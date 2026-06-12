@@ -1,0 +1,3379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Lab — Acids & Alkalis Mini-Lab</title>
+<style>
+/* =============================================================
+   VIRTUAL LAB — Acids & Alkalis Mini-Lab
+   Progress Schools Magritte design system
+   ============================================================= */
+
+:root{
+  --bg:#f4f6fb;
+  --bench:#ede4d3;
+  --bench-edge:#c9b994;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --card:#ffffff;
+  --line:#e2e8f0;
+
+  --purple:#9c27b0;
+  --foundation:#16a34a;
+  --middle:#f59e0b;
+  --higher:#1e3a8a;
+
+  --acid:#dc2626;
+  --alkali:#2563eb;
+  --neutral:#6b7280;
+  --salt:#7c3aed;
+
+  --task-bg:#fef9c3;
+  --scaffold-bg:#e0f2fe;
+  --ido-bg:#ede9fe;
+  --wedo-bg:#fce7f3;
+  --tip-bg:#fef3c7;
+
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06), 0 1px 1px rgba(15,23,42,.04);
+  --shadow-md:0 4px 12px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.05);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.12), 0 4px 8px rgba(15,23,42,.06);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter','Segoe UI',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.5;
+  overflow-x:hidden;
+}
+
+.screen{
+  min-height:100vh;
+  width:100vw;
+  padding:24px;
+  display:none;
+  flex-direction:column;
+}
+.screen.active{display:flex}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 20px;
+  background:var(--card);
+  border-radius:14px;
+  box-shadow:var(--shadow-sm);
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-weight:700;color:var(--purple);
+}
+.brand-logo{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--purple),#6d28d9);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:16px;
+  box-shadow:var(--shadow-sm);
+}
+.brand-text{font-size:14px;letter-spacing:.02em}
+.brand-text small{display:block;font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+.topbar-actions{display:flex;gap:10px;align-items:center}
+.pupil-tag{
+  font-size:13px;color:var(--muted);
+  padding:6px 12px;border:1px solid var(--line);border-radius:999px;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 18px;
+  background:var(--purple);color:#fff;
+  border:none;border-radius:10px;
+  font:600 14px 'Inter',sans-serif;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, background .12s;
+  box-shadow:var(--shadow-sm);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:#f8fafc}
+.btn.success{background:var(--foundation)}
+.btn.danger{background:var(--acid)}
+.btn.warn{background:var(--middle)}
+.btn.big{padding:16px 28px;font-size:16px;border-radius:14px}
+
+/* ---------- Welcome ---------- */
+#welcome{align-items:center;justify-content:center}
+.welcome-card{
+  max-width:640px;width:100%;
+  background:var(--card);border-radius:24px;
+  box-shadow:var(--shadow-lg);
+  padding:42px 44px;
+  text-align:center;
+}
+.welcome-icon{
+  width:96px;height:96px;margin:0 auto 18px;
+  background:linear-gradient(135deg,#e0f2fe,#dbeafe);
+  border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:52px;
+  box-shadow:var(--shadow-md);
+}
+.welcome-card h1{
+  font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;
+}
+.welcome-card .sub{color:var(--muted);font-size:15px;margin-bottom:28px}
+.welcome-form{
+  display:grid;gap:14px;text-align:left;margin-bottom:26px;
+}
+.welcome-form label{
+  font-size:13px;font-weight:600;color:var(--muted);
+  display:block;margin-bottom:6px;
+}
+.welcome-form input{
+  width:100%;padding:14px 16px;
+  font:500 16px 'Inter',sans-serif;
+  border:2px solid var(--line);border-radius:12px;
+  transition:border-color .12s, box-shadow .12s;
+}
+.welcome-form input:focus{
+  outline:none;border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(156,39,176,.12);
+}
+.welcome-stations{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin-bottom:24px;
+}
+.ws-card{
+  background:#f8fafc;border:1px solid var(--line);
+  padding:14px 12px;border-radius:12px;text-align:center;font-size:12px;color:var(--muted);
+}
+.ws-card .ws-icon{font-size:24px;display:block;margin-bottom:4px}
+.ws-card .ws-num{font-weight:700;color:var(--purple);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.ws-card .ws-name{font-weight:600;color:var(--ink);font-size:13px}
+
+/* ---------- Hub ---------- */
+.hub-wrap{max-width:1100px;margin:0 auto;width:100%}
+.hub-title{
+  display:flex;justify-content:space-between;align-items:end;
+  margin-bottom:22px;flex-wrap:wrap;gap:12px;
+}
+.hub-title h1{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.hub-title p{color:var(--muted);font-size:14px;margin-top:4px}
+.hub-progress{
+  display:flex;gap:6px;align-items:center;
+  background:var(--card);padding:8px 14px;border-radius:999px;box-shadow:var(--shadow-sm);
+  font-size:13px;font-weight:600;
+}
+.hub-progress .dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--line);background:#fff;
+}
+.hub-progress .dot.done{background:var(--foundation);border-color:var(--foundation)}
+.hub-progress .dot.done::after{
+  content:"✓";color:#fff;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;height:100%;margin-top:-1px;
+}
+
+.station-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;
+}
+.station-card{
+  background:var(--card);border-radius:18px;
+  padding:24px;
+  box-shadow:var(--shadow-sm);
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s, border-color .15s;
+  position:relative;
+  overflow:hidden;
+}
+.station-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:5px;
+  background:var(--brand-color,var(--purple));
+}
+.station-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--brand-color,var(--purple))}
+.station-card.done{background:linear-gradient(180deg,#f0fdf4,#fff)}
+.station-card .sc-tag{
+  font-size:11px;font-weight:700;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;
+}
+.station-card .sc-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--brand-color,var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:28px;margin-bottom:14px;
+}
+.station-card h3{font-size:20px;font-weight:700;margin-bottom:6px}
+.station-card p{color:var(--muted);font-size:13px;margin-bottom:14px}
+.station-card .sc-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:14px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);
+}
+.station-card .sc-status{font-weight:600;color:var(--brand-color,var(--purple))}
+.station-card.done .sc-status{color:var(--foundation)}
+.station-card.done .sc-status::before{content:"✓ "}
+
+.station-card.s1{--brand-color:#0e7490}
+.station-card.s2{--brand-color:var(--acid)}
+.station-card.s3{--brand-color:var(--salt)}
+.station-card.report{--brand-color:var(--higher)}
+.station-card.report.locked{opacity:.55;cursor:not-allowed}
+.station-card.report.locked:hover{transform:none;box-shadow:var(--shadow-sm);border-color:transparent}
+
+/* ---------- Station header ---------- */
+.station-head{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--card);padding:16px 22px;border-radius:14px;
+  box-shadow:var(--shadow-sm);margin-bottom:18px;flex-wrap:wrap;gap:10px;
+}
+.station-head .sh-left{display:flex;align-items:center;gap:14px}
+.station-head .sh-num{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--brand-color);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:18px;
+}
+.station-head .sh-title{font-size:20px;font-weight:700}
+.station-head .sh-aim{color:var(--muted);font-size:13px}
+.station-head .sh-right{display:flex;gap:10px;align-items:center}
+
+/* ---------- Two-col layout for stations ---------- */
+.station-body{
+  display:grid;grid-template-columns:1fr 380px;gap:18px;
+  flex:1;min-height:0;
+}
+.lab-panel{
+  background:var(--card);border-radius:18px;
+  padding:24px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:14px;
+  min-height:520px;
+}
+.method-panel{
+  background:var(--card);border-radius:18px;
+  padding:22px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:14px;
+  max-height:calc(100vh - 140px);overflow:auto;
+}
+
+.method-title{
+  font-weight:700;font-size:15px;color:var(--muted);
+  letter-spacing:.05em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+}
+.method-title::before{content:"📋"}
+
+.steps-list{display:grid;gap:8px;counter-reset:step}
+.step-item{
+  display:flex;gap:10px;
+  padding:10px 12px;
+  background:#f8fafc;border-radius:10px;
+  border-left:3px solid var(--line);
+  transition:border-color .2s, background .2s;
+}
+.step-item.active{border-left-color:var(--brand-color);background:var(--ido-bg)}
+.step-item.done{border-left-color:var(--foundation);background:#f0fdf4}
+.step-num{
+  min-width:24px;height:24px;border-radius:6px;
+  background:var(--line);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:12px;
+  counter-increment:step;
+}
+.step-item.active .step-num{background:var(--brand-color);color:#fff}
+.step-item.done .step-num{background:var(--foundation);color:#fff}
+.step-item.done .step-num::before{content:"✓"}
+.step-item.done .step-text{text-decoration:line-through;color:var(--muted)}
+.step-text{font-size:13px;line-height:1.45}
+
+.tip-box{
+  background:var(--tip-bg);border-left:4px solid var(--middle);
+  padding:12px 14px;border-radius:8px;font-size:13px;
+}
+.tip-box strong{color:#92400e}
+.tip-box::before{content:"💡 ";font-size:15px}
+
+.scaffold-box{
+  background:var(--scaffold-bg);border-left:4px solid #0284c7;
+  padding:12px 14px;border-radius:8px;font-size:13px;
+}
+
+/* ---------- Lab bench (Station 1) ---------- */
+.lab-bench{
+  background:linear-gradient(180deg,#fafaf3 0%,var(--bench) 100%);
+  border-radius:14px;
+  padding:20px;
+  position:relative;
+  flex:1;
+  display:flex;flex-direction:column;
+  border-bottom:6px solid var(--bench-edge);
+  min-height:380px;
+}
+
+.s1-shelf{
+  display:grid;grid-template-columns:repeat(8,1fr);gap:10px;
+  padding-bottom:18px;margin-bottom:18px;
+  border-bottom:2px dashed rgba(15,23,42,.15);
+}
+.bottle{
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:8px 4px;border-radius:10px;
+  transition:transform .15s, background .15s;
+  position:relative;
+}
+.bottle:hover{transform:translateY(-2px);background:rgba(255,255,255,.5)}
+.bottle.used{opacity:.4}
+.bottle.used::after{
+  content:"✓";position:absolute;top:4px;right:4px;
+  width:18px;height:18px;background:var(--foundation);color:#fff;border-radius:50%;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.bottle-svg{width:46px;height:60px}
+.bottle-label{font-size:10px;font-weight:600;text-align:center;line-height:1.2;color:var(--ink)}
+
+.s1-workbench{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:16px;flex:1;align-items:center;
+}
+.test-tube-area{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:10px;
+}
+.test-tube-svg{width:100px;height:200px}
+.tt-label{font-size:13px;font-weight:600;color:var(--muted);text-align:center}
+.tt-label span{display:block;color:var(--ink);margin-top:2px;font-size:14px}
+
+.ph-chart{
+  background:#fff;border-radius:12px;padding:14px;
+  box-shadow:var(--shadow-sm);
+}
+.ph-chart-title{
+  font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;
+  text-align:center;
+}
+.ph-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ph-cell{
+  border:2px solid transparent;border-radius:6px;
+  padding:8px 2px;cursor:pointer;text-align:center;
+  font-weight:700;font-size:13px;color:#fff;
+  transition:transform .12s, box-shadow .12s;
+  text-shadow:0 1px 2px rgba(0,0,0,.3);
+}
+.ph-cell:hover{transform:scale(1.08);box-shadow:0 4px 8px rgba(0,0,0,.15);z-index:1;position:relative}
+.ph-cell.selected{border-color:var(--ink);transform:scale(1.1);z-index:2;position:relative}
+.ph-cell[data-ph="1"]{background:#dc2626}
+.ph-cell[data-ph="3"]{background:#ea580c}
+.ph-cell[data-ph="5"]{background:#facc15;color:#1f2937;text-shadow:none}
+.ph-cell[data-ph="7"]{background:#22c55e}
+.ph-cell[data-ph="9"]{background:#0ea5e9}
+.ph-cell[data-ph="11"]{background:#3730a3}
+.ph-cell[data-ph="13"]{background:#7e22ce}
+.ph-legend{
+  display:flex;justify-content:space-between;font-size:10px;color:var(--muted);
+  margin-top:6px;font-weight:600;
+}
+
+.s1-prompt{
+  background:var(--ido-bg);padding:12px 16px;border-radius:10px;
+  font-size:14px;font-weight:600;color:#5b21b6;text-align:center;
+}
+
+.s1-results{
+  background:#fff;border-radius:10px;padding:12px;box-shadow:var(--shadow-sm);
+  font-size:13px;max-height:180px;overflow:auto;
+}
+.s1-results h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.s1-results table{width:100%;border-collapse:collapse}
+.s1-results th, .s1-results td{
+  padding:6px 8px;text-align:left;border-bottom:1px solid var(--line);font-size:12px;
+}
+.s1-results th{background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.s1-results .pill{
+  display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-size:11px;font-weight:600;
+}
+.s1-results .pill.acid{background:var(--acid)}
+.s1-results .pill.neutral{background:var(--neutral)}
+.s1-results .pill.alkali{background:var(--alkali)}
+
+/* ---------- Station 2 (Titration) ---------- */
+.titration-bench{
+  background:linear-gradient(180deg,#fafaf3 0%,var(--bench) 100%);
+  border-radius:14px;
+  padding:24px;
+  position:relative;
+  flex:1;
+  display:flex;flex-direction:column;
+  border-bottom:6px solid var(--bench-edge);
+  align-items:center;
+  min-height:480px;
+}
+
+.burette-area{position:relative;display:flex;flex-direction:column;align-items:center}
+.burette-svg{width:80px;height:340px}
+.burette-reading{
+  position:absolute;top:90px;left:90px;
+  background:#fff;padding:8px 12px;border-radius:8px;
+  font-family:'Courier New',monospace;font-weight:700;font-size:16px;
+  box-shadow:var(--shadow-sm);min-width:90px;text-align:center;
+  border:2px solid var(--acid);
+}
+.burette-reading small{display:block;font-size:9px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:600;text-transform:uppercase}
+
+.flask-area{margin-top:-30px;position:relative}
+.flask-svg{width:160px;height:140px}
+
+.s2-controls{
+  display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;
+}
+.s2-controls .btn{padding:10px 16px;font-size:13px}
+
+.s2-status{
+  margin-top:12px;padding:10px 16px;background:#fff;border-radius:10px;
+  font-size:13px;font-weight:600;text-align:center;min-height:42px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);
+}
+.s2-status.warn{background:#fef3c7;color:#92400e}
+.s2-status.good{background:#dcfce7;color:#166534}
+.s2-status.bad{background:#fee2e2;color:#991b1b}
+
+.titre-table{
+  background:#fff;border-radius:10px;padding:12px;
+  box-shadow:var(--shadow-sm);width:100%;max-width:340px;margin-top:14px;
+}
+.titre-table table{width:100%;font-size:13px;border-collapse:collapse}
+.titre-table td, .titre-table th{padding:6px 8px;border-bottom:1px solid var(--line)}
+.titre-table th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;text-align:left}
+.titre-table .val{font-family:'Courier New',monospace;font-weight:700;text-align:right}
+.titre-table .avg{background:#f0fdf4;font-weight:700;color:#166534}
+
+.s2-calc{
+  background:var(--wedo-bg);border-radius:12px;padding:16px;
+  display:none;
+}
+.s2-calc.show{display:block}
+.s2-calc h4{font-size:14px;font-weight:700;margin-bottom:10px;color:#831843}
+.s2-calc .formula{
+  background:#fff;padding:10px 14px;border-radius:8px;
+  font-family:'Courier New',monospace;font-size:13px;
+  margin:8px 0;border-left:3px solid var(--purple);
+}
+.s2-calc input{
+  padding:6px 10px;border:2px solid var(--line);border-radius:6px;
+  font:600 14px 'Courier New',monospace;width:80px;text-align:right;
+}
+.s2-calc input:focus{outline:none;border-color:var(--purple)}
+.s2-calc .check-result{font-weight:600;font-size:13px;margin-top:8px;padding:8px 12px;border-radius:8px;display:none}
+.s2-calc .check-result.show{display:block}
+.s2-calc .check-result.ok{background:#dcfce7;color:#166534}
+.s2-calc .check-result.bad{background:#fee2e2;color:#991b1b}
+
+/* ---------- Station 3 (Making a Salt) ---------- */
+.salt-bench{
+  background:linear-gradient(180deg,#fafaf3 0%,var(--bench) 100%);
+  border-radius:14px;
+  padding:24px;
+  position:relative;
+  flex:1;
+  display:flex;flex-direction:column;
+  border-bottom:6px solid var(--bench-edge);
+  align-items:center;justify-content:center;
+  min-height:440px;
+}
+
+.salt-stage{
+  width:100%;display:flex;flex-direction:column;align-items:center;
+  flex:1;justify-content:center;
+}
+
+.salt-stage-svg{width:280px;height:300px;max-height:60vh}
+
+.salt-stage-caption{
+  margin-top:14px;background:#fff;padding:14px 18px;border-radius:10px;
+  font-size:14px;max-width:520px;text-align:center;box-shadow:var(--shadow-sm);
+}
+.salt-stage-caption strong{display:block;color:var(--salt);font-size:13px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+
+.salt-controls{
+  margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+
+.salt-observe{
+  margin-top:14px;background:#fff;padding:12px 16px;border-radius:10px;
+  box-shadow:var(--shadow-sm);width:100%;max-width:520px;
+}
+.salt-observe label{
+  font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px;
+}
+.salt-observe textarea{
+  width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:8px;
+  font:500 13px 'Inter',sans-serif;resize:vertical;min-height:50px;
+}
+.salt-observe textarea:focus{outline:none;border-color:var(--salt)}
+.salt-observe .quick-pick{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;
+}
+.salt-observe .quick-pick button{
+  background:#f3e8ff;color:#6b21a8;border:none;
+  padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;
+  cursor:pointer;transition:background .12s;
+}
+.salt-observe .quick-pick button:hover{background:#e9d5ff}
+
+/* ---------- Report (Print view) ---------- */
+#report{display:none;background:#e5e7eb;padding:24px;flex-direction:column;align-items:center}
+#report.active{display:flex}
+
+.report-toolbar{
+  background:var(--card);padding:14px 20px;border-radius:12px;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:var(--shadow-sm);width:100%;max-width:820px;margin-bottom:18px;flex-wrap:wrap;gap:10px;
+}
+
+.lab-report{
+  background:#fff;width:100%;max-width:820px;
+  padding:38px 46px;
+  box-shadow:var(--shadow-md);
+  font-size:13px;line-height:1.55;
+  color:#1f2937;
+}
+
+.lr-head{
+  border-bottom:3px solid var(--purple);padding-bottom:14px;margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:10px;
+}
+.lr-head h1{font-size:24px;font-weight:800;color:var(--purple);letter-spacing:-.01em}
+.lr-head .lr-meta{font-size:12px;color:var(--muted);text-align:right}
+.lr-head .lr-meta strong{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
+
+.lr-section{margin-bottom:22px;page-break-inside:avoid}
+.lr-section h2{
+  font-size:16px;font-weight:800;
+  color:#fff;background:var(--brand);
+  padding:6px 12px;border-radius:6px;margin-bottom:10px;
+  display:inline-block;
+}
+.lr-section.s1-section{--brand:#0e7490}
+.lr-section.s2-section{--brand:var(--acid)}
+.lr-section.s3-section{--brand:var(--salt)}
+
+.lr-section .lr-aim{
+  background:#f8fafc;padding:8px 12px;border-radius:6px;font-style:italic;
+  margin-bottom:10px;font-size:12px;
+}
+.lr-section table{
+  width:100%;border-collapse:collapse;margin:8px 0;font-size:12px;
+}
+.lr-section th, .lr-section td{
+  border:1px solid #9ca3af;padding:6px 8px;text-align:left;
+}
+.lr-section th{background:#f3f4f6;font-weight:700}
+
+.lr-method{
+  background:#fafafa;border-left:3px solid #9ca3af;
+  padding:10px 14px;font-size:12px;margin-bottom:10px;
+}
+.lr-method ol{padding-left:18px}
+.lr-method li{margin-bottom:4px}
+
+.lr-data{font-family:'Courier New',monospace;font-weight:700}
+.lr-conclusion{
+  margin-top:8px;padding:10px 12px;
+  border:1px dashed #9ca3af;border-radius:6px;
+  min-height:60px;font-size:12px;
+  background:#fffef5;
+}
+.lr-conclusion strong{display:block;margin-bottom:4px;font-family:'Inter',sans-serif}
+.lr-write-line{
+  border-bottom:1px solid #94a3b8;height:18px;margin:4px 0;
+}
+
+.lr-aspire{
+  margin-top:18px;padding:12px 14px;
+  background:#dcfce7;
+  border-left:4px solid var(--foundation);
+  border-radius:6px;font-size:12px;
+  page-break-inside:avoid;
+}
+.lr-aspire .aspire-tag{
+  display:inline-block;background:var(--foundation);color:#fff;
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:4px;margin-right:8px;
+}
+.lr-aspire strong{font-family:'Inter',sans-serif;color:#166534}
+
+.lr-footer{
+  border-top:1px solid var(--line);margin-top:24px;padding-top:10px;
+  font-size:10px;color:var(--muted);display:flex;justify-content:space-between;
+}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;
+  font-size:14px;font-weight:600;box-shadow:var(--shadow-lg);
+  opacity:0;transition:opacity .2s, transform .2s;
+  z-index:1000;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Animations ---------- */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.screen.active>*{animation:fadeUp .35s ease both}
+.screen.active>*:nth-child(2){animation-delay:.05s}
+.screen.active>*:nth-child(3){animation-delay:.1s}
+
+@keyframes drip{
+  0%{transform:translateY(0);opacity:1}
+  100%{transform:translateY(120px);opacity:0}
+}
+.drop{
+  position:absolute;width:6px;height:8px;
+  background:var(--acid);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  pointer-events:none;
+  animation:drip .35s ease-in forwards;
+}
+
+@keyframes confettiFall{
+  0%{transform:translateY(-10vh) rotate(0);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+.confetti{
+  position:fixed;width:10px;height:14px;
+  top:0;pointer-events:none;z-index:9999;
+  animation:confettiFall 2.4s ease-in forwards;
+}
+
+/* ---------- Print ---------- */
+@media print{
+  body{background:#fff}
+  #welcome,#hub,#station1,#station2,#station3,.report-toolbar,.topbar{display:none !important}
+  #report{display:flex !important;background:#fff;padding:0}
+  .lab-report{box-shadow:none;max-width:none;padding:24px}
+  @page{size:A4 portrait;margin:14mm}
+  .lr-section{break-inside:avoid;page-break-inside:avoid}
+}
+
+/* ---------- Phase strip (NEW: scientific-method flow) ---------- */
+.phase-strip{
+  display:flex;gap:6px;background:var(--card);
+  border-radius:14px;padding:8px;box-shadow:var(--shadow-sm);
+  margin-bottom:14px;overflow:hidden;
+}
+.phase-step{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 8px;border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  background:#f8fafc;cursor:pointer;
+  transition:background .15s, color .15s, transform .12s;
+  text-align:center;
+  border:2px solid transparent;
+}
+.phase-step:hover:not(.locked){background:#eef2ff}
+.phase-step.active{
+  background:var(--brand-color,var(--purple));color:#fff;
+  box-shadow:var(--shadow-sm);
+}
+.phase-step.done{color:var(--foundation);background:#f0fdf4;border-color:#bbf7d0}
+.phase-step.done.active{color:#fff;background:var(--brand-color,var(--purple));border-color:transparent}
+.phase-step.locked{opacity:.45;cursor:not-allowed}
+.phase-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.4);font-weight:800;font-size:11px;
+  flex-shrink:0;
+}
+.phase-step.active .phase-num{background:rgba(255,255,255,.25);color:#fff}
+.phase-step.done:not(.active) .phase-num{background:var(--foundation);color:#fff}
+.phase-step.done:not(.active) .phase-num::after{content:"✓"}
+.phase-step.done:not(.active) .phase-num-text{display:none}
+.phase-step.locked .phase-num{background:#cbd5e1}
+.phase-step .phase-label{display:none}
+@media (min-width:780px){.phase-step .phase-label{display:inline}}
+
+/* ---------- Phase content (only one visible at a time) ---------- */
+.phase-content{display:none;flex-direction:column;gap:14px}
+.phase-content.active{display:flex;animation:fadeUp .35s ease both}
+
+/* ---------- Visual instruction callout ---------- */
+.visual-callout{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,var(--ido-bg),#fce7f3);
+  border-left:6px solid var(--brand-color,var(--purple));
+  padding:14px 18px;border-radius:12px;
+  font-size:14px;font-weight:600;color:#3b1d6e;
+  position:relative;
+}
+.vc-icon{
+  font-size:28px;line-height:1;flex-shrink:0;
+  animation:bounce 1.5s ease-in-out infinite;
+}
+.vc-text{flex:1;line-height:1.4}
+.vc-text small{display:block;color:var(--muted);font-weight:500;font-size:12px;margin-top:2px}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+/* ---------- Pulse highlight for action buttons ---------- */
+.pulse{animation:pulseRing 1.5s ease-in-out infinite}
+@keyframes pulseRing{
+  0%{box-shadow:0 0 0 0 rgba(156,39,176,.45)}
+  70%{box-shadow:0 0 0 14px rgba(156,39,176,0)}
+  100%{box-shadow:0 0 0 0 rgba(156,39,176,0)}
+}
+
+/* ---------- Phase-content cards (the white panels inside phases) ---------- */
+.phase-card{
+  background:var(--card);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow-sm);
+}
+.phase-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.phase-card .ph-helper{font-size:13px;color:var(--muted);margin-bottom:12px}
+
+/* ---------- Scaffolded chip row ---------- */
+.chip-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;
+}
+.chip{
+  background:#f3e8ff;color:#6b21a8;
+  border:2px solid transparent;
+  padding:8px 14px;border-radius:999px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:transform .12s, background .12s, border-color .12s;
+}
+.chip:hover{background:#e9d5ff;transform:translateY(-1px)}
+.chip.selected{background:var(--purple);color:#fff;border-color:#6d28d9}
+.chip-tag{
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.chip-tag::before{content:"💡";font-size:13px}
+
+/* ---------- Scaffolded textarea ---------- */
+.scaffold-textarea{
+  width:100%;padding:12px 14px;
+  border:2px solid var(--line);border-radius:10px;
+  font:500 14px 'Inter',sans-serif;
+  resize:vertical;min-height:80px;
+  background:#fffef9;
+}
+.scaffold-textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(156,39,176,.1)}
+
+/* ---------- Prediction grid (Station 1) ---------- */
+.predict-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+}
+.predict-col{
+  background:#f8fafc;border-radius:10px;padding:10px;
+  border:2px solid var(--line);
+  min-height:120px;
+}
+.predict-col[data-type="acid"]{border-color:#fecaca;background:#fef2f2}
+.predict-col[data-type="neutral"]{border-color:#e2e8f0;background:#f8fafc}
+.predict-col[data-type="alkali"]{border-color:#bfdbfe;background:#eff6ff}
+.predict-col-title{
+  font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:8px;text-align:center;
+}
+.predict-col[data-type="acid"] .predict-col-title{color:var(--acid)}
+.predict-col[data-type="alkali"] .predict-col-title{color:var(--alkali)}
+.predict-col[data-type="neutral"] .predict-col-title{color:var(--neutral)}
+.predict-pool{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.predict-item{
+  background:#fff;border:1.5px solid var(--line);
+  padding:6px 10px;border-radius:999px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:background .12s, transform .12s;
+  user-select:none;
+}
+.predict-item:hover{background:#f1f5f9;transform:translateY(-1px)}
+.predict-bank{
+  background:#f3e8ff;border:1.5px dashed #c084fc;
+  border-radius:10px;padding:10px;margin-bottom:12px;
+  min-height:60px;
+}
+.predict-bank-title{font-size:11px;font-weight:700;color:#6b21a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+
+/* ---------- Intensity rating (Station 3) ---------- */
+.intensity-row{
+  display:flex;gap:6px;justify-content:center;margin-top:8px;
+}
+.intensity-cell{
+  flex:1;max-width:60px;
+  padding:10px 4px;border-radius:8px;
+  border:2px solid var(--line);background:#fff;
+  cursor:pointer;text-align:center;
+  font-size:13px;font-weight:700;
+  transition:transform .12s, border-color .12s;
+}
+.intensity-cell:hover{transform:translateY(-2px)}
+.intensity-cell.selected{border-color:var(--ink);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.intensity-cell[data-i="1"]{background:#eff6ff;color:#1e3a8a}
+.intensity-cell[data-i="2"]{background:#bfdbfe;color:#1e3a8a}
+.intensity-cell[data-i="3"]{background:#60a5fa;color:#fff}
+.intensity-cell[data-i="4"]{background:#2563eb;color:#fff}
+.intensity-cell[data-i="5"]{background:#1e3a8a;color:#fff}
+.intensity-label{
+  font-size:11px;color:var(--muted);
+  display:flex;justify-content:space-between;margin-top:6px;font-weight:600;
+}
+
+/* ---------- Graph container ---------- */
+.graph-wrap{
+  background:var(--card);border-radius:14px;padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.graph-wrap h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.graph-wrap .g-helper{font-size:12px;color:var(--muted);margin-bottom:10px}
+.graph-svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
+.graph-legend{
+  display:flex;gap:14px;justify-content:center;margin-top:6px;
+  font-size:11px;color:var(--muted);flex-wrap:wrap;
+}
+.graph-legend span{display:flex;align-items:center;gap:4px}
+.graph-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* ---------- Sentence-starter strip (Conclusion) ---------- */
+.starter-row{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;
+}
+.starter{
+  background:#fef9c3;color:#854d0e;
+  border:1.5px solid #fde047;
+  padding:6px 12px;border-radius:8px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:background .12s;
+}
+.starter:hover{background:#fef08a}
+.starter::before{content:"+ ";color:#a16207}
+
+/* ---------- Universal Indicator dropper bottle (Station 1) ---------- */
+.ui-dropper-area{
+  position:absolute;top:14px;right:14px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:rgba(255,255,255,.7);padding:8px 10px;border-radius:10px;
+  box-shadow:var(--shadow-sm);cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+  z-index:2;
+}
+.ui-dropper-area.disabled{opacity:.35;cursor:not-allowed}
+.ui-dropper-area:not(.disabled):hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.ui-dropper-area.pulse-ring{animation:pulseRing 1.5s ease-in-out infinite}
+.ui-dropper-svg{width:44px;height:58px}
+.ui-dropper-label{font-size:10px;font-weight:700;text-align:center;color:#166534;line-height:1.1}
+
+/* ---------- Phase-investigate sub-status (S1 above shelf) ---------- */
+.phase-status{
+  background:#fffaeb;border:1px solid #fde68a;
+  padding:8px 14px;border-radius:8px;
+  font-size:13px;font-weight:600;color:#92400e;
+  text-align:center;
+}
+.phase-status.ready{background:#dcfce7;border-color:#86efac;color:#166534}
+.phase-status.waiting{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+
+/* ---------- Lab Report additions for new content ---------- */
+.lr-hypothesis,.lr-prediction{
+  background:#fef9c3;border-left:3px solid #facc15;
+  padding:10px 14px;border-radius:6px;font-size:12px;margin-bottom:10px;
+}
+.lr-hypothesis strong,.lr-prediction strong{display:block;color:#854d0e;font-family:'Inter',sans-serif;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.lr-graph{margin:10px 0;text-align:center}
+.lr-graph svg{max-width:100%;height:auto}
+.lr-graph-caption{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic}
+
+
+/* ---------- Responsive ---------- */
+@media (max-width:880px){
+  .station-body{grid-template-columns:1fr}
+  .method-panel{max-height:none;order:2}
+  .lab-panel{order:1}
+  .s1-shelf{grid-template-columns:repeat(4,1fr)}
+  .s1-workbench{grid-template-columns:1fr}
+  .phase-step{font-size:11px;padding:8px 4px}
+  .predict-grid{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .welcome-stations{grid-template-columns:1fr}
+  .welcome-card{padding:28px 22px}
+  .station-card{padding:18px}
+  .ph-grid{grid-template-columns:repeat(7,1fr);gap:2px}
+  .ph-cell{padding:6px 1px;font-size:11px}
+  .s1-shelf{grid-template-columns:repeat(4,1fr);gap:6px}
+  .bottle-svg{width:38px;height:50px}
+  .bottle-label{font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     WELCOME SCREEN
+     ============================================================ -->
+<section id="welcome" class="screen active">
+  <div class="welcome-card">
+    <div class="welcome-icon">🧪</div>
+    <h1>Virtual Lab: Acids &amp; Alkalis</h1>
+    <p class="sub">Mini-lab • Three experiments • Earn your lab report</p>
+
+    <div class="welcome-stations">
+      <div class="ws-card">
+        <span class="ws-icon">🌈</span>
+        <div class="ws-num">Station 1</div>
+        <div class="ws-name">pH Test</div>
+      </div>
+      <div class="ws-card">
+        <span class="ws-icon">⚗️</span>
+        <div class="ws-num">Station 2</div>
+        <div class="ws-name">Titration</div>
+      </div>
+      <div class="ws-card">
+        <span class="ws-icon">💎</span>
+        <div class="ws-num">Station 3</div>
+        <div class="ws-name">Make a Salt</div>
+      </div>
+    </div>
+
+    <div class="welcome-form">
+      <div>
+        <label for="pupilName">Your name</label>
+        <input id="pupilName" type="text" placeholder="e.g. Jamie Williams" autocomplete="off">
+      </div>
+      <div>
+        <label for="className">Class</label>
+        <input id="className" type="text" placeholder="e.g. 11a Science" autocomplete="off">
+      </div>
+    </div>
+
+    <button class="btn big" onclick="startLab()">Enter the lab →</button>
+    <p style="font-size:11px;color:var(--muted);margin-top:14px">Your progress saves automatically. You can close and come back.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     HUB
+     ============================================================ -->
+<section id="hub" class="screen">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">PS</div>
+      <div class="brand-text">Virtual Lab<small>Acids &amp; Alkalis Mini-Lab</small></div>
+    </div>
+    <div class="topbar-actions">
+      <span class="pupil-tag" id="pupilTag"></span>
+      <button class="btn ghost" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="hub-wrap">
+    <div class="hub-title">
+      <div>
+        <h1>Pick a station</h1>
+        <p>Do them in any order. Once all three are complete, your lab report unlocks.</p>
+      </div>
+      <div class="hub-progress">
+        <div class="dot" id="d1"></div>
+        <div class="dot" id="d2"></div>
+        <div class="dot" id="d3"></div>
+        <span id="hubCount" style="margin-left:6px;color:var(--muted)">0 / 3</span>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div class="station-card s1" onclick="gotoStation(1)">
+        <div class="sc-tag">Station 1 • ~10 min</div>
+        <div class="sc-icon">🌈</div>
+        <h3>pH Investigation</h3>
+        <p>Test 8 household substances with universal indicator. Classify each as acid, neutral, or alkali.</p>
+        <div class="sc-meta">
+          <span>8 substances</span>
+          <span class="sc-status" id="status1">Start →</span>
+        </div>
+      </div>
+
+      <div class="station-card s2" onclick="gotoStation(2)">
+        <div class="sc-tag">Station 2 • ~12 min</div>
+        <div class="sc-icon">⚗️</div>
+        <h3>Titration</h3>
+        <p>Neutralise an unknown alkali with hydrochloric acid using phenolphthalein indicator. Find the concentration.</p>
+        <div class="sc-meta">
+          <span>2 titrations + calc</span>
+          <span class="sc-status" id="status2">Start →</span>
+        </div>
+      </div>
+
+      <div class="station-card s3" onclick="gotoStation(3)">
+        <div class="sc-tag">Station 3 • ~10 min</div>
+        <div class="sc-icon">💎</div>
+        <h3>Make a Salt</h3>
+        <p>Make copper chloride from copper oxide + hydrochloric acid. Filter and evaporate to grow crystals.</p>
+        <div class="sc-meta">
+          <span>5 stages</span>
+          <span class="sc-status" id="status3">Start →</span>
+        </div>
+      </div>
+
+      <div class="station-card report locked" id="reportCard" onclick="tryGoReport()">
+        <div class="sc-tag">Lab Report</div>
+        <div class="sc-icon">📄</div>
+        <h3>Your Lab Report</h3>
+        <p>A printable A4 write-up of all three experiments — your name, your data, your conclusions.</p>
+        <div class="sc-meta">
+          <span id="reportMeta">Complete all 3 stations to unlock</span>
+          <span class="sc-status" id="statusR">🔒 Locked</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATION 1 — pH Investigation
+     ============================================================ -->
+<section id="station1" class="screen" style="--brand-color:#0e7490">
+  <div class="station-head">
+    <div class="sh-left">
+      <div class="sh-num" style="background:#0e7490">1</div>
+      <div>
+        <div class="sh-title">pH Investigation</div>
+        <div class="sh-aim">Aim: find out the pH of 8 household substances and classify them.</div>
+      </div>
+    </div>
+    <div class="sh-right">
+      <button class="btn ghost" onclick="goHub()">← Hub</button>
+      <button class="btn success" id="s1FinishBtn" onclick="finishStation1()" disabled>Finish station ✓</button>
+    </div>
+  </div>
+
+  <!-- Phase strip -->
+  <div class="phase-strip" id="s1PhaseStrip">
+    <div class="phase-step" data-phase="1" onclick="setS1Phase(1)"><span class="phase-num"><span class="phase-num-text">1</span></span><span class="phase-label">Hypothesis</span></div>
+    <div class="phase-step" data-phase="2" onclick="setS1Phase(2)"><span class="phase-num"><span class="phase-num-text">2</span></span><span class="phase-label">Predict</span></div>
+    <div class="phase-step" data-phase="3" onclick="setS1Phase(3)"><span class="phase-num"><span class="phase-num-text">3</span></span><span class="phase-label">Investigate</span></div>
+    <div class="phase-step" data-phase="4" onclick="setS1Phase(4)"><span class="phase-num"><span class="phase-num-text">4</span></span><span class="phase-label">Graph</span></div>
+    <div class="phase-step" data-phase="5" onclick="setS1Phase(5)"><span class="phase-num"><span class="phase-num-text">5</span></span><span class="phase-label">Conclude</span></div>
+  </div>
+
+  <div class="station-body">
+    <div class="lab-panel">
+
+      <!-- PHASE 1 — HYPOTHESIS -->
+      <div class="phase-content" id="s1p1">
+        <div class="visual-callout">
+          <div class="vc-icon">🤔</div>
+          <div class="vc-text">Before we test anything, write a hypothesis.<small>What do you THINK we'll find when we test 8 household substances?</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My hypothesis</h3>
+          <p class="ph-helper">Stuck? Click one of the boxes below to use it. You can also edit it or type your own.</p>
+          <div class="chip-tag">Choose a hypothesis to start with</div>
+          <div class="chip-row" id="s1HypChips">
+            <div class="chip" onclick="useChip('s1Hyp','Most of the substances will be acidic, and only a few will be alkaline.')">Most will be acidic</div>
+            <div class="chip" onclick="useChip('s1Hyp','Most of the substances will be alkaline, and only a few will be acidic.')">Most will be alkaline</div>
+            <div class="chip" onclick="useChip('s1Hyp','I think we will find a mix — some acids, one neutral substance, and some alkalis.')">A mix of acid, neutral, alkali</div>
+            <div class="chip" onclick="useChip('s1Hyp','All of the substances will be near neutral (pH around 7).')">All near neutral</div>
+          </div>
+          <textarea class="scaffold-textarea" id="s1Hyp" placeholder="Write your hypothesis here…" oninput="onHypInput(1)"></textarea>
+        </div>
+        <button class="btn big" id="s1NextHyp" onclick="setS1Phase(2)" disabled>Next: make a prediction →</button>
+      </div>
+
+      <!-- PHASE 2 — PREDICTION -->
+      <div class="phase-content" id="s1p2">
+        <div class="visual-callout">
+          <div class="vc-icon">🎯</div>
+          <div class="vc-text">Predict where each substance belongs.<small>Click a substance, then click the box you think it'll fall into.</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>Sort each substance into a category</h3>
+          <p class="ph-helper">Tap a substance in the pool below, then tap the column where you predict it goes. You can move them around — nothing is locked in.</p>
+          <div class="predict-bank">
+            <div class="predict-bank-title">Substances (tap one, then a column)</div>
+            <div class="predict-pool" id="s1PredictPool"></div>
+          </div>
+          <div class="predict-grid">
+            <div class="predict-col" data-type="acid" onclick="placePredict('acid')">
+              <div class="predict-col-title">🍋 Acid (pH &lt;7)</div>
+              <div class="predict-pool" id="s1PredictAcid"></div>
+            </div>
+            <div class="predict-col" data-type="neutral" onclick="placePredict('neutral')">
+              <div class="predict-col-title">💧 Neutral (pH 7)</div>
+              <div class="predict-pool" id="s1PredictNeutral"></div>
+            </div>
+            <div class="predict-col" data-type="alkali" onclick="placePredict('alkali')">
+              <div class="predict-col-title">🧼 Alkali (pH &gt;7)</div>
+              <div class="predict-pool" id="s1PredictAlkali"></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn big" id="s1NextPred" onclick="setS1Phase(3)" disabled>Next: do the experiment →</button>
+      </div>
+
+      <!-- PHASE 3 — INVESTIGATE (existing UI, plus universal indicator dropper) -->
+      <div class="phase-content" id="s1p3">
+        <div class="visual-callout" id="s1InvestCallout">
+          <div class="vc-icon">🧪</div>
+          <div class="vc-text">First, add universal indicator to the test tube.<small>Click the green dropper bottle (top right of the bench).</small></div>
+        </div>
+        <div class="lab-bench" style="position:relative">
+          <!-- Universal Indicator dropper -->
+          <div class="ui-dropper-area pulse-ring" id="uiDropper" onclick="addUniversalIndicator()">
+            <svg class="ui-dropper-svg" viewBox="0 0 44 58">
+              <rect x="18" y="0" width="8" height="5" fill="#1f2937"/>
+              <rect x="14" y="5" width="16" height="3" fill="#475569"/>
+              <path d="M 8 14 Q 8 10 14 10 L 30 10 Q 36 10 36 14 L 36 50 Q 36 55 31 55 L 13 55 Q 8 55 8 50 Z" fill="rgba(255,255,255,.85)" stroke="#94a3b8" stroke-width=".8"/>
+              <path d="M 10 22 Q 10 18 14 18 L 30 18 Q 34 18 34 22 L 34 50 Q 34 53 30 53 L 14 53 Q 10 53 10 50 Z" fill="#16a34a" opacity=".7"/>
+              <rect x="14" y="32" width="16" height="8" fill="#fff" opacity=".85"/>
+              <text x="22" y="38" text-anchor="middle" font-size="3.5" fill="#166534" font-weight="700" font-family="Inter">UI</text>
+            </svg>
+            <div class="ui-dropper-label">Universal<br>Indicator</div>
+          </div>
+
+          <div class="s1-shelf" id="s1Shelf"></div>
+
+          <div class="s1-workbench">
+            <div class="test-tube-area">
+              <svg class="test-tube-svg" viewBox="0 0 100 200">
+                <defs>
+                  <linearGradient id="ttShine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity=".5"/>
+                    <stop offset=".4" stop-color="#ffffff" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#ffffff" stop-opacity=".15"/>
+                  </linearGradient>
+                </defs>
+                <ellipse cx="50" cy="14" rx="22" ry="5" fill="#cbd5e1"/>
+                <path d="M 30 14 L 30 160 Q 30 190 50 190 Q 70 190 70 160 L 70 14 Z"
+                      fill="rgba(255,255,255,.55)" stroke="#94a3b8" stroke-width="1.5"/>
+                <path id="ttLiquid" d="M 32 110 L 32 160 Q 32 187 50 187 Q 68 187 68 160 L 68 110 Z"
+                      fill="#94a3b8" opacity="0"/>
+                <path d="M 30 14 L 30 160 Q 30 190 50 190 Q 70 190 70 160 L 70 14 Z" fill="url(#ttShine)"/>
+                <ellipse cx="50" cy="14" rx="22" ry="5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+              </svg>
+              <div class="tt-label">Test tube<span id="ttLabel">(empty)</span></div>
+            </div>
+
+            <div>
+              <div class="ph-chart">
+                <div class="ph-chart-title">Universal Indicator pH chart</div>
+                <div class="ph-grid">
+                  <div class="ph-cell" data-ph="1" onclick="pickPH(1)">1</div>
+                  <div class="ph-cell" data-ph="3" onclick="pickPH(3)">3</div>
+                  <div class="ph-cell" data-ph="5" onclick="pickPH(5)">5</div>
+                  <div class="ph-cell" data-ph="7" onclick="pickPH(7)">7</div>
+                  <div class="ph-cell" data-ph="9" onclick="pickPH(9)">9</div>
+                  <div class="ph-cell" data-ph="11" onclick="pickPH(11)">11</div>
+                  <div class="ph-cell" data-ph="13" onclick="pickPH(13)">13</div>
+                </div>
+                <div class="ph-legend">
+                  <span>← acid</span><span>neutral</span><span>alkali →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="s1-prompt" id="s1Prompt">👆 First, click the Universal Indicator dropper bottle to set up your test tube.</div>
+        <div class="s1-results">
+          <h4>Your results so far (<span id="s1Count">0</span> / 8)</h4>
+          <table id="s1Table">
+            <thead><tr><th>Substance</th><th>Colour</th><th>pH</th><th>Type</th></tr></thead>
+            <tbody><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:14px">No results yet</td></tr></tbody>
+          </table>
+        </div>
+        <button class="btn big" id="s1NextInvest" onclick="setS1Phase(4)" disabled>Next: see your graph →</button>
+      </div>
+
+      <!-- PHASE 4 — GRAPH -->
+      <div class="phase-content" id="s1p4">
+        <div class="visual-callout">
+          <div class="vc-icon">📊</div>
+          <div class="vc-text">Here's your data as a bar chart.<small>Each bar is a substance. The colour shows acid (red), neutral (green), or alkali (blue).</small></div>
+        </div>
+        <div class="graph-wrap">
+          <h3>Bar chart: pH of each substance tested</h3>
+          <p class="g-helper">Y-axis = pH (0–14). The dashed line at pH 7 is neutral.</p>
+          <div id="s1GraphHost"></div>
+          <div class="graph-legend">
+            <span><i style="background:#dc2626"></i>Acid</span>
+            <span><i style="background:#22c55e"></i>Neutral</span>
+            <span><i style="background:#2563eb"></i>Alkali</span>
+          </div>
+        </div>
+        <button class="btn big" onclick="setS1Phase(5)">Next: write your conclusion →</button>
+      </div>
+
+      <!-- PHASE 5 — CONCLUSION -->
+      <div class="phase-content" id="s1p5">
+        <div class="visual-callout">
+          <div class="vc-icon">✍️</div>
+          <div class="vc-text">Write a conclusion about what you found.<small>Click the yellow sentence-starters to help you build it.</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My conclusion</h3>
+          <p class="ph-helper">Click a starter to insert it. Then finish the sentence.</p>
+          <div class="chip-tag">Sentence starters</div>
+          <div class="starter-row" id="s1Starters"></div>
+          <textarea class="scaffold-textarea" id="s1Concl" placeholder="Write your conclusion here…" rows="6" oninput="onConclInput(1)"></textarea>
+          <p class="ph-helper" style="margin-top:8px" id="s1ConclMeta">Aim for 2–3 sentences.</p>
+        </div>
+        <button class="btn success big" id="s1FinishBtn2" onclick="finishStation1()" disabled>Finish station ✓</button>
+      </div>
+
+    </div>
+
+    <div class="method-panel" id="s1Sidebar">
+      <!-- Filled dynamically by setS1Phase() -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATION 2 — Titration
+     ============================================================ -->
+<section id="station2" class="screen" style="--brand-color:#dc2626">
+  <div class="station-head">
+    <div class="sh-left">
+      <div class="sh-num" style="background:#dc2626">2</div>
+      <div>
+        <div class="sh-title">Titration</div>
+        <div class="sh-aim">Aim: find the concentration of an unknown alkali using hydrochloric acid.</div>
+      </div>
+    </div>
+    <div class="sh-right">
+      <button class="btn ghost" onclick="goHub()">← Hub</button>
+      <button class="btn success" id="s2FinishBtn" onclick="finishStation2()" disabled>Finish station ✓</button>
+    </div>
+  </div>
+
+  <div class="phase-strip" id="s2PhaseStrip">
+    <div class="phase-step" data-phase="1" onclick="setS2Phase(1)"><span class="phase-num"><span class="phase-num-text">1</span></span><span class="phase-label">Hypothesis</span></div>
+    <div class="phase-step" data-phase="2" onclick="setS2Phase(2)"><span class="phase-num"><span class="phase-num-text">2</span></span><span class="phase-label">Predict</span></div>
+    <div class="phase-step" data-phase="3" onclick="setS2Phase(3)"><span class="phase-num"><span class="phase-num-text">3</span></span><span class="phase-label">Investigate</span></div>
+    <div class="phase-step" data-phase="4" onclick="setS2Phase(4)"><span class="phase-num"><span class="phase-num-text">4</span></span><span class="phase-label">Graph</span></div>
+    <div class="phase-step" data-phase="5" onclick="setS2Phase(5)"><span class="phase-num"><span class="phase-num-text">5</span></span><span class="phase-label">Conclude</span></div>
+  </div>
+
+  <div class="station-body">
+    <div class="lab-panel">
+
+      <!-- PHASE 1 — HYPOTHESIS -->
+      <div class="phase-content" id="s2p1">
+        <div class="visual-callout">
+          <div class="vc-icon">🤔</div>
+          <div class="vc-text">Form a hypothesis about the unknown alkali.<small>The acid is 0.1 mol/dm³. What do you think the alkali's concentration will be?</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My hypothesis</h3>
+          <p class="ph-helper">Pick one to start, then add your reasoning.</p>
+          <div class="chip-tag">Choose a hypothesis</div>
+          <div class="chip-row" id="s2HypChips">
+            <div class="chip" onclick="useChip('s2Hyp','The alkali is LESS concentrated than the acid (less than 0.1 mol/dm³).')">Less concentrated</div>
+            <div class="chip" onclick="useChip('s2Hyp','The alkali has about the SAME concentration as the acid (around 0.1 mol/dm³).')">About the same</div>
+            <div class="chip" onclick="useChip('s2Hyp','The alkali is MORE concentrated than the acid (more than 0.1 mol/dm³).')">More concentrated</div>
+          </div>
+          <textarea class="scaffold-textarea" id="s2Hyp" placeholder="Write your hypothesis here…" oninput="onHypInput(2)"></textarea>
+        </div>
+        <button class="btn big" id="s2NextHyp" onclick="setS2Phase(2)" disabled>Next: predict the titre →</button>
+      </div>
+
+      <!-- PHASE 2 — PREDICTION -->
+      <div class="phase-content" id="s2p2">
+        <div class="visual-callout">
+          <div class="vc-icon">🎯</div>
+          <div class="vc-text">Predict how much acid you'll need.<small>The flask holds 25 cm³ of alkali. The burette holds 50 cm³ of 0.1 mol/dm³ acid.</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My prediction: titre (cm³)</h3>
+          <p class="ph-helper">Tap one option.</p>
+          <div class="chip-tag">Choose your prediction</div>
+          <div class="chip-row" id="s2PredChips">
+            <div class="chip" data-val="about 10 cm³" onclick="setPred(2,'about 10 cm³')">About 10 cm³</div>
+            <div class="chip" data-val="about 20 cm³" onclick="setPred(2,'about 20 cm³')">About 20 cm³</div>
+            <div class="chip" data-val="about 25 cm³" onclick="setPred(2,'about 25 cm³')">About 25 cm³</div>
+            <div class="chip" data-val="about 40 cm³" onclick="setPred(2,'about 40 cm³')">About 40 cm³</div>
+            <div class="chip" data-val="more than 50 cm³" onclick="setPred(2,'more than 50 cm³')">More than 50 cm³</div>
+          </div>
+          <div class="scaffold-box">
+            <strong>Hint:</strong> If they were the SAME concentration, the titre would be exactly 25 cm³ (because the flask has 25 cm³ of alkali).
+          </div>
+        </div>
+        <button class="btn big" id="s2NextPred" onclick="setS2Phase(3)" disabled>Next: do the titration →</button>
+      </div>
+
+      <!-- PHASE 3 — INVESTIGATE (existing UI) -->
+      <div class="phase-content" id="s2p3">
+        <div class="visual-callout">
+          <div class="vc-icon">⚗️</div>
+          <div class="vc-text">Do the titration twice.<small>Open the tap until the pink fades, then dropwise. Press Record titre when the flask is colourless. Repeat for accuracy.</small></div>
+        </div>
+        <div class="titration-bench" id="titrationBench">
+          <div class="burette-area">
+            <svg class="burette-svg" viewBox="0 0 80 340">
+              <rect x="5" y="60" width="10" height="120" fill="#475569"/>
+              <rect x="0" y="58" width="20" height="6" fill="#334155"/>
+              <rect x="0" y="178" width="20" height="6" fill="#334155"/>
+              <rect x="15" y="80" width="22" height="4" fill="#475569"/>
+              <rect x="33" y="20" width="14" height="240" rx="3" fill="rgba(255,255,255,.6)" stroke="#94a3b8" stroke-width="1.2"/>
+              <rect id="buretteLiquid" x="34" y="20" width="12" height="200" fill="#fca5a5" opacity=".55"/>
+              <g stroke="#64748b" stroke-width=".5">
+                <line x1="33" y1="40" x2="40" y2="40"/>
+                <line x1="33" y1="80" x2="40" y2="80"/>
+                <line x1="33" y1="120" x2="40" y2="120"/>
+                <line x1="33" y1="160" x2="40" y2="160"/>
+                <line x1="33" y1="200" x2="40" y2="200"/>
+                <line x1="33" y1="240" x2="40" y2="240"/>
+              </g>
+              <g font-size="6" fill="#64748b" font-family="Inter">
+                <text x="48" y="42">0</text>
+                <text x="48" y="82">10</text>
+                <text x="48" y="122">20</text>
+                <text x="48" y="162">30</text>
+                <text x="48" y="202">40</text>
+                <text x="48" y="242">50</text>
+              </g>
+              <rect x="32" y="260" width="16" height="10" fill="#94a3b8"/>
+              <circle id="buretteTap" cx="40" cy="265" r="6" fill="#dc2626"/>
+              <path d="M 36 270 L 44 270 L 40 280 Z" fill="#94a3b8"/>
+              <text x="40" y="14" text-anchor="middle" font-size="6" fill="#dc2626" font-weight="700" font-family="Inter">0.1 mol/dm³ HCl</text>
+            </svg>
+            <div class="burette-reading" id="buretteReading">
+              <small>Burette reading</small>
+              <span id="readingValue">0.0 cm³</span>
+            </div>
+          </div>
+
+          <div class="flask-area" id="flaskArea">
+            <svg class="flask-svg" viewBox="0 0 160 140">
+              <path d="M 60 10 L 60 50 L 20 120 Q 18 130 28 130 L 132 130 Q 142 130 140 120 L 100 50 L 100 10 Z"
+                    fill="rgba(255,255,255,.55)" stroke="#94a3b8" stroke-width="1.5"/>
+              <path id="flaskLiquid" d="M 35 95 L 25 120 Q 18 130 28 130 L 132 130 Q 142 130 135 120 L 125 95 Z"
+                    fill="#ec4899" opacity=".8"/>
+              <line x1="32" y1="100" x2="40" y2="100" stroke="#64748b" stroke-width=".8"/>
+              <text x="44" y="103" font-size="6" fill="#64748b" font-family="Inter">25 cm³</text>
+              <text x="80" y="22" text-anchor="middle" font-size="6" fill="#64748b" font-family="Inter">NaOH(aq) + phenolphthalein</text>
+            </svg>
+          </div>
+
+          <div class="s2-controls">
+            <button class="btn danger" id="btnOpenTap" onclick="openTap()">Open tap (fast)</button>
+            <button class="btn warn" id="btnDropwise" onclick="addDrop()">Add 1 drop</button>
+            <button class="btn success" id="btnRecord" onclick="tryRecordTitre()">📌 Record titre</button>
+            <button class="btn ghost" id="btnResetTit" onclick="resetTitration()">Refill burette</button>
+          </div>
+
+          <div class="s2-status" id="s2Status">Start the titration by opening the tap. Stop when the pink colour fades.</div>
+        </div>
+
+        <div class="titre-table" id="titreTable">
+          <table>
+            <tr><th></th><th>Volume of acid (cm³)</th></tr>
+            <tr><td>Titration 1 (rough)</td><td class="val" id="titre1">—</td></tr>
+            <tr><td>Titration 2 (accurate)</td><td class="val" id="titre2">—</td></tr>
+            <tr class="avg"><td>Average titre</td><td class="val" id="titreAvg">—</td></tr>
+          </table>
+        </div>
+
+        <div class="s2-calc" id="s2Calc">
+          <h4>📐 Calculation: concentration of the alkali</h4>
+          <p style="font-size:13px;margin-bottom:8px">Fill in the gaps. Use your average titre.</p>
+          <div class="formula">
+            Concentration of alkali = (Average titre × 0.1) ÷ 25
+          </div>
+          <p style="font-size:13px;margin:6px 0">
+            = (<input type="number" step="0.1" min="0" id="calcA" placeholder="?"> × 0.1) ÷ 25
+          </p>
+          <p style="font-size:13px;margin:6px 0">
+            = <input type="number" step="0.001" min="0" id="calcAns" placeholder="?"> mol/dm³
+          </p>
+          <button class="btn" onclick="checkCalc()">Check my answer</button>
+          <div class="check-result" id="calcResult"></div>
+        </div>
+
+        <button class="btn big" id="s2NextInvest" onclick="setS2Phase(4)" disabled>Next: see your graph →</button>
+      </div>
+
+      <!-- PHASE 4 — GRAPH -->
+      <div class="phase-content" id="s2p4">
+        <div class="visual-callout">
+          <div class="vc-icon">📊</div>
+          <div class="vc-text">Here's your data as a bar chart.<small>If your two titrations are close together, the result is reliable.</small></div>
+        </div>
+        <div class="graph-wrap">
+          <h3>Bar chart: your two titrations and the average</h3>
+          <p class="g-helper">Y-axis = volume of acid (cm³). Closer bars = better repeatability.</p>
+          <div id="s2GraphHost"></div>
+        </div>
+        <button class="btn big" onclick="setS2Phase(5)">Next: write your conclusion →</button>
+      </div>
+
+      <!-- PHASE 5 — CONCLUSION -->
+      <div class="phase-content" id="s2p5">
+        <div class="visual-callout">
+          <div class="vc-icon">✍️</div>
+          <div class="vc-text">Write a conclusion about what you found.<small>Click a yellow starter to insert it. Aim for 2–3 sentences.</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My conclusion</h3>
+          <div class="chip-tag">Sentence starters</div>
+          <div class="starter-row" id="s2Starters"></div>
+          <textarea class="scaffold-textarea" id="s2Concl" placeholder="Write your conclusion here…" rows="6" oninput="onConclInput(2)"></textarea>
+        </div>
+        <button class="btn success big" id="s2FinishBtn2" onclick="finishStation2()" disabled>Finish station ✓</button>
+      </div>
+
+    </div>
+
+    <div class="method-panel" id="s2Sidebar">
+      <!-- Filled dynamically by setS2Phase() -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATION 3 — Making a Salt
+     ============================================================ -->
+<section id="station3" class="screen" style="--brand-color:#7c3aed">
+  <div class="station-head">
+    <div class="sh-left">
+      <div class="sh-num" style="background:#7c3aed">3</div>
+      <div>
+        <div class="sh-title">Making a Salt</div>
+        <div class="sh-aim">Aim: make copper chloride crystals from copper oxide and hydrochloric acid.</div>
+      </div>
+    </div>
+    <div class="sh-right">
+      <button class="btn ghost" onclick="goHub()">← Hub</button>
+      <button class="btn success" id="s3FinishBtn" onclick="finishStation3()" disabled>Finish station ✓</button>
+    </div>
+  </div>
+
+  <div class="phase-strip" id="s3PhaseStrip">
+    <div class="phase-step" data-phase="1" onclick="setS3Phase(1)"><span class="phase-num"><span class="phase-num-text">1</span></span><span class="phase-label">Hypothesis</span></div>
+    <div class="phase-step" data-phase="2" onclick="setS3Phase(2)"><span class="phase-num"><span class="phase-num-text">2</span></span><span class="phase-label">Predict</span></div>
+    <div class="phase-step" data-phase="3" onclick="setS3Phase(3)"><span class="phase-num"><span class="phase-num-text">3</span></span><span class="phase-label">Investigate</span></div>
+    <div class="phase-step" data-phase="4" onclick="setS3Phase(4)"><span class="phase-num"><span class="phase-num-text">4</span></span><span class="phase-label">Graph</span></div>
+    <div class="phase-step" data-phase="5" onclick="setS3Phase(5)"><span class="phase-num"><span class="phase-num-text">5</span></span><span class="phase-label">Conclude</span></div>
+  </div>
+
+  <div class="station-body">
+    <div class="lab-panel">
+
+      <!-- PHASE 1 — HYPOTHESIS -->
+      <div class="phase-content" id="s3p1">
+        <div class="visual-callout">
+          <div class="vc-icon">🤔</div>
+          <div class="vc-text">Form a hypothesis about the reaction.<small>You'll add black copper oxide to hydrochloric acid. What do you THINK will happen?</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My hypothesis</h3>
+          <p class="ph-helper">Pick a starting point. You can edit or type your own.</p>
+          <div class="chip-tag">Choose a hypothesis</div>
+          <div class="chip-row" id="s3HypChips">
+            <div class="chip" onclick="useChip('s3Hyp','Nothing will happen — copper oxide is a solid and acids only react with metals.')">Nothing will happen</div>
+            <div class="chip" onclick="useChip('s3Hyp','The acid will neutralise the copper oxide. The solution will turn blue because of copper.')">Solution will turn blue</div>
+            <div class="chip" onclick="useChip('s3Hyp','It will fizz and give off a gas, like an acid with a metal carbonate.')">It will fizz</div>
+            <div class="chip" onclick="useChip('s3Hyp','The mixture will get hot because neutralisation reactions are exothermic.')">It will get hot</div>
+          </div>
+          <textarea class="scaffold-textarea" id="s3Hyp" placeholder="Write your hypothesis here…" oninput="onHypInput(3)"></textarea>
+        </div>
+        <button class="btn big" id="s3NextHyp" onclick="setS3Phase(2)" disabled>Next: predict the crystals →</button>
+      </div>
+
+      <!-- PHASE 2 — PREDICTION -->
+      <div class="phase-content" id="s3p2">
+        <div class="visual-callout">
+          <div class="vc-icon">🎯</div>
+          <div class="vc-text">Predict the colour of the final crystals.<small>The salt we're making is copper chloride (CuCl₂).</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My prediction: colour of the crystals</h3>
+          <p class="ph-helper">Tap one option.</p>
+          <div class="chip-tag">Choose your prediction</div>
+          <div class="chip-row" id="s3PredChips">
+            <div class="chip" onclick="setPred(3,'white')">⚪ White</div>
+            <div class="chip" onclick="setPred(3,'blue')">🟦 Blue</div>
+            <div class="chip" onclick="setPred(3,'blue-green')">🟢 Blue-green</div>
+            <div class="chip" onclick="setPred(3,'pink')">🩷 Pink</div>
+            <div class="chip" onclick="setPred(3,'black')">⚫ Black</div>
+          </div>
+          <div class="scaffold-box">
+            <strong>Hint:</strong> Most copper compounds are blue or blue-green. (Think of copper roofs going green over time — that's a copper salt!)
+          </div>
+        </div>
+        <button class="btn big" id="s3NextPred" onclick="setS3Phase(3)" disabled>Next: do the experiment →</button>
+      </div>
+
+      <!-- PHASE 3 — INVESTIGATE -->
+      <div class="phase-content" id="s3p3">
+        <div class="visual-callout" id="s3InvestCallout">
+          <div class="vc-icon">🔬</div>
+          <div class="vc-text">Work through the 5 stages.<small>At each stage: do the action, write what you saw, then rate how blue the solution is.</small></div>
+        </div>
+        <div class="salt-bench">
+          <div class="salt-stage" id="saltStage">
+            <!-- SVG injected by JS -->
+          </div>
+
+          <div class="salt-stage-caption" id="saltCaption">
+            <strong>Stage 1 — Warm the acid</strong>
+            Click the Bunsen to warm 25 cm³ of dilute hydrochloric acid in a beaker. Warming speeds the reaction. <em>(Don't boil it!)</em>
+          </div>
+
+          <div class="salt-controls">
+            <button class="btn ghost" id="btnPrev" onclick="saltStep(-1)" disabled>← Previous</button>
+            <button class="btn" id="btnAct">Light the Bunsen 🔥</button>
+            <button class="btn warn" id="btnNext" onclick="saltStep(1)" disabled>Next stage →</button>
+          </div>
+
+          <div class="salt-observe">
+            <label for="saltObs">What did you observe in this stage?</label>
+            <textarea id="saltObs" placeholder="Type a short observation..."></textarea>
+            <div class="quick-pick" id="saltQuickPick"></div>
+
+            <label style="margin-top:12px">How blue is the solution? <small style="color:var(--muted);font-weight:500">(1 = very pale, 5 = deep blue)</small></label>
+            <div class="intensity-row" id="saltIntensity">
+              <div class="intensity-cell" data-i="1" onclick="setIntensity(1)">1</div>
+              <div class="intensity-cell" data-i="2" onclick="setIntensity(2)">2</div>
+              <div class="intensity-cell" data-i="3" onclick="setIntensity(3)">3</div>
+              <div class="intensity-cell" data-i="4" onclick="setIntensity(4)">4</div>
+              <div class="intensity-cell" data-i="5" onclick="setIntensity(5)">5</div>
+            </div>
+            <div class="intensity-label"><span>very pale</span><span>deep blue</span></div>
+          </div>
+        </div>
+
+        <button class="btn big" id="s3NextInvest" onclick="setS3Phase(4)" disabled>Next: see your graph →</button>
+      </div>
+
+      <!-- PHASE 4 — GRAPH -->
+      <div class="phase-content" id="s3p4">
+        <div class="visual-callout">
+          <div class="vc-icon">📊</div>
+          <div class="vc-text">Here's your colour-intensity data as a bar chart.<small>The blue should grow stronger from stage 1 to stage 4, then drop at stage 5 (crystals — water gone).</small></div>
+        </div>
+        <div class="graph-wrap">
+          <h3>Bar chart: blue intensity through each stage</h3>
+          <p class="g-helper">Y-axis = how blue (1–5). Each bar is one stage.</p>
+          <div id="s3GraphHost"></div>
+        </div>
+        <button class="btn big" onclick="setS3Phase(5)">Next: write your conclusion →</button>
+      </div>
+
+      <!-- PHASE 5 — CONCLUSION -->
+      <div class="phase-content" id="s3p5">
+        <div class="visual-callout">
+          <div class="vc-icon">✍️</div>
+          <div class="vc-text">Write a conclusion about making copper chloride.<small>Click a yellow starter to insert it.</small></div>
+        </div>
+        <div class="phase-card">
+          <h3>My conclusion</h3>
+          <div class="chip-tag">Sentence starters</div>
+          <div class="starter-row" id="s3Starters"></div>
+          <textarea class="scaffold-textarea" id="s3Concl" placeholder="Write your conclusion here…" rows="6" oninput="onConclInput(3)"></textarea>
+        </div>
+        <button class="btn success big" id="s3FinishBtn2" onclick="finishStation3()" disabled>Finish station ✓</button>
+      </div>
+
+    </div>
+
+    <div class="method-panel" id="s3Sidebar">
+      <!-- Filled dynamically by setS3Phase() -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     REPORT (printable)
+     ============================================================ -->
+<section id="report" class="screen">
+  <div class="report-toolbar">
+    <button class="btn ghost" onclick="goHub()">← Back to hub</button>
+    <div style="font-weight:600">📄 Your lab report — preview</div>
+    <button class="btn" onclick="window.print()">🖨️ Print</button>
+  </div>
+
+  <div class="lab-report" id="labReport">
+    <!-- populated by JS -->
+  </div>
+</section>
+
+<!-- ============================================================
+     TOAST
+     ============================================================ -->
+<div class="toast" id="toast">Saved</div>
+
+<script>
+/* =============================================================
+   VIRTUAL LAB — JavaScript
+   ============================================================= */
+
+const STORAGE_KEY = 'virtualLab_acidsAlkalis_v2';
+
+const SUBSTANCES = [
+  {id:'lemon',    name:'Lemon juice',     ph:1,  colour:'#dc2626'},
+  {id:'vinegar',  name:'Vinegar',         ph:3,  colour:'#ea580c'},
+  {id:'cola',     name:'Cola',            ph:3,  colour:'#ea580c'},
+  {id:'milk',     name:'Milk',            ph:5,  colour:'#facc15'},
+  {id:'water',    name:'Pure water',      ph:7,  colour:'#22c55e'},
+  {id:'tooth',    name:'Toothpaste',      ph:9,  colour:'#0ea5e9'},
+  {id:'soap',     name:'Hand soap',       ph:11, colour:'#3730a3'},
+  {id:'oven',     name:'Oven cleaner',    ph:13, colour:'#7e22ce'}
+];
+
+const SALT_STAGES = [
+  {
+    title:'Stage 1 — Warm the acid',
+    caption:'Click the Bunsen to warm 25 cm³ of dilute hydrochloric acid in a beaker. Warming speeds the reaction. <em>(Don\'t boil it!)</em>',
+    actLabel:'Light the Bunsen 🔥',
+    quickPicks:['Acid warmed up','Steam rose from the beaker','No visible reaction yet']
+  },
+  {
+    title:'Stage 2 — Add copper oxide',
+    caption:'Add black copper oxide powder a spatula at a time. Stir. The acid turns blue as copper chloride forms. Keep adding until no more dissolves (excess).',
+    actLabel:'Add copper oxide ⚫',
+    quickPicks:['Black powder dissolved','Solution turned blue','Some black powder left over (excess)']
+  },
+  {
+    title:'Stage 3 — Filter',
+    caption:'Pour the mixture through filter paper in a funnel. The excess copper oxide is trapped as <strong>residue</strong>. The blue copper chloride solution passes through as <strong>filtrate</strong>.',
+    actLabel:'Filter the mixture 🔻',
+    quickPicks:['Black solid left on filter paper','Blue solution collected below','No more black bits in the filtrate']
+  },
+  {
+    title:'Stage 4 — Evaporate',
+    caption:'Pour the blue filtrate into an evaporating basin. Heat gently to evaporate the water. Stop heating when crystals start to form at the edge.',
+    actLabel:'Evaporate the water 💨',
+    quickPicks:['Water bubbled and evaporated','Solution got more blue (concentrated)','Crystals started to form at the edge']
+  },
+  {
+    title:'Stage 5 — Crystallise',
+    caption:'Leave the basin to cool. Beautiful blue-green <strong>copper chloride crystals</strong> form as the solution cools.',
+    actLabel:'Cool and inspect 💎',
+    quickPicks:['Blue/green crystals formed','Crystals were geometric in shape','We made a salt!']
+  }
+];
+
+let state = {
+  pupilName:'',
+  className:'',
+  startedAt:null,
+  s1:{
+    phase:1, indicatorAdded:false,
+    hypothesis:'', prediction:{acid:[],neutral:[],alkali:[]},
+    results:[], current:null,
+    conclusion:'',
+    complete:false
+  },
+  s2:{
+    phase:1,
+    hypothesis:'', prediction:'',
+    trueConc:0.1,   // randomised
+    targetTitre:25.0,
+    titre1:null,
+    titre2:null,
+    currentReading:0.0,
+    flaskFraction:1.0, // pink intensity
+    activeTit:1,
+    tapInterval:null,
+    overshot:false,
+    calcDone:false,
+    calcAnswer:null,
+    conclusion:'',
+    complete:false
+  },
+  s3:{
+    phase:1,
+    hypothesis:'', prediction:'',
+    stage:0,
+    stageStarted:[false,false,false,false,false],
+    observations:['','','','',''],
+    intensity:[0,0,0,0,0],
+    conclusion:'',
+    complete:false
+  }
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      // Deep merge so new state fields aren't lost when loading older saves
+      state = {
+        ...state, ...saved,
+        s1:{...state.s1, ...(saved.s1||{}), prediction:{...state.s1.prediction, ...((saved.s1||{}).prediction||{})}},
+        s2:{...state.s2, ...(saved.s2||{})},
+        s3:{...state.s3, ...(saved.s3||{})}
+      };
+      // reset transient stuff
+      if(state.s2){state.s2.tapInterval=null; state.s2.currentReading=parseFloat(state.s2.currentReading)||0;}
+    }
+  }catch(e){console.warn('No saved state',e)}
+}
+
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e){console.warn('Save failed',e)}
+}
+
+function resetAll(){
+  if(!confirm('Reset everything? Your progress will be erased.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg, duration=1800){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+/* ---------- Sounds ---------- */
+let audioCtx=null;
+function ensureAudio(){
+  if(!audioCtx){
+    try{audioCtx = new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+  }
+}
+function playTone(freq, dur=0.12, vol=0.06, type='sine'){
+  ensureAudio();
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type=type; o.frequency.value=freq;
+  g.gain.value=vol;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+dur);
+  o.stop(audioCtx.currentTime+dur);
+}
+function playDing(){playTone(880,.15,.07);setTimeout(()=>playTone(1320,.18,.06),80)}
+function playBuzz(){playTone(180,.18,.07,'sawtooth')}
+function playDrop(){playTone(550,.04,.05);}
+
+/* ---------- Confetti ---------- */
+function fireConfetti(){
+  const colours = ['#9c27b0','#16a34a','#f59e0b','#dc2626','#0ea5e9','#7c3aed'];
+  for(let i=0;i<48;i++){
+    const c = document.createElement('div');
+    c.className='confetti';
+    c.style.left = (Math.random()*100)+'vw';
+    c.style.background = colours[Math.floor(Math.random()*colours.length)];
+    c.style.animationDuration = (1.8 + Math.random()*1.2)+'s';
+    c.style.animationDelay = (Math.random()*0.4)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 3500);
+  }
+}
+
+/* ---------- Navigation ---------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startLab(){
+  const name = document.getElementById('pupilName').value.trim();
+  const cls  = document.getElementById('className').value.trim();
+  if(!name){toast('Please enter your name'); document.getElementById('pupilName').focus(); return;}
+  state.pupilName = name;
+  state.className = cls || '—';
+  if(!state.startedAt) state.startedAt = Date.now();
+  saveState();
+  goHub();
+}
+
+function goHub(){
+  document.getElementById('pupilTag').textContent = state.pupilName + (state.className!=='—' ? ' • '+state.className : '');
+  updateHub();
+  show('hub');
+}
+
+function gotoStation(n){
+  if(n===1) show('station1');
+  else if(n===2) show('station2');
+  else if(n===3) show('station3');
+  // Always restore via the phase renderer (which sets up the correct phase's bench)
+  renderPhase(n);
+}
+
+function tryGoReport(){
+  if(!(state.s1.complete && state.s2.complete && state.s3.complete)){
+    toast('Complete all 3 stations to unlock');
+    return;
+  }
+  buildReport();
+  show('report');
+}
+
+function updateHub(){
+  const done = [state.s1.complete, state.s2.complete, state.s3.complete];
+  ['d1','d2','d3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('done', done[i]);
+  });
+  const total = done.filter(Boolean).length;
+  document.getElementById('hubCount').textContent = total+' / 3';
+
+  document.querySelectorAll('.station-card.s1, .station-card.s2, .station-card.s3').forEach((c,i)=>{
+    c.classList.toggle('done', done[i]);
+  });
+
+  ['status1','status2','status3'].forEach((id,i)=>{
+    document.getElementById(id).textContent = done[i] ? 'Complete' : (i===0 && state.s1.results.length>0 || i===1 && (state.s2.titre1 || state.s2.titre2) || i===2 && state.s3.stage>0 ? 'Continue →' : 'Start →');
+  });
+
+  const reportCard = document.getElementById('reportCard');
+  if(total===3){
+    reportCard.classList.remove('locked');
+    document.getElementById('reportMeta').textContent = 'Ready to print 🎉';
+    document.getElementById('statusR').textContent = 'Open →';
+  } else {
+    reportCard.classList.add('locked');
+    document.getElementById('reportMeta').textContent = `Complete all 3 stations to unlock (${total}/3)`;
+    document.getElementById('statusR').textContent = '🔒 Locked';
+  }
+}
+
+/* =============================================================
+   PHASE MANAGEMENT (Hypothesis → Predict → Investigate → Graph → Conclude)
+   ============================================================= */
+
+const SIDEBAR_S1 = {
+  1:`<div class="method-title">What is a hypothesis?</div>
+     <div class="scaffold-box">A <strong>hypothesis</strong> is your educated guess about what will happen, written BEFORE you do the experiment.<br><br>It usually starts with "I think…" or "I predict…".</div>
+     <div class="tip-box"><strong>Stuck?</strong> Click one of the chips on the left to use it as a starter.</div>`,
+  2:`<div class="method-title">Predict each substance</div>
+     <div class="scaffold-box">Acid (pH &lt; 7): things that taste sour or sharp.<br>Neutral (pH = 7): pure water.<br>Alkali (pH &gt; 7): things that feel slippery (soaps, cleaners).</div>
+     <div class="tip-box"><strong>Hint:</strong> Lemon juice and vinegar are sour — that's a clue!</div>`,
+  3:`<div class="method-title">Method</div>
+     <div class="steps-list">
+       <div class="step-item" id="s1step1"><div class="step-num">1</div><div class="step-text">Click the green Universal Indicator dropper to add indicator to the test tube.</div></div>
+       <div class="step-item" id="s1step2"><div class="step-num">2</div><div class="step-text">Click a substance on the shelf to add it.</div></div>
+       <div class="step-item" id="s1step3"><div class="step-num">3</div><div class="step-text">Watch the colour change.</div></div>
+       <div class="step-item" id="s1step4"><div class="step-num">4</div><div class="step-text">Click the matching pH on the chart.</div></div>
+       <div class="step-item" id="s1step5"><div class="step-num">5</div><div class="step-text">Repeat for all 8 substances.</div></div>
+     </div>
+     <div class="scaffold-box"><strong>UI colour chart:</strong><br>Red → strong acid (1–2)<br>Orange → weak acid (3–4)<br>Yellow → weakly acidic (5–6)<br>Green → neutral (7)<br>Blue → weak alkali (8–10)<br>Purple → strong alkali (11–14)</div>`,
+  4:`<div class="method-title">Reading your graph</div>
+     <div class="scaffold-box">Each bar shows the pH of a substance. The dashed line at pH 7 separates acids from alkalis.<br><br>Tall bar = alkaline. Short bar = acidic.</div>
+     <div class="tip-box"><strong>Look for:</strong> Which substance has the highest pH? Which has the lowest?</div>`,
+  5:`<div class="method-title">Writing a good conclusion</div>
+     <div class="scaffold-box">A conclusion should:<br>1. State what you found out.<br>2. Use your data (give specific examples).<br>3. Say whether your hypothesis was right.</div>
+     <div class="tip-box"><strong>Click the yellow starters</strong> to help build your conclusion.</div>`
+};
+const SIDEBAR_S2 = {
+  1:`<div class="method-title">Hypothesis for titration</div>
+     <div class="scaffold-box">You're comparing the alkali to the acid (0.1 mol/dm³).<br><br>Will the alkali be weaker, the same, or stronger?</div>
+     <div class="tip-box"><strong>Why a hypothesis?</strong> It makes you THINK before you do, so you compare your real answer to what you expected.</div>`,
+  2:`<div class="method-title">Predicting the titre</div>
+     <div class="scaffold-box">Titre = volume of acid that neutralises the alkali.<br><br>If both are 0.1 mol/dm³, the titre would be exactly 25 cm³ (because there's 25 cm³ of alkali).<br><br>Weaker alkali → smaller titre.<br>Stronger alkali → larger titre.</div>`,
+  3:`<div class="method-title">Method</div>
+     <div class="steps-list">
+       <div class="step-item" id="s2step1"><div class="step-num">1</div><div class="step-text">Burette has 0.1 mol/dm³ HCl.</div></div>
+       <div class="step-item" id="s2step2"><div class="step-num">2</div><div class="step-text">Flask has 25 cm³ alkali + phenolphthalein (pink).</div></div>
+       <div class="step-item" id="s2step3"><div class="step-num">3</div><div class="step-text">Open the tap fast at first.</div></div>
+       <div class="step-item" id="s2step4"><div class="step-num">4</div><div class="step-text">Switch to DROPWISE when pink fades.</div></div>
+       <div class="step-item" id="s2step5"><div class="step-num">5</div><div class="step-text">Record titre when flask is colourless. Repeat.</div></div>
+       <div class="step-item" id="s2step6"><div class="step-num">6</div><div class="step-text">Average the titres, then calculate.</div></div>
+     </div>
+     <div class="tip-box"><strong>End-point:</strong> the EXACT moment pink → colourless.</div>
+     <div class="scaffold-box"><strong>Calculation:</strong><br>conc = (titre × 0.1) ÷ 25</div>`,
+  4:`<div class="method-title">Reading your graph</div>
+     <div class="scaffold-box">Two close bars = reliable result.<br>Two far-apart bars = something went wrong on one of them.</div>
+     <div class="tip-box"><strong>Good titrations</strong> agree to within 0.1 cm³ of each other.</div>`,
+  5:`<div class="method-title">Writing a good conclusion</div>
+     <div class="scaffold-box">Include:<br>• Your average titre<br>• The concentration you calculated<br>• Whether the alkali was stronger or weaker than the acid<br>• Why we repeated the titration</div>`
+};
+const SIDEBAR_S3 = {
+  1:`<div class="method-title">Hypothesis for the reaction</div>
+     <div class="scaffold-box">Copper oxide (CuO) is a <strong>base</strong>.<br>Hydrochloric acid (HCl) is an <strong>acid</strong>.<br><br>Acid + base → ?</div>
+     <div class="tip-box"><strong>Think:</strong> what type of reaction is acid + base?</div>`,
+  2:`<div class="method-title">Predicting the salt</div>
+     <div class="scaffold-box">The product is copper chloride.<br>Almost all copper compounds are coloured.<br><br>Common copper colours: blue, blue-green.</div>`,
+  3:`<div class="method-title">Method</div>
+     <div class="steps-list" id="s3Steps">
+       <div class="step-item" id="s3step1"><div class="step-num">1</div><div class="step-text">Warm 25 cm³ HCl in a beaker.</div></div>
+       <div class="step-item" id="s3step2"><div class="step-num">2</div><div class="step-text">Add CuO until no more reacts (excess).</div></div>
+       <div class="step-item" id="s3step3"><div class="step-num">3</div><div class="step-text">Filter to remove excess CuO.</div></div>
+       <div class="step-item" id="s3step4"><div class="step-num">4</div><div class="step-text">Evaporate water from the filtrate.</div></div>
+       <div class="step-item" id="s3step5"><div class="step-num">5</div><div class="step-text">Cool to make crystals.</div></div>
+     </div>
+     <div class="tip-box"><strong>Symbol equation:</strong> CuO + 2HCl → CuCl₂ + H₂O</div>
+     <div class="scaffold-box">At each stage, rate how blue the solution looks (1 = pale, 5 = deep). This is your data.</div>`,
+  4:`<div class="method-title">Reading your graph</div>
+     <div class="scaffold-box">As you add CuO, the solution gets bluer (stages 1→2→3).<br>Filtering doesn't change the colour much.<br>Evaporating makes it MORE blue (concentrating).<br>Crystals don't have water — colour may look different.</div>`,
+  5:`<div class="method-title">Writing a good conclusion</div>
+     <div class="scaffold-box">Include:<br>• What was made (the salt)<br>• Evidence it reacted (colour change)<br>• Why we filtered<br>• Whether your hypothesis was right</div>`
+};
+
+function getCurrentS(n){
+  return n===1 ? state.s1 : n===2 ? state.s2 : state.s3;
+}
+
+function phasesAccessible(n){
+  // Which phases (1..5) is the pupil allowed to navigate to?
+  // 1 always. 2 needs hypothesis. 3 needs prediction. 4 needs investigation data. 5 needs graph viewed (anything from p4 onwards is auto-unlocked after investigation).
+  const s = getCurrentS(n);
+  const hypOk = !!(s.hypothesis && s.hypothesis.trim().length >= 10);
+  const predOk = n===1 ? (s.prediction && (s.prediction.acid.length + s.prediction.neutral.length + s.prediction.alkali.length) >= 4)
+                       : !!(s.prediction && s.prediction.length);
+  let investOk = false;
+  if(n===1) investOk = state.s1.results.length >= 8;
+  if(n===2) investOk = state.s2.calcDone;
+  if(n===3) investOk = state.s3.stageStarted.every((x,i)=>x && state.s3.observations[i]?.trim() && state.s3.intensity[i]>0);
+  return {1:true, 2:hypOk, 3:hypOk && predOk, 4:hypOk && predOk && investOk, 5:hypOk && predOk && investOk};
+}
+
+function setPhase(n, phase){
+  const access = phasesAccessible(n);
+  if(!access[phase]){
+    toast(phase===2 ? 'Write your hypothesis first (at least one sentence).' : phase===3 ? 'Make a prediction first.' : 'Complete the investigation first.');
+    return;
+  }
+  const s = getCurrentS(n);
+  s.phase = phase;
+  saveState();
+  renderPhase(n);
+}
+function setS1Phase(p){setPhase(1,p)}
+function setS2Phase(p){setPhase(2,p)}
+function setS3Phase(p){setPhase(3,p)}
+
+function renderPhase(n){
+  const s = getCurrentS(n);
+  const phase = s.phase || 1;
+  const access = phasesAccessible(n);
+
+  // Phase strip
+  const strip = document.getElementById('s'+n+'PhaseStrip');
+  strip.querySelectorAll('.phase-step').forEach(step=>{
+    const p = parseInt(step.dataset.phase);
+    step.classList.toggle('active', p===phase);
+    // "done" = either we've moved past this phase OR the gate condition for the NEXT phase is met
+    const done = (p===1 && access[2]) || (p===2 && access[3]) || (p===3 && access[4]) || (p===4 && access[5]) || (p===5 && s.complete);
+    step.classList.toggle('done', done);
+    step.classList.toggle('locked', !access[p]);
+  });
+
+  // Show only the active phase content
+  for(let p=1;p<=5;p++){
+    const el = document.getElementById('s'+n+'p'+p);
+    if(el) el.classList.toggle('active', p===phase);
+  }
+
+  // Sidebar
+  const sidebar = document.getElementById('s'+n+'Sidebar');
+  const map = n===1 ? SIDEBAR_S1 : n===2 ? SIDEBAR_S2 : SIDEBAR_S3;
+  sidebar.innerHTML = map[phase] || '';
+
+  // Phase-specific re-renders
+  if(n===1){
+    if(phase===1){
+      document.getElementById('s1Hyp').value = s.hypothesis||'';
+      document.getElementById('s1NextHyp').disabled = (s.hypothesis||'').trim().length < 10;
+    }
+    if(phase===2) renderS1Prediction();
+    if(phase===3){
+      initStation1Bench();
+    }
+    if(phase===4) renderS1Graph();
+    if(phase===5){
+      renderConclusionStarters(1);
+      document.getElementById('s1Concl').value = s.conclusion||'';
+      document.getElementById('s1FinishBtn2').disabled = (s.conclusion||'').trim().length < 20;
+    }
+  }
+  if(n===2){
+    if(phase===1){
+      document.getElementById('s2Hyp').value = s.hypothesis||'';
+      document.getElementById('s2NextHyp').disabled = (s.hypothesis||'').trim().length < 10;
+    }
+    if(phase===2){
+      document.getElementById('s2PredChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('selected', c.dataset.val===s.prediction));
+      document.getElementById('s2NextPred').disabled = !s.prediction;
+    }
+    if(phase===3){
+      initStation2Bench();
+    }
+    if(phase===4) renderS2Graph();
+    if(phase===5){
+      renderConclusionStarters(2);
+      document.getElementById('s2Concl').value = s.conclusion||'';
+      document.getElementById('s2FinishBtn2').disabled = (s.conclusion||'').trim().length < 20;
+    }
+  }
+  if(n===3){
+    if(phase===1){
+      document.getElementById('s3Hyp').value = s.hypothesis||'';
+      document.getElementById('s3NextHyp').disabled = (s.hypothesis||'').trim().length < 10;
+    }
+    if(phase===2){
+      document.getElementById('s3PredChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('selected', c.textContent.toLowerCase().includes((s.prediction||'').toLowerCase()) && s.prediction));
+      document.getElementById('s3NextPred').disabled = !s.prediction;
+    }
+    if(phase===3){
+      initStation3Bench();
+    }
+    if(phase===4) renderS3Graph();
+    if(phase===5){
+      renderConclusionStarters(3);
+      document.getElementById('s3Concl').value = s.conclusion||'';
+      document.getElementById('s3FinishBtn2').disabled = (s.conclusion||'').trim().length < 20;
+    }
+  }
+}
+
+/* ---------- Common chip / textarea handlers ---------- */
+function useChip(textareaId, text){
+  const ta = document.getElementById(textareaId);
+  ta.value = text;
+  ta.dispatchEvent(new Event('input'));
+  ta.focus();
+}
+
+function onHypInput(n){
+  const s = getCurrentS(n);
+  s.hypothesis = document.getElementById('s'+n+'Hyp').value;
+  saveState();
+  const ok = (s.hypothesis||'').trim().length >= 10;
+  document.getElementById('s'+n+'NextHyp').disabled = !ok;
+  // also update strip
+  const access = phasesAccessible(n);
+  document.querySelector(`#s${n}PhaseStrip [data-phase="2"]`).classList.toggle('locked', !access[2]);
+  document.querySelector(`#s${n}PhaseStrip [data-phase="1"]`).classList.toggle('done', access[2]);
+}
+
+function onConclInput(n){
+  const s = getCurrentS(n);
+  s.conclusion = document.getElementById('s'+n+'Concl').value;
+  saveState();
+  const ok = (s.conclusion||'').trim().length >= 20;
+  document.getElementById('s'+n+'FinishBtn2').disabled = !ok;
+  document.getElementById('s'+n+'FinishBtn').disabled = !ok;
+}
+
+function setPred(n, val){
+  const s = getCurrentS(n);
+  s.prediction = val;
+  saveState();
+  renderPhase(n);
+}
+
+function renderConclusionStarters(n){
+  const starters = {
+    1:[
+      "I found that ",
+      "The most acidic substance was ",
+      "The most alkaline substance was ",
+      "There were ___ acids, ___ neutral, and ___ alkalis.",
+      "My hypothesis was right because ",
+      "My hypothesis was wrong because "
+    ],
+    2:[
+      "My average titre was ",
+      "The concentration of the alkali was ",
+      "This is ___ than the acid because ",
+      "We had to repeat the titration to ",
+      "My hypothesis was right because ",
+      "My hypothesis was wrong because "
+    ],
+    3:[
+      "We made copper chloride by reacting ",
+      "I knew a reaction was happening because ",
+      "We filtered to remove ",
+      "The crystals were ___ in colour, which ",
+      "My hypothesis was right because ",
+      "My hypothesis was wrong because "
+    ]
+  };
+  const list = document.getElementById('s'+n+'Starters');
+  list.innerHTML = starters[n].map(t=>`<button class="starter" type="button" onclick="appendStarter(${n},'${t.replace(/'/g,"\\'")}')">${escapeHTML(t)}</button>`).join('');
+}
+
+function appendStarter(n, text){
+  const ta = document.getElementById('s'+n+'Concl');
+  const cur = ta.value.trim();
+  ta.value = cur ? cur + (cur.endsWith('.')||cur.endsWith('?')||cur.endsWith('!') ? ' ' : '. ') + text : text;
+  ta.dispatchEvent(new Event('input'));
+  ta.focus();
+  // place caret at end
+  setTimeout(()=>{ta.selectionStart=ta.selectionEnd=ta.value.length}, 10);
+}
+
+/* =============================================================
+   STATION 1 PREDICTION (sort substances into acid/neutral/alkali)
+   ============================================================= */
+let s1PredictSelected = null;
+
+function renderS1Prediction(){
+  const placed = state.s1.prediction;
+  const allPlaced = [...placed.acid, ...placed.neutral, ...placed.alkali];
+  const pool = SUBSTANCES.filter(s=>!allPlaced.includes(s.id));
+
+  const poolEl = document.getElementById('s1PredictPool');
+  poolEl.innerHTML = pool.map(s=>`<div class="predict-item" onclick="selectPredictItem('${s.id}', event)">${escapeHTML(s.name)}</div>`).join('') || '<em style="color:var(--muted);font-size:12px">All substances placed ✓</em>';
+
+  ['acid','neutral','alkali'].forEach(cat=>{
+    const el = document.getElementById('s1Predict' + cat.charAt(0).toUpperCase()+cat.slice(1));
+    el.innerHTML = placed[cat].map(id=>{
+      const s = SUBSTANCES.find(x=>x.id===id);
+      return `<div class="predict-item" onclick="removeFromCategory('${id}','${cat}', event)" title="Click to remove">${escapeHTML(s.name)} ×</div>`;
+    }).join('');
+  });
+
+  // highlight selected
+  if(s1PredictSelected){
+    const m = document.querySelector(`.predict-item[onclick*="${s1PredictSelected}"]`);
+    if(m) m.style.outline = '2px solid var(--purple)';
+  }
+
+  const total = placed.acid.length + placed.neutral.length + placed.alkali.length;
+  document.getElementById('s1NextPred').disabled = total < 4;
+}
+
+function selectPredictItem(id, ev){
+  ev.stopPropagation();
+  s1PredictSelected = id;
+  renderS1Prediction();
+  toast('Now tap a category column →');
+}
+
+function placePredict(cat){
+  if(!s1PredictSelected){toast('Pick a substance from the pool first'); return;}
+  // remove from any existing category
+  ['acid','neutral','alkali'].forEach(c=>{
+    state.s1.prediction[c] = state.s1.prediction[c].filter(id=>id!==s1PredictSelected);
+  });
+  state.s1.prediction[cat].push(s1PredictSelected);
+  s1PredictSelected = null;
+  saveState();
+  renderS1Prediction();
+  playDrop();
+}
+
+function removeFromCategory(id, cat, ev){
+  ev.stopPropagation();
+  state.s1.prediction[cat] = state.s1.prediction[cat].filter(x=>x!==id);
+  saveState();
+  renderS1Prediction();
+}
+
+/* =============================================================
+   STATION 3 INTENSITY RATING
+   ============================================================= */
+function setIntensity(v){
+  state.s3.intensity[state.s3.stage] = v;
+  saveState();
+  document.querySelectorAll('#saltIntensity .intensity-cell').forEach(c=>{
+    c.classList.toggle('selected', parseInt(c.dataset.i)===v);
+  });
+  updateS3NextButton();
+}
+
+function updateS3NextButton(){
+  const allDone = state.s3.stageStarted.every((s,i)=> s && state.s3.observations[i]?.trim() && state.s3.intensity[i]>0);
+  document.getElementById('s3NextInvest').disabled = !allDone;
+  document.getElementById('s3FinishBtn').disabled = !state.s3.complete;
+}
+
+/* =============================================================
+   GRAPH BUILDERS (SVG bar charts)
+   ============================================================= */
+
+function svgS1Graph(){
+  const data = state.s1.results;
+  if(!data.length) return '<p style="color:var(--muted);text-align:center;padding:24px">No data yet — go back to Investigate.</p>';
+  const W=560,H=320,M={l:36,r:14,t:20,b:90};
+  const innerW=W-M.l-M.r, innerH=H-M.t-M.b;
+  const barW=innerW/data.length;
+  const colourFor = t => t==='acid'?'#dc2626':t==='alkali'?'#2563eb':'#22c55e';
+
+  let bars='', labels='';
+  data.forEach((r,i)=>{
+    const x = M.l + i*barW + barW*0.12;
+    const w = barW*0.76;
+    const h = (r.ph/14) * innerH;
+    const y = M.t + innerH - h;
+    bars += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${colourFor(r.type)}" rx="3"/>`;
+    bars += `<text x="${x+w/2}" y="${y-4}" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937">${r.ph}</text>`;
+    labels += `<text x="${x+w/2}" y="${M.t+innerH+14}" text-anchor="middle" font-size="10" fill="#475569" transform="rotate(-32 ${x+w/2} ${M.t+innerH+14})">${escapeHTML(r.name)}</text>`;
+  });
+
+  // Y axis ticks
+  let yAxis='';
+  for(let p=0;p<=14;p+=2){
+    const y = M.t + innerH - (p/14)*innerH;
+    yAxis += `<line x1="${M.l-4}" y1="${y}" x2="${M.l}" y2="${y}" stroke="#64748b" stroke-width="1"/>`;
+    yAxis += `<text x="${M.l-8}" y="${y+3}" text-anchor="end" font-size="10" fill="#475569">${p}</text>`;
+  }
+  // pH 7 line
+  const y7 = M.t + innerH - (7/14)*innerH;
+  yAxis += `<line x1="${M.l}" y1="${y7}" x2="${W-M.r}" y2="${y7}" stroke="#94a3b8" stroke-dasharray="4 4" stroke-width="1.2"/>`;
+  yAxis += `<text x="${W-M.r-6}" y="${y7-3}" text-anchor="end" font-size="10" fill="#475569" font-style="italic">pH 7 (neutral)</text>`;
+
+  // Axes
+  const axes = `
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <line x1="${M.l}" y1="${M.t+innerH}" x2="${W-M.r}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <text x="${M.l-26}" y="${M.t+innerH/2}" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" transform="rotate(-90 ${M.l-26} ${M.t+innerH/2})">pH</text>
+  `;
+
+  return `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter">
+    ${axes}${yAxis}${bars}${labels}
+  </svg>`;
+}
+
+function renderS1Graph(){
+  document.getElementById('s1GraphHost').innerHTML = svgS1Graph();
+}
+
+function svgS2Graph(){
+  const t1 = state.s2.titre1, t2 = state.s2.titre2;
+  if(!t1 || !t2) return '<p style="color:var(--muted);text-align:center;padding:24px">Complete both titrations first.</p>';
+  const avg = (t1+t2)/2;
+  const data = [
+    {label:'Titration 1', val:t1, color:'#dc2626'},
+    {label:'Titration 2', val:t2, color:'#dc2626'},
+    {label:'Average', val:avg, color:'#16a34a'}
+  ];
+  const W=520,H=280,M={l:42,r:14,t:24,b:50};
+  const innerW=W-M.l-M.r, innerH=H-M.t-M.b;
+  const maxV = Math.ceil(Math.max(...data.map(d=>d.val),5)/5)*5; // round up
+  const barW=innerW/data.length;
+
+  let bars='', labels='';
+  data.forEach((d,i)=>{
+    const x = M.l + i*barW + barW*0.18;
+    const w = barW*0.64;
+    const h = (d.val/maxV)*innerH;
+    const y = M.t+innerH-h;
+    bars += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${d.color}" rx="3"/>`;
+    bars += `<text x="${x+w/2}" y="${y-4}" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2937">${d.val.toFixed(2)}</text>`;
+    labels += `<text x="${x+w/2}" y="${M.t+innerH+18}" text-anchor="middle" font-size="11" fill="#475569" font-weight="600">${d.label}</text>`;
+  });
+
+  let yAxis='';
+  for(let v=0;v<=maxV;v+=Math.max(5,Math.round(maxV/5))){
+    const y = M.t + innerH - (v/maxV)*innerH;
+    yAxis += `<line x1="${M.l-4}" y1="${y}" x2="${M.l}" y2="${y}" stroke="#64748b" stroke-width="1"/>`;
+    yAxis += `<text x="${M.l-8}" y="${y+3}" text-anchor="end" font-size="10" fill="#475569">${v}</text>`;
+    yAxis += `<line x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}" stroke="#e2e8f0" stroke-width=".7"/>`;
+  }
+
+  const axes = `
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <line x1="${M.l}" y1="${M.t+innerH}" x2="${W-M.r}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <text x="${M.l-28}" y="${M.t+innerH/2}" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" transform="rotate(-90 ${M.l-28} ${M.t+innerH/2})">cm³</text>
+  `;
+
+  return `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter">${axes}${yAxis}${bars}${labels}</svg>`;
+}
+
+function renderS2Graph(){
+  document.getElementById('s2GraphHost').innerHTML = svgS2Graph();
+}
+
+function svgS3Graph(){
+  const data = state.s3.intensity;
+  if(data.every(x=>!x)) return '<p style="color:var(--muted);text-align:center;padding:24px">No intensity ratings yet.</p>';
+  const labels = ['1. Warm acid','2. Add CuO','3. Filter','4. Evaporate','5. Crystallise'];
+  const palette = ['#bfdbfe','#60a5fa','#2563eb','#1e40af','#06b6d4'];
+  const W=520,H=280,M={l:36,r:14,t:24,b:60};
+  const innerW=W-M.l-M.r, innerH=H-M.t-M.b;
+  const barW=innerW/5;
+
+  let bars='', xlabels='';
+  data.forEach((v,i)=>{
+    const x = M.l + i*barW + barW*0.14;
+    const w = barW*0.72;
+    const h = (v/5)*innerH;
+    const y = M.t+innerH-h;
+    bars += `<rect x="${x}" y="${y}" width="${w}" height="${h||1}" fill="${palette[i]}" rx="3"/>`;
+    if(v>0) bars += `<text x="${x+w/2}" y="${y-4}" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2937">${v}</text>`;
+    xlabels += `<text x="${x+w/2}" y="${M.t+innerH+14}" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">${labels[i]}</text>`;
+  });
+
+  let yAxis='';
+  for(let v=0;v<=5;v++){
+    const y = M.t + innerH - (v/5)*innerH;
+    yAxis += `<line x1="${M.l-4}" y1="${y}" x2="${M.l}" y2="${y}" stroke="#64748b" stroke-width="1"/>`;
+    yAxis += `<text x="${M.l-8}" y="${y+3}" text-anchor="end" font-size="10" fill="#475569">${v}</text>`;
+    if(v>0) yAxis += `<line x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}" stroke="#e2e8f0" stroke-width=".7"/>`;
+  }
+
+  const axes = `
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <line x1="${M.l}" y1="${M.t+innerH}" x2="${W-M.r}" y2="${M.t+innerH}" stroke="#1f2937" stroke-width="1.4"/>
+    <text x="${M.l-26}" y="${M.t+innerH/2}" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" transform="rotate(-90 ${M.l-26} ${M.t+innerH/2})">Blue intensity</text>
+  `;
+
+  return `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter">${axes}${yAxis}${bars}${xlabels}</svg>`;
+}
+
+function renderS3Graph(){
+  document.getElementById('s3GraphHost').innerHTML = svgS3Graph();
+}
+
+/* =============================================================
+   UNIVERSAL INDICATOR (Station 1, investigate phase)
+   ============================================================= */
+function addUniversalIndicator(){
+  if(state.s1.indicatorAdded){toast('Indicator already added'); return;}
+  state.s1.indicatorAdded = true;
+  saveState();
+
+  // Visual: drops fall, tube turns green (neutral colour of UI alone in water)
+  const liq = document.getElementById('ttLiquid');
+  liq.setAttribute('fill','#22c55e');
+  liq.setAttribute('opacity','0.5');
+  document.getElementById('ttLabel').textContent = '(universal indicator)';
+
+  document.getElementById('uiDropper').classList.add('disabled');
+  document.getElementById('uiDropper').classList.remove('pulse-ring');
+
+  // Update callout and prompt
+  document.getElementById('s1InvestCallout').innerHTML = `
+    <div class="vc-icon">🧪</div>
+    <div class="vc-text">Universal indicator added.<small>Now click a substance bottle on the shelf to test it.</small></div>`;
+  document.getElementById('s1Prompt').innerHTML = '👆 Click a substance on the shelf to test it.';
+
+  playDrop();
+  setTimeout(playDrop, 120);
+  setTimeout(playDrop, 240);
+}
+
+
+/* =============================================================
+   STATION 1 — pH Investigation
+   ============================================================= */
+function bottleSVG(colour){
+  return `<svg class="bottle-svg" viewBox="0 0 50 64">
+    <rect x="20" y="0" width="10" height="6" rx="1" fill="#475569"/>
+    <rect x="22" y="6" width="6" height="4" fill="#64748b"/>
+    <path d="M 10 16 Q 10 10 18 10 L 32 10 Q 40 10 40 16 L 40 56 Q 40 62 34 62 L 16 62 Q 10 62 10 56 Z"
+          fill="rgba(255,255,255,.85)" stroke="#94a3b8" stroke-width=".8"/>
+    <path d="M 12 30 Q 12 26 16 26 L 34 26 Q 38 26 38 30 L 38 56 Q 38 60 34 60 L 16 60 Q 12 60 12 56 Z"
+          fill="${colour}" opacity=".85"/>
+    <rect x="14" y="38" width="22" height="10" fill="#fff" opacity=".9"/>
+  </svg>`;
+}
+
+function initStation1Bench(){
+  const shelf = document.getElementById('s1Shelf');
+  shelf.innerHTML = '';
+  SUBSTANCES.forEach((s,i)=>{
+    const isUsed = state.s1.results.some(r=>r.id===s.id);
+    const b = document.createElement('div');
+    b.className = 'bottle' + (isUsed ? ' used' : '');
+    b.innerHTML = bottleSVG(s.colour) + `<div class="bottle-label">${s.name}</div>`;
+    b.onclick = ()=>{ if(!isUsed) selectSubstance(s); };
+    shelf.appendChild(b);
+  });
+  renderS1Table();
+  updateS1Finish();
+
+  // Restore Universal Indicator state visually
+  const dropper = document.getElementById('uiDropper');
+  if(state.s1.indicatorAdded){
+    dropper.classList.add('disabled');
+    dropper.classList.remove('pulse-ring');
+    if(state.s1.current){
+      showSubstanceInTube(SUBSTANCES.find(x=>x.id===state.s1.current));
+      document.getElementById('s1Prompt').textContent = `👀 Now match the colour to a pH number. (Substance: ${state.s1.current})`;
+      document.getElementById('s1InvestCallout').innerHTML = `<div class="vc-icon">🌈</div><div class="vc-text">Match the colour to a pH number on the chart.<small>Look at the colour of the test tube and click the closest pH.</small></div>`;
+    } else if(state.s1.results.length >= 8){
+      const liq = document.getElementById('ttLiquid');
+      liq.setAttribute('fill','#22c55e');
+      liq.setAttribute('opacity','0.5');
+      document.getElementById('ttLabel').textContent = '(all tested ✓)';
+      document.getElementById('s1Prompt').innerHTML = '🎉 All 8 tested! Press <strong>Next: see your graph →</strong>.';
+      document.getElementById('s1InvestCallout').innerHTML = `<div class="vc-icon">🎉</div><div class="vc-text">All 8 substances tested!<small>Go to the next phase to see your graph.</small></div>`;
+    } else {
+      // Indicator still in tube
+      const liq = document.getElementById('ttLiquid');
+      liq.setAttribute('fill','#22c55e');
+      liq.setAttribute('opacity','0.5');
+      document.getElementById('ttLabel').textContent = '(universal indicator)';
+      document.getElementById('s1Prompt').innerHTML = '👆 Click a substance on the shelf to test it.';
+      document.getElementById('s1InvestCallout').innerHTML = `<div class="vc-icon">🧪</div><div class="vc-text">Universal indicator added.<small>Now click a substance bottle on the shelf to test it.</small></div>`;
+    }
+  } else {
+    dropper.classList.remove('disabled');
+    dropper.classList.add('pulse-ring');
+    resetTube();
+    document.getElementById('s1Prompt').innerHTML = '👆 First, click the Universal Indicator dropper bottle to set up your test tube.';
+  }
+
+  document.getElementById('s1Count').textContent = state.s1.results.length;
+  document.getElementById('s1NextInvest').disabled = state.s1.results.length < 8;
+}
+
+function resetTube(){
+  const liq = document.getElementById('ttLiquid');
+  liq.setAttribute('fill','#94a3b8');
+  liq.setAttribute('opacity','0');
+  document.getElementById('ttLabel').textContent = '(empty)';
+  document.querySelectorAll('.ph-cell').forEach(c=>c.classList.remove('selected'));
+}
+
+function selectSubstance(s){
+  if(!state.s1.indicatorAdded){toast('Add universal indicator first (click the green dropper)'); return;}
+  // guard: don't allow re-picking an already-tested substance
+  if(state.s1.results.some(r=>r.id===s.id)) return;
+  state.s1.current = s.id;
+  showSubstanceInTube(s);
+  document.getElementById('s1Prompt').innerHTML = `👀 The indicator has changed colour. Match it to a <strong>pH number</strong> on the chart.`;
+  document.getElementById('s1InvestCallout').innerHTML = `<div class="vc-icon">🌈</div><div class="vc-text">Now match the colour to a pH number.<small>Click the closest pH on the chart.</small></div>`;
+  saveState();
+  playDrop();
+}
+
+function showSubstanceInTube(s){
+  const liq = document.getElementById('ttLiquid');
+  liq.setAttribute('fill', s.colour);
+  liq.setAttribute('opacity','0.85');
+  document.getElementById('ttLabel').textContent = `(${s.name})`;
+  document.querySelectorAll('.ph-cell').forEach(c=>c.classList.remove('selected'));
+}
+
+function pickPH(ph){
+  if(!state.s1.current){toast('Pick a substance first'); return;}
+  const s = SUBSTANCES.find(x=>x.id===state.s1.current);
+  const cell = document.querySelector(`.ph-cell[data-ph="${ph}"]`);
+  document.querySelectorAll('.ph-cell').forEach(c=>c.classList.remove('selected'));
+  cell.classList.add('selected');
+
+  // record result
+  const diff = Math.abs(s.ph - ph);
+  if(diff <= 1){
+    const type = ph<7 ? 'acid' : (ph===7 ? 'neutral' : 'alkali');
+    state.s1.results.push({id:s.id, name:s.name, ph:ph, colour:s.colour, type:type});
+    state.s1.current = null;
+    saveState();
+    renderS1Table();
+    updateS1Finish();
+    document.getElementById('s1Count').textContent = state.s1.results.length;
+    document.getElementById('s1NextInvest').disabled = state.s1.results.length < 8;
+    playDing();
+    toast(`✓ ${s.name} → pH ${ph} (${type})`);
+    setTimeout(()=>{
+      // Restore tube to UI green (indicator still in tube, awaiting next substance)
+      const liq = document.getElementById('ttLiquid');
+      liq.setAttribute('fill','#22c55e');
+      liq.setAttribute('opacity','0.5');
+      document.getElementById('ttLabel').textContent = '(universal indicator)';
+      document.querySelectorAll('.ph-cell').forEach(c=>c.classList.remove('selected'));
+      initStation1Bench(); // refresh shelf used markers + prompt + callout
+      // update phase strip done-state since results count changed
+      renderPhase(1);
+    }, 700);
+  } else {
+    playBuzz();
+    toast('Hmm — look at the colour again. Is the indicator more red, orange, yellow, green, blue or purple?');
+  }
+}
+
+function renderS1Table(){
+  const tbody = document.querySelector('#s1Table tbody');
+  if(state.s1.results.length===0){
+    tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:14px">No results yet</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = state.s1.results.map(r=>`
+    <tr>
+      <td>${r.name}</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:${r.colour};border:1px solid #94a3b8;vertical-align:middle"></span></td>
+      <td><strong>${r.ph}</strong></td>
+      <td><span class="pill ${r.type}">${r.type}</span></td>
+    </tr>
+  `).join('');
+}
+
+function updateS1Finish(){
+  const ok = state.s1.results.length >= 8 && (state.s1.conclusion||'').trim().length >= 20;
+  document.getElementById('s1FinishBtn').disabled = !ok;
+  const fb2 = document.getElementById('s1FinishBtn2');
+  if(fb2) fb2.disabled = !ok;
+}
+
+function finishStation1(){
+  if(state.s1.results.length<8){toast('Test all 8 substances first'); return;}
+  if((state.s1.conclusion||'').trim().length < 20){toast('Write your conclusion first (at least one full sentence).'); setS1Phase(5); return;}
+  state.s1.complete = true;
+  saveState();
+  fireConfetti();
+  playDing();
+  toast('Station 1 complete! ✓');
+  setTimeout(goHub, 800);
+}
+
+/* =============================================================
+   STATION 2 — Titration
+   ============================================================= */
+function initStation2Bench(){
+  // Set seeded true concentration on first visit
+  if(!state.s2.trueConc || state.s2.trueConc===0.1){
+    // seed from pupil name length so it's reproducible per pupil
+    const seed = (state.pupilName||'pupil').split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+    const opts = [0.080,0.084,0.088,0.092,0.096,0.100,0.104,0.108,0.112,0.116,0.120];
+    state.s2.trueConc = opts[seed % opts.length];
+    state.s2.targetTitre = +(state.s2.trueConc * 25 / 0.1).toFixed(1); // exact titre
+    saveState();
+  }
+
+  // Trust saved currentReading (set by recordTitre/resetTitration). Don't override.
+  if(typeof state.s2.currentReading !== 'number' || isNaN(state.s2.currentReading)){
+    state.s2.currentReading = 0;
+  }
+  state.s2.flaskFraction = 1.0;
+  state.s2.overshot = false;
+  state.s2.activeTit = state.s2.titre1 ? 2 : 1;
+  if(state.s2.titre2){state.s2.activeTit = 3;} // both done
+
+  updateBuretteUI();
+  updateFlaskUI();
+  updateTitreTable();
+  updateS2Buttons();
+  updateS2Status();
+
+  if(state.s2.titre1 && state.s2.titre2){
+    document.getElementById('s2Calc').classList.add('show');
+  }
+  document.getElementById('s2NextInvest').disabled = !state.s2.calcDone;
+}
+
+function updateBuretteUI(){
+  document.getElementById('readingValue').textContent = state.s2.currentReading.toFixed(1) + ' cm³';
+  // liquid height shrinks as we use acid (max 50 cm3, full at top)
+  const remaining = Math.max(0, 50 - state.s2.currentReading);
+  const liq = document.getElementById('buretteLiquid');
+  const fullH = 220; // y from 20 to 240
+  const newH = (remaining/50)*fullH;
+  liq.setAttribute('y', 20 + (fullH-newH));
+  liq.setAttribute('height', newH);
+}
+
+function updateFlaskUI(){
+  const liq = document.getElementById('flaskLiquid');
+  // pink fades as we approach end-point
+  const ratio = state.s2.currentReading / state.s2.targetTitre;
+  let pinkness;
+  if(ratio < 0.85) pinkness = 0.8;
+  else if(ratio < 0.97) pinkness = 0.8 * (1 - (ratio-0.85)/0.12 * 0.6); // start fading
+  else if(ratio <= 1.01) pinkness = 0.15 - (ratio-0.97)*3; // fade to near zero
+  else pinkness = 0; // colourless (overshoot still 0)
+  pinkness = Math.max(0, pinkness);
+  liq.setAttribute('opacity', pinkness);
+  state.s2.flaskFraction = pinkness;
+
+  if(state.s2.currentReading > state.s2.targetTitre + 0.6){
+    state.s2.overshot = true;
+  }
+}
+
+function updateS2Status(){
+  const status = document.getElementById('s2Status');
+  status.className = 's2-status';
+  if(state.s2.titre1 && state.s2.titre2){
+    status.textContent = 'Two titrations done! Now work out the average and the alkali concentration ↓';
+    status.classList.add('good');
+    return;
+  }
+  if(state.s2.overshot){
+    status.textContent = 'You went past the end-point — the flask should be JUST colourless, not over. Refill and try again.';
+    status.classList.add('bad');
+    return;
+  }
+  const r = state.s2.currentReading / state.s2.targetTitre;
+  if(r === 0){
+    status.textContent = `Titration ${state.s2.activeTit}: open the tap to add acid. Stop when the pink fades.`;
+  } else if(r < 0.5){
+    status.textContent = `Acid going in. The flask is still pink — keep going.`;
+  } else if(r < 0.85){
+    status.textContent = `Halfway there. Watch the colour — it'll start fading soon.`;
+    status.classList.add('warn');
+  } else if(r < 0.97){
+    status.textContent = `⚠️ Colour is fading! Switch to DROPWISE now — close the tap.`;
+    status.classList.add('warn');
+  } else if(r < 1.005){
+    status.textContent = `Very close to end-point. One drop at a time...`;
+    status.classList.add('warn');
+  } else if(r <= 1.03){
+    status.textContent = `🎯 End-point reached! The flask is colourless. Press Record titre.`;
+    status.classList.add('good');
+  } else if(r <= 1.07){
+    status.textContent = `You\'ve gone a tiny bit past. Press Record titre — or refill and try again for a more accurate result.`;
+    status.classList.add('warn');
+  } else {
+    status.textContent = `You\'ve gone too far past the end-point. Press Refill burette and try again.`;
+    status.classList.add('bad');
+  }
+}
+
+function openTap(){
+  if(state.s2.titre1 && state.s2.titre2){toast('Both titrations done!'); return;}
+  if(state.s2.overshot){toast('Refill the burette first'); return;}
+  if(state.s2.tapInterval){
+    clearInterval(state.s2.tapInterval);
+    state.s2.tapInterval = null;
+    document.getElementById('btnOpenTap').textContent = 'Open tap (fast)';
+    return;
+  }
+  document.getElementById('btnOpenTap').textContent = '⏸ Close tap';
+  state.s2.tapInterval = setInterval(()=>{
+    state.s2.currentReading = +(state.s2.currentReading + 0.4).toFixed(1);
+    if(state.s2.currentReading >= 50){
+      state.s2.currentReading = 50; closeTap();
+    }
+    addDripAnimation();
+    updateBuretteUI();
+    updateFlaskUI();
+    updateS2Status();
+    updateS2Buttons();
+    saveState();
+
+    // auto-close if past end-point comfortably (safety net)
+    if(state.s2.currentReading >= state.s2.targetTitre + 0.5){
+      closeTap();
+    }
+  }, 80);
+}
+
+function closeTap(){
+  if(state.s2.tapInterval){
+    clearInterval(state.s2.tapInterval);
+    state.s2.tapInterval = null;
+  }
+  document.getElementById('btnOpenTap').textContent = 'Open tap (fast)';
+}
+
+function addDrop(){
+  if(state.s2.titre1 && state.s2.titre2){toast('Both titrations done!'); return;}
+  if(state.s2.overshot){toast('Refill the burette first'); return;}
+  closeTap();
+  state.s2.currentReading = +(state.s2.currentReading + 0.1).toFixed(1);
+  if(state.s2.currentReading > 50) state.s2.currentReading = 50;
+  addDripAnimation();
+  updateBuretteUI();
+  updateFlaskUI();
+  updateS2Status();
+  updateS2Buttons();
+  saveState();
+  playDrop();
+
+  // Pupil records titre manually via Record button
+}
+
+function addDripAnimation(){
+  const bench = document.getElementById('titrationBench');
+  const drop = document.createElement('div');
+  drop.className = 'drop';
+  // position near burette tip — bench is the relative container
+  const rect = bench.getBoundingClientRect();
+  // approximate: burette tip is centred roughly
+  const burette = bench.querySelector('.burette-svg');
+  const br = burette.getBoundingClientRect();
+  drop.style.left = (br.left - rect.left + br.width*0.5 - 3)+'px';
+  drop.style.top = (br.top - rect.top + br.height*0.83)+'px';
+  bench.appendChild(drop);
+  setTimeout(()=>drop.remove(), 400);
+}
+
+function tryRecordTitre(){
+  if(state.s2.titre1 && state.s2.titre2){toast('Both titrations done!'); return;}
+  if(state.s2.currentReading === 0){
+    toast('You haven\'t added any acid yet.');
+    return;
+  }
+  // If flask is still clearly pink, it's not the end-point
+  if(state.s2.flaskFraction > 0.2){
+    const status = document.getElementById('s2Status');
+    status.className = 's2-status bad';
+    status.textContent = 'The flask is still pink — that\'s not the end-point. Add more acid carefully, or refill if you\'ve gone wrong.';
+    playBuzz();
+    return;
+  }
+  // If they overshot by a lot, warn but still let them record (or force refill)
+  if(state.s2.currentReading > state.s2.targetTitre + 1.5){
+    const status = document.getElementById('s2Status');
+    status.className = 's2-status bad';
+    status.textContent = 'You\'ve gone well past the end-point. This titre wouldn\'t be reliable — please refill and try again.';
+    playBuzz();
+    return;
+  }
+  recordTitre();
+}
+
+function recordTitre(){
+  closeTap();
+  const v = state.s2.currentReading;
+  if(state.s2.activeTit === 1){
+    state.s2.titre1 = v;
+    state.s2.activeTit = 2;
+    toast(`Titration 1 recorded: ${v.toFixed(1)} cm³. Refill and do a second one.`);
+  } else {
+    state.s2.titre2 = v;
+    state.s2.activeTit = 3;
+    document.getElementById('s2Calc').classList.add('show');
+    toast(`Titration 2 recorded: ${v.toFixed(1)} cm³. Now do the calculation ↓`);
+    fireConfetti();
+  }
+  saveState();
+  updateTitreTable();
+  updateS2Steps();
+  updateS2Buttons();
+  updateS2Status();
+}
+
+function resetTitration(){
+  if(state.s2.titre1 && state.s2.titre2 && !state.s2.overshot){
+    if(!confirm('Both titrations are recorded. Refill anyway?')) return;
+    state.s2.titre2 = null;
+    state.s2.activeTit = 2;
+    document.getElementById('s2Calc').classList.remove('show');
+    state.s2.calcDone = false;
+  }
+  closeTap();
+  state.s2.currentReading = 0;
+  state.s2.flaskFraction = 1.0;
+  state.s2.overshot = false;
+  saveState();
+  updateBuretteUI();
+  updateFlaskUI();
+  updateS2Status();
+  updateS2Buttons();
+  toast('Burette refilled.');
+}
+
+function updateTitreTable(){
+  document.getElementById('titre1').textContent = state.s2.titre1 ? state.s2.titre1.toFixed(1) : '—';
+  document.getElementById('titre2').textContent = state.s2.titre2 ? state.s2.titre2.toFixed(1) : '—';
+  if(state.s2.titre1 && state.s2.titre2){
+    const avg = ((state.s2.titre1 + state.s2.titre2)/2);
+    document.getElementById('titreAvg').textContent = avg.toFixed(2);
+  } else {
+    document.getElementById('titreAvg').textContent = '—';
+  }
+}
+
+function updateS2Buttons(){
+  const bothDone = state.s2.titre1 && state.s2.titre2;
+  document.getElementById('btnOpenTap').disabled = bothDone || state.s2.overshot;
+  document.getElementById('btnDropwise').disabled = bothDone || state.s2.overshot;
+  document.getElementById('btnRecord').disabled = bothDone || state.s2.currentReading === 0;
+}
+
+function updateS2Steps(){
+  // Sidebar steps are re-rendered per phase by renderPhase(); guard so we don't crash if elements aren't in DOM
+  const setDone = id => { const el = document.getElementById(id); if(el) el.classList.add('done'); };
+  setDone('s2step1');
+  setDone('s2step2');
+  if(state.s2.currentReading > 0 || state.s2.titre1) setDone('s2step3');
+  if(state.s2.flaskFraction < 0.3 || state.s2.titre1) setDone('s2step4');
+  if(state.s2.titre1 && state.s2.titre2) setDone('s2step5');
+  if(state.s2.calcDone) setDone('s2step6');
+}
+
+function checkCalc(){
+  const avg = (state.s2.titre1 + state.s2.titre2)/2;
+  const expected = +((avg * 0.1)/25).toFixed(4);
+  const a = parseFloat(document.getElementById('calcA').value);
+  const ans = parseFloat(document.getElementById('calcAns').value);
+  const res = document.getElementById('calcResult');
+  res.className = 'check-result show';
+  let problems = [];
+  if(isNaN(a) || Math.abs(a - avg) > 0.05) problems.push(`The number in the brackets should be your <strong>average titre (${avg.toFixed(2)} cm³)</strong>.`);
+  if(isNaN(ans) || Math.abs(ans - expected) > 0.003) problems.push(`Your final answer should be about <strong>${expected.toFixed(3)} mol/dm³</strong>. Try: (${avg.toFixed(2)} × 0.1) ÷ 25 on a calculator.`);
+  if(problems.length===0){
+    res.classList.add('ok');
+    res.innerHTML = `✓ Correct! The alkali's concentration is <strong>${expected.toFixed(3)} mol/dm³</strong>.`;
+    state.s2.calcDone = true;
+    state.s2.calcAnswer = expected;
+    saveState();
+    updateS2Finish();
+    // Enable phase-3 → phase-4 navigation
+    document.getElementById('s2NextInvest').disabled = false;
+    // Mark phase 3 as done in the strip (don't re-render the whole bench)
+    const s2strip = document.getElementById('s2PhaseStrip');
+    if(s2strip){
+      s2strip.querySelector('[data-phase="3"]').classList.add('done');
+      s2strip.querySelector('[data-phase="4"]').classList.remove('locked');
+      s2strip.querySelector('[data-phase="5"]').classList.remove('locked');
+    }
+    playDing();
+    fireConfetti();
+  } else {
+    res.classList.add('bad');
+    res.innerHTML = problems.join('<br>');
+    playBuzz();
+  }
+}
+
+function updateS2Finish(){
+  const ok = state.s2.calcDone && (state.s2.conclusion||'').trim().length >= 20;
+  document.getElementById('s2FinishBtn').disabled = !ok;
+  const fb2 = document.getElementById('s2FinishBtn2');
+  if(fb2) fb2.disabled = !ok;
+}
+
+function finishStation2(){
+  if(!state.s2.calcDone){toast('Finish the calculation first'); setS2Phase(3); return;}
+  if((state.s2.conclusion||'').trim().length < 20){toast('Write your conclusion first (at least one full sentence).'); setS2Phase(5); return;}
+  state.s2.complete = true;
+  saveState();
+  fireConfetti();
+  playDing();
+  toast('Station 2 complete! ✓');
+  setTimeout(goHub, 800);
+}
+
+/* =============================================================
+   STATION 3 — Making a Salt
+   ============================================================= */
+function initStation3Bench(){
+  renderSaltStage();
+  updateS3Steps();
+  updateS3Finish();
+  // Hook the observation textarea so it also enables/disables Next button
+  const obs = document.getElementById('saltObs');
+  if(obs && !obs.dataset.hooked){
+    obs.addEventListener('input', ()=>{
+      state.s3.observations[state.s3.stage] = obs.value;
+      saveState();
+      updateS3NextButton();
+    });
+    obs.dataset.hooked = '1';
+  }
+  // Restore intensity highlight for current stage
+  const v = state.s3.intensity[state.s3.stage] || 0;
+  document.querySelectorAll('#saltIntensity .intensity-cell').forEach(c=>{
+    c.classList.toggle('selected', parseInt(c.dataset.i)===v);
+  });
+}
+
+function saltStageSVG(stage, started){
+  // 5 different scenes
+  switch(stage){
+    case 0:
+      return `<svg class="salt-stage-svg" viewBox="0 0 280 300">
+        <!-- bench -->
+        <rect x="0" y="240" width="280" height="60" fill="#c9b994"/>
+        <rect x="0" y="240" width="280" height="6" fill="#a89776"/>
+        <!-- tripod -->
+        <line x1="80" y1="200" x2="60" y2="240" stroke="#475569" stroke-width="3"/>
+        <line x1="140" y1="200" x2="160" y2="240" stroke="#475569" stroke-width="3"/>
+        <line x1="110" y1="200" x2="100" y2="240" stroke="#475569" stroke-width="3"/>
+        <ellipse cx="110" cy="200" rx="50" ry="6" fill="#475569"/>
+        <!-- gauze -->
+        <rect x="65" y="195" width="90" height="4" fill="#94a3b8"/>
+        <!-- beaker -->
+        <path d="M 80 130 L 80 195 Q 80 200 86 200 L 134 200 Q 140 200 140 195 L 140 130 Z" fill="rgba(255,255,255,.7)" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- acid -->
+        <path d="M 82 150 L 82 195 Q 82 198 86 198 L 134 198 Q 138 198 138 195 L 138 150 Z" fill="#bae6fd" opacity=".8"/>
+        <text x="110" y="170" text-anchor="middle" font-size="9" fill="#0c4a6e" font-weight="700">HCl(aq)</text>
+        <!-- Bunsen -->
+        <rect x="195" y="200" width="50" height="40" fill="#475569"/>
+        <rect x="200" y="195" width="40" height="6" fill="#1e293b"/>
+        <rect x="218" y="180" width="4" height="20" fill="#475569"/>
+        ${started ? `
+        <!-- flame -->
+        <path d="M 200 195 Q 205 175 215 165 Q 225 155 220 195 Z" fill="#3b82f6" opacity=".7"/>
+        <path d="M 210 195 Q 215 180 220 170 Q 226 160 225 195 Z" fill="#f59e0b" opacity=".85">
+          <animate attributeName="d" dur="0.6s" repeatCount="indefinite"
+            values="M 210 195 Q 215 180 220 170 Q 226 160 225 195 Z;
+                    M 210 195 Q 218 178 222 165 Q 228 158 225 195 Z;
+                    M 210 195 Q 215 180 220 170 Q 226 160 225 195 Z"/>
+        </path>
+        <!-- steam -->
+        <ellipse cx="100" cy="125" rx="5" ry="3" fill="#cbd5e1" opacity=".6">
+          <animate attributeName="cy" dur="1.6s" repeatCount="indefinite" values="125;100;125"/>
+          <animate attributeName="opacity" dur="1.6s" repeatCount="indefinite" values=".6;0;.6"/>
+        </ellipse>
+        <ellipse cx="120" cy="125" rx="6" ry="4" fill="#cbd5e1" opacity=".5">
+          <animate attributeName="cy" dur="1.8s" repeatCount="indefinite" values="125;95;125" begin="0.5s"/>
+          <animate attributeName="opacity" dur="1.8s" repeatCount="indefinite" values=".5;0;.5" begin="0.5s"/>
+        </ellipse>` : ''}
+      </svg>`;
+
+    case 1:
+      return `<svg class="salt-stage-svg" viewBox="0 0 280 300">
+        <rect x="0" y="240" width="280" height="60" fill="#c9b994"/>
+        <rect x="0" y="240" width="280" height="6" fill="#a89776"/>
+        <!-- beaker -->
+        <path d="M 90 100 L 90 230 Q 90 240 100 240 L 180 240 Q 190 240 190 230 L 190 100 Z" fill="rgba(255,255,255,.7)" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- solution -->
+        <path d="M 92 130 L 92 230 Q 92 238 100 238 L 180 238 Q 188 238 188 230 L 188 130 Z" fill="${started ? '#2563eb' : '#bae6fd'}" opacity=".75">
+          ${started ? '<animate attributeName="fill" dur="3s" values="#bae6fd;#60a5fa;#2563eb" fill="freeze"/>' : ''}
+        </path>
+        ${started ? `
+        <!-- CuO at bottom (excess) -->
+        <ellipse cx="140" cy="235" rx="44" ry="5" fill="#1f2937"/>
+        <ellipse cx="120" cy="234" rx="6" ry="2" fill="#0f172a"/>
+        <ellipse cx="155" cy="234" rx="5" ry="2" fill="#0f172a"/>
+        <!-- bubbles indicating reaction -->
+        <circle cx="115" cy="200" r="2.5" fill="#fff" opacity=".6">
+          <animate attributeName="cy" dur="2s" repeatCount="indefinite" values="220;140;140"/>
+          <animate attributeName="opacity" dur="2s" repeatCount="indefinite" values=".6;.4;0"/>
+        </circle>
+        <circle cx="150" cy="180" r="3" fill="#fff" opacity=".5">
+          <animate attributeName="cy" dur="2.4s" repeatCount="indefinite" values="220;140;140" begin="0.4s"/>
+          <animate attributeName="opacity" dur="2.4s" repeatCount="indefinite" values=".5;.4;0" begin="0.4s"/>
+        </circle>
+        <circle cx="165" cy="190" r="2" fill="#fff" opacity=".5">
+          <animate attributeName="cy" dur="2.2s" repeatCount="indefinite" values="220;140;140" begin="0.8s"/>
+          <animate attributeName="opacity" dur="2.2s" repeatCount="indefinite" values=".5;.4;0" begin="0.8s"/>
+        </circle>
+        ` : `
+        <!-- CuO spatula -->
+        <rect x="200" y="120" width="6" height="80" fill="#94a3b8"/>
+        <ellipse cx="203" cy="115" rx="12" ry="8" fill="#cbd5e1"/>
+        <ellipse cx="203" cy="115" rx="8" ry="5" fill="#1f2937"/>
+        `}
+        <text x="140" y="170" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${started ? 'CuCl₂(aq) — blue' : 'Add CuO →'}</text>
+      </svg>`;
+
+    case 2:
+      return `<svg class="salt-stage-svg" viewBox="0 0 280 300">
+        <rect x="0" y="240" width="280" height="60" fill="#c9b994"/>
+        <rect x="0" y="240" width="280" height="6" fill="#a89776"/>
+        <!-- stand for filter funnel -->
+        <rect x="40" y="60" width="6" height="180" fill="#475569"/>
+        <rect x="35" y="240" width="40" height="6" fill="#334155"/>
+        <rect x="46" y="100" width="50" height="3" fill="#475569"/>
+        <circle cx="100" cy="101" r="4" fill="#94a3b8"/>
+        <!-- filter funnel -->
+        <path d="M 80 110 L 200 110 L 150 180 L 130 180 Z" fill="rgba(255,255,255,.6)" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- filter paper -->
+        <path d="M 88 115 L 192 115 L 148 175 L 132 175 Z" fill="#fde68a" opacity=".8"/>
+        <!-- residue on paper -->
+        ${started ? `
+        <ellipse cx="140" cy="165" rx="18" ry="4" fill="#1f2937"/>
+        <ellipse cx="135" cy="160" rx="14" ry="3" fill="#0f172a"/>
+        <text x="140" y="155" text-anchor="middle" font-size="7" fill="#fff" font-weight="700" style="text-shadow:0 1px 2px rgba(0,0,0,.6)">residue: CuO</text>
+        ` : `<text x="140" y="155" text-anchor="middle" font-size="8" fill="#475569" font-weight="600">filter paper</text>`}
+        <!-- tip dripping -->
+        <path d="M 138 178 L 142 178 L 140 184 Z" fill="#94a3b8"/>
+        ${started ? `
+        <ellipse cx="140" cy="195" rx="3" ry="4" fill="#2563eb" opacity=".7">
+          <animate attributeName="cy" dur="1.4s" repeatCount="indefinite" values="184;215;215"/>
+          <animate attributeName="opacity" dur="1.4s" repeatCount="indefinite" values=".8;.6;0"/>
+        </ellipse>` : ''}
+        <!-- beaker below -->
+        <path d="M 100 215 L 100 245 Q 100 252 108 252 L 172 252 Q 180 252 180 245 L 180 215 Z" fill="rgba(255,255,255,.6)" stroke="#94a3b8" stroke-width="1.5"/>
+        <path d="M 102 ${started?225:240} L 102 245 Q 102 250 108 250 L 172 250 Q 178 250 178 245 L 178 ${started?225:240} Z" fill="${started?'#2563eb':'#bae6fd'}" opacity=".7"/>
+        <text x="140" y="245" text-anchor="middle" font-size="7" fill="#fff" font-weight="700" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${started?'filtrate':'beaker'}</text>
+      </svg>`;
+
+    case 3:
+      return `<svg class="salt-stage-svg" viewBox="0 0 280 300">
+        <rect x="0" y="240" width="280" height="60" fill="#c9b994"/>
+        <rect x="0" y="240" width="280" height="6" fill="#a89776"/>
+        <!-- tripod -->
+        <line x1="80" y1="200" x2="60" y2="240" stroke="#475569" stroke-width="3"/>
+        <line x1="180" y1="200" x2="200" y2="240" stroke="#475569" stroke-width="3"/>
+        <line x1="130" y1="200" x2="130" y2="240" stroke="#475569" stroke-width="3"/>
+        <ellipse cx="130" cy="200" rx="60" ry="6" fill="#475569"/>
+        <rect x="75" y="195" width="110" height="4" fill="#94a3b8"/>
+        <!-- evaporating basin -->
+        <path d="M 80 170 Q 80 200 130 200 Q 180 200 180 170" fill="rgba(255,255,255,.7)" stroke="#94a3b8" stroke-width="1.5"/>
+        <path d="M 75 170 L 185 170 L 180 175 L 80 175 Z" fill="#94a3b8" opacity=".5"/>
+        <!-- liquid concentrating -->
+        ${started ? `
+        <path d="M 95 182 Q 95 197 130 197 Q 165 197 165 182" fill="#1e40af" opacity=".9"/>
+        <text x="130" y="195" text-anchor="middle" font-size="7" fill="#fff" font-weight="700">concentrating →</text>
+        <!-- steam clouds -->
+        <ellipse cx="115" cy="155" rx="8" ry="4" fill="#cbd5e1" opacity=".6">
+          <animate attributeName="cy" dur="1.5s" repeatCount="indefinite" values="170;120;120"/>
+          <animate attributeName="opacity" dur="1.5s" repeatCount="indefinite" values=".7;0;0"/>
+          <animate attributeName="rx" dur="1.5s" repeatCount="indefinite" values="6;14;14"/>
+        </ellipse>
+        <ellipse cx="135" cy="155" rx="10" ry="5" fill="#cbd5e1" opacity=".5">
+          <animate attributeName="cy" dur="1.8s" repeatCount="indefinite" values="170;110;110" begin="0.6s"/>
+          <animate attributeName="opacity" dur="1.8s" repeatCount="indefinite" values=".6;0;0" begin="0.6s"/>
+          <animate attributeName="rx" dur="1.8s" repeatCount="indefinite" values="8;18;18" begin="0.6s"/>
+        </ellipse>
+        <ellipse cx="150" cy="155" rx="8" ry="4" fill="#cbd5e1" opacity=".55">
+          <animate attributeName="cy" dur="1.6s" repeatCount="indefinite" values="170;125;125" begin="1.1s"/>
+          <animate attributeName="opacity" dur="1.6s" repeatCount="indefinite" values=".6;0;0" begin="1.1s"/>
+        </ellipse>
+        ` : `
+        <path d="M 85 180 Q 85 198 130 198 Q 175 198 175 180" fill="#2563eb" opacity=".7"/>
+        `}
+        <!-- Bunsen -->
+        <rect x="115" y="240" width="30" height="0" fill="#475569"/>
+        <rect x="115" y="218" width="30" height="22" fill="#475569"/>
+        <rect x="125" y="208" width="10" height="10" fill="#1e293b"/>
+        ${started ? `
+        <path d="M 124 212 Q 130 195 132 188 Q 140 195 136 212 Z" fill="#f59e0b" opacity=".85">
+          <animate attributeName="d" dur="0.5s" repeatCount="indefinite"
+            values="M 124 212 Q 130 195 132 188 Q 140 195 136 212 Z;
+                    M 124 212 Q 132 192 135 185 Q 142 195 136 212 Z;
+                    M 124 212 Q 130 195 132 188 Q 140 195 136 212 Z"/>
+        </path>` : ''}
+      </svg>`;
+
+    case 4:
+      return `<svg class="salt-stage-svg" viewBox="0 0 280 300">
+        <rect x="0" y="240" width="280" height="60" fill="#c9b994"/>
+        <rect x="0" y="240" width="280" height="6" fill="#a89776"/>
+        <!-- evaporating basin (cool) -->
+        <path d="M 70 200 Q 70 240 140 240 Q 210 240 210 200" fill="rgba(255,255,255,.7)" stroke="#94a3b8" stroke-width="1.5"/>
+        <path d="M 65 200 L 215 200 L 210 207 L 70 207 Z" fill="#94a3b8" opacity=".5"/>
+        ${started ? `
+        <!-- crystals!  -->
+        <g fill="#06b6d4" opacity=".9">
+          <polygon points="100,215 110,220 105,232 95,228"/>
+          <polygon points="125,220 138,225 132,238 120,232"/>
+          <polygon points="150,217 162,222 158,236 146,230"/>
+          <polygon points="175,220 188,226 183,238 172,232"/>
+          <polygon points="115,232 124,236 121,242 112,238"/>
+          <polygon points="148,232 158,238 154,242 145,238"/>
+        </g>
+        <g fill="#22d3ee" opacity=".95">
+          <polygon points="108,210 116,215 113,224 105,219"/>
+          <polygon points="158,210 168,216 164,226 154,221"/>
+        </g>
+        <g fill="#0e7490" opacity=".7">
+          <polygon points="135,228 144,232 141,239 132,235"/>
+        </g>
+        <text x="140" y="195" text-anchor="middle" font-size="11" fill="#0e7490" font-weight="800">💎 CuCl₂ crystals!</text>
+        ` : `
+        <text x="140" y="225" text-anchor="middle" font-size="10" fill="#64748b">cool to crystallise...</text>
+        `}
+      </svg>`;
+
+    default: return '';
+  }
+}
+
+function renderSaltStage(){
+  const stage = state.s3.stage;
+  const data = SALT_STAGES[stage];
+  const started = state.s3.stageStarted[stage];
+  document.getElementById('saltStage').innerHTML = saltStageSVG(stage, started);
+  document.getElementById('saltCaption').innerHTML = `<strong>${data.title}</strong>${data.caption}`;
+
+  const btnAct = document.getElementById('btnAct');
+  btnAct.textContent = data.actLabel;
+  btnAct.disabled = started;
+  btnAct.onclick = ()=>doStageAction();
+
+  document.getElementById('btnPrev').disabled = stage===0;
+  const stageReady = started && state.s3.observations[stage]?.trim() && state.s3.intensity[stage]>0;
+  document.getElementById('btnNext').disabled = !stageReady || stage===4;
+
+  // quick picks
+  const qp = document.getElementById('saltQuickPick');
+  qp.innerHTML = data.quickPicks.map(t=>`<button onclick="appendObs('${t.replace(/'/g,"\\'")}')">+ ${t}</button>`).join('');
+
+  // observation textarea
+  document.getElementById('saltObs').value = state.s3.observations[stage] || '';
+
+  // intensity highlight reflects this stage's saved value
+  const v = state.s3.intensity[stage] || 0;
+  document.querySelectorAll('#saltIntensity .intensity-cell').forEach(c=>{
+    c.classList.toggle('selected', parseInt(c.dataset.i)===v);
+  });
+
+  updateS3NextButton();
+}
+
+function appendObs(text){
+  const ta = document.getElementById('saltObs');
+  const cur = ta.value.trim();
+  ta.value = cur ? cur + '. ' + text : text;
+  state.s3.observations[state.s3.stage] = ta.value;
+  saveState();
+  updateS3NextButton();
+  // Refresh stage Next button too
+  const stage = state.s3.stage;
+  const stageReady = state.s3.stageStarted[stage] && ta.value.trim() && state.s3.intensity[stage]>0;
+  document.getElementById('btnNext').disabled = !stageReady || stage===4;
+}
+
+function doStageAction(){
+  state.s3.stageStarted[state.s3.stage] = true;
+  saveState();
+  renderSaltStage();
+  playDing();
+}
+
+function saltStep(dir){
+  const next = state.s3.stage + dir;
+  if(next < 0 || next > 4) return;
+  state.s3.stage = next;
+  saveState();
+  renderSaltStage();
+  updateS3Steps();
+  updateS3Finish();
+  updateS3NextButton();
+}
+
+function updateS3Steps(){
+  // Sidebar steps regenerate per phase; guard against missing DOM
+  for(let i=0;i<5;i++){
+    const el = document.getElementById('s3step'+(i+1));
+    if(!el) continue;
+    const done = state.s3.stageStarted[i] && state.s3.observations[i]?.trim() && state.s3.intensity[i]>0;
+    el.classList.toggle('done', !!done);
+    el.classList.toggle('active', i===state.s3.stage && !done);
+  }
+}
+
+function updateS3Finish(){
+  const allStagesDone = state.s3.stageStarted.every((s,i)=> s && state.s3.observations[i]?.trim() && state.s3.intensity[i]>0);
+  const conclOk = (state.s3.conclusion||'').trim().length >= 20;
+  document.getElementById('s3FinishBtn').disabled = !(allStagesDone && conclOk);
+  const fb2 = document.getElementById('s3FinishBtn2');
+  if(fb2) fb2.disabled = !(allStagesDone && conclOk);
+}
+
+function finishStation3(){
+  const allDone = state.s3.stageStarted.every((s,i)=> s && state.s3.observations[i]?.trim() && state.s3.intensity[i]>0);
+  if(!allDone){toast('Do every stage: action, observation, and intensity rating'); setS3Phase(3); return;}
+  if((state.s3.conclusion||'').trim().length < 20){toast('Write your conclusion first (at least one full sentence).'); setS3Phase(5); return;}
+  state.s3.complete = true;
+  saveState();
+  fireConfetti();
+  playDing();
+  toast('Station 3 complete! ✓');
+  setTimeout(goHub, 800);
+}
+
+/* =============================================================
+   LAB REPORT
+   ============================================================= */
+function buildReport(){
+  const r1 = state.s1.results;
+  const acidCount = r1.filter(x=>x.type==='acid').length;
+  const neutralCount = r1.filter(x=>x.type==='neutral').length;
+  const alkaliCount = r1.filter(x=>x.type==='alkali').length;
+
+  const t1 = state.s2.titre1 || 0;
+  const t2 = state.s2.titre2 || 0;
+  const avg = ((t1 + t2)/2);
+  const conc = state.s2.calcAnswer || +((avg * 0.1)/25).toFixed(4);
+
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+  // Build S1 prediction summary (names not IDs)
+  const nameById = id => (SUBSTANCES.find(x=>x.id===id)||{}).name || id;
+  const predS1 = state.s1.prediction;
+  const predS1Text = ['acid','neutral','alkali'].map(cat=>{
+    const items = (predS1[cat]||[]).map(nameById).join(', ');
+    return items ? `<strong>${cat.charAt(0).toUpperCase()+cat.slice(1)}:</strong> ${escapeHTML(items)}` : '';
+  }).filter(Boolean).join(' &nbsp;•&nbsp; ');
+
+  const html = `
+    <div class="lr-head">
+      <h1>Lab Report — Acids &amp; Alkalis</h1>
+      <div class="lr-meta">
+        <strong>${escapeHTML(state.pupilName)}</strong>
+        ${escapeHTML(state.className)} • ${today}
+      </div>
+    </div>
+
+    <!-- STATION 1 -->
+    <div class="lr-section s1-section">
+      <h2>Experiment 1 — pH Investigation</h2>
+      <div class="lr-aim"><strong>Aim:</strong> to find the pH of 8 household substances and classify each as acid, neutral, or alkali.</div>
+
+      <div class="lr-hypothesis">
+        <strong>Hypothesis</strong>
+        ${escapeHTML(state.s1.hypothesis) || '<em>(not written)</em>'}
+      </div>
+      <div class="lr-prediction">
+        <strong>Prediction</strong>
+        ${predS1Text || '<em>(no prediction made)</em>'}
+      </div>
+
+      <div class="lr-method">
+        <strong>Method</strong>
+        <ol>
+          <li>Add a few drops of universal indicator to a clean test tube.</li>
+          <li>Add a small sample of the substance.</li>
+          <li>Match the colour to the universal indicator pH chart.</li>
+          <li>Record the pH and classify as acid (&lt;7), neutral (7), or alkali (&gt;7).</li>
+        </ol>
+      </div>
+      <strong>Results table</strong>
+      <table>
+        <tr><th>Substance</th><th>pH</th><th>Acid / Neutral / Alkali</th></tr>
+        ${r1.map(r=>`<tr>
+          <td>${escapeHTML(r.name)}</td>
+          <td class="lr-data">${r.ph}</td>
+          <td>${r.type.charAt(0).toUpperCase()+r.type.slice(1)}</td>
+        </tr>`).join('')}
+      </table>
+
+      <div class="lr-graph">
+        ${svgS1Graph()}
+        <div class="lr-graph-caption">Bar chart: pH of each substance (red=acid, green=neutral, blue=alkali; dashed line = pH 7).</div>
+      </div>
+
+      <div class="lr-conclusion">
+        <strong>Summary:</strong> Out of 8 substances tested, ${acidCount} were acidic, ${neutralCount} ${neutralCount===1?'was':'were'} neutral, and ${alkaliCount} ${alkaliCount===1?'was':'were'} alkaline.<br>
+        <strong>My conclusion:</strong><br>
+        ${state.s1.conclusion ? escapeHTML(state.s1.conclusion).replace(/\n/g,'<br>') : '<div class="lr-write-line"></div><div class="lr-write-line"></div>'}
+      </div>
+    </div>
+
+    <!-- STATION 2 -->
+    <div class="lr-section s2-section">
+      <h2>Experiment 2 — Titration</h2>
+      <div class="lr-aim"><strong>Aim:</strong> to find the concentration of an unknown alkali using 0.1 mol/dm³ hydrochloric acid.</div>
+
+      <div class="lr-hypothesis">
+        <strong>Hypothesis</strong>
+        ${escapeHTML(state.s2.hypothesis) || '<em>(not written)</em>'}
+      </div>
+      <div class="lr-prediction">
+        <strong>Prediction</strong>
+        Titre will be ${escapeHTML(state.s2.prediction) || '<em>(not set)</em>'}.
+      </div>
+
+      <div class="lr-method">
+        <strong>Method</strong>
+        <ol>
+          <li>25.0 cm³ of unknown alkali was added to a conical flask with a few drops of phenolphthalein (turned pink).</li>
+          <li>The burette was filled with 0.1 mol/dm³ HCl.</li>
+          <li>Acid was added — fast at first, then dropwise — swirling the flask.</li>
+          <li>The end-point was the moment the pink turned colourless.</li>
+          <li>The volume of acid used (titre) was recorded. The experiment was repeated for accuracy.</li>
+        </ol>
+      </div>
+      <strong>Results</strong>
+      <table>
+        <tr><th></th><th>Volume of acid (cm³)</th></tr>
+        <tr><td>Titration 1 (rough)</td><td class="lr-data">${t1.toFixed(1)}</td></tr>
+        <tr><td>Titration 2 (accurate)</td><td class="lr-data">${t2.toFixed(1)}</td></tr>
+        <tr><td><strong>Average titre</strong></td><td class="lr-data"><strong>${avg.toFixed(2)}</strong></td></tr>
+      </table>
+
+      <div class="lr-graph">
+        ${svgS2Graph()}
+        <div class="lr-graph-caption">Bar chart: the two titrations and the average. Close bars = reliable.</div>
+      </div>
+
+      <strong>Calculation</strong>
+      <div class="lr-method">
+        Concentration of alkali = (Average titre × concentration of acid) ÷ volume of alkali<br>
+        = (${avg.toFixed(2)} × 0.1) ÷ 25<br>
+        = <strong class="lr-data">${conc.toFixed(3)} mol/dm³</strong>
+      </div>
+      <div class="lr-conclusion">
+        <strong>Summary:</strong> The unknown alkali had a concentration of <strong>${conc.toFixed(3)} mol/dm³</strong>.<br>
+        <strong>My conclusion:</strong><br>
+        ${state.s2.conclusion ? escapeHTML(state.s2.conclusion).replace(/\n/g,'<br>') : '<div class="lr-write-line"></div><div class="lr-write-line"></div>'}
+      </div>
+    </div>
+
+    <!-- STATION 3 -->
+    <div class="lr-section s3-section">
+      <h2>Experiment 3 — Making a Salt (Copper Chloride)</h2>
+      <div class="lr-aim"><strong>Aim:</strong> to make copper chloride from copper oxide and hydrochloric acid by neutralisation.</div>
+
+      <div class="lr-hypothesis">
+        <strong>Hypothesis</strong>
+        ${escapeHTML(state.s3.hypothesis) || '<em>(not written)</em>'}
+      </div>
+      <div class="lr-prediction">
+        <strong>Prediction</strong>
+        The crystals will be ${escapeHTML(state.s3.prediction) || '<em>(not set)</em>'} in colour.
+      </div>
+
+      <div class="lr-method">
+        <strong>Equation:</strong> CuO + 2HCl → CuCl₂ + H₂O<br>
+        <strong>Word equation:</strong> copper oxide + hydrochloric acid → copper chloride + water
+      </div>
+      <strong>Method and observations</strong>
+      <table>
+        <tr><th style="width:30%">Stage</th><th>Observation</th><th style="width:12%">Blue (1–5)</th></tr>
+        ${SALT_STAGES.map((s,i)=>`<tr>
+          <td><strong>${s.title.replace(/^Stage \d+ — /,'')}</strong></td>
+          <td>${escapeHTML(state.s3.observations[i]||'—')}</td>
+          <td class="lr-data" style="text-align:center">${state.s3.intensity[i]||'—'}</td>
+        </tr>`).join('')}
+      </table>
+
+      <div class="lr-graph">
+        ${svgS3Graph()}
+        <div class="lr-graph-caption">Bar chart: blue intensity rating through each stage.</div>
+      </div>
+
+      <div class="lr-conclusion">
+        <strong>Summary:</strong> Copper chloride crystals were made by reacting copper oxide (a base) with hydrochloric acid. The reaction is a neutralisation — the acid and base cancel each other to make a salt and water.<br>
+        <strong>My conclusion:</strong><br>
+        ${state.s3.conclusion ? escapeHTML(state.s3.conclusion).replace(/\n/g,'<br>') : '<div class="lr-write-line"></div><div class="lr-write-line"></div>'}
+      </div>
+    </div>
+
+    <div class="lr-aspire">
+      <span class="aspire-tag">Aspire ★</span>
+      <strong>Stretch challenge — for finishers:</strong>
+      Write the balanced symbol equation for the Station 2 neutralisation (HCl + NaOH), including <em>state symbols</em>. Then do the same for the Station 3 reaction (HCl + CuO).
+      <div class="lr-write-line" style="margin-top:6px"></div>
+      <div class="lr-write-line"></div>
+      <div class="lr-write-line"></div>
+      <div class="lr-write-line"></div>
+    </div>
+
+    <div class="lr-footer">
+      <span>Virtual Lab — Acids &amp; Alkalis Mini-Lab</span>
+      <span>Generated ${today}</span>
+    </div>
+  `;
+  document.getElementById('labReport').innerHTML = html;
+}
+
+function escapeHTML(s){
+  if(s===undefined||s===null) return '';
+  return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+/* =============================================================
+   INIT
+   ============================================================= */
+loadState();
+
+// if already started, skip welcome
+if(state.pupilName){
+  document.getElementById('pupilName').value = state.pupilName;
+  document.getElementById('className').value = state.className==='—' ? '' : state.className;
+  goHub();
+}
+
+// Allow Enter on welcome inputs
+document.getElementById('pupilName').addEventListener('keydown', e=>{if(e.key==='Enter') startLab();});
+document.getElementById('className').addEventListener('keydown', e=>{if(e.key==='Enter') startLab();});
+
+// Wake audio on first click
+document.addEventListener('click', ensureAudio, {once:true});
+
+</script>
+</body>
+</html>
