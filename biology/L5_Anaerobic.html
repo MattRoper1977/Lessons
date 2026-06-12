@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 5: Anaerobic Respiration</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(234,179,8,.3)}50%{box-shadow:0 0 20px rgba(234,179,8,.7)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
+    .tag-exit{background:var(--sc-bg);color:#9a3412}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);font-size:.9rem}.evidence-btn:hover{background:#9d174d}
+    /* Warning box (red) for misconceptions */
+    .warn-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-bottom:12px}
+    /* ATP badge */
+    /* Uses grid */
+    .uses-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+    .use-card{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;transition:transform .15s}.use-card:hover{transform:translateY(-2px);border-color:var(--task-border)}
+    .use-icon{font-size:2rem;margin-bottom:6px}
+
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    
+    .indep-timer{text-align:center;margin:10px 0;padding:12px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px}
+    .indep-timer .timer-display{font-family:monospace;font-size:2.5rem;font-weight:900;color:var(--lo-border);margin:4px 0}
+    .indep-timer .timer-display.timer-warning{color:var(--error);animation:pulse .5s infinite}
+    .indep-timer .timer-label{font-size:.9rem;color:var(--muted);font-weight:bold}
+    
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.indep-timer{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}}
+    /* ── BUG FIX: shake keyframe (used by wrong-tile feedback) ── */
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+    @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+    @keyframes confettiFall{to{transform:translateY(105vh) rotate(720deg)}}
+    @keyframes dashflow{to{stroke-dashoffset:-220}}
+    .cycle-ring{stroke-dasharray:7 9;animation:dashflow 3.2s linear infinite}
+
+    /* ── BUG FIX: label-btn styling (equation tiles were unstyled) ── */
+
+    /* ── V4: Teacher toolbar (TA Focus / Cold Call / Board / XP) ── */
+    .teacher-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;border-radius:999px;padding:5px 8px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+    .teacher-bar button{padding:7px 12px;font-size:.85rem;border-radius:999px}
+    .tb-ta{background:#0ea5e9}.tb-ta:hover{background:#0369a1}
+    .tb-cc{background:#7c3aed}.tb-cc:hover{background:#5b21b6}
+    .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
+    .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
+    .xp-chip.xp-pop{animation:popIn .4s}
+    @media print{.teacher-bar{display:none!important}}
+
+    /* ── V4: Modals (TA Focus + Cold Call + Leaderboard) ── */
+    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-back.open{display:flex;animation:fadeIn .2s}
+    .modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;border-top:8px solid var(--lo-border)}
+    .modal h2{margin-right:0;border:none;padding:0}
+    .modal .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}
+    .modal-ta{border-top-color:#0ea5e9}.modal-cc{border-top-color:#7c3aed}.modal-board{border-top-color:#f59e0b}
+    .cc-name{font-size:1.6rem;font-weight:900;text-align:center;color:var(--lo-border);margin:6px 0 14px;min-height:38px}
+    .cc-q{padding:12px 14px;border-radius:12px;margin:8px 0;border-left:6px solid}
+    .cc-f{background:#dcfce7;border-color:#22c55e}.cc-m{background:#ffedd5;border-color:#f97316}.cc-h{background:#dbeafe;border-color:#1e3a8a}
+    .cc-q .tier{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .roster-row{display:flex;gap:8px;margin-top:10px}
+    .roster-row input{flex:1;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem}
+    .ta-modal-body p{margin:8px 0}.ta-modal-body li{margin:5px 0}
+    .lb-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;margin:5px 0;background:#f8fafc;font-weight:bold}
+    .lb-row.me{background:#fef3c7}
+
+    /* ── V4: Hint button ── */
+    .hint-btn{background:#10b981;font-size:.85rem}.hint-btn:hover{background:#047857}
+    .hint-text{display:none;margin-top:8px;padding:10px 12px;background:#ecfdf5;border-left:5px solid #10b981;border-radius:10px;font-weight:bold;color:#065f46}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+
+    /* ── V4: Slide-1 success criteria + title hero + LO checks ── */
+    .title-hero{display:flex;gap:18px;justify-content:center;margin:6px 0 4px;font-size:2.4rem}
+    .title-hero span{display:inline-block;animation:iconBounce 2.2s infinite}
+    .title-hero span:nth-child(2){animation-delay:.2s}.title-hero span:nth-child(3){animation-delay:.4s}.title-hero span:nth-child(4){animation-delay:.6s}.title-hero span:nth-child(5){animation-delay:.8s}
+    .float-dots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-dots i{position:absolute;width:14px;height:14px;border-radius:50%;opacity:.35;animation:floatDot 4s infinite ease-in-out}
+    .lo-anim li{opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li::marker{content:''}
+    .lo-anim li.done::before{content:'✅ ';}
+    .sc1-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 16px;border-radius:12px;max-width:680px;margin:14px auto;text-align:left}
+    .sc1-box h3{margin:0 0 6px;color:#9a3412}
+
+    /* ── V5: step reveal + turn & talk ── */
+    .v5-step{display:none}.v5-step.revealed{display:block;animation:fadeInUp .4s}
+    .v5-grid.revealed{display:grid}
+    .step-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;margin:6px 0 10px}
+    .step-ctrl .step-count{font-weight:900;color:var(--ido-border);font-size:.9rem}
+    .turn-talk{background:#eef2ff;border:2px dashed #6366f1;border-radius:14px;padding:14px 16px;margin-top:12px;position:relative}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-11px;left:14px;background:#6366f1;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* ── V4: Lesson complete overlay + confetti ── */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+    .lesson-complete{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:2600;display:none;align-items:center;justify-content:center;padding:24px}
+    .lesson-complete.open{display:flex;animation:fadeIn .3s}
+    .lc-card{background:#fff;border-radius:22px;padding:34px 40px;text-align:center;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:10px solid var(--aspire-border);animation:popIn .5s}
+    .lc-card h1{border:none;font-size:2.2rem;display:block;color:var(--aspire-text)}
+    .lc-xp{font-size:3rem;font-weight:900;color:#f59e0b;margin:6px 0}
+
+    /* ── Drag & Drop (pointer-based: works with mouse AND touch) ── */
+    .dnd-tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:12px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;min-height:58px;margin:6px 0 12px}
+    .drag-item{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:2px solid #94a3b8;border-radius:10px;background:#fff;font-weight:bold;cursor:grab;user-select:none;touch-action:none;box-shadow:0 2px 5px rgba(0,0,0,.1);transition:box-shadow .15s,transform .1s}
+    .drag-item:hover{box-shadow:0 5px 12px rgba(0,0,0,.16)}
+    .drag-item:active{cursor:grabbing}
+    .drag-item.dragging{box-shadow:0 14px 30px rgba(0,0,0,.28);transform:scale(1.05);opacity:.97}
+    .drag-item.locked{cursor:default}
+    .drag-item.dnd-correct{border-color:var(--success);background:rgba(22,163,74,.12);color:#166534}
+    .dnd-bounce{animation:shake .4s}
+    .drop-zone{transition:background .15s,border-color .15s}
+    .drop-zone.zone-hover{background:rgba(99,102,241,.14)!important;border-color:#6366f1!important}
+    .drop-zone.zone-wrong{animation:shake .4s}
+    /* Equation build frame */
+    .eq-frame{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:14px;background:#f8fafc;border-radius:14px}
+    .eq-group{display:flex;gap:8px;align-items:center;padding:10px;border-radius:12px}
+    .eq-react{background:#eef6ff;border:1px solid #bfdbfe}.eq-prod{background:#fef9ee;border:1px solid #fde68a}
+    .eq-group .glabel{position:absolute;top:-10px;left:10px;font-size:.62rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:1px 8px;border-radius:6px;color:#fff}
+    .eq-grp-wrap{position:relative;margin-top:6px}
+    .eq-slot{min-width:118px;min-height:60px;border:2px dashed #94a3b8;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;padding:4px}
+    .eq-slot .slot-hint{font-size:.6rem;color:#94a3b8;font-weight:900;text-transform:uppercase;letter-spacing:.5px;text-align:center}
+    .eq-op{font-size:1.5rem;font-weight:900;color:var(--ido-border)}
+    .mito-reactor{display:flex;flex-direction:column;align-items:center}
+    /* ATP sort bins */
+    .atp-bins{display:flex;gap:16px;margin-top:10px}
+    .atp-bin{flex:1;min-height:170px;border:3px dashed #cbd5e1;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+    .atp-bin.bin-yes{border-color:var(--success)}.atp-bin.bin-no{border-color:var(--error)}
+    .atp-bin .bin-items{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+    .atp-bin h3{margin:0}
+
+    /* ── Interactive Exit Knowledge Check ── */
+    .exit-quiz-wrap{max-width:760px;width:100%;margin:6px auto 0}
+    .quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .quiz-dots{display:flex;gap:6px}
+    .qdot{width:15px;height:15px;border-radius:50%;background:#e2e8f0;border:2px solid #cbd5e1;transition:all .2s}
+    .qdot.cur{box-shadow:0 0 0 3px rgba(124,58,237,.25);border-color:var(--lo-border)}
+    .qdot.dot-right{background:var(--success);border-color:var(--success)}
+    .qdot.dot-wrong{background:var(--error);border-color:var(--error)}
+    .quiz-score-chip{font-weight:900;color:var(--lo-border);background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 12px;border-radius:999px;font-size:.9rem}
+    .quiz-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);animation:fadeInUp .35s}
+    .q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+    .qnum{font-size:.78rem;font-weight:900;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+    .qtier{font-size:.68rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:2px 10px;border-radius:999px}
+    .qt-f{background:#dcfce7;color:#166534}.qt-m{background:#ffedd5;color:#9a3412}.qt-h{background:#dbeafe;color:#1e3a8a}
+    .q-text{font-size:1.35rem;font-weight:800;color:#0f172a;margin:6px 0 14px;line-height:1.35}
+    .quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quiz-opt{background:#f8fafc;color:#0f172a;border:2px solid #cbd5e1;border-radius:12px;padding:14px 16px;font-size:1.05rem;font-weight:bold;text-align:left;cursor:pointer;transition:all .15s;box-shadow:none}
+    .quiz-opt:hover:not(:disabled){border-color:var(--lo-border);transform:translateY(-2px)}
+    .quiz-opt:disabled{cursor:default}
+    .quiz-opt.opt-correct{background:rgba(22,163,74,.14);border-color:var(--success);color:#166534}
+    .quiz-opt.opt-wrong{background:rgba(220,38,38,.1);border-color:var(--error);color:#991b1b}
+    .q-fb{min-height:22px;margin:12px 0 6px;font-weight:bold;font-size:1rem;line-height:1.4}
+    .q-next{background:var(--lo-border);margin-top:4px}
+    .exit-results{display:none}.exit-results.open{display:block;animation:fadeInUp .4s}
+    .result-card{text-align:center;background:#fff;border:2px solid var(--aspire-border);border-top:8px solid var(--aspire-border);border-radius:18px;padding:22px 24px;box-shadow:0 12px 30px rgba(0,0,0,.1);max-width:520px;margin:0 auto}
+    .result-card h2{border:none;margin:6px 0;display:block}
+    .result-card .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+    /* ── Mobile (Chromebook narrow / phones) ── */
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
+      h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
+      .content-grid,.arrival-grid,.uses-grid{grid-template-columns:1fr!important}
+      .logo{width:96px;top:14px;right:14px}
+      .teacher-bar{flex-wrap:wrap;max-width:94%;justify-content:center}
+      .sort-zone,.atp-bins{flex-direction:column}
+      .eq-frame{flex-direction:column}
+      .drag-item{font-size:.95rem;padding:9px 12px}
+      .quiz-opts{grid-template-columns:1fr}
+      .q-text{font-size:1.15rem}
+      .title-hero{font-size:1.7rem;gap:10px}
+      h2{margin-right:0}
+    }
+  </style>
+</head>
+<body>
+<!-- ═══ TEACHER TOOLBAR (V4) ═══ -->
+<div class="teacher-bar">
+  <span class="xp-chip">⭐ <span id="xp-val">0</span> XP</span>
+  <button class="tb-ta small" onclick="openTA()">🎓 TA Focus</button>
+  <button class="tb-cc small" onclick="openCC()">🎯 Cold Call</button>
+  <button class="tb-board small" onclick="openBoard()">🏆 Board</button>
+  <button class="small" style="background:#dc2626" onclick="openVideo()">📺 Watch</button>
+</div>
+
+<div class="slide-container">
+
+<!-- ═══ SLIDE 1: TITLE ═══ -->
+<div class="slide active" data-title="Title">
+  <div class="float-dots"></div>
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <div style="text-align:center;margin-top:2%"><div class="animate-enter">
+    <span class="slide-tag tag-lesson">Lesson 5</span>
+    <h1>Lesson 5: Anaerobic Respiration</h1>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Respiration Without Oxygen — Animals &amp; Yeast</p>
+    <div class="title-hero"><span>🏃</span><span>🥵</span><span>🍺</span><span>🍞</span><span>⚗️</span></div>
+    <div class="li-box" style="margin:14px auto;max-width:680px;text-align:left"><strong>Learning Objectives:</strong>
+      <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li><strong>Recall (2.37)</strong> – Last lesson: the aerobic equation needs oxygen and makes lots of ATP.</li><li><strong>2.38</strong> – Know the word equations for anaerobic respiration in <em>animals</em> and in <em>yeast/plants</em>.</li></ul>
+    </div>
+    <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
+      <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> write the anaerobic equation in animals: Glucose → Lactic Acid.</p>
+      <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> write the anaerobic equation in yeast: Glucose → Ethanol + Carbon Dioxide.</p>
+      <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> compare aerobic and anaerobic respiration (oxygen, ATP yield, products).</p>
+    </div>
+    <p style="font-size:1.05rem;margin-top:10px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+  </div>
+  <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools – Lesson 5</h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+      <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (2–3)</button>
+      <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+      <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2: ARRIVAL ═══ -->
+<div class="slide" id="arrival-slide" data-title="Fab 4">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-arrival">⭐ Fab 4</span>
+  <h2>The Fab 4 – Recall to Get You Started</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer in your books from memory. Q1–3 recall previous lessons. Q4 leads into today.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="scaffold-box" style="margin-top:12px"><h3 style="margin:0 0 8px;color:var(--scaffold-border)">⭐ The Fab 4 — Quick-Fire Recall</h3><p style="font-size:.9rem;margin:0 0 8px;color:var(--muted)">Four to warm up the brain — recall from last lesson (Aerobic Equations). Try all 4 before the reveal!</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">1. Which gas does aerobic respiration need?</p><p class="answer" style="font-size:.9rem;margin-top:6px">Oxygen</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">2. Name the two products of aerobic respiration.</p><p class="answer" style="font-size:.9rem;margin-top:6px">Carbon dioxide + water</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">3. Does aerobic make a lot or a little ATP?</p><p class="answer" style="font-size:.9rem;margin-top:6px">A lot</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">4. What if a cell runs OUT of oxygen?</p><p class="answer" style="font-size:.9rem;margin-top:6px">It must respire <em>anaerobically</em></p></div></div></div>
+  <div class="level-toggle">
+    <button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Reactants (Recall)</h3><p>Name the <strong>two reactants</strong> of aerobic respiration.</p><p class="answer">Glucose and oxygen.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Products (Recall)</h3><p>Name the <strong>two products</strong> of aerobic respiration.</p><p class="answer">Carbon dioxide and water.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Oxygen (Recall)</h3><p>Aerobic respiration <strong>needs</strong> which gas?</p><p class="answer">Oxygen.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: No Oxygen</h3><p>A sprinter's muscles run out of oxygen. They keep going for a few seconds. How might they still get <strong>some</strong> energy?</p><p class="answer">By respiring <strong>without</strong> oxygen (anaerobically).</p></div>
+  </div>
+
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Word Equation (Recall)</h3><p>Write the <strong>word equation</strong> for aerobic respiration.</p><p class="answer">Glucose + Oxygen → Carbon Dioxide + Water</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. ATP Yield (Recall)</h3><p>Why does aerobic respiration release <strong>so much</strong> ATP?</p><p class="answer">Oxygen lets glucose be broken down completely, releasing almost all the energy.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Symbol Equation (Recall)</h3><p>Write the <strong>balanced symbol equation</strong> for aerobic respiration.</p><p class="answer">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: No Oxygen</h3><p>If there's <strong>no oxygen</strong>, glucose can't be broken down fully. Predict: will anaerobic respiration release <strong>more</strong> or <strong>less</strong> ATP?</p><p class="answer">Less ATP — the glucose is only partly broken down.</p></div>
+  </div>
+
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Complete Breakdown (Recall)</h3><p>Explain the link between <strong>oxygen</strong> and the <strong>amount of ATP</strong> aerobic respiration releases.</p><p class="answer">Oxygen allows glucose to be oxidised completely to CO₂ and water, releasing the maximum energy as ATP.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Balancing (Recall)</h3><p>Prove the aerobic symbol equation is <strong>balanced</strong> (count C, H, O).</p><p class="answer">Each side: 6 C, 12 H, 18 O. Balanced.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Demand (Recall)</h3><p>During hard exercise, why might muscle cells not get <strong>enough</strong> oxygen?</p><p class="answer">Oxygen is used up faster than the blood can deliver it, so supply can't meet demand.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Incomplete</h3><p>If glucose is only <strong>partly</strong> broken down without oxygen, suggest why a waste product must be left behind.</p><p class="answer">The carbon and hydrogen from glucose aren't fully oxidised, so they remain in a product (lactic acid, or ethanol + CO₂).</p></div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3: STARTER ═══ -->
+<div class="slide" data-title="Starter">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-starter">Starter</span>
+  <h2>Starter: No Oxygen — Which Equation is Right?</h2>
+  <div class="li-box"><strong>Instructions:</strong> When muscles run out of oxygen, they respire <strong>anaerobically</strong>. Only <strong>ONE</strong> equation below is correct for animals. <strong>Tick</strong> it and be ready to say <strong>why</strong>. No calling out!</div>
+  <div style="max-width:820px;margin:10px auto">
+    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>A)</strong> Glucose + Oxygen → Lactic Acid</p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>B)</strong> Glucose → Lactic Acid</p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>C)</strong> Lactic Acid → Glucose</p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>D)</strong> Glucose → Carbon Dioxide + Water</p></div>
+    <div class="scaffold-box"><strong>🧠 Hint:</strong> Anaerobic means <strong>no oxygen</strong> — so oxygen can't be a reactant. In animals the waste product is <strong>lactic acid</strong>.</div>
+    <div class="aspire-box"><strong>Aspire:</strong> For each WRONG equation (A, C, D) — can you say exactly what's wrong with it?</div>
+  </div>
+</div>
+
+<div class="slide" data-title="I Do: Anaerobic in Animals (Spec 2.38)" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Anaerobic Respiration in Animals (Spec 2.38)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> When there is <strong>no oxygen</strong>, animal cells respire <strong>anaerobically</strong>. Glucose is only <strong>partly</strong> broken down into <strong>lactic acid</strong>.</div>
+  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/2</span></div>
+
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter">
+        <h3 style="margin-top:0;color:var(--ido-border)">The Word Equation (Animals)</h3>
+        <div class="eq-box" style="font-size:1.25rem;border:3px solid var(--error);border-radius:14px;padding:18px;text-align:center;font-weight:900;color:#991b1b;background:#fff">Glucose → Lactic Acid</div>
+        <p style="margin-top:10px"><strong>No oxygen</strong> = no oxygen on the left. <strong>No</strong> carbon dioxide or water — just <strong>lactic acid</strong>.</p>
+        <p>It releases only a <strong>little</strong> ATP (glucose isn't fully broken down).</p>
+      </div>
+      <div class="warn-box animate-enter anim-delay-1">
+        <h3 style="margin-top:0;color:var(--error)">⚠️ Oxygen Debt &amp; Cramp</h3>
+        <p><strong>Lactic acid</strong> builds up in muscles during hard exercise — this causes <strong>fatigue</strong> and <strong>cramp</strong>.</p>
+        <p>Afterwards you breathe hard to repay the <strong>oxygen debt</strong> — oxygen breaks the lactic acid down.</p>
+      </div>
+    </div>
+    <div>
+      <div class="diagram-container animate-enter anim-delay-1" style="min-height:150px">
+        <h3 style="margin-top:0;color:var(--ido-border)">Glucose → Lactic Acid</h3>
+        <svg width="360" height="120" viewBox="0 0 360 120">
+          <rect x="10" y="40" width="120" height="44" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+          <text x="70" y="60" text-anchor="middle" font-weight="bold" font-size="11" fill="#166534">GLUCOSE</text>
+          <text x="70" y="76" text-anchor="middle" font-size="9" fill="#166534">(fuel)</text>
+          <text x="170" y="68" text-anchor="middle" font-size="22" fill="#7c3aed" font-weight="bold">→</text>
+          <rect x="200" y="40" width="150" height="44" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+          <text x="275" y="60" text-anchor="middle" font-weight="bold" font-size="11" fill="#991b1b">LACTIC ACID</text>
+          <text x="275" y="76" text-anchor="middle" font-size="9" fill="#991b1b">+ a little ATP</text>
+          <text x="115" y="28" text-anchor="middle" font-size="9" fill="#64748b">no oxygen needed</text>
+          <text x="275" y="28" text-anchor="middle" font-size="9" fill="#64748b">causes cramp</text>
+        </svg>
+      </div>
+      <div class="exam-tip-box animate-enter anim-delay-2"><p style="margin:0"><strong>⚠️ Exam Tip:</strong> In <strong>animals</strong> the only product is <strong>lactic acid</strong>. Don't add carbon dioxide or water — that's aerobic!</p></div>
+    </div>
+
+  <div class="v5-step v5-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+    <div class="diagram-container">
+      <h3 style="margin-top:0;color:var(--ido-border)">Why only a little ATP?</h3>
+      <svg width="220" height="110" viewBox="0 0 220 110">
+        <rect x="10" y="35" width="84" height="44" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="52" y="55" text-anchor="middle" font-size="9" font-weight="900" fill="#166534">AEROBIC</text>
+        <text x="52" y="70" text-anchor="middle" font-size="9" fill="#166534">LOTS of ATP</text>
+        <rect x="126" y="35" width="84" height="44" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="168" y="55" text-anchor="middle" font-size="9" font-weight="900" fill="#991b1b">ANAEROBIC</text>
+        <text x="168" y="70" text-anchor="middle" font-size="9" fill="#991b1b">LITTLE ATP</text>
+      </svg>
+    </div>
+    <div>
+      <div class="scaffold-box"><strong>🧠 Memory Trick:</strong> "<strong>No air → lactic</strong>." Animals with no oxygen make <strong>lactic acid</strong>. Less oxygen used = less energy released.</div>
+      <div class="aspire-box"><strong>Aspire:</strong> Why do you keep breathing hard <em>after</em> a sprint has finished? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">To take in extra oxygen to break down the lactic acid that built up — repaying the <strong>oxygen debt</strong>.</span></div>
+    </div>
+  </div>
+</div>
+
+  <div class="misc-box v5-step"><p><strong>Don't write:</strong> <span class="misc-wrong">Glucose + Oxygen → Lactic Acid</span> (anaerobic has NO oxygen)</p><p><strong>Write:</strong> <span class="misc-right">Glucose → Lactic Acid</span></p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">Anaerobic = without air. Oxygen can't appear on the left of an anaerobic equation.</p></div>
+  <div class="turn-talk"><strong>Talk to your partner:</strong> What is the <strong>one product</strong> of anaerobic respiration in animals, and why does it release <strong>less</strong> ATP than aerobic? Next we'll build it.</div>
+</div>
+
+<!-- ═══ WE DO 1: BUILD THE EQUATION ═══ -->
+<div class="slide" data-title="We Do: Build the Equation" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Build Both Anaerobic Equations</h2>
+  <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each tile into the right gap to build the anaerobic equation in <strong>animals</strong> and in <strong>yeast/plants</strong>. Remember — <strong>no oxygen</strong>! (Works by touch or mouse.)</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+
+  <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Tiles placed: <span class="score" id="wedo1-score">0</span>/5</span><button class="ghost small" onclick="resetDnD('wedo1')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo1')">👁️ Reveal</button></div>
+
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:6px 0 4px">Tile bank — drag each into the right place:</p>
+    <div class="dnd-tray" id="wedo1-tray">
+      <div class="drag-item" data-activity="wedo1" data-target="a2" style="background:#fee2e2;border-color:#ef4444">Lactic Acid</div>
+      <div class="drag-item" data-activity="wedo1" data-target="y1" style="background:#dcfce7;border-color:#22c55e">Glucose</div>
+      <div class="drag-item" data-activity="wedo1" data-target="y3" style="background:#dbeafe;border-color:#2563eb">Carbon Dioxide</div>
+      <div class="drag-item" data-activity="wedo1" data-target="a1" style="background:#dcfce7;border-color:#22c55e">Glucose</div>
+      <div class="drag-item" data-activity="wedo1" data-target="y2" style="background:#fef3c7;border-color:#eab308">Ethanol</div>
+    </div>
+
+    <span class="eq-label-tag" style="display:block;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--error);margin:6px 0 2px">1 · Animals (no oxygen)</span>
+    <div class="eq-frame">
+      <div class="eq-grp-wrap"><span class="glabel" style="background:#2563eb">Reactant (IN)</span>
+        <div class="eq-group eq-react">
+          <div class="drop-zone eq-slot" data-activity="wedo1" data-zoneid="a1" data-cap="1"><span class="slot-hint">fuel<br>(sugar)</span></div>
+        </div>
+      </div>
+      <div class="eq-op" style="font-size:1.8rem">→</div>
+      <div class="eq-grp-wrap"><span class="glabel" style="background:#d97706">Product (OUT)</span>
+        <div class="eq-group eq-prod">
+          <div class="drop-zone eq-slot" data-activity="wedo1" data-zoneid="a2" data-cap="1"><span class="slot-hint">muscle<br>waste</span></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="eq-label-tag" style="display:block;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--lo-border);margin:10px 0 2px">2 · Yeast &amp; Plants (no oxygen)</span>
+    <div class="eq-frame">
+      <div class="eq-grp-wrap"><span class="glabel" style="background:#2563eb">Reactant (IN)</span>
+        <div class="eq-group eq-react">
+          <div class="drop-zone eq-slot" data-activity="wedo1" data-zoneid="y1" data-cap="1"><span class="slot-hint">fuel<br>(sugar)</span></div>
+        </div>
+      </div>
+      <div class="eq-op" style="font-size:1.8rem">→</div>
+      <div class="eq-grp-wrap"><span class="glabel" style="background:#d97706">Products (OUT)</span>
+        <div class="eq-group eq-prod">
+          <div class="drop-zone eq-slot" data-activity="wedo1" data-zoneid="y2" data-cap="1"><span class="slot-hint">alcohol</span></div>
+          <div class="eq-op">+</div>
+          <div class="drop-zone eq-slot" data-activity="wedo1" data-zoneid="y3" data-cap="1"><span class="slot-hint">waste<br>gas</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wedo1-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:18px"></div>
+
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧡 Tip:</strong> Both start with <strong>glucose</strong> and have <strong>no oxygen</strong>. Animals → <strong>lactic acid</strong>. Yeast → <strong>ethanol + carbon dioxide</strong>.</div>
+    <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">Animals: <strong>Glucose → Lactic Acid</strong>. Yeast/plants: <strong>Glucose → Ethanol + Carbon Dioxide</strong>. Neither uses oxygen!</div></div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="I Do: Yeast &amp; Comparison (Spec 2.38)" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Anaerobic in Yeast &amp; Aerobic vs Anaerobic (Spec 2.38)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> In <strong>yeast and plants</strong>, anaerobic respiration is called <strong>fermentation</strong>. Glucose breaks down into <strong>ethanol</strong> and <strong>carbon dioxide</strong>.</div>
+  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/2</span></div>
+
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter">
+        <h3 style="margin-top:0;color:var(--ido-border)">The Word Equation (Yeast)</h3>
+        <div class="eq-box" style="font-size:1.15rem;border:3px solid var(--lo-border);border-radius:14px;padding:16px;text-align:center;font-weight:900;color:#92400e;background:#fff">Glucose → Ethanol + Carbon Dioxide</div>
+        <p style="margin-top:10px">This is called <strong>fermentation</strong>. Like animals, it uses <strong>no oxygen</strong> and releases only a <strong>little</strong> ATP.</p>
+      </div>
+      <div class="ido-box animate-enter anim-delay-1">
+        <h3 style="margin-top:0;color:var(--ido-border)">🍺🍞 Why we use it</h3>
+        <p><strong>Brewing:</strong> yeast makes the <strong>ethanol</strong> (alcohol) in beer and wine.</p>
+        <p><strong>Baking:</strong> the <strong>carbon dioxide</strong> makes bread <strong>rise</strong> (the bubbles).</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="diagram-container animate-enter anim-delay-1">
+        <h3 style="margin-top:0;color:var(--ido-border)">Aerobic vs Anaerobic</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:.95rem">
+          <tr style="border-bottom:2px solid #e2e8f0"><th style="padding:6px;text-align:left"></th><th style="padding:6px;color:var(--success)">Aerobic</th><th style="padding:6px;color:var(--error)">Anaerobic</th></tr>
+          <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:6px"><strong>Oxygen?</strong></td><td style="padding:6px;text-align:center">✅ Yes</td><td style="padding:6px;text-align:center">❌ No</td></tr>
+          <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:6px"><strong>ATP</strong></td><td style="padding:6px;text-align:center">Lots</td><td style="padding:6px;text-align:center">A little</td></tr>
+          <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:6px"><strong>Animal product</strong></td><td style="padding:6px;text-align:center">CO₂ + water</td><td style="padding:6px;text-align:center">Lactic acid</td></tr>
+          <tr><td style="padding:6px"><strong>Yeast product</strong></td><td style="padding:6px;text-align:center">CO₂ + water</td><td style="padding:6px;text-align:center">Ethanol + CO₂</td></tr>
+        </table>
+      </div>
+      <div class="aspire-box animate-enter anim-delay-2"><strong>Aspire:</strong> Why does anaerobic respiration release <strong>less</strong> ATP than aerobic? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">Without oxygen, glucose is only <strong>partly</strong> broken down — so most of its stored energy stays locked in the products (lactic acid or ethanol).</span></div>
+    </div>
+
+  <div class="scaffold-box v5-step" style="margin-top:10px"><strong>💡 Real-World Link:</strong> The same yeast reaction that puts bubbles in bread also makes the alcohol in beer. The <strong>carbon dioxide</strong> escapes as bubbles; the <strong>ethanol</strong> stays behind (and bakes off in the oven).</div>
+</div>
+
+  <div class="exam-tip-box v5-step"><p><strong>#1 exam error:</strong> mixing up the products. <span class="misc-right">Animals → lactic acid. Yeast/plants → ethanol + carbon dioxide.</span></p><p style="font-size:.9rem;color:#92400e;margin-top:4px">Neither uses oxygen, and both release far less ATP than aerobic respiration.</p></div>
+  <div class="turn-talk"><strong>Talk to your partner:</strong> Give <strong>one</strong> way aerobic and anaerobic respiration are the <strong>same</strong>, and <strong>two</strong> ways they are <strong>different</strong>. Next we'll sort statements into aerobic vs anaerobic.</div>
+</div>
+
+<!-- ═══ SLIDE 6: WE DO ═══ -->
+<!-- WE DO 2: AEROBIC VS ANAEROBIC SORT -->
+<div class="slide" data-title="We Do – Aerobic vs Anaerobic" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Aerobic or Anaerobic?</h2>
+  <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each statement into the right bin. Does it describe respiration <strong>with</strong> oxygen (aerobic) or <strong>without</strong> oxygen (anaerobic)? (Works by touch or mouse.)</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+  <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Sorted: <span class="score" id="wedo2-score">0</span>/6</span><button class="ghost small" onclick="resetDnD('wedo2')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo2')">👁️ Reveal</button></div>
+    <div class="dnd-tray" id="wedo2-tray">
+      <div class="drag-item" data-activity="wedo2" data-target="aer">🫁 Needs oxygen</div>
+      <div class="drag-item" data-activity="wedo2" data-target="ana">🥵 Animals make lactic acid</div>
+      <div class="drag-item" data-activity="wedo2" data-target="aer">🔋 Releases lots of ATP</div>
+      <div class="drag-item" data-activity="wedo2" data-target="ana">🍺 Yeast makes ethanol + CO₂</div>
+      <div class="drag-item" data-activity="wedo2" data-target="aer">💨 Products: CO₂ + water</div>
+      <div class="drag-item" data-activity="wedo2" data-target="ana">🪫 Releases only a little ATP</div>
+    </div>
+    <div class="atp-bins">
+      <div class="drop-zone atp-bin bin-yes" data-activity="wedo2" data-zoneid="aer" data-cap="6">
+        <svg width="60" height="60" viewBox="0 0 60 60" aria-label="oxygen">
+          <circle cx="22" cy="30" r="13" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+          <circle cx="40" cy="30" r="13" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+          <text x="22" y="34" text-anchor="middle" font-size="11" font-weight="900" fill="#166534">O</text>
+          <text x="40" y="34" text-anchor="middle" font-size="11" font-weight="900" fill="#166534">O</text>
+        </svg>
+        <h3 style="color:var(--success)">✅ Aerobic</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin:0">WITH oxygen</p>
+        <div class="bin-items"></div>
+      </div>
+      <div class="drop-zone atp-bin bin-no" data-activity="wedo2" data-zoneid="ana" data-cap="6">
+        <svg width="60" height="60" viewBox="0 0 60 60" aria-label="no oxygen">
+          <circle cx="30" cy="30" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="3"/>
+          <text x="30" y="34" text-anchor="middle" font-size="11" font-weight="900" fill="#991b1b">O₂</text>
+          <line x1="16" y1="16" x2="44" y2="44" stroke="#dc2626" stroke-width="4"/>
+        </svg>
+        <h3 style="color:var(--error)">❌ Anaerobic</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin:0">WITHOUT oxygen</p>
+        <div class="bin-items"></div>
+      </div>
+    </div>
+    <div id="wedo2-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:18px"></div>
+    <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">Ask: "does it use <strong>oxygen</strong>?" If yes → aerobic (lots of ATP, CO₂ + water). If no → anaerobic (little ATP, lactic acid OR ethanol + CO₂).</div></div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="Independent Work" data-type="independent">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-independent">Independent Work</span>
+  <h2>Independent Work – Anaerobic Respiration</h2>
+  <div class="li-box"><strong>Instructions:</strong> Complete your printed worksheet at your level. You may use the equations from the starter and the knowledge organiser.</div>
+    <div class="indep-timer">
+      <div class="timer-label">Independent Work Timer</div>
+      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
+        <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
+        <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
+        <button onclick="startIndepTimer(360)" class="small ghost">▶ 6 min</button>
+        <button onclick="pauseIndepTimer()" class="small ghost">⏸ Pause</button>
+        <button onclick="resetIndepTimer()" class="small ghost">🔄 Reset</button>
+      </div>
+    </div>
+
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>MCQ + complete the anaerobic equations using a word bank.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Write both anaerobic equations from memory, plus a 4-mark comparison question.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Explain oxygen debt and a 5-mark aerobic-vs-anaerobic question.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Your pack includes both anaerobic equations, the aerobic-vs-anaerobic comparison table, and a key-word glossary (lactic acid, ethanol, fermentation, oxygen debt).</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> I can write the animal equation (Glucose → Lactic Acid) and say anaerobic means without oxygen.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> I can write both anaerobic equations and say which products belong to animals and which to yeast.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> I can compare aerobic and anaerobic respiration (oxygen, ATP, products) and explain oxygen debt.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8: EXIT TICKET ═══ -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-exit">Exit Ticket</span>
+  <h2>Exit Ticket – Anaerobic Respiration</h2>
+  <div class="li-box"><strong>Knowledge check:</strong> Tap your answer to each question — you'll get instant feedback and a score at the end. Books closed, no notes!</div>
+
+  <div class="exit-quiz-wrap">
+    <div class="quiz-top">
+      <div class="quiz-dots" id="quiz-dots"></div>
+      <div class="quiz-score-chip">Score: <span id="quiz-score">0</span>/6</div>
+    </div>
+    <div id="exit-quiz"></div>
+    <div id="exit-results" class="exit-results"></div>
+    <div style="text-align:center;margin-top:8px">
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
+      <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
+      <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-container -->
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/9</div>
+
+<!-- ═══ PRINT AREA ═══ -->
+<div id="print-area">
+
+<div id="print-ko" class="print-section">
+  <h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L5): Anaerobic Respiration</h1>
+  <table class="ko-table">
+    <tr><th>Item</th><th>Details</th></tr>
+    <tr><td><strong>Anaerobic</strong></td><td>Respiration <strong>without</strong> oxygen. Releases only a little ATP.</td></tr>
+    <tr><td><strong>Animals (equation)</strong></td><td>Glucose → Lactic Acid</td></tr>
+    <tr><td><strong>Yeast/plants (equation)</strong></td><td>Glucose → Ethanol + Carbon Dioxide</td></tr>
+    <tr><td><strong>Fermentation</strong></td><td>The name for anaerobic respiration in yeast/plants.</td></tr>
+    <tr><td><strong>Oxygen debt</strong></td><td>Extra oxygen needed after exercise to break down the lactic acid that built up.</td></tr>
+    <tr><td><strong>Cramp/fatigue</strong></td><td>Caused by lactic acid building up in muscles.</td></tr>
+    <tr><td><strong>Uses of fermentation</strong></td><td>Brewing (ethanol in beer/wine), baking (CO₂ makes bread rise).</td></tr>
+    <tr><td><strong>Aerobic vs anaerobic</strong></td><td>Aerobic: needs O₂, lots of ATP, makes CO₂ + water. Anaerobic: no O₂, little ATP, makes lactic acid OR ethanol + CO₂.</td></tr>
+  </table>
+</div>
+
+<div id="print-arrival" class="print-section">
+  <h2>The Fab 4 – Recall Starter (from Aerobic Equations)</h2>
+  <div class="foundation-content"><h3>Foundation</h3><p>1) Name the two reactants of aerobic respiration.</p><div class="print-line"></div><p>2) Name the two products of aerobic respiration.</p><div class="print-line"></div><p>3) Which gas does aerobic respiration need?</p><div class="print-line"></div><p>4) What happens if a cell runs out of oxygen?</p><div class="print-line"></div></div>
+  <div class="middle-content"><h3>Middle</h3><p>1) Write the word equation for aerobic respiration.</p><div class="print-line"></div><p>2) Why does aerobic respiration release so much ATP?</p><div class="print-line"></div><p>3) Write the balanced symbol equation for aerobic respiration.</p><div class="print-line"></div><p>4) Predict: will anaerobic release more or less ATP than aerobic?</p><div class="print-line"></div></div>
+  <div class="higher-content"><h3>Higher</h3><p>1) Explain the link between oxygen and the amount of ATP released.</p><div class="print-line"></div><div class="print-line"></div><p>2) Prove the aerobic symbol equation is balanced (count C, H, O).</p><div class="print-line"></div><div class="print-line"></div><p>3) During hard exercise, why might muscles not get enough oxygen?</p><div class="print-line"></div><p>4) If glucose is only partly broken down, why is a waste product left?</p><div class="print-line"></div></div>
+</div>
+
+<div id="print-starter" class="print-section"><h2>Lesson 5 Starter: No Oxygen — Which Equation is Right?</h2>
+<p>When muscles run out of oxygen they respire anaerobically. Only <strong>ONE</strong> equation is correct for animals. Tick it, then explain why.</p>
+<table class="ko-table" style="font-size:1.05rem"><tr><th style="width:8%">Tick</th><th>Equation</th></tr>
+<tr><td></td><td style="font-family:monospace">A) Glucose + Oxygen → Lactic Acid</td></tr>
+<tr><td></td><td style="font-family:monospace">B) Glucose → Lactic Acid</td></tr>
+<tr><td></td><td style="font-family:monospace">C) Lactic Acid → Glucose</td></tr>
+<tr><td></td><td style="font-family:monospace">D) Glucose → Carbon Dioxide + Water</td></tr>
+</table>
+<p><strong>My choice:</strong> ________&nbsp;&nbsp;&nbsp;<strong>Why?</strong></p>
+<div class="print-line"></div><div class="print-line"></div>
+<p><strong>Extension – what's wrong with the other three?</strong></p>
+<p>A is wrong because:</p><div class="print-line"></div>
+<p>C is wrong because:</p><div class="print-line"></div>
+<p>D is wrong because:</p><div class="print-line"></div>
+</div>
+
+<div id="print-scaffold-foundation" class="print-section">
+  <h2>Scaffolding Sheet – Foundation (Grades U–1)</h2>
+  <div class="scaffold-print-box"><h3>Both Anaerobic Equations</h3>
+    <p><strong>Animals:</strong> Glucose → Lactic Acid</p>
+    <p><strong>Yeast/plants:</strong> Glucose → Ethanol + Carbon Dioxide</p></div>
+  <div class="scaffold-print-box"><h3>Sentence Starters</h3>
+    <p>Anaerobic respiration happens when there is no ________.</p>
+    <p>In animals, glucose turns into ________.</p>
+    <p>In yeast, glucose turns into ________ and ________.</p></div>
+</div>
+
+<div  id="print-scaffold-middle" class="print-section">
+  <h2>Scaffolding Sheet – Middle (Grades 2–3)</h2>
+  <div class="scaffold-print-box"><h3>Equations</h3>
+    <p><strong>Animals:</strong> Glucose → Lactic Acid</p>
+    <p><strong>Yeast/plants:</strong> Glucose → Ethanol + Carbon Dioxide</p></div>
+  <div class="scaffold-print-box"><h3>Key Words</h3>
+    <table class="ko-table"><tr><td><strong>Anaerobic</strong></td><td>Without oxygen.</td></tr>
+    <tr><td><strong>Lactic acid</strong></td><td>Animal anaerobic product (causes cramp).</td></tr>
+    <tr><td><strong>Ethanol</strong></td><td>Yeast anaerobic product (alcohol).</td></tr>
+    <tr><td><strong>Fermentation</strong></td><td>Anaerobic respiration in yeast/plants.</td></tr></table></div>
+</div>
+
+<div id="print-scaffold-higher" class="print-section">
+  <h2>Scaffolding Sheet – Higher (Grades 3–5)</h2>
+  <div class="scaffold-print-box"><h3>Aerobic vs Anaerobic</h3>
+    <table class="ko-table"><tr><th></th><th>Aerobic</th><th>Anaerobic</th></tr><tr><td>Oxygen</td><td>Yes</td><td>No</td></tr><tr><td>ATP</td><td>Lots</td><td>A little</td></tr><tr><td>Animal product</td><td>CO₂ + water</td><td>Lactic acid</td></tr><tr><td>Yeast product</td><td>CO₂ + water</td><td>Ethanol + CO₂</td></tr></table></div>
+  <div class="scaffold-print-box"><h3>Key Terms</h3>
+    <p>Anaerobic, fermentation, lactic acid, ethanol, oxygen debt, incomplete breakdown, fatigue</p></div>
+</div>
+
+<div id="print-worksheet-foundation" class="print-section">
+  <h2>Independent Work – Foundation (Grades U–1)</h2>
+  <div class="prevent-break"><p><strong>Part A: Multiple Choice (circle the correct answer)</strong></p>
+    <p>1) "Anaerobic" means respiration: A) With oxygen &nbsp; B) Without oxygen &nbsp; C) In the lungs &nbsp; D) With water</p>
+    <p>2) In animals, anaerobic respiration makes: A) Lactic acid &nbsp; B) Ethanol &nbsp; C) Oxygen &nbsp; D) Water</p>
+    <p>3) In yeast, anaerobic respiration makes: A) Lactic acid &nbsp; B) Ethanol + carbon dioxide &nbsp; C) Glucose &nbsp; D) Oxygen</p>
+    <p>4) Anaerobic respiration releases: A) Lots of ATP &nbsp; B) A little ATP &nbsp; C) No energy &nbsp; D) Only heat</p></div>
+  <div class="prevent-break"><p><strong>Part B: Short Answer (word bank: Glucose · Lactic Acid · Ethanol · Carbon Dioxide)</strong></p>
+    <p>5) Complete (animals): __________ → __________</p><div class="print-line"></div>
+    <p>6) Complete (yeast): Glucose → __________ + __________</p><div class="print-line"></div>
+    <p>7) Anaerobic respiration happens when there is no __________.</p><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part C: Long Answer</strong></p>
+    <p>8) Write the anaerobic equation for animals and the one for yeast. Say which product belongs to which.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part D: Exam Question [3 marks]</strong></p>
+    <p>9) Write the word equation for anaerobic respiration in animals and say what causes muscle cramp. [3]</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-worksheet-middle" class="print-section">
+  <h2>Independent Work – Middle (Grades 2–3)</h2>
+  <div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p>
+    <p>1) The anaerobic equation in animals is: A) Glucose + Oxygen → Lactic Acid &nbsp; B) Glucose → Lactic Acid &nbsp; C) Lactic Acid → Glucose &nbsp; D) Glucose → Ethanol + CO₂</p>
+    <p>2) Fermentation is anaerobic respiration in: A) Animals &nbsp; B) Yeast and plants &nbsp; C) The lungs &nbsp; D) Bacteria only</p>
+    <p>3) Anaerobic respiration releases less ATP because: A) It is slow &nbsp; B) Glucose is only partly broken down &nbsp; C) It happens in the lungs &nbsp; D) It uses too much oxygen</p></div>
+  <div class="prevent-break"><p><strong>Part B: Short Answer</strong></p>
+    <p>4) Write the anaerobic equation in animals from memory.</p><div class="print-line"></div>
+    <p>5) Write the anaerobic equation in yeast/plants from memory.</p><div class="print-line"></div>
+    <p>6) Give one use of fermentation in everyday life.</p><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part C: Long Answer</strong></p>
+    <p>7) Explain what "oxygen debt" is and why you breathe hard after a sprint.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part D: Exam Question [4 marks]</strong></p>
+    <p>8) Compare anaerobic respiration in animals with anaerobic respiration in yeast. Give the equation for each and one similarity. [4]</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-worksheet-higher" class="print-section">
+  <h2>Independent Work – Higher (Grades 3–5)</h2>
+  <div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p>
+    <p>1) Anaerobic respiration releases less ATP than aerobic because: A) It is faster &nbsp; B) Glucose is not fully broken down &nbsp; C) It uses more oxygen &nbsp; D) It makes water</p>
+    <p>2) Lactic acid building up in muscles causes: A) Cramp and fatigue &nbsp; B) More oxygen &nbsp; C) Faster ATP &nbsp; D) Cooling</p></div>
+  <div class="prevent-break"><p><strong>Part B: Short Answer</strong></p>
+    <p>3) Explain why anaerobic respiration releases less energy than aerobic respiration.</p><div class="print-line"></div><div class="print-line"></div>
+    <p>4) Explain what oxygen debt is and how the body repays it.</p><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part C: Long Answer</strong></p>
+    <p>5) Yeast is used in both brewing and baking. Explain how the <em>same</em> anaerobic reaction is useful in each case.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part D: Exam Question [5 marks]</strong></p>
+    <p>6) Compare aerobic and anaerobic respiration. In your answer refer to oxygen, the amount of ATP released, and the products in animals and in yeast. [5]</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-exit" class="print-section">
+  <div class="foundation-content">
+    <h2>Exit Ticket – Anaerobic Respiration (Foundation U–1)</h2>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ______________________   <strong>Class:</strong> __________   <strong>Date:</strong> __________</p>
+    <p style="font-size:.9rem;margin:0 0 12px"><em>Answer from memory — no notes.</em></p>
+    <div class="prevent-break"><p><strong>1)</strong> "Anaerobic" means respiration ______________ oxygen.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>2)</strong> Complete (animals): Glucose → __________</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>3)</strong> Complete (yeast): Glucose → __________ + __________</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>4)</strong> Does anaerobic respiration release a lot or a little ATP? Circle:&nbsp;&nbsp; A LOT&nbsp;&nbsp;/&nbsp;&nbsp; A LITTLE</p></div>
+    <div class="prevent-break"><p><strong>5)</strong> What waste product builds up in muscles and causes cramp?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>6)</strong> Name one food or drink made using fermentation.</p><div class="print-line"></div></div>
+  </div>
+  <div class="middle-content">
+    <h2>Exit Ticket – Anaerobic Respiration (Middle 2–3)</h2>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ______________________   <strong>Class:</strong> __________   <strong>Date:</strong> __________</p>
+    <p style="font-size:.9rem;margin:0 0 12px"><em>Answer from memory — no notes.</em></p>
+    <div class="prevent-break"><p><strong>1)</strong> Write the anaerobic equation in animals.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>2)</strong> Write the anaerobic equation in yeast/plants.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>3)</strong> What is fermentation?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>4)</strong> Why does anaerobic respiration release less ATP than aerobic?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>5)</strong> Give one similarity between anaerobic respiration in animals and in yeast.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>6)</strong> What is "oxygen debt"?</p><div class="print-line"></div></div>
+  </div>
+  <div class="higher-content">
+    <h2>Exit Ticket – Anaerobic Respiration (Higher 3–5)</h2>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ______________________   <strong>Class:</strong> __________   <strong>Date:</strong> __________</p>
+    <p style="font-size:.9rem;margin:0 0 12px"><em>Answer from memory — no notes.</em></p>
+    <div class="prevent-break"><p><strong>1)</strong> Write both anaerobic equations (animals and yeast).</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>2)</strong> Explain why anaerobic respiration releases far less ATP than aerobic.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>3)</strong> Explain oxygen debt and how it is repaid.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>4)</strong> Give two differences between aerobic and anaerobic respiration.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>5)</strong> A student writes: "Anaerobic respiration in animals makes ethanol." Correct this.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>6)</strong> Explain why the carbon dioxide from yeast is useful in baking.</p><div class="print-line"></div></div>
+  </div>
+</div>
+
+<div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><pre id="wedo-evidence-content" style="white-space:pre-wrap;font-family:inherit;font-size:.95rem"></pre></div>
+</div>
+
+<!-- ═══ V4 MODALS / OVERLAYS ═══ -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="modal-back" id="ta-modal"><div class="modal modal-ta">
+  <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+  <h2>🎓 TA Focus</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px" id="ta-slide-name"></p>
+  <div class="ta-modal-body" id="ta-body"></div>
+</div></div>
+
+<div class="modal-back" id="cc-modal"><div class="modal modal-cc">
+  <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+  <h2>🎯 Cold Call</h2>
+  <div class="roster-row"><input id="cc-roster-input" placeholder="Names, comma separated (saved for all lessons)"><button class="small" onclick="saveRoster()">Save</button></div>
+  <button class="small" style="margin-top:10px;background:#7c3aed" onclick="pickPupil()">🎲 Pick a pupil</button>
+  <div class="cc-name" id="cc-name">—</div>
+  <div id="cc-questions"></div>
+</div></div>
+
+<div class="modal-back" id="video-modal"><div class="modal" style="max-width:760px;border-top-color:#dc2626">
+  <button class="modal-close small" onclick="closeVideo()">✕ Close</button>
+  <h2>📺 Anaerobic Respiration</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px">Short GCSE/IGCSE clip on anaerobic respiration in animals and yeast (spec 2.38). Teacher: swap the link in the code if you prefer another.</p>
+  <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000">
+    <iframe id="video-frame" title="Anaerobic respiration video" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div></div>
+
+<div class="modal-back" id="board-modal"><div class="modal modal-board">
+  <button class="modal-close small" onclick="closeModal('board-modal')">✕ Close</button>
+  <h2>🏆 Class Progress Board</h2>
+  <p style="color:var(--muted);font-size:.9rem">XP earned this lesson through the interactive tasks.</p>
+  <div id="board-body"></div>
+</div></div>
+
+<div class="lesson-complete" id="lesson-complete"><div class="lc-card">
+  <h1>🎉 Lesson Complete!</h1>
+  <p>Anaerobic Respiration — Lesson 5</p>
+  <div class="lc-xp">⭐ <span id="lc-xp-val">0</span> XP</div>
+  <p id="lc-msg" style="color:var(--muted)"></p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('open')">Close</button>
+</div></div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{
+  const t=e.target;
+  if(t&&(t.isContentEditable||t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
+  if(document.querySelector('.modal-back.open,.lesson-complete.open'))return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')||el.classList.contains('exit-grid')?'grid':'block'}else{el.style.display='none'}}})}
+function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');window.print()}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;const s=c.closest('.slide');const title=s?s.getAttribute('data-title'):'We Do';const ts=new Date().toLocaleString('en-GB');const results=[];c.querySelectorAll('.quiz').forEach((q,i)=>{const qT=q.querySelector('.q')?.innerText||'';const fb=q.querySelector('.fb')?.innerText||'(not answered)';results.push('Q'+(i+1)+': '+qT+'\nAnswer: '+fb)});const n=c.querySelector('[contenteditable]');const notes=n?n.innerText:'';let out='CLASS EVIDENCE \u2013 '+title+'\nDate/Time: '+ts+'\n'+'\u2500'.repeat(50)+'\n\n';if(results.length)out+='QUESTIONS:\n'+results.join('\n\n')+'\n\n';if(notes&&notes!==n?.getAttribute('data-placeholder'))out+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=out;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // --- Teacher-notes placeholder init ---
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // ═══ DRAG & DROP ENGINE (pointer-based: works with mouse AND touch) ═══
+  const DND={};const DND_LABELS={wedo1:'Anaerobic Equation Builder',wedo2:'Aerobic vs Anaerobic Sort'};
+  function initDnD(act,total){DND[act]={total:total,placed:0}}
+  function dndZoneUnder(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.drop-zone'):null}
+  function clearDragStyle(it){it.style.position='';it.style.left='';it.style.top='';it.style.zIndex='';it.style.width=''}
+  function hideHint(z){const h=z.querySelector('.slot-hint');if(h)h.style.display='none'}
+  function makeDrag(it){
+    it.style.touchAction='none';
+    it.addEventListener('pointerdown',function(e){
+      if(it.classList.contains('locked'))return;
+      e.preventDefault();
+      const r=it.getBoundingClientRect();const ox=e.clientX-r.left,oy=e.clientY-r.top,w=r.width;
+      try{it.setPointerCapture(e.pointerId)}catch(_){}
+      it.classList.add('dragging');it.style.width=w+'px';it.style.position='fixed';it.style.left=r.left+'px';it.style.top=r.top+'px';it.style.zIndex=4000;
+      function mv(ev){it.style.left=(ev.clientX-ox)+'px';it.style.top=(ev.clientY-oy)+'px';it.style.visibility='hidden';const z=dndZoneUnder(ev.clientX,ev.clientY);it.style.visibility='';document.querySelectorAll('.drop-zone.zone-hover').forEach(zz=>zz.classList.remove('zone-hover'));if(z&&z.dataset.activity===it.dataset.activity)z.classList.add('zone-hover')}
+      function up(ev){try{it.releasePointerCapture(e.pointerId)}catch(_){}it.removeEventListener('pointermove',mv);it.removeEventListener('pointerup',up);it.classList.remove('dragging');it.style.visibility='hidden';const z=dndZoneUnder(ev.clientX,ev.clientY);it.style.visibility='';document.querySelectorAll('.drop-zone.zone-hover').forEach(zz=>zz.classList.remove('zone-hover'));clearDragStyle(it);dndDrop(it,z)}
+      it.addEventListener('pointermove',mv);it.addEventListener('pointerup',up);
+    });
+  }
+  function dndBounce(it){it.classList.add('dnd-bounce');playBuzz();setTimeout(()=>it.classList.remove('dnd-bounce'),400)}
+  function dndDrop(it,zone){
+    const act=it.dataset.activity;
+    if(!zone||zone.dataset.activity!==act){dndBounce(it);return}
+    const cap=parseInt(zone.dataset.cap||'99',10);
+    if(zone.querySelectorAll('.drag-item').length>=cap&&!zone.contains(it)){dndBounce(it);return}
+    if(zone.dataset.zoneid===it.dataset.target){
+      (zone.querySelector('.bin-items')||zone).appendChild(it);hideHint(zone);
+      it.classList.add('locked','dnd-correct');
+      DND[act].placed++;updateDnDScore(act);addXP(10,DND_LABELS[act]);
+      if(DND[act].placed>=DND[act].total)dndComplete(act);
+    }else{dndBounce(it);zone.classList.add('zone-wrong');setTimeout(()=>zone.classList.remove('zone-wrong'),400)}
+  }
+  function updateDnDScore(act){const el=document.getElementById(act+'-score');if(el)el.textContent=DND[act].placed}
+  function dndComplete(act){const fb=document.getElementById(act+'-fb');if(fb){fb.textContent='🎉 All correct — superb work!';fb.style.color='var(--success)'}confetti()}
+  function resetDnD(act){
+    const tray=document.getElementById(act+'-tray');
+    document.querySelectorAll('.drag-item[data-activity="'+act+'"]').forEach(it=>{it.classList.remove('locked','dnd-correct','dnd-bounce');clearDragStyle(it);if(tray)tray.appendChild(it)});
+    document.querySelectorAll('.eq-slot .slot-hint').forEach(h=>h.style.display='');
+    DND[act].placed=0;updateDnDScore(act);const fb=document.getElementById(act+'-fb');if(fb)fb.textContent='';playClick()
+  }
+  function revealDnD(act){
+    document.querySelectorAll('.drag-item[data-activity="'+act+'"]').forEach(it=>{
+      if(it.classList.contains('locked'))return;
+      const z=document.querySelector('.drop-zone[data-activity="'+act+'"][data-zoneid="'+it.dataset.target+'"]');
+      if(z){(z.querySelector('.bin-items')||z).appendChild(it);hideHint(z);it.classList.add('locked','dnd-correct')}
+    });
+    DND[act].placed=DND[act].total;updateDnDScore(act);const fb=document.getElementById(act+'-fb');if(fb){fb.textContent='✅ Answers revealed';fb.style.color='var(--success)'}
+  }
+  initDnD('wedo1',5);initDnD('wedo2',6);
+  document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
+  window.addEventListener('load',()=>{document.querySelectorAll('.drag-item').forEach(makeDrag)});
+
+  // --- Independent Work Timer ---
+  let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function startIndepTimer(secs){
+    if(indepPaused&&!secs){indepPaused=false;}
+    else{clearInterval(indepInterval);indepSeconds=secs||480;}
+    indepPaused=false;
+    updateIndepDisplay();
+    indepInterval=setInterval(function(){
+      if(!indepPaused){indepSeconds--;updateIndepDisplay();
+      if(indepSeconds<=0){clearInterval(indepInterval);
+        const d=document.getElementById('indep-timer-display');if(d){d.textContent='TIME UP!';d.classList.add('timer-warning');}
+      }}
+    },1000);
+  }
+  function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d&&indepPaused)d.style.opacity='.5';else if(d)d.style.opacity='1';}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1';}}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const d=document.getElementById('indep-timer-display');if(d){d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);}}
+
+  // ═══════════════ V4 / V5 ENGAGEMENT MODULE ═══════════════
+  // --- Sounds (WebAudio, no assets) ---
+  let _ac=null;function _audio(){if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return _ac}
+  function _tone(freq,dur,type){const a=_audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.start();o.stop(a.currentTime+dur)}
+  function playDing(){_tone(880,.18);setTimeout(()=>_tone(1320,.22),90)}
+  function playBuzz(){_tone(150,.25,'square')}
+  function playClick(){_tone(520,.06,'triangle')}
+
+  // --- Confetti ---
+  function confetti(){const c=document.getElementById('confetti-canvas');if(!c)return;c.style.display='block';c.width=innerWidth;c.height=innerHeight;const ctx=c.getContext('2d');const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb','#eab308'];const P=[];for(let i=0;i<140;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[i%cols.length],v:2+Math.random()*4,a:Math.random()*6.28});let t=0;const id=setInterval(()=>{ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.05)*1.5;ctx.fillStyle=p.c;ctx.beginPath();ctx.rect(p.x,p.y,p.r,p.r*1.6);ctx.fill()});if(++t>140){clearInterval(id);ctx.clearRect(0,0,c.width,c.height);c.style.display='none'}},25)}
+
+  // --- XP system ---
+  let xp=0;const xpLog={};
+  function addXP(n,label){xp+=n;const v=document.getElementById('xp-val');v.textContent=xp;v.parentElement.classList.remove('xp-pop');void v.parentElement.offsetWidth;v.parentElement.classList.add('xp-pop');if(label)xpLog[label]=(xpLog[label]||0)+n;playDing()}
+
+  // --- Modals ---
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  const VIDEO_ID='-75KqAvnOR8'; // PLACEHOLDER clip — replace with an anaerobic respiration video (spec 2.38)
+  function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
+  function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';const roster=JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]');if(roster.length)rows+=`<div class="lb-row me"><span>🏅 Class total</span><span>${xp} XP</span></div>`;else rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
+
+  // --- Cold Call (roster shared across all PS lessons) ---
+  function loadRoster(){return JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]')}
+  function saveRoster(){const raw=document.getElementById('cc-roster-input').value;const names=raw.split(',').map(s=>s.trim()).filter(Boolean);localStorage.setItem('ps_coldcall_roster',JSON.stringify(names));document.getElementById('cc-name').textContent=names.length?'Saved '+names.length+' names ✓':'—';playClick()}
+  function pickPupil(){const r=loadRoster();const el=document.getElementById('cc-name');if(!r.length){el.textContent='Add names first ↑';return}let i=0,n=12;const id=setInterval(()=>{el.textContent=r[Math.floor(Math.random()*r.length)];if(++i>n){clearInterval(id);el.textContent=r[Math.floor(Math.random()*r.length)];playDing()}},70)}
+  function openCC(){document.getElementById('cc-roster-input').value=loadRoster().join(', ');const d=CC_DATA[currentSlide];const box=document.getElementById('cc-questions');if(!d){box.innerHTML='<p style="color:var(--muted)">No targeted questions for this slide — use a recall question from earlier.</p>'}else{box.innerHTML=`<div class="cc-q cc-f"><div class="tier">Foundation · U/1</div>${d.f}</div><div class="cc-q cc-m"><div class="tier">Middle · 2</div>${d.m}</div><div class="cc-q cc-h"><div class="tier">Higher · 3–5</div>${d.h}</div>`}document.getElementById('cc-name').textContent='—';document.getElementById('cc-modal').classList.add('open')}
+
+  // --- TA Focus ---
+  function openTA(){const d=TA_DATA[currentSlide]||{name:slides[currentSlide].getAttribute('data-title')||'',body:'<p>Support pupils to stay on task and re-voice the key idea in their own words.</p>'};document.getElementById('ta-slide-name').textContent=d.name;document.getElementById('ta-body').innerHTML=d.body;document.getElementById('ta-modal').classList.add('open')}
+
+  // --- Per-slide data (index matches slide order) ---
+  const TA_DATA={
+    1:{name:'Arrival – Recall (Aerobic)',body:'<p><strong>Your job:</strong> circulate, keep books open, no calling out.</p><ul><li>This recalls last lesson (Aerobic Equations). If a pupil is blank, prompt "what gas do we breathe in?" rather than giving the answer.</li><li>Q4 is the lead-in — accept any sensible "no oxygen / anaerobic" reasoning.</li><li>Flag anyone who can\'t recall the aerobic <em>products</em> — they\'ll need support in the comparison.</li></ul>'},
+    2:{name:'Starter – No Oxygen?',body:'<p><strong>Your job:</strong> low-threat, tick-one task — get reluctant writers committing.</p><ul><li>The correct one is <strong>B</strong> (Glucose → Lactic Acid). Don\'t reveal — ask "what does anaerobic NOT have?"</li><li>Key catch: A still has oxygen, so it can\'t be anaerobic.</li></ul>'},
+    3:{name:'I Do – Anaerobic in Animals',body:'<p><strong>Your job:</strong> nail the single product — lactic acid.</p><ul><li>Watch for pupils adding CO₂/water (that\'s aerobic) — red misconception box.</li><li>Link lactic acid → cramp → oxygen debt with the sprinter example.</li></ul>'},
+    4:{name:'We Do – Build Both Equations',body:'<p><strong>Your job:</strong> let pupils try before hinting. Use the on-screen Hint button.</p><ul><li>Two separate "Glucose" tiles — one for each equation. Both start with glucose.</li><li>Animals → lactic acid. Yeast → ethanol + carbon dioxide. No oxygen on either left.</li></ul>'},
+    5:{name:'I Do – Yeast & Comparison',body:'<p><strong>Your job:</strong> keep the two anaerobic products separate in pupils\' minds.</p><ul><li>Yeast = ethanol + CO₂ (fermentation). Use the brewing/baking hook.</li><li>Higher pupils: push them on <em>why</em> anaerobic gives less ATP (incomplete breakdown).</li></ul>'},
+    6:{name:'We Do – Aerobic vs Anaerobic',body:'<p><strong>Your job:</strong> the discriminator is always "does it use oxygen?"</p><ul><li>"Lots of ATP" and "CO₂ + water" → aerobic. "Lactic acid", "ethanol + CO₂", "little ATP" → anaerobic.</li><li>If a pupil hesitates, ask them to say the question aloud first.</li></ul>'},
+    7:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
+    8:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still mixes up the animal vs yeast products — that\'s a starter for next lesson.</li></ul>'}
+  };
+  const CC_DATA={
+    1:{f:'Which <strong>gas</strong> does aerobic respiration need?',m:'Name the <strong>two products</strong> of aerobic respiration.',h:'Why does aerobic respiration release <strong>so much</strong> ATP?'},
+    2:{f:'Which letter (A–D) is the <strong>correct</strong> anaerobic equation?',m:'Why can\'t equation <strong>A</strong> be anaerobic?',h:'Equation C is reversed — why is that wrong?'},
+    3:{f:'What is the <strong>one product</strong> of anaerobic respiration in animals?',m:'Why does lactic acid cause <strong>cramp</strong>?',h:'Explain what <strong>oxygen debt</strong> is.'},
+    4:{f:'What do <strong>both</strong> anaerobic equations start with?',m:'Build the <strong>yeast</strong> equation out loud.',h:'Why is there <strong>no oxygen</strong> on the left of either equation?'},
+    5:{f:'What two products does <strong>yeast</strong> make?',m:'What is <strong>fermentation</strong>?',h:'Why does anaerobic respiration release <strong>less</strong> ATP than aerobic?'},
+    6:{f:'Does anaerobic respiration <strong>use oxygen</strong>?',m:'Is "makes lactic acid" aerobic or anaerobic?',h:'Give <strong>two</strong> differences between aerobic and anaerobic respiration.'},
+    8:{f:'Write the anaerobic equation in <strong>animals</strong>.',m:'Write the anaerobic equation in <strong>yeast</strong>.',h:'Compare aerobic and anaerobic (oxygen, ATP, products).'}
+  };
+
+  // --- V5: step-by-step reveal on I Do slides ---
+  function revealStep(btn){const slide=btn.closest('.slide');const steps=[...slide.querySelectorAll('.v5-step')];const next=steps.find(s=>!s.classList.contains('revealed'));if(next){next.classList.add('revealed');playClick();const done=steps.filter(s=>s.classList.contains('revealed')).length;const c=slide.querySelector('.step-count');if(c)c.textContent=done+'/'+steps.length;if(done===steps.length){btn.textContent='✓ All shown';btn.disabled=true;btn.style.opacity='.5'}}}
+  function revealAllSteps(btn){const slide=btn.closest('.slide');slide.querySelectorAll('.v5-step').forEach(s=>s.classList.add('revealed'));const steps=slide.querySelectorAll('.v5-step');const c=slide.querySelector('.step-count');if(c)c.textContent=steps.length+'/'+steps.length;const rb=slide.querySelector('.reveal-next-btn');if(rb){rb.textContent='✓ All shown';rb.disabled=true;rb.style.opacity='.5'}}
+
+  // --- Hints ---
+  // --- Lesson complete overlay ---
+  function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+  function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=70?'Outstanding effort across the whole lesson!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
+
+  // ═══ INTERACTIVE EXIT KNOWLEDGE CHECK ═══
+  const QUIZ=[
+    {q:'What does "anaerobic" respiration mean?',tier:'F',opts:['Respiration with extra oxygen','Respiration without oxygen','Respiration in the lungs','Respiration using water'],a:1,why:'Anaerobic = without oxygen. Aerobic = with oxygen.'},
+    {q:'In animals, anaerobic respiration produces…',tier:'F',opts:['Lactic acid','Ethanol','Carbon dioxide + water','Oxygen'],a:0,why:'In animals the only product is lactic acid — it builds up and causes cramp.'},
+    {q:'Which is the correct anaerobic equation in yeast?',tier:'F',opts:['Glucose → Lactic Acid','Glucose + Oxygen → CO\u2082 + Water','Glucose → Ethanol + Carbon Dioxide','Ethanol → Glucose'],a:2,why:'In yeast (fermentation): Glucose → Ethanol + Carbon Dioxide. No oxygen needed.'},
+    {q:'Compared with aerobic respiration, anaerobic respiration releases…',tier:'M',opts:['Much more ATP','A little ATP','The same ATP','No energy at all'],a:1,why:'Without oxygen glucose is only partly broken down, so far less ATP is released.'},
+    {q:'Why is yeast useful in baking bread?',tier:'M',opts:['The lactic acid adds flavour','The carbon dioxide makes the bread rise','The ethanol makes it soft','It adds oxygen'],a:1,why:'The carbon dioxide from fermentation forms bubbles that make the dough rise.'},
+    {q:'What is "oxygen debt"?',tier:'H',opts:['Oxygen owed to the lungs','Extra oxygen needed after exercise to break down lactic acid','Oxygen used during a sprint','A shortage of glucose'],a:1,why:'After hard exercise you breathe deeply to take in extra oxygen and break down the lactic acid that built up.'}
+  ];
+  let qIdx=0,qScore=0,qAnswered=false;
+  const TIER_NAME={F:'Foundation',M:'Middle',H:'Higher'},TIER_CLS={F:'qt-f',M:'qt-m',H:'qt-h'};
+  function startQuiz(){qIdx=0;qScore=0;qAnswered=false;const s=document.getElementById('quiz-score');if(s)s.textContent='0';const r=document.getElementById('exit-results');if(r){r.classList.remove('open');r.innerHTML=''}buildDots();renderQuizQ()}
+  function buildDots(){const d=document.getElementById('quiz-dots');if(!d)return;d.innerHTML=QUIZ.map((_,i)=>'<span class="qdot" id="qdot-'+i+'"></span>').join('')}
+  function renderQuizQ(){
+    qAnswered=false;const item=QUIZ[qIdx];
+    document.querySelectorAll('.qdot').forEach((el,i)=>el.classList.toggle('cur',i===qIdx));
+    const opts=item.opts.map((o,i)=>'<button class="quiz-opt" onclick="answerQuiz('+i+',this)">'+o+'</button>').join('');
+    const last=qIdx===QUIZ.length-1;
+    document.getElementById('exit-quiz').innerHTML=
+      '<div class="quiz-card"><div class="q-head"><span class="qnum">Question '+(qIdx+1)+' of '+QUIZ.length+'</span><span class="qtier '+TIER_CLS[item.tier]+'">'+TIER_NAME[item.tier]+'</span></div>'+
+      '<p class="q-text">'+item.q+'</p><div class="quiz-opts">'+opts+'</div>'+
+      '<div class="q-fb" id="q-fb"></div>'+
+      '<div style="text-align:center"><button class="q-next small" id="q-next" style="display:none" onclick="nextQuiz()">'+(last?'See results 🏁':'Next ▶')+'</button></div></div>';
+  }
+  function answerQuiz(i,btn){
+    if(qAnswered)return;qAnswered=true;const item=QUIZ[qIdx];
+    const opts=btn.parentElement.querySelectorAll('.quiz-opt');
+    opts.forEach((b,j)=>{b.disabled=true;if(j===item.a)b.classList.add('opt-correct')});
+    const fb=document.getElementById('q-fb');
+    if(i===item.a){btn.classList.add('opt-correct');qScore++;document.getElementById('quiz-score').textContent=qScore;addXP(10,'Exit Check');fb.innerHTML='✅ Correct! '+item.why;fb.style.color='var(--success)';const d=document.getElementById('qdot-'+qIdx);if(d)d.classList.add('dot-right')}
+    else{btn.classList.add('opt-wrong');playBuzz();fb.innerHTML='❌ Not quite. '+item.why;fb.style.color='var(--error)';const d=document.getElementById('qdot-'+qIdx);if(d)d.classList.add('dot-wrong')}
+    document.getElementById('q-next').style.display='inline-block';
+  }
+  function nextQuiz(){playClick();if(qIdx<QUIZ.length-1){qIdx++;renderQuizQ()}else{showQuizResults()}}
+  function showQuizResults(){
+    const pct=Math.round(qScore/QUIZ.length*100);
+    const msg=pct>=83?'Brilliant — you\u2019ve nailed today\u2019s lesson!':pct>=50?'Good effort — look back at the ones you missed.':'Let\u2019s revisit this together next lesson.';
+    const C=2*Math.PI*42,off=C*(1-pct/100);
+    const ring='<svg width="120" height="120" viewBox="0 0 120 120" style="margin:0 auto 4px;display:block"><circle cx="60" cy="60" r="42" fill="none" stroke="#e2e8f0" stroke-width="12"/><circle cx="60" cy="60" r="42" fill="none" stroke="#16a34a" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-size="22" font-weight="900" fill="#0f172a">'+pct+'%</text><text x="60" y="76" text-anchor="middle" font-size="11" fill="#64748b">'+qScore+'/'+QUIZ.length+'</text></svg>';
+    const r=document.getElementById('exit-results');
+    r.innerHTML='<div class="result-card">'+ring+'<h2>🏁 Knowledge check complete</h2><p style="margin:6px 0">'+msg+'</p><div class="btn-row"><button class="small ghost" onclick="startQuiz()">🔄 Try again</button><button class="small" style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish lesson</button></div></div>';
+    r.classList.add('open');document.getElementById('exit-quiz').innerHTML='';
+    if(pct>=50)confetti();
+  }
+
+  // --- Slide-1 LO checkmark animation ---
+  function animateLOs(){document.querySelectorAll('.lo-anim li').forEach((li,i)=>{li.style.animationDelay=(.3+i*.4)+'s';setTimeout(()=>li.classList.add('done'),(800+i*900))})}
+
+  // --- Float dots on title slide ---
+  function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
+
+  // --- Init ---
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots();startQuiz()});
+
+</script>
+</body>
+</html>
