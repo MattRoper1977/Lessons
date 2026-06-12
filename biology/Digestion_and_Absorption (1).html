@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 1-2: Digestion &amp; Absorption</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}.quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}.quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);font-size:.9rem}.evidence-btn:hover{background:#9d174d}
+    .enzyme-table{width:100%;border-collapse:collapse;font-size:1rem;margin:10px 0}.enzyme-table th{background:var(--ido-bg);border:2px solid var(--ido-border);padding:10px;text-align:left;font-weight:900}.enzyme-table td{border:1px solid #cbd5e1;padding:8px 10px}.enzyme-table tr:nth-child(even){background:#faf5ff}
+    .villus-feature{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;margin-bottom:8px}.villus-icon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .exit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.exit-grid .task-box{margin-bottom:0}
+
+    .match-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;justify-content:center}
+    .match-pill{padding:10px 18px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:1rem;transition:all .15s}
+    .match-pill:hover{border-color:var(--task-border);background:#fefce8}
+    .match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);background:#fce7f3}
+    .match-pill.placed{opacity:.35;pointer-events:none}
+    .match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:14px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:70px;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:all .15s}
+    .match-target:hover{border-color:var(--task-border);background:#fefce8}
+    .match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}
+    .match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .label-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+    .label-btn{padding:8px 14px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;font-weight:bold;font-size:.95rem;user-select:none;transition:all .12s}
+    .label-btn:hover{border-color:var(--task-border)}
+    .label-btn.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2)}
+    .label-btn.placed{opacity:.35;pointer-events:none}
+    .label-spot{position:absolute;border:2px dashed rgba(219,39,119,.5);border-radius:8px;padding:4px 8px;font-size:.8rem;font-weight:900;cursor:pointer;background:rgba(255,255,255,.9);min-width:70px;text-align:center;transition:all .15s}
+    .label-spot:hover{background:#fce7f3}
+    .label-spot.filled{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}
+    .label-spot.wrong-label{border:2px solid var(--error);background:rgba(220,38,38,.1)}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}
+    .score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+
+    .sort-cards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+    .sort-card{padding:8px 14px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;font-weight:bold;font-size:.95rem;user-select:none;transition:all .12s}
+    .sort-card:hover{transform:translateY(-2px);border-color:var(--btn-bg)}
+    .sort-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2)}
+    .sort-card.correct-place{border-color:var(--success);background:rgba(22,163,74,.08)}
+    .sort-card.wrong-place{border-color:var(--error);background:rgba(220,38,38,.08)}
+    .sort-bin{min-height:100px;border:3px dashed #cbd5e1;border-radius:14px;padding:14px;background:#fafafa}
+    
+    .indep-timer{text-align:center;margin:10px 0;padding:12px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px}
+    .indep-timer .timer-display{font-family:monospace;font-size:2.5rem;font-weight:900;color:var(--lo-border);margin:4px 0}
+    .indep-timer .timer-display.timer-warning{color:var(--error);animation:pulse .5s infinite}
+    .indep-timer .timer-label{font-size:.9rem;color:var(--muted);font-weight:bold}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    /* ==== Absorption animation (diffusion vs active transport) ==== */
+    @keyframes diffuseDown{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(150px);opacity:0}}
+    @keyframes activeDown{0%{transform:translateY(0);opacity:0}10%{opacity:1}35%{transform:translateY(55px);opacity:1}50%{transform:translateY(80px);opacity:1}90%{opacity:1;transform:translateY(150px)}100%{opacity:0;transform:translateY(160px)}}
+    @keyframes atpPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.25);opacity:1}}
+    @keyframes pumpPulse{0%,100%{transform:scaleY(1);fill:#7c3aed}50%{transform:scaleY(1.15);fill:#a855f7}}
+    @keyframes bloodFlow{0%{offset-distance:0%}100%{offset-distance:100%}}
+    .diff-mol{animation:diffuseDown 4s linear infinite;transform-origin:center;transform-box:fill-box}
+    .active-mol{animation:activeDown 4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .atp-icon{animation:atpPulse 1.2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .pump-shape{animation:pumpPulse 2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    /* ==== Villus animation ==== */
+    @keyframes villiWave{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+    @keyframes nutrientFlow{0%{opacity:0;transform:translateY(0)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translateY(70px)}}
+    .microvillus{transform-origin:bottom center;transform-box:fill-box;animation:villiWave 2.4s ease-in-out infinite}
+    .nutrient-in{animation:nutrientFlow 3s linear infinite;transform-origin:center;transform-box:fill-box}
+    .flow-arrow{stroke-dasharray:6 4;animation:dashFlow 1.2s linear infinite}
+    @keyframes dashFlow{to{stroke-dashoffset:-20}}
+    /* Label callout styling for We Do accurate labelling */
+    .villus-callout{position:absolute;background:#fff;border:2px solid var(--wedo-border);border-radius:8px;padding:3px 8px;font-size:.78rem;font-weight:900;color:#9d174d;box-shadow:0 2px 6px rgba(0,0,0,.1);min-width:82px;text-align:center;cursor:pointer;transition:all .15s}
+    .villus-callout.filled{background:rgba(22,163,74,.12);border-color:var(--success);color:var(--success)}
+    .villus-callout.wrong-label{background:rgba(220,38,38,.1);border-color:var(--error);animation:shake .4s}
+    .villus-callout:hover{background:#fce7f3}
+    .leader-line{stroke:#db2777;stroke-width:1.5;stroke-dasharray:3 2;fill:none;opacity:.75}
+
+    /* Prior-knowledge starter: journey bar + voting rows */
+    .journey-bar{display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(90deg,#fef3c7 0%,#fce7f3 30%,#dbeafe 60%,#f1f5f9 80%,#dcfce7 100%);border:2px solid #cbd5e1;border-radius:14px;padding:10px 12px;margin:8px auto;max-width:1000px;flex-wrap:wrap}
+    .journey-bar .stage{display:flex;flex-direction:column;align-items:center;min-width:90px;font-size:.88rem;font-weight:700;color:#334155;padding:4px 8px}
+    .journey-bar .stage .emoji{font-size:1.6rem;margin-bottom:2px}
+    .journey-bar .stage-q{background:#fff3cd;border:2.5px dashed #f59e0b;border-radius:12px;color:#92400e;animation:pulseQ 1.6s ease-in-out infinite}
+    @keyframes pulseQ{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    .journey-bar .arrow{font-size:1.4rem;color:#64748b;font-weight:900}
+    .prior-probe{max-width:1000px;margin:0 auto}
+    .prior-probe h3{margin:10px 0 6px;color:var(--starter-border,#1e40af);font-size:1.02rem;font-weight:900;letter-spacing:.3px;text-transform:uppercase}
+    .start-row{display:flex;align-items:center;gap:14px;padding:8px 12px;border-radius:12px;background:#f8fafc;border:2px solid #cbd5e1;margin-bottom:8px;transition:all .18s;flex-wrap:wrap}
+    .start-row:hover{border-color:#1e40af;background:#f1f5f9}
+    .start-row .stmt{flex:1 1 340px;font-size:1rem;font-weight:600;color:#1e293b;line-height:1.35}
+    .start-row .votes{display:flex;gap:4px;flex-shrink:0}
+    .vote-btn{padding:6px 10px;border:2px solid #94a3b8;border-radius:8px;background:#fff;cursor:pointer;font-weight:700;font-size:.82rem;transition:all .15s;color:#475569;font-family:inherit}
+    .vote-btn:hover{transform:translateY(-1px);box-shadow:0 2px 4px rgba(0,0,0,.1)}
+    .vote-btn.agree.voted{background:#dcfce7;border-color:#22c55e;color:#166534}
+    .vote-btn.disagree.voted{background:#fecaca;border-color:#ef4444;color:#991b1b}
+    .vote-btn.unsure.voted{background:#fef3c7;border-color:#eab308;color:#92400e}
+    .start-row .answer{flex-basis:100%;margin-top:6px;font-size:.92rem}
+    .show-ans .start-row[data-correct="agree"] .vote-btn.agree{background:#dcfce7;border-color:#22c55e;box-shadow:0 0 0 2px #22c55e inset}
+    .show-ans .start-row[data-correct="disagree"] .vote-btn.disagree{background:#fecaca;border-color:#ef4444;box-shadow:0 0 0 2px #ef4444 inset}
+    .show-ans .start-row[data-correct="agree"] .vote-btn.agree::before{content:"✓ ";font-weight:900}
+    .show-ans .start-row[data-correct="disagree"] .vote-btn.disagree::before{content:"✓ ";font-weight:900}
+    .bridge-task{background:#fffbeb;border:2px solid #f59e0b;border-radius:14px;padding:12px 16px;margin-top:8px}
+    .bridge-task h3{margin:0 0 4px;color:#92400e;text-transform:uppercase;font-size:.95rem;letter-spacing:.4px}
+
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.indep-timer{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}}
+  </style>
+</head>
+<body>
+<div class="slide-container">
+
+<!-- ═══ LESSON 1: ENZYMES & BILE ═══ -->
+
+<div class="slide active" data-title="L1 – Title">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+    <span class="slide-tag tag-lesson">Lesson 1 of 2</span>
+    <h1>Lesson 1-2: Digestion &amp; Absorption</h1>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 18px">Digestive Enzymes &amp; Bile</p>
+    <div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objectives:</strong>
+      <ul style="font-size:1.05rem;margin-top:8px"><li><strong>2.29</strong> – Understand the role of digestive enzymes: amylase &amp; maltase (starch to glucose), proteases (proteins to amino acids), lipases (lipids to fatty acids &amp; glycerol).</li><li><strong>2.30</strong> – Understand that bile is produced by the liver and stored in the gallbladder.</li><li><strong>2.31</strong> – Understand the role of bile in neutralising stomach acid and emulsifying lipids.</li></ul>
+    </div>
+    <p style="font-size:1.1rem;margin-top:14px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+  </div>
+  <div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools – Lesson 1</h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button onclick="printPack('foundation',1)" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+      <button onclick="printPack('middle',1)" style="background:#f97316">🖨️ Middle (2–3)</button>
+      <button onclick="printPack('higher',1)" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+      <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+    </div></div>
+  </div>
+</div>
+
+<!-- L1 ARRIVAL -->
+<div class="slide" id="l1-arrival-slide" data-title="L1 – Arrival Task">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-arrival">Arrival Task</span>
+  <h2>Arrival Task – Recall from the Digestive System</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer in your books from memory. Q1–3 recall the Digestive System lesson. Q4 leads into today.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('l1-arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle">
+    <button onclick="switchLevel('l1-arrival','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('l1-arrival','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('l1-arrival','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+  <div id="l1-arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Organs (Recall)</h3><p>Name the <strong>five</strong> main organs of the <strong>alimentary canal</strong> in the correct order.</p><p class="answer">Mouth, oesophagus, stomach, small intestine, large intestine.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Peristalsis (Recall)</h3><p>What is the name for the wave of muscular <strong>contraction</strong> that pushes food through the gut?</p><p class="answer">Peristalsis.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Stomach (Recall)</h3><p>Name the strong acid found in the <strong>stomach</strong> that kills bacteria.</p><p class="answer">Hydrochloric acid (HCl).</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Enzymes</h3><p>Food molecules like <strong>starch</strong> are too big to pass into our blood. What type of chemical helps break them into smaller pieces?</p><p class="answer">Enzymes.</p></div>
+  </div>
+  <div id="l1-arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Alimentary Canal (Recall)</h3><p>Name the two parts of the <strong>small intestine</strong> and state one function of each.</p><p class="answer">Duodenum – finishes chemical digestion. Ileum – absorbs digested food into the blood.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Peristalsis (Recall)</h3><p>Describe how <strong>peristalsis</strong> moves a <strong>bolus</strong> of food through the oesophagus.</p><p class="answer">Waves of muscular contraction squeeze behind the bolus, pushing it along towards the stomach.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Accessory Organs (Recall)</h3><p>Name one <strong>accessory organ</strong> and state what it produces.</p><p class="answer">Pancreas – produces digestive enzymes. Or: liver – produces bile; salivary glands – produce saliva with amylase.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Enzymes</h3><p>Large <strong>insoluble</strong> molecules cannot pass through the gut wall. What type of biological <strong>catalyst</strong> breaks them into smaller <strong>soluble</strong> molecules?</p><p class="answer">Enzymes.</p></div>
+  </div>
+  <div id="l1-arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Digestion Types (Recall)</h3><p>Explain the difference between <strong>mechanical</strong> and <strong>chemical</strong> digestion and give one location where both occur.</p><p class="answer">Mechanical digestion physically breaks food into smaller pieces (e.g. chewing). Chemical digestion uses enzymes to break bonds. Both occur in the mouth.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Peristalsis (Recall)</h3><p>Explain why <strong>peristalsis</strong> works even when someone eats upside down.</p><p class="answer">Peristalsis uses active muscular contractions to push the bolus. It does not rely on gravity.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Stomach pH (Recall)</h3><p>The <strong>stomach</strong> has a pH of about 2. Suggest why <strong>enzymes</strong> from the small intestine would be destroyed there.</p><p class="answer">Intestinal enzymes have an alkaline optimum pH. Highly acidic conditions would denature them, changing the active site shape.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Enzymes</h3><p>Large <strong>insoluble</strong> molecules must become smaller <strong>soluble</strong> molecules before <strong>absorption</strong>. Name the <strong>catalyst</strong> responsible and suggest why <strong>specificity</strong> matters.</p><p class="answer">Enzymes. Each has a unique active site fitting only one substrate (lock and key), so different enzymes are needed for different food groups.</p></div>
+  </div>
+</div>
+
+<!-- L1 STARTER -->
+<div class="slide" data-title="L1 – Starter">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-starter">Starter</span>
+  <h2>Starter: Match the Words to the Meanings</h2>
+  <div class="li-box"><strong>Instructions:</strong> Copy each word into your books. Then choose the meaning you think fits best from the list. Two words on the list are <strong>wrong</strong> – they don’t match any of the key words!</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:900px;margin:0 auto">
+    <div>
+      <h3 style="margin:0 0 8px;color:var(--ido-border)">Key Words to Copy:</h3>
+      <div class="task-box" style="padding:10px;margin-bottom:8px"><p style="margin:0"><strong>1. Enzyme</strong> – \_\_\_\_\_\_\_\_</p></div>
+      <div class="task-box" style="padding:10px;margin-bottom:8px"><p style="margin:0"><strong>2. Substrate</strong> – \_\_\_\_\_\_\_\_</p></div>
+      <div class="task-box" style="padding:10px;margin-bottom:8px"><p style="margin:0"><strong>3. Product</strong> – \_\_\_\_\_\_\_\_</p></div>
+      <div class="task-box" style="padding:10px;margin-bottom:8px"><p style="margin:0"><strong>4. Bile</strong> – \_\_\_\_\_\_\_\_</p></div>
+      <div class="task-box" style="padding:10px"><p style="margin:0"><strong>5. Emulsification</strong> – \_\_\_\_\_\_\_\_</p></div>
+    </div>
+    <div>
+      <h3 style="margin:0 0 8px;color:var(--wedo-border)">Possible Meanings (pick one for each):</h3>
+      <div class="scaffold-box" style="margin-top:0"><p style="margin:4px 0"><strong>A.</strong> A green-yellow liquid that helps break up fats</p><p style="margin:4px 0"><strong>B.</strong> A chemical in cells that is always there</p><p style="margin:4px 0"><strong>C.</strong> Breaking large fat droplets into many smaller ones</p><p style="margin:4px 0"><strong>D.</strong> A biological “scissors” that cuts big molecules into small ones</p><p style="margin:4px 0"><strong>E.</strong> The new molecule made after an enzyme has worked</p><p style="margin:4px 0"><strong>F.</strong> The molecule the enzyme works on (it gets broken down)</p><p style="margin:4px 0"><strong>G.</strong> The tube that carries food to the stomach</p></div>
+      <div class="aspire-box" style="margin-top:10px"><strong>🧠 Hint:</strong> Think about enzymes like a pair of scissors. The <strong>scissors</strong> = enzyme. What goes IN the scissors? What comes OUT?</div>
+    </div>
+  </div>
+  <div class="sc-box" style="margin-top:12px;max-width:900px;margin-left:auto;margin-right:auto"><p style="margin:0;color:#431407"><strong>Extension:</strong> Write the correct answers in your books like this: <em>1. Enzyme = D. A biological “scissors”...</em></p></div>
+</div>
+
+<div class="slide" data-title="L1 – I Do: Enzymes" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Digestive Enzymes (Spec 2.29)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> Digestion breaks large, <strong>insoluble</strong> molecules into smaller, <strong>soluble</strong> ones so they can be <strong>absorbed</strong> into the blood.</div>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">1. Carbohydrases</h3><p><strong>Amylase</strong> breaks <strong>starch</strong> (polysaccharide) into <strong>maltose</strong> (disaccharide).</p><p><strong>Maltase</strong> then breaks <strong>maltose</strong> into <strong>glucose</strong> (monosaccharide).</p>
+        <div style="text-align:center;margin:8px 0"><svg width="360" height="50" viewBox="0 0 360 50"><rect x="5" y="10" width="80" height="30" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="45" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#1e40af">STARCH</text><text x="118" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">amylase</text><line x1="88" y1="25" x2="148" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="145,20 155,25 145,30" fill="#7c3aed"/><rect x="158" y="10" width="80" height="30" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2"/><text x="198" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#92400e">MALTOSE</text><text x="268" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">maltase</text><line x1="240" y1="25" x2="298" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="295,20 305,25 295,30" fill="#7c3aed"/><rect x="308" y="10" width="48" height="30" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="332" y="30" text-anchor="middle" font-weight="bold" font-size="12" fill="#166534">GLUCOSE</text></svg></div>
+        <p style="font-size:.95rem;color:var(--muted)">Made in: salivary glands (mouth) and pancreas.</p></div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">2. Proteases</h3><p><strong>Proteases</strong> break <strong>proteins</strong> into <strong>amino acids</strong>.</p><p>Stomach makes <strong>pepsin</strong>. Pancreas makes <strong>trypsin</strong>.</p>
+        <div style="text-align:center;margin:8px 0"><svg width="280" height="50" viewBox="0 0 280 50"><rect x="5" y="10" width="80" height="30" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="2"/><text x="45" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#9d174d">PROTEINS</text><text x="118" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">protease</text><line x1="88" y1="25" x2="148" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="145,20 155,25 145,30" fill="#7c3aed"/><rect x="158" y="10" width="118" height="30" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="217" y="30" text-anchor="middle" font-weight="bold" font-size="12" fill="#166534">AMINO ACIDS</text></svg></div></div>
+    </div>
+    <div>
+      <div class="ido-box animate-enter anim-delay-2"><h3 style="margin-top:0;color:var(--ido-border)">3. Lipases</h3><p><strong>Lipases</strong> break <strong>lipids</strong> (fats) into <strong>fatty acids</strong> and <strong>glycerol</strong>.</p><p>Made in the <strong>pancreas</strong>, released into the <strong>small intestine</strong>.</p>
+        <div style="text-align:center;margin:8px 0"><svg width="300" height="70" viewBox="0 0 300 70"><rect x="5" y="20" width="70" height="30" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><text x="40" y="40" text-anchor="middle" font-weight="bold" font-size="13" fill="#92400e">LIPIDS</text><text x="108" y="38" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">lipase</text><line x1="78" y1="35" x2="138" y2="35" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="135,30 145,35 135,40" fill="#7c3aed"/><rect x="148" y="5" width="110" height="26" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="203" y="22" text-anchor="middle" font-weight="bold" font-size="11" fill="#166534">FATTY ACIDS</text><rect x="148" y="38" width="110" height="26" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="203" y="55" text-anchor="middle" font-weight="bold" font-size="11" fill="#166534">GLYCEROL</text></svg></div></div>
+      <div class="scaffold-box animate-enter"><h3 style="margin-top:0">📝 Now complete your table!</h3><p>Fill in the blank columns using the information on this slide.</p></div>
+      <div class="aspire-box animate-enter"><strong>Aspire:</strong> Why can't amylase break down proteins? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:10px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:10px 0 0">Each enzyme has a uniquely shaped <strong>active site</strong> – the <strong>lock and key</strong> model.</span></div>
+    </div>
+  </div>
+
+  <div class="misc-box"><p><strong>Don't write:</strong> <span class="misc-wrong">"Enzymes digest food."</span></p><p><strong>Write:</strong> <span class="misc-right">"Enzymes break down large insoluble molecules into small soluble ones."</span></p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">The examiner wants the <strong>reason</strong> digestion happens (small = can be absorbed), not just the word "digest"!</p></div>
+</div>
+
+<!-- L1 I DO 2: BILE -->
+<!-- L1 WE DO 1: ENZYME MATCHING -->
+<div class="slide" data-title="L1 – We Do: Enzymes" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Enzyme Matching Game</h2>
+  <div class="li-box"><strong>Instructions:</strong> Select an <strong>enzyme</strong>, then tap the matching <strong>substrate → product</strong> card.</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('l1-wedo1')">📸 Print Evidence</button>
+  <div id="l1-wedo1" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Matches: <span class="score" id="l1w1-score">0</span>/4</span><button class="ghost small" onclick="resetMatch('l1w1')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealMatch('l1w1')">👁️ Reveal</button></div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 1: Select an enzyme</p>
+    <div class="match-row" id="l1w1-pills">
+      <div class="match-pill" onclick="selMatch(this,'amylase','l1w1')">🧪 Amylase</div>
+      <div class="match-pill" onclick="selMatch(this,'maltase','l1w1')">🧪 Maltase</div>
+      <div class="match-pill" onclick="selMatch(this,'protease','l1w1')">🧪 Protease</div>
+      <div class="match-pill" onclick="selMatch(this,'lipase','l1w1')">🧪 Lipase</div>
+    </div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 2: Tap the matching description</p>
+    <div class="match-grid" style="grid-template-columns:1fr 1fr">
+      <div class="match-target" data-correct="lipase" data-group="l1w1" onclick="pickMatch(this,'l1w1')">Lipids → <strong>Fatty acids &amp; glycerol</strong></div>
+      <div class="match-target" data-correct="amylase" data-group="l1w1" onclick="pickMatch(this,'l1w1')">Starch → <strong>Maltose</strong></div>
+      <div class="match-target" data-correct="protease" data-group="l1w1" onclick="pickMatch(this,'l1w1')">Proteins → <strong>Amino acids</strong></div>
+      <div class="match-target" data-correct="maltase" data-group="l1w1" onclick="pickMatch(this,'l1w1')">Maltose → <strong>Glucose</strong></div>
+    </div>
+    <div id="l1w1-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:20px"></div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="L1 – I Do: Bile" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Bile (Spec 2.30 &amp; 2.31)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> Bile is <strong>not</strong> an enzyme – it prepares conditions for enzymes to work.</div>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">Where does bile come from?</h3><p><strong>Produced</strong> in the <strong>liver</strong>. <strong>Stored</strong> in the <strong>gallbladder</strong>. <strong>Released</strong> into the <strong>small intestine</strong>.</p>
+        <div class="diagram-container" style="margin-top:8px"><svg width="260" height="130" viewBox="0 0 260 130"><path d="M30 30 Q60 10 130 25 Q180 35 180 60 Q180 80 130 85 Q60 95 30 70 Z" fill="#fecaca" stroke="#ef4444" stroke-width="3"/><text x="100" y="58" text-anchor="middle" font-weight="bold" font-size="14" fill="#991b1b">LIVER</text><text x="100" y="73" text-anchor="middle" font-size="10" fill="#991b1b">(produces bile)</text><line x1="140" y1="85" x2="160" y2="100" stroke="#16a34a" stroke-width="2" stroke-dasharray="4"/><polygon points="157,96 165,103 155,103" fill="#16a34a"/><ellipse cx="185" cy="115" rx="35" ry="18" fill="#bbf7d0" stroke="#16a34a" stroke-width="3"/><text x="185" y="112" text-anchor="middle" font-weight="bold" font-size="11" fill="#166534">GALLBLADDER</text><text x="185" y="126" text-anchor="middle" font-size="9" fill="#166534">(stores bile)</text><line x1="220" y1="115" x2="248" y2="115" stroke="#2563eb" stroke-width="2" stroke-dasharray="4"/><polygon points="245,110 255,115 245,120" fill="#2563eb"/></svg></div></div>
+    </div>
+    <div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">Job 1: Neutralise Stomach Acid</h3><p>Food from stomach is <strong>acidic</strong>. Bile is <strong>alkaline</strong> – it <strong>neutralises</strong> the acid, creating conditions intestinal enzymes need.</p></div>
+      <div class="ido-box animate-enter anim-delay-2"><h3 style="margin-top:0;color:var(--ido-border)">Job 2: Emulsify Lipids</h3><p>Bile breaks <strong>large fat droplets</strong> into <strong>many smaller droplets</strong>. This increases <strong>SA:V</strong> so <strong>lipase</strong> works <strong>faster</strong>.</p>
+        <div style="text-align:center;margin:8px 0"><svg width="280" height="55" viewBox="0 0 280 55"><circle cx="35" cy="28" r="22" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><text x="35" y="33" text-anchor="middle" font-size="10" fill="#92400e" font-weight="bold">FAT</text><text x="95" y="33" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">+ bile</text><line x1="120" y1="28" x2="148" y2="28" stroke="#7c3aed" stroke-width="2"/><polygon points="145,23 155,28 145,33" fill="#7c3aed"/><circle cx="178" cy="15" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><circle cx="200" cy="28" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><circle cx="178" cy="42" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><circle cx="222" cy="15" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><circle cx="222" cy="42" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><circle cx="244" cy="28" r="9" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/></svg></div></div>
+    </div>
+  
+  <div class="scaffold-box" style="margin-top:8px"><strong>💡 Real-World Link:</strong> Washing-up liquid works exactly like bile – it breaks grease into tiny droplets (emulsification). That's why you can't wash oily plates with just water – you need something to increase the SA:V so water can get at the grease!</div>
+</div>
+
+  <div class="exam-tip-box"><p><strong>Grab the mark by using:</strong> "Bile <span class="misc-right">emulsifies</span> fats <span class="misc-right">to increase surface area</span> <span class="misc-right">so that lipase works faster</span>."</p><p style="font-size:.9rem;color:#92400e;margin-top:4px">Three marks in one sentence: the <strong>process</strong>, the <strong>effect</strong>, and the <strong>link word</strong> ("so that") showing WHY.</p></div>
+</div>
+
+<!-- L1 WE DO: ENZYME MATCHING GAME -->
+<!-- L1 WE DO 2: BILE SORT & CHECK -->
+<div class="slide" data-title="L1 – We Do: Bile" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Bile Fact Sort</h2>
+  <div class="li-box"><strong>Instructions:</strong> Select a fact card, then place it in the correct category: <strong>what bile IS</strong>, <strong>Job 1</strong>, or <strong>Job 2</strong>.</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('l1-wedo2')">📸 Print Evidence</button>
+  <div id="l1-wedo2" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Score: <span class="score" id="bile-score">0</span>/6</span><button class="ghost small" onclick="resetBileSort()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealBileSort()">👁️ Reveal</button></div>
+    <div class="sort-cards" id="bile-cards">
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="what">Produced in the liver</div>
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="job1">Neutralises stomach acid</div>
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="job2">Breaks large fat droplets into smaller ones</div>
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="what">Stored in the gallbladder</div>
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="job1">Creates alkaline pH for enzymes</div>
+      <div class="sort-card" onclick="selectBileCard(this)" data-bin="job2">Increases SA:V for lipase</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+      <div class="sort-bin" onclick="placeBileCard('what')" style="border-color:var(--ido-border);min-height:100px"><h3 style="color:var(--ido-border);margin:0 0 6px">💚 What Bile Is</h3><div id="bile-what"></div></div>
+      <div class="sort-bin" onclick="placeBileCard('job1')" style="border-color:var(--success);min-height:100px"><h3 style="color:var(--success);margin:0 0 6px">Job 1: Neutralise</h3><div id="bile-job1"></div></div>
+      <div class="sort-bin" onclick="placeBileCard('job2')" style="border-color:var(--sc-border);min-height:100px"><h3 style="color:var(--sc-border);margin:0 0 6px">Job 2: Emulsify</h3><div id="bile-job2"></div></div>
+    </div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="L1 – Independent Work" data-type="independent">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-independent">Independent Work</span>
+  <h2>Independent Work – Enzymes &amp; Bile</h2>
+  <div class="li-box"><strong>Instructions:</strong> Complete your printed worksheet at your level. You may use your enzyme table and knowledge organiser.</div>
+    <div class="indep-timer">
+      <div class="timer-label">Independent Work Timer</div>
+      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
+        <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
+        <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
+        <button onclick="startIndepTimer(360)" class="small ghost">▶ 6 min</button>
+        <button onclick="pauseIndepTimer()" class="small ghost">⏸ Pause</button>
+        <button onclick="resetIndepTimer()" class="small ghost">🔄 Reset</button>
+      </div>
+    </div>
+
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>MCQ + short answer on enzyme names, substrates, products, and bile facts.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Short answer, sentence completion, and 4-mark exam questions on bile.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Extended response and a 5-mark question on gallbladder removal.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Your pack includes a completed enzyme table, bile key facts, and key word glossary.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> Name enzyme groups, state what bile does, recall key facts.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> Explain two-step starch digestion, describe both roles of bile, link SA:V to rate.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> Explain enzyme specificity, evaluate impact of gallbladder removal.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- L1 EXIT -->
+<div class="slide" id="l1-exit-slide" data-title="L1 – Exit Ticket">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-exit">Exit Ticket</span>
+  <h2>Exit Ticket – L1</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+  <div class="level-toggle">
+    <button onclick="switchLevel('l1-exit','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('l1-exit','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('l1-exit','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+    <button class="ghost" onclick="document.getElementById('l1-exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+  </div>
+  <div id="l1-exit-foundation" class="task-box"><p><strong>1) What does amylase break starch into?</strong></p><p class="answer">Maltose.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Where is bile produced and where is it stored?</strong></p><p class="answer">Produced in the liver. Stored in the gallbladder.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What are the two jobs of bile?</strong></p><p class="answer">1) Neutralises stomach acid. 2) Emulsifies fats.</p></div>
+  <div id="l1-exit-middle" class="task-box" style="display:none"><p><strong>1) Complete: Starch → ______ (amylase) → ______ (maltase).</strong></p><p class="answer">Maltose, then glucose.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Name the protease from the stomach and pancreas.</strong></p><p class="answer">Pepsin (stomach), trypsin (pancreas).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Explain why emulsification helps lipase.</strong></p><p class="answer">Breaks large fat droplets into smaller ones, increasing SA:V so lipase has more surface to act on.</p></div>
+  <div id="l1-exit-higher" class="task-box" style="display:none"><p><strong>1) Explain why starch digestion needs two enzymes.</strong></p><p class="answer">Amylase breaks starch to maltose. Maltase breaks maltose to glucose. Each enzyme is specific to one substrate.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Why must bile neutralise stomach acid?</strong></p><p class="answer">Intestinal enzymes have alkaline optimum pH. Acid would denature them.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Predict the effect of gallbladder removal on fat digestion.</strong></p><p class="answer">Less bile = less emulsification = lower SA:V = lipase works slower = fat digestion less efficient.</p></div>
+</div>
+
+<!-- ═══ LESSON 2: ABSORPTION & VILLI ═══ -->
+
+<div class="slide" data-title="L2 – Title">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+    <span class="slide-tag tag-lesson">Lesson 2 of 2</span>
+    <h1>Digestion &amp; Absorption</h1>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 18px">Absorption &amp; the Structure of Villi</p>
+    <div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul style="font-size:1.05rem;margin-top:8px"><li><strong>2.32</strong> – Understand how the small intestine is adapted for absorption, including the structure of a <strong>villus</strong>.</li></ul></div>
+    <p style="font-size:1.1rem;margin-top:14px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+  </div>
+  <div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools – Lesson 2</h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button onclick="printPack('foundation',2)" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+      <button onclick="printPack('middle',2)" style="background:#f97316">🖨️ Middle (2–3)</button>
+      <button onclick="printPack('higher',2)" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+      <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+    </div></div>
+  </div>
+</div>
+
+<!-- L2 ARRIVAL -->
+<div class="slide" id="l2-arrival-slide" data-title="L2 – Arrival Task">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-arrival">Arrival Task</span>
+  <h2>Arrival Task – Recall from Last Week (Enzymes &amp; Bile)</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer from memory. Q1–3 recall last week. Q4 leads into today.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('l2-arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle">
+    <button onclick="switchLevel('l2-arrival','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('l2-arrival','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('l2-arrival','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+  <div id="l2-arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Enzymes (Recall)</h3><p>Name the <strong>enzyme</strong> that breaks <strong>starch</strong> into <strong>maltose</strong>.</p><p class="answer">Amylase.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Lipids (Recall)</h3><p>What two products does <strong>lipase</strong> make from <strong>lipids</strong>?</p><p class="answer">Fatty acids and glycerol.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Bile (Recall)</h3><p>Where is <strong>bile</strong> produced and where is it stored?</p><p class="answer">Produced in the liver. Stored in the gallbladder.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Absorption</h3><p>Once food is <strong>digested</strong> into small molecules, where does it enter the <strong>blood</strong>?</p><p class="answer">The small intestine (specifically the ileum).</p></div>
+  </div>
+  <div id="l2-arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Enzymes (Recall)</h3><p>Complete: Starch → ______ by <strong>amylase</strong> → ______ by <strong>maltase</strong>.</p><p class="answer">Maltose, then glucose.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Proteases (Recall)</h3><p>Name the <strong>protease</strong> from the stomach and the one from the <strong>pancreas</strong>.</p><p class="answer">Pepsin (stomach), trypsin (pancreas).</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Bile (Recall)</h3><p>Explain the two roles of <strong>bile</strong> in <strong>digestion</strong>.</p><p class="answer">1) Neutralises stomach acid for alkaline conditions. 2) Emulsifies fats, increasing SA:V for lipase.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Absorption</h3><p>Digested food passes into the <strong>bloodstream</strong>. What is this process called, and in which part of the small <strong>intestine</strong>?</p><p class="answer">Absorption. In the ileum.</p></div>
+  </div>
+  <div id="l2-arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Enzymes (Recall)</h3><p>Explain why <strong>starch</strong> digestion requires two separate <strong>enzymes</strong>.</p><p class="answer">Amylase breaks starch to maltose. Maltase breaks maltose to glucose. Each enzyme is specific to one substrate.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Bile (Recall)</h3><p>Explain why <strong>bile</strong> must <strong>neutralise</strong> stomach acid before intestinal <strong>enzymes</strong> can work.</p><p class="answer">Intestinal enzymes have alkaline optimum pH. Acid would denature them by changing active site shape.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Emulsification (Recall)</h3><p>Explain how <strong>emulsification</strong> increases digestion rate. Use <strong>SA:V</strong>.</p><p class="answer">Breaks large fat droplets into smaller ones, increasing SA:V. More surface for lipase to bind, so more fat digested per second.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Absorption</h3><p>The <strong>ileum</strong> must maximise <strong>surface area</strong> and minimise diffusion distance. Suggest why.</p><p class="answer">More SA = more nutrients absorbed at once. Short distance = faster crossing. Both maximise absorption rate.</p></div>
+  </div>
+</div>
+
+<!-- L2 STARTER -->
+<div class="slide" id="l2-starter-slide" data-title="L2 – Starter">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-starter">Starter</span>
+  <h2>Starter: What Do You Already Know?</h2>
+  <div class="li-box"><strong>Instructions:</strong> Vote honestly on each statement – no guessing! Then tackle the <strong>Predict</strong> task. We're finding out what you already think, so we can test your ideas in today's lesson.</div>
+  <div class="level-toggle">
+    <button onclick="switchLevel('l2-starter','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('l2-starter','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('l2-starter','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+    <button class="ghost" onclick="document.getElementById('l2-starter-slide').classList.toggle('show-ans')">👁️ Answers</button>
+  </div>
+
+  <!-- Journey bar - same for all tiers, hook into today's lesson -->
+  <div class="journey-bar">
+    <div class="stage"><span class="emoji">🦷</span><div>Mouth</div></div>
+    <div class="arrow">→</div>
+    <div class="stage"><span class="emoji">🫃</span><div>Stomach</div></div>
+    <div class="arrow">→</div>
+    <div class="stage"><span class="emoji">🫄</span><div>Small Intestine</div></div>
+    <div class="arrow">→</div>
+    <div class="stage stage-q"><span class="emoji">❓</span><div>???</div></div>
+    <div class="arrow">→</div>
+    <div class="stage"><span class="emoji">💪</span><div>Body Cells</div></div>
+  </div>
+  <div style="text-align:center;font-size:.95rem;color:#334155;margin:0 0 8px"><strong>Today's lesson answers the ❓</strong> – how does digested food get from gut into blood?</div>
+
+  <!-- FOUNDATION (U–1) — simple language, clear misconceptions -->
+  <div id="l2-starter-foundation" class="prior-probe" style="display:grid;grid-template-columns:1fr;gap:4px">
+    <h3>✋ Part A: Agree or Disagree?</h3>
+    <div class="start-row" data-correct="disagree">
+      <div class="stmt">🥪 <strong>1.</strong> Food goes from your stomach <em>straight</em> into your blood.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>DISAGREE.</strong> Food goes from stomach → small intestine first. It needs to be digested into tiny pieces before it can enter the blood.</div>
+    </div>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">🧠 <strong>2.</strong> Your body uses food for energy and to build new cells.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> Cells use glucose for respiration (energy) and amino acids to build new tissue. That's why food must reach the blood.</div>
+    </div>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">🫄 <strong>3.</strong> Most food gets absorbed in the small intestine.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> Exactly right – the ileum (part of the small intestine) is where absorption mainly happens.</div>
+    </div>
+    <div class="start-row" data-correct="disagree">
+      <div class="stmt">📏 <strong>4.</strong> The inside of the small intestine is completely smooth, like a plastic pipe.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>DISAGREE.</strong> It's covered in millions of finger-like folds (called villi) to give a huge surface area – you'll see them today!</div>
+    </div>
+    <div class="bridge-task">
+      <h3>🔮 Part B: Predict</h3>
+      <p style="margin:0;font-size:1.02rem">On your mini-whiteboard: <strong>draw an arrow</strong> showing where you think food <strong>goes next</strong> after the small intestine. Use <strong>one word</strong> to label it.</p>
+      <p class="answer" style="margin-top:8px">Arrow from small intestine → into the <strong>BLOOD</strong> (blood vessels). Blood then carries it to all the cells in your body.</p>
+    </div>
+  </div>
+
+  <!-- MIDDLE (2–3) — concentration gradient, surface area, nuanced probes -->
+  <div id="l2-starter-middle" class="prior-probe" style="display:none;grid-template-columns:1fr;gap:4px">
+    <h3>✋ Part A: Agree or Disagree?</h3>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">🔬 <strong>1.</strong> Digested food molecules are small enough to pass through the gut wall.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> That's the whole point of digestion – to break food into molecules small enough to be absorbed (e.g. glucose, amino acids).</div>
+    </div>
+    <div class="start-row" data-correct="disagree">
+      <div class="stmt">🚿 <strong>2.</strong> Diffusion moves molecules from <em>LOW</em> concentration to <em>HIGH</em> concentration.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>DISAGREE.</strong> Diffusion goes the OTHER way: HIGH → LOW. Think of a drop of food colouring spreading in water.</div>
+    </div>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">📏 <strong>3.</strong> The small intestine has a <em>huge</em> surface area for absorption.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> About the size of a tennis court if you unfolded all the villi – we'll see why today!</div>
+    </div>
+    <div class="start-row" data-correct="disagree">
+      <div class="stmt">⚡ <strong>4.</strong> All nutrient absorption happens <em>without</em> needing any energy.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>DISAGREE.</strong> Some nutrients need <strong>active transport</strong>, which uses ATP energy. Today's lesson covers both.</div>
+    </div>
+    <div class="bridge-task">
+      <h3>🔮 Part B: Predict</h3>
+      <p style="margin:0;font-size:1.02rem">In <strong>one sentence</strong>: suggest <strong>two things</strong> that might help digested food molecules move from the gut into the blood.</p>
+      <p class="answer" style="margin-top:8px">Examples: diffusion from high → low concentration; a large surface area for more molecules to cross; thin walls for a short path; energy (active transport) to pump molecules against the gradient. Accept any sensible answer.</p>
+    </div>
+  </div>
+
+  <!-- HIGHER (3–5) — conceptual probes, Fick's Law foreshadowing -->
+  <div id="l2-starter-higher" class="prior-probe" style="display:none;grid-template-columns:1fr;gap:4px">
+    <h3>✋ Part A: Agree or Disagree?</h3>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">⚡ <strong>1.</strong> Some nutrients need energy (ATP) to be absorbed <em>against</em> a concentration gradient.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> That's exactly what active transport is. Glucose absorption often uses it when blood concentration is already high.</div>
+    </div>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">🩸 <strong>2.</strong> A rich blood supply speeds up absorption by maintaining a steep concentration gradient.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> Blood sweeps nutrients away, keeping their concentration LOW on the blood side, so diffusion keeps happening.</div>
+    </div>
+    <div class="start-row" data-correct="disagree">
+      <div class="stmt">💪 <strong>3.</strong> A <em>thicker</em> gut wall would speed up diffusion of nutrients into the blood.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>DISAGREE.</strong> A <em>thinner</em> wall speeds diffusion (shorter distance). This is why the ileum wall is only ONE cell thick.</div>
+    </div>
+    <div class="start-row" data-correct="agree">
+      <div class="stmt">🔄 <strong>4.</strong> Diffusion only happens when there's a concentration difference across the membrane.</div>
+      <div class="votes">
+        <button class="vote-btn agree" onclick="voteStart(this,'agree')">👍 Agree</button>
+        <button class="vote-btn disagree" onclick="voteStart(this,'disagree')">👎 Disagree</button>
+        <button class="vote-btn unsure" onclick="voteStart(this,'unsure')">🤔 Unsure</button>
+      </div>
+      <div class="answer"><strong>AGREE.</strong> No gradient = no net movement (dynamic equilibrium). This is why we need active transport too.</div>
+    </div>
+    <div class="bridge-task">
+      <h3>🔮 Part B: Predict</h3>
+      <p style="margin:0;font-size:1.02rem">Predict <strong>TWO structural features</strong> of the small intestine wall that would <em>maximise</em> the rate of absorption. <strong>Justify each</strong> using what you know about rate of diffusion.</p>
+      <p class="answer" style="margin-top:8px">Examples: (1) <strong>Large surface area</strong> (villi/folds) – more molecules can cross per second. (2) <strong>Thin wall / one cell thick</strong> – shorter diffusion path, faster rate (Fick's Law). (3) <strong>Rich blood supply</strong> – maintains steep concentration gradient. Accept any valid link to rate-of-diffusion variables.</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="L2 – I Do: Absorption" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: What is Absorption? (Spec 2.32)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> Once food is digested into small soluble molecules, it must be <strong>absorbed</strong> into the blood. This happens in the <strong>ileum</strong>. Watch the animation – molecules cross the gut wall in <strong>two different ways</strong>.</div>
+  <div class="content-grid" style="height:auto;grid-template-columns:1fr 1.15fr">
+    <div>
+      <div class="ido-box animate-enter" style="padding:10px 14px"><h3 style="margin:0 0 6px;color:var(--ido-border)">What is absorption?</h3>
+        <p style="margin:4px 0"><strong>Absorption</strong> = digested food molecules passing through the wall of the <strong>ileum</strong> into the <strong>bloodstream</strong>. Only <strong>small, soluble</strong> molecules fit through.</p></div>
+      <div class="ido-box animate-enter anim-delay-1" style="background:#dcfce7;border-left-color:#22c55e;padding:10px 14px">
+        <h3 style="margin:0 0 4px;color:#166534">🟢 1. DIFFUSION <span style="font-size:.8rem;font-weight:normal">(left side of animation)</span></h3>
+        <p style="margin:2px 0;font-size:1.05rem"><strong>Passive</strong> – no energy needed. Molecules move from <strong>HIGH</strong> (gut) → <strong>LOW</strong> (blood). Like rolling downhill.</p></div>
+      <div class="ido-box animate-enter anim-delay-2" style="background:#ede9fe;border-left-color:#7c3aed;padding:10px 14px">
+        <h3 style="margin:0 0 4px;color:#5b21b6">⚡ 2. ACTIVE TRANSPORT <span style="font-size:.8rem;font-weight:normal">(right side of animation)</span></h3>
+        <p style="margin:2px 0;font-size:1.05rem">Uses <strong>energy (ATP)</strong> to pump molecules <strong>AGAINST</strong> the gradient (LOW → HIGH). Like pushing uphill.</p></div>
+      <div class="scaffold-box" style="margin-top:8px;padding:8px 12px"><strong>🧠 Memory:</strong> Diffusion is <strong>FREE</strong>. Active transport <strong>COSTS</strong> ATP ⚡</div>
+    </div>
+    <div>
+      <div class="diagram-container animate-enter anim-delay-1" style="padding:10px">
+        <h3 style="margin:0 0 4px;color:var(--ido-border)">🎬 Absorption in the Ileum (Animated)</h3>
+        <svg width="100%" height="340" viewBox="0 0 440 340" style="max-width:500px">
+          <!-- GUT layer (top) -->
+          <rect x="10" y="10" width="420" height="90" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+          <text x="220" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#92400e">🍽️ INSIDE THE GUT (ileum lumen)</text>
+          <text x="220" y="46" text-anchor="middle" font-size="10" fill="#92400e" font-style="italic">Digested food – HIGH concentration of nutrients</text>
+
+          <!-- Ileum wall -->
+          <rect x="10" y="148" width="420" height="24" rx="4" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+          <text x="220" y="164" text-anchor="middle" font-size="10" fill="#9d174d" font-weight="bold">🧱 ILEUM WALL – ONE CELL THICK (short pathway)</text>
+
+          <!-- BLOOD layer (bottom) -->
+          <rect x="10" y="220" width="420" height="110" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+          <text x="220" y="310" text-anchor="middle" font-weight="bold" font-size="13" fill="#1e40af">🩸 BLOOD CAPILLARY</text>
+          <text x="220" y="325" text-anchor="middle" font-size="10" fill="#1e40af" font-style="italic">Blood sweeps nutrients away → to cells for respiration</text>
+          <!-- Red blood cells (static decorative) -->
+          <ellipse cx="60" cy="275" rx="8" ry="5" fill="#ef4444" opacity=".65"/>
+          <ellipse cx="140" cy="265" rx="8" ry="5" fill="#ef4444" opacity=".65"/>
+          <ellipse cx="220" cy="278" rx="8" ry="5" fill="#ef4444" opacity=".65"/>
+          <ellipse cx="300" cy="268" rx="8" ry="5" fill="#ef4444" opacity=".65"/>
+          <ellipse cx="380" cy="275" rx="8" ry="5" fill="#ef4444" opacity=".65"/>
+
+          <!-- Gradient indicator (left = diffusion, follows gradient) -->
+          <text x="80" y="110" text-anchor="middle" font-size="10" fill="#16a34a" font-weight="bold">DIFFUSION (passive)</text>
+          <line x1="8" y1="120" x2="8" y2="215" stroke="#16a34a" stroke-width="3"/>
+          <polygon points="5,215 11,215 8,220" fill="#16a34a"/>
+          <text x="18" y="140" font-size="8" fill="#166534">HIGH</text>
+          <text x="18" y="210" font-size="8" fill="#166534">LOW</text>
+          <text x="18" y="180" font-size="7" fill="#166534" font-style="italic">gradient</text>
+
+          <!-- Active transport label on right -->
+          <text x="360" y="110" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="bold">ACTIVE TRANSPORT</text>
+          <text x="360" y="123" text-anchor="middle" font-size="8" fill="#7c3aed" font-style="italic">(needs ATP ⚡)</text>
+
+          <!-- ====== LEFT: DIFFUSION (passive) – molecules falling DOWN ====== -->
+          <!-- Starting group around y=70 falling to y=240 -->
+          <circle class="diff-mol" cx="60" cy="70" r="7" fill="#f97316" stroke="#9a3412" stroke-width="1.5" style="animation-delay:0s"/>
+          <circle class="diff-mol" cx="95" cy="75" r="6" fill="#22c55e" stroke="#166534" stroke-width="1.5" style="animation-delay:.8s"/>
+          <circle class="diff-mol" cx="130" cy="72" r="7" fill="#f97316" stroke="#9a3412" stroke-width="1.5" style="animation-delay:1.6s"/>
+          <circle class="diff-mol" cx="165" cy="78" r="6" fill="#22c55e" stroke="#166534" stroke-width="1.5" style="animation-delay:2.4s"/>
+          <circle class="diff-mol" cx="78" cy="68" r="5" fill="#f97316" stroke="#9a3412" stroke-width="1.5" style="animation-delay:3.2s"/>
+          <!-- No pump shape on diffusion side – molecules pass through freely (small gap) -->
+          <rect x="40" y="148" width="140" height="24" fill="#fce7f3" opacity=".4"/>
+
+          <!-- ====== MIDDLE DIVIDER ====== -->
+          <line x1="220" y1="105" x2="220" y2="215" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3"/>
+
+          <!-- ====== RIGHT: ACTIVE TRANSPORT (with pump + ATP) ====== -->
+          <!-- Pump proteins embedded in wall (pulsing) -->
+          <rect class="pump-shape" x="268" y="146" width="14" height="28" rx="3" fill="#7c3aed" style="animation-delay:0s"/>
+          <rect class="pump-shape" x="328" y="146" width="14" height="28" rx="3" fill="#7c3aed" style="animation-delay:.5s"/>
+          <rect class="pump-shape" x="388" y="146" width="14" height="28" rx="3" fill="#7c3aed" style="animation-delay:1s"/>
+          <text x="335" y="142" text-anchor="middle" font-size="8" fill="#5b21b6" font-weight="bold">Pump proteins</text>
+
+          <!-- ATP icon (pulsing near a pump) – in the wall region to show energy use at the pump -->
+          <g transform="translate(305,210)">
+            <g class="atp-icon">
+              <circle r="11" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+              <text text-anchor="middle" dy="3.5" font-size="9" font-weight="bold" fill="#7c2d12">ATP</text>
+            </g>
+          </g>
+          <text x="305" y="234" text-anchor="middle" font-size="8" fill="#7c2d12" font-weight="bold">⚡ energy used</text>
+
+          <!-- Active transport molecules start in gut and move DOWN through pumps -->
+          <circle class="active-mol" cx="275" cy="70" r="6" fill="#22c55e" stroke="#166534" stroke-width="1.5" style="animation-delay:0s"/>
+          <circle class="active-mol" cx="335" cy="74" r="6" fill="#22c55e" stroke="#166534" stroke-width="1.5" style="animation-delay:1.3s"/>
+          <circle class="active-mol" cx="395" cy="72" r="6" fill="#22c55e" stroke="#166534" stroke-width="1.5" style="animation-delay:2.6s"/>
+
+          <!-- Legend at bottom -->
+          <g transform="translate(18,336)">
+            <circle cx="0" cy="-2" r="5" fill="#f97316" stroke="#9a3412" stroke-width="1"/>
+            <text x="10" y="2" font-size="9" fill="#334155">Glucose</text>
+            <circle cx="70" cy="-2" r="5" fill="#22c55e" stroke="#166534" stroke-width="1"/>
+            <text x="80" y="2" font-size="9" fill="#334155">Amino acid</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="L2 – We Do: Absorption" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Absorption Process Sort</h2>
+  <div class="li-box"><strong>Instructions:</strong> Sort each fact into <strong>Diffusion</strong> or <strong>Active Transport</strong>.</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('l2-wedo1')">📸 Print Evidence</button>
+  <div id="l2-wedo1" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Score: <span class="score" id="abs-score">0</span>/6</span><button class="ghost small" onclick="resetAbsSort()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealAbsSort()">👁️ Reveal</button></div>
+    <div class="sort-cards" id="abs-cards">
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="diff">Passive – no energy needed</div>
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="active">Needs energy (ATP)</div>
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="diff">High to low concentration</div>
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="active">Against the concentration gradient</div>
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="diff">Like rolling downhill</div>
+      <div class="sort-card" onclick="selectAbsCard(this)" data-bin="active">Like pushing uphill</div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:8px">
+      <div class="sort-bin" onclick="placeAbsCard('diff')" style="border-color:var(--success);flex:1;min-height:100px"><h3 style="color:var(--success);margin:0 0 6px;text-align:center">✅ Diffusion</h3><div id="bin-diff"></div></div>
+      <div class="sort-bin" onclick="placeAbsCard('active')" style="border-color:var(--ido-border);flex:1;min-height:100px"><h3 style="color:var(--ido-border);margin:0 0 6px;text-align:center">⚡ Active Transport</h3><div id="bin-active"></div></div>
+    </div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="L2 – I Do: Villi Adaptations" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: How Are Villi Adapted? (Spec 2.32)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> The ileum wall is folded into millions of finger-like <strong>villi</strong>. Each villus has <strong>5 key adaptations</strong> – watch the animation to see them working.</div>
+  <div class="content-grid" style="height:auto;grid-template-columns:1fr 1.1fr">
+    <div>
+      <div class="villus-feature animate-enter" style="padding:8px 10px"><div class="villus-icon" style="background:#fce7f3;border:2px solid #db2777;width:36px;height:36px;font-size:1.1rem">📏</div><div style="font-size:1rem"><strong>1. Large surface area</strong> – millions of villi mean more nutrients absorbed at once.</div></div>
+      <div class="villus-feature animate-enter anim-delay-1" style="padding:8px 10px"><div class="villus-icon" style="background:#fce7f3;border:2px solid #db2777;width:36px;height:36px;font-size:1.1rem">🔬</div><div style="font-size:1rem"><strong>2. Microvilli</strong> – tiny hair-like projections on each villus further increase SA.</div></div>
+      <div class="villus-feature animate-enter anim-delay-1" style="padding:8px 10px"><div class="villus-icon" style="background:#dbeafe;border:2px solid #3b82f6;width:36px;height:36px;font-size:1.1rem">📄</div><div style="font-size:1rem"><strong>3. Thin wall</strong> – one cell thick = short diffusion pathway, so nutrients cross fast.</div></div>
+      <div class="villus-feature animate-enter anim-delay-2" style="padding:8px 10px"><div class="villus-icon" style="background:#fecaca;border:2px solid #ef4444;width:36px;height:36px;font-size:1.1rem">🩸</div><div style="font-size:1rem"><strong>4. Rich blood supply</strong> – capillaries carry nutrients away, keeping a <strong>steep gradient</strong>.</div></div>
+      <div class="villus-feature animate-enter anim-delay-2" style="padding:8px 10px"><div class="villus-icon" style="background:#fef9c3;border:2px solid #ca8a04;width:36px;height:36px;font-size:1.1rem">🥛</div><div style="font-size:1rem"><strong>5. Lacteal</strong> – central vessel that absorbs <strong>fats</strong> (fatty acids + glycerol).</div></div>
+      <div class="aspire-box" style="padding:8px 10px;margin-top:6px"><strong>Aspire:</strong> Why do villus cells need lots of <strong>mitochondria</strong>? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:6px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0">They perform <strong>active transport</strong>, which needs ATP. More mitochondria = more ATP.</span></div>
+    </div>
+    <div>
+      <div class="diagram-container animate-enter anim-delay-1" style="padding:8px">
+        <h3 style="margin:0 0 4px;color:var(--ido-border)">🎬 A Villus in Action (Animated)</h3>
+        <svg viewBox="0 0 320 340" width="100%" style="max-width:360px;height:auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- Gut lumen background shading at top -->
+          <rect x="0" y="0" width="320" height="44" fill="#fef9c3" opacity=".7"/>
+          <text x="160" y="14" text-anchor="middle" font-size="10" fill="#92400e" font-weight="bold">GUT LUMEN (digested food)</text>
+
+          <!-- Nutrients in the gut flowing DOWN into the villus -->
+          <circle class="nutrient-in" cx="60" cy="8" r="4" fill="#f97316" stroke="#9a3412" stroke-width="1" style="animation-delay:0s"/>
+          <circle class="nutrient-in" cx="160" cy="8" r="4" fill="#22c55e" stroke="#166534" stroke-width="1" style="animation-delay:.8s"/>
+          <circle class="nutrient-in" cx="260" cy="8" r="4" fill="#f97316" stroke="#9a3412" stroke-width="1" style="animation-delay:1.6s"/>
+          <circle class="nutrient-in" cx="110" cy="8" r="4" fill="#22c55e" stroke="#166534" stroke-width="1" style="animation-delay:2.2s"/>
+          <circle class="nutrient-in" cx="210" cy="8" r="4" fill="#fde047" stroke="#a16207" stroke-width="1" style="animation-delay:1.2s"/>
+
+          <!-- Villus body (finger-like projection) -->
+          <path d="M 70 330 Q 70 75 160 45 Q 250 75 250 330" fill="#fce7f3" stroke="#db2777" stroke-width="3"/>
+
+          <!-- Inner edge shading to show "one cell thick" epithelium -->
+          <path d="M 82 330 Q 82 82 160 55 Q 238 82 238 330" fill="#fdf2f8" stroke="#ec4899" stroke-width="1" stroke-dasharray="3 2" opacity=".6"/>
+
+          <!-- Microvilli (brush border) – each one waves -->
+          <g>
+            <line class="microvillus" x1="86" y1="70" x2="86" y2="52" stroke="#db2777" stroke-width="2.5" style="animation-delay:0s"/>
+            <line class="microvillus" x1="98" y1="62" x2="98" y2="42" stroke="#db2777" stroke-width="2.5" style="animation-delay:.15s"/>
+            <line class="microvillus" x1="112" y1="55" x2="112" y2="34" stroke="#db2777" stroke-width="2.5" style="animation-delay:.3s"/>
+            <line class="microvillus" x1="126" y1="50" x2="126" y2="28" stroke="#db2777" stroke-width="2.5" style="animation-delay:.45s"/>
+            <line class="microvillus" x1="140" y1="47" x2="140" y2="24" stroke="#db2777" stroke-width="2.5" style="animation-delay:.6s"/>
+            <line class="microvillus" x1="154" y1="46" x2="154" y2="23" stroke="#db2777" stroke-width="2.5" style="animation-delay:.75s"/>
+            <line class="microvillus" x1="168" y1="46" x2="168" y2="23" stroke="#db2777" stroke-width="2.5" style="animation-delay:.9s"/>
+            <line class="microvillus" x1="182" y1="47" x2="182" y2="24" stroke="#db2777" stroke-width="2.5" style="animation-delay:1.05s"/>
+            <line class="microvillus" x1="196" y1="50" x2="196" y2="28" stroke="#db2777" stroke-width="2.5" style="animation-delay:1.2s"/>
+            <line class="microvillus" x1="210" y1="55" x2="210" y2="34" stroke="#db2777" stroke-width="2.5" style="animation-delay:1.35s"/>
+            <line class="microvillus" x1="224" y1="62" x2="224" y2="42" stroke="#db2777" stroke-width="2.5" style="animation-delay:1.5s"/>
+            <line class="microvillus" x1="236" y1="70" x2="236" y2="52" stroke="#db2777" stroke-width="2.5" style="animation-delay:1.65s"/>
+          </g>
+
+          <!-- LEFT capillary (arterial incoming - blood rises up, then arches across) -->
+          <path id="leftCap" d="M 108 325 Q 98 210 105 90 Q 125 72 160 78" fill="none" stroke="#fecaca" stroke-width="10" stroke-linecap="round"/>
+          <path d="M 108 325 Q 98 210 105 90 Q 125 72 160 78" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- RIGHT capillary (venous outgoing) -->
+          <path id="rightCap" d="M 160 78 Q 195 72 215 90 Q 222 210 212 325" fill="none" stroke="#fecaca" stroke-width="10" stroke-linecap="round"/>
+          <path d="M 160 78 Q 195 72 215 90 Q 222 210 212 325" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- Red blood cells flowing UP the left side -->
+          <ellipse rx="5" ry="3.2" fill="#dc2626" stroke="#7f1d1d" stroke-width=".8">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M 108 325 Q 98 210 105 90 Q 125 72 160 78"/>
+          </ellipse>
+          <ellipse rx="5" ry="3.2" fill="#dc2626" stroke="#7f1d1d" stroke-width=".8">
+            <animateMotion dur="6s" begin="2s" repeatCount="indefinite" path="M 108 325 Q 98 210 105 90 Q 125 72 160 78"/>
+          </ellipse>
+          <ellipse rx="5" ry="3.2" fill="#dc2626" stroke="#7f1d1d" stroke-width=".8">
+            <animateMotion dur="6s" begin="4s" repeatCount="indefinite" path="M 108 325 Q 98 210 105 90 Q 125 72 160 78"/>
+          </ellipse>
+
+          <!-- Red blood cells flowing DOWN the right side (now carrying nutrients - with orange/green spots) -->
+          <g>
+            <ellipse rx="5" ry="3.2" fill="#dc2626" stroke="#7f1d1d" stroke-width=".8">
+              <animateMotion dur="6s" begin="1s" repeatCount="indefinite" path="M 160 78 Q 195 72 215 90 Q 222 210 212 325"/>
+            </ellipse>
+            <ellipse rx="5" ry="3.2" fill="#dc2626" stroke="#7f1d1d" stroke-width=".8">
+              <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M 160 78 Q 195 72 215 90 Q 222 210 212 325"/>
+            </ellipse>
+          </g>
+
+          <!-- Central lacteal (lymph vessel) -->
+          <rect x="152" y="82" width="16" height="245" fill="#fef9c3" stroke="#ca8a04" stroke-width="2" rx="4"/>
+
+          <!-- Fat droplets moving DOWN the lacteal (lymph carries fat AWAY) -->
+          <circle r="4" fill="#facc15" stroke="#a16207" stroke-width="1.2">
+            <animateMotion dur="5s" repeatCount="indefinite" path="M 160 90 L 160 320"/>
+          </circle>
+          <circle r="4" fill="#facc15" stroke="#a16207" stroke-width="1.2">
+            <animateMotion dur="5s" begin="1.7s" repeatCount="indefinite" path="M 160 90 L 160 320"/>
+          </circle>
+          <circle r="4" fill="#facc15" stroke="#a16207" stroke-width="1.2">
+            <animateMotion dur="5s" begin="3.4s" repeatCount="indefinite" path="M 160 90 L 160 320"/>
+          </circle>
+
+          <!-- Numbered labels directly on the diagram -->
+          <!-- 1. Microvilli -->
+          <circle cx="30" cy="34" r="12" fill="#db2777"/>
+          <text x="30" y="38" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">1</text>
+          <text x="44" y="38" font-size="10" fill="#9d174d" font-weight="bold">Microvilli</text>
+
+          <!-- 2. Villus (whole shape) -->
+          <circle cx="290" cy="320" r="12" fill="#db2777"/>
+          <text x="290" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">2</text>
+          <text x="215" y="324" font-size="10" fill="#9d174d" font-weight="bold">Villus (finger)</text>
+
+          <!-- 3. One cell thick wall -->
+          <circle cx="258" cy="140" r="12" fill="#0284c7"/>
+          <text x="258" y="144" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">3</text>
+          <text x="272" y="144" font-size="9" fill="#075985" font-weight="bold">Thin wall</text>
+          <line x1="248" y1="140" x2="238" y2="140" stroke="#0284c7" stroke-width="1.5"/>
+
+          <!-- 4. Blood capillary -->
+          <circle cx="30" cy="200" r="12" fill="#dc2626"/>
+          <text x="30" y="204" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">4</text>
+          <text x="44" y="198" font-size="10" fill="#991b1b" font-weight="bold">Blood</text>
+          <text x="44" y="210" font-size="10" fill="#991b1b" font-weight="bold">capillary</text>
+          <line x1="80" y1="205" x2="100" y2="205" stroke="#dc2626" stroke-width="1.5"/>
+
+          <!-- 5. Lacteal -->
+          <circle cx="290" cy="200" r="12" fill="#ca8a04"/>
+          <text x="290" y="204" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">5</text>
+          <text x="248" y="198" font-size="10" fill="#854d0e" font-weight="bold">Lacteal</text>
+          <text x="248" y="210" font-size="9" fill="#854d0e">(fats)</text>
+          <line x1="238" y1="205" x2="170" y2="205" stroke="#ca8a04" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="L2 – We Do: Adaptations" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Label the Villus &amp; Match Adaptations</h2>
+  <div class="li-box"><strong>Instructions:</strong> As a class – <strong>Part A:</strong> Select a label, then click the dashed box next to the feature it names. <strong>Part B:</strong> Match each adaptation to <em>why</em> it helps.</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('l2-wedo')">📸 Print Evidence</button>
+
+  <div id="l2-wedo" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Score: <span class="score" id="l2-score">0</span>/10</span><button class="ghost small" onclick="resetVillusLabel()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealVillusLabel()">👁️ Reveal All</button></div>
+
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start">
+      <!-- Diagram with label spots -->
+      <div>
+        <p style="font-weight:900;color:var(--wedo-border);text-align:center;margin:0 0 4px">Part A: Label the Villus</p>
+        <div class="label-bank" id="villus-labels">
+          <div class="label-btn" onclick="selectLabel(this,'microvilli')">Microvilli</div>
+          <div class="label-btn" onclick="selectLabel(this,'thin-wall')">Thin wall</div>
+          <div class="label-btn" onclick="selectLabel(this,'capillary')">Blood capillary</div>
+          <div class="label-btn" onclick="selectLabel(this,'lacteal')">Lacteal</div>
+          <div class="label-btn" onclick="selectLabel(this,'villus')">Villus</div>
+        </div>
+        <div style="position:relative;width:320px;height:340px;margin:0 auto">
+          <svg width="320" height="340" viewBox="0 0 320 340" xmlns="http://www.w3.org/2000/svg">
+            <!-- Gut lumen background -->
+            <rect x="0" y="0" width="320" height="40" fill="#fef9c3" opacity=".5"/>
+            <text x="160" y="14" text-anchor="middle" font-size="9" fill="#92400e" font-weight="bold">GUT (food)</text>
+
+            <!-- Villus body (finger-like projection) -->
+            <path d="M 78 330 Q 78 75 160 45 Q 242 75 242 330" fill="#fce7f3" stroke="#db2777" stroke-width="3"/>
+
+            <!-- Inner edge showing thin wall -->
+            <path d="M 92 330 Q 92 84 160 57 Q 228 84 228 330" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.2" stroke-dasharray="3 2" opacity=".7"/>
+
+            <!-- Microvilli brush border (top) -->
+            <line x1="94" y1="70" x2="94" y2="50" stroke="#db2777" stroke-width="2"/>
+            <line x1="106" y1="60" x2="106" y2="38" stroke="#db2777" stroke-width="2"/>
+            <line x1="118" y1="52" x2="118" y2="30" stroke="#db2777" stroke-width="2"/>
+            <line x1="130" y1="48" x2="130" y2="25" stroke="#db2777" stroke-width="2"/>
+            <line x1="142" y1="46" x2="142" y2="22" stroke="#db2777" stroke-width="2"/>
+            <line x1="154" y1="45" x2="154" y2="21" stroke="#db2777" stroke-width="2"/>
+            <line x1="166" y1="45" x2="166" y2="21" stroke="#db2777" stroke-width="2"/>
+            <line x1="178" y1="46" x2="178" y2="22" stroke="#db2777" stroke-width="2"/>
+            <line x1="190" y1="48" x2="190" y2="25" stroke="#db2777" stroke-width="2"/>
+            <line x1="202" y1="52" x2="202" y2="30" stroke="#db2777" stroke-width="2"/>
+            <line x1="214" y1="60" x2="214" y2="38" stroke="#db2777" stroke-width="2"/>
+            <line x1="226" y1="70" x2="226" y2="50" stroke="#db2777" stroke-width="2"/>
+
+            <!-- LEFT capillary -->
+            <path d="M 112 325 Q 103 210 108 95 Q 128 80 160 82" fill="none" stroke="#fecaca" stroke-width="9" stroke-linecap="round"/>
+            <path d="M 112 325 Q 103 210 108 95 Q 128 80 160 82" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+
+            <!-- RIGHT capillary -->
+            <path d="M 160 82 Q 192 80 212 95 Q 217 210 208 325" fill="none" stroke="#fecaca" stroke-width="9" stroke-linecap="round"/>
+            <path d="M 160 82 Q 192 80 212 95 Q 217 210 208 325" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+
+            <!-- Small red blood cell markers for visual clarity -->
+            <ellipse cx="105" cy="190" rx="4" ry="2.5" fill="#dc2626"/>
+            <ellipse cx="215" cy="190" rx="4" ry="2.5" fill="#dc2626"/>
+            <ellipse cx="110" cy="270" rx="4" ry="2.5" fill="#dc2626"/>
+            <ellipse cx="210" cy="270" rx="4" ry="2.5" fill="#dc2626"/>
+
+            <!-- Central lacteal -->
+            <rect x="152" y="87" width="16" height="240" fill="#fef9c3" stroke="#ca8a04" stroke-width="2" rx="4"/>
+            <circle cx="160" cy="160" r="3.5" fill="#facc15" stroke="#a16207" stroke-width="1"/>
+            <circle cx="160" cy="230" r="3.5" fill="#facc15" stroke="#a16207" stroke-width="1"/>
+
+            <!-- LEADER LINES pointing from the feature to the label spots -->
+            <!-- 1. Microvilli – leader from brush border to top-left -->
+            <line x1="130" y1="23" x2="60" y2="8" stroke="#db2777" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="130" cy="23" r="3" fill="#db2777"/>
+
+            <!-- 2. Villus – leader from villus body (mid-right) to bottom-right label -->
+            <line x1="250" y1="210" x2="296" y2="298" stroke="#db2777" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="250" cy="210" r="3" fill="#db2777"/>
+
+            <!-- 3. One cell thick – leader from villus outer wall to right side label -->
+            <line x1="240" y1="130" x2="300" y2="100" stroke="#0284c7" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="240" cy="130" r="3" fill="#0284c7"/>
+
+            <!-- 4. Blood capillary – leader from left capillary to left-side label -->
+            <line x1="105" y1="240" x2="22" y2="198" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="105" cy="240" r="3" fill="#dc2626"/>
+
+            <!-- 5. Lacteal – leader from central lacteal to bottom-left label -->
+            <line x1="160" y1="280" x2="48" y2="320" stroke="#ca8a04" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="160" cy="280" r="3" fill="#ca8a04"/>
+          </svg>
+
+          <!-- Label spots positioned at the END of each leader line -->
+          <!-- 1. Microvilli (top) -->
+          <div class="label-spot" data-correct="microvilli" onclick="placeLabel(this)" style="top:-4px;left:10px;min-width:86px">?</div>
+          <!-- 2. Villus (bottom-right) -->
+          <div class="label-spot" data-correct="villus" onclick="placeLabel(this)" style="top:286px;right:-4px;min-width:60px">?</div>
+          <!-- 3. One cell thick (right side, upper) -->
+          <div class="label-spot" data-correct="thin-wall" onclick="placeLabel(this)" style="top:86px;right:-4px;min-width:86px">?</div>
+          <!-- 4. Blood capillary (left side, middle) -->
+          <div class="label-spot" data-correct="capillary" onclick="placeLabel(this)" style="top:184px;left:-4px;min-width:86px">?</div>
+          <!-- 5. Lacteal (bottom-left) -->
+          <div class="label-spot" data-correct="lacteal" onclick="placeLabel(this)" style="top:308px;left:8px;min-width:78px">?</div>
+        </div>
+      </div>
+
+      <!-- Part B: Adaptation matching -->
+      <div>
+        <p style="font-weight:900;color:var(--wedo-border);margin:0 0 4px">Part B: Match Adaptation → Reason</p>
+        <div class="match-row" id="adapt-pills">
+          <div class="match-pill" onclick="selectAdapt(this,'sa')" style="font-size:.9rem">📏 Large SA</div>
+          <div class="match-pill" onclick="selectAdapt(this,'thin')" style="font-size:.9rem">📄 Thin wall</div>
+          <div class="match-pill" onclick="selectAdapt(this,'blood')" style="font-size:.9rem">🩸 Blood supply</div>
+          <div class="match-pill" onclick="selectAdapt(this,'lact')" style="font-size:.9rem">🥛 Lacteals</div>
+          <div class="match-pill" onclick="selectAdapt(this,'at')" style="font-size:.9rem">⚡ Active transport</div>
+        </div>
+        <div class="match-grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <div class="match-target" data-correct="sa" onclick="pickAdaptTarget(this)" style="font-size:.9rem">More nutrients absorbed <strong>at once</strong></div>
+          <div class="match-target" data-correct="thin" onclick="pickAdaptTarget(this)" style="font-size:.9rem"><strong>Short diffusion</strong> pathway</div>
+          <div class="match-target" data-correct="blood" onclick="pickAdaptTarget(this)" style="font-size:.9rem">Maintains steep <strong>concentration gradient</strong></div>
+          <div class="match-target" data-correct="lact" onclick="pickAdaptTarget(this)" style="font-size:.9rem">Absorb <strong>fats</strong> from intestine</div>
+          <div class="match-target" data-correct="at" onclick="pickAdaptTarget(this)" style="font-size:.9rem">Moves nutrients <strong>against</strong> gradient using energy</div>
+        </div>
+        <div id="l2-adapt-fb" style="font-weight:900;margin-top:8px;min-height:20px;text-align:center"></div>
+      </div>
+    </div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:36px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<!-- L2 INDEPENDENT -->
+<div class="slide" data-title="L2 – Independent Work" data-type="independent">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-independent">Independent Work</span>
+  <h2>Independent Work – Absorption &amp; Villi</h2>
+  <div class="li-box"><strong>Instructions:</strong> Complete your Lesson 2 worksheet. Use your labelled villus diagram and knowledge organiser.</div>
+    <div class="indep-timer">
+      <div class="timer-label">Independent Work Timer</div>
+      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
+        <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
+        <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
+        <button onclick="startIndepTimer(360)" class="small ghost">▶ 6 min</button>
+        <button onclick="pauseIndepTimer()" class="small ghost">⏸ Pause</button>
+        <button onclick="resetIndepTimer()" class="small ghost">🔄 Reset</button>
+      </div>
+    </div>
+
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>MCQ + short answer on villi adaptations and absorption.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Table completion, short answer, and 4-mark exam questions.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Extended response including a 6-mark coeliac disease question.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Labelled villus diagram, adaptation checklist, and key word glossary in your pack.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> Name where absorption occurs, list 3 adaptations, state what lacteals do.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> Explain how each adaptation helps, describe diffusion and active transport.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> Link SA:V and gradients to rate, evaluate how damaged villi cause malnutrition.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- L2 EXIT – 3×2 GRID ACROSS ALL 3 LESSONS -->
+<div class="slide" id="l2-exit-slide" data-title="L2 – Exit Ticket">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-exit">Exit Ticket</span>
+  <h2>Exit Ticket – Lesson 1–2 Cumulative</h2>
+  <div class="li-box"><strong>Instructions:</strong> 6 questions covering the Digestive System, Enzymes &amp; Bile, and Absorption &amp; Villi. No notes.</div>
+  <div class="level-toggle">
+    <button onclick="switchLevel('l2-exit','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('l2-exit','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('l2-exit','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+    <button class="ghost" onclick="document.getElementById('l2-exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+  </div>
+  <div id="l2-exit-foundation" class="exit-grid">
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Digestive System</p><p><strong>1) Name the muscular action that pushes food through the gut.</strong></p><p class="answer">Peristalsis.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Digestive System</p><p><strong>2) What does the large intestine absorb?</strong></p><p class="answer">Water.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Enzymes</p><p><strong>3) What does amylase break starch into?</strong></p><p class="answer">Maltose.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Bile</p><p><strong>4) Where is bile stored?</strong></p><p class="answer">The gallbladder.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Enzymes</p><p><strong>5) What does lipase produce?</strong></p><p class="answer">Fatty acids and glycerol.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Villi</p><p><strong>6) Name two adaptations of villi.</strong></p><p class="answer">Any two: large SA, microvilli, one cell thick, blood supply, lacteals.</p></div>
+  </div>
+  <div id="l2-exit-middle" class="exit-grid" style="display:none">
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Digestive System</p><p><strong>1) Name both parts of the small intestine and one function each.</strong></p><p class="answer">Duodenum – digestion. Ileum – absorption.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Enzymes</p><p><strong>2) Starch → _____ → _____. Name both enzymes.</strong></p><p class="answer">Maltose (amylase), glucose (maltase).</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Enzymes</p><p><strong>3) Name the protease from the stomach.</strong></p><p class="answer">Pepsin.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Bile</p><p><strong>4) Explain one role of bile.</strong></p><p class="answer">Neutralises acid for enzyme pH, OR emulsifies fats to increase SA:V.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Villi</p><p><strong>5) Why is a good blood supply important?</strong></p><p class="answer">Carries nutrients away, maintaining steep concentration gradient for diffusion.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Absorption</p><p><strong>6) Name both absorption processes.</strong></p><p class="answer">Diffusion and active transport.</p></div>
+  </div>
+  <div id="l2-exit-higher" class="exit-grid" style="display:none">
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Digestive System</p><p><strong>1) Why does peristalsis work upside down?</strong></p><p class="answer">Active muscular contractions – doesn't rely on gravity.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Enzymes</p><p><strong>2) Why does starch need two enzymes?</strong></p><p class="answer">Amylase: starch→maltose. Maltase: maltose→glucose. Each specific to one substrate.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Bile</p><p><strong>3) How does emulsification increase digestion rate?</strong></p><p class="answer">Smaller droplets = higher SA:V = more lipase binding = faster digestion.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Bile</p><p><strong>4) Why must bile neutralise acid?</strong></p><p class="answer">Intestinal enzymes need alkaline pH. Acid would denature them.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Villi</p><p><strong>5) Why is one cell thick important?</strong></p><p class="answer">Short diffusion pathway = faster absorption.</p></div>
+    <div class="task-box"><p style="font-size:.8rem;color:var(--muted);margin:0 0 4px">Absorption</p><p><strong>6) Why is active transport needed alongside diffusion?</strong></p><p class="answer">Diffusion stops at equilibrium. Active transport uses energy to absorb against gradient, maximising uptake.</p></div>
+  </div>
+</div>
+
+</div><!-- end slide-container -->
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/18</div>
+
+<!-- ═══ PRINT AREA ═══ -->
+<div id="print-area">
+
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L1-L2): Digestion &amp; Absorption</h1><table class="ko-table"><tr><th>Concept</th><th>Details</th></tr><tr><td><strong>Amylase</strong></td><td>Starch → maltose. Salivary glands &amp; pancreas.</td></tr><tr><td><strong>Maltase</strong></td><td>Maltose → glucose.</td></tr><tr><td><strong>Protease</strong></td><td>Proteins → amino acids. Pepsin (stomach), trypsin (pancreas).</td></tr><tr><td><strong>Lipase</strong></td><td>Lipids → fatty acids &amp; glycerol. Pancreas.</td></tr><tr><td><strong>Bile</strong></td><td>Produced: liver. Stored: gallbladder. NOT an enzyme.</td></tr><tr><td><strong>Bile Job 1</strong></td><td>Neutralises stomach acid → alkaline pH for enzymes.</td></tr><tr><td><strong>Bile Job 2</strong></td><td>Emulsifies fats → increases SA:V for lipase.</td></tr><tr><td><strong>Absorption</strong></td><td>Food → blood in ileum. Diffusion + active transport.</td></tr><tr><td><strong>Villi</strong></td><td>Finger-like projections increasing SA for absorption.</td></tr><tr><td><strong>Adaptations</strong></td><td>Large SA, microvilli, one cell thick, blood supply, lacteals.</td></tr><tr><td><strong>Lacteals</strong></td><td>Vessels inside villi that absorb fats.</td></tr></table></div>
+
+<div id="print-l1-arrival" class="print-section"><h2>Lesson 1 Arrival Task</h2><div class="foundation-content"><h3>Foundation</h3><p>1) Name the five organs of the alimentary canal in order.</p><div class="print-line"></div><div class="print-line"></div><p>2) What pushes food through the gut?</p><div class="print-line"></div><p>3) Name the acid in the stomach.</p><div class="print-line"></div><p>4) What breaks large food molecules into smaller ones?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) Name both parts of the small intestine + one function each.</p><div class="print-line"></div><div class="print-line"></div><p>2) Describe how peristalsis moves a bolus.</p><div class="print-line"></div><div class="print-line"></div><p>3) Name one accessory organ and what it produces.</p><div class="print-line"></div><p>4) What catalyst breaks insoluble molecules into soluble ones?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) Explain mechanical vs chemical digestion + location where both occur.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><p>2) Why does peristalsis work upside down?</p><div class="print-line"></div><div class="print-line"></div><p>3) Why would intestinal enzymes be destroyed in the stomach?</p><div class="print-line"></div><div class="print-line"></div><p>4) Name the catalyst. Why does specificity matter?</p><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l1-starter" class="print-section"><h2>Lesson 1 Starter: Match the Words to the Meanings</h2>
+<p>Match each key word to its meaning. Two meanings are wrong – don’t use them!</p>
+<table class="ko-table"><tr><th style="width:35%">Key Word</th><th>Possible Meanings (pick one)</th></tr>
+<tr><td><strong>1. Enzyme</strong></td><td rowspan="5">A. A green-yellow liquid that helps break up fats<br>B. A chemical in cells that is always there<br>C. Breaking large fat droplets into many smaller ones<br>D. A biological “scissors” that cuts big molecules into small ones<br>E. The new molecule made after an enzyme has worked<br>F. The molecule the enzyme works on (it gets broken down)<br>G. The tube that carries food to the stomach</td></tr>
+<tr><td><strong>2. Substrate</strong></td></tr>
+<tr><td><strong>3. Product</strong></td></tr>
+<tr><td><strong>4. Bile</strong></td></tr>
+<tr><td><strong>5. Emulsification</strong></td></tr>
+</table>
+<p><strong>Write your answers like this:</strong> 1. Enzyme = D. A biological “scissors”...</p>
+</div>
+
+<div  id="print-l1-wedo" class="print-section"><h2>Lesson 1 We Do 1: Enzyme Matching</h2><p>Draw a line to match each enzyme to its substrate and product:</p><table class="ko-table"><tr><th>Enzyme</th><th>Breaks down...</th><th>Into...</th></tr><tr><td>Amylase</td><td></td><td></td></tr><tr><td>Maltase</td><td></td><td></td></tr><tr><td>Protease</td><td></td><td></td></tr><tr><td>Lipase</td><td></td><td></td></tr></table><h2 style="margin-top:20px">Lesson 1 We Do 2: Bile Fact Sort</h2><p>Write each fact in the correct column:</p><p><em>Produced in liver | Neutralises acid | Breaks fat into droplets | Stored in gallbladder | Creates alkaline pH | Increases SA:V</em></p><table class="ko-table"><tr><th>What Bile Is</th><th>Job 1: Neutralise</th><th>Job 2: Emulsify</th></tr><tr><td style="height:80px"></td><td></td><td></td></tr></table></div>
+
+<div id="print-l1-scaffold-foundation" class="print-section"><h2>Lesson 1 Scaffolding – Foundation (Grades U–1)</h2><div class="scaffold-print-box"><h3>Completed Enzyme Table</h3><table class="ko-table"><tr><th>Group</th><th>Example</th><th>Breaks down</th><th>Into</th><th>Made where</th></tr><tr><td>Carbohydrases</td><td>Amylase</td><td>Starch</td><td>Maltose</td><td>Salivary glands &amp; pancreas</td></tr><tr><td></td><td>Maltase</td><td>Maltose</td><td>Glucose</td><td>Small intestine</td></tr><tr><td>Proteases</td><td>Pepsin/Trypsin</td><td>Proteins</td><td>Amino acids</td><td>Stomach/Pancreas</td></tr><tr><td>Lipases</td><td>Lipase</td><td>Lipids</td><td>Fatty acids + glycerol</td><td>Pancreas</td></tr></table></div><div class="scaffold-print-box"><h3>Bile Key Facts</h3><p>Made in <strong>liver</strong>. Stored in <strong>gallbladder</strong>. NOT an enzyme.</p><p>Job 1: <strong>Neutralises</strong> acid. Job 2: <strong>Emulsifies</strong> fats (↑ SA:V).</p></div><div class="scaffold-print-box"><h3>Sentence Starters</h3><p>Amylase is an enzyme that breaks... into...</p><p>Bile is produced in the... and stored in the...</p><p>Bile helps digestion by... and by...</p></div></div>
+
+<div id="print-l1-scaffold-middle" class="print-section"><h2>Lesson 1 Scaffolding – Middle (Grades 2–3)</h2><div class="scaffold-print-box"><h3>Key Facts</h3><p>Starch → maltose (amylase) → glucose (maltase).</p><p>Proteins → amino acids (protease). Lipids → fatty acids + glycerol (lipase).</p><p>Bile: liver → gallbladder → small intestine. Neutralises + emulsifies.</p></div></div>
+
+<div id="print-l1-scaffold-higher" class="print-section"><h2>Lesson 1 Scaffolding – Higher (Grades 3–5)</h2><div class="scaffold-print-box"><h3>Key Terms</h3><p>Amylase, maltase, protease, lipase, pepsin, trypsin, bile, emulsification, SA:V, neutralisation, gallbladder, specificity</p></div></div>
+
+<div id="print-l1-worksheet-foundation" class="print-section"><h2>Lesson 1 Independent Work – Foundation (Grades U–1)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Amylase breaks starch into: A) Glucose B) Amino acids C) Maltose D) Fatty acids</p><p>2) Where is bile stored? A) Liver B) Stomach C) Gallbladder D) Pancreas</p><p>3) Lipase produces: A) Amino acids B) Maltose C) Fatty acids &amp; glycerol D) Starch</p><p>4) Which organ makes pepsin? A) Pancreas B) Liver C) Stomach D) Mouth</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>5) Name the three enzyme groups.</p><div class="print-line"></div><p>6) Where is bile produced?</p><div class="print-line"></div><p>7) State the two jobs of bile.</p><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>8) Describe the complete digestion of starch. Name the enzymes and products at each stage.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [3 marks]</strong></p><p>9) State what bile does to help digestion. Include where it is made and stored. [3]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l1-worksheet-middle" class="print-section"><h2>Lesson 1 Independent Work – Middle (Grades 2–3)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Maltase breaks maltose into: A) Starch B) Glucose C) Amino acids D) Lipids</p><p>2) Trypsin is made in the: A) Stomach B) Mouth C) Pancreas D) Liver</p><p>3) Bile is NOT: A) An enzyme B) Made in the liver C) Stored in the gallbladder D) Alkaline</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>4) Complete: Amylase breaks _____ into _____. Maltase breaks this into _____.</p><div class="print-line"></div><p>5) Explain why bile is not an enzyme.</p><div class="print-line"></div><div class="print-line"></div><p>6) Define emulsification.</p><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>7) Explain how emulsification increases the rate of lipid digestion. Use the term SA:V.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [4 marks]</strong></p><p>8) Describe the role of bile in digestion. Include where it is made and stored, and explain both functions. [4]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l1-worksheet-higher" class="print-section"><h2>Lesson 1 Independent Work – Higher (Grades 3–5)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Enzymes are specific because: A) They are big B) Each has a unique active site C) They are made of fat D) They work fast</p><p>2) Bile increases SA:V by: A) Dissolving fat B) Breaking large droplets into smaller ones C) Heating fat D) Mixing with lipase</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>3) Explain why enzymes are described as biological catalysts.</p><div class="print-line"></div><div class="print-line"></div><p>4) Explain why starch digestion requires two separate enzymes.</p><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>5) Explain why bile must neutralise stomach acid before intestinal enzymes can work. Include the concept of optimum pH and denaturation.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [5 marks]</strong></p><p>6) A patient has their gallbladder removed. Explain the effect on their digestion of fatty foods. Describe bile's normal role and why its absence causes problems. [5]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l1-exit" class="print-section"><div class="foundation-content"><h2>Lesson 1 Exit Ticket (Foundation U–1)</h2><p>1) What does amylase break starch into?</p><div class="print-line"></div><p>2) Where is bile produced and stored?</p><div class="print-line"></div><p>3) What are bile's two jobs?</p><div class="print-line"></div></div><div class="middle-content"><h2>Lesson 1 Exit Ticket (Middle 2–3)</h2><p>1) Starch → _____ (amylase) → _____ (maltase).</p><div class="print-line"></div><p>2) Name proteases from stomach and pancreas.</p><div class="print-line"></div><p>3) Why does emulsification help lipase?</p><div class="print-line"></div><div class="print-line"></div></div><div class="higher-content"><h2>Lesson 1 Exit Ticket (Higher 3–5)</h2><p>1) Why does starch need two enzymes?</p><div class="print-line"></div><div class="print-line"></div><p>2) Why must bile neutralise acid?</p><div class="print-line"></div><div class="print-line"></div><p>3) Effect of gallbladder removal on fat digestion?</p><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-arrival" class="print-section"><h2>Lesson 2 Arrival Task</h2><div class="foundation-content"><h3>Foundation</h3><p>1) Name the enzyme that breaks starch into maltose.</p><div class="print-line"></div><p>2) What two products does lipase make?</p><div class="print-line"></div><p>3) Where is bile produced and stored?</p><div class="print-line"></div><p>4) Where does digested food enter the blood?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) Starch → _____ (amylase) → _____ (maltase).</p><div class="print-line"></div><p>2) Name proteases from stomach and pancreas.</p><div class="print-line"></div><p>3) Explain bile's two roles.</p><div class="print-line"></div><div class="print-line"></div><p>4) What is absorption and where does it occur?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) Why does starch need two enzymes?</p><div class="print-line"></div><div class="print-line"></div><p>2) Why must bile neutralise acid?</p><div class="print-line"></div><div class="print-line"></div><p>3) How does emulsification increase rate? Use SA:V.</p><div class="print-line"></div><div class="print-line"></div><p>4) Why must ileum maximise SA and minimise diffusion distance?</p><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-starter" class="print-section"><h2>Lesson 2 Starter: What Do You Already Know?</h2><p style="font-style:italic;margin-bottom:10px">Journey: Mouth → Stomach → Small Intestine → <strong>???</strong> → Body Cells. Today's lesson answers the <strong>???</strong></p><div class="foundation-content"><h3>Foundation (U–1)</h3><p><strong>Part A:</strong> Tick Agree, Disagree or Unsure for each statement.</p><table class="ko-table"><tr><th>Statement</th><th>Agree</th><th>Disagree</th><th>Unsure</th></tr><tr><td>1) Food goes from your stomach straight into your blood.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>2) Your body uses food for energy and to build new cells.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>3) Most food gets absorbed in the small intestine.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>4) The inside of the small intestine is completely smooth.</td><td>☐</td><td>☐</td><td>☐</td></tr></table><p><strong>Part B – Predict:</strong> Draw an arrow showing where food goes after the small intestine. Label it with one word.</p><div class="print-line"></div><div class="print-line"></div></div><div class="middle-content"><h3>Middle (2–3)</h3><p><strong>Part A:</strong> Tick Agree, Disagree or Unsure for each statement.</p><table class="ko-table"><tr><th>Statement</th><th>Agree</th><th>Disagree</th><th>Unsure</th></tr><tr><td>1) Digested food molecules are small enough to pass through the gut wall.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>2) Diffusion moves molecules from LOW to HIGH concentration.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>3) The small intestine has a huge surface area for absorption.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>4) All nutrient absorption happens without needing any energy.</td><td>☐</td><td>☐</td><td>☐</td></tr></table><p><strong>Part B – Predict:</strong> In one sentence, suggest two things that might help digested food move from gut to blood.</p><div class="print-line"></div><div class="print-line"></div></div><div class="higher-content"><h3>Higher (3–5)</h3><p><strong>Part A:</strong> Tick Agree, Disagree or Unsure. Briefly justify each choice.</p><table class="ko-table"><tr><th>Statement</th><th>A</th><th>D</th><th>?</th></tr><tr><td>1) Some nutrients need energy (ATP) to be absorbed against a concentration gradient.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>2) A rich blood supply speeds up absorption by maintaining a steep concentration gradient.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>3) A thicker gut wall would speed up diffusion of nutrients into the blood.</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>4) Diffusion only happens when there's a concentration difference across the membrane.</td><td>☐</td><td>☐</td><td>☐</td></tr></table><p><strong>Part B – Predict:</strong> Predict TWO structural features of the small intestine wall that would maximise the rate of absorption. Justify each using rate of diffusion.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-wedo" class="print-section"><h2>Lesson 2 We Do 1: Diffusion vs Active Transport</h2>
+  <p>Write each fact in the correct column:</p>
+  <p><em>Passive | Needs ATP | High to low | Against gradient | Like rolling downhill | Like pushing uphill</em></p>
+  <table class="ko-table"><tr><th>Diffusion</th><th>Active Transport</th></tr><tr><td style="height:80px"></td><td></td></tr></table>
+  <h2>Lesson 2 We Do: Label &amp; Match</h2><p><strong>Part A:</strong> Label these features on the villus diagram above (if not done already).</p><p><strong>Part B:</strong> Match each adaptation to why it helps absorption:</p><table class="ko-table"><tr><th>Adaptation</th><th>Why it helps</th></tr><tr><td>Large surface area</td><td></td></tr><tr><td>One cell thick</td><td></td></tr><tr><td>Good blood supply</td><td></td></tr><tr><td>Lacteals</td><td></td></tr><tr><td>Active transport</td><td></td></tr></table></div>
+
+<div id="print-l2-scaffold-foundation" class="print-section"><h2>Lesson 2 Scaffolding – Foundation (Grades U–1)</h2><div class="scaffold-print-box"><h3>Villus Adaptations</h3><p>1. <strong>Large SA</strong> – millions of villi.</p><p>2. <strong>Microvilli</strong> – further increase SA.</p><p>3. <strong>One cell thick</strong> – short diffusion pathway.</p><p>4. <strong>Blood supply</strong> – steep concentration gradient.</p><p>5. <strong>Lacteals</strong> – absorb fats.</p><p>Uses: <strong>diffusion</strong> + <strong>active transport</strong>.</p></div><div class="scaffold-print-box"><h3>Sentence Starters</h3><p>Absorption happens in the...</p><p>Villi increase absorption because...</p><p>The wall is one cell thick so that...</p></div></div>
+
+<div id="print-l2-scaffold-middle" class="print-section"><h2>Lesson 2 Scaffolding – Middle (Grades 2–3)</h2><div class="scaffold-print-box"><h3>Key Facts</h3><p>Absorption: ileum. Diffusion + active transport.</p><p>5 adaptations: SA, microvilli, thin wall, blood supply, lacteals.</p></div></div>
+
+<div id="print-l2-scaffold-higher" class="print-section"><h2>Lesson 2 Scaffolding – Higher (Grades 3–5)</h2><div class="scaffold-print-box"><h3>Key Terms</h3><p>Absorption, villus, microvilli, lacteal, diffusion, active transport, concentration gradient, SA:V</p></div></div>
+
+<div id="print-l2-worksheet-foundation" class="print-section"><h2>Lesson 2 Independent Work – Foundation (Grades U–1)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Food is absorbed in the: A) Stomach B) Duodenum C) Ileum D) Colon</p><p>2) Lacteals absorb: A) Water B) Glucose C) Fats D) Amino acids</p><p>3) Villus wall thickness: A) 5 cells B) One cell C) 10 cells D) 3 cells</p><p>4) Absorption uses diffusion and: A) Osmosis B) Active transport C) Peristalsis D) Evaporation</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>5) Name three adaptations of villi.</p><div class="print-line"></div><div class="print-line"></div><p>6) What are microvilli?</p><div class="print-line"></div><p>7) Why is a good blood supply important?</p><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>8) Describe how food is absorbed in the small intestine. Name the structures and processes involved.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [3 marks]</strong></p><p>9) Explain why villi increase the rate of absorption. Include how they are adapted. [3]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-worksheet-middle" class="print-section"><h2>Lesson 2 Independent Work – Middle (Grades 2–3)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Blood supply helps villi because it: A) Keeps them warm B) Maintains concentration gradient C) Makes enzymes D) Produces ATP</p><p>2) Active transport needs: A) Gravity B) Energy C) Sunlight D) Oxygen</p><p>3) The ileum is part of the: A) Stomach B) Large intestine C) Small intestine D) Liver</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>4) Complete this table:</p><table class="ko-table"><tr><th>Adaptation</th><th>How it helps</th></tr><tr><td>Villi</td><td></td></tr><tr><td>One cell thick</td><td></td></tr><tr><td>Blood supply</td><td></td></tr><tr><td>Lacteals</td><td></td></tr></table><p>5) Explain the difference between diffusion and active transport.</p><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>6) Explain why both diffusion and active transport are needed for absorption in the ileum.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [4 marks]</strong></p><p>7) Describe how the structure of a villus makes it adapted for absorbing digested food. [4]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-worksheet-higher" class="print-section"><h2>Lesson 2 Independent Work – Higher (Grades 3–5)</h2><div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p><p>1) Active transport is needed because: A) Diffusion is too slow B) Diffusion stops at equilibrium C) Blood flows too fast D) Villi are too small</p><p>2) A patient with flattened villi would experience: A) Better absorption B) Reduced absorption C) No change D) More villi</p></div><div class="prevent-break"><p><strong>Part B: Short Answer</strong></p><p>3) Explain how blood supply maintains a steep concentration gradient.</p><div class="print-line"></div><div class="print-line"></div><p>4) Why do cells in the ileum wall need lots of mitochondria?</p><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part C: Long Answer</strong></p><p>5) Explain why both diffusion and active transport are essential. What would happen if only one process was available?</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><p><strong>Part D: Exam Question [6 marks]</strong></p><p>6) A person with coeliac disease has flattened villi. Explain how this affects nutrient absorption and could cause malnutrition. Link to specific adaptations of healthy villi. [6]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+
+<div id="print-l2-exit" class="print-section"><div class="foundation-content"><h2>Lesson 2 Exit – Cumulative (Foundation U–1)</h2><table class="ko-table"><tr><td>1) What pushes food through the gut?</td><td></td></tr><tr><td>2) What does amylase break starch into?</td><td></td></tr><tr><td>3) Where is bile produced and stored?</td><td></td></tr><tr><td>4) Where is bile stored?</td><td></td></tr><tr><td>5) What does lipase produce?</td><td></td></tr><tr><td>6) Name two adaptations of villi.</td><td></td></tr></table></div><div class="middle-content"><h2>Lesson 2 Exit – Cumulative (Middle 2–3)</h2><table class="ko-table"><tr><td>1) Name both small intestine parts + function.</td><td></td></tr><tr><td>2) Starch → _____ → _____. Name enzymes.</td><td></td></tr><tr><td>3) Stomach protease name?</td><td></td></tr><tr><td>4) Explain one role of bile.</td><td></td></tr><tr><td>5) Why is blood supply important in villi?</td><td></td></tr><tr><td>6) Name both absorption processes.</td><td></td></tr></table></div><div class="higher-content"><h2>Lesson 2 Exit – Cumulative (Higher 3–5)</h2><table class="ko-table"><tr><td>1) Why does starch need two enzymes?</td><td></td></tr><tr><td>2) How does emulsification increase rate?</td><td></td></tr><tr><td>3) Why is active transport needed too?</td><td></td></tr><tr><td>4) Why must bile neutralise acid?</td><td></td></tr><tr><td>5) Why is one cell thick important?</td><td></td></tr><tr><td>6) Trace glucose from bread to blood.</td><td></td></tr></table></div></div>
+
+<div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><pre id="wedo-evidence-content" style="white-space:pre-wrap;font-family:inherit;font-size:.95rem"></pre></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el)el.style.display=(l===level)?'grid':'none'})}
+function voteStart(btn,choice){const row=btn.closest('.start-row');row.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('voted'));btn.classList.add('voted');row.dataset.voted=choice}
+function quizMark(btn,ok,msg){const q=btn.closest('.quiz');if(!q)return;const fb=q.querySelector('.fb');q.querySelectorAll('button').forEach(b=>b.style.border='');btn.style.border=ok?'3px solid var(--success)':'3px solid var(--error)';fb.innerText=msg;fb.style.color=ok?'var(--success)':'var(--error)'}
+function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+function printPack(level,lesson){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-ko').classList.add('visible');const prefix=lesson===1?'l1':'l2';['arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+prefix+'-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-'+prefix+'-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-'+prefix+'-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;const s=c.closest('.slide');const title=s?s.getAttribute('data-title'):'We Do';const ts=new Date().toLocaleString('en-GB');const results=[];c.querySelectorAll('.quiz').forEach((q,i)=>{const qT=q.querySelector('.q')?.innerText||'';const fb=q.querySelector('.fb')?.innerText||'(not answered)';results.push('Q'+(i+1)+': '+qT+'\nAnswer: '+fb)});const n=c.querySelector('[contenteditable]');const notes=n?n.innerText:'';let out='CLASS EVIDENCE \u2013 '+title+'\nDate/Time: '+ts+'\n'+'\u2500'.repeat(50)+'\n\n';if(results.length)out+='QUESTIONS:\n'+results.join('\n\n')+'\n\n';if(notes&&notes!==n?.getAttribute('data-placeholder'))out+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=out;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // --- Generic Match System ---
+  let matchSel = {};
+  let matchScores = {};
+
+  function selMatch(el, id, group) {
+    matchSel[group] = id;
+    document.querySelectorAll('#'+group+'-pills .match-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function pickMatch(el, group) {
+    if (!matchSel[group]) { el.classList.add('wrong'); setTimeout(() => el.classList.remove('wrong'), 500); return; }
+    if (el.classList.contains('correct')) return;
+    const fb = document.getElementById(group+'-fb');
+    if (el.getAttribute('data-correct') === matchSel[group]) {
+      el.classList.add('correct');
+      document.querySelector('#'+group+'-pills .match-pill.selected').classList.add('placed');
+      matchScores[group] = (matchScores[group]||0) + 1;
+      document.getElementById(group+'-score').textContent = matchScores[group];
+      if(fb){fb.textContent='✅ Correct!';fb.style.color='var(--success)';}
+    } else {
+      el.classList.add('wrong'); setTimeout(() => el.classList.remove('wrong'), 500);
+      if(fb){fb.textContent='❌ Try again!';fb.style.color='var(--error)';}
+    }
+    matchSel[group] = null;
+  }
+  function resetMatch(group) {
+    matchSel[group] = null; matchScores[group] = 0;
+    document.getElementById(group+'-score').textContent = '0';
+    const fb = document.getElementById(group+'-fb'); if(fb) fb.textContent='';
+    document.querySelectorAll('#'+group+'-pills .match-pill').forEach(p => p.classList.remove('selected','placed'));
+    document.querySelectorAll('.match-target[data-group="'+group+'"]').forEach(t => t.classList.remove('correct','wrong'));
+  }
+  function revealMatch(group) {
+    document.querySelectorAll('.match-target[data-group="'+group+'"]').forEach(t => t.classList.add('correct'));
+    document.querySelectorAll('#'+group+'-pills .match-pill').forEach(p => p.classList.add('placed'));
+    const total = document.querySelectorAll('.match-target[data-group="'+group+'"]').length;
+    matchScores[group] = total; document.getElementById(group+'-score').textContent = total;
+  }
+
+  // --- Bile Sort ---
+  let selBileEl = null;
+  let bileScore = 0;
+  function selectBileCard(el) {
+    if (el.style.pointerEvents === 'none') return;
+    document.querySelectorAll('#bile-cards .sort-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected'); selBileEl = el;
+  }
+  function placeBileCard(bin) {
+    if (!selBileEl) return;
+    const correct = selBileEl.getAttribute('data-bin');
+    const clone = document.createElement('div');
+    clone.className = 'sort-card'; clone.textContent = selBileEl.textContent;
+    clone.style.fontSize = '.85rem'; clone.style.padding = '4px 8px'; clone.style.pointerEvents = 'none';
+    if (bin === correct) { clone.classList.add('correct-place'); bileScore++; document.getElementById('bile-score').textContent = bileScore; }
+    else { clone.classList.add('wrong-place'); }
+    document.getElementById('bile-' + bin).appendChild(clone);
+    selBileEl.style.pointerEvents = 'none'; selBileEl.style.opacity = '.3';
+    selBileEl.classList.remove('selected'); selBileEl = null;
+  }
+  function resetBileSort() {
+    selBileEl = null; bileScore = 0;
+    document.getElementById('bile-score').textContent = '0';
+    document.querySelectorAll('#bile-cards .sort-card').forEach(c => { c.classList.remove('selected'); c.style.pointerEvents = ''; c.style.opacity = ''; });
+    ['bile-what','bile-job1','bile-job2'].forEach(id => document.getElementById(id).innerHTML = '');
+  }
+  function revealBileSort() {
+    document.querySelectorAll('#bile-cards .sort-card').forEach(c => {
+      const bin = c.getAttribute('data-bin');
+      const clone = document.createElement('div'); clone.className = 'sort-card correct-place';
+      clone.textContent = c.textContent; clone.style.fontSize = '.85rem'; clone.style.padding = '4px 8px';
+      document.getElementById('bile-' + bin).appendChild(clone);
+      c.style.pointerEvents = 'none'; c.style.opacity = '.3';
+    });
+    bileScore = 6; document.getElementById('bile-score').textContent = '6';
+  }
+
+
+  // --- L2 Absorption Sort ---
+  let selAbsEl = null;
+  let absScore = 0;
+  function selectAbsCard(el) {
+    if (el.style.pointerEvents === 'none') return;
+    document.querySelectorAll('#abs-cards .sort-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected'); selAbsEl = el;
+  }
+  function placeAbsCard(bin) {
+    if (!selAbsEl) return;
+    const correct = selAbsEl.getAttribute('data-bin');
+    const clone = document.createElement('div'); clone.className = 'sort-card';
+    clone.textContent = selAbsEl.textContent; clone.style.fontSize = '.85rem'; clone.style.padding = '4px 8px'; clone.style.pointerEvents = 'none';
+    if (bin === correct) { clone.classList.add('correct-place'); absScore++; document.getElementById('abs-score').textContent = absScore; }
+    else { clone.classList.add('wrong-place'); }
+    document.getElementById('bin-' + bin).appendChild(clone);
+    selAbsEl.style.pointerEvents = 'none'; selAbsEl.style.opacity = '.3';
+    selAbsEl.classList.remove('selected'); selAbsEl = null;
+  }
+  function resetAbsSort() {
+    selAbsEl = null; absScore = 0; document.getElementById('abs-score').textContent = '0';
+    document.querySelectorAll('#abs-cards .sort-card').forEach(c => { c.classList.remove('selected'); c.style.pointerEvents = ''; c.style.opacity = ''; });
+    document.getElementById('bin-diff').innerHTML = ''; document.getElementById('bin-active').innerHTML = '';
+  }
+  function revealAbsSort() {
+    document.querySelectorAll('#abs-cards .sort-card').forEach(c => {
+      const bin = c.getAttribute('data-bin');
+      const clone = document.createElement('div'); clone.className = 'sort-card correct-place';
+      clone.textContent = c.textContent; clone.style.fontSize = '.85rem'; clone.style.padding = '4px 8px';
+      document.getElementById('bin-' + bin).appendChild(clone);
+      c.style.pointerEvents = 'none'; c.style.opacity = '.3';
+    });
+    absScore = 6; document.getElementById('abs-score').textContent = '6';
+  }
+
+  // --- L2 Villus Labelling ---
+  let selectedLabelId = null;
+  let l2Score = 0;
+
+  function selectLabel(el, id) {
+    selectedLabelId = id;
+    document.querySelectorAll('#villus-labels .label-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function placeLabel(spot) {
+    if (!selectedLabelId) return;
+    if (spot.classList.contains('filled')) return;
+    const correct = spot.getAttribute('data-correct');
+    if (selectedLabelId === correct) {
+      spot.textContent = document.querySelector('#villus-labels .label-btn.selected').textContent;
+      spot.classList.add('filled');
+      document.querySelector('#villus-labels .label-btn.selected').classList.add('placed');
+      l2Score++; document.getElementById('l2-score').textContent = l2Score;
+    } else {
+      spot.classList.add('wrong-label');
+      setTimeout(() => spot.classList.remove('wrong-label'), 500);
+    }
+    selectedLabelId = null;
+  }
+
+  // --- L2 Adaptation Matching ---
+  let selectedAdapt = null;
+
+  function selectAdapt(el, id) {
+    selectedAdapt = id;
+    document.querySelectorAll('#adapt-pills .match-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function pickAdaptTarget(el) {
+    if (!selectedAdapt) { el.classList.add('wrong'); setTimeout(() => el.classList.remove('wrong'), 500); return; }
+    if (el.classList.contains('correct')) return;
+    const fb = document.getElementById('l2-adapt-fb');
+    if (el.getAttribute('data-correct') === selectedAdapt) {
+      el.classList.add('correct');
+      document.querySelector('#adapt-pills .match-pill.selected').classList.add('placed');
+      l2Score++; document.getElementById('l2-score').textContent = l2Score;
+      fb.textContent = '✅ Correct!'; fb.style.color = 'var(--success)';
+    } else {
+      el.classList.add('wrong'); setTimeout(() => el.classList.remove('wrong'), 500);
+      fb.textContent = '❌ Try again!'; fb.style.color = 'var(--error)';
+    }
+    selectedAdapt = null;
+  }
+  function resetVillusLabel() {
+    selectedLabelId = null; selectedAdapt = null; l2Score = 0;
+    document.getElementById('l2-score').textContent = '0';
+    document.getElementById('l2-adapt-fb').textContent = '';
+    document.querySelectorAll('#villus-labels .label-btn').forEach(b => b.classList.remove('selected','placed'));
+    document.querySelectorAll('.label-spot').forEach(s => { s.textContent = '?'; s.classList.remove('filled','wrong-label'); });
+    document.querySelectorAll('#adapt-pills .match-pill').forEach(p => p.classList.remove('selected','placed'));
+    document.querySelectorAll('#l2-wedo .match-target').forEach(t => t.classList.remove('correct','wrong'));
+  }
+  function revealVillusLabel() {
+    const labels = {microvilli:'Microvilli','thin-wall':'Thin wall',capillary:'Blood capillary',lacteal:'Lacteal',villus:'Villus'};
+    document.querySelectorAll('.label-spot').forEach(s => { s.textContent = labels[s.getAttribute('data-correct')]; s.classList.add('filled'); });
+    document.querySelectorAll('#villus-labels .label-btn').forEach(b => b.classList.add('placed'));
+    document.querySelectorAll('#l2-wedo .match-target').forEach(t => t.classList.add('correct'));
+    document.querySelectorAll('#adapt-pills .match-pill').forEach(p => p.classList.add('placed'));
+    l2Score = 10; document.getElementById('l2-score').textContent = '10';
+  }
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // --- Independent Work Timer ---
+  let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function startIndepTimer(secs){
+    if(indepPaused&&!secs){indepPaused=false;}
+    else{clearInterval(indepInterval);indepSeconds=secs||480;}
+    indepPaused=false;
+    updateIndepDisplay();
+    indepInterval=setInterval(function(){
+      if(!indepPaused){indepSeconds--;updateIndepDisplay();
+      if(indepSeconds<=0){clearInterval(indepInterval);
+        const d=document.getElementById('indep-timer-display');if(d){d.textContent='TIME UP!';d.classList.add('timer-warning');}
+      }}
+    },1000);
+  }
+  function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d&&indepPaused)d.style.opacity='.5';else if(d)d.style.opacity='1';}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1';}}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const d=document.getElementById('indep-timer-display');if(d){d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);}}
+
+</script>
+</body>
+</html><div class="scaffold-box animate-enter" style="margin-top:8px"><strong>🧠 Memory Trick:</strong> "Amylase Makes Maltose, Maltase Makes Glucose" – the enzyme name sounds like the product it creates! And remember: <strong>starch needs TWO steps</strong>, not one.</div>
+      
