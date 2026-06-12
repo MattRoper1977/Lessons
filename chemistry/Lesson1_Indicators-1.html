@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 1 of 3 – Indicators &amp; Universal Indicator</title>
+  <style>
+    :root{--bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    @keyframes drip{0%{transform:translateY(-10px);opacity:1}70%{opacity:1}100%{transform:translateY(35px);opacity:0}}
+    @keyframes fillUp{from{height:0}to{height:var(--fill-h,50px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}
+    .anim-demo{background:#0f172a;border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+    .anim-demo:hover{box-shadow:0 0 20px rgba(124,58,237,.3)}
+    .anim-tube{position:relative;width:48px;height:80px;border:3px solid #64748b;border-radius:0 0 24px 24px;border-top:none;overflow:hidden;display:inline-block;margin:0 10px;vertical-align:top}
+    .anim-tube::before{content:'';position:absolute;top:-4px;left:-8px;right:-8px;height:5px;background:#64748b;border-radius:2px}
+    .anim-tube .liquid{position:absolute;bottom:0;left:0;right:0;border-radius:0 0 21px 21px;height:0;transition:height .8s ease,background 1s ease}
+    .ind-level{display:none}.ind-level.active{display:block}
+    .ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px;margin:-2px -4px 0 0}
+    .q-mcq{background:#dbeafe;color:#1e40af}.q-short{background:#fef3c7;color:#92400e}.q-exam{background:#fce7f3;color:#9d174d}
+    .mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}.mcq-opt:hover{border-color:var(--btn-bg)}.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+    .anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}
+    .slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+    .slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}
+    h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+    h3{margin:10px 0 8px;color:#0f172a}
+    p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+    button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+    button:active{transform:translateY(0)}
+    button.small{padding:8px 12px;font-size:.95rem}
+    button.ghost{background:#e2e8f0;color:#0f172a}
+    button.ghost:hover{background:#cbd5e1}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+    .progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+    .progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}
+    .task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .wedo-box{background:var(--wedo-bg);border-left:6px solid var(--wedo-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}
+    .show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}
+    .quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}
+    .quiz .opts{display:flex;gap:10px;flex-wrap:wrap}
+    .quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}
+    .tag-starter{background:#dbeafe;color:#1e40af}
+    .tag-ido{background:var(--ido-bg);color:#5b21b6}
+    .tag-wedo{background:var(--wedo-bg);color:#9d174d}
+    .tag-independent{background:var(--task-bg);color:#92400e}
+    .tag-exit{background:var(--sc-bg);color:#9a3412}
+    .indicator-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;margin:6px 0;background:#fff;border:1px solid #e2e8f0}
+    .colour-swatch{width:36px;height:36px;border-radius:8px;border:2px solid #cbd5e1}
+    .ind-pill{border-radius:999px;padding:10px 16px;font-weight:900;border:2px solid #cbd5e1;background:#fff;cursor:pointer;user-select:none}
+    .ind-pill.selected{border-color:var(--task-border);box-shadow:0 0 0 4px rgba(234,179,8,.25)}
+    .solution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+    .solution-card{border:2px solid #cbd5e1;border-radius:14px;padding:12px;background:#fff;cursor:pointer;user-select:none;display:flex;gap:10px;align-items:center;font-weight:bold}
+    .solution-card.correct{border-color:var(--success);background:rgba(22,163,74,.1)}
+    .solution-card.wrong{border-color:var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .lab-beaker{width:100px;text-align:center;cursor:pointer;transition:transform .2s;position:relative}
+    .lab-beaker:hover{transform:translateY(-3px)}
+    .lab-beaker.selected{outline:3px solid var(--wedo-border);border-radius:12px;outline-offset:4px}
+    .lab-beaker.done{opacity:.7;pointer-events:none}
+    .beaker-liquid{width:60px;height:70px;margin:0 auto;border:3px solid #94a3b8;border-radius:0 0 10px 10px;border-top:none;position:relative;background:#f8fafc;transition:background .5s}
+    .beaker-liquid::before{content:'';position:absolute;top:-3px;left:-8px;right:-8px;height:4px;background:#94a3b8;border-radius:2px}
+    .beaker-label{font-size:.8rem;font-weight:bold;margin:6px 0 0;color:#334155}
+    .beaker-fb{font-size:.85rem;font-weight:900;min-height:20px;margin:2px 0 0}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}
+    .wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+    .evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}
+    .data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}
+    .data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .timer-box{background:#1e293b;color:#fff;border-radius:12px;padding:14px 20px;text-align:center;font-size:2rem;font-weight:900;display:inline-block;min-width:100px;margin:8px 0}
+
+    #print-area{display:none}
+    @media print{
+      body{overflow:visible;background:#fff;height:auto;color:#000}
+      .controls,.slide-container,.progress-wrap,.progress-label,
+    .xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+    .xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+    .xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+    .confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+    .confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+    @keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+    .lb-widget{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:10px;margin-top:6px}
+    .lb-widget h4{margin:0 0 6px;color:var(--lo-border);font-size:.9rem}
+    .lb-list{display:flex;flex-wrap:wrap;gap:4px}
+    .lb-name{background:var(--lo-bg);color:var(--lo-border);padding:3px 10px;border-radius:6px;font-size:.85rem;font-weight:bold;animation:fadeInUp .3s}
+    .lb-input-row{display:flex;gap:6px;margin-top:6px}
+    .lb-input{border:2px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:.9rem;flex:1;font-family:inherit}
+    .lb-input:focus{border-color:var(--lo-border);outline:none}
+    
+    .hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+    .hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+    .hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+    .mistake-card{background:#fff;border:3px solid var(--error);border-radius:14px;padding:16px;margin:8px 0;position:relative;cursor:pointer;transition:all .2s}
+    .mistake-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(220,38,38,.2)}
+    .mistake-card .wrong-badge{position:absolute;top:-10px;right:14px;background:var(--error);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900}
+    .mistake-reveal{display:none;background:#f0fdf4;border:2px solid var(--success);border-radius:10px;padding:12px;margin-top:8px}
+    .mistake-reveal.show{display:block;animation:fadeInUp .3s}
+    #timer-widget{display:none!important}
+      #print-area{display:block!important;padding:20px}
+      .print-section{display:none;page-break-after:always}
+      .print-section.visible{display:block}
+      .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+      .print-box{border:1px solid #000;padding:10px;min-height:80px}
+      .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+      .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+      .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}
+      .ko-table th{background:#eee}
+      .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+      .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+      body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+      body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+      body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+    }
+  
+    
+    {background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+    @keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:none;align-items:center;gap:15px}
+    #timer-widget.visible{display:flex}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+  </style>
+</head>
+<body>
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">10:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetTimer(15)" title="15 min">↻15</button>
+    <button class="timer-btn" onclick="resetTimer(5)" title="5 min">↻5</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ===== SLIDE 1: TITLE ===== -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:3%">
+      <div class="animate-enter">
+        <p style="font-size:1rem;color:var(--muted);margin:0">Lesson 1 of 3 — Acids &amp; Alkalis</p>
+        <h1>Indicators &amp; Universal Indicator</h1>
+        <p style="font-size:1rem;color:var(--muted);margin:-8px 0 14px">Spec: 2.28 &amp; 2.30</p>
+        <div class="li-box" style="margin:16px auto;max-width:640px;text-align:left">
+          <strong>🌍 Real World:</strong> Doctors test urine with indicators. Farmers test soil pH. Pool technicians test swimming pool water. Today you learn the science behind ALL of these.<br><br><strong>Learning Objectives:</strong>
+          <ul style="font-size:1.05rem;margin-top:8px">
+            <li><strong>2.28</strong> – Describe the use of litmus, phenolphthalein and methyl orange to distinguish between acidic and alkaline solutions.</li>
+            <li><strong>2.30</strong> – Describe the use of universal indicator to measure the approximate pH value of an aqueous solution.</li>
+          </ul>
+        </div>
+        <p style="font-size:1.05rem;margin-top:12px"><strong>Navigation:</strong> Arrow Keys or Spacebar &nbsp;|&nbsp; <strong>Lesson time:</strong> 40 minutes</p>
+      </div>
+      <div class="scaffold-box" style="display:inline-block;margin-top:16px;text-align:left">
+        <h3 style="margin-top:0">🖨️ Pupil Packs (One Click = All Pages)</h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+          <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+          <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–4)</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: ARRIVAL TASK ===== -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Last Lesson</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory in your books. Q1–3 recall our Atmosphere topic. Q4 leads into today.</div>
+    <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+
+    <div class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter">
+        <h3>1. Atmosphere Recall</h3>
+        <p>Name the <strong>two most abundant</strong> gases in the Earth's atmosphere and give their approximate percentages.</p>
+        <p class="answer">Nitrogen (~78%) and Oxygen (~21%).</p>
+      </div>
+      <div class="task-box animate-enter anim-d1">
+        <h3>2. Atmosphere Recall</h3>
+        <p>Describe <strong>one</strong> way the early Earth's atmosphere was different from today's.</p>
+        <p class="answer">Much more CO₂, little or no oxygen. Volcanoes released CO₂, water vapour and nitrogen.</p>
+      </div>
+      <div class="task-box animate-enter anim-d2">
+        <h3>3. Atmosphere Recall</h3>
+        <p>State <strong>one</strong> human activity that is increasing the amount of CO₂ in the atmosphere.</p>
+        <p class="answer">Burning fossil fuels (coal, oil, gas). Also accept: deforestation, cement manufacture.</p>
+      </div>
+      <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+        <h3>4. Lead-in 🔬</h3>
+        <p>CO₂ dissolves in rainwater to form a <strong>weak acid</strong>. How could a scientist tell if an unknown liquid is an acid without tasting it?</p>
+        <p class="answer">Use an indicator – a substance that changes colour in the presence of acids or alkalis.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: STARTER ===== -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">Starter – Record in Books</span>
+    <h2>Starter: Copy &amp; Complete (5 mins)</h2>
+    <div class="li-box"><strong>Instructions:</strong> Copy the table into your book. Predict whether each substance is an acid, alkali, or neutral.</div>
+
+    <div class="content-grid">
+      <div>
+        <div class="task-box" style="padding:14px">
+          <h3 style="margin-top:0">📝 Copy this table:</h3>
+          <table class="data-table" style="font-size:1rem">
+            <thead><tr><th>Substance</th><th>Acid, Alkali or Neutral?</th><th>Clue / How do you know?</th></tr></thead>
+            <tbody>
+              <tr><td>Lemon juice</td><td style="color:var(--muted)">Acid ✓</td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td>Soap</td><td contenteditable="true" class="editable"></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td>Pure water</td><td contenteditable="true" class="editable"></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td>Vinegar</td><td contenteditable="true" class="editable"></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td>Bleach</td><td contenteditable="true" class="editable"></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td>Stomach acid</td><td contenteditable="true" class="editable"></td><td contenteditable="true" class="editable"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container">
+          <h3 style="margin-top:0;color:var(--ido-border)">🧪 Everyday Clues</h3>
+          <svg width="280" height="160" viewBox="0 0 280 160">
+            <rect x="10" y="20" width="80" height="100" rx="8" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <rect x="18" y="55" width="64" height="58" rx="4" fill="#fca5a5" opacity=".6"/>
+            <text x="50" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">ACIDS</text>
+            <text x="50" y="100" text-anchor="middle" font-size="10" fill="#991b1b">Sour taste</text>
+            <text x="50" y="140" text-anchor="middle" font-size="11" fill="#ef4444">🍋 Lemon, vinegar</text>
+            <rect x="100" y="20" width="80" height="100" rx="8" fill="none" stroke="#22c55e" stroke-width="3"/>
+            <rect x="108" y="55" width="64" height="58" rx="4" fill="#bbf7d0" opacity=".6"/>
+            <text x="140" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">NEUTRAL</text>
+            <text x="140" y="100" text-anchor="middle" font-size="10" fill="#166534">No reaction</text>
+            <text x="140" y="140" text-anchor="middle" font-size="11" fill="#22c55e">💧 Pure water</text>
+            <rect x="190" y="20" width="80" height="100" rx="8" fill="none" stroke="#3b82f6" stroke-width="3"/>
+            <rect x="198" y="55" width="64" height="58" rx="4" fill="#93c5fd" opacity=".6"/>
+            <text x="230" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">ALKALIS</text>
+            <text x="230" y="100" text-anchor="middle" font-size="10" fill="#1e3a8a">Soapy feel</text>
+            <text x="230" y="140" text-anchor="middle" font-size="11" fill="#3b82f6">🧼 Soap, bleach</text>
+          </svg>
+        </div>
+        <div class="scaffold-box"><strong>💡 Hint:</strong> Does it sting / taste sour? → Probably acidic. Does it feel slippery / soapy? → Probably alkaline.</div>
+        <div class="aspire-box"><strong>🌟 Extension:</strong> If you couldn't taste or touch the substance, what tool could you use to test it safely?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: I DO 1 – THREE INDICATORS ===== -->
+  
+  <div class="slide" data-title="I Do – Indicators" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Three Key Indicators (2.28)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> An <strong>indicator</strong> is a dye that changes colour to show whether a solution is acidic or alkaline. 🎯 <strong>Examiners want:</strong> the word "dye" or "substance", the phrase "changes colour", and "acidic or alkaline". Miss any of those = lose the mark.</div>
+
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter">
+          <h3 style="margin-top:0">🧪 Litmus</h3>
+          <div class="indicator-row">
+            <div class="colour-swatch" style="background:#ef4444"></div>
+            <div><strong>Red</strong> in acid</div>
+            <div class="colour-swatch" style="background:#3b82f6"></div>
+            <div><strong>Blue</strong> in alkali</div>
+          </div>
+          <p style="font-size:.95rem;color:var(--muted);margin:4px 0 0">Comes as paper or liquid. The oldest indicator — used for over 700 years! 🧠 <strong>Memory aid:</strong> "Litmus = Literally just Red or Blue"</p>
+        </div>
+        <div class="ido-box animate-enter anim-d1">
+          <h3 style="margin-top:0">🧪 Phenolphthalein</h3>
+          <div class="indicator-row">
+            <div class="colour-swatch" style="background:#f5f5f5;border:2px dashed #94a3b8"></div>
+            <div><strong>Colourless</strong> in acid</div>
+            <div class="colour-swatch" style="background:#ec4899"></div>
+            <div><strong>Pink</strong> in alkali</div>
+          </div>
+          <p style="font-size:.95rem;color:var(--muted);margin:4px 0 0">🧠 <strong>Memory aid:</strong> "Phenolphthalein = <strong>Ph</strong>antom in acid (invisible!), <strong>P</strong>ink in alkali." Used in titrations because the colour snaps from nothing to bright pink — impossible to miss.</p>
+        </div>
+        <div class="ido-box animate-enter anim-d2">
+          <h3 style="margin-top:0">🧪 Methyl Orange</h3>
+          <div class="indicator-row">
+            <div class="colour-swatch" style="background:#ef4444"></div>
+            <div><strong>Red</strong> in acid</div>
+            <div class="colour-swatch" style="background:#eab308"></div>
+            <div><strong>Yellow</strong> in alkali</div>
+          </div>
+          <p style="font-size:.95rem;color:var(--muted);margin:4px 0 0">🧠 <strong>Memory aid:</strong> "Methyl orange = Mars bar Red in acid, Yellow sunshine in alkali." 🚦 Traffic-light colours make it easy to remember.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">How an Indicator Works</h3>
+          <svg width="300" height="180" viewBox="0 0 300 180">
+            <rect x="10" y="30" width="60" height="90" rx="30" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <rect x="18" y="60" width="44" height="55" rx="22" fill="#fca5a5" opacity=".7"/>
+            <text x="40" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">ACID</text>
+            <ellipse cx="40" cy="45" rx="6" ry="8" fill="#7c3aed" opacity=".8"/>
+            <text x="40" y="25" text-anchor="middle" font-size="10" fill="#7c3aed">Indicator</text>
+            <text x="95" y="80" text-anchor="middle" font-size="22" fill="#64748b" font-weight="bold">→</text>
+            <rect x="115" y="30" width="60" height="90" rx="30" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <rect x="123" y="60" width="44" height="55" rx="22" fill="#ef4444" opacity=".5"/>
+            <text x="145" y="88" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">RED</text>
+            <text x="145" y="140" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="bold">Litmus → Red</text>
+            <rect x="200" y="30" width="60" height="90" rx="30" fill="none" stroke="#3b82f6" stroke-width="3"/>
+            <rect x="208" y="60" width="44" height="55" rx="22" fill="#93c5fd" opacity=".7"/>
+            <text x="230" y="88" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e3a8a">ALKALI</text>
+            <text x="230" y="140" text-anchor="middle" font-size="10" fill="#3b82f6" font-weight="bold">Litmus → Blue</text>
+            <text x="150" y="170" text-anchor="middle" font-size="12" fill="#64748b" font-weight="bold">The colour tells you what the solution is!</text>
+          </svg>
+        </div>
+        <!-- Animated Demo -->
+        <div class="anim-demo" onclick="runIndicatorDemo()">
+          <p style="color:#fbbf24;font-weight:900;margin:0 0 6px;font-size:.9rem">▶ CLICK TO WATCH: Litmus in Acid vs Alkali</p>
+          <div style="display:flex;gap:24px;justify-content:center;align-items:flex-end">
+            <div style="text-align:center">
+              <p style="color:#fca5a5;font-size:.8rem;margin:0 0 4px">ACID</p>
+              <div class="anim-tube"><div class="liquid" id="demo-acid" style="background:#fca5a5;height:40px"></div></div>
+              <div id="demo-acid-strip" style="width:20px;height:40px;background:#7c3aed;border-radius:3px;margin:6px auto 0;transition:background 1s ease"></div>
+              <p id="demo-acid-label" style="color:#94a3b8;font-size:.8rem;margin:4px 0;font-weight:bold;min-height:16px"></p>
+            </div>
+            <div style="text-align:center">
+              <p style="color:#93c5fd;font-size:.8rem;margin:0 0 4px">ALKALI</p>
+              <div class="anim-tube"><div class="liquid" id="demo-alkali" style="background:#93c5fd;height:40px"></div></div>
+              <div id="demo-alkali-strip" style="width:20px;height:40px;background:#7c3aed;border-radius:3px;margin:6px auto 0;transition:background 1s ease"></div>
+              <p id="demo-alkali-label" style="color:#94a3b8;font-size:.8rem;margin:4px 0;font-weight:bold;min-height:16px"></p>
+            </div>
+          </div>
+        </div>
+        <div class="scaffold-box animate-enter anim-d2">
+          <strong>💡 Memory Tricks:</strong><br>
+          • Litmus: <strong>R</strong>ed in <strong>a</strong>cid, <strong>B</strong>lue in <strong>b</strong>ase<br>
+          • <strong>P</strong>henolphthalein: <strong>P</strong>ink in alkali<br>
+          • Methyl Orange: like traffic lights – Red 🔴 → Yellow 🟡
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 5: WE DO 1 – INDICATOR MATCH ===== -->
+  <div class="slide" data-title="We Do – Indicator Match" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Indicator Match Game</h2>
+    <div class="li-box"><strong>As a class:</strong> Select an indicator + solution → tap the matching colour.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+
+    <div id="wedo1" class="wedo-capture">
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
+        <button class="ind-pill" onclick="selectInd(this,'la')" style="border-color:#ef4444;color:#b91c1c">🔴 Litmus + Acid</button>
+        <button class="ind-pill" onclick="selectInd(this,'lb')" style="border-color:#3b82f6;color:#1d4ed8">🔵 Litmus + Alkali</button>
+        <button class="ind-pill" onclick="selectInd(this,'pa')" style="border-color:#94a3b8;color:#64748b">⚪ Phenol. + Acid</button>
+        <button class="ind-pill" onclick="selectInd(this,'pb')" style="border-color:#ec4899;color:#9d174d">🩷 Phenol. + Alkali</button>
+        <button class="ind-pill" onclick="selectInd(this,'ma')" style="border-color:#ef4444;color:#b91c1c">🔴 M.Orange + Acid</button>
+        <button class="ind-pill" onclick="selectInd(this,'mb')" style="border-color:#eab308;color:#713f12">🟡 M.Orange + Alkali</button>
+      </div>
+      <div class="solution-grid">
+        <div class="solution-card" data-correct="la,ma" onclick="pickSol(this)"><span style="font-size:2rem">🔴</span> Turns <strong>Red</strong></div>
+        <div class="solution-card" data-correct="lb" onclick="pickSol(this)"><span style="font-size:2rem">🔵</span> Turns <strong>Blue</strong></div>
+        <div class="solution-card" data-correct="pa" onclick="pickSol(this)"><span style="font-size:2rem">🫧</span> Stays <strong>Colourless</strong></div>
+        <div class="solution-card" data-correct="pb" onclick="pickSol(this)"><span style="font-size:2rem">🩷</span> Turns <strong>Bright Pink</strong></div>
+        <div class="solution-card" data-correct="mb" onclick="pickSol(this)"><span style="font-size:2rem">🟡</span> Turns <strong>Yellow</strong></div>
+        <div class="solution-card" onclick="pickSol(this)" style="opacity:.35;cursor:default"><span style="font-size:2rem">🟠</span> Turns <strong>Orange</strong> (decoy)</div>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:12px;min-height:36px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher: type class notes here before printing..."></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+      <button class="ghost small" onclick="resetMatch()">🔄 Reset</button>
+      <button class="small" onclick="revealMatch()">✅ Reveal All</button>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: I DO 2 – UNIVERSAL INDICATOR ===== -->
+  <div class="slide" data-title="I Do – Universal Indicator" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Universal Indicator (2.30)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> Universal indicator is a <strong>mixture of dyes</strong> that gives a <strong>range of colours</strong> to show the approximate <strong>pH</strong> of a solution.</div>
+
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter">
+          <h3 style="margin-top:0">🌈 What Makes It Special?</h3>
+          <p>Litmus, phenolphthalein and methyl orange each only tell you <strong>acid or alkali</strong> (two colours).</p>
+          <p><strong>Universal indicator</strong> gives a <strong>range of colours</strong> – from <span style="color:#ef4444;font-weight:bold">red</span> through <span style="color:#eab308;font-weight:bold">yellow</span>, <span style="color:#22c55e;font-weight:bold">green</span>, <span style="color:#3b82f6;font-weight:bold">blue</span> to <span style="color:#7c3aed;font-weight:bold">purple</span> – so you can estimate the <strong>pH</strong> (how acidic or alkaline).</p>
+        </div>
+        <div class="ido-box animate-enter anim-d1">
+          <h3 style="margin-top:0">📏 What Is pH?</h3>
+          <p>pH is a scale from <strong>0 to 14</strong> that measures how acidic or alkaline a solution is. You will learn the full scale next lesson – for now, just know:</p>
+          <p>• <strong>Low pH</strong> (0–6) = acidic &nbsp;|&nbsp; <strong>pH 7</strong> = neutral &nbsp;|&nbsp; <strong>High pH</strong> (8–14) = alkaline</p>
+        </div>
+        <div class="ido-box animate-enter anim-d2">
+          <h3 style="margin-top:0">⚠️ Limitation</h3>
+          <p>Universal indicator only gives an <strong>approximate</strong> pH – the colours can be tricky to read between values. For precise measurements, a <strong>pH meter</strong> is better.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter" style="padding:12px">
+          <h3 style="margin-top:0;color:var(--ido-border)">Universal Indicator Colour Chart</h3>
+          <div style="display:flex;border-radius:12px;overflow:hidden;height:44px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.12)">
+            <div style="flex:1;background:#cc0000;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">0–1</div>
+            <div style="flex:1;background:#e53e3e;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">2</div>
+            <div style="flex:1;background:#f97316;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">3–4</div>
+            <div style="flex:1;background:#fde047;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:.8rem">5–6</div>
+            <div style="flex:1;background:#4ade80;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:.8rem">7</div>
+            <div style="flex:1;background:#60a5fa;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">8–9</div>
+            <div style="flex:1;background:#4f46e5;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">10–11</div>
+            <div style="flex:1;background:#7c3aed;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.8rem">12–14</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:bold;margin-top:4px">
+            <span style="color:#ef4444">← ACIDIC</span>
+            <span style="color:#22c55e">NEUTRAL</span>
+            <span style="color:#7c3aed">ALKALINE →</span>
+          </div>
+        </div>
+
+        <div class="diagram-container animate-enter anim-d1" style="padding:14px;margin-top:8px">
+          <h3 style="margin-top:0;color:var(--ido-border)">Litmus vs Universal Indicator</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center">
+            <div style="background:#fef2f2;border-radius:10px;padding:10px">
+              <p style="font-weight:900;margin:0;color:#ef4444">Litmus</p>
+              <p style="margin:4px 0;font-size:.95rem">Only 2 colours</p>
+              <p style="margin:0;font-size:.95rem">Red or Blue</p>
+              <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Tells: acid or alkali</p>
+            </div>
+            <div style="background:#f5f3ff;border-radius:10px;padding:10px">
+              <p style="font-weight:900;margin:0;color:#7c3aed">Universal</p>
+              <p style="margin:4px 0;font-size:.95rem">Many colours</p>
+              <p style="margin:0;font-size:.95rem">Full rainbow</p>
+              <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Tells: approximate pH</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 7: WE DO 2 – UI COLOUR PREDICTION ===== -->
+  <!-- SPOT THE MISTAKE -->
+  <div class="slide" data-title="Spot the Mistake">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">🔍 Spot the Mistake</span>
+    <h2>Spot the Mistake: Indicators</h2>
+    <div class="li-box"><strong>A student wrote the answer below. It contains THREE mistakes.</strong><br>Discuss with your partner first. Can you find all three before we reveal?</div>
+
+    <div class="mistake-card" style="margin-top:10px;cursor:default">
+      <span class="wrong-badge">❌ WRONG ANSWER</span>
+      <p style="font-style:italic;font-size:1.15rem;margin:14px 0 6px;color:#991b1b">"Litmus paper turns pink in acid and stays colourless in alkali. Phenolphthalein turns red in acid and blue in alkali."</p>
+    </div>
+
+    <div class="aspire-box" style="margin-top:10px;text-align:center">
+      <strong>👥 PEER TEACH:</strong> <em>Tell your partner what's wrong and what the correct answer should be.</em>
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button onclick="revealMistake()" id="stm-btn" style="font-size:1.1rem;padding:12px 24px">👆 Reveal Mistakes &amp; Correct Answer</button>
+    </div>
+
+    <div id="stm-reveal" style="display:none;margin-top:12px">
+      <div class="scaffold-box" style="background:#fef2f2;border-left-color:var(--error)">
+        <h3 style="margin-top:0;color:var(--error)">❌ The 3 Mistakes:</h3>
+        <ol style="margin:4px 0 0 20px;padding:0"><li style="margin:6px 0">Litmus turns <strong>RED</strong> in acid (not pink) and <strong>BLUE</strong> in alkali (not colourless)</li><li style="margin:6px 0">Phenolphthalein is <strong>COLOURLESS</strong> in acid (not red) and <strong>PINK</strong> in alkali (not blue)</li><li style="margin:6px 0">The student has mixed up the two indicators completely!</li></ol>
+      </div>
+      <div class="scaffold-box" style="margin-top:10px">
+        <strong style="color:var(--success)">✅ Correct Version:</strong><br>Litmus = <strong>Red/Blue</strong>. Phenolphthalein = <strong>Colourless/Pink</strong>. Methyl Orange = <strong>Red/Yellow</strong>. 🧠 Examiners LOVE swapping indicator colours to test if you really know them.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" data-title="We Do – UI Lab Bench" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Lab Bench – Predict the UI Colour</h2>
+    <div class="li-box"><strong>As a class:</strong> Click a beaker, then click the colour you think universal indicator would show. Score: <span id="lab-score" style="font-size:1.2rem;color:var(--success)">0</span>/5</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <!-- Beakers -->
+      <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:14px">
+        <div class="lab-beaker" id="bk-0" onclick="selectBeaker(0)" data-answer="red" data-name="Lemon juice">
+          <div class="beaker-liquid" id="bkl-0"></div>
+          <p class="beaker-label">🍋 Lemon juice</p>
+          <p class="beaker-fb" id="bkfb-0"></p>
+        </div>
+        <div class="lab-beaker" id="bk-1" onclick="selectBeaker(1)" data-answer="green" data-name="Pure water">
+          <div class="beaker-liquid" id="bkl-1"></div>
+          <p class="beaker-label">💧 Pure water</p>
+          <p class="beaker-fb" id="bkfb-1"></p>
+        </div>
+        <div class="lab-beaker" id="bk-2" onclick="selectBeaker(2)" data-answer="purple" data-name="Oven cleaner">
+          <div class="beaker-liquid" id="bkl-2"></div>
+          <p class="beaker-label">🧴 Oven cleaner</p>
+          <p class="beaker-fb" id="bkfb-2"></p>
+        </div>
+        <div class="lab-beaker" id="bk-3" onclick="selectBeaker(3)" data-answer="yellow" data-name="Milk">
+          <div class="beaker-liquid" id="bkl-3"></div>
+          <p class="beaker-label">🥛 Milk</p>
+          <p class="beaker-fb" id="bkfb-3"></p>
+        </div>
+        <div class="lab-beaker" id="bk-4" onclick="selectBeaker(4)" data-answer="blue" data-name="Toothpaste">
+          <div class="beaker-liquid" id="bkl-4"></div>
+          <p class="beaker-label">🪥 Toothpaste</p>
+          <p class="beaker-fb" id="bkfb-4"></p>
+        </div>
+      </div>
+
+      <!-- Colour palette -->
+      <p style="text-align:center;font-weight:bold;color:var(--muted);margin:4px 0;font-size:.95rem">👆 Select a beaker above, then click the UI colour below:</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap" id="colour-palette">
+        <button onclick="pickColour('red')" style="background:#ef4444;width:60px;height:44px;border-radius:10px;font-size:.85rem">Red</button>
+        <button onclick="pickColour('orange')" style="background:#f97316;width:60px;height:44px;border-radius:10px;font-size:.85rem">Orange</button>
+        <button onclick="pickColour('yellow')" style="background:#fde047;color:#000;width:60px;height:44px;border-radius:10px;font-size:.85rem">Yellow</button>
+        <button onclick="pickColour('green')" style="background:#4ade80;color:#000;width:60px;height:44px;border-radius:10px;font-size:.85rem">Green</button>
+        <button onclick="pickColour('blue')" style="background:#60a5fa;width:60px;height:44px;border-radius:10px;font-size:.85rem">Blue</button>
+        <button onclick="pickColour('purple')" style="background:#7c3aed;width:60px;height:44px;border-radius:10px;font-size:.85rem">Purple</button>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+        <button class="ghost small" onclick="resetLab()">🔄 Reset Lab</button>
+        <button class="small" onclick="revealLab()">✅ Reveal All</button>
+      </div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:10px;min-height:36px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: INDEPENDENT WORK ===== -->
+  <div class="slide" id="ind-slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-independent">Independent Work – 8 mins</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Answer these questions independently.</strong> Use your scaffolding sheet if needed.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0">
+      <button onclick="switchInd('f')" style="background:#22c55e">Foundation (U–1)</button>
+      <button onclick="switchInd('m')" style="background:#f97316">Middle (1–2)</button>
+      <button onclick="switchInd('h')" style="background:#1e3a8a">Higher (3–4)</button>
+      <button class="ghost" onclick="document.getElementById('ind-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <!-- FOUNDATION -->
+    <div class="xp-label" id="xp-label">Questions completed: 0/0</div><div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-fill"></div></div>
+    <div id="ind-f" class="ind-level active" style="max-height:55vh;overflow-y:auto;padding-right:8px">
+      <p style="margin:0 0 4px;font-size:.8rem;color:#22c55e;font-weight:900;text-align:center">📗 Grades U–1 • Grade 2 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> What colour does litmus turn in acid?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think: R for Red, R for... what starts with A?</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">Red</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Blue</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Green</span></div></div>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>2.</strong> Phenolphthalein in alkali turns:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Pink is the colour. Think flamingos...</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">Red</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Colourless</span><span class="mcq-opt" onclick="mcqCheck(this,true)">Pink</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> What is an indicator?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">It changes colour to show if something is acidic or...</div><p class="answer">A dye that changes colour to show whether a solution is acidic or alkaline.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>4.</strong> Name the indicator that turns yellow in alkali.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">This indicator has 'orange' in its name but turns a different colour in alkali</div><p class="answer">Methyl orange.</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [3 marks]</span><p style="margin:0"><strong>5.</strong> A student tests a solution. Litmus turns red, phenolphthalein stays colourless. (a) Is it acidic or alkaline? [1] (b) Give evidence from both indicators. [2]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Both indicators agree: it's not alkaline. What's left?</div><p class="answer">(a) Acidic. (b) Litmus turns red in acid. Phenolphthalein stays colourless in acid (it only turns pink in alkali).</p></div>
+    </div>
+    <!-- MIDDLE -->
+    <div id="ind-m" class="ind-level" style="max-height:55vh;overflow-y:auto;padding-right:8px">
+      <p style="margin:0 0 4px;font-size:.8rem;color:#f97316;font-weight:900;text-align:center">📙 Grades 1–2 • Grade 3 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> Universal indicator is a mixture of dyes. True or false?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">UI is a MIXTURE of indicators, not just one</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">True</span><span class="mcq-opt" onclick="mcqCheck(this,false)">False</span></div></div>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>2.</strong> Methyl orange turns yellow. The solution is:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">It turns yellow in alkali. The solution can't be acidic because in acid it would be red</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">Acidic</span><span class="mcq-opt" onclick="mcqCheck(this,true)">Alkaline</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Neutral</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> State one advantage of universal indicator over litmus.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think: UI gives you MORE information than litmus. What extra info?</div><p class="answer">UI shows a range of colours giving the approximate pH, not just acid or alkali.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>4.</strong> UI turns green. What does this tell you?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Green = neutral. What pH is that?</div><p class="answer">The solution is neutral (approximately pH 7).</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [4 marks]</span><p style="margin:0"><strong>5.</strong> Compare litmus and universal indicator. State what each shows, and give one advantage and one disadvantage of UI.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">One gives a pH range, the other is better for titrations with a sharp change</div><p class="answer">Litmus shows only acid (red) or alkali (blue) – two colours. UI shows a range of colours giving approximate pH. Advantage: UI tells you how acidic/alkaline. Disadvantage: colours can be hard to read precisely between values.</p></div>
+    </div>
+    <!-- HIGHER -->
+    <div id="ind-h" class="ind-level" style="max-height:55vh;overflow-y:auto;padding-right:8px">
+      <p style="margin:0 0 4px;font-size:.8rem;color:#1e3a8a;font-weight:900;text-align:center">📘 Grades 3–4 • Grade 5 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> Phenolphthalein is better than UI for titrations because:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Titrations need a SHARP colour change at the endpoint</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">It's cheaper</span><span class="mcq-opt" onclick="mcqCheck(this,true)">Sharp two-colour change</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Gives exact pH</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>2.</strong> State the colours of all three named indicators in acid and alkali.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">There are 3 named indicators. List each with both colours</div><p class="answer">Litmus: red/blue. Phenolphthalein: colourless/pink. Methyl orange: red/yellow.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> Explain why UI only gives an "approximate" pH.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think about what happens when the colour is BETWEEN two pH values</div><p class="answer">The colours can be hard to distinguish between adjacent pH values – e.g. is it yellow-green (pH 6-7) or green (pH 7)? A pH meter would be more precise.<br><br>📝 <strong>Say this in the exam:</strong> <em>"Universal indicator shows a range of colours to estimate the approximate pH of a solution."</em> That sentence alone is worth 2 marks.</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [5 marks]</span><p style="margin:0"><strong>4.</strong> A technician has litmus, phenolphthalein, methyl orange, and UI. She needs to find the pH of 5 unknown solutions. (a) Which should she use? [1] (b) Why not litmus? [2] (c) State one limitation and suggest a better alternative. [2]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Which method gives a NUMBER not just a COLOUR?</div><p class="answer">(a) Universal indicator. (b) Litmus only shows acid/alkali (2 colours) – can't estimate pH or tell strongly vs weakly acidic. (c) UI only approximate; a pH meter gives precise numerical readings.</p></div>
+    </div>
+      <div class="lb-widget"><h4>🏆 Finished? Add your name:</h4><div class="lb-list" id="lb-list"></div><div class="lb-input-row"><input class="lb-input" id="lb-input" placeholder="Type name, press Enter" onkeydown="if(event.key==='Enter')addToLB()"><button class="small" onclick="addToLB()">Add</button></div></div>
+  </div>
+
+  <!-- ===== SLIDE 9: EXIT TICKET ===== -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-exit">Exit Ticket – 3 mins</span>
+    <h2>Exit Ticket</h2>
+    <div class="li-box"><strong>No notes.</strong> Answer from memory to check what you've learned today.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0">
+      <button onclick="switchExit('f')" style="background:#22c55e">Foundation</button>
+      <button onclick="switchExit('m')" style="background:#f97316">Middle</button>
+      <button onclick="switchExit('h')" style="background:#1e3a8a">Higher</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="exit-f" class="task-box">
+      <p><strong>1) What colour does litmus turn in an acidic solution?</strong></p>
+      <p class="answer">Red.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) What colour does phenolphthalein turn in an alkaline solution?</strong></p>
+      <p class="answer">Bright pink.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) Name one indicator we learned about today.</strong></p>
+      <p class="answer">Litmus / Phenolphthalein / Methyl orange / Universal indicator.</p>
+    </div>
+    <div id="exit-m" class="task-box" style="display:none">
+      <p><strong>1) What is the difference between litmus and universal indicator?</strong></p>
+      <p class="answer">Litmus only gives two colours (red/blue) showing acid or alkali. Universal indicator gives a range of colours to show the approximate pH.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Methyl orange turns yellow in a solution. What type is it?</strong></p>
+      <p class="answer">Alkaline.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) What colour would universal indicator be in a strong acid?</strong></p>
+      <p class="answer">Red.</p>
+    </div>
+    <div id="exit-h" class="task-box" style="display:none">
+      <p><strong>1) Explain why phenolphthalein might be preferred over universal indicator in a titration.</strong></p>
+      <p class="answer">Phenolphthalein has only two distinct colours (colourless → pink), giving a sharp, clear colour change at the exact end point. Universal indicator shows a range of colours, making the precise end point harder to identify.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) A student adds UI to a solution and it turns blue. What can they conclude?</strong></p>
+      <p class="answer">The solution is weakly alkaline (approximately pH 8–9).</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) State one limitation of using universal indicator.</strong></p>
+      <p class="answer">It only gives an approximate pH – colours can be hard to distinguish between adjacent values. A pH meter would be more precise.</p>
+    </div>
+  </div>
+
+</div><!-- end slide-container -->
+
+<div class="controls">
+  <button onclick="prevSlide()">◀ Previous</button>
+  <button onclick="nextSlide()">Next ▶</button>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- ============ PRINT AREA ============ -->
+<div id="print-area">
+
+  <div id="print-ko" class="print-section">
+    <h1 style="text-align:center">Knowledge Organiser – Lesson 1: Indicators</h1>
+    <table class="ko-table">
+      <tr><th>Term</th><th>Definition / Detail</th></tr>
+      <tr><td><strong>Indicator</strong></td><td>A dye that changes colour to show whether a solution is acidic or alkaline.</td></tr>
+      <tr><td><strong>Litmus</strong></td><td>Red in acid · Blue in alkali. Available as paper or liquid.</td></tr>
+      <tr><td><strong>Phenolphthalein</strong></td><td>Colourless in acid · Bright pink in alkali. Sharp colour change – used in titrations.</td></tr>
+      <tr><td><strong>Methyl Orange</strong></td><td>Red in acid · Yellow in alkali. Also used in titrations.</td></tr>
+      <tr><td><strong>Universal Indicator</strong></td><td>A mixture of dyes that shows a range of colours to give the approximate pH of a solution.</td></tr>
+      <tr><td><strong>pH</strong></td><td>A scale from 0–14 measuring how acidic or alkaline a solution is. Low = acidic, 7 = neutral, high = alkaline.</td></tr>
+    </table>
+    <p style="margin-top:12px"><strong>Universal Indicator Colour Chart:</strong></p>
+    <table class="ko-table">
+      <tr>
+        <td style="background:#cc0000;color:#fff;text-align:center">pH 0–2<br>Red</td>
+        <td style="background:#f97316;color:#fff;text-align:center">pH 3–4<br>Orange</td>
+        <td style="background:#fde047;text-align:center">pH 5–6<br>Yellow</td>
+        <td style="background:#4ade80;text-align:center">pH 7<br>Green</td>
+        <td style="background:#60a5fa;color:#fff;text-align:center">pH 8–9<br>Blue</td>
+        <td style="background:#4f46e5;color:#fff;text-align:center">pH 10–12<br>Indigo</td>
+        <td style="background:#7c3aed;color:#fff;text-align:center">pH 13–14<br>Violet</td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="print-arrival" class="print-section">
+    <h2>Arrival Task – Recall from Last Lesson</h2>
+    <p><em>Answer from memory.</em></p>
+    <div class="print-grid-2x2">
+      <div class="print-box"><strong>1.</strong> Name the two most abundant gases in the atmosphere and their approximate percentages.</div>
+      <div class="print-box"><strong>2.</strong> Describe one way the early atmosphere was different from today's.</div>
+      <div class="print-box"><strong>3.</strong> State one human activity increasing CO₂ in the atmosphere.</div>
+      <div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> CO₂ dissolves in rainwater to form a weak acid. How could a scientist test an unknown liquid without tasting it?</div>
+    </div>
+  </div>
+
+  <div id="print-starter" class="print-section">
+    <h2>Starter: Acid, Alkali or Neutral?</h2>
+    <p>Copy and complete. Predict whether each substance is an acid, alkali, or neutral, and explain your reasoning.</p>
+    <table class="ko-table">
+      <tr><th>Substance</th><th>Acid, Alkali or Neutral?</th><th>Clue / How do you know?</th></tr>
+      <tr><td>Lemon juice</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Soap</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Pure water</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Vinegar</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Bleach</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Stomach acid</td><td style="height:36px"></td><td></td></tr>
+    </table>
+  </div>
+
+  <div id="print-wedo" class="print-section">
+    <h2>We Do: Indicator Colour Table</h2>
+    <p>Complete the table using the colour changes for each indicator.</p>
+    <table class="ko-table">
+      <tr><th>Indicator</th><th>Colour in Acid</th><th>Colour in Alkali</th></tr>
+      <tr><td>Litmus paper</td><td style="height:40px"></td><td></td></tr>
+      <tr><td>Phenolphthalein</td><td style="height:40px"></td><td></td></tr>
+      <tr><td>Methyl orange</td><td style="height:40px"></td><td></td></tr>
+    </table>
+    <p style="margin-top:18px"><strong>Universal Indicator:</strong> For each substance, write the colour UI would show and whether it is acidic, neutral or alkaline.</p>
+    <table class="ko-table">
+      <tr><th>Substance</th><th>UI Colour</th><th>Acidic / Neutral / Alkaline?</th></tr>
+      <tr><td>Lemon juice</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Pure water</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Oven cleaner</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Milk</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Toothpaste</td><td style="height:36px"></td><td></td></tr>
+    </table>
+  </div>
+
+  <div id="print-scaffold" class="print-section">
+    <h2>Scaffolding &amp; Help Sheet</h2>
+    <div class="scaffold-print-box prevent-break">
+      <h3>Indicator Colour Summary</h3>
+      <table class="ko-table">
+        <tr><th>Indicator</th><th>Colour in ACID</th><th>Colour in ALKALI</th></tr>
+        <tr><td>Litmus</td><td>Red</td><td>Blue</td></tr>
+        <tr><td>Phenolphthalein</td><td>Colourless</td><td>Bright pink</td></tr>
+        <tr><td>Methyl orange</td><td>Red</td><td>Yellow</td></tr>
+      </table>
+    </div>
+    <div class="scaffold-print-box prevent-break">
+      <h3>Universal Indicator</h3>
+      <p>Universal indicator is a <strong>mixture of dyes</strong> that produces different colours at different pH values.</p>
+      <p>It tells you <strong>how acidic or alkaline</strong> a solution is (approximate pH), unlike litmus which only tells you acid or alkali.</p>
+      <table class="ko-table">
+        <tr><td style="background:#cc0000;color:#fff;text-align:center">Red<br>Strong acid</td><td style="background:#f97316;color:#fff;text-align:center">Orange<br>Acid</td><td style="background:#fde047;text-align:center">Yellow<br>Weak acid</td><td style="background:#4ade80;text-align:center">Green<br>Neutral</td><td style="background:#60a5fa;color:#fff;text-align:center">Blue<br>Weak alkali</td><td style="background:#7c3aed;color:#fff;text-align:center">Purple<br>Strong alkali</td></tr>
+      </table>
+    </div>
+    <div class="scaffold-print-box prevent-break foundation-content"><h3>📝 Word Bank (Foundation)</h3><p>Use these words in your answers: <strong>indicator, acid, alkali, neutral, red, blue, pink, colourless, yellow, universal indicator, pH, colour change, litmus, phenolphthalein, methyl orange</strong></p><h3>✍️ Sentence Starters</h3><p>• An indicator is a substance that...</p><p>• In acid, litmus turns...</p><p>• Universal indicator is more useful than litmus because...</p><p>• The colour tells us whether the solution is...</p></div>
+    <div class="scaffold-print-box prevent-break higher-content">
+      <h3>Why Use Different Indicators? (Higher)</h3>
+      <p>• <strong>Phenolphthalein</strong> is preferred in titrations because it has a <strong>sharp, clear</strong> two-colour change (colourless → pink).</p>
+      <p>• <strong>Universal indicator</strong> shows a range of colours, making the exact end point harder to spot.</p>
+      <p>• <strong>Limitation:</strong> UI only gives an approximate pH. A pH meter gives a precise numerical reading.</p>
+    </div>
+  </div>
+
+  <!-- FOUNDATION WORKSHEET -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content">
+    <h2>Independent Work – Foundation (Grades U–1)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. What colour does litmus paper turn in an acidic solution?</p>
+      <p>[&nbsp;&nbsp;] Blue &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Red &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Green</p>
+      <p style="margin-top:12px">2. What colour does phenolphthalein turn in an alkaline solution?</p>
+      <p>[&nbsp;&nbsp;] Red &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Colourless &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Pink</p>
+      <p style="margin-top:12px">3. What is an indicator?</p>
+      <div class="print-line"></div>
+      <p style="margin-top:12px">4. Name the indicator that turns yellow in an alkaline solution.</p>
+      <div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>5. Complete the indicator colour table:</p>
+      <table class="ko-table">
+        <tr><th>Indicator</th><th>Colour in Acid</th><th>Colour in Alkali</th></tr>
+        <tr><td>Litmus</td><td style="height:36px"></td><td></td></tr>
+        <tr><td>Phenolphthalein</td><td style="height:36px"></td><td></td></tr>
+        <tr><td>Methyl orange</td><td style="height:36px"></td><td></td></tr>
+      </table>
+      <p style="margin-top:14px">6. A student adds universal indicator to a solution and it turns green. What does this tell the student?</p>
+      <div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>7. [3 marks]</strong> A student tests an unknown solution. Litmus turns red. Phenolphthalein stays colourless. Methyl orange turns red.</p>
+      <p>(a) Is the solution acidic, alkaline, or neutral? [1 mark]</p><div class="print-line"></div>
+      <p>(b) State the evidence from <strong>two</strong> indicators that support your answer. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>8. [3 marks]</strong> Explain what universal indicator is and state one way it is more useful than litmus paper.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- MIDDLE WORKSHEET -->
+  <div id="print-worksheet-middle" class="print-section middle-content">
+    <h2>Independent Work – Middle (Grades 1–2)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. Methyl orange turns yellow in a solution. The solution is:</p>
+      <p>[&nbsp;&nbsp;] Acidic &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Alkaline &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Neutral</p>
+      <p style="margin-top:12px">2. Universal indicator is a mixture of dyes. True or False?</p>
+      <p>[&nbsp;&nbsp;] True &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] False</p>
+      <p style="margin-top:12px">3. What colour would universal indicator turn in a neutral solution?</p>
+      <div class="print-line"></div>
+      <p style="margin-top:12px">4. Explain one advantage of universal indicator over litmus.</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>5. A student tests three solutions. Use the indicator results to identify each as acidic, alkaline or neutral.</p>
+      <table class="ko-table">
+        <tr><th>Solution</th><th>Litmus</th><th>Phenolphthalein</th><th>Methyl Orange</th><th>Conclusion</th></tr>
+        <tr><td>X</td><td>Red</td><td>Colourless</td><td>Red</td><td style="height:36px"></td></tr>
+        <tr><td>Y</td><td>Blue</td><td>Pink</td><td>Yellow</td><td style="height:36px"></td></tr>
+        <tr><td>Z</td><td>Purple</td><td>Colourless</td><td>Orange</td><td style="height:36px"></td></tr>
+      </table>
+      <p style="margin-top:14px">6. Universal indicator is added to a solution and turns blue. Estimate the pH range and classify the solution.</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>7. [4 marks]</strong> A student adds universal indicator to four solutions. Describe what each colour tells them.</p>
+      <table class="ko-table">
+        <tr><th>UI Colour</th><th>Acid / Neutral / Alkali?</th><th>Approximate pH</th></tr>
+        <tr><td>Red</td><td style="height:36px"></td><td></td></tr>
+        <tr><td>Green</td><td style="height:36px"></td><td></td></tr>
+        <tr><td>Blue</td><td style="height:36px"></td><td></td></tr>
+        <tr><td>Violet</td><td style="height:36px"></td><td></td></tr>
+      </table>
+      <p style="margin-top:14px"><strong>8. [4 marks]</strong> Compare litmus paper and universal indicator. In your answer, state what each shows and give one advantage and one disadvantage of universal indicator.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- HIGHER WORKSHEET -->
+  <div id="print-worksheet-higher" class="print-section higher-content">
+    <h2>Independent Work – Higher (Grades 3–4)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. Phenolphthalein is preferred over universal indicator in a titration because:</p>
+      <p>[&nbsp;&nbsp;] It is cheaper &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] It has a sharp two-colour change &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] It gives exact pH</p>
+      <p style="margin-top:12px">2. State the colours of all three named indicators in acidic and alkaline solutions.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:12px">3. Explain why universal indicator only gives an <em>approximate</em> pH.</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>4. A student argues that litmus is the best indicator because it's the simplest. Evaluate this claim, using your knowledge of different indicators. [3 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:14px">5. Design a method a student could use to determine whether an unknown solution is a strong acid, weak acid, neutral, weak alkali or strong alkali. State which indicator(s) you would use and explain your choice. [3 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>6. [5 marks]</strong> A technician is asked to determine the pH of five unknown solutions. She has litmus paper, phenolphthalein, methyl orange and universal indicator available.</p>
+      <p>(a) Explain why litmus paper alone would not be sufficient for this task. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Explain why universal indicator is the most appropriate choice. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p>(c) State one limitation of using universal indicator and suggest a more accurate alternative. [1 mark]</p>
+      <div class="print-line"></div>
+      <p style="margin-top:14px"><strong>7. [6 marks]</strong> A student carries out a titration using phenolphthalein as the indicator. The alkali (NaOH) is in the conical flask and acid (HCl) is in the burette.</p>
+      <p>(a) What colour is the solution in the flask at the start? [1 mark]</p><div class="print-line"></div>
+      <p>(b) Describe the colour change observed at the end point. [1 mark]</p><div class="print-line"></div>
+      <p>(c) Give <strong>two</strong> reasons why phenolphthalein is a better choice than universal indicator for a titration. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(d) Another student repeats the experiment using methyl orange instead. Describe the expected colour change at the end point. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break">
+      <h2>Exit Ticket – Foundation (U–1)</h2>
+      <p>1) What colour does litmus turn in an acidic solution?</p><div class="print-line"></div>
+      <p>2) What colour does phenolphthalein turn in an alkaline solution?</p><div class="print-line"></div>
+      <p>3) Name one indicator we learned about today.</p><div class="print-line"></div>
+    </div>
+    <div class="middle-content prevent-break">
+      <h2>Exit Ticket – Middle (1–2)</h2>
+      <p>1) What is the difference between litmus and universal indicator?</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2) Methyl orange turns yellow in a solution. What type is it?</p><div class="print-line"></div>
+      <p>3) What colour would universal indicator be in a strong acid?</p><div class="print-line"></div>
+    </div>
+    <div class="higher-content prevent-break">
+      <h2>Exit Ticket – Higher (3–4)</h2>
+      <p>1) Explain why phenolphthalein might be preferred over UI in a titration.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2) A student adds UI to a solution and it turns blue. What can they conclude?</p><div class="print-line"></div>
+      <p>3) State one limitation of using universal indicator.</p><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-wedo-evidence" class="print-section">
+    <h2>We Do – Class Evidence</h2>
+    <div id="wedo-evidence-content" style="white-space:pre-wrap"></div>
+  </div>
+
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+  function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`}
+  updateProgress();
+  checkTimerVisibility();
+
+  function switchExit(l){document.getElementById('exit-f').style.display=l==='f'?'block':'none';document.getElementById('exit-m').style.display=l==='m'?'block':'none';document.getElementById('exit-h').style.display=l==='h'?'block':'none'}
+  function quizMark(btn,ok,msg){const q=btn.closest('.quiz');if(!q)return;const fb=q.querySelector('.fb');q.querySelectorAll('button').forEach(b=>b.style.border='');btn.style.border=ok?'3px solid var(--success)':'3px solid var(--error)';fb.innerText=msg;fb.style.color=ok?'var(--success)':'var(--error)'}
+
+  let selInd=null;
+  function selectInd(el,k){selInd=k;document.querySelectorAll('.ind-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected')}
+  function pickSol(el){if(!selInd){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);return}const c=el.getAttribute('data-correct');if(c&&c.split(',').includes(selInd)){el.classList.remove('wrong');el.classList.add('correct')}else{el.classList.remove('correct');el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450)}}
+  function resetMatch(){selInd=null;document.querySelectorAll('.ind-pill').forEach(p=>p.classList.remove('selected'));document.querySelectorAll('.solution-card').forEach(c=>c.classList.remove('correct','wrong'))}
+  function revealMatch(){document.querySelectorAll('.solution-card').forEach(c=>{if(c.getAttribute('data-correct'))c.classList.add('correct')})}
+
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});document.body.classList.add('print-'+level);const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const st=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.quiz').forEach((q,i)=>{const question=q.querySelector('.q')?.innerText||'';const fb=q.querySelector('.fb')?.innerText||'(not attempted)';results.push(`Q${i+1}: ${question}\nAnswer: ${fb}`)});let cards=[];area.querySelectorAll('.solution-card.correct').forEach(c=>{cards.push('✅ '+c.innerText.trim())});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content=`CLASS EVIDENCE – ${st}\nDate/Time: ${ts}\n${'─'.repeat(50)}\n\n`;if(cards.length>0)content+=`MATCHES:\n${cards.join('\n')}\n\n`;if(results.length>0)content+=`QUESTIONS:\n${results.join('\n\n')}\n\n`;if(notes)content+=`TEACHER NOTES:\n${notes}\n`;document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // --- Indicator Demo Animation ---
+  function runIndicatorDemo(){
+    // Reset
+    document.getElementById('demo-acid-strip').style.background='#7c3aed';
+    document.getElementById('demo-alkali-strip').style.background='#7c3aed';
+    document.getElementById('demo-acid-label').innerText='';
+    document.getElementById('demo-alkali-label').innerText='';
+    // Step 1: dip strips (after 500ms)
+    setTimeout(()=>{
+      document.getElementById('demo-acid-strip').style.background='#ef4444';
+      document.getElementById('demo-acid-label').innerText='→ RED (acid!)';
+      document.getElementById('demo-acid-label').style.color='#fca5a5';
+    },800);
+    setTimeout(()=>{
+      document.getElementById('demo-alkali-strip').style.background='#3b82f6';
+      document.getElementById('demo-alkali-label').innerText='→ BLUE (alkali!)';
+      document.getElementById('demo-alkali-label').style.color='#93c5fd';
+    },1600);
+  }
+
+  // --- Independent Work Toggles ---
+  function switchInd(l){document.querySelectorAll('.ind-level').forEach(el=>el.classList.remove('active'));document.getElementById('ind-'+l).classList.add('active');updateXP()}
+  function mcqCheck(el,ok){if(el.parentNode.classList.contains('locked'))return;if(ok){el.classList.add('correct');el.parentNode.classList.add('locked');try{playDing()}catch(e){};updateXP()}else{el.classList.add('wrong');try{playBuzz()}catch(e){};setTimeout(()=>el.classList.remove('wrong'),600)}}
+
+  // --- Lab Bench ---
+  let selectedBk=null, labScore=0, colourMap={red:'#ef4444',orange:'#f97316',yellow:'#fde047',green:'#4ade80',blue:'#60a5fa',purple:'#7c3aed'};
+  function selectBeaker(i){selectedBk=i;document.querySelectorAll('.lab-beaker').forEach((b,j)=>b.classList.toggle('selected',j===i))}
+  function pickColour(c){if(selectedBk===null)return;const bk=document.getElementById('bk-'+selectedBk);if(bk.classList.contains('done'))return;const ans=bk.getAttribute('data-answer');const liquid=document.getElementById('bkl-'+selectedBk);const fb=document.getElementById('bkfb-'+selectedBk);liquid.style.background=colourMap[c];if(c===ans){fb.innerText='✅ Correct!';fb.style.color='var(--success)';bk.classList.add('done');bk.classList.remove('selected');labScore++;document.getElementById('lab-score').innerText=labScore;selectedBk=null}else{fb.innerText='❌ Try again';fb.style.color='var(--error)';bk.style.animation='shake .4s';setTimeout(()=>{bk.style.animation='';liquid.style.background='#f8fafc';fb.innerText=''},800)}}
+  function resetLab(){labScore=0;document.getElementById('lab-score').innerText=0;selectedBk=null;document.querySelectorAll('.lab-beaker').forEach((b,i)=>{b.classList.remove('done','selected');document.getElementById('bkl-'+i).style.background='#f8fafc';document.getElementById('bkfb-'+i).innerText=''})}
+  function revealLab(){document.querySelectorAll('.lab-beaker').forEach((b,i)=>{const ans=b.getAttribute('data-answer');document.getElementById('bkl-'+i).style.background=colourMap[ans];document.getElementById('bkfb-'+i).innerText='✅ '+ans.charAt(0).toUpperCase()+ans.slice(1);document.getElementById('bkfb-'+i).style.color='var(--success)';b.classList.add('done')});labScore=5;document.getElementById('lab-score').innerText=5}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Timer
+  let timerInterval,timeLeft=0,isTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!isTimerRunning)resetTimer(parseInt(t))}else{w.classList.remove('visible')}}
+  function updateTimerDisplay(){const m=Math.floor(timeLeft/60);const s=timeLeft%60;document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('timer-display').style.color=timeLeft<60?'var(--error)':'var(--lo-border)'}
+  function startTimer(){if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000)}
+  function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+
+
+  // Sound Effects
+  const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  function playDing(){const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(880,audioCtx.currentTime);o.frequency.setValueAtTime(1320,audioCtx.currentTime+0.08);g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+0.4)}
+  function playBuzz(){const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.setValueAtTime(150,audioCtx.currentTime);g.gain.setValueAtTime(0.15,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.25);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+0.25)}
+
+  // XP Progress Bar
+  function updateXP(){const slide=document.getElementById('ind-slide');if(!slide)return;const active=slide.querySelector('.ind-level.active');if(!active)return;const total=active.querySelectorAll('.ind-q').length;const done=active.querySelectorAll('.ind-q .correct').length;const el=document.getElementById('xp-label');const fill=document.getElementById('xp-fill');if(el)el.innerText='Questions completed: '+done+'/'+total+(done===total&&total>0?' 🎉':'');if(fill)fill.style.width=(total>0?Math.round(done/total*100):0)+'%';if(done===total&&total>0&&done>0)fireConfettiGlobal()}
+
+  // Global Confetti
+  function fireConfettiGlobal(){let area=document.getElementById('confetti-global');if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];for(let i=0;i<30;i++){const c=document.createElement('div');c.className='confetti-p';c.style.left=Math.random()*100+'%';c.style.top=-10+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.animationDelay=Math.random()*0.6+'s';c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';area.appendChild(c);setTimeout(()=>c.remove(),2500)}}
+
+  // Shuffle MCQ options on load
+  function shuffleMCQs(){document.querySelectorAll('.ind-q').forEach(q=>{const opts=q.querySelectorAll('.mcq-opt');if(opts.length<2)return;const parent=opts[0].parentNode;const arr=Array.from(opts);for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}arr.forEach(o=>parent.appendChild(o))})}
+  shuffleMCQs();
+
+  // Leaderboard
+  function addToLB(){const input=document.getElementById('lb-input');const name=input.value.trim();if(!name)return;const list=document.getElementById('lb-list');const el=document.createElement('span');el.className='lb-name';el.innerText=name;list.appendChild(el);input.value='';playDing()}
+
+
+  // Hint System
+  function toggleHint(btn){const hint=btn.nextElementSibling;if(hint&&hint.classList.contains('hint-text')){hint.classList.toggle('show');btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}}
+
+  // Click-to-reveal model answers
+  function revealNext(btnEl){const container=btnEl.closest('.mark-scheme,.ido-box,.correct-box');if(!container)return;const hidden=container.querySelector('.reveal-point[style*="display:none"],.reveal-point:not(.revealed)');if(hidden){hidden.style.display='block';hidden.classList.add('revealed');hidden.style.animation='fadeInUp .3s';const remaining=container.querySelectorAll('.reveal-point:not(.revealed)').length;if(remaining===0)btnEl.innerText='✅ All revealed!'}}
+  function revealMistake(){const r=document.getElementById('stm-reveal');const b=document.getElementById('stm-btn');if(!r)return;if(r.style.display==='none'){r.style.display='block';if(b)b.innerText='👁️ Hide Answer'}else{r.style.display='none';if(b)b.innerText='👆 Reveal Mistakes & Correct Answer'}}
+</script>
+</body>
+</html>

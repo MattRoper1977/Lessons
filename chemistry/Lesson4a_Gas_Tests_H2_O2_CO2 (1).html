@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 4a – Gas Tests I (H₂ · O₂ · CO₂)</title>
+  <style>
+    :root{--bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .logo-txt{font-weight:900;letter-spacing:1px;color:#7c3aed;border:2px solid #7c3aed;border-radius:10px;padding:5px 10px;font-size:.78rem;background:#fff;white-space:nowrap}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .ind-level{display:none}.ind-level.active{display:block}
+    .ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px}.q-mcq{background:#dbeafe;color:#1e40af}.q-short{background:#fef3c7;color:#92400e}.q-exam{background:#fce7f3;color:#9d174d}
+    .mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}.mcq-opt:hover{border-color:var(--btn-bg)}.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}.quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}.quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .gas-card{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:14px;margin:8px 0;display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:center;transition:transform .15s}.gas-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .gas-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;color:#fff}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    /* ── Drag & drop We Do ── */
+    .dnd-instruction{text-align:center;font-weight:bold;color:var(--muted);margin:2px 0 10px}
+    .dnd-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;min-height:50px}
+    .dnd-chip{touch-action:none;cursor:grab;user-select:none;background:#fff;border:2.5px solid var(--chip,var(--ido-border));color:var(--chip,var(--ido-border));border-radius:12px;padding:12px 18px;font-size:1.1rem;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,.12);transition:transform .12s,box-shadow .12s,opacity .2s}
+    .dnd-chip:hover{transform:translateY(-2px)}
+    .dnd-chip.selected{outline:4px solid var(--task-border);outline-offset:2px;transform:translateY(-2px) scale(1.04)}
+    .dnd-chip.placed{opacity:0;pointer-events:none;width:0;padding:0;margin:0;border:0;overflow:hidden}
+    .dnd-chip.dragging{opacity:.25}
+    .dnd-ghost{position:fixed;z-index:5000;pointer-events:none;background:#fff;border:2.5px solid var(--ido-border);color:var(--ido-border);border-radius:12px;padding:12px 18px;font-size:1.1rem;font-weight:900;box-shadow:0 10px 22px rgba(0,0,0,.28);transform:translate(-50%,-50%)}
+    .dnd-zones{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .dnd-zones.col{flex-direction:column;gap:8px;max-width:760px;margin:0 auto}
+    .dnd-zone{flex:1;min-width:180px;border:3px dashed #cbd5e1;border-radius:14px;padding:12px 14px;background:#f8fafc;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;transition:border-color .15s,background .15s}
+    .dnd-zones.col .dnd-zone{flex-direction:row;justify-content:space-between;text-align:left;min-height:54px}
+    .dnd-zone.over{border-color:var(--task-border);background:#fef9c3}
+    .dnd-zone.matched{border-style:solid;border-color:var(--success);background:#dcfce7}
+    .dnd-zone.nope{animation:shake .4s}
+    .zone-label{font-weight:800;color:#0f172a;font-size:1.02rem}
+    .zone-slot{min-height:30px;min-width:90px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:900;color:var(--success)}
+    .zone-slot .placed-gas{background:#fff;border:2px solid var(--success);border-radius:10px;padding:4px 12px;color:#166534}
+    .zone-result{font-size:.95rem;font-weight:900;color:#166534}
+    .dnd-fb{text-align:center;font-size:1.1rem;font-weight:900;min-height:28px;margin-top:10px}
+    .dnd-count{text-align:center;font-weight:800;color:var(--muted);margin-top:4px}
+    /* ── Round 2: type it ── */
+    .type-round{margin-top:12px;border-top:3px dashed var(--wedo-border);padding-top:10px}
+    .tr-head{margin:0 0 6px;font-size:1.05rem}
+    .tr-count{float:right;font-weight:900;color:var(--wedo-border)}
+    .type-q{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0;background:#fdf2f8;border:2px solid #fbcfe8;border-radius:10px;padding:8px 10px}
+    .type-q label{font-weight:bold;flex:1 1 100%;font-size:1rem;color:#0f172a}
+    .type-q input{flex:1;min-width:130px;padding:8px 10px;border:2px solid #cbd5e1;border-radius:10px;font-size:1rem;font-family:inherit}
+    .type-q.done{border-color:var(--success);background:#f0fdf4}
+    .type-q.done input{border-color:var(--success);background:#fff}
+    .tq-fb{font-weight:900;font-size:.95rem;flex:1 1 100%}
+    /* ── Calm Mode ── */
+    .calm-btn{background:#475569}.calm-btn:hover{background:#334155}.calm-btn.on{background:#0f172a;box-shadow:0 0 0 3px #94a3b8}
+    body.calm .hero-icon,body.calm .obs-flame,body.calm .obs-bubble,body.calm .dnd-zone.nope,body.calm .mcq-opt.wrong,body.calm .cc-picked{animation:none!important}
+    body.calm .animate-enter,body.calm .anim-d1,body.calm .anim-d2,body.calm .anim-d3,body.calm .lo-anim li{animation:none!important;opacity:1!important}
+    body.calm .lo-anim li::before{animation:none!important;transform:scale(1)!important}
+    body.calm .slide.active{animation:none}
+    body.calm .task-box:hover,body.calm .dnd-chip:hover,body.calm .gas-card:hover{transform:none;box-shadow:none}
+    body.calm .obs-pop,body.calm .obs-pop-b,body.calm .obs-popword,body.calm .sparkup,body.calm .ord-wrong,body.calm .shaketube,body.calm .splint-go1,body.calm .splint-go2,body.calm .ember-pulse,body.calm .lab-halo,body.calm .fizzing,body.calm .zone-slot .placed-gas{animation:none!important}
+    /* ── Predict starter ── */
+    .predict-grid{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+    .p-row{display:flex;align-items:center;gap:10px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:8px 12px;flex-wrap:wrap;transition:border-color .2s,background .2s}
+    .p-row.picked{border-color:var(--ido-border);background:#faf5ff}
+    .p-gas{display:flex;align-items:center;gap:8px;min-width:170px;font-weight:900;color:#0f172a}
+    .p-opt{display:inline-block;background:#fff;border:2px solid #cbd5e1;border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:bold;font-size:.92rem;user-select:none;transition:all .15s}
+    .p-opt:hover{border-color:var(--ido-border)}
+    .p-opt.sel{border-color:var(--ido-border);background:var(--ido-bg);color:#5b21b6}
+    /* ── Observe animation upgrades ── */
+    @keyframes popflash2{0%{transform:scale(.3);opacity:.9}100%{transform:scale(4.2);opacity:0}}
+    .obs-pop-b{transform-origin:center;transform-box:fill-box;animation:popflash2 .75s ease-out .1s both}
+    @keyframes popword{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.35);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:0}}
+    .obs-popword{transform-origin:center;transform-box:fill-box;animation:popword 1.1s ease-out both}
+    @keyframes sparkup{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-26px);opacity:0}}
+    .sparkup{transform-box:fill-box;animation:sparkup .9s ease-out both}
+    .shaketube{animation:shake .45s}
+    @keyframes chipIn{from{transform:scale(.4);opacity:.3}to{transform:scale(1);opacity:1}}
+    .zone-slot .placed-gas{animation:chipIn .3s ease-out}
+    #print-area{display:none}
+    /* ── screen styles (REPAIRED: these were trapped inside @media print and never rendered on screen) ── */
+    .xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+    .xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+    .xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+    .confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+    .confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+    @keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    .hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+    .hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+    .hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:none;align-items:center;gap:15px}
+    #timer-widget.visible{display:flex}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+    /* ── V4 polish additions ── */
+    .title-hero{display:flex;gap:14px;justify-content:center;margin:6px 0 14px;flex-wrap:wrap}
+    .hero-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:#fff;border:2px solid #e2e8f0;box-shadow:0 4px 10px rgba(0,0,0,.06);animation:floaty 3s ease-in-out infinite}
+    .hero-icon:nth-child(2){animation-delay:.3s}.hero-icon:nth-child(3){animation-delay:.6s}.hero-icon:nth-child(4){animation-delay:.9s}.hero-icon:nth-child(5){animation-delay:1.2s}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .lo-anim li{list-style:none;position:relative;padding-left:30px;margin-bottom:6px;opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li::before{content:'\2713';position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--success);color:#fff;font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;transform:scale(0);animation:popCheck .4s forwards .5s}
+    @keyframes popCheck{to{transform:scale(1)}}
+    .teach-tools{position:fixed;top:16px;left:16px;z-index:1500;display:flex;gap:8px}
+    .tool-btn{padding:8px 12px;font-size:.85rem;border-radius:10px}
+    .ta-btn{background:#0d9488}.ta-btn:hover{background:#0f766e}
+    .tn-btn{background:#b45309}.tn-btn:hover{background:#92400e}
+    .cc-btn{background:#7c3aed}.cc-btn:hover{background:#5b21b6}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:3000;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.show{display:flex;animation:fadeIn .25s}
+    .modal-card{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.3);border-top:8px solid var(--lo-border);position:relative}
+    .modal-card h2{margin-top:0}
+    .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}.modal-close:hover{background:#cbd5e1}
+    .ta-card{border-top-color:#0d9488}.cc-card{border-top-color:#7c3aed}.tn-card{border-top-color:#b45309}
+    .cc-name{display:flex;flex-wrap:wrap;gap:8px}
+    .grade-chip{padding:6px 12px;border-radius:999px;border:2px solid #cbd5e1;background:#fff;cursor:pointer;font-weight:bold;font-size:.85rem;user-select:none}
+    .grade-chip.sel{border-color:var(--lo-border);background:var(--lo-bg)}
+    .cc-result{margin-top:14px;text-align:center;min-height:40px}
+    .cc-picked{font-size:1.7rem;font-weight:900;color:var(--lo-border);animation:pulse 1.2s}
+    .cc-q{margin-top:10px;font-size:1.05rem;background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:12px;text-align:left}
+    .owl-badge{display:inline-block;background:#ede9fe;color:#5b21b6;border:2px solid #a78bfa;border-radius:999px;padding:3px 12px;font-size:.78rem;font-weight:900;letter-spacing:.5px;margin-bottom:6px}
+    .stem-box{background:#ecfeff;border-left:6px solid #06b6d4;border-radius:12px;padding:12px 14px;margin-top:8px}
+    .stem-box code{background:#fff;border:1px solid #cffafe;border-radius:6px;padding:2px 6px;font-size:.95rem;color:#0e7490;font-weight:bold}
+    #lesson-complete{display:none;position:fixed;inset:0;background:rgba(15,23,42,.88);z-index:4000;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+    #lesson-complete.show{display:flex;animation:fadeIn .4s}
+    #lesson-complete h1{color:#fff;border:none;font-size:3rem;animation:pulse 1.6s infinite}
+    /* ── Testing Lab (I Do) ── */
+    .lab-wrap{background:#0f172a;border-radius:16px;padding:10px 10px 8px;border:2px solid #334155;max-width:880px;margin:6px auto 0}
+    .lab-svg{width:100%;height:auto;display:block}
+    .lab-title{color:#fbbf24;font-weight:900;font-size:.85rem;letter-spacing:1px;margin:0 0 6px;text-align:center}
+    .lab-hint{color:#94a3b8;font-size:.8rem;font-weight:bold}
+    .lab-station{cursor:pointer}
+    @keyframes splintGo1{to{transform:translate(-28px,8px)}}
+    .splint-go1{animation:splintGo1 .6s ease-in forwards}
+    @keyframes splintGo2{to{transform:translateY(34px)}}
+    .splint-go2{animation:splintGo2 .7s ease-in forwards}
+    .exam-tip-box{background:#fef9c3;border:2px solid #eab308;border-left:6px solid #eab308;border-radius:12px;padding:12px 14px;color:#713f12;font-size:.98rem}
+    #ind-f .ind-q{border-left:6px solid #22c55e}
+    #ind-m .ind-q{border-left:6px solid #f97316}
+    #ind-h .ind-q{border-left:6px solid #1e3a8a}
+    @keyframes fizzup{0%{transform:translateY(0);opacity:0}30%{opacity:.9}100%{transform:translateY(-14px);opacity:0}}
+    .fizzing{transform-box:fill-box;animation:fizzup 1.1s linear infinite}
+    @keyframes haloPulse{0%,100%{opacity:.85}50%{opacity:.2}}
+    .lab-halo{animation:haloPulse 1.6s ease-in-out infinite}
+    /* ── We Do interaction modes ── */
+    .wd-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+    .wd-tab{background:#e2e8f0;color:#334155;font-weight:900;border-radius:999px;padding:8px 16px;border:2px solid transparent}
+    .wd-tab.active{background:#7c3aed;color:#fff}
+    .wd-mode{display:none}
+    .wd-mode.active{display:block}
+    .vote-card{max-width:680px;margin:8px auto;background:#fff;border:3px solid #7c3aed;border-radius:16px;padding:16px;text-align:center;box-shadow:0 6px 18px rgba(124,58,237,.12)}
+    .vote-q{font-size:1.3rem;font-weight:900;color:#1e293b;min-height:60px;display:flex;align-items:center;justify-content:center}
+    .vote-cue{font-size:.98rem;color:#7c3aed;font-weight:900;margin:8px 0}
+    .vote-verdict{font-size:1.2rem;font-weight:900;min-height:28px;margin-top:8px}
+    .vote-why{font-size:.95rem;color:#475569;min-height:22px}
+    .ord-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+    .ord-step{background:#fff;border:2px solid #94a3b8;border-radius:12px;padding:10px 14px;font-weight:bold;cursor:pointer;font-size:1rem;color:#1e293b}
+    .ord-step.placed{opacity:.25;pointer-events:none}
+    .ord-step.ord-wrong{animation:shake .4s;border-color:#ef4444}
+    .ord-list{max-width:640px;margin:0 auto;text-align:left;padding-left:26px}
+    .ord-list li{background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:bold;animation:fadeInUp .25s}
+    @keyframes flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.25)}}
+    .obs-flame{transform-origin:center bottom;transform-box:fill-box;animation:flicker .22s infinite}
+    @keyframes emberPulse{0%,100%{opacity:.55}50%{opacity:1}}
+    .ember-pulse{transform-box:fill-box;animation:emberPulse 1.15s ease-in-out infinite}
+    @keyframes bubup{0%{transform:translateY(12px);opacity:0}25%{opacity:.85}100%{transform:translateY(-60px);opacity:0}}
+    .obs-bubble{transform-box:fill-box;animation:bubup 2.2s linear infinite}
+    @keyframes popflash{0%{transform:scale(.2);opacity:.95}100%{transform:scale(2.9);opacity:0}}
+    .obs-pop{transform-origin:center;transform-box:fill-box;animation:popflash .6s ease-out}
+    .vid-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .vid-btn{display:block;text-align:center;background:#dc2626;color:#fff;border-radius:10px;padding:10px;font-weight:bold;text-decoration:none;font-size:.92rem}
+    .vid-btn:hover{background:#b91c1c}
+    .vid-btn.alt{background:#7c3aed}.vid-btn.alt:hover{background:#5b21b6}
+    .vid-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:2px solid #e2e8f0;background:#000}
+    .vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    @media (max-width:640px){.vid-grid{grid-template-columns:1fr}.ido-cards{grid-template-columns:1fr!important}}
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:18px}
+      .logo{width:92px;top:8px;right:8px}
+      h1{font-size:1.6rem}h2{font-size:1.2rem;margin-right:0}p,li{font-size:1.02rem}
+      .content-grid,.arrival-grid{grid-template-columns:1fr!important;gap:12px}
+      .logo{width:84px;top:10px;right:10px}
+      .teach-tools{top:auto;bottom:58px;left:8px}
+      #timer-widget{top:auto;bottom:58px;left:auto;right:8px;transform:none;padding:6px 10px}
+      #timer-display{font-size:1.6rem;min-width:70px}
+      .controls{bottom:10px;right:10px}button{padding:8px 12px;font-size:.9rem}
+      .gas-card{grid-template-columns:44px 1fr}
+    }
+    @media print{
+      body{overflow:visible;background:#fff;height:auto;color:#000}
+      .controls,.slide-container,.progress-wrap,.progress-label,.teach-tools,.modal-overlay,#timer-widget,#lesson-complete{display:none!important}
+      #print-area{display:block!important;padding:2px}
+      @page{margin:11mm}
+      .print-section{display:none}
+      .print-section.visible{display:block;border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-area h1,#print-area h2,#print-area h3{break-after:avoid-page;page-break-after:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+      .print-section h1{font-size:1.4rem;margin:0 0 8px}
+      .print-section h2{font-size:1.12rem;margin:0 0 8px}
+      .ko-table tr{break-inside:avoid;page-break-inside:avoid}
+      .print-box,.print-grid-2x2,.scaffold-print-box{break-inside:avoid;page-break-inside:avoid}
+      .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}.print-box{border:1px solid #000;padding:10px;min-height:80px}
+      .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+      .ko-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}
+      .scaffold-print-box{border:2px dashed #94a3b8;padding:12px;margin-bottom:12px;border-radius:8px;background:#f8fafc}
+      .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:14px}
+      body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+      body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+      body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+      .wd-evi-head{text-align:center;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
+      .wd-evi-tag{display:inline-block;border:2px solid #000;border-radius:6px;padding:2px 14px;font-weight:900;letter-spacing:2px;font-size:.95rem}
+      .wd-evi-name{border:1px solid #000;padding:7px 9px;margin:0 0 14px;font-size:.95rem}
+      .wd-evi-h3{margin:14px 0 6px;font-size:1.05rem;border-bottom:1px solid #000;padding-bottom:3px}
+      .wd-evi-line{border:1px solid #000;padding:12px 9px;font-size:1rem}
+      #wedo-evidence-content .ko-table td,#wedo-evidence-content .ko-table th{color:#000}
+    }
+  </style>
+</head>
+<body>
+<div class="teach-tools">
+  <button class="tool-btn ta-btn" onclick="openTA()">🧑‍🏫 TA Focus</button>
+  <button class="tool-btn tn-btn" onclick="openTN()">📋 Teacher</button>
+  <button class="tool-btn cc-btn" onclick="openModal('cc-modal')">🎯 Cold Call</button>
+  <button class="tool-btn calm-btn" id="calm-btn" onclick="toggleCalm()">🌙 Calm</button>
+</div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">10:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetTimer(15)" title="15 min">↻15</button>
+    <button class="timer-btn" onclick="resetTimer(5)" title="5 min">↻5</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- TITLE -->
+  <div class="slide active" data-title="Title">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <div style="text-align:center;margin-top:3%">
+      <div class="animate-enter">
+        <p style="font-size:1rem;color:var(--muted);margin:0">Lesson 4a — Chemical Analysis</p>
+        <h1>Gas Tests I: H₂ · O₂ · CO₂</h1>
+        <p style="font-size:1rem;color:var(--muted);margin:-8px 0 10px">Spec: 2.44</p>
+        <div class="title-hero">
+          <div class="hero-icon">🎈</div><div class="hero-icon">🔥</div><div class="hero-icon">🥤</div><div class="hero-icon">📄</div><div class="hero-icon">🧪</div>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:820px;margin:6px auto 0;text-align:left">
+          <div class="li-box" style="flex:1;min-width:300px;margin:0">
+            <strong>🌍 Did you know?</strong> In 1937 the Hindenburg airship exploded because it was filled with hydrogen — the "squeaky pop" test detects that same gas.<br><br><strong>Learning Objective:</strong>
+            <ul class="lo-anim" style="font-size:1.02rem;margin-top:8px;padding-left:0">
+              <li><strong>2.44</strong> – Describe tests for hydrogen, oxygen and carbon dioxide <em>(ammonia &amp; chlorine next lesson)</em>.</li>
+            </ul>
+          </div>
+          <div class="sc-box" style="flex:1;min-width:300px"><strong>🏆 Success Criteria — I will…</strong>
+            <ul style="font-size:1rem;margin:8px 0 0;color:#431407"><li>…name the correct test for H₂, O₂ and CO₂.</li><li>…state what I would <em>observe</em> (the positive result).</li><li>…write an observation → conclusion sentence.</li></ul>
+          </div>
+        </div>
+        <p style="font-size:1.05rem;margin-top:12px"><strong>Navigation:</strong> Arrow Keys / Spacebar &nbsp;|&nbsp; <strong>40 minutes</strong> &nbsp;|&nbsp; <strong>TA Focus</strong> &amp; <strong>Cold Call</strong> top-left</p>
+      </div>
+      <div class="scaffold-box" style="display:inline-block;margin-top:16px;text-align:left">
+        <h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+          <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+          <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–4)</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARRIVAL TASK -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="5">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Lesson 3</h2>
+    <div class="li-box"><strong>Welcome back!</strong> It's been a while, so just have a go — use the 💡 hints and the word bank if you're stuck. Q1–3 are a quick warm-up; Q4 leads into today.<br>🧠 <strong>"Burns with a Bang"</strong> = Burning splint → H₂ squeaky pop. <strong>"Glows and Goes"</strong> = Glowing splint → O₂ relights.</div>
+    <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    <div class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. Acids</h3><p>Acids release one of these ions. <strong>Tap the correct one:</strong></p>
+        <div><span class="mcq-opt" onclick="mcqCheck(this,true)">H⁺</span><span class="mcq-opt" onclick="mcqCheck(this,false)">OH⁻</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Na⁺</span></div>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text"><strong>H</strong> is for <strong>H</strong>ydrogen — acids are full of H⁺ ions.</div>
+        <p class="answer">H⁺ (hydrogen ions).</p></div>
+      <div class="task-box animate-enter anim-d1"><h3>2. Base or Alkali?</h3><p><strong>True or false?</strong><br>"An alkali is a base that dissolves in water."</p>
+        <div><span class="mcq-opt" onclick="mcqCheck(this,true)">True</span><span class="mcq-opt" onclick="mcqCheck(this,false)">False</span></div>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">All alkalis are bases — but only the bases that <em>dissolve in water</em> are called alkalis.</div>
+        <p class="answer">True — an alkali is a soluble base (it dissolves in water and releases OH⁻ ions).</p></div>
+      <div class="task-box animate-enter anim-d2"><h3>3. Neutralisation</h3><p>Fill the gaps using the word bank:<br>Acid + Base → <strong>______</strong> + <strong>______</strong></p>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">An acid and a base react to make a <strong>salt</strong> and one very common liquid.</div>
+        <p class="answer">Acid + Base → Salt + Water.</p></div>
+      <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Today's Lead-in 🔬</h3><p>Today we learn how to <strong>test gases</strong>. Name <strong>ONE</strong> piece of equipment a scientist might use to test a gas.</p>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think about a wooden <strong>splint</strong>, <strong>limewater</strong>, or <strong>litmus paper</strong>.</div>
+        <p class="answer">Any one of: a (burning or glowing) splint, limewater, damp litmus paper, a delivery tube.</p></div>
+    </div>
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧰 Word bank:</strong> H⁺ · OH⁻ · base · alkali · salt · water · splint · limewater · litmus paper</div>
+  </div>
+
+  <!-- STARTER -->
+  <div class="slide" data-title="Starter" data-timer="5">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-starter">Starter – Predict Like a Scientist</span>
+    <h2>Starter: Predict the Tests! 🔮 (5 mins)</h2>
+    <div class="li-box"><strong>No marks — no wrong answers yet.</strong> Scientists <strong>predict first, then test</strong>. For each gas, tap the test you THINK identifies it. We check the first THREE this lesson — your NH₃ and Cl₂ predictions get tested NEXT lesson. <em>(Your table sheet gets filled in during the lesson — no copying today.)</em></div>
+    <div class="wd-tabs">
+      <button class="wd-tab active" onclick="wdMode('predict',this)">🔮 Predict</button>
+      <button class="wd-tab" onclick="wdMode('qf',this)">🧠 Quick Fire</button>
+      <button class="wd-tab" onclick="wdMode('ooo',this)">🎯 Odd One Out</button>
+    </div>
+    <div class="wd-mode active" data-wd="predict">
+    <div class="predict-grid" id="predict-grid">
+      <div class="p-row"><span class="p-gas"><span class="gas-icon" style="width:40px;height:40px;font-size:.95rem;background:linear-gradient(135deg,#ef4444,#dc2626)">H₂</span> Hydrogen</span><span class="p-opt" onclick="predictPick(this)">🔥 Burning splint</span><span class="p-opt" onclick="predictPick(this)">✨ Glowing splint</span><span class="p-opt" onclick="predictPick(this)">🧴 Limewater</span><span class="p-opt" onclick="predictPick(this)">📄 Damp litmus</span></div>
+      <div class="p-row"><span class="p-gas"><span class="gas-icon" style="width:40px;height:40px;font-size:.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8)">O₂</span> Oxygen</span><span class="p-opt" onclick="predictPick(this)">🔥 Burning splint</span><span class="p-opt" onclick="predictPick(this)">✨ Glowing splint</span><span class="p-opt" onclick="predictPick(this)">🧴 Limewater</span><span class="p-opt" onclick="predictPick(this)">📄 Damp litmus</span></div>
+      <div class="p-row"><span class="p-gas"><span class="gas-icon" style="width:40px;height:40px;font-size:.9rem;background:linear-gradient(135deg,#64748b,#475569)">CO₂</span> Carbon dioxide</span><span class="p-opt" onclick="predictPick(this)">🔥 Burning splint</span><span class="p-opt" onclick="predictPick(this)">✨ Glowing splint</span><span class="p-opt" onclick="predictPick(this)">🧴 Limewater</span><span class="p-opt" onclick="predictPick(this)">📄 Damp litmus</span></div>
+      <div class="p-row"><span class="p-gas"><span class="gas-icon" style="width:40px;height:40px;font-size:.9rem;background:linear-gradient(135deg,#22c55e,#16a34a)">NH₃</span> Ammonia</span><span class="p-opt" onclick="predictPick(this)">🔥 Burning splint</span><span class="p-opt" onclick="predictPick(this)">✨ Glowing splint</span><span class="p-opt" onclick="predictPick(this)">🧴 Limewater</span><span class="p-opt" onclick="predictPick(this)">📄 Damp litmus</span></div>
+      <div class="p-row"><span class="p-gas"><span class="gas-icon" style="width:40px;height:40px;font-size:.95rem;background:linear-gradient(135deg,#eab308,#ca8a04)">Cl₂</span> Chlorine</span><span class="p-opt" onclick="predictPick(this)">🔥 Burning splint</span><span class="p-opt" onclick="predictPick(this)">✨ Glowing splint</span><span class="p-opt" onclick="predictPick(this)">🧴 Limewater</span><span class="p-opt" onclick="predictPick(this)">📄 Damp litmus</span></div>
+    </div>
+    <div class="dnd-fb" id="predict-fb" style="margin-top:8px">Predictions made: <span id="predict-count">0</span>/5</div>
+    <div class="aspire-box" style="margin-top:6px"><strong>🌟 Extension:</strong> Tell your partner <em>WHY</em> you picked each one. A reason is what makes a prediction scientific.</div>
+    </div>
+    <div class="wd-mode" data-wd="qf">
+      <p class="dnd-instruction"><strong>Six taps, sixty seconds</strong> — quick recall from Lessons 1–3. Tap, lock, move on.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;max-width:900px;margin:0 auto">
+        <div class="task-box"><p style="margin:0"><strong>1.</strong> Acids release which ion?</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">H⁺</span><span class="mcq-opt" onclick="mcqCheck(this,false)">OH⁻</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Na⁺</span></div></div>
+        <div class="task-box"><p style="margin:0"><strong>2.</strong> Red litmus in an ALKALI turns…</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">Blue</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Stays red</span><span class="mcq-opt" onclick="mcqCheck(this,false)">White</span></div></div>
+        <div class="task-box"><p style="margin:0"><strong>3.</strong> Acid + Base → ?</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">Salt + water</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Salt + hydrogen</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Water only</span></div></div>
+        <div class="task-box"><p style="margin:0"><strong>4.</strong> Universal indicator in STRONG acid?</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">Red</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Green</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Purple</span></div></div>
+        <div class="task-box"><p style="margin:0"><strong>5.</strong> Mg + HCl gives off which gas?</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">H₂</span><span class="mcq-opt" onclick="mcqCheck(this,false)">O₂</span><span class="mcq-opt" onclick="mcqCheck(this,false)">CO₂</span></div></div>
+        <div class="task-box"><p style="margin:0"><strong>6.</strong> Neutral pH is…</p><div><span class="mcq-opt" onclick="mcqCheck(this,true)">7</span><span class="mcq-opt" onclick="mcqCheck(this,false)">1</span><span class="mcq-opt" onclick="mcqCheck(this,false)">14</span></div></div>
+      </div>
+      <div class="aspire-box" style="margin-top:8px"><strong>🌟 Finished?</strong> Q5 is a clue about TODAY — which test would prove that gas is hydrogen?</div>
+    </div>
+    <div class="wd-mode" data-wd="ooo">
+      <p class="dnd-instruction"><strong>Which is the odd one out — and WHY?</strong> Any answer with a reason scores. Talk first, then reveal.</p>
+      <div class="ord-pool"><span class="ord-step" style="pointer-events:none">H₂ Hydrogen</span><span class="ord-step" style="pointer-events:none">O₂ Oxygen</span><span class="ord-step" style="pointer-events:none">CO₂ Carbon dioxide</span><span class="ord-step" style="pointer-events:none">🧴 Limewater</span></div>
+      <div style="text-align:center"><button class="hint-btn" onclick="toggleHint(this)">👁️ Reveal possible answers</button></div>
+      <div class="hint-text" style="max-width:700px;margin:8px auto"><strong>All defensible:</strong> Limewater — the only TEST (the rest are gases) · CO₂ — the only gas tested with a liquid · O₂ — the only one that RELIGHTS a splint · H₂ — the only one that goes POP. <em>The reason is the science.</em></div>
+      <div class="aspire-box" style="margin-top:8px"><strong>🌟 Stretch:</strong> Invent your own odd-one-out set of four for a partner to solve.</div>
+    </div>
+  </div>
+
+  <!-- I DO 1: HYDROGEN, OXYGEN, CO2 -->
+  
+  <div class="slide" data-title="I Do – H₂, O₂, CO₂" data-type="ido">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Testing for H₂, O₂ and CO₂</h2>
+    <span class="owl-badge">🦉 OWL · OBSERVE</span>
+    <div class="li-box"><strong>Fill in your table sheet</strong> as we go through each gas test. Watch carefully and <strong>name what you must notice</strong> (the positive result). 🔮 <strong>Prediction check:</strong> did you call these in the Starter?</div>
+    <div class="ido-cards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
+      <div class="gas-card animate-enter" style="grid-template-columns:48px 1fr;padding:10px">
+        <div class="gas-icon" style="width:44px;height:44px;font-size:1rem;background:linear-gradient(135deg,#ef4444,#dc2626)">H₂</div>
+        <div><h3 style="margin:0;color:#dc2626;font-size:1rem">Hydrogen</h3>
+          <p style="margin:3px 0;font-size:.92rem"><strong>Test:</strong> hold a <strong>burning splint</strong> near the gas.</p>
+          <p style="margin:0;font-size:.92rem"><strong>Result:</strong> a <strong>"squeaky pop"</strong>.</p>
+          <p style="margin:3px 0 0;font-size:.8rem;color:var(--muted)">The pop is the tiny explosion of H₂ + O₂ → H₂O.</p></div>
+      </div>
+      <div class="gas-card animate-enter anim-d1" style="grid-template-columns:48px 1fr;padding:10px">
+        <div class="gas-icon" style="width:44px;height:44px;font-size:1rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8)">O₂</div>
+        <div><h3 style="margin:0;color:#1d4ed8;font-size:1rem">Oxygen</h3>
+          <p style="margin:3px 0;font-size:.92rem"><strong>Test:</strong> place a <strong>glowing splint</strong> into the gas.</p>
+          <p style="margin:0;font-size:.92rem"><strong>Result:</strong> the splint <strong>relights</strong>.</p>
+          <p style="margin:3px 0 0;font-size:.8rem;color:var(--muted)">Oxygen supports combustion — it makes things burn.</p></div>
+      </div>
+      <div class="gas-card animate-enter anim-d2" style="grid-template-columns:48px 1fr;padding:10px">
+        <div class="gas-icon" style="width:44px;height:44px;font-size:.9rem;background:linear-gradient(135deg,#64748b,#475569)">CO₂</div>
+        <div><h3 style="margin:0;color:#475569;font-size:1rem">Carbon Dioxide</h3>
+          <p style="margin:3px 0;font-size:.92rem"><strong>Test:</strong> bubble through <strong>limewater</strong> (calcium hydroxide solution).</p>
+          <p style="margin:0;font-size:.92rem"><strong>Result:</strong> turns <strong>milky / cloudy</strong>.</p>
+          <p style="margin:3px 0 0;font-size:.8rem;color:var(--muted)">CO₂ + Ca(OH)₂ → insoluble CaCO₃ (the white cloudiness).</p></div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px">
+      <strong>💡 Key Distinction:</strong> <strong>Burning</strong> splint = flame still lit (for H₂). <strong>Glowing</strong> splint = blown out so only the red ember remains (for O₂). Students often confuse these!
+    </div>
+  </div>
+
+  <!-- OBSERVE: REAL DEMO + VIDEO -->
+  <div class="slide" data-title="Observe – Watch It For Real" data-type="ido">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-ido">I Do</span>
+    <span class="owl-badge">🦉 OWL · OBSERVE</span>
+    <h2>Observe: Watch It For Real 👀</h2>
+    <div class="li-box"><strong>Run each lab station, then watch the REAL thing.</strong> Before each test: say the <strong>TEST</strong>, predict the <strong>OBSERVATION</strong>, then run it. Did your Starter prediction hold?</div>
+    <div class="lab-wrap">
+      <p class="lab-title">🧪 THE TESTING LAB — tap a station to run its test</p>
+      <svg class="lab-svg" viewBox="0 0 740 240" xmlns="http://www.w3.org/2000/svg"><defs>
+  <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cbd5e1" stop-opacity=".30"/><stop offset="0.35" stop-color="#f8fafc" stop-opacity=".12"/><stop offset="1" stop-color="#1e293b" stop-opacity=".30"/></linearGradient>
+  <radialGradient id="flameGrad" cx="0.5" cy="0.75" r="0.75"><stop offset="0" stop-color="#fff7ed"/><stop offset="0.45" stop-color="#fbbf24"/><stop offset="1" stop-color="#ea580c"/></radialGradient>
+  <radialGradient id="emberGrad" cx="0.5" cy="0.45" r="0.55"><stop offset="0" stop-color="#fef08a"/><stop offset="0.5" stop-color="#f97316"/><stop offset="1" stop-color="#b91c1c"/></radialGradient>
+  <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b45309"/><stop offset="0.5" stop-color="#92400e"/><stop offset="1" stop-color="#78350f"/></linearGradient>
+  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs><rect x="0" y="0" width="740" height="170" fill="#1e293b"/><rect x="0" y="0" width="740" height="36" fill="#0f172a"/><rect x="0" y="40" width="740" height="4" fill="#475569"/><rect x="40" y="20" width="14" height="20" rx="2" fill="#f59e0b"/><rect x="43" y="13" width="8" height="8" rx="1" fill="#78350f"/><rect x="42" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="62" y="20" width="14" height="20" rx="2" fill="#3b82f6"/><rect x="65" y="13" width="8" height="8" rx="1" fill="#1e3a8a"/><rect x="64" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="84" y="20" width="14" height="20" rx="2" fill="#22c55e"/><rect x="87" y="13" width="8" height="8" rx="1" fill="#166534"/><rect x="86" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="596" y="8" width="134" height="26" rx="6" fill="#fbbf24"/><text x="663" y="25" text-anchor="middle" font-size="10" font-weight="900" fill="#78350f">⚠ EYE PROTECTION</text><rect x="0" y="170" width="740" height="16" fill="#475569"/><rect x="0" y="170" width="740" height="3" fill="#64748b"/><rect x="0" y="186" width="740" height="54" fill="#1f2937"/><g class="lab-station" id="lab-st1" onclick="runLabTest(1)"><rect class="lab-halo" id="lab-halo1" x="100" y="42" width="100" height="136" rx="16" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/><text x="150" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#f87171">A · HYDROGEN (H₂)</text><ellipse cx="112" cy="177" rx="23" ry="5" fill="#0b1220"/><rect x="102" y="171" width="20" height="8" rx="2" fill="#334155"/><rect x="110" y="62" width="6" height="112" rx="2" fill="#475569"/><rect x="111" y="62" width="1.6" height="112" fill="#94a3b8" opacity=".5"/><rect x="105" y="80" width="15" height="15" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1"/><circle cx="119" cy="87.5" r="2.4" fill="#cbd5e1"/><rect x="117" y="85" width="22" height="5" rx="2" fill="#475569"/><path d="M138 80 Q132 88 138 96" stroke="#64748b" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="150" cy="176" rx="18" ry="3.5" fill="#0b1220" opacity=".5"/><path d="M136 60 L136 140 Q136 160 150 160 Q164 160 164 140 L164 60" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><path d="M136 60 L136 140 Q136 160 150 160 Q164 160 164 140 L164 60 Z" fill="url(#glassGrad)"/><rect x="141" y="72" width="3" height="78" rx="1.5" fill="#ffffff" opacity=".22"/><ellipse cx="150" cy="60" rx="14" ry="3.5" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><g transform="translate(166,58)"><g id="lab-spl1"><path d="M2 0 L42 -2 L42 6 L2 8 Z" fill="url(#woodGrad)"/><rect x="6" y="2" width="34" height="1.4" fill="#fcd34d" opacity=".35"/><path d="M-1 1 L6 0 L6 7 L-1 6.5 Z" fill="#27272a"/><g filter="url(#glow)"><path id="lab-flame1" class="obs-flame" d="M1 6 C-7 -1 -3 -13 1 -17 C5 -13 8 -1 1 6 Z" fill="url(#flameGrad)"/><path d="M1 4 C-2 0 -1 -7 1 -10 C3 -7 4 0 1 4 Z" fill="#fef9c3"/></g><path d="M1 -16 q-4 -6 0 -12 q4 5 0 11" stroke="#cbd5e1" stroke-width="1.3" fill="none" opacity=".3"/></g></g><circle id="lab-pop1a" cx="150" cy="62" r="9" fill="none" stroke="#fbbf24" stroke-width="4" style="display:none"/><circle id="lab-pop1b" cx="150" cy="62" r="9" fill="none" stroke="#f97316" stroke-width="3" style="display:none"/><text id="lab-popw" x="150" y="44" text-anchor="middle" font-size="15" font-weight="900" fill="#fbbf24" style="display:none">POP!</text><text id="lab-cap1" x="150" y="224" text-anchor="middle" font-size="11" font-weight="900" fill="#94a3b8">Tap to run the H₂ test</text><g id="lab-done1" opacity="0"><circle cx="188" cy="70" r="9" fill="#16a34a"/><text x="188" y="74" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">✓</text></g></g><g class="lab-station" id="lab-st2" onclick="runLabTest(2)"><rect class="lab-halo" id="lab-halo2" x="330" y="42" width="100" height="136" rx="16" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/><text x="380" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#60a5fa">B · OXYGEN (O₂)</text><ellipse cx="342" cy="177" rx="23" ry="5" fill="#0b1220"/><rect x="332" y="171" width="20" height="8" rx="2" fill="#334155"/><rect x="340" y="62" width="6" height="112" rx="2" fill="#475569"/><rect x="341" y="62" width="1.6" height="112" fill="#94a3b8" opacity=".5"/><rect x="335" y="80" width="15" height="15" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1"/><circle cx="349" cy="87.5" r="2.4" fill="#cbd5e1"/><rect x="347" y="85" width="22" height="5" rx="2" fill="#475569"/><path d="M368 80 Q362 88 368 96" stroke="#64748b" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="380" cy="176" rx="18" ry="3.5" fill="#0b1220" opacity=".5"/><path d="M366 60 L366 140 Q366 160 380 160 Q394 160 394 140 L394 60" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><path d="M366 60 L366 140 Q366 160 380 160 Q394 160 394 140 L394 60 Z" fill="url(#glassGrad)"/><rect x="371" y="72" width="3" height="78" rx="1.5" fill="#ffffff" opacity=".22"/><ellipse cx="380" cy="60" rx="14" ry="3.5" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><g transform="translate(378,16)"><g id="lab-spl2"><path d="M0 0 L4 0 L3.4 44 L0.6 44 Z" fill="url(#woodGrad)"/><rect x="1.4" y="2" width="1.2" height="40" fill="#fcd34d" opacity=".3"/><path d="M0.4 38 L3.6 38 L3.4 44 L0.6 44 Z" fill="#3f1d0a"/><circle id="lab-ember" class="ember-pulse" cx="2" cy="44" r="5" fill="url(#emberGrad)" filter="url(#glow)"/><path id="lab-smoke2" d="M2 40 q-4 -7 0 -13 q4 5 0 11" stroke="#cbd5e1" stroke-width="1.3" fill="none" opacity=".3"/><path class="obs-flame" id="lab-flame2" d="M2 45 C-6 39 -3 27 2 21 C7 27 10 39 2 45 Z" fill="url(#flameGrad)" style="opacity:0" filter="url(#glow)"/><circle id="lab-flash" cx="2" cy="42" r="7" fill="none" stroke="#fbbf24" stroke-width="3" style="display:none"/><circle class="lab-spark" cx="-4" cy="36" r="1.6" fill="#fbbf24" style="opacity:0"/><circle class="lab-spark" cx="2" cy="31" r="1.4" fill="#f97316" style="opacity:0"/><circle class="lab-spark" cx="8" cy="37" r="1.6" fill="#fbbf24" style="opacity:0"/></g></g><text id="lab-cap2" x="380" y="224" text-anchor="middle" font-size="11" font-weight="900" fill="#94a3b8">Tap to run the O₂ test</text><g id="lab-done2" opacity="0"><circle cx="418" cy="70" r="9" fill="#16a34a"/><text x="418" y="74" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">✓</text></g></g><g class="lab-station" id="lab-st3" onclick="runLabTest(3)"><rect class="lab-halo" id="lab-halo3" x="560" y="42" width="100" height="136" rx="16" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/><text x="610" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#94a3b8">C · CARBON DIOXIDE (CO₂)</text><ellipse cx="572" cy="177" rx="23" ry="5" fill="#0b1220"/><rect x="562" y="171" width="20" height="8" rx="2" fill="#334155"/><rect x="570" y="62" width="6" height="112" rx="2" fill="#475569"/><rect x="571" y="62" width="1.6" height="112" fill="#94a3b8" opacity=".5"/><rect x="565" y="80" width="15" height="15" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1"/><circle cx="579" cy="87.5" r="2.4" fill="#cbd5e1"/><rect x="577" y="85" width="22" height="5" rx="2" fill="#475569"/><path d="M598 80 Q592 88 598 96" stroke="#64748b" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="610" cy="176" rx="18" ry="3.5" fill="#0b1220" opacity=".5"/><path d="M596 60 L596 140 Q596 160 610 160 Q624 160 624 140 L624 60" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><path d="M596 60 L596 140 Q596 160 610 160 Q624 160 624 140 L624 60 Z" fill="url(#glassGrad)"/><rect x="601" y="72" width="3" height="78" rx="1.5" fill="#ffffff" opacity=".22"/><ellipse cx="610" cy="60" rx="14" ry="3.5" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><path id="lab-water" d="M598 104 L598 140 Q598 160 610 160 Q622 160 622 140 L622 104 Z" fill="#dbeafe" style="transition:fill .9s"/><ellipse cx="610" cy="104" rx="12" ry="2.5" fill="#bfdbfe"/><g id="lab-milk" style="opacity:0;transition:opacity 1.4s"><ellipse cx="606" cy="114" rx="8" ry="5" fill="#fff" opacity=".85"/><ellipse cx="614" cy="126" rx="8" ry="6" fill="#f1f5f9" opacity=".9"/><ellipse cx="607" cy="138" rx="9" ry="6" fill="#fff" opacity=".85"/></g><circle class="lab-bub" cx="606" cy="130" r="2.6" fill="#e0f2fe"/><circle class="lab-bub" cx="613" cy="135" r="2.2" fill="#e0f2fe"/><circle class="lab-bub" cx="609" cy="139" r="2.8" fill="#e0f2fe"/><ellipse cx="561" cy="200" rx="28" ry="4" fill="#0b1220" opacity=".5"/><path d="M553 139 L569 139 L569 151 L585 196 L537 196 L553 151 Z" fill="#0a1422" stroke="#94a3b8" stroke-width="2"/><path d="M553 139 L569 139 L569 151 L585 196 L537 196 L553 151 Z" fill="url(#glassGrad)"/><path d="M556 172 L566 172 L580 193 L542 193 Z" fill="#fde68a" opacity=".92"/><ellipse cx="561" cy="172" rx="5" ry="1.2" fill="#fcd34d"/><circle class="lab-fizz" cx="553" cy="194" r="1.5" fill="#fff"/><circle class="lab-fizz" cx="561" cy="196" r="1.3" fill="#fff"/><circle class="lab-fizz" cx="557" cy="191" r="1.2" fill="#fff"/><polygon points="548,191 553,187 558,191 553,194" fill="#e5e7eb" stroke="#9ca3af" stroke-width=".7"/><polygon points="560,191 565,187 570,191 564,194" fill="#eef2f7" stroke="#9ca3af" stroke-width=".7"/><polygon points="553,193 557,190 562,193 557,195" fill="#d1d5db" stroke="#9ca3af" stroke-width=".7"/><path d="M555 142 L558 142 L545 188 L542 188 Z" fill="#ffffff" opacity=".1"/><rect x="551" y="131" width="20" height="10" rx="2" fill="#92400e"/><rect x="553" y="129" width="16" height="3" rx="1" fill="#b45309"/><path d="M561 131 C561 96 610 96 610 58 L610 126" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" opacity=".9"/><text id="lab-cap3" x="610" y="224" text-anchor="middle" font-size="11" font-weight="900" fill="#94a3b8">Tap: acid + marble chips → test the gas</text><g id="lab-done3" opacity="0"><circle cx="648" cy="70" r="9" fill="#16a34a"/><text x="648" y="74" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">✓</text></g></g></svg>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;flex-wrap:wrap;gap:6px"><span class="lab-hint">Run A → B → C, or any order · results stay until reset</span><button class="small ghost" onclick="labReset()">↺ Reset lab</button></div>
+    </div>
+    <div class="content-grid" style="grid-template-columns:1.15fr 1fr;margin-top:8px">
+      <div>
+        <div class="vid-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/P_gPlbExHv0" title="GCSE Science Chemistry (9-1) — Tests for Gases" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);margin:4px 0 0">GCSE Science Chemistry (9-1) · Tests for Gases. If blocked on the school network, use the buttons.</p>
+      </div>
+      <div>
+        <div class="vid-grid" style="grid-template-columns:1fr">
+          <a class="vid-btn" href="https://www.youtube.com/watch?v=5RY7fJ0EOUE" target="_blank" rel="noopener">▶ Hydrogen (pop) ↗</a>
+          <a class="vid-btn" href="https://www.youtube.com/watch?v=olGOFHZXS_Y" target="_blank" rel="noopener">▶ Oxygen (relight) ↗</a>
+          <a class="vid-btn" href="https://www.youtube.com/watch?v=E6QSDEDXvB8" target="_blank" rel="noopener">▶ Carbon dioxide ↗</a>
+        </div>
+        <div class="stem-box" style="margin-top:10px"><strong>👀 Say it as you watch:</strong> <code>I see ___, so the gas is ___.</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WE DO 1 -->
+  <div class="slide" data-title="We Do – Gas Test Relay" data-type="wedo">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Gas Test Relay 🏃</h2>
+    <div class="li-box"><strong>As a class:</strong> the <strong>three gases we've learned so far</strong> (H₂, O₂, CO₂). <strong>Drag each gas onto the test that identifies it.</strong> Get it right and the result appears. <span class="dnd-count wd-mc" style="display:inline;margin:0"><span id="relay-count">0</span>/3 matched</span></div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence (We Do)</button>
+    <div class="wd-tabs">
+      <button class="wd-tab active" onclick="wdMode('match',this)">🧩 Match</button>
+      <button class="wd-tab" onclick="wdMode('vote',this)">🗳️ Class Vote</button>
+      <button class="wd-tab" onclick="wdMode('order',this)">🔢 Order It</button>
+    </div>
+    
+    <div id="wedo1" class="wedo-capture wd-mode active" data-wd="match" style="margin-top:4px">
+      <p class="dnd-instruction">Drag a gas up to its test — or <strong>tap a gas, then tap its test</strong>.</p>
+      <div class="dnd-chips" id="relay-chips">
+        <div class="dnd-chip" data-val="H₂" style="--chip:#dc2626">🧪 Hydrogen (H₂)</div>
+        <div class="dnd-chip" data-val="O₂" style="--chip:#1d4ed8">🧪 Oxygen (O₂)</div>
+        <div class="dnd-chip" data-val="CO₂" style="--chip:#475569">🧪 Carbon dioxide (CO₂)</div>
+      </div>
+      <div class="dnd-zones" id="relay-zones">
+        <div class="dnd-zone" data-accept="H₂" data-test="Burning splint" data-result="💥 Squeaky pop" data-sentence="A burning splint gives a squeaky pop, so the gas is hydrogen."><span class="zone-label">🔥 Burning splint</span><span class="zone-slot"></span></div>
+        <div class="dnd-zone" data-accept="O₂" data-test="Glowing splint" data-result="🔆 Relights" data-sentence="A glowing splint relights, so the gas is oxygen."><span class="zone-label">✨ Glowing splint</span><span class="zone-slot"></span></div>
+        <div class="dnd-zone" data-accept="CO₂" data-test="Limewater" data-result="🥛 Turns milky" data-sentence="Limewater turns milky, so the gas is carbon dioxide."><span class="zone-label">🧴 Limewater</span><span class="zone-slot"></span></div>
+      </div>
+      <div id="relay-fb" class="dnd-fb"></div>
+      <div id="relay-r2" class="type-round" style="display:none">
+        <p class="tr-head">🔓 <strong>Round 2 — type it from memory</strong> <span class="tr-count">0/3</span></p>
+        <div class="type-q"><label>1. The test for hydrogen is a <strong>______ splint</strong>.</label><input data-a="burning" data-full="burning" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <div class="type-q"><label>2. Oxygen relights a <strong>______ splint</strong>.</label><input data-a="glowing" data-full="glowing" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <div class="type-q"><label>3. CO₂ turns limewater <strong>______</strong>.</label><input data-a="milky|cloudy" data-full="milky" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155;text-align:left" data-placeholder="Teacher notes..."></div>
+    </div>
+    <div class="wd-mode" data-wd="vote">
+      <div class="vote-card">
+        <p style="margin:0 0 4px;font-weight:900;color:#7c3aed">Statement <span id="vote-count">1/6</span></p>
+        <div class="vote-q" id="vote-q"></div>
+        <p class="vote-cue">👍 Thumbs-up / stand = TRUE &nbsp;·&nbsp; 👎 thumbs-down / stay sat = FALSE — everyone votes!</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button id="vote-reveal" onclick="voteReveal()" style="background:#7c3aed">👁️ Reveal</button>
+          <button id="vote-next" class="ghost" onclick="voteNext()" disabled>Next ▶</button>
+        </div>
+        <div class="vote-verdict" id="vote-verdict"></div>
+        <div class="vote-why" id="vote-why"></div>
+      </div>
+    </div>
+    <div class="wd-mode" data-wd="order">
+      <p class="dnd-instruction">Tap the steps <strong>in the right order</strong> to build the exam method.</p>
+      <div class="ord-pool" id="ord-pool"></div>
+      <ol class="ord-list" id="ord-list"></ol>
+      <div class="dnd-fb" id="ord-fb"></div>
+      <div style="text-align:center;margin-top:6px"><button class="small ghost" onclick="ordInit()">↺ Restart order</button></div>
+    </div>
+  </div>
+
+  <!-- INDEPENDENT WORK -->
+  <div class="slide" id="ind-slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-independent">Independent Work – 8 mins</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Answer independently.</strong> ❌ <strong>Never write</strong> just "splint" — always say <em>BURNING splint</em> or <em>GLOWING splint</em>.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0">
+      <button onclick="switchInd('f')" style="background:#22c55e">Foundation (U–1)</button>
+      <button onclick="switchInd('m')" style="background:#f97316">Middle (1–2)</button>
+      <button onclick="switchInd('h')" style="background:#1e3a8a">Higher (3–4)</button>
+      <button class="ghost" onclick="document.getElementById('ind-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div class="xp-label" id="xp-label">Questions completed: 0/0</div><div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-fill"></div></div>
+    <div id="ind-f" class="ind-level active" style="max-height:50vh;overflow-y:auto"><p style="margin:0 0 4px;font-size:.8rem;color:#22c55e;font-weight:900;text-align:center">📗 Grades U–1 • Grade 2 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> How do you test for oxygen?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Oxygen relights a GLOWING splint — an ember, no flame.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">Burning splint</span><span class="mcq-opt" onclick="mcqCheck(this,true)">Glowing splint</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Limewater</span></div></div>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>2.</strong> Hydrogen makes a:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Hydrogen ignites — a tiny explosion. What sound is that?</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">Squeaky pop</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Relights splint</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Turns milky</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> What does CO₂ do to limewater?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">LIMEwater turns MILKY — cloudy, like milk.</div><p class="answer">Turns it milky/cloudy.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>4.</strong> Name the gas that turns limewater milky.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">The gas in fizzy drinks.</div><p class="answer">Carbon dioxide (CO₂).</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [3 marks]</span><p style="margin:0"><strong>5.</strong> A student collects a gas. A burning splint at the tube mouth gives a squeaky pop. (a) Name the gas [1]. (b) State the test [1]. (c) Describe the positive result [1].</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">"Burns with a Bang" — which gas pops?</div><button class="hint-btn" onclick="toggleHint(this)">✍️ Sentence frame</button><div class="hint-text">(a) The gas is ______. &nbsp;(b) The test: hold a ______ splint near the gas. &nbsp;(c) The result is a ______ ______.</div><p class="answer">(a) Hydrogen. (b) Hold a burning splint near the gas. (c) A squeaky pop.</p></div>
+    
+      <div class="aspire-box" style="margin-top:10px"><strong>🌟 Finished?</strong> Flip the toggle and try ONE Middle question — the limewater one is closer than you think.</div>
+    </div>
+    <div id="ind-m" class="ind-level" style="max-height:50vh;overflow-y:auto"><p style="margin:0 0 4px;font-size:.8rem;color:#f97316;font-weight:900;text-align:center">📙 Grades 1–2 • Grade 3 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> A glowing splint relights. The gas is:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Only one gas relights a glowing splint — the one that supports burning.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">H₂</span><span class="mcq-opt" onclick="mcqCheck(this,true)">O₂</span><span class="mcq-opt" onclick="mcqCheck(this,false)">CO₂</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>2.</strong> Explain the difference between the H₂ and O₂ splint tests.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">One has a FLAME (burning), one has an EMBER (glowing). Which gas for which?</div><p class="answer">H₂: burning splint (flame visible) → squeaky pop. O₂: glowing splint (ember only) → relights.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> Limewater is a solution of which substance?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Formula Ca(OH)₂ — calcium something.</div><p class="answer">Calcium hydroxide.</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [4 marks]</span><p style="margin:0"><strong>4.</strong> A student reacts Mg with HCl. A gas bubbles off. (a) Name the gas [1]. (b) Describe the test and result [2]. (c) Write a word equation [1].</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Metal + acid makes the gas that goes "pop". Name it.</div><p class="answer">(a) Hydrogen. (b) Hold burning splint near gas – squeaky pop. (c) Magnesium + hydrochloric acid → magnesium chloride + hydrogen.</p></div>
+    
+      <div class="aspire-box" style="margin-top:10px"><strong>🌟 Finished?</strong> Try the Higher MCQ (Q1) — you already know why the pop happens.</div>
+    </div>
+    <div id="ind-h" class="ind-level" style="max-height:50vh;overflow-y:auto"><p style="margin:0 0 4px;font-size:.8rem;color:#1e3a8a;font-weight:900;text-align:center">📘 Grades 3–4 • Grade 5 challenge marked with ⭐</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> A burning splint "pops" in hydrogen because:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think 2H₂ + O₂ → 2H₂O.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">H₂ ignites explosively with O₂, making water</span><span class="mcq-opt" onclick="mcqCheck(this,false)">H₂ is denser than air</span><span class="mcq-opt" onclick="mcqCheck(this,false)">The splint contains hydrogen</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>2.</strong> Write the equation for CO₂ turning limewater milky.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">CO₂ + calcium hydroxide → calcium carbonate (insoluble = milky) + water.</div><p class="answer">CO₂ + Ca(OH)₂ → CaCO₃ + H₂O. CaCO₃ is insoluble → white precipitate (milky).</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> Write the equation for the squeaky pop test.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Hydrogen burns in oxygen to make water. Balance: 2H₂ + O₂ → 2H₂O.</div><p class="answer">2H₂ + O₂ → 2H₂O (hydrogen combustion).</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [6 marks]</span><p style="margin:0"><strong>4.</strong> A student has 3 test tubes: H₂, O₂, CO₂. She has a splint, matches, and limewater. Describe a systematic method to identify all three. For each step: test, observation, conclusion.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Glowing splint first (finds O₂), then burning splint (finds H₂), then limewater (confirms CO₂).</div><p class="answer">Step 1: Insert glowing splint into each. One relights → O₂ identified. Step 2: Hold burning splint at mouth of remaining two. One gives squeaky pop → H₂ identified. Step 3: Bubble remaining gas through limewater – turns milky → CO₂ confirmed.</p></div>
+    
+      <div class="exam-tip-box" style="margin-top:10px"><strong>🎯 Examiner wants:</strong> on the 6-marker, EACH gas needs Test → Observation → Conclusion. Three gases × 3 parts = the marks. Tick them off as you write.</div>
+      <div class="aspire-box" style="margin-top:10px"><strong>🌟 Finished?</strong> Write your OWN exam question about these tests — with a mark scheme. Hardest thing in science: thinking like the examiner.</div>
+    </div>
+  </div>
+
+  <!-- EXIT TICKET -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+    <span class="slide-tag tag-exit">Exit Ticket – 3 mins</span>
+    <h2>Exit Ticket</h2>
+    <div class="li-box"><strong>No notes.</strong> From memory only. Your tier question = one observation + one conclusion. Then everyone answers the safety/method check below.</div>
+    <div class="task-box" style="margin-top:0"><strong>✅ Method check (everyone):</strong> Name <strong>one</strong> safety precaution a scientist takes when testing gases.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0">
+      <button onclick="switchExit('f')" style="background:#22c55e">Foundation</button>
+      <button onclick="switchExit('m')" style="background:#f97316">Middle</button>
+      <button onclick="switchExit('h')" style="background:#1e3a8a">Higher</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="exit-f" class="task-box">
+      <p><strong>1) How do you test for hydrogen?</strong></p><p class="answer">Hold a burning splint near the gas. It makes a squeaky pop.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) What does CO₂ do to limewater?</strong></p><p class="answer">Turns it milky/cloudy.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) A glowing splint relights — name the gas.</strong></p><p class="answer">Oxygen.</p>
+    </div>
+    <div id="exit-m" class="task-box" style="display:none">
+      <p><strong>1) A glowing splint relights. Name the gas and explain why.</strong></p><p class="answer">Oxygen. It relights because oxygen supports combustion.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Describe how you would prove a gas is carbon dioxide.</strong></p><p class="answer">Bubble it through limewater — the limewater turns milky/cloudy.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) Why is the splint test for hydrogen different from the splint test for oxygen?</strong></p><p class="answer">Hydrogen needs a burning splint (gives squeaky pop as H₂ ignites). Oxygen needs a glowing splint (relights it because O₂ supports combustion).</p>
+    </div>
+    <div id="exit-h" class="task-box" style="display:none">
+      <p><strong>1) Explain the chemistry behind why CO₂ turns limewater milky.</strong></p><p class="answer">CO₂ reacts with calcium hydroxide solution: CO₂ + Ca(OH)₂ → CaCO₃ + H₂O. The calcium carbonate (CaCO₃) is insoluble and forms a white precipitate, making the solution appear milky.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Why does a burning splint go OUT in CO₂ but a glowing splint RELIGHTS in O₂?</strong></p><p class="answer">CO₂ does not support combustion (it can smother flames), whereas O₂ supports combustion strongly, so a glowing ember bursts back into flame.</p><hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) Write the balanced equation for the squeaky pop and name the product.</strong></p><p class="answer">2H₂ + O₂ → 2H₂O. The product is water.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Prev</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+    <div class="print-box" style="margin-bottom:10px"><strong>🎯 Learning Objective (2.44):</strong> Describe tests for hydrogen, oxygen and carbon dioxide <em>(ammonia &amp; chlorine next lesson)</em>.</div>
+    <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong><p style="margin:5px 0 0;font-size:1.02rem">☐ I can name the correct test for H₂, O₂ and CO₂.</p><p style="margin:5px 0 0;font-size:1.02rem">☐ I can state what I would <em>observe</em> (the positive result).</p><p style="margin:5px 0 0;font-size:1.02rem">☐ I can write an observation → conclusion sentence.</p></div>
+    <h1 style="text-align:center">Knowledge Organiser – Lesson 4a: Gas Tests I (H₂ · O₂ · CO₂)</h1>
+    <table class="ko-table">
+      <tr><th>Gas</th><th>Formula</th><th>Test</th><th>Positive Result</th></tr>
+      <tr><td><strong>Hydrogen</strong></td><td>H₂</td><td>Hold a <strong>burning splint</strong> near the gas</td><td><strong>Squeaky pop</strong></td></tr>
+      <tr><td><strong>Oxygen</strong></td><td>O₂</td><td>Place a <strong>glowing splint</strong> in the gas</td><td>Splint <strong>relights</strong></td></tr>
+      <tr><td><strong>Carbon dioxide</strong></td><td>CO₂</td><td>Bubble through <strong>limewater</strong></td><td>Turns <strong>milky / cloudy</strong></td></tr>
+      <tr><td><strong>Ammonia</strong></td><td>NH₃</td><td colspan="2" style="color:#777"><em>— Lesson 4b: you fill this in next lesson —</em></td></tr>
+      <tr><td><strong>Chlorine</strong></td><td>Cl₂</td><td colspan="2" style="color:#777"><em>— Lesson 4b: you fill this in next lesson —</em></td></tr>
+    </table>
+    <p><strong>Key distinctions:</strong> Burning splint (flame visible) = H₂ test. Glowing splint (ember only) = O₂ test. If limewater stays CLEAR, the gas is NOT CO₂ — a negative result is still evidence.</p>
+    <p class="prevent-break"><strong>🧠 Self-quiz routine (everyone):</strong> COVER the table → WRITE the tests from memory → CHECK → fix any gaps. Do it twice — the second go is where it sticks.</p>
+    <p class="prevent-break"><strong>⚠️ Common mark-losers:</strong> writing just "splint" (say BURNING or GLOWING) · "calcium chloride" (limewater is calcium HYDROXIDE) · holding limewater NEAR the gas (it must be BUBBLED through) · mixing up which splint pops and which relights.</p>
+    <p class="prevent-break foundation-content"><strong>🎵 Memory hooks:</strong> "Burns with a Bang" = H₂ · "Glows and Goes back alight" = O₂ · "LIMEwater goes MILKY" = CO₂.</p>
+  </div>
+  <div id="print-arrival" class="print-section"><h2>Arrival Task</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Acids release one of these ions — circle it: &nbsp; H⁺ &nbsp; / &nbsp; OH⁻ &nbsp; / &nbsp; Na⁺</div><div class="print-box"><strong>2.</strong> True or false? "An alkali is a base that dissolves in water." &nbsp; True / False</div><div class="print-box"><strong>3.</strong> Fill the gaps: &nbsp; Acid + Base → ______ + ______</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> Today we test gases. Name ONE piece of equipment a scientist might use to test a gas.</div></div><p style="margin-top:10px"><strong>🧰 Word bank:</strong> H⁺ · OH⁻ · base · alkali · salt · water · splint · limewater · litmus paper</p></div>
+  <div id="print-starter" class="print-section"><h2>Gas Test Table — fill in during the lesson</h2><p>Stick this in your book. Fill in each row as we learn the test (no copying needed). <strong>Rows 4–5 get filled NEXT lesson.</strong></p><table class="ko-table"><tr><th>Gas</th><th>Formula</th><th>Test</th><th>Positive Result</th></tr><tr><td>Hydrogen</td><td>H₂</td><td style="height:36px"></td><td></td></tr><tr><td>Oxygen</td><td>O₂</td><td style="height:36px"></td><td></td></tr><tr><td>Carbon dioxide</td><td>CO₂</td><td style="height:36px"></td><td></td></tr><tr><td>Ammonia</td><td>NH₃</td><td style="height:36px"></td><td></td></tr><tr><td>Chlorine</td><td>Cl₂</td><td style="height:36px"></td><td></td></tr></table><p><strong>🔮 My Starter predictions I got right:</strong> ______ / 5</p></div>
+  <div id="print-wedo" class="print-section">
+    <h2>We Do: Gas Test Matching</h2>
+    <p><strong>Part 1:</strong> Draw a line to match each gas to its correct test and result.</p>
+    <table class="ko-table">
+      <tr><th>Gas</th><th>Test</th><th>Positive Result</th></tr>
+      <tr><td>Hydrogen (H₂)</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Oxygen (O₂)</td><td style="height:36px"></td><td></td></tr>
+      <tr><td>Carbon dioxide (CO₂)</td><td style="height:36px"></td><td></td></tr>
+      </table>
+    <p style="margin-top:14px"><strong>Part 2:</strong> A student performs these tests. Identify each gas.</p>
+    <table class="ko-table">
+      <tr><th>Observation</th><th>Gas</th></tr>
+      <tr><td>Burning splint → squeaky pop</td><td style="height:30px"></td></tr>
+      <tr><td>Glowing splint relights</td><td style="height:30px"></td></tr>
+      <tr><td>Limewater turns milky</td><td style="height:30px"></td></tr>
+      <tr><td>Limewater stays clear (no change)</td><td style="height:30px">NOT ___ (which gas is ruled out?)</td></tr>
+    </table>
+  </div>
+
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box prevent-break"><h3>All Five Gas Tests</h3><table class="ko-table"><tr><th>Gas</th><th>Test</th><th>Result</th><th>Memory Aid</th></tr><tr><td>H₂</td><td>Burning splint</td><td>Squeaky pop</td><td>H₂ goes "pop!" like a tiny explosion</td></tr><tr><td>O₂</td><td>Glowing splint</td><td>Relights</td><td>O₂ supports burning – it lights things up</td></tr><tr><td>CO₂</td><td>Bubble through limewater</td><td>Turns milky</td><td>LIMEwater goes MILKY</td></tr><tr><td>NH₃</td><td colspan="3" style="color:#777"><em>— next lesson (4b) —</em></td></tr><tr><td>Cl₂</td><td colspan="3" style="color:#777"><em>— next lesson (4b) —</em></td></tr></table></div>
+    <div class="scaffold-print-box prevent-break"><h3>Common Mistakes</h3><p>• Don't confuse BURNING splint (H₂) with GLOWING splint (O₂).</p><p>• Limewater must have the gas BUBBLED through it — not just held near.</p><p>• Limewater staying CLEAR is evidence too: the gas is NOT CO₂. Say so!</p></div>
+    <div class="scaffold-print-box prevent-break foundation-content"><h3>📝 Word Bank (Foundation)</h3><p>Use these words: <strong>hydrogen, oxygen, carbon dioxide, burning splint, glowing splint, limewater, squeaky pop, relights, milky, cloudy</strong></p><h3>✍️ Sentence Starters</h3><p>• To test for ___, you use a...</p><p>• The positive result is...</p><p>• A burning splint is different from a glowing splint because...</p><p>• The gas is ___ because the test showed...</p><p><strong>⭐ Exam frame:</strong> (a) The gas is ______. (b) The test: hold a ______ splint near the gas. (c) The result is a ______ ______.</p></div>
+    <div class="scaffold-print-box prevent-break middle-content"><h3>📙 Explain-It Toolkit (Middle)</h3><p><strong>Key words you MUST use:</strong> burning · glowing · relights · squeaky pop · limewater · calcium hydroxide · milky</p><p><strong>Explain stems:</strong> "The gas is ___ <em>because</em>…" · "This shows that…" · "The difference between the two splint tests is…"</p><p><strong>Self-check:</strong> every answer = TEST + RESULT + GAS NAME. Missing one = missing marks.</p></div>
+    <div class="scaffold-print-box prevent-break higher-content"><h3>Chemistry Behind the Tests (Higher)</h3><p>• H₂: 2H₂ + O₂ → 2H₂O (explosive combustion → pop)</p><p>• O₂: supports combustion → relights glowing material</p><p>• CO₂ + Ca(OH)₂ → CaCO₃ + H₂O (CaCO₃ is insoluble → milky)</p><p>• CO₂ does not support combustion → a burning splint goes OUT (useful contrast with O₂)</p><p style="color:#777"><em>• Litmus-pair chemistry (NH₃, Cl₂) → Lesson 4b</em></p><p><strong>🎯 Command words:</strong> DESCRIBE = say what happens · EXPLAIN = say WHY (use "because") · COMPARE = similarities AND differences · PLAN/METHOD = numbered steps.</p><p><strong>6-mark frame:</strong> for EACH gas — Step n: do the TEST → state the OBSERVATION → draw the CONCLUSION. Repeat per gas, add ONE safety point.</p></div>
+  </div>
+
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <div class="prevent-break"><h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. How do you test for oxygen?</p><p>[&nbsp;&nbsp;] Burning splint &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Glowing splint &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Limewater</p>
+      <p>2. What result shows hydrogen is present?</p><p>[&nbsp;&nbsp;] Relights &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Squeaky pop &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Turns milky</p>
+      <p>3. What does CO₂ do to limewater?</p><div class="print-line"></div>
+      <p>4. What is the difference between a BURNING splint and a GLOWING splint?</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
+      <p>5. Complete the table:</p><table class="ko-table"><tr><th>Gas</th><th>Test</th><th>Positive Result</th></tr><tr><td>Hydrogen</td><td style="height:36px"></td><td></td></tr><tr><td>Oxygen</td><td style="height:36px"></td><td></td></tr><tr><td>Carbon dioxide</td><td style="height:36px"></td><td></td></tr></table>
+      <p style="margin-top:14px">6. A gas turns limewater milky. Name the gas.</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Exam-Style Questions</h3>
+      <p><strong>7. [3 marks]</strong> A student collects a gas during a reaction. She holds a burning splint at the top of the test tube and hears a squeaky pop.</p>
+      <p>(a) Name the gas. [1 mark]</p><div class="print-line"></div>
+      <p>(b) State the test she used. [1 mark]</p><div class="print-line"></div>
+      <p>(c) Describe the positive result. [1 mark]</p><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>8. [3 marks]</strong> Describe how you would test a gas to show it is carbon dioxide. State the equipment needed, the method and the positive result.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <div class="prevent-break"><h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. Why must you use a GLOWING splint (not burning) for oxygen?</p><div class="print-line"></div>
+      <p>2. Describe the positive test result for hydrogen AND for oxygen.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3. Why is the hydrogen test result described as a "squeaky pop"? What reaction is happening?</p><div class="print-line"></div>
+      <p>4. Name the substance limewater is a solution of.</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
+      <p>5. A student tests four unknown gases. Identify each gas:</p>
+      <table class="ko-table"><tr><th>Observation</th><th>Gas</th></tr><tr><td>Glowing splint relights</td><td style="height:36px"></td></tr><tr><td>Limewater turns milky</td><td style="height:36px"></td></tr><tr><td>A burning splint at the mouth — loud squeaky pop</td><td style="height:36px"></td></tr></table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Exam-Style Questions</h3>
+      <p><strong>6. [4 marks]</strong> A student reacts zinc with hydrochloric acid. A gas is produced. (a) Name the gas likely produced. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Describe the test and the expected result. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Write a word equation for this reaction. [1 mark]</p><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>7. [4 marks]</strong> Compare the splint tests for hydrogen and oxygen. State what you would observe for each gas and explain why the splint must be BURNING for one test and GLOWING for the other.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–4)</h2>
+    <div class="prevent-break"><h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. Write the equation for the reaction that occurs when CO₂ is bubbled through limewater.</p><div class="print-line"></div>
+      <p>2. Explain why the hydrogen test produces a "pop" — include the balanced symbol equation.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3. Suggest why a glowing splint relights in oxygen but a burning splint goes OUT in carbon dioxide.</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
+      <p>4. A student performs the following reactions and collects the gases. For each, name the gas produced and describe how to confirm its identity:</p>
+      <table class="ko-table"><tr><th>Reaction</th><th>Gas Produced</th><th>Test &amp; Result</th></tr><tr><td>Mg + HCl</td><td style="height:40px"></td><td></td></tr><tr><td>CaCO₃ + HCl</td><td style="height:40px"></td><td></td></tr><tr><td>Electrolysis of water (at cathode)</td><td style="height:40px"></td><td></td></tr><tr><td>Electrolysis of water (at anode)</td><td style="height:40px"></td><td></td></tr></table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Exam-Style Questions</h3>
+      <p><strong>5. [5 marks]</strong> A student heats copper carbonate (CuCO₃) and collects the gas given off.</p>
+      <p>(a) Predict the gas produced. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Describe the test and the expected positive result. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Write the word equation for the decomposition. [2 marks]</p><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>6. [6 marks]</strong> A student is given three test tubes, each containing an unknown gas: one is H₂, one is O₂, and one is CO₂. She has a wooden splint, matches, and limewater available. Describe a systematic method she could use to identify all three gases. For each step, state the test performed, the expected observation, and the conclusion drawn.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1)</h2><p>1) How do you test for hydrogen?</p><div class="print-line"></div><p>2) What does CO₂ do to limewater?</p><div class="print-line"></div><p>3) A glowing splint relights — name the gas.</p><div class="print-line"></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2><p>1) A glowing splint relights. Name the gas and explain why.</p><div class="print-line"></div><div class="print-line"></div><p>2) Describe how you would prove a gas is carbon dioxide.</p><div class="print-line"></div><div class="print-line"></div><p>3) Why is the splint test for H₂ different from the one for O₂?</p><div class="print-line"></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–4)</h2><p>1) Explain the chemistry behind CO₂ turning limewater milky.</p><div class="print-line"></div><div class="print-line"></div><p>2) Why does a burning splint go OUT in CO₂ but a glowing splint relights in O₂?</p><div class="print-line"></div><div class="print-line"></div><p>3) Write the balanced equation for the squeaky pop and name the product.</p><div class="print-line"></div></div>
+  </div>
+  <div id="print-wedo-evidence" class="print-section"><div id="wedo-evidence-content"></div></div>
+</div>
+
+<!-- ═══ TA FOCUS MODAL ═══ -->
+<div class="modal-overlay" id="ta-modal">
+  <div class="modal-card ta-card">
+    <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+    <h2 style="color:#0d9488">🧑‍🏫 TA Focus — <span id="ta-slide-title"></span></h2>
+    <div id="ta-brief" style="font-size:1.05rem;line-height:1.6"></div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:16px;border-top:1px solid #e2e8f0;padding-top:10px">Practical (OWL): assign clear roles, reduce transitions, model the first observation→conclusion. Coloured paper (blue/pink) out for written work. Read questions aloud if needed; mini-whiteboards before books.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tn-modal">
+  <div class="modal-card tn-card">
+    <button class="modal-close small" onclick="closeModal('tn-modal')">✕ Close</button>
+    <h2 style="color:#b45309">📋 Teacher Notes — <span id="tn-slide-title"></span></h2>
+    <div id="tn-brief" style="font-size:1.05rem;line-height:1.6"></div>
+  </div>
+</div>
+
+<!-- ═══ COLD CALL MODAL ═══ -->
+<div class="modal-overlay" id="cc-modal">
+  <div class="modal-card cc-card">
+    <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+    <h2 style="color:#7c3aed">🎯 Cold Call</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin-top:-6px">Add your class once — names stay on this device. Pick a band per pupil (U–1 / 1–2 / 3–4) so questions are tier-matched.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <input id="cc-name-input" placeholder="Pupil name" onkeydown="if(event.key==='Enter')addPupil()" style="flex:1;min-width:130px;padding:8px 10px;border:2px solid #cbd5e1;border-radius:10px;font-size:1rem">
+      <div class="cc-name" id="cc-band-pick">
+        <span class="grade-chip sel" data-band="U-1" onclick="pickBand(this)">U–1</span>
+        <span class="grade-chip" data-band="1-2" onclick="pickBand(this)">1–2</span>
+        <span class="grade-chip" data-band="3-4" onclick="pickBand(this)">3–4</span>
+      </div>
+      <button class="small" onclick="addPupil()">+ Add</button>
+    </div>
+    <div id="cc-roster" style="display:flex;flex-wrap:wrap;gap:6px;margin:12px 0"></div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button onclick="pickPupil()" style="background:#7c3aed">🎲 Pick a pupil</button>
+      <button class="ghost small" onclick="clearRoster()">Clear class</button>
+    </div>
+    <div class="cc-result" id="cc-result"></div>
+  </div>
+</div>
+
+<!-- ═══ LESSON COMPLETE OVERLAY ═══ -->
+<div id="lesson-complete">
+  <h1>🎉 Lesson Complete!</h1>
+  <p style="font-size:1.3rem;margin:8px 0 0">Three gases down — NH₃ &amp; Cl₂ next lesson!</p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('show')" style="margin-top:18px">Close</button>
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{const tg=e.target;if(tg.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`}updateProgress();
+  checkTimerVisibility();
+  function switchExit(l){document.getElementById('exit-f').style.display=l==='f'?'block':'none';document.getElementById('exit-m').style.display=l==='m'?'block':'none';document.getElementById('exit-h').style.display=l==='h'?'block':'none'}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});document.body.classList.add('print-'+level);const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+  function printWeDoEvidence(wedoId){
+    const area=document.getElementById(wedoId);if(!area)return;
+    const ts=new Date().toLocaleDateString('en-GB');
+    const isRelay=wedoId==='wedo1';
+    const activity=isRelay?'Gas Test Relay':'Name That Gas';
+    // Reference info to stick in books (the I Do content for this stage)
+    const refRows=isRelay?[
+      ['Hydrogen','H₂','Burning splint','Squeaky pop'],
+      ['Oxygen','O₂','Glowing splint','Relights (bursts into flame)'],
+      ['Carbon dioxide','CO₂','Bubble through limewater','Limewater turns milky/cloudy']
+    ]:[
+      ['Hydrogen','H₂','Burning splint','Squeaky pop'],
+      ['Oxygen','O₂','Glowing splint','Relights (bursts into flame)'],
+      ['Carbon dioxide','CO₂','Bubble through limewater','Limewater turns milky/cloudy'],
+      ['Ammonia','NH₃','Damp red litmus paper','Turns blue'],
+      ['Chlorine','Cl₂','Damp litmus paper','Bleached white']
+    ];
+    let refTable='<table class="ko-table"><tr><th>Gas</th><th>Formula</th><th>Test</th><th>Positive result</th></tr>';
+    refRows.forEach(r=>{refTable+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'});
+    refTable+='</table>';
+    // The class's completed We Do answers (read live from the drop zones)
+    let ansTable;
+    if(isRelay){
+      ansTable='<table class="ko-table"><tr><th>Test</th><th>Gas we matched</th><th>Result</th></tr>';
+      area.querySelectorAll('.dnd-zone').forEach(z=>{
+        const g=z.dataset.filled||'—';
+        const result=z.dataset.filled?(z.dataset.result||'').replace(/^[^A-Za-z]+/,''):'';
+        ansTable+='<tr><td>'+(z.dataset.test||'')+'</td><td>'+g+'</td><td>'+result+'</td></tr>';
+      });
+    }else{
+      ansTable='<table class="ko-table"><tr><th>What was seen (the clue)</th><th>Gas we named</th></tr>';
+      area.querySelectorAll('.dnd-zone').forEach(z=>{
+        const g=z.dataset.filled||'—';
+        ansTable+='<tr><td>'+(z.dataset.clue||z.querySelector('.zone-label').textContent)+'</td><td>'+g+'</td></tr>';
+      });
+    }
+    ansTable+='</table>';
+    const chipsBox=document.getElementById(isRelay?'relay-chips':'mgl-chips');
+    const zs=area.querySelectorAll('.dnd-zone');let filledN=0;zs.forEach(z=>{if(z.dataset.filled)filledN++});
+    let statsLine='<p style="font-size:.95rem;margin:4px 0 0"><strong>Class stats:</strong> matched '+filledN+'/'+zs.length+' · incorrect tries: '+((chipsBox&&chipsBox.dataset.wrong)||0);
+    const r2=document.getElementById(isRelay?'relay-r2':'mgl-r2');
+    if(r2&&r2.style.display!=='none'){statsLine+=' · Round 2 typed from memory: '+r2.querySelectorAll('.type-q.done').length+'/'+r2.querySelectorAll('.type-q').length}
+    statsLine+='</p>';
+    const notesEl=area.querySelector('[contenteditable][data-placeholder]');
+    let notes=notesEl?notesEl.innerText.trim():'';
+    if(notesEl&&notes===notesEl.getAttribute('data-placeholder'))notes='';
+    const html=
+      '<div class="wd-evi-head"><span class="wd-evi-tag">WE DO</span><h2 style="margin:6px 0 2px">'+activity+'</h2>'
+      +'<p style="margin:0;font-size:.95rem">Testing for Gases · Edexcel IGCSE Chemistry</p></div>'
+      +'<p class="wd-evi-name">Name: ______________________   Class: ____________   Date: '+ts+'</p>'
+      +'<h3 class="wd-evi-h3">What we learned — stick this in your book</h3>'+refTable
+      +'<h3 class="wd-evi-h3">Our class answers (We Do)</h3>'+ansTable+statsLine
+      +'<h3 class="wd-evi-h3">My sentence</h3><p class="wd-evi-line">I saw ____________________, so the gas is ____________________.</p>'
+      +(notes?('<h3 class="wd-evi-h3">Teacher notes</h3><p style="white-space:pre-wrap;border:1px solid #000;padding:8px">'+notes+'</p>'):'');
+    document.getElementById('wedo-evidence-content').innerHTML=html;
+    document.body.classList.remove('print-foundation','print-middle','print-higher');
+    document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+    document.getElementById('print-wedo-evidence').classList.add('visible');
+    window.print();
+  }
+  // --- Independent Work ---
+  function switchInd(l){document.querySelectorAll('.ind-level').forEach(el=>el.classList.remove('active'));document.getElementById('ind-'+l).classList.add('active');updateXP()}
+  function mcqCheck(el,ok){if(el.parentNode.classList.contains('locked'))return;if(ok){el.classList.add('correct');el.parentNode.classList.add('locked');try{playDing()}catch(e){};updateXP()}else{el.classList.add('wrong');try{playBuzz()}catch(e){};setTimeout(()=>el.classList.remove('wrong'),600)}}
+
+  // --- Drag & drop We Do engine (mouse + touch + tap-to-place fallback) ---
+  function makeDnD(chipsId,zonesId,fbId,countId,total,completeMsg,confMap,onComplete){
+    const chipsBox=document.getElementById(chipsId),zonesBox=document.getElementById(zonesId),fb=document.getElementById(fbId),countEl=document.getElementById(countId);
+    if(!chipsBox||!zonesBox)return;
+    // shuffle chips so order doesn't give the answers away
+    const cs=Array.from(chipsBox.querySelectorAll('.dnd-chip'));for(let i=cs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cs[i],cs[j]]=[cs[j],cs[i]]}cs.forEach(c=>chipsBox.appendChild(c));
+    let matched=0,wrong=0,selected=null,ghost=null,dragChip=null,dragging=false,sx=0,sy=0;
+    function setFb(msg,ok){fb.textContent=msg;fb.style.color=ok?'var(--success)':'var(--error)'}
+    function clearSel(){if(selected){selected.classList.remove('selected');selected=null}}
+    function hi(on){zonesBox.querySelectorAll('.dnd-zone').forEach(z=>{if(!z.classList.contains('matched'))z.style.boxShadow=on?'0 0 0 3px var(--task-border)':''})}
+    function zoneAt(x,y){const el=document.elementFromPoint(x,y);return el&&el.closest?el.closest('.dnd-zone'):null}
+    function attempt(chip,zone){
+      if(!chip||!zone||zone.classList.contains('matched'))return;
+      const val=chip.dataset.val;
+      if(zone.dataset.accept===val){
+        zone.classList.add('matched');zone.classList.remove('over');
+        const res=zone.dataset.result?(' <span class="zone-result">'+zone.dataset.result+'</span>'):'';
+        zone.querySelector('.zone-slot').innerHTML='<span class="placed-gas">'+val+'</span>'+res;
+        zone.dataset.filled=val;chip.classList.add('placed');
+        matched++;if(countEl)countEl.textContent=matched;
+        setFb('✅ '+(zone.dataset.sentence||('Yes — '+val+' belongs there.')),true);try{playDing()}catch(e){}
+        if(matched===total){if(onComplete){try{onComplete()}catch(e){}}setTimeout(()=>setFb(completeMsg,true),2000);try{fireConfettiGlobal()}catch(e){}}
+      }else{
+        wrong++;chipsBox.dataset.wrong=wrong;
+        zone.classList.add('nope');setTimeout(()=>zone.classList.remove('nope'),420);
+        const key=val+'>'+zone.dataset.accept;
+        setFb((confMap&&confMap[key])||'Not that one — have another go. 💪',false);try{playBuzz()}catch(e){}
+      }
+    }
+    chipsBox.querySelectorAll('.dnd-chip').forEach(chip=>{
+      chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('placed'))return;dragChip=chip;dragging=false;sx=e.clientX;sy=e.clientY;try{chip.setPointerCapture(e.pointerId)}catch(_){}});
+      chip.addEventListener('pointermove',e=>{
+        if(dragChip!==chip)return;
+        if(!dragging&&Math.hypot(e.clientX-sx,e.clientY-sy)>8){dragging=true;chip.classList.add('dragging');clearSel();ghost=document.createElement('div');ghost.className='dnd-ghost';ghost.textContent=chip.dataset.val;document.body.appendChild(ghost);hi(true)}
+        if(dragging&&ghost){ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';const z=zoneAt(e.clientX,e.clientY);zonesBox.querySelectorAll('.dnd-zone').forEach(zz=>zz.classList.toggle('over',zz===z&&!zz.classList.contains('matched')))}
+      });
+      chip.addEventListener('pointerup',e=>{
+        if(dragChip!==chip)return;
+        if(dragging){if(ghost){ghost.remove();ghost=null}chip.classList.remove('dragging');hi(false);const z=zoneAt(e.clientX,e.clientY);zonesBox.querySelectorAll('.dnd-zone').forEach(zz=>zz.classList.remove('over'));attempt(chip,z)}
+        else{if(selected===chip){clearSel();hi(false)}else{clearSel();selected=chip;chip.classList.add('selected');hi(true)}}
+        dragChip=null;dragging=false;
+      });
+      chip.addEventListener('pointercancel',()=>{if(ghost){ghost.remove();ghost=null}chip.classList.remove('dragging');hi(false);dragChip=null;dragging=false});
+    });
+    zonesBox.querySelectorAll('.dnd-zone').forEach(zone=>{zone.addEventListener('click',()=>{if(selected){const s=selected;clearSel();hi(false);attempt(s,zone)}})});
+  }
+  const splintConf={'H₂>O₂':'Not quite — BURNING splint = bang (H₂ pop). The GLOWING splint is the O₂ test.','O₂>H₂':'Not quite — GLOWING splint = goes again (O₂ relights). The BURNING splint is the H₂ test.'};
+  function unlockR2(id){return function(){const r=document.getElementById(id);if(r&&r.style.display==='none'){r.style.display='block';setTimeout(()=>{try{r.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}},400)}}}
+  makeDnD('relay-chips','relay-zones','relay-fb','relay-count',3,'🎉 All three matched — add these three rows to your gas test table, then try Round 2 below!',splintConf,unlockR2('relay-r2'));
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Timer
+  let timerInterval,timeLeft=0,isTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!isTimerRunning)resetTimer(parseInt(t))}else{w.classList.remove('visible')}}
+  function updateTimerDisplay(){const m=Math.floor(timeLeft/60);const s=timeLeft%60;document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('timer-display').style.color=timeLeft<60?'var(--error)':'var(--lo-border)'}
+  function startTimer(){if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000)}
+  function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+
+
+  // Sound Effects
+  const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  function wakeAudio(){if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}}
+  document.addEventListener('pointerdown',wakeAudio,{once:true});
+  function playDing(){if(document.body.classList.contains('calm'))return;wakeAudio();const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(880,audioCtx.currentTime);o.frequency.setValueAtTime(1320,audioCtx.currentTime+0.08);g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+0.4)}
+  function playBuzz(){if(document.body.classList.contains('calm'))return;wakeAudio();const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.setValueAtTime(150,audioCtx.currentTime);g.gain.setValueAtTime(0.15,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.25);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+0.25)}
+
+  // XP Progress Bar
+  function updateXP(){const slide=document.getElementById('ind-slide');if(!slide)return;const active=slide.querySelector('.ind-level.active');if(!active)return;const total=active.querySelectorAll('.ind-q').length;const done=active.querySelectorAll('.ind-q .correct').length;const el=document.getElementById('xp-label');const fill=document.getElementById('xp-fill');if(el)el.innerText='Questions completed: '+done+'/'+total+(done===total&&total>0?' 🎉':'');if(fill)fill.style.width=(total>0?Math.round(done/total*100):0)+'%';if(done===total&&total>0&&done>0)fireConfettiGlobal()}
+
+  // Global Confetti
+  function fireConfettiGlobal(){if(document.body.classList.contains('calm'))return;let area=document.getElementById('confetti-global');if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];for(let i=0;i<30;i++){const c=document.createElement('div');c.className='confetti-p';c.style.left=Math.random()*100+'%';c.style.top=-10+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.animationDelay=Math.random()*0.6+'s';c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';area.appendChild(c);setTimeout(()=>c.remove(),2500)}}
+
+  // Shuffle MCQ options on load
+  function shuffleMCQs(){const parents=new Set();document.querySelectorAll('.mcq-opt').forEach(o=>{if(o.parentNode)parents.add(o.parentNode)});parents.forEach(p=>{const arr=Array.from(p.children).filter(c=>c.classList&&c.classList.contains('mcq-opt'));if(arr.length<2)return;for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}arr.forEach(o=>p.appendChild(o))})}
+  shuffleMCQs();
+
+
+  // Hint System
+  function toggleHint(btn){let hint=btn.nextElementSibling;if(!hint||!hint.classList.contains('hint-text'))hint=btn.parentElement.nextElementSibling;if(hint&&hint.classList.contains('hint-text')){hint.classList.toggle('show');const showing=hint.classList.contains('show');btn.innerText=showing?btn.innerText.replace('Show','Hide').replace('Give me a hint','Hide hint'):btn.innerText.replace('Hide','Show').replace('Hide hint','Give me a hint')}}
+
+  // ── Round 2: type it (tolerant marking) ──
+  function normT(s){return (s||'').toLowerCase().replace(/₂/g,'2').replace(/₃/g,'3').replace(/[^a-z0-9]/g,'')}
+  function typeCheck(btn){const row=btn.closest('.type-q');if(!row||row.classList.contains('done'))return;const inp=row.querySelector('input');const fb=row.querySelector('.tq-fb');const accepts=(inp.dataset.a||'').split('|');const n=normT(inp.value);if(!n){fb.textContent='Type your answer first 🙂';fb.style.color='var(--muted)';return}
+    const ok=accepts.some(a=>{const na=normT(a);return n===na||(na.length>3&&n.includes(na))});
+    if(ok){row.classList.add('done');inp.disabled=true;fb.textContent='✅ '+(inp.dataset.full||inp.value);fb.style.color='var(--success)';try{playDing()}catch(e){}tqCount(row)}
+    else{fb.textContent='Not quite — try again or tap 💡';fb.style.color='var(--error)';try{playBuzz()}catch(e){}}}
+  function tqReveal(btn){const row=btn.closest('.type-q');if(!row||row.classList.contains('done'))return;const inp=row.querySelector('input');const fb=row.querySelector('.tq-fb');fb.textContent='👀 '+(inp.dataset.full||'')+' — now type it to lock it in!';fb.style.color='var(--muted)'}
+  function tqCount(row){const root=row.closest('.type-round');if(!root)return;const done=root.querySelectorAll('.type-q.done').length,tot=root.querySelectorAll('.type-q').length;const c=root.querySelector('.tr-count');if(c)c.textContent=done+'/'+tot+(done===tot?' 🎉':'');if(done===tot){try{fireConfettiGlobal()}catch(e){}}}
+
+  // ── Starter: predictions (no marking — deliberately) ──
+  function predictPick(el){const row=el.closest('.p-row');if(!row)return;row.querySelectorAll('.p-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');row.classList.add('picked');const g=document.getElementById('predict-grid');const tot=g.querySelectorAll('.p-row').length;const done=g.querySelectorAll('.p-row.picked').length;const c=document.getElementById('predict-count');if(c)c.textContent=done;if(done===tot){document.getElementById('predict-fb').innerHTML='🔒 <strong>Predictions locked in!</strong> Keep them in mind — we find out who called it right today.';try{playDing()}catch(e){}}}
+
+  // ── Calm Mode (no sounds / confetti / animations; persists on this device) ──
+  function toggleCalm(){const on=document.body.classList.toggle('calm');try{localStorage.setItem('ps_calm',on?'1':'0')}catch(e){}const b=document.getElementById('calm-btn');if(b){b.innerText=on?'🌙 Calm ON':'🌙 Calm';b.classList.toggle('on',on)}}
+  (function(){try{if(localStorage.getItem('ps_calm')==='1'){document.body.classList.add('calm');const b=document.getElementById('calm-btn');if(b){b.innerText='🌙 Calm ON';b.classList.add('on')}}}catch(e){}})();
+
+  // ── Testing Lab (I Do) ──
+  function stReset(n){
+    const L=id=>document.getElementById(id);
+    const cap=L('lab-cap'+n),done=L('lab-done'+n);
+    if(done)done.style.opacity='0';
+    const halR=document.getElementById('lab-halo'+n);if(halR)halR.style.display='';
+    if(n===1){
+      ['lab-pop1a','lab-pop1b','lab-popw'].forEach(i=>{const e=L(i);if(e){e.style.display='none';e.classList.remove('obs-pop','obs-pop-b','obs-popword')}});
+      const s=L('lab-spl1');if(s)s.classList.remove('splint-go1');
+      const g=L('lab-st1');if(g)g.classList.remove('shaketube');
+      const f1=L('lab-flame1');if(f1)f1.style.opacity='';
+      if(cap){cap.textContent='Tap to run the H₂ test';cap.setAttribute('fill','#94a3b8')}
+    }
+    if(n===2){
+      const s=L('lab-spl2');if(s)s.classList.remove('splint-go2');
+      const f=L('lab-flame2');if(f)f.style.opacity='0';
+      const em=L('lab-ember');if(em){em.classList.add('ember-pulse');em.style.opacity='';}
+      const fl=L('lab-flash');if(fl){fl.style.display='none';fl.classList.remove('obs-pop')}
+      document.querySelectorAll('.lab-spark').forEach(sp=>{sp.classList.remove('sparkup');sp.style.opacity='0'});
+      if(cap){cap.textContent='Tap to run the O₂ test';cap.setAttribute('fill','#94a3b8')}
+    }
+    if(n===3){
+      const w=L('lab-water');if(w)w.setAttribute('fill','#dbeafe');
+      const m=L('lab-milk');if(m)m.style.opacity='0';
+      document.querySelectorAll('.lab-bub').forEach(b=>b.classList.remove('obs-bubble'));
+      document.querySelectorAll('.lab-fizz').forEach(f=>f.classList.remove('fizzing'));
+      if(cap){cap.textContent='Tap: acid + marble chips → test the gas';cap.setAttribute('fill','#94a3b8')}
+    }
+  }
+  function labReset(){[1,2,3].forEach(stReset)}
+  function runLabTest(n){
+    stReset(n);
+    const hal0=document.getElementById('lab-halo'+n);if(hal0)hal0.style.display='none';
+    const L=id=>document.getElementById(id);
+    const re=(el,cls)=>{if(!el)return;el.classList.remove(cls);void el.getBoundingClientRect();el.classList.add(cls)};
+    const cap=L('lab-cap'+n),done=L('lab-done'+n);
+    if(n===1){
+      re(L('lab-spl1'),'splint-go1');
+      if(cap){cap.textContent='Burning splint moves to the mouth…'}
+      setTimeout(function(){
+        const a=L('lab-pop1a');if(a){a.style.display='block';re(a,'obs-pop')}
+        const b=L('lab-pop1b');if(b){b.style.display='block';re(b,'obs-pop-b')}
+        const w=L('lab-popw');if(w){w.style.display='block';re(w,'obs-popword')}
+        const f1=L('lab-flame1');if(f1)f1.style.opacity='0';
+        re(L('lab-st1'),'shaketube');
+        if(cap){cap.textContent='💥 SQUEAKY POP — hydrogen!';cap.setAttribute('fill','#fbbf24')}
+        if(done)done.style.opacity='1';try{playDing()}catch(e){}
+      },650);
+    }
+    if(n===2){
+      re(L('lab-spl2'),'splint-go2');
+      if(cap){cap.textContent='Glowing ember lowered in…'}
+      setTimeout(function(){
+        const em=L('lab-ember');if(em){em.classList.remove('ember-pulse');em.style.opacity='0';}
+        const f=L('lab-flame2');if(f)f.style.opacity='1';
+        const fl=L('lab-flash');if(fl){fl.style.display='block';re(fl,'obs-pop')}
+        document.querySelectorAll('.lab-spark').forEach(function(sp,i){sp.style.animationDelay=(i*0.12)+'s';re(sp,'sparkup')});
+        if(cap){cap.textContent='🔆 RELIGHTS — oxygen!';cap.setAttribute('fill','#60a5fa')}
+        if(done)done.style.opacity='1';try{playDing()}catch(e){}
+      },780);
+    }
+    if(n===3){
+      document.querySelectorAll('.lab-bub').forEach(function(b,i){b.style.animationDelay=(i*0.5)+'s';b.classList.add('obs-bubble')});
+      document.querySelectorAll('.lab-fizz').forEach(function(f,i){f.style.animationDelay=(i*0.35)+'s';f.classList.add('fizzing')});
+      if(cap){cap.textContent='Gas bubbling through limewater…'}
+      setTimeout(function(){
+        const w=L('lab-water');if(w)w.setAttribute('fill','#eef2f7');
+        const m=L('lab-milk');if(m)m.style.opacity='1';
+        if(cap){cap.textContent='🥛 TURNS MILKY — carbon dioxide!';cap.setAttribute('fill','#e2e8f0')}
+        if(done)done.style.opacity='1';try{playDing()}catch(e){}
+      },1500);
+    }
+  }
+
+  // ── We Do interaction modes ──
+  function wdMode(m,btn){
+    const sc=btn.closest('.slide')||document;
+    sc.querySelectorAll('.wd-tab').forEach(function(t){t.classList.toggle('active',t===btn)});
+    sc.querySelectorAll('.wd-mode').forEach(function(d){d.classList.toggle('active',(d.dataset.wd||'match')===m)});
+    sc.querySelectorAll('.wd-mc').forEach(function(s){s.style.display=(m==='match')?'inline':'none'});
+  }
+  const voteQs=[
+    {s:"A burning splint makes hydrogen go SQUEAKY POP.",a:true,why:"H₂ ignites: 2H₂ + O₂ → 2H₂O — the pop is that tiny explosion."},
+    {s:"You test for oxygen with a BURNING splint.",a:false,why:"GLOWING splint — O₂ relights the ember. Burning is the H₂ test."},
+    {s:"Limewater turns milky in carbon dioxide.",a:true,why:"CO₂ + Ca(OH)₂ → CaCO₃, a white insoluble solid."},
+    {s:"Limewater is a solution of calcium chloride.",a:false,why:"Calcium HYDROXIDE — Ca(OH)₂."},
+    {s:"A glowing splint goes OUT in oxygen.",a:false,why:"It RELIGHTS — oxygen supports combustion."},
+    {s:"The pop in the hydrogen test makes water.",a:true,why:"2H₂ + O₂ → 2H₂O — the product really is water."}
+  ];
+  let vIdx=0;
+  function voteShow(){
+    const el=id=>document.getElementById(id);
+    if(!el('vote-q'))return;
+    const q=voteQs[vIdx];
+    el('vote-q').textContent=q.s;
+    el('vote-count').textContent=(vIdx+1)+'/'+voteQs.length;
+    el('vote-verdict').textContent='';el('vote-why').textContent='';
+    el('vote-reveal').disabled=false;el('vote-next').disabled=true;
+    el('vote-next').textContent=(vIdx===voteQs.length-1)?'Finish 🏁':'Next ▶';
+  }
+  function voteReveal(){
+    const q=voteQs[vIdx];const el=id=>document.getElementById(id);
+    el('vote-verdict').textContent=q.a?'✅ TRUE':'❌ FALSE';
+    el('vote-verdict').style.color=q.a?'#16a34a':'#dc2626';
+    el('vote-why').textContent=q.why;
+    el('vote-reveal').disabled=true;el('vote-next').disabled=false;
+    try{playDing()}catch(e){}
+  }
+  function voteNext(){
+    const el=id=>document.getElementById(id);
+    if(vIdx<voteQs.length-1){vIdx++;voteShow();}
+    else{el('vote-q').textContent='🎉 Vote round complete — great calling, scientists!';el('vote-verdict').textContent='';el('vote-why').textContent='';el('vote-next').disabled=true;}
+  }
+  const ordSteps=[
+    "Collect the gas in a test tube",
+    "Set up a tube of limewater",
+    "Bubble the gas through the limewater",
+    "Observe: the limewater turns milky",
+    "Conclude: the gas is carbon dioxide"
+  ];
+  let ordNextIdx=0;
+  function ordInit(){
+    const el=id=>document.getElementById(id);const pool=el('ord-pool');
+    if(!pool)return;
+    const idx=ordSteps.map(function(_,i){return i});
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=idx[i];idx[i]=idx[j];idx[j]=t;}
+    pool.innerHTML='';
+    idx.forEach(function(i){const b=document.createElement('button');b.className='ord-step';b.type='button';b.textContent=ordSteps[i];b.dataset.i=i;b.onclick=function(){ordPick(b)};pool.appendChild(b);});
+    el('ord-list').innerHTML='';ordNextIdx=0;
+    el('ord-fb').textContent='Tap the FIRST step of the method.';
+  }
+  function ordPick(b){
+    const el=id=>document.getElementById(id);const i=+b.dataset.i;
+    if(i===ordNextIdx){
+      b.classList.add('placed');
+      const li=document.createElement('li');li.textContent=ordSteps[i];el('ord-list').appendChild(li);
+      ordNextIdx++;
+      if(ordNextIdx===ordSteps.length){el('ord-fb').innerHTML='🎉 <strong>Method complete</strong> — written exactly how the exam wants it!';try{playDing()}catch(e){}}
+      else{el('ord-fb').textContent='✔ Step '+ordNextIdx+' locked in — what comes next?';}
+    }else{
+      b.classList.remove('ord-wrong');void b.offsetWidth;b.classList.add('ord-wrong');
+      el('ord-fb').textContent='Not yet — think: what has to happen FIRST? 💪';
+    }
+  }
+
+  voteShow();ordInit();
+
+  // ── Modals ──
+  function openModal(id){document.getElementById(id).classList.add('show')}
+  function closeModal(id){document.getElementById(id).classList.remove('show')}
+  document.querySelectorAll('.modal-overlay').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('show')})});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.modal-overlay.show').forEach(function(m){m.classList.remove('show')})});
+
+  // ── TA Focus (per-slide, practical/SEND-informed) ──
+  const taBriefs=[
+    "<strong>Before we start:</strong> coloured paper out (blue / pink learners). Seating — front for focus pupils, door-seat with a simple task for the tired-risk pupil; named-adult check-in done. Flag offsite/absent pupils for Wed PM catch-up.",
+    "<strong>Arrival:</strong> read Q-stems aloud. Lower demand on purpose (it's been a while) — Q1–2 are tap-to-answer, Q3 is fill-the-gap, and there's a 💡 hint per question plus a word bank. Point hesitant pupils to those before answering. Q4 is the confidence bridge into today's tests — let a lower-tier pupil answer it first.",
+    "<strong>Starter (predict):</strong> no wrong answers — the point is committing to a guess. Read each gas aloud; hesitant pupils can copy a partner's prediction as long as they say WHY. Hand out the table sheet now so it's ready to fill from the first I Do (no copying). Tabs: Quick Fire = 6 rapid taps (L1–3 recall) · Odd One Out = talk-first, any reason scores.",
+    "<strong>I Do:</strong> teach the three facts off the cards; re-voice BURNING vs GLOWING twice. Model the first observation → conclusion aloud.",
+    "<strong>Observe · Lab + footage:</strong> tap each lab station (A→B→C) to run the test live; ↺ resets. Then the real clip — pause before each test, ask 'what will you SEE?'. Gesture anchors: pop = clap, relight = fingers flare, milky = fist swirl.",
+    "<strong>We Do Relay · WONDER:</strong> drag-and-drop — good for restless/kinaesthetic pupils. Wrong drops bounce back calmly (no penalty) and H₂/O₂ mix-ups get a targeted reminder. Teacher checkpoint after the first gas. Tap-a-gas then tap-a-test also works for pupils who find dragging fiddly. Round 2 (typed) unlocks after matching — the checker is spelling-tolerant; 💡 shows the word for cover-write-check. NEW: tabs switch the mode — Vote = whole-class thumbs vote, Order It = tap steps in sequence.",
+    "<strong>Independent:</strong> movement break BEFORE the long sit for the door-seat pupil. Tier-matched worksheet + coloured paper. Track head-downs; prompt before the write-up section.",
+    "<strong>Exit:</strong> collect ONE proof (book page / exit ticket / photo / witness note). Note absentees for catch-up week. Finish on specific praise — and trail next lesson: the two litmus gases."
+  ];
+  function openTA(){const t=slides[currentSlide].getAttribute('data-title')||('Slide '+(currentSlide+1));document.getElementById('ta-slide-title').textContent=t;document.getElementById('ta-brief').innerHTML=taBriefs[currentSlide]||'Circulate, prompt don\'t tell, tier-match support.';openModal('ta-modal')}
+  const tNotes=[
+    "<strong>Setup:</strong> no practical equipment anywhere in this lesson — the Testing Lab sim + real footage replace it. Print the pupil pack first (buttons on the title slide). Plan: Arrival 5 · Predict 4 · I Do 4 · Observe 6 · We Do 6 · Independent 8 · Exit 3.",
+    "<strong>Arrival = entry routine.</strong> Pupils start as they arrive; 👁️ reveals answers. Hold to 5 min — the timer helps.",
+    "<strong>Starter:</strong> no marking — committing to a prediction is the point. Say out loud that NH₃/Cl₂ get tested NEXT lesson (hook). Tabs vary the starter: Predict (default) · Quick Fire (retrieval from L1–3) · Odd One Out (reasoning talk). Same 4–5 min whichever you pick.",
+    "<strong>I Do:</strong> teach off the three cards; re-voice BURNING vs GLOWING twice. If safety comes up: goggles/eye protection is the exam answer — we just do not run practicals here.",
+    "<strong>Observe:</strong> tap stations A→B→C to run each sim test; ↺ resets and stations replay individually. Ask <em>what will you SEE?</em> before each, then the real clip.",
+    "<strong>We Do:</strong> wrong drags bounce back calmly with a targeted reminder; Round 2 (typed, spelling-tolerant) unlocks after matching. 🖨️ prints class answers + stats as evidence. Tabs give 3 modes for the SAME slot — pick ONE: Match (Round 2 + evidence print) · Vote (physical true/false, misconception traps inside) · Order It (sequence the CO₂ method, exam-style).",
+    "<strong>Independent:</strong> tiers via the toggles; ⭐ exam Q sits last in each tier. Hints are pupil-facing — circulate rather than re-teach.",
+    "<strong>Exit:</strong> 👁️ fires the completion overlay. Method-check: any sensible precaution scores (goggles/eye protection). Trail next lesson — the two litmus gases."
+  ];
+  function openTN(){const t=slides[currentSlide].getAttribute('data-title')||('Slide '+(currentSlide+1));document.getElementById('tn-slide-title').textContent=t;document.getElementById('tn-brief').innerHTML=tNotes[currentSlide]||'Deliver from the slide; notes on the surrounding slides.';openModal('tn-modal')}
+
+  // ── Cold Call (localStorage roster + tiered, slide-aware gas-test banks) ──
+  let ccBand='U-1',ccRecent=[];
+  function pickBand(el){document.querySelectorAll('#cc-band-pick .grade-chip').forEach(function(c){c.classList.remove('sel')});el.classList.add('sel');ccBand=el.dataset.band}
+  function loadRoster(){try{return JSON.parse(localStorage.getItem('gasTests_pupils')||'[]')}catch(e){return[]}}
+  function saveRoster(r){try{localStorage.setItem('gasTests_pupils',JSON.stringify(r))}catch(e){}}
+  function renderRoster(){const r=loadRoster(),c=document.getElementById('cc-roster');if(!c)return;c.innerHTML=r.length?'':'<span style="color:var(--muted);font-size:.9rem">No pupils yet — add some above.</span>';r.forEach(function(p,i){const chip=document.createElement('span');chip.className='grade-chip sel';chip.style.cursor='default';chip.innerHTML=p.name+' <small>('+p.band+')</small> <b style="cursor:pointer;color:#dc2626" onclick="removePupil('+i+')">✕</b>';c.appendChild(chip)})}
+  function addPupil(){const inp=document.getElementById('cc-name-input'),name=(inp.value||'').trim();if(!name)return;const r=loadRoster();r.push({name:name,band:ccBand});saveRoster(r);inp.value='';renderRoster();playDing()}
+  function removePupil(i){const r=loadRoster();r.splice(i,1);saveRoster(r);renderRoster()}
+  function clearRoster(){if(confirm('Clear the whole class list?')){saveRoster([]);renderRoster()}}
+  const ccBanks={
+    'default':{'U-1':['How do you test for hydrogen?','Which gas relights a glowing splint?','What does CO₂ do to limewater?'],
+               '1-2':['What is the difference between a burning and a glowing splint?','Name the gas that turns limewater milky.','Why must the splint be GLOWING for the oxygen test?'],
+               '3-4':['Write the equation for the squeaky pop test.','Explain why CO₂ turns limewater milky.','Describe how to identify H₂, O₂ and CO₂ systematically.']},
+    'splints':{'U-1':['What sound does hydrogen make with a burning splint?','Which splint test is for oxygen — burning or glowing?','What does limewater do when CO₂ bubbles through?'],
+               '1-2':['Why use a glowing (not burning) splint for oxygen?','Describe the positive result for the hydrogen test.','How would you confirm a gas is CO₂?'],
+               '3-4':['Balance: H₂ + O₂ → ?','Explain why a glowing splint relights in oxygen.','Write the equation for CO₂ reacting with limewater.']},
+    'litmus':{'U-1':['What colour does ammonia turn damp red litmus?','What does chlorine do to litmus paper?','Should the litmus be wet or dry for these tests?'],
+              '1-2':['How can you tell ammonia and chlorine apart with litmus?','Why is ammonia an alkaline gas?','Why must the litmus paper be damp?'],
+              '3-4':['Explain why chlorine turns blue litmus red, then white.','Why does ammonia turn litmus blue (think pH)?','What forms when chlorine dissolves in the damp paper?']}
+  };
+  function ccBankFor(){const t=slides[currentSlide].getAttribute('data-title')||'';if(/NH₃|Cl₂|litmus/i.test(t))return ccBanks['litmus'];if(/H₂|Relay/i.test(t))return ccBanks['splints'];return ccBanks['default']}
+  function pickPupil(){const r=loadRoster(),res=document.getElementById('cc-result');if(!r.length){res.innerHTML='<span style="color:#dc2626">Add at least one pupil first.</span>';return}
+    let pool=r.map(function(p,i){return i}).filter(function(i){return ccRecent.indexOf(i)===-1});
+    if(!pool.length){ccRecent=[];pool=r.map(function(p,i){return i})}
+    const idx=pool[Math.floor(Math.random()*pool.length)];ccRecent.push(idx);if(ccRecent.length>Math.min(2,r.length-1))ccRecent.shift();
+    const p=r[idx],bank=ccBankFor()[p.band]||ccBankFor()['U-1'],q=bank[Math.floor(Math.random()*bank.length)];
+    res.innerHTML='<div class="cc-picked">'+p.name+'</div><div style="font-size:.85rem;color:var(--muted)">Band '+p.band+' · question matched to level</div><div class="cc-q">'+q+'</div>';playDing()}
+
+  // ── Lesson complete overlay (fires when exit-slide answers revealed) ──
+  (function(){const exit=document.getElementById('exit-slide');if(exit&&window.MutationObserver){new MutationObserver(function(){if(exit.classList.contains('show-ans')){const o=document.getElementById('lesson-complete');if(o&&!o.dataset.fired){o.dataset.fired='1';o.classList.add('show');fireConfettiGlobal()}}}).observe(exit,{attributes:true,attributeFilter:['class']})}})();
+
+  renderRoster();
+</script>
+</body>
+</html>
