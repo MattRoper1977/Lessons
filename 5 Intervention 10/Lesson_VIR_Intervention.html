@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Intervention: V = I × R & Circuit Rules (Teacher)</title>
+<style>
+:root{
+  --bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;
+  --lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;
+  --task-bg:#fef9c3;--task-border:#eab308;
+  --scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+  --sc-bg:#ffedd5;--sc-border:#f97316;
+  --btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+  --success:#16a34a;--error:#dc2626;--muted:#64748b;
+  --ido-bg:#ede9fe;--ido-border:#7c3aed;
+  --wedo-bg:#fce7f3;--wedo-border:#db2777;
+  --found:#22c55e;--mid:#f97316;--high:#1e3a8a;
+}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes drip{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}80%{opacity:1}100%{transform:translateY(70px);opacity:0}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5)}50%{box-shadow:0 0 0 12px rgba(124,58,237,0)}}
+@keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes ionFloat{0%{transform:translate(0,0)}25%{transform:translate(8px,-6px)}50%{transform:translate(-4px,-12px)}75%{transform:translate(-8px,-4px)}100%{transform:translate(0,0)}}
+@keyframes pulseAttn{0%,100%{background:#fef3c7}50%{background:#fde047}}
+@keyframes colourFill{from{height:0}to{height:55px}}
+@keyframes markerSlide{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.animate-enter{animation:fadeInUp .55s ease-out forwards}
+.anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+.anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+.anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+.pulse-attn{animation:pulseAttn 2s ease-in-out infinite;padding:1px 6px;border-radius:6px;font-style:italic}
+
+/* ---------- SLIDE SYSTEM ---------- */
+.slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:36px 40px;overflow-y:auto;position:relative;flex-direction:column}
+.slide.active{display:flex;animation:fadeIn .45s ease}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--task-border)}
+
+h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}
+h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+h3{margin:10px 0 8px;color:#0f172a}
+p,li{font-size:1.1rem;line-height:1.55;color:#334155}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+
+button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+button:active{transform:translateY(0)}
+button.small{padding:8px 12px;font-size:.95rem}
+button.ghost{background:#e2e8f0;color:#0f172a}
+button.ghost:hover{background:#cbd5e1}
+
+.controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+/* ---------- BOXES ---------- */
+.li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-bottom:12px;transition:transform .15s}
+.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+.diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center;margin:8px 0}
+
+.answer{display:none;margin-top:8px;padding:8px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}
+.show-ans .answer{display:block;animation:fadeInUp .25s}
+
+/* ---------- SLIDE TAGS ---------- */
+.slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.tag-arrival{background:#fef3c7;color:#92400e}
+.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#5b21b6}
+.tag-wedo{background:var(--wedo-bg);color:#9d174d}
+.tag-independent{background:var(--task-bg);color:#92400e}
+.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+/* ---------- pH SCALE BAR ---------- */
+.ph-scale-bar{display:flex;border-radius:12px;overflow:hidden;height:48px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.ph-cell{flex:1;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;cursor:pointer;transition:transform .15s}
+.ph-cell:hover{transform:scaleY(1.15);z-index:2}
+
+/* ---------- TIER TOGGLE ---------- */
+.tier-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.tier-toggle button{font-size:.95rem;padding:8px 14px}
+.tier-toggle .active{outline:3px solid #0f172a;outline-offset:2px}
+.tier-level{display:none}
+.tier-level.active{display:block;animation:fadeInUp .3s}
+
+/* ---------- ARRIVAL ---------- */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---------- SORT (We Do 1) ---------- */
+.sort-card{background:#fff;border:2px solid var(--task-border);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:.9rem;text-align:center;transition:all .2s;user-select:none;min-width:90px}
+.sort-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.3)}
+.sort-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.3);transform:scale(1.05);animation:pulseGlow 1.4s infinite}
+.sort-card.placed{opacity:.4;pointer-events:none;transform:scale(.9)}
+.sort-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:8px;text-align:center;min-height:80px;cursor:pointer;transition:all .2s}
+.sort-zone:hover{border-style:solid;transform:scale(1.02)}
+.zone-items{margin-top:4px;font-size:.8rem;color:#334155}
+
+/* ---------- PREDICT & PLACE (NEW Starter) ---------- */
+.pp-bench{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0;min-height:60px}
+.pp-card{background:#fff;border:2px solid var(--lo-border);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:bold;font-size:.9rem;user-select:none;transition:all .2s;text-align:center;min-width:110px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.pp-card:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(124,58,237,.25)}
+.pp-card.selected{background:var(--lo-bg);border-color:var(--lo-border);box-shadow:0 0 0 3px rgba(156,39,176,.3);animation:pulseGlow 1.4s infinite}
+.pp-card.placed{opacity:.45;pointer-events:none}
+.pp-card.correct-pred{border-color:var(--success);background:#dcfce7}
+.pp-card.wrong-pred{border-color:var(--error);background:#fef2f2}
+.pp-scale{position:relative;display:flex;border-radius:12px;overflow:visible;height:54px;margin:30px 0 14px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.pp-cell{flex:1;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;cursor:pointer;transition:transform .15s;position:relative;color:#fff}
+.pp-cell:hover{transform:scaleY(1.12);z-index:5}
+.pp-marker{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:#fff;border:2px solid var(--lo-border);border-radius:8px;padding:2px 6px;font-size:.7rem;font-weight:900;color:var(--lo-border);white-space:nowrap;z-index:6;animation:markerSlide .4s ease}
+.pp-marker.actual{border-color:var(--success);color:var(--success);top:-50px;background:#dcfce7}
+.pp-marker.actual::after{content:'';position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid var(--success)}
+.pp-status{display:flex;justify-content:space-between;align-items:center;background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:8px 14px;margin-top:6px;font-weight:bold}
+.pp-status .pp-score{color:var(--success);font-size:1.15rem}
+
+/* ---------- SPOT THE MISTAKE (REBUILT click-to-find) ---------- */
+.stm-paragraph{font-style:italic;font-size:1.18rem;line-height:1.9;color:#1e293b;background:#fff;border:3px solid var(--error);border-radius:14px;padding:20px 22px;margin:10px 0;position:relative}
+.stm-paragraph::before{content:'❌ A STUDENT WROTE THIS';position:absolute;top:-12px;left:18px;background:var(--error);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+.stm-clickable{background:transparent;padding:1px 2px;border-radius:4px;cursor:pointer;border-bottom:1px dotted rgba(148,163,184,.45);font-style:inherit;font-weight:inherit;transition:all .2s}
+.stm-clickable:hover{background:#fef9c3;border-bottom:2px solid #eab308;padding:1px 4px}
+.stm-clickable.found{background:#fee2e2;color:#991b1b;text-decoration:line-through;border:2px solid var(--error);padding:1px 4px;cursor:default;animation:none;pointer-events:none}
+.stm-clickable.miss{background:#dbeafe;border-bottom:2px solid #60a5fa;animation:shake .35s}
+.stm-feedback-box{background:#fff;border:2px dashed #cbd5e1;border-radius:12px;padding:10px 14px;margin-top:10px;min-height:46px;text-align:center;font-weight:bold;color:#334155;transition:all .2s}
+.stm-feedback-box.success{border-color:var(--success);background:#dcfce7;color:#166534}
+.stm-feedback-box.error{border-color:var(--error);background:#fef2f2;color:#991b1b}
+.stm-correction{display:none;margin-top:8px;background:#f0fdf4;border-left:5px solid var(--success);border-radius:10px;padding:10px 14px;color:#166534;font-weight:bold}
+.stm-correction.visible{display:block;animation:fadeInUp .3s}
+.stm-progress{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.stm-pip{width:26px;height:26px;border-radius:50%;background:#e2e8f0;color:#94a3b8;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .3s}
+.stm-pip.found{background:var(--success);color:#fff;transform:scale(1.1)}
+
+/* ---------- CLASSIFICATION SPOTLIGHT (I Do 1) ---------- */
+.cs-stage{min-height:120px;background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%);border-radius:14px;border:2px dashed #cbd5e1;padding:14px;margin:8px 0;display:flex;align-items:center;justify-content:center}
+.cs-empty{color:var(--muted);font-style:italic;font-size:1.05rem;text-align:center}
+.cs-card{display:flex;align-items:center;gap:18px;width:100%;animation:fadeInUp .35s ease-out}
+.cs-num{flex:0 0 90px;height:90px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.cs-body{flex:1;display:flex;flex-direction:column;gap:4px}
+.cs-class{font-size:1.4rem;font-weight:900;color:var(--ido-border)}
+.cs-detail{font-size:1.05rem;color:#334155;font-weight:600}
+.cs-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.cs-chip{background:#fff;border:2px solid #cbd5e1;border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:900;color:#475569}
+.cs-fact{background:#fef3c7;border-left:4px solid var(--task-border);border-radius:6px;padding:4px 10px;font-size:.9rem;color:#713f12;flex:1;min-width:200px}
+
+/* ---------- READ THE TUBES (We Do 2) ---------- */
+.rt-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:8px 0}
+.rt-tube{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;user-select:none}
+.rt-tube:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);border-color:var(--wedo-border)}
+.rt-tube.revealed{border-color:var(--success);background:#f0fdf4}
+.rt-letter{font-weight:900;font-size:1rem;margin:2px 0 0;color:#0f172a}
+.rt-colour{font-size:.8rem;color:var(--muted);margin:0 0 4px}
+.rt-result{background:#f1f5f9;border-radius:6px;padding:4px 6px;font-size:.78rem;font-weight:900;color:#475569;min-height:18px;line-height:1.2}
+.rt-tube.revealed .rt-result{background:var(--success);color:#fff}
+.rt-feedback{background:#eff6ff;border-left:5px solid var(--ido-border);border-radius:8px;padding:8px 12px;font-size:.95rem;color:#1e3a8a;margin-top:8px;font-weight:600;min-height:20px}
+
+/* ---------- SUPER SIX EXIT (3×2 grid) ---------- */
+.ss-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:12px;margin-top:10px;height:calc(100% - 110px)}
+.ss-cell{background:#fff;border-radius:14px;border:2px solid #e2e8f0;padding:14px 14px 12px;display:flex;flex-direction:column;justify-content:flex-start;animation:fadeInUp .4s ease-out;position:relative;overflow:hidden}
+.ss-cell.ss-l1{border-left:6px solid #f97316}
+.ss-cell.ss-l2{border-left:6px solid var(--lo-border)}
+.ss-cell .ss-tag{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#fff;padding:3px 8px;border-radius:6px;align-self:flex-start;margin-bottom:6px}
+.ss-cell.ss-l1 .ss-tag{background:#f97316}
+.ss-cell.ss-l2 .ss-tag{background:var(--lo-border)}
+.ss-cell p{margin:0 0 6px;font-size:1rem;line-height:1.4}
+.ss-cell .answer{display:none;background:#f0fdf4;border-left:4px solid var(--success);border-radius:6px;padding:6px 10px;color:#166534;font-size:.95rem;margin-top:auto}
+#exit-slide.show-ans .ss-cell .answer{display:block;animation:fadeInUp .25s}
+.rt-tube{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;user-select:none}
+.rt-tube:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);border-color:var(--wedo-border)}
+.rt-tube.revealed{border-color:var(--success);background:#f0fdf4}
+.rt-letter{font-weight:900;font-size:1rem;margin:2px 0 0;color:#0f172a}
+.rt-colour{font-size:.8rem;color:var(--muted);margin:0 0 4px}
+.rt-result{background:#f1f5f9;border-radius:6px;padding:4px 6px;font-size:.78rem;font-weight:900;color:#475569;min-height:18px;line-height:1.2}
+.rt-tube.revealed .rt-result{background:var(--success);color:#fff}
+.rt-feedback{background:#eff6ff;border-left:5px solid var(--ido-border);border-radius:8px;padding:8px 12px;font-size:.95rem;color:#1e3a8a;margin-top:8px;font-weight:600;min-height:20px}
+.cs-empty{color:var(--muted);font-style:italic;font-size:1.05rem;text-align:center}
+.cs-card{display:flex;align-items:center;gap:18px;width:100%;animation:fadeInUp .35s ease-out}
+.cs-num{flex:0 0 90px;height:90px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.cs-body{flex:1;display:flex;flex-direction:column;gap:4px}
+.cs-class{font-size:1.4rem;font-weight:900;color:var(--ido-border)}
+.cs-detail{font-size:1.05rem;color:#334155;font-weight:600}
+.cs-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.cs-chip{background:#fff;border:2px solid #cbd5e1;border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:900;color:#475569}
+.cs-fact{background:#fef3c7;border-left:4px solid var(--task-border);border-radius:6px;padding:4px 10px;font-size:.9rem;color:#713f12;flex:1;min-width:200px}
+
+/* ---------- UI DRIP (I Do 2 animation) ---------- */
+.drip-stage{position:relative;width:100%;max-width:340px;height:230px;margin:0 auto;background:#f8fafc;border-radius:14px}
+.drip-pipette{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:20px;height:60px;background:linear-gradient(to bottom,#94a3b8,#cbd5e1);border-radius:4px 4px 12px 12px}
+.drip-pipette::after{content:'';position:absolute;bottom:-10px;left:50%;width:6px;height:14px;background:#94a3b8;transform:translateX(-50%);border-radius:0 0 3px 3px}
+.drip-drop{position:absolute;left:50%;top:80px;transform:translateX(-50%);width:14px;height:18px;background:radial-gradient(circle at 35% 30%,#a78bfa,#7c3aed);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;animation:drip 2.4s ease-in-out infinite;box-shadow:0 2px 6px rgba(124,58,237,.4)}
+.drip-beaker{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:120px;height:90px;border:3px solid #475569;border-top:none;border-radius:0 0 16px 16px;background:#fff;overflow:hidden}
+.drip-liquid{position:absolute;left:0;right:0;bottom:0;height:55px;background:#fde047;animation:colourFill 1.8s ease forwards;transition:background 1.5s ease}
+.drip-beaker.changed .drip-liquid{background:#3b82f6}
+.drip-label{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);font-size:.8rem;font-weight:900;color:#475569}
+.drip-arrow{position:absolute;right:8px;top:90px;font-size:1.6rem;color:var(--ido-border);font-weight:900;animation:fadeInUp 1s 1.5s forwards;opacity:0}
+.drip-readout{position:absolute;right:8px;top:130px;background:var(--ido-border);color:#fff;padding:4px 10px;border-radius:8px;font-weight:900;font-size:.85rem;animation:fadeInUp 1s 1.8s forwards;opacity:0}
+
+/* ---------- INDEPENDENT WORK ---------- */
+.ind-level{display:none}.ind-level.active{display:block}
+.ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}
+.ind-q.stretch{border-color:#a78bfa;background:linear-gradient(to right,#fff,#f5f3ff)}
+.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px}
+.q-mcq{background:#dbeafe;color:#1e40af}
+.q-short{background:#fef3c7;color:#92400e}
+.q-long{background:#dcfce7;color:#166534}
+.q-diagram{background:#ffedd5;color:#9a3412}
+.q-exam{background:#fce7f3;color:#9d174d}
+.q-stretch{background:#ede9fe;color:#5b21b6}
+.q-synthesis{background:#cffafe;color:#155e75}
+.ind-q.synthesis{border-color:#0891b2;background:linear-gradient(to right,#fff,#ecfeff);position:relative;margin-top:18px;padding-top:16px}
+.ind-q.synthesis::before{content:'🌍 REAL-WORLD APPLICATION';position:absolute;top:-10px;left:14px;background:#0891b2;color:#fff;padding:2px 9px;border-radius:5px;font-size:.68rem;font-weight:900;letter-spacing:.6px}
+.mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}
+.mcq-opt:hover{border-color:var(--btn-bg)}
+.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}
+.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+
+.xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+.xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+.xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+
+.hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+.hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+.hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+.hint-text.show{display:block;animation:fadeInUp .25s}
+
+.confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+
+.lb-widget{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:10px;margin-top:6px}
+.lb-widget h4{margin:0 0 6px;color:var(--lo-border);font-size:.9rem}
+.lb-list{display:flex;flex-wrap:wrap;gap:4px}
+.lb-name{background:var(--lo-bg);color:var(--lo-border);padding:3px 10px;border-radius:6px;font-size:.85rem;font-weight:bold;animation:fadeInUp .3s}
+.lb-input-row{display:flex;gap:6px;margin-top:6px}
+.lb-input{border:2px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:.9rem;flex:1;font-family:inherit}
+.lb-input:focus{border-color:var(--lo-border);outline:none}
+
+/* ---------- WE DO CAPTURE / EVIDENCE ---------- */
+.wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:14px;background:#fff;position:relative}
+.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+.evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+
+.editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+
+/* ---------- TIMER WIDGET (tidy pill) ---------- */
+#timer-widget{position:fixed;top:14px;left:14px;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:5px 12px 5px 14px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:2000;display:none;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+#timer-widget.visible{display:flex}
+#timer-widget::before{content:'⏱';font-size:1.05rem;line-height:1}
+#timer-display{font-size:1.15rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:54px;text-align:center;letter-spacing:.5px}
+.timer-controls{display:flex;gap:3px}
+.timer-btn{background:transparent;color:#475569;border:none;border-radius:50%;width:26px;height:26px;padding:0;cursor:pointer;font-size:.9rem;transition:background .2s;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.timer-btn:hover{background:#e2e8f0;transform:none}
+.timer-btn.active-play{background:var(--success);color:white}
+.timer-btn.active-pause{background:#fbbf24;color:white}
+#timer-widget.warning{border-color:var(--error);animation:pulseWarn 1.4s ease-in-out infinite}
+@keyframes pulseWarn{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.12)}50%{box-shadow:0 6px 24px rgba(220,38,38,.4)}}
+
+/* ---------- TA FOCUS — observer-visible TA deployment system ---------- */
+#ta-focus-btn{position:fixed;top:14px;left:230px;z-index:2000;background:#6d28d9;color:#fff;border:2px solid #5b21b6;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4)}
+#ta-focus-btn::before{content:'👥';font-size:1.05rem}
+#ta-focus-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#ta-focus-overlay.visible{display:flex}
+#ta-focus-modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;animation:fadeInUp .35s ease-out;border:3px solid #6d28d9}
+.ta-modal-header{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.ta-modal-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.ta-modal-header h3::before{content:'👥 ';margin-right:4px}
+.ta-modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.ta-modal-close:hover{background:rgba(255,255,255,.35);transform:none}
+.ta-modal-body{padding:18px 24px 22px}
+.ta-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.ta-row-icon{flex:0 0 28px;font-size:1.3rem;line-height:1.2}
+.ta-row-content{flex:1;font-size:.96rem;line-height:1.45}
+.ta-row-content strong{color:#5b21b6}
+.ta-cta-row{background:#fef3c7;border-left:5px solid #d97706;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:.92rem}
+.ta-cta-row strong{color:#92400e}
+.ta-no-brief{font-style:italic;color:var(--muted);text-align:center;padding:12px}
+
+/* ---------- COLD CALL — random pupil picker + slide-relevant question ---------- */
+#cold-call-btn{position:fixed;top:14px;left:380px;z-index:2000;background:#dc2626;color:#fff;border:2px solid #b91c1c;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#cold-call-btn:hover{background:#b91c1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,38,38,.4)}
+#cold-call-btn::before{content:'🎲';font-size:1.05rem}
+#cold-call-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#cold-call-overlay.visible{display:flex}
+#cold-call-modal{background:#fff;border-radius:18px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid #dc2626}
+.cold-call-header{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.cold-call-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.cold-call-header h3::before{content:'🎲 ';margin-right:4px}
+.cold-call-body{padding:18px 22px 22px}
+.cold-call-class-label{text-align:center;font-size:.85rem;color:#64748b;margin:0 0 10px}
+.cold-call-class-label strong{color:#dc2626;font-size:1rem}
+.cold-call-name-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;border-radius:14px;padding:24px 18px;margin:6px 0 14px;text-align:center;min-height:78px;display:flex;align-items:center;justify-content:center}
+.cold-call-name{font-size:2.4rem;font-weight:900;color:#7c2d12;margin:0;letter-spacing:1px;line-height:1.1}
+.cold-call-name.spinning{animation:nameSpin .08s ease-in-out infinite}
+.cold-call-name.settled{animation:nameLand .55s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes nameSpin{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes nameLand{0%{transform:scale(0.6);opacity:0}40%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+.cold-call-q-box{background:#dbeafe;border-left:5px solid #1e40af;padding:12px 16px;border-radius:10px;margin:10px 0 14px}
+.cold-call-q-label{margin:0 0 4px;font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+.cold-call-question{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0;line-height:1.4}
+.cold-call-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.cc-btn-primary{flex:1 1 200px;background:#dc2626;color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.98rem;font-weight:bold;transition:.2s}
+.cc-btn-primary:hover{background:#b91c1c;transform:translateY(-1px)}
+.cc-btn-secondary{flex:1 1 140px;background:#e5e7eb;color:#1e293b;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;transition:.2s}
+.cc-btn-secondary:hover{background:#cbd5e1}
+.cc-edit-link{display:block;text-align:center;background:none;border:none;color:#64748b;cursor:pointer;font-size:.85rem;text-decoration:underline;margin-top:10px;padding:6px}
+.cc-edit-link:hover{color:#dc2626}
+.cc-setup-title{font-weight:bold;margin:0 0 8px;font-size:1.05rem}
+.cc-names-input{width:100%;min-height:180px;padding:12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;resize:vertical;box-sizing:border-box}
+.cc-names-input:focus{outline:none;border-color:#dc2626}
+.cc-helper{font-size:.85rem;color:#64748b;margin:6px 0 12px}
+/* Pupil rows with grade chips */
+.cc-empty-rows{text-align:center;color:#94a3b8;font-style:italic;padding:18px;border:2px dashed #cbd5e1;border-radius:10px;margin:6px 0}
+.cc-pupil-rows{max-height:300px;overflow-y:auto;padding:2px;border:1px solid #e5e7eb;border-radius:10px;margin:0 0 10px}
+.cc-pupil-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9}
+.cc-pupil-row:last-child{border-bottom:none}
+.cc-pupil-name{flex:1;font-weight:600;color:#1e293b;font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-grade-chips{display:flex;gap:3px;flex-shrink:0}
+.cc-grade-chip{width:30px;height:30px;border-radius:50%;border:2px solid;background:#fff;cursor:pointer;font-weight:900;font-size:.85rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cc-grade-u{border-color:#dc2626;color:#dc2626}
+.cc-grade-1{border-color:#ea580c;color:#ea580c}
+.cc-grade-2{border-color:#d97706;color:#d97706}
+.cc-grade-3{border-color:#0891b2;color:#0891b2}
+.cc-grade-4{border-color:#16a34a;color:#16a34a}
+.cc-grade-chip:hover{transform:scale(1.1)}
+.cc-grade-chip.cc-grade-selected{color:#fff;transform:scale(1.05)}
+.cc-grade-u.cc-grade-selected{background:#dc2626}
+.cc-grade-1.cc-grade-selected{background:#ea580c}
+.cc-grade-2.cc-grade-selected{background:#d97706}
+.cc-grade-3.cc-grade-selected{background:#0891b2}
+.cc-grade-4.cc-grade-selected{background:#16a34a}
+.cc-remove-btn{background:#fee2e2;color:#991b1b;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.85rem;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.cc-remove-btn:hover{background:#fecaca;transform:none}
+.cc-add-row{display:flex;gap:8px;margin:8px 0 12px}
+.cc-add-input{flex:1;padding:10px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;box-sizing:border-box}
+.cc-add-input:focus{outline:none;border-color:#dc2626}
+/* Grade badge under spun name */
+.cold-call-grade{margin-top:6px}
+.cc-grade-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:bold;letter-spacing:.3px}
+.cc-tier-foundation{background:#dcfce7;color:#166534;border:1.5px solid #16a34a}
+.cc-tier-middle{background:#ffedd5;color:#9a3412;border:1.5px solid #ea580c}
+.cc-tier-higher{background:#dbeafe;color:#1e3a8a;border:1.5px solid #1e40af}
+.cc-tier-none{background:#f1f5f9;color:#64748b;border:1.5px solid #cbd5e1}
+/* Mode toggle */
+.cc-mode-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.cc-mode-label{font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.cc-mode-btn{background:#fff;border:1.5px solid #cbd5e1;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;color:#475569;transition:.15s;flex:1 1 auto;min-width:0;box-shadow:none}
+.cc-mode-btn:hover{background:#e0f2fe;border-color:#0891b2;transform:none}
+.cc-mode-btn.active{background:#dc2626;color:#fff;border-color:#b91c1c}
+/* Tier pip on question */
+.cc-tier-badge{display:inline-block;margin-left:8px}
+.cc-tier-pip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.7rem;font-weight:bold;letter-spacing:.3px}
+.cc-tier-pip.cc-tier-foundation{background:#16a34a;color:#fff;border:none}
+.cc-tier-pip.cc-tier-middle{background:#ea580c;color:#fff;border:none}
+.cc-tier-pip.cc-tier-higher{background:#1e40af;color:#fff;border:none}
+
+/* ---------- PRINT AREA / PRINT CSS ---------- */
+#print-area{display:none}
+@media print{
+  body{overflow:visible;background:#fff;height:auto;color:#000}
+  .controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#ta-focus-btn,#ta-focus-overlay,#cold-call-btn,#cold-call-overlay{display:none!important}
+  #print-area{display:block!important;padding:20px}
+  .print-section{display:none;page-break-after:always}
+  .print-section.visible{display:block}
+  .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .print-box{border:1px solid #000;padding:10px;min-height:80px}
+  .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+  .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+  .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}
+  .ko-table th{background:#eee}
+  .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+  .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+  body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+  body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+  body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+  /* Super Six print grid */
+  .ss-print{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}
+  .ss-print td{border:2px solid #000;padding:10px;vertical-align:top;width:33.33%;height:170px;page-break-inside:avoid}
+  .ss-print .ss-pip{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:.5px;padding:2px 7px;border-radius:5px;color:#fff;margin-bottom:6px}
+  .ss-print .ss-pip-l1{background:#f97316}
+  .ss-print .ss-pip-l2{background:#9c27b0}
+  .ss-print .ss-ans{border-bottom:1px solid #888;height:18px;margin-top:8px}
+  .ss-print .ss-ans:nth-of-type(n){margin-top:6px}
+  .ss-print td p{margin:0 0 4px;font-size:.95rem;line-height:1.35}
+}
+    /* ============== V4 POLISH UPGRADE — pH Scale lesson ============== */
+
+    /* ---------- TITLE HERO (animated central icon row on slide 1) ---------- */
+    @keyframes phHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(124,58,237,.5),0 0 60px rgba(124,58,237,.25)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(124,58,237,.85),0 0 100px rgba(124,58,237,.45)}}
+    @keyframes phRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:760px;padding:18px 20px;background:linear-gradient(135deg,rgba(204,0,0,.08) 0%,rgba(74,222,128,.08) 50%,rgba(124,58,237,.08) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+    .hero-acid{font-size:3rem;animation:heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-ph{font-size:2rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-ph .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-spectrum{position:relative;display:flex;align-items:center;justify-content:center;width:120px;height:80px;border-radius:14px;background:linear-gradient(90deg,#cc0000 0%,#f97316 16%,#fde047 33%,#4ade80 50%,#60a5fa 66%,#4f46e5 83%,#7c3aed 100%);border:4px solid #fff;animation:phHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+    .hero-spectrum::before,.hero-spectrum::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(124,58,237,.55);border-radius:18px;pointer-events:none}
+    .hero-spectrum::before{animation:phRipple 2.4s ease-out infinite}
+    .hero-spectrum::after{animation:phRipple 2.4s ease-out 1.2s infinite}
+    .hero-spectrum .a-mini{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:.65rem;font-weight:900;color:#1f2937;letter-spacing:.5px;background:#fff;padding:2px 8px;border-radius:8px;border:1.5px solid #cbd5e1;white-space:nowrap}
+    .hero-spectrum .ph-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.05rem;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);letter-spacing:.5px}
+    .hero-tag-ph{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-ph .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+
+    /* ---------- LO checkmarks (animated tick) ---------- */
+    .lo-anim{list-style:none;padding-left:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.5s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.8s}
+
+    /* ---------- MISCONCEPTION BOX ---------- */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+
+    /* ---------- EXAMINER'S TIP BOX ---------- */
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+
+    /* ---------- LESSON COMPLETE celebration (modal pops on Exit reveal) ---------- */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:520px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+
+    /* ---------- USE-CARD animated icons (5 classifications) ---------- */
+    @keyframes flexBounce{0%,100%{transform:scale(1)}40%{transform:scale(.9)}55%{transform:scale(1.2)}}
+    @keyframes vibrShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+    @keyframes divPulse{0%,100%{transform:scale(1)}30%{transform:scale(.82)}55%{transform:scale(1.18)}}
+    @keyframes thermPulse{0%,100%{filter:hue-rotate(0) brightness(1)}50%{filter:hue-rotate(20deg) brightness(1.3)}}
+    @keyframes dripFall{0%,100%{transform:translateY(0)}40%{transform:translateY(-2px) scale(1.08)}80%{transform:translateY(2px) scale(.96)}}
+    .uses-grid-ph{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+    .uc-ph{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:8px;text-align:center;transition:transform .15s}
+    .uc-ph:hover{transform:translateY(-2px)}
+    .uc-ph .uc-icon{font-size:1.6rem;display:block;line-height:1;height:26px;margin-bottom:4px}
+    .uc-ph strong{display:block;font-size:.82rem;line-height:1.1;margin-bottom:2px}
+    .uc-ph .uc-range{font-size:.72rem;color:var(--muted);font-weight:bold}
+    .uc-ph.uc-strong-acid{border-color:#ef4444}
+    .uc-ph.uc-weak-acid{border-color:#f97316}
+    .uc-ph.uc-neutral{border-color:#22c55e}
+    .uc-ph.uc-weak-alk{border-color:#3b82f6}
+    .uc-ph.uc-strong-alk{border-color:#7c3aed}
+    .uc-ph.uc-strong-acid .uc-icon{animation:divPulse 1.4s ease-in-out infinite}
+    .uc-ph.uc-weak-acid .uc-icon{animation:vibrShake .5s ease-in-out infinite}
+    .uc-ph.uc-neutral .uc-icon{animation:flexBounce 1.4s ease-in-out infinite}
+    .uc-ph.uc-weak-alk .uc-icon{animation:dripFall 1.6s ease-in-out infinite}
+    .uc-ph.uc-strong-alk .uc-icon{animation:thermPulse 1.4s ease-in-out infinite}
+
+    /* ---------- ANIMATED pH CYCLING TEST TUBE (Measuring with UI slide) ---------- */
+    @keyframes phCycle{
+      0%,8%{background:#cc0000}
+      14%,22%{background:#f97316}
+      28%,36%{background:#fde047}
+      42%,50%{background:#4ade80}
+      56%,64%{background:#60a5fa}
+      70%,78%{background:#4f46e5}
+      84%,92%{background:#7c3aed}
+      100%{background:#cc0000}
+    }
+    @keyframes phNumCycle{
+      0%,8%{content:'pH 1'}
+      14%,22%{content:'pH 3'}
+      28%,36%{content:'pH 5'}
+      42%,50%{content:'pH 7'}
+      56%,64%{content:'pH 9'}
+      70%,78%{content:'pH 11'}
+      84%,92%{content:'pH 13'}
+    }
+    .ph-cycle-stage{display:flex;align-items:center;justify-content:center;gap:14px;background:linear-gradient(135deg,#f8fafc 0%,#ede9fe 100%);border:2px solid #c4b5fd;border-radius:14px;padding:12px;margin-top:8px}
+    .ph-cycle-tube{position:relative;width:54px;height:120px;border:3px solid #1f2937;border-top:none;border-radius:0 0 26px 26px;overflow:hidden;background:#f1f5f9;flex-shrink:0}
+    .ph-cycle-tube::before{content:'';position:absolute;top:-8px;left:-3px;right:-3px;height:8px;background:#64748b;border-radius:3px}
+    .ph-cycle-fill{position:absolute;left:0;right:0;bottom:0;height:78%;animation:phCycle 14s linear infinite}
+    .ph-cycle-readout{font-weight:900;color:var(--ido-border);font-size:1.05rem;font-variant-numeric:tabular-nums;background:#fff;padding:6px 10px;border-radius:8px;border:1.5px solid var(--ido-border);min-width:64px;text-align:center}
+    .ph-cycle-caption{font-size:.85rem;color:var(--muted);max-width:200px;line-height:1.3}
+
+    /* ---------- MOBILE LAYOUT (≤640px / phone portrait) ---------- */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .ss-grid{grid-template-columns:1fr 1fr!important;gap:8px}
+      /* Title hero stacks */
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px}
+      .hero-acid{font-size:2.4rem}
+      .hero-spectrum{width:100px;height:60px}
+      .hero-arrow-ph{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-ph{font-size:.85rem;text-align:center;max-width:100%}
+      /* pH scale: smaller cells + tighter spacing */
+      .ph-scale-bar{flex-wrap:wrap;gap:2px}
+      .ph-cell{font-size:.85rem!important;padding:6px 0!important}
+      /* Use-card grid: drop to 2 cols */
+      .uses-grid-ph{grid-template-columns:1fr 1fr;gap:6px}
+      .uc-ph{padding:6px}
+      .uc-ph .uc-icon{font-size:1.3rem;height:20px}
+      .uc-ph strong{font-size:.75rem}
+      /* Sort zones: drop to 2 cols, then 1 */
+      [style*="grid-template-columns:repeat(5,1fr)"]{grid-template-columns:1fr 1fr!important}
+      .sort-zone{font-size:.75rem;padding:6px}
+      /* Top buttons reposition to right edge */
+      #ta-focus-btn,#cold-call-btn{font-size:.75rem;padding:5px 10px}
+      #ta-focus-btn{left:auto;right:14px;top:50px}
+      #cold-call-btn{left:auto;right:14px;top:84px}
+      #timer-widget{padding:4px 8px 4px 10px}
+      #timer-display{font-size:1rem;min-width:46px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .tier-toggle{gap:6px;flex-wrap:wrap}
+      .tier-toggle button{padding:6px 10px;font-size:.85rem}
+      .ph-cycle-stage{flex-direction:column;gap:8px}
+      .ph-cycle-tube{width:48px;height:100px}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      #ta-focus-modal,#cold-call-modal{max-width:96%}
+      /* Spot-the-mistakes paragraph stays readable */
+      .stm-paragraph{font-size:1rem!important;line-height:1.6!important}
+      /* Beat the clock colour panel smaller */
+      #btc-colour{width:140px!important;height:90px!important;font-size:1.2rem!important}
+    }
+
+    /* ============== END V4 POLISH UPGRADE ============== */
+
+
+/* ============== VIR INTERVENTION — lesson-specific CSS ============== */
+.lo-list{list-style:none;padding-left:0;margin:6px 0 0}
+.lo-list li{padding:5px 0 5px 30px;position:relative;font-size:1.05rem}
+.lo-list li::before{content:"✓";position:absolute;left:2px;top:5px;color:#fff;background:var(--success);border-radius:50%;width:20px;height:20px;text-align:center;line-height:20px;font-size:.78rem;font-weight:900}
+
+/* V=IR triangle */
+.tri-wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:center;margin:12px 0}
+.triangle{width:210px;height:182px;flex:0 0 auto}
+.triangle svg{width:100%;height:100%}
+.tri-cell{cursor:pointer;transition:.25s}
+.tri-cell:hover{filter:brightness(.93)}
+.tri-cell.dim{opacity:.15}
+.tri-let{font-size:42px;font-weight:900;fill:#fff;pointer-events:none}
+.tri-out{min-width:210px}
+.tri-out .formula{font-size:1.7rem;font-weight:900;color:var(--ido-border);background:var(--ido-bg);border:2px solid var(--ido-border);border-radius:12px;padding:12px 18px;display:inline-block;animation:fadeIn .3s ease}
+
+/* worked steps */
+.steps{margin:8px 0}
+.vstep{font-size:1.12rem;font-weight:600;padding:9px 13px;margin:7px 0;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;opacity:0;transform:translateX(-10px);transition:.4s}
+.vstep.show{opacity:1;transform:none}
+.vstep b{color:var(--ido-border)}
+.vstep .ans{color:#166534;background:#dcfce7;padding:2px 8px;border-radius:6px;font-weight:900}
+
+/* circuits */
+.circuit-card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:10px;margin:8px 0;text-align:center}
+.circuit-card svg{max-width:100%;height:auto}
+.wire2{fill:none;stroke:#334155;stroke-width:4;stroke-linecap:round}
+.flow2{fill:none;stroke:#f97316;stroke-width:4;stroke-linecap:round;stroke-dasharray:9 14;animation:flowdash 1s linear infinite}
+@keyframes flowdash{to{stroke-dashoffset:-46}}
+.comp2{fill:#fff;stroke:#1e293b;stroke-width:3}
+.lbl2{font-size:14px;font-weight:700;fill:#1e293b}
+.lblsm2{font-size:12px;fill:#475569;font-weight:600}
+.cols2{display:flex;flex-wrap:wrap;gap:16px}
+.col2{flex:1 1 300px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:12px}
+.col2 h3{color:var(--wedo-border);margin-top:0}
+.rule2{font-size:1rem;padding:6px 0;border-bottom:1px dashed #e2e8f0;color:#334155}
+.rule2:last-child{border:none}
+.rule2 b{color:var(--ido-border)}
+
+/* inputs / tables / feedback */
+.numin{font:inherit;font-size:1rem;padding:6px;border:2px solid #cbd5e1;border-radius:8px;width:90px;text-align:center}
+.numin.good{border-color:var(--success);background:#f0fdf4}
+.numin.bad{border-color:var(--error);background:#fef2f2;animation:shake .35s}
+.vsel{font:inherit;font-size:1rem;padding:6px;border:2px solid #cbd5e1;border-radius:8px;background:#fff}
+.vtable{border-collapse:collapse;width:100%;margin:10px 0}
+.vtable th,.vtable td{border:1px solid #cbd5e1;padding:8px 10px;text-align:center;font-size:1rem}
+.vtable th{background:#f1f5f9;font-weight:900}
+.vfb{font-weight:bold;margin-top:8px;padding:8px 12px;border-radius:8px;display:none}
+.vfb.ok{display:block;background:#dcfce7;color:#166534}
+.vfb.no{display:block;background:#fef2f2;color:#991b1b}
+
+/* series/parallel picker */
+.pick2{display:inline-block;cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:8px;background:#fff;transition:.15s}
+.pick2:hover{border-color:var(--ido-border)}
+.pick2.good{border-color:var(--success);background:#f0fdf4}
+.pick2.bad{border-color:var(--error);background:#fef2f2}
+
+/* misconception box */
+.misc-box{background:#fef2f2;border-left:6px solid var(--error);border-radius:12px;padding:14px;margin:10px 0}
+.strike{text-decoration:line-through;text-decoration-color:var(--error);text-decoration-thickness:3px;opacity:.6;transition:.5s}
+
+@media (max-width:640px){
+  .triangle{width:180px;height:156px}
+  .tri-out{min-width:0}
+  .tri-out .formula{font-size:1.4rem}
+  .cols2{flex-direction:column}
+}
+
+/* ===== MASTER 40-MIN LESSON CLOCK ===== */
+.mclock{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2100;background:var(--lo-border);color:#fff;font-weight:900;font-size:1rem;padding:6px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(156,39,176,.35);letter-spacing:.5px;font-variant-numeric:tabular-nums;cursor:default;user-select:none}
+.mclock.warn{background:var(--error);animation:pulseWarn 1.4s infinite}
+@media (max-width:640px){.mclock{font-size:.8rem;padding:5px 10px;top:8px}}
+
+/* ===== TIER TOGGLES ===== */
+.tier-row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.tbtn{background:#fff;border:2px solid #cbd5e1;color:#475569;padding:7px 14px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:.9rem;box-shadow:none}
+.tbtn:hover{border-color:var(--lo-border);transform:none}
+.tbtn.active{background:var(--lo-border);color:#fff;border-color:var(--lo-border)}
+.tlvl{display:none}
+.tlvl.active{display:block;animation:fadeIn .3s ease}
+
+</style>
+</head>
+<body>
+
+<!-- TIMER WIDGET -->
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>⭐</span><span>🏆</span><span>⭐</span></div>
+    <h2>Lesson Complete!</h2>
+    <p>You've powered through V = I × R ⚡🔋</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> Used V = I × R to find voltage, current and resistance</span>
+      <span><strong>✓</strong> Series rule: current is the SAME everywhere; resistances add</span>
+      <span><strong>✓</strong> Parallel rule: voltage is the SAME across each branch</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+  </div>
+</div>
+
+<!-- TA FOCUS BUTTON (observer-visible TA deployment) -->
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+
+<!-- COLD CALL BUTTON (random pupil + slide-relevant question) -->
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+
+<!-- TA FOCUS MODAL OVERLAY -->
+<div id="ta-focus-overlay" onclick="if(event.target.id==='ta-focus-overlay')hideTABrief()">
+  <div id="ta-focus-modal">
+    <div class="ta-modal-header">
+      <h3 id="ta-modal-title">TA Focus</h3>
+      <button class="ta-modal-close" onclick="hideTABrief()" aria-label="Close">✕</button>
+    </div>
+    <div class="ta-modal-body" id="ta-modal-body"></div>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL OVERLAY -->
+<div id="cold-call-overlay" onclick="if(event.target.id==='cold-call-overlay')hideColdCall()">
+  <div id="cold-call-modal">
+    <div class="cold-call-header">
+      <h3>Cold Call</h3>
+      <button class="ta-modal-close" onclick="hideColdCall()" aria-label="Close">✕</button>
+    </div>
+    <div class="cold-call-body" id="cold-call-body"></div>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ============ 0 TITLE ============ -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <h1>V = I × R &amp; Circuit Rules</h1>
+    <p style="color:var(--muted);margin-top:-4px">Intervention · Edexcel IGCSE Single Science (Foundation–Higher) · Electricity</p>
+    <div class="title-hero">
+      <div class="hero-acid">⚡</div>
+      <div class="hero-arrow-ph">V=IR<span class="a-text">OHM'S LAW</span></div>
+      <div class="hero-acid">🔋</div>
+      <div class="hero-acid">💡</div>
+    </div>
+    <div class="content-grid">
+      <div class="li-box">
+        <strong>🎯 Learning Objectives</strong>
+        <ul class="lo-list">
+          <li>Use <strong>V = I × R</strong> to find voltage, current or resistance.</li>
+          <li>Describe the <strong>current</strong> &amp; <strong>voltage</strong> rules for <strong>series</strong> and <strong>parallel</strong> circuits.</li>
+        </ul>
+      </div>
+      <div class="sc-box">
+        <strong>✅ Success Criteria</strong>
+        <ul class="lo-list" style="margin-top:6px">
+          <li>I can use the triangle to rearrange V = I × R.</li>
+          <li>I can calculate a missing value (with units!).</li>
+          <li>I can state the current &amp; voltage rule for series and parallel.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <button onclick="nextSlide()">Start lesson ▶</button>
+      <button class="ghost" onclick="printPack()">🖨️ Print Pack</button>
+    </div>
+  </div>
+
+  <!-- ============ 1 ARRIVAL (tiered) ============ -->
+  <div class="slide" data-title="Arrival Task" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Match the symbol to its unit</h2>
+    <div class="tier-row">
+      <button class="tbtn active" onclick="pickTier('arrival','f',this)">🟢 Foundation</button>
+      <button class="tbtn" onclick="pickTier('arrival','m',this)">🟠 Middle</button>
+      <button class="tbtn" onclick="pickTier('arrival','h',this)">🟣 Higher</button>
+    </div>
+
+    <div class="tlvl active" id="arrival-f">
+      <div class="task-box">
+        <table class="vtable">
+          <tr><th>Quantity</th><th>Correct unit</th></tr>
+          <tr><td><strong>V</strong> — Voltage</td><td><select class="vsel" data-ans="volts (V)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select></td></tr>
+          <tr><td><strong>I</strong> — Current</td><td><select class="vsel" data-ans="amps (A)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select></td></tr>
+          <tr><td><strong>R</strong> — Resistance</td><td><select class="vsel" data-ans="ohms (Ω)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select></td></tr>
+        </table>
+        <button class="small" onclick="checkBox('arrival-f','afb-f')">Check answers</button>
+        <div class="vfb" id="afb-f"></div>
+      </div>
+      <div class="scaffold-box"><strong>🪜 Stuck?</strong> "Victor has Volts." Current = amps. Resistance = ohms (Ω).</div>
+    </div>
+
+    <div class="tlvl" id="arrival-m">
+      <div class="task-box">
+        <p>Pick the correct unit, then answer the extra question.</p>
+        <p>V — Voltage → <select class="vsel" data-ans="volts (V)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select> &nbsp;
+           I — Current → <select class="vsel" data-ans="amps (A)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select> &nbsp;
+           R — Resistance → <select class="vsel" data-ans="ohms (Ω)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select></p>
+        <p>The letter <strong>I</strong> stands for: <select class="vsel" data-ans="Current"><option value="">—</option><option>Voltage</option><option>Current</option><option>Resistance</option></select></p>
+        <button class="small" onclick="checkBox('arrival-m','afb-m')">Check answers</button>
+        <div class="vfb" id="afb-m"></div>
+      </div>
+    </div>
+
+    <div class="tlvl" id="arrival-h">
+      <div class="task-box">
+        <p>Match the unit <em>and</em> the measuring instrument.</p>
+        <p>Current is measured in <select class="vsel" data-ans="amps (A)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select> using a(n) <select class="vsel" data-ans="ammeter"><option value="">—</option><option>ammeter</option><option>voltmeter</option></select>.</p>
+        <p>Voltage is measured in <select class="vsel" data-ans="volts (V)"><option value="">—</option><option>amps (A)</option><option>volts (V)</option><option>ohms (Ω)</option></select> using a(n) <select class="vsel" data-ans="voltmeter"><option value="">—</option><option>ammeter</option><option>voltmeter</option></select>.</p>
+        <button class="small" onclick="checkBox('arrival-h','afb-h')">Check answers</button>
+        <div class="vfb" id="afb-h"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2 STARTER (tiered) ============ -->
+  <div class="slide" data-title="Starter" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>What do you already know?</h2>
+    <div class="tier-row">
+      <button class="tbtn active" onclick="pickTier('starter','f',this)">🟢 Foundation</button>
+      <button class="tbtn" onclick="pickTier('starter','m',this)">🟠 Middle</button>
+      <button class="tbtn" onclick="pickTier('starter','h',this)">🟣 Higher</button>
+    </div>
+
+    <div class="tlvl active" id="starter-f">
+      <div class="ind-q"><strong>1.</strong> What does the <strong>battery</strong> provide?
+        <div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">the resistance</span><span class="mcq-opt" onclick="mcqCheck(this,true)">the voltage (the push)</span><span class="mcq-opt" onclick="mcqCheck(this,false)">current made by the wire</span></div></div>
+      <div class="ind-q"><strong>2.</strong> A higher <strong>resistance</strong> means…
+        <div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">current flows more easily</span><span class="mcq-opt" onclick="mcqCheck(this,true)">it is harder for current to flow</span><span class="mcq-opt" onclick="mcqCheck(this,false)">the voltage disappears</span></div></div>
+    </div>
+
+    <div class="tlvl" id="starter-m">
+      <div class="ind-q"><strong>1.</strong> The battery provides the <select class="vsel" data-ans="voltage"><option value="">—</option><option>voltage</option><option>resistance</option><option>amps</option></select>, which pushes the current round.</div>
+      <div class="ind-q"><strong>2.</strong> If resistance increases, the current <select class="vsel" data-ans="decreases"><option value="">—</option><option>increases</option><option>decreases</option><option>stays the same</option></select>.</div>
+      <button class="small" onclick="checkBox('starter-m','stfb-m')">Check answers</button><div class="vfb" id="stfb-m"></div>
+    </div>
+
+    <div class="tlvl" id="starter-h">
+      <div class="ind-q"><strong>1.</strong> A circuit keeps voltage the same but the resistance doubles. The current will <select class="vsel" data-ans="halve"><option value="">—</option><option>double</option><option>halve</option><option>stay the same</option></select>.</div>
+      <div class="ind-q"><strong>2.</strong> Best description of resistance: <select class="vsel" data-ans="how hard it is for current to flow"><option value="">—</option><option>how hard it is for current to flow</option><option>the push from the battery</option><option>the amount of charge stored</option></select>.</div>
+      <button class="small" onclick="checkBox('starter-h','stfb-h')">Check answers</button><div class="vfb" id="stfb-h"></div>
+    </div>
+    <div class="aspire-box"><strong>🚀 Aspire:</strong> "Voltage pushes the current, and resistance slows it down."</div>
+  </div>
+
+  <!-- ============ 3 I DO 1 (V=IR) ============ -->
+  <div class="slide" data-title="I Do — V=IR" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · I teach</span>
+    <h2>The equation: V = I × R</h2>
+    <p>We use a <strong>triangle</strong> to rearrange it. <strong>Tap a letter</strong> to cover it.</p>
+    <div class="tri-wrap">
+      <div class="triangle">
+        <svg viewBox="0 0 230 200">
+          <polygon points="115,10 220,190 10,190" fill="#ede9fe" stroke="#7c3aed" stroke-width="4"/>
+          <line x1="10" y1="125" x2="220" y2="125" stroke="#7c3aed" stroke-width="4"/>
+          <line x1="115" y1="125" x2="115" y2="190" stroke="#7c3aed" stroke-width="4"/>
+          <g class="tri-cell" id="cV" onclick="triPick('V')"><polygon points="115,12 200,118 30,118" fill="#7c3aed"/><text class="tri-let" x="115" y="92" text-anchor="middle">V</text></g>
+          <g class="tri-cell" id="cI" onclick="triPick('I')"><rect x="14" y="128" width="98" height="58" fill="#a78bfa"/><text class="tri-let" x="63" y="170" text-anchor="middle">I</text></g>
+          <g class="tri-cell" id="cR" onclick="triPick('R')"><rect x="118" y="128" width="98" height="58" fill="#a78bfa"/><text class="tri-let" x="167" y="170" text-anchor="middle">R</text></g>
+        </svg>
+      </div>
+      <div class="tri-out" id="triOut"><p style="color:var(--muted);font-weight:600">Cover the one you want to find…</p></div>
+    </div>
+    <div class="ido-box">
+      <strong>👀 Watch me — worked example</strong>
+      <p style="margin:6px 0">A bulb has <strong>I = 2 A</strong> and <strong>R = 3 Ω</strong>. Find the voltage <strong>V</strong>.</p>
+      <div class="steps" id="ido1steps">
+        <div class="vstep"><b>Step 1 — Formula.</b> Cover V → V = I × R</div>
+        <div class="vstep"><b>Step 2 — Numbers in.</b> V = 2 × 3</div>
+        <div class="vstep"><b>Step 3 — Calculate.</b> V = <span class="ans">6 V</span> (don't forget the unit!)</div>
+      </div>
+      <button onclick="stepReveal('ido1steps',this)">Next step ▶</button>
+    </div>
+    <div class="task-box"><strong>📝 Exam Tip:</strong> write the <strong>formula first</strong>, then the numbers, then the <strong>unit</strong>.</div>
+  </div>
+
+  <!-- ============ 4 WE DO 1 (V=IR) ============ -->
+  <div class="slide" data-title="We Do — V=IR" data-type="wedo" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · we practise together</span>
+    <h2>Now we try together</h2>
+    <div class="wedo-capture" id="wedo1">
+      <strong>✍️ Find the current</strong>
+      <p style="margin:6px 0">Heater: <strong>V = 12 V</strong>, <strong>R = 4 Ω</strong>. Cover I → I = V ÷ R</p>
+      <p>I = 12 ÷ 4 = <input class="numin" type="text" id="we1"> A</p>
+      <button class="small" onclick="checkVal('we1','3','we1fb')">Check together</button>
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button>
+      <div class="hint-text">12 shared into 4 equal parts.</div>
+      <div class="vfb" id="we1fb"></div>
+      <hr style="border:none;border-top:1px dashed #e2e8f0;margin:12px 0">
+      <strong>✍️ Find the resistance</strong>
+      <p style="margin:6px 0">Lamp: <strong>V = 9 V</strong>, <strong>I = 3 A</strong>. Cover R → R = V ÷ I</p>
+      <p>R = 9 ÷ 3 = <input class="numin" type="text" id="we2"> Ω</p>
+      <button class="small" onclick="checkVal('we2','3','we2fb')">Check together</button>
+      <div class="vfb" id="we2fb"></div>
+      <button class="evidence-btn" style="margin-top:12px" onclick="printWeDoEvidence('wedo1')">🖨️ Print evidence</button>
+    </div>
+    <div class="scaffold-box"><strong>🗣️ Turn &amp; Talk:</strong> how did you know whether to multiply or divide?</div>
+  </div>
+
+  <!-- ============ 5 I DO 2 (RULES) ============ -->
+  <div class="slide" data-title="I Do — Circuit Rules" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · I teach</span>
+    <h2>Circuit rules: series vs parallel</h2>
+    <p>Watch the <strong>orange flow</strong> — that's the current moving round.</p>
+    <div class="cols2">
+      <div class="col2">
+        <h3>🔗 Series (one loop)</h3>
+        <div class="circuit-card">
+          <svg viewBox="0 0 320 150">
+            <path class="wire2" d="M40 110 H280 V40 H40 Z"/><path class="flow2" d="M40 110 H280 V40 H40 Z"/>
+            <rect class="comp2" x="30" y="70" width="20" height="38"/><text class="lblsm2" x="40" y="128" text-anchor="middle">cell</text>
+            <rect class="comp2" x="110" y="28" width="44" height="24"/><text class="lblsm2" x="132" y="22" text-anchor="middle">R₁</text>
+            <rect class="comp2" x="190" y="28" width="44" height="24"/><text class="lblsm2" x="212" y="22" text-anchor="middle">R₂</text>
+          </svg>
+        </div>
+        <div class="rule2"><b>Current:</b> the SAME everywhere 🔁</div>
+        <div class="rule2"><b>Voltage:</b> SHARED across components (adds up)</div>
+        <div class="rule2"><b>Resistance:</b> ADD them → R = R₁ + R₂</div>
+      </div>
+      <div class="col2">
+        <h3>🪢 Parallel (branches)</h3>
+        <div class="circuit-card">
+          <svg viewBox="0 0 320 150">
+            <path class="wire2" d="M40 120 H280 M40 30 H280 M120 30 V120 M220 30 V120"/>
+            <path class="flow2" d="M40 120 H280 V30 H40 Z"/>
+            <rect class="comp2" x="30" y="55" width="20" height="40"/><text class="lblsm2" x="40" y="112" text-anchor="middle">cell</text>
+            <rect class="comp2" x="98" y="63" width="44" height="24"/><text class="lblsm2" x="120" y="58" text-anchor="middle">R₁</text>
+            <rect class="comp2" x="198" y="63" width="44" height="24"/><text class="lblsm2" x="220" y="58" text-anchor="middle">R₂</text>
+          </svg>
+        </div>
+        <div class="rule2"><b>Current:</b> SHARED between branches (splits)</div>
+        <div class="rule2"><b>Voltage:</b> the SAME across each branch 🔁</div>
+        <div class="rule2"><b>Resistance:</b> total goes DOWN (more paths)</div>
+      </div>
+    </div>
+    <div class="misc-box">
+      <strong>🚫 Common misconception</strong>
+      <p style="margin:6px 0"><span class="strike" id="miscStrike">"Current gets used up as it goes round the circuit."</span></p>
+      <p id="miscFix" style="display:none;margin:6px 0"><b>✓ Truth:</b> in a series circuit the current is the <strong>same all the way round</strong>. The energy (voltage) is what gets shared out.</p>
+      <button class="small" onclick="fixMisc()">Reveal the truth ▶</button>
+    </div>
+  </div>
+
+  <!-- ============ 6 WE DO 2 (RULES) ============ -->
+  <div class="slide" data-title="We Do — Circuit Rules" data-type="wedo" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · we practise together</span>
+    <h2>Apply the rules together</h2>
+    <div class="wedo-capture" id="wedo2">
+      <strong>✍️ Series — total resistance, then current</strong>
+      <div class="circuit-card">
+        <svg viewBox="0 0 320 140">
+          <path class="wire2" d="M40 105 H280 V40 H40 Z"/><path class="flow2" d="M40 105 H280 V40 H40 Z"/>
+          <rect class="comp2" x="30" y="65" width="20" height="38"/><text class="lblsm2" x="40" y="124" text-anchor="middle">12 V</text>
+          <rect class="comp2" x="110" y="28" width="44" height="24"/><text class="lblsm2" x="132" y="22" text-anchor="middle">2 Ω</text>
+          <rect class="comp2" x="200" y="28" width="44" height="24"/><text class="lblsm2" x="222" y="22" text-anchor="middle">4 Ω</text>
+        </svg>
+      </div>
+      <p><b>Step 1:</b> series → add resistances. R = 2 + 4 = <input class="numin" type="text" id="we3"> Ω</p>
+      <button class="small" onclick="checkVal('we3','6','we3fb')">Check Step 1</button><div class="vfb" id="we3fb"></div>
+      <p style="margin-top:12px"><b>Step 2:</b> I = V ÷ R = 12 ÷ 6 = <input class="numin" type="text" id="we4"> A</p>
+      <button class="small" onclick="checkVal('we4','2','we4fb')">Check Step 2</button>
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button>
+      <div class="hint-text">Use your Step 1 answer (6 Ω) as R.</div>
+      <div class="vfb" id="we4fb"></div>
+      <button class="evidence-btn" style="margin-top:12px" onclick="printWeDoEvidence('wedo2')">🖨️ Print evidence</button>
+    </div>
+    <div class="scaffold-box"><strong>🗣️ Turn &amp; Talk:</strong> in parallel, what stays the <strong>same</strong> across each branch?</div>
+  </div>
+
+  <!-- ============ 7 INDEPENDENT (tiered) ============ -->
+  <div class="slide" id="ind-slide" data-title="Independent Work" data-type="independent" data-timer="8" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-independent">Independent Work · you practise</span>
+    <h2>Independent task</h2>
+    <div class="tier-row">
+      <button class="tbtn active" onclick="pickTier('ind','f',this)">🟢 Foundation</button>
+      <button class="tbtn" onclick="pickTier('ind','m',this)">🟠 Middle</button>
+      <button class="tbtn" onclick="pickTier('ind','h',this)">🟣 Higher</button>
+    </div>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-fill"></div></div>
+    <div class="xp-label" id="xp-label">Questions completed: 0</div>
+
+    <!-- FOUNDATION -->
+    <div class="tlvl ind-level active" id="ind-f">
+      <div class="ind-q" id="qf1"><span class="q-type q-short">Calculate</span><strong>1.</strong> Complete the table (V = I × R)
+        <table class="vtable"><tr><th>V</th><th>I</th><th>R</th></tr>
+          <tr><td><input class="numin" type="number" data-ans="10"></td><td>2</td><td>5</td></tr>
+          <tr><td>20</td><td><input class="numin" type="number" data-ans="5"></td><td>4</td></tr>
+          <tr><td>18</td><td>3</td><td><input class="numin" type="number" data-ans="6"></td></tr></table>
+        <button class="small" onclick="checkBox('qf1','qf1fb','qf1')">Check</button>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Cover the missing letter on the triangle.</div>
+        <div class="vfb" id="qf1fb"></div></div>
+      <div class="ind-q" id="qf2"><span class="q-type q-diagram">Diagram</span><strong>2.</strong> Label the circuit
+        <div class="circuit-card"><svg viewBox="0 0 340 160"><path class="wire2" d="M50 120 H290 V40 H50 Z"/><rect class="comp2" x="40" y="78" width="20" height="42"/><text class="lblsm2" x="40" y="138" text-anchor="middle">A</text><rect class="comp2" x="150" y="28" width="44" height="24"/><text class="lblsm2" x="172" y="22" text-anchor="middle">B</text><circle class="comp2" cx="280" cy="80" r="16"/><text class="lbl2" x="280" y="85" text-anchor="middle">A</text><text class="lblsm2" x="280" y="118" text-anchor="middle">C</text></svg></div>
+        <p style="margin:4px 0"><b>A</b>: <select class="vsel" data-ans="cell / battery"><option value="">—</option><option>cell / battery</option><option>resistor</option><option>ammeter</option></select>
+           &nbsp;<b>B</b>: <select class="vsel" data-ans="resistor"><option value="">—</option><option>cell / battery</option><option>resistor</option><option>ammeter</option></select>
+           &nbsp;<b>C</b>: <select class="vsel" data-ans="ammeter"><option value="">—</option><option>cell / battery</option><option>resistor</option><option>ammeter</option></select></p>
+        <button class="small" onclick="checkBox('qf2','qf2fb','qf2')">Check</button><div class="vfb" id="qf2fb"></div></div>
+      <div class="ind-q" id="qf3"><span class="q-type q-short">Calculate</span><strong>3.</strong> Series circuit 3 Ω + 5 Ω + 2 Ω. Total R = <input class="numin" type="number" data-ans="10"> Ω
+        <button class="small" onclick="checkBox('qf3','qf3fb','qf3')">Check</button><div class="vfb" id="qf3fb"></div></div>
+      <div class="ind-q" id="qf4"><span class="q-type q-mcq">Apply</span><strong>4.</strong> (a) Series, ammeter reads 2 A at battery — further round it reads
+        <select class="vsel" data-ans="2 A (same everywhere)"><option value="">—</option><option>1 A (halves)</option><option>2 A (same everywhere)</option><option>0 A (used up)</option></select>
+        (b) Parallel, 6 V battery — each branch is <select class="vsel" data-ans="6 V (same across each branch)"><option value="">—</option><option>3 V (shares)</option><option>6 V (same across each branch)</option><option>12 V (doubles)</option></select>
+        <button class="small" onclick="checkBox('qf4','qf4fb','qf4')">Check</button><div class="vfb" id="qf4fb"></div></div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div class="tlvl ind-level" id="ind-m">
+      <div class="ind-q" id="qm1"><span class="q-type q-short">Calculate</span><strong>1.</strong> Complete the table (V = I × R)
+        <table class="vtable"><tr><th>V</th><th>I</th><th>R</th></tr>
+          <tr><td><input class="numin" type="number" data-ans="18"></td><td>3</td><td>6</td></tr>
+          <tr><td>24</td><td><input class="numin" type="number" data-ans="6"></td><td>4</td></tr>
+          <tr><td>30</td><td>5</td><td><input class="numin" type="number" data-ans="6"></td></tr></table>
+        <button class="small" onclick="checkBox('qm1','qm1fb','qm1')">Check</button><div class="vfb" id="qm1fb"></div></div>
+      <div class="ind-q" id="qm2"><span class="q-type q-short">Calculate</span><strong>2.</strong> Series 5 Ω + 5 Ω + 2 Ω with a 24 V supply. Total R = <input class="numin" type="number" data-ans="12"> Ω, so current I = <input class="numin" type="number" data-ans="2"> A
+        <button class="small" onclick="checkBox('qm2','qm2fb','qm2')">Check</button>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Add the resistances first, then I = V ÷ R.</div>
+        <div class="vfb" id="qm2fb"></div></div>
+      <div class="ind-q" id="qm3"><span class="q-type q-mcq">Apply</span><strong>3.</strong> In a parallel circuit the current from the battery is
+        <select class="vsel" data-ans="shared between the branches"><option value="">—</option><option>the same in every branch</option><option>shared between the branches</option><option>used up in the first branch</option></select>
+        <button class="small" onclick="checkBox('qm3','qm3fb','qm3')">Check</button><div class="vfb" id="qm3fb"></div></div>
+    </div>
+
+    <!-- HIGHER -->
+    <div class="tlvl ind-level" id="ind-h">
+      <div class="ind-q" id="qh1"><span class="q-type q-short">Calculate</span><strong>1.</strong> A 230 V supply drives a current of 5 A. The resistance is <input class="numin" type="number" data-ans="46"> Ω
+        <button class="small" onclick="checkBox('qh1','qh1fb','qh1')">Check</button>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">R = V ÷ I = 230 ÷ 5.</div><div class="vfb" id="qh1fb"></div></div>
+      <div class="ind-q" id="qh2"><span class="q-type q-short">Calculate</span><strong>2.</strong> Two 6 Ω resistors in series share a 24 V supply. Total R = <input class="numin" type="number" data-ans="12"> Ω, current = <input class="numin" type="number" data-ans="2"> A, and the voltage across ONE resistor = <input class="numin" type="number" data-ans="12"> V
+        <button class="small" onclick="checkBox('qh2','qh2fb','qh2')">Check</button>
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Equal resistors share the voltage equally → 24 ÷ 2.</div><div class="vfb" id="qh2fb"></div></div>
+      <div class="ind-q stretch" id="qh3"><span class="q-type q-stretch">⭐ Reason</span><strong>3.</strong> Why does adding a second bulb in <strong>parallel</strong> (not series) keep both bulbs bright?
+        <select class="vsel" data-ans="each branch still gets the full battery voltage"><option value="">—</option><option>each branch still gets the full battery voltage</option><option>the current is shared so each gets less voltage</option><option>the resistance increases so voltage rises</option></select>
+        <button class="small" onclick="checkBox('qh3','qh3fb','qh3')">Check</button><div class="vfb" id="qh3fb"></div></div>
+    </div>
+  </div>
+
+  <!-- ============ 8 EXIT (tiered, reveal-based) ============ -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Show me what stuck</h2>
+    <div class="tier-row">
+      <button class="tbtn active" onclick="pickTier('exit','f',this)">🟢 Foundation</button>
+      <button class="tbtn" onclick="pickTier('exit','m',this)">🟠 Middle</button>
+      <button class="tbtn" onclick="pickTier('exit','h',this)">🟣 Higher</button>
+    </div>
+
+    <div class="tlvl active" id="exit-f">
+      <div class="ind-q"><strong>1.</strong> V = 10 V, R = 2 Ω. Find I. <span class="answer">I = V ÷ R = 10 ÷ 2 = 5 A</span></div>
+      <div class="ind-q"><strong>2.</strong> In a series circuit, the current is… <span class="answer">the same everywhere</span></div>
+      <div class="ind-q"><strong>3.</strong> In a parallel circuit, the voltage across each branch is… <span class="answer">the same across each branch</span></div>
+    </div>
+    <div class="tlvl" id="exit-m">
+      <div class="ind-q"><strong>1.</strong> V = 18 V, I = 3 A. Find R. <span class="answer">R = V ÷ I = 18 ÷ 3 = 6 Ω</span></div>
+      <div class="ind-q"><strong>2.</strong> In series, two equal bulbs share a 12 V supply. Each gets… <span class="answer">6 V (the voltage is shared equally)</span></div>
+      <div class="ind-q"><strong>3.</strong> Total resistance of 4 Ω + 6 Ω in series? <span class="answer">10 Ω (resistances add)</span></div>
+    </div>
+    <div class="tlvl" id="exit-h">
+      <div class="ind-q"><strong>1.</strong> A 12 V supply, total resistance 8 Ω. Find the current. <span class="answer">I = V ÷ R = 12 ÷ 8 = 1.5 A</span></div>
+      <div class="ind-q"><strong>2.</strong> Explain why current is the same everywhere in a series circuit. <span class="answer">There is only one path, so the same charge flows through every component each second — nothing is used up.</span></div>
+      <div class="ind-q"><strong>3.</strong> Two resistors in parallel across 6 V. What is the voltage across each? <span class="answer">6 V — each branch gets the full supply voltage.</span></div>
+    </div>
+
+    <button onclick="showExitVIR()" style="margin-top:10px">Show answers &amp; finish ✓</button>
+  </div>
+
+</div>
+
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- ===================== PRINT AREA (TIER-AWARE) ===================== -->
+<div id="print-area">
+
+  <div id="print-arrival" class="print-section">
+    <h2>Arrival Task — V = I × R &amp; Circuit Rules</h2>
+    <p>Name: ____________________  Date: __________  Class: __________</p>
+    <p>Write the correct unit next to each quantity (volts V / amps A / ohms Ω).</p>
+    <p style="line-height:2.2">V — Voltage: ____________________ &nbsp;&nbsp; I — Current: ____________________ &nbsp;&nbsp; R — Resistance: ____________________</p>
+  </div>
+
+  <div id="print-starter" class="print-section">
+    <h2>Starter</h2>
+    <p>1. What does the battery provide to a circuit?</p><div class="print-line"></div>
+    <p>2. A higher resistance means…</p><div class="print-line"></div>
+    <p>3. Finish the sentence: "Voltage ____________ the current, and resistance ____________ it down."</p>
+  </div>
+
+  <div id="print-independent" class="print-section">
+    <h2>Independent Task</h2>
+    <p><strong>1. Complete the table (V = I × R):</strong></p>
+    <table class="ko-table"><tr><th>V (volts)</th><th>I (amps)</th><th>R (ohms)</th></tr>
+      <tr><td>&nbsp;</td><td>2</td><td>5</td></tr><tr><td>20</td><td>&nbsp;</td><td>4</td></tr><tr><td>18</td><td>3</td><td>&nbsp;</td></tr></table>
+    <p><strong>2. Label the circuit:</strong> A (power source) = ____________  B (slows current) = ____________  C (measures amps) = ____________</p>
+    <p><strong>3.</strong> Series circuit 3 Ω + 5 Ω + 2 Ω. &nbsp; Total resistance = ____________ Ω</p>
+    <p><strong>4.</strong> Series circuit: ammeter reads 2 A at the battery. Reading further round = ____________ A</p>
+    <p><strong>5.</strong> Parallel circuit with a 6 V battery. Voltage across each branch = ____________ V</p>
+    <p><strong>⭐ Challenge:</strong> 20 V supply, total 10 Ω. &nbsp; Current = ____________ A</p>
+  </div>
+
+  <div id="print-exit" class="print-section">
+    <h2>Exit Ticket</h2>
+    <p>1. V = 10 V, R = 2 Ω. &nbsp; Current I = ____________ A</p>
+    <p>2. In a series circuit, the current is ________________________________________</p>
+    <p>3. In a parallel circuit, the voltage across each branch is ________________________________</p>
+  </div>
+
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+
+</div>
+
+
+<script>
+/* ---------- NAVIGATION ---------- */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+
+/* ---------- TA FOCUS — observer-visible TA deployment briefs ---------- */
+const taBriefs={
+  0:null,
+  1:{
+    phase:"Arrival — Match symbol to unit",
+    position:"Stay with the most anxious pupils; do NOT prompt before they try.",
+    watch:"Pupils muddling amps/volts/ohms, or unsure what Ω means.",
+    support:"After 1 min: point to the scaffold box ('Victor has Volts'). Don't give the answer.",
+    cta:"Cold-call 3 pupils — one each for V, I, R — for the whole-class share."
+  },
+  2:{
+    phase:"Starter — Voltage pushes, resistance slows",
+    position:"Roam; verify books/screens are headed up.",
+    watch:"Pupils who think the wire 'makes' the current, or that high resistance = more flow.",
+    support:"Verbal stem: 'Voltage ______ the current. Resistance ______ it down.'",
+    cta:"Cold-call a pupil to say the whole sentence aloud before I Do."
+  },
+  3:{
+    phase:"I Do 1 — V = I × R triangle",
+    position:"Front and centre — model the triangle slowly on the board too.",
+    watch:"Pupils not covering the right letter; multiply/divide confusion.",
+    support:"Have them physically cover the letter with a finger on their own triangle.",
+    cta:"Cold-call a pupil to read the formula after covering each of V, I, R."
+  },
+  4:{
+    phase:"We Do 1 — practise V=IR",
+    position:"Roam — hunt for divide vs multiply errors.",
+    watch:"Pupils writing the answer with no unit, or dividing the wrong way round.",
+    support:"Whisper: 'Which letter did you cover? So is it × or ÷?'",
+    cta:"Before each check, cold-call for the method (formula → numbers → unit)."
+  },
+  5:{
+    phase:"I Do 2 — Series vs parallel rules",
+    position:"Re-target pupils prone to the 'current used up' misconception.",
+    watch:"Confusing the current rule with the voltage rule; mixing series/parallel.",
+    support:"Anchor it: 'Series = current SAME. Parallel = voltage SAME.' Write in red pen.",
+    cta:"Cold-call a Higher pupil to explain why current is the same all the way round."
+  },
+  6:{
+    phase:"We Do 2 — Apply the rules (2 steps)",
+    position:"Roam; check Step 1 is correct before pupils start Step 2.",
+    watch:"Pupils using the wrong R in Step 2, or not adding resistances in series.",
+    support:"Scaffold the division; remind them Step 1's answer is the R for Step 2.",
+    cta:"Cold-call for Step 1 total resistance, then a different pupil for Step 2 current."
+  },
+  7:{
+    phase:"Independent Work (8 min)",
+    position:"TARGETED — sit with 2–3 named pupils (decide before the lesson).",
+    watch:"Freezing on Q2 (labelling) or Q5 (applying rules). Q6 is challenge only.",
+    support:"Refer back to the triangle and the two rule columns. Give a verbal stem.",
+    cta:"At 4 min: cold-call a pupil for Q1 progress. At 6 min: pause for any common stuck-point."
+  },
+  8:{
+    phase:"Exit Ticket — quick AfL",
+    position:"Stay back; this is assessment, minimal scaffolding.",
+    watch:"Note who misses Q2/Q3 — that's the re-teach list for next session.",
+    support:"Confirm pupils attempt all three; do not feed answers.",
+    cta:"Whole-class cold-call: assign one of the three questions to three named pupils."
+  }
+};
+function showTABrief(){
+  const brief=taBriefs[currentSlide];
+  const body=document.getElementById('ta-modal-body');
+  const title=document.getElementById('ta-modal-title');
+  if(!brief){
+    title.innerText='TA Focus';
+    body.innerHTML='<p class="ta-no-brief">No TA action required for this slide.</p>';
+  } else {
+    title.innerText=brief.phase;
+    let html='';
+    html+='<div class="ta-row"><div class="ta-row-icon">📍</div><div class="ta-row-content"><strong>Position:</strong> '+brief.position+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">👀</div><div class="ta-row-content"><strong>Watch for:</strong> '+brief.watch+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">🤝</div><div class="ta-row-content"><strong>Support:</strong> '+brief.support+'</div></div>';
+    if(brief.cta){html+='<div class="ta-cta-row"><strong>📣 CTA cue (for teacher):</strong> '+brief.cta+'</div>'}
+    body.innerHTML=html;
+  }
+  document.getElementById('ta-focus-overlay').classList.add('visible');
+}
+function hideTABrief(){
+  document.getElementById('ta-focus-overlay').classList.remove('visible');
+}
+
+/* ---------- COLD CALL — random pupil + slide-relevant tiered question ---------- */
+/* Each slide has questions tiered: foundation (U-1), middle (1-2), higher (3-4) */
+const coldCallQuestions={
+  0:null,
+  1:{
+    foundation:["Which unit goes with voltage?","Which unit goes with current?","What does the Ω symbol mean?","Is current measured in amps or volts?"],
+    middle:["What does the letter I stand for?","Why do we measure resistance in ohms?","Which quantity is the 'push' in a circuit?"],
+    higher:["Explain the difference between voltage and current in your own words.","Why does every electrical quantity need its own unit?"]
+  },
+  2:{
+    foundation:["What provides the voltage in a circuit?","Does high resistance make current flow more or less easily?","Finish: 'Voltage ______ the current.'","Is the battery or the wire the source of the push?"],
+    middle:["Why is it wrong to say the wire makes the current?","What happens to current if resistance goes up?","Give an everyday example of resistance."],
+    higher:["Explain how voltage and resistance together decide the current.","Predict: if you double the resistance, what happens to the current?"]
+  },
+  3:{
+    foundation:["Which letter do you cover to find V?","What is V = I × R in words?","Cover I — what's the formula?","Cover R — what's the formula?"],
+    middle:["I = 2 A, R = 3 Ω — find V.","Why must you write the unit in your answer?","What's the first thing to write in any calculation?"],
+    higher:["Explain why the triangle works for rearranging the formula.","If V stays the same and R doubles, what happens to I? Justify."]
+  },
+  4:{
+    foundation:["Read out your answer for the current question.","Did you multiply or divide? Why?","What unit goes with your answer?"],
+    middle:["Talk us through finding the resistance step by step.","How did you decide × or ÷?","Which letter did you cover and why?"],
+    higher:["Explain your full method as if teaching it.","Make up your own V=IR question and solve it."]
+  },
+  5:{
+    foundation:["In a series circuit, is the current the same or different everywhere?","In parallel, what is the same across each branch?","Does current get 'used up'? Yes or no?"],
+    middle:["State the current rule for series.","State the voltage rule for parallel.","What happens to total resistance when you add a parallel branch?"],
+    higher:["Explain why current is the same all the way round a series circuit.","Compare how voltage behaves in series vs parallel."]
+  },
+  6:{
+    foundation:["What do you do with resistances in a series circuit?","2 Ω + 4 Ω — what's the total?","Which formula finds the current?"],
+    middle:["Talk us through Step 1 then Step 2.","Why do we add the resistances first?","What R value did you use in Step 2?"],
+    higher:["Explain why you can't find the current before the total resistance.","If these were parallel instead, what would change?"]
+  },
+  7:{
+    foundation:["Which question are you on?","Read your answer to Q1.","For Q2, what measures the current?"],
+    middle:["Q4 — what's the total resistance and why?","Q5(a) — what's the current further round? Why?","Q5(b) — what's the voltage across each branch?"],
+    higher:["Q6 challenge — talk us through your full method.","Explain how Q5 uses the rules from the I Do."]
+  },
+  8:{
+    foundation:["Q1 — what's your current answer?","Q2 — read your choice out.","Q3 — what did you pick?"],
+    middle:["Defend your Q2 answer.","Explain your Q3 choice using the rule.","How did you work out Q1?"],
+    higher:["Explain the difference between the series and parallel rules you used.","Which question was the real test of understanding? Why?"]
+  }
+};
+/* Pupils stored as {name, grade} where grade is 'U','1','2','3','4' */
+/* Year 10 single class — uses its own storage key (separate from Year 11) */
+let coldCallNames=[];
+let lastPickedNames=[];
+let questionMode='match'; // 'match' | 'stretch' | 'check'
+try{
+  const list=JSON.parse(localStorage.getItem('coldCall_y10')||'[]');
+  /* Migrate legacy plain-string lists to {name,grade:''} */
+  coldCallNames=list.map(p=>typeof p==='string'?{name:p,grade:''}:p);
+}catch(e){}
+function gradeToTier(grade){
+  if(grade==='U'||grade==='1')return 'foundation';
+  if(grade==='2')return 'middle';
+  if(grade==='3'||grade==='4')return 'higher';
+  return 'middle';
+}
+function applyMode(tier,mode){
+  const order=['foundation','middle','higher'];
+  let i=order.indexOf(tier);
+  if(mode==='stretch')i=Math.min(i+1,2);
+  else if(mode==='check')i=Math.max(i-1,0);
+  return order[i];
+}
+function showColdCall(){
+  document.getElementById('cold-call-overlay').classList.add('visible');
+  renderColdCall();
+}
+function hideColdCall(){
+  document.getElementById('cold-call-overlay').classList.remove('visible');
+}
+function renderColdCall(){
+  if(coldCallNames.length===0){renderColdCallSetup()}else{renderColdCallPicker()}
+}
+function renderColdCallSetup(){
+  const body=document.getElementById('cold-call-body');
+  const list=coldCallNames;
+  const hasAnyNames=list.length>0;
+  let rows='';
+  if(list.length===0){
+    rows='<p class="cc-empty-rows">No pupils added yet — add one below to begin.</p>';
+  } else {
+    rows='<div class="cc-pupil-rows">';
+    list.forEach((p,idx)=>{
+      const name=escapeHTML(p.name);
+      const grades=['U','1','2','3','4'];
+      let gradeChips='';
+      grades.forEach(g=>{
+        const sel=p.grade===g?' cc-grade-selected':'';
+        gradeChips+='<button class="cc-grade-chip cc-grade-'+g.toLowerCase()+sel+'" onclick="setPupilGrade('+idx+',\''+g+'\')">'+g+'</button>';
+      });
+      rows+='<div class="cc-pupil-row"><div class="cc-pupil-name">'+name+'</div><div class="cc-grade-chips">'+gradeChips+'</div><button class="cc-remove-btn" onclick="removePupil('+idx+')" aria-label="Remove">✕</button></div>';
+    });
+    rows+='</div>';
+  }
+  body.innerHTML=
+    '<p class="cc-setup-title">Year 10 — Class List</p>'+
+    '<p class="cc-helper">Set each pupil\'s predicted grade (<strong>U/1</strong>=Foundation, <strong>2</strong>=Middle, <strong>3/4</strong>=Higher). Saves automatically.</p>'+
+    rows+
+    '<div class="cc-add-row">'+
+      '<input type="text" class="cc-add-input" id="cc-add-input" placeholder="Add pupil name..." onkeypress="if(event.key===\'Enter\')addPupil()">'+
+      '<button class="cc-btn-secondary" onclick="addPupil()" style="flex:0 0 auto">+ Add</button>'+
+    '</div>'+
+    '<div class="cold-call-actions">'+
+      (hasAnyNames?'<button class="cc-btn-primary" onclick="renderColdCallPicker()">▶ Start Cold Calling</button>':'<button class="cc-btn-primary" disabled style="opacity:.5;cursor:not-allowed">Add at least one pupil</button>')+
+    '</div>';
+}
+function escapeHTML(s){const d=document.createElement('div');d.innerText=s;return d.innerHTML}
+function addPupil(){
+  const input=document.getElementById('cc-add-input');
+  const name=(input.value||'').trim();
+  if(!name)return;
+  coldCallNames.push({name:name,grade:''});
+  saveColdCallNames();
+  input.value='';
+  renderColdCallSetup();
+  setTimeout(()=>{const inp=document.getElementById('cc-add-input');if(inp)inp.focus()},50);
+}
+function removePupil(idx){
+  coldCallNames.splice(idx,1);
+  saveColdCallNames();
+  renderColdCallSetup();
+}
+function setPupilGrade(idx,grade){
+  if(coldCallNames[idx].grade===grade){
+    coldCallNames[idx].grade='';
+  } else {
+    coldCallNames[idx].grade=grade;
+  }
+  saveColdCallNames();
+  renderColdCallSetup();
+}
+function saveColdCallNames(){
+  try{localStorage.setItem('coldCall_y10',JSON.stringify(coldCallNames))}catch(e){}
+}
+function renderColdCallPicker(){
+  const list=coldCallNames;
+  const body=document.getElementById('cold-call-body');
+  body.innerHTML=
+    '<p class="cold-call-class-label">Year 10 · '+list.length+' pupils</p>'+
+    '<div class="cold-call-name-box">'+
+      '<div class="cold-call-name" id="cold-call-name">— ready —</div>'+
+    '</div>'+
+    '<div class="cc-mode-toggle">'+
+      '<span class="cc-mode-label">Pitch:</span>'+
+      '<button class="cc-mode-btn '+(questionMode==='check'?'active':'')+'" onclick="setQMode(\'check\')" title="Easier question">Easier</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='match'?'active':'')+'" onclick="setQMode(\'match\')" title="Standard question">Standard</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='stretch'?'active':'')+'" onclick="setQMode(\'stretch\')" title="Harder question">Harder</button>'+
+    '</div>'+
+    '<div class="cold-call-q-box">'+
+      '<p class="cold-call-q-label">📚 Slide question</p>'+
+      '<p class="cold-call-question" id="cold-call-question">Press 🎲 to roll a name + question</p>'+
+    '</div>'+
+    '<div class="cold-call-actions">'+
+      '<button class="cc-btn-primary" onclick="rollNameAndQuestion()">🎲 Spin · Name + Question</button>'+
+      '<button class="cc-btn-secondary" onclick="rollQuestionOnly()">🎯 New Question</button>'+
+    '</div>'+
+    '<button class="cc-edit-link" onclick="renderColdCallSetup()">✎ Edit names / grades</button>';
+}
+function setQMode(mode){
+  questionMode=mode;
+  const list=coldCallNames||[];
+  if(list.length===0)return;
+  const btns=document.querySelectorAll('.cc-mode-btn');
+  if(btns.length>0){
+    btns.forEach(b=>b.classList.remove('active'));
+    const map={'check':0,'match':1,'stretch':2};
+    if(btns[map[mode]])btns[map[mode]].classList.add('active');
+  }
+}
+function rollNameAndQuestion(){
+  const list=coldCallNames||[];
+  if(list.length===0){renderColdCallSetup();return}
+  const display=document.getElementById('cold-call-name');
+  let availableList=list.slice();
+  if(list.length>4){availableList=list.filter(p=>!lastPickedNames.includes(p.name))}
+  if(availableList.length===0){availableList=list.slice()}
+  const finalPick=availableList[Math.floor(Math.random()*availableList.length)];
+  lastPickedNames.push(finalPick.name);
+  if(lastPickedNames.length>3)lastPickedNames.shift();
+  display.classList.remove('settled');
+  display.classList.add('spinning');
+  let counter=0;
+  const intervalId=setInterval(()=>{
+    display.innerText=list[Math.floor(Math.random()*list.length)].name;
+    counter++;
+    if(counter>=14){
+      clearInterval(intervalId);
+      display.classList.remove('spinning');
+      display.innerText=finalPick.name;
+      display.classList.add('settled');
+      setTimeout(()=>display.classList.remove('settled'),650);
+      // Roll question matched silently to this pupil's tier
+      rollQuestionForTier(finalPick.grade);
+    }
+  },70);
+}
+function rollQuestionOnly(){
+  const list=coldCallNames||[];
+  const currentName=document.getElementById('cold-call-name')?.innerText;
+  const pupil=list.find(p=>p.name===currentName);
+  rollQuestionForTier(pupil?pupil.grade:'');
+}
+function rollQuestionForTier(grade){
+  const slideQs=coldCallQuestions[currentSlide];
+  const qDisplay=document.getElementById('cold-call-question');
+  if(!slideQs){
+    qDisplay.innerText="(No specific question for this slide — ask one based on the displayed content.)";
+    return;
+  }
+  const baseTier=grade?gradeToTier(grade):'middle';
+  const finalTier=applyMode(baseTier,questionMode);
+  const pool=slideQs[finalTier]||slideQs.middle||[];
+  if(pool.length===0){
+    qDisplay.innerText="(No question available for this tier on this slide.)";
+    return;
+  }
+  const q=pool[Math.floor(Math.random()*pool.length)];
+  qDisplay.innerText=q;
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.isContentEditable)return;
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){
+  const p=((currentSlide+1)/slides.length)*100;
+  document.getElementById('progressBar').style.width=p+'%';
+  const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;
+  document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`;
+}
+
+/* ---------- TIER TOGGLES ---------- */
+function switchTier(area,tier){
+  ['f','m','h'].forEach(t=>{
+    const lvl=document.getElementById(area+'-'+t);
+    if(lvl)lvl.classList.toggle('active',t===tier);
+    const prefix=area==='arrival'?'arr-btn-':area==='starter'?'st-btn-':null;
+    if(prefix){
+      const btn=document.getElementById(prefix+t);
+      if(btn)btn.classList.toggle('active',t===tier);
+    }
+  });
+}
+function switchInd(l){
+  document.querySelectorAll('.ind-level').forEach(el=>el.classList.remove('active'));
+  document.getElementById('ind-'+l).classList.add('active');
+  ['f','m','h'].forEach(t=>{
+    const b=document.getElementById('ind-btn-'+t);
+    if(b)b.classList.toggle('active',t===l);
+  });
+  updateXP();
+}
+function switchExit(l){
+  document.getElementById('exit-f').style.display=l==='f'?'grid':'none';
+  document.getElementById('exit-m').style.display=l==='m'?'grid':'none';
+  document.getElementById('exit-h').style.display=l==='h'?'grid':'none';
+  ['f','m','h'].forEach(t=>{
+    const b=document.getElementById('exit-btn-'+t);
+    if(b)b.classList.toggle('active',t===l);
+  });
+}
+
+/* ---------- I DO 1: pH CELL CLICK + ION SWARM ---------- */
+function showPH(val,label,detail,colour){
+  const empty=document.getElementById('csEmpty');
+  const card=document.getElementById('csCard');
+  if(!card)return;
+  if(empty)empty.style.display='none';
+  card.style.display='flex';
+  // Animate re-entry
+  card.style.animation='none';void card.offsetWidth;card.style.animation='fadeInUp .35s ease-out';
+  // Set values
+  const num=document.getElementById('csNum');
+  num.innerText=val;
+  num.style.background=colour;
+  document.getElementById('csClass').innerText=label;
+  document.getElementById('csDetail').innerText=detail;
+  // UI colour mapping
+  const uiColours={0:'Dark red',1:'Red',2:'Red',3:'Orange-red',4:'Orange',5:'Yellow',6:'Light yellow',7:'Green',8:'Light blue',9:'Blue',10:'Blue',11:'Indigo',12:'Purple',13:'Dark purple',14:'Violet'};
+  document.getElementById('csChip').innerText='UI: '+uiColours[val];
+  // Real-world key fact
+  const facts={
+    0:'⚠️ Highly corrosive — destroys metals, burns skin.',1:'⚠️ Strong acid — corrosive, can burn.',
+    2:'Sour taste; harmful in large amounts.',3:'Sour; fairly acidic.',4:'Mildly acidic; safe in food.',
+    5:'Slightly acidic; common in foods/drinks.',6:'Very mildly acidic; close to neutral.',
+    7:'✅ Safe; pure water.',8:'Mildly alkaline; soapy feel.',9:'Used in cleaning/hygiene.',
+    10:'Alkaline; can irritate skin.',11:'⚠️ Strongly alkaline — corrosive.',12:'⚠️ Causes burns.',
+    13:'⚠️ Highly corrosive.',14:'⚠️ Most alkaline; damages skin/eyes.'
+  };
+  document.getElementById('csFact').innerText=facts[val]||'';
+  try{playClick()}catch(e){}
+}
+
+/* ---------- WE DO 1: ZONE SORT ---------- */
+let selSortCard=null,sortScore=0;
+function selectCard(el){if(el.classList.contains('placed'))return;document.querySelectorAll('.sort-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selSortCard=el}
+function dropInZone(zone,zoneEl){
+  if(!selSortCard)return;
+  const correct=selSortCard.getAttribute('data-zone');
+  const name=selSortCard.innerText.split('\n')[0];
+  if(zone===correct){
+    selSortCard.classList.add('placed');selSortCard.classList.remove('selected');
+    const items=zoneEl.querySelector('.zone-items');
+    items.innerHTML+='<div style="background:#fff;border-radius:6px;padding:2px 6px;margin:2px;display:inline-block;border:1px solid #22c55e">✅ '+name+'</div>';
+    sortScore++;document.getElementById('sort-score').innerText=sortScore;
+    selSortCard=null;
+    try{playDing()}catch(e){}
+    if(sortScore===8)fireConfettiGlobal();
+  } else {
+    zoneEl.style.animation='shake .4s';setTimeout(()=>zoneEl.style.animation='',450);
+    try{playBuzz()}catch(e){}
+  }
+}
+function resetSort(){
+  sortScore=0;document.getElementById('sort-score').innerText=0;selSortCard=null;
+  document.querySelectorAll('.sort-card').forEach(c=>c.classList.remove('placed','selected'));
+  document.querySelectorAll('.zone-items').forEach(z=>z.innerHTML='');
+}
+function revealSort(){
+  document.querySelectorAll('.sort-card').forEach(c=>{
+    if(c.classList.contains('placed'))return;
+    const zone=c.getAttribute('data-zone');
+    const name=c.innerText.split('\n')[0];
+    c.classList.add('placed');
+    document.querySelectorAll('.sort-zone').forEach(z=>{
+      if(z.getAttribute('onclick').includes("'"+zone+"'")){
+        z.querySelector('.zone-items').innerHTML+='<div style="background:#fff;border-radius:6px;padding:2px 6px;margin:2px;display:inline-block;border:1px solid #22c55e">✅ '+name+'</div>';
+      }
+    });
+  });
+  sortScore=8;document.getElementById('sort-score').innerText=8;
+}
+
+/* (Predict-and-Place feature was removed; functions retired) */
+
+/* ---------- WE DO 2: READ THE TUBES ---------- */
+let rtRevealed=new Set();
+function rtReveal(el){
+  if(el.classList.contains('revealed'))return;
+  const ph=el.getAttribute('data-ph');
+  const cls=el.getAttribute('data-class');
+  const explain=el.getAttribute('data-explain');
+  const letter=el.querySelector('.rt-letter').innerText;
+  el.querySelector('.rt-result').innerText=`pH ${ph}`;
+  el.classList.add('revealed');
+  rtRevealed.add(letter);
+  document.getElementById('rt-score').innerText=rtRevealed.size;
+  document.getElementById('rt-feedback').innerHTML=`✅ <strong>Tube ${letter}</strong>: pH ${ph} — <strong>${cls}</strong>. ${explain}`;
+  try{playDing()}catch(e){}
+  if(rtRevealed.size===6){fireConfettiGlobal();document.getElementById('rt-feedback').innerHTML='🏆 <strong>Full set revealed!</strong> Pupils should now have a complete picture of UI colours mapped to pH classifications.'}
+}
+function rtReset(){
+  document.querySelectorAll('.rt-tube').forEach(t=>{t.classList.remove('revealed');t.querySelector('.rt-result').innerText='—'});
+  rtRevealed.clear();
+  document.getElementById('rt-score').innerText='0';
+  document.getElementById('rt-feedback').innerText='👆 Click any tube to reveal its pH range and classification.';
+}
+function rtRevealAll(){document.querySelectorAll('.rt-tube').forEach(t=>{if(!t.classList.contains('revealed'))rtReveal(t)})}
+
+/* ---------- SPOT THE MISTAKE: CLICK-TO-FIND ---------- */
+let stmFound=new Set();
+function stmClick(el){
+  if(el.classList.contains('found'))return;
+  const isCorrect=el.getAttribute('data-correct')==='true';
+  const id=el.getAttribute('data-id');
+  const explain=el.getAttribute('data-explain');
+  const fb=document.getElementById('stm-feedback');
+  if(isCorrect){
+    el.classList.add('found');
+    stmFound.add(id);
+    fb.innerText=explain;
+    fb.classList.add('success');fb.classList.remove('error');
+    // Mark pip
+    const num=id.replace('m','');
+    const pip=document.getElementById('stm-pip-'+num);
+    if(pip){pip.classList.add('found');pip.innerText='✓'}
+    try{playDing()}catch(e){}
+    if(stmFound.size===3){
+      setTimeout(()=>{
+        document.getElementById('stm-correction').classList.add('visible');
+        fb.innerText='🎉 All 3 mistakes found! Read the correct version below.';
+        fireConfettiGlobal();
+      },800);
+    }
+  } else {
+    el.classList.add('miss');
+    setTimeout(()=>el.classList.remove('miss'),400);
+    fb.innerText='🤔 Not quite — that bit\'s actually correct. Try another phrase!';
+    fb.classList.add('error');fb.classList.remove('success');
+    try{playBuzz()}catch(e){}
+  }
+}
+function stmReset(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>el.classList.remove('found','miss'));
+  document.querySelectorAll('.stm-pip').forEach((p,i)=>{p.classList.remove('found');p.innerText=String(i+1)});
+  document.getElementById('stm-correction').classList.remove('visible');
+  document.getElementById('stm-feedback').classList.remove('success','error');
+  document.getElementById('stm-feedback').innerText='👆 Click a phrase you think is wrong. Find all 3 to win!';
+  stmFound.clear();
+}
+function stmRevealAll(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>{
+    if(el.getAttribute('data-correct')==='true'&&!el.classList.contains('found')){
+      el.classList.add('found');
+      stmFound.add(el.getAttribute('data-id'));
+      const num=el.getAttribute('data-id').replace('m','');
+      const pip=document.getElementById('stm-pip-'+num);
+      if(pip){pip.classList.add('found');pip.innerText='✓'}
+    }
+  });
+  document.getElementById('stm-correction').classList.add('visible');
+  document.getElementById('stm-feedback').innerText='👁️ All mistakes revealed.';
+  document.getElementById('stm-feedback').classList.add('success');
+}
+
+/* ---------- BEAT THE CLOCK ---------- */
+const btcData=[
+  {colour:'#ef4444',name:'Red',answer:'pH 0–2 • Strongly Acidic'},
+  {colour:'#f97316',name:'Orange',answer:'pH 3–4 • Strongly/Weakly Acidic'},
+  {colour:'#fde047',name:'Yellow',answer:'pH 5–6 • Weakly Acidic'},
+  {colour:'#4ade80',name:'Green',answer:'pH 7 • Neutral'},
+  {colour:'#60a5fa',name:'Blue',answer:'pH 8–9 • Weakly Alkaline'},
+  {colour:'#4f46e5',name:'Indigo',answer:'pH 10–11 • Strongly Alkaline'},
+  {colour:'#7c3aed',name:'Violet',answer:'pH 12–14 • Strongly Alkaline'}
+];
+let btcIdx=0,btcSc=0;
+function btcShow(){
+  const d=btcData[btcIdx];
+  document.getElementById('btc-colour').style.background=d.colour;
+  document.getElementById('btc-colour').innerText=d.name;
+  document.getElementById('btc-answer').innerText=d.answer;
+  document.getElementById('btc-answer').style.opacity='0';
+  document.getElementById('btc-round').innerText=btcIdx+1;
+  // Reset font color for yellow/green to be visible
+  if(d.colour==='#fde047'||d.colour==='#4ade80')document.getElementById('btc-colour').style.color='#000';
+  else document.getElementById('btc-colour').style.color='#fff';
+}
+function btcReveal(){document.getElementById('btc-answer').style.opacity='1'}
+function btcCorrect(){
+  btcSc++;document.getElementById('btc-score').innerText=btcSc;
+  const prog=document.getElementById('btc-progress');
+  prog.innerHTML+='<span style="display:inline-block;width:24px;height:24px;background:var(--success);border-radius:50%;color:#fff;font-size:.75rem;line-height:24px;text-align:center">✓</span>';
+}
+function btcNext(){
+  if(btcIdx<btcData.length-1){btcIdx++;btcShow()}
+  else{document.getElementById('btc-answer').innerText='🏆 All done! Final score: '+btcSc+'/7';document.getElementById('btc-answer').style.opacity='1';if(btcSc>=5)fireConfettiGlobal()}
+}
+/*btcShow();*/
+
+/* ---------- INDEPENDENT WORK MCQ ---------- */
+function mcqCheck(el,ok){
+  if(el.parentNode.classList.contains('locked'))return;
+  if(ok){
+    el.classList.add('correct');el.parentNode.classList.add('locked');
+    try{playDing()}catch(e){}updateXP();
+  } else {
+    el.classList.add('wrong');try{playBuzz()}catch(e){}
+    setTimeout(()=>el.classList.remove('wrong'),600);
+  }
+}
+function toggleHint(btn){
+  const hint=btn.nextElementSibling;
+  if(hint&&hint.classList.contains('hint-text')){
+    hint.classList.toggle('show');
+    btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Hint';
+  }
+}
+function updateXP(){
+  const slide=document.getElementById('ind-slide');if(!slide)return;
+  const active=slide.querySelector('.ind-level.active');if(!active)return;
+  const total=active.querySelectorAll('.ind-q').length;
+  const done=active.querySelectorAll('.ind-q .correct').length+active.querySelectorAll('.ind-q.show-mark').length;
+  const el=document.getElementById('xp-label');const fill=document.getElementById('xp-fill');
+  if(el)el.innerText='Questions completed: '+done+'/'+total+(done===total&&total>0?' 🎉':'');
+  if(fill)fill.style.width=(total>0?Math.round(done/total*100):0)+'%';
+  if(done===total&&total>0&&done>0)fireConfettiGlobal();
+}
+
+/* ---------- LEADERBOARD ---------- */
+function addToLB(){
+  const input=document.getElementById('lb-input');const name=input.value.trim();if(!name)return;
+  const list=document.getElementById('lb-list');const el=document.createElement('span');
+  el.className='lb-name';el.innerText=name;list.appendChild(el);input.value='';
+  try{playDing()}catch(e){}
+}
+
+/* ---------- TIMER (auto-start except on slides with data-no-autostart) ---------- */
+let timerInterval,timeLeft=0,isTimerRunning=false;
+function checkTimerVisibility(){
+  const s=slides[currentSlide];
+  const t=s.getAttribute('data-timer');
+  const noAuto=s.getAttribute('data-no-autostart')==='true';
+  const w=document.getElementById('timer-widget');
+  pauseTimer();
+  if(t){
+    w.classList.add('visible');
+    resetTimer(parseInt(t));
+    if(!noAuto){
+      // brief delay to let slide transition settle, then auto-start
+      setTimeout(()=>{if(timeLeft>0)startTimer()},250);
+    }
+  } else {
+    w.classList.remove('visible');
+  }
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60);const s=timeLeft%60;
+  document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const w=document.getElementById('timer-widget');
+  if(timeLeft<30 && timeLeft>0){w.classList.add('warning')}else{w.classList.remove('warning')}
+}
+function startTimer(){
+  if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;
+  document.getElementById('btn-play').classList.add('active-play');
+  document.getElementById('btn-pause').classList.remove('active-pause');
+  timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000);
+}
+function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+
+/* ---------- SOUND ---------- */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1320,ctx.currentTime+0.08);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4)}
+function playBuzz(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.setValueAtTime(150,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.25)}
+function playClick(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(660,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.1)}
+
+/* ---------- CONFETTI ---------- */
+function fireConfettiGlobal(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=Math.random()*100+'%';c.style.top=-10+'px';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=Math.random()*0.6+'s';
+    c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2500);
+  }
+}
+
+/* ---------- MCQ SHUFFLE ---------- */
+function shuffleMCQs(){
+  document.querySelectorAll('.ind-q').forEach(q=>{
+    const opts=q.querySelectorAll('.mcq-opt');if(opts.length<2)return;
+    const parent=opts[0].parentNode;const arr=Array.from(opts);
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+    arr.forEach(o=>parent.appendChild(o));
+  });
+}
+shuffleMCQs();
+
+/* ---------- CONTENT EDITABLE PLACEHOLDERS ---------- */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{
+  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+});
+
+/* ---------- PRINTING ---------- */
+function printSection(id){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.getElementById('print-'+id).classList.add('visible');
+  window.print();
+}
+function printPack(level){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  ['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{
+    const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  });
+  document.body.classList.add('print-'+level);
+  const ws=document.getElementById('print-worksheet-'+level);
+  if(ws)ws.classList.add('visible');
+  window.print();
+}
+function printWeDoEvidence(wedoId){
+  const area=document.getElementById(wedoId);if(!area)return;
+  const ts=new Date().toLocaleString('en-GB');
+  const st=slides[currentSlide].getAttribute('data-title')||'We Do';
+  let cells=[];
+  area.querySelectorAll('[contenteditable]').forEach((c,i)=>{
+    const ph=c.getAttribute('data-placeholder')||'';
+    if(c.innerText.trim()&&c.innerText.trim()!==ph)cells.push(`Note ${i+1}: ${c.innerText.trim()}`);
+  });
+  // Capture STM state
+  let stmStatus='';
+  if(wedoId==='wedo-stm'){
+    const found=area.querySelectorAll('.stm-clickable.found').length;
+    stmStatus=`Mistakes found: ${found}/3\n`;
+  }
+  // Capture sort score
+  let sortStatus='';
+  if(wedoId==='wedo1'){
+    const sc=document.getElementById('sort-score');
+    if(sc)sortStatus=`Sort score: ${sc.innerText}/8\n`;
+  }
+  let content=`CLASS EVIDENCE – ${st}\nDate: ${ts}\n${'─'.repeat(50)}\n\n`+sortStatus+stmStatus;
+  if(cells.length>0)content+=`TEACHER NOTES:\n${cells.join('\n')}\n`;
+  document.getElementById('wedo-evidence-content').innerText=content;
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.getElementById('print-wedo-evidence').classList.add('visible');
+  window.print();
+}
+
+/* ---------- INIT ---------- */
+updateProgress();
+checkTimerVisibility();
+// Spotlight starts with empty state — pupils click a pH cell to populate
+
+  /* ============== V4 POLISH — pH lesson JS ============== */
+
+  /* ---------- LESSON COMPLETE celebration ---------- */
+  let _lcShown=false;
+  function _lcShowComplete(){
+    if(_lcShown)return;_lcShown=true;
+    setTimeout(()=>{
+      try{fireConfettiGlobal()}catch(e){}
+      try{playDing()}catch(e){}
+      const ov=document.getElementById('lc-overlay');
+      if(ov)ov.classList.add('visible');
+    },400);
+  }
+  function hideLessonComplete(){
+    const ov=document.getElementById('lc-overlay');
+    if(ov)ov.classList.remove('visible');
+  }
+  /* Trigger when exit-slide gets show-ans class (teacher reveals answers) */
+  (function(){
+    const exit=document.getElementById('exit-slide');
+    if(!exit)return;
+    const obs=new MutationObserver(()=>{
+      if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();
+    });
+    obs.observe(exit,{attributes:true,attributeFilter:['class']});
+  })();
+
+  /* ============== END V4 POLISH JS ============== */
+
+
+/* ============== VIR INTERVENTION — interaction JS (tiered) ============== */
+function triPick(q){
+  ['cV','cI','cR'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('dim')});
+  var t=document.getElementById('c'+q);if(t)t.classList.add('dim');
+  var map={V:'V = I × R',I:'I = V ÷ R',R:'R = V ÷ I'};
+  document.getElementById('triOut').innerHTML='<p style="margin:0 0 6px;color:var(--muted);font-weight:600">To find '+q+':</p><span class="formula">'+map[q]+'</span>';
+  try{playClick()}catch(e){}
+}
+function stepReveal(id,btn){
+  var steps=document.querySelectorAll('#'+id+' .vstep');var revealed=false;
+  for(var i=0;i<steps.length;i++){if(!steps[i].classList.contains('show')){steps[i].classList.add('show');revealed=true;break;}}
+  if(revealed){try{playClick()}catch(e){}}
+  var all=true;steps.forEach(function(s){if(!s.classList.contains('show'))all=false});
+  if(all){btn.innerText='✓ All steps shown';btn.disabled=true;btn.style.opacity=.6}
+}
+function fixMisc(){var s=document.getElementById('miscStrike');if(s)s.style.opacity=.45;var f=document.getElementById('miscFix');if(f)f.style.display='block';try{playClick()}catch(e){}}
+function markQ(qid){var q=document.getElementById(qid);if(q){q.classList.add('show-mark');try{updateXP()}catch(e){}}}
+
+/* generic check: validates every [data-ans] inside a box */
+function checkBox(boxId,fbId,qid){
+  var box=document.getElementById(boxId);var all=true;
+  box.querySelectorAll('[data-ans]').forEach(function(el){
+    var v=(el.value||'').trim();
+    if(v===el.getAttribute('data-ans')){el.classList.add('good');el.classList.remove('bad')}
+    else{el.classList.add('bad');el.classList.remove('good');all=false}});
+  var fb=document.getElementById(fbId);
+  if(all){fb.className='vfb ok';fb.innerText='✓ All correct!';try{playDing()}catch(e){}if(qid)markQ(qid)}
+  else{fb.className='vfb no';fb.innerText='Check the red ones and try again.';try{playBuzz()}catch(e){}}
+}
+/* single numeric/text check (used by We Do) */
+function checkVal(id,ans,fbId,qid){
+  var el=document.getElementById(id),fb=document.getElementById(fbId);
+  if((el.value||'').trim()===ans){el.classList.remove('bad');el.classList.add('good');fb.className='vfb ok';fb.innerText='✓ Correct!';try{playDing()}catch(e){}if(qid)markQ(qid)}
+  else{el.classList.remove('good');el.classList.add('bad');fb.className='vfb no';fb.innerText='Try again — check your method.';try{playBuzz()}catch(e){}}
+}
+function showExitVIR(){var ex=document.getElementById('exit-slide');if(ex)ex.classList.add('show-ans');}
+
+/* tier toggle */
+function pickTier(area,t,btn){
+  ['f','m','h'].forEach(function(x){var el=document.getElementById(area+'-'+x);if(el)el.classList.toggle('active',x===t)});
+  if(btn){btn.parentNode.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active')}
+  if(area==='ind'){try{updateXP()}catch(e){}}
+}
+
+/* print pack: Arrival + Starter + Independent + Exit */
+function printPack(){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(function(el){el.classList.remove('visible')});
+  ['arrival','starter','independent','exit'].forEach(function(id){var el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});
+  window.print();
+}
+
+/* ===== MASTER 40-MIN LESSON CLOCK (auto-start on load) ===== */
+(function(){
+  var TOTAL=40*60, KEY='vir_teacher_start';
+  var b=document.createElement('div');b.className='mclock';b.id='mclock';b.textContent='⏱ 40:00';document.body.appendChild(b);
+  var start=parseInt(localStorage.getItem(KEY)||'0',10);
+  if(!start){start=Date.now();localStorage.setItem(KEY,String(start))}
+  function fmt(s){s=Math.max(0,s);var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x}
+  function tick(){var left=TOTAL-Math.floor((Date.now()-start)/1000);b.textContent='⏱ Lesson '+fmt(left);b.classList.toggle('warn',left<=300&&left>0)}
+  tick();setInterval(tick,1000);
+  var pt;
+  b.addEventListener('pointerdown',function(){pt=setTimeout(function(){if(confirm('Reset the 40-minute lesson timer back to the start?')){start=Date.now();localStorage.setItem(KEY,String(start));tick()}},1500)});
+  ['pointerup','pointerleave'].forEach(function(ev){b.addEventListener(ev,function(){clearTimeout(pt)})});
+})();
+
+</script>
+</body>
+</html>

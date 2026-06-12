@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POWERHOUSE — ATP &amp; Aerobic Respiration (Intervention 8a)</title>
+<style>
+:root{
+  --lo-border:#9c27b0; --task-bg:#fef9c3; --scaffold-bg:#e0f2fe;
+  --ido-bg:#ede9fe; --wedo-bg:#fce7f3;
+  --arrival:#f59e0b; --starter:#0ea5e9; --ido:#7c3aed; --wedo:#ec4899;
+  --game:#10b981; --indep:#0d9488; --exit:#ef4444;
+  --neon:#22d3ee; --ink:#1f2937; --muted:#6b7280;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:#f3f4f6;color:var(--ink);overflow:hidden;}
+.slide{position:fixed;inset:0;width:100vw;height:100vh;display:none;flex-direction:column;
+  align-items:center;justify-content:flex-start;padding:3.2vh 4vw 9vh;overflow-y:auto;}
+.slide.active{display:flex;}
+.card{background:#fff;width:92%;max-width:1100px;margin:auto;border-radius:18px;
+  box-shadow:0 14px 40px rgba(0,0,0,.14);border-top:9px solid var(--lo-border);
+  padding:26px 30px;animation:fadeInUp .45s ease;}
+.slide[data-type="arrival"] .card{border-top-color:var(--arrival);}
+.slide[data-type="starter"] .card{border-top-color:var(--starter);}
+.slide[data-type="ido"] .card{border-top-color:var(--ido);}
+.slide[data-type="wedo"] .card{border-top-color:var(--wedo);}
+.slide[data-type="game"] .card{border-top-color:var(--game);}
+.slide[data-type="indep"] .card{border-top-color:var(--indep);}
+.slide[data-type="exit"] .card{border-top-color:var(--exit);}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:none;}}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;color:#fff;margin-bottom:12px;}
+.tag-arrival{background:var(--arrival);}.tag-starter{background:var(--starter);}
+.tag-ido{background:var(--ido);}.tag-wedo{background:var(--wedo);}
+.tag-game{background:var(--game);}.tag-indep{background:var(--indep);}.tag-exit{background:var(--exit);}
+h1{font-size:2.1rem;line-height:1.15;margin-bottom:8px;}
+h2{font-size:1.55rem;margin-bottom:10px;}
+p,li{font-size:1.12rem;line-height:1.5;}
+ul{margin:6px 0 6px 22px;}
+.sub{color:var(--muted);font-size:1rem;margin-bottom:10px;}
+/* logo */
+.logo{position:fixed;top:12px;right:16px;height:42px;z-index:60;}
+.logo-text{position:fixed;top:10px;right:16px;z-index:60;font-weight:800;font-size:.78rem;
+  text-align:right;line-height:1;color:var(--lo-border);}
+/* progress + nav */
+.progress{position:fixed;top:0;left:0;height:5px;background:var(--neon);width:0;z-index:70;transition:width .3s;}
+.nav{position:fixed;bottom:14px;left:0;width:100%;display:flex;justify-content:center;gap:12px;z-index:60;}
+.nav button{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:9px 20px;
+  font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.nav button:disabled{opacity:.35;cursor:default;}
+.slide-no{position:fixed;bottom:18px;right:16px;font-size:.85rem;color:var(--muted);z-index:60;}
+/* tools */
+.tools{position:fixed;top:12px;left:16px;z-index:60;display:flex;gap:8px;}
+.tools button{background:#fff;border:2px solid var(--lo-border);color:var(--lo-border);
+  border-radius:9px;padding:6px 12px;font-size:.82rem;font-weight:700;cursor:pointer;}
+/* xp */
+.xpwrap{position:fixed;bottom:54px;left:16px;z-index:60;width:160px;background:#fff;border-radius:8px;
+  padding:5px 8px;box-shadow:0 3px 10px rgba(0,0,0,.12);font-size:.7rem;font-weight:700;color:var(--muted);}
+.xpbar{height:8px;background:#e5e7eb;border-radius:6px;margin-top:3px;overflow:hidden;}
+.xpfill{height:100%;width:0;background:linear-gradient(90deg,#fbbf24,#10b981);transition:width .5s;}
+/* boxes */
+.sc-box{background:#ffedd5;border:2px solid #f97316;border-radius:12px;padding:14px 18px;margin:14px 0;}
+.aspire-box{background:#dcfce7;border:2px solid #16a34a;border-radius:12px;padding:14px 18px;margin:14px 0;}
+.misc-box{background:#fee2e2;border:2px solid #ef4444;border-radius:12px;padding:14px 18px;margin:14px 0;}
+.misc-box s{color:#b91c1c;}
+.exam-tip-box{background:#fef9c3;border:2px solid #eab308;border-radius:12px;padding:14px 18px;margin:14px 0;}
+.scaffold-box{background:var(--scaffold-bg);border:2px solid #38bdf8;border-radius:12px;padding:14px 18px;margin:12px 0;}
+.ido-box{background:var(--ido-bg);border-radius:12px;padding:14px 18px;margin:12px 0;}
+.wedo-box{background:var(--wedo-bg);border-radius:12px;padding:14px 18px;margin:12px 0;}
+.box-title{font-weight:800;text-transform:uppercase;font-size:.8rem;letter-spacing:.6px;margin-bottom:6px;}
+/* arrival/exit grids + tiers */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.tier-btns{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;}
+.tier-btns button{border:none;border-radius:9px;padding:7px 16px;font-weight:700;cursor:pointer;color:#fff;opacity:.55;}
+.tb-F{background:#16a34a;}.tb-M{background:#f59e0b;}.tb-H{background:#1e3a8a;}
+.tier-btns button.on{opacity:1;outline:3px solid rgba(0,0,0,.15);}
+.tier{display:none;}.tier.show{display:block;}
+/* reveal */
+.ghost{background:transparent;border:2px dashed var(--muted);color:var(--muted);border-radius:9px;
+  padding:6px 14px;font-weight:700;cursor:pointer;font-size:.9rem;margin-top:8px;}
+.ans{display:none;background:#ecfdf5;border-left:5px solid #10b981;padding:10px 14px;border-radius:8px;margin-top:8px;}
+.ans.show{display:block;animation:fadeInUp .3s;}
+/* hint */
+.hint-btn{background:#eef2ff;border:2px solid #6366f1;color:#4338ca;border-radius:9px;padding:5px 12px;
+  font-weight:700;cursor:pointer;font-size:.85rem;}
+.hint{display:none;margin-top:8px;font-style:italic;color:#4338ca;}
+.hint.show{display:block;}
+/* mcq */
+.mcq{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.mcq-opt{text-align:left;background:#f9fafb;border:2px solid #d1d5db;border-radius:11px;padding:12px 16px;
+  font-size:1.05rem;font-weight:600;cursor:pointer;transition:.15s;}
+.mcq-opt:hover{border-color:var(--ido);}
+.mcq-opt.correct{background:#dcfce7;border-color:#16a34a;}
+.mcq-opt.wrong{background:#fee2e2;border-color:#ef4444;}
+.mcq-opt.lock{pointer-events:none;}
+/* turn & talk */
+.tt{display:flex;align-items:center;gap:14px;background:#1f2937;color:#fff;border-radius:14px;padding:16px 20px;margin:14px 0;}
+.tt .ic{font-size:2rem;}
+/* step reveal */
+.step{opacity:.25;filter:blur(.4px);transition:.4s;margin:8px 0;}
+.step.on{opacity:1;filter:none;}
+/* ===== ARCADE ===== */
+.arcade{background:#0f172a;border-radius:16px;padding:20px;color:#e2e8f0;box-shadow:inset 0 0 40px rgba(34,211,238,.15);}
+.arcade h2,.arcade p{color:#e2e8f0;}
+.neon{color:var(--neon);text-shadow:0 0 8px rgba(34,211,238,.7);}
+.charge-wrap{background:#1e293b;border-radius:10px;height:26px;margin:14px 0;overflow:hidden;border:2px solid var(--neon);}
+.charge-fill{height:100%;width:0;background:linear-gradient(90deg,#fbbf24,#22d3ee);transition:width .5s;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-weight:800;color:#0f172a;font-size:.8rem;}
+.arc-q{font-size:1.2rem;font-weight:700;margin:12px 0 8px;}
+.arc-opts{display:flex;flex-direction:column;gap:8px;}
+.arc-opt{background:#1e293b;border:2px solid #334155;color:#e2e8f0;border-radius:10px;padding:11px 14px;
+  font-weight:600;cursor:pointer;text-align:left;font-size:1.02rem;}
+.arc-opt:hover{border-color:var(--neon);}
+.arc-opt.correct{background:#064e3b;border-color:#10b981;}
+.arc-opt.wrong{background:#7f1d1d;border-color:#ef4444;}
+.arc-opt.lock{pointer-events:none;}
+.arc-win{display:none;text-align:center;margin-top:14px;font-size:1.3rem;font-weight:800;}
+.arc-win.show{display:block;animation:fadeInUp .4s;}
+/* equation arena */
+.eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:16px 0;font-size:1.25rem;font-weight:800;}
+.slot{min-width:130px;height:54px;border:2px dashed var(--neon);border-radius:10px;display:flex;
+  align-items:center;justify-content:center;background:#1e293b;cursor:pointer;padding:0 8px;text-align:center;font-size:1rem;}
+.slot.filled{border-style:solid;background:#0e7490;color:#fff;}
+.slot.correct{background:#065f46;border-color:#10b981;}
+.slot.bad{background:#7f1d1d;border-color:#ef4444;}
+.op{font-size:1.5rem;color:var(--neon);}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;}
+.chip{background:#334155;border:2px solid #475569;color:#e2e8f0;border-radius:999px;padding:9px 16px;
+  font-weight:700;cursor:pointer;font-size:1rem;}
+.chip.sel{border-color:#fbbf24;background:#475569;box-shadow:0 0 12px rgba(251,191,36,.6);}
+.chip.used{opacity:.3;pointer-events:none;}
+.arc-btn{background:var(--neon);color:#0f172a;border:none;border-radius:10px;padding:10px 22px;
+  font-weight:800;cursor:pointer;font-size:1rem;margin-top:8px;}
+.arc-btn.sec{background:#475569;color:#fff;}
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;align-items:center;justify-content:center;}
+.modal.show{display:flex;}
+.modal .inner{background:#fff;border-radius:16px;padding:24px;max-width:520px;width:90%;max-height:84vh;overflow-y:auto;}
+.modal h3{margin-bottom:10px;}
+.close-x{float:right;cursor:pointer;font-weight:800;font-size:1.3rem;color:var(--muted);}
+.chips-cc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.gchip{padding:7px 12px;border-radius:999px;font-weight:700;cursor:pointer;color:#fff;font-size:.9rem;}
+.g-U,.g-1{background:#16a34a;}.g-2{background:#f59e0b;}.g-3,.g-4,.g-5{background:#1e3a8a;}
+.cc-add{display:flex;gap:8px;margin-top:12px;}
+.cc-add input,.cc-add select{padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:.95rem;}
+.cc-add button{background:var(--ido);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;}
+.cc-picked{margin-top:14px;font-size:1.5rem;font-weight:800;text-align:center;min-height:36px;color:var(--ido);}
+/* hero */
+.hero-dots{display:flex;gap:14px;justify-content:center;margin:14px 0;}
+.hero-dots span{font-size:2.4rem;animation:floaty 3s ease-in-out infinite;}
+.hero-dots span:nth-child(2){animation-delay:.4s;}
+.hero-dots span:nth-child(3){animation-delay:.8s;}
+.hero-dots span:nth-child(4){animation-delay:1.2s;}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+/* lesson complete */
+.complete{display:none;position:fixed;inset:0;background:rgba(15,23,42,.92);z-index:95;
+  flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;}
+.complete.show{display:flex;animation:fadeInUp .5s;}
+.complete h1{font-size:3rem;}
+/* confetti */
+.confetti{position:fixed;top:-10px;width:10px;height:16px;z-index:120;pointer-events:none;}
+/* print evidence */
+.print-btn{background:#0d9488;color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:700;cursor:pointer;margin-top:10px;}
+@media print{.tools,.nav,.logo,.progress,.xpwrap,.slide-no,.print-btn{display:none!important;}}
+@media(max-width:640px){
+  h1{font-size:1.55rem;}h2{font-size:1.25rem;}p,li{font-size:1rem;}
+  .card{padding:18px 16px;width:96%;}.grid2{grid-template-columns:1fr;}
+  .slot{min-width:104px;font-size:.85rem;}.eq{font-size:1rem;}
+  .tools button{padding:5px 8px;font-size:.72rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<img class="logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2024-12/progress-schools-logo.png" alt="Progress Schools" onerror="this.style.display='none';var t=document.getElementById('logoText');if(t)t.style.display='block';">
+<div class="logo-text" id="logoText" style="display:none">PROGRESS<br>SCHOOLS</div>
+
+<div class="tools">
+  <button onclick="openTA()">TA Focus</button>
+  <button onclick="openCC()">Cold Call</button>
+</div>
+
+<div class="xpwrap">⚡ XP <span id="xpval">0</span><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
+
+<!-- ===== SLIDE 1 — TITLE ===== -->
+<section class="slide active" data-type="ido">
+  <div class="card">
+    <span class="tag tag-ido">Intervention 8a</span>
+    <h1>⚡ POWERHOUSE</h1>
+    <p class="sub">ATP &amp; Aerobic Respiration — your cells' energy arcade</p>
+    <div class="hero-dots"><span>🔋</span><span>🍬</span><span>💨</span><span>🔥</span></div>
+    <div class="sc-box">
+      <div class="box-title">Success Criteria — by the end you can…</div>
+      <ul>
+        <li>Say <b>where</b> respiration happens and <b>what ATP is</b> (the energy currency).</li>
+        <li>Write the <b>word equation</b> for aerobic respiration.</li>
+        <li>Explain that energy is <b>released</b> (not made) from glucose.</li>
+      </ul>
+    </div>
+    <div class="aspire-box">
+      <div class="box-title">Aspire 🚀</div>
+      <p>Write the <b>balanced symbol equation</b> and explain why “energy” isn’t a chemical formula in it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2 — ARRIVAL ===== -->
+<section class="slide" data-type="arrival">
+  <div class="card">
+    <span class="tag tag-arrival">Arrival Task</span>
+    <h2>Power on 🔌</h2>
+    <p>As you settle — two quick ones in your head:</p>
+    <div class="grid2" style="margin-top:12px;">
+      <div class="scaffold-box"><b>1.</b> Right now, sitting still, is your body using energy? <b>Yes / No</b></div>
+      <div class="scaffold-box"><b>2.</b> Name <b>one</b> thing your body needs energy for.</div>
+    </div>
+    <button class="ghost" onclick="reveal('a-arr')">Reveal answers</button>
+    <div class="ans" id="a-arr">
+      <p><b>1.</b> YES — even resting you need energy (heartbeat, breathing, staying warm, brain).</p>
+      <p><b>2.</b> Any of: moving, growing, keeping warm, building new molecules, sending nerve signals.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3 — STARTER ===== -->
+<section class="slide" data-type="starter">
+  <div class="card">
+    <span class="tag tag-starter">Starter</span>
+    <h2>Spot the myth 🕵️</h2>
+    <div class="misc-box">
+      <div class="box-title">Misconception</div>
+      <p><s>“Respiration means breathing in and out.”</s></p>
+      <p>❌ Breathing moves air. <b>Respiration is a chemical reaction inside every cell</b> that releases energy from glucose.</p>
+    </div>
+    <p style="margin-top:10px;"><b>Quick check:</b> Which part of the cell is called the “powerhouse”?</p>
+    <div class="mcq" data-correct="0">
+      <button class="mcq-opt" onclick="mcq(this)">Mitochondria</button>
+      <button class="mcq-opt" onclick="mcq(this)">Nucleus</button>
+      <button class="mcq-opt" onclick="mcq(this)">Cell wall</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 4 — I DO (ATP) step reveal ===== -->
+<section class="slide" data-type="ido">
+  <div class="card">
+    <span class="tag tag-ido">I Do</span>
+    <h2>What is ATP? 🔋</h2>
+    <div class="ido-box">
+      <div class="step" data-step><b>1.</b> Glucose is the fuel — but cells can’t use it directly for everything.</div>
+      <div class="step" data-step><b>2.</b> <b>Respiration</b> releases energy from glucose inside the <b>mitochondria</b>.</div>
+      <div class="step" data-step><b>3.</b> That energy is stored in <b>ATP</b> — think of it as a <b>rechargeable battery</b> 🔋 or the cell’s <b>“energy currency”</b> 💷.</div>
+      <div class="step" data-step><b>4.</b> When a cell needs energy, it “spends” ATP. Then respiration recharges it.</div>
+    </div>
+    <button class="arc-btn sec" style="background:#7c3aed;color:#fff;" onclick="nextStep(this)">▶ Next step</button>
+    <div class="exam-tip-box">
+      <div class="box-title">Exam tip 💡</div>
+      <p>Energy is <b>released</b> from glucose — never “made” or “created”. Examiners love that word.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5 — WE DO (TURN & TALK) ===== -->
+<section class="slide" data-type="wedo">
+  <div class="card">
+    <span class="tag tag-wedo">We Do</span>
+    <h2>Together 🤝</h2>
+    <div class="tt"><div class="ic">💬</div><div><b>TURN &amp; TALK:</b> If ATP is a rechargeable battery, what “recharges” it? Tell your partner in one sentence.</div></div>
+    <div class="wedo-box">
+      <p><b>Fill the gap as a class:</b> Respiration happens in the ______ and releases energy from ______, storing it as ______.</p>
+      <button class="ghost" onclick="reveal('a-wedo')">Reveal</button>
+      <div class="ans" id="a-wedo"><p>Respiration happens in the <b>mitochondria</b> and releases energy from <b>glucose</b>, storing it as <b>ATP</b>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 6 — ARCADE ROUND 1 ===== -->
+<section class="slide" data-type="game">
+  <div class="card">
+    <span class="tag tag-game">Arcade · Round 1</span>
+    <h2>⚡ ATP Charge-Up</h2>
+    <div class="arcade">
+      <p>Answer to <span class="neon">charge the cell</span>. Three correct = full battery!</p>
+      <div class="charge-wrap"><div class="charge-fill" id="charge">0%</div></div>
+      <div id="r1area"></div>
+      <div class="arc-win" id="r1win">🔋 <span class="neon">CELL FULLY CHARGED!</span> +30 XP</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7 — I DO (Aerobic equation) step reveal ===== -->
+<section class="slide" data-type="ido">
+  <div class="card">
+    <span class="tag tag-ido">I Do</span>
+    <h2>Aerobic respiration 💨</h2>
+    <p class="sub"><b>Aerobic</b> = <b>WITH oxygen</b>. This releases the most energy and runs most of the time.</p>
+    <div class="ido-box">
+      <div class="step" data-step><b>Word equation:</b><br>glucose + oxygen → carbon dioxide + water <span style="color:#7c3aed">(+ energy / ATP)</span></div>
+      <div class="step" data-step><b>Symbol equation:</b><br>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</div>
+      <div class="step" data-step><b>In:</b> glucose (fuel) + oxygen. &nbsp; <b>Out:</b> carbon dioxide + water + energy.</div>
+    </div>
+    <button class="arc-btn sec" style="background:#7c3aed;color:#fff;" onclick="nextStep(this)">▶ Next step</button>
+    <div class="misc-box">
+      <div class="box-title">Watch out</div>
+      <p><s>“Plants don’t respire.”</s> ❌ <b>All living cells respire, all the time</b> — day and night.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8 — WE DO (build equation, scaffold) ===== -->
+<section class="slide" data-type="wedo">
+  <div class="card">
+    <span class="tag tag-wedo">We Do</span>
+    <h2>Build it together ✍️</h2>
+    <div class="tt"><div class="ic">💬</div><div><b>TURN &amp; TALK:</b> What are the <b>two things going IN</b> and the <b>two things coming OUT</b>?</div></div>
+    <div class="scaffold-box">
+      <p>______ + ______ → ______ + ______ (+ energy)</p>
+      <button class="hint-btn" onclick="hint('h-wedo')">Need a hint?</button>
+      <div class="hint" id="h-wedo">IN starts with a sugar and a gas you breathe in. OUT is a gas you breathe out and a liquid.</div>
+      <button class="ghost" onclick="reveal('a-eqw')">Reveal</button>
+      <div class="ans" id="a-eqw"><p><b>glucose + oxygen → carbon dioxide + water</b> (+ energy)</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 9 — ARCADE ROUND 2 (BOSS) ===== -->
+<section class="slide" data-type="game">
+  <div class="card">
+    <span class="tag tag-game">Arcade · Boss</span>
+    <h2>👾 Aerobic Equation Arena</h2>
+    <div class="arcade">
+      <p>Tap a chip, then tap a slot. Build the <span class="neon">word equation</span> to defeat the boss. Watch for fake fuels!</p>
+      <div class="eq">
+        <div class="slot" id="s0" onclick="placeSlot(0)"></div><span class="op">+</span>
+        <div class="slot" id="s1" onclick="placeSlot(1)"></div><span class="op">→</span>
+        <div class="slot" id="s2" onclick="placeSlot(2)"></div><span class="op">+</span>
+        <div class="slot" id="s3" onclick="placeSlot(3)"></div>
+      </div>
+      <div class="chips" id="chipTray"></div>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="arc-btn" onclick="checkEq()">⚔️ Check</button>
+        <button class="arc-btn sec" onclick="resetEq()">Reset</button>
+      </div>
+      <div class="arc-win" id="r2win">👾 <span class="neon">BOSS DEFEATED!</span> +40 XP</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10 — INDEPENDENT (tiered) ===== -->
+<section class="slide" data-type="indep">
+  <div class="card">
+    <span class="tag tag-indep">Independent Work</span>
+    <h2>Show what you know ✏️</h2>
+    <div class="tier-btns">
+      <button class="tb-F on" onclick="setTier('F',this)">Foundation</button>
+      <button class="tb-M" onclick="setTier('M',this)">Middle</button>
+      <button class="tb-H" onclick="setTier('H',this)">Higher</button>
+    </div>
+    <div class="tier show" data-tier="F">
+      <ol style="margin-left:20px;">
+        <li>Respiration happens in the ____________ .</li>
+        <li>Energy from glucose is stored as ____________ .</li>
+        <li>Complete: glucose + ________ → carbon dioxide + ________ .</li>
+      </ol>
+    </div>
+    <div class="tier" data-tier="M">
+      <ol style="margin-left:20px;">
+        <li>Write the full <b>word equation</b> for aerobic respiration.</li>
+        <li>What does “aerobic” mean?</li>
+        <li>Why is ATP called the cell’s energy currency? (1 sentence)</li>
+      </ol>
+    </div>
+    <div class="tier" data-tier="H">
+      <ol style="margin-left:20px;">
+        <li>Write the word <b>and</b> balanced symbol equation.</li>
+        <li>Explain why “energy” appears in the word equation but not as a formula in the symbol equation.</li>
+        <li>Aerobic respiration releases far more energy than anaerobic — suggest why oxygen matters.</li>
+      </ol>
+    </div>
+    <button class="ghost" onclick="reveal('a-ind')">Reveal answers</button>
+    <div class="ans" id="a-ind">
+      <p><b>F:</b> mitochondria · ATP · glucose + <b>oxygen</b> → carbon dioxide + <b>water</b>.</p>
+      <p><b>M:</b> glucose + oxygen → carbon dioxide + water (+ energy) · “aerobic” = with oxygen · ATP stores &amp; transfers energy cells can spend instantly.</p>
+      <p><b>H:</b> C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O · energy isn’t a substance/molecule so it has no formula · oxygen lets glucose be fully broken down, releasing much more energy.</p>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ Print my evidence</button>
+  </div>
+</section>
+
+<!-- ===== SLIDE 11 — EXIT TICKET ===== -->
+<section class="slide" data-type="exit" id="exitSlide">
+  <div class="card">
+    <span class="tag tag-exit">Exit Ticket</span>
+    <h2>Charged up? 🔋</h2>
+    <ol style="margin-left:20px;">
+      <li>Where in the cell does respiration happen?</li>
+      <li>What is the job of ATP?</li>
+      <li>Word equation for aerobic respiration?</li>
+      <li>True or false: energy is <i>made</i> in respiration.</li>
+    </ol>
+    <button class="ghost" onclick="revealExit()">Reveal &amp; finish</button>
+    <div class="ans" id="a-exit">
+      <p><b>1.</b> Mitochondria. &nbsp;<b>2.</b> Stores &amp; transfers energy (energy currency / battery).</p>
+      <p><b>3.</b> glucose + oxygen → carbon dioxide + water (+ energy).</p>
+      <p><b>4.</b> <b>False</b> — energy is <b>released</b>, not made.</p>
+    </div>
+  </div>
+</section>
+
+<!-- nav + counters -->
+<div class="slide-no" id="slideNo"></div>
+<div class="nav">
+  <button id="prevBtn" onclick="go(-1)">◀ Prev</button>
+  <button id="nextBtn" onclick="go(1)">Next ▶</button>
+</div>
+
+<!-- TA modal -->
+<div class="modal" id="taModal"><div class="inner">
+  <span class="close-x" onclick="closeM('taModal')">×</span>
+  <h3>👩‍🏫 TA Focus</h3>
+  <div id="taBody"></div>
+</div></div>
+
+<!-- Cold Call modal -->
+<div class="modal" id="ccModal"><div class="inner">
+  <span class="close-x" onclick="closeM('ccModal')">×</span>
+  <h3>🎯 Cold Call</h3>
+  <p style="font-size:.95rem;color:#6b7280;">Tap a name to pick. Chips show tier (U/1=F, 2=M, 3–5=H).</p>
+  <div class="cc-picked" id="ccPicked">—</div>
+  <div class="chips-cc" id="ccList"></div>
+  <div class="cc-add">
+    <input id="ccName" placeholder="Add pupil name">
+    <select id="ccGrade"><option>U</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    <button onclick="ccAdd()">Add</button>
+  </div>
+  <button class="ghost" style="margin-top:12px;" onclick="ccPick()">🎲 Pick random</button>
+</div></div>
+
+<!-- lesson complete -->
+<div class="complete" id="complete">
+  <h1>🏆 POWERHOUSE COMPLETE</h1>
+  <p style="font-size:1.4rem;margin-top:10px;">You can power a cell — ATP &amp; aerobic respiration ✅</p>
+  <p style="margin-top:18px;color:#94a3b8;">Next mission → 8b: Anaerobic respiration &amp; oxygen debt</p>
+</div>
+
+<script>
+"use strict";
+/* ===================== DATA CONSTS (declare BEFORE any init that reads them — TDZ guard) ===================== */
+const R1_QUESTIONS = [
+  {q:"Where does respiration happen?", opts:["Mitochondria","Nucleus","Cell membrane"], correct:0},
+  {q:"What does ATP do?", opts:["Stores & transfers energy","Stores water","Makes glucose"], correct:0},
+  {q:"Respiration is…", opts:["a reaction that releases energy","breathing in and out","making food in leaves"], correct:0}
+];
+const EQ_ANSWER = ["glucose","oxygen","carbon dioxide","water"];
+const EQ_CHIPS  = ["glucose","oxygen","carbon dioxide","water","lactic acid","nitrogen"];
+const TA_BRIEFS = {
+  0:"Settle pupils; read Success Criteria aloud. Flag the battery/currency analogy early.",
+  1:"Low-stakes arrival — accept verbal answers. Prompt: 'even sitting still?'",
+  2:"Name the misconception out loud. Cold-call the MCQ.",
+  3:"Step-reveal — pause after each step, check the battery analogy lands.",
+  4:"Turn & Talk 30s. Scribe the class gap-fill on the board.",
+  5:"Round 1 — let pupils tap; celebrate full charge. Re-voice ATP = energy currency.",
+  6:"Step-reveal the equation. Point to IN vs OUT physically.",
+  7:"Turn & Talk IN/OUT. Use the hint for strugglers before revealing.",
+  8:"Boss round — pair weaker readers. Distractor chips (lactic acid/nitrogen) are the trap.",
+  9:"Tier-toggle to match each pupil. Print evidence for books.",
+  10:"Exit independently if possible. Q4 is the 'released not made' clincher."
+};
+const TIER_MAP = {"U":"F","1":"F","2":"M","3":"H","4":"H","5":"H"};
+
+/* ===================== STATE ===================== */
+let current = 0, slides = [], xp = 0;
+let r1idx = 0, r1correct = 0;
+let selChip = null;
+const slotFill = [null,null,null,null];
+let ccRoster = [];
+
+/* ===================== AUDIO (resume on first gesture) ===================== */
+let actx = null;
+function ensureAudio(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ actx=null; } } if(actx && actx.state==="suspended"){ actx.resume(); } }
+function beep(freq, dur, type){
+  if(!actx) return;
+  try{
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type||"sine"; o.frequency.value=freq;
+    o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(.12, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, actx.currentTime+(dur||.18));
+    o.start(); o.stop(actx.currentTime+(dur||.18));
+  }catch(e){}
+}
+function ding(){ beep(660,.12,"sine"); setTimeout(function(){beep(880,.16,"sine");},90); }
+function buzz(){ beep(150,.22,"square"); }
+
+/* ===================== XP + CONFETTI ===================== */
+function addXP(n){
+  xp += n;
+  const v=document.getElementById("xpval"); if(v) v.textContent=xp;
+  const f=document.getElementById("xpfill"); if(f) f.style.width=Math.min(100,xp)+"%";
+}
+function confetti(){
+  const cols=["#fbbf24","#22d3ee","#10b981","#ec4899","#7c3aed"];
+  for(let i=0;i<40;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=cols[i%cols.length];
+    c.style.transform="rotate("+(Math.random()*360)+"deg)";
+    document.body.appendChild(c);
+    const fall=900+Math.random()*900;
+    c.animate([{top:"-10px",opacity:1},{top:"100vh",opacity:.2}],{duration:fall,easing:"ease-in"});
+    setTimeout(function(){ c.remove(); }, fall);
+  }
+}
+
+/* ===================== NAV ===================== */
+function showSlide(i){
+  slides.forEach(function(s,n){ s.classList.toggle("active", n===i); });
+  current=i;
+  const p=document.getElementById("progress");
+  if(p) p.style.width=((i)/(slides.length-1))*100+"%";
+  const sn=document.getElementById("slideNo"); if(sn) sn.textContent=(i+1)+" / "+slides.length;
+  const pb=document.getElementById("prevBtn"); if(pb) pb.disabled=(i===0);
+  const nb=document.getElementById("nextBtn"); if(nb) nb.disabled=(i===slides.length-1);
+}
+function go(d){ const n=current+d; if(n>=0 && n<slides.length) showSlide(n); }
+
+/* ===================== REVEAL / HINT / MCQ / STEP / TIER ===================== */
+function reveal(id){ const e=document.getElementById(id); if(e){ e.classList.add("show"); ding(); } }
+function hint(id){ const e=document.getElementById(id); if(e) e.classList.toggle("show"); }
+function mcq(btn){
+  const box=btn.parentElement;
+  const correct=parseInt(box.getAttribute("data-correct"),10);
+  const opts=Array.prototype.slice.call(box.children);
+  const idx=opts.indexOf(btn);
+  opts.forEach(function(o){ o.classList.add("lock"); });
+  if(idx===correct){ btn.classList.add("correct"); ding(); addXP(5); confetti(); }
+  else{ btn.classList.add("wrong"); buzz(); opts[correct].classList.add("correct"); }
+}
+function nextStep(btn){
+  const card=btn.closest(".card");
+  const steps=card.querySelectorAll(".step:not(.on)");
+  if(steps.length){ steps[0].classList.add("on"); beep(520,.1); if(steps.length===1){ btn.style.display="none"; } }
+}
+function setTier(t,btn){
+  const card=btn.closest(".card");
+  card.querySelectorAll(".tier-btns button").forEach(function(b){ b.classList.remove("on"); });
+  btn.classList.add("on");
+  card.querySelectorAll(".tier").forEach(function(d){ d.classList.toggle("show", d.getAttribute("data-tier")===t); });
+}
+
+/* ===================== ARCADE R1 ===================== */
+function renderR1(){
+  const area=document.getElementById("r1area");
+  if(!area) return;
+  if(r1idx>=R1_QUESTIONS.length){ return; }
+  const item=R1_QUESTIONS[r1idx];
+  let html='<div class="arc-q">'+(r1idx+1)+'. '+item.q+'</div><div class="arc-opts">';
+  item.opts.forEach(function(o,i){ html+='<button class="arc-opt" onclick="answerR1(this,'+i+')">'+o+'</button>'; });
+  html+='</div>';
+  area.innerHTML=html;
+}
+function answerR1(btn,i){
+  const item=R1_QUESTIONS[r1idx];
+  const opts=Array.prototype.slice.call(btn.parentElement.children);
+  opts.forEach(function(o){ o.classList.add("lock"); });
+  if(i===item.correct){
+    btn.classList.add("correct"); ding(); r1correct++;
+    const pct=Math.round((r1correct/R1_QUESTIONS.length)*100);
+    const cf=document.getElementById("charge"); if(cf){ cf.style.width=pct+"%"; cf.textContent=pct+"%"; }
+  } else {
+    btn.classList.add("wrong"); buzz(); opts[item.correct].classList.add("correct");
+  }
+  r1idx++;
+  setTimeout(function(){
+    if(r1idx<R1_QUESTIONS.length){ renderR1(); }
+    else{
+      const win=document.getElementById("r1win");
+      if(r1correct===R1_QUESTIONS.length){ if(win) win.classList.add("show"); addXP(30); confetti(); ding(); }
+      else{ if(win){ win.textContent="🔋 Charged "+Math.round((r1correct/R1_QUESTIONS.length)*100)+"% — try again next round!"; win.classList.add("show"); } addXP(r1correct*5); }
+    }
+  }, 850);
+}
+
+/* ===================== ARCADE R2 (tap-place, shuffled chips) ===================== */
+function shuffle(a){ const x=a.slice(); for(let i=x.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=x[i];x[i]=x[j];x[j]=t; } return x; }
+function renderChips(){
+  const tray=document.getElementById("chipTray");
+  if(!tray) return;
+  tray.innerHTML="";
+  shuffle(EQ_CHIPS).forEach(function(label){
+    const c=document.createElement("button");
+    c.className="chip"; c.textContent=label; c.setAttribute("data-label",label);
+    c.onclick=function(){ selectChip(c); };
+    tray.appendChild(c);
+  });
+}
+function selectChip(c){
+  if(c.classList.contains("used")) return;
+  const tray=document.getElementById("chipTray");
+  tray.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("sel"); });
+  c.classList.add("sel"); selChip=c; beep(440,.07);
+}
+function placeSlot(idx){
+  const slot=document.getElementById("s"+idx);
+  if(slotFill[idx]){ // clear existing
+    const old=slotFill[idx]; old.classList.remove("used"); slotFill[idx]=null;
+    slot.textContent=""; slot.classList.remove("filled","correct","bad"); beep(300,.07); return;
+  }
+  if(!selChip) return;
+  slot.textContent=selChip.getAttribute("data-label");
+  slot.classList.add("filled");
+  selChip.classList.add("used"); selChip.classList.remove("sel");
+  slotFill[idx]=selChip; selChip=null; beep(560,.08);
+}
+function checkEq(){
+  let all=true;
+  for(let i=0;i<4;i++){
+    const slot=document.getElementById("s"+i);
+    const val=slotFill[i]?slotFill[i].getAttribute("data-label"):null;
+    slot.classList.remove("correct","bad");
+    if(val===EQ_ANSWER[i]){ slot.classList.add("correct"); }
+    else{ slot.classList.add("bad"); all=false; }
+  }
+  if(all){ const w=document.getElementById("r2win"); if(w) w.classList.add("show"); addXP(40); confetti(); ding(); }
+  else{ buzz(); }
+}
+function resetEq(){
+  for(let i=0;i<4;i++){
+    const slot=document.getElementById("s"+i);
+    slot.textContent=""; slot.classList.remove("filled","correct","bad"); slotFill[i]=null;
+  }
+  selChip=null; renderChips();
+  const w=document.getElementById("r2win"); if(w) w.classList.remove("show");
+}
+
+/* ===================== EXIT + COMPLETE ===================== */
+function revealExit(){
+  const e=document.getElementById("a-exit");
+  if(e){ e.classList.add("show"); ding(); }
+  const ex=document.getElementById("exitSlide"); if(ex) ex.classList.add("show-ans");
+}
+
+/* ===================== MODALS ===================== */
+function openTA(){
+  const body=document.getElementById("taBody");
+  if(body) body.innerHTML='<p><b>Slide '+(current+1)+':</b> '+(TA_BRIEFS[current]||"Support pupils; keep pace; praise effort.")+'</p>';
+  document.getElementById("taModal").classList.add("show");
+}
+function openCC(){ document.getElementById("ccModal").classList.add("show"); renderCC(); }
+function closeM(id){ document.getElementById(id).classList.remove("show"); }
+function renderCC(){
+  const list=document.getElementById("ccList"); if(!list) return;
+  list.innerHTML="";
+  ccRoster.forEach(function(p){
+    const chip=document.createElement("span");
+    chip.className="gchip g-"+p.grade; chip.textContent=p.name+" ("+(TIER_MAP[p.grade]||"?")+")";
+    chip.onclick=function(){ document.getElementById("ccPicked").textContent=p.name; ding(); };
+    list.appendChild(chip);
+  });
+}
+function ccAdd(){
+  const n=document.getElementById("ccName").value.trim();
+  const g=document.getElementById("ccGrade").value;
+  if(!n) return;
+  ccRoster.push({name:n,grade:g});
+  saveRoster(); document.getElementById("ccName").value=""; renderCC();
+}
+function ccPick(){
+  if(!ccRoster.length){ document.getElementById("ccPicked").textContent="Add names first"; return; }
+  const p=ccRoster[Math.floor(Math.random()*ccRoster.length)];
+  document.getElementById("ccPicked").textContent=p.name; ding(); confetti();
+}
+function saveRoster(){ try{ localStorage.setItem("ps_coldcall_roster", JSON.stringify(ccRoster)); }catch(e){} }
+function loadRoster(){ try{ const r=localStorage.getItem("ps_coldcall_roster"); if(r) ccRoster=JSON.parse(r)||[]; }catch(e){ ccRoster=[]; } }
+
+/* ===================== INIT (runs LAST, after all consts above) ===================== */
+function init(){
+  slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  loadRoster();
+  renderR1();
+  renderChips();
+  showSlide(0);
+
+  // lesson-complete overlay: MutationObserver on exit slide show-ans
+  const ex=document.getElementById("exitSlide");
+  if(ex){
+    const obs=new MutationObserver(function(){
+      if(ex.classList.contains("show-ans")){
+        const c=document.getElementById("complete");
+        if(c && !c.classList.contains("show")){ c.classList.add("show"); confetti(); ding(); addXP(20); }
+      }
+    });
+    obs.observe(ex,{attributes:true,attributeFilter:["class"]});
+  }
+
+  // keyboard nav — exempt INPUT/TEXTAREA/SELECT
+  document.addEventListener("keydown",function(e){
+    const t=(e.target.tagName||"").toUpperCase();
+    if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+    if(e.key==="ArrowRight") go(1);
+    else if(e.key==="ArrowLeft") go(-1);
+  });
+
+  // resume audio on first gesture
+  document.addEventListener("click", ensureAudio, {once:true});
+  document.addEventListener("keydown", ensureAudio, {once:true});
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

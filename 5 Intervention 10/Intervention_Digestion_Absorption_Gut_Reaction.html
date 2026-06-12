@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Intervention: Gut Reaction — Digestion &amp; Absorption Game Show</title>
+<style>
+  /* ============ MAGRITTE BASE TOKENS ============ */
+  :root{
+    --bg:#fff;--slide-bg:#fff;--text:#1f2937;
+    --lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;
+    --task-bg:#fef9c3;--task-border:#eab308;
+    --scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+    --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+    --sc-bg:#ffedd5;--sc-border:#f97316;
+    --ido-bg:#ede9fe;--ido-border:#7c3aed;
+    --wedo-bg:#fce7f3;--wedo-border:#db2777;
+    --btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+    --success:#16a34a;--error:#dc2626;--muted:#64748b;
+    --gold:#f59e0b;--gold-deep:#b45309;--spotlight:#fde68a;
+  }
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+  @keyframes strikeIn{from{width:0}to{width:100%}}
+  @keyframes rightFlash{0%,100%{background:transparent}50%{background:#dcfce7}}
+  @keyframes loCheckPop{0%{transform:scale(.4) rotate(-90deg);opacity:0}60%{transform:scale(1.25) rotate(8deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+  @keyframes confettiDrop{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+  @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-15deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(3deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+  @keyframes lcGlow{0%,100%{box-shadow:0 0 50px rgba(124,58,237,.5)}50%{box-shadow:0 0 80px rgba(124,58,237,.85),0 0 120px rgba(245,158,11,.55)}}
+  @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes spotlightSweep{0%,100%{transform:translateX(-30px) rotate(-2deg)}50%{transform:translateX(30px) rotate(2deg)}}
+  @keyframes trophyShine{0%,100%{filter:drop-shadow(0 0 8px rgba(245,158,11,.4))}50%{filter:drop-shadow(0 0 22px rgba(245,158,11,.95))}}
+  @keyframes micPulse{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.06) rotate(3deg)}}
+  @keyframes scoreBump{0%{transform:scale(1)}40%{transform:scale(1.4);color:var(--success)}100%{transform:scale(1)}}
+
+  .animate-enter{animation:fadeInUp .55s ease-out forwards}
+  .anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+  .anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+  .anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+
+  /* ---------- SLIDE FRAME ---------- */
+  .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+  .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:34px 40px 30px;overflow-y:auto;position:relative;flex-direction:column}
+  .slide.active{display:flex;animation:fadeIn .45s ease}
+  .slide[data-type="ido"]{border-top-color:var(--ido-border)}
+  .slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+  .slide[data-type="independent"]{border-top-color:var(--task-border)}
+  .slide[data-type="exit"]{border-top-color:var(--sc-border)}
+
+  h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}
+  h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+  h3{margin:10px 0 8px;color:#0f172a}
+  p,li{font-size:1.1rem;line-height:1.55;color:#334155}
+
+  .logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+
+  /* ---------- BUTTONS ---------- */
+  button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none;font-family:inherit}
+  button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+  button:active{transform:translateY(0)}
+  button.small{padding:8px 12px;font-size:.95rem}
+  button.ghost{background:#e2e8f0;color:#0f172a}
+  button.ghost:hover{background:#cbd5e1}
+
+  /* ---------- CONTROLS + PROGRESS ---------- */
+  .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+  .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+  .progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+  .progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+  /* ---------- BOXES ---------- */
+  .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+  .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-bottom:12px;transition:transform .15s}
+  .task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+  .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+  .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+  .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+  .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+
+  .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}
+  .show-ans .answer{display:block;animation:fadeInUp .25s}
+
+  /* ---------- MISCONCEPTION + BOSS TIP BOXES ---------- */
+  .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px 14px 12px;border-radius:12px;margin-top:10px;position:relative}
+  .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+  .misc-box p{margin:6px 0}
+  .slide.active .misc-wrong{position:relative;display:inline-block}
+  .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:3px;background:#dc2626;animation:strikeIn .6s ease-out .8s both}
+  .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1;padding:1px 4px;border-radius:4px}
+
+  .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px 14px 12px;border-radius:12px;margin-top:10px;position:relative}
+  .exam-tip-box::before{content:'🎯 BOSS TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+  /* ---------- LO CHECK ANIMATION ---------- */
+  .lo-anim{list-style:none;padding-left:8px;margin:8px 0 0}
+  .lo-anim li{position:relative;padding-left:30px;margin:6px 0;font-size:1.05rem}
+  .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+  .lo-anim li:nth-child(1)::before{animation-delay:.4s}
+  .lo-anim li:nth-child(2)::before{animation-delay:.7s}
+  .lo-anim li:nth-child(3)::before{animation-delay:1s}
+
+  /* ---------- ROUND TAGS ---------- */
+  .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+  .tag-arrival{background:#fef3c7;color:#92400e}
+  .tag-starter{background:#dbeafe;color:#1e40af}
+  .tag-ido{background:var(--ido-bg);color:#5b21b6}
+  .tag-wedo{background:var(--wedo-bg);color:#9d174d}
+  .tag-independent{background:var(--task-bg);color:#92400e}
+  .tag-exit{background:var(--sc-bg);color:#9a3412}
+  .tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
+  .tag-round{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;font-size:.95rem;padding:5px 16px;box-shadow:0 4px 12px rgba(245,158,11,.35);border:2px solid #fff}
+
+  /* ---------- LEVEL TOGGLE ---------- */
+  .level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+  .level-toggle button.active{box-shadow:0 0 0 3px #fff,0 0 0 6px currentColor;transform:translateY(-1px)}
+
+  .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+  /* ---------- TITLE HERO (game-show flavour) ---------- */
+  @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes ripple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+  .title-hero{position:relative;margin:18px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(245,158,11,.12) 0%,rgba(156,39,176,.12) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;border:2px solid rgba(245,158,11,.3)}
+  .hero-mic{font-size:3.6rem;animation:micPulse 2.4s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));transform-origin:center}
+  .hero-arrow{font-size:2.2rem;font-weight:900;color:var(--gold-deep);display:flex;flex-direction:column;align-items:center;line-height:1}
+  .hero-arrow .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--gold-deep);margin-top:-2px}
+  .hero-spotlight{position:relative;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fef9c3 0%,var(--gold) 50%,var(--gold-deep) 100%);display:flex;align-items:center;justify-content:center;font-size:2.6rem;border:4px solid #fff;animation:trophyShine 2s ease-in-out infinite}
+  .hero-spotlight::before,.hero-spotlight::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(245,158,11,.55);border-radius:50%;pointer-events:none}
+  .hero-spotlight::before{animation:ripple 2.4s ease-out infinite}
+  .hero-spotlight::after{animation:ripple 2.4s ease-out 1.2s infinite}
+  .hero-tag{font-size:1rem;font-weight:900;color:var(--gold-deep);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards}
+  .hero-tag .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+  .bridge-banner{display:inline-block;background:#fffbeb;border:2px dashed var(--gold);color:var(--gold-deep);padding:6px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:.5px;margin-top:6px}
+
+  /* ---------- XP / SCORE BAR ---------- */
+  .score-strip{display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,#fff7ed 0%,#fef3c7 100%);border:2px solid var(--gold);border-radius:12px;padding:8px 14px;margin:0 0 12px;box-shadow:0 4px 12px rgba(245,158,11,.15)}
+  .score-strip .score-label{font-size:.85rem;font-weight:900;color:var(--gold-deep);letter-spacing:.5px;text-transform:uppercase}
+  .score-strip .score-num{font-size:1.4rem;font-weight:900;color:var(--gold-deep);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
+  .score-strip .score-num.bump{animation:scoreBump .5s ease-out}
+  .xp-bar-wrap{flex:1;background:#fef3c7;border-radius:10px;height:14px;overflow:hidden;position:relative;border:1px solid #fde68a}
+  .xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+
+  /* ---------- MCQ INLINE ---------- */
+  .mcq-row{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 10px;align-items:center}
+  .mcq-q{font-weight:900;color:#1e3a8a;margin-right:8px;font-size:1rem}
+  .mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:2px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}
+  .mcq-opt:hover{border-color:var(--btn-bg)}
+  .mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}
+  .mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+  .mcq-row.locked .mcq-opt:not(.correct){opacity:.4;pointer-events:none}
+
+  /* ---------- HINT ---------- */
+  .hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+  .hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+  .hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+  .hint-text.show{display:block;animation:fadeInUp .25s}
+
+  /* ---------- 3-BIN SORT (ROUND 3) ---------- */
+  .sort-stage{display:grid;grid-template-columns:1fr 1.6fr;gap:14px;margin-top:8px}
+  .sort-cards{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:10px;min-height:200px}
+  .sort-card{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);padding:6px 12px;border-radius:8px;font-weight:bold;font-size:.95rem;cursor:pointer;user-select:none;transition:all .12s}
+  .sort-card:hover{transform:translateY(-2px);box-shadow:0 3px 8px rgba(0,0,0,.1)}
+  .sort-card.selected{background:var(--ido-bg);box-shadow:0 0 0 3px var(--ido-border)}
+  .sort-bins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .sort-bin{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:8px;min-height:200px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column}
+  .sort-bin:hover{border-color:var(--btn-bg);background:#f0f9ff}
+  .sort-bin h4{margin:0 0 6px;text-align:center;font-size:.9rem;color:#0f172a;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid #e2e8f0;padding-bottom:4px}
+  .sort-bin .bin-zone{flex:1;display:flex;flex-direction:column;gap:4px}
+  .sort-card.correct-place{background:#dcfce7;border-color:var(--success);color:#166534}
+  .sort-card.wrong-place{background:#fee2e2;border-color:var(--error);color:#991b1b;animation:shake .4s}
+
+  /* ---------- BUILD A VILLUS (ROUND 4) ---------- */
+  .villus-stage{position:relative;background:linear-gradient(180deg,#fef3c7 0%,#fef9c3 50%,#dbeafe 100%);border-radius:14px;border:2px solid #fde68a;height:280px;overflow:hidden}
+  .villus-stage .axis-lab{position:absolute;font-size:.7rem;font-weight:900;letter-spacing:.5px;text-transform:uppercase;z-index:5}
+  .villus-stage .axis-gut{left:8px;top:8px;color:#d97706}
+  .villus-stage .axis-blood{right:8px;bottom:90px;color:#1e40af}
+  .label-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+  .label-btn{padding:8px 14px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;font-weight:bold;font-size:.95rem;user-select:none;transition:all .12s}
+  .label-btn:hover{border-color:var(--task-border)}
+  .label-btn.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:#fce7f3}
+  .label-btn.placed{opacity:.35;pointer-events:none}
+  .villus-callout{position:absolute;background:#fff;border:2px solid var(--wedo-border);border-radius:8px;padding:3px 8px;font-size:.78rem;font-weight:900;color:#9d174d;box-shadow:0 2px 6px rgba(0,0,0,.1);min-width:84px;text-align:center;cursor:pointer;transition:all .15s}
+  .villus-callout.filled{background:rgba(22,163,74,.12);border-color:var(--success);color:var(--success)}
+  .villus-callout.wrong-label{background:rgba(220,38,38,.1);border-color:var(--error);animation:shake .4s}
+  .villus-callout:hover{background:#fce7f3}
+  .leader-line{stroke:#db2777;stroke-width:1.5;stroke-dasharray:3 2;fill:none;opacity:.75}
+
+  /* Function-match grid (stage 2 of Build a Villus) */
+  .func-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .func-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:bold;font-size:.92rem;transition:all .12s;display:flex;align-items:center;gap:8px}
+  .func-card:hover{border-color:var(--task-border);transform:translateY(-1px)}
+  .func-card .func-feat{flex:0 0 auto;color:var(--wedo-border);font-weight:900}
+  .func-card.correct{background:#dcfce7;border-color:var(--success);color:#166534;pointer-events:none}
+  .func-card.wrong{background:#fee2e2;border-color:var(--error);animation:shake .4s}
+  .func-options{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .func-opt{background:#f1f5f9;border:2px solid #e2e8f0;border-radius:6px;padding:3px 8px;font-size:.82rem;font-weight:bold;cursor:pointer;transition:all .12s}
+  .func-opt:hover{border-color:var(--btn-bg)}
+  .func-opt.correct{background:#dcfce7;border-color:var(--success);color:#166534;pointer-events:none}
+  .func-opt.wrong{background:#fee2e2;border-color:var(--error);animation:shake .4s}
+  .func-opts.locked .func-opt:not(.correct){opacity:.4;pointer-events:none}
+
+  /* ---------- JOURNEY OF A SANDWICH (ROUND 5) ---------- */
+  .journey-stage{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:6px;margin:8px 0}
+  .journey-stop{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;position:relative}
+  .journey-stop:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .journey-stop.active{border-color:var(--gold);background:#fffbeb;box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+  .journey-stop.complete{background:#dcfce7;border-color:var(--success)}
+  .journey-stop.complete::after{content:'✓';position:absolute;top:-8px;right:-8px;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 6px rgba(22,163,74,.4)}
+  .journey-stop .j-emoji{font-size:1.7rem;display:block;line-height:1}
+  .journey-stop .j-name{font-size:.78rem;font-weight:900;color:#0f172a;margin-top:3px}
+  .journey-detail{background:#f8fafc;border:2px solid var(--gold);border-radius:12px;padding:12px;min-height:140px;margin-top:6px}
+  .journey-detail h4{margin:0 0 6px;color:var(--gold-deep)}
+  .journey-detail .j-ph{color:var(--muted);font-style:italic;text-align:center;padding:20px}
+
+  /* ---------- WE DO CAPTURE ---------- */
+  .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:14px;background:#fff;position:relative;margin-top:6px}
+  .wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+  .evidence-btn{background:var(--wedo-border);font-size:.9rem}
+  .evidence-btn:hover{background:#9d174d}
+
+  /* ---------- 3x2 EXIT GRID ---------- */
+  .exit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .exit-grid .task-box{margin-bottom:0}
+
+  /* ============ V4 POLISH PACK ============ */
+
+  /* ---------- TIMER WIDGET ---------- */
+  @keyframes pulseWarn{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.12)}50%{box-shadow:0 6px 24px rgba(220,38,38,.4)}}
+  #timer-widget{position:fixed;top:14px;left:14px;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:5px 12px 5px 14px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:2000;display:none;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+  #timer-widget.visible{display:flex}
+  #timer-widget::before{content:'⏱';font-size:1.05rem;line-height:1}
+  #timer-display{font-size:1.15rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:54px;text-align:center;letter-spacing:.5px}
+  .timer-controls{display:flex;gap:3px}
+  .timer-btn{background:transparent;color:#475569;border:none;border-radius:50%;width:26px;height:26px;padding:0;cursor:pointer;font-size:.9rem;transition:background .2s;box-shadow:none;display:flex;align-items:center;justify-content:center}
+  .timer-btn:hover{background:#e2e8f0;transform:none}
+  .timer-btn.active-play{background:var(--success);color:white}
+  .timer-btn.active-pause{background:#fbbf24;color:white}
+  #timer-widget.warning{border-color:var(--error);animation:pulseWarn 1.4s ease-in-out infinite}
+
+  /* ---------- TA FOCUS ---------- */
+  #ta-focus-btn{position:fixed;top:14px;left:230px;z-index:2000;background:#6d28d9;color:#fff;border:2px solid #5b21b6;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+  #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4)}
+  #ta-focus-btn::before{content:'👥';font-size:1.05rem}
+  #ta-focus-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+  #ta-focus-overlay.visible{display:flex}
+  #ta-focus-modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;animation:fadeInUp .35s ease-out;border:3px solid #6d28d9}
+  .ta-modal-header{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+  .ta-modal-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+  .ta-modal-header h3::before{content:'👥 ';margin-right:4px}
+  .ta-modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+  .ta-modal-close:hover{background:rgba(255,255,255,.35);transform:none}
+  .ta-modal-body{padding:18px 24px 22px}
+  .ta-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+  .ta-row-icon{flex:0 0 28px;font-size:1.3rem;line-height:1.2}
+  .ta-row-content{flex:1;font-size:.96rem;line-height:1.45}
+  .ta-row-content strong{color:#5b21b6}
+  .ta-cta-row{background:#fef3c7;border-left:5px solid #d97706;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:.92rem}
+  .ta-cta-row strong{color:#92400e}
+  .ta-no-brief{font-style:italic;color:var(--muted);text-align:center;padding:12px}
+
+  /* ---------- COLD CALL ---------- */
+  @keyframes nameSpin{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes nameLand{0%{transform:scale(1.4) rotate(-3deg)}50%{transform:scale(1.1) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
+  #cold-call-btn{position:fixed;top:14px;left:380px;z-index:2000;background:#dc2626;color:#fff;border:2px solid #b91c1c;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+  #cold-call-btn:hover{background:#b91c1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,38,38,.4)}
+  #cold-call-btn::before{content:'🎲';font-size:1.05rem}
+  #cold-call-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+  #cold-call-overlay.visible{display:flex}
+  #cold-call-modal{background:#fff;border-radius:18px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid #dc2626}
+  .cold-call-header{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+  .cold-call-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+  .cold-call-header h3::before{content:'🎲 ';margin-right:4px}
+  .cold-call-body{padding:18px 22px 22px}
+  .cold-call-class-label{text-align:center;font-size:.85rem;color:#64748b;margin:0 0 10px}
+  .cold-call-class-label strong{color:#dc2626;font-size:1rem}
+  .cold-call-name-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;border-radius:14px;padding:24px 18px;margin:6px 0 14px;text-align:center;min-height:78px;display:flex;align-items:center;justify-content:center}
+  .cold-call-name{font-size:2.4rem;font-weight:900;color:#7c2d12;margin:0;letter-spacing:1px;line-height:1.1}
+  .cold-call-name.spinning{animation:nameSpin .08s ease-in-out infinite}
+  .cold-call-name.settled{animation:nameLand .55s cubic-bezier(0.34,1.56,0.64,1)}
+  .cold-call-q-box{background:#dbeafe;border-left:5px solid #1e40af;padding:12px 16px;border-radius:10px;margin:10px 0 14px}
+  .cold-call-q-label{margin:0 0 4px;font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+  .cold-call-question{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0;line-height:1.4}
+  .cold-call-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .cc-btn-primary{flex:1 1 200px;background:#dc2626;color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.98rem;font-weight:bold;transition:.2s}
+  .cc-btn-primary:hover{background:#b91c1c;transform:translateY(-1px)}
+  .cc-btn-secondary{flex:1 1 140px;background:#e5e7eb;color:#1e293b;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;transition:.2s}
+  .cc-btn-secondary:hover{background:#cbd5e1}
+  .cc-edit-link{display:block;text-align:center;background:none;border:none;color:#64748b;cursor:pointer;font-size:.85rem;text-decoration:underline;margin-top:10px;padding:6px}
+  .cc-edit-link:hover{color:#dc2626}
+  .cc-setup-title{font-weight:bold;margin:0 0 8px;font-size:1.05rem}
+  .cc-helper{font-size:.85rem;color:#64748b;margin:6px 0 12px}
+  .cc-empty-rows{text-align:center;color:#94a3b8;font-style:italic;padding:18px;border:2px dashed #cbd5e1;border-radius:10px;margin:6px 0}
+  .cc-pupil-rows{max-height:300px;overflow-y:auto;padding:2px;border:1px solid #e5e7eb;border-radius:10px;margin:0 0 10px}
+  .cc-pupil-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9}
+  .cc-pupil-row:last-child{border-bottom:none}
+  .cc-pupil-name{flex:1;font-weight:600;color:#1e293b;font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cc-grade-chips{display:flex;gap:3px;flex-shrink:0}
+  .cc-grade-chip{width:30px;height:30px;border-radius:50%;border:2px solid;background:#fff;cursor:pointer;font-weight:900;font-size:.85rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+  .cc-grade-u{border-color:#dc2626;color:#dc2626}
+  .cc-grade-1{border-color:#ea580c;color:#ea580c}
+  .cc-grade-2{border-color:#d97706;color:#d97706}
+  .cc-grade-3{border-color:#0891b2;color:#0891b2}
+  .cc-grade-4{border-color:#16a34a;color:#16a34a}
+  .cc-grade-chip:hover{transform:scale(1.1)}
+  .cc-grade-chip.cc-grade-selected{color:#fff;transform:scale(1.05)}
+  .cc-grade-u.cc-grade-selected{background:#dc2626}
+  .cc-grade-1.cc-grade-selected{background:#ea580c}
+  .cc-grade-2.cc-grade-selected{background:#d97706}
+  .cc-grade-3.cc-grade-selected{background:#0891b2}
+  .cc-grade-4.cc-grade-selected{background:#16a34a}
+  .cc-remove-btn{background:#fee2e2;color:#991b1b;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.85rem;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+  .cc-remove-btn:hover{background:#fecaca;transform:none}
+  .cc-add-row{display:flex;gap:8px;margin:8px 0 12px}
+  .cc-add-input{flex:1;padding:10px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;box-sizing:border-box}
+  .cc-add-input:focus{outline:none;border-color:#dc2626}
+  .cc-mode-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+  .cc-mode-label{font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+  .cc-mode-btn{background:#fff;border:1.5px solid #cbd5e1;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;color:#475569;transition:.15s;flex:1 1 auto;min-width:0;box-shadow:none}
+  .cc-mode-btn:hover{background:#e0f2fe;border-color:#0891b2;transform:none}
+  .cc-mode-btn.active{background:#dc2626;color:#fff;border-color:#b91c1c}
+
+  /* ---------- LESSON COMPLETE ---------- */
+  .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+  .lesson-complete-overlay.visible{display:flex}
+  .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--gold);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:540px;width:90%}
+  .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+  .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+  .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+  .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+  .lesson-complete-modal h2{margin:14px 0 6px;color:var(--gold-deep);font-size:1.8rem;border:none;padding:0}
+  .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+  .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+  .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+  .lesson-complete-modal button{background:var(--gold-deep);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+  .lesson-complete-modal button:hover{background:#92400e;transform:translateY(-2px)}
+  .confetti-piece{position:fixed;top:-20px;width:10px;height:14px;z-index:9000;animation:confettiDrop 3s ease-in forwards;pointer-events:none}
+
+  /* ---------- INDEPENDENT TIMER (separate from page-level timer) ---------- */
+  .indep-timer{position:absolute;top:18px;right:200px;background:#1e3a8a;color:#fff;padding:8px 14px;border-radius:10px;font-weight:900;font-size:1rem;font-variant-numeric:tabular-nums;z-index:100}
+  .indep-timer.timer-warning{background:#dc2626;animation:pulseWarn 1.2s infinite}
+  .indep-timer-controls{display:inline-flex;gap:6px;margin-left:8px}
+  .indep-timer-controls button{padding:4px 8px;font-size:.8rem;background:rgba(255,255,255,.2);box-shadow:none}
+  .indep-timer-controls button:hover{background:rgba(255,255,255,.3);transform:none}
+
+  /* ---------- SMOOTH SCROLLBAR ---------- */
+  .slide::-webkit-scrollbar{width:8px}
+  .slide::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px}
+  .slide::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+  .slide::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+
+  /* ============ MOBILE RESPONSIVE ============ */
+  @media (max-width:640px){
+    .slide{padding:20px 14px 18px;width:96%;height:94%}
+    h1{font-size:1.5rem}
+    h2{font-size:1.1rem;margin-right:0}
+    p,li{font-size:.95rem}
+    .logo{width:90px;top:14px;right:14px}
+    .arrival-grid{grid-template-columns:1fr}
+    .sort-stage{grid-template-columns:1fr}
+    .sort-bins{grid-template-columns:1fr}
+    .journey-stage{grid-template-columns:1fr 1fr 1fr}
+    .exit-grid{grid-template-columns:1fr}
+    .func-grid{grid-template-columns:1fr}
+    .controls button{padding:8px 12px;font-size:.9rem}
+    .title-hero{flex-direction:column;gap:10px}
+    .hero-mic{font-size:2.6rem}
+    .hero-spotlight{width:72px;height:72px;font-size:2rem}
+    .misc-box,.exam-tip-box{padding:10px}
+    #ta-focus-btn,#cold-call-btn{font-size:.75rem;padding:5px 10px}
+    #ta-focus-btn{left:auto;right:14px;top:54px}
+    #cold-call-btn{left:auto;right:14px;top:84px}
+    #timer-widget{padding:3px 10px;top:8px;left:8px}
+    #timer-display{font-size:.95rem;min-width:42px}
+    #ta-focus-modal,#cold-call-modal{max-width:96%}
+  }
+
+  /* ============ PRINT ============ */
+  #print-area{display:none}
+  @media print{
+    body{overflow:visible;background:#fff;height:auto;color:#000}
+    .controls,.slide-container,.progress-wrap,.progress-label,.indep-timer,#timer-widget,#ta-focus-btn,#cold-call-btn,#ta-focus-overlay,#cold-call-overlay,.lesson-complete-overlay,.confetti-piece{display:none!important}
+    #print-area{display:block!important;padding:20px}
+    .print-section{display:none;page-break-after:always}
+    .print-section.visible{display:block}
+    .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+    .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+    .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left;vertical-align:top}
+    .ko-table th{background:#eee}
+    .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+    body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+    body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+    body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+    .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+
+    /* 3x2 print grid for cumulative exit */
+    .print-grid-3x2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+    .pg-cell{border:1.5px solid #000;border-radius:6px;padding:8px}
+    .pg-tag{display:inline-block;background:#000;color:#fff;font-size:.7rem;font-weight:900;padding:2px 6px;border-radius:3px;letter-spacing:.5px;margin-bottom:4px}
+    .pg-q{margin:2px 0;font-size:.92rem;font-weight:600;color:#000;line-height:1.3}
+    .pg-cell .print-line{border-bottom:1px solid #000;height:18px;margin-top:5px}
+    .foundation-content,.middle-content,.higher-content{page-break-after:auto}
+  }
+
+</style>
+</head>
+<body>
+
+<!-- TIMER WIDGET (top-left auto pill) -->
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+  </div>
+</div>
+
+<!-- TA FOCUS BUTTON -->
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+
+<!-- COLD CALL BUTTON -->
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+
+<!-- TA FOCUS MODAL -->
+<div id="ta-focus-overlay" onclick="if(event.target.id==='ta-focus-overlay')hideTABrief()">
+  <div id="ta-focus-modal">
+    <div class="ta-modal-header">
+      <h3 id="ta-modal-title">TA Focus</h3>
+      <button class="ta-modal-close" onclick="hideTABrief()" aria-label="Close">✕</button>
+    </div>
+    <div class="ta-modal-body" id="ta-modal-body"></div>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL -->
+<div id="cold-call-overlay" onclick="if(event.target.id==='cold-call-overlay')hideColdCall()">
+  <div id="cold-call-modal">
+    <div class="cold-call-header">
+      <h3>Cold Call</h3>
+      <button class="ta-modal-close" onclick="hideColdCall()" aria-label="Close">✕</button>
+    </div>
+    <div class="cold-call-body" id="cold-call-body"></div>
+  </div>
+</div>
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>⭐</span><span>🏆</span><span>⭐</span></div>
+    <h2>Champion of Gut Reaction!</h2>
+    <p>You've fixed the wobbles in digestion &amp; absorption 🎤🩸</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> L1 Recap — enzymes (amylase, maltase, proteases, lipase) and bile (liver→gallbladder, neutralise + emulsify)</span>
+      <span><strong>✓</strong> L2 Recap — diffusion + active transport into the ileum</span>
+      <span><strong>✓</strong> Five villus adaptations linked to absorption rate</span>
+      <span><strong>✓</strong> Misconceptions busted, journey traced, boss question cracked</span>
+    </div>
+    <button onclick="hideLessonComplete()">Take a bow! 🚀</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+
+<!-- ════════════ SLIDE 0: TITLE ════════════ -->
+<div class="slide active" data-title="Title – Welcome to Gut Reaction" data-timer="1" data-no-autostart="true">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <div style="text-align:center;margin-top:2%">
+    <div class="animate-enter">
+      <span class="slide-tag tag-lesson">Intervention · Bridge from L1 + L2</span>
+      <h1>Gut Reaction</h1>
+      <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 4px">The Digestion &amp; Absorption Game Show</p>
+      <span class="bridge-banner">🔗 Bridges Lesson 1 (Enzymes &amp; Bile) → Lesson 2 (Absorption &amp; Villi)</span>
+      <div class="title-hero">
+        <div class="hero-mic" title="Game show host">🎤</div>
+        <div class="hero-arrow">→<span class="a-text">5 ROUNDS</span></div>
+        <div class="hero-spotlight">🏆</div>
+        <div class="hero-tag">Today you become<br>a digestion champion.<span class="small">5 rounds, one trophy. Show what you remember.</span></div>
+      </div>
+      <div class="li-box" style="margin:18px auto;max-width:720px;text-align:left">
+        <strong>Today you will fix &amp; firm-up:</strong>
+        <ul class="lo-anim">
+          <li><strong>2.29–2.31</strong> – Digestive enzymes &amp; the role of bile (from L1).</li>
+          <li><strong>2.32</strong> – How the small intestine &amp; villi are adapted for absorption (from L2).</li>
+          <li><strong>Synthesis</strong> – Trace a meal from mouth to bloodstream.</li>
+        </ul>
+      </div>
+      <p style="font-size:1.05rem;margin-top:8px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left">
+      <h3 style="margin-top:0">Teacher Print Tools</h3>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (2–3)</button>
+        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+        <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SLIDE 1: WARM-UP ROUND (Arrival Diagnostic) ════════════ -->
+<div class="slide" id="warmup-slide" data-title="Warm-Up Round – Diagnostic" data-timer="5">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-arrival">Warm-Up Round</span>
+  <h2>🎤 Warm-Up Round – What Do You Already Know?</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer from memory only — no notes, no neighbours. This tells us where to focus today's rounds.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('warmup-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle">
+    <button onclick="switchLevel('warmup','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('warmup','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('warmup','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+  <div id="warmup-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Enzymes (L1)</h3><p>What enzyme breaks <strong>starch</strong> into maltose?</p><p class="answer">Amylase.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Bile (L1)</h3><p>Where is <strong>bile</strong> made and where is it stored?</p><p class="answer">Made in the liver. Stored in the gallbladder.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Absorption (L2)</h3><p>In which organ does <strong>absorption</strong> happen?</p><p class="answer">The small intestine (ileum).</p></div>
+    <div class="task-box animate-enter anim-delay-3" style="background:#fefce8;border-color:#fde047"><h3>4. Villi (L2)</h3><p>Name <strong>one</strong> way the villi are adapted to absorb food.</p><p class="answer">Any of: large surface area, microvilli, one-cell-thick wall, good blood supply, lacteals.</p></div>
+  </div>
+  <div id="warmup-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Enzymes (L1)</h3><p>Complete: Starch → ______ (by amylase) → ______ (by maltase).</p><p class="answer">Maltose, then glucose.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Bile (L1)</h3><p>Name the <strong>two</strong> jobs of bile.</p><p class="answer">1) Neutralises stomach acid. 2) Emulsifies fats (increases SA:V).</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Absorption (L2)</h3><p>Name the <strong>two</strong> processes by which nutrients enter the blood.</p><p class="answer">Diffusion and active transport.</p></div>
+    <div class="task-box animate-enter anim-delay-3" style="background:#fefce8;border-color:#fde047"><h3>4. Villi (L2)</h3><p>Why are villus walls only <strong>one cell thick</strong>?</p><p class="answer">Short diffusion distance — speeds up absorption.</p></div>
+  </div>
+  <div id="warmup-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Enzymes (L1)</h3><p>Why does <strong>starch</strong> need two separate enzymes to be fully digested?</p><p class="answer">Each enzyme is specific. Amylase only breaks starch → maltose. Maltase only breaks maltose → glucose.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Bile (L1)</h3><p>Explain why <strong>bile</strong> must neutralise stomach acid before lipase can work.</p><p class="answer">Lipase has an alkaline optimum pH. Acid would denature it (change active site shape).</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Absorption (L2)</h3><p>Explain why <strong>active transport</strong> is needed even though diffusion is "free".</p><p class="answer">Diffusion stops when concentrations equal. Active transport moves nutrients against the gradient — even when blood = gut.</p></div>
+    <div class="task-box animate-enter anim-delay-3" style="background:#fefce8;border-color:#fde047"><h3>4. Synthesis (L1+L2)</h3><p>Bridge L1 → L2 in <strong>one sentence</strong>: how does L1 (digestion) lead into L2 (absorption)?</p><p class="answer">Digestion breaks insoluble food into small soluble molecules (e.g. starch→glucose) that are now small enough to be absorbed across the villus wall in the ileum.</p></div>
+  </div>
+</div>
+
+
+<!-- ════════════ SLIDE 2: ROUND 1 — RAPID FIRE ════════════ -->
+<div class="slide" data-title="Round 1 – Rapid Fire" data-timer="5" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">⚡ Round 1</span>
+  <h2>Rapid Fire — 8 Questions, Lock In Your Answer!</h2>
+  <div class="li-box"><strong>How to play:</strong> Click your chosen answer for each question. Each correct answer earns 1 point. Watch the XP bar fill — can your class hit a clean 8/8?</div>
+  <div class="score-strip">
+    <span class="score-label">⚡ Round 1 Score</span>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="r1-xp"></div></div>
+    <span class="score-num" id="r1-score">0</span>
+    <span style="font-weight:bold;color:var(--muted)">/ 8</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 18px">
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">1. Amylase makes:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Glucose</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Maltose</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Amino acids</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">2. Lipase makes:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Glucose + maltose</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Fatty acids + glycerol</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Amino acids</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">3. Bile is made in the:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Pancreas</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Gallbladder</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Liver</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">4. Bile is stored in the:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Liver</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Gallbladder</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Stomach</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">5. Absorption happens in the:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Stomach</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Ileum (small intestine)</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Colon</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">6. Active transport needs:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Energy (ATP)</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Just a gradient</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Heat</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">7. Microvilli are for:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Killing germs</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">More surface area</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Mixing food</span>
+    </div>
+    <div class="mcq-row" data-r1>
+      <span class="mcq-q">8. Lacteals absorb:</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Glucose</span>
+      <span class="mcq-opt" onclick="r1Mark(this,false)">Amino acids</span>
+      <span class="mcq-opt" onclick="r1Mark(this,true)">Fats (fatty acids)</span>
+    </div>
+  </div>
+
+  <button class="hint-btn" onclick="toggleHint(this)">💡 Stuck? Quick Hint</button>
+  <div class="hint-text">Q5: it's the LONG winding tube after the stomach. Q6: think of "uphill" needing power. Q8: only ONE adaptation deals with fats.</div>
+
+  <div class="exam-tip-box"><p><strong>Recall is everything.</strong> If you missed any of Q1–4, that's L1 wobbly. Q5–8 wobbly = L2 wobbly. The next rounds will fix it.</p></div>
+</div>
+
+<!-- ════════════ SLIDE 3: ROUND 2 — MISCONCEPTION BUSTER ════════════ -->
+<div class="slide" data-title="Round 2 – Misconception Buster" data-timer="6" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">🚫 Round 2</span>
+  <h2>Misconception Buster — Spot the WRONG Statement!</h2>
+  <div class="li-box"><strong>How to play:</strong> Each card has the WRONG version (red, struck through) and the RIGHT version (green flash). Read each one out loud. If anyone in the class still believes the red one — that's our intervention target!</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="misc-box">
+      <p><strong>1.</strong> <span class="misc-wrong">"Bile is an enzyme that digests fat."</span></p>
+      <p><strong>Reality:</strong> <span class="misc-right">Bile is NOT an enzyme. It physically breaks fat into droplets (emulsification). Lipase does the chemical digestion.</span></p>
+    </div>
+    <div class="misc-box">
+      <p><strong>2.</strong> <span class="misc-wrong">"Active transport doesn't need energy because it's natural."</span></p>
+      <p><strong>Reality:</strong> <span class="misc-right">Active transport ALWAYS needs ATP — it works against the concentration gradient. Diffusion is the free one.</span></p>
+    </div>
+    <div class="misc-box">
+      <p><strong>3.</strong> <span class="misc-wrong">"Diffusion moves things from low to high concentration."</span></p>
+      <p><strong>Reality:</strong> <span class="misc-right">Diffusion goes from HIGH to LOW concentration. Down the gradient. Always.</span></p>
+    </div>
+    <div class="misc-box">
+      <p><strong>4.</strong> <span class="misc-wrong">"Enzymes get used up when they break down food."</span></p>
+      <p><strong>Reality:</strong> <span class="misc-right">Enzymes are catalysts — they speed up reactions and are NOT used up. One enzyme molecule can act on many substrate molecules.</span></p>
+    </div>
+    <div class="misc-box" style="grid-column:1 / -1">
+      <p><strong>5.</strong> <span class="misc-wrong">"A thicker villus wall would absorb more food because there's more cell to take it in."</span></p>
+      <p><strong>Reality:</strong> <span class="misc-right">A thicker wall = LONGER diffusion distance = SLOWER absorption. The wall is one cell thick to keep the diffusion path as short as possible.</span></p>
+    </div>
+  </div>
+
+  <div class="exam-tip-box"><p><strong>In the exam:</strong> if a question says <em>"explain why"</em>, you must LINK feature → function → effect on absorption rate. Just naming the feature loses marks.</p></div>
+</div>
+
+
+<!-- ════════════ SLIDE 4: ROUND 3 — SORT THE SUSPECTS ════════════ -->
+<div class="slide" id="r3-slide" data-title="Round 3 – Sort the Suspects" data-timer="5" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">🗂️ Round 3</span>
+  <h2>Sort the Suspects — Where Does Each Fact Belong?</h2>
+  <div class="li-box"><strong>How to play:</strong> Click a card, then click the bin (Enzymes / Bile / Villi &amp; Absorption) it belongs in. Correct = green. Wrong = red. Cumulative — all from L1 + L2.</div>
+
+  <div class="score-strip">
+    <span class="score-label">🗂️ Round 3 Score</span>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="r3-xp"></div></div>
+    <span class="score-num" id="r3-score">0</span>
+    <span style="font-weight:bold;color:var(--muted)">/ 9</span>
+  </div>
+
+  <div class="sort-stage">
+    <div class="sort-cards" id="r3-cards">
+      <span class="sort-card" data-bin="enzymes" onclick="r3Select(this)">Breaks starch into maltose</span>
+      <span class="sort-card" data-bin="enzymes" onclick="r3Select(this)">Breaks proteins into amino acids</span>
+      <span class="sort-card" data-bin="enzymes" onclick="r3Select(this)">Specific to one substrate</span>
+      <span class="sort-card" data-bin="bile" onclick="r3Select(this)">Made in the liver</span>
+      <span class="sort-card" data-bin="bile" onclick="r3Select(this)">Neutralises stomach acid</span>
+      <span class="sort-card" data-bin="bile" onclick="r3Select(this)">Emulsifies fats</span>
+      <span class="sort-card" data-bin="villi" onclick="r3Select(this)">One-cell-thick wall</span>
+      <span class="sort-card" data-bin="villi" onclick="r3Select(this)">Lacteals absorb fats</span>
+      <span class="sort-card" data-bin="villi" onclick="r3Select(this)">Microvilli increase SA</span>
+    </div>
+    <div class="sort-bins">
+      <div class="sort-bin" onclick="r3Place('enzymes')">
+        <h4>🧪 Enzymes</h4>
+        <div class="bin-zone" id="r3-bin-enzymes"></div>
+      </div>
+      <div class="sort-bin" onclick="r3Place('bile')">
+        <h4>🟡 Bile</h4>
+        <div class="bin-zone" id="r3-bin-bile"></div>
+      </div>
+      <div class="sort-bin" onclick="r3Place('villi')">
+        <h4>🩸 Villi &amp; Absorption</h4>
+        <div class="bin-zone" id="r3-bin-villi"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+    <button class="ghost" onclick="r3Reset()">🔄 Reset</button>
+    <button class="ghost" onclick="r3Reveal()">👁️ Reveal All</button>
+    <button class="evidence-btn" onclick="printWeDoEvidence('r3-slide')">🖨️ Print Class Evidence</button>
+  </div>
+
+  <div class="wedo-capture" style="margin-top:8px">
+    <strong>Teacher Notes:</strong>
+    <div contenteditable="true" data-placeholder="Click and type — names of pupils stuck on which bin, common errors observed..." style="min-height:30px;padding:6px;font-size:.92rem"></div>
+  </div>
+</div>
+
+<!-- ════════════ SLIDE 5: ROUND 4 — BUILD A VILLUS ════════════ -->
+<div class="slide" id="r4-slide" data-title="Round 4 – Build a Villus" data-timer="6" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">🏗️ Round 4</span>
+  <h2>Build a Villus — Two Stages, Double XP!</h2>
+  <div class="li-box"><strong>Stage 1:</strong> click a label, then click the spot where it belongs. <strong>Stage 2:</strong> match each adaptation to <em>why it helps</em>. Each correct = +1 XP.</div>
+
+  <div class="score-strip">
+    <span class="score-label">🏗️ Round 4 Score</span>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="r4-xp"></div></div>
+    <span class="score-num" id="r4-score">0</span>
+    <span style="font-weight:bold;color:var(--muted)">/ 10</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px">
+    <!-- Stage 1: Label the villus -->
+    <div>
+      <h3 style="margin-top:0;color:var(--wedo-border)">Stage 1: Label the Villus</h3>
+      <div class="label-bank" id="r4-labels">
+        <span class="label-btn" onclick="r4SelectLabel(this,'microvilli')">Microvilli</span>
+        <span class="label-btn" onclick="r4SelectLabel(this,'thin-wall')">One cell thick</span>
+        <span class="label-btn" onclick="r4SelectLabel(this,'capillary')">Blood capillary</span>
+        <span class="label-btn" onclick="r4SelectLabel(this,'lacteal')">Lacteal</span>
+        <span class="label-btn" onclick="r4SelectLabel(this,'villus')">Villus body</span>
+      </div>
+      <div class="villus-stage">
+        <span class="axis-lab axis-gut">↑ GUT (food side)</span>
+        <span class="axis-lab axis-blood">↓ BLOOD (capillary)</span>
+        <svg viewBox="0 0 400 280" style="width:100%;height:100%;display:block" preserveAspectRatio="xMidYMid meet">
+          <!-- Villus body -->
+          <ellipse cx="200" cy="130" rx="55" ry="100" fill="#fce7f3" stroke="#db2777" stroke-width="3"/>
+          <!-- Microvilli (small fingers along top) -->
+          <g stroke="#db2777" stroke-width="2" fill="#fce7f3">
+            <rect x="158" y="20" width="6" height="18" rx="2"/>
+            <rect x="170" y="14" width="6" height="22" rx="2"/>
+            <rect x="182" y="12" width="6" height="24" rx="2"/>
+            <rect x="194" y="10" width="6" height="26" rx="2"/>
+            <rect x="206" y="12" width="6" height="24" rx="2"/>
+            <rect x="218" y="14" width="6" height="22" rx="2"/>
+            <rect x="230" y="20" width="6" height="18" rx="2"/>
+          </g>
+          <!-- Inner: capillary (red ring) -->
+          <ellipse cx="180" cy="150" rx="14" ry="40" fill="#ef4444" opacity=".5"/>
+          <!-- Inner: lacteal (green tube) -->
+          <ellipse cx="220" cy="150" rx="10" ry="38" fill="#16a34a" opacity=".5"/>
+          <!-- Wall of villus (highlight thinness) -->
+          <path d="M 145 130 Q 150 110 155 130" stroke="#7c2d12" stroke-width="2" fill="none"/>
+          <!-- Blood vessel base -->
+          <rect x="60" y="240" width="280" height="34" fill="#fecaca" stroke="#ef4444" stroke-width="2"/>
+          <text x="200" y="262" text-anchor="middle" font-size="11" font-weight="900" fill="#991b1b" letter-spacing=".5">→ BLOOD FLOW →</text>
+          <!-- Leader lines -->
+          <line class="leader-line" x1="200" y1="22" x2="60" y2="40"/>
+          <line class="leader-line" x1="148" y1="100" x2="40" y2="120"/>
+          <line class="leader-line" x1="180" y1="180" x2="40" y2="200"/>
+          <line class="leader-line" x1="220" y1="170" x2="360" y2="120"/>
+          <line class="leader-line" x1="250" y1="130" x2="360" y2="200"/>
+        </svg>
+        <!-- Callouts (drop targets) -->
+        <div class="villus-callout" style="left:8px;top:32px" data-correct="microvilli" onclick="r4PlaceLabel(this)">?</div>
+        <div class="villus-callout" style="left:0;top:108px" data-correct="thin-wall" onclick="r4PlaceLabel(this)">?</div>
+        <div class="villus-callout" style="left:0;top:188px" data-correct="capillary" onclick="r4PlaceLabel(this)">?</div>
+        <div class="villus-callout" style="right:0;top:108px" data-correct="lacteal" onclick="r4PlaceLabel(this)">?</div>
+        <div class="villus-callout" style="right:0;top:188px" data-correct="villus" onclick="r4PlaceLabel(this)">?</div>
+      </div>
+    </div>
+
+    <!-- Stage 2: Match adaptation -> why it helps -->
+    <div>
+      <h3 style="margin-top:0;color:var(--wedo-border)">Stage 2: Match the Reason</h3>
+      <p style="margin:0 0 6px;font-size:.92rem;color:var(--muted)">For each feature, click the right reason it helps absorption.</p>
+
+      <div class="func-card" data-feat="microvilli">
+        <span class="func-feat">Microvilli</span> →
+        <div class="func-options">
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Kill bacteria</span>
+          <span class="func-opt" onclick="r4FuncMark(this,true)">Increase surface area further</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Absorb water</span>
+        </div>
+      </div>
+      <div class="func-card" data-feat="thin-wall">
+        <span class="func-feat">One cell thick</span> →
+        <div class="func-options">
+          <span class="func-opt" onclick="r4FuncMark(this,true)">Short diffusion distance</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Stops fat passing</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Holds enzymes</span>
+        </div>
+      </div>
+      <div class="func-card" data-feat="capillary">
+        <span class="func-feat">Blood capillary</span> →
+        <div class="func-options">
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Stores food</span>
+          <span class="func-opt" onclick="r4FuncMark(this,true)">Maintains a steep concentration gradient</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Mixes the food</span>
+        </div>
+      </div>
+      <div class="func-card" data-feat="lacteal">
+        <span class="func-feat">Lacteal</span> →
+        <div class="func-options">
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Absorbs glucose</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Pumps blood</span>
+          <span class="func-opt" onclick="r4FuncMark(this,true)">Absorbs fatty acids &amp; glycerol</span>
+        </div>
+      </div>
+      <div class="func-card" data-feat="villus">
+        <span class="func-feat">Many villi (large SA)</span> →
+        <div class="func-options">
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Reduce friction</span>
+          <span class="func-opt" onclick="r4FuncMark(this,true)">More molecules absorbed at once</span>
+          <span class="func-opt" onclick="r4FuncMark(this,false)">Make food softer</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="ghost small" onclick="r4Reset()">🔄 Reset</button>
+        <button class="ghost small" onclick="r4Reveal()">👁️ Reveal All</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ SLIDE 6: ROUND 5 — JOURNEY OF A SANDWICH ════════════ -->
+<div class="slide" data-title="Round 5 – Journey of a Sandwich" data-timer="6" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">🥪 Round 5</span>
+  <h2>The Journey of a Sandwich — Trace it from Bite to Bloodstream</h2>
+  <div class="li-box"><strong>How to play:</strong> Click each stop on the journey. For each one, pick the enzyme/process that acts AND what comes out. This bridges L1 (digestion) → L2 (absorption).</div>
+
+  <div class="score-strip">
+    <span class="score-label">🥪 Round 5 Score</span>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="r5-xp"></div></div>
+    <span class="score-num" id="r5-score">0</span>
+    <span style="font-weight:bold;color:var(--muted)">/ 5</span>
+  </div>
+
+  <div class="journey-stage">
+    <div class="journey-stop" id="j-mouth" onclick="r5OpenStop('mouth')">
+      <span class="j-emoji">👄</span>
+      <div class="j-name">Mouth</div>
+    </div>
+    <div class="journey-stop" id="j-stomach" onclick="r5OpenStop('stomach')">
+      <span class="j-emoji">🫃</span>
+      <div class="j-name">Stomach</div>
+    </div>
+    <div class="journey-stop" id="j-duodenum" onclick="r5OpenStop('duodenum')">
+      <span class="j-emoji">💧</span>
+      <div class="j-name">Duodenum<br>(+ bile)</div>
+    </div>
+    <div class="journey-stop" id="j-ileum" onclick="r5OpenStop('ileum')">
+      <span class="j-emoji">🌀</span>
+      <div class="j-name">Ileum<br>(villi)</div>
+    </div>
+    <div class="journey-stop" id="j-blood" onclick="r5OpenStop('blood')">
+      <span class="j-emoji">🩸</span>
+      <div class="j-name">Bloodstream</div>
+    </div>
+  </div>
+
+  <div class="journey-detail" id="r5-detail">
+    <p class="j-ph">👆 Click a stop above to begin the journey.</p>
+  </div>
+
+  <div class="exam-tip-box"><p><strong>Exam phrasing that scores:</strong> "Starch is digested by amylase in the mouth into maltose, which is then digested by maltase in the small intestine into glucose, which is absorbed into the blood by diffusion and active transport."</p></div>
+</div>
+
+<!-- ════════════ SLIDE 7: BOSS ROUND — CHAMPIONSHIP QUESTION ════════════ -->
+<div class="slide" id="boss-slide" data-title="Boss Round – Championship Question" data-timer="6" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-round">👑 Boss Round</span>
+  <h2>Championship Question — The 5-Mark Boss</h2>
+  <div class="li-box"><strong>The scenario:</strong> A patient has had their <strong>gallbladder removed</strong> and also has <strong>flattened villi</strong> (coeliac disease). Explain how their digestion AND absorption of fatty foods will be affected.</div>
+
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('boss-slide').classList.toggle('show-ans')">👁️ Reveal Model Answer</button>
+
+  <div class="level-toggle">
+    <button onclick="switchLevel('boss','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('boss','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('boss','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+
+  <div id="boss-foundation" class="arrival-grid" style="grid-template-columns:1fr">
+    <div class="task-box">
+      <h3>Foundation Sentence Stems (3 marks)</h3>
+      <p>Fill in the gaps:</p>
+      <p>1. The patient has no gallbladder, so they cannot store ___________________ .</p>
+      <p>2. Without bile, fat cannot be ___________________ (broken into small droplets).</p>
+      <p>3. Their villi are flat, so the surface area is ___________________ , and absorption is ___________________ .</p>
+      <p class="answer"><strong>Model:</strong> 1) bile · 2) emulsified · 3) reduced / smaller, slower / less efficient.</p>
+    </div>
+  </div>
+  <div id="boss-middle" class="arrival-grid" style="display:none;grid-template-columns:1fr">
+    <div class="task-box">
+      <h3>Middle Sentence Stems (4 marks)</h3>
+      <p>Use these starters:</p>
+      <p>• Without bile being stored... → ...</p>
+      <p>• Fats will not be emulsified into smaller droplets, so... → ...</p>
+      <p>• With flattened villi, the surface area is... → ...so absorption is... → ...</p>
+      <p>• The patient may suffer from... → ...</p>
+      <p class="answer"><strong>Model:</strong> Without storage, bile is released slowly so fats stay as large droplets — SA:V is low, lipase works slowly, fat digestion takes longer. Flattened villi mean reduced surface area for absorption — so even digested nutrients cross the wall slowly. The patient may suffer from malnutrition / fatty stools / weight loss.</p>
+    </div>
+  </div>
+  <div id="boss-higher" class="arrival-grid" style="display:none;grid-template-columns:1fr">
+    <div class="task-box">
+      <h3>Higher (5+ marks) — No Stems, Just Cues</h3>
+      <p>Your answer must include ALL of:</p>
+      <ul style="margin:0 0 6px 18px">
+        <li>Role of bile (neutralise + emulsify) and effect of its absence</li>
+        <li>SA:V link to lipase rate</li>
+        <li>How flattened villi affect <strong>both</strong> diffusion (concentration gradient) and active transport</li>
+        <li>The clinical consequence (malabsorption / weight loss / malnutrition)</li>
+        <li>Use BECAUSE / SO THAT to link cause and effect</li>
+      </ul>
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Higher Hint</button>
+      <div class="hint-text">Active transport still works in flat villi — but with less SA, the ileum's mitochondria-rich cells are fewer, and overall ATP-driven uptake drops. Diffusion suffers because the gradient cannot be steeply maintained over a smaller capillary network.</div>
+      <p class="answer"><strong>Model (5 marks):</strong> Without a gallbladder, bile cannot be stored and concentrated, so fats are not emulsified efficiently. This keeps fat droplets large, lowering SA:V and slowing lipase action — fats stay undigested. Flattened villi reduce total absorbing surface area, so fewer molecules can be absorbed by diffusion at any moment. The reduced capillary network also fails to maintain a steep concentration gradient. Active transport is reduced because there are fewer ATP-rich cells. The patient suffers malabsorption — leading to weight loss, fatty stools (steatorrhoea) and malnutrition.</p>
+    </div>
+  </div>
+
+  <div class="wedo-capture" style="margin-top:8px">
+    <strong>Boss Round Notes:</strong>
+    <div contenteditable="true" data-placeholder="Names of pupils whose answers showed the deepest understanding / who is still missing the SA:V link..." style="min-height:30px;padding:6px;font-size:.92rem"></div>
+  </div>
+</div>
+
+
+<!-- ════════════ SLIDE 8: INDEPENDENT CATCH-UP SPRINT ════════════ -->
+<div class="slide" data-title="Independent Catch-Up Sprint" data-timer="8" data-type="independent">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-independent">⏱️ Independent Sprint</span>
+  <h2>Catch-Up Sprint — Tiered Worksheet</h2>
+  <div class="indep-timer" id="indep-timer-display" onclick="startIndepTimer(480)">08:00
+    <span class="indep-timer-controls">
+      <button onclick="event.stopPropagation();startIndepTimer(480)">▶</button>
+      <button onclick="event.stopPropagation();pauseIndepTimer()">⏸</button>
+      <button onclick="event.stopPropagation();resetIndepTimer()">🔄</button>
+    </span>
+  </div>
+  <div class="li-box"><strong>How it works:</strong> Print and complete the worksheet matching your grade chip. The questions target the most common L1+L2 misconceptions — this is your chance to fix them on paper.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px">
+    <div class="task-box" style="background:#dcfce7;border-color:#22c55e">
+      <h3 style="color:#166534">Foundation (U–1)</h3>
+      <p style="font-size:.95rem">Multiple choice + sentence completion. Targets enzyme/product matching, where bile is made/stored, and naming villus adaptations.</p>
+      <button onclick="printSection('worksheet-foundation')" style="background:#22c55e;width:100%">🖨️ Print Foundation</button>
+    </div>
+    <div class="task-box" style="background:#ffedd5;border-color:#f97316">
+      <h3 style="color:#9a3412">Middle (2–3)</h3>
+      <p style="font-size:.95rem">Short answer + 4-mark exam Q. Targets emulsification, SA:V reasoning, and diffusion vs active transport.</p>
+      <button onclick="printSection('worksheet-middle')" style="background:#f97316;width:100%">🖨️ Print Middle</button>
+    </div>
+    <div class="task-box" style="background:#dbeafe;border-color:#1e3a8a">
+      <h3 style="color:#1e3a8a">Higher (3–5)</h3>
+      <p style="font-size:.95rem">Application + 6-mark synthesis (gallbladder/coeliac/lactose). Targets the bridge L1↔L2 and exam-style linking.</p>
+      <button onclick="printSection('worksheet-higher')" style="background:#1e3a8a;width:100%;color:#fff">🖨️ Print Higher</button>
+    </div>
+  </div>
+
+  <div class="scaffold-box" style="margin-top:12px">
+    <strong>Need extra support?</strong> Tap the print button for your tier. Use the Knowledge Organiser as a checklist while you work — every term in green is one you should be confident with by the end of the sprint.
+  </div>
+
+  <div class="exam-tip-box"><p><strong>Sprint strategy:</strong> Don't get stuck. If a question takes &gt; 90 seconds, skip it, finish the worksheet, then come back. Marks for what you finish — not what you stare at.</p></div>
+</div>
+
+<!-- ════════════ SLIDE 9: TROPHY ROUND (EXIT TICKET) ════════════ -->
+<div class="slide" id="trophy-slide" data-title="Trophy Round – Exit Ticket" data-timer="4" data-type="exit">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-exit">🏆 Trophy Round</span>
+  <h2>Trophy Round — Cumulative Super Six</h2>
+  <div class="li-box"><strong>How to play:</strong> Six questions, no notes, no neighbours. Reveal answers at the end as a class — every full row earns a "Champion" shout-out!</div>
+
+  <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap">
+    <button class="ghost" onclick="document.getElementById('trophy-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  </div>
+
+  <div class="exit-grid" style="margin-top:10px">
+    <div class="task-box animate-enter">
+      <h3>1. Enzymes (L1)</h3>
+      <p>Name the enzyme and product: <strong>Starch</strong> → ?</p>
+      <p class="answer"><strong>Amylase</strong> breaks starch into <strong>maltose</strong>.</p>
+    </div>
+    <div class="task-box animate-enter anim-delay-1">
+      <h3>2. Bile (L1)</h3>
+      <p>State the <strong>two</strong> jobs of bile.</p>
+      <p class="answer">1) Neutralises stomach acid. 2) Emulsifies fats (↑ SA:V).</p>
+    </div>
+    <div class="task-box animate-enter anim-delay-2">
+      <h3>3. Absorption (L2)</h3>
+      <p>Name the <strong>two</strong> processes that move food into the blood.</p>
+      <p class="answer">Diffusion and active transport.</p>
+    </div>
+    <div class="task-box animate-enter anim-delay-3">
+      <h3>4. Villi (L2)</h3>
+      <p>Why must active transport need <strong>ATP</strong>?</p>
+      <p class="answer">It moves nutrients against the concentration gradient (low→high), which doesn't happen naturally — it costs energy.</p>
+    </div>
+    <div class="task-box animate-enter">
+      <h3>5. Adaptation (L2)</h3>
+      <p>Why is the villus wall <strong>one cell thick</strong>?</p>
+      <p class="answer">Short diffusion distance — molecules cross faster, so absorption rate is higher.</p>
+    </div>
+    <div class="task-box animate-enter anim-delay-1" style="background:#ede9fe;border-color:#7c3aed">
+      <h3>6. Synthesis (L1+L2)</h3>
+      <p>In <strong>one sentence</strong>, link L1 to L2: how does digestion enable absorption?</p>
+      <p class="answer">Digestion breaks insoluble food into small soluble molecules (e.g. glucose, amino acids, fatty acids) that are now small enough to cross the villus wall and be absorbed into the blood.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-container -->
+
+<!-- ════════════ NAV CONTROLS + PROGRESS ════════════ -->
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+
+
+<!-- ════════════ PRINT AREA ════════════ -->
+<div id="print-area">
+
+<!-- KNOWLEDGE ORGANISER -->
+<div id="print-ko" class="print-section">
+  <h2>Knowledge Organiser — Digestion &amp; Absorption (Bridge L1+L2)</h2>
+  <table class="ko-table">
+    <tr><th colspan="2" style="background:#dbeafe">L1 — Enzymes (Spec 2.29)</th></tr>
+    <tr><td><strong>Amylase</strong></td><td>Starch → Maltose. Made in salivary glands &amp; pancreas.</td></tr>
+    <tr><td><strong>Maltase</strong></td><td>Maltose → Glucose. Made in small intestine.</td></tr>
+    <tr><td><strong>Proteases</strong> (pepsin / trypsin)</td><td>Proteins → Amino acids. Pepsin = stomach. Trypsin = pancreas.</td></tr>
+    <tr><td><strong>Lipase</strong></td><td>Lipids → Fatty acids + Glycerol. Made in pancreas.</td></tr>
+    <tr><th colspan="2" style="background:#fef3c7">L1 — Bile (Spec 2.30 / 2.31)</th></tr>
+    <tr><td><strong>Made in</strong></td><td>The liver. Bile is NOT an enzyme.</td></tr>
+    <tr><td><strong>Stored in</strong></td><td>The gallbladder.</td></tr>
+    <tr><td><strong>Job 1</strong></td><td>Neutralises stomach acid → alkaline conditions for intestinal enzymes.</td></tr>
+    <tr><td><strong>Job 2</strong></td><td>Emulsifies fats — large fat droplets → smaller droplets → ↑ SA:V → faster lipase action.</td></tr>
+    <tr><th colspan="2" style="background:#fce7f3">L2 — Absorption &amp; Villi (Spec 2.32)</th></tr>
+    <tr><td><strong>Where</strong></td><td>The ileum (final part of small intestine).</td></tr>
+    <tr><td><strong>How</strong></td><td>Diffusion (high→low, free) + Active transport (low→high, needs ATP).</td></tr>
+    <tr><td><strong>Adaptation 1</strong></td><td>Many villi → large surface area.</td></tr>
+    <tr><td><strong>Adaptation 2</strong></td><td>Microvilli → even larger SA.</td></tr>
+    <tr><td><strong>Adaptation 3</strong></td><td>One-cell-thick wall → short diffusion distance.</td></tr>
+    <tr><td><strong>Adaptation 4</strong></td><td>Good blood supply → maintains steep concentration gradient.</td></tr>
+    <tr><td><strong>Adaptation 5</strong></td><td>Lacteals → absorb fats (fatty acids + glycerol).</td></tr>
+  </table>
+</div>
+
+<!-- SCAFFOLDS -->
+<div id="print-scaffold-foundation" class="print-section">
+  <h2>Scaffold — Foundation (U–1)</h2>
+  <div class="scaffold-print-box">
+    <h3>Sentence Starters</h3>
+    <p>• Amylase is an enzyme that breaks _________ into _________.</p>
+    <p>• Lipase breaks lipids into _________ and _________.</p>
+    <p>• Bile is made in the _________ and stored in the _________.</p>
+    <p>• Absorption happens in the _________.</p>
+    <p>• A villus has _________ to make a large surface area.</p>
+  </div>
+  <div class="scaffold-print-box">
+    <h3>Key Facts</h3>
+    <p>Bile = NOT an enzyme. It physically breaks up fat (emulsification).</p>
+    <p>Diffusion = high → low concentration. Active transport = low → high (needs energy / ATP).</p>
+  </div>
+</div>
+<div id="print-scaffold-middle" class="print-section">
+  <h2>Scaffold — Middle (2–3)</h2>
+  <div class="scaffold-print-box">
+    <h3>Key Linking Phrases</h3>
+    <p>• ...because amylase is specific to starch, and...</p>
+    <p>• ...the gallbladder stores bile so that it can be released when fat enters the small intestine...</p>
+    <p>• ...emulsification increases SA:V so lipase can work faster...</p>
+    <p>• ...active transport needs ATP because it moves against the concentration gradient...</p>
+  </div>
+</div>
+<div id="print-scaffold-higher" class="print-section">
+  <h2>Scaffold — Higher (3–5)</h2>
+  <div class="scaffold-print-box">
+    <h3>Key Terms (use ALL in your boss answer)</h3>
+    <p>amylase, maltase, lipase, protease, bile, gallbladder, liver, emulsification, SA:V, neutralisation, diffusion, active transport, concentration gradient, mitochondria, ATP, villi, microvilli, lacteal, capillary, malabsorption, denature.</p>
+  </div>
+</div>
+
+<!-- WORKSHEETS -->
+<div id="print-worksheet-foundation" class="print-section">
+  <h2>Catch-Up Worksheet — Foundation (U–1)</h2>
+  <div class="prevent-break">
+    <p><strong>Part A: Multiple Choice (circle one)</strong></p>
+    <p>1) Amylase makes: A) Glucose &nbsp; B) Maltose &nbsp; C) Amino acids &nbsp; D) Fatty acids</p>
+    <p>2) Bile is made in the: A) Liver &nbsp; B) Stomach &nbsp; C) Gallbladder &nbsp; D) Pancreas</p>
+    <p>3) Absorption happens in the: A) Stomach &nbsp; B) Liver &nbsp; C) Small intestine &nbsp; D) Mouth</p>
+    <p>4) Microvilli: A) Kill germs &nbsp; B) Mix food &nbsp; C) Increase surface area &nbsp; D) Make bile</p>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part B: Fill in the gap</strong></p>
+    <p>5) Lipase breaks lipids into ____________ and ____________ .</p>
+    <p>6) Bile is stored in the ____________ .</p>
+    <p>7) Diffusion moves things from ______________ to ______________ concentration.</p>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part C: Short Answer</strong></p>
+    <p>8) Name two adaptations of a villus.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+    <p>9) Why is bile NOT an enzyme?</p>
+    <div class="print-line"></div><div class="print-line"></div>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part D: Exam Question [3 marks]</strong></p>
+    <p>10) Describe the role of bile in the digestion of fat.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+</div>
+
+<div id="print-worksheet-middle" class="print-section">
+  <h2>Catch-Up Worksheet — Middle (2–3)</h2>
+  <div class="prevent-break">
+    <p><strong>Part A: Multiple Choice</strong></p>
+    <p>1) Maltase breaks maltose into: A) Starch &nbsp; B) Glucose &nbsp; C) Lipids &nbsp; D) Amino acids</p>
+    <p>2) Active transport requires: A) Just a gradient &nbsp; B) Heat &nbsp; C) Energy (ATP) &nbsp; D) Bile</p>
+    <p>3) Diffusion direction: A) Low → High &nbsp; B) High → Low &nbsp; C) Equal &nbsp; D) Random</p>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part B: Short Answer</strong></p>
+    <p>4) Complete: Starch → ___________ (by amylase) → ___________ (by maltase).</p>
+    <div class="print-line"></div>
+    <p>5) Explain why emulsification helps lipase. Use SA:V.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+    <p>6) State why the villus wall is only one cell thick.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part C: Long Answer</strong></p>
+    <p>7) Explain why both diffusion AND active transport are needed for absorption.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part D: Exam Question [4 marks]</strong></p>
+    <p>8) Describe how the structure of a villus is adapted for absorption. Name two adaptations and link each to its function.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+</div>
+
+<div id="print-worksheet-higher" class="print-section">
+  <h2>Catch-Up Worksheet — Higher (3–5)</h2>
+  <div class="prevent-break">
+    <p><strong>Part A: Multiple Choice</strong></p>
+    <p>1) A patient with low ATP would lose: A) Diffusion &nbsp; B) Active transport &nbsp; C) Both equally &nbsp; D) Neither</p>
+    <p>2) The optimum pH of intestinal lipase is: A) Acidic &nbsp; B) Neutral &nbsp; C) Alkaline &nbsp; D) None</p>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part B: Short Answer</strong></p>
+    <p>3) Explain why starch needs TWO different enzymes to be fully digested.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+    <p>4) Explain how the blood supply maintains a steep concentration gradient at the villi.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+    <p>5) Predict what would happen to a patient with very few mitochondria in their ileum cells.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part C: Bridge L1 ↔ L2</strong></p>
+    <p>6) Explain how digestion (L1) makes absorption (L2) possible. Use specific examples — starch, protein, lipid.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+  <div class="prevent-break">
+    <p><strong>Part D: Exam Question [6 marks]</strong></p>
+    <p>7) A patient has had their gallbladder removed AND has flattened villi (coeliac disease). Explain how this affects (i) digestion of fats and (ii) absorption of all nutrients. Use SA:V, concentration gradient, and ATP in your answer.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+</div>
+
+<!-- TROPHY/EXIT (3x2 grid printable) -->
+<div id="print-trophy" class="print-section">
+  <h2>Trophy Round Exit Ticket — Cumulative Super Six</h2>
+  <div class="print-grid-3x2">
+    <div class="pg-cell"><span class="pg-tag">Enzymes</span><p class="pg-q">1) Starch → ? (name enzyme + product)</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="pg-cell"><span class="pg-tag">Bile</span><p class="pg-q">2) State the two jobs of bile.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="pg-cell"><span class="pg-tag">Absorption</span><p class="pg-q">3) Name the two processes that move food into blood.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="pg-cell"><span class="pg-tag">Mechanism</span><p class="pg-q">4) Why does active transport need ATP?</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="pg-cell"><span class="pg-tag">Adaptation</span><p class="pg-q">5) Why is the villus wall one cell thick?</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="pg-cell"><span class="pg-tag">Synthesis</span><p class="pg-q">6) In one sentence, link digestion to absorption.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+</div>
+
+<!-- WE DO EVIDENCE -->
+<div id="print-wedo-evidence" class="print-section">
+  <h2>We Do – Class Evidence</h2>
+  <pre id="wedo-evidence-content" style="white-space:pre-wrap;font-family:inherit;font-size:.95rem"></pre>
+</div>
+
+</div><!-- end print-area -->
+
+
+<script>
+/* ============ NAVIGATION ============ */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{
+  if(e.target.isContentEditable||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){
+  const p=((currentSlide+1)/slides.length)*100;
+  document.getElementById('progressBar').style.width=p+'%';
+  const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);
+  document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length;
+}
+updateProgress();
+
+/* ============ LEVEL TOGGLE ============ */
+function switchLevel(prefix,level){
+  ['foundation','middle','higher'].forEach(l=>{
+    const el=document.getElementById(prefix+'-'+l);
+    if(el)el.style.display=(l===level)?'grid':'none';
+  });
+  setLevelToggleActive(prefix,level);
+}
+function setLevelToggleActive(prefix,level){
+  const cont=document.getElementById(prefix+'-foundation');
+  if(!cont)return;
+  const togglesParent=cont.parentElement.querySelector('.level-toggle');
+  if(!togglesParent)return;
+  togglesParent.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  const map={foundation:0,middle:1,higher:2};
+  const btns=togglesParent.querySelectorAll('button');
+  if(btns[map[level]])btns[map[level]].classList.add('active');
+}
+
+/* ============ PRINT ============ */
+function printSection(id){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  const el=document.getElementById('print-'+id);
+  if(el)el.classList.add('visible');
+  window.print();
+}
+function printPack(level){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.body.classList.add('print-'+level);
+  ['ko','trophy'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});
+  const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');
+  const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');
+  window.print();
+}
+function printWeDoEvidence(slideId){
+  const c=document.getElementById(slideId);if(!c)return;
+  const title=c.getAttribute('data-title')||'We Do';
+  const ts=new Date().toLocaleString('en-GB');
+  const score=c.querySelector('.score-num')?c.querySelector('.score-num').innerText:'';
+  const n=c.querySelector('[contenteditable]');
+  const notes=n?n.innerText:'';
+  let out='CLASS EVIDENCE — '+title+'\nDate/Time: '+ts+'\n';
+  if(score)out+='Score: '+score+'\n';
+  out+='\u2500'.repeat(50)+'\n\n';
+  if(notes && n && notes!==n.getAttribute('data-placeholder'))out+='TEACHER NOTES:\n'+notes+'\n';
+  document.getElementById('wedo-evidence-content').innerText=out;
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.getElementById('print-wedo-evidence').classList.add('visible');
+  window.print();
+}
+
+/* ============ SOUND (Web Audio) ============ */
+let _v4audioCtx=null;
+function _v4getAudio(){if(!_v4audioCtx)_v4audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _v4audioCtx}
+function playDing(){try{const ctx=_v4getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(1320,ctx.currentTime+0.15);g.gain.setValueAtTime(0.18,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);o.start();o.stop(ctx.currentTime+0.4)}catch(e){}}
+function playBuzz(){try{const ctx=_v4getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.setValueAtTime(150,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);o.start();o.stop(ctx.currentTime+0.25)}catch(e){}}
+function playClick(){try{const ctx=_v4getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(660,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);o.start();o.stop(ctx.currentTime+0.1)}catch(e){}}
+
+/* ============ HINTS ============ */
+function toggleHint(btn){
+  const hint=btn.nextElementSibling;
+  if(hint && hint.classList.contains('hint-text')){
+    hint.classList.toggle('show');
+    btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Hint';
+  }
+}
+
+/* ============ MCQ LOCKING (used in Round 1) ============ */
+function mcqCheck(el,ok){
+  const row=el.closest('.mcq-row');
+  if(row && row.classList.contains('locked'))return;
+  if(ok){el.classList.add('correct');if(row)row.classList.add('locked');try{playDing()}catch(e){}}
+  else{el.classList.add('wrong');try{playBuzz()}catch(e){}setTimeout(()=>el.classList.remove('wrong'),600)}
+}
+
+/* ============ ROUND 1 — RAPID FIRE SCORING ============ */
+let r1Score=0;const r1Total=8;
+function r1Mark(el,ok){
+  const row=el.closest('.mcq-row');
+  if(row.classList.contains('locked'))return;
+  if(ok){
+    el.classList.add('correct');row.classList.add('locked');
+    r1Score++;updateScoreDisplay('r1',r1Score,r1Total);
+    try{playDing()}catch(e){}
+  } else {
+    el.classList.add('wrong');try{playBuzz()}catch(e){}
+    setTimeout(()=>el.classList.remove('wrong'),600);
+  }
+}
+function updateScoreDisplay(prefix,score,total){
+  const sn=document.getElementById(prefix+'-score');
+  const xp=document.getElementById(prefix+'-xp');
+  if(sn){sn.innerText=score;sn.classList.add('bump');setTimeout(()=>sn.classList.remove('bump'),500)}
+  if(xp)xp.style.width=((score/total)*100)+'%';
+}
+
+/* ============ ROUND 3 — SORT THE SUSPECTS ============ */
+let r3Sel=null,r3Score=0;const r3Total=9;
+function r3Select(el){
+  if(el.classList.contains('correct-place')||el.classList.contains('wrong-place'))return;
+  document.querySelectorAll('#r3-cards .sort-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');r3Sel=el;
+  try{playClick()}catch(e){}
+}
+function r3Place(bin){
+  if(!r3Sel)return;
+  const correct=r3Sel.getAttribute('data-bin');
+  const card=r3Sel;
+  card.classList.remove('selected');
+  if(bin===correct){
+    card.classList.add('correct-place');
+    card.style.pointerEvents='none';
+    document.getElementById('r3-bin-'+bin).appendChild(card);
+    r3Score++;updateScoreDisplay('r3',r3Score,r3Total);
+    try{playDing()}catch(e){}
+  } else {
+    card.classList.add('wrong-place');
+    setTimeout(()=>card.classList.remove('wrong-place'),600);
+    try{playBuzz()}catch(e){}
+  }
+  r3Sel=null;
+}
+function r3Reset(){
+  r3Sel=null;r3Score=0;updateScoreDisplay('r3',0,r3Total);
+  // Move all cards back to source
+  const src=document.getElementById('r3-cards');
+  document.querySelectorAll('.sort-card').forEach(c=>{
+    c.classList.remove('selected','correct-place','wrong-place');
+    c.style.pointerEvents='';
+    src.appendChild(c);
+  });
+}
+function r3Reveal(){
+  document.querySelectorAll('#r3-cards .sort-card').forEach(c=>{
+    if(c.classList.contains('correct-place'))return;
+    const bin=c.getAttribute('data-bin');
+    c.classList.add('correct-place');c.style.pointerEvents='none';c.classList.remove('selected');
+    document.getElementById('r3-bin-'+bin).appendChild(c);
+  });
+  r3Score=r3Total;updateScoreDisplay('r3',r3Score,r3Total);
+}
+
+/* ============ ROUND 4 — BUILD A VILLUS ============ */
+let r4SelectedLabel=null,r4Score=0;const r4Total=10;
+function r4SelectLabel(el,id){
+  if(el.classList.contains('placed'))return;
+  document.querySelectorAll('#r4-labels .label-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');r4SelectedLabel=id;
+  try{playClick()}catch(e){}
+}
+function r4PlaceLabel(spot){
+  if(spot.classList.contains('filled'))return;
+  if(!r4SelectedLabel)return;
+  const correct=spot.getAttribute('data-correct');
+  if(r4SelectedLabel===correct){
+    const sel=document.querySelector('#r4-labels .label-btn.selected');
+    spot.innerText=sel?sel.innerText:'?';
+    spot.classList.add('filled');
+    if(sel)sel.classList.add('placed');
+    r4Score++;updateScoreDisplay('r4',r4Score,r4Total);
+    try{playDing()}catch(e){}
+  } else {
+    spot.classList.add('wrong-label');
+    setTimeout(()=>spot.classList.remove('wrong-label'),600);
+    try{playBuzz()}catch(e){}
+  }
+  r4SelectedLabel=null;
+  document.querySelectorAll('#r4-labels .label-btn').forEach(b=>b.classList.remove('selected'));
+}
+function r4FuncMark(el,ok){
+  const opts=el.parentElement;
+  if(opts.classList.contains('locked'))return;
+  if(ok){
+    el.classList.add('correct');opts.classList.add('locked');
+    r4Score++;updateScoreDisplay('r4',r4Score,r4Total);
+    try{playDing()}catch(e){}
+  } else {
+    el.classList.add('wrong');try{playBuzz()}catch(e){}
+    setTimeout(()=>el.classList.remove('wrong'),600);
+  }
+}
+function r4Reset(){
+  r4SelectedLabel=null;r4Score=0;updateScoreDisplay('r4',0,r4Total);
+  document.querySelectorAll('#r4-labels .label-btn').forEach(b=>b.classList.remove('selected','placed'));
+  document.querySelectorAll('.villus-callout').forEach(s=>{s.innerText='?';s.classList.remove('filled','wrong-label')});
+  document.querySelectorAll('.func-options').forEach(o=>o.classList.remove('locked'));
+  document.querySelectorAll('.func-opt').forEach(o=>o.classList.remove('correct','wrong'));
+}
+function r4Reveal(){
+  const labels={microvilli:'Microvilli','thin-wall':'One cell thick',capillary:'Blood capillary',lacteal:'Lacteal',villus:'Villus body'};
+  document.querySelectorAll('.villus-callout').forEach(s=>{
+    if(s.classList.contains('filled'))return;
+    s.innerText=labels[s.getAttribute('data-correct')];s.classList.add('filled');
+  });
+  document.querySelectorAll('#r4-labels .label-btn').forEach(b=>b.classList.add('placed'));
+  document.querySelectorAll('.func-options').forEach(o=>{
+    if(o.classList.contains('locked'))return;
+    o.classList.add('locked');
+    // Mark the correct option
+    o.querySelectorAll('.func-opt').forEach(opt=>{
+      if(opt.getAttribute('onclick')&&opt.getAttribute('onclick').indexOf('true')>-1){
+        opt.classList.add('correct');
+      }
+    });
+  });
+  r4Score=r4Total;updateScoreDisplay('r4',r4Score,r4Total);
+}
+
+/* ============ ROUND 5 — JOURNEY OF A SANDWICH ============ */
+const r5Stops={
+  mouth:{
+    title:'👄 Mouth',
+    intro:'A bite of <strong>cheese sandwich</strong> (bread + cheese) enters your mouth.',
+    questions:[
+      {q:'Which enzyme starts working here?',opts:[{t:'Pepsin',ok:false},{t:'Amylase',ok:true},{t:'Lipase',ok:false},{t:'Maltase',ok:false}]},
+      {q:'What does it break down?',opts:[{t:'Protein → amino acids',ok:false},{t:'Starch → maltose',ok:true},{t:'Lipid → fatty acids',ok:false}]}
+    ]
+  },
+  stomach:{
+    title:'🫃 Stomach',
+    intro:'The bolus arrives in the <strong>stomach</strong> — acidic (pH 2). The cheese protein is now the focus.',
+    questions:[
+      {q:'Which enzyme works here?',opts:[{t:'Amylase',ok:false},{t:'Lipase',ok:false},{t:'Pepsin (protease)',ok:true}]},
+      {q:'What does it produce?',opts:[{t:'Glucose',ok:false},{t:'Amino acids',ok:true},{t:'Fatty acids',ok:false}]}
+    ]
+  },
+  duodenum:{
+    title:'💧 Duodenum (small intestine, top)',
+    intro:'Bile pours in from the <strong>gallbladder</strong>. Pancreatic juice arrives. The fat from the cheese is the target.',
+    questions:[
+      {q:'What does bile do FIRST?',opts:[{t:'Digests fat',ok:false},{t:'Neutralises acid',ok:true},{t:'Absorbs glucose',ok:false}]},
+      {q:'What does bile do to fat?',opts:[{t:'Emulsifies it (↑ SA:V)',ok:true},{t:'Chemically digests it',ok:false},{t:'Stores it',ok:false}]}
+    ]
+  },
+  ileum:{
+    title:'🌀 Ileum (small intestine, end)',
+    intro:'All molecules are now small &amp; soluble: glucose, amino acids, fatty acids. The villi take over.',
+    questions:[
+      {q:'How does GLUCOSE enter the blood?',opts:[{t:'Diffusion AND active transport',ok:true},{t:'Only diffusion',ok:false},{t:'Through the lacteal',ok:false}]},
+      {q:'How do FATTY ACIDS get out?',opts:[{t:'Through the capillary',ok:false},{t:'Through the lacteal',ok:true},{t:'Active transport only',ok:false}]}
+    ]
+  },
+  blood:{
+    title:'🩸 Bloodstream',
+    intro:'Glucose, amino acids and fatty acids are now travelling in the blood toward every cell in the body.',
+    questions:[
+      {q:'Where does glucose go FIRST after the gut?',opts:[{t:'Heart',ok:false},{t:'Liver (via hepatic portal vein)',ok:true},{t:'Brain',ok:false}]},
+      {q:'You\'ve made it! Score this stop?',opts:[{t:'🏁 Confirm complete',ok:true}]}
+    ]
+  }
+};
+let r5Score=0;const r5Total=5;
+let r5Completed={};
+function r5OpenStop(id){
+  document.querySelectorAll('.journey-stop').forEach(s=>s.classList.remove('active'));
+  document.getElementById('j-'+id).classList.add('active');
+  const stop=r5Stops[id];if(!stop)return;
+  let html='<h4>'+stop.title+'</h4><p style="font-size:.95rem;margin:0 0 8px">'+stop.intro+'</p>';
+  if(r5Completed[id]){
+    html+='<p style="color:var(--success);font-weight:900">✓ Stop complete — well done!</p>';
+  } else {
+    stop.questions.forEach((qq,qIdx)=>{
+      html+='<div style="margin:6px 0"><strong style="color:var(--gold-deep);font-size:.92rem">Q'+(qIdx+1)+': '+qq.q+'</strong><div class="mcq-row" data-r5stop="'+id+'" data-r5q="'+qIdx+'">';
+      qq.opts.forEach((opt,oIdx)=>{
+        html+='<span class="mcq-opt" onclick="r5MarkAnswer(this,'+(opt.ok?'true':'false')+',\''+id+'\','+qIdx+',\''+stop.questions.length+'\')">'+opt.t+'</span>';
+      });
+      html+='</div></div>';
+    });
+  }
+  document.getElementById('r5-detail').innerHTML=html;
+}
+let r5StopProgress={};
+function r5MarkAnswer(el,ok,stopId,qIdx,totalQs){
+  const row=el.closest('.mcq-row');
+  if(row.classList.contains('locked'))return;
+  if(ok){
+    el.classList.add('correct');row.classList.add('locked');
+    if(!r5StopProgress[stopId])r5StopProgress[stopId]=0;
+    r5StopProgress[stopId]++;
+    try{playDing()}catch(e){}
+    // If all questions in this stop done, mark it complete
+    if(r5StopProgress[stopId]>=parseInt(totalQs)){
+      r5Completed[stopId]=true;
+      const stopEl=document.getElementById('j-'+stopId);
+      if(stopEl){stopEl.classList.add('complete');stopEl.classList.remove('active')}
+      r5Score++;updateScoreDisplay('r5',r5Score,r5Total);
+      // Show celebratory completion in detail
+      setTimeout(()=>r5OpenStop(stopId),400);
+    }
+  } else {
+    el.classList.add('wrong');try{playBuzz()}catch(e){}
+    setTimeout(()=>el.classList.remove('wrong'),600);
+  }
+}
+
+/* ============ INDEPENDENT TIMER (separate from page-level timer) ============ */
+let indepInterval=null,indepSeconds=480,indepPaused=false;
+function startIndepTimer(secs){
+  if(indepPaused && !secs){indepPaused=false}
+  else{clearInterval(indepInterval);indepSeconds=secs||480}
+  indepPaused=false;updateIndepDisplay();
+  indepInterval=setInterval(function(){
+    if(!indepPaused){indepSeconds--;updateIndepDisplay();
+      if(indepSeconds<=0){clearInterval(indepInterval);
+        const d=document.getElementById('indep-timer-display');
+        if(d){d.firstChild.nodeValue='TIME UP! ';d.classList.add('timer-warning')}
+      }
+    }
+  },1000);
+}
+function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d){d.style.opacity=indepPaused?'.6':'1'}}
+function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1'}}
+function updateIndepDisplay(){
+  const m=Math.floor(indepSeconds/60),s=indepSeconds%60;
+  const d=document.getElementById('indep-timer-display');
+  if(d){
+    d.firstChild.nodeValue=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' ';
+    d.classList.toggle('timer-warning',indepSeconds<=60 && indepSeconds>0);
+  }
+}
+
+/* ============ LESSON COMPLETE + CONFETTI ============ */
+let lcShown=false;
+function fireConfettiGlobal(){
+  const colors=['#9c27b0','#22c55e','#f97316','#1e3a8a','#eab308','#db2777','#f59e0b'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay=(Math.random()*0.5)+'s';
+    c.style.animationDuration=(2.5+Math.random()*1.5)+'s';
+    c.style.transform='rotate('+(Math.random()*360)+'deg)';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4500);
+  }
+}
+function showLessonComplete(){
+  if(lcShown)return;lcShown=true;
+  setTimeout(()=>{
+    try{fireConfettiGlobal()}catch(e){}
+    try{playDing()}catch(e){}
+    const ov=document.getElementById('lc-overlay');if(ov)ov.classList.add('visible');
+  },400);
+}
+function hideLessonComplete(){const ov=document.getElementById('lc-overlay');if(ov)ov.classList.remove('visible')}
+
+/* Trigger Lesson Complete when trophy answers revealed */
+(function(){
+  const trophy=document.getElementById('trophy-slide');
+  if(!trophy)return;
+  const observer=new MutationObserver(()=>{
+    if(trophy.classList.contains('show-ans') && !lcShown){showLessonComplete()}
+  });
+  observer.observe(trophy,{attributes:true,attributeFilter:['class']});
+})();
+
+/* ============ PAGE-LEVEL TIMER ============ */
+let _v4timerInterval=null,_v4timeLeft=0,_v4timerRunning=false;
+function checkTimerVisibility(){
+  const s=slides[currentSlide];if(!s)return;
+  const t=s.getAttribute('data-timer');
+  const noAuto=s.getAttribute('data-no-autostart')==='true';
+  const w=document.getElementById('timer-widget');if(!w)return;
+  pauseTimer();
+  if(t){
+    w.classList.add('visible');
+    resetTimer(parseInt(t));
+    if(!noAuto){setTimeout(()=>{if(_v4timeLeft>0)startTimer()},250)}
+  } else {
+    w.classList.remove('visible');
+  }
+}
+function updateTimerDisplay(){
+  const m=Math.floor(_v4timeLeft/60),s=_v4timeLeft%60;
+  const d=document.getElementById('timer-display');if(!d)return;
+  d.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const w=document.getElementById('timer-widget');
+  if(_v4timeLeft<30 && _v4timeLeft>0){w.classList.add('warning')}else{w.classList.remove('warning')}
+}
+function startTimer(){
+  if(_v4timerRunning||_v4timeLeft<=0)return;
+  _v4timerRunning=true;
+  const bp=document.getElementById('btn-play');if(bp)bp.classList.add('active-play');
+  const bz=document.getElementById('btn-pause');if(bz)bz.classList.remove('active-pause');
+  _v4timerInterval=setInterval(()=>{_v4timeLeft--;updateTimerDisplay();if(_v4timeLeft<=0)pauseTimer()},1000);
+}
+function pauseTimer(){
+  _v4timerRunning=false;clearInterval(_v4timerInterval);
+  const bp=document.getElementById('btn-play');if(bp)bp.classList.remove('active-play');
+  const bz=document.getElementById('btn-pause');if(bz)bz.classList.add('active-pause');
+}
+function resetTimer(minutes){
+  pauseTimer();
+  const bz=document.getElementById('btn-pause');if(bz)bz.classList.remove('active-pause');
+  _v4timeLeft=minutes*60;updateTimerDisplay();
+}
+
+/* Hook into showSlide for timer auto-start */
+const _origShowSlide=showSlide;
+window.showSlide=function(i){_origShowSlide(i);try{checkTimerVisibility()}catch(e){}};
+setTimeout(()=>{try{checkTimerVisibility()}catch(e){}},150);
+
+/* ============ PLACEHOLDERS for contenteditable ============ */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{
+  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+});
+
+
+/* ============ TA FOCUS BRIEFS (per slide index, intervention-focused) ============ */
+const taBriefs={
+  0:null,
+  1:{phase:"Warm-Up Round — Diagnostic",position:"Stand BACK. This is genuine assessment data. Stay near Foundation only if pencils aren't moving after 30s.",watch:"Any pupil who blanks on Q1 (amylase) or Q2 (bile location) — that's L1 wobbly. Blanks on Q3/Q4 = L2 wobbly. Mark it down — you'll target them in Rounds 1–4.",support:"NO support. Verbal stem only if a pupil hasn't started after 60s: 'What's the first thing you remember from last week?' Don't supply terms.",cta:"After 4 mins: cold-call 4 pupils, one per Q across tiers. Note who can't answer — that's your priority list."},
+  2:{phase:"Round 1 — Rapid Fire (intervention triage)",position:"Move between tables every 30s. The locking MCQs give you instant feedback on who's stuck.",watch:"Pupils clicking the same wrong option repeatedly — that's NOT a lapse, it's a consolidated misconception. Q3 (bile-liver mix-up) and Q6 (active transport energy) are the classics.",support:"For pupils who get a wrong answer twice: don't reveal — point at the score strip and say 'You've got 5/8 — what could 6 look like?'",cta:"Cold-call ANY pupil with 5+ correct: 'Defend Q[x] — why did you pick that?'"},
+  3:{phase:"Round 2 — Misconception Buster",position:"Foundation tier — many pupils HAVE believed at least one of these. Watch for the 'oh!' moment.",watch:"Misconception 1 (bile = enzyme) and 5 (thicker wall = more absorption) are the stickiest. If pupils nod along but can't paraphrase, they don't get it yet.",support:"Pause after each misconception. Ask a Foundation pupil to paraphrase 'In your own words, what's the right version?' DON'T supply the answer — let other pupils correct.",cta:"Cold-call: 'You've heard this misconception in real life — give an example sentence using the WRONG version.'"},
+  4:{phase:"Round 3 — Sort the Suspects",position:"All tiers. Watch the bin choices live.",watch:"Cards going in the wrong bin tell you exactly what's confused. 'Specific to one substrate' often goes to bile. 'Made in the liver' often goes to enzymes.",support:"For pupils stuck: ask 'IS this an enzyme — yes or no?' Often that one yes/no unsticks the bin choice.",cta:"After 4 mins reveal. Cold-call: 'Why does [card X] go in [bin Y]?' Force the explanation, not the answer."},
+  5:{phase:"Round 4 — Build a Villus (TWO STAGES)",position:"Higher tier — this is where they earn the boss-round marks. Stage 2 (matching reasons) is where they show LINKING.",watch:"Stage 1 labelling is usually OK. Stage 2 is where pupils crash — they know microvilli but can't link to 'increase SA further'. Watch for guessing on the function options.",support:"Force the linking phrase: 'feature → effect → reason'. E.g. 'one cell thick → short distance → fast absorption.' If a pupil gets a function wrong, ask: 'What's the FUNCTION of that feature?'",cta:"Cold-call after Stage 2: 'You picked the right reason for [feature]. Now PREDICT — what would happen if it was missing?'"},
+  6:{phase:"Round 5 — Journey of a Sandwich (BRIDGE)",position:"This round is the L1↔L2 bridge. Stand near pupils who got LOW Round 1 scores.",watch:"Pupils stuck at the duodenum stop (bile vs lipase confusion). Pupils unsure at the ileum stop about which adaptation absorbs which nutrient (lacteal = fats; capillary = glucose/amino acids).",support:"For each stop: 'What molecule are we tracking?' (starch? protein? fat?). Re-anchoring the molecule helps them pick the right enzyme.",cta:"At the blood stop, cold-call: 'In ONE sentence, trace the journey of the cheese protein from bite to bloodstream.'"},
+  7:{phase:"Boss Round — Championship Question",position:"Stand back. This is summative — let pupils struggle for the marks.",watch:"Pupils writing facts but not LINKING (bile → no emulsification → low SA:V → slow lipase). Foundation pupils may stop after one stem. Higher pupils may use only L1 OR only L2 — not both.",support:"For Middle/Higher: 'You've explained the digestion side — what about the absorption side? It's a TWO-PART question.'",cta:"Cold-call to share one sentence each: 'Pupil A — give me the bile sentence. Pupil B — the villi sentence. Pupil C — link them.' Builds the answer collectively."},
+  8:{phase:"Independent Catch-Up Sprint",position:"Circulate by tier. Worksheets matched to grade chips.",watch:"Pupils running out of time on Part D. Pupils whose answers don't use BECAUSE/SO THAT.",support:"Read questions aloud for Foundation. For Middle: insist on the SA:V phrase. For Higher: 6 marks = 6 separate linking points.",cta:"At 6 mins: 'Anyone who's on Part C, raise a hand.' Cold-call those who don't raise — they may be stuck on A/B."},
+  9:{phase:"Trophy Round — Cumulative Exit",position:"STAND BACK. No support. This is your data for tomorrow.",watch:"Pupils stuck on Q6 (synthesis) — that's the clearest signal of who hasn't bridged L1↔L2.",support:"Absolutely none. If they're blank, they're blank — that's the data point.",cta:"Whole-class cold-call assigning each cell to a different pupil. Reveal answers; celebrate. Confetti will fire."}
+};
+
+/* ============ COLD CALL QUESTIONS (per slide index, tiered) ============ */
+const coldCallQuestions={
+  0:null,
+  1:{
+    foundation:["What enzyme breaks starch into maltose?","Where is bile made?","Where is bile stored?","Where does absorption happen?"],
+    middle:["Complete: Starch → ____ → glucose. Name both enzymes.","State the two roles of bile.","Name the two processes of absorption."],
+    higher:["Why does starch need TWO enzymes — not one?","Bridge L1 to L2 in one sentence.","Predict: a patient with no gallbladder — effect on fat digestion."]
+  },
+  2:{
+    foundation:["Read out which option you picked for Q[X].","What does amylase produce?","What energy molecule does active transport use?","Where in the small intestine is absorption?"],
+    middle:["Defend your Q3 answer (bile location).","Why is Q6 (energy) the trickiest? What's the right answer?","What's a microvillus?"],
+    higher:["You got 8/8 — explain Q5 to someone who got it wrong.","If lacteals were missing, which nutrient would the body fail to absorb?","Predict: a pupil scored 4/8. What's their next step?"]
+  },
+  3:{
+    foundation:["Read misconception 1. Why is it WRONG?","What IS bile, if not an enzyme?","What direction does diffusion go?","What's the actual job of enzymes — are they used up?"],
+    middle:["Defend misconception 5 — why does a thicker wall slow absorption?","Explain why active transport NEEDS ATP.","Give an example of a different misconception YOU used to hold."],
+    higher:["For misconception 4 (enzymes used up): explain why this matters in the gut.","Predict: a pupil who still believes #2 — what would they get wrong on a 4-mark Q?","Construct a NEW misconception nobody has spotted yet — and bust it."]
+  },
+  4:{
+    foundation:["Which bin does 'made in the liver' go in?","Read out one card you placed correctly.","Why is 'one cell thick' a villi card?","Which card was easiest? Why?"],
+    middle:["Defend a card you initially placed wrong — what corrected you?","Sort 'specific to one substrate' — which bin and why?","Bridge two cards from different bins — show how they link."],
+    higher:["Predict: which card would a Year 9 pupil get wrong? Why?","If we added 'made in the pancreas' — which bin? Defend.","Compare: how is 'emulsifies fats' SIMILAR to a digestion card, even though it's bile?"]
+  },
+  5:{
+    foundation:["Read out one label you placed correctly.","Where does a microvillus go on the diagram?","What's a lacteal for?","Read out one match you got right in stage 2."],
+    middle:["Defend the match for 'one cell thick → short diffusion distance'.","Why does the capillary maintain a steep gradient?","Why are lacteals NOT capillaries?"],
+    higher:["You matched all 5 — predict which match a Foundation pupil would get wrong.","Compare microvilli to villi — what do they share, what's different?","Build a new villus mentally — remove ONE adaptation. Which loses most absorption?"]
+  },
+  6:{
+    foundation:["Which enzyme works in the mouth?","What does bile do in the duodenum?","Where in the gut do villi live?","Where does food go after the ileum?"],
+    middle:["Defend your stomach answer — why pepsin not amylase?","Why does bile come from the gallbladder, not the liver, at duodenum stage?","Why does glucose use TWO methods to enter the blood?"],
+    higher:["Trace cheese fat from bite to blood — which path differs from glucose? Why?","Predict: a pupil who skipped the duodenum — what concept gap does that show?","Compare the journeys of starch and protein — when do they diverge?"]
+  },
+  7:{
+    foundation:["Read out one of your sentence stems filled in.","What can the patient NOT do without bile?","What's wrong with flat villi?","Name one consequence the patient might suffer."],
+    middle:["Defend your SA:V sentence.","Why does flat villi affect BOTH diffusion AND active transport?","Predict: which symptom would the patient notice FIRST?"],
+    higher:["You wrote 5 marks — share your strongest LINKING sentence.","Predict another condition that would have similar effects.","Construct an alternative: what if villi were normal but bile was missing? Compare."]
+  },
+  8:{
+    foundation:["Read out your answer to Part B Q5.","What's the answer to MCQ Q1?","Which question were you stuck on? Let's solve it together.","What's bile's job in 5 words?"],
+    middle:["Read your Part D exam Q answer.","What's the role of SA:V in your worksheet?","Why is one cell thick essential — read your answer."],
+    higher:["Read your 6-mark synthesis answer.","Defend one BECAUSE sentence in your answer.","Predict: which pupil's answer is closest to yours? What did they add that you missed?"]
+  },
+  9:{
+    foundation:["Q1 answer please. Q2? Q3? Q4? Q5? Q6?","Which Q was the trickiest? Why?","Which Q felt the most confident?","If you had to teach Q[X] to a Year 9, how would you start?"],
+    middle:["Defend your Q4 answer (active transport / ATP).","Read your synthesis sentence (Q6).","Bridge Q3 and Q5 in one new sentence."],
+    higher:["Improve your Q6 — add one MORE link.","Compare your Q6 to a peer's. What did they have you didn't?","Predict your tomorrow grade if you keep this level. Justify."]
+  }
+};
+
+/* ============ COLD CALL ENGINE (real pupil names + grade chips) ============ */
+let coldCallNames=[];
+let lastPickedNames=[];
+let questionMode='match';
+try{
+  const list=JSON.parse(localStorage.getItem('coldCall_bio_y10y11')||'[]');
+  coldCallNames=list.map(p=>typeof p==='string'?{name:p,grade:''}:p);
+}catch(e){}
+function gradeToTier(grade){
+  if(grade==='U'||grade==='1')return 'foundation';
+  if(grade==='2')return 'middle';
+  if(grade==='3'||grade==='4'||grade==='5')return 'higher';
+  return 'middle';
+}
+function applyMode(tier,mode){
+  const order=['foundation','middle','higher'];
+  let i=order.indexOf(tier);
+  if(mode==='stretch')i=Math.min(i+1,2);
+  else if(mode==='check')i=Math.max(i-1,0);
+  return order[i];
+}
+function escapeHTML(s){const d=document.createElement('div');d.innerText=s;return d.innerHTML}
+function saveColdCallNames(){try{localStorage.setItem('coldCall_bio_y10y11',JSON.stringify(coldCallNames))}catch(e){}}
+function addPupil(){
+  const input=document.getElementById('cc-add-input');
+  const name=(input.value||'').trim();if(!name)return;
+  coldCallNames.push({name:name,grade:''});
+  saveColdCallNames();input.value='';renderColdCallSetup();
+  setTimeout(()=>{const inp=document.getElementById('cc-add-input');if(inp)inp.focus()},50);
+}
+function removePupil(idx){coldCallNames.splice(idx,1);saveColdCallNames();renderColdCallSetup()}
+function setPupilGrade(idx,grade){
+  if(coldCallNames[idx].grade===grade){coldCallNames[idx].grade=''}
+  else{coldCallNames[idx].grade=grade}
+  saveColdCallNames();renderColdCallSetup();
+}
+function renderColdCall(){if(coldCallNames.length===0){renderColdCallSetup()}else{renderColdCallPicker()}}
+function renderColdCallSetup(){
+  const body=document.getElementById('cold-call-body');
+  const list=coldCallNames;
+  const hasAnyNames=list.length>0;
+  let rows='';
+  if(list.length===0){rows='<p class="cc-empty-rows">No pupils added yet — add one below to begin.</p>'}
+  else{
+    rows='<div class="cc-pupil-rows">';
+    list.forEach((p,idx)=>{
+      const name=escapeHTML(p.name);
+      const grades=['U','1','2','3','4'];
+      let gradeChips='';
+      grades.forEach(g=>{
+        const sel=p.grade===g?' cc-grade-selected':'';
+        gradeChips+='<button class="cc-grade-chip cc-grade-'+g.toLowerCase()+sel+'" onclick="setPupilGrade('+idx+',\''+g+'\')">'+g+'</button>';
+      });
+      rows+='<div class="cc-pupil-row"><div class="cc-pupil-name">'+name+'</div><div class="cc-grade-chips">'+gradeChips+'</div><button class="cc-remove-btn" onclick="removePupil('+idx+')" aria-label="Remove">✕</button></div>';
+    });
+    rows+='</div>';
+  }
+  body.innerHTML=
+    '<p class="cc-setup-title">Class List</p>'+
+    '<p class="cc-helper">Set each pupil\'s predicted grade (<strong>U/1</strong>=Foundation, <strong>2</strong>=Middle, <strong>3/4</strong>=Higher). Saves automatically.</p>'+
+    rows+
+    '<div class="cc-add-row">'+
+      '<input type="text" class="cc-add-input" id="cc-add-input" placeholder="Add pupil name..." onkeypress="if(event.key===\'Enter\')addPupil()">'+
+      '<button class="cc-btn-secondary" onclick="addPupil()" style="flex:0 0 auto">+ Add</button>'+
+    '</div>'+
+    '<div class="cold-call-actions">'+
+      (hasAnyNames?'<button class="cc-btn-primary" onclick="renderColdCallPicker()">▶ Start Cold Calling</button>':'<button class="cc-btn-primary" disabled style="opacity:.5;cursor:not-allowed">Add at least one pupil</button>')+
+    '</div>';
+}
+function renderColdCallPicker(){
+  const list=coldCallNames;
+  const body=document.getElementById('cold-call-body');
+  body.innerHTML=
+    '<p class="cold-call-class-label">'+list.length+' pupils</p>'+
+    '<div class="cold-call-name-box"><div class="cold-call-name" id="cold-call-name">— ready —</div></div>'+
+    '<div class="cc-mode-toggle">'+
+      '<span class="cc-mode-label">Pitch:</span>'+
+      '<button class="cc-mode-btn '+(questionMode==='check'?'active':'')+'" onclick="setQMode(\'check\')" title="Easier question">Easier</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='match'?'active':'')+'" onclick="setQMode(\'match\')" title="Standard question">Standard</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='stretch'?'active':'')+'" onclick="setQMode(\'stretch\')" title="Harder question">Harder</button>'+
+    '</div>'+
+    '<div class="cold-call-q-box"><p class="cold-call-q-label">📚 Slide question</p><p class="cold-call-question" id="cold-call-question">Press 🎲 to roll a name + question</p></div>'+
+    '<div class="cold-call-actions">'+
+      '<button class="cc-btn-primary" onclick="rollNameAndQuestion()">🎲 Spin · Name + Question</button>'+
+      '<button class="cc-btn-secondary" onclick="rollQuestionOnly()">🎯 New Question</button>'+
+    '</div>'+
+    '<button class="cc-edit-link" onclick="renderColdCallSetup()">✎ Edit names / grades</button>';
+}
+function rollQuestionForTier(grade){
+  const slideQs=coldCallQuestions[currentSlide];
+  const qDisplay=document.getElementById('cold-call-question');
+  if(!slideQs){qDisplay.innerText="(No specific question for this slide — ask one based on the displayed content.)";return}
+  const baseTier=grade?gradeToTier(grade):'middle';
+  const finalTier=applyMode(baseTier,questionMode);
+  const pool=slideQs[finalTier]||slideQs.middle||[];
+  if(pool.length===0){qDisplay.innerText="(No question available for this tier on this slide.)";return}
+  const q=pool[Math.floor(Math.random()*pool.length)];
+  qDisplay.innerText=q;
+}
+function rollNameAndQuestion(){
+  const list=coldCallNames||[];if(list.length===0){renderColdCallSetup();return}
+  const display=document.getElementById('cold-call-name');
+  let availableList=list.slice();
+  if(list.length>4){availableList=list.filter(p=>!lastPickedNames.includes(p.name))}
+  if(availableList.length===0){availableList=list.slice()}
+  const finalPick=availableList[Math.floor(Math.random()*availableList.length)];
+  lastPickedNames.push(finalPick.name);
+  if(lastPickedNames.length>3)lastPickedNames.shift();
+  display.classList.remove('settled');display.classList.add('spinning');
+  let counter=0;
+  const intervalId=setInterval(()=>{
+    display.innerText=list[Math.floor(Math.random()*list.length)].name;
+    counter++;
+    if(counter>=14){
+      clearInterval(intervalId);
+      display.classList.remove('spinning');
+      display.innerText=finalPick.name;
+      display.classList.add('settled');
+      setTimeout(()=>display.classList.remove('settled'),650);
+      rollQuestionForTier(finalPick.grade);
+    }
+  },70);
+}
+function rollQuestionOnly(){
+  const list=coldCallNames||[];
+  const currentName=document.getElementById('cold-call-name')?.innerText;
+  const pupil=list.find(p=>p.name===currentName);
+  rollQuestionForTier(pupil?pupil.grade:'');
+}
+function setQMode(mode){
+  questionMode=mode;
+  const list=coldCallNames||[];if(list.length===0)return;
+  const btns=document.querySelectorAll('.cc-mode-btn');
+  if(btns.length>0){
+    btns.forEach(b=>b.classList.remove('active'));
+    const map={'check':0,'match':1,'stretch':2};
+    if(btns[map[mode]])btns[map[mode]].classList.add('active');
+  }
+}
+function showTABrief(){
+  const brief=taBriefs[currentSlide];
+  const body=document.getElementById('ta-modal-body');
+  const title=document.getElementById('ta-modal-title');
+  if(!brief){title.innerText='TA Focus';body.innerHTML='<p class="ta-no-brief">No TA action required for this slide.</p>'}
+  else{
+    title.innerText=brief.phase;
+    let html='';
+    html+='<div class="ta-row"><div class="ta-row-icon">📍</div><div class="ta-row-content"><strong>Position:</strong> '+brief.position+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">👀</div><div class="ta-row-content"><strong>Watch for:</strong> '+brief.watch+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">🤝</div><div class="ta-row-content"><strong>Support:</strong> '+brief.support+'</div></div>';
+    if(brief.cta){html+='<div class="ta-cta-row"><strong>📣 CTA cue (for teacher):</strong> '+brief.cta+'</div>'}
+    body.innerHTML=html;
+  }
+  document.getElementById('ta-focus-overlay').classList.add('visible');
+}
+function hideTABrief(){document.getElementById('ta-focus-overlay').classList.remove('visible')}
+function showColdCall(){document.getElementById('cold-call-overlay').classList.add('visible');renderColdCall()}
+function hideColdCall(){document.getElementById('cold-call-overlay').classList.remove('visible')}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POWERHOUSE ARENA — Team Whiteboard Quiz (8a)</title>
+<style>
+:root{
+  --lo-border:#9c27b0;--ink:#e2e8f0;--neon:#22d3ee;--bg:#0f172a;--panel:#1e293b;--line:#334155;
+  --t0:#ef4444;--t1:#3b82f6;--t2:#10b981;--t3:#f59e0b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,#1e293b,#0f172a);
+  color:var(--ink);min-height:100vh;overflow-x:hidden;}
+.logo{position:fixed;top:12px;right:16px;height:38px;z-index:60;opacity:.9;}
+.logo-text{position:fixed;top:10px;right:16px;z-index:60;font-weight:800;font-size:.72rem;text-align:right;line-height:1;color:#c084fc;display:none;}
+.neon{color:var(--neon);text-shadow:0 0 10px rgba(34,211,238,.6);}
+button{font-family:inherit;cursor:pointer;}
+.progress{position:fixed;top:0;left:0;height:5px;background:var(--neon);width:0;z-index:70;transition:width .3s;box-shadow:0 0 10px var(--neon);}
+
+/* ===== SETUP ===== */
+.setup{position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;text-align:center;}
+.setup h1{font-size:2.6rem;margin-bottom:6px;}
+.setup .sub{color:#94a3b8;margin-bottom:22px;}
+.count-btns{display:flex;gap:10px;justify-content:center;margin:14px 0;}
+.count-btns button{background:var(--panel);border:2px solid var(--line);color:var(--ink);
+  border-radius:12px;padding:12px 22px;font-size:1.2rem;font-weight:800;}
+.count-btns button.on{border-color:var(--neon);box-shadow:0 0 16px rgba(34,211,238,.4);}
+.team-inputs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0;max-width:680px;}
+.team-inputs .ti{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:10px;padding:8px 12px;border-left:6px solid #888;}
+.team-inputs input{background:#0f172a;border:1px solid var(--line);color:#fff;border-radius:8px;padding:8px;font-size:1rem;width:150px;}
+.big-btn{background:var(--neon);color:#0f172a;border:none;border-radius:14px;padding:14px 40px;font-size:1.3rem;font-weight:800;margin-top:14px;box-shadow:0 0 22px rgba(34,211,238,.5);}
+.wb-note{margin-top:18px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:14px 18px;max-width:560px;color:#cbd5e1;font-size:.98rem;}
+
+/* ===== SCOREBOARD ===== */
+.scorebar{position:fixed;top:0;left:0;width:100%;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  padding:14px 12px 12px;background:rgba(15,23,42,.92);backdrop-filter:blur(4px);z-index:55;border-bottom:1px solid var(--line);}
+.tcard{background:var(--panel);border-radius:12px;padding:8px 14px;min-width:140px;border-top:5px solid #888;text-align:center;}
+.tcard .tn{font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.tcard .ts{font-size:1.9rem;font-weight:900;line-height:1;margin:2px 0;}
+.tcard .adj{display:flex;gap:6px;justify-content:center;}
+.tcard .adj button{background:#0f172a;border:1px solid var(--line);color:#cbd5e1;border-radius:7px;width:30px;height:26px;font-weight:800;font-size:1rem;}
+.pulse{animation:pulse .5s;}
+@keyframes pulse{0%{transform:scale(1);}40%{transform:scale(1.18);}100%{transform:scale(1);}}
+
+/* ===== STAGE ===== */
+.stage{max-width:980px;margin:0 auto;padding:170px 20px 40px;text-align:center;}
+.qmeta{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.qcount{color:#94a3b8;font-weight:700;}
+.badge{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;background:var(--lo-border);color:#fff;}
+.worth{background:#f59e0b;color:#0f172a;font-weight:900;border-radius:999px;padding:5px 12px;font-size:.8rem;}
+.qcard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:34px 30px;
+  box-shadow:inset 0 0 50px rgba(34,211,238,.08);animation:fadeIn .35s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.qtext{font-size:2rem;font-weight:800;line-height:1.25;}
+.emoji-clue{font-size:3.4rem;margin:16px 0;letter-spacing:8px;}
+.opts{display:flex;flex-direction:column;gap:10px;max-width:460px;margin:18px auto 0;}
+.opt{background:#0f172a;border:2px solid var(--line);border-radius:12px;padding:12px 16px;font-size:1.15rem;font-weight:700;text-align:left;}
+.tf{display:flex;gap:18px;justify-content:center;margin-top:18px;}
+.tf div{background:#0f172a;border:2px solid var(--line);border-radius:14px;padding:16px 34px;font-size:1.6rem;font-weight:900;}
+.amode{margin-top:20px;display:flex;align-items:center;gap:12px;justify-content:center;background:#0f172a;border:2px solid var(--neon);border-radius:14px;padding:12px 18px;font-weight:700;font-size:1.06rem;color:#e2e8f0;transition:border-color .3s;}
+.amode .ami{font-size:1.7rem;}
+.tg{display:inline-flex;gap:4px;margin-left:8px;}
+.tg button{background:var(--line);border:none;color:#cbd5e1;border-radius:7px;padding:5px 10px;font-weight:700;font-size:.84rem;}
+.tg button.on{background:var(--neon);color:#0f172a;}
+
+/* timer */
+.timer{display:inline-flex;align-items:center;gap:10px;margin-top:14px;background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:8px 14px;}
+.timer .tdisp{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--neon);}
+.timer button{background:var(--line);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-weight:700;}
+
+/* answer */
+.answer{display:none;margin-top:20px;background:#064e3b;border:2px solid #10b981;border-radius:16px;padding:18px 22px;animation:fadeIn .3s;}
+.answer.show{display:block;}
+.answer .al{font-size:.78rem;text-transform:uppercase;letter-spacing:1px;color:#6ee7b7;font-weight:800;}
+.answer .av{font-size:1.6rem;font-weight:800;margin-top:4px;}
+.award{margin-top:16px;}
+.award .ah{color:#94a3b8;font-weight:700;margin-bottom:8px;}
+.award-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.award-btns button{border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-size:1rem;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.3);}
+
+/* controls */
+.controls{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
+.ctrl{background:var(--neon);color:#0f172a;border:none;border-radius:12px;padding:13px 30px;font-size:1.1rem;font-weight:800;box-shadow:0 0 18px rgba(34,211,238,.4);}
+.ctrl.sec{background:var(--panel);color:#e2e8f0;border:1px solid var(--line);box-shadow:none;}
+
+/* final */
+.final{display:none;text-align:center;padding:180px 20px 60px;}
+.final.show{display:block;animation:fadeIn .5s;}
+.final h1{font-size:3.2rem;}
+.winner{font-size:2.2rem;font-weight:900;margin:10px 0 6px;}
+.podium{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:24px 0;}
+.pod{background:var(--panel);border-radius:14px;padding:18px 26px;border-top:6px solid #888;min-width:150px;}
+.pod .ps{font-size:2.4rem;font-weight:900;}
+
+.confetti{position:fixed;top:-10px;width:10px;height:16px;z-index:120;pointer-events:none;}
+@media(max-width:640px){
+  .qtext{font-size:1.45rem;}.setup h1{font-size:1.9rem;}.final h1{font-size:2.2rem;}
+  .stage{padding-top:200px;}.tcard{min-width:118px;}.tcard .ts{font-size:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<img class="logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2024-12/progress-schools-logo.png" alt="Progress Schools" onerror="this.style.display='none';var t=document.getElementById('logoText');if(t)t.style.display='block';">
+<div class="logo-text" id="logoText">PROGRESS<br>SCHOOLS</div>
+
+<!-- ===== SETUP ===== -->
+<div class="setup" id="setup">
+  <h1>⚡ POWERHOUSE <span class="neon">ARENA</span></h1>
+  <p class="sub">Team whiteboard quiz · ATP &amp; Aerobic Respiration</p>
+  <div>
+    <p style="font-weight:700;">How many teams?</p>
+    <div class="count-btns" id="countBtns">
+      <button data-n="2" onclick="setCount(2,this)">2</button>
+      <button data-n="3" onclick="setCount(3,this)">3</button>
+      <button data-n="4" class="on" onclick="setCount(4,this)">4</button>
+    </div>
+  </div>
+  <div class="team-inputs" id="teamInputs"></div>
+  <button class="big-btn" onclick="startGame()">▶ Start Arena</button>
+  <div class="wb-note">🧑‍🏫 <b>How to run it:</b> each team gets a mini whiteboard. Read the question, start the timer, teams write &amp; hold up. Hit <b>Reveal</b>, then tap each team that got it right to award points. Manual <b>+ / −</b> on the scoreboard for any judgement call.</div>
+</div>
+
+<!-- ===== SCOREBOARD ===== -->
+<div class="scorebar" id="scorebar" style="display:none;"></div>
+
+<!-- ===== STAGE ===== -->
+<div class="stage" id="stage" style="display:none;">
+  <div class="qmeta">
+    <span class="qcount" id="qcount"></span>
+    <span class="badge" id="qbadge"></span>
+    <span class="worth" id="qworth"></span>
+  </div>
+  <div class="qcard">
+    <div id="qbody"></div>
+    <div class="amode" id="amode"></div>
+    <div class="timer">
+      <span class="tdisp" id="tdisp">0:30</span>
+      <button onclick="startTimer()" id="timerBtn">Start ⏱</button>
+      <span class="tg" id="timerLenBtns">
+        <button data-l="15" onclick="setTimerLen(15,this)">15s</button>
+        <button data-l="30" class="on" onclick="setTimerLen(30,this)">30s</button>
+        <button data-l="45" onclick="setTimerLen(45,this)">45s</button>
+      </span>
+    </div>
+    <div class="answer" id="answer">
+      <div class="al">Answer</div>
+      <div class="av" id="avalue"></div>
+      <div class="award">
+        <div class="ah">Tap each team that got it right:</div>
+        <div class="award-btns" id="awardBtns"></div>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="ctrl sec" onclick="prevQ()">◀ Back</button>
+    <button class="ctrl" id="mainBtn" onclick="mainAction()">Reveal answer</button>
+    <button class="ctrl sec" onclick="endNow()">⏹ End now</button>
+  </div>
+</div>
+
+<!-- ===== FINAL ===== -->
+<div class="final" id="final">
+  <h1>🏆 ARENA COMPLETE</h1>
+  <div class="winner neon" id="winnerName"></div>
+  <div class="podium" id="podium"></div>
+  <div class="controls">
+    <button class="ctrl" onclick="resetGame()">🔄 Play again</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ===================== DATA CONSTS (declared before any init — TDZ guard) ===================== */
+const TEAM_COLOURS = ["var(--t0)","var(--t1)","var(--t2)","var(--t3)"];
+const TEAM_HEX = ["#ef4444","#3b82f6","#10b981","#f59e0b"];
+const DEFAULT_NAMES = ["Team 1","Team 2","Team 3","Team 4"];
+const MODES = {
+  write:{icon:"✏️", text:"Write it on your whiteboard and hold it up", accent:"#22d3ee"},
+  move: {icon:"↔️", text:"Feet decide — move to the TRUE side or the FALSE side", accent:"#a78bfa"},
+  card: {icon:"🅰️", text:"Hold up a card: A, B or C", accent:"#f472b6"},
+  buzz: {icon:"✋", text:"Fastest finger — first team with ALL hands up answers. Wrong? It bounces!", accent:"#fb923c"},
+  voice:{icon:"🗣️", text:"Huddle 20s, then your chosen voice answers out loud", accent:"#34d399"},
+  draw: {icon:"🎨", text:"Sketch &amp; label your answer on the whiteboard", accent:"#facc15"},
+  point:{icon:"👉", text:"Write or point to the odd one out", accent:"#22d3ee"}
+};
+const QUESTIONS = [
+  {type:"Quick-fire", mode:"write", q:"Which part of the cell is called the “powerhouse”?", a:"Mitochondria", worth:1},
+  {type:"True / False", mode:"move", q:"“Respiration means breathing in and out.”", tf:true, a:"FALSE — respiration is a chemical reaction in cells that releases energy", worth:1},
+  {type:"Fill the gap", mode:"write", q:"Respiration releases energy from ____________ .", a:"glucose", worth:1},
+  {type:"Multiple choice", mode:"card", q:"Aerobic respiration needs which gas?", opts:["A) Oxygen","B) Carbon dioxide","C) Nitrogen"], a:"A) Oxygen", worth:1},
+  {type:"Quick-fire", mode:"buzz", q:"What is the cell’s “energy currency”?", a:"ATP", worth:1},
+  {type:"Equation build", mode:"write", q:"Write the WORD equation for aerobic respiration.", a:"glucose + oxygen → carbon dioxide + water  (+ energy)", worth:2},
+  {type:"Spot the mistake", mode:"voice", q:"A pupil wrote: “Energy is made in respiration.” What’s wrong?", a:"Energy is RELEASED (transferred), not made or created", worth:2},
+  {type:"Emoji clue", mode:"write", q:"Name the two PRODUCTS of aerobic respiration:", emoji:"🍬 + 💨 → ❓ + 💧", a:"carbon dioxide + water", worth:2},
+  {type:"Apply it", mode:"buzz", q:"When you sprint, why does your breathing rate go up?", a:"Muscles need more oxygen for more aerobic respiration to release energy", worth:2},
+  {type:"Odd one out", mode:"point", q:"glucose · oxygen · lactic acid · carbon dioxide — which is NOT part of aerobic respiration?", a:"lactic acid (that’s anaerobic)", worth:2},
+  {type:"Draw it", mode:"draw", q:"Draw and label the part of the cell where aerobic respiration happens.", a:"A cell with the mitochondria labelled (the “powerhouse”)", worth:1},
+  {type:"Bonus · Aspire", mode:"write", q:"Write the balanced SYMBOL equation for aerobic respiration.", a:"C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O", worth:2}
+];
+
+/* ===================== STATE ===================== */
+let teamCount = 4;
+let teams = [];          // {name,score,colour,hex}
+let qIndex = 0;
+let revealed = false;
+let timerId = null, timeLeft = 30, timerLen = 30;
+
+/* ===================== AUDIO ===================== */
+let actx=null;
+function ensureAudio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ actx=null; } } if(actx&&actx.state==="suspended"){ actx.resume(); } }
+function beep(f,d,t){ if(!actx) return; try{ const o=actx.createOscillator(),g=actx.createGain(); o.type=t||"sine"; o.frequency.value=f; o.connect(g); g.connect(actx.destination); g.gain.setValueAtTime(.12,actx.currentTime); g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+(d||.18)); o.start(); o.stop(actx.currentTime+(d||.18)); }catch(e){} }
+function ding(){ beep(660,.12); setTimeout(function(){ beep(990,.16); },90); }
+function buzz(){ beep(140,.25,"square"); }
+function point(){ beep(523,.08); setTimeout(function(){ beep(784,.12); },70); }
+
+/* ===================== CONFETTI ===================== */
+function confetti(){
+  const cols=["#fbbf24","#22d3ee","#10b981","#ec4899","#7c3aed","#ef4444"];
+  for(let i=0;i<46;i++){
+    const c=document.createElement("div"); c.className="confetti";
+    c.style.left=Math.random()*100+"vw"; c.style.background=cols[i%cols.length];
+    c.style.transform="rotate("+(Math.random()*360)+"deg)";
+    document.body.appendChild(c);
+    const fall=900+Math.random()*1000;
+    c.animate([{top:"-10px",opacity:1},{top:"100vh",opacity:.2}],{duration:fall,easing:"ease-in"});
+    setTimeout(function(){ c.remove(); },fall);
+  }
+}
+
+/* ===================== SETUP ===================== */
+function setCount(n,btn){
+  teamCount=n;
+  const wrap=document.getElementById("countBtns");
+  wrap.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b===btn); });
+  renderTeamInputs();
+}
+function renderTeamInputs(){
+  const wrap=document.getElementById("teamInputs");
+  if(!wrap) return;
+  wrap.innerHTML="";
+  for(let i=0;i<teamCount;i++){
+    const div=document.createElement("div");
+    div.className="ti"; div.style.borderLeftColor=TEAM_HEX[i];
+    const inp=document.createElement("input");
+    inp.id="tname"+i; inp.value=(teams[i]&&teams[i].name)||DEFAULT_NAMES[i]; inp.maxLength=18;
+    div.appendChild(inp); wrap.appendChild(div);
+  }
+}
+
+/* ===================== GAME FLOW ===================== */
+function startGame(){
+  ensureAudio();
+  teams=[];
+  for(let i=0;i<teamCount;i++){
+    const inp=document.getElementById("tname"+i);
+    const nm=(inp&&inp.value.trim())||DEFAULT_NAMES[i];
+    teams.push({name:nm,score:0,colour:TEAM_COLOURS[i],hex:TEAM_HEX[i]});
+  }
+  qIndex=0;
+  document.getElementById("setup").style.display="none";
+  document.getElementById("scorebar").style.display="flex";
+  document.getElementById("stage").style.display="block";
+  document.getElementById("final").classList.remove("show");
+  renderScoreboard();
+  showQuestion();
+  ding();
+}
+function renderScoreboard(){
+  const bar=document.getElementById("scorebar");
+  if(!bar) return;
+  bar.innerHTML="";
+  teams.forEach(function(t,i){
+    const c=document.createElement("div");
+    c.className="tcard"; c.style.borderTopColor=t.hex;
+    c.innerHTML='<div class="tn" style="color:'+t.hex+'">'+escapeHtml(t.name)+'</div>'+
+      '<div class="ts" id="score'+i+'">'+t.score+'</div>'+
+      '<div class="adj"><button onclick="adjust('+i+',-1)">−</button><button onclick="adjust('+i+',1)">+</button></div>';
+    bar.appendChild(c);
+  });
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]; }); }
+
+function showQuestion(){
+  revealed=false;
+  stopTimer(); timeLeft=timerLen; updateTimerDisp();
+  const item=QUESTIONS[qIndex];
+  const m=MODES[item.mode]||MODES.write;
+  const ab=document.getElementById("amode");
+  if(ab){ ab.style.borderColor=m.accent; ab.innerHTML='<span class="ami">'+m.icon+'</span> '+m.text; }
+  document.getElementById("qcount").textContent="Q"+(qIndex+1)+" / "+QUESTIONS.length;
+  document.getElementById("qbadge").textContent=item.type;
+  document.getElementById("qworth").textContent=item.worth+(item.worth>1?" pts":" pt");
+  // body
+  let body='<div class="qtext">'+escapeHtml(item.q)+'</div>';
+  if(item.emoji){ body+='<div class="emoji-clue">'+item.emoji+'</div>'; }
+  if(item.opts){ body+='<div class="opts">'+item.opts.map(function(o){ return '<div class="opt">'+escapeHtml(o)+'</div>'; }).join("")+'</div>'; }
+  if(item.tf){ body+='<div class="tf"><div>TRUE</div><div>FALSE</div></div>'; }
+  document.getElementById("qbody").innerHTML=body;
+  // answer
+  document.getElementById("avalue").textContent=item.a;
+  document.getElementById("answer").classList.remove("show");
+  document.getElementById("mainBtn").textContent="Reveal answer";
+  // progress
+  const p=document.getElementById("progress"); if(p) p.style.width=(qIndex/(QUESTIONS.length))*100+"%";
+}
+function mainAction(){
+  if(!revealed){ revealAnswer(); }
+  else { nextQ(); }
+}
+function revealAnswer(){
+  revealed=true; stopTimer();
+  document.getElementById("answer").classList.add("show");
+  document.getElementById("mainBtn").textContent=(qIndex===QUESTIONS.length-1)?"Finish ▶":"Next ▶";
+  renderAwardBtns();
+  ding();
+}
+function renderAwardBtns(){
+  const wrap=document.getElementById("awardBtns");
+  if(!wrap) return;
+  const worth=QUESTIONS[qIndex].worth;
+  wrap.innerHTML="";
+  teams.forEach(function(t,i){
+    const b=document.createElement("button");
+    b.style.background=t.hex; b.textContent="+"+worth+" "+t.name;
+    b.onclick=function(){ adjust(i,worth); b.style.opacity=.55; };
+    wrap.appendChild(b);
+  });
+}
+function adjust(i,delta){
+  if(!teams[i]) return;
+  teams[i].score=Math.max(0,teams[i].score+delta);
+  const el=document.getElementById("score"+i);
+  if(el){ el.textContent=teams[i].score; el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); }
+  if(delta>0) point(); else beep(300,.08);
+}
+function nextQ(){
+  if(qIndex>=QUESTIONS.length-1){ endGame(); return; }
+  qIndex++; showQuestion();
+}
+function prevQ(){
+  if(qIndex===0) return;
+  qIndex--; showQuestion();
+}
+
+/* ===================== TIMER ===================== */
+function updateTimerDisp(){
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
+  const d=document.getElementById("tdisp"); if(d) d.textContent=m+":"+(s<10?"0":"")+s;
+}
+function startTimer(){
+  ensureAudio();
+  if(timerId){ stopTimer(); document.getElementById("timerBtn").textContent="Start ⏱"; return; }
+  document.getElementById("timerBtn").textContent="Stop ⏱";
+  timerId=setInterval(function(){
+    timeLeft--; updateTimerDisp();
+    if(timeLeft<=0){ stopTimer(); buzz(); document.getElementById("timerBtn").textContent="Start ⏱"; timeLeft=timerLen; setTimeout(updateTimerDisp,1200); }
+  },1000);
+}
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+function setTimerLen(n,btn){
+  timerLen=n;
+  const wrap=document.getElementById("timerLenBtns");
+  if(wrap) wrap.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b===btn); });
+  if(!timerId){ timeLeft=n; updateTimerDisp(); }
+  beep(500,.06);
+}
+function endNow(){ stopTimer(); endGame(); }
+
+/* ===================== END ===================== */
+function endGame(){
+  stopTimer();
+  document.getElementById("stage").style.display="none";
+  document.getElementById("scorebar").style.display="none";
+  const p=document.getElementById("progress"); if(p) p.style.width="100%";
+  const sorted=teams.slice().sort(function(a,b){ return b.score-a.score; });
+  const top=sorted[0].score;
+  const winners=sorted.filter(function(t){ return t.score===top; });
+  const wname=winners.length>1 ? winners.map(function(t){return t.name;}).join(" & ")+" — it’s a tie!" : sorted[0].name+" win!";
+  document.getElementById("winnerName").textContent="🏅 "+wname;
+  const pod=document.getElementById("podium");
+  pod.innerHTML="";
+  sorted.forEach(function(t){
+    const d=document.createElement("div");
+    d.className="pod"; d.style.borderTopColor=t.hex;
+    d.innerHTML='<div style="font-weight:800;color:'+t.hex+'">'+escapeHtml(t.name)+'</div><div class="ps">'+t.score+'</div>';
+    pod.appendChild(d);
+  });
+  document.getElementById("final").classList.add("show");
+  confetti(); ding(); setTimeout(confetti,600);
+}
+function resetGame(){
+  document.getElementById("final").classList.remove("show");
+  document.getElementById("setup").style.display="flex";
+  const p=document.getElementById("progress"); if(p) p.style.width="0";
+  renderTeamInputs();
+}
+
+/* ===================== INIT (runs last, after consts) ===================== */
+function init(){
+  renderTeamInputs();
+  // keyboard: Enter/Space = reveal then next; arrows navigate; exempt inputs
+  document.addEventListener("keydown",function(e){
+    const tag=(e.target.tagName||"").toUpperCase();
+    if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT") return;
+    if(document.getElementById("stage").style.display==="none") return;
+    if(e.key===" "||e.key==="Enter"){ e.preventDefault(); mainAction(); }
+    else if(e.key==="ArrowRight"){ if(revealed) nextQ(); else revealAnswer(); }
+    else if(e.key==="ArrowLeft"){ prevQ(); }
+  });
+  document.addEventListener("click",ensureAudio,{once:true});
+  document.addEventListener("keydown",ensureAudio,{once:true});
+}
+document.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>
