@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>L1: Circuit Symbols, Diagrams &amp; Series/Parallel</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--middle-bg:#fff7ed;--middle-border:#f97316}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    @keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-left{animation:slideInLeft .6s ease-out forwards}.anim-right{animation:slideInRight .6s ease-out forwards}
+    .anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}
+    h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+    h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+    button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}
+    button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+    .progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+    .progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}
+    .task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .wedo-box{background:var(--wedo-bg);border-left:6px solid var(--wedo-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}
+    .show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}
+    .data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}
+    .data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}
+    .wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+    .evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}
+    .quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}.quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+
+    /* === WE DO 1: SYMBOL SNAP === */
+    .snap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .snap-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:.25s;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .snap-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+    .snap-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);transform:scale(1.03)}
+    .snap-card.matched{border-color:var(--success);background:#f0fdf4;pointer-events:none}
+    .snap-card.wrong{border-color:var(--error);animation:shake .4s}
+    .snap-card .snap-label{font-weight:900;font-size:.9rem;margin-top:6px;color:#1e293b}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+
+    /* === WE DO 2: SERIES OR PARALLEL === */
+    .classify-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center;transition:.3s}
+    .classify-card.correct-s{border-color:var(--success);background:#f0fdf4}
+    .classify-card.correct-p{border-color:#3b82f6;background:#eff6ff}
+    .classify-card.wrong-c{border-color:var(--error);animation:shake .4s}
+    .classify-btns{display:flex;gap:8px;justify-content:center;margin-top:8px}
+
+    /* === WE DO 3: CIRCUIT DOCTOR === */
+    .doctor-card{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:16px;transition:.3s;margin-bottom:12px}
+    .doctor-card.healed{border-color:var(--success);background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+    .doctor-card.misdiagnosed{border-color:var(--error);animation:shake .4s}
+    .doctor-opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .doctor-opt{padding:8px 14px;border-radius:10px;font-weight:700;font-size:.9rem;border:2px solid #cbd5e1;background:#fff;cursor:pointer;transition:.2s;color:#334155}
+    .doctor-opt:hover{border-color:var(--wedo-border);background:#fce7f3}
+    .doctor-opt.correct-doc{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .doctor-opt.wrong-doc{border-color:var(--error);background:#fef2f2;color:#991b1b}
+    .doctor-fb{font-weight:900;font-size:.95rem;min-height:20px;margin-top:6px}
+
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+    /* Print */
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+    body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* LABEL THE CIRCUIT */
+    .label-btn{background:#e0f2fe;border:2px solid #38bdf8;color:#0369a1;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:900;transition:.2s;box-shadow:none}
+    .label-btn:hover{background:#bae6fd;transform:translateY(-1px)}
+    .label-btn.selected-label{background:#9c27b0;color:#fff;border-color:#9c27b0;box-shadow:0 0 0 3px rgba(156,39,176,.25)}
+    .label-btn.used{opacity:.3;pointer-events:none;background:#f1f5f9;border-color:#e2e8f0;color:#94a3b8}
+    .label-spot:hover{fill:rgba(156,39,176,0.2)}
+    .label-spot.placed-ok{fill:rgba(22,163,74,0.15);stroke:#16a34a;stroke-dasharray:none;pointer-events:none}
+    .label-spot.placed-wrong{fill:rgba(220,38,38,0.2);stroke:#dc2626;animation:shake .4s}
+    .spot-label.filled{fill:#16a34a;font-size:11px}
+    .spot-label.wrong-fill{fill:#dc2626}
+
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-150%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+  </style>
+</head>
+<body>
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ===== SLIDE 1: TITLE ===== -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 1</p>
+      <h1>Circuit Symbols, Diagrams &amp; Series/Parallel</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 16px">Spec 2.10 · 2.11 · 2.12</p>
+      <div class="li-box" style="margin:16px auto;max-width:680px;text-align:left"><strong>Learning Objectives:</strong>
+        <ul style="font-size:1.05rem;margin-top:8px">
+          <li><strong>2.10</strong> – Know and use standard circuit symbols.</li>
+          <li><strong>2.11</strong> – Draw and interpret circuit diagrams using standard conventions.</li>
+          <li><strong>2.12</strong> – Understand the differences between series and parallel circuits.</li>
+        </ul>
+      </div>
+      <p style="font-size:1.1rem;margin-top:12px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:16px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+        <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+      </div>
+        
+    </div></div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do 1 → We Do 1 → I Do 2 → We Do 2 → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>FLEX slides</strong> (I Do 3 + We Do 3): Use if time allows, or as next-lesson warm-up. Marked with 🟠 FLEX badge.</p>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: ARRIVAL TASK ===== -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – What Do You Already Know?</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer in your books from memory. This activates what you already know about electricity before we start.</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+    </div>
+
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p>Name <strong>three</strong> things in your home that use electricity.</p><p class="answer">Any electrical appliance: TV, phone charger, lamp, kettle, fridge, games console, etc.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p>What do all electrical devices need to work? Think about what they are plugged into or what powers them.</p><p class="answer">They need a power source (battery, mains supply) and a complete circuit for electricity to flow through.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p>What happens when you flip a light switch to the <strong>off</strong> position?</p><p class="answer">The circuit is broken (there is a gap), so electricity can no longer flow and the light goes off.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>If you could look inside a wire, what do you think is actually <strong>moving</strong> when electricity flows?</p><p class="answer">Answers vary. Accept: electrons, tiny charged particles, electrical charge. The key idea is that something physical is moving through the wire.</p></div>
+    </div>
+
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p>Name <strong>four</strong> components you might find in an electrical circuit.</p><p class="answer">Any from: cell/battery, wire, switch, lamp/bulb, resistor, ammeter, voltmeter, motor, buzzer, LED.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p>Explain why a torch stops working when you remove one of the batteries.</p><p class="answer">Removing a battery breaks the circuit — there is no longer a complete loop for the current to flow through, so the lamp goes off.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p>What is the difference between a <strong>cell</strong> and a <strong>battery</strong>?</p><p class="answer">A cell is a single unit that provides voltage (e.g. one AA). A battery is two or more cells connected together.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>Why do you think scientists use <strong>symbols</strong> for circuit components instead of drawing pictures?</p><p class="answer">Symbols are quick to draw, universally understood, consistent, and make circuit diagrams clear and easy to read anywhere in the world.</p></div>
+    </div>
+
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p>Draw, from memory, a simple circuit containing a <strong>cell</strong>, a <strong>switch</strong>, and a <strong>lamp</strong>. Use any symbols you know.</p><p class="answer">A closed loop with standard symbols: cell (long and short line), switch (line with gap), lamp (circle with cross).</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p>Explain the difference between a circuit where two lamps are in a <strong>single loop</strong> versus a circuit where they are on <strong>separate branches</strong>.</p><p class="answer">Single loop (series): both lamps on the same path, if one breaks both go out, they share the voltage so are dimmer. Separate branches (parallel): each lamp has its own path, if one breaks the other stays on, each gets full voltage.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p>Christmas tree lights used to all go out when one bulb broke. Modern ones don't. Explain why, using what you know about circuits.</p><p class="answer">Old lights were wired in series — one break stops all current. Modern lights are wired in parallel — each bulb has its own path, so others keep working when one fails.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>Why do you think there are strict <strong>rules</strong> for drawing circuit diagrams? What could go wrong if everyone drew them differently?</p><p class="answer">Without standard rules, diagrams would be ambiguous — different people could interpret them differently, leading to incorrectly built circuits, safety hazards, or communication errors between engineers and scientists worldwide.</p></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: STARTER ===== -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Name That Symbol</h2>
+    <div class="li-box"><strong>Instructions:</strong> Copy the table into your book. Look at each circuit symbol and write the component name. You have <strong>4 minutes</strong>.</div>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box" style="padding:14px">
+          <h3 style="margin-top:0">📝 Copy &amp; complete:</h3>
+          <table class="data-table" style="font-size:1rem">
+            <thead><tr><th>Symbol</th><th>Component Name</th></tr></thead>
+            <tbody>
+              <tr><td><svg width="60" height="30"><line x1="0" y1="15" x2="22" y2="15" stroke="#1f2937" stroke-width="3"/><line x1="22" y1="5" x2="22" y2="25" stroke="#1f2937" stroke-width="3"/><line x1="30" y1="8" x2="30" y2="22" stroke="#1f2937" stroke-width="2"/><line x1="30" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="3"/></svg></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td><svg width="60" height="30"><line x1="0" y1="15" x2="18" y2="15" stroke="#1f2937" stroke-width="3"/><circle cx="30" cy="15" r="12" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="21" y1="6" x2="39" y2="24" stroke="#1f2937" stroke-width="2"/><line x1="39" y1="6" x2="21" y2="24" stroke="#1f2937" stroke-width="2"/><line x1="42" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="3"/></svg></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td><svg width="60" height="30"><line x1="0" y1="20" x2="20" y2="20" stroke="#1f2937" stroke-width="3"/><circle cx="20" cy="20" r="3" fill="#1f2937"/><line x1="20" y1="20" x2="42" y2="8" stroke="#1f2937" stroke-width="3"/><circle cx="45" cy="20" r="3" fill="#1f2937"/><line x1="45" y1="20" x2="60" y2="20" stroke="#1f2937" stroke-width="3"/></svg></td><td contenteditable="true" class="editable"></td></tr>
+              <tr><td><svg width="60" height="30"><line x1="0" y1="15" x2="15" y2="15" stroke="#1f2937" stroke-width="3"/><rect x="15" y="5" width="30" height="20" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="45" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="3"/></svg></td><td contenteditable="true" class="editable"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="aspire-box"><strong>🌟 Extension:</strong> Can you draw the symbols for an ammeter and a voltmeter from memory?</div>
+      </div>
+      <div>
+        <div class="diagram-container">
+          <h3 style="margin-top:0;color:var(--ido-border)">💡 Word Bank</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px">
+            <span style="background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:8px;padding:6px 14px;font-weight:900">Cell</span>
+            <span style="background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:8px;padding:6px 14px;font-weight:900">Lamp</span>
+            <span style="background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:8px;padding:6px 14px;font-weight:900">Open Switch</span>
+            <span style="background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:8px;padding:6px 14px;font-weight:900">Resistor</span>
+          </div>
+        </div>
+        <div class="scaffold-box" style="margin-top:10px"><strong>💡 Hint:</strong> A cell has one long thin line and one short thick line. A lamp has a cross inside a circle.</div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>The International Space Station has over <strong>8 miles of electrical wiring</strong>. Every single connection uses the same circuit symbols you're learning today. If one wire is wrong, astronauts could lose oxygen.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: I DO 1 – CIRCUIT SYMBOLS ===== -->
+  <div class="slide" data-title="I Do – Circuit Symbols" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Circuit Symbols &amp; Golden Rules (2.10, 2.11)</h2>
+    <div class="li-box"><strong>Learning Objective:</strong> Know standard circuit symbols and draw diagrams using correct conventions.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">🔌 8 Essential Symbols</h3>
+          <table class="data-table" style="font-size:.9rem">
+            <thead><tr><th>Component</th><th>Symbol</th><th>Job</th></tr></thead>
+            <tbody>
+              <tr><td>Cell</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="18" y2="12" stroke="#1f2937" stroke-width="2.5"/><line x1="18" y1="3" x2="18" y2="21" stroke="#1f2937" stroke-width="2.5"/><line x1="24" y1="6" x2="24" y2="18" stroke="#1f2937" stroke-width="1.5"/><line x1="24" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2.5"/></svg></td><td>Provides voltage (push)</td></tr>
+              <tr><td>Battery</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="8" y2="12" stroke="#1f2937" stroke-width="2"/><line x1="8" y1="3" x2="8" y2="21" stroke="#1f2937" stroke-width="2.5"/><line x1="14" y1="6" x2="14" y2="18" stroke="#1f2937" stroke-width="1.5"/><line x1="20" y1="3" x2="20" y2="21" stroke="#1f2937" stroke-width="2.5"/><line x1="26" y1="6" x2="26" y2="18" stroke="#1f2937" stroke-width="1.5"/><line x1="26" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2"/></svg></td><td>2+ cells together</td></tr>
+              <tr><td>Lamp</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="14" y2="12" stroke="#1f2937" stroke-width="2"/><circle cx="25" cy="12" r="10" fill="none" stroke="#1f2937" stroke-width="2"/><line x1="17" y1="4" x2="33" y2="20" stroke="#1f2937" stroke-width="1.5"/><line x1="33" y1="4" x2="17" y2="20" stroke="#1f2937" stroke-width="1.5"/><line x1="35" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2"/></svg></td><td>Lights up</td></tr>
+              <tr><td>Switch (open)</td><td><svg width="50" height="24"><line x1="0" y1="17" x2="16" y2="17" stroke="#1f2937" stroke-width="2"/><circle cx="16" cy="17" r="2.5" fill="#1f2937"/><line x1="16" y1="17" x2="35" y2="6" stroke="#1f2937" stroke-width="2"/><circle cx="38" cy="17" r="2.5" fill="#1f2937"/><line x1="38" y1="17" x2="50" y2="17" stroke="#1f2937" stroke-width="2"/></svg></td><td>Breaks circuit</td></tr>
+              <tr><td>Resistor</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="12" y2="12" stroke="#1f2937" stroke-width="2"/><rect x="12" y="4" width="26" height="16" rx="2" fill="none" stroke="#1f2937" stroke-width="2"/><line x1="38" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2"/></svg></td><td>Opposes current</td></tr>
+              <tr><td>Ammeter</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="12" y2="12" stroke="#1f2937" stroke-width="2"/><circle cx="25" cy="12" r="10" fill="none" stroke="#3b82f6" stroke-width="2"/><text x="25" y="16" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">A</text><line x1="35" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2"/></svg></td><td>Measures current</td></tr>
+              <tr><td>Voltmeter</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="12" y2="12" stroke="#1f2937" stroke-width="2"/><circle cx="25" cy="12" r="10" fill="none" stroke="#ef4444" stroke-width="2"/><text x="25" y="16" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">V</text><line x1="35" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2"/></svg></td><td>Measures voltage</td></tr>
+              <tr><td>Wire</td><td><svg width="50" height="24"><line x1="0" y1="12" x2="50" y2="12" stroke="#1f2937" stroke-width="2.5"/></svg></td><td>Carries current</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">📐 The 4 Golden Rules</h3>
+          <p>1. Always draw <strong>straight lines</strong> with <strong>90° corners</strong> (no curves).</p>
+          <p>2. Use <strong>standard symbols</strong> — never pictures.</p>
+          <p>3. The circuit must be a <strong>complete loop</strong> (no gaps).</p>
+          <p>4. Components go on <strong>straight sections</strong>, never on corners.</p>
+        </div>
+        <div class="diagram-container animate-enter anim-delay-2">
+          <h3 style="margin-top:0;color:var(--ido-border)">✅ Good vs ❌ Bad</h3>
+          <svg width="300" height="120" viewBox="0 0 300 120">
+            <text x="75" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="#16a34a">✅ Correct</text>
+            <rect x="20" y="20" width="110" height="80" rx="0" fill="none" stroke="#16a34a" stroke-width="3"/>
+            <line x1="55" y1="20" x2="55" y2="20" stroke="#16a34a" stroke-width="3"/>
+            <line x1="60" y1="14" x2="60" y2="26" stroke="#16a34a" stroke-width="3"/>
+            <line x1="68" y1="17" x2="68" y2="23" stroke="#16a34a" stroke-width="2"/>
+            <circle cx="75" cy="100" r="8" fill="none" stroke="#16a34a" stroke-width="2"/>
+            <line x1="69" y1="94" x2="81" y2="106" stroke="#16a34a" stroke-width="1.5"/>
+            <line x1="81" y1="94" x2="69" y2="106" stroke="#16a34a" stroke-width="1.5"/>
+            <text x="225" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">❌ Wrong</text>
+            <path d="M170,60 C200,20 250,20 280,60 C250,100 200,100 170,60" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6"/>
+            <text x="225" y="65" text-anchor="middle" font-size="10" fill="#dc2626">Curvy lines!</text>
+            <text x="225" y="80" text-anchor="middle" font-size="10" fill="#dc2626">No proper symbols!</text>
+          </svg>
+        </div>
+        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>Every electronic device you own — your phone, PlayStation, TV — is a circuit. Electricians, engineers, and technicians use these exact symbols every day. If you can read a circuit diagram, you can fix things, build things, and understand how your world works.</p></div>
+        <div class="aspire-box animate-enter anim-delay-3"><strong>🌟 Why standard symbols?</strong> An engineer in Japan, a scientist in Brazil, and a student in London all use the <em>same</em> symbols. It's a universal language for circuits.</div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Circuit</td><td style="padding:4px 8px;color:#334155">A complete loop that electricity can flow around.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Component</td><td style="padding:4px 8px;color:#334155">A part of a circuit (cell, lamp, switch, etc.).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Series</td><td style="padding:4px 8px;color:#334155">Components on ONE single loop.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Parallel</td><td style="padding:4px 8px;color:#334155">Components on SEPARATE branches.</td></tr></table></div>
+  </div>
+
+  <!-- ===== SLIDE 5: WE DO 1 – SYMBOL SNAP ===== -->
+  <div class="slide" data-title="We Do – Symbol Snap" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Symbol Snap ⚡</h2>
+    <div class="li-box"><strong>Instructions:</strong> Match each symbol to its name. Click a <strong>symbol card</strong>, then click the matching <strong>name card</strong>. Get all 6 pairs!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <p style="text-align:center;color:var(--muted);font-size:.95rem;margin:0 0 8px"><strong>Symbols</strong> (click one first)</p>
+      <div class="snap-grid" id="snap-symbols">
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="cell"><svg width="60" height="30"><line x1="0" y1="15" x2="22" y2="15" stroke="#1f2937" stroke-width="3"/><line x1="22" y1="5" x2="22" y2="25" stroke="#1f2937" stroke-width="3"/><line x1="28" y1="8" x2="28" y2="22" stroke="#1f2937" stroke-width="2"/><line x1="28" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="3"/></svg></div>
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="ammeter"><svg width="60" height="30"><line x1="0" y1="15" x2="14" y2="15" stroke="#1f2937" stroke-width="2.5"/><circle cx="30" cy="15" r="12" fill="none" stroke="#3b82f6" stroke-width="2.5"/><text x="30" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a8a">A</text><line x1="42" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="2.5"/></svg></div>
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="lamp"><svg width="60" height="30"><line x1="0" y1="15" x2="14" y2="15" stroke="#1f2937" stroke-width="2.5"/><circle cx="30" cy="15" r="12" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="21" y1="6" x2="39" y2="24" stroke="#1f2937" stroke-width="2"/><line x1="39" y1="6" x2="21" y2="24" stroke="#1f2937" stroke-width="2"/><line x1="42" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="2.5"/></svg></div>
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="resistor"><svg width="60" height="30"><line x1="0" y1="15" x2="14" y2="15" stroke="#1f2937" stroke-width="2.5"/><rect x="14" y="5" width="32" height="20" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="46" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="2.5"/></svg></div>
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="switch"><svg width="60" height="30"><line x1="0" y1="20" x2="18" y2="20" stroke="#1f2937" stroke-width="2.5"/><circle cx="18" cy="20" r="3" fill="#1f2937"/><line x1="18" y1="20" x2="40" y2="8" stroke="#1f2937" stroke-width="2.5"/><circle cx="44" cy="20" r="3" fill="#1f2937"/><line x1="44" y1="20" x2="60" y2="20" stroke="#1f2937" stroke-width="2.5"/></svg></div>
+        <div class="snap-card" onclick="snapSelect(this,'sym')" data-id="voltmeter"><svg width="60" height="30"><line x1="0" y1="15" x2="14" y2="15" stroke="#1f2937" stroke-width="2.5"/><circle cx="30" cy="15" r="12" fill="none" stroke="#ef4444" stroke-width="2.5"/><text x="30" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#991b1b">V</text><line x1="42" y1="15" x2="60" y2="15" stroke="#1f2937" stroke-width="2.5"/></svg></div>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:.95rem;margin:10px 0 6px"><strong>Names</strong> (then click the match)</p>
+      <div class="snap-grid" id="snap-names">
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="lamp"><span class="snap-label">💡 Lamp</span></div>
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="switch"><span class="snap-label">🕹️ Open Switch</span></div>
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="voltmeter"><span class="snap-label">Ⓥ Voltmeter</span></div>
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="cell"><span class="snap-label">🔋 Cell</span></div>
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="resistor"><span class="snap-label">🟩 Resistor</span></div>
+        <div class="snap-card" onclick="snapSelect(this,'name')" data-id="ammeter"><span class="snap-label">Ⓐ Ammeter</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:10px">
+        <div class="snap-score">Matched: <span id="snap-count">0</span> / 6</div>
+        <div id="snap-msg" style="font-weight:900;font-size:1.1rem;min-height:24px"></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+        <button class="ghost small" onclick="resetSnap()">🔄 Reset</button>
+        <button class="small" onclick="revealSnap()">✅ Reveal All</button>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: I DO 2 – SERIES VS PARALLEL ===== -->
+  <div class="slide" data-title="I Do – Series vs Parallel" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Series vs Parallel Circuits (2.12)</h2>
+    <div class="li-box"><strong>Learning Objective:</strong> Understand the differences between series and parallel circuits.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0;color:#dc2626">🔴 Series Circuit</h3>
+          <svg width="280" height="100" viewBox="0 0 280 100"><rect x="10" y="10" width="260" height="80" rx="0" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <line x1="120" y1="10" x2="120" y2="10" stroke="#1f2937" stroke-width="3"/><line x1="125" y1="4" x2="125" y2="16" stroke="#1f2937" stroke-width="3"/><line x1="131" y1="7" x2="131" y2="13" stroke="#1f2937" stroke-width="2"/>
+            <circle cx="60" cy="90" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="53" y1="83" x2="67" y2="97" stroke="#1f2937" stroke-width="1.5"/><line x1="67" y1="83" x2="53" y2="97" stroke="#1f2937" stroke-width="1.5"/>
+            <circle cx="200" cy="90" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/><line x1="193" y1="83" x2="207" y2="97" stroke="#1f2937" stroke-width="1.5"/><line x1="207" y1="83" x2="193" y2="97" stroke="#1f2937" stroke-width="1.5"/>
+            <text x="140" y="60" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">ONE LOOP</text>
+          </svg>
+          <p><strong>One single path</strong> for current to flow through.</p>
+          <p>• Current is the <strong>same</strong> everywhere.</p>
+          <p>• Voltage is <strong>shared</strong> between components.</p>
+          <p>• If one component breaks → <strong>all stop</strong>.</p>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:#2563eb">🔵 Parallel Circuit</h3>
+          <svg width="280" height="140" viewBox="0 0 280 140">
+            <!-- Outer loop -->
+            <line x1="40" y1="70" x2="40" y2="30" stroke="#1f2937" stroke-width="3"/>
+            <line x1="40" y1="30" x2="240" y2="30" stroke="#1f2937" stroke-width="3"/>
+            <line x1="240" y1="30" x2="240" y2="110" stroke="#1f2937" stroke-width="3"/>
+            <line x1="240" y1="110" x2="40" y2="110" stroke="#1f2937" stroke-width="3"/>
+            <line x1="40" y1="110" x2="40" y2="90" stroke="#1f2937" stroke-width="3"/>
+            <!-- Middle branch (horizontal, linking mid-points) -->
+            <line x1="110" y1="30" x2="110" y2="110" stroke="#1f2937" stroke-width="3"/>
+            <line x1="180" y1="30" x2="180" y2="110" stroke="#1f2937" stroke-width="3"/>
+            <!-- Cell on left -->
+            <line x1="33" y1="90" x2="47" y2="90" stroke="#1f2937" stroke-width="3"/>
+            <line x1="37" y1="70" x2="43" y2="70" stroke="#1f2937" stroke-width="3"/>
+            <text x="15" y="85" font-size="10" font-weight="bold" fill="#64748b">Cell</text>
+            <!-- Lamp 1 (top branch) -->
+            <circle cx="145" cy="30" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+            <line x1="138" y1="23" x2="152" y2="37" stroke="#1f2937" stroke-width="1.5"/>
+            <line x1="152" y1="23" x2="138" y2="37" stroke="#1f2937" stroke-width="1.5"/>
+            <!-- Lamp 2 (middle branch) -->
+            <circle cx="145" cy="110" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+            <line x1="138" y1="103" x2="152" y2="117" stroke="#1f2937" stroke-width="1.5"/>
+            <line x1="152" y1="103" x2="138" y2="117" stroke="#1f2937" stroke-width="1.5"/>
+            <!-- Labels -->
+            <text x="145" y="60" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="bold">BRANCH 1</text>
+            <text x="145" y="87" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="bold">BRANCH 2</text>
+            <text x="215" y="70" text-anchor="middle" font-size="9" fill="#64748b">Current</text>
+            <text x="215" y="82" text-anchor="middle" font-size="9" fill="#64748b">splits</text>
+          </svg>
+          <p><strong>Multiple paths</strong> (branches) for current.</p>
+          <p>• Voltage is the <strong>same</strong> across each branch.</p>
+          <p>• Current <strong>splits</strong> between branches.</p>
+          <p>• If one branch breaks → <strong>others keep working</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="scaffold-box"><strong>💡 Real World:</strong> Houses are wired in <strong>parallel</strong> so each appliance gets the full voltage (230 V) and you can switch them on/off independently. Old Christmas lights were in <strong>series</strong> — one bulb out = all out!</div>
+  </div>
+
+  <!-- ===== SLIDE 7: WE DO 2 – SERIES OR PARALLEL? ===== -->
+  <div class="slide" data-title="We Do – Label the Circuit" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Label the Circuit 🔍</h2>
+    <div class="li-box"><strong>Instructions:</strong> Look at each diagram. <strong>Click a label</strong> below, then <strong>click the matching part</strong> on the circuit to place it!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:20px">
+        <!-- CIRCUIT 1: SERIES -->
+        <div>
+          <h3 style="margin:0 0 6px;text-align:center;color:#dc2626">Circuit 1: Series</h3>
+          <svg width="320" height="180" viewBox="0 0 320 180" style="background:#fff;border:2px solid #e2e8f0;border-radius:10px">
+            <!-- Loop -->
+            <rect x="30" y="30" width="260" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <!-- Cell -->
+            <line x1="155" y1="24" x2="155" y2="36" stroke="#1f2937" stroke-width="3"/>
+            <line x1="163" y1="27" x2="163" y2="33" stroke="#1f2937" stroke-width="2.5"/>
+            <circle class="label-spot" cx="159" cy="30" r="16" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c1-cell')"/>
+            <text class="spot-label" id="lbl-c1-cell" x="159" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+            <!-- Lamp 1 -->
+            <circle cx="90" cy="150" r="12" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+            <line x1="82" y1="142" x2="98" y2="158" stroke="#1f2937" stroke-width="1.5"/>
+            <line x1="98" y1="142" x2="82" y2="158" stroke="#1f2937" stroke-width="1.5"/>
+            <circle class="label-spot" cx="90" cy="150" r="18" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c1-lamp')"/>
+            <text class="spot-label" id="lbl-c1-lamp" x="90" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+            <!-- Switch -->
+            <line x1="220" y1="150" x2="240" y2="140" stroke="#1f2937" stroke-width="2.5"/>
+            <circle cx="220" cy="150" r="3" fill="#1f2937"/>
+            <circle cx="244" cy="150" r="3" fill="#1f2937"/>
+            <circle class="label-spot" cx="232" cy="146" r="18" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c1-switch')"/>
+            <text class="spot-label" id="lbl-c1-switch" x="232" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+            <!-- Wire label -->
+            <circle class="label-spot" cx="30" cy="90" r="16" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c1-wire')"/>
+            <text class="spot-label" id="lbl-c1-wire" x="12" y="94" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+          </svg>
+          <div style="margin-top:8px;text-align:center">
+            <p style="font-size:.9rem;margin:4px 0;color:#334155"><strong>Available labels:</strong></p>
+            <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap" id="labels-c1">
+              <button class="label-btn" data-val="Cell" onclick="labelSelect(this)">Cell</button>
+              <button class="label-btn" data-val="Lamp" onclick="labelSelect(this)">Lamp</button>
+              <button class="label-btn" data-val="Switch" onclick="labelSelect(this)">Switch</button>
+              <button class="label-btn" data-val="Wire" onclick="labelSelect(this)">Wire</button>
+            </div>
+          </div>
+        </div>
+        <!-- CIRCUIT 2: PARALLEL WITH METERS -->
+        <div>
+          <h3 style="margin:0 0 6px;text-align:center;color:#2563eb">Circuit 2: Parallel with meters</h3>
+          <svg width="320" height="180" viewBox="0 0 320 180" style="background:#fff;border:2px solid #e2e8f0;border-radius:10px">
+            <!-- Outer loop -->
+            <rect x="30" y="30" width="260" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <!-- Two vertical branch dividers -->
+            <line x1="130" y1="30" x2="130" y2="150" stroke="#1f2937" stroke-width="3"/>
+            <line x1="210" y1="30" x2="210" y2="150" stroke="#1f2937" stroke-width="3"/>
+            <!-- Cell left -->
+            <line x1="23" y1="85" x2="37" y2="85" stroke="#1f2937" stroke-width="3"/>
+            <line x1="27" y1="95" x2="33" y2="95" stroke="#1f2937" stroke-width="3"/>
+            <!-- Lamp in branch 1 (top) -->
+            <circle cx="170" cy="30" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+            <line x1="163" y1="23" x2="177" y2="37" stroke="#1f2937" stroke-width="1.5"/>
+            <line x1="177" y1="23" x2="163" y2="37" stroke="#1f2937" stroke-width="1.5"/>
+            <!-- Ammeter in series with lamp (branch 1) -->
+            <circle cx="170" cy="90" r="12" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+            <text x="170" y="95" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">A</text>
+            <circle class="label-spot" cx="170" cy="90" r="18" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c2-amm')"/>
+            <text class="spot-label" id="lbl-c2-amm" x="170" y="118" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+            <!-- Lamp in branch 2 -->
+            <circle cx="250" cy="90" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+            <line x1="243" y1="83" x2="257" y2="97" stroke="#1f2937" stroke-width="1.5"/>
+            <line x1="257" y1="83" x2="243" y2="97" stroke="#1f2937" stroke-width="1.5"/>
+            <!-- Voltmeter across lamp in branch 2 -->
+            <circle cx="250" cy="140" r="12" fill="#fecaca" stroke="#ef4444" stroke-width="2"/>
+            <text x="250" y="145" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">V</text>
+            <line x1="238" y1="140" x2="220" y2="140" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3"/>
+            <line x1="220" y1="140" x2="220" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3"/>
+            <line x1="262" y1="140" x2="280" y2="140" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3"/>
+            <line x1="280" y1="140" x2="280" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3"/>
+            <circle class="label-spot" cx="250" cy="140" r="18" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c2-volt')"/>
+            <text class="spot-label" id="lbl-c2-volt" x="250" y="168" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+            <!-- Cell label spot -->
+            <circle class="label-spot" cx="30" cy="90" r="16" fill="rgba(156,39,176,0.08)" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4" style="cursor:pointer" onclick="labelPlace(this,'c2-cell')"/>
+            <text class="spot-label" id="lbl-c2-cell" x="12" y="94" text-anchor="middle" font-size="10" font-weight="bold" fill="#9c27b0">?</text>
+          </svg>
+          <div style="margin-top:8px;text-align:center">
+            <p style="font-size:.9rem;margin:4px 0;color:#334155"><strong>Available labels:</strong></p>
+            <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap" id="labels-c2">
+              <button class="label-btn" data-val="Cell" onclick="labelSelect(this)">Cell</button>
+              <button class="label-btn" data-val="Ammeter" onclick="labelSelect(this)">Ammeter</button>
+              <button class="label-btn" data-val="Voltmeter" onclick="labelSelect(this)">Voltmeter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:12px">
+        <div class="snap-score">Labelled: <span id="label-count">0</span> / 7</div>
+        <div id="label-msg" style="font-weight:900;font-size:1.05rem;min-height:24px"></div>
+      </div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: I DO 3 – AMMETERS & VOLTMETERS ===== -->
+  <div class="slide" data-title="I Do – Meters" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 4 min · FLEX</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Ammeters &amp; Voltmeters</h2>
+    <div class="li-box"><strong>Key Idea:</strong> Ammeters go <strong>IN SERIES</strong> (in the loop). Voltmeters go <strong>IN PARALLEL</strong> (across a component).</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0;color:#2563eb">Ⓐ Ammeter — Measures Current</h3>
+          <p>• Connected <strong>in series</strong> (part of the loop).</p>
+          <p>• All the current flows <strong>through</strong> it.</p>
+          <p>• Unit: <strong>Amps (A)</strong>.</p>
+          <p>• Think: <strong>A</strong>mmeter = <strong>A</strong>mps = in the loop like <strong>A</strong> chain.</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:#dc2626">Ⓥ Voltmeter — Measures Voltage</h3>
+          <p>• Connected <strong>in parallel</strong> (across a component).</p>
+          <p>• Measures the energy difference <strong>across</strong> the component.</p>
+          <p>• Unit: <strong>Volts (V)</strong>.</p>
+          <p>• Think: <strong>V</strong>oltmeter sits on a <strong>V</strong>-shaped bridge across the component.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter anim-delay-2">
+          <h3 style="margin-top:0;color:var(--ido-border)">Where Do They Go?</h3>
+          <svg width="300" height="200" viewBox="0 0 300 200">
+            <!-- Main circuit loop -->
+            <rect x="30" y="30" width="240" height="140" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <!-- Cell at top centre -->
+            <line x1="146" y1="24" x2="146" y2="36" stroke="#1f2937" stroke-width="3"/>
+            <line x1="154" y1="27" x2="154" y2="33" stroke="#1f2937" stroke-width="2.5"/>
+            <text x="150" y="18" text-anchor="middle" font-size="10" font-weight="bold" fill="#64748b">Cell</text>
+            <!-- Lamp at bottom centre (horizontal on bottom wire) -->
+            <rect x="120" y="159" width="60" height="22" rx="3" fill="#fff7ed" stroke="#1f2937" stroke-width="2.5"/>
+            <text x="150" y="175" text-anchor="middle" font-size="11" font-weight="bold">Lamp</text>
+            <!-- Ammeter (in series, on left wire) -->
+            <circle cx="30" cy="100" r="16" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2.5"/>
+            <text x="30" y="106" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">A</text>
+            <text x="30" y="75" text-anchor="middle" font-size="9" font-weight="bold" fill="#2563eb">IN SERIES</text>
+            <text x="30" y="135" text-anchor="middle" font-size="9" fill="#2563eb">(in the loop)</text>
+            <!-- Voltmeter directly above lamp, connected to BOTH terminals -->
+            <!-- Voltmeter body -->
+            <circle cx="150" cy="120" r="14" fill="#fecaca" stroke="#ef4444" stroke-width="2.5"/>
+            <text x="150" y="126" text-anchor="middle" font-size="14" font-weight="bold" fill="#991b1b">V</text>
+            <!-- Left dashed connector: from voltmeter down-left to LEFT end of lamp -->
+            <line x1="136" y1="120" x2="120" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+            <line x1="120" y1="120" x2="120" y2="159" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+            <!-- Right dashed connector: from voltmeter down-right to RIGHT end of lamp -->
+            <line x1="164" y1="120" x2="180" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+            <line x1="180" y1="120" x2="180" y2="159" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+            <!-- Voltmeter labels -->
+            <text x="240" y="115" text-anchor="middle" font-size="9" font-weight="bold" fill="#dc2626">IN</text>
+            <text x="240" y="127" text-anchor="middle" font-size="9" font-weight="bold" fill="#dc2626">PARALLEL</text>
+            <text x="240" y="140" text-anchor="middle" font-size="9" fill="#dc2626">(across lamp)</text>
+          </svg>
+        </div>
+        <div class="aspire-box"><strong>🌟 Common mistake:</strong> Putting a voltmeter in series or an ammeter in parallel. An ammeter in parallel can cause a <strong>short circuit</strong> — very dangerous!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 9: WE DO 3 – CIRCUIT DOCTOR ===== -->
+  <div class="slide" data-title="We Do – Circuit Doctor" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 5 min · FLEX</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Circuit Doctor 🩺</h2>
+    <div class="li-box"><strong>Instructions:</strong> Each circuit has a problem! Read the description, diagnose the error, and click the correct fix. Can you heal all 5 circuits?</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Print Evidence</button>
+    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:10px">
+        <div>
+          <div class="doctor-card" id="doc0"><p style="font-weight:900;color:#9d174d;margin:0">🩺 Patient 1:</p><p style="margin:4px 0">A student drew a circuit with <strong>curved, wavy wires</strong> and components drawn as little pictures instead of symbols.</p>
+            <div class="doctor-opts">
+              <button class="doctor-opt" onclick="doctorCheck(0,this,true)">Use straight lines, 90° corners, and standard symbols</button>
+              <button class="doctor-opt" onclick="doctorCheck(0,this,false)">Add more batteries</button>
+            </div><div class="doctor-fb" id="docf0"></div>
+          </div>
+          <div class="doctor-card" id="doc1"><p style="font-weight:900;color:#9d174d;margin:0">🩺 Patient 2:</p><p style="margin:4px 0">A lamp is connected to a cell but <strong>there is a gap</strong> in the wire on one side. The lamp won't light.</p>
+            <div class="doctor-opts">
+              <button class="doctor-opt" onclick="doctorCheck(1,this,false)">Add another cell for more power</button>
+              <button class="doctor-opt" onclick="doctorCheck(1,this,true)">Close the gap — the circuit must be a complete loop</button>
+            </div><div class="doctor-fb" id="docf1"></div>
+          </div>
+          <div class="doctor-card" id="doc2"><p style="font-weight:900;color:#9d174d;margin:0">🩺 Patient 3:</p><p style="margin:4px 0">A student placed the <strong>voltmeter in series</strong> (in the main loop) to measure the voltage across a lamp.</p>
+            <div class="doctor-opts">
+              <button class="doctor-opt" onclick="doctorCheck(2,this,true)">Move the voltmeter to be in parallel (across the lamp)</button>
+              <button class="doctor-opt" onclick="doctorCheck(2,this,false)">Replace the voltmeter with an ammeter</button>
+            </div><div class="doctor-fb" id="docf2"></div>
+          </div>
+        </div>
+        <div>
+          <div class="doctor-card" id="doc3"><p style="font-weight:900;color:#9d174d;margin:0">🩺 Patient 4:</p><p style="margin:4px 0">A student placed a <strong>lamp on the corner</strong> of the circuit where two wires meet at 90°.</p>
+            <div class="doctor-opts">
+              <button class="doctor-opt" onclick="doctorCheck(3,this,false)">That's fine — components can go anywhere</button>
+              <button class="doctor-opt" onclick="doctorCheck(3,this,true)">Move the lamp to a straight section of wire</button>
+            </div><div class="doctor-fb" id="docf3"></div>
+          </div>
+          <div class="doctor-card" id="doc4"><p style="font-weight:900;color:#9d174d;margin:0">🩺 Patient 5:</p><p style="margin:4px 0">A student wants to measure the <strong>current</strong> through a lamp but placed the <strong>ammeter in parallel</strong> across it.</p>
+            <div class="doctor-opts">
+              <button class="doctor-opt" onclick="doctorCheck(4,this,true)">Move the ammeter into series (in the loop) — parallel is dangerous!</button>
+              <button class="doctor-opt" onclick="doctorCheck(4,this,false)">That's correct — ammeters go in parallel</button>
+            </div><div class="doctor-fb" id="docf4"></div>
+          </div>
+          <div class="snap-score" style="margin-top:8px">Healed: <span id="doc-count">0</span> / 5 🩺</div>
+        </div>
+      </div>
+      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 10: INDEPENDENT WORK ===== -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed worksheet pack independently. Use your Knowledge Organiser or Scaffolding Sheet if you need support.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Printed Pack Contains:</h3>
+        <p><strong>Section A:</strong> Recall — Symbol identification and short answer.</p>
+        <p><strong>Section B:</strong> Application — Draw circuits, classify series/parallel, place meters.</p>
+        <p><strong>Section C:</strong> Exam-Style Questions — Differentiated by level.</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the <strong>Scaffolding Sheet</strong> at the front of your pack — it has all 8 symbols, the golden rules, and the series/parallel comparison.</div>
+        <div class="aspire-box" style="margin-top:10px"><strong>📝 Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div>
+      </div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can name and draw at least 5 circuit symbols and state one difference between series and parallel.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can draw complete circuit diagrams using golden rules, identify series/parallel, and state where ammeters and voltmeters go.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can explain why meters must be connected in specific ways, compare series/parallel using current and voltage rules, and apply to real-world contexts.</p>
+      </div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can name 8 circuit symbols</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can say where ammeters and voltmeters go</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can describe the difference between series and parallel</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can draw a complete circuit diagram</span></div></div>
+  </div>
+
+  <!-- ===== SLIDE 11: EXIT TICKET ===== -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Check Your Learning</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+    </div>
+
+    <div id="exit-foundation" class="task-box">
+      <p><strong>1) Draw the circuit symbol for a lamp.</strong></p><p class="answer">Circle with a cross inside.</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Is this series or parallel? "Two lamps on one single loop."</strong></p><p class="answer">Series.</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) What happens in a series circuit if one lamp breaks?</strong></p><p class="answer">All the lamps go out because the circuit is broken.</p>
+    </div>
+    <div id="exit-middle" class="task-box" style="display:none">
+      <p><strong>1) State how an ammeter and a voltmeter must be connected.</strong></p><p class="answer">Ammeter in series (in the loop). Voltmeter in parallel (across the component).</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Give two differences between series and parallel circuits.</strong></p><p class="answer">Series: one loop, current same everywhere, voltage shared, one break stops all. Parallel: branches, voltage same across each, current splits, one break doesn't affect others.</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) State two of the four golden rules for drawing circuit diagrams.</strong></p><p class="answer">Any two from: straight lines with 90° corners, standard symbols, complete loop, components on straight sections.</p>
+    </div>
+    <div id="exit-higher" class="task-box" style="display:none">
+      <p><strong>1) Explain why placing an ammeter in parallel across a battery is dangerous.</strong></p><p class="answer">An ammeter has very low resistance. In parallel, it creates a path with almost no resistance — a short circuit. A huge current flows, which can overheat wires, damage the ammeter, or start a fire.</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>2) Explain why houses are wired in parallel. Give two reasons.</strong></p><p class="answer">1. Each appliance gets the full mains voltage (230 V). 2. Appliances can be switched on/off independently — a fault in one doesn't affect others.</p>
+      <hr style="border:0;border-top:1px solid var(--task-border)">
+      <p><strong>3) A student connects 3 lamps in series. They are dim. She reconnects them in parallel and they are brighter. Explain why.</strong></p><p class="answer">In series, total resistance = R₁ + R₂ + R₃ (higher), so less current flows and voltage is shared. In parallel, each lamp gets the full battery voltage and has its own path, so more current flows through each — they glow brighter.</p>
+    </div>
+  </div>
+
+</div><!-- end slide-container -->
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- ===== PRINT AREA ===== -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <h1 style="text-align:center">Knowledge Organiser: Circuits (L1)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Cell</strong></td><td>Provides voltage (push). Symbol: one long line + one short line. Long = positive.</td></tr>
+      <tr><td><strong>Battery</strong></td><td>Two or more cells connected together. Symbol: repeated long/short lines.</td></tr>
+      <tr><td><strong>Lamp</strong></td><td>Converts electrical energy to light. Symbol: circle with a cross inside.</td></tr>
+      <tr><td><strong>Switch (open)</strong></td><td>Breaks the circuit so current cannot flow. Symbol: line with raised gap.</td></tr>
+      <tr><td><strong>Resistor</strong></td><td>Opposes the flow of current. Symbol: rectangle.</td></tr>
+      <tr><td><strong>Ammeter</strong></td><td>Measures current in amps (A). Connected <strong>IN SERIES</strong> (in the loop).</td></tr>
+      <tr><td><strong>Voltmeter</strong></td><td>Measures voltage in volts (V). Connected <strong>IN PARALLEL</strong> (across a component).</td></tr>
+      <tr><td><strong>Series circuit</strong></td><td>One single loop. Current is the same everywhere. Voltage is shared. One break = all stop.</td></tr>
+      <tr><td><strong>Parallel circuit</strong></td><td>Multiple branches. Voltage is the same across each branch. Current splits. One break = others keep working.</td></tr>
+      <tr><td><strong>Golden Rules</strong></td><td>1. Straight lines + 90° corners. 2. Standard symbols. 3. Complete loop. 4. Components on straight sections only.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>Series</strong> = <strong>S</strong>ame current. <strong>S</strong>ingle loop.</p><p style="margin:2px 0;font-size:.9rem"><strong>Parallel</strong> = voltage is the same across each <strong>P</strong>ath.</p><p style="margin:2px 0;font-size:.9rem"><strong>A</strong>mmeter in series = <strong>A</strong>ll the current flows through it.</p><p style="margin:2px 0;font-size:.9rem"><strong>V</strong>oltmeter across = measures the <strong>V</strong>oltage difference.</p></div>
+  </div>
+
+  <div id="print-arrival" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Name three things in your home that use electricity.</div><div class="print-box"><strong>2.</strong> What do all electrical devices need to work?</div><div class="print-box"><strong>3.</strong> What happens when you flip a light switch to OFF?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> If you could look inside a wire, what is actually moving?</div></div>
+    </div>
+    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Name four components you might find in an electrical circuit.</div><div class="print-box"><strong>2.</strong> Explain why a torch stops working when you remove a battery.</div><div class="print-box"><strong>3.</strong> What is the difference between a cell and a battery?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> Why do scientists use symbols instead of pictures for circuits?</div></div>
+    </div>
+    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Draw a simple circuit from memory with a cell, switch, and lamp.</div><div class="print-box"><strong>2.</strong> Explain the difference between lamps in one loop vs on separate branches.</div><div class="print-box"><strong>3.</strong> Old Christmas lights all went out when one broke. Modern ones don't. Why?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> Why are there strict rules for drawing circuit diagrams?</div></div>
+    </div>
+  </div>
+
+  <div id="print-starter" class="print-section">
+    <h2>Starter: Name That Symbol</h2>
+    <p><em>Write the component name next to each symbol. Use the word bank.</em></p>
+    <table class="ko-table"><tr><th>Symbol Description</th><th>Component Name</th></tr>
+      <tr><td>One long line + one short line</td><td style="height:30px"></td></tr>
+      <tr><td>Circle with a cross inside</td><td style="height:30px"></td></tr>
+      <tr><td>Line with a raised gap and two dots</td><td style="height:30px"></td></tr>
+      <tr><td>Rectangle on a wire</td><td style="height:30px"></td></tr>
+    </table>
+    <p style="margin-top:10px"><strong>Word bank:</strong> Cell, Lamp, Open Switch, Resistor</p>
+  </div>
+
+  <div id="print-wedo" class="print-section">
+    <h2>We Do Worksheet</h2>
+    <div class="prevent-break">
+      <h3>Part A: Match the Symbol to the Name</h3>
+      <p><em>Draw a line from each symbol description to its correct name.</em></p>
+      <table class="ko-table"><tr><th>Symbol</th><th></th><th>Name</th></tr>
+        <tr><td>Circle with letter A</td><td style="width:80px"></td><td>Lamp</td></tr>
+        <tr><td>Long line + short line</td><td></td><td>Voltmeter</td></tr>
+        <tr><td>Circle with a cross</td><td></td><td>Cell</td></tr>
+        <tr><td>Circle with letter V</td><td></td><td>Resistor</td></tr>
+        <tr><td>Rectangle</td><td></td><td>Open Switch</td></tr>
+        <tr><td>Line with raised gap</td><td></td><td>Ammeter</td></tr>
+      </table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Part B: Series or Parallel?</h3>
+      <p><em>Write "Series" or "Parallel" for each description.</em></p>
+      <table class="ko-table"><tr><th>Description</th><th>Series or Parallel?</th></tr>
+        <tr><td>Two lamps on one single loop with a cell.</td><td style="height:30px"></td></tr>
+        <tr><td>Each lamp has its own separate branch back to the cell.</td><td style="height:30px"></td></tr>
+        <tr><td>One lamp breaks and ALL others go out.</td><td style="height:30px"></td></tr>
+        <tr><td>The voltage across each lamp equals the battery voltage.</td><td style="height:30px"></td></tr>
+        <tr><td>Adding more lamps makes them all dimmer.</td><td style="height:30px"></td></tr>
+        <tr><td>Houses are wired this way so appliances work independently.</td><td style="height:30px"></td></tr>
+      </table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Part C: Circuit Doctor</h3>
+      <p><em>For each problem, write what is wrong and how to fix it.</em></p>
+      <p>1. A student drew curved, wavy wires with pictures instead of symbols.</p>
+      <p>Error: <span style="border-bottom:1px solid #000;display:inline-block;width:80%;height:18px"></span></p>
+      <p>Fix: <span style="border-bottom:1px solid #000;display:inline-block;width:80%;height:18px"></span></p>
+      <p style="margin-top:10px">2. A voltmeter is placed in series (in the main loop) to measure voltage across a lamp.</p>
+      <p>Error: <span style="border-bottom:1px solid #000;display:inline-block;width:80%;height:18px"></span></p>
+      <p>Fix: <span style="border-bottom:1px solid #000;display:inline-block;width:80%;height:18px"></span></p>
+    </div>
+  </div>
+
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Circuit Symbols</h3>
+      <table class="ko-table"><tr><th>Component</th><th>What it does</th><th>Remember</th></tr>
+        <tr><td>Cell</td><td>Provides voltage (push)</td><td>Long line = +, short = −</td></tr>
+        <tr><td>Battery</td><td>Two or more cells</td><td>Repeated long/short pattern</td></tr>
+        <tr><td>Lamp</td><td>Converts energy to light</td><td>Circle with cross ✕</td></tr>
+        <tr><td>Switch (open)</td><td>Breaks the circuit</td><td>Gap = no current flows</td></tr>
+        <tr><td>Resistor</td><td>Opposes current</td><td>Rectangle box</td></tr>
+        <tr><td>Ammeter</td><td>Measures current (A)</td><td><strong>A</strong>mmeter = <strong>A</strong>mps = in <strong>S</strong>eries</td></tr>
+        <tr><td>Voltmeter</td><td>Measures voltage (V)</td><td><strong>V</strong>oltmeter = <strong>V</strong>olts = in <strong>P</strong>arallel</td></tr>
+      </table>
+    </div>
+    <div class="scaffold-print-box"><h3>Golden Rules for Drawing Circuits</h3>
+      <p>1. <strong>Straight lines</strong> + <strong>90° corners</strong> (never curves) &nbsp; 2. <strong>Standard symbols</strong> only (never pictures) &nbsp; 3. <strong>Complete loop</strong> (no gaps) &nbsp; 4. Components on <strong>straight sections</strong> (never on corners)</p>
+    </div>
+    <div class="scaffold-print-box"><h3>Series vs Parallel — Quick Comparison</h3>
+      <table class="ko-table"><tr><th></th><th>Series</th><th>Parallel</th></tr>
+        <tr><td><strong>Path</strong></td><td>One single loop</td><td>Multiple branches</td></tr>
+        <tr><td><strong>Current</strong></td><td>Same everywhere</td><td>Splits between branches</td></tr>
+        <tr><td><strong>Voltage</strong></td><td>Shared between components</td><td>Same across each branch</td></tr>
+        <tr><td><strong>If one breaks</strong></td><td>All stop</td><td>Others keep working</td></tr>
+        <tr><td><strong>Example</strong></td><td>Old Christmas lights</td><td>House wiring</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOUNDATION WORKSHEET -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. A circle with a cross inside is the symbol for a…</p>
+      <p>[&nbsp;&nbsp;] Cell &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Lamp &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Switch</p>
+      <p style="margin-top:10px">2. A complete circuit must have…</p>
+      <p>[&nbsp;&nbsp;] No gaps anywhere &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] At least two switches &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Curved wires</p>
+      <p style="margin-top:10px">3. In a series circuit, if one lamp breaks…</p>
+      <p>[&nbsp;&nbsp;] The others stay on &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] All the lamps go out &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Nothing happens</p>
+      <p style="margin-top:10px">4. An ammeter measures current and is connected…</p>
+      <p>[&nbsp;&nbsp;] In parallel &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] In series &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Anywhere</p>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Short Answer</h3>
+      <p>5. Draw the circuit symbol for a cell. Label which end is positive (+).</p>
+      <div class="print-box" style="min-height:50px"></div>
+      <p style="margin-top:10px">6. State <strong>one</strong> difference between a series circuit and a parallel circuit.</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">7. What does a switch do when it is opened?</p>
+      <div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>8. (4 marks)</strong> A student draws a circuit diagram. They use curved wires, draw a picture of a light bulb instead of a symbol, and leave a gap in one wire.</p>
+      <p>(a) State <strong>three</strong> mistakes the student made. [3 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) State <strong>one</strong> golden rule they should follow. [1 mark]</p>
+      <div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style Question</h3>
+      <p><strong>9. (3 marks)</strong> Draw a series circuit containing 1 cell, 1 switch, and 2 lamps. Use standard symbols and golden rules. [2 marks]</p>
+      <div class="print-box" style="min-height:100px"></div>
+      <p>State what happens to the other lamp if one lamp in this circuit breaks. [1 mark]</p>
+      <div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- MIDDLE WORKSHEET -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. A voltmeter is represented by…</p>
+      <p>[&nbsp;&nbsp;] Circle with A &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Circle with V &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Rectangle</p>
+      <p style="margin-top:10px">2. In a parallel circuit, the voltage across each branch is…</p>
+      <p>[&nbsp;&nbsp;] Shared between branches &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] The same as the supply voltage &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Zero</p>
+      <p style="margin-top:10px">3. State all four golden rules for drawing circuit diagrams.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">4. What is the difference between a cell and a battery?</p>
+      <div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Application</h3>
+      <p>5. Draw a parallel circuit with 1 cell and 2 lamps on separate branches. Use golden rules.</p>
+      <div class="print-box" style="min-height:120px"></div>
+      <p style="margin-top:10px">6. A student connects a voltmeter in series (in the main loop). Explain why this is wrong and where it should go. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">7. Complete the comparison table:</p>
+      <table class="ko-table"><tr><th></th><th>Series</th><th>Parallel</th></tr>
+        <tr><td>Current rule</td><td style="height:30px"></td><td></td></tr>
+        <tr><td>Voltage rule</td><td style="height:30px"></td><td></td></tr>
+        <tr><td>If one breaks</td><td style="height:30px"></td><td></td></tr>
+      </table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer</h3>
+      <p><strong>8. (4 marks)</strong> A student connects 3 lamps in series. They are dim. She reconnects them in parallel and they are much brighter.</p>
+      <p>(a) Explain why the lamps were dim in series. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Explain why they are brighter in parallel. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>9. (4 marks)</strong> Draw a circuit with 1 cell, 1 lamp, an ammeter measuring the current through the lamp, and a voltmeter measuring the voltage across the lamp. [2 marks]</p>
+      <div class="print-box" style="min-height:120px"></div>
+      <p>Explain why the ammeter must be in series and the voltmeter must be in parallel. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- HIGHER WORKSHEET -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. In a series circuit with 3 identical lamps…</p>
+      <p>[&nbsp;&nbsp;] Current splits between them &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Voltage is shared between them &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Total resistance decreases</p>
+      <p style="margin-top:10px">2. Explain why placing an ammeter in parallel across a battery is dangerous. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">3. State all four golden rules for drawing circuit diagrams.</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">4. Explain one limitation of a series circuit compared to parallel. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Application</h3>
+      <p>5. Draw a parallel circuit with 1 cell, a main switch, and 2 lamps on separate branches. Add an ammeter measuring total current and a voltmeter across one lamp. Label all components.</p>
+      <div class="print-box" style="min-height:140px"></div>
+      <p style="margin-top:10px">6. Complete the full comparison table:</p>
+      <table class="ko-table"><tr><th></th><th>Series</th><th>Parallel</th></tr>
+        <tr><td>Current rule</td><td style="height:32px"></td><td></td></tr>
+        <tr><td>Voltage rule</td><td style="height:32px"></td><td></td></tr>
+        <tr><td>If one component breaks</td><td style="height:32px"></td><td></td></tr>
+        <tr><td>Adding more components</td><td style="height:32px"></td><td></td></tr>
+        <tr><td>Real-world example</td><td style="height:32px"></td><td></td></tr>
+      </table>
+      <p style="margin-top:10px">7. A circuit has 3 lamps in series. Describe their brightness compared to the same 3 lamps rewired in parallel. Explain why using current and voltage rules. [3 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer</h3>
+      <p><strong>8. (5 marks)</strong> Explain why houses are wired in parallel rather than in series. In your answer, discuss voltage, independence of operation, and what happens when a fault occurs. [5 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
+      <p><strong>9. (6 marks)</strong> A student designs a circuit for a bedroom. They want 2 ceiling lights and a desk fan. Each must be able to be switched on and off independently.</p>
+      <p>(a) Should the components be connected in series or parallel? Explain why. [2 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Draw the circuit diagram. Include a main switch, 2 lamps, and a motor (circle with M) for the fan, each with their own switch. [3 marks]</p>
+      <div class="print-box" style="min-height:140px"></div>
+      <p>(c) State what would happen if the motor broke in a series circuit vs in a parallel circuit. [1 mark]</p>
+      <div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+
+      <p>1) Draw the circuit symbol for a lamp.</p><div class="print-box" style="min-height:40px"></div>
+      <p>2) Is this series or parallel? "Two lamps on one single loop."</p><div class="print-line"></div>
+      <p>3) What happens in a series circuit if one lamp breaks?</p><div class="print-line"></div>
+    </div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2>
+      <p>1) State how an ammeter and a voltmeter must be connected.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2) Give two differences between series and parallel circuits.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3) State two golden rules for drawing circuits.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5)</h2>
+      <p>1) Explain why placing an ammeter in parallel across a battery is dangerous.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2) Explain why houses are wired in parallel. Give two reasons.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3) 3 lamps in series are dim. In parallel they're brighter. Explain why.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap">
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>⚡ Next lesson:</strong> We introduce the most important equation in electricity — <strong>V = I × R</strong>. You'll calculate voltage, current, and resistance using real appliances like kettles and phone chargers!</div>
+  </div></div>
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+  function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}
+  updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'block':'none';document.getElementById('exit-middle').style.display=l==='middle'?'block':'none';document.getElementById('exit-higher').style.display=l==='higher'?'block':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function quizMark(btn,ok,msg){const q=btn.closest('.quiz');if(!q)return;const fb=q.querySelector('.fb');q.querySelectorAll('button').forEach(b=>b.style.border='');btn.style.border=ok?'3px solid var(--success)':'3px solid var(--error)';fb.innerText=msg;fb.style.color=ok?'var(--success)':'var(--error)'}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.quiz,.classify-card,.doctor-card,.snap-card.matched').forEach((el,i)=>{const fb=el.querySelector('.doctor-fb,.fb');if(fb&&fb.innerText)results.push('Q'+(i+1)+': '+fb.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes)content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // === WE DO 1: SYMBOL SNAP ===
+  let snapSym=null,snapName=null,snapMatched=0;
+  function snapSelect(card,type){if(card.classList.contains('matched'))return;if(type==='sym'){document.querySelectorAll('#snap-symbols .snap-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');snapSym=card;if(snapName)trySnapMatch()}else{document.querySelectorAll('#snap-names .snap-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');snapName=card;if(snapSym)trySnapMatch()}}
+  function trySnapMatch(){if(!snapSym||!snapName)return;if(snapSym.dataset.id===snapName.dataset.id){snapSym.classList.remove('selected');snapSym.classList.add('matched');snapName.classList.remove('selected');snapName.classList.add('matched');snapMatched++;document.getElementById('snap-count').innerText=snapMatched;if(snapMatched>=6)document.getElementById('snap-msg').innerText='🎉 ALL MATCHED!'}else{snapSym.classList.add('wrong');snapName.classList.add('wrong');setTimeout(()=>{snapSym.classList.remove('selected','wrong');snapName.classList.remove('selected','wrong');snapSym=null;snapName=null},500);return}snapSym=null;snapName=null}
+  function resetSnap(){snapSym=null;snapName=null;snapMatched=0;document.getElementById('snap-count').innerText='0';document.getElementById('snap-msg').innerText='';document.querySelectorAll('.snap-card').forEach(c=>c.classList.remove('selected','matched','wrong'))}
+  function revealSnap(){document.querySelectorAll('.snap-card').forEach(c=>c.classList.add('matched'));snapMatched=6;document.getElementById('snap-count').innerText='6';document.getElementById('snap-msg').innerText='✅ All revealed.'}
+
+  // === WE DO 2: SERIES OR PARALLEL ===
+  // LABEL THE CIRCUIT
+  const correctLabels={
+    'c1-cell':'Cell','c1-lamp':'Lamp','c1-switch':'Switch','c1-wire':'Wire',
+    'c2-cell':'Cell','c2-amm':'Ammeter','c2-volt':'Voltmeter'
+  };
+  let selectedLabel=null,selectedLabelBtn=null,labelCount=0;
+  function labelSelect(btn){
+    if(btn.classList.contains('used'))return;
+    document.querySelectorAll('.label-btn').forEach(b=>b.classList.remove('selected-label'));
+    btn.classList.add('selected-label');
+    selectedLabel=btn.dataset.val;
+    selectedLabelBtn=btn;
+  }
+  function labelPlace(spot,spotId){
+    if(!selectedLabel){document.getElementById('label-msg').innerText='👇 Pick a label first!';document.getElementById('label-msg').style.color='var(--muted)';return}
+    if(spot.classList.contains('placed-ok'))return;
+    const textEl=document.getElementById('lbl-'+spotId);
+    if(correctLabels[spotId]===selectedLabel){
+      spot.classList.add('placed-ok');
+      textEl.innerText='✓ '+selectedLabel;
+      textEl.classList.add('filled');
+      // Mark this label button as used — but only if this is the only spot needing that label in this circuit
+      const circuitNum=spotId.split('-')[0];
+      const remainingSpots=Object.keys(correctLabels).filter(k=>k.startsWith(circuitNum)&&correctLabels[k]===selectedLabel&&!document.querySelector('.label-spot.placed-ok[onclick*="'+k+'"]')).length;
+      if(remainingSpots===0)selectedLabelBtn.classList.add('used');
+      selectedLabelBtn.classList.remove('selected-label');
+      selectedLabel=null;selectedLabelBtn=null;
+      labelCount++;
+      document.getElementById('label-count').innerText=labelCount;
+      if(labelCount>=7){document.getElementById('label-msg').innerText='🎉 All labels placed!';document.getElementById('label-msg').style.color='var(--success)'}
+      else{document.getElementById('label-msg').innerText='✅ Correct!';document.getElementById('label-msg').style.color='var(--success)'}
+    }else{
+      spot.classList.add('placed-wrong');
+      textEl.classList.add('wrong-fill');
+      document.getElementById('label-msg').innerText='❌ Wrong label — try again!';
+      document.getElementById('label-msg').style.color='var(--error)';
+      setTimeout(()=>{spot.classList.remove('placed-wrong');textEl.classList.remove('wrong-fill');document.getElementById('label-msg').innerText=''},700);
+    }
+  }
+
+  // === WE DO 3: CIRCUIT DOCTOR ===
+  let docCount=0;
+  const docExplanations=['✅ Golden rules: straight lines, 90° corners, standard symbols!','✅ A circuit must be a complete loop with no gaps!','✅ Voltmeters must be in parallel (across the component)!','✅ Components must go on straight sections, not corners!','✅ Ammeters go in series! In parallel = short circuit = dangerous!'];
+  function doctorCheck(idx,btn,correct){const card=document.getElementById('doc'+idx);const fb=document.getElementById('docf'+idx);if(card.classList.contains('healed'))return;card.querySelectorAll('.doctor-opt').forEach(o=>o.classList.remove('correct-doc','wrong-doc'));if(correct){btn.classList.add('correct-doc');card.classList.remove('misdiagnosed');card.classList.add('healed');fb.innerText=docExplanations[idx];fb.style.color='var(--success)';docCount++;document.getElementById('doc-count').innerText=docCount}else{btn.classList.add('wrong-doc');card.classList.add('misdiagnosed');fb.innerText='❌ Not quite — think again!';fb.style.color='var(--error)';setTimeout(()=>{card.classList.remove('misdiagnosed');btn.classList.remove('wrong-doc');fb.innerText=''},700)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+</script>
+</body>
+</html>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a formula = 1 mark.</p></div>
+  

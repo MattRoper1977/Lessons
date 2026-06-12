@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L5: Wave Speed Equation v = f × λ</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}.quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}.quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+    /* Triangle challenge */
+    .tri-cover{position:absolute;border-radius:50%;background:rgba(219,39,119,.85);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#fff;opacity:0;pointer-events:none;transition:.3s;backdrop-filter:blur(4px)}.tri-cover.active{opacity:1;pointer-events:auto;animation:pulse .8s infinite}
+    .tri-wrap{position:relative;width:240px;height:210px;margin:0 auto 8px}
+    .tri-input{width:100px;padding:10px;font-size:1.2rem;font-weight:900;border:3px solid #cbd5e1;border-radius:10px;text-align:center}.tri-input:focus{outline:none;border-color:var(--ido-border)}.tri-input.correct{border-color:var(--success);background:#f0fdf4}.tri-input.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .tri-formula{background:#1e293b;color:#fff;padding:8px 18px;border-radius:10px;font-size:1.1rem;font-weight:900;display:inline-block;margin:6px 0}
+    .tri-dot{width:20px;height:20px;border-radius:50%;border:2px solid #cbd5e1;background:#f1f5f9;display:inline-block;margin:2px;transition:.3s}.tri-dot.hit{background:var(--success);border-color:var(--success)}.tri-dot.miss{background:var(--error);border-color:var(--error)}
+    .tri-progress{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin:6px 0}.tri-fill{height:100%;background:linear-gradient(90deg,var(--wedo-border),var(--ido-border));transition:width .4s;border-radius:4px}
+    /* Detective cards */
+    .det-card{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:14px;text-align:center;transition:.3s}.det-card.solved{border-color:var(--success);background:linear-gradient(135deg,#f0fdf4,#dcfce7)}.det-card.wrong-d{border-color:var(--error);animation:shake .4s}
+    .det-icon{font-size:2.2rem;margin-bottom:4px}.det-name{font-weight:900;font-size:1rem;color:#1e293b;margin-bottom:6px}
+    .det-input{width:80px;padding:6px;font-size:1rem;font-weight:900;border:2px solid var(--task-border);border-radius:8px;text-align:center}.det-input.correct{border-color:var(--success);background:#f0fdf4}.det-input.wrong{border-color:var(--error);background:#fef2f2}
+    .det-check{padding:6px 12px;border-radius:8px;font-size:.85rem;font-weight:900;background:var(--task-border);color:#fff;border:none;cursor:pointer;transition:.2s}.det-check:hover{background:#ca8a04}.det-check:disabled{opacity:.4;cursor:default}
+    .det-fb{font-size:.85rem;font-weight:900;min-height:18px;margin-top:4px}
+    /* Cumulative exit grid */
+    .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.exit-cell{border:2px solid var(--task-border);border-radius:12px;padding:14px;background:var(--task-bg);position:relative}.exit-cell .lesson-tag{position:absolute;top:6px;right:8px;font-size:.7rem;font-weight:900;color:#fff;background:var(--lo-border);padding:2px 8px;border-radius:6px}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-150%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+  </style>
+</head>
+<body>
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- TITLE -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 5 — Waves</p>
+      <h1>Wave Speed Equation: v = f × λ</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 16px">Spec 3.5</p>
+      <div class="li-box" style="margin:16px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong>
+        <ul style="font-size:1.05rem;margin-top:8px"><li><strong>3.5</strong> – Know and use: wave speed = frequency × wavelength → <strong>v = f × λ</strong></li></ul></div>
+      <p style="font-size:1.1rem;margin-top:10px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button><button class="ghost" onclick="printSection('ko')">🗂️ KO</button></div>
+        </div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do 1 → We Do 1 → I Do 2 → We Do 2 → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>FLEX slides</strong> (I Do 3 + We Do 3): Use if time allows, or as next-lesson warm-up. Marked with 🟠 FLEX badge.</p>
+    </div></div>
+  </div>
+
+  <!-- ARRIVAL -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Lesson 4</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. Q1–3 recall wave definitions from L4.</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p>What is the <strong>amplitude</strong> of a wave?</p><p class="answer">The maximum displacement from the rest position (the height).</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p>What unit is <strong>frequency</strong> measured in?</p><p class="answer">Hertz (Hz).</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p>Do waves transfer energy or matter?</p><p class="answer">Energy (and information). Not matter.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p>If a wave has a frequency of 10 Hz and each wave is 2 m long, how far do you think the wave travels in 1 second?</p><p class="answer">10 waves × 2 m = 20 m per second. This is the wave speed!</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p>Define <strong>wavelength</strong> and state its unit.</p><p class="answer">Distance from one point to the same point on the next wave (e.g. crest to crest). Measured in metres (m).</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p>A wave has a frequency of 4 Hz. Calculate the period.</p><p class="answer">T = 1/f = 1/4 = 0.25 s.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p>Explain why a duck on a pond doesn't travel with the wave.</p><p class="answer">Waves transfer energy not matter. Water particles bob up and down but don't travel forward.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p>If you know how many waves arrive per second (frequency) and how long each wave is (wavelength), how could you calculate the <strong>speed</strong>?</p><p class="answer">Multiply them: speed = frequency × wavelength. v = f × λ.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p>Distinguish between a <strong>wavefront</strong> and a <strong>wavelength</strong>.</p><p class="answer">Wavefront: line joining points at the same vibration stage. Wavelength: distance between two consecutive wavefronts.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p>A wave has T = 0.005 s. Calculate frequency.</p><p class="answer">f = 1/T = 1/0.005 = 200 Hz.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p>Explain how a tsunami transfers energy 10,000 km without moving water that distance.</p><p class="answer">Each particle passes energy to the next by vibrating — energy is transferred through the water without the water itself travelling.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p>All electromagnetic waves travel at <strong>3 × 10⁸ m/s</strong>. Radio waves have λ ≈ 1 m, visible light λ ≈ 5 × 10⁻⁷ m. Which has the higher frequency? Explain.</p><p class="answer">Visible light. If v is constant and v = fλ, then f = v/λ. Smaller λ means larger f.</p></div>
+    </div>
+  </div>
+
+  <!-- STARTER -->
+  <div class="slide" id="starter-slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Crack the Code 🔍</h2>
+    <div class="li-box"><strong>Instructions:</strong> Look at the wave data in the table. Your mission: <strong>work out the pattern</strong> that links f, λ, and v.</div>
+    <button class="ghost" style="position:absolute;top:70px;right:40px;z-index:200" onclick="document.getElementById('starter-slide').classList.toggle('show-ans')">👁️ Reveal Pattern</button>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box" style="padding:14px"><h3 style="margin-top:0">📝 Spot the pattern</h3>
+          <table class="data-table" style="font-size:1rem"><thead><tr><th>f (Hz)</th><th>λ (m)</th><th>v (m/s)</th></tr></thead><tbody>
+            <tr><td>2</td><td>3</td><td>6</td></tr>
+            <tr><td>5</td><td>4</td><td>20</td></tr>
+            <tr><td>10</td><td>0.5</td><td>5</td></tr>
+            <tr><td>100</td><td>0.02</td><td>2</td></tr>
+          </tbody></table>
+          <p style="margin-top:10px;font-weight:900;color:var(--ido-border)">What do you do to <span style="background:#bfdbfe;padding:2px 8px;border-radius:4px">f</span> and <span style="background:#bbf7d0;padding:2px 8px;border-radius:4px">λ</span> to get <span style="background:#fecaca;padding:2px 8px;border-radius:4px">v</span>?</p>
+          <p style="margin-top:8px">Write it in your book: v = _______ _______ _______</p>
+        </div>
+      </div>
+      <div>
+        <div class="scaffold-box"><h3 style="margin-top:0">💡 Step-by-step guide</h3>
+          <p><strong>Step 1:</strong> Look at row 1 only. f = 2, λ = 3, v = 6.</p>
+          <p><strong>Step 2:</strong> Ask yourself: what does <strong>2 and 3</strong> do to make <strong>6</strong>? Try: <strong>+, −, ×, ÷</strong></p>
+          <p><strong>Step 3:</strong> Check your answer works for row 2: does it also give 20?</p>
+          <p><strong>Step 4:</strong> If yes — that's the formula! Write it down.</p>
+        </div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>Light from the Sun takes <strong>8 minutes 20 seconds</strong> to reach Earth — even at 3 × 10⁸ m/s! You can calculate the distance using today's formula: v × t = 3×10⁸ × 500 = 1.5 × 10¹¹ m (150 billion metres).</p></div>
+        <div class="aspire-box" style="margin-top:8px"><strong>🌟 Stretch:</strong> Can you predict v if f = 8 Hz and λ = 0.5 m? &nbsp; <span class="answer" style="display:inline">(v = 4 m/s)</span></div>
+        <div class="answer" style="margin-top:8px;padding:12px;background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:10px;font-weight:900;color:var(--aspire-text)">✅ The pattern: <strong>v = f × λ</strong><br>Check: 2 × 3 = 6 ✅ &nbsp; 5 × 4 = 20 ✅ &nbsp; 10 × 0.5 = 5 ✅</div>
+      </div>
+    </div>
+      <div style="background:#ede9fe;border-left:5px solid #7c3aed;border-radius:10px;padding:10px 14px;margin-top:8px"><h3 style="margin:0 0 4px;color:#7c3aed;font-size:1rem">🧠 Quick Recall (from L4)</h3><p style="margin:2px 0;font-weight:900">What is the <strong>wavelength</strong> of a wave?</p><p style="margin:2px 0;font-size:.9rem;color:#64748b"><em>Try it in your head before we start. Answer: The distance from one crest to the next. Measured in metres.</em></p></div>
+  </div>
+
+  <!-- I DO 1 -->
+  <div class="slide" data-title="I Do – The Wave Equation" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: The Wave Equation (3.5)</h2>
+    <div class="li-box"><strong>Key Equation:</strong> wave speed = frequency × wavelength → <strong>v = f × λ</strong></div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">📜 The Equation &amp; Rearrangements</h3>
+          <div class="formula-display">v = f × λ</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+            <div style="background:#fecaca;padding:8px 14px;border-radius:8px;font-weight:900;font-size:1.05rem">v = f × λ</div>
+            <div style="background:#bfdbfe;padding:8px 14px;border-radius:8px;font-weight:900;font-size:1.05rem">f = v ÷ λ</div>
+            <div style="background:#bbf7d0;padding:8px 14px;border-radius:8px;font-weight:900;font-size:1.05rem">λ = v ÷ f</div>
+          </div>
+          <p style="margin-top:10px"><span style="background:#fecaca;padding:2px 8px;border-radius:4px;font-weight:900">v</span> = wave speed (m/s) &nbsp; <span style="background:#bfdbfe;padding:2px 8px;border-radius:4px;font-weight:900">f</span> = frequency (Hz) &nbsp; <span style="background:#bbf7d0;padding:2px 8px;border-radius:4px;font-weight:900">λ</span> = wavelength (m)</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">✏️ Worked Example</h3>
+          <p><strong>Q:</strong> A wave has f = 5 Hz and λ = 3 m. Find v.</p>
+          <p><strong>Step 1:</strong> v = f × λ</p><p><strong>Step 2:</strong> v = 5 × 3</p><p><strong>Step 3:</strong> <strong>v = 15 m/s</strong></p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">The vfλ Formula Triangle</h3>
+          <svg width="260" height="240" viewBox="0 0 260 240">
+            <!-- Main triangle -->
+            <polygon points="130,20 20,220 240,220" fill="#faf5ff" stroke="#7c3aed" stroke-width="4" stroke-linejoin="round"/>
+            <!-- Horizontal divider — placed 2/3 down so top half is bigger (for the single letter 'v') -->
+            <line x1="57" y1="150" x2="203" y2="150" stroke="#7c3aed" stroke-width="4"/>
+            <!-- TOP HALF: v (centred in upper triangle) -->
+            <text x="130" y="115" text-anchor="middle" font-size="54" font-weight="bold" fill="#dc2626">v</text>
+            <!-- BOTTOM HALF: f × λ (evenly spaced) -->
+            <text x="90" y="198" text-anchor="middle" font-size="42" font-weight="bold" fill="#2563eb">f</text>
+            <text x="130" y="198" text-anchor="middle" font-size="30" fill="#64748b">×</text>
+            <text x="170" y="198" text-anchor="middle" font-size="42" font-weight="bold" fill="#16a34a">λ</text>
+          </svg>
+          <p style="font-size:.95rem;color:var(--muted);margin-top:4px">Cover what you want — the rest is the formula!</p>
+          <p style="font-size:.9rem;color:#334155;margin:4px 0"><strong>Cover v</strong> → f × λ &nbsp;|&nbsp; <strong>Cover f</strong> → v ÷ λ &nbsp;|&nbsp; <strong>Cover λ</strong> → v ÷ f</p>
+        </div>
+        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>This one equation — v = f × λ — explains why thunder arrives after lightning (sound is slow), how radar catches speeding cars (EM waves are fast), and why submarines use sonar not radio (sound travels in water, radio doesn't). One formula, hundreds of uses.</p></div>
+        <div class="scaffold-box animate-enter anim-delay-1"><strong>💡 Step-by-step:</strong> 1. Write formula 2. Substitute numbers 3. Calculate 4. Write the unit (m/s, Hz, or m)</div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Wave speed (v)</td><td style="padding:4px 8px;color:#334155">How fast the wave travels. Measured in m/s.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Frequency (f)</td><td style="padding:4px 8px;color:#334155">Waves per second. Measured in hertz (Hz).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Wavelength (λ)</td><td style="padding:4px 8px;color:#334155">Length of one complete wave. Measured in metres.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Equation</td><td style="padding:4px 8px;color:#334155">v = f × λ (speed = frequency × wavelength).</td></tr></table></div>
+  </div>
+
+  <!-- WE DO 1: GUIDED SOLVER -->
+  <div class="slide" data-title="We Do – Guided Solver" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Guided Wave Calculations 🧮</h2>
+    <div class="li-box"><strong>Instructions:</strong> Work through each question together. Type the answer and check!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto">
+        <div>
+          <div class="quiz" style="margin:6px 0"><p class="q">1. f = 4 Hz, λ = 2 m. Find v.</p><div class="opts"><button class="ghost small" onclick="quizMark(this,false,'❌ That\'s f ÷ λ.')">2 m/s</button><button class="ghost small" onclick="quizMark(this,true,'✅ v = f × λ = 4 × 2 = 8 m/s')">8 m/s</button><button class="ghost small" onclick="quizMark(this,false,'❌ That\'s f + λ.')">6 m/s</button></div><div class="fb"></div></div>
+          <div class="quiz" style="margin:6px 0"><p class="q">2. v = 330 m/s, f = 110 Hz. Find λ.</p><div class="opts"><button class="ghost small" onclick="quizMark(this,true,'✅ λ = v ÷ f = 330 ÷ 110 = 3 m')">3 m</button><button class="ghost small" onclick="quizMark(this,false,'❌ That\'s v × f.')">36300 m</button><button class="ghost small" onclick="quizMark(this,false,'❌ Check your division.')">0.33 m</button></div><div class="fb"></div></div>
+          <div class="quiz" style="margin:6px 0"><p class="q">3. v = 1500 m/s, λ = 0.5 m. Find f.</p><div class="opts"><button class="ghost small" onclick="quizMark(this,false,'❌ That\'s v × λ.')">750 Hz</button><button class="ghost small" onclick="quizMark(this,true,'✅ f = v ÷ λ = 1500 ÷ 0.5 = 3000 Hz')">3000 Hz</button><button class="ghost small" onclick="quizMark(this,false,'❌ Check which way to divide.')">0.00033 Hz</button></div><div class="fb"></div></div>
+        </div>
+        <div>
+          <div class="quiz" style="margin:6px 0"><p class="q">4. A sound wave: f = 256 Hz, λ = 1.3 m. Find v.</p><div class="opts"><button class="ghost small" onclick="quizMark(this,false,'❌ Check your multiplication.')">197 m/s</button><button class="ghost small" onclick="quizMark(this,true,'✅ v = 256 × 1.3 = 332.8 m/s ≈ 330 m/s (speed of sound!)')">332.8 m/s</button><button class="ghost small" onclick="quizMark(this,false,'❌ That would be v ÷ f.')">0.005 m/s</button></div><div class="fb"></div></div>
+          <div class="quiz" style="margin:6px 0"><p class="q">5. All EM waves: v = 3 × 10⁸ m/s, f = 1 × 10⁶ Hz. Find λ.</p><div class="opts"><button class="ghost small" onclick="quizMark(this,false,'❌ Check your powers of 10.')">3 m</button><button class="ghost small" onclick="quizMark(this,true,'✅ λ = v ÷ f = 3×10⁸ ÷ 1×10⁶ = 300 m')">300 m</button><button class="ghost small" onclick="quizMark(this,false,'❌ That\'s v × f.')">3×10¹⁴ m</button></div><div class="fb"></div></div>
+          <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- I DO 2 -->
+  <div class="slide" data-title="I Do – More Examples" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Real-World Wave Calculations</h2>
+    <div class="li-box"><strong>Key Context:</strong> Speed of sound in air ≈ 330 m/s. Speed of light / all EM waves ≈ 3 × 10⁸ m/s.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">✏️ Sound Example</h3>
+          <p><strong>Q:</strong> A tuning fork vibrates at 440 Hz. Sound travels at 330 m/s. Find λ.</p>
+          <p>λ = v ÷ f = 330 ÷ 440 = <strong>0.75 m</strong></p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">✏️ Water Wave Example</h3>
+          <p><strong>Q:</strong> A ripple tank produces waves with λ = 0.03 m at 8 Hz. Find v.</p>
+          <p>v = f × λ = 8 × 0.03 = <strong>0.24 m/s</strong></p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-2"><h3 style="margin-top:0">✏️ EM Wave Example</h3>
+          <p><strong>Q:</strong> A radio wave has λ = 1500 m. All EM waves travel at 3 × 10⁸ m/s. Find f.</p>
+          <p>f = v ÷ λ = 3 × 10⁸ ÷ 1500 = <strong>200,000 Hz = 200 kHz</strong></p>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">📋 Key Wave Speeds to Know</h3>
+          <table class="data-table" style="font-size:.95rem"><thead><tr><th>Wave Type</th><th>Speed</th></tr></thead><tbody>
+            <tr><td>Sound in air</td><td>~330 m/s</td></tr>
+            <tr><td>Sound in water</td><td>~1500 m/s</td></tr>
+            <tr><td>All EM waves (light, radio, etc.)</td><td>3 × 10⁸ m/s</td></tr>
+          </tbody></table>
+        </div>
+        <div class="aspire-box animate-enter anim-delay-1"><strong>🌟 Exam Tip:</strong> If the question mentions "electromagnetic" or "light" — use v = 3 × 10⁸ m/s. If it says "sound in air" — use v ≈ 330 m/s. The question will always tell you or give you the speed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WE DO 2: TRIANGLE CHALLENGE -->
+  <div class="slide" data-title="We Do – vfλ Triangle Challenge" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: vfλ Triangle Challenge ⚡</h2>
+    <div class="li-box"><strong>Instructions:</strong> The triangle covers the unknown. Calculate the answer and type it in. Get all 6!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto">
+        <div style="text-align:center">
+          <div class="tri-wrap"><svg width="240" height="210" viewBox="0 0 240 210"><polygon points="120,10 10,190 230,190" fill="#faf5ff" stroke="#7c3aed" stroke-width="4"/><line x1="10" y1="110" x2="230" y2="110" stroke="#7c3aed" stroke-width="3"/><text id="tri-v" x="120" y="78" text-anchor="middle" font-size="36" font-weight="bold" fill="#dc2626">v</text><text id="tri-f" x="82" y="165" text-anchor="middle" font-size="32" font-weight="bold" fill="#2563eb">f</text><text x="120" y="167" text-anchor="middle" font-size="22" fill="#64748b">×</text><text id="tri-l" x="158" y="165" text-anchor="middle" font-size="32" font-weight="bold" fill="#16a34a">λ</text></svg>
+            <div class="tri-cover" id="cov-v" style="width:80px;height:60px;top:18px;left:80px">?</div>
+            <div class="tri-cover" id="cov-f" style="width:70px;height:55px;bottom:20px;left:30px">?</div>
+            <div class="tri-cover" id="cov-l" style="width:70px;height:55px;bottom:20px;right:30px">?</div>
+          </div>
+          <div class="tri-formula" id="tri-hint">Ready? Let's go!</div>
+          <div id="tri-dots" style="margin:6px 0"><span class="tri-dot" id="td0"></span><span class="tri-dot" id="td1"></span><span class="tri-dot" id="td2"></span><span class="tri-dot" id="td3"></span><span class="tri-dot" id="td4"></span><span class="tri-dot" id="td5"></span></div>
+          <div class="tri-progress"><div class="tri-fill" id="tri-prog" style="width:0%"></div></div>
+        </div>
+        <div>
+          <div style="background:linear-gradient(135deg,#ede9fe,#fce7f3);border:2px solid var(--ido-border);border-radius:14px;padding:16px;min-height:80px" id="tri-q-card">
+            <p style="font-weight:900;font-size:1.15rem;color:#1e293b;margin:0" id="tri-q-text">Click <strong>Start</strong> to begin!</p>
+            <div id="tri-input-area" style="display:none;margin-top:12px">
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+                <input type="number" step="any" class="tri-input" id="tri-ans" placeholder="?" onkeydown="if(event.key==='Enter')checkTri()">
+                <span style="font-weight:900;font-size:1.1rem;color:var(--muted)" id="tri-unit"></span>
+              </div>
+              <div style="margin-top:10px"><button class="small" onclick="checkTri()" id="tri-check-btn">✅ Check</button></div>
+            </div>
+            <div id="tri-fb" style="font-weight:900;font-size:1rem;min-height:24px;margin-top:8px"></div>
+          </div>
+          <div style="text-align:center;margin-top:8px">
+            <button class="small" id="tri-start" onclick="startTri()" style="background:var(--ido-border);font-size:1.1rem;padding:12px 24px">🚀 Start</button>
+            <button class="ghost small" id="tri-next" onclick="nextTri()" style="display:none">Next ▶</button>
+          </div>
+          <div class="snap-score" style="margin-top:10px">Score: <span id="tri-score-val">0</span> / 6</div>
+          <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- I DO 3 -->
+  <div class="slide" data-title="I Do – Harder Problems" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 4 min · FLEX</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Combining v = fλ with Definitions</h2>
+    <div class="li-box"><strong>Key Skill:</strong> Some questions give you period (T) instead of frequency. Use f = 1/T first, then v = fλ.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">✏️ Two-Step Example</h3>
+          <p><strong>Q:</strong> A wave has T = 0.2 s and λ = 4 m. Find v.</p>
+          <p><strong>Step 1:</strong> f = 1/T = 1/0.2 = 5 Hz</p>
+          <p><strong>Step 2:</strong> v = f × λ = 5 × 4 = <strong>20 m/s</strong></p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">✏️ Finding Period from v and λ</h3>
+          <p><strong>Q:</strong> v = 330 m/s, λ = 1.5 m. Find T.</p>
+          <p><strong>Step 1:</strong> f = v ÷ λ = 330 ÷ 1.5 = 220 Hz</p>
+          <p><strong>Step 2:</strong> T = 1/f = 1/220 = <strong>0.0045 s</strong></p>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">📋 Full Summary</h3>
+          <table class="data-table" style="font-size:.9rem"><thead><tr><th>Find</th><th>Formula</th></tr></thead><tbody>
+            <tr><td>Wave speed</td><td>v = f × λ</td></tr>
+            <tr><td>Frequency</td><td>f = v ÷ λ</td></tr>
+            <tr><td>Wavelength</td><td>λ = v ÷ f</td></tr>
+            <tr><td>Period from f</td><td>T = 1 ÷ f</td></tr>
+            <tr><td>Frequency from T</td><td>f = 1 ÷ T</td></tr>
+          </tbody></table>
+        </div>
+        <div class="aspire-box animate-enter anim-delay-1"><strong>🌟 Common exam trap:</strong> They give you period instead of frequency, hoping you'll put T straight into v = fλ. Always convert T → f first using f = 1/T!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WE DO 3: WAVE DETECTIVE -->
+  <div class="slide" data-title="We Do – Wave Detective" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 5 min · FLEX</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Wave Detective 🔍</h2>
+    <div class="li-box"><strong>Instructions:</strong> Each wave card shows 2 values. Calculate the missing one. Type your answer and check!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Print Evidence</button>
+    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="det-card" id="wc0"><div class="det-icon">🎵</div><div class="det-name">Guitar String</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>f = 440 Hz</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = 0.75 m</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>v = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi0" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m/s</span></div>
+          <button class="det-check" onclick="detCheck(0,330)">Check</button><div class="det-fb" id="wf0"></div></div>
+        <div class="det-card" id="wc1"><div class="det-icon">🌊</div><div class="det-name">Ocean Wave</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>v = 8 m/s</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>f = 0.5 Hz</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi1" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="det-check" onclick="detCheck(1,16)">Check</button><div class="det-fb" id="wf1"></div></div>
+        <div class="det-card" id="wc2"><div class="det-icon">📡</div><div class="det-name">Wi-Fi Signal</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>v = 3×10⁸ m/s</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = 0.12 m</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>f = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi2" placeholder="?" style="width:110px"><span style="font-weight:900;font-size:.85rem"> Hz</span></div>
+          <button class="det-check" onclick="detCheck(2,2500000000)">Check</button><div class="det-fb" id="wf2"></div></div>
+        <div class="det-card" id="wc3"><div class="det-icon">🦇</div><div class="det-name">Bat Echolocation</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>f = 50000 Hz</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>v = 330 m/s</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi3" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="det-check" onclick="detCheck(3,0.0066)">Check</button><div class="det-fb" id="wf3"></div></div>
+        <div class="det-card" id="wc4"><div class="det-icon">🔊</div><div class="det-name">Bass Speaker</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>v = 330 m/s</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = 5.5 m</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>f = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi4" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Hz</span></div>
+          <button class="det-check" onclick="detCheck(4,60)">Check</button><div class="det-fb" id="wf4"></div></div>
+        <div class="det-card" id="wc5"><div class="det-icon">🏥</div><div class="det-name">Ultrasound</div>
+          <p style="font-size:.9rem;margin:2px 0"><strong>f = 3×10⁶ Hz</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>v = 1500 m/s</strong></p><p style="font-size:.9rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="det-input" id="wi5" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="det-check" onclick="detCheck(5,0.0005)">Check</button><div class="det-fb" id="wf5"></div></div>
+      </div>
+      <div style="background:#f1f5f9;border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:12px;margin-top:10px">
+        <span style="font-weight:900;font-size:.95rem;white-space:nowrap">Cases Solved:</span>
+        <div style="flex:1;background:#e2e8f0;border-radius:7px;height:14px;overflow:hidden"><div id="det-fill" style="height:100%;background:linear-gradient(90deg,#eab308,#22c55e);border-radius:7px;transition:width .5s;width:0%"></div></div>
+        <span style="font-weight:900;font-size:1rem" id="det-count">0/6</span>
+      </div>
+      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- INDEPENDENT -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3><p><strong>A:</strong> Multiple Choice (4 Qs)</p><p><strong>B:</strong> Short Answer — calculations</p><p><strong>C:</strong> Long Answer — explain + calculate</p><p><strong>D:</strong> Exam-Style Question</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for the vfλ triangle and step-by-step method.</div>
+        <div class="aspire-box" style="margin-top:10px"><strong>📝 Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can use v = f × λ to find wave speed when given f and λ.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can rearrange v = fλ to find any unknown and apply it to sound and water waves.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can solve two-step problems involving T and f, apply v = fλ to EM waves, and evaluate real-world scenarios.</p></div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can write v = f × λ</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I know the units for each</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can calculate v when given f and λ</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can rearrange to find f or λ (Middle/Higher)</span></div></div>
+  </div>
+
+  <!-- EXIT TICKET: CUMULATIVE L4+L5 -->
+  <div class="slide" id="exit-slide" data-timer="3" data-title="Exit Ticket – Lessons 4–5 Recap">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Lessons 4–5 Recap</h2>
+    <div class="li-box"><strong>6 questions — 3 from each lesson. No notes.</strong></div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 I'm getting there — need a bit more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help with this</div>
+    </div>
+
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="exit-foundation" class="exit-grid">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> What is the amplitude of a wave?</p><p class="answer">Maximum displacement from rest position.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> What unit is frequency measured in?</p><p class="answer">Hertz (Hz).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>3.</strong> Do waves transfer energy or matter?</p><p class="answer">Energy (and information). Not matter.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> Write the wave speed equation.</p><p class="answer">v = f × λ</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>5.</strong> f = 5 Hz, λ = 2 m. Find v.</p><p class="answer">v = 5 × 2 = 10 m/s</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>6.</strong> What unit is wave speed measured in?</p><p class="answer">Metres per second (m/s).</p></div>
+    </div>
+    <div id="exit-middle" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> Define wavelength and state its unit.</p><p class="answer">Distance from one point to the same point on the next wave. Metres (m).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> A wave has f = 10 Hz. Calculate T.</p><p class="answer">T = 1/f = 1/10 = 0.1 s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>3.</strong> Explain why a duck doesn't travel with a wave.</p><p class="answer">Waves transfer energy not matter. Water bobs up/down but doesn't travel forward.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> v = 330 m/s, f = 110 Hz. Find λ.</p><p class="answer">λ = v ÷ f = 330 ÷ 110 = 3 m.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>5.</strong> A wave has λ = 0.5 m and v = 1500 m/s. Find f.</p><p class="answer">f = v ÷ λ = 1500 ÷ 0.5 = 3000 Hz.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>6.</strong> State the speed of all EM waves in free space.</p><p class="answer">3 × 10⁸ m/s (speed of light).</p></div>
+    </div>
+    <div id="exit-higher" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> Distinguish between a wavefront and a wavelength.</p><p class="answer">Wavefront = line joining points at the same vibration stage. Wavelength = distance between consecutive wavefronts.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> T = 0.002 s. Find f.</p><p class="answer">f = 1/T = 1/0.002 = 500 Hz.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>3.</strong> Explain how a tsunami carries energy 10,000 km without moving water that far.</p><p class="answer">Particles pass energy to neighbours by vibrating — energy transfers through without matter travelling.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> A wave has T = 0.2 s and λ = 4 m. Find v. (Two steps!)</p><p class="answer">f = 1/T = 1/0.2 = 5 Hz. v = fλ = 5 × 4 = 20 m/s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>5.</strong> EM wave: v = 3×10⁸ m/s, λ = 0.01 m. Find f.</p><p class="answer">f = v/λ = 3×10⁸ / 0.01 = 3×10¹⁰ Hz.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>6.</strong> If frequency increases but wave speed is constant, what happens to wavelength? Explain.</p><p class="answer">Wavelength decreases. v = fλ, so if v is constant and f↑, λ must ↓ to keep the product the same.</p></div>
+    
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Next lesson:</strong> We apply v = fλ to real contexts — sound vs EM waves — and discover why <strong>all waves can be reflected and refracted</strong>.</div>
+  </div>
+  </div>
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section"><h1 style="text-align:center">Knowledge Organiser: Wave Speed Equation (L5)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Wave equation</strong></td><td>v = f × λ. Wave speed = frequency × wavelength.</td></tr>
+      <tr><td><strong>v (wave speed)</strong></td><td>How fast the wave travels. Unit: m/s.</td></tr>
+      <tr><td><strong>f (frequency)</strong></td><td>Waves per second. Unit: Hz. f = 1/T.</td></tr>
+      <tr><td><strong>λ (wavelength)</strong></td><td>Length of one complete wave. Unit: m.</td></tr>
+      <tr><td><strong>Rearranged</strong></td><td>f = v ÷ λ &nbsp;|&nbsp; λ = v ÷ f</td></tr>
+      <tr><td><strong>Sound in air</strong></td><td>≈ 330 m/s</td></tr>
+      <tr><td><strong>All EM waves</strong></td><td>3 × 10⁸ m/s in free space (speed of light)</td></tr>
+      <tr><td><strong>Period trap</strong></td><td>If given T, convert first: f = 1/T, then use v = fλ.</td></tr>
+      <tr><td><strong>Triangle</strong></td><td>v on top, f × λ on bottom. Cover what you need.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>"Very Fast Lamborghini"</strong> = v = f × λ</p><p style="margin:2px 0;font-size:.9rem"><strong>Sound</strong> is <strong>S</strong>low = 330 m/s. <strong>Light</strong> is <strong>L</strong>ightning fast = 3×10⁸ m/s.</p><p style="margin:2px 0;font-size:.9rem"><strong>Period trap:</strong> If they give you T, ALWAYS convert to f first: f = 1/T. Then use v = fλ.</p></div>
+  </div>
+  <div id="print-arrival" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> What is the amplitude of a wave?</div><div class="print-box"><strong>2.</strong> What unit is frequency measured in?</div><div class="print-box"><strong>3.</strong> Do waves transfer energy or matter?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> f = 10 Hz, λ = 2 m. How far does the wave travel in 1 second?</div></div></div>
+    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Define wavelength and state its unit.</div><div class="print-box"><strong>2.</strong> f = 4 Hz. Calculate T.</div><div class="print-box"><strong>3.</strong> Explain why a duck doesn't travel with a wave.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> If you know f and λ, how could you calculate speed?</div></div></div>
+    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Distinguish between wavefront and wavelength.</div><div class="print-box"><strong>2.</strong> T = 0.005 s. Calculate f.</div><div class="print-box"><strong>3.</strong> How does a tsunami transfer energy without moving water?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> Radio λ ≈ 1 m, light λ ≈ 5×10⁻⁷ m. Both at 3×10⁸ m/s. Which has higher f?</div></div></div>
+  </div>
+  <div id="print-starter" class="print-section"><h2>Starter: Build the Formula</h2><p>Spot the pattern and write the formula for wave speed.</p>
+    <table class="ko-table"><tr><th>f (Hz)</th><th>λ (m)</th><th>v (m/s)</th></tr><tr><td>2</td><td>3</td><td>6</td></tr><tr><td>5</td><td>4</td><td>20</td></tr><tr><td>10</td><td>0.5</td><td>5</td></tr><tr><td>100</td><td>0.02</td><td>2</td></tr></table><p style="margin-top:10px"><strong>The formula is:</strong> v = _______ × _______</p></div>
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
+    <div class="prevent-break"><h3>Part A: Guided Calculations</h3><table class="ko-table"><tr><th>#</th><th>Given</th><th>Find</th><th>Formula</th><th>Working</th><th>Answer</th></tr>
+      <tr><td>1</td><td>f=4 Hz, λ=2 m</td><td>v</td><td style="height:32px"></td><td></td><td></td></tr>
+      <tr><td>2</td><td>v=330, f=110 Hz</td><td>λ</td><td></td><td></td><td></td></tr>
+      <tr><td>3</td><td>v=1500, λ=0.5 m</td><td>f</td><td></td><td></td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part B: Wave Detective</h3><table class="ko-table"><tr><th>Wave</th><th>v</th><th>f</th><th>λ</th><th>Working</th></tr>
+      <tr><td>🎵 Guitar</td><td>?</td><td>440 Hz</td><td>0.75 m</td><td style="height:32px"></td></tr>
+      <tr><td>🌊 Ocean</td><td>8 m/s</td><td>0.5 Hz</td><td>?</td><td></td></tr>
+      <tr><td>🦇 Bat</td><td>330 m/s</td><td>50000 Hz</td><td>?</td><td></td></tr></table></div></div>
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>vfλ Formula Triangle</h3><table class="ko-table" style="max-width:400px;margin:0 auto"><tr><th>Find</th><th>Formula</th><th>Example</th></tr><tr><td>Speed (v)</td><td>v = f × λ</td><td>v = 5 × 3 = 15 m/s</td></tr><tr><td>Frequency (f)</td><td>f = v ÷ λ</td><td>f = 330 ÷ 3 = 110 Hz</td></tr><tr><td>Wavelength (λ)</td><td>λ = v ÷ f</td><td>λ = 330 ÷ 110 = 3 m</td></tr></table></div>
+    <div style="text-align:center;margin:10px 0"><svg width="180" height="150" viewBox="0 0 180 150"><polygon points="90,5 5,140 175,140" fill="#faf5ff" stroke="#9c27b0" stroke-width="3"/><line x1="5" y1="80" x2="175" y2="80" stroke="#9c27b0" stroke-width="2"/><text x="90" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="#dc2626">v</text><text x="60" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#2563eb">f</text><text x="90" y="122" text-anchor="middle" font-size="16" fill="#64748b">×</text><text x="120" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#16a34a">λ</text></svg><p style="font-size:.85rem;color:#666;margin:4px 0">Cover what you want — the rest is the formula!</p></div>
+    <div class="scaffold-print-box"><h3>Step-by-Step</h3><p>1. Write formula 2. Substitute 3. Calculate 4. Unit (m/s, Hz, or m)</p><p><strong>Period trap:</strong> If given T, find f first: f = 1/T. Then use v = fλ.</p></div>
+    <div class="scaffold-print-box"><h3>Key Speeds</h3><p>Sound in air ≈ 330 m/s &nbsp;|&nbsp; All EM waves = 3 × 10⁸ m/s</p></div></div>
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. The wave equation is… [&nbsp;&nbsp;] v = f + λ [&nbsp;&nbsp;] v = f × λ [&nbsp;&nbsp;] v = f ÷ λ</p>
+      <p>2. Wave speed is measured in… [&nbsp;&nbsp;] Hz [&nbsp;&nbsp;] m [&nbsp;&nbsp;] m/s</p>
+      <p>3. f = 10 Hz, λ = 3 m. v = … [&nbsp;&nbsp;] 30 m/s [&nbsp;&nbsp;] 13 m/s [&nbsp;&nbsp;] 3.3 m/s</p>
+      <p>4. The Greek letter λ stands for… [&nbsp;&nbsp;] Frequency [&nbsp;&nbsp;] Wavelength [&nbsp;&nbsp;] Speed</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
+      <p>5. Write the wave speed equation in words and symbols.</p><div class="print-line"></div>
+      <p style="margin-top:10px">6. Calculate v for each:</p><table class="ko-table"><tr><th>f (Hz)</th><th>λ (m)</th><th>v (m/s)</th></tr><tr><td>2</td><td>5</td><td style="height:28px"></td></tr><tr><td>4</td><td>3</td><td></td></tr><tr><td>10</td><td>0.5</td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>7. (4 marks)</strong> A sound wave has f = 256 Hz and travels at 330 m/s.</p>
+      <p><em>Hint: To find wavelength, use λ = v ÷ f</em></p>
+      <p>(a) Write the formula for wave speed. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Which formula finds wavelength? Tick one: [1 mark]</p>
+      <p>[&nbsp;&nbsp;] λ = v × f &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] λ = v ÷ f &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] λ = f ÷ v</p>
+      <p>(c) Calculate λ: λ = v ÷ f = _______ ÷ _______ = _______ m [2 marks]</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
+      <p><strong>8. (3 marks)</strong> Water waves in a ripple tank have f = 8 Hz and λ = 0.03 m.</p>
+      <p>(a) Calculate the wave speed. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) State the unit of wave speed. [1 mark]</p><div class="print-line"></div></div></div>
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. Write v = fλ and state what each letter represents with units.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Rearrange v = fλ to find: (a) f = _______ (b) λ = _______</p><div class="print-line"></div>
+      <p>3. State the speed of sound in air.</p><div class="print-line"></div>
+      <p>4. State the speed of all EM waves.</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>5. Complete the table. Show working.</p><table class="ko-table"><tr><th>v (m/s)</th><th>f (Hz)</th><th>λ (m)</th><th>Working</th></tr><tr><td>?</td><td>440</td><td>0.75</td><td style="height:36px"></td></tr><tr><td>330</td><td>?</td><td>1.5</td><td></td></tr><tr><td>1500</td><td>3000</td><td>?</td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>6. (4 marks)</strong> A student counts 20 waves passing in 10 seconds. λ = 0.04 m.</p>
+      <p>(a) Calculate f. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Calculate v. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>7. (5 marks)</strong> A radio station broadcasts at f = 200 kHz. EM waves travel at 3 × 10⁸ m/s.</p>
+      <p>(a) Convert 200 kHz to Hz. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Calculate the wavelength. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Another station has a shorter wavelength. Is its frequency higher or lower? Explain. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div></div>
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. State v = fλ and explain how to find f if given T and λ. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Explain why increasing frequency decreases wavelength when speed is constant. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>3. Complete. Show full working.</p><table class="ko-table"><tr><th>v</th><th>f</th><th>λ</th><th>T</th><th>Working</th></tr><tr><td>?</td><td></td><td>4 m</td><td>0.2 s</td><td style="height:40px"></td></tr><tr><td>3×10⁸</td><td>?</td><td>0.01 m</td><td></td><td></td></tr><tr><td>330</td><td></td><td>?</td><td>0.005 s</td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>4. (5 marks)</strong> Ultrasound used in pregnancy has f = 3 MHz and travels at 1500 m/s in body tissue.</p>
+      <p>(a) Convert 3 MHz to Hz. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Calculate λ. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Explain why ultrasound uses very high frequency waves. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
+      <p><strong>5. (6 marks)</strong> A student uses a ripple tank. She measures λ = 0.02 m and counts 40 waves in 8 s.</p>
+      <p>(a) Calculate f. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Calculate v. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) She increases f but v stays the same. Calculate the new λ if f doubles. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(d) Explain why the speed stayed constant even though she changed the frequency. [1 mark]</p><div class="print-line"></div></div></div>
+  <!-- CUMULATIVE EXIT -->
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1) (L4–L5 Recap)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) What is amplitude?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) What unit is frequency?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>3) Waves transfer energy or matter?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) Write the wave speed equation.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>5) f=5 Hz, λ=2 m. Find v.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>6) Unit of wave speed?</p><div class="print-line"></div></div>
+      </div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2) (L4–L5 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) Define wavelength + unit.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) f=10 Hz. Find T.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>3) Why doesn't a duck travel with a wave?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) v=330, f=110. Find λ.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>5) λ=0.5, v=1500. Find f.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>6) Speed of all EM waves?</p><div class="print-line"></div></div>
+      </div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5) (L4–L5 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) Wavefront vs wavelength?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) T=0.002 s. Find f.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>3) Tsunami energy transfer explanation.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) T=0.2 s, λ=4 m. Find v (two steps).</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>5) v=3×10⁸, λ=0.01. Find f.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>6) f↑ but v constant. What happens to λ?</p><div class="print-line"></div><div class="print-line"></div></div>
+      </div></div>
+  </div>
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('exit-middle').style.display=l==='middle'?'grid':'none';document.getElementById('exit-higher').style.display=l==='higher'?'grid':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function quizMark(btn,ok,msg){const q=btn.closest('.quiz');if(!q)return;const fb=q.querySelector('.fb');q.querySelectorAll('button').forEach(b=>b.style.border='');btn.style.border=ok?'3px solid var(--success)':'3px solid var(--error)';fb.innerText=msg;fb.style.color=ok?'var(--success)':'var(--error)'}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.fb,.det-fb,.tri-dot.hit,.tri-dot.miss').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // VFλ TRIANGLE CHALLENGE
+  const triQs=[
+    {find:'v',f:4,l:2,answer:8,unit:'m/s',text:'f = 4 Hz, λ = 2 m. Find v.',formula:'v = f × λ'},
+    {find:'l',v:330,f:110,answer:3,unit:'m',text:'v = 330 m/s, f = 110 Hz. Find λ.',formula:'λ = v ÷ f'},
+    {find:'f',v:1500,l:0.5,answer:3000,unit:'Hz',text:'v = 1500 m/s, λ = 0.5 m. Find f.',formula:'f = v ÷ λ'},
+    {find:'v',f:256,l:1.3,answer:332.8,unit:'m/s',text:'Tuning fork: f = 256 Hz, λ = 1.3 m. Find v.',formula:'v = f × λ'},
+    {find:'l',v:8,f:0.5,answer:16,unit:'m',text:'Ocean wave: v = 8 m/s, f = 0.5 Hz. Find λ.',formula:'λ = v ÷ f'},
+    {find:'f',v:330,l:5.5,answer:60,unit:'Hz',text:'Bass note: v = 330 m/s, λ = 5.5 m. Find f.',formula:'f = v ÷ λ'}
+  ];
+  let triIdx=-1,triScore=0;
+  function startTri(){triIdx=-1;triScore=0;document.getElementById('tri-score-val').innerText='0';for(let i=0;i<6;i++)document.getElementById('td'+i).classList.remove('hit','miss');document.getElementById('tri-prog').style.width='0%';document.getElementById('tri-start').style.display='none';document.getElementById('tri-input-area').style.display='block';nextTri()}
+  function nextTri(){triIdx++;if(triIdx>=triQs.length){document.getElementById('tri-input-area').style.display='none';document.getElementById('tri-next').style.display='none';['cov-v','cov-f','cov-l'].forEach(id=>document.getElementById(id).classList.remove('active'));const msg=triScore>=6?'🏆 PERFECT!':triScore>=4?'⭐ Great! '+triScore+'/6':'💪 '+triScore+'/6';document.getElementById('tri-q-text').innerHTML=msg;document.getElementById('tri-hint').innerText='Complete!';document.getElementById('tri-fb').innerText='';return}
+    const q=triQs[triIdx];document.getElementById('tri-q-text').innerHTML='<strong>Q'+(triIdx+1)+':</strong> '+q.text;document.getElementById('tri-unit').innerText=q.unit;document.getElementById('tri-ans').value='';document.getElementById('tri-ans').classList.remove('correct','wrong');document.getElementById('tri-fb').innerText='';document.getElementById('tri-check-btn').disabled=false;document.getElementById('tri-next').style.display='none';document.getElementById('tri-hint').innerText=q.formula;document.getElementById('tri-ans').focus();
+    document.getElementById('cov-v').classList.toggle('active',q.find==='v');document.getElementById('cov-f').classList.toggle('active',q.find==='f');document.getElementById('cov-l').classList.toggle('active',q.find==='l');document.getElementById('tri-prog').style.width=(triIdx/6*100)+'%'}
+  function checkTri(){if(triIdx<0||triIdx>=triQs.length)return;const q=triQs[triIdx],input=document.getElementById('tri-ans'),fb=document.getElementById('tri-fb'),dot=document.getElementById('td'+triIdx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Type a number!';fb.style.color='var(--error)';return}const tol=Math.abs(q.answer*0.05);if(Math.abs(val-q.answer)<=Math.max(tol,0.1)){input.classList.add('correct');fb.innerText='✅ '+q.formula+' = '+q.answer+' '+q.unit;fb.style.color='var(--success)';dot.classList.add('hit');triScore++;document.getElementById('tri-score-val').innerText=triScore}else{input.classList.add('wrong');fb.innerText='❌ Answer: '+q.answer+' '+q.unit;fb.style.color='var(--error)';dot.classList.add('miss')}document.getElementById('tri-check-btn').disabled=true;document.getElementById('tri-next').style.display='inline-block';document.getElementById('tri-prog').style.width=((triIdx+1)/6*100)+'%'}
+
+  // WAVE DETECTIVE
+  let detSolved=0;
+  function detCheck(idx,correct){const input=document.getElementById('wi'+idx),fb=document.getElementById('wf'+idx),card=document.getElementById('wc'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Number!';fb.style.color='var(--error)';return}if(card.classList.contains('solved'))return;const tol=Math.abs(correct*0.1);if(Math.abs(val-correct)<=Math.max(tol,0.5)){input.classList.add('correct');card.classList.add('solved');fb.innerText='✅ Correct!';fb.style.color='var(--success)';card.querySelector('.det-check').disabled=true;detSolved++;document.getElementById('det-count').innerText=detSolved+'/6';document.getElementById('det-fill').style.width=(detSolved/6*100)+'%'}else{input.classList.add('wrong');card.classList.add('wrong-d');fb.innerText='❌ Try again!';fb.style.color='var(--error)';setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-d')},600)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+</script>
+</body>
+</html>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a formula = 1 mark.</p></div>
+  

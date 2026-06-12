@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L6: Waves in Context &amp; Reflection/Refraction</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+    /* Speed Detective cards */
+    .speed-card{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:14px;text-align:center;transition:.3s;margin-bottom:10px}
+    .speed-card.solved-s{border-color:var(--success);background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+    .speed-card.solved-em{border-color:#7c3aed;background:linear-gradient(135deg,#faf5ff,#ede9fe)}
+    .speed-card.wrong-s{border-color:var(--error);animation:shake .4s}
+    .speed-icon{font-size:2rem;margin-bottom:4px}
+    .speed-btns{display:flex;gap:8px;justify-content:center;margin-top:6px}
+    .speed-opt{padding:8px 16px;border-radius:10px;font-weight:900;font-size:.9rem;border:2px solid #cbd5e1;background:#fff;cursor:pointer;transition:.2s;color:#334155}
+    .speed-opt:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.1)}
+    .speed-opt.right-s{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .speed-opt.wrong-pick{border-color:var(--error);background:#fef2f2;color:#991b1b}
+    .speed-fb{font-weight:900;font-size:.85rem;min-height:18px;margin-top:4px}
+    /* Context calc cards */
+    .ctx-card{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:14px;text-align:center;transition:.3s}
+    .ctx-card.solved-c{border-color:var(--success);background:#f0fdf4}
+    .ctx-card.wrong-c{border-color:var(--error);animation:shake .4s}
+    .ctx-input{width:90px;padding:6px;font-size:1rem;font-weight:900;border:2px solid var(--task-border);border-radius:8px;text-align:center}
+    .ctx-input.correct{border-color:var(--success);background:#f0fdf4}.ctx-input.wrong{border-color:var(--error);background:#fef2f2}
+    .ctx-check{padding:6px 12px;border-radius:8px;font-size:.85rem;font-weight:900;background:var(--task-border);color:#fff;border:none;cursor:pointer;transition:.2s}
+    .ctx-check:hover{background:#ca8a04}.ctx-check:disabled{opacity:.4;cursor:default}
+    .ctx-fb{font-size:.85rem;font-weight:900;min-height:18px;margin-top:4px}
+    /* Sort cards */
+    .sort-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:8px;transition:.3s}
+    .sort-card.correct-sort{border-color:var(--success);background:#f0fdf4}
+    .sort-card.wrong-sort{border-color:var(--error);animation:shake .4s}
+    .sort-btns{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+    .sort-opt{padding:6px 14px;border-radius:10px;font-weight:700;font-size:.9rem;border:2px solid #cbd5e1;background:#fff;cursor:pointer;transition:.2s;color:#334155}
+    .sort-opt:hover{border-color:var(--wedo-border);background:#fce7f3}
+    .sort-opt.right-sort{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .sort-opt.wrong-sort-pick{border-color:var(--error);background:#fef2f2;color:#991b1b}
+    .sort-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+    .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.exit-cell{border:2px solid var(--task-border);border-radius:12px;padding:14px;background:var(--task-bg);position:relative}.exit-cell .lesson-tag{position:absolute;top:6px;right:8px;font-size:.7rem;font-weight:900;color:#fff;background:var(--lo-border);padding:2px 8px;border-radius:6px}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-150%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+  </style>
+</head>
+<body>
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- TITLE -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 6 of 6 — Waves</p>
+      <h1>Waves in Context &amp; Reflection/Refraction</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 16px">Spec 3.7 · 3.9</p>
+      <div class="li-box" style="margin:16px auto;max-width:700px;text-align:left"><strong>Learning Objectives:</strong>
+        <ul style="font-size:1.05rem;margin-top:8px">
+          <li><strong>3.7</strong> – Use v = f × λ in different contexts including sound waves and electromagnetic waves.</li>
+          <li><strong>3.9</strong> – Explain that all waves can be reflected and refracted.</li>
+        </ul></div>
+      <p style="font-size:1.1rem;margin-top:10px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button><button class="ghost" onclick="printSection('ko')">🗂️ KO</button></div>
+        </div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do 1 → We Do 1 → I Do 2 → We Do 2 → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>FLEX slides</strong> (I Do 3 + We Do 3): Use if time allows, or as next-lesson warm-up. Marked with 🟠 FLEX badge.</p>
+    </div></div>
+  </div>
+
+  <!-- ARRIVAL -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Lesson 5</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. Q1–3 recall v = fλ from L5.</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p>Write the wave speed equation.</p><p class="answer">v = f × λ</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p>f = 5 Hz, λ = 3 m. Calculate v.</p><p class="answer">v = 5 × 3 = 15 m/s</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p>What unit is wave speed measured in?</p><p class="answer">Metres per second (m/s).</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🪞</h3><p>When you look in a <strong>mirror</strong>, you see yourself. When you put a straw in a <strong>glass of water</strong>, it looks bent. What do you think is happening to the light?</p><p class="answer">Mirror: the light is bouncing back (reflecting). Straw: the light is bending as it enters the water (refracting).</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p>v = 330 m/s, f = 110 Hz. Calculate λ.</p><p class="answer">λ = v ÷ f = 330 ÷ 110 = 3 m.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p>State the speed of all EM waves in free space.</p><p class="answer">3 × 10⁸ m/s (speed of light).</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p>A radio wave has λ = 1500 m and v = 3 × 10⁸ m/s. Calculate f.</p><p class="answer">f = v ÷ λ = 3×10⁸ ÷ 1500 = 200,000 Hz.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🪞</h3><p>An echo is a sound wave bouncing off a wall. A swimming pool looks shallower than it really is because light bends. Name these two wave behaviours.</p><p class="answer">Bouncing = reflection. Bending = refraction.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p>A wave has T = 0.04 s and λ = 2 m. Find v.</p><p class="answer">f = 1/T = 1/0.04 = 25 Hz. v = fλ = 25 × 2 = 50 m/s.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p>Explain why increasing f while keeping v constant decreases λ.</p><p class="answer">v = fλ. If v is constant and f↑, then λ must ↓ to keep the product equal to v. They are inversely proportional at constant speed.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p>Sound travels at 330 m/s in air but 1500 m/s in water. A 500 Hz note has different wavelengths in each medium. Explain why.</p><p class="answer">λ = v/f. Same f but different v → different λ. In water: λ = 1500/500 = 3 m. In air: λ = 330/500 = 0.66 m. Faster speed = longer wavelength.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🪞</h3><p>When light slows down as it enters glass, it changes direction. Using v = fλ, explain what happens to the wavelength (frequency stays constant).</p><p class="answer">If v decreases and f stays the same, then λ = v/f must decrease. The wavelength gets shorter inside the glass.</p></div>
+    </div>
+  </div>
+
+  <!-- STARTER -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Speed Check — Which Type of Wave?</h2>
+    <div class="li-box"><strong>Instructions:</strong> For each row, calculate v = f × λ. Then decide: is it a <strong>sound wave</strong> (~330 m/s) or an <strong>EM wave</strong> (~3 × 10⁸ m/s)? <strong>4 minutes.</strong></div>
+    <div class="content-grid" style="margin-top:8px">
+      <div class="task-box" style="padding:14px"><h3 style="margin-top:0">📝 Calculate v, then classify:</h3>
+        <table class="data-table" style="font-size:1rem"><thead><tr><th>f</th><th>λ</th><th>v = f × λ</th><th>Sound or EM?</th></tr></thead><tbody>
+          <tr><td>440 Hz</td><td>0.75 m</td><td style="height:30px"></td><td></td></tr>
+          <tr><td>1 × 10⁶ Hz</td><td>300 m</td><td></td><td></td></tr>
+          <tr><td>256 Hz</td><td>1.29 m</td><td></td><td></td></tr>
+          <tr><td>5 × 10¹⁴ Hz</td><td>6 × 10⁻⁷ m</td><td></td><td></td></tr>
+        </tbody></table></div>
+      <div>
+        <div class="diagram-container"><h3 style="margin-top:0;color:var(--ido-border)">💡 Key Speeds</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+            <div style="background:#fecaca;padding:10px 16px;border-radius:10px;font-weight:900;font-size:1.1rem;text-align:center">🔊 Sound in air ≈ <strong>330 m/s</strong></div>
+            <div style="background:#e9d5ff;padding:10px 16px;border-radius:10px;font-weight:900;font-size:1.1rem;text-align:center">💡 All EM waves = <strong>3 × 10⁸ m/s</strong></div>
+          </div></div>
+        <div class="scaffold-box" style="margin-top:10px"><strong>💡 Hint:</strong> If your answer is close to 330 → sound wave. If it's huge (hundreds of millions) → electromagnetic wave.</div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>Diamonds sparkle because of <strong>total internal reflection</strong> — light enters the diamond, bounces around inside, and exits in bursts of colour. The diamond cutter's entire job is getting the angles right so refraction and reflection work perfectly.</p></div>
+      </div>
+    </div>
+      <div style="background:#ede9fe;border-left:5px solid #7c3aed;border-radius:10px;padding:10px 14px;margin-top:8px"><h3 style="margin:0 0 4px;color:#7c3aed;font-size:1rem">🧠 Quick Recall (from L5)</h3><p style="margin:2px 0;font-weight:900">A wave has f = 5 Hz and λ = 4 m. What is v?</p><p style="margin:2px 0;font-size:.9rem;color:#64748b"><em>Try it in your head before we start. Answer: v = f × λ = 5 × 4 = <strong>20 m/s</strong></em></p></div>
+  </div>
+
+  <!-- I DO 1: WAVES IN CONTEXT -->
+  <div class="slide" data-title="I Do – v=fλ in Context" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Using v = fλ in Different Contexts (3.7)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> The same equation works for ALL waves — but the <strong>speed</strong> depends on the wave type and medium.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">🔊 Sound Wave Context</h3>
+          <p><strong>Speed of sound in air</strong> ≈ 330 m/s (always given or you use this value)</p>
+          <p><strong>Speed of sound in water</strong> ≈ 1500 m/s (faster because water is denser)</p>
+          <p><strong>Example:</strong> Tuning fork at 440 Hz in air:<br>λ = v ÷ f = 330 ÷ 440 = <strong>0.75 m</strong></p>
+          <p><strong>Same note in water:</strong><br>λ = 1500 ÷ 440 = <strong>3.41 m</strong> (longer because faster speed!)</p>
+        </div>
+        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>Without reflection, you'd have no mirrors, no radar, and no ultrasound scans. Without refraction, you'd have no glasses, no cameras, no fibre optic internet, and no rainbows. These two behaviours shape the technology you use every single day.</p></div>
+        <div class="scaffold-box animate-enter anim-delay-1"><strong>💡 Key rule:</strong> When a wave enters a different medium, <strong>speed changes</strong>, <strong>wavelength changes</strong>, but <strong>frequency stays the same</strong>.</div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">💡 EM Wave Context</h3>
+          <p><strong>All EM waves</strong> travel at <strong>3 × 10⁸ m/s</strong> in free space (vacuum).</p>
+          <p>This includes radio, microwave, infrared, visible light, UV, X-ray, gamma.</p>
+          <p><strong>Example:</strong> Radio wave f = 200,000 Hz:<br>λ = v ÷ f = 3×10⁸ ÷ 200,000 = <strong>1500 m</strong></p>
+          <p><strong>Example:</strong> Green light λ = 5 × 10⁻⁷ m:<br>f = v ÷ λ = 3×10⁸ ÷ 5×10⁻⁷ = <strong>6 × 10¹⁴ Hz</strong></p>
+        </div>
+        <div class="aspire-box animate-enter anim-delay-1"><strong>🌟 Why does sound travel faster in water?</strong> Sound needs particles to vibrate through. Water molecules are closer together than air molecules, so vibrations pass between them faster.</div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Reflection</td><td style="padding:4px 8px;color:#334155">Wave BOUNCES back off a surface.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Refraction</td><td style="padding:4px 8px;color:#334155">Wave CHANGES DIRECTION because its speed changes.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Normal</td><td style="padding:4px 8px;color:#334155">An imaginary line at 90° to the surface.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Medium</td><td style="padding:4px 8px;color:#334155">The substance the wave travels through (air, water, glass).</td></tr></table></div>
+  </div>
+
+  <!-- WE DO 1: SOUND OR EM SPEED DETECTIVE -->
+  <div class="slide" data-title="We Do – Sound or EM?" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Sound or EM? Speed Detective 🔍</h2>
+    <div class="li-box"><strong>Instructions:</strong> Each wave has f and λ given. First calculate v mentally, then classify as <strong>Sound</strong> (~330) or <strong>EM</strong> (~3×10⁸). Click your answer!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:10px">
+        <div>
+          <div class="speed-card" id="sp0"><div class="speed-icon">🎻</div><p style="font-weight:900;margin:0">f = 660 Hz, λ = 0.5 m</p><p style="color:var(--muted);margin:2px 0;font-size:.9rem">v = 660 × 0.5 = 330 m/s</p>
+            <div class="speed-btns"><button class="speed-opt" onclick="speedCheck(0,this,'sound')">🔊 Sound</button><button class="speed-opt" onclick="speedCheck(0,this,'em')">💡 EM</button></div><div class="speed-fb" id="spf0"></div></div>
+          <div class="speed-card" id="sp1"><div class="speed-icon">📻</div><p style="font-weight:900;margin:0">f = 1×10⁶ Hz, λ = 300 m</p><p style="color:var(--muted);margin:2px 0;font-size:.9rem">v = 1×10⁶ × 300 = 3×10⁸ m/s</p>
+            <div class="speed-btns"><button class="speed-opt" onclick="speedCheck(1,this,'sound')">🔊 Sound</button><button class="speed-opt" onclick="speedCheck(1,this,'em')">💡 EM</button></div><div class="speed-fb" id="spf1"></div></div>
+          <div class="speed-card" id="sp2"><div class="speed-icon">🎤</div><p style="font-weight:900;margin:0">f = 1000 Hz, λ = 0.33 m</p><p style="color:var(--muted);margin:2px 0;font-size:.9rem">v = 1000 × 0.33 = 330 m/s</p>
+            <div class="speed-btns"><button class="speed-opt" onclick="speedCheck(2,this,'sound')">🔊 Sound</button><button class="speed-opt" onclick="speedCheck(2,this,'em')">💡 EM</button></div><div class="speed-fb" id="spf2"></div></div>
+        </div>
+        <div>
+          <div class="speed-card" id="sp3"><div class="speed-icon">📶</div><p style="font-weight:900;margin:0">f = 2.4×10⁹ Hz, λ = 0.125 m</p><p style="color:var(--muted);margin:2px 0;font-size:.9rem">v = 2.4×10⁹ × 0.125 = 3×10⁸ m/s</p>
+            <div class="speed-btns"><button class="speed-opt" onclick="speedCheck(3,this,'sound')">🔊 Sound</button><button class="speed-opt" onclick="speedCheck(3,this,'em')">💡 EM</button></div><div class="speed-fb" id="spf3"></div></div>
+          <div class="speed-card" id="sp4"><div class="speed-icon">🦇</div><p style="font-weight:900;margin:0">f = 50,000 Hz, λ = 0.0066 m</p><p style="color:var(--muted);margin:2px 0;font-size:.9rem">v = 50000 × 0.0066 = 330 m/s</p>
+            <div class="speed-btns"><button class="speed-opt" onclick="speedCheck(4,this,'sound')">🔊 Sound</button><button class="speed-opt" onclick="speedCheck(4,this,'em')">💡 EM</button></div><div class="speed-fb" id="spf4"></div></div>
+          <div class="snap-score" style="margin-top:8px">Correct: <span id="sp-count">0</span> / 5</div>
+        </div>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- I DO 2: REFLECTION & REFRACTION -->
+  <div class="slide" data-title="I Do – Reflection & Refraction" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: All Waves Can Be Reflected &amp; Refracted (3.9)</h2>
+    <div class="li-box"><strong>Key Fact:</strong> <strong>All</strong> waves — light, sound, water, EM — can be <strong>reflected</strong> and <strong>refracted</strong>.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0;color:#dc2626">🪞 Reflection</h3>
+          <p><strong>Reflection</strong> = a wave <strong>bounces back</strong> when it hits a surface.</p>
+          <p>The <strong>angle of incidence = angle of reflection</strong> (both measured from the <strong>normal</strong>).</p>
+          <p><strong>Examples:</strong> Mirror (light), echo (sound), sonar ping off seabed (sound), radar (EM).</p>
+        </div>
+        <div class="diagram-container animate-enter anim-delay-1">
+          <h3 style="margin-top:0;color:#dc2626">Reflection Diagram</h3>
+          <svg width="280" height="140" viewBox="0 0 280 140">
+            <line x1="20" y1="100" x2="260" y2="100" stroke="#1f2937" stroke-width="3"/>
+            <line x1="140" y1="100" x2="140" y2="20" stroke="#64748b" stroke-width="2" stroke-dasharray="6"/>
+            <text x="148" y="30" font-size="10" fill="#64748b">Normal</text>
+            <line x1="60" y1="30" x2="140" y2="100" stroke="#dc2626" stroke-width="3" marker-end="url(#ar1)"/>
+            <defs><marker id="ar1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+            <line x1="140" y1="100" x2="220" y2="30" stroke="#3b82f6" stroke-width="3" marker-end="url(#ar2)"/>
+            <defs><marker id="ar2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3b82f6"/></marker></defs>
+            <text x="80" y="55" font-size="11" font-weight="bold" fill="#dc2626">Incident</text>
+            <text x="180" y="55" font-size="11" font-weight="bold" fill="#3b82f6">Reflected</text>
+            <text x="105" y="85" font-size="10" fill="#dc2626">i</text>
+            <text x="155" y="85" font-size="10" fill="#3b82f6">r</text>
+            <text x="140" y="135" text-anchor="middle" font-size="12" font-weight="bold" fill="#1f2937">angle i = angle r</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0;color:#2563eb">🌊 Refraction</h3>
+          <p><strong>Refraction</strong> = a wave <strong>changes direction</strong> when it enters a different medium because its <strong>speed changes</strong>.</p>
+          <p>Into a denser medium (air → glass): wave <strong>slows down</strong>, bends <strong>towards</strong> the normal.</p>
+          <p>Into a less dense medium (glass → air): wave <strong>speeds up</strong>, bends <strong>away</strong> from the normal.</p>
+          <p><strong>Frequency stays the same</strong> — only speed and wavelength change.</p>
+        </div>
+        <div class="diagram-container animate-enter anim-delay-1">
+          <h3 style="margin-top:0;color:#2563eb">Refraction Diagram</h3>
+          <svg width="280" height="140" viewBox="0 0 280 140">
+            <rect x="0" y="0" width="280" height="70" fill="#dbeafe" opacity="0.3"/><text x="20" y="20" font-size="10" fill="#2563eb">AIR (fast)</text>
+            <rect x="0" y="70" width="280" height="70" fill="#bfdbfe" opacity="0.3"/><text x="20" y="130" font-size="10" fill="#1e3a8a">GLASS (slow)</text>
+            <line x1="0" y1="70" x2="280" y2="70" stroke="#1f2937" stroke-width="2"/>
+            <line x1="140" y1="10" x2="140" y2="130" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5"/>
+            <line x1="80" y1="10" x2="140" y2="70" stroke="#dc2626" stroke-width="3"/>
+            <line x1="140" y1="70" x2="170" y2="130" stroke="#22c55e" stroke-width="3"/>
+            <text x="95" y="35" font-size="10" font-weight="bold" fill="#dc2626">i</text>
+            <text x="148" y="105" font-size="10" font-weight="bold" fill="#22c55e">r</text>
+            <text x="200" y="50" font-size="10" fill="#64748b">Bends TOWARDS</text>
+            <text x="200" y="62" font-size="10" fill="#64748b">normal (slower)</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="scaffold-box"><strong>💡 Memory trick:</strong> Reflection = <strong>R</strong>ebounds. Refraction = <strong>R</strong>edirects (changes direction because speed changes). <strong>All waves</strong> do both — light, sound, water waves, seismic waves, EM waves.</div>
+  </div>
+
+  <!-- WE DO 2: CONTEXT CALCULATION CARDS -->
+  <div class="slide" data-title="We Do – Context Calculations" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Real-World Wave Calculations 🌍</h2>
+    <div class="li-box"><strong>Instructions:</strong> Each card is a real-world wave. Calculate the missing value, type your answer, and check!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="ctx-card" id="cx0"><p style="font-size:1.5rem;margin:0">🐬</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">Dolphin Sonar</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>v = 1500 m/s</strong> (water)</p><p style="font-size:.85rem;margin:2px 0"><strong>f = 100,000 Hz</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci0" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="ctx-check" onclick="ctxCheck(0,0.015)">Check</button><div class="ctx-fb" id="cf0"></div></div>
+        <div class="ctx-card" id="cx1"><p style="font-size:1.5rem;margin:0">🏥</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">X-Ray</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>v = 3×10⁸ m/s</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>λ = 1×10⁻¹⁰ m</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>f = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci1" placeholder="?" style="width:110px"><span style="font-weight:900;font-size:.85rem"> Hz</span></div>
+          <button class="ctx-check" onclick="ctxCheck(1,3e18)">Check</button><div class="ctx-fb" id="cf1"></div></div>
+        <div class="ctx-card" id="cx2"><p style="font-size:1.5rem;margin:0">🎸</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">Low E String</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>f = 82 Hz</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>v = 330 m/s</strong> (air)</p><p style="font-size:.85rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci2" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="ctx-check" onclick="ctxCheck(2,4.02)">Check</button><div class="ctx-fb" id="cf2"></div></div>
+        <div class="ctx-card" id="cx3"><p style="font-size:1.5rem;margin:0">📡</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">Microwave Oven</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>v = 3×10⁸ m/s</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>f = 2.45×10⁹ Hz</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>λ = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci3" placeholder="?"><span style="font-weight:900;font-size:.85rem"> m</span></div>
+          <button class="ctx-check" onclick="ctxCheck(3,0.122)">Check</button><div class="ctx-fb" id="cf3"></div></div>
+        <div class="ctx-card" id="cx4"><p style="font-size:1.5rem;margin:0">🌍</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">Earthquake P-wave</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>v = 6000 m/s</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>λ = 12,000 m</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>f = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci4" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Hz</span></div>
+          <button class="ctx-check" onclick="ctxCheck(4,0.5)">Check</button><div class="ctx-fb" id="cf4"></div></div>
+        <div class="ctx-card" id="cx5"><p style="font-size:1.5rem;margin:0">🔴</p><p style="font-weight:900;font-size:.95rem;margin:2px 0">Red Light</p>
+          <p style="font-size:.85rem;margin:2px 0"><strong>v = 3×10⁸ m/s</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>λ = 7×10⁻⁷ m</strong></p><p style="font-size:.85rem;margin:2px 0"><strong>f = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="ctx-input" id="ci5" placeholder="?" style="width:110px"><span style="font-weight:900;font-size:.85rem"> Hz</span></div>
+          <button class="ctx-check" onclick="ctxCheck(5,4.29e14)">Check</button><div class="ctx-fb" id="cf5"></div></div>
+      </div>
+      <div style="background:#f1f5f9;border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:12px;margin-top:8px">
+        <span style="font-weight:900;font-size:.95rem">Solved:</span>
+        <div style="flex:1;background:#e2e8f0;border-radius:7px;height:14px;overflow:hidden"><div id="ctx-fill" style="height:100%;background:linear-gradient(90deg,#eab308,#22c55e);border-radius:7px;transition:width .5s;width:0%"></div></div>
+        <span style="font-weight:900;font-size:1rem" id="ctx-count">0/6</span></div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- I DO 3: EXAMPLES OF REFLECTION & REFRACTION -->
+  <div class="slide" data-title="I Do – Real Examples" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 4 min · FLEX</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Reflection &amp; Refraction in Real Life</h2>
+    <div class="li-box"><strong>Remember:</strong> ALL types of waves can be reflected AND refracted. Not just light!</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">🪞 Reflection Examples</h3>
+          <p>🔊 <strong>Echo</strong> — sound reflects off a cliff/building back to you.</p>
+          <p>🪞 <strong>Mirror</strong> — light reflects off a smooth surface. Angle in = angle out.</p>
+          <p>📡 <strong>Radar</strong> — EM waves reflect off aircraft back to the dish.</p>
+          <p>🌊 <strong>Sea wall</strong> — water waves bounce back off a harbour wall.</p>
+          <p>🌍 <strong>Seismic</strong> — earthquake waves reflect off layers inside the Earth.</p>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">🌊 Refraction Examples</h3>
+          <p>🥄 <strong>Spoon in water</strong> — looks bent because light refracts at the surface.</p>
+          <p>🏊 <strong>Pool looks shallow</strong> — light bends as it leaves water → your brain misjudges depth.</p>
+          <p>🔊 <strong>Sound at night</strong> — sounds travel further because cooler air refracts sound waves downwards.</p>
+          <p>🌍 <strong>Seismic waves</strong> — refract as they pass through different rock layers (different densities).</p>
+          <p>💎 <strong>Rainbow</strong> — sunlight refracts inside water droplets, separating into colours.</p>
+        </div>
+      </div>
+    </div>
+    <div class="aspire-box"><strong>🌟 Exam key point:</strong> When asked "can sound/water waves be reflected and refracted?" — the answer is always <strong>YES</strong>. All waves exhibit both behaviours. It's not just light!</div>
+  </div>
+
+  <!-- WE DO 3: REFLECT, REFRACT, OR BOTH? -->
+  <div class="slide" data-title="We Do – Reflect or Refract?" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 5 min · FLEX</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Reflect, Refract, or Both? 🪞🌊</h2>
+    <div class="li-box"><strong>Instructions:</strong> For each scenario, classify the wave behaviour. Click your answer!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Print Evidence</button>
+    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:10px">
+        <div>
+          <div class="sort-card" id="so0"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">1. 🗣️ You shout at a cliff and hear your voice come back.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(0,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(0,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(0,this,'both')">Both</button></div><div class="sort-fb" id="sof0"></div></div>
+          <div class="sort-card" id="so1"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">2. 🥤 A straw in a glass of water looks bent at the surface.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(1,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(1,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(1,this,'both')">Both</button></div><div class="sort-fb" id="sof1"></div></div>
+          <div class="sort-card" id="so2"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">3. 🌊 A wave hits a sea wall and bounces back, but some passes into the harbour and bends around the gap.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(2,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(2,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(2,this,'both')">Both</button></div><div class="sort-fb" id="sof2"></div></div>
+        </div>
+        <div>
+          <div class="sort-card" id="so3"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">4. 📡 Radar sends EM waves that bounce off an aircraft back to the dish.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(3,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(3,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(3,this,'both')">Both</button></div><div class="sort-fb" id="sof3"></div></div>
+          <div class="sort-card" id="so4"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">5. 🌈 Sunlight enters a raindrop, slows down, separates into colours, then exits.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(4,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(4,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(4,this,'both')">Both</button></div><div class="sort-fb" id="sof4"></div></div>
+          <div class="sort-card" id="so5"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">6. 🌍 Earthquake waves change direction as they pass through layers of different density rock.</p>
+            <div class="sort-btns"><button class="sort-opt" onclick="sortCheck(5,this,'reflection')">Reflection</button><button class="sort-opt" onclick="sortCheck(5,this,'refraction')">Refraction</button><button class="sort-opt" onclick="sortCheck(5,this,'both')">Both</button></div><div class="sort-fb" id="sof5"></div></div>
+          <div class="snap-score" style="margin-top:8px">Correct: <span id="so-count">0</span> / 6 🪞</div>
+        </div>
+      </div>
+      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- INDEPENDENT -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Pack Contents:</h3><p><strong>A:</strong> Multiple Choice (4 Qs)</p><p><strong>B:</strong> Short Answer — calculations in context + reflection/refraction</p><p><strong>C:</strong> Long Answer — explain + compare</p><p><strong>D:</strong> Exam-Style Question</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Scaffolding sheet has key speeds, vfλ triangle, and reflection/refraction rules.</div>
+        <div class="aspire-box" style="margin-top:10px"><strong>📝 Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can use v=fλ for sound and EM waves, and state that all waves can be reflected and refracted with examples.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can calculate v, f, or λ in sound and EM contexts, explain reflection and refraction with diagrams, and give real-world examples for each.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can solve multi-context problems, explain why refraction occurs in terms of speed change, and discuss how frequency/wavelength change across media boundaries.</p></div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define reflection and refraction</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I know speed of sound (330 m/s) and EM waves (3×10⁸ m/s)</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can give real examples of each</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain why refraction happens (Higher)</span></div></div>
+  </div>
+
+  <!-- EXIT TICKET: CUMULATIVE L4+L5+L6 -->
+  <div class="slide" id="exit-slide" data-timer="3" data-title="Exit Ticket – Lessons 4–6 Recap">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Lessons 4–6 Recap</h2>
+    <div class="li-box"><strong>6 questions — 2 from each lesson. No notes.</strong></div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 I'm getting there — need a bit more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help with this</div>
+    </div>
+
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="exit-foundation" class="exit-grid">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> What is the amplitude of a wave?</p><p class="answer">Maximum displacement from rest position.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> Do waves transfer energy or matter?</p><p class="answer">Energy (and information). Not matter.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>3.</strong> Write the wave speed equation.</p><p class="answer">v = f × λ</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> f = 10 Hz, λ = 2 m. Find v.</p><p class="answer">v = 10 × 2 = 20 m/s</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>5.</strong> State the speed of sound in air.</p><p class="answer">Approximately 330 m/s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>6.</strong> Name one example of reflection and one of refraction.</p><p class="answer">Reflection: echo / mirror. Refraction: straw in water / pool looks shallow.</p></div>
+    </div>
+    <div id="exit-middle" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> Define wavelength and its unit.</p><p class="answer">Distance from one point to same point on next wave. Metres (m).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> f = 8 Hz. Calculate T.</p><p class="answer">T = 1/f = 1/8 = 0.125 s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>3.</strong> v = 1500 m/s, f = 500 Hz. Find λ.</p><p class="answer">λ = v/f = 1500/500 = 3 m.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> State the speed of all EM waves.</p><p class="answer">3 × 10⁸ m/s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>5.</strong> Explain what happens when light enters glass from air.</p><p class="answer">It slows down and bends towards the normal (refraction). Frequency stays the same, wavelength decreases.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>6.</strong> Can sound waves be reflected? Give one example.</p><p class="answer">Yes. Example: an echo — sound reflects off a cliff or wall.</p></div>
+    </div>
+    <div id="exit-higher" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>1.</strong> Distinguish wavefront from wavelength.</p><p class="answer">Wavefront = line joining same-phase points. Wavelength = distance between adjacent wavefronts.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>2.</strong> Explain how a tsunami carries energy without moving water.</p><p class="answer">Particles vibrate, passing energy to neighbours. Energy transfers, matter stays.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>3.</strong> T = 0.05 s, λ = 2 m. Find v.</p><p class="answer">f = 1/0.05 = 20 Hz. v = 20 × 2 = 40 m/s.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L5</span><p><strong>4.</strong> If f↑ but v is constant, what happens to λ? Explain.</p><p class="answer">λ decreases. v = fλ; if v constant and f↑, λ must ↓.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>5.</strong> A 500 Hz sound note in air (330 m/s) enters water (1500 m/s). Does λ change? Calculate both.</p><p class="answer">Yes. Air: λ = 330/500 = 0.66 m. Water: λ = 1500/500 = 3 m. λ increases because speed increases while f stays constant.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L6</span><p><strong>6.</strong> Explain why refraction occurs when light enters glass, using the idea of speed change.</p><p class="answer">Glass is denser than air so light slows down. When a wavefront hits the boundary at an angle, one side slows before the other, causing the wave to change direction (bend towards the normal).</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section"><h1 style="text-align:center">Knowledge Organiser: Waves in Context (L6)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>v = f × λ</strong></td><td>Works for ALL waves — sound, EM, water, seismic.</td></tr>
+      <tr><td><strong>Sound in air</strong></td><td>≈ 330 m/s. Sound in water ≈ 1500 m/s (faster).</td></tr>
+      <tr><td><strong>All EM waves</strong></td><td>3 × 10⁸ m/s in free space. Radio → gamma.</td></tr>
+      <tr><td><strong>Changing medium</strong></td><td>Speed changes, wavelength changes, frequency STAYS THE SAME.</td></tr>
+      <tr><td><strong>Reflection</strong></td><td>Wave bounces back off a surface. Angle of incidence = angle of reflection.</td></tr>
+      <tr><td><strong>Refraction</strong></td><td>Wave changes direction at a boundary because speed changes.</td></tr>
+      <tr><td><strong>Into denser medium</strong></td><td>Slows down → bends TOWARDS normal. λ decreases.</td></tr>
+      <tr><td><strong>Into less dense</strong></td><td>Speeds up → bends AWAY from normal. λ increases.</td></tr>
+      <tr><td><strong>All waves</strong></td><td>ALL waves can be reflected AND refracted — light, sound, water, seismic, EM.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>R</strong>eflection = <strong>R</strong>ebounds (bounces back).</p><p style="margin:2px 0;font-size:.9rem"><strong>R</strong>efraction = <strong>R</strong>edirects (changes direction because speed changes).</p><p style="margin:2px 0;font-size:.9rem"><strong>Into denser = towards normal.</strong> Think: "Dense = Drag = pulled towards the line."</p><p style="margin:2px 0;font-size:.9rem"><strong>Frequency NEVER changes</strong> at a boundary — only speed and wavelength do.</p></div></div>
+  <div id="print-arrival" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Write the wave speed equation.</div><div class="print-box"><strong>2.</strong> f = 5 Hz, λ = 3 m. Calculate v.</div><div class="print-box"><strong>3.</strong> What unit is wave speed measured in?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> When you look in a mirror, you see yourself. When a straw is in water it looks bent. What is happening to the light?</div></div></div>
+    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> v=330, f=110. Calculate λ.</div><div class="print-box"><strong>2.</strong> State the speed of all EM waves.</div><div class="print-box"><strong>3.</strong> Radio: λ=1500 m, v=3×10⁸. Calculate f.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> An echo is a sound bouncing off a wall. A pool looks shallow because light bends. Name these two wave behaviours.</div></div></div>
+    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> T = 0.04 s, λ = 2 m. Find v.</div><div class="print-box"><strong>2.</strong> Explain why increasing f at constant v decreases λ.</div><div class="print-box"><strong>3.</strong> Sound: 500 Hz. Air: 330 m/s. Water: 1500 m/s. Calculate λ in each. Why are they different?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> Light slows entering glass. Using v=fλ, what happens to λ (f stays constant)?</div></div></div></div>
+  <div id="print-starter" class="print-section"><h2>Starter: Speed Check — Sound or EM?</h2>
+    <table class="ko-table"><tr><th>f</th><th>λ</th><th>v = f × λ</th><th>Sound or EM?</th></tr><tr><td>440 Hz</td><td>0.75 m</td><td style="height:28px"></td><td></td></tr><tr><td>1×10⁶ Hz</td><td>300 m</td><td></td><td></td></tr><tr><td>256 Hz</td><td>1.29 m</td><td></td><td></td></tr><tr><td>5×10¹⁴ Hz</td><td>6×10⁻⁷ m</td><td></td><td></td></tr></table>
+    <p><strong>Key:</strong> Sound ≈ 330 m/s | EM ≈ 3 × 10⁸ m/s</p></div>
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
+    <div class="prevent-break"><h3>Part A: Sound or EM?</h3><p>For each, state if it's a sound wave or EM wave and explain how you know.</p>
+      <p>1. f=660 Hz, λ=0.5 m. Type: _______ Because: _______</p>
+      <p>2. f=1×10⁶ Hz, λ=300 m. Type: _______ Because: _______</p>
+      <p>3. f=50000 Hz, λ=0.0066 m. Type: _______ Because: _______</p></div>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part B: Context Calculations</h3>
+      <table class="ko-table"><tr><th>Wave</th><th>v</th><th>f</th><th>λ</th><th>Working</th></tr>
+        <tr><td>🐬 Dolphin sonar</td><td>1500 m/s</td><td>100,000 Hz</td><td>?</td><td style="height:32px"></td></tr>
+        <tr><td>🎸 Guitar E string</td><td>330 m/s</td><td>82 Hz</td><td>?</td><td></td></tr>
+        <tr><td>📡 Microwave oven</td><td>3×10⁸ td><td>2.45×10⁹ Hz</td><td>?</td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part C: Reflect, Refract, or Both?</h3>
+      <p>1. Echo from a cliff: _______</p><p>2. Straw looks bent in water: _______</p><p>3. Radar bouncing off aircraft: _______</p><p>4. Rainbow from sunlight through rain: _______</p><p>5. Earthquake waves changing direction in rock layers: _______</p></div></div>
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Key Wave Speeds</h3><table class="ko-table"><tr><th>Wave</th><th>Speed</th></tr><tr><td>Sound in air</td><td>≈ 330 m/s</td></tr><tr><td>Sound in water</td><td>≈ 1500 m/s</td></tr><tr><td>ALL EM waves in free space</td><td>3 × 10⁸ m/s</td></tr></table></div>
+    <div style="text-align:center;margin:10px 0"><svg width="180" height="150" viewBox="0 0 180 150"><polygon points="90,5 5,140 175,140" fill="#faf5ff" stroke="#9c27b0" stroke-width="3"/><line x1="5" y1="80" x2="175" y2="80" stroke="#9c27b0" stroke-width="2"/><text x="90" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="#dc2626">v</text><text x="60" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#2563eb">f</text><text x="90" y="122" text-anchor="middle" font-size="16" fill="#64748b">×</text><text x="120" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#16a34a">λ</text></svg><p style="font-size:.85rem;color:#666;margin:4px 0">Cover what you want — the rest is the formula!</p></div>
+    <div class="scaffold-print-box"><h3>vfλ Triangle</h3><table class="ko-table" style="max-width:400px;margin:0 auto"><tr><th>Find</th><th>Formula</th></tr><tr><td>v</td><td>v = f × λ</td></tr><tr><td>f</td><td>f = v ÷ λ</td></tr><tr><td>λ</td><td>λ = v ÷ f</td></tr></table></div>
+    <div class="scaffold-print-box"><h3>Reflection vs Refraction</h3><table class="ko-table"><tr><th></th><th>Reflection</th><th>Refraction</th></tr><tr><td>What happens</td><td>Wave bounces back</td><td>Wave changes direction</td></tr><tr><td>Why</td><td>Hits a surface</td><td>Speed changes at a boundary</td></tr><tr><td>Rule</td><td>Angle in = angle out</td><td>Into denser = towards normal</td></tr><tr><td>Example</td><td>Mirror, echo, radar</td><td>Straw in water, rainbow</td></tr></table></div></div>
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. The speed of sound in air is approximately… [&nbsp;&nbsp;] 3 m/s [&nbsp;&nbsp;] 330 m/s [&nbsp;&nbsp;] 3×10⁸ m/s</p>
+      <p>2. When a wave bounces off a surface, this is called… [&nbsp;&nbsp;] Refraction [&nbsp;&nbsp;] Reflection [&nbsp;&nbsp;] Diffraction</p>
+      <p>3. All EM waves travel at… [&nbsp;&nbsp;] 330 m/s [&nbsp;&nbsp;] Different speeds [&nbsp;&nbsp;] 3 × 10⁸ m/s</p>
+      <p>4. A straw looks bent in water because of… [&nbsp;&nbsp;] Reflection [&nbsp;&nbsp;] Refraction [&nbsp;&nbsp;] Absorption</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
+      <p>5. A sound wave has f = 200 Hz and travels at 330 m/s. Calculate λ.</p>
+      <p><em>Hint: λ = v ÷ f = _______ ÷ _______ = _______ m</em></p><div class="print-line"></div>
+      <p style="margin-top:10px">6. Name one example of sound reflection.</p><div class="print-line"></div>
+      <p style="margin-top:10px">7. Name one example of light refraction.</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>8. (4 marks)</strong> Complete the sentences about reflection and refraction.</p>
+      <p>Reflection is when a wave _________________________ off a surface. [1 mark]</p>
+      <p>One example of reflection is _________________________ . [1 mark]</p>
+      <p>Refraction is when a wave changes _________________________ because its speed changes. [1 mark]</p>
+      <p>One example of refraction is _________________________ . [1 mark]</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
+      <p><strong>9. (4 marks)</strong> A sound wave in air (330 m/s) has a frequency of 440 Hz.</p>
+      <p>(a) Calculate its wavelength. <em>Hint: λ = v ÷ f = _______ ÷ _______ = _______ m</em> [2 marks]</p><div class="print-line"></div>
+      <p>(b) The sound enters water where v = 1500 m/s. Does the frequency change? Circle: <strong>YES / NO</strong> [1 mark]</p>
+      <p>(c) Will the wavelength in water be longer or shorter? Circle: <strong>LONGER / SHORTER</strong> [1 mark]</p></div></div>
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. State the speed of sound in air and the speed of all EM waves.</p><div class="print-line"></div>
+      <p style="margin-top:10px">2. When a wave enters a denser medium, what happens to: speed? wavelength? frequency?</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">3. Define reflection and refraction.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>4. Calculate the missing values:</p><table class="ko-table"><tr><th>Context</th><th>v</th><th>f</th><th>λ</th><th>Working</th></tr><tr><td>Ultrasound in body</td><td>1500</td><td>3×10⁶ Hz</td><td>?</td><td style="height:36px"></td></tr><tr><td>FM Radio</td><td>3×10⁸</td><td>?</td><td>3 m</td><td></td></tr></table>
+      <p style="margin-top:10px">5. Explain, with a named example, how sound waves can be reflected. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>6. (4 marks)</strong> A 500 Hz sound wave travels from air (330 m/s) into water (1500 m/s).</p>
+      <p>(a) Calculate λ in air and λ in water. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Explain why the wavelength changes but the frequency does not. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>7. (5 marks)</strong> Light travels at 3×10⁸ m/s in air and slows to 2×10⁸ m/s in glass.</p>
+      <p>(a) Explain why the light changes direction at the boundary. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Does it bend towards or away from the normal entering glass? [1 mark]</p><div class="print-line"></div>
+      <p>(c) If the light has f = 5×10¹⁴ Hz, calculate λ in air and λ in glass. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div></div>
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. State what stays constant when a wave crosses a boundary between two media. [1 mark]</p><div class="print-line"></div>
+      <p style="margin-top:10px">2. Explain, using the wavefront model, why a wave bends towards the normal when entering a denser medium. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>3. Complete. Show full working.</p><table class="ko-table"><tr><th>Context</th><th>v</th><th>f</th><th>λ</th><th>Working</th></tr><tr><td>X-ray</td><td>3×10⁸</td><td>?</td><td>1×10⁻¹⁰ m</td><td style="height:40px"></td></tr><tr><td>Earthquake P-wave</td><td>6000</td><td>?</td><td>12000 m</td><td></td></tr><tr><td>Sound (T=0.01 s)</td><td>330</td><td></td><td>?</td><td></td></tr></table>
+      <p style="margin-top:10px">4. A 440 Hz note has λ = 0.75 m in air but λ = 3.41 m in water. Calculate the speed of sound in water using these values. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>5. (5 marks)</strong> Explain, using v = fλ and the concept of wavefronts, why a light wave bends towards the normal when entering glass from air. Include what happens to speed, wavelength, and frequency. [5 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
+      <p><strong>6. (6 marks)</strong> Light travels from air into glass. Its speed drops from 3×10⁸ to 2×10⁸ m/s. The frequency of the light is 6×10¹⁴ Hz.</p>
+      <p>(a) Calculate λ in air. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Calculate λ in glass. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) A swimming pool appears shallower than it really is. Explain why, using the idea of refraction. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div></div>
+  <!-- CUMULATIVE EXIT -->
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1) (L4–L6 Recap)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) What is amplitude?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) Waves transfer energy or matter?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>3) Write v = f × λ</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) f=10, λ=2. Find v.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>5) Speed of sound in air?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>6) One example of reflection + one of refraction.</p><div class="print-line"></div></div></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2) (L4–L6 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) Define wavelength + unit.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) f=8 Hz. Calculate T.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>3) v=1500, f=500. Find λ.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) Speed of all EM waves?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>5) What happens when light enters glass?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>6) Can sound be reflected? Example?</p><div class="print-line"></div></div></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5) (L4–L6 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>1) Wavefront vs wavelength?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>2) How does a tsunami carry energy without moving water?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>3) T=0.05 s, λ=2 m. Find v.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L5</p><p>4) f↑, v constant → what happens to λ?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>5) 500 Hz in air (330) vs water (1500). Calculate both λ values.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L6</p><p>6) Why does light bend towards normal entering glass?</p><div class="print-line"></div><div class="print-line"></div></div></div></div></div>
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('exit-middle').style.display=l==='middle'?'grid':'none';document.getElementById('exit-higher').style.display=l==='higher'?'grid':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.speed-fb,.ctx-fb,.sort-fb').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // WE DO 1: SOUND OR EM
+  let spCount=0;
+  const spCorrect=['sound','em','sound','em','sound'];
+  const spExps=['✅ v = 330 m/s → Sound wave! (violin)','✅ v = 3×10⁸ m/s → EM wave! (radio)','✅ v = 330 m/s → Sound wave! (voice)','✅ v = 3×10⁸ m/s → EM wave! (Wi-Fi)','✅ v = 330 m/s → Sound wave! (bat ultrasound)'];
+  function speedCheck(idx,btn,ans){const card=document.getElementById('sp'+idx);const fb=document.getElementById('spf'+idx);if(card.classList.contains('solved-s')||card.classList.contains('solved-em'))return;card.querySelectorAll('.speed-opt').forEach(o=>o.classList.remove('right-s','wrong-pick'));if(ans===spCorrect[idx]){btn.classList.add('right-s');card.classList.add(ans==='sound'?'solved-s':'solved-em');fb.innerText=spExps[idx];fb.style.color='var(--success)';spCount++;document.getElementById('sp-count').innerText=spCount}else{btn.classList.add('wrong-pick');card.classList.add('wrong-s');fb.innerText='❌ Check the speed!';fb.style.color='var(--error)';setTimeout(()=>{card.classList.remove('wrong-s');btn.classList.remove('wrong-pick');fb.innerText=''},700)}}
+
+  // WE DO 2: CONTEXT CARDS
+  let ctxSolved=0;
+  function ctxCheck(idx,correct){const input=document.getElementById('ci'+idx),fb=document.getElementById('cf'+idx),card=document.getElementById('cx'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Number!';fb.style.color='var(--error)';return}if(card.classList.contains('solved-c'))return;const tol=Math.abs(correct*0.15);if(Math.abs(val-correct)<=Math.max(tol,0.5)){input.classList.add('correct');card.classList.add('solved-c');fb.innerText='✅ Correct!';fb.style.color='var(--success)';card.querySelector('.ctx-check').disabled=true;ctxSolved++;document.getElementById('ctx-count').innerText=ctxSolved+'/6';document.getElementById('ctx-fill').style.width=(ctxSolved/6*100)+'%'}else{input.classList.add('wrong');card.classList.add('wrong-c');fb.innerText='❌ Try again!';fb.style.color='var(--error)';setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-c')},600)}}
+
+  // WE DO 3: SORT
+  let soCount=0;
+  const soCorrect=['reflection','refraction','both','reflection','refraction','refraction'];
+  const soExps=['✅ Echo = sound REFLECTS off the cliff!','✅ Light bends (REFRACTS) at the water surface!','✅ BOTH — bounces back AND bends through the gap!','✅ EM waves REFLECT off the aircraft!','✅ Light REFRACTS entering + exiting the raindrop, splitting into colours!','✅ Seismic waves REFRACT as density changes between layers!'];
+  function sortCheck(idx,btn,ans){const card=document.getElementById('so'+idx);const fb=document.getElementById('sof'+idx);if(card.classList.contains('correct-sort'))return;card.querySelectorAll('.sort-opt').forEach(o=>o.classList.remove('right-sort','wrong-sort-pick'));if(ans===soCorrect[idx]){btn.classList.add('right-sort');card.classList.add('correct-sort');fb.innerText=soExps[idx];fb.style.color='var(--success)';soCount++;document.getElementById('so-count').innerText=soCount}else{btn.classList.add('wrong-sort-pick');card.classList.add('wrong-sort');fb.innerText='❌ Think again!';fb.style.color='var(--error)';setTimeout(()=>{card.classList.remove('wrong-sort');btn.classList.remove('wrong-sort-pick');fb.innerText=''},700)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+</script>
+</body>
+</html>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a formula = 1 mark.</p></div>
+  
