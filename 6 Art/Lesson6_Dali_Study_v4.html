@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 6: Studying Dalí – Gridding & Annotation (V4)</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Annotation model — three-stage reveal */
+    .anno-stage{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
+    .anno-stage .stage-label{position:absolute;top:-12px;left:14px;color:#fff;font-size:.75rem;font-weight:900;padding:3px 10px;border-radius:6px;letter-spacing:1px}
+    .anno-stage.state .stage-label{background:#1e40af}
+    .anno-stage.describe .stage-label{background:#7c3aed}
+    .anno-stage.explain .stage-label{background:#9a3412}
+    .anno-stage.state{border-color:#1e40af}
+    .anno-stage.describe{border-color:#7c3aed}
+    .anno-stage.explain{border-color:#9a3412}
+    .anno-stage .anno-body{display:none;animation:fadeInUp .3s}
+    .anno-stage.revealed .anno-body{display:block}
+    .anno-stage .reveal-prompt{font-style:italic;color:var(--muted)}
+    .anno-stage.revealed .reveal-prompt{display:none}
+    /* Gridding step row */
+    .grid-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+    .grid-step{background:#f8fafc;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px;text-align:center;font-size:.92rem}
+    .grid-step .gnum{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .grid-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* Mistake-spotting box */
+    .mistake-box{background:#fff;border:3px dashed var(--error);border-radius:14px;padding:18px 16px 16px;margin:10px 0;position:relative}.mistake-box::before{content:'⚠️ STUDENT ANNOTATION — SPOT THE MISTAKES';position:absolute;top:-12px;left:16px;background:var(--error);color:#fff;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:.5px}
+    .mistake-text{font-family:'Caveat','Comic Sans MS',cursive;font-size:1.15rem;line-height:1.6;color:#334155;padding:8px}
+    .mistake-reveal{display:none;margin-top:10px;padding:12px;background:#fee2e2;border-left:5px solid var(--error);border-radius:8px}.mistake-reveal.show{display:block;animation:fadeInUp .25s}
+    .mistake-reveal ul{margin:4px 0 0 20px}.mistake-reveal li{color:#991b1b;font-weight:600;margin-bottom:4px;font-size:1rem}
+    .reveal-btn{background:var(--ido-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 4px 4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.reveal-btn:hover{background:#6d28d9}
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ---------- TITLE HERO (Brain → DREAMS → Dalí dreamscape SVG) ---------- */
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L5 → L6';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .grid-steps{grid-template-columns:1fr 1fr!important;gap:8px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1rem!important;line-height:1.5!important}
+      .anno-stage{padding:12px 10px;font-size:.95rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="auto-timer">
+  <span id="auto-timer-icon">⏱</span>
+  <span id="auto-timer-display">00:00</span>
+  <button class="at-btn" onclick="autoTimerToggle()" title="Play/Pause">▶</button>
+  <button class="at-btn" onclick="autoTimerReset()" title="Reset">↺</button>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">👥 TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">🎲 Cold Call</button>
+
+<!-- LESSON COMPLETE OVERLAY (Dalí Study Complete — series ongoing) -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>✏️</span><span>🌟</span><span>🖼️</span></div>
+    <h2>Dalí Study Complete!</h2>
+    <p>Gridded · Studied · Annotated 🎨</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> Recapped the State / Describe / Explain frame</span>
+      <span><strong>✓</strong> Modelled annotation on a Dalí dreamscape</span>
+      <span><strong>✓</strong> Gridded up your chosen Dalí piece</span>
+      <span><strong>✓</strong> Wrote your own annotation in your sketchbook</span>
+      <span style="margin-top:8px;font-style:italic;color:var(--ido-border)"><strong>Series continues next:</strong> the next artist in your sketchbook journey…</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+<!-- SLIDE 1 - TITLE -->
+<div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><div style="text-align:center;margin-top:3%"><div class="animate-enter"><span class="slide-tag tag-lesson">Lesson 6</span><h1>Studying Dalí: Gridding & Annotation</h1><p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Workshop lesson — your study + annotation</p><div class="title-hero">
+        <div class="hero-palette" title="Sketch + study">✏️</div>
+        <div class="hero-arrow-art">→<span class="a-text">STUDY</span></div>
+        <div class="hero-grid-svg" title="Gridded Dalí scene">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff4d6"/><rect y="62" width="100" height="38" fill="#d4a574"/><line x1="0" y1="62" x2="100" y2="62" stroke="#8b6f47" stroke-width="0.5"/><line x1="20" y1="44" x2="84" y2="50" stroke="#5d4037" stroke-width="2"/><ellipse cx="50" cy="48" rx="20" ry="5" fill="#fff" stroke="#8b6f47" stroke-width="1.2" transform="rotate(-12 50 48)"/><g stroke="#9c27b0" stroke-width="0.4" opacity="0.7"><line x1="25" y1="0" x2="25" y2="100"/><line x1="50" y1="0" x2="50" y2="100"/><line x1="75" y1="0" x2="75" y2="100"/><line x1="0" y1="25" x2="100" y2="25"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="75" x2="100" y2="75"/></g></svg>
+        </div>
+        <div class="hero-tag-art">Grid · Sketch · Annotate.<br>This is your workshop.<span class="small">Today: model annotation, gridding recap, then long workshop time.</span></div>
+      </div><div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li>Recall the State / Describe / Explain annotation frame</li><li>Use gridding to draw an accurate study of a Dalí piece</li><li>Write a full annotation using the writing frame</li></ul></div><div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher</button></div></div></div></div></div>
+
+<!-- SLIDE 2 - CATCH-UP BRIDGE -->
+<div class="slide" id="bridge-slide" data-title="Catch-up Bridge" data-timer="2"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-lesson" style="background:var(--lo-bg);color:var(--lo-border)">Catch-up</span><h2>Page not finished yet? Here's your lane 👀</h2><div class="li-box"><strong>Most of you</strong> have a Dalí research page started. Today is mainly about <strong>the study + annotation</strong>. If your research page isn't quite done, follow the catch-up lane below.</div>
+
+  <div class="bridge-banner">
+    <h3>Three routes today — pick yours</h3>
+    <div class="bridge-flow">
+      <div class="bridge-step"><div class="num">A</div><strong>Research finished</strong>Go straight into the study. Grid up your chosen image and write the annotation.</div>
+      <div class="bridge-step"><div class="num">B</div><strong>Research nearly done</strong>Spend 5 min finishing facts/REACT, then start gridding. Annotation may slip to homework.</div>
+      <div class="bridge-step"><div class="num">C</div><strong>Still finishing Miró</strong>Finish Miró first (10 min), then jump into Foundation Dalí research. Study/annotation = next lesson.</div>
+    </div>
+  </div>
+
+  <div class="aspire-box" style="margin-top:10px"><strong>🎯 Either way:</strong> the I Do / We Do slides apply to ALL of you — they're skill demos (annotation + gridding) you'll use in YOUR sketchbook today.</div>
+</div>
+
+<!-- SLIDE 3 - ARRIVAL -->
+<div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="3"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-arrival">Arrival Task</span><h2>Arrival Task — Review Your Page</h2><div class="li-box"><strong>Instructions:</strong> Open your sketchbook on your Dalí page. Read it. Make a tick-list of what's <strong>still to do</strong>.</div>
+  <div class="level-toggle"><button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher</button></div>
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>Have you got…</h3><ul style="margin:6px 0 0 18px;font-size:1rem"><li>A title?</li><li>5 facts about Dalí?</li><li>1 image stuck in?</li><li>Anything written about it?</li></ul></div>
+    <div class="task-box animate-enter anim-delay-1" style="background-color:#fefce8;border-color:#fde047"><h3>Today's focus:</h3><p><strong>The drawing.</strong> Pick a Dalí image and draw it carefully using a grid.</p></div>
+  </div>
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>Have you got…</h3><ul style="margin:6px 0 0 18px;font-size:1rem"><li>Title + 6 facts in own words?</li><li>2+ images with titles?</li><li>A REACT response?</li><li>Juxtaposition explained?</li><li>Comparison sentence to Miró?</li></ul></div>
+    <div class="task-box animate-enter anim-delay-1" style="background-color:#fefce8;border-color:#fde047"><h3>Today's focus:</h3><p><strong>Study + annotation.</strong> Use gridding for accuracy. Use State / Describe / Explain to annotate.</p></div>
+  </div>
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>Have you got…</h3><ul style="margin:6px 0 0 18px;font-size:1rem"><li>Creative title + 8+ facts in context?</li><li>3 images with mini-analysis?</li><li>Three-way comparison (Magritte/Miró/Dalí)?</li><li>Subconscious/Freud connection?</li><li>"Connection to my work" line?</li></ul></div>
+    <div class="task-box animate-enter anim-delay-1" style="background-color:#fefce8;border-color:#fde047"><h3>Today's focus:</h3><p><strong>A high-quality study + a sophisticated annotation</strong> linking technique to meaning. Aim for tone, scale, and symbolism in the annotation.</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 4 - STARTER (annotation framework recall) -->
+<div class="slide" id="starter-slide" data-title="Starter: Annotation Frame" data-timer="3"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-starter">Starter</span><h2>Starter — Annotation Writing Frame</h2><div class="li-box"><strong>Instructions:</strong> Recall the writing frame. We'll use this every time we annotate. Three stages — you build them in order.</div>
+  <button class="ghost" style="margin-bottom:8px" onclick="document.getElementById('starter-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e40af">1️⃣ STATE</h3><p>What is the basic info?</p><p class="answer">Artist's name · Title of work · Medium (oil, watercolour…) · Date / year painted</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#7c3aed">2️⃣ DESCRIBE</h3><p>What can you see?</p><p class="answer">Foreground / mid-ground / background. Objects. Colours, tone, line, texture. Visual elements. Juxtaposition / scale / unusual choices.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#9a3412">3️⃣ EXPLAIN</h3><p>Why? Meaning? Your reaction?</p><p class="answer">What the artist might mean. What it makes YOU feel. Connection to the artist's life or ideas (e.g., subconscious / Freud / dreams).</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Quick test yourself</h3><p style="font-size:1rem">For each phrase, decide: STATE, DESCRIBE or EXPLAIN?</p>
+        <p style="margin-top:6px;font-size:1rem"><em>"Painted in 1944 in oil."</em> → <span class="answer" style="display:inline-block;background:#dbeafe;color:#1e40af;padding:2px 8px;border:none;margin:0">STATE</span></p>
+        <p style="font-size:1rem"><em>"In the background, an elephant on long stilt-legs."</em> → <span class="answer" style="display:inline-block;background:#ede9fe;color:#7c3aed;padding:2px 8px;border:none;margin:0">DESCRIBE</span></p>
+        <p style="font-size:1rem"><em>"Reminds me of a chaotic dream — feels uneasy."</em> → <span class="answer" style="display:inline-block;background:#ffedd5;color:#9a3412;padding:2px 8px;border:none;margin:0">EXPLAIN</span></p>
+      </div>
+      <div class="aspire-box" style="margin-top:8px"><strong>Aspire:</strong> Top-band annotations <em>weave the three stages together</em> — they don't write three separate paragraphs labelled "state", "describe", "explain". Use the frame as a checklist, not a wall.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 - I DO 1: Model Annotation -->
+<div class="slide" data-title="I Do: Model Annotation" data-timer="4" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Model Annotation — Dalí's Bee Painting</h2><div class="li-box"><strong>Watch & note:</strong> I'll model a full annotation of <em>Dream Caused by the Flight of a Bee around a Pomegranate a Second before Waking</em> (1944). Reveal each stage in order.</div>
+  <div class="anno-stage state" id="anno-state">
+    <span class="stage-label">1️⃣ STATE</span>
+    <p class="reveal-prompt">Click below to reveal the STATE stage…</p>
+    <div class="anno-body"><p>"This painting is by Salvador Dalí. It is called <em>Dream Caused by the Flight of a Bee around a Pomegranate a Second before Waking</em>. It is an oil painting on panel, painted in 1944."</p></div>
+    <button class="reveal-btn" onclick="document.getElementById('anno-state').classList.toggle('revealed')">👁️ Reveal STATE</button>
+  </div>
+  <div class="anno-stage describe" id="anno-describe">
+    <span class="stage-label">2️⃣ DESCRIBE</span>
+    <p class="reveal-prompt">Click below to reveal the DESCRIBE stage…</p>
+    <div class="anno-body"><p>"In the background there is an elephant with absurdly long stilt-legs carrying a large rock-like crystal. In the mid-ground we see two tigers leaping from one another, and from a fish which itself leaps from a pomegranate. In front of the leaping tiger a rifle points at an unclothed reclining woman. There are many <strong>juxtapositions</strong> here — bizarre imagery contrasted with the relaxed pose of the woman, calm against the aggression of the tigers. Dalí emphasises warm colour and tone to give the work a Renaissance feel."</p></div>
+    <button class="reveal-btn" onclick="document.getElementById('anno-describe').classList.toggle('revealed')">👁️ Reveal DESCRIBE</button>
+  </div>
+  <div class="anno-stage explain" id="anno-explain">
+    <span class="stage-label">3️⃣ EXPLAIN</span>
+    <p class="reveal-prompt">Click below to reveal the EXPLAIN stage…</p>
+    <div class="anno-body"><p>"This piece feels chaotic and dreamlike. I think Dalí is showing the woman's <strong>subconscious mind</strong> — the bee, the rifle, the tigers may all be dream-images created at the moment of waking. The realistic detail makes the impossible scene feel believable, which makes me feel uneasy. This links to Dalí's interest in Freud's ideas about dreams."</p></div>
+    <button class="reveal-btn" onclick="document.getElementById('anno-explain').classList.toggle('revealed')">👁️ Reveal EXPLAIN</button>
+  </div>
+  <div class="exam-tip-box">
+    <p><strong>Notice:</strong> the model uses <span class="misc-right">juxtaposition</span>, <span class="misc-right">subconscious</span>, <span class="misc-right">tone</span>, and <span class="misc-right">Renaissance</span> — your Word-Along-the-Way and 3 keywords from last lesson.</p>
+  </div>
+</div>
+
+<!-- SLIDE 6 - WE DO 1: Co-annotate -->
+<div class="slide" data-title="We Do: Co-Annotate" data-timer="4" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Co-Annotate Together</h2><div class="li-box"><strong>Instructions:</strong> Together, write ONE sentence for each stage about the dreamscape on the left. Whiteboards out.</div>
+  <div class="react-panel">
+    <div style="display:flex;align-items:center;justify-content:center;background:#fff4d6;border-radius:12px;padding:14px"><div style="text-align:center"><svg viewBox="0 0 320 240" width="280"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7ec6e0"/><stop offset="100%" stop-color="#fff4d6"/></linearGradient></defs><rect width="320" height="160" fill="url(#sky)"/><rect y="160" width="320" height="80" fill="#d4a574"/><line x1="0" y1="160" x2="320" y2="160" stroke="#8b6f47" stroke-width="0.5"/><ellipse cx="240" cy="105" rx="22" ry="13" fill="#7a6b5a"/><line x1="232" y1="115" x2="230" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="240" y1="115" x2="238" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="248" y1="115" x2="246" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="256" y1="115" x2="254" y2="200" stroke="#5d4037" stroke-width="2.5"/><rect x="234" y="80" width="14" height="22" fill="#9c8470"/><circle cx="100" cy="130" r="4" fill="#eab308"/><line x1="100" y1="125" x2="100" y2="118" stroke="#000" stroke-width="0.6"/><circle cx="100" cy="118" r="1.5" fill="#666"/><circle cx="105" cy="170" r="14" fill="#b85042"/><path d="M105,158 L102,154 L108,154 Z" fill="#5d3a32"/><ellipse cx="140" cy="135" rx="18" ry="9" fill="#eab308"/><ellipse cx="170" cy="125" rx="18" ry="9" fill="#eab308" transform="rotate(15 170 125)"/><line x1="135" y1="132" x2="130" y2="128" stroke="#000" stroke-width="0.8"/><line x1="148" y1="135" x2="153" y2="135" stroke="#000" stroke-width="0.8"/><ellipse cx="60" cy="190" rx="35" ry="9" fill="#e0c4a0"/><circle cx="35" cy="186" r="6" fill="#e0c4a0"/><path d="M0,150 L40,130 L70,150 L100,135 L150,150" fill="none" stroke="#8b6f47" stroke-width="0.8"/></svg><p style="font-size:.85rem;color:var(--muted);margin-top:6px;font-weight:600">Same dreamscape — write ONE sentence per stage</p></div></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="react-q" style="border-left:5px solid #1e40af"><label style="color:#1e40af">1️⃣ STATE</label><textarea placeholder="The artist is __ . The work is called __ , painted in __ ."></textarea></div>
+      <div class="react-q" style="border-left:5px solid #7c3aed"><label style="color:#7c3aed">2️⃣ DESCRIBE</label><textarea placeholder="In the foreground I can see __ . There is a juxtaposition between __ and __ ."></textarea></div>
+      <div class="react-q" style="border-left:5px solid #9a3412"><label style="color:#9a3412">3️⃣ EXPLAIN</label><textarea placeholder="This makes me feel __ . I think Dalí is showing __ . It links to Freud's idea of __ ."></textarea></div>
+    </div>
+  </div>
+  <div class="scaffold-box" style="margin-top:8px"><strong>Sentence starters:</strong> "The artist is _____." | "There is a juxtaposition between _____ and _____." | "I think Dalí is showing _____."</div>
+</div>
+
+<!-- SLIDE 7 - I DO 2: Gridding recap -->
+<div class="slide" data-title="I Do: Gridding Recap" data-timer="2" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Gridding — A Quick Recap</h2><div class="li-box"><strong>Reminder:</strong> You used gridding for your Magritte study. Same technique for Dalí. Four steps. <em>Skip if confident.</em></div>
+  <div class="grid-steps">
+    <div class="grid-step"><div class="gnum">1</div><strong>Grid the image</strong>Draw 2cm × 2cm squares over your printed Dalí image with a ruler.</div>
+    <div class="grid-step"><div class="gnum">2</div><strong>Grid your page</strong>Same number of squares on your sketchbook. Bigger if scaling up.</div>
+    <div class="grid-step"><div class="gnum">3</div><strong>Box-by-box</strong>Copy what's in <em>each square</em>, one at a time. Don't draw the whole shape.</div>
+    <div class="grid-step"><div class="gnum">4</div><strong>Add tone</strong>Pencil shading, watercolour, or coloured pencil. Match Dalí's warm/sunlit feel.</div>
+  </div>
+  <div style="display:flex;gap:14px;align-items:center;justify-content:center;margin-top:14px;flex-wrap:wrap">
+    <div style="text-align:center"><svg viewBox="0 0 100 100" width="120" height="120" style="background:#fff4d6;border:2px solid #b85042;border-radius:8px"><line x1="20" y1="44" x2="84" y2="50" stroke="#5d4037" stroke-width="2"/><ellipse cx="50" cy="48" rx="20" ry="5" fill="#fff" stroke="#8b6f47" stroke-width="1.2" transform="rotate(-12 50 48)"/><g stroke="#9c27b0" stroke-width="0.4" opacity="0.8"><line x1="25" y1="0" x2="25" y2="100"/><line x1="50" y1="0" x2="50" y2="100"/><line x1="75" y1="0" x2="75" y2="100"/><line x1="0" y1="25" x2="100" y2="25"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="75" x2="100" y2="75"/></g></svg><p style="font-size:.8rem;color:var(--muted);margin:4px 0">Image with grid</p></div>
+    <div style="font-size:2rem;color:var(--lo-border);font-weight:900">→</div>
+    <div style="text-align:center"><svg viewBox="0 0 100 100" width="120" height="120" style="background:#fff;border:2px dashed #94a3b8;border-radius:8px"><g stroke="#cbd5e1" stroke-width="0.4"><line x1="25" y1="0" x2="25" y2="100"/><line x1="50" y1="0" x2="50" y2="100"/><line x1="75" y1="0" x2="75" y2="100"/><line x1="0" y1="25" x2="100" y2="25"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="75" x2="100" y2="75"/></g><line x1="20" y1="44" x2="84" y2="50" stroke="#666" stroke-width="1"/><ellipse cx="50" cy="48" rx="20" ry="5" fill="none" stroke="#666" stroke-width="1" transform="rotate(-12 50 48)"/></svg><p style="font-size:.8rem;color:var(--muted);margin:4px 0">Sketchbook outline</p></div>
+  </div>
+  <div class="exam-tip-box">
+    <p><strong>Quality check:</strong> use a <span class="misc-right">sharp pencil</span>, <span class="misc-right">light lines</span>, <span class="misc-right">box-by-box copying</span> (not freehand). The grid does the proportion work for you.</p>
+  </div>
+</div>
+
+<!-- SLIDE 8 - WE DO 2: Spot the Mistake -->
+<div class="slide" id="mistake-slide" data-title="We Do: Spot the Mistake" data-timer="3" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span>
+  <h2>🔍 We Do: Spot the Mistake</h2>
+  <div class="li-box"><strong>Instructions:</strong> A pupil wrote this annotation about Dalí's painting. Find <strong>3 mistakes</strong>. Whiteboards out.</div>
+  <div class="mistake-box">
+    <div class="mistake-text">"This painting by <strong>Dalí</strong> is called <strong>The Persistence of Memory</strong>. It is a <strong>watercolour</strong> painted in <strong>2004</strong>. In the painting I can see lots of weird stuff — an elephant with long legs, some tigers and a pomegranate. <strong>Dalí used bright primary colours like Miró did</strong>. The work is just weird and I don't really get it. <strong>I think it's lazy because anyone could paint random things.</strong>"</div>
+  </div>
+  <button class="reveal-btn" onclick="revealMistakes(this)">🔍 Reveal mistakes</button>
+  <div class="mistake-reveal">
+    <p style="margin-bottom:6px;font-weight:700;color:#991b1b">Here are the mistakes:</p>
+    <ul>
+      <li><strong>Mistake 1 (STATE):</strong> Title is wrong. The painting described is <em>Dream Caused by the Flight of a Bee around a Pomegranate</em>, NOT Persistence of Memory. Medium is <strong>oil on panel</strong>, not watercolour. Date is <strong>1944</strong>, not 2004.</li>
+      <li><strong>Mistake 2 (DESCRIBE):</strong> "Bright primary colours like Miró" — wrong. Dalí used warm sunlit naturalistic tones, not bold primaries. He's the <em>opposite</em> of Miró colour-wise.</li>
+      <li><strong>Mistake 3 (EXPLAIN):</strong> "It's lazy because anyone could paint random things" — completely wrong. Dalí trained as a realistic painter. His work uses <strong>juxtaposition</strong> deliberately to access the <strong>subconscious mind</strong> — there's nothing random about it.</li>
+    </ul>
+    <p style="margin-top:8px;font-size:.95rem;color:#7c2d12"><strong>And missing:</strong> the EXPLAIN stage doesn't link to Freud, dreams, or the subconscious — that's the meaning the writer skipped.</p>
+  </div>
+  <div class="aspire-box" style="margin-top:10px"><strong>Quality check before YOU write:</strong> Did I get the title, medium and date right? Did I describe what's actually IN the picture? Did I link the EXPLAIN to Dalí's BIG idea (the subconscious / dreams)?</div>
+</div>
+
+<!-- SLIDE 9 - INDEPENDENT WORK (WORKSHOP) -->
+<div class="slide" data-title="Independent Work" data-timer="0" data-no-autostart="true" data-type="independent"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work — Study + Annotation Workshop</h2><div class="li-box"><strong>This is the big block.</strong> Pick a Dalí image from the resource sheet, grid it, draw it, then annotate using STATE / DESCRIBE / EXPLAIN.</div>
+  <div class="timer-widget"><div class="timer-display" id="timerDisplay">14:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation</h3><p>Pick ONE simpler Dalí image from the sheet. Grid it (2cm×2cm). Copy outlines box-by-box. Add basic tone (pencil shading or one watercolour wash). Write <strong>STATE</strong> sentence (use the printed writing frame template).</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle</h3><p>Pick ONE Dalí image. Grid + accurate copy. Add tone using your chosen medium. Write <strong>STATE + DESCRIBE</strong> paragraphs. Include the keyword <em>juxtaposition</em>.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher</h3><p>Pick ONE complex Dalí image. Detailed gridded study with developed tone (multiple media if appropriate). Full annotation: <strong>STATE + DESCRIBE + EXPLAIN</strong>, weaving in juxtaposition, subconscious, Freud and a comparison line to one other Surrealist.</p></div>
+      <div class="task-box" style="background:#fff7ed;border:3px dashed var(--sc-border)"><h3 style="margin-top:0;color:#9a3412">🌉 Catch-up Path</h3><p style="color:#7c2d12">Route B (research nearly done): finish research first (~5 min), then start gridding. Route C (Miró unfinished): finish Miró first, do Foundation Dalí research, study slips to next lesson.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Foundation: use the <strong>printed writing frame template</strong> — fill in the gaps. Middle: use sentence starters from the Starter slide. Higher: link technique to meaning in EXPLAIN.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation:</strong> gridded study, tone added, STATE complete on writing frame.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle:</strong> accurate study with tone, STATE + DESCRIBE paragraphs, juxtaposition used.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher:</strong> developed study, full STATE/DESCRIBE/EXPLAIN, technique linked to meaning, comparison line.</p>
+      </div>
+      <div class="aspire-box" style="margin-top:10px"><strong>🎯 Last 2 mins:</strong> stop drawing, photograph your work, write your name on it, leave it in the marking pile.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 - EXIT TICKET -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="4"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-exit">Exit Ticket</span><h2>Exit Ticket</h2><div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+  <div class="level-toggle"><button onclick="switchLevel('exit','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('exit','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('exit','higher')" style="background:#1e3a8a">Higher</button><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button></div>
+  <div id="exit-foundation" class="task-box">
+    <p><strong>1) What are the 3 stages of the annotation writing frame?</strong></p><p class="answer">State, Describe, Explain.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Why do we use a grid when copying an image?</strong></p><p class="answer">To draw accurately / get proportions right by copying box by box.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Name one thing that should go in the STATE part of an annotation.</strong></p><p class="answer">Artist's name OR title of work OR medium OR date.</p>
+  </div>
+  <div id="exit-middle" class="task-box" style="display:none">
+    <p><strong>1) What goes into each stage — STATE, DESCRIBE, EXPLAIN?</strong></p><p class="answer">STATE: artist, title, medium, date. DESCRIBE: what you can see (objects, colours, layout, juxtaposition). EXPLAIN: meaning, your reaction, link to artist's ideas.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Why do Dalí annotations need to mention the SUBCONSCIOUS?</strong></p><p class="answer">Because Dalí's whole purpose was to paint the subconscious mind (Freud's idea). Skipping this misses the meaning.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Give an example of a juxtaposition in the Bee/Pomegranate painting.</strong></p><p class="answer">e.g., calm reclining woman vs aggressive leaping tigers; tiny bee causing huge dream; elephant on impossibly long stilt-legs.</p>
+  </div>
+  <div id="exit-higher" class="task-box" style="display:none">
+    <p><strong>1) Why must STATE come before DESCRIBE before EXPLAIN — does the order matter?</strong></p><p class="answer">Yes. STATE establishes context (who/when/medium). DESCRIBE catalogues what's actually there before interpreting. EXPLAIN can only be trusted if the first two are accurate. Without STATE, your reader doesn't know which work you mean; without DESCRIBE, the EXPLAIN floats free of evidence.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) How does GRIDDING actually help artistic accuracy — and what does it NOT teach you?</strong></p><p class="answer">Helps: proportion, scale, placement — by isolating each square. Doesn't teach: free-hand drawing, observational sketching, line confidence. It's a scaffold to be removed once you can see proportions independently.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Argue: should artists ALWAYS link technique to meaning when annotating, or can technique stand alone?</strong></p><p class="answer">Top-band annotations link both — technique without meaning is just description; meaning without technique is opinion. The strongest writing weaves them: "Dalí's tight Renaissance brushwork (technique) makes the impossible elephant feel believable, deepening the subconscious unease (meaning)."</p>
+  </div>
+</div>
+
+</div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+
+<div id="print-area">
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L6): Studying Dalí</h1><table class="ko-table"><tr><th>Annotation Stage</th><th>What goes in it</th></tr><tr><td>1. STATE</td><td>Artist · Title · Medium · Date</td></tr><tr><td>2. DESCRIBE</td><td>Foreground / mid / background. Objects. Colour, tone, line, scale. Juxtaposition.</td></tr><tr><td>3. EXPLAIN</td><td>What the artist means. Your reaction. Link to ideas (Freud / dreams / subconscious).</td></tr></table><table class="ko-table"><tr><th>Gridding step</th><th>Action</th></tr><tr><td>1</td><td>Grid the printed image (2cm × 2cm)</td></tr><tr><td>2</td><td>Grid your sketchbook page (same number of squares)</td></tr><tr><td>3</td><td>Copy box-by-box, NOT freehand</td></tr><tr><td>4</td><td>Add tone — pencil, watercolour, or coloured pencil</td></tr></table><table class="ko-table"><tr><th>Keyword</th><th>Meaning</th></tr><tr><td>Juxtaposition</td><td>Two unrelated things side by side</td></tr><tr><td>Subconscious</td><td>Mind below conscious awareness</td></tr><tr><td>Renaissance</td><td>Classical revival — Dalí's later style</td></tr><tr><td>Dreamscape</td><td>Landscape that resembles a dream</td></tr></table></div>
+<div id="print-arrival" class="print-section"><h2>Arrival Task — Review Your Page</h2><div class="foundation-content"><h3>Foundation</h3><p>Tick what you've already got:</p><p>☐ A title ☐ 5 facts about Dalí ☐ 1 image stuck in ☐ Anything written about it</p><p>Today's focus: <strong>the gridded drawing.</strong></p><p>Notes:</p><div class="print-line"></div><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>Tick what you've got:</p><p>☐ Title + 6 facts in own words ☐ 2+ images with titles ☐ REACT response ☐ Juxtaposition explained ☐ Comparison sentence to Miró</p><p>Today's focus: <strong>study + annotation.</strong></p><p>Notes:</p><div class="print-line"></div><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>Tick what you've got:</p><p>☐ Creative title + 8+ facts in context ☐ 3 images with mini-analysis ☐ Three-way comparison ☐ Subconscious / Freud connection ☐ "Connection to my work" line</p><p>Today's focus: <strong>high-quality study + sophisticated annotation</strong> linking technique to meaning.</p><p>Notes:</p><div class="print-line"></div><div class="print-line"></div></div></div>
+<div id="print-bridge" class="print-section"><h2>🌉 Catch-up Bridge — Three Routes Today</h2><table class="ko-table"><tr><th>Route</th><th>Plan</th></tr><tr><td>A — Research finished</td><td>Straight into the study + annotation</td></tr><tr><td>B — Research nearly done</td><td>5 min finish facts/REACT, then grid + draw. Annotation possibly homework.</td></tr><tr><td>C — Miró still unfinished</td><td>Finish Miró first (10 min), then start Foundation Dalí research. Study slips to next lesson.</td></tr></table></div>
+<div id="print-starter" class="print-section"><h2>Starter — Annotation Writing Frame</h2><table class="ko-table"><tr><th>Stage</th><th>Includes</th><th>Example phrase</th></tr><tr><td>1. STATE</td><td>Artist, title, medium, date</td><td>"Painted by Dalí in 1944, oil on panel."</td></tr><tr><td>2. DESCRIBE</td><td>Objects, layout, colour, tone, juxtaposition</td><td>"In the background, an elephant on long stilt-legs."</td></tr><tr><td>3. EXPLAIN</td><td>Meaning, your reaction, link to ideas</td><td>"This feels like a chaotic dream — Dalí is showing the subconscious."</td></tr></table></div>
+<div id="print-ido-model" class="print-section"><h2>I Do — Model Annotation (Bee/Pomegranate, 1944)</h2><p><strong>STATE:</strong> This painting is by Salvador Dalí. It is called <em>Dream Caused by the Flight of a Bee around a Pomegranate a Second before Waking</em>. It is an oil painting on panel, painted in 1944.</p><p><strong>DESCRIBE:</strong> In the background there is an elephant with absurdly long stilt-legs carrying a large rock-like crystal. In the mid-ground we see two tigers leaping from one another, and from a fish which itself leaps from a pomegranate. In front of the leaping tiger a rifle points at an unclothed reclining woman. Many juxtapositions: bizarre imagery against the relaxed pose of the woman, calm against tiger-aggression. Dalí emphasises warm colour and tone for a Renaissance feel.</p><p><strong>EXPLAIN:</strong> This piece feels chaotic and dreamlike. Dalí is showing the woman's subconscious mind — the bee, rifle, tigers may be dream-images at the moment of waking. The realistic detail makes the impossible believable, which makes me feel uneasy. Links to Dalí's interest in Freud's writings on dreams.</p></div>
+<div id="print-wedo" class="print-section"><h2>We Do — Co-Annotate (your turn)</h2><p><strong>1️⃣ STATE.</strong> The artist is _____. The work is called _____, painted in _____.</p><div class="print-line"></div><div class="print-line"></div><p><strong>2️⃣ DESCRIBE.</strong> In the foreground I can see _____. There is a juxtaposition between _____ and _____.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><p><strong>3️⃣ EXPLAIN.</strong> This makes me feel _____. I think Dalí is showing _____. It links to Freud's idea of _____.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+<div id="print-mistake" class="print-section"><h2>We Do — Spot the Mistake</h2><p><em>"This painting by Dalí is called The Persistence of Memory. It is a watercolour painted in 2004. In the painting I can see lots of weird stuff — an elephant with long legs, some tigers and a pomegranate. Dalí used bright primary colours like Miró did. The work is just weird and I don't really get it. I think it's lazy because anyone could paint random things."</em></p><p><strong>Find 3 mistakes:</strong></p><p>1. ____________________________________</p><div class="print-line"></div><p>2. ____________________________________</p><div class="print-line"></div><p>3. ____________________________________</p><div class="print-line"></div></div>
+<div id="print-scaffold-foundation" class="print-section"><h2>Scaffolding – Foundation</h2><div class="scaffold-print-box"><p><strong>Writing frame template:</strong></p><p>This painting is by ___________. It is called ___________. It is painted in ___________. It was made in ___________.</p><p>In the picture I can see ___________.</p><p>This makes me feel ___________ because ___________.</p></div></div>
+<div id="print-scaffold-middle" class="print-section"><h2>Scaffolding – Middle</h2><div class="scaffold-print-box"><p>"In the foreground there is _____, in the mid-ground _____, in the background _____."</p><p>"There is a juxtaposition between _____ and _____."</p><p>"I think Dalí is exploring _____ because _____."</p></div></div>
+<div id="print-scaffold-higher" class="print-section"><h2>Scaffolding – Higher</h2><div class="scaffold-print-box"><p>Key terms to weave in: juxtaposition, subconscious, Freud, dreamscape, Renaissance brushwork, tonal contrast, scale distortion, symbolic, naturalistic, hyper-realism</p><p>Aim: link technique to meaning in EXPLAIN. Add one comparison line to Magritte or Miró.</p></div></div>
+<div id="print-worksheet-foundation" class="print-section"><h2>Independent – Foundation</h2><p>☐ Pick a simpler Dalí image ☐ Grid 2cm×2cm ☐ Copy box-by-box ☐ Add basic tone ☐ Write STATE on the writing frame</p></div>
+<div id="print-worksheet-middle" class="print-section"><h2>Independent – Middle</h2><p>☐ Pick a Dalí image ☐ Grid + accurate copy ☐ Add tone ☐ Write STATE + DESCRIBE ☐ Use the keyword juxtaposition</p></div>
+<div id="print-worksheet-higher" class="print-section"><h2>Independent – Higher</h2><p>☐ Pick a complex image ☐ Detailed gridded study with developed tone ☐ Full STATE + DESCRIBE + EXPLAIN ☐ Weave juxtaposition / subconscious / Freud ☐ One comparison line</p></div>
+<div id="print-exit" class="print-section"><div class="foundation-content"><h2>Exit Ticket – Foundation</h2><p>1) What are the 3 stages of the writing frame?</p><div class="print-line"></div><p>2) Why do we use a grid?</p><div class="print-line"></div><p>3) Name one thing in the STATE part of an annotation.</p><div class="print-line"></div></div><div class="middle-content"><h2>Exit Ticket – Middle</h2><p>1) What goes into each stage — STATE, DESCRIBE, EXPLAIN?</p><div class="print-line"></div><div class="print-line"></div><p>2) Why must Dalí annotations mention the SUBCONSCIOUS?</p><div class="print-line"></div><p>3) Give an example of a juxtaposition in the Bee painting.</p><div class="print-line"></div></div><div class="higher-content"><h2>Exit Ticket – Higher</h2><p>1) Why must STATE come before DESCRIBE before EXPLAIN — does order matter?</p><div class="print-line"></div><div class="print-line"></div><p>2) How does gridding help — and what does it NOT teach?</p><div class="print-line"></div><div class="print-line"></div><p>3) Should artists always link technique to meaning? Argue.</p><div class="print-line"></div><div class="print-line"></div></div></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+
+function revealMistakes(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'👁️ Hide mistakes':'🔍 Reveal mistakes'}
+
+let selectedKWId=null;let matchScore=0;
+function selectKW(el,id){selectedKWId=id;document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedKWId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedKWId){el.classList.add('correct');document.querySelector('#kw-pills .match-pill.selected').classList.add('placed');matchScore++;document.getElementById('match-score').textContent=matchScore;fb.textContent='✅ Correct!';fb.style.color='var(--success)';}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);fb.textContent='❌ Try again!';fb.style.color='var(--error)';}selectedKWId=null;}
+function resetMatch(){selectedKWId=null;matchScore=0;const sc=document.getElementById('match-score');if(sc)sc.textContent='0';const fb=document.getElementById('match-fb');if(fb)fb.textContent='';document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.add('placed'));matchScore=5;const sc=document.getElementById('match-score');if(sc)sc.textContent='5';}
+
+let timerTotal=840,timerLeft=840,timerInterval=null,timerRunning=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;document.getElementById('timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('timerBar').style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';else if(timerLeft<=300)document.getElementById('timerDisplay').style.color='#f97316';else document.getElementById('timerDisplay').style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='⏰ TIME!';}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;updateTimerDisplay();}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','bridge','arrival','starter','ido-model','wedo','mistake','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+</script>
+
+<style>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+</style>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}
+/* XP for L6: each anno-stage reveal + the mistake reveal */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.anno-stage').forEach(stage=>{
+    registerXP(1);
+    const btn=stage.querySelector('.reveal-btn');
+    if(btn){
+      const orig=btn.onclick;
+      btn.addEventListener('click',()=>{
+        if(stage.classList.contains('revealed')&&!stage.dataset.xpAwarded){stage.dataset.xpAwarded='1';playDing();gainXP();}
+      });
+    }
+  });
+  const mb=document.querySelector('.mistake-box');
+  if(mb){registerXP(1);}
+});
+const _origRevealMistakes=window.revealMistakes;
+window.revealMistakes=function(btn){
+  const wasShown=btn.nextElementSibling.classList.contains('show');
+  _origRevealMistakes(btn);
+  if(!wasShown&&!btn.dataset.xpAwarded){btn.dataset.xpAwarded='1';playDing();gainXP();}
+};
+
+  /* ============== V4 POLISH JS ============== */
+  const _taBriefs = {
+    'Title': 'Welcome pupils. Sketchbooks open ON the Dalí page from L5. This is a workshop lesson — most of it is independent work. Have grid templates and printed Dalí images ready to hand out.',
+    'Catch-up Bridge': 'Identify which route each pupil is on — A, B, or C. Hands-up survey takes 30 seconds. Mentally tag the C-route pupils so you know who to check on first during Independent Work.',
+    'Arrival Task': 'Walk among pupils as they tick-list. Some will say "I\'ve done it all" — gently push them to look harder (have they REACTED? Named visual elements?). The right answer is rarely "nothing left".',
+    'Starter: Annotation Frame': 'Quick recall — get them naming State, Describe, Explain in order. The "test yourself" panel is the key check — make sure pupils can sort phrases into stages.',
+    'I Do: Model Annotation': 'Reveal each stage in order — STATE, DESCRIBE, EXPLAIN. Read each aloud at performance pace. Highlight juxtaposition / subconscious / Renaissance vocab as it appears. This IS the modelling.',
+    'We Do: Co-Annotate': 'Whiteboards out. ONE sentence per stage. Take ideas from 2-3 pupils for each stage and synthesise on the board. Praise specific vocab use ("juxtaposition", "subconscious").',
+    'I Do: Gridding Recap': 'Skip if confident — only 2 minutes here. Most pupils gridded for Magritte already. Quick reminder of box-by-box copying. Hand out grid templates to anyone who needs them.',
+    'We Do: Spot the Mistake': 'Listen for pupils who only spot the EASY mistakes (title, date). Praise those who spot the "lazy" mistake — that\'s the deepest one. The MISSING Freud/subconscious link is the most sophisticated catch.',
+    'Independent Work': 'BIGGEST SLIDE OF THE LESSON. Roam constantly. Routes A/B/C — check each pupil knows which lane. Push for tone added (not just outlines). Last 2 mins: stop everyone for photo + name.',
+    'Exit Ticket': 'Photo capture for those who finish. Anyone who can\'t name State/Describe/Explain needs follow-up. Reveal-answers triggers the "Dalí Study Complete" overlay.'
+  };
+  const _ccQuestions = {
+    'Title': {F:'What\'s the lesson called today?',M:'What two skills are we using today?',H:'Why is gridding a means and not the goal of this lesson?'},
+    'Catch-up Bridge': {F:'Which route are you on — A, B, or C?',M:'If you\'re on Route B, what\'s your first 5 minutes?',H:'Which route gives you the BEST chance of nailing all 3 LOs today, and why?'},
+    'Arrival Task': {F:'Read me one thing you still need to do.',M:'What\'s the ONE missing piece blocking your annotation?',H:'Which item on your list is highest-leverage — finishing first will improve your page most?'},
+    'Starter: Annotation Frame': {F:'Name the 3 stages.',M:'What goes in DESCRIBE that doesn\'t go in STATE?',H:'Why does the order STATE → DESCRIBE → EXPLAIN matter?'},
+    'I Do: Model Annotation': {F:'In which stage do we say the date of the painting?',M:'Which stage uses the word "juxtaposition" — Describe or Explain?',H:'Where in the model annotation does the writer link technique to meaning?'},
+    'We Do: Co-Annotate': {F:'Read me your STATE sentence.',M:'Read me your DESCRIBE sentence — does it include juxtaposition?',H:'Read me your EXPLAIN — does it link to Freud or the subconscious?'},
+    'I Do: Gridding Recap': {F:'How big are the squares?',M:'Why do we copy box-by-box and not freehand?',H:'When SHOULDN\'T you grid? Argue.'},
+    'We Do: Spot the Mistake': {F:'Name one mistake you spotted.',M:'Why is "bright primary colours" wrong for Dalí?',H:'Which is the worst mistake — and why?'},
+    'Independent Work': {F:'How many squares have you copied so far?',M:'Read me your DESCRIBE paragraph in progress.',H:'What\'s your EXPLAIN going to argue, in one sentence?'},
+    'Exit Ticket': {F:'Q1 — name the 3 stages.',M:'Q2 — why must Dalí annotations mention the subconscious?',H:'Q3 — should artists always link technique to meaning? Defend.'}
+  };
+  const _CC_KEY = 'coldCall_art_l6';
+  const _ccDefault = [{n:'Aisha',g:'2'},{n:'Ben',g:'1'},{n:'Carla',g:'3'},{n:'Daniel',g:'U'},{n:'Erin',g:'2'},{n:'Fionn',g:'3'},{n:'Grace',g:'1'},{n:'Hassan',g:'2'},{n:'Imani',g:'4'},{n:'Jay',g:'U'},{n:'Kira',g:'3'},{n:'Liam',g:'2'}];
+  function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return Array.isArray(d)&&d.length?d:_ccDefault.slice()}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+
+  function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>👥 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the ✏️ Edit list button.');return}
+    const tier=_gradeToTier(pick.g);
+    const tierLabel={F:'Foundation',M:'Middle',H:'Higher'}[tier];
+    const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>🎲 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">—</div><span class="cc-tier" id="cc-tier">—</span><div class="cc-question" id="cc-q">—</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">✏️ Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">🎲 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');
+    nameEl.textContent=pick.n;
+    nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');
+    try{playDing()}catch(e){}
+  }
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>✏️ Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">💾 Save</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    const list=_ccLoad();
+    document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');
+    modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){
+    const txt=document.getElementById('cc-edit-area').value;
+    const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);
+    _ccSave(list);_ccRecent=[];
+    document.getElementById('cc-edit-modal').classList.remove('visible');
+  }
+
+  /* AUTO TIMER */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){
+    _atPause();
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}
+    const minStr=slide.getAttribute('data-timer');
+    const noAuto=slide.getAttribute('data-no-autostart')==='true';
+    const min=parseInt(minStr,10);
+    if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}
+    document.body.classList.remove('no-timer');
+    _atTotal=min*60;_atSeconds=_atTotal;_atRender();
+    if(!noAuto)setTimeout(()=>{_atStart()},250);
+  }
+
+  /* LESSON COMPLETE */
+  let _lcShown=false;
+  function _lcShowComplete(){
+    if(_lcShown)return;_lcShown=true;
+    setTimeout(()=>{
+      try{fireConfetti()}catch(e){}
+      try{playLevelUp()}catch(e){}
+      const ov=document.getElementById('lc-overlay');
+      if(ov)ov.classList.add('visible');
+    },400);
+  }
+  function hideLessonComplete(){
+    const ov=document.getElementById('lc-overlay');
+    if(ov)ov.classList.remove('visible');
+  }
+  (function(){
+    const exit=document.getElementById('exit-slide');
+    if(!exit)return;
+    const obs=new MutationObserver(()=>{
+      if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();
+    });
+    obs.observe(exit,{attributes:true,attributeFilter:['class']});
+  })();
+
+  if(typeof showSlide==='function'){
+    const _origShowSlide=showSlide;
+    window.showSlide=function(i){
+      _origShowSlide(i);
+      try{_atOnSlideChange()}catch(e){}
+    };
+  }
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      ['ta-modal','cc-modal','cc-edit-modal','lc-overlay'].forEach(id=>{
+        const m=document.getElementById(id);if(m)m.classList.remove('visible');
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

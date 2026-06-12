@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 2: René Magritte – The Master of Mystery</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}@keyframes hideReveal{0%,40%{opacity:1}50%,100%{opacity:0}}@keyframes scaleGrow{0%,30%{transform:scale(.4)}60%,100%{transform:scale(1.5)}}@keyframes mergeView{0%,30%{opacity:0}50%,100%{opacity:1}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);font-size:.9rem}.evidence-btn:hover{background:#9d174d}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:var(--task-border);margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:var(--task-border)}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  </style>
+</head>
+<body>
+<div class="slide-container">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active" data-title="Title">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <div style="text-align:center;margin-top:3%"><div class="animate-enter">
+    <span class="slide-tag tag-lesson">Lesson 2</span>
+    <h1>René Magritte: The Master of Mystery</h1>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 18px">Surrealism Series — Artist Study</p>
+    <div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul style="font-size:1.05rem;margin-top:8px"><li>Know who René Magritte was and why he matters</li><li>React to and analyse his artwork using visual elements</li><li>Begin creating a Magritte artist research page</li></ul></div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools – Lesson 2</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher</button></div></div>
+  </div></div>
+</div>
+
+<!-- SLIDE 2: ARRIVAL -->
+<div class="slide" id="arrival-slide" data-title="Arrival Task">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-arrival">Arrival Task</span>
+  <h2>Arrival Task – Recall from Lesson 1</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer from memory. Q1–3 recall Surrealism. Q4 leads into today.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle"><button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher</button></div>
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Surrealism (Recall)</h3><p>What does <strong>"Surrealism"</strong> mean?</p><p class="answer">Beyond reality / dreamlike art.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Artists (Recall)</h3><p>Name <strong>one</strong> Surrealist artist.</p><p class="answer">Any: Dalí, Magritte, Kahlo, Höch.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Techniques (Recall)</h3><p>Name <strong>one</strong> Surrealist technique.</p><p class="answer">Any: Juxtaposition, Scale Change, Transformation, Dislocation.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Magritte</h3><p>Why might an artist paint the <strong>same object</strong> over and over?</p><p class="answer">It becomes a symbol / signature / part of their identity.</p></div>
+  </div>
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Definition (Recall)</h3><p>Define <strong>Surrealism</strong> in your own words.</p><p class="answer">Art inspired by dreams and the unconscious mind, meaning "beyond reality".</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Artists (Recall)</h3><p>Name <strong>two</strong> Surrealist artists and one fact about each.</p><p class="answer">e.g. Dalí — melting clocks; Kahlo — personal self-portraits.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Technique (Recall)</h3><p>Explain what <strong>"juxtaposition"</strong> means with an example.</p><p class="answer">Placing unexpected objects together, e.g. a fish with human legs.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Magritte</h3><p>What's the difference between painting something <strong>"realistic"</strong> and something <strong>"surreal"</strong>?</p><p class="answer">Realistic = copies real life. Surreal = changes/distorts reality.</p></div>
+  </div>
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Unconscious (Recall)</h3><p>Explain the link between Surrealism and the <strong>unconscious mind</strong>.</p><p class="answer">Artists explored the unconscious to reveal hidden thoughts, dreams and emotions through art.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Compare (Recall)</h3><p>Compare <strong>two</strong> Surrealist artists — how do their styles differ?</p><p class="answer">e.g. Dalí — hyper-realistic dreamscapes; Höch — photomontage collage. Different media, same unconscious exploration.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Techniques (Recall)</h3><p>Describe all <strong>four</strong> Surrealist techniques with examples.</p><p class="answer">Juxtaposition (unexpected objects), Scale Change (wrong size), Transformation (morphing), Dislocation (strange places).</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Magritte</h3><p>Can completely <strong>realistic</strong> artwork still be <strong>Surreal</strong>? Explain.</p><p class="answer">Yes — Magritte's work looks realistic but shows impossible scenes, which makes it even more unsettling.</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 3: STARTER -->
+<div class="slide" data-title="Starter">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-starter">Starter</span>
+  <h2>Starter: Quick Retrieval from Lesson 1</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer on whiteboards. 3 quick questions.</div>
+  <div style="max-width:700px;margin:10px auto">
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q1.</strong> What decade did Surrealism begin? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0">The <strong>1920s</strong>.</span></p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q2.</strong> What does "surréalisme" mean? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0"><strong>Beyond reality</strong>.</span></p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q3.</strong> Which technique involves placing unexpected objects together? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0"><strong>Juxtaposition</strong>.</span></p></div>
+  </div>
+</div>
+
+<!-- SLIDE 4: I DO 1 — Who Was Magritte? -->
+<div class="slide" data-title="I Do: Who Was Magritte?" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Who Was René Magritte?</h2>
+  <div class="li-box"><strong>Key Idea:</strong> Magritte painted <strong>realistic-looking</strong> scenes that were actually <strong>impossible</strong> — making viewers question what's real.</div>
+  <div class="scaffold-box"><strong>📝 Note down at least 5 facts</strong> — you'll need them for your research page!</div>
+  <div class="fact-carousel" id="factCarousel"><div class="fact-num" id="factNum">1</div><div class="fact-text" id="factText"></div><div class="fact-nav"><button onclick="changeFact(-1)">◀ Previous</button><button onclick="changeFact(1)">Next ▶</button></div><div class="fact-dots" id="factDots"></div></div>
+</div>
+
+<!-- SLIDE 5: WE DO 1 — REACT -->
+<div class="slide" data-title="We Do: REACT to Magritte" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: REACT to "The Human Condition" (1933)</h2>
+  <div class="li-box"><strong>Instructions:</strong> Write your reactions using the prompts. Then check the reveal cards.</div>
+  <div class="react-panel">
+    <div style="display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:12px;padding:16px">
+      <div style="text-align:center"><svg viewBox="0 0 300 240" width="260"><rect width="300" height="240" fill="#87CEEB" rx="8"/><rect y="140" width="300" height="100" fill="#5a7d4a"/><rect x="90" y="40" width="120" height="160" fill="#333" rx="4"/><rect x="95" y="45" width="110" height="150" fill="#87CEEB"/><rect x="95" y="135" width="110" height="60" fill="#5a7d4a"/><circle cx="150" cy="90" r="18" fill="#f0d060"/></svg><p style="font-size:.9rem;color:var(--muted);margin-top:6px;font-weight:600">"The Human Condition" (1933)</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="react-q"><label>👀 What do you SEE?</label><textarea placeholder="Describe what's in the painting..."></textarea></div>
+      <div class="react-q"><label>🎨 What TECHNIQUES can you spot?</label><textarea placeholder="Blending, layering, realism..."></textarea></div>
+      <div class="react-q"><label>🔍 Which VISUAL ELEMENTS?</label><textarea placeholder="Line, tone, colour, shape..."></textarea></div>
+      <div class="react-q"><label>💭 Your OPINION?</label><textarea placeholder="How does it make you feel?"></textarea></div>
+    </div>
+  </div>
+  <div class="scaffold-box" style="margin-top:8px"><strong>Sentence starters:</strong> "In this painting I can see…" | "The artist has used _____ to create…" | "This makes me feel _____ because…"</div>
+</div>
+
+<!-- SLIDE 6: I DO 2 — Magritte's Techniques -->
+<div class="slide" data-title="I Do: Magritte's Techniques" data-type="ido">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: Magritte's Signature Techniques</h2>
+  <div class="li-box"><strong>Key Idea:</strong> Magritte's paintings look <strong>incredibly realistic</strong> but the scenes are <strong>impossible</strong>. That contrast is what makes his work powerful.</div>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">📏 Scale Change</h3><p>Objects become <strong>impossibly large</strong> — a giant apple fills an entire room, leaving no space for anything else.</p>
+        <div class="diagram-container"><svg viewBox="0 0 180 100" width="180" height="100"><rect x="15" y="5" width="150" height="80" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/><circle cx="90" cy="45" r="14" fill="#22c55e" style="animation:scaleGrow 3s ease-in-out infinite;transform-origin:90px 45px"/><text x="90" y="95" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="600">🍎 grows to fill the room</text></svg></div>
+      </div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">🎭 Hidden Identity</h3><p>Faces are constantly <strong>hidden or obscured</strong> — behind apples, cloths, or turned away. The bowler hat man never shows his face.</p>
+        <div class="diagram-container"><svg viewBox="0 0 180 100" width="180" height="100"><rect width="180" height="90" fill="#f8fafc" rx="4"/><circle cx="90" cy="40" r="22" fill="#FFD9B3"/><circle cx="82" cy="34" r="3" fill="#333"/><circle cx="98" cy="34" r="3" fill="#333"/><circle cx="90" cy="40" r="12" fill="#22c55e" style="animation:hideReveal 3s ease-in-out infinite"/><text x="90" y="95" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="600">Face hidden behind an apple</text></svg></div>
+      </div>
+    </div>
+    <div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">👁️ Visual Illusion</h3><p>Paintings within paintings — windows that <strong>merge with the view</strong>. What's real? What's the painting?</p>
+        <div class="diagram-container"><svg viewBox="0 0 180 100" width="180" height="100"><rect width="180" height="90" fill="#87CEEB" rx="4"/><rect y="55" width="180" height="35" fill="#5a7d4a"/><rect x="50" y="10" width="80" height="70" fill="#334155" rx="3"/><rect x="53" y="13" width="74" height="64" fill="#87CEEB"/><rect x="53" y="55" width="74" height="22" fill="#5a7d4a"/><rect x="53" y="13" width="74" height="64" fill="#87CEEB" style="animation:mergeView 4s ease-in-out infinite" opacity=".6"/><text x="90" y="95" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="600">Painting merges with the view</text></svg></div>
+      </div>
+      <div class="aspire-box animate-enter anim-delay-2"><strong>Aspire:</strong> Why might Magritte have called his pipe painting "The Treachery of Images"? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">Because the painting of a pipe is NOT a pipe — it's a <strong>representation</strong>. He wanted viewers to question the gap between an object and its image.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: WE DO 2 — Technique Matching -->
+<div class="slide" data-title="We Do: Match Technique → Description" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Match Description → Technique</h2>
+  <div class="li-box"><strong>Instructions:</strong> Select a technique, then tap the matching description.</div>
+  <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Matches: <span class="score" id="match-score">0</span>/6</span><button class="ghost small" onclick="resetMatch()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealMatch()">👁️ Reveal</button><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-box"><strong>Hints:</strong> Scale Change = something is impossibly BIG or SMALL. Hidden Identity = you can't see someone's FACE. Visual Illusion = a painting or window blends with what's behind it.</div></div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 1: Select a technique</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px" id="tech-pills">
+      <div class="match-pill" onclick="selectTech(this,'scale')">📏 Scale Change</div>
+      <div class="match-pill" onclick="selectTech(this,'hidden')">🎭 Hidden Identity</div>
+      <div class="match-pill" onclick="selectTech(this,'illusion')">👁️ Visual Illusion</div>
+    </div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 2: Tap the matching description</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="match-target" data-correct="scale" onclick="pickTarget(this)">A <strong>giant apple</strong> fills an entire room</div>
+      <div class="match-target" data-correct="hidden" onclick="pickTarget(this)">A man's face is <strong>hidden behind</strong> a floating apple</div>
+      <div class="match-target" data-correct="illusion" onclick="pickTarget(this)">A painting on an easel <strong>merges with the view</strong> behind it</div>
+      <div class="match-target" data-correct="scale" onclick="pickTarget(this)">A <strong>tiny man</strong> stands on a massive comb</div>
+      <div class="match-target" data-correct="hidden" onclick="pickTarget(this)">A bowler hat figure has <strong>no visible face</strong></div>
+      <div class="match-target" data-correct="illusion" onclick="pickTarget(this)">The sky inside a window <strong>doesn't match</strong> outside</div>
+    </div>
+    <div id="match-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:20px"></div>
+  </div>
+</div>
+
+<!-- SLIDE: SPOT THE MISTAKE -->
+<div class="slide" data-title="Spot the Mistake" data-type="wedo">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-wedo">Spot the Mistake</span>
+  <h2>🔍 Spot the Mistake — Student Analysis</h2>
+  <div class="li-box"><strong>Instructions:</strong> A student wrote this about Magritte's "The Human Condition". Find the 3 mistakes!</div>
+  <div class="mistake-box">
+    <div class="mistake-text">"In this painting I can see an easel with a painting on it. Magritte has used <strong>bright, bold primary colours</strong> like red and yellow. The painting on the easel is <strong>completely different</strong> from the view behind it. Magritte was a <strong>French</strong> artist who wanted people to feel happy."</div>
+  </div>
+  <button class="reveal-btn" onclick="revealMistakes(this)">🔍 Reveal mistakes</button>
+  <div class="mistake-reveal">
+    <p style="margin-bottom:6px;font-weight:700;color:#991b1b">Here are the 3 mistakes:</p>
+    <ul>
+      <li><strong>Mistake 1:</strong> "Bright, bold primary colours" — Magritte used <strong>naturalistic, muted colours</strong> (blues, greens, browns). Bold primaries are more Miró's style!</li>
+      <li><strong>Mistake 2:</strong> "Completely different from the view behind" — actually the painting <strong>perfectly merges</strong> with the view. That's the whole point! It's a visual illusion.</li>
+      <li><strong>Mistake 3:</strong> "French artist" — Magritte was <strong>Belgian</strong>. And he wanted viewers to <strong>question reality</strong>, not feel happy.</li>
+    </ul>
+  </div>
+  <div class="peer-teach"><strong>👥 Turn to your partner:</strong> Which was the biggest mistake? Explain to your partner what a correct version should say.</div>
+</div>
+
+<!-- SLIDE 8: INDEPENDENT -->
+<div class="slide" data-title="Independent Work" data-type="independent">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-independent">Independent Work</span>
+  <h2>Independent Work – Magritte Research Page</h2>
+  <div class="li-box"><strong>Instructions:</strong> Create your artist research page on René Magritte.</div>
+  <div class="timer-widget"><div class="timer-display" id="timerDisplay">18:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation</h3><p>Title "René Magritte", 5 facts (copy from carousel), 2 printed images, REACT writing, start a gridded study.</p><p style="font-style:italic;color:var(--muted);font-size:1rem">"René Magritte was a _____ artist who…"</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle</h3><p>Title, 6+ facts in own words, 3 images with titles, REACT with visual elements, gridded study with tonal work, annotations.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher</h3><p>Creative title, 8+ facts with context, 3+ images with analysis, full annotation framework, detailed tonal study, "connection to my work".</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Use the fact carousel, your REACT writing, and the technique notes. Foundation: copy from slides. Middle: rewrite in own words. Higher: analyse and compare.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation:</strong> 5 facts, 2 images, REACT, study started.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle:</strong> Own-word facts, visual element analysis, annotations on study.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher:</strong> Contextual analysis, technique comparison, personal connection.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: EXIT TICKET -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-exit">Exit Ticket</span>
+  <h2>Exit Ticket</h2>
+  <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+  <div class="level-toggle"><button onclick="switchLevel('exit','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('exit','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('exit','higher')" style="background:#1e3a8a">Higher</button><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button></div>
+  <div id="exit-foundation" class="task-box">
+    <p><strong>1) What nationality was Magritte?</strong></p><p class="answer">Belgian.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Name one object that appears often in his paintings.</strong></p><p class="answer">Bowler hat (or green apple).</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What did Magritte want viewers to do?</strong></p><p class="answer">Question what they see / question reality.</p>
+  </div>
+  <div id="exit-middle" class="task-box" style="display:none">
+    <p><strong>1) Describe one technique Magritte used and give an example.</strong></p><p class="answer">e.g. Scale Change — a giant apple fills an entire room, making a normal object feel strange and impossible.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Why do Magritte's paintings feel unsettling even though they look realistic?</strong></p><p class="answer">Because the scenes are impossible — the realistic style makes impossible things look like they could be real, which is disturbing.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What was "The Treachery of Images" about?</strong></p><p class="answer">A painting of a pipe with "This is not a pipe" — challenging the idea that a painting of something IS that thing.</p>
+  </div>
+  <div id="exit-higher" class="task-box" style="display:none">
+    <p><strong>1) Compare Magritte's approach to Surrealism with Dalí's.</strong></p><p class="answer">Magritte used realistic painting of everyday objects in impossible contexts. Dalí created entire dreamscape worlds with melting/distorted forms. Both explored the unconscious but Magritte is more subtle — the strangeness comes from ordinary things being wrong.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Explain how Magritte's use of "hidden identity" connects to Surrealism's goals.</strong></p><p class="answer">By hiding faces, Magritte removes identity and makes viewers uncomfortable — we expect to see faces but can't. This links to the Surrealist goal of accessing the unconscious and creating feelings of unease and mystery.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Why is "The Human Condition" considered a masterpiece of visual illusion?</strong></p><p class="answer">The painting on the easel perfectly merges with the landscape behind it — you can't tell where "reality" ends and "art" begins. It forces the viewer to question whether any painting (or any perception) is truly "real".</p>
+  </div>
+  <div class="lb-widget" id="lb-widget"><h3>🏆 Magritte Masters Wall</h3><p style="font-size:.95rem;margin-bottom:8px">Completed your research page? Add your name to the wall!</p><div class="lb-form"><input type="text" placeholder="Your first name" onkeypress="if(event.key==='Enter')addToLB('lb-widget')"><button onclick="addToLB('lb-widget')">Add Name 🎩</button></div><div class="lb-list"></div></div>
+</div>
+
+</div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/9</div>
+
+<div id="print-area">
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L2): René Magritte</h1><table class="ko-table"><tr><th>Fact</th><th>Detail</th></tr><tr><td>Born</td><td>1898, Lessines, Belgium</td></tr><tr><td>Training</td><td>Académie Royale des Beaux-Arts, Brussels</td></tr><tr><td>Early career</td><td>Advertising & wallpaper design</td></tr><tr><td>Inspiration</td><td>Seeing Giorgio de Chirico's work in the 1920s</td></tr><tr><td>Style</td><td>Hyper-realistic painting of impossible scenes</td></tr><tr><td>Symbols</td><td>Bowler hats, green apples</td></tr><tr><td>Famous work</td><td>"The Treachery of Images" — pipe + "This is not a pipe"</td></tr><tr><td>Quote</td><td>"Everything we see hides another thing"</td></tr><tr><td>Techniques</td><td>Smooth blending, layering, precise tonal transitions</td></tr><tr><td>Death</td><td>1967 — left over 1,000 artworks</td></tr></table><table class="ko-table"><tr><th>Technique</th><th>Description</th><th>Example</th></tr><tr><td>Scale Change</td><td>Objects impossibly large</td><td>Giant apple fills room</td></tr><tr><td>Hidden Identity</td><td>Faces obscured</td><td>Apple hiding a face</td></tr><tr><td>Visual Illusion</td><td>Paintings merge with reality</td><td>Easel merges with landscape</td></tr></table></div>
+<div id="print-arrival" class="print-section"><h2>Arrival Task</h2><div class="foundation-content"><h3>Foundation</h3><p>1) What does Surrealism mean?</p><div class="print-line"></div><p>2) Name one Surrealist artist.</p><div class="print-line"></div><p>3) Name one Surrealist technique.</p><div class="print-line"></div><p>4) Why might an artist paint the same object over and over?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) Define Surrealism in your own words.</p><div class="print-line"></div><p>2) Name two artists and a fact about each.</p><div class="print-line"></div><div class="print-line"></div><p>3) Explain juxtaposition with an example.</p><div class="print-line"></div><p>4) Difference between realistic and surreal?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) Explain the link between Surrealism and the unconscious mind.</p><div class="print-line"></div><div class="print-line"></div><p>2) Compare two Surrealist artists' styles.</p><div class="print-line"></div><div class="print-line"></div><p>3) Describe all four techniques with examples.</p><div class="print-line"></div><div class="print-line"></div><p>4) Can realistic artwork be Surreal? Explain.</p><div class="print-line"></div></div></div>
+<div id="print-starter" class="print-section"><h2>Starter: Retrieval</h2><p>Q1) What decade did Surrealism begin?</p><div class="print-line"></div><p>Q2) What does "surréalisme" mean?</p><div class="print-line"></div><p>Q3) Which technique places unexpected objects together?</p><div class="print-line"></div></div>
+<div id="print-wedo" class="print-section"><h2>We Do: REACT</h2><p><strong>"The Human Condition" (1933) — Write your reaction:</strong></p><p>What do you SEE?</p><div class="print-line"></div><div class="print-line"></div><p>What TECHNIQUES?</p><div class="print-line"></div><div class="print-line"></div><p>Which VISUAL ELEMENTS?</p><div class="print-line"></div><p>Your OPINION?</p><div class="print-line"></div><div class="print-line"></div></div>
+<div id="print-scaffold-foundation" class="print-section"><h2>Scaffolding – Foundation</h2><div class="scaffold-print-box"><h3>Sentence Starters</h3><p>"René Magritte was a _____ artist who was famous for…"</p><p>"He was born in _____ in _____."</p><p>"His paintings often include _____ and _____."</p><p>"I chose this painting because…"</p></div></div>
+<div id="print-scaffold-middle" class="print-section"><h2>Scaffolding – Middle</h2><div class="scaffold-print-box"><h3>Sentence Starters</h3><p>"Magritte's style is distinctive because…"</p><p>"The technique of _____ can be seen in…"</p><p>"This links to Surrealism because…"</p></div></div>
+<div id="print-scaffold-higher" class="print-section"><h2>Scaffolding – Higher</h2><div class="scaffold-print-box"><h3>Key Terms</h3><p>Scale change, hidden identity, visual illusion, juxtaposition, unconscious mind, realistic, impossible, representation, blending, tonal transitions, symbolism</p></div></div>
+<div id="print-worksheet-foundation" class="print-section"><h2>Independent Work – Foundation</h2><div class="prevent-break"><p><strong>Research Page Checklist:</strong></p><p>☐ Title: "René Magritte" ☐ 5 facts ☐ 2 images ☐ REACT writing ☐ Gridded study started</p></div></div>
+<div id="print-worksheet-middle" class="print-section"><h2>Independent Work – Middle</h2><div class="prevent-break"><p>1) Write 6 facts about Magritte in your own words.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><p>2) Describe one of his techniques and explain why it's effective.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+<div id="print-worksheet-higher" class="print-section"><h2>Independent Work – Higher</h2><div class="prevent-break"><p>1) Analyse "The Human Condition". Describe what you see, identify techniques, and explain the meaning.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><p>2) Compare Magritte's approach to Surrealism with one other artist.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+<div id="print-exit" class="print-section"><div class="foundation-content"><h2>Exit Ticket – Foundation</h2><p>1) What nationality was Magritte?</p><div class="print-line"></div><p>2) Name one object that appears often.</p><div class="print-line"></div><p>3) What did Magritte want viewers to do?</p><div class="print-line"></div></div><div class="middle-content"><h2>Exit Ticket – Middle</h2><p>1) Describe one technique with an example.</p><div class="print-line"></div><div class="print-line"></div><p>2) Why do his paintings feel unsettling?</p><div class="print-line"></div><div class="print-line"></div><p>3) What was "The Treachery of Images" about?</p><div class="print-line"></div></div><div class="higher-content"><h2>Exit Ticket – Higher</h2><p>1) Compare Magritte's approach with Dalí's.</p><div class="print-line"></div><div class="print-line"></div><p>2) How does "hidden identity" connect to Surrealism?</p><div class="print-line"></div><div class="print-line"></div><p>3) Why is "The Human Condition" a masterpiece?</p><div class="print-line"></div><div class="print-line"></div></div></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();if(i===3&&!factsInit)initFacts();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+
+// FACTS
+const facts=["René Magritte was born in 1898 in Lessines, Belgium.","He studied at the Académie Royale des Beaux-Arts in Brussels.","He worked in advertising and wallpaper design to fund his art career.","In the 1920s, seeing de Chirico's work changed his life — he discovered Surrealism.","His paintings look incredibly realistic but show impossible scenes.","Bowler hats and green apples — his signature symbols.","'The Treachery of Images' — a pipe with 'This is not a pipe'.","He said: 'Everything we see hides another thing.'","Techniques: realistic oil painting, smooth blending, precise tonal transitions.","He painted until 1967, leaving over 1,000 artworks."];
+let currentFact=0,factsInit=false;
+function initFacts(){factsInit=true;const d=document.getElementById('factDots');facts.forEach((_,i)=>{const dot=document.createElement('div');dot.className='fact-dot'+(i===0?' active':'');d.appendChild(dot);});showFact();}
+function showFact(){document.getElementById('factText').textContent=facts[currentFact];document.getElementById('factNum').textContent=currentFact+1;document.querySelectorAll('.fact-dot').forEach((d,i)=>d.classList.toggle('active',i===currentFact));}
+function changeFact(d){currentFact=(currentFact+d+facts.length)%facts.length;showFact();}
+
+// MATCHING
+let selectedTechId=null;let matchScore=0;
+function selectTech(el,id){selectedTechId=id;document.querySelectorAll('#tech-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedTechId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedTechId){el.classList.add('correct');matchScore++;document.getElementById('match-score').textContent=matchScore;fb.textContent='✅ Correct!';fb.style.color='var(--success)';if(matchScore>=6){document.querySelectorAll('#tech-pills .match-pill').forEach(p=>p.classList.add('placed'));}}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);fb.textContent='❌ Try again!';fb.style.color='var(--error)';}selectedTechId=null;}
+function resetMatch(){selectedTechId=null;matchScore=0;document.getElementById('match-score').textContent='0';document.getElementById('match-fb').textContent='';document.querySelectorAll('#tech-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#tech-pills .match-pill').forEach(p=>p.classList.add('placed'));matchScore=6;document.getElementById('match-score').textContent='6';}
+
+// TIMER
+let timerTotal=1080,timerLeft=1080,timerInterval=null,timerRunning=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;document.getElementById('timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('timerBar').style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';else if(timerLeft<=300)document.getElementById('timerDisplay').style.color='#f97316';else document.getElementById('timerDisplay').style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='⏰ TIME!';}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;updateTimerDisplay();}
+
+// PRINT
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+</script>
+<!-- ===== ENGAGEMENT ENHANCEMENTS ===== -->
+<style>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.reveal-btn{background:var(--ido-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 4px 4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.reveal-btn:hover{background:#6d28d9}
+.mistake-box{background:#fff;border:3px dashed var(--error);border-radius:14px;padding:18px 16px 16px;margin:10px 0;position:relative}.mistake-box::before{content:'⚠️ STUDENT ANSWER — SPOT THE MISTAKES';position:absolute;top:-12px;left:16px;background:var(--error);color:#fff;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:.5px}
+.mistake-text{font-family:'Caveat','Comic Sans MS',cursive;font-size:1.3rem;line-height:1.6;color:#334155;padding:8px}
+.mistake-reveal{display:none;margin-top:10px;padding:12px;background:#fee2e2;border-left:5px solid var(--error);border-radius:8px}.mistake-reveal.show{display:block;animation:fadeInUp .25s}
+.mistake-reveal ul{margin:4px 0 0 20px}.mistake-reveal li{color:#991b1b;font-weight:600;margin-bottom:4px;font-size:1rem}
+.lb-widget{background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:14px;padding:16px;margin-top:16px}.lb-widget h3{margin-top:0;color:var(--lo-border)}
+.lb-form{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}.lb-form input{flex:1;min-width:140px;padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:.95rem}.lb-form input:focus{border-color:var(--lo-border);outline:none}
+.lb-list{display:flex;flex-wrap:wrap;gap:6px}.lb-badge{background:var(--lo-border);color:#fff;padding:4px 12px;border-radius:999px;font-size:.85rem;font-weight:700;animation:fadeInUp .3s}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes correctFlash{0%{box-shadow:0 0 0 0 rgba(34,197,94,0)}50%{box-shadow:0 0 0 8px rgba(34,197,94,.4)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.correct-flash{animation:correctFlash .6s ease}
+.peer-teach{background:#fff7ed;border:2px dashed var(--sc-border);border-radius:12px;padding:12px 14px;margin-top:12px;color:#9a3412}.peer-teach strong{color:#7c2d12}
+@media print{.xp-wrap,.hint-btn,.hint-box,.reveal-btn,.mistake-box,.lb-widget,.confetti,.peer-teach{display:none!important}}
+</style>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}
+function revealMistakes(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'👁️ Hide mistakes':'🔍 Reveal mistakes'}
+function addToLB(widgetId){const inp=document.querySelector('#'+widgetId+' input');const name=inp.value.trim();if(!name)return;const list=document.querySelector('#'+widgetId+' .lb-list');const b=document.createElement('span');b.className='lb-badge';b.textContent=name;list.appendChild(b);inp.value='';playDing()}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.match-target').forEach(()=>registerXP(1));});
+const _origPickTarget=window.pickTarget;
+window.pickTarget=function(el){if(!selectedTechId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedTechId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
+</script>
+
+</body>
+</html>

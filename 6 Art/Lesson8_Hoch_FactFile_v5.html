@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 8: Hannah Höch – The Fact File (V5)</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Highlight-bio block */
+    .bio-block{background:#fdfdfd;border:2px solid #cbd5e1;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:1.02rem;line-height:1.7;max-height:280px;overflow-y:auto;color:#1f2937}
+    .bio-block p{margin:6px 0}
+    .bio-block .key-fact.revealed{background:#fef08a;padding:1px 4px;border-radius:3px;box-shadow:0 0 0 2px rgba(234,179,8,.4);transition:all .3s}
+    /* Live-click sentence highlighting */
+    .hl-sentence{cursor:pointer;padding:2px 3px;border-radius:4px;transition:background .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+    .hl-sentence:hover{background:#fef9c3}
+    .hl-sentence.highlighted{background:#fde047;box-shadow:0 0 0 2px rgba(234,179,8,.5);font-weight:500}
+    .hl-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 8px;font-size:.95rem}
+    .hl-counter{background:#1e293b;color:#fef08a;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.9rem;letter-spacing:.5px}
+    /* WAGOLL Ghost Typer */
+    .wagoll-trigger{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);color:#fff;font-weight:900;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 4px 12px rgba(124,58,237,.3);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+    .wagoll-trigger:hover{background:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);transform:translateY(-2px)}
+    .wagoll-panel{display:none;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,rgba(219,39,119,.06) 100%);border:3px solid var(--ido-border);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;animation:fadeInUp .4s ease-out}
+    .wagoll-panel.visible{display:block}
+    .wagoll-panel::before{content:'🪄 WAGOLL — What A Good One Looks Like';position:absolute;top:-12px;left:14px;background:var(--ido-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+    .wagoll-text{font-family:'Georgia',serif;font-size:1rem;line-height:1.65;color:#1e293b;min-height:80px;padding:6px 4px}
+    .wagoll-text .cursor{display:inline-block;width:2px;height:1em;background:var(--ido-border);margin-left:2px;vertical-align:text-bottom;animation:caretBlink .9s steps(2) infinite}
+    @keyframes caretBlink{50%{opacity:0}}
+    .wagoll-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .wagoll-tag{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:5px;letter-spacing:.5px;display:none}
+    .wagoll-tag.show{display:inline-block;animation:fadeInUp .3s}
+    /* Mid-Point Peer Check overlay */
+    @keyframes midpointPulse{0%,100%{box-shadow:0 0 30px rgba(56,189,248,.6),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(56,189,248,.9),0 0 100px rgba(124,58,237,.6)}}
+    .midpoint-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:8500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .25s ease}
+    .midpoint-overlay.visible{display:flex}
+    .midpoint-modal{background:linear-gradient(135deg,#e0f2fe 0%,#ede9fe 100%);border:4px solid var(--scaffold-border);border-radius:24px;padding:30px 36px;text-align:center;animation:lessonCompletePop .55s cubic-bezier(.34,1.56,.64,1),midpointPulse 2.4s ease-in-out 0.55s infinite;max-width:600px;width:90%}
+    .midpoint-modal .mp-tag{display:inline-block;background:var(--scaffold-border);color:#fff;padding:4px 14px;border-radius:6px;font-size:.78rem;font-weight:900;letter-spacing:1.5px;margin-bottom:8px}
+    .midpoint-modal h2{margin:6px 0 10px;color:#0c4a6e;font-size:1.7rem;border:none;padding:0}
+    .midpoint-modal .mp-prompt{background:rgba(255,255,255,.85);border-left:6px solid var(--task-border);padding:14px 16px;border-radius:10px;margin:10px 0;font-size:1.1rem;color:#1e293b;font-weight:600;text-align:left}
+    .midpoint-modal .mp-prompt strong{color:#9a3412}
+    .midpoint-modal .mp-sub{font-size:.92rem;color:#475569;font-style:italic;margin:6px 0}
+    .midpoint-modal button{background:var(--scaffold-border);color:#fff;border:none;padding:11px 26px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;font-size:1.05rem;transition:all .2s}
+    .midpoint-modal button:hover{background:#0284c7;transform:translateY(-2px)}
+    @media (max-width:640px){
+      .wagoll-panel{padding:14px 12px}.wagoll-text{font-size:.92rem}
+      .midpoint-modal{padding:22px 20px;max-width:94%}
+      .midpoint-modal h2{font-size:1.3rem}
+      .midpoint-modal .mp-prompt{font-size:.95rem;padding:10px 12px}
+      .hl-toolbar{font-size:.85rem;gap:6px}
+    }
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ================= V5 ADDITIONS ================= */
+    /* (1) Animated floating title dots */
+    @keyframes floatDot{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+    .title-dots{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .title-dot{position:absolute;border-radius:50%;animation:floatDot ease-in-out infinite;will-change:transform}
+    .title-stage{position:relative;z-index:1}
+    /* (2) Step-by-step reveal on I Do slides */
+    .v5-step-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ido-bg);border:2px solid var(--ido-border);border-radius:12px;padding:8px 14px;margin:8px 0 12px}
+    .v5-step-controls button{background:var(--ido-border);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-weight:900;cursor:pointer;font-size:.95rem;box-shadow:0 3px 8px rgba(124,58,237,.25)}
+    .v5-step-controls button:hover{background:#5b21b6;transform:translateY(-2px)}
+    .v5-step-controls button:disabled{background:var(--success);cursor:default;transform:none;opacity:.85}
+    .v5-step-label{font-weight:900;color:var(--ido-border);font-size:.92rem;letter-spacing:.5px}
+    .v5-step-hint{font-size:.85rem;color:var(--muted)}
+    .v5-step{display:none}
+    .v5-step.revealed{display:block;animation:fadeInUp .45s ease-out}
+    .compare-grid-3 .v5-step.revealed{display:block}
+    /* (3) TURN & TALK bridge prompt */
+    @keyframes ttPulse{0%,100%{box-shadow:0 0 0 0 rgba(219,39,119,.0)}50%{box-shadow:0 0 0 5px rgba(219,39,119,.12)}}
+    .turn-talk{background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 100%);border:3px solid var(--wedo-border);border-radius:14px;padding:14px 18px;margin-top:14px;position:relative;animation:ttPulse 2.6s ease-in-out infinite}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-12px;left:16px;background:var(--wedo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.74rem;font-weight:900;letter-spacing:1px}
+    .turn-talk p{margin:4px 0;font-size:1.05rem;color:#831843;font-weight:600}
+    .turn-talk .tt-sub{font-size:.85rem;color:#9d174d;font-style:italic;font-weight:500}
+    @media (max-width:640px){.v5-step-controls{padding:6px 10px;gap:8px}.v5-step-controls button{padding:6px 12px;font-size:.85rem}.turn-talk p{font-size:.95rem}.title-dot{display:none}}
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L6 Dalí → L7 Höch';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+      .fact-carousel{padding:18px 14px;min-height:140px}
+      .fact-text{font-size:1rem}
+      .fact-num{font-size:1.8rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+      .bio-block{font-size:.92rem;padding:12px;max-height:240px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="auto-timer">
+  <span id="auto-timer-icon">⏱</span>
+  <span id="auto-timer-display">00:00</span>
+  <button class="at-btn" onclick="autoTimerToggle()" title="Play/Pause">▶</button>
+  <button class="at-btn" onclick="autoTimerReset()" title="Reset">↺</button>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">👥 TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">🎲 Cold Call</button>
+
+<!-- LESSON COMPLETE OVERLAY (Höch Research + Collage) -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>🔎</span><span>🌟</span><span>📇</span></div>
+    <h2>Höch Fact File Complete!</h2>
+    <p>Researched · Sorted · Own Words ✊</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> Found the strong facts — and binned the filler</span>
+      <span><strong>✓</strong> Sorted facts under six expert headings</span>
+      <span><strong>✓</strong> Wrote in your OWN words — cover, say, write</span>
+      <span><strong>✓</strong> Said why Höch matters — like a critic would</span>
+      <span style="margin-top:8px;font-style:italic;color:var(--ido-border)"><strong>Next lesson:</strong> you study one of her REAL artworks and write an evaluation!</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<!-- MID-POINT PEER CHECK OVERLAY (Independent Work, fires at 7:30 mark) -->
+<div class="midpoint-overlay" id="mp-overlay">
+  <div class="midpoint-modal">
+    <span class="mp-tag">⏸ MID-POINT PEER CHECK</span>
+    <h2>Pens down — quick partner check!</h2>
+    <div class="mp-prompt">📣 Swap fact files with your partner. <strong>Tick one fact</strong> that is clearly in their OWN words — then <strong>name one heading</strong> they still need to fill (or strengthen).</div>
+    <p class="mp-sub">2 minutes max. Then I'll resume the timer and you've got 7:30 left.</p>
+    <button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button>
+  </div>
+</div>
+
+
+<div class="slide-container">
+
+<!-- SLIDE 1 - TITLE -->
+<div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><div class="title-dots" aria-hidden="true"><span class="title-dot" style="left:8%;top:18%;width:26px;height:26px;background:#9c27b0;opacity:.18;animation-duration:6s"></span><span class="title-dot" style="left:20%;top:62%;width:16px;height:16px;background:#b85042;opacity:.22;animation-duration:5s;animation-delay:.6s"></span><span class="title-dot" style="left:84%;top:22%;width:30px;height:30px;background:#d4a574;opacity:.20;animation-duration:7s;animation-delay:.3s"></span><span class="title-dot" style="left:90%;top:68%;width:14px;height:14px;background:#7d8a99;opacity:.25;animation-duration:5.5s;animation-delay:1s"></span><span class="title-dot" style="left:12%;top:84%;width:20px;height:20px;background:#db2777;opacity:.15;animation-duration:6.5s;animation-delay:.9s"></span><span class="title-dot" style="left:74%;top:84%;width:22px;height:22px;background:#7c3aed;opacity:.16;animation-duration:6s;animation-delay:.4s"></span><span class="title-dot" style="left:50%;top:10%;width:12px;height:12px;background:#eab308;opacity:.28;animation-duration:4.8s;animation-delay:1.3s"></span><span class="title-dot" style="left:32%;top:30%;width:10px;height:10px;background:#b85042;opacity:.20;animation-duration:5.2s;animation-delay:.2s"></span></div><div class="title-stage" style="text-align:center;margin-top:3%"><div class="animate-enter"><span class="slide-tag tag-lesson">Lesson 8</span><h1>Hannah Höch: The Fact File</h1><p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Last lesson you made the collage. Today you meet the woman who started it all.</p><div class="title-hero">
+        <div class="hero-palette" title="Research the artist">🔎</div>
+        <div class="hero-arrow-art">→<span class="a-text">RESEARCH</span></div>
+        <div class="hero-grid-svg" title="Fact file card">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="6" fill="#fffdf5" stroke="#d4a574" stroke-width="2"/><rect x="10" y="8" width="48" height="9" rx="2" fill="#9c27b0" opacity=".85"/><rect x="66" y="8" width="24" height="26" rx="2" fill="#d8c4a8"/><circle cx="78" cy="17" r="6" fill="#c9a07a"/><rect x="70" y="25" width="16" height="7" rx="2" fill="#b85042" opacity=".7"/><rect x="10" y="24" width="50" height="4" rx="2" fill="#7d8a99"/><rect x="10" y="32" width="44" height="4" rx="2" fill="#7d8a99"/><rect x="10" y="44" width="80" height="4" rx="2" fill="#cbd5e1"/><rect x="10" y="52" width="74" height="4" rx="2" fill="#cbd5e1"/><rect x="10" y="60" width="80" height="4" rx="2" fill="#cbd5e1"/><rect x="10" y="72" width="34" height="8" rx="3" fill="#22c55e" opacity=".75"/><rect x="48" y="72" width="34" height="8" rx="3" fill="#eab308" opacity=".75"/><rect x="10" y="85" width="72" height="4" rx="2" fill="#cbd5e1"/></svg>
+        </div>
+        <div class="hero-tag-art">One artist. Six headings.<br>Your own words.<span class="small">Today: dig into Höch's life and build a fact file you're proud of.</span></div>
+      </div><div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li>Research Hannah Höch and select the facts that matter</li><li>Organise facts under fact-file headings</li><li>Write a fact file in your OWN words</li></ul></div><div class="scaffold-box" style="max-width:680px;margin:0 auto;text-align:left"><strong>Key words:</strong> photomontage • Dada • juxtaposition • fact file • own words</div><div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher</button></div><p style="font-size:.85rem;color:var(--muted);margin:8px 0 0">Pack: KO • arrival quiz • bio sheet • fact-or-filler grid • fact-file frame • scaffolds • exit • feedback sheet.</p></div></div></div></div>
+
+<!-- SLIDE 2 - LAST LESSON BRIDGE -->
+<div class="slide" id="bridge-slide" data-title="Last Lesson Bridge" data-timer="2"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-lesson" style="background:var(--lo-bg);color:var(--lo-border)">Bridge</span><h2>Last lesson: you built a face collage ✂️</h2><div class="li-box"><strong>You already worked like Höch:</strong> you cut eyes, mouths and hair from different photos and glued them into a brand-new face. Today we find out <strong>who invented that technique</strong> — and you become the expert on her.</div>
+  <div class="content-grid" style="height:auto">
+    <div class="ido-box"><h3 style="margin-top:0">🧠 Hold onto these from last lesson</h3><p style="font-size:1.05rem"><strong>Photomontage</strong> — a picture built from cut-up photos.<br><strong>Juxtaposition</strong> — two clashing things placed side by side.<br>Your collage face used BOTH.</p></div>
+    <div class="task-box"><h3 style="margin-top:0;color:#9a3412">🎯 Where we're heading</h3><p style="font-size:1.05rem"><strong>Today (L8):</strong> research Höch → build a <strong>fact file</strong>.<br><strong>Next lesson (L9):</strong> study one of her real artworks → write an <strong>evaluation</strong> like a critic.</p></div>
+  </div>
+  <div class="turn-talk"><p>Tell your partner ONE thing you remember about your collage face — which two pieces clashed the most?</p><p class="tt-sub">Use the word "juxtaposition" if you can.</p></div>
+</div>
+
+<!-- SLIDE 3 - ARRIVAL (retrieval quiz) -->
+<div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-arrival">Retrieval Quiz</span><h2>Arrival Task — Retrieval Quiz (Do Now)</h2><div class="li-box"><strong>Instructions:</strong> Answer from memory. Q4 leads into today.</div><button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle"><button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher</button></div>
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box"><p><strong>1)</strong> What is a <em>collage</em>?</p><p class="answer">A picture made by sticking different materials or images onto a surface.</p></div>
+    <div class="task-box"><p><strong>2)</strong> Cutting up <em>photos</em> and gluing them into a new picture is called…?</p><p class="answer">Photomontage.</p></div>
+    <div class="task-box"><p><strong>3)</strong> What does <em>juxtaposition</em> mean?</p><p class="answer">Placing two unrelated/clashing things side by side.</p></div>
+    <div class="task-box"><p><strong>4)</strong> In your collage face, which pieces came from DIFFERENT photos?</p><p class="answer">Open answer — e.g. eyes, mouth, hair from different magazine photos.</p></div>
+  </div>
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box"><p><strong>1)</strong> What's the difference between <em>collage</em> and <em>photomontage</em>?</p><p class="answer">Collage = any stuck-down materials; photomontage = specifically cut-up photographs.</p></div>
+    <div class="task-box"><p><strong>2)</strong> Why did your collage face look strange or unsettling?</p><p class="answer">The pieces clashed — different scales, tones and sources (juxtaposition).</p></div>
+    <div class="task-box"><p><strong>3)</strong> Which artist painted dream-like scenes — Höch's opposite?</p><p class="answer">Salvador Dalí (Surrealism, painted by hand).</p></div>
+    <div class="task-box"><p><strong>4)</strong> A fact file needs facts. What makes a fact DIFFERENT from an opinion?</p><p class="answer">A fact can be checked/proved; an opinion is what someone thinks.</p></div>
+  </div>
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box"><p><strong>1)</strong> Define photomontage AND name what makes it different from painting.</p><p class="answer">Cutting and reassembling real photographs; it re-uses real media images rather than inventing by hand.</p></div>
+    <div class="task-box"><p><strong>2)</strong> Why is juxtaposition the engine of a photomontage?</p><p class="answer">The clash between unrelated pieces is what creates the new meaning/message.</p></div>
+    <div class="task-box"><p><strong>3)</strong> Give one fact and one opinion about your own collage.</p><p class="answer">Open — e.g. fact: "I used five cut pieces"; opinion: "the giant eye looks creepy".</p></div>
+    <div class="task-box"><p><strong>4)</strong> If you researched an artist, what 3 headings would you use?</p><p class="answer">Open — e.g. life/born, movement/style, famous work, technique, why they matter.</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 4 - STARTER: FACT OR FILLER -->
+<div class="slide" id="starter-slide" data-title="Starter: Fact or Filler?" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-starter">Starter</span><h2>Starter — Fact or Filler? 🧐</h2><div class="li-box"><strong>A good fact file has STRONG facts — not filler.</strong> Tap each card: is it a <strong>strong fact</strong> (⭐ worth writing down) or <strong>filler</strong> (🗑️ vague, obvious or just an opinion)? Find all <strong>4 strong facts</strong> to fill the XP bar.</div>
+  <div class="score-bar"><span>Strong facts found:</span><span class="score"><span id="ff-num">0</span> / 4</span><span id="ff-msg" style="font-weight:700;color:var(--scaffold-border);margin-left:auto"></span></div>
+  <div class="arrival-grid" id="ff-grid">
+    <div class="task-box ff-card" data-ff="fact" onclick="ffPick(this)"><p style="margin:0"><strong>"Höch was born in Germany in 1889."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+    <div class="task-box ff-card" data-ff="filler" onclick="ffPick(this)"><p style="margin:0"><strong>"Höch was an artist who made art."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+    <div class="task-box ff-card" data-ff="fact" onclick="ffPick(this)"><p style="margin:0"><strong>"She helped invent photomontage."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+    <div class="task-box ff-card" data-ff="filler" onclick="ffPick(this)"><p style="margin:0"><strong>"I think her pictures look really weird."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+    <div class="task-box ff-card" data-ff="fact" onclick="ffPick(this)"><p style="margin:0"><strong>"She was the only woman in the Berlin Dada group."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+    <div class="task-box ff-card" data-ff="fact" onclick="ffPick(this)"><p style="margin:0"><strong>"She cut images from magazines she worked on at a publishing house."</strong></p><p class="ff-fb" style="display:none;margin:8px 0 0;font-weight:700"></p></div>
+  </div>
+  <div class="scaffold-box"><strong>🧭 Test for a strong fact:</strong> Is it specific? Can it be checked? Does it teach the reader something new? If yes ×3 — it earns a place in your fact file.</div>
+  <div class="turn-talk"><p>Say one of the FILLER cards out loud and explain to your partner WHY it's weak.</p><p class="tt-sub">Listen for: "too vague", "just an opinion", "doesn't tell us anything new".</p></div>
+</div>
+
+<!-- SLIDE 5 - I DO 1: Who Was Hoch? (fact carousel) -->
+<div class="slide" data-title="I Do: Who Was Höch?" data-timer="5" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Who Was Hannah Höch?</h2><div class="li-box"><strong>Key Idea:</strong> A German Dada artist who invented photomontage — cutting up printed photos to build bold new images that challenged society.</div><div class="scaffold-box"><strong>📝 Jot facts as we go</strong> — these are the raw material for your fact file. Aim for 5+.</div>
+  <div class="fact-carousel"><div class="fact-num"><span id="factNum">1</span>/10</div><div class="fact-text" id="factText"></div><div class="fact-nav"><button onclick="changeFact(-1)">◀ Back</button><button onclick="changeFact(1)">Next ▶</button></div><div class="fact-dots" id="factDots"></div></div>
+  <div class="turn-talk"><p>Tell your partner the ONE fact so far you'd put at the TOP of your fact file — and say why it matters.</p><p class="tt-sub">Then swap: did you choose the same fact? Listen for "because…"</p></div>
+</div>
+
+<!-- SLIDE 6 - WE DO 1: Research Dig (live highlighting) -->
+<div class="slide" data-title="We Do: Research Dig" data-timer="6" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Research Dig ⛏️</h2><div class="li-box"><strong>Real researchers don't copy everything — they MINE the text.</strong> Read the bio together. Tap a sentence to highlight it if it deserves a place in the fact file. Can we find the <strong>6 golden facts</strong>?</div>
+  <div class="hl-toolbar"><span class="hl-counter">🖍️ Highlighted: <span id="hl-count">0</span></span><button class="small" onclick="revealKeyFacts()">✨ Reveal the 6 golden facts</button><button class="small ghost" onclick="resetHighlights()">↺ Reset</button></div>
+  <div class="bio-block" id="bio-block">
+    <p><span class="hl-sentence key-fact">Hannah Höch was born on 1 November 1889 in Gotha, Germany.</span> <span class="hl-sentence">She liked drawing as a child.</span> <span class="hl-sentence">She studied applied arts and graphic design in Berlin.</span></p>
+    <p><span class="hl-sentence key-fact">From 1916 she worked at the Ullstein publishing house, designing patterns for women's magazines — so she was surrounded by printed photos all day.</span> <span class="hl-sentence">The office was in the centre of Berlin.</span> <span class="hl-sentence key-fact">She became the ONLY woman in the Berlin Dada group — a radical anti-art movement born from disgust at the First World War.</span></p>
+    <p><span class="hl-sentence key-fact">Höch helped invent photomontage: cutting photographs from magazines, newspapers and adverts, then reassembling them into strange new images.</span> <span class="hl-sentence">She used ordinary scissors and glue.</span> <span class="hl-sentence key-fact">Her most famous work, "Cut with the Kitchen Knife…" (1919), is a chaotic collage attacking German politics and society.</span></p>
+    <p><span class="hl-sentence">Many people saw her work in galleries.</span> <span class="hl-sentence key-fact">Much of her art questioned beauty standards and the "New Woman" ideal sold by 1920s magazines; later the Nazis branded her work "degenerate", and she kept making art quietly in private until her death in Berlin in 1978.</span> <span class="hl-sentence">She is still talked about today.</span></p>
+  </div>
+  <div class="turn-talk"><p>Pick ONE highlighted sentence and shrink it to a 6-word fact with your partner.</p><p class="tt-sub">e.g. "Invented photomontage — cut-up photo art." Shorter = stronger.</p></div>
+</div>
+
+<!-- SLIDE 7 - I DO 2: Building a Fact File -->
+<div class="slide" data-title="I Do: Building a Fact File" data-timer="6" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Building a Fact File 📇</h2><div class="li-box"><strong>Key Idea:</strong> A fact file isn't a list of copied sentences — it's facts SORTED under headings, written in YOUR OWN WORDS.</div>
+  <div class="v5-step-controls"><button onclick="v5RevealNext(this)">▶ Reveal next step</button><span class="v5-step-label">Step 0 of 4</span></div>
+  <div class="v5-step"><div class="ido-box"><strong>Step 1 — The six headings.</strong> 👶 Born &amp; died • 🎨 Movement &amp; style • ✂️ Technique • 📰 Day job &amp; life • 🖼️ Famous work • ⭐ Why she matters. Every fact you found fits under one of these.</div></div>
+  <div class="v5-step"><div class="ido-box"><strong>Step 2 — Sort, don't dump.</strong> Take a highlighted fact → ask "which heading does this belong to?" → write it there. A sorted fact file reads like an expert wrote it.</div></div>
+  <div class="v5-step"><div class="ido-box"><strong>Step 3 — The golden rule: OWN WORDS.</strong> Cover the bio. Say the fact out loud to yourself. THEN write it. If your sentence matches the bio word-for-word, you copied — cover and try again.</div></div>
+  <div class="v5-step"><div class="ido-box"><strong>Step 4 — Finish with a "Why she matters" sentence.</strong> This is the expert touch: one sentence that says why anyone should care. Watch what a good one looks like ⤵️</div></div>
+  <button class="wagoll-trigger" onclick="startWagoll()">🪄 Show me a WAGOLL fact-file entry</button>
+  <div class="wagoll-panel" id="wagoll-panel"><div class="wagoll-text" id="wagoll-text"></div><div class="wagoll-tags" id="wagoll-tags"><span class="wagoll-tag" data-trigger="photomontage">✂️ KEY WORD</span><span class="wagoll-tag" data-trigger="only woman">📌 SPECIFIC FACT</span><span class="wagoll-tag" data-trigger="because">🔗 BECAUSE = EXPLAINING</span><span class="wagoll-tag" data-trigger="still copy">⭐ WHY SHE MATTERS</span></div><div style="margin-top:8px;display:flex;gap:8px"><button class="small ghost" onclick="restartWagoll()">↺ Replay</button><button class="small ghost" onclick="skipWagoll()">⏩ Skip to end</button></div></div>
+</div>
+
+<!-- SLIDE 8 - WE DO 2: Sort the Fact File -->
+<div class="slide" id="wedo2" data-title="We Do: Sort the Fact File" data-timer="5" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Sort the Fact File 🗂️</h2><div class="li-box"><strong>Practice the sort before you write.</strong> Tap a fact (pill), then tap the heading it belongs under. 5 facts, 5 headings.</div>
+  <div class="score-bar"><span>Sorted:</span><span class="score"><span id="match-score">0</span> / 5</span><span id="match-fb" style="font-weight:800;margin-left:auto"></span><button class="small ghost" onclick="resetMatch()">↺ Reset</button><button class="small ghost" onclick="revealMatch()">👁️ Reveal</button></div>
+  <div id="kw-pills" style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0">
+    <div class="match-pill" onclick="selectKW(this,'f1')">"Born 1889 in Gotha; died 1978 in Berlin"</div>
+    <div class="match-pill" onclick="selectKW(this,'f2')">"The only woman in Berlin Dada"</div>
+    <div class="match-pill" onclick="selectKW(this,'f3')">"Cut up photos and reassembled them"</div>
+    <div class="match-pill" onclick="selectKW(this,'f4')">"Designed magazine patterns at Ullstein"</div>
+    <div class="match-pill" onclick="selectKW(this,'f5')">"'Cut with the Kitchen Knife…' (1919)"</div>
+  </div>
+  <div class="arrival-grid" style="grid-template-columns:repeat(5,1fr);gap:10px">
+    <div class="match-target" data-correct="f1" onclick="pickTarget(this)">👶 Born &amp; died</div>
+    <div class="match-target" data-correct="f2" onclick="pickTarget(this)">🎨 Movement &amp; style</div>
+    <div class="match-target" data-correct="f3" onclick="pickTarget(this)">✂️ Technique</div>
+    <div class="match-target" data-correct="f4" onclick="pickTarget(this)">📰 Day job &amp; life</div>
+    <div class="match-target" data-correct="f5" onclick="pickTarget(this)">🖼️ Famous work</div>
+  </div>
+  <div class="scaffold-box" style="margin-top:14px"><strong>🧠 Heading six — ⭐ Why she matters — has no pill.</strong> That's because YOU write that one yourself, in your own voice, during Independent Work.</div>
+  <div class="turn-talk"><p>With your partner, draft a "Why she matters" sentence out loud — one each, then pick the stronger one.</p><p class="tt-sub">Starter: "Höch matters because…" — ban the word "famous", it's filler!</p></div>
+</div>
+
+<!-- SLIDE 9 - INDEPENDENT WORK -->
+<div class="slide" data-title="Independent Work" data-timer="0" data-no-autostart="true" data-type="independent"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work — Build Your Höch Fact File</h2><div class="li-box"><strong>Your sketchbook, one page, six headings.</strong> Use your highlighted facts and the carousel. Golden rule: <strong>own words</strong> — cover the bio, say it, then write it.</div>
+  <div class="timer-widget"><div class="timer-display" id="timerDisplay">15:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation</h3><p>Title "Hannah Höch" + the six headings. Write <strong>one fact under each heading</strong> using the sentence starters. Add 1 small drawing or symbol per heading (e.g. ✂️ for technique).</p><p style="font-style:italic;color:var(--muted);font-size:1rem">"Höch was born in _____." • "Her technique was _____."</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle</h3><p>Six headings, <strong>6+ facts in your own words</strong> (cover-say-write), 1 image/symbol per section, and a full <strong>"Why she matters"</strong> sentence using "because".</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher</h3><p><strong>8+ own-word facts</strong> with context (WWI → Dada; 1920s magazines → the "New Woman"), a short <strong>Höch vs Dalí</strong> comparison under Technique, and a 2–3 sentence "Why she matters" linking her to collage art today.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Foundation: one starter per heading is on your sheet. Middle: write the fact, then re-read — does it match the bio word-for-word? Rewrite if so. Higher: every fact should answer "so what?" — add the because.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation:</strong> 6 headings, 1 fact each, own words attempted, 1 symbol per heading.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle:</strong> 6+ own-word facts sorted correctly, images, "because" in Why she matters.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher:</strong> 8+ facts with context, Dalí comparison, expert "Why she matters" paragraph.</p>
+      </div>
+      <div class="aspire-box"><strong>🚀 Aspire:</strong> finished early? Add a "Key words" box (photomontage • Dada • juxtaposition) with your own one-line definitions — you'll need them next lesson when we evaluate a real Höch artwork.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 - EXIT TICKET -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-exit">Exit Ticket</span><h2>Exit Ticket</h2><div class="li-box"><strong>Instructions:</strong> Answer independently. No notes — your fact file stays closed.</div>
+  <div class="level-toggle"><button onclick="switchLevel('exit','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('exit','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('exit','higher')" style="background:#1e3a8a">Higher</button><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button></div>
+  <div id="exit-foundation" class="task-box">
+    <p><strong>1) What technique did Hannah Höch help invent?</strong></p><p class="answer">Photomontage — cutting up photos and gluing them into a new image.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Name ONE heading from your fact file.</strong></p><p class="answer">Any of: Born &amp; died / Movement &amp; style / Technique / Day job &amp; life / Famous work / Why she matters.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Why must a fact file be in your OWN words?</strong></p><p class="answer">Copying isn't learning — own words prove you understood it (and it's honest research).</p>
+  </div>
+  <div id="exit-middle" class="task-box" style="display:none">
+    <p><strong>1) Give two strong facts about Höch — from two different headings.</strong></p><p class="answer">e.g. Technique: invented photomontage; Movement: only woman in Berlin Dada (any two valid).</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What makes a fact "strong" rather than filler?</strong></p><p class="answer">Specific, checkable, and teaches the reader something new — not vague or just opinion.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Why did Höch have so many printed photos to cut up?</strong></p><p class="answer">She worked at the Ullstein publishing house designing for women's magazines — mass-media images surrounded her.</p>
+  </div>
+  <div id="exit-higher" class="task-box" style="display:none">
+    <p><strong>1) Explain how Höch's day job shaped her art.</strong></p><p class="answer">At Ullstein she handled magazine imagery daily — the same mass-media photos became her raw material AND her target: she cut up the media she knew from the inside.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) "Höch matters because…" — finish it like an expert (no "famous").</strong></p><p class="answer">e.g. …because she proved cut-up real photographs could criticise society more directly than paint, and every collage artist since borrows her invention.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What was Dada, and why did it appear when it did?</strong></p><p class="answer">A radical anti-art movement born from disgust at WWI — artists mocked the "logical" society that had produced the slaughter.</p>
+  </div>
+</div>
+
+</div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+
+<div id="print-area">
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L8): Hannah Höch — Fact File</h1><table class="ko-table"><tr><th>Heading</th><th>Key facts</th></tr><tr><td>👶 Born &amp; died</td><td>Born 1 November 1889, Gotha, Germany • Died 1978, Berlin, aged 88</td></tr><tr><td>🎨 Movement &amp; style</td><td>Berlin Dada — anti-art movement born from disgust at WWI • the ONLY woman in the group</td></tr><tr><td>✂️ Technique</td><td>Photomontage — cutting photos from magazines/newspapers and reassembling them into new images</td></tr><tr><td>📰 Day job &amp; life</td><td>From 1916 designed patterns for women's magazines at the Ullstein publishing house • surrounded by printed media imagery</td></tr><tr><td>🖼️ Famous work</td><td>"Cut with the Kitchen Knife…" (1919) — chaotic collage attacking German politics and society</td></tr><tr><td>⭐ Why she matters</td><td>Proved cut-up REAL photos could critique society • questioned beauty standards and the "New Woman" • pioneer of all collage art since</td></tr></table><table class="ko-table"><tr><th>Word</th><th>Meaning</th></tr><tr><td>Fact file</td><td>Facts sorted under headings, written in your own words</td></tr><tr><td>Photomontage</td><td>Cutting &amp; reassembling photos into a new image</td></tr><tr><td>Dada</td><td>Anti-art movement born from disgust at WWI</td></tr><tr><td>Juxtaposition</td><td>Placing two unrelated things side by side</td></tr><tr><td>Own words</td><td>Cover the source → say it → write it — never copy</td></tr></table></div>
+<div id="print-arrival" class="print-section"><h2>Arrival Task — Retrieval Quiz (Do Now)</h2><div class="foundation-content"><h3>Foundation</h3><p>1) What is a collage?</p><div class="print-line"></div><p>2) Cutting up photos and gluing them into a new picture is called…?</p><div class="print-line"></div><p>3) What does juxtaposition mean?</p><div class="print-line"></div><p>4) In your collage face, which pieces came from different photos?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) What's the difference between collage and photomontage?</p><div class="print-line"></div><p>2) Why did your collage face look strange or unsettling?</p><div class="print-line"></div><p>3) Which artist painted dream-like scenes — Höch's opposite?</p><div class="print-line"></div><p>4) What makes a fact different from an opinion?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) Define photomontage and what makes it different from painting.</p><div class="print-line"></div><p>2) Why is juxtaposition the engine of a photomontage?</p><div class="print-line"></div><p>3) Give one fact and one opinion about your own collage.</p><div class="print-line"></div><p>4) If you researched an artist, what 3 headings would you use?</p><div class="print-line"></div></div></div>
+<div id="print-starter" class="print-section"><h2>Höch Bio Sheet — mine it for facts, then write in YOUR OWN WORDS</h2><p>Hannah Höch was born on 1 November 1889 in Gotha, Germany. She studied applied arts and graphic design in Berlin. From 1916 she worked at the Ullstein publishing house, designing embroidery and sewing patterns for women's magazines — surrounding her with printed photographs and mass-media imagery every day.</p><p>She became the only woman in the Berlin Dada group, a radical anti-art movement that grew out of disgust at the First World War. Höch helped invent photomontage: cutting photographs from newspapers, magazines and adverts and reassembling them into strange new images. Her most famous work, "Cut with the Kitchen Knife…" (1919), is a chaotic collage attacking German politics and society.</p><p>Much of her work questioned beauty standards and the idea of the "New Woman" sold by 1920s magazines. The Nazis branded her work "degenerate" and she lived quietly through the Second World War, continuing to make art in private. She died in Berlin in 1978, aged 88 — remembered as a pioneer of collage.</p><p style="font-weight:bold;margin-top:14px">🖍️ Highlight the 6 golden facts — one for each fact-file heading.</p></div>
+<div id="print-bridge" class="print-section"><h2>🧐 Starter — Fact or Filler?</h2><p style="font-size:.95rem">Tick ⭐ STRONG FACT or 🗑️ FILLER for each statement — and say why.</p><table class="ko-table"><tr><th>Statement</th><th>⭐ / 🗑️</th><th>Why?</th></tr><tr><td>"Höch was born in Germany in 1889."</td><td></td><td></td></tr><tr><td>"Höch was an artist who made art."</td><td></td><td></td></tr><tr><td>"She helped invent photomontage."</td><td></td><td></td></tr><tr><td>"I think her pictures look really weird."</td><td></td><td></td></tr><tr><td>"She was the only woman in the Berlin Dada group."</td><td></td><td></td></tr><tr><td>"She cut images from magazines she worked on at a publishing house."</td><td></td><td></td></tr></table></div>
+<div id="print-wedo" class="print-section"><h2>Fact File Frame — Hannah Höch</h2><div class="prevent-break"><h3>👶 Born &amp; died</h3><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><h3>🎨 Movement &amp; style</h3><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><h3>✂️ Technique</h3><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><h3>📰 Day job &amp; life</h3><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><h3>🖼️ Famous work</h3><div class="print-line"></div><div class="print-line"></div></div><div class="prevent-break"><h3>⭐ Why she matters</h3><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+<div id="print-scaffold-foundation" class="print-section"><h2>Scaffolding – Foundation</h2><div class="scaffold-print-box"><p>"Höch was born in _____ in the year _____."</p><p>"She belonged to an art movement called _____."</p><p>"Her technique, called _____, means cutting up _____ and gluing them into a new picture."</p><p>"Her day job was designing patterns for _____."</p><p>"Her most famous work is called _____."</p><p>"Höch matters because _____."</p></div></div>
+<div id="print-scaffold-middle" class="print-section"><h2>Scaffolding – Middle</h2><div class="scaffold-print-box"><p>Own-words routine: COVER the bio → SAY the fact → WRITE it → CHECK it doesn't match word-for-word.</p><p>"Höch matters because…" — banned word: "famous". Use: invented / proved / questioned / influenced.</p><p>Every section: fact + one extra detail.</p></div></div>
+<div id="print-scaffold-higher" class="print-section"><h2>Scaffolding – Higher</h2><div class="scaffold-print-box"><p>Context links: WWI → Dada (anti-art) • 1920s magazines → the "New Woman" • Nazis → "degenerate art".</p><p>Technique section: add a 2-sentence Höch vs Dalí comparison (cut real photos vs painted dreams — shared word: juxtaposition).</p><p>"Why she matters": 2–3 sentences linking her invention to collage art today.</p></div></div>
+<div id="print-worksheet-foundation" class="print-section"><h2>Independent – Foundation</h2><p>☐ Title "Hannah Höch" ☐ Six headings ☐ One fact under each (use the starters) ☐ One symbol/drawing per heading</p></div>
+<div id="print-worksheet-middle" class="print-section"><h2>Independent – Middle</h2><p>☐ Six headings ☐ 6+ facts in own words (cover-say-write) ☐ Image/symbol per section ☐ "Why she matters" with "because"</p></div>
+<div id="print-worksheet-higher" class="print-section"><h2>Independent – Higher</h2><p>☐ 8+ own-word facts with context ☐ Höch vs Dalí comparison in Technique ☐ 2–3 sentence "Why she matters" ☐ Key words box with own definitions</p></div>
+<div id="print-exit" class="print-section"><div class="foundation-content"><h2>Exit Ticket – Foundation</h2><p>1) What technique did Hannah Höch help invent?</p><div class="print-line"></div><p>2) Name ONE heading from your fact file.</p><div class="print-line"></div><p>3) Why must a fact file be in your OWN words?</p><div class="print-line"></div></div><div class="middle-content"><h2>Exit Ticket – Middle</h2><p>1) Give two strong facts about Höch — from two different headings.</p><div class="print-line"></div><div class="print-line"></div><p>2) What makes a fact "strong" rather than filler?</p><div class="print-line"></div><p>3) Why did Höch have so many printed photos to cut up?</p><div class="print-line"></div></div><div class="higher-content"><h2>Exit Ticket – Higher</h2><p>1) Explain how Höch's day job shaped her art.</p><div class="print-line"></div><div class="print-line"></div><p>2) "Höch matters because…" — finish it like an expert (no "famous").</p><div class="print-line"></div><div class="print-line"></div><p>3) What was Dada, and why did it appear when it did?</p><div class="print-line"></div><div class="print-line"></div></div></div>
+<div id="print-feedback" class="print-section"><h2 style="text-align:center">Höch Fact File — Feedback Sheet</h2><p style="font-size:.95rem;color:#444">For next lesson's review. Keep with your sketchbook.</p><table class="ko-table"><tr><td style="width:50%"><strong>Pupil name:</strong></td><td><strong>Date:</strong></td></tr><tr><td><strong>Artist:</strong> Hannah Höch</td><td><strong>Tier:</strong> F / M / H</td></tr></table><table class="ko-table"><tr><th style="width:50%">Fact file checklist</th><th>Own words check</th></tr><tr><td>☐ Six headings &nbsp; ☐ Facts sorted correctly &nbsp;<br>☐ "Why she matters" included &nbsp; ☐ Images/symbols</td><td>☐ Facts don't match the bio word-for-word &nbsp;<br>☐ At least one "because" explanation</td></tr></table><p style="margin-top:10px"><strong>✅ What Went Well (WWW):</strong></p><div class="print-line"></div><div class="print-line"></div><p><strong>🔧 Even Better If (EBI):</strong></p><div class="print-line"></div><div class="print-line"></div><p style="margin-top:10px"><strong>✍️ Pupil response — "My next step is…"</strong></p><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const t=slides[i]&&slides[i].getAttribute('data-title');if(t==='I Do: Who Was Höch?'&&!factsInit)initFacts();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+/* V5 — step-by-step reveal on I Do slides */
+function v5UpdateLabel(slide){const total=slide.querySelectorAll('.v5-step').length;const shown=slide.querySelectorAll('.v5-step.revealed').length;const lbl=slide.querySelector('.v5-step-label');if(lbl)lbl.textContent='Step '+shown+' of '+total;const btn=slide.querySelector('.v5-step-controls button');if(btn){if(shown>=total){btn.textContent='✓ All revealed';btn.disabled=true;}else{btn.textContent='▶ Reveal next step';btn.disabled=false;}}}
+function v5RevealNext(btn){const slide=btn.closest('.slide');if(!slide)return;const next=slide.querySelector('.v5-step:not(.revealed)');if(next){next.classList.add('revealed');try{playDing()}catch(e){}}v5UpdateLabel(slide);}
+
+/* --- FACT CAROUSEL --- */
+const facts=["Hannah Höch was born on 1 November 1889 in Gotha, Germany.","She was a German Dada artist — and one of the INVENTORS of photomontage.","She studied graphic design and applied arts in Berlin.","From 1916 she worked at the Ullstein publishing house, designing patterns for women's magazines — surrounded by printed images all day.","She was the ONLY woman in the Berlin Dada group — a radical anti-art movement born from the horror of WWI.","Her technique: cut photographs from magazines, newspapers and adverts, then reassemble them into strange new images (PHOTOMONTAGE).","Her most famous work is 'Cut with the Kitchen Knife…' (1919) — a chaotic collage attacking German politics.","Much of her art explored the role of women and the idea of the 'New Woman' in 1920s Germany.","The Nazis branded her work 'degenerate art'; she survived WWII making art quietly in private.","Höch died in Berlin in 1978, aged 88 — remembered as a pioneer of collage."];
+let currentFact=0,factsInit=false;
+function initFacts(){factsInit=true;const d=document.getElementById('factDots');facts.forEach((_,i)=>{const dot=document.createElement('div');dot.className='fact-dot'+(i===0?' active':'');d.appendChild(dot);});showFact();}
+function showFact(){document.getElementById('factText').textContent=facts[currentFact];document.getElementById('factNum').textContent=currentFact+1;document.querySelectorAll('.fact-dot').forEach((d,i)=>d.classList.toggle('active',i===currentFact));}
+function changeFact(d){currentFact=(currentFact+d+facts.length)%facts.length;showFact();}
+
+/* --- STARTER: FACT OR FILLER --- */
+const _ffWhy={fact:'⭐ Strong fact — specific, checkable, teaches something new.',filler:'🗑️ Filler — vague or just an opinion. Leave it out of the fact file.'};
+let _ffFound=0;
+function ffPick(card){
+  if(card.dataset.done)return;card.dataset.done='1';
+  const kind=card.getAttribute('data-ff');const fb=card.querySelector('.ff-fb');
+  fb.style.display='block';fb.textContent=_ffWhy[kind];
+  if(kind==='fact'){
+    card.style.borderColor='var(--success)';card.style.background='rgba(22,163,74,.08)';fb.style.color='var(--success)';
+    _ffFound++;document.getElementById('ff-num').textContent=_ffFound;
+    try{playDing()}catch(e){}try{gainXP()}catch(e){}
+    if(_ffFound===4){const m=document.getElementById('ff-msg');m.style.color='var(--success)';m.textContent='✅ All 4 strong facts found — you can smell filler now!';}
+  }else{
+    card.style.borderColor='var(--error)';card.style.background='rgba(220,38,38,.06)';fb.style.color='var(--error)';
+    try{playBuzz()}catch(e){}
+  }
+}
+
+/* --- LIVE HIGHLIGHTING (Research Dig) --- */
+function revealKeyFacts(){document.querySelectorAll('#bio-block .key-fact').forEach((el,i)=>setTimeout(()=>{el.classList.add('revealed');if(!el.classList.contains('highlighted')){el.classList.add('highlighted');updateHlCount();}},i*220));}
+function updateHlCount(){const c=document.querySelectorAll('#bio-block .hl-sentence.highlighted').length;const el=document.getElementById('hl-count');if(el)el.textContent=c;}
+function resetHighlights(){document.querySelectorAll('#bio-block .hl-sentence').forEach(s=>s.classList.remove('highlighted'));document.querySelectorAll('#bio-block .key-fact.revealed').forEach(s=>s.classList.remove('revealed'));updateHlCount();}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('#bio-block .hl-sentence').forEach(s=>{s.addEventListener('click',()=>{s.classList.toggle('highlighted');if(s.classList.contains('highlighted')){try{playDing()}catch(e){}}updateHlCount();});});});
+
+/* --- WAGOLL GHOST TYPER (fact-file entry) --- */
+const _wagollText="TECHNIQUE — Höch helped invent photomontage: instead of painting, she cut real photographs out of magazines and newspapers and glued the pieces into strange new images. WHY SHE MATTERS — Höch matters because she was the only woman in the Berlin Dada group and she proved that ordinary scissors, glue and the media's own pictures could attack society harder than paint ever could — collage artists today still copy her invention.";
+let _wagollTimer=null,_wagollIdx=0;
+function _wagollClearTags(){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>t.classList.remove('show'));}
+function _wagollCheckTags(soFar){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>{const trig=t.getAttribute('data-trigger');if(trig&&soFar.toLowerCase().includes(trig.toLowerCase())&&!t.classList.contains('show')){t.classList.add('show');try{playDing()}catch(e){}}});}
+function startWagoll(){const panel=document.getElementById('wagoll-panel');panel.classList.add('visible');restartWagoll();}
+function restartWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=0;const out=document.getElementById('wagoll-text');out.innerHTML='<span class="cursor"></span>';_wagollClearTags();_wagollTimer=setInterval(()=>{_wagollIdx++;if(_wagollIdx>_wagollText.length){clearInterval(_wagollTimer);out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);return;}const so=_wagollText.slice(0,_wagollIdx);out.innerHTML=so+'<span class="cursor"></span>';_wagollCheckTags(so);},22);}
+function skipWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=_wagollText.length;document.getElementById('wagoll-text').innerHTML=_wagollText;_wagollCheckTags(_wagollText);}
+
+/* --- MATCH GAME: facts → headings --- */
+let selectedKWId=null;let matchScore=0;
+function selectKW(el,id){selectedKWId=id;document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedKWId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedKWId){el.classList.add('correct');document.querySelector('#kw-pills .match-pill.selected').classList.add('placed');matchScore++;document.getElementById('match-score').textContent=matchScore;fb.textContent='✅ Correct!';fb.style.color='var(--success)';}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);fb.textContent='❌ Try again!';fb.style.color='var(--error)';}selectedKWId=null;}
+function resetMatch(){selectedKWId=null;matchScore=0;document.getElementById('match-score').textContent='0';document.getElementById('match-fb').textContent='';document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.add('placed'));matchScore=5;document.getElementById('match-score').textContent='5';}
+
+/* --- INDEPENDENT TIMER + MIDPOINT --- */
+let timerTotal=900,timerLeft=900,timerInterval=null,timerRunning=false,midpointFired=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;document.getElementById('timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('timerBar').style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';else if(timerLeft<=300)document.getElementById('timerDisplay').style.color='#f97316';else document.getElementById('timerDisplay').style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();if(timerLeft===Math.floor(timerTotal/2)&&!midpointFired){midpointFired=true;fireMidpoint();}}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='⏰ TIME!';try{playBuzz()}catch(e){}}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
+function fireMidpoint(){pauseTimer();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
+function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','bridge','arrival','starter','wedo','exit','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+</script>
+
+<style>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+</style>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}
+document.addEventListener('DOMContentLoaded',()=>{registerXP(9);});/* XP: 4 strong facts (starter) + 5 heading sorts (We Do) */
+const _origPickTarget=window.pickTarget;
+window.pickTarget=function(el){if(!selectedKWId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedKWId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
+
+  /* ============== V4 POLISH JS ============== */
+  const _taBriefs = {
+    'Title': 'Welcome pupils. Sketchbooks open, fresh full page for the fact file. Bio sheets and fact-file frames printed and on tables. Remind pupils: last lesson\'s collage was the warm-up — today they become the expert on the artist.',
+    'Last Lesson Bridge': 'Quick celebration of the collage faces from last lesson. Listen for "photomontage" and "juxtaposition" in the turn & talk — reteach instantly if missing, those two words carry the next two lessons.',
+    'Arrival Task': 'Walk among pupils. Q4 on every tier points at today (facts vs opinion / headings). Anyone shaky on "photomontage" gets a 20-second reteach now, before the research.',
+    'Starter: Fact or Filler?': 'The skill of the lesson in miniature: spotting strong facts. Push past "it\'s good" to WHY — specific, checkable, new. The two filler cards (vague + opinion) are the common traps in pupil fact files; name them.',
+    'I Do: Who Was Höch?': 'Pupils JOT facts as the carousel plays — raw material for the fact file. Big three: invented photomontage, only woman in Berlin Dada, used cut media to critique society.',
+    'We Do: Research Dig': 'Pupils tap sentences on the board (or call them out). The 6 golden facts map onto the 6 fact-file headings — make that link out loud. Decoy sentences ("She liked drawing as a child") are deliberately weak; ask WHY they don\'t earn highlight.',
+    'I Do: Building a Fact File': 'Step-reveal: headings → sort → OWN WORDS → why-she-matters. The cover-say-write routine is the heart of it — model it physically with the bio sheet. The WAGOLL shows a finished entry; deconstruct the tags together.',
+    'We Do: Sort the Fact File': 'Quick sorting rehearsal. If a pupil mis-sorts, ask "what is the fact ABOUT?" rather than correcting. Flag that heading six has no pill on purpose — they author that one.',
+    'Independent Work': 'Fact file in sketchbooks. Watch for copying — enforce cover-say-write. Mid-point peer check fires at 7:30: partners verify own-words and suggest a missing heading. Catch weak "why she matters" sentences — ban "famous".',
+    'Exit Ticket': 'Fact files closed. Anyone who can\'t name a heading or define photomontage needs follow-up before L9. Reveal-answers triggers the lesson-complete overlay. Hand out feedback sheets — L9 starts by reviewing these fact files.'
+  };
+  const _ccQuestions = {
+    'Title': {F:'What artist is today\'s lesson about?',M:'What two things will your fact file need?',H:'Why research an artist BEFORE judging their work?'},
+    'Last Lesson Bridge': {F:'What did you make last lesson?',M:'Which two pieces clashed most in your collage face?',H:'How was your collage already "in the style of" Höch?'},
+    'Arrival Task': {F:'Q2 — cutting up photos and gluing them is called…?',M:'Q4 — what makes a fact different from an opinion?',H:'Q2 — why is juxtaposition the engine of a photomontage?'},
+    'Starter: Fact or Filler?': {F:'Point to one card you think is a strong fact.',M:'Why is "Höch was an artist who made art" filler?',H:'Turn one of the filler cards into a strong fact.'},
+    'I Do: Who Was Höch?': {F:'What nationality was Höch?',M:'What technique did Höch help invent?',H:'Why might working at a magazine publisher have shaped her art?'},
+    'We Do: Research Dig': {F:'Read out one sentence you\'d highlight.',M:'Which heading would that fact go under?',H:'Why does "She liked drawing as a child" NOT earn a highlight?'},
+    'I Do: Building a Fact File': {F:'Name one fact-file heading.',M:'What\'s the cover-say-write routine for?',H:'Why is a SORTED fact file better than a list?'},
+    'We Do: Sort the Fact File': {F:'Which heading does "born 1889" go under?',M:'Why does the famous-work pill not fit under Technique?',H:'Draft a "why she matters" sentence — no "famous" allowed.'},
+    'Independent Work': {F:'Which heading are you on?',M:'Say your last fact out loud — is it in your own words?',H:'What context have you linked — WWI, the New Woman, or Dalí?'},
+    'Exit Ticket': {F:'Q1 — what technique did Höch invent?',M:'Q2 — what makes a fact strong rather than filler?',H:'Q2 — finish it: "Höch matters because…"'}
+  };
+  const _CC_KEY = 'coldCall_art_l8';
+  const _ccDefault = [{n:'Aisha',g:'2'},{n:'Ben',g:'1'},{n:'Carla',g:'3'},{n:'Daniel',g:'U'},{n:'Erin',g:'2'},{n:'Fionn',g:'3'},{n:'Grace',g:'1'},{n:'Hassan',g:'2'},{n:'Imani',g:'4'},{n:'Jay',g:'U'},{n:'Kira',g:'3'},{n:'Liam',g:'2'}];
+  function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return Array.isArray(d)&&d.length?d:_ccDefault.slice()}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+
+  function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>👥 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the ✏️ Edit list button.');return}
+    const tier=_gradeToTier(pick.g);
+    const tierLabel={F:'Foundation',M:'Middle',H:'Higher'}[tier];
+    const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>🎲 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">—</div><span class="cc-tier" id="cc-tier">—</span><div class="cc-question" id="cc-q">—</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">✏️ Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">🎲 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');
+    nameEl.textContent=pick.n;
+    nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');
+    try{playDing()}catch(e){}
+  }
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>✏️ Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">💾 Save</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    const list=_ccLoad();
+    document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');
+    modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){
+    const txt=document.getElementById('cc-edit-area').value;
+    const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);
+    _ccSave(list);_ccRecent=[];
+    document.getElementById('cc-edit-modal').classList.remove('visible');
+  }
+
+  /* AUTO TIMER */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){
+    _atPause();
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}
+    const minStr=slide.getAttribute('data-timer');
+    const noAuto=slide.getAttribute('data-no-autostart')==='true';
+    const min=parseInt(minStr,10);
+    if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}
+    document.body.classList.remove('no-timer');
+    _atTotal=min*60;_atSeconds=_atTotal;_atRender();
+    if(!noAuto)setTimeout(()=>{_atStart()},250);
+  }
+
+  /* LESSON COMPLETE */
+  let _lcShown=false;
+  function _lcShowComplete(){
+    if(_lcShown)return;_lcShown=true;
+    setTimeout(()=>{
+      try{fireConfetti()}catch(e){}
+      try{playLevelUp()}catch(e){}
+      const ov=document.getElementById('lc-overlay');
+      if(ov)ov.classList.add('visible');
+    },400);
+  }
+  function hideLessonComplete(){
+    const ov=document.getElementById('lc-overlay');
+    if(ov)ov.classList.remove('visible');
+  }
+  (function(){
+    const exit=document.getElementById('exit-slide');
+    if(!exit)return;
+    const obs=new MutationObserver(()=>{
+      if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();
+    });
+    obs.observe(exit,{attributes:true,attributeFilter:['class']});
+  })();
+
+  if(typeof showSlide==='function'){
+    const _origShowSlide=showSlide;
+    window.showSlide=function(i){
+      _origShowSlide(i);
+      try{_atOnSlideChange()}catch(e){}
+    };
+  }
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      ['ta-modal','cc-modal','cc-edit-modal','lc-overlay','mp-overlay'].forEach(id=>{
+        const m=document.getElementById(id);if(m)m.classList.remove('visible');
+      });
+    }
+  });
+</script>
+
+
+</body>
+</html>

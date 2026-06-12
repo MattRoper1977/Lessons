@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 5: Salvador Dalí – Master of Dreams (V4)</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Highlight-bio block */
+    .bio-block{background:#fdfdfd;border:2px solid #cbd5e1;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:1.02rem;line-height:1.7;max-height:280px;overflow-y:auto;color:#1f2937}
+    .bio-block p{margin:6px 0}
+    .bio-block .key-fact.revealed{background:#fef08a;padding:1px 4px;border-radius:3px;box-shadow:0 0 0 2px rgba(234,179,8,.4);transition:all .3s}
+    /* Live-click sentence highlighting */
+    .hl-sentence{cursor:pointer;padding:2px 3px;border-radius:4px;transition:background .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+    .hl-sentence:hover{background:#fef9c3}
+    .hl-sentence.highlighted{background:#fde047;box-shadow:0 0 0 2px rgba(234,179,8,.5);font-weight:500}
+    .hl-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 8px;font-size:.95rem}
+    .hl-counter{background:#1e293b;color:#fef08a;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.9rem;letter-spacing:.5px}
+    /* WAGOLL Ghost Typer */
+    .wagoll-trigger{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);color:#fff;font-weight:900;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 4px 12px rgba(124,58,237,.3);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+    .wagoll-trigger:hover{background:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);transform:translateY(-2px)}
+    .wagoll-panel{display:none;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,rgba(219,39,119,.06) 100%);border:3px solid var(--ido-border);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;animation:fadeInUp .4s ease-out}
+    .wagoll-panel.visible{display:block}
+    .wagoll-panel::before{content:'🪄 WAGOLL — What A Good One Looks Like';position:absolute;top:-12px;left:14px;background:var(--ido-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+    .wagoll-text{font-family:'Georgia',serif;font-size:1rem;line-height:1.65;color:#1e293b;min-height:80px;padding:6px 4px}
+    .wagoll-text .cursor{display:inline-block;width:2px;height:1em;background:var(--ido-border);margin-left:2px;vertical-align:text-bottom;animation:caretBlink .9s steps(2) infinite}
+    @keyframes caretBlink{50%{opacity:0}}
+    .wagoll-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .wagoll-tag{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:5px;letter-spacing:.5px;display:none}
+    .wagoll-tag.show{display:inline-block;animation:fadeInUp .3s}
+    /* Mid-Point Peer Check overlay */
+    @keyframes midpointPulse{0%,100%{box-shadow:0 0 30px rgba(56,189,248,.6),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(56,189,248,.9),0 0 100px rgba(124,58,237,.6)}}
+    .midpoint-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:8500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .25s ease}
+    .midpoint-overlay.visible{display:flex}
+    .midpoint-modal{background:linear-gradient(135deg,#e0f2fe 0%,#ede9fe 100%);border:4px solid var(--scaffold-border);border-radius:24px;padding:30px 36px;text-align:center;animation:lessonCompletePop .55s cubic-bezier(.34,1.56,.64,1),midpointPulse 2.4s ease-in-out 0.55s infinite;max-width:600px;width:90%}
+    .midpoint-modal .mp-tag{display:inline-block;background:var(--scaffold-border);color:#fff;padding:4px 14px;border-radius:6px;font-size:.78rem;font-weight:900;letter-spacing:1.5px;margin-bottom:8px}
+    .midpoint-modal h2{margin:6px 0 10px;color:#0c4a6e;font-size:1.7rem;border:none;padding:0}
+    .midpoint-modal .mp-prompt{background:rgba(255,255,255,.85);border-left:6px solid var(--task-border);padding:14px 16px;border-radius:10px;margin:10px 0;font-size:1.1rem;color:#1e293b;font-weight:600;text-align:left}
+    .midpoint-modal .mp-prompt strong{color:#9a3412}
+    .midpoint-modal .mp-sub{font-size:.92rem;color:#475569;font-style:italic;margin:6px 0}
+    .midpoint-modal button{background:var(--scaffold-border);color:#fff;border:none;padding:11px 26px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;font-size:1.05rem;transition:all .2s}
+    .midpoint-modal button:hover{background:#0284c7;transform:translateY(-2px)}
+    @media (max-width:640px){
+      .wagoll-panel{padding:14px 12px}.wagoll-text{font-size:.92rem}
+      .midpoint-modal{padding:22px 20px;max-width:94%}
+      .midpoint-modal h2{font-size:1.3rem}
+      .midpoint-modal .mp-prompt{font-size:.95rem;padding:10px 12px}
+      .hl-toolbar{font-size:.85rem;gap:6px}
+    }
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ---------- TITLE HERO (Brain → DREAMS → Dalí dreamscape SVG) ---------- */
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L4 Miró → L5 Dalí';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+      .fact-carousel{padding:18px 14px;min-height:140px}
+      .fact-text{font-size:1rem}
+      .fact-num{font-size:1.8rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+      .bio-block{font-size:.92rem;padding:12px;max-height:240px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="auto-timer">
+  <span id="auto-timer-icon">⏱</span>
+  <span id="auto-timer-display">00:00</span>
+  <button class="at-btn" onclick="autoTimerToggle()" title="Play/Pause">▶</button>
+  <button class="at-btn" onclick="autoTimerReset()" title="Reset">↺</button>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">👥 TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">🎲 Cold Call</button>
+
+<!-- LESSON COMPLETE OVERLAY (Dalí Research) -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>🧠</span><span>🌟</span><span>🎨</span></div>
+    <h2>Dalí Research Page Complete!</h2>
+    <p>You've met the Master of Dreams 🖼️✨</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> Who Dalí was — Spanish surrealist born 1904</span>
+      <span><strong>✓</strong> His signature style — dreamscapes & juxtaposition</span>
+      <span><strong>✓</strong> How he differs from Magritte AND Miró</span>
+      <span><strong>✓</strong> Key word: <em>juxtaposition</em></span>
+      <span style="margin-top:8px;font-style:italic;color:var(--ido-border)"><strong>Next lesson:</strong> Grid up a Dalí piece + write your own annotation!</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<!-- MID-POINT PEER CHECK OVERLAY (Independent Work, fires at 7:30 mark) -->
+<div class="midpoint-overlay" id="mp-overlay">
+  <div class="midpoint-modal">
+    <span class="mp-tag">⏸ MID-POINT PEER CHECK</span>
+    <h2>Pens down — quick partner check!</h2>
+    <div class="mp-prompt">📣 Read your <strong>juxtaposition sentence</strong> to the person next to you. Then together, spot <strong>one improvement</strong> you can each make on your page.</div>
+    <p class="mp-sub">2 minutes max. Then I'll resume the timer and you've got 7:30 left.</p>
+    <button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+<!-- SLIDE 1 - TITLE -->
+<div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><div style="text-align:center;margin-top:3%"><div class="animate-enter"><span class="slide-tag tag-lesson">Lesson 5</span><h1>Salvador Dalí: Master of Dreams</h1><p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Surrealism continues — your third Surrealist artist</p><div class="title-hero">
+        <div class="hero-palette" title="The subconscious mind">🧠</div>
+        <div class="hero-arrow-art">→<span class="a-text">DREAMS</span></div>
+        <div class="hero-grid-svg" title="Dalí dreamscape — melting clock">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff4d6"/><rect y="62" width="100" height="38" fill="#d4a574"/><line x1="0" y1="62" x2="100" y2="62" stroke="#8b6f47" stroke-width="0.5"/><line x1="20" y1="44" x2="84" y2="50" stroke="#5d4037" stroke-width="2.5"/><ellipse cx="50" cy="48" rx="22" ry="6" fill="#fff" stroke="#8b6f47" stroke-width="1.5" transform="rotate(-12 50 48)"/><circle cx="50" cy="48" r="1.5" fill="#000" transform="rotate(-12 50 48)"/><line x1="50" y1="48" x2="56" y2="46" stroke="#000" stroke-width="0.8" transform="rotate(-12 50 48)"/><line x1="50" y1="48" x2="48" y2="42" stroke="#000" stroke-width="0.8" transform="rotate(-12 50 48)"/><circle cx="78" cy="74" r="3" fill="#000"/><line x1="78" y1="77" x2="78" y2="84" stroke="#000" stroke-width="1.2"/><line x1="78" y1="80" x2="74" y2="83" stroke="#000" stroke-width="1"/><line x1="78" y1="80" x2="82" y2="83" stroke="#000" stroke-width="1"/></svg>
+        </div>
+        <div class="hero-tag-art">Hyper-real dreams.<br>Bizarre juxtapositions.<span class="small">Today: meet Dalí, highlight 5 facts, start your research page.</span></div>
+      </div><div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li>Know who Salvador Dalí was and what makes his style unique</li><li>React to his work using sentence stems</li><li>Begin a Dalí artist research page using highlighted facts</li></ul></div><div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher</button></div></div></div></div></div>
+
+<!-- SLIDE 2 - CATCH-UP BRIDGE (Miró) -->
+<div class="slide" id="bridge-slide" data-title="Catch-up Bridge" data-timer="2"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-lesson" style="background:var(--lo-bg);color:var(--lo-border)">Catch-up</span><h2>Still finishing your Miró page? Read this 👀</h2><div class="li-box"><strong>Just for the small group still finishing Miró:</strong> you've got a clear lane today. Everyone else: 30 seconds, then we move on to Dalí.</div>
+
+  <div class="bridge-banner">
+    <h3>If your Miró research page isn't quite finished…</h3>
+    <p style="margin:4px 0 8px"><strong>Topic from last lesson:</strong> Joan Miró — abstract Surrealism with bold primary colours and symbols.</p>
+    <div class="bridge-flow">
+      <div class="bridge-step"><div class="num">1</div><strong>Your facts</strong>Have you written 5+ facts about Miró? If not, jot them now from memory or notebook.</div>
+      <div class="bridge-step"><div class="num">2</div><strong>Your study</strong>Have you finished the Miró-style image with bold primary colours and shapes?</div>
+      <div class="bridge-step"><div class="num">3</div><strong>Your REACT</strong>Have you written what you SEE, how it's DIFFERENT, visual ELEMENTS, and your OPINION?</div>
+    </div>
+  </div>
+
+  <div class="content-grid" style="height:auto;margin-top:14px">
+    <div>
+      <div class="task-box" style="background:#fef9c3;border-color:#eab308"><h3 style="margin-top:0;color:#92400e">⚡ Your plan today (catch-up pupils only)</h3><p>During <strong>Independent Work</strong>, finish Miró FIRST (15 min), then start Dalí facts. Use the orange "Catch-up Path" box on that slide.</p></div>
+    </div>
+    <div>
+      <div class="aspire-box"><h3 style="margin-top:0;color:var(--aspire-text)">🎯 You can still join in fully</h3><p style="margin:4px 0">Listen during the I Do slides — Dalí facts will help your work either way. The retrieval quiz is good practice.</p></div>
+      <div class="scaffold-box" style="margin-top:10px"><strong>Teacher / TA note:</strong> Hands up now if your Miró page isn't done — 30-second flag so I can check in during Independent Work.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3 - ARRIVAL (retrieval quiz) -->
+<div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-arrival">Retrieval Quiz</span><h2>Arrival Task — Retrieval Quiz (Miró + earlier)</h2><div class="li-box"><strong>Instructions:</strong> Answer from memory. Q4 leads into today.</div><button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle"><button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher</button></div>
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Surrealism (Recall)</h3><p>What does <strong>"Surrealism"</strong> mean?</p><p class="answer">Beyond reality / dreamlike art.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Miró (Recall)</h3><p>What <strong>nationality</strong> was Miró?</p><p class="answer">Spanish.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Style (Recall)</h3><p>Was Miró's style realistic or <strong>abstract</strong>?</p><p class="answer">Abstract — bold shapes, primary colours, symbols.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Dalí</h3><p>What is a <strong>dream</strong>? Could a painting look like a dream?</p><p class="answer">A scene from your sleeping mind. Yes — Dalí painted dreams in detail.</p></div>
+  </div>
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Compare (Recall)</h3><p>Name <strong>two</strong> Surrealist artists studied so far and one fact about each.</p><p class="answer">Magritte (Belgian, bowler hats); Miró (Spanish, abstract symbols).</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Framework (Recall)</h3><p>What are some things to include when you write about an artwork?</p><p class="answer">Describe what you see, techniques, visual elements, opinion linked to meaning.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Style (Recall)</h3><p>How did Miró's <strong>colours</strong> differ from Magritte's?</p><p class="answer">Miró — bold primaries (red, blue, yellow). Magritte — naturalistic, muted.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Dalí</h3><p>What might a "dreamlike landscape" actually <strong>look like</strong>?</p><p class="answer">Strange combinations of objects, distorted forms, melting/floating elements, weirdly empty space.</p></div>
+  </div>
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Compare (Recall)</h3><p>How did Magritte and Miró each <strong>explore the unconscious</strong>?</p><p class="answer">Magritte — realistic impossible scenes. Miró — abstract symbolic forms.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Vocab (Recall)</h3><p>Define <strong>abstract</strong> AND <strong>symbolic</strong>. How do they differ?</p><p class="answer">Abstract = doesn't show recognisable objects. Symbolic = uses one image to stand for an idea. Symbolic art can still be recognisable.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Style (Recall)</h3><p>Why might a Surrealist choose <strong>realistic detail</strong> over abstraction?</p><p class="answer">Realism makes impossible scenes feel believable — sharper unease.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Dalí</h3><p>If a painting puts an <strong>elephant on tiny stilt-legs in a desert</strong>, what does that achieve?</p><p class="answer">Bizarre juxtaposition — calm landscape clashes with impossible creature. Forces the viewer to think.</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 4 - STARTER (Highlight 5 facts) -->
+<div class="slide" id="starter-slide" data-title="Starter: Highlight 5 Facts" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-starter">Starter</span><h2>Starter — Highlight 5 Key Facts on Dalí</h2><div class="li-box"><strong>Instructions:</strong> Read the bio below. Highlight or note <strong>at least 5 key facts</strong> about Dalí for your research page later.</div>
+  <div class="hl-toolbar">
+    <button class="ghost" onclick="revealKeyFacts()">💡 Reveal 5 Suggested Facts</button>
+    <button class="ghost" onclick="resetHighlights()">🧹 Reset Highlights</button>
+    <span class="hl-counter">✨ <span id="hl-count">0</span> highlighted</span>
+    <span style="color:var(--muted);font-size:.88rem">Tap any sentence to highlight it on the board</span>
+  </div>
+  <div class="bio-block" id="bio-block">
+    <p><span class="hl-sentence"><strong>Salvador Dalí is one of the most celebrated artists of all time.</strong></span> <span class="hl-sentence">His fiercely technical yet highly unusual paintings, sculptures and visionary explorations in film and life-size interactive art ushered in a new generation of imaginative expression.</span></p>
+    <p><span class="hl-sentence key-fact">Dalí was born on May 11, 1904 in Figueras, Spain.</span> <span class="hl-sentence key-fact">He was a surrealist painter, printmaker and sculptor, and many of his works were influenced by <strong>subconscious imagery</strong>.</span> <span class="hl-sentence">As an art student in Madrid and Barcelona, Dalí developed a vast number of artistic styles and displayed unusual technical ability as a painter.</span></p>
+    <p><span class="hl-sentence key-fact">It was not until the late 1920s, however, that two events brought about his mature style: his discovery of Sigmund Freud's writings on the subconscious mind, and his affiliation with the Paris Surrealists — a group of artists exploring the "greater reality" of the human subconscious.</span></p>
+    <p><span class="hl-sentence key-fact">Dalí depicted a dream world in which commonplace objects are juxtaposed, deformed or otherwise changed in a bizarre and irrational way.</span> <span class="hl-sentence">He also portrayed those objects in extremely realistic detail and placed them within bleak, sunlit landscapes.</span></p>
+    <p><span class="hl-sentence">In the 1930s, Dalí switched his painting style to a more academic one under the influence of the Renaissance painter <strong>Raphael</strong>.</span> <span class="hl-sentence">His political views during the rise of fascism resulted in him being expelled from the Paris Surrealists.</span> <span class="hl-sentence">After that he spent a lot of time designing theatre sets, fashionable shop interiors, and jewellery, and exhibited his genius for flamboyant self-promotional stunts in the USA, where he lived between 1940 and 1955.</span></p>
+    <p><span class="hl-sentence">Between 1950 and 1970, Dalí's work took on a religious theme, though he still represented childhood memories and used themes centring on his wife Gala.</span> <span class="hl-sentence">These later works were not as popular as his Surrealist pieces.</span> <span class="hl-sentence key-fact">Dalí died on 23 January 1989, aged 79.</span></p>
+  </div>
+  <div class="scaffold-box" style="margin-top:8px"><strong>Sentence starter:</strong> "Dalí was a _____ artist born in _____. He is famous for _____."</div>
+</div>
+
+<!-- SLIDE 5 - I DO 1: Who Was Dalí? (fact carousel) -->
+<div class="slide" data-title="I Do: Who Was Dalí?" data-timer="5" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Who Was Salvador Dalí?</h2><div class="li-box"><strong>Key Idea:</strong> A Spanish Surrealist who painted his dreams in obsessive detail — bizarre objects in sunlit landscapes.</div><div class="scaffold-box"><strong>📝 Aim to capture at least 5 facts</strong> for your research page!</div>
+  <div class="fact-carousel" id="factCarousel"><div class="fact-num" id="factNum">1</div><div class="fact-text" id="factText"></div><div class="fact-nav"><button onclick="changeFact(-1)">◀ Previous</button><button onclick="changeFact(1)">Next ▶</button></div><div class="fact-dots" id="factDots"></div></div>
+</div>
+
+<!-- SLIDE 6 - WE DO 1: REACT to Dalí -->
+<div class="slide" data-title="We Do: REACT to Dalí" data-timer="5" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: REACT to a Dalí Dreamscape</h2><div class="li-box"><strong>Instructions:</strong> Look at this Dalí-style scene. Inspired by <em>Dream Caused by the Flight of a Bee around a Pomegranate</em> (1944).</div>
+  <div class="react-panel">
+    <div style="display:flex;align-items:center;justify-content:center;background:#fff4d6;border-radius:12px;padding:14px"><div style="text-align:center"><svg viewBox="0 0 320 240" width="280"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7ec6e0"/><stop offset="100%" stop-color="#fff4d6"/></linearGradient></defs><rect width="320" height="160" fill="url(#sky)"/><rect y="160" width="320" height="80" fill="#d4a574"/><line x1="0" y1="160" x2="320" y2="160" stroke="#8b6f47" stroke-width="0.5"/><!-- elephant on stilt legs --><ellipse cx="240" cy="105" rx="22" ry="13" fill="#7a6b5a"/><line x1="232" y1="115" x2="230" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="240" y1="115" x2="238" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="248" y1="115" x2="246" y2="200" stroke="#5d4037" stroke-width="2.5"/><line x1="256" y1="115" x2="254" y2="200" stroke="#5d4037" stroke-width="2.5"/><rect x="234" y="80" width="14" height="22" fill="#9c8470"/><!-- floating bee --><circle cx="100" cy="130" r="4" fill="#eab308"/><line x1="100" y1="125" x2="100" y2="118" stroke="#000" stroke-width="0.6"/><circle cx="100" cy="118" r="1.5" fill="#666"/><!-- pomegranate --><circle cx="105" cy="170" r="14" fill="#b85042"/><path d="M105,158 L102,154 L108,154 Z" fill="#5d3a32"/><!-- two leaping tigers (simplified) --><ellipse cx="140" cy="135" rx="18" ry="9" fill="#eab308"/><ellipse cx="170" cy="125" rx="18" ry="9" fill="#eab308" transform="rotate(15 170 125)"/><line x1="135" y1="132" x2="130" y2="128" stroke="#000" stroke-width="0.8"/><line x1="148" y1="135" x2="153" y2="135" stroke="#000" stroke-width="0.8"/><!-- reclining figure --><ellipse cx="60" cy="190" rx="35" ry="9" fill="#e0c4a0"/><circle cx="35" cy="186" r="6" fill="#e0c4a0"/><!-- distant mountains --><path d="M0,150 L40,130 L70,150 L100,135 L150,150" fill="none" stroke="#8b6f47" stroke-width="0.8"/></svg><p style="font-size:.85rem;color:var(--muted);margin-top:6px;font-weight:600">Dalí-style dreamscape: stilt elephant, leaping tigers, pomegranate, reclining figure</p></div></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="react-q"><label>👀 What do you SEE?</label><textarea placeholder="An elephant with very long legs, two tigers..."></textarea></div>
+      <div class="react-q"><label>🤔 What's WEIRD or UNEXPECTED?</label><textarea placeholder="The combination of objects that don't belong together..."></textarea></div>
+      <div class="react-q"><label>🔍 Which VISUAL ELEMENTS jump out?</label><textarea placeholder="Colour (warm sunlight), tone, line, scale..."></textarea></div>
+      <div class="react-q"><label>💭 How does it MAKE YOU FEEL?</label><textarea placeholder="Uneasy, fascinated, confused because..."></textarea></div>
+    </div>
+  </div>
+  <div class="scaffold-box" style="margin-top:8px"><strong>Sentence starters:</strong> "I see _____ which is weird because _____." | "It feels like a dream because _____."</div>
+  <button class="wagoll-trigger" onclick="startWagoll()">🪄 Show WAGOLL — Grade-9 Model</button>
+  <div class="wagoll-panel" id="wagoll-panel">
+    <div class="wagoll-text" id="wagoll-text"></div>
+    <div class="wagoll-tags" id="wagoll-tags">
+      <span class="wagoll-tag" data-trigger="juxtaposition">juxtaposition</span>
+      <span class="wagoll-tag" data-trigger="hyper-realism">hyper-realism</span>
+      <span class="wagoll-tag" data-trigger="subconscious">subconscious</span>
+      <span class="wagoll-tag" data-trigger="Freud">Freud</span>
+      <span class="wagoll-tag" data-trigger="scale">scale</span>
+    </div>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="ghost small" onclick="restartWagoll()">↺ Replay</button><button class="ghost small" onclick="skipWagoll()">⏭ Show Full</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 7 - I DO 2: Three Surrealists Compared + Juxtaposition keyword -->
+<div class="slide" data-title="I Do: Three Surrealists" data-timer="5" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: Three Surrealists, Three Styles</h2><div class="li-box"><strong>Key Idea:</strong> All three painted Surrealism — but each took a different route. Dalí is the third corner of the triangle.</div>
+  <div class="compare-grid-3">
+    <div class="compare-card" style="background:var(--scaffold-bg);border:3px solid var(--scaffold-border)"><h3 style="color:#0c4a6e">🎩 Magritte</h3><p><strong>Style:</strong> Hyper-realistic<br><strong>Colours:</strong> Naturalistic<br><strong>Shapes:</strong> Recognisable objects<br><strong>Message:</strong> Questions reality</p></div>
+    <div class="compare-card" style="background:#fee2e2;border:3px solid #dc2626"><h3 style="color:#991b1b">🎨 Miró</h3><p><strong>Style:</strong> Abstract, symbolic<br><strong>Colours:</strong> Bold primaries<br><strong>Shapes:</strong> Organic blobs, stars<br><strong>Message:</strong> Pure imagination</p></div>
+    <div class="compare-card" style="background:#fff4d6;border:3px solid #d4a574"><h3 style="color:#8b4513">🧠 Dalí</h3><p><strong>Style:</strong> Hyper-realistic dreams<br><strong>Colours:</strong> Warm, sunlit<br><strong>Shapes:</strong> Real objects, distorted<br><strong>Message:</strong> The subconscious mind</p></div>
+  </div>
+  <div class="ido-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--ido-border)">📝 Word Along the Way — JUXTAPOSITION</h3><p><strong>Juxtaposition</strong> = placing two things side by side that don't usually belong together. Dalí's elephant on stilt-legs next to a calm desert is pure juxtaposition. The clash is the whole point.</p></div>
+  <div class="exam-tip-box">
+    <p><strong>Three things to mention when comparing artists:</strong> <span class="misc-right">Style</span> · <span class="misc-right">Colours</span> · <span class="misc-right">Meaning / Message</span></p>
+    <p style="font-size:.9rem;color:#92400e;margin-top:4px">Hit all three with proper sentences and you're in the top mark band.</p>
+  </div>
+  <div class="misc-box">
+    <p><strong>Don't write:</strong> <span class="misc-wrong">"Dalí's art is just weird"</span> &nbsp;or&nbsp; <span class="misc-wrong">"Dalí is the same as Magritte"</span></p>
+    <p><strong>Write:</strong> <span class="misc-right">"Dalí used realistic detail to paint impossible juxtapositions, exploring the subconscious mind."</span></p>
+    <p style="font-size:.9rem;color:#991b1b;margin-top:4px">"Weird" is a feeling — not analysis. Both Magritte and Dalí used realism, but Dalí's WORLD is dreamlike (sunlit deserts, melting forms); Magritte's is everyday spaces broken by single impossible objects.</p>
+  </div>
+</div>
+
+<!-- SLIDE 8 - WE DO 2: Keyword match -->
+<div class="slide" data-title="We Do: Keyword Match" data-timer="4" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Match Keyword → Definition</h2><div class="li-box"><strong>Instructions:</strong> Select a keyword, then tap the matching definition.</div>
+  <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Matches: <span class="score" id="match-score">0</span>/5</span><button class="ghost small" onclick="resetMatch()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealMatch()">👁️ Reveal</button><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-box"><strong>Hints:</strong> "Juxtaposition" — think CLASH of unrelated things. "Subconscious" — your mind BELOW thought. "Dreamscape" — landscape from a DREAM. "Renaissance" — old, ITALIAN, classical art. "Surrealism" — beyond REALITY.</div></div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 1: Select a keyword</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px" id="kw-pills">
+      <div class="match-pill" onclick="selectKW(this,'jux')">Juxtaposition</div>
+      <div class="match-pill" onclick="selectKW(this,'sub')">Subconscious</div>
+      <div class="match-pill" onclick="selectKW(this,'dream')">Dreamscape</div>
+      <div class="match-pill" onclick="selectKW(this,'renai')">Renaissance</div>
+      <div class="match-pill" onclick="selectKW(this,'surr')">Surrealism</div>
+    </div>
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:4px 0">Step 2: Tap the matching definition</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="match-target" data-correct="jux" onclick="pickTarget(this)"><span>Placing <strong>two unrelated things together</strong> for shock or contrast</span></div>
+      <div class="match-target" data-correct="sub" onclick="pickTarget(this)"><span>The part of your mind <strong>below conscious awareness</strong></span></div>
+      <div class="match-target" data-correct="dream" onclick="pickTarget(this)"><span>A <strong>landscape that resembles a dream</strong> — strange, vivid, unreal</span></div>
+      <div class="match-target" data-correct="renai" onclick="pickTarget(this)"><span>Italian artistic <strong>revival of classical detail</strong> (Raphael, da Vinci…)</span></div>
+      <div class="match-target" data-correct="surr" onclick="pickTarget(this)"><span>Art <strong>"beyond reality"</strong> — exploring dreams and the unconscious</span></div>
+    </div>
+    <div id="match-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:20px"></div>
+  </div>
+</div>
+
+<!-- SLIDE 9 - INDEPENDENT WORK -->
+<div class="slide" data-title="Independent Work" data-timer="0" data-no-autostart="true" data-type="independent"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work — Dalí Research Page</h2><div class="li-box"><strong>Instructions:</strong> Most of you → Dalí research page below. <strong>Catch-up pupils</strong> (still finishing Miró) → orange box on the right.</div>
+  <div class="timer-widget"><div class="timer-display" id="timerDisplay">15:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation</h3><p>Title "Salvador Dalí". Write the 5 facts you highlighted. Stick in 1 printed Dalí image. Write a REACT response (3 sentences). Name 2 visual elements.</p><p style="font-style:italic;color:var(--muted);font-size:1rem">"Salvador Dalí was a _____ artist born in _____."</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle</h3><p>Title, 6+ facts in your own words, 2 images with titles, REACT response with visual elements named, explain <strong>juxtaposition</strong> with an example, one comparison sentence: Dalí vs Miró.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher</h3><p>Creative Dalí-inspired title, 8+ facts with context, 3 images with mini-analysis, detailed comparison across <em>all three</em> Surrealists, explain how the subconscious shapes Dalí's work, "what I take from Dalí for my own work" line.</p></div>
+    </div>
+    <div>
+      <div class="task-box" style="background:#fff7ed;border:3px dashed var(--sc-border)"><h3 style="margin-top:0;color:#9a3412">🌉 Catch-up Path (Miró unfinished)</h3><p style="color:#7c2d12">First 15 min: <strong>finish Miró</strong> (image, REACT, 5 facts). Last 10 min: do Foundation Dalí — title + 5 facts only. We'll catch the rest next lesson.</p></div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Foundation: copy from your highlighted bio + use sentence starters. Middle: write facts in your OWN words. Higher: link facts to specific paintings.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation:</strong> 5 facts, 1 image, 3-sentence REACT, 2 elements named.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle:</strong> 6+ own-word facts, juxtaposition explained, comparison to Miró.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher:</strong> Three-way Surrealist comparison, subconscious analysis, personal connection.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 - EXIT TICKET -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-exit">Exit Ticket</span><h2>Exit Ticket</h2><div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+  <div class="level-toggle"><button onclick="switchLevel('exit','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('exit','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('exit','higher')" style="background:#1e3a8a">Higher</button><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button></div>
+  <div id="exit-foundation" class="task-box">
+    <p><strong>1) What nationality was Dalí?</strong></p><p class="answer">Spanish.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Dalí's style is best described as…</strong></p><p class="answer">Hyper-realistic dreamscapes / surrealism with subconscious imagery.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What does <em>juxtaposition</em> mean?</strong></p><p class="answer">Placing two unrelated things side by side for contrast.</p>
+  </div>
+  <div id="exit-middle" class="task-box" style="display:none">
+    <p><strong>1) Name three things that make Dalí's style different from Miró's.</strong></p><p class="answer">Dalí: realistic detail, recognisable objects, warm sunlit landscapes. Miró: abstract, organic blobs, bold primaries.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Explain juxtaposition with a Dalí example.</strong></p><p class="answer">Juxtaposition = placing unrelated things together. e.g., a stilt-legged elephant in a calm desert — impossible creature in real-looking landscape.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Whose writings inspired Dalí's interest in dreams?</strong></p><p class="answer">Sigmund Freud — his writings on the subconscious mind.</p>
+  </div>
+  <div id="exit-higher" class="task-box" style="display:none">
+    <p><strong>1) Compare how Magritte, Miró and Dalí each used Surrealism to explore the unconscious.</strong></p><p class="answer">Magritte — realistic objects in impossible scenes (subtle unease). Miró — abstract symbolic shapes (raw imagination). Dalí — realistic dreamscapes with juxtaposed objects (Freudian subconscious).</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Why might Dalí's realistic technique make his Surrealism more disturbing than Miró's abstraction?</strong></p><p class="answer">Realistic detail tricks the brain into believing the scene — then the impossible elements (melting clocks, stilt elephants) hit harder. Miró's abstraction signals "this is symbolic" upfront.</p>
+    <hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Argue: is juxtaposition a strong or lazy artistic technique?</strong></p><p class="answer">Strong if the clash REVEALS something (a hidden meaning, a truth, an emotion). Lazy if it's just shock for shock's sake. Dalí's juxtapositions usually carry symbolic weight.</p>
+  </div>
+</div>
+
+</div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+
+<div id="print-area">
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L5): Salvador Dalí</h1><table class="ko-table"><tr><th>Fact</th><th>Detail</th></tr><tr><td>Born</td><td>11 May 1904, Figueras, Spain</td></tr><tr><td>Style</td><td>Hyper-realistic Surrealist dreamscapes</td></tr><tr><td>Inspiration</td><td>Sigmund Freud's writings on the subconscious mind</td></tr><tr><td>Group</td><td>Paris Surrealists (later expelled over politics)</td></tr><tr><td>Approach</td><td>Bizarre objects juxtaposed in bleak sunlit landscapes</td></tr><tr><td>Influences</td><td>Renaissance master Raphael (1930s onwards)</td></tr><tr><td>USA years</td><td>1940–1955: theatre, fashion, jewellery, self-promo</td></tr><tr><td>Later work</td><td>Religious themes, childhood memories, his wife Gala</td></tr><tr><td>Died</td><td>23 January 1989, age 79</td></tr></table><table class="ko-table"><tr><th>Magritte</th><th>Miró</th><th>Dalí</th></tr><tr><td>Hyper-realistic</td><td>Abstract, symbolic</td><td>Hyper-realistic dreamscapes</td></tr><tr><td>Naturalistic colours</td><td>Bold primaries</td><td>Warm, sunlit</td></tr><tr><td>Recognisable objects</td><td>Organic blobs, stars</td><td>Real objects, distorted</td></tr><tr><td>Questions reality</td><td>Pure imagination</td><td>The subconscious mind</td></tr></table><table class="ko-table"><tr><th>Word</th><th>Meaning</th></tr><tr><td>Juxtaposition</td><td>Placing two unrelated things side by side</td></tr><tr><td>Subconscious</td><td>Mind below conscious awareness</td></tr><tr><td>Dreamscape</td><td>Landscape that resembles a dream</td></tr><tr><td>Renaissance</td><td>Italian classical revival in art</td></tr><tr><td>Surrealism</td><td>Art "beyond reality"</td></tr></table></div>
+<div id="print-arrival" class="print-section"><h2>Arrival Task — Retrieval Quiz</h2><div class="foundation-content"><h3>Foundation</h3><p>1) What does "Surrealism" mean?</p><div class="print-line"></div><p>2) What nationality was Miró?</p><div class="print-line"></div><p>3) Was Miró's style realistic or abstract?</p><div class="print-line"></div><p>4) What is a dream? Could a painting look like one?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) Name two Surrealists studied so far + one fact each.</p><div class="print-line"></div><div class="print-line"></div><p>2) What do you include when writing about an artwork?</p><div class="print-line"></div><p>3) How did Miró's colours differ from Magritte's?</p><div class="print-line"></div><p>4) What might a dreamlike landscape look like?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) How did Magritte and Miró each explore the unconscious?</p><div class="print-line"></div><div class="print-line"></div><p>2) Define abstract AND symbolic — how do they differ?</p><div class="print-line"></div><div class="print-line"></div><p>3) Why might a Surrealist choose realistic detail over abstraction?</p><div class="print-line"></div><p>4) An elephant on tiny stilt-legs in a desert — what does that achieve?</p><div class="print-line"></div></div></div>
+<div id="print-bridge" class="print-section"><h2>🌉 Catch-up Bridge — Miró Finish</h2><p style="font-size:.95rem">Only for pupils still completing Miró:</p><table class="ko-table"><tr><th>Step</th><th>Task</th></tr><tr><td>1</td><td>Write 5+ facts about Miró (Spanish, 1893, abstract, primary colours, symbols)</td></tr><tr><td>2</td><td>Finish your Miró-style image with bold primary colours</td></tr><tr><td>3</td><td>Write a REACT response — what you SEE, how it's DIFFERENT, ELEMENTS, OPINION</td></tr><tr><td>4</td><td>Then start the Foundation Dalí task — title + 5 facts only</td></tr></table></div>
+<div id="print-starter" class="print-section"><h2>Starter — Highlight 5 Facts (Dalí Bio)</h2><p>Salvador Dalí was born on 11 May 1904 in Figueras, Spain. He was a surrealist painter, printmaker and sculptor, and many of his works were influenced by subconscious imagery. As an art student in Madrid and Barcelona, he developed a vast number of styles and showed unusual technical ability.</p><p>In the late 1920s, he discovered Sigmund Freud's writings on the subconscious mind and joined the Paris Surrealists. He depicted a dream world in which commonplace objects are juxtaposed, deformed or otherwise changed in a bizarre way — painted in extreme realistic detail in bleak sunlit landscapes.</p><p>In the 1930s he switched to a more academic style influenced by the Renaissance painter Raphael. His political views during the rise of fascism resulted in him being expelled from the Paris Surrealists. He lived in the USA between 1940 and 1955 and was famous for self-promotional stunts. Later (1950–70) he painted religious themes, childhood memories, and his wife Gala. Dalí died on 23 January 1989, aged 79.</p><p style="font-weight:bold;margin-top:14px">📝 Highlight at least 5 facts. Then list them here:</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+<div id="print-wedo" class="print-section"><h2>We Do: REACT to Dalí</h2><p>What do you SEE?</p><div class="print-line"></div><div class="print-line"></div><p>What's WEIRD or UNEXPECTED?</p><div class="print-line"></div><div class="print-line"></div><p>Which VISUAL ELEMENTS jump out?</p><div class="print-line"></div><p>How does it MAKE YOU FEEL?</p><div class="print-line"></div><div class="print-line"></div></div>
+<div id="print-scaffold-foundation" class="print-section"><h2>Scaffolding – Foundation</h2><div class="scaffold-print-box"><p>"Salvador Dalí was a _____ artist born in _____."</p><p>"He is famous for paintings of _____."</p><p>"This painting makes me feel _____ because…"</p></div></div>
+<div id="print-scaffold-middle" class="print-section"><h2>Scaffolding – Middle</h2><div class="scaffold-print-box"><p>"Dalí's style is different to Miró because…"</p><p>"Juxtaposition means _____, for example in this work _____."</p></div></div>
+<div id="print-scaffold-higher" class="print-section"><h2>Scaffolding – Higher</h2><div class="scaffold-print-box"><p>Key terms: juxtaposition, subconscious, dreamscape, Renaissance, hyper-realism, Freud, dislocation, symbolic</p></div></div>
+<div id="print-worksheet-foundation" class="print-section"><h2>Independent – Foundation</h2><p>☐ Title "Salvador Dalí" ☐ 5 facts ☐ 1 image ☐ REACT (3 sentences) ☐ 2 visual elements named</p></div>
+<div id="print-worksheet-middle" class="print-section"><h2>Independent – Middle</h2><p>☐ Title ☐ 6+ own-word facts ☐ 2 images with titles ☐ REACT ☐ Juxtaposition explained with example ☐ Dalí vs Miró comparison</p></div>
+<div id="print-worksheet-higher" class="print-section"><h2>Independent – Higher</h2><p>☐ Creative title ☐ 8+ facts with context ☐ 3 images mini-analysis ☐ Three-way Surrealist comparison ☐ Subconscious analysis ☐ Personal connection line</p></div>
+<div id="print-exit" class="print-section"><div class="foundation-content"><h2>Exit Ticket – Foundation</h2><p>1) Nationality of Dalí?</p><div class="print-line"></div><p>2) Describe his style.</p><div class="print-line"></div><p>3) What does <em>juxtaposition</em> mean?</p><div class="print-line"></div></div><div class="middle-content"><h2>Exit Ticket – Middle</h2><p>1) Three things that make Dalí different from Miró.</p><div class="print-line"></div><div class="print-line"></div><p>2) Explain juxtaposition with a Dalí example.</p><div class="print-line"></div><p>3) Whose writings inspired Dalí's interest in dreams?</p><div class="print-line"></div></div><div class="higher-content"><h2>Exit Ticket – Higher</h2><p>1) Compare Magritte, Miró and Dalí.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><p>2) Why might Dalí's realism make Surrealism MORE disturbing?</p><div class="print-line"></div><div class="print-line"></div><p>3) Is juxtaposition strong or lazy? Argue.</p><div class="print-line"></div><div class="print-line"></div></div></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const t=slides[i]&&slides[i].getAttribute('data-title');if(t==='I Do: Who Was Dalí?'&&!factsInit)initFacts();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+
+const facts=["Salvador Dalí was born on 11 May 1904 in Figueras, Spain.","He was a Surrealist painter, printmaker and sculptor — much of his work was inspired by SUBCONSCIOUS imagery.","As an art student in Madrid and Barcelona, Dalí mastered many styles and showed unusual technical skill.","In the late 1920s he discovered Sigmund Freud's writings on the subconscious mind — this changed his art forever.","He joined the Paris Surrealists, a group exploring the 'greater reality' of the human unconscious.","His signature style: dreamlike scenes where everyday objects are JUXTAPOSED, deformed or twisted in bizarre ways.","He painted these strange objects in extreme realistic detail — placed in bleak, sunlit landscapes.","In the 1930s his style became more academic — influenced by the Renaissance master Raphael.","His political views during the rise of fascism led to him being expelled from the Paris Surrealists.","Between 1940 and 1955 Dalí lived in the USA and became famous for flamboyant self-promotional stunts.","Later (1950–70) his work explored religious themes, childhood memories, and his wife Gala — though less popular than his Surrealist pieces.","Dalí died on 23 January 1989, aged 79."];
+let currentFact=0,factsInit=false;
+function initFacts(){factsInit=true;const d=document.getElementById('factDots');facts.forEach((_,i)=>{const dot=document.createElement('div');dot.className='fact-dot'+(i===0?' active':'');d.appendChild(dot);});showFact();}
+function showFact(){document.getElementById('factText').textContent=facts[currentFact];document.getElementById('factNum').textContent=currentFact+1;document.querySelectorAll('.fact-dot').forEach((d,i)=>d.classList.toggle('active',i===currentFact));}
+function changeFact(d){currentFact=(currentFact+d+facts.length)%facts.length;showFact();}
+
+function revealKeyFacts(){document.querySelectorAll('#bio-block .key-fact').forEach((el,i)=>setTimeout(()=>{el.classList.add('revealed');if(!el.classList.contains('highlighted')){el.classList.add('highlighted');updateHlCount();}},i*220));}
+/* --- LIVE HIGHLIGHTING (Slide 4) --- */
+function updateHlCount(){const c=document.querySelectorAll('#bio-block .hl-sentence.highlighted').length;const el=document.getElementById('hl-count');if(el)el.textContent=c;}
+function resetHighlights(){document.querySelectorAll('#bio-block .hl-sentence').forEach(s=>s.classList.remove('highlighted'));document.querySelectorAll('#bio-block .key-fact.revealed').forEach(s=>s.classList.remove('revealed'));updateHlCount();}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('#bio-block .hl-sentence').forEach(s=>{s.addEventListener('click',()=>{s.classList.toggle('highlighted');if(s.classList.contains('highlighted')){try{playDing()}catch(e){}}updateHlCount();});});});
+
+/* --- WAGOLL GHOST TYPER (Slide 6) --- */
+const _wagollText="In the foreground I can see a reclining figure surrounded by leaping tigers, a pomegranate, a bee and an elephant balanced on impossibly long stilt-legs. The most striking visual element is the juxtaposition of scale — Dalí pairs the tiny bee with an enormous elephant, forcing my eye to compare them. The warm, naturalistic lighting deliberately clashes with the bizarre subject matter; this hyper-realism makes the impossible feel believable, which is exactly what makes the scene so unsettling. I think Dalí is showing the woman's subconscious mind in the moment before waking, drawing on Freud's ideas about how the dreaming brain juxtaposes unrelated images.";
+let _wagollTimer=null,_wagollIdx=0;
+function _wagollClearTags(){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>t.classList.remove('show'));}
+function _wagollCheckTags(soFar){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>{const trig=t.getAttribute('data-trigger');if(trig&&soFar.toLowerCase().includes(trig.toLowerCase())&&!t.classList.contains('show')){t.classList.add('show');try{playDing()}catch(e){}}});}
+function startWagoll(){const panel=document.getElementById('wagoll-panel');panel.classList.add('visible');restartWagoll();}
+function restartWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=0;const out=document.getElementById('wagoll-text');out.innerHTML='<span class="cursor"></span>';_wagollClearTags();_wagollTimer=setInterval(()=>{_wagollIdx++;if(_wagollIdx>_wagollText.length){clearInterval(_wagollTimer);out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);return;}const so=_wagollText.slice(0,_wagollIdx);out.innerHTML=so+'<span class="cursor"></span>';_wagollCheckTags(so);},22);}
+function skipWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=_wagollText.length;document.getElementById('wagoll-text').innerHTML=_wagollText;_wagollCheckTags(_wagollText);}
+
+let selectedKWId=null;let matchScore=0;
+function selectKW(el,id){selectedKWId=id;document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedKWId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedKWId){el.classList.add('correct');document.querySelector('#kw-pills .match-pill.selected').classList.add('placed');matchScore++;document.getElementById('match-score').textContent=matchScore;fb.textContent='✅ Correct!';fb.style.color='var(--success)';}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);fb.textContent='❌ Try again!';fb.style.color='var(--error)';}selectedKWId=null;}
+function resetMatch(){selectedKWId=null;matchScore=0;document.getElementById('match-score').textContent='0';document.getElementById('match-fb').textContent='';document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.add('placed'));matchScore=5;document.getElementById('match-score').textContent='5';}
+
+let timerTotal=900,timerLeft=900,timerInterval=null,timerRunning=false,midpointFired=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;document.getElementById('timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('timerBar').style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';else if(timerLeft<=300)document.getElementById('timerDisplay').style.color='#f97316';else document.getElementById('timerDisplay').style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();if(timerLeft===Math.floor(timerTotal/2)&&!midpointFired){midpointFired=true;fireMidpoint();}}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='⏰ TIME!';try{playBuzz()}catch(e){}}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
+function fireMidpoint(){pauseTimer();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
+function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','bridge','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+</script>
+
+<style>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+</style>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.match-target').forEach(()=>registerXP(1));});
+const _origPickTarget=window.pickTarget;
+window.pickTarget=function(el){if(!selectedKWId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedKWId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
+
+  /* ============== V4 POLISH JS ============== */
+  const _taBriefs = {
+    'Title': 'Welcome pupils. Sketchbooks open, fresh page ready for the Dalí research page. Have last lesson\'s books ready for anyone still finishing Miró.',
+    'Catch-up Bridge': 'Identify pupils who haven\'t finished Miró right now — flag them silently and direct them to the catch-up path during Independent Work.',
+    'Arrival Task': 'Walk among pupils, prompt anyone stuck. Q4 leads into today (could a painting look like a dream?). Listen for "weird" or "strange" — that\'s your bridge in to Dalí.',
+    'Starter: Highlight 5 Facts': 'This is the LESSON PLAN starter — highlighting 5 key facts. Roam constantly. Encourage pupils to mark up the printed bio (in their pack). The "Reveal 5 Suggested Facts" button is a backup if needed.',
+    'I Do: Who Was Dalí?': 'Encourage pupils to JOT down 5+ facts as the carousel plays. Read each fact aloud. The Freud connection (subconscious mind) is the BIG idea — emphasise it. Juxtaposition is the keyword.',
+    'We Do: REACT to Dalí': 'Praise specific words: "weird" → push to "juxtaposed", "different sizes" → push to "scale". Aim for full sentences in the textareas. The bee/elephant scene is from Dalí\'s 1944 painting.',
+    'I Do: Three Surrealists': 'Three-card comparison — point at each card in turn. The keyword JUXTAPOSITION is the lesson plan\'s "Word Along the Way" — make sure every pupil writes it down.',
+    'We Do: Keyword Match': 'Encourage hint-button use. Juxtaposition vs Surrealism is the trickiest — link Surrealism to "BEYOND reality" and juxtaposition to "the CLASH".',
+    'Independent Work': 'CRITICAL: identify catch-up pupils early. Most pupils → Dalí research page. Catch-up pupils → finish Miró FIRST then start Foundation Dalí. Roam constantly.',
+    'Exit Ticket': 'Photo capture for those who finish. Anyone who couldn\'t define juxtaposition needs follow-up. Reveal-answers triggers the lesson-complete overlay.'
+  };
+  const _ccQuestions = {
+    'Title': {F:'What\'s today\'s artist called?',M:'How does Dalí continue the Surrealism series after Miró?',H:'Why might painting dreams REALISTICALLY be more powerful than abstractly?'},
+    'Catch-up Bridge': {F:'Have you finished your Miró page? What\'s left?',M:'What were the 4 parts of your Miró REACT response?',H:'Looking at your Miró page now — what one improvement would push it up a band?'},
+    'Arrival Task': {F:'Q1 — what does Surrealism mean?',M:'Q2 — name two Surrealists with one fact each.',H:'Q4 — an elephant on stilt-legs in a desert. What does that achieve?'},
+    'Starter: Highlight 5 Facts': {F:'Read me one fact you\'ve highlighted.',M:'Which fact about Dalí surprised you most? Why?',H:'Which detail in the bio is the most TURNING POINT in his career?'},
+    'I Do: Who Was Dalí?': {F:'Where was Dalí born?',M:'Whose writings inspired Dalí\'s interest in dreams?',H:'How might Freud\'s ideas about the subconscious shape Dalí\'s painting choices?'},
+    'We Do: REACT to Dalí': {F:'Name one weird thing in this picture.',M:'Which visual element is most dramatic — colour, line, scale or tone?',H:'Choose one element and argue why it\'s the most powerful in this scene.'},
+    'I Do: Three Surrealists': {F:'Which Surrealist used bold primary colours?',M:'Define juxtaposition in your own words.',H:'Which of the three Surrealists do you think is the most disturbing — and why?'},
+    'We Do: Keyword Match': {F:'Match "Dreamscape" — what does it mean?',M:'Explain why "subconscious" matters for Dalí\'s art.',H:'Could juxtaposition exist WITHOUT realism? Argue.'},
+    'Independent Work': {F:'How many facts have you got down?',M:'What is your juxtaposition example sentence?',H:'What\'s your three-way comparison line going to say?'},
+    'Exit Ticket': {F:'Q1 — what nationality was Dalí?',M:'Q2 — explain juxtaposition with a Dalí example.',H:'Q3 — is juxtaposition strong or lazy as a technique? Defend.'}
+  };
+  const _CC_KEY = 'coldCall_art_l5';
+  const _ccDefault = [{n:'Aisha',g:'2'},{n:'Ben',g:'1'},{n:'Carla',g:'3'},{n:'Daniel',g:'U'},{n:'Erin',g:'2'},{n:'Fionn',g:'3'},{n:'Grace',g:'1'},{n:'Hassan',g:'2'},{n:'Imani',g:'4'},{n:'Jay',g:'U'},{n:'Kira',g:'3'},{n:'Liam',g:'2'}];
+  function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return Array.isArray(d)&&d.length?d:_ccDefault.slice()}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+
+  function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>👥 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the ✏️ Edit list button.');return}
+    const tier=_gradeToTier(pick.g);
+    const tierLabel={F:'Foundation',M:'Middle',H:'Higher'}[tier];
+    const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>🎲 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">—</div><span class="cc-tier" id="cc-tier">—</span><div class="cc-question" id="cc-q">—</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">✏️ Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">🎲 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');
+    nameEl.textContent=pick.n;
+    nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');
+    try{playDing()}catch(e){}
+  }
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>✏️ Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">💾 Save</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    const list=_ccLoad();
+    document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');
+    modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){
+    const txt=document.getElementById('cc-edit-area').value;
+    const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);
+    _ccSave(list);_ccRecent=[];
+    document.getElementById('cc-edit-modal').classList.remove('visible');
+  }
+
+  /* AUTO TIMER */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){
+    _atPause();
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}
+    const minStr=slide.getAttribute('data-timer');
+    const noAuto=slide.getAttribute('data-no-autostart')==='true';
+    const min=parseInt(minStr,10);
+    if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}
+    document.body.classList.remove('no-timer');
+    _atTotal=min*60;_atSeconds=_atTotal;_atRender();
+    if(!noAuto)setTimeout(()=>{_atStart()},250);
+  }
+
+  /* LESSON COMPLETE */
+  let _lcShown=false;
+  function _lcShowComplete(){
+    if(_lcShown)return;_lcShown=true;
+    setTimeout(()=>{
+      try{fireConfetti()}catch(e){}
+      try{playLevelUp()}catch(e){}
+      const ov=document.getElementById('lc-overlay');
+      if(ov)ov.classList.add('visible');
+    },400);
+  }
+  function hideLessonComplete(){
+    const ov=document.getElementById('lc-overlay');
+    if(ov)ov.classList.remove('visible');
+  }
+  (function(){
+    const exit=document.getElementById('exit-slide');
+    if(!exit)return;
+    const obs=new MutationObserver(()=>{
+      if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();
+    });
+    obs.observe(exit,{attributes:true,attributeFilter:['class']});
+  })();
+
+  if(typeof showSlide==='function'){
+    const _origShowSlide=showSlide;
+    window.showSlide=function(i){
+      _origShowSlide(i);
+      try{_atOnSlideChange()}catch(e){}
+    };
+  }
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      ['ta-modal','cc-modal','cc-edit-modal','lc-overlay','mp-overlay'].forEach(id=>{
+        const m=document.getElementById(id);if(m)m.classList.remove('visible');
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

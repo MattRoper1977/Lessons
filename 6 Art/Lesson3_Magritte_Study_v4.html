@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lesson 3: Magritte – Artist Study & Research Page</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}@keyframes gridDraw{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}@keyframes gridFill{0%,60%{opacity:0}80%,100%{opacity:1}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .flow-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:12px;background:#fff;margin-bottom:6px}.flow-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;border:2px solid var(--ido-border);background:var(--ido-bg)}.flow-arrow{text-align:center;font-size:1.2rem;color:var(--ido-border);font-weight:900;margin:2px 0}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .seq-card{padding:12px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;font-weight:600;font-size:1rem;transition:all .2s;min-width:200px;text-align:center;display:inline-block;margin:4px}.seq-card:hover{border-color:var(--scaffold-border);transform:translateY(-2px)}.seq-card.done{border-color:var(--success);background:#dcfce7}.seq-card.wrong-seq{border-color:var(--error);background:#fee2e2}
+    .anno-area{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.anno-box{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px}.anno-box:hover{border-color:var(--aspire-border)}.anno-title{font-weight:700;color:var(--ido-border);font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}.anno-box textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:50px}.anno-box textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+      /* ============== V4 POLISH UPGRADE — Lesson 3 Magritte Study ============== */
+
+    /* ---------- TIMER WIDGET (page-level auto-start per slide) ---------- */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+
+    /* ---------- TA FOCUS + COLD CALL buttons + modals ---------- */
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+
+    /* ---------- TITLE HERO (palette → MAGRITTE STUDY → grid) ---------- */
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(124,58,237,.5),0 0 60px rgba(124,58,237,.25)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(124,58,237,.85),0 0 100px rgba(124,58,237,.45)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes paletteFloat{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(217,119,6,.08) 0%,rgba(124,58,237,.08) 50%,rgba(34,197,94,.08) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:paletteFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff;border:3px solid var(--ido-border);animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(124,58,237,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+
+    /* ---------- LO checkmarks ---------- */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+
+    /* ---------- MISCONCEPTION + QUALITY-CHECK boxes (art-adapted) ---------- */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON ANNOTATION MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+
+    /* ---------- LESSON COMPLETE celebration ---------- */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:540px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+
+    /* ---------- MOBILE LAYOUT (≤640px / phone portrait) ---------- */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .anno-area{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      /* Title hero stacks */
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      /* Top buttons reposition: timer top-left, TA below, Cold Call below TA */
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      /* Specific slides */
+      .seq-card{min-width:140px;font-size:.9rem;padding:8px 12px}
+      .flow-item{font-size:.9rem;padding:8px 10px}
+      .flow-icon{width:32px;height:32px;font-size:1rem}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+    }
+
+    /* ============== END V4 POLISH UPGRADE ============== */
+
+</style>
+</head>
+<body>
+
+<!-- AUTO TIMER WIDGET (per-slide countdown) -->
+<div id="auto-timer">
+  <span id="auto-timer-icon">⏱</span>
+  <span id="auto-timer-display">00:00</span>
+  <button class="at-btn" onclick="autoTimerToggle()" title="Play/Pause">▶</button>
+  <button class="at-btn" onclick="autoTimerReset()" title="Reset">↺</button>
+</div>
+
+<!-- TA FOCUS BUTTON -->
+<button id="ta-focus-btn" onclick="showTABrief()">👥 TA Focus</button>
+
+<!-- COLD CALL BUTTON -->
+<button id="cold-call-btn" onclick="showColdCall()">🎲 Cold Call</button>
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>🎨</span><span>🏆</span><span>📐</span></div>
+    <h2>Lesson Complete!</h2>
+    <p>Your Magritte study is underway 🖼️✨</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> How to grid up an image accurately</span>
+      <span><strong>✓</strong> The 4-area annotation framework (Describe / Techniques / Visual Elements / Opinion)</span>
+      <span><strong>✓</strong> Started your Magritte fact file (research page)</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+<div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><div style="text-align:center;margin-top:3%"><div class="animate-enter"><span class="slide-tag tag-lesson">Lesson 3</span><h1>Magritte: Artist Study</h1><p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Gridding, Painting & Annotation</p><div class="title-hero">
+          <div class="hero-palette" title="An artist begins">🎨</div>
+          <div class="hero-arrow-art">→<span class="a-text">STUDY</span></div>
+          <div class="hero-grid-svg" title="Grid up for accuracy">
+            <svg viewBox="0 0 60 60"><rect x="2" y="2" width="56" height="56" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><line x1="22" y1="2" x2="22" y2="58" stroke="#7c3aed" stroke-width="1.5"/><line x1="42" y1="2" x2="42" y2="58" stroke="#7c3aed" stroke-width="1.5"/><line x1="2" y1="22" x2="58" y2="22" stroke="#7c3aed" stroke-width="1.5"/><line x1="2" y1="42" x2="58" y2="42" stroke="#7c3aed" stroke-width="1.5"/><circle cx="30" cy="22" r="6" fill="#22c55e"/><rect x="14" y="38" width="32" height="14" rx="2" fill="#f97316"/></svg>
+          </div>
+          <div class="hero-tag-art">Grid up. Paint smooth.<br>Annotate with meaning.<span class="small">Today you start your Magritte fact file.</span></div>
+        </div><div class="li-box" style="margin:20px auto;max-width:680px;text-align:left"><strong>Learning Objective:</strong><ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li>Learn how to grid up and create an accurate artist study</li><li>Understand and apply the annotation framework</li><li>Complete your Magritte research page</li></ul></div><div class="scaffold-box" style="display:inline-block;margin-top:20px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation</button><button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle</button><button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher</button></div></div></div></div></div>
+
+<div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="4"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-arrival">Arrival Task</span><h2>Arrival Task – Recall from Lessons 1 & 2</h2><div class="li-box"><strong>Instructions:</strong> Answer from memory. Q4 leads into today.</div><button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle"><button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation</button><button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle</button><button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher</button></div>
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Colours (Recall)</h3><p>What is the rule with <strong>complementary colours</strong>?</p><p class="answer">They are opposite each other on the colour wheel.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Magritte (Recall)</h3><p>Name <strong>one</strong> technique Magritte uses.</p><p class="answer">Blending, layering, juxtaposition, scale change, hidden identity, visual illusion.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Media (Recall)</h3><p>What <strong>media</strong> did Magritte use?</p><p class="answer">Paint (oil/acrylic).</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Gridding</h3><p>Why do artists use a <strong>grid</strong> to help them draw?</p><p class="answer">To help get proportions and shapes accurate.</p></div>
+  </div>
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Colours (Recall)</h3><p>Explain complementary colours with an <strong>example pair</strong>.</p><p class="answer">Opposite on the wheel, e.g. Red↔Green — create strong contrast.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Magritte (Recall)</h3><p>Name <strong>two</strong> Magritte techniques and explain one.</p><p class="answer">e.g. Blending — smooth tonal transitions. Scale Change — objects impossibly large.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Style (Recall)</h3><p>Why does Magritte's work look realistic despite <strong>impossible scenes</strong>?</p><p class="answer">He used realistic painting techniques (blending, detail) on impossible subjects.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Drawing</h3><p>What's the difference between <strong>"accuracy"</strong> and <strong>"detail"</strong>?</p><p class="answer">Accuracy = correct proportions/placement. Detail = fine features like highlights.</p></div>
+  </div>
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Comparison (Recall)</h3><p>How does Magritte use <strong>juxtaposition</strong> differently from Dalí?</p><p class="answer">Dalí creates dreamscapes; Magritte places ordinary objects in extraordinary contexts.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Style (Recall)</h3><p>Describe Magritte's painting style — what makes it <strong>distinctive</strong>?</p><p class="answer">Smooth, realistic oil paint with precise tonal blending and meticulous detail.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Meaning (Recall)</h3><p>Why did Magritte call his pipe painting <strong>"The Treachery of Images"</strong>?</p><p class="answer">A painting of a pipe is not a pipe — it's a representation. He challenged the relationship between objects and images.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Annotation</h3><p>What should <strong>annotations</strong> include beyond just describing what you see?</p><p class="answer">Techniques, visual elements, meaning, personal response, connections to own work.</p></div>
+  </div>
+</div>
+
+<div class="slide" data-title="Starter" data-timer="4"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-starter">Starter</span><h2>Starter: Quick Retrieval</h2><div class="li-box"><strong>Instructions:</strong> Answer on whiteboards.</div>
+  <div style="max-width:700px;margin:10px auto">
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q1.</strong> What nationality was Magritte? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0"><strong>Belgian</strong>.</span></p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q2.</strong> Which object is Magritte's signature symbol? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0"><strong>Bowler hat</strong> (and green apple).</span></p></div>
+    <div class="task-box" style="padding:14px"><p style="margin:0"><strong>Q3.</strong> What does "annotation" mean in art? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'">Answer</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:6px 0 0">Writing <strong>notes around your artwork</strong> to explain techniques, elements, and meaning.</span></p></div>
+  </div>
+</div>
+
+<div class="slide" data-title="I Do: How to Grid" data-timer="5" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: How to Grid Up Your Study</h2><div class="li-box"><strong>Key Idea:</strong> Gridding helps you draw <strong>accurately</strong> by breaking an image into small, manageable squares.</div>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">6 Steps to Grid</h3>
+        <div class="flow-item"><div class="flow-icon">1️⃣</div><div><strong>Choose</strong> your Magritte image from the resource sheet.</div></div><div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-icon">2️⃣</div><div><strong>Grid the image</strong> — 2cm × 2cm squares over the printed image.</div></div><div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-icon">3️⃣</div><div><strong>Grid your page</strong> — same number of squares, bigger to scale up.</div></div><div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-icon">4️⃣</div><div><strong>Draw box by box</strong> — outlines first, one square at a time.</div></div><div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-icon">5️⃣</div><div><strong>Erase the grid</strong> — gently rub out grid lines.</div></div><div class="flow-arrow">↓</div>
+        <div class="flow-item"><div class="flow-icon">6️⃣</div><div><strong>Add tone with paint</strong> — light colours first, then darker shadows.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="diagram-container animate-enter anim-delay-1">
+        <h3 style="margin-top:0;color:var(--ido-border)">Animated Gridding Demo</h3>
+        <svg viewBox="0 0 480 150" width="100%" style="max-width:460px">
+          <text x="75" y="14" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Source Image</text><rect x="15" y="20" width="120" height="105" rx="4" fill="#87CEEB" stroke="#334155" stroke-width="2"/><circle cx="75" cy="58" r="18" fill="#22c55e"/><rect x="50" y="82" width="50" height="28" rx="3" fill="#f97316"/>
+          <line x1="55" y1="20" x2="55" y2="125" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4" style="animation:gridDraw 2s ease-out .5s both"/><line x1="95" y1="20" x2="95" y2="125" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 1s both"/><line x1="15" y1="55" x2="135" y2="55" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 1.5s both"/><line x1="15" y1="90" x2="135" y2="90" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 2s both"/>
+          <text x="195" y="78" text-anchor="middle" font-size="24" fill="#7c3aed" style="animation:gridFill 3s ease-out 2.5s both">→</text>
+          <text x="355" y="14" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Your Sketchbook</text><rect x="245" y="20" width="220" height="125" rx="4" fill="#fff" stroke="#334155" stroke-width="2"/>
+          <line x1="318" y1="20" x2="318" y2="145" stroke="#dc2626" stroke-width="1" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 3s both"/><line x1="392" y1="20" x2="392" y2="145" stroke="#dc2626" stroke-width="1" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 3.3s both"/><line x1="245" y1="62" x2="465" y2="62" stroke="#dc2626" stroke-width="1" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 3.6s both"/><line x1="245" y1="103" x2="465" y2="103" stroke="#dc2626" stroke-width="1" stroke-dasharray="4" style="animation:gridDraw 2s ease-out 3.9s both"/>
+          <circle cx="355" cy="46" r="26" fill="#22c55e" opacity=".35" style="animation:gridFill 2s ease-out 4.5s both"/><rect x="320" y="78" width="70" height="38" rx="3" fill="#f97316" opacity=".35" style="animation:gridFill 2s ease-out 5s both"/>
+        </svg>
+      </div>
+      <div class="task-box animate-enter anim-delay-2"><h3 style="margin-top:0;color:#92400e">⚠️ Common Mistakes</h3><p>Don't press too hard — light lines are easier to erase. Don't skip squares — work systematically.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="We Do: Sequencing" data-timer="4" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Put the Steps in Order</h2><div class="li-box"><strong>Instructions:</strong> Tap the steps in the correct order (1st → 6th).</div>
+  <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Steps placed: <span class="score" id="seq-score">0</span>/6</span><button class="hint-btn" style="margin-left:auto" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-box"><strong>Think about it like this:</strong> You can't paint before you've drawn. You can't draw before you've gridded. You can't grid both until you've picked an image. The grid should come OFF before you add paint (so paint goes over clean lines).</div></div>
+    <div id="seqGame" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+    <div id="seq-fb" style="text-align:center;font-weight:900;min-height:20px;margin-top:8px"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="I Do: Annotation Framework" data-timer="5" data-type="ido"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-ido">I Do</span><h2>I Do: How to Annotate Your Study</h2><div class="li-box"><strong>Key Idea:</strong> Annotate your artwork with <strong>arrows</strong> pointing to specific areas. Cover these 4 areas:</div>
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">1. Describe</h3><p>"In this section I can see…" — What is literally there?</p></div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">2. Techniques</h3><p>"The artist has used [blending/layering] to create…" — How was it made?</p></div>
+    </div>
+    <div>
+      <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">3. Visual Elements</h3><p>"The visual elements are [line/tone/colour/shape]…" — What principles are used?</p></div>
+      <div class="ido-box animate-enter anim-delay-2"><h3 style="margin-top:0;color:var(--ido-border)">4. Opinion & Meaning</h3><p>"I think this means… It reminds me of… I could use this by…" — What does it mean to you?</p></div>
+      <div class="aspire-box animate-enter anim-delay-2"><strong>Top Tip:</strong> Good annotations are <strong>specific</strong> — say <strong>which</strong> colours, <strong>where</strong>, and <strong>why</strong> they work.</div>
+    </div>
+  </div>
+
+  <div class="misc-box">
+    <p><strong>Don't write:</strong> <span class="misc-wrong">"It looks nice"</span> &nbsp;or&nbsp; <span class="misc-wrong">"He liked drawing eyes"</span></p>
+    <p><strong>Write:</strong> <span class="misc-right">"I think this represents perception because the sky inside the eye suggests…"</span></p>
+    <p style="font-size:.9rem;color:#991b1b;margin-top:4px">An <strong>opinion</strong> in art annotation is NEVER just "it looks nice" — it must link to <em>meaning</em> with a "because…" reason.</p>
+  </div>
+  <div class="exam-tip-box">
+    <p><strong>The 4-area framework that makes a good annotation:</strong> <span class="misc-right">Describe</span> · <span class="misc-right">Techniques</span> · <span class="misc-right">Visual Elements</span> · <span class="misc-right">Opinion linked to meaning</span></p>
+    <p style="font-size:.9rem;color:#92400e;margin-top:4px">A pupil who hits all 4 areas with full sentences earns the highest mark band. Skipping "Opinion" or only using one-word answers caps the grade.</p>
+  </div>
+</div>
+
+<div class="slide" data-title="We Do: Annotation Practice" data-timer="8" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">We Do</span><h2>We Do: Annotate "The False Mirror" (1928)</h2><div class="li-box"><strong>Instructions:</strong> Write an annotation for each area. Use the sentence starters.</div>
+  <div class="anno-area">
+    <div style="display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:12px;padding:16px"><div style="text-align:center"><svg viewBox="0 0 280 210" width="260"><rect width="280" height="210" fill="#1e293b" rx="8"/><ellipse cx="140" cy="105" rx="125" ry="80" fill="#fff" stroke="#334155" stroke-width="3"/><circle cx="140" cy="105" r="52" fill="#87CEEB"/><ellipse cx="122" cy="90" rx="20" ry="12" fill="#fff" opacity=".7"/><ellipse cx="158" cy="115" rx="16" ry="9" fill="#fff" opacity=".5"/><circle cx="140" cy="105" r="20" fill="#0f172a"/><circle cx="146" cy="98" r="4" fill="#fff" opacity=".8"/></svg><p style="font-size:.9rem;color:var(--muted);margin-top:6px;font-weight:600">"The False Mirror" (1928)</p></div></div>
+    <div>
+      <div class="anno-box" style="margin-bottom:10px"><div class="anno-title">1. Describe</div><textarea placeholder="I can see a large eye with..."></textarea></div>
+      <div class="anno-box" style="margin-bottom:10px"><div class="anno-title">2. Techniques</div><textarea placeholder="Magritte has used blending to..."></textarea></div>
+      <div class="anno-box" style="margin-bottom:10px"><div class="anno-title">3. Visual Elements</div><textarea placeholder="The main elements are..."></textarea></div>
+      <div class="anno-box"><div class="anno-title">4. Opinion</div><textarea placeholder="I think this means..."></textarea></div>
+    </div>
+  </div>
+  <div class="scaffold-box" style="margin-top:8px"><strong>Sentence starters:</strong> "I can see…" | "The artist used _____ to create…" | "The visual elements are…" | "I think this means _____ because…"</div>
+  <div class="peer-teach" style="margin-top:8px"><strong>👥 Check your work:</strong> Click below to reveal model answers <em>one at a time</em> — compare to your own annotations and see what you could add.</div>
+  <div class="reveal-wrap" style="margin-top:10px">
+    <button class="reveal-btn" onclick="revealNextPoint(this)">👆 Reveal next model answer</button>
+    <div class="reveal-point"><strong>1. Describe:</strong> "I can see a close-up of a single eye. The iris contains a blue sky with fluffy white clouds instead of a normal coloured iris. The pupil is a deep black circle at the centre, with the whites of the eye clearly visible around the edge."</div>
+    <div class="reveal-point"><strong>2. Techniques:</strong> "Magritte has used smooth oil paint blending to create seamless tonal transitions between the sky and clouds. There are no visible brushstrokes, giving the painting a photographic quality that tricks your eye."</div>
+    <div class="reveal-point"><strong>3. Visual Elements:</strong> "The main visual elements are <em>colour</em> (blue sky, white clouds, black pupil), <em>tone</em> (light iris against dark pupil), <em>shape</em> (concentric circles) and <em>texture</em> (smooth, glossy, realistic)."</div>
+    <div class="reveal-point"><strong>4. Opinion & Meaning:</strong> "I think this represents how our eyes don't just SEE reality — they shape it with imagination and memory. The sky in the eye suggests we project our thoughts onto what we see. It makes me feel small, like the world is bigger than what I think I'm looking at."</div>
+  </div>
+</div>
+
+<div class="slide" data-title="Spot the Mistake" data-timer="4" data-type="wedo"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-wedo">Spot the Mistake</span>
+  <h2>🔍 Spot the Mistake — Student Annotation</h2>
+  <div class="li-box"><strong>Instructions:</strong> A student annotated "The False Mirror" like this. Find the 3 mistakes!</div>
+  <div class="mistake-box">
+    <div class="mistake-text">"In this picture I can see a painting of an eye. Magritte has used <strong>rough textured brushstrokes</strong> so you can see exactly how he made it. The visual elements are <strong>pattern and form</strong>. I think it means <strong>he liked drawing eyes</strong>."</div>
+  </div>
+  <button class="reveal-btn" onclick="revealMistakes(this)">🔍 Reveal mistakes</button>
+  <div class="mistake-reveal">
+    <p style="margin-bottom:6px;font-weight:700;color:#991b1b">Here are the 3 mistakes:</p>
+    <ul>
+      <li><strong>Mistake 1:</strong> "Rough textured brushstrokes" — Magritte's painting is <strong>smooth with no visible brushstrokes</strong>. That's his signature style.</li>
+      <li><strong>Mistake 2:</strong> "Pattern and form" — these aren't the main elements. The big ones here are <strong>colour, tone and shape</strong>.</li>
+      <li><strong>Mistake 3:</strong> "He liked drawing eyes" — this isn't a meaning, it's a guess. A proper opinion links to <strong>what the artwork might represent</strong> — e.g. perception, seeing, imagination.</li>
+    </ul>
+  </div>
+  <div class="peer-teach"><strong>👥 Turn to your partner:</strong> Rewrite the "Opinion" sentence properly — what might the eye with a sky inside it actually represent?</div>
+</div>
+
+<div class="slide" data-title="Independent Work" data-timer="18" data-no-autostart="true" data-type="independent"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-independent">Independent Work</span><h2>Independent Work – Start Your Magritte Fact File</h2><div class="li-box"><strong>Instructions:</strong> Today you're <strong>starting</strong> your Magritte fact file. Aim for: <strong>3+ facts</strong> down on the page, then begin <strong>gridding</strong> your chosen image. Annotations and tonal painting come next lesson.</div>
+  <div class="timer-widget"><div class="timer-display" id="timerDisplay">18:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation</h3><p>Grid up image + page, draw outlines box by box, start adding tone, write 2 annotations using sentence starters.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle</h3><p>Accurate gridded study, at least 3 tonal values in paint, 4 annotations covering full framework, page has 5+ facts and REACT.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher</h3><p>High-accuracy study with fine detail, full tonal range in paint, all 4 framework annotations, comparison to another Surrealist, "connection to my work".</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Foundation: use sentence starters. Middle: full sentences, specific visual elements. Higher: analyse and compare.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation:</strong> Grid, outline, started tone, 2 annotations.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle:</strong> Accurate study, tonal work, full annotation framework.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher:</strong> Detailed study, comparative annotations, personal connection.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="exit-slide" data-title="Exit Ticket – Cumulative" data-timer="5"><img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png"><span class="slide-tag tag-exit">Exit Ticket</span><h2>Exit Ticket – Cumulative (Lessons 1–3)</h2><div class="li-box"><strong>Instructions:</strong> 6 questions covering everything so far. Answer independently.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px">
+    <div class="task-box"><p><strong>1) What does "surréalisme" mean?</strong></p><p class="answer">Beyond reality.</p></div>
+    <div class="task-box"><p><strong>2) What nationality was Magritte?</strong></p><p class="answer">Belgian.</p></div>
+    <div class="task-box"><p><strong>3) Why do we use a grid?</strong></p><p class="answer">To draw accurately / get proportions right.</p></div>
+    <div class="task-box"><p><strong>4) Which technique puts objects in strange places?</strong></p><p class="answer">Dislocation.</p></div>
+    <div class="task-box"><p><strong>5) Annotations should include…</strong></p><p class="answer">Description, techniques, visual elements & opinion.</p></div>
+    <div class="task-box"><p><strong>6) What media did Magritte use?</strong></p><p class="answer">Oil / acrylic paint.</p></div>
+  </div>
+  <div class="lb-widget" id="lb-widget"><h3>🏆 Magritte Study Complete Wall</h3><p style="font-size:.95rem;margin-bottom:8px">Finished your research page AND your gridded study? Add your name!</p><div class="lb-form"><input type="text" placeholder="Your first name" onkeypress="if(event.key==='Enter')addToLB('lb-widget')"><button onclick="addToLB('lb-widget')">Add Name 🎨</button></div><div class="lb-list"></div></div>
+</div>
+
+</div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+
+<div id="print-area">
+<div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L3): Magritte Artist Study</h1><table class="ko-table"><tr><th>Step</th><th>What to Do</th></tr><tr><td>1. Choose</td><td>Pick a Magritte painting from the resource sheet</td></tr><tr><td>2. Grid image</td><td>Draw 2cm × 2cm squares over the printed image</td></tr><tr><td>3. Grid page</td><td>Same number of squares on sketchbook, bigger to scale up</td></tr><tr><td>4. Draw</td><td>Copy outlines box by box — one square at a time</td></tr><tr><td>5. Erase</td><td>Gently rub out grid lines</td></tr><tr><td>6. Paint</td><td>Add tone with acrylic — light colours first, then shadows</td></tr></table><table class="ko-table"><tr><th>Annotation Area</th><th>What to Write</th></tr><tr><td>1. Describe</td><td>What can you literally see?</td></tr><tr><td>2. Techniques</td><td>How was it made? (blending, layering…)</td></tr><tr><td>3. Visual Elements</td><td>Line, tone, colour, shape, texture, form, pattern</td></tr><tr><td>4. Opinion & Meaning</td><td>What does it mean? How does it make you feel?</td></tr></table></div>
+<div id="print-arrival" class="print-section"><h2>Arrival Task</h2><div class="foundation-content"><h3>Foundation</h3><p>1) What is the rule with complementary colours?</p><div class="print-line"></div><p>2) Name one technique Magritte uses.</p><div class="print-line"></div><p>3) What media did Magritte use?</p><div class="print-line"></div><p>4) Why do artists use a grid?</p><div class="print-line"></div></div><div class="middle-content"><h3>Middle</h3><p>1) Explain complementary colours with an example.</p><div class="print-line"></div><p>2) Name two Magritte techniques, explain one.</p><div class="print-line"></div><div class="print-line"></div><p>3) Why does his work look realistic despite impossible scenes?</p><div class="print-line"></div><p>4) Difference between accuracy and detail?</p><div class="print-line"></div></div><div class="higher-content"><h3>Higher</h3><p>1) How does Magritte use juxtaposition differently from Dalí?</p><div class="print-line"></div><div class="print-line"></div><p>2) Describe Magritte's distinctive style.</p><div class="print-line"></div><p>3) Why "The Treachery of Images"?</p><div class="print-line"></div><div class="print-line"></div><p>4) What should annotations include beyond description?</p><div class="print-line"></div></div></div>
+<div id="print-starter" class="print-section"><h2>Starter</h2><p>Q1) Nationality of Magritte?</p><div class="print-line"></div><p>Q2) His signature symbol?</p><div class="print-line"></div><p>Q3) What does annotation mean?</p><div class="print-line"></div></div>
+<div id="print-wedo" class="print-section"><h2>We Do: Annotation Practice — "The False Mirror"</h2><p><strong>1. Describe:</strong></p><div class="print-line"></div><div class="print-line"></div><p><strong>2. Techniques:</strong></p><div class="print-line"></div><div class="print-line"></div><p><strong>3. Visual Elements:</strong></p><div class="print-line"></div><p><strong>4. Opinion & Meaning:</strong></p><div class="print-line"></div><div class="print-line"></div></div>
+<div id="print-scaffold-foundation" class="print-section"><h2>Scaffolding – Foundation</h2><div class="scaffold-print-box"><p>"I can see…" | "The artist used _____ to make…" | "The colours are…"</p></div></div>
+<div id="print-scaffold-middle" class="print-section"><h2>Scaffolding – Middle</h2><div class="scaffold-print-box"><p>"The technique of _____ creates a sense of…" | "This links to Surrealism because…"</p></div></div>
+<div id="print-scaffold-higher" class="print-section"><h2>Scaffolding – Higher</h2><div class="scaffold-print-box"><p>Key terms: scale change, hidden identity, visual illusion, annotation framework, tonal range, blending, layering</p></div></div>
+<div id="print-worksheet-foundation" class="print-section"><h2>Independent – Foundation</h2><p>☐ Grid image ☐ Grid page ☐ Draw outlines ☐ Start tone ☐ Write 2 annotations</p></div>
+<div id="print-worksheet-middle" class="print-section"><h2>Independent – Middle</h2><p>☐ Accurate study ☐ 3+ tonal values ☐ 4 annotations ☐ 5+ facts ☐ REACT ☐ 2+ images</p></div>
+<div id="print-worksheet-higher" class="print-section"><h2>Independent – Higher</h2><p>☐ High-accuracy study ☐ Full tonal range ☐ All 4 annotations ☐ Compare to another artist ☐ Connection to my work</p></div>
+<div id="print-exit" class="print-section"><h2>Exit Ticket – Cumulative (L1–3)</h2><p>1) What does "surréalisme" mean?</p><div class="print-line"></div><p>2) What nationality was Magritte?</p><div class="print-line"></div><p>3) Why do we use a grid?</p><div class="print-line"></div><p>4) Which technique puts objects in strange places?</p><div class="print-line"></div><p>5) Annotations should include…</p><div class="print-line"></div><p>6) What media did Magritte use?</p><div class="print-line"></div></div>
+</div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();if(i===4&&!seqInit)initSeq();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+
+// SEQUENCING
+const seqSteps=[{id:1,text:"Choose your Magritte image"},{id:2,text:"Draw a grid over the printed image"},{id:3,text:"Draw the same grid on your sketchbook"},{id:4,text:"Copy outlines box by box"},{id:5,text:"Rub out the grid lines"},{id:6,text:"Add tone with acrylic paint"}];
+let seqInit=false,seqNext=1;
+function initSeq(){seqInit=true;const c=document.getElementById('seqGame');[...seqSteps].sort(()=>Math.random()-.5).forEach(s=>{const b=document.createElement('div');b.className='seq-card';b.textContent=s.text;b.dataset.id=s.id;b.onclick=()=>{if(b.classList.contains('done'))return;const ok=parseInt(b.dataset.id)===seqNext;if(ok){b.classList.add('done');b.textContent=seqNext+'. '+b.textContent;seqNext++;document.getElementById('seq-score').textContent=seqNext-1;if(seqNext>6)document.getElementById('seq-fb').innerHTML='✅ Perfect sequence!';}else{b.classList.add('wrong-seq');setTimeout(()=>b.classList.remove('wrong-seq'),500);}};c.appendChild(b);});}
+
+// TIMER
+let timerTotal=1080,timerLeft=1080,timerInterval=null,timerRunning=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;document.getElementById('timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('timerBar').style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';else if(timerLeft<=300)document.getElementById('timerDisplay').style.color='#f97316';else document.getElementById('timerDisplay').style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;document.getElementById('timerDisplay').textContent='⏰ TIME!';}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;updateTimerDisplay();}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
+</script>
+<!-- ===== ENGAGEMENT ENHANCEMENTS ===== -->
+<style>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.reveal-btn{background:var(--ido-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 4px 4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.reveal-btn:hover{background:#6d28d9}
+.reveal-wrap{margin:10px 0}
+.reveal-point{display:none;background:#f3e8ff;border-left:4px solid var(--ido-border);padding:10px 14px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#4c1d95;animation:fadeInUp .25s}.reveal-point.show{display:block}
+.mistake-box{background:#fff;border:3px dashed var(--error);border-radius:14px;padding:18px 16px 16px;margin:10px 0;position:relative}.mistake-box::before{content:'⚠️ STUDENT ANNOTATION — SPOT THE MISTAKES';position:absolute;top:-12px;left:16px;background:var(--error);color:#fff;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:.5px}
+.mistake-text{font-family:'Caveat','Comic Sans MS',cursive;font-size:1.3rem;line-height:1.6;color:#334155;padding:8px}
+.mistake-reveal{display:none;margin-top:10px;padding:12px;background:#fee2e2;border-left:5px solid var(--error);border-radius:8px}.mistake-reveal.show{display:block;animation:fadeInUp .25s}
+.mistake-reveal ul{margin:4px 0 0 20px}.mistake-reveal li{color:#991b1b;font-weight:600;margin-bottom:4px;font-size:1rem}
+.lb-widget{background:var(--lo-bg);border:2px solid var(--lo-border);border-radius:14px;padding:16px;margin-top:16px}.lb-widget h3{margin-top:0;color:var(--lo-border)}
+.lb-form{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}.lb-form input{flex:1;min-width:140px;padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:.95rem}.lb-form input:focus{border-color:var(--lo-border);outline:none}
+.lb-list{display:flex;flex-wrap:wrap;gap:6px}.lb-badge{background:var(--lo-border);color:#fff;padding:4px 12px;border-radius:999px;font-size:.85rem;font-weight:700;animation:fadeInUp .3s}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes correctFlash{0%{box-shadow:0 0 0 0 rgba(34,197,94,0)}50%{box-shadow:0 0 0 8px rgba(34,197,94,.4)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.correct-flash{animation:correctFlash .6s ease}
+.peer-teach{background:#fff7ed;border:2px dashed var(--sc-border);border-radius:12px;padding:12px 14px;margin-top:12px;color:#9a3412}.peer-teach strong{color:#7c2d12}
+.seq-card.done{animation:correctFlash .6s ease}
+@media print{.xp-wrap,.hint-btn,.hint-box,.reveal-btn,.mistake-box,.lb-widget,.confetti,.peer-teach,.reveal-point{display:none!important}}
+</style>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'💡 Hide hint':'💡 Give me a hint'}
+function revealMistakes(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'👁️ Hide mistakes':'🔍 Reveal mistakes'}
+function revealNextPoint(btn){const wrap=btn.parentElement;const hidden=wrap.querySelectorAll('.reveal-point:not(.show)');if(hidden.length){hidden[0].classList.add('show');playDing();if(hidden.length===1)btn.textContent='✅ All revealed'}}
+function addToLB(widgetId){const inp=document.querySelector('#'+widgetId+' input');const name=inp.value.trim();if(!name)return;const list=document.querySelector('#'+widgetId+' .lb-list');const b=document.createElement('span');b.className='lb-badge';b.textContent=name;list.appendChild(b);inp.value='';playDing()}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.seq-card').forEach(()=>registerXP(1));});
+// Wrap seq click
+const _origInitSeq=window.initSeq;
+window.initSeq=function(){_origInitSeq();document.querySelectorAll('.seq-card').forEach(c=>{const orig=c.onclick;c.onclick=function(){if(c.classList.contains('done'))return;const preClicks=document.querySelectorAll('.seq-card.done').length;orig();const postClicks=document.querySelectorAll('.seq-card.done').length;if(postClicks>preClicks){playDing();gainXP()}else{playBuzz()}}})}
+
+  /* ============== V4 POLISH — Lesson 3 Art JS ============== */
+
+  /* ---------- TA BRIEF + COLD CALL content per slide ---------- */
+  const _taBriefs = {
+    'Title': 'Welcome pupils. Check sketchbooks, pencils, rulers, A4 image of chosen Magritte work are on the table.',
+    'Arrival Task': 'Walk among pupils as they recall L1+L2 — Q4 (gridding) is the lead-in. Prompt anyone stuck on Q4 with: "How do artists copy a picture really accurately?"',
+    'Starter': 'Listen for "Belgian" (not French) and "bowler hat". If someone says French, gently redirect with the country names: Belgium, Brussels.',
+    'I Do: How to Grid': 'During the 6-step demo, support pupils who need help reading the steps. Make sure each pupil has a ruler and pencil ready for when they grid up themselves.',
+    'We Do: Sequencing': 'Sit beside any pupil hesitating. Prompt with "What did we say happens FIRST?" Foundation pupils may benefit from physical step cards instead.',
+    'I Do: Annotation Framework': 'Highlight the 4 areas (Describe / Techniques / Visual Elements / Opinion). Reassure pupils that "Opinion" is allowed to be personal — but it must link to MEANING.',
+    'We Do: Annotation Practice': 'Roam between pupils. Encourage anyone who has only written 1–2 words to add full sentences using the starters. Praise specific visual element vocabulary.',
+    'Spot the Mistake': 'Listen for who spots the brushstrokes mistake (most miss it). Praise pupils who back up their answer with a reason.',
+    'Independent Work': 'Circulate constantly. Priority pupils: those struggling with gridding accuracy. Offer pre-printed grids for SEN/EAL pupils. Encourage starting the FACT FILE with 3 facts minimum.',
+    'Exit Ticket – Cumulative': 'Collect responses or take a photo of whiteboards. Note any persistent confusion (e.g. "French" answers) for next lesson.'
+  };
+
+  /* Cold call questions per slide, per tier (F=Foundation U/1, M=Middle 2, H=Higher 3-5).
+     Tier auto-selected from pupil grade in localStorage. */
+  const _ccQuestions = {
+    'Title': {F:'What is today\'s lesson about?',M:'What two main skills will we use today?',H:'How does today\'s lesson build on last week\'s techniques?'},
+    'Arrival Task': {F:'Name one Magritte technique.',M:'Explain why his work looks realistic but feels strange.',H:'Compare Magritte\'s use of juxtaposition with another Surrealist.'},
+    'Starter': {F:'What nationality was Magritte?',M:'Describe Magritte\'s signature style in one sentence.',H:'Why might "The Treachery of Images" challenge how we see paintings?'},
+    'I Do: How to Grid': {F:'What\'s step 1 of gridding?',M:'Why do we draw box-by-box rather than freehand?',H:'How does gridding help with proportion and what does it not help with?'},
+    'We Do: Sequencing': {F:'Which step comes after gridding the image?',M:'Why must we grid the page BEFORE drawing?',H:'If we skipped the gridding step, what specific accuracy problems would appear?'},
+    'I Do: Annotation Framework': {F:'Name the 4 areas of annotation.',M:'Give an example of a visual element.',H:'Why must Opinion link to meaning, not just feelings?'},
+    'We Do: Annotation Practice': {F:'Read out your "Describe" sentence.',M:'Read out your "Techniques" sentence — name a technique.',H:'Read your "Opinion" — what does the eye-with-sky represent?'},
+    'Spot the Mistake': {F:'Name one mistake.',M:'Explain why the brushstrokes mistake matters.',H:'Rewrite the Opinion sentence to a Higher standard.'},
+    'Independent Work': {F:'What stage of your fact file are you on?',M:'What\'s your next step on the gridded study?',H:'What comparison or connection are you planning to add?'},
+    'Exit Ticket – Cumulative': {F:'Answer Q3 (why use a grid?).',M:'Answer Q4 (which technique puts objects in strange places?).',H:'Answer Q5 (what should annotations include?).'}
+  };
+
+  /* ---------- Pupil list & grade tier ---------- */
+  const _CC_KEY = 'coldCall_art_l3';
+  const _ccDefault = [
+    {n:'Aisha',g:'2'},{n:'Ben',g:'1'},{n:'Carla',g:'3'},{n:'Daniel',g:'U'},
+    {n:'Erin',g:'2'},{n:'Fionn',g:'3'},{n:'Grace',g:'1'},{n:'Hassan',g:'2'},
+    {n:'Imani',g:'4'},{n:'Jay',g:'U'},{n:'Kira',g:'3'},{n:'Liam',g:'2'}
+  ];
+  function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return Array.isArray(d)&&d.length?d:_ccDefault.slice()}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+
+  /* ---------- TA FOCUS modal ---------- */
+  function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>👥 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+
+  /* ---------- COLD CALL modal ---------- */
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the ✏️ Edit list button.');return}
+    const tier=_gradeToTier(pick.g);
+    const tierLabel={F:'Foundation',M:'Middle',H:'Higher'}[tier];
+    const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>🎲 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">—</div><span class="cc-tier" id="cc-tier">—</span><div class="cc-question" id="cc-q">—</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">✏️ Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">🎲 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';
+      document.body.appendChild(modal);
+    }
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');
+    nameEl.textContent=pick.n;
+    nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');
+    try{playDing()}catch(e){}
+  }
+
+  /* ---------- Cold Call: edit pupil list ---------- */
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){
+      modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';
+      modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};
+      modal.innerHTML='<div class="v4-modal"><h3>✏️ Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">💾 Save</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    const list=_ccLoad();
+    document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');
+    modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){
+    const txt=document.getElementById('cc-edit-area').value;
+    const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);
+    _ccSave(list);_ccRecent=[];
+    document.getElementById('cc-edit-modal').classList.remove('visible');
+  }
+
+  /* ---------- AUTO TIMER WIDGET (per-slide auto-start) ---------- */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){
+    _atPause();
+    const slide=document.querySelectorAll('.slide')[currentSlide];
+    if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}
+    const minStr=slide.getAttribute('data-timer');
+    const noAuto=slide.getAttribute('data-no-autostart')==='true';
+    const min=parseInt(minStr,10);
+    if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}
+    document.body.classList.remove('no-timer');
+    _atTotal=min*60;_atSeconds=_atTotal;_atRender();
+    if(!noAuto)setTimeout(()=>{_atStart()},250);
+  }
+
+  /* ---------- LESSON COMPLETE celebration ---------- */
+  let _lcShown=false;
+  function _lcShowComplete(){
+    if(_lcShown)return;_lcShown=true;
+    setTimeout(()=>{
+      try{fireConfetti()}catch(e){}
+      try{playDing()}catch(e){}
+      const ov=document.getElementById('lc-overlay');
+      if(ov)ov.classList.add('visible');
+    },400);
+  }
+  function hideLessonComplete(){
+    const ov=document.getElementById('lc-overlay');
+    if(ov)ov.classList.remove('visible');
+  }
+  /* Fire when exit-slide gets show-ans class */
+  (function(){
+    const exit=document.getElementById('exit-slide');
+    if(!exit)return;
+    const obs=new MutationObserver(()=>{
+      if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();
+    });
+    obs.observe(exit,{attributes:true,attributeFilter:['class']});
+  })();
+
+  /* ---------- Hook into showSlide for timer auto-start ---------- */
+  if(typeof showSlide==='function'){
+    const _origShowSlide=showSlide;
+    window.showSlide=function(i){
+      _origShowSlide(i);
+      try{_atOnSlideChange()}catch(e){}
+    };
+  }
+  /* Initial trigger */
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+
+  /* ---------- Escape key closes modals ---------- */
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      ['ta-modal','cc-modal','cc-edit-modal','lc-overlay'].forEach(id=>{
+        const m=document.getElementById(id);if(m)m.classList.remove('visible');
+      });
+    }
+  });
+
+  /* ============== END V4 POLISH JS ============== */
+
+</script>
+
+</body>
+</html>
