@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L4: Electron Flow &amp; Series Circuit Calculations</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}
+    .anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}
+    h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+    h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+    button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}
+    button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+    .progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+    .progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}
+    .task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}
+    .show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}
+    .data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}
+    .data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}
+    .wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+    .evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .quiz{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-top:8px}
+    .quiz .q{font-weight:900;color:#1e3a8a;margin-bottom:10px}.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}.quiz .fb{margin-top:10px;font-weight:900;min-height:24px}
+
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+    /* WE DO 1: Label chips */
+    .label-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+    .label-chip{padding:8px 16px;border-radius:999px;font-weight:900;font-size:.95rem;border:3px solid #cbd5e1;background:#fff;cursor:pointer;user-select:none;transition:.2s}
+    .label-chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1)}
+    .label-chip.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);transform:scale(1.05)}
+    .label-chip.placed{opacity:.4;pointer-events:none;border-style:dashed}
+    .label-slot{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:36px;border:3px dashed #cbd5e1;border-radius:10px;background:#f8fafc;font-weight:900;font-size:.9rem;color:var(--muted);cursor:pointer;transition:.25s;margin:2px}
+    .label-slot:hover{border-color:var(--wedo-border);background:#fce7f3}
+    .label-slot.filled{border-style:solid;background:#fff;color:#0f172a}
+    .label-slot.correct{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .label-slot.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+
+    /* WE DO 2: Step solver */
+    .step-card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:10px;transition:.3s}
+    .step-card.complete{border-color:var(--success);background:#f0fdf4}
+    .step-card.wrong-step{border-color:var(--error);animation:shake .4s}
+    .step-input{width:90px;padding:8px;font-size:1.1rem;font-weight:900;border:2px solid #cbd5e1;border-radius:8px;text-align:center}
+    .step-input:focus{outline:none;border-color:var(--ido-border)}
+    .step-input.correct{border-color:var(--success);background:#f0fdf4}
+    .step-input.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .step-check{padding:6px 14px;border-radius:8px;font-size:.9rem;font-weight:900;background:var(--ido-border);color:#fff;border:none;cursor:pointer;transition:.2s}
+    .step-check:hover{background:#5b21b6}
+    .step-check:disabled{opacity:.4;cursor:default}
+    .step-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+
+    /* WE DO 3: Spot the mistake */
+    .mistake-card{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:10px;transition:.3s}
+    .mistake-card.fixed{border-color:var(--success);background:#f0fdf4}
+    .mistake-card.wrong-m{border-color:var(--error);animation:shake .4s}
+    .mistake-opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .mistake-opt{padding:8px 14px;border-radius:10px;font-weight:700;font-size:.9rem;border:2px solid #cbd5e1;background:#fff;cursor:pointer;transition:.2s;color:#334155}
+    .mistake-opt:hover{border-color:var(--wedo-border);background:#fce7f3}
+    .mistake-opt.right-m{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .mistake-opt.wrong-pick{border-color:var(--error);background:#fef2f2;color:#991b1b}
+    .mistake-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+
+    /* Exit ticket grid */
+    .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .exit-cell{border:2px solid var(--task-border);border-radius:12px;padding:14px;background:var(--task-bg);position:relative}
+    .exit-cell .lesson-tag{position:absolute;top:6px;right:8px;font-size:.7rem;font-weight:900;color:#fff;background:var(--lo-border);padding:2px 8px;border-radius:6px}
+
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#xp-widget,.modal-bg,#complete-overlay{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+    body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-150%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+    /* ===== V5 ADDITIONS ===== */
+    /* Title hero icon row */
+    .hero-icons{display:flex;gap:20px;justify-content:center;margin:8px 0 4px;font-size:2.2rem}
+    .hero-icons span{display:inline-block;animation:heroBob 2.6s ease-in-out infinite}
+    .hero-icons span:nth-child(2){animation-delay:.25s}.hero-icons span:nth-child(3){animation-delay:.5s}.hero-icons span:nth-child(4){animation-delay:.75s}.hero-icons span:nth-child(5){animation-delay:1s}
+    @keyframes heroBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+    /* LO checkmark pops */
+    .lo-check{display:inline-block;opacity:0;transform:scale(0);animation:loPop .45s cubic-bezier(.175,.885,.32,1.4) forwards;color:var(--success);font-weight:900}
+    @keyframes loPop{to{opacity:1;transform:scale(1)}}
+    /* Misconception box with strikethrough */
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:12px 14px;border-radius:12px;margin-top:10px}
+    .misc-strike{position:relative;font-style:italic;color:#991b1b;font-weight:700}
+    .misc-strike::after{content:'';position:absolute;left:0;top:55%;height:3px;width:0;background:#dc2626;border-radius:2px;animation:strikeOut .8s ease forwards;animation-delay:1.2s}
+    @keyframes strikeOut{to{width:100%}}
+    /* Exam tip box */
+    .exam-tip-box{background:#fef9c3;border:2px solid #eab308;border-left:8px solid #eab308;border-radius:12px;padding:14px 14px 10px;margin-top:14px;position:relative}
+    .exam-tip-box::before{content:'💡 EXAM TIP';position:absolute;top:-12px;left:12px;background:#eab308;color:#422006;padding:2px 10px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    /* Starter tap mode */
+    .tf-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin-bottom:8px;transition:.25s}
+    .tf-row.locked{background:#f8fafc}
+    .tf-row p{margin:0;flex:1;min-width:200px}
+    .tf-btn{background:#fff;color:#0f172a;border:2px solid #cbd5e1;padding:6px 16px;border-radius:10px;font-weight:900;box-shadow:none}
+    .tf-btn:hover{background:#f1f5f9;transform:none}
+    .tf-row.locked .tf-btn{pointer-events:none;opacity:.9}
+    .tf-btn.right{border-color:var(--success);background:#f0fdf4;color:#166534}
+    .tf-btn.wrong{border-color:var(--error);background:#fef2f2;color:#991b1b;animation:shake .4s}
+    .tf-fb{flex-basis:100%;font-weight:900;font-size:.92rem}
+    /* Hints */
+    .hint-btn{background:#e0f2fe;color:#0369a1;border:1px solid #38bdf8;padding:4px 10px;border-radius:8px;font-size:.8rem;font-weight:900;box-shadow:none;margin-left:6px}
+    .hint-btn:hover{background:#bae6fd;transform:none}
+    .hint-text{display:none;background:#f0f9ff;border-left:4px solid #38bdf8;border-radius:8px;padding:6px 10px;font-size:.9rem;color:#0c4a6e;margin-top:6px}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+    /* Modals */
+    .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:3000;display:none;justify-content:center;align-items:center}
+    .modal-bg.open{display:flex}
+    .modal{background:#fff;border-radius:18px;border-top:8px solid var(--lo-border);max-width:680px;width:92%;max-height:85vh;overflow-y:auto;padding:22px 26px;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:fadeInUp .3s}
+    .modal h2{border:none;margin:0 0 10px;padding:0;margin-right:0}
+    .modal h3{margin:14px 0 4px}
+    /* XP widget */
+    #xp-widget{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:1100;background:#fff;border:2px solid #e2e8f0;border-radius:999px;padding:6px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 16px rgba(0,0,0,.08);font-weight:900;font-size:.85rem;color:#334155}
+    #xp-bar-wrap{width:110px;height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+    #xp-bar{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#db2777);transition:width .4s}
+    /* Lesson complete overlay */
+    #complete-overlay{position:fixed;inset:0;z-index:4000;display:none;justify-content:center;align-items:center;background:rgba(15,23,42,.7)}
+    #complete-overlay .card{background:#fff;border-radius:24px;padding:36px 46px;text-align:center;animation:fadeInUp .4s;border-top:10px solid var(--success);max-width:500px;width:90%}
+    /* Confetti */
+    .confetto{position:fixed;top:-30px;z-index:5000;font-size:1.4rem;animation:confFall linear forwards;pointer-events:none}
+    @keyframes confFall{to{transform:translateY(110vh) rotate(540deg);opacity:.5}}
+    /* Calm mode */
+    body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+    body.calm .animate-enter,body.calm .anim-delay-1,body.calm .anim-delay-2,body.calm .anim-delay-3,body.calm .lo-check{opacity:1!important;transform:none!important}
+    body.calm .misc-strike::after{width:100%}
+    /* Mobile responsive */
+    @media (max-width:640px){
+      h1{font-size:1.55rem}h2{font-size:1.15rem;margin-right:78px}p,li{font-size:.98rem}
+      .slide{padding:16px;width:96%;height:94%}
+      .logo{width:78px;top:10px;right:12px}
+      .content-grid,.arrival-grid,.exit-grid{grid-template-columns:1fr}
+      .time-badge,.flex-badge{position:static;display:inline-block;margin-bottom:6px}
+      .controls{bottom:56px;right:8px;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:60vw}
+      button{padding:7px 10px;font-size:.82rem}
+      #xp-widget{bottom:60px;left:8px;transform:none;padding:4px 10px}#xp-bar-wrap{width:64px}
+      #timer-display{font-size:1.5rem;min-width:64px}
+      .hero-icons{font-size:1.45rem;gap:12px}
+      .formula-display{font-size:1.1rem}
+    }
+  </style>
+</head>
+<body>
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ===== SLIDE 1: TITLE ===== -->
+  <div class="slide active" data-title="Title">
+    <img class="logo" alt="Progress Schools Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:1%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics — Electricity · Lesson 4</p>
+      <h1>Electron Flow &amp; Series Calculations</h1>
+      <div class="hero-icons"><span>⚡</span><span>🔋</span><span>💡</span><span>🧲</span><span>🔌</span></div>
+      <p style="font-size:1rem;color:var(--muted);margin:2px 0 10px">Spec 2.16 · 2.19 &nbsp;·&nbsp; <strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="content-grid" style="max-width:1000px;margin:0 auto;text-align:left;gap:16px">
+      <div class="li-box" style="margin:0"><strong>🎯 Learning Objectives:</strong>
+        <ul style="font-size:1rem;margin:8px 0 0;padding-left:18px;list-style:none">
+          <li style="margin-bottom:6px"><span class="lo-check" style="animation-delay:.7s">✔</span> <strong>2.16</strong> – Know that electric current in solid metallic conductors is a flow of negatively charged electrons.</li>
+          <li><span class="lo-check" style="animation-delay:1.2s">✔</span> <strong>2.19</strong> – Calculate the currents, voltages and resistances of two resistive components connected in series.</li>
+        </ul>
+      </div>
+      <div class="sc-box" style="margin:0"><strong style="color:#9a3412">🏆 Success Criteria — I will…</strong>
+        <ul style="font-size:.98rem;margin:8px 0 0;padding-left:20px;color:#431407">
+          <li>describe current in a metal as a flow of <strong>negatively charged electrons</strong></li>
+          <li>find <strong>R<sub>total</sub></strong>, the <strong>current</strong> and the <strong>voltage</strong> across each resistor in series</li>
+          <li>use the <strong>check step</strong> (V₁ + V₂ = supply) to prove my answer</li>
+        </ul>
+      </div>
+    </div>
+    <div class="content-grid" style="max-width:1000px;margin:12px auto 0;gap:16px;text-align:left">
+      <div class="scaffold-box" style="margin:0"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="small" onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+          <button class="small" onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+          <button class="small" onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+          <button class="small ghost" onclick="printSection('ko')">🗂️ KO</button>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:8px 0 0">Page 1 of every pack = title, LOs &amp; success criteria for that tier.</p>
+      </div>
+      <div class="li-box" style="margin:0;background:#fff;border-color:#e2e8f0">
+        <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+        <p style="font-size:.9rem;margin:4px 0"><strong>Core path:</strong> Arrival → Starter → I Do 1 → We Do 1 → I Do 2 → We Do 2 → Independent → Exit Ticket</p>
+        <p style="font-size:.9rem;margin:4px 0"><strong>FLEX slides</strong> (I Do 3 + We Do 3): only if time allows, or as next-lesson warm-up. Marked 🟠 FLEX.</p>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ===== SLIDE 2: ARRIVAL TASK ===== -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Lesson 2</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. Q1–3 recall V = I × R from Lesson 2. Q4 leads into today.</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p>Write the formula that links voltage, current and resistance.</p><p class="answer">V = I × R</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p>Current is the rate of flow of ___________.</p><p class="answer">Charge.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p>A 3 A current flows through a 4 Ω resistor. Calculate the voltage.</p><p class="answer">V = I × R = 3 × 4 = 12 V</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>What <strong>tiny particles</strong> inside a metal wire actually carry the charge? What charge do they have?</p><p class="answer">Electrons. They have a negative charge.</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p>A 12 V battery pushes current through a 6 Ω resistor. Calculate the current.</p><p class="answer">I = V ÷ R = 12 ÷ 6 = 2 A</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p>Define current in terms of charge.</p><p class="answer">Current is the rate of flow of charge — the amount of charge passing a point per second. 1 A = 1 coulomb per second.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p>A lamp has 9 V across it and 0.5 A flowing through it. Calculate its resistance.</p><p class="answer">R = V ÷ I = 9 ÷ 0.5 = 18 Ω</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>We draw current flowing from <strong>+ to −</strong>, but the electrons actually flow the <strong>other way</strong>. Why do you think scientists still use the old direction?</p><p class="answer">Scientists agreed on the + to − direction (conventional current) before they discovered electrons. It became the global standard and changing it would cause confusion, so we kept it.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p>A hairdryer draws 10 A on UK mains (230 V). Calculate its resistance. Show working.</p><p class="answer">R = V ÷ I = 230 ÷ 10 = 23 Ω</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p>Explain why increasing the voltage across a fixed resistor increases the current, using ideas about charge.</p><p class="answer">Higher voltage gives more energy per coulomb, pushing electrons faster through the circuit. Since current is the rate of flow of charge, faster electron flow = higher current. R stays constant, so by V = IR, if V↑ then I↑.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p>Two resistors of 10 Ω and 20 Ω are in series with a 6 V battery. Calculate the current.</p><p class="answer">R_total = 10 + 20 = 30 Ω. I = V ÷ R = 6 ÷ 30 = 0.2 A</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in ⚡</h3><p>In the circuit above, the voltage across the 10 Ω resistor is 2 V and across the 20 Ω it's 4 V. What do you notice when you add these together? Why?</p><p class="answer">2 + 4 = 6 V, which equals the battery voltage. In series, the voltages across each component add up to the total supply voltage.</p></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: STARTER ===== -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: True or False?</h2>
+    <div class="li-box"><strong>Instructions:</strong> <strong>✍️ Write it</strong> — copy each statement into your book and write TRUE or FALSE, then correct the false ones. <strong>🎮 Tap it</strong> — vote on the board as a class. <strong>3 minutes.</strong></div>
+    <div class="level-toggle" style="justify-content:flex-start;margin:4px 0 8px">
+      <button class="small" id="st-mode-write" onclick="switchStarter('write')">✍️ Write it</button>
+      <button class="small ghost" id="st-mode-tap" onclick="switchStarter('tap')">🎮 Tap it</button>
+    </div>
+    <div id="starter-write">
+    <div class="content-grid" style="margin-top:4px">
+      <div class="task-box" style="padding:14px">
+        <h3 style="margin-top:0">📝 True or False?</h3>
+        <p>1. Electrons flow from the negative terminal to the positive terminal. ________</p>
+        <p>2. Electrons are positively charged. ________</p>
+        <p>3. In a series circuit, the current is the same at every point. ________</p>
+        <p>4. Adding a second resistor in series decreases the total resistance. ________</p>
+        <p>5. In series, every component gets the full battery voltage. ________</p>
+        <p>6. Metals conduct because their electrons are free to move. ________</p>
+      </div>
+      <div>
+        <div class="diagram-container"><h3 style="margin-top:0;color:var(--ido-border)">💡 Hint</h3>
+          <p style="font-size:1rem;color:var(--muted)">Q1: which way do the <strong>negative</strong> electrons get pushed? Away from the − terminal…</p>
+          <p style="font-size:1rem;color:var(--muted);margin-top:8px">Qs 3–5 are the <strong>series rules</strong> — same current everywhere, voltages <strong>share</strong>. Watch out: <strong>three</strong> of these are false!</p>
+        </div>
+        <div class="scaffold-box"><strong>💡 Answers to discuss:</strong> 1. TRUE. 2. FALSE — negatively charged. 3. TRUE. 4. FALSE — it increases total resistance. 5. FALSE — that's parallel; in series the voltages share and add up to the supply. 6. TRUE.</div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>An electron in a wire actually moves incredibly slowly — about <strong>0.1 mm per second</strong> (slower than a snail!). But the electrical signal travels at nearly the speed of light because each electron pushes the next one, like dominoes.</p></div>
+      </div>
+    </div>
+    </div>
+    <div id="starter-tap" style="display:none;margin-top:4px">
+      <div class="tf-row" id="tf0"><p>1. Electrons flow from the negative terminal to the positive terminal.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(0,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(0,this,false)">FALSE</button></div><div class="tf-fb" id="tfb0"></div></div>
+      <div class="tf-row" id="tf1"><p>2. Electrons are positively charged.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(1,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(1,this,false)">FALSE</button></div><div class="tf-fb" id="tfb1"></div></div>
+      <div class="tf-row" id="tf2"><p>3. In a series circuit, the current is the same at every point.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(2,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(2,this,false)">FALSE</button></div><div class="tf-fb" id="tfb2"></div></div>
+      <div class="tf-row" id="tf3"><p>4. Adding a second resistor in series decreases the total resistance.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(3,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(3,this,false)">FALSE</button></div><div class="tf-fb" id="tfb3"></div></div>
+      <div class="tf-row" id="tf4"><p>5. In series, every component gets the full battery voltage.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(4,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(4,this,false)">FALSE</button></div><div class="tf-fb" id="tfb4"></div></div>
+      <div class="tf-row" id="tf5"><p>6. Metals conduct because their electrons are free to move.</p><div style="display:flex;gap:8px"><button class="tf-btn" onclick="tfCheck(5,this,true)">TRUE</button><button class="tf-btn" onclick="tfCheck(5,this,false)">FALSE</button></div><div class="tf-fb" id="tfb5"></div></div>
+      <div class="snap-score" style="display:inline-block;margin-top:4px">Score: <span id="tf-score">0</span> / 6</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: I DO 1 – ELECTRON FLOW ===== -->
+  <div class="slide" data-title="I Do – Electron Flow" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Electron Flow in Metals (2.16)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> Electric current in solid metallic conductors is a flow of <strong>negatively charged electrons</strong>.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">⚡ What Actually Moves?</h3>
+          <p>Inside a metal wire, there are billions of <strong>free electrons</strong> — they are not locked to any single atom.</p>
+          <p>When a battery provides <strong>voltage</strong>, it pushes these free electrons through the wire — this is <strong>current</strong>.</p>
+          <p>Electrons are <strong>negatively charged</strong>, so they flow from the <strong>negative terminal</strong> to the <strong>positive terminal</strong>.</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">🔄 Two Directions!</h3>
+          <p><strong>Conventional current:</strong> + → − (what we draw on diagrams)</p>
+          <p><strong>Electron flow:</strong> − → + (what actually happens)</p>
+          <p>Scientists agreed on conventional current <em>before</em> discovering electrons, and it stuck.</p>
+        </div>
+        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>When engineers design fairy lights, phone chargers, or car dashboards, they need to know exactly how voltage is shared between components in series. Get the calculation wrong and the component burns out — or doesn't work at all. This is real engineering maths.</p></div>
+        <div class="scaffold-box animate-enter anim-delay-2"><strong>💡 Why do metals conduct?</strong> Metal atoms are arranged in a lattice. The outer electrons are <strong>delocalised</strong> (free to move). Non-metals like plastic don't have free electrons, so they are <strong>insulators</strong>.</div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">Inside a Metal Wire</h3>
+          <svg width="320" height="190" viewBox="0 0 320 190">
+            <rect x="10" y="50" width="300" height="50" rx="25" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+            <text x="160" y="40" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">Metal wire (magnified)</text>
+            <circle cx="50" cy="75" r="14" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/><text x="50" y="79" text-anchor="middle" font-size="8" font-weight="bold" fill="#475569">M⁺</text>
+            <circle cx="110" cy="75" r="14" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/><text x="110" y="79" text-anchor="middle" font-size="8" font-weight="bold" fill="#475569">M⁺</text>
+            <circle cx="170" cy="75" r="14" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/><text x="170" y="79" text-anchor="middle" font-size="8" font-weight="bold" fill="#475569">M⁺</text>
+            <circle cx="230" cy="75" r="14" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/><text x="230" y="79" text-anchor="middle" font-size="8" font-weight="bold" fill="#475569">M⁺</text>
+            <circle cx="80" cy="75" r="6" fill="#3b82f6"><animate attributeName="cx" values="30;290" dur="2s" repeatCount="indefinite"/></circle>
+            <circle cx="140" cy="75" r="6" fill="#3b82f6"><animate attributeName="cx" values="30;290" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="75" r="6" fill="#3b82f6"><animate attributeName="cx" values="30;290" dur="2s" begin="1s" repeatCount="indefinite"/></circle>
+            <text x="60" y="130" text-anchor="middle" font-size="10" fill="#64748b">Grey = metal ions (fixed)</text>
+            <text x="60" y="145" text-anchor="middle" font-size="10" fill="#3b82f6">Blue = free electrons (moving)</text>
+            <line x1="40" y1="170" x2="280" y2="170" stroke="#dc2626" stroke-width="3" marker-end="url(#arr1)"/>
+            <defs><marker id="arr1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker></defs>
+            <text x="160" y="188" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">Electron flow: − → +</text>
+          </svg>
+        </div>
+        <div class="exam-tip-box">If the question says "describe the current in a metal wire" — say: <em>"a flow of negatively charged electrons"</em>. This is the exact spec wording worth 1 mark.</div>
+        <div class="misc-box"><strong>⚠️ Misconception alert:</strong> <span class="misc-strike">"The lamp uses up the electrons."</span><br><strong>Truth:</strong> Electrons are never used up — the same electrons keep looping round the circuit. It's <strong>energy</strong> that gets transferred to the lamp.</div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Electron</td><td style="padding:4px 8px;color:#334155">A tiny negatively-charged particle. Carries current in metals.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Charge</td><td style="padding:4px 8px;color:#334155">A property of particles. Measured in coulombs (C).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Conventional current</td><td style="padding:4px 8px;color:#334155">The "pretend" flow from + to − (opposite to electrons).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Series</td><td style="padding:4px 8px;color:#334155">Components on a single loop. Current same, voltages add.</td></tr></table></div>
+  </div>
+
+  <!-- ===== SLIDE 5: WE DO 1 – LABEL THE WIRE ===== -->
+  <div class="slide" data-title="We Do – Label the Wire" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Label the Wire 🏷️</h2>
+    <div class="li-box"><strong>Instructions:</strong> Select a label from the bank, then click the correct slot. Match all 8!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div class="label-bank" id="label-bank">
+        <span class="label-chip" onclick="selLabel(this)" data-val="Electrons">Electrons</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Negative">Negative</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Metal ions">Metal ions</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Fixed">Fixed</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="− to +">− to +</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="+ to −">+ to −</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Amps (A)">Amps (A)</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Insulators">Insulators</span>
+      </div>
+      <div class="content-grid" style="height:auto;gap:14px">
+        <div style="background:#f8fafc;border-radius:12px;padding:14px;border:2px solid #e2e8f0">
+          <h3 style="margin:0 0 8px;color:var(--wedo-border)">Part A: Inside the Wire</h3>
+          <p style="margin:4px 0">The charge carriers in metals are <span class="label-slot" onclick="placeLabel(this)" data-answer="Electrons">?</span></p>
+          <p style="margin:4px 0">Their charge is <span class="label-slot" onclick="placeLabel(this)" data-answer="Negative">?</span></p>
+          <p style="margin:4px 0">The large particles that don't move are <span class="label-slot" onclick="placeLabel(this)" data-answer="Metal ions">?</span></p>
+          <p style="margin:4px 0">These ions are <span class="label-slot" onclick="placeLabel(this)" data-answer="Fixed">?</span> in position</p>
+        </div>
+        <div style="background:#f8fafc;border-radius:12px;padding:14px;border:2px solid #e2e8f0">
+          <h3 style="margin:0 0 8px;color:var(--wedo-border)">Part B: Directions &amp; Units</h3>
+          <p style="margin:4px 0">Electron flow direction: <span class="label-slot" onclick="placeLabel(this)" data-answer="− to +">?</span></p>
+          <p style="margin:4px 0">Conventional current direction: <span class="label-slot" onclick="placeLabel(this)" data-answer="+ to −">?</span></p>
+          <p style="margin:4px 0">Current is measured in <span class="label-slot" onclick="placeLabel(this)" data-answer="Amps (A)">?</span></p>
+          <p style="margin:4px 0">Plastics and rubber are <span class="label-slot" onclick="placeLabel(this)" data-answer="Insulators">?</span></p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px">
+        <div class="snap-score">Matched: <span id="lbl-count">0</span> / 8</div>
+        <div id="lbl-msg" style="font-weight:900;font-size:1.1rem;min-height:24px"></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+        <button class="ghost small" onclick="resetLabels()">🔄 Reset</button>
+        <button class="small" onclick="revealLabels()">✅ Reveal All</button>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: I DO 2 – SERIES CALCULATIONS ===== -->
+  <div class="slide" data-title="I Do – Series Calculations" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Series Circuit Calculations (2.19)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> In series: R<sub>total</sub> = R₁ + R₂. Current is the <strong>same</strong> everywhere. Voltage <strong>adds up</strong> to the supply.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">📐 The Three Series Rules</h3>
+          <div class="formula-display" style="font-size:1.2rem">R<sub>total</sub> = R₁ + R₂</div>
+          <p style="margin-top:8px"><strong>Rule 1:</strong> Total resistance = sum of all resistances.</p>
+          <p><strong>Rule 2:</strong> Current is the <strong>same</strong> at every point in the circuit.</p>
+          <p><strong>Rule 3:</strong> V<sub>total</sub> = V₁ + V₂ — voltages across components add up to the supply.</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">✏️ Worked Example</h3>
+          <p><strong>Q:</strong> A 9 V battery is connected to a 5 Ω and a 10 Ω resistor in series. Find the current and voltage across each.</p>
+          <p><strong>Step 1:</strong> R<sub>total</sub> = 5 + 10 = <strong>15 Ω</strong></p>
+          <p><strong>Step 2:</strong> I = V ÷ R = 9 ÷ 15 = <strong>0.6 A</strong></p>
+          <p><strong>Step 3:</strong> V₁ = I × R₁ = 0.6 × 5 = <strong>3 V</strong></p>
+          <p><strong>Step 4:</strong> V₂ = I × R₂ = 0.6 × 10 = <strong>6 V</strong></p>
+          <p><strong>Check:</strong> 3 + 6 = 9 V ✅</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">Series Circuit with Two Resistors</h3>
+          <svg width="300" height="160" viewBox="0 0 300 160">
+            <rect x="20" y="15" width="260" height="130" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <line x1="130" y1="15" x2="130" y2="15" stroke="#1f2937" stroke-width="3"/><line x1="136" y1="9" x2="136" y2="21" stroke="#1f2937" stroke-width="3"/><line x1="142" y1="12" x2="142" y2="18" stroke="#1f2937" stroke-width="2"/>
+            <text x="150" y="8" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">9 V</text>
+            <rect x="60" y="130" width="50" height="20" rx="3" fill="#bbf7d0" stroke="#22c55e" stroke-width="2"/>
+            <text x="85" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#166534">5 Ω</text>
+            <rect x="180" y="130" width="50" height="20" rx="3" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+            <text x="205" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">10 Ω</text>
+            <text x="85" y="125" text-anchor="middle" font-size="9" fill="#22c55e" font-weight="bold">V₁ = 3 V</text>
+            <text x="205" y="125" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold">V₂ = 6 V</text>
+            <text x="15" y="85" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="bold" transform="rotate(-90,15,85)">I = 0.6 A →</text>
+          </svg>
+        </div>
+        <div class="scaffold-box animate-enter anim-delay-1"><strong>💡 Step-by-step method:</strong><br>1. Add the resistances → R<sub>total</sub><br>2. Use I = V ÷ R<sub>total</sub> to find current<br>3. Use V = I × R for each resistor<br>4. Check: V₁ + V₂ should = supply V</div>
+        <div class="aspire-box animate-enter anim-delay-2"><strong>🌟 The bigger resistor gets the bigger share of voltage.</strong> 10 Ω gets twice as much voltage as 5 Ω because it has twice the resistance. Voltage is shared in proportion to resistance!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 7: WE DO 2 – SERIES STEP SOLVER ===== -->
+  <div class="slide" data-title="We Do – Series Solver" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Series Step Solver 🧮</h2>
+    <div class="li-box"><strong>Instructions:</strong> A 12 V battery is connected to a <strong>4 Ω</strong> and an <strong>8 Ω</strong> resistor in series. Work through each step — type your answer and check!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:14px">
+        <div>
+          <div class="step-card" id="sc0"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 1: Find R<sub>total</sub></p>
+            <p style="margin:4px 0">R<sub>total</sub> = R₁ + R₂ = 4 + 8 = <input type="number" step="any" class="step-input" id="si0" placeholder="?"> Ω</p>
+            <button class="step-check" onclick="stepCheck(0,12)">Check</button><button class="hint-btn" onclick="toggleHint('h0')">💡 Hint</button><div class="hint-text" id="h0">Just add them: 4 + 8.</div>
+            <div class="step-fb" id="sf0"></div>
+          </div>
+          <div class="step-card" id="sc1"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 2: Find the current (I)</p>
+            <p style="margin:4px 0">I = V ÷ R<sub>total</sub> = 12 ÷ 12 = <input type="number" step="any" class="step-input" id="si1" placeholder="?"> A</p>
+            <button class="step-check" onclick="stepCheck(1,1)">Check</button><button class="hint-btn" onclick="toggleHint('h1')">💡 Hint</button><div class="hint-text" id="h1">Divide the battery voltage by R<sub>total</sub>: 12 ÷ 12.</div>
+            <div class="step-fb" id="sf1"></div>
+          </div>
+          <div class="step-card" id="sc2"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 3: Voltage across 4 Ω</p>
+            <p style="margin:4px 0">V₁ = I × R₁ = 1 × 4 = <input type="number" step="any" class="step-input" id="si2" placeholder="?"> V</p>
+            <button class="step-check" onclick="stepCheck(2,4)">Check</button><button class="hint-btn" onclick="toggleHint('h2')">💡 Hint</button><div class="hint-text" id="h2">Use V = I × R with THIS resistor: 1 × 4.</div>
+            <div class="step-fb" id="sf2"></div>
+          </div>
+        </div>
+        <div>
+          <div class="step-card" id="sc3"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 4: Voltage across 8 Ω</p>
+            <p style="margin:4px 0">V₂ = I × R₂ = 1 × 8 = <input type="number" step="any" class="step-input" id="si3" placeholder="?"> V</p>
+            <button class="step-check" onclick="stepCheck(3,8)">Check</button><button class="hint-btn" onclick="toggleHint('h3')">💡 Hint</button><div class="hint-text" id="h3">Same again, other resistor: 1 × 8.</div>
+            <div class="step-fb" id="sf3"></div>
+          </div>
+          <div class="step-card" id="sc4"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 5: Check — do the voltages add up?</p>
+            <p style="margin:4px 0">V₁ + V₂ = 4 + 8 = <input type="number" step="any" class="step-input" id="si4" placeholder="?"> V = supply? ✅</p>
+            <button class="step-check" onclick="stepCheck(4,12)">Check</button><button class="hint-btn" onclick="toggleHint('h4')">💡 Hint</button><div class="hint-text" id="h4">Add your two voltage answers — they should hit the supply voltage.</div>
+            <div class="step-fb" id="sf4"></div>
+          </div>
+          <div class="snap-score" style="margin-top:10px">Steps correct: <span id="step-count">0</span> / 5</div>
+          <div class="exam-tip-box">Writing the <strong>formula first</strong> earns a mark even if the final number is wrong. Formula → substitute → answer <strong>+ unit</strong>.</div>
+        </div>
+      </div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: I DO 3 – MORE EXAMPLES ===== -->
+  <div class="slide" data-title="I Do – More Series Examples" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 4 min · FLEX</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Putting It All Together</h2>
+    <div class="li-box"><strong>Combining 2.16 + 2.19:</strong> We now know <em>what</em> flows (electrons), <em>how much</em> flows (V = IR), and how series circuits share voltage.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">✏️ Worked Example 2</h3>
+          <p><strong>Q:</strong> A 6 V battery connects to a 3 Ω lamp and a 9 Ω resistor in series.</p>
+          <p><strong>R<sub>total</sub></strong> = 3 + 9 = 12 Ω</p>
+          <p><strong>I</strong> = 6 ÷ 12 = 0.5 A (same everywhere)</p>
+          <p><strong>V<sub>lamp</sub></strong> = 0.5 × 3 = 1.5 V</p>
+          <p><strong>V<sub>resistor</sub></strong> = 0.5 × 9 = 4.5 V</p>
+          <p><strong>Check:</strong> 1.5 + 4.5 = 6 V ✅</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">✏️ Worked Example 3 — Finding R</h3>
+          <p><strong>Q:</strong> Two resistors in series have 15 V across them. The current is 0.5 A. R₁ = 10 Ω. Find R₂.</p>
+          <p><strong>R<sub>total</sub></strong> = V ÷ I = 15 ÷ 0.5 = 30 Ω</p>
+          <p><strong>R₂</strong> = R<sub>total</sub> − R₁ = 30 − 10 = <strong>20 Ω</strong></p>
+        </div>
+      </div>
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">📋 Summary: What You Must Know</h3>
+          <table class="data-table" style="font-size:.9rem">
+            <thead><tr><th>Fact</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>What carries current in metals?</td><td>Free <strong>negatively charged electrons</strong></td></tr>
+              <tr><td>Electron flow direction</td><td>− → + (opposite to conventional)</td></tr>
+              <tr><td>Series: Total R</td><td>R<sub>total</sub> = R₁ + R₂</td></tr>
+              <tr><td>Series: Current</td><td>Same everywhere in the loop</td></tr>
+              <tr><td>Series: Voltage</td><td>V<sub>total</sub> = V₁ + V₂</td></tr>
+              <tr><td>Finding V across a component</td><td>V = I × R</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="exam-tip-box animate-enter anim-delay-1">You might be asked to find a <em>missing</em> resistance, voltage or current in a series circuit. Always start with R<sub>total</sub>, then I, then individual voltages. The check step (do they add up?) catches errors!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 9: WE DO 3 – SPOT THE MISTAKE ===== -->
+  <div class="slide" data-title="We Do – Spot the Mistake" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 5 min · FLEX</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Spot the Mistake! 🔍❌</h2>
+    <div class="li-box"><strong>Instructions:</strong> Each student's working has <strong>one mistake</strong>. Find it and click the correct fix!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Print Evidence</button>
+    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:10px">
+        <div>
+          <div class="mistake-card" id="mc0"><p style="font-weight:900;color:#9d174d;margin:0">❌ Student A:</p>
+            <p style="margin:4px 0;font-size:1rem">"A 10 V battery, 2 Ω and 3 Ω in series."<br>R<sub>total</sub> = 2 × 3 = <strong>6 Ω</strong><br>I = 10 ÷ 6 = 1.67 A</p>
+            <p style="font-weight:900;color:#1e3a8a;font-size:.95rem">What went wrong?</p>
+            <div class="mistake-opts">
+              <button class="mistake-opt" onclick="mistakeCheck(0,this,true)">Should ADD resistances: 2 + 3 = 5 Ω</button>
+              <button class="mistake-opt" onclick="mistakeCheck(0,this,false)">Should use V = I × R instead</button>
+            </div><div class="mistake-fb" id="mf0"></div>
+          </div>
+          <div class="mistake-card" id="mc1"><p style="font-weight:900;color:#9d174d;margin:0">❌ Student B:</p>
+            <p style="margin:4px 0;font-size:1rem">"12 V battery, 4 Ω and 8 Ω in series."<br>R<sub>total</sub> = 12 Ω ✅<br>I = 12 × 12 = <strong>144 A</strong></p>
+            <p style="font-weight:900;color:#1e3a8a;font-size:.95rem">What went wrong?</p>
+            <div class="mistake-opts">
+              <button class="mistake-opt" onclick="mistakeCheck(1,this,false)">The total resistance is wrong</button>
+              <button class="mistake-opt" onclick="mistakeCheck(1,this,true)">Should DIVIDE: I = V ÷ R = 12 ÷ 12 = 1 A</button>
+            </div><div class="mistake-fb" id="mf1"></div>
+          </div>
+        </div>
+        <div>
+          <div class="mistake-card" id="mc2"><p style="font-weight:900;color:#9d174d;margin:0">❌ Student C:</p>
+            <p style="margin:4px 0;font-size:1rem">"9 V battery, 3 Ω and 6 Ω in series. I = 1 A."<br>V₁ = 1 × 3 = 3 V ✅<br>V₂ = 1 × 6 = 6 V ✅<br>"The voltages don't add to 9 V so it's wrong."</p>
+            <p style="font-weight:900;color:#1e3a8a;font-size:.95rem">What went wrong?</p>
+            <div class="mistake-opts">
+              <button class="mistake-opt" onclick="mistakeCheck(2,this,true)">3 + 6 = 9 V — it DOES add up! The check passed!</button>
+              <button class="mistake-opt" onclick="mistakeCheck(2,this,false)">V₂ should be 3 V not 6 V</button>
+            </div><div class="mistake-fb" id="mf2"></div>
+          </div>
+          <div class="mistake-card" id="mc3"><p style="font-weight:900;color:#9d174d;margin:0">❌ Student D:</p>
+            <p style="margin:4px 0;font-size:1rem">"Current in metals is a flow of positively charged protons."</p>
+            <p style="font-weight:900;color:#1e3a8a;font-size:.95rem">What went wrong?</p>
+            <div class="mistake-opts">
+              <button class="mistake-opt" onclick="mistakeCheck(3,this,false)">Should say 'atoms' not 'protons'</button>
+              <button class="mistake-opt" onclick="mistakeCheck(3,this,true)">Should say 'negatively charged electrons'</button>
+            </div><div class="mistake-fb" id="mf3"></div>
+          </div>
+          <div class="snap-score" style="margin-top:8px">Fixed: <span id="mist-count">0</span> / 4 🔧</div>
+        </div>
+      </div>
+      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 10: INDEPENDENT WORK ===== -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3>
+        <p><strong>Section A:</strong> Multiple Choice — 4 questions</p>
+        <p><strong>Section B:</strong> Short Answer — calculations + definitions</p>
+        <p><strong>Section C:</strong> Long Answer — explain + calculate</p>
+        <p><strong>Section D:</strong> Exam-Style Question — full marks breakdown</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for the series rules and step-by-step method.</div>
+        <div class="aspire-box" style="margin-top:10px"><strong>📝 Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div>
+      </div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can state what carries current in metals, use V = I × R, and add resistances in series.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can calculate current and individual voltages in a series circuit with two resistors and explain electron flow.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can solve multi-step series problems, find missing resistances, and explain why voltage is shared in proportion to resistance.</p>
+      </div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I know electrons carry current in metals</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I know electron flow direction (− to +)</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can find R_total in a series circuit</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can calculate voltage across each resistor (Middle/Higher)</span></div></div>
+  </div>
+
+  <!-- ===== SLIDE 11: EXIT TICKET – CUMULATIVE 3×2 GRID ===== -->
+  <div class="slide" id="exit-slide" data-timer="3" data-title="Exit Ticket – Cumulative Recap">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Cumulative Recap (L1 · L2 · Today)</h2>
+    <div class="li-box"><strong>Instructions:</strong> 6 questions — 2 from each lesson. Answer from memory. No notes.</div>
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="toggleExitAnswers()">👁️ Answers</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+    </div>
+
+
+    <!-- FOUNDATION -->
+    <div id="exit-foundation" class="exit-grid">
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> Draw the circuit symbol for a lamp.</p><p class="answer">Circle with a cross inside.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> State one difference between series and parallel.</p><p class="answer">Series: one loop / parallel: branches. (Or any valid difference.)</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> Write the formula linking V, I and R.</p><p class="answer">V = I × R</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> A 2 A current flows through a 5 Ω resistor. Find V.</p><p class="answer">V = 2 × 5 = 10 V</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>5.</strong> What particles carry current in a metal wire?</p><p class="answer">Electrons (negatively charged).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>6.</strong> Two resistors (3 Ω and 6 Ω) are in series. What is the total resistance?</p><p class="answer">R = 3 + 6 = 9 Ω</p></div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div id="exit-middle" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> State how an ammeter and voltmeter must be connected.</p><p class="answer">Ammeter in series. Voltmeter in parallel.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> Give two golden rules for drawing circuit diagrams.</p><p class="answer">Any two from: straight lines + 90° corners, standard symbols, complete loop, components on straight sections.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> Define current in terms of charge.</p><p class="answer">Current is the rate of flow of charge. 1 A = 1 coulomb per second.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> A 9 V battery is connected to a 3 Ω resistor. Calculate the current.</p><p class="answer">I = V ÷ R = 9 ÷ 3 = 3 A</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>5.</strong> State the direction of electron flow compared to conventional current.</p><p class="answer">Electrons flow − to + (opposite to conventional current which is + to −).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>6.</strong> A 12 V battery connects to 4 Ω and 8 Ω in series. Calculate the current and V across the 4 Ω.</p><p class="answer">R = 12 Ω. I = 12 ÷ 12 = 1 A. V₁ = 1 × 4 = 4 V.</p></div>
+    </div>
+
+    <!-- HIGHER -->
+    <div id="exit-higher" class="exit-grid" style="display:none">
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> Explain why placing an ammeter in parallel is dangerous.</p><p class="answer">Low resistance → short circuit → huge current → overheating/fire risk.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> Explain why houses are wired in parallel. Give two reasons.</p><p class="answer">Each appliance gets full voltage (230 V). Appliances work independently — fault in one doesn't affect others.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> Explain why increasing voltage across a fixed resistor increases current.</p><p class="answer">Higher V = more energy per coulomb → pushes electrons faster → more charge per second → higher I. By V = IR, if V↑ and R constant, I↑.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> A hairdryer runs on 230 V and draws 5 A. Calculate its resistance.</p><p class="answer">R = V ÷ I = 230 ÷ 5 = 46 Ω</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>5.</strong> Explain why metals conduct electricity but plastics don't, in terms of electrons.</p><p class="answer">Metals have delocalised (free) electrons that can move through the lattice when a voltage is applied. Plastics have no free electrons — all are tightly bound to atoms — so charge cannot flow.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">Today</span><p><strong>6.</strong> 15 V battery, two resistors in series. I = 0.5 A, R₁ = 10 Ω. Find R₂ and V across each.</p><p class="answer">R<sub>total</sub> = 15 ÷ 0.5 = 30 Ω. R₂ = 30 − 10 = 20 Ω. V₁ = 0.5 × 10 = 5 V. V₂ = 0.5 × 20 = 10 V. Check: 5 + 10 = 15 V ✅</p></div>
+    </div>
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>⚡ Next lesson:</strong> Consolidation — we lock in everything from the electricity block with fresh practice. Then a brand new topic: <strong>WAVES!</strong></div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button class="small" style="background:#db2777" onclick="showCC()">🎲 Cold Call</button>
+  <button class="small" style="background:#7c3aed" onclick="showTA()">🧑‍🏫 TA</button>
+  <button class="small" style="background:#0f766e" onclick="showNotes()">📋 Notes</button>
+  <button class="small ghost" id="calm-btn" onclick="toggleCalm()">😌 Calm</button>
+  <button onclick="prevSlide()">◀</button><button onclick="nextSlide()">Next ▶</button>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<div id="xp-widget"><span>⭐</span><div id="xp-bar-wrap"><div id="xp-bar"></div></div><span id="xp-label">0 XP</span></div>
+
+<!-- ===== TA FOCUS MODAL ===== -->
+<div class="modal-bg" id="ta-modal">
+  <div class="modal">
+    <h2>🧑‍🏫 TA Focus — <span id="ta-slide" style="color:var(--ido-border)"></span></h2>
+    <div id="ta-brief" style="font-size:1.05rem;line-height:1.6"></div>
+    <button style="margin-top:14px" onclick="closeModal('ta-modal')">Close</button>
+  </div>
+</div>
+
+<!-- ===== COLD CALL MODAL ===== -->
+<div class="modal-bg" id="cc-modal">
+  <div class="modal" style="border-top-color:#db2777">
+    <h2>🎲 Cold Call</h2>
+    <div style="text-align:center">
+      <div id="cc-name" style="font-size:2.2rem;font-weight:900;color:var(--lo-border)"></div>
+      <div id="cc-tier" style="font-weight:900;margin:4px 0"></div>
+      <div id="cc-q" style="font-size:1.2rem;background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:16px;margin:10px 0;font-weight:700"></div>
+      <button class="small" style="background:#db2777" onclick="pickCC()">🎲 Another pupil</button>
+      <button class="small ghost" onclick="toggleCCEdit()">✏️ Class list</button>
+    </div>
+    <div id="cc-edit" style="display:none;margin-top:12px">
+      <p style="font-size:.9rem;margin:0 0 6px">One pupil per line: <code>Name = grade</code> &nbsp;(grade U, 1, 2, 3, 4 or 5 — U/1 → Foundation, 2 → Middle, 3–5 → Higher)</p>
+      <textarea id="cc-text" style="width:100%;height:130px;font-size:1rem;border:2px solid #cbd5e1;border-radius:10px;padding:8px;box-sizing:border-box"></textarea>
+      <button class="small" style="margin-top:6px" onclick="saveCC()">💾 Save list</button>
+    </div>
+    <button style="margin-top:14px" onclick="closeModal('cc-modal')">Close</button>
+  </div>
+</div>
+
+<!-- ===== TEACHER NOTES MODAL ===== -->
+<div class="modal-bg" id="notes-modal">
+  <div class="modal" style="border-top-color:#0f766e">
+    <h2>📋 Teacher Notes — L4</h2>
+    <h3>At a glance</h3>
+    <p style="font-size:.95rem">Fourth electricity lesson. Two spec points: <strong>2.16</strong> (current in metals = flow of negatively charged electrons) and <strong>2.19</strong> (series calculations). Core path ≈ 36 min planned — with SEMH settle/transition time, drop the FLEX slides and trim We Do reveals if running hot.</p>
+    <h3>⏱️ Route &amp; timings</h3>
+    <p style="font-size:.92rem">Arrival 4 → Starter 3 → I Do 1 (4) → We Do 1 (5) → I Do 2 (4) → We Do 2 (5) → Independent 8 → Exit 3. <strong>FLEX:</strong> I Do 3 / We Do 3 only if the room is settled — otherwise they're next lesson's warm-up.</p>
+    <h3>⚠️ Misconceptions to ambush</h3>
+    <ul style="font-size:.92rem">
+      <li><em>"Electrons get used up"</em> — they loop; it's energy that transfers (misc-box on I Do 1).</li>
+      <li><em>"Electrons whizz round fast"</em> — drift ≈ 0.1 mm/s; the <em>push</em> is near-instant (starter Did You Know).</li>
+      <li><em>"Multiply resistances in series"</em> — ADD them (We Do 3, Student A).</li>
+      <li><em>"I = V × R"</em> — divide for current (Student B).</li>
+      <li><em>"Every series component gets the full supply voltage"</em> — that's parallel; series voltages share (starter Q5).</li>
+    </ul>
+    <h3>🎯 Differentiation</h3>
+    <p style="font-size:.92rem">Packs are tier-printed from page 1 (cover with LOs + tier success criteria). Foundation Section C is fully scaffolded — formula given at every step. Higher Section D(d) is the Grade 5 reasoning challenge. Cold Call auto-matches question tier to pupil grade (set the class list once — it's saved on this device).</p>
+    <h3>📸 Evidence</h3>
+    <p style="font-size:.92rem">Each We Do slide has a Print Evidence button — captures results plus your notes box, timestamped. The exit ticket Answers button fires the lesson-complete overlay.</p>
+    <h3>⚡ Next lesson</h3>
+    <p style="font-size:.92rem">Consolidation of the electricity block, then a new topic: Waves.</p>
+    <button style="margin-top:10px" onclick="closeModal('notes-modal')">Close</button>
+  </div>
+</div>
+
+<!-- ===== LESSON COMPLETE OVERLAY ===== -->
+<div id="complete-overlay">
+  <div class="card">
+    <div style="font-size:3.4rem">🎉</div>
+    <h1 style="border:none;margin:6px 0">Lesson Complete!</h1>
+    <p id="ov-xp" style="font-weight:900;color:#7c3aed"></p>
+    <p>Pack in the tray · KO goes home · See you next lesson ⚡</p>
+    <button onclick="document.getElementById('complete-overlay').style.display='none'">Close</button>
+  </div>
+</div>
+
+<!-- ===== PRINT AREA ===== -->
+<div id="print-area">
+  <div id="print-cover" class="print-section">
+    <h1 style="text-align:center;margin-bottom:2px">Electron Flow &amp; Series Calculations</h1>
+    <p style="text-align:center;margin:0 0 6px;color:#444">Physics · Electricity · Lesson 4 &nbsp;|&nbsp; Spec 2.16 &amp; 2.19</p>
+    <p style="text-align:center;margin:0 0 14px;font-size:1.05rem"><span class="foundation-content"><strong>🟢 Foundation Pack (Grades U–1)</strong></span><span class="middle-content"><strong>🟠 Middle Pack (Grades 1–2)</strong></span><span class="higher-content"><strong>🔵 Higher Pack (Grades 3–5)</strong></span></p>
+    <p style="margin:0 0 12px"><strong>Name:</strong> ________________________________ &nbsp; <strong>Date:</strong> ________________ &nbsp; <strong>Class:</strong> __________</p>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:12px;background:#faf5ff" class="prevent-break">
+      <h3 style="margin:0 0 6px">🎯 Learning Objectives</h3>
+      <p style="margin:3px 0;font-size:.95rem"><strong>2.16</strong> — Know that electric current in solid metallic conductors is a flow of negatively charged electrons.</p>
+      <p style="margin:3px 0;font-size:.95rem"><strong>2.19</strong> — Calculate the currents, voltages and resistances of two resistive components connected in a series circuit.</p>
+    </div>
+    <div style="border:2px solid #f97316;border-radius:8px;padding:12px;background:#fff7ed;margin-top:12px" class="prevent-break">
+      <h3 style="margin:0 0 6px">🏆 Success Criteria — I will…</h3>
+      <div class="foundation-content">
+        <p style="margin:4px 0">☐ state that <strong>electrons</strong> carry the current in metals, and that they are <strong>negatively charged</strong></p>
+        <p style="margin:4px 0">☐ use <strong>V = I × R</strong> to calculate voltage, current or resistance</p>
+        <p style="margin:4px 0">☐ <strong>add resistances</strong> to find R<sub>total</sub> in a series circuit</p>
+      </div>
+      <div class="middle-content">
+        <p style="margin:4px 0">☐ explain the difference between <strong>electron flow</strong> (− to +) and <strong>conventional current</strong> (+ to −)</p>
+        <p style="margin:4px 0">☐ calculate the <strong>current</strong> in a two-resistor series circuit (R<sub>total</sub> first, then I = V ÷ R)</p>
+        <p style="margin:4px 0">☐ calculate the <strong>voltage across each resistor</strong> and check they add up to the supply</p>
+      </div>
+      <div class="higher-content">
+        <p style="margin:4px 0">☐ solve <strong>multi-step series problems</strong>, including finding a missing resistance</p>
+        <p style="margin:4px 0">☐ explain why voltage is shared <strong>in proportion to resistance</strong></p>
+        <p style="margin:4px 0">☐ describe current using the exact spec wording: <strong>a flow of negatively charged electrons</strong></p>
+      </div>
+    </div>
+    <div style="border:1px solid #999;border-radius:8px;padding:10px;margin-top:12px" class="prevent-break">
+      <h3 style="margin:0 0 4px">🗺️ Today's route</h3>
+      <p style="font-size:.9rem;margin:2px 0">Arrival Task → Starter → I Do → We Do → I Do → We Do → Independent Work → Exit Ticket</p>
+      <p style="font-size:.9rem;margin:8px 0 2px"><strong>Before we start — how confident do you feel about circuits?</strong> (circle one) &nbsp; 🔴 Stuck &nbsp;&nbsp; 🟡 Getting there &nbsp;&nbsp; 🟢 Confident</p>
+    </div>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff" class="prevent-break"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a formula = 1 mark.</p></div>
+  </div>
+  <div id="print-ko" class="print-section">
+    <h1 style="text-align:center">Knowledge Organiser: Electron Flow &amp; Series Calculations (L4)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Current in metals</strong></td><td>A flow of <strong>negatively charged electrons</strong> through a metallic conductor.</td></tr>
+      <tr><td><strong>Free electrons</strong></td><td>Outer electrons in metals are delocalised — free to move through the lattice of positive metal ions.</td></tr>
+      <tr><td><strong>Conventional current</strong></td><td>Drawn from + to − on diagrams (historical convention).</td></tr>
+      <tr><td><strong>Electron flow</strong></td><td>Actual direction: − to + (opposite to conventional current).</td></tr>
+      <tr><td><strong>Series: Total R</strong></td><td>R<sub>total</sub> = R₁ + R₂ (add all resistances together).</td></tr>
+      <tr><td><strong>Series: Current</strong></td><td>The same at every point in the circuit. I = V<sub>total</sub> ÷ R<sub>total</sub>.</td></tr>
+      <tr><td><strong>Series: Voltage</strong></td><td>V<sub>total</sub> = V₁ + V₂. Voltage is shared between components.</td></tr>
+      <tr><td><strong>Finding V across one component</strong></td><td>V = I × R (use the current and that component's resistance).</td></tr>
+      <tr><td><strong>Voltage sharing rule</strong></td><td>The bigger the resistance, the bigger its share of the voltage.</td></tr>
+      <tr><td><strong>Insulators</strong></td><td>Materials like plastic with no free electrons. Charge cannot flow.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>E</strong>lectrons are <strong>N</strong>egative = think <strong>"EN"</strong>ergy flows − to +.</p><p style="margin:2px 0;font-size:.9rem"><strong>Series R:</strong> "Resistances <strong>ADD</strong> up, just like the word <strong>S-E-R-I-E-S</strong> adds letters."</p><p style="margin:2px 0;font-size:.9rem"><strong>Check step:</strong> "Voltages must add to the battery — if they don't, you made an error!"</p></div>
+  </div>
+
+  <div id="print-arrival" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Write the formula linking V, I and R.</div><div class="print-box"><strong>2.</strong> Current is the rate of flow of ___________.</div><div class="print-box"><strong>3.</strong> A 3 A current flows through a 4 Ω resistor. Calculate V.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> What tiny particles inside a metal wire carry the charge? What charge do they have?</div></div>
+    </div>
+    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> A 12 V battery, 6 Ω resistor. Calculate the current.</div><div class="print-box"><strong>2.</strong> Define current in terms of charge.</div><div class="print-box"><strong>3.</strong> V = 9 V, I = 0.5 A. Calculate R.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> We draw current + to −, but electrons flow the other way. Why do scientists keep the old direction?</div></div>
+    </div>
+    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><p><em>Answer from memory.</em></p>
+      <div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Hairdryer: 10 A on 230 V. Calculate R. Show working.</div><div class="print-box"><strong>2.</strong> Explain why increasing V across a fixed R increases I, using charge ideas.</div><div class="print-box"><strong>3.</strong> 10 Ω + 20 Ω in series, 6 V battery. Calculate the current.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4.</strong> V across 10 Ω = 2 V, across 20 Ω = 4 V. What do you notice? Why?</div></div>
+    </div>
+  </div>
+
+  <div id="print-starter" class="print-section"><h2>Starter: True or False?</h2>
+    <p><em>Write TRUE or FALSE. Correct any false statements.</em></p>
+    <table class="ko-table"><tr><th>#</th><th>Statement</th><th>T / F</th><th>Correction (if false)</th></tr>
+      <tr><td>1</td><td>Electrons flow from the negative terminal to the positive terminal.</td><td style="width:40px"></td><td style="width:200px"></td></tr>
+      <tr><td>2</td><td>Electrons are positively charged.</td><td></td><td></td></tr>
+      <tr><td>3</td><td>In a series circuit, the current is the same at every point.</td><td></td><td></td></tr>
+      <tr><td>4</td><td>Adding a second resistor in series decreases the total resistance.</td><td></td><td></td></tr>
+      <tr><td>5</td><td>In series, every component gets the full battery voltage.</td><td></td><td></td></tr>
+      <tr><td>6</td><td>Metals conduct because their electrons are free to move.</td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
+    <div class="prevent-break"><h3>Part A: Label the Wire</h3>
+      <p>Fill in each blank with the correct word from the bank.</p>
+      <p>1. The charge carriers in metals are _______________</p>
+      <p>2. Their charge is _______________</p>
+      <p>3. The large particles that don't move are _______________</p>
+      <p>4. Electron flow direction: _______________</p>
+      <p>5. Conventional current direction: _______________</p>
+      <p>6. Current is measured in _______________</p>
+      <p style="margin-top:8px"><strong>Word bank:</strong> Electrons · Negative · Metal ions · − to + · + to − · Amps (A)</p>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Part B: Series Step Solver</h3>
+      <p><em>12 V battery, 4 Ω and 8 Ω in series. Complete each step.</em></p>
+      <table class="ko-table"><tr><th>Step</th><th>Working</th><th>Answer</th></tr>
+        <tr><td>1. R<sub>total</sub></td><td>R₁ + R₂ = 4 + 8 =</td><td style="width:80px"></td></tr>
+        <tr><td>2. Current (I)</td><td>I = V ÷ R<sub>total</sub> = 12 ÷ ___ =</td><td></td></tr>
+        <tr><td>3. V across 4 Ω</td><td>V₁ = I × R₁ = ___ × 4 =</td><td></td></tr>
+        <tr><td>4. V across 8 Ω</td><td>V₂ = I × R₂ = ___ × 8 =</td><td></td></tr>
+        <tr><td>5. Check</td><td>V₁ + V₂ = ___ + ___ =</td><td>= supply? ✅</td></tr>
+      </table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Part C: Spot the Mistake</h3>
+      <p><em>Each student made one error. Write what is wrong and the correct answer.</em></p>
+      <p>1. Student used R = 2 × 3 = 6 Ω for two resistors in series.</p>
+      <p>Mistake: <span style="border-bottom:1px solid #000;display:inline-block;width:70%;height:18px"></span></p>
+      <p>Correct: <span style="border-bottom:1px solid #000;display:inline-block;width:70%;height:18px"></span></p>
+      <p style="margin-top:10px">2. Student wrote "Current in metals is a flow of positively charged protons."</p>
+      <p>Mistake: <span style="border-bottom:1px solid #000;display:inline-block;width:70%;height:18px"></span></p>
+      <p>Correct: <span style="border-bottom:1px solid #000;display:inline-block;width:70%;height:18px"></span></p>
+    </div>
+  </div>
+
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Series Circuit Rules</h3>
+      <table class="ko-table"><tr><th>Rule</th><th>Formula / Detail</th></tr>
+        <tr><td>Total Resistance</td><td>R<sub>total</sub> = R₁ + R₂ (just add them up)</td></tr>
+        <tr><td>Current</td><td>Same everywhere. I = V<sub>total</sub> ÷ R<sub>total</sub></td></tr>
+        <tr><td>Voltage</td><td>V<sub>total</sub> = V₁ + V₂ (voltages add up to supply)</td></tr>
+        <tr><td>V across one component</td><td>V = I × R</td></tr>
+      </table>
+    </div>
+    <div style="text-align:center;margin:10px 0"><svg width="180" height="150" viewBox="0 0 180 150"><polygon points="90,5 5,140 175,140" fill="#faf5ff" stroke="#9c27b0" stroke-width="3"/><line x1="5" y1="80" x2="175" y2="80" stroke="#9c27b0" stroke-width="2"/><text x="90" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="#dc2626">V</text><text x="60" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#2563eb">I</text><text x="90" y="122" text-anchor="middle" font-size="16" fill="#64748b">×</text><text x="120" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#16a34a">R</text></svg><p style="font-size:.85rem;color:#666;margin:4px 0">Cover what you want — the rest is the formula!</p></div>
+    <div class="scaffold-print-box"><h3>Step-by-Step Method for Series</h3>
+      <p><strong>Step 1:</strong> Add resistances → R<sub>total</sub></p>
+      <p><strong>Step 2:</strong> Find current → I = V ÷ R<sub>total</sub></p>
+      <p><strong>Step 3:</strong> Find voltage across each → V = I × R</p>
+      <p><strong>Step 4:</strong> Check → do voltages add up to supply?</p>
+    </div>
+    <div class="scaffold-print-box"><h3>Electron Flow</h3>
+      <p><strong>Current in metals</strong> = flow of negatively charged electrons.</p>
+      <p><strong>Electron flow:</strong> − → + &nbsp;&nbsp; <strong>Conventional current:</strong> + → −</p>
+      <p>Metals conduct because outer electrons are <strong>free / delocalised</strong>.</p>
+    </div>
+  </div>
+
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. Electric current in a metal wire is a flow of…</p>
+      <p>[&nbsp;&nbsp;] Protons &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Neutrons &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Electrons</p>
+      <p style="margin-top:10px">2. Electrons have a _______ charge.</p>
+      <p>[&nbsp;&nbsp;] Positive &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Negative &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] No charge</p>
+      <p style="margin-top:10px">3. In a series circuit, total resistance is found by…</p>
+      <p>[&nbsp;&nbsp;] Multiplying them &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Adding them &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Subtracting them</p>
+      <p style="margin-top:10px">4. In series, the current is…</p>
+      <p>[&nbsp;&nbsp;] Different everywhere &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] The same everywhere &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Zero</p>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Short Answer</h3>
+      <p>5. State what carries the electric current inside a metal wire.</p><div class="print-line"></div>
+      <p style="margin-top:10px">6. Two resistors (5 Ω and 10 Ω) are in series. What is R<sub>total</sub>?</p><div class="print-line"></div>
+      <p style="margin-top:10px">7. A 15 V battery is connected to the resistors in Q6. Calculate the current.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>8. (4 marks)</strong> A 12 V battery is connected to a 4 Ω and a 2 Ω resistor in series.</p>
+      <p><em>Hint: Follow the steps. The formula is given for you each time.</em></p>
+      <p>(a) R<sub>total</sub> = R₁ + R₂ = 4 + 2 = _______ Ω [1 mark]</p><div class="print-line"></div>
+      <p>(b) I = V ÷ R<sub>total</sub> = 12 ÷ _______ = _______ A [1 mark]</p><div class="print-line"></div>
+      <p>(c) V across 4 Ω: V = I × R = _______ × 4 = _______ V [1 mark]</p><div class="print-line"></div>
+      <p>(d) V across 2 Ω: V = I × R = _______ × 2 = _______ V [1 mark]</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style Question</h3>
+      <p><strong>9. (4 marks)</strong> A student says "current in a wire is a flow of positively charged protons."</p>
+      <p>(a) State two things wrong with this statement. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Write the correct statement. [1 mark]</p><div class="print-line"></div>
+      <p>(c) In which direction do the electrons actually flow? [1 mark]</p><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. Conventional current flows from…</p>
+      <p>[&nbsp;&nbsp;] − to + &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] + to − &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Either direction</p>
+      <p style="margin-top:10px">2. In series, voltages across components…</p>
+      <p>[&nbsp;&nbsp;] Are all equal &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Add up to the supply voltage &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Are always zero</p>
+      <p style="margin-top:10px">3. Explain why metals can conduct electricity but plastics cannot.</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">4. State the difference between conventional current and electron flow.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Application</h3>
+      <p>5. Calculate the missing values. Show full working.</p>
+      <table class="ko-table"><tr><th>V<sub>supply</sub></th><th>R₁</th><th>R₂</th><th>R<sub>total</sub></th><th>I</th><th>V₁</th><th>V₂</th></tr>
+        <tr><td>9 V</td><td>3 Ω</td><td>6 Ω</td><td style="height:36px"></td><td></td><td></td><td></td></tr>
+        <tr><td>12 V</td><td>4 Ω</td><td>8 Ω</td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <p style="margin-top:10px">6. In both circuits above, check: does V₁ + V₂ = V<sub>supply</sub>?</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer</h3>
+      <p><strong>7. (4 marks)</strong> A 10 V battery is connected to a 2 Ω resistor and a 3 Ω resistor in series.</p>
+      <p>(a) Calculate the current through the circuit. Show working. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Explain why the 3 Ω resistor has a higher voltage across it than the 2 Ω. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>8. (5 marks)</strong> A 15 V battery is connected to two resistors in series. The current is 0.5 A. One resistor is 10 Ω.</p>
+      <p>(a) Calculate the total resistance of the circuit. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Calculate the resistance of the second resistor. [1 mark]</p><div class="print-line"></div>
+      <p>(c) Describe, in terms of electrons, what is happening inside the wire when a current flows. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. Describe, in terms of particles, what electric current is in a metal wire. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">2. Explain why the voltage across a larger resistor in series is greater. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">3. Two resistors in series have a combined resistance of 30 Ω and a current of 0.5 A. R₁ = 10 Ω. Calculate R₂ and V across each. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section B: Application</h3>
+      <p>4. Complete the table. Show working in the final column.</p>
+      <table class="ko-table"><tr><th>V<sub>supply</sub></th><th>R₁</th><th>R₂</th><th>I</th><th>V₁</th><th>V₂</th><th>Working</th></tr>
+        <tr><td>15 V</td><td>5 Ω</td><td>10 Ω</td><td style="height:40px"></td><td></td><td></td><td></td></tr>
+        <tr><td>?</td><td>8 Ω</td><td>12 Ω</td><td>0.5 A</td><td></td><td></td><td></td></tr>
+        <tr><td>24 V</td><td>?</td><td>6 Ω</td><td>2 A</td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section C: Long Answer</h3>
+      <p><strong>5. (5 marks)</strong> Explain, using ideas about electrons and resistance, why adding a second resistor in series to a circuit reduces the current but adding one in parallel increases the total current. [5 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
+      <p><strong>6. (6 marks)</strong> A circuit contains a 24 V battery and three resistors in series: R₁ = 4 Ω, R₂ = 8 Ω, and R₃ = 12 Ω.</p>
+      <p>(a) Calculate the total resistance. [1 mark]</p><div class="print-line"></div>
+      <p>(b) Calculate the current flowing through the circuit. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Calculate the voltage across each resistor and verify they add to 24 V. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(d) <strong>Grade 5 Challenge:</strong> The 8 Ω resistor is removed. Without calculating, predict whether the current increases or decreases. Explain your reasoning using V = IR. [1 mark]</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <!-- CUMULATIVE EXIT TICKET -->
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1) — Cumulative Recap</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) Draw the circuit symbol for a lamp.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) State one difference between series and parallel.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) Write the formula linking V, I and R.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) I = 2 A, R = 5 Ω. Calculate V.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>5) What particles carry current in metals?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>6) 3 Ω + 6 Ω in series. What is R<sub>total</sub>?</p><div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2) — Cumulative Recap</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) How must an ammeter and voltmeter be connected?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) Give two golden rules for circuit diagrams.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) Define current in terms of charge.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) V = 9 V, R = 3 Ω. Calculate I.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>5) Electron flow vs conventional current direction?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>6) 12 V, 4 Ω + 8 Ω series. Find I and V across 4 Ω.</p><div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5) — Cumulative Recap</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) Explain why an ammeter in parallel is dangerous.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) Why are houses wired in parallel? Two reasons.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) Explain why increasing V across a fixed R increases I.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) 230 V hairdryer, 5 A. Calculate R.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>5) Metals vs plastics: why do metals conduct?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">Today</p><p>6) 15 V, I = 0.5 A, R₁ = 10 Ω. Find R₂ and V across each.</p><div class="print-line"></div><div class="print-line"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+  function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{const tg=e.target.tagName;if(e.target.isContentEditable||tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;const ov=document.getElementById('complete-overlay');if(document.querySelector('.modal-bg.open')||ov.style.display==='flex'){if(e.key==='Escape'){document.querySelectorAll('.modal-bg.open').forEach(m=>m.classList.remove('open'));ov.style.display='none'}return}if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}
+  updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('exit-middle').style.display=l==='middle'?'grid':'none';document.getElementById('exit-higher').style.display=l==='higher'?'grid':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['cover','ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.step-fb,.mistake-fb,.label-slot.correct').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // === WE DO 1: LABEL THE WIRE ===
+  let selChip=null,lblCount=0;
+  function selLabel(el){if(el.classList.contains('placed'))return;document.querySelectorAll('.label-chip').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selChip=el}
+  function placeLabel(slot){if(!selChip)return;if(slot.classList.contains('correct'))return;if(selChip.dataset.val===slot.dataset.answer){slot.innerText=selChip.dataset.val;slot.classList.remove('wrong');slot.classList.add('filled','correct');selChip.classList.remove('selected');selChip.classList.add('placed');selChip=null;lblCount++;sCorrect();addXP(2);document.getElementById('lbl-count').innerText=lblCount;if(lblCount>=8){document.getElementById('lbl-msg').innerText='🎉 ALL MATCHED!';sFanfare();confetti()}}else{slot.classList.add('wrong');sWrong();setTimeout(()=>slot.classList.remove('wrong'),500)}}
+  function resetLabels(){selChip=null;lblCount=0;document.getElementById('lbl-count').innerText='0';document.getElementById('lbl-msg').innerText='';document.querySelectorAll('.label-chip').forEach(c=>c.classList.remove('selected','placed'));document.querySelectorAll('.label-slot').forEach(s=>{s.innerText='?';s.classList.remove('filled','correct','wrong')})}
+  function revealLabels(){document.querySelectorAll('.label-slot').forEach(s=>{s.innerText=s.dataset.answer;s.classList.add('filled','correct')});document.querySelectorAll('.label-chip').forEach(c=>c.classList.add('placed'));lblCount=8;document.getElementById('lbl-count').innerText='8';document.getElementById('lbl-msg').innerText='✅ All revealed.'}
+
+  // === WE DO 2: STEP SOLVER ===
+  let stepCount=0;
+  function stepCheck(idx,correct){const input=document.getElementById('si'+idx);const fb=document.getElementById('sf'+idx);const card=document.getElementById('sc'+idx);const val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Type a number!';fb.style.color='var(--error)';return}if(card.classList.contains('complete'))return;const tol=Math.abs(correct*0.05);if(Math.abs(val-correct)<=Math.max(tol,0.1)){input.classList.add('correct');card.classList.add('complete');fb.innerText='✅ Correct!';fb.style.color='var(--success)';stepCount++;sCorrect();addXP(4);document.getElementById('step-count').innerText=stepCount;if(stepCount>=5){sFanfare();confetti()}}else{input.classList.add('wrong');card.classList.add('wrong-step');fb.innerText='❌ Try again! Check your calculation.';fb.style.color='var(--error)';sWrong();setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-step')},600)}}
+
+  // === WE DO 3: SPOT THE MISTAKE ===
+  let mistCount=0;
+  const mistExps=['✅ In series, ADD resistances: R = R₁ + R₂, not multiply!','✅ To find current, DIVIDE: I = V ÷ R, not multiply!','✅ 3 + 6 = 9 V — the check PASSED! The student panicked for nothing.','✅ Current in metals = flow of NEGATIVELY charged ELECTRONS, not protons!'];
+  function mistakeCheck(idx,btn,correct){const card=document.getElementById('mc'+idx);const fb=document.getElementById('mf'+idx);if(card.classList.contains('fixed'))return;card.querySelectorAll('.mistake-opt').forEach(o=>o.classList.remove('right-m','wrong-pick'));if(correct){btn.classList.add('right-m');card.classList.remove('wrong-m');card.classList.add('fixed');fb.innerText=mistExps[idx];fb.style.color='var(--success)';mistCount++;sCorrect();addXP(4);document.getElementById('mist-count').innerText=mistCount;if(mistCount>=4){sFanfare();confetti()}}else{btn.classList.add('wrong-pick');card.classList.add('wrong-m');fb.innerText='❌ Not quite — look again!';fb.style.color='var(--error)';sWrong();setTimeout(()=>{card.classList.remove('wrong-m');btn.classList.remove('wrong-pick');fb.innerText=''},700)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+  // ===== V5 UPGRADE PACK =====
+  // --- Data (declared before any init that reads them) ---
+  const TA_BRIEFS=[
+    'Settle &amp; seat. Hand out packs by tier — green / orange / blue covers. Quiet check-ins with target pupils. <strong>Gesture:</strong> thumbs-up when their pack is open at page 1.',
+    'Sit with target pupils. Q1–3 are last lesson\'s V = I × R — point to the formula triangle on the scaffold sheet if stuck. Q4 is the lead-in, effort over accuracy. <strong>Gesture:</strong> tap the page = "write something, anything".',
+    'Read statements aloud for weaker readers. Three are false — don\'t let pupils rush. In Tap mode, get them to vote out loud before clicking. <strong>Gesture:</strong> hold up T-hand or F-hand before the click.',
+    'Pens down, eyes on board. Echo the key phrase back: <em>"negatively charged electrons"</em>. Watch for the two-directions confusion. <strong>Gesture:</strong> wiggle fingers travelling along your arm = electrons flowing.',
+    'Pair pupils up. Make them say the label out loud before clicking the slot. Celebrate near-misses. <strong>Gesture:</strong> point → pause → place.',
+    'Pens down. Track the 4-step method on your fingers as the teacher works it: add R → find I → V each → check. <strong>Gesture:</strong> count the steps 1-2-3-4 on fingers.',
+    'Sit beside Foundation pupils — they type, you prompt the formula ("what do we always write first?"). Use the 💡 Hint buttons before giving anything away. <strong>Gesture:</strong> write the formula in the air.',
+    'FLEX slide — only if time. Reinforce: R total first, <em>always</em>. <strong>Gesture:</strong> closed fist = total, open fingers = split between resistors.',
+    'FLEX slide. Let pairs argue it out before anyone clicks. The wrong answers here are this class\'s real exam mistakes. <strong>Gesture:</strong> detective magnifying-glass hand.',
+    'Circulate, don\'t hover. Foundation: get a fast win on Section A. Never give answers — point to the scaffold sheet, walk away, come back. <strong>Gesture:</strong> point to scaffold → walk → return.',
+    'Books closed, KO covered — memory only. Quietly note who chooses 🔴 on the confidence check. <strong>Gesture:</strong> hands flat on the desk = ready.'
+  ];
+  const CC_QS=[
+    {f:'What topic are we on — what flows in a circuit?',m:'What does the V in V = I × R stand for?',h:'Predict: what do you think actually moves inside a wire?'},
+    {f:'Say the formula that links V, I and R.',m:'Define current in terms of charge.',h:'Two resistors in series — how do you find the total resistance?'},
+    {f:'True or false — electrons are positively charged?',m:'Which way do electrons actually flow round a circuit?',h:'Why does adding a series resistor change the current?'},
+    {f:'What particle carries the current in a metal?',m:'What charge does an electron have, and which terminal is it pushed away from?',h:'Why do metals conduct but plastics don\'t? Use the word "delocalised".'},
+    {f:'What unit is current measured in?',m:'What\'s the difference between electron flow and conventional current?',h:'What do we call the fixed particles left behind in the wire?'},
+    {f:'In series, do we add or multiply the resistances?',m:'In a series circuit, what stays the same at every point?',h:'State all three series rules in order.'},
+    {f:'Once you know R total, what formula finds the current?',m:'12 V across 12 Ω — what current flows?',h:'How do you check your series voltage answers are right?'},
+    {f:'R total = V ÷ what?',m:'15 V supply, 0.5 A current — what is R total?',h:'Talk me through finding a missing resistor in series.'},
+    {f:'In series: add or multiply resistances?',m:'What\'s wrong with writing I = V × R?',h:'Give me the exact spec sentence for current in a metal.'},
+    {f:'State what carries current in metals.',m:'Tell me one series rule and what it means.',h:'Talk me through the 4-step series method without notes.'},
+    {f:'Tell me one thing you\'ve learned today.',m:'Which question on the exit ticket felt hardest — why?',h:'Summarise today\'s lesson in exactly one sentence.'}
+  ];
+  // --- Modals ---
+  function openModal(id){document.getElementById(id).classList.add('open')}
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+  function showTA(){const i=Math.min(currentSlide,TA_BRIEFS.length-1);document.getElementById('ta-slide').innerText=slides[currentSlide].getAttribute('data-title')||'';document.getElementById('ta-brief').innerHTML=TA_BRIEFS[i];openModal('ta-modal')}
+  function showNotes(){openModal('notes-modal')}
+  // --- Cold Call ---
+  let ccList=[];
+  try{ccList=JSON.parse(localStorage.getItem('l4_class')||'[]')}catch(e){ccList=[]}
+  if(!Array.isArray(ccList)||!ccList.length)ccList=[{n:'Set up your class list ✏️',g:'1'}];
+  function tierOf(g){g=String(g).trim().toUpperCase();return(g==='U'||g==='1')?'f':(g==='2')?'m':'h'}
+  const TIER_LABEL={f:'🟢 Foundation question',m:'🟠 Middle question',h:'🔵 Higher question'};
+  function pickCC(){const p=ccList[Math.floor(Math.random()*ccList.length)];const t=tierOf(p.g);const i=Math.min(currentSlide,CC_QS.length-1);document.getElementById('cc-name').innerText=p.n;document.getElementById('cc-tier').innerText=TIER_LABEL[t];document.getElementById('cc-q').innerText=CC_QS[i][t]}
+  function showCC(){pickCC();openModal('cc-modal')}
+  function toggleCCEdit(){const d=document.getElementById('cc-edit');const show=d.style.display==='none';d.style.display=show?'block':'none';if(show)document.getElementById('cc-text').value=ccList.map(p=>p.n+' = '+p.g).join('\n')}
+  function saveCC(){const lines=document.getElementById('cc-text').value.split('\n').map(l=>l.trim()).filter(Boolean);const parsed=lines.map(l=>{const m=l.split('=');return{n:(m[0]||'').trim(),g:(m[1]||'1').trim()}}).filter(p=>p.n);if(parsed.length)ccList=parsed;try{localStorage.setItem('l4_class',JSON.stringify(ccList))}catch(e){}document.getElementById('cc-edit').style.display='none';pickCC()}
+  // --- XP ---
+  let xp=0;const XP_MAX=64;
+  function addXP(n){xp=Math.min(XP_MAX,xp+n);document.getElementById('xp-bar').style.width=Math.round(100*xp/XP_MAX)+'%';document.getElementById('xp-label').innerText=xp+' XP'}
+  // --- Sounds (AudioContext resumed on first user gesture) ---
+  let AC=null,calmMode=false;
+  function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+  document.addEventListener('pointerdown',()=>ac(),{once:true});
+  function tone(f,d,t,delay){if(calmMode)return;const c=ac();if(!c)return;delay=delay||0;const o=c.createOscillator(),g=c.createGain();o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(.16,c.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+delay+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+d+.05)}
+  function sCorrect(){tone(660,.12);tone(880,.18,'sine',.1)}
+  function sWrong(){tone(170,.22,'square')}
+  function sFanfare(){[523,659,784,1047].forEach((f,i)=>tone(f,.22,'triangle',i*.12))}
+  // --- Confetti ---
+  function confetti(n){if(calmMode)return;n=n||22;const em=['🎉','⭐','⚡','💡','🟣','✨'];for(let i=0;i<n;i++){const sp=document.createElement('span');sp.className='confetto';sp.innerText=em[Math.floor(Math.random()*em.length)];sp.style.left=Math.random()*100+'vw';sp.style.animationDuration=(1.6+Math.random()*1.4)+'s';document.body.appendChild(sp);setTimeout(()=>sp.remove(),3200)}}
+  // --- Calm Mode (persists) ---
+  function toggleCalm(){calmMode=!calmMode;document.body.classList.toggle('calm',calmMode);document.getElementById('calm-btn').innerText=calmMode?'😌 Calm: ON':'😌 Calm';try{localStorage.setItem('l4_calm',calmMode?'1':'0')}catch(e){}}
+  // --- Starter Tap mode ---
+  let tfScore=0,tfDone=0;
+  const TF_ANS=[true,false,true,false,false,true];
+  const TF_FIX=['Electrons are pushed away from the − terminal, towards +.','Electrons are NEGATIVELY charged.','Same current at every point of the loop.','Adding series resistors INCREASES total resistance.','Voltages SHARE in series — they add up to the supply. Full voltage everywhere is parallel.','Free (delocalised) electrons carry the charge.'];
+  function tfCheck(i,btn,choice){const row=document.getElementById('tf'+i);if(row.classList.contains('locked'))return;row.classList.add('locked');const fb=document.getElementById('tfb'+i);const ok=choice===TF_ANS[i];btn.classList.add(ok?'right':'wrong');if(!ok)row.querySelectorAll('.tf-btn').forEach(b=>{if(b!==btn)b.classList.add('right')});fb.innerText=(ok?'✅ ':'❌ ')+TF_FIX[i];fb.style.color=ok?'var(--success)':'var(--error)';tfDone++;if(ok){tfScore++;sCorrect();addXP(2)}else sWrong();document.getElementById('tf-score').innerText=tfScore;if(tfDone>=6&&tfScore===6){sFanfare();confetti()}}
+  function switchStarter(m){document.getElementById('starter-write').style.display=m==='write'?'block':'none';document.getElementById('starter-tap').style.display=m==='tap'?'block':'none';document.getElementById('st-mode-write').classList.toggle('ghost',m!=='write');document.getElementById('st-mode-tap').classList.toggle('ghost',m!=='tap')}
+  // --- Hints ---
+  function toggleHint(id){document.getElementById(id).classList.toggle('show')}
+  // --- Exit ticket reveal + lesson-complete overlay ---
+  let lessonDone=false;
+  function toggleExitAnswers(){const sl=document.getElementById('exit-slide');sl.classList.toggle('show-ans');if(sl.classList.contains('show-ans')&&!lessonDone){lessonDone=true;sFanfare();confetti(30);document.getElementById('ov-xp').innerText='⭐ Class XP earned: '+xp+' / '+XP_MAX;document.getElementById('complete-overlay').style.display='flex'}}
+  // --- Init (after all data consts) ---
+  try{if(localStorage.getItem('l4_calm')==='1'){calmMode=true;document.body.classList.add('calm');document.getElementById('calm-btn').innerText='😌 Calm: ON'}}catch(e){}
+  (function shuffleChips(){const bank=document.getElementById('label-bank');if(!bank)return;Array.from(bank.children).sort(()=>Math.random()-.5).forEach(c=>bank.appendChild(c))})();
+
+</script>
+</body>
+</html>
