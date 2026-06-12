@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lesson 3 of 3 – Ions &amp; Neutralisation</title>
+<style>
+:root{
+  --bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;
+  --lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;
+  --task-bg:#fef9c3;--task-border:#eab308;
+  --scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+  --sc-bg:#ffedd5;--sc-border:#f97316;
+  --btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+  --success:#16a34a;--error:#dc2626;--muted:#64748b;
+  --ido-bg:#ede9fe;--ido-border:#7c3aed;
+  --wedo-bg:#fce7f3;--wedo-border:#db2777;
+  --found:#22c55e;--mid:#f97316;--high:#1e3a8a;
+}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5)}50%{box-shadow:0 0 0 12px rgba(124,58,237,0)}}
+@keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes ionFloat{0%{transform:translate(0,0)}25%{transform:translate(8px,-6px)}50%{transform:translate(-4px,-12px)}75%{transform:translate(-8px,-4px)}100%{transform:translate(0,0)}}
+@keyframes pulseAttn{0%,100%{background:#fef3c7}50%{background:#fde047}}
+@keyframes neutPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.animate-enter{animation:fadeInUp .55s ease-out forwards}
+.anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+.anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+.anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+.pulse-attn{animation:pulseAttn 2s ease-in-out infinite;padding:1px 6px;border-radius:6px;font-style:italic}
+
+/* ---------- SLIDE SYSTEM ---------- */
+.slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:36px 40px;overflow-y:auto;position:relative;flex-direction:column}
+.slide.active{display:flex;animation:fadeIn .45s ease}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--task-border)}
+
+h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}
+h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+h3{margin:10px 0 8px;color:#0f172a}
+p,li{font-size:1.1rem;line-height:1.55;color:#334155}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+
+button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+button:active{transform:translateY(0)}
+button.small{padding:8px 12px;font-size:.95rem}
+button.ghost{background:#e2e8f0;color:#0f172a}
+button.ghost:hover{background:#cbd5e1}
+
+.controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+/* ---------- BOXES ---------- */
+.li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-bottom:12px;transition:transform .15s}
+.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+.diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center;margin:8px 0}
+
+.answer{display:none;margin-top:8px;padding:8px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}
+.show-ans .answer{display:block;animation:fadeInUp .25s}
+
+/* ---------- SLIDE TAGS ---------- */
+.slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.tag-arrival{background:#fef3c7;color:#92400e}
+.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#5b21b6}
+.tag-wedo{background:var(--wedo-bg);color:#9d174d}
+.tag-independent{background:var(--task-bg);color:#92400e}
+.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+/* ---------- TIER TOGGLE ---------- */
+.tier-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.tier-toggle button{font-size:.95rem;padding:8px 14px}
+.tier-toggle .active{outline:3px solid #0f172a;outline-offset:2px}
+.tier-level{display:none}
+.tier-level.active{display:block;animation:fadeInUp .3s}
+
+/* ---------- ARRIVAL ---------- */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---------- ION BADGES ---------- */
+.ion-badge{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;font-weight:900;font-size:1.1rem;color:#fff;margin:4px}
+.ion-h{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.ion-oh{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.ion-water{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+/* ---------- SORT (We Do 1) ---------- */
+.sort-card{background:#fff;border:2px solid var(--task-border);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:.95rem;text-align:center;transition:all .2s;user-select:none;min-width:70px}
+.sort-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.3)}
+.sort-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.3);transform:scale(1.05);animation:pulseGlow 1.4s infinite}
+.sort-card.placed{opacity:.4;pointer-events:none;transform:scale(.9)}
+.sort-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:8px;text-align:center;min-height:80px;cursor:pointer;transition:all .2s}
+.sort-zone:hover{border-style:solid;transform:scale(1.02)}
+.zone-items{margin-top:4px;font-size:.8rem;color:#334155}
+
+/* ---------- SUPER SIX EXIT (3×2 grid) ---------- */
+.exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.exit-grid .eq{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:12px 14px;position:relative}
+.exit-grid .eq .tag-lesson{position:absolute;top:6px;right:8px;font-size:.7rem;font-weight:900;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:6px}
+
+/* ---------- INDEPENDENT WORK ---------- */
+.ind-level{display:none}.ind-level.active{display:block}
+.ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}
+.ind-q.stretch{border-color:#a78bfa;background:linear-gradient(to right,#fff,#f5f3ff)}
+.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px}
+.q-mcq{background:#dbeafe;color:#1e40af}
+.q-short{background:#fef3c7;color:#92400e}
+.q-long{background:#dcfce7;color:#166534}
+.q-diagram{background:#ffedd5;color:#9a3412}
+.q-exam{background:#fce7f3;color:#9d174d}
+.q-stretch{background:#ede9fe;color:#5b21b6}
+.q-synthesis{background:#cffafe;color:#155e75}
+.ind-q.synthesis{border-color:#0891b2;background:linear-gradient(to right,#fff,#ecfeff);position:relative;margin-top:18px;padding-top:16px}
+.ind-q.synthesis::before{content:'🌍 REAL-WORLD APPLICATION';position:absolute;top:-10px;left:14px;background:#0891b2;color:#fff;padding:2px 9px;border-radius:5px;font-size:.68rem;font-weight:900;letter-spacing:.6px}
+.mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}
+.mcq-opt:hover{border-color:var(--btn-bg)}
+.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}
+.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+
+.xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+.xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+.xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+
+.hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+.hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+.hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+.hint-text.show{display:block;animation:fadeInUp .25s}
+
+.confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+
+/* ---------- WE DO CAPTURE / EVIDENCE ---------- */
+.wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:14px;background:#fff;position:relative}
+.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+.evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+
+.editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+
+/* ---------- TIMER WIDGET (slim pill, top-left) ---------- */
+#timer-widget{position:fixed;top:14px;left:14px;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:5px 12px 5px 14px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:2000;display:none;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+#timer-widget.visible{display:flex}
+#timer-widget::before{content:'⏱';font-size:1.05rem;line-height:1}
+#timer-display{font-size:1.15rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:54px;text-align:center;letter-spacing:.5px}
+.timer-controls{display:flex;gap:3px}
+.timer-btn{background:transparent;color:#475569;border:none;border-radius:50%;width:26px;height:26px;padding:0;cursor:pointer;font-size:.9rem;transition:background .2s;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.timer-btn:hover{background:#e2e8f0;transform:none}
+.timer-btn.active-play{background:var(--success);color:white}
+.timer-btn.active-pause{background:#fbbf24;color:white}
+#timer-widget.warning{border-color:var(--error);animation:pulseWarn 1.4s ease-in-out infinite}
+@keyframes pulseWarn{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.12)}50%{box-shadow:0 6px 24px rgba(220,38,38,.4)}}
+
+/* ---------- TA FOCUS — observer-visible TA deployment system ---------- */
+#ta-focus-btn{position:fixed;top:14px;left:230px;z-index:2000;background:#6d28d9;color:#fff;border:2px solid #5b21b6;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4)}
+#ta-focus-btn::before{content:'👥';font-size:1.05rem}
+#ta-focus-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#ta-focus-overlay.visible{display:flex}
+#ta-focus-modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;animation:fadeInUp .35s ease-out;border:3px solid #6d28d9}
+.ta-modal-header{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.ta-modal-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.ta-modal-header h3::before{content:'👥 ';margin-right:4px}
+.ta-modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.ta-modal-close:hover{background:rgba(255,255,255,.35);transform:none}
+.ta-modal-body{padding:18px 24px 22px}
+.ta-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.ta-row-icon{flex:0 0 28px;font-size:1.3rem;line-height:1.2}
+.ta-row-content{flex:1;font-size:.96rem;line-height:1.45}
+.ta-row-content strong{color:#5b21b6}
+.ta-cta-row{background:#fef3c7;border-left:5px solid #d97706;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:.92rem}
+.ta-cta-row strong{color:#92400e}
+.ta-no-brief{font-style:italic;color:var(--muted);text-align:center;padding:12px}
+
+/* ---------- COLD CALL — random pupil picker + slide-relevant question ---------- */
+#cold-call-btn{position:fixed;top:14px;left:380px;z-index:2000;background:#dc2626;color:#fff;border:2px solid #b91c1c;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#cold-call-btn:hover{background:#b91c1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,38,38,.4)}
+#cold-call-btn::before{content:'🎲';font-size:1.05rem}
+#cold-call-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#cold-call-overlay.visible{display:flex}
+#cold-call-modal{background:#fff;border-radius:18px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid #dc2626}
+.cold-call-header{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.cold-call-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.cold-call-header h3::before{content:'🎲 ';margin-right:4px}
+.cold-call-body{padding:18px 22px 22px}
+.cold-call-class-label{text-align:center;font-size:.85rem;color:#64748b;margin:0 0 10px}
+.cold-call-class-label strong{color:#dc2626;font-size:1rem}
+.cold-call-name-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;border-radius:14px;padding:24px 18px;margin:6px 0 14px;text-align:center;min-height:78px;display:flex;align-items:center;justify-content:center}
+.cold-call-name{font-size:2.4rem;font-weight:900;color:#7c2d12;margin:0;letter-spacing:1px;line-height:1.1}
+.cold-call-name.spinning{animation:nameSpin .08s ease-in-out infinite}
+.cold-call-name.settled{animation:nameLand .55s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes nameSpin{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes nameLand{0%{transform:scale(0.6);opacity:0}40%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+.cold-call-q-box{background:#dbeafe;border-left:5px solid #1e40af;padding:12px 16px;border-radius:10px;margin:10px 0 14px}
+.cold-call-q-label{margin:0 0 4px;font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+.cold-call-question{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0;line-height:1.4}
+.cold-call-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.cc-btn-primary{flex:1 1 200px;background:#dc2626;color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.98rem;font-weight:bold;transition:.2s}
+.cc-btn-primary:hover{background:#b91c1c;transform:translateY(-1px)}
+.cc-btn-secondary{flex:1 1 140px;background:#e5e7eb;color:#1e293b;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;transition:.2s}
+.cc-btn-secondary:hover{background:#cbd5e1}
+.cc-edit-link{display:block;text-align:center;background:none;border:none;color:#64748b;cursor:pointer;font-size:.85rem;text-decoration:underline;margin-top:10px;padding:6px}
+.cc-edit-link:hover{color:#dc2626}
+.cc-setup-title{font-weight:bold;margin:0 0 8px;font-size:1.05rem}
+.cc-helper{font-size:.85rem;color:#64748b;margin:6px 0 12px}
+.cc-empty-rows{text-align:center;color:#94a3b8;font-style:italic;padding:18px;border:2px dashed #cbd5e1;border-radius:10px;margin:6px 0}
+.cc-pupil-rows{max-height:300px;overflow-y:auto;padding:2px;border:1px solid #e5e7eb;border-radius:10px;margin:0 0 10px}
+.cc-pupil-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9}
+.cc-pupil-row:last-child{border-bottom:none}
+.cc-pupil-name{flex:1;font-weight:600;color:#1e293b;font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-grade-chips{display:flex;gap:3px;flex-shrink:0}
+.cc-grade-chip{width:30px;height:30px;border-radius:50%;border:2px solid;background:#fff;cursor:pointer;font-weight:900;font-size:.85rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cc-grade-u{border-color:#dc2626;color:#dc2626}
+.cc-grade-1{border-color:#ea580c;color:#ea580c}
+.cc-grade-2{border-color:#d97706;color:#d97706}
+.cc-grade-3{border-color:#0891b2;color:#0891b2}
+.cc-grade-4{border-color:#16a34a;color:#16a34a}
+.cc-grade-chip:hover{transform:scale(1.1)}
+.cc-grade-chip.cc-grade-selected{color:#fff;transform:scale(1.05)}
+.cc-grade-u.cc-grade-selected{background:#dc2626}
+.cc-grade-1.cc-grade-selected{background:#ea580c}
+.cc-grade-2.cc-grade-selected{background:#d97706}
+.cc-grade-3.cc-grade-selected{background:#0891b2}
+.cc-grade-4.cc-grade-selected{background:#16a34a}
+.cc-remove-btn{background:#fee2e2;color:#991b1b;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.85rem;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.cc-remove-btn:hover{background:#fecaca;transform:none}
+.cc-add-row{display:flex;gap:8px;margin:8px 0 12px}
+.cc-add-input{flex:1;padding:10px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;box-sizing:border-box}
+.cc-add-input:focus{outline:none;border-color:#dc2626}
+.cc-mode-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.cc-mode-label{font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.cc-mode-btn{background:#fff;border:1.5px solid #cbd5e1;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;color:#475569;transition:.15s;flex:1 1 auto;min-width:0;box-shadow:none}
+.cc-mode-btn:hover{background:#e0f2fe;border-color:#0891b2;transform:none}
+.cc-mode-btn.active{background:#dc2626;color:#fff;border-color:#b91c1c}
+
+/* ---------- TITLE HERO (animated central icon row) ---------- */
+@keyframes h2oPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(34,197,94,.5),0 0 60px rgba(124,58,237,.25)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(34,197,94,.85),0 0 100px rgba(124,58,237,.45)}}
+@keyframes ionRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+@keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+.title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(239,68,68,.08) 0%,rgba(34,197,94,.08) 50%,rgba(59,130,246,.08) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.hero-ion{position:relative;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.3rem;box-shadow:0 6px 18px rgba(0,0,0,.18);animation:heroSlideUp .8s ease-out .35s backwards;border:3px solid #fff}
+.hero-ion.h-plus{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.hero-ion.oh-minus{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.hero-ion.h-plus::before,.hero-ion.oh-minus::before{content:'';position:absolute;inset:-6px;border:2px solid rgba(124,58,237,.5);border-radius:50%;pointer-events:none;animation:ionRipple 2.8s ease-out infinite}
+.hero-ion.h-plus::before{animation-delay:.4s}
+.hero-ion.oh-minus::before{animation-delay:1.4s}
+.hero-ion .ion-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:.65rem;font-weight:900;color:#1f2937;letter-spacing:.4px;background:#fff;padding:1px 6px;border-radius:6px;border:1px solid #cbd5e1;white-space:nowrap}
+.hero-op{font-size:2rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;line-height:1}
+.hero-op.plus{color:#7c3aed}
+.hero-op.arrow{animation-delay:.75s}
+.hero-water{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#bbf7d0,#22c55e);border:4px solid #fff;animation:h2oPulse 2.4s ease-in-out infinite;animation-delay:.9s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);color:#fff;font-weight:900;font-size:1rem;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.hero-water::before,.hero-water::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(34,197,94,.5);border-radius:50%;pointer-events:none}
+.hero-water::before{animation:ionRipple 2.4s ease-out infinite}
+.hero-water::after{animation:ionRipple 2.4s ease-out 1.2s infinite}
+.hero-water .water-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:.65rem;font-weight:900;color:#166534;letter-spacing:.5px;background:#fff;padding:1px 8px;border-radius:8px;border:1.5px solid #22c55e;white-space:nowrap}
+.hero-tag-ion{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px;margin-left:8px}
+.hero-tag-ion .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+
+/* ---------- LO checkmarks (animated tick) ---------- */
+.lo-anim{list-style:none;padding-left:8px}
+.lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+.lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+.lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+.lo-anim li:nth-child(2)::before{animation-delay:1.5s}
+
+/* ---------- MISCONCEPTION BOX ---------- */
+@keyframes strikeIn{from{width:0}to{width:100%}}
+@keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+.misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+.misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+.misc-box p{margin:6px 0}
+.misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+.misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+.slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+.slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+.slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+
+/* ---------- EXAMINER'S TIP BOX ---------- */
+.exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+.exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+.exam-tip-box p{margin:6px 0}
+
+/* ---------- LESSON COMPLETE celebration ---------- */
+@keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+@keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+.lesson-complete-overlay.visible{display:flex}
+.lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:520px;width:90%}
+.lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+.lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+.lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+.lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+.lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+.lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+.lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+.lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+.lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+.lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+
+/* ---------- SPOT THE MISTAKE (V4 click-to-find) ---------- */
+.stm-paragraph{font-style:italic;font-size:1.18rem;line-height:1.9;color:#1e293b;background:#fff;border:3px solid var(--error);border-radius:14px;padding:20px 22px;margin:10px 0;position:relative}
+.stm-paragraph::before{content:'❌ A STUDENT WROTE THIS';position:absolute;top:-12px;left:18px;background:var(--error);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+.stm-clickable{background:transparent;padding:1px 2px;border-radius:4px;cursor:pointer;border-bottom:1px dotted rgba(148,163,184,.45);font-style:inherit;font-weight:inherit;transition:all .2s}
+.stm-clickable:hover{background:#fef9c3;border-bottom:2px solid #eab308;padding:1px 4px}
+.stm-clickable.found{background:#fee2e2;color:#991b1b;text-decoration:line-through;border:2px solid var(--error);padding:1px 4px;cursor:default;animation:none;pointer-events:none}
+.stm-clickable.miss{background:#dbeafe;border-bottom:2px solid #60a5fa;animation:shake .35s}
+.stm-feedback-box{background:#fff;border:2px dashed #cbd5e1;border-radius:12px;padding:10px 14px;margin-top:10px;min-height:46px;text-align:center;font-weight:bold;color:#334155;transition:all .2s}
+.stm-feedback-box.success{border-color:var(--success);background:#dcfce7;color:#166534}
+.stm-feedback-box.error{border-color:var(--error);background:#fef2f2;color:#991b1b}
+.stm-correction{display:none;margin-top:8px;background:#f0fdf4;border-left:5px solid var(--success);border-radius:10px;padding:10px 14px;color:#166534;font-weight:bold}
+.stm-correction.visible{display:block;animation:fadeInUp .3s}
+.stm-progress{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.stm-pip{width:26px;height:26px;border-radius:50%;background:#e2e8f0;color:#94a3b8;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .3s}
+.stm-pip.found{background:var(--success);color:#fff;transform:scale(1.1)}
+
+/* ---------- PRINT AREA / PRINT CSS ---------- */
+#print-area{display:none}
+@media print{
+  body{overflow:visible;background:#fff;height:auto;color:#000}
+  .controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#ta-focus-btn,#ta-focus-overlay,#cold-call-btn,#cold-call-overlay,.lesson-complete-overlay{display:none!important}
+  #print-area{display:block!important;padding:20px}
+  .print-section{display:none;page-break-after:always}
+  .print-section.visible{display:block}
+  .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .print-box{border:1px solid #000;padding:10px;min-height:80px}
+  .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+  .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+  .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}
+  .ko-table th{background:#eee}
+  .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+  .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+  body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+  body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+  body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+}
+
+/* ---------- MOBILE LAYOUT (≤640px / phone portrait) ---------- */
+@media (max-width:640px){
+  .slide{padding:30px 14px 24px;width:96%}
+  .logo{width:90px;top:10px;right:14px}
+  h1{font-size:1.7rem}
+  h2{font-size:1.25rem;margin-right:90px}
+  h3{font-size:1.05rem}
+  p,li{font-size:.95rem}
+  .content-grid{grid-template-columns:1fr!important;gap:12px}
+  .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+  .exit-grid{grid-template-columns:1fr 1fr!important;gap:8px}
+  /* Title hero stacks */
+  .title-hero{flex-direction:column;gap:8px;padding:14px 10px}
+  .hero-ion{width:54px;height:54px;font-size:1rem}
+  .hero-water{width:64px;height:64px;font-size:.85rem}
+  .hero-op{font-size:1.6rem}
+  .hero-tag-ion{font-size:.85rem;text-align:center;max-width:100%;margin-left:0;margin-top:18px}
+  /* Sort zones: drop to 1 col when needed */
+  [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:1fr 1fr"]:not(.exit-grid){grid-template-columns:1fr!important}
+  .sort-zone{font-size:.85rem;padding:6px}
+  /* Top buttons reposition to right edge */
+  #ta-focus-btn,#cold-call-btn{font-size:.75rem;padding:5px 10px}
+  #ta-focus-btn{left:auto;right:14px;top:50px}
+  #cold-call-btn{left:auto;right:14px;top:84px}
+  #timer-widget{padding:4px 8px 4px 10px}
+  #timer-display{font-size:1rem;min-width:46px}
+  .controls button{padding:8px 12px;font-size:.9rem}
+  .tier-toggle{gap:6px;flex-wrap:wrap}
+  .tier-toggle button{padding:6px 10px;font-size:.85rem}
+  svg{max-width:100%;height:auto}
+  .lesson-complete-modal{padding:20px 22px;max-width:94%}
+  .lesson-complete-modal h2{font-size:1.4rem}
+  #ta-focus-modal,#cold-call-modal{max-width:96%}
+  .stm-paragraph{font-size:1rem!important;line-height:1.6!important}
+}
+
+</style>
+</head>
+<body>
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal">
+    <div class="lc-stars"><span>⭐</span><span>🏆</span><span>⭐</span></div>
+    <h2>Lesson Complete!</h2>
+    <p>You've cracked the neutralisation code 💧⚗️</p>
+    <div class="lc-summary">
+      <span><strong>✓</strong> Spec 2.31 — Acids release H⁺, alkalis release OH⁻</span>
+      <span><strong>✓</strong> Spec 2.32 — Bases neutralise acids (Salt + Water)</span>
+      <span><strong>✓</strong> The ionic equation: H⁺(aq) + OH⁻(aq) → H₂O(l)</span>
+      <span><strong>✓</strong> Base ≠ Alkali (alkalis are SOLUBLE bases)</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+  </div>
+</div>
+
+<!-- TA FOCUS BUTTON -->
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+
+<!-- COLD CALL BUTTON -->
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+
+<!-- TA FOCUS MODAL -->
+<div id="ta-focus-overlay" onclick="if(event.target.id==='ta-focus-overlay')hideTABrief()">
+  <div id="ta-focus-modal">
+    <div class="ta-modal-header">
+      <h3 id="ta-modal-title">TA Focus</h3>
+      <button class="ta-modal-close" onclick="hideTABrief()" aria-label="Close">✕</button>
+    </div>
+    <div class="ta-modal-body" id="ta-modal-body"></div>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL -->
+<div id="cold-call-overlay" onclick="if(event.target.id==='cold-call-overlay')hideColdCall()">
+  <div id="cold-call-modal">
+    <div class="cold-call-header">
+      <h3>Cold Call</h3>
+      <button class="ta-modal-close" onclick="hideColdCall()" aria-label="Close">✕</button>
+    </div>
+    <div class="cold-call-body" id="cold-call-body"></div>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ============ SLIDE 0 — TITLE ============ -->
+  <div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:2%">
+      <div class="animate-enter">
+        <p style="font-size:1rem;color:var(--muted);margin:0">Lesson 3 of 3 — Acids &amp; Alkalis</p>
+        <h1>Ions &amp; Neutralisation</h1>
+        <p style="font-size:1rem;color:var(--muted);margin:-8px 0 6px">Edexcel IGCSE 4SS0 — Spec 2.31 &amp; 2.32</p>
+        <div class="title-hero">
+          <div class="hero-ion h-plus" title="Hydrogen ion — from acids">H⁺<span class="ion-label">From Acid</span></div>
+          <div class="hero-op plus">+</div>
+          <div class="hero-ion oh-minus" title="Hydroxide ion — from alkalis">OH⁻<span class="ion-label">From Alkali</span></div>
+          <div class="hero-op arrow">→</div>
+          <div class="hero-water" title="Water — the product of neutralisation">H₂O<span class="water-label">⚡ Neutral ⚡</span></div>
+          <div class="hero-tag-ion">Today you build the<br>equation that wins marks<br>on every paper.<span class="small">Acids, alkalis, bases — finally settled.</span></div>
+        </div>
+        <div class="li-box" style="margin:14px auto;max-width:680px;text-align:left">
+          <strong>🌍 Why this matters:</strong> Antacid tablets neutralise stomach acid. Lime is added to acidic soil so crops grow. Bee stings are acidic — treat with baking soda. Today you learn why all these work the same way.<br><br>
+          <strong>Learning Objectives:</strong>
+          <ul class="lo-anim" style="font-size:1.05rem;margin-top:6px">
+            <li><strong>2.31</strong> – Know that acids in aqueous solution are a source of <strong>H⁺ ions</strong> and alkalis are a source of <strong>OH⁻ ions</strong>.</li>
+            <li><strong>2.32</strong> – Know that bases can <strong>neutralise</strong> acids.</li>
+          </ul>
+        </div>
+        <p style="font-size:1rem;margin-top:8px"><strong>Navigation:</strong> Arrow Keys / Spacebar &nbsp;|&nbsp; <strong>40 minutes</strong></p>
+      </div>
+      <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left">
+        <h3 style="margin-top:0">🖨️ Differentiated Pupil Packs</h3>
+        <p style="font-size:.9rem;margin:4px 0;color:var(--muted)">Each pack auto-prints the correct tier of arrival, starter, worksheet and exit ticket.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onclick="printPack('foundation')" style="background:var(--found)">🖨️ Foundation (U–1)</button>
+          <button onclick="printPack('middle')" style="background:var(--mid)">🖨️ Middle (1–2)</button>
+          <button onclick="printPack('higher')" style="background:var(--high)">🖨️ Higher (3–4)</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 1 — ARRIVAL TASK (3-TIER, RECALL FROM L2) ============ -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-arrival">FAB 4 · Arrival Task</span>
+    <h2>FAB 4 Arrival – Recall from Lesson 2 (pH Scale)</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer all four in your book. Q1–3 recall from <strong>Lesson 2 (pH scale &amp; UI)</strong>. Q4 leads into today.</div>
+
+    <div class="tier-toggle">
+      <button onclick="switchTier('arrival','f')" id="arr-btn-f" class="active" style="background:var(--found)">Foundation (U–1)</button>
+      <button onclick="switchTier('arrival','m')" id="arr-btn-m" style="background:var(--mid)">Middle (1–2)</button>
+      <button onclick="switchTier('arrival','h')" id="arr-btn-h" style="background:var(--high)">Higher (3–4)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+
+    <!-- ===== FOUNDATION ARRIVAL ===== -->
+    <div id="arrival-f" class="tier-level active">
+      <div class="arrival-grid">
+        <div class="task-box animate-enter">
+          <h3>1. pH Recall</h3>
+          <p>What pH range is <strong>strongly acidic</strong>?</p>
+          <p class="answer">pH 0–3.</p>
+        </div>
+        <div class="task-box animate-enter anim-d1">
+          <h3>2. UI colour</h3>
+          <p>What colour is <strong>universal indicator</strong> at pH 7?</p>
+          <p class="answer">Green.</p>
+        </div>
+        <div class="task-box animate-enter anim-d2">
+          <h3>3. pH Classify</h3>
+          <p>A solution has pH 9. Is it acidic, neutral, or alkaline?</p>
+          <p class="answer">Alkaline (weakly alkaline, pH 8–10).</p>
+        </div>
+        <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+          <h3>4. Lead-in 🔬</h3>
+          <p>Stomach acid has pH 1. Bleach has pH 12. What do you think makes one of them <strong>acidic</strong> and the other <strong>alkaline</strong>?</p>
+          <p class="answer">They contain different particles (ions). Today you learn which ion makes something acidic vs alkaline.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MIDDLE ARRIVAL ===== -->
+    <div id="arrival-m" class="tier-level">
+      <div class="arrival-grid">
+        <div class="task-box animate-enter">
+          <h3>1. Classify</h3>
+          <p>A solution has pH 9. Classify it using the <strong>5 phrases</strong>.</p>
+          <p class="answer">Weakly alkaline (pH 8–10).</p>
+        </div>
+        <div class="task-box animate-enter anim-d1">
+          <h3>2. UI limitations</h3>
+          <p>State <strong>one limitation</strong> of using universal indicator.</p>
+          <p class="answer">It only gives an approximate pH — colours between values can be hard to distinguish.</p>
+        </div>
+        <div class="task-box animate-enter anim-d2">
+          <h3>3. Compare two</h3>
+          <p>Solution X has pH 1. Solution Y has pH 6. Which is more acidic, and why?</p>
+          <p class="answer">X is more acidic. The lower the pH number, the more acidic the solution.</p>
+        </div>
+        <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+          <h3>4. Lead-in 🔬</h3>
+          <p>Stomach acid (pH 1) and bleach (pH 12) are both <strong>chemicals</strong> — but they behave very differently. What do you think is <strong>physically inside the solution</strong> that makes one acidic and one alkaline?</p>
+          <p class="answer">Different ions in the solution. Acids contain H⁺ ions; alkalis contain OH⁻ ions. That is today's lesson.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HIGHER ARRIVAL ===== -->
+    <div id="arrival-h" class="tier-level">
+      <div class="arrival-grid">
+        <div class="task-box animate-enter">
+          <h3>1. Range comparison</h3>
+          <p>Solution A has pH 2. Solution B has pH 5. <strong>Both are acidic</strong> — explain the difference.</p>
+          <p class="answer">A is strongly acidic (pH 0–3); B is weakly acidic (pH 4–6). A has many more acidic particles in solution.</p>
+        </div>
+        <div class="task-box animate-enter anim-d1">
+          <h3>2. UI vs pH meter</h3>
+          <p>Suggest a <strong>more accurate</strong> alternative to UI and explain why it is better.</p>
+          <p class="answer">A pH meter — gives a precise numerical reading rather than approximate colour matching.</p>
+        </div>
+        <div class="task-box animate-enter anim-d2">
+          <h3>3. Phenolphthalein recall</h3>
+          <p>Why might phenolphthalein be preferred over UI in a titration?</p>
+          <p class="answer">It has a sharp, distinct colour change (colourless → pink) at the end-point — UI's colour gradient is harder to pinpoint.</p>
+        </div>
+        <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+          <h3>4. Lead-in 🔬</h3>
+          <p>HCl, H₂SO₄ and HNO₃ are <strong>all acids</strong>. NaOH, KOH and Ca(OH)₂ are <strong>all alkalis</strong>. Predict <strong>what they each release</strong> when dissolved in water that makes them behave the same way.</p>
+          <p class="answer">All acids release H⁺ ions. All alkalis release OH⁻ ions. This is what classifies them — that's today's lesson.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 2 — STARTER (KEY DEFINITIONS - SINGLE TIER) ============ -->
+  <div class="slide" id="starter-slide" data-title="Starter – Key Definitions" data-timer="6">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">Starter – Record in Books</span>
+    <h2>Starter: Key Definitions (5 mins)</h2>
+    <div class="li-box"><strong>Instructions:</strong> Copy these key definitions into your book. You will need them for today's lesson.</div>
+    <div class="content-grid">
+      <div>
+        <div class="task-box" style="padding:14px">
+          <h3 style="margin-top:0">📝 Copy these definitions:</h3>
+          <p><strong>Acid:</strong> A substance that releases <strong>hydrogen ions (H⁺)</strong> when dissolved in water.</p>
+          <p><strong>Alkali:</strong> A substance that releases <strong>hydroxide ions (OH⁻)</strong> when dissolved in water.</p>
+          <p><strong>Base:</strong> Any substance that can <strong>neutralise an acid</strong>. All alkalis are bases, but not all bases are alkalis.</p>
+          <p><strong>Neutralisation:</strong> The reaction between an acid and a base that produces <strong>water</strong> (and a salt).</p>
+        </div>
+        <div class="exam-tip-box">
+          <p><strong>Say this in the exam:</strong> <em>"An alkali is a soluble base that dissolves in water to release OH⁻ ions."</em> The word <strong>soluble</strong> is the difference — miss it, lose the mark.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container">
+          <h3 style="margin-top:0;color:var(--ido-border)">Base vs Alkali</h3>
+          <svg width="280" height="180" viewBox="0 0 280 180">
+            <ellipse cx="140" cy="100" rx="130" ry="70" fill="none" stroke="#f97316" stroke-width="3" stroke-dasharray="8 4"/>
+            <text x="140" y="40" text-anchor="middle" font-size="13" font-weight="bold" fill="#f97316">BASES</text>
+            <text x="140" y="55" text-anchor="middle" font-size="10" fill="#92400e">(neutralise acids)</text>
+            <ellipse cx="140" cy="105" rx="75" ry="42" fill="#dbeafe" stroke="#3b82f6" stroke-width="3" opacity=".6"/>
+            <text x="140" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">ALKALIS</text>
+            <text x="140" y="115" text-anchor="middle" font-size="10" fill="#1e3a8a">(soluble bases)</text>
+            <text x="140" y="130" text-anchor="middle" font-size="9" fill="#1e3a8a">e.g. NaOH, KOH (aq)</text>
+            <text x="45" y="90" text-anchor="middle" font-size="9" fill="#92400e">CuO</text>
+            <text x="235" y="90" text-anchor="middle" font-size="9" fill="#92400e">MgO</text>
+            <text x="50" y="130" text-anchor="middle" font-size="8" fill="#92400e">(insoluble)</text>
+            <text x="230" y="130" text-anchor="middle" font-size="8" fill="#92400e">(insoluble)</text>
+            <text x="140" y="170" text-anchor="middle" font-size="11" fill="#64748b" font-weight="bold">All alkalis are bases. Not all bases are alkalis.</text>
+          </svg>
+        </div>
+        <div class="aspire-box"><strong>🌟 Extension:</strong> Copper oxide (CuO) neutralises acid but doesn't dissolve in water. Is it a base or an alkali? Why?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 3 — I DO 1: IONS ============ -->
+  <div class="slide" data-title="I Do – Ions" data-type="ido" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Acids, Alkalis &amp; Ions (2.31)</h2>
+    <div class="li-box"><strong>🎯 The big idea:</strong> The <strong>ions in solution</strong> determine whether something is acidic or alkaline. Acids release <strong>H⁺</strong>. Alkalis release <strong>OH⁻</strong>. That's it.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter">
+          <h3 style="margin-top:0">🔴 Acids Release H⁺ Ions</h3>
+          <p>When an acid dissolves in water, it releases <strong>hydrogen ions (H⁺)</strong>.</p>
+          <p style="font-family:monospace;font-size:1.1rem;background:#fff;padding:6px 10px;border-radius:6px">HCl(aq) → H⁺(aq) + Cl⁻(aq)</p>
+          <p style="font-size:.95rem;color:var(--muted);margin-bottom:0">More H⁺ ions = more acidic = lower pH.</p>
+        </div>
+        <div class="ido-box animate-enter anim-d1">
+          <h3 style="margin-top:0">🔵 Alkalis Release OH⁻ Ions</h3>
+          <p>When an alkali dissolves in water, it releases <strong>hydroxide ions (OH⁻)</strong>.</p>
+          <p style="font-family:monospace;font-size:1.1rem;background:#fff;padding:6px 10px;border-radius:6px">NaOH(aq) → Na⁺(aq) + OH⁻(aq)</p>
+          <p style="font-size:.95rem;color:var(--muted);margin-bottom:0">More OH⁻ ions = more alkaline = higher pH.</p>
+        </div>
+        <div class="scaffold-box animate-enter anim-d2">
+          <strong>💡 Memory trick:</strong> <strong>H</strong>⁺ = <strong>H</strong>ydrogen = from acids. <strong>OH</strong>⁻ = <strong>OH</strong> dear, that's an alkali!
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">What's In the Solution?</h3>
+          <svg width="300" height="200" viewBox="0 0 300 200">
+            <rect x="15" y="30" width="100" height="120" rx="10" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <rect x="23" y="70" width="84" height="73" rx="6" fill="#fca5a5" opacity=".4"/>
+            <text x="65" y="55" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">ACID (e.g. HCl)</text>
+            <circle cx="40" cy="90" r="10" fill="#ef4444"/><text x="40" y="94" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">H⁺</text>
+            <circle cx="70" cy="105" r="10" fill="#ef4444"/><text x="70" y="109" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">H⁺</text>
+            <circle cx="90" cy="85" r="10" fill="#ef4444"/><text x="90" y="89" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">H⁺</text>
+            <circle cx="55" cy="120" r="10" fill="#ef4444"/><text x="55" y="124" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">H⁺</text>
+            <text x="65" y="170" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="bold">Lots of H⁺</text>
+            <text x="65" y="185" text-anchor="middle" font-size="10" fill="#ef4444">Low pH</text>
+            <rect x="185" y="30" width="100" height="120" rx="10" fill="none" stroke="#3b82f6" stroke-width="3"/>
+            <rect x="193" y="70" width="84" height="73" rx="6" fill="#93c5fd" opacity=".4"/>
+            <text x="235" y="55" text-anchor="middle" font-size="11" font-weight="bold" fill="#1d4ed8">ALKALI (e.g. NaOH)</text>
+            <circle cx="210" cy="90" r="12" fill="#3b82f6"/><text x="210" y="95" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">OH⁻</text>
+            <circle cx="245" cy="105" r="12" fill="#3b82f6"/><text x="245" y="110" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">OH⁻</text>
+            <circle cx="225" cy="125" r="12" fill="#3b82f6"/><text x="225" y="130" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">OH⁻</text>
+            <text x="235" y="170" text-anchor="middle" font-size="11" fill="#3b82f6" font-weight="bold">Lots of OH⁻</text>
+            <text x="235" y="185" text-anchor="middle" font-size="10" fill="#3b82f6">High pH</text>
+            <text x="150" y="110" text-anchor="middle" font-size="16" fill="#64748b" font-weight="bold">vs</text>
+          </svg>
+        </div>
+        <div class="misc-box">
+          <p><span class="misc-wrong">Alkalis release H⁺ ions</span> — wrong way round!</p>
+          <p>Correct: <span class="misc-right">Alkalis release OH⁻ ions</span>. Acids release H⁺.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 4 — WE DO 1: ION SORT ============ -->
+  <div class="slide" data-title="We Do – Ion Sort" data-type="wedo" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Ion Sort Challenge</h2>
+    <div class="li-box"><strong>As a class:</strong> Click an ion card, then click the correct category to sort it. Score: <span id="ion-score" style="font-size:1.2rem;color:var(--success)">0</span>/6</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:4px">
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px" id="ion-cards">
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="acid" style="font-size:1.1rem">🔴 H⁺</div>
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="alkali" style="font-size:1.1rem">🔵 OH⁻</div>
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="product" style="font-size:1.1rem">💧 H₂O</div>
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="acid" style="font-size:1.1rem">🧪 HCl</div>
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="alkali" style="font-size:1.1rem">🧴 NaOH</div>
+        <div class="sort-card" onclick="selectIonCard(this)" data-cat="product" style="font-size:1.1rem">🧂 NaCl</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div class="sort-zone" onclick="dropIon('acid',this)" style="background:#fef2f2;border-color:#ef4444;min-height:90px">
+          <strong style="color:#dc2626;font-size:1rem">🔴 From ACIDS</strong><br><small style="color:#94a3b8">Release H⁺ ions</small>
+          <div class="zone-items"></div>
+        </div>
+        <div class="sort-zone" onclick="dropIon('alkali',this)" style="background:#eff6ff;border-color:#3b82f6;min-height:90px">
+          <strong style="color:#2563eb;font-size:1rem">🔵 From ALKALIS</strong><br><small style="color:#94a3b8">Release OH⁻ ions</small>
+          <div class="zone-items"></div>
+        </div>
+        <div class="sort-zone" onclick="dropIon('product',this)" style="background:#f0fdf4;border-color:#22c55e;min-height:90px">
+          <strong style="color:#16a34a;font-size:1rem">🟢 PRODUCTS</strong><br><small style="color:#94a3b8">Made during neutralisation</small>
+          <div class="zone-items"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+        <button class="ghost small" onclick="resetIonSort()">🔄 Reset</button>
+        <button class="small" onclick="revealIonSort()">✅ Reveal</button>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 5 — I DO 2: NEUTRALISATION ============ -->
+  <div class="slide" data-title="I Do – Neutralisation" data-type="ido" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Bases Neutralise Acids (2.32)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> When a base reacts with an acid, the H⁺ and OH⁻ ions combine to form <strong>water</strong>. This is <strong>neutralisation</strong>.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter">
+          <h3 style="margin-top:0">⚗️ The Ionic Equation</h3>
+          <p style="font-size:1.4rem;text-align:center;margin:8px 0"><strong>H⁺(aq) + OH⁻(aq) → H₂O(l)</strong></p>
+          <p style="margin-bottom:0">The hydrogen ion from the acid combines with the hydroxide ion from the base to produce <strong>water</strong>. This is <strong>true for every neutralisation</strong> — same equation every time.</p>
+        </div>
+        <div class="ido-box animate-enter anim-d1">
+          <h3 style="margin-top:0">📋 The Word Equation</h3>
+          <p style="font-size:1.2rem;text-align:center"><strong>Acid + Base → Salt + Water</strong></p>
+          <p style="margin-bottom:0">Example: HCl + NaOH → NaCl + H₂O. The salt (NaCl) depends on which acid and base you use.</p>
+        </div>
+        <div class="aspire-box animate-enter anim-d2">
+          <strong>🌟 Insoluble bases:</strong> Copper oxide (CuO) is a base but <strong>NOT</strong> an alkali (it doesn't dissolve in water). It still neutralises acid: CuO + H₂SO₄ → CuSO₄ + H₂O.
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter" style="padding:14px">
+          <h3 style="margin-top:0;color:var(--ido-border)">Neutralisation – What Happens</h3>
+          <svg width="300" height="140" viewBox="0 0 300 140">
+            <circle cx="50" cy="60" r="28" fill="#fca5a5" stroke="#ef4444" stroke-width="3"/>
+            <text x="50" y="66" text-anchor="middle" font-size="18" font-weight="bold" fill="#991b1b">H⁺</text>
+            <text x="50" y="108" text-anchor="middle" font-size="10" fill="#ef4444">From acid</text>
+            <text x="105" y="66" text-anchor="middle" font-size="24" fill="#64748b" font-weight="bold">+</text>
+            <circle cx="160" cy="60" r="28" fill="#93c5fd" stroke="#3b82f6" stroke-width="3"/>
+            <text x="160" y="66" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">OH⁻</text>
+            <text x="160" y="108" text-anchor="middle" font-size="10" fill="#3b82f6">From base</text>
+            <text x="215" y="66" text-anchor="middle" font-size="24" fill="#64748b" font-weight="bold">→</text>
+            <circle cx="265" cy="60" r="28" fill="#bbf7d0" stroke="#22c55e" stroke-width="3"/>
+            <text x="265" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">H₂O</text>
+            <text x="265" y="72" text-anchor="middle" font-size="10" fill="#166534">(water)</text>
+            <text x="265" y="108" text-anchor="middle" font-size="10" fill="#22c55e">pH → 7</text>
+            <text x="150" y="135" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="bold">NEUTRALISATION</text>
+          </svg>
+        </div>
+
+        <h3 style="text-align:center;margin-top:6px">🧪 Simulator: Add Base to Acid</h3>
+        <div style="text-align:center">
+          <div style="position:relative;width:120px;height:130px;margin:0 auto">
+            <svg width="120" height="130" viewBox="0 0 120 130">
+              <path d="M20 8 L20 110 Q20 125 35 125 L85 125 Q100 125 100 110 L100 8 Z" fill="none" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="8" y1="8" x2="112" y2="8" stroke="#94a3b8" stroke-width="3"/>
+            </svg>
+            <div id="neut-liquid" style="position:absolute;bottom:5px;left:24px;right:24px;height:95px;border-radius:0 0 6px 6px;background:#ef4444;transition:background-color .6s;opacity:.7"></div>
+            <div style="position:absolute;top:12px;right:-10px;background:#fff;border:2px solid var(--lo-border);border-radius:8px;padding:2px 8px;font-weight:900;font-size:.95rem">pH:<span id="ph-val">1</span></div>
+          </div>
+          <p style="font-size:.9rem;color:var(--muted);margin:4px 0" id="neut-label">🔴 Strongly Acidic</p>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="small" onclick="addAlkali(1)">+1 drop base</button>
+            <button class="small" onclick="addAlkali(3)">+3 drops</button>
+            <button class="ghost small" onclick="resetNeut()">🔄 Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 6 — SPOT THE MISTAKE (V4 CLICK-TO-FIND) ============ -->
+  <div class="slide" id="stm-slide" data-title="Spot the Mistake" data-type="wedo" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">🔍 Spot the Mistake</span>
+    <h2>Spot the Mistake: Ions &amp; Neutralisation</h2>
+    <div class="li-box"><strong>A student wrote the answer below. It contains <strong>THREE</strong> mistakes.</strong> Click each wrong word/phrase to identify it. <em>Discuss with your partner first.</em></div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo-stm')">📸 Print Evidence</button>
+
+    <div id="wedo-stm" class="wedo-capture" style="margin-top:4px">
+      <div class="stm-progress">
+        <div class="stm-pip" id="stm-pip-1">1</div>
+        <div class="stm-pip" id="stm-pip-2">2</div>
+        <div class="stm-pip" id="stm-pip-3">3</div>
+      </div>
+      <div class="stm-paragraph" id="stm-paragraph">
+        Acids dissolve in water and release <span class="stm-clickable" data-correct="false">hydrogen ions</span>, which makes the pH <span class="stm-clickable" data-correct="false">low</span>. Alkalis are different — they release <span class="stm-clickable" data-correct="true" data-fix="hydroxide ions (OH⁻)">hydrogen ions</span> in water. Copper oxide (CuO) <span class="stm-clickable" data-correct="false">neutralises acids</span> but doesn't dissolve in water — that means CuO is <span class="stm-clickable" data-correct="true" data-fix="a base (it neutralises acid but isn't soluble in water)">an alkali</span>. When neutralisation happens, the acid and base react to form a salt and the pH ends up at <span class="stm-clickable" data-correct="true" data-fix="7 (neutral)">0</span>.
+      </div>
+      <div class="stm-feedback-box" id="stm-feedback">Click a word or phrase you think is wrong.</div>
+      <div class="stm-correction" id="stm-correction"></div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+        <button class="ghost small" onclick="resetSTM()">🔄 Reset</button>
+        <button class="small" onclick="revealSTM()">✅ Reveal All</button>
+      </div>
+      <div id="wedo-stm-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 7 — WE DO 2: EQUATION BUILDER + BASE/ALKALI ============ -->
+  <div class="slide" data-title="We Do – Equation Builder" data-type="wedo" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Equation Builder &amp; Base or Alkali?</h2>
+    <div class="li-box"><strong>As a class:</strong> Two activities. Build the ionic equation, then sort substances as base-only or alkali.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:4px">
+      <div class="content-grid" style="height:auto">
+        <div>
+          <h3 style="margin-top:0;color:var(--wedo-border)">🧩 Build the Ionic Equation</h3>
+          <p style="font-size:.9rem;color:var(--muted);margin:0 0 6px">Click the parts in the correct order to build the neutralisation equation:</p>
+          <div id="eq-result" style="min-height:48px;border:3px solid var(--task-border);border-radius:12px;padding:10px;background:#fff;font-size:1.3rem;font-weight:900;text-align:center;color:var(--ido-border);margin-bottom:8px"></div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="eq-parts">
+            <button class="ghost small" style="font-size:1.1rem;padding:10px 16px" onclick="addEqPart(this,'H₂O(l)')">H₂O(l)</button>
+            <button class="ghost small" style="font-size:1.1rem;padding:10px 16px" onclick="addEqPart(this,'→')">→</button>
+            <button class="ghost small" style="font-size:1.1rem;padding:10px 16px" onclick="addEqPart(this,'OH⁻(aq)')">OH⁻(aq)</button>
+            <button class="ghost small" style="font-size:1.1rem;padding:10px 16px" onclick="addEqPart(this,'+')">+</button>
+            <button class="ghost small" style="font-size:1.1rem;padding:10px 16px" onclick="addEqPart(this,'H⁺(aq)')">H⁺(aq)</button>
+          </div>
+          <div id="eq-fb" style="text-align:center;font-weight:900;min-height:24px;margin-top:6px"></div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:4px">
+            <button class="ghost small" onclick="resetEq()">🔄 Reset</button>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-top:0;color:var(--wedo-border)">🏷️ Base or Alkali?</h3>
+          <p style="font-size:.9rem;color:var(--muted);margin:0 0 6px">Click a substance, then click "Base" or "Alkali":</p>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px" id="ba-cards">
+            <div class="sort-card" onclick="selectBA(this)" data-ans="alkali">NaOH</div>
+            <div class="sort-card" onclick="selectBA(this)" data-ans="base">CuO</div>
+            <div class="sort-card" onclick="selectBA(this)" data-ans="alkali">KOH</div>
+            <div class="sort-card" onclick="selectBA(this)" data-ans="base">MgO</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="sort-zone" onclick="dropBA('base',this)" style="background:#fff7ed;border-color:#f97316;min-height:70px">
+              <strong style="color:#ea580c">BASE only</strong><br><small style="color:#94a3b8">Neutralises acid but insoluble</small>
+              <div class="zone-items"></div>
+            </div>
+            <div class="sort-zone" onclick="dropBA('alkali',this)" style="background:#eff6ff;border-color:#3b82f6;min-height:70px">
+              <strong style="color:#2563eb">ALKALI</strong><br><small style="color:#94a3b8">Soluble base (dissolves)</small>
+              <div class="zone-items"></div>
+            </div>
+          </div>
+          <div id="ba-fb" style="text-align:center;font-weight:900;min-height:20px;margin-top:4px"></div>
+        </div>
+      </div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 8 — INDEPENDENT WORK (3-TIER, 6 QUESTIONS) ============ -->
+  <div class="slide" id="ind-slide" data-title="Independent Work" data-type="independent" data-timer="8" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-independent">Independent Work – 8 mins</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Answer independently.</strong> Use your scaffold sheet if needed. ⭐ = stretch question (one tier above). 🌍 = real-world synthesis.<br>❌ <strong>Never write:</strong> "alkalis release H+" or "CuO is an alkali". Use the right ion + the right classification.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0">
+      <button onclick="switchInd('f')" id="ind-btn-f" class="active" style="background:var(--found)">Foundation (U–1)</button>
+      <button onclick="switchInd('m')" id="ind-btn-m" style="background:var(--mid)">Middle (1–2)</button>
+      <button onclick="switchInd('h')" id="ind-btn-h" style="background:var(--high)">Higher (3–4)</button>
+      <button class="ghost" onclick="document.getElementById('ind-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div class="xp-label" id="xp-label">Questions completed: 0/0</div><div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-fill"></div></div>
+
+    <!-- ===== FOUNDATION (U–1) ===== -->
+    <div id="ind-f" class="ind-level active" style="max-height:46vh;overflow-y:auto">
+      <p style="margin:0 0 4px;font-size:.8rem;color:var(--found);font-weight:900;text-align:center">📗 Grades U–1 • Six question types • Q5 ⭐ stretch → Grade 2 • Q6 🌍 real-world synthesis</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> Acids release which ion in water?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">H⁺ starts with H for Hydrogen.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">H⁺</span><span class="mcq-opt" onclick="mcqCheck(this,false)">OH⁻</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Na⁺</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short answer</span><p style="margin:0"><strong>2.</strong> Complete: Acid + Base → ________ + ________.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">One you'd put on chips. The other you drink.</div><p class="answer">Salt + Water.</p></div>
+      <div class="ind-q"><span class="q-type q-long">Long answer [3]</span><p style="margin:0"><strong>3.</strong> Describe what happens when an acid is mixed with an alkali. Include in your answer: (a) which ions react, (b) what is produced, (c) what happens to the pH.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Three things: which ions / what gets made / pH end value.</div><p class="answer">The H⁺ ions from the acid react with OH⁻ ions from the alkali [1]. Water (H₂O) is produced [1]. The pH moves towards 7 (neutral) [1].</p></div>
+      <div class="ind-q"><span class="q-type q-diagram">Diagram</span><p style="margin:0"><strong>4.</strong> Which beaker contains the acid?</p><div style="margin:6px 0 4px;display:flex;gap:18px;align-items:center;justify-content:center"><div style="text-align:center"><svg width="50" height="70" viewBox="0 0 60 100"><rect x="10" y="20" width="40" height="70" rx="4" fill="#fca5a5" stroke="#0f172a" stroke-width="2"/><text x="30" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">H⁺</text><text x="30" y="75" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">H⁺</text></svg><p style="margin:2px 0;font-size:.85rem;font-weight:900">Beaker A</p></div><div style="text-align:center"><svg width="50" height="70" viewBox="0 0 60 100"><rect x="10" y="20" width="40" height="70" rx="4" fill="#93c5fd" stroke="#0f172a" stroke-width="2"/><text x="30" y="55" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">OH⁻</text><text x="30" y="75" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">OH⁻</text></svg><p style="margin:2px 0;font-size:.85rem;font-weight:900">Beaker B</p></div></div><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Acid releases H⁺. Look at the ions in each.</div><p class="answer">Beaker A — it contains H⁺ ions, which are released by acids.</p></div>
+      <div class="ind-q stretch"><span class="q-type q-exam">⭐ Challenge GCSE [3]</span><p style="margin:0"><strong>5.</strong> A student says <em>"All bases are alkalis"</em>. Is the student correct? Explain your answer.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Think about CuO — does it dissolve? Does it neutralise acid?</div><p class="answer">No, the student is wrong [1]. All alkalis are bases (because they neutralise acid) [1], but not all bases are alkalis — some bases (like CuO) don't dissolve in water and so are NOT alkalis [1].</p></div>
+      <div class="ind-q synthesis"><span class="q-type q-synthesis">Synthesis [3]</span><p style="margin:0"><strong>6.</strong> Sam has heartburn — too much stomach acid. They take an antacid tablet (which contains a base). <br>(a) What type of reaction happens in Sam's stomach? [1] <br>(b) What is produced from this reaction? [1] <br>(c) What happens to the pH inside Sam's stomach? [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Acid + base = …? Products of every neutralisation are the same. pH moves towards which number?</div><p class="answer">(a) Neutralisation [1]. (b) Salt and water [1]. (c) The pH increases — moving towards 7 (neutral) [1].</p></div>
+    </div>
+
+    <!-- ===== MIDDLE (1–2) ===== -->
+    <div id="ind-m" class="ind-level" style="max-height:46vh;overflow-y:auto">
+      <p style="margin:0 0 4px;font-size:.8rem;color:var(--mid);font-weight:900;text-align:center">📙 Grades 1–2 • Six question types • Q5 ⭐ stretch → Grade 3 • Q6 🌍 real-world synthesis</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> NaOH dissolves in water and releases OH⁻. This means NaOH is:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Soluble + releases OH⁻ = which classification?</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,false)">An acid</span><span class="mcq-opt" onclick="mcqCheck(this,true)">An alkali</span><span class="mcq-opt" onclick="mcqCheck(this,false)">A salt</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short answer</span><p style="margin:0"><strong>2.</strong> What is the difference between a <strong>base</strong> and an <strong>alkali</strong>?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">One always works as both. The other can be insoluble.</div><p class="answer">A base is any substance that neutralises an acid. An alkali is a base that <strong>dissolves in water</strong> (releasing OH⁻).</p></div>
+      <div class="ind-q"><span class="q-type q-long">Long answer [4]</span><p style="margin:0"><strong>3.</strong> Explain what happens at the ion level when HCl reacts with NaOH. Include the ions released by each, the ions that combine, and the products formed.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">HCl → H⁺ + Cl⁻. NaOH → Na⁺ + OH⁻. Which ions combine?</div><p class="answer">HCl releases H⁺ and Cl⁻ ions [1]. NaOH releases Na⁺ and OH⁻ ions [1]. The H⁺ combines with OH⁻ to form water [1]. Na⁺ and Cl⁻ remain to form the salt sodium chloride (NaCl) [1].</p></div>
+      <div class="ind-q"><span class="q-type q-diagram">Equation</span><p style="margin:0"><strong>4.</strong> Complete the word equation:</p><p style="font-size:1.15rem;text-align:center;margin:6px 0"><strong>HCl + KOH → ________ + ________</strong></p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Acid + base = salt + water. Metal from base + ending from acid.</div><p class="answer">KCl (potassium chloride) + H₂O (water).</p></div>
+      <div class="ind-q stretch"><span class="q-type q-exam">⭐ Challenge GCSE [4]</span><p style="margin:0"><strong>5.</strong> A student adds NaOH (alkali) to HCl (acid) drop by drop while monitoring with universal indicator. <br>(a) State the type of reaction occurring. [1] <br>(b) What colour change(s) would the student see? [2] <br>(c) Write the ionic equation for the reaction. [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">UI starts red (acid). Where does it end? What pH gives the colour change?</div><p class="answer">(a) Neutralisation [1]. (b) UI starts red (acid, pH 0–3); as alkali is added, it shifts through orange → yellow → green (pH 7) and eventually purple if excess is added [2]. (c) H⁺(aq) + OH⁻(aq) → H₂O(l) [1].</p></div>
+      <div class="ind-q synthesis"><span class="q-type q-synthesis">Synthesis [4]</span><p style="margin:0"><strong>6.</strong> A farmer's field is too acidic (pH 5) to grow good crops. The farmer adds <strong>lime (calcium hydroxide, Ca(OH)₂)</strong> to the soil. <br>(a) Is calcium hydroxide a base or an alkali? Explain. [2] <br>(b) Name the ion released by Ca(OH)₂ that does the neutralising. [1] <br>(c) What happens to the pH of the soil? [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Does Ca(OH)₂ dissolve in water? Yes — slightly. So it's both a base AND an alkali.</div><p class="answer">(a) It is both a base and an alkali — it neutralises acid (so it's a base) AND it dissolves in water releasing OH⁻ ions (so it's also an alkali) [2]. (b) OH⁻ (hydroxide) ions [1]. (c) The pH increases — moves up towards 7 (or above) — neutralising the acidic soil [1].</p></div>
+    </div>
+
+    <!-- ===== HIGHER (3–4) ===== -->
+    <div id="ind-h" class="ind-level" style="max-height:46vh;overflow-y:auto">
+      <p style="margin:0 0 4px;font-size:.8rem;color:var(--high);font-weight:900;text-align:center">📘 Grades 3–4 • Six question types • Q5 ⭐ stretch → Grade 5 • Q6 🌍 real-world synthesis</p>
+      <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> The ionic equation for neutralisation is:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Only the reacting ions appear — the spectator ions don't.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">H⁺(aq) + OH⁻(aq) → H₂O(l)</span><span class="mcq-opt" onclick="mcqCheck(this,false)">HCl + NaOH → NaCl + H₂O</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Acid + Base → Salt + Water</span></div></div>
+      <div class="ind-q"><span class="q-type q-short">Short answer</span><p style="margin:0"><strong>2.</strong> Explain why CuO is classified as a base but <strong>not</strong> as an alkali.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Two things: does it neutralise acid? Does it dissolve?</div><p class="answer">CuO neutralises acids (so it is a base) but it does not dissolve in water, so it cannot release OH⁻ ions in aqueous solution — therefore it is not an alkali.</p></div>
+      <div class="ind-q"><span class="q-type q-long">Long answer [4]</span><p style="margin:0"><strong>3.</strong> Predict the products of the following reactions. Write the word equation in each case: <br>(a) HCl + KOH → ? <br>(b) H₂SO₄ + Ca(OH)₂ → ? <br>(c) HNO₃ + NaOH → ? <br>(d) HCl + CuO → ?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">Salts formed: HCl → chloride; H₂SO₄ → sulfate; HNO₃ → nitrate. Metal from the base.</div><p class="answer">(a) Potassium chloride + water [1]. (b) Calcium sulfate + water [1]. (c) Sodium nitrate + water [1]. (d) Copper chloride + water [1].</p></div>
+      <div class="ind-q"><span class="q-type q-diagram">Diagram / Mechanism</span><p style="margin:0"><strong>4.</strong> Sketch (or describe) what happens to the H⁺ and OH⁻ ions during a neutralisation reaction. Use arrows to show the ions combining and label the product.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">H⁺ + OH⁻ → ? Show the arrow showing them combining.</div><p class="answer">A diagram showing H⁺ ion and OH⁻ ion approaching each other, an arrow → between them, and the product H₂O (water). H⁺ + OH⁻ → H₂O. The ions combine to form a covalent bond, producing water — pH moves to 7.</p></div>
+      <div class="ind-q stretch"><span class="q-type q-exam">⭐ Challenge GCSE [5]</span><p style="margin:0"><strong>5.</strong> Magnesium oxide (MgO) is added to dilute sulfuric acid (H₂SO₄). The MgO is in excess. <br>(a) Is MgO a base, an alkali, or both? Explain. [2] <br>(b) Write the balanced word equation. [1] <br>(c) Write the ionic equation for neutralisation. [1] <br>(d) State what would be observed. [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">MgO is insoluble in water → base only. Sulfate salt = MgSO₄.</div><p class="answer">(a) Base only — it neutralises acid but does not dissolve in water (insoluble), so cannot release OH⁻ ions in solution [2]. (b) MgO + H₂SO₄ → MgSO₄ + H₂O [1]. (c) H⁺(aq) + OH⁻(aq) → H₂O(l) [1]. (d) The MgO solid would slowly disappear/dissolve as it reacts; the solution would warm up; some unreacted MgO solid would remain (excess) [1].</p></div>
+      <div class="ind-q synthesis"><span class="q-type q-synthesis">Synthesis [5]</span><p style="margin:0"><strong>6.</strong> An industrial chemist has spilled 100 litres of dilute sulfuric acid (H₂SO₄, pH 2) onto the lab floor. They have <strong>two</strong> options to neutralise it: (A) sodium hydroxide solution (NaOH); or (B) calcium oxide powder (CaO). <br>(a) Classify each option as base, alkali, or both. [2] <br>(b) Suggest <strong>one</strong> safety advantage and <strong>one</strong> disadvantage of using NaOH for this spill. [2] <br>(c) Write the ionic equation for the neutralisation that occurs in <strong>both</strong> cases. [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Hint</button><div class="hint-text">NaOH dissolves in water (alkali); CaO is a solid that doesn't dissolve much (base only).</div><p class="answer">(a) NaOH = both a base AND an alkali (soluble, releases OH⁻); CaO = base only (insoluble) [2]. (b) Advantage: NaOH (aq) reacts very quickly because it's already dissolved and OH⁻ is available. Disadvantage: NaOH is itself corrosive — too much would create another hazard (alkaline burn) — and adds liquid volume. Accept similar reasoning [2]. (c) H⁺(aq) + OH⁻(aq) → H₂O(l) — same equation in both cases (CaO reacts with water first to make Ca(OH)₂, releasing OH⁻) [1].</p></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 9 — EXIT TICKET (CUMULATIVE L1+L2+L3) ============ -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket – Lessons 1–3 Recap" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-exit">Exit Ticket – Lessons 1–3 Cumulative</span>
+    <h2>Exit Ticket – Acids &amp; Alkalis Series Recap</h2>
+    <div class="li-box"><strong>No notes.</strong> 6 recall questions covering all three lessons. Answer from memory in 3 minutes.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0">
+      <button onclick="switchExit('f')" id="exit-btn-f" class="active" style="background:var(--found)">Foundation</button>
+      <button onclick="switchExit('m')" id="exit-btn-m" style="background:var(--mid)">Middle</button>
+      <button onclick="switchExit('h')" id="exit-btn-h" style="background:var(--high)">Higher</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="exit-f" class="exit-grid">
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>1) What colour does litmus turn in an acidic solution?</strong></p><p class="answer">Red.</p></div>
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>2) Name one advantage of universal indicator over litmus.</strong></p><p class="answer">UI shows a range of colours — gives an approximate pH, not just acid or alkali.</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>3) What pH range is "weakly alkaline"?</strong></p><p class="answer">pH 8–10.</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>4) What colour is universal indicator at pH 7?</strong></p><p class="answer">Green.</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>5) What ion do acids release in water?</strong></p><p class="answer">H⁺ (hydrogen ions).</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>6) What do you get when an acid reacts with a base?</strong></p><p class="answer">Salt and water.</p></div>
+    </div>
+    <div id="exit-m" class="exit-grid" style="display:none">
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>1) What colour does phenolphthalein turn in alkali?</strong></p><p class="answer">Bright pink.</p></div>
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>2) What colour does methyl orange turn in acid?</strong></p><p class="answer">Red.</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>3) A solution has pH 12. Classify it.</strong></p><p class="answer">Strongly alkaline (pH 11–14).</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>4) State one limitation of universal indicator.</strong></p><p class="answer">It only gives an approximate pH — colours between values can be hard to distinguish.</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>5) What is the difference between a base and an alkali?</strong></p><p class="answer">A base is any substance that neutralises an acid. An alkali is a base that dissolves in water (releasing OH⁻).</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>6) Write the word equation for neutralisation.</strong></p><p class="answer">Acid + Base → Salt + Water.</p></div>
+    </div>
+    <div id="exit-h" class="exit-grid" style="display:none">
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>1) Explain why phenolphthalein is preferred over UI in a titration.</strong></p><p class="answer">Phenolphthalein has only two distinct colours (colourless/pink), giving a sharp colour change at the exact end-point. UI shows a colour range, making the precise end-point harder to identify.</p></div>
+      <div class="eq"><span class="tag-lesson">L1</span><p style="margin:0"><strong>2) State methyl orange colours in acid and alkali.</strong></p><p class="answer">Red in acid, yellow in alkali.</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>3) Solution A is pH 2; Solution B is pH 5. Explain the difference.</strong></p><p class="answer">A is strongly acidic (pH 0–3), B is weakly acidic (pH 4–6). A has a much higher concentration of H⁺ ions.</p></div>
+      <div class="eq"><span class="tag-lesson">L2</span><p style="margin:0"><strong>4) Suggest a more accurate alternative to UI and explain why.</strong></p><p class="answer">A pH meter — gives a precise numerical reading rather than an approximate colour match.</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>5) Write the ionic equation for neutralisation.</strong></p><p class="answer">H⁺(aq) + OH⁻(aq) → H₂O(l).</p></div>
+      <div class="eq"><span class="tag-lesson">L3</span><p style="margin:0"><strong>6) CuO neutralises H₂SO₄. Is CuO a base or an alkali? Explain.</strong></p><p class="answer">CuO is a base (not an alkali). It neutralises acid but does not dissolve in water, so cannot release OH⁻ ions into solution.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- ============ PRINT AREA ============ -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <h1 style="text-align:center">Knowledge Organiser – Lesson 3: Ions &amp; Neutralisation</h1>
+    <table class="ko-table">
+      <tr><th>Term</th><th>Detail</th></tr>
+      <tr><td><strong>Acid</strong></td><td>A substance that releases H⁺ (hydrogen) ions in aqueous solution. Examples: HCl, H₂SO₄, HNO₃.</td></tr>
+      <tr><td><strong>Alkali</strong></td><td>A soluble base that releases OH⁻ (hydroxide) ions in aqueous solution. Examples: NaOH, KOH, Ca(OH)₂.</td></tr>
+      <tr><td><strong>Base</strong></td><td>Any substance that can neutralise an acid. All alkalis are bases. Not all bases are alkalis (some are insoluble, e.g. CuO, MgO).</td></tr>
+      <tr><td><strong>Neutralisation</strong></td><td>Acid + Base → Salt + Water. The H⁺ and OH⁻ ions combine to form water.</td></tr>
+      <tr><td><strong>Ionic Equation</strong></td><td>H⁺(aq) + OH⁻(aq) → H₂O(l) — same for ALL neutralisation reactions.</td></tr>
+      <tr><td><strong>H⁺ ions</strong></td><td>Hydrogen ions — released by acids. More H⁺ = more acidic = lower pH.</td></tr>
+      <tr><td><strong>OH⁻ ions</strong></td><td>Hydroxide ions — released by alkalis. More OH⁻ = more alkaline = higher pH.</td></tr>
+      <tr><td><strong>Salt naming</strong></td><td>HCl → chloride; H₂SO₄ → sulfate; HNO₃ → nitrate. The metal comes from the base.</td></tr>
+    </table>
+  </div>
+
+  <div id="print-arrival" class="print-section">
+    <div class="foundation-content">
+      <h2>Arrival Task – Foundation (Recall from Lesson 2)</h2>
+      <div class="print-grid-2x2">
+        <div class="print-box"><strong>1.</strong> What pH range is strongly acidic?<div class="print-line"></div></div>
+        <div class="print-box"><strong>2.</strong> What colour is universal indicator at pH 7?<div class="print-line"></div></div>
+        <div class="print-box"><strong>3.</strong> A solution has pH 9. Is it acidic, neutral, or alkaline?<div class="print-line"></div></div>
+        <div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> Stomach acid has pH 1 and bleach has pH 12. What makes one acidic and the other alkaline?<div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="middle-content">
+      <h2>Arrival Task – Middle (Recall from Lesson 2)</h2>
+      <div class="print-grid-2x2">
+        <div class="print-box"><strong>1.</strong> A solution has pH 9. Classify using the 5 phrases.<div class="print-line"></div></div>
+        <div class="print-box"><strong>2.</strong> State one limitation of universal indicator.<div class="print-line"></div></div>
+        <div class="print-box"><strong>3.</strong> Solution X has pH 1, Y has pH 6. Which is more acidic? Why?<div class="print-line"></div></div>
+        <div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> What do you think is physically inside an acid that makes it acidic?<div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="higher-content">
+      <h2>Arrival Task – Higher (Recall from Lesson 2)</h2>
+      <div class="print-grid-2x2">
+        <div class="print-box"><strong>1.</strong> Solution A is pH 2, B is pH 5. Both acidic — explain the difference.<div class="print-line"></div><div class="print-line"></div></div>
+        <div class="print-box"><strong>2.</strong> Suggest a more accurate alternative to UI and explain why.<div class="print-line"></div></div>
+        <div class="print-box"><strong>3.</strong> Why might phenolphthalein be preferred over UI in a titration?<div class="print-line"></div><div class="print-line"></div></div>
+        <div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> All acids behave the same way. Predict what they release in water.<div class="print-line"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="print-starter" class="print-section">
+    <h2>Starter: Key Definitions</h2>
+    <p>Copy these into your book. Learn them — they appear on every paper.</p>
+    <table class="ko-table">
+      <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td><strong>Acid</strong></td><td>A substance that releases H⁺ (hydrogen) ions in water.</td></tr>
+      <tr><td><strong>Alkali</strong></td><td>A substance that releases OH⁻ (hydroxide) ions in water.</td></tr>
+      <tr><td><strong>Base</strong></td><td>Any substance that can neutralise an acid. Alkalis are soluble bases.</td></tr>
+      <tr><td><strong>Neutralisation</strong></td><td>Acid + Base → Salt + Water.</td></tr>
+    </table>
+    <p><strong>Diagram task:</strong> Sketch the Bases/Alkalis Venn — a big "Bases" circle with a smaller "Alkalis" circle inside. Add CuO and MgO outside the alkalis circle (insoluble bases) and NaOH/KOH inside (soluble bases = alkalis).</p>
+  </div>
+
+  <div id="print-wedo" class="print-section">
+    <h2>We Do – Ion Sort &amp; Equation Builder</h2>
+    <p><strong>Part 1:</strong> Write each item in the correct column: H⁺, OH⁻, H₂O, HCl, NaOH, NaCl</p>
+    <table class="ko-table">
+      <tr><th>From ACIDS<br>(release H⁺)</th><th>From ALKALIS<br>(release OH⁻)</th><th>PRODUCTS of<br>Neutralisation</th></tr>
+      <tr><td style="height:60px"></td><td></td><td></td></tr>
+    </table>
+    <p style="margin-top:14px"><strong>Part 2:</strong> Write the ionic equation for neutralisation by filling in the blanks:</p>
+    <p style="font-size:1.2rem;text-align:center">_______(aq) + _______(aq) → _______(l)</p>
+    <p style="margin-top:14px"><strong>Part 3:</strong> Write each substance in the correct column: NaOH, CuO, KOH, MgO</p>
+    <table class="ko-table">
+      <tr><th>BASE only (insoluble)</th><th>ALKALI (soluble base)</th></tr>
+      <tr><td style="height:50px"></td><td></td></tr>
+    </table>
+    <p style="margin-top:14px"><strong>Part 4 — Spot the Mistake:</strong> The student wrote: <em>"Acids dissolve in water and release hydrogen ions, which makes the pH low. Alkalis are different — they release hydrogen ions in water. Copper oxide (CuO) neutralises acids but doesn't dissolve in water — that means CuO is an alkali. When neutralisation happens, the acid and base react to form a salt and the pH ends up at 0."</em></p>
+    <p>Underline the <strong>three</strong> mistakes and write the corrections below:</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+  </div>
+
+  <div id="print-scaffold" class="print-section">
+    <h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box prevent-break">
+      <h3>Key Ions</h3>
+      <p><strong>Acids</strong> → release <strong>H⁺</strong> ions (hydrogen). More H⁺ = lower pH = more acidic.</p>
+      <p><strong>Alkalis</strong> → release <strong>OH⁻</strong> ions (hydroxide). More OH⁻ = higher pH = more alkaline.</p>
+    </div>
+    <div class="scaffold-print-box prevent-break">
+      <h3>Neutralisation</h3>
+      <p><strong>Word equation:</strong> Acid + Base → Salt + Water</p>
+      <p><strong>Ionic equation:</strong> H⁺(aq) + OH⁻(aq) → H₂O(l)</p>
+      <p><strong>Example:</strong> HCl + NaOH → NaCl + H₂O</p>
+    </div>
+    <div class="scaffold-print-box prevent-break">
+      <h3>Base vs Alkali</h3>
+      <p><strong>Base</strong> = any substance that neutralises an acid (e.g. CuO, MgO, NaOH).</p>
+      <p><strong>Alkali</strong> = a base that <strong>dissolves in water</strong> (e.g. NaOH, KOH).</p>
+      <p>All alkalis are bases. Not all bases are alkalis.</p>
+    </div>
+    <div class="scaffold-print-box prevent-break foundation-content"><h3>📝 Word Bank (Foundation)</h3><p>Use these words: <strong>acid, alkali, base, H⁺, OH⁻, neutralisation, salt, water, pH 7, dissolves, insoluble, ions, hydrogen, hydroxide</strong></p><h3>✍️ Sentence Starters</h3><p>• Acids release ___ ions</p><p>• Alkalis release ___ ions</p><p>• A base is a substance that...</p><p>• Acid + Base → ___ + ___</p><p>• The difference between a base and an alkali is...</p></div>
+    <div class="scaffold-print-box prevent-break higher-content">
+      <h3>Exam Tips (Higher)</h3>
+      <p>• The ionic equation H⁺ + OH⁻ → H₂O is the <strong>same for all neutralisations</strong>.</p>
+      <p>• An insoluble base like CuO still neutralises acid but does not release OH⁻ ions into solution directly.</p>
+      <p>• The salt depends on the acid and the metal in the base: HCl → chloride, H₂SO₄ → sulfate, HNO₃ → nitrate.</p>
+      <p>• "Soluble base" = alkali. Use this exact phrase in your answers for full marks.</p>
+    </div>
+  </div>
+
+  <div id="print-worksheet-foundation" class="print-section foundation-content">
+    <h2>Independent Work – Foundation (Grades U–1)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. What type of ion do acids release in water?</p>
+      <p>[&nbsp;&nbsp;] OH⁻ &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] H⁺ &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Na⁺</p>
+      <p>2. Complete: Acid + Base → ________ + ________.</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>3. Describe what happens when an acid is mixed with an alkali. Include: (a) which ions react, (b) what is produced, (c) what happens to the pH.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:14px">4. Beaker A has H⁺ ions. Beaker B has OH⁻ ions. Which is the acid?</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>5. ⭐ [3 marks]</strong> A student says "All bases are alkalis". Is the student correct? Explain.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>6. 🌍 [3 marks]</strong> Sam has heartburn — too much stomach acid. They take an antacid (which is a base). (a) What type of reaction happens? [1] (b) What is produced? [1] (c) What happens to the pH? [1]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-worksheet-middle" class="print-section middle-content">
+    <h2>Independent Work – Middle (Grades 1–2)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. NaOH dissolves in water and releases OH⁻. NaOH is:</p>
+      <p>[&nbsp;&nbsp;] An acid &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] An alkali &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] A salt</p>
+      <p>2. State the difference between a <strong>base</strong> and an <strong>alkali</strong>.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>3. Explain what happens at the ion level when HCl reacts with NaOH. Include the ions released by each, the ions that combine, and the products.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:14px">4. Complete: HCl + KOH → ________ + ________.</p><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>5. ⭐ [4 marks]</strong> A student adds NaOH to HCl drop by drop while monitoring with universal indicator.</p>
+      <p>(a) State the type of reaction. [1]</p><div class="print-line"></div>
+      <p>(b) Describe the colour changes seen. [2]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Write the ionic equation. [1]</p><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>6. 🌍 [4 marks]</strong> A farmer's field is too acidic (pH 5). They add lime (Ca(OH)₂).</p>
+      <p>(a) Is calcium hydroxide a base or alkali? Explain. [2]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Name the ion that does the neutralising. [1]</p><div class="print-line"></div>
+      <p>(c) What happens to the pH of the soil? [1]</p><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-worksheet-higher" class="print-section higher-content">
+    <h2>Independent Work – Higher (Grades 3–4)</h2>
+    <div class="prevent-break">
+      <h3>Multiple Choice &amp; Short Answer</h3>
+      <p>1. Tick the ionic equation for neutralisation:</p>
+      <p>[&nbsp;&nbsp;] H⁺(aq) + OH⁻(aq) → H₂O(l) &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] HCl + NaOH → NaCl + H₂O</p>
+      <p>2. Explain why CuO is a base but not an alkali.</p><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Long Answer</h3>
+      <p>3. Predict the products of these reactions. Write the word equation:</p>
+      <table class="ko-table">
+        <tr><th>Reaction</th><th>Word Equation</th></tr>
+        <tr><td>HCl + KOH →</td><td style="height:36px"></td></tr>
+        <tr><td>H₂SO₄ + Ca(OH)₂ →</td><td></td></tr>
+        <tr><td>HNO₃ + NaOH →</td><td></td></tr>
+        <tr><td>HCl + CuO →</td><td></td></tr>
+      </table>
+      <p style="margin-top:14px">4. Sketch what happens to H⁺ and OH⁻ ions during neutralisation. Use arrows and label the product.</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+    </div>
+    <div class="prevent-break" style="margin-top:18px">
+      <h3>Exam-Style Questions</h3>
+      <p><strong>5. ⭐ [5 marks]</strong> Excess MgO is added to dilute H₂SO₄.</p>
+      <p>(a) Is MgO a base, alkali, or both? Explain. [2]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Write the balanced word equation. [1]</p><div class="print-line"></div>
+      <p>(c) Write the ionic equation. [1]</p><div class="print-line"></div>
+      <p>(d) State what would be observed. [1]</p><div class="print-line"></div>
+      <p style="margin-top:14px"><strong>6. 🌍 [5 marks]</strong> A chemist has spilled 100 L of dilute H₂SO₄ (pH 2). Two options: (A) NaOH solution; (B) CaO powder.</p>
+      <p>(a) Classify each option as base, alkali, or both. [2]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Suggest one safety advantage and one disadvantage of using NaOH. [2]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) Write the ionic equation for the neutralisation in both cases. [1]</p><div class="print-line"></div>
+    </div>
+  </div>
+
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1) (Lessons 1–3 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Indicators</p><p>1) What colour does litmus turn in acid?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Universal Indicator</p><p>2) Name one advantage of UI over litmus.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – pH Scale</p><p>3) What pH range is "weakly alkaline"?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – pH Scale</p><p>4) What colour is UI at pH 7?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Ions</p><p>5) What ion do acids release in water?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Neutralisation</p><p>6) What do you get when acid reacts with a base?</p><div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2) (Lessons 1–3 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Indicators</p><p>1) What colour does phenolphthalein turn in alkali?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Indicators</p><p>2) What colour does methyl orange turn in acid?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – pH Scale</p><p>3) A solution has pH 12. Classify it.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – Universal Indicator</p><p>4) State one limitation of universal indicator.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Base vs Alkali</p><p>5) What is the difference between a base and an alkali?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Neutralisation</p><p>6) Write the word equation for neutralisation.</p><div class="print-line"></div></div>
+      </div>
+    </div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–4) (Lessons 1–3 Recap)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Indicators</p><p>1) Explain why phenolphthalein is preferred over UI in a titration.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1 – Indicators</p><p>2) State methyl orange colours in acid and alkali.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – pH Scale</p><p>3) pH 2 vs pH 5: explain the difference.</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2 – Measuring pH</p><p>4) Suggest a more accurate alternative to UI. Explain why.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Neutralisation</p><p>5) Write the ionic equation for neutralisation.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3 – Bases</p><p>6) CuO neutralises H₂SO₄. Base or alkali? Explain.</p><div class="print-line"></div><div class="print-line"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap;font-family:'Courier New',monospace;font-size:.95rem"></div></div>
+</div>
+
+<script>
+/* ---------- SLIDE NAVIGATION ---------- */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{
+  if(e.target.isContentEditable)return;
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){
+  const p=((currentSlide+1)/slides.length)*100;
+  document.getElementById('progressBar').style.width=p+'%';
+  const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;
+  document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`;
+}
+
+/* ---------- TIER TOGGLES (Arrival) ---------- */
+function switchTier(area,tier){
+  ['f','m','h'].forEach(t=>{
+    const lvl=document.getElementById(area+'-'+t);
+    if(lvl)lvl.classList.toggle('active',t===tier);
+    const prefix=area==='arrival'?'arr-btn-':null;
+    if(prefix){
+      const btn=document.getElementById(prefix+t);
+      if(btn)btn.classList.toggle('active',t===tier);
+    }
+  });
+}
+
+/* ---------- INDEPENDENT WORK (tier toggle + XP) ---------- */
+function switchInd(l){
+  document.querySelectorAll('.ind-level').forEach(el=>el.classList.remove('active'));
+  document.getElementById('ind-'+l).classList.add('active');
+  ['f','m','h'].forEach(t=>{
+    const btn=document.getElementById('ind-btn-'+t);
+    if(btn)btn.classList.toggle('active',t===l);
+  });
+  updateXP();
+}
+function mcqCheck(el,ok){
+  if(el.parentNode.classList.contains('locked'))return;
+  if(ok){
+    el.classList.add('correct');
+    el.parentNode.classList.add('locked');
+    try{playDing()}catch(e){}
+    updateXP();
+  } else {
+    el.classList.add('wrong');
+    try{playBuzz()}catch(e){}
+    setTimeout(()=>el.classList.remove('wrong'),600);
+  }
+}
+function updateXP(){
+  const slide=document.getElementById('ind-slide');
+  if(!slide)return;
+  const active=slide.querySelector('.ind-level.active');
+  if(!active)return;
+  const total=active.querySelectorAll('.ind-q').length;
+  const done=active.querySelectorAll('.ind-q .correct').length;
+  const el=document.getElementById('xp-label');
+  const fill=document.getElementById('xp-fill');
+  if(el)el.innerText='Questions completed: '+done+'/'+total+(done===total&&total>0?' 🎉':'');
+  if(fill)fill.style.width=(total>0?Math.round(done/total*100):0)+'%';
+  if(done===total&&total>0&&done>0)fireConfettiGlobal();
+}
+function toggleHint(btn){
+  const hint=btn.nextElementSibling;
+  if(hint&&hint.classList.contains('hint-text')){
+    hint.classList.toggle('show');
+    btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Hint';
+  }
+}
+
+/* ---------- EXIT TICKET tier switch ---------- */
+function switchExit(l){
+  document.getElementById('exit-f').style.display=l==='f'?'grid':'none';
+  document.getElementById('exit-m').style.display=l==='m'?'grid':'none';
+  document.getElementById('exit-h').style.display=l==='h'?'grid':'none';
+  ['f','m','h'].forEach(t=>{
+    const btn=document.getElementById('exit-btn-'+t);
+    if(btn)btn.classList.toggle('active',t===l);
+  });
+}
+
+/* ---------- ION SORT (We Do 1) ---------- */
+let selIonCard=null,ionScore=0;
+function selectIonCard(el){
+  if(el.classList.contains('placed'))return;
+  document.querySelectorAll('#ion-cards .sort-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selIonCard=el;
+}
+function dropIon(cat,zoneEl){
+  if(!selIonCard)return;
+  if(selIonCard.getAttribute('data-cat')===cat){
+    selIonCard.classList.add('placed');
+    selIonCard.classList.remove('selected');
+    zoneEl.querySelector('.zone-items').innerHTML+='<div style="background:#fff;border-radius:6px;padding:2px 6px;margin:2px;display:inline-block;border:1px solid #22c55e">✅ '+selIonCard.innerText+'</div>';
+    ionScore++;
+    document.getElementById('ion-score').innerText=ionScore;
+    selIonCard=null;
+    try{playDing()}catch(e){}
+    if(ionScore===6)fireConfettiGlobal();
+  } else {
+    zoneEl.style.animation='shake .4s';
+    setTimeout(()=>zoneEl.style.animation='',450);
+    try{playBuzz()}catch(e){}
+  }
+}
+function resetIonSort(){
+  ionScore=0;
+  document.getElementById('ion-score').innerText=0;
+  selIonCard=null;
+  document.querySelectorAll('#ion-cards .sort-card').forEach(c=>c.classList.remove('placed','selected'));
+  document.querySelectorAll('#wedo1 .zone-items').forEach(z=>z.innerHTML='');
+}
+function revealIonSort(){
+  document.querySelectorAll('#ion-cards .sort-card').forEach(c=>{
+    if(!c.classList.contains('placed')){
+      c.classList.add('placed');
+      const cat=c.getAttribute('data-cat');
+      document.querySelectorAll('#wedo1 .sort-zone').forEach(z=>{
+        if(z.getAttribute('onclick').includes("'"+cat+"'"))z.querySelector('.zone-items').innerHTML+='<div style="background:#fff;border-radius:6px;padding:2px 6px;margin:2px;display:inline-block;border:1px solid #22c55e">✅ '+c.innerText+'</div>';
+      });
+    }
+  });
+  ionScore=6;
+  document.getElementById('ion-score').innerText=6;
+}
+
+/* ---------- NEUTRALISATION SIMULATOR (I Do 2) ---------- */
+let neutPH=1;
+const neutC={1:'#ef4444',2:'#f97316',3:'#f97316',4:'#fb923c',5:'#fbbf24',6:'#fde047',7:'#4ade80',8:'#60a5fa',9:'#60a5fa',10:'#3b82f6',11:'#4f46e5',12:'#7c3aed',13:'#6d28d9',14:'#4c1d95'};
+const neutL={1:'🔴 Strongly Acidic',2:'🔴 Strongly Acidic',3:'🔴 Strongly Acidic',4:'🟠 Weakly Acidic',5:'🟡 Weakly Acidic',6:'🟡 Weakly Acidic',7:'🟢 Neutral – Perfectly balanced!',8:'🔵 Weakly Alkaline',9:'🔵 Weakly Alkaline',10:'🔵 Weakly Alkaline',11:'🟣 Strongly Alkaline',12:'🟣 Strongly Alkaline',13:'🟣 Strongly Alkaline',14:'🟣 Strongly Alkaline'};
+function addAlkali(d){
+  if(neutPH>=14)return;
+  neutPH=Math.min(14,neutPH+d);
+  updateNeut();
+  if(neutPH===7){try{playDing()}catch(e){};fireConfettiGlobal()}
+}
+function resetNeut(){neutPH=1;updateNeut()}
+function updateNeut(){
+  document.getElementById('neut-liquid').style.background=neutC[neutPH]||'#4c1d95';
+  document.getElementById('ph-val').innerText=neutPH;
+  document.getElementById('neut-label').innerText=neutL[neutPH]||'';
+}
+
+/* ---------- SPOT THE MISTAKE (V4 click-to-find) ---------- */
+let stmFoundCount=0;
+function bindSTM(){
+  document.querySelectorAll('#stm-paragraph .stm-clickable').forEach(span=>{
+    span.addEventListener('click',function(){
+      if(this.classList.contains('found'))return;
+      const isCorrect=this.getAttribute('data-correct')==='true';
+      const fb=document.getElementById('stm-feedback');
+      const correction=document.getElementById('stm-correction');
+      if(isCorrect){
+        this.classList.add('found');
+        stmFoundCount++;
+        try{playDing()}catch(e){}
+        const pip=document.getElementById('stm-pip-'+stmFoundCount);
+        if(pip){pip.classList.add('found');pip.innerText='✓'}
+        const fix=this.getAttribute('data-fix')||'';
+        fb.className='stm-feedback-box success';
+        fb.innerText='✅ Got one! Mistake '+stmFoundCount+'/3 found.';
+        if(fix){
+          correction.innerHTML+='<p style="margin:4px 0">✅ <strong>"'+this.innerText+'"</strong> → should be <strong>'+fix+'</strong></p>';
+          correction.classList.add('visible');
+        }
+        if(stmFoundCount===3){
+          fb.innerText='🎉 All 3 mistakes found! You\'ve mastered Spec 2.31 & 2.32.';
+          fireConfettiGlobal();
+        }
+      } else {
+        this.classList.add('miss');
+        try{playBuzz()}catch(e){}
+        fb.className='stm-feedback-box error';
+        fb.innerText='❌ Not that one — that bit is actually correct. Keep looking.';
+        setTimeout(()=>{this.classList.remove('miss')},400);
+      }
+    });
+  });
+}
+function resetSTM(){
+  stmFoundCount=0;
+  document.querySelectorAll('#stm-paragraph .stm-clickable').forEach(s=>s.classList.remove('found','miss'));
+  document.querySelectorAll('.stm-pip').forEach((p,i)=>{p.classList.remove('found');p.innerText=(i+1)});
+  const fb=document.getElementById('stm-feedback');
+  fb.className='stm-feedback-box';
+  fb.innerText='Click a word or phrase you think is wrong.';
+  const c=document.getElementById('stm-correction');
+  c.classList.remove('visible');
+  c.innerHTML='';
+}
+function revealSTM(){
+  document.querySelectorAll('#stm-paragraph .stm-clickable').forEach(span=>{
+    if(span.getAttribute('data-correct')==='true'&&!span.classList.contains('found')){
+      span.classList.add('found');
+      stmFoundCount++;
+      const pip=document.getElementById('stm-pip-'+stmFoundCount);
+      if(pip){pip.classList.add('found');pip.innerText='✓'}
+      const fix=span.getAttribute('data-fix')||'';
+      const correction=document.getElementById('stm-correction');
+      correction.innerHTML+='<p style="margin:4px 0">✅ <strong>"'+span.innerText+'"</strong> → should be <strong>'+fix+'</strong></p>';
+      correction.classList.add('visible');
+    }
+  });
+  const fb=document.getElementById('stm-feedback');
+  fb.className='stm-feedback-box success';
+  fb.innerText='All 3 mistakes revealed.';
+}
+
+/* ---------- EQUATION BUILDER (We Do 2) ---------- */
+const correctEq=['H⁺(aq)','+','OH⁻(aq)','→','H₂O(l)'];
+let eqParts=[];
+function addEqPart(btn,part){
+  eqParts.push(part);
+  btn.disabled=true;
+  btn.style.opacity='.4';
+  document.getElementById('eq-result').innerText=eqParts.join(' ');
+  if(eqParts.length===5){
+    const ok=eqParts.every((p,i)=>p===correctEq[i]);
+    const fb=document.getElementById('eq-fb');
+    if(ok){
+      fb.innerText='🎉 Perfect! H⁺(aq) + OH⁻(aq) → H₂O(l)';
+      fb.style.color='var(--success)';
+      document.getElementById('eq-result').style.borderColor='var(--success)';
+      try{playDing()}catch(e){}
+      fireConfettiGlobal();
+    } else {
+      fb.innerText='❌ Not quite – try again!';
+      fb.style.color='var(--error)';
+      document.getElementById('eq-result').style.borderColor='var(--error)';
+      try{playBuzz()}catch(e){}
+    }
+  }
+}
+function resetEq(){
+  eqParts=[];
+  document.getElementById('eq-result').innerText='';
+  document.getElementById('eq-fb').innerText='';
+  document.getElementById('eq-result').style.borderColor='var(--task-border)';
+  document.querySelectorAll('#eq-parts button').forEach(b=>{b.disabled=false;b.style.opacity='1'});
+}
+
+/* ---------- BASE OR ALKALI? sort (We Do 2) ---------- */
+let selBA=null;
+function selectBA(el){
+  if(el.classList.contains('placed'))return;
+  document.querySelectorAll('#ba-cards .sort-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selBA=el;
+}
+function dropBA(cat,zoneEl){
+  if(!selBA)return;
+  if(selBA.getAttribute('data-ans')===cat){
+    selBA.classList.add('placed');
+    selBA.classList.remove('selected');
+    zoneEl.querySelector('.zone-items').innerHTML+='<div style="background:#fff;border-radius:6px;padding:2px 6px;margin:2px;display:inline-block;border:1px solid #22c55e">✅ '+selBA.innerText+'</div>';
+    selBA=null;
+    try{playDing()}catch(e){}
+    document.getElementById('ba-fb').innerText='Correct!';
+    document.getElementById('ba-fb').style.color='var(--success)';
+  } else {
+    zoneEl.style.animation='shake .4s';
+    setTimeout(()=>zoneEl.style.animation='',450);
+    try{playBuzz()}catch(e){}
+    document.getElementById('ba-fb').innerText='❌ Try again';
+    document.getElementById('ba-fb').style.color='var(--error)';
+  }
+}
+
+/* ---------- CONTENT EDITABLE PLACEHOLDERS ---------- */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{
+  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+});
+
+/* ---------- TIMER (auto-start except on slides with data-no-autostart) ---------- */
+let timerInterval,timeLeft=0,isTimerRunning=false;
+function checkTimerVisibility(){
+  const s=slides[currentSlide];
+  const t=s.getAttribute('data-timer');
+  const noAuto=s.getAttribute('data-no-autostart')==='true';
+  const w=document.getElementById('timer-widget');
+  pauseTimer();
+  if(t){
+    w.classList.add('visible');
+    resetTimer(parseInt(t));
+    if(!noAuto){
+      setTimeout(()=>{if(timeLeft>0)startTimer()},250);
+    }
+  } else {
+    w.classList.remove('visible');
+  }
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60);const s=timeLeft%60;
+  document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const w=document.getElementById('timer-widget');
+  if(timeLeft<30 && timeLeft>0){w.classList.add('warning')}else{w.classList.remove('warning')}
+}
+function startTimer(){
+  if(isTimerRunning||timeLeft<=0)return;
+  isTimerRunning=true;
+  document.getElementById('btn-play').classList.add('active-play');
+  document.getElementById('btn-pause').classList.remove('active-pause');
+  timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000);
+}
+function pauseTimer(){
+  isTimerRunning=false;
+  clearInterval(timerInterval);
+  document.getElementById('btn-play').classList.remove('active-play');
+  document.getElementById('btn-pause').classList.add('active-pause');
+}
+function resetTimer(minutes){
+  pauseTimer();
+  document.getElementById('btn-pause').classList.remove('active-pause');
+  timeLeft=minutes*60;
+  updateTimerDisplay();
+}
+
+/* ---------- SOUND ---------- */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1320,ctx.currentTime+0.08);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4)}
+function playBuzz(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.setValueAtTime(150,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.25)}
+
+/* ---------- CONFETTI ---------- */
+function fireConfettiGlobal(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=Math.random()*100+'%';c.style.top=-10+'px';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=Math.random()*0.6+'s';
+    c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2500);
+  }
+}
+
+/* ---------- MCQ SHUFFLE ---------- */
+function shuffleMCQs(){
+  document.querySelectorAll('.ind-q').forEach(q=>{
+    const opts=q.querySelectorAll('.mcq-opt');
+    if(opts.length<2)return;
+    const parent=opts[0].parentNode;
+    const arr=Array.from(opts);
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+    arr.forEach(o=>parent.appendChild(o));
+  });
+}
+shuffleMCQs();
+
+/* ---------- PRINT ---------- */
+function printSection(id){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.getElementById('print-'+id).classList.add('visible');
+  window.print();
+}
+function printPack(level){
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  ['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{
+    const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  });
+  document.body.classList.add('print-'+level);
+  const ws=document.getElementById('print-worksheet-'+level);
+  if(ws)ws.classList.add('visible');
+  window.print();
+}
+function printWeDoEvidence(wedoId){
+  const area=document.getElementById(wedoId);
+  if(!area)return;
+  const ts=new Date().toLocaleString('en-GB');
+  const st=slides[currentSlide].getAttribute('data-title')||'We Do';
+  let cells=[];
+  area.querySelectorAll('[contenteditable]').forEach((c,i)=>{
+    const ph=c.getAttribute('data-placeholder')||'';
+    if(c.innerText.trim()&&c.innerText.trim()!==ph)cells.push(`Note ${i+1}: ${c.innerText.trim()}`);
+  });
+  let stmStatus='';
+  if(wedoId==='wedo-stm'){
+    const found=area.querySelectorAll('.stm-clickable.found').length;
+    stmStatus=`Mistakes found: ${found}/3\n`;
+  }
+  let sortStatus='';
+  if(wedoId==='wedo1'){
+    const sc=document.getElementById('ion-score');
+    if(sc)sortStatus=`Ion sort score: ${sc.innerText}/6\n`;
+  }
+  if(wedoId==='wedo2'){
+    const eq=document.getElementById('eq-result')?.innerText||'';
+    if(eq)sortStatus=`Equation built: ${eq}\n`;
+  }
+  let content=`CLASS EVIDENCE – ${st}\nDate: ${ts}\n${'─'.repeat(50)}\n\n`+sortStatus+stmStatus;
+  if(cells.length>0)content+=`\nTEACHER NOTES:\n${cells.join('\n')}\n`;
+  document.getElementById('wedo-evidence-content').innerText=content;
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  document.getElementById('print-wedo-evidence').classList.add('visible');
+  window.print();
+}
+
+
+/* ---------- TA FOCUS BRIEFS (per-slide deployment) ---------- */
+const taBriefs={
+  0:{position:"Welcome pupils at door — quick check who has pen, book, scaffold sheet ready.",watch:"Anyone arriving in a low-state mood — flag for class teacher within first 2 mins.",support:"Distribute Foundation packs to known target pupils proactively (don't wait for them to ask).",cta:"Plan: today is Lesson 3 of 3. Big concept = ions. End goal = pupils write the equation H⁺ + OH⁻ → H₂O independently."},
+  1:{position:"Move between Foundation tier pupils first — Q1–3 is recall from L2 so you are watching for gaps in prior knowledge.",watch:"Pupils sitting silent without writing — that's a confidence gap, not laziness. Q4 is deliberately speculative; some pupils freeze on 'predict'.",support:"For Q4 prompt: 'You don't have to be right — just guess what's INSIDE the solution that makes it acid or alkali.' Accept any reasonable answer; today's lesson confirms it.",cta:"Note any pupil who can't recall pH ranges from L2 — pull them for a 30-second recap during starter."},
+  2:{position:"Stand by the OH⁻ / H⁺ board — ready to point at it as pupils ask 'which one is which?'",watch:"Pupils copying definitions but missing the WORD <em>soluble</em> in the alkali definition. This single word is exam-critical.",support:"For low writing speed pupils, focus on the <strong>4 key terms</strong> only: acid, alkali, base, neutralisation. Skip the Venn extension if time-pressed.",cta:"Quality-check 3 books at the end of starter — flag any pupil whose definitions are missing the words 'H⁺' and 'OH⁻'."},
+  3:{position:"At the front board with the teacher — co-teach the misconception by pointing to the wrong/right examples in the misc-box.",watch:"Pupils confusing OH⁻ with O⁻ or H⁺ with H. This is the single biggest source of error in Yr10.",support:"For Foundation pupils, write H⁺ and OH⁻ on a sticky note and stick it to their book — they refer to it for the rest of the lesson.",cta:"During this slide, identify 1 pupil to be your 'cold call demo' for the next slide — someone who you've seen engaging."},
+  4:{position:"At the rear of the room with overview of the projector — calling out which card is being moved.",watch:"Pupils trying to drop H₂O into 'from acids' or 'from alkalis' — common confusion (H₂O isn't an ion source!).",support:"If a pupil is stuck on H₂O / NaCl: prompt 'Is that an ion released, or is it MADE during the reaction?' Then they get 'product' instantly.",cta:"After 6/6 confetti, ask the class: 'OK — but which TWO ions actually combine to make water?' This sets up the next slide perfectly."},
+  5:{position:"At the simulator — actively pressing 'add base' as the teacher narrates. Verbalise pH change ('we're at 4 now, still acidic but weaker').",watch:"Pupils thinking H⁺ + OH⁻ → some new substance (not water). The connection to H₂O = water is not obvious to all.",support:"Sentence stem for Foundation pupils: 'When acid and base react, the H⁺ joins with the OH⁻ to make ___'. Wait time on this one — don't give the answer.",cta:"At pH 7 confetti, freeze and ask: 'Now — has all the H⁺ disappeared? Yes. Where did it go? Into water.' Cement the point."},
+  6:{position:"Free-roving — get to mid-range pupils first as they tend to spot mistake 1 and 2 but freeze on 3.",watch:"Pupils clicking randomly to 'guess' — redirect: 'Read the sentence twice before clicking.'",support:"Easier hint scaffolding: 'Mistake 1 is about which IONS alkalis release. Mistake 2 is about whether CuO dissolves. Mistake 3 is about the FINAL pH after neutralisation.' Use only as last resort.",cta:"After all 3 found, ask the class to write the corrected sentence in their books — turns the activity into evidence."},
+  7:{position:"At the equation builder side — co-narrate ('We need the acid ion first... that's H⁺').",watch:"Pupils dropping items in any order without thinking about what comes first. This is where 'reactants on left, arrow, product on right' literacy is built.",support:"Three-step verbal scaffold: 'Step 1: which two ions react? Step 2: what symbol joins them? Step 3: what symbol leads to the product? Step 4: what's the product?'",cta:"Once equation correct, point to the wall display: 'You'll see this exact equation in your exam — likely 1 mark.' Make it real."},
+  8:{position:"Move primarily between Middle tier pupils — they are the most likely to be 'stuck but not asking'.",watch:"Pupils stalling on Q3 (long answer) — usually they know the content but freeze writing 'three things'. Sit alongside; don't take over.",support:"For Foundation Q3 use the [a/b/c] structure visibly: 'Sentence 1 = which ions. Sentence 2 = what is made. Sentence 3 = what the pH does.' Tick each off.",cta:"Confetti at 6/6 = check book at end. Q5 (stretch) is the marks-grabber — push at least one Foundation pupil up to attempt it."},
+  9:{position:"Standing — circulate at speed. 3 minutes total. No discussion, no help, no scaffolds.",watch:"Pupils glancing at neighbour — gentle 'eyes on your own paper' redirect. This is summative.",support:"<strong>No support</strong> on the exit ticket itself. After collection, identify Q5–Q6 errors as your re-teach priorities for next week.",cta:"Collect papers in tier order. Stack with named pupils on top — Heidi can rapid-mark as RAG: <strong>R</strong>ed (≤2/6) → 1:1 next week, <strong>A</strong>mber (3–4/6) → group recap, <strong>G</strong>reen (5–6/6) → move on."}
+};
+
+/* ---------- COLD CALL QUESTIONS (per-slide, tiered) ---------- */
+const coldCallQuestions={
+  0:null,
+  1:{foundation:["What pH range is strongly acidic?","What colour is universal indicator at neutral pH?","What pH is neutral?","What colour is litmus in alkali?","Is pH 9 acidic, neutral, or alkaline?"],middle:["Classify pH 9 using one of the five phrases.","State one limitation of universal indicator.","Solution X has pH 1, Y has pH 6 — which is more acidic and why?","What does universal indicator measure that litmus doesn't?","What pH range is weakly alkaline?"],higher:["Explain the difference between pH 2 and pH 5 — both are acidic.","Suggest a more accurate alternative to UI and explain why.","Why is phenolphthalein preferred over UI in a titration?","If all acids behave the same chemically, what do they all release?","Predict what NaOH, KOH, and Ca(OH)₂ all release in water."]},
+  2:{foundation:["What ion does an acid release in water?","What ion does an alkali release in water?","Give one example of an acid.","Give one example of an alkali.","What is the chemical formula for a hydrogen ion?"],middle:["Define an acid using the word 'ion'.","What is the difference between a base and an alkali?","Why is water (H₂O) not classed as an acid or alkali?","Name the two products of every neutralisation reaction.","Why is 'soluble' the key word in the definition of an alkali?"],higher:["State precisely why CuO is a base but not an alkali.","Explain in terms of ions why HCl, H₂SO₄ and HNO₃ are all acids.","Why is 'all alkalis are bases' true but 'all bases are alkalis' false?","Predict the ions released when KOH dissolves in water.","If a substance neutralises acid but doesn't dissolve, what is its classification?"]},
+  3:{foundation:["What ion makes a solution acidic?","What ion makes a solution alkaline?","More H⁺ ions = higher or lower pH?","What is the symbol for hydrogen ion?","Is the misconception 'alkalis release H⁺' true or false?"],middle:["Explain why the pH gets lower as more H⁺ ions are added.","What is released when HCl dissolves in water? Use ion symbols.","Why do all alkalis behave the same chemically?","If a solution has lots of OH⁻ ions, what's the approximate pH?","Why is 'OH⁻' written with a negative charge and 'H⁺' with positive?"],higher:["Explain in terms of ions why a strong acid has a lower pH than a weak acid.","Predict the ions in a 1.0M solution of H₂SO₄.","Why does the H⁺ concentration determine acidity, not just the molecule type?","Compare ion concentrations at pH 1 vs pH 6.","Explain why the equation HCl(aq) → H⁺ + Cl⁻ uses '(aq)' for HCl."]},
+  4:{foundation:["Which category did you put H⁺ in? Why?","Which category did you put OH⁻ in? Why?","What's the colour code for acids on the screen?","Where does NaCl go and why?","Is H₂O a starting ion or a product?"],middle:["Explain why H₂O is in the 'products' column, not 'from acids'.","Why is HCl in the same column as H⁺?","If you saw KOH, which column would it go in and why?","Predict where H₂SO₄ would go.","Why is there no overlap between the H⁺ column and the OH⁻ column?"],higher:["Explain in terms of ion behaviour why HCl belongs with H⁺ but not with NaCl.","Predict where Ca(OH)₂ would go and explain why.","Justify why the 'products' column contains both H₂O and NaCl.","Compare the role of H⁺ in HCl with the role of Na⁺ in NaCl.","Explain why a salt like NaCl can't go in the 'from acids' column."]},
+  5:{foundation:["What two ions react during neutralisation?","What is the product of neutralisation?","What pH do you end up at after a successful neutralisation?","What's the word equation for neutralisation?","If acid pH is 1 and you add a base, what happens to the pH?"],middle:["Why is the same ionic equation true for every neutralisation?","Predict the salt formed when HCl reacts with KOH.","What would the pH be after the simulator reaches halfway?","What's the difference between the word equation and the ionic equation?","Explain why a small amount of base added to lots of acid doesn't reach pH 7."],higher:["Write the ionic equation for neutralisation in full.","Why can the ionic equation be applied to ALL acid–base neutralisations regardless of identity?","What happens to the spectator ions (e.g. Na⁺, Cl⁻) during neutralisation?","Predict the products of H₂SO₄ + Ca(OH)₂.","Explain why if you keep adding base past pH 7, the solution becomes alkaline."]},
+  6:{foundation:["Which ion did you swap in to fix the alkali mistake?","What's the correct final pH after neutralisation?","Why is 'CuO is an alkali' wrong?","What did the student get right in the paragraph?","Did acids release H⁺ or OH⁻?"],middle:["Explain why 'alkalis release hydrogen ions' is the most common misconception.","What classification is CuO and why is it not an alkali?","Why does the pH end at 7, not 0, after neutralisation?","Predict what would happen if you wrote 'neutralisation makes pH = 14' on an exam paper.","Re-state the corrected sentence in one go: what does CuO actually do?"],higher:["Explain in terms of ion availability why CuO neutralises acid despite not being an alkali.","Justify why the pH '7' is exactly correct after a complete acid–base neutralisation.","Describe the ion-level error a student makes when they say 'alkalis release H⁺'.","Explain why the misconception 'CuO is an alkali' often arises (hint: salt formation).","Predict the consequence if pH were to actually drop to 0 during neutralisation."]},
+  7:{foundation:["What's the first ion in the equation?","What's the symbol that joins the two reactant ions?","What's the product of the equation?","Why is NaOH classed as an alkali, not just a base?","Why is CuO classed as a base only?"],middle:["Why is the order H⁺ + OH⁻ → H₂O always the same?","Why does NaOH get classified as both 'base' and 'alkali'?","Predict whether KOH would go in 'base only' or 'alkali'.","Explain why MgO doesn't fit the 'alkali' classification.","If you saw Ca(OH)₂, which category and why?"],higher:["Write the full ionic equation including state symbols (aq, l).","Explain why the state symbol on the product side is (l), not (aq).","Justify why MgO is a base but not an alkali in terms of solubility.","Explain why every alkali is automatically a base, but the reverse isn't true.","Predict what would happen if the equation were written H⁺(aq) + OH⁻(aq) → 2H₂O — would it be balanced?"]},
+  8:{foundation:["What's the ion released by acids? (No looking back!)","What goes in the gap: Acid + Base → ___ + Water?","Is 'all bases are alkalis' true or false?","Read out your answer to Q4.","What pH does Sam's stomach reach after the antacid works?"],middle:["Read your answer to Q3 — name all four ions involved.","Predict the salt when HCl reacts with KOH.","Is calcium hydroxide a base, an alkali, or both?","What ion does Ca(OH)₂ release that does the neutralising?","If you were marking Q5, what would you give 0 marks for?"],higher:["Read out your ionic equation answer (Q1) and explain why it's the right one.","Predict the products of HNO₃ + Ca(OH)₂.","Justify why MgO is a base only and not an alkali.","Explain why CaO and NaOH would both produce the same ionic equation despite being different starting materials.","Critique a student answer that says 'CuO neutralises by releasing OH⁻' — what's wrong with it?"]},
+  9:{foundation:["Q1 answer — what colour does litmus turn in acid?","Q2 — name one advantage of UI over litmus.","Q3 — what pH range is weakly alkaline?","Q5 — what ion do acids release?","Q6 — what does acid + base produce?"],middle:["Q1 — what colour does phenolphthalein turn in alkali?","Q3 — classify pH 12 using the five phrases.","Q4 — state one limitation of universal indicator.","Q5 — base vs alkali, what's the difference?","Q6 — write the word equation for neutralisation."],higher:["Q1 — explain why phenolphthalein is preferred over UI in titration.","Q3 — explain the difference between pH 2 and pH 5.","Q4 — what's a more accurate alternative to UI?","Q5 — write the ionic equation for neutralisation.","Q6 — is CuO a base or alkali? Justify."]}
+};
+
+/* ---------- TA FOCUS MODAL ---------- */
+function showTABrief(){
+  const overlay=document.getElementById('ta-focus-overlay');
+  const body=document.getElementById('ta-modal-body');
+  const title=document.getElementById('ta-modal-title');
+  const slideTitle=slides[currentSlide].getAttribute('data-title')||('Slide '+(currentSlide+1));
+  title.innerText='TA Focus — '+slideTitle;
+  const brief=taBriefs[currentSlide];
+  if(!brief){
+    body.innerHTML='<p class="ta-no-brief">No specific TA brief for this slide. Continue circulating and supporting target pupils as needed.</p>';
+  } else {
+    body.innerHTML=`
+      <div class="ta-row"><div class="ta-row-icon">📍</div><div class="ta-row-content"><strong>Position:</strong> ${brief.position}</div></div>
+      <div class="ta-row"><div class="ta-row-icon">👀</div><div class="ta-row-content"><strong>Watch for:</strong> ${brief.watch}</div></div>
+      <div class="ta-row"><div class="ta-row-icon">🤝</div><div class="ta-row-content"><strong>Support strategy:</strong> ${brief.support}</div></div>
+      <div class="ta-cta-row"><strong>🎯 Action:</strong> ${brief.cta}</div>`;
+  }
+  overlay.classList.add('visible');
+}
+function hideTABrief(){document.getElementById('ta-focus-overlay').classList.remove('visible')}
+
+/* ---------- COLD CALL ---------- */
+let coldCallNames=[];
+let coldCallLastNames=[];
+let coldCallMode='match';
+const COLD_CALL_KEY='coldCall_y10';
+
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function gradeToTier(g){
+  if(g==='U'||g==='1')return 'foundation';
+  if(g==='2')return 'middle';
+  return 'higher';
+}
+function loadColdCallNames(){
+  try{
+    const raw=localStorage.getItem(COLD_CALL_KEY);
+    if(raw)coldCallNames=JSON.parse(raw);
+  }catch(e){coldCallNames=[]}
+}
+function saveColdCallNames(){
+  try{localStorage.setItem(COLD_CALL_KEY,JSON.stringify(coldCallNames))}catch(e){}
+}
+function showColdCall(){
+  loadColdCallNames();
+  document.getElementById('cold-call-overlay').classList.add('visible');
+  if(coldCallNames.length===0||coldCallNames.some(p=>!p.grade)){
+    renderColdCallSetup();
+  } else {
+    renderColdCallPicker();
+  }
+}
+function hideColdCall(){document.getElementById('cold-call-overlay').classList.remove('visible')}
+
+function renderColdCallSetup(){
+  const body=document.getElementById('cold-call-body');
+  let rowsHTML='';
+  if(coldCallNames.length===0){
+    rowsHTML='<div class="cc-empty-rows">No pupils added yet. Add pupils below.</div>';
+  } else {
+    rowsHTML='<div class="cc-pupil-rows">';
+    coldCallNames.forEach((p,i)=>{
+      const chips=['U','1','2','3','4'].map(g=>{
+        const sel=p.grade===g?'cc-grade-selected':'';
+        return `<button class="cc-grade-chip cc-grade-${g.toLowerCase()} ${sel}" onclick="setPupilGrade(${i},'${g}')" title="Set grade ${g}">${g}</button>`;
+      }).join('');
+      rowsHTML+=`<div class="cc-pupil-row">
+        <span class="cc-pupil-name">${escapeHTML(p.name)}</span>
+        <div class="cc-grade-chips">${chips}</div>
+        <button class="cc-remove-btn" onclick="removePupil(${i})" title="Remove">×</button>
+      </div>`;
+    });
+    rowsHTML+='</div>';
+  }
+  body.innerHTML=`
+    <p class="cc-setup-title">👥 Class Setup</p>
+    <p class="cc-helper">Add pupil names and tap a grade chip (U, 1, 2, 3 or 4). Saved on this device.<br><small>U/1 → Foundation • 2 → Middle • 3–4 → Higher</small></p>
+    ${rowsHTML}
+    <div class="cc-add-row">
+      <input type="text" class="cc-add-input" id="cc-new-name" placeholder="Enter pupil name…" onkeydown="if(event.key==='Enter')addPupil()">
+      <button class="cc-btn-primary" style="flex:0 0 auto;padding:10px 16px" onclick="addPupil()">+ Add</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="cc-btn-primary" onclick="renderColdCallPicker()" ${coldCallNames.length===0||coldCallNames.some(p=>!p.grade)?'disabled style="opacity:.4"':''}>✓ Done — Start Cold Call</button>
+    </div>`;
+  setTimeout(()=>{const i=document.getElementById('cc-new-name');if(i)i.focus()},120);
+}
+function addPupil(){
+  const inp=document.getElementById('cc-new-name');
+  if(!inp)return;
+  const name=inp.value.trim();
+  if(!name)return;
+  if(coldCallNames.length>=40){alert('Max 40 pupils.');return}
+  coldCallNames.push({name:name,grade:null});
+  saveColdCallNames();
+  renderColdCallSetup();
+}
+function removePupil(i){
+  coldCallNames.splice(i,1);
+  saveColdCallNames();
+  renderColdCallSetup();
+}
+function setPupilGrade(i,grade){
+  if(coldCallNames[i]){
+    coldCallNames[i].grade=grade;
+    saveColdCallNames();
+    renderColdCallSetup();
+  }
+}
+
+function renderColdCallPicker(){
+  const body=document.getElementById('cold-call-body');
+  body.innerHTML=`
+    <p class="cold-call-class-label">Class roll: <strong>${coldCallNames.length}</strong> pupils</p>
+    <div class="cold-call-name-box"><p class="cold-call-name" id="cc-name">Tap below to roll</p></div>
+    <div class="cold-call-q-box" id="cc-q-wrap" style="display:none">
+      <p class="cold-call-q-label" id="cc-q-label">Question</p>
+      <p class="cold-call-question" id="cc-q-text">—</p>
+    </div>
+    <div class="cc-mode-toggle">
+      <span class="cc-mode-label">Pitch:</span>
+      <button class="cc-mode-btn ${coldCallMode==='easier'?'active':''}" onclick="setQMode('easier')" title="Pitch one tier easier">Easier</button>
+      <button class="cc-mode-btn ${coldCallMode==='match'?'active':''}" onclick="setQMode('match')" title="Match pupil grade">Match</button>
+      <button class="cc-mode-btn ${coldCallMode==='harder'?'active':''}" onclick="setQMode('harder')" title="Stretch one tier harder">Harder</button>
+    </div>
+    <div class="cold-call-actions">
+      <button class="cc-btn-primary" onclick="rollNameAndQuestion()">🎲 Roll Name + Question</button>
+      <button class="cc-btn-secondary" onclick="rollQuestionOnly()" id="cc-q-only-btn" style="display:none">↻ New Q (same pupil)</button>
+    </div>
+    <button class="cc-edit-link" onclick="renderColdCallSetup()">⚙️ Edit class roll / grades</button>`;
+}
+function setQMode(m){coldCallMode=m;renderColdCallPicker()}
+
+function applyMode(tier,mode){
+  const order=['foundation','middle','higher'];
+  let idx=order.indexOf(tier);
+  if(mode==='easier')idx=Math.max(0,idx-1);
+  else if(mode==='harder')idx=Math.min(2,idx+1);
+  return order[idx];
+}
+function rollQuestionForTier(tier){
+  const slideQs=coldCallQuestions[currentSlide];
+  if(!slideQs)return null;
+  const pool=slideQs[tier]||slideQs.middle||[];
+  if(pool.length===0)return null;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+let lastPickedPupil=null;
+function rollNameAndQuestion(){
+  if(coldCallNames.length===0){renderColdCallSetup();return}
+  const nameEl=document.getElementById('cc-name');
+  const qWrap=document.getElementById('cc-q-wrap');
+  const qLabel=document.getElementById('cc-q-label');
+  const qText=document.getElementById('cc-q-text');
+  const qOnlyBtn=document.getElementById('cc-q-only-btn');
+  // pick pupil avoiding recent repeats if class >4
+  let pool=coldCallNames.slice();
+  if(coldCallNames.length>4){
+    pool=coldCallNames.filter(p=>!coldCallLastNames.slice(-Math.min(3,coldCallNames.length-1)).includes(p.name));
+    if(pool.length===0)pool=coldCallNames.slice();
+  }
+  const picked=pool[Math.floor(Math.random()*pool.length)];
+  coldCallLastNames.push(picked.name);
+  if(coldCallLastNames.length>5)coldCallLastNames.shift();
+  lastPickedPupil=picked;
+
+  // spin animation
+  nameEl.classList.add('spinning');
+  nameEl.classList.remove('settled');
+  let spinCount=0;
+  const spinInterval=setInterval(()=>{
+    nameEl.innerText=coldCallNames[Math.floor(Math.random()*coldCallNames.length)].name;
+    spinCount++;
+    if(spinCount>=12){
+      clearInterval(spinInterval);
+      nameEl.classList.remove('spinning');
+      nameEl.innerText=picked.name;
+      nameEl.classList.add('settled');
+      // then reveal question
+      setTimeout(()=>{
+        const baseTier=gradeToTier(picked.grade||'2');
+        const finalTier=applyMode(baseTier,coldCallMode);
+        const q=rollQuestionForTier(finalTier);
+        const tierLabel={foundation:'Foundation',middle:'Middle',higher:'Higher'}[finalTier];
+        qLabel.innerText=`Question (${tierLabel} pitch)`;
+        qText.innerText=q||'(No question for this slide.)';
+        qWrap.style.display='block';
+        if(qOnlyBtn)qOnlyBtn.style.display='inline-block';
+      },200);
+    }
+  },70);
+}
+function rollQuestionOnly(){
+  if(!lastPickedPupil){rollNameAndQuestion();return}
+  const baseTier=gradeToTier(lastPickedPupil.grade||'2');
+  const finalTier=applyMode(baseTier,coldCallMode);
+  const q=rollQuestionForTier(finalTier);
+  const tierLabel={foundation:'Foundation',middle:'Middle',higher:'Higher'}[finalTier];
+  document.getElementById('cc-q-label').innerText=`Question (${tierLabel} pitch)`;
+  document.getElementById('cc-q-text').innerText=q||'(No question for this slide.)';
+}
+
+/* ---------- LESSON COMPLETE ---------- */
+function hideLessonComplete(){document.getElementById('lc-overlay').classList.remove('visible')}
+const lcObserver=new MutationObserver(muts=>{
+  muts.forEach(m=>{
+    if(m.attributeName==='class'){
+      const exit=document.getElementById('exit-slide');
+      if(exit&&exit.classList.contains('show-ans')&&!document.getElementById('lc-overlay').classList.contains('visible')){
+        // delay then show
+        setTimeout(()=>{
+          document.getElementById('lc-overlay').classList.add('visible');
+          fireConfettiGlobal();
+          try{playDing()}catch(e){}
+          setTimeout(()=>fireConfettiGlobal(),600);
+        },400);
+      }
+    }
+  });
+});
+const exitForObs=document.getElementById('exit-slide');
+if(exitForObs)lcObserver.observe(exitForObs,{attributes:true});
+
+/* ---------- INIT ---------- */
+bindSTM();
+updateProgress();
+checkTimerVisibility();
+loadColdCallNames();
+</script>
+</body>
+</html>
