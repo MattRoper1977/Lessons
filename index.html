@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Hub — Progress Schools Tees Valley</title>
+<style>
+  :root{
+    --navy:#1e3a5f; --navy-dark:#152a46; --green:#16a34a; --orange:#f97316;
+    --blue:#2563eb; --purple:#7c3aed; --red:#dc2626; --teal:#0d9488;
+    --bg:#f1f5f9; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+  header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;padding:28px 20px 22px;position:relative;overflow:hidden;}
+  header::after{content:"🧪 🔬 ⚡ 🥾 🎨 🧠";position:absolute;right:-10px;bottom:-14px;font-size:64px;opacity:.08;letter-spacing:8px;pointer-events:none;}
+  .brand{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;opacity:.75;font-weight:600;}
+  header h1{font-size:clamp(1.5rem,4.5vw,2.2rem);font-weight:800;margin-top:4px;}
+  header p{opacity:.85;margin-top:6px;font-size:.95rem;max-width:560px;}
+
+  /* ===== LIVE LESSON BANNER (hidden unless LIVE.on = true) ===== */
+  #liveBanner{display:none;margin:16px auto 0;max-width:1100px;padding:0 16px;}
+  #liveBanner a{display:flex;align-items:center;gap:12px;background:#fef3c7;border:2px solid var(--orange);border-left:8px solid var(--orange);border-radius:14px;padding:14px 18px;text-decoration:none;color:#7c2d12;font-weight:700;animation:fadeInUp .5s ease both;}
+  #liveBanner .pulse{width:12px;height:12px;border-radius:50%;background:var(--red);flex:none;animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5);}70%{box-shadow:0 0 0 10px rgba(220,38,38,0);}100%{box-shadow:0 0 0 0 rgba(220,38,38,0);}}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px;}
+
+  .searchbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0;}
+  .searchbar input{width:100%;padding:14px 18px;font-size:1.05rem;border:2px solid #cbd5e1;border-radius:14px;outline:none;background:var(--card);transition:border-color .2s;}
+  .searchbar input:focus{border-color:var(--navy);}
+
+  .subject{margin-top:26px;animation:fadeInUp .5s ease both;}
+  .subject h2{display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:800;padding-bottom:8px;border-bottom:3px solid var(--sc,var(--navy));}
+  .subject h2 .count{margin-left:auto;font-size:.75rem;font-weight:700;color:var(--muted);background:#e2e8f0;border-radius:999px;padding:3px 10px;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px;}
+  .tile{background:var(--card);border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--ink);border:1px solid #e2e8f0;border-top:5px solid var(--sc,var(--navy));box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:6px;min-height:84px;transition:transform .15s,box-shadow .15s;}
+  .tile:hover,.tile:focus-visible{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.12);outline:none;}
+  .tile:focus-visible{border-color:var(--navy);}
+  .tile .t-title{font-weight:700;font-size:1rem;line-height:1.3;}
+  .tile .t-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;}
+  .badge{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;background:#e2e8f0;color:#334155;}
+  .badge.lesson{background:#dbeafe;color:#1e40af;}
+  .badge.revision{background:#fce7f3;color:#9d174d;}
+  .badge.game{background:#dcfce7;color:#166534;}
+  .badge.pupil{background:#ffedd5;color:#9a3412;}
+  .badge.teacher{background:#ede9fe;color:#5b21b6;}
+
+  #noResults{display:none;text-align:center;color:var(--muted);padding:50px 20px;font-size:1.05rem;}
+  #noResults .big{font-size:2.4rem;display:block;margin-bottom:8px;}
+
+  footer{text-align:center;color:var(--muted);font-size:.8rem;padding:20px;}
+
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr 1fr;}
+    .tile{min-height:96px;}
+    header{padding:22px 16px 18px;}
+  }
+  @media (max-width:380px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Progress Schools — Tees Valley</div>
+  <h1>📚 Lesson Hub</h1>
+  <p>Find your lesson below, or type its name in the search box.</p>
+</header>
+
+<div id="liveBanner"><a id="liveLink" href="#"><span class="pulse"></span><span id="liveText"></span><span style="margin-left:auto">→</span></a></div>
+
+<div class="wrap">
+  <div class="searchbar"><input id="search" type="search" placeholder="🔍 Search lessons… (e.g. gas tests, pH, trekkers)" aria-label="Search lessons"></div>
+  <div id="sections"></div>
+  <div id="noResults"><span class="big">🦉</span>Nothing matches that search — check the spelling or try a shorter word.</div>
+</div>
+
+<footer>Lesson Hub · Built by Mr Roper · Files are self-contained — they also work offline once downloaded.</footer>
+
+<script>
+/* ================================================================
+   ✏️ EDIT ZONE — this is the ONLY part you ever need to touch.
+   ----------------------------------------------------------------
+   1. LIVE banner: set on:true on intervention days, point url at
+      your PythonAnywhere app, set the label. Set on:false after.
+   2. LESSONS: one line per file. "file" must EXACTLY match the
+      filename in your repo (case-sensitive! GitHub Pages cares).
+      Put files in subject folders or the root — just make the
+      path here match, e.g. "chemistry/Lesson2_pH_Scale.html".
+   3. To add a subject, just use a new subject name — sections
+      build themselves. Colours are mapped in SUBJECT_COLOURS.
+   ⚠️ Filenames below are best-guess placeholders — correct each
+      one against your real files before going live.
+   ================================================================ */
+
+const LIVE = {
+  on: false,
+  label: "Live lesson today: V = I × R — tap here to join",
+  url: "https://YOURNAME.pythonanywhere.com"
+};
+
+const LESSONS = [
+  // ---- Chemistry: Qualitative Analysis suite ----
+  {subject:"Chemistry", title:"L1 · Indicators",            file:"chemistry/Lesson1_Indicators.html",        tag:"lesson"},
+  {subject:"Chemistry", title:"L2 · The pH Scale",          file:"chemistry/Lesson2_pH_Scale.html",          tag:"lesson"},
+  {subject:"Chemistry", title:"L3 · Ions & Neutralisation", file:"chemistry/Lesson3_Ions_Neutralisation.html",tag:"lesson"},
+  {subject:"Chemistry", title:"L4a · Gas Tests I (H₂ O₂ CO₂)", file:"chemistry/Lesson4a_Gas_Tests_I.html",   tag:"lesson"},
+  {subject:"Chemistry", title:"L4b · Gas Tests II (NH₃ Cl₂)",  file:"chemistry/Lesson4b_Gas_Tests_II.html",  tag:"lesson"},
+  {subject:"Chemistry", title:"L5 · Flame Tests",           file:"chemistry/Lesson5_Flame_Tests.html",       tag:"lesson"},
+  {subject:"Chemistry", title:"L6 · Anion & Water Tests",   file:"chemistry/Lesson6_Anion_Water_Tests.html", tag:"lesson"},
+  {subject:"Chemistry", title:"Rev5 · Bonding",             file:"chemistry/Rev5_Chem_Bonding.html",         tag:"revision"},
+  {subject:"Chemistry", title:"Chem Arcade",                file:"chemistry/Chem_Arcade.html",               tag:"game"},
+  {subject:"Chemistry", title:"Lab Escape: Acid Crisis",    file:"chemistry/Lab_Escape_Acid_Crisis.html",    tag:"game"},
+  {subject:"Chemistry", title:"Virtual Lab · Acids & Alkalis (L3c)", file:"chemistry/L3c_Virtual_Lab.html",  tag:"lesson"},
+
+  // ---- Physics ----
+  {subject:"Physics", title:"V = I × R · Pupil App",        file:"physics/Lesson_VIR_Pupil_App.html",        tag:"pupil"},
+  {subject:"Physics", title:"V = I × R · Teacher App",      file:"physics/Lesson_VIR_Intervention.html",     tag:"teacher"},
+  {subject:"Physics", title:"L2b/L2c · Ohm's Law Practical",file:"physics/L2b_Ohms_Law_PhET.html",           tag:"lesson"},
+
+  // ---- Biology ----
+  {subject:"Biology", title:"Respiration & ATP Recap",      file:"biology/Respiration_ATP_Recap.html",       tag:"revision"},
+
+  // ---- Tees Trekkers ----
+  {subject:"Tees Trekkers", title:"L7 · Orienteering Bootcamp", file:"trekkers/L7_Orienteering_Bootcamp.html",tag:"lesson"},
+  {subject:"Tees Trekkers", title:"Coatham Expedition · Pupil", file:"trekkers/Coatham_Expedition_Pupil.html",tag:"pupil"},
+
+  // ---- PSHE / ASDAN ----
+  {subject:"PSHE & ASDAN", title:"Know the Law · Homework",  file:"pshe/HW_L1_Know_the_Law_PUPIL.html",      tag:"pupil"},
+
+  // ---- Art ----
+  {subject:"Art", title:"Surrealism L1 · Magritte",          file:"art/Surrealism_L1_Magritte.html",         tag:"lesson"},
+];
+
+/* ================== end of edit zone ================== */
+
+const SUBJECT_COLOURS = {
+  "Chemistry":"var(--green)", "Physics":"var(--blue)", "Biology":"var(--teal)",
+  "Tees Trekkers":"var(--orange)", "PSHE & ASDAN":"var(--purple)", "Art":"var(--red)"
+};
+const SUBJECT_ICONS = {
+  "Chemistry":"🧪","Physics":"⚡","Biology":"🌱","Tees Trekkers":"🥾","PSHE & ASDAN":"🧠","Art":"🎨"
+};
+
+function build(){
+  // Live banner
+  if (LIVE.on){
+    document.getElementById('liveBanner').style.display='block';
+    document.getElementById('liveLink').href = LIVE.url;
+    document.getElementById('liveText').textContent = LIVE.label;
+  }
+  // Group by subject, preserving first-seen order
+  const order=[]; const groups={};
+  LESSONS.forEach(l=>{ if(!groups[l.subject]){groups[l.subject]=[];order.push(l.subject);} groups[l.subject].push(l); });
+
+  const host=document.getElementById('sections');
+  order.forEach(sub=>{
+    const sec=document.createElement('section');
+    sec.className='subject';
+    sec.style.setProperty('--sc', SUBJECT_COLOURS[sub]||'var(--navy)');
+    sec.innerHTML = `<h2><span>${SUBJECT_ICONS[sub]||'📁'}</span>${sub}<span class="count">${groups[sub].length}</span></h2>`;
+    const grid=document.createElement('div'); grid.className='grid';
+    groups[sub].forEach(l=>{
+      const a=document.createElement('a');
+      a.className='tile'; a.href=l.file;
+      a.dataset.search=(sub+' '+l.title+' '+l.file).toLowerCase();
+      a.innerHTML=`<span class="t-title">${l.title}</span><span class="t-meta"><span class="badge ${l.tag||''}">${l.tag||'file'}</span></span>`;
+      grid.appendChild(a);
+    });
+    sec.appendChild(grid); host.appendChild(sec);
+  });
+}
+
+function filter(q){
+  q=q.trim().toLowerCase();
+  let any=false;
+  document.querySelectorAll('.subject').forEach(sec=>{
+    let shown=0;
+    sec.querySelectorAll('.tile').forEach(t=>{
+      const hit=!q || t.dataset.search.includes(q);
+      t.style.display=hit?'':'none';
+      if(hit) shown++;
+    });
+    sec.style.display=shown?'':'none';
+    sec.querySelector('.count').textContent=shown;
+    if(shown) any=true;
+  });
+  document.getElementById('noResults').style.display=any?'none':'block';
+}
+
+build();
+document.getElementById('search').addEventListener('input',e=>filter(e.target.value));
+</script>
+</body>
+</html>
