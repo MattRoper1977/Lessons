@@ -3,331 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson Hub — Matt Roper's Class</title>
+<title>Lesson Hub — Mr Roper's Classroom</title>
 <style>
   :root {
-    --navy: #1e3a5f; 
-    --navy-dark: #0f1e33; 
-    --green: #16a34a; 
-    --orange: #f97316;
-    --blue: #2563eb; 
-    --purple: #7c3aed; 
-    --red: #dc2626; 
-    --teal: #0d9488;
-    --bg: #f8fafc; 
-    --card: #ffffff; 
-    --ink: #0f172a; 
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --radius-lg: 16px;
-    --radius-sm: 999px;
-    --ease-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --navy:#1e3a5f; --navy-dark:#0f1e33;
+    --green:#16a34a; --orange:#f97316; --blue:#2563eb;
+    --purple:#7c3aed; --red:#dc2626; --teal:#0d9488;
+    --bg:#f6f8fb; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --border:#e2e8f0; --radius:14px; --radius-sm:999px;
+    --ease:cubic-bezier(.22,1,.36,1);
   }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  /* ============ HEADER ============ */
+  header{background:linear-gradient(140deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;position:relative;overflow:hidden;}
+  .hero-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;user-select:none;}
+  .hero-inner{position:relative;max-width:1140px;margin:0 auto;padding:44px 24px 36px;}
+  .brand{display:flex;align-items:center;gap:10px;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#93c5fd;}
+  .brand::before{content:"";display:inline-block;width:26px;height:2px;background:#93c5fd;border-radius:2px;}
+  header h1{font-size:clamp(1.9rem,5vw,2.7rem);font-weight:800;margin-top:10px;letter-spacing:-.02em;line-height:1.1;}
+  header h1 span{color:#7dd3fc;}
+  .tagline{opacity:.82;margin-top:10px;font-size:1rem;max-width:560px;line-height:1.55;}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+  .stat{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius-sm);padding:7px 16px;font-size:.82rem;font-weight:600;backdrop-filter:blur(4px);}
+  .stat svg{width:15px;height:15px;stroke:#7dd3fc;flex:none;}
+  .hero-wave{display:block;width:100%;height:34px;margin-bottom:-1px;}
 
-  header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
-    color: #fff;
-    padding: 40px 24px 32px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-  }
+  /* ============ LIVE BANNER ============ */
+  #liveBanner{display:none;margin:20px auto 0;max-width:1140px;padding:0 20px;}
+  #liveBanner a{display:flex;align-items:center;gap:14px;background:#fffbeb;border:2px solid var(--orange);border-left:8px solid var(--orange);border-radius:var(--radius);padding:16px 20px;text-decoration:none;color:#7c2d12;font-weight:700;box-shadow:0 4px 12px rgba(249,115,22,.08);animation:fadeInUp .5s var(--ease) both;}
+  #liveBanner .pulse{width:12px;height:12px;border-radius:50%;background:var(--red);flex:none;animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5);}70%{box-shadow:0 0 0 10px rgba(220,38,38,0);}100%{box-shadow:0 0 0 0 rgba(220,38,38,0);}}
 
-  header::after {
-    content: "🧪 🔬 ⚡ 🥾 🎨 🧠";
-    position: absolute;
-    right: 12px;
-    bottom: -10px;
-    font-size: 72px;
-    opacity: .06;
-    letter-spacing: 12px;
-    pointer-events: none;
-    user-select: none;
-  }
+  .wrap{max-width:1140px;margin:0 auto;padding:4px 20px 70px;}
 
-  .brand {
-    font-size: .75rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    opacity: .8;
-    font-weight: 700;
-    color: #93c5fd;
-  }
+  /* ============ SEARCH ============ */
+  .searchbar{position:sticky;top:0;z-index:20;background:rgba(246,248,251,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:14px 0 12px;}
+  .search-wrap{position:relative;}
+  .search-wrap svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:19px;height:19px;stroke:var(--muted);pointer-events:none;}
+  .searchbar input{width:100%;padding:15px 20px 15px 48px;font-size:1.02rem;color:var(--ink);border:1.5px solid var(--border);border-radius:var(--radius);outline:none;background:var(--card);box-shadow:0 1px 3px rgba(15,23,42,.04);transition:border-color .2s,box-shadow .2s;}
+  .searchbar input:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(30,58,95,.08);}
 
-  header h1 {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    font-weight: 850;
-    margin-top: 6px;
-    letter-spacing: -0.02em;
-  }
+  /* ============ SUBJECT SECTIONS ============ */
+  .subject{margin-top:34px;animation:fadeInUp .5s var(--ease) both;}
+  .subject-head{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--border);position:relative;}
+  .subject-head::after{content:"";position:absolute;left:0;bottom:-1px;width:64px;height:3px;background:var(--sc,var(--navy));}
+  .s-icon{width:38px;height:38px;border-radius:10px;background:var(--sl,#eef2f7);display:flex;align-items:center;justify-content:center;flex:none;}
+  .s-icon svg{width:20px;height:20px;stroke:var(--sc,var(--navy));}
+  .subject-head h2{font-size:1.2rem;font-weight:800;letter-spacing:-.01em;}
+  .subject-head .count{margin-left:auto;font-size:.72rem;font-weight:700;color:var(--muted);background:#eaeef4;border-radius:var(--radius-sm);padding:4px 12px;letter-spacing:.04em;}
 
-  header p {
-    opacity: .85;
-    margin-top: 8px;
-    font-size: 1rem;
-    max-width: 600px;
-    line-height: 1.5;
-  }
+  /* ============ TILES ============ */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;margin-top:16px;}
+  .tile{position:relative;background:var(--card);border-radius:var(--radius);padding:16px 18px 14px;text-decoration:none;color:var(--ink);border:1px solid var(--border);box-shadow:0 1px 3px rgba(15,23,42,.04);display:flex;flex-direction:column;gap:10px;min-height:104px;overflow:hidden;transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s;}
+  .tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sc,var(--navy));opacity:.85;transition:width .22s var(--ease);}
+  .tile:hover,.tile:focus-visible{transform:translateY(-3px);box-shadow:0 12px 24px -6px rgba(15,23,42,.12);border-color:#cbd5e1;outline:none;}
+  .tile:hover::before,.tile:focus-visible::before{width:6px;}
+  .tile:focus-visible{box-shadow:0 0 0 4px rgba(30,58,95,.15);}
+  .tile .t-title{font-weight:700;font-size:1rem;line-height:1.38;padding-left:6px;}
+  .tile .t-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:auto;padding-left:6px;}
+  .tile .open{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:.74rem;font-weight:700;color:var(--sc,var(--navy));opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .22s var(--ease);}
+  .tile:hover .open,.tile:focus-visible .open{opacity:1;transform:none;}
 
-  /* ===== LIVE LESSON BANNER ===== */
-  #liveBanner {
-    display: none;
-    margin: 20px auto 0;
-    max-width: 1140px;
-    padding: 0 20px;
-  }
+  .badge{font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:var(--radius-sm);padding:4px 11px;background:#eaeef4;color:#334155;}
+  .badge.lesson{background:#dbeafe;color:#1e40af;}
+  .badge.revision{background:#fce7f3;color:#9d174d;}
+  .badge.game{background:#dcfce7;color:#166534;}
+  .badge.pupil{background:#ffedd5;color:#9a3412;}
+  .badge.teacher{background:#ede9fe;color:#5b21b6;}
 
-  #liveBanner a {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #fffbeb;
-    border: 2px solid var(--orange);
-    border-left: 8px solid var(--orange);
-    border-radius: var(--radius-lg);
-    padding: 16px 20px;
-    text-decoration: none;
-    color: #7c2d12;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.08);
-    animation: fadeInUp .5s var(--ease-out) both;
-  }
+  #noResults{display:none;text-align:center;color:var(--muted);padding:70px 24px;font-size:1.05rem;background:var(--card);border-radius:var(--radius);border:1px dashed #cbd5e1;margin-top:30px;}
+  #noResults svg{width:44px;height:44px;stroke:#94a3b8;display:block;margin:0 auto 14px;}
 
-  #liveBanner .pulse {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--red);
-    flex: none;
-    animation: pulse 1.6s infinite;
-  }
+  footer{border-top:1px solid var(--border);background:#fff;}
+  .foot-inner{max-width:1140px;margin:0 auto;padding:26px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:.84rem;}
+  .foot-inner .dotsep{width:4px;height:4px;border-radius:50%;background:#cbd5e1;}
+  .foot-mark{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink);}
+  .foot-mark svg{width:18px;height:18px;stroke:var(--navy);}
 
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
-    70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+  @media (max-width:640px){
+    .grid{grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px;}
+    .tile{min-height:96px;padding:14px 15px 12px;}
+    .hero-inner{padding:32px 18px 26px;}
+    .stats{gap:8px;}
+    .stat{padding:6px 12px;font-size:.76rem;}
   }
-
-  .wrap {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 8px 20px 80px;
-  }
-
-  /* ===== STICKY GLASS SEARCH ===== */
-  .searchbar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(248, 250, 252, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 16px 0;
-    margin-bottom: 8px;
-  }
-
-  .searchbar input {
-    width: 100%;
-    padding: 16px 20px;
-    font-size: 1.05rem;
-    color: var(--ink);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    outline: none;
-    background: var(--card);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-    transition: border-color .2s, box-shadow .2s;
-  }
-
-  .searchbar input:focus {
-    border-color: var(--navy);
-    box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
-  }
-
-  /* ===== SUBJECT SECTIONS ===== */
-  .subject {
-    margin-top: 36px;
-    animation: fadeInUp .5s var(--ease-out) both;
-  }
-
-  .subject h2 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--ink);
-    padding-bottom: 10px;
-    border-bottom: 3px solid var(--sc, var(--navy));
-    letter-spacing: -0.01em;
-  }
-
-  .subject h2 .count {
-    margin-left: auto;
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--muted);
-    background: #e2e8f0;
-    border-radius: var(--radius-sm);
-    padding: 4px 12px;
-  }
-
-  /* ===== INTERACTIVE GRID & TILES ===== */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-  }
-
-  .tile {
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    padding: 18px 20px;
-    text-decoration: none;
-    color: var(--ink);
-    border: 1px solid var(--border);
-    border-top: 5px solid var(--sc, var(--navy));
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 110px;
-    transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s;
-  }
-
-  .tile:hover, .tile:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
-    border-color: #cbd5e1;
-    outline: none;
-  }
-
-  .tile:focus-visible {
-    border-color: var(--navy);
-    box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.15), 0 12px 24px -4px rgba(0, 0, 0, 0.08);
-  }
-
-  .tile .t-title {
-    font-weight: 700;
-    font-size: 1.05rem;
-    line-height: 1.4;
-    color: var(--ink);
-  }
-
-  .tile .t-meta {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: auto;
-    padding-top: 8px;
-  }
-
-  /* ===== BADGES ===== */
-  .badge {
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    border-radius: var(--radius-sm);
-    padding: 4px 10px;
-    background: #e2e8f0;
-    color: #334155;
-  }
-  
-  .badge.lesson { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-  .badge.revision { background: #fff1f2; color: #9d174d; border: 1px solid #fecdd3; }
-  .badge.game { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-  .badge.pupil { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
-  .badge.teacher { background: #faf5ff; color: #5b21b6; border: 1px solid #e9d5ff; }
-
-  #noResults {
-    display: none;
-    text-align: center;
-    color: var(--muted);
-    padding: 80px 24px;
-    font-size: 1.1rem;
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    border: 1px dashed var(--border);
-    margin-top: 32px;
-  }
-
-  #noResults .big {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 12px;
-  }
-
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: .85rem;
-    padding: 32px 20px;
-    border-top: 1px solid var(--border);
-    background: #ffffff;
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation: none !important; transition: none !important; }
-  }
-
-  @media (max-width: 640px) {
-    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-    .tile { min-height: 100px; padding: 16px; }
-    header { padding: 32px 20px 24px; }
-    .searchbar { padding: 12px 0; }
-  }
-  
-  @media (max-width: 440px) {
-    .grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width:430px){.grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">Matt Roper's — </div>
-  <h1>📚 Lesson Hub</h1>
-  <p>Find your lesson below, or type its name in the search box.</p>
+  <svg class="hero-art" viewBox="0 0 1200 280" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" fill="none">
+    <g stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.6">
+      <path d="M-20 235 Q 180 165 380 225 T 760 215 T 1230 230" />
+      <path d="M-20 255 Q 200 195 420 245 T 820 240 T 1230 252" stroke-opacity="0.07"/>
+      <path d="M620 150 q 30 -60 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0" stroke-opacity="0.13"/>
+      <line x1="880" y1="58" x2="956" y2="96"/><line x1="956" y1="96" x2="1040" y2="62"/>
+      <line x1="956" y1="96" x2="975" y2="170"/><line x1="1040" y1="62" x2="1110" y2="110"/>
+      <line x1="880" y1="58" x2="828" y2="118"/>
+    </g>
+    <g fill="#ffffff" fill-opacity="0.16">
+      <circle cx="880" cy="58" r="7"/><circle cx="956" cy="96" r="10"/><circle cx="1040" cy="62" r="6"/>
+      <circle cx="975" cy="170" r="5"/><circle cx="1110" cy="110" r="7"/><circle cx="828" cy="118" r="5"/>
+    </g>
+    <g stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.6">
+      <path d="M1042 218 l28 -42 l24 30 l20 -26 l30 40" />
+      <path d="M695 64 h46 m-23 0 v34 m-26 10 a26 26 0 1 0 52 0 c0 -12 -10 -16 -10 -16 v-28 h-32 v28 c0 0 -10 4 -10 16 z"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <div class="brand">Mr Roper · Progress Schools — Tees Valley</div>
+    <h1>Lesson <span>Hub</span></h1>
+    <p class="tagline">Every lesson, one place. Find yours below or use the search box — tiles open the lesson straight away.</p>
+    <div class="stats">
+      <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span id="statLessons">0 lessons</span></span>
+      <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span id="statSubjects">0 subjects</span></span>
+      <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Available 24/7</span>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 L0 20 Q 300 0 600 18 T 1200 14 L1200 34 Z" fill="#f6f8fb"/></svg>
 </header>
 
 <div id="liveBanner">
   <a id="liveLink" href="#">
     <span class="pulse"></span>
     <span id="liveText"></span>
-    <span style="margin-left:auto; font-weight:900;">→</span>
+    <span style="margin-left:auto;font-weight:900;">→</span>
   </a>
 </div>
 
 <div class="wrap">
   <div class="searchbar">
-    <input id="search" type="search" placeholder="🔍 Search lessons… (e.g. gas tests, pH, trekkers)" aria-label="Search lessons">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search lessons… (e.g. gas tests, pH, trekkers)" aria-label="Search lessons">
+    </div>
   </div>
   <div id="sections"></div>
   <div id="noResults">
-    <span class="big">🦉</span>Nothing matches that search — check the spelling or try a shorter word.
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8.5 11h5"/></svg>
+    Nothing matches that search — check the spelling or try a shorter word.
   </div>
 </div>
 
 <footer>
-  Lesson Hub &middot; Built by Mr Roper &middot; Files are self-contained &mdash; they also work offline once downloaded.
+  <div class="foot-inner">
+    <span class="foot-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Lesson Hub</span>
+    <span class="dotsep"></span><span>Built by Mr Roper</span>
+    <span class="dotsep"></span><span>Files are self-contained — they also work offline once downloaded.</span>
+  </div>
 </footer>
 
 <script>
@@ -342,8 +170,6 @@
       path here match, e.g. "chemistry/Lesson2_pH_Scale.html".
    3. To add a subject, just use a new subject name — sections
       build themselves. Colours are mapped in SUBJECT_COLOURS.
-   ⚠️ Filenames below are best-guess placeholders — correct each
-      one against your real files before going live.
    ================================================================ */
 
 const LIVE = {
@@ -376,7 +202,7 @@ const LESSONS = [
   {subject:"Biology", title:"Lesson 1 Digestion",      file:"biology/Digestion_and_Absorption (1).html",       tag:"lesson"},
   {subject:"Biology", title:"Lesson 2 Absorption",      file:"biology/Lesson_2_Absorption_v4-6.html",       tag:"lesson"},
   {subject:"Biology", title:"Lesson 3 Respiration and ATP",      file:"biology/Respiration_and_ATP_Lesson_1.html",       tag:"lesson"},
-  
+
 
   // ---- Tees Trekkers ----
   {subject:"Tees Trekkers", title:"L7 · Orienteering Bootcamp", file:"trekkers/L7_Orienteering_Bootcamp.html",tag:"lesson"},
@@ -392,15 +218,27 @@ const LESSONS = [
 /* ================== end of edit zone ================== */
 
 const SUBJECT_COLOURS = {
-  "Chemistry":"var(--green)", "Physics":"var(--blue)", "Biology":"var(--teal)",
-  "Tees Trekkers":"var(--orange)", "PSHE & ASDAN":"var(--purple)", "Art":"var(--red)"
-};
-const SUBJECT_ICONS = {
-  "Chemistry":"🧪","Physics":"⚡","Biology":"🌱","Tees Trekkers":"🥾","PSHE & ASDAN":"🧠","Art":"🎨"
+  "Chemistry":    {c:"var(--green)",  l:"#dcfce7"},
+  "Physics":      {c:"var(--blue)",   l:"#dbeafe"},
+  "Biology":      {c:"var(--teal)",   l:"#ccfbf1"},
+  "Tees Trekkers":{c:"var(--orange)", l:"#ffedd5"},
+  "PSHE & ASDAN": {c:"var(--purple)", l:"#ede9fe"},
+  "Art":          {c:"var(--red)",    l:"#fee2e2"}
 };
 
+const ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const SUBJECT_ICONS = {
+  "Chemistry":    `<svg ${ICON_ATTRS}><path d="M9 3h6"/><path d="M10 3v6L5.2 17.3A2 2 0 0 0 7 20h10a2 2 0 0 0 1.8-2.7L14 9V3"/><path d="M7.5 14h9"/></svg>`,
+  "Physics":      `<svg ${ICON_ATTRS}><path d="M13 2L4.5 13.5H11L9.5 22 19.5 10H13l1.5-8z"/></svg>`,
+  "Biology":      `<svg ${ICON_ATTRS}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.5 5.5-6"/></svg>`,
+  "Tees Trekkers":`<svg ${ICON_ATTRS}><path d="M3 20l6-11 4 7 3-5 5 9z"/><path d="M13 9l2-4 2 3.5"/></svg>`,
+  "PSHE & ASDAN": `<svg ${ICON_ATTRS}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>`,
+  "Art":          `<svg ${ICON_ATTRS}><path d="M12 21a9 9 0 1 1 9-9c0 2-1.5 3-3 3h-2a2 2 0 0 0-1.5 3.3c.4.5.5 1.2.1 1.7-.5.7-1.5 1-2.6 1z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/></svg>`
+};
+const FALLBACK_ICON = `<svg ${ICON_ATTRS}><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`;
+const OPEN_ARROW = `<svg width="13" height="13" ${ICON_ATTRS}><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>`;
+
 function build(){
-  // Live banner
   if (LIVE.on){
     document.getElementById('liveBanner').style.display='block';
     document.getElementById('liveLink').href = LIVE.url;
@@ -410,18 +248,24 @@ function build(){
   const order=[]; const groups={};
   LESSONS.forEach(l=>{ if(!groups[l.subject]){groups[l.subject]=[];order.push(l.subject);} groups[l.subject].push(l); });
 
+  document.getElementById('statLessons').textContent = LESSONS.length + ' lessons';
+  document.getElementById('statSubjects').textContent = order.length + ' subjects';
+
   const host=document.getElementById('sections');
-  order.forEach(sub=>{
+  order.forEach((sub,i)=>{
+    const theme = SUBJECT_COLOURS[sub] || {c:'var(--navy)', l:'#eef2f7'};
     const sec=document.createElement('section');
     sec.className='subject';
-    sec.style.setProperty('--sc', SUBJECT_COLOURS[sub]||'var(--navy)');
-    sec.innerHTML = `<h2><span>${SUBJECT_ICONS[sub]||'📁'}</span>${sub}<span class="count">${groups[sub].length}</span></h2>`;
+    sec.style.setProperty('--sc', theme.c);
+    sec.style.setProperty('--sl', theme.l);
+    sec.style.animationDelay = (i*0.06)+'s';
+    sec.innerHTML = `<div class="subject-head"><span class="s-icon">${SUBJECT_ICONS[sub]||FALLBACK_ICON}</span><h2>${sub}</h2><span class="count">${groups[sub].length}</span></div>`;
     const grid=document.createElement('div'); grid.className='grid';
     groups[sub].forEach(l=>{
       const a=document.createElement('a');
       a.className='tile'; a.href=l.file;
       a.dataset.search=(sub+' '+l.title+' '+l.file).toLowerCase();
-      a.innerHTML=`<span class="t-title">${l.title}</span><span class="t-meta"><span class="badge ${l.tag||''}">${l.tag||'file'}</span></span>`;
+      a.innerHTML=`<span class="t-title">${l.title}</span><span class="t-meta"><span class="badge ${l.tag||''}">${l.tag||'file'}</span><span class="open">Open ${OPEN_ARROW}</span></span>`;
       grid.appendChild(a);
     });
     sec.appendChild(grid); host.appendChild(sec);
