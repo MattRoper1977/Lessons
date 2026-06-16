@@ -107,6 +107,12 @@
     #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:none;align-items:center;gap:15px}
     #timer-widget.visible{display:flex}
     #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-stack{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+    .timer-cap{font-size:.58rem;font-weight:800;letter-spacing:.6px;color:var(--muted);text-transform:uppercase}
+    #lesson-clock{font-size:.82rem;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;cursor:pointer;user-select:none;margin-top:3px;white-space:nowrap}
+    #lesson-clock.warn{color:#f97316}
+    #lesson-clock.over{color:var(--error)}
+    #lesson-clock.paused{opacity:.5}
     .timer-controls{display:flex;gap:5px}
     .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
     .timer-btn:hover{background:#e2e8f0;transform:none}
@@ -231,7 +237,7 @@
 
 <!-- TIMER WIDGET -->
 <div id="timer-widget">
-  <div id="timer-display">10:00</div>
+  <div class="timer-stack"><div class="timer-cap">This page</div><div id="timer-display">02:00</div><div id="lesson-clock" onclick="toggleLessonClock()" title="Whole-lesson timer (40 min) — tap to pause/resume">🕐 Lesson <span id="lesson-clock-num">40:00</span></div></div>
   <div class="timer-controls">
     <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
     <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
@@ -243,7 +249,7 @@
 <div class="slide-container">
 
   <!-- TITLE -->
-  <div class="slide active" data-title="Title">
+  <div class="slide active" data-title="Title" data-timer="2">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <div style="text-align:center;margin-top:3%">
       <div class="animate-enter">
@@ -255,7 +261,7 @@
         </div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:820px;margin:6px auto 0;text-align:left">
           <div class="li-box" style="flex:1;min-width:300px;margin:0">
-            <strong>🌍 Did you know?</strong> The chlorine that bleaches litmus white is the same chemistry that keeps swimming pools safe to swim in — it destroys germs the way it destroys the dye.<br><br><strong>Learning Objective:</strong>
+            <strong>🌍 Did you know?</strong> The chlorine that turns litmus white is the same stuff that keeps swimming pools clean. It kills germs the same way it removes the colour from the paper.<br><br><strong>Learning Objective:</strong>
             <ul class="lo-anim" style="font-size:1.02rem;margin-top:8px;padding-left:0">
               <li><strong>2.44</strong> – Describe tests for ammonia and chlorine, and recall all five gas tests.</li>
             </ul>
@@ -305,10 +311,10 @@
   </div>
 
   <!-- STARTER -->
-  <div class="slide" data-title="Starter" data-timer="5">
+  <div class="slide" data-title="Starter" data-timer="4">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <span class="slide-tag tag-starter">Starter – Final Two Predictions</span>
-    <h2>Starter: Two Predictions Left 🔮 (3 mins)</h2>
+    <h2>Starter: Two Predictions Left 🔮 (4 mins)</h2>
     <div class="li-box"><strong>Three confirmed last lesson:</strong> H₂ burning→pop ✔ · O₂ glowing→relights ✔ · CO₂ limewater→milky ✔.<br><strong>Two still open.</strong> Lock in (or change!) your prediction for ammonia and chlorine — we test them today.</div>
     <div class="wd-tabs">
       <button class="wd-tab active" onclick="wdMode('revisit',this)">🔮 Final Two</button>
@@ -340,12 +346,12 @@
   </div>
 
   <!-- OBSERVE: REAL DEMO + VIDEO -->
-  <div class="slide" data-title="Observe – Watch It For Real" data-type="ido">
+  <div class="slide" data-title="Observe – Watch It For Real" data-type="ido" data-timer="5">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <span class="slide-tag tag-ido">I Do</span>
     <span class="owl-badge">🦉 OWL · OBSERVE</span>
     <h2>Observe: The Litmus Tests For Real 👀</h2>
-    <div class="li-box"><strong>Run the litmus lab, then watch the REAL tests.</strong> For each: say the <strong>TEST</strong>, predict the <strong>OBSERVATION</strong>, then run it. Were your Starter predictions right?</div>
+    <div class="li-box"><strong>Run the litmus lab, then watch the REAL tests.</strong> For each one: say the <strong>TEST</strong>, then say what you think you will <strong>SEE</strong>, then run it. Were your Starter guesses right?</div>
     <div class="lab-wrap">
       <p class="lab-title">🧪 THE LITMUS LAB — tap a station to test the gas</p>
       <svg class="lab-svg" viewBox="0 0 740 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cbd5e1" stop-opacity=".30"/><stop offset="0.35" stop-color="#f8fafc" stop-opacity=".12"/><stop offset="1" stop-color="#1e293b" stop-opacity=".30"/></linearGradient></defs><rect x="0" y="0" width="740" height="170" fill="#1e293b"/><rect x="0" y="0" width="740" height="36" fill="#0f172a"/><rect x="0" y="40" width="740" height="4" fill="#475569"/><rect x="40" y="20" width="14" height="20" rx="2" fill="#16a34a"/><rect x="43" y="13" width="8" height="8" rx="1" fill="#14532d"/><rect x="42" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="62" y="20" width="14" height="20" rx="2" fill="#eab308"/><rect x="65" y="13" width="8" height="8" rx="1" fill="#854d0e"/><rect x="64" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="84" y="20" width="14" height="20" rx="2" fill="#64748b"/><rect x="87" y="13" width="8" height="8" rx="1" fill="#334155"/><rect x="86" y="26" width="10" height="8" rx="1" fill="#f8fafc" opacity=".85"/><rect x="596" y="8" width="134" height="26" rx="6" fill="#fbbf24"/><text x="663" y="25" text-anchor="middle" font-size="10" font-weight="900" fill="#78350f">⚠ EYE PROTECTION</text><rect x="0" y="170" width="740" height="16" fill="#475569"/><rect x="0" y="170" width="740" height="3" fill="#64748b"/><rect x="0" y="186" width="740" height="54" fill="#1f2937"/><g class="lab-station" id="lab-st1" onclick="runLabTest(1)"><rect class="lab-halo" id="lab-halo1" x="169" y="34" width="92" height="142" rx="14" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/><text x="215" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#4ade80">A · AMMONIA (NH₃)</text><ellipse cx="215" cy="170" rx="34" ry="4" fill="#0b1220"/><rect x="181" y="94" width="68" height="76" rx="6" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><rect x="181" y="94" width="68" height="76" rx="6" fill="url(#glassGrad)"/><rect x="188" y="104" width="4" height="58" rx="2" fill="#ffffff" opacity=".20"/><rect x="177" y="88" width="76" height="9" rx="3" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><g transform="rotate(-16 193 87)"><ellipse cx="193" cy="87" rx="19" ry="5.5" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/><circle cx="193" cy="83" r="3" fill="#94a3b8"/></g><text x="215" y="138" text-anchor="middle" font-size="9" font-weight="900" fill="#475569" opacity=".55">NH₃ gas</text><g transform="translate(215,40)"><g id="lab-rodA" style="transition:transform .65s ease-in"><rect x="-1.2" y="0" width="2.4" height="50" rx="1.2" fill="#cbd5e1" opacity=".75"/><rect x="-2.5" y="46" width="5" height="6" rx="1" fill="#94a3b8"/><rect id="lab-paperA" x="-8" y="50" width="16" height="20" rx="2" fill="#dc2626" stroke="#64748b" stroke-width=".8" style="transition:fill .8s"/><rect x="-8" y="50" width="16" height="4" rx="2" fill="#ffffff" opacity=".28"/></g></g><text x="169" y="118" font-size="11">💧</text><text id="lab-cap1" x="215" y="226" text-anchor="middle" font-size="11" font-weight="900" fill="#94a3b8">Tap: lower damp RED litmus in</text><g id="lab-done1" opacity="0"><circle cx="255" cy="74" r="9" fill="#16a34a"/><text x="255" y="78" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">✓</text></g></g><g class="lab-station" id="lab-st2" onclick="runLabTest(2)"><rect class="lab-halo" id="lab-halo2" x="474" y="34" width="92" height="142" rx="14" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/><text x="520" y="56" text-anchor="middle" font-size="10" font-weight="900" fill="#d4d40c">B · CHLORINE (Cl₂)</text><ellipse cx="520" cy="170" rx="34" ry="4" fill="#0b1220"/><rect x="486" y="94" width="68" height="76" rx="6" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><rect x="486" y="94" width="68" height="76" rx="6" fill="url(#glassGrad)"/><rect x="490" y="100" width="60" height="66" rx="4" fill="#d9f99d" opacity=".20"/><rect x="493" y="104" width="4" height="58" rx="2" fill="#ffffff" opacity=".20"/><rect x="482" y="88" width="76" height="9" rx="3" fill="#0a1422" stroke="#7dd3fc" stroke-width="2"/><g transform="rotate(-16 498 87)"><ellipse cx="498" cy="87" rx="19" ry="5.5" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/><circle cx="498" cy="83" r="3" fill="#94a3b8"/></g><text x="520" y="138" text-anchor="middle" font-size="9" font-weight="900" fill="#65a30d" opacity=".6">Cl₂ gas</text><g transform="translate(520,40)"><g id="lab-rodB" style="transition:transform .65s ease-in"><rect x="-1.2" y="0" width="2.4" height="50" rx="1.2" fill="#cbd5e1" opacity=".75"/><rect x="-2.5" y="46" width="5" height="6" rx="1" fill="#94a3b8"/><rect id="lab-paperB" x="-8" y="50" width="16" height="20" rx="2" fill="#2563eb" stroke="#64748b" stroke-width=".8" style="transition:fill .8s"/><rect x="-8" y="50" width="16" height="4" rx="2" fill="#ffffff" opacity=".28"/></g></g><text x="474" y="118" font-size="11">💧</text><text id="lab-cap2" x="520" y="226" text-anchor="middle" font-size="11" font-weight="900" fill="#94a3b8">Tap: lower damp BLUE litmus in</text><g id="lab-done2" opacity="0"><circle cx="560" cy="74" r="9" fill="#16a34a"/><text x="560" y="78" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">✓</text></g></g></svg>
@@ -369,7 +375,7 @@
   </div>
 
   <!-- I DO 2: AMMONIA & CHLORINE -->
-  <div class="slide" data-title="I Do – NH₃ & Cl₂" data-type="ido">
+  <div class="slide" data-title="I Do – NH₃ & Cl₂" data-type="ido" data-timer="5">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <span class="slide-tag tag-ido">I Do</span>
     <h2>I Do: Testing for NH₃ and Cl₂</h2>
@@ -382,7 +388,7 @@
             <h3 style="margin:0;color:#16a34a">Ammonia</h3>
             <p style="margin:4px 0"><strong>Test:</strong> Hold <strong>damp red litmus paper</strong> near the gas.</p>
             <p style="margin:0"><strong>Result:</strong> The paper turns <strong>blue</strong>.</p>
-            <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Ammonia is the only common alkaline gas. It dissolves in the moisture on the paper to form an alkaline solution, which turns litmus blue.</p>
+            <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Ammonia is the only common gas that is alkaline (a base). It dissolves in the damp paper, and alkalis turn litmus blue.</p>
           </div>
         </div>
         <div class="gas-card animate-enter anim-d1">
@@ -390,8 +396,8 @@
           <div>
             <h3 style="margin:0;color:#ca8a04">Chlorine</h3>
             <p style="margin:4px 0"><strong>Test:</strong> Hold <strong>damp litmus paper</strong> (blue or red) near the gas.</p>
-            <p style="margin:0"><strong>Result:</strong> The paper is <strong>bleached white</strong> (decolourised).</p>
-            <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Chlorine is a powerful bleaching agent. It destroys the dye in the paper. ⚠️ Chlorine is toxic — scientists test it in a fume cupboard.</p>
+            <p style="margin:0"><strong>Result:</strong> The paper is <strong>bleached white</strong> (the colour is removed).</p>
+            <p style="margin:4px 0;font-size:.9rem;color:var(--muted)">Chlorine is a bleach. It removes the colour from the paper, leaving it white. ⚠️ Chlorine is poisonous — scientists test it in a fume cupboard.</p>
           </div>
         </div>
 
@@ -432,7 +438,7 @@
             <rect x="240" y="60" width="30" height="50" rx="3" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
             <text x="255" y="90" text-anchor="middle" font-size="8" fill="#94a3b8" font-weight="bold">WHITE</text>
             <text x="220" y="135" text-anchor="middle" font-size="11" fill="#ca8a04" font-weight="bold">Bleached WHITE</text>
-            <text x="220" y="150" text-anchor="middle" font-size="9" fill="#ca8a04">(bleaching agent)</text>
+            <text x="220" y="150" text-anchor="middle" font-size="9" fill="#ca8a04">(it bleaches)</text>
             <text x="220" y="170" text-anchor="middle" font-size="9" fill="#64748b">Use DAMP litmus</text>
           </svg>
           <button class="small" onclick="playLitmus()" style="margin-top:6px;background:var(--ido-border)">▶ Watch the litmus change</button>
@@ -446,12 +452,12 @@
   </div>
 
   <!-- WE DO 2 -->
-  <div class="slide" data-title="We Do – Name That Gas" data-type="wedo">
+  <div class="slide" data-title="We Do – Name That Gas" data-type="wedo" data-timer="8">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <span class="slide-tag tag-wedo">We Do</span>
     <h2>We Do: Name That Gas 🔬🕵️</h2>
     <span class="owl-badge">🦉 OWL · LINK (observation → conclusion)</span>
-    <div class="li-box"><strong>As a class:</strong> five tests, five unknown gases — <strong>all five tests, including last lesson's three</strong> (free revision!). <strong>Drag each gas name onto its clue.</strong> <span class="dnd-count wd-mc" style="display:inline;margin:0"><span id="mgl-count">0</span>/5 matched</span></div>
+    <div class="li-box"><strong>As a class:</strong> today's two gases — <strong>ammonia and chlorine</strong>. The exam loves to swap these, so we sort the clues. <strong>Drag the right gas onto each clue</strong> — you will use each gas twice. <span class="dnd-count wd-mc" style="display:inline;margin:0"><span id="mgl-count">0</span>/4 matched</span></div>
     <div class="stem-box"><strong>✍️ Say it / write it:</strong> <code>I saw ___, so the gas is ___.</code></div>
     <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence (We Do)</button>
     <div class="wd-tabs">
@@ -463,29 +469,26 @@
     <div id="wedo2" class="wedo-capture wd-mode active" data-wd="match" style="margin-top:4px">
       <p class="dnd-instruction">Drag a gas onto its clue — or <strong>tap a gas, then tap its clue</strong>.</p>
       <div style="text-align:center"><button class="hint-btn" onclick="toggleHint(this)">💡 Show the test-results reminder</button></div>
-      <div class="hint-text" style="max-width:700px;margin:6px auto 10px">H₂ → squeaky pop · O₂ → relights a glowing splint · CO₂ → limewater milky · NH₃ → damp red litmus turns blue · Cl₂ → litmus bleached white</div>
+      <div class="hint-text" style="max-width:700px;margin:6px auto 10px">NH₃ (ammonia) → damp RED litmus turns BLUE (alkaline gas) · Cl₂ (chlorine) → damp litmus is BLEACHED WHITE (toxic — fume cupboard)</div>
       <div class="dnd-chips" id="mgl-chips">
-        <div class="dnd-chip" data-val="H₂" style="--chip:#dc2626">H₂</div>
-        <div class="dnd-chip" data-val="O₂" style="--chip:#1d4ed8">O₂</div>
-        <div class="dnd-chip" data-val="CO₂" style="--chip:#475569">CO₂</div>
         <div class="dnd-chip" data-val="NH₃" style="--chip:#16a34a">NH₃</div>
+        <div class="dnd-chip" data-val="NH₃" style="--chip:#16a34a">NH₃</div>
+        <div class="dnd-chip" data-val="Cl₂" style="--chip:#ca8a04">Cl₂</div>
         <div class="dnd-chip" data-val="Cl₂" style="--chip:#ca8a04">Cl₂</div>
       </div>
       <div class="dnd-zones col" id="mgl-zones">
-        <div class="dnd-zone" data-accept="H₂" data-clue="A burning splint at the mouth → a loud squeaky POP" data-sentence="I saw a squeaky pop, so the gas is hydrogen (H₂)."><span class="zone-label">A burning splint is held at the mouth — a loud "squeaky POP".</span><span class="zone-slot"></span></div>
-        <div class="dnd-zone" data-accept="O₂" data-clue="A glowing splint is lowered in → it RELIGHTS" data-sentence="I saw the glowing splint relight, so the gas is oxygen (O₂)."><span class="zone-label">A glowing splint (ember, no flame) is lowered in — it RELIGHTS.</span><span class="zone-slot"></span></div>
-        <div class="dnd-zone" data-accept="CO₂" data-clue="Bubbled through limewater → turns MILKY" data-sentence="I saw limewater turn milky, so the gas is carbon dioxide (CO₂)."><span class="zone-label">The gas is bubbled through clear limewater — it turns MILKY.</span><span class="zone-slot"></span></div>
         <div class="dnd-zone" data-accept="NH₃" data-clue="Damp RED litmus → turns BLUE" data-sentence="I saw damp red litmus turn blue, so the gas is ammonia (NH₃)."><span class="zone-label">Damp RED litmus paper is held in the gas — it turns BLUE.</span><span class="zone-slot"></span></div>
         <div class="dnd-zone" data-accept="Cl₂" data-clue="Damp litmus → BLEACHED WHITE" data-sentence="I saw the litmus bleached white, so the gas is chlorine (Cl₂)."><span class="zone-label">Damp litmus paper is held in the gas — it is BLEACHED WHITE.</span><span class="zone-slot"></span></div>
+        <div class="dnd-zone" data-accept="NH₃" data-clue="The only common ALKALINE gas" data-sentence="It is the only common alkaline gas, so it is ammonia (NH₃)."><span class="zone-label">The only common gas that is alkaline (a base).</span><span class="zone-slot"></span></div>
+        <div class="dnd-zone" data-accept="Cl₂" data-clue="Toxic gas; also keeps pools clean" data-sentence="It is toxic and used to clean pools, so it is chlorine (Cl₂)."><span class="zone-label">A poisonous gas — tested in a fume cupboard. Also keeps swimming pools clean.</span><span class="zone-slot"></span></div>
       </div>
       <div id="mgl-fb" class="dnd-fb"></div>
       <div id="mgl-r2" class="type-round" style="display:none">
-        <p class="tr-head">🔓 <strong>Round 2 — type the gas from memory</strong> <span class="tr-count">0/5</span></p>
-        <div class="type-q"><label>1. Squeaky pop → the gas is ______.</label><input data-a="hydrogen|h2" data-full="hydrogen (H₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
-        <div class="type-q"><label>2. Glowing splint relights → ______.</label><input data-a="oxygen|o2" data-full="oxygen (O₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
-        <div class="type-q"><label>3. Limewater turns milky → ______.</label><input data-a="carbon dioxide|co2" data-full="carbon dioxide (CO₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
-        <div class="type-q"><label>4. Damp RED litmus turns BLUE → ______.</label><input data-a="ammonia|nh3" data-full="ammonia (NH₃)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
-        <div class="type-q"><label>5. Litmus BLEACHED WHITE → ______.</label><input data-a="chlorine|cl2" data-full="chlorine (Cl₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <p class="tr-head">🔓 <strong>Round 2 — type the gas from memory</strong> <span class="tr-count">0/4</span></p>
+        <div class="type-q"><label>1. Damp RED litmus turns BLUE → the gas is ______.</label><input data-a="ammonia|nh3" data-full="ammonia (NH₃)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <div class="type-q"><label>2. Damp litmus is BLEACHED WHITE → ______.</label><input data-a="chlorine|cl2" data-full="chlorine (Cl₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <div class="type-q"><label>3. The only common ALKALINE gas → ______.</label><input data-a="ammonia|nh3" data-full="ammonia (NH₃)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
+        <div class="type-q"><label>4. Toxic gas, tested in a fume cupboard → ______.</label><input data-a="chlorine|cl2" data-full="chlorine (Cl₂)" placeholder="type here" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();typeCheck(this.nextElementSibling)}"><button class="small" onclick="typeCheck(this)">Check</button><button class="hint-btn" onclick="tqReveal(this)">💡</button><span class="tq-fb"></span></div>
       </div>
       <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:30px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155;text-align:left" data-placeholder="Teacher notes..."></div>
     </div>
@@ -516,7 +519,7 @@
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
     <span class="slide-tag tag-independent">Independent Work – 8 mins</span>
     <h2>Independent Work</h2>
-    <div class="li-box"><strong>Answer independently.</strong> ❌ <strong>Never write</strong> just "splint" — always say <em>BURNING splint</em> or <em>GLOWING splint</em>.</div>
+    <div class="li-box"><strong>Answer independently.</strong> ✅ Always say the litmus is <em>DAMP</em>, and say what it does: turns <strong>BLUE</strong> (ammonia) or is <strong>bleached WHITE</strong> (chlorine).</div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0">
       <button onclick="switchInd('f')" style="background:#22c55e">Foundation (U–1)</button>
       <button onclick="switchInd('m')" style="background:#f97316">Middle (1–2)</button>
@@ -528,15 +531,15 @@
       <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> Damp RED litmus turns BLUE. The gas is:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">The only common ALKALINE gas.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">NH₃</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Cl₂</span><span class="mcq-opt" onclick="mcqCheck(this,false)">CO₂</span></div></div>
       <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>2.</strong> Chlorine turns damp litmus paper:</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Chlorine = bleach.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">Bleached white</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Blue</span><span class="mcq-opt" onclick="mcqCheck(this,false)">Milky</span></div></div>
       <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> Which TWO gases are tested with damp litmus paper?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Today's two gases!</div><p class="answer">Ammonia (NH₃) and chlorine (Cl₂).</p></div>
-      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>4.</strong> 🔁 Mixed: what does CO₂ do to limewater?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">LIMEwater goes MILKY.</div><p class="answer">Turns it milky/cloudy.</p></div>
-      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [3 marks]</span><p style="margin:0"><strong>5.</strong> A student holds damp litmus in a gas. It goes white. (a) Name the gas [1]. (b) State the test [1]. (c) What happened to the litmus? [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Chlorine = bleach. What happens when you bleach something?</div><button class="hint-btn" onclick="toggleHint(this)">✍️ Sentence frame</button><div class="hint-text">(a) The gas is ______. &nbsp;(b) The test: hold damp ______ litmus paper in the gas. &nbsp;(c) The litmus is ______ ______.</div><p class="answer">(a) Chlorine. (b) Hold damp litmus paper near the gas. (c) It was bleached/decolourised.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>4.</strong> Why must the litmus paper be DAMP?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">The gas has to soak INTO the paper.</div><p class="answer">So the gas can dissolve into the wet paper and react with it.</p></div>
+      <div class="ind-q"><span class="q-type q-exam">⭐ Exam [3 marks]</span><p style="margin:0"><strong>5.</strong> A student holds damp litmus in a gas. It goes white. (a) Name the gas [1]. (b) State the test [1]. (c) What happened to the litmus? [1]</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Chlorine = bleach. What happens when you bleach something?</div><button class="hint-btn" onclick="toggleHint(this)">✍️ Sentence frame</button><div class="hint-text">(a) The gas is ______. &nbsp;(b) The test: hold damp ______ litmus paper in the gas. &nbsp;(c) The litmus is ______ ______.</div><p class="answer">(a) Chlorine. (b) Hold damp litmus paper near the gas. (c) It was bleached white (the colour was taken out).</p></div>
     
       <div class="aspire-box" style="margin-top:10px"><strong>🌟 Finished?</strong> Flip to Middle and try Q2 — you already know blue vs white.</div>
     </div>
     <div id="ind-m" class="ind-level" style="max-height:50vh;overflow-y:auto"><p style="margin:0 0 4px;font-size:.8rem;color:#f97316;font-weight:900;text-align:center">📙 Grades 1–2 • Grade 3 challenge marked with ⭐</p>
       <div class="ind-q"><span class="q-type q-mcq">MCQ</span><p style="margin:0"><strong>1.</strong> Why must the litmus paper be DAMP?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">The gas has to get INTO the paper somehow.</div><div style="margin-top:6px"><span class="mcq-opt" onclick="mcqCheck(this,true)">So the gas can dissolve in the moisture and reach the dye</span><span class="mcq-opt" onclick="mcqCheck(this,false)">To make the paper stronger</span><span class="mcq-opt" onclick="mcqCheck(this,false)">To keep the gas cool</span></div></div>
       <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>2.</strong> How can you tell apart ammonia and chlorine using damp litmus paper?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">One changes the colour TO something; one DESTROYS the colour.</div><p class="answer">Ammonia turns damp red litmus blue (alkaline gas). Chlorine bleaches damp litmus white.</p></div>
-      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> 🔁 Mixed: a glowing splint relights. Name the gas and explain why.</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Which gas supports combustion?</div><p class="answer">Oxygen — it supports combustion, so the glowing ember bursts back into flame.</p></div>
+      <div class="ind-q"><span class="q-type q-short">Short</span><p style="margin:0"><strong>3.</strong> Why is chlorine tested in a fume cupboard?</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Think about what chlorine does to your lungs.</div><p class="answer">Chlorine is toxic (poisonous) — a fume cupboard stops you breathing it in.</p></div>
       <div class="ind-q"><span class="q-type q-exam">⭐ Exam [4 marks]</span><p style="margin:0"><strong>4.</strong> A cleaning product releases a gas that bleaches damp litmus paper white. (a) Name the gas [1]. (b) Describe the test and the result [2]. (c) State ONE safety precaution when testing this gas [1].</p><button class="hint-btn" onclick="toggleHint(this)">💡 Give me a hint</button><div class="hint-text">Toxic gas — where would a scientist test it?</div><button class="hint-btn" onclick="toggleHint(this)">✍️ Sentence frame</button><div class="hint-text">(a) The gas is ______. (b) Hold damp ______ litmus in the gas — it is ______ ______. (c) Safety: test in a ______ ______ because the gas is ______.</div><p class="answer">(a) Chlorine. (b) Hold damp litmus paper in the gas — it is bleached white. (c) Use a fume cupboard / well-ventilated area (chlorine is toxic).</p></div>
     
       <div class="aspire-box" style="margin-top:10px"><strong>🌟 Finished?</strong> Try the Higher MCQ (Q1) — the red-then-white story is one step beyond what you just wrote.</div>
@@ -555,30 +558,17 @@
   <!-- EXIT TICKET -->
   <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
     <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
-    <span class="slide-tag tag-exit">Exit Ticket – 3 mins</span>
-    <h2>Exit Ticket</h2>
-    <div class="li-box"><strong>No notes.</strong> From memory only. Your tier question = one observation + one conclusion. Then everyone answers the safety/method check below.</div>
-    <div class="task-box" style="margin-top:0"><strong>✅ Method check (everyone):</strong> Name <strong>one</strong> safety precaution when testing gases, OR explain why litmus paper must be <strong>damp</strong>.</div>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0">
-      <button onclick="switchExit('f')" style="background:#22c55e">Foundation</button>
-      <button onclick="switchExit('m')" style="background:#f97316">Middle</button>
-      <button onclick="switchExit('h')" style="background:#1e3a8a">Higher</button>
-      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
-    </div>
-    <div id="exit-f" class="task-box">
-      <p><strong>1) What colour does damp red litmus turn in ammonia?</strong></p><p class="answer">Blue.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>2) What does chlorine do to damp litmus paper?</strong></p><p class="answer">Bleaches it white.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>3) 🔁 Mixed: what does CO₂ do to limewater?</strong></p><p class="answer">Turns it milky/cloudy.</p>
-    </div>
-    <div id="exit-m" class="task-box" style="display:none">
-      <p><strong>1) How do you tell ammonia apart from chlorine with litmus?</strong></p><p class="answer">Ammonia turns damp red litmus blue; chlorine bleaches litmus white.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>2) Why must the litmus paper be damp?</strong></p><p class="answer">The gas must dissolve in the moisture on the paper to react with the indicator dye.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>3) 🔁 Mixed: why is the splint BURNING for H₂ but GLOWING for O₂?</strong></p><p class="answer">H₂ ignites at a flame → squeaky pop. O₂ supports combustion → relights a glowing ember.</p>
-    </div>
-    <div id="exit-h" class="task-box" style="display:none">
-      <p><strong>1) Explain why ammonia turns damp red litmus blue (name the solution formed).</strong></p><p class="answer">NH₃ dissolves in the moisture forming ammonium hydroxide — an alkaline solution (OH⁻ ions) — and alkalis turn red litmus blue.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>2) A student holds damp blue litmus paper in chlorine gas. Describe what they would see and explain why.</strong></p><p class="answer">The paper may briefly turn red (Cl₂ dissolves in water to form HCl, which is acidic) before being bleached white. Chlorine is a powerful bleaching agent that destroys the dye.</p><hr style="border:0;border-top:1px solid var(--task-border)">
-      <p><strong>3) Cl₂ + H₂O → HCl + HClO. Which product does the bleaching — and what does the other explain?</strong></p><p class="answer">HClO is the bleaching agent (turns the paper white). HCl is acidic — it explains why blue litmus briefly turns red first.</p>
+    <span class="slide-tag tag-exit">Exit Ticket – Super Six (3 mins)</span>
+    <h2>Exit Ticket — Super Six 🎯</h2>
+    <div class="li-box"><strong>Six quick questions — no notes, from memory.</strong> These cover <strong>all five gas tests</strong>: last lesson's three AND today's two. Answer all six, then tap 👁️ to check.</div>
+    <div style="text-align:center;margin:6px 0"><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Show / hide answers</button></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;max-height:58vh;overflow-y:auto">
+      <div class="task-box" style="margin:0"><strong>1. Hydrogen (H₂)</strong><p style="margin:6px 0 0">Test and positive result?</p><p class="answer">Hold a <strong>burning splint</strong> at the mouth → a <strong>squeaky pop</strong>.</p></div>
+      <div class="task-box" style="margin:0"><strong>2. Oxygen (O₂)</strong><p style="margin:6px 0 0">Test and positive result?</p><p class="answer">Place a <strong>glowing splint</strong> in the gas → it <strong>relights</strong>.</p></div>
+      <div class="task-box" style="margin:0"><strong>3. Carbon dioxide (CO₂)</strong><p style="margin:6px 0 0">Test and positive result?</p><p class="answer">Bubble it through <strong>limewater</strong> → turns <strong>milky / cloudy</strong>.</p></div>
+      <div class="task-box" style="margin:0"><strong>4. Ammonia (NH₃)</strong><p style="margin:6px 0 0">Test and positive result?</p><p class="answer">Hold <strong>damp red litmus</strong> in the gas → turns <strong>blue</strong>.</p></div>
+      <div class="task-box" style="margin:0"><strong>5. Chlorine (Cl₂)</strong><p style="margin:6px 0 0">Test and positive result?</p><p class="answer">Hold <strong>damp litmus</strong> in the gas → <strong>bleached white</strong>.</p></div>
+      <div class="task-box" style="margin:0;border-color:var(--lo-border);background:var(--lo-bg)"><strong>6. Safety &amp; method ⚠️</strong><p style="margin:6px 0 0">Why must litmus be damp? Name one safety point for chlorine.</p><p class="answer">Damp so the gas dissolves into the paper and reacts. Chlorine is toxic → test it in a <strong>fume cupboard</strong>.</p></div>
     </div>
   </div>
 
@@ -601,7 +591,7 @@
       <tr><td><strong>Oxygen</strong></td><td>O₂</td><td>Place a <strong>glowing splint</strong> in the gas</td><td>Splint <strong>relights</strong></td></tr>
       <tr><td><strong>Carbon dioxide</strong></td><td>CO₂</td><td>Bubble through <strong>limewater</strong></td><td>Turns <strong>milky / cloudy</strong></td></tr>
       <tr><td><strong>Ammonia</strong></td><td>NH₃</td><td>Hold <strong>damp red litmus paper</strong> near gas</td><td>Turns <strong>blue</strong> (alkaline gas)</td></tr>
-      <tr><td><strong>Chlorine</strong></td><td>Cl₂</td><td>Hold <strong>damp litmus paper</strong> near gas</td><td><strong>Bleached white</strong> (decolourised)</td></tr>
+      <tr><td><strong>Chlorine</strong></td><td>Cl₂</td><td>Hold <strong>damp litmus paper</strong> near gas</td><td><strong>Bleached white</strong> (colour removed)</td></tr>
     </table>
     <p><strong>Key distinctions:</strong> Burning splint (flame visible) = H₂ test. Glowing splint (ember only) = O₂ test. Damp litmus must be used for NH₃ and Cl₂ so the gas can dissolve in moisture.</p>
     <p class="prevent-break"><strong>🧠 Self-quiz routine (everyone):</strong> COVER the table → WRITE all five tests from memory → CHECK → fix any gaps. Do it twice — the second go is where it sticks.</p>
@@ -611,24 +601,20 @@
   <div id="print-arrival" class="print-section"><h2>Arrival Task</h2><div class="print-grid-2x2"><div class="print-box"><strong>1.</strong> Hydrogen test — circle: &nbsp; Burning splint→pop &nbsp;/&nbsp; Glowing splint→relights &nbsp;/&nbsp; Limewater→milky</div><div class="print-box"><strong>2.</strong> Oxygen test — circle: &nbsp; Burning splint→pop &nbsp;/&nbsp; Glowing splint→relights &nbsp;/&nbsp; Limewater→milky</div><div class="print-box"><strong>3.</strong> Fill the gap: CO₂ turns limewater ______.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4. Lead-in:</strong> Which TWO gases from your predictions are still unchecked?</div></div><p style="margin-top:10px"><strong>🧰 Word bank:</strong> burning · glowing · splint · pop · relights · limewater · milky · NH₃ · Cl₂</p></div>
   <div id="print-starter" class="print-section"><h2>Gas Test Table — fill in during the lesson</h2><p>Stick this in your book. Fill in each row as we learn the test (no copying needed).</p><table class="ko-table"><tr><th>Gas</th><th>Formula</th><th>Test</th><th>Positive Result</th></tr><tr><td>Hydrogen</td><td>H₂</td><td>Burning splint</td><td>Squeaky pop</td></tr><tr><td>Oxygen</td><td>O₂</td><td>Glowing splint</td><td>Relights</td></tr><tr><td>Carbon dioxide</td><td>CO₂</td><td>Bubble through limewater</td><td>Turns milky</td></tr><tr><td>Ammonia</td><td>NH₃</td><td style="height:36px"></td><td></td></tr><tr><td>Chlorine</td><td>Cl₂</td><td style="height:36px"></td><td></td></tr></table><p><strong>🔮 My final-two predictions I got right:</strong> ______ / 2</p></div>
   <div id="print-wedo" class="print-section">
-    <h2>We Do: Gas Test Matching</h2>
-    <p><strong>Part 1:</strong> Draw a line to match each gas to its correct test and result.</p>
+    <h2>We Do: Name That Gas — Ammonia vs Chlorine</h2>
+    <p><strong>Part 1:</strong> Complete the table for today's two gases.</p>
     <table class="ko-table">
       <tr><th>Gas</th><th>Test</th><th>Positive Result</th></tr>
-      <tr><td>Hydrogen (H₂)</td><td style="height:36px"></td><td></td></tr>
-      <tr><td>Oxygen (O₂)</td><td style="height:36px"></td><td></td></tr>
-      <tr><td>Carbon dioxide (CO₂)</td><td style="height:36px"></td><td></td></tr>
       <tr><td>Ammonia (NH₃)</td><td style="height:36px"></td><td></td></tr>
       <tr><td>Chlorine (Cl₂)</td><td style="height:36px"></td><td></td></tr>
     </table>
-    <p style="margin-top:14px"><strong>Part 2:</strong> A student performs these tests. Identify each gas.</p>
+    <p style="margin-top:14px"><strong>Part 2:</strong> For each clue, name the gas — ammonia or chlorine.</p>
     <table class="ko-table">
-      <tr><th>Observation</th><th>Gas</th></tr>
-      <tr><td>Burning splint → squeaky pop</td><td style="height:30px"></td></tr>
-      <tr><td>Glowing splint relights</td><td style="height:30px"></td></tr>
-      <tr><td>Limewater turns milky</td><td style="height:30px"></td></tr>
-      <tr><td>Damp red litmus → blue</td><td style="height:30px"></td></tr>
-      <tr><td>Damp litmus → bleached white</td><td style="height:30px"></td></tr>
+      <tr><th>Clue</th><th>Gas</th></tr>
+      <tr><td>Damp red litmus turns blue</td><td style="height:30px"></td></tr>
+      <tr><td>Damp litmus is bleached white</td><td style="height:30px"></td></tr>
+      <tr><td>The only common alkaline gas</td><td style="height:30px"></td></tr>
+      <tr><td>A toxic gas tested in a fume cupboard</td><td style="height:30px"></td></tr>
     </table>
   </div>
 
@@ -645,10 +631,10 @@
       <p>1. Damp RED litmus turns BLUE. The gas is:</p><p>[&nbsp;&nbsp;] NH₃ &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Cl₂ &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] CO₂</p>
       <p>2. Chlorine turns damp litmus paper:</p><p>[&nbsp;&nbsp;] Bleached white &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Blue &nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;] Milky</p>
       <p>3. Which TWO gases use damp litmus paper?</p><div class="print-line"></div>
-      <p>4. 🔁 Mixed: what does CO₂ do to limewater?</p><div class="print-line"></div>
+      <p>4. Why must the litmus paper be damp for these tests?</p><div class="print-line"></div>
     </div>
     <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
-      <p>5. Complete the table:</p><table class="ko-table"><tr><th>Gas</th><th>Test</th><th>Positive Result</th></tr><tr><td>Ammonia</td><td style="height:36px"></td><td></td></tr><tr><td>Chlorine</td><td style="height:36px"></td><td></td></tr><tr><td>🔁 Hydrogen</td><td style="height:36px"></td><td></td></tr></table>
+      <p>5. Complete the table:</p><table class="ko-table"><tr><th>Gas</th><th>Test</th><th>Positive Result</th></tr><tr><td>Ammonia (NH₃)</td><td style="height:36px"></td><td></td></tr><tr><td>Chlorine (Cl₂)</td><td style="height:36px"></td><td></td></tr></table>
       <p style="margin-top:14px">6. A student holds damp litmus paper in a gas and it is bleached white. Name the gas.</p><div class="print-line"></div>
     </div>
     <div class="prevent-break" style="margin-top:18px"><h3>Exam-Style Questions</h3>
@@ -668,8 +654,8 @@
       <p>4. Why is chlorine tested in a fume cupboard?</p><div class="print-line"></div>
     </div>
     <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
-      <p>5. A student tests four unknown gases. Identify each gas:</p>
-      <table class="ko-table"><tr><th>Observation</th><th>Gas</th></tr><tr><td>Glowing splint relights</td><td style="height:36px"></td></tr><tr><td>Limewater turns milky</td><td style="height:36px"></td></tr><tr><td>Damp red litmus turns blue</td><td style="height:36px"></td></tr><tr><td>Damp litmus bleached white</td><td style="height:36px"></td></tr></table>
+      <p>5. For each clue, name the gas — ammonia or chlorine:</p>
+      <table class="ko-table"><tr><th>Clue</th><th>Gas</th></tr><tr><td>Damp red litmus turns blue</td><td style="height:36px"></td></tr><tr><td>Damp litmus is bleached white</td><td style="height:36px"></td></tr><tr><td>The only common alkaline gas</td><td style="height:36px"></td></tr><tr><td>A toxic gas tested in a fume cupboard</td><td style="height:36px"></td></tr></table>
     </div>
     <div class="prevent-break" style="margin-top:18px"><h3>Exam-Style Questions</h3>
       <p><strong>6. [4 marks]</strong> A cleaning product releases a gas that bleaches damp litmus white. (a) Name the gas. [1 mark]</p><div class="print-line"></div>
@@ -683,7 +669,7 @@
     <div class="prevent-break"><h3>Multiple Choice &amp; Short Answer</h3>
       <p>1. Explain why ammonia turns damp red litmus blue — name the solution formed.</p><div class="print-line"></div>
       <p>2. Explain why chlorine initially turns damp blue litmus red before bleaching it white.</p><div class="print-line"></div><div class="print-line"></div>
-      <p>3. Hydrogen makes a squeaky pop. Write the equation for the reaction occurring during this test.</p><div class="print-line"></div>
+      <p>3. Name the alkaline solution formed when ammonia dissolves in the damp litmus paper.</p><div class="print-line"></div>
     </div>
     <div class="prevent-break" style="margin-top:18px"><h3>Long Answer</h3>
       <p>4. A student heats ammonium chloride (NH₄Cl) and two gases are produced.</p>
@@ -696,15 +682,21 @@
       <p>(a) Name the two gases produced. [2 marks]</p><div class="print-line"></div>
       <p>(b) Describe a test for each gas and state the expected result. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
       <p>(c) Explain why both tests require damp litmus paper. [1 mark]</p><div class="print-line"></div>
-      <p style="margin-top:14px"><strong>6. [6 marks]</strong> A student is given three test tubes, each containing an unknown gas: one is H₂, one is O₂, and one is CO₂. She has a wooden splint, matches, and limewater available. Describe a systematic method she could use to identify all three gases. For each step, state the test performed, the expected observation, and the conclusion drawn.</p>
+      <p style="margin-top:14px"><strong>6. [6 marks]</strong> A student has two unlabelled gas jars: one contains ammonia, one contains chlorine. Describe a method to identify both gases. For each jar, state the test, the expected observation, and the conclusion. Include ONE safety point.</p>
       <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
     </div>
   </div>
 
   <div id="print-exit" class="print-section">
-    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1)</h2><p>1) How do you test for hydrogen?</p><div class="print-line"></div><p>2) What does CO₂ do to limewater?</p><div class="print-line"></div><p>3) What happens to damp litmus in chlorine?</p><div class="print-line"></div></div>
-    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2><p>1) A glowing splint relights. Name the gas and explain why.</p><div class="print-line"></div><div class="print-line"></div><p>2) How do you tell ammonia apart from chlorine?</p><div class="print-line"></div><div class="print-line"></div><p>3) Why is the splint test for H₂ different from the one for O₂?</p><div class="print-line"></div></div>
-    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–4)</h2><p>1) Explain the chemistry behind CO₂ turning limewater milky.</p><div class="print-line"></div><div class="print-line"></div><p>2) Describe what happens when damp blue litmus is held in chlorine. Explain why.</p><div class="print-line"></div><div class="print-line"></div><p>3) Cl₂ + H₂O → HCl + HClO: which product bleaches, and what does the other product explain?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><h2>Exit Ticket – Super Six (all five gas tests)</h2>
+      <p>No notes — from memory. Last lesson's three gases AND today's two.</p>
+      <p>1. Hydrogen (H₂) — state the test and the positive result.</p><div class="print-line"></div>
+      <p>2. Oxygen (O₂) — state the test and the positive result.</p><div class="print-line"></div>
+      <p>3. Carbon dioxide (CO₂) — state the test and the positive result.</p><div class="print-line"></div>
+      <p>4. Ammonia (NH₃) — state the test and the positive result.</p><div class="print-line"></div>
+      <p>5. Chlorine (Cl₂) — state the test and the positive result.</p><div class="print-line"></div>
+      <p>6. Why must the litmus paper be damp, and name one safety point for chlorine.</p><div class="print-line"></div>
+    </div>
   </div>
   <div id="print-wedo-evidence" class="print-section"><div id="wedo-evidence-content"></div></div>
 </div>
@@ -763,7 +755,6 @@
   function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
   document.addEventListener('keydown',e=>{const tg=e.target;if(tg.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
   function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`}updateProgress();
-  checkTimerVisibility();
   function switchExit(l){document.getElementById('exit-f').style.display=l==='f'?'block':'none';document.getElementById('exit-m').style.display=l==='m'?'block':'none';document.getElementById('exit-h').style.display=l==='h'?'block':'none'}
   function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
   function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});document.body.classList.add('print-'+level);const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
@@ -778,11 +769,8 @@
       ['Oxygen','O₂','Glowing splint','Relights (bursts into flame)'],
       ['Carbon dioxide','CO₂','Bubble through limewater','Limewater turns milky/cloudy']
     ]:[
-      ['Hydrogen','H₂','Burning splint','Squeaky pop'],
-      ['Oxygen','O₂','Glowing splint','Relights (bursts into flame)'],
-      ['Carbon dioxide','CO₂','Bubble through limewater','Limewater turns milky/cloudy'],
-      ['Ammonia','NH₃','Damp red litmus paper','Turns blue'],
-      ['Chlorine','Cl₂','Damp litmus paper','Bleached white']
+      ['Ammonia','NH₃','Damp red litmus paper','Turns blue (alkaline gas)'],
+      ['Chlorine','Cl₂','Damp litmus paper','Bleached white (toxic — fume cupboard)']
     ];
     let refTable='<table class="ko-table"><tr><th>Gas</th><th>Formula</th><th>Test</th><th>Positive result</th></tr>';
     refRows.forEach(r=>{refTable+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'});
@@ -880,17 +868,22 @@
   const splintConf={'H₂>O₂':'Not quite — BURNING splint = bang (H₂ pop). The GLOWING splint is the O₂ test.','O₂>H₂':'Not quite — GLOWING splint = goes again (O₂ relights). The BURNING splint is the H₂ test.'};
   const litmusConf={'NH₃>Cl₂':'Blue vs white — NH₃ turns damp red litmus BLUE. Bleached WHITE means chlorine.','Cl₂>NH₃':'Blue vs white — Cl₂ BLEACHES litmus white. Turning BLUE means ammonia.'};
   function unlockR2(id){return function(){const r=document.getElementById(id);if(r&&r.style.display==='none'){r.style.display='block';setTimeout(()=>{try{r.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}},400)}}}
-  makeDnD('mgl-chips','mgl-zones','mgl-fb','mgl-count',5,'🎉 All five identified — check your table is complete, then try Round 2 below!',Object.assign({},splintConf,litmusConf),unlockR2('mgl-r2'));
+  makeDnD('mgl-chips','mgl-zones','mgl-fb','mgl-count',4,'🎉 All four clues sorted — you can tell ammonia and chlorine apart. Now try Round 2 below!',litmusConf,unlockR2('mgl-r2'));
 
   document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
 
   // Timer
   let timerInterval,timeLeft=0,isTimerRunning=false;
-  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!isTimerRunning)resetTimer(parseInt(t))}else{w.classList.remove('visible')}}
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');resetTimer(parseInt(t));startTimer()}else{w.classList.remove('visible');pauseTimer()}}
   function updateTimerDisplay(){const m=Math.floor(timeLeft/60);const s=timeLeft%60;document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('timer-display').style.color=timeLeft<60?'var(--error)':'var(--lo-border)'}
   function startTimer(){if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000)}
   function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
   function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+  // ── Master 40-minute lesson clock (auto-starts on load, runs continuously across all pages) ──
+  let lessonLeft=40*60,lessonTimer=null,lessonPaused=false;
+  function lessonClockTick(){const el=document.getElementById('lesson-clock-num');const box=document.getElementById('lesson-clock');if(!el)return;const t=Math.max(lessonLeft,0);el.textContent=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');if(box){box.classList.toggle('warn',lessonLeft<=300&&lessonLeft>0);box.classList.toggle('over',lessonLeft<=0)}if(lessonLeft<=0){clearInterval(lessonTimer);lessonTimer=null;return}if(!lessonPaused)lessonLeft--}
+  function startLessonClock(){lessonClockTick();if(!lessonTimer)lessonTimer=setInterval(lessonClockTick,1000)}
+  function toggleLessonClock(){lessonPaused=!lessonPaused;const box=document.getElementById('lesson-clock');if(box)box.classList.toggle('paused',lessonPaused)}
 
 
   // Sound Effects
@@ -980,11 +973,11 @@
     sc.querySelectorAll('.wd-mc').forEach(function(s){s.style.display=(m==='match')?'inline':'none'});
   }
   const voteQs=[
-    {s:"Damp red litmus turns BLUE in ammonia.",a:true,why:"NH₃ is the alkaline gas — alkalis turn red litmus blue."},
-    {s:"Chlorine turns damp litmus blue.",a:false,why:"Bleached WHITE — chlorine destroys the dye."},
-    {s:"The litmus paper must be DAMP for these tests.",a:true,why:"The gas dissolves in the moisture to reach the dye."},
-    {s:"Chlorine briefly turns blue litmus RED before bleaching it.",a:true,why:"Cl₂ + water makes an acid first — then it bleaches (Higher detail)."},
-    {s:"🔁 A glowing splint relights in carbon dioxide.",a:false,why:"That is oxygen — CO₂ puts flames OUT."},
+    {s:"Damp red litmus turns BLUE in ammonia.",a:true,why:"Yes — NH₃ is alkaline, and alkalis turn red litmus blue."},
+    {s:"Chlorine turns damp litmus blue.",a:false,why:"No — chlorine BLEACHES litmus WHITE. Blue means ammonia."},
+    {s:"The litmus paper must be DAMP for both tests.",a:true,why:"Yes — the gas has to soak into the wet paper to react."},
+    {s:"Ammonia is the toxic gas, so it is tested in a fume cupboard.",a:false,why:"That is chlorine — chlorine is the poisonous one."},
+    {s:"Chlorine can briefly turn damp BLUE litmus red before bleaching it.",a:true,why:"Higher detail — Cl₂ makes an acid first (red), then bleaches (white)."},
     {s:"Ammonia bleaches litmus white.",a:false,why:"BLUE = ammonia. WHITE = chlorine. The exam loves this swap."}
   ];
   let vIdx=0;
@@ -1070,9 +1063,9 @@
     "<strong>Starter:</strong> 2 predictions, 3 mins. Changing your mind with a reason = good science — praise it. Hand out the table sheet (top 3 rows pre-filled). Tabs vary the starter: Final Two (default) · Brain Dump (60s timer + reveal checklist) · Odd One Out. Same 3 min whichever.",
     "<strong>Observe:</strong> tap the two litmus stations to run each test live (A ammonia → blue, B chlorine → red-then-white); ↺ resets. Then the clip. Note: Station B shows the full story — damp BLUE litmus goes red (acidic) then bleaches, which is the Higher-tier detail.",
     "<strong>I Do:</strong> ▶ runs the litmus colour-change animation. Re-voice BLUE = ammonia, WHITE = chlorine. The fume-cupboard line on the card = what scientists do (exam point).",
-    "<strong>We Do:</strong> all five gases — frame as free revision of last lesson. Round 2 typed unlocks after matching. 🖨️ evidence print includes stats. Tabs give 3 modes for the SAME slot — pick ONE: Match (Round 2 + evidence print) · Vote (physical true/false) · Order It (sequence the two-jars plan — rehearses the 6-mark exam Q).",
-    "<strong>Independent:</strong> tiers via toggles; 🔁 items are mixed retrieval from last lesson — keep them in even for strugglers.",
-    "<strong>Exit:</strong> 👁️ fires the full-set completion overlay. Safety answers: fume cupboard / ventilation = the exam marks."
+    "<strong>We Do:</strong> ammonia vs chlorine only — the classic exam swap (BLUE = ammonia, WHITE = chlorine). Sort the 4 clues (each gas used twice); Round 2 typed unlocks after matching. 🖨️ evidence print includes stats. Tabs = 3 modes for the SAME slot — pick ONE: Match · Vote (physical true/false) · Order It (the two-jars plan — rehearses the 6-mark Q).",
+    "<strong>Independent:</strong> tiers via toggles — every question is ammonia/chlorine now. Cumulative recall of all five gases is saved for the Super Six exit.",
+    "<strong>Exit — Super Six:</strong> 6 questions from memory, cumulative across all five gas tests. 👁️ reveals answers and fires the completion overlay. Q6 safety: damp litmus + fume cupboard = the marks."
   ];
   function openTN(){const t=slides[currentSlide].getAttribute('data-title')||('Slide '+(currentSlide+1));document.getElementById('tn-slide-title').textContent=t;document.getElementById('tn-brief').innerHTML=tNotes[currentSlide]||'Deliver from the slide; notes on the surrounding slides.';openModal('tn-modal')}
 
@@ -1108,6 +1101,9 @@
   (function(){const exit=document.getElementById('exit-slide');if(exit&&window.MutationObserver){new MutationObserver(function(){if(exit.classList.contains('show-ans')){const o=document.getElementById('lesson-complete');if(o&&!o.dataset.fired){o.dataset.fired='1';o.classList.add('show');fireConfettiGlobal()}}}).observe(exit,{attributes:true,attributeFilter:['class']})}})();
 
   renderRoster();
+  // ── 40-minute lesson timing: start the master clock + auto-start the per-page budget ──
+  startLessonClock();
+  checkTimerVisibility();
 </script>
 </body>
 </html>
