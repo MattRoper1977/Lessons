@@ -1461,7 +1461,7 @@
         function startBossSequence() {
             gameState = 'WARNING';
             livesAtBossStart = lives;
-            bossMaxHP = (level === 1) ? 80 : 130 + (level * 45); bossCurrentHP = bossMaxHP; updateBossHP();
+            bossMaxHP = (level === 1) ? 80 : (level === 2) ? 120 : 140 + ((level - 2) * 50); bossCurrentHP = bossMaxHP; updateBossHP();
             const bw = document.getElementById('boss-warning'); if (bw) bw.innerText = pick(STORM_LINES);
             document.getElementById('boss-warning').style.display = 'block';
             playerGun.visible = true; boss.visible = true;
@@ -1487,7 +1487,7 @@
             }
             
             // Movement
-            const moveSpeed = 0.04 * bossPhase * (level === 1 ? 0.7 : 1); 
+            const moveSpeed = 0.04 * bossPhase * (level === 1 ? 0.7 : level === 2 ? 0.82 : 1); 
             // Only move if not firing laser
             if(boss.userData.laserState === 0) {
                 boss.position.x = Math.sin(frame * moveSpeed) * (LANE_WIDTH * 1.5); 
@@ -1498,7 +1498,7 @@
             const shield = boss.getObjectByName('EnergyShield'); if (shield) shield.rotation.z += 0.07;
             
             // Laser Attack Logic
-            if (level >= 2) {
+            if (level >= 3) {
                 if (boss.userData.laserState === 0) {
                     if (Math.random() < 0.01) {
                         boss.userData.laserState = 1; // Charge
@@ -1532,7 +1532,7 @@
                 }
             }
 
-            const attackFreq = (level === 1) ? (bossPhase === 1 ? 110 : 70) : (bossPhase === 1 ? 75 : 45); 
+            const attackFreq = (level === 1) ? (bossPhase === 1 ? 110 : 70) : (level === 2) ? (bossPhase === 1 ? 95 : 60) : (bossPhase === 1 ? 75 : 45); 
             if(frame % attackFreq === 0 && boss.userData.laserState === 0) spawnEnemyProjectile();
             
             const fuselageMesh = boss.getObjectByName('Fuselage');
@@ -1720,7 +1720,7 @@
         function spawnParticles(pos, color, count) { for(let i=0; i<count; i++) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.15,0.15), new THREE.MeshBasicMaterial({color})); p.position.copy(pos); p.userData.vel = new THREE.Vector3((Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5); p.userData.gravity = 0; scene.add(p); particles.push(p); } }
         function spawnEngineTrail() { const createP = (offsetX) => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.15), materials.trail.clone()); p.position.set(player.position.x + offsetX, player.position.y + 0.4, player.position.z + 1.2); p.userData.life = 1.0; scene.add(p); engineTrails.push(p); }; createP(-0.9); createP(0.9); }
         function updateParticles() { for(let i=particles.length-1; i>=0; i--) { let p = particles[i]; p.userData.gravity -= 0.005; p.position.add(p.userData.vel); p.position.y += p.userData.gravity; p.scale.multiplyScalar(0.9); if(p.scale.x < 0.01) { p.geometry.dispose(); p.material.dispose(); scene.remove(p); particles.splice(i,1); } } for(let i=engineTrails.length-1; i>=0; i--) { let p = engineTrails[i]; p.position.z += speed; p.userData.life -= 0.05; p.material.opacity = p.userData.life; p.scale.multiplyScalar(0.95); if(p.userData.life <= 0) { p.geometry.dispose(); p.material.dispose(); scene.remove(p); engineTrails.splice(i,1); } } }
-        function spawnEnemyProjectile() { const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.8), materials.enemyProj); mesh.position.copy(boss.position); mesh.position.z += 1.0; const vel = new THREE.Vector3( (player.position.x - boss.position.x)*0.05, (player.position.y - boss.position.y)*0.03, (level === 1 ? 0.45 : 0.7)); scene.add(mesh); enemyProjectiles.push({mesh, velocity: vel}); if(settings.audio) SFX.shoot(); }
+        function spawnEnemyProjectile() { const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.8), materials.enemyProj); mesh.position.copy(boss.position); mesh.position.z += 1.0; const vel = new THREE.Vector3( (player.position.x - boss.position.x)*0.05, (player.position.y - boss.position.y)*0.03, (level === 1 ? 0.45 : level === 2 ? 0.55 : 0.7)); scene.add(mesh); enemyProjectiles.push({mesh, velocity: vel}); if(settings.audio) SFX.shoot(); }
         
         function updateProjectiles() { 
             for(let i=playerProjectiles.length-1; i>=0; i--) { 
