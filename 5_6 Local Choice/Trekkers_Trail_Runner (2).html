@@ -368,6 +368,13 @@
         .badge.earned .b-name { color:#fff; }
         .badge .b-desc { font-size:11px; color:#94a3b8; margin-top:4px; line-height:1.25; }
         @media (max-width:560px){ #challenge-grid { grid-template-columns:repeat(2,1fr); width:96%; } }
+        #board-list { list-style:none; padding:0; margin:0; width:420px; max-width:92%; }
+        .board-row { display:flex; align-items:center; gap:12px; background:rgba(15,23,42,0.85); border:1px solid #334155; border-radius:10px; padding:10px 16px; margin:7px 0; }
+        .board-row.top { border-color:#ffd700; box-shadow:0 0 14px rgba(255,215,0,0.25); }
+        .board-rank { font-family:'Orbitron',sans-serif; font-weight:700; color:#ffd700; min-width:34px; text-align:center; font-size:16px; }
+        .board-name { flex:1; color:#fff; font-weight:600; letter-spacing:1px; }
+        .board-score { font-family:'Orbitron',sans-serif; font-weight:700; color:#00d4ff; }
+        .board-empty { color:#94a3b8; text-align:center; padding:24px; }
     </style>
     <script type="importmap">
         {
@@ -466,6 +473,7 @@
         <a id="trek-evidence-link" class="trek-link" href="#">← Back to Trekkers Evidence</a>
         <br>
         <button class="btn" id="open-challenges-btn" style="border-color:#22c55e; color:#4ade80;">🏅 TRAIL CHALLENGES</button>
+        <button class="btn" id="open-board-btn" style="border-color:#ffd700; color:#ffd700;">🏆 LEADERBOARD</button>
         <button class="btn" id="close-leaderboard-btn">BACK</button>
     </div>
 
@@ -475,6 +483,14 @@
         <div id="challenge-grid"></div>
         <br>
         <button class="btn" id="close-challenges-btn">BACK</button>
+    </div>
+
+    <div id="board-screen" class="screen hidden">
+        <h1 class="neon-text" style="color: #ffd700; text-shadow: 0 0 20px #ff8800; font-size:38px;">🏆 LEADERBOARD</h1>
+        <div class="trek-stat" style="margin-bottom:10px;">Best treks on this device</div>
+        <ol id="board-list"></ol>
+        <br>
+        <button class="btn" id="close-board-btn">BACK</button>
     </div>
     
     <div id="pause-screen" class="screen hidden">
@@ -488,9 +504,9 @@
         <p id="go-cheese"></p>
         <p style="color: white; font-size: 20px;">DISTANCE SCORE: <span id="final-score" style="color:#00d4ff; font-weight:bold; font-size:30px;">0</span></p>
         <p id="best-line" style="color:#cbd5e1; font-size:16px; min-height:20px;"></p>
-        <div id="name-entry-container" style="display:none;">
-            <input type="text" id="player-name-input" placeholder="ENTER CALLSIGN" maxlength="10">
-            <button class="btn" id="submit-score-btn" style="margin-top: 5px;">UPLOAD DATA</button>
+        <div id="name-entry-container" style="margin-top:12px;">
+            <input type="text" id="player-name-input" placeholder="Your initials (optional)" maxlength="8">
+            <button class="btn" id="submit-score-btn" style="margin-top: 6px; border-color:#ffd700; color:#ffd700;">🏆 ADD TO LEADERBOARD</button>
         </div>
         <button class="btn" id="restart-btn" style="margin-top: 20px;">TRY AGAIN</button>
         <button class="btn" id="gameover-leaderboard-btn" style="border-color: #ffb703; color: #ffb703;">🧭 TRAIL QUEST</button>
@@ -612,25 +628,39 @@
 
         // Each leg's Storm looks different (colour, glow, size) — a fresh weather system per walk.
         const STORM_TYPES = [
-            { name:'Drizzle',          emoji:'🌦️', body:0x6b7280, glow:0xbfe3ff, scale:1.00 }, // ① light grey
-            { name:'Sea Fret',         emoji:'🌫️', body:0x4a6070, glow:0x9fd0e0, scale:1.12 }, // ② blue-grey mist
-            { name:'Thunderhead',      emoji:'⛈️', body:0x2b3440, glow:0xffe066, scale:1.40 }, // ③ dark, lightning-yellow
-            { name:'Gale',             emoji:'🌬️', body:0x6a5a3a, glow:0xffb703, scale:1.18 }, // ④ amber, windy
-            { name:'North Sea Squall', emoji:'🌊', body:0x18323a, glow:0x66c0d8, scale:1.45 }  // ⑤ dark teal, biggest
+            { name:'Drizzle',          emoji:'🌦️', body:0x8a93a0, glow:0xcfe8ff, scale:1.00 }, // ① light grey
+            { name:'Sea Fret',         emoji:'🌫️', body:0x3f6b80, glow:0x9fe0ea, scale:1.14 }, // ② teal-blue mist
+            { name:'Thunderhead',      emoji:'⛈️', body:0x2b2f48, glow:0xffe34d, scale:1.42 }, // ③ dark, lightning-yellow
+            { name:'Gale',             emoji:'🌬️', body:0x7a6326, glow:0xffc24a, scale:1.20 }, // ④ amber, windy
+            { name:'North Sea Squall', emoji:'🌊', body:0x123a44, glow:0x4fd6ee, scale:1.46 }  // ⑤ dark teal, biggest
         ];
-        function applyLegTheme(level) {
+        function applyLegTheme(level, instant) {
             const idx = (level - 1) % LEG_THEMES.length;
             const t = LEG_THEMES[idx];
-            if (skyDome) { skyDome.material.uniforms.topColor.value.setHex(t.top); skyDome.material.uniforms.bottomColor.value.setHex(t.bottom); }
-            if (terrainMesh) terrainMesh.material.color.setHex(t.terrain);
-            if (groundPlane) groundPlane.material.color.setHex(t.fog);
-            if (ridgeMat) ridgeMat.color.setHex(t.ridge);
-            if (materials.building) materials.building.color.setHex(t.hill);
-            if (sunCoreMat) sunCoreMat.color.setHex(t.sun);
-            if (sunHaloMat) sunHaloMat.color.setHex(t.sun);
+            // colours the scene will ease toward
+            legTarget = {
+                top: new THREE.Color(t.top), bottom: new THREE.Color(t.bottom),
+                terrain: new THREE.Color(t.terrain), fog: new THREE.Color(t.fog),
+                hill: new THREE.Color(t.hill), ridge: new THREE.Color(t.ridge),
+                sun: new THREE.Color(t.sun)
+            };
+            // discrete scenery swaps happen immediately
             if (seaPlane) seaPlane.visible = (idx === 4);                 // sea only at the coast
             if (moonMesh) moonMesh.visible = (idx === 1 || idx === 2);    // moon on the cooler/darker legs
-            if (scene) { if (scene.fog) scene.fog.color.setHex(t.fog); scene.background.setHex(t.fog); }
+            if (instant) tweenLeg(1);                                      // snap (boot / new run / menu)
+        }
+        // Ease every background colour toward the current leg's target. amt 1 = snap.
+        function tweenLeg(amt) {
+            if (!legTarget) return;
+            const a = amt || 0.045;
+            if (skyDome) { skyDome.material.uniforms.topColor.value.lerp(legTarget.top, a); skyDome.material.uniforms.bottomColor.value.lerp(legTarget.bottom, a); }
+            if (terrainMesh) terrainMesh.material.color.lerp(legTarget.terrain, a);
+            if (groundPlane) groundPlane.material.color.lerp(legTarget.fog, a);
+            if (ridgeMat) ridgeMat.color.lerp(legTarget.ridge, a);
+            if (materials.building) materials.building.color.lerp(legTarget.hill, a);
+            if (sunCoreMat) sunCoreMat.color.lerp(legTarget.sun, a);
+            if (sunHaloMat) sunHaloMat.color.lerp(legTarget.sun, a);
+            if (scene) { if (scene.fog) scene.fog.color.lerp(legTarget.fog, a); if (scene.background && scene.background.lerp) scene.background.lerp(legTarget.fog, a); }
         }
         // End of a run: bump the count, keep the personal best (no class ranking — SEMH).
         function recordRun(finalScore) {
@@ -755,6 +785,7 @@
         let sunMesh, skyDome, terrainMesh, starField, dirLight;
         let groundPlane, ridgeMat;
         let sunHaloMat, sunCoreMat, seaPlane, moonMesh;
+        let legTarget = null;   // target colours the scene eases toward on a leg change
 
         let lives = 5, score = 0, levelScore = 0, level = 1, speed = BASE_SPEED, frame = 0, gameState = 'MENU';
         let cameraShake = 0;
@@ -862,7 +893,7 @@
             setupUI(); setupSkinUI();
             applyQuality(); // honour saved Low/High graphics preference
             applyCalm();    // honour saved Calm Mode preference
-            applyLegTheme(1); // set the opening (Eston Rec) atmosphere
+            applyLegTheme(1, true); // set the opening (Eston Rec) atmosphere
 
             window.addEventListener('resize', onResize); window.addEventListener('keydown', handleInput); window.addEventListener('keyup', handleInput);
             if('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -1090,6 +1121,9 @@
             const scaleMod = 1.3;
             const fuselage = new THREE.Mesh(new THREE.CylinderGeometry(1.0*scaleMod, 0.6*scaleMod, 4.5*scaleMod, 8), matBody); fuselage.rotation.x = Math.PI / 2; fuselage.name = "Fuselage"; boss.add(fuselage);
             const eye = new THREE.Mesh(new THREE.SphereGeometry(0.6*scaleMod, 16, 16), matGlow); eye.position.set(0, 0.3*scaleMod, -2.0*scaleMod); eye.scale.set(1, 0.5, 1); eye.name = "Eye"; boss.add(eye);
+            // Storm aura — a coloured haze around the boss, distinct per leg.
+            const aura = new THREE.Mesh(new THREE.SphereGeometry(3.4*scaleMod, 18, 18), new THREE.MeshBasicMaterial({ color: storm.glow, transparent:true, opacity:0.12, blending:THREE.AdditiveBlending, side:THREE.BackSide, depthWrite:false }));
+            aura.name = "Aura"; boss.add(aura);
             const wingShape = new THREE.Shape(); wingShape.moveTo(0, 0.5*scaleMod); wingShape.lineTo(4.5*scaleMod, -0.5*scaleMod); wingShape.lineTo(4.5*scaleMod, -1.0*scaleMod); wingShape.lineTo(3.5*scaleMod, -0.8*scaleMod); wingShape.lineTo(0, -1.5*scaleMod);
             const wingGeo = new THREE.ExtrudeGeometry(wingShape, { steps: 1, depth: 0.4*scaleMod, bevelEnabled: false });
             const wingR = new THREE.Mesh(wingGeo, matWing); wingR.position.set(-0.8*scaleMod, 0, 0); wingR.name = "WingR"; boss.add(wingR);
@@ -1206,8 +1240,10 @@
             document.getElementById('close-leaderboard-btn').onclick = () => { document.getElementById('leaderboard-screen').classList.add('hidden'); if (gameState === 'GAMEOVER') document.getElementById('game-over-screen').classList.remove('hidden'); else document.getElementById('start-screen').classList.remove('hidden'); };
             document.getElementById('open-challenges-btn').onclick = () => { renderChallenges(); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.remove('hidden'); };
             document.getElementById('close-challenges-btn').onclick = () => { document.getElementById('challenges-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.remove('hidden'); };
+            document.getElementById('open-board-btn').onclick = () => { renderBoard(); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('board-screen').classList.remove('hidden'); };
+            document.getElementById('close-board-btn').onclick = () => { document.getElementById('board-screen').classList.add('hidden'); if (gameState === 'GAMEOVER') document.getElementById('game-over-screen').classList.remove('hidden'); else document.getElementById('leaderboard-screen').classList.remove('hidden'); };
             const evLink = document.getElementById('trek-evidence-link'); if (evLink) evLink.setAttribute('href', TREKKERS_URL);
-            document.getElementById('submit-score-btn').onclick = () => { if(scoreSubmitted) return; const nameInput = document.getElementById('player-name-input'); let name = nameInput.value.trim(); if(!name) name = "PILOT"; saveScore(name, score); scoreSubmitted = true; document.getElementById('submit-score-btn').innerText = "SAVED!"; document.getElementById('submit-score-btn').disabled = true; document.getElementById('player-name-input').disabled = true; };
+            document.getElementById('submit-score-btn').onclick = () => { if(scoreSubmitted) return; const nameInput = document.getElementById('player-name-input'); let name = nameInput.value.trim(); if(!name) name = "YOU"; saveScore(name, score); scoreSubmitted = true; document.getElementById('submit-score-btn').innerText = "✓ ADDED!"; document.getElementById('submit-score-btn').disabled = true; nameInput.disabled = true; renderBoard(); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('board-screen').classList.remove('hidden'); };
         }
         function setupSkinUI() {
             const pContainer = document.getElementById('skin-container'); pContainer.innerHTML = '';
@@ -1233,8 +1269,20 @@
                 bContainer.appendChild(tag);
             });
         }
-        function loadLeaderboard() { const stored = localStorage.getItem('neonRunnerScores_v5'); if (stored) highScores = JSON.parse(stored); else highScores = []; }
-        function saveScore(name, finalScore) { const entry = { name: name.substring(0, 10).toUpperCase(), score: Math.floor(finalScore), date: new Date().toLocaleDateString() }; highScores.push(entry); highScores.sort((a, b) => b.score - a.score); highScores = highScores.slice(0, 5); localStorage.setItem('neonRunnerScores_v5', JSON.stringify(highScores)); }
+        function loadLeaderboard() { try { const stored = localStorage.getItem('trekTrailScores_v1'); highScores = stored ? JSON.parse(stored) : []; } catch(e){ highScores = []; } }
+        function saveScore(name, finalScore) { const entry = { name: (name||'YOU').substring(0, 8).toUpperCase(), score: Math.floor(finalScore), date: new Date().toLocaleDateString('en-GB') }; highScores.push(entry); highScores.sort((a, b) => b.score - a.score); highScores = highScores.slice(0, 8); try { localStorage.setItem('trekTrailScores_v1', JSON.stringify(highScores)); } catch(e){} }
+        function renderBoard() {
+            const list = document.getElementById('board-list'); if (!list) return;
+            list.innerHTML = '';
+            if (!highScores.length) { list.innerHTML = '<li class="board-empty">No scores yet — finish a trek and add yours! 🥾</li>'; return; }
+            highScores.forEach((e, i) => {
+                const li = document.createElement('li');
+                li.className = 'board-row' + (i === 0 ? ' top' : '');
+                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+                li.innerHTML = '<span class="board-rank">' + medal + '</span><span class="board-name">' + e.name + '</span><span class="board-score">' + e.score + '</span>';
+                list.appendChild(li);
+            });
+        }
         function renderLeaderboard() {
             const stat = document.getElementById('trek-stat');
             if (stat) stat.innerHTML = 'Best distance <b>' + Math.floor(quest.best) + '</b> &nbsp;·&nbsp; Treks finished <b>' + quest.runs + '</b> &nbsp;·&nbsp; Trail legs reached <b>' + Math.min(quest.legs, QUEST.length) + '/' + QUEST.length + '</b>';
@@ -1317,10 +1365,10 @@
         function showFloatingText(pos, text, color) { const div = document.createElement('div'); div.className = 'float-text'; div.style.color = color || '#fff'; div.innerText = text; const vec = pos.clone(); vec.project(camera); const x = (vec.x * .5 + .5) * window.innerWidth; const y = (-(vec.y * .5) + .5) * window.innerHeight; div.style.left = `${x}px`; div.style.top = `${y}px`; document.body.appendChild(div); setTimeout(() => { div.remove(); }, 800); }
 
         function startGame() {
-            document.getElementById('start-screen').classList.add('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.add('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.add('hidden'); document.getElementById('board-screen').classList.add('hidden');
             if (lives <= 0) lives = 5; player.visible = true; player.position.set(0, 0.4, 2); gameState = 'RUNNING'; scoreSubmitted = false;
             bonusActive = false; bonusTimer = 0; runCompass = 0; runBonusGrabs = 0; runPaceMax = 1; livesAtBossStart = lives;
-            applyLegTheme(1);
+            applyLegTheme(1, true);
             const _bt = document.getElementById('bonus-tint'); if (_bt) _bt.classList.remove('on');
             const _btm = document.getElementById('bonus-timer'); if (_btm) _btm.style.display = 'none';
             shieldActive = false; playerShieldMesh.visible = false;
@@ -1334,7 +1382,7 @@
             enemyProjectiles.forEach(p => scene.remove(p.mesh)); enemyProjectiles = [];
             playerProjectiles.forEach(p => scene.remove(p.mesh)); playerProjectiles = [];
             engineTrails.forEach(p => scene.remove(p)); engineTrails = [];
-            applyLegTheme(1);
+            applyLegTheme(1, true);
             bonusActive = false; bonusTimer = 0;
             const _bt = document.getElementById('bonus-tint'); if (_bt) _bt.classList.remove('on');
             const _bb = document.getElementById('bonus-banner'); if (_bb) _bb.style.display = 'none';
@@ -1618,7 +1666,7 @@
         function spawnObstacle() {
             const lanes = [-LANE_WIDTH, 0, LANE_WIDTH]; const x = lanes[Math.floor(Math.random()*3)]; const z = -60; 
             const r = Math.random(); 
-            const isCeiling = Math.random() > 0.65; 
+            const isCeiling = Math.random() > 0.72; 
             let type, mesh;
 
             if (isCeiling) {
@@ -1629,17 +1677,17 @@
                 // Hang into the upper flight band (player ceiling is y=3.0) so high-flyers must duck.
                 mesh.position.set(x, 3.6 + Math.random() * 0.3, z); 
             } else {
-                if (r < 0.02) { 
+                if (r < 0.03) { 
                     type = 'SHIELD_ITEM';
                     mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.4, 0), materials.shieldItem);
                     mesh.position.set(x, 1.0, z);
                 }
-                else if (r < 0.06) {
+                else if (r < 0.08) {
                     type = 'COMBO_ORB';
                     mesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4, 0), materials.comboOrb);
                     mesh.position.set(x, 1.0, z);
                 }
-                else if (r < 0.20) {
+                else if (r < 0.18) {
                     type = 'MINE';
                     mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 1), materials.spaceMine);
                     for(let i=0; i<6; i++) {
@@ -1650,7 +1698,7 @@
                     }
                     mesh.position.set(x, 1.0 + Math.random(), z);
                 }
-                else if(r < 0.3) { 
+                else if(r < 0.26) { 
                     type = 'DEADLY_BLOCK'; 
                     const h = 0.8 + Math.random() * 2.5; 
                     const y = 1.0 + Math.random() * 1.5; 
@@ -1659,9 +1707,9 @@
                     mesh.add(border); 
                     mesh.position.set(x, y, z); 
                 }
-                else if(r < 0.35) { type='LIFE'; mesh=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.8,0.8), materials.life); mesh.position.set(x, 1.0, z); }
-                else if(r < 0.6) { type='WUMPA'; mesh=new THREE.Mesh(new THREE.DodecahedronGeometry(0.3), materials.wumpa); mesh.position.set(x, 1.0, z); }
-                else if(r < 0.9) { type='CRATE'; mesh=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.9,0.9), materials.crate); mesh.position.set(x, 1.0, z); }
+                else if(r < 0.42) { type='LIFE'; mesh=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.8,0.8), materials.life); mesh.position.set(x, 1.0, z); }
+                else if(r < 0.64) { type='WUMPA'; mesh=new THREE.Mesh(new THREE.DodecahedronGeometry(0.3), materials.wumpa); mesh.position.set(x, 1.0, z); }
+                else if(r < 0.93) { type='CRATE'; mesh=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.9,0.9), materials.crate); mesh.position.set(x, 1.0, z); }
                 else { type='TNT'; mesh=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.9,0.9), materials.tnt); mesh.position.set(x, 1.0, z); }
             }
 
@@ -1682,7 +1730,7 @@
                 return;
             }
             if(settings.audio) SFX.crash(); 
-            if (instaKill) lives = 0; else lives--; 
+            lives--;   // forgiving: any collision costs a single heart (no instant-kills)
             resetCombo();
             if(lives < 0) lives = 0; 
             updateLivesUI(); 
@@ -1692,6 +1740,9 @@
             if(lives <= 0) { 
                 gameState = 'GAMEOVER'; player.visible = false; boss.visible = false; 
                 recordRun(Math.floor(score));
+                scoreSubmitted = false;
+                const _ni = document.getElementById('player-name-input'); if(_ni){ _ni.value=''; _ni.disabled=false; }
+                const _sb = document.getElementById('submit-score-btn'); if(_sb){ _sb.disabled=false; _sb.innerText='🏆 ADD TO LEADERBOARD'; }
                 const goc = document.getElementById('go-cheese'); if (goc) goc.innerText = pick(GAME_OVER_LINES);
                 document.getElementById('game-over-screen').classList.remove('hidden'); 
                 document.getElementById('final-score').innerText = Math.floor(score); 
@@ -1817,7 +1868,7 @@
             if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'WARNING' || gameState === 'BOSS_WRECK') {
                 updateGameLogic(); updateWorld();
             }
-            updateBackgroundAndCity(); updateParticles();
+            updateBackgroundAndCity(); updateParticles(); tweenLeg();
         }
 
         // One cadence tick: applies freeze-frames (hit-stop) and slow-motion (timeScale).
