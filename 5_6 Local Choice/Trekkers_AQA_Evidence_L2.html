@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trekkers · AQA Walking Unit · L2 Reflection & Sign-off</title>
+<style>
+:root{
+  --lo-border:#9c27b0;--lo-bg:#e6d4e8;
+  --task-bg:#fef9c3;--scaffold-bg:#e0f2fe;
+  --ido-bg:#ede9fe;--ido-border:#7c3aed;
+  --wedo-bg:#fce7f3;--wedo-border:#ec4899;
+  --sc-bg:#ffedd5;--sc-border:#f97316;
+  --aspire-bg:#dcfce7;--aspire-border:#16a34a;
+  --ind-bg:#fee2e2;--ind-border:#dc2626;
+  --exit-bg:#fef3c7;--exit-border:#d97706;
+  --found:#16a34a;--mid:#f59e0b;--high:#1e3a8a;
+  --ink:#1f2937;--paper:#fffaf3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100vw;overflow-x:hidden;font-family:'Trebuchet MS',sans-serif;background:#0f172a;color:var(--ink)}
+.slide{width:100vw;min-height:100vh;display:none;padding:48px 56px 80px;background:var(--paper);position:relative;border-top:14px solid var(--lo-border)}
+.slide.active{display:block;animation:fadeInUp .5s ease}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--ind-border)}
+.slide[data-type="exit"]{border-top-color:var(--exit-border)}
+
+.school-logo{position:fixed;top:14px;right:18px;height:46px;z-index:75;background:#fff;padding:4px 8px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.slide-tag{display:inline-block;padding:6px 14px;border-radius:999px;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;background:#1f2937;color:#fff}
+.slide[data-type="ido"] .slide-tag{background:var(--ido-border)}
+.slide[data-type="wedo"] .slide-tag{background:var(--wedo-border)}
+.slide[data-type="independent"] .slide-tag{background:var(--ind-border)}
+.slide[data-type="exit"] .slide-tag{background:var(--exit-border)}
+
+h1{font-size:44px;line-height:1.05;margin-bottom:8px;color:#0f172a;font-weight:900;letter-spacing:-.5px}
+h2{font-size:32px;margin-bottom:18px;color:#0f172a;font-weight:800}
+h3{font-size:22px;margin-bottom:10px;color:#0f172a}
+p,li{font-size:18px;line-height:1.5}
+
+.hero-row{display:flex;justify-content:center;gap:18px;margin:28px 0 14px;flex-wrap:wrap}
+.hero-icon{width:78px;height:78px;background:#fff;border:3px solid var(--lo-border);border-radius:18px;display:grid;place-items:center;font-size:38px;box-shadow:0 6px 14px rgba(0,0,0,.08);animation:pop .6s ease both}
+.hero-icon:nth-child(1){animation-delay:.1s}.hero-icon:nth-child(2){animation-delay:.25s;border-color:#16a34a}
+.hero-icon:nth-child(3){animation-delay:.4s;border-color:#0284c7}.hero-icon:nth-child(4){animation-delay:.55s;border-color:#d97706}
+.hero-icon:nth-child(5){animation-delay:.7s;border-color:#dc2626}
+@keyframes pop{from{opacity:0;transform:scale(.4) rotate(-12deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+
+.lo-box{background:var(--lo-bg);border:3px solid var(--lo-border);border-radius:14px;padding:18px 22px;margin:16px 0}
+.lo-box h3{margin-bottom:8px;color:var(--lo-border)}
+.lo-anim{margin:6px 0;font-size:17px;opacity:0;animation:slideIn .5s ease forwards}
+.lo-anim:nth-child(2){animation-delay:.4s}.lo-anim:nth-child(3){animation-delay:.8s}
+.lo-anim:nth-child(4){animation-delay:1.2s}.lo-anim:nth-child(5){animation-delay:1.6s}
+@keyframes slideIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+.lo-anim::before{content:"☐ ";color:var(--lo-border);font-weight:900}
+.lo-anim.done::before{content:"✅ "}
+
+.task-box,.scaffold-box,.aspire-box,.ido-box,.wedo-box{padding:16px 20px;border-radius:14px;margin:12px 0;border:3px solid}
+.task-box{background:var(--task-bg);border-color:#ca8a04}
+.scaffold-box{background:var(--scaffold-bg);border-color:#0284c7}
+.aspire-box{background:var(--aspire-bg);border-color:var(--aspire-border)}
+.ido-box{background:var(--ido-bg);border-color:var(--ido-border)}
+.wedo-box{background:var(--wedo-bg);border-color:var(--wedo-border)}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 18px;margin:14px 0;border-radius:8px}
+
+.misc-box{background:#f3f4f6;border:2px dashed #94a3b8;padding:14px 18px;border-radius:10px;margin:14px 0;position:relative;overflow:hidden}
+.misc-box.struck::after{content:"";position:absolute;top:50%;left:0;width:100%;height:4px;background:#dc2626;animation:strike .6s ease forwards;transform-origin:left}
+@keyframes strike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.exam-tip-box{background:#fef9c3;border-left:6px solid #ca8a04;padding:14px 18px;border-radius:8px;margin:14px 0;font-style:italic}
+.exam-tip-box::before{content:"🥾 Trekker Tip — ";font-weight:900;font-style:normal;color:#854d0e}
+
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+.arrival-cell{background:#fff;border:3px solid #1f2937;border-radius:14px;padding:16px;min-height:140px}
+.arrival-cell h4{margin-bottom:6px;color:#1f2937}
+
+.btn,.hint-btn,.show-ans,.print-btn{cursor:pointer;border:none;padding:10px 20px;border-radius:10px;font-weight:700;font-size:15px;font-family:inherit;transition:transform .15s,box-shadow .15s}
+.btn:hover,.hint-btn:hover,.show-ans:hover,.print-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.hint-btn{background:#fbbf24;color:#000}
+.show-ans{background:transparent;color:#1f2937;border:2px solid #1f2937}
+.show-ans.revealed{background:#16a34a;color:#fff;border-color:#16a34a}
+.print-btn{background:#0f172a;color:#fff;margin:8px 4px}
+.btn-primary{background:var(--lo-border);color:#fff}
+.btn-big{font-size:17px;padding:12px 24px}
+.hint{display:none;background:#fef3c7;border-left:5px solid #ca8a04;padding:10px 14px;margin-top:8px;border-radius:6px}
+.hint.show{display:block}
+
+.mcq-list{list-style:none;margin:10px 0}
+.mcq-opt{background:#fff;border:2px solid #475569;padding:10px 14px;border-radius:8px;margin:6px 0;cursor:pointer;font-size:16px;transition:all .15s}
+.mcq-opt:hover{background:#f1f5f9}
+.mcq-opt.correct{background:#16a34a;color:#fff;border-color:#16a34a;pointer-events:none}
+.mcq-opt.wrong{background:#dc2626;color:#fff;border-color:#dc2626;pointer-events:none;animation:shake .3s}
+.mcq-opt.locked{pointer-events:none;opacity:.55}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.tier-bar{display:flex;gap:8px;justify-content:center;margin:12px 0}
+.tier-btn{padding:8px 16px;border-radius:999px;border:2px solid #94a3b8;background:#fff;cursor:pointer;font-weight:700;font-size:14px;font-family:inherit}
+.tier-btn.f.on{background:var(--found);color:#fff;border-color:var(--found)}
+.tier-btn.m.on{background:var(--mid);color:#fff;border-color:var(--mid)}
+.tier-btn.h.on{background:var(--high);color:#fff;border-color:var(--high)}
+.tier-content{display:none}
+.tier-content.show{display:block;animation:fadeInUp .35s ease}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+
+/* Evidence table — used in slides */
+.ev-table{width:100%;border-collapse:collapse;margin:10px 0;background:#fff;border-radius:8px;overflow:hidden}
+.ev-table th,.ev-table td{border:1.5px solid #cbd5e1;padding:6px 8px;font-size:14px;text-align:left;vertical-align:top}
+.ev-table th{background:#1f2937;color:#fff;font-weight:800;font-size:13px}
+.ev-table td.tick{text-align:center;width:54px}
+.ev-table .out{font-weight:700;width:32%}
+
+.nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:60}
+.nav button{background:#0f172a;color:#fff;border:none;width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.nav button:disabled{opacity:.35;cursor:not-allowed}
+.progress-bar{position:fixed;top:0;left:0;height:5px;background:linear-gradient(90deg,var(--lo-border),#16a34a);z-index:70;transition:width .3s}
+
+.xp-widget{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:6px 14px;border-radius:999px;z-index:75;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.xp-track{width:120px;height:8px;background:#334155;border-radius:4px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,#fbbf24,#16a34a);width:0;transition:width .5s}
+
+.timer-widget{position:fixed;top:14px;left:14px;background:#0f172a;color:#fff;padding:8px 14px;border-radius:10px;font-weight:700;z-index:75;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.2);font-size:14px}
+.timer-widget button{background:#334155;color:#fff;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:14px}
+.timer-widget.warn{background:#dc2626;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+.fab-stack{position:fixed;right:14px;bottom:80px;display:flex;flex-direction:column;gap:8px;z-index:75}
+.fab{background:#0f172a;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.25);font-family:inherit}
+.fab.ta{background:#0284c7}
+.fab.cc{background:#7c3aed}
+
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.7);display:none;z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:24px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.modal h3{margin-bottom:14px}
+.modal .close{float:right;background:#dc2626;color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.cc-input{display:flex;gap:8px;margin:12px 0}
+.cc-input input{flex:1;padding:8px 12px;border:2px solid #94a3b8;border-radius:8px;font-size:15px}
+.cc-input button{background:var(--lo-border);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+.cc-list{margin:10px 0}
+.cc-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed #cbd5e1}
+.cc-row .name{flex:1;font-weight:600}
+.chip{padding:3px 8px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent}
+.chip.U{background:#fee2e2;color:#991b1b}.chip.U.on{background:#dc2626;color:#fff}
+.chip.G1{background:#fed7aa;color:#9a3412}.chip.G1.on{background:#ea580c;color:#fff}
+.chip.G2{background:#fef3c7;color:#854d0e}.chip.G2.on{background:#ca8a04;color:#fff}
+.chip.G3{background:#bbf7d0;color:#14532d}.chip.G3.on{background:#16a34a;color:#fff}
+.chip.G4{background:#bae6fd;color:#075985}.chip.G4.on{background:#0284c7;color:#fff}
+.chip.G5{background:#ddd6fe;color:#4c1d95}.chip.G5.on{background:#7c3aed;color:#fff}
+.cc-row .del{background:transparent;border:none;color:#dc2626;cursor:pointer;font-size:18px}
+.pitch-bar{display:flex;gap:8px;margin:10px 0;justify-content:center}
+.pitch-bar button{padding:6px 12px;border-radius:8px;border:2px solid #94a3b8;background:#fff;cursor:pointer;font-weight:700;font-size:13px;font-family:inherit}
+.pitch-bar button.on{background:#0f172a;color:#fff;border-color:#0f172a}
+.cc-pick{background:#fef3c7;border:3px solid #ca8a04;border-radius:12px;padding:18px;margin:12px 0;text-align:center}
+.cc-pick .name-out{font-size:32px;font-weight:900;color:#854d0e;margin:6px 0}
+.cc-pick .pitch-out{font-size:14px;font-weight:700;color:#7c2d12}
+
+.lc-overlay{position:fixed;inset:0;background:rgba(15,23,42,.92);display:none;z-index:200;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:24px}
+.lc-overlay.show{display:flex;animation:fadeInUp .5s ease}
+.lc-overlay h2{color:#fff;font-size:46px;margin-bottom:14px}
+.lc-overlay p{font-size:21px;margin-bottom:20px}
+.confetti{position:fixed;width:10px;height:10px;pointer-events:none;z-index:201}
+
+#print-area{display:none}
+@media print{
+  body{background:#fff}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide,.nav,.timer-widget,.xp-widget,.fab-stack,.school-logo,.progress-bar,.modal-bg{display:none!important}
+  #print-area{display:block;background:#fff;color:#000;font-family:'Trebuchet MS',sans-serif;padding:0}
+  .pp{page-break-after:always;padding:14mm 12mm;min-height:265mm}
+  .pp:last-child{page-break-after:auto}
+  .pp h2{font-size:20pt;margin-bottom:5pt;border-bottom:1.8pt solid #000;padding-bottom:3pt}
+  .pp h3{font-size:13pt;margin:6pt 0 3pt}
+  .pp p,.pp li{font-size:10.5pt;line-height:1.4}
+  .pp .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:4mm}
+  .pp .pcell{border:1.5pt solid #000;padding:4mm;min-height:46mm}
+  .pp .ko-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+  .pp .ko-block{border:1.5pt solid #000;padding:4mm}
+  .pp .tickrow{display:flex;align-items:center;gap:5mm;padding:2.5mm 0;border-bottom:1pt dashed #555;font-size:10.5pt}
+  .pp .tickrow .pbox{display:inline-block;width:6mm;height:6mm;border:1.5pt solid #000;flex-shrink:0}
+  .pp .siglines{margin-top:5mm;font-size:10.5pt}
+  .pp .siglines .line{display:inline-block;border-bottom:1.5pt solid #000;min-width:50mm;margin:0 5mm 4mm 5mm}
+  .pp .evtbl{width:100%;border-collapse:collapse;margin:3mm 0}
+  .pp .evtbl th,.pp .evtbl td{border:1pt solid #000;padding:2mm;font-size:9pt;text-align:left;vertical-align:top}
+  .pp .evtbl th{background:#1f2937;color:#fff;font-weight:800;font-size:8.5pt;text-align:center}
+  .pp .evtbl td.tick{text-align:center;width:18mm}
+  .pp .evtbl td.tick .b{display:inline-block;width:5mm;height:5mm;border:1pt solid #000}
+  .pp .evtbl td.outname{font-weight:700;width:36mm}
+  .pp .evbox{border:1.5pt solid #000;border-radius:1mm;padding:3mm;margin:2mm 0}
+  .pp .evbox .head{font-weight:800;font-size:10pt;margin-bottom:1.5mm}
+  .pp .evbox .lines{background:repeating-linear-gradient(transparent 0,transparent 5mm,#94a3b8 5mm,#94a3b8 5.1mm);min-height:18mm}
+  .pp .ratebar{display:flex;gap:2mm;font-size:9pt;align-items:center}
+  .pp .ratebar .r{border:1pt solid #000;padding:1mm 3mm;border-radius:1.5mm}
+  .pp .sentstart{font-size:10pt;color:#374151;font-style:italic;margin:1mm 0}
+  body.print-slide-mode #print-area{display:none!important}
+  body.print-slide-mode .slide{display:none!important}
+  body.print-slide-mode .slide.active{display:block!important;padding:0;border:none}
+  body.print-slide-mode .print-btn,body.print-slide-mode .show-ans,body.print-slide-mode .hint-btn,body.print-slide-mode .nav,body.print-slide-mode .fab-stack,body.print-slide-mode .timer-widget,body.print-slide-mode .xp-widget,body.print-slide-mode .school-logo,body.print-slide-mode .progress-bar{display:none!important}
+  .tier-only{display:none}
+  .tier-only.print-show{display:block}
+}
+
+@media (max-width:640px){
+  .slide{padding:90px 18px 90px}
+  h1{font-size:28px}h2{font-size:22px}h3{font-size:18px}
+  p,li{font-size:15px}
+  .hero-row{gap:10px}.hero-icon{width:50px;height:50px;font-size:24px}
+  .arrival-grid,.two-col{grid-template-columns:1fr}
+  .timer-widget,.xp-widget{font-size:11px;padding:5px 9px}
+  .xp-track{width:70px}
+  .fab{font-size:11px;padding:8px 10px}
+  .school-logo{height:32px;top:8px;right:8px}
+  .nav button{width:42px;height:42px}
+  .ev-table th,.ev-table td{font-size:11px;padding:4px}
+}
+</style>
+</head>
+<body>
+
+<img class="school-logo" src="https://www.randstad.co.uk/s3fs-media/uk/2024-04/Progress%20Schools%20logo_0.png" alt="Progress Schools">
+<div class="progress-bar" id="progBar"></div>
+<div class="timer-widget" id="timer">
+  <span>⏱</span><span id="tDisp">00:00</span>
+  <button onclick="tToggle()">▶</button><button onclick="tReset()">↺</button>
+</div>
+<div class="xp-widget"><span>⭐ XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div><span id="xpNum">0</span></div>
+<div class="fab-stack">
+  <button class="fab ta" onclick="openTA()">🎯 TA Focus</button>
+  <button class="fab cc" onclick="openCC()">🎲 Cold Call</button>
+</div>
+
+<!-- ===== SLIDE 1: TITLE ===== -->
+<section class="slide active" data-type="title" data-no-autostart>
+  <span class="slide-tag">Lesson 2 · AQA Walking Unit</span>
+  <h1>Finishing the Evidence</h1>
+  <h3 style="color:#475569;font-weight:600">Reflect · Self-assess · Sign off — AQA UAS 113789 portfolio complete.</h3>
+  <div class="hero-row">
+    <div class="hero-icon">🪞</div>
+    <div class="hero-icon">⭐</div>
+    <div class="hero-icon">📊</div>
+    <div class="hero-icon">✍️</div>
+    <div class="hero-icon">🎯</div>
+  </div>
+  <div class="lo-box">
+    <h3>Learning Objective</h3>
+    <p style="margin-bottom:8px"><strong>Finalise my AQA portfolio</strong> by self-assessing the 6 outcomes and reflecting on the 5 walks.</p>
+    <div class="lo-anim">Self-assess my performance on each outcome (honestly)</div>
+    <div class="lo-anim">Use WWW / EBI to reflect on the walks</div>
+    <div class="lo-anim">Identify skills I'll take into future walking</div>
+    <div class="lo-anim">Get my portfolio signed off</div>
+  </div>
+  <div class="sc-box"><strong>Success criteria:</strong> Foundation — smiley scale + 3 short reflections · Middle — 5-point scale + WWW/EBI per walk · Higher — full self-assessment + skill transfer plan.</div>
+</section>
+
+<!-- ===== SLIDE 2: ARRIVAL ===== -->
+<section class="slide" data-type="arrival" data-timer="240" data-no-autostart>
+  <span class="slide-tag">Arrival Task · 4 min</span>
+  <h2>Last lesson recall</h2>
+  <p>Quietly. Pen on. We will share.</p>
+  <div class="arrival-grid">
+    <div class="arrival-cell">
+      <h4>① The 6 outcomes start with…</h4>
+      <p>E ____ · P ____ · H ____ · C ____ · C ____ · R ____<br><em style="font-size:14px;color:#64748b">💡 EPHCR mnemonic.</em></p>
+    </div>
+    <div class="arrival-cell">
+      <h4>② Strong evidence has…</h4>
+      <p>Tick the 3 you need:<br>☐ Where ☐ Who ☐ When ☐ Why<br>☐ What ☐ How long<br><em style="font-size:13px;color:#64748b">💡 3 W's.</em></p>
+    </div>
+    <div class="arrival-cell">
+      <h4>③ Your showcase walk was…</h4>
+      <p>The one that ticked the MOST outcomes. Which was it?<br>____________________________________</p>
+    </div>
+    <div class="arrival-cell">
+      <h4>④ Honest self-rating</h4>
+      <p>How confident do you feel about your evidence sheet?<br>☐ 😊 Solid ☐ 😐 OK ☐ ☹ Needs work</p>
+    </div>
+  </div>
+  <button class="show-ans" onclick="reveal(this,'a-ans')">Reveal answers</button>
+  <div id="a-ans" style="display:none;margin-top:10px" class="aspire-box">
+    <p>① Equipment · Plan · Hazards · Compass · Complete · Reflect &nbsp;·&nbsp; ② Where · When · What &nbsp;·&nbsp; ③ Most → South Gare → Majuba &nbsp;·&nbsp; ④ Your honest answer — no wrong choice. Today is about being real.</p>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: STARTER ===== -->
+<section class="slide" data-type="starter" data-timer="300">
+  <span class="slide-tag">Starter · 5 min</span>
+  <h2>What does GOOD reflection sound like?</h2>
+  <div class="two-col">
+    <div class="task-box">
+      <h3>Compare these</h3>
+      <p><strong>A:</strong> <em>"It was fine."</em></p>
+      <p><strong>B:</strong> <em>"It was good but my feet hurt."</em></p>
+      <p><strong>C:</strong> <em>"The dune section was harder than I expected — next time I'd wear thicker socks and pace myself more on the soft sand."</em></p>
+      <p>Which is the strongest reflection? Why?</p>
+    </div>
+    <div class="scaffold-box">
+      <h3>What makes C strong</h3>
+      <ul style="margin-left:20px">
+        <li>Names the <strong>specific bit</strong> (dune section)</li>
+        <li>Says what was <strong>hard</strong> (the sand)</li>
+        <li>Gives a <strong>fix for next time</strong> (thicker socks, pace)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="exam-tip-box">Reflection = NAMING + LEARNING. Bad: "It was OK." Good: "X happened, next time I will Y."</div>
+</section>
+
+<!-- ===== SLIDE 4: I DO 1 ===== -->
+<section class="slide" data-type="ido" data-timer="360">
+  <span class="slide-tag">I Do · 6 min</span>
+  <h2>Self-assessment — being honest is the skill</h2>
+  <div class="ido-box">
+    <h3>The 5-point Trekker scale</h3>
+    <ul style="margin-left:24px;font-size:17px;line-height:1.7;list-style:none">
+      <li><strong>5 ⭐⭐⭐⭐⭐</strong> — I could teach this to a new Trekker.</li>
+      <li><strong>4 ⭐⭐⭐⭐</strong> — I did this well on most walks.</li>
+      <li><strong>3 ⭐⭐⭐</strong> — I did this. Some walks better than others.</li>
+      <li><strong>2 ⭐⭐</strong> — I tried. I need more practice.</li>
+      <li><strong>1 ⭐</strong> — I struggled. I'd want help next time.</li>
+    </ul>
+  </div>
+  <div class="exam-tip-box">Honest 3s are worth more than dishonest 5s. AQA rewards real reflection — not bragging.</div>
+</section>
+
+<!-- ===== SLIDE 5: WE DO 1 ===== -->
+<section class="slide" data-type="wedo" data-timer="360">
+  <span class="slide-tag">We Do · 6 min</span>
+  <h2>Self-assess one outcome — together</h2>
+  <p>Pick <strong>O3 Hazards</strong>. Class shares ratings. Staff probes the reasoning.</p>
+  <div class="wedo-box">
+    <h3>Vote out loud — O3 Hazards across all 5 walks</h3>
+    <p>How would YOU rate yourself, 1–5, on Hazards across the unit?</p>
+    <p><strong>Then justify with:</strong></p>
+    <ul style="margin-left:24px">
+      <li><em>"I gave myself a ___ because…"</em></li>
+      <li><em>"My best walk for hazards was ___ because…"</em></li>
+      <li><em>"To push to a 5, I'd need to ___…"</em></li>
+    </ul>
+  </div>
+  <div class="aspire-box"><strong>Aspire:</strong> If you said 5, what would prove it? Be ready to defend the score.</div>
+  <button class="print-btn" onclick="printEvidence()">🖨 Print evidence (this slide)</button>
+</section>
+
+<!-- ===== SLIDE 6: I DO 2 ===== -->
+<section class="slide" data-type="ido" data-timer="300">
+  <span class="slide-tag">I Do · 5 min</span>
+  <h2>WWW · EBI · Next time — the 3-step reflection</h2>
+  <div class="ido-box">
+    <h3>Three lines, every walk</h3>
+    <ul style="margin-left:24px;font-size:17px;line-height:1.7">
+      <li><strong>WWW (What Went Well)</strong> — name a specific success.</li>
+      <li><strong>EBI (Even Better If)</strong> — name a specific tweak.</li>
+      <li><strong>Next time</strong> — a concrete change for the next walk.</li>
+    </ul>
+    <div style="background:#fff;border:2px solid #16a34a;border-radius:8px;padding:10px 14px;margin-top:10px">
+      <strong>✅ Strong example — Eston Hills:</strong><br>
+      <em>WWW: I kept pace with the group on the climb.<br>
+      EBI: I forgot a snack and got tired near the top.<br>
+      Next time: I'll pack a banana &amp; refill my water before we leave school.</em>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: WE DO 2 ===== -->
+<section class="slide" data-type="wedo" data-timer="360">
+  <span class="slide-tag">We Do · 6 min</span>
+  <h2>WWW · EBI · Next time — one walk together</h2>
+  <p>As a class, pick a walk. Build the three lines on the board. Everyone writes.</p>
+  <div class="wedo-box">
+    <p><strong>Walk chosen:</strong> _______________________________________________</p>
+    <p><strong>WWW (What Went Well):</strong> ____________________________________</p>
+    <p>____________________________________________________________</p>
+    <p><strong>EBI (Even Better If):</strong> ____________________________________</p>
+    <p>____________________________________________________________</p>
+    <p><strong>Next time I will:</strong> _______________________________________</p>
+    <p>____________________________________________________________</p>
+  </div>
+  <button class="hint-btn" onclick="toggleHint('h-wd2')">💡 Stuck?</button>
+  <div class="hint" id="h-wd2">Pick the walk that's freshest — South Gare → Majuba (16 June). WWW: the dunes / the snack stop / staying with the group. EBI: pace on the sand / hydration / hazard call-outs. Next time: kit choice / pace / role.</div>
+  <button class="print-btn" onclick="printEvidence()">🖨 Print evidence (this slide)</button>
+</section>
+
+<!-- ===== SLIDE 8: INDEPENDENT ===== -->
+<section class="slide" data-type="independent" data-timer="900" data-no-autostart>
+  <span class="slide-tag">Independent · 15 min</span>
+  <h2>YOUR portfolio finish</h2>
+  <p>Pen on. Sheet out. Use your printed reflection pack.</p>
+  <div class="tier-bar">
+    <button class="tier-btn f on" onclick="tier('f',this)">Foundation</button>
+    <button class="tier-btn m" onclick="tier('m',this)">Middle</button>
+    <button class="tier-btn h" onclick="tier('h',this)">Higher</button>
+  </div>
+
+  <div class="tier-content show" id="t-f">
+    <div class="task-box" style="border-color:var(--found)">
+      <h3 style="color:var(--found)">Foundation — your job</h3>
+      <ol style="margin-left:24px">
+        <li>For EACH of the 6 outcomes, circle a face: 😊 / 😐 / ☹.</li>
+        <li>"My best walk was ____ because ____" (one line).</li>
+        <li>Tick 3 reflection prompts and finish each sentence.</li>
+        <li>Sign your sheet. Staff sign too.</li>
+      </ol>
+    </div>
+    <div class="scaffold-box"><strong>Reflection word bank:</strong> proud · enjoyed · tired · cold · learned · would change · favourite · hardest.</div>
+  </div>
+
+  <div class="tier-content" id="t-m">
+    <div class="task-box" style="border-color:var(--mid)">
+      <h3 style="color:var(--mid)">Middle — your job</h3>
+      <ol style="margin-left:24px">
+        <li>Rate yourself 1–5 on EACH of the 6 outcomes (be honest).</li>
+        <li>Write a WWW + EBI + Next time line for EACH of the 5 walks.</li>
+        <li>Name ONE skill you want to use on the next walking trip.</li>
+        <li>Sign and submit.</li>
+      </ol>
+    </div>
+    <div class="scaffold-box"><strong>Sentence frame:</strong> "On the ___ walk, what went well was ___. Even better if I had ___. Next time I will ___."</div>
+  </div>
+
+  <div class="tier-content" id="t-h">
+    <div class="task-box" style="border-color:var(--high)">
+      <h3 style="color:var(--high)">Higher — your job</h3>
+      <ol style="margin-left:24px">
+        <li>Rate yourself 1–5 per outcome — and justify each rating with a sentence.</li>
+        <li>Full WWW / EBI / Next time across all 5 walks.</li>
+        <li>Write a "Skills transfer" paragraph — 3 walking skills I'd take into adult life.</li>
+        <li>Identify one outcome to push to a 5 next time, and HOW.</li>
+        <li>Submit; be ready to share one reflection aloud.</li>
+      </ol>
+    </div>
+    <div class="aspire-box"><strong>Aspire:</strong> Higher pupils may be selected to model their reflection for the AQA moderator.</div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 9: EXIT ===== -->
+<section class="slide" data-type="exit" data-timer="180">
+  <span class="slide-tag">Exit Ticket · 3 min</span>
+  <h2>One last check</h2>
+  <ol style="margin-left:24px;font-size:18px;line-height:1.7">
+    <li>What does <strong>WWW</strong> stand for?</li>
+    <li>What does <strong>EBI</strong> stand for?</li>
+    <li>Name ONE skill you'll take into the next walking trip.</li>
+    <li>Honest self-rating overall: <strong>1 · 2 · 3 · 4 · 5</strong></li>
+    <li>Pupil ☐ &nbsp; Staff ☐ — both signatures on the portfolio?</li>
+  </ol>
+  <button class="show-ans" onclick="reveal(this,'ex-ans')">Reveal answers</button>
+  <div id="ex-ans" style="display:none;margin-top:10px" class="aspire-box">
+    <p>① What Went Well &nbsp;·&nbsp; ② Even Better If &nbsp;·&nbsp; ③ Your answer — examples: pacing, compass reading, hazard awareness, staying with a group, kit choice &nbsp;·&nbsp; ④ Honest answer — no wrong number &nbsp;·&nbsp; ⑤ Must be both ticked before the portfolio leaves the room.</p>
+  </div>
+  <div class="misc-box" id="lc-trigger">Strikethrough this when all 8 portfolios are pupil-signed AND staff-signed. → press the button below.</div>
+  <button class="btn btn-primary" onclick="strikeAndComplete(this)">✅ All portfolios signed — finish unit</button>
+  <button class="print-btn" onclick="window.print()">🖨 Print full lesson pack</button>
+</section>
+
+
+<div class="nav">
+  <button id="prevBtn" onclick="nav(-1)">‹</button>
+  <button id="nextBtn" onclick="nav(1)">›</button>
+</div>
+
+<div class="modal-bg" id="taModal">
+  <div class="modal">
+    <button class="close" onclick="closeTA()">✕</button>
+    <h3>🎯 TA Focus brief — this slide</h3>
+    <div id="taContent"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="ccModal">
+  <div class="modal">
+    <button class="close" onclick="closeCC()">✕</button>
+    <h3>🎲 Cold Call — Y11</h3>
+    <div class="cc-input">
+      <input id="ccName" placeholder="Pupil first name" maxlength="20">
+      <button onclick="ccAdd()">Add</button>
+    </div>
+    <div class="pitch-bar">
+      <span style="font-size:13px;font-weight:700;align-self:center">Pitch:</span>
+      <button class="pitch on" data-p="match" onclick="ccPitch('match',this)">Match</button>
+      <button class="pitch" data-p="easier" onclick="ccPitch('easier',this)">Easier</button>
+      <button class="pitch" data-p="stretch" onclick="ccPitch('stretch',this)">Stretch</button>
+    </div>
+    <div class="cc-list" id="ccList"></div>
+    <div class="cc-pick" id="ccPick" style="display:none">
+      <div style="font-size:13px;font-weight:700;color:#854d0e">CALLED ON</div>
+      <div class="name-out" id="ccNameOut">—</div>
+      <div class="pitch-out" id="ccPitchOut">—</div>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn btn-primary" onclick="ccPick()">🎲 Pick a pupil</button>
+    </div>
+  </div>
+</div>
+
+<div class="lc-overlay" id="lcOverlay">
+  <h2>🥾 AQA Evidence — well done, Trekkers.</h2>
+  <p>Your evidence is in. AQA-ready.</p>
+  <button class="btn btn-primary" onclick="document.getElementById('lcOverlay').classList.remove('show')">Close</button>
+</div>
+
+
+<div id="print-area">
+  <!-- KO -->
+  <div class="pp">
+    <h2>Knowledge Organiser — Reflection &amp; Sign-off</h2>
+    <div class="ko-grid">
+      <div class="ko-block">
+        <h3>The 5-point Trekker scale</h3>
+        <p>5 = could teach it · 4 = did it well · 3 = did it (mixed) · 2 = tried, need practice · 1 = struggled.</p>
+      </div>
+      <div class="ko-block">
+        <h3>3-step reflection</h3>
+        <p><strong>WWW</strong> = What Went Well · <strong>EBI</strong> = Even Better If · <strong>Next time</strong> = a concrete change.</p>
+      </div>
+      <div class="ko-block">
+        <h3>The 5 walks</h3>
+        <p>① The Rec · ② Rec with Compasses · ③ Eston Hills · ④ Planned local · ⑤ South Gare → Majuba.</p>
+      </div>
+      <div class="ko-block">
+        <h3>Honesty rule</h3>
+        <p>AQA rewards real reflection, not bragging. A real 3 beats a fake 5.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrival -->
+  <div class="pp">
+    <h2>Arrival Task — 4 min</h2>
+    <div class="pgrid">
+      <div class="pcell"><strong>① The 6 outcomes start with…</strong><br>E ____  P ____  H ____  C ____  C ____  R ____</div>
+      <div class="pcell"><strong>② Strong evidence has…</strong><br>Tick 3:<br>☐ Where ☐ Who ☐ When ☐ Why<br>☐ What ☐ How long</div>
+      <div class="pcell"><strong>③ My showcase walk was…</strong><br>____________________________</div>
+      <div class="pcell"><strong>④ Honest rating of my evidence sheet</strong><br>☐ 😊 Solid &nbsp; ☐ 😐 OK &nbsp; ☐ ☹ Needs work</div>
+    </div>
+  </div>
+
+  <!-- Starter -->
+  <div class="pp">
+    <h2>Starter — What does GOOD reflection sound like?</h2>
+    <p>Compare:</p>
+    <ul style="margin-left:18pt">
+      <li><strong>A:</strong> "It was fine."</li>
+      <li><strong>B:</strong> "It was good but my feet hurt."</li>
+      <li><strong>C:</strong> "The dune section was harder than I expected — next time I'd wear thicker socks and pace myself on the soft sand."</li>
+    </ul>
+    <h3>Why is C the strongest?</h3>
+    <p>1. ________________________________________________________</p>
+    <p>2. ________________________________________________________</p>
+    <p>3. ________________________________________________________</p>
+  </div>
+
+  <!-- We Do -->
+  <div class="pp">
+    <h2>We Do — Self-assess + WWW/EBI together</h2>
+    <h3>O3 Hazards — my rating</h3>
+    <div class="ratebar"><span>Rating:</span><span class="r">1</span><span class="r">2</span><span class="r">3</span><span class="r">4</span><span class="r">5</span></div>
+    <p style="margin-top:3mm"><strong>I gave myself a ___ because:</strong> ___________________________________</p>
+    <p>____________________________________________________________</p>
+    <h3>One walk · WWW · EBI · Next time</h3>
+    <p><strong>Walk:</strong> _____________________________________________________</p>
+    <p><strong>WWW:</strong> _____________________________________________________</p>
+    <p>____________________________________________________________</p>
+    <p><strong>EBI:</strong> ______________________________________________________</p>
+    <p>____________________________________________________________</p>
+    <p><strong>Next time I will:</strong> _______________________________________</p>
+  </div>
+
+  <!-- Scaffold -->
+  <div class="pp">
+    <h2>Scaffold — frames &amp; word bank</h2>
+    <h3>Reflection frame</h3>
+    <p>"On the ___ walk, what went well was ___. Even better if I had ___. Next time I will ___."</p>
+    <h3>Self-assessment frame</h3>
+    <p>"I'd rate myself ___ on ___ because ___. My evidence is ___. To get to a 5 I would need to ___."</p>
+    <h3>Word bank</h3>
+    <p><strong>Strengths:</strong> kept pace · stayed with group · called out hazards · used compass · planned route · finished safely · helped others.</p>
+    <p><strong>Improvements:</strong> water · snack · pace · kit · timing · listening · hazard awareness · confidence.</p>
+    <p><strong>Skills to transfer:</strong> planning · time-keeping · teamwork · safety awareness · using a map · resilience · physical fitness.</p>
+  </div>
+
+  <!-- Foundation worksheet -->
+  <div class="pp tier-only print-show" id="print-f">
+    <h2>Foundation — Reflection Sheet</h2>
+    <p><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> ____________________</p>
+    <h3>Rate yourself — circle a face per outcome</h3>
+    <table class="evtbl">
+      <thead><tr><th class="outname">Outcome</th><th>😊 Good</th><th>😐 OK</th><th>☹ Hard</th></tr></thead>
+      <tbody>
+        <tr><td class="outname">O1 Equipment</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O2 Plan a route</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O3 Hazards</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O4 Compass</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O5 Complete</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O6 Reflect</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="evbox"><div class="head">My best walk was ____ because…</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">The hardest bit of the unit was…</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">Next time I will…</div><div class="lines"></div></div>
+    <div class="siglines">
+      Pupil signature: <span class="line"></span> Date: <span class="line" style="min-width:28mm"></span><br><br>
+      Staff sign-off: <span class="line"></span>
+    </div>
+  </div>
+
+  <!-- Middle worksheet -->
+  <div class="pp tier-only" id="print-m">
+    <h2>Middle — Reflection Sheet</h2>
+    <p><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> ____________________</p>
+    <h3>Self-rate 1–5 (be honest)</h3>
+    <table class="evtbl">
+      <thead><tr><th class="outname">Outcome</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+      <tbody>
+        <tr><td class="outname">O1 Equipment</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O2 Plan a route</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O3 Hazards</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O4 Compass</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O5 Complete</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+        <tr><td class="outname">O6 Reflect</td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td><td class="tick"><span class="b"></span></td></tr>
+      </tbody>
+    </table>
+    <h3>WWW · EBI · Next time — per walk</h3>
+    <div class="evbox"><div class="head">① The Rec</div><div class="sentstart">WWW · EBI · Next time</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">② The Rec with Compasses</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">③ Eston Hills to the Top</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">④ Planned local area walk</div><div class="lines"></div></div>
+    <div class="evbox"><div class="head">⑤ South Gare → Majuba</div><div class="lines"></div></div>
+    <p><strong>One skill I'll take to the next walk:</strong> _________________________________</p>
+    <div class="siglines">
+      Pupil signature: <span class="line"></span> Date: <span class="line" style="min-width:28mm"></span><br><br>
+      Staff sign-off: <span class="line"></span>
+    </div>
+  </div>
+
+  <!-- Higher worksheet -->
+  <div class="pp tier-only" id="print-h">
+    <h2>Higher — Reflection Sheet</h2>
+    <p><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> ____________________</p>
+    <h3>Self-rate 1–5 with one-sentence justification</h3>
+    <div class="evbox"><div class="head">O1 Equipment — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <div class="evbox"><div class="head">O2 Plan a route — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <div class="evbox"><div class="head">O3 Hazards — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <div class="evbox"><div class="head">O4 Compass — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <div class="evbox"><div class="head">O5 Complete — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <div class="evbox"><div class="head">O6 Reflect — Rating: ___ — because:</div><div class="lines" style="min-height:12mm"></div></div>
+    <h3>WWW · EBI · Next time — all 5 walks</h3>
+    <div class="evbox"><div class="head">① Rec · ② Rec+🧭 · ③ Eston Hills · ④ Local · ⑤ S.Gare→Majuba</div><div class="sentstart">For each walk: WWW, EBI, Next time.</div><div class="lines" style="min-height:60mm"></div></div>
+    <h3>Skills transfer — 3 skills I'll take into adult life from these walks</h3>
+    <div class="evbox"><div class="lines" style="min-height:22mm"></div></div>
+    <h3>One outcome I'll push to a 5 — and HOW</h3>
+    <div class="evbox"><div class="lines" style="min-height:18mm"></div></div>
+    <div class="siglines">
+      Pupil signature: <span class="line"></span> Date: <span class="line" style="min-width:28mm"></span><br><br>
+      Staff sign-off: <span class="line"></span>
+    </div>
+  </div>
+
+  <!-- Exit -->
+  <div class="pp">
+    <h2>Exit Ticket — Lesson 2</h2>
+    <ol style="margin-left:18pt">
+      <li>WWW = What ___ Well</li>
+      <li>EBI = ___ Better If</li>
+      <li>One skill I'll take into the next walk: _______________________________</li>
+      <li>Honest overall self-rating: &nbsp; 1 · 2 · 3 · 4 · 5</li>
+      <li>Pupil ☐ &nbsp; Staff ☐ &nbsp; — both signatures on the portfolio?</li>
+    </ol>
+    <p style="margin-top:8mm"><strong>Pupil:</strong> <span style="display:inline-block;border-bottom:1pt solid #000;min-width:60mm"></span> · <strong>Date:</strong> <span style="display:inline-block;border-bottom:1pt solid #000;min-width:30mm"></span></p>
+  </div>
+</div>
+
+<script>
+let cur=0;const slides=document.querySelectorAll('.slide');
+let xp=0;const XP_MAX=100;
+let timerId=null,tSec=0,tInit=0;
+let coldCall=JSON.parse(localStorage.getItem('cc-aqa-l2')||'[]');
+let pitch=localStorage.getItem('cc-aqa-l2-pitch')||'match';
+
+function nav(d){
+  if(cur+d<0||cur+d>=slides.length)return;
+  if(timerId){clearInterval(timerId);timerId=null;}
+  slides[cur].classList.remove('active');cur+=d;slides[cur].classList.add('active');
+  document.getElementById('progBar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').disabled=cur===slides.length-1;
+  initSlideTimer();window.scrollTo({top:0,behavior:'smooth'});beep(440,.05,.04);
+}
+document.addEventListener('keydown',e=>{
+  if(document.querySelector('.modal-bg.show'))return;
+  if(e.key==='ArrowRight')nav(1);if(e.key==='ArrowLeft')nav(-1);
+});
+
+function initSlideTimer(){
+  clearInterval(timerId);timerId=null;
+  const s=slides[cur],dt=parseInt(s.dataset.timer||0);
+  tInit=dt;tSec=dt;tDispUpdate();
+  document.getElementById('timer').classList.remove('warn');
+  if(dt>0&&!s.hasAttribute('data-no-autostart'))tStart();
+}
+function tStart(){if(timerId||tSec<=0)return;timerId=setInterval(()=>{tSec--;tDispUpdate();if(tSec<=10)document.getElementById('timer').classList.add('warn');if(tSec<=0){clearInterval(timerId);timerId=null;beep(880,.3,.06);beep(660,.3,.06);}},1000);}
+function tToggle(){timerId?(clearInterval(timerId),timerId=null):tStart();}
+function tReset(){clearInterval(timerId);timerId=null;tSec=tInit;tDispUpdate();document.getElementById('timer').classList.remove('warn');}
+function tDispUpdate(){const m=Math.floor(Math.max(0,tSec)/60),s=Math.max(0,tSec)%60;document.getElementById('tDisp').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+
+function addXP(n){xp=Math.min(XP_MAX,xp+n);document.getElementById('xpFill').style.width=(xp/XP_MAX*100)+'%';document.getElementById('xpNum').textContent=xp;}
+
+let actx=null;
+function beep(f,d,v=.05){try{
+  actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended')actx.resume();
+  const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);
+  o.frequency.value=f;g.gain.value=v;o.start();setTimeout(()=>o.stop(),d*1000);
+}catch(e){}}
+
+function reveal(btn,id){
+  if(btn.classList.contains('revealed'))return;
+  document.getElementById(id).style.display='block';
+  btn.classList.add('revealed');btn.textContent='Answers shown';
+  addXP(5);beep(660,.1);
+  if(id==='ex-ans'){
+    document.querySelectorAll('.lo-anim').forEach(a=>a.classList.add('done'));
+    confetti();document.getElementById('lcOverlay').classList.add('show');
+  }
+}
+function toggleHint(id){document.getElementById(id).classList.toggle('show');}
+
+function mcq(el,correct){
+  const list=el.parentElement;
+  if(list.dataset.locked)return;
+  if(correct){el.classList.add('correct');list.dataset.locked=1;[...list.children].forEach(c=>{if(c!==el)c.classList.add('locked')});addXP(10);beep(880,.2);}
+  else{el.classList.add('wrong');addXP(2);beep(220,.2);}
+}
+
+function tier(t,btn){
+  ['f','m','h'].forEach(x=>{
+    document.querySelector('.tier-btn.'+x).classList.remove('on');
+    document.getElementById('t-'+x).classList.remove('show');
+  });
+  btn.classList.add('on');
+  document.getElementById('t-'+t).classList.add('show');
+  document.querySelectorAll('.pp.tier-only').forEach(p=>p.classList.remove('print-show'));
+  const pp=document.getElementById('print-'+t);
+  if(pp)pp.classList.add('print-show');
+}
+
+function printEvidence(){
+  document.body.classList.add('print-slide-mode');
+  const done=()=>document.body.classList.remove('print-slide-mode');
+  window.addEventListener('afterprint',done,{once:true});
+  window.print();
+  setTimeout(done,3000);
+}
+
+const taBriefs={};
+function setTA(briefs){Object.assign(taBriefs,briefs);}
+function openTA(){document.getElementById('taContent').innerHTML='<p>'+(taBriefs[cur]||'No specific brief — circulate &amp; support.')+'</p>';document.getElementById('taModal').classList.add('show');}
+function closeTA(){document.getElementById('taModal').classList.remove('show');}
+
+function ccRender(){
+  const list=document.getElementById('ccList');
+  list.innerHTML=coldCall.map((p,i)=>`<div class="cc-row"><span class="name">${p.name}</span>${['U','G1','G2','G3','G4','G5'].map(g=>`<span class="chip ${g} ${p.grade===g?'on':''}" onclick="ccGrade(${i},'${g}')">${g.replace('G','')}</span>`).join('')}<button class="del" onclick="ccDel(${i})">🗑</button></div>`).join('');
+}
+function ccAdd(){const v=document.getElementById('ccName').value.trim();if(!v)return;coldCall.push({name:v,grade:'G2'});document.getElementById('ccName').value='';ccSave();ccRender();}
+function ccDel(i){coldCall.splice(i,1);ccSave();ccRender();}
+function ccGrade(i,g){coldCall[i].grade=g;ccSave();ccRender();}
+function ccSave(){localStorage.setItem('cc-aqa-l2',JSON.stringify(coldCall));}
+function ccPitch(p,btn){pitch=p;localStorage.setItem('cc-aqa-l2-pitch',p);document.querySelectorAll('.pitch-bar .pitch').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');}
+function ccSyncPitch(){document.querySelectorAll('.pitch-bar .pitch').forEach(b=>{b.classList.toggle('on',b.dataset.p===pitch);});}
+function ccPick(){
+  if(!coldCall.length){alert('Add pupils first.');return;}
+  const F=coldCall.filter(p=>p.grade==='U'||p.grade==='G1');
+  const M=coldCall.filter(p=>p.grade==='G2');
+  const H=coldCall.filter(p=>['G3','G4','G5'].includes(p.grade));
+  let pool=coldCall;
+  if(pitch==='easier'&&F.length)pool=F;
+  else if(pitch==='match'&&M.length)pool=M;
+  else if(pitch==='stretch'&&H.length)pool=H;
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('ccPick').style.display='block';
+  document.getElementById('ccNameOut').textContent=pick.name;
+  document.getElementById('ccPitchOut').textContent=`Pitch: ${pitch.toUpperCase()} · ${pick.grade}`;
+  beep(660,.15);beep(880,.15);
+}
+function openCC(){ccRender();ccSyncPitch();document.getElementById('ccPick').style.display='none';document.getElementById('ccModal').classList.add('show');}
+function closeCC(){document.getElementById('ccModal').classList.remove('show');}
+
+function strikeAndComplete(btn){
+  if(btn&&btn.dataset.done)return;
+  if(btn)btn.dataset.done='true';
+  const m=document.getElementById('lc-trigger');
+  m.classList.add('struck');
+  setTimeout(()=>{
+    document.querySelectorAll('.lo-anim').forEach(a=>a.classList.add('done'));
+    addXP(40);confetti();
+    document.getElementById('lcOverlay').classList.add('show');
+  },700);
+}
+
+function confetti(){
+  const colors=['#9c27b0','#16a34a','#fbbf24','#ec4899','#0284c7','#dc2626'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.left=(50+(Math.random()-.5)*40)+'%';c.style.top='40%';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.transform=`rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    const dx=(Math.random()-.5)*800,dy=Math.random()*600+200;
+    c.animate([{transform:c.style.transform,opacity:1},{transform:`translate(${dx}px,${dy}px) rotate(${Math.random()*720}deg)`,opacity:0}],{duration:1800+Math.random()*800,easing:'cubic-bezier(.2,.8,.4,1)'});
+    setTimeout(()=>c.remove(),2700);
+  }
+}
+
+window.addEventListener('load',()=>{
+  document.getElementById('progBar').style.width=(1/slides.length*100)+'%';
+  document.getElementById('prevBtn').disabled=true;
+  initSlideTimer();
+});
+</script>
+<script>setTA({
+  0:"Greet pupils. Sit close to anyone showing avoidance. Re-state the unit-end nature of today — no more chances after this.",
+  1:"Circulate. Q4 is sensitive — protect honest 😐/☹ from peer comment. Praise self-honesty quietly.",
+  2:"Pair-share the A/B/C reflection. Push for them to articulate why C is stronger — specifics matter.",
+  3:"Stand back during the 5-point scale reveal. Watch for pupils who say 5 without evidence — flag for individual check.",
+  4:"O3 Hazards vote — ensure everyone speaks. Help anyone defending a 5 with: 'show me the evidence on your sheet'.",
+  5:"Read WWW/EBI examples aloud. Praise specifics.",
+  6:"Lead the build of WWW/EBI/Next-time for one walk. Pupils write as you build. No skipped lines.",
+  7:"Roving support. Foundation first — get the faces circled. Middle — push for WWW/EBI per walk. Higher — check skills-transfer paragraph quality.",
+  8:"Sign-off line. Read the rating distribution. Praise honest 3s. Lock the portfolios into folders before pupils leave."
+});</script>
+</body>
+</html>

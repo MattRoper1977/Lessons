@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lesson 19 – Fieldwork Day (Simulated)</title>
+<style>
+:root{
+  --bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;
+  --lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;
+  --task-bg:#fef9c3;--task-border:#eab308;
+  --scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+  --sc-bg:#ffedd5;--sc-border:#f97316;
+  --btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+  --success:#16a34a;--error:#dc2626;--muted:#64748b;
+  --ido-bg:#ede9fe;--ido-border:#7c3aed;
+  --wedo-bg:#fce7f3;--wedo-border:#db2777;
+  --found:#22c55e;--mid:#f97316;--high:#1e3a8a;
+}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5)}50%{box-shadow:0 0 0 12px rgba(124,58,237,0)}}
+@keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes pulseAttn{0%,100%{background:#fef3c7}50%{background:#fde047}}
+.animate-enter{animation:fadeInUp .55s ease-out forwards}
+.anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+.anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+.anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+.pulse-attn{animation:pulseAttn 2s ease-in-out infinite;padding:1px 6px;border-radius:6px;font-style:italic}
+
+/* SLIDE SYSTEM */
+.slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:36px 40px;overflow-y:auto;position:relative;flex-direction:column}
+.slide.active{display:flex;animation:fadeIn .45s ease}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--task-border)}
+
+h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}
+h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+h3{margin:10px 0 8px;color:#0f172a}
+p,li{font-size:1.1rem;line-height:1.55;color:#334155}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+
+button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+button:active{transform:translateY(0)}
+button.small{padding:8px 12px;font-size:.95rem}
+button.ghost{background:#e2e8f0;color:#0f172a}
+button.ghost:hover{background:#cbd5e1}
+
+.controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+/* BOXES */
+.li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-bottom:12px;transition:transform .15s}
+.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+.diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center;margin:8px 0}
+
+.answer{display:none;margin-top:8px;padding:8px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}
+.show-ans .answer{display:block;animation:fadeInUp .25s}
+
+/* SLIDE TAGS */
+.slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.tag-arrival{background:#fef3c7;color:#92400e}
+.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#5b21b6}
+.tag-wedo{background:var(--wedo-bg);color:#9d174d}
+.tag-independent{background:var(--task-bg);color:#92400e}
+.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+/* ARRIVAL */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* AIM-QUALITY CARDS (Starter + I Do 1) */
+.aim-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin:6px 0;position:relative;transition:transform .2s}
+.aim-card.weak{border-color:#dc2626;background:#fef2f2}
+.aim-card.medium{border-color:#f59e0b;background:#fef3c7}
+.aim-card.strong{border-color:#16a34a;background:#dcfce7}
+.aim-card .aim-tag{position:absolute;top:-12px;left:14px;padding:3px 10px;border-radius:6px;color:#fff;font-size:.78rem;font-weight:900;letter-spacing:1px}
+.aim-card.weak .aim-tag{background:#dc2626}
+.aim-card.medium .aim-tag{background:#f59e0b}
+.aim-card.strong .aim-tag{background:#16a34a}
+.aim-card-quote{font-style:italic;font-size:1.05rem;line-height:1.5;color:#1e293b;margin:6px 0}
+.aim-card-why{font-size:.9rem;color:#475569;margin-top:6px;display:none}
+.aim-card.show-why .aim-card-why{display:block;animation:fadeInUp .25s}
+
+/* METHOD CARDS (I Do 2) */
+.method-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:8px 0}
+.method-card{background:#fff;border:2px solid var(--ido-border);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s;position:relative;min-height:140px}
+.method-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(124,58,237,.18)}
+.method-card .m-icon{font-size:2.4rem;line-height:1;margin-bottom:4px}
+.method-card .m-name{font-size:1.15rem;font-weight:900;color:var(--ido-border);margin:0 0 4px}
+.method-card .m-tease{font-size:.9rem;color:#64748b;font-style:italic}
+.method-card .m-detail{display:none;margin-top:8px;font-size:.92rem;line-height:1.5}
+.method-card.revealed{background:var(--ido-bg);border-color:#5b21b6}
+.method-card.revealed .m-tease{display:none}
+.method-card.revealed .m-detail{display:block;animation:fadeInUp .25s}
+.method-card .m-row{display:flex;gap:6px;margin:3px 0;align-items:flex-start}
+.method-card .m-row-label{flex:0 0 70px;font-weight:900;color:#5b21b6;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
+.method-card .m-row-text{flex:1;color:#1e293b}
+
+/* MATCH (We Do 2) */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0}
+.match-col-title{text-align:center;font-weight:900;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600;transition:all .2s;user-select:none;font-size:.95rem}
+.match-card:hover{border-color:var(--wedo-border);transform:translateY(-2px);box-shadow:0 4px 10px rgba(219,39,119,.15)}
+.match-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.3);background:#fce7f3;animation:pulseGlow 1.4s infinite}
+.match-card.matched{opacity:.4;pointer-events:none;border-color:var(--success);background:#dcfce7}
+.match-feedback{background:#eff6ff;border-left:5px solid var(--ido-border);border-radius:8px;padding:8px 12px;font-size:.95rem;color:#1e3a8a;margin-top:8px;font-weight:600;min-height:20px}
+.match-feedback.success{background:#dcfce7;border-color:var(--success);color:#166534}
+.match-feedback.error{background:#fef2f2;border-color:var(--error);color:#991b1b}
+
+/* SPOT THE MISTAKE (We Do 3) */
+.stm-paragraph{font-style:italic;font-size:1.18rem;line-height:1.9;color:#1e293b;background:#fff;border:3px solid var(--error);border-radius:14px;padding:20px 22px;margin:10px 0;position:relative}
+.stm-paragraph::before{content:'❌ A STUDENT WROTE THIS PLAN';position:absolute;top:-12px;left:18px;background:var(--error);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+.stm-clickable{background:transparent;padding:1px 2px;border-radius:4px;cursor:pointer;border-bottom:1px dotted rgba(148,163,184,.45);font-style:inherit;font-weight:inherit;transition:all .2s}
+.stm-clickable:hover{background:#fef9c3;border-bottom:2px solid #eab308;padding:1px 4px}
+.stm-clickable.found{background:#fee2e2;color:#991b1b;text-decoration:line-through;border:2px solid var(--error);padding:1px 4px;cursor:default;animation:none;pointer-events:none}
+.stm-clickable.miss{background:#dbeafe;border-bottom:2px solid #60a5fa;animation:shake .35s}
+.stm-feedback-box{background:#fff;border:2px dashed #cbd5e1;border-radius:12px;padding:10px 14px;margin-top:10px;min-height:46px;text-align:center;font-weight:bold;color:#334155;transition:all .2s}
+.stm-feedback-box.success{border-color:var(--success);background:#dcfce7;color:#166534}
+.stm-feedback-box.error{border-color:var(--error);background:#fef2f2;color:#991b1b}
+.stm-correction{display:none;margin-top:8px;background:#f0fdf4;border-left:5px solid var(--success);border-radius:10px;padding:10px 14px;color:#166534;font-weight:bold}
+.stm-correction.visible{display:block;animation:fadeInUp .3s}
+.stm-progress{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.stm-pip{width:26px;height:26px;border-radius:50%;background:#e2e8f0;color:#94a3b8;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .3s}
+.stm-pip.found{background:var(--success);color:#fff;transform:scale(1.1)}
+
+/* SUPER SIX EXIT */
+.ss-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:12px;margin-top:10px;height:calc(100% - 110px)}
+.ss-cell{background:#fff;border-radius:14px;border:2px solid #e2e8f0;padding:14px 14px 12px;display:flex;flex-direction:column;justify-content:flex-start;animation:fadeInUp .4s ease-out;position:relative;overflow:hidden}
+.ss-cell.ss-l1{border-left:6px solid #f97316}
+.ss-cell.ss-l2{border-left:6px solid var(--lo-border)}
+.ss-cell .ss-tag{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#fff;padding:3px 8px;border-radius:6px;align-self:flex-start;margin-bottom:6px}
+.ss-cell.ss-l1 .ss-tag{background:#f97316}
+.ss-cell.ss-l2 .ss-tag{background:var(--lo-border)}
+.ss-cell p{margin:0 0 6px;font-size:1rem;line-height:1.4}
+.ss-cell .answer{display:none;background:#f0fdf4;border-left:4px solid var(--success);border-radius:6px;padding:6px 10px;color:#166534;font-size:.95rem;margin-top:auto}
+#exit-slide.show-ans .ss-cell .answer{display:block;animation:fadeInUp .25s}
+
+/* INDEPENDENT WORK */
+.ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}
+.ind-q.stretch{border-color:#a78bfa;background:linear-gradient(to right,#fff,#f5f3ff)}
+.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px}
+.q-mcq{background:#dbeafe;color:#1e40af}
+.q-short{background:#fef3c7;color:#92400e}
+.q-long{background:#dcfce7;color:#166534}
+.q-diagram{background:#ffedd5;color:#9a3412}
+.q-stretch{background:#ede9fe;color:#5b21b6}
+.mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}
+.mcq-opt:hover{border-color:var(--btn-bg)}
+.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}
+.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+.locked .mcq-opt:not(.correct){opacity:.55}
+
+.xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+.xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+.xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+
+.hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+.hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+.hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+.hint-text.show{display:block;animation:fadeInUp .25s}
+
+.confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+
+.lb-widget{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:10px;margin-top:6px}
+.lb-widget h4{margin:0 0 6px;color:var(--lo-border);font-size:.9rem}
+.lb-list{display:flex;flex-wrap:wrap;gap:4px}
+.lb-name{background:var(--lo-bg);color:var(--lo-border);padding:3px 10px;border-radius:6px;font-size:.85rem;font-weight:bold;animation:fadeInUp .3s}
+.lb-input-row{display:flex;gap:6px;margin-top:6px}
+.lb-input{border:2px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:.9rem;flex:1;font-family:inherit}
+.lb-input:focus{border-color:var(--lo-border);outline:none}
+
+/* WE DO CAPTURE */
+.wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:14px;background:#fff;position:relative}
+.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+.evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+.editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px;padding:2px 6px;display:inline-block;min-width:80px;background:#fff}
+
+/* TIMER WIDGET */
+#timer-widget{position:fixed;top:14px;left:14px;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:5px 12px 5px 14px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:2000;display:none;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+#timer-widget.visible{display:flex}
+#timer-widget::before{content:'⏱';font-size:1.05rem;line-height:1}
+#timer-display{font-size:1.15rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:54px;text-align:center;letter-spacing:.5px}
+.timer-controls{display:flex;gap:3px}
+.timer-btn{background:transparent;color:#475569;border:none;border-radius:50%;width:26px;height:26px;padding:0;cursor:pointer;font-size:.9rem;transition:background .2s;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.timer-btn:hover{background:#e2e8f0;transform:none}
+.timer-btn.active-play{background:var(--success);color:white}
+.timer-btn.active-pause{background:#fbbf24;color:white}
+#timer-widget.warning{border-color:var(--error);animation:pulseWarn 1.4s ease-in-out infinite}
+@keyframes pulseWarn{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.12)}50%{box-shadow:0 6px 24px rgba(220,38,38,.4)}}
+
+/* TA FOCUS */
+#ta-focus-btn{position:fixed;top:14px;left:230px;z-index:2000;background:#6d28d9;color:#fff;border:2px solid #5b21b6;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4)}
+#ta-focus-btn::before{content:'👥';font-size:1.05rem}
+#ta-focus-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#ta-focus-overlay.visible{display:flex}
+#ta-focus-modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;animation:fadeInUp .35s ease-out;border:3px solid #6d28d9}
+.ta-modal-header{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.ta-modal-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.ta-modal-header h3::before{content:'👥 ';margin-right:4px}
+.ta-modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.ta-modal-close:hover{background:rgba(255,255,255,.35);transform:none}
+.ta-modal-body{padding:18px 24px 22px}
+.ta-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.ta-row-icon{flex:0 0 28px;font-size:1.3rem;line-height:1.2}
+.ta-row-content{flex:1;font-size:.96rem;line-height:1.45}
+.ta-row-content strong{color:#5b21b6}
+.ta-cta-row{background:#fef3c7;border-left:5px solid #d97706;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:.92rem}
+.ta-cta-row strong{color:#92400e}
+.ta-no-brief{font-style:italic;color:var(--muted);text-align:center;padding:12px}
+
+/* COLD CALL */
+#cold-call-btn{position:fixed;top:14px;left:380px;z-index:2000;background:#dc2626;color:#fff;border:2px solid #b91c1c;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#cold-call-btn:hover{background:#b91c1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,38,38,.4)}
+#cold-call-btn::before{content:'🎲';font-size:1.05rem}
+#cold-call-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#cold-call-overlay.visible{display:flex}
+#cold-call-modal{background:#fff;border-radius:18px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid #dc2626}
+.cold-call-header{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.cold-call-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.cold-call-header h3::before{content:'🎲 ';margin-right:4px}
+.cold-call-body{padding:18px 22px 22px}
+.cold-call-class-label{text-align:center;font-size:.85rem;color:#64748b;margin:0 0 10px}
+.cold-call-name-box{background:#fef3c7;border:3px solid #d97706;border-radius:14px;padding:18px;text-align:center;margin:0 0 6px}
+.cold-call-name{font-size:2.4rem;font-weight:900;color:#7c2d12;margin:0;letter-spacing:1px;line-height:1.1}
+.cold-call-name.spinning{animation:nameSpin .08s ease-in-out infinite}
+.cold-call-name.settled{animation:nameLand .55s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes nameSpin{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes nameLand{0%{transform:scale(0.6);opacity:0}40%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+.cold-call-q-box{background:#dbeafe;border-left:5px solid #1e40af;padding:12px 16px;border-radius:10px;margin:10px 0 14px}
+.cold-call-q-label{margin:0 0 4px;font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+.cold-call-question{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0;line-height:1.4}
+.cold-call-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.cc-btn-primary{flex:1 1 200px;background:#dc2626;color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.98rem;font-weight:bold;transition:.2s}
+.cc-btn-primary:hover{background:#b91c1c;transform:translateY(-1px)}
+.cc-btn-secondary{flex:1 1 140px;background:#e5e7eb;color:#1e293b;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;transition:.2s}
+.cc-btn-secondary:hover{background:#cbd5e1}
+.cc-edit-link{display:block;text-align:center;background:none;border:none;color:#64748b;cursor:pointer;font-size:.85rem;text-decoration:underline;margin-top:10px;padding:6px}
+.cc-edit-link:hover{color:#dc2626}
+.cc-setup-title{font-weight:bold;margin:0 0 8px;font-size:1.05rem}
+.cc-helper{font-size:.85rem;color:#64748b;margin:6px 0 12px}
+.cc-empty-rows{text-align:center;color:#94a3b8;font-style:italic;padding:18px;border:2px dashed #cbd5e1;border-radius:10px;margin:6px 0}
+.cc-pupil-rows{max-height:300px;overflow-y:auto;padding:2px;border:1px solid #e5e7eb;border-radius:10px;margin:0 0 10px}
+.cc-pupil-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9}
+.cc-pupil-row:last-child{border-bottom:none}
+.cc-pupil-name{flex:1;font-weight:600;color:#1e293b;font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-grade-chips{display:flex;gap:3px;flex-shrink:0}
+.cc-grade-chip{width:30px;height:30px;border-radius:50%;border:2px solid;background:#fff;cursor:pointer;font-weight:900;font-size:.85rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cc-grade-u{border-color:#dc2626;color:#dc2626}
+.cc-grade-1{border-color:#ea580c;color:#ea580c}
+.cc-grade-2{border-color:#d97706;color:#d97706}
+.cc-grade-3{border-color:#0891b2;color:#0891b2}
+.cc-grade-4{border-color:#16a34a;color:#16a34a}
+.cc-grade-chip:hover{transform:scale(1.1)}
+.cc-grade-chip.cc-grade-selected{color:#fff;transform:scale(1.05)}
+.cc-grade-u.cc-grade-selected{background:#dc2626}
+.cc-grade-1.cc-grade-selected{background:#ea580c}
+.cc-grade-2.cc-grade-selected{background:#d97706}
+.cc-grade-3.cc-grade-selected{background:#0891b2}
+.cc-grade-4.cc-grade-selected{background:#16a34a}
+.cc-remove-btn{background:#fee2e2;color:#991b1b;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.85rem;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.cc-remove-btn:hover{background:#fecaca;transform:none}
+.cc-add-row{display:flex;gap:8px;margin:8px 0 12px}
+.cc-add-input{flex:1;padding:10px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;box-sizing:border-box}
+.cc-add-input:focus{outline:none;border-color:#dc2626}
+.cc-mode-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.cc-mode-label{font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.cc-mode-btn{background:#fff;border:1.5px solid #cbd5e1;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;color:#475569;transition:.15s;flex:1 1 auto;min-width:0;box-shadow:none}
+.cc-mode-btn:hover{background:#e0f2fe;border-color:#0891b2;transform:none}
+.cc-mode-btn.active{background:#dc2626;color:#fff;border-color:#b91c1c}
+
+/* TEAM SCOREBOARD PILL */
+#team-scoreboard{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1900;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:6px 12px;box-shadow:0 6px 18px rgba(0,0,0,.12);display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:bold;font-size:.95rem;backdrop-filter:blur(4px);transition:all .2s;max-width:340px}
+#team-scoreboard:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.tsb-team{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-variant-numeric:tabular-nums;font-size:.95rem;white-space:nowrap}
+.tsb-team-a{background:#fce7ef;color:#831843}
+.tsb-team-b{background:#e7efe1;color:#365314}
+.tsb-vs{color:var(--muted);font-weight:600;font-size:.7rem;letter-spacing:.5px;padding:0 2px}
+
+/* SCOREBOARD MODAL */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#sb-overlay.visible{display:flex}
+#sb-modal{background:#fff;border-radius:18px;max-width:520px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid var(--lo-border)}
+.sb-header{background:linear-gradient(135deg,var(--lo-border),#a855f7);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.sb-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.sb-header h3::before{content:'🏆 ';margin-right:4px}
+.sb-body{padding:18px 24px 22px}
+.sb-team-row{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:10px;border:2px solid #e2e8f0}
+.sb-team-row.team-a{border-left:6px solid #c08aa0}
+.sb-team-row.team-b{border-left:6px solid #9cb38a}
+.sb-name-input{width:100%;padding:8px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:1rem;font-weight:bold;font-family:inherit;margin-bottom:10px;box-sizing:border-box}
+.sb-name-input:focus{outline:none;border-color:var(--lo-border)}
+.sb-controls{display:flex;align-items:center;gap:10px}
+.sb-score{flex:1;font-size:2.4rem;font-weight:900;text-align:center;color:#1e293b;font-variant-numeric:tabular-nums}
+.sb-btn{padding:10px 16px;border-radius:10px;font-weight:bold;cursor:pointer;border:none;font-size:1rem;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:.15s;min-width:50px}
+.sb-btn-plus{background:var(--success);color:#fff}
+.sb-btn-plus:hover{background:#15803d;transform:translateY(-1px)}
+.sb-btn-minus{background:#fee2e2;color:#991b1b}
+.sb-btn-minus:hover{background:#fecaca}
+.sb-actions{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.sb-btn-reset{background:#f1f5f9;color:#475569;font-size:.9rem;padding:8px 14px}
+.sb-btn-reset:hover{background:#e2e8f0}
+
+/* PUSH NOTIFICATION (title slide hook) */
+.push-notif{background:linear-gradient(135deg,#1e1e22,#2d2d34);color:#f5f5f7;border-radius:14px;padding:.85rem 1rem;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;align-items:flex-start;gap:.75rem;max-width:380px;margin:0 auto 16px;border:1px solid rgba(255,255,255,.1);animation:notifSlide .8s cubic-bezier(.34,1.56,.64,1) both;text-align:left}
+@keyframes notifSlide{0%{opacity:0;transform:translateY(-40px) scale(.85)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.pn-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#388ea5,#1e3a4a);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;color:white;font-size:.85rem;letter-spacing:.5px}
+.pn-body{flex-grow:1;min-width:0}
+.pn-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pn-app{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a8a8b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-time{font-size:.7rem;color:#8a8a92;flex-shrink:0}
+.pn-title{font-size:.95rem;font-weight:700;color:#f5f5f7;margin-top:.15rem}
+.pn-msg{font-size:.82rem;color:#c8c8d0;margin-top:.1rem;line-height:1.35}
+
+/* FINAL BUZZER */
+.fb-stage{padding:8px 0;display:flex;flex-direction:column;flex:1}
+.fb-counter{font-size:.95rem;color:var(--muted);text-align:center;font-weight:900;margin:4px 0;letter-spacing:2px}
+.fb-question{background:#fff;border:3px solid var(--lo-border);border-radius:14px;padding:24px;font-size:1.4rem;font-weight:700;color:#1e293b;text-align:center;line-height:1.4;margin:8px 0;min-height:90px;display:flex;align-items:center;justify-content:center}
+.fb-which{text-align:center;font-weight:900;font-size:1.05rem;color:var(--lo-border);margin:6px 0;letter-spacing:.5px}
+.fb-answer{background:#dcfce7;border-left:5px solid var(--success);border-radius:10px;padding:14px;font-weight:bold;color:#166534;margin:8px 0;font-size:1.05rem;text-align:center;animation:fadeInUp .25s}
+.fb-buzzers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.fb-buzzer{padding:24px 16px;border-radius:18px;border:none;font-size:1.5rem;font-weight:900;cursor:pointer;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:all .15s;line-height:1.3;letter-spacing:1px;text-align:center}
+.fb-buzz-a{background:linear-gradient(135deg,#c08aa0,#831843)}
+.fb-buzz-b{background:linear-gradient(135deg,#9cb38a,#365314)}
+.fb-buzzer:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.fb-buzzer:active{transform:translateY(0)}
+.fb-buzzer.buzzed{transform:scale(1.05);box-shadow:0 0 0 6px rgba(255,255,255,.6),0 10px 30px rgba(0,0,0,.3);animation:pulseAttn .8s infinite}
+.fb-buzzer.dimmed{opacity:.4;pointer-events:none;transform:scale(.95)}
+.fb-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.fb-final{text-align:center;padding:30px;display:flex;flex-direction:column;justify-content:center;flex:1}
+
+/* TEAM BRIEF SLIDE PANELS */
+.brief-team{background:#fff;border-radius:14px;padding:14px;border:3px solid #e2e8f0}
+.brief-team.team-a{border-color:#c08aa0;background:linear-gradient(180deg,#fce7ef 0%,#fff 60%)}
+.brief-team.team-b{border-color:#9cb38a;background:linear-gradient(180deg,#e7efe1 0%,#fff 60%)}
+
+/* PRINT */
+/* ===== VISUAL-FIRST HELPERS (afternoon-friendly) ===== */
+.big-icon-row{display:flex;gap:14px;justify-content:center;align-items:center;margin:14px 0;flex-wrap:wrap}
+.big-icon{font-size:3.2rem;line-height:1;animation:fadeInUp .6s ease-out both}
+.big-icon-row .big-icon:nth-child(2){animation-delay:.15s}
+.big-icon-row .big-icon:nth-child(3){animation-delay:.30s}
+.big-icon-row .big-icon:nth-child(4){animation-delay:.45s}
+
+/* Tap-cards (3-step reveal) */
+.tap-card{position:relative;border-radius:18px;padding:20px;cursor:pointer;border:4px solid;display:flex;align-items:center;gap:14px;margin:10px 0;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 12px rgba(0,0,0,.08);min-height:90px}
+.tap-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.tap-card .tc-icon{font-size:3rem;line-height:1;flex-shrink:0}
+.tap-card .tc-body{flex:1}
+.tap-card .tc-headline{font-size:1.2rem;font-weight:900;color:#1e293b;line-height:1.3}
+.tap-card .tc-detail{font-size:.95rem;color:#475569;margin-top:6px;display:none;line-height:1.4}
+.tap-card.opened .tc-detail{display:block;animation:fadeInUp .25s ease-out}
+.tap-card .tc-tag{position:absolute;top:-12px;right:14px;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.75rem;letter-spacing:1px;color:#fff}
+.tc-orange{border-color:#f97316;background:linear-gradient(180deg,#ffedd5 0%,#fff 50%)}
+.tc-orange .tc-tag{background:#f97316}
+.tc-amber{border-color:#d97706;background:linear-gradient(180deg,#fef3c7 0%,#fff 50%)}
+.tc-amber .tc-tag{background:#d97706}
+.tc-blue{border-color:#1d4ed8;background:linear-gradient(180deg,#dbeafe 0%,#fff 50%)}
+.tc-blue .tc-tag{background:#1d4ed8}
+
+/* Big-icon task tiles (Team Brief) */
+.task-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.task-tile{padding:18px 12px;border-radius:16px;background:#fff;border:3px solid #e2e8f0;text-align:center;animation:fadeInUp .5s ease-out both}
+.task-tile:nth-child(1){animation-delay:.05s;border-color:#1d4ed8}
+.task-tile:nth-child(2){animation-delay:.20s;border-color:#dc2626}
+.task-tile:nth-child(3){animation-delay:.35s;border-color:#16a34a}
+.tt-icon{font-size:3.4rem;line-height:1;margin-bottom:8px;display:block}
+.tt-num{display:inline-block;background:#1e293b;color:#fff;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:900;margin-bottom:4px}
+.tt-title{font-size:1.1rem;font-weight:900;color:#1e293b;margin:6px 0 2px}
+.tt-sub{font-size:.85rem;color:#475569;line-height:1.3}
+
+/* Data card → arrow → results card (I Do 1) */
+.data-flow{display:grid;grid-template-columns:1fr 50px 1fr;gap:8px;align-items:stretch;margin:14px 0;max-width:880px;margin-left:auto;margin-right:auto}
+.data-card{padding:14px;border-radius:14px;border:3px solid #92400e;background:linear-gradient(180deg,#fef3c7 0%,#fff 75%)}
+.data-card.results{border-color:#16a34a;background:linear-gradient(180deg,#dcfce7 0%,#fff 75%)}
+.data-card h3{margin:0 0 8px;font-size:1rem;color:#1e293b;border:none;padding:0}
+.data-card .dc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dotted #cbd5e1;font-size:.92rem}
+.data-card .dc-row:last-child{border-bottom:none}
+.data-card .dc-label{color:#475569;font-weight:600}
+.data-card .dc-val{font-family:'SF Mono','Consolas',monospace;font-weight:900;color:#1e293b}
+.data-card.results .dc-val{font-size:1.05rem;color:#15803d;background:#fff;padding:2px 8px;border-radius:6px}
+.data-flow-arrow{font-size:2.4rem;font-weight:900;color:#475569;align-self:center;text-align:center;animation:slideRight 1.4s ease-in-out infinite}
+@keyframes slideRight{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+
+/* Anomaly highlight (Site B) */
+.anomaly-row{background:linear-gradient(90deg,#fee2e2 0%,#fff 100%);border-left:4px solid #dc2626;padding:6px 10px;margin:6px 0;border-radius:6px;font-family:'SF Mono','Consolas',monospace;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.anomaly-row .anom-bang{color:#dc2626;font-size:1.4rem;font-weight:900;animation:pulseAttn 1.6s ease-in-out infinite}
+
+/* Trend mini-graph (We Do 2) */
+.trend-mini{display:block;margin:0 auto 6px;max-width:520px;width:100%;height:auto}
+
+/* Quiet "click for more" hint */
+.tap-hint{font-size:.8rem;color:#64748b;font-style:italic;text-align:center;margin-top:6px;letter-spacing:.5px}
+
+/* Trap-rows (one-liner mistakes) */
+.trap-row{display:flex;gap:8px;align-items:center;padding:8px 12px;background:#fffbeb;border-left:4px solid #d97706;border-radius:8px;margin:6px 0;font-size:.9rem}
+.trap-row .trap-x{color:#dc2626;font-size:1.2rem;font-weight:900;flex-shrink:0}
+
+#print-area{display:none}
+@media print{
+  body{overflow:visible;background:#fff;height:auto;color:#000}
+  .controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#ta-focus-btn,#ta-focus-overlay,#cold-call-btn,#cold-call-overlay{display:none!important}
+  #print-area{display:block!important;padding:20px}
+  .print-section{display:none;page-break-after:always}
+  .print-section.visible{display:block}
+  .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .print-box{border:1px solid #000;padding:10px;min-height:80px}
+  .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+  .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+  .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}
+  .ko-table th{background:#eee}
+  .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+  .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+  .cover-sheet{border:2px solid #000;padding:14px 16px;margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;page-break-after:always}
+  .cover-header{border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:10px;overflow:hidden}
+  .cover-title-block{float:left;width:60%}
+  .cover-title-block h2{margin:0;font-size:1.15rem;color:#000;border:none;padding:0}
+  .cover-title-block .cover-code{font-size:.78rem;color:#000;font-weight:bold;letter-spacing:.5px;text-transform:uppercase;margin:0 0 4px}
+  .cover-namebox{float:right;width:38%;font-size:.82rem;text-align:right}
+  .cover-namebox-row{margin:3px 0;line-height:1.4}
+  .cover-namebox-row span:first-child{font-weight:bold;display:inline-block;width:42px;text-align:right}
+  .cover-namebox-row .cover-line{border-bottom:1px solid #000;display:inline-block;width:110px;height:14px;vertical-align:middle}
+  .cover-section{margin-top:8px;clear:both}
+  .cover-section h4{margin:0 0 6px;font-size:.92rem;font-weight:bold;color:#000;text-transform:uppercase;letter-spacing:.4px}
+  .cover-lo-list{margin:0 0 0 6px;padding:0;list-style:disc;padding-left:20px}
+  .cover-lo-list li{margin:3px 0;font-size:.86rem;line-height:1.35}
+  .cover-sc-row{margin:4px 0;padding:5px 6px;border-bottom:1px dotted #94a3b8;overflow:hidden}
+  .cover-sc-row:last-child{border-bottom:none}
+  .cover-sc-text{float:left;width:75%;font-size:.83rem;line-height:1.35}
+  .cover-sc-marks{float:right;width:22%;text-align:right}
+  .cover-sc-mark{display:inline-block;width:22px;height:22px;border:1.5px solid #000;border-radius:50%;text-align:center;line-height:18px;font-size:.78rem;font-weight:900;background:#fff;margin-left:3px}
+  .cover-exit{margin-top:10px;padding-top:8px;border-top:1.5px dashed #000;clear:both}
+  .cover-exit-prompt{font-size:.82rem;font-style:italic;margin:0 0 4px}
+  .cover-exit-line{border-bottom:1px solid #000;height:16px;margin-top:2px}
+  .cover-key{font-size:.72rem;color:#333;text-align:center;margin-top:8px;font-style:italic;padding-top:6px;border-top:1px dotted #94a3b8}
+  .ss-print{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}
+  .ss-print td{border:2px solid #000;padding:10px;vertical-align:top;width:33.33%;height:170px;page-break-inside:avoid}
+  .ss-print .ss-pip{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:.5px;padding:2px 7px;border-radius:5px;color:#fff;margin-bottom:6px}
+  .ss-print .ss-pip-l1{background:#f97316}
+  .ss-print .ss-pip-l2{background:#9c27b0}
+  .ss-print td p{margin:0 0 4px;font-size:.95rem;line-height:1.35}
+  .ss-print .ss-ans{border-bottom:1px solid #888;height:18px;margin-top:8px}
+  /* TEAM BRIEF PRINT */
+  .team-brief-page{page-break-after:always;font-size:.92rem;padding:0}
+  .brief-banner{background:#831843;color:#fff;padding:12px 18px;font-size:1.4rem;font-weight:900;text-align:center;letter-spacing:2px;border-radius:10px;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .brief-banner.banner-b{background:#365314}
+  .brief-section-head{font-weight:900;color:#000;margin:14px 0 4px;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px}
+  .brief-method-row{padding:6px 0;border-bottom:1px dotted #94a3b8;font-size:.9rem}
+  .brief-method-row label{font-weight:bold}
+  .brief-stretch-row{padding:6px 0;border-bottom:1px dotted #94a3b8}
+  .brief-sign-row{margin-top:14px;text-align:right;font-size:.85rem;border-top:1.5px dashed #000;padding-top:6px}
+  /* Method reference cards (cut-and-distribute) */
+  .method-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .method-ref-card{border:2px solid #000;border-radius:8px;padding:10px;page-break-inside:avoid;min-height:140px}
+  .method-ref-card h4{margin:0 0 4px;font-size:1.05rem}
+  .method-ref-card p{margin:2px 0;font-size:.85rem;line-height:1.4}
+}
+</style>
+</head>
+<body>
+
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+  </div>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+
+<div id="ta-focus-overlay" onclick="if(event.target.id==='ta-focus-overlay')hideTABrief()">
+  <div id="ta-focus-modal">
+    <div class="ta-modal-header">
+      <h3 id="ta-modal-title">TA Focus</h3>
+      <button class="ta-modal-close" onclick="hideTABrief()" aria-label="Close">✕</button>
+    </div>
+    <div class="ta-modal-body" id="ta-modal-body"></div>
+  </div>
+</div>
+
+<div id="cold-call-overlay" onclick="if(event.target.id==='cold-call-overlay')hideColdCall()">
+  <div id="cold-call-modal">
+    <div class="cold-call-header">
+      <h3>Cold Call</h3>
+      <button class="ta-modal-close" onclick="hideColdCall()" aria-label="Close">✕</button>
+    </div>
+    <div class="cold-call-body" id="cold-call-body"></div>
+  </div>
+</div>
+
+<!-- TEAM SCOREBOARD PILL -->
+<div id="team-scoreboard" onclick="showScoreboard()" title="Click to score / edit"></div>
+
+<!-- SCOREBOARD MODAL -->
+<div id="sb-overlay" onclick="if(event.target.id==='sb-overlay')hideScoreboard()">
+  <div id="sb-modal">
+    <div class="sb-header">
+      <h3>Team Scoreboard</h3>
+      <button class="ta-modal-close" onclick="hideScoreboard()" aria-label="Close">✕</button>
+    </div>
+    <div class="sb-body" id="sb-body"></div>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ============ TITLE ============ -->
+  <div class="slide active" data-title="Title" data-timer="1">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:1%">
+      <div class="push-notif">
+        <div class="pn-icon">MC</div>
+        <div class="pn-body">
+          <div class="pn-head">
+            <span class="pn-app">Messages · Dr M. Calder</span>
+            <span class="pn-time">now</span>
+          </div>
+          <div class="pn-title">Today's the day! 🌊📋</div>
+          <div class="pn-msg">Site Packs sent to your team. 3 sites on the Tees. Get me averages + a one-line conclusion. Final scoreboard tonight.</div>
+        </div>
+      </div>
+      <div class="animate-enter">
+        <p style="font-size:1rem;color:var(--muted);margin:0">Lesson 19 — PGFI</p>
+        <h1>Fieldwork Day 🌊</h1>
+        <p style="font-size:1rem;color:var(--muted);margin:-8px 0 14px">"What does the river actually do downstream?"</p>
+
+        <div class="big-icon-row" style="margin:18px 0 6px">
+          <div class="big-icon">📊</div>
+          <div class="big-icon" style="font-size:2.4rem;color:#475569">→</div>
+          <div class="big-icon">🔍</div>
+          <div class="big-icon" style="font-size:2.4rem;color:#475569">→</div>
+          <div class="big-icon">🎯</div>
+        </div>
+        <p style="font-size:1.15rem;font-weight:900;color:#1e293b;margin:0">Calculate · Spot the anomaly · Conclude</p>
+        <p style="font-size:.9rem;color:var(--muted);margin:6px 0 0">PGFI Obj 4 evidence by the end · 50 minutes</p>
+      </div>
+      <div class="scaffold-box" style="display:inline-block;margin-top:18px;text-align:left">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button onclick="printPack()">🖨️ Print KO + Site Packs</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ KO only</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ARRIVAL ============ -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-arrival">FAB 4 · Arrival</span>
+    <h2>FAB 4 Arrival – Recall from L17/L18</h2>
+    <div class="li-box"><strong>Whiteboards.</strong> 4 minutes. Q4 leads into today.</div>
+    <button class="ghost small" style="position:absolute;top:18px;right:200px" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+
+    <div class="arrival-grid">
+      <div class="task-box animate-enter">
+        <h3>1. Recall — L18</h3>
+        <p>Name the <strong>3 sampling strategies</strong>.</p>
+        <p class="answer">Random · Systematic · Stratified.</p>
+      </div>
+      <div class="task-box animate-enter anim-d1">
+        <h3>2. Recall — L18</h3>
+        <p>Why is <strong>"be careful"</strong> a bad control?</p>
+        <p class="answer">It doesn't say what you'll DO. A control names a specific action (wellies, buddy, stay back, etc).</p>
+      </div>
+      <div class="task-box animate-enter anim-d2">
+        <h3>3. Recall — L17</h3>
+        <p>How do you measure <strong>velocity</strong>?</p>
+        <p class="answer">Mark 10 m, drop a float, time it, repeat 3 times, average. Velocity = distance ÷ time.</p>
+      </div>
+      <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+        <h3>4. Lead-in 🔬</h3>
+        <p>You've got <strong>5 depth readings</strong> at one site: <code>0.42, 0.45, 0.43, 1.20, 0.41</code> metres. Spot anything weird?</p>
+        <p class="answer">1.20 m — way bigger than the others. Could be: a deep hole, a mistake, a misread. Today: how to handle that.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <div class="slide" id="starter-slide" data-title="Starter – Vague vs Sharp" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>When data goes weird</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">3 problems. Each gets fixed at a different moment. Tap to reveal.</p>
+
+    <div class="tap-card tc-blue" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">BEFORE</span>
+      <div class="tc-icon">📐</div>
+      <div class="tc-body">
+        <div class="tc-headline">No units. "Width = 12. Depth = 0.5."</div>
+        <div class="tc-detail">Fix <strong>before the trip</strong> — print column headers (m / m/s / cm) so you can't forget.</div>
+      </div>
+    </div>
+
+    <div class="tap-card tc-orange" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">ON THE DAY</span>
+      <div class="tc-icon">📋</div>
+      <div class="tc-body">
+        <div class="tc-headline">Missed reading. "We just remember it was about half a metre."</div>
+        <div class="tc-detail">Fix <strong>on the day</strong> — always re-check the sheet before leaving each site.</div>
+      </div>
+    </div>
+
+    <div class="tap-card tc-amber" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">WRITE-UP</span>
+      <div class="tc-icon">⚠️</div>
+      <div class="tc-body">
+        <div class="tc-headline">Anomaly. "4 readings are 0.4 m. One is 1.2 m."</div>
+        <div class="tc-detail">Fix <strong>in write-up</strong> — highlight it, justify it, average without it. <strong>Never delete.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ I DO 1: ANATOMY OF A STRONG AIM ============ -->
+  <div class="slide" data-title="I Do – Site A model" data-type="ido" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · 1 of 2</span>
+    <h2>📍 Site A — upstream</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">Raw data on the left → averages on the right.</p>
+
+    <div class="data-flow">
+      <div class="data-card">
+        <h3>📋 Raw data</h3>
+        <div class="dc-row"><span class="dc-label">Width</span><span class="dc-val">2.4 m</span></div>
+        <div class="dc-row"><span class="dc-label">Depths (×5)</span><span class="dc-val">0.18 · 0.22 · 0.25 · 0.21 · 0.19</span></div>
+        <div class="dc-row"><span class="dc-label">Velocity times</span><span class="dc-val">18s · 19s · 17s</span></div>
+        <div class="dc-row"><span class="dc-label">Pebbles (×10)</span><span class="dc-val">8.2 · 9.1 · 7.8 · 10.4 · 8.5 · 9.0 · 7.5 · 8.8 · 9.3 · 8.9</span></div>
+      </div>
+      <div class="data-flow-arrow">→</div>
+      <div class="data-card results">
+        <h3>🧮 Averages</h3>
+        <div class="dc-row"><span class="dc-label">Width</span><span class="dc-val">2.40 m</span></div>
+        <div class="dc-row"><span class="dc-label">Avg depth</span><span class="dc-val">0.21 m</span></div>
+        <div class="dc-row"><span class="dc-label">Velocity = 10 ÷ 18</span><span class="dc-val">0.56 m/s</span></div>
+        <div class="dc-row"><span class="dc-label">Avg pebble</span><span class="dc-val">8.75 cm</span></div>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:1rem;font-weight:900;color:#15803d;margin:10px 0 0">✓ Sense check: shallow, slow, chunky pebbles — yes, upstream.</p>
+    <p style="text-align:center;font-size:.85rem;color:#64748b;font-style:italic;margin:4px 0">💡 Sum first, divide last. Round to 2 d.p.</p>
+  </div>
+
+  <!-- ============ WE DO 1: CLASS CALCS SITE B ============ -->
+  <div class="slide" data-title="We Do – Site B together" data-type="wedo" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 1</span>
+    <h2>📍 Site B — and there's an anomaly</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">Spot the odd value first. Class agrees on each blank, then we type it in.</p>
+
+    <div class="data-card" style="max-width:780px;margin:0 auto">
+      <h3>📋 Raw data — Site B</h3>
+      <div class="dc-row"><span class="dc-label">Width</span><span class="dc-val">5.8 m</span></div>
+      <div class="dc-row"><span class="dc-label">Depths (×5)</span><span class="dc-val">0.42 · 0.45 · 0.43 · 0.41 m</span></div>
+      <div class="anomaly-row"><span class="anom-bang">⚠️</span><span style="flex:1"><strong>1.20 m</strong> — this 5th reading is way bigger than the others</span></div>
+      <div class="dc-row"><span class="dc-label">Velocity times</span><span class="dc-val">11s · 12s · 11s</span></div>
+      <div class="dc-row"><span class="dc-label">Pebbles (×10)</span><span class="dc-val">4.1 · 3.8 · 4.5 · 3.9 · 4.2 · 3.7 · 4.4 · 4.0 · 3.6 · 4.3</span></div>
+    </div>
+
+    <div class="wedo-capture" style="margin-top:14px">
+      <p style="font-size:1.05rem;line-height:2.2;color:#1e293b">
+        Avg depth (4 valid) =
+        <span class="editable" contenteditable="true" data-placeholder="m"></span>m
+        &nbsp;|&nbsp; Avg time =
+        <span class="editable" contenteditable="true" data-placeholder="s"></span>s
+        →&nbsp; Velocity =
+        <span class="editable" contenteditable="true" data-placeholder="m/s"></span>m/s
+        &nbsp;|&nbsp; Avg pebble =
+        <span class="editable" contenteditable="true" data-placeholder="cm"></span>cm.
+      </p>
+      <p style="margin-top:8px;color:var(--muted);font-size:.85rem;font-style:italic">💡 Answers: 0.43 m · 11.3 s · 0.88 m/s · 4.05 cm</p>
+    </div>
+  </div>
+
+  <!-- ============ I DO 2: 4 METHODS ============ -->
+  <div class="slide" data-title="I Do – Handling Anomalies" data-type="ido" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · 2 of 2</span>
+    <h2>3 things to do with an anomaly</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">In order. Tap each card.</p>
+
+    <div class="method-grid">
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#f97316">
+        <div class="m-icon">🔍</div>
+        <p class="m-name">1. Spot it</p>
+        <p class="m-tease">2× or 3× the others</p>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem">Look at the <em>pattern</em>. The 1.20 next to four 0.4s is obvious.</p>
+        </div>
+      </div>
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#22c55e">
+        <div class="m-icon">📝</div>
+        <p class="m-name">2. Highlight + justify</p>
+        <p class="m-tease">never delete it</p>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem"><strong>Why?</strong> Deep hole · misread · stick hit soft patch.</p>
+          <p style="margin:6px 0;font-size:.9rem;color:#dc2626;font-weight:900">Deleting = data tampering.</p>
+        </div>
+      </div>
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#a855f7">
+        <div class="m-icon">🧮</div>
+        <p class="m-name">3. Average without it</p>
+        <p class="m-tease">divide by N–1</p>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem;font-family:'SF Mono',monospace">(0.42 + 0.45 + 0.43 + 0.41) ÷ <strong>4</strong> = 0.43 m</p>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:1rem;font-weight:900;color:#15803d;margin:14px 0 0">✓ Honest scientists win more credit than "perfect" data scientists.</p>
+  </div>
+
+  <!-- ============ WE DO 2: MATCH METHOD TO QUESTION ============ -->
+  <div class="slide" id="match-slide" data-title="We Do – Read the Trend" data-type="wedo" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 2</span>
+    <h2>Read the Trend</h2>
+    <p style="text-align:center;color:var(--muted);font-size:.95rem;margin:0 0 4px">Each line shows how a variable changed Site A → B → C. Match data on the left to the conclusion on the right.</p>
+
+    <!-- Animated mini trend graph -->
+    <svg class="trend-mini" viewBox="0 0 520 130" xmlns="http://www.w3.org/2000/svg">
+      <!-- axes -->
+      <line x1="40" y1="115" x2="510" y2="115" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="40" y1="10" x2="40" y2="115" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="40" y="128" font-size="11" fill="#475569" text-anchor="middle">Site A</text>
+      <text x="275" y="128" font-size="11" fill="#475569" text-anchor="middle">Site B</text>
+      <text x="510" y="128" font-size="11" fill="#475569" text-anchor="middle">Site C</text>
+      <text x="20" y="64" font-size="10" fill="#475569" text-anchor="middle" transform="rotate(-90 20 64)">value</text>
+      <!-- 3 trend-up lines (width, depth, velocity) — drawn over time -->
+      <polyline fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600" points="40,90 275,55 510,25">
+        <animate attributeName="stroke-dashoffset" from="600" to="0" dur="1.4s" begin="0s" fill="freeze"/>
+      </polyline>
+      <text x="510" y="22" font-size="10" font-weight="900" fill="#1d4ed8" text-anchor="end" opacity="0">width ↑<animate attributeName="opacity" from="0" to="1" dur=".3s" begin="1.4s" fill="freeze"/></text>
+      <polyline fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600" points="40,98 275,68 510,38">
+        <animate attributeName="stroke-dashoffset" from="600" to="0" dur="1.4s" begin=".3s" fill="freeze"/>
+      </polyline>
+      <text x="510" y="35" font-size="10" font-weight="900" fill="#16a34a" text-anchor="end" opacity="0">depth ↑<animate attributeName="opacity" from="0" to="1" dur=".3s" begin="1.7s" fill="freeze"/></text>
+      <polyline fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600" points="40,105 275,80 510,52">
+        <animate attributeName="stroke-dashoffset" from="600" to="0" dur="1.4s" begin=".6s" fill="freeze"/>
+      </polyline>
+      <text x="510" y="49" font-size="10" font-weight="900" fill="#a855f7" text-anchor="end" opacity="0">velocity ↑<animate attributeName="opacity" from="0" to="1" dur=".3s" begin="2s" fill="freeze"/></text>
+      <!-- 1 trend-down line (pebble) -->
+      <polyline fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="600" points="40,30 275,70 510,100">
+        <animate attributeName="stroke-dashoffset" from="600" to="0" dur="1.4s" begin=".9s" fill="freeze"/>
+      </polyline>
+      <text x="510" y="112" font-size="10" font-weight="900" fill="#dc2626" text-anchor="end" opacity="0">pebble ↓<animate attributeName="opacity" from="0" to="1" dur=".3s" begin="2.3s" fill="freeze"/></text>
+    </svg>
+
+    <p style="text-align:center;font-size:.9rem;margin:0 0 6px;color:var(--muted)"><strong>Score:</strong> <span id="match-score" style="font-size:1.1rem;color:var(--success)">0</span>/6</p>
+    <div class="match-grid" id="wedo2">
+      <div class="match-col">
+        <p class="match-col-title">Data trend (Site A → C)</p>
+        <div class="match-card" data-key="width" onclick="matchClick(this,'q')">Width: 2.4 → 5.8 → 8.9 m &nbsp; <strong>(↑)</strong></div>
+        <div class="match-card" data-key="depth" onclick="matchClick(this,'q')">Avg depth: 0.21 → 0.43 → 0.62 m &nbsp; <strong>(↑)</strong></div>
+        <div class="match-card" data-key="velocity" onclick="matchClick(this,'q')">Velocity: 0.56 → 0.88 → 1.05 m/s &nbsp; <strong>(↑)</strong></div>
+        <div class="match-card" data-key="pebble" onclick="matchClick(this,'q')">Avg pebble: 8.75 → 4.05 → 1.85 cm &nbsp; <strong>(↓)</strong></div>
+        <div class="match-card" data-key="anom" onclick="matchClick(this,'q')">One Site B depth = 1.20 m, others ≈ 0.43 m</div>
+        <div class="match-card" data-key="hyp" onclick="matchClick(this,'q')">L17 hypothesis: width↑, depth↑, velocity↑, pebble↓</div>
+      </div>
+      <div class="match-col">
+        <p class="match-col-title">What it tells us</p>
+        <div class="match-card" data-key="velocity" onclick="matchClick(this,'m')">River speeds up downstream — more water, less friction with banks.</div>
+        <div class="match-card" data-key="hyp" onclick="matchClick(this,'m')">All four trends match the prediction — the data <strong>supports</strong> the hypothesis.</div>
+        <div class="match-card" data-key="width" onclick="matchClick(this,'m')">Channel gets wider — tributaries are adding water as we go downstream.</div>
+        <div class="match-card" data-key="anom" onclick="matchClick(this,'m')">Anomaly — exclude from average, justify (deep hole?), keep visible in raw data.</div>
+        <div class="match-card" data-key="depth" onclick="matchClick(this,'m')">Channel cuts deeper as flow grows — more erosion of the bed.</div>
+        <div class="match-card" data-key="pebble" onclick="matchClick(this,'m')">Pebbles get smaller — worn down by erosion as they travel downstream.</div>
+      </div>
+    </div>
+    <div class="match-feedback" id="match-feedback">👆 Click a trend on the left, then the conclusion on the right.</div>
+    <div style="text-align:right;margin-top:6px"><button class="ghost small" onclick="matchReset()">🔄 Reset</button> <button class="ghost small" onclick="matchRevealAll()">👁️ Reveal All</button></div>
+  </div>
+
+  <!-- ============ WE DO 3: SPOT THE MISTAKE ============ -->
+  <div class="slide" id="stm-slide" data-title="Spot the Mistakes in the Results" data-type="wedo" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 3</span>
+    <h2>Spot the 3 Mistakes</h2>
+    <div class="li-box"><strong>A pupil wrote this results paragraph for Site B.</strong> 3 things are wrong. Click the phrases you think are wrong.</div>
+
+    <div class="stm-progress">
+      <div class="stm-pip" id="stm-pip-1">1</div>
+      <div class="stm-pip" id="stm-pip-2">2</div>
+      <div class="stm-pip" id="stm-pip-3">3</div>
+    </div>
+
+    <div class="stm-paragraph">
+      Site B depths were 0.42, 0.45, 0.43, 1.20, 0.41 metres. <span class="stm-clickable" data-correct="true" data-id="m1" data-explain="Mistake 1: NEVER delete an anomaly — that's data tampering. The correct response is to highlight it, justify it (deep hole? misread?), and average WITHOUT it. Keep the 1.20 visible in the raw data.">I deleted the 1.20 because it was wrong</span>, then averaged the other four to get 0.43 m. <span class="stm-clickable" data-correct="false" data-id="x1">Velocity was 10 m ÷ 11.3 s = 0.88 m/s</span>. Average pebble size was <span class="stm-clickable" data-correct="true" data-id="m2" data-explain="Mistake 2: missing units. 'Avg pebble = 4.05' is meaningless — is that mm? cm? m? Always include units. The correct entry is '4.05 cm' (or '40.5 mm').">4.05</span>. Comparing to Site A: <span class="stm-clickable" data-correct="false" data-id="x2">depth and velocity have both increased downstream</span>, which <span class="stm-clickable" data-correct="true" data-id="m3" data-explain="Mistake 3: the data here SUPPORTS the L17 hypothesis (width↑ depth↑ velocity↑ pebble↓). Saying it 'disproves' contradicts the actual numbers. Match your conclusion to your data, not to what you wish.">disproves the L17 hypothesis</span>.
+    </div>
+
+    <div class="stm-feedback-box" id="stm-feedback">👆 Click a phrase you think is wrong. Find all 3 to win.</div>
+    <div class="stm-correction" id="stm-correction">
+      ✅ Correct version: "Site B depths were 0.42, 0.45, 0.43, <strong>1.20 (anomaly — possible deep hole, excluded)</strong>, 0.41 m. Average of the four valid readings = 0.43 m. Velocity = 0.88 m/s. Avg pebble = <strong>4.05 cm</strong>. Compared to Site A, depth and velocity have increased — this <strong>supports</strong> the L17 hypothesis."
+    </div>
+    <div style="text-align:right;margin-top:6px"><button class="ghost small" onclick="stmReset()">🔄 Reset</button> <button class="ghost small" onclick="stmRevealAll()">👁️ Reveal All</button></div>
+  </div>
+
+  <!-- ============ INDEPENDENT: PGFI Obj 4 ============ -->
+  <div class="slide" id="brief-slide" data-title="Team Brief — Site Pack" data-type="independent" data-timer="8" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-independent">Team Task · 8 min</span>
+    <h2>📋 Site Pack — 8 minutes</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0">One printed Site Pack per team. Photo it at the end = PGFI Obj 4 evidence.</p>
+
+    <div class="task-tiles">
+      <div class="task-tile">
+        <span class="tt-icon">📊</span>
+        <span class="tt-num">1</span>
+        <div class="tt-title">Calculate</div>
+        <div class="tt-sub">Averages for Sites A, B, C.</div>
+      </div>
+      <div class="task-tile">
+        <span class="tt-icon">🔍</span>
+        <span class="tt-num">2</span>
+        <div class="tt-title">Anomaly</div>
+        <div class="tt-sub">Spot it. Highlight it. Justify in 1 line.</div>
+      </div>
+      <div class="task-tile">
+        <span class="tt-icon">🎯</span>
+        <span class="tt-num">3</span>
+        <div class="tt-title">★ Conclusion</div>
+        <div class="tt-sub">1 line. Link to L17 hypothesis.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button onclick="printSection('brief')" style="background:var(--wedo-border)">🖨️ Print Site Packs (1 per team)</button>
+      <button class="ghost small" onclick="document.getElementById('brief-slide').classList.toggle('show-ans')">👁️ Example</button>
+    </div>
+
+    <div class="answer" style="margin-top:10px;padding:12px;background:#dcfce7;border-left:5px solid var(--success);border-radius:8px">
+      <strong>Sample conclusion:</strong> "As the Tees flows downstream, width, depth and velocity all increased while pebble size decreased. This <strong>supports</strong> our hypothesis."
+    </div>
+  </div>
+
+  <!-- ============ FINAL BUZZER ============ -->
+  <div class="slide" id="final-buzzer-slide" data-title="Final Buzzer" data-timer="6" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-exit">🏆 Final Buzzer · 6 Qs</span>
+    <h2>🏆 Final Buzzer — Last One!</h2>
+    <div class="li-box"><strong>6 questions to settle the whole series.</strong> Score is cumulative L16 → L19. First to BUZZ answers.</div>
+
+    <div class="fb-stage" id="fb-stage">
+      <div class="fb-counter">QUESTION <span id="fb-q-num">1</span> / 6</div>
+      <div class="fb-question" id="fb-question">Loading…</div>
+      <div class="fb-answer" id="fb-answer" style="display:none">—</div>
+      <div class="fb-buzzers">
+        <button class="fb-buzzer fb-buzz-a" onclick="fbBuzz('a')">🌹<br><span id="fb-buzzer-a-name">ROSE</span><br>BUZZ</button>
+        <button class="fb-buzzer fb-buzz-b" onclick="fbBuzz('b')">🌿<br><span id="fb-buzzer-b-name">SAGE</span><br>BUZZ</button>
+      </div>
+      <div class="fb-which" id="fb-which">Click a team's BUZZ button to claim the question.</div>
+      <div class="fb-controls">
+        <button class="ghost small" onclick="fbReveal()">👁️ Reveal Answer</button>
+        <button class="small" style="background:#c08aa0" onclick="fbAward('a')">+1 <span id="fb-award-a-name">Rose</span></button>
+        <button class="small" style="background:#9cb38a" onclick="fbAward('b')">+1 <span id="fb-award-b-name">Sage</span></button>
+        <button class="ghost small" onclick="fbNext()">Skip / Next ▶</button>
+      </div>
+    </div>
+
+    <div class="fb-final" id="fb-final" style="display:none">
+      <h2 style="text-align:center;border:none;margin-right:0;color:var(--success)">🏆 Final Result</h2>
+      <div id="fb-winner-text" style="margin-top:16px;font-size:1.4rem;font-weight:900"></div>
+      <div style="margin-top:20px"><button onclick="fbInit()">🔄 Play Again</button></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- ===================== PRINT AREA ===================== -->
+<div id="print-area">
+
+  <!-- KNOWLEDGE ORGANISER -->
+  <div id="print-ko" class="print-section">
+    <h2 style="border:none">Knowledge Organiser — Fieldwork Day</h2>
+    <h3>Calculating averages</h3>
+    <table class="ko-table">
+      <tr><th style="width:25%">Variable</th><th>Calculation</th><th>Units</th></tr>
+      <tr><td><strong>Avg depth</strong></td><td>Sum of depth readings ÷ number of readings.</td><td>m</td></tr>
+      <tr><td><strong>Velocity</strong></td><td>Avg time = (t₁+t₂+t₃) ÷ 3, then 10 m ÷ avg time.</td><td>m/s</td></tr>
+      <tr><td><strong>Avg pebble size</strong></td><td>Sum of 10 long-axis values ÷ 10.</td><td>cm</td></tr>
+      <tr><td><strong>Cross-section</strong></td><td>Width × avg depth.</td><td>m²</td></tr>
+    </table>
+    <h3>Anomaly handling — 3 steps</h3>
+    <ol style="margin:.4rem 0 .6rem;padding-left:1.4rem">
+      <li><strong>Spot</strong> it — value 2× or 3× the others.</li>
+      <li><strong>Highlight + justify</strong> — circle it, write WHY (deep hole? misread? eddy?).</li>
+      <li><strong>Average without it</strong> — divide by N-1 not N. Never delete it.</li>
+    </ol>
+    <h3>Conclusion stem</h3>
+    <p>"Our data shows that as the river flows downstream, ___, ___ and ___ <strong>increased</strong> while ___ <strong>decreased</strong>. This <strong>supports / does not support</strong> our hypothesis because ___."</p>
+    <p style="margin-top:.6rem"><strong>Sense check:</strong> upstream = shallow, slow, big chunky pebbles. Downstream = deep, fast, small smooth pebbles. If your numbers don't match that pattern, check your maths — or you have a real anomaly.</p>
+  </div>
+
+  <!-- SITE PACK (one per team, 2 pages) -->
+  <div id="print-brief" class="print-section">
+    <div class="team-brief-page">
+      <div class="brief-banner ">🌹 ROSE SITE PACK — RIVER TEES DATA DAY</div>
+      <p style="font-size:.9rem"><strong>Team members:</strong> _______________ · _______________ · _______________ &nbsp;&nbsp; <strong>Date:</strong> _________</p>
+
+      <div class="brief-section-head">Raw data (3 sites — collected by Calder's team)</div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE A — UPSTREAM</div>
+          <p style="margin:4px 0 2px"><em>Near Cross Fell, narrow rocky stream</em></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 2.4 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.18 · 0.22 · 0.25 · 0.21 · 0.19 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 18 · 19 · 17 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 8.2 · 9.1 · 7.8 · 10.4 · 8.5 · 9.0 · 7.5 · 8.8 · 9.3 · 8.9 cm</p>
+        </div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE B — MIDDLE</div>
+          <p style="margin:4px 0 2px"><em>Below Middleton-in-Teesdale, after 2 tributaries</em> &nbsp; <strong>Note: 1.20 m looks high — possible deep hole?</strong></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 5.8 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.42 · 0.45 · 0.43 · <u>1.20</u> · 0.41 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 11 · 12 · 11 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 4.1 · 3.8 · 4.5 · 3.9 · 4.2 · 3.7 · 4.4 · 4.0 · 3.6 · 4.3 cm</p>
+        </div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE C — LOWER</div>
+          <p style="margin:4px 0 2px"><em>Near Stockton, broad slow channel</em></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 8.9 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.58 · 0.65 · 0.61 · 0.63 · 0.60 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 9 · 10 · 10 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 1.8 · 2.1 · 1.7 · 1.9 · 1.6 · 2.0 · 1.8 · 1.9 · 1.7 · 2.0 cm</p>
+        </div>
+
+      <div class="brief-section-head">Results Sheet — Calculate the averages</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:5px;width:18%">Site</th><th style="border:1px solid #94a3b8;padding:5px">Width (m)</th><th style="border:1px solid #94a3b8;padding:5px">Avg depth (m)</th><th style="border:1px solid #94a3b8;padding:5px">Velocity (m/s)</th><th style="border:1px solid #94a3b8;padding:5px">Avg pebble (cm)</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>A</strong> — upstream</td><td style="border:1px solid #94a3b8;padding:12px">2.4</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>B</strong> — middle</td><td style="border:1px solid #94a3b8;padding:12px">5.8</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>C</strong> — lower</td><td style="border:1px solid #94a3b8;padding:12px">8.9</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+      </table>
+      <div class="brief-section-head">Anomaly — what was odd, and why?</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-section-head">★ One-line conclusion (link back to L17 hypothesis)</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+
+      <div class="brief-sign-row"><strong>Approved by team:</strong> _______________</div>
+    </div>
+    <div class="team-brief-page">
+      <div class="brief-banner banner-b">🌿 SAGE SITE PACK — RIVER TEES DATA DAY</div>
+      <p style="font-size:.9rem"><strong>Team members:</strong> _______________ · _______________ · _______________ &nbsp;&nbsp; <strong>Date:</strong> _________</p>
+
+      <div class="brief-section-head">Raw data (3 sites — collected by Calder's team)</div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE A — UPSTREAM</div>
+          <p style="margin:4px 0 2px"><em>Near Cross Fell, narrow rocky stream</em></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 2.4 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.18 · 0.22 · 0.25 · 0.21 · 0.19 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 18 · 19 · 17 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 8.2 · 9.1 · 7.8 · 10.4 · 8.5 · 9.0 · 7.5 · 8.8 · 9.3 · 8.9 cm</p>
+        </div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE B — MIDDLE</div>
+          <p style="margin:4px 0 2px"><em>Below Middleton-in-Teesdale, after 2 tributaries</em> &nbsp; <strong>Note: 1.20 m looks high — possible deep hole?</strong></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 5.8 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.42 · 0.45 · 0.43 · <u>1.20</u> · 0.41 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 11 · 12 · 11 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 4.1 · 3.8 · 4.5 · 3.9 · 4.2 · 3.7 · 4.4 · 4.0 · 3.6 · 4.3 cm</p>
+        </div>
+        <div style="border:1.5px solid #475569;border-radius:6px;padding:8px;margin-bottom:8px;font-size:.82rem;background:#f8fafc">
+          <div style="background:#475569;color:#fff;padding:3px 8px;border-radius:4px;font-weight:900;display:inline-block">SITE C — LOWER</div>
+          <p style="margin:4px 0 2px"><em>Near Stockton, broad slow channel</em></p>
+          <p style="margin:2px 0"><strong>Width:</strong> 8.9 m &nbsp;|&nbsp; <strong>Depths (5 pts):</strong> 0.58 · 0.65 · 0.61 · 0.63 · 0.60 m</p>
+          <p style="margin:2px 0"><strong>Velocity (3 floats × 10m):</strong> 9 · 10 · 10 s &nbsp;|&nbsp; <strong>Pebbles (10 long-axis):</strong> 1.8 · 2.1 · 1.7 · 1.9 · 1.6 · 2.0 · 1.8 · 1.9 · 1.7 · 2.0 cm</p>
+        </div>
+
+      <div class="brief-section-head">Results Sheet — Calculate the averages</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:5px;width:18%">Site</th><th style="border:1px solid #94a3b8;padding:5px">Width (m)</th><th style="border:1px solid #94a3b8;padding:5px">Avg depth (m)</th><th style="border:1px solid #94a3b8;padding:5px">Velocity (m/s)</th><th style="border:1px solid #94a3b8;padding:5px">Avg pebble (cm)</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>A</strong> — upstream</td><td style="border:1px solid #94a3b8;padding:12px">2.4</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>B</strong> — middle</td><td style="border:1px solid #94a3b8;padding:12px">5.8</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:12px"><strong>C</strong> — lower</td><td style="border:1px solid #94a3b8;padding:12px">8.9</td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td><td style="border:1px solid #94a3b8;padding:12px"></td></tr>
+      </table>
+      <div class="brief-section-head">Anomaly — what was odd, and why?</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-section-head">★ One-line conclusion (link back to L17 hypothesis)</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+
+      <div class="brief-sign-row"><strong>Approved by team:</strong> _______________</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* NAVIGATION */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+
+/* TA FOCUS */
+const taBriefs={
+  0:null,
+  1:{phase:"FAB 4 Arrival — recall L17/L18 + anomaly hook",position:"Stay close to lower-confidence pupils. Don't prompt before they try.",watch:"Pupils stuck on Q3 (velocity formula) or Q4 (spotting the 1.20 anomaly).",support:"After 1 min: <em>'Look at the depth values — does one stand out?'</em>",cta:"After 2 min: cold-call 4 different pupils — Q1 to lowest, Q4 to highest."},
+  2:{phase:"Starter — When data goes weird",position:"At the front. Read each problem slowly. Let pupils predict before clicking.",watch:"Pupils thinking 'delete the anomaly' is okay. Watch for that.",support:"Verbal: <em>'Why do scientists keep odd values visible? What does deleting hide?'</em>",cta:"After all 3 revealed: cold-call — 'Which one fixes BEFORE the trip? Which on the day? Which in write-up?'"},
+  3:{phase:"I Do 1 — Site A averaging walk-through",position:"Front. Calculator visible. Show each calc step on the board.",watch:"Pupils unable to follow which numbers go into which average. Slow down.",support:"Verbal stem: <em>'Sum these. Now divide by how many. That's your average.'</em>",cta:"After all 3 averages shown: cold-call lower pupil for the formula. Cold-call higher pupil for the sense-check (upstream → shallow / slow / chunky)."},
+  4:{phase:"We Do 1 — Class calculates Site B (with anomaly)",position:"Front, leading. TA scribes consensus into editable boxes.",watch:"Pupils trying to include the 1.20 m anomaly. Push them to spot it first.",support:"<em>'Look at the 4 valid readings — what's similar about them? Now look at the odd one. What's it doing?'</em>",cta:"At end: read the row aloud. Cold-call: 'How many readings did we average? Why not 5?'"},
+  5:{phase:"I Do 2 — Handling anomalies (3 steps)",position:"Front. Click each card with the class. Emphasise step 2 (justify, don't delete).",watch:"Pupils thinking 'delete it' is the answer. Hammer the rule: NEVER delete.",support:"Make pupils restate each step in their own words: spot, justify, average.",cta:"After all 3 cards revealed: cold-call random pupil — 'Why is deleting an anomaly bad science?'"},
+  6:{phase:"We Do 2 — Match data trend to conclusion",position:"Roam. Watch for guessing.",watch:"Pupils picking conclusions that don't match the arrows (↑ vs ↓).",support:"<em>'What does the arrow tell you? Now find the conclusion that matches.'</em>",cta:"At end: cold-call for justification of any one match — must use the data."},
+  7:{phase:"We Do 3 — Spot the mistakes in the results",position:"Move to back. Observe engagement.",watch:"Pupils only finding 1 of 3. Often miss the 'disproves' contradiction.",support:"Hint: <em>'Does the data actually disprove anything? Look at the numbers, not the words.'</em>",cta:"After all 3 found: cold-call WHY each mistake damages the credibility of the work."},
+  8:{phase:"Site Pack — 8 min team calculation task",position:"Roam between the two teams. Spot maths errors early.",watch:"One girl doing all the calculations while others watch. Push '1 girl per site, then check together.'",support:"If a team is stuck on velocity, write the formula on a whiteboard: <em>v = 10 ÷ avg time</em>.",cta:"At 4 min: 'Halfway — Site A done? Anomaly spotted at B?' At 7 min: '1 minute — get that conclusion line written.'"},
+  9:{phase:"Final Buzzer — last 6 questions of the unit",position:"Stand between the two teams as referee.",watch:"One girl shouting over teammates. Make sure all 3 in each team get a chance to BUZZ.",support:"If a team is way behind on cumulative score, frame it: 'These 6 questions = 6 points up for grabs. Anything's possible.'",cta:"After buzz, 5 sec to answer. Award the point. Final result lands here — milk the moment."}
+};
+function showTABrief(){
+  const brief=taBriefs[currentSlide];
+  const body=document.getElementById('ta-modal-body');
+  const title=document.getElementById('ta-modal-title');
+  if(!brief){title.innerText='TA Focus';body.innerHTML='<p class="ta-no-brief">No TA action required for this slide.</p>'}
+  else {
+    title.innerText=brief.phase;
+    let html='';
+    html+='<div class="ta-row"><div class="ta-row-icon">📍</div><div class="ta-row-content"><strong>Position:</strong> '+brief.position+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">👀</div><div class="ta-row-content"><strong>Watch for:</strong> '+brief.watch+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">🤝</div><div class="ta-row-content"><strong>Support:</strong> '+brief.support+'</div></div>';
+    if(brief.cta)html+='<div class="ta-cta-row"><strong>📣 CTA cue:</strong> '+brief.cta+'</div>';
+    body.innerHTML=html;
+  }
+  document.getElementById('ta-focus-overlay').classList.add('visible');
+}
+function hideTABrief(){document.getElementById('ta-focus-overlay').classList.remove('visible')}
+
+/* COLD CALL */
+const coldCallQuestions={
+  0:null,
+  1:{
+    foundation:["Name 1 of the 3 sampling strategies.","Why is 'be careful' a bad control?","Name a piece of fieldwork kit.","Spot the odd value in 0.42, 0.45, 0.43, 1.20, 0.41."],
+    middle:["Name all 3 sampling strategies.","Give a specific control (not 'be careful').","Why is the 1.20 m anomalous? What could cause it?"],
+    higher:["Defend why systematic beats random for our 'change downstream' aim.","Predict 2 anomaly causes if you SAW them happen on the day."]
+  },
+  2:{
+    foundation:["What does MISSED mean here?","What does ANOMALY mean?","What does UNITS mean?"],
+    middle:["Explain why deleting an anomaly is bad science.","Give one example of a missing-units mistake."],
+    higher:["Defend why anomaly handling is a write-up problem, not a fieldwork problem.","Predict: if 4 of 5 readings looked anomalous, what's gone wrong?"]
+  },
+  3:{
+    foundation:["What's the formula for an average?","What units does velocity have?","Site A width — read it off.","Pebble — sum them, then what?"],
+    middle:["Calculate avg of 0.18, 0.22, 0.25, 0.21, 0.19.","Velocity formula?","Why divide pebble sum by 10 not 5?"],
+    higher:["Sense check Site A: shallow, slow, big — does that fit upstream?","Predict the velocity if avg time was 20s instead of 18s."]
+  },
+  4:{
+    foundation:["Read me Site B's depths.","Which one's the anomaly?","Sum the 4 valid depths.","Divide by what — 5 or 4?"],
+    middle:["Justify why we exclude 1.20 from the average.","Calculate Site B velocity (10 ÷ 11.3).","Read me the avg pebble for Site B."],
+    higher:["Defend why we average WITHOUT the anomaly but keep it visible.","If 1.20 were 0.50, would it still be anomalous? Why?"]
+  },
+  5:{
+    foundation:["Step 1 — what do you do with an anomaly?","Step 2 — highlight it AND…?","Step 3 — divide by N or N-1?"],
+    middle:["Why never delete?","Give one possible cause for a depth anomaly.","Give one possible cause for a velocity anomaly."],
+    higher:["Defend why honest anomaly handling earns more credit than 'perfect' data.","Predict: how would you justify keeping a value that's only 1.5× the others?"]
+  },
+  6:{
+    foundation:["Width arrow — up or down?","Pebble arrow — up or down?","Anomaly — what do you do with it?"],
+    middle:["Justify pairing the velocity ↑ with the conclusion about friction.","Why does pebble size DECREASE downstream? Mechanism?"],
+    higher:["Defend why all 4 trends matching the hypothesis is strong (not weak) science.","Predict: if pebble size INCREASED downstream, what would that imply?"]
+  },
+  7:{
+    foundation:["Mistake 1 — what's wrong?","What's missing from '4.05'?","Did the data really disprove the hypothesis?"],
+    middle:["Explain why deleting the anomaly is the worst mistake.","Rewrite the conclusion sentence so it matches the actual data."],
+    higher:["Defend the difference between 'supports' and 'proves' a hypothesis.","Predict: if the team kept the anomaly in their average, what would Site B depth become?"]
+  },
+  8:{
+    foundation:["Which site is your team on?","Read me one of your averages.","Have you spotted the anomaly?","Read me one line of your conclusion."],
+    middle:["Justify your team's anomaly-handling decision.","Defend your conclusion line.","Read me Site C's velocity calculation."],
+    higher:["Predict: if Site B's anomaly were real (a deep hole), how would you flag it in a write-up?","Defend the 2 d.p. rounding choice — could you go to 3?"]
+  },
+  9:{
+    foundation:["Buzz when you know it.","Tell us your answer when you buzz — short is fine.","If you don't know, say PASS — the other team can steal."],
+    middle:["Buzz quickly — first to answer wins.","Justify your answer briefly when you give it.","If you got it wrong, the other team can steal."],
+    higher:["Faster buzzing.","Aim for full-sentence answers.","This is the cumulative final — make it count."]
+  }
+};
+let coldCallNames=[];let lastPickedNames=[];let questionMode='match';
+try{const list=JSON.parse(localStorage.getItem('coldCall_y10_geog')||'[]');coldCallNames=list.map(p=>typeof p==='string'?{name:p,grade:''}:p)}catch(e){}
+function gradeToTier(grade){if(grade==='U'||grade==='1')return 'foundation';if(grade==='2')return 'middle';if(grade==='3'||grade==='4')return 'higher';return 'middle'}
+function applyMode(tier,mode){const order=['foundation','middle','higher'];let i=order.indexOf(tier);if(mode==='stretch')i=Math.min(i+1,2);else if(mode==='check')i=Math.max(i-1,0);return order[i]}
+function showColdCall(){document.getElementById('cold-call-overlay').classList.add('visible');renderColdCall()}
+function hideColdCall(){document.getElementById('cold-call-overlay').classList.remove('visible')}
+function renderColdCall(){if(coldCallNames.length===0){renderColdCallSetup()}else{renderColdCallPicker()}}
+function escapeHTML(s){const d=document.createElement('div');d.innerText=s;return d.innerHTML}
+function renderColdCallSetup(){
+  const body=document.getElementById('cold-call-body');const list=coldCallNames;const hasAny=list.length>0;
+  let rows='';
+  if(list.length===0){rows='<p class="cc-empty-rows">No pupils added yet — add one below to begin.</p>'}
+  else {
+    rows='<div class="cc-pupil-rows">';
+    list.forEach((p,idx)=>{
+      const name=escapeHTML(p.name);const grades=['U','1','2','3','4'];let chips='';
+      grades.forEach(g=>{const sel=p.grade===g?' cc-grade-selected':'';chips+='<button class="cc-grade-chip cc-grade-'+g.toLowerCase()+sel+'" onclick="setPupilGrade('+idx+',\''+g+'\')">'+g+'</button>'});
+      rows+='<div class="cc-pupil-row"><div class="cc-pupil-name">'+name+'</div><div class="cc-grade-chips">'+chips+'</div><button class="cc-remove-btn" onclick="removePupil('+idx+')" aria-label="Remove">✕</button></div>';
+    });
+    rows+='</div>';
+  }
+  body.innerHTML='<p class="cc-setup-title">Year 10 — Class List</p>'+
+    '<p class="cc-helper">Set each pupil\'s predicted grade (<strong>U/1</strong>=Foundation, <strong>2</strong>=Middle, <strong>3/4</strong>=Higher). Saves automatically.</p>'+
+    rows+
+    '<div class="cc-add-row"><input type="text" class="cc-add-input" id="cc-add-input" placeholder="Add pupil name..." onkeypress="if(event.key===\'Enter\')addPupil()"><button class="cc-btn-secondary" onclick="addPupil()" style="flex:0 0 auto">+ Add</button></div>'+
+    '<div class="cold-call-actions">'+(hasAny?'<button class="cc-btn-primary" onclick="renderColdCallPicker()">▶ Start Cold Calling</button>':'<button class="cc-btn-primary" disabled style="opacity:.5;cursor:not-allowed">Add at least one pupil</button>')+'</div>';
+}
+function addPupil(){const input=document.getElementById('cc-add-input');const name=(input.value||'').trim();if(!name)return;coldCallNames.push({name,grade:''});saveColdCallNames();input.value='';renderColdCallSetup();setTimeout(()=>{const inp=document.getElementById('cc-add-input');if(inp)inp.focus()},50)}
+function removePupil(idx){coldCallNames.splice(idx,1);saveColdCallNames();renderColdCallSetup()}
+function setPupilGrade(idx,grade){if(coldCallNames[idx].grade===grade){coldCallNames[idx].grade=''}else{coldCallNames[idx].grade=grade}saveColdCallNames();renderColdCallSetup()}
+function saveColdCallNames(){try{localStorage.setItem('coldCall_y10_geog',JSON.stringify(coldCallNames))}catch(e){}}
+function renderColdCallPicker(){
+  const list=coldCallNames;const body=document.getElementById('cold-call-body');
+  body.innerHTML='<p class="cold-call-class-label">Year 10 · '+list.length+' pupils</p>'+
+    '<div class="cold-call-name-box"><div class="cold-call-name" id="cold-call-name">— ready —</div></div>'+
+    '<div class="cc-mode-toggle"><span class="cc-mode-label">Pitch:</span>'+
+      '<button class="cc-mode-btn '+(questionMode==='check'?'active':'')+'" onclick="setQMode(\'check\')">Easier</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='match'?'active':'')+'" onclick="setQMode(\'match\')">Standard</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='stretch'?'active':'')+'" onclick="setQMode(\'stretch\')">Harder</button>'+
+    '</div>'+
+    '<div class="cold-call-q-box"><p class="cold-call-q-label">📚 Slide question</p><p class="cold-call-question" id="cold-call-question">Press 🎲 to roll a name + question</p></div>'+
+    '<div class="cold-call-actions"><button class="cc-btn-primary" onclick="rollNameAndQuestion()">🎲 Spin · Name + Question</button><button class="cc-btn-secondary" onclick="rollQuestionOnly()">🎯 New Question</button></div>'+
+    '<button class="cc-edit-link" onclick="renderColdCallSetup()">✎ Edit names / grades</button>';
+}
+function setQMode(mode){questionMode=mode;const btns=document.querySelectorAll('.cc-mode-btn');if(btns.length>0){btns.forEach(b=>b.classList.remove('active'));const map={'check':0,'match':1,'stretch':2};if(btns[map[mode]])btns[map[mode]].classList.add('active')}}
+function rollNameAndQuestion(){
+  const list=coldCallNames||[];if(list.length===0){renderColdCallSetup();return}
+  const display=document.getElementById('cold-call-name');
+  let avail=list.slice();if(list.length>4){avail=list.filter(p=>!lastPickedNames.includes(p.name))}
+  if(avail.length===0)avail=list.slice();
+  const finalPick=avail[Math.floor(Math.random()*avail.length)];
+  lastPickedNames.push(finalPick.name);if(lastPickedNames.length>3)lastPickedNames.shift();
+  display.classList.remove('settled');display.classList.add('spinning');
+  let counter=0;
+  const id=setInterval(()=>{
+    display.innerText=list[Math.floor(Math.random()*list.length)].name;counter++;
+    if(counter>=14){clearInterval(id);display.classList.remove('spinning');display.innerText=finalPick.name;display.classList.add('settled');setTimeout(()=>display.classList.remove('settled'),650);rollQuestionForTier(finalPick.grade)}
+  },70);
+}
+function rollQuestionOnly(){const currentName=document.getElementById('cold-call-name')?.innerText;const pupil=coldCallNames.find(p=>p.name===currentName);rollQuestionForTier(pupil?pupil.grade:'')}
+function rollQuestionForTier(grade){
+  const slideQs=coldCallQuestions[currentSlide];const qDisp=document.getElementById('cold-call-question');
+  if(!slideQs){qDisp.innerText="(No specific question for this slide.)";return}
+  const baseTier=grade?gradeToTier(grade):'middle';const finalTier=applyMode(baseTier,questionMode);
+  const pool=slideQs[finalTier]||slideQs.middle||[];
+  if(pool.length===0){qDisp.innerText="(No question for this tier on this slide.)";return}
+  qDisp.innerText=pool[Math.floor(Math.random()*pool.length)];
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.target.isContentEditable||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){
+  const p=((currentSlide+1)/slides.length)*100;
+  document.getElementById('progressBar').style.width=p+'%';
+  const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;
+  document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`;
+}
+
+/* WE DO 2: MATCH */
+let matchSel=null,matchScore=0;
+function matchClick(el,col){
+  if(el.classList.contains('matched'))return;
+  if(!matchSel){
+    document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');matchSel={el,col,key:el.getAttribute('data-key')};
+    document.getElementById('match-feedback').innerText='Now click the matching card on the other side.';
+    document.getElementById('match-feedback').classList.remove('success','error');
+  } else {
+    if(col===matchSel.col){
+      document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected'));
+      el.classList.add('selected');matchSel={el,col,key:el.getAttribute('data-key')};return;
+    }
+    if(el.getAttribute('data-key')===matchSel.key){
+      el.classList.add('matched');matchSel.el.classList.add('matched');matchSel.el.classList.remove('selected');
+      matchScore++;document.getElementById('match-score').innerText=matchScore;
+      document.getElementById('match-feedback').innerText='✅ Match — '+matchSel.key+'!';
+      document.getElementById('match-feedback').classList.add('success');document.getElementById('match-feedback').classList.remove('error');
+      try{playDing()}catch(e){}
+      if(matchScore===6){document.getElementById('match-feedback').innerText='🏆 All 6 matched!';fireConfettiGlobal()}
+      matchSel=null;
+    } else {
+      el.style.animation='shake .4s';setTimeout(()=>el.style.animation='',450);
+      document.getElementById('match-feedback').innerText='❌ Not a match. Try again.';
+      document.getElementById('match-feedback').classList.add('error');document.getElementById('match-feedback').classList.remove('success');
+      try{playBuzz()}catch(e){}
+      matchSel.el.classList.remove('selected');matchSel=null;
+    }
+  }
+}
+function matchReset(){matchSel=null;matchScore=0;document.getElementById('match-score').innerText=0;document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected','matched'));document.getElementById('match-feedback').innerText='👆 Click a question, then click its matching method.';document.getElementById('match-feedback').classList.remove('success','error')}
+function matchRevealAll(){const all=document.querySelectorAll('#wedo2 .match-card');all.forEach(c=>c.classList.add('matched'));matchScore=6;document.getElementById('match-score').innerText=6;document.getElementById('match-feedback').innerText='👁️ All revealed.';document.getElementById('match-feedback').classList.add('success')}
+
+/* WE DO 3: SPOT THE MISTAKES */
+let stmFound=new Set();
+function stmClick(el){
+  if(el.classList.contains('found'))return;
+  const isCorrect=el.getAttribute('data-correct')==='true';
+  const id=el.getAttribute('data-id');
+  const explain=el.getAttribute('data-explain');
+  const fb=document.getElementById('stm-feedback');
+  if(isCorrect){
+    el.classList.add('found');stmFound.add(id);
+    fb.innerText=explain;fb.classList.add('success');fb.classList.remove('error');
+    const num=id.replace('m','');const pip=document.getElementById('stm-pip-'+num);
+    if(pip){pip.classList.add('found');pip.innerText='✓'}
+    try{playDing()}catch(e){}
+    if(stmFound.size===3){setTimeout(()=>{document.getElementById('stm-correction').classList.add('visible');fb.innerText='🎉 All 3 mistakes found! Read the correct version below.';fireConfettiGlobal()},800)}
+  } else {
+    el.classList.add('miss');setTimeout(()=>el.classList.remove('miss'),400);
+    fb.innerText='🤔 Not quite — that bit\'s actually correct. Try another phrase!';
+    fb.classList.add('error');fb.classList.remove('success');
+    try{playBuzz()}catch(e){}
+  }
+}
+function stmReset(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>el.classList.remove('found','miss'));
+  document.querySelectorAll('.stm-pip').forEach((p,i)=>{p.classList.remove('found');p.innerText=String(i+1)});
+  document.getElementById('stm-correction').classList.remove('visible');
+  document.getElementById('stm-feedback').classList.remove('success','error');
+  document.getElementById('stm-feedback').innerText='👆 Click a phrase you think is wrong. Find all 3 to win.';
+  stmFound.clear();
+}
+function stmRevealAll(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>{
+    if(el.getAttribute('data-correct')==='true'&&!el.classList.contains('found')){
+      el.classList.add('found');stmFound.add(el.getAttribute('data-id'));
+      const num=el.getAttribute('data-id').replace('m','');const pip=document.getElementById('stm-pip-'+num);
+      if(pip){pip.classList.add('found');pip.innerText='✓'}
+    }
+  });
+  document.getElementById('stm-correction').classList.add('visible');
+  document.getElementById('stm-feedback').innerText='👁️ All mistakes revealed.';
+  document.getElementById('stm-feedback').classList.add('success');
+}
+document.querySelectorAll('.stm-clickable').forEach(el=>el.addEventListener('click',()=>stmClick(el)));
+
+/* CONTENT EDITABLE PLACEHOLDERS */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{
+  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+});
+
+/* INDEPENDENT: MCQ + HINT + XP */
+function mcqCheck(el,ok){
+  if(el.parentNode.classList.contains('locked'))return;
+  if(ok){el.classList.add('correct');el.parentNode.classList.add('locked');try{playDing()}catch(e){}updateXP()}
+  else {el.classList.add('wrong');try{playBuzz()}catch(e){}setTimeout(()=>el.classList.remove('wrong'),600)}
+}
+function toggleHint(btn){
+  const hint=btn.nextElementSibling;
+  if(hint&&hint.classList.contains('hint-text')){hint.classList.toggle('show');btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Hint'}
+}
+function updateXP(){
+  const slide=document.getElementById('ind-slide');if(!slide)return;
+  const done=slide.querySelectorAll('.ind-q .correct').length;
+  const el=document.getElementById('xp-label');const fill=document.getElementById('xp-fill');
+  if(el)el.innerText='MCQs correct: '+done+'/2'+(done===2?' 🎉':'');
+  if(fill)fill.style.width=(done/2*100)+'%';
+  if(done===2)fireConfettiGlobal();
+}
+
+/* LEADERBOARD */
+function addToLB(){
+  const input=document.getElementById('lb-input');const name=input.value.trim();if(!name)return;
+  const list=document.getElementById('lb-list');const el=document.createElement('span');
+  el.className='lb-name';el.innerText=name;list.appendChild(el);input.value='';
+  try{playDing()}catch(e){}
+}
+
+/* TIMER */
+let timerInterval,timeLeft=0,isTimerRunning=false;
+function checkTimerVisibility(){
+  const s=slides[currentSlide];const t=s.getAttribute('data-timer');const noAuto=s.getAttribute('data-no-autostart')==='true';
+  const w=document.getElementById('timer-widget');pauseTimer();
+  if(t){w.classList.add('visible');resetTimer(parseInt(t));if(!noAuto){setTimeout(()=>{if(timeLeft>0)startTimer()},250)}}
+  else {w.classList.remove('visible')}
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60);const s=timeLeft%60;
+  document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const w=document.getElementById('timer-widget');
+  if(timeLeft<30&&timeLeft>0){w.classList.add('warning')}else{w.classList.remove('warning')}
+}
+function startTimer(){if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000)}
+function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+
+/* SOUND */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1320,ctx.currentTime+0.08);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4)}
+function playBuzz(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.setValueAtTime(150,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.25)}
+function playClick(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(660,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.1)}
+
+/* CONFETTI */
+function fireConfettiGlobal(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=Math.random()*100+'%';c.style.top=-10+'px';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=Math.random()*0.6+'s';
+    c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2500);
+  }
+}
+
+/* MCQ SHUFFLE */
+function shuffleMCQs(){
+  document.querySelectorAll('.ind-q').forEach(q=>{
+    const opts=q.querySelectorAll('.mcq-opt');if(opts.length<2)return;
+    const parent=opts[0].parentNode;const arr=Array.from(opts);
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+    arr.forEach(o=>parent.appendChild(o));
+  });
+}
+shuffleMCQs();
+
+/* PRINT */
+function printSection(id){
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  window.print();
+}
+function printPack(){
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  ['ko','brief'].forEach(id=>{
+    const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  });
+  window.print();
+}
+
+/* TEAM SCOREBOARD (shared key with L16 — score carries over) */
+let teamA={name:'Rose',emoji:'🌹',score:0};
+let teamB={name:'Sage',emoji:'🌿',score:0};
+try{
+  const stored=JSON.parse(localStorage.getItem('teamScores_y10_geog')||'null');
+  if(stored){
+    if(stored.a){teamA.name=stored.a.name||teamA.name;teamA.score=Number(stored.a.score)||0}
+    if(stored.b){teamB.name=stored.b.name||teamB.name;teamB.score=Number(stored.b.score)||0}
+  }
+}catch(e){}
+function saveTeams(){try{localStorage.setItem('teamScores_y10_geog',JSON.stringify({a:teamA,b:teamB}))}catch(e){}}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderScoreboardPill(){
+  const pill=document.getElementById('team-scoreboard');if(!pill)return;
+  pill.innerHTML='<span class="tsb-team tsb-team-a">'+teamA.emoji+' '+escapeHTML(teamA.name)+' <strong>'+teamA.score+'</strong></span><span class="tsb-vs">VS</span><span class="tsb-team tsb-team-b">'+teamB.emoji+' '+escapeHTML(teamB.name)+' <strong>'+teamB.score+'</strong></span>';
+  const ids=['bt-name-a','fb-buzzer-a-name','fb-award-a-name'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=teamA.name});
+  const ids2=['bt-name-b','fb-buzzer-b-name','fb-award-b-name'];ids2.forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=teamB.name});
+}
+function showScoreboard(){renderScoreboardModal();document.getElementById('sb-overlay').classList.add('visible')}
+function hideScoreboard(){document.getElementById('sb-overlay').classList.remove('visible')}
+function renderScoreboardModal(){
+  const body=document.getElementById('sb-body');
+  body.innerHTML=
+    '<div class="sb-team-row team-a">'+
+      '<input type="text" class="sb-name-input" value="'+escapeHTML(teamA.name)+'" oninput="setTeamName(\'a\',this.value)" placeholder="Team A name">'+
+      '<div class="sb-controls">'+
+        '<button class="sb-btn sb-btn-minus" onclick="awardTeam(\'a\',-1)">−1</button>'+
+        '<div class="sb-score">'+teamA.emoji+' '+teamA.score+'</div>'+
+        '<button class="sb-btn sb-btn-plus" onclick="awardTeam(\'a\',1)">+1</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sb-team-row team-b">'+
+      '<input type="text" class="sb-name-input" value="'+escapeHTML(teamB.name)+'" oninput="setTeamName(\'b\',this.value)" placeholder="Team B name">'+
+      '<div class="sb-controls">'+
+        '<button class="sb-btn sb-btn-minus" onclick="awardTeam(\'b\',-1)">−1</button>'+
+        '<div class="sb-score">'+teamB.emoji+' '+teamB.score+'</div>'+
+        '<button class="sb-btn sb-btn-plus" onclick="awardTeam(\'b\',1)">+1</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sb-actions"><button class="sb-btn sb-btn-reset" onclick="resetTeams()">🔄 Reset both to 0</button></div>';
+}
+function awardTeam(team,delta){
+  const t=team==='a'?teamA:teamB;
+  t.score=Math.max(0,t.score+delta);
+  saveTeams();renderScoreboardPill();renderScoreboardModal();
+  if(delta>0){try{playDing()}catch(e){}fireConfettiSmall()}
+}
+function setTeamName(team,name){
+  const t=team==='a'?teamA:teamB;
+  t.name=(name||'').trim().slice(0,20)||(team==='a'?'Team A':'Team B');
+  saveTeams();renderScoreboardPill();
+}
+function resetTeams(){
+  if(!confirm('Reset both team scores to 0? (Names kept.)'))return;
+  teamA.score=0;teamB.score=0;
+  saveTeams();renderScoreboardPill();renderScoreboardModal();
+}
+function fireConfettiSmall(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
+  for(let i=0;i<10;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=(40+Math.random()*20)+'%';c.style.top='10%';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=(Math.random()*0.3)+'s';
+    c.style.width=(5+Math.random()*5)+'px';c.style.height=(5+Math.random()*5)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2200);
+  }
+}
+
+/* FINAL BUZZER */
+const fbQuestions=[
+  {q:"What's the formula for an average?",a:"Sum of values ÷ number of values."},
+  {q:"How do you handle an anomaly in your data?",a:"Highlight it, justify in 1 sentence why it's odd, average WITHOUT it. Never delete it."},
+  {q:"Site A width = 2.4 m. Site C width = 8.9 m. What's the trend, and why?",a:"Width INCREASES downstream — tributaries add more water, channel widens."},
+  {q:"What units would you put on velocity?",a:"m/s (metres per second)."},
+  {q:"5 depth readings: 0.42, 0.45, 0.43, 1.20, 0.41 m. Calculate the average correctly.",a:"Exclude 1.20 (anomaly). (0.42+0.45+0.43+0.41) ÷ 4 = 0.43 m."},
+  {q:"Our hypothesis was 'width↑, depth↑, velocity↑, pebble↓'. Our data showed exactly that. What can we conclude?",a:"The data SUPPORTS the hypothesis — predicted trends are confirmed by the measurements."}
+];
+let fbIdx=0,fbBuzzed=null;
+function fbInit(){
+  fbIdx=0;fbBuzzed=null;
+  const fin=document.getElementById('fb-final');if(fin)fin.style.display='none';
+  const stg=document.getElementById('fb-stage');if(stg)stg.style.display='flex';
+  fbShow();
+}
+function fbShow(){
+  const q=fbQuestions[fbIdx];if(!q)return;
+  const num=document.getElementById('fb-q-num');if(num)num.innerText=fbIdx+1;
+  const qel=document.getElementById('fb-question');if(qel)qel.innerText=q.q;
+  const ans=document.getElementById('fb-answer');if(ans){ans.style.display='none';ans.innerText=q.a}
+  const which=document.getElementById('fb-which');
+  if(which)which.innerText=(fbIdx%2===0?teamA.emoji+' '+teamA.name:teamB.emoji+' '+teamB.name)+' goes first — but either team can buzz.';
+  fbBuzzed=null;
+  document.querySelectorAll('.fb-buzzer').forEach(b=>{b.classList.remove('buzzed','dimmed');b.disabled=false});
+  renderScoreboardPill();
+}
+function fbBuzz(team){
+  if(fbBuzzed)return;
+  fbBuzzed=team;
+  document.querySelector('.fb-buzz-'+team).classList.add('buzzed');
+  document.querySelector('.fb-buzz-'+(team==='a'?'b':'a')).classList.add('dimmed');
+  const which=document.getElementById('fb-which');
+  if(which)which.innerText=(team==='a'?teamA.emoji+' '+teamA.name:teamB.emoji+' '+teamB.name)+' BUZZED! Answer or pass.';
+  try{playBuzzer()}catch(e){}
+}
+function fbReveal(){const ans=document.getElementById('fb-answer');if(ans)ans.style.display='block'}
+function fbAward(team){awardTeam(team,1);setTimeout(fbNext,400)}
+function fbNext(){
+  if(fbIdx<fbQuestions.length-1){fbIdx++;fbShow()}
+  else fbFinalize();
+}
+function fbFinalize(){
+  document.getElementById('fb-stage').style.display='none';
+  const fin=document.getElementById('fb-final');fin.style.display='flex';
+  const txt=document.getElementById('fb-winner-text');
+  if(teamA.score>teamB.score)txt.innerHTML='🏆 <span style="color:#831843">'+teamA.emoji+' '+escapeHTML(teamA.name)+'</span> wins! '+teamA.score+'–'+teamB.score;
+  else if(teamB.score>teamA.score)txt.innerHTML='🏆 <span style="color:#365314">'+teamB.emoji+' '+escapeHTML(teamB.name)+'</span> wins! '+teamB.score+'–'+teamA.score;
+  else txt.innerHTML='🤝 Tied at '+teamA.score+'–'+teamB.score+' — settle it next session.';
+  try{fireConfettiGlobal()}catch(e){fireConfettiSmall()}
+}
+function playBuzzer(){
+  try{
+    const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='square';o.frequency.setValueAtTime(220,ctx.currentTime);
+    g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4);
+  }catch(e){}
+}
+
+/* INIT */
+updateProgress();
+checkTimerVisibility();
+renderScoreboardPill();
+const _origShowSlide=showSlide;
+showSlide=function(i){_origShowSlide(i);if(slides[i]&&slides[i].id==='final-buzzer-slide')fbInit()};
+</script>
+</body>
+</html>

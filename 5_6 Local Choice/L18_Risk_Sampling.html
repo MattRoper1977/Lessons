@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lesson 18 – Risk &amp; Sampling</title>
+<style>
+:root{
+  --bg:#f1f5f9;--slide-bg:#fff;--text:#1f2937;
+  --lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;
+  --task-bg:#fef9c3;--task-border:#eab308;
+  --scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+  --sc-bg:#ffedd5;--sc-border:#f97316;
+  --btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+  --success:#16a34a;--error:#dc2626;--muted:#64748b;
+  --ido-bg:#ede9fe;--ido-border:#7c3aed;
+  --wedo-bg:#fce7f3;--wedo-border:#db2777;
+  --found:#22c55e;--mid:#f97316;--high:#1e3a8a;
+}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,.5)}50%{box-shadow:0 0 0 12px rgba(124,58,237,0)}}
+@keyframes confettiDrop{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes pulseAttn{0%,100%{background:#fef3c7}50%{background:#fde047}}
+.animate-enter{animation:fadeInUp .55s ease-out forwards}
+.anim-d1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}
+.anim-d2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+.anim-d3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+.pulse-attn{animation:pulseAttn 2s ease-in-out infinite;padding:1px 6px;border-radius:6px;font-style:italic}
+
+/* SLIDE SYSTEM */
+.slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:36px 40px;overflow-y:auto;position:relative;flex-direction:column}
+.slide.active{display:flex;animation:fadeIn .45s ease}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--task-border)}
+
+h1{color:var(--lo-border);font-size:2.4rem;margin:0 0 14px;border-bottom:3px solid var(--lo-border);display:inline-block}
+h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}
+h3{margin:10px 0 8px;color:#0f172a}
+p,li{font-size:1.1rem;line-height:1.55;color:#334155}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+
+button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}
+button:hover{background:var(--btn-hover);transform:translateY(-2px)}
+button:active{transform:translateY(0)}
+button.small{padding:8px 12px;font-size:.95rem}
+button.ghost{background:#e2e8f0;color:#0f172a}
+button.ghost:hover{background:#cbd5e1}
+
+.controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}
+.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}
+.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+
+/* BOXES */
+.li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:16px;margin-bottom:12px;transition:transform .15s}
+.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+.diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center;margin:8px 0}
+
+.answer{display:none;margin-top:8px;padding:8px 12px;background:#f1f5f9;border-left:5px solid var(--success);border-radius:10px;font-weight:bold;color:#166534}
+.show-ans .answer{display:block;animation:fadeInUp .25s}
+
+/* SLIDE TAGS */
+.slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.tag-arrival{background:#fef3c7;color:#92400e}
+.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#5b21b6}
+.tag-wedo{background:var(--wedo-bg);color:#9d174d}
+.tag-independent{background:var(--task-bg);color:#92400e}
+.tag-exit{background:var(--sc-bg);color:#9a3412}
+
+/* ARRIVAL */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* AIM-QUALITY CARDS (Starter + I Do 1) */
+.aim-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin:6px 0;position:relative;transition:transform .2s}
+.aim-card.weak{border-color:#dc2626;background:#fef2f2}
+.aim-card.medium{border-color:#f59e0b;background:#fef3c7}
+.aim-card.strong{border-color:#16a34a;background:#dcfce7}
+.aim-card .aim-tag{position:absolute;top:-12px;left:14px;padding:3px 10px;border-radius:6px;color:#fff;font-size:.78rem;font-weight:900;letter-spacing:1px}
+.aim-card.weak .aim-tag{background:#dc2626}
+.aim-card.medium .aim-tag{background:#f59e0b}
+.aim-card.strong .aim-tag{background:#16a34a}
+.aim-card-quote{font-style:italic;font-size:1.05rem;line-height:1.5;color:#1e293b;margin:6px 0}
+.aim-card-why{font-size:.9rem;color:#475569;margin-top:6px;display:none}
+.aim-card.show-why .aim-card-why{display:block;animation:fadeInUp .25s}
+
+/* METHOD CARDS (I Do 2) */
+.method-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:8px 0}
+.method-card{background:#fff;border:2px solid var(--ido-border);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s;position:relative;min-height:140px}
+.method-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(124,58,237,.18)}
+.method-card .m-icon{font-size:2.4rem;line-height:1;margin-bottom:4px}
+.method-card .m-name{font-size:1.15rem;font-weight:900;color:var(--ido-border);margin:0 0 4px}
+.method-card .m-tease{font-size:.9rem;color:#64748b;font-style:italic}
+.method-card .m-detail{display:none;margin-top:8px;font-size:.92rem;line-height:1.5}
+.method-card.revealed{background:var(--ido-bg);border-color:#5b21b6}
+.method-card.revealed .m-tease{display:none}
+.method-card.revealed .m-detail{display:block;animation:fadeInUp .25s}
+.method-card .m-row{display:flex;gap:6px;margin:3px 0;align-items:flex-start}
+.method-card .m-row-label{flex:0 0 70px;font-weight:900;color:#5b21b6;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
+.method-card .m-row-text{flex:1;color:#1e293b}
+
+/* MATCH (We Do 2) */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0}
+.match-col-title{text-align:center;font-weight:900;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600;transition:all .2s;user-select:none;font-size:.95rem}
+.match-card:hover{border-color:var(--wedo-border);transform:translateY(-2px);box-shadow:0 4px 10px rgba(219,39,119,.15)}
+.match-card.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.3);background:#fce7f3;animation:pulseGlow 1.4s infinite}
+.match-card.matched{opacity:.4;pointer-events:none;border-color:var(--success);background:#dcfce7}
+.match-feedback{background:#eff6ff;border-left:5px solid var(--ido-border);border-radius:8px;padding:8px 12px;font-size:.95rem;color:#1e3a8a;margin-top:8px;font-weight:600;min-height:20px}
+.match-feedback.success{background:#dcfce7;border-color:var(--success);color:#166534}
+.match-feedback.error{background:#fef2f2;border-color:var(--error);color:#991b1b}
+
+/* SPOT THE MISTAKE (We Do 3) */
+.stm-paragraph{font-style:italic;font-size:1.18rem;line-height:1.9;color:#1e293b;background:#fff;border:3px solid var(--error);border-radius:14px;padding:20px 22px;margin:10px 0;position:relative}
+.stm-paragraph::before{content:'❌ A STUDENT WROTE THIS PLAN';position:absolute;top:-12px;left:18px;background:var(--error);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+.stm-clickable{background:transparent;padding:1px 2px;border-radius:4px;cursor:pointer;border-bottom:1px dotted rgba(148,163,184,.45);font-style:inherit;font-weight:inherit;transition:all .2s}
+.stm-clickable:hover{background:#fef9c3;border-bottom:2px solid #eab308;padding:1px 4px}
+.stm-clickable.found{background:#fee2e2;color:#991b1b;text-decoration:line-through;border:2px solid var(--error);padding:1px 4px;cursor:default;animation:none;pointer-events:none}
+.stm-clickable.miss{background:#dbeafe;border-bottom:2px solid #60a5fa;animation:shake .35s}
+.stm-feedback-box{background:#fff;border:2px dashed #cbd5e1;border-radius:12px;padding:10px 14px;margin-top:10px;min-height:46px;text-align:center;font-weight:bold;color:#334155;transition:all .2s}
+.stm-feedback-box.success{border-color:var(--success);background:#dcfce7;color:#166534}
+.stm-feedback-box.error{border-color:var(--error);background:#fef2f2;color:#991b1b}
+.stm-correction{display:none;margin-top:8px;background:#f0fdf4;border-left:5px solid var(--success);border-radius:10px;padding:10px 14px;color:#166534;font-weight:bold}
+.stm-correction.visible{display:block;animation:fadeInUp .3s}
+.stm-progress{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.stm-pip{width:26px;height:26px;border-radius:50%;background:#e2e8f0;color:#94a3b8;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .3s}
+.stm-pip.found{background:var(--success);color:#fff;transform:scale(1.1)}
+
+/* SUPER SIX EXIT */
+.ss-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:12px;margin-top:10px;height:calc(100% - 110px)}
+.ss-cell{background:#fff;border-radius:14px;border:2px solid #e2e8f0;padding:14px 14px 12px;display:flex;flex-direction:column;justify-content:flex-start;animation:fadeInUp .4s ease-out;position:relative;overflow:hidden}
+.ss-cell.ss-l1{border-left:6px solid #f97316}
+.ss-cell.ss-l2{border-left:6px solid var(--lo-border)}
+.ss-cell .ss-tag{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#fff;padding:3px 8px;border-radius:6px;align-self:flex-start;margin-bottom:6px}
+.ss-cell.ss-l1 .ss-tag{background:#f97316}
+.ss-cell.ss-l2 .ss-tag{background:var(--lo-border)}
+.ss-cell p{margin:0 0 6px;font-size:1rem;line-height:1.4}
+.ss-cell .answer{display:none;background:#f0fdf4;border-left:4px solid var(--success);border-radius:6px;padding:6px 10px;color:#166534;font-size:.95rem;margin-top:auto}
+#exit-slide.show-ans .ss-cell .answer{display:block;animation:fadeInUp .25s}
+
+/* INDEPENDENT WORK */
+.ind-q{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin:6px 0}
+.ind-q.stretch{border-color:#a78bfa;background:linear-gradient(to right,#fff,#f5f3ff)}
+.ind-q .q-type{float:right;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:6px}
+.q-mcq{background:#dbeafe;color:#1e40af}
+.q-short{background:#fef3c7;color:#92400e}
+.q-long{background:#dcfce7;color:#166534}
+.q-diagram{background:#ffedd5;color:#9a3412}
+.q-stretch{background:#ede9fe;color:#5b21b6}
+.mcq-opt{display:inline-block;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;padding:5px 12px;margin:3px;cursor:pointer;font-weight:bold;transition:all .15s;user-select:none;font-size:.95rem}
+.mcq-opt:hover{border-color:var(--btn-bg)}
+.mcq-opt.correct{border-color:var(--success);background:#dcfce7;color:#166534;pointer-events:none}
+.mcq-opt.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+.locked .mcq-opt:not(.correct){opacity:.55}
+
+.xp-bar-wrap{background:#e2e8f0;border-radius:10px;height:14px;margin:6px 0;overflow:hidden;position:relative}
+.xp-bar-fill{background:linear-gradient(90deg,var(--success),#4ade80);height:100%;width:0%;border-radius:10px;transition:width .4s ease}
+.xp-label{text-align:center;font-size:.85rem;font-weight:900;color:var(--muted);margin:2px 0}
+
+.hint-btn{background:none;border:2px solid #f59e0b;color:#f59e0b;padding:3px 10px;border-radius:6px;font-size:.8rem;cursor:pointer;margin-top:4px;box-shadow:none;font-weight:bold;transition:all .2s}
+.hint-btn:hover{background:#fef3c7;transform:none;color:#92400e}
+.hint-text{display:none;background:#fef3c7;border-left:4px solid #f59e0b;padding:6px 10px;border-radius:8px;margin-top:4px;font-size:.95rem;color:#92400e;font-weight:bold}
+.hint-text.show{display:block;animation:fadeInUp .25s}
+
+.confetti-global{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti-p{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiDrop 1.8s ease forwards}
+
+.lb-widget{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:10px;margin-top:6px}
+.lb-widget h4{margin:0 0 6px;color:var(--lo-border);font-size:.9rem}
+.lb-list{display:flex;flex-wrap:wrap;gap:4px}
+.lb-name{background:var(--lo-bg);color:var(--lo-border);padding:3px 10px;border-radius:6px;font-size:.85rem;font-weight:bold;animation:fadeInUp .3s}
+.lb-input-row{display:flex;gap:6px;margin-top:6px}
+.lb-input{border:2px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:.9rem;flex:1;font-family:inherit}
+.lb-input:focus{border-color:var(--lo-border);outline:none}
+
+/* WE DO CAPTURE */
+.wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:14px;background:#fff;position:relative}
+.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+.evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}
+.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+.editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px;padding:2px 6px;display:inline-block;min-width:80px;background:#fff}
+
+/* TIMER WIDGET */
+#timer-widget{position:fixed;top:14px;left:14px;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:5px 12px 5px 14px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:2000;display:none;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+#timer-widget.visible{display:flex}
+#timer-widget::before{content:'⏱';font-size:1.05rem;line-height:1}
+#timer-display{font-size:1.15rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:54px;text-align:center;letter-spacing:.5px}
+.timer-controls{display:flex;gap:3px}
+.timer-btn{background:transparent;color:#475569;border:none;border-radius:50%;width:26px;height:26px;padding:0;cursor:pointer;font-size:.9rem;transition:background .2s;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.timer-btn:hover{background:#e2e8f0;transform:none}
+.timer-btn.active-play{background:var(--success);color:white}
+.timer-btn.active-pause{background:#fbbf24;color:white}
+#timer-widget.warning{border-color:var(--error);animation:pulseWarn 1.4s ease-in-out infinite}
+@keyframes pulseWarn{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.12)}50%{box-shadow:0 6px 24px rgba(220,38,38,.4)}}
+
+/* TA FOCUS */
+#ta-focus-btn{position:fixed;top:14px;left:230px;z-index:2000;background:#6d28d9;color:#fff;border:2px solid #5b21b6;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4)}
+#ta-focus-btn::before{content:'👥';font-size:1.05rem}
+#ta-focus-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#ta-focus-overlay.visible{display:flex}
+#ta-focus-modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;animation:fadeInUp .35s ease-out;border:3px solid #6d28d9}
+.ta-modal-header{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.ta-modal-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.ta-modal-header h3::before{content:'👥 ';margin-right:4px}
+.ta-modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.ta-modal-close:hover{background:rgba(255,255,255,.35);transform:none}
+.ta-modal-body{padding:18px 24px 22px}
+.ta-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.ta-row-icon{flex:0 0 28px;font-size:1.3rem;line-height:1.2}
+.ta-row-content{flex:1;font-size:.96rem;line-height:1.45}
+.ta-row-content strong{color:#5b21b6}
+.ta-cta-row{background:#fef3c7;border-left:5px solid #d97706;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:.92rem}
+.ta-cta-row strong{color:#92400e}
+.ta-no-brief{font-style:italic;color:var(--muted);text-align:center;padding:12px}
+
+/* COLD CALL */
+#cold-call-btn{position:fixed;top:14px;left:380px;z-index:2000;background:#dc2626;color:#fff;border:2px solid #b91c1c;border-radius:999px;padding:6px 14px;font-size:.88rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.3);transition:.2s;display:flex;align-items:center;gap:6px}
+#cold-call-btn:hover{background:#b91c1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,38,38,.4)}
+#cold-call-btn::before{content:'🎲';font-size:1.05rem}
+#cold-call-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#cold-call-overlay.visible{display:flex}
+#cold-call-modal{background:#fff;border-radius:18px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid #dc2626}
+.cold-call-header{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.cold-call-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.cold-call-header h3::before{content:'🎲 ';margin-right:4px}
+.cold-call-body{padding:18px 22px 22px}
+.cold-call-class-label{text-align:center;font-size:.85rem;color:#64748b;margin:0 0 10px}
+.cold-call-name-box{background:#fef3c7;border:3px solid #d97706;border-radius:14px;padding:18px;text-align:center;margin:0 0 6px}
+.cold-call-name{font-size:2.4rem;font-weight:900;color:#7c2d12;margin:0;letter-spacing:1px;line-height:1.1}
+.cold-call-name.spinning{animation:nameSpin .08s ease-in-out infinite}
+.cold-call-name.settled{animation:nameLand .55s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes nameSpin{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes nameLand{0%{transform:scale(0.6);opacity:0}40%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+.cold-call-q-box{background:#dbeafe;border-left:5px solid #1e40af;padding:12px 16px;border-radius:10px;margin:10px 0 14px}
+.cold-call-q-label{margin:0 0 4px;font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+.cold-call-question{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0;line-height:1.4}
+.cold-call-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.cc-btn-primary{flex:1 1 200px;background:#dc2626;color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.98rem;font-weight:bold;transition:.2s}
+.cc-btn-primary:hover{background:#b91c1c;transform:translateY(-1px)}
+.cc-btn-secondary{flex:1 1 140px;background:#e5e7eb;color:#1e293b;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;transition:.2s}
+.cc-btn-secondary:hover{background:#cbd5e1}
+.cc-edit-link{display:block;text-align:center;background:none;border:none;color:#64748b;cursor:pointer;font-size:.85rem;text-decoration:underline;margin-top:10px;padding:6px}
+.cc-edit-link:hover{color:#dc2626}
+.cc-setup-title{font-weight:bold;margin:0 0 8px;font-size:1.05rem}
+.cc-helper{font-size:.85rem;color:#64748b;margin:6px 0 12px}
+.cc-empty-rows{text-align:center;color:#94a3b8;font-style:italic;padding:18px;border:2px dashed #cbd5e1;border-radius:10px;margin:6px 0}
+.cc-pupil-rows{max-height:300px;overflow-y:auto;padding:2px;border:1px solid #e5e7eb;border-radius:10px;margin:0 0 10px}
+.cc-pupil-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9}
+.cc-pupil-row:last-child{border-bottom:none}
+.cc-pupil-name{flex:1;font-weight:600;color:#1e293b;font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-grade-chips{display:flex;gap:3px;flex-shrink:0}
+.cc-grade-chip{width:30px;height:30px;border-radius:50%;border:2px solid;background:#fff;cursor:pointer;font-weight:900;font-size:.85rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cc-grade-u{border-color:#dc2626;color:#dc2626}
+.cc-grade-1{border-color:#ea580c;color:#ea580c}
+.cc-grade-2{border-color:#d97706;color:#d97706}
+.cc-grade-3{border-color:#0891b2;color:#0891b2}
+.cc-grade-4{border-color:#16a34a;color:#16a34a}
+.cc-grade-chip:hover{transform:scale(1.1)}
+.cc-grade-chip.cc-grade-selected{color:#fff;transform:scale(1.05)}
+.cc-grade-u.cc-grade-selected{background:#dc2626}
+.cc-grade-1.cc-grade-selected{background:#ea580c}
+.cc-grade-2.cc-grade-selected{background:#d97706}
+.cc-grade-3.cc-grade-selected{background:#0891b2}
+.cc-grade-4.cc-grade-selected{background:#16a34a}
+.cc-remove-btn{background:#fee2e2;color:#991b1b;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.85rem;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none}
+.cc-remove-btn:hover{background:#fecaca;transform:none}
+.cc-add-row{display:flex;gap:8px;margin:8px 0 12px}
+.cc-add-input{flex:1;padding:10px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem;font-family:'Segoe UI',sans-serif;box-sizing:border-box}
+.cc-add-input:focus{outline:none;border-color:#dc2626}
+.cc-mode-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.cc-mode-label{font-size:.78rem;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.cc-mode-btn{background:#fff;border:1.5px solid #cbd5e1;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;color:#475569;transition:.15s;flex:1 1 auto;min-width:0;box-shadow:none}
+.cc-mode-btn:hover{background:#e0f2fe;border-color:#0891b2;transform:none}
+.cc-mode-btn.active{background:#dc2626;color:#fff;border-color:#b91c1c}
+
+/* TEAM SCOREBOARD PILL */
+#team-scoreboard{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1900;background:rgba(255,255,255,.96);border:2px solid var(--lo-border);border-radius:999px;padding:6px 12px;box-shadow:0 6px 18px rgba(0,0,0,.12);display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:bold;font-size:.95rem;backdrop-filter:blur(4px);transition:all .2s;max-width:340px}
+#team-scoreboard:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.tsb-team{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-variant-numeric:tabular-nums;font-size:.95rem;white-space:nowrap}
+.tsb-team-a{background:#fce7ef;color:#831843}
+.tsb-team-b{background:#e7efe1;color:#365314}
+.tsb-vs{color:var(--muted);font-weight:600;font-size:.7rem;letter-spacing:.5px;padding:0 2px}
+
+/* SCOREBOARD MODAL */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:5000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .25s ease-out}
+#sb-overlay.visible{display:flex}
+#sb-modal{background:#fff;border-radius:18px;max-width:520px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:fadeInUp .35s ease-out;border:3px solid var(--lo-border)}
+.sb-header{background:linear-gradient(135deg,var(--lo-border),#a855f7);color:#fff;padding:16px 24px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.sb-header h3{margin:0;font-size:1.15rem;color:#fff;border:none;padding:0}
+.sb-header h3::before{content:'🏆 ';margin-right:4px}
+.sb-body{padding:18px 24px 22px}
+.sb-team-row{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:10px;border:2px solid #e2e8f0}
+.sb-team-row.team-a{border-left:6px solid #c08aa0}
+.sb-team-row.team-b{border-left:6px solid #9cb38a}
+.sb-name-input{width:100%;padding:8px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:1rem;font-weight:bold;font-family:inherit;margin-bottom:10px;box-sizing:border-box}
+.sb-name-input:focus{outline:none;border-color:var(--lo-border)}
+.sb-controls{display:flex;align-items:center;gap:10px}
+.sb-score{flex:1;font-size:2.4rem;font-weight:900;text-align:center;color:#1e293b;font-variant-numeric:tabular-nums}
+.sb-btn{padding:10px 16px;border-radius:10px;font-weight:bold;cursor:pointer;border:none;font-size:1rem;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:.15s;min-width:50px}
+.sb-btn-plus{background:var(--success);color:#fff}
+.sb-btn-plus:hover{background:#15803d;transform:translateY(-1px)}
+.sb-btn-minus{background:#fee2e2;color:#991b1b}
+.sb-btn-minus:hover{background:#fecaca}
+.sb-actions{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.sb-btn-reset{background:#f1f5f9;color:#475569;font-size:.9rem;padding:8px 14px}
+.sb-btn-reset:hover{background:#e2e8f0}
+
+/* PUSH NOTIFICATION (title slide hook) */
+.push-notif{background:linear-gradient(135deg,#1e1e22,#2d2d34);color:#f5f5f7;border-radius:14px;padding:.85rem 1rem;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;align-items:flex-start;gap:.75rem;max-width:380px;margin:0 auto 16px;border:1px solid rgba(255,255,255,.1);animation:notifSlide .8s cubic-bezier(.34,1.56,.64,1) both;text-align:left}
+@keyframes notifSlide{0%{opacity:0;transform:translateY(-40px) scale(.85)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.pn-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#388ea5,#1e3a4a);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;color:white;font-size:.85rem;letter-spacing:.5px}
+.pn-body{flex-grow:1;min-width:0}
+.pn-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pn-app{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a8a8b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-time{font-size:.7rem;color:#8a8a92;flex-shrink:0}
+.pn-title{font-size:.95rem;font-weight:700;color:#f5f5f7;margin-top:.15rem}
+.pn-msg{font-size:.82rem;color:#c8c8d0;margin-top:.1rem;line-height:1.35}
+
+/* FINAL BUZZER */
+.fb-stage{padding:8px 0;display:flex;flex-direction:column;flex:1}
+.fb-counter{font-size:.95rem;color:var(--muted);text-align:center;font-weight:900;margin:4px 0;letter-spacing:2px}
+.fb-question{background:#fff;border:3px solid var(--lo-border);border-radius:14px;padding:24px;font-size:1.4rem;font-weight:700;color:#1e293b;text-align:center;line-height:1.4;margin:8px 0;min-height:90px;display:flex;align-items:center;justify-content:center}
+.fb-which{text-align:center;font-weight:900;font-size:1.05rem;color:var(--lo-border);margin:6px 0;letter-spacing:.5px}
+.fb-answer{background:#dcfce7;border-left:5px solid var(--success);border-radius:10px;padding:14px;font-weight:bold;color:#166534;margin:8px 0;font-size:1.05rem;text-align:center;animation:fadeInUp .25s}
+.fb-buzzers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.fb-buzzer{padding:24px 16px;border-radius:18px;border:none;font-size:1.5rem;font-weight:900;cursor:pointer;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:all .15s;line-height:1.3;letter-spacing:1px;text-align:center}
+.fb-buzz-a{background:linear-gradient(135deg,#c08aa0,#831843)}
+.fb-buzz-b{background:linear-gradient(135deg,#9cb38a,#365314)}
+.fb-buzzer:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.fb-buzzer:active{transform:translateY(0)}
+.fb-buzzer.buzzed{transform:scale(1.05);box-shadow:0 0 0 6px rgba(255,255,255,.6),0 10px 30px rgba(0,0,0,.3);animation:pulseAttn .8s infinite}
+.fb-buzzer.dimmed{opacity:.4;pointer-events:none;transform:scale(.95)}
+.fb-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.fb-final{text-align:center;padding:30px;display:flex;flex-direction:column;justify-content:center;flex:1}
+
+/* TEAM BRIEF SLIDE PANELS */
+.brief-team{background:#fff;border-radius:14px;padding:14px;border:3px solid #e2e8f0}
+.brief-team.team-a{border-color:#c08aa0;background:linear-gradient(180deg,#fce7ef 0%,#fff 60%)}
+.brief-team.team-b{border-color:#9cb38a;background:linear-gradient(180deg,#e7efe1 0%,#fff 60%)}
+
+/* PRINT */
+/* ===== VISUAL-FIRST HELPERS (afternoon-friendly) ===== */
+/* Big icon row */
+.big-icon-row{display:flex;gap:14px;justify-content:center;align-items:center;margin:14px 0;flex-wrap:wrap}
+.big-icon{font-size:3.2rem;line-height:1;animation:fadeInUp .6s ease-out both}
+.big-icon-row .big-icon:nth-child(2){animation-delay:.15s}
+.big-icon-row .big-icon:nth-child(3){animation-delay:.30s}
+.big-icon-row .big-icon:nth-child(4){animation-delay:.45s}
+
+/* 4-block risk-row anatomy diagram */
+.row-anatomy{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0;max-width:780px;margin-left:auto;margin-right:auto}
+.row-block{padding:14px 8px;border-radius:14px;text-align:center;border:3px solid;animation:fadeInUp .5s ease-out both;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px}
+.row-block:nth-child(1){animation-delay:.05s}
+.row-block:nth-child(2){animation-delay:.20s}
+.row-block:nth-child(3){animation-delay:.35s}
+.row-block:nth-child(4){animation-delay:.50s}
+.row-block-icon{font-size:2.2rem;line-height:1;margin-bottom:4px}
+.row-block-label{font-size:.78rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,0,0,.55);margin-bottom:2px}
+.row-block-word{font-size:1.05rem;font-weight:900;color:#1e293b;line-height:1.2}
+.rb-red{background:#fee2e2;border-color:#dc2626}
+.rb-amber{background:#fef3c7;border-color:#d97706}
+.rb-pink{background:#fce7ef;border-color:#be185d}
+.rb-blue{background:#dbeafe;border-color:#1d4ed8}
+
+/* Plus connectors between blocks */
+.row-anatomy{position:relative}
+.row-arrow{font-size:1.6rem;font-weight:900;color:#475569;align-self:center;text-align:center;display:flex;align-items:center;justify-content:center}
+
+/* Big-tap card (for starter risk levels) */
+.tap-card{position:relative;border-radius:18px;padding:20px;cursor:pointer;border:4px solid;display:flex;align-items:center;gap:14px;margin:10px 0;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 12px rgba(0,0,0,.08);min-height:90px}
+.tap-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.tap-card .tc-icon{font-size:3rem;line-height:1;flex-shrink:0}
+.tap-card .tc-body{flex:1}
+.tap-card .tc-headline{font-size:1.2rem;font-weight:900;color:#1e293b;line-height:1.3}
+.tap-card .tc-detail{font-size:.95rem;color:#475569;margin-top:6px;display:none;line-height:1.4}
+.tap-card.opened .tc-detail{display:block;animation:fadeInUp .25s ease-out}
+.tap-card .tc-tag{position:absolute;top:-12px;right:14px;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.75rem;letter-spacing:1px;color:#fff}
+.tc-low{border-color:#16a34a;background:linear-gradient(180deg,#dcfce7 0%,#fff 50%)}
+.tc-low .tc-tag{background:#16a34a}
+.tc-med{border-color:#d97706;background:linear-gradient(180deg,#fef3c7 0%,#fff 50%)}
+.tc-med .tc-tag{background:#d97706}
+.tc-high{border-color:#dc2626;background:linear-gradient(180deg,#fee2e2 0%,#fff 50%);animation:pulseHigh 2.6s ease-in-out infinite}
+.tc-high .tc-tag{background:#dc2626}
+@keyframes pulseHigh{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.0)}50%{box-shadow:0 0 0 6px rgba(220,38,38,.15)}}
+
+/* Big-icon team-brief task tiles */
+.task-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.task-tile{padding:18px 12px;border-radius:16px;background:#fff;border:3px solid #e2e8f0;text-align:center;animation:fadeInUp .5s ease-out both}
+.task-tile:nth-child(1){animation-delay:.05s;border-color:#dc2626}
+.task-tile:nth-child(2){animation-delay:.20s;border-color:#d97706}
+.task-tile:nth-child(3){animation-delay:.35s;border-color:#16a34a}
+.tt-icon{font-size:3.4rem;line-height:1;margin-bottom:8px;display:block}
+.tt-num{display:inline-block;background:#1e293b;color:#fff;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:900;margin-bottom:4px}
+.tt-title{font-size:1.1rem;font-weight:900;color:#1e293b;margin:6px 0 2px}
+.tt-sub{font-size:.85rem;color:#475569;line-height:1.3}
+
+/* Riverbank scene SVG container */
+.bank-scene{display:block;margin:14px auto;max-width:680px;width:100%;height:auto}
+
+/* Quiet "click for more" hint */
+.tap-hint{font-size:.8rem;color:#64748b;font-style:italic;text-align:center;margin-top:6px;letter-spacing:.5px}
+
+/* Two-column reveal cards (for I Do common-traps mini) */
+.trap-row{display:flex;gap:8px;align-items:center;padding:8px 12px;background:#fffbeb;border-left:4px solid #d97706;border-radius:8px;margin:6px 0;font-size:.9rem}
+.trap-row .trap-x{color:#dc2626;font-size:1.2rem;font-weight:900;flex-shrink:0}
+
+#print-area{display:none}
+@media print{
+  body{overflow:visible;background:#fff;height:auto;color:#000}
+  .controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#ta-focus-btn,#ta-focus-overlay,#cold-call-btn,#cold-call-overlay{display:none!important}
+  #print-area{display:block!important;padding:20px}
+  .print-section{display:none;page-break-after:always}
+  .print-section.visible{display:block}
+  .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .print-box{border:1px solid #000;padding:10px;min-height:80px}
+  .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+  .ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}
+  .ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}
+  .ko-table th{background:#eee}
+  .scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}
+  .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}
+  .cover-sheet{border:2px solid #000;padding:14px 16px;margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;page-break-after:always}
+  .cover-header{border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:10px;overflow:hidden}
+  .cover-title-block{float:left;width:60%}
+  .cover-title-block h2{margin:0;font-size:1.15rem;color:#000;border:none;padding:0}
+  .cover-title-block .cover-code{font-size:.78rem;color:#000;font-weight:bold;letter-spacing:.5px;text-transform:uppercase;margin:0 0 4px}
+  .cover-namebox{float:right;width:38%;font-size:.82rem;text-align:right}
+  .cover-namebox-row{margin:3px 0;line-height:1.4}
+  .cover-namebox-row span:first-child{font-weight:bold;display:inline-block;width:42px;text-align:right}
+  .cover-namebox-row .cover-line{border-bottom:1px solid #000;display:inline-block;width:110px;height:14px;vertical-align:middle}
+  .cover-section{margin-top:8px;clear:both}
+  .cover-section h4{margin:0 0 6px;font-size:.92rem;font-weight:bold;color:#000;text-transform:uppercase;letter-spacing:.4px}
+  .cover-lo-list{margin:0 0 0 6px;padding:0;list-style:disc;padding-left:20px}
+  .cover-lo-list li{margin:3px 0;font-size:.86rem;line-height:1.35}
+  .cover-sc-row{margin:4px 0;padding:5px 6px;border-bottom:1px dotted #94a3b8;overflow:hidden}
+  .cover-sc-row:last-child{border-bottom:none}
+  .cover-sc-text{float:left;width:75%;font-size:.83rem;line-height:1.35}
+  .cover-sc-marks{float:right;width:22%;text-align:right}
+  .cover-sc-mark{display:inline-block;width:22px;height:22px;border:1.5px solid #000;border-radius:50%;text-align:center;line-height:18px;font-size:.78rem;font-weight:900;background:#fff;margin-left:3px}
+  .cover-exit{margin-top:10px;padding-top:8px;border-top:1.5px dashed #000;clear:both}
+  .cover-exit-prompt{font-size:.82rem;font-style:italic;margin:0 0 4px}
+  .cover-exit-line{border-bottom:1px solid #000;height:16px;margin-top:2px}
+  .cover-key{font-size:.72rem;color:#333;text-align:center;margin-top:8px;font-style:italic;padding-top:6px;border-top:1px dotted #94a3b8}
+  .ss-print{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}
+  .ss-print td{border:2px solid #000;padding:10px;vertical-align:top;width:33.33%;height:170px;page-break-inside:avoid}
+  .ss-print .ss-pip{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:.5px;padding:2px 7px;border-radius:5px;color:#fff;margin-bottom:6px}
+  .ss-print .ss-pip-l1{background:#f97316}
+  .ss-print .ss-pip-l2{background:#9c27b0}
+  .ss-print td p{margin:0 0 4px;font-size:.95rem;line-height:1.35}
+  .ss-print .ss-ans{border-bottom:1px solid #888;height:18px;margin-top:8px}
+  /* TEAM BRIEF PRINT */
+  .team-brief-page{page-break-after:always;font-size:.92rem;padding:0}
+  .brief-banner{background:#831843;color:#fff;padding:12px 18px;font-size:1.4rem;font-weight:900;text-align:center;letter-spacing:2px;border-radius:10px;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .brief-banner.banner-b{background:#365314}
+  .brief-section-head{font-weight:900;color:#000;margin:14px 0 4px;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px}
+  .brief-method-row{padding:6px 0;border-bottom:1px dotted #94a3b8;font-size:.9rem}
+  .brief-method-row label{font-weight:bold}
+  .brief-stretch-row{padding:6px 0;border-bottom:1px dotted #94a3b8}
+  .brief-sign-row{margin-top:14px;text-align:right;font-size:.85rem;border-top:1.5px dashed #000;padding-top:6px}
+  /* Method reference cards (cut-and-distribute) */
+  .method-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .method-ref-card{border:2px solid #000;border-radius:8px;padding:10px;page-break-inside:avoid;min-height:140px}
+  .method-ref-card h4{margin:0 0 4px;font-size:1.05rem}
+  .method-ref-card p{margin:2px 0;font-size:.85rem;line-height:1.4}
+}
+</style>
+</head>
+<body>
+
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseTimer()" title="Pause">⏸</button>
+  </div>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+
+<div id="ta-focus-overlay" onclick="if(event.target.id==='ta-focus-overlay')hideTABrief()">
+  <div id="ta-focus-modal">
+    <div class="ta-modal-header">
+      <h3 id="ta-modal-title">TA Focus</h3>
+      <button class="ta-modal-close" onclick="hideTABrief()" aria-label="Close">✕</button>
+    </div>
+    <div class="ta-modal-body" id="ta-modal-body"></div>
+  </div>
+</div>
+
+<div id="cold-call-overlay" onclick="if(event.target.id==='cold-call-overlay')hideColdCall()">
+  <div id="cold-call-modal">
+    <div class="cold-call-header">
+      <h3>Cold Call</h3>
+      <button class="ta-modal-close" onclick="hideColdCall()" aria-label="Close">✕</button>
+    </div>
+    <div class="cold-call-body" id="cold-call-body"></div>
+  </div>
+</div>
+
+<!-- TEAM SCOREBOARD PILL -->
+<div id="team-scoreboard" onclick="showScoreboard()" title="Click to score / edit"></div>
+
+<!-- SCOREBOARD MODAL -->
+<div id="sb-overlay" onclick="if(event.target.id==='sb-overlay')hideScoreboard()">
+  <div id="sb-modal">
+    <div class="sb-header">
+      <h3>Team Scoreboard</h3>
+      <button class="ta-modal-close" onclick="hideScoreboard()" aria-label="Close">✕</button>
+    </div>
+    <div class="sb-body" id="sb-body"></div>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- ============ TITLE ============ -->
+  <div class="slide active" data-title="Title" data-timer="1">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:1%">
+      <div class="push-notif">
+        <div class="pn-icon">MC</div>
+        <div class="pn-body">
+          <div class="pn-head">
+            <span class="pn-app">Messages · Dr M. Calder</span>
+            <span class="pn-time">now</span>
+          </div>
+          <div class="pn-title">Don't drown 🦺</div>
+          <div class="pn-msg">Before you set foot on the riverbank — risk plan + sampling strategy. No exceptions. Today's the day.</div>
+        </div>
+      </div>
+      <div class="animate-enter">
+        <p style="font-size:1rem;color:var(--muted);margin:0">Lesson 18 — PGFI</p>
+        <h1>Risk &amp; Sampling</h1>
+        <p style="font-size:1rem;color:var(--muted);margin:-8px 0 14px">"How do we stay safe — and pick fair sites?"</p>
+
+        <div class="big-icon-row" style="margin:18px 0 6px">
+          <div class="big-icon">🦺</div>
+          <div class="big-icon" style="font-size:2.4rem;color:#475569">+</div>
+          <div class="big-icon">🎯</div>
+        </div>
+        <p style="font-size:1.15rem;font-weight:900;color:#1e293b;margin:0">Spot the hazards · Pick fair sites</p>
+        <p style="font-size:.9rem;color:var(--muted);margin:6px 0 0">PGFI Obj 3 evidence by the end · 50 minutes</p>
+      </div>
+      <div class="scaffold-box" style="display:inline-block;margin-top:18px;text-align:left">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button onclick="printPack()">🖨️ Print KO + Team Briefs</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ KO only</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ARRIVAL ============ -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-arrival">FAB 4 · Arrival</span>
+    <h2>FAB 4 Arrival – Recall from last lesson</h2>
+    <div class="li-box"><strong>Whiteboards.</strong> 4 minutes. Easy ones — straight from last lesson's river parts. Q4 leads into today.</div>
+    <button class="ghost small" style="position:absolute;top:18px;right:200px" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+
+    <div class="arrival-grid">
+      <div class="task-box animate-enter">
+        <h3>1. Recall</h3>
+        <p>Where does a river <strong>start</strong>? (one word)</p>
+        <p class="answer">Source.</p>
+      </div>
+      <div class="task-box animate-enter anim-d1">
+        <h3>2. Recall</h3>
+        <p>Where does a river <strong>end</strong>? (one word)</p>
+        <p class="answer">Mouth.</p>
+      </div>
+      <div class="task-box animate-enter anim-d2">
+        <h3>3. Recall</h3>
+        <p>What do we call a <strong>smaller river that joins a bigger one</strong>?</p>
+        <p class="answer">A tributary.</p>
+      </div>
+      <div class="task-box animate-enter anim-d3" style="border-color:var(--lo-border);background:var(--lo-bg)">
+        <h3>4. Lead-in 🔬</h3>
+        <p>You're standing on a riverbank with a clipboard. Name <strong>1 thing</strong> that could go wrong.</p>
+        <p class="answer">Many: slipping, falling in, dropping kit, getting cold, weather turning… anything sensible.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <div class="slide" id="starter-slide" data-title="Starter – How risky?" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>How risky is each one?</h2>
+
+    <!-- Riverbank scene with 3 numbered hot-spots -->
+    <svg class="bank-scene" viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- sky -->
+      <rect x="0" y="0" width="680" height="80" fill="#e0f2fe"/>
+      <!-- bank -->
+      <path d="M 0 80 Q 100 75 200 90 L 200 200 L 0 200 Z" fill="#84cc16" stroke="#365314" stroke-width="1.5"/>
+      <path d="M 480 90 Q 580 75 680 80 L 680 200 L 480 200 Z" fill="#84cc16" stroke="#365314" stroke-width="1.5"/>
+      <!-- river -->
+      <rect x="200" y="80" width="280" height="120" fill="#60a5fa" opacity=".85"/>
+      <!-- water sparkle (animated) -->
+      <path d="M 220 110 Q 250 100 280 110 T 340 110 T 400 110 T 460 110" fill="none" stroke="#fff" stroke-width="2" opacity=".6">
+        <animate attributeName="d" dur="3s" repeatCount="indefinite"
+          values="M 220 110 Q 250 100 280 110 T 340 110 T 400 110 T 460 110;
+                  M 220 110 Q 250 120 280 110 T 340 110 T 400 110 T 460 110;
+                  M 220 110 Q 250 100 280 110 T 340 110 T 400 110 T 460 110"/>
+      </path>
+      <path d="M 220 150 Q 250 140 280 150 T 340 150 T 400 150 T 460 150" fill="none" stroke="#fff" stroke-width="2" opacity=".4">
+        <animate attributeName="d" dur="4s" repeatCount="indefinite"
+          values="M 220 150 Q 250 140 280 150 T 340 150 T 400 150 T 460 150;
+                  M 220 150 Q 250 160 280 150 T 340 150 T 400 150 T 460 150;
+                  M 220 150 Q 250 140 280 150 T 340 150 T 400 150 T 460 150"/>
+      </path>
+      <!-- hot-spot 1: low (on bank, well back) -->
+      <circle cx="80" cy="120" r="18" fill="#16a34a" stroke="#fff" stroke-width="3"/>
+      <text x="80" y="127" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">1</text>
+      <text x="80" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b">on the bank</text>
+      <!-- hot-spot 2: medium (shallow edge) -->
+      <circle cx="240" cy="120" r="18" fill="#d97706" stroke="#fff" stroke-width="3"/>
+      <text x="240" y="127" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">2</text>
+      <text x="240" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b">shallow edge</text>
+      <!-- hot-spot 3: high (middle) -->
+      <circle cx="340" cy="140" r="18" fill="#dc2626" stroke="#fff" stroke-width="3">
+        <animate attributeName="r" dur="1.4s" repeatCount="indefinite" values="18;21;18"/>
+      </circle>
+      <text x="340" y="147" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">3</text>
+      <text x="340" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b">middle of channel</text>
+    </svg>
+
+    <p class="tap-hint">Tap each card to reveal the verdict.</p>
+
+    <div class="tap-card tc-low" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">1 · LOW</span>
+      <div class="tc-icon">📝</div>
+      <div class="tc-body">
+        <div class="tc-headline">Stand on the bank with a clipboard.</div>
+        <div class="tc-detail">No water contact, dry ground. Worst case: drop your pen.</div>
+      </div>
+    </div>
+
+    <div class="tap-card tc-med" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">2 · MEDIUM</span>
+      <div class="tc-icon">🥾</div>
+      <div class="tc-body">
+        <div class="tc-headline">Step into the shallow edge with a metre stick.</div>
+        <div class="tc-detail">Wet rocks slip, water is cold. <strong>Wellies, buddy, knee-deep max.</strong></div>
+      </div>
+    </div>
+
+    <div class="tap-card tc-high" onclick="this.classList.toggle('opened')">
+      <span class="tc-tag">3 · HIGH</span>
+      <div class="tc-icon">⚠️</div>
+      <div class="tc-body">
+        <div class="tc-headline">Wade to the middle after heavy rain.</div>
+        <div class="tc-detail"><strong>Don't.</strong> Current sweeps adults off their feet. Measure from the bank — or skip that day.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ I DO 1: ANATOMY OF A STRONG AIM ============ -->
+  <div class="slide" data-title="I Do – Anatomy of a Risk Row" data-type="ido" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · 1 of 2</span>
+    <h2>What's in a risk row?</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">4 things, in this order:</p>
+
+    <div class="row-anatomy">
+      <div class="row-block rb-red">
+        <div class="row-block-icon">⚠️</div>
+        <div class="row-block-label">Hazard</div>
+        <div class="row-block-word">slipping</div>
+      </div>
+      <div class="row-block rb-amber">
+        <div class="row-block-icon">👥</div>
+        <div class="row-block-label">Who?</div>
+        <div class="row-block-word">pupils &amp; staff</div>
+      </div>
+      <div class="row-block rb-pink">
+        <div class="row-block-icon">📊</div>
+        <div class="row-block-label">Level</div>
+        <div class="row-block-word">MEDIUM</div>
+      </div>
+      <div class="row-block rb-blue">
+        <div class="row-block-icon">🦺</div>
+        <div class="row-block-label">Control</div>
+        <div class="row-block-word">wellies + buddy</div>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:1.05rem;font-weight:900;color:#1e293b;margin:6px 0">"<span style="color:#dc2626">Slipping</span> could happen to <span style="color:#d97706">pupils</span>. Risk: <span style="color:#be185d">MEDIUM</span>. We will <span style="color:#1d4ed8">wear wellies + buddy holds hand</span>."</p>
+
+    <div class="trap-row"><span class="trap-x">✗</span><div>"<strong>Be careful</strong>" isn't a control. A control says <em>what you'll do</em>.</div></div>
+    <div class="trap-row"><span class="trap-x">✗</span><div>Match the consequence to the actual hazard. Paper cut ≠ death.</div></div>
+  </div>
+
+  <!-- ============ WE DO 1: WRITE A RISK ROW TOGETHER ============ -->
+  <div class="slide" data-title="We Do – Write a Risk Row" data-type="wedo" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 1</span>
+    <h2>We Do: Fill in OUR first risk row — together</h2>
+    <div class="li-box"><strong>As a class:</strong> Hazard = <em>slipping on wet rocks</em>. Click each yellow box to type — class agrees, then we lock it in.</div>
+    <div class="wedo-capture" style="margin-top:18px">
+      <p style="font-size:1.1rem;line-height:2.2;color:#1e293b">
+        "
+        <span class="editable" contenteditable="true" data-placeholder="hazard">Slipping on wet rocks</span>
+        could happen to
+        <span class="editable" contenteditable="true" data-placeholder="who is at risk"></span>.
+        We think this is
+        <span class="editable" contenteditable="true" data-placeholder="low / medium / high"></span>
+        risk because
+        <span class="editable" contenteditable="true" data-placeholder="reason — likelihood × consequence"></span>.
+        To control this, we will
+        <span class="editable" contenteditable="true" data-placeholder="control 1"></span>
+        and
+        <span class="editable" contenteditable="true" data-placeholder="control 2"></span>."
+      </p>
+      <p style="margin-top:14px;color:var(--muted);font-size:.9rem;font-style:italic">💡 Suggestions: who = pupils, staff, public · risk = MEDIUM (likely + can twist an ankle / fall) · controls = wellies, stay back from edge, buddy holds hand, keep depth below knee.</p>
+    </div>
+
+    <div class="aspire-box" style="margin-top:14px">
+      <strong>🌟 Aspire — second hazard (optional):</strong> Try one for <em>cold water / hypothermia</em> using the same stem. Who is most at risk if it's a winter day?
+    </div>
+  </div>
+
+  <!-- ============ I DO 2: 4 METHODS ============ -->
+  <div class="slide" data-title="I Do – 3 Sampling Strategies" data-type="ido" data-timer="5">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-ido">I Do · 2 of 2</span>
+    <h2>How do we pick fair sites?</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0 0 4px">3 strategies. Same river. 6 sampling points each. Tap each card to see what each gives us.</p>
+
+    <div class="method-grid">
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#f97316">
+        <div class="m-icon">🎲</div>
+        <p class="m-name">Random</p>
+        <p class="m-tease">picked by chance</p>
+        <svg viewBox="0 0 280 70" style="width:100%;max-width:240px;display:block;margin:6px auto 0">
+          <rect x="0" y="20" width="280" height="30" fill="#dbeafe" stroke="#388ea5" stroke-width="2"/>
+          <text x="2" y="14" font-size="9" fill="#475569">Site A</text><text x="248" y="14" font-size="9" fill="#475569">Site B</text>
+          <circle cx="22" cy="35" r="5" fill="#f97316"/>
+          <circle cx="71" cy="38" r="5" fill="#f97316"/>
+          <circle cx="89" cy="32" r="5" fill="#f97316"/>
+          <circle cx="155" cy="40" r="5" fill="#f97316"/>
+          <circle cx="201" cy="33" r="5" fill="#f97316"/>
+          <circle cx="244" cy="36" r="5" fill="#f97316"/>
+        </svg>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem"><strong>Best for:</strong> removing bias.</p>
+          <p style="margin:6px 0;font-size:.9rem"><strong>Watch out:</strong> can cluster by chance.</p>
+        </div>
+      </div>
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#22c55e">
+        <div class="m-icon">📏</div>
+        <p class="m-name">Systematic ⭐</p>
+        <p class="m-tease">same gap each time</p>
+        <svg viewBox="0 0 280 70" style="width:100%;max-width:240px;display:block;margin:6px auto 0">
+          <rect x="0" y="20" width="280" height="30" fill="#dbeafe" stroke="#388ea5" stroke-width="2"/>
+          <text x="2" y="14" font-size="9" fill="#475569">Site A</text><text x="248" y="14" font-size="9" fill="#475569">Site B</text>
+          <circle cx="20" cy="35" r="5" fill="#22c55e"/>
+          <circle cx="64" cy="35" r="5" fill="#22c55e"/>
+          <circle cx="108" cy="35" r="5" fill="#22c55e"/>
+          <circle cx="152" cy="35" r="5" fill="#22c55e"/>
+          <circle cx="196" cy="35" r="5" fill="#22c55e"/>
+          <circle cx="240" cy="35" r="5" fill="#22c55e"/>
+        </svg>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem"><strong>Best for:</strong> showing change over distance.</p>
+          <p style="margin:6px 0;font-size:.9rem"><strong>⭐ Best fit for OUR aim.</strong></p>
+        </div>
+      </div>
+      <div class="method-card" onclick="this.classList.toggle('revealed')" style="border-top-color:#a855f7">
+        <div class="m-icon">🎯</div>
+        <p class="m-name">Stratified</p>
+        <p class="m-tease">split into zones</p>
+        <svg viewBox="0 0 280 70" style="width:100%;max-width:240px;display:block;margin:6px auto 0">
+          <rect x="0" y="20" width="93" height="30" fill="#fce7ef" stroke="#831843" stroke-width="2"/>
+          <rect x="93" y="20" width="93" height="30" fill="#fef3c7" stroke="#92400e" stroke-width="2"/>
+          <rect x="186" y="20" width="94" height="30" fill="#dcfce7" stroke="#365314" stroke-width="2"/>
+          <text x="20" y="14" font-size="9" fill="#475569">Upper</text>
+          <text x="115" y="14" font-size="9" fill="#475569">Middle</text>
+          <text x="215" y="14" font-size="9" fill="#475569">Lower</text>
+          <circle cx="28" cy="35" r="5" fill="#a855f7"/>
+          <circle cx="64" cy="35" r="5" fill="#a855f7"/>
+          <circle cx="120" cy="35" r="5" fill="#a855f7"/>
+          <circle cx="160" cy="35" r="5" fill="#a855f7"/>
+          <circle cx="210" cy="35" r="5" fill="#a855f7"/>
+          <circle cx="252" cy="35" r="5" fill="#a855f7"/>
+        </svg>
+        <div class="m-detail">
+          <p style="margin:6px 0;font-size:.9rem"><strong>Best for:</strong> very different zones (e.g. moor → urban).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WE DO 2: MATCH METHOD TO QUESTION ============ -->
+  <div class="slide" id="match-slide" data-title="We Do – Which Strategy?" data-type="wedo" data-timer="4">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 2</span>
+    <h2>We Do: Match Scenario to Strategy</h2>
+    <div class="li-box"><strong>Click a question, then click the method that answers it.</strong> Score: <span id="match-score" style="font-size:1.2rem;color:var(--success)">0</span>/6</div>
+    <div class="match-grid" id="wedo2">
+      <div class="match-col">
+        <p class="match-col-title">Investigation scenario</p>
+        <div class="match-card" data-key="syst1" onclick="matchClick(this,'q')">"We want to show how the river changes <strong>over distance</strong>, every 200m for 1km."</div>
+        <div class="match-card" data-key="rand1" onclick="matchClick(this,'q')">"We've got 6 sites and want to be sure we're <strong>not biased</strong> by picking 'nice-looking' bits."</div>
+        <div class="match-card" data-key="strat1" onclick="matchClick(this,'q')">"The river has 3 very different zones — <strong>upper, middle &amp; lower</strong> — and we need data from each."</div>
+        <div class="match-card" data-key="syst2" onclick="matchClick(this,'q')">"Same gap each time so we can plot a <strong>smooth graph</strong> of width vs distance."</div>
+        <div class="match-card" data-key="rand2" onclick="matchClick(this,'q')">"We want a small <strong>pilot study</strong> — pick 5 spots out of a hat to check our method works."</div>
+        <div class="match-card" data-key="strat2" onclick="matchClick(this,'q')">"Land use changes from <strong>moorland → farmland → urban</strong> — we need samples from each band."</div>
+      </div>
+      <div class="match-col">
+        <p class="match-col-title">Best strategy</p>
+        <div class="match-card" data-key="strat1" onclick="matchClick(this,'m')">Stratified — split into upper/middle/lower zones, sample each.</div>
+        <div class="match-card" data-key="syst2" onclick="matchClick(this,'m')">Systematic — same gap each measurement (e.g. every 100m).</div>
+        <div class="match-card" data-key="rand1" onclick="matchClick(this,'m')">Random — pick by chance to remove "I-like-this-spot" bias.</div>
+        <div class="match-card" data-key="strat2" onclick="matchClick(this,'m')">Stratified — split by land-use band, sample each.</div>
+        <div class="match-card" data-key="syst1" onclick="matchClick(this,'m')">Systematic — every 200m gives even coverage for distance graphs.</div>
+        <div class="match-card" data-key="rand2" onclick="matchClick(this,'m')">Random — names from a hat / random number generator.</div>
+      </div>
+    </div>
+    <div class="match-feedback" id="match-feedback">👆 Click a scenario on the left, then the strategy on the right.</div>
+    <div style="text-align:right;margin-top:6px"><button class="ghost small" onclick="matchReset()">🔄 Reset</button> <button class="ghost small" onclick="matchRevealAll()">👁️ Reveal All</button></div>
+  </div>
+
+  <!-- ============ WE DO 3: SPOT THE MISTAKE ============ -->
+  <div class="slide" id="stm-slide" data-title="Spot the Mistakes in this Plan" data-type="wedo" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-wedo">We Do · 3</span>
+    <h2>Spot the 3 Mistakes</h2>
+    <div class="li-box"><strong>A pupil wrote this risk &amp; sampling plan.</strong> 3 things are wrong. Click the phrases you think are wrong.</div>
+
+    <div class="stm-progress">
+      <div class="stm-pip" id="stm-pip-1">1</div>
+      <div class="stm-pip" id="stm-pip-2">2</div>
+      <div class="stm-pip" id="stm-pip-3">3</div>
+    </div>
+
+    <div class="stm-paragraph">
+      One hazard is <span class="stm-clickable" data-correct="false" data-id="x1">slipping on wet rocks</span>. To control this we will <span class="stm-clickable" data-correct="true" data-id="m1" data-explain="Mistake 1: 'be careful' is NOT a control. A control says exactly what you'll do. Better: 'wear wellies, stay 1m back from the edge unless measuring, buddy holds your hand'.">tell pupils to be careful</span>. Another hazard is <span class="stm-clickable" data-correct="false" data-id="x2">cold water causing hypothermia</span>, controlled by wearing waterproofs and limiting time in the water. For sampling we will use <span class="stm-clickable" data-correct="true" data-id="m2" data-explain="Mistake 2: this isn't 'random' — picking what looks 'good' is biased sampling. True random = chosen by chance (hat / random number). For our 'show change over distance' aim, SYSTEMATIC every 200m would be better anyway.">a random method by picking spots that look good</span>, and we will measure depth at <span class="stm-clickable" data-correct="true" data-id="m3" data-explain="Mistake 3: 1 reading isn't reliable — depth varies a lot across the channel. The correct method is 5+ points across the width, then average. Same rule as L17.">one point in the middle of each site</span>.
+    </div>
+
+    <div class="stm-feedback-box" id="stm-feedback">👆 Click a phrase you think is wrong. Find all 3 to win.</div>
+    <div class="stm-correction" id="stm-correction">
+      ✅ Correct version: "To control slipping we will <strong>wear wellies, stay 1m back unless measuring, buddy holds hand, depth below knee</strong>. We will use <strong>systematic sampling — every 200m for 1km</strong> to show change over distance. Depth will be measured at <strong>5 points across the width</strong> and averaged at each site."
+    </div>
+    <div style="text-align:right;margin-top:6px"><button class="ghost small" onclick="stmReset()">🔄 Reset</button> <button class="ghost small" onclick="stmRevealAll()">👁️ Reveal All</button></div>
+  </div>
+
+  <!-- ============ INDEPENDENT: PGFI Obj 3 ============ -->
+  <div class="slide" id="brief-slide" data-title="Team Brief — Risk + Sampling" data-type="independent" data-timer="8" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-independent">Team Task · 8 min</span>
+    <h2>📋 Team Brief — 8 minutes</h2>
+    <p style="text-align:center;color:var(--muted);font-size:1rem;margin:0">One printed Brief per team. Photo it at the end = evidence.</p>
+
+    <div class="task-tiles">
+      <div class="task-tile">
+        <span class="tt-icon">⚠️</span>
+        <span class="tt-num">1</span>
+        <div class="tt-title">Risk rows</div>
+        <div class="tt-sub">Fill in 4. Hazard · Who · Level · Control.</div>
+      </div>
+      <div class="task-tile">
+        <span class="tt-icon">🎯</span>
+        <span class="tt-num">2</span>
+        <div class="tt-title">Sampling</div>
+        <div class="tt-sub">Tick one. Justify in 2 lines.</div>
+      </div>
+      <div class="task-tile">
+        <span class="tt-icon">📊</span>
+        <span class="tt-num">3</span>
+        <div class="tt-title">★ Recording sheet</div>
+        <div class="tt-sub">Sketch the table you'll fill next lesson.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button onclick="printSection('brief')" style="background:var(--wedo-border)">🖨️ Print Team Briefs (1 per team)</button>
+      <button class="ghost small" onclick="document.getElementById('brief-slide').classList.toggle('show-ans')">👁️ Example</button>
+    </div>
+
+    <div class="answer" style="margin-top:10px;padding:12px;background:#dcfce7;border-left:5px solid var(--success);border-radius:8px">
+      <strong>Sample risk row:</strong> Cold water · pupils &amp; staff · MEDIUM · waterproofs + warm drinks + watch for shivering.<br>
+      <strong>Sample sampling choice:</strong> Systematic, every 200m — best for showing change downstream.
+    </div>
+  </div>
+
+  <!-- ============ FINAL BUZZER ============ -->
+  <div class="slide" id="final-buzzer-slide" data-title="Final Buzzer" data-timer="6" data-no-autostart="true">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <span class="slide-tag tag-exit">🏆 Final Buzzer · 6 Qs</span>
+    <h2>🏆 Final Buzzer Round</h2>
+    <div class="li-box"><strong>6 questions to settle it.</strong> Score carries from L16 — Sage may have ground to make up. First team to BUZZ answers. Wrong / pass = the other team can steal.</div>
+
+    <div class="fb-stage" id="fb-stage">
+      <div class="fb-counter">QUESTION <span id="fb-q-num">1</span> / 6</div>
+      <div class="fb-question" id="fb-question">Loading…</div>
+      <div class="fb-answer" id="fb-answer" style="display:none">—</div>
+      <div class="fb-buzzers">
+        <button class="fb-buzzer fb-buzz-a" onclick="fbBuzz('a')">🌹<br><span id="fb-buzzer-a-name">ROSE</span><br>BUZZ</button>
+        <button class="fb-buzzer fb-buzz-b" onclick="fbBuzz('b')">🌿<br><span id="fb-buzzer-b-name">SAGE</span><br>BUZZ</button>
+      </div>
+      <div class="fb-which" id="fb-which">Click a team's BUZZ button to claim the question.</div>
+      <div class="fb-controls">
+        <button class="ghost small" onclick="fbReveal()">👁️ Reveal Answer</button>
+        <button class="small" style="background:#c08aa0" onclick="fbAward('a')">+1 <span id="fb-award-a-name">Rose</span></button>
+        <button class="small" style="background:#9cb38a" onclick="fbAward('b')">+1 <span id="fb-award-b-name">Sage</span></button>
+        <button class="ghost small" onclick="fbNext()">Skip / Next ▶</button>
+      </div>
+    </div>
+
+    <div class="fb-final" id="fb-final" style="display:none">
+      <h2 style="text-align:center;border:none;margin-right:0;color:var(--success)">🏆 Final Result</h2>
+      <div id="fb-winner-text" style="margin-top:16px;font-size:1.4rem;font-weight:900"></div>
+      <div style="margin-top:20px"><button onclick="fbInit()">🔄 Play Again</button></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel"></div>
+
+<!-- ===================== PRINT AREA ===================== -->
+<div id="print-area">
+
+  <!-- KNOWLEDGE ORGANISER -->
+  <div id="print-ko" class="print-section">
+    <h2 style="border:none">Knowledge Organiser — Risk &amp; Sampling</h2>
+    <h3>Risk row — 4 ingredients</h3>
+    <ol style="margin:.4rem 0 .6rem;padding-left:1.4rem">
+      <li><strong>HAZARD</strong> — the actual thing (e.g. slipping on wet rocks).</li>
+      <li><strong>WHO</strong> — who is at risk (pupils, staff, public).</li>
+      <li><strong>RISK LEVEL</strong> — Likelihood × Consequence = Low / Medium / High.</li>
+      <li><strong>CONTROL</strong> — what you'll DO to make it safer (specific actions, not "be careful").</li>
+    </ol>
+    <p><strong>Stem:</strong> "____ could happen to ____. Risk: ____. We will ____."</p>
+    <h3>3 Sampling strategies</h3>
+    <table class="ko-table">
+      <tr><th style="width:22%">Strategy</th><th>How</th><th>Best when</th></tr>
+      <tr><td><strong>Random</strong></td><td>Pick spots by chance (hat / random number).</td><td>You want to remove "I-like-this-spot" bias.</td></tr>
+      <tr><td><strong>Systematic</strong></td><td>Same gap each time (every 100m / 200m).</td><td>⭐ Showing change over distance — best for our aim.</td></tr>
+      <tr><td><strong>Stratified</strong></td><td>Split into zones, then random within each zone.</td><td>The river has very different sections (moor / farm / urban).</td></tr>
+    </table>
+    <p style="margin-top:.6rem"><strong>Common river hazards:</strong> slipping on wet rocks · cold water (hypothermia) · sudden current after rain · weather (sun / rain) · dropping kit · access road traffic · lost phone signal.</p>
+    <p><strong>Common controls:</strong> wellies · buddy on bank · stay 1m back unless measuring · keep depth below knee · check weather forecast · carry a spare phone/whistle · agreed meeting time · brief everyone before setting off.</p>
+  </div>
+
+  <!-- TEAM BRIEF (one per team, 2 pages) -->
+  <div id="print-brief" class="print-section">
+    <div class="team-brief-page">
+      <div class="brief-banner ">🌹 ROSE TEAM BRIEF — RISK + SAMPLING</div>
+      <p style="font-size:.9rem"><strong>Team members:</strong> _______________ · _______________ · _______________ &nbsp;&nbsp; <strong>Date:</strong> _________</p>
+
+      <div class="brief-section-head">Task 1 — Our 4 risk rows</div>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0 6px">Hazard · Who's at risk · L/M/H · Control (what you'll DO).</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:25%">Hazard</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:18%">Who?</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:12%">L/M/H</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left">Control</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+      </table>
+
+      <div class="brief-section-head">Task 2 — Our sampling strategy</div>
+      <p style="font-size:.88rem;margin:2px 0">Tick one: &nbsp; ☐ Random &nbsp; ☐ Systematic &nbsp; ☐ Stratified</p>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0">Justify in 2 lines — why is this the BEST fit for our aim?</p>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+
+      <div class="brief-section-head">★ Stretch — Recording sheet sketch</div>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0">Rows = sites. Columns = your 4 methods. Leave the cells empty — that's where data will go in L19.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.8rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:5px;width:18%">Site</th><th style="border:1px solid #94a3b8;padding:5px">Width (m)</th><th style="border:1px solid #94a3b8;padding:5px">Avg depth (m)</th><th style="border:1px solid #94a3b8;padding:5px">Velocity (m/s)</th><th style="border:1px solid #94a3b8;padding:5px">Avg pebble (cm)</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site A</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site B</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site C</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+      </table>
+
+      <div class="brief-sign-row"><strong>Approved by team:</strong> _______________</div>
+    </div>
+    <div class="team-brief-page">
+      <div class="brief-banner banner-b">🌿 SAGE TEAM BRIEF — RISK + SAMPLING</div>
+      <p style="font-size:.9rem"><strong>Team members:</strong> _______________ · _______________ · _______________ &nbsp;&nbsp; <strong>Date:</strong> _________</p>
+
+      <div class="brief-section-head">Task 1 — Our 4 risk rows</div>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0 6px">Hazard · Who's at risk · L/M/H · Control (what you'll DO).</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:25%">Hazard</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:18%">Who?</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left;width:12%">L/M/H</th><th style="border:1px solid #94a3b8;padding:6px;text-align:left">Control</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td><td style="border:1px solid #94a3b8;padding:14px"></td></tr>
+      </table>
+
+      <div class="brief-section-head">Task 2 — Our sampling strategy</div>
+      <p style="font-size:.88rem;margin:2px 0">Tick one: &nbsp; ☐ Random &nbsp; ☐ Systematic &nbsp; ☐ Stratified</p>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0">Justify in 2 lines — why is this the BEST fit for our aim?</p>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+      <div class="brief-stretch-row">_____________________________________________________________________</div>
+
+      <div class="brief-section-head">★ Stretch — Recording sheet sketch</div>
+      <p style="font-size:.85rem;font-style:italic;margin:2px 0">Rows = sites. Columns = your 4 methods. Leave the cells empty — that's where data will go in L19.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.8rem;margin-top:4px">
+        <tr style="background:#f1f5f9"><th style="border:1px solid #94a3b8;padding:5px;width:18%">Site</th><th style="border:1px solid #94a3b8;padding:5px">Width (m)</th><th style="border:1px solid #94a3b8;padding:5px">Avg depth (m)</th><th style="border:1px solid #94a3b8;padding:5px">Velocity (m/s)</th><th style="border:1px solid #94a3b8;padding:5px">Avg pebble (cm)</th></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site A</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site B</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+        <tr><td style="border:1px solid #94a3b8;padding:10px">Site C</td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td><td style="border:1px solid #94a3b8;padding:10px"></td></tr>
+      </table>
+
+      <div class="brief-sign-row"><strong>Approved by team:</strong> _______________</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* NAVIGATION */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+
+/* TA FOCUS */
+const taBriefs={
+  0:null,
+  1:{phase:"FAB 4 Arrival — simple recall (river parts) + lead-in",position:"Stay close to lower-confidence pupils. Don't prompt before they try.",watch:"After last lesson's wellbeing walk, energy may be low. Keep it gentle — these are easy on purpose so everyone gets one right.",support:"After 1 min: <em>'Where does a river START? Just one word.'</em> Quick win to get pens moving.",cta:"After 2 min: cold-call 4 different pupils — Q1 to lowest-confidence first (it's a freebie), Q4 to anyone."},
+  2:{phase:"Starter — Risk levels (low/medium/high)",position:"At the front. Read each scenario slowly. Let pupils predict before clicking.",watch:"Pupils ranking 'wading after rain' as medium not high — sign they're underrating consequence.",support:"Verbal: <em>'Could this kill someone? Then it's HIGH no matter how unlikely.'</em>",cta:"After all 3 revealed: cold-call for the risk formula (Likelihood × Consequence)."},
+  3:{phase:"I Do 1 — Anatomy of a risk row",position:"Front. Walk through the colour-coded row physically.",watch:"Pupils confusing 'who' with 'what' — getting hazard and victim mixed up.",support:"Re-read the colours: red=hazard · amber=who · pink=level · blue=control.",cta:"Cold-call middle pupil: 'Give me a 1-line risk row using the stem.'"},
+  4:{phase:"We Do 1 — Build the class risk row",position:"Front, leading discussion. TA scribes consensus into editable boxes.",watch:"Pupils giving controls like 'be careful' instead of specific actions.",support:"<em>'WHAT exactly will we do? Wellies? Stay back? How far?'</em>",cta:"At end: read the row aloud. Cold-call: 'Would a stranger know what to do from this?'"},
+  5:{phase:"I Do 2 — 3 sampling strategies",position:"Front. Click each card with the class. Sit with anyone struggling to keep up.",watch:"Confusing random with 'guessing' or 'whatever feels good'. That's bias, not random.",support:"Make pupils restate each in their own words: random=chance, systematic=same gap, stratified=zones.",cta:"After all 3 cards revealed: cold-call random pupil — 'Which strategy fits OUR aim and why?'"},
+  6:{phase:"We Do 2 — Match scenario to strategy",position:"Roam. Watch for guessing.",watch:"Pupils picking 'random' for systematic scenarios because random sounds 'fair'.",support:"<em>'Read the scenario — is it about coverage, fairness, or zones?'</em>",cta:"At end: cold-call for justification of any one match — must use the strategy name."},
+  7:{phase:"We Do 3 — Spot the mistakes (the plan)",position:"Move to back. Observe engagement.",watch:"Pupils only finding 1 of 3. Often miss the 'be careful' control.",support:"Hint: <em>'A control says EXACTLY what you'll do — not how you'll feel.'</em>",cta:"After all 3 found: cold-call WHY each mistake matters scientifically OR for safety."},
+  8:{phase:"Team Brief — 8 min team task",position:"Roam between the two teams. Sit briefly with whichever needs it.",watch:"One girl writing all 4 risk rows alone while others zone out. Push for shared writing — 1-2 rows each.",support:"If a team is stuck on sampling, point at the I Do 2 dot diagram in the KO. Don't pick for them.",cta:"At 4 min: 'Halfway — risk rows done? sampling chosen?' At 7 min: '1 minute — recording sheet sketch if you've finished risk + sampling.'"},
+  9:{phase:"Final Buzzer — 6 questions",position:"Stand between the two teams as referee.",watch:"One girl shouting over teammates. Make sure all 3 in each team get a chance to BUZZ.",support:"If a team is way behind, give the strugglers a slower question or a hint. Both teams must finish feeling capable.",cta:"After buzz, 5 sec to answer. Award the point. Move on. Keep momentum — final result must land."}
+};
+function showTABrief(){
+  const brief=taBriefs[currentSlide];
+  const body=document.getElementById('ta-modal-body');
+  const title=document.getElementById('ta-modal-title');
+  if(!brief){title.innerText='TA Focus';body.innerHTML='<p class="ta-no-brief">No TA action required for this slide.</p>'}
+  else {
+    title.innerText=brief.phase;
+    let html='';
+    html+='<div class="ta-row"><div class="ta-row-icon">📍</div><div class="ta-row-content"><strong>Position:</strong> '+brief.position+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">👀</div><div class="ta-row-content"><strong>Watch for:</strong> '+brief.watch+'</div></div>';
+    html+='<div class="ta-row"><div class="ta-row-icon">🤝</div><div class="ta-row-content"><strong>Support:</strong> '+brief.support+'</div></div>';
+    if(brief.cta)html+='<div class="ta-cta-row"><strong>📣 CTA cue:</strong> '+brief.cta+'</div>';
+    body.innerHTML=html;
+  }
+  document.getElementById('ta-focus-overlay').classList.add('visible');
+}
+function hideTABrief(){document.getElementById('ta-focus-overlay').classList.remove('visible')}
+
+/* COLD CALL */
+const coldCallQuestions={
+  0:null,
+  1:{
+    foundation:["Where does a river start? One word.","Where does a river end? One word.","What's a tributary?","Name 1 thing that could go wrong at a river."],
+    middle:["Source or mouth — which is high up?","Difference between a tributary and the main river?","Why is a riverbank a tricky place to do fieldwork?"],
+    higher:["Predict 2 risks specific to a winter fieldwork day.","Compare a tributary with a confluence — link to today's risk planning."]
+  },
+  2:{
+    foundation:["Scenario A — risk level?","What's a 'control' for slipping?","Why is wading after rain dangerous?"],
+    middle:["Why is HIGH risk possible even when something is unlikely?","Give a control for cold water.","Rank scenario B: low or medium and why?"],
+    higher:["Defend why we'd cancel a fieldwork day rather than reduce a HIGH risk.","Explain Likelihood × Consequence using a non-river example."]
+  },
+  3:{
+    foundation:["What's a HAZARD?","What's a CONTROL?","Name one part of a risk row.","Why is 'be careful' bad?"],
+    middle:["Give a 1-line risk row using the stem.","Why does the control need specific actions?","What does L/M/H stand for?"],
+    higher:["Explain how a vague control could fail an inspection.","Predict: what's the trap if you list the SAME control for every hazard?"]
+  },
+  4:{
+    foundation:["Pick a 'who' for our class row.","Pick L, M, or H.","Read out the class control."],
+    middle:["Defend the risk level we picked.","Could the control fail? When?","Add a second control."],
+    higher:["Justify our control over an alternative.","If staff weren't there, would the risk level change? Explain."]
+  },
+  5:{
+    foundation:["Name the 3 sampling strategies.","Random — chance or guess?","Systematic — same gap, true or false?","Stratified — what's a 'zone'?"],
+    middle:["Why is systematic best for our 'change downstream' aim?","Difference between random and stratified?","When would stratified beat systematic?"],
+    higher:["Explain why a hat-pull is more rigorous than 'picking nice spots'.","Predict: if our river had 1 zone (uniform), would stratified add value?","Defend systematic over random for graphing change."]
+  },
+  6:{
+    foundation:["Scenario 1 — which strategy?","Scenario 3 — which strategy?","What does 'bias' mean here?"],
+    middle:["Justify pairing scenario 4 with systematic.","Why isn't random the answer for the 'every 200m' scenario?"],
+    higher:["Defend stratified for the moorland→urban scenario.","Could systematic AND stratified work together? How?"]
+  },
+  7:{
+    foundation:["What was mistake 1?","What's wrong with 'be careful'?","What's wrong with 'spots that look good'?"],
+    middle:["Explain why 'one point in the middle' fails reliability.","Rewrite the mistake-2 sentence using a real strategy."],
+    higher:["Defend why specific controls beat 'be careful' for an inspection.","Explain how each mistake would damage the conclusion AND the safety."]
+  },
+  8:{
+    foundation:["Read me one of your team's risk rows.","Which sampling strategy did you pick?","Has every girl on your team written a row?","Point to one control on your sheet — would it actually work?"],
+    middle:["Justify your team's sampling choice in 2 sentences.","Defend your highest-risk row.","Read me your recording sheet structure."],
+    higher:["Add a 5th risk row your team forgot — name it and rate it.","Predict the trickiest control to actually do in the field — why?"]
+  },
+  9:{
+    foundation:["Buzz when you know it.","Tell us your answer when you buzz — short answer is fine.","If you don't know, say PASS — the other team can steal."],
+    middle:["Buzz quickly — first to answer wins it.","Justify your answer briefly when you give it.","If you got it wrong, the other team can steal."],
+    higher:["Faster buzzing.","Aim for full-sentence answers.","Don't wait for permission — commit."]
+  }
+};
+let coldCallNames=[];let lastPickedNames=[];let questionMode='match';
+try{const list=JSON.parse(localStorage.getItem('coldCall_y10_geog')||'[]');coldCallNames=list.map(p=>typeof p==='string'?{name:p,grade:''}:p)}catch(e){}
+function gradeToTier(grade){if(grade==='U'||grade==='1')return 'foundation';if(grade==='2')return 'middle';if(grade==='3'||grade==='4')return 'higher';return 'middle'}
+function applyMode(tier,mode){const order=['foundation','middle','higher'];let i=order.indexOf(tier);if(mode==='stretch')i=Math.min(i+1,2);else if(mode==='check')i=Math.max(i-1,0);return order[i]}
+function showColdCall(){document.getElementById('cold-call-overlay').classList.add('visible');renderColdCall()}
+function hideColdCall(){document.getElementById('cold-call-overlay').classList.remove('visible')}
+function renderColdCall(){if(coldCallNames.length===0){renderColdCallSetup()}else{renderColdCallPicker()}}
+function escapeHTML(s){const d=document.createElement('div');d.innerText=s;return d.innerHTML}
+function renderColdCallSetup(){
+  const body=document.getElementById('cold-call-body');const list=coldCallNames;const hasAny=list.length>0;
+  let rows='';
+  if(list.length===0){rows='<p class="cc-empty-rows">No pupils added yet — add one below to begin.</p>'}
+  else {
+    rows='<div class="cc-pupil-rows">';
+    list.forEach((p,idx)=>{
+      const name=escapeHTML(p.name);const grades=['U','1','2','3','4'];let chips='';
+      grades.forEach(g=>{const sel=p.grade===g?' cc-grade-selected':'';chips+='<button class="cc-grade-chip cc-grade-'+g.toLowerCase()+sel+'" onclick="setPupilGrade('+idx+',\''+g+'\')">'+g+'</button>'});
+      rows+='<div class="cc-pupil-row"><div class="cc-pupil-name">'+name+'</div><div class="cc-grade-chips">'+chips+'</div><button class="cc-remove-btn" onclick="removePupil('+idx+')" aria-label="Remove">✕</button></div>';
+    });
+    rows+='</div>';
+  }
+  body.innerHTML='<p class="cc-setup-title">Year 10 — Class List</p>'+
+    '<p class="cc-helper">Set each pupil\'s predicted grade (<strong>U/1</strong>=Foundation, <strong>2</strong>=Middle, <strong>3/4</strong>=Higher). Saves automatically.</p>'+
+    rows+
+    '<div class="cc-add-row"><input type="text" class="cc-add-input" id="cc-add-input" placeholder="Add pupil name..." onkeypress="if(event.key===\'Enter\')addPupil()"><button class="cc-btn-secondary" onclick="addPupil()" style="flex:0 0 auto">+ Add</button></div>'+
+    '<div class="cold-call-actions">'+(hasAny?'<button class="cc-btn-primary" onclick="renderColdCallPicker()">▶ Start Cold Calling</button>':'<button class="cc-btn-primary" disabled style="opacity:.5;cursor:not-allowed">Add at least one pupil</button>')+'</div>';
+}
+function addPupil(){const input=document.getElementById('cc-add-input');const name=(input.value||'').trim();if(!name)return;coldCallNames.push({name,grade:''});saveColdCallNames();input.value='';renderColdCallSetup();setTimeout(()=>{const inp=document.getElementById('cc-add-input');if(inp)inp.focus()},50)}
+function removePupil(idx){coldCallNames.splice(idx,1);saveColdCallNames();renderColdCallSetup()}
+function setPupilGrade(idx,grade){if(coldCallNames[idx].grade===grade){coldCallNames[idx].grade=''}else{coldCallNames[idx].grade=grade}saveColdCallNames();renderColdCallSetup()}
+function saveColdCallNames(){try{localStorage.setItem('coldCall_y10_geog',JSON.stringify(coldCallNames))}catch(e){}}
+function renderColdCallPicker(){
+  const list=coldCallNames;const body=document.getElementById('cold-call-body');
+  body.innerHTML='<p class="cold-call-class-label">Year 10 · '+list.length+' pupils</p>'+
+    '<div class="cold-call-name-box"><div class="cold-call-name" id="cold-call-name">— ready —</div></div>'+
+    '<div class="cc-mode-toggle"><span class="cc-mode-label">Pitch:</span>'+
+      '<button class="cc-mode-btn '+(questionMode==='check'?'active':'')+'" onclick="setQMode(\'check\')">Easier</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='match'?'active':'')+'" onclick="setQMode(\'match\')">Standard</button>'+
+      '<button class="cc-mode-btn '+(questionMode==='stretch'?'active':'')+'" onclick="setQMode(\'stretch\')">Harder</button>'+
+    '</div>'+
+    '<div class="cold-call-q-box"><p class="cold-call-q-label">📚 Slide question</p><p class="cold-call-question" id="cold-call-question">Press 🎲 to roll a name + question</p></div>'+
+    '<div class="cold-call-actions"><button class="cc-btn-primary" onclick="rollNameAndQuestion()">🎲 Spin · Name + Question</button><button class="cc-btn-secondary" onclick="rollQuestionOnly()">🎯 New Question</button></div>'+
+    '<button class="cc-edit-link" onclick="renderColdCallSetup()">✎ Edit names / grades</button>';
+}
+function setQMode(mode){questionMode=mode;const btns=document.querySelectorAll('.cc-mode-btn');if(btns.length>0){btns.forEach(b=>b.classList.remove('active'));const map={'check':0,'match':1,'stretch':2};if(btns[map[mode]])btns[map[mode]].classList.add('active')}}
+function rollNameAndQuestion(){
+  const list=coldCallNames||[];if(list.length===0){renderColdCallSetup();return}
+  const display=document.getElementById('cold-call-name');
+  let avail=list.slice();if(list.length>4){avail=list.filter(p=>!lastPickedNames.includes(p.name))}
+  if(avail.length===0)avail=list.slice();
+  const finalPick=avail[Math.floor(Math.random()*avail.length)];
+  lastPickedNames.push(finalPick.name);if(lastPickedNames.length>3)lastPickedNames.shift();
+  display.classList.remove('settled');display.classList.add('spinning');
+  let counter=0;
+  const id=setInterval(()=>{
+    display.innerText=list[Math.floor(Math.random()*list.length)].name;counter++;
+    if(counter>=14){clearInterval(id);display.classList.remove('spinning');display.innerText=finalPick.name;display.classList.add('settled');setTimeout(()=>display.classList.remove('settled'),650);rollQuestionForTier(finalPick.grade)}
+  },70);
+}
+function rollQuestionOnly(){const currentName=document.getElementById('cold-call-name')?.innerText;const pupil=coldCallNames.find(p=>p.name===currentName);rollQuestionForTier(pupil?pupil.grade:'')}
+function rollQuestionForTier(grade){
+  const slideQs=coldCallQuestions[currentSlide];const qDisp=document.getElementById('cold-call-question');
+  if(!slideQs){qDisp.innerText="(No specific question for this slide.)";return}
+  const baseTier=grade?gradeToTier(grade):'middle';const finalTier=applyMode(baseTier,questionMode);
+  const pool=slideQs[finalTier]||slideQs.middle||[];
+  if(pool.length===0){qDisp.innerText="(No question for this tier on this slide.)";return}
+  qDisp.innerText=pool[Math.floor(Math.random()*pool.length)];
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.target.isContentEditable||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){
+  const p=((currentSlide+1)/slides.length)*100;
+  document.getElementById('progressBar').style.width=p+'%';
+  const t=slides[currentSlide].getAttribute('data-title')||`Slide ${currentSlide+1}`;
+  document.getElementById('progressLabel').innerText=`${t} • ${currentSlide+1}/${slides.length}`;
+}
+
+/* WE DO 2: MATCH */
+let matchSel=null,matchScore=0;
+function matchClick(el,col){
+  if(el.classList.contains('matched'))return;
+  if(!matchSel){
+    document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');matchSel={el,col,key:el.getAttribute('data-key')};
+    document.getElementById('match-feedback').innerText='Now click the matching card on the other side.';
+    document.getElementById('match-feedback').classList.remove('success','error');
+  } else {
+    if(col===matchSel.col){
+      document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected'));
+      el.classList.add('selected');matchSel={el,col,key:el.getAttribute('data-key')};return;
+    }
+    if(el.getAttribute('data-key')===matchSel.key){
+      el.classList.add('matched');matchSel.el.classList.add('matched');matchSel.el.classList.remove('selected');
+      matchScore++;document.getElementById('match-score').innerText=matchScore;
+      document.getElementById('match-feedback').innerText='✅ Match — '+matchSel.key+'!';
+      document.getElementById('match-feedback').classList.add('success');document.getElementById('match-feedback').classList.remove('error');
+      try{playDing()}catch(e){}
+      if(matchScore===6){document.getElementById('match-feedback').innerText='🏆 All 6 matched!';fireConfettiGlobal()}
+      matchSel=null;
+    } else {
+      el.style.animation='shake .4s';setTimeout(()=>el.style.animation='',450);
+      document.getElementById('match-feedback').innerText='❌ Not a match. Try again.';
+      document.getElementById('match-feedback').classList.add('error');document.getElementById('match-feedback').classList.remove('success');
+      try{playBuzz()}catch(e){}
+      matchSel.el.classList.remove('selected');matchSel=null;
+    }
+  }
+}
+function matchReset(){matchSel=null;matchScore=0;document.getElementById('match-score').innerText=0;document.querySelectorAll('#wedo2 .match-card').forEach(c=>c.classList.remove('selected','matched'));document.getElementById('match-feedback').innerText='👆 Click a question, then click its matching method.';document.getElementById('match-feedback').classList.remove('success','error')}
+function matchRevealAll(){const all=document.querySelectorAll('#wedo2 .match-card');all.forEach(c=>c.classList.add('matched'));matchScore=6;document.getElementById('match-score').innerText=6;document.getElementById('match-feedback').innerText='👁️ All revealed.';document.getElementById('match-feedback').classList.add('success')}
+
+/* WE DO 3: SPOT THE MISTAKES */
+let stmFound=new Set();
+function stmClick(el){
+  if(el.classList.contains('found'))return;
+  const isCorrect=el.getAttribute('data-correct')==='true';
+  const id=el.getAttribute('data-id');
+  const explain=el.getAttribute('data-explain');
+  const fb=document.getElementById('stm-feedback');
+  if(isCorrect){
+    el.classList.add('found');stmFound.add(id);
+    fb.innerText=explain;fb.classList.add('success');fb.classList.remove('error');
+    const num=id.replace('m','');const pip=document.getElementById('stm-pip-'+num);
+    if(pip){pip.classList.add('found');pip.innerText='✓'}
+    try{playDing()}catch(e){}
+    if(stmFound.size===3){setTimeout(()=>{document.getElementById('stm-correction').classList.add('visible');fb.innerText='🎉 All 3 mistakes found! Read the correct version below.';fireConfettiGlobal()},800)}
+  } else {
+    el.classList.add('miss');setTimeout(()=>el.classList.remove('miss'),400);
+    fb.innerText='🤔 Not quite — that bit\'s actually correct. Try another phrase!';
+    fb.classList.add('error');fb.classList.remove('success');
+    try{playBuzz()}catch(e){}
+  }
+}
+function stmReset(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>el.classList.remove('found','miss'));
+  document.querySelectorAll('.stm-pip').forEach((p,i)=>{p.classList.remove('found');p.innerText=String(i+1)});
+  document.getElementById('stm-correction').classList.remove('visible');
+  document.getElementById('stm-feedback').classList.remove('success','error');
+  document.getElementById('stm-feedback').innerText='👆 Click a phrase you think is wrong. Find all 3 to win.';
+  stmFound.clear();
+}
+function stmRevealAll(){
+  document.querySelectorAll('.stm-clickable').forEach(el=>{
+    if(el.getAttribute('data-correct')==='true'&&!el.classList.contains('found')){
+      el.classList.add('found');stmFound.add(el.getAttribute('data-id'));
+      const num=el.getAttribute('data-id').replace('m','');const pip=document.getElementById('stm-pip-'+num);
+      if(pip){pip.classList.add('found');pip.innerText='✓'}
+    }
+  });
+  document.getElementById('stm-correction').classList.add('visible');
+  document.getElementById('stm-feedback').innerText='👁️ All mistakes revealed.';
+  document.getElementById('stm-feedback').classList.add('success');
+}
+document.querySelectorAll('.stm-clickable').forEach(el=>el.addEventListener('click',()=>stmClick(el)));
+
+/* CONTENT EDITABLE PLACEHOLDERS */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{
+  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+});
+
+/* INDEPENDENT: MCQ + HINT + XP */
+function mcqCheck(el,ok){
+  if(el.parentNode.classList.contains('locked'))return;
+  if(ok){el.classList.add('correct');el.parentNode.classList.add('locked');try{playDing()}catch(e){}updateXP()}
+  else {el.classList.add('wrong');try{playBuzz()}catch(e){}setTimeout(()=>el.classList.remove('wrong'),600)}
+}
+function toggleHint(btn){
+  const hint=btn.nextElementSibling;
+  if(hint&&hint.classList.contains('hint-text')){hint.classList.toggle('show');btn.innerText=hint.classList.contains('show')?'💡 Hide hint':'💡 Hint'}
+}
+function updateXP(){
+  const slide=document.getElementById('ind-slide');if(!slide)return;
+  const done=slide.querySelectorAll('.ind-q .correct').length;
+  const el=document.getElementById('xp-label');const fill=document.getElementById('xp-fill');
+  if(el)el.innerText='MCQs correct: '+done+'/2'+(done===2?' 🎉':'');
+  if(fill)fill.style.width=(done/2*100)+'%';
+  if(done===2)fireConfettiGlobal();
+}
+
+/* LEADERBOARD */
+function addToLB(){
+  const input=document.getElementById('lb-input');const name=input.value.trim();if(!name)return;
+  const list=document.getElementById('lb-list');const el=document.createElement('span');
+  el.className='lb-name';el.innerText=name;list.appendChild(el);input.value='';
+  try{playDing()}catch(e){}
+}
+
+/* TIMER */
+let timerInterval,timeLeft=0,isTimerRunning=false;
+function checkTimerVisibility(){
+  const s=slides[currentSlide];const t=s.getAttribute('data-timer');const noAuto=s.getAttribute('data-no-autostart')==='true';
+  const w=document.getElementById('timer-widget');pauseTimer();
+  if(t){w.classList.add('visible');resetTimer(parseInt(t));if(!noAuto){setTimeout(()=>{if(timeLeft>0)startTimer()},250)}}
+  else {w.classList.remove('visible')}
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60);const s=timeLeft%60;
+  document.getElementById('timer-display').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const w=document.getElementById('timer-widget');
+  if(timeLeft<30&&timeLeft>0){w.classList.add('warning')}else{w.classList.remove('warning')}
+}
+function startTimer(){if(isTimerRunning||timeLeft<=0)return;isTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0)pauseTimer()},1000)}
+function pauseTimer(){isTimerRunning=false;clearInterval(timerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+function resetTimer(minutes){pauseTimer();document.getElementById('btn-pause').classList.remove('active-pause');timeLeft=minutes*60;updateTimerDisplay()}
+
+/* SOUND */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playDing(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1320,ctx.currentTime+0.08);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4)}
+function playBuzz(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.setValueAtTime(150,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.25)}
+function playClick(){const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(660,ctx.currentTime);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);o.start(ctx.currentTime);o.stop(ctx.currentTime+0.1)}
+
+/* CONFETTI */
+function fireConfettiGlobal(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=Math.random()*100+'%';c.style.top=-10+'px';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=Math.random()*0.6+'s';
+    c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2500);
+  }
+}
+
+/* MCQ SHUFFLE */
+function shuffleMCQs(){
+  document.querySelectorAll('.ind-q').forEach(q=>{
+    const opts=q.querySelectorAll('.mcq-opt');if(opts.length<2)return;
+    const parent=opts[0].parentNode;const arr=Array.from(opts);
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+    arr.forEach(o=>parent.appendChild(o));
+  });
+}
+shuffleMCQs();
+
+/* PRINT */
+function printSection(id){
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  window.print();
+}
+function printPack(){
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  ['ko','brief'].forEach(id=>{
+    const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');
+  });
+  window.print();
+}
+
+/* TEAM SCOREBOARD (shared key with L16 — score carries over) */
+let teamA={name:'Rose',emoji:'🌹',score:0};
+let teamB={name:'Sage',emoji:'🌿',score:0};
+try{
+  const stored=JSON.parse(localStorage.getItem('teamScores_y10_geog')||'null');
+  if(stored){
+    if(stored.a){teamA.name=stored.a.name||teamA.name;teamA.score=Number(stored.a.score)||0}
+    if(stored.b){teamB.name=stored.b.name||teamB.name;teamB.score=Number(stored.b.score)||0}
+  }
+}catch(e){}
+function saveTeams(){try{localStorage.setItem('teamScores_y10_geog',JSON.stringify({a:teamA,b:teamB}))}catch(e){}}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderScoreboardPill(){
+  const pill=document.getElementById('team-scoreboard');if(!pill)return;
+  pill.innerHTML='<span class="tsb-team tsb-team-a">'+teamA.emoji+' '+escapeHTML(teamA.name)+' <strong>'+teamA.score+'</strong></span><span class="tsb-vs">VS</span><span class="tsb-team tsb-team-b">'+teamB.emoji+' '+escapeHTML(teamB.name)+' <strong>'+teamB.score+'</strong></span>';
+  const ids=['bt-name-a','fb-buzzer-a-name','fb-award-a-name'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=teamA.name});
+  const ids2=['bt-name-b','fb-buzzer-b-name','fb-award-b-name'];ids2.forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=teamB.name});
+}
+function showScoreboard(){renderScoreboardModal();document.getElementById('sb-overlay').classList.add('visible')}
+function hideScoreboard(){document.getElementById('sb-overlay').classList.remove('visible')}
+function renderScoreboardModal(){
+  const body=document.getElementById('sb-body');
+  body.innerHTML=
+    '<div class="sb-team-row team-a">'+
+      '<input type="text" class="sb-name-input" value="'+escapeHTML(teamA.name)+'" oninput="setTeamName(\'a\',this.value)" placeholder="Team A name">'+
+      '<div class="sb-controls">'+
+        '<button class="sb-btn sb-btn-minus" onclick="awardTeam(\'a\',-1)">−1</button>'+
+        '<div class="sb-score">'+teamA.emoji+' '+teamA.score+'</div>'+
+        '<button class="sb-btn sb-btn-plus" onclick="awardTeam(\'a\',1)">+1</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sb-team-row team-b">'+
+      '<input type="text" class="sb-name-input" value="'+escapeHTML(teamB.name)+'" oninput="setTeamName(\'b\',this.value)" placeholder="Team B name">'+
+      '<div class="sb-controls">'+
+        '<button class="sb-btn sb-btn-minus" onclick="awardTeam(\'b\',-1)">−1</button>'+
+        '<div class="sb-score">'+teamB.emoji+' '+teamB.score+'</div>'+
+        '<button class="sb-btn sb-btn-plus" onclick="awardTeam(\'b\',1)">+1</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sb-actions"><button class="sb-btn sb-btn-reset" onclick="resetTeams()">🔄 Reset both to 0</button></div>';
+}
+function awardTeam(team,delta){
+  const t=team==='a'?teamA:teamB;
+  t.score=Math.max(0,t.score+delta);
+  saveTeams();renderScoreboardPill();renderScoreboardModal();
+  if(delta>0){try{playDing()}catch(e){}fireConfettiSmall()}
+}
+function setTeamName(team,name){
+  const t=team==='a'?teamA:teamB;
+  t.name=(name||'').trim().slice(0,20)||(team==='a'?'Team A':'Team B');
+  saveTeams();renderScoreboardPill();
+}
+function resetTeams(){
+  if(!confirm('Reset both team scores to 0? (Names kept.)'))return;
+  teamA.score=0;teamB.score=0;
+  saveTeams();renderScoreboardPill();renderScoreboardModal();
+}
+function fireConfettiSmall(){
+  let area=document.getElementById('confetti-global');
+  if(!area){area=document.createElement('div');area.id='confetti-global';area.className='confetti-global';document.body.appendChild(area)}
+  const cols=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
+  for(let i=0;i<10;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    c.style.left=(40+Math.random()*20)+'%';c.style.top='10%';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.animationDelay=(Math.random()*0.3)+'s';
+    c.style.width=(5+Math.random()*5)+'px';c.style.height=(5+Math.random()*5)+'px';
+    area.appendChild(c);setTimeout(()=>c.remove(),2200);
+  }
+}
+
+/* FINAL BUZZER */
+const fbQuestions=[
+  {q:"Name the 4 ingredients of a risk row.",a:"HAZARD · WHO is at risk · LIKELIHOOD × CONSEQUENCE (the risk level) · CONTROL."},
+  {q:"Why is 'be careful' a bad control?",a:"It doesn't say what you'll DO. A control names a specific action: wellies, buddy, stay 1m back, depth below knee, etc."},
+  {q:"Give one HIGH-risk thing you should NEVER do at a river.",a:"Many: wade into the middle after rain · go alone · ignore the weather · measure with no buddy. Any one with a clear reason."},
+  {q:"What's the difference between random and systematic sampling?",a:"Random = chosen by chance (hat / random number). Systematic = same gap each time (e.g. every 200m)."},
+  {q:"Which sampling strategy fits 'how does the river change every 200m for 1km'?",a:"Systematic — even spacing makes the change clear on a graph."},
+  {q:"When would stratified sampling beat the other two?",a:"When the river has clearly different zones (e.g. moorland → farmland → urban) and you need data from each."}
+];
+let fbIdx=0,fbBuzzed=null;
+function fbInit(){
+  fbIdx=0;fbBuzzed=null;
+  const fin=document.getElementById('fb-final');if(fin)fin.style.display='none';
+  const stg=document.getElementById('fb-stage');if(stg)stg.style.display='flex';
+  fbShow();
+}
+function fbShow(){
+  const q=fbQuestions[fbIdx];if(!q)return;
+  const num=document.getElementById('fb-q-num');if(num)num.innerText=fbIdx+1;
+  const qel=document.getElementById('fb-question');if(qel)qel.innerText=q.q;
+  const ans=document.getElementById('fb-answer');if(ans){ans.style.display='none';ans.innerText=q.a}
+  const which=document.getElementById('fb-which');
+  if(which)which.innerText=(fbIdx%2===0?teamA.emoji+' '+teamA.name:teamB.emoji+' '+teamB.name)+' goes first — but either team can buzz.';
+  fbBuzzed=null;
+  document.querySelectorAll('.fb-buzzer').forEach(b=>{b.classList.remove('buzzed','dimmed');b.disabled=false});
+  renderScoreboardPill();
+}
+function fbBuzz(team){
+  if(fbBuzzed)return;
+  fbBuzzed=team;
+  document.querySelector('.fb-buzz-'+team).classList.add('buzzed');
+  document.querySelector('.fb-buzz-'+(team==='a'?'b':'a')).classList.add('dimmed');
+  const which=document.getElementById('fb-which');
+  if(which)which.innerText=(team==='a'?teamA.emoji+' '+teamA.name:teamB.emoji+' '+teamB.name)+' BUZZED! Answer or pass.';
+  try{playBuzzer()}catch(e){}
+}
+function fbReveal(){const ans=document.getElementById('fb-answer');if(ans)ans.style.display='block'}
+function fbAward(team){awardTeam(team,1);setTimeout(fbNext,400)}
+function fbNext(){
+  if(fbIdx<fbQuestions.length-1){fbIdx++;fbShow()}
+  else fbFinalize();
+}
+function fbFinalize(){
+  document.getElementById('fb-stage').style.display='none';
+  const fin=document.getElementById('fb-final');fin.style.display='flex';
+  const txt=document.getElementById('fb-winner-text');
+  if(teamA.score>teamB.score)txt.innerHTML='🏆 <span style="color:#831843">'+teamA.emoji+' '+escapeHTML(teamA.name)+'</span> wins! '+teamA.score+'–'+teamB.score;
+  else if(teamB.score>teamA.score)txt.innerHTML='🏆 <span style="color:#365314">'+teamB.emoji+' '+escapeHTML(teamB.name)+'</span> wins! '+teamB.score+'–'+teamA.score;
+  else txt.innerHTML='🤝 Tied at '+teamA.score+'–'+teamB.score+' — settle it next session.';
+  try{fireConfettiGlobal()}catch(e){fireConfettiSmall()}
+}
+function playBuzzer(){
+  try{
+    const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='square';o.frequency.setValueAtTime(220,ctx.currentTime);
+    g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4);
+  }catch(e){}
+}
+
+/* INIT */
+updateProgress();
+checkTimerVisibility();
+renderScoreboardPill();
+const _origShowSlide=showSlide;
+showSlide=function(i){_origShowSlide(i);if(slides[i]&&slides[i].id==='final-buzzer-slide')fbInit()};
+</script>
+</body>
+</html>

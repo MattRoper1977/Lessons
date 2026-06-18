@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening Night — Team Building Challenge</title>
+    <script>
+        // Silence the Tailwind CDN "production" warning — not applicable to offline lesson files
+        (function(){ const w = console.warn; console.warn = function(m){ if (typeof m === 'string' && m.indexOf('cdn.tailwindcss.com') !== -1) return; w.apply(console, arguments); }; })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Base & Background — warmer cream instead of cool slate */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #faf6f0; 
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a5b0' fill-opacity='0.12'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .font-serif { font-family: 'Merriweather', serif; }
+        .font-display { font-family: 'Cormorant Garamond', serif; }
+
+        /* Slide Mechanics */
+        .slide { display: none; animation: fadeIn 0.6s ease-out; position: relative; padding: 2rem 2rem 8rem 2rem; min-height: 600px; }
+        .slide.active { display: block; }
+        
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(217, 119, 87, 0.2); } 50% { box-shadow: 0 0 25px rgba(217, 119, 87, 0.45); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        
+        .animate-up { animation: slideUp 0.6s ease-out both; }
+        .delay-1 { animation-delay: 0.15s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.45s; }
+        .delay-4 { animation-delay: 0.6s; }
+        .delay-5 { animation-delay: 0.75s; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-glow { animation: glow 2.5s ease-in-out infinite; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(45, 35, 40, 0.8); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background-color: #ffffff; border: none; width: 95%; max-width: 900px; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; background-color: #faf6f0; }
+        .modal-title-class { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .close-btn { color: #64748b; font-size: 2rem; font-weight: bold; cursor: pointer; transition: color 0.2s; line-height: 1; }
+        .close-btn:hover { color: #0f172a; }
+        .modal-body-class { flex-grow: 1; overflow-y: auto; padding: 2rem; }
+        
+        /* Layout Utilities */
+        .logo-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; }
+        .printable-only { display: none; }
+        .page-break { page-break-after: always; }
+
+        /* Thematic Boxes — same Magritte system, consistent with the rest of the suite */
+        :root {
+            --lo-bg: #f3e8ff; --lo-border: #a855f7; --lo-text: #4c1d95;
+            --task-bg: #fef9c3; --task-border: #eab308;
+            --scaffold-bg: #e0f2fe; --scaffold-border: #38bdf8;
+            --aspire-bg: #dcfce7; --aspire-border: #22c55e; --aspire-text: #166534;
+            --sc-bg: #ffedd5; --sc-border: #f97316;
+            --rose: #c08aa0; --rose-bg: #fce7ef; --rose-text: #831843;
+            --sage: #9cb38a; --sage-bg: #e7efe1; --sage-text: #365314;
+        }
+
+        .lo-box { background-color: var(--lo-bg) !important; border-left: 6px solid var(--lo-border) !important; padding: 1.5rem; border-radius: 0.5rem; }
+        .lo-box h3, .lo-box p, .lo-box div { color: var(--lo-text) !important; }
+        .task-box { background-color: var(--task-bg) !important; border: 2px solid var(--task-border) !important; padding: 1.5rem; border-radius: 0.5rem; margin-top: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .scaffold-box { background-color: var(--scaffold-bg) !important; border-left: 5px solid var(--scaffold-border) !important; color: #0c4a6e; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; font-size: 0.95rem; }
+        .aspire-box { background-color: var(--aspire-bg) !important; border-left: 5px solid var(--aspire-border) !important; color: var(--aspire-text) !important; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; font-size: 0.95rem; }
+        .success-box { background-color: var(--sc-bg) !important; border-left: 6px solid var(--sc-border) !important; color: #9a3412; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; font-size: 0.95rem; }
+
+        /* Images */
+        .hero-image { width: 100%; max-height: 250px; object-fit: cover; border-radius: 0.75rem; margin-top: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 4px solid white; }
+
+        .timer-display { font-size: 3rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #1e293b; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); transition: color 0.3s; }
+        .timer-display.warning { color: #be185d; animation: pulse 1s infinite; }
+
+        /* 3D Role Cards */
+        .evidence-card { background: transparent; border: none; perspective: 1000px; min-height: 190px; cursor: pointer; }
+        .evidence-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1); transform-style: preserve-3d; }
+        .evidence-card.flipped .evidence-inner { transform: rotateY(180deg); }
+        .evidence-card:hover .evidence-inner { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        
+        .card-front, .card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem; border: 2px solid #f1e8e4; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08); }
+        .card-front { background-color: #ffffff; }
+        .card-back { background-color: #fce7ef; border-color: #c08aa0; transform: rotateY(180deg); }
+
+        /* Role card border tones */
+        .role-director .card-front { border-top: 6px solid #c08aa0; }
+        .role-voice .card-front { border-top: 6px solid #d4a574; }
+        .role-runner .card-front { border-top: 6px solid #a855f7; }
+        .role-scribe .card-front { border-top: 6px solid #9cb38a; }
+        .role-lookout .card-front { border-top: 6px solid #e879a7; }
+        .role-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 9999px; margin-bottom: 0.4rem; }
+        .role-tag.challenge { background: #dcfce7; color: #166534; }
+        .role-tag.support { background: #e0f2fe; color: #0c4a6e; }
+        .role-tag.core { background: #fce7ef; color: #831843; }
+
+        /* SVG Icon */
+        .svg-icon { width: 40px; height: 40px; margin-bottom: 0.5rem; fill: none; stroke: #64748b; transition: stroke 0.3s ease; }
+        .evidence-card:hover .svg-icon { stroke: #c08aa0; }
+
+        /* Session Banner — warmer palette */
+        .session-banner { background: linear-gradient(135deg, #2d2326 0%, #4a3a3f 100%); color: white; padding: 2rem 2.5rem; border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .session-banner::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(212, 165, 116, 0.35) 0%, transparent 70%); border-radius: 50%; }
+        .session-banner::after { content: ''; position: absolute; bottom: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(192, 138, 160, 0.25) 0%, transparent 70%); border-radius: 50%; }
+
+        /* Event invitation card (replaces wax seal) */
+        .invite-card { display: flex; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, #fff9f2 0%, #fef4ec 100%); border: 2px solid #d4a574; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(139, 98, 66, 0.15); overflow: hidden; position: relative; }
+        .invite-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(212, 165, 116, 0.15) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 4s infinite; pointer-events: none; }
+        .invite-stub { flex-shrink: 0; width: 100px; padding: 1.2rem 0.5rem; background: #2d2326; color: #f5e1c4; text-align: center; border-right: 2px dashed #d4a574; }
+        .invite-stub-label { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #d4a574; }
+        .invite-stub-num { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; line-height: 1; margin-top: 0.3rem; color: #f5e1c4; }
+        .invite-main { padding: 1.2rem 1.3rem; flex-grow: 1; text-align: left; }
+        .invite-kicker { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: #8b6b4f; }
+        .invite-title { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; color: #2d2326; line-height: 1.1; margin-top: 0.2rem; letter-spacing: 0.02em; }
+        .invite-details { font-size: 0.75rem; color: #5a4838; font-style: italic; margin-top: 0.4rem; font-family: 'Merriweather', serif; }
+
+        /* Scoreboard */
+        .scoreboard { background: white; border: 2px solid #f1e8e4; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .score-row { display: flex; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f8f1ed; }
+        .score-row:last-child { border-bottom: none; }
+        .score-badge { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 1.3rem; margin-right: 1rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .score-input { flex-grow: 0; width: 80px; text-align: center; font-size: 1.5rem; font-weight: 800; border: 2px solid #f1e8e4; border-radius: 0.5rem; padding: 0.4rem; font-variant-numeric: tabular-nums; color: #2d2326; }
+        .score-input:focus { outline: none; border-color: #c08aa0; background-color: #fce7ef; }
+
+        /* Editable team names */
+        .crew-name-editable { outline: none; border-bottom: 2px dashed transparent; padding: 0.1rem 0.35rem; border-radius: 0.25rem; transition: all 0.2s; cursor: text; }
+        .crew-name-editable:hover { background-color: #fce7ef; border-bottom-color: #c08aa0; }
+        .crew-name-editable:focus { background-color: #fce7ef; border-bottom-color: #c08aa0; }
+
+        /* Skill chips */
+        .skill-chip { display: inline-flex; align-items: center; gap: 0.4rem; background: white; border: 2px solid #f1e8e4; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 700; font-size: 0.85rem; color: #5a4838; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .skill-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* Medals — elegant ribbons */
+        .medal-ribbon { position: relative; background: linear-gradient(135deg, #fff 0%, #faf6f0 100%); border: 2px solid #d4a574; color: #2d2326; padding: 1.5rem 1.1rem 1.75rem 1.1rem; border-radius: 0.75rem; box-shadow: 0 6px 14px rgba(139, 98, 66, 0.12); text-align: center; transition: transform 0.3s; }
+        .medal-ribbon:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(139, 98, 66, 0.2); }
+        .medal-icon-circle { display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, #f5e1c4 0%, #d4a574 100%); font-size: 1.8rem; margin-bottom: 0.6rem; box-shadow: 0 3px 8px rgba(139, 98, 66, 0.2); }
+        .medal-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.02em; color: #2d2326; }
+        .medal-desc { font-size: 0.78rem; color: #5a4838; font-style: italic; margin-top: 0.5rem; line-height: 1.4; font-family: 'Merriweather', serif; }
+
+        /* ====== ICING: Push Notification Opener ====== */
+        .push-notif { background: linear-gradient(135deg, #1e1e22 0%, #2d2d34 100%); color: #f5f5f7; border-radius: 1rem; padding: 0.85rem 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; align-items: flex-start; gap: 0.75rem; max-width: 380px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1); animation: notifSlide 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both; position: relative; }
+        @keyframes notifSlide { 0% { opacity: 0; transform: translateY(-40px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        .push-notif-icon { width: 36px; height: 36px; border-radius: 0.5rem; background: linear-gradient(135deg, #d4a574 0%, #c08aa0 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: white; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+        .push-notif-body { flex-grow: 1; }
+        .push-notif-head { display: flex; justify-content: space-between; align-items: center; }
+        .push-notif-app { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a8b0; }
+        .push-notif-time { font-size: 0.7rem; color: #8a8a92; }
+        .push-notif-title { font-size: 0.9rem; font-weight: 700; color: #f5f5f7; margin-top: 0.15rem; letter-spacing: -0.01em; }
+        .push-notif-msg { font-size: 0.82rem; color: #c8c8d0; margin-top: 0.1rem; line-height: 1.35; }
+
+        /* ====== ICING: Chaos Meter (Round 1) ====== */
+        .chaos-meter-wrap { background: #fff; border: 2px solid #f1e8e4; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .chaos-meter-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+        .chaos-meter-name { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: #64748b; font-family: 'Inter', sans-serif; }
+        .chaos-meter-pct { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; color: #2d2326; font-variant-numeric: tabular-nums; }
+        .chaos-meter-bar { background: #f1e8e4; border-radius: 9999px; height: 14px; overflow: hidden; position: relative; }
+        .chaos-meter-fill { height: 100%; background: linear-gradient(90deg, #9cb38a 0%, #d4a574 55%, #c08aa0 80%, #be185d 100%); border-radius: 9999px; width: 0%; transition: width 0.6s ease; box-shadow: 0 0 10px rgba(192, 138, 160, 0.4); }
+        .chaos-meter-bar.chaos-warn .chaos-meter-fill { animation: pulse 1s infinite; }
+        .chaos-buttons { display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; }
+        .chaos-btn { flex-grow: 1; background: #faf6f0; border: 1.5px solid #e5d5cf; color: #5a4838; font-weight: 700; font-size: 0.72rem; padding: 0.5rem 0.6rem; border-radius: 0.4rem; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
+        .chaos-btn:hover { background: #fce7ef; border-color: #c08aa0; transform: translateY(-1px); }
+        .chaos-btn.crisis { background: #be185d; color: white; border-color: #9d174d; }
+        .chaos-btn.crisis:hover { background: #9d174d; }
+
+        /* ====== ICING: Mid-round Voicemail Banner ====== */
+        .voicemail { display: none; background: linear-gradient(135deg, #fce7ef 0%, #fef4ec 100%); color: #2d2326; border: 2.5px solid #c08aa0; border-radius: 0.85rem; padding: 1rem 1.25rem; margin: 1.5rem auto; max-width: 800px; box-shadow: 0 10px 25px rgba(192, 138, 160, 0.2); animation: slideUp 0.5s ease-out; position: relative; }
+        .voicemail.visible { display: block; }
+        .voicemail-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .voicemail-icon { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #d4a574 0%, #c08aa0 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; box-shadow: 0 2px 8px rgba(192, 138, 160, 0.35); flex-shrink: 0; }
+        .voicemail-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #831843; }
+        .voicemail-from { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: #2d2326; line-height: 1; }
+        .voicemail-transcript { font-family: 'Merriweather', serif; font-style: italic; color: #3d2d30; line-height: 1.55; font-size: 0.95rem; }
+
+        /* ====== ICING: Secret Brief Print Card ====== */
+        .brief-card { border: 2.5px dashed #2d2326; background: #fff9f2; padding: 1rem 1.2rem; margin-bottom: 1.2rem; position: relative; page-break-inside: avoid; }
+        .brief-card .brief-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2d2326; padding-bottom: 0.4rem; margin-bottom: 0.7rem; }
+        .brief-card .brief-role { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 0.05em; color: #831843; }
+        .brief-card .brief-class { font-family: 'Inter', sans-serif; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.2em; background: #2d2326; color: #fce7ef; padding: 0.15rem 0.5rem; border-radius: 2px; text-transform: uppercase; }
+        .brief-card .brief-meta { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #8b6b4f; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+        .brief-card .brief-body { font-size: 0.82rem; color: #2d2326; line-height: 1.55; font-family: 'Merriweather', serif; }
+        .brief-card .brief-secret { background: #fce7ef; border: 1px solid #c08aa0; border-radius: 0.3rem; padding: 0.55rem 0.75rem; margin-top: 0.6rem; font-weight: 600; font-size: 0.8rem; color: #831843; }
+        .brief-card .brief-cut { text-align: center; font-family: 'Inter', sans-serif; font-size: 0.6rem; color: #8b6b4f; letter-spacing: 0.2em; margin-top: 0.7rem; padding-top: 0.3rem; border-top: 1px dashed #e5d5cf; text-transform: uppercase; font-weight: 600; }
+
+        /* Print Styles */
+        @page { size: A4; margin: 20mm; }
+        @media print {
+            .no-print { display: none !important; }
+
+            /* Single modal print */
+            body.printing-modal > * { display: none !important; }
+            body.printing-modal #modal-container-l28, body.printing-modal .modal { display: block !important; position: static; }
+            body.printing-modal .modal-content { box-shadow: none !important; border: none !important; max-height: none !important; height: auto; }
+            body.printing-modal .modal-body-class { display: block !important; overflow-y: visible !important; padding: 0.5rem; }
+            body.printing-modal .printable-only { display: block !important; }
+
+            /* Print all SLIDES only */
+            body.printing-slides-mode { background: white !important; }
+            body.printing-slides-mode > * { display: none !important; }
+            body.printing-slides-mode #print-slides-container { display: block !important; position: static; }
+            body.printing-slides-mode .slide { display: block !important; min-height: 0 !important; padding: 1rem 1.5rem 1.5rem 1.5rem !important; background: none !important; box-shadow: none !important; border: none !important; page-break-after: always; }
+            body.printing-slides-mode .evidence-card { min-height: auto !important; perspective: none !important; page-break-inside: avoid; cursor: default !important; }
+            body.printing-slides-mode .evidence-inner { position: relative !important; transform: none !important; transform-style: flat !important; height: auto !important; }
+            body.printing-slides-mode .card-front, body.printing-slides-mode .card-back { position: relative !important; transform: none !important; backface-visibility: visible !important; margin-bottom: 0.3rem; page-break-inside: avoid; height: auto !important; }
+            body.printing-slides-mode .voicemail { display: block !important; }
+            body.printing-slides-mode .lo-box, body.printing-slides-mode .scaffold-box, body.printing-slides-mode .aspire-box, body.printing-slides-mode .success-box, body.printing-slides-mode .task-box, body.printing-slides-mode .session-banner, body.printing-slides-mode .push-notif, body.printing-slides-mode .card-front, body.printing-slides-mode .card-back, body.printing-slides-mode .scoreboard, body.printing-slides-mode .invite-card, body.printing-slides-mode .chaos-meter-wrap, body.printing-slides-mode .voicemail, body.printing-slides-mode .medal-ribbon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            /* Print all WORKSHEETS only */
+            body.printing-worksheets-mode { background: white !important; }
+            body.printing-worksheets-mode > * { display: none !important; }
+            body.printing-worksheets-mode #print-worksheets-container { display: block !important; position: static; }
+            body.printing-worksheets-mode .printable-only { display: block !important; }
+            body.printing-worksheets-mode .worksheet-print-item { page-break-after: always; }
+            body.printing-worksheets-mode .brief-card, body.printing-worksheets-mode .brief-secret, body.printing-worksheets-mode .brief-class { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-8">
+    <div id="main-container-l28" class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+        <div id="slides-container-l28" class="p-6 sm:p-10 relative">
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 1: TITLE                                                      -->
+            <!-- =================================================================== -->
+            <div class="slide active z-10">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Lesson 28</span>
+                    <div class="flex items-center"><img src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" alt="Progress Schools" class="h-10 opacity-80 grayscale hover:grayscale-0 transition duration-300"></div>
+                </div>
+
+                <!-- ICING: Push Notification — immediate phone-native hook -->
+                <div class="push-notif mb-4">
+                    <div class="push-notif-icon">KA</div>
+                    <div class="push-notif-body">
+                        <div class="push-notif-head">
+                            <span class="push-notif-app">Messages · K. Archer</span>
+                            <span class="push-notif-time">now</span>
+                        </div>
+                        <div class="push-notif-title">Darling, we have a problem. 🌹</div>
+                        <div class="push-notif-msg">Doors in 60. Your team's already late. Get downstairs — bring an attitude, not an apology.</div>
+                    </div>
+                </div>
+
+                <h1 class="font-display text-6xl sm:text-7xl font-bold text-center text-slate-800 tracking-tight mt-2">Opening Night</h1>
+                <p class="text-xl text-center text-slate-500 mt-3 font-medium italic font-serif">Two teams. One launch. Sixty minutes. Try not to panic.</p>
+                
+                <div class="mt-6 animate-float">
+                    <div class="invite-card">
+                        <div class="invite-stub">
+                            <p class="invite-stub-label">Admit</p>
+                            <p class="invite-stub-num">VIP</p>
+                            <p class="invite-stub-label mt-1">2026</p>
+                        </div>
+                        <div class="invite-main">
+                            <p class="invite-kicker">You Are Invited To</p>
+                            <p class="invite-title">The Opening Night</p>
+                            <p class="invite-details">Year 10 · An exclusive working event<br>Doors open. No excuses.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                    <div class="lo-box shadow-sm animate-up delay-1">
+                        <h3 class="font-extrabold text-lg mb-2 uppercase tracking-wide">Learning Objective</h3>
+                        <p class="font-medium">To work as a team to complete a physical challenge under competitive conditions.</p>
+                    </div>
+                    <div class="success-box mt-0 shadow-sm animate-up delay-2">
+                        <h3 class="font-extrabold text-lg mb-2 uppercase tracking-wide">Success Criteria</h3>
+                        <ul class="list-disc list-inside space-y-1.5 font-medium">
+                            <li>I can take on a clear role within my team.</li>
+                            <li>I can communicate clearly when under pressure.</li>
+                            <li>I can adapt my strategy after reflection.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex justify-center flex-wrap gap-3 mt-8 relative z-10 animate-up delay-3">
+                    <span class="skill-chip"><span class="dot" style="background:#a855f7;"></span>Teamwork</span>
+                    <span class="skill-chip"><span class="dot" style="background:#38bdf8;"></span>Communication</span>
+                    <span class="skill-chip"><span class="dot" style="background:#d4a574;"></span>Strategy</span>
+                    <span class="skill-chip"><span class="dot" style="background:#9cb38a;"></span>Resilience</span>
+                </div>
+
+                <div class="mt-6 bg-rose-50 border border-rose-200 rounded-xl p-4 max-w-2xl mx-auto text-center relative z-10 animate-up delay-4">
+                    <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Structure</p>
+                    <p class="text-slate-700 mt-1 font-medium">Session 1 (40 min) — The Setup · <span class="text-slate-400">break</span> · Session 2 (40 min) — Silent Service</p>
+                </div>
+
+                <div class="max-w-2xl mx-auto mt-6 relative z-10 animate-up delay-4 text-center">
+                    <p class="text-sm text-slate-500 italic font-serif">Look. This will feel weird for the first five minutes. Then it won't. Stay with it.</p>
+                </div>
+
+                <div class="text-center mt-8 no-print relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button onclick="printAllSlides()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl inline-flex items-center shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm2-9V5a2 2 0 012-2h2a2 2 0 012 2v3m-2 7h.01"></path></svg>
+                        Print All Slides
+                    </button>
+                    <button onclick="printAllWorksheetsOnly()" class="bg-rose-400 hover:bg-rose-500 text-white font-bold py-3 px-6 rounded-xl inline-flex items-center shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Print All Worksheets
+                    </button>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 2: ARRIVAL TASK — 2x2 Grid (recall from The Crew's Trial)     -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header no-print">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 1</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Arrival Task: The 2x2 Grid</h2>
+                <div class="lo-box text-center mb-6 py-3 font-semibold text-lg max-w-3xl mx-auto shadow-sm">LO: To work as a team to complete a physical challenge under competitive conditions.</div>
+                <div class="task-box text-center mb-8 py-3 max-w-3xl mx-auto">
+                    <p class="text-slate-800 font-bold text-lg flex items-center justify-center gap-2">
+                        <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Whiteboards. One question each. 4 minutes total.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col justify-center text-center animate-up delay-1 hover:shadow-md transition-shadow">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full inline-block w-fit mx-auto mb-3">Recall (Crew's Trial)</span>
+                        <p class="font-semibold text-slate-800 text-lg">Thomas Marsh was found hiding in a supply barrel. What was he charged with?</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col justify-center text-center animate-up delay-2 hover:shadow-md transition-shadow">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full inline-block w-fit mx-auto mb-3">Recall (Crew's Trial)</span>
+                        <p class="font-semibold text-slate-800 text-lg">Name ONE piece of evidence used in the trial — by either side.</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col justify-center text-center animate-up delay-3 hover:shadow-md transition-shadow">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full inline-block w-fit mx-auto mb-3">Recall (Crew's Trial)</span>
+                        <p class="font-semibold text-slate-800 text-lg">What verdict did <em>you</em> give Marsh — and what was your strongest reason?</p>
+                    </div>
+                    <div class="bg-rose-50 border-2 border-rose-300 rounded-xl p-6 shadow-sm flex flex-col justify-center text-center animate-up delay-4 hover:shadow-md transition-shadow">
+                        <span class="bg-rose-200 text-rose-900 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full inline-block w-fit mx-auto mb-3">Lead-In (Today)</span>
+                        <p class="font-bold text-rose-900 text-lg">On the Trincomalee, 300 sailors had to move as ONE. Which ONE skill do you think mattered most for them?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 3: SESSION 1 OPENER — The Briefing                            -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 1</span>
+                </div>
+
+                <div class="session-banner mb-8 animate-up delay-1">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="bg-amber-300 text-slate-900 font-black text-2xl w-16 h-16 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">1</div>
+                        <div>
+                            <p class="text-amber-200 text-xs font-extrabold uppercase tracking-widest">Session 1 · 40 minutes</p>
+                            <h2 class="font-display text-4xl font-bold tracking-tight mt-1">The Setup</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-3xl mx-auto bg-rose-50 border-l-8 border-rose-400 rounded-r-xl p-8 shadow-md animate-glow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <svg class="w-8 h-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        <p class="text-sm uppercase tracking-widest text-rose-700 font-extrabold">Briefing — Creative Director's Office, 4:15 PM</p>
+                    </div>
+                    <p class="text-2xl text-slate-800 leading-relaxed font-serif italic font-bold">
+                        "Darlings, gather round. We have a problem."
+                    </p>
+                    <p class="text-xl text-slate-800 leading-relaxed font-serif mt-4">
+                        A successful launch doesn't happen because <strong>one</strong> person nailed it. It happens because every person on the team knew their job, trusted each other, and didn't fall apart when things went sideways.
+                    </p>
+                    <p class="text-xl text-slate-800 leading-relaxed font-serif mt-4">
+                        Today you'll find out if <em>your</em> team can do the same — or whether tonight's launch will be the kind of disaster people whisper about for weeks. Your mission: beat the rival team in a timed setup challenge. There's a catch. It's a big one. And yes, you're going to hate it.
+                    </p>
+                    <p class="text-base text-rose-700 font-serif italic mt-5 text-right">— K. Archer, Creative Director ✒</p>
+                </div>
+
+                <div class="task-box max-w-3xl mx-auto text-center mt-8">
+                    <p class="text-slate-800 font-bold text-lg">Round 1 happens <strong>before</strong> the break. After the break, the rules change — and the Final Round decides who takes the trophy.</p>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 4: I DO — THE CHALLENGE & ROLES                               -->
+            <!-- =================================================================== -->
+            <div class="slide bg-rose-50/30 rounded-xl">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 1</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">The Challenge &amp; Your Team Roles</h2>
+                
+                <div class="task-box mb-5 max-w-4xl mx-auto shadow-sm">
+                    <h3 class="font-extrabold text-xl mb-3 text-slate-800 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                        The Setup — Round 1 Rules
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1.5 text-slate-800 font-medium">
+                        <li>Move "stock" from the <strong>Stockroom</strong> (start zone) to the <strong>Shop Floor</strong> (end zone).</li>
+                        <li>You have <strong>2 minutes</strong>. Most items delivered wins.</li>
+                        <li>The <strong>Runner</strong> is blindfolded. Only the <strong>Voice</strong> may speak to them.</li>
+                        <li>Only <strong>one</strong> item can be carried at a time.</li>
+                        <li>Only the Runner crosses the Stockroom line. Everyone else stays put.</li>
+                    </ul>
+                </div>
+
+                <div class="scaffold-box max-w-4xl mx-auto mb-5 shadow-sm flex items-start gap-4">
+                    <svg class="w-8 h-8 text-sky-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Not wearing the blindfold? Totally fine.</p>
+                        <p>Closing your eyes works exactly the same way. We're on trust here, not on stage. Do what feels okay for you.</p>
+                    </div>
+                </div>
+
+                <div class="aspire-box max-w-4xl mx-auto mb-6 shadow-sm flex items-start gap-4">
+                    <svg class="w-8 h-8 text-green-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <div>
+                        <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Class of 6 → 2 teams of 3</p>
+                        <p>With 3 per team, you double up: <strong>Director + Lookout</strong>, <strong>Voice + Scribe</strong>, <strong>Runner</strong> solo (running blind takes enough focus).</p>
+                    </div>
+                </div>
+
+                <p class="text-center text-slate-500 font-semibold uppercase tracking-widest text-xs mb-4">Click each card to reveal the role</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+                    <div class="evidence-card role-director animate-up delay-1" onclick="this.classList.toggle('flipped')">
+                        <div class="evidence-inner">
+                            <div class="card-front">
+                                <svg class="svg-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>
+                                <span class="role-tag challenge">Challenge</span>
+                                <p class="text-base font-extrabold text-slate-700 uppercase tracking-wider">Director</p>
+                                <p class="text-xs text-slate-400 mt-2 font-medium bg-slate-100 py-1 px-3 rounded-full">Click to flip</p>
+                            </div>
+                            <div class="card-back">
+                                <p class="text-base font-bold text-slate-800 leading-snug">Sets the strategy. Assigns every role. Calls changes if it breaks down. Nobody moves without the Director's plan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-card role-voice animate-up delay-2" onclick="this.classList.toggle('flipped')">
+                        <div class="evidence-inner">
+                            <div class="card-front">
+                                <svg class="svg-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+                                <span class="role-tag core">Core</span>
+                                <p class="text-base font-extrabold text-slate-700 uppercase tracking-wider">Voice</p>
+                                <p class="text-xs text-slate-400 mt-2 font-medium bg-slate-100 py-1 px-3 rounded-full">Click to flip</p>
+                            </div>
+                            <div class="card-back">
+                                <p class="text-base font-bold text-slate-800 leading-snug">The only voice the Runner hears. Calm. Specific. <em>"Two steps forward. Reach left. You've got it."</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-card role-runner animate-up delay-3" onclick="this.classList.toggle('flipped')">
+                        <div class="evidence-inner">
+                            <div class="card-front">
+                                <svg class="svg-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4l-8 8 8 8M5 12h16"/></svg>
+                                <span class="role-tag core">Core</span>
+                                <p class="text-base font-extrabold text-slate-700 uppercase tracking-wider">Runner</p>
+                                <p class="text-xs text-slate-400 mt-2 font-medium bg-slate-100 py-1 px-3 rounded-full">Click to flip</p>
+                            </div>
+                            <div class="card-back">
+                                <p class="text-base font-bold text-slate-800 leading-snug">Blindfolded (or eyes closed). Moves between Stockroom and Shop Floor. One item at a time. Trusts the Voice.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-card role-scribe animate-up delay-4" onclick="this.classList.toggle('flipped')">
+                        <div class="evidence-inner">
+                            <div class="card-front">
+                                <svg class="svg-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                <span class="role-tag support">Support</span>
+                                <p class="text-base font-extrabold text-slate-700 uppercase tracking-wider">Scribe</p>
+                                <p class="text-xs text-slate-400 mt-2 font-medium bg-slate-100 py-1 px-3 rounded-full">Click to flip</p>
+                            </div>
+                            <div class="card-back">
+                                <p class="text-base font-bold text-slate-800 leading-snug">Counts every successful delivery. Shouts encouragement. Keeps the team calm. Simple — but honestly, vital.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-card role-lookout animate-up delay-5" onclick="this.classList.toggle('flipped')">
+                        <div class="evidence-inner">
+                            <div class="card-front">
+                                <svg class="svg-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <span class="role-tag core">Core</span>
+                                <p class="text-base font-extrabold text-slate-700 uppercase tracking-wider">Lookout</p>
+                                <p class="text-xs text-slate-400 mt-2 font-medium bg-slate-100 py-1 px-3 rounded-full">Click to flip</p>
+                            </div>
+                            <div class="card-back">
+                                <p class="text-base font-bold text-slate-800 leading-snug">Watches the rival team. Feeds the Director intel: what's working for them, what isn't. Nicking ideas is allowed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ICING: Secret Briefs teaser — jigsaw-method teamwork forcing function -->
+                <div class="mt-8 max-w-3xl mx-auto bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-rose-300 rounded-xl p-6 shadow-2xl text-center animate-glow relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-rose-400 opacity-15 rounded-full blur-3xl"></div>
+                    <p class="font-display text-sm tracking-[0.3em] text-rose-200 font-bold mb-2 uppercase relative z-10">✦ Eyes Only ✦</p>
+                    <h3 class="font-display text-3xl font-bold text-white mb-3 relative z-10">Your Role Has a Secret.</h3>
+                    <p class="text-rose-50 font-serif text-base leading-relaxed mb-5 relative z-10">Each of you gets a folded card — your own secret brief. Inside: one job only <strong>you</strong> know about, and one rule only <strong>you</strong> have to follow. Your team <em>literally cannot pull off the launch</em> without what's on your card.</p>
+                    <button onclick="showModal('secret-briefs')" class="bg-rose-300 hover:bg-rose-400 text-slate-900 font-black uppercase tracking-widest py-3 px-8 rounded-xl text-sm shadow-lg transition-transform hover:-translate-y-1 no-print relative z-10">Open / Print Secret Briefs</button>
+                    <p class="text-xs text-rose-200 italic mt-4 font-serif relative z-10">Teacher: print, cut along the dotted lines, hand each girl her card privately. No peeking at each other's.</p>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 5: WE DO — STRATEGY PLANNING                                  -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 1</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Plan Your Team Strategy</h2>
+
+                <div class="task-box mb-6 text-center py-4 shadow-sm max-w-4xl mx-auto">
+                    <p class="text-lg text-slate-800 font-medium"><strong>Split into teams.</strong> You have <strong>5 minutes</strong> to: (1) assign roles, (2) agree on the exact calls your Voice will use, (3) decide your path from Stockroom to Shop Floor.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div class="scaffold-box shadow-sm flex items-start gap-4 mt-0 animate-up delay-1">
+                        <svg class="w-8 h-8 text-sky-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div>
+                            <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Support</p>
+                            <p>Not sure where you fit? Take <strong>Scribe</strong>. You count, encourage, and keep the team from spiralling. Absolutely needed.</p>
+                        </div>
+                    </div>
+                    <div class="aspire-box shadow-sm flex items-start gap-4 mt-0 animate-up delay-2">
+                        <svg class="w-8 h-8 text-green-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        <div>
+                            <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Challenge</p>
+                            <p>Take <strong>Director</strong>. Lead the strategy discussion. Make sure every person on the team knows their job before Round 1 starts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white border-t-4 border-rose-400 rounded-xl p-4 text-center shadow-sm animate-up delay-3">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-2">1 · Roles</p>
+                        <p class="text-sm text-slate-700 font-medium">Director, Voice, Runner, Scribe, Lookout.</p>
+                    </div>
+                    <div class="bg-white border-t-4 border-amber-400 rounded-xl p-4 text-center shadow-sm animate-up delay-4">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-2">2 · Calls</p>
+                        <p class="text-sm text-slate-700 font-medium">Agree 4 short commands — "left", "right", "grab", "drop".</p>
+                    </div>
+                    <div class="bg-white border-t-4 border-green-500 rounded-xl p-4 text-center shadow-sm animate-up delay-5">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-2">3 · Path</p>
+                        <p class="text-sm text-slate-700 font-medium">Safest route. Pickup order. Handoff point.</p>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="flex flex-col items-center mt-8 no-print bg-white p-6 rounded-2xl shadow-sm border border-slate-100 max-w-md mx-auto">
+                    <div class="flex items-center gap-4 mb-4">
+                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div id="timer-display" class="timer-display">5:00</div>
+                    </div>
+                    <div class="flex gap-4 w-full">
+                        <button onclick="startTimer(300)" id="timer-start" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md">Start Prep</button>
+                        <button onclick="resetTimer(300)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all border border-slate-300">Reset</button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6 no-print">
+                    <button onclick="showModal('strategy-sheet')" class="bg-rose-400 hover:bg-rose-500 text-white font-extrabold py-3.5 px-10 rounded-xl text-lg shadow-lg transition-transform hover:-translate-y-1">Open Strategy Planning Sheet</button>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 6: YOU DO — ROUND 1: THE SETUP                                -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 1</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Round 1 — The Setup</h2>
+
+                <div class="max-w-3xl mx-auto bg-rose-50 border-l-8 border-rose-400 rounded-r-xl p-6 shadow-md mb-6 animate-glow">
+                    <p class="text-sm uppercase tracking-widest text-rose-700 font-extrabold mb-2">Rules Reminder</p>
+                    <ul class="text-slate-800 text-lg leading-relaxed font-serif list-disc list-inside space-y-1">
+                        <li>Runner blindfolded (or eyes closed). Voice only.</li>
+                        <li>One item at a time. Two minutes on the clock.</li>
+                        <li>Scribe counts. Lookout watches. Director calls the shots.</li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- Scoreboard -->
+                    <div class="scoreboard animate-up delay-1">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-3 text-center">Live Scoreboard — Round 1</p>
+                        <p class="text-xs text-slate-400 text-center mb-3 italic">Click a team name to rename</p>
+                        <div class="score-row">
+                            <div class="score-badge" style="background:#c08aa0;">🌹</div>
+                            <p class="flex-grow font-bold text-slate-700 text-lg"><span class="crew-name-editable" contenteditable="true" spellcheck="false">Team Rose</span></p>
+                            <input type="number" class="score-input" min="0" placeholder="0" />
+                        </div>
+                        <div class="score-row">
+                            <div class="score-badge" style="background:#9cb38a;">🌿</div>
+                            <p class="flex-grow font-bold text-slate-700 text-lg"><span class="crew-name-editable" contenteditable="true" spellcheck="false">Team Sage</span></p>
+                            <input type="number" class="score-input" min="0" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <!-- Round Timer -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 animate-up delay-2 flex flex-col justify-center">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-3 text-center">Round Timer — 2 minutes</p>
+                        <div class="flex items-center justify-center gap-4 mb-5">
+                            <svg class="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <div id="round-timer-display" class="timer-display">2:00</div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="startRoundTimer('round-timer-display', 120, 'round-timer-btn')" id="round-timer-btn" class="flex-1 bg-rose-400 hover:bg-rose-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md">Start Round</button>
+                            <button onclick="resetRoundTimer('round-timer-display', 120, 'round-timer-btn')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl border border-slate-300">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ICING: Chaos Meter — visible pressure beyond just the clock -->
+                <div class="chaos-meter-wrap max-w-4xl mx-auto mt-8">
+                    <div class="chaos-meter-label">
+                        <span class="chaos-meter-name">✦ Chaos Meter ✦ Things Going Wrong</span>
+                        <span class="chaos-meter-pct"><span id="chaos-pct">0</span>%</span>
+                    </div>
+                    <div class="chaos-meter-bar" id="chaos-bar">
+                        <div class="chaos-meter-fill" id="chaos-fill"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3 italic font-serif text-center">Teacher: tap a button when something goes wrong on the floor. Hit 100% and the launch is ruined — both teams lose 2 points.</p>
+                    <div class="chaos-buttons">
+                        <button onclick="bumpChaos(10)" class="chaos-btn">+10 Dropped It</button>
+                        <button onclick="bumpChaos(15)" class="chaos-btn">+15 Spoke Out of Turn</button>
+                        <button onclick="bumpChaos(20)" class="chaos-btn">+20 Plan Broke Down</button>
+                        <button onclick="bumpChaos(-15)" class="chaos-btn">−15 Nailed a Save</button>
+                        <button onclick="resetChaos()" class="chaos-btn crisis">Reset</button>
+                    </div>
+                </div>
+
+                <!-- ICING: Mid-round Voicemail from K. Archer -->
+                <div id="midround-voicemail" class="voicemail">
+                    <div class="voicemail-head">
+                        <div class="voicemail-icon">📞</div>
+                        <div>
+                            <p class="voicemail-label">Voicemail · just now</p>
+                            <p class="voicemail-from">K. Archer</p>
+                        </div>
+                    </div>
+                    <p class="voicemail-transcript">"Darlings — scrap that. There's a <strong>VIP allergy</strong> I should've mentioned. Any item tagged <strong>red</strong> must <em>never</em> touch the shop floor — take it straight to the back. Don't ask why. Just do it. And don't panic. You've got this. Probably. Bye darling!"</p>
+                </div>
+                <div class="text-center no-print mb-4">
+                    <button onclick="toggleVoicemail()" class="text-xs bg-rose-200 hover:bg-rose-300 text-rose-900 font-bold py-2 px-4 rounded-lg shadow border border-rose-300 tracking-widest uppercase">▸ Teacher: Drop K. Archer Voicemail (≈1min in)</button>
+                </div>
+
+                <div class="scaffold-box max-w-3xl mx-auto mt-8 shadow-sm flex items-start gap-4">
+                    <svg class="w-8 h-8 text-sky-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <div>
+                        <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Teacher — watch for</p>
+                        <p>Clear role-taking · calmness when the plan breaks · whose voice the Runner actually follows · what happens when two teams both start talking at once.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 7: END OF SESSION 1 — INTERMISSION                            -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Intermission</span>
+                </div>
+
+                <div class="max-w-3xl mx-auto text-center mt-6">
+                    <div class="inline-block bg-rose-600 text-white font-black text-lg uppercase tracking-widest py-2 px-6 rounded-full shadow-md mb-6 animate-up delay-1">✦ Breaking — 17:04 ✦</div>
+                    <h2 class="font-display text-5xl font-bold text-slate-800 tracking-tight mb-2 animate-up delay-2">A VIP Just Complained.</h2>
+                    <p class="text-xl text-slate-600 font-serif italic font-bold animate-up delay-3">"The setup isn't right. The launch is in trouble."</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto mt-8 bg-gradient-to-br from-slate-800 to-slate-900 border-l-8 border-rose-300 rounded-r-xl p-6 shadow-2xl animate-up delay-4 animate-glow relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-rose-400 opacity-15 rounded-full blur-3xl"></div>
+                    <p class="text-sm uppercase tracking-widest text-rose-200 font-extrabold mb-3 relative z-10">Voicemail · K. Archer · Creative Director</p>
+                    <p class="text-lg text-rose-50 font-serif leading-relaxed relative z-10">
+                        "Darlings — slight disaster. The principal sponsor walked in early and <strong>saw the whole setup</strong>. They're threatening to pull funding unless we pull off a flawless Silent Service. <em>Flawless.</em> No margin for error. The rules for Round 2 are going to bite.
+                    </p>
+                    <p class="text-lg text-rose-50 font-serif leading-relaxed mt-3 relative z-10">
+                        Go. Have a break. Come back with your heads on. This isn't over — it's <strong>exactly</strong> where the good bit starts."
+                    </p>
+                    <p class="text-sm text-rose-200 font-serif italic mt-4 text-right relative z-10">— K. ✒</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto mt-8 bg-rose-50 border-l-8 border-rose-400 rounded-r-xl p-5 shadow-md animate-up delay-5">
+                    <p class="text-sm uppercase tracking-widest text-rose-700 font-extrabold mb-2">On Your Break — Carry This With You</p>
+                    <p class="text-slate-800 font-serif leading-relaxed">If you had to launch in <em>total silence</em> — what's the one thing your team would need to agree on <strong>now</strong> to stop it falling apart? Don't write it. Just think about it. Tell your team when you come back in.</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-6">
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center shadow-sm animate-up delay-5">
+                        <p class="font-display text-3xl font-bold text-slate-800">1</p>
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mt-1">Debrief</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center shadow-sm animate-up delay-5">
+                        <p class="font-display text-3xl font-bold text-slate-800">2</p>
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mt-1">New Rules</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center shadow-sm animate-up delay-5">
+                        <p class="font-display text-3xl font-bold text-slate-800">3</p>
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mt-1">The Final</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 8: SESSION 2 OPENER / DEBRIEF                                 -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+
+                <div class="session-banner mb-8 animate-up delay-1">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="bg-amber-300 text-slate-900 font-black text-2xl w-16 h-16 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">2</div>
+                        <div>
+                            <p class="text-amber-200 text-xs font-extrabold uppercase tracking-widest">Session 2 · 40 minutes</p>
+                            <h2 class="font-display text-4xl font-bold tracking-tight mt-1">Return to Set</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Debrief — Pull Round 1 Apart</h3>
+
+                <div class="task-box max-w-4xl mx-auto text-center mb-6 py-3 shadow-sm">
+                    <p class="text-slate-800 font-bold text-lg">3 minutes in your teams. Then 2 minutes whole-class share. Be honest — this is how the Final Round gets won.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+                    <div class="bg-white border-t-4 border-green-500 rounded-xl p-5 shadow-md animate-up delay-2">
+                        <p class="text-xs uppercase tracking-widest text-green-700 font-extrabold mb-3">Question 1</p>
+                        <p class="font-bold text-slate-800 text-lg leading-snug mb-3">What <em>worked</em>?</p>
+                        <p class="text-sm text-slate-600 font-medium">One specific thing your team did well. Not "teamwork" — be precise.</p>
+                    </div>
+                    <div class="bg-white border-t-4 border-rose-400 rounded-xl p-5 shadow-md animate-up delay-3">
+                        <p class="text-xs uppercase tracking-widest text-rose-600 font-extrabold mb-3">Question 2</p>
+                        <p class="font-bold text-slate-800 text-lg leading-snug mb-3">What <em>fell apart</em>?</p>
+                        <p class="text-sm text-slate-600 font-medium">One moment the system broke. Why did it break?</p>
+                    </div>
+                    <div class="bg-white border-t-4 border-amber-500 rounded-xl p-5 shadow-md animate-up delay-4">
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-extrabold mb-3">Question 3</p>
+                        <p class="font-bold text-slate-800 text-lg leading-snug mb-3">What will you <em>change</em>?</p>
+                        <p class="text-sm text-slate-600 font-medium">One concrete change for the Final. Say it out loud to your team.</p>
+                    </div>
+                </div>
+
+                <div class="aspire-box max-w-3xl mx-auto mt-8 shadow-sm flex items-start gap-4">
+                    <svg class="w-8 h-8 text-green-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <p><strong>Push it further:</strong> A West End show rehearses the same scene for weeks before opening night. Why bother? What do they get out of repetition that one round can't give you?</p>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 9: STRATEGY REFINEMENT — NEW RULES REVEAL                     -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Final Round — The Rules Change</h2>
+
+                <div class="max-w-3xl mx-auto bg-slate-800 border-4 border-amber-400 rounded-xl p-8 shadow-2xl mb-8 animate-glow text-center">
+                    <p class="text-sm uppercase tracking-widest text-amber-300 font-extrabold mb-3">New Rule</p>
+                    <h3 class="font-display text-5xl font-bold text-white tracking-tight mb-4">Silent Service</h3>
+                    <p class="text-xl text-amber-100 font-serif leading-relaxed">The doors are open. The guests are here. <strong>You cannot break character.</strong></p>
+                    <p class="text-lg text-slate-300 font-serif mt-3 leading-relaxed">Not one word. Claps, nods, taps on the shoulder, pre-agreed signals only. Speak — and that delivery doesn't count.</p>
+                </div>
+
+                <div class="task-box max-w-3xl mx-auto shadow-sm mb-6">
+                    <h3 class="font-extrabold text-lg mb-2 text-slate-800">3 minutes to refine</h3>
+                    <ul class="list-disc list-inside space-y-1 text-slate-800 font-medium">
+                        <li>Replace your verbal calls with physical signals.</li>
+                        <li>Agree a "<strong>stop — reset</strong>" signal for when it goes wrong.</li>
+                        <li>Re-brief your Runner. Their trust in you is everything now.</li>
+                    </ul>
+                </div>
+
+                <!-- 3-min refinement timer -->
+                <div class="flex flex-col items-center no-print bg-white p-6 rounded-2xl shadow-sm border border-slate-100 max-w-md mx-auto">
+                    <div class="flex items-center gap-4 mb-4">
+                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div id="refine-timer-display" class="timer-display">3:00</div>
+                    </div>
+                    <div class="flex gap-4 w-full">
+                        <button onclick="startRoundTimer('refine-timer-display', 180, 'refine-btn')" id="refine-btn" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md">Start Refine</button>
+                        <button onclick="resetRoundTimer('refine-timer-display', 180, 'refine-btn')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all border border-slate-300">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 10: YOU DO — FINAL ROUND                                      -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">The Final Round — Silent Service</h2>
+
+                <div class="max-w-3xl mx-auto bg-rose-50 border-l-8 border-rose-400 rounded-r-xl p-6 shadow-md mb-6 animate-glow">
+                    <p class="text-sm uppercase tracking-widest text-rose-700 font-extrabold mb-2">This is it — The Final</p>
+                    <ul class="text-slate-800 text-lg leading-relaxed font-serif list-disc list-inside space-y-1">
+                        <li><strong>Complete silence.</strong> Any speech = that delivery doesn't count.</li>
+                        <li>Two minutes. Most items delivered wins.</li>
+                        <li>Totals add to Round 1 — highest combined score takes the trophy.</li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- Final Scoreboard -->
+                    <div class="scoreboard animate-up delay-1">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-3 text-center">Final Round Scoreboard</p>
+                        <p class="text-xs text-slate-400 text-center mb-3 italic">Add to Round 1 total for the Championship</p>
+                        <div class="score-row">
+                            <div class="score-badge" style="background:#c08aa0;">🌹</div>
+                            <p class="flex-grow font-bold text-slate-700 text-lg"><span class="crew-name-editable" contenteditable="true" spellcheck="false">Team Rose</span></p>
+                            <input type="number" class="score-input" min="0" placeholder="0" />
+                        </div>
+                        <div class="score-row">
+                            <div class="score-badge" style="background:#9cb38a;">🌿</div>
+                            <p class="flex-grow font-bold text-slate-700 text-lg"><span class="crew-name-editable" contenteditable="true" spellcheck="false">Team Sage</span></p>
+                            <input type="number" class="score-input" min="0" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <!-- Final Round Timer -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 animate-up delay-2 flex flex-col justify-center">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-extrabold mb-3 text-center">Final Round Timer</p>
+                        <div class="flex items-center justify-center gap-4 mb-5">
+                            <svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <div id="final-timer-display" class="timer-display">2:00</div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="startRoundTimer('final-timer-display', 120, 'final-timer-btn')" id="final-timer-btn" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md">Start Final</button>
+                            <button onclick="resetRoundTimer('final-timer-display', 120, 'final-timer-btn')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl border border-slate-300">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scaffold-box max-w-3xl mx-auto mt-8 shadow-sm flex items-start gap-4">
+                    <svg class="w-8 h-8 text-sky-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <p class="font-extrabold uppercase tracking-wider text-xs mb-1">Teacher — watch for</p>
+                        <p>Who keeps a cool head · whose signals the Runner actually understands · how teams handle a missed gesture · the team that adapted fastest from Round 1.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 11: CAPTURE LEARNING — REFLECTION                             -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-8 text-center tracking-tight">Your Private Account</h2>
+
+                <div class="bg-white border-2 border-rose-200 rounded-2xl max-w-2xl mx-auto text-center p-8 shadow-lg mb-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-300 via-amber-300 to-green-300"></div>
+                    <p class="text-slate-800 text-xl font-bold mb-4">Fill out the sheet — just for you.</p>
+                    <p class="text-base text-slate-600 mb-8">No one reads it unless you want them to. Even if your team won, lost, or fell apart — this is <em>your</em> honest version of what happened.</p>
+                    <button onclick="showModal('reflection-sheet')" class="bg-rose-400 hover:bg-rose-500 text-white font-extrabold py-4 px-10 rounded-xl text-lg shadow-md transition-transform hover:-translate-y-1">Open Reflection Sheet</button>
+                </div>
+
+                <div class="aspire-box max-w-2xl mx-auto text-center shadow-sm flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    <p><strong>Push it further:</strong> Is a great team a <em>group of great players</em> — or a <em>great group</em>? Write one sentence arguing your view.</p>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 12: THE GALA — Awards Ceremony                                -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+                <h2 class="font-display text-5xl font-bold text-slate-800 mb-2 text-center tracking-tight">The Gala</h2>
+                <p class="text-center text-slate-500 font-serif italic mb-6">For vision, for voice, for sheer stubborn refusal to give up.</p>
+
+                <div class="task-box max-w-4xl mx-auto text-center mb-8 py-3 shadow-sm">
+                    <p class="text-slate-800 font-bold">Teacher: hand out these honours however you like. Every person leaves with at least one. No exceptions.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-10">
+                    <div class="medal-ribbon animate-up delay-1">
+                        <div class="medal-icon-circle">💡</div>
+                        <p class="medal-name">The Visionary</p>
+                        <p class="medal-desc">Best strategy. Saw the angle the rest of us missed.</p>
+                    </div>
+                    <div class="medal-ribbon animate-up delay-2">
+                        <div class="medal-icon-circle">🎤</div>
+                        <p class="medal-name">The Voice</p>
+                        <p class="medal-desc">Calm, clear, impossible to miss. The Runner never had to ask twice.</p>
+                    </div>
+                    <div class="medal-ribbon animate-up delay-3">
+                        <div class="medal-icon-circle">🪷</div>
+                        <p class="medal-name">Grace Under Pressure</p>
+                        <p class="medal-desc">When it all went sideways, stayed completely calm.</p>
+                    </div>
+                    <div class="medal-ribbon animate-up delay-3">
+                        <div class="medal-icon-circle">✨</div>
+                        <p class="medal-name">Main Character Energy</p>
+                        <p class="medal-desc">Went for it. Fully. Committed 100% — no half-measures.</p>
+                    </div>
+                    <div class="medal-ribbon animate-up delay-4">
+                        <div class="medal-icon-circle">📈</div>
+                        <p class="medal-name">The Comeback</p>
+                        <p class="medal-desc">Had a rough Round 1. Came back in the Final. Phoenix behaviour.</p>
+                    </div>
+                    <div class="medal-ribbon animate-up delay-4">
+                        <div class="medal-icon-circle">🫶</div>
+                        <p class="medal-name">Heart of the Team</p>
+                        <p class="medal-desc">Kept everyone going when it got hard. The reason the team held together.</p>
+                    </div>
+                </div>
+
+                <!-- Championship Announcement -->
+                <div class="max-w-2xl mx-auto bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-2xl p-8 shadow-2xl text-center relative overflow-hidden border-4 border-amber-400">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-amber-400 opacity-20 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-rose-400 opacity-20 rounded-full blur-2xl"></div>
+                    <p class="text-amber-300 text-xs uppercase tracking-widest font-extrabold mb-3 relative z-10">✦ The Opening Night Trophy ✦</p>
+                    <p class="text-white font-display text-3xl italic font-bold mb-6 relative z-10">"And now — the team that pulled it off…"</p>
+                    <button onclick="announceWinner()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-black uppercase tracking-widest py-4 px-10 rounded-xl text-lg shadow-lg transition-transform hover:-translate-y-1 hover:scale-105 no-print relative z-10">🎉 Announce the Winners 🎉</button>
+                    <p id="winner-message" class="text-amber-200 text-xl font-serif italic font-bold mt-6 relative z-10 opacity-0 transition-opacity duration-500"></p>
+                </div>
+
+                <div class="aspire-box max-w-2xl mx-auto mt-8 shadow-sm flex items-start gap-3">
+                    <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    <p><strong>Other team:</strong> no trophy, but you get full receipts and a comeback arc people will talk about. Honestly, better storyline.</p>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- SLIDE 13: EXIT TICKET                                               -->
+            <!-- =================================================================== -->
+            <div class="slide">
+                <div class="logo-header">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Post-Trip Reflection · Session 2</span>
+                </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-8 text-center tracking-tight">Exit Ticket</h2>
+                <div class="task-box max-w-2xl mx-auto p-8 shadow-sm">
+                    <h3 class="font-extrabold text-2xl mb-6 text-center text-slate-800">Check your reflection sheet before leaving</h3>
+                    <div class="flex flex-col gap-4 text-left max-w-md mx-auto bg-white p-6 border border-slate-200 rounded-xl shadow-inner">
+                        <label class="flex items-start cursor-pointer group">
+                            <input type="checkbox" class="w-6 h-6 mt-0.5 mr-4 rounded border-slate-300 text-rose-400 focus:ring-rose-400"> 
+                            <span class="text-slate-700 font-medium group-hover:text-slate-900 transition-colors">I knew my role and did it.</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer group">
+                            <input type="checkbox" class="w-6 h-6 mt-0.5 mr-4 rounded border-slate-300 text-rose-400 focus:ring-rose-400"> 
+                            <span class="text-slate-700 font-medium group-hover:text-slate-900 transition-colors">I communicated clearly — or adapted when I couldn't.</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer group">
+                            <input type="checkbox" class="w-6 h-6 mt-0.5 mr-4 rounded border-slate-300 text-rose-400 focus:ring-rose-400"> 
+                            <span class="text-slate-700 font-medium group-hover:text-slate-900 transition-colors">I named one thing our team got wrong and why.</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer group">
+                            <input type="checkbox" class="w-6 h-6 mt-0.5 mr-4 rounded border-slate-300 text-rose-400 focus:ring-rose-400"> 
+                            <span class="text-slate-700 font-medium group-hover:text-slate-900 transition-colors">I helped my team — not just myself.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="bg-slate-50 px-8 py-5 flex justify-between items-center border-t border-slate-200 no-print w-full rounded-b-2xl">
+            <button id="prev-btn-l28" class="bg-white border border-slate-300 text-slate-700 font-bold py-2.5 px-6 rounded-xl hover:bg-slate-100 transition shadow-sm flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Previous
+            </button>
+            <div id="slide-counter-l28" class="text-slate-500 font-bold bg-slate-200 py-1.5 px-4 rounded-full text-sm tracking-widest">1 / 13</div>
+            <button id="next-btn-l28" class="bg-slate-800 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-slate-900 transition shadow-md flex items-center gap-2">
+                Next
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Container for dynamically injected Modals -->
+    <div id="modal-container-l28"></div>
+
+    <script>
+        const modalData = {
+            'strategy-sheet': {
+                title: "Team Strategy Planning Sheet",
+                content: `<div class="printable-only text-black">
+                    <div class="border-b-4 border-black mb-4 pb-2 text-center">
+                        <h2 class="text-3xl font-bold font-serif uppercase tracking-widest">Team Strategy</h2>
+                        <p class="mt-1 text-gray-600 font-serif italic">The Setup — Round 1 Planning</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1 mb-3">
+                        <p class="text-sm"><strong>Team Name:</strong> _____________________</p>
+                        <p class="text-sm"><strong>Date:</strong> _____________________</p>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">1 · Role Assignment</h3>
+                        <div class="grid grid-cols-1 gap-2 mt-2 text-sm">
+                            <p class="border-b border-gray-400 pb-2"><strong>Director:</strong> _______________________________</p>
+                            <p class="border-b border-gray-400 pb-2"><strong>Voice:</strong> _______________________________</p>
+                            <p class="border-b border-gray-400 pb-2"><strong>Runner:</strong> _______________________________</p>
+                            <p class="border-b border-gray-400 pb-2"><strong>Scribe:</strong> _______________________________</p>
+                            <p class="border-b border-gray-400 pb-2"><strong>Lookout:</strong> _______________________________</p>
+                        </div>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">2 · The Voice's Calls (agree 4 short commands)</h3>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <p class="text-sm border-b border-gray-400 pb-2"><strong>Call 1:</strong> &nbsp; ______________</p>
+                            <p class="text-sm border-b border-gray-400 pb-2"><strong>Call 2:</strong> &nbsp; ______________</p>
+                            <p class="text-sm border-b border-gray-400 pb-2"><strong>Call 3:</strong> &nbsp; ______________</p>
+                            <p class="text-sm border-b border-gray-400 pb-2"><strong>Call 4:</strong> &nbsp; ______________</p>
+                        </div>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">3 · Our Path — Stockroom to Shop Floor</h3>
+                        <p class="text-xs text-gray-600 mb-2">Sketch your route. Mark any obstacles or tricky corners.</p>
+                        <div class="border border-gray-400 rounded h-32 bg-gray-50"></div>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">4 · Back-up Plan — What if it all goes wrong?</h3>
+                        <p class="border-b border-gray-400 pb-2 mt-2">&nbsp;</p>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                    </div>
+
+                    <div class="border-2 border-dashed border-gray-400 p-4 bg-gray-50">
+                        <h3 class="font-bold uppercase text-sm mb-2">Challenge Extension (Directors):</h3>
+                        <p class="text-xs text-gray-700 mb-2">Write one sentence predicting what might cause your team to lose Round 1.</p>
+                        <p class="border-b border-gray-400 pb-2 mt-2">&nbsp;</p>
+                    </div>
+                </div>`
+            },
+            'secret-briefs': {
+                title: "Secret Role Briefs — Print, Cut, Distribute (1 per girl)",
+                content: `<div class="printable-only text-black">
+                    <div class="border-b-4 border-black mb-4 pb-2 text-center">
+                        <h2 class="text-2xl font-bold font-serif uppercase tracking-widest">Opening Night · Eyes-Only Briefs</h2>
+                        <p class="mt-1 text-gray-700 text-xs font-serif italic">Teacher: print this page, cut along the dotted borders, hand each girl her card privately. They must NOT share the secret until their team needs it — but they must share it in time, or the launch fails.</p>
+                    </div>
+
+                    <div class="brief-card">
+                        <div class="brief-header">
+                            <div class="brief-role">✦ Director</div>
+                            <div class="brief-class">For Your Eyes Only</div>
+                        </div>
+                        <p class="brief-meta">FROM: K. ARCHER &nbsp;·&nbsp; FOR: THE DIRECTOR</p>
+                        <p class="brief-body">Here's what I didn't tell the others, darling. The sponsor is watching <strong>specifically for calm leadership</strong>. She doesn't care who ends up with the most points. She cares who <em>handled pressure best</em>. Lead with that energy — your team's <em>vibe</em> is on trial, not just their speed.</p>
+                        <div class="brief-secret"><strong>Your secret power:</strong> Once per round, you may call "REGROUP" — everyone freezes for 10 seconds while your team resets the plan. Use it wisely. You only get it once.</div>
+                        <p class="brief-cut">- - - - - cut here - - - - -</p>
+                    </div>
+
+                    <div class="brief-card">
+                        <div class="brief-header">
+                            <div class="brief-role">✦ Voice</div>
+                            <div class="brief-class">For Your Eyes Only</div>
+                        </div>
+                        <p class="brief-meta">FROM: K. ARCHER &nbsp;·&nbsp; FOR: THE VOICE</p>
+                        <p class="brief-body">Three words that have <strong>ruined</strong> every launch I've ever directed: <em>"hurry up"</em>, <em>"come on"</em>, and — my personal nightmare — <em>"just do it."</em> They panic runners. They do not help.</p>
+                        <div class="brief-secret"><strong>Your secret rule:</strong> You are FORBIDDEN from using those three phrases. If you use any of them, your team loses 1 point. Find calmer ways to move your Runner. (Also: breathe. Out loud. They'll copy you.)</div>
+                        <p class="brief-cut">- - - - - cut here - - - - -</p>
+                    </div>
+
+                    <div class="brief-card">
+                        <div class="brief-header">
+                            <div class="brief-role">✦ Runner</div>
+                            <div class="brief-class">For Your Eyes Only</div>
+                        </div>
+                        <p class="brief-meta">FROM: K. ARCHER &nbsp;·&nbsp; FOR: THE RUNNER</p>
+                        <p class="brief-body">Darling, listen. This looks like it's about you, but it <em>isn't</em>. You're not being watched to see if you can walk in a straight line. You're being watched to see if you can <strong>trust</strong>. Your Voice will say something. You do it. Don't overthink. Don't correct them. Don't try to be clever.</p>
+                        <div class="brief-secret"><strong>Your secret rule:</strong> Count silently to 2 before every step. Small pause. Calm breath. If the Voice says something unclear — just stop. Wait. Trust them to try again. (Your calm sets the whole team's pace.)</div>
+                        <p class="brief-cut">- - - - - cut here - - - - -</p>
+                    </div>
+
+                    <div class="brief-card">
+                        <div class="brief-header">
+                            <div class="brief-role">✦ Scribe</div>
+                            <div class="brief-class">For Your Eyes Only</div>
+                        </div>
+                        <p class="brief-meta">FROM: K. ARCHER &nbsp;·&nbsp; FOR: THE SCRIBE</p>
+                        <p class="brief-body">Here's what nobody else knows, darling: you're <strong>the most important person</strong> in the room. Not the loudest — the most important. You're the reason nothing is forgotten. You're the eye in the storm. When the rest of them are losing it, you are the person who knows exactly what's happened.</p>
+                        <div class="brief-secret"><strong>Your secret power:</strong> You decide when the team needs to stop and re-think. If you think they're panicking, hold up the piece of paper. Everyone must pause. They WILL thank you for it.</div>
+                        <p class="brief-cut">- - - - - cut here - - - - -</p>
+                    </div>
+
+                    <div class="brief-card">
+                        <div class="brief-header">
+                            <div class="brief-role">✦ Lookout</div>
+                            <div class="brief-class">For Your Eyes Only</div>
+                        </div>
+                        <p class="brief-meta">FROM: K. ARCHER &nbsp;·&nbsp; FOR: THE LOOKOUT</p>
+                        <p class="brief-body">Something nobody's told you yet: the <strong>rival team has a weakness</strong>. I don't know which one — but every team has one. Maybe their Voice is too loud. Maybe their Director is too slow. Maybe their Runner is too confident. You'll see it before anyone else does.</p>
+                        <div class="brief-secret"><strong>Your secret power:</strong> Halfway through the round, pass the Director one <strong>specific</strong> note about the rival team — what they're doing wrong. Not vague. Specific. Example: "Their Voice says 'faster' a lot — it's stressing their Runner out." That intel wins rounds.</div>
+                        <p class="brief-cut">- - - - - cut here - - - - -</p>
+                    </div>
+
+                    <div class="border-2 border-black p-3 bg-gray-100 text-center mt-4">
+                        <p class="font-bold text-xs uppercase tracking-widest">Teacher Note</p>
+                        <p class="text-xs italic text-gray-700 mt-1">The secret powers/rules are designed to make each girl ESSENTIAL — her role can't be skipped or lived through by someone else. If she stays silent, the team loses something important. That's the forcing function.</p>
+                    </div>
+                </div>`
+            },
+            'reflection-sheet': {
+                title: "Private Reflection Sheet",
+                content: `<div class="printable-only text-black">
+                    <div class="border-b-4 border-black mb-4 pb-2 text-center">
+                        <h2 class="text-3xl font-bold font-serif uppercase tracking-widest">Opening Night</h2>
+                        <p class="mt-1 text-gray-600 font-serif italic">Your Private Account</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1 mb-3">
+                        <p class="text-sm"><strong>Name:</strong> _________________________</p>
+                        <p class="text-sm"><strong>Team:</strong> _________________________</p>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4 text-center">
+                        <p class="text-sm font-bold uppercase tracking-wider text-gray-500 mb-2">My Role</p>
+                        <div class="flex justify-center flex-wrap gap-3">
+                            <div class="border-2 border-gray-400 rounded px-4 py-2"><p class="font-bold text-sm">DIRECTOR</p></div>
+                            <div class="border-2 border-gray-400 rounded px-4 py-2"><p class="font-bold text-sm">VOICE</p></div>
+                            <div class="border-2 border-gray-400 rounded px-4 py-2"><p class="font-bold text-sm">RUNNER</p></div>
+                            <div class="border-2 border-gray-400 rounded px-4 py-2"><p class="font-bold text-sm">SCRIBE</p></div>
+                            <div class="border-2 border-gray-400 rounded px-4 py-2"><p class="font-bold text-sm">LOOKOUT</p></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 italic">Circle one (or both, if you switched)</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="border-2 border-black p-3 text-center">
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Round 1 Score</p>
+                            <p class="text-2xl font-bold mt-1">____</p>
+                        </div>
+                        <div class="border-2 border-black p-3 text-center">
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Final Round Score</p>
+                            <p class="text-2xl font-bold mt-1">____</p>
+                        </div>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">What I did well</h3>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">One thing our team got wrong — and why</h3>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                    </div>
+
+                    <div class="border-2 border-black p-4 mb-4">
+                        <h3 class="font-bold uppercase text-sm border-b border-black pb-1 mb-3">Hardest moment — and how I (or the team) handled it</h3>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                    </div>
+
+                    <div class="border-2 border-dashed border-gray-400 p-4 bg-gray-50">
+                        <h3 class="font-bold uppercase text-sm mb-2">Extension: Is a great team a group of great players — or a great group?</h3>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                        <p class="border-b border-gray-400 pb-2 mt-4">&nbsp;</p>
+                    </div>
+
+                    <div class="mt-4 border-2 border-gray-400 rounded p-3 bg-gray-50">
+                        <h3 class="font-bold text-center uppercase text-xs mb-2">Self-Check</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center"><input type="checkbox" class="w-3 h-3 mr-2"> I knew my role.</label>
+                            <label class="flex items-center"><input type="checkbox" class="w-3 h-3 mr-2"> I communicated clearly or adapted.</label>
+                            <label class="flex items-center"><input type="checkbox" class="w-3 h-3 mr-2"> I named a mistake honestly.</label>
+                            <label class="flex items-center"><input type="checkbox" class="w-3 h-3 mr-2"> I helped my team, not just myself.</label>
+                        </div>
+                    </div>
+                </div>`
+            }
+        };
+
+        // ========== SLIDES ==========
+        const slides = document.querySelectorAll('#slides-container-l28 .slide');
+        let current = 0;
+        function showSlide(i) {
+            slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+            current = i;
+            document.getElementById('prev-btn-l28').disabled = current === 0;
+            document.getElementById('prev-btn-l28').style.opacity = current === 0 ? 0.5 : 1;
+            document.getElementById('next-btn-l28').disabled = current >= slides.length - 1;
+            document.getElementById('next-btn-l28').style.opacity = current >= slides.length - 1 ? 0.5 : 1;
+            document.getElementById('slide-counter-l28').textContent = `${current + 1} / ${slides.length}`;
+        }
+
+        // ========== 5-MIN PREP TIMER ==========
+        let timerInterval = null, timerSeconds = 300, timerBaseSeconds = 300;
+        function updateTimer() {
+            const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+            const d = document.getElementById('timer-display');
+            if (!d) return;
+            d.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+            d.classList.toggle('warning', timerSeconds <= 30);
+        }
+        function startTimer(secs) {
+            if (timerInterval) return;
+            if (secs) { timerSeconds = secs; timerBaseSeconds = secs; }
+            const btn = document.getElementById('timer-start');
+            btn.textContent = 'Running...'; btn.disabled = true; btn.style.opacity = 0.5;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimer();
+                if (timerSeconds <= 0) { 
+                    clearInterval(timerInterval); 
+                    timerInterval = null; 
+                    document.getElementById('timer-display').textContent = "TIME'S UP"; 
+                    btn.textContent = 'Done'; 
+                }
+            }, 1000);
+        }
+        function resetTimer(secs) {
+            clearInterval(timerInterval); 
+            timerInterval = null; 
+            timerSeconds = secs || timerBaseSeconds; 
+            updateTimer();
+            const btn = document.getElementById('timer-start');
+            btn.textContent = 'Start Prep'; 
+            btn.disabled = false; 
+            btn.style.opacity = 1;
+            document.getElementById('timer-display').classList.remove('warning');
+        }
+
+        // ========== GENERIC ROUND TIMERS ==========
+        const roundTimers = {};
+        function startRoundTimer(displayId, totalSecs, btnId) {
+            if (roundTimers[displayId]) return;
+            let secs = totalSecs;
+            const d = document.getElementById(displayId);
+            const btn = document.getElementById(btnId);
+            btn.textContent = 'Running...'; btn.disabled = true; btn.style.opacity = 0.6;
+            roundTimers[displayId] = setInterval(() => {
+                secs--;
+                const m = Math.floor(secs / 60), s = secs % 60;
+                d.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+                d.classList.toggle('warning', secs <= 15);
+                if (secs <= 0) {
+                    clearInterval(roundTimers[displayId]);
+                    roundTimers[displayId] = null;
+                    d.textContent = "TIME'S UP";
+                    btn.textContent = 'Done';
+                }
+            }, 1000);
+        }
+        function resetRoundTimer(displayId, totalSecs, btnId) {
+            if (roundTimers[displayId]) { clearInterval(roundTimers[displayId]); roundTimers[displayId] = null; }
+            const d = document.getElementById(displayId);
+            const btn = document.getElementById(btnId);
+            const m = Math.floor(totalSecs / 60), s = totalSecs % 60;
+            d.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+            d.classList.remove('warning');
+            if (btnId === 'round-timer-btn') btn.textContent = 'Start Round';
+            else if (btnId === 'final-timer-btn') btn.textContent = 'Start Final';
+            else btn.textContent = 'Start Refine';
+            btn.disabled = false; btn.style.opacity = 1;
+        }
+
+        // ========== ICING: Chaos Meter ==========
+        let chaosLevel = 0;
+        function bumpChaos(n) {
+            chaosLevel = Math.max(0, Math.min(100, chaosLevel + n));
+            const fill = document.getElementById('chaos-fill');
+            const pct = document.getElementById('chaos-pct');
+            const bar = document.getElementById('chaos-bar');
+            if (fill) fill.style.width = chaosLevel + '%';
+            if (pct) pct.textContent = chaosLevel;
+            if (bar) bar.classList.toggle('chaos-warn', chaosLevel >= 75);
+            if (chaosLevel >= 100 && typeof confetti === 'function') {
+                // ironic confetti for total meltdown
+                confetti({ particleCount: 40, spread: 60, origin: { y: 0.5 }, colors: ['#be185d', '#9d174d', '#831843'], ticks: 50 });
+            }
+        }
+        function resetChaos() {
+            chaosLevel = 0;
+            const fill = document.getElementById('chaos-fill');
+            const pct = document.getElementById('chaos-pct');
+            const bar = document.getElementById('chaos-bar');
+            if (fill) fill.style.width = '0%';
+            if (pct) pct.textContent = '0';
+            if (bar) bar.classList.remove('chaos-warn');
+        }
+
+        // ========== ICING: Mid-round Voicemail ==========
+        function toggleVoicemail() {
+            const v = document.getElementById('midround-voicemail');
+            if (v) v.classList.toggle('visible');
+        }
+
+        // ========== WINNER ANNOUNCEMENT ==========
+        function announceWinner() {
+            const msg = document.getElementById('winner-message');
+            if (msg) {
+                msg.textContent = "✦ The Opening Night trophy goes to the team with the highest total. Go on then — take a bow. ✦";
+                msg.style.opacity = '1';
+            }
+            if (typeof confetti === 'function') {
+                const colors = ['#c08aa0', '#d4a574', '#9cb38a', '#e879a7', '#f5e1c4', '#ffffff'];
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: colors });
+                setTimeout(() => confetti({ particleCount: 80, spread: 100, origin: { x: 0.2, y: 0.7 }, colors: colors }), 300);
+                setTimeout(() => confetti({ particleCount: 80, spread: 100, origin: { x: 0.8, y: 0.7 }, colors: colors }), 600);
+                setTimeout(() => confetti({ particleCount: 150, spread: 120, origin: { y: 0.5 }, colors: colors, startVelocity: 45 }), 900);
+            }
+        }
+
+        // ========== MODALS ==========
+        function showModal(id) {
+            const data = modalData[id]; if (!data) return;
+            document.getElementById('modal-container-l28').innerHTML = `
+                <div id="${id}-modal" class="modal" style="display:flex; opacity:0; animation: fadeIn 0.3s forwards;">
+                    <div class="modal-content" style="transform: scale(0.95); animation: zoomIn 0.3s forwards;">
+                        <div class="modal-header">
+                            <h1 class="modal-title-class">${data.title}</h1>
+                            <div class="flex items-center no-print">
+                                <button onclick="printModalContent()" class="p-2 rounded-full hover:bg-slate-200 mr-2 transition-colors" title="Print"><svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm2-9V5a2 2 0 012-2h2a2 2 0 012 2v3m-2 7h.01"></path></svg></button>
+                                <span class="close-btn" onclick="closeModal('${id}-modal')">&times;</span>
+                            </div>
+                        </div>
+                        <div class="modal-body-class">${data.content}</div>
+                    </div>
+                </div>
+                <style>@keyframes zoomIn { to { transform: scale(1); } }</style>`;
+        }
+        
+        function closeModal(id) { 
+            const m = document.getElementById(id); 
+            if (m) m.style.display = 'none'; 
+        }
+        
+        function printModalContent() { 
+            document.body.classList.add('printing-modal'); 
+            window.print(); 
+            document.body.classList.remove('printing-modal'); 
+        }
+
+        function printAllSlides() {
+            let pc = document.getElementById('print-slides-container');
+            if (!pc) { pc = document.createElement('div'); pc.id = 'print-slides-container'; document.body.appendChild(pc); }
+            else { pc.innerHTML = ''; }
+
+            const allSlides = document.querySelectorAll('#slides-container-l28 .slide');
+            const total = allSlides.length;
+            allSlides.forEach((slide, i) => {
+                const c = slide.cloneNode(true);
+                c.querySelectorAll('.no-print').forEach(el => el.remove());
+                c.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
+                // Force voicemail banner visible (slide 6)
+                c.querySelectorAll('.voicemail').forEach(v => v.classList.add('visible'));
+
+                const wrap = document.createElement('div');
+                wrap.style.pageBreakAfter = 'always';
+                const header = document.createElement('div');
+                header.style.cssText = 'text-align:center; font-family:Cormorant Garamond, serif; font-size:0.8rem; letter-spacing:0.2em; color:#5a4838; padding:0.4rem 0; text-transform:uppercase; border-bottom:1px solid #e5d5cf; margin-bottom:0.6rem;';
+                header.textContent = `Opening Night · Slide ${i + 1} of ${total}`;
+                wrap.appendChild(header);
+                wrap.appendChild(c);
+                pc.appendChild(wrap);
+            });
+
+            document.body.classList.add('printing-slides-mode');
+            window.print();
+            document.body.classList.remove('printing-slides-mode');
+        }
+
+        function printAllWorksheetsOnly() {
+            let pc = document.getElementById('print-worksheets-container');
+            if (!pc) { pc = document.createElement('div'); pc.id = 'print-worksheets-container'; document.body.appendChild(pc); }
+            else { pc.innerHTML = ''; }
+
+            // Secret Briefs first — must be cut and distributed before the lesson starts
+            const order = ['secret-briefs', 'strategy-sheet', 'reflection-sheet'];
+            order.forEach(id => {
+                if (modalData[id]) {
+                    const w = document.createElement('div');
+                    w.className = 'worksheet-print-item';
+                    w.innerHTML = modalData[id].content;
+                    pc.appendChild(w);
+                }
+            });
+
+            document.body.classList.add('printing-worksheets-mode');
+            window.print();
+            document.body.classList.remove('printing-worksheets-mode');
+        }
+
+        // Backwards-compatible alias
+        function printAllWorksheets() {
+            printAllWorksheetsOnly();
+        }
+
+        // ========== EVENT LISTENERS ==========
+        document.getElementById('prev-btn-l28').addEventListener('click', () => { 
+            if (current > 0) showSlide(current - 1); 
+        });
+        document.getElementById('next-btn-l28').addEventListener('click', () => { 
+            if (current < slides.length - 1) showSlide(current + 1); 
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.code === 'Space') { 
+                e.preventDefault(); 
+                document.getElementById('next-btn-l28').click(); 
+            }
+            else if (e.key === 'ArrowLeft') { 
+                e.preventDefault(); 
+                document.getElementById('prev-btn-l28').click(); 
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => showSlide(0));
+    </script>
+</body>
+</html>

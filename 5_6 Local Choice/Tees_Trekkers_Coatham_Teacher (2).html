@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tees Trekkers — South Gare to Majuba (Teacher · Part 1)</title>
+<style>
+:root{--navy:#1E3A8A;--navy-bg:#e6ebf7;--navy-ink:#152a63;--green:#16A34A;--green-bg:#dcfce7;--green-ink:#14532d;
+--gold:#EAB308;--gold-bg:#fef3c7;--gold-ink:#78350F;--brown:#78350F;--teal:#0d9488;--teal-bg:#ccfbf1;
+--orange:#ea7317;--orange-bg:#ffedd5;--paper:#fff;--ink:#241a10;--muted:#6b5d4d;--line:#e4ddcf;--bad:#dc2626;--bad-bg:#fee2e2;--yellow:#fde047}
+*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%}
+body{font-family:'Trebuchet MS',Segoe UI,system-ui,sans-serif;background:#13205a;color:var(--ink);overflow:hidden}
+button{font-family:inherit;cursor:pointer}svg{max-width:100%}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;background:var(--paper);padding:46px 58px 84px;overflow:auto;border-top:10px solid var(--muted)}
+.slide.active{display:flex}
+.slide[data-type=title]{border-top-color:var(--navy);background:radial-gradient(circle at 28% 18%,#eef1fb,#fff 62%)}
+.slide[data-type=arrival],.slide[data-type=starter]{border-top-color:var(--teal)}
+.slide[data-type=ido]{border-top-color:var(--navy)}.slide[data-type=wedo]{border-top-color:var(--green)}
+.slide[data-type=spot]{border-top-color:var(--orange)}
+.slide[data-type=independent]{border-top-color:var(--gold);background:radial-gradient(circle at 72% 10%,#fff8e6,#fff 60%)}
+.slide[data-type=exit]{border-top-color:var(--brown)}
+.inner{max-width:1080px;margin:0 auto;width:100%}.slide.active .inner{animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.crest{position:fixed;top:13px;right:18px;z-index:20;display:flex;align-items:center;gap:8px;font-weight:bold;color:var(--navy);font-size:.82rem}
+.crest .shield{width:26px;height:30px;background:linear-gradient(160deg,var(--green),var(--navy));border:2px solid var(--gold);border-radius:5px 5px 13px 13px;display:grid;place-items:center;font-size:.85rem;color:#fff}
+.progress{position:fixed;top:0;left:0;height:5px;background:var(--gold);width:0;z-index:25;transition:width .35s}
+.badges{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.tag{display:inline-block;padding:5px 14px;border-radius:30px;font-weight:bold;font-size:.76rem;letter-spacing:.5px;color:#fff;background:var(--muted);text-transform:uppercase}
+.tag.arrival,.tag.starter{background:var(--teal)}.tag.ido{background:var(--navy)}.tag.wedo{background:var(--green)}
+.tag.spot{background:var(--orange)}.tag.independent{background:var(--gold);color:var(--brown)}.tag.exit{background:var(--brown)}.tag.title{background:var(--navy)}
+.chip-time{display:inline-block;padding:4px 12px;border-radius:30px;font-weight:bold;font-size:.76rem;background:#efe9dc;color:var(--brown)}
+.lo-chip{display:inline-block;padding:4px 11px;border-radius:30px;font-weight:bold;font-size:.72rem;background:var(--navy);color:#fff;letter-spacing:.5px}
+.part-flag{display:inline-block;padding:4px 12px;border-radius:30px;font-weight:bold;font-size:.72rem;background:var(--brown);color:#fff}
+h1.bigtitle{font-size:3.1rem;margin:.1em 0;line-height:1.05;color:var(--navy-ink)}
+.slide h2{font-size:2rem;margin:.1em 0 .4em;color:var(--navy-ink)}
+.subtitle{font-size:1.25rem;color:var(--muted);margin:0 0 16px}.lead{font-size:1.15rem}
+.slide p,.slide li{font-size:1.1rem;line-height:1.5}
+.hero-icons{font-size:3.2rem;letter-spacing:18px;margin:6px 0 14px}
+.hero-icons span{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+.hero-icons span:nth-child(2){animation-delay:.3s}.hero-icons span:nth-child(3){animation-delay:.6s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.lo-anim{list-style:none;padding:0;margin:12px 0}
+.lo-anim li{padding-left:34px;position:relative;margin:9px 0;opacity:0;animation:fadeUp .5s ease forwards}
+.lo-anim li:nth-child(1){animation-delay:.2s}.lo-anim li:nth-child(2){animation-delay:.5s}.lo-anim li:nth-child(3){animation-delay:.8s}
+.lo-anim li::before{content:"✔";position:absolute;left:0;top:0;width:24px;height:24px;background:var(--green);color:#fff;border-radius:6px;display:grid;place-items:center;font-size:.85rem}
+.mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.mcard{background:var(--navy-bg);border:1px solid #cdd8f0;border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mcard .mn{display:block;font-size:.66rem;color:var(--navy);font-weight:bold;letter-spacing:.5px}.mcard .mi{font-size:1.4rem}
+.box{border-radius:14px;padding:15px 19px;margin:13px 0}
+.sc-box{background:var(--gold-bg);border:2px solid var(--gold)}.sc-box h3{margin:0 0 6px;color:var(--gold-ink)}
+.li-box{background:#faf8f2;border:1px solid var(--line)}
+.task-box{background:var(--teal-bg);border:2px dashed var(--teal)}.task-box h3{margin:0 0 8px;color:#134e4a}
+.ido-box{background:var(--navy-bg);border-left:6px solid var(--navy)}.ido-box h3{margin:0 0 6px;color:var(--navy-ink)}
+.wedo-capture{background:var(--green-bg);border-left:6px solid var(--green)}.wedo-capture h3{margin:0 0 6px;color:var(--green-ink)}
+.scaffold-box{background:var(--navy-bg);border:1px solid #cdd8f0;font-size:1.02rem}.scaffold-box b{color:var(--navy-ink)}
+.aspire-box{background:var(--green-bg);border:1px solid #bbf7d0;border-left:6px solid var(--green)}.aspire-box b{color:var(--green-ink)}
+.exam-tip-box{background:#fffbea;border:2px solid var(--yellow);border-left:6px solid #eab308}.exam-tip-box b{color:#854d0e}
+.fact-box{background:#ecfeff;border:2px solid #a5f3fc;border-left:6px solid var(--teal)}.fact-box b{color:#134e4a}
+.misc-box{background:var(--bad-bg);border:2px solid var(--bad)}.misc-box .wrong-line{text-decoration:line-through;color:var(--bad);font-weight:bold}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.pill{display:inline-block;background:#efe9dc;border-radius:20px;padding:4px 12px;font-size:.95rem;margin:3px}
+.pill.good{background:var(--green-bg);color:var(--green-ink)}.pill.bad{background:var(--bad-bg);color:var(--bad);text-decoration:line-through}
+.mcq{margin:14px 0}.mcq .q{font-weight:bold;font-size:1.12rem;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.mcq-opt{border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px 16px;font-size:1.02rem;text-align:left;font-weight:bold}
+.mcq-opt:hover{background:#f5f1e6}.mcq-opt.right{border-color:var(--green);background:var(--green-bg);color:var(--green-ink)}
+.mcq-opt.wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}.mcq-opt:disabled{cursor:default}
+.explain{margin-top:10px;padding:11px 15px;border-radius:10px;background:var(--green-bg);color:var(--green-ink);font-weight:bold;display:none}
+.explain.show{display:block}
+.hint-btn{border:1px solid var(--gold);background:var(--gold-bg);color:var(--gold-ink);border-radius:10px;padding:7px 14px;font-weight:bold;margin-top:8px}
+.hint{display:none;margin-top:8px;font-style:italic;color:#92400e}.hint.show{display:block}
+.reveal-btn{border:2px solid var(--navy);background:var(--navy);color:#fff;border-radius:12px;padding:11px 20px;font-weight:bold;font-size:1.02rem;margin-top:10px}
+.reveal-btn:hover{opacity:.9}.reveal{display:none}.reveal.show{display:block;animation:fadeUp .4s ease}
+.mapbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#e7f1e7}
+.streets line{stroke:#c4b79a;stroke-width:7;stroke-linecap:round}.gridlines line{stroke:#cfe0cf;stroke-width:1}
+.node circle.dot{fill:#fff;stroke:#2f7d4f;stroke-width:2.5}
+.node.start circle.dot{fill:var(--gold);stroke:var(--brown);stroke-width:3}
+.node.finish circle.dot{fill:#fde68a;stroke:var(--brown);stroke-width:3}
+.node text.lbl{font-size:11px;font-weight:bold;fill:#243a24}.node .emo{font-size:15px}
+.routeline{fill:none;stroke:var(--green);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1600;stroke-dashoffset:1600}
+.routeline.draw{animation:draw 1.7s ease forwards}@keyframes draw{to{stroke-dashoffset:0}}
+.pt text{font-weight:bold;fill:#3a4a40;font-size:16px}.pt.diag text{fill:#6b7a70;font-size:13px}
+.bearing-lbl{display:none}.bearing-lbl.show{display:block}
+.nav{position:fixed;bottom:0;left:0;right:0;height:62px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:22}
+.nav .navbtn{border:none;background:rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:11px 22px;font-weight:bold;font-size:1rem}
+.nav .navbtn:hover{background:rgba(255,255,255,.26)}.nav .navbtn:disabled{opacity:.35;cursor:default}
+.nav .counter{color:#cdd8f0;font-weight:bold}.nav .tools{display:flex;gap:9px;align-items:center}
+.tool{border:none;background:rgba(255,255,255,.14);color:#fff;border-radius:10px;padding:9px 13px;font-weight:bold;font-size:.84rem}
+.tool:hover{background:rgba(255,255,255,.26)}
+.xp-wrap{display:flex;align-items:center;gap:7px;color:#cdd8f0;font-size:.8rem;font-weight:bold}
+.xp-bar{width:88px;height:9px;background:rgba(255,255,255,.16);border-radius:6px;overflow:hidden}
+.xp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .4s}
+@media(max-width:640px){.slide{padding:32px 18px 76px}h1.bigtitle{font-size:2rem}.slide h2{font-size:1.45rem}.slide p,.slide li{font-size:1rem}.nav .navbtn{padding:10px 14px}.tool{padding:8px 9px;font-size:.78rem}.xp-wrap{display:none}.crest span{display:none}.mission-grid{grid-template-columns:1fr 1fr}}
+.modal-back{position:fixed;inset:0;background:rgba(15,12,6,.6);display:none;z-index:40;align-items:center;justify-content:center;padding:18px}
+.modal-back.show{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:560px;width:100%;padding:24px;max-height:88vh;overflow:auto}
+.modal h3{margin:0 0 12px}.modal .close{float:right;border:none;background:#efe9dc;border-radius:10px;padding:6px 12px;font-weight:bold}
+.tier{border-radius:12px;padding:12px 16px;margin:10px 0}
+.tier.f{background:var(--green-bg);border-left:5px solid var(--green)}
+.tier.m{background:var(--orange-bg);border-left:5px solid var(--orange)}
+.tier.h{background:var(--navy-bg);border-left:5px solid var(--navy)}
+.tier b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.roster{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.roster input{flex:1;min-width:150px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
+.namebtn{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;margin:3px;font-weight:bold}
+.picked-name{font-size:1.7rem;font-weight:bold;text-align:center;color:var(--navy);margin:12px 0;min-height:1.7rem}
+.ta-list{margin:0;padding-left:18px}.ta-list li{margin:7px 0}
+.vocab{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.vocab span{background:var(--navy-bg);color:var(--navy-ink);border-radius:18px;padding:3px 10px;font-size:.85rem}
+.overlay{position:fixed;inset:0;background:rgba(30,58,138,.95);color:#fff;display:none;z-index:50;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.overlay.show{display:flex}.overlay h2{font-size:2.4rem;margin:0 0 6px}
+.overlay ul{text-align:left;max-width:480px;font-size:1.08rem}
+.confetti{position:fixed;top:-12px;width:11px;height:15px;z-index:60;pointer-events:none}
+.handover-card{background:#fff;border:2px solid var(--gold);border-radius:16px;padding:18px 22px;margin:14px 0}
+.handover-card ol{margin:8px 0 0;padding-left:22px}.handover-card li{margin:8px 0;font-weight:bold}
+.big-arrow{font-size:1.8rem;text-align:center;color:var(--gold-ink);margin:6px 0}
+</style>
+</head>
+<body>
+<div class="crest"><span class="shield">🧭</span><span>Tees Trekkers · South Gare → Majuba</span></div>
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <section class="slide active" data-type="title"><div class="inner">
+    <div class="badges"><span class="tag title">Tees Trekkers</span><span class="chip-time">⏱ 2 min</span><span class="part-flag">PART 1 · led from the front</span></div>
+    <div class="hero-icons"><span>🥾</span><span>🧭</span><span>🦆</span></div>
+    <h1 class="bigtitle">South Gare → Majuba Expedition</h1>
+    <p class="subtitle">Planning the walk we do on the 16th of June</p>
+    <ul class="lo-anim">
+      <li><b>LO:</b> To plan a walk, take a bearing off a map, and follow a route — South Gare to Majuba.</li>
+      <li>You've earned this: compasses at Eston Rec, up Eston Hills, your own route planned and walked.</li>
+      <li>Part 1 (now): we plan this walk together. Part 2 (next): you run it on the devices — then we do it for real on the 16th.</li>
+    </ul>
+    <div class="mission-grid">
+      <div class="mcard"><span class="mn">LO3</span><span class="mi">🎒</span> Leader's kit</div>
+      <div class="mcard"><span class="mn">LO1</span><span class="mi">🗺️</span> Plan your route</div>
+      <div class="mcard"><span class="mn">LO4</span><span class="mi">✍️</span> Describe it</div>
+      <div class="mcard"><span class="mn">LO2</span><span class="mi">🧭</span> Bearing off a map</div>
+      <div class="mcard"><span class="mn">LO5</span><span class="mi">🦆</span> Protect the SSSI</div>
+      <div class="mcard"><span class="mn">LO6</span><span class="mi">🏅</span> Orienteering</div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="arrival"><div class="inner">
+    <div class="badges"><span class="tag arrival">Arrival Task</span><span class="chip-time">⏱ 3 min</span></div>
+    <h2>As you come in…</h2>
+    <div class="box task-box"><h3>On your whiteboard:</h3>
+      <p>1. List <b>3 things a leader</b> would carry on a coastal walk — and why.</p>
+      <p>2. If you're facing <b>North</b>, which direction is on your <b>left</b>?</p>
+      <p>3. It starts <b>raining</b> on the coast — what keeps the group safe?</p>
+      <p>4. Why might <b>one path</b> be better than another along the dunes?</p>
+    </div>
+    <div class="box scaffold-box"><b>Stuck?</b> Think weather 🧥, finding your way 🧭, staying safe 🩹. For Q2, picture a clock face with North at 12.</div>
+  </div></section>
+
+  <section class="slide" data-type="starter"><div class="inner">
+    <div class="badges"><span class="tag starter">Starter</span><span class="chip-time">⏱ 3 min</span></div>
+    <h2>🥾 Planning the big one</h2>
+    <p class="lead">You've already used a compass round <b>Eston Rec</b>, climbed <b>Eston Hills</b>, and planned and walked <b>your own local route</b>. Now we step it up to the coast: today we <b>plan the South Gare → Coatham Dunes → Majuba walk</b> — the one we actually do on the <b>16th of June</b>. Get the plan right and you lead it on the day.</p>
+    <div class="cols">
+      <div class="box ido-box"><h3>Think · Pair · Share</h3><p>What does a compass actually <i>do</i>?</p><p>Why plan a route <i>before</i> a group sets off along an exposed coast?</p></div>
+      <div class="box fact-box"><b>The route:</b> South Gare to Majuba runs along Coatham Sands — a protected stretch (SSSI) of marram dunes with ground-nesting birds, right by the sea at Redcar.</div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="ido"><div class="inner">
+    <div class="badges"><span class="tag ido">I Do</span><span class="lo-chip">LO3 · LO1</span><span class="chip-time">⏱ 5 min</span></div>
+    <h2>🎒 A leader's kit &amp; a good route</h2>
+    <div class="cols">
+      <div>
+        <div class="box ido-box"><h3>What a leader carries</h3>
+          <div><span class="pill good">🗺️ Map</span><span class="pill good">🧭 Compass</span><span class="pill good">🩹 First aid</span><span class="pill good">💧 Water</span><span class="pill good">🍎 Food</span><span class="pill good">🧥 Waterproofs</span><span class="pill good">📣 Whistle</span><span class="pill good">📱 Phone</span><span class="pill good">🔦 Torch</span><span class="pill good">⛺ Shelter</span></div>
+          <div style="margin-top:6px"><span class="pill bad">☂️ Umbrella</span><span class="pill bad">🧊 Cool box</span></div>
+        </div>
+        <div class="box exam-tip-box"><b>Good route:</b> starts at <b>South Gare</b>, finishes at <b>Majuba</b>, and <b>keeps to the coastal path</b> (it crosses a protected SSSI).</div>
+      </div>
+      <div>
+        <div class="mapbox" id="mapDemo"></div>
+        <button class="reveal-btn" id="showRoute">▶ Watch me plan a route</button>
+        <div class="reveal" id="routeWords" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="wedo"><div class="inner">
+    <div class="badges"><span class="tag wedo">We Do</span><span class="lo-chip">LO1</span><span class="chip-time">⏱ 4 min</span></div>
+    <h2>🗺️ Plan one together</h2>
+    <div class="cols">
+      <div class="mapbox" id="mapWe"></div>
+      <div>
+        <div class="box wedo-capture"><h3>Build it on the board</h3><p>Where do we head <b>first</b> from South Gare? Which <b>direction</b> is that?</p><p>Keep to the path, and bring us out to <b>Majuba</b>.</p></div>
+        <div class="box aspire-box"><b>Aspire:</b> describe all four legs using a bearing, a distance and a landmark each.</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="spot"><div class="inner">
+    <div class="badges"><span class="tag spot">Spot the Mistake</span><span class="chip-time">⏱ 3 min</span></div>
+    <h2>🔍 What's wrong with this plan?</h2>
+    <div class="box misc-box">
+      <p class="wrong-line">My route: South Gare → cut straight across the dunes → home.</p>
+      <p class="wrong-line">Kit: phone, crisps, and an umbrella ☂️.</p>
+      <p class="wrong-line">"No need for a map — I'll just follow the lake."</p>
+    </div>
+    <button class="reveal-btn" id="spot1btn">▶ Reveal the fixes</button>
+    <div class="reveal box aspire-box" id="spot1">
+      <p>❌ <b>Keep to the coastal path</b> — cutting across the dunes damages a protected habitat and disturbs nesting birds.</p>
+      <p>❌ <b>Finish at Majuba</b>, not "home" — keep <b>off the fragile dunes</b>, and swap the umbrella for <b>waterproofs</b>.</p>
+      <p>❌ <b>"Just follow the lake"</b> — you need a <b>map and compass</b> to navigate and stay safe.</p>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="ido"><div class="inner">
+    <div class="badges"><span class="tag ido">I Do</span><span class="lo-chip">LO2</span><span class="chip-time">⏱ 5 min</span></div>
+    <h2>🧭 Take a bearing off the map</h2>
+    <div class="cols">
+      <div class="rose" id="roseDemo"></div>
+      <div>
+        <div class="box ido-box"><h3>The leader's method</h3>
+          <p>1. Lay the compass <b>edge</b> from where you are to the next control.</p>
+          <p>2. <b>Turn the dial</b> so its lines point to <b>grid north</b> (straight up the map).</p>
+          <p>3. <b>Read the bearing</b> at the index line.</p>
+        </div>
+        <button class="reveal-btn" id="showBearings">▶ Show the four key bearings</button>
+        <div class="box exam-tip-box" style="margin-top:10px"><b>Bearings:</b> N = 000° · E = 090° · S = 180° · W = 270°. The diagonals (NE/SE/SW/NW) are the trip-ups.</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="spot"><div class="inner">
+    <div class="badges"><span class="tag spot">Spot the Mistake</span><span class="chip-time">⏱ 3 min</span></div>
+    <h2>🔍 Two bearing errors — find them</h2>
+    <div class="box misc-box">
+      <p class="wrong-line">"Facing North, <b>East</b> is on my <b>left</b>."</p>
+      <p class="wrong-line">"The bearing for <b>South</b> is <b>090°</b>."</p>
+    </div>
+    <button class="reveal-btn" id="spot2btn">▶ Reveal the fixes</button>
+    <div class="reveal box aspire-box" id="spot2">
+      <p>✅ Facing North, <b>East is on the RIGHT</b> (West is on the left).</p>
+      <p>✅ South is <b>180°</b>. 090° is <b>East</b>.</p>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="wedo"><div class="inner">
+    <div class="badges"><span class="tag wedo">We Do</span><span class="lo-chip">LO2</span><span class="chip-time">⏱ 4 min</span></div>
+    <h2>🧭 Bearings together</h2>
+    <div class="box wedo-capture"><h3>On whiteboards / hands up</h3>
+      <p>1. Facing <b>East</b>, what's <b>behind</b> you?</p>
+      <p>2. What <b>bearing</b> is <b>West</b>?</p>
+      <p>3. On the map, <b>South Gare → Open Dunes</b> is roughly which direction?</p>
+    </div>
+    <button class="reveal-btn" id="we2btn">▶ Reveal answers</button>
+    <div class="reveal box aspire-box" id="we2"><p>1. <b>West</b> &nbsp; 2. <b>270°</b> &nbsp; 3. roughly <b>North-East</b> (up and to the right).</p></div>
+    <div class="box aspire-box"><b>Aspire:</b> what bearing is halfway between North and East? (045° = NE)</div>
+  </div></section>
+
+  <section class="slide" data-type="ido"><div class="inner">
+    <div class="badges"><span class="tag ido">I Do → We Do</span><span class="lo-chip">LO4 · LO6</span><span class="chip-time">⏱ 4 min</span></div>
+    <h2>✍️ Describe a route, then follow it</h2>
+    <p class="lead">A leader describes a route using <b>at least two types</b> of terminology, then <b>follows the bearings</b> control to control — that's orienteering.</p>
+    <div class="cols">
+      <div class="box ido-box"><h3>Two types is the minimum (LO4)</h3>
+        <p>"Head <b>south-east</b> (direction) for <b>900 m</b> (distance) to the <b>Open Dunes</b> (landmark)."</p>
+        <p>Other types: <b>grid reference</b>, <b>time</b>, <b>contour</b> features.</p>
+      </div>
+      <div>
+        <div class="box wedo-capture"><h3>You describe the next leg</h3><p>From the Open Dunes to the SSSI — give me <b>two</b> types of terminology.</p></div>
+        <button class="reveal-btn" id="followBtn">▶ Reveal an example</button>
+        <div class="reveal" id="followAns" style="margin-top:8px"><div class="box aspire-box"><b>"Head south-east for about 1 km to Coatham Sands SSSI."</b> Direction + distance + landmark = three types.</div></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="exit"><div class="inner">
+    <div class="badges"><span class="tag exit">Ready Check</span><span class="chip-time">⏱ 4 min</span></div>
+    <h2>✅ Ready for your own expedition?</h2>
+    <p class="lead">Lock in 3 answers before you go solo.</p>
+    <div class="mcq" data-mcq="1">
+      <div class="q">1. Which of these would a walk <b>leader NOT</b> carry?</div>
+      <div class="opts"><button class="mcq-opt">Compass and map</button><button class="mcq-opt">First aid and whistle</button><button class="mcq-opt" data-correct>An umbrella</button></div>
+      <button class="hint-btn">💡 Hint</button><div class="hint">Which one is useless in wind and on a long walk?</div>
+      <div class="explain">✓ An umbrella is no use on an exposed walk — leaders carry waterproofs.</div>
+    </div>
+    <div class="mcq" data-mcq="2">
+      <div class="q">2. To take a bearing off a map, you turn the dial until its lines point to…</div>
+      <div class="opts"><button class="mcq-opt">the nearest lake</button><button class="mcq-opt" data-correct>grid north (straight up the map)</button><button class="mcq-opt">the way you're facing</button></div>
+      <button class="hint-btn">💡 Hint</button><div class="hint">It lines up with the map's north–south grid lines.</div>
+      <div class="explain">✓ Align the dial to grid north, then read the bearing at the index.</div>
+    </div>
+    <div class="mcq" data-mcq="3">
+      <div class="q">3. On the dunes you see a sign about nesting birds. You should…</div>
+      <div class="opts"><button class="mcq-opt">let your dog run free</button><button class="mcq-opt" data-correct>keep dogs on a lead and stay on paths</button><button class="mcq-opt">walk through the reeds for a look</button></div>
+      <button class="hint-btn">💡 Hint</button><div class="hint">It's a protected nature reserve — protect the wildlife.</div>
+      <div class="explain">✓ Dogs on leads, paths only — that protects the habitat (LO5).</div>
+    </div>
+    <div class="reveal box aspire-box" id="readyDone"><b>🎉 You're trained up — to your devices for Part 2!</b></div>
+  </div></section>
+
+  <section class="slide" data-type="independent"><div class="inner">
+    <div class="badges"><span class="tag independent">Independent</span><span class="chip-time">⏱ ~40 min</span><span class="part-flag">PART 2 · the Expedition app on your devices</span></div>
+    <h2>🥾 Your turn — run the South Gare → Majuba Expedition</h2>
+    <div class="big-arrow">↓ open the <b>South Gare → Majuba Expedition</b> app ↓</div>
+    <div class="handover-card"><ol>
+      <li>🎒 <b>Leader's kit</b> + plan <b>your own</b> route to Majuba (LO3, LO1).</li>
+      <li>✍️ <b>Describe</b> your first leg with 2+ terminology types (LO4).</li>
+      <li>🧭 <b>Take a bearing</b> off the map at every control (LO2 · LO6).</li>
+      <li>🦆 <b>Protect the SSSI</b>, earn your Trekker rank, and 🖨️ <b>print your evidence</b> (LO5).</li>
+    </ol></div>
+    <div class="cols">
+      <div class="box scaffold-box"><b>If you get stuck:</b> use 🔊 read-aloud, bigger text in ⚙️ Settings, and "💡 Show me" on the bearings dial.</div>
+      <div class="box aspire-box"><b>Going for Gold:</b> 5+ control route, read the exact bearing, and nail every habitat question first time.</div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-type="exit"><div class="inner">
+    <div class="badges"><span class="tag exit">Plenary</span><span class="chip-time">⏱ 5 min</span><span class="part-flag">back together after Part 2</span></div>
+    <h2>🏔️ Expedition debrief</h2>
+    <div class="box wedo-capture"><h3>Share with the group</h3>
+      <p>📍 <b>One control</b> on your route — and the <b>bearing</b> to reach it.</p>
+      <p>🦆 One thing you did to <b>protect the SSSI</b>.</p>
+      <p>🤔 Which was <b>hardest</b> — taking the bearing or planning the route? Why?</p>
+    </div>
+    <button class="reveal-btn" id="finishBtn">🏁 Finish the lesson</button>
+  </div></section>
+
+</div>
+
+<div class="nav">
+  <button class="navbtn" id="prevBtn">← Back</button>
+  <div class="tools">
+    <button class="tool" id="taBtn">👋 TA Focus</button>
+    <button class="tool" id="ccBtn">🎯 Cold Call</button>
+    <div class="xp-wrap">XP <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div></div>
+  </div>
+  <div class="counter"><span id="counter">1 / 13</span></div>
+  <button class="navbtn" id="nextBtn">Next →</button>
+</div>
+
+<div class="modal-back" id="taBack"><div class="modal">
+  <button class="close" data-close>Close</button><h3>👋 TA Focus</h3>
+  <div id="taBody"></div>
+  <div style="margin-top:14px"><b>Key vocabulary:</b><div class="vocab"><span>bearing</span><span>grid north</span><span>control point</span><span>terminology</span><span>SSSI / habitat</span><span>orienteering</span><span>contour</span></div></div>
+</div></div>
+
+<div class="modal-back" id="ccBack"><div class="modal">
+  <button class="close" data-close>Close</button><h3>🎯 Cold Call</h3>
+  <div class="roster"><input id="nameInput" placeholder="Add a pupil name…"><button class="tool" id="addName" style="background:var(--green)">Add</button></div>
+  <div id="nameList" style="margin-bottom:6px"></div>
+  <button class="reveal-btn" id="pickBtn" style="width:100%">🎲 Pick a pupil</button>
+  <div class="picked-name" id="pickedName"></div>
+  <p style="font-size:.85rem;color:var(--muted);margin:4px 0">Tiered questions for this slide:</p>
+  <div id="ccBody"></div>
+</div></div>
+
+<div class="overlay" id="overlay">
+  <div style="font-size:3rem">🥾🧭🦆</div>
+  <h2>Plan complete!</h2>
+  <p>You've planned the walk like a leader. You can:</p>
+  <ul>
+    <li>✔ choose a leader's kit and plan your own route (LO3, LO1)</li>
+    <li>✔ take a bearing off a map and describe a route (LO2, LO4)</li>
+    <li>✔ protect the SSSI and navigate the route (LO5, LO6)</li>
+  </ul>
+  <p style="font-size:1.05rem"><b>Next: your devices for Part 2 — then the real walk on the 16th of June. 🥾</b></p>
+  <button class="reveal-btn" id="ovClose" style="background:#fff;color:var(--navy);border-color:#fff;margin-top:10px">Close</button>
+</div>
+
+<script>
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+var slides=$$(".slide"),cur=0,xp=0;
+var DIRS=["N","NE","E","SE","S","SW","W","NW"];
+var actx=null;
+function beep(f,d,t){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();var o=actx.createOscillator(),g=actx.createGain();o.type=t||"sine";o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.001,actx.currentTime);g.gain.exponentialRampToValueAtTime(.16,actx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d);}catch(e){}}
+function good(){beep(660,.12);setTimeout(function(){beep(880,.14);},90);}
+
+function show(i){i=Math.max(0,Math.min(slides.length-1,i));cur=i;
+  slides.forEach(function(s,k){s.classList.toggle("active",k===i);});
+  $("#counter").textContent=(i+1)+" / "+slides.length;
+  $("#progress").style.width=(i/(slides.length-1)*100)+"%";
+  $("#prevBtn").disabled=(i===0);$("#nextBtn").disabled=(i===slides.length-1);
+  var inner=$(".inner",slides[i]);if(inner){inner.style.animation="none";void inner.offsetWidth;inner.style.animation="";}
+  slides[i].scrollTop=0;}
+$("#prevBtn").onclick=function(){show(cur-1);};
+$("#nextBtn").onclick=function(){show(cur+1);};
+document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT")return;
+  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();show(cur+1);}
+  if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(cur-1);}});
+function addXp(n){xp+=n;$("#xpFill").style.width=Math.min(100,xp)+"%";}
+
+/* Coastal route — same waypoints as the pupil app (South Gare → Majuba) */
+var NODES={
+  gare:{name:"South Gare",x:60,y:108,e:"🚦",start:true},
+  dunes:{name:"Open Dunes",x:185,y:140,e:"🏖️"},
+  sssi:{name:"Coatham Sands SSSI",x:330,y:195,e:"🦆"},
+  golf:{name:"Golf Links",x:470,y:255,e:"⛳"},
+  majuba:{name:"Majuba C.P.",x:548,y:298,e:"🅿️",finish:true}
+};
+var STREETS=[["gare","dunes"],["dunes","sssi"],["sssi","golf"],["golf","majuba"]];
+function mapSVG(prefix){
+  var s='<svg viewBox="0 0 600 460" style="width:100%;height:auto;display:block">';
+  // The route runs NW (South Gare) -> SE (Majuba) hugging the coast.
+  // Sea sits ABOVE/right of the path; beach is a band along the path; dunes & reserve sit BELOW/left.
+  // Base = dunes/reserve (land)
+  s+='<rect width="600" height="460" fill="#e3ddc6"/>';
+  // Sea: a band sweeping across the top, following the same NW->SE fall as the route
+  s+='<path d="M0,0 L600,0 L600,300 Q470,220 350,170 Q210,120 80,88 L0,62 Z" fill="#bcdfe9"/>';
+  // surf/waves hint near the shoreline
+  s+='<path d="M0,62 L80,88 Q210,120 350,170 Q470,220 600,300" fill="none" stroke="#fff" stroke-width="3" opacity="0.6"/>';
+  // Beach: a sandy band just inland of the shoreline, parallel to the route
+  s+='<path d="M0,62 L80,88 Q210,120 350,170 Q470,220 600,300 L600,400 Q470,320 350,280 Q210,228 80,196 L0,170 Z" fill="#efe0b4"/>';
+  s+='<text x="470" y="90" text-anchor="middle" font-size="13" fill="#5b7a90" font-style="italic">North Sea</text>';
+  s+='<text x="150" y="400" text-anchor="middle" font-size="12" fill="#6b7d5b" font-style="italic">Coatham dunes &amp; reserve (SSSI)</text>';
+  s+='<g class="gridlines">';for(var gx=60;gx<600;gx+=90){s+='<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="460"/>';}for(var gy=40;gy<460;gy+=90){s+='<line x1="0" y1="'+gy+'" x2="600" y2="'+gy+'"/>';}s+='</g>';
+  s+='<g class="streets">';STREETS.forEach(function(p){var a=NODES[p[0]],b=NODES[p[1]];s+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"/>';});s+='</g>';
+  s+='<g transform="translate(38,42)"><line x1="0" y1="20" x2="0" y2="-14" stroke="#1E3A8A" stroke-width="2.5"/><polygon points="0,-20 5,-10 -5,-10" fill="#1E3A8A"/><text x="0" y="-24" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E3A8A">N</text></g>';
+  s+='<polyline id="'+prefix+'Line" class="routeline" points=""/>';
+  Object.keys(NODES).forEach(function(id){var n=NODES[id];var ly=(n.y<200)?n.y-22:n.y+32;
+    s+='<g class="node'+(n.start?" start":"")+(n.finish?" finish":"")+'"><circle class="dot" cx="'+n.x+'" cy="'+n.y+'" r="15"/><text class="emo" x="'+n.x+'" y="'+(n.y+1)+'" text-anchor="middle" dominant-baseline="central">'+n.e+'</text><text class="lbl" x="'+n.x+'" y="'+ly+'" text-anchor="middle">'+n.name+'</text></g>';});
+  s+='</svg>';return s;
+}
+function drawRoute(prefix,ids){
+  $("#"+prefix+"Line").setAttribute("points",ids.map(function(id){return NODES[id].x+","+NODES[id].y;}).join(" "));
+  var line=$("#"+prefix+"Line");line.classList.remove("draw");void line.getBBox();line.classList.add("draw");
+}
+function roseSVG(prefix){
+  var cx=150,cy=150,R=120,s='<svg viewBox="0 0 300 300" style="max-width:300px;display:block;margin:0 auto">';
+  s+='<circle cx="150" cy="150" r="128" fill="#fff" stroke="#e5e7eb"/><circle cx="150" cy="150" r="86" fill="none" stroke="#f1f1f1"/>';
+  DIRS.forEach(function(d,i){var a=(i*45-90)*Math.PI/180;s+='<line x1="150" y1="150" x2="'+(cx+Math.cos(a)*R)+'" y2="'+(cy+Math.sin(a)*R)+'" stroke="#eee"/>';});
+  s+='<polygon points="150,40 162,150 150,160 138,150" fill="#EAB308"/><polygon points="150,260 162,150 150,140 138,150" fill="#9ca3af"/><circle cx="150" cy="150" r="6" fill="#374151"/>';
+  DIRS.forEach(function(d,i){var a=(i*45-90)*Math.PI/180;var lr=(d.length===1)?138:112;var x=cx+Math.cos(a)*lr,y=cy+Math.sin(a)*lr+5;s+='<g class="pt'+(d.length>1?" diag":"")+'"><text x="'+x+'" y="'+y+'" text-anchor="middle">'+d+'</text></g>';});
+  [["000",0],["090",90],["180",180],["270",270]].forEach(function(b){var a=(b[1]-90)*Math.PI/180;var x=cx+Math.cos(a)*66,y=cy+Math.sin(a)*66+4;s+='<text class="bearing-lbl '+prefix+'-brg" x="'+x+'" y="'+y+'" text-anchor="middle" font-size="13" font-weight="bold" fill="#EAB308">'+b[0]+'°</text>';});
+  s+='</svg>';return s;
+}
+
+$("#mapDemo").innerHTML=mapSVG("demo");
+$("#mapWe").innerHTML=mapSVG("we");
+$("#roseDemo").innerHTML=roseSVG("rose");
+
+$("#showRoute").onclick=function(){
+  drawRoute("demo",["gare","dunes","sssi","golf","majuba"]);
+  var w=$("#routeWords");w.classList.add("show");
+  w.innerHTML='<div class="box li-box"><b>South Gare → SE (about 120°) to the Open Dunes → SE to Coatham Sands SSSI → SE to the Golf Links → E (about 090°) to Majuba.</b> Keep to the path along the coast ✔ finishes at Majuba ✔</div>';
+  good();addXp(8);this.disabled=true;
+};
+$("#showBearings").onclick=function(){$$(".rose-brg").forEach(function(e){e.classList.add("show");});good();addXp(6);this.disabled=true;};
+function reveal(btnId,boxId,n){var b=$(btnId);b.onclick=function(){$(boxId).classList.add("show");good();addXp(n||5);b.disabled=true;};}
+reveal("#spot1btn","#spot1",6);reveal("#spot2btn","#spot2",6);reveal("#we2btn","#we2",6);reveal("#followBtn","#followAns",6);
+
+$$(".mcq").forEach(function(m){var answered=false;
+  $$(".mcq-opt",m).forEach(function(b){b.onclick=function(){
+    if(answered)return;
+    if(b.hasAttribute("data-correct")){b.classList.add("right");answered=true;$$(".mcq-opt",m).forEach(function(x){x.disabled=true;});$(".explain",m).classList.add("show");good();addXp(10);checkReady();}
+    else{b.classList.add("wrong");b.disabled=true;beep(200,.18,"triangle");}};});
+  var hb=$(".hint-btn",m);if(hb)hb.onclick=function(){$(".hint",m).classList.toggle("show");};});
+function checkReady(){if($$(".mcq").every(function(m){return $(".mcq-opt.right",m);}))$("#readyDone").classList.add("show");}
+
+$("#finishBtn").onclick=function(){$("#overlay").classList.add("show");confetti();good();};
+$("#ovClose").onclick=function(){$("#overlay").classList.remove("show");};
+
+var TA={
+1:"Set the framing: this plans the real walk on the 16th of June. Part 1 led by you; Part 2 they run solo on devices. Link back to Eston Rec / Eston Hills / their own route. Read the LO and the six missions aloud.",
+2:"Circulate as they arrive. Q2 (facing north, left = west) anchors the whole compass section — note who's unsure.",
+3:"Brisk. Draw out that a compass shows direction and a plan keeps the group safe on an exposed coast. Cold-call a quiet pupil with the Foundation prompt.",
+4:"Model thinking aloud while plotting. Stress: starts at South Gare, finishes at Majuba, keeps to the coastal path. Press 'Watch me plan a route'.",
+5:"Hand the pen over — let pupils pick controls. Push correct direction names. Stretch finishers with the 5+ control loop.",
+6:"Let them spot before revealing. Tie the cut-across-the-dunes error to Coatham Sands being a protected SSSI.",
+7:"Teach the real method: edge along route, dial to grid north, read it. This is exactly the app's bearing tool. Reveal bearings after they try.",
+8:"Quick error-spotting. Make sure a pupil says the fix aloud (South = 180°, not 090°), not you.",
+9:"Whiteboards up so you can scan. Watch for left/right confusion. Aspire (045°) for the most secure.",
+10:"LO4 needs TWO terminology types. Accept any valid pair from a pupil. Preview that following the bearings = orienteering (LO6).",
+11:"Readiness check before release — anyone wrong here needs a quick recap before Part 2. Hints available.",
+12:"Settle them onto devices. Roam and prompt. Read-aloud, big text and calm mode are in the app's Settings. Runs ~40 min.",
+13:"After Part 2. Use their printed evidence as talking points. 'Finish the lesson' fires the summary."
+};
+$("#taBtn").onclick=function(){$("#taBody").innerHTML='<p>'+(TA[cur+1]||"Support pupils with this slide.")+'</p>';$("#taBack").classList.add("show");};
+
+var CC={
+2:{f:"Name one thing a leader would carry.",m:"Facing north, what's on your left?",h:"Why is keeping to the path important on protected dunes?"},
+3:{f:"What is a compass used for?",m:"Why plan a route before setting off?",h:"Give two reasons a planned route keeps a group safe."},
+4:{f:"Where does our route start?",m:"Name two things a leader carries and why.",h:"What three things make a route a 'good' route here?"},
+5:{f:"Is Majuba near the sea or inland?",m:"South Gare → Open Dunes is which direction?",h:"Describe all four legs with a bearing and a landmark each."},
+6:{f:"Spot one thing wrong with the plan.",m:"Why shouldn't we cut across the dunes?",h:"Rewrite the plan correctly in one sentence."},
+7:{f:"What does N stand for?",m:"What bearing is East?",h:"Describe the three steps to take a bearing off a map."},
+8:{f:"Is East on your left when facing north?",m:"What is the correct bearing for South?",h:"Correct both mistakes and explain why."},
+9:{f:"Point to West.",m:"Facing east, what's behind you?",h:"What's the bearing halfway between North and East?"},
+10:{f:"Name one type of route terminology.",m:"Describe one leg using a direction and a distance.",h:"Describe a leg using three types of terminology."},
+11:{f:"Which item would a leader NOT carry?",m:"The dial lines point to which north?",h:"Why must a route stay on marked paths on an SSSI?"},
+12:{f:"What's your first step in the app?",m:"What must your route start and finish at?",h:"What evidence will you produce by the end?"},
+13:{f:"Name one control on your route.",m:"Name a bearing you took today.",h:"Which was hardest — bearings or planning — and why?"}
+};
+function renderCC(){var c=CC[cur+1];
+  $("#ccBody").innerHTML=c?('<div class="tier f"><b>Foundation (U–1)</b>'+c.f+'</div><div class="tier m"><b>Middle (2–3)</b>'+c.m+'</div><div class="tier h"><b>Higher (3–5)</b>'+c.h+'</div>'):'<p>No targeted question for this slide.</p>';}
+var roster=[];
+function renderRoster(){$("#nameList").innerHTML=roster.map(function(n){return '<span class="namebtn">'+n+'</span>';}).join(" ")||'<span style="color:#94a3b8;font-size:.85rem">No names yet — add your class.</span>';}
+$("#addName").onclick=function(){var v=$("#nameInput").value.trim();if(v){roster.push(v);$("#nameInput").value="";renderRoster();}};
+$("#nameInput").addEventListener("keydown",function(e){if(e.key==="Enter")$("#addName").click();});
+$("#pickBtn").onclick=function(){if(!roster.length){$("#pickedName").textContent="Add some names first!";return;}$("#pickedName").textContent="👉 "+roster[Math.floor(Math.random()*roster.length)];good();};
+$("#ccBtn").onclick=function(){renderCC();renderRoster();$("#ccBack").classList.add("show");};
+
+$$("[data-close]").forEach(function(b){b.onclick=function(){b.closest(".modal-back").classList.remove("show");};});
+$$(".modal-back").forEach(function(m){m.onclick=function(e){if(e.target===m)m.classList.remove("show");};});
+
+function confetti(){var cols=["#EAB308","#16A34A","#1E3A8A","#78350F","#fff"];
+  for(var i=0;i<70;i++){(function(){var c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"vw";c.style.background=cols[Math.floor(Math.random()*cols.length)];document.body.appendChild(c);
+    var top=-12,vy=2+Math.random()*3,drift=(Math.random()-.5)*3,rot=Math.random()*10,ang=parseFloat(c.style.left);
+    var id=setInterval(function(){top+=vy;ang+=drift/8;c.style.top=top+"vh";c.style.left=ang+"vw";c.style.transform="rotate("+(top*rot)+"deg)";if(top>110){clearInterval(id);c.remove();}},30);})();}}
+
+show(0);renderRoster();
+</script>
+</body>
+</html>
