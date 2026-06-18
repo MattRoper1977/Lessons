@@ -28,6 +28,39 @@
     .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
     .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
     .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    /* Multiple-choice option grid (arrival) */
+    .mc{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:1.02rem;color:#0f172a}
+    .mc span{padding:6px 10px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-weight:600}
+    /* Animated reaction stage (I Do) */
+    .rx-stage{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:18px 14px;margin-top:6px}
+    .rx-side{display:flex;flex-direction:column;gap:8px;align-items:stretch;min-width:150px}
+    .rx-cap{font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;text-align:center;color:#64748b}
+    .rx-chip{padding:9px 12px;border-radius:10px;font-weight:800;border:2px solid;display:flex;align-items:center;gap:8px;font-size:1rem;opacity:0}
+    .rx-react .rx-chip{background:#dbeafe;border-color:#2563eb;color:#1e40af}
+    .rx-prod .rx-chip{background:#dcfce7;border-color:#16a34a;color:#166534}
+    .rx-chip .rx-emoji{font-size:1.3rem}
+    .revealed .rx-react .rx-chip{animation:rxInL .55s ease-out forwards}
+    .revealed .rx-prod .rx-chip{animation:rxInR .55s ease-out forwards}
+    .revealed .rx-react .rx-chip:nth-child(3){animation-delay:.15s}
+    .revealed .rx-prod .rx-chip:nth-child(2){animation-delay:.55s}
+    .revealed .rx-prod .rx-chip:nth-child(3){animation-delay:.7s}
+    .revealed .rx-prod .rx-chip:nth-child(4){animation-delay:.85s}
+    @keyframes rxInL{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes rxInR{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:translateX(0)}}
+    .rx-mito{display:flex;flex-direction:column;align-items:center;gap:4px;color:#5b21b6;font-weight:900;font-size:.8rem}
+    .rx-mito svg{animation:pulse 2.4s ease-in-out infinite}
+    .rx-arrow{font-size:2.4rem;color:#7c3aed;font-weight:900;line-height:1}
+    /* Equation Detective (starter) */
+    .suspect{cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;margin:8px 0;background:#fff;transition:all .15s;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .suspect:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);border-color:#94a3b8}
+    .suspect.solved{border-color:var(--success);background:#f0fdf4}
+    .suspect.cleared{border-color:#f59e0b;background:#fffbeb}
+    .susp-tag{font-weight:900;color:#7c3aed;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;min-width:88px}
+    .susp-eq{font-family:monospace;font-weight:bold;font-size:1.05rem;flex:1;min-width:230px}
+    .susp-hint{font-size:.72rem;color:#94a3b8;font-weight:700}
+    .suspect.investigated .susp-hint{display:none}
+    .verdict{display:none;width:100%;font-weight:bold;font-size:.95rem;padding:8px 10px;border-radius:8px;background:#f1f5f9;color:#334155}
+    .suspect.investigated .verdict{display:block;animation:fadeInUp .25s}
     .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
     .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
     .tag-exit{background:var(--sc-bg);color:#9a3412}
@@ -57,7 +90,28 @@
     .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
     .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
     #print-area{display:none}
-    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.indep-timer{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}}
+    @media print{
+      body{overflow:visible;background:#fff;height:auto;color:#000}
+      .controls,.slide-container,.progress-wrap,.progress-label,.indep-timer,.modal-overlay,#lesson-complete{display:none!important}
+      #print-area{display:block!important;padding:2px}
+      @page{margin:11mm}
+      .print-section{display:none}
+      .print-section.visible{display:block;border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-area h1,#print-area h2,#print-area h3{break-after:avoid-page;page-break-after:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+      .print-section h1{font-size:1.4rem;margin:0 0 8px}
+      .print-section h2{font-size:1.12rem;margin:0 0 8px}
+      .ko-table tr{break-inside:avoid;page-break-inside:avoid}
+      .print-box,.print-grid-2x2,.scaffold-print-box{break-inside:avoid;page-break-inside:avoid}
+      .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}.print-box{border:1px solid #000;padding:10px}
+      .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+      .ko-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}
+      .scaffold-print-box{border:2px dashed #94a3b8;padding:12px;margin-bottom:12px;border-radius:8px;background:#f8fafc}
+      .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:14px}
+      body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+      body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+      body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+    }
     /* ── BUG FIX: shake keyframe (used by wrong-tile feedback) ── */
     @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
     @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
@@ -77,7 +131,46 @@
     .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
     .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
     .xp-chip.xp-pop{animation:popIn .4s}
-    @media print{.teacher-bar{display:none!important}}
+    @media print{.teacher-bar{display:none!important}
+    /* ---- Gas-Tests pack styling ---- */
+    #print-area{color:#0f172a}
+    .print-section h1,.print-section h2{color:#1e3a8a}
+    .ko-table{border:2px solid #1e3a8a;border-radius:8px;overflow:hidden}
+    .ko-table th{background:#1e3a8a!important;color:#fff!important;border-color:#1e3a8a;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-table td{border:1px solid #cbd5e1}
+    .ko-table tr:nth-child(even) td{background:#f1f5f9;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-note{border-left:5px solid #1e3a8a;background:#eff6ff;padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:.92rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-note.warn{border-left-color:#dc2626;background:#fef2f2}
+    .ko-note.hook{border-left-color:#16a34a;background:#f0fdf4}
+    .scaffold-print-box{border:2px dashed #94a3b8;background:#f8fafc;border-radius:12px;padding:0 16px 14px;margin-bottom:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .scaffold-print-box>h3{margin:0 -16px 12px;background:#1e3a8a;color:#fff;padding:8px 16px;border-radius:10px 10px 0 0;font-size:1rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .callout{border:2px dashed #94a3b8;border-radius:12px;padding:12px 16px;margin-bottom:16px;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .callout-title{font-weight:800;margin:0 0 8px;font-size:1rem}
+    .callout.wordbank{background:#fffbeb;border-color:#f59e0b}
+    .callout.starters{background:#eff6ff;border-color:#60a5fa}
+    .exam-frame{background:#fff7ed;border:2px solid #f97316;border-radius:12px;padding:12px 16px;margin-bottom:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .exam-frame .callout-title{color:#c2410c}
+    .callout.mistakes{background:#fef2f2;border-color:#f87171}
+    .callout.mistakes ul{margin:6px 0 0;padding-left:20px}.callout.mistakes li{margin-bottom:5px}
+    /* ---- We Do evidence page ---- */
+    body.print-evidence #print-area{display:block!important}
+    body.print-evidence .print-section{display:none!important}
+    body.print-evidence #print-evidence{display:block!important;padding:0}
+    .ev-fit{transform-origin:top left}
+    .ev-head{border:2px solid #1e3a8a;border-radius:12px;padding:10px 14px;margin-bottom:12px;background:#eff6ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-head h2{margin:0 0 4px;font-size:1.2rem;color:#1e3a8a}
+    .ev-meta{font-size:.85rem;color:#0f172a}
+    .ev-panel{border:2px dashed #94a3b8;border-radius:12px;padding:8px 14px 10px;margin-bottom:12px;background:#fff;page-break-inside:avoid;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-label{display:inline-block;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;color:#fff;padding:3px 12px;border-radius:999px;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-label.ido{background:#7c3aed}.ev-label.wedo{background:#0891b2}
+    .ev-slidecopy{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;transform:none!important;display:block!important;animation:none!important;overflow:visible!important}
+    .ev-slidecopy .logo,.ev-slidecopy .slide-tag,.ev-slidecopy .float-dots,.ev-slidecopy .step-ctrl,.ev-slidecopy .evidence-btn,.ev-slidecopy .hint-text,.ev-slidecopy button,.ev-slidecopy .turn-talk{display:none!important}
+    .ev-slidecopy .v5-step{display:block!important;opacity:1!important;transform:none!important;max-height:none!important}
+    .ev-slidecopy .answer{display:block!important}
+    .ev-slidecopy .content-grid{display:grid!important}
+    .ev-slidecopy h2{font-size:1rem;margin:.2rem 0 .4rem}
+    .ev-slidecopy .li-box,.ev-slidecopy .ido-box,.ev-slidecopy .scaffold-box,.ev-slidecopy .aspire-box,.ev-slidecopy .exam-tip-box,.ev-slidecopy .warn-box,.ev-slidecopy .misc-box{margin:6px 0}
+    }
 
     /* ── V4: Modals (TA Focus + Cold Call + Leaderboard) ── */
     .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
@@ -190,7 +283,7 @@
     @media (max-width:640px){
       .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
       h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
-      .content-grid,.arrival-grid,.uses-grid{grid-template-columns:1fr!important}
+      .content-grid,.arrival-grid,.uses-grid,.mc{grid-template-columns:1fr!important}
       .logo{width:96px;top:14px;right:14px}
       .teacher-bar{flex-wrap:wrap;max-width:94%;justify-content:center}
       .sort-zone,.atp-bins{flex-direction:column}
@@ -222,15 +315,15 @@
   <div style="text-align:center;margin-top:2%"><div class="animate-enter">
     <span class="slide-tag tag-lesson">Lesson 4</span>
     <h1>Lesson 4: Aerobic Respiration</h1>
-    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">The Word &amp; Balanced Symbol Equations</p>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">The Word &amp; Symbol Equations</p>
     <div class="title-hero"><span>🍬</span><span>🫁</span><span>⚖️</span><span>🔢</span><span>🔋</span></div>
     <div class="li-box" style="margin:14px auto;max-width:680px;text-align:left"><strong>Learning Objectives:</strong>
-      <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li><strong>Recall (2.34/2.35)</strong> – Last lesson: respiration releases energy from glucose to make ATP.</li><li><strong>2.37</strong> – Know the word equation <em>and</em> the balanced symbol equation for aerobic respiration.</li></ul>
+      <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li><strong>Recall (2.34/2.35)</strong> – Last lesson: respiration releases energy from glucose to make ATP.</li><li><strong>2.37</strong> – Know the word equation <em>and</em> the symbol equation for aerobic respiration.</li></ul>
     </div>
     <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
-      <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> write the word equation for aerobic respiration and label reactants and products.</p>
-      <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> write the balanced symbol equation C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O.</p>
-      <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> prove the symbol equation is balanced by counting atoms on each side.</p>
+      <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> pick out the correct word equation and name the reactants and products.</p>
+      <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> write the word equation, and copy the symbol equation C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O correctly.</p>
+      <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> write the symbol equation from memory and explain what the big 6s mean.</p>
     </div>
     <p style="font-size:1.05rem;margin-top:10px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
   </div>
@@ -249,9 +342,8 @@
   <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
   <span class="slide-tag tag-arrival">⭐ Fab 4</span>
   <h2>The Fab 4 – Recall to Get You Started</h2>
-  <div class="li-box"><strong>Instructions:</strong> Answer in your books from memory. Q1–3 recall previous lessons. Q4 leads into today.</div>
+  <div class="li-box"><strong>Instructions:</strong> Multiple choice — in your books, write the <strong>letter</strong> of the answer you think is right for each one. No calling out. Reveal when ready.</div>
   <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
-  <div class="scaffold-box" style="margin-top:12px"><h3 style="margin:0 0 8px;color:var(--scaffold-border)">⭐ The Fab 4 — Quick-Fire Recall</h3><p style="font-size:.9rem;margin:0 0 8px;color:var(--muted)">Four to warm up the brain — recall from last lesson (Respiration &amp; ATP). Try all 4 before the reveal!</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">1. What does ATP stand for?</p><p class="answer" style="font-size:.9rem;margin-top:6px">Adenosine triphosphate</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">2. Which organelle makes most ATP?</p><p class="answer" style="font-size:.9rem;margin-top:6px">Mitochondria</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">3. Which gas does aerobic respiration need?</p><p class="answer" style="font-size:.9rem;margin-top:6px">Oxygen</p></div><div class="task-box" style="padding:10px;margin:0"><p style="margin:0;font-size:.95rem;font-weight:bold">4. Where does the glucose come from?</p><p class="answer" style="font-size:.9rem;margin-top:6px">Digested &amp; absorbed food</p></div></div></div>
   <div class="level-toggle">
     <button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation (U–1)</button>
     <button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle (2–3)</button>
@@ -259,24 +351,24 @@
   </div>
 
   <div id="arrival-foundation" class="arrival-grid">
-    <div class="task-box animate-enter"><h3>1. ATP (Recall)</h3><p>What does <strong>ATP</strong> stand for, and what is its job?</p><p class="answer">Adenosine triphosphate. It provides energy for cells.</p></div>
-    <div class="task-box animate-enter anim-delay-1"><h3>2. Reactants (Recall)</h3><p>Aerobic respiration uses <strong>glucose</strong>. Which <strong>gas</strong> does it also need?</p><p class="answer">Oxygen.</p></div>
-    <div class="task-box animate-enter anim-delay-2"><h3>3. Products (Recall)</h3><p>Name the <strong>two</strong> waste products made when glucose reacts with oxygen.</p><p class="answer">Carbon dioxide and water.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Equations</h3><p>Last lesson you met the <strong>word equation</strong>. Today we write it as a proper <strong>equation</strong>. What goes on the <strong>left</strong> of the arrow — reactants or products?</p><p class="answer">Reactants (the things that go IN).</p></div>
+    <div class="task-box animate-enter"><h3>1. Energy</h3><p style="margin:0 0 8px">What does <strong>ATP</strong> give a cell?</p><div class="mc"><span>A) A colour</span><span>B) Energy</span><span>C) Water</span><span>D) A smell</span></div><p class="answer">✅ B) Energy. ATP is the cell's energy.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. The gas needed</h3><p style="margin:0 0 8px">Aerobic respiration uses glucose and one <strong>gas</strong>. Which gas?</p><div class="mc"><span>A) Oxygen</span><span>B) Carbon dioxide</span><span>C) Nitrogen</span><span>D) Hydrogen</span></div><p class="answer">✅ A) Oxygen.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. The waste made</h3><p style="margin:0 0 8px">What two things are <strong>made</strong> in aerobic respiration?</p><div class="mc"><span>A) Glucose + oxygen</span><span>B) Carbon dioxide + water</span><span>C) Salt + sugar</span><span>D) Oil + gas</span></div><p class="answer">✅ B) Carbon dioxide + water.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today's lead-in</h3><p style="margin:0 0 8px">In an equation, the things that go <strong>IN</strong> are on the…</p><div class="mc"><span>A) Left</span><span>B) Right</span></div><p class="answer">✅ A) Left. The "ingredients" go on the left of the arrow.</p></div>
   </div>
 
   <div id="arrival-middle" class="arrival-grid" style="display:none">
-    <div class="task-box animate-enter"><h3>1. Word Equation (Recall)</h3><p>Write the <strong>word equation</strong> for aerobic respiration from memory.</p><p class="answer">Glucose + Oxygen → Carbon Dioxide + Water (+ ATP)</p></div>
-    <div class="task-box animate-enter anim-delay-1"><h3>2. Location (Recall)</h3><p>In which <strong>organelle</strong> does aerobic respiration mostly happen, and why do muscle cells have lots of them?</p><p class="answer">Mitochondria. Muscles need lots of ATP for contraction.</p></div>
-    <div class="task-box animate-enter anim-delay-2"><h3>3. Respiration ≠ Breathing</h3><p>Explain the difference between <strong>respiration</strong> and <strong>breathing</strong>.</p><p class="answer">Respiration = chemical reaction in cells making ATP. Breathing = moving air in/out of the lungs.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Equations</h3><p>The formula for <strong>glucose</strong> is C₆H₁₂O₆. Suggest what the <strong>symbol equation</strong> for aerobic respiration might look like.</p><p class="answer">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</p></div>
+    <div class="task-box animate-enter"><h3>1. Word equation</h3><p style="margin:0 0 8px">Which is the correct <strong>word equation</strong> for aerobic respiration?</p><div class="mc"><span>A) Glucose + Oxygen → Carbon Dioxide + Water</span><span>B) Glucose + Carbon Dioxide → Oxygen + Water</span><span>C) Oxygen + Water → Glucose + Carbon Dioxide</span><span>D) Glucose → Carbon Dioxide + Oxygen</span></div><p class="answer">✅ A) Glucose + Oxygen → Carbon Dioxide + Water.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Not the same as breathing</h3><p style="margin:0 0 8px">Respiration is…</p><div class="mc"><span>A) moving air in and out of the lungs</span><span>B) a reaction in cells that releases energy</span><span>C) exactly the same as breathing</span><span>D) something only plants do</span></div><p class="answer">✅ B) A chemical reaction in cells that releases energy.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Why so many mitochondria?</h3><p style="margin:0 0 8px">Muscle cells have <strong>lots</strong> of mitochondria because they…</p><div class="mc"><span>A) store fat</span><span>B) need lots of energy (ATP)</span><span>C) make oxygen</span><span>D) need colour</span></div><p class="answer">✅ B) They need lots of energy (ATP) to contract.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today's lead-in</h3><p style="margin:0 0 8px">The chemical <strong>formula</strong> for glucose is…</p><div class="mc"><span>A) CO₂</span><span>B) H₂O</span><span>C) C₆H₁₂O₆</span><span>D) O₂</span></div><p class="answer">✅ C) C₆H₁₂O₆.</p></div>
   </div>
 
   <div id="arrival-higher" class="arrival-grid" style="display:none">
-    <div class="task-box animate-enter"><h3>1. Energy (Recall)</h3><p>Explain why we say respiration <strong>releases</strong> energy rather than <strong>makes</strong> energy.</p><p class="answer">Energy cannot be created (conservation of energy). It is already stored in glucose bonds and is released/transferred to ATP.</p></div>
-    <div class="task-box animate-enter anim-delay-1"><h3>2. Mitochondria (Recall)</h3><p>Explain why an actively respiring cell would contain many <strong>mitochondria</strong>.</p><p class="answer">Each mitochondrion carries out aerobic respiration. More mitochondria = more respiration = more ATP for high energy demand.</p></div>
-    <div class="task-box animate-enter anim-delay-2"><h3>3. The Journey (Recall)</h3><p>Trace <strong>glucose</strong> from a slice of bread to a respiring muscle cell.</p><p class="answer">Starch digested → glucose → absorbed in ileum → blood → muscle cell → mitochondria → respiration → ATP.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Lead-in: Balancing</h3><p>Why must a <strong>symbol equation</strong> have the <strong>same number of each atom</strong> on both sides?</p><p class="answer">Atoms can't be created or destroyed in a reaction (conservation of mass) — they are only rearranged, so each side must balance.</p></div>
+    <div class="task-box animate-enter"><h3>1. Releases, not makes</h3><p style="margin:0 0 8px">We say respiration <strong>releases</strong> energy (not makes it) because…</p><div class="mc"><span>A) energy is already stored in glucose and is let out</span><span>B) cells make energy from nothing</span><span>C) energy comes from the air</span><span>D) energy is made in the lungs</span></div><p class="answer">✅ A) The energy is already stored in glucose — respiration releases it.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. The big number</h3><p style="margin:0 0 8px">In <strong>6O₂</strong>, what does the big 6 in front mean?</p><div class="mc"><span>A) six molecules of oxygen</span><span>B) six grams</span><span>C) six degrees</span><span>D) six cells</span></div><p class="answer">✅ A) Six molecules of oxygen.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Write it (scaffolded)</h3><p style="margin:0 0 6px">Fill the gaps to make the <strong>word equation</strong>:</p><p style="font-family:monospace;font-weight:bold;margin:0">____ + ____ → ____ + ____ (+ ATP)</p><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Word bank: glucose · oxygen · carbon dioxide · water</div><p class="answer">✅ Glucose + Oxygen → Carbon Dioxide + Water (+ ATP)</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Why oxygen helps (scaffolded)</h3><p style="margin:0 0 6px">Finish the sentence:</p><p style="font-style:italic;margin:0">"Oxygen lets glucose break down ________, so it releases ________ energy."</p><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Choose from: completely / a little &nbsp;•&nbsp; lots of / hardly any</div><p class="answer">✅ Oxygen lets glucose break down <strong>completely</strong>, so it releases <strong>lots of</strong> energy.</p></div>
   </div>
 </div>
 
@@ -284,15 +376,19 @@
 <div class="slide" data-title="Starter">
   <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
   <span class="slide-tag tag-starter">Starter</span>
-  <h2>Starter: Which Equation is Right?</h2>
-  <div class="li-box"><strong>Instructions:</strong> Only <strong>ONE</strong> of these is the correct aerobic equation. On your sheet, <strong>tick</strong> the one you think is right and be ready to say <strong>why</strong>. No calling out!</div>
-  <div style="max-width:820px;margin:10px auto">
-    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>A)</strong> Glucose + Water → Carbon Dioxide + Oxygen + ATP</p></div>
-    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>B)</strong> Oxygen + Carbon Dioxide → Glucose + Water + ATP</p></div>
-    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>C)</strong> Glucose + Oxygen → Carbon Dioxide + Water + ATP</p></div>
-    <div class="task-box" style="padding:14px"><p style="margin:0;font-family:monospace;font-size:1.05rem"><strong>D)</strong> Glucose → Oxygen + Carbon Dioxide + ATP</p></div>
-    <div class="scaffold-box"><strong>🧠 Hint:</strong> What does respiration <strong>need</strong> (reactants, LEFT)? What does it <strong>make</strong> (products, RIGHT)?</div>
-    <div class="aspire-box"><strong>Aspire:</strong> For each WRONG equation (A, B, D) — can you say exactly what's wrong with it?</div>
+  <h2>🕵️ Starter: Equation Detective</h2>
+  <div class="li-box"><strong>Your mission:</strong> Four equations are in the line-up. Only <strong>ONE</strong> is the real aerobic respiration equation — the other three are imposters. Decide in your book first, then <strong>tap a suspect</strong> to investigate. No calling out!</div>
+  <div style="max-width:880px;margin:6px auto">
+    <div class="suspect" onclick="accuse(this)" data-verdict="fake" data-alibi="🚫 Imposter! It uses WATER going in and makes OXYGEN. Respiration is the other way round — it needs oxygen and makes water.">
+      <span class="susp-tag">Suspect A</span><span class="susp-eq">Glucose + Water → Carbon Dioxide + Oxygen + ATP</span><span class="susp-hint">tap to investigate ▸</span><div class="verdict"></div></div>
+    <div class="suspect" onclick="accuse(this)" data-verdict="fake" data-alibi="🚫 Imposter! The arrow is the wrong way round — this is BUILDING glucose (that's photosynthesis), not releasing energy.">
+      <span class="susp-tag">Suspect B</span><span class="susp-eq">Oxygen + Carbon Dioxide → Glucose + Water + ATP</span><span class="susp-hint">tap to investigate ▸</span><div class="verdict"></div></div>
+    <div class="suspect" onclick="accuse(this)" data-verdict="real" data-alibi="✅ Case solved! Reactants (glucose + oxygen) go IN on the left; products (carbon dioxide + water + ATP) come OUT on the right.">
+      <span class="susp-tag">Suspect C</span><span class="susp-eq">Glucose + Oxygen → Carbon Dioxide + Water + ATP</span><span class="susp-hint">tap to investigate ▸</span><div class="verdict"></div></div>
+    <div class="suspect" onclick="accuse(this)" data-verdict="fake" data-alibi="🚫 Imposter! There is NO oxygen going in. Aerobic respiration must use oxygen.">
+      <span class="susp-tag">Suspect D</span><span class="susp-eq">Glucose → Oxygen + Carbon Dioxide + ATP</span><span class="susp-hint">tap to investigate ▸</span><div class="verdict"></div></div>
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧠 Detective's hint:</strong> Ask two things — what does respiration <strong>need</strong> (goes LEFT)? What does it <strong>make</strong> (goes RIGHT)?</div>
+    <div class="aspire-box"><strong>Aspire:</strong> Be the lead detective — for each imposter, give its "alibi": say <em>exactly</em> what's wrong with it.</div>
   </div>
 </div>
 
@@ -300,61 +396,58 @@
   <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
   <span class="slide-tag tag-ido">I Do</span>
   <h2>I Do: The Aerobic Respiration Equations (Spec 2.37)</h2>
-  <div class="li-box"><strong>Key Idea:</strong> For aerobic respiration you must know <strong>both</strong> the <strong>word equation</strong> and the <strong>balanced symbol equation</strong>.</div>
-  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/2</span></div>
+  <div class="li-box"><strong>Key Idea:</strong> Aerobic respiration has <strong>two</strong> equations that mean the same thing — a <strong>word equation</strong> and a <strong>symbol equation</strong>.</div>
+  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/3</span></div>
 
   <div class="content-grid" style="height:auto">
     <div>
       <div class="ido-box animate-enter">
-        <h3 style="margin-top:0;color:var(--ido-border)">The Word Equation</h3>
+        <h3 style="margin-top:0;color:var(--ido-border)">1 · The Word Equation</h3>
         <div class="eq-box" style="font-size:1.1rem;border:3px solid var(--success);border-radius:14px;padding:18px;text-align:center;font-weight:900;color:#1e3a8a;background:#fff">Glucose + Oxygen → Carbon Dioxide + Water</div>
         <p style="margin-top:10px"><strong>Reactants</strong> (LEFT): glucose and oxygen go <strong>in</strong>.</p>
         <p><strong>Products</strong> (RIGHT): carbon dioxide and water come <strong>out</strong> (plus <strong>ATP</strong>, the energy).</p>
       </div>
       <div class="ido-box animate-enter anim-delay-1">
-        <h3 style="margin-top:0;color:var(--ido-border)">The Symbol Equation</h3>
+        <h3 style="margin-top:0;color:var(--ido-border)">2 · The Symbol Equation</h3>
         <div class="eq-box" style="font-size:1.15rem;border:3px solid var(--success);border-radius:14px;padding:18px;text-align:center;font-weight:900;color:#1e3a8a;background:#fff">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> → 6CO<sub>2</sub> + 6H<sub>2</sub>O</div>
-        <p style="margin-top:10px">The <strong>6</strong> in front means <strong>six molecules</strong> of that substance. <strong>C₆H₁₂O₆</strong> is the formula for glucose.</p>
+        <p style="margin-top:10px">The <strong>same</strong> equation in chemical "code". The big <strong>6</strong> means <strong>six molecules</strong>. <strong>C₆H₁₂O₆</strong> is the formula for glucose.</p>
       </div>
     </div>
     <div>
-      <div class="diagram-container animate-enter anim-delay-1" style="min-height:150px">
-        <h3 style="margin-top:0;color:var(--ido-border)">Reactants → Products</h3>
-        <svg width="360" height="120" viewBox="0 0 360 120">
-          <rect x="5" y="40" width="150" height="44" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
-          <text x="80" y="60" text-anchor="middle" font-weight="bold" font-size="11" fill="#1e40af">REACTANTS (IN)</text>
-          <text x="80" y="76" text-anchor="middle" font-size="10" fill="#1e40af">Glucose + Oxygen</text>
-          <text x="185" y="68" text-anchor="middle" font-size="22" fill="#7c3aed" font-weight="bold">→</text>
-          <rect x="205" y="40" width="150" height="44" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
-          <text x="280" y="60" text-anchor="middle" font-weight="bold" font-size="11" fill="#166534">PRODUCTS (OUT)</text>
-          <text x="280" y="76" text-anchor="middle" font-size="10" fill="#166534">CO₂ + Water + ATP</text>
-          <text x="80" y="28" text-anchor="middle" font-size="9" fill="#64748b">What goes in</text>
-          <text x="280" y="28" text-anchor="middle" font-size="9" fill="#64748b">What comes out</text>
-        </svg>
-      </div>
-      <div class="warn-box animate-enter anim-delay-2"><p style="margin:0"><strong>⚠️ Exam Tip:</strong> The spec says you must know the <strong>balanced</strong> symbol equation. Don't drop the <strong>6</strong> in front of O₂, CO₂ and H₂O!</p></div>
-    </div>
-
-  <div class="v5-step v5-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
-    <div class="diagram-container">
-      <h3 style="margin-top:0;color:var(--ido-border)">Where does it happen?</h3>
-      <svg width="220" height="120" viewBox="0 0 220 120">
-        <ellipse cx="110" cy="60" rx="100" ry="50" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
-        <path d="M30 60 Q50 30 80 50 Q100 65 70 80 Q50 90 40 70" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.5"/>
-        <path d="M120 40 Q150 20 170 45 Q190 65 160 75 Q140 80 130 60" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.5"/>
-        <text x="110" y="55" text-anchor="middle" font-weight="bold" font-size="11" fill="#5b21b6">MITOCHONDRIA</text>
-        <text x="110" y="72" text-anchor="middle" font-size="9" fill="#7c3aed">"Powerhouse of the cell"</text>
-        <text x="110" y="105" text-anchor="middle" font-size="10" fill="#64748b">Glucose + O₂ → CO₂ + H₂O + ATP</text>
-      </svg>
-    </div>
-    <div>
-      <div class="scaffold-box"><strong>🧠 Memory Trick:</strong> "<strong>G</strong>iant <strong>O</strong>ctopus <strong>C</strong>aught <strong>W</strong>ater" — <strong>G</strong>lucose + <strong>O</strong>xygen → <strong>C</strong>arbon dioxide + <strong>W</strong>ater. Reactants first, products after.</div>
-      <div class="aspire-box"><strong>Aspire:</strong> Why does aerobic respiration release a <strong>lot</strong> of ATP? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">Oxygen lets glucose be broken down <strong>completely</strong>, so almost all the stored energy is released as ATP.</span></div>
+      <div class="exam-tip-box animate-enter anim-delay-1" style="margin-top:0"><p style="margin:0"><strong>Copy it exactly:</strong> keep the small subscript numbers <em>and</em> the big <strong>6</strong>s in front of O₂, CO₂ and H₂O.</p></div>
+      <div class="scaffold-box" style="margin-top:12px"><strong>🧠 Memory Trick:</strong> "<strong>G</strong>iant <strong>O</strong>ctopus <strong>C</strong>aught <strong>W</strong>ater" → <strong>G</strong>lucose + <strong>O</strong>xygen → <strong>C</strong>arbon dioxide + <strong>W</strong>ater. Reactants first, products after.</div>
     </div>
   </div>
-</div>
 
-  <div class="misc-box v5-step"><p><strong>Don't write:</strong> <span class="misc-wrong">C6H12O6 + O2 → CO2 + H2O</span> (no numbers)</p><p><strong>Write:</strong> <span class="misc-right">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</span> (balanced!)</p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">An unbalanced equation loses the mark. The number <strong>6</strong> belongs in front of O₂, CO₂ and H₂O.</p></div>
+  <div class="v5-step" style="margin-top:12px">
+    <h3 style="text-align:center;color:var(--ido-border);margin:0 0 6px">▶ Watch it flow: reactants IN → products OUT</h3>
+    <div class="rx-stage">
+      <div class="rx-side rx-react">
+        <span class="rx-cap">Reactants — go IN (left)</span>
+        <div class="rx-chip"><span class="rx-emoji">🍬</span> Glucose (C₆H₁₂O₆)</div>
+        <div class="rx-chip"><span class="rx-emoji">🫁</span> Oxygen (6O₂)</div>
+      </div>
+      <span class="rx-arrow">→</span>
+      <div class="rx-mito">
+        <svg width="76" height="70" viewBox="0 0 76 70" aria-label="mitochondria"><ellipse cx="38" cy="35" rx="34" ry="22" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/><path d="M12 35 Q24 20 42 31 Q54 39 30 47 Q18 49 16 38" fill="none" stroke="#7c3aed" stroke-width="2" opacity=".55"/><text x="38" y="39" text-anchor="middle" font-size="9" font-weight="bold" fill="#5b21b6">MITO</text></svg>
+        <span>Mitochondria</span>
+      </div>
+      <span class="rx-arrow">→</span>
+      <div class="rx-side rx-prod">
+        <span class="rx-cap">Products — come OUT (right)</span>
+        <div class="rx-chip"><span class="rx-emoji">💨</span> Carbon dioxide (6CO₂)</div>
+        <div class="rx-chip"><span class="rx-emoji">💧</span> Water (6H₂O)</div>
+        <div class="rx-chip"><span class="rx-emoji">🔋</span> ATP (energy!)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="v5-step v5-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+    <div class="ido-box" style="margin:0"><h3 style="margin-top:0;color:var(--ido-border)">Why so much energy (ATP)?</h3><p style="margin:0">Because there is <strong>oxygen</strong>, glucose is broken down <strong>completely</strong> into CO₂ and water. Almost <strong>all</strong> the energy stored in glucose is released — so aerobic respiration gives a <strong>large</strong> amount of ATP.</p></div>
+    <div class="aspire-box" style="margin:0"><strong>Aspire:</strong> What would happen to the amount of ATP if there was <strong>no oxygen</strong>? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">Much less ATP — without oxygen, glucose can't be broken down completely (that's anaerobic respiration, next lesson!).</span></div>
+  </div>
+
+  <div class="misc-box v5-step"><p><strong>Don't write:</strong> <span class="misc-wrong">C6H12O6 + O2 → CO2 + H2O</span> (the 6s are missing)</p><p><strong>Write:</strong> <span class="misc-right">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</span> (with the 6s!)</p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">The big <strong>6</strong>s in front of O₂, CO₂ and H₂O are part of the correct equation — copy them every time.</p></div>
   <div class="turn-talk"><strong>Talk to your partner:</strong> What are the <strong>two reactants</strong> and the <strong>two products</strong> of aerobic respiration? Be ready to build the equation next.</div>
 </div>
 
@@ -363,8 +456,8 @@
   <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
   <span class="slide-tag tag-wedo">We Do</span>
   <h2>We Do: Build Both Aerobic Equations</h2>
-  <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each tile into the right gap to build the <strong>word equation</strong> and the <strong>balanced symbol equation</strong>. Reactants go LEFT, products go RIGHT. (Works by touch or mouse.)</div>
-  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+  <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each tile into the right gap to build the <strong>word equation</strong> and the <strong>symbol equation</strong>. Reactants go LEFT, products go RIGHT. (Works by touch or mouse.)</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printEvidence('wedo1')">📸 Print Evidence</button>
 
   <div id="wedo1" class="wedo-capture" style="margin-top:6px">
     <div class="score-bar"><span>Tiles placed: <span class="score" id="wedo1-score">0</span>/8</span><button class="ghost small" onclick="resetDnD('wedo1')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo1')">👁️ Reveal</button></div>
@@ -400,7 +493,7 @@
       </div>
     </div>
 
-    <span class="eq-label-tag" style="display:block;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--ido-border);margin:10px 0 2px">2 · Balanced Symbol Equation</span>
+    <span class="eq-label-tag" style="display:block;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--ido-border);margin:10px 0 2px">2 · Symbol Equation</span>
     <div class="eq-frame">
       <div class="eq-grp-wrap"><span class="glabel" style="background:#2563eb">Reactants (IN)</span>
         <div class="eq-group eq-react">
@@ -421,110 +514,12 @@
 
     <div id="wedo1-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:18px"></div>
 
-    <div class="scaffold-box" style="margin-top:10px"><strong>🧡 Tip:</strong> The word and symbol equations say the <strong>same thing</strong> — just different "languages". Each <strong>6</strong> in the symbol equation keeps the atoms balanced.</div>
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧡 Tip:</strong> The word and symbol equations say the <strong>same thing</strong> — just different "languages". The matching <strong>6</strong>s belong in front of O₂, CO₂ and H₂O.</div>
     <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">Word: <strong>Glucose + Oxygen → Carbon Dioxide + Water</strong>. Symbol: <strong>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</strong>. The order on each side matches!</div></div>
     <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
   </div>
 </div>
 
-<div class="slide" data-title="I Do: Balancing the Equation (Spec 2.37)" data-type="ido">
-  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-  <span class="slide-tag tag-ido">I Do</span>
-  <h2>I Do: Balancing the Symbol Equation (Spec 2.37)</h2>
-  <div class="li-box"><strong>Key Idea:</strong> A <strong>balanced</strong> equation has the <strong>same number of each atom</strong> on both sides. Atoms aren't created or destroyed — they're just rearranged.</div>
-  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/2</span></div>
-
-  <div class="content-grid" style="height:auto">
-    <div>
-      <div class="ido-box animate-enter">
-        <h3 style="margin-top:0;color:var(--ido-border)">Count the Atoms</h3>
-        <div class="eq-box" style="font-size:1.05rem;border:3px solid var(--success);border-radius:12px;padding:14px;text-align:center;font-weight:900;color:#1e3a8a;background:#fff">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> → 6CO<sub>2</sub> + 6H<sub>2</sub>O</div>
-        <table style="width:100%;border-collapse:collapse;font-size:1.02rem;margin:12px 0">
-          <tr style="border-bottom:2px solid #e2e8f0"><th style="padding:7px;text-align:left">Atom</th><th style="padding:7px;text-align:center">Left</th><th style="padding:7px;text-align:center">Right</th><th style="padding:7px;text-align:center">✓</th></tr>
-          <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:7px"><strong>Carbon (C)</strong></td><td style="padding:7px;text-align:center">6</td><td style="padding:7px;text-align:center">6</td><td style="padding:7px;text-align:center;color:var(--success);font-weight:900">✅</td></tr>
-          <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:7px"><strong>Hydrogen (H)</strong></td><td style="padding:7px;text-align:center">12</td><td style="padding:7px;text-align:center">12</td><td style="padding:7px;text-align:center;color:var(--success);font-weight:900">✅</td></tr>
-          <tr><td style="padding:7px"><strong>Oxygen (O)</strong></td><td style="padding:7px;text-align:center">6+12 = 18</td><td style="padding:7px;text-align:center">12+6 = 18</td><td style="padding:7px;text-align:center;color:var(--success);font-weight:900">✅</td></tr>
-        </table>
-        <p style="text-align:center;font-size:.95rem;color:var(--muted);margin:0">Same number of each atom on both sides = <strong>balanced</strong>!</p>
-      </div>
-    </div>
-
-    <div>
-      <div class="diagram-container animate-enter anim-delay-1">
-        <h3 style="margin-top:0;color:var(--ido-border)">Balance Check</h3>
-        <svg width="350" height="70" viewBox="0 0 350 70">
-          <rect x="5" y="5" width="160" height="55" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
-          <text x="85" y="22" text-anchor="middle" font-weight="bold" font-size="10" fill="#1e40af">LEFT (Reactants)</text>
-          <text x="85" y="38" text-anchor="middle" font-size="9" fill="#1e40af">C=6, H=12, O=18</text>
-          <text x="85" y="52" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="bold">✅ Balanced!</text>
-          <text x="185" y="35" text-anchor="middle" font-size="16" fill="#7c3aed" font-weight="bold">=</text>
-          <rect x="200" y="5" width="145" height="55" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
-          <text x="272" y="22" text-anchor="middle" font-weight="bold" font-size="10" fill="#166534">RIGHT (Products)</text>
-          <text x="272" y="38" text-anchor="middle" font-size="9" fill="#166534">C=6, H=12, O=18</text>
-          <text x="272" y="52" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="bold">✅ Balanced!</text>
-        </svg>
-      </div>
-      <div class="scaffold-box" style="margin-top:10px"><strong>🧠 Memory Trick:</strong> "Charlie Has 12 Oranges, 6 On 2 sides" — C₆H₁₂O₆ + <strong>6</strong>O₂ → <strong>6</strong>CO₂ + <strong>6</strong>H₂O. The number <strong>6</strong> appears everywhere!</div>
-
-  <div class="v5-step" style="margin-top:10px">
-    <div class="ido-box" style="margin-bottom:0"><h3 style="margin-top:0;color:var(--ido-border)">Why does aerobic release so much ATP?</h3><p>Oxygen lets glucose be broken down <strong>completely</strong> into CO₂ and water. Almost all the energy stored in glucose is released — so aerobic respiration gives a <strong>large</strong> amount of ATP.</p></div>
-  </div>
-    </div>
-  </div>
-
-  <div class="exam-tip-box v5-step"><p><strong>Easy marks:</strong> the spec wants the <span class="misc-right">balanced</span> symbol equation. Prove it by counting: <strong>6 C, 12 H, 18 O</strong> on each side.</p><p style="font-size:.9rem;color:#92400e;margin-top:4px">Watch the oxygen: 6 O in glucose + 12 O in 6O₂ = 18 on the left; 12 O in 6CO₂ + 6 O in 6H₂O = 18 on the right.</p></div>
-  <div class="turn-talk"><strong>Talk to your partner:</strong> How would you <strong>prove</strong> to an examiner that the symbol equation is balanced? Next we'll spot which equations are balanced and which aren't.</div>
-</div>
-
-<!-- ═══ SLIDE 6: WE DO ═══ -->
-<!-- WE DO 2: BALANCED OR NOT SORT -->
-<div class="slide" data-title="We Do – Balanced or Not?" data-type="wedo">
-  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-  <span class="slide-tag tag-wedo">We Do</span>
-  <h2>We Do: Balanced or Not Balanced?</h2>
-  <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each equation into the right bin. Count the atoms on each side — are they the <strong>same</strong>? (Works by touch or mouse.)</div>
-  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
-  <div id="wedo2" class="wedo-capture" style="margin-top:6px">
-    <div class="score-bar"><span>Sorted: <span class="score" id="wedo2-score">0</span>/6</span><button class="ghost small" onclick="resetDnD('wedo2')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo2')">👁️ Reveal</button></div>
-    <div class="dnd-tray" id="wedo2-tray">
-      <div class="drag-item" data-activity="wedo2" data-target="bal" style="font-family:monospace">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</div>
-      <div class="drag-item" data-activity="wedo2" data-target="not" style="font-family:monospace">C₆H₁₂O₆ + O₂ → CO₂ + H₂O</div>
-      <div class="drag-item" data-activity="wedo2" data-target="bal" style="font-family:monospace">CH₄ + 2O₂ → CO₂ + 2H₂O</div>
-      <div class="drag-item" data-activity="wedo2" data-target="not" style="font-family:monospace">C₆H₁₂O₆ + 6O₂ → 6CO₂ + H₂O</div>
-      <div class="drag-item" data-activity="wedo2" data-target="bal" style="font-family:monospace">2H₂ + O₂ → 2H₂O</div>
-      <div class="drag-item" data-activity="wedo2" data-target="not" style="font-family:monospace">H₂ + O₂ → H₂O</div>
-    </div>
-    <div class="atp-bins">
-      <div class="drop-zone atp-bin bin-yes" data-activity="wedo2" data-zoneid="bal" data-cap="6">
-        <svg width="60" height="60" viewBox="0 0 60 60" aria-label="balanced scales">
-          <line x1="30" y1="10" x2="30" y2="46" stroke="#16a34a" stroke-width="3"/>
-          <line x1="12" y1="20" x2="48" y2="20" stroke="#16a34a" stroke-width="3"/>
-          <path d="M12 20 l-6 14 h12 z" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-          <path d="M48 20 l-6 14 h12 z" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-          <rect x="20" y="46" width="20" height="6" rx="2" fill="#16a34a"/>
-        </svg>
-        <h3 style="color:var(--success)">✅ Balanced</h3>
-        <p style="font-size:.8rem;color:var(--muted);margin:0">Same atoms each side</p>
-        <div class="bin-items"></div>
-      </div>
-      <div class="drop-zone atp-bin bin-no" data-activity="wedo2" data-zoneid="not" data-cap="6">
-        <svg width="60" height="60" viewBox="0 0 60 60" aria-label="unbalanced scales">
-          <line x1="30" y1="10" x2="30" y2="46" stroke="#dc2626" stroke-width="3"/>
-          <line x1="10" y1="14" x2="50" y2="26" stroke="#dc2626" stroke-width="3"/>
-          <path d="M10 14 l-6 14 h12 z" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
-          <path d="M50 26 l-6 14 h12 z" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
-          <rect x="20" y="46" width="20" height="6" rx="2" fill="#dc2626"/>
-        </svg>
-        <h3 style="color:var(--error)">❌ Not Balanced</h3>
-        <p style="font-size:.8rem;color:var(--muted);margin:0">Atoms don't match</p>
-        <div class="bin-items"></div>
-      </div>
-    </div>
-    <div id="wedo2-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:18px"></div>
-    <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">Pick one atom at a time. Count it on the LEFT, then the RIGHT. If <strong>every</strong> atom matches, it's balanced. Missing numbers (like a lone O₂ → CO₂) usually means it isn't.</div></div>
-    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
-  </div>
-</div>
 
 <div class="slide" data-title="Independent Work" data-type="independent">
   <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
@@ -545,16 +540,16 @@
 
   <div class="content-grid" style="height:auto;margin-top:10px">
     <div>
-      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>MCQ + complete the word and symbol equations using a word bank.</p></div>
-      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Write both equations from memory, plus a 4-mark question on balancing.</p></div>
-      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Prove the equation is balanced and a 5-mark extended-response question.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>Multiple choice, then fill the gaps in both equations using a word bank.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Multiple choice, then write both equations (with a word bank to lean on).</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Write both equations and a short scaffolded 4-mark exam question.</p></div>
     </div>
     <div>
-      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Your pack includes both equations, the atom-count table, and a key-word glossary (reactants, products, balanced, C₆H₁₂O₆).</p></div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Every pack includes both equations, a word bank, and sentence starters. Use them whenever you need them — that's what they're for.</p></div>
       <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
-        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> I can complete the word equation, name the formula for glucose, and identify reactants and products.</p>
-        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> I can write the balanced symbol equation from memory and say how many molecules of CO₂ and H₂O are made.</p>
-        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> I can prove the equation is balanced by counting atoms and explain why aerobic respiration releases so much ATP.</p></div>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> I can complete the word equation, name the formula for glucose, and say which side reactants and products go.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> I can write the word equation and copy the symbol equation, including the 6s.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> I can write both equations and explain what the 6s mean and why aerobic respiration releases so much ATP.</p></div>
     </div>
   </div>
 </div>
@@ -592,41 +587,63 @@
 <div id="print-area">
 
 <div id="print-ko" class="print-section">
-  <h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L4): Aerobic Respiration</h1>
+  <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+  <div class="print-box" style="margin-bottom:10px"><strong>🎯 Learning Objective (2.37):</strong> Know the <strong>word equation</strong> and the <strong>symbol equation</strong> for aerobic respiration, and what the big 6s mean.</div>
+  <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ I can pick out the word equation and name the reactants and products.</p>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ I can write the word equation and copy the symbol equation (with the 6s).</p>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ I can explain what the big 6s mean.</p></div>
+  <h1 style="text-align:center">Knowledge Organiser – Lesson 4: Aerobic Respiration Equations</h1>
   <table class="ko-table">
     <tr><th>Item</th><th>Details</th></tr>
     <tr><td><strong>Word equation</strong></td><td>Glucose + Oxygen → Carbon Dioxide + Water (+ ATP)</td></tr>
     <tr><td><strong>Symbol equation</strong></td><td>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</td></tr>
     <tr><td><strong>Reactants</strong></td><td>Go INTO the reaction — on the LEFT of the arrow (glucose + oxygen).</td></tr>
     <tr><td><strong>Products</strong></td><td>Come OUT of the reaction — on the RIGHT (carbon dioxide + water).</td></tr>
-    <tr><td><strong>Balanced</strong></td><td>Same number of each atom on both sides. Here: 6 C, 12 H, 18 O each side.</td></tr>
+    <tr><td><strong>The 6s</strong></td><td>A big number in front means how many molecules. 6O₂ = six oxygen molecules.</td></tr>
     <tr><td><strong>C₆H₁₂O₆</strong></td><td>The chemical formula for glucose.</td></tr>
     <tr><td><strong>Why so much ATP?</strong></td><td>Oxygen breaks glucose down completely, releasing almost all the stored energy.</td></tr>
     <tr><td><strong>Where?</strong></td><td>Mitochondria — the "powerhouse of the cell".</td></tr>
   </table>
+  <p><strong>Key distinctions:</strong> Reactants go on the <strong>LEFT</strong> (they go IN); products go on the <strong>RIGHT</strong> (they come OUT). The big <strong>6</strong>s in front of O₂, CO₂ and H₂O are part of the correct symbol equation — always copy them.</p>
+  <p class="prevent-break"><strong>🧠 Self-quiz routine (everyone):</strong> COVER the equations → WRITE them from memory → CHECK → fix any gaps. Do it twice — the second go is where it sticks.</p>
+  <p class="prevent-break"><strong>⚠️ Common mark-losers:</strong> dropping the <strong>6</strong> in the symbol equation · writing energy is "<em>made</em>" (it is <strong>released</strong>) · putting oxygen on the right · forgetting glucose is C₆H₁₂O₆.</p>
+  <p class="prevent-break foundation-content"><strong>🎵 Memory hook:</strong> "<strong>G</strong>iant <strong>O</strong>ctopus <strong>C</strong>aught <strong>W</strong>ater" = <strong>G</strong>lucose + <strong>O</strong>xygen → <strong>C</strong>arbon dioxide + <strong>W</strong>ater.</p>
 </div>
 
 <div id="print-arrival" class="print-section">
-  <h2>The Fab 4 – Recall Starter (from Respiration &amp; ATP)</h2>
-  <div class="foundation-content"><h3>Foundation</h3><p>1) What does ATP stand for, and what is its job?</p><div class="print-line"></div><p>2) Which gas does aerobic respiration need?</p><div class="print-line"></div><p>3) Name the two waste products of aerobic respiration.</p><div class="print-line"></div><p>4) Do reactants go on the left or right of the arrow?</p><div class="print-line"></div></div>
-  <div class="middle-content"><h3>Middle</h3><p>1) Write the word equation for aerobic respiration.</p><div class="print-line"></div><p>2) In which organelle does aerobic respiration mostly happen?</p><div class="print-line"></div><p>3) Explain the difference between respiration and breathing.</p><div class="print-line"></div><div class="print-line"></div><p>4) The formula for glucose is C₆H₁₂O₆ — suggest the symbol equation.</p><div class="print-line"></div></div>
-  <div class="higher-content"><h3>Higher</h3><p>1) Why do we say respiration releases energy, not makes energy?</p><div class="print-line"></div><div class="print-line"></div><p>2) Why would an active cell contain many mitochondria?</p><div class="print-line"></div><div class="print-line"></div><p>3) Trace glucose from bread to a respiring muscle cell.</p><div class="print-line"></div><div class="print-line"></div><p>4) Why must a symbol equation have the same atoms on both sides?</p><div class="print-line"></div></div>
+  <h2>Starter Recall – Multiple Choice (circle a letter)</h2>
+  <div class="foundation-content"><h3>Foundation</h3>
+    <p>1) What does ATP give a cell?&nbsp;&nbsp; A) A colour &nbsp; B) Energy &nbsp; C) Water &nbsp; D) A smell</p>
+    <p>2) Which gas does aerobic respiration need?&nbsp;&nbsp; A) Oxygen &nbsp; B) Carbon dioxide &nbsp; C) Nitrogen &nbsp; D) Hydrogen</p>
+    <p>3) What two things are made?&nbsp;&nbsp; A) Glucose + oxygen &nbsp; B) Carbon dioxide + water &nbsp; C) Salt + sugar &nbsp; D) Oil + gas</p>
+    <p>4) Things that go IN are on the…&nbsp;&nbsp; A) Left &nbsp; B) Right</p></div>
+  <div class="middle-content"><h3>Middle</h3>
+    <p>1) The word equation is:&nbsp;&nbsp; A) Glucose + Oxygen → Carbon Dioxide + Water &nbsp; B) Glucose + Carbon Dioxide → Oxygen + Water &nbsp; C) Oxygen + Water → Glucose + Carbon Dioxide &nbsp; D) Glucose → Carbon Dioxide + Oxygen</p>
+    <p>2) Respiration is:&nbsp;&nbsp; A) moving air in/out of the lungs &nbsp; B) a reaction in cells that releases energy &nbsp; C) the same as breathing &nbsp; D) only in plants</p>
+    <p>3) Muscle cells have lots of mitochondria because they:&nbsp;&nbsp; A) store fat &nbsp; B) need lots of energy (ATP) &nbsp; C) make oxygen &nbsp; D) need colour</p>
+    <p>4) The formula for glucose is:&nbsp;&nbsp; A) CO₂ &nbsp; B) H₂O &nbsp; C) C₆H₁₂O₆ &nbsp; D) O₂</p></div>
+  <div class="higher-content"><h3>Higher</h3>
+    <p>1) We say respiration <em>releases</em> energy because:&nbsp;&nbsp; A) energy is already stored in glucose and is let out &nbsp; B) cells make energy from nothing &nbsp; C) energy comes from the air &nbsp; D) energy is made in the lungs</p>
+    <p>2) In 6O₂ the big 6 means:&nbsp;&nbsp; A) six molecules of oxygen &nbsp; B) six grams &nbsp; C) six degrees &nbsp; D) six cells</p>
+    <p>3) Fill the gaps: ____ + ____ → ____ + ____ (+ ATP) &nbsp; <em>(word bank: glucose, oxygen, carbon dioxide, water)</em></p><div class="print-line"></div>
+    <p>4) Finish: "Oxygen lets glucose break down ________, so it releases ________ energy."</p><div class="print-line"></div></div>
 </div>
 
-<div id="print-starter" class="print-section"><h2>Lesson 4 Starter: Which Equation is Right?</h2>
-<p>Only <strong>ONE</strong> of these is the correct aerobic equation. Tick the one you think is right, then explain why.</p>
-<table class="ko-table" style="font-size:1.05rem"><tr><th style="width:8%">Tick</th><th>Equation</th></tr>
+<div id="print-starter" class="print-section"><h2>🕵️ Starter: Equation Detective</h2>
+<p>Four suspects are in the line-up. Only <strong>ONE</strong> is the real aerobic respiration equation — the other three are imposters. Circle the <strong>real</strong> one, then give each imposter its "alibi" (what's wrong).</p>
+<table class="ko-table" style="font-size:1.05rem"><tr><th style="width:10%">Real?</th><th>Suspect equation</th></tr>
 <tr><td></td><td style="font-family:monospace">A) Glucose + Water → Carbon Dioxide + Oxygen + ATP</td></tr>
 <tr><td></td><td style="font-family:monospace">B) Oxygen + Carbon Dioxide → Glucose + Water + ATP</td></tr>
 <tr><td></td><td style="font-family:monospace">C) Glucose + Oxygen → Carbon Dioxide + Water + ATP</td></tr>
 <tr><td></td><td style="font-family:monospace">D) Glucose → Oxygen + Carbon Dioxide + ATP</td></tr>
 </table>
-<p><strong>My choice:</strong> ________&nbsp;&nbsp;&nbsp;<strong>Why?</strong></p>
-<div class="print-line"></div><div class="print-line"></div>
-<p><strong>Extension – what's wrong with the other three?</strong></p>
-<p>A is wrong because:</p><div class="print-line"></div>
-<p>B is wrong because:</p><div class="print-line"></div>
-<p>D is wrong because:</p><div class="print-line"></div>
+<p><strong>The real equation is:</strong> ________</p>
+<div class="print-line"></div>
+<p><strong>The alibis – what's wrong with each imposter?</strong></p>
+<p>A's alibi:</p><div class="print-line"></div>
+<p>B's alibi:</p><div class="print-line"></div>
+<p>D's alibi:</p><div class="print-line"></div>
 </div>
 
 <div id="print-scaffold-foundation" class="print-section">
@@ -638,6 +655,12 @@
     <p>The reactants of aerobic respiration are ________ and ________.</p>
     <p>The products of aerobic respiration are ________ and ________.</p>
     <p>The chemical formula for glucose is ________.</p></div>
+  <div class="callout wordbank"><p class="callout-title">📝 Word Bank (Foundation)</p>
+    <p>Use these words: <strong>glucose · oxygen · carbon dioxide · water · reactants · products · left · right · mitochondria</strong></p></div>
+  <div class="exam-frame"><p class="callout-title">⭐ Exam frame</p>
+    <p>(a) The two reactants are ________ and ________.</p>
+    <p>(b) The two products are ________ and ________.</p>
+    <p>(c) The word equation is: ________ + ________ → ________ + ________.</p></div>
 </div>
 
 <div  id="print-scaffold-middle" class="print-section">
@@ -648,16 +671,20 @@
   <div class="scaffold-print-box"><h3>Key Words</h3>
     <table class="ko-table"><tr><td><strong>Reactants</strong></td><td>Left side of the arrow (go IN).</td></tr>
     <tr><td><strong>Products</strong></td><td>Right side of the arrow (come OUT).</td></tr>
-    <tr><td><strong>Balanced</strong></td><td>Same atoms each side.</td></tr>
+    <tr><td><strong>The 6s</strong></td><td>Six molecules — copy them in front of O₂, CO₂, H₂O.</td></tr>
     <tr><td><strong>C₆H₁₂O₆</strong></td><td>Formula for glucose.</td></tr></table></div>
 </div>
 
 <div id="print-scaffold-higher" class="print-section">
   <h2>Scaffolding Sheet – Higher (Grades 3–5)</h2>
-  <div class="scaffold-print-box"><h3>Atom Count (Aerobic Symbol Equation)</h3>
-    <table class="ko-table"><tr><th>Atom</th><th>Left</th><th>Right</th></tr><tr><td>Carbon</td><td>6</td><td>6</td></tr><tr><td>Hydrogen</td><td>12</td><td>12</td></tr><tr><td>Oxygen</td><td>6+12 = 18</td><td>12+6 = 18</td></tr></table></div>
+  <div class="scaffold-print-box"><h3>What the symbol equation means</h3>
+    <p><strong>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</strong></p>
+    <table class="ko-table"><tr><th>Part</th><th>What it means</th></tr><tr><td>C₆H₁₂O₆</td><td>one glucose molecule (the fuel)</td></tr><tr><td>6O₂</td><td>six oxygen molecules (the gas needed)</td></tr><tr><td>6CO₂</td><td>six carbon dioxide molecules (waste gas)</td></tr><tr><td>6H₂O</td><td>six water molecules (waste liquid)</td></tr></table></div>
+  <div class="scaffold-print-box"><h3>Sentence starters</h3>
+    <p>The big 6s mean ________.</p>
+    <p>Aerobic respiration releases lots of ATP because oxygen lets glucose ________.</p></div>
   <div class="scaffold-print-box"><h3>Key Terms</h3>
-    <p>Reactants, products, balanced, conservation of mass, C₆H₁₂O₆, mitochondria, complete breakdown</p></div>
+    <p>reactants · products · molecule · C₆H₁₂O₆ · mitochondria · complete breakdown · ATP</p></div>
 </div>
 
 <div id="print-worksheet-foundation" class="print-section">
@@ -681,36 +708,38 @@
 
 <div id="print-worksheet-middle" class="print-section">
   <h2>Independent Work – Middle (Grades 2–3)</h2>
-  <div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p>
-    <p>1) The balanced symbol equation for aerobic respiration is: A) C₆H₁₂O₆ + O₂ → CO₂ + H₂O &nbsp; B) C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O &nbsp; C) 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ &nbsp; D) C₆H₁₂O₆ → 6CO₂ + 6H₂O</p>
-    <p>2) "Balanced" means: A) The equation looks neat &nbsp; B) Same number of each atom on both sides &nbsp; C) Reactants weigh more &nbsp; D) It uses oxygen</p>
-    <p>3) How many oxygen atoms are on each side of the balanced equation? A) 6 &nbsp; B) 12 &nbsp; C) 18 &nbsp; D) 2</p></div>
-  <div class="prevent-break"><p><strong>Part B: Short Answer</strong></p>
-    <p>4) Write the word equation for aerobic respiration from memory.</p><div class="print-line"></div>
-    <p>5) Write the balanced symbol equation from memory.</p><div class="print-line"></div>
-    <p>6) How many molecules of CO₂ and H₂O are produced?</p><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part A: Multiple Choice (circle the answer)</strong></p>
+    <p>1) The symbol equation for aerobic respiration is: A) C₆H₁₂O₆ + O₂ → CO₂ + H₂O &nbsp; B) C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O &nbsp; C) 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ &nbsp; D) C₆H₁₂O₆ → 6CO₂ + 6H₂O</p>
+    <p>2) In 6O₂, the big 6 in front means: A) six grams &nbsp; B) six molecules of oxygen &nbsp; C) six degrees &nbsp; D) nothing</p>
+    <p>3) Respiration mostly happens in the: A) nucleus &nbsp; B) mitochondria &nbsp; C) cell wall &nbsp; D) lungs</p></div>
+  <div class="prevent-break"><p><strong>Part B: Short Answer</strong> <em>(word bank: glucose · oxygen · carbon dioxide · water)</em></p>
+    <p>4) Write the word equation for aerobic respiration.</p><div class="print-line"></div>
+    <p>5) Copy the symbol equation (don't forget the 6s).</p><div class="print-line"></div>
+    <p>6) Name the two reactants and the two products.</p><div class="print-line"></div></div>
   <div class="prevent-break"><p><strong>Part C: Long Answer</strong></p>
     <p>7) Explain what "reactants" and "products" mean, using aerobic respiration as your example.</p>
-    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
   <div class="prevent-break"><p><strong>Part D: Exam Question [4 marks]</strong></p>
-    <p>8) A student writes: C₆H₁₂O₆ + O₂ → CO₂ + H₂O. Explain what is wrong and write the corrected balanced equation. [4]</p>
-    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <p>8) A student writes: <strong>C₆H₁₂O₆ + O₂ → CO₂ + H₂O</strong>. The 6s are missing. Write the equation out correctly. [2] Then explain why the 6s matter. [2]</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
 </div>
 
 <div id="print-worksheet-higher" class="print-section">
   <h2>Independent Work – Higher (Grades 3–5)</h2>
-  <div class="prevent-break"><p><strong>Part A: Multiple Choice</strong></p>
-    <p>1) Aerobic respiration releases a large amount of ATP because: A) It is fast &nbsp; B) Oxygen lets glucose break down completely &nbsp; C) It happens in the lungs &nbsp; D) It makes lactic acid</p>
-    <p>2) The principle that means equations must balance is: A) Conservation of mass &nbsp; B) Diffusion &nbsp; C) Osmosis &nbsp; D) Active transport</p></div>
+  <div class="prevent-break"><p><strong>Part A: Multiple Choice (circle the answer)</strong></p>
+    <p>1) Aerobic respiration releases a large amount of ATP because: A) it is fast &nbsp; B) oxygen lets glucose break down completely &nbsp; C) it happens in the lungs &nbsp; D) it makes lactic acid</p>
+    <p>2) In the symbol equation, the big 6s tell us: A) the temperature &nbsp; B) how many molecules &nbsp; C) the mass in grams &nbsp; D) the number of cells</p></div>
   <div class="prevent-break"><p><strong>Part B: Short Answer</strong></p>
-    <p>3) Prove that C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O is balanced. Count C, H and O on each side.</p><div class="print-line"></div><div class="print-line"></div>
-    <p>4) Explain why aerobic respiration releases more ATP than respiration without oxygen.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <p>3) Write the word equation for aerobic respiration.</p><div class="print-line"></div>
+    <p>4) Write the symbol equation for aerobic respiration (include the 6s).</p><div class="print-line"></div>
+    <p>5) Explain why aerobic respiration releases <em>more</em> ATP than respiration without oxygen.</p><div class="print-line"></div><div class="print-line"></div></div>
   <div class="prevent-break"><p><strong>Part C: Long Answer</strong></p>
-    <p>5) Explain why a balanced symbol equation must have the same number of each atom on both sides. Use the idea of conservation of mass.</p>
+    <p>6) Explain how the word equation and the symbol equation describe the <em>same</em> reaction. Use the words reactants, products and molecules.</p>
+    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><p><strong>Part D: Exam Question [4 marks] — use the frame</strong></p>
+    <p>7) Write the word <em>and</em> symbol equations for aerobic respiration, and say what the 6s mean. [4]</p>
+    <p style="font-style:italic">Frame: "The word equation is ____. The symbol equation is ____. The 6s mean ____."</p>
     <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
-  <div class="prevent-break"><p><strong>Part D: Exam Question [5 marks]</strong></p>
-    <p>6) Write the word and balanced symbol equations for aerobic respiration, then prove the symbol equation is balanced by counting every atom on each side. [5]</p>
-    <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
 </div>
 
 <div id="print-exit" class="print-section">
@@ -730,9 +759,9 @@
     <p style="margin:0 0 6px"><strong>Name:</strong> ______________________   <strong>Class:</strong> __________   <strong>Date:</strong> __________</p>
     <p style="font-size:.9rem;margin:0 0 12px"><em>Answer from memory — no notes.</em></p>
     <div class="prevent-break"><p><strong>1)</strong> Write the word equation for aerobic respiration.</p><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>2)</strong> Write the balanced symbol equation for aerobic respiration.</p><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>3)</strong> What does "balanced" mean?</p><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>4)</strong> How many molecules of CO₂ are produced in the balanced equation?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>2)</strong> Write the symbol equation for aerobic respiration (don't forget the 6s).</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>3)</strong> What does the big 6 in 6O₂ mean?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>4)</strong> How many molecules of CO₂ are produced?</p><div class="print-line"></div></div>
     <div class="prevent-break"><p><strong>5)</strong> What goes on the LEFT of the arrow — reactants or products?</p><div class="print-line"></div></div>
     <div class="prevent-break"><p><strong>6)</strong> In which organelle does aerobic respiration happen?</p><div class="print-line"></div></div>
   </div>
@@ -740,16 +769,16 @@
     <h2>Exit Ticket – Aerobic Equations (Higher 3–5)</h2>
     <p style="margin:0 0 6px"><strong>Name:</strong> ______________________   <strong>Class:</strong> __________   <strong>Date:</strong> __________</p>
     <p style="font-size:.9rem;margin:0 0 12px"><em>Answer from memory — no notes.</em></p>
-    <div class="prevent-break"><p><strong>1)</strong> Write the balanced symbol equation for aerobic respiration.</p><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>2)</strong> Prove it is balanced: how many C, H and O atoms are on each side?</p><div class="print-line"></div><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>3)</strong> Why must the same atoms appear on both sides? Name the principle.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>1)</strong> Write the symbol equation for aerobic respiration.</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>2)</strong> What do the big 6s in front of O₂, CO₂ and H₂O tell us?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>3)</strong> Name the two reactants and the two products.</p><div class="print-line"></div></div>
     <div class="prevent-break"><p><strong>4)</strong> Explain why aerobic respiration releases a lot of ATP.</p><div class="print-line"></div><div class="print-line"></div></div>
-    <div class="prevent-break"><p><strong>5)</strong> A student writes C₆H₁₂O₆ + 6O₂ → 6CO₂ + H₂O. What is wrong?</p><div class="print-line"></div></div>
+    <div class="prevent-break"><p><strong>5)</strong> A student writes C₆H₁₂O₆ + 6O₂ → 6CO₂ + H₂O. The 6 is missing from the water — write it correctly.</p><div class="print-line"></div></div>
     <div class="prevent-break"><p><strong>6)</strong> Explain why the word and symbol equations describe the same reaction.</p><div class="print-line"></div><div class="print-line"></div></div>
   </div>
 </div>
 
-<div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><pre id="wedo-evidence-content" style="white-space:pre-wrap;font-family:inherit;font-size:.95rem"></pre></div>
+<div id="print-evidence" class="print-section"></div>
 </div>
 
 <!-- ═══ V4 MODALS / OVERLAYS ═══ -->
@@ -810,16 +839,57 @@ document.addEventListener('keydown',e=>{
 function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
 updateProgress();
 function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')||el.classList.contains('exit-grid')?'grid':'block'}else{el.style.display='none'}}})}
-function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
+function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
 function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');window.print()}
-function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
-function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;const s=c.closest('.slide');const title=s?s.getAttribute('data-title'):'We Do';const ts=new Date().toLocaleString('en-GB');const results=[];c.querySelectorAll('.quiz').forEach((q,i)=>{const qT=q.querySelector('.q')?.innerText||'';const fb=q.querySelector('.fb')?.innerText||'(not answered)';results.push('Q'+(i+1)+': '+qT+'\nAnswer: '+fb)});const n=c.querySelector('[contenteditable]');const notes=n?n.innerText:'';let out='CLASS EVIDENCE \u2013 '+title+'\nDate/Time: '+ts+'\n'+'\u2500'.repeat(50)+'\n\n';if(results.length)out+='QUESTIONS:\n'+results.join('\n\n')+'\n\n';if(notes&&notes!==n?.getAttribute('data-placeholder'))out+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=out;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+function printEvidence(id){
+  const cap=document.getElementById(id);if(!cap)return;
+  const wedoSlide=cap.closest('.slide');
+  const all=[...document.querySelectorAll('.slide')];
+  const idx=all.indexOf(wedoSlide);
+  const idoSlide=idx>0?all[idx-1]:null;
+  const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
+  const host=document.getElementById('print-evidence');if(!host)return;
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  host.innerHTML='';
+  const fit=document.createElement('div');fit.className='ev-fit';host.appendChild(fit);
+  const head=document.createElement('div');head.className='ev-head';
+  const h2=document.createElement('h2');h2.textContent='📸 '+lessonTitle+' — Evidence';head.appendChild(h2);
+  const meta=document.createElement('div');meta.className='ev-meta';
+  meta.innerHTML='<strong>Name:</strong> ____________________   <strong>Class:</strong> ________   <strong>Date:</strong> ____________';
+  head.appendChild(meta);fit.appendChild(head);
+  const addPanel=(node,labelText,labelCls)=>{
+    const p=document.createElement('div');p.className='ev-panel';
+    const lab=document.createElement('span');lab.className='ev-label '+labelCls;lab.textContent=labelText;p.appendChild(lab);
+    const copy=node.cloneNode(true);copy.classList.add('ev-slidecopy');copy.removeAttribute('id');
+    copy.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+    p.appendChild(copy);fit.appendChild(p);
+  };
+  if(idoSlide)addPanel(idoSlide,'I Do — the method','ido');
+  addPanel(cap,'We Do — my work','wedo');
+  fitToPage(host,fit);
+  document.body.classList.add('print-evidence');
+  const cleanup=()=>{document.body.classList.remove('print-evidence');host.innerHTML='';window.removeEventListener('afterprint',cleanup)};
+  window.addEventListener('afterprint',cleanup);
+  setTimeout(()=>window.print(),60);
+}
+function fitToPage(host,fit){
+  try{
+    const prev=host.getAttribute('style')||'';
+    host.setAttribute('style','display:block;position:fixed;left:-99999px;top:0;width:718px;z-index:-1');
+    const h=fit.scrollHeight||0,w=fit.scrollWidth||718;
+    let k=1;if(h>0)k=Math.min(1,1040/h,718/w);
+    fit.style.zoom=k;
+    host.setAttribute('style',prev);
+  }catch(e){fit.style.zoom=1}
+}
 
   // --- Teacher-notes placeholder init ---
   document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
 
   // ═══ DRAG & DROP ENGINE (pointer-based: works with mouse AND touch) ═══
-  const DND={};const DND_LABELS={wedo1:'Equation Builder',wedo2:'Balanced-or-Not Sort'};
+  const DND={};const DND_LABELS={wedo1:'Equation Builder'};
   function initDnD(act,total){DND[act]={total:total,placed:0}}
   function dndZoneUnder(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.drop-zone'):null}
   function clearDragStyle(it){it.style.position='';it.style.left='';it.style.top='';it.style.zIndex='';it.style.width=''}
@@ -866,7 +936,7 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
     });
     DND[act].placed=DND[act].total;updateDnDScore(act);const fb=document.getElementById(act+'-fb');if(fb){fb.textContent='✅ Answers revealed';fb.style.color='var(--success)'}
   }
-  initDnD('wedo1',8);initDnD('wedo2',6);
+  initDnD('wedo1',8);
   document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
   window.addEventListener('load',()=>{document.querySelectorAll('.drag-item').forEach(makeDrag)});
 
@@ -921,23 +991,19 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
 
   // --- Per-slide data (index matches slide order) ---
   const TA_DATA={
-    1:{name:'Arrival – Recall (ATP)',body:'<p><strong>Your job:</strong> circulate, keep books open, no calling out.</p><ul><li>This recalls last lesson (Respiration &amp; ATP). If a pupil is blank, prompt with "what gas do we breathe in?" rather than giving the answer.</li><li>Q4 is the lead-in to equations — accept "reactants/left" reasoning and build confidence.</li><li>Flag anyone who can\'t recall the <em>word equation</em> — they\'ll need close support in the We Do.</li></ul>'},
-    2:{name:'Starter – Which Equation?',body:'<p><strong>Your job:</strong> low-threat, tick-one task — get reluctant writers committing to an answer.</p><ul><li>The correct one is <strong>C</strong>. Don\'t reveal — ask "what does respiration NEED and what does it MAKE?"</li><li>Push the extension: what exactly is wrong with A, B and D?</li></ul>'},
+    1:{name:'Arrival – Recall (multiple choice)',body:'<p><strong>Your job:</strong> circulate, keep books open, no calling out.</p><ul><li>All four are multiple choice — every pupil can commit to an answer. If a pupil is unsure, prompt with "what gas do we breathe in?" rather than reading out the option.</li><li>This recalls last lesson (Respiration &amp; ATP). Build confidence — a right answer here sets up the equation work.</li><li>Flag anyone who can\'t pick the <em>word equation</em> ideas — they\'ll need close support in the We Do.</li></ul>'},
+    2:{name:'Starter – Equation Detective',body:'<p><strong>Your job:</strong> low-threat line-up — get reluctant writers committing to one suspect.</p><ul><li>The <strong>real</strong> equation is <strong>C</strong>. Don\'t reveal — ask "what does respiration NEED and what does it MAKE?"</li><li>Push the "alibi" idea: for each fake (A, B, D) what exactly is wrong? One short reason is plenty.</li></ul>'},
     3:{name:'I Do – Aerobic Equations',body:'<p><strong>Your job:</strong> support accurate copying — subscripts and the number 6 matter.</p><ul><li>Listen for pupils dropping the <em>6</em> in the symbol equation (red misconception box).</li><li>Reinforce reactants LEFT, products RIGHT using the on-screen diagram.</li></ul>'},
     4:{name:'We Do – Build Both Equations',body:'<p><strong>Your job:</strong> let pupils try before hinting. Use the on-screen Hint button.</p><ul><li>Word equation row first, then the symbol row — same order on each side.</li><li>If stuck, point to the I Do equations on the board rather than telling them the tile.</li></ul>'},
-    5:{name:'I Do – Balancing',body:'<p><strong>Your job:</strong> make the atom-counting visible — count aloud with the class.</p><ul><li>Oxygen is the tricky one: 6 (in glucose) + 12 (in 6O₂) = 18 on the left.</li><li>Higher pupils: push them to <em>prove</em> balance, not just state it.</li></ul>'},
-    6:{name:'We Do – Balanced or Not?',body:'<p><strong>Your job:</strong> encourage one-atom-at-a-time counting before sorting.</p><ul><li>The respiration equation (top tile) is the key one — make sure everyone gets that right.</li><li>The "not balanced" ones are missing numbers (lone O₂→CO₂, or H₂O not ×6).</li></ul>'},
-    7:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
-    8:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t write the balanced symbol equation — that\'s a starter for next lesson.</li></ul>'}
+    5:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
+    6:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t write the <em>word</em> equation — that\'s the secure-for-all goal and a starter for next lesson.</li></ul>'}
   };
   const CC_DATA={
-    1:{f:'Which <strong>gas</strong> does aerobic respiration need?',m:'Write the <strong>word equation</strong> for aerobic respiration.',h:'Why do we say respiration <strong>releases</strong> energy, not makes it?'},
-    2:{f:'Which letter (A–D) is the <strong>correct</strong> equation?',m:'What is <strong>wrong</strong> with equation B?',h:'Equation D is missing something — what, and why does it matter?'},
-    3:{f:'Name the <strong>two reactants</strong> of aerobic respiration.',m:'What is the chemical <strong>formula</strong> for glucose?',h:'How many molecules of <strong>CO₂</strong> are made in the balanced equation?'},
-    4:{f:'Which side of the arrow do <strong>products</strong> go?',m:'Build the word equation out loud, in order.',h:'Build the <strong>symbol</strong> equation and say what each 6 is for.'},
-    5:{f:'How many <strong>carbon</strong> atoms are on the left side?',m:'What does <strong>balanced</strong> mean?',h:'<strong>Prove</strong> the oxygen atoms balance (count both sides).'},
-    6:{f:'Is C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O <strong>balanced</strong>?',m:'Why is C₆H₁₂O₆ + O₂ → CO₂ + H₂O <strong>not</strong> balanced?',h:'Pick a "not balanced" card and say exactly which atom is wrong.'},
-    8:{f:'Write the <strong>word equation</strong> for aerobic respiration.',m:'Write the <strong>balanced symbol equation</strong>.',h:'Prove the symbol equation is balanced (C, H and O).'}
+    1:{f:'Which <strong>gas</strong> does aerobic respiration need?',m:'Name the <strong>two products</strong> of aerobic respiration.',h:'Why do we say respiration <strong>releases</strong> energy, not makes it?'},
+    2:{f:'Which letter is the <strong>real</strong> aerobic equation?',m:'Equation A has the arrow the wrong way — what should go on the <strong>left</strong>?',h:'Pick one fake equation and give its <strong>"alibi"</strong> — exactly what is wrong with it?'},
+    3:{f:'Name the <strong>two reactants</strong> of aerobic respiration.',m:'What is the chemical <strong>formula</strong> for glucose?',h:'What does the big <strong>6</strong> in 6O₂ tell us?'},
+    4:{f:'Which side of the arrow do <strong>products</strong> go?',m:'Say the word equation out loud, in order.',h:'Say the <strong>symbol</strong> equation out loud, including every 6.'},
+    6:{f:'Write the <strong>word equation</strong> for aerobic respiration.',m:'Write the <strong>symbol equation</strong> (don\'t forget the 6s).',h:'Explain why aerobic respiration releases a <strong>lot</strong> of ATP.'}
   };
 
   // --- V5: step-by-step reveal on I Do slides ---
@@ -947,6 +1013,14 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
   // --- Hints ---
   // --- Lesson complete overlay ---
   function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+  // --- Equation Detective (starter) ---
+  let _caseSolved=false;
+  function accuse(el){
+    el.classList.add('investigated');
+    const v=el.querySelector('.verdict');if(v)v.textContent=el.dataset.alibi||'';
+    if(el.dataset.verdict==='real'){el.classList.add('solved');if(!_caseSolved){_caseSolved=true;addXP(5,'Equation Detective');confetti()}else{playClick()}}
+    else{el.classList.add('cleared');playClick()}
+  }
   function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=70?'Outstanding effort across the whole lesson!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
 
   // ═══ INTERACTIVE EXIT KNOWLEDGE CHECK ═══
@@ -954,8 +1028,8 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
     {q:'Which is the correct word equation for aerobic respiration?',tier:'F',opts:['Glucose + Carbon Dioxide → Oxygen + Water','Glucose + Oxygen → Carbon Dioxide + Water','Oxygen + Water → Glucose','Glucose → Oxygen + Carbon Dioxide'],a:1,why:'Reactants: glucose + oxygen. Products: carbon dioxide + water (+ ATP).'},
     {q:'What is the chemical formula for glucose?',tier:'F',opts:['CO\u2082','H\u2082O','C\u2086H\u2081\u2082O\u2086','O\u2082'],a:2,why:'Glucose is C\u2086H\u2081\u2082O\u2086 — 6 carbons, 12 hydrogens, 6 oxygens.'},
     {q:'Reactants are found on which side of the arrow?',tier:'F',opts:['The left (they go IN)','The right (they come OUT)'],a:0,why:'Reactants go IN, on the LEFT. Products come OUT, on the RIGHT.'},
-    {q:'Which is the correct balanced symbol equation?',tier:'M',opts:['C\u2086H\u2081\u2082O\u2086 + O\u2082 → CO\u2082 + H\u2082O','C\u2086H\u2081\u2082O\u2086 + 6O\u2082 → 6CO\u2082 + 6H\u2082O','6CO\u2082 + 6H\u2082O → C\u2086H\u2081\u2082O\u2086 + 6O\u2082','C\u2086H\u2081\u2082O\u2086 → 6CO\u2082 + 6H\u2082O'],a:1,why:'The 6 in front of O\u2082, CO\u2082 and H\u2082O keeps the equation balanced.'},
-    {q:'How many oxygen atoms are on each side of the balanced equation?',tier:'M',opts:['6','12','18','2'],a:2,why:'Left: 6 (glucose) + 12 (6O\u2082) = 18. Right: 12 (6CO\u2082) + 6 (6H\u2082O) = 18.'},
+    {q:'Which is the correct symbol equation for aerobic respiration?',tier:'M',opts:['C\u2086H\u2081\u2082O\u2086 + O\u2082 → CO\u2082 + H\u2082O','C\u2086H\u2081\u2082O\u2086 + 6O\u2082 → 6CO\u2082 + 6H\u2082O','6CO\u2082 + 6H\u2082O → C\u2086H\u2081\u2082O\u2086 + 6O\u2082','C\u2086H\u2081\u2082O\u2086 → 6CO\u2082 + 6H\u2082O'],a:1,why:'The 6 in front of O\u2082, CO\u2082 and H\u2082O is part of the correct equation — don\u2019t drop it!'},
+    {q:'In 6O\u2082, what does the big number 6 in front tell us?',tier:'M',opts:['Six molecules of oxygen','Six oxygen atoms only','The temperature','Nothing important'],a:0,why:'A big number in front means how many molecules. 6O\u2082 = six oxygen molecules.'},
     {q:'Why does aerobic respiration release a large amount of ATP?',tier:'H',opts:['It happens in the lungs','Oxygen lets glucose break down completely','It makes lactic acid','It is very slow'],a:1,why:'With oxygen, glucose is broken down completely, releasing almost all its stored energy as ATP.'}
   ];
   let qIdx=0,qScore=0,qAnswered=false;
