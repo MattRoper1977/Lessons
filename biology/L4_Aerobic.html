@@ -14,7 +14,7 @@
     .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
     .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
     .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
-    .slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}.slide[data-type="observe"]{border-top-color:#dc2626}
     h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
     .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
     .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
@@ -35,21 +35,30 @@
     .rx-stage{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:18px 14px;margin-top:6px}
     .rx-side{display:flex;flex-direction:column;gap:8px;align-items:stretch;min-width:150px}
     .rx-cap{font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;text-align:center;color:#64748b}
-    .rx-chip{padding:9px 12px;border-radius:10px;font-weight:800;border:2px solid;display:flex;align-items:center;gap:8px;font-size:1rem;opacity:0}
+    .rx-chip{padding:9px 12px;border-radius:10px;font-weight:800;border:2px solid;display:flex;align-items:center;gap:8px;font-size:1rem;transition:filter .2s}
     .rx-react .rx-chip{background:#dbeafe;border-color:#2563eb;color:#1e40af}
     .rx-prod .rx-chip{background:#dcfce7;border-color:#16a34a;color:#166534}
     .rx-chip .rx-emoji{font-size:1.3rem}
-    .revealed .rx-react .rx-chip{animation:rxInL .55s ease-out forwards}
-    .revealed .rx-prod .rx-chip{animation:rxInR .55s ease-out forwards}
-    .revealed .rx-react .rx-chip:nth-child(3){animation-delay:.15s}
-    .revealed .rx-prod .rx-chip:nth-child(2){animation-delay:.55s}
-    .revealed .rx-prod .rx-chip:nth-child(3){animation-delay:.7s}
-    .revealed .rx-prod .rx-chip:nth-child(4){animation-delay:.85s}
-    @keyframes rxInL{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:translateX(0)}}
-    @keyframes rxInR{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:translateX(0)}}
+    .rx-chip.rx-atp{background:#fef9c3;border-color:#eab308;color:#854d0e}
+    /* chips are fully visible at rest; .playing adds the IN -> process -> OUT emphasis */
+    .rx-stage.playing .rx-react .rx-chip{animation:rxReactFlow .9s ease both}
+    .rx-stage.playing .rx-react .rx-chip:nth-child(3){animation-delay:.12s}
+    .rx-stage.playing .rx-prod .rx-chip{animation:rxProdPop .6s ease both;animation-delay:1.5s}
+    .rx-stage.playing .rx-prod .rx-chip:nth-child(3){animation-delay:1.7s}
+    .rx-stage.playing .rx-prod .rx-chip:nth-child(4){animation-delay:1.9s}
+    .rx-stage.playing .rx-prod .rx-chip.rx-atp{animation:rxProdPop .6s ease both,atpSpark 1.2s ease both;animation-delay:1.9s}
+    .rx-stage.playing .rx-arrow{animation:arrowPulse .8s ease infinite}
+    .rx-stage.playing .rx-mito svg{animation:mitoBurst 1.1s ease both;animation-delay:.75s}
+    @keyframes rxReactFlow{0%{transform:translateX(0)}45%{transform:translateX(14px);filter:brightness(1.18)}100%{transform:translateX(0)}}
+    @keyframes rxProdPop{0%{transform:scale(.7);opacity:.25}55%{transform:scale(1.16)}100%{transform:scale(1);opacity:1}}
+    @keyframes atpSpark{0%,100%{box-shadow:0 0 0 rgba(234,179,8,0)}50%{box-shadow:0 0 18px rgba(234,179,8,.85)}}
+    @keyframes arrowPulse{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(6px);opacity:1}}
+    @keyframes mitoBurst{0%{transform:scale(1)}35%{transform:scale(1.22);filter:drop-shadow(0 0 12px rgba(124,58,237,.7))}100%{transform:scale(1)}}
     .rx-mito{display:flex;flex-direction:column;align-items:center;gap:4px;color:#5b21b6;font-weight:900;font-size:.8rem}
     .rx-mito svg{animation:pulse 2.4s ease-in-out infinite}
     .rx-arrow{font-size:2.4rem;color:#7c3aed;font-weight:900;line-height:1}
+    .rx-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 0 6px}
+    .rx-caption{text-align:center;font-weight:800;color:#5b21b6;background:#f5f3ff;border:2px solid #ddd6fe;border-radius:12px;padding:8px 14px;margin:10px auto 0;max-width:680px;min-height:22px;font-size:1rem;transition:opacity .2s}
     /* Equation Detective (starter) */
     .suspect{cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;margin:8px 0;background:#fff;transition:all .15s;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     .suspect:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);border-color:#94a3b8}
@@ -63,7 +72,7 @@
     .suspect.investigated .verdict{display:block;animation:fadeInUp .25s}
     .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
     .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
-    .tag-exit{background:var(--sc-bg);color:#9a3412}
+    .tag-exit{background:var(--sc-bg);color:#9a3412}.tag-observe{background:#fee2e2;color:#991b1b}
     .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
     .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
     .evidence-btn{background:var(--wedo-border);font-size:.9rem}.evidence-btn:hover{background:#9d174d}
@@ -397,7 +406,6 @@
   <span class="slide-tag tag-ido">I Do</span>
   <h2>I Do: The Aerobic Respiration Equations (Spec 2.37)</h2>
   <div class="li-box"><strong>Key Idea:</strong> Aerobic respiration has <strong>two</strong> equations that mean the same thing — a <strong>word equation</strong> and a <strong>symbol equation</strong>.</div>
-  <div class="step-ctrl"><button class="reveal-next-btn small" onclick="revealStep(this)">Reveal next ▶</button><button class="ghost small" onclick="revealAllSteps(this)">Reveal all</button><span class="step-count">0/3</span></div>
 
   <div class="content-grid" style="height:auto">
     <div>
@@ -419,9 +427,12 @@
     </div>
   </div>
 
-  <div class="v5-step" style="margin-top:12px">
-    <h3 style="text-align:center;color:var(--ido-border);margin:0 0 6px">▶ Watch it flow: reactants IN → products OUT</h3>
-    <div class="rx-stage">
+  <div class="animate-enter" style="margin-top:12px">
+    <div class="rx-head">
+      <h3 style="color:var(--ido-border);margin:0">Watch it flow: reactants IN → products OUT</h3>
+      <button class="small" style="background:var(--ido-border)" onclick="runRx(document.getElementById('rx-stage1'))">▶ Play / Replay</button>
+    </div>
+    <div class="rx-stage" id="rx-stage1" data-autoplay>
       <div class="rx-side rx-react">
         <span class="rx-cap">Reactants — go IN (left)</span>
         <div class="rx-chip"><span class="rx-emoji">🍬</span> Glucose (C₆H₁₂O₆)</div>
@@ -437,18 +448,60 @@
         <span class="rx-cap">Products — come OUT (right)</span>
         <div class="rx-chip"><span class="rx-emoji">💨</span> Carbon dioxide (6CO₂)</div>
         <div class="rx-chip"><span class="rx-emoji">💧</span> Water (6H₂O)</div>
-        <div class="rx-chip"><span class="rx-emoji">🔋</span> ATP (energy!)</div>
+        <div class="rx-chip rx-atp"><span class="rx-emoji">🔋</span> ATP (energy!)</div>
       </div>
     </div>
+    <div class="rx-caption" id="rx-caption1">Reactants go <b>IN</b> → broken down in the <b>mitochondria</b> → products come <b>OUT</b>.</div>
   </div>
 
-  <div class="v5-step v5-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+  <div class="animate-enter" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
     <div class="ido-box" style="margin:0"><h3 style="margin-top:0;color:var(--ido-border)">Why so much energy (ATP)?</h3><p style="margin:0">Because there is <strong>oxygen</strong>, glucose is broken down <strong>completely</strong> into CO₂ and water. Almost <strong>all</strong> the energy stored in glucose is released — so aerobic respiration gives a <strong>large</strong> amount of ATP.</p></div>
     <div class="aspire-box" style="margin:0"><strong>Aspire:</strong> What would happen to the amount of ATP if there was <strong>no oxygen</strong>? <button class="small ghost" onclick="this.nextElementSibling.style.display='block'" style="margin-left:8px">Reveal</button><span class="answer" style="display:none;background:none;border:none;padding:0;margin:8px 0 0">Much less ATP — without oxygen, glucose can't be broken down completely (that's anaerobic respiration, next lesson!).</span></div>
   </div>
 
-  <div class="misc-box v5-step"><p><strong>Don't write:</strong> <span class="misc-wrong">C6H12O6 + O2 → CO2 + H2O</span> (the 6s are missing)</p><p><strong>Write:</strong> <span class="misc-right">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</span> (with the 6s!)</p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">The big <strong>6</strong>s in front of O₂, CO₂ and H₂O are part of the correct equation — copy them every time.</p></div>
+  <div class="misc-box animate-enter"><p><strong>Don't write:</strong> <span class="misc-wrong">C6H12O6 + O2 → CO2 + H2O</span> (the 6s are missing)</p><p><strong>Write:</strong> <span class="misc-right">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O</span> (with the 6s!)</p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">The big <strong>6</strong>s in front of O₂, CO₂ and H₂O are part of the correct equation — copy them every time.</p></div>
   <div class="turn-talk"><strong>Talk to your partner:</strong> What are the <strong>two reactants</strong> and the <strong>two products</strong> of aerobic respiration? Be ready to build the equation next.</div>
+</div>
+
+<!-- ═══ OBSERVE: WATCH RESPIRATION IN ACTION ═══ -->
+<div class="slide" data-title="Observe: See It Happen" data-type="observe">
+  <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+  <span class="slide-tag tag-observe">📺 Observe</span>
+  <h2>Observe: See Aerobic Respiration Happen</h2>
+  <div class="li-box"><strong>Watch &amp; check:</strong> You've met both equations — now <strong>see</strong> them in action. Watch the clip, spot the three things below, then finish the sentences. This is exactly what you'll build on your own next — unaided.</div>
+
+  <div class="content-grid" style="height:auto">
+    <div>
+      <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:14px;overflow:hidden;background:#000;border:3px solid #fecaca">
+        <iframe id="observe-frame" title="Aerobic respiration video" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <button class="small" style="background:#dc2626" onclick="loadObserve()">▶ Load video</button>
+        <a id="observe-link" href="https://www.youtube.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#1d4ed8;text-decoration:none;font-size:.9rem;border:2px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:10px">Open on YouTube ↗</a>
+        <a href="https://www.youtube.com/results?search_query=aerobic+respiration+word+symbol+equation+GCSE" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#1d4ed8;text-decoration:none;font-size:.9rem;border:2px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:10px">Backup clips ↗</a>
+      </div>
+      <p style="font-size:.78rem;color:var(--muted);margin:6px 0 0">If the video is blocked on the network, use the links above — or revisit the <strong>Watch it flow</strong> animation on the previous slide.</p>
+    </div>
+    <div>
+      <div class="scaffold-box" style="margin-top:0"><strong>👀 While you watch, spot 3 things:</strong>
+        <ol style="margin:6px 0 0;padding-left:20px;line-height:1.7">
+          <li>What goes <strong>IN</strong> — the two <strong>reactants</strong></li>
+          <li>What comes <strong>OUT</strong> — the two <strong>products</strong> (+ ATP)</li>
+          <li><strong>Where</strong> in the cell it happens</li>
+        </ol>
+      </div>
+      <div class="exam-tip-box"><p style="margin:0"><strong>Listen carefully:</strong> a clip may just say "energy" — in your exam, write <strong>ATP</strong>. And keep the big <strong>6</strong>s in the symbol equation.</p></div>
+    </div>
+  </div>
+
+  <div class="li-box" style="background:#f0fdf4;border-left-color:#22c55e;color:#14532d;margin:12px 0 8px"><strong>✍️ Now finish these — say it out loud first, then jot it down:</strong></div>
+  <div class="animate-enter" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="scaffold-box" style="margin:0">The two <strong>reactants</strong> are ____________ and ____________.<br>The two <strong>products</strong> are ____________ and ____________.</div>
+    <div class="scaffold-box" style="margin:0">Aerobic respiration happens in the ____________.<br>It releases a <strong>large / small</strong> amount of ATP because oxygen breaks glucose down ____________.</div>
+  </div>
+  <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Reveal the answers</button><div class="hint-text">Reactants: <strong>glucose</strong> &amp; <strong>oxygen</strong>. Products: <strong>carbon dioxide</strong> &amp; <strong>water</strong> (+ ATP). It happens in the <strong>mitochondria</strong>. It releases a <strong>large</strong> amount of ATP because glucose is broken down <strong>completely</strong>.</div></div>
+
+  <div class="turn-talk"><strong>Ready check:</strong> Cover the screen — can you say the <strong>word equation</strong> out loud, in the right order? If yes, you're ready to build it yourself in the next task.</div>
 </div>
 
 <!-- ═══ WE DO 1: BUILD THE EQUATION ═══ -->
@@ -826,7 +879,7 @@
 
 <script>
 let currentSlide=0;const slides=document.querySelectorAll('.slide');
-function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress()}
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const cur=slides[i];if(cur){const rx=cur.querySelector('.rx-stage[data-autoplay]');if(rx)setTimeout(()=>runRx(rx,true),400);const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve();}}
 function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
 function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
 document.addEventListener('keydown',e=>{
@@ -847,7 +900,7 @@ function printEvidence(id){
   const wedoSlide=cap.closest('.slide');
   const all=[...document.querySelectorAll('.slide')];
   const idx=all.indexOf(wedoSlide);
-  const idoSlide=idx>0?all[idx-1]:null;
+  let idoSlide=null;for(let k=idx-1;k>=0;k--){if(all[k].getAttribute('data-type')==='ido'){idoSlide=all[k];break;}}if(!idoSlide&&idx>0)idoSlide=all[idx-1];
   const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
   const host=document.getElementById('print-evidence');if(!host)return;
   document.body.classList.remove('print-foundation','print-middle','print-higher');
@@ -978,6 +1031,21 @@ function fitToPage(host,fit){
   const VIDEO_ID='-75KqAvnOR8'; // GCSE Aerobic Respiration (covers spec 2.37) — swap to change clip
   function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
   function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  // --- I Do flow animation (reactants IN -> mitochondria -> products OUT) ---
+  let _rxToken=0;
+  function runRx(el,silent){
+    if(!el)return;
+    const tok=++_rxToken;
+    el.classList.remove('playing');void el.offsetWidth;el.classList.add('playing');
+    const cap=el.parentElement.querySelector('.rx-caption');
+    const steps=[[0,'① Glucose + oxygen go <b>IN</b> (reactants) →'],[850,'② …broken down inside the <b>mitochondria</b>…'],[1750,'③ → <b>Carbon dioxide + water + lots of ATP</b> come OUT (products)!']];
+    if(cap)steps.forEach(s=>setTimeout(()=>{if(tok===_rxToken)cap.innerHTML=s[1]},s[0]));
+    if(el._rxTimer)clearTimeout(el._rxTimer);
+    el._rxTimer=setTimeout(()=>{if(tok===_rxToken)el.classList.remove('playing')},3600);
+    if(!silent&&typeof playClick==='function')playClick();
+  }
+  // --- Observe slide: lazy-load the embedded video + set the out-link ---
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID;}
   function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';const roster=JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]');if(roster.length)rows+=`<div class="lb-row me"><span>🏅 Class total</span><span>${xp} XP</span></div>`;else rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
 
   // --- Cold Call (roster shared across all PS lessons) ---
@@ -994,21 +1062,19 @@ function fitToPage(host,fit){
     1:{name:'Arrival – Recall (multiple choice)',body:'<p><strong>Your job:</strong> circulate, keep books open, no calling out.</p><ul><li>All four are multiple choice — every pupil can commit to an answer. If a pupil is unsure, prompt with "what gas do we breathe in?" rather than reading out the option.</li><li>This recalls last lesson (Respiration &amp; ATP). Build confidence — a right answer here sets up the equation work.</li><li>Flag anyone who can\'t pick the <em>word equation</em> ideas — they\'ll need close support in the We Do.</li></ul>'},
     2:{name:'Starter – Equation Detective',body:'<p><strong>Your job:</strong> low-threat line-up — get reluctant writers committing to one suspect.</p><ul><li>The <strong>real</strong> equation is <strong>C</strong>. Don\'t reveal — ask "what does respiration NEED and what does it MAKE?"</li><li>Push the "alibi" idea: for each fake (A, B, D) what exactly is wrong? One short reason is plenty.</li></ul>'},
     3:{name:'I Do – Aerobic Equations',body:'<p><strong>Your job:</strong> support accurate copying — subscripts and the number 6 matter.</p><ul><li>Listen for pupils dropping the <em>6</em> in the symbol equation (red misconception box).</li><li>Reinforce reactants LEFT, products RIGHT using the on-screen diagram.</li></ul>'},
-    4:{name:'We Do – Build Both Equations',body:'<p><strong>Your job:</strong> let pupils try before hinting. Use the on-screen Hint button.</p><ul><li>Word equation row first, then the symbol row — same order on each side.</li><li>If stuck, point to the I Do equations on the board rather than telling them the tile.</li></ul>'},
-    5:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
-    6:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t write the <em>word</em> equation — that\'s the secure-for-all goal and a starter for next lesson.</li></ul>'}
+    4:{name:'Observe – Watch Respiration',body:'<p><strong>Your job:</strong> eyes on the clip, then hold pupils to the sentence stems before any writing.</p><ul><li>Pause at the equation and ask "what went IN? what came OUT?" — get it verbally first.</li><li>The "ready check" (saying the word equation aloud) is the gate to independent work — don\'t let pupils skip it.</li><li>Flag anyone who can\'t name the two products; they\'ll need close support in the We Do.</li></ul>'},
+    5:{name:'We Do – Build Both Equations',body:'<p><strong>Your job:</strong> let pupils try before hinting. Use the on-screen Hint button.</p><ul><li>Word equation row first, then the symbol row — same order on each side.</li><li>If stuck, point to the I Do equations on the board rather than telling them the tile.</li></ul>'},
+    6:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
+    7:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t write the <em>word</em> equation — that\'s the secure-for-all goal and a starter for next lesson.</li></ul>'}
   };
   const CC_DATA={
     1:{f:'Which <strong>gas</strong> does aerobic respiration need?',m:'Name the <strong>two products</strong> of aerobic respiration.',h:'Why do we say respiration <strong>releases</strong> energy, not makes it?'},
     2:{f:'Which letter is the <strong>real</strong> aerobic equation?',m:'Equation A has the arrow the wrong way — what should go on the <strong>left</strong>?',h:'Pick one fake equation and give its <strong>"alibi"</strong> — exactly what is wrong with it?'},
     3:{f:'Name the <strong>two reactants</strong> of aerobic respiration.',m:'What is the chemical <strong>formula</strong> for glucose?',h:'What does the big <strong>6</strong> in 6O₂ tell us?'},
-    4:{f:'Which side of the arrow do <strong>products</strong> go?',m:'Say the word equation out loud, in order.',h:'Say the <strong>symbol</strong> equation out loud, including every 6.'},
-    6:{f:'Write the <strong>word equation</strong> for aerobic respiration.',m:'Write the <strong>symbol equation</strong> (don\'t forget the 6s).',h:'Explain why aerobic respiration releases a <strong>lot</strong> of ATP.'}
+    4:{f:'In the clip, what two things go <strong>IN</strong>?',m:'What two <strong>products</strong> come OUT (besides ATP)?',h:'<strong>Where</strong> in the cell does this happen, and why so much ATP?'},
+    5:{f:'Which side of the arrow do <strong>products</strong> go?',m:'Say the word equation out loud, in order.',h:'Say the <strong>symbol</strong> equation out loud, including every 6.'},
+    7:{f:'Write the <strong>word equation</strong> for aerobic respiration.',m:'Write the <strong>symbol equation</strong> (don\'t forget the 6s).',h:'Explain why aerobic respiration releases a <strong>lot</strong> of ATP.'}
   };
-
-  // --- V5: step-by-step reveal on I Do slides ---
-  function revealStep(btn){const slide=btn.closest('.slide');const steps=[...slide.querySelectorAll('.v5-step')];const next=steps.find(s=>!s.classList.contains('revealed'));if(next){next.classList.add('revealed');playClick();const done=steps.filter(s=>s.classList.contains('revealed')).length;const c=slide.querySelector('.step-count');if(c)c.textContent=done+'/'+steps.length;if(done===steps.length){btn.textContent='✓ All shown';btn.disabled=true;btn.style.opacity='.5'}}}
-  function revealAllSteps(btn){const slide=btn.closest('.slide');slide.querySelectorAll('.v5-step').forEach(s=>s.classList.add('revealed'));const steps=slide.querySelectorAll('.v5-step');const c=slide.querySelector('.step-count');if(c)c.textContent=steps.length+'/'+steps.length;const rb=slide.querySelector('.reveal-next-btn');if(rb){rb.textContent='✓ All shown';rb.disabled=true;rb.style.opacity='.5'}}
 
   // --- Hints ---
   // --- Lesson complete overlay ---
