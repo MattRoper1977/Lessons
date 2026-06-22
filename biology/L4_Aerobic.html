@@ -974,10 +974,6 @@ function printExit(level){document.body.classList.remove('print-foundation','pri
 function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
 function printEvidence(id){
   const cap=document.getElementById(id);if(!cap)return;
-  const wedoSlide=cap.closest('.slide');
-  const all=[...document.querySelectorAll('.slide')];
-  const idx=all.indexOf(wedoSlide);
-  let idoSlide=null;for(let k=idx-1;k>=0;k--){if(all[k].getAttribute('data-type')==='ido'){idoSlide=all[k];break;}}if(!idoSlide&&idx>0)idoSlide=all[idx-1];
   const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
   const host=document.getElementById('print-evidence');if(!host)return;
   document.body.classList.remove('print-foundation','print-middle','print-higher');
@@ -996,7 +992,6 @@ function printEvidence(id){
     copy.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
     p.appendChild(copy);fit.appendChild(p);
   };
-  if(idoSlide)addPanel(idoSlide,'I Do — the method','ido');
   addPanel(cap,'We Do — my work','wedo');
   fitToPage(host,fit);
   document.body.classList.add('print-evidence');
