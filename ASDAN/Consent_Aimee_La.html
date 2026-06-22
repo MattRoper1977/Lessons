@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consent &amp; Aimee's Story — Part 1 (PSHE / RSE)</title>
+<style>
+  :root{
+    --navy:#1e2a52;--pink:#e8367f;--ink:#1f2433;--paper:#f7f8fc;--card:#ffffff;
+    --ido:#2563eb;--wedo:#16a34a;--independent:#7c3aed;--exit:#e8367f;--bridge:#f59e0b;
+    --muted:#5b6273;--line:#e4e7f0;--ind-f:#16a34a;--ind-m:#f97316;--ind-h:#1e2a52;
+    --shadow:0 10px 30px rgba(30,42,82,.10);--radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:var(--ink);background:var(--paper);overflow:hidden;-webkit-font-smoothing:antialiased}
+  body.calm{--paper:#0f1320;--card:#1b2133;--ink:#e7ebf5;--muted:#aab2c6;--line:#2c3450}
+
+  .deck{height:100vh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:42px 58px 100px;overflow-y:auto;
+    border-top:10px solid var(--navy);background:radial-gradient(1200px 500px at 80% -10%, rgba(232,54,127,.06), transparent 60%)}
+  .slide.active{display:flex;animation:fadeInUp .5s ease both}
+  .slide.t-ido{border-top-color:var(--ido)} .slide.t-wedo{border-top-color:var(--wedo)}
+  .slide.t-merge{border-top-color:var(--wedo)} .slide.t-independent{border-top-color:var(--independent)}
+  .slide.t-exit{border-top-color:var(--exit)} .slide.t-bridge{border-top-color:var(--bridge)} .slide.t-arrival{border-top-color:var(--navy)}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  body.reduce .slide.active{animation:none}
+
+  .badge{display:inline-flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    font-size:.72rem;padding:6px 14px;border-radius:999px;color:#fff;width:max-content}
+  .b-ido{background:var(--ido)} .b-wedo{background:var(--wedo)} .b-merge{background:linear-gradient(90deg,var(--ido),var(--wedo))}
+  .b-independent{background:var(--independent)} .b-exit{background:var(--exit)} .b-bridge{background:var(--bridge)} .b-arrival{background:var(--navy)}
+
+  h1{font-size:2.5rem;line-height:1.08;margin:12px 0 6px;color:var(--navy)} body.calm h1{color:#fff}
+  h2{font-size:1.95rem;line-height:1.12;margin:8px 0 8px;color:var(--navy)} body.calm h2{color:#fff}
+  h3{font-size:1.2rem;margin:10px 0 6px;color:var(--navy)} body.calm h3{color:#dbe2f2}
+  h4{font-size:1rem;margin:4px 0 6px;color:var(--navy)} body.calm h4{color:#cfd8ee}
+  p,li{font-size:1.1rem;line-height:1.48} .lede{font-size:1.18rem;color:var(--muted);max-width:64ch}
+  ul,ol{margin:6px 0 6px 22px} li{margin:5px 0}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 20px;box-shadow:var(--shadow);margin:8px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+  .sc-box{background:#ffedd5;border-left:6px solid #f97316;border-radius:12px;padding:13px 18px;margin:10px 0} body.calm .sc-box{background:#3a2a14;color:#ffe6cf}
+  .sc-box h3{color:#9a3412;margin-top:0} body.calm .sc-box h3{color:#ffd9b3}
+  .sc-box label{display:flex;gap:10px;align-items:flex-start;font-size:1.02rem;margin:6px 0;cursor:pointer}
+  .sc-box input{margin-top:5px;width:18px;height:18px;accent-color:#f97316}
+  .aspire-box{background:#dcfce7;border-left:6px solid #16a34a;border-radius:12px;padding:12px 18px;margin:9px 0} body.calm .aspire-box{background:#10331f;color:#cdf3da}
+  .aspire-box strong{color:#166534} body.calm .aspire-box strong{color:#a7f3c4}
+  .care-box{background:#fdeef4;border-left:6px solid var(--pink);border-radius:12px;padding:13px 18px;margin:9px 0} body.calm .care-box{background:#3a1c2b;color:#ffd6e6}
+  .care-box h3{color:#a01253;margin-top:0} body.calm .care-box h3{color:#ffc0dc}
+  .stem-box{background:#eef2ff;border:1px dashed #93a4e8;border-radius:12px;padding:11px 18px;margin:9px 0} body.calm .stem-box{background:#1a2238;border-color:#3a4a78}
+  .stem-box em{color:var(--navy);font-style:normal;font-weight:600} body.calm .stem-box em{color:#cdd8f5}
+  .exam-tip{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:10px 16px;margin:8px 0;font-size:1rem} body.calm .exam-tip{background:#332514;border-color:#7a5320}
+
+  .lo li{list-style:none;position:relative;padding-left:34px;margin:8px 0;opacity:.35;transition:opacity .4s}
+  .lo li.on{opacity:1} .lo li::before{content:"○";position:absolute;left:0;top:-2px;font-size:1.4rem;color:var(--muted)}
+  .lo li.on::before{content:"✓";color:var(--wedo);font-weight:900}
+
+  .reveal{display:none} .reveal.show{display:block;animation:fadeInUp .4s ease both} body.reduce .reveal.show{animation:none}
+  .reveal-btn{font:inherit;border:none;border-radius:999px;padding:11px 20px;font-weight:800;cursor:pointer;background:var(--ido);color:#fff;box-shadow:var(--shadow);font-size:1rem;margin:6px 0}
+  .reveal-btn:disabled{background:var(--wedo);cursor:default;opacity:.95}
+
+  .viz{background:#f1f5fb;border:1px solid #d8e0f0;border-radius:16px;padding:12px;margin:9px 0;display:flex;justify-content:center}
+  .viz svg{max-width:100%;height:auto}
+
+  /* clip */
+  .clip{margin:9px 0}
+  .clip-frame{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#0b1020;border:1px solid #d8e0f0}
+  .clip-frame iframe,.clip-cover{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .clip-cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;background:linear-gradient(135deg,#1e2a52,#3a2740);color:#fff;text-align:center;padding:18px}
+  .clip-cover .play,.story-cover .play{width:60px;height:60px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:1.45rem;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+  .clip-cover small,.story-cover small{max-width:42ch;opacity:.92;font-size:.9rem;line-height:1.4}
+  .clip-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+  .outlink{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;background:var(--card);color:var(--navy);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.9rem} body.calm .outlink{color:#dbe2f2}
+
+  /* animated story */
+  .story-stage{position:relative;background:#f1f5fb;border:1px solid #d8e0f0;border-radius:16px;overflow:hidden}
+  .story-stage svg{display:block;width:100%;height:auto}
+  .story-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;background:linear-gradient(135deg,#1e2a52,#3a2740);color:#fff;text-align:center;padding:18px}
+  .story-frame{opacity:0;transition:opacity .5s} .story-frame.on{opacity:1} body.reduce .story-frame{transition:none}
+  .pulse{transform-origin:center;animation:pulse 1s ease-in-out infinite} body.reduce .pulse{animation:none}
+  @keyframes pulse{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+  .story-cap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bridge);border-radius:12px;padding:12px 16px;margin:9px 0;font-size:1.12rem;min-height:48px}
+  .story-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .story-ctrl .kbd{margin-left:auto}
+
+  /* 2x2 arrival grid */
+  .grid2x2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0} @media(max-width:640px){.grid2x2{grid-template-columns:1fr}}
+  .scn{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--muted);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+  .scn.correct{border-left-color:#16a34a} .scn.wrong{border-left-color:#dc2626}
+  .scn .q{font-weight:600;margin-bottom:8px} .scn .btns{display:flex;gap:8px}
+  .minibtn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer}
+  body.calm .minibtn{color:#dbe2f2} .minibtn.yes:hover{border-color:#16a34a} .minibtn.no:hover{border-color:#dc2626}
+  .scn .fb{display:none;margin-top:9px;font-size:.96rem;background:#eef2ff;border-radius:10px;padding:9px 12px} body.calm .scn .fb{background:#1a2238}
+  .scn .fb.show{display:block}
+
+  /* match starter */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0} @media(max-width:640px){.match{grid-template-columns:1fr}}
+  .mbtn{display:block;width:100%;text-align:left;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 14px;margin:7px 0;cursor:pointer;font-weight:600}
+  body.calm .mbtn{color:#e7ebf5} .mbtn.sel{outline:3px solid var(--ido);outline-offset:1px}
+  .mbtn.done{background:#dcfce7;border-color:#16a34a;color:#14532d;pointer-events:none} body.calm .mbtn.done{background:#10331f;color:#bff0cf}
+  .mbtn.bad{animation:shake .32s} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}} body.reduce .mbtn.bad{animation:none}
+  .donebar{display:none;background:#dcfce7;border-left:6px solid #16a34a;border-radius:10px;padding:10px 14px;margin-top:8px;font-weight:700;color:#166534}
+  body.calm .donebar{background:#10331f;color:#bff0cf} .donebar.show{display:block}
+  .hint-btn{font:inherit;border:1px dashed #f59e0b;background:#fff7ed;color:#9a3412;border-radius:999px;padding:6px 13px;font-weight:700;cursor:pointer;font-size:.9rem}
+  body.calm .hint-btn{background:#332514;color:#ffd9b3} .hint-txt{display:none;margin-top:6px;font-size:.95rem;color:var(--muted)} .hint-txt.show{display:block}
+
+  .qtier{border-radius:12px;padding:13px 18px;margin:9px 0;background:var(--card);border:1px solid var(--line);border-left-width:7px;border-left-style:solid}
+  .qtier.f{border-left-color:var(--ind-f)} .qtier.m{border-left-color:var(--ind-m)} .qtier.h{border-left-color:var(--ind-h)}
+  .qtier .tier-tag{font-weight:800;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:999px;padding:4px 12px;display:inline-block;margin-bottom:6px}
+  .qtier.f .tier-tag{background:var(--ind-f)} .qtier.m .tier-tag{background:var(--ind-m)} .qtier.h .tier-tag{background:var(--ind-h)}
+  .owl-badge{float:right;font-size:1.6rem}
+
+  .logo{position:fixed;top:14px;right:18px;z-index:40;display:flex;align-items:center;gap:8px;font-weight:900;color:var(--navy);font-size:.95rem;background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;box-shadow:var(--shadow)}
+  body.calm .logo{background:rgba(27,33,51,.85);color:#fff} .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--pink)}
+  .progress{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:50;transition:width .35s}
+  .nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:40}
+  .nav button,.toolbtn{font:inherit;border:none;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+  .nav button:disabled{opacity:.4;cursor:default}
+  .counter{align-self:center;font-weight:700;color:var(--muted);padding:0 6px} body.calm .counter{color:#aab2c6}
+  .tools{position:fixed;bottom:18px;right:18px;display:flex;gap:8px;z-index:40}
+  .toolbtn{background:var(--card);color:var(--navy);border:1px solid var(--line);padding:9px 14px;font-size:.9rem} body.calm .toolbtn{color:#dbe2f2}
+  .toolbtn.ta{background:var(--pink);color:#fff;border:none} .toolbtn.cc{background:var(--ido);color:#fff;border:none}
+  .xpwrap{position:fixed;bottom:18px;left:18px;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);font-weight:700;font-size:.85rem;color:var(--navy)}
+  body.calm .xpwrap{color:#dbe2f2} .xpbar{width:84px;height:9px;background:var(--line);border-radius:999px;overflow:hidden}
+  .xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wedo),var(--ido));transition:width .5s}
+
+  .modal{position:fixed;inset:0;background:rgba(15,19,32,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .modal.open{display:flex} .sheet{background:var(--card);max-width:560px;width:100%;border-radius:20px;padding:24px 28px;box-shadow:var(--shadow);max-height:86vh;overflow:auto}
+  .sheet h3{margin-top:0} .sheet .close{float:right;border:none;background:var(--line);border-radius:50%;width:34px;height:34px;font-size:1.1rem;cursor:pointer;color:var(--ink)}
+  .cc-pill{display:inline-block;background:var(--navy);color:#fff;font-weight:800;padding:8px 16px;border-radius:999px;font-size:1.3rem;margin:8px 0}
+  .cc-q{background:#eef2ff;border-radius:12px;padding:14px 16px;margin:10px 0;font-size:1.1rem} body.calm .cc-q{background:#1a2238}
+  .cc-q .tag{font-weight:800;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:999px;color:#fff;margin-right:8px}
+  .cc-q .tag.F{background:var(--ind-f)} .cc-q .tag.M{background:var(--ind-m)} .cc-q .tag.H{background:var(--ind-h)}
+  textarea#roster{width:100%;min-height:80px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;resize:vertical}
+
+  .complete{position:fixed;inset:0;background:rgba(15,19,32,.72);display:none;align-items:center;justify-content:center;z-index:70} .complete.open{display:flex}
+  .complete .box{background:var(--card);border-radius:24px;padding:32px 40px;text-align:center;box-shadow:var(--shadow);max-width:480px} .complete .big{font-size:3rem;margin-bottom:6px}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:65}
+  .kbd{font-size:.85rem;color:var(--muted)} .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .pill{background:#eef2ff;border:1px solid #c8d2f5;border-radius:999px;padding:6px 14px;font-weight:600;font-size:.95rem} body.calm .pill{background:#1a2238;border-color:#3a4a78}
+
+  @media (max-width:640px){
+    .slide{padding:36px 16px 120px} h1{font-size:1.8rem} h2{font-size:1.48rem} p,li{font-size:1.01rem}
+    .logo{font-size:.76rem;top:10px;right:10px} .nav button,.toolbtn{padding:9px 12px;font-size:.82rem}
+    .xpwrap{display:none} .tools{bottom:62px}
+  }
+</style>
+</head>
+<body>
+<div class="logo"><span class="dot"></span>Progress Schools · Tees Valley</div>
+<div class="progress" id="progress"></div>
+<canvas id="confetti"></canvas>
+
+<div class="deck" id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide active" data-type="title" data-ta="Welcome calmly. Set the tone: serious, real topic; the room is a safe place to think about it. Read the title and the three LOs. Do NOT skip slide 2 (ground rules).">
+    <span class="badge b-arrival">PSHE · RSE · Consent</span>
+    <div class="pillrow" id="dots" aria-hidden="true"></div>
+    <h1>Consent &amp; Aimee's Story</h1>
+    <p class="lede">Part 1 of 2 — exploring consent, respect and how people respond to difficult experiences, using a storyline from <em>Sex Education</em> (Series 2, Episode 3).</p>
+    <div class="card"><h3>Today we are learning to…</h3>
+      <ul class="lo" id="loList">
+        <li data-lo="0">Recall what <strong>consent</strong> means and its key features.</li>
+        <li data-lo="1">Explain <strong>why the behaviour on the bus was a violation of consent</strong>.</li>
+        <li data-lo="2">Describe how <strong>responses to a shock can vary</strong>.</li>
+      </ul></div>
+    <div class="sc-box"><h3>Success criteria — tick when you've got it</h3>
+      <label><input type="checkbox" class="sc"> I can state the key features of consent.</label>
+      <label><input type="checkbox" class="sc"> I can explain why what happened to Aimee was wrong and unlawful.</label>
+      <label><input type="checkbox" class="sc"> I can give two reasons why someone might react the way Aimee did.</label></div>
+  </section>
+
+  <!-- 2 GROUND RULES -->
+  <section class="slide" data-type="care" data-ta="Safeguarding gate. Read warmly. We discuss the CHARACTER, not ourselves; nobody shares anything personal; stepping out is fine. Recall the disclosure protocol — listen, don't promise confidentiality, record and pass to the DSL same day. Olivia: sit near pupils who may find this close to home; quiet check-ins.">
+    <span class="badge b-arrival">Before we start</span>
+    <h2>How we'll talk about this today</h2>
+    <div class="care-box"><h3>⚠️ A heads-up</h3><p>Today's lesson talks about an unwanted sexual experience that happens to a character on a bus. It is handled sensitively, but it is a real and serious topic.</p></div>
+    <div class="grid2">
+      <div class="card"><h3>Our ground rules</h3><ul>
+        <li>We talk about <strong>Aimee</strong>, the character — <strong>not about ourselves</strong>.</li>
+        <li>You never have to share anything personal.</li>
+        <li>You can step out for a moment — just go, no questions asked.</li>
+        <li>We listen, we don't judge, and what's said here stays kind.</li></ul></div>
+      <div class="card"><h3>If you want to talk to someone</h3><ul>
+        <li>Any trusted adult in school</li>
+        <li>Our safeguarding lead (your teacher will say who)</li>
+        <li><strong>Childline — 0800 1111</strong> (free, any time)</li>
+        <li><strong>childline.org.uk</strong> for 1-2-1 chat</li></ul>
+        <p class="kbd">There's no wrong reason to ask for support.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 ARRIVAL — 2x2 GRID -->
+  <section class="slide" data-type="arrival" data-ta="Arrival task pupils complete. Four everyday scenarios — tap ✓ or ✗ for each. Locks and gives feedback. Aim: pupils see consent must be freely given and willing; silence/pressure isn't consent. Take the temperature of the room. Olivia: support reading the cards.">
+    <span class="badge b-arrival">Arrival · do-now · ~4 min</span>
+    <h2>Consent or not? Decide for all four</h2>
+    <p class="lede">Tap <strong>✓ Consent</strong> or <strong>✗ Not consent</strong> for each card. You'll get feedback straight away.</p>
+    <div class="grid2x2" id="arrivalGrid"></div>
+    <div class="donebar" id="arrivalDone">✓ All four done — nice thinking. The key idea: consent is a clear, willing yes that's freely given.</div>
+  </section>
+
+  <!-- 4 STARTER — MATCH -->
+  <section class="slide" data-type="arrival" data-ta="Starter task pupils complete. Tap a feature, then tap its meaning. Correct pairs lock green. Shuffled each load. Use the hint if a pair is tricky. Builds the FRIES vocabulary they'll use all lesson.">
+    <span class="badge b-arrival">Starter · ~4 min</span>
+    <h2>Match the 5 features of consent</h2>
+    <p class="lede">Tap a word on the left, then tap its meaning on the right.</p>
+    <div class="match">
+      <div class="col"><h4>The feature</h4><div id="starterTerms"></div></div>
+      <div class="col"><h4>What it means</h4><div id="starterMeanings"></div></div>
+    </div>
+    <button class="hint-btn" id="starterHint">💡 Hint</button>
+    <div class="hint-txt" id="starterHintTxt">Think about the first letters: <strong>F</strong>reely given, <strong>I</strong>nformed, <strong>E</strong>nthusiastic, <strong>S</strong>pecific, <strong>R</strong>eversible.</div>
+    <div class="donebar" id="starterDone">✓ All matched! That's the language of consent — keep it in mind today.</div>
+  </section>
+
+  <!-- 5 I DO — ANIMATED STORY -->
+  <section class="slide" data-type="ido" data-ta="I Do — press-play story (~1 min). It plays automatically through 5 gentle frames; use Next/Replay to control it, and pause to talk between frames. The 'moment' is shown only as a freeze/alarm cue — no assault is depicted. Teacher note: the Netflix clip is in S2E3 — for SEMH this animation replaces showing the scene.">
+    <span class="badge b-ido">I Do · the story</span>
+    <h2>What happens to Aimee</h2>
+    <div class="story">
+      <div class="story-stage">
+        <svg viewBox="0 0 600 250" role="img" aria-label="An animated story of Aimee's bus journey and how it affects her">
+          <rect x="0" y="0" width="600" height="196" fill="#eaf1fb"/>
+          <line x1="0" y1="196" x2="600" y2="196" stroke="#94a3b8" stroke-width="3" stroke-dasharray="14 12"/>
+          <rect x="60" y="120" width="8" height="76" fill="#94a3b8"/><rect x="48" y="112" width="32" height="14" rx="3" fill="#64748b"/>
+
+          <!-- F0 boarding -->
+          <g class="story-frame on" data-f="0">
+            <g transform="translate(180,96)">
+              <rect x="0" y="0" width="270" height="80" rx="16" fill="#c7d3f0" stroke="#1e2a52" stroke-width="3"/>
+              <rect x="14" y="14" width="46" height="34" rx="5" fill="#eef6ff" stroke="#1e2a52"/>
+              <rect x="68" y="14" width="46" height="34" rx="5" fill="#eef6ff" stroke="#1e2a52"/>
+              <rect x="122" y="14" width="46" height="34" rx="5" fill="#eef6ff" stroke="#1e2a52"/>
+              <rect x="232" y="10" width="30" height="64" rx="5" fill="#aebbe0" stroke="#1e2a52"/>
+              <circle cx="40" cy="84" r="15" fill="#1e2a52"/><circle cx="220" cy="84" r="15" fill="#1e2a52"/>
+            </g>
+            <g transform="translate(470,120)"><circle cx="0" cy="0" r="13" fill="#e8367f"/><rect x="-11" y="14" width="22" height="36" rx="9" fill="#e8367f"/></g>
+            <text x="300" y="40" font-family="Segoe UI,Arial" font-size="15" fill="#475569" text-anchor="middle" font-weight="700">An ordinary bus journey</text>
+          </g>
+
+          <!-- F1 freeze (abstract) -->
+          <g class="story-frame" data-f="1">
+            <g transform="translate(180,96)">
+              <rect x="0" y="0" width="270" height="80" rx="16" fill="#c7d3f0" stroke="#1e2a52" stroke-width="3"/>
+              <rect x="0" y="0" width="270" height="80" rx="16" fill="#bcdcff" opacity="0.5"/>
+              <circle cx="40" cy="84" r="15" fill="#1e2a52"/><circle cx="220" cy="84" r="15" fill="#1e2a52"/>
+              <g transform="translate(120,30)"><circle cx="0" cy="0" r="13" fill="#9aa6c4"/><rect x="-10" y="14" width="20" height="2" fill="#1e2a52"/></g>
+            </g>
+            <g class="pulse" transform="translate(315,34)"><circle cx="0" cy="0" r="20" fill="#dc2626"/><text x="0" y="7" font-family="Segoe UI,Arial" font-size="24" fill="#fff" text-anchor="middle" font-weight="900">!</text></g>
+            <text x="300" y="230" font-family="Segoe UI,Arial" font-size="14" fill="#7f1d1d" text-anchor="middle" font-weight="700">Something happens without her consent. Aimee freezes.</text>
+          </g>
+
+          <!-- F2 minimise -->
+          <g class="story-frame" data-f="2">
+            <g transform="translate(70,96)" opacity="0.5">
+              <rect x="0" y="0" width="170" height="78" rx="14" fill="#c7d3f0" stroke="#1e2a52" stroke-width="2"/>
+            </g>
+            <g transform="translate(330,118)"><circle cx="0" cy="0" r="14" fill="#e8367f"/><rect x="-11" y="15" width="22" height="38" rx="9" fill="#e8367f"/><path d="M-6 -2 q6 6 12 0" stroke="#fff" stroke-width="2" fill="none"/></g>
+            <g transform="translate(360,84)"><rect x="0" y="0" width="150" height="40" rx="12" fill="#fff" stroke="#94a3b8"/><polygon points="14,40 26,40 12,54" fill="#fff" stroke="#94a3b8"/><text x="75" y="25" font-family="Segoe UI,Arial" font-size="14" fill="#475569" text-anchor="middle">"It's fine, it's nothing."</text></g>
+          </g>
+
+          <!-- F3 maeve -->
+          <g class="story-frame" data-f="3">
+            <g transform="translate(250,116)"><circle cx="0" cy="0" r="14" fill="#e8367f"/><rect x="-11" y="15" width="22" height="40" rx="9" fill="#e8367f"/></g>
+            <g transform="translate(330,116)"><circle cx="0" cy="0" r="14" fill="#7c3aed"/><rect x="-11" y="15" width="22" height="40" rx="9" fill="#7c3aed"/></g>
+            <text x="292" y="96" font-family="Segoe UI,Arial" font-size="20" text-anchor="middle">💜</text>
+            <g transform="translate(360,70)"><rect x="0" y="0" width="170" height="40" rx="12" fill="#fff" stroke="#94a3b8"/><polygon points="14,40 26,40 12,54" fill="#fff" stroke="#94a3b8"/><text x="85" y="25" font-family="Segoe UI,Arial" font-size="13.5" fill="#5b21b6" text-anchor="middle">"I believe you. This matters."</text></g>
+          </g>
+
+          <!-- F4 later -->
+          <g class="story-frame" data-f="4">
+            <g transform="translate(160,108)">
+              <rect x="0" y="0" width="240" height="76" rx="16" fill="#c7d3f0" stroke="#1e2a52" stroke-width="3"/>
+              <rect x="206" y="8" width="28" height="60" rx="5" fill="#eef6ff" stroke="#1e2a52"/>
+              <circle cx="36" cy="80" r="14" fill="#1e2a52"/><circle cx="200" cy="80" r="14" fill="#1e2a52"/>
+            </g>
+            <g transform="translate(460,118)"><circle cx="0" cy="0" r="14" fill="#e8367f"/><rect x="-11" y="15" width="22" height="40" rx="9" fill="#e8367f"/>
+              <path d="M16 6 q8 -8 16 0" stroke="#f59e0b" stroke-width="3" fill="none"/><path d="M18 16 q8 -8 16 0" stroke="#f59e0b" stroke-width="3" fill="none"/></g>
+            <path d="M448 150 l-26 0" stroke="#dc2626" stroke-width="3" marker-end="url(#ar)"/>
+            <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#dc2626"/></marker></defs>
+            <g transform="translate(40,30)"><rect x="0" y="0" width="74" height="28" rx="14" fill="#1e2a52"/><text x="37" y="19" font-family="Segoe UI,Arial" font-size="14" fill="#fff" text-anchor="middle" font-weight="800">Later…</text></g>
+          </g>
+        </svg>
+        <div class="story-cover" data-storyplay><div class="play">▶</div><strong>Press play — Aimee's story</strong><small>A short, gentle animation. No assault is shown.</small></div>
+      </div>
+      <div class="story-cap" id="storyCap">Press play to watch what happens to Aimee.</div>
+      <div class="story-ctrl">
+        <button class="toolbtn cc" id="storyPlay">▶ Play</button>
+        <button class="toolbtn" id="storyNext">⏭ Next</button>
+        <button class="toolbtn" id="storyReplay">↺ Replay</button>
+        <span class="kbd" id="storyCount">Frame 1 of 5</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 WE DO — UNDERSTANDING -->
+  <section class="slide" data-type="wedo" data-ta="We Do. Discussion. Use Cold Call (bottom-right) to spread answers fairly and tier to the pupil. Accept tentative answers warmly. Keep dwell time here — the heart of the lesson.">
+    <span class="badge b-wedo">We Do · understanding the scene</span>
+    <h2>Let's talk it through</h2>
+    <div class="grid2">
+      <div class="card"><h3>1</h3><p>What happens to Aimee on the bus?</p></div>
+      <div class="card"><h3>2</h3><p>How does she react <em>straight afterwards</em>?</p></div>
+      <div class="card"><h3>3</h3><p>Why do you think she finds it hard to describe what happened?</p></div>
+      <div class="card"><h3>4</h3><p>How does Maeve support her?</p></div>
+    </div>
+    <div class="stem-box"><em>Sentence stems:</em> <em>"Aimee reacts by… because…"</em> · <em>"Maeve helps by… This matters because…"</em></div>
+  </section>
+
+  <!-- 7 MERGED I DO + WE DO — CONSENT -->
+  <section class="slide" data-type="merge" data-ta="I Do + We Do combined. First reveal the four teaching points against the diagram (I Do). Then move straight into the discussion questions (We Do) — Cold Call, push for 'because'. The merge keeps the consent thread in one place.">
+    <span class="badge b-merge">I Do + We Do · consent</span>
+    <h2>Why it's a violation of consent — and what that teaches us</h2>
+    <div class="viz">
+      <svg viewBox="0 0 560 150" role="img" aria-label="Consent needs freely given, informed and enthusiastic; none were true, so there is no consent">
+        <g font-family="Segoe UI,Arial">
+          <rect x="14" y="34" width="120" height="64" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/><text x="74" y="60" font-size="13.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">Freely given?</text><text x="74" y="86" font-size="20" fill="#dc2626" text-anchor="middle" font-weight="800">✗</text>
+          <rect x="158" y="34" width="120" height="64" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/><text x="218" y="60" font-size="13.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">Informed?</text><text x="218" y="86" font-size="20" fill="#dc2626" text-anchor="middle" font-weight="800">✗</text>
+          <rect x="302" y="34" width="120" height="64" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/><text x="362" y="60" font-size="13.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">Enthusiastic?</text><text x="362" y="86" font-size="20" fill="#dc2626" text-anchor="middle" font-weight="800">✗</text>
+          <text x="440" y="72" font-size="26" fill="#475569">→</text>
+          <rect x="456" y="28" width="92" height="76" rx="12" fill="#7f1d1d"/><text x="502" y="60" font-size="14" fill="#fff" text-anchor="middle" font-weight="800">NO</text><text x="502" y="80" font-size="14" fill="#fff" text-anchor="middle" font-weight="800">CONSENT</text>
+          <text x="280" y="130" font-size="13" fill="#475569" text-anchor="middle">If any answer is "no", there is no consent — words or no words.</text>
+        </g>
+      </svg>
+    </div>
+    <button class="reveal-btn" data-reveal>👆 Reveal teaching point 1</button>
+    <div class="card reveal"><p>Aimee <strong>did not agree</strong> to any sexual interaction — in any way.</p></div>
+    <div class="card reveal"><p>Consent must be <strong>freely given, informed and enthusiastic</strong>. None of that was true here.</p></div>
+    <div class="card reveal"><p>Consent matters <strong>even when no words are exchanged</strong>. No words does not mean "yes".</p></div>
+    <div class="card reveal"><p>So the behaviour was <strong>harmful, disrespectful and against the law</strong>. Everyone has the right to their own body — that's <em>bodily autonomy</em>.</p></div>
+    <h3 style="margin-top:14px">Now discuss</h3>
+    <div class="grid2">
+      <div class="card"><h3>5</h3><p>Why is the man's behaviour a violation of consent?</p></div>
+      <div class="card"><h3>6</h3><p>Why does respecting <em>personal boundaries</em> matter so much?</p></div>
+      <div class="card"><h3>7</h3><p>Why is consent relevant even when no one says anything?</p></div>
+      <div class="card"><h3>8</h3><p>What does this teach us about respect and bodily autonomy?</p></div>
+    </div>
+    <div class="stem-box"><em>Stem:</em> <em>"This is a violation of consent because…"</em></div>
+  </section>
+
+  <!-- 8 BRIDGE — RECAP CLIP -->
+  <section class="slide" data-type="bridge" data-ta="Bridge / recap clip (~2–3 min). PREVIEW IT YOURSELF FIRST and confirm it plays on the school network — out-link is a fallback. Content note: shows Aimee's reaction AFTERWARDS, not the assault, but it is emotional. Set the 'watch for', pause after, then discuss. Repeat step-out reminder.">
+    <span class="badge b-bridge">Bridge · short recap clip</span>
+    <h2>"It's just a stupid bus"</h2>
+    <div class="care-box"><p>A short clip of Aimee's reaction <strong>afterwards</strong>. It does <strong>not</strong> show what happened on the bus, but it is emotional. Remember — you can step out if you need to.</p></div>
+    <div class="stem-box"><em>Watch for:</em> How does Aimee's <strong>behaviour</strong> change? What does that tell us about how she really feels inside?</div>
+    <div class="clip">
+      <div class="clip-frame">
+        <div class="clip-cover" data-play data-embed="https://www.youtube-nocookie.com/embed/E_DOxfr5n00?rel=0">
+          <div class="play">▶</div><strong>Tap to play the recap clip</strong><small>"It's Just a Stupid Bus" — the bus-scene aftermath (Netflix's Sex Education)</small>
+        </div>
+      </div>
+      <div class="clip-actions">
+        <a class="outlink" href="https://www.youtube.com/watch?v=E_DOxfr5n00" target="_blank" rel="noopener">▶ Open on YouTube (fallback)</a>
+        <span class="kbd">If the embed won't load on the school network, use the fallback link.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 BRIDGE — HOW PEOPLE RESPOND -->
+  <section class="slide" data-type="bridge" data-ta="Bridge. Normalise the range of responses using the timeline: minimising, freezing, delayed feelings. Key message — there is no 'right' way to react, and reacting differently never means it wasn't serious. Calm voice.">
+    <span class="badge b-bridge">Bridge · how people respond</span>
+    <h2>Feelings can come later</h2>
+    <div class="viz">
+      <svg viewBox="0 0 560 180" role="img" aria-label="Timeline showing Aimee seeming fine at first while her real feelings rise later">
+        <g font-family="Segoe UI,Arial">
+          <line x1="50" y1="140" x2="530" y2="140" stroke="#94a3b8" stroke-width="2"/><line x1="50" y1="20" x2="50" y2="140" stroke="#94a3b8" stroke-width="2"/>
+          <text x="120" y="160" font-size="12.5" fill="#475569" text-anchor="middle">On the bus</text><text x="290" y="160" font-size="12.5" fill="#475569" text-anchor="middle">Just after (jokes)</text><text x="470" y="160" font-size="12.5" fill="#475569" text-anchor="middle">Later</text>
+          <polyline points="120,118 290,120 470,116" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/><circle cx="120" cy="118" r="5" fill="#16a34a"/><circle cx="290" cy="120" r="5" fill="#16a34a"/><circle cx="470" cy="116" r="5" fill="#16a34a"/>
+          <polyline points="120,112 290,96 470,44" fill="none" stroke="#e8367f" stroke-width="4" stroke-linecap="round"/><circle cx="120" cy="112" r="5" fill="#e8367f"/><circle cx="290" cy="96" r="5" fill="#e8367f"/><circle cx="470" cy="44" r="5" fill="#e8367f"/>
+          <rect x="300" y="18" width="14" height="14" rx="3" fill="#16a34a"/><text x="320" y="30" font-size="12.5" fill="#166534">How she seemed</text>
+          <rect x="300" y="36" width="14" height="14" rx="3" fill="#e8367f"/><text x="320" y="48" font-size="12.5" fill="#a01253">How she really felt</text>
+        </g>
+      </svg>
+    </div>
+    <div class="grid2">
+      <div class="card"><p><strong>Minimising</strong> — joking or "I'm fine" can be a way of coping or feeling in control.</p></div>
+      <div class="card"><p><strong>Freezing</strong> — the body's response to shock isn't always "fight". It's common and <em>not</em> the person's fault.</p></div>
+    </div>
+    <div class="stem-box"><em>Turn &amp; talk:</em> Why might someone say <em>"I'm fine"</em> when they really aren't? <strong>Reacting differently never means it wasn't serious.</strong></div>
+  </section>
+
+  <!-- 10 INDEPENDENT -->
+  <section class="slide" data-type="independent" data-ta="Independent. Pupils pick the tier that fits (or you assign). ~8 min. Olivia to support Ava, Eden, Lilly-Grace P. with the stems. This feeds the full summary in Part 2 — keep their work. Tiered paper packs available for anyone who prefers paper.">
+    <span class="badge b-independent">Independent · ~8 min</span>
+    <h2>Your turn to write <span class="owl-badge" title="Plan first, then write">🦉</span></h2>
+    <p class="lede">Choose your level. Use the stems to help you.</p>
+    <div class="qtier f"><span class="tier-tag">Foundation</span><p>Finish these sentences:</p>
+      <div class="stem-box"><em>"On the bus, a man behaved towards Aimee without her ____."</em><br><em>"This was wrong because consent must be freely ____."</em><br><em>"Afterwards Aimee felt ____ because ____."</em></div></div>
+    <div class="qtier m"><span class="tier-tag">Middle</span><p>Write 3–4 sentences explaining <strong>why what happened to Aimee was a violation of consent</strong>, and <strong>one reason</strong> she might have played it down at first.</p>
+      <div class="stem-box"><em>"What happened to Aimee was a violation of consent because… She may have minimised it because…"</em></div></div>
+    <div class="qtier h"><span class="tier-tag">Higher</span><p>Write a full paragraph. Explain <strong>why the behaviour breached consent</strong>, and <strong>why people respond to a shock in very different ways</strong> — using Aimee as your example.</p>
+      <div class="exam-tip">✍️ <strong>Top tip:</strong> use the words <em>consent</em>, <em>freely given</em> and <em>bodily autonomy</em>.</div></div>
+    <div class="aspire-box"><strong>🌟 Finished?</strong> Add one sentence on what <em>you'd</em> want a friend like Maeve to do if someone they cared about was upset.</div>
+  </section>
+
+  <!-- 11 EXIT -->
+  <section class="slide" data-type="exit" data-ta="Exit. Calm reading of the room. Land the three key messages. Tap 'Lesson complete' to finish (XP + confetti). Leave the support signpost on screen as pupils pack away.">
+    <span class="badge b-exit">Exit ticket</span>
+    <h2>Before you go</h2>
+    <div class="grid2">
+      <div class="card"><h3>One thing</h3><p>Write down <strong>one thing</strong> you now understand about consent that you could explain to someone else.</p></div>
+      <div class="card"><h3>One word</h3><p>Choose <strong>one word</strong> for the most important message of today.</p></div>
+    </div>
+    <div class="care-box"><h3>Key messages</h3><ul>
+      <li>Consent must be <strong>freely given, informed and enthusiastic</strong>.</li>
+      <li>If there's no clear "yes", there's <strong>no consent</strong> — words or no words.</li>
+      <li>People react to upsetting events in <strong>different ways</strong>, and that's never their fault. Support — like Childline <strong>0800 1111</strong> — is always there.</li></ul></div>
+    <button class="toolbtn cc" id="completeBtn" style="margin-top:8px">Lesson complete ✓</button>
+  </section>
+
+</div>
+
+<div class="nav"><button id="prev">◂ Back</button><span class="counter" id="counter">1 / 11</span><button id="next">Next ▸</button></div>
+<div class="tools">
+  <button class="toolbtn" id="calmBtn" title="Calm mode">🌙 Calm</button>
+  <button class="toolbtn cc" id="ccBtn">🎯 Cold Call</button>
+  <button class="toolbtn ta" id="taBtn">👩‍🏫 TA Focus</button>
+</div>
+<div class="xpwrap"><span>XP</span><div class="xpbar"><i id="xpfill"></i></div><span id="xpval">0</span></div>
+
+<div class="modal" id="taModal"><div class="sheet"><button class="close" data-close>✕</button><h3>👩‍🏫 TA Focus — this slide</h3><p id="taText">—</p></div></div>
+<div class="modal" id="ccModal"><div class="sheet"><button class="close" data-close>✕</button><h3>🎯 Cold Call</h3><div class="cc-pill" id="ccName">—</div>
+  <div class="cc-q" id="ccQ">Tap "Pick again" to start.</div><button class="toolbtn cc" id="ccPick">Pick again 🔀</button>
+  <details style="margin-top:16px"><summary style="cursor:pointer;font-weight:700">Edit class roster</summary>
+    <p class="kbd" style="margin:8px 0">One name per line. Saved to this device.</p>
+    <textarea id="roster"></textarea><button class="toolbtn" id="saveRoster" style="margin-top:8px">Save roster</button></details></div></div>
+<div class="complete" id="complete"><div class="box"><div class="big">🌟</div><h2>Well thought through.</h2>
+  <p class="lede" style="margin:8px auto">You worked carefully on a serious topic. That takes maturity.</p>
+  <p class="kbd" style="margin-top:10px">Support is always there — Childline 0800 1111.</p>
+  <button class="toolbtn cc" id="closeComplete" style="margin-top:16px">Close</button></div></div>
+
+<script>
+"use strict";
+/* ---- data (TDZ-safe, before init) ---- */
+var DEFAULT_ROSTER=["Pupil A","Pupil B","Pupil C","Pupil D","Pupil E","Pupil F"];
+var CC_QUESTIONS={
+  F:["What did the man do to Aimee on the bus — in your own words?","Did Aimee agree to it? Yes or no?","Name one feeling Aimee had later on.","Who did Aimee tell about what happened?"],
+  M:["Why is what happened a violation of consent?","Why might Aimee have made a joke of it at first?","How does Maeve show she's a good friend here?","What does 'freely given' mean when we talk about consent?"],
+  H:["Explain why consent still matters even though no words were spoken.","Why can fear and anxiety appear later, rather than straight away?","Connect Aimee's story to the idea of 'bodily autonomy'.","Why might reporting something like this feel difficult for someone?"]
+};
+var TIER_KEYS=["F","M","H"];
+var STORY=[
+ "Aimee gets on the bus to meet her friend Maeve. An ordinary day.",
+ "On the bus, a man behaves towards her without her consent. Aimee freezes — she doesn't know what to do.",
+ "Afterwards, she plays it down: \u201cIt's fine, it's nothing.\u201d",
+ "She tells Maeve, who takes it seriously and supports her.",
+ "Later, Aimee is too frightened to get on a bus at all."
+];
+var ARRIVAL=[
+ {t:"A friend happily says \u201cyes, sure!\u201d when you ask to borrow their charger.",a:"yes",fb:"Yes — a clear, willing yes that's freely given."},
+ {t:"Someone keeps on at you until you give in, just to make them stop.",a:"no",fb:"No — giving in to pressure isn't freely given, so it isn't real consent."},
+ {t:"A person says nothing, looks away and freezes.",a:"no",fb:"No — silence or freezing is not a yes."},
+ {t:"Two people both clearly and willingly agree to something.",a:"yes",fb:"Yes — freely given and enthusiastic from both."}
+];
+var PAIRS=[
+ {id:"a",term:"Freely given",mean:"A real choice — no pressure or fear"},
+ {id:"b",term:"Informed",mean:"You know what you're actually agreeing to"},
+ {id:"c",term:"Enthusiastic",mean:"A clear, willing yes — not just going along"},
+ {id:"d",term:"Specific",mean:"Agreeing to one thing isn't agreeing to everything"},
+ {id:"e",term:"Reversible",mean:"You can change your mind at any time"}
+];
+
+/* ---- state ---- */
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var idx=0,xp=0,XP_MAX=slides.length;
+var reduceMotion=false;
+try{ reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+if(reduceMotion) document.body.classList.add("reduce");
+
+/* ---- audio ---- */
+var actx=null;
+function ensureAudio(){ try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC) actx=new AC();} if(actx&&actx.state==="suspended") actx.resume(); }catch(e){} }
+function blip(freq){ if(reduceMotion) return; try{ if(!actx) return; var o=actx.createOscillator(),g=actx.createGain();
+  o.frequency.value=freq||540;o.type="sine";g.gain.value=0.05;o.connect(g);g.connect(actx.destination);
+  o.start();g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.25);o.stop(actx.currentTime+0.26);}catch(e){} }
+document.addEventListener("pointerdown",ensureAudio,{once:true});
+document.addEventListener("keydown",ensureAudio,{once:true});
+
+/* ---- nav ---- */
+var counter=document.getElementById("counter"),progress=document.getElementById("progress");
+var prevBtn=document.getElementById("prev"),nextBtn=document.getElementById("next");
+function show(n){ n=Math.max(0,Math.min(slides.length-1,n));
+  slides[idx].classList.remove("active"); idx=n; slides[idx].classList.add("active"); slides[idx].scrollTop=0;
+  counter.textContent=(idx+1)+" / "+slides.length; progress.style.width=(idx/(slides.length-1)*100)+"%";
+  prevBtn.disabled=(idx===0); nextBtn.disabled=(idx===slides.length-1); awardXp(idx); syncLOs(); }
+function next(){ if(idx<slides.length-1){ show(idx+1); blip(560);} }
+function prev(){ if(idx>0){ show(idx-1);} }
+prevBtn.addEventListener("click",prev); nextBtn.addEventListener("click",next);
+document.addEventListener("keydown",function(e){ var t=e.target?e.target.tagName:""; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(e.key==="ArrowRight"||e.key===" "){ e.preventDefault(); next(); } else if(e.key==="ArrowLeft"){ prev(); } });
+
+var seen={};
+function awardXp(i){ if(seen[i]) return; seen[i]=true; xp=Math.min(XP_MAX,xp+1);
+  document.getElementById("xpfill").style.width=(xp/XP_MAX*100)+"%"; document.getElementById("xpval").textContent=xp; }
+function syncLOs(){ var map={0:idx>=3,1:idx>=6,2:idx>=8};
+  document.querySelectorAll("#loList li").forEach(function(li){ var k=parseInt(li.getAttribute("data-lo"),10); if(map[k]) li.classList.add("on"); }); }
+
+/* ---- reveal ---- */
+document.querySelectorAll("[data-reveal]").forEach(function(btn){
+  var slide=btn.closest(".slide"); var items=slide.querySelectorAll(".reveal"); var total=items.length;
+  function label(){ var shown=slide.querySelectorAll(".reveal.show").length;
+    if(shown>=total){ btn.textContent="All points shown ✓"; btn.disabled=true; } else btn.textContent="👆 Reveal teaching point "+(shown+1)+" of "+total; }
+  label();
+  btn.addEventListener("click",function(){ var h=slide.querySelector(".reveal:not(.show)"); if(h){ h.classList.add("show"); blip(620);} label(); });
+});
+
+/* ---- ARRIVAL 2x2 ---- */
+(function(){
+  var grid=document.getElementById("arrivalGrid"); if(!grid) return; var doneCount=0;
+  ARRIVAL.forEach(function(s){
+    var card=document.createElement("div"); card.className="scn";
+    var q=document.createElement("div"); q.className="q"; q.textContent=s.t; card.appendChild(q);
+    var btns=document.createElement("div"); btns.className="btns";
+    var fb=document.createElement("div"); fb.className="fb";
+    function choose(pick){
+      var ok=(pick===s.a);
+      card.classList.add(ok?"correct":"wrong");
+      fb.textContent=(ok?"✓ ":"Not quite — ")+s.fb; fb.classList.add("show");
+      Array.prototype.forEach.call(btns.children,function(b){ b.disabled=true; });
+      blip(ok?640:300); doneCount++; if(doneCount>=ARRIVAL.length){ document.getElementById("arrivalDone").classList.add("show"); }
+    }
+    var y=document.createElement("button"); y.className="minibtn yes"; y.textContent="✓ Consent"; y.addEventListener("click",function(){choose("yes");});
+    var n=document.createElement("button"); n.className="minibtn no"; n.textContent="✗ Not consent"; n.addEventListener("click",function(){choose("no");});
+    btns.appendChild(y); btns.appendChild(n); card.appendChild(btns); card.appendChild(fb); grid.appendChild(card);
+  });
+})();
+
+/* ---- STARTER match ---- */
+(function(){
+  var termWrap=document.getElementById("starterTerms"), meanWrap=document.getElementById("starterMeanings");
+  if(!termWrap||!meanWrap) return;
+  var sel=null, matched=0;
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  PAIRS.forEach(function(p){ var b=document.createElement("button"); b.className="mbtn term"; b.textContent=p.term; b.setAttribute("data-id",p.id);
+    b.addEventListener("click",function(){ if(b.classList.contains("done")) return;
+      document.querySelectorAll(".mbtn.term.sel").forEach(function(x){x.classList.remove("sel");}); b.classList.add("sel"); sel=b; });
+    termWrap.appendChild(b); });
+  shuffle(PAIRS.slice()).forEach(function(p){ var b=document.createElement("button"); b.className="mbtn mean"; b.textContent=p.mean; b.setAttribute("data-id",p.id);
+    b.addEventListener("click",function(){ if(b.classList.contains("done")||!sel) return;
+      if(sel.getAttribute("data-id")===p.id){ sel.classList.remove("sel"); sel.classList.add("done"); b.classList.add("done"); sel=null; matched++; blip(660);
+        if(matched>=PAIRS.length) document.getElementById("starterDone").classList.add("show");
+      } else { b.classList.add("bad"); blip(300); setTimeout(function(){ b.classList.remove("bad"); },350); }
+    });
+    meanWrap.appendChild(b); });
+  var hb=document.getElementById("starterHint"); if(hb) hb.addEventListener("click",function(){ document.getElementById("starterHintTxt").classList.toggle("show"); });
+})();
+
+/* ---- STORY player ---- */
+(function(){
+  var frames=Array.prototype.slice.call(document.querySelectorAll(".story-frame"));
+  var cap=document.getElementById("storyCap"), cnt=document.getElementById("storyCount");
+  var cover=document.querySelector("[data-storyplay]");
+  if(!frames.length) return;
+  var cur=0, timer=null;
+  function render(i){ cur=i; frames.forEach(function(f,n){ f.classList.toggle("on",n===i); });
+    if(cap) cap.textContent=STORY[i]; if(cnt) cnt.textContent="Frame "+(i+1)+" of "+frames.length; }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+  function start(){ stop(); if(cover) cover.style.display="none"; render(0); blip(560);
+    if(!reduceMotion){ timer=setInterval(function(){ if(cur+1>=frames.length){ stop(); return; } render(cur+1); },3800); } }
+  function nextF(){ stop(); render(Math.min(cur+1,frames.length-1)); blip(540); }
+  function replay(){ stop(); if(cover) cover.style.display="none"; render(0); start(); }
+  if(cover) cover.addEventListener("click",start);
+  var pb=document.getElementById("storyPlay"); if(pb) pb.addEventListener("click",start);
+  var nb=document.getElementById("storyNext"); if(nb) nb.addEventListener("click",nextF);
+  var rb=document.getElementById("storyReplay"); if(rb) rb.addEventListener("click",replay);
+})();
+
+/* ---- title dots ---- */
+(function(){ var dots=document.getElementById("dots"); if(!dots) return; var cols=["#e8367f","#2563eb","#16a34a","#f59e0b","#7c3aed"];
+  for(var i=0;i<5;i++){ var s=document.createElement("span"); s.className="pill"; s.textContent="•"; s.style.color=cols[i]; s.style.fontSize="1.2rem"; s.style.padding="2px 12px";
+    if(!reduceMotion){ s.style.animation="fadeInUp .5s ease both"; s.style.animationDelay=(i*0.08)+"s"; } dots.appendChild(s); } })();
+
+/* ---- calm ---- */
+var CALM_KEY="matt_consent_la_calm_v1"; var calmBtn=document.getElementById("calmBtn");
+function applyCalm(on){ document.body.classList.toggle("calm",on); calmBtn.textContent=on?"☀️ Light":"🌙 Calm"; }
+try{ applyCalm(localStorage.getItem(CALM_KEY)==="1"); }catch(e){}
+calmBtn.addEventListener("click",function(){ var on=!document.body.classList.contains("calm"); applyCalm(on); try{ localStorage.setItem(CALM_KEY,on?"1":"0"); }catch(e){} });
+
+/* ---- TA ---- */
+var taModal=document.getElementById("taModal");
+document.getElementById("taBtn").addEventListener("click",function(){ document.getElementById("taText").textContent=slides[idx].getAttribute("data-ta")||"Support engagement and use the sentence stems."; taModal.classList.add("open"); });
+
+/* ---- cold call ---- */
+var ROSTER_KEY="ps_coldcall_roster";
+function getRoster(){ try{ var raw=localStorage.getItem(ROSTER_KEY); if(raw){ var arr=JSON.parse(raw); if(Array.isArray(arr)&&arr.length) return arr; } }catch(e){} return DEFAULT_ROSTER.slice(); }
+var ccModal=document.getElementById("ccModal");
+function pickCC(){ var roster=getRoster(); var name=roster[Math.floor(Math.random()*roster.length)];
+  var tier=TIER_KEYS[Math.floor(Math.random()*TIER_KEYS.length)]; var qs=CC_QUESTIONS[tier]; var q=qs[Math.floor(Math.random()*qs.length)];
+  document.getElementById("ccName").textContent=name;
+  document.getElementById("ccQ").innerHTML='<span class="tag '+tier+'">'+(tier==="F"?"Foundation":tier==="M"?"Middle":"Higher")+'</span>'+q; blip(500); }
+document.getElementById("ccBtn").addEventListener("click",function(){ document.getElementById("roster").value=getRoster().join("\n"); ccModal.classList.add("open"); });
+document.getElementById("ccPick").addEventListener("click",pickCC);
+document.getElementById("saveRoster").addEventListener("click",function(){ var lines=document.getElementById("roster").value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+  try{ localStorage.setItem(ROSTER_KEY,JSON.stringify(lines)); }catch(e){} var b=document.getElementById("saveRoster"); b.textContent="Saved ✓"; setTimeout(function(){ b.textContent="Save roster"; },1400); });
+
+/* ---- modals / clip / complete ---- */
+document.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click",function(){ b.closest(".modal").classList.remove("open"); }); });
+document.querySelectorAll(".modal").forEach(function(m){ m.addEventListener("click",function(e){ if(e.target===m) m.classList.remove("open"); }); });
+
+document.querySelectorAll("[data-play]").forEach(function(cover){ cover.addEventListener("click",function(){
+  var embed=cover.getAttribute("data-embed"); if(!embed) return; var iframe=document.createElement("iframe");
+  iframe.setAttribute("src",embed+"&autoplay=1"); iframe.setAttribute("allow","accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen");
+  iframe.setAttribute("allowfullscreen",""); iframe.setAttribute("title","Recap clip"); if(cover.parentNode) cover.parentNode.replaceChild(iframe,cover); blip(560); }); });
+
+var completeOverlay=document.getElementById("complete");
+document.getElementById("completeBtn").addEventListener("click",function(){ completeOverlay.classList.add("open"); xp=XP_MAX;
+  document.getElementById("xpfill").style.width="100%"; document.getElementById("xpval").textContent=xp; blip(720); if(!reduceMotion) confetti(); });
+document.getElementById("closeComplete").addEventListener("click",function(){ completeOverlay.classList.remove("open"); });
+function confetti(){ var c=document.getElementById("confetti"); var ctx=c.getContext("2d"); c.width=window.innerWidth; c.height=window.innerHeight;
+  var cols=["#e8367f","#2563eb","#16a34a","#f59e0b","#7c3aed"]; var bits=[];
+  for(var i=0;i<90;i++){ bits.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*0.5,vx:(Math.random()-0.5)*2,vy:2+Math.random()*3,s:4+Math.random()*6,col:cols[i%cols.length],rot:Math.random()*6.28}); }
+  var frames=0; function tick(){ frames++; ctx.clearRect(0,0,c.width,c.height);
+    bits.forEach(function(b){ b.x+=b.vx; b.y+=b.vy; b.rot+=0.1; ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.fillStyle=b.col; ctx.fillRect(-b.s/2,-b.s/2,b.s,b.s); ctx.restore(); });
+    if(frames<160) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height); } tick(); }
+
+/* ---- init last ---- */
+show(0);
+</script>
+</body>
+</html>
