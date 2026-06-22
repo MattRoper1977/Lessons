@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 5: Flame Tests</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(234,179,8,.3)}50%{box-shadow:0 0 20px rgba(234,179,8,.7)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}
+    .slide.active{display:flex;animation:fadeIn .45s ease}.ms-step{background:#fff;border:2px solid #94a3b8;border-radius:12px;padding:10px 14px;font-weight:800;font-size:1rem;color:#1e293b;cursor:pointer;text-align:left;max-width:420px}.ms-step:hover{border-color:var(--wedo-border)}.ms-step.placed{opacity:.25;pointer-events:none}@keyframes msShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.ms-step.ms-wrong{animation:msShake .4s;border-color:#ef4444}#ms-list li{background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:9px 12px;margin:6px 0;font-weight:800;animation:fadeInUp .25s;list-style-position:inside}.claim{text-decoration:underline dotted 2px #94a3b8;cursor:pointer;font-weight:800;padding:1px 4px;border-radius:6px;transition:background .2s}.claim:hover{background:#f1f5f9}.claim.ok{background:#dcfce7;color:#166534;text-decoration:none}.claim.ok::after{content:" ✓";font-weight:900}.claim.bad{background:#fee2e2;color:#991b1b;text-decoration:line-through 2px #dc2626}.claim-fix{display:inline-block;font-size:.78rem;font-weight:900;color:#dc2626;background:#fff;border:2px solid #fecaca;border-radius:8px;padding:1px 7px;margin-left:4px;text-decoration:none;vertical-align:middle}.logo-txt{font-weight:900;letter-spacing:1px;color:#7c3aed;border:2px solid #7c3aed;border-radius:10px;padding:5px 10px;font-size:.78rem;background:#fff;white-space:nowrap}.lab-wrap{background:#0f172a;border-radius:16px;padding:10px 10px 8px;border:2px solid #334155;max-width:880px;margin:6px auto 0}.lab-svg{width:100%;height:auto;display:block}.lab-title{color:#fbbf24;font-weight:900;font-size:.85rem;letter-spacing:1px;margin:0 0 6px;text-align:center}.lab-hint{color:#94a3b8;font-size:.8rem;font-weight:bold}.lab-station{cursor:pointer}@keyframes haloPulse{0%,100%{opacity:.85}50%{opacity:.2}}.lab-halo{animation:haloPulse 1.6s ease-in-out infinite}@keyframes flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.25)}}.obs-flame{transform-origin:center bottom;transform-box:fill-box;animation:flicker .22s infinite}@media (prefers-reduced-motion:reduce){.obs-flame,.lab-halo,.float-dots i{animation:none!important}}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}.slide[data-type="observe"]{border-top-color:#dc2626}.slide[data-type="prior"]{border-top-color:#0891b2}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}
+    button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}
+    .task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}
+    .aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
+    .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    /* Multiple-choice option grid (arrival) */
+    .mc{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:1.02rem;color:#0f172a}
+    .mc span{padding:6px 10px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-weight:600}
+    /* Animated reaction stage (I Do) */
+    .rx-stage{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:18px 14px;margin-top:6px}
+    .rx-side{display:flex;flex-direction:column;gap:8px;align-items:stretch;min-width:150px}
+    .rx-cap{font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;text-align:center;color:#64748b}
+    .rx-chip{padding:9px 12px;border-radius:10px;font-weight:800;border:2px solid;display:flex;align-items:center;gap:8px;font-size:1rem;transition:filter .2s}
+    .rx-react .rx-chip{background:#dbeafe;border-color:#2563eb;color:#1e40af}
+    .rx-prod .rx-chip{background:#dcfce7;border-color:#16a34a;color:#166534}
+    .rx-chip .rx-emoji{font-size:1.3rem}
+    .rx-chip.rx-atp{background:#fef9c3;border-color:#eab308;color:#854d0e}
+    /* chips are fully visible at rest; .playing adds the IN -> process -> OUT emphasis */
+    .rx-stage.playing .rx-react .rx-chip{animation:rxReactFlow .9s ease both}
+    .rx-stage.playing .rx-react .rx-chip:nth-child(3){animation-delay:.12s}
+    .rx-stage.playing .rx-prod .rx-chip{animation:rxProdPop .6s ease both;animation-delay:1.5s}
+    .rx-stage.playing .rx-prod .rx-chip:nth-child(3){animation-delay:1.7s}
+    .rx-stage.playing .rx-prod .rx-chip:nth-child(4){animation-delay:1.9s}
+    .rx-stage.playing .rx-prod .rx-chip.rx-atp{animation:rxProdPop .6s ease both,atpSpark 1.2s ease both;animation-delay:1.9s}
+    .rx-stage.playing .rx-arrow{animation:arrowPulse .8s ease infinite}
+    .rx-stage.playing .rx-mito svg{animation:mitoBurst 1.1s ease both;animation-delay:.75s}
+    @keyframes rxReactFlow{0%{transform:translateX(0)}45%{transform:translateX(14px);filter:brightness(1.18)}100%{transform:translateX(0)}}
+    @keyframes rxProdPop{0%{transform:scale(.7);opacity:.25}55%{transform:scale(1.16)}100%{transform:scale(1);opacity:1}}
+    @keyframes atpSpark{0%,100%{box-shadow:0 0 0 rgba(234,179,8,0)}50%{box-shadow:0 0 18px rgba(234,179,8,.85)}}
+    @keyframes arrowPulse{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(6px);opacity:1}}
+    @keyframes mitoBurst{0%{transform:scale(1)}35%{transform:scale(1.22);filter:drop-shadow(0 0 12px rgba(124,58,237,.7))}100%{transform:scale(1)}}
+    .rx-mito{display:flex;flex-direction:column;align-items:center;gap:4px;color:#5b21b6;font-weight:900;font-size:.8rem}
+    .rx-mito svg{animation:pulse 2.4s ease-in-out infinite}
+    .rx-arrow{font-size:2.4rem;color:#7c3aed;font-weight:900;line-height:1}
+    .rx-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 0 6px}
+    .rx-caption{text-align:center;font-weight:800;color:#5b21b6;background:#f5f3ff;border:2px solid #ddd6fe;border-radius:12px;padding:8px 14px;margin:10px auto 0;max-width:680px;min-height:22px;font-size:1rem;transition:opacity .2s}
+    /* Equation Detective (starter) */
+    .suspect{cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;margin:8px 0;background:#fff;transition:all .15s;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .suspect:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);border-color:#94a3b8}
+    .suspect.solved{border-color:var(--success);background:#f0fdf4}
+    .suspect.cleared{border-color:#f59e0b;background:#fffbeb}
+    .susp-tag{font-weight:900;color:#7c3aed;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;min-width:88px}
+    .susp-eq{font-family:monospace;font-weight:bold;font-size:1.05rem;flex:1;min-width:230px}
+    .susp-hint{font-size:.72rem;color:#94a3b8;font-weight:700}
+    .suspect.investigated .susp-hint{display:none}
+    .verdict{display:none;width:100%;font-weight:bold;font-size:.95rem;padding:8px 10px;border-radius:8px;background:#f1f5f9;color:#334155}
+    .suspect.investigated .verdict{display:block;animation:fadeInUp .25s}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}
+    .tag-exit{background:var(--sc-bg);color:#9a3412}.tag-observe{background:#fee2e2;color:#991b1b}.tag-prior{background:#cffafe;color:#155e75}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);font-size:.9rem}.evidence-btn:hover{background:#9d174d}
+    /* Warning box (red) for misconceptions */
+    .warn-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-bottom:12px}
+    /* ATP badge */
+    /* Uses grid */
+    .uses-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+    .use-card{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;transition:transform .15s}.use-card:hover{transform:translateY(-2px);border-color:var(--task-border)}
+    .use-icon{font-size:2rem;margin-bottom:6px}
+
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    
+    .indep-timer{text-align:center;margin:10px 0;padding:12px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px}
+    .indep-timer .timer-display{font-family:monospace;font-size:2.5rem;font-weight:900;color:var(--lo-border);margin:4px 0}
+    .indep-timer .timer-display.timer-warning{color:var(--error);animation:pulse .5s infinite}
+    .indep-timer .timer-label{font-size:.9rem;color:var(--muted);font-weight:bold}
+    
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    #print-area{display:none}
+    @media print{
+      body{overflow:visible;background:#fff;height:auto;color:#000}
+      .controls,.slide-container,.progress-wrap,.progress-label,.indep-timer,.modal-overlay,#lesson-complete{display:none!important}
+      #print-area{display:block!important;padding:2px}
+      @page{margin:11mm}
+      .print-section{display:none}
+      .print-section.visible{display:block;border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-area h1,#print-area h2,#print-area h3{break-after:avoid-page;page-break-after:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+      .print-section h1{font-size:1.4rem;margin:0 0 8px}
+      .print-section h2{font-size:1.12rem;margin:0 0 8px}
+      .ko-table tr{break-inside:avoid;page-break-inside:avoid}
+      .print-box,.print-grid-2x2,.scaffold-print-box{break-inside:avoid;page-break-inside:avoid}
+      .print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}.print-box{border:1px solid #000;padding:10px}
+      .print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}
+      .ko-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}
+      .scaffold-print-box{border:2px dashed #94a3b8;padding:12px;margin-bottom:12px;border-radius:8px;background:#f8fafc}
+      .prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:14px}
+      body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}
+      body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}
+      body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}
+    }
+    /* ── BUG FIX: shake keyframe (used by wrong-tile feedback) ── */
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+    @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+    @keyframes confettiFall{to{transform:translateY(105vh) rotate(720deg)}}
+    @keyframes dashflow{to{stroke-dashoffset:-220}}
+    .cycle-ring{stroke-dasharray:7 9;animation:dashflow 3.2s linear infinite}
+
+    /* ── BUG FIX: label-btn styling (equation tiles were unstyled) ── */
+
+    /* ── V4: Teacher toolbar (TA Focus / Cold Call / Board / XP) ── */
+    .teacher-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;border-radius:999px;padding:5px 8px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+    .teacher-bar button{padding:7px 12px;font-size:.85rem;border-radius:999px}
+    .tb-ta{background:#0ea5e9}.tb-ta:hover{background:#0369a1}
+    .tb-cc{background:#7c3aed}.tb-cc:hover{background:#5b21b6}
+    .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
+    .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
+    .xp-chip.xp-pop{animation:popIn .4s}
+    @media print{.teacher-bar{display:none!important}
+    /* ---- Gas-Tests pack styling ---- */
+    #print-area{color:#0f172a}
+    .print-section h1,.print-section h2{color:#1e3a8a}
+    .ko-table{border:2px solid #1e3a8a;border-radius:8px;overflow:hidden}
+    .ko-table th{background:#1e3a8a!important;color:#fff!important;border-color:#1e3a8a;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-table td{border:1px solid #cbd5e1}
+    .ko-table tr:nth-child(even) td{background:#f1f5f9;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-note{border-left:5px solid #1e3a8a;background:#eff6ff;padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:.92rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ko-note.warn{border-left-color:#dc2626;background:#fef2f2}
+    .ko-note.hook{border-left-color:#16a34a;background:#f0fdf4}
+    .scaffold-print-box{border:2px dashed #94a3b8;background:#f8fafc;border-radius:12px;padding:0 16px 14px;margin-bottom:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .scaffold-print-box>h3{margin:0 -16px 12px;background:#1e3a8a;color:#fff;padding:8px 16px;border-radius:10px 10px 0 0;font-size:1rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .callout{border:2px dashed #94a3b8;border-radius:12px;padding:12px 16px;margin-bottom:16px;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .callout-title{font-weight:800;margin:0 0 8px;font-size:1rem}
+    .callout.wordbank{background:#fffbeb;border-color:#f59e0b}
+    .callout.starters{background:#eff6ff;border-color:#60a5fa}
+    .exam-frame{background:#fff7ed;border:2px solid #f97316;border-radius:12px;padding:12px 16px;margin-bottom:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .exam-frame .callout-title{color:#c2410c}
+    .callout.mistakes{background:#fef2f2;border-color:#f87171}
+    .callout.mistakes ul{margin:6px 0 0;padding-left:20px}.callout.mistakes li{margin-bottom:5px}
+    /* ---- We Do evidence page ---- */
+    body.print-evidence #print-area{display:block!important}
+    body.print-evidence .print-section{display:none!important}
+    body.print-evidence #print-evidence{display:block!important;padding:0}
+    .ev-fit{transform-origin:top left}
+    .ev-head{border:2px solid #1e3a8a;border-radius:12px;padding:10px 14px;margin-bottom:12px;background:#eff6ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-head h2{margin:0 0 4px;font-size:1.2rem;color:#1e3a8a}
+    .ev-meta{font-size:.85rem;color:#0f172a}
+    .ev-panel{border:2px dashed #94a3b8;border-radius:12px;padding:8px 14px 10px;margin-bottom:12px;background:#fff;page-break-inside:avoid;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-label{display:inline-block;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;color:#fff;padding:3px 12px;border-radius:999px;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .ev-label.ido{background:#7c3aed}.ev-label.wedo{background:#0891b2}
+    .ev-slidecopy{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;transform:none!important;display:block!important;animation:none!important;overflow:visible!important}
+    .ev-slidecopy .logo,.ev-slidecopy .slide-tag,.ev-slidecopy .float-dots,.ev-slidecopy .step-ctrl,.ev-slidecopy .evidence-btn,.ev-slidecopy .hint-text,.ev-slidecopy button,.ev-slidecopy .turn-talk{display:none!important}
+    .ev-slidecopy .v5-step{display:block!important;opacity:1!important;transform:none!important;max-height:none!important}
+    .ev-slidecopy .answer{display:block!important}
+    .ev-slidecopy .content-grid{display:grid!important}
+    .ev-slidecopy h2{font-size:1rem;margin:.2rem 0 .4rem}
+    .ev-slidecopy .li-box,.ev-slidecopy .ido-box,.ev-slidecopy .scaffold-box,.ev-slidecopy .aspire-box,.ev-slidecopy .exam-tip-box,.ev-slidecopy .warn-box,.ev-slidecopy .misc-box{margin:6px 0}
+    }
+
+    /* ── V4: Modals (TA Focus + Cold Call + Leaderboard) ── */
+    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-back.open{display:flex;animation:fadeIn .2s}
+    .modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;border-top:8px solid var(--lo-border)}
+    .modal h2{margin-right:0;border:none;padding:0}
+    .modal .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}
+    .modal-ta{border-top-color:#0ea5e9}.modal-cc{border-top-color:#7c3aed}.modal-board{border-top-color:#f59e0b}
+    .cc-name{font-size:1.6rem;font-weight:900;text-align:center;color:var(--lo-border);margin:6px 0 14px;min-height:38px}
+    .cc-q{padding:12px 14px;border-radius:12px;margin:8px 0;border-left:6px solid}
+    .cc-f{background:#dcfce7;border-color:#22c55e}.cc-m{background:#ffedd5;border-color:#f97316}.cc-h{background:#dbeafe;border-color:#1e3a8a}
+    .cc-q .tier{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .roster-row{display:flex;gap:8px;margin-top:10px}
+    .roster-row input{flex:1;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem}
+    .ta-modal-body p{margin:8px 0}.ta-modal-body li{margin:5px 0}
+    .lb-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;margin:5px 0;background:#f8fafc;font-weight:bold}
+    .lb-row.me{background:#fef3c7}
+
+    /* ── V4: Hint button ── */
+    .hint-btn{background:#10b981;font-size:.85rem}.hint-btn:hover{background:#047857}
+    .hint-text{display:none;margin-top:8px;padding:10px 12px;background:#ecfdf5;border-left:5px solid #10b981;border-radius:10px;font-weight:bold;color:#065f46}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+
+    /* ── V4: Slide-1 success criteria + title hero + LO checks ── */
+    .title-hero{display:flex;gap:18px;justify-content:center;margin:6px 0 4px;font-size:2.4rem}
+    .title-hero span{display:inline-block;animation:iconBounce 2.2s infinite}
+    .title-hero span:nth-child(2){animation-delay:.2s}.title-hero span:nth-child(3){animation-delay:.4s}.title-hero span:nth-child(4){animation-delay:.6s}.title-hero span:nth-child(5){animation-delay:.8s}
+    .float-dots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-dots i{position:absolute;width:14px;height:14px;border-radius:50%;opacity:.35;animation:floatDot 4s infinite ease-in-out}
+    .lo-anim li{opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li::marker{content:''}
+    .lo-anim li.done::before{content:'✅ ';}
+    .sc1-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 16px;border-radius:12px;max-width:680px;margin:14px auto;text-align:left}
+    .sc1-box h3{margin:0 0 6px;color:#9a3412}
+
+    /* ── V5: step reveal + turn & talk ── */
+    .v5-step{display:none}.v5-step.revealed{display:block;animation:fadeInUp .4s}
+    .v5-grid.revealed{display:grid}
+    .step-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;margin:6px 0 10px}
+    .step-ctrl .step-count{font-weight:900;color:var(--ido-border);font-size:.9rem}
+    .turn-talk{background:#eef2ff;border:2px dashed #6366f1;border-radius:14px;padding:14px 16px;margin-top:12px;position:relative}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-11px;left:14px;background:#6366f1;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* ── V4: Lesson complete overlay + confetti ── */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+    .lesson-complete{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:2600;display:none;align-items:center;justify-content:center;padding:24px}
+    .lesson-complete.open{display:flex;animation:fadeIn .3s}
+    .lc-card{background:#fff;border-radius:22px;padding:34px 40px;text-align:center;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:10px solid var(--aspire-border);animation:popIn .5s}
+    .lc-card h1{border:none;font-size:2.2rem;display:block;color:var(--aspire-text)}
+    .lc-xp{font-size:3rem;font-weight:900;color:#f59e0b;margin:6px 0}
+
+    /* ── Drag & Drop (pointer-based: works with mouse AND touch) ── */
+    .dnd-tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:12px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;min-height:58px;margin:6px 0 12px}
+    .drag-item{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:2px solid #94a3b8;border-radius:10px;background:#fff;font-weight:bold;cursor:grab;user-select:none;touch-action:none;box-shadow:0 2px 5px rgba(0,0,0,.1);transition:box-shadow .15s,transform .1s}
+    .drag-item:hover{box-shadow:0 5px 12px rgba(0,0,0,.16)}
+    .drag-item:active{cursor:grabbing}
+    .drag-item.dragging{box-shadow:0 14px 30px rgba(0,0,0,.28);transform:scale(1.05);opacity:.97}
+    .drag-item.locked{cursor:default}
+    .drag-item.dnd-correct{border-color:var(--success);background:rgba(22,163,74,.12);color:#166534}
+    .dnd-bounce{animation:shake .4s}
+    .drop-zone{transition:background .15s,border-color .15s}
+    .drop-zone.zone-hover{background:rgba(99,102,241,.14)!important;border-color:#6366f1!important}
+    .drop-zone.zone-wrong{animation:shake .4s}
+    /* Equation build frame */
+    .eq-frame{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:14px;background:#f8fafc;border-radius:14px}
+    .eq-group{display:flex;gap:8px;align-items:center;padding:10px;border-radius:12px}
+    .eq-react{background:#eef6ff;border:1px solid #bfdbfe}.eq-prod{background:#fef9ee;border:1px solid #fde68a}
+    .eq-group .glabel{position:absolute;top:-10px;left:10px;font-size:.62rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:1px 8px;border-radius:6px;color:#fff}
+    .eq-grp-wrap{position:relative;margin-top:6px}
+    .eq-slot{min-width:118px;min-height:60px;border:2px dashed #94a3b8;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;padding:4px}
+    .eq-slot .slot-hint{font-size:.6rem;color:#94a3b8;font-weight:900;text-transform:uppercase;letter-spacing:.5px;text-align:center}
+    .eq-op{font-size:1.5rem;font-weight:900;color:var(--ido-border)}
+    .mito-reactor{display:flex;flex-direction:column;align-items:center}
+    /* ATP sort bins */
+    .atp-bins{display:flex;gap:16px;margin-top:10px}
+    .atp-bin{flex:1;min-height:170px;border:3px dashed #cbd5e1;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+    .atp-bin.bin-yes{border-color:var(--success)}.atp-bin.bin-no{border-color:var(--error)}
+    .atp-bin .bin-items{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+    .atp-bin h3{margin:0}
+
+    /* ── Interactive Exit Knowledge Check ── */
+    .exit-quiz-wrap{max-width:760px;width:100%;margin:6px auto 0}
+    .quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .quiz-dots{display:flex;gap:6px}
+    .qdot{width:15px;height:15px;border-radius:50%;background:#e2e8f0;border:2px solid #cbd5e1;transition:all .2s}
+    .qdot.cur{box-shadow:0 0 0 3px rgba(124,58,237,.25);border-color:var(--lo-border)}
+    .qdot.dot-right{background:var(--success);border-color:var(--success)}
+    .qdot.dot-wrong{background:var(--error);border-color:var(--error)}
+    .quiz-score-chip{font-weight:900;color:var(--lo-border);background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 12px;border-radius:999px;font-size:.9rem}
+    .quiz-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);animation:fadeInUp .35s}
+    .q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+    .qnum{font-size:.78rem;font-weight:900;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+    .qtier{font-size:.68rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:2px 10px;border-radius:999px}
+    .qt-f{background:#dcfce7;color:#166534}.qt-m{background:#ffedd5;color:#9a3412}.qt-h{background:#dbeafe;color:#1e3a8a}
+    .q-text{font-size:1.35rem;font-weight:800;color:#0f172a;margin:6px 0 14px;line-height:1.35}
+    .quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quiz-opt{background:#f8fafc;color:#0f172a;border:2px solid #cbd5e1;border-radius:12px;padding:14px 16px;font-size:1.05rem;font-weight:bold;text-align:left;cursor:pointer;transition:all .15s;box-shadow:none}
+    .quiz-opt:hover:not(:disabled){border-color:var(--lo-border);transform:translateY(-2px)}
+    .quiz-opt:disabled{cursor:default}
+    .quiz-opt.opt-correct{background:rgba(22,163,74,.14);border-color:var(--success);color:#166534}
+    .quiz-opt.opt-wrong{background:rgba(220,38,38,.1);border-color:var(--error);color:#991b1b}
+    .q-fb{min-height:22px;margin:12px 0 6px;font-weight:bold;font-size:1rem;line-height:1.4}
+    .q-next{background:var(--lo-border);margin-top:4px}
+    .exit-results{display:none}.exit-results.open{display:block;animation:fadeInUp .4s}
+    .result-card{text-align:center;background:#fff;border:2px solid var(--aspire-border);border-top:8px solid var(--aspire-border);border-radius:18px;padding:22px 24px;box-shadow:0 12px 30px rgba(0,0,0,.1);max-width:520px;margin:0 auto}
+    .result-card h2{border:none;margin:6px 0;display:block}
+    .result-card .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+    /* ── Mobile (Chromebook narrow / phones) ── */
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
+      h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
+      .content-grid,.arrival-grid,.uses-grid,.mc{grid-template-columns:1fr!important}
+      .logo{width:96px;top:14px;right:14px}
+      .teacher-bar{flex-wrap:wrap;max-width:94%;justify-content:center}
+      .sort-zone,.atp-bins{flex-direction:column}
+      .eq-frame{flex-direction:column}
+      .drag-item{font-size:.95rem;padding:9px 12px}
+      .quiz-opts{grid-template-columns:1fr}
+      .q-text{font-size:1.15rem}
+      .title-hero{font-size:1.7rem;gap:10px}
+      h2{margin-right:0}
+    }
+  .fab4-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.fab4-cell{border:1.6px solid #cbd5e1;border-radius:8px;padding:7px 10px;break-inside:avoid;font-size:1rem}.fab4-cell svg{max-width:100%;height:auto;display:block;margin:4px auto 0}.fab4-info{background:#fffbeb;border:1.6px solid #f59e0b;margin-bottom:10px}#print-ko .ko-table td,#print-ko .ko-table th{padding:4px 8px;line-height:1.25}#print-ko h1{margin:6px 0;font-size:1.4rem}#print-ko .print-box{padding:6px 10px}</style>
+</head>
+<body>
+<!-- ═══ TEACHER TOOLBAR (V4) ═══ -->
+<div class="teacher-bar">
+  <span class="xp-chip">⭐ <span id="xp-val">0</span> XP</span>
+  <button class="tb-ta small" onclick="openTA()">🎓 TA Focus</button>
+  <button class="tb-cc small" onclick="openCC()">🎯 Cold Call</button>
+  <button class="tb-board small" onclick="openBoard()">🏆 Board</button>
+  <button class="small" style="background:#dc2626" onclick="window.open('https://www.youtube.com/results?search_query=flame+test+metal+ions+GCSE','_blank')">📺 Watch</button>
+</div>
+
+<div class="slide-container">
+
+<!-- ═══ SLIDE 1: TITLE ═══ -->
+<div class="slide active" data-title="Title">
+  <div class="float-dots"></div>
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <div style="text-align:center;margin-top:2%"><div class="animate-enter">
+    <span class="slide-tag tag-lesson">Lesson 5</span>
+    <h1>Lesson 5: Flame Tests 🔥</h1>
+    <p style="font-size:1.15rem;color:var(--muted);margin:-10px 0 10px">Identifying Metal Ions by Colour</p>
+    <div class="title-hero"><span>🔥</span><span>🔴</span><span>🟡</span><span>🟣</span><span>💚</span></div>
+    <div class="li-box" style="margin:14px auto;max-width:680px;text-align:left"><strong>Learning Objectives:</strong>
+      <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px"><li><strong>2.45</strong> – Describe how to carry out a flame test.</li><li><strong>2.46</strong> – Identify Li⁺, Na⁺, K⁺, Ca²⁺ and Cu²⁺ by their flame colours.</li></ul>
+    </div>
+    <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
+      <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> name the flame colour for each of the five metal ions.</p>
+      <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> describe the flame test method step by step, including cleaning the wire.</p>
+      <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> explain why the wire is cleaned and why each ion gives its own colour.</p>
+    </div>
+    <p style="font-size:1.05rem;margin-top:10px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+  </div>
+  <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools – Lesson 5</h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+      <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (2–3)</button>
+      <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+      <button class="ghost" onclick="printSection('ko')">🗂️ Knowledge Organiser</button>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2: BEFORE WE START (60s teach) ═══ -->
+<div class="slide" data-title="Before We Start (60s)" data-type="prior">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-prior">⏱️ Before We Start · 60 sec</span>
+  <h2>Before We Start: Flame Tests in 60 Seconds</h2>
+  <div class="li-box"><strong>New to this?</strong> Here is everything you need for today — fast. <span style="color:var(--muted)">(It is all on <strong>Side A</strong> of your bridge sheet if you want it on paper.)</span></div>
+
+  <div class="content-grid" style="height:auto">
+    <div class="ido-box animate-enter" style="text-align:center">
+      <h3 style="margin-top:0;color:#0e7490">Five metal ions — five colours</h3>
+      <svg viewBox="0 0 720 176" role="img" aria-label="Five metal ions and the flame colour each one produces">
+        <rect x="8" y="40" width="128" height="96" rx="12" fill="#0f172a" stroke="#ef4444" stroke-width="2.5"/><circle cx="72" cy="74" r="20" fill="#ef4444"/><text x="72" y="108" text-anchor="middle" font-size="15" font-weight="900" fill="#e2e8f0">Li⁺</text><text x="72" y="125" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ef4444">CRIMSON RED</text><rect x="150" y="40" width="128" height="96" rx="12" fill="#0f172a" stroke="#facc15" stroke-width="2.5"/><circle cx="214" cy="74" r="20" fill="#facc15"/><text x="214" y="108" text-anchor="middle" font-size="15" font-weight="900" fill="#e2e8f0">Na⁺</text><text x="214" y="125" text-anchor="middle" font-size="9.5" font-weight="800" fill="#facc15">YELLOW</text><rect x="292" y="40" width="128" height="96" rx="12" fill="#0f172a" stroke="#c084fc" stroke-width="2.5"/><circle cx="356" cy="74" r="20" fill="#c084fc"/><text x="356" y="108" text-anchor="middle" font-size="15" font-weight="900" fill="#e2e8f0">K⁺</text><text x="356" y="125" text-anchor="middle" font-size="9.5" font-weight="800" fill="#c084fc">LILAC</text><rect x="434" y="40" width="128" height="96" rx="12" fill="#0f172a" stroke="#fb923c" stroke-width="2.5"/><circle cx="498" cy="74" r="20" fill="#fb923c"/><text x="498" y="108" text-anchor="middle" font-size="15" font-weight="900" fill="#e2e8f0">Ca²⁺</text><text x="498" y="125" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fb923c">ORANGE-RED</text><rect x="576" y="40" width="128" height="96" rx="12" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/><circle cx="640" cy="74" r="20" fill="#34d399"/><text x="640" y="108" text-anchor="middle" font-size="15" font-weight="900" fill="#e2e8f0">Cu²⁺</text><text x="640" y="125" text-anchor="middle" font-size="9.5" font-weight="800" fill="#34d399">BLUE-GREEN</text>
+      </svg>
+      <p style="font-size:.95rem;color:var(--muted);margin:8px 0 0">A flame test identifies the <strong>metal ion</strong> in a compound by the <strong>colour</strong> it turns a flame.</p>
+    </div>
+    <div>
+      <div class="scaffold-box animate-enter anim-delay-1"><strong>1.</strong> Clean a <strong>nichrome wire loop</strong> in <strong>concentrated HCl</strong>, then heat it until it shows <strong>no colour</strong>.</div>
+      <div class="scaffold-box animate-enter anim-delay-1" style="margin-top:10px"><strong>2.</strong> Dip the clean loop in the <strong>sample</strong>, hold it in a <strong>blue</strong> Bunsen flame, and <strong>read the colour</strong>.</div>
+      <div class="scaffold-box animate-enter anim-delay-2" style="margin-top:10px"><strong>3.</strong> Match the colour to the ion. <strong>Clean between every test</strong> — sodium’s yellow masks everything.</div>
+    </div>
+  </div>
+
+  <div class="turn-talk"><strong>Whiteboards — 20 seconds:</strong> which ion is <strong>crimson red</strong>? Which is <strong>blue-green</strong>? Then we go straight into today’s colours.</div>
+</div>
+
+<!-- ═══ SLIDE 3: ARRIVAL ═══ -->
+<div class="slide" id="arrival-slide" data-title="Fab 4">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-arrival">⭐ Fab 4</span>
+  <h2>The Fab 4 – Recall to Get You Started</h2>
+  <div class="li-box"><strong>Instructions:</strong> Multiple choice — in your books, write the <strong>letter</strong> you think is right for each one. No calling out. Reveal when ready.</div>
+  <button class="ghost" style="position:absolute;top:70px;left:40px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+  <div class="level-toggle">
+    <button onclick="switchLevel('arrival','foundation')" style="background:#22c55e">Foundation (U–1)</button>
+    <button onclick="switchLevel('arrival','middle')" style="background:#f97316">Middle (2–3)</button>
+    <button onclick="switchLevel('arrival','higher')" style="background:#1e3a8a">Higher (3–5)</button>
+  </div>
+
+  <div id="arrival-foundation" class="arrival-grid">
+    <div class="task-box animate-enter"><h3>1. Hydrogen</h3><p style="margin:0 0 8px">How do you test for <strong>hydrogen</strong> gas?</p><div class="mc"><span>A) Burning splint → squeaky pop</span><span>B) Glowing splint → relights</span><span>C) Limewater → milky</span><span>D) Damp litmus → blue</span></div><p class="answer">✅ A) Burning splint → squeaky pop.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Carbon dioxide</h3><p style="margin:0 0 8px">What does <strong>CO₂</strong> do to limewater?</p><div class="mc"><span>A) Turns it blue</span><span>B) Turns it milky</span><span>C) Bleaches it</span><span>D) Nothing</span></div><p class="answer">✅ B) Turns it milky/cloudy.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. The litmus pair</h3><p style="margin:0 0 8px">Damp red litmus turns <strong>BLUE</strong>. The gas is…</p><div class="mc"><span>A) Chlorine</span><span>B) Oxygen</span><span>C) Ammonia</span><span>D) Hydrogen</span></div><p class="answer">✅ C) Ammonia (NH₃) — the alkaline gas.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today\u2019s lead-in</h3><p style="margin:0 0 8px">Those tests find <strong>gases</strong>. How could you find the <strong>METAL</strong> in a solid compound?</p><div class="mc"><span>A) Weigh it</span><span>B) Put it in a flame and watch the colour</span><span>C) Smell it</span></div><p class="answer">✅ B) Put it in a flame — different metals give different colours.</p></div>
+  </div>
+
+  <div id="arrival-middle" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Oxygen</h3><p style="margin:0 0 8px">Which test is correct for <strong>oxygen</strong>?</p><div class="mc"><span>A) Burning splint pops</span><span>B) Glowing splint relights</span><span>C) Limewater goes milky</span><span>D) Litmus bleaches</span></div><p class="answer">✅ B) A glowing splint relights.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. Chlorine</h3><p style="margin:0 0 8px">Damp litmus is <strong>bleached white</strong>. The gas is…</p><div class="mc"><span>A) Ammonia</span><span>B) Hydrogen</span><span>C) Chlorine</span><span>D) Carbon dioxide</span></div><p class="answer">✅ C) Chlorine (Cl₂) — it bleaches the dye.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Limewater</h3><p style="margin:0 0 8px">Limewater is a solution of…</p><div class="mc"><span>A) Calcium hydroxide</span><span>B) Sodium chloride</span><span>C) Copper sulfate</span><span>D) Hydrochloric acid</span></div><p class="answer">✅ A) Calcium hydroxide.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today\u2019s lead-in</h3><p style="margin:0 0 8px">A flame test identifies the…</p><div class="mc"><span>A) gas given off</span><span>B) metal ion in the compound</span><span>C) mass of the sample</span><span>D) temperature</span></div><p class="answer">✅ B) The metal ion in the compound.</p></div>
+  </div>
+
+  <div id="arrival-higher" class="arrival-grid" style="display:none">
+    <div class="task-box animate-enter"><h3>1. Negative results</h3><p style="margin:0 0 8px">Limewater stays <strong>clear</strong>. This tells you…</p><div class="mc"><span>A) the gas is definitely CO₂</span><span>B) the gas is NOT CO₂</span><span>C) nothing at all</span><span>D) the test failed</span></div><p class="answer">✅ B) The gas is NOT CO₂ — a negative result is still evidence.</p></div>
+    <div class="task-box animate-enter anim-delay-1"><h3>2. The litmus pair</h3><p style="margin:0 0 8px">Why must litmus be <strong>damp</strong> for NH₃ and Cl₂?</p><div class="mc"><span>A) so the gas can dissolve and react</span><span>B) to cool the gas</span><span>C) to colour the paper</span><span>D) it need not be damp</span></div><p class="answer">✅ A) The gas must dissolve in the moisture before it can react.</p></div>
+    <div class="task-box animate-enter anim-delay-2"><h3>3. Write it (scaffolded)</h3><p style="margin:0 0 8px">Fill the gap: a flame test identifies a metal by the ________ it produces in a flame.</p><div class="mc"><span>colour</span><span>mass</span><span>smell</span><span>sound</span></div><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Word bank: colour · mass · smell · sound</div><p class="answer">✅ colour.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Why clean? (scaffolded)</h3><p style="margin:0 0 8px">Finish: \u201cThe wire is cleaned so that ________ from the last test cannot give a ________ colour.\u201d</p><div class="mc"><span>contamination / false</span><span>heat / bright</span><span>water / dark</span><span>acid / new</span></div><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Choose: contamination / false</div><p class="answer">✅ contamination / false — leftover ions would give a false colour.</p></div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3: STARTER ═══ -->
+<div class="slide" data-title="Starter">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-starter">Starter</span>
+  <h2>🕵️ Starter: Spot the Mistakes</h2>
+  <div class="li-box"><strong>Your mission:</strong> a student wrote this flame-test answer in their book — and got <strong>three things wrong</strong>. Read it in your head first, then <strong>tap each underlined claim</strong> to test it. Correct ones turn green; mistakes turn red and show the fix. No calling out!</div>
+  <div style="max-width:860px;margin:8px auto">
+    <div class="task-box" style="font-size:1.15rem;line-height:2.1">
+      \u201cTo carry out a flame test, I clean the wire loop with <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="it should be CONCENTRATED HCl — water won\u2019t remove the ions">water</span>, dip it in the sample, and hold it in a blue flame.
+      <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="sodium burns YELLOW (NAcho yellow)">Sodium burns red</span> and <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="lithium burns CRIMSON RED (LIpstick)">lithium burns yellow</span>, while <span class="claim" onclick="checkClaim(this)" data-ok="true">copper burns blue-green</span>.”
+    </div>
+    <p style="text-align:center;font-weight:900;font-size:1.1rem;margin:10px 0 0">Mistakes found: <span id="mist-count" style="color:#dc2626">0</span> / 3 &nbsp; <span id="mist-done" style="color:var(--success)"></span></p>
+    <div style="text-align:center;margin-top:6px"><button class="small ghost" onclick="resetClaims()">🔄 Reset</button></div>
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧠 Detective’s hint:</strong> run the five through your head — Li red, Na yellow, K lilac, Ca orange-red, Cu blue-green — and check the cleaning step.</div>
+    <div class="aspire-box"><strong>Aspire:</strong> for each mistake, don’t just spot it — say the <em>correct</em> version out loud, like a detective explaining the case.</div>
+  </div>
+</div>
+
+<div class="slide" data-title="I Do: Flame Tests (Spec 2.45 & 2.46)" data-type="ido">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-ido">I Do</span>
+  <h2>I Do: One Method, Five Colours (Spec 2.45 &amp; 2.46)</h2>
+  <div class="li-box"><strong>Key Idea:</strong> a flame test identifies the <strong>metal ion</strong> in a compound by the <strong>colour</strong> it gives a flame. This appears on nearly every paper — five ions, five colours, free marks.</div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px">
+    <div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #ef4444;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#ef4444;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Li⁺ · Lithium</div><div style="font-weight:900;color:#ef4444;font-size:.9rem">🔴 CRIMSON RED</div><div style="font-size:.72rem;color:var(--muted)">LIpstick red 💄</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #facc15;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#facc15;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Na⁺ · Sodium</div><div style="font-weight:900;color:#facc15;font-size:.9rem">🟡 YELLOW</div><div style="font-size:.72rem;color:var(--muted)">NAcho yellow 🧀</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #c084fc;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#c084fc;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">K⁺ · Potassium</div><div style="font-weight:900;color:#c084fc;font-size:.9rem">🟣 LILAC</div><div style="font-size:.72rem;color:var(--muted)">King\u2019s robe 👑</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #fb923c;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#fb923c;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Ca²⁺ · Calcium</div><div style="font-weight:900;color:#fb923c;font-size:.9rem">🟠 ORANGE-RED</div><div style="font-size:.72rem;color:var(--muted)">CAmpfire 🔥</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #34d399;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#34d399;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Cu²⁺ · Copper</div><div style="font-weight:900;color:#34d399;font-size:.9rem">💚 BLUE-GREEN</div><div style="font-size:.72rem;color:var(--muted)">CUte statue 🗽</div></div>
+  </div>
+
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div class="ido-box animate-enter" style="margin:0">
+      <h3 style="margin-top:0;color:var(--ido-border)">📋 The Method (worth marks on its own)</h3>
+      <p style="margin:4px 0"><strong>1.</strong> <strong>Clean</strong> a nichrome wire loop in <strong>concentrated HCl</strong>.</p>
+      <p style="margin:4px 0"><strong>2.</strong> Heat it in the flame until it shows <strong>no colour</strong> (clean).</p>
+      <p style="margin:4px 0"><strong>3.</strong> <strong>Dip</strong> the clean loop into the <strong>sample</strong>.</p>
+      <p style="margin:4px 0"><strong>4.</strong> Hold it in a <strong>blue</strong> Bunsen flame and <strong>observe the colour</strong>.</p>
+      <p style="margin:4px 0"><strong>5.</strong> <strong>Compare</strong> to the known colours and <strong>identify the ion</strong>.</p>
+    </div>
+    <div>
+      <div class="exam-tip-box animate-enter anim-delay-1" style="margin-top:0"><p style="margin:0"><strong>🎯 Say this in the exam:</strong> “Dip a clean nichrome loop in conc. HCl, heat until no colour, dip in sample, hold in a blue flame, observe the colour.” That sentence is worth <strong>4 marks</strong>.</p></div>
+      <div class="aspire-box" style="margin-top:12px"><strong>🌟 Higher:</strong> electrons absorb flame energy, jump to a higher level (“excited”), then fall back — emitting light of a colour unique to that element.</div>
+    </div>
+  </div>
+
+  <div class="misc-box animate-enter"><p><strong>Don’t write:</strong> <span class="misc-wrong">calcium = orange · sodium = gold</span></p><p><strong>Write:</strong> <span class="misc-right">calcium = ORANGE-RED · sodium = YELLOW · lithium = pure CRIMSON</span></p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">Lithium and calcium are the trap — <strong>pure crimson</strong> vs <strong>brick orange-red</strong>. Use the exact words.</p></div>
+  <div class="turn-talk"><strong>Talk to your partner:</strong> which two colours are easiest to mix up — and what is the <strong>exact</strong> word for each? Be ready to match them next.</div>
+</div>
+
+<!-- ═══ OBSERVE: THE FLAME LAB ═══ -->
+<div class="slide" data-title="Observe: The Flame Lab" data-type="observe">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-observe">🔥 Observe</span>
+  <h2>Observe: The Flame Lab</h2>
+  <div class="li-box"><strong>Watch &amp; check:</strong> run all five tests. Before each one, <strong>say the colour you predict</strong>, then tap. Notice the wire being <strong>cleaned first</strong> every single time — that\u2019s the method made visible.</div>
+  <div class="lab-wrap">
+      <p class="lab-title">🔥 THE FLAME LAB — tap a salt to flame-test it</p>
+      <svg class="lab-svg" viewBox="0 0 740 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bGrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1d4ed8"/><stop offset="0.6" stop-color="#3b82f6"/><stop offset="1" stop-color="#93c5fd"/></linearGradient>
+          <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="740" height="170" fill="#1e293b"/>
+        <rect x="0" y="0" width="740" height="36" fill="#0f172a"/>
+        <rect x="0" y="40" width="740" height="4" fill="#475569"/>
+        <rect x="40" y="20" width="14" height="20" rx="2" fill="#f59e0b"/><rect x="43" y="13" width="8" height="8" rx="1" fill="#78350f"/>
+        <rect x="62" y="20" width="14" height="20" rx="2" fill="#3b82f6"/><rect x="65" y="13" width="8" height="8" rx="1" fill="#1e3a8a"/>
+        <rect x="596" y="8" width="134" height="26" rx="6" fill="#fbbf24"/><text x="663" y="25" text-anchor="middle" font-size="10" font-weight="900" fill="#78350f">⚠ EYE PROTECTION</text>
+        <rect x="0" y="170" width="740" height="16" fill="#475569"/><rect x="0" y="170" width="740" height="3" fill="#64748b"/>
+        <rect x="0" y="186" width="740" height="54" fill="#1f2937"/>
+        <ellipse cx="130" cy="172" rx="34" ry="4" fill="#0b1220" opacity=".6"/>
+        <path d="M100 170 L160 170 L150 156 L110 156 Z" fill="#334155"/>
+        <rect x="123" y="112" width="14" height="46" rx="3" fill="#475569"/>
+        <rect x="121" y="140" width="18" height="9" rx="3" fill="#64748b"/>
+        <path d="M104 162 C84 162 80 176 64 176" stroke="#b45309" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path id="lab-bflame" class="obs-flame" d="M130 112 C114 92 118 66 130 50 C142 66 146 92 130 112 Z" fill="url(#bGrad)" opacity=".95"/>
+        <path class="obs-flame" d="M130 112 C122 100 124 84 130 74 C136 84 138 100 130 112 Z" fill="#dbeafe" opacity=".85"/>
+        <path id="lab-cflame" class="obs-flame" d="M130 112 C110 88 116 58 130 40 C144 58 150 88 130 112 Z" fill="#ffffff" filter="url(#glow)" style="opacity:0;transition:opacity .5s"/>
+        <rect x="152" y="88" width="58" height="3.5" rx="1.5" fill="#94a3b8"/>
+        <rect x="206" y="84" width="10" height="11" rx="2" fill="#334155"/>
+        <circle cx="148" cy="90" r="6" fill="none" stroke="#cbd5e1" stroke-width="2.5"/>
+        <circle id="lab-bead" cx="148" cy="90" r="3.6" fill="#e2e8f0" style="transition:fill .4s"/>
+        <text id="lab-cap0" x="440" y="224" text-anchor="middle" font-size="12" font-weight="900" fill="#94a3b8">Tap a salt bottle to run its flame test</text>
+        <g class="lab-station" id="lab-st1" onclick="runLabTest(1)">
+          <rect class="lab-halo" id="lab-halo1" x="266" y="104" width="68" height="68" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/>
+          <ellipse cx="300" cy="168" rx="24" ry="3.5" fill="#0b1220" opacity=".55"/>
+          <rect x="280" y="118" width="40" height="48" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="292" y="110" width="16" height="9" rx="2" fill="#475569"/>
+          <circle cx="300" cy="134" r="7" fill="#ef4444"/>
+          <text x="300" y="152" text-anchor="middle" font-size="10" font-weight="900" fill="#e2e8f0">LiCl</text>
+          <text x="300" y="162" text-anchor="middle" font-size="9" font-weight="900" fill="#ef4444">Li⁺</text>
+          <g id="lab-done1" opacity="0"><circle cx="326" cy="112" r="8" fill="#16a34a"/><text x="326" y="116" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">✓</text></g>
+        </g><g class="lab-station" id="lab-st2" onclick="runLabTest(2)">
+          <rect class="lab-halo" id="lab-halo2" x="354" y="104" width="68" height="68" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/>
+          <ellipse cx="388" cy="168" rx="24" ry="3.5" fill="#0b1220" opacity=".55"/>
+          <rect x="368" y="118" width="40" height="48" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="380" y="110" width="16" height="9" rx="2" fill="#475569"/>
+          <circle cx="388" cy="134" r="7" fill="#facc15"/>
+          <text x="388" y="152" text-anchor="middle" font-size="10" font-weight="900" fill="#e2e8f0">NaCl</text>
+          <text x="388" y="162" text-anchor="middle" font-size="9" font-weight="900" fill="#facc15">Na⁺</text>
+          <g id="lab-done2" opacity="0"><circle cx="414" cy="112" r="8" fill="#16a34a"/><text x="414" y="116" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">✓</text></g>
+        </g><g class="lab-station" id="lab-st3" onclick="runLabTest(3)">
+          <rect class="lab-halo" id="lab-halo3" x="442" y="104" width="68" height="68" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/>
+          <ellipse cx="476" cy="168" rx="24" ry="3.5" fill="#0b1220" opacity=".55"/>
+          <rect x="456" y="118" width="40" height="48" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="468" y="110" width="16" height="9" rx="2" fill="#475569"/>
+          <circle cx="476" cy="134" r="7" fill="#c084fc"/>
+          <text x="476" y="152" text-anchor="middle" font-size="10" font-weight="900" fill="#e2e8f0">KCl</text>
+          <text x="476" y="162" text-anchor="middle" font-size="9" font-weight="900" fill="#c084fc">K⁺</text>
+          <g id="lab-done3" opacity="0"><circle cx="502" cy="112" r="8" fill="#16a34a"/><text x="502" y="116" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">✓</text></g>
+        </g><g class="lab-station" id="lab-st4" onclick="runLabTest(4)">
+          <rect class="lab-halo" id="lab-halo4" x="530" y="104" width="68" height="68" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/>
+          <ellipse cx="564" cy="168" rx="24" ry="3.5" fill="#0b1220" opacity=".55"/>
+          <rect x="544" y="118" width="40" height="48" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="556" y="110" width="16" height="9" rx="2" fill="#475569"/>
+          <circle cx="564" cy="134" r="7" fill="#fb923c"/>
+          <text x="564" y="152" text-anchor="middle" font-size="10" font-weight="900" fill="#e2e8f0">CaCl₂</text>
+          <text x="564" y="162" text-anchor="middle" font-size="9" font-weight="900" fill="#fb923c">Ca²⁺</text>
+          <g id="lab-done4" opacity="0"><circle cx="590" cy="112" r="8" fill="#16a34a"/><text x="590" y="116" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">✓</text></g>
+        </g><g class="lab-station" id="lab-st5" onclick="runLabTest(5)">
+          <rect class="lab-halo" id="lab-halo5" x="618" y="104" width="68" height="68" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 7" opacity=".7"/>
+          <ellipse cx="652" cy="168" rx="24" ry="3.5" fill="#0b1220" opacity=".55"/>
+          <rect x="632" y="118" width="40" height="48" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="644" y="110" width="16" height="9" rx="2" fill="#475569"/>
+          <circle cx="652" cy="134" r="7" fill="#34d399"/>
+          <text x="652" y="152" text-anchor="middle" font-size="10" font-weight="900" fill="#e2e8f0">CuSO₄</text>
+          <text x="652" y="162" text-anchor="middle" font-size="9" font-weight="900" fill="#34d399">Cu²⁺</text>
+          <g id="lab-done5" opacity="0"><circle cx="678" cy="112" r="8" fill="#16a34a"/><text x="678" y="116" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">✓</text></g>
+        </g>
+      </svg>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;flex-wrap:wrap;gap:6px"><span class="lab-hint">Wire cleaned in conc. HCl before EVERY test · colours stay until reset</span><button class="small ghost" onclick="labReset()">↺ Reset lab</button></div>
+  </div>
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div class="scaffold-box" style="margin:0"><strong>👀 Say it as you test:</strong> <span style="font-family:monospace">“I see a ____ flame, so the ion is ____.”</span> Then jot the pair on your colour table.</div>
+    <div class="exam-tip-box" style="margin:0"><strong>🌟 Think:</strong> why must the Bunsen be on the roaring <strong>BLUE</strong> flame, not the yellow safety flame? Clue: the yellow flame glows with <strong>sodium</strong> — it would mask every test colour.</div>
+  </div>
+  <div class="turn-talk"><strong>Ready check:</strong> cover the screen — can you name all five colours, Li to Cu, in order? If yes, you’re ready to match them yourself next.</div>
+</div>
+
+<!-- ═══ WE DO 1: METHOD BUILDER ═══ -->
+<div class="slide" data-title="We Do: Build the Method" data-type="wedo">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-wedo">We Do</span>
+  <h2>We Do: Build the Flame Test Method</h2>
+  <div class="li-box"><strong>Instructions:</strong> the six steps are jumbled. <strong>Tap them in the correct order</strong> to rebuild the method that earns 4 marks. Tap a wrong step and it just wobbles — no harm, try again.</div>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printEvidence('wedo1')">📸 Print Evidence</button>
+
+  <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+    <div class="score-bar"><span>Steps placed: <span class="score" id="ms-score">0</span>/6</span><button class="ghost small" onclick="methodReset()" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="methodReveal()">👁️ Reveal</button></div>
+
+    <p style="text-align:center;font-weight:900;color:var(--wedo-border);margin:8px 0 4px">Jumbled steps — tap in order:</p>
+    <div id="ms-pool" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:880px;margin:0 auto"><button class="ms-step" id="ms5" data-order="5" onclick="methodTap(this)">👁️ Observe the flame colour</button><button class="ms-step" id="ms1" data-order="1" onclick="methodTap(this)">🧼 Clean the nichrome wire loop in concentrated HCl</button><button class="ms-step" id="ms6" data-order="6" onclick="methodTap(this)">🔎 Compare to the known colours and identify the ion</button><button class="ms-step" id="ms4" data-order="4" onclick="methodTap(this)">🔵 Hold the loop in a blue Bunsen flame</button><button class="ms-step" id="ms2" data-order="2" onclick="methodTap(this)">🔥 Heat the loop until it shows NO colour (it is clean)</button><button class="ms-step" id="ms3" data-order="3" onclick="methodTap(this)">🥄 Dip the clean loop into the sample</button></div>
+
+    <p style="text-align:center;font-weight:900;color:var(--success);margin:12px 0 4px">The method, in order:</p>
+    <ol id="ms-list" style="max-width:760px;margin:0 auto;padding-left:26px;min-height:40px"></ol>
+
+    <div id="ms-fb" style="text-align:center;font-weight:900;margin-top:8px;min-height:18px"></div>
+
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧡 Tip:</strong> the order is <strong>Clean → Check → Dip → Flame → Observe → Identify</strong>. Cleaning always comes first, identifying always comes last.</div>
+    <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">Start with cleaning the wire in conc. HCl; finish by comparing the colour to identify the ion.</div></div>
+    <div contenteditable="true" data-placeholder="Teacher notes..." style="margin-top:10px;min-height:30px;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;font-size:.95rem;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="slide" data-title="Independent Work" data-type="independent">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-independent">Independent Work</span>
+  <h2>Independent Work – Flame Tests</h2>
+  <div class="li-box"><strong>Instructions:</strong> Complete your printed worksheet at your level. You may use the colour table from the lab and the knowledge organiser. ❌ Never write “orange” for calcium — say <strong>orange-red</strong>.</div>
+    <div class="indep-timer">
+      <div class="timer-label">Independent Work Timer</div>
+      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
+        <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
+        <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
+        <button onclick="startIndepTimer(360)" class="small ghost">▶ 6 min</button>
+        <button onclick="pauseIndepTimer()" class="small ghost">⏸ Pause</button>
+        <button onclick="resetIndepTimer()" class="small ghost">🔄 Reset</button>
+      </div>
+    </div>
+
+  <div class="content-grid" style="height:auto;margin-top:10px">
+    <div>
+      <div class="task-box"><h3 style="margin-top:0;color:#22c55e">Foundation (Grades U–1)</h3><p>Complete the colour table, then circle the right answers and a short red-flame scenario.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#f97316">Middle (Grades 2–3)</h3><p>Write the 4-step method, the five colours, and the Li-vs-Ca distinction, then a contamination exam question.</p></div>
+      <div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Higher (Grades 3–5)</h3><p>Explain the electron chemistry, evaluate the technique, then a three-bottles 5-mark question.</p></div>
+    </div>
+    <div>
+      <div class="scaffold-box"><h3 style="margin-top:0">📋 Scaffolding</h3><p>Every pack includes the colour table, the method, sentence starters and word banks. Use them whenever you need them — that’s what they’re for.</p></div>
+      <div class="sc-box" style="margin-top:12px"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#22c55e">Foundation (U–1):</strong> I can name the flame colour for each ion and say what we clean the wire with.</p>
+        <p style="color:#431407;margin-bottom:8px"><strong style="color:#f97316">Middle (2–3):</strong> I can describe the method and tell lithium and calcium apart by their exact colours.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> I can explain why cleaning matters and why each ion gives its own colour.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8: EXIT TICKET ═══ -->
+<div class="slide" id="exit-slide" data-title="Exit Ticket">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-exit">Exit Ticket</span>
+  <h2>Exit Ticket – Flame Tests</h2>
+  <div class="li-box"><strong>Knowledge check:</strong> Tap your answer to each question — instant feedback and a score at the end. Books closed, no notes!</div>
+
+  <div class="exit-quiz-wrap">
+    <div class="quiz-top">
+      <div class="quiz-dots" id="quiz-dots"></div>
+      <div class="quiz-score-chip">Score: <span id="quiz-score">0</span>/6</div>
+    </div>
+    <div id="exit-quiz"></div>
+    <div id="exit-results" class="exit-results"></div>
+    <div style="text-align:center;margin-top:8px">
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
+      <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
+      <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-container -->
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/9</div>
+
+<!-- ═══ PRINT AREA ═══ -->
+<div id="print-area">
+
+<div id="print-ko" class="print-section">
+  <div class="print-box" style="margin-bottom:7px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+  <div class="print-box" style="margin-bottom:7px"><strong>🎯 Learning Objectives (2.45 &amp; 2.46):</strong> Describe how to carry out a flame test, and identify Li⁺, Na⁺, K⁺, Ca²⁺ and Cu²⁺ by their flame colours.</div>
+  <div class="print-box" style="margin-bottom:10px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong><p style="margin:5px 0 0">☐ I can name the flame colour for each of the five metal ions.</p><p style="margin:5px 0 0">☐ I can describe the flame test method step by step.</p><p style="margin:5px 0 0">☐ I can explain why the wire must be cleaned first.</p></div>
+  <h1 style="text-align:center">Knowledge Organiser – Lesson 5: Flame Tests</h1>
+  <table class="ko-table"><tr><th>Metal ion</th><th>Symbol</th><th>Flame colour</th><th>Memory trick</th></tr>
+    <tr><td><strong>Lithium</strong></td><td>Li⁺</td><td><strong>Crimson red</strong></td><td>LIpstick red 💄</td></tr>
+    <tr><td><strong>Sodium</strong></td><td>Na⁺</td><td><strong>Yellow</strong></td><td>NAcho yellow 🧀</td></tr>
+    <tr><td><strong>Potassium</strong></td><td>K⁺</td><td><strong>Lilac</strong></td><td>King&#39;s robe 👑</td></tr>
+    <tr><td><strong>Calcium</strong></td><td>Ca²⁺</td><td><strong>Orange-red</strong></td><td>CAmpfire / brick 🔥</td></tr>
+    <tr><td><strong>Copper</strong></td><td>Cu²⁺</td><td><strong>Blue-green</strong></td><td>CUte green statue 🗽</td></tr></table>
+  <p><strong>📋 Method (2.45):</strong> 1. Clean a nichrome loop in conc. HCl. 2. Heat until NO colour (clean). 3. Dip into the sample. 4. Hold in a blue Bunsen flame. 5. Observe the colour → identify the ion.</p>
+  <p><strong>Key distinction:</strong> Li⁺ = PURE crimson red. Ca²⁺ = ORANGE-red, like a brick. The exam loves this pair — use exact colour words.</p>
+  <p><strong>⚠️ Common mark-losers:</strong> writing \u201corange\u201d for calcium (say ORANGE-RED) · \u201cgold\u201d for sodium (say YELLOW) · cleaning the wire with water (it is conc. HCl) · forgetting the wire must show NO colour before testing.</p>
+  <p><strong>🎵 Memory hooks:</strong> LIpstick red = Li⁺ · NAcho yellow = Na⁺ · King&#39;s robe lilac = K⁺ · CAmpfire orange-red = Ca²⁺ · CUte green statue = Cu²⁺.</p>
+</div>
+
+<div id="print-arrival" class="print-section"><h2>Arrival Task — The Fab 4</h2>
+  <p><strong>1.</strong> How do you test for hydrogen? &nbsp; Burning splint→pop &nbsp;/&nbsp; Glowing splint→relights &nbsp;/&nbsp; Limewater→milky</p>
+  <p><strong>2.</strong> What does CO₂ do to limewater? ______________________</p>
+  <p><strong>3.</strong> Damp red litmus turns BLUE — circle the gas: &nbsp; NH₃ &nbsp;/&nbsp; Cl₂ &nbsp;/&nbsp; O₂</p>
+  <p><strong>4. Lead-in:</strong> How could you identify the METAL in a solid compound? ______________________</p>
+  <p style="margin-top:8px"><strong>🧰 Word bank:</strong> burning · glowing · pop · milky · damp litmus · blue · bleached · flame · colour</p>
+</div>
+
+<div id="print-starter" class="print-section"><h2>🕵️ Starter: Spot the Mistakes</h2>
+  <p>This student made <strong>three</strong> mistakes. <u>Underline</u> each mistake and write the correct version next to it.</p>
+  <p style="line-height:2.2">“To carry out a flame test, I clean the wire loop with <strong>water</strong>, dip it in the sample, and hold it in a blue flame. <strong>Sodium burns red</strong> and <strong>lithium burns yellow</strong>, while <strong>copper burns blue-green</strong>.”</p>
+  <p>1. ____________________ should be ____________________</p>
+  <p>2. ____________________ should be ____________________</p>
+  <p>3. ____________________ should be ____________________</p>
+</div>
+
+<div id="print-scaffold-foundation" class="print-section">
+  <h2>Scaffolding Sheet – Foundation (Grades U–2)</h2>
+  <div class="scaffold-print-box"><h3>The Five Flame Colours</h3><table class="ko-table"><tr><th>Ion</th><th>Colour</th><th>Memory aid</th></tr><tr><td>Li⁺</td><td>Crimson red</td><td>LIpstick</td></tr><tr><td>Na⁺</td><td>Yellow</td><td>NAcho</td></tr><tr><td>K⁺</td><td>Lilac</td><td>King&#39;s robe</td></tr><tr><td>Ca²⁺</td><td>Orange-red</td><td>CAmpfire</td></tr><tr><td>Cu²⁺</td><td>Blue-green</td><td>CUte statue</td></tr></table></div>
+  <div class="scaffold-print-box"><h3>Sentence Starters</h3><p>• To identify the metal ion, I would carry out a ____________.</p><p>• The flame colour was ____________, which shows the ion is ____________.</p><p>• The wire must be cleaned first because ____________.</p></div>
+  <div class="scaffold-print-box"><h3>Word bank</h3><p>nichrome wire loop · concentrated hydrochloric acid · Bunsen burner · crimson red · yellow · lilac · orange-red · blue-green · contamination</p></div>
+</div>
+
+<div id="print-scaffold-middle" class="print-section">
+  <h2>Scaffolding Sheet – Middle (Grades 1–3)</h2>
+  <div class="scaffold-print-box"><h3>Explain-It Toolkit</h3><p><strong>Key words you MUST use:</strong> nichrome · concentrated HCl · no colour · crimson · lilac · orange-red · blue-green · contamination · masks</p><p><strong>Stems:</strong> \u201cThe flame was ___ so the ion is…\u201d · \u201cThe wire is cleaned because…\u201d · \u201cSodium masks other colours which means…\u201d</p></div>
+  <div class="scaffold-print-box"><h3>The lookalikes</h3><p>Li⁺ is a <strong>pure crimson</strong> red. Ca²⁺ is <strong>orange-red</strong>, like a brick. Always use the exact colour word.</p></div>
+</div>
+
+<div id="print-scaffold-higher" class="print-section">
+  <h2>Scaffolding Sheet – Higher (Grades 2–4)</h2>
+  <div class="scaffold-print-box"><h3>Why each ion has its own colour</h3><p>• Electrons absorb flame energy → jump to a higher level (\u201cexcited\u201d).</p><p>• Falling back, they emit light of a specific <strong>wavelength</strong> → a colour unique to that element.</p><p>• Na⁺ emits so strongly that traces <strong>mask</strong> every other colour — hence rigorous cleaning.</p></div>
+  <div class="scaffold-print-box"><h3>Command words</h3><p>DESCRIBE = say what happens · EXPLAIN = say WHY (use \u201cbecause\u201d) · COMPARE = similarities AND differences · METHOD = numbered steps.</p></div>
+  <div class="scaffold-print-box"><h3>5-mark frame (three bottles)</h3><p>Per bottle: clean wire → TEST → COLOUR → ION. Then explain cleaning: name <strong>sodium</strong> and <strong>masking</strong> for the last 2 marks.</p></div>
+</div>
+
+<div id="print-worksheet-foundation" class="print-section">
+  <h2>Independent Work – Foundation (Grades U–2)</h2>
+  <div class="prevent-break"><h3>Part 1 — Complete the colour table</h3><table class="ko-table"><tr><th>Metal ion</th><th>Symbol</th><th>Flame colour</th></tr><tr><td>Lithium</td><td>Li⁺</td><td style="height:30px"></td></tr><tr><td>Sodium</td><td>Na⁺</td><td style="height:30px"></td></tr><tr><td>Potassium</td><td>K⁺</td><td style="height:30px"></td></tr><tr><td>Calcium</td><td>Ca²⁺</td><td style="height:30px"></td></tr><tr><td>Copper</td><td>Cu²⁺</td><td style="height:30px"></td></tr></table></div>
+  <div class="prevent-break"><h3>Part 2 — Circle the correct answer</h3><p>1. You clean the wire loop with: &nbsp; water &nbsp;/&nbsp; concentrated HCl &nbsp;/&nbsp; limewater</p><p>2. The wire is clean when it burns with: &nbsp; a yellow flame &nbsp;/&nbsp; NO colour &nbsp;/&nbsp; a green flame</p><p>3. A blue-green flame means the ion is: &nbsp; Na⁺ &nbsp;/&nbsp; Cu²⁺ &nbsp;/&nbsp; Li⁺</p></div>
+  <div class="prevent-break"><h3>⭐ Part 3 — Exam practice [3 marks]</h3><p>A student sees a <strong>crimson red</strong> flame. (a) Name the ion [1] (b) Name the equipment [1] (c) Why clean the wire first? [1]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-worksheet-middle" class="print-section">
+  <h2>Independent Work – Middle (Grades 1–3)</h2>
+  <div class="prevent-break"><h3>Part 1 — The method</h3><p>Write the flame test method in <strong>4 numbered steps</strong>:</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><h3>Part 2 — Quick colours</h3><p>Li⁺ = __________ · Na⁺ = __________ · K⁺ = __________ · Ca²⁺ = __________ · Cu²⁺ = __________</p></div>
+  <div class="prevent-break"><h3>Part 3 — The lookalikes</h3><p>How do you tell Li⁺ apart from Ca²⁺? Use the EXACT colour words.</p><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><h3>⭐ Part 4 — Exam practice [4 marks]</h3><p>A student tests NaCl (yellow), then KCl — but still sees yellow. (a) What went wrong? [2] (b) How to fix it? [2]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-worksheet-higher" class="print-section">
+  <h2>Independent Work – Higher (Grades 2–4)</h2>
+  <div class="prevent-break"><h3>Part 1 — The physics of the colour</h3><p>Explain at the atomic level why different metal ions give different flame colours. Use: <em>electrons · energy levels · excited · wavelength</em>.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><h3>Part 2 — Evaluate</h3><p>State one advantage and two limitations of flame tests.</p><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><h3>⭐ Part 3 — Exam practice [5 marks]</h3><p>Three bottles contain LiCl, NaCl and KCl. (a) Describe how to identify each [3]. (b) Explain why cleaning between tests is essential [2].</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  <div class="prevent-break"><h3>🌟 Part 4 — Application</h3><p>A firework designer wants RED and BLUE-GREEN bursts. Which metal salts go in each — and why?</p><div class="print-line"></div><div class="print-line"></div></div>
+</div>
+
+<div id="print-exit" class="print-section">
+  <div class="foundation-content prevent-break"><h2>Exit Ticket – Flame Tests (Foundation U–2)</h2><p>1) What colour flame does lithium (Li⁺) produce?</p><div class="print-line"></div><p>2) What colour flame does sodium (Na⁺) produce?</p><div class="print-line"></div><p>3) What do you dip the wire loop in to clean it?</p><div class="print-line"></div></div>
+  <div class="middle-content prevent-break"><h2>Exit Ticket – Flame Tests (Middle 1–3)</h2><p>1) A flame test gives BLUE-GREEN. Name the ion.</p><div class="print-line"></div><p>2) How do you know the wire is clean enough to use?</p><div class="print-line"></div><p>3) State all five flame colours and their ions.</p><div class="print-line"></div></div>
+  <div class="higher-content prevent-break"><h2>Exit Ticket – Flame Tests (Higher 2–4)</h2><p>1) Explain why different metal ions produce different flame colours.</p><div class="print-line"></div><p>2) A student gets YELLOW testing KCl. Explain what happened and the fix.</p><div class="print-line"></div><p>3) Describe the FULL flame test method.</p><div class="print-line"></div></div>
+</div>
+
+<div id="print-evidence" class="print-section"></div>
+
+</div>
+
+<!-- ═══ V4 MODALS / OVERLAYS ═══ -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="modal-back" id="ta-modal"><div class="modal modal-ta">
+  <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+  <h2>🎓 TA Focus</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px" id="ta-slide-name"></p>
+  <div class="ta-modal-body" id="ta-body"></div>
+</div></div>
+
+<div class="modal-back" id="cc-modal"><div class="modal modal-cc">
+  <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+  <h2>🎯 Cold Call</h2>
+  <div class="roster-row"><input id="cc-roster-input" placeholder="Names, comma separated (saved for all lessons)"><button class="small" onclick="saveRoster()">Save</button></div>
+  <button class="small" style="margin-top:10px;background:#7c3aed" onclick="pickPupil()">🎲 Pick a pupil</button>
+  <div class="cc-name" id="cc-name">—</div>
+  <div id="cc-questions"></div>
+</div></div>
+
+
+
+<div class="modal-back" id="board-modal"><div class="modal modal-board">
+  <button class="modal-close small" onclick="closeModal('board-modal')">✕ Close</button>
+  <h2>🏆 Class Progress Board</h2>
+  <p style="color:var(--muted);font-size:.9rem">XP earned this lesson through the interactive tasks.</p>
+  <div id="board-body"></div>
+</div></div>
+
+<div class="lesson-complete" id="lesson-complete"><div class="lc-card">
+  <h1>🎉 Lesson Complete!</h1>
+  <p>Flame Tests — Lesson 5</p>
+  <div class="lc-xp">⭐ <span id="lc-xp-val">0</span> XP</div>
+  <p id="lc-msg" style="color:var(--muted)"></p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('open')">Close</button>
+</div></div>
+
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const cur=slides[i];if(cur){const rx=cur.querySelector('.rx-stage[data-autoplay]');if(rx)setTimeout(()=>runRx(rx,true),400);const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve();}}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{
+  const t=e.target;
+  if(t&&(t.isContentEditable||t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
+  if(document.querySelector('.modal-back.open,.lesson-complete.open'))return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}
+});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')||el.classList.contains('exit-grid')?'grid':'block'}else{el.style.display='none'}}})}
+function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');window.print()}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+function printEvidence(id){
+  const cap=document.getElementById(id);if(!cap)return;
+  const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
+  const host=document.getElementById('print-evidence');if(!host)return;
+  document.body.classList.remove('print-foundation','print-middle','print-higher');
+  document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+  host.innerHTML='';
+  const fit=document.createElement('div');fit.className='ev-fit';host.appendChild(fit);
+  const head=document.createElement('div');head.className='ev-head';
+  const h2=document.createElement('h2');h2.textContent='📸 '+lessonTitle+' — Evidence';head.appendChild(h2);
+  const meta=document.createElement('div');meta.className='ev-meta';
+  meta.innerHTML='<strong>Name:</strong> ____________________   <strong>Class:</strong> ________   <strong>Date:</strong> ____________';
+  head.appendChild(meta);fit.appendChild(head);
+  const addPanel=(node,labelText,labelCls)=>{
+    const p=document.createElement('div');p.className='ev-panel';
+    const lab=document.createElement('span');lab.className='ev-label '+labelCls;lab.textContent=labelText;p.appendChild(lab);
+    const copy=node.cloneNode(true);copy.classList.add('ev-slidecopy');copy.removeAttribute('id');
+    copy.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+    p.appendChild(copy);fit.appendChild(p);
+  };
+  addPanel(cap,'We Do — my work','wedo');
+  fitToPage(host,fit);
+  document.body.classList.add('print-evidence');
+  const cleanup=()=>{document.body.classList.remove('print-evidence');host.innerHTML='';window.removeEventListener('afterprint',cleanup)};
+  window.addEventListener('afterprint',cleanup);
+  setTimeout(()=>window.print(),60);
+}
+function fitToPage(host,fit){
+  try{
+    const prev=host.getAttribute('style')||'';
+    host.setAttribute('style','display:block;position:fixed;left:-99999px;top:0;width:718px;z-index:-1');
+    const h=fit.scrollHeight||0,w=fit.scrollWidth||718;
+    let k=1;if(h>0)k=Math.min(1,1040/h,718/w);
+    fit.style.zoom=k;
+    host.setAttribute('style',prev);
+  }catch(e){fit.style.zoom=1}
+}
+
+  // --- Teacher-notes placeholder init ---
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // ═══ DRAG & DROP ENGINE (pointer-based: works with mouse AND touch) ═══
+  const DND={};const DND_LABELS={wedo1:'Ion Match'};
+  function initDnD(act,total){DND[act]={total:total,placed:0}}
+  function dndZoneUnder(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.drop-zone'):null}
+  function clearDragStyle(it){it.style.position='';it.style.left='';it.style.top='';it.style.zIndex='';it.style.width=''}
+  function hideHint(z){const h=z.querySelector('.slot-hint');if(h)h.style.display='none'}
+  function makeDrag(it){
+    it.style.touchAction='none';
+    it.addEventListener('pointerdown',function(e){
+      if(it.classList.contains('locked'))return;
+      e.preventDefault();
+      const r=it.getBoundingClientRect();const ox=e.clientX-r.left,oy=e.clientY-r.top,w=r.width;
+      try{it.setPointerCapture(e.pointerId)}catch(_){}
+      it.classList.add('dragging');it.style.width=w+'px';it.style.position='fixed';it.style.left=r.left+'px';it.style.top=r.top+'px';it.style.zIndex=4000;
+      function mv(ev){it.style.left=(ev.clientX-ox)+'px';it.style.top=(ev.clientY-oy)+'px';it.style.visibility='hidden';const z=dndZoneUnder(ev.clientX,ev.clientY);it.style.visibility='';document.querySelectorAll('.drop-zone.zone-hover').forEach(zz=>zz.classList.remove('zone-hover'));if(z&&z.dataset.activity===it.dataset.activity)z.classList.add('zone-hover')}
+      function up(ev){try{it.releasePointerCapture(e.pointerId)}catch(_){}it.removeEventListener('pointermove',mv);it.removeEventListener('pointerup',up);it.classList.remove('dragging');it.style.visibility='hidden';const z=dndZoneUnder(ev.clientX,ev.clientY);it.style.visibility='';document.querySelectorAll('.drop-zone.zone-hover').forEach(zz=>zz.classList.remove('zone-hover'));clearDragStyle(it);dndDrop(it,z)}
+      it.addEventListener('pointermove',mv);it.addEventListener('pointerup',up);
+    });
+  }
+  function dndBounce(it){it.classList.add('dnd-bounce');playBuzz();setTimeout(()=>it.classList.remove('dnd-bounce'),400)}
+  function dndDrop(it,zone){
+    const act=it.dataset.activity;
+    if(!zone||zone.dataset.activity!==act){dndBounce(it);return}
+    const cap=parseInt(zone.dataset.cap||'99',10);
+    if(zone.querySelectorAll('.drag-item').length>=cap&&!zone.contains(it)){dndBounce(it);return}
+    if(zone.dataset.zoneid===it.dataset.target){
+      (zone.querySelector('.bin-items')||zone).appendChild(it);hideHint(zone);
+      it.classList.add('locked','dnd-correct');
+      DND[act].placed++;updateDnDScore(act);addXP(10,DND_LABELS[act]);
+      if(DND[act].placed>=DND[act].total)dndComplete(act);
+    }else{dndBounce(it);zone.classList.add('zone-wrong');setTimeout(()=>zone.classList.remove('zone-wrong'),400)}
+  }
+  function updateDnDScore(act){const el=document.getElementById(act+'-score');if(el)el.textContent=DND[act].placed}
+  function dndComplete(act){const fb=document.getElementById(act+'-fb');if(fb){fb.textContent='🎉 All correct — superb work!';fb.style.color='var(--success)'}confetti()}
+  function resetDnD(act){
+    const tray=document.getElementById(act+'-tray');
+    document.querySelectorAll('.drag-item[data-activity="'+act+'"]').forEach(it=>{it.classList.remove('locked','dnd-correct','dnd-bounce');clearDragStyle(it);if(tray)tray.appendChild(it)});
+    document.querySelectorAll('.eq-slot .slot-hint').forEach(h=>h.style.display='');
+    DND[act].placed=0;updateDnDScore(act);const fb=document.getElementById(act+'-fb');if(fb)fb.textContent='';playClick()
+  }
+  function revealDnD(act){
+    document.querySelectorAll('.drag-item[data-activity="'+act+'"]').forEach(it=>{
+      if(it.classList.contains('locked'))return;
+      const z=document.querySelector('.drop-zone[data-activity="'+act+'"][data-zoneid="'+it.dataset.target+'"]');
+      if(z){(z.querySelector('.bin-items')||z).appendChild(it);hideHint(z);it.classList.add('locked','dnd-correct')}
+    });
+    DND[act].placed=DND[act].total;updateDnDScore(act);const fb=document.getElementById(act+'-fb');if(fb){fb.textContent='✅ Answers revealed';fb.style.color='var(--success)'}
+  }
+  // --- We Do: Method Builder (tap-to-order) ---
+  let _msNext=1;const _msTotal=6;
+  function methodTap(el){
+    if(el.classList.contains('placed'))return;
+    const o=parseInt(el.dataset.order,10);
+    if(o===_msNext){
+      el.classList.add('placed');
+      const li=document.createElement('li');li.textContent=el.textContent;document.getElementById('ms-list').appendChild(li);
+      _msNext++;const sc=document.getElementById('ms-score');if(sc)sc.textContent=(_msNext-1);addXP(8,'Method Builder');
+      if(_msNext>_msTotal){const fb=document.getElementById('ms-fb');if(fb){fb.textContent='🎉 Method complete — that is your 4-mark answer!';fb.style.color='var(--success)';}confetti();}
+    }else{el.classList.add('ms-wrong');playBuzz();setTimeout(()=>el.classList.remove('ms-wrong'),400);}
+  }
+  function methodReset(){
+    _msNext=1;document.getElementById('ms-list').innerHTML='';
+    document.querySelectorAll('.ms-step').forEach(s=>s.classList.remove('placed','ms-wrong'));
+    const sc=document.getElementById('ms-score');if(sc)sc.textContent='0';const fb=document.getElementById('ms-fb');if(fb)fb.textContent='';playClick();
+  }
+  function methodReveal(){
+    const ol=document.getElementById('ms-list');ol.innerHTML='';
+    const steps=Array.from(document.querySelectorAll('.ms-step')).sort((a,b)=>a.dataset.order-b.dataset.order);
+    steps.forEach(s=>{s.classList.add('placed');const li=document.createElement('li');li.textContent=s.textContent;ol.appendChild(li);});
+    _msNext=_msTotal+1;const sc=document.getElementById('ms-score');if(sc)sc.textContent=_msTotal;const fb=document.getElementById('ms-fb');if(fb){fb.textContent='✅ Method revealed';fb.style.color='var(--success)';}
+  }
+
+  // (drag engine retained but unused — We Do is now tap-to-order)
+  document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
+  window.addEventListener('load',()=>{document.querySelectorAll('.drag-item').forEach(makeDrag)});
+
+  // --- Independent Work Timer ---
+  let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function startIndepTimer(secs){
+    if(indepPaused&&!secs){indepPaused=false;}
+    else{clearInterval(indepInterval);indepSeconds=secs||480;}
+    indepPaused=false;
+    updateIndepDisplay();
+    indepInterval=setInterval(function(){
+      if(!indepPaused){indepSeconds--;updateIndepDisplay();
+      if(indepSeconds<=0){clearInterval(indepInterval);
+        const d=document.getElementById('indep-timer-display');if(d){d.textContent='TIME UP!';d.classList.add('timer-warning');}
+      }}
+    },1000);
+  }
+  function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d&&indepPaused)d.style.opacity='.5';else if(d)d.style.opacity='1';}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1';}}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const d=document.getElementById('indep-timer-display');if(d){d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);}}
+
+  // ═══════════════ V4 / V5 ENGAGEMENT MODULE ═══════════════
+  // --- Sounds (WebAudio, no assets) ---
+  let _ac=null;function _audio(){if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return _ac}
+  function _tone(freq,dur,type){const a=_audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.start();o.stop(a.currentTime+dur)}
+  function playDing(){_tone(880,.18);setTimeout(()=>_tone(1320,.22),90)}
+  function playBuzz(){_tone(150,.25,'square')}
+  function playClick(){_tone(520,.06,'triangle')}
+
+  // --- Confetti ---
+  function confetti(){const c=document.getElementById('confetti-canvas');if(!c)return;c.style.display='block';c.width=innerWidth;c.height=innerHeight;const ctx=c.getContext('2d');const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb','#eab308'];const P=[];for(let i=0;i<140;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[i%cols.length],v:2+Math.random()*4,a:Math.random()*6.28});let t=0;const id=setInterval(()=>{ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.05)*1.5;ctx.fillStyle=p.c;ctx.beginPath();ctx.rect(p.x,p.y,p.r,p.r*1.6);ctx.fill()});if(++t>140){clearInterval(id);ctx.clearRect(0,0,c.width,c.height);c.style.display='none'}},25)}
+
+  // --- XP system ---
+  let xp=0;const xpLog={};
+  function addXP(n,label){xp+=n;const v=document.getElementById('xp-val');v.textContent=xp;v.parentElement.classList.remove('xp-pop');void v.parentElement.offsetWidth;v.parentElement.classList.add('xp-pop');if(label)xpLog[label]=(xpLog[label]||0)+n;playDing()}
+
+  // --- Modals ---
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  const VIDEO_ID=''; // unused in this lesson — the Flame Lab replaces the embedded video
+  function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
+  function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  // --- legacy reaction-flow animation (unused in this lesson) ---
+  let _rxToken=0;
+  function runRx(el,silent){
+    if(!el)return;
+    const tok=++_rxToken;
+    el.classList.remove('playing');void el.offsetWidth;el.classList.add('playing');
+    const cap=el.parentElement.querySelector('.rx-caption');
+    const steps=[];
+    if(cap)steps.forEach(s=>setTimeout(()=>{if(tok===_rxToken)cap.innerHTML=s[1]},s[0]));
+    if(el._rxTimer)clearTimeout(el._rxTimer);
+    el._rxTimer=setTimeout(()=>{if(tok===_rxToken)el.classList.remove('playing')},3600);
+    if(!silent&&typeof playClick==='function')playClick();
+  }
+  // --- Observe slide: lazy-load the embedded video + set the out-link ---
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID;}
+  function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';const roster=JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]');if(roster.length)rows+=`<div class="lb-row me"><span>🏅 Class total</span><span>${xp} XP</span></div>`;else rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
+
+  // --- Cold Call (roster shared across all PS lessons) ---
+  function loadRoster(){return JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]')}
+  function saveRoster(){const raw=document.getElementById('cc-roster-input').value;const names=raw.split(',').map(s=>s.trim()).filter(Boolean);localStorage.setItem('ps_coldcall_roster',JSON.stringify(names));document.getElementById('cc-name').textContent=names.length?'Saved '+names.length+' names ✓':'—';playClick()}
+  function pickPupil(){const r=loadRoster();const el=document.getElementById('cc-name');if(!r.length){el.textContent='Add names first ↑';return}let i=0,n=12;const id=setInterval(()=>{el.textContent=r[Math.floor(Math.random()*r.length)];if(++i>n){clearInterval(id);el.textContent=r[Math.floor(Math.random()*r.length)];playDing()}},70)}
+  function openCC(){document.getElementById('cc-roster-input').value=loadRoster().join(', ');const d=CC_DATA[currentSlide];const box=document.getElementById('cc-questions');if(!d){box.innerHTML='<p style="color:var(--muted)">No targeted questions for this slide — use a recall question from earlier.</p>'}else{box.innerHTML=`<div class="cc-q cc-f"><div class="tier">Foundation · U/1</div>${d.f}</div><div class="cc-q cc-m"><div class="tier">Middle · 2</div>${d.m}</div><div class="cc-q cc-h"><div class="tier">Higher · 3–5</div>${d.h}</div>`}document.getElementById('cc-name').textContent='—';document.getElementById('cc-modal').classList.add('open')}
+
+  // --- TA Focus ---
+  function openTA(){const d=TA_DATA[currentSlide]||{name:slides[currentSlide].getAttribute('data-title')||'',body:'<p>Support pupils to stay on task and re-voice the key idea in their own words.</p>'};document.getElementById('ta-slide-name').textContent=d.name;document.getElementById('ta-body').innerHTML=d.body;document.getElementById('ta-modal').classList.add('open')}
+
+  // --- Per-slide data (index matches slide order) ---
+  const TA_DATA={
+    1:{name:'Before We Start – 60s teach',body:'<p><strong>Your job:</strong> fast <em>new</em> teaching, not a quiz — ~60 seconds.</p><ul><li>Point at the five colour swatches: name the ion, name the colour, say the memory trick once.</li><li>Land the big idea: a flame test identifies the <strong>metal ion</strong> by its <strong>colour</strong>. Side A of the bridge sheet has it on paper.</li><li>Whiteboard check: can they name even two colours before we move on?</li></ul>'},
+    2:{name:'Arrival – Recall (multiple choice)',body:'<p><strong>Your job:</strong> circulate, books open, no calling out.</p><ul><li>All four are multiple choice — every pupil commits a letter. This recalls the gas tests (last two lessons).</li><li>If a pupil is stuck, prompt with \'what did limewater do?\' rather than reading the option.</li><li>Q4 is the hook into today: identifying the METAL, not the gas. Let them speculate (fireworks!).</li></ul>'},
+    3:{name:'Starter – Spot the Mistakes',body:'<p><strong>Your job:</strong> get pupils reading carefully before tapping — eyes first, then commit.</p><ul><li>There are <strong>three</strong> mistakes: water (should be conc. HCl), sodium-red and lithium-yellow (swapped). Copper blue-green is correct.</li><li>Push for the <strong>correct version</strong> spoken aloud, not just \'that one\u2019s wrong\'.</li></ul>'},
+    4:{name:'I Do – Method & Colours',body:'<p><strong>Your job:</strong> support the chant and the Li-vs-Ca distinction.</p><ul><li>Say CRIMSON (lithium) and ORANGE-RED (calcium) with exaggerated contrast — this is THE exam trap.</li><li>The 4-mark method sentence (yellow box) is the highest-value line — have the class say it twice.</li></ul>'},
+    5:{name:'Observe – The Flame Lab',body:'<p><strong>Your job:</strong> pupils predict the colour OUT LOUD before each tap.</p><ul><li>Point out the wire being cleaned FIRST on every run — that is the method made visible.</li><li>Ask why a BLUE flame, not the yellow safety flame? (the yellow glows with sodium and masks the test colour.)</li><li>Flag anyone who can\'t name two colours; they\'ll need support in the We Do.</li></ul>'},
+    6:{name:'We Do – Build the Method',body:'<p><strong>Your job:</strong> let pupils try the order before hinting; wrong taps just wobble, so it is safe to experiment.</p><ul><li>Anchor the ends: cleaning is always FIRST, identifying is always LAST. The middle is dip \u2192 flame \u2192 observe.</li><li>Have pupils say each step aloud as it locks in — this is the 4-mark exam sentence being built. Print evidence at the end.</li></ul>'},
+    7:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand scaffold sheets to named pupils only. Prompt with the success criteria, not the answer.</li><li>Circulate on exact colour words — \'orange\' for calcium instead of \'orange-red\' is where marks die.</li></ul>'},
+    8:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t name three colours — that\'s the secure-for-all goal and a starter for next time.</li></ul>'}
+  };
+  const CC_DATA={
+    1:{f:'What colour does <strong>lithium</strong> burn?',m:'Name the ion that gives a <strong>yellow</strong> flame.',h:'<strong>Why</strong> must the wire be cleaned before a flame test?'},
+    2:{f:'What did <strong>limewater</strong> do with carbon dioxide?',m:'How do you tell <strong>NH₃</strong> from <strong>Cl₂</strong> with litmus?',h:'A flame test finds the <strong>metal</strong> — how is that different from a gas test?'},
+    3:{f:'Name <strong>one</strong> mistake in the student\u2019s answer.',m:'The student swapped two colours — <strong>which two</strong>?',h:'Give the <strong>correct</strong> version of every mistake you found.'},
+    4:{f:'What colour is <strong>copper</strong> (Cu²⁺)?',m:'How do you tell <strong>Li⁺</strong> from <strong>Ca²⁺</strong>?',h:'Say the <strong>full method</strong> in one sentence.'},
+    5:{f:'What colour did <strong>potassium</strong> give in the lab?',m:'What does the wire do <strong>first</strong>, every time?',h:'Why a <strong>blue</strong> Bunsen flame, not the yellow one?'},
+    6:{f:'What is the <strong>first</strong> step of the method?',m:'Say the six steps <strong>in order</strong>.',h:'Why must <strong>cleaning</strong> come before everything else?'},
+    8:{f:'Name <strong>two</strong> flame colours and their ions.',m:'State <strong>all five</strong> colours and ions.',h:'Explain at the <strong>atomic level</strong> why colours differ.'}
+  };
+
+  // --- Hints ---
+
+  // --- Hints ---
+  // --- Lesson complete overlay ---
+  function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+  // --- Equation Detective (starter) ---
+  let _caseSolved=false;
+  // --- Starter: Spot the Mistakes ---
+  let _mistFound=0,_mistDone=false;
+  function checkClaim(el){
+    if(el.classList.contains('ok')||el.classList.contains('bad'))return;
+    const wrong=el.dataset.ok==='false';
+    if(wrong){el.classList.add('bad');if(el.dataset.fix){const f=document.createElement('span');f.className='claim-fix';f.textContent='→ '+el.dataset.fix;el.after(f);} _mistFound++;const c=document.getElementById('mist-count');if(c)c.textContent=_mistFound;playClick();
+      if(_mistFound>=3&&!_mistDone){_mistDone=true;const d=document.getElementById('mist-done');if(d)d.textContent='🎉 Case solved — all three found!';addXP(5,'Spot the Mistakes');confetti();}}
+    else{el.classList.add('ok');playDing();}
+  }
+  function resetClaims(){_mistFound=0;_mistDone=false;document.querySelectorAll('.claim').forEach(c=>c.classList.remove('ok','bad'));document.querySelectorAll('.claim-fix').forEach(f=>f.remove());const c=document.getElementById('mist-count');if(c)c.textContent='0';const d=document.getElementById('mist-done');if(d)d.textContent='';playClick();}
+
+  function accuse(el){
+    el.classList.add('investigated');
+    const v=el.querySelector('.verdict');if(v)v.textContent=el.dataset.alibi||'';
+    if(el.dataset.verdict==='real'){el.classList.add('solved');if(!_caseSolved){_caseSolved=true;addXP(5,'Colour Detective');confetti()}else{playClick()}}
+    else{el.classList.add('cleared');playClick()}
+  }
+  function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=70?'Five ions, five colours — outstanding work!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
+
+  // ── Flame Lab ──
+  const flames=[null,
+    {n:'lithium (Li⁺)',c:'#ef4444',w:'🔴 CRIMSON RED',s:'LiCl'},
+    {n:'sodium (Na⁺)',c:'#facc15',w:'🟡 YELLOW',s:'NaCl'},
+    {n:'potassium (K⁺)',c:'#c084fc',w:'🟣 LILAC',s:'KCl'},
+    {n:'calcium (Ca²⁺)',c:'#fb923c',w:'🟠 ORANGE-RED',s:'CaCl₂'},
+    {n:'copper (Cu²⁺)',c:'#34d399',w:'💚 BLUE-GREEN',s:'CuSO₄'}];
+  let labTimers=[];
+  function stReset(n){
+    const L=id=>document.getElementById(id);
+    const d=L('lab-done'+n);if(d)d.style.opacity='0';
+    const hal=L('lab-halo'+n);if(hal)hal.style.display='';
+  }
+  function labReset(){
+    labTimers.forEach(clearTimeout);labTimers=[];
+    [1,2,3,4,5].forEach(stReset);
+    const L=id=>document.getElementById(id);
+    const cf=L('lab-cflame');if(cf)cf.style.opacity='0';
+    const bd=L('lab-bead');if(bd)bd.setAttribute('fill','#e2e8f0');
+    const cap=L('lab-cap0');if(cap){cap.textContent='Tap a salt bottle to run its flame test';cap.setAttribute('fill','#94a3b8');}
+  }
+  function runLabTest(n){
+    const L=id=>document.getElementById(id);
+    const f=flames[n];if(!f)return;
+    labTimers.forEach(clearTimeout);labTimers=[];
+    const hal=L('lab-halo'+n);if(hal)hal.style.display='none';
+    const cf=L('lab-cflame');if(cf)cf.style.opacity='0';
+    const bd=L('lab-bead');if(bd)bd.setAttribute('fill','#e2e8f0');
+    const cap=L('lab-cap0');
+    if(cap){cap.textContent='Cleaning the loop in conc. HCl… heating until NO colour…';cap.setAttribute('fill','#94a3b8');}
+    labTimers.push(setTimeout(function(){
+      if(bd)bd.setAttribute('fill',f.c);
+      if(cap)cap.textContent='Clean ✓ — dipping the loop into '+f.s+'… into the blue flame…';
+    },1100));
+    labTimers.push(setTimeout(function(){
+      if(cf){cf.setAttribute('fill',f.c);cf.style.opacity='.95';}
+      if(cap){cap.textContent=f.w+' — '+f.n+'!';cap.setAttribute('fill',f.c);}
+      const d=L('lab-done'+n);if(d)d.style.opacity='1';
+      try{playDing()}catch(e){}
+    },2100));
+  }
+
+  // ── We Do interaction modes ──
+  function wdMode(m,btn){
+    const sc=btn.closest('.slide')||document;
+    sc.querySelectorAll('.wd-tab').forEach(function(t){t.classList.toggle('active',t===btn)});
+    sc.querySelectorAll('.wd-mode').forEach(function(d){d.classList.toggle('active',(d.dataset.wd||'match')===m)});
+    sc.querySelectorAll('.wd-mc').forEach(function(s){s.style.display=(m==='match')?'inline':'none'});
+  }
+
+  // ═══ INTERACTIVE EXIT KNOWLEDGE CHECK ═══
+  const QUIZ=[
+    {q:'What flame colour does lithium (Li\u207a) produce?',tier:'F',opts:['Yellow','Crimson red','Lilac','Blue-green'],a:1,why:'Li\u207a burns crimson red — think LIpstick red.'},
+    {q:'What flame colour does sodium (Na\u207a) produce?',tier:'F',opts:['Yellow','Lilac','Orange-red','Blue-green'],a:0,why:'Na\u207a burns yellow — NAcho yellow. Never write \u201cgold\u201d.'},
+    {q:'What do you clean the wire loop with before a flame test?',tier:'F',opts:['Water','Limewater','Concentrated hydrochloric acid','Soap'],a:2,why:'Conc. HCl removes ions from the last test — water will not.'},
+    {q:'A flame test gives a blue-green colour. Which ion is present?',tier:'M',opts:['Ca\u00b2\u207a','Cu\u00b2\u207a','K\u207a','Li\u207a'],a:1,why:'Blue-green = copper (Cu\u00b2\u207a) — the CUte green statue.'},
+    {q:'You test NaCl (yellow), then KCl \u2014 but still see yellow. Why?',tier:'M',opts:['Potassium is also yellow','The wire is contaminated with sodium','KCl does not work','The flame is too hot'],a:1,why:'A trace of Na\u207a left on the wire masks the lilac of potassium. Clean and re-test.'},
+    {q:'Why do different metal ions give different flame colours?',tier:'H',opts:['They burn at different speeds','Excited electrons emit light of a specific wavelength','The acid changes colour','They melt at different points'],a:1,why:'Electrons absorb energy, get excited, then emit light of a wavelength unique to that element.'}
+  ];
+  let qIdx=0,qScore=0,qAnswered=false;
+  const TIER_NAME={F:'Foundation',M:'Middle',H:'Higher'},TIER_CLS={F:'qt-f',M:'qt-m',H:'qt-h'};
+  function startQuiz(){qIdx=0;qScore=0;qAnswered=false;const s=document.getElementById('quiz-score');if(s)s.textContent='0';const r=document.getElementById('exit-results');if(r){r.classList.remove('open');r.innerHTML=''}buildDots();renderQuizQ()}
+  function buildDots(){const d=document.getElementById('quiz-dots');if(!d)return;d.innerHTML=QUIZ.map((_,i)=>'<span class="qdot" id="qdot-'+i+'"></span>').join('')}
+  function renderQuizQ(){
+    qAnswered=false;const item=QUIZ[qIdx];
+    document.querySelectorAll('.qdot').forEach((el,i)=>el.classList.toggle('cur',i===qIdx));
+    const opts=item.opts.map((o,i)=>'<button class="quiz-opt" onclick="answerQuiz('+i+',this)">'+o+'</button>').join('');
+    const last=qIdx===QUIZ.length-1;
+    document.getElementById('exit-quiz').innerHTML=
+      '<div class="quiz-card"><div class="q-head"><span class="qnum">Question '+(qIdx+1)+' of '+QUIZ.length+'</span><span class="qtier '+TIER_CLS[item.tier]+'">'+TIER_NAME[item.tier]+'</span></div>'+
+      '<p class="q-text">'+item.q+'</p><div class="quiz-opts">'+opts+'</div>'+
+      '<div class="q-fb" id="q-fb"></div>'+
+      '<div style="text-align:center"><button class="q-next small" id="q-next" style="display:none" onclick="nextQuiz()">'+(last?'See results 🏁':'Next ▶')+'</button></div></div>';
+  }
+  function answerQuiz(i,btn){
+    if(qAnswered)return;qAnswered=true;const item=QUIZ[qIdx];
+    const opts=btn.parentElement.querySelectorAll('.quiz-opt');
+    opts.forEach((b,j)=>{b.disabled=true;if(j===item.a)b.classList.add('opt-correct')});
+    const fb=document.getElementById('q-fb');
+    if(i===item.a){btn.classList.add('opt-correct');qScore++;document.getElementById('quiz-score').textContent=qScore;addXP(10,'Exit Check');fb.innerHTML='✅ Correct! '+item.why;fb.style.color='var(--success)';const d=document.getElementById('qdot-'+qIdx);if(d)d.classList.add('dot-right')}
+    else{btn.classList.add('opt-wrong');playBuzz();fb.innerHTML='❌ Not quite. '+item.why;fb.style.color='var(--error)';const d=document.getElementById('qdot-'+qIdx);if(d)d.classList.add('dot-wrong')}
+    document.getElementById('q-next').style.display='inline-block';
+  }
+  function nextQuiz(){playClick();if(qIdx<QUIZ.length-1){qIdx++;renderQuizQ()}else{showQuizResults()}}
+  function showQuizResults(){
+    const pct=Math.round(qScore/QUIZ.length*100);
+    const msg=pct>=83?'Brilliant — you\u2019ve nailed today\u2019s lesson!':pct>=50?'Good effort — look back at the ones you missed.':'Let\u2019s revisit this together next lesson.';
+    const C=2*Math.PI*42,off=C*(1-pct/100);
+    const ring='<svg width="120" height="120" viewBox="0 0 120 120" style="margin:0 auto 4px;display:block"><circle cx="60" cy="60" r="42" fill="none" stroke="#e2e8f0" stroke-width="12"/><circle cx="60" cy="60" r="42" fill="none" stroke="#16a34a" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-size="22" font-weight="900" fill="#0f172a">'+pct+'%</text><text x="60" y="76" text-anchor="middle" font-size="11" fill="#64748b">'+qScore+'/'+QUIZ.length+'</text></svg>';
+    const r=document.getElementById('exit-results');
+    r.innerHTML='<div class="result-card">'+ring+'<h2>🏁 Knowledge check complete</h2><p style="margin:6px 0">'+msg+'</p><div class="btn-row"><button class="small ghost" onclick="startQuiz()">🔄 Try again</button><button class="small" style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish lesson</button></div></div>';
+    r.classList.add('open');document.getElementById('exit-quiz').innerHTML='';
+    if(pct>=50)confetti();
+  }
+
+  // --- Slide-1 LO checkmark animation ---
+  function animateLOs(){document.querySelectorAll('.lo-anim li').forEach((li,i)=>{li.style.animationDelay=(.3+i*.4)+'s';setTimeout(()=>li.classList.add('done'),(800+i*900))})}
+
+  // --- Float dots on title slide ---
+  function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
+
+  // --- Init ---
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots();startQuiz()});
+
+</script>
+</body>
+</html>
