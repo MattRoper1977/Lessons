@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bystanders &amp; Why This Story Was Told — Part 2 (PSHE / RSE)</title>
+<style>
+  :root{
+    --navy:#1e2a52;--pink:#e8367f;--ink:#1f2433;--paper:#f7f8fc;--card:#ffffff;
+    --ido:#2563eb;--wedo:#16a34a;--independent:#7c3aed;--exit:#e8367f;--bridge:#f59e0b;
+    --muted:#5b6273;--line:#e4e7f0;--ind-f:#16a34a;--ind-m:#f97316;--ind-h:#1e2a52;
+    --shadow:0 10px 30px rgba(30,42,82,.10);--radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:var(--ink);background:var(--paper);overflow:hidden;-webkit-font-smoothing:antialiased}
+  body.calm{--paper:#0f1320;--card:#1b2133;--ink:#e7ebf5;--muted:#aab2c6;--line:#2c3450}
+
+  .deck{height:100vh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:42px 58px 100px;overflow-y:auto;
+    border-top:10px solid var(--navy);background:radial-gradient(1200px 500px at 80% -10%, rgba(232,54,127,.06), transparent 60%)}
+  .slide.active{display:flex;animation:fadeInUp .5s ease both}
+  .slide.t-ido{border-top-color:var(--ido)} .slide.t-wedo{border-top-color:var(--wedo)}
+  .slide.t-merge{border-top-color:var(--wedo)} .slide.t-independent{border-top-color:var(--independent)}
+  .slide.t-exit{border-top-color:var(--exit)} .slide.t-bridge{border-top-color:var(--bridge)} .slide.t-arrival{border-top-color:var(--navy)}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  body.reduce .slide.active{animation:none}
+
+  .badge{display:inline-flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    font-size:.72rem;padding:6px 14px;border-radius:999px;color:#fff;width:max-content}
+  .b-ido{background:var(--ido)} .b-wedo{background:var(--wedo)} .b-merge{background:linear-gradient(90deg,var(--ido),var(--wedo))}
+  .b-independent{background:var(--independent)} .b-exit{background:var(--exit)} .b-bridge{background:var(--bridge)} .b-arrival{background:var(--navy)}
+
+  h1{font-size:2.5rem;line-height:1.08;margin:12px 0 6px;color:var(--navy)} body.calm h1{color:#fff}
+  h2{font-size:1.95rem;line-height:1.12;margin:8px 0 8px;color:var(--navy)} body.calm h2{color:#fff}
+  h3{font-size:1.2rem;margin:10px 0 6px;color:var(--navy)} body.calm h3{color:#dbe2f2}
+  h4{font-size:1rem;margin:4px 0 6px;color:var(--navy)} body.calm h4{color:#cfd8ee}
+  p,li{font-size:1.1rem;line-height:1.48} .lede{font-size:1.18rem;color:var(--muted);max-width:64ch}
+  ul,ol{margin:6px 0 6px 22px} li{margin:5px 0}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 20px;box-shadow:var(--shadow);margin:8px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+  .sc-box{background:#ffedd5;border-left:6px solid #f97316;border-radius:12px;padding:13px 18px;margin:10px 0} body.calm .sc-box{background:#3a2a14;color:#ffe6cf}
+  .sc-box h3{color:#9a3412;margin-top:0} body.calm .sc-box h3{color:#ffd9b3}
+  .sc-box label{display:flex;gap:10px;align-items:flex-start;font-size:1.02rem;margin:6px 0;cursor:pointer}
+  .sc-box input{margin-top:5px;width:18px;height:18px;accent-color:#f97316}
+  .aspire-box{background:#dcfce7;border-left:6px solid #16a34a;border-radius:12px;padding:12px 18px;margin:9px 0} body.calm .aspire-box{background:#10331f;color:#cdf3da}
+  .aspire-box strong{color:#166534} body.calm .aspire-box strong{color:#a7f3c4}
+  .care-box{background:#fdeef4;border-left:6px solid var(--pink);border-radius:12px;padding:13px 18px;margin:9px 0} body.calm .care-box{background:#3a1c2b;color:#ffd6e6}
+  .care-box h3{color:#a01253;margin-top:0} body.calm .care-box h3{color:#ffc0dc}
+  .stem-box{background:#eef2ff;border:1px dashed #93a4e8;border-radius:12px;padding:11px 18px;margin:9px 0} body.calm .stem-box{background:#1a2238;border-color:#3a4a78}
+  .stem-box em{color:var(--navy);font-style:normal;font-weight:600} body.calm .stem-box em{color:#cdd8f5}
+  .exam-tip{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:10px 16px;margin:8px 0;font-size:1rem} body.calm .exam-tip{background:#332514;border-color:#7a5320}
+
+  .lo li{list-style:none;position:relative;padding-left:34px;margin:8px 0;opacity:.35;transition:opacity .4s}
+  .lo li.on{opacity:1} .lo li::before{content:"○";position:absolute;left:0;top:-2px;font-size:1.4rem;color:var(--muted)}
+  .lo li.on::before{content:"✓";color:var(--wedo);font-weight:900}
+
+  .reveal{display:none} .reveal.show{display:block;animation:fadeInUp .4s ease both} body.reduce .reveal.show{animation:none}
+  .reveal-btn{font:inherit;border:none;border-radius:999px;padding:11px 20px;font-weight:800;cursor:pointer;background:var(--ido);color:#fff;box-shadow:var(--shadow);font-size:1rem;margin:6px 0}
+  .reveal-btn:disabled{background:var(--wedo);cursor:default;opacity:.95}
+
+  .viz{background:#f1f5fb;border:1px solid #d8e0f0;border-radius:16px;padding:12px;margin:9px 0;display:flex;justify-content:center}
+  .viz svg{max-width:100%;height:auto}
+
+  /* clip */
+  .clip{margin:9px 0}
+  .clip-frame{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#0b1020;border:1px solid #d8e0f0}
+  .clip-frame iframe,.clip-cover{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .clip-cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;background:linear-gradient(135deg,#1e2a52,#3a2740);color:#fff;text-align:center;padding:18px}
+  .clip-cover .play{width:60px;height:60px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:1.45rem;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+  .clip-cover small{max-width:44ch;opacity:.92;font-size:.9rem;line-height:1.4}
+  .clip-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+  .outlink{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;background:var(--card);color:var(--navy);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.9rem} body.calm .outlink{color:#dbe2f2}
+
+  /* 2x2 arrival grid */
+  .grid2x2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0} @media(max-width:640px){.grid2x2{grid-template-columns:1fr}}
+  .scn{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--muted);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+  .scn.correct{border-left-color:#16a34a} .scn.wrong{border-left-color:#dc2626}
+  .scn .q{font-weight:600;margin-bottom:8px} .scn .btns{display:flex;gap:8px;flex-wrap:wrap}
+  .minibtn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer}
+  body.calm .minibtn{color:#dbe2f2} .minibtn.yes:hover{border-color:#16a34a} .minibtn.no:hover{border-color:#dc2626}
+  .scn .fb{display:none;margin-top:9px;font-size:.96rem;background:#eef2ff;border-radius:10px;padding:9px 12px} body.calm .scn .fb{background:#1a2238}
+  .scn .fb.show{display:block}
+
+  /* match starter */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0} @media(max-width:640px){.match{grid-template-columns:1fr}}
+  .mbtn{display:block;width:100%;text-align:left;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 14px;margin:7px 0;cursor:pointer;font-weight:600}
+  body.calm .mbtn{color:#e7ebf5} .mbtn.sel{outline:3px solid var(--ido);outline-offset:1px}
+  .mbtn.done{background:#dcfce7;border-color:#16a34a;color:#14532d;pointer-events:none} body.calm .mbtn.done{background:#10331f;color:#bff0cf}
+  .mbtn.bad{animation:shake .32s} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}} body.reduce .mbtn.bad{animation:none}
+  .donebar{display:none;background:#dcfce7;border-left:6px solid #16a34a;border-radius:10px;padding:10px 14px;margin-top:8px;font-weight:700;color:#166534}
+  body.calm .donebar{background:#10331f;color:#bff0cf} .donebar.show{display:block}
+  .hint-btn{font:inherit;border:1px dashed #f59e0b;background:#fff7ed;color:#9a3412;border-radius:999px;padding:6px 13px;font-weight:700;cursor:pointer;font-size:.9rem}
+  body.calm .hint-btn{background:#332514;color:#ffd9b3} .hint-txt{display:none;margin-top:6px;font-size:.95rem;color:var(--muted)} .hint-txt.show{display:block}
+
+  .qtier{border-radius:12px;padding:13px 18px;margin:9px 0;background:var(--card);border:1px solid var(--line);border-left-width:7px;border-left-style:solid}
+  .qtier.f{border-left-color:var(--ind-f)} .qtier.m{border-left-color:var(--ind-m)} .qtier.h{border-left-color:var(--ind-h)}
+  .qtier .tier-tag{font-weight:800;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:999px;padding:4px 12px;display:inline-block;margin-bottom:6px}
+  .qtier.f .tier-tag{background:var(--ind-f)} .qtier.m .tier-tag{background:var(--ind-m)} .qtier.h .tier-tag{background:var(--ind-h)}
+  .owl-badge{float:right;font-size:1.6rem}
+
+  .logo{position:fixed;top:14px;right:18px;z-index:40;display:flex;align-items:center;gap:8px;font-weight:900;color:var(--navy);font-size:.95rem;background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;box-shadow:var(--shadow)}
+  body.calm .logo{background:rgba(27,33,51,.85);color:#fff} .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--pink)}
+  .progress{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:50;transition:width .35s}
+  .nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:40}
+  .nav button,.toolbtn{font:inherit;border:none;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+  .nav button:disabled{opacity:.4;cursor:default}
+  .counter{align-self:center;font-weight:700;color:var(--muted);padding:0 6px} body.calm .counter{color:#aab2c6}
+  .tools{position:fixed;bottom:18px;right:18px;display:flex;gap:8px;z-index:40}
+  .toolbtn{background:var(--card);color:var(--navy);border:1px solid var(--line);padding:9px 14px;font-size:.9rem} body.calm .toolbtn{color:#dbe2f2}
+  .toolbtn.ta{background:var(--pink);color:#fff;border:none} .toolbtn.cc{background:var(--ido);color:#fff;border:none}
+  .xpwrap{position:fixed;bottom:18px;left:18px;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);font-weight:700;font-size:.85rem;color:var(--navy)}
+  body.calm .xpwrap{color:#dbe2f2} .xpbar{width:84px;height:9px;background:var(--line);border-radius:999px;overflow:hidden}
+  .xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wedo),var(--ido));transition:width .5s}
+
+  .modal{position:fixed;inset:0;background:rgba(15,19,32,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .modal.open{display:flex} .sheet{background:var(--card);max-width:560px;width:100%;border-radius:20px;padding:24px 28px;box-shadow:var(--shadow);max-height:86vh;overflow:auto}
+  .sheet h3{margin-top:0} .sheet .close{float:right;border:none;background:var(--line);border-radius:50%;width:34px;height:34px;font-size:1.1rem;cursor:pointer;color:var(--ink)}
+  .cc-pill{display:inline-block;background:var(--navy);color:#fff;font-weight:800;padding:8px 16px;border-radius:999px;font-size:1.3rem;margin:8px 0}
+  .cc-q{background:#eef2ff;border-radius:12px;padding:14px 16px;margin:10px 0;font-size:1.1rem} body.calm .cc-q{background:#1a2238}
+  .cc-q .tag{font-weight:800;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:999px;color:#fff;margin-right:8px}
+  .cc-q .tag.F{background:var(--ind-f)} .cc-q .tag.M{background:var(--ind-m)} .cc-q .tag.H{background:var(--ind-h)}
+  textarea#roster{width:100%;min-height:80px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;resize:vertical}
+
+  .complete{position:fixed;inset:0;background:rgba(15,19,32,.72);display:none;align-items:center;justify-content:center;z-index:70} .complete.open{display:flex}
+  .complete .box{background:var(--card);border-radius:24px;padding:32px 40px;text-align:center;box-shadow:var(--shadow);max-width:480px} .complete .big{font-size:3rem;margin-bottom:6px}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:65}
+  .kbd{font-size:.85rem;color:var(--muted)} .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .pill{background:#eef2ff;border:1px solid #c8d2f5;border-radius:999px;padding:6px 14px;font-weight:600;font-size:.95rem} body.calm .pill{background:#1a2238;border-color:#3a4a78}
+
+  @media (max-width:640px){
+    .slide{padding:36px 16px 120px} h1{font-size:1.8rem} h2{font-size:1.48rem} p,li{font-size:1.01rem}
+    .logo{font-size:.76rem;top:10px;right:10px} .nav button,.toolbtn{padding:9px 12px;font-size:.82rem}
+    .xpwrap{display:none} .tools{bottom:62px}
+  }
+</style>
+</head>
+<body>
+<div class="logo"><span class="dot"></span>Progress Schools · Tees Valley</div>
+<div class="progress" id="progress"></div>
+<canvas id="confetti"></canvas>
+
+<div class="deck" id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide active" data-type="title" data-ta="Welcome back. This is Part 2 — same calm, serious tone. One-line recall of Part 1 (consent; responses vary), then read the three LOs. Don't skip slide 2 (ground rules + recap).">
+    <span class="badge b-arrival">PSHE · RSE · Part 2 of 2</span>
+    <div class="pillrow" id="dots" aria-hidden="true"></div>
+    <h1>Bystanders &amp; Why This Story Was Told</h1>
+    <p class="lede">Part 2 — looking at the <strong>people around Aimee</strong>, why writers tell stories like this, and pulling it all together in a full summary. (<em>Sex Education</em> S2 E3.)</p>
+    <div class="card"><h3>Today we are learning to…</h3>
+      <ul class="lo" id="loList">
+        <li data-lo="0">Explain why <strong>bystanders</strong> sometimes do nothing — and what an <strong>active bystander</strong> could do.</li>
+        <li data-lo="1">Explain <strong>why the writer included</strong> Aimee's storyline.</li>
+        <li data-lo="2">Write a clear, structured <strong>summary</strong> of the storyline and its message.</li>
+      </ul></div>
+    <div class="sc-box"><h3>Success criteria — tick when you've got it</h3>
+      <label><input type="checkbox" class="sc"> I can describe the bystander effect and name a safe way to help.</label>
+      <label><input type="checkbox" class="sc"> I can give two reasons the writer might have told this story.</label>
+      <label><input type="checkbox" class="sc"> I can write a summary that covers what happened, the responses, and the message.</label></div>
+  </section>
+
+  <!-- 2 GROUND RULES + RECAP -->
+  <section class="slide" data-type="care" data-ta="Re-set the ground rules briefly, then quick recap of Part 1. Same disclosure protocol — listen, don't promise confidentiality, pass to the DSL same day. Olivia: sit near pupils who may find this close to home.">
+    <span class="badge b-arrival">Before we start</span>
+    <h2>Same room, same rules</h2>
+    <div class="grid2">
+      <div class="card"><h3>Our ground rules</h3><ul>
+        <li>We talk about <strong>Aimee</strong>, the character — not about ourselves.</li>
+        <li>You never have to share anything personal.</li>
+        <li>You can step out for a moment, no questions asked.</li>
+        <li>We listen and we keep it kind.</li></ul></div>
+      <div class="card"><h3>Quick recap of Part 1</h3><ul>
+        <li>Consent must be <strong>freely given, informed and enthusiastic</strong>.</li>
+        <li>No clear "yes" means <strong>no consent</strong> — words or no words.</li>
+        <li>People react to a shock in <strong>different ways</strong> (joking, freezing, fear later) — never their fault.</li></ul></div>
+    </div>
+    <div class="care-box"><p>If anything today brings something up for you, that's OK. Talk to a trusted adult, our safeguarding lead, or <strong>Childline 0800 1111</strong>.</p></div>
+  </section>
+
+  <!-- 3 ARRIVAL — 2x2 GRID -->
+  <section class="slide" data-type="arrival" data-ta="Arrival task pupils complete. Four actions — tap 'Active' or 'Passive'. Locks with feedback. Aim: pupils see the difference between stepping in safely and staying out of it. Olivia: support reading.">
+    <span class="badge b-arrival">Arrival · do-now · ~4 min</span>
+    <h2>Active or passive bystander?</h2>
+    <p class="lede">A <strong>bystander</strong> is someone who is there and sees what's happening. For each one, tap <strong>🙋 Active</strong> or <strong>🙈 Passive</strong>.</p>
+    <div class="grid2x2" id="arrivalGrid"></div>
+    <div class="donebar" id="arrivalDone">✓ All four done. An <strong>active</strong> bystander does something safe; a <strong>passive</strong> one stays out of it.</div>
+  </section>
+
+  <!-- 4 STARTER — MATCH (5 D's) -->
+  <section class="slide" data-type="arrival" data-ta="Starter task pupils complete. Tap a 'D', then tap what it means. Correct pairs lock green. This is the toolkit they'll use in the discussion — keep it light, it's about safe options, never confronting anyone.">
+    <span class="badge b-arrival">Starter · ~4 min</span>
+    <h2>The 5 D's of being an active bystander</h2>
+    <p class="lede">Safe ways to help. Tap a word on the left, then tap what it means.</p>
+    <div class="match">
+      <div class="col"><h4>The "D"</h4><div id="starterTerms"></div></div>
+      <div class="col"><h4>What it means</h4><div id="starterMeanings"></div></div>
+    </div>
+    <button class="hint-btn" id="starterHint">💡 Hint</button>
+    <div class="hint-txt" id="starterHintTxt">They all start with <strong>D</strong>: <strong>D</strong>irect, <strong>D</strong>istract, <strong>D</strong>elegate, <strong>D</strong>ocument, <strong>D</strong>elay. You never have to put yourself in danger.</div>
+    <div class="donebar" id="starterDone">✓ All matched! Even small, safe actions can make a real difference.</div>
+  </section>
+
+  <!-- 5 I DO — BYSTANDER EFFECT -->
+  <section class="slide" data-type="ido" data-ta="I Do. Reveal the points one at a time against the diagram. Keep it non-blaming — the point is understanding why people freeze, then that doing nothing isn't neutral, then that safe options exist. Don't dwell on guilt.">
+    <span class="badge b-ido">I Do · the bystander effect</span>
+    <h2>Why did no one step in?</h2>
+    <div class="viz">
+      <svg viewBox="0 0 560 180" role="img" aria-label="Several people nearby, each thinking someone else will help">
+        <g font-family="Segoe UI,Arial">
+          <circle cx="80" cy="120" r="16" fill="#e8367f"/><rect x="68" y="134" width="24" height="34" rx="9" fill="#e8367f"/>
+          <text x="80" y="170" font-size="11" fill="#a01253" text-anchor="middle" font-weight="700">needs help</text>
+          <g fill="#9aa6c4"><circle cx="220" cy="118" r="15"/><rect x="209" y="132" width="22" height="32" rx="9"/>
+            <circle cx="320" cy="118" r="15"/><rect x="309" y="132" width="22" height="32" rx="9"/>
+            <circle cx="420" cy="118" r="15"/><rect x="409" y="132" width="22" height="32" rx="9"/></g>
+          <g font-size="11.5" fill="#475569">
+            <rect x="176" y="20" width="120" height="34" rx="10" fill="#eef2ff" stroke="#c8d2f5"/><text x="236" y="41" text-anchor="middle">"Someone else will."</text>
+            <rect x="300" y="58" width="118" height="34" rx="10" fill="#eef2ff" stroke="#c8d2f5"/><text x="359" y="79" text-anchor="middle">"Not sure what I saw."</text>
+            <rect x="404" y="20" width="96" height="34" rx="10" fill="#eef2ff" stroke="#c8d2f5"/><text x="452" y="41" text-anchor="middle">"I'm scared."</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <button class="reveal-btn" data-reveal>👆 Reveal point 1</button>
+    <div class="card reveal"><p>On the bus, other people were nearby — but <strong>no one stepped in</strong> or checked on Aimee.</p></div>
+    <div class="card reveal"><p>This is the <strong>bystander effect</strong>: the more people who are present, the <em>less</em> likely any one person acts — everyone assumes someone else will.</p></div>
+    <div class="card reveal"><p>People also <strong>freeze</strong>: unsure what they saw, scared, or worried about getting it wrong.</p></div>
+    <div class="card reveal"><p>Doing nothing isn't really neutral — it can leave a person feeling alone. But you never have to confront anyone: the <strong>5 D's</strong> are safe ways to help.</p></div>
+    <div class="exam-tip">🧠 <strong>Key word:</strong> <em>bystander effect</em> — diffusion of responsibility across a crowd.</div>
+  </section>
+
+  <!-- 6 WE DO — BYSTANDER DISCUSSION -->
+  <section class="slide" data-type="wedo" data-ta="We Do. Cold Call to spread answers and tier the question. Keep tone non-judgemental — many pupils have frozen as bystanders themselves. Validate that helping can feel hard, then steer to the safe options.">
+    <span class="badge b-wedo">We Do · let's talk it through</span>
+    <h2>The people around Aimee</h2>
+    <div class="grid2">
+      <div class="card"><h3>1</h3><p>What did the other passengers do? Why might they have done nothing?</p></div>
+      <div class="card"><h3>2</h3><p>Is "doing nothing" really a neutral choice? Why / why not?</p></div>
+      <div class="card"><h3>3</h3><p>Using the 5 D's, what's one <em>safe</em> thing a bystander could have done?</p></div>
+      <div class="card"><h3>4</h3><p>How might it feel to be surrounded by people who say nothing?</p></div>
+    </div>
+    <div class="stem-box"><em>Stems:</em> <em>"People might do nothing because…"</em> · <em>"A safe action would be to ___ because…"</em></div>
+  </section>
+
+  <!-- 7 BRIDGE — CLIP (One Story Away) -->
+  <section class="slide" data-type="bridge" data-ta="Bridge / clip — sets up Writer's Purpose. PREVIEW FIRST. 'One Story Away' mixes creator & actor commentary with BRIEF moments from the bus scene. If those moments aren't right for your group, SKIP the embed and teach Writer's Purpose from the points + discussion. Out-link provided. Set the 'watch for' before playing.">
+    <span class="badge b-bridge">Bridge · the makers explain</span>
+    <h2>"One Story Away"</h2>
+    <div class="care-box"><p>In this short feature the show's <strong>writer and actor talk about why they told this story</strong>. It may also show <strong>brief moments from the bus scene</strong>. Your teacher will have checked it first — and you can step out any time.</p></div>
+    <div class="stem-box"><em>Watch for:</em> What do the makers say they <strong>wanted people to understand</strong> by telling Aimee's story?</div>
+    <div class="clip">
+      <div class="clip-frame">
+        <div class="clip-cover" data-play data-embed="https://www.youtube-nocookie.com/embed/gEdF9eq8V4U?rel=0">
+          <div class="play">▶</div><strong>Tap to play</strong><small>"The Bus | One Story Away" — creators &amp; cast on the storyline (Netflix's Sex Education)</small>
+        </div>
+      </div>
+      <div class="clip-actions">
+        <a class="outlink" href="https://www.youtube.com/watch?v=gEdF9eq8V4U" target="_blank" rel="noopener">▶ Open on YouTube (fallback)</a>
+        <span class="kbd">Teacher: preview first. If the scene moments aren't right for the group, use the points below instead.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 MERGED I DO + WE DO — WRITER'S PURPOSE -->
+  <section class="slide" data-type="merge" data-ta="I Do + We Do combined. Reveal the writer's-purpose points (I Do), then go straight into the discussion (We Do). Push for 'because'. Link back to the clip if you played it.">
+    <span class="badge b-merge">I Do + We Do · writer's purpose</span>
+    <h2>Why did the writer tell this story?</h2>
+    <button class="reveal-btn" data-reveal>👆 Reveal reason 1</button>
+    <div class="card reveal"><p>To show that this <strong>can happen anywhere</strong> — even somewhere ordinary, like a daytime bus.</p></div>
+    <div class="card reveal"><p>To show there's <strong>no single "right" way to react</strong> — minimising, freezing and fear-later are all real.</p></div>
+    <div class="card reveal"><p>To <strong>challenge assumptions</strong> about who this happens to and what it "looks like".</p></div>
+    <div class="card reveal"><p>To encourage people to <strong>take it seriously, report it, and support each other</strong> — the way Maeve and the girls support Aimee.</p></div>
+    <h3 style="margin-top:14px">Now discuss</h3>
+    <div class="grid2">
+      <div class="card"><h3>5</h3><p>Why do you think the writer included this storyline?</p></div>
+      <div class="card"><h3>6</h3><p>Why set it on an <em>ordinary bus, in daytime</em>?</p></div>
+      <div class="card"><h3>7</h3><p>What does the writer want the audience to <em>understand, feel or do</em>?</p></div>
+      <div class="card"><h3>8</h3><p>Why show Aimee's friends supporting her, not just the assault itself?</p></div>
+    </div>
+    <div class="stem-box"><em>Stem:</em> <em>"I think the writer included this because they wanted the audience to…"</em></div>
+  </section>
+
+  <!-- 9 INDEPENDENT — FULL SUMMARY -->
+  <section class="slide" data-type="independent" data-ta="Independent — the culmination. ~10 min. Pupils write a full summary pulling together both lessons. Olivia to support Ava, Eden, Lilly-Grace P. with the stems/structure. Keep their writing — it's the assessed outcome for the unit.">
+    <span class="badge b-independent">Independent · ~10 min</span>
+    <h2>Pull it all together: write the summary <span class="owl-badge" title="Plan first, then write">🦉</span></h2>
+    <p class="lede">Choose your level. Use the structure to help you.</p>
+    <div class="qtier f"><span class="tier-tag">Foundation</span><p>Finish each sentence:</p>
+      <div class="stem-box"><em>"On the bus, a man behaved towards Aimee without her ____."</em><br>
+        <em>"Afterwards she ____ it, but later she felt ____."</em><br>
+        <em>"The other people did ____."</em><br>
+        <em>"The writer wanted us to ____."</em></div></div>
+    <div class="qtier m"><span class="tier-tag">Middle</span><p>Write a paragraph covering all four:</p>
+      <ul><li>what happens &amp; why it breaks consent</li><li>how Aimee responds (then &amp; later)</li><li>what the bystanders did</li><li>why the writer told the story</li></ul>
+      <div class="stem-box"><em>Start: "In this storyline, a man behaves towards Aimee without her consent on the bus…"</em></div></div>
+    <div class="qtier h"><span class="tier-tag">Higher</span><p>Write a structured summary in <strong>three short paragraphs</strong>: (1) the event &amp; consent, (2) the responses &amp; bystanders, (3) the writer's purpose. Use the words <em>consent</em>, <em>bystander effect</em> and <em>bodily autonomy</em>.</p>
+      <div class="exam-tip">✍️ <strong>Top tip:</strong> a strong summary explains <em>why</em> things matter, not just <em>what</em> happens.</div></div>
+    <div class="aspire-box"><strong>🌟 Finished?</strong> End with one sentence: if you saw a friend frozen like Aimee, which of the 5 D's would you use, and why?</div>
+  </section>
+
+  <!-- 10 EXIT -->
+  <section class="slide" data-type="exit" data-ta="Exit. Land the three messages: consent, active bystander, support. Tap 'Lesson complete' for XP + confetti. Leave the support signpost up as they pack away. This closes the two-lesson unit.">
+    <span class="badge b-exit">Exit ticket</span>
+    <h2>Before you go</h2>
+    <div class="grid2">
+      <div class="card"><h3>One action</h3><p>Name <strong>one safe thing</strong> a bystander could do to help someone.</p></div>
+      <div class="card"><h3>One word</h3><p>Choose <strong>one word</strong> for the most important message of these two lessons.</p></div>
+    </div>
+    <div class="care-box"><h3>Key messages</h3><ul>
+      <li>Consent must be <strong>freely given, informed and enthusiastic</strong>.</li>
+      <li>Bystanders can help safely — <strong>doing something small beats doing nothing</strong>.</li>
+      <li>However someone reacts, it's <strong>never their fault</strong>, and support — <strong>Childline 0800 1111</strong> — is always there.</li></ul></div>
+    <button class="toolbtn cc" id="completeBtn" style="margin-top:8px">Lesson complete ✓</button>
+  </section>
+
+</div>
+
+<div class="nav"><button id="prev">◂ Back</button><span class="counter" id="counter">1 / 10</span><button id="next">Next ▸</button></div>
+<div class="tools">
+  <button class="toolbtn" id="calmBtn" title="Calm mode">🌙 Calm</button>
+  <button class="toolbtn cc" id="ccBtn">🎯 Cold Call</button>
+  <button class="toolbtn ta" id="taBtn">👩‍🏫 TA Focus</button>
+</div>
+<div class="xpwrap"><span>XP</span><div class="xpbar"><i id="xpfill"></i></div><span id="xpval">0</span></div>
+
+<div class="modal" id="taModal"><div class="sheet"><button class="close" data-close>✕</button><h3>👩‍🏫 TA Focus — this slide</h3><p id="taText">—</p></div></div>
+<div class="modal" id="ccModal"><div class="sheet"><button class="close" data-close>✕</button><h3>🎯 Cold Call</h3><div class="cc-pill" id="ccName">—</div>
+  <div class="cc-q" id="ccQ">Tap "Pick again" to start.</div><button class="toolbtn cc" id="ccPick">Pick again 🔀</button>
+  <details style="margin-top:16px"><summary style="cursor:pointer;font-weight:700">Edit class roster</summary>
+    <p class="kbd" style="margin:8px 0">One name per line. Saved to this device.</p>
+    <textarea id="roster"></textarea><button class="toolbtn" id="saveRoster" style="margin-top:8px">Save roster</button></details></div></div>
+<div class="complete" id="complete"><div class="box"><div class="big">🌟</div><h2>That completes the unit.</h2>
+  <p class="lede" style="margin:8px auto">You thought carefully about a serious topic across two lessons. That's real maturity.</p>
+  <p class="kbd" style="margin-top:10px">Support is always there — Childline 0800 1111.</p>
+  <button class="toolbtn cc" id="closeComplete" style="margin-top:16px">Close</button></div></div>
+
+<script>
+"use strict";
+/* ---- data (TDZ-safe, before init) ---- */
+var DEFAULT_ROSTER=["Pupil A","Pupil B","Pupil C","Pupil D","Pupil E","Pupil F"];
+var CC_QUESTIONS={
+  F:["What did the other people on the bus do?","Name one of the 5 D's of being a helpful bystander.","Why do you think the writer put this story in the show?","What is one safe thing a bystander could do?"],
+  M:["Why might people on the bus have done nothing?","Why isn't 'doing nothing' really a neutral choice?","Why do you think the writer set it on an ordinary daytime bus?","What does the writer want the audience to understand?"],
+  H:["Explain the 'bystander effect' in your own words.","How could an active bystander have helped safely?","Why might the writer want to challenge assumptions about who experiences assault?","Why include Aimee's friends' support, not just the assault itself?"]
+};
+var TIER_KEYS=["F","M","H"];
+var ARRIVAL_OPTS=[{val:"active",label:"🙋 Active"},{val:"passive",label:"🙈 Passive"}];
+var ARRIVAL=[
+ {t:"You see someone being hassled, so you sit nearby and ask them the time to break it up.",a:"active",fb:"Active — that's the 'Distract' D. Breaking the moment safely can be enough."},
+ {t:"You notice something's wrong but think \u201csomeone else will deal with it.\u201d",a:"passive",fb:"Passive — that's the bystander effect. If everyone thinks it, no one acts."},
+ {t:"You quietly tell the bus driver you're worried about a passenger.",a:"active",fb:"Active — that's 'Delegate': getting someone with authority to step in."},
+ {t:"You look away, turn up your music and ignore it.",a:"passive",fb:"Passive — understandable, but it leaves the person on their own."}
+];
+var PAIRS=[
+ {id:"a",term:"Direct",mean:"Step in and say something — only if it feels safe"},
+ {id:"b",term:"Distract",mean:"Break the moment — ask the time, start a chat"},
+ {id:"c",term:"Delegate",mean:"Get someone with authority — the driver or an adult"},
+ {id:"d",term:"Document",mean:"Safely note what's happening, if others are already helping"},
+ {id:"e",term:"Delay",mean:"Check in with the person afterwards: \u201care you OK?\u201d"}
+];
+
+/* ---- state ---- */
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var idx=0,xp=0,XP_MAX=slides.length;
+var reduceMotion=false;
+try{ reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+if(reduceMotion) document.body.classList.add("reduce");
+
+/* ---- audio ---- */
+var actx=null;
+function ensureAudio(){ try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC) actx=new AC();} if(actx&&actx.state==="suspended") actx.resume(); }catch(e){} }
+function blip(freq){ if(reduceMotion) return; try{ if(!actx) return; var o=actx.createOscillator(),g=actx.createGain();
+  o.frequency.value=freq||540;o.type="sine";g.gain.value=0.05;o.connect(g);g.connect(actx.destination);
+  o.start();g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.25);o.stop(actx.currentTime+0.26);}catch(e){} }
+document.addEventListener("pointerdown",ensureAudio,{once:true});
+document.addEventListener("keydown",ensureAudio,{once:true});
+
+/* ---- nav ---- */
+var counter=document.getElementById("counter"),progress=document.getElementById("progress");
+var prevBtn=document.getElementById("prev"),nextBtn=document.getElementById("next");
+function show(n){ n=Math.max(0,Math.min(slides.length-1,n));
+  slides[idx].classList.remove("active"); idx=n; slides[idx].classList.add("active"); slides[idx].scrollTop=0;
+  counter.textContent=(idx+1)+" / "+slides.length; progress.style.width=(idx/(slides.length-1)*100)+"%";
+  prevBtn.disabled=(idx===0); nextBtn.disabled=(idx===slides.length-1); awardXp(idx); syncLOs(); }
+function next(){ if(idx<slides.length-1){ show(idx+1); blip(560);} }
+function prev(){ if(idx>0){ show(idx-1);} }
+prevBtn.addEventListener("click",prev); nextBtn.addEventListener("click",next);
+document.addEventListener("keydown",function(e){ var t=e.target?e.target.tagName:""; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(e.key==="ArrowRight"||e.key===" "){ e.preventDefault(); next(); } else if(e.key==="ArrowLeft"){ prev(); } });
+
+var seen={};
+function awardXp(i){ if(seen[i]) return; seen[i]=true; xp=Math.min(XP_MAX,xp+1);
+  document.getElementById("xpfill").style.width=(xp/XP_MAX*100)+"%"; document.getElementById("xpval").textContent=xp; }
+function syncLOs(){ var map={0:idx>=4,1:idx>=7,2:idx>=8};
+  document.querySelectorAll("#loList li").forEach(function(li){ var k=parseInt(li.getAttribute("data-lo"),10); if(map[k]) li.classList.add("on"); }); }
+
+/* ---- reveal ---- */
+document.querySelectorAll("[data-reveal]").forEach(function(btn){
+  var slide=btn.closest(".slide"); var items=slide.querySelectorAll(".reveal"); var total=items.length;
+  function label(){ var shown=slide.querySelectorAll(".reveal.show").length;
+    if(shown>=total){ btn.textContent="All points shown ✓"; btn.disabled=true; } else btn.textContent="👆 Reveal point "+(shown+1)+" of "+total; }
+  label();
+  btn.addEventListener("click",function(){ var h=slide.querySelector(".reveal:not(.show)"); if(h){ h.classList.add("show"); blip(620);} label(); });
+});
+
+/* ---- ARRIVAL 2x2 ---- */
+(function(){
+  var grid=document.getElementById("arrivalGrid"); if(!grid) return; var doneCount=0;
+  ARRIVAL.forEach(function(s){
+    var card=document.createElement("div"); card.className="scn";
+    var q=document.createElement("div"); q.className="q"; q.textContent=s.t; card.appendChild(q);
+    var btns=document.createElement("div"); btns.className="btns";
+    var fb=document.createElement("div"); fb.className="fb";
+    function choose(pick){ var ok=(pick===s.a); card.classList.add(ok?"correct":"wrong");
+      fb.textContent=(ok?"✓ ":"Not quite — ")+s.fb; fb.classList.add("show");
+      Array.prototype.forEach.call(btns.children,function(b){ b.disabled=true; });
+      blip(ok?640:300); doneCount++; if(doneCount>=ARRIVAL.length){ document.getElementById("arrivalDone").classList.add("show"); } }
+    ARRIVAL_OPTS.forEach(function(o,i){ var b=document.createElement("button"); b.className="minibtn "+(i===0?"yes":"no"); b.textContent=o.label;
+      b.addEventListener("click",function(){ choose(o.val); }); btns.appendChild(b); });
+    card.appendChild(btns); card.appendChild(fb); grid.appendChild(card);
+  });
+})();
+
+/* ---- STARTER match ---- */
+(function(){
+  var termWrap=document.getElementById("starterTerms"), meanWrap=document.getElementById("starterMeanings");
+  if(!termWrap||!meanWrap) return; var sel=null, matched=0;
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  PAIRS.forEach(function(p){ var b=document.createElement("button"); b.className="mbtn term"; b.textContent=p.term; b.setAttribute("data-id",p.id);
+    b.addEventListener("click",function(){ if(b.classList.contains("done")) return;
+      document.querySelectorAll(".mbtn.term.sel").forEach(function(x){x.classList.remove("sel");}); b.classList.add("sel"); sel=b; });
+    termWrap.appendChild(b); });
+  shuffle(PAIRS.slice()).forEach(function(p){ var b=document.createElement("button"); b.className="mbtn mean"; b.textContent=p.mean; b.setAttribute("data-id",p.id);
+    b.addEventListener("click",function(){ if(b.classList.contains("done")||!sel) return;
+      if(sel.getAttribute("data-id")===p.id){ sel.classList.remove("sel"); sel.classList.add("done"); b.classList.add("done"); sel=null; matched++; blip(660);
+        if(matched>=PAIRS.length) document.getElementById("starterDone").classList.add("show");
+      } else { b.classList.add("bad"); blip(300); setTimeout(function(){ b.classList.remove("bad"); },350); } });
+    meanWrap.appendChild(b); });
+  var hb=document.getElementById("starterHint"); if(hb) hb.addEventListener("click",function(){ document.getElementById("starterHintTxt").classList.toggle("show"); });
+})();
+
+/* ---- title dots ---- */
+(function(){ var dots=document.getElementById("dots"); if(!dots) return; var cols=["#e8367f","#2563eb","#16a34a","#f59e0b","#7c3aed"];
+  for(var i=0;i<5;i++){ var s=document.createElement("span"); s.className="pill"; s.textContent="•"; s.style.color=cols[i]; s.style.fontSize="1.2rem"; s.style.padding="2px 12px";
+    if(!reduceMotion){ s.style.animation="fadeInUp .5s ease both"; s.style.animationDelay=(i*0.08)+"s"; } dots.appendChild(s); } })();
+
+/* ---- calm ---- */
+var CALM_KEY="matt_consent_p2_calm_v1"; var calmBtn=document.getElementById("calmBtn");
+function applyCalm(on){ document.body.classList.toggle("calm",on); calmBtn.textContent=on?"☀️ Light":"🌙 Calm"; }
+try{ applyCalm(localStorage.getItem(CALM_KEY)==="1"); }catch(e){}
+calmBtn.addEventListener("click",function(){ var on=!document.body.classList.contains("calm"); applyCalm(on); try{ localStorage.setItem(CALM_KEY,on?"1":"0"); }catch(e){} });
+
+/* ---- TA ---- */
+var taModal=document.getElementById("taModal");
+document.getElementById("taBtn").addEventListener("click",function(){ document.getElementById("taText").textContent=slides[idx].getAttribute("data-ta")||"Support engagement and use the sentence stems."; taModal.classList.add("open"); });
+
+/* ---- cold call ---- */
+var ROSTER_KEY="ps_coldcall_roster";
+function getRoster(){ try{ var raw=localStorage.getItem(ROSTER_KEY); if(raw){ var arr=JSON.parse(raw); if(Array.isArray(arr)&&arr.length) return arr; } }catch(e){} return DEFAULT_ROSTER.slice(); }
+var ccModal=document.getElementById("ccModal");
+function pickCC(){ var roster=getRoster(); var name=roster[Math.floor(Math.random()*roster.length)];
+  var tier=TIER_KEYS[Math.floor(Math.random()*TIER_KEYS.length)]; var qs=CC_QUESTIONS[tier]; var q=qs[Math.floor(Math.random()*qs.length)];
+  document.getElementById("ccName").textContent=name;
+  document.getElementById("ccQ").innerHTML='<span class="tag '+tier+'">'+(tier==="F"?"Foundation":tier==="M"?"Middle":"Higher")+'</span>'+q; blip(500); }
+document.getElementById("ccBtn").addEventListener("click",function(){ document.getElementById("roster").value=getRoster().join("\n"); ccModal.classList.add("open"); });
+document.getElementById("ccPick").addEventListener("click",pickCC);
+document.getElementById("saveRoster").addEventListener("click",function(){ var lines=document.getElementById("roster").value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+  try{ localStorage.setItem(ROSTER_KEY,JSON.stringify(lines)); }catch(e){} var b=document.getElementById("saveRoster"); b.textContent="Saved ✓"; setTimeout(function(){ b.textContent="Save roster"; },1400); });
+
+/* ---- modals / clip / complete ---- */
+document.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click",function(){ b.closest(".modal").classList.remove("open"); }); });
+document.querySelectorAll(".modal").forEach(function(m){ m.addEventListener("click",function(e){ if(e.target===m) m.classList.remove("open"); }); });
+
+document.querySelectorAll("[data-play]").forEach(function(cover){ cover.addEventListener("click",function(){
+  var embed=cover.getAttribute("data-embed"); if(!embed) return; var iframe=document.createElement("iframe");
+  iframe.setAttribute("src",embed+"&autoplay=1"); iframe.setAttribute("allow","accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen");
+  iframe.setAttribute("allowfullscreen",""); iframe.setAttribute("title","One Story Away"); if(cover.parentNode) cover.parentNode.replaceChild(iframe,cover); blip(560); }); });
+
+var completeOverlay=document.getElementById("complete");
+document.getElementById("completeBtn").addEventListener("click",function(){ completeOverlay.classList.add("open"); xp=XP_MAX;
+  document.getElementById("xpfill").style.width="100%"; document.getElementById("xpval").textContent=xp; blip(720); if(!reduceMotion) confetti(); });
+document.getElementById("closeComplete").addEventListener("click",function(){ completeOverlay.classList.remove("open"); });
+function confetti(){ var c=document.getElementById("confetti"); var ctx=c.getContext("2d"); c.width=window.innerWidth; c.height=window.innerHeight;
+  var cols=["#e8367f","#2563eb","#16a34a","#f59e0b","#7c3aed"]; var bits=[];
+  for(var i=0;i<90;i++){ bits.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*0.5,vx:(Math.random()-0.5)*2,vy:2+Math.random()*3,s:4+Math.random()*6,col:cols[i%cols.length],rot:Math.random()*6.28}); }
+  var frames=0; function tick(){ frames++; ctx.clearRect(0,0,c.width,c.height);
+    bits.forEach(function(b){ b.x+=b.vx; b.y+=b.vy; b.rot+=0.1; ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.fillStyle=b.col; ctx.fillRect(-b.s/2,-b.s/2,b.s,b.s); ctx.restore(); });
+    if(frames<160) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height); } tick(); }
+
+/* ---- init last ---- */
+show(0);
+</script>
+</body>
+</html>
