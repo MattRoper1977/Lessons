@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Consolidation: Electricity Review &amp; Bridge to Waves</title>
+  <title>Catch-Up &amp; Consolidate: Electricity Calculations &amp; Bridge to Waves</title>
   <style>
-    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--exam-bg:#fef9c3;--exam-border:#eab308}
     *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    @keyframes strike{from{width:0}to{width:100%}}@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}}
     .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
     .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
     h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
@@ -17,7 +19,13 @@
     .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
     .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}
     .ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .misc-box{background:#f1f5f9;border-left:5px solid var(--muted);padding:10px 14px;border-radius:10px;margin:8px 0;position:relative;overflow:hidden}
+    .misc-strike{text-decoration:line-through;text-decoration-color:var(--error);text-decoration-thickness:2px;color:#64748b}
+    .exam-tip-box{background:var(--exam-bg);border:3px solid var(--exam-border);border-radius:12px;padding:12px 14px;margin:10px 0;position:relative}
+    .exam-tip-box::before{content:'📋 EXAM TIP';position:absolute;top:-12px;left:14px;background:var(--exam-border);color:#fff;padding:2px 10px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box h3{margin-top:6px}
     .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .formula-display .hv{color:#fca5a5}.formula-display .hi{color:#93c5fd}.formula-display .hr{color:#86efac}
     .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
     .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
     .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
@@ -26,7 +34,26 @@
     .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
     .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
 
-    /* SPEED MATCH — grid of clickable cards */
+    /* STEP-BY-STEP REVEAL (I Do) */
+    .reveal-item.hidden-step{display:none}
+    .reveal-btn{background:var(--ido-border);color:#fff;border:none;padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:900;margin:6px 0}
+    .reveal-btn:hover{background:#5b21b6}.reveal-btn:disabled{opacity:.45;cursor:default}
+
+    /* HINT */
+    .hint-btn{background:var(--scaffold-border);color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:bold;margin-top:6px;box-shadow:none}
+    .hint-btn:hover{background:#0284c7}
+    .hint-content{display:none;margin-top:8px;background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:8px 12px;border-radius:10px;font-size:.95rem}
+    .hint-content.shown{display:block;animation:fadeInUp .3s}
+
+    /* Animated hero icons (title slide) */
+    .hero-row{display:flex;justify-content:center;gap:30px;margin:14px 0 8px}
+    .hero-icon{font-size:3.2rem;animation:bounce 2s ease-in-out infinite}
+    .hero-icon:nth-child(2){animation-delay:.2s}.hero-icon:nth-child(3){animation-delay:.4s}
+    /* LO checkmarks */
+    .lo-anim{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:1rem;text-align:left}
+    .lo-check{width:22px;height:22px;border-radius:50%;background:var(--lo-border);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;flex-shrink:0;animation:pulse 2s infinite}
+
+    /* SPEED MATCH */
     .sm-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:.25s;min-height:65px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.95rem}
     .sm-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
     .sm-card.sel-sm{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2)}
@@ -42,7 +69,7 @@
     .car-input.correct{border-color:var(--success);background:var(--aspire-bg)}.car-input.wrong{border-color:var(--error);background:#fef2f2}
     .car-check{padding:6px 14px;border-radius:8px;font-size:.85rem;font-weight:900;background:var(--task-border);color:#fff;border:none;cursor:pointer;transition:.2s}
     .car-check:hover{background:#ca8a04}.car-check:disabled{opacity:.4;cursor:default}
-    .car-fb{font-size:.85rem;font-weight:900;min-height:18px;margin-top:4px}
+    .car-fb{font-size:.85rem;font-weight:900;min-height:18px;margin-top:4px;line-height:1.3}
 
     /* SERIES CHALLENGE — step solver */
     .step-card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:10px;transition:.3s}
@@ -53,7 +80,7 @@
     .step-input.correct{border-color:var(--success);background:var(--aspire-bg)}.step-input.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
     .step-check{padding:6px 14px;border-radius:8px;font-size:.9rem;font-weight:900;background:var(--ido-border);color:#fff;border:none;cursor:pointer;transition:.2s}
     .step-check:hover{background:#5b21b6}.step-check:disabled{opacity:.4;cursor:default}
-    .step-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+    .step-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px;line-height:1.3}
 
     /* EXIT GRID */
     .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.exit-cell{border:2px solid var(--task-border);border-radius:12px;padding:14px;background:var(--task-bg);position:relative}.exit-cell .lesson-tag{position:absolute;top:6px;right:8px;font-size:.7rem;font-weight:900;color:#fff;background:var(--lo-border);padding:2px 8px;border-radius:6px}
@@ -62,13 +89,59 @@
     .tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
     .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
 
-    #print-area{display:none}
-    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
-  
-    /* TIMING */
+    /* TIMING badges */
     .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
     .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
-  
+
+    /* XP BAR */
+    #xp-bar-wrap{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(0,0,0,.06);z-index:1500}
+    #xp-bar{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#eab308,#f97316);transition:width .5s ease;box-shadow:0 0 8px rgba(34,197,94,.5)}
+    #xp-label{position:fixed;top:8px;left:14px;background:rgba(255,255,255,.95);border:2px solid var(--success);border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:900;color:var(--success);z-index:1501;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+
+    /* TA FOCUS */
+    #ta-focus-btn{position:fixed;bottom:60px;right:18px;background:#0ea5e9;color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:900;z-index:1000;box-shadow:0 4px 10px rgba(14,165,233,.3)}
+    #ta-focus-btn:hover{background:#0284c7;transform:translateY(-2px)}
+    #ta-focus-panel{position:fixed;bottom:110px;right:18px;width:340px;max-height:60vh;background:#fff;border:3px solid #0ea5e9;border-radius:14px;padding:14px 16px;box-shadow:0 12px 30px rgba(0,0,0,.18);z-index:1001;display:none;overflow-y:auto}
+    #ta-focus-panel.visible{display:block;animation:fadeInUp .3s}
+    #ta-focus-panel h3{margin:0 0 6px;color:#0369a1;font-size:1rem}
+    #ta-focus-panel .ta-brief{font-size:.92rem;line-height:1.45;color:#334155}
+    .ta-close{float:right;background:none;color:#64748b;border:none;font-size:1.1rem;cursor:pointer;padding:0;box-shadow:none}
+
+    /* COLD CALL */
+    #cold-call-btn{position:fixed;bottom:60px;left:18px;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:900;z-index:1000;box-shadow:0 4px 10px rgba(124,58,237,.3)}
+    #cold-call-btn:hover{background:#6d28d9;transform:translateY(-2px)}
+    #cold-call-panel{position:fixed;bottom:110px;left:18px;width:340px;max-height:70vh;background:#fff;border:3px solid #7c3aed;border-radius:14px;padding:14px 16px;box-shadow:0 12px 30px rgba(0,0,0,.18);z-index:1001;display:none;overflow-y:auto}
+    #cold-call-panel.visible{display:block;animation:fadeInUp .3s}
+    #cold-call-panel h3{margin:0 0 6px;color:#5b21b6;font-size:1rem}
+    .cc-pupil{display:flex;align-items:center;gap:6px;background:#faf5ff;border:1px solid #ddd6fe;border-radius:8px;padding:5px 8px;margin:4px 0;font-size:.9rem}
+    .cc-pupil-name{flex:1;font-weight:600}
+    .cc-grade{display:inline-flex;width:24px;height:24px;border-radius:6px;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;color:#fff;cursor:pointer}
+    .cc-grade.gU{background:#94a3b8}.cc-grade.g1{background:#f87171}.cc-grade.g2{background:#fb923c}.cc-grade.g3{background:#facc15;color:#000}.cc-grade.g4{background:#34d399}.cc-grade.g5{background:#3b82f6}
+    .cc-del{background:none;color:#dc2626;border:none;font-size:1rem;cursor:pointer;padding:0 4px;box-shadow:none}
+    .cc-add{display:flex;gap:4px;margin-top:6px}
+    .cc-add input{flex:1;padding:5px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:.9rem}
+    .cc-pitch{display:flex;gap:4px;margin:8px 0;justify-content:center}
+    .cc-pitch button{padding:4px 10px;font-size:.8rem;border-radius:6px;background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;box-shadow:none}
+    .cc-pitch button.active{background:#7c3aed;color:#fff;border-color:#7c3aed}
+    #cc-result{background:#faf5ff;border:2px solid #7c3aed;border-radius:10px;padding:10px;margin-top:8px;text-align:center;font-weight:900;font-size:1rem;color:#5b21b6;min-height:36px}
+
+    /* HINT TOAST */
+    #hint-toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e293b;color:#fff;padding:10px 18px;border-radius:12px;font-size:.95rem;font-weight:700;z-index:4000;opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+    #hint-toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* LESSON COMPLETE OVERLAY */
+    #lesson-complete{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.85);z-index:5000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+    #lesson-complete.visible{display:flex;animation:fadeIn .4s}
+    .lc-card{background:#fff;border-radius:24px;padding:32px 40px;text-align:center;max-width:520px;box-shadow:0 30px 60px rgba(0,0,0,.4);animation:fadeInUp .5s}
+    .lc-card h2{font-size:2rem;color:var(--lo-border);margin:8px 0 10px;border:none}
+    .lc-trophy{font-size:5rem;animation:bounce 1.5s infinite}
+    .lc-stats{display:flex;gap:16px;justify-content:center;margin:14px 0}
+    .lc-stat{background:#f1f5f9;border-radius:12px;padding:8px 14px;font-weight:900;color:#1e293b}
+    .lc-stat span{display:block;font-size:1.4rem;color:var(--lo-border)}
+
+    /* Confetti */
+    .confetti{position:fixed;width:10px;height:10px;pointer-events:none;z-index:6000}
+
     /* FLOATING TIMER WIDGET */
     #timer-widget{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-150%);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
     #timer-widget.visible{transform:translateX(-50%) translateY(0)}
@@ -79,92 +152,206 @@
     .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
     .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
 
+    /* ===== INTERACTIVE VISUALS ===== */
+    .viz-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:6px}
+    .viz-tab{padding:6px 14px;border-radius:10px 10px 0 0;border:2px solid #e2e8f0;border-bottom:none;background:#f1f5f9;color:#334155;font-size:.85rem;font-weight:900;cursor:pointer;box-shadow:none}
+    .viz-tab.active{background:#fff;color:var(--ido-border);border-color:var(--ido-border)}
+    .viz-panel{display:none}.viz-panel.active{display:block;animation:fadeIn .3s}
+    .find-btns{display:flex;gap:8px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+    .find-btn{padding:10px 16px;border-radius:12px;font-size:1rem;font-weight:900;border:2px solid;cursor:pointer;min-width:84px;min-height:46px;background:#fff;box-shadow:none}
+    .find-btn[data-v="V"]{border-color:#dc2626;color:#dc2626}.find-btn[data-v="I"]{border-color:#2563eb;color:#2563eb}.find-btn[data-v="R"]{border-color:#16a34a;color:#16a34a}
+    .find-btn.active[data-v="V"]{background:#dc2626;color:#fff}.find-btn.active[data-v="I"]{background:#2563eb;color:#fff}.find-btn.active[data-v="R"]{background:#16a34a;color:#fff}
+    .find-btn:hover{transform:translateY(-2px)}
+    .tri-result{background:#1e293b;color:#fff;border-radius:12px;padding:10px 14px;text-align:center;font-size:1.05rem;font-weight:900;min-height:24px;margin-top:6px;line-height:1.5}
+    .tri-result .step{display:block;font-size:.95rem}
+    /* Water analogy */
+    .water-svg{width:100%;max-width:300px;height:auto}
+    .droplet{animation:flowR 2.2s linear infinite}
+    @keyframes flowR{from{transform:translateX(0)}to{transform:translateX(220px)}}
+    @media (prefers-reduced-motion:reduce){.droplet{animation:none}}
+    .water-cap{font-size:.85rem;color:#475569;margin:4px 0}
+    /* Animated series circuit */
+    .charge-dot{fill:#7c3aed}
+    .vbar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:2px solid #1e293b;margin:8px 0 2px}
+    .vbar-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.85rem;transition:width .4s}
+    .vbar-v1{background:#22c55e}.vbar-v2{background:#3b82f6}
+    .vslider-wrap{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:.9rem;font-weight:900;color:#334155}
+    .vslider{flex:1;accent-color:var(--ido-border);height:24px}
+    .flow-btn{padding:6px 14px;border-radius:10px;font-size:.85rem;font-weight:900;background:var(--ido-border);color:#fff;border:none;cursor:pointer;box-shadow:none}
+    .live-read{font-weight:900;color:var(--ido-border)}
+    /* Video embed */
+    .video-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 2px}
+    .video-btn{padding:8px 14px;border-radius:10px;font-size:.88rem;font-weight:900;background:#dc2626;color:#fff;border:none;cursor:pointer;box-shadow:none}
+    .video-btn:hover{background:#b91c1c;transform:translateY(-2px)}
+    .video-out{padding:8px 12px;border-radius:10px;font-size:.82rem;font-weight:900;background:#e2e8f0;color:#334155;text-decoration:none;display:inline-block}
+    .video-frame{display:none;margin-top:8px;border-radius:12px;overflow:hidden;background:#000}
+    .video-frame.shown{display:block;animation:fadeIn .3s}
+    .video-frame .ratio{position:relative;width:100%;padding-bottom:56.25%;height:0}
+    .video-frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+    @media (max-width:640px){.find-btn{min-width:72px;font-size:.9rem}.tri-result{font-size:.95rem}}
+
+    #print-area{display:none}
+    @media print{
+      body{overflow:visible;background:#fff;height:auto;color:#000}
+      .controls,.slide-container,.progress-wrap,.progress-label,#timer-widget,#xp-bar-wrap,#xp-label,#ta-focus-btn,#cold-call-btn,#ta-focus-panel,#cold-call-panel,#lesson-complete,#hint-toast{display:none!important}
+      #print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:18px;width:96%;height:94%}
+      h1{font-size:1.6rem}
+      h2{font-size:1.3rem;margin-right:0}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr;gap:12px}
+      .arrival-grid{grid-template-columns:1fr}
+      .logo{width:90px;top:14px;right:14px}
+      .time-badge,.flex-badge{top:14px;left:14px;font-size:.7rem;padding:3px 8px}
+      .hero-row{gap:14px}.hero-icon{font-size:2.2rem}
+      #timer-widget{top:8px;padding:5px 10px}
+      #timer-display{font-size:1.4rem;min-width:70px}
+      #ta-focus-btn,#cold-call-btn{font-size:.75rem;padding:6px 10px;bottom:50px}
+      #ta-focus-panel,#cold-call-panel{width:90vw;max-width:340px}
+      .controls{bottom:10px;right:10px}.controls button{padding:8px 12px;font-size:.85rem}
+    }
   </style>
 </head>
 <body>
+<!-- XP BAR -->
+<div id="xp-bar-wrap"><div id="xp-bar"></div></div>
+<div id="xp-label">⚡ XP: <span id="xp-val">0</span></div>
+
 <!-- TIMER WIDGET -->
 <div id="timer-widget">
-  <div id="timer-display">08:00</div>
+  <div id="timer-display">06:00</div>
   <div class="timer-controls">
     <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
     <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
-    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(6)" title="6 min">↻6</button>
     <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
     <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
   </div>
 </div>
 
-<div class="slide-container">
+<!-- TA FOCUS -->
+<button id="ta-focus-btn" onclick="toggleTA()">👁️ TA Focus</button>
+<div id="ta-focus-panel">
+  <button class="ta-close" onclick="toggleTA()">✕</button>
+  <h3>👁️ TA Brief — <span id="ta-slide-name">This Slide</span></h3>
+  <div class="ta-brief" id="ta-brief-text">Loading…</div>
+</div>
 
-  <!-- SLIDE 1: TITLE -->
-  <div class="slide active" data-title="Title">
-    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div style="text-align:center;margin-top:3%"><div class="animate-enter">
-      <p style="font-size:1rem;color:var(--muted);margin:0">Physics — Consolidation Lesson</p>
-      <h1>Electricity Review &amp; Bridge to Waves</h1>
-      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 16px">Reviewing L1–L3 &nbsp;|&nbsp; Preparing for Waves</p>
-      <div class="li-box" style="margin:16px auto;max-width:700px;text-align:left"><strong>Purpose:</strong> Before we start a brand-new topic (Waves), we're going to make sure everything from Electricity is locked in. Today is about <strong>practising</strong>, not learning new content.
-        <ul style="font-size:1.05rem;margin-top:8px">
-          <li><strong>L1</strong> – Circuit symbols, series &amp; parallel</li>
-          <li><strong>L2</strong> – V = I × R, current, voltage, resistance</li>
-          <li><strong>L3</strong> – Electron flow, series calculations</li>
-        </ul></div>
+<!-- COLD CALL -->
+<button id="cold-call-btn" onclick="toggleCC()">🎯 Cold Call</button>
+<div id="cold-call-panel">
+  <button class="ta-close" onclick="toggleCC()">✕</button>
+  <h3>🎯 Random Pupil Picker</h3>
+  <div class="cc-pitch">
+    <button id="cc-easier" onclick="setPitch('easier')">Easier</button>
+    <button id="cc-match" class="active" onclick="setPitch('match')">Match</button>
+    <button id="cc-stretch" onclick="setPitch('stretch')">Stretch</button>
+  </div>
+  <button onclick="pickPupil()" style="width:100%;margin:4px 0">🎲 Pick a Pupil</button>
+  <div id="cc-result">No pupils added yet</div>
+  <div id="cc-pupil-list"></div>
+  <div class="cc-add">
+    <input id="cc-name-input" placeholder="Pupil name…" onkeydown="if(event.key==='Enter')addPupil()">
+    <button class="small" onclick="addPupil()">+ Add</button>
+  </div>
+  <p style="font-size:.78rem;color:#64748b;margin:6px 0 0">Tap a grade chip beside each name to set tier (U/1/2/3/4/5). Easier=U/1, Match=2, Stretch=3–5.</p>
+</div>
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div id="lesson-complete">
+  <div class="lc-card">
+    <div class="lc-trophy">🏆</div>
+    <h2>Lesson Complete!</h2>
+    <p style="margin:6px 0;font-size:1rem;color:#475569">You caught up on the calculations and locked in your electricity skills. Brilliant focus — onto Waves next. ⚡🌊</p>
+    <div class="lc-stats">
+      <div class="lc-stat"><span id="lc-xp">0</span>XP earned</div>
+      <div class="lc-stat"><span id="lc-slides">11</span>slides done</div>
     </div>
-    <div class="scaffold-box" style="display:inline-block;margin-top:12px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
-        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
-        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
-        <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
-      </div>
+    <button onclick="closeLessonComplete()" style="margin-top:8px">Close</button>
+  </div>
+</div>
+
+<div class="slide-container">
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" data-title="Title" data-ta="Welcome pupils warmly at the door. Stress the framing OUT LOUD: nobody is behind — today everyone re-builds the calculations together from the ground up. If a pupil missed L2c or L4, reassure them privately that this lesson is built for exactly that. Point at the 3 success criteria as you read them. Have the printed packs ready to hand out.">
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:1%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics — Catch-Up &amp; Consolidation Lesson</p>
+      <h1>Electricity Calculations &amp; Bridge to Waves</h1>
+      <div class="hero-row"><span class="hero-icon">⚡</span><span class="hero-icon">🔢</span><span class="hero-icon">🌊</span></div>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-2px 0 12px">Re-building L2c &amp; L4 calculations &nbsp;|&nbsp; Bridge to Waves</p>
+      <div class="li-box" style="margin:10px auto;max-width:740px;text-align:left"><strong>Missed a lesson? You're in exactly the right place.</strong> Lots of us were away for the calculation lessons, so today we <strong>re-build them together from scratch</strong> — slowly, step by step. This isn't a test. It's a catch-up.
+        <div style="margin-top:8px">
+          <div class="lo-anim"><div class="lo-check">✓</div><div><strong>L1</strong> — Recall circuit symbols, series &amp; parallel <em>(quick recap — you didn't miss this one)</em></div></div>
+          <div class="lo-anim"><div class="lo-check">✓</div><div><strong>L2c</strong> — Use <strong>V = I × R</strong> and rearrange it (find V, I or R)</div></div>
+          <div class="lo-anim"><div class="lo-check">✓</div><div><strong>L4</strong> — Explain electron flow &amp; solve <strong>series circuit</strong> calculations</div></div>
         </div>
-    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
-      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
-      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do 1 → We Do 1 → I Do 2 → We Do 2 → Independent → Exit Ticket</p>
-      <p style="font-size:.95rem;margin:4px 0"><strong>FLEX slides</strong> (I Do 3 + We Do 3): Use if time allows, or as next-lesson warm-up. Marked with 🟠 FLEX badge.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:flex-start;max-width:900px;margin:0 auto">
+      <div class="sc-box" style="flex:1;min-width:300px;text-align:left"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Today's Success Criteria</h3>
+        <p style="color:#431407;margin:6px 0;font-size:1rem"><strong style="color:#22c55e">Foundation:</strong> I can use V = I × R and add resistances in series.</p>
+        <p style="color:#431407;margin:6px 0;font-size:1rem"><strong style="color:#f97316">Middle:</strong> I can rearrange V = IR and find the current in a series circuit.</p>
+        <p style="color:#431407;margin:6px 0;font-size:1rem"><strong style="color:#1e3a8a">Higher:</strong> I can solve a full series problem and explain voltage sharing.</p>
+      </div>
+      <div class="scaffold-box" style="flex:1;min-width:300px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+          <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+          <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+          <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
+        </div>
+        <div style="margin-top:10px;border-top:1px solid #cbd5e1;padding-top:8px">
+          <h3 style="margin:0 0 4px;color:var(--muted);font-size:.95rem">⏱️ 40-Minute Pacing (calc-focused)</h3>
+          <p style="font-size:.85rem;margin:3px 0"><strong>Core:</strong> Arrival → Starter → I Do <em>VIR</em> → We Do <em>Carousel</em> → I Do <em>Series</em> → We Do <em>Series Solver</em> → Independent → Exit</p>
+          <p style="font-size:.85rem;margin:3px 0"><strong>🟠 FLEX</strong> (use if time/confidence allows): <em>Common Mistakes</em> + <em>Symbol Speed Match</em>. You didn't miss L1 symbols, so they're optional today.</p>
+        </div>
+      </div>
     </div></div>
   </div>
 
   <!-- SLIDE 2: ARRIVAL -->
-  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+  <div class="slide" id="arrival-slide" data-title="Arrival Task" data-ta="Stand at the door. Direct pupils to answer from memory — no notes. If someone freezes on the L2c or L4 question, that's expected (they may have been away) — reassure 'we re-build it together in a few minutes, just have a go'. Take Q2 from a named pupil for a quick win. Praise attempts loudly to rebuild confidence.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 4 min</div>
     <span class="slide-tag tag-arrival">Arrival Task</span>
-    <h2>Arrival Task – How Much Do You Remember?</h2>
-    <div class="li-box"><strong>Instructions:</strong> No notes. Answer from memory. One question from each of L1, L2 and L3.</div>
+    <h2>Arrival – How Much Do You Remember?</h2>
+    <div class="li-box"><strong>No notes. Answer from memory.</strong> One from L1, one from L2c, one from L4. <strong>If you were away — just have a go. We re-build it all together shortly.</strong></div>
     <div class="level-toggle">
-      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
-      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
-      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button onclick="switchArrival('foundation')" style="background:#22c55e">Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316">Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a">Higher (3–5)</button>
       <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
     </div>
     <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
       <div class="task-box animate-enter"><h3>1. 🟢 (L1)</h3><p>Draw the circuit symbol for a <strong>cell</strong> and a <strong>lamp</strong>.</p><p class="answer">Cell: long line + short line. Lamp: circle with a cross.</p></div>
-      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢 (L2)</h3><p>Write the formula linking voltage, current and resistance.</p><p class="answer">V = I × R</p></div>
-      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢 (L3)</h3><p>What particles carry current in a metal wire?</p><p class="answer">Electrons (negatively charged).</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢 (L2c)</h3><p>Write the formula linking voltage, current and resistance.</p><p class="answer">V = I × R</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢 (L4)</h3><p>What particles carry current in a metal wire?</p><p class="answer">Electrons (negatively charged).</p></div>
       <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Bridge 🌊</h3><p>Name <strong>two types of wave</strong> you know about.</p><p class="answer">Any from: water waves, sound waves, light waves, radio waves, etc.</p></div>
     </div>
     <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
       <div class="task-box animate-enter"><h3>1. 🟠 (L1)</h3><p>State how an <strong>ammeter</strong> and <strong>voltmeter</strong> must be connected.</p><p class="answer">Ammeter: in series. Voltmeter: in parallel.</p></div>
-      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠 (L2)</h3><p>A 12 V battery is connected to a 6 Ω resistor. Calculate the current.</p><p class="answer">I = V ÷ R = 12 ÷ 6 = 2 A</p></div>
-      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠 (L3)</h3><p>In which direction do electrons flow — + to − or − to +?</p><p class="answer">− to + (opposite to conventional current).</p></div>
-      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Bridge 🌊</h3><p>If you drop a stone into a pond, what happens? Does the water travel outward, or just the energy?</p><p class="answer">Ripples spread outward. The energy travels, but the water itself stays roughly in place (bobs up and down).</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠 (L2c)</h3><p>A 12 V battery is connected to a 6 Ω resistor. Calculate the current.</p><p class="answer">I = V ÷ R = 12 ÷ 6 = 2 A</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠 (L4)</h3><p>In which direction do electrons flow — + to − or − to +?</p><p class="answer">− to + (opposite to conventional current).</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Bridge 🌊</h3><p>Drop a stone into a pond. Does the <strong>water</strong> travel outward, or just the <strong>energy</strong>?</p><p class="answer">Ripples spread outward. The energy travels, but the water itself stays roughly in place (bobs up and down).</p></div>
     </div>
     <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
       <div class="task-box animate-enter"><h3>1. 🔵 (L1)</h3><p>Explain why houses are wired in <strong>parallel</strong>, not series.</p><p class="answer">Each appliance gets full voltage (230 V). If one breaks, the others keep working.</p></div>
-      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵 (L2)</h3><p>A hairdryer uses 230 V and draws 10 A. Calculate its resistance.</p><p class="answer">R = V ÷ I = 230 ÷ 10 = 23 Ω</p></div>
-      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵 (L3)</h3><p>A 15 V battery connects to 5 Ω and 10 Ω in series. Find the current and V across the 10 Ω.</p><p class="answer">R = 15 Ω. I = 15 ÷ 15 = 1 A. V = 1 × 10 = 10 V.</p></div>
-      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Bridge 🌊</h3><p>Both electricity and waves involve <strong>energy transfer</strong>. In a circuit, energy is transferred by electrons. In a wave, how do you think energy is transferred without anything physically travelling?</p><p class="answer">Particles vibrate and pass the energy to their neighbours — the energy moves forward, but the particles stay roughly in place.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵 (L2c)</h3><p>A hairdryer uses 230 V and draws 10 A. Calculate its resistance.</p><p class="answer">R = V ÷ I = 230 ÷ 10 = 23 Ω</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵 (L4)</h3><p>A 15 V battery connects to 5 Ω and 10 Ω in series. Find the current and V across the 10 Ω.</p><p class="answer">R = 15 Ω. I = 15 ÷ 15 = 1 A. V = 1 × 10 = 10 V.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Bridge 🌊</h3><p>Both electricity and waves transfer <strong>energy</strong>. In a wave, how is energy transferred without anything physically travelling?</p><p class="answer">Particles vibrate and pass the energy to their neighbours — the energy moves forward, but the particles stay roughly in place.</p></div>
     </div>
   </div>
-
   <!-- SLIDE 3: STARTER -->
-  <div class="slide" data-title="Starter">
+  <div class="slide" data-title="Starter" data-ta="Walk the room. The brain dump is low-stakes — it shows you who remembers what BEFORE the re-teach. Note quietly who writes nothing under V=IR or series (those pupils likely missed L2c/L4 — keep an eye on them in the I Do). Prompt blank pages with 'just one fact to start'. After 3 min, the partner swap restarts confidence.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 3 min</div>
     <span class="slide-tag tag-starter">Starter</span>
     <h2>Starter: Electricity Brain Dump 🧠</h2>
-    <div class="li-box"><strong>Instructions:</strong> In 3 minutes, write down <strong>everything you can remember</strong> about electricity from Lessons 1–3. Facts, formulas, units, rules, diagrams — anything!</div>
+    <div class="li-box"><strong>Instructions:</strong> In 3 minutes, write down <strong>everything you can remember</strong> about electricity. Facts, formulas, units, rules — anything! Blank under a topic? That's fine — it just shows what we'll re-build today.</div>
     <div class="content-grid" style="margin-top:8px">
       <div class="task-box" style="min-height:200px;padding:20px"><h3 style="margin-top:0">📝 Brain Dump — Write everything!</h3>
         <p style="color:var(--muted)">Challenge yourself: can you get <strong>10+ facts</strong>?</p>
@@ -173,64 +360,277 @@
       <div>
         <div class="scaffold-box"><h3 style="margin-top:0">💡 Topics to jog your memory:</h3>
           <p><strong>L1:</strong> Circuit symbols, series vs parallel, ammeter/voltmeter</p>
-          <p><strong>L2:</strong> V = I × R, units, water analogy, VIR triangle</p>
-          <p><strong>L3:</strong> Electron flow, conventional current, series R rules, voltage sharing</p>
+          <p><strong>L2c:</strong> V = I × R, units, water analogy, VIR triangle</p>
+          <p><strong>L4:</strong> Electron flow, conventional current, series R rules, voltage sharing</p>
         </div>
-        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>Research shows that revisiting content <strong>24 hours later</strong> boosts long-term memory by up to <strong>80%</strong>. That's what today's lesson does — it fires up the neural pathways you built in L1–L3 so they stick permanently.</p></div>
-        <div class="aspire-box"><strong>🌟 After 3 minutes:</strong> Swap books with a partner. Read their list. Add anything they missed using a different colour pen. Discuss!</div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p>Revisiting content <strong>24 hours later</strong> can boost long-term memory by up to <strong>80%</strong>. Catching up today fires the pathways back up — even if you missed the lesson first time.</p></div>
+        <div class="aspire-box"><strong>🌟 After 3 minutes:</strong> Swap books with a partner. Read their list. Add anything they missed in a different colour. Discuss!</div>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 4: I DO 1 — RAPID RECAP -->
-  <div class="slide" data-title="I Do – Rapid Recap" data-type="ido">
+  <!-- SLIDE 4: I DO 1 — VIR TRIANGLE RE-TEACH (L2c) -->
+  <div class="slide" data-title="I Do – The VIR Triangle (L2c)" data-type="ido" data-ta="THIS IS THE KEY CATCH-UP SLIDE for anyone who missed L2c. Pens DOWN, eyes front. Use the 'Reveal next step' button to model ONE step at a time — don't rush. Say the same 3 words every time: 'Formula → Substitute → Answer + Unit'. Point at the triangle and physically cover the unknown with your finger. Tap the desk of any pupil whose head drops. Cold Call 'Easier' tier to check the ÷ vs × idea landed.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 4 min</div>
     <span class="slide-tag tag-ido">I Do</span>
-    <h2>I Do: Rapid Recap — Everything in One Page</h2>
-    <div class="li-box"><strong>This slide summarises ALL of L1–L3.</strong> Check your brain dump — did you get all of these?</div>
+    <h2>I Do: The VIR Triangle — From Scratch (L2c)</h2>
+    <div class="li-box"><strong>Missed the Ohm's Law lesson? Watch this carefully.</strong> Every calculation uses the <strong>same 3 steps</strong>. I'll reveal them one at a time.</div>
     <div class="content-grid" style="margin-top:6px">
       <div>
-        <div class="ido-box animate-enter"><h3 style="margin-top:0">⚡ L1: Circuits</h3>
-          <p>8 symbols: cell, battery, switch, lamp, resistor, variable resistor, ammeter, voltmeter.</p>
-          <p><strong>Series:</strong> one loop, current same, voltages add up.</p>
-          <p><strong>Parallel:</strong> branches, voltage same, currents add up.</p>
-          <p>Ammeter = <strong>series</strong>. Voltmeter = <strong>parallel</strong>.</p>
+        <div class="formula-display"><span class="hv">V</span> = <span class="hi">I</span> × <span class="hr">R</span></div>
+        <div class="diagram-container" style="margin-top:8px">
+          <div class="viz-tabs">
+            <button class="viz-tab active" id="tabtri-1" onclick="vizTab('tri')">🔺 Triangle</button>
+            <button class="viz-tab" id="tabwater-1" onclick="vizTab('water')">💧 Water analogy</button>
+          </div>
+          <div class="viz-panel active" id="panel-tri">
+            <svg width="200" height="160" viewBox="0 0 200 170" style="touch-action:manipulation">
+              <polygon points="100,10 12,158 188,158" fill="#faf5ff" stroke="#7c3aed" stroke-width="4"/>
+              <line x1="12" y1="92" x2="188" y2="92" stroke="#7c3aed" stroke-width="3"/>
+              <text x="100" y="68" text-anchor="middle" font-size="40" font-weight="bold" fill="#dc2626">V</text>
+              <text x="66" y="142" text-anchor="middle" font-size="34" font-weight="bold" fill="#2563eb">I</text>
+              <text x="100" y="142" text-anchor="middle" font-size="22" fill="#64748b">×</text>
+              <text x="134" y="142" text-anchor="middle" font-size="34" font-weight="bold" fill="#16a34a">R</text>
+              <rect id="tri-cover" x="0" y="0" width="44" height="40" rx="8" fill="#1e293b" opacity="0" style="transition:opacity .2s"/>
+              <text id="tri-cover-q" x="0" y="0" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff" opacity="0">?</text>
+            </svg>
+            <div class="find-btns">
+              <button class="find-btn" data-v="V" onclick="findVal('V')">Find V</button>
+              <button class="find-btn" data-v="I" onclick="findVal('I')">Find I</button>
+              <button class="find-btn" data-v="R" onclick="findVal('R')">Find R</button>
+            </div>
+            <div class="tri-result" id="tri-result">👆 Tap a button — I'll cover that letter and show the formula.</div>
+          </div>
+          <div class="viz-panel" id="panel-water">
+            <svg class="water-svg" viewBox="0 0 300 150" style="background:#f0f9ff;border-radius:10px">
+              <rect x="10" y="20" width="44" height="110" rx="6" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+              <text x="32" y="78" text-anchor="middle" font-size="11" font-weight="bold" fill="#7c2d12">PUMP</text>
+              <text x="32" y="92" text-anchor="middle" font-size="9" fill="#7c2d12">(V)</text>
+              <rect x="54" y="60" width="120" height="30" fill="#bae6fd"/>
+              <rect x="174" y="68" width="50" height="14" fill="#7dd3fc"/>
+              <text x="199" y="56" text-anchor="middle" font-size="9" font-weight="bold" fill="#0369a1">narrow = R</text>
+              <rect x="224" y="60" width="66" height="30" fill="#bae6fd"/>
+              <g class="droplet"><circle cx="60" cy="75" r="5" fill="#0284c7"/></g>
+              <g class="droplet" style="animation-delay:-0.7s"><circle cx="60" cy="75" r="5" fill="#0284c7"/></g>
+              <g class="droplet" style="animation-delay:-1.4s"><circle cx="60" cy="75" r="5" fill="#0284c7"/></g>
+              <text x="150" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#0369a1">flow of water = current (I)</text>
+            </svg>
+            <p class="water-cap"><strong>Bigger pump (more V)</strong> → faster flow (more I). <strong>Narrower pipe (more R)</strong> → slower flow (less I). That's <strong>V = I × R</strong>!</p>
+          </div>
         </div>
-        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">🔋 L2: V = I × R</h3>
-          <div class="formula-display" style="font-size:1.2rem">V = I × R &nbsp;|&nbsp; I = V ÷ R &nbsp;|&nbsp; R = V ÷ I</div>
-          <p style="margin-top:6px"><strong>V</strong> = volts (V) &nbsp; <strong>I</strong> = amps (A) &nbsp; <strong>R</strong> = ohms (Ω)</p>
-          <p>Current = rate of flow of charge. 1 A = 1 coulomb per second.</p>
+        <div class="exam-tip-box"><strong>Every calculation, every time:</strong> ① write the <strong>Formula</strong> → ② <strong>Substitute</strong> the numbers → ③ <strong>Answer + Unit</strong> (V, A or Ω). Even the formula alone can earn a mark.</div>
+        <div class="video-row">
+          <button class="video-btn" onclick="toggleVideo('vid-vir')">📺 Re-watch: V = IR (Cognito)</button>
+          <a class="video-out" href="https://www.youtube.com/watch?v=BbizKa6eywo" target="_blank" rel="noopener">↗ Open on YouTube</a>
         </div>
+        <div class="video-frame" id="vid-vir" data-src="https://www.youtube-nocookie.com/embed/BbizKa6eywo?rel=0"><div class="ratio"><iframe title="V=IR (Cognito)" src="" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>
       </div>
-      <div>
-        <div class="ido-box animate-enter"><h3 style="margin-top:0">🔬 L3: Electron Flow</h3>
-          <p>Current in metals = flow of <strong>negatively charged electrons</strong>.</p>
-          <p><strong>Electron flow:</strong> − → + &nbsp;|&nbsp; <strong>Conventional:</strong> + → −</p>
-          <p>Metals conduct because they have <strong>free (delocalised) electrons</strong>.</p>
-        </div>
-        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">🔗 L3: Series Calculations</h3>
-          <p><strong>R<sub>total</sub> = R₁ + R₂</strong> (add resistances)</p>
-          <p>Find I = V ÷ R<sub>total</sub> → then V across each = I × R</p>
-          <p><strong>Check:</strong> V₁ + V₂ must = supply voltage.</p>
-        </div>
-        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Lesson Matters</h3><p>Revision research shows you forget <strong>70% of what you learned</strong> within a week if you don't revisit it. Today's lesson activates your memory and strengthens the connections. By practising now, you'll remember more in the exam — guaranteed.</p></div>
-        <div class="aspire-box animate-enter anim-delay-2"><strong>🌟 Step method:</strong> 1. Write formula → 2. Substitute → 3. Calculate → 4. Unit!</div>
+      <div data-reveal-wrap>
+        <button class="reveal-btn" onclick="revealNext(this)">▶ Reveal next worked example</button>
+        <div class="ido-box reveal-item hidden-step"><h3 style="margin-top:0">① Find R — cover R</h3>
+          <p style="margin:2px 0"><strong>Step 1 – Formula:</strong> R = V ÷ I</p>
+          <p style="margin:2px 0"><strong>Step 2 – Substitute:</strong> R = 10 ÷ 2</p>
+          <p style="margin:2px 0"><strong>Step 3 – Answer:</strong> <strong>R = 5 Ω</strong> ✅</p></div>
+        <div class="ido-box reveal-item hidden-step"><h3 style="margin-top:0">② Find I — cover I</h3>
+          <p style="margin:2px 0"><strong>Step 1:</strong> I = V ÷ R</p>
+          <p style="margin:2px 0"><strong>Step 2:</strong> I = 12 ÷ 4</p>
+          <p style="margin:2px 0"><strong>Step 3:</strong> <strong>I = 3 A</strong> ✅</p></div>
+        <div class="ido-box reveal-item hidden-step"><h3 style="margin-top:0">③ Find V — cover V</h3>
+          <p style="margin:2px 0"><strong>Step 1:</strong> V = I × R</p>
+          <p style="margin:2px 0"><strong>Step 2:</strong> V = 0.5 × 12</p>
+          <p style="margin:2px 0"><strong>Step 3:</strong> <strong>V = 6 V</strong> ✅</p></div>
+        <div class="misc-box reveal-item hidden-step"><strong>⚠️ The #1 mistake:</strong> <span class="misc-strike">"I = V × R"</span><br><strong>Truth:</strong> To find I or R you <strong>DIVIDE</strong>. You only multiply when you want <strong>V</strong>. The triangle never lies — cover the unknown.</div>
       </div>
     </div>
-    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Series</td><td style="padding:4px 8px;color:#334155">One loop. Current same everywhere. Voltages add.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Parallel</td><td style="padding:4px 8px;color:#334155">Branches. Voltage same. Currents split.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">V = I × R</td><td style="padding:4px 8px;color:#334155">Ohm's Law. Rearrange: I = V÷R, R = V÷I.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Electron flow</td><td style="padding:4px 8px;color:#334155">− to + (opposite to conventional current).</td></tr></table></div>
   </div>
 
-  <!-- SLIDE 5: WE DO 1 — SYMBOL SPEED MATCH -->
-  <div class="slide" data-title="We Do – Symbol Speed Match" data-type="wedo">
+  <!-- SLIDE 5: WE DO 1 — VIR CAROUSEL (CORE) -->
+  <div class="slide" data-title="We Do – VIR Carousel (L2c)" data-type="wedo" data-ta="Pupils now try it. The worked LAMP example is done for them at the top — point to it: 'copy this routine'. Roam constantly. If a wrong answer appears, the feedback names the exact slip (÷ vs ×) — read it WITH the pupil. Push the 💡 Stuck? hint at anyone frozen for 30s. Cold Call 'Match' tier between cards. Hit 📸 Evidence at the end to capture who's secure on Ohm's Law.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 5 min</div>
     <span class="slide-tag tag-wedo">We Do</span>
-    <h2>We Do: Symbol Speed Match ⚡</h2>
-    <div class="li-box"><strong>Instructions:</strong> Click a <strong>symbol name</strong>, then click its <strong>matching description</strong>. Match all 6!</div>
-    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <h2>We Do: VIR Problem Carousel 🎠 (L2c)</h2>
+    <div class="li-box"><strong>Your turn.</strong> The first one is <strong>done for you</strong> — copy the routine. Calculate the missing value, type it, check!</div>
+    <div class="ido-box" style="margin:4px 0"><h3 style="margin-top:0">✅ Worked example — Lamp</h3><p style="margin:2px 0">V = 6 V, R = 3 Ω, find <strong>I</strong>. → Cover I → <strong>I = V ÷ R</strong> = 6 ÷ 3 = <strong>2 A</strong> ✅</p></div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: try it → discuss with your partner → agree the answer.</div>
     <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Evidence</button>
     <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="car-card" id="cc0"><div class="car-icon">🔦</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Torch</p>
+          <p style="font-size:.85rem;margin:2px 0">V = 3 V, R = 6 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>I = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci0" placeholder="?"><span style="font-weight:900;font-size:.85rem"> A</span></div>
+          <button class="car-check" onclick="carCheck(0,0.5,{'18':'You multiplied V×R. To find I you DIVIDE: V÷R = 3÷6 = 0.5','2':'Careful — that is R÷V. Flip it: V÷R = 3÷6 = 0.5'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h0')">💡 Stuck?</button><div class="hint-content" id="h0">Cover I → I = V ÷ R. Put in 3 ÷ 6.</div>
+          <div class="car-fb" id="cf0"></div></div>
+        <div class="car-card" id="cc1"><div class="car-icon">📱</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Phone Charger</p>
+          <p style="font-size:.85rem;margin:2px 0">I = 2 A, R = 2.5 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>V = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci1" placeholder="?"><span style="font-weight:900;font-size:.85rem"> V</span></div>
+          <button class="car-check" onclick="carCheck(1,5,{'0.8':'That is I÷R. To find V you MULTIPLY: I×R = 2×2.5 = 5','4.5':'You added I+R. Multiply instead: 2×2.5 = 5'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h1')">💡 Stuck?</button><div class="hint-content" id="h1">Cover V → V = I × R. Put in 2 × 2.5.</div>
+          <div class="car-fb" id="cf1"></div></div>
+        <div class="car-card" id="cc2"><div class="car-icon">💡</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">LED Bulb</p>
+          <p style="font-size:.85rem;margin:2px 0">V = 12 V, I = 0.5 A</p><p style="font-size:.85rem;margin:2px 0"><strong>R = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci2" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Ω</span></div>
+          <button class="car-check" onclick="carCheck(2,24,{'6':'You multiplied V×I. To find R you DIVIDE: V÷I = 12÷0.5 = 24','0.04':'That is I÷V. Flip it: V÷I = 12÷0.5 = 24'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h2')">💡 Stuck?</button><div class="hint-content" id="h2">Cover R → R = V ÷ I. Dividing by 0.5 doubles the number.</div>
+          <div class="car-fb" id="cf2"></div></div>
+        <div class="car-card" id="cc3"><div class="car-icon">🧹</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Vacuum</p>
+          <p style="font-size:.85rem;margin:2px 0">V = 230 V, R = 23 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>I = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci3" placeholder="?"><span style="font-weight:900;font-size:.85rem"> A</span></div>
+          <button class="car-check" onclick="carCheck(3,10,{'5290':'You multiplied V×R. To find I you DIVIDE: V÷R = 230÷23 = 10'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h3')">💡 Stuck?</button><div class="hint-content" id="h3">Cover I → I = V ÷ R = 230 ÷ 23.</div>
+          <div class="car-fb" id="cf3"></div></div>
+        <div class="car-card" id="cc4"><div class="car-icon">🎮</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Game Controller</p>
+          <p style="font-size:.85rem;margin:2px 0">I = 0.1 A, R = 30 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>V = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci4" placeholder="?"><span style="font-weight:900;font-size:.85rem"> V</span></div>
+          <button class="car-check" onclick="carCheck(4,3,{'300':'You divided R÷I. To find V you MULTIPLY: I×R = 0.1×30 = 3','30.1':'You added I+R. Multiply: 0.1×30 = 3'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h4')">💡 Stuck?</button><div class="hint-content" id="h4">Cover V → V = I × R = 0.1 × 30.</div>
+          <div class="car-fb" id="cf4"></div></div>
+        <div class="car-card" id="cc5"><div class="car-icon">🔌</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Kettle</p>
+          <p style="font-size:.85rem;margin:2px 0">V = 230 V, I = 10 A</p><p style="font-size:.85rem;margin:2px 0"><strong>R = ?</strong></p>
+          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci5" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Ω</span></div>
+          <button class="car-check" onclick="carCheck(5,23,{'2300':'You multiplied V×I. To find R you DIVIDE: V÷I = 230÷10 = 23'})">Check</button>
+          <button class="hint-btn" onclick="toggleHint('h5')">💡 Stuck?</button><div class="hint-content" id="h5">Cover R → R = V ÷ I = 230 ÷ 10.</div>
+          <div class="car-fb" id="cf5"></div></div>
+      </div>
+      <div style="background:#f1f5f9;border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:12px;margin-top:8px">
+        <span style="font-weight:900;font-size:.95rem">Solved:</span>
+        <div style="flex:1;background:#e2e8f0;border-radius:7px;height:14px;overflow:hidden"><div id="car-fill" style="height:100%;background:linear-gradient(90deg,var(--lo-border),var(--success));border-radius:7px;transition:width .5s;width:0%"></div></div>
+        <span style="font-weight:900;font-size:1rem" id="car-count">0/6</span></div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+  <!-- SLIDE 6: I DO 2 — SERIES CALCULATIONS RE-TEACH (L4) -->
+  <div class="slide" data-title="I Do – Series Calculations (L4)" data-type="ido" data-ta="KEY CATCH-UP for anyone who missed L4. Pens down. Reveal ONE step at a time with the button. Hammer the 4-step routine: 'Add R → Find I → Find each V → Check'. The most common error from absent pupils is multiplying resistances or thinking current shrinks — pre-empt both with the misc-box. Point at the circuit diagram as you go. Cold Call 'Match' to read back step 1.">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Series Circuit Calculations — From Scratch (L4)</h2>
+    <div class="li-box"><strong>Missed the series lesson? Watch the 4-step method.</strong> In series: add the resistances, the current is the <strong>same everywhere</strong>, and the voltages <strong>add up</strong> to the supply.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div data-reveal-wrap>
+        <div class="ido-box"><h3 style="margin-top:0">✏️ Problem</h3>
+          <p>An <strong>18 V</strong> battery is connected to a <strong>6 Ω</strong> and a <strong>12 Ω</strong> resistor in <strong>series</strong>. Find R<sub>total</sub>, the current, and the voltage across each.</p></div>
+        <button class="reveal-btn" onclick="revealNext(this)">▶ Reveal next step</button>
+        <div class="ido-box reveal-item hidden-step"><p style="margin:2px 0"><strong>Step 1 — Add the resistances:</strong><br>R<sub>total</sub> = R₁ + R₂ = 6 + 12 = <strong>18 Ω</strong></p></div>
+        <div class="ido-box reveal-item hidden-step"><p style="margin:2px 0"><strong>Step 2 — Find the current:</strong><br>I = V ÷ R<sub>total</sub> = 18 ÷ 18 = <strong>1 A</strong></p></div>
+        <div class="ido-box reveal-item hidden-step"><p style="margin:2px 0"><strong>Step 3 — Voltage across each:</strong><br>V₁ = I × R₁ = 1 × 6 = <strong>6 V</strong><br>V₂ = I × R₂ = 1 × 12 = <strong>12 V</strong></p></div>
+        <div class="ido-box reveal-item hidden-step" style="border-left-color:var(--success)"><p style="margin:2px 0"><strong>Step 4 — Check:</strong> V₁ + V₂ = 6 + 12 = <strong>18 V</strong> = supply ✅</p></div>
+      </div>
+      <div>
+        <div class="diagram-container">
+          <h3 style="margin-top:0;color:var(--ido-border)">Series Circuit — watch the charge flow</h3>
+          <svg id="series-svg" width="300" height="150" viewBox="0 0 300 150" style="max-width:100%">
+            <path id="loop" d="M40,30 H260 V120 H40 Z" fill="none" stroke="#1f2937" stroke-width="3"/>
+            <text x="150" y="22" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">Battery</text>
+            <rect x="80" y="110" width="46" height="20" rx="3" fill="#bbf7d0" stroke="#22c55e" stroke-width="2"/>
+            <text x="103" y="124" text-anchor="middle" font-size="10" font-weight="bold" fill="#166534">6 Ω</text>
+            <rect x="174" y="110" width="46" height="20" rx="3" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+            <text x="197" y="124" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">12 Ω</text>
+            <circle class="charge-dot" r="5"><animateMotion dur="5s" repeatCount="indefinite" begin="0s"><mpath href="#loop"/></animateMotion></circle>
+            <circle class="charge-dot" r="5"><animateMotion dur="5s" repeatCount="indefinite" begin="-1.25s"><mpath href="#loop"/></animateMotion></circle>
+            <circle class="charge-dot" r="5"><animateMotion dur="5s" repeatCount="indefinite" begin="-2.5s"><mpath href="#loop"/></animateMotion></circle>
+            <circle class="charge-dot" r="5"><animateMotion dur="5s" repeatCount="indefinite" begin="-3.75s"><mpath href="#loop"/></animateMotion></circle>
+          </svg>
+          <button class="flow-btn" id="flow-btn" onclick="toggleFlow()">▶ Play the current</button>
+          <p style="font-size:.82rem;color:#475569;margin:6px 0 2px">The dots keep the <strong>same spacing &amp; speed</strong> all the way round — the current is the <strong>same everywhere</strong>.</p>
+          <div class="vslider-wrap"><span>Supply:</span><input type="range" class="vslider" id="vsupply" min="6" max="36" step="6" value="18" oninput="updateSeries()"><span class="live-read"><span id="vsupply-val">18</span> V</span></div>
+          <div class="vbar" id="vbar"><div class="vbar-seg vbar-v1" id="vbar1" style="width:33.3%">V₁ <span id="v1-val">6</span> V</div><div class="vbar-seg vbar-v2" id="vbar2" style="width:66.7%">V₂ <span id="v2-val">12</span> V</div></div>
+          <p style="font-size:.82rem;color:#475569;margin:2px 0">Current now: <span class="live-read"><span id="iseries-val">1</span> A</span> — and the <strong>12 Ω always grabs double the voltage of the 6 Ω</strong> (voltage shares by resistance).</p>
+        </div>
+        <div class="formula-display" style="font-size:1.1rem">R<sub>total</sub> = R₁ + R₂</div>
+        <div class="exam-tip-box"><strong>The routine, every series question:</strong> ① Add R → ② I = V ÷ R<sub>total</sub> → ③ V = I × R for each → ④ Check the voltages add up.</div>
+        <div class="video-row">
+          <button class="video-btn" onclick="toggleVideo('vid-series')">📺 Re-watch: Series Circuits (Cognito)</button>
+          <a class="video-out" href="https://www.youtube.com/watch?v=Hk4JEB5DITw" target="_blank" rel="noopener">↗ Open on YouTube</a>
+        </div>
+        <div class="video-frame" id="vid-series" data-src="https://www.youtube-nocookie.com/embed/Hk4JEB5DITw?rel=0"><div class="ratio"><iframe title="Series Circuits (Cognito)" src="" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>
+        <div class="misc-box"><strong>⚠️ Two classic slips:</strong> <span class="misc-strike">"R total = 6 × 12"</span> — no, you <strong>ADD</strong> in series. And <span class="misc-strike">"current shrinks after a resistor"</span> — no, current is the <strong>SAME everywhere</strong>; it's the <strong>voltage</strong> that's shared.</div>
+        <div class="aspire-box"><strong>🌟 Notice:</strong> the 12 Ω gets <strong>double</strong> the voltage of the 6 Ω — voltage is shared in proportion to resistance.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: WE DO 2 — SERIES STEP SOLVER (CORE) -->
+  <div class="slide" data-title="We Do – Series Step Solver (L4)" data-type="wedo" data-ta="Pupils solve their own series circuit, one step at a time. Each step has a 💡 Hint and names the slip if they go wrong. Roam — the most common error is Step 2 (dividing the wrong way). The build-up is gentle: each box turns green before moving on. Step 5 is the self-check habit — praise anyone who spots V₁+V₂ must equal supply. 📸 Evidence captures who can now do series calcs.">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Series Circuit Step Solver 🧮 (L4)</h2>
+    <div class="li-box"><strong>Your turn — one step at a time.</strong> A <strong>20 V</strong> battery connects to <strong>5 Ω</strong> and <strong>15 Ω</strong> in series. Use a hint whenever you're stuck — that's what they're for.</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: try each step → check with your partner → agree.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Evidence</button>
+    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:14px">
+        <div>
+          <div class="step-card" id="sc0"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 1: Add the resistances (R<sub>total</sub>)</p>
+            <p style="margin:4px 0">R<sub>total</sub> = 5 + 15 = <input type="number" step="any" class="step-input" id="si0" placeholder="?"> Ω</p>
+            <button class="step-check" onclick="stepCheck(0,20,{'75':'In series you ADD, not multiply: 5 + 15 = 20'})">Check</button>
+            <button class="hint-btn" onclick="toggleHint('sh0')">💡 Hint</button><div class="hint-content" id="sh0">Series resistances ADD together: 5 + 15.</div><div class="step-fb" id="sf0"></div></div>
+          <div class="step-card" id="sc1"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 2: Find the current (I)</p>
+            <p style="margin:4px 0">I = V ÷ R<sub>total</sub> = 20 ÷ 20 = <input type="number" step="any" class="step-input" id="si1" placeholder="?"> A</p>
+            <button class="step-check" onclick="stepCheck(1,1,{'400':'You multiplied. To find I you DIVIDE: 20 ÷ 20 = 1'})">Check</button>
+            <button class="hint-btn" onclick="toggleHint('sh1')">💡 Hint</button><div class="hint-content" id="sh1">Divide the battery voltage by R<sub>total</sub>: 20 ÷ 20.</div><div class="step-fb" id="sf1"></div></div>
+          <div class="step-card" id="sc2"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 3: Voltage across the 5 Ω</p>
+            <p style="margin:4px 0">V₁ = I × R₁ = 1 × 5 = <input type="number" step="any" class="step-input" id="si2" placeholder="?"> V</p>
+            <button class="step-check" onclick="stepCheck(2,5,{})">Check</button>
+            <button class="hint-btn" onclick="toggleHint('sh2')">💡 Hint</button><div class="hint-content" id="sh2">Multiply the current by this resistor: 1 × 5.</div><div class="step-fb" id="sf2"></div></div>
+        </div>
+        <div>
+          <div class="step-card" id="sc3"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 4: Voltage across the 15 Ω</p>
+            <p style="margin:4px 0">V₂ = I × R₂ = 1 × 15 = <input type="number" step="any" class="step-input" id="si3" placeholder="?"> V</p>
+            <button class="step-check" onclick="stepCheck(3,15,{})">Check</button>
+            <button class="hint-btn" onclick="toggleHint('sh3')">💡 Hint</button><div class="hint-content" id="sh3">Multiply the current by this resistor: 1 × 15.</div><div class="step-fb" id="sf3"></div></div>
+          <div class="step-card" id="sc4"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 5: CHECK — do they add up?</p>
+            <p style="margin:4px 0">V₁ + V₂ = 5 + 15 = <input type="number" step="any" class="step-input" id="si4" placeholder="?"> V = supply?</p>
+            <button class="step-check" onclick="stepCheck(4,20,{})">Check</button>
+            <button class="hint-btn" onclick="toggleHint('sh4')">💡 Hint</button><div class="hint-content" id="sh4">Add your two voltages — they should equal the 20 V supply.</div><div class="step-fb" id="sf4"></div></div>
+          <div class="snap-score" style="margin-top:10px">Steps correct: <span id="step-count">0</span> / 5</div>
+          <div class="aspire-box" style="margin-top:8px"><strong>🌟 Finished?</strong> Try it again with a <strong>24 V</strong> battery, 4 Ω + 8 Ω. (R=12, I=2 A, V₁=8 V, V₂=16 V.)</div>
+        </div>
+      </div>
+      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: FLEX — COMMON MISTAKES -->
+  <div class="slide" data-title="FLEX – Common Mistakes" data-type="ido" data-ta="FLEX — use if the class is more secure than expected, or as a next-lesson warm-up. Read each mistake then reveal the fix. Great for a whole-class 'thumbs up if you've made this one' moment — normalises errors, which matters for SEMH confidence.">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 3 min · FLEX</div>
+    <span class="slide-tag tag-ido">I Do · FLEX</span>
+    <h2>Top 4 Mistakes to Avoid</h2>
+    <div class="li-box"><strong>Optional recap.</strong> Everyone makes these — spotting them is how you stop losing easy marks.</div>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 1: Multiplying to find I</h3>
+          <p><span class="misc-strike">"I = V × R = 12 × 4 = 48"</span></p>
+          <p style="color:var(--success);font-weight:900">✅ Fix: I = V <strong>÷</strong> R = 12 ÷ 4 = 3 A</p></div>
+        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 2: Multiplying series R</h3>
+          <p><span class="misc-strike">"R total = 3 × 6 = 18 Ω"</span></p>
+          <p style="color:var(--success);font-weight:900">✅ Fix: R total = 3 <strong>+</strong> 6 = 9 Ω (ADD in series)</p></div>
+      </div>
+      <div>
+        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 3: Forgetting the unit</h3>
+          <p><span class="misc-strike">"V = 3 × 4 = 12"</span> (no unit!)</p>
+          <p style="color:var(--success);font-weight:900">✅ Fix: V = 3 × 4 = 12 <strong>V</strong> (always write V, A or Ω)</p></div>
+        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 4: Current changes in series</h3>
+          <p><span class="misc-strike">"The current is smaller after the resistor"</span></p>
+          <p style="color:var(--success);font-weight:900">✅ Fix: In series, current is the <strong>SAME everywhere</strong>. Voltage is what's shared.</p></div>
+      </div>
+    </div>
+    <div class="scaffold-box"><strong>💡 Rule of thumb:</strong> finding I or R → you DIVIDE. Finding V → you MULTIPLY. The triangle never lies!</div>
+  </div>
+
+  <!-- SLIDE 9: FLEX — SYMBOL SPEED MATCH (L1) -->
+  <div class="slide" data-title="FLEX – Symbol Speed Match (L1)" data-type="wedo" data-ta="FLEX — L1 wasn't missed, so this is optional revision. Good low-stakes filler if calcs finished early. Click a component, then its description. Think-Pair-Share works well. Hit 📸 Evidence if you want a record.">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 5 min · FLEX</div>
+    <span class="slide-tag tag-wedo">We Do · FLEX</span>
+    <h2>Symbol Speed Match ⚡ (L1)</h2>
+    <div class="li-box"><strong>Optional L1 revision.</strong> Click a <strong>component</strong>, then click its <strong>matching description</strong>. Match all 6!</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo-sm')">📸 Evidence</button>
+    <div id="wedo-sm" class="wedo-capture" style="margin-top:6px">
       <div class="content-grid" style="height:auto;gap:14px">
         <div><p style="text-align:center;color:var(--muted);font-size:.9rem;margin:0 0 6px"><strong>Component</strong> (click first)</p>
           <div style="display:flex;flex-direction:column;gap:8px" id="sm-terms">
@@ -257,227 +657,80 @@
         <div class="snap-score">Matched: <span id="sm-count">0</span> / 6</div>
         <div id="sm-msg" style="font-weight:900;font-size:1.1rem;min-height:24px"></div>
       </div>
-      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+      <div id="wedo-sm-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
     </div>
   </div>
-
-  <!-- SLIDE 6: I DO 2 — COMMON MISTAKES -->
-  <div class="slide" data-title="I Do – Common Mistakes" data-type="ido">
-    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="time-badge">⏱️ 4 min</div>
-    <span class="slide-tag tag-ido">I Do</span>
-    <h2>I Do: Top 4 Mistakes to Avoid</h2>
-    <div class="li-box"><strong>Before you practise, let's fix the most common errors.</strong></div>
-    <div class="content-grid" style="margin-top:8px">
-      <div>
-        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 1: Multiplying to find I</h3>
-          <p>"I = V × R = 12 × 4 = 48"</p>
-          <p style="color:var(--success);font-weight:900">✅ Fix: I = V <strong>÷</strong> R = 12 ÷ 4 = 3 A</p></div>
-        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 2: Multiplying series R</h3>
-          <p>"R total = 3 × 6 = 18 Ω"</p>
-          <p style="color:var(--success);font-weight:900">✅ Fix: R total = 3 <strong>+</strong> 6 = 9 Ω (ADD in series)</p></div>
-      </div>
-      <div>
-        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 3: Forgetting the unit</h3>
-          <p>"V = 3 × 4 = 12" (no unit!)</p>
-          <p style="color:var(--success);font-weight:900">✅ Fix: V = 3 × 4 = 12 <strong>V</strong> (always write V, A, or Ω)</p></div>
-        <div class="task-box" style="border-color:var(--error)"><h3 style="margin-top:0;color:var(--error)">❌ Mistake 4: Current changes in series</h3>
-          <p>"The current is smaller after the resistor"</p>
-          <p style="color:var(--success);font-weight:900">✅ Fix: In series, current is the <strong>SAME everywhere</strong>. It's voltage that is shared.</p></div>
-      </div>
-    </div>
-    <div class="scaffold-box"><strong>💡 Rule of thumb:</strong> If you're finding I or R, you DIVIDE. If you're finding V, you MULTIPLY. The triangle never lies!</div>
-  </div>
-
-  <!-- SLIDE 7: WE DO 2 — VIR PROBLEM CAROUSEL -->
-  <div class="slide" data-title="We Do – VIR Carousel" data-type="wedo">
-    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="time-badge">⏱️ 5 min</div>
-    <span class="slide-tag tag-wedo">We Do</span>
-    <h2>We Do: VIR Problem Carousel 🎠</h2>
-    <div class="li-box"><strong>Instructions:</strong> 6 real-world appliances. Calculate the missing value, type your answer, check!</div>
-    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
-    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Evidence</button>
-    <div id="wedo2" class="wedo-capture" style="margin-top:6px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-        <div class="car-card" id="cc0"><div class="car-icon">🔦</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Torch</p>
-          <p style="font-size:.85rem;margin:2px 0">V = 3 V, R = 6 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>I = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci0" placeholder="?"><span style="font-weight:900;font-size:.85rem"> A</span></div>
-          <button class="car-check" onclick="carCheck(0,0.5)">Check</button><div class="car-fb" id="cf0"></div></div>
-        <div class="car-card" id="cc1"><div class="car-icon">📱</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Phone Charger</p>
-          <p style="font-size:.85rem;margin:2px 0">I = 2 A, R = 2.5 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>V = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci1" placeholder="?"><span style="font-weight:900;font-size:.85rem"> V</span></div>
-          <button class="car-check" onclick="carCheck(1,5)">Check</button><div class="car-fb" id="cf1"></div></div>
-        <div class="car-card" id="cc2"><div class="car-icon">💡</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">LED Bulb</p>
-          <p style="font-size:.85rem;margin:2px 0">V = 12 V, I = 0.5 A</p><p style="font-size:.85rem;margin:2px 0"><strong>R = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci2" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Ω</span></div>
-          <button class="car-check" onclick="carCheck(2,24)">Check</button><div class="car-fb" id="cf2"></div></div>
-        <div class="car-card" id="cc3"><div class="car-icon">🧹</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Vacuum</p>
-          <p style="font-size:.85rem;margin:2px 0">V = 230 V, R = 23 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>I = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci3" placeholder="?"><span style="font-weight:900;font-size:.85rem"> A</span></div>
-          <button class="car-check" onclick="carCheck(3,10)">Check</button><div class="car-fb" id="cf3"></div></div>
-        <div class="car-card" id="cc4"><div class="car-icon">🎮</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Game Controller</p>
-          <p style="font-size:.85rem;margin:2px 0">I = 0.1 A, R = 30 Ω</p><p style="font-size:.85rem;margin:2px 0"><strong>V = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci4" placeholder="?"><span style="font-weight:900;font-size:.85rem"> V</span></div>
-          <button class="car-check" onclick="carCheck(4,3)">Check</button><div class="car-fb" id="cf4"></div></div>
-        <div class="car-card" id="cc5"><div class="car-icon">🔌</div><p style="font-weight:900;font-size:.95rem;margin:2px 0">Kettle</p>
-          <p style="font-size:.85rem;margin:2px 0">V = 230 V, I = 10 A</p><p style="font-size:.85rem;margin:2px 0"><strong>R = ?</strong></p>
-          <div style="margin-top:6px"><input type="number" step="any" class="car-input" id="ci5" placeholder="?"><span style="font-weight:900;font-size:.85rem"> Ω</span></div>
-          <button class="car-check" onclick="carCheck(5,23)">Check</button><div class="car-fb" id="cf5"></div></div>
-      </div>
-      <div style="background:#f1f5f9;border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:12px;margin-top:8px">
-        <span style="font-weight:900;font-size:.95rem">Solved:</span>
-        <div style="flex:1;background:#e2e8f0;border-radius:7px;height:14px;overflow:hidden"><div id="car-fill" style="height:100%;background:linear-gradient(90deg,var(--lo-border),var(--success));border-radius:7px;transition:width .5s;width:0%"></div></div>
-        <span style="font-weight:900;font-size:1rem" id="car-count">0/6</span></div>
-      <div id="wedo2-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
-    </div>
-  </div>
-
-  <!-- SLIDE 8: I DO 3 — SERIES WORKED EXAMPLE -->
-  <div class="slide" data-title="I Do – Series Worked Example" data-type="ido">
-    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="flex-badge">⏱️ 4 min · FLEX</div>
-    <span class="slide-tag tag-ido">I Do</span>
-    <h2>I Do: Full Series Worked Example</h2>
-    <div class="li-box"><strong>Watch the method carefully.</strong> You'll do your own in the next We Do.</div>
-    <div class="content-grid" style="margin-top:6px">
-      <div>
-        <div class="ido-box"><h3 style="margin-top:0">✏️ Problem</h3>
-          <p><strong>An 18 V battery</strong> is connected to a <strong>6 Ω</strong> and a <strong>12 Ω</strong> resistor in <strong>series</strong>.</p>
-          <p>Find: R<sub>total</sub>, current, voltage across each resistor.</p>
-        </div>
-        <div class="ido-box"><h3 style="margin-top:0">📝 Step-by-Step Solution</h3>
-          <p><strong>Step 1:</strong> R<sub>total</sub> = R₁ + R₂ = 6 + 12 = <strong>18 Ω</strong></p>
-          <p><strong>Step 2:</strong> I = V ÷ R = 18 ÷ 18 = <strong>1 A</strong></p>
-          <p><strong>Step 3:</strong> V₁ = I × R₁ = 1 × 6 = <strong>6 V</strong></p>
-          <p><strong>Step 4:</strong> V₂ = I × R₂ = 1 × 12 = <strong>12 V</strong></p>
-          <p><strong>Check:</strong> 6 + 12 = 18 V = supply ✅</p>
-        </div>
-      </div>
-      <div>
-        <div class="diagram-container">
-          <h3 style="margin-top:0;color:var(--ido-border)">Series Circuit</h3>
-          <svg width="300" height="160" viewBox="0 0 300 160">
-            <rect x="20" y="15" width="260" height="130" fill="none" stroke="#1f2937" stroke-width="3"/>
-            <text x="150" y="8" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">18 V</text>
-            <rect x="60" y="130" width="50" height="20" rx="3" fill="#bbf7d0" stroke="#22c55e" stroke-width="2"/>
-            <text x="85" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#166534">6 Ω</text>
-            <rect x="180" y="130" width="50" height="20" rx="3" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
-            <text x="205" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">12 Ω</text>
-            <text x="85" y="125" text-anchor="middle" font-size="9" fill="#22c55e" font-weight="bold">V₁ = 6 V</text>
-            <text x="205" y="125" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold">V₂ = 12 V</text>
-            <text x="15" y="85" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="bold" transform="rotate(-90,15,85)">I = 1 A →</text>
-          </svg>
-        </div>
-        <div class="aspire-box"><strong>🌟 Notice:</strong> The 12 Ω resistor gets <strong>double</strong> the voltage of the 6 Ω — because it has double the resistance. Voltage is shared <strong>in proportion to resistance</strong>.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 9: WE DO 3 — SERIES CHALLENGE -->
-  <div class="slide" data-title="We Do – Series Challenge" data-type="wedo">
-    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="flex-badge">⏱️ 5 min · FLEX</div>
-    <span class="slide-tag tag-wedo">We Do</span>
-    <h2>We Do: Series Circuit Challenge 🧮</h2>
-    <div class="li-box"><strong>Your turn!</strong> A <strong>20 V</strong> battery connects to <strong>5 Ω</strong> and <strong>15 Ω</strong> in series. Work through each step!</div>
-    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
-    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Evidence</button>
-    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
-      <div class="content-grid" style="height:auto;gap:14px">
-        <div>
-          <div class="step-card" id="sc0"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 1: Find R<sub>total</sub></p>
-            <p style="margin:4px 0">R<sub>total</sub> = 5 + 15 = <input type="number" step="any" class="step-input" id="si0" placeholder="?"> Ω</p>
-            <button class="step-check" onclick="stepCheck(0,20)">Check</button><div class="step-fb" id="sf0"></div></div>
-          <div class="step-card" id="sc1"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 2: Find current (I)</p>
-            <p style="margin:4px 0">I = V ÷ R<sub>total</sub> = 20 ÷ 20 = <input type="number" step="any" class="step-input" id="si1" placeholder="?"> A</p>
-            <button class="step-check" onclick="stepCheck(1,1)">Check</button><div class="step-fb" id="sf1"></div></div>
-          <div class="step-card" id="sc2"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 3: V across 5 Ω</p>
-            <p style="margin:4px 0">V₁ = I × R₁ = 1 × 5 = <input type="number" step="any" class="step-input" id="si2" placeholder="?"> V</p>
-            <button class="step-check" onclick="stepCheck(2,5)">Check</button><div class="step-fb" id="sf2"></div></div>
-        </div>
-        <div>
-          <div class="step-card" id="sc3"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 4: V across 15 Ω</p>
-            <p style="margin:4px 0">V₂ = I × R₂ = 1 × 15 = <input type="number" step="any" class="step-input" id="si3" placeholder="?"> V</p>
-            <button class="step-check" onclick="stepCheck(3,15)">Check</button><div class="step-fb" id="sf3"></div></div>
-          <div class="step-card" id="sc4"><p style="font-weight:900;color:var(--ido-border);margin:0">Step 5: CHECK — do they add up?</p>
-            <p style="margin:4px 0">V₁ + V₂ = 5 + 15 = <input type="number" step="any" class="step-input" id="si4" placeholder="?"> V = supply?</p>
-            <button class="step-check" onclick="stepCheck(4,20)">Check</button><div class="step-fb" id="sf4"></div></div>
-          <div class="snap-score" style="margin-top:10px">Steps correct: <span id="step-count">0</span> / 5</div>
-        </div>
-      </div>
-      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
-    </div>
-  </div>
-
   <!-- SLIDE 10: INDEPENDENT -->
-  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="6" data-ta="Hand out the printed pack matched to each pupil's tier. Foundation is heavily scaffolded — formulas given each line — so an absent pupil can still succeed. Roam with the scaffolding sheet. 'Point at your formula, point at your numbers.' Use Cold Call to spot-check a calculation. Watch for pupils who write an answer with no working — remind them working earns marks even if the answer is wrong.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="time-badge">⏱️ 8 min</div>
+    <div class="time-badge">⏱️ 6 min</div>
     <span class="slide-tag tag-independent">Independent Work</span>
     <h2>Independent Work</h2>
-    <div class="li-box"><strong>Complete your printed pack.</strong> This tests EVERYTHING from L1–L3.</div>
+    <div class="li-box"><strong>Complete your printed pack.</strong> The calculations you've just re-built are the focus. Use your scaffolding sheet whenever you need it.</div>
     <div class="content-grid" style="margin-top:10px">
       <div class="task-box"><h3 style="margin-top:0">📝 Pack Contains:</h3>
-        <p><strong>A:</strong> Multiple Choice — mixed L1/L2/L3 (4 Qs)</p><p><strong>B:</strong> Short Answer — symbols, definitions, calculations</p><p><strong>C:</strong> Long Answer — explain + calculate</p><p><strong>D:</strong> Exam-Style — full series circuit problem</p>
-        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for all formulas, series rules, and the VIR triangle.</div>
+        <p><strong>A:</strong> Multiple Choice — mixed L1/L2c/L4 (4 Qs)</p><p><strong>B:</strong> Short Answer — symbols, definitions, V=IR</p><p><strong>C:</strong> Long Answer — scaffolded series calculation</p><p><strong>D:</strong> Exam-Style — full series circuit problem</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> The Scaffolding Sheet has every formula, the series rules, and the VIR triangle.</div>
         <div class="aspire-box" style="margin-top:10px"><strong>📝 Exam Command Words:</strong><br>
-          <strong>State</strong> = write a fact, no explanation needed.<br>
-          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
-          <strong>Explain</strong> = say what happens AND why (use "because").<br>
-          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
+          <strong>State</strong> = write a fact, no explanation.<br>
+          <strong>Calculate</strong> = formula → substitute → answer + unit.<br>
+          <strong>Explain</strong> = what happens AND why (use "because").<br>
+          <strong>Describe</strong> = what happens, step by step.</div></div>
       <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
-        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can name circuit symbols, use V = I × R, and state what carries current in metals.</p>
-        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can rearrange V = IR, calculate current in series circuits, and explain electron flow direction.</p>
-        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can solve full series problems, find missing R, explain voltage sharing, and connect electron flow to conventional current.</p></div>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (U–1):</strong> I can use V = I × R and add resistances in series.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (1–2):</strong> I can rearrange V = IR and find the current in a series circuit.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (3–5):</strong> I can solve a full series problem, find a missing R, and explain voltage sharing.</p></div>
     </div>
-    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I remember all 8 circuit symbols</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can use V = I × R confidently</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can solve series circuit problems</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain electron flow</span></div></div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3>
+      <div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can use V = I × R and rearrange it</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can add resistances in series (R total)</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can find the current in a series circuit</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain what carries current in metals</span></div></div>
   </div>
 
   <!-- SLIDE 11: EXIT TICKET + BRIDGE -->
-  <div class="slide" id="exit-slide" data-title="Exit Ticket + Bridge to Waves" data-timer="3">
+  <div class="slide" id="exit-slide" data-title="Exit Ticket + Bridge to Waves" data-type="exit" data-timer="3" data-ta="Books out, no notes, silent. 6 questions — 2 each from L1, L2c, L4. Walk and watch which pupils can now do the calcs they missed. Get a RAG card held up at the end. Pressing 👁️ Answers reveals the answers AND triggers the lesson-complete celebration — use it to close on a high.">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 3 min</div>
     <span class="slide-tag tag-exit">Exit Ticket</span>
-    <h2>Exit Ticket — L1–L3 Cumulative</h2>
+    <h2>Exit Ticket — L1, L2c &amp; L4 Cumulative</h2>
     <div class="li-box"><strong>6 questions — 2 from each lesson. No notes.</strong></div>
     <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
       <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
-      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 I'm getting there — need a bit more practice</div>
-      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help with this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
     </div>
-
     <div class="level-toggle">
-      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
-      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
-      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button onclick="switchExit('foundation')" style="background:#22c55e">Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316">Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a">Higher (3–5)</button>
       <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
     </div>
     <div id="exit-foundation" class="exit-grid">
-      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> Name the component measured with an ammeter.</p><p class="answer">Current (in amps).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> Name the quantity measured with an ammeter.</p><p class="answer">Current (in amps).</p></div>
       <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> In series, is the current the same or different everywhere?</p><p class="answer">The same everywhere.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> I = 3 A, R = 4 Ω. Calculate V.</p><p class="answer">V = 3 × 4 = 12 V</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> What unit is resistance measured in?</p><p class="answer">Ohms (Ω)</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>5.</strong> What carries current in a metal wire?</p><p class="answer">Negatively charged electrons.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>6.</strong> 4 Ω + 6 Ω in series. R total = ?</p><p class="answer">R = 4 + 6 = 10 Ω</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>3.</strong> I = 3 A, R = 4 Ω. Calculate V.</p><p class="answer">V = 3 × 4 = 12 V</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>4.</strong> What unit is resistance measured in?</p><p class="answer">Ohms (Ω)</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>5.</strong> What carries current in a metal wire?</p><p class="answer">Negatively charged electrons.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>6.</strong> 4 Ω + 6 Ω in series. R total = ?</p><p class="answer">R = 4 + 6 = 10 Ω</p></div>
     </div>
     <div id="exit-middle" class="exit-grid" style="display:none">
       <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> How is a voltmeter connected?</p><p class="answer">In parallel across the component.</p></div>
       <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> Give two differences between series and parallel.</p><p class="answer">Series: one loop, same current. Parallel: branches, same voltage.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> V = 9 V, R = 3 Ω. Calculate I.</p><p class="answer">I = V ÷ R = 9 ÷ 3 = 3 A</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> Define current in terms of charge.</p><p class="answer">Rate of flow of charge. 1 A = 1 coulomb per second.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>5.</strong> Electron flow is − to +. What is the other direction called?</p><p class="answer">Conventional current (+ to −).</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>6.</strong> 12 V, 4 Ω + 8 Ω series. Find I and V across 8 Ω.</p><p class="answer">R = 12 Ω. I = 1 A. V = 1 × 8 = 8 V.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>3.</strong> V = 9 V, R = 3 Ω. Calculate I.</p><p class="answer">I = V ÷ R = 9 ÷ 3 = 3 A</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>4.</strong> Define current in terms of charge.</p><p class="answer">Rate of flow of charge. 1 A = 1 coulomb per second.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>5.</strong> Electron flow is − to +. What is the other direction called?</p><p class="answer">Conventional current (+ to −).</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>6.</strong> 12 V, 4 Ω + 8 Ω series. Find I and V across 8 Ω.</p><p class="answer">R = 12 Ω. I = 1 A. V = 1 × 8 = 8 V.</p></div>
     </div>
     <div id="exit-higher" class="exit-grid" style="display:none">
       <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>1.</strong> Explain why an ammeter in parallel is dangerous.</p><p class="answer">Very low resistance → short circuit → huge current → overheating.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> Why are houses wired in parallel?</p><p class="answer">Full voltage to each appliance. One fault doesn't break others.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>3.</strong> Hairdryer: 230 V, 5 A. Calculate R.</p><p class="answer">R = V ÷ I = 230 ÷ 5 = 46 Ω</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L2</span><p><strong>4.</strong> Explain why increasing V across fixed R increases I.</p><p class="answer">More energy per coulomb → electrons pushed faster → more charge per second → higher I.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>5.</strong> Explain why metals conduct but plastics don't.</p><p class="answer">Metals: free/delocalised electrons. Plastics: no free electrons — all bound.</p></div>
-      <div class="exit-cell"><span class="lesson-tag">L3</span><p><strong>6.</strong> 15 V, I = 0.5 A, R₁ = 10 Ω. Find R₂ and V across each.</p><p class="answer">R total = 15/0.5 = 30 Ω. R₂ = 20 Ω. V₁ = 5 V. V₂ = 10 V.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L1</span><p><strong>2.</strong> Why are houses wired in parallel?</p><p class="answer">Full voltage to each appliance. One fault doesn't break the others.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>3.</strong> Hairdryer: 230 V, 5 A. Calculate R.</p><p class="answer">R = V ÷ I = 230 ÷ 5 = 46 Ω</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L2c</span><p><strong>4.</strong> Explain why increasing V across fixed R increases I.</p><p class="answer">More energy per coulomb → electrons pushed faster → more charge per second → higher I.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>5.</strong> Explain why metals conduct but plastics don't.</p><p class="answer">Metals: free/delocalised electrons. Plastics: no free electrons — all bound.</p></div>
+      <div class="exit-cell"><span class="lesson-tag">L4</span><p><strong>6.</strong> 15 V, I = 0.5 A, R₁ = 10 Ω. Find R₂ and V across each.</p><p class="answer">R total = 15 ÷ 0.5 = 30 Ω. R₂ = 20 Ω. V₁ = 5 V. V₂ = 10 V.</p></div>
     </div>
-    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Coming next lesson:</strong> We start a brand-new topic — <strong>WAVES!</strong> You'll learn about amplitude, wavelength, frequency, and how waves transfer energy without transferring matter. Get excited!</div>
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Coming next lesson:</strong> a brand-new topic — <strong>WAVES!</strong> Amplitude, wavelength, frequency, and how waves transfer energy without transferring matter. Get excited!</div>
   </div>
 
 </div>
@@ -485,30 +738,29 @@
 <div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
 <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
 <div class="progress-label" id="progressLabel">Slide 1/11</div>
-
 <!-- PRINT AREA -->
 <div id="print-area">
-  <div id="print-ko" class="print-section"><h1 style="text-align:center">Knowledge Organiser: Electricity Review (L1–L3)</h1>
-    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+  <div id="print-ko" class="print-section"><h1 style="text-align:center">Knowledge Organiser: Electricity Calculations (L1 · L2c · L4)</h1>
+    <p style="margin:0 0 8px"><strong>Name:</strong> ____________________ &nbsp; <strong>Class:</strong> __________ &nbsp; <strong>Date:</strong> <span class="auto-date"></span></p>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before you start. Refer back during independent work. Cover it for the exit ticket — that tests what you actually remember!</p>
     <table class="ko-table"><tr><th>Topic</th><th>Key Facts</th></tr>
-      <tr><td><strong>Circuit symbols</strong></td><td>Cell, battery, switch, lamp, resistor, variable resistor, ammeter, voltmeter.</td></tr>
+      <tr><td><strong>Circuit symbols (L1)</strong></td><td>Cell, battery, switch, lamp, resistor, variable resistor, ammeter, voltmeter.</td></tr>
       <tr><td><strong>Series</strong></td><td>One loop. Current same everywhere. Voltages add up. R total = R₁ + R₂.</td></tr>
       <tr><td><strong>Parallel</strong></td><td>Branches. Voltage same across each. Currents add up.</td></tr>
-      <tr><td><strong>Ammeter</strong></td><td>Measures current (A). Connected in SERIES.</td></tr>
-      <tr><td><strong>Voltmeter</strong></td><td>Measures voltage (V). Connected in PARALLEL.</td></tr>
-      <tr><td><strong>V = I × R</strong></td><td>V in volts, I in amps, R in ohms. Rearrange: I = V÷R, R = V÷I.</td></tr>
+      <tr><td><strong>Ammeter / Voltmeter</strong></td><td>Ammeter measures current (A), in SERIES. Voltmeter measures voltage (V), in PARALLEL.</td></tr>
+      <tr><td><strong>V = I × R (L2c)</strong></td><td>V in volts, I in amps, R in ohms. Rearrange: I = V÷R, R = V÷I.</td></tr>
       <tr><td><strong>Current</strong></td><td>Rate of flow of charge. 1 A = 1 coulomb per second.</td></tr>
-      <tr><td><strong>Electrons</strong></td><td>Current in metals = flow of negatively charged electrons.</td></tr>
-      <tr><td><strong>Electron flow</strong></td><td>− → + (opposite to conventional current + → −).</td></tr>
-      <tr><td><strong>Series calc method</strong></td><td>1. R total → 2. I = V÷R → 3. V = IR for each → 4. Check voltages add up.</td></tr></table>
-    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>VIR Triangle:</strong> V on top, I × R on bottom. Cover what you want = formula!</p><p style="margin:2px 0;font-size:.9rem"><strong>Series:</strong> "Add R, Same I, Share V" (3 words to remember everything).</p><p style="margin:2px 0;font-size:.9rem"><strong>Electrons:</strong> Negative, flow − to +, free in metals, stuck in plastics.</p><p style="margin:2px 0;font-size:.9rem"><strong>Step method:</strong> Formula → Substitute → Calculate → Unit. Every. Single. Time.</p></div></div>
+      <tr><td><strong>Electron flow (L4)</strong></td><td>Current in metals = flow of negatively charged electrons. Flow: − → + (conventional + → −).</td></tr>
+      <tr><td><strong>Series calc method (L4)</strong></td><td>1. R total = R₁+R₂ → 2. I = V÷R total → 3. V = I×R for each → 4. Check voltages add up.</td></tr></table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>VIR Triangle:</strong> V on top, I × R on bottom. Cover what you want = formula!</p><p style="margin:2px 0;font-size:.9rem"><strong>Series:</strong> "Add R, Same I, Share V" (3 words for everything).</p><p style="margin:2px 0;font-size:.9rem"><strong>÷ or ×?</strong> Finding I or R → DIVIDE. Finding V → MULTIPLY.</p><p style="margin:2px 0;font-size:.9rem"><strong>Step method:</strong> Formula → Substitute → Calculate → Unit. Every. Single. Time.</p></div></div>
   <div id="print-arrival" class="print-section">
-    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> Draw the symbol for a cell and a lamp.</div><div class="print-box"><strong>2 (L2).</strong> Write V = I × R.</div><div class="print-box"><strong>3 (L3).</strong> What particles carry current in metals?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> Name two types of wave.</div></div></div>
-    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> How are ammeter + voltmeter connected?</div><div class="print-box"><strong>2 (L2).</strong> 12 V, 6 Ω. Calculate I.</div><div class="print-box"><strong>3 (L3).</strong> Electron flow direction?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> Stone in pond — does water travel outward or just energy?</div></div></div>
-    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> Why are houses wired in parallel?</div><div class="print-box"><strong>2 (L2).</strong> 230 V, 10 A. Calculate R.</div><div class="print-box"><strong>3 (L3).</strong> 15 V, 5 Ω + 10 Ω series. Find I and V across 10 Ω.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> How do waves transfer energy without matter travelling?</div></div></div></div>
-  <div id="print-starter" class="print-section"><h2>Starter: Brain Dump</h2><p>Write down EVERYTHING you remember about electricity (L1–L3). Facts, formulas, units, rules, diagrams.</p><div style="border:2px solid #000;min-height:300px;padding:10px"><p style="color:#999">Write here...</p></div></div>
+    <div class="foundation-content prevent-break"><h2>Arrival Task – Foundation (U–1) 🟢</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> Draw the symbol for a cell and a lamp.</div><div class="print-box"><strong>2 (L2c).</strong> Write V = I × R.</div><div class="print-box"><strong>3 (L4).</strong> What particles carry current in metals?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> Name two types of wave.</div></div></div>
+    <div class="middle-content prevent-break"><h2>Arrival Task – Middle (1–2) 🟠</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> How are ammeter + voltmeter connected?</div><div class="print-box"><strong>2 (L2c).</strong> 12 V, 6 Ω. Calculate I.</div><div class="print-box"><strong>3 (L4).</strong> Electron flow direction?</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> Stone in pond — does water travel outward or just energy?</div></div></div>
+    <div class="higher-content prevent-break"><h2>Arrival Task – Higher (3–5) 🔵</h2><div class="print-grid-2x2"><div class="print-box"><strong>1 (L1).</strong> Why are houses wired in parallel?</div><div class="print-box"><strong>2 (L2c).</strong> 230 V, 10 A. Calculate R.</div><div class="print-box"><strong>3 (L4).</strong> 15 V, 5 Ω + 10 Ω series. Find I and V across 10 Ω.</div><div class="print-box" style="border:2px solid #9c27b0"><strong>4 (Bridge).</strong> How do waves transfer energy without matter travelling?</div></div></div></div>
+  <div id="print-starter" class="print-section"><h2>Starter: Brain Dump</h2><p>Write down EVERYTHING you remember about electricity (L1, L2c, L4). Facts, formulas, units, rules, diagrams.</p><div style="border:2px solid #000;min-height:300px;padding:10px"><p style="color:#999">Write here...</p></div></div>
   <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
-    <div class="prevent-break"><h3>Part A: VIR Carousel — Calculate the missing value</h3>
+    <div class="prevent-break"><h3>Part A: VIR Carousel — Calculate the missing value (L2c)</h3>
+      <p style="font-size:.9rem;color:#475569;margin:2px 0">Worked example — Lamp: V = 6, R = 3, find I → I = V ÷ R = 6 ÷ 3 = 2 A.</p>
       <table class="ko-table"><tr><th>Appliance</th><th>V</th><th>I</th><th>R</th><th>Working</th></tr>
         <tr><td>🔦 Torch</td><td>3 V</td><td>?</td><td>6 Ω</td><td style="height:32px"></td></tr>
         <tr><td>📱 Charger</td><td>?</td><td>2 A</td><td>2.5 Ω</td><td></td></tr>
@@ -516,7 +768,7 @@
         <tr><td>🧹 Vacuum</td><td>230 V</td><td>?</td><td>23 Ω</td><td></td></tr>
         <tr><td>🎮 Controller</td><td>?</td><td>0.1 A</td><td>30 Ω</td><td></td></tr>
         <tr><td>🔌 Kettle</td><td>230 V</td><td>10 A</td><td>?</td><td></td></tr></table></div>
-    <div class="prevent-break" style="margin-top:14px"><h3>Part B: Series Challenge</h3>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part B: Series Step Solver (L4)</h3>
       <p>20 V battery, 5 Ω + 15 Ω in series.</p>
       <table class="ko-table"><tr><th>Step</th><th>Working</th><th>Answer</th></tr>
         <tr><td>1. R total</td><td>5 + 15 =</td><td style="height:32px"></td></tr>
@@ -525,19 +777,20 @@
         <tr><td>4. V across 15 Ω</td><td>V = ___ × 15 =</td><td></td></tr>
         <tr><td>5. Check</td><td>___ + ___ =</td><td>= 20 V? ✅/❌</td></tr></table></div></div>
   <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet — All Electricity Formulas</h2>
-    <div class="scaffold-print-box"><h3>VIR Triangle</h3>
+    <div class="scaffold-print-box"><h3>VIR Triangle (L2c)</h3>
       <table class="ko-table" style="max-width:400px;margin:0 auto"><tr><th>Find</th><th>Formula</th><th>Example</th></tr>
         <tr><td>V</td><td>V = I × R</td><td>V = 3 × 4 = 12 V</td></tr>
         <tr><td>I</td><td>I = V ÷ R</td><td>I = 12 ÷ 4 = 3 A</td></tr>
         <tr><td>R</td><td>R = V ÷ I</td><td>R = 12 ÷ 3 = 4 Ω</td></tr></table></div>
     <div style="text-align:center;margin:10px 0"><svg width="180" height="150" viewBox="0 0 180 150"><polygon points="90,5 5,140 175,140" fill="#faf5ff" stroke="#9c27b0" stroke-width="3"/><line x1="5" y1="80" x2="175" y2="80" stroke="#9c27b0" stroke-width="2"/><text x="90" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="#dc2626">V</text><text x="60" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#2563eb">I</text><text x="90" y="122" text-anchor="middle" font-size="16" fill="#64748b">×</text><text x="120" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#16a34a">R</text></svg><p style="font-size:.85rem;color:#666;margin:4px 0">Cover what you want — the rest is the formula!</p></div>
-    <div class="scaffold-print-box"><h3>Series Circuit Rules</h3>
+    <div class="scaffold-print-box"><h3>Series Circuit Rules (L4)</h3>
       <p>R total = R₁ + R₂ &nbsp;|&nbsp; Current same everywhere &nbsp;|&nbsp; Voltages add up to supply</p>
       <p><strong>Method:</strong> 1. R total → 2. I = V ÷ R total → 3. V = I × R for each → 4. Check</p></div>
-    <div class="scaffold-print-box"><h3>Electron Flow</h3>
+    <div class="scaffold-print-box"><h3>Electron Flow (L4)</h3>
       <p>Current in metals = negatively charged electrons. Flow: − → +. Conventional: + → −.</p></div></div>
   <!-- FOUNDATION INDEPENDENT -->
   <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> <span class="auto-date"></span></p>
     <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
     <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
       <p>1. An ammeter is connected in… [&nbsp;&nbsp;] Series [&nbsp;&nbsp;] Parallel</p>
@@ -546,20 +799,21 @@
       <p>4. In series, total R is found by… [&nbsp;&nbsp;] Adding [&nbsp;&nbsp;] Multiplying [&nbsp;&nbsp;] Dividing</p></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
       <p>5. Draw the circuit symbol for a switch and a resistor.</p><div class="print-box" style="min-height:60px"></div>
-      <p>6. V = 9 V, I = 3 A. Calculate R.</p><div class="print-line"></div><div class="print-line"></div>
+      <p>6. V = 9 V, I = 3 A. Calculate R. <em>(Formula: R = V ÷ I)</em></p><div class="print-line"></div><div class="print-line"></div>
       <p>7. State one difference between series and parallel.</p><div class="print-line"></div></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
       <p><strong>8. (4 marks)</strong> A 10 V battery connects to 2 Ω + 3 Ω in series.</p>
-      <p><em>Hint: Follow the steps. The formula is given each time.</em></p>
-      <p>(a) R<sub>total</sub> = R₁ + R₂ = 2 + 3 = _______ Ω [1 mark]</p>
-      <p>(b) I = V ÷ R<sub>total</sub> = 10 ÷ _______ = _______ A [1 mark]</p>
-      <p>(c) V across 3 Ω: V = I × R = _______ × 3 = _______ V [1 mark]</p>
-      <p>(d) Check: V₁ + V₂ = _______ + _______ = _______ V = supply? ✅ / ❌ [1 mark]</p></div>
+      <p><em>Hint: follow the steps. The formula is given each time.</em></p>
+      <p>(a) R<sub>total</sub> = R₁ + R₂ = 2 + 3 = _______ Ω [1]</p>
+      <p>(b) I = V ÷ R<sub>total</sub> = 10 ÷ _______ = _______ A [1]</p>
+      <p>(c) V across 3 Ω: V = I × R = _______ × 3 = _______ V [1]</p>
+      <p>(d) Check: V₁ + V₂ = _______ + _______ = _______ V = supply? ✅ / ❌ [1]</p></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
-      <p><strong>9. (3 marks)</strong> State what carries current in a metal wire. [1] State their charge. [1] State the direction they flow. [1]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
+      <p><strong>9. (3 marks)</strong> State what carries current in a metal wire [1]. State their charge [1]. State the direction they flow [1].</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
   <!-- MIDDLE INDEPENDENT -->
   <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
-    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> <span class="auto-date"></span></p>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch.</p>
     <div class="prevent-break"><h3>Section A: Recall</h3>
       <p>1. State V = I × R and what each letter stands for with units.</p><div class="print-line"></div><div class="print-line"></div>
       <p>2. What is the difference between electron flow and conventional current?</p><div class="print-line"></div><div class="print-line"></div>
@@ -573,14 +827,15 @@
       <p><strong>7. (4 marks)</strong> A student says "current gets used up as it passes through a resistor." (a) Explain why this is wrong [2]. (b) What does change as current passes through a resistor? [2]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div></div>
   <!-- HIGHER INDEPENDENT -->
   <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
-    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <p style="margin:0 0 6px"><strong>Name:</strong> ____________________ &nbsp; <strong>Date:</strong> <span class="auto-date"></span></p>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges.</p>
     <div class="prevent-break"><h3>Section A: Recall</h3>
-      <p>1. Explain why metals conduct but plastics don't, in terms of electrons. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
-      <p>2. Explain why voltage is shared in proportion to resistance in series. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+      <p>1. Explain why metals conduct but plastics don't, in terms of electrons. [3]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Explain why voltage is shared in proportion to resistance in series. [2]</p><div class="print-line"></div><div class="print-line"></div></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
       <p>3. Complete:</p><table class="ko-table"><tr><th>V supply</th><th>R₁</th><th>R₂</th><th>I</th><th>V₁</th><th>V₂</th><th>Working</th></tr><tr><td>15 V</td><td>5 Ω</td><td>10 Ω</td><td style="height:36px"></td><td></td><td></td><td></td></tr><tr><td>?</td><td>8 Ω</td><td>12 Ω</td><td>0.5 A</td><td></td><td></td><td></td></tr><tr><td>24 V</td><td>?</td><td>6 Ω</td><td>2 A</td><td></td><td></td><td></td></tr></table></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
-      <p><strong>4. (5 marks)</strong> Explain, using electron flow and V = IR, what happens in a series circuit when you add a second resistor. Describe the effect on total R, current, and how voltage is shared. [5 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+      <p><strong>4. (5 marks)</strong> Explain, using electron flow and V = IR, what happens in a series circuit when you add a second resistor. Describe the effect on total R, current, and how voltage is shared.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
     <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
       <p><strong>5. (6 marks)</strong> A circuit has a 6 V battery and two resistors in series. The current is 0.25 A. R₁ = 8 Ω.</p>
       <p>(a) Calculate R total. [2]</p><div class="print-line"></div><div class="print-line"></div>
@@ -589,71 +844,155 @@
       <p>(d) State the direction of electron flow through this circuit. [1]</p><div class="print-line"></div></div></div>
   <!-- EXIT TICKET -->
   <div id="print-exit" class="print-section">
-    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1) (L1–L3)</h2>
-      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
-
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> <span class="auto-date"></span></p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) What does an ammeter measure?</p><div class="print-line"></div></div>
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) In series, is current same or different?</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) I=3 A, R=4 Ω. Find V.</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) Unit of resistance?</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>5) What carries current in metals?</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>6) 4Ω + 6Ω series. R total?</p><div class="print-line"></div></div></div></div>
-    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2) (L1–L3)</h2>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>3) I=3 A, R=4 Ω. Find V.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>4) Unit of resistance?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>5) What carries current in metals?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>6) 4Ω + 6Ω series. R total?</p><div class="print-line"></div></div></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> <span class="auto-date"></span></p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) How is voltmeter connected?</p><div class="print-line"></div></div>
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) Two differences: series vs parallel.</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) V=9, R=3. Find I.</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) Define current in terms of charge.</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>5) Electron flow vs conventional direction?</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>6) 12V, 4Ω+8Ω series. Find I and V across 8Ω.</p><div class="print-line"></div></div></div></div>
-    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5) (L1–L3)</h2>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>3) V=9, R=3. Find I.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>4) Define current in terms of charge.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>5) Electron flow vs conventional direction?</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>6) 12V, 4Ω+8Ω series. Find I and V across 8Ω.</p><div class="print-line"></div></div></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> <span class="auto-date"></span></p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>1) Why is ammeter in parallel dangerous?</p><div class="print-line"></div><div class="print-line"></div></div>
         <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L1</p><p>2) Why parallel for houses?</p><div class="print-line"></div><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>3) 230V, 5A. Find R.</p><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2</p><p>4) Why does ↑V cause ↑I at fixed R?</p><div class="print-line"></div><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>5) Metals vs plastics: why conduct?</p><div class="print-line"></div><div class="print-line"></div></div>
-        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L3</p><p>6) 15V, I=0.5A, R₁=10Ω. Find R₂ + V each.</p><div class="print-line"></div><div class="print-line"></div></div></div></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>3) 230V, 5A. Find R.</p><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L2c</p><p>4) Why does ↑V cause ↑I at fixed R?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>5) Metals vs plastics: why conduct?</p><div class="print-line"></div><div class="print-line"></div></div>
+        <div style="border:1px solid #000;padding:10px"><p style="font-size:.8rem;color:#666;margin:0">L4</p><p>6) 15V, I=0.5A, R₁=10Ω. Find R₂ + V each.</p><div class="print-line"></div><div class="print-line"></div></div></div></div></div>
   <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
 </div>
-
 <script>
-let currentSlide=0;const slides=document.querySelectorAll('.slide');
-function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility()}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
-document.addEventListener('keydown',e=>{if(e.target.isContentEditable||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
-function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
-function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('exit-middle').style.display=l==='middle'?'grid':'none';document.getElementById('exit-higher').style.display=l==='higher'?'grid':'none'}
-function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
-function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
-function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}window.print()}
-function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.step-fb,.car-fb,.sm-card.matched-sm').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+"use strict";
+/* ===== Slide nav ===== */
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility();if(document.getElementById('ta-focus-panel').classList.contains('visible'))updateTABrief();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide);}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide);}}
+document.addEventListener('keydown',e=>{
+  const t=e.target.tagName;
+  if(e.target.isContentEditable||t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide();}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide();}
+});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length;}
 
-// WE DO 1: SPEED MATCH
-let smTerm=null,smDef=null,smCount=0;
-function smSel(card,type){if(card.classList.contains('matched-sm'))return;if(type==='term'){document.querySelectorAll('#sm-terms .sm-card').forEach(c=>c.classList.remove('sel-sm'));card.classList.add('sel-sm');smTerm=card;if(smDef)tryMatch()}else{document.querySelectorAll('#sm-defs .sm-card').forEach(c=>c.classList.remove('sel-sm'));card.classList.add('sel-sm');smDef=card;if(smTerm)tryMatch()}}
-function tryMatch(){if(!smTerm||!smDef)return;if(smTerm.dataset.id===smDef.dataset.id){smTerm.classList.remove('sel-sm');smTerm.classList.add('matched-sm');smDef.classList.remove('sel-sm');smDef.classList.add('matched-sm');smCount++;document.getElementById('sm-count').innerText=smCount;if(smCount>=6)document.getElementById('sm-msg').innerText='🎉 ALL MATCHED!'}else{smTerm.classList.add('wrong-sm');smDef.classList.add('wrong-sm');setTimeout(()=>{smTerm.classList.remove('sel-sm','wrong-sm');smDef.classList.remove('sel-sm','wrong-sm');smTerm=null;smDef=null},500);return}smTerm=null;smDef=null}
+/* ===== Toggles for level views ===== */
+function switchExit(l){['foundation','middle','higher'].forEach(x=>{document.getElementById('exit-'+x).style.display=(x===l)?'grid':'none';});}
+function switchArrival(l){['foundation','middle','higher'].forEach(x=>{document.getElementById('arrival-'+x).style.display=(x===l)?'grid':'none';});}
 
-// WE DO 2: CAROUSEL
+/* ===== XP ===== */
+let xp=0;const XP_MAX=200;
+function awardXP(amount){xp=Math.min(XP_MAX,xp+amount);document.getElementById('xp-val').innerText=xp;document.getElementById('xp-bar').style.width=(xp/XP_MAX*100)+'%';}
+
+/* ===== Web Audio (resumes on first gesture) ===== */
+let audioCtx=null;
+function ensureAudio(){if(!audioCtx){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){audioCtx=null;}}if(audioCtx&&audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
+function playTone(freq,dur,type){const ctx=ensureAudio();if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);o.start();o.stop(ctx.currentTime+dur);}
+function playCorrect(){playTone(660,0.12);setTimeout(()=>playTone(880,0.12),100);}
+function playWrong(){playTone(180,0.18,'square');}
+['pointerdown','keydown','touchstart'].forEach(ev=>window.addEventListener(ev,function once(){ensureAudio();window.removeEventListener(ev,once);},{passive:true}));
+
+/* ===== Confetti ===== */
+function tinyConfetti(anchor){if(!anchor)return;const rect=anchor.getBoundingClientRect();const colors=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#a855f7'];for(let i=0;i<14;i++){const c=document.createElement('div');c.className='confetti';c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.left=(rect.left+rect.width/2)+'px';c.style.top=(rect.top+rect.height/2)+'px';c.style.borderRadius=Math.random()>0.5?'50%':'2px';document.body.appendChild(c);const angle=Math.random()*2*Math.PI,dist=50+Math.random()*80,dx=Math.cos(angle)*dist,dy=Math.sin(angle)*dist-30;c.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:'translate('+dx+'px,'+dy+'px) rotate('+(360+Math.random()*360)+'deg)',opacity:0}],{duration:900,easing:'cubic-bezier(.2,.7,.4,1)'});setTimeout(()=>c.remove(),950);}}
+
+/* ===== Hint toggle + toast ===== */
+function toggleHint(id){const h=document.getElementById(id);if(h)h.classList.toggle('shown');}
+function showHintToast(msg){let toast=document.getElementById('hint-toast');if(!toast){toast=document.createElement('div');toast.id='hint-toast';document.body.appendChild(toast);}toast.innerText=msg;toast.classList.add('visible');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('visible'),2600);}
+
+/* ===== Step-by-step reveal (I Do) ===== */
+function revealNext(btn){const wrap=btn.closest('[data-reveal-wrap]');if(!wrap)return;const hidden=wrap.querySelector('.reveal-item.hidden-step');if(hidden){hidden.classList.remove('hidden-step');playTone(520,0.08);}if(!wrap.querySelector('.reveal-item.hidden-step')){btn.disabled=true;btn.innerText='✓ All steps revealed';}}
+
+/* ===== TA Focus ===== */
+function toggleTA(){document.getElementById('ta-focus-panel').classList.toggle('visible');updateTABrief();}
+function updateTABrief(){const s=slides[currentSlide];const brief=s.getAttribute('data-ta')||'No specific TA brief for this slide. Standard: roam, support, prompt pupils by name.';document.getElementById('ta-slide-name').innerText=s.getAttribute('data-title')||'Slide';document.getElementById('ta-brief-text').innerText=brief;}
+
+/* ===== Cold Call ===== */
+let pupils=[];try{pupils=JSON.parse(localStorage.getItem('cc_pupils_phys')||'[]');}catch(e){pupils=[];}
+let pitch='match';
+function savePupils(){try{localStorage.setItem('cc_pupils_phys',JSON.stringify(pupils));}catch(e){}}
+function renderPupils(){const list=document.getElementById('cc-pupil-list');list.innerHTML='';pupils.forEach((p,i)=>{const div=document.createElement('div');div.className='cc-pupil';div.innerHTML='<span class="cc-pupil-name">'+p.name+'</span>'+['U','1','2','3','4','5'].map(g=>'<span class="cc-grade g'+g+'" onclick="setGrade('+i+',\''+g+'\')" style="opacity:'+(p.grade===g?'1':'.4')+'">'+g+'</span>').join('')+'<button class="cc-del" onclick="delPupil('+i+')">✕</button>';list.appendChild(div);});if(pupils.length===0)document.getElementById('cc-result').innerText='No pupils added yet';}
+function addPupil(){const inp=document.getElementById('cc-name-input');const name=inp.value.trim();if(!name)return;pupils.push({name:name,grade:'2'});savePupils();inp.value='';renderPupils();}
+function delPupil(i){pupils.splice(i,1);savePupils();renderPupils();}
+function setGrade(i,g){pupils[i].grade=g;savePupils();renderPupils();}
+function setPitch(p){pitch=p;['easier','match','stretch'].forEach(x=>document.getElementById('cc-'+x).classList.toggle('active',x===p));}
+function pickPupil(){if(pupils.length===0){document.getElementById('cc-result').innerText='Add some pupils first!';return;}let pool=pupils;if(pitch==='easier')pool=pupils.filter(p=>['U','1'].includes(p.grade));else if(pitch==='match')pool=pupils.filter(p=>p.grade==='2');else if(pitch==='stretch')pool=pupils.filter(p=>['3','4','5'].includes(p.grade));if(pool.length===0)pool=pupils;const pick=pool[Math.floor(Math.random()*pool.length)];const tier=['U','1'].includes(pick.grade)?'Foundation':(pick.grade==='2'?'Middle':'Higher');document.getElementById('cc-result').innerHTML='🎯 <strong>'+pick.name+'</strong><br><span style="font-size:.8rem;font-weight:normal">Grade '+pick.grade+' • '+tier+'</span>';playCorrect();}
+function toggleCC(){document.getElementById('cold-call-panel').classList.toggle('visible');renderPupils();}
+
+/* ===== Helper: number tolerance ===== */
+function closeEnough(val,correct){const tol=Math.max(Math.abs(correct*0.03),0.05);return Math.abs(val-correct)<=tol;}
+function findMisc(val,miscMap){if(!miscMap)return null;for(const k in miscMap){if(closeEnough(val,parseFloat(k)))return miscMap[k];}return null;}
+
+/* ===== WE DO: VIR Carousel ===== */
 let carSolved=0;
-function carCheck(idx,correct){const input=document.getElementById('ci'+idx),fb=document.getElementById('cf'+idx),card=document.getElementById('cc'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Number!';fb.style.color='var(--error)';return}if(card.classList.contains('solved-car'))return;const tol=Math.abs(correct*0.05);if(Math.abs(val-correct)<=Math.max(tol,0.1)){input.classList.add('correct');card.classList.add('solved-car');fb.innerText='✅ Correct!';fb.style.color='var(--success)';card.querySelector('.car-check').disabled=true;carSolved++;document.getElementById('car-count').innerText=carSolved+'/6';document.getElementById('car-fill').style.width=(carSolved/6*100)+'%'}else{input.classList.add('wrong');card.classList.add('wrong-car');fb.innerText='❌ Try again!';fb.style.color='var(--error)';setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-car')},600)}}
+function carCheck(idx,correct,miscMap){const input=document.getElementById('ci'+idx),fb=document.getElementById('cf'+idx),card=document.getElementById('cc'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Type a number';fb.style.color='var(--error)';return;}if(card.classList.contains('solved-car'))return;if(closeEnough(val,correct)){input.classList.remove('wrong');input.classList.add('correct');card.classList.add('solved-car');fb.innerText='✅ Correct!';fb.style.color='var(--success)';card.querySelector('.car-check').disabled=true;carSolved++;document.getElementById('car-count').innerText=carSolved+'/6';document.getElementById('car-fill').style.width=(carSolved/6*100)+'%';awardXP(12);playCorrect();tinyConfetti(card);}else{input.classList.add('wrong');card.classList.add('wrong-car');const m=findMisc(val,miscMap);fb.innerText=m?('❌ '+m):'❌ Not quite — try the hint.';fb.style.color='var(--error)';playWrong();setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-car');},700);}}
 
-// WE DO 3: STEP SOLVER
+/* ===== WE DO: Series Step Solver ===== */
 let stepCount=0;
-function stepCheck(idx,correct){const input=document.getElementById('si'+idx),fb=document.getElementById('sf'+idx),card=document.getElementById('sc'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Number!';fb.style.color='var(--error)';return}if(card.classList.contains('complete'))return;const tol=Math.abs(correct*0.05);if(Math.abs(val-correct)<=Math.max(tol,0.1)){input.classList.add('correct');card.classList.add('complete');fb.innerText='✅ Correct!';fb.style.color='var(--success)';stepCount++;document.getElementById('step-count').innerText=stepCount}else{input.classList.add('wrong');card.classList.add('wrong-step');fb.innerText='❌ Try again!';fb.style.color='var(--error)';setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-step')},600)}}
+function stepCheck(idx,correct,miscMap){const input=document.getElementById('si'+idx),fb=document.getElementById('sf'+idx),card=document.getElementById('sc'+idx),val=parseFloat(input.value);if(isNaN(val)){fb.innerText='⚠️ Type a number';fb.style.color='var(--error)';return;}if(card.classList.contains('complete'))return;if(closeEnough(val,correct)){input.classList.remove('wrong');input.classList.add('correct');card.classList.add('complete');fb.innerText='✅ Correct!';fb.style.color='var(--success)';stepCount++;document.getElementById('step-count').innerText=stepCount;awardXP(12);playCorrect();tinyConfetti(card);}else{input.classList.add('wrong');card.classList.add('wrong-step');const m=findMisc(val,miscMap);fb.innerText=m?('❌ '+m):'❌ Try again — use the hint if you need it.';fb.style.color='var(--error)';playWrong();setTimeout(()=>{input.classList.remove('wrong');card.classList.remove('wrong-step');},700);}}
 
-document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+/* ===== FLEX: Symbol Speed Match ===== */
+let smTerm=null,smDef=null,smCount=0;
+function smSel(card,type){if(card.classList.contains('matched-sm'))return;if(type==='term'){document.querySelectorAll('#sm-terms .sm-card').forEach(c=>c.classList.remove('sel-sm'));card.classList.add('sel-sm');smTerm=card;if(smDef)smTry();}else{document.querySelectorAll('#sm-defs .sm-card').forEach(c=>c.classList.remove('sel-sm'));card.classList.add('sel-sm');smDef=card;if(smTerm)smTry();}}
+function smTry(){if(!smTerm||!smDef)return;if(smTerm.dataset.id===smDef.dataset.id){smTerm.classList.remove('sel-sm');smTerm.classList.add('matched-sm');smDef.classList.remove('sel-sm');smDef.classList.add('matched-sm');smCount++;document.getElementById('sm-count').innerText=smCount;awardXP(6);playCorrect();if(smCount>=6){document.getElementById('sm-msg').innerText='🎉 ALL MATCHED!';tinyConfetti(document.getElementById('sm-msg'));}smTerm=null;smDef=null;}else{smTerm.classList.add('wrong-sm');smDef.classList.add('wrong-sm');playWrong();const a=smTerm,b=smDef;setTimeout(()=>{a.classList.remove('sel-sm','wrong-sm');b.classList.remove('sel-sm','wrong-sm');},500);smTerm=null;smDef=null;}}
 
-  // Floating Timer Widget
-  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
-  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
-  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
-  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
-  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
-  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+/* ===== Placeholder editable notes ===== */
+document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText='';});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder');});});
 
+/* ===== Floating timer ===== */
+let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');pauseIndTimer();indTimeLeft=parseInt(t)*60;updateIndTimerDisplay();}else{w.classList.remove('visible');pauseIndTimer();}}
+function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60),s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)';}}
+function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay();},1000);}
+function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause');}
+function resetIndTimer(min){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=min*60;updateIndTimerDisplay();}
+
+/* ===== Lesson Complete (observe exit-slide .show-ans) ===== */
+const exitSlide=document.getElementById('exit-slide');
+const obs=new MutationObserver(muts=>{muts.forEach(m=>{if(m.type==='attributes'&&m.attributeName==='class'&&exitSlide.classList.contains('show-ans'))showLessonComplete();});});
+obs.observe(exitSlide,{attributes:true});
+let lcShown=false;
+function showLessonComplete(){if(lcShown)return;lcShown=true;document.getElementById('lc-xp').innerText=xp;document.getElementById('lc-slides').innerText=slides.length;document.getElementById('lesson-complete').classList.add('visible');const target=document.querySelector('.lc-card');tinyConfetti(target);setTimeout(()=>tinyConfetti(target),300);setTimeout(()=>tinyConfetti(target),600);playCorrect();setTimeout(playCorrect,200);}
+function closeLessonComplete(){document.getElementById('lesson-complete').classList.remove('visible');}
+
+/* ===== Print ===== */
+function stampDates(){const d=new Date().toLocaleDateString('en-GB');document.querySelectorAll('.auto-date').forEach(e=>e.innerText=d);}
+function printSection(id){stampDates();document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print();}
+function printPack(level){stampDates();document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible');});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible');}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible');}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible');}window.print();}
+function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.step-fb,.car-fb,.sm-card.matched-sm').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText);});const notesEl=area.querySelector('[contenteditable]');let notes=notesEl?notesEl.innerText:'';if(notesEl&&notes===notesEl.getAttribute('data-placeholder'))notes='';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes)content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print();}
+
+/* ===== Interactive VIR triangle + water tab ===== */
+function vizTab(which){document.getElementById('panel-tri').classList.toggle('active',which==='tri');document.getElementById('panel-water').classList.toggle('active',which==='water');document.getElementById('tabtri-1').classList.toggle('active',which==='tri');document.getElementById('tabwater-1').classList.toggle('active',which==='water');}
+const TRI_POS={V:{x:100,y:68},I:{x:66,y:142},R:{x:134,y:142}};
+const TRI_FORMULA={V:{f:'V = I × R',ex:'e.g. V = 0.5 × 12 = 6 V'},I:{f:'I = V ÷ R',ex:'e.g. I = 12 ÷ 4 = 3 A'},R:{f:'R = V ÷ I',ex:'e.g. R = 10 ÷ 2 = 5 Ω'}};
+function findVal(v){document.querySelectorAll('.find-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-v')===v));const cover=document.getElementById('tri-cover'),q=document.getElementById('tri-cover-q'),pos=TRI_POS[v];cover.setAttribute('x',pos.x-22);cover.setAttribute('y',pos.y-30);cover.setAttribute('opacity','0.92');q.setAttribute('x',pos.x);q.setAttribute('y',pos.y);q.setAttribute('opacity','1');const d=TRI_FORMULA[v];document.getElementById('tri-result').innerHTML='<span class="step">Cover '+v+' → <strong>'+d.f+'</strong></span><span class="step" style="font-weight:400;font-size:.85rem">'+d.ex+'</span>';playTone(560,0.08);}
+
+/* ===== Video (lazy-load iframe on first open) ===== */
+function toggleVideo(id){const f=document.getElementById(id);if(!f)return;const iframe=f.querySelector('iframe');if(iframe&&!iframe.getAttribute('src')&&f.getAttribute('data-src'))iframe.setAttribute('src',f.getAttribute('data-src'));f.classList.toggle('shown');}
+
+/* ===== Animated series circuit + live calc ===== */
+let flowOn=false;
+function toggleFlow(){const svg=document.getElementById('series-svg');if(!svg)return;flowOn=!flowOn;try{flowOn?svg.unpauseAnimations():svg.pauseAnimations();}catch(e){}document.getElementById('flow-btn').innerText=flowOn?'⏸ Pause the current':'▶ Play the current';}
+function updateSeries(){const el=document.getElementById('vsupply');if(!el)return;const V=parseInt(el.value),R1=6,R2=12,Rt=R1+R2,I=V/Rt;document.getElementById('vsupply-val').innerText=V;document.getElementById('iseries-val').innerText=(Math.round(I*100)/100);document.getElementById('v1-val').innerText=(Math.round(I*R1*10)/10);document.getElementById('v2-val').innerText=(Math.round(I*R2*10)/10);}
+
+/* ===== Init (after all consts/functions defined) ===== */
+renderPupils();
+updateProgress();
+checkTimerVisibility();
+updateSeries();
+try{const ssvg=document.getElementById('series-svg');if(ssvg)ssvg.pauseAnimations();}catch(e){}
 </script>
 </body>
 </html>
-    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a formula = 1 mark.</p></div>
-  
