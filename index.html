@@ -212,6 +212,54 @@
   .badge.teacher { background: #ede9fe; color: #5b21b6; }
   .badge.support { background: #fef3c7; color: #92400e; }
 
+  /* ============ ARCADE FEATURE ZONE (Games) ============ */
+  .subject.arcade-zone {
+    margin-top: 54px; padding: 28px 26px 32px; border-radius: 22px;
+    background: linear-gradient(160deg, #1b1736 0%, #120e28 58%, #0e0b22 100%);
+    border: 1px solid rgba(99,102,241,.45);
+    box-shadow: 0 0 0 1px rgba(99,102,241,.12), 0 26px 60px -22px rgba(79,70,229,.6);
+    position: relative; overflow: hidden;
+  }
+  .subject.arcade-zone::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+    background:
+      radial-gradient(420px 180px at 12% -10%, rgba(99,102,241,.30), transparent 70%),
+      radial-gradient(360px 160px at 100% 0%, rgba(217,70,239,.20), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 22px);
+  }
+  .subject.arcade-zone > * { position: relative; z-index: 1; }
+  .arcade-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px; margin-bottom: 14px;
+    font-size: .66rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+    color: #c7d2fe; background: rgba(99,102,241,.16);
+    border: 1px solid rgba(129,140,248,.45); border-radius: 999px; padding: 6px 13px;
+  }
+  .arcade-eyebrow svg { width: 13px; height: 13px; fill: #fbbf24; stroke: #fbbf24; }
+  .subject.arcade-zone .subject-head { border-bottom-color: rgba(129,140,248,.28); }
+  .subject.arcade-zone .subject-head::after { background: #818cf8; box-shadow: 0 0 14px rgba(129,140,248,.9); }
+  .subject.arcade-zone .s-icon { background: rgba(99,102,241,.2); box-shadow: inset 0 0 20px rgba(99,102,241,.35); }
+  .subject.arcade-zone .s-icon svg { stroke: #a5b4fc; }
+  .subject.arcade-zone .subject-head h2 { color: #f8fafc; text-shadow: 0 0 20px rgba(129,140,248,.55); }
+  .subject.arcade-zone .subject-head .count { background: rgba(99,102,241,.22); color: #c7d2fe; }
+  .arcade-tag { margin-top: 12px; color: #a5b4fc; font-size: .9rem; line-height: 1.5; max-width: 640px; }
+  .subject.arcade-zone .tile {
+    background: rgba(255,255,255,.035); border: 1px solid rgba(129,140,248,.22);
+    border-top: 3px solid #6366f1; box-shadow: 0 4px 14px -6px rgba(0,0,0,.5);
+  }
+  .subject.arcade-zone .tile:hover {
+    border-color: #818cf8; transform: translateY(-5px);
+    box-shadow: 0 0 0 1px #818cf8, 0 22px 44px -14px rgba(99,102,241,.7);
+  }
+  .subject.arcade-zone .tile-body { background: transparent; }
+  .subject.arcade-zone .tile .t-title { color: #f1f5f9; }
+  .subject.arcade-zone .tile .open { color: #a5b4fc; }
+  .subject.arcade-zone .tile:hover .open { color: #fff; }
+  .subject.arcade-zone .badge.game { background: rgba(99,102,241,.22); color: #c7d2fe; }
+  .subject.arcade-zone .fav-btn.is-fav { background: rgba(251,191,36,.28); }
+  /* arcade jump-nav pill stands out from the educational pills */
+  .jn-pill[data-subject="Games"] { border-color: rgba(99,102,241,.55); box-shadow: 0 0 0 1px rgba(99,102,241,.25), 0 0 12px rgba(99,102,241,.25); }
+  @media (max-width: 768px) { .subject.arcade-zone { padding: 22px 18px 26px; } }
+
   #noResults { text-align: center; color: var(--muted); padding: 80px 24px; font-size: 1.1rem; background: var(--card); border-radius: var(--radius); border: 1px dashed var(--border); margin-top: 30px; }
   #noResults svg { width: 48px; height: 48px; stroke: #94a3b8; display: block; margin: 0 auto 16px; }
 
@@ -370,6 +418,8 @@
 
   <div id="sections"></div>
 
+  <div id="arcade"></div>
+
   <div id="noResults" style="display:none;">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8.5 11h5"/></svg>
     Nothing matches those filters yet. Clear the search or pick a different category.
@@ -504,9 +554,11 @@ const LESSONS = [
   {subject:"Art", title:"L7 · Hannah Höch",          file:"6 Art/Lesson7_Hoch_v5 (1).html",          tag:"lesson"},
   {subject:"Art", title:"L8 · Höch Fact File",       file:"6 Art/Lesson8_Hoch_FactFile_v5.html",     tag:"lesson"},
   {subject:"Art", title:"L10 - Surrealist Collage",  file:"6 Art/Lesson10_SurrealistCollage_HANDSON_v5 (1).html",     tag:"lesson", added:"2026-06-20"},
-  {subject:"Games", title:"🎮 Trail Runner",  file:"Games/Trail_Runner.html", tag:"game", added:"2026-06-25"},
-  {subject:"Games", title:"🧱 VoxelCraft",    file:"Games/voxelcraft.html",   tag:"game", added:"2026-06-25"},
-  {subject:"Games", title:" Vortex ",    file:"Games/vortex.html",   tag:"game", added:"2026-06-26"},
+  {subject:"Games", title:"🎮 Trail Runner",         file:"Games/Trail_Runner.html",         tag:"game", added:"2026-06-25"},
+  {subject:"Games", title:"🧱 VoxelCraft",           file:"Games/voxelcraft.html",           tag:"game", added:"2026-06-25"},
+  {subject:"Games", title:"🌀 Vortex",               file:"Games/Vortex.html",               tag:"game", added:"2026-06-26"},
+  {subject:"Games", title:"🌐 Globe Snake",          file:"Games/Globe_Snake (1).html",      tag:"game", added:"2026-06-26"},
+  {subject:"Games", title:"⚡ Neon Snake Overdrive",  file:"Games/Neon_Snake_Overdrive.html", tag:"game", added:"2026-06-26"},
 
 ];
 
@@ -787,11 +839,13 @@ function build(){
 
   /* ---- sections + cards ---- */
   const host = document.getElementById('sections');
+  const arcadeHost = document.getElementById('arcade');
   order.forEach((sub, i) => {
     const theme = SUBJECT_COLOURS[sub] || {c:'var(--navy)', l:'#eef2f7', g1:'#1e3a5f', g2:'#0f1e33'};
     const subjectPath = SUBJECT_ICONS[sub] || FALLBACK_ICON;
+    const isArcade = sub === 'Games';
     const sec = document.createElement('section');
-    sec.className = 'subject';
+    sec.className = isArcade ? 'subject arcade-zone' : 'subject';
     sec.dataset.subject = sub;
     sec.style.setProperty('--sc', theme.c);
     sec.style.setProperty('--sl', theme.l);
@@ -840,11 +894,19 @@ function build(){
       grid.appendChild(card);
     });
     sec.appendChild(grid);
-    host.appendChild(sec);
+    if (isArcade){
+      sec.querySelector('.subject-head').insertAdjacentHTML('beforebegin',
+        '<span class="arcade-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15 9 22 9 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 9 9 9"/></svg>Feature · Brain-break Arcade</span>');
+      sec.querySelector('.subject-head').insertAdjacentHTML('afterend',
+        '<p class="arcade-tag">Standalone, offline, no logins and no leaderboards — a quick reset between tasks.</p>');
+      arcadeHost.appendChild(sec);
+    } else {
+      host.appendChild(sec);
+    }
   });
 
   /* ---- delegated clicks: favourite + badge-as-filter ---- */
-  host.addEventListener('click', e => {
+  const cardClick = e => {
     const favBtn = e.target.closest('.fav-btn');
     if (favBtn){ e.preventDefault(); e.stopPropagation(); toggleFav(favBtn.closest('.tile').dataset.file, favBtn); return; }
     const prev = e.target.closest('[data-preview]');
@@ -853,7 +915,9 @@ function build(){
     if (badge){ e.preventDefault(); e.stopPropagation(); setType(badge.dataset.tag); return; }
     const tile = e.target.closest('.tile');
     if (tile) recordOpen(tile.dataset.file); /* genuine launch */
-  });
+  };
+  host.addEventListener('click', cardClick);
+  arcadeHost.addEventListener('click', cardClick);
 
   updateFavCount();
   applyFilter();
