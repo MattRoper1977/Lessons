@@ -258,7 +258,47 @@
       .title-hero{font-size:1.7rem;gap:10px}
       h2{margin-right:0}
     }
-  </style>
+  
+@media print{
+  #print-area{color:#0f172a}
+  .print-section h1,.print-section h2{color:#1e3a8a}
+  .ko-table{width:100%;border-collapse:collapse;border:2px solid #1e3a8a;border-radius:8px;overflow:hidden;margin-bottom:12px}
+  .ko-table th,.ko-table td{padding:8px;text-align:left}
+  .ko-table th{background:#1e3a8a!important;color:#fff!important;border-color:#1e3a8a;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ko-table td{border:1px solid #cbd5e1}
+  .ko-table tr:nth-child(even) td{background:#f1f5f9;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ko-note{border-left:5px solid #1e3a8a;background:#eff6ff;padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:.92rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ko-note.warn{border-left-color:#dc2626;background:#fef2f2}
+  .ko-note.hook{border-left-color:#16a34a;background:#f0fdf4}
+  .scaffold-print-box{border:2px dashed #94a3b8;background:#f8fafc;border-radius:12px;padding:0 16px 14px;margin-bottom:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .scaffold-print-box>h3{margin:0 -16px 12px;background:#1e3a8a;color:#fff;padding:8px 16px;border-radius:10px 10px 0 0;font-size:1rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .callout{border:2px dashed #94a3b8;border-radius:12px;padding:12px 16px;margin-bottom:16px;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .callout-title{font-weight:800;margin:0 0 8px;font-size:1rem}
+  .callout.wordbank{background:#fffbeb;border-color:#f59e0b}
+  .callout.starters{background:#eff6ff;border-color:#60a5fa}
+  .callout.mistakes{background:#fef2f2;border-color:#f87171}
+  .callout.mistakes ul{margin:6px 0 0;padding-left:20px}.callout.mistakes li{margin-bottom:5px}
+  .exam-frame{background:#fff7ed;border:2px solid #f97316;border-radius:12px;padding:12px 16px;margin-bottom:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .exam-frame .callout-title{color:#c2410c}
+  body.print-evidence #print-area{display:block!important}
+  body.print-evidence .print-section{display:none!important}
+  body.print-evidence #print-evidence{display:block!important;padding:0}
+  .ev-fit{transform-origin:top left}
+  .ev-head{border:2px solid #1e3a8a;border-radius:12px;padding:10px 14px;margin-bottom:12px;background:#eff6ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ev-head h2{margin:0 0 4px;font-size:1.2rem;color:#1e3a8a}
+  .ev-meta{font-size:.85rem;color:#0f172a}
+  .ev-panel{border:2px dashed #94a3b8;border-radius:12px;padding:8px 14px 10px;margin-bottom:12px;background:#fff;page-break-inside:avoid;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ev-label{display:inline-block;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;color:#fff;padding:3px 12px;border-radius:999px;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ev-label.ido{background:#7c3aed}.ev-label.wedo{background:#0891b2}
+  .ev-slidecopy{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;transform:none!important;display:block!important;animation:none!important;overflow:visible!important}
+  .ev-slidecopy .logo,.ev-slidecopy .slide-tag,.ev-slidecopy .float-dots,.ev-slidecopy .evidence-btn,.ev-slidecopy .hint-text,.ev-slidecopy button,.ev-slidecopy .turn-talk,.ev-slidecopy .indep-timer{display:none!important}
+  .ev-slidecopy .v5-step{display:block!important;opacity:1!important;transform:none!important;max-height:none!important}
+  .ev-slidecopy .answer{display:block!important}
+  .ev-slidecopy .content-grid{display:grid!important}
+  .ev-slidecopy h2{font-size:1rem;margin:.2rem 0 .4rem}
+  .ev-slidecopy .li-box,.ev-slidecopy .ido-box,.ev-slidecopy .scaffold-box,.ev-slidecopy .aspire-box,.ev-slidecopy .exam-tip-box,.ev-slidecopy .warn-box,.ev-slidecopy .misc-box{margin:6px 0}
+}
+</style>
 </head>
 <body>
 <!-- ═══ TEACHER TOOLBAR (V4) ═══ -->
@@ -490,7 +530,7 @@
   <span class="slide-tag tag-wedo">We Do</span>
   <h2>We Do: Build Both Anaerobic Equations</h2>
   <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each tile into the right gap to build the anaerobic equation in <strong>animals</strong> and in <strong>yeast/plants</strong>. Remember — <strong>no oxygen</strong>! (Works by touch or mouse.)</div>
-  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printEvidence('wedo1')">📸 Print Evidence</button>
 
   <div id="wedo1" class="wedo-capture" style="margin-top:6px">
     <div class="score-bar"><span>Tiles placed: <span class="score" id="wedo1-score">0</span>/5</span><button class="ghost small" onclick="resetDnD('wedo1')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo1')">👁️ Reveal</button></div>
@@ -671,7 +711,7 @@
   <span class="slide-tag tag-wedo">We Do</span>
   <h2>We Do: Aerobic or Anaerobic?</h2>
   <div class="li-box"><strong>Instructions:</strong> <strong>Drag</strong> each statement into the right bin. Does it describe respiration <strong>with</strong> oxygen (aerobic) or <strong>without</strong> oxygen (anaerobic)? (Works by touch or mouse.)</div>
-  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo2')">📸 Print Evidence</button>
+  <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printEvidence('wedo2')">📸 Print Evidence</button>
   <div id="wedo2" class="wedo-capture" style="margin-top:6px">
     <div class="score-bar"><span>Sorted: <span class="score" id="wedo2-score">0</span>/6</span><button class="ghost small" onclick="resetDnD('wedo2')" style="margin-left:auto">🔄 Reset</button><button class="ghost small" onclick="revealDnD('wedo2')">👁️ Reveal</button></div>
     <div class="dnd-tray" id="wedo2-tray">
@@ -777,6 +817,12 @@
 <div id="print-area">
 
 <div id="print-ko" class="print-section">
+  <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp; <strong>Class:</strong> __________ &nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+  <div class="print-box" style="margin-bottom:10px"><strong>🎯 Learning Objective:</strong> Understand <strong>anaerobic respiration</strong> — the same idea as aerobic, with oxygen taken away — and write its equations in animals and in yeast.</div>
+  <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ <strong>All:</strong> I can write the anaerobic equation in animals: Glucose → Lactic Acid.</p>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ <strong>Most:</strong> I can write the anaerobic equation in yeast: Glucose → Ethanol + Carbon Dioxide.</p>
+    <p style="margin:5px 0 0;font-size:1.02rem">☐ <strong>Some:</strong> I can compare aerobic and anaerobic respiration (oxygen, ATP yield, products).</p></div>
   <h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (L5): Anaerobic Respiration</h1>
   <table class="ko-table">
     <tr><th>Item</th><th>Details</th></tr>
@@ -789,6 +835,10 @@
     <tr><td><strong>Uses of fermentation</strong></td><td>Brewing (ethanol in beer/wine), baking (CO₂ makes bread rise).</td></tr>
     <tr><td><strong>Aerobic vs anaerobic</strong></td><td>Aerobic: needs O₂, lots of ATP, makes CO₂ + water. Anaerobic: no O₂, little ATP, makes lactic acid OR ethanol + CO₂.</td></tr>
   </table>
+  <p><strong>Key distinctions:</strong> aerobic <strong>needs oxygen</strong> and releases <strong>lots</strong> of ATP; anaerobic has <strong>no oxygen</strong> and releases only <strong>a little</strong> ATP. Animals make <strong>lactic acid</strong>; yeast/plants make <strong>ethanol + carbon dioxide</strong>.</p>
+  <div class="ko-note hook">🎵 <strong>Memory hook:</strong> “Animals = lactic Acid · Yeast = ethanol”. No oxygen → only a little ATP.</div>
+  <div class="ko-note warn">⚠️ <strong>Common mistakes:</strong> saying anaerobic makes <em>no</em> ATP (it makes a <strong>little</strong>) · swapping the animal and yeast products · forgetting the <strong>CO₂</strong> in the yeast equation · writing oxygen as a reactant.</div>
+  <p class="prevent-break"><strong>🧠 Self-quiz routine:</strong> COVER both equations → WRITE them from memory → CHECK → fix any gaps. Do it twice — the second go is where it sticks.</p>
 </div>
 
 <div id="print-arrival" class="print-section">
@@ -823,6 +873,12 @@
     <p>Anaerobic respiration happens when there is no ________.</p>
     <p>In animals, glucose turns into ________.</p>
     <p>In yeast, glucose turns into ________ and ________.</p></div>
+  <div class="callout wordbank"><p class="callout-title">📝 Word Bank (Foundation)</p>
+    <p>Use these words: <strong>oxygen · glucose · lactic acid · ethanol · carbon dioxide · fermentation · ATP · energy</strong></p></div>
+  <div class="exam-frame"><p class="callout-title">⭐ Exam frame</p>
+    <p>(a) Anaerobic respiration happens when there is no ________.</p>
+    <p>(b) In animals: Glucose → ________.</p>
+    <p>(c) In yeast: Glucose → ________ + ________.</p></div>
 </div>
 
 <div  id="print-scaffold-middle" class="print-section">
@@ -934,7 +990,7 @@
   </div>
 </div>
 
-<div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><pre id="wedo-evidence-content" style="white-space:pre-wrap;font-family:inherit;font-size:.95rem"></pre></div>
+<div id="print-evidence" class="print-section"></div>
 </div>
 
 <!-- ═══ V4 MODALS / OVERLAYS ═══ -->
@@ -995,10 +1051,10 @@ document.addEventListener('keydown',e=>{
 function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
 updateProgress();
 function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')||el.classList.contains('exit-grid')?'grid':'block'}else{el.style.display='none'}}})}
-function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');window.print()}
-function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');window.print()}
-function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');window.print()}
-function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;const s=c.closest('.slide');const title=s?s.getAttribute('data-title'):'We Do';const ts=new Date().toLocaleString('en-GB');const results=[];c.querySelectorAll('.quiz').forEach((q,i)=>{const qT=q.querySelector('.q')?.innerText||'';const fb=q.querySelector('.fb')?.innerText||'(not answered)';results.push('Q'+(i+1)+': '+qT+'\nAnswer: '+fb)});const n=c.querySelector('[contenteditable]');const notes=n?n.innerText:'';let out='CLASS EVIDENCE \u2013 '+title+'\nDate/Time: '+ts+'\n'+'\u2500'.repeat(50)+'\n\n';if(results.length)out+='QUESTIONS:\n'+results.join('\n\n')+'\n\n';if(notes&&notes!==n?.getAttribute('data-placeholder'))out+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=out;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));const s=document.getElementById('print-'+id);if(s)s.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);const e=document.getElementById('print-exit');if(e)e.classList.add('visible');window.print()}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+
 
   // --- Teacher-notes placeholder init ---
   document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
@@ -1215,6 +1271,48 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
   // --- Float dots on title slide ---
   function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
 
+  
+  function printEvidence(id){
+    const cap=document.getElementById(id);if(!cap)return;
+    const capSlide=cap.closest('.slide')||cap;
+    const isWeDo=capSlide.getAttribute('data-type')==='wedo';
+    const all=[...document.querySelectorAll('.slide')];const idx=all.indexOf(capSlide);
+    let idoSlide=null;if(isWeDo){for(let k=idx-1;k>=0;k--){if(all[k].getAttribute('data-type')==='ido'){idoSlide=all[k];break;}}}
+    const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
+    const host=document.getElementById('print-evidence');if(!host)return;
+    document.body.classList.remove('print-foundation','print-middle','print-higher');
+    document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));
+    host.innerHTML='';
+    const fit=document.createElement('div');fit.className='ev-fit';host.appendChild(fit);
+    const head=document.createElement('div');head.className='ev-head';
+    const h2=document.createElement('h2');h2.textContent='\U0001f4f8 '+lessonTitle+' \u2014 Evidence';head.appendChild(h2);
+    const meta=document.createElement('div');meta.className='ev-meta';
+    meta.innerHTML='<strong>Name:</strong> ____________________   <strong>Class:</strong> ________   <strong>Date:</strong> ____________';
+    head.appendChild(meta);fit.appendChild(head);
+    const addPanel=(node,labelText,labelCls)=>{
+      const p=document.createElement('div');p.className='ev-panel';
+      const lab=document.createElement('span');lab.className='ev-label '+labelCls;lab.textContent=labelText;p.appendChild(lab);
+      const copy=node.cloneNode(true);copy.classList.add('ev-slidecopy');copy.removeAttribute('id');
+      copy.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+      p.appendChild(copy);fit.appendChild(p);
+    };
+    if(isWeDo&&idoSlide)addPanel(idoSlide,'I Do \u2014 the method','ido');
+    addPanel(cap,isWeDo?'We Do \u2014 my work':'My work','wedo');
+    fitToPage(host,fit);
+    document.body.classList.add('print-evidence');
+    const cleanup=()=>{document.body.classList.remove('print-evidence');host.innerHTML='';window.removeEventListener('afterprint',cleanup)};
+    window.addEventListener('afterprint',cleanup);
+    setTimeout(()=>window.print(),60);
+  }
+  function fitToPage(host,fit){
+    try{
+      const prev=host.getAttribute('style')||'';
+      host.setAttribute('style','display:block;position:fixed;left:-99999px;top:0;width:718px;z-index:-1');
+      const h=fit.scrollHeight||0,w=fit.scrollWidth||718;
+      let k=1;if(h>0)k=Math.min(1,1040/h,718/w);
+      fit.style.zoom=k;host.setAttribute('style',prev);
+    }catch(e){fit.style.zoom=1}
+  }
   // --- Init ---
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
   window.addEventListener('load',()=>{animateLOs();buildFloatDots();startQuiz()});
