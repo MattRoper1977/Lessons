@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCSIE · Calling For Help — What To Say — Assembly</title>
+<style>
+:root{
+  --bg1:#eef6ff; --bg2:#cfe6ff;
+  --ink:#16263c; --ink-soft:#5a6b80;
+  --blue:#2b7fd6; --blue-deep:#1f63ad;
+  --green:#1f9d57; --green-soft:#27b466;
+  --red:#e63946; --red-deep:#c52733;
+  --amber:#f6a609;
+  --card:#ffffff;
+  --line:rgba(22,38,60,.14); --shadow:rgba(22,38,60,.16);
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,monospace;
+  --disp:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  --body:"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);color:var(--ink);overflow:hidden;background:linear-gradient(160deg,var(--bg1),var(--bg2))}
+.rays{position:fixed;top:-26vh;right:-26vw;width:80vw;height:80vw;z-index:0;opacity:.07;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 50%,#2b7fd6 0deg 7deg,transparent 7deg 14deg)}
+.logo{position:fixed;top:13px;right:16px;font-weight:900;font-size:10px;letter-spacing:.1em;color:var(--ink-soft);z-index:8}
+.logo b{color:var(--blue-deep)}
+
+.hud{position:fixed;top:11px;left:50%;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:40px;padding:6px 16px;box-shadow:0 4px 0 var(--shadow)}
+.caseno{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-soft)}
+.seals{display:flex;gap:7px}
+.seal{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;opacity:.4;transition:.35s;filter:grayscale(1)}
+.seal.lit{opacity:1;filter:none;border-color:var(--green);background:#e7f8ee;box-shadow:0 0 14px rgba(31,157,87,.45);animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.score{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
+.score b{font-family:var(--disp);color:var(--green);font-size:15px;margin-left:4px}
+.xppop{position:fixed;font-family:var(--disp);color:var(--green);font-size:20px;pointer-events:none;z-index:30}
+
+.stage{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:11vh 6vw 12vh}
+.slide.on{display:flex;animation:in .5s ease both}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--body);font-weight:800;font-size:clamp(.7rem,1.3vw,.86rem);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);background:var(--card);padding:6px 16px;border-radius:40px;margin-bottom:18px;box-shadow:0 3px 0 var(--shadow)}
+.eyebrow.alert{color:#fff;background:var(--red)}
+h1{font-family:var(--disp);font-size:clamp(2.2rem,7.4vw,5.2rem);line-height:.9;letter-spacing:-.02em;text-transform:uppercase;text-shadow:0 3px 0 rgba(255,255,255,.5)}
+h1 .thin{display:block;font-family:var(--body);font-weight:800;font-size:.24em;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep);margin-top:14px;text-shadow:none}
+h2{font-family:var(--disp);font-size:clamp(1.5rem,4.4vw,2.9rem);line-height:1;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:16px;text-shadow:0 2px 0 rgba(255,255,255,.5)}
+
+.heroBox{position:relative;width:min(86vw,520px);height:140px;margin-bottom:8px}
+.ecg{width:100%;height:100%}
+.ecgline{stroke:var(--green);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(31,157,87,.5));stroke-dasharray:1000;stroke-dashoffset:1000;animation:draw 2.4s ease forwards infinite}
+@keyframes draw{0%{stroke-dashoffset:1000}70%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+.phone999{position:absolute;right:6%;top:8%;background:var(--red);color:#fff;font-family:var(--disp);font-size:1.4rem;padding:8px 16px;border-radius:14px;box-shadow:0 5px 0 rgba(0,0,0,.18);animation:pulse999 1.6s ease-in-out infinite}
+@keyframes pulse999{50%{transform:scale(1.08)}}
+
+.anchor{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.astep{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:8px 15px;font-weight:800;box-shadow:0 3px 0 var(--shadow);font-size:clamp(.8rem,1.6vw,.98rem)}
+.astep .n{color:var(--green);font-family:var(--disp);margin-right:6px}
+
+/* film */
+.film{position:relative;width:min(94vw,720px);height:230px;background:var(--card);border-radius:18px;box-shadow:0 6px 0 var(--shadow);border:1px solid var(--line);overflow:hidden}
+.film .ground{position:absolute;left:0;right:0;bottom:50px;height:3px;background:var(--line)}
+.faller{position:absolute;left:32%;bottom:53px;width:30px;height:46px;transform-origin:bottom center}
+.faller .head{width:15px;height:15px;border-radius:50%;background:var(--blue);margin:0 auto 3px}
+.faller .body{width:24px;height:28px;border-radius:12px 12px 4px 4px;background:#3a78b8;margin:0 auto}
+.film.play .faller{animation:fall 7s ease forwards}
+@keyframes fall{0%{transform:rotate(0)}18%{transform:rotate(0)}34%{transform:rotate(-82deg) translateY(6px)}100%{transform:rotate(-82deg) translateY(6px)}}
+.helper{position:absolute;left:54%;bottom:53px;width:30px;height:46px}
+.helper .head{width:15px;height:15px;border-radius:50%;background:var(--green);margin:0 auto 3px}
+.helper .body{width:24px;height:28px;border-radius:12px 12px 4px 4px;background:#2aa35e;margin:0 auto}
+.phonepop{position:absolute;left:50%;top:22px;transform:translateX(-50%);background:var(--red);color:#fff;font-family:var(--disp);font-size:1rem;padding:6px 16px;border-radius:24px;opacity:0;box-shadow:0 4px 0 var(--shadow)}
+.film.play .phonepop{animation:phonein 7s ease forwards}
+@keyframes phonein{0%,38%{opacity:0;transform:translate(-50%,-10px)}48%{opacity:1;transform:translate(-50%,0)}74%{opacity:1}82%{opacity:0}100%{opacity:0}}
+.amb{position:absolute;right:-60px;bottom:56px;font-size:2.2rem}
+.film.play .amb{animation:ambin 7s ease forwards}
+@keyframes ambin{0%,72%{right:-60px}88%{right:8%}100%{right:8%}}
+.tick{position:absolute;top:14px;right:18px;font-size:1.8rem;opacity:0}
+.film.play .tick{animation:tickin 7s ease forwards}
+@keyframes tickin{0%,84%{opacity:0;transform:scale(.4)}92%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+.filmcap{font-family:var(--mono);font-size:clamp(.82rem,1.7vw,1rem);margin-top:14px;color:var(--blue-deep);min-height:1.4em;font-weight:600}
+.filmcap.ok{color:var(--green)}
+.replay{margin-top:12px;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:30px;padding:8px 18px;font-weight:700;cursor:pointer;font-family:var(--body);box-shadow:0 3px 0 var(--shadow)}
+
+/* simulator picker */
+.simIntro{font-size:clamp(.95rem,1.9vw,1.12rem);color:var(--ink-soft);max-width:40ch;margin-bottom:14px;line-height:1.4}
+.simIntro b{color:var(--blue-deep)}
+.scnGrid{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;width:min(96vw,880px);max-height:46vh;overflow-y:auto;padding:2px}
+.scnCard{flex:1 1 122px;max-width:160px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 10px;cursor:pointer;box-shadow:0 4px 0 var(--shadow);transition:.2s;position:relative}
+.scnCard:hover{transform:translateY(-3px)}
+.scnCard .ic{font-size:1.8rem}
+.scnCard .lb{font-weight:800;font-size:.86rem;margin-top:6px;line-height:1.2}
+.scnCard.done{border-color:var(--green);background:#f1faf4}
+.scnCard.done::after{content:"✓";position:absolute;top:6px;right:10px;color:var(--green);font-weight:900}
+.simProg{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);margin-top:12px}
+
+/* call panel (reused for sim) */
+.callwrap{width:min(94vw,560px);background:#0e2032;border-radius:24px;padding:16px;box-shadow:0 6px 0 rgba(0,0,0,.25);display:none}
+.callwrap.show{display:block}
+.callbar{display:flex;align-items:center;gap:8px;color:#cfe6ff;font-family:var(--mono);font-size:.78rem;margin-bottom:10px;padding:0 6px;justify-content:space-between}
+.callbar .l{display:flex;align-items:center;gap:8px}
+.callbar .dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse999 1.4s infinite}
+.callbar .back{background:none;border:none;color:#9fc3ea;font-family:var(--mono);font-size:.78rem;cursor:pointer}
+.calllog{display:flex;flex-direction:column;gap:9px;min-height:130px;max-height:210px;overflow-y:auto;padding:4px}
+.bub{max-width:82%;padding:9px 13px;border-radius:14px;font-size:.94rem;line-height:1.3}
+.bub.op{align-self:flex-start;background:#1d3a55;color:#eaf3ff;border-bottom-left-radius:4px}
+.bub.me{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:4px}
+.bub.good{align-self:flex-start;background:transparent;color:#9fe3bd;font-size:.8rem;padding:2px 8px}
+.bub.res{align-self:center;background:#173a2a;color:#bff0d2;text-align:center;font-weight:700;border-radius:12px}
+.callopts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.callopts button{background:#173049;color:#eaf3ff;border:1px solid #2c4a68;border-radius:10px;padding:11px;font-family:var(--body);font-size:.92rem;cursor:pointer;text-align:left;transition:.15s}
+.callopts button:hover{background:#1f3f5e}
+.callopts button.shake{animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.callopts button.anotherBtn{background:var(--green);color:#fff;border-color:var(--green);text-align:center;font-weight:800}
+.callopts button.anotherBtn:hover{background:#1aa85e}
+
+/* reveal lists (silent + who) */
+.revlist{display:flex;flex-direction:column;gap:10px;width:min(94vw,620px)}
+.ritem{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:12px;padding:14px 18px;text-align:left;box-shadow:0 4px 0 var(--shadow);opacity:.55;transition:.3s;cursor:pointer}
+.ritem.active{opacity:1;border-left-color:var(--amber)}
+.ritem.active:hover{transform:translateY(-2px)}
+.ritem.open{opacity:1;border-left-color:var(--green);cursor:default}
+.ritem .ic{font-size:1.7rem;flex:none}
+.ritem .big{font-family:var(--disp);font-size:1.1rem}
+.ritem h3{font-family:var(--disp);text-transform:uppercase;font-size:1rem}
+.ritem p{font-size:.9rem;color:var(--ink-soft);line-height:1.35;display:none;margin-top:3px}
+.ritem.open p{display:block}
+.ritem .tap{font-family:var(--mono);font-size:.7rem;color:var(--amber);margin-left:auto}
+.ritem.open .tap,.ritem:not(.active):not(.open) .tap{display:none}
+.revhint{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);margin-top:12px}
+.silentbadge{background:var(--red);color:#fff;font-family:var(--disp);border-radius:30px;padding:8px 18px;font-size:1.2rem;margin-bottom:14px;box-shadow:0 4px 0 rgba(0,0,0,.14)}
+
+/* who directory chips colour */
+.ritem.w999{border-left-color:var(--red)} .ritem.w999 .big{color:var(--red)}
+.ritem.open.w999{border-left-color:var(--green)}
+
+/* video */
+.vidcard{width:min(94vw,760px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 0 var(--shadow);padding:18px;text-align:left}
+.vidframe{position:relative;width:100%;aspect-ratio:16/9;background:#0e2032;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.vidframe iframe{width:100%;height:100%;border:0;display:none}
+.vidframe.loaded iframe{display:block}
+.vidPlay{display:flex;flex-direction:column;align-items:center;gap:10px;color:#cfe6ff;text-align:center;padding:18px}
+.vidPlay .pbig{width:78px;height:78px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.vidPlay .pbig:hover{transform:scale(1.06)}
+.vidframe.loaded .vidPlay{display:none}
+.vidrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.vidrow input{flex:1;min-width:160px;background:#f3f8ff;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--mono);font-size:.85rem;color:var(--ink)}
+.vidrow a{font-family:var(--mono);font-size:.82rem;color:var(--blue-deep);text-decoration:none;font-weight:700}
+.vidnote{font-size:.82rem;color:var(--ink-soft);margin-top:10px;line-height:1.4}
+.vidnote b{color:var(--red)}
+
+/* flip */
+.flip{perspective:1200px;width:min(90vw,540px);height:300px;cursor:pointer}
+.flipInner{position:relative;width:100%;height:100%;transition:transform .8s;transform-style:preserve-3d}
+.flip.flipped .flipInner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;box-shadow:0 6px 0 var(--shadow)}
+.face.front{background:linear-gradient(160deg,#ff6f6a,#e63946);color:#fff}
+.face.front .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.4rem,3.6vw,2.3rem)}
+.face.back{background:linear-gradient(160deg,#2bbf78,#1f9d57);color:#fff;transform:rotateY(180deg)}
+.face.back .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem)}
+.face .em{font-size:3rem;margin-bottom:10px}
+.face .ln{font-size:1.02rem;margin-top:12px;max-width:28ch;line-height:1.4;opacity:.97}
+.face .ln b{text-decoration:underline}
+.tapcue{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;color:var(--ink-soft);margin-top:16px;transition:opacity .3s}
+
+/* capture */
+.cap{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;align-items:stretch}
+.tallybox,.voicebox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 26px;box-shadow:0 5px 0 var(--shadow)}
+.tallybox{min-width:240px;border-top:6px solid var(--green);text-align:center}
+.tallybox h3,.voicebox h3{font-family:var(--mono);font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+.tallycount{font-family:var(--disp);font-size:3.4rem;color:var(--ink);line-height:1;margin:8px 0;transition:transform .15s}
+.tallycount.bump{transform:scale(1.18)}
+.tbtns button{background:var(--green);color:#fff;border:none;width:50px;height:50px;border-radius:50%;font-size:1.5rem;font-weight:800;margin:4px;cursor:pointer;font-family:var(--body)}
+.tbtns button.minus{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.voicebox{flex:1;min-width:300px;text-align:left}
+textarea{width:100%;min-height:120px;background:#f3f8ff;border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:12px;font-family:var(--body);font-size:1rem;resize:vertical}
+
+.pledge{font-size:clamp(1.2rem,3vw,1.9rem);max-width:27ch;line-height:1.3;font-weight:800;color:var(--blue-deep)}
+.completeBtn{margin-top:26px;background:var(--green);color:#fff;border:none;border-radius:30px;padding:15px 32px;font-size:1.14rem;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 5px 0 var(--shadow)}
+.completeBtn:hover{transform:translateY(-2px)}
+
+.closed{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(700px 500px at 50% 40%,rgba(39,180,102,.92),rgba(31,157,87,.96))}
+.closed.show{display:flex}
+.closedStamp{font-family:var(--disp);text-transform:uppercase;color:var(--green);border:6px solid var(--green);border-radius:14px;padding:18px 36px;font-size:clamp(1.5rem,5.5vw,3rem);letter-spacing:.04em;background:#fff;transform:scale(0) rotate(-16deg);animation:slam .55s cubic-bezier(.2,1.7,.4,1) forwards;box-shadow:0 8px 0 rgba(0,0,0,.18)}
+@keyframes slam{to{transform:scale(1) rotate(-7deg)}}
+.closedSub{font-family:var(--disp);text-transform:uppercase;color:#fff;margin-top:24px;letter-spacing:.04em;font-size:clamp(1rem,2.4vw,1.4rem)}
+.closedScore{font-family:var(--disp);color:#0c3a22;font-size:clamp(1.4rem,4vw,2.2rem);margin-top:8px}
+.closedBtn{margin-top:26px;background:#fff;border:none;color:var(--ink-soft);border-radius:30px;padding:10px 20px;font-family:var(--mono);font-size:.8rem;cursor:pointer}
+
+.navbar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:12px 20px;z-index:9;background:linear-gradient(0deg,rgba(207,230,255,.92),transparent)}
+.pbar{flex:1;height:6px;background:rgba(22,38,60,.14);border-radius:4px;overflow:hidden}
+.pfill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .45s}
+.slidelbl{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);min-width:54px}
+.navbtn{background:var(--green);color:#fff;border:none;border-radius:30px;padding:11px 22px;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 4px 0 var(--shadow)}
+.navbtn.ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.tools{position:fixed;top:11px;left:14px;display:flex;gap:8px;z-index:9}
+.toolbtn{background:var(--card);border:1px solid var(--line);color:var(--ink-soft);border-radius:30px;padding:7px 13px;font-size:.74rem;font-family:var(--mono);letter-spacing:.04em;cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.toolbtn:hover{color:var(--blue-deep)}
+.modal{position:fixed;inset:0;background:rgba(8,20,34,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal.open{display:flex}
+.modal-card{background:#fff;border:1px solid var(--line);border-radius:14px;max-width:540px;width:100%;padding:28px;position:relative;text-align:left;box-shadow:0 10px 0 var(--shadow);max-height:86vh;overflow-y:auto}
+.modal-card h3{font-family:var(--disp);color:var(--blue-deep);margin-bottom:14px;text-transform:uppercase;font-size:1.1rem}
+.modal-card p{color:var(--ink);line-height:1.55;margin-bottom:10px;font-size:.95rem}
+.modal-card p b{color:var(--red)}
+.modal-x{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--ink-soft);font-size:1.4rem;cursor:pointer}
+
+body.calm .ecgline,body.calm .phone999,body.calm .film.play .faller,body.calm .film.play .phonepop,body.calm .film.play .amb,body.calm .film.play .tick,body.calm .callbar .dot{animation:none}
+body.calm .slide.on{animation:none}body.calm .ecgline{stroke-dashoffset:0}
+@media (prefers-reduced-motion:reduce){
+  .ecgline,.phone999,.slide.on,.film.play .faller,.film.play .phonepop,.film.play .amb,.film.play .tick,.callbar .dot{animation:none}
+  .ecgline{stroke-dashoffset:0}.flipInner{transition:none}
+}
+@media (max-width:680px){
+  .tools{top:auto;bottom:62px}.hud{gap:8px;padding:5px 10px}.seal{width:26px;height:26px;font-size:12px}
+  .caseno{display:none}.film{height:200px}.scnCard{flex:1 1 120px}
+}
+@media print{body *{visibility:hidden}}
+</style>
+</head>
+<body>
+<div class="rays"></div>
+<div class="logo">PROGRESS <b>SCHOOLS</b></div>
+
+<div class="hud">
+  <span class="caseno">SAFEGUARDING</span>
+  <div class="seals">
+    <div class="seal" id="seal-calm" title="Stay calm">🧠</div>
+    <div class="seal" id="seal-call" title="Make the call">📞</div>
+    <div class="seal" id="seal-silent" title="When you can't speak">🤫</div>
+    <div class="seal" id="seal-who" title="Who to call">☎️</div>
+    <div class="seal" id="seal-tell" title="Tell an adult">🗣️</div>
+  </div>
+  <span class="score">READY<b id="score">0</b></span>
+</div>
+
+<div class="tools">
+  <button class="toolbtn" onclick="openModal('ta')">👁 TA</button>
+  <button class="toolbtn" onclick="toggleCalm()">🌙 CALM</button>
+  <button class="toolbtn" onclick="printEvidence()">🖨 EVIDENCE</button>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide on">
+    <div class="eyebrow">🚨 Safeguarding · Getting Help</div>
+    <div class="heroBox">
+      <svg class="ecg" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polyline class="ecgline" points="0,70 110,70 140,70 155,35 175,105 195,15 215,115 235,70 300,70 330,70 345,50 360,90 375,70 520,70"/>
+      </svg>
+      <div class="phone999">📞 999</div>
+    </div>
+    <h1>Calling For Help<span class="thin">what to say · and who to say it to</span></h1>
+    <div class="anchor">
+      <div class="astep"><span class="n">1</span>Which service?</div>
+      <div class="astep"><span class="n">2</span>Where are you?</div>
+      <div class="astep"><span class="n">3</span>What's happening?</div>
+      <div class="astep"><span class="n">4</span>Stay on the line</div>
+    </div>
+  </section>
+
+  <!-- 2 FILM -->
+  <section class="slide">
+    <div class="eyebrow">▶ Watch · Help is just a call away</div>
+    <h2>One call changes everything</h2>
+    <div class="film" id="film">
+      <div class="phonepop">📞 999 — on its way</div>
+      <div class="tick">✅</div>
+      <div class="faller"><div class="head"></div><div class="body"></div></div>
+      <div class="helper"><div class="head"></div><div class="body"></div></div>
+      <div class="amb">🚑</div>
+      <div class="ground"></div>
+    </div>
+    <div class="filmcap" id="filmcap">Something's wrong…</div>
+    <button class="replay" onclick="playFilm(true)">↻ Replay</button>
+  </section>
+
+  <!-- 3 SIMULATOR -->
+  <section class="slide">
+    <div class="eyebrow alert">📞 The call · Try a real situation</div>
+    <h2>What would you say?</h2>
+    <div class="simIntro" id="simIntro">Every 999 call needs four things: <b>which service · where you are · what's happening · stay on the line</b>. Pick a situation, make the call — then come back and try another.</div>
+    <div class="scnGrid" id="scnGrid"></div>
+    <div class="simProg" id="simProg">Pick as many as you like</div>
+
+    <div class="callwrap" id="callwrap">
+      <div class="callbar"><span class="l"><span class="dot"></span> <span id="callsvc">999 · CONNECTED</span></span>
+        <button class="back" onclick="backToPicker()">← situations</button></div>
+      <div class="calllog" id="calllog"></div>
+      <div class="callopts" id="callopts"></div>
+    </div>
+  </section>
+
+  <!-- 4 SILENT SOLUTION -->
+  <section class="slide">
+    <div class="eyebrow">🤫 When you can't speak</div>
+    <div class="silentbadge">999 → press 55</div>
+    <h2>Can't talk? You can still get help</h2>
+    <div class="revlist" id="silent"></div>
+    <div class="revhint" id="silentHint">▸ tap each step to reveal it</div>
+  </section>
+
+  <!-- 5 WHO TO CALL -->
+  <section class="slide">
+    <div class="eyebrow">☎️ Who to speak to</div>
+    <h2>Not sure who to call?</h2>
+    <div class="revlist" id="who"></div>
+    <div class="revhint" id="whoHint">▸ tap each one to see when to use it</div>
+  </section>
+
+  <!-- 6 VIDEO -->
+  <section class="slide">
+    <div class="eyebrow">▶ How the experts do it</div>
+    <h2>See it for real</h2>
+    <div class="vidcard">
+      <div class="vidframe" id="vidframe">
+        <div class="vidPlay">
+          <div class="pbig" onclick="loadVideo()">▶</div>
+          <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.06em">Tap to load the clip</div>
+        </div>
+        <iframe id="vidIframe" title="Emergency help video" allow="encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="vidrow">
+        <input id="vidId" value="ea1RJUOiNfQ" aria-label="YouTube video ID">
+        <a href="https://www.youtube.com/user/stjohnambulance" target="_blank" rel="noopener">St John Ambulance ↗</a>
+      </div>
+      <div class="vidnote"><b>Staff:</b> preview before showing. Loads only when you tap play. Swap the ID for a "how to call 999" or "Recovery Position" (GmqXqwSV3bo) clip if you prefer.</div>
+    </div>
+  </section>
+
+  <!-- 7 FLIP / TELL -->
+  <section class="slide">
+    <div class="eyebrow">🗣️ Tell · The brave bit</div>
+    <h2>Will I get in trouble?</h2>
+    <div class="flip" id="flip" onclick="doFlip()">
+      <div class="flipInner">
+        <div class="face front">
+          <div class="big">Will I get in trouble — or make it worse?</div>
+          <div class="ln">This worry stops people getting help. Let's settle it.</div>
+        </div>
+        <div class="face back">
+          <div class="em">🛡️</div>
+          <div class="big">No. Never.</div>
+          <div class="ln">You <b>never</b> get in trouble for getting someone help, and it is <b>never your fault</b>. The bravest thing is to call — and to tell a trusted adult.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tapcue" id="tapcue">▸ tap the card to flip it</div>
+  </section>
+
+  <!-- 8 CAPTURE -->
+  <section class="slide">
+    <div class="eyebrow">§ This week · Logbook</div>
+    <h2>Looking out for each other</h2>
+    <div class="cap">
+      <div class="tallybox">
+        <h3>Times we got help / spoke up</h3>
+        <div class="tallycount" id="tcount">0</div>
+        <div class="tbtns"><button class="minus" onclick="tally(-1)">−</button><button onclick="tally(1)">+</button></div>
+      </div>
+      <div class="voicebox">
+        <h3>Which service would you ask for — and the first thing you'd say?</h3>
+        <textarea id="voice" placeholder="As a hall: pick a situation, name the service, and the first sentence…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 PLEDGE -->
+  <section class="slide">
+    <div class="eyebrow">✓ Ready · Your pledge</div>
+    <h2>This week's pledge</h2>
+    <p class="pledge">"If someone needs help, I'll call the right service, say clearly where I am and what's happening, and tell a trusted adult — and I'll never be scared, or in trouble, for getting help."</p>
+    <button class="completeBtn" onclick="markDone()">✓ I'd know what to say</button>
+  </section>
+
+</div>
+
+<div class="closed" id="closed">
+  <div class="closedStamp">Response Ready</div>
+  <div class="closedSub">Which service · Where · What's happening · Stay on the line</div>
+  <div class="closedScore" id="closedScore">READINESS 0</div>
+  <button class="closedBtn" onclick="document.getElementById('closed').classList.remove('show')">↺ back to slides</button>
+</div>
+
+<div class="navbar">
+  <button class="navbtn ghost" onclick="go(-1)">‹ Back</button>
+  <div class="slidelbl" id="lbl">01 / 09</div>
+  <div class="pbar"><div class="pfill" id="pf"></div></div>
+  <button class="navbtn" id="nb" onclick="go(1)">Start ›</button>
+</div>
+
+<div class="modal" id="ta"><div class="modal-card">
+  <button class="modal-x" onclick="closeModal('ta')">✕</button>
+  <h3>👁 TA Focus — Calling For Help</h3>
+  <p><b>High-sensitivity topic.</b> The situations now include being attacked, being hurt by a parent or carer, feeling followed, and really struggling. Some pupils may be living with this. Keep the tone calm and matter-of-fact, never dramatic. Watch for anyone who goes quiet, tearful or agitated.</p>
+  <p><b>This kind of session can prompt a disclosure — that's okay and good. Any disclosure today → DSL the same day.</b></p>
+  <p><b>Frame:</b> the focus is <i>what to say and who to say it to</i> — not the violence itself. Four things every call needs: service · where · what · stay on the line.</p>
+  <p><b>Slide 4 (Silent Solution):</b> the police "press 55" system — for when it isn't safe to speak. Reinforce it is never the pupil's fault.</p>
+  <p><b>Slide 3 simulator:</b> wrong taps just nudge, never fail. The "home" situation is deliberately gentle — no celebration, just reassurance.</p>
+  <p><b>Helplines:</b> 999 (emergency) · 101 (police, non-urgent) · 111 (NHS advice) · Childline 0800 1111 · Shout text 85258. Slide 6 video loads only on tap — preview first.</p>
+</div></div>
+
+<script>
+var STORE_KEY="progressKCSIEEmergency_v1";
+var TOTAL=9;
+var SEAL_PTS=140;
+
+var idx=0, tCount=0, audioCtx=null, score=0, filmPlayed=false;
+var scnActive=-1, scnStep=0, scnDone={}, silentOpen=0, whoOpen=0;
+var seals={calm:false,call:false,silent:false,who:false,tell:false};
+var slides=document.querySelectorAll(".slide");
+
+var SCN=[
+ {id:"med",ic:"🚑",label:"Someone's hurt or ill",svc:"999 · AMBULANCE",tone:"normal",steps:[
+   {q:"You've dialled 999. \u201cWhich service do you need?\u201d",opts:[{t:"Ambulance",ok:true},{t:"I don't know",ok:false}],good:"Ambulance — for illness or injury."},
+   {q:"\u201cWhere are you?\u201d",opts:[{t:"The exact address — or school name and the road",ok:true},{t:"Somewhere round here",ok:false}],good:"Exact place = they reach you fast."},
+   {q:"\u201cTell me what's happened.\u201d",opts:[{t:"They've collapsed and won't wake up — they need help",ok:true},{t:"They look a bit tired",ok:false}],good:"Calm, clear facts."},
+   {q:"\u201cStay on the line, I'll guide you.\u201d",opts:[{t:"Okay, I'll stay and do what you say",ok:true},{t:"I'll hang up",ok:false}],good:"Never hang up."}
+  ],res:"✓ Ambulance on its way. Stay with them. 🚑"},
+ {id:"street",ic:"🚓",label:"Violence in the street",svc:"999 · POLICE",tone:"normal",steps:[
+   {q:"There's a fight and you're scared. What do you do FIRST?",opts:[{t:"Get yourself somewhere safe, then call",ok:true},{t:"Jump in to stop it",ok:false}],good:"Safe first — you can't help if you're hurt too."},
+   {q:"\u201cWhich service?\u201d",opts:[{t:"Police (and ambulance if someone's hurt)",ok:true},{t:"Fire",ok:false}],good:"Police for violence or crime."},
+   {q:"\u201cTell me what's happening.\u201d",opts:[{t:"Where it is, what's happening, and what people look like",ok:true},{t:"Just 'there's a fight'",ok:false}],good:"Descriptions help police find them."},
+   {q:"\u201cStay on the line.\u201d",opts:[{t:"Yes — from a safe distance",ok:true},{t:"Go back to film it",ok:false}],good:"Stay safe; watch from afar."}
+  ],res:"✓ Police on the way. Keep yourself safe. 🚓"},
+ {id:"attacked",ic:"🆘",label:"I'm being attacked",svc:"999 · POLICE",tone:"care",steps:[
+   {q:"Someone is attacking or hurting you. What's the first priority?",opts:[{t:"Get away to somewhere safe if I can, then call",ok:true},{t:"Stay and fight no matter what",ok:false}],good:"Getting yourself safe comes first."},
+   {q:"\u201cWhich service?\u201d",opts:[{t:"Police on 999 (and ambulance if I'm hurt)",ok:true},{t:"Fire",ok:false}],good:"Police — for someone attacking you."},
+   {q:"\u201cTell me what's happening.\u201d",opts:[{t:"Where I am, what's happening, what they look like",ok:true},{t:"I'm too scared to say anything",ok:false}],good:"Even a few words help — where, and what."},
+   {q:"Will I be in trouble for calling?",opts:[{t:"No — I'm being hurt, I'm allowed to get help",ok:true},{t:"Maybe, so I shouldn't call",ok:false}],good:"Never. Protecting yourself is always right."}
+  ],res:"Police on the way. You did the right thing getting help. 💚"},
+ {id:"home",ic:"🏠",label:"Someone's being hurt at home",svc:"999 · POLICE",tone:"care",steps:[
+   {q:"You're scared and it might not be safe to talk out loud. Can you still get help?",opts:[{t:"Yes — I can call 999 and still get help",ok:true},{t:"No, there's nothing I can do",ok:false}],good:"You can ALWAYS get help."},
+   {q:"The operator hears no one speak. On a mobile, what can you do?",opts:[{t:"Press 55 when asked — it tells police it's real",ok:true},{t:"Hang up",ok:false}],good:"Pressing 55 connects you to police, without speaking."},
+   {q:"Whose fault is this?",opts:[{t:"Never mine — I'm allowed to get help",ok:true},{t:"Mine",ok:false}],good:"It is never your fault. Ever."},
+   {q:"Afterwards, who can you tell?",opts:[{t:"A trusted adult, your Safeguarding Lead, or Childline 0800 1111",ok:true},{t:"No one — keep it secret",ok:false}],good:"Telling someone is how it gets better."}
+  ],res:"You can always get help — and it is never your fault. 💚"},
+ {id:"carer",ic:"🫂",label:"Someone at home is hurting me",svc:"GETTING HELP",tone:"care",steps:[
+   {q:"A parent or carer is hurting you and you're in danger right now. What can you do?",opts:[{t:"Call 999 — I'm allowed to, even about my own family",ok:true},{t:"Nothing — it's family",ok:false}],good:"You can always call 999 if you're in danger — even about family."},
+   {q:"Whose fault is it that this is happening?",opts:[{t:"Never mine — no one is allowed to hurt me",ok:true},{t:"Mine",ok:false}],good:"It is never, ever your fault."},
+   {q:"It's not an emergency right now, but you need to talk. Who?",opts:[{t:"A teacher, your Safeguarding Lead, or Childline 0800 1111",ok:true},{t:"Keep it a secret forever",ok:false}],good:"Telling a trusted adult is how it stops."},
+   {q:"Too hard to say it out loud to anyone?",opts:[{t:"Call Childline, or text SHOUT to 85258 — free & private",ok:true},{t:"Bottle it all up",ok:false}],good:"There are people whose whole job is to listen."}
+  ],res:"You deserve to be safe. It is never your fault, and help is always there. 💚"},
+ {id:"followed",ic:"🚶",label:"I'm being followed / feel unsafe",svc:"GETTING HELP",tone:"care",steps:[
+   {q:"You think someone is following you. What's the safest move?",opts:[{t:"Head to a busy place or a shop and tell a staff member",ok:true},{t:"Take a quiet shortcut on my own",ok:false}],good:"Busy, bright places and telling someone = safer."},
+   {q:"Still scared or in danger?",opts:[{t:"Call 999 — or call someone I trust to stay on the phone",ok:true},{t:"Just keep walking and hope",ok:false}],good:"999 if in danger; or keep a trusted person on the line."},
+   {q:"When you're safe, then what?",opts:[{t:"Tell a trusted adult what happened",ok:true},{t:"Say nothing in case I'm overreacting",ok:false}],good:"You're never overreacting about feeling unsafe."}
+  ],res:"Safe place, trusted person, 999 if you need it. 💪"},
+ {id:"struggling",ic:"💭",label:"I'm really struggling",svc:"GETTING HELP",tone:"care",steps:[
+   {q:"You feel overwhelmed or unsafe in yourself. Who can you tell?",opts:[{t:"A trusted adult, or Childline on 0800 1111",ok:true},{t:"No one would care",ok:false}],good:"People do care — and want to help."},
+   {q:"Hard to say it out loud?",opts:[{t:"Text SHOUT to 85258 — free, any time",ok:true},{t:"Keep it all in",ok:false}],good:"Texting can be easier than talking — that's okay."},
+   {q:"If you ever feel unsafe right now?",opts:[{t:"Tell someone straight away, or call 999",ok:true},{t:"Deal with it completely alone",ok:false}],good:"You never have to deal with that alone."}
+  ],res:"Reaching out is strength, not weakness. You're not alone. 💚"},
+ {id:"fire",ic:"🔥",label:"Fire",svc:"999 · FIRE",tone:"normal",steps:[
+   {q:"There's a fire. What do you do FIRST?",opts:[{t:"Get out, stay out, then call 999",ok:true},{t:"Hide and wait",ok:false}],good:"Out and stay out — never go back in."},
+   {q:"\u201cWhich service?\u201d",opts:[{t:"Fire",ok:true},{t:"Ambulance",ok:false}],good:"Fire service."},
+   {q:"\u201cWhat do you tell them?\u201d",opts:[{t:"The address, that there's a fire, and if anyone's still inside",ok:true},{t:"Nothing",ok:false}],good:"Address + who's inside saves lives."},
+   {q:"\u201cStay on the line.\u201d",opts:[{t:"Yes — from outside, away from the building",ok:true},{t:"Go back for my stuff",ok:false}],good:"Never go back inside."}
+  ],res:"✓ Fire service on the way. Stay outside. 🚒"},
+ {id:"other",ic:"❓",label:"I'm scared / not sure",svc:"GETTING HELP",tone:"normal",steps:[
+   {q:"Is someone in danger RIGHT NOW?",opts:[{t:"If yes — call 999",ok:true},{t:"Ignore it and hope",ok:false}],good:"In danger now = 999, every time."},
+   {q:"If it's NOT urgent, who fits?",opts:[{t:"101 police · 111 NHS · Childline · a trusted adult",ok:true},{t:"Just deal with it alone",ok:false}],good:"There's always someone — you don't carry it alone."},
+   {q:"Worried about yourself or a friend?",opts:[{t:"Tell a trusted adult or Childline 0800 1111",ok:true},{t:"Say nothing",ok:false}],good:"Saying it out loud is the brave first step."}
+  ],res:"✓ There's always a way to get help. 💪"}
+];
+
+var SILENT=[
+ {ic:"📞",h:"Still call 999",p:"Getting help matters more than anything. Make the call."},
+ {ic:"👂",h:"Listen",p:"Listen to the operator. They will ask if you need help and can tell something is wrong."},
+ {ic:"5️⃣",h:"Press 55",p:"On a mobile, when you're prompted, press 55. It tells the police it's a real emergency and you can't speak — and connects you, without saying a word."},
+ {ic:"💚",h:"Never your fault",p:"You will never be in trouble for getting help, and none of it is your fault."}
+];
+var WHO=[
+ {ic:"🚨",cls:"w999",big:"999",h:"Right now",p:"Someone's life is in danger, a crime is happening, or there's a fire. Ask for ambulance, police or fire. Can't speak? Press 55."},
+ {ic:"👮",cls:"",big:"101",h:"Police — not urgent",p:"To report something to the police that already happened and isn't an emergency."},
+ {ic:"🩺",cls:"",big:"111",h:"NHS — not urgent",p:"When someone's unwell but it isn't life-threatening and you want advice on what to do."},
+ {ic:"💚",cls:"",big:"0800 1111",h:"Childline",p:"Any worry at all — bullying, home, feeling unsafe. Free, confidential, day or night."},
+ {ic:"💬",cls:"",big:"Text 85258",h:"Shout",p:"Text SHOUT to 85258 when it's easier to text than talk. Free, 24/7, for any worry."},
+ {ic:"🫂",cls:"",big:"A person",h:"A trusted adult",p:"A teacher, your Safeguarding Lead, a youth worker, or a family member you trust. Often the best first person to tell."}
+];
+
+function beep(freq,dur,type){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||"sine"; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.06,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+document.addEventListener("pointerdown",function once(){ if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume(); document.removeEventListener("pointerdown",once); });
+
+function xpPop(pts){
+  var el=document.createElement("div"); el.className="xppop"; el.textContent="+"+pts;
+  var hud=document.querySelector(".score");
+  var r=hud&&hud.getBoundingClientRect?hud.getBoundingClientRect():{left:window.innerWidth/2,top:60};
+  el.style.left=r.left+"px"; el.style.top=(r.top+18)+"px";
+  document.body.appendChild(el);
+  el.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(-46px)",opacity:0}],{duration:900,easing:"ease-out"});
+  setTimeout(function(){el.remove();},950);
+}
+function addScore(p){ score+=p; document.getElementById("score").textContent=score; xpPop(p); }
+function awardSeal(id){
+  if(seals[id]) return; seals[id]=true;
+  var s=document.getElementById("seal-"+id); if(s) s.classList.add("lit");
+  beep(660,.12); setTimeout(function(){beep(880,.14);},90); addScore(SEAL_PTS);
+}
+
+/* film */
+function playFilm(replay){
+  var f=document.getElementById("film"), cap=document.getElementById("filmcap");
+  if(replay){ f.classList.remove("play"); void f.offsetWidth; }
+  cap.textContent="Something's wrong…"; cap.classList.remove("ok");
+  f.classList.add("play");
+  setTimeout(function(){ cap.textContent="You stay calm and make the call."; },2400);
+  setTimeout(function(){ cap.textContent="You say where you are and what's happening."; beep(523,.14); },4200);
+  setTimeout(function(){ cap.textContent="✓ Help is on the way. One call did that."; cap.classList.add("ok"); beep(659,.16); setTimeout(function(){beep(784,.2);},140); awardSeal("calm"); },6200);
+}
+
+/* simulator */
+function buildPicker(){
+  var g=document.getElementById("scnGrid"); if(g.children.length) return;
+  SCN.forEach(function(s,i){
+    var d=document.createElement("div"); d.className="scnCard"+(scnDone[s.id]?" done":""); d.id="scn-"+s.id;
+    d.innerHTML='<div class="ic">'+s.ic+'</div><div class="lb">'+s.label+'</div>';
+    d.onclick=function(){ openScn(i); };
+    g.appendChild(d);
+  });
+}
+function updProg(){
+  var n=Object.keys(scnDone).length;
+  document.getElementById("simProg").textContent=n+" of "+SCN.length+" situations explored";
+}
+function openScn(i){
+  scnActive=i; scnStep=0;
+  document.getElementById("scnGrid").style.display="none";
+  document.getElementById("simIntro").style.display="none";
+  document.getElementById("simProg").style.display="none";
+  var w=document.getElementById("callwrap"); w.classList.add("show");
+  document.getElementById("callsvc").textContent=SCN[i].svc;
+  document.getElementById("calllog").innerHTML="";
+  renderScnStep();
+}
+function backToPicker(){
+  document.getElementById("callwrap").classList.remove("show");
+  document.getElementById("scnGrid").style.display="";
+  document.getElementById("simIntro").style.display="";
+  document.getElementById("simProg").style.display="";
+}
+function addBub(txt,cls){
+  var log=document.getElementById("calllog");
+  var b=document.createElement("div"); b.className="bub "+cls; b.textContent=txt;
+  log.appendChild(b); log.scrollTop=log.scrollHeight;
+}
+function renderScnStep(){
+  var opts=document.getElementById("callopts"); opts.innerHTML="";
+  var sc=SCN[scnActive];
+  if(scnStep>=sc.steps.length){
+    addBub(sc.res,"res");
+    if(!scnDone[sc.id]){ scnDone[sc.id]=true; var c=document.getElementById("scn-"+sc.id); if(c)c.classList.add("done"); updProg();
+      if(!seals.call) awardSeal("call"); else addScore(60);
+      if(sc.tone!=="care") confetti();
+    }
+    var ob=document.createElement("button");
+    ob.className="anotherBtn";
+    var left=SCN.length-Object.keys(scnDone).length;
+    ob.textContent = left>0 ? ("← Try another situation ("+left+" left)") : "← Back to all situations";
+    ob.onclick=backToPicker;
+    document.getElementById("callopts").appendChild(ob);
+    return;
+  }
+  var step=sc.steps[scnStep];
+  addBub(step.q,"op");
+  step.opts.forEach(function(o){
+    var b=document.createElement("button"); b.textContent=o.t;
+    b.onclick=function(){ scnPick(o,b); };
+    opts.appendChild(b);
+  });
+}
+function scnPick(o,btn){
+  if(!o.ok){ btn.classList.add("shake"); beep(300,.18,"triangle"); setTimeout(function(){btn.classList.remove("shake");},360);
+    addBub("Try the other one — stay calm and clear.","good"); return; }
+  beep(620,.14);
+  addBub(o.t,"me");
+  addBub(SCN[scnActive].steps[scnStep].good,"good");
+  scnStep++;
+  document.getElementById("callopts").innerHTML="";
+  setTimeout(renderScnStep,600);
+}
+
+/* reveal lists */
+function buildReveal(boxId,data,hintId,sealId){
+  var box=document.getElementById(boxId); if(box.children.length) return;
+  data.forEach(function(s,i){
+    var d=document.createElement("div"); d.className="ritem"+(s.cls?(" "+s.cls):"")+(i===0?" active":"");
+    var head=s.big?('<span class="big">'+s.big+'</span> <h3 style="display:inline">· '+s.h+'</h3>'):('<h3>'+s.h+'</h3>');
+    d.innerHTML='<span class="ic">'+s.ic+'</span><div>'+head+'<p>'+s.p+'</p></div><span class="tap">tap ▸</span>';
+    d.onclick=function(){ openReveal(boxId,i,d,hintId,sealId,data.length); };
+    box.appendChild(d);
+  });
+}
+function openReveal(boxId,i,el,hintId,sealId,total){
+  if(!el.classList.contains("active")||el.classList.contains("open")) return;
+  el.classList.remove("active"); el.classList.add("open"); beep(560,.12);
+  var box=document.getElementById(boxId);
+  if(i+1<box.children.length) box.children[i+1].classList.add("active");
+  var opened=box.querySelectorAll(".ritem.open").length;
+  if(opened>=total){
+    var h=document.getElementById(hintId); if(h){ h.textContent="✓ Got it."; h.style.color="var(--green)"; }
+    awardSeal(sealId);
+  }
+}
+
+/* video */
+function loadVideo(){
+  var id=(document.getElementById("vidId").value||"").trim();
+  var m=id.match(/[?&]v=([\w-]{6,})/)||id.match(/youtu\.be\/([\w-]{6,})/);
+  if(m) id=m[1];
+  if(!id) return;
+  var fr=document.getElementById("vidIframe");
+  fr.src="https://www.youtube-nocookie.com/embed/"+id+"?rel=0&modestbranding=1";
+  document.getElementById("vidframe").classList.add("loaded");
+}
+
+/* flip */
+function doFlip(){
+  var f=document.getElementById("flip"); f.classList.toggle("flipped");
+  document.getElementById("tapcue").style.opacity=f.classList.contains("flipped")?"0":"1";
+  beep(392,.16);
+  if(f.classList.contains("flipped")) awardSeal("tell");
+}
+
+/* tally */
+function tally(d){
+  tCount=Math.max(0,tCount+d);
+  var el=document.getElementById("tcount");
+  el.textContent=tCount; el.classList.add("bump");
+  setTimeout(function(){el.classList.remove("bump");},150);
+  if(d>0) beep(560,.1);
+  save();
+}
+
+/* nav */
+function show(n){
+  idx=Math.max(0,Math.min(TOTAL-1,n));
+  slides.forEach(function(s,i){ s.classList.toggle("on",i===idx); });
+  document.getElementById("pf").style.width=(idx/(TOTAL-1)*100)+"%";
+  document.getElementById("lbl").textContent=String(idx+1).padStart(2,"0")+" / "+TOTAL;
+  var nb=document.getElementById("nb");
+  nb.textContent = idx===TOTAL-1 ? "End" : (idx===0 ? "Start ›" : "Next ›");
+  if(idx===1 && !filmPlayed){ filmPlayed=true; setTimeout(function(){playFilm(false);},250); }
+  if(idx===2) buildPicker();
+  if(idx===3) buildReveal("silent",SILENT,"silentHint","silent");
+  if(idx===4) buildReveal("who",WHO,"whoHint","who");
+}
+function go(d){ show(idx+d); }
+document.addEventListener("keydown",function(e){
+  var t=e.target.tagName;
+  if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();go(1);}
+  if(e.key==="ArrowLeft") go(-1);
+});
+
+function toggleCalm(){ document.body.classList.toggle("calm"); }
+function openModal(id){ document.getElementById(id).classList.add("open"); }
+function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+
+function confetti(){
+  if(document.body.classList.contains("calm")) return;
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  var cols=["#1f9d57","#27b466","#2b7fd6","#f6a609"];
+  for(var i=0;i<26;i++){
+    var d=document.createElement("div");
+    d.style.cssText="position:fixed;top:-10px;left:"+(Math.random()*100)+"vw;width:9px;height:9px;background:"+cols[i%cols.length]+";z-index:55;border-radius:2px;pointer-events:none;";
+    document.body.appendChild(d);
+    var fall=400+Math.random()*500, x=(Math.random()*120-60);
+    d.animate([{transform:"translateY(0) rotate(0)",opacity:1},{transform:"translateY(100vh) translateX("+x+"px) rotate(540deg)",opacity:0}],{duration:fall+1200,easing:"ease-in"});
+    setTimeout((function(el){return function(){el.remove();};})(d),fall+1300);
+  }
+}
+
+function loadStore(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); }catch(e){ return {}; } }
+function save(){
+  var s=loadStore(); s.tally=tCount;
+  var v=document.getElementById("voice"); if(v) s.voice=v.value.trim();
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+}
+function markDone(){
+  save(); var s=loadStore(); s.done=true; s.date=new Date().toISOString();
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+  addScore(SEAL_PTS);
+  document.getElementById("closedScore").textContent="READINESS "+score;
+  document.getElementById("closed").classList.add("show");
+  beep(659,.18); setTimeout(function(){beep(784,.18);},140); setTimeout(function(){beep(988,.26);},300);
+  confetti(); setTimeout(confetti,400);
+}
+
+function printEvidence(){
+  var date=new Date().toLocaleDateString("en-GB");
+  var v=(document.getElementById("voice").value||"").replace(/</g,"&lt;");
+  var w=window.open("","","width=800,height=650");
+  w.document.write(
+    '<html><head><title>Assembly Evidence</title><style>'+
+    'body{font-family:Arial,sans-serif;padding:30px;max-width:680px;margin:0 auto;color:#111}'+
+    'h1{font-size:20px;border-bottom:3px solid #1f9d57;padding-bottom:8px}'+
+    'h2{font-size:14px;color:#555;margin-top:18px}table{width:100%;border-collapse:collapse;margin:8px 0}'+
+    'td,th{border:1px solid #ccc;padding:7px 10px;text-align:left}th{background:#e7f8ee}'+
+    '.sig{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:20px}'+
+    '.sig div{border-top:1px solid #999;padding-top:6px;font-size:11px;color:#666}</style></head><body>'+
+    '<h1>Assembly Evidence — Safeguarding: Calling For Help (What To Say)</h1>'+
+    '<p><b>Date:</b> '+date+' &nbsp;·&nbsp; <b>British Values link:</b> Rule of Law &nbsp;·&nbsp; <b>Behaviour link:</b> Resilience</p>'+
+    '<table><tr><th>KCSIE focus</th><td>Part 1 — knowing how to get help: which service, what to say, who to tell. Situations covered: medical, street violence, being attacked, abuse/violence in the home, feeling followed or unsafe, struggling/mental wellbeing, fire and other worries.</td></tr>'+
+    '<tr><th>Key safeguarding points</th><td>999/101/111/Childline 0800 1111/Shout text 85258; the Silent Solution (999 then press 55); "never your fault / never in trouble for getting help"</td></tr>'+
+    '<tr><th>Readiness score reached</th><td>'+score+'</td></tr>'+
+    '<tr><th>Times helped / spoke up (whole-hall tally)</th><td>'+tCount+'</td></tr></table>'+
+    '<h2>Hall agreed — service + first thing to say</h2><p>'+(v||"—")+'</p>'+
+    '<h2>Staff notes (flag any disclosure to DSL same day)</h2><p style="min-height:46px;border:1px solid #ccc;border-radius:4px;padding:8px"></p>'+
+    '<div class="sig"><div>Staff signature</div><div>Any disclosure → DSL same day (sign)</div></div>'+
+    '</body></html>');
+  w.document.close(); w.focus(); w.print();
+}
+
+(function init(){
+  var s=loadStore();
+  if(typeof s.tally==="number"){ tCount=s.tally; document.getElementById("tcount").textContent=tCount; }
+  if(s.voice){ document.getElementById("voice").value=s.voice; }
+  document.getElementById("voice").addEventListener("input",save);
+  show(0);
+})();
+</script>
+</body>
+</html>

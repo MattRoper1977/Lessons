@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>British Values · The Rule of Law — Assembly</title>
+<style>
+:root{
+  --bg1:#fff6e3; --bg2:#ffe3a6;
+  --ink:#2a1c05; --ink-soft:#7a6128;
+  --gold:#f6a609; --amber:#ffc83d; --gold-deep:#d98800;
+  --cream:#fffdf7;
+  --teal:#10a99a; --coral:#ff6a45; --blue:#3f6fd6; --green:#2aa35e;
+  --line:rgba(122,47,0,.16); --shadow:rgba(122,47,0,.16);
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,monospace;
+  --disp:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  --body:"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);color:var(--ink);overflow:hidden;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2))}
+/* sunburst rays */
+.rays{position:fixed;top:-26vh;right:-26vw;width:80vw;height:80vw;z-index:0;opacity:.10;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,#d98800 0deg 7deg,transparent 7deg 14deg)}
+
+.logo{position:fixed;top:13px;right:16px;font-weight:900;font-size:10px;letter-spacing:.1em;color:var(--ink-soft);z-index:8}
+.logo b{color:#7a2f00}
+
+/* HUD */
+.hud{position:fixed;top:11px;left:50%;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:13px;
+  background:var(--cream);border:1px solid var(--line);border-radius:40px;padding:6px 16px;box-shadow:0 4px 0 var(--shadow)}
+.caseno{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-soft)}
+.seals{display:flex;gap:7px}
+.seal{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:14px;opacity:.4;transition:.35s;filter:grayscale(1)}
+.seal.lit{opacity:1;filter:none;border-color:var(--gold);background:#fff2cf;box-shadow:0 0 14px rgba(246,166,9,.5);animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.score{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
+.score b{font-family:var(--disp);color:var(--gold-deep);font-size:15px;margin-left:4px}
+.xppop{position:fixed;font-family:var(--disp);color:var(--gold-deep);font-size:20px;pointer-events:none;z-index:30}
+
+.stage{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:11vh 6vw 12vh}
+.slide.on{display:flex;animation:in .5s ease both}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--body);font-weight:800;font-size:clamp(.7rem,1.3vw,.86rem);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);background:var(--cream);padding:6px 16px;border-radius:40px;margin-bottom:18px;box-shadow:0 3px 0 var(--shadow)}
+h1{font-family:var(--disp);font-size:clamp(2.6rem,9vw,6.2rem);line-height:.88;letter-spacing:-.02em;text-transform:uppercase;
+  text-shadow:0 3px 0 rgba(255,255,255,.5)}
+h1 .thin{display:block;font-family:var(--body);font-weight:800;font-size:.2em;letter-spacing:.18em;text-transform:uppercase;color:#7a2f00;margin-top:14px;text-shadow:none}
+h2{font-family:var(--disp);font-size:clamp(1.7rem,5vw,3.3rem);line-height:1;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:18px;text-shadow:0 2px 0 rgba(255,255,255,.5)}
+
+.heroBox{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.dust{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--amber);opacity:.6;animation:rise 5.5s linear infinite}
+@keyframes rise{0%{transform:translateY(30px) scale(.6);opacity:0}30%{opacity:.8}100%{transform:translateY(-90px) scale(1);opacity:0}}
+.scaleWrap{filter:drop-shadow(0 8px 10px rgba(122,47,0,.18))}
+#scaleHero{width:min(46vw,330px);height:auto}
+.beam{transform-origin:240px 92px;transition:transform .7s cubic-bezier(.34,1.4,.5,1)}
+.beam.dipL{transform:rotate(-5deg)}
+.beam.tip{transform:rotate(-22deg);transition:transform .5s ease}
+.pan-tok{opacity:0;transition:opacity .4s}
+.pan-tok.show{opacity:1}
+.sway{animation:sway 5.5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+
+/* ===== MINI-FILM ===== */
+.film{position:relative;width:min(94vw,720px);height:240px;background:var(--cream);border-radius:18px;
+  box-shadow:0 6px 0 var(--shadow);border:1px solid var(--line);overflow:hidden}
+.film .ground{position:absolute;left:0;right:0;bottom:54px;height:3px;background:var(--line)}
+.film .ground.lit{background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.fg{position:absolute;bottom:57px;width:30px;height:44px}
+.fg .head{width:15px;height:15px;border-radius:50%;background:var(--coral);margin:0 auto 3px;transition:background .6s}
+.fg .body{width:24px;height:26px;border-radius:12px 12px 4px 4px;background:#a35a1e;margin:0 auto}
+.film.play .fg{animation:march 7s ease forwards}
+.film.play .fg .head{animation:heal 7s ease forwards}
+@keyframes march{0%{transform:var(--t)}46%{transform:var(--t)}100%{transform:translate(0,0)}}
+@keyframes heal{0%,55%{background:var(--coral)}100%{background:var(--green)}}
+.tok{position:absolute;bottom:64px;left:50%;font-size:26px;transform:translateX(-50%)}
+.banner{position:absolute;top:-50px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--ink);
+  font-family:var(--disp);text-transform:uppercase;font-size:1.1rem;padding:8px 22px;border-radius:30px;
+  box-shadow:0 4px 0 var(--shadow);white-space:nowrap}
+.film.play .banner{animation:drop 7s ease forwards}
+@keyframes drop{0%,40%{top:-50px}50%{top:14px}66%{top:14px}80%{top:-50px}100%{top:-50px}}
+.tick{position:absolute;top:14px;right:18px;font-size:1.8rem;opacity:0}
+.film.play .tick{animation:tickin 7s ease forwards}
+@keyframes tickin{0%,72%{opacity:0;transform:scale(.4)}82%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+.filmcap{font-family:var(--mono);font-size:clamp(.82rem,1.7vw,1rem);margin-top:14px;color:var(--coral);min-height:1.4em;letter-spacing:.04em}
+.filmcap.ok{color:var(--green)}
+.replay{margin-top:12px;background:var(--cream);border:1px solid var(--line);color:var(--ink);border-radius:30px;
+  padding:8px 18px;font-weight:700;cursor:pointer;font-family:var(--body);box-shadow:0 3px 0 var(--shadow)}
+
+/* ===== cards / chips ===== */
+.rules{display:flex;flex-direction:column;gap:12px;width:min(92vw,640px)}
+.rule{display:flex;align-items:center;gap:16px;background:var(--cream);border:1px solid var(--line);border-left:6px solid var(--gold);
+  border-radius:10px;padding:16px 20px;text-align:left;cursor:pointer;transition:.25s;position:relative;box-shadow:0 4px 0 var(--shadow);
+  opacity:0;transform:translateX(-14px);animation:rin .5s ease forwards}
+.rule:nth-child(1){animation-delay:.1s}.rule:nth-child(2){animation-delay:.3s}.rule:nth-child(3){animation-delay:.5s}
+@keyframes rin{to{opacity:1;transform:none}}
+.rule:hover{transform:translateY(-2px)}
+.rule.examined{border-left-color:var(--green);background:#f1faef;cursor:default}
+.rule.examined::after{content:"✓ VERIFIED";position:absolute;top:8px;right:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--green)}
+.rule .num{font-family:var(--disp);color:var(--gold-deep);font-size:1.5rem;min-width:36px}
+.rule.examined .num{color:var(--green)}
+.rule h3{font-family:var(--disp);text-transform:uppercase;font-size:1.2rem}
+.rule p{color:var(--ink-soft);font-size:.98rem;line-height:1.35}
+.examineHint{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;color:var(--ink-soft);margin-top:14px}
+
+.scaleStage{display:flex;gap:clamp(18px,4vw,46px);align-items:center;flex-wrap:wrap;justify-content:center;width:100%;max-width:900px}
+.whoBtns{display:flex;flex-direction:column;gap:12px;min-width:220px}
+.whoBtn{font-family:var(--body);background:var(--cream);border:1px solid var(--line);color:var(--ink);border-radius:10px;
+  padding:14px 18px;font-size:1.04rem;cursor:pointer;text-align:left;transition:.2s;display:flex;gap:10px;align-items:center;
+  box-shadow:0 4px 0 var(--shadow);font-weight:600}
+.whoBtn:hover:not(:disabled){transform:translateY(-2px)}
+.whoBtn:disabled{opacity:.55;cursor:default;box-shadow:none}
+.whoBtn .ic{font-size:1.5rem}
+.scaleCol{display:flex;flex-direction:column;align-items:center}
+.minihall{display:flex;gap:6px;margin-top:4px;height:26px}
+.mini{width:13px;height:21px;border-radius:6px 6px 2px 2px;background:#a35a1e;transition:transform .5s ease,opacity .5s ease}
+.minihall.scatter .mini:nth-child(1){transform:translate(-42px,-30px) rotate(-40deg);opacity:.3}
+.minihall.scatter .mini:nth-child(2){transform:translate(-18px,18px) rotate(30deg);opacity:.3}
+.minihall.scatter .mini:nth-child(3){transform:translate(8px,-26px) rotate(15deg);opacity:.3}
+.minihall.scatter .mini:nth-child(4){transform:translate(28px,16px) rotate(-25deg);opacity:.3}
+.minihall.scatter .mini:nth-child(5){transform:translate(46px,-12px) rotate(40deg);opacity:.3}
+.verdict{font-family:var(--mono);font-size:clamp(1rem,2.2vw,1.28rem);color:var(--green);min-height:1.5em;letter-spacing:.03em;margin-top:10px;max-width:36ch;line-height:1.35;font-weight:600}
+.keyline{max-width:32ch;font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.1rem,2.3vw,1.5rem);line-height:1.12;color:#7a2f00;opacity:0;transition:opacity .6s;margin-top:12px}
+.keyline.show{opacity:1}
+.tipBtn{margin-top:14px;background:#fff;border:1px solid var(--coral);color:var(--coral);border-radius:30px;padding:9px 18px;font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;cursor:pointer;display:none;font-weight:700}
+.tipBtn.show{display:inline-block}
+.tipBtn:hover{background:#fff0eb}
+
+/* ===== video ===== */
+.vidcard{width:min(94vw,760px);background:var(--cream);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 0 var(--shadow);padding:18px;text-align:left}
+.vidframe{position:relative;width:100%;aspect-ratio:16/9;background:#241803;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.vidframe iframe{width:100%;height:100%;border:0;display:none}
+.vidframe.loaded iframe{display:block}
+.vidPlay{display:flex;flex-direction:column;align-items:center;gap:10px;color:#fff7e6;text-align:center;padding:18px}
+.vidPlay .pbig{width:78px;height:78px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.vidPlay .pbig:hover{transform:scale(1.06)}
+.vidframe.loaded .vidPlay{display:none}
+.vidrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.vidrow input{flex:1;min-width:160px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--mono);font-size:.85rem;color:var(--ink)}
+.vidrow a{font-family:var(--mono);font-size:.82rem;color:var(--gold-deep);text-decoration:none;font-weight:700}
+.vidnote{font-size:.82rem;color:var(--ink-soft);margin-top:10px;line-height:1.4}
+.vidnote b{color:var(--coral)}
+
+/* ===== flip ===== */
+.flip{perspective:1200px;width:min(90vw,540px);height:300px;cursor:pointer}
+.flipInner{position:relative;width:100%;height:100%;transition:transform .8s;transform-style:preserve-3d}
+.flip.flipped .flipInner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;box-shadow:0 6px 0 var(--shadow)}
+.face.front{background:linear-gradient(160deg,#ff8a3d,#ff6a45);color:#fff}
+.face.front .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.5rem)}
+.face.back{background:linear-gradient(160deg,#2bbf78,#1f9c61);color:#fff;transform:rotateY(180deg)}
+.face.back .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.5rem)}
+.face .shield{font-size:3rem;margin-bottom:10px}
+.face .ln{font-size:1.02rem;margin-top:12px;max-width:26ch;line-height:1.4;opacity:.96}
+.face .ln b{text-decoration:underline}
+.tapcue{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;color:var(--ink-soft);margin-top:16px;transition:opacity .3s}
+
+/* ===== quiz ===== */
+.quiz{width:min(90vw,620px)}
+.quizq{font-size:clamp(1.1rem,2.4vw,1.5rem);line-height:1.3;margin-bottom:18px;color:var(--ink)}
+.quizopt{display:block;width:100%;text-align:left;background:var(--cream);border:1px solid var(--line);color:var(--ink);padding:15px 18px;margin:10px 0;font-size:1.08rem;border-radius:10px;cursor:pointer;font-family:var(--body);font-weight:600;transition:.2s;box-shadow:0 4px 0 var(--shadow)}
+.quizopt:hover:not(:disabled){transform:translateY(-2px)}
+.quizopt:disabled{cursor:default;box-shadow:none}
+.quizopt.right{background:#e9f9ed;border-color:var(--green)}
+.quizopt.wrong{background:#ffeee9;border-color:var(--coral)}
+.qfb{margin-top:14px;font-size:1.04rem;min-height:1.4em;color:var(--ink-soft);max-width:42ch}
+
+/* ===== capture ===== */
+.cap{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;align-items:stretch}
+.tallybox,.voicebox{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:22px 26px;box-shadow:0 5px 0 var(--shadow)}
+.tallybox{min-width:240px;border-top:6px solid var(--gold);text-align:center}
+.tallybox h3,.voicebox h3{font-family:var(--mono);font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px}
+.tallycount{font-family:var(--disp);font-size:3.4rem;color:var(--ink);line-height:1;margin:8px 0;transition:transform .15s}
+.tallycount.bump{transform:scale(1.18)}
+.tbtns button{background:var(--gold);color:#241803;border:none;width:50px;height:50px;border-radius:50%;font-size:1.5rem;font-weight:800;margin:4px;cursor:pointer;font-family:var(--body)}
+.tbtns button.minus{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.voicebox{flex:1;min-width:300px;text-align:left}
+textarea{width:100%;min-height:120px;background:#fff;border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:12px;font-family:var(--body);font-size:1rem;resize:vertical}
+
+.pledge{font-size:clamp(1.3rem,3.2vw,2.1rem);max-width:24ch;line-height:1.28;font-weight:800;color:#7a2f00}
+.completeBtn{margin-top:26px;background:var(--gold);color:#241803;border:none;border-radius:30px;padding:15px 32px;font-size:1.14rem;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 5px 0 var(--shadow)}
+.completeBtn:hover{transform:translateY(-2px)}
+
+.closed{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;
+  background:radial-gradient(700px 500px at 50% 40%,rgba(255,210,110,.9),rgba(255,200,90,.96))}
+.closed.show{display:flex}
+.closedStamp{font-family:var(--disp);text-transform:uppercase;color:var(--green);border:6px solid var(--green);border-radius:14px;
+  padding:18px 36px;font-size:clamp(1.6rem,6vw,3.4rem);letter-spacing:.04em;background:#fff;
+  transform:scale(0) rotate(-16deg);animation:slam .55s cubic-bezier(.2,1.7,.4,1) forwards;box-shadow:0 8px 0 rgba(122,47,0,.18)}
+@keyframes slam{to{transform:scale(1) rotate(-7deg)}}
+.closedSub{font-family:var(--disp);text-transform:uppercase;color:#7a2f00;margin-top:24px;letter-spacing:.04em;font-size:clamp(1rem,2.4vw,1.4rem)}
+.closedScore{font-family:var(--disp);color:var(--ink);font-size:clamp(1.4rem,4vw,2.2rem);margin-top:8px}
+.closedBtn{margin-top:26px;background:#fff;border:1px solid var(--line);color:var(--ink-soft);border-radius:30px;padding:10px 20px;font-family:var(--mono);font-size:.8rem;cursor:pointer}
+
+.navbar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:12px 20px;z-index:9;
+  background:linear-gradient(0deg,rgba(255,227,166,.92),transparent)}
+.pbar{flex:1;height:6px;background:rgba(122,47,0,.16);border-radius:4px;overflow:hidden}
+.pfill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--coral));transition:width .45s}
+.slidelbl{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);min-width:54px}
+.navbtn{background:var(--gold);color:#241803;border:none;border-radius:30px;padding:11px 22px;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 4px 0 var(--shadow)}
+.navbtn.ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.tools{position:fixed;top:11px;left:14px;display:flex;gap:8px;z-index:9}
+.toolbtn{background:var(--cream);border:1px solid var(--line);color:var(--ink-soft);border-radius:30px;padding:7px 13px;font-size:.74rem;font-family:var(--mono);letter-spacing:.04em;cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.toolbtn:hover{color:var(--gold-deep)}
+.modal{position:fixed;inset:0;background:rgba(60,40,8,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal.open{display:flex}
+.modal-card{background:#fff;border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;padding:28px;position:relative;text-align:left;box-shadow:0 10px 0 var(--shadow)}
+.modal-card h3{font-family:var(--disp);color:var(--gold-deep);margin-bottom:14px;text-transform:uppercase;font-size:1.1rem}
+.modal-card p{color:var(--ink);line-height:1.55;margin-bottom:10px;font-size:.96rem}
+.modal-card p b{color:#7a2f00}
+.modal-x{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--ink-soft);font-size:1.4rem;cursor:pointer}
+
+body.calm{--coral:#e88a6a;--teal:#3bb0a3}
+body.calm .sway,body.calm .dust,body.calm .film.play .fg,body.calm .film.play .banner,body.calm .film.play .tick,body.calm .film.play .fg .head{animation:none}
+body.calm .slide.on{animation:none}
+@media (prefers-reduced-motion:reduce){
+  .sway,.dust,.slide.on,.film.play .fg,.film.play .banner,.film.play .tick,.film.play .fg .head{animation:none}
+  .beam,.flipInner{transition:none}
+}
+@media (max-width:680px){
+  .tools{top:auto;bottom:62px}.hud{gap:8px;padding:5px 10px}.seal{width:26px;height:26px;font-size:12px}
+  .caseno{display:none}.scaleStage{gap:14px}.film{height:210px}
+}
+@media print{body *{visibility:hidden}}
+</style>
+</head>
+<body>
+<div class="rays"></div>
+<div class="logo">PROGRESS <b>SCHOOLS</b></div>
+
+<div class="hud">
+  <span class="caseno">CASE 2026·ROL</span>
+  <div class="seals">
+    <div class="seal" id="seal-order" title="Order restored">👥</div>
+    <div class="seal" id="seal-tests" title="The three tests">🔍</div>
+    <div class="seal" id="seal-equal" title="Equal before the law">⚖️</div>
+    <div class="seal" id="seal-shield" title="Trap or shield">🛡️</div>
+    <div class="seal" id="seal-verdict" title="Verdict">🔨</div>
+  </div>
+  <span class="score">STRENGTH<b id="score">0</b></span>
+</div>
+
+<div class="tools">
+  <button class="toolbtn" onclick="openModal('ta')">👁 TA</button>
+  <button class="toolbtn" onclick="toggleCalm()">🌙 CALM</button>
+  <button class="toolbtn" onclick="printEvidence()">🖨 EVIDENCE</button>
+</div>
+
+<div class="stage" id="stage">
+
+  <section class="slide on">
+    <div class="eyebrow">🏛️ British Values · Civic Record 01</div>
+    <div class="heroBox">
+      <span class="dust" style="left:10%;animation-delay:0s"></span>
+      <span class="dust" style="left:28%;animation-delay:1.4s"></span>
+      <span class="dust" style="left:72%;animation-delay:.7s"></span>
+      <span class="dust" style="left:88%;animation-delay:2.1s"></span>
+      <div class="scaleWrap sway">
+        <svg id="scaleHero" viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="196" y="276" width="88" height="18" rx="4" fill="#7a2f00"/>
+          <rect x="212" y="262" width="56" height="16" rx="4" fill="#9a4400"/>
+          <rect x="232" y="104" width="16" height="162" rx="5" fill="#7a2f00"/>
+          <circle cx="240" cy="98" r="12" fill="#fffdf7" stroke="#7a2f00" stroke-width="4"/>
+          <g class="beam">
+            <rect x="112" y="86" width="256" height="12" rx="6" fill="#7a2f00"/>
+            <line x1="136" y1="92" x2="118" y2="150" stroke="#7a2f00" stroke-width="3"/>
+            <line x1="136" y1="92" x2="170" y2="150" stroke="#7a2f00" stroke-width="3"/>
+            <path d="M104 150 H184 A40 26 0 0 1 104 150 Z" fill="#10a99a" stroke="#0c8478" stroke-width="3"/>
+            <line x1="344" y1="92" x2="310" y2="150" stroke="#7a2f00" stroke-width="3"/>
+            <line x1="344" y1="92" x2="362" y2="150" stroke="#7a2f00" stroke-width="3"/>
+            <path d="M296 150 H376 A40 26 0 0 1 296 150 Z" fill="#ff6a45" stroke="#e0492a" stroke-width="3"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <h1>The Rule<br>of Law<span class="thin">solve the case · keep it fair</span></h1>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">▶ Watch · Case 02</div>
+    <h2>The rule of law in 7 seconds</h2>
+    <div class="film" id="film">
+      <div class="banner">One fair rule</div>
+      <span class="tok">⭐</span>
+      <div class="fg" style="--t:translate(-140px,-30px) rotate(-22deg);left:18%"><div class="head"></div><div class="body"></div></div>
+      <div class="fg" style="--t:translate(70px,40px) rotate(18deg);left:36%"><div class="head"></div><div class="body"></div></div>
+      <div class="fg" style="--t:translate(-50px,30px) rotate(-12deg);left:54%"><div class="head"></div><div class="body"></div></div>
+      <div class="fg" style="--t:translate(120px,-26px) rotate(26deg);left:72%"><div class="head"></div><div class="body"></div></div>
+      <div class="tick">✅</div>
+      <div class="ground lit"></div>
+    </div>
+    <div class="filmcap" id="filmcap">No rules — the strongest just grabs it.</div>
+    <button class="replay" onclick="playFilm(true)">↻ Replay</button>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ The test · Case 03</div>
+    <h2>Three things make it "law"</h2>
+    <div class="rules">
+      <div class="rule" onclick="examine(this)"><div class="num">01</div><div><h3>Known</h3><p>You can find out the rules. No secret rules used to catch you out.</p></div></div>
+      <div class="rule" onclick="examine(this)"><div class="num">02</div><div><h3>Fair</h3><p>The rule fits the situation — and there's a way to challenge it if it's wrong.</p></div></div>
+      <div class="rule" onclick="examine(this)"><div class="num">03</div><div><h3>Equal</h3><p>It applies to everyone. Your mate, your teacher, the Prime Minister. No exceptions.</p></div></div>
+    </div>
+    <div class="examineHint" id="examineHint">▸ tap each test to verify it</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ Equal before the law · Case 04</div>
+    <h2>The scales you can't tip</h2>
+    <div class="scaleStage">
+      <div class="whoBtns">
+        <button class="whoBtn" data-tok="m" onclick="weigh(this,'m')"><span class="ic">🧑</span> Put a mate on the scale</button>
+        <button class="whoBtn" data-tok="t" onclick="weigh(this,'t')"><span class="ic">👩‍🏫</span> Put a teacher on the scale</button>
+        <button class="whoBtn" data-tok="p" onclick="weigh(this,'p')"><span class="ic">🎩</span> Put the Prime Minister on</button>
+      </div>
+      <div class="scaleCol">
+        <div class="scaleWrap">
+          <svg width="280" height="240" viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="196" y="276" width="88" height="18" rx="4" fill="#7a2f00"/>
+            <rect x="212" y="262" width="56" height="16" rx="4" fill="#9a4400"/>
+            <rect x="232" y="104" width="16" height="162" rx="5" fill="#7a2f00"/>
+            <circle cx="240" cy="98" r="12" fill="#fffdf7" stroke="#7a2f00" stroke-width="4"/>
+            <g class="beam" id="beam2">
+              <rect x="112" y="86" width="256" height="12" rx="6" fill="#7a2f00"/>
+              <line x1="136" y1="92" x2="118" y2="150" stroke="#7a2f00" stroke-width="3"/>
+              <line x1="136" y1="92" x2="170" y2="150" stroke="#7a2f00" stroke-width="3"/>
+              <path d="M104 150 H184 A40 26 0 0 1 104 150 Z" fill="#10a99a" stroke="#0c8478" stroke-width="3"/>
+              <line x1="344" y1="92" x2="310" y2="150" stroke="#7a2f00" stroke-width="3"/>
+              <line x1="344" y1="92" x2="362" y2="150" stroke="#7a2f00" stroke-width="3"/>
+              <path d="M296 150 H376 A40 26 0 0 1 296 150 Z" fill="#ff6a45" stroke="#e0492a" stroke-width="3"/>
+              <text x="144" y="146" text-anchor="middle" font-size="24" class="pan-tok" id="tok-m">🧑</text>
+              <text x="144" y="146" text-anchor="middle" font-size="24" class="pan-tok" id="tok-t">👩‍🏫</text>
+              <text x="144" y="146" text-anchor="middle" font-size="24" class="pan-tok" id="tok-p">🎩</text>
+              <text x="336" y="146" text-anchor="middle" font-size="22">⚖️</text>
+            </g>
+          </svg>
+        </div>
+        <div class="minihall" id="minihall"><div class="mini"></div><div class="mini"></div><div class="mini"></div><div class="mini"></div><div class="mini"></div></div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict">Tap anyone. Watch what the scale does.</div>
+    <div class="keyline" id="scaleKey">The same law that judges you also judges the people with power over you. That's your protection.</div>
+    <button class="tipBtn" id="tipBtn" onclick="tipScale()">⚠ What if one person was above the law?</button>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">▶ Real voices · Case 05</div>
+    <h2>What do people think?</h2>
+    <div class="vidcard">
+      <div class="vidframe" id="vidframe">
+        <div class="vidPlay">
+          <div class="pbig" onclick="loadVideo()">▶</div>
+          <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.06em">Tap to load the clip</div>
+        </div>
+        <iframe id="vidIframe" title="Rule of Law video" allow="encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="vidrow">
+        <input id="vidId" value="LQeXEaRHbSc" aria-label="YouTube video ID">
+        <a href="https://www.youtube.com/results?search_query=british+values+rule+of+law+assembly" target="_blank" rel="noopener">find another ↗</a>
+      </div>
+      <div class="vidnote"><b>Staff:</b> preview before showing. Loads only when you tap play — paste any YouTube ID above and tap ▶ to swap the clip.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ The reframe · Case 06</div>
+    <h2>Trap, or shield?</h2>
+    <div class="flip" id="flip" onclick="doFlip()">
+      <div class="flipInner">
+        <div class="face front">
+          <div class="big">Law = a trap?</div>
+          <div class="ln">For some people, "the law" has only ever meant getting in trouble.</div>
+        </div>
+        <div class="face back">
+          <div class="shield">🛡️</div>
+          <div class="big">Law = your shield</div>
+          <div class="ln">You are <b>never</b> in trouble for telling a trusted adult that you — or a friend — need help.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tapcue" id="tapcue">▸ tap the card to flip it</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ Verdict · Case 07</div>
+    <div class="quiz">
+      <div class="quizq">True or false: <b>"Some people are too important to have to follow the law."</b></div>
+      <button class="quizopt" onclick="answer(this,false)">TRUE</button>
+      <button class="quizopt" onclick="answer(this,true)">FALSE</button>
+      <div class="qfb" id="qfb"></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ This week · Logbook 08</div>
+    <h2>Where did we keep it fair?</h2>
+    <div class="cap">
+      <div class="tallybox">
+        <h3>Fairness spotted</h3>
+        <div class="tallycount" id="tcount">0</div>
+        <div class="tbtns"><button class="minus" onclick="tally(-1)">−</button><button onclick="tally(1)">+</button></div>
+      </div>
+      <div class="voicebox">
+        <h3>One rule that keeps us safe is…</h3>
+        <textarea id="voice" placeholder="As a hall, agree one rule and why it matters…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">§ Close the case · Case 09</div>
+    <h2>This week's pledge</h2>
+    <p class="pledge">"I'll follow the rules that keep us all safe and fair — and I'll speak up when something isn't right."</p>
+    <button class="completeBtn" onclick="markDone()">⚖ Close the case</button>
+  </section>
+
+</div>
+
+<div class="closed" id="closed">
+  <div class="closedStamp">Case Closed</div>
+  <div class="closedSub">Rule of Law — upheld by this hall</div>
+  <div class="closedScore" id="closedScore">CASE STRENGTH 0</div>
+  <button class="closedBtn" onclick="document.getElementById('closed').classList.remove('show')">↺ back to slides</button>
+</div>
+
+<div class="navbar">
+  <button class="navbtn ghost" onclick="go(-1)">‹ Back</button>
+  <div class="slidelbl" id="lbl">01 / 09</div>
+  <div class="pbar"><div class="pfill" id="pf"></div></div>
+  <button class="navbtn" id="nb" onclick="go(1)">Start ›</button>
+</div>
+
+<div class="modal" id="ta"><div class="modal-card">
+  <button class="modal-x" onclick="closeModal('ta')">✕</button>
+  <h3>👁 TA Focus — Rule of Law</h3>
+  <p><b>The game:</b> the hall solves a case — five seals in the top bar light as pupils interact. Let them drive the taps.</p>
+  <p><b>Slide 2 film</b> auto-plays (7s); tap Replay if needed.</p>
+  <p><b>Slide 4 is the heart.</b> After all three weigh, the "⚠ above the law" button tips the scale and scatters the crowd — that's why equal matters.</p>
+  <p><b>Slide 5 video:</b> preview first; it loads only on tap, and you can swap the clip ID. Suggested IDs: LQeXEaRHbSc · KiajFTMeWUc.</p>
+  <p><b>Any disclosure → DSL same day.</b> Tally is whole-hall, never individual.</p>
+</div></div>
+
+<script>
+var STORE_KEY="progressBritishValues_v2";
+var VALUE="rulelaw";
+var TOTAL=9;
+var SEAL_PTS=140;
+
+var idx=0, tCount=0, audioCtx=null, score=0, filmPlayed=false;
+var weighed={}, examined={};
+var seals={order:false,tests:false,equal:false,shield:false,verdict:false};
+var slides=document.querySelectorAll(".slide");
+
+function beep(freq,dur,type){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||"sine"; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.06,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+document.addEventListener("pointerdown",function once(){ if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume(); document.removeEventListener("pointerdown",once); });
+
+function xpPop(pts){
+  var el=document.createElement("div"); el.className="xppop"; el.textContent="+"+pts;
+  var hud=document.querySelector(".score");
+  var r=hud&&hud.getBoundingClientRect?hud.getBoundingClientRect():{left:window.innerWidth/2,top:60};
+  el.style.left=r.left+"px"; el.style.top=(r.top+18)+"px";
+  document.body.appendChild(el);
+  el.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(-46px)",opacity:0}],{duration:900,easing:"ease-out"});
+  setTimeout(function(){el.remove();},950);
+}
+function addScore(pts){ score+=pts; document.getElementById("score").textContent=score; xpPop(pts); }
+function awardSeal(id){
+  if(seals[id]) return; seals[id]=true;
+  var s=document.getElementById("seal-"+id); if(s) s.classList.add("lit");
+  beep(660,.12); setTimeout(function(){beep(880,.14);},90);
+  addScore(SEAL_PTS);
+}
+
+/* ===== film ===== */
+function playFilm(replay){
+  var f=document.getElementById("film"), cap=document.getElementById("filmcap");
+  if(replay){ f.classList.remove("play"); void f.offsetWidth; }
+  cap.textContent="No rules — the strongest just grabs it."; cap.classList.remove("ok");
+  f.classList.add("play");
+  setTimeout(function(){ cap.textContent="One fair rule drops in…"; },3300);
+  setTimeout(function(){ cap.textContent="✓ Everyone safe. Everyone gets a turn. That's the rule of law."; cap.classList.add("ok"); beep(523,.14); setTimeout(function(){beep(659,.16);},120); setTimeout(function(){beep(784,.2);},260); awardSeal("order"); },6000);
+}
+
+/* ===== examine ===== */
+function examine(el){
+  if(el.classList.contains("examined")) return;
+  el.classList.add("examined"); beep(520,.12);
+  var n=el.querySelector(".num").textContent; examined[n]=true;
+  if(Object.keys(examined).length>=3){
+    var h=document.getElementById("examineHint");
+    h.textContent="✓ All three tests verified."; h.style.color="var(--green)";
+    awardSeal("tests");
+  }
+}
+
+/* ===== nav ===== */
+function show(n){
+  idx=Math.max(0,Math.min(TOTAL-1,n));
+  slides.forEach(function(s,i){ s.classList.toggle("on",i===idx); });
+  document.getElementById("pf").style.width=(idx/(TOTAL-1)*100)+"%";
+  document.getElementById("lbl").textContent=String(idx+1).padStart(2,"0")+" / "+TOTAL;
+  var nb=document.getElementById("nb");
+  nb.textContent = idx===TOTAL-1 ? "End" : (idx===0 ? "Start ›" : "Next ›");
+  if(idx===1 && !filmPlayed){ filmPlayed=true; setTimeout(function(){playFilm(false);},250); }
+}
+function go(d){ show(idx+d); }
+document.addEventListener("keydown",function(e){
+  var t=e.target.tagName;
+  if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();go(1);}
+  if(e.key==="ArrowLeft") go(-1);
+});
+
+/* ===== scales ===== */
+function weigh(btn,tok){
+  btn.disabled=true;
+  var t=document.getElementById("tok-"+tok); if(t) t.classList.add("show");
+  weighed[tok]=true;
+  var beam=document.getElementById("beam2");
+  beam.classList.add("dipL");
+  setTimeout(function(){ beam.classList.remove("dipL"); },360);
+  beep(440,.12);
+  var names={m:"a mate",t:"a teacher",p:"the Prime Minister"};
+  document.getElementById("verdict").textContent="Still level with "+names[tok]+" on it. The law weighs everyone the same.";
+  if(Object.keys(weighed).length>=3){
+    awardSeal("equal");
+    setTimeout(function(){
+      document.getElementById("scaleKey").classList.add("show");
+      document.getElementById("tipBtn").classList.add("show");
+      beep(587,.25);
+    },500);
+  }
+}
+function tipScale(){
+  var beam=document.getElementById("beam2"), mh=document.getElementById("minihall"), btn=document.getElementById("tipBtn");
+  if(beam.classList.contains("tip")){
+    beam.classList.remove("tip"); mh.classList.remove("scatter");
+    document.getElementById("verdict").textContent="Level again. Equal before the law — that's the protection.";
+    btn.textContent="⚠ What if one person was above the law?"; beep(523,.16);
+  }else{
+    beam.classList.add("tip"); mh.classList.add("scatter");
+    document.getElementById("verdict").textContent="When one person is above the law, it tips — and stops protecting everyone else.";
+    btn.textContent="↺ Restore fairness"; beep(180,.3,"triangle");
+  }
+}
+
+/* ===== video ===== */
+function loadVideo(){
+  var id=(document.getElementById("vidId").value||"").trim();
+  var m=id.match(/[?&]v=([\w-]{6,})/)||id.match(/youtu\.be\/([\w-]{6,})/);
+  if(m) id=m[1];
+  if(!id){ return; }
+  var fr=document.getElementById("vidIframe");
+  fr.src="https://www.youtube-nocookie.com/embed/"+id+"?rel=0&modestbranding=1";
+  document.getElementById("vidframe").classList.add("loaded");
+}
+
+/* ===== flip ===== */
+function doFlip(){
+  var f=document.getElementById("flip"); f.classList.toggle("flipped");
+  document.getElementById("tapcue").style.opacity=f.classList.contains("flipped")?"0":"1";
+  beep(392,.16);
+  if(f.classList.contains("flipped")) awardSeal("shield");
+}
+
+/* ===== quiz ===== */
+function answer(btn,correct){
+  var opts=btn.parentElement.querySelectorAll(".quizopt");
+  opts.forEach(function(o){ o.disabled=true; });
+  var fb=document.getElementById("qfb");
+  if(correct){
+    btn.classList.add("right"); beep(740,.2); confetti();
+    fb.textContent="✓ False — and that's the whole point. No one is above the law. The same rules protect, and bind, everyone.";
+    fb.style.color="var(--green)";
+  }else{
+    btn.classList.add("wrong"); beep(300,.22,"triangle");
+    opts.forEach(function(o){ if(o.textContent==="FALSE")o.classList.add("right"); });
+    fb.textContent="Not quite — it's FALSE. If powerful people could ignore the law, it would stop protecting you. Fair rules only work when they apply to everyone.";
+    fb.style.color="var(--ink-soft)";
+  }
+  awardSeal("verdict");
+}
+
+/* ===== tally ===== */
+function tally(d){
+  tCount=Math.max(0,tCount+d);
+  var el=document.getElementById("tcount");
+  el.textContent=tCount; el.classList.add("bump");
+  setTimeout(function(){el.classList.remove("bump");},150);
+  if(d>0) beep(560,.1);
+  save();
+}
+
+function toggleCalm(){ document.body.classList.toggle("calm"); }
+function openModal(id){ document.getElementById(id).classList.add("open"); }
+function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+
+function confetti(){
+  if(document.body.classList.contains("calm")) return;
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  var cols=["#f6a609","#ffc83d","#ff6a45","#2aa35e","#10a99a"];
+  for(var i=0;i<30;i++){
+    var d=document.createElement("div");
+    d.style.cssText="position:fixed;top:-10px;left:"+(Math.random()*100)+"vw;width:9px;height:9px;background:"+cols[i%cols.length]+";z-index:55;border-radius:2px;pointer-events:none;";
+    document.body.appendChild(d);
+    var fall=400+Math.random()*500, x=(Math.random()*120-60);
+    d.animate([{transform:"translateY(0) rotate(0)",opacity:1},{transform:"translateY(100vh) translateX("+x+"px) rotate(540deg)",opacity:0}],{duration:fall+1200,easing:"ease-in"});
+    setTimeout((function(el){return function(){el.remove();};})(d),fall+1300);
+  }
+}
+
+function loadStore(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); }catch(e){ return {}; } }
+function save(){
+  var s=loadStore(); s.tally=s.tally||{}; s.tally[VALUE]=tCount;
+  s.opinions=s.opinions||{};
+  var v=document.getElementById("voice"); if(v&&v.value.trim()) s.opinions[VALUE]={text:v.value.trim(),source:"assembly"};
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+}
+function markDone(){
+  save(); var s=loadStore(); s.rag=s.rag||{}; s.rag[VALUE]="green";
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+  addScore(SEAL_PTS);
+  document.getElementById("closedScore").textContent="CASE STRENGTH "+score;
+  document.getElementById("closed").classList.add("show");
+  beep(659,.18); setTimeout(function(){beep(784,.18);},140); setTimeout(function(){beep(988,.26);},300);
+  confetti(); setTimeout(confetti,400);
+}
+
+function printEvidence(){
+  var date=new Date().toLocaleDateString("en-GB");
+  var v=(document.getElementById("voice").value||"").replace(/</g,"&lt;");
+  var w=window.open("","","width=800,height=650");
+  w.document.write(
+    '<html><head><title>Assembly Evidence</title><style>'+
+    'body{font-family:Arial,sans-serif;padding:30px;max-width:680px;margin:0 auto;color:#111}'+
+    'h1{font-size:20px;border-bottom:3px solid #d98800;padding-bottom:8px}'+
+    'h2{font-size:14px;color:#555;margin-top:18px}table{width:100%;border-collapse:collapse;margin:8px 0}'+
+    'td,th{border:1px solid #ccc;padding:7px 10px;text-align:left}th{background:#fdeecb}'+
+    '.sig{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:20px}'+
+    '.sig div{border-top:1px solid #999;padding-top:6px;font-size:11px;color:#666}</style></head><body>'+
+    '<h1>Assembly Evidence — British Values: The Rule of Law</h1>'+
+    '<p><b>Date:</b> '+date+' &nbsp;·&nbsp; <b>Behaviour link:</b> Resilience &nbsp;·&nbsp; <b>Safeguarding focus:</b> What to do in an emergency</p>'+
+    '<table><tr><th>British Value</th><td>The Rule of Law</td></tr>'+
+    '<tr><th>Fairness spotted (whole-hall tally)</th><td>'+tCount+'</td></tr>'+
+    '<tr><th>Case strength reached</th><td>'+score+'</td></tr>'+
+    '<tr><th>KCSIE link</th><td>Part 1 — pupils know the law protects them; asking for help is never "being in trouble"</td></tr></table>'+
+    '<h2>Hall agreed — one rule that keeps us safe</h2><p>'+(v||"—")+'</p>'+
+    '<h2>Staff notes</h2><p style="min-height:46px;border:1px solid #ccc;border-radius:4px;padding:8px"></p>'+
+    '<div class="sig"><div>Staff signature</div><div>Any disclosure → DSL same day (sign)</div></div>'+
+    '</body></html>');
+  w.document.close(); w.focus(); w.print();
+}
+
+(function init(){
+  var s=loadStore();
+  if(s.tally&&typeof s.tally[VALUE]==="number"){ tCount=s.tally[VALUE]; document.getElementById("tcount").textContent=tCount; }
+  if(s.opinions&&s.opinions[VALUE]&&s.opinions[VALUE].text){ document.getElementById("voice").value=s.opinions[VALUE].text; }
+  document.getElementById("voice").addEventListener("input",save);
+  show(0);
+})();
+</script>
+</body>
+</html>

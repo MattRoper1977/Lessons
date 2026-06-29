@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behaviour Focus · Resilience — Assembly</title>
+<style>
+:root{
+  --bg1:#eafaf2; --bg2:#c4ecd9;
+  --ink:#10362c; --ink-soft:#4f7a6c;
+  --teal:#0fae9b; --teal-deep:#0a8576;
+  --orange:#ff7a1a; --orange-deep:#e85f00;
+  --green:#2bb673;
+  --amber:#f6a609;
+  --card:#ffffff;
+  --line:rgba(16,54,44,.14); --shadow:rgba(16,54,44,.16);
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,monospace;
+  --disp:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  --body:"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);color:var(--ink);overflow:hidden;background:linear-gradient(160deg,var(--bg1),var(--bg2))}
+.rays{position:fixed;top:-26vh;right:-26vw;width:80vw;height:80vw;z-index:0;opacity:.08;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 50%,var(--teal) 0deg 7deg,transparent 7deg 14deg)}
+.logo{position:fixed;top:13px;right:16px;font-weight:900;font-size:10px;letter-spacing:.1em;color:var(--ink-soft);z-index:8}
+.logo b{color:var(--teal-deep)}
+
+.hud{position:fixed;top:11px;left:50%;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:40px;padding:6px 16px;box-shadow:0 4px 0 var(--shadow)}
+.caseno{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-soft)}
+.seals{display:flex;gap:7px}
+.seal{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;opacity:.4;transition:.35s;filter:grayscale(1)}
+.seal.lit{opacity:1;filter:none;border-color:var(--orange);background:#fff0e3;box-shadow:0 0 14px rgba(255,122,26,.45);animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.score{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
+.score b{font-family:var(--disp);color:var(--orange-deep);font-size:15px;margin-left:4px}
+.xppop{position:fixed;font-family:var(--disp);color:var(--orange);font-size:20px;pointer-events:none;z-index:30}
+
+.stage{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:11vh 6vw 12vh}
+.slide.on{display:flex;animation:in .5s ease both}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--body);font-weight:800;font-size:clamp(.7rem,1.3vw,.86rem);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);background:var(--card);padding:6px 16px;border-radius:40px;margin-bottom:18px;box-shadow:0 3px 0 var(--shadow)}
+h1{font-family:var(--disp);font-size:clamp(2.6rem,9vw,6rem);line-height:.9;letter-spacing:-.02em;text-transform:uppercase;text-shadow:0 3px 0 rgba(255,255,255,.5)}
+h1 .thin{display:block;font-family:var(--body);font-weight:800;font-size:.2em;letter-spacing:.1em;text-transform:uppercase;color:var(--orange-deep);margin-top:14px;text-shadow:none}
+h2{font-family:var(--disp);font-size:clamp(1.6rem,4.6vw,3rem);line-height:1;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:16px;text-shadow:0 2px 0 rgba(255,255,255,.5)}
+
+.heroBox{position:relative;width:min(86vw,520px);height:150px;margin-bottom:8px}
+.trend{width:100%;height:100%}
+.trendline{stroke:var(--teal);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(15,174,155,.5));stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 3s ease forwards infinite}
+@keyframes draw{0%{stroke-dashoffset:1200}75%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+.peakStar{position:absolute;right:3%;top:2%;font-size:1.8rem;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{50%{transform:scale(1.2) rotate(8deg)}}
+
+.anchor{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.astep{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:8px 15px;font-weight:800;box-shadow:0 3px 0 var(--shadow);font-size:clamp(.8rem,1.6vw,.98rem)}
+.astep .n{color:var(--orange);font-family:var(--disp);margin-right:6px}
+
+/* film: a bar with a setback */
+.film{position:relative;width:min(94vw,640px);background:var(--card);border-radius:18px;box-shadow:0 6px 0 var(--shadow);border:1px solid var(--line);padding:30px 26px}
+.filmtrack{position:relative;height:34px;background:#eef4f1;border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.filmfill{height:100%;width:8%;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:20px}
+.film.play .filmfill{animation:fillsetback 7s ease forwards}
+@keyframes fillsetback{0%{width:8%}28%{width:62%}44%{width:40%}100%{width:100%}}
+.filmyet{position:absolute;top:-30px;left:42%;font-family:var(--disp);color:var(--orange);font-size:1.1rem;opacity:0}
+.film.play .filmyet{animation:yetpop 7s ease forwards}
+@keyframes yetpop{0%,40%{opacity:0;transform:translateY(8px)}48%{opacity:1;transform:translateY(0)}66%{opacity:1}78%{opacity:0}100%{opacity:0}}
+.filmstar{position:absolute;right:14px;top:50%;transform:translateY(-50%) scale(0);font-size:1.6rem}
+.film.play .filmstar{animation:starpop 7s ease forwards}
+@keyframes starpop{0%,84%{transform:translateY(-50%) scale(0)}94%{transform:translateY(-50%) scale(1.3)}100%{transform:translateY(-50%) scale(1)}}
+.filmcap{font-family:var(--mono);font-size:clamp(.82rem,1.7vw,1rem);margin-top:18px;color:var(--teal-deep);min-height:1.4em;font-weight:600}
+.filmcap.ok{color:var(--orange-deep)}
+.replay{margin-top:14px;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:30px;padding:8px 18px;font-weight:700;cursor:pointer;font-family:var(--body);box-shadow:0 3px 0 var(--shadow)}
+
+/* reveal toolkit */
+.revlist{display:flex;flex-direction:column;gap:10px;width:min(94vw,620px)}
+.ritem{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:12px;padding:14px 18px;text-align:left;box-shadow:0 4px 0 var(--shadow);opacity:.55;transition:.3s;cursor:pointer}
+.ritem.active{opacity:1;border-left-color:var(--orange)}
+.ritem.active:hover{transform:translateY(-2px)}
+.ritem.open{opacity:1;border-left-color:var(--teal);cursor:default}
+.ritem .ic{font-size:1.7rem;flex:none}
+.ritem h3{font-family:var(--disp);text-transform:uppercase;font-size:1rem}
+.ritem p{font-size:.9rem;color:var(--ink-soft);line-height:1.35;display:none;margin-top:3px}
+.ritem.open p{display:block}
+.ritem .tap{font-family:var(--mono);font-size:.7rem;color:var(--orange);margin-left:auto}
+.ritem.open .tap,.ritem:not(.active):not(.open) .tap{display:none}
+.revhint{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);margin-top:12px}
+
+/* signature: bar you can't empty */
+.hpwrap{width:min(94vw,620px);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 0 var(--shadow);padding:24px 26px}
+.hplabel{font-family:var(--disp);text-transform:uppercase;letter-spacing:.04em;color:var(--teal-deep);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.hplabel .lv{font-family:var(--mono);font-size:.8rem;color:var(--orange-deep)}
+.hptrack{position:relative;height:38px;background:#eef4f1;border-radius:22px;overflow:hidden;border:1px solid var(--line)}
+.hpfill{height:100%;width:38%;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:22px;transition:width .5s cubic-bezier(.3,1.3,.4,1)}
+.hpfloor{position:absolute;left:16%;top:0;bottom:0;width:1px;background:rgba(16,54,44,.18)}
+.hpyet{position:absolute;top:-30px;font-family:var(--disp);color:var(--orange);font-size:1.2rem;opacity:0;left:30%;pointer-events:none}
+.hpyet.show{animation:yetfloat 1.1s ease forwards}
+@keyframes yetfloat{0%{opacity:0;transform:translateY(8px)}30%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-26px)}}
+.hpmsg{margin-top:14px;font-size:1rem;color:var(--ink);min-height:2.6em;line-height:1.35;font-weight:600}
+.hpbtns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.hpbtns button{background:#f3faf7;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px;font-family:var(--body);font-weight:700;cursor:pointer;transition:.15s;font-size:.96rem}
+.hpbtns button:hover{transform:translateY(-2px);border-color:var(--teal)}
+.giveupBtn{margin-top:10px;background:transparent;border:1px dashed rgba(16,54,44,.3);color:var(--ink-soft);border-radius:10px;padding:9px 16px;font-family:var(--body);cursor:pointer;font-size:.9rem}
+.giveupBtn:hover{background:rgba(16,54,44,.04)}
+
+/* video */
+.vidcard{width:min(94vw,760px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 0 var(--shadow);padding:18px;text-align:left}
+.vidframe{position:relative;width:100%;aspect-ratio:16/9;background:#0e2a24;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.vidframe iframe{width:100%;height:100%;border:0;display:none}
+.vidframe.loaded iframe{display:block}
+.vidPlay{display:flex;flex-direction:column;align-items:center;gap:10px;color:#d6f5ec;text-align:center;padding:18px}
+.vidPlay .pbig{width:78px;height:78px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.vidPlay .pbig:hover{transform:scale(1.06)}
+.vidframe.loaded .vidPlay{display:none}
+.vidrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.vidrow input{flex:1;min-width:160px;background:#f3faf7;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--mono);font-size:.85rem;color:var(--ink)}
+.vidrow a{font-family:var(--mono);font-size:.82rem;color:var(--teal-deep);text-decoration:none;font-weight:700}
+.vidnote{font-size:.82rem;color:var(--ink-soft);margin-top:10px;line-height:1.4}
+.vidnote b{color:var(--orange-deep)}
+
+/* flip */
+.flip{perspective:1200px;width:min(90vw,540px);height:300px;cursor:pointer}
+.flipInner{position:relative;width:100%;height:100%;transition:transform .8s;transform-style:preserve-3d}
+.flip.flipped .flipInner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;box-shadow:0 6px 0 var(--shadow)}
+.face.front{background:linear-gradient(160deg,#ff9a4d,#ff7a1a);color:#fff}
+.face.front .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.4rem,3.6vw,2.3rem)}
+.face.back{background:linear-gradient(160deg,#19c4ac,#0fae9b);color:#fff;transform:rotateY(180deg)}
+.face.back .big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.5rem)}
+.face .em{font-size:3rem;margin-bottom:10px}
+.face .ln{font-size:1.02rem;margin-top:12px;max-width:28ch;line-height:1.4;opacity:.97}
+.face .ln b{text-decoration:underline}
+.tapcue{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;color:var(--ink-soft);margin-top:16px;transition:opacity .3s}
+
+/* quiz */
+.quiz{width:min(90vw,620px)}
+.quizq{font-size:clamp(1.1rem,2.4vw,1.5rem);line-height:1.3;margin-bottom:18px;color:var(--ink)}
+.quizopt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:15px 18px;margin:10px 0;font-size:1.06rem;border-radius:10px;cursor:pointer;font-family:var(--body);font-weight:600;transition:.2s;box-shadow:0 4px 0 var(--shadow)}
+.quizopt:hover:not(:disabled){transform:translateY(-2px)}
+.quizopt:disabled{cursor:default;box-shadow:none}
+.quizopt.right{background:#e8f9f1;border-color:var(--green)}
+.quizopt.wrong{background:#fff0e8;border-color:var(--orange)}
+.qfb{margin-top:14px;font-size:1.04rem;min-height:1.4em;color:var(--ink-soft);max-width:42ch}
+
+/* capture */
+.cap{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;align-items:stretch}
+.tallybox,.voicebox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 26px;box-shadow:0 5px 0 var(--shadow)}
+.tallybox{min-width:240px;border-top:6px solid var(--orange);text-align:center}
+.tallybox h3,.voicebox h3{font-family:var(--mono);font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-deep);margin-bottom:14px}
+.tallycount{font-family:var(--disp);font-size:3.4rem;color:var(--ink);line-height:1;margin:8px 0;transition:transform .15s}
+.tallycount.bump{transform:scale(1.18)}
+.tbtns button{background:var(--orange);color:#fff;border:none;width:50px;height:50px;border-radius:50%;font-size:1.5rem;font-weight:800;margin:4px;cursor:pointer;font-family:var(--body)}
+.tbtns button.minus{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.voicebox{flex:1;min-width:300px;text-align:left}
+textarea{width:100%;min-height:120px;background:#f3faf7;border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:12px;font-family:var(--body);font-size:1rem;resize:vertical}
+
+.pledge{font-size:clamp(1.2rem,3vw,2rem);max-width:25ch;line-height:1.3;font-weight:800;color:var(--teal-deep)}
+.completeBtn{margin-top:26px;background:var(--orange);color:#fff;border:none;border-radius:30px;padding:15px 32px;font-size:1.14rem;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 5px 0 var(--shadow)}
+.completeBtn:hover{transform:translateY(-2px)}
+
+.closed{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(700px 500px at 50% 40%,rgba(25,196,172,.92),rgba(15,174,155,.96))}
+.closed.show{display:flex}
+.closedStamp{font-family:var(--disp);text-transform:uppercase;color:var(--orange-deep);border:6px solid var(--orange);border-radius:14px;padding:18px 36px;font-size:clamp(1.5rem,5.5vw,3rem);letter-spacing:.04em;background:#fff;transform:scale(0) rotate(-16deg);animation:slam .55s cubic-bezier(.2,1.7,.4,1) forwards;box-shadow:0 8px 0 rgba(0,0,0,.18)}
+@keyframes slam{to{transform:scale(1) rotate(-7deg)}}
+.closedSub{font-family:var(--disp);text-transform:uppercase;color:#fff;margin-top:24px;letter-spacing:.04em;font-size:clamp(1rem,2.4vw,1.4rem)}
+.closedScore{font-family:var(--disp);color:#0a3b32;font-size:clamp(1.4rem,4vw,2.2rem);margin-top:8px}
+.closedBtn{margin-top:26px;background:#fff;border:none;color:var(--ink-soft);border-radius:30px;padding:10px 20px;font-family:var(--mono);font-size:.8rem;cursor:pointer}
+
+.navbar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:12px 20px;z-index:9;background:linear-gradient(0deg,rgba(196,236,217,.92),transparent)}
+.pbar{flex:1;height:6px;background:rgba(16,54,44,.14);border-radius:4px;overflow:hidden}
+.pfill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--orange));transition:width .45s}
+.slidelbl{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);min-width:54px}
+.navbtn{background:var(--orange);color:#fff;border:none;border-radius:30px;padding:11px 22px;font-weight:800;cursor:pointer;font-family:var(--body);box-shadow:0 4px 0 var(--shadow)}
+.navbtn.ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.tools{position:fixed;top:11px;left:14px;display:flex;gap:8px;z-index:9}
+.toolbtn{background:var(--card);border:1px solid var(--line);color:var(--ink-soft);border-radius:30px;padding:7px 13px;font-size:.74rem;font-family:var(--mono);letter-spacing:.04em;cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.toolbtn:hover{color:var(--teal-deep)}
+.modal{position:fixed;inset:0;background:rgba(8,30,24,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal.open{display:flex}
+.modal-card{background:#fff;border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;padding:28px;position:relative;text-align:left;box-shadow:0 10px 0 var(--shadow)}
+.modal-card h3{font-family:var(--disp);color:var(--teal-deep);margin-bottom:14px;text-transform:uppercase;font-size:1.1rem}
+.modal-card p{color:var(--ink);line-height:1.55;margin-bottom:10px;font-size:.96rem}
+.modal-card p b{color:var(--orange-deep)}
+.modal-x{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--ink-soft);font-size:1.4rem;cursor:pointer}
+
+body.calm .trendline,body.calm .peakStar,body.calm .film.play .filmfill,body.calm .film.play .filmyet,body.calm .film.play .filmstar{animation:none}
+body.calm .slide.on{animation:none}body.calm .trendline{stroke-dashoffset:0}
+@media (prefers-reduced-motion:reduce){
+  .trendline,.peakStar,.slide.on,.film.play .filmfill,.film.play .filmyet,.film.play .filmstar{animation:none}
+  .trendline{stroke-dashoffset:0}.flipInner,.hpfill{transition:none}
+}
+@media (max-width:680px){
+  .tools{top:auto;bottom:62px}.hud{gap:8px;padding:5px 10px}.seal{width:26px;height:26px;font-size:12px}
+  .caseno{display:none}.hpbtns{grid-template-columns:1fr}
+}
+@media print{body *{visibility:hidden}}
+</style>
+</head>
+<body>
+<div class="rays"></div>
+<div class="logo">PROGRESS <b>SCHOOLS</b></div>
+
+<div class="hud">
+  <span class="caseno">BEHAVIOUR</span>
+  <div class="seals">
+    <div class="seal" id="seal-yet" title="The power of yet">🌱</div>
+    <div class="seal" id="seal-moves" title="Comeback moves">🧰</div>
+    <div class="seal" id="seal-grit" title="The bar you can't empty">💪</div>
+    <div class="seal" id="seal-ask" title="Asking is smart">🙋</div>
+    <div class="seal" id="seal-grow" title="Mistakes grow you">✅</div>
+  </div>
+  <span class="score">GRIT<b id="score">0</b></span>
+</div>
+
+<div class="tools">
+  <button class="toolbtn" onclick="openModal('ta')">👁 TA</button>
+  <button class="toolbtn" onclick="toggleCalm()">🌙 CALM</button>
+  <button class="toolbtn" onclick="printEvidence()">🖨 EVIDENCE</button>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide on">
+    <div class="eyebrow">💪 Behaviour Focus · This Week</div>
+    <div class="heroBox">
+      <span class="peakStar">⭐</span>
+      <svg class="trend" viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polyline class="trendline" points="0,128 70,108 115,118 165,78 205,92 280,52 320,66 395,30 470,16"/>
+      </svg>
+    </div>
+    <h1>Resilience<span class="thin">it's OK to be stuck · it's not OK to stop</span></h1>
+    <div class="anchor">
+      <div class="astep"><span class="n">1</span>Stuck</div>
+      <div class="astep"><span class="n">2</span>Breathe</div>
+      <div class="astep"><span class="n">3</span>Try / Ask</div>
+      <div class="astep"><span class="n">4</span>Keep going</div>
+    </div>
+  </section>
+
+  <!-- 2 FILM -->
+  <section class="slide">
+    <div class="eyebrow">▶ Watch · Progress isn't a straight line</div>
+    <h2>The power of "…yet"</h2>
+    <div class="film" id="film">
+      <div class="filmtrack">
+        <div class="filmfill"></div>
+        <div class="filmstar">⭐</div>
+      </div>
+      <div class="filmyet">…yet</div>
+    </div>
+    <div class="filmcap" id="filmcap">You're getting somewhere…</div>
+    <button class="replay" onclick="playFilm(true)">↻ Replay</button>
+  </section>
+
+  <!-- 3 COMEBACK TOOLKIT -->
+  <section class="slide">
+    <div class="eyebrow">🧰 Your comeback moves</div>
+    <h2>When it gets hard, you have moves</h2>
+    <div class="revlist" id="moves"></div>
+    <div class="revhint" id="movesHint">▸ tap each move to see how it works</div>
+  </section>
+
+  <!-- 4 SIGNATURE: bar you can't empty -->
+  <section class="slide">
+    <div class="eyebrow">💪 The bar you can't empty</div>
+    <h2>Give up? Watch what happens</h2>
+    <div class="hpwrap">
+      <div class="hplabel"><span>RESILIENCE</span><span class="lv" id="hplv">keep going…</span></div>
+      <div class="hptrack">
+        <div class="hpfill" id="hpfill"></div>
+        <div class="hpfloor"></div>
+        <div class="hpyet" id="hpyet">…yet</div>
+      </div>
+      <div class="hpmsg" id="hpmsg">The work just got hard. Don't go quiet — pick a comeback move and watch the bar grow.</div>
+      <div class="hpbtns">
+        <button onclick="comeback('breathe')">🌬️ Breathe</button>
+        <button onclick="comeback('break')">🧩 Break it down</button>
+        <button onclick="comeback('try')">🔁 Try another way</button>
+        <button onclick="comeback('ask')">🙋 Ask for help</button>
+      </div>
+      <button class="giveupBtn" onclick="giveUp()">😮‍💨 …or just give up</button>
+    </div>
+  </section>
+
+  <!-- 5 VIDEO -->
+  <section class="slide">
+    <div class="eyebrow">▶ Famous failures</div>
+    <h2>Everyone fails first</h2>
+    <div class="vidcard">
+      <div class="vidframe" id="vidframe">
+        <div class="vidPlay">
+          <div class="pbig" onclick="loadVideo()">▶</div>
+          <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.06em">Tap to load the clip</div>
+        </div>
+        <iframe id="vidIframe" title="Growth mindset video" allow="encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="vidrow">
+        <input id="vidId" value="pN34FNbOKXc" aria-label="YouTube video ID">
+        <a href="https://www.youtube.com/results?search_query=famous+failures+growth+mindset" target="_blank" rel="noopener">find a clip ↗</a>
+      </div>
+      <div class="vidnote"><b>Staff:</b> preview before showing. Loads only when you tap play. Default is a growth-mindset talk — swap the ID for a short "Famous Failures" or ClassDojo "Power of Yet" clip if you'd rather something punchier.</div>
+    </div>
+  </section>
+
+  <!-- 6 FLIP / ASK -->
+  <section class="slide">
+    <div class="eyebrow">🙋 Asking · The smart move</div>
+    <h2>Is asking for help giving up?</h2>
+    <div class="flip" id="flip" onclick="doFlip()">
+      <div class="flipInner">
+        <div class="face front">
+          <div class="big">Asking for help = giving up?</div>
+          <div class="ln">Loads of people stay stuck because they think this. Let's flip it.</div>
+        </div>
+        <div class="face back">
+          <div class="em">🙋</div>
+          <div class="big">Asking is a comeback move</div>
+          <div class="ln">The people who get furthest are the ones who <b>ask</b>. It's not weak — it's the smartest, bravest move in the toolkit.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tapcue" id="tapcue">▸ tap the card to flip it</div>
+  </section>
+
+  <!-- 7 QUICK CHECK -->
+  <section class="slide">
+    <div class="eyebrow">✅ Quick check · Grow</div>
+    <div class="quiz">
+      <div class="quizq">True or false: <b>"Making mistakes means you're just not clever."</b></div>
+      <button class="quizopt" onclick="answer(this,false)">TRUE</button>
+      <button class="quizopt" onclick="answer(this,true)">FALSE</button>
+      <div class="qfb" id="qfb"></div>
+    </div>
+  </section>
+
+  <!-- 8 CAPTURE -->
+  <section class="slide">
+    <div class="eyebrow">§ This week · Logbook</div>
+    <h2>Add the "yet"</h2>
+    <div class="cap">
+      <div class="tallybox">
+        <h3>Comebacks spotted this week</h3>
+        <div class="tallycount" id="tcount">0</div>
+        <div class="tbtns"><button class="minus" onclick="tally(-1)">−</button><button onclick="tally(1)">+</button></div>
+      </div>
+      <div class="voicebox">
+        <h3>"I can't do this… yet." One thing I'll keep trying:</h3>
+        <textarea id="voice" placeholder="As a hall: finish the sentence — I can't ____ … yet. My next comeback move is ____."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 PLEDGE -->
+  <section class="slide">
+    <div class="eyebrow">⭐ Your pledge</div>
+    <h2>This week's pledge</h2>
+    <p class="pledge">"When it gets hard, I won't go quiet and give up. I'll breathe, break it down, try again or ask — and add the word 'yet'."</p>
+    <button class="completeBtn" onclick="markDone()">⭐ Level up</button>
+  </section>
+
+</div>
+
+<div class="closed" id="closed">
+  <div class="closedStamp">Levelled Up</div>
+  <div class="closedSub">It's OK to be stuck · it's not OK to stop</div>
+  <div class="closedScore" id="closedScore">GRIT 0</div>
+  <button class="closedBtn" onclick="document.getElementById('closed').classList.remove('show')">↺ back to slides</button>
+</div>
+
+<div class="navbar">
+  <button class="navbtn ghost" onclick="go(-1)">‹ Back</button>
+  <div class="slidelbl" id="lbl">01 / 09</div>
+  <div class="pbar"><div class="pfill" id="pf"></div></div>
+  <button class="navbtn" id="nb" onclick="go(1)">Start ›</button>
+</div>
+
+<div class="modal" id="ta"><div class="modal-card">
+  <button class="modal-x" onclick="closeModal('ta')">✕</button>
+  <h3>👁 TA Focus — Resilience</h3>
+  <p><b>The behaviour we're growing:</b> not going quiet and giving up the moment work gets hard. The whole assembly reframes <i>stuck</i> as a normal, temporary step — not a verdict on how clever you are.</p>
+  <p><b>Slide 4 is the heart.</b> Let a pupil try the "give up" button — the bar dips, says "…yet", and refuses to empty. That's the message made physical: stuck isn't stopped.</p>
+  <p><b>Watch your praise:</b> praise the <i>effort and the comeback move</i> ("you broke it down", "you asked"), not "you're so clever" — that's what builds resilience.</p>
+  <p><b>British Values link:</b> resilience helps us stay positive, respectful and responsible — especially when things are difficult. Ties to this week's value, Rule of Law.</p>
+  <p><b>Any disclosure → DSL same day.</b> Tally is whole-hall, never individual.</p>
+</div></div>
+
+<script>
+var STORE_KEY="progressBehaviourResilience_v1";
+var TOTAL=9;
+var SEAL_PTS=140;
+
+var idx=0, tCount=0, audioCtx=null, score=0, filmPlayed=false;
+var movesOpen=0, hp=38, leveled=false;
+var seals={yet:false,moves:false,grit:false,ask:false,grow:false};
+var slides=document.querySelectorAll(".slide");
+
+var MOVES=[
+ {ic:"🌬️",h:"Breathe",p:"Three slow breaths. It sounds too simple, but it switches your thinking brain back on so you can actually have a go."},
+ {ic:"🧩",h:"Break it down",p:"Don't look at the whole mountain. Just do the next tiny step. Then the next. Big things get done in small bits."},
+ {ic:"🔁",h:"Try another way",p:"Stuck doesn't mean it's impossible — it means that route didn't work. There's always another way in."},
+ {ic:"🙋",h:"Ask",p:"Asking isn't giving up — it's a comeback move. The people who get furthest ask the most questions."}
+];
+
+function beep(freq,dur,type){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||"sine"; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.06,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+document.addEventListener("pointerdown",function once(){ if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume(); document.removeEventListener("pointerdown",once); });
+
+function xpPop(pts){
+  var el=document.createElement("div"); el.className="xppop"; el.textContent="+"+pts;
+  var hud=document.querySelector(".score");
+  var r=hud&&hud.getBoundingClientRect?hud.getBoundingClientRect():{left:window.innerWidth/2,top:60};
+  el.style.left=r.left+"px"; el.style.top=(r.top+18)+"px";
+  document.body.appendChild(el);
+  el.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(-46px)",opacity:0}],{duration:900,easing:"ease-out"});
+  setTimeout(function(){el.remove();},950);
+}
+function addScore(p){ score+=p; document.getElementById("score").textContent=score; xpPop(p); }
+function awardSeal(id){
+  if(seals[id]) return; seals[id]=true;
+  var s=document.getElementById("seal-"+id); if(s) s.classList.add("lit");
+  beep(660,.12); setTimeout(function(){beep(880,.14);},90); addScore(SEAL_PTS);
+}
+
+/* film */
+function playFilm(replay){
+  var f=document.getElementById("film"), cap=document.getElementById("filmcap");
+  if(replay){ f.classList.remove("play"); void f.offsetWidth; }
+  cap.textContent="You're getting somewhere…"; cap.classList.remove("ok");
+  f.classList.add("play");
+  setTimeout(function(){ cap.textContent="Then it got hard and you slipped back… but that's not the end."; beep(300,.16,"triangle"); },3000);
+  setTimeout(function(){ cap.textContent="You didn't stop. You kept going."; beep(523,.14); },4600);
+  setTimeout(function(){ cap.textContent="⭐ Levelled up. Progress is never a straight line."; cap.classList.add("ok"); beep(659,.16); setTimeout(function(){beep(784,.2);},140); awardSeal("yet"); },6300);
+}
+
+/* comeback toolkit reveal */
+function buildMoves(){
+  var box=document.getElementById("moves"); if(box.children.length) return;
+  MOVES.forEach(function(s,i){
+    var d=document.createElement("div"); d.className="ritem"+(i===0?" active":"");
+    d.innerHTML='<span class="ic">'+s.ic+'</span><div><h3>'+s.h+'</h3><p>'+s.p+'</p></div><span class="tap">tap ▸</span>';
+    d.onclick=function(){ openMove(i,d); };
+    box.appendChild(d);
+  });
+}
+function openMove(i,el){
+  if(!el.classList.contains("active")||el.classList.contains("open")) return;
+  el.classList.remove("active"); el.classList.add("open"); beep(560,.12); movesOpen++;
+  var box=document.getElementById("moves");
+  if(i+1<box.children.length) box.children[i+1].classList.add("active");
+  if(movesOpen>=MOVES.length){ var h=document.getElementById("movesHint"); h.textContent="✓ Four moves — always one to reach for."; h.style.color="var(--teal-deep)"; awardSeal("moves"); }
+}
+
+/* signature bar */
+function setHp(){ document.getElementById("hpfill").style.width=hp+"%"; }
+function comeback(type){
+  hp=Math.min(100,hp+22); setHp(); beep(560,.12); setTimeout(function(){beep(720,.12);},80);
+  var msg={breathe:"🌬️ Breathe — brain back online. The bar grows. +grit",
+    "break":"🧩 One tiny step at a time. The bar grows. +grit",
+    "try":"🔁 Another way in — nice. The bar grows. +grit",
+    ask:"🙋 You asked — that's a comeback move, not a fail. The bar grows. +grit"};
+  document.getElementById("hpmsg").textContent=msg[type]||"The bar grows. +grit";
+  document.getElementById("hplv").textContent="climbing…";
+  if(hp>=100 && !leveled){ leveled=true;
+    document.getElementById("hpmsg").textContent="⭐ LEVELLED UP. That's resilience — you grew the bar instead of giving up.";
+    document.getElementById("hplv").textContent="LEVEL UP!";
+    beep(784,.22); setTimeout(function(){beep(988,.26);},150); confetti(); awardSeal("grit");
+  }
+}
+function giveUp(){
+  hp=Math.max(16,hp-12); setHp();
+  var y=document.getElementById("hpyet"); y.classList.remove("show"); void y.offsetWidth; y.classList.add("show");
+  document.getElementById("hpmsg").textContent="See? It dips — but it won't empty. Stuck isn't stopped. Pick a comeback move and it grows again.";
+  document.getElementById("hplv").textContent="…yet";
+  beep(240,.2,"triangle");
+}
+
+/* video */
+function loadVideo(){
+  var id=(document.getElementById("vidId").value||"").trim();
+  var m=id.match(/[?&]v=([\w-]{6,})/)||id.match(/youtu\.be\/([\w-]{6,})/);
+  if(m) id=m[1];
+  if(!id) return;
+  var fr=document.getElementById("vidIframe");
+  fr.src="https://www.youtube-nocookie.com/embed/"+id+"?rel=0&modestbranding=1";
+  document.getElementById("vidframe").classList.add("loaded");
+}
+
+/* flip */
+function doFlip(){
+  var f=document.getElementById("flip"); f.classList.toggle("flipped");
+  document.getElementById("tapcue").style.opacity=f.classList.contains("flipped")?"0":"1";
+  beep(392,.16);
+  if(f.classList.contains("flipped")) awardSeal("ask");
+}
+
+/* quiz */
+function answer(btn,correct){
+  var opts=btn.parentElement.querySelectorAll(".quizopt");
+  opts.forEach(function(o){ o.disabled=true; });
+  var fb=document.getElementById("qfb");
+  if(correct){
+    btn.classList.add("right"); beep(740,.2); confetti();
+    fb.textContent="✓ False. Mistakes are how your brain actually grows — every slip-up builds a stronger connection. Getting it wrong is part of getting it right.";
+    fb.style.color="var(--teal-deep)";
+  }else{
+    btn.classList.add("wrong"); beep(300,.22,"triangle");
+    opts.forEach(function(o){ if(o.textContent==="FALSE")o.classList.add("right"); });
+    fb.textContent="Not quite — it's FALSE. Clever isn't fixed. Your brain grows the most exactly when you're struggling. Mistakes are the workout.";
+    fb.style.color="var(--ink-soft)";
+  }
+  awardSeal("grow");
+}
+
+/* tally */
+function tally(d){
+  tCount=Math.max(0,tCount+d);
+  var el=document.getElementById("tcount");
+  el.textContent=tCount; el.classList.add("bump");
+  setTimeout(function(){el.classList.remove("bump");},150);
+  if(d>0) beep(560,.1);
+  save();
+}
+
+/* nav */
+function show(n){
+  idx=Math.max(0,Math.min(TOTAL-1,n));
+  slides.forEach(function(s,i){ s.classList.toggle("on",i===idx); });
+  document.getElementById("pf").style.width=(idx/(TOTAL-1)*100)+"%";
+  document.getElementById("lbl").textContent=String(idx+1).padStart(2,"0")+" / "+TOTAL;
+  var nb=document.getElementById("nb");
+  nb.textContent = idx===TOTAL-1 ? "End" : (idx===0 ? "Start ›" : "Next ›");
+  if(idx===1 && !filmPlayed){ filmPlayed=true; setTimeout(function(){playFilm(false);},250); }
+  if(idx===2) buildMoves();
+  if(idx===3) setHp();
+}
+function go(d){ show(idx+d); }
+document.addEventListener("keydown",function(e){
+  var t=e.target.tagName;
+  if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();go(1);}
+  if(e.key==="ArrowLeft") go(-1);
+});
+
+function toggleCalm(){ document.body.classList.toggle("calm"); }
+function openModal(id){ document.getElementById(id).classList.add("open"); }
+function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+
+function confetti(){
+  if(document.body.classList.contains("calm")) return;
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  var cols=["#0fae9b","#19c4ac","#ff7a1a","#f6a609","#2bb673"];
+  for(var i=0;i<28;i++){
+    var d=document.createElement("div");
+    d.style.cssText="position:fixed;top:-10px;left:"+(Math.random()*100)+"vw;width:9px;height:9px;background:"+cols[i%cols.length]+";z-index:55;border-radius:2px;pointer-events:none;";
+    document.body.appendChild(d);
+    var fall=400+Math.random()*500, x=(Math.random()*120-60);
+    d.animate([{transform:"translateY(0) rotate(0)",opacity:1},{transform:"translateY(100vh) translateX("+x+"px) rotate(540deg)",opacity:0}],{duration:fall+1200,easing:"ease-in"});
+    setTimeout((function(el){return function(){el.remove();};})(d),fall+1300);
+  }
+}
+
+function loadStore(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); }catch(e){ return {}; } }
+function save(){
+  var s=loadStore(); s.tally=tCount;
+  var v=document.getElementById("voice"); if(v) s.voice=v.value.trim();
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+}
+function markDone(){
+  save(); var s=loadStore(); s.done=true; s.date=new Date().toISOString();
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }catch(e){}
+  addScore(SEAL_PTS);
+  document.getElementById("closedScore").textContent="GRIT "+score;
+  document.getElementById("closed").classList.add("show");
+  beep(659,.18); setTimeout(function(){beep(784,.18);},140); setTimeout(function(){beep(988,.26);},300);
+  confetti(); setTimeout(confetti,400);
+}
+
+function printEvidence(){
+  var date=new Date().toLocaleDateString("en-GB");
+  var v=(document.getElementById("voice").value||"").replace(/</g,"&lt;");
+  var w=window.open("","","width=800,height=650");
+  w.document.write(
+    '<html><head><title>Assembly Evidence</title><style>'+
+    'body{font-family:Arial,sans-serif;padding:30px;max-width:680px;margin:0 auto;color:#111}'+
+    'h1{font-size:20px;border-bottom:3px solid #0fae9b;padding-bottom:8px}'+
+    'h2{font-size:14px;color:#555;margin-top:18px}table{width:100%;border-collapse:collapse;margin:8px 0}'+
+    'td,th{border:1px solid #ccc;padding:7px 10px;text-align:left}th{background:#e3f7f1}'+
+    '.sig{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:20px}'+
+    '.sig div{border-top:1px solid #999;padding-top:6px;font-size:11px;color:#666}</style></head><body>'+
+    '<h1>Assembly Evidence — Behaviour Focus: Resilience</h1>'+
+    '<p><b>Date:</b> '+date+' &nbsp;·&nbsp; <b>British Values link:</b> Rule of Law &nbsp;·&nbsp; <b>Safeguarding link:</b> What to do in an emergency</p>'+
+    '<table><tr><th>Behaviour focus</th><td>Resilience — keep trying when work is hard; don\'t give up; learn from mistakes ("the power of yet")</td></tr>'+
+    '<tr><th>Comeback moves taught</th><td>Breathe · Break it down · Try another way · Ask for help</td></tr>'+
+    '<tr><th>British Values message</th><td>Resilience helps us stay positive, respectful and responsible — especially when things are difficult</td></tr>'+
+    '<tr><th>Grit score reached</th><td>'+score+'</td></tr>'+
+    '<tr><th>Comebacks spotted (whole-hall tally)</th><td>'+tCount+'</td></tr></table>'+
+    '<h2>Hall agreed — "I can\'t ____ … yet"</h2><p>'+(v||"—")+'</p>'+
+    '<h2>Staff notes</h2><p style="min-height:46px;border:1px solid #ccc;border-radius:4px;padding:8px"></p>'+
+    '<div class="sig"><div>Staff signature</div><div>Any disclosure → DSL same day (sign)</div></div>'+
+    '</body></html>');
+  w.document.close(); w.focus(); w.print();
+}
+
+(function init(){
+  var s=loadStore();
+  if(typeof s.tally==="number"){ tCount=s.tally; document.getElementById("tcount").textContent=tCount; }
+  if(s.voice){ document.getElementById("voice").value=s.voice; }
+  document.getElementById("voice").addEventListener("input",save);
+  setHp();
+  show(0);
+})();
+</script>
+</body>
+</html>
