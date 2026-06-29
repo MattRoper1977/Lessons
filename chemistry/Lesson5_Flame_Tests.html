@@ -303,7 +303,31 @@
       .title-hero{font-size:1.7rem;gap:10px}
       h2{margin-right:0}
     }
-  .fab4-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.fab4-cell{border:1.6px solid #cbd5e1;border-radius:8px;padding:7px 10px;break-inside:avoid;font-size:1rem}.fab4-cell svg{max-width:100%;height:auto;display:block;margin:4px auto 0}.fab4-info{background:#fffbeb;border:1.6px solid #f59e0b;margin-bottom:10px}#print-ko .ko-table td,#print-ko .ko-table th{padding:4px 8px;line-height:1.25}#print-ko h1{margin:6px 0;font-size:1.4rem}#print-ko .print-box{padding:6px 10px}</style>
+  .fab4-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.fab4-cell{border:1.6px solid #cbd5e1;border-radius:8px;padding:7px 10px;break-inside:avoid;font-size:1rem}.fab4-cell svg{max-width:100%;height:auto;display:block;margin:4px auto 0}.fab4-info{background:#fffbeb;border:1.6px solid #f59e0b;margin-bottom:10px}#print-ko .ko-table td,#print-ko .ko-table th{padding:4px 8px;line-height:1.25}#print-ko h1{margin:6px 0;font-size:1.4rem}#print-ko .print-box{padding:6px 10px}
+    /* Starter: Meet the Flame Crew (colour match) */
+    .fc-key{display:none;flex-wrap:wrap;gap:8px 18px;justify-content:center;background:#f1f5f9;border:2px dashed #94a3b8;border-radius:12px;padding:10px 12px;margin:0 auto 10px;max-width:780px}
+    .fc-key.show{display:flex}
+    .fc-key span{font-weight:800;color:#0f172a;display:flex;align-items:center;font-size:1rem}
+    .fc-dot{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:7px;border:1.5px solid rgba(0,0,0,.25);flex:none}
+    .fc-lbl{text-align:center;font-weight:900;color:#1e40af;margin:10px 0 6px;letter-spacing:.5px}
+    .fc-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .fc-chip{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:11px 16px;font-weight:800;font-size:1.02rem;color:#1e293b;cursor:pointer;display:flex;align-items:center;transition:transform .12s,border-color .2s,background .2s;box-shadow:0 2px 5px rgba(0,0,0,.06)}
+    .fc-chip:hover{transform:translateY(-2px);border-color:#1e40af}
+    .fc-metal.fc-sel{background:#dbeafe;border-color:#1e40af;box-shadow:0 0 0 3px rgba(30,64,175,.28)}
+    .fc-chip.fc-done{background:#dcfce7;border-color:#16a34a;color:#166534;cursor:default;opacity:.95}
+    .fc-chip.fc-done::after{content:" \2713";font-weight:900}
+    @keyframes fcWob{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .fc-chip.fc-wob{animation:fcWob .35s}
+    /* Watch & Catch: video + colour-catch table */
+    .video-embed{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#0f172a;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .catch-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+    .catch-ion{font-weight:800;color:#0f172a;min-width:128px}
+    .catch-in{flex:1;padding:7px 10px;border:2px solid #cbd5e1;border-radius:8px;font-size:1rem;font-family:inherit}
+    .catch-in:focus{outline:none;border-color:#1e40af}
+    .catch-ans{display:none;margin-top:8px;padding:8px 10px;background:#dcfce7;border-left:5px solid #16a34a;border-radius:8px;font-weight:800;color:#166534;font-size:.95rem}
+    .catch-ans.show{display:block}
+    @media (prefers-reduced-motion:reduce){.fc-chip.fc-wob{animation:none}}</style>
 </head>
 <body>
 <!-- ═══ TEACHER TOOLBAR (V4) ═══ -->
@@ -388,21 +412,21 @@
     <div class="task-box animate-enter"><h3>1. Hydrogen</h3><p style="margin:0 0 8px">How do you test for <strong>hydrogen</strong> gas?</p><div class="mc"><span>A) Burning splint → squeaky pop</span><span>B) Glowing splint → relights</span><span>C) Limewater → milky</span><span>D) Damp litmus → blue</span></div><p class="answer">✅ A) Burning splint → squeaky pop.</p></div>
     <div class="task-box animate-enter anim-delay-1"><h3>2. Carbon dioxide</h3><p style="margin:0 0 8px">What does <strong>CO₂</strong> do to limewater?</p><div class="mc"><span>A) Turns it blue</span><span>B) Turns it milky</span><span>C) Bleaches it</span><span>D) Nothing</span></div><p class="answer">✅ B) Turns it milky/cloudy.</p></div>
     <div class="task-box animate-enter anim-delay-2"><h3>3. The litmus pair</h3><p style="margin:0 0 8px">Damp red litmus turns <strong>BLUE</strong>. The gas is…</p><div class="mc"><span>A) Chlorine</span><span>B) Oxygen</span><span>C) Ammonia</span><span>D) Hydrogen</span></div><p class="answer">✅ C) Ammonia (NH₃) — the alkaline gas.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today\u2019s lead-in</h3><p style="margin:0 0 8px">Those tests find <strong>gases</strong>. How could you find the <strong>METAL</strong> in a solid compound?</p><div class="mc"><span>A) Weigh it</span><span>B) Put it in a flame and watch the colour</span><span>C) Smell it</span></div><p class="answer">✅ B) Put it in a flame — different metals give different colours.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today’s lead-in</h3><p style="margin:0 0 8px">Those tests find <strong>gases</strong>. How could you find the <strong>METAL</strong> in a solid compound?</p><div class="mc"><span>A) Weigh it</span><span>B) Put it in a flame and watch the colour</span><span>C) Smell it</span></div><p class="answer">✅ B) Put it in a flame — different metals give different colours.</p></div>
   </div>
 
   <div id="arrival-middle" class="arrival-grid" style="display:none">
     <div class="task-box animate-enter"><h3>1. Oxygen</h3><p style="margin:0 0 8px">Which test is correct for <strong>oxygen</strong>?</p><div class="mc"><span>A) Burning splint pops</span><span>B) Glowing splint relights</span><span>C) Limewater goes milky</span><span>D) Litmus bleaches</span></div><p class="answer">✅ B) A glowing splint relights.</p></div>
     <div class="task-box animate-enter anim-delay-1"><h3>2. Chlorine</h3><p style="margin:0 0 8px">Damp litmus is <strong>bleached white</strong>. The gas is…</p><div class="mc"><span>A) Ammonia</span><span>B) Hydrogen</span><span>C) Chlorine</span><span>D) Carbon dioxide</span></div><p class="answer">✅ C) Chlorine (Cl₂) — it bleaches the dye.</p></div>
     <div class="task-box animate-enter anim-delay-2"><h3>3. Limewater</h3><p style="margin:0 0 8px">Limewater is a solution of…</p><div class="mc"><span>A) Calcium hydroxide</span><span>B) Sodium chloride</span><span>C) Copper sulfate</span><span>D) Hydrochloric acid</span></div><p class="answer">✅ A) Calcium hydroxide.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today\u2019s lead-in</h3><p style="margin:0 0 8px">A flame test identifies the…</p><div class="mc"><span>A) gas given off</span><span>B) metal ion in the compound</span><span>C) mass of the sample</span><span>D) temperature</span></div><p class="answer">✅ B) The metal ion in the compound.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Today’s lead-in</h3><p style="margin:0 0 8px">A flame test identifies the…</p><div class="mc"><span>A) gas given off</span><span>B) metal ion in the compound</span><span>C) mass of the sample</span><span>D) temperature</span></div><p class="answer">✅ B) The metal ion in the compound.</p></div>
   </div>
 
   <div id="arrival-higher" class="arrival-grid" style="display:none">
     <div class="task-box animate-enter"><h3>1. Negative results</h3><p style="margin:0 0 8px">Limewater stays <strong>clear</strong>. This tells you…</p><div class="mc"><span>A) the gas is definitely CO₂</span><span>B) the gas is NOT CO₂</span><span>C) nothing at all</span><span>D) the test failed</span></div><p class="answer">✅ B) The gas is NOT CO₂ — a negative result is still evidence.</p></div>
     <div class="task-box animate-enter anim-delay-1"><h3>2. The litmus pair</h3><p style="margin:0 0 8px">Why must litmus be <strong>damp</strong> for NH₃ and Cl₂?</p><div class="mc"><span>A) so the gas can dissolve and react</span><span>B) to cool the gas</span><span>C) to colour the paper</span><span>D) it need not be damp</span></div><p class="answer">✅ A) The gas must dissolve in the moisture before it can react.</p></div>
     <div class="task-box animate-enter anim-delay-2"><h3>3. Write it (scaffolded)</h3><p style="margin:0 0 8px">Fill the gap: a flame test identifies a metal by the ________ it produces in a flame.</p><div class="mc"><span>colour</span><span>mass</span><span>smell</span><span>sound</span></div><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Word bank: colour · mass · smell · sound</div><p class="answer">✅ colour.</p></div>
-    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Why clean? (scaffolded)</h3><p style="margin:0 0 8px">Finish: \u201cThe wire is cleaned so that ________ from the last test cannot give a ________ colour.\u201d</p><div class="mc"><span>contamination / false</span><span>heat / bright</span><span>water / dark</span><span>acid / new</span></div><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Choose: contamination / false</div><p class="answer">✅ contamination / false — leftover ions would give a false colour.</p></div>
+    <div class="task-box animate-enter" style="background-color:#fefce8;border-color:#fde047"><h3>4. Why clean? (scaffolded)</h3><p style="margin:0 0 8px">Finish: “The wire is cleaned so that ________ from the last test cannot give a ________ colour.”</p><div class="mc"><span>contamination / false</span><span>heat / bright</span><span>water / dark</span><span>acid / new</span></div><div class="scaffold-box" style="margin-top:8px;font-size:.95rem">Choose: contamination / false</div><p class="answer">✅ contamination / false — leftover ions would give a false colour.</p></div>
   </div>
 </div>
 
@@ -410,17 +434,37 @@
 <div class="slide" data-title="Starter">
   <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
   <span class="slide-tag tag-starter">Starter</span>
-  <h2>🕵️ Starter: Spot the Mistakes</h2>
-  <div class="li-box"><strong>Your mission:</strong> a student wrote this flame-test answer in their book — and got <strong>three things wrong</strong>. Read it in your head first, then <strong>tap each underlined claim</strong> to test it. Correct ones turn green; mistakes turn red and show the fix. No calling out!</div>
-  <div style="max-width:860px;margin:8px auto">
-    <div class="task-box" style="font-size:1.15rem;line-height:2.1">
-      \u201cTo carry out a flame test, I clean the wire loop with <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="it should be CONCENTRATED HCl — water won\u2019t remove the ions">water</span>, dip it in the sample, and hold it in a blue flame.
-      <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="sodium burns YELLOW (NAcho yellow)">Sodium burns red</span> and <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="lithium burns CRIMSON RED (LIpstick)">lithium burns yellow</span>, while <span class="claim" onclick="checkClaim(this)" data-ok="true">copper burns blue-green</span>.”
+  <h2>🎨 Starter: Meet the Flame Crew</h2>
+  <div class="li-box"><strong>Your warm-up:</strong> tap a <strong>metal</strong>, then tap the <strong>colour</strong> you think it makes in a flame. A match locks <span style="color:var(--success);font-weight:900">green</span>. A wrong tap just gives a tiny wobble — <strong>no harm</strong>, try again. Stuck? Tap <strong>Show the colour key</strong> any time.</div>
+  <div style="max-width:900px;margin:4px auto;width:100%">
+    <div style="text-align:center;margin-bottom:8px"><button class="small ghost" onclick="fcToggleKey(this)">🔑 Show the colour key</button></div>
+    <div id="fc-key" class="fc-key">
+      <span><span class="fc-dot" style="background:#ef4444"></span>Li⁺ → crimson red</span>
+      <span><span class="fc-dot" style="background:#facc15"></span>Na⁺ → yellow</span>
+      <span><span class="fc-dot" style="background:#c084fc"></span>K⁺ → lilac</span>
+      <span><span class="fc-dot" style="background:#fb923c"></span>Ca²⁺ → orange-red</span>
+      <span><span class="fc-dot" style="background:#34d399"></span>Cu²⁺ → blue-green</span>
     </div>
-    <p style="text-align:center;font-weight:900;font-size:1.1rem;margin:10px 0 0">Mistakes found: <span id="mist-count" style="color:#dc2626">0</span> / 3 &nbsp; <span id="mist-done" style="color:var(--success)"></span></p>
-    <div style="text-align:center;margin-top:6px"><button class="small ghost" onclick="resetClaims()">🔄 Reset</button></div>
-    <div class="scaffold-box" style="margin-top:10px"><strong>🧠 Detective’s hint:</strong> run the five through your head — Li red, Na yellow, K lilac, Ca orange-red, Cu blue-green — and check the cleaning step.</div>
-    <div class="aspire-box"><strong>Aspire:</strong> for each mistake, don’t just spot it — say the <em>correct</em> version out loud, like a detective explaining the case.</div>
+    <p class="fc-lbl">1 · Pick a metal</p>
+    <div id="fc-metals" class="fc-row">
+      <button class="fc-chip fc-metal" data-ion="Li" onclick="fcPickMetal(this)">Li⁺ · lithium</button>
+      <button class="fc-chip fc-metal" data-ion="Na" onclick="fcPickMetal(this)">Na⁺ · sodium</button>
+      <button class="fc-chip fc-metal" data-ion="K" onclick="fcPickMetal(this)">K⁺ · potassium</button>
+      <button class="fc-chip fc-metal" data-ion="Ca" onclick="fcPickMetal(this)">Ca²⁺ · calcium</button>
+      <button class="fc-chip fc-metal" data-ion="Cu" onclick="fcPickMetal(this)">Cu²⁺ · copper</button>
+    </div>
+    <p class="fc-lbl">2 · Tap its flame colour</p>
+    <div id="fc-colours" class="fc-row">
+      <button class="fc-chip fc-colour" data-col="crimson" onclick="fcPickColour(this)"><span class="fc-dot" style="background:#ef4444"></span>Crimson red</button>
+      <button class="fc-chip fc-colour" data-col="yellow" onclick="fcPickColour(this)"><span class="fc-dot" style="background:#facc15"></span>Yellow</button>
+      <button class="fc-chip fc-colour" data-col="lilac" onclick="fcPickColour(this)"><span class="fc-dot" style="background:#c084fc"></span>Lilac</button>
+      <button class="fc-chip fc-colour" data-col="orange" onclick="fcPickColour(this)"><span class="fc-dot" style="background:#fb923c"></span>Orange-red</button>
+      <button class="fc-chip fc-colour" data-col="bluegreen" onclick="fcPickColour(this)"><span class="fc-dot" style="background:#34d399"></span>Blue-green</button>
+    </div>
+    <p style="text-align:center;font-weight:900;font-size:1.1rem;margin:12px 0 0">Pairs matched: <span id="fc-count" style="color:var(--success)">0</span> / 5 &nbsp; <span id="fc-done-msg" style="color:var(--success)"></span></p>
+    <p id="fc-hint-live" style="text-align:center;font-weight:700;color:var(--muted);min-height:20px;margin:4px 0 0"></p>
+    <div style="text-align:center;margin-top:4px"><button class="small ghost" onclick="fcReset()">🔄 Reset</button></div>
+    <div class="aspire-box"><strong>Aspire:</strong> as you match each one, say it out loud — “lithium makes a crimson red flame.” Saying it is how it sticks.</div>
   </div>
 </div>
 
@@ -431,7 +475,7 @@
   <div class="li-box"><strong>Key Idea:</strong> a flame test identifies the <strong>metal ion</strong> in a compound by the <strong>colour</strong> it gives a flame. This appears on nearly every paper — five ions, five colours, free marks.</div>
 
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px">
-    <div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #ef4444;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#ef4444;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Li⁺ · Lithium</div><div style="font-weight:900;color:#ef4444;font-size:.9rem">🔴 CRIMSON RED</div><div style="font-size:.72rem;color:var(--muted)">LIpstick red 💄</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #facc15;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#facc15;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Na⁺ · Sodium</div><div style="font-weight:900;color:#facc15;font-size:.9rem">🟡 YELLOW</div><div style="font-size:.72rem;color:var(--muted)">NAcho yellow 🧀</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #c084fc;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#c084fc;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">K⁺ · Potassium</div><div style="font-weight:900;color:#c084fc;font-size:.9rem">🟣 LILAC</div><div style="font-size:.72rem;color:var(--muted)">King\u2019s robe 👑</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #fb923c;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#fb923c;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Ca²⁺ · Calcium</div><div style="font-weight:900;color:#fb923c;font-size:.9rem">🟠 ORANGE-RED</div><div style="font-size:.72rem;color:var(--muted)">CAmpfire 🔥</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #34d399;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#34d399;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Cu²⁺ · Copper</div><div style="font-weight:900;color:#34d399;font-size:.9rem">💚 BLUE-GREEN</div><div style="font-size:.72rem;color:var(--muted)">CUte statue 🗽</div></div>
+    <div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #ef4444;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#ef4444;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Li⁺ · Lithium</div><div style="font-weight:900;color:#ef4444;font-size:.9rem">🔴 CRIMSON RED</div><div style="font-size:.72rem;color:var(--muted)">LIpstick red 💄</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #facc15;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#facc15;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Na⁺ · Sodium</div><div style="font-weight:900;color:#facc15;font-size:.9rem">🟡 YELLOW</div><div style="font-size:.72rem;color:var(--muted)">NAcho yellow 🧀</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #c084fc;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#c084fc;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">K⁺ · Potassium</div><div style="font-weight:900;color:#c084fc;font-size:.9rem">🟣 LILAC</div><div style="font-size:.72rem;color:var(--muted)">King’s robe 👑</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #fb923c;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#fb923c;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Ca²⁺ · Calcium</div><div style="font-weight:900;color:#fb923c;font-size:.9rem">🟠 ORANGE-RED</div><div style="font-size:.72rem;color:var(--muted)">CAmpfire 🔥</div></div><div class="ido-box animate-enter" style="margin:0;text-align:center;border-top:5px solid #34d399;padding:10px"><div style="width:38px;height:38px;border-radius:50%;background:#34d399;margin:0 auto 4px"></div><div style="font-weight:900;font-size:.95rem">Cu²⁺ · Copper</div><div style="font-weight:900;color:#34d399;font-size:.9rem">💚 BLUE-GREEN</div><div style="font-size:.72rem;color:var(--muted)">CUte statue 🗽</div></div>
   </div>
 
   <div class="content-grid" style="height:auto;margin-top:10px">
@@ -458,7 +502,7 @@
   <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
   <span class="slide-tag tag-observe">🔥 Observe</span>
   <h2>Observe: The Flame Lab</h2>
-  <div class="li-box"><strong>Watch &amp; check:</strong> run all five tests. Before each one, <strong>say the colour you predict</strong>, then tap. Notice the wire being <strong>cleaned first</strong> every single time — that\u2019s the method made visible.</div>
+  <div class="li-box"><strong>Watch &amp; check:</strong> run all five tests. Before each one, <strong>say the colour you predict</strong>, then tap. Notice the wire being <strong>cleaned first</strong> every single time — that’s the method made visible.</div>
   <div class="lab-wrap">
       <p class="lab-title">🔥 THE FLAME LAB — tap a salt to flame-test it</p>
       <svg class="lab-svg" viewBox="0 0 740 240" xmlns="http://www.w3.org/2000/svg">
@@ -543,6 +587,34 @@
   <div class="turn-talk"><strong>Ready check:</strong> cover the screen — can you name all five colours, Li to Cu, in order? If yes, you’re ready to match them yourself next.</div>
 </div>
 
+<!-- ═══ OBSERVE 2: WATCH & CATCH (real demonstration video) ═══ -->
+<div class="slide" data-title="Watch &amp; Catch" data-type="observe">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-observe">🎬 Watch &amp; Catch</span>
+  <h2>Watch &amp; Catch: The Real Flames</h2>
+  <div class="li-box"><strong>Now the real thing.</strong> As each metal is tested in the video, <strong>write its colour</strong> in your catch-table. Pause any time. You’re just writing what you <em>see</em> — you can’t get this wrong.</div>
+  <div class="content-grid" style="height:auto;gap:18px;margin-top:4px">
+    <div>
+      <div class="video-embed"><iframe id="observe-frame" title="Flame tests — real demonstration" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+      <p style="font-size:.9rem;color:var(--muted);margin:6px 0 0">Video not loading? <a id="observe-link" href="#" target="_blank" rel="noopener" style="font-weight:800;color:#dc2626">▶ Open it on YouTube</a> — the flame tests are in the first few minutes.</p>
+    </div>
+    <div>
+      <div class="task-box" style="margin:0">
+        <h3 style="margin-top:0">🎯 Colour-catch table</h3>
+        <p style="margin:0 0 8px;font-size:.95rem;color:var(--muted)">Write the colour you see for each ion:</p>
+        <div class="catch-row"><span class="catch-ion">Li⁺ · lithium</span><input class="catch-in" type="text" placeholder="colour…" aria-label="lithium flame colour"></div>
+        <div class="catch-row"><span class="catch-ion">Na⁺ · sodium</span><input class="catch-in" type="text" placeholder="colour…" aria-label="sodium flame colour"></div>
+        <div class="catch-row"><span class="catch-ion">K⁺ · potassium</span><input class="catch-in" type="text" placeholder="colour…" aria-label="potassium flame colour"></div>
+        <div class="catch-row"><span class="catch-ion">Ca²⁺ · calcium</span><input class="catch-in" type="text" placeholder="colour…" aria-label="calcium flame colour"></div>
+        <div class="catch-row"><span class="catch-ion">Cu²⁺ · copper</span><input class="catch-in" type="text" placeholder="colour…" aria-label="copper flame colour"></div>
+        <div style="text-align:center;margin-top:8px"><button class="small ghost" onclick="catchReveal(this)">👁️ Check my colours</button></div>
+        <div id="catch-ans" class="catch-ans">Li⁺ crimson red · Na⁺ yellow · K⁺ lilac · Ca²⁺ orange-red · Cu²⁺ blue-green</div>
+      </div>
+      <div class="scaffold-box" style="margin-top:10px"><strong>👂 Listen for:</strong> the wire being <strong>cleaned before every test</strong>, and why a <strong>blue</strong> flame is used (not the yellow one). Same method as the lab — now for real.</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ WE DO 1: METHOD BUILDER ═══ -->
 <div class="slide" data-title="We Do: Build the Method" data-type="wedo">
   <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
@@ -601,6 +673,24 @@
   </div>
 </div>
 
+<!-- ═══ PLENARY: SPOT THE MISTAKES ═══ -->
+<div class="slide" data-title="Plenary: Spot the Mistakes" data-type="wedo">
+  <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
+  <span class="slide-tag tag-wedo">🕵️ Plenary</span>
+  <h2>🕵️ Plenary: Spot the Mistakes</h2>
+  <div class="li-box"><strong>Detective time.</strong> Now you know your colours — here is a student’s answer with <strong>three mistakes</strong>. Read it in your head, then <strong>tap each underlined claim</strong> to test it. Correct ones turn green; mistakes turn red and show the fix. No calling out!</div>
+  <div style="max-width:860px;margin:8px auto">
+    <div class="task-box" style="font-size:1.15rem;line-height:2.1">
+      “To carry out a flame test, I clean the wire loop with <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="it should be CONCENTRATED HCl — water won’t remove the ions">water</span>, dip it in the sample, and hold it in a blue flame.
+      <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="sodium burns YELLOW (NAcho yellow)">Sodium burns red</span> and <span class="claim" onclick="checkClaim(this)" data-ok="false" data-fix="lithium burns CRIMSON RED (LIpstick)">lithium burns yellow</span>, while <span class="claim" onclick="checkClaim(this)" data-ok="true">copper burns blue-green</span>.”
+    </div>
+    <p style="text-align:center;font-weight:900;font-size:1.1rem;margin:10px 0 0">Mistakes found: <span id="mist-count" style="color:#dc2626">0</span> / 3 &nbsp; <span id="mist-done" style="color:var(--success)"></span></p>
+    <div style="text-align:center;margin-top:6px"><button class="small ghost" onclick="resetClaims()">🔄 Reset</button></div>
+    <div class="scaffold-box" style="margin-top:10px"><strong>🧠 Detective’s hint:</strong> run the five through your head — Li crimson, Na yellow, K lilac, Ca orange-red, Cu blue-green — and check the cleaning step.</div>
+    <div class="aspire-box"><strong>Aspire:</strong> for each mistake, don’t just spot it — say the <em>correct</em> version out loud, like a detective explaining the case.</div>
+  </div>
+</div>
+
 <!-- ═══ SLIDE 8: EXIT TICKET ═══ -->
 <div class="slide" id="exit-slide" data-title="Exit Ticket">
   <span class="logo"><img alt="Progress Schools" style="width:100%;height:auto;display:block" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="logo-txt" style="display:none">PROGRESS SCHOOLS</span></span>
@@ -646,7 +736,7 @@
     <tr><td><strong>Copper</strong></td><td>Cu²⁺</td><td><strong>Blue-green</strong></td><td>CUte green statue 🗽</td></tr></table>
   <p><strong>📋 Method (2.45):</strong> 1. Clean a nichrome loop in conc. HCl. 2. Heat until NO colour (clean). 3. Dip into the sample. 4. Hold in a blue Bunsen flame. 5. Observe the colour → identify the ion.</p>
   <p><strong>Key distinction:</strong> Li⁺ = PURE crimson red. Ca²⁺ = ORANGE-red, like a brick. The exam loves this pair — use exact colour words.</p>
-  <p><strong>⚠️ Common mark-losers:</strong> writing \u201corange\u201d for calcium (say ORANGE-RED) · \u201cgold\u201d for sodium (say YELLOW) · cleaning the wire with water (it is conc. HCl) · forgetting the wire must show NO colour before testing.</p>
+  <p><strong>⚠️ Common mark-losers:</strong> writing “orange” for calcium (say ORANGE-RED) · “gold” for sodium (say YELLOW) · cleaning the wire with water (it is conc. HCl) · forgetting the wire must show NO colour before testing.</p>
   <p><strong>🎵 Memory hooks:</strong> LIpstick red = Li⁺ · NAcho yellow = Na⁺ · King&#39;s robe lilac = K⁺ · CAmpfire orange-red = Ca²⁺ · CUte green statue = Cu²⁺.</p>
 </div>
 
@@ -658,12 +748,23 @@
   <p style="margin-top:8px"><strong>🧰 Word bank:</strong> burning · glowing · pop · milky · damp litmus · blue · bleached · flame · colour</p>
 </div>
 
-<div id="print-starter" class="print-section"><h2>🕵️ Starter: Spot the Mistakes</h2>
+<div id="print-starter" class="print-section"><h2>🕵️ Plenary: Spot the Mistakes</h2>
   <p>This student made <strong>three</strong> mistakes. <u>Underline</u> each mistake and write the correct version next to it.</p>
   <p style="line-height:2.2">“To carry out a flame test, I clean the wire loop with <strong>water</strong>, dip it in the sample, and hold it in a blue flame. <strong>Sodium burns red</strong> and <strong>lithium burns yellow</strong>, while <strong>copper burns blue-green</strong>.”</p>
   <p>1. ____________________ should be ____________________</p>
   <p>2. ____________________ should be ____________________</p>
   <p>3. ____________________ should be ____________________</p>
+</div>
+
+<div id="print-catch" class="print-section"><h2>🎬 Watch &amp; Catch — Flame Colours</h2>
+  <p>As you watch the demonstration, write the flame colour you see for each metal ion.</p>
+  <table class="ko-table"><tr><th>Metal ion</th><th>Symbol</th><th>Flame colour I saw</th></tr>
+  <tr><td>Lithium</td><td>Li⁺</td><td style="height:34px"></td></tr>
+  <tr><td>Sodium</td><td>Na⁺</td><td style="height:34px"></td></tr>
+  <tr><td>Potassium</td><td>K⁺</td><td style="height:34px"></td></tr>
+  <tr><td>Calcium</td><td>Ca²⁺</td><td style="height:34px"></td></tr>
+  <tr><td>Copper</td><td>Cu²⁺</td><td style="height:34px"></td></tr></table>
+  <p style="margin-top:6px"><strong>Two things to listen for:</strong> 1. the wire is cleaned before every test; 2. a blue flame is used, not the yellow safety flame.</p>
 </div>
 
 <div id="print-scaffold-foundation" class="print-section">
@@ -675,14 +776,14 @@
 
 <div id="print-scaffold-middle" class="print-section">
   <h2>Scaffolding Sheet – Middle (Grades 1–3)</h2>
-  <div class="scaffold-print-box"><h3>Explain-It Toolkit</h3><p><strong>Key words you MUST use:</strong> nichrome · concentrated HCl · no colour · crimson · lilac · orange-red · blue-green · contamination · masks</p><p><strong>Stems:</strong> \u201cThe flame was ___ so the ion is…\u201d · \u201cThe wire is cleaned because…\u201d · \u201cSodium masks other colours which means…\u201d</p></div>
+  <div class="scaffold-print-box"><h3>Explain-It Toolkit</h3><p><strong>Key words you MUST use:</strong> nichrome · concentrated HCl · no colour · crimson · lilac · orange-red · blue-green · contamination · masks</p><p><strong>Stems:</strong> “The flame was ___ so the ion is…” · “The wire is cleaned because…” · “Sodium masks other colours which means…”</p></div>
   <div class="scaffold-print-box"><h3>The lookalikes</h3><p>Li⁺ is a <strong>pure crimson</strong> red. Ca²⁺ is <strong>orange-red</strong>, like a brick. Always use the exact colour word.</p></div>
 </div>
 
 <div id="print-scaffold-higher" class="print-section">
   <h2>Scaffolding Sheet – Higher (Grades 2–4)</h2>
-  <div class="scaffold-print-box"><h3>Why each ion has its own colour</h3><p>• Electrons absorb flame energy → jump to a higher level (\u201cexcited\u201d).</p><p>• Falling back, they emit light of a specific <strong>wavelength</strong> → a colour unique to that element.</p><p>• Na⁺ emits so strongly that traces <strong>mask</strong> every other colour — hence rigorous cleaning.</p></div>
-  <div class="scaffold-print-box"><h3>Command words</h3><p>DESCRIBE = say what happens · EXPLAIN = say WHY (use \u201cbecause\u201d) · COMPARE = similarities AND differences · METHOD = numbered steps.</p></div>
+  <div class="scaffold-print-box"><h3>Why each ion has its own colour</h3><p>• Electrons absorb flame energy → jump to a higher level (“excited”).</p><p>• Falling back, they emit light of a specific <strong>wavelength</strong> → a colour unique to that element.</p><p>• Na⁺ emits so strongly that traces <strong>mask</strong> every other colour — hence rigorous cleaning.</p></div>
+  <div class="scaffold-print-box"><h3>Command words</h3><p>DESCRIBE = say what happens · EXPLAIN = say WHY (use “because”) · COMPARE = similarities AND differences · METHOD = numbered steps.</p></div>
   <div class="scaffold-print-box"><h3>5-mark frame (three bottles)</h3><p>Per bottle: clean wire → TEST → COLOUR → ION. Then explain cleaning: name <strong>sodium</strong> and <strong>masking</strong> for the last 2 marks.</p></div>
 </div>
 
@@ -772,7 +873,7 @@ updateProgress();
 function switchLevel(prefix,level){['foundation','middle','higher'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')||el.classList.contains('exit-grid')?'grid':'block'}else{el.style.display='none'}}})}
 function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
 function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');window.print()}
-function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
+function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','arrival','starter','catch','wedo','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');window.print()}
 function printEvidence(id){
   const cap=document.getElementById(id);if(!cap)return;
   const lessonTitle=(document.title||'Lesson').replace(/^[^:]*:\s*/,'');
@@ -925,7 +1026,7 @@ function fitToPage(host,fit){
 
   // --- Modals ---
   function closeModal(id){document.getElementById(id).classList.remove('open')}
-  const VIDEO_ID=''; // unused in this lesson — the Flame Lab replaces the embedded video
+  const VIDEO_ID='fCZztwJmAl0'; // Watch & Catch slide. "Identifying Ions – GCSE Required Practical" (Mrs Peers-Dent); flame tests are in the first few minutes. SWAP THIS ID for your own clip if you prefer — preview before the lesson.
   function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
   function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
   // --- legacy reaction-flow animation (unused in this lesson) ---
@@ -958,21 +1059,25 @@ function fitToPage(host,fit){
   const TA_DATA={
     1:{name:'Before We Start – 60s teach',body:'<p><strong>Your job:</strong> fast <em>new</em> teaching, not a quiz — ~60 seconds.</p><ul><li>Point at the five colour swatches: name the ion, name the colour, say the memory trick once.</li><li>Land the big idea: a flame test identifies the <strong>metal ion</strong> by its <strong>colour</strong>. Side A of the bridge sheet has it on paper.</li><li>Whiteboard check: can they name even two colours before we move on?</li></ul>'},
     2:{name:'Arrival – Recall (multiple choice)',body:'<p><strong>Your job:</strong> circulate, books open, no calling out.</p><ul><li>All four are multiple choice — every pupil commits a letter. This recalls the gas tests (last two lessons).</li><li>If a pupil is stuck, prompt with \'what did limewater do?\' rather than reading the option.</li><li>Q4 is the hook into today: identifying the METAL, not the gas. Let them speculate (fireworks!).</li></ul>'},
-    3:{name:'Starter – Spot the Mistakes',body:'<p><strong>Your job:</strong> get pupils reading carefully before tapping — eyes first, then commit.</p><ul><li>There are <strong>three</strong> mistakes: water (should be conc. HCl), sodium-red and lithium-yellow (swapped). Copper blue-green is correct.</li><li>Push for the <strong>correct version</strong> spoken aloud, not just \'that one\u2019s wrong\'.</li></ul>'},
+    3:{name:'Starter – Meet the Flame Crew',body:'<p><strong>Your job:</strong> this is a low-stakes warm-up — <em>every</em> pupil can succeed. No recall pressure.</p><ul><li>Tap a metal, then its colour. A wrong tap only wobbles — encourage trying again calmly.</li><li>Nudge anyone stuck to tap <strong>Show the colour key</strong> — using it is a win, not a cheat. The key is the support; the matching builds the memory.</li><li>Push the say-it-aloud line: \'lithium makes a crimson red flame.\'</li></ul>'},
     4:{name:'I Do – Method & Colours',body:'<p><strong>Your job:</strong> support the chant and the Li-vs-Ca distinction.</p><ul><li>Say CRIMSON (lithium) and ORANGE-RED (calcium) with exaggerated contrast — this is THE exam trap.</li><li>The 4-mark method sentence (yellow box) is the highest-value line — have the class say it twice.</li></ul>'},
     5:{name:'Observe – The Flame Lab',body:'<p><strong>Your job:</strong> pupils predict the colour OUT LOUD before each tap.</p><ul><li>Point out the wire being cleaned FIRST on every run — that is the method made visible.</li><li>Ask why a BLUE flame, not the yellow safety flame? (the yellow glows with sodium and masks the test colour.)</li><li>Flag anyone who can\'t name two colours; they\'ll need support in the We Do.</li></ul>'},
-    6:{name:'We Do – Build the Method',body:'<p><strong>Your job:</strong> let pupils try the order before hinting; wrong taps just wobble, so it is safe to experiment.</p><ul><li>Anchor the ends: cleaning is always FIRST, identifying is always LAST. The middle is dip \u2192 flame \u2192 observe.</li><li>Have pupils say each step aloud as it locks in — this is the 4-mark exam sentence being built. Print evidence at the end.</li></ul>'},
-    7:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand scaffold sheets to named pupils only. Prompt with the success criteria, not the answer.</li><li>Circulate on exact colour words — \'orange\' for calcium instead of \'orange-red\' is where marks die.</li></ul>'},
-    8:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t name three colours — that\'s the secure-for-all goal and a starter for next time.</li></ul>'}
+    6:{name:'Watch & Catch – Real flames',body:'<p><strong>Your job:</strong> eyes on the screen, pens moving on the catch-table.</p><ul><li><strong>Preview the clip before the lesson</strong> and check where the flame tests sit (first few minutes) — the video ID is swappable in the code if you prefer your own.</li><li>Pause after each ion so everyone writes the colour; then they tap <strong>Check my colours</strong>.</li><li>Listen-fors: wire cleaned each time; BLUE flame, not yellow. Same method as the lab — now real.</li></ul>'},
+    7:{name:'We Do – Build the Method',body:'<p><strong>Your job:</strong> let pupils try the order before hinting; wrong taps just wobble, so it is safe to experiment.</p><ul><li>Anchor the ends: cleaning is always FIRST, identifying is always LAST. The middle is dip \u2192 flame \u2192 observe.</li><li>Have pupils say each step aloud as it locks in — this is the 4-mark exam sentence being built. Print evidence at the end.</li></ul>'},
+    8:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first 4 minutes.</p><ul><li>Hand scaffold sheets to named pupils only. Prompt with the success criteria, not the answer.</li><li>Circulate on exact colour words — \'orange\' for calcium instead of \'orange-red\' is where marks die.</li></ul>'},
+    9:{name:'Plenary – Spot the Mistakes',body:'<p><strong>Your job:</strong> colours should be secure now — this checks who is still confused.</p><ul><li>Three mistakes: water (should be conc. HCl), and sodium-red / lithium-yellow are <strong>swapped</strong>. Copper blue-green is correct.</li><li>Push for the <strong>correct version</strong> spoken aloud, not just \'that one is wrong\'.</li><li>Watch for anyone still mixing up <strong>Li (crimson)</strong> and <strong>Ca (orange-red)</strong> — that is the one to re-teach.</li></ul>'},
+    10:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>Note who still can\'t name three colours — that\'s the secure-for-all goal and a starter for next time.</li></ul>'}
   };
   const CC_DATA={
     1:{f:'What colour does <strong>lithium</strong> burn?',m:'Name the ion that gives a <strong>yellow</strong> flame.',h:'<strong>Why</strong> must the wire be cleaned before a flame test?'},
     2:{f:'What did <strong>limewater</strong> do with carbon dioxide?',m:'How do you tell <strong>NH₃</strong> from <strong>Cl₂</strong> with litmus?',h:'A flame test finds the <strong>metal</strong> — how is that different from a gas test?'},
-    3:{f:'Name <strong>one</strong> mistake in the student\u2019s answer.',m:'The student swapped two colours — <strong>which two</strong>?',h:'Give the <strong>correct</strong> version of every mistake you found.'},
+    3:{f:'What colour does <strong>lithium</strong> make in a flame?',m:'Two ions can look reddish — name them and say how you tell them apart.',h:'Say <strong>all five</strong> ion → colour pairs without looking at the key.'},
     4:{f:'What colour is <strong>copper</strong> (Cu²⁺)?',m:'How do you tell <strong>Li⁺</strong> from <strong>Ca²⁺</strong>?',h:'Say the <strong>full method</strong> in one sentence.'},
     5:{f:'What colour did <strong>potassium</strong> give in the lab?',m:'What does the wire do <strong>first</strong>, every time?',h:'Why a <strong>blue</strong> Bunsen flame, not the yellow one?'},
-    6:{f:'What is the <strong>first</strong> step of the method?',m:'Say the six steps <strong>in order</strong>.',h:'Why must <strong>cleaning</strong> come before everything else?'},
-    8:{f:'Name <strong>two</strong> flame colours and their ions.',m:'State <strong>all five</strong> colours and ions.',h:'Explain at the <strong>atomic level</strong> why colours differ.'}
+    6:{f:'What colour did <strong>sodium</strong> give in the video?',m:'What does the technician do to the wire <strong>before each test</strong>?',h:'Why use a <strong>blue</strong> flame on camera, not the yellow one?'},
+    7:{f:'What is the <strong>first</strong> step of the method?',m:'Say the six steps <strong>in order</strong>.',h:'Why must <strong>cleaning</strong> come before everything else?'},
+    9:{f:'Name <strong>one</strong> mistake in the student\u2019s answer.',m:'The student swapped two colours — <strong>which two</strong>?',h:'Give the <strong>correct</strong> version of every mistake you found.'},
+    10:{f:'Name <strong>two</strong> flame colours and their ions.',m:'State <strong>all five</strong> colours and ions.',h:'Explain at the <strong>atomic level</strong> why colours differ.'}
   };
 
   // --- Hints ---
@@ -992,6 +1097,32 @@ function fitToPage(host,fit){
     else{el.classList.add('ok');playDing();}
   }
   function resetClaims(){_mistFound=0;_mistDone=false;document.querySelectorAll('.claim').forEach(c=>c.classList.remove('ok','bad'));document.querySelectorAll('.claim-fix').forEach(f=>f.remove());const c=document.getElementById('mist-count');if(c)c.textContent='0';const d=document.getElementById('mist-done');if(d)d.textContent='';playClick();}
+
+  // --- Starter: Meet the Flame Crew (colour match) ---
+  const FC_ANSWERS={Li:'crimson',Na:'yellow',K:'lilac',Ca:'orange',Cu:'bluegreen'};
+  let _fcMetal=null,_fcPairs=0;
+  function fcToggleKey(btn){const k=document.getElementById('fc-key');if(!k)return;const open=k.classList.toggle('show');btn.textContent=open?'🔑 Hide the colour key':'🔑 Show the colour key';playClick();}
+  function fcPickMetal(el){if(el.classList.contains('fc-done'))return;document.querySelectorAll('.fc-metal').forEach(m=>m.classList.remove('fc-sel'));el.classList.add('fc-sel');_fcMetal=el;playClick();}
+  function fcSay(t){const h=document.getElementById('fc-hint-live');if(h)h.textContent=t;}
+  function fcPickColour(el){
+    if(el.classList.contains('fc-done'))return;
+    if(!_fcMetal){fcSay('👆 Tap a metal first, then its colour.');playClick();return;}
+    if(FC_ANSWERS[_fcMetal.dataset.ion]===el.dataset.col){
+      _fcMetal.classList.add('fc-done');_fcMetal.classList.remove('fc-sel');el.classList.add('fc-done');
+      _fcPairs++;const c=document.getElementById('fc-count');if(c)c.textContent=_fcPairs;
+      _fcMetal=null;playDing();addXP(4,'Flame Crew');fcSay('✅ Matched! Pick another metal.');
+      if(_fcPairs>=5){const d=document.getElementById('fc-done-msg');if(d)d.textContent='🎉 All five paired — you know the Flame Crew!';fcSay('');confetti();}
+    } else {
+      el.classList.remove('fc-wob');void el.offsetWidth;el.classList.add('fc-wob');playBuzz();
+      fcSay('Not that one — try again, no harm done. (Need help? Show the colour key.)');
+    }
+  }
+  function fcShuffle(){const pool=document.getElementById('fc-colours');if(!pool)return;const items=[...pool.children];for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}items.forEach(n=>pool.appendChild(n));}
+  function fcReset(){_fcMetal=null;_fcPairs=0;const c=document.getElementById('fc-count');if(c)c.textContent='0';const d=document.getElementById('fc-done-msg');if(d)d.textContent='';document.querySelectorAll('.fc-metal,.fc-colour').forEach(x=>x.classList.remove('fc-done','fc-sel','fc-wob'));fcShuffle();fcSay('');playClick();}
+  function startFlameCrew(){_fcMetal=null;_fcPairs=0;fcShuffle();}
+
+  // --- Watch & Catch: reveal the answer colours ---
+  function catchReveal(btn){const a=document.getElementById('catch-ans');if(!a)return;const open=a.classList.toggle('show');btn.textContent=open?'🙈 Hide answers':'👁️ Check my colours';playClick();}
 
   function accuse(el){
     el.classList.add('investigated');
@@ -1104,7 +1235,7 @@ function fitToPage(host,fit){
 
   // --- Init ---
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
-  window.addEventListener('load',()=>{animateLOs();buildFloatDots();startQuiz()});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots();startQuiz();startFlameCrew()});
 
 </script>
 </body>
