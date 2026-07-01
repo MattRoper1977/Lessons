@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05060f">
+<meta name="description" content="Orbital — a neon gravity-slingshot game. Bend your shot around planets, stars, black holes and wormholes to reach the goal in as few shots as possible. Collect bonus stars, use a one-time mid-flight boost, and share your seed.">
+<title>Orbital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{ --cyan:#27e0ff; --magenta:#ff3df0; --green:#33e08a; --amber:#ffb020; --violet:#9b8cff; --red:#ff3a52;
+ --ink:#05060f; --panel:rgba(10,14,30,0.86); --line:#2a3556; --text:#dbe4ff; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--text);font-family:'Rajdhani',system-ui,sans-serif;-webkit-user-select:none;user-select:none;touch-action:none;}
+canvas{display:block;}
+h1,h2,h3,.disp,.btn,#banner,.stat{font-family:'Orbitron',sans-serif;}
+.screen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:11px;background:radial-gradient(circle at 50% 28%, rgba(30,26,66,0.6), rgba(5,6,15,0.95) 72%);backdrop-filter:blur(3px);overflow-y:auto;}
+.screen.hidden{display:none;}
+.neon{letter-spacing:2px;text-transform:uppercase;}
+#title{font-size:clamp(44px,11vw,100px);font-weight:900;letter-spacing:8px;background:linear-gradient(90deg,var(--violet),var(--cyan),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 34px rgba(155,140,255,0.4));}
+#tagline{color:#aab6e0;font-size:clamp(13px,2.6vw,16px);letter-spacing:1px;max-width:480px;margin-top:-2px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;max-width:450px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.4);}
+.panel h3{font-size:13px;letter-spacing:2px;color:var(--cyan);margin-bottom:9px;text-transform:uppercase;}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:#c3cdf0;margin:4px 0;}
+.btn{appearance:none;cursor:pointer;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);background:rgba(12,18,40,0.7);border:1.5px solid var(--cyan);border-radius:10px;padding:11px 20px;min-width:220px;transition:transform .08s,box-shadow .2s,background .2s;}
+.btn:hover{box-shadow:0 0 18px rgba(39,224,255,0.4);background:rgba(20,30,60,0.9);} .btn:active{transform:scale(0.97);}
+.btn.go{color:var(--amber);border-color:var(--amber);font-size:17px;} .btn.go:hover{box-shadow:0 0 22px rgba(255,176,32,0.5);}
+.btn.alt{color:var(--magenta);border-color:var(--magenta);} .btn.ghost{color:#9fb0e0;border-color:var(--line);min-width:0;padding:9px 15px;font-size:13px;}
+.seedbox{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.seedbox input{width:130px;background:#0a1024;border:1px solid var(--line);border-radius:8px;color:#fff;font-family:'Orbitron';font-size:15px;letter-spacing:1px;padding:8px 10px;text-align:center;}
+.pill{font-size:12px;letter-spacing:1px;color:#8ea0d0;} .small{font-size:12px;color:#8294c0;letter-spacing:1px;}
+#hud{position:fixed;inset:0;z-index:20;pointer-events:none;}
+#topbar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:9px 13px;gap:8px;background:linear-gradient(180deg,rgba(5,6,15,0.9),rgba(5,6,15,0));}
+.stat{font-weight:700;letter-spacing:1px;font-size:14px;} .stat b{font-size:19px;}
+#hole b{color:var(--cyan);} #strokes b{color:var(--amber);} #total b{color:var(--green);} #stars-hud{color:var(--amber);}
+#hud-btns{display:flex;gap:6px;pointer-events:auto;}
+.iconbtn{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:rgba(10,14,30,0.7);color:#cfe;font-size:15px;cursor:pointer;font-family:'Orbitron';}
+#aimhud{position:absolute;left:50%;bottom:15px;transform:translateX(-50%);text-align:center;pointer-events:none;width:min(70vw,420px);}
+#powerwrap{width:100%;height:9px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:rgba(255,255,255,0.08);}
+#powerfill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));}
+#aimtext{font-size:13px;letter-spacing:1px;color:#cfe;margin-top:5px;font-family:'Orbitron';}
+#boostpip{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:20px;border:1px solid var(--violet);color:var(--violet);font-size:11px;opacity:0;transition:opacity .2s;}
+#boostpip.on{opacity:1;animation:bpulse 1s ease-in-out infinite;} @keyframes bpulse{50%{box-shadow:0 0 12px var(--violet);}}
+#resethole{position:absolute;right:13px;bottom:15px;pointer-events:auto;background:rgba(12,18,40,0.85);border:1.5px solid var(--line);color:#cfe;font-family:'Orbitron';font-weight:700;letter-spacing:1px;border-radius:9px;padding:9px 13px;cursor:pointer;font-size:12px;}
+#popups{position:absolute;inset:0;}
+.popup{position:absolute;font-family:'Orbitron';font-weight:900;font-size:17px;opacity:0;animation:pop 1s ease-out forwards;text-shadow:0 0 12px currentColor;white-space:nowrap;}
+@keyframes pop{0%{opacity:0;transform:translateY(6px) scale(0.8);}20%{opacity:1;transform:translateY(-3px) scale(1.06);}100%{opacity:0;transform:translateY(-30px) scale(1);}}
+#banner{position:fixed;top:22%;left:50%;transform:translateX(-50%);z-index:25;text-align:center;pointer-events:none;font-family:'Orbitron';font-weight:900;letter-spacing:3px;font-size:clamp(26px,6vw,48px);opacity:0;text-shadow:0 0 26px currentColor;}
+#banner small{display:block;font-size:15px;letter-spacing:2px;color:#cfe;margin-top:6px;font-family:'Rajdhani';}
+#banner.show{animation:banner 2s ease-out forwards;}
+@keyframes banner{0%{opacity:0;transform:translate(-50%,12px) scale(0.9);}15%{opacity:1;transform:translate(-50%,0) scale(1);}80%{opacity:1;}100%{opacity:0;}}
+#flash{position:fixed;inset:0;z-index:24;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;}
+#vignette{position:fixed;inset:0;z-index:17;pointer-events:none;box-shadow:inset 0 0 220px rgba(0,0,0,0.7);}
+#res-score{font-size:clamp(44px,12vw,86px);font-weight:900;color:#fff;text-shadow:0 0 30px rgba(39,224,255,0.5);letter-spacing:2px;}
+#res-verdict{font-size:18px;letter-spacing:1px;font-weight:700;}
+#res-stars{font-size:26px;letter-spacing:4px;margin:2px 0;}
+#res-lines{font-size:14px;color:#c3cdf0;line-height:1.7;}
+.share{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:4px;flex-wrap:wrap;}
+.share input{flex:1;min-width:170px;background:#0a1024;border:1px solid var(--line);border-radius:8px;color:#cfe;font-family:'Orbitron';font-size:13px;padding:9px 10px;text-align:center;}
+.initials{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px;}
+.initials input{width:90px;text-transform:uppercase;background:#0a1024;border:1px solid var(--line);border-radius:8px;color:#fff;font-family:'Orbitron';font-size:15px;padding:8px;text-align:center;}
+ol#board-list{list-style:none;text-align:left;font-size:14px;}
+ol#board-list li{display:flex;justify-content:space-between;padding:5px 4px;border-bottom:1px solid rgba(120,150,220,0.12);}
+.brank{color:var(--amber);width:30px;} .bname{flex:1;color:#fff;font-family:'Orbitron';letter-spacing:1px;} .bsc{color:var(--cyan);font-family:'Orbitron';}
+#boot{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--ink);}
+#boot .t{font-family:'Orbitron';font-weight:900;font-size:40px;letter-spacing:8px;color:var(--violet);filter:drop-shadow(0 0 20px var(--violet));}
+#boot .b{width:180px;height:4px;border-radius:3px;background:#11203a;overflow:hidden;}
+#boot .b::after{content:'';display:block;height:100%;width:40%;background:var(--violet);box-shadow:0 0 12px var(--violet);animation:bs 1s ease-in-out infinite;}
+@keyframes bs{0%{transform:translateX(-120%);}100%{transform:translateX(360%);}}
+@media (max-width:640px){ .btn{min-width:200px;} #par{display:none;} }
+</style>
+</head>
+<body>
+<div id="boot"><div class="t">ORBITAL</div><div class="b"></div><div class="small">charting gravity…</div></div>
+
+<div id="hud">
+ <div id="topbar">
+   <div style="display:flex;gap:13px;align-items:center;">
+     <div class="stat" id="hole">HOLE <b>1</b>/9</div>
+     <div class="stat" id="strokes">SHOTS <b>0</b></div>
+     <div class="stat" id="par" style="color:#9fb0e0;">PAR 3</div>
+     <div class="stat" id="stars-hud">★ 0</div>
+   </div>
+   <div style="display:flex;gap:13px;align-items:center;">
+     <div class="stat" id="total">TOTAL <b>0</b></div>
+     <div id="hud-btns"><button class="iconbtn" id="audio-btn">🔊</button><button class="iconbtn" id="pause-btn">⏸</button></div>
+   </div>
+ </div>
+ <div id="aimhud"><div id="powerwrap"><div id="powerfill"></div></div><div id="aimtext">drag to aim · release to launch<span id="boostpip">⚡ TAP TO BOOST</span></div></div>
+ <button id="resethole">↺ REPLAY HOLE</button>
+ <div id="popups"></div>
+</div>
+
+<div id="banner"></div><div id="flash"></div><div id="vignette"></div>
+
+<div id="menu" class="screen">
+ <div id="title">ORBITAL</div>
+ <p id="tagline">Space golf. Slingshot your probe around planets, stars and black holes to reach the goal in as few shots as possible. Grab bonus stars, boost mid-flight, and share your seed to compete.</p>
+ <div class="panel">
+   <h3>How to play</h3>
+   <div class="row"><span>Drag from the probe</span><span style="color:var(--cyan)">aim + power</span></div>
+   <div class="row"><span>Read the dotted preview</span><span style="color:var(--amber)">it bends with gravity</span></div>
+   <div class="row"><span>Release to launch · tap to boost</span><span style="color:var(--violet)">one boost per shot</span></div>
+   <div class="row"><span>Grab ★ stars · reach the goal</span><span style="color:var(--green)">fewest shots wins</span></div>
+ </div>
+ <div class="panel">
+   <h3>Course</h3>
+   <div class="seedbox"><input id="seed-input" type="text" inputmode="numeric" placeholder="seed #"><button class="btn ghost" id="daily-btn">TODAY'S</button><button class="btn ghost" id="rand-btn">RANDOM</button></div>
+   <div class="pill" id="seed-note" style="margin-top:8px;">9 holes · type a number or take Today's course.</div>
+   <div class="pill" id="best-note" style="margin-top:4px;"></div>
+ </div>
+ <button class="btn go" id="start-btn">LAUNCH ▸</button>
+ <div class="share">
+   <button class="btn ghost" id="board-btn">🏆 SCORES</button>
+   <button class="btn ghost" id="preview-btn">PREVIEW: ON</button>
+   <button class="btn ghost" id="calm-btn">CALM FX: OFF</button>
+ </div>
+ <div class="small">single file · works offline · share a seed with anyone</div>
+</div>
+
+<div id="pause" class="screen hidden">
+ <h1 class="neon" style="font-size:38px;color:var(--cyan);">PAUSED</h1>
+ <button class="btn" id="resume-btn">RESUME</button>
+ <button class="btn alt" id="restart-btn">RESTART COURSE</button>
+ <button class="btn ghost" id="quit-btn">QUIT TO MENU</button>
+</div>
+
+<div id="results" class="screen hidden">
+ <h2 class="neon" id="res-head" style="font-size:22px;color:#9fb0e0;letter-spacing:3px;">COURSE COMPLETE</h2>
+ <div id="res-score">0</div>
+ <div id="res-verdict"></div>
+ <div id="res-stars"></div>
+ <div class="panel"><div id="res-lines"></div></div>
+ <div class="panel" id="initials-panel" style="display:none;"><h3 style="color:var(--amber)">🏆 Leaderboard score!</h3><div class="initials"><input id="initials-input" maxlength="3" placeholder="ABC"><button class="btn ghost" id="add-board-btn">ADD</button></div></div>
+ <div class="panel"><h3>Share this course</h3><div class="share"><input id="share-str" readonly value=""><button class="btn ghost" id="copy-btn">COPY</button></div><div class="pill" id="copy-note" style="margin-top:6px;">Anyone can paste the seed and try to beat you.</div></div>
+ <div class="share"><button class="btn go" id="retry-btn">RETRY ↻</button><button class="btn alt" id="next-seed-btn">NEW COURSE</button><button class="btn ghost" id="res-board-btn">🏆</button><button class="btn ghost" id="res-menu-btn">MENU</button></div>
+</div>
+
+<div id="board" class="screen hidden">
+ <h1 class="neon" style="font-size:30px;color:var(--amber);text-shadow:0 0 20px rgba(255,176,32,0.4);">🏆 SCORES</h1>
+ <div class="pill" id="board-seed"></div>
+ <div class="panel"><ol id="board-list"></ol></div>
+ <div class="small">Fewest total shots wins. Saved on this device, per seed.</div>
+ <button class="btn ghost" id="board-close-btn">BACK</button>
+</div>
+
+<script type="importmap">
+{ "imports": {
+ "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+ "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// ============ CONFIG ============
+const HOLES=9;
+const G=1.4;                    // gravitational constant (validated)
+const SUB=4, DT=1/60;           // physics sub-steps per frame
+const PROBE_R=0.6;
+const MAXP=30, MAXDRAG=30;
+const BX=56, BY=38;
+const OOB=Math.hypot(BX+20,BY+16);
+const BOOST_IMP=9, BOOST_MAX=MAXP*1.5;
+const PLANET_COLORS=[0x27e0ff,0x2affc0,0x9b8cff,0x4aa8ff,0xff8adf];
+const LS_QUEST='orbital_quest_v1', LS_SET='orbital_settings_v1';
+
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const dist=(ax,ay,bx,by)=>Math.hypot(ax-bx,ay-by);
+const lerp=(a,b,t)=>a+(b-a)*t;
+
+// ============ AUDIO ============
+const SFX={ ctx:null,on:true,
+ init(){ if(this.ctx)return; const AC=window.AudioContext||window.webkitAudioContext; this.ctx=new AC(); },
+ tone(f,type,dur,vol=0.1,slideTo){ if(!this.on||!this.ctx)return; const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+   o.type=type;o.frequency.setValueAtTime(f,this.ctx.currentTime); if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,this.ctx.currentTime+dur);
+   g.gain.setValueAtTime(vol,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+dur);
+   o.connect(g);g.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+dur); },
+ launch(){this.tone(300,'sawtooth',0.3,0.12,760);}, crash(){this.tone(160,'sawtooth',0.4,0.13,50);},
+ goal(){this.tone(560,'sine',0.4,0.14,1100);setTimeout(()=>this.tone(880,'square',0.35,0.08),110);},
+ warp(){this.tone(700,'sine',0.2,0.09,1600);}, boost(){this.tone(420,'square',0.22,0.11,900);},
+ star(){this.tone(880,'sine',0.14,0.09,1500);}, win(){this.tone(520,'sine',0.5,0.14,1200);setTimeout(()=>this.tone(990,'square',0.5,0.08),150);}
+};
+
+// ============ STATE ============
+let scene,camera,renderer,composer,bloomPass, raycaster,groundPlane,pointerNDC, bgStars,starLight,fillLight;
+const SETTINGS={ audio:true, calm:false, preview:true };
+let reduceMotion=false;
+let seed=1, gameState='MENU';
+let course=null, holeIdx=0, hole=null, strokes=0, total=0, holeStrokes=0;
+let starsTotalCourse=0, starsHole=0, starsAllCourse=0;
+let probe={x:0,y:0,vx:0,vy:0,flying:false};
+let aiming=false, aimDir={x:1,y:0}, aimPower=0;
+let bodyMeshes=[], starMeshes=[], goalMesh, probeMesh, startMesh, wormMeshes=[], previewDots=[], previewMarker, particles=[];
+let trailLine, trailPts=[], trailGeo;
+let shake=0, pendingBoard=null, resolveTimer=0, flightT=0, boostAvail=false, engineFlare=0;
+let camTarget={x:0,h:80,z:30,lx:0,lz:3}, camNow={x:0,h:80,z:30,lx:0,lz:3};
+
+let quest=load(LS_QUEST,{ plays:0, bestBySeed:{}, starsBySeed:{}, boards:{} });
+function load(k,def){ try{ const r=localStorage.getItem(k); return r?Object.assign(def,JSON.parse(r)):def; }catch(e){ return def; } }
+function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+// ============ COURSE GEN (seeded) ============
+function buildCourse(s){ const holes=[]; for(let h=1;h<=HOLES;h++){ holes.push(genHole(h,mulberry32(((s>>>0)^(h*2654435761))>>>0))); } return {seed:s,holes}; }
+function genHole(h,rnd){
+ const start={x:-46,y:(rnd()*2-1)*24};
+ const goal={x:46,y:(rnd()*2-1)*24,r:3.4};
+ const bodies=[], worms=[], stars=[];
+ const nB=1+Math.min(4,Math.floor((h+1)/1.5));
+ const clearOf=(x,y,rad)=>{ if(dist(x,y,start.x,start.y)<rad+9)return false; if(dist(x,y,goal.x,goal.y)<rad+goal.r+7)return false;
+   for(const b of bodies)if(dist(x,y,b.x,b.y)<rad+b.r+7)return false; return true; };
+ for(let i=0;i<nB;i++){ let x,y,r,mass,type,color,t=0;
+   const star=(i===0&&h>=3&&rnd()<0.6);
+   do{ x=(rnd()*2-1)*34; y=(rnd()*2-1)*30; r=star?(5.5+rnd()*1.5):(3+rnd()*2); t++; }while(!clearOf(x,y,r)&&t<40);
+   mass=(star?46:26)*r*r/10; type=star?'star':'planet'; color=star?0xffb020:PLANET_COLORS[(i+ (h%PLANET_COLORS.length))%PLANET_COLORS.length];
+   const b={x,y,r,mass,type,color,ring:(!star&&rnd()<0.4)};
+   // orbiting body on late holes (preview simulates its motion too, so it stays exact)
+   if(!star && h>=7 && i===1){ b.moving=true; b.cx=x; b.cy=y; b.orbitR=6+rnd()*5; b.omega=(rnd()<0.5?-1:1)*(0.35+rnd()*0.4); b.phase0=rnd()*Math.PI*2; b.x=b.cx+Math.cos(b.phase0)*b.orbitR; b.y=b.cy+Math.sin(b.phase0)*b.orbitR; }
+   bodies.push(b); }
+ if(h>=4){ let x,y,t=0; do{ x=(rnd()*2-1)*30; y=(rnd()*2-1)*26; t++; }while(!clearOf(x,y,2.4)&&t<40); bodies.push({x,y,r:2.2,mass:150,type:'blackhole',color:0xff3df0}); }
+ if(h>=6){ let ax,ay,bx,by,t=0; do{ ax=(rnd()*2-1)*28; ay=(rnd()*2-1)*26; t++; }while(!clearOf(ax,ay,3)&&t<30);
+   t=0; do{ bx=(rnd()*2-1)*28; by=(rnd()*2-1)*26; t++; }while((!clearOf(bx,by,3)||dist(ax,ay,bx,by)<20)&&t<30);
+   worms.push({ax,ay,bx,by,r:2.4}); }
+ // bonus stars — 1..3, in open space (often the daring line near a hazard)
+ const nS=1+Math.floor(rnd()*3);
+ for(let i=0;i<nS;i++){ let x,y,t=0; do{ x=(rnd()*2-1)*40; y=(rnd()*2-1)*30; t++; }while(!clearOf(x,y,3)&&t<40); if(t<40)stars.push({x,y,r:1.7,got:false}); }
+ const par=2+Math.floor(h/2.5);
+ return {start,goal,bodies,worms,stars,par};
+}
+
+// ============ PHYSICS (validated core — unchanged) ============
+function accel(x,y,bodies){ let ax=0,ay=0; for(const b of bodies){ if(b.type==='goal')continue; const dx=b.x-x,dy=b.y-y; let r2=dx*dx+dy*dy; const soft=(b.r*0.7)*(b.r*0.7); if(r2<soft)r2=soft; const inv=1/Math.sqrt(r2); const a=G*b.mass/r2; ax+=dx*inv*a; ay+=dy*inv*a; } return [ax,ay]; }
+function subStep(p,h,dt){
+ const [ax,ay]=accel(p.x,p.y,h.bodies); p.vx+=ax*dt; p.vy+=ay*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+ if(dist(p.x,p.y,h.goal.x,h.goal.y)<h.goal.r) return 'goal';
+ for(const b of h.bodies){ if(dist(p.x,p.y,b.x,b.y)<b.r+PROBE_R) return 'crash'; }
+ for(const w of h.worms){ if(dist(p.x,p.y,w.ax,w.ay)<w.r){ const s=1/(Math.hypot(p.vx,p.vy)||1); p.x=w.bx+p.vx*s*(w.r+PROBE_R+0.5); p.y=w.by+p.vy*s*(w.r+PROBE_R+0.5); return 'warp'; }
+   if(dist(p.x,p.y,w.bx,w.by)<w.r){ const s=1/(Math.hypot(p.vx,p.vy)||1); p.x=w.ax+p.vx*s*(w.r+PROBE_R+0.5); p.y=w.ay+p.vy*s*(w.r+PROBE_R+0.5); return 'warp'; } }
+ if(Math.abs(p.x)>BX+20||Math.abs(p.y)>BY+16||Math.hypot(p.x,p.y)>OOB) return 'oob';
+ return 'fly';
+}
+// advance moving bodies to local time t (both live sim and preview use this → preview stays exact)
+function setBodyTime(h,t){ for(const b of h.bodies){ if(b.moving){ b.x=b.cx+Math.cos(b.phase0+b.omega*t)*b.orbitR; b.y=b.cy+Math.sin(b.phase0+b.omega*t)*b.orbitR; } } }
+function predictPath(x,y,vx,vy,h,maxSub){ const p={x,y,vx,vy}; const pts=[[x,y]]; let status='fly',tt=0;
+ for(let i=0;i<maxSub;i++){ tt+=DT/SUB; setBodyTime(h,tt); status=subStep(p,h,DT/SUB); if(i%3===0)pts.push([p.x,p.y]); if(status!=='fly'&&status!=='warp'){ pts.push([p.x,p.y]); break; } }
+ setBodyTime(h,0); return {pts,status};
+}
+
+// ============ INIT ============
+function init(){
+ reduceMotion=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+ Object.assign(SETTINGS,load(LS_SET,{})); if(reduceMotion)SETTINGS.calm=true;
+ scene=new THREE.Scene(); scene.background=new THREE.Color(0x04050c); scene.fog=new THREE.FogExp2(0x05070f,0.0032);
+ camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,0.1,600); camera.position.set(0,80,30); camera.lookAt(0,0,3);
+ renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15; document.body.appendChild(renderer.domElement);
+ composer=new EffectComposer(renderer); composer.addPass(new RenderPass(scene,camera));
+ bloomPass=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),1.0,0.8,0.0); composer.addPass(bloomPass);
+ scene.add(new THREE.AmbientLight(0x5566aa,0.55));
+ starLight=new THREE.PointLight(0xffd6a0,0,140,1.4); scene.add(starLight);
+ fillLight=new THREE.DirectionalLight(0x88aaff,0.35); fillLight.position.set(-20,50,-10); scene.add(fillLight);
+ raycaster=new THREE.Raycaster(); groundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0); pointerNDC=new THREE.Vector2();
+ buildStatic(); buildProbeAndPools(); wireUI(); applySettingsUI();
+ window.addEventListener('resize',onResize);
+ window.addEventListener('keydown',onKey);
+ window.addEventListener('blur',()=>{ if(gameState==='AIM'||gameState==='FLY')togglePause(); });
+ renderer.domElement.addEventListener('pointerdown',onPointerDown);
+ renderer.domElement.addEventListener('pointermove',onPointerMove);
+ window.addEventListener('pointerup',onPointerUp);
+ seed=todaySeed(); document.getElementById('seed-input').value=seed; refreshBestNote();
+ document.getElementById('boot').style.display='none';
+ requestAnimationFrame(animate);
+}
+function todaySeed(){ const d=new Date(); return parseInt(''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')); }
+
+function gradientTexture(){ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
+ const rg=g.createRadialGradient(128,128,10,128,128,140); rg.addColorStop(0,'#1a1740'); rg.addColorStop(0.4,'#0d1030'); rg.addColorStop(0.75,'#070914'); rg.addColorStop(1,'#04050c');
+ g.fillStyle=rg; g.fillRect(0,0,256,256);
+ // faint nebula blobs
+ for(let i=0;i<7;i++){ const x=Math.random()*256,y=Math.random()*256,r=30+Math.random()*70; const b=g.createRadialGradient(x,y,0,x,y,r);
+   const col=['rgba(60,40,120,0.16)','rgba(30,80,120,0.14)','rgba(120,40,90,0.10)'][i%3]; b.addColorStop(0,col); b.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=b; g.fillRect(0,0,256,256); }
+ const tex=new THREE.CanvasTexture(c); return tex;
+}
+function buildStatic(){
+ // nebula floor disc
+ const floor=new THREE.Mesh(new THREE.PlaneGeometry(360,300),new THREE.MeshBasicMaterial({map:gradientTexture(),transparent:true,opacity:0.9,depthWrite:false}));
+ floor.rotation.x=-Math.PI/2; floor.position.y=-0.6; scene.add(floor);
+ // subtle arena grid
+ const grid=new THREE.GridHelper(BX*2.1,26,0x2a4a8c,0x162542); grid.position.y=-0.3; grid.scale.set(1,1,BY*2.1/(BX*2.1)); grid.material.transparent=true; grid.material.opacity=0.34; scene.add(grid);
+ // arena boundary frame
+ const bpts=[]; const bx=BX+2,by=BY+2; [[-bx,-by],[bx,-by],[bx,by],[-bx,by],[-bx,-by]].forEach(p=>bpts.push(new THREE.Vector3(p[0],-0.25,p[1])));
+ const bl=new THREE.Line(new THREE.BufferGeometry().setFromPoints(bpts),new THREE.LineBasicMaterial({color:0x3a5590,transparent:true,opacity:0.5})); scene.add(bl);
+ // depth starfield (3 layers)
+ [[900,0.5,0x6a7ac0,0.8,-8],[500,0.9,0x9fb0e0,0.6,-20],[300,1.5,0x4a5aa0,0.5,-38]].forEach(([N,sz,col,op,yy])=>{
+   const ps=new Float32Array(N*3); for(let i=0;i<N;i++){ const a=Math.random()*Math.PI*2, rr=40+Math.random()*160; ps[i*3]=Math.cos(a)*rr; ps[i*3+1]=yy-Math.random()*24; ps[i*3+2]=Math.sin(a)*rr; }
+   const gg=new THREE.BufferGeometry(); gg.setAttribute('position',new THREE.BufferAttribute(ps,3));
+   const pts=new THREE.Points(gg,new THREE.PointsMaterial({color:col,size:sz,transparent:true,opacity:op})); scene.add(pts); if(!bgStars)bgStars=pts; });
+}
+function buildProbeAndPools(){
+ // probe craft (points along velocity)
+ probeMesh=new THREE.Group();
+ const craft=new THREE.Mesh(new THREE.ConeGeometry(0.5,1.5,5),new THREE.MeshStandardMaterial({color:0xffffff,emissive:0x9be7ff,emissiveIntensity:1.7,metalness:0.4,roughness:0.3}));
+ craft.rotation.x=Math.PI/2; probeMesh.add(craft); probeMesh.userData.craft=craft;
+ const halo=new THREE.Mesh(new THREE.SphereGeometry(0.95,12,12),new THREE.MeshBasicMaterial({color:0x27e0ff,transparent:true,opacity:0.22,blending:THREE.AdditiveBlending})); probeMesh.add(halo);
+ const flare=new THREE.Mesh(new THREE.SphereGeometry(0.5,10,10),new THREE.MeshBasicMaterial({color:0xffe6a0,transparent:true,opacity:0,blending:THREE.AdditiveBlending})); flare.position.z=-0.9; probeMesh.add(flare); probeMesh.userData.flare=flare;
+ probeMesh.visible=false; scene.add(probeMesh);
+ // trail (vertexColor line, fades head->tail)
+ const MAXT=64; trailGeo=new THREE.BufferGeometry();
+ trailGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(MAXT*3),3));
+ trailGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(MAXT*3),3));
+ trailLine=new THREE.Line(trailGeo,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,blending:THREE.AdditiveBlending})); trailLine.frustumCulled=false; scene.add(trailLine);
+ // start pad
+ startMesh=new THREE.Group();
+ const sp=new THREE.Mesh(new THREE.TorusGeometry(1.5,0.12,10,28),new THREE.MeshBasicMaterial({color:0x33e08a})); sp.rotation.x=-Math.PI/2; startMesh.add(sp);
+ const sp2=new THREE.Mesh(new THREE.CircleGeometry(1.35,24),new THREE.MeshBasicMaterial({color:0x0a2a1a,transparent:true,opacity:0.6,side:THREE.DoubleSide})); sp2.rotation.x=-Math.PI/2; sp2.position.y=-0.02; startMesh.add(sp2);
+ startMesh.visible=false; scene.add(startMesh);
+ // goal portal
+ goalMesh=new THREE.Group();
+ const gt=new THREE.Mesh(new THREE.TorusGeometry(3.4,0.24,14,40),new THREE.MeshBasicMaterial({color:0xffb020})); gt.rotation.x=-Math.PI/2; goalMesh.add(gt);
+ const gt2=new THREE.Mesh(new THREE.TorusGeometry(2.5,0.12,10,32),new THREE.MeshBasicMaterial({color:0xffe28a,transparent:true,opacity:0.8})); gt2.rotation.x=-Math.PI/2; goalMesh.add(gt2); goalMesh.userData.g2=gt2;
+ const gd=new THREE.Mesh(new THREE.CircleGeometry(3.1,32),new THREE.MeshBasicMaterial({color:0x3a2400,transparent:true,opacity:0.55,side:THREE.DoubleSide})); gd.rotation.x=-Math.PI/2; gd.position.y=-0.03; goalMesh.add(gd);
+ const gcore=new THREE.Mesh(new THREE.SphereGeometry(0.7,12,12),new THREE.MeshBasicMaterial({color:0xffe6a0,transparent:true,opacity:0.9,blending:THREE.AdditiveBlending})); gcore.position.y=0.3; goalMesh.add(gcore); goalMesh.userData.core=gcore;
+ goalMesh.visible=false; scene.add(goalMesh);
+ // preview dots + landing marker
+ for(let i=0;i<110;i++){ const m=new THREE.Mesh(new THREE.SphereGeometry(0.26,6,6),new THREE.MeshBasicMaterial({color:0x9b8cff,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending})); m.visible=false; scene.add(m); previewDots.push(m); }
+ previewMarker=new THREE.Mesh(new THREE.TorusGeometry(1.3,0.12,10,24),new THREE.MeshBasicMaterial({color:0x9b8cff,transparent:true,opacity:0.9})); previewMarker.rotation.x=-Math.PI/2; previewMarker.visible=false; scene.add(previewMarker);
+ // particles
+ for(let i=0;i<110;i++){ const m=new THREE.Mesh(new THREE.SphereGeometry(0.24,6,6),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,blending:THREE.AdditiveBlending})); m.visible=false; scene.add(m); particles.push({m,life:0,px:0,py:0,vx:0,vy:0}); }
+}
+function clearHoleMeshes(){ bodyMeshes.forEach(m=>scene.remove(m)); bodyMeshes=[]; wormMeshes.forEach(m=>scene.remove(m)); wormMeshes=[]; starMeshes.forEach(m=>scene.remove(m)); starMeshes=[]; }
+function buildHoleMeshes(){
+ clearHoleMeshes(); let starBody=null;
+ for(const b of hole.bodies){ const g=new THREE.Group();
+   if(b.type==='blackhole'){
+     const core=new THREE.Mesh(new THREE.SphereGeometry(b.r,20,20),new THREE.MeshBasicMaterial({color:0x000000})); g.add(core);
+     const disc=new THREE.Mesh(new THREE.TorusGeometry(b.r*1.7,b.r*0.55,2,40),new THREE.MeshBasicMaterial({color:0xff3df0,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending})); disc.rotation.x=-Math.PI/2.1; disc.scale.y=0.28; g.add(disc); g.userData.disc=disc;
+     const ring=new THREE.Mesh(new THREE.TorusGeometry(b.r*1.15,0.08,8,30),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.6})); ring.rotation.x=-Math.PI/2.1; g.add(ring);
+   } else {
+     const sph=new THREE.Mesh(new THREE.SphereGeometry(b.r,24,24),new THREE.MeshStandardMaterial({color:0xffffff,emissive:b.color,emissiveIntensity:b.type==='star'?1.3:0.55,roughness:0.55,metalness:0.25})); g.add(sph); g.userData.sph=sph;
+     const atmo=new THREE.Mesh(new THREE.SphereGeometry(b.r*1.22,20,20),new THREE.MeshBasicMaterial({color:b.color,transparent:true,opacity:b.type==='star'?0.28:0.16,blending:THREE.AdditiveBlending,side:THREE.BackSide})); g.add(atmo);
+     if(b.type==='star'){ const corona=new THREE.Mesh(new THREE.SphereGeometry(b.r*1.6,20,20),new THREE.MeshBasicMaterial({color:0xffca6a,transparent:true,opacity:0.14,blending:THREE.AdditiveBlending})); g.add(corona); g.userData.corona=corona;
+       starBody=b; starLight.position.set(b.x,14,b.y); starLight.intensity=1.7; starLight.color.setHex(0xffd6a0); }
+     if(b.ring){ const rg=new THREE.Mesh(new THREE.TorusGeometry(b.r*1.7,0.14,8,36),new THREE.MeshBasicMaterial({color:0xcfe0ff,transparent:true,opacity:0.55})); rg.rotation.x=-Math.PI/2.4; g.add(rg); }
+   }
+   const well=new THREE.Mesh(new THREE.RingGeometry(b.r*1.3,b.r*3.4,44),new THREE.MeshBasicMaterial({color:b.color,transparent:true,opacity:b.type==='blackhole'?0.18:0.08,side:THREE.DoubleSide,blending:THREE.AdditiveBlending})); well.rotation.x=-Math.PI/2; well.position.y=-0.2; g.add(well);
+   g.position.set(b.x,0,b.y); scene.add(g); bodyMeshes.push(g); b._mesh=g; }
+ if(!starBody)starLight.intensity=0;
+ for(const w of hole.worms){ [[w.ax,w.ay,0x27e0ff],[w.bx,w.by,0xff3df0]].forEach(([x,y,c])=>{ const g=new THREE.Group();
+   const t1=new THREE.Mesh(new THREE.TorusGeometry(w.r,0.16,10,28),new THREE.MeshBasicMaterial({color:c})); t1.rotation.x=-Math.PI/2; g.add(t1);
+   const d=new THREE.Mesh(new THREE.CircleGeometry(w.r*0.85,20),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:0.28,side:THREE.DoubleSide,blending:THREE.AdditiveBlending})); d.rotation.x=-Math.PI/2; d.position.y=0.05; g.add(d);
+   g.position.set(x,0.1,y); scene.add(g); wormMeshes.push(g); }); }
+ for(const s of hole.stars){ const g=new THREE.Group();
+   const core=new THREE.Mesh(new THREE.OctahedronGeometry(0.7,0),new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffd24a,emissiveIntensity:1.9,metalness:0.5,roughness:0.2})); g.add(g.userData.core=core);
+   const halo=new THREE.Mesh(new THREE.SphereGeometry(1.2,12,12),new THREE.MeshBasicMaterial({color:0xffd24a,transparent:true,opacity:0.22,blending:THREE.AdditiveBlending})); g.add(halo);
+   g.position.set(s.x,0.4,s.y); scene.add(g); starMeshes.push(g); s._mesh=g; }
+ goalMesh.position.set(hole.goal.x,0.1,hole.goal.y); goalMesh.visible=true;
+ startMesh.position.set(hole.start.x,0.1,hole.start.y); startMesh.visible=true;
+}
+
+// ============ CAMERA FRAMING ============
+function frameHole(){
+ let minx=hole.start.x,maxx=hole.goal.x,miny=hole.start.y,maxy=hole.start.y;
+ const consider=(x,y)=>{ minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y); };
+ consider(hole.goal.x,hole.goal.y); hole.bodies.forEach(b=>consider(b.x,b.y)); hole.stars.forEach(s=>consider(s.x,s.y));
+ const cx=(minx+maxx)/2, cy=(miny+maxy)/2, span=Math.max(maxx-minx,(maxy-miny)*1.5,60);
+ camTarget={ x:cx, h:span*0.92+34, z:cy+span*0.34+10, lx:cx, lz:cy+2 };
+}
+
+// ============ FLOW ============
+function startCourse(){ if(SETTINGS.audio)SFX.init(); course=buildCourse(seed); holeIdx=0; total=0; starsAllCourse=0; loadHole(); }
+function loadHole(){ hole=course.holes[holeIdx]; hole.bodies.forEach(b=>{ if(b.moving){ b.x=b.cx+Math.cos(b.phase0)*b.orbitR; b.y=b.cy+Math.sin(b.phase0)*b.orbitR; } }); hole.stars.forEach(s=>s.got=false);
+ buildHoleMeshes(); resetProbe(); holeStrokes=0; starsHole=0; gameState='AIM'; frameHole(); Object.assign(camNow,camTarget);
+ hideAllScreens(); probeMesh.visible=true; updateHUD();
+ banner('HOLE '+(holeIdx+1),'#27e0ff','par '+hole.par+' · '+describeHole()); }
+function describeHole(){ const c={}; hole.bodies.forEach(b=>c[b.type]=(c[b.type]||0)+1); const names={planet:'planet',star:'star',blackhole:'black hole'};
+ const parts=Object.entries(c).map(([k,v])=>v+' '+names[k]+(v>1?'s':'')); if(hole.worms.length)parts.push('wormhole'); if(hole.stars.length)parts.push(hole.stars.length+' ★'); return parts.join(' · '); }
+function resetProbe(){ probe.x=hole.start.x; probe.y=hole.start.y; probe.vx=0; probe.vy=0; probe.flying=false; flightT=0; setBodyTime(hole,0); boostAvail=false; clearTrail(); }
+function clearTrail(){ trailPts=[]; trailGeo.setDrawRange(0,0); }
+function launch(){ if(gameState!=='AIM'||aimPower<2)return; probe.vx=aimDir.x*aimPower; probe.vy=aimDir.y*aimPower; probe.flying=true; flightT=0;
+ holeStrokes++; strokes=holeStrokes; total++; boostAvail=true; engineFlare=1; gameState='FLY'; if(SETTINGS.audio)SFX.launch(); hidePreview(); updateHUD(); }
+function doBoost(){ if(gameState!=='FLY'||!boostAvail||!probe.flying)return; const v=Math.hypot(probe.vx,probe.vy)||1; const nv=Math.min(v+BOOST_IMP,BOOST_MAX); probe.vx*=nv/v; probe.vy*=nv/v; boostAvail=false; engineFlare=1.4; if(SETTINGS.audio)SFX.boost(); burst(probe.x,probe.y,0x9b8cff,10); popupWorld('BOOST',probe.x,probe.y,'#9b8cff'); }
+function collectStars(){ for(const s of hole.stars){ if(!s.got && dist(probe.x,probe.y,s.x,s.y)<s.r+PROBE_R){ s.got=true; starsHole++; if(SETTINGS.audio)SFX.star(); burst(s.x,s.y,0xffd24a,10); popupWorld('★',s.x,s.y,'#ffd24a'); updateHUD(); } } }
+function resolveShot(status){
+ if(status==='goal'){ if(SETTINGS.audio)SFX.goal(); if(!SETTINGS.calm)flashScreen('#33e08a',0.4); burst(hole.goal.x,hole.goal.y,0xffb020,20);
+   starsAllCourse+=starsHole; const dp=holeStrokes-hole.par; const tag=dp<0?(dp===-1?'BIRDIE':'EAGLE!'):dp===0?'PAR':dp===1?'BOGEY':'+'+dp;
+   const st=hole.stars.length?(' · ★ '+starsHole+'/'+hole.stars.length):'';
+   banner('HOLE '+(holeIdx+1)+' — '+tag,'#33e08a',holeStrokes+' shot'+(holeStrokes>1?'s':'')+st);
+   gameState='WIN'; resolveTimer=1.5; }
+ else { if(SETTINGS.audio)SFX.crash(); if(!SETTINGS.calm){shake=1;flashScreen('#ff3a52',0.5);} burst(probe.x,probe.y,0xff3a52,16);
+   gameState='RESET'; resolveTimer=0.7; }
+}
+function nextHole(){ holeIdx++; if(holeIdx>=HOLES){ endCourse(); return; } loadHole(); }
+function endCourse(){
+ gameState='OVER'; probeMesh.visible=false; goalMesh.visible=false; startMesh.visible=false; clearTrail(); if(SETTINGS.audio)SFX.win();
+ const parTotal=course.holes.reduce((s,h)=>s+h.par,0); const dp=total-parTotal;
+ const starMax=course.holes.reduce((s,h)=>s+h.stars.length,0);
+ quest.plays=(quest.plays||0)+1; const prev=quest.bestBySeed[seed]; const isBest=(prev===undefined)||total<prev; if(isBest)quest.bestBySeed[seed]=total;
+ const prevS=quest.starsBySeed[seed]||0; if(starsAllCourse>prevS)quest.starsBySeed[seed]=starsAllCourse; save(LS_QUEST,quest);
+ const rank=boardRank(seed,total); document.getElementById('initials-panel').style.display=rank>=0?'block':'none';
+ document.getElementById('add-board-btn').disabled=false; document.getElementById('add-board-btn').textContent='ADD'; document.getElementById('initials-input').value=''; pendingBoard=rank>=0?{score:total}:null;
+ document.getElementById('res-score').textContent=total;
+ const v=document.getElementById('res-verdict'); const dpTxt=dp===0?'even par':dp<0?(Math.abs(dp)+' under par 🎉'):(dp+' over par');
+ v.textContent=dpTxt; v.style.color=dp<=0?'var(--green)':'#cfe';
+ const pct=starMax?starsAllCourse/starMax:1; const rate=pct>=1?'★★★ PERFECT':pct>=0.66?'★★☆':pct>=0.33?'★☆☆':'☆☆☆';
+ document.getElementById('res-stars').innerHTML='<span style="color:var(--amber)">'+rate+'</span> <span style="font-size:14px;color:#9fb0e0">'+starsAllCourse+'/'+starMax+' stars</span>';
+ document.getElementById('res-lines').innerHTML='Seed <b style="color:#fff">'+seed+'</b> · '+HOLES+' holes<br>Total <b style="color:var(--amber)">'+total+'</b> shots · par <b style="color:#9fb0e0">'+parTotal+'</b> · Best <b style="color:var(--green)">'+quest.bestBySeed[seed]+'</b>'+(isBest?' ⭐':'');
+ document.getElementById('share-str').value='ORBITAL · seed '+seed+' · '+total+' shots ('+dpTxt+') · ★'+starsAllCourse+'/'+starMax+' — beat it?';
+ document.getElementById('copy-note').textContent='Anyone can paste seed '+seed+' and try to beat you.';
+ show('results');
+}
+
+// ============ SIM ============
+function stepSim(){
+ if(gameState==='FLY'&&probe.flying){ let status='fly';
+   for(let i=0;i<SUB;i++){ flightT+=DT/SUB; setBodyTime(hole,flightT); status=subStep(probe,hole,DT/SUB); collectStars();
+     if(status==='warp'){ if(SETTINGS.audio)SFX.warp(); burst(probe.x,probe.y,0x9b8cff,8); } if(status!=='fly'&&status!=='warp')break; }
+   pushTrail(probe.x,probe.y);
+   if(status==='goal'||status==='crash'||status==='oob'){ probe.flying=false; resolveShot(status==='goal'?'goal':'crash'); }
+ }
+ if((gameState==='WIN'||gameState==='RESET')&&resolveTimer>0){ resolveTimer-=DT; if(resolveTimer<=0){ if(gameState==='WIN')nextHole(); else { resetProbe(); gameState='AIM'; updateHUD(); } } }
+ if(shake>0)shake*=0.86; if(engineFlare>0)engineFlare*=0.9;
+ for(const p of particles){ if(p.life>0){ p.life-=DT*1.6; p.px+=p.vx*DT; p.py+=p.vy*DT; } }
+}
+
+// ============ RENDER ============
+function renderFrame(dt){
+ const tms=performance.now();
+ if(bgStars)bgStars.rotation.y+=dt*0.008;
+ for(const g of bodyMeshes){ g.rotation.y+=dt*0.15; if(g.userData.disc)g.userData.disc.rotation.z+=dt*1.4; if(g.userData.corona)g.userData.corona.scale.setScalar(1+Math.sin(tms*0.003)*0.05); }
+ // moving bodies follow sim position
+ for(const b of hole?hole.bodies:[]){ if(b.moving&&b._mesh)b._mesh.position.set(b.x,0,b.y); }
+ if(goalMesh.visible){ goalMesh.children[0].rotation.z+=dt*0.5; const s=1+Math.sin(tms*0.004)*0.06; goalMesh.userData.g2.scale.setScalar(s); goalMesh.userData.g2.rotation.z-=dt*0.9; goalMesh.userData.core.scale.setScalar(0.8+Math.sin(tms*0.006)*0.25); }
+ if(startMesh.visible)startMesh.children[0].rotation.z+=dt*0.7;
+ for(const g of starMeshes){ g.userData.core.rotation.y+=dt*1.6; g.position.y=0.4+Math.sin(tms*0.004+g.position.x)*0.18; }
+ for(const s of hole?hole.stars:[]){ if(s._mesh)s._mesh.visible=!s.got; }
+ // probe
+ if(probeMesh.visible){ probeMesh.position.set(probe.x,0.3,probe.y); const ang=Math.atan2(probe.vx,probe.vy); if(probe.flying||aiming)probeMesh.rotation.y=ang;
+   probeMesh.userData.flare.material.opacity=clamp(engineFlare,0,1)*0.9; probeMesh.userData.flare.scale.setScalar(0.7+engineFlare); }
+ // trail
+ updateTrailMesh();
+ // preview marker pulse
+ if(previewMarker.visible)previewMarker.scale.setScalar(1+Math.sin(tms*0.008)*0.12);
+ // particles
+ for(const p of particles){ if(p.life>0){ p.m.visible=true; p.m.position.set(p.px,0.35,p.py); p.m.material.opacity=clamp(p.life,0,1)*0.9; p.m.scale.setScalar(0.5+p.life); } else p.m.visible=false; }
+ // camera: ease toward target, mild push-in during flight
+ const pushing=(gameState==='FLY'); const tgtH=camTarget.h*(pushing?0.93:1), tgtZ=camTarget.z*(pushing?0.96:1);
+ camNow.x=lerp(camNow.x,camTarget.x,0.05); camNow.h=lerp(camNow.h,tgtH,0.05); camNow.z=lerp(camNow.z,tgtZ,0.05); camNow.lx=lerp(camNow.lx,camTarget.lx,0.06); camNow.lz=lerp(camNow.lz,camTarget.lz,0.06);
+ const sh=(SETTINGS.calm||reduceMotion)?shake*0.3:shake;
+ camera.position.set(camNow.x+(Math.random()-0.5)*sh*2.4, camNow.h, camNow.z+(Math.random()-0.5)*sh*2.4); camera.lookAt(camNow.lx,0,camNow.lz);
+ composer.render();
+}
+function pushTrail(x,y){ trailPts.push([x,y]); if(trailPts.length>64)trailPts.shift(); }
+function updateTrailMesh(){ const n=trailPts.length; if(n<2){ trailGeo.setDrawRange(0,0); return; }
+ const pos=trailGeo.attributes.position.array, col=trailGeo.attributes.color.array;
+ for(let i=0;i<n;i++){ const t=i/(n-1); pos[i*3]=trailPts[i][0]; pos[i*3+1]=0.3; pos[i*3+2]=trailPts[i][1]; const b=t*t; col[i*3]=0.15*b+0.0; col[i*3+1]=0.88*b; col[i*3+2]=1.0*b; }
+ trailGeo.attributes.position.needsUpdate=true; trailGeo.attributes.color.needsUpdate=true; trailGeo.setDrawRange(0,n); }
+function burst(x,y,color,n){ let c=0; for(const p of particles){ if(p.life>0)continue; const a=Math.random()*Math.PI*2,s=6+Math.random()*11; p.life=1; p.px=x;p.py=y;p.vx=Math.cos(a)*s;p.vy=Math.sin(a)*s; p.m.material.color.setHex(color); if(++c>=n)break; } }
+function popupWorld(txt,wx,wy,color){ const v=new THREE.Vector3(wx,0.6,wy).project(camera); const el=document.createElement('div'); el.className='popup'; el.textContent=txt; el.style.color=color;
+ el.style.left=((v.x*0.5+0.5)*innerWidth)+'px'; el.style.top=((-v.y*0.5+0.5)*innerHeight)+'px'; document.getElementById('popups').appendChild(el); setTimeout(()=>el.remove(),1000); }
+
+// ============ AIM / PREVIEW ============
+function showPreview(){ if(!SETTINGS.preview){ hidePreview(); return; } const {pts,status}=predictPath(probe.x,probe.y,aimDir.x*aimPower,aimDir.y*aimPower,hole,1100);
+ const col=status==='goal'?0x33e08a:status==='crash'?0xff3a52:0x9b8cff;
+ for(let i=0;i<previewDots.length;i++){ const m=previewDots[i]; if(i<pts.length){ m.visible=true; m.position.set(pts[i][0],0.3,pts[i][1]); m.material.color.setHex(col); const t=i/pts.length; m.material.opacity=0.9*(1-t*0.55); m.scale.setScalar(clamp(1.15-t*0.7,0.35,1.15)); } else m.visible=false; }
+ const last=pts[pts.length-1]; previewMarker.visible=true; previewMarker.position.set(last[0],0.25,last[1]); previewMarker.material.color.setHex(col); }
+function hidePreview(){ previewDots.forEach(m=>m.visible=false); previewMarker.visible=false; }
+function updatePowerHud(){ document.getElementById('powerfill').style.width=(aimPower/MAXP*100)+'%';
+ document.getElementById('aimtext').firstChild&&(document.getElementById('aimtext').childNodes[0].nodeValue=aiming?('power '+Math.round(aimPower/MAXP*100)+'% '):'drag to aim · release to launch ');
+ const bp=document.getElementById('boostpip'); bp.classList.toggle('on', gameState==='FLY'&&boostAvail); }
+
+// ============ POINTER ============
+function worldFromPointer(ev){ const r=renderer.domElement.getBoundingClientRect();
+ pointerNDC.x=((ev.clientX-r.left)/r.width)*2-1; pointerNDC.y=-((ev.clientY-r.top)/r.height)*2+1;
+ raycaster.setFromCamera(pointerNDC,camera); const pt=new THREE.Vector3(); if(raycaster.ray.intersectPlane(groundPlane,pt))return {x:pt.x,y:pt.z}; return null; }
+function onPointerDown(ev){ if(gameState==='FLY'){ doBoost(); return; } if(gameState!=='AIM')return; const w=worldFromPointer(ev); if(!w)return; aiming=true; updateAim(w); }
+function onPointerMove(ev){ if(!aiming||gameState!=='AIM')return; const w=worldFromPointer(ev); if(!w)return; updateAim(w); }
+function onPointerUp(){ if(!aiming)return; aiming=false; if(gameState==='AIM'&&aimPower>=2)launch(); else { hidePreview(); updatePowerHud(); } }
+function updateAim(w){ let dx=w.x-probe.x, dy=w.y-probe.y; const len=Math.hypot(dx,dy)||1; aimDir.x=dx/len; aimDir.y=dy/len;
+ aimPower=clamp(len/MAXDRAG,0,1)*MAXP; probeMesh.rotation.y=Math.atan2(aimDir.x,aimDir.y); showPreview(); updatePowerHud(); }
+
+// ============ HUD / UI ============
+function updateHUD(){ document.getElementById('hole').innerHTML='HOLE <b>'+(holeIdx+1)+'</b>/'+HOLES;
+ document.getElementById('strokes').innerHTML='SHOTS <b>'+holeStrokes+'</b>'; document.getElementById('par').textContent='PAR '+(hole?hole.par:'-');
+ document.getElementById('stars-hud').textContent='★ '+starsHole+'/'+(hole?hole.stars.length:0);
+ document.getElementById('total').innerHTML='TOTAL <b>'+total+'</b>'; }
+function banner(t,c,sub){ const b=document.getElementById('banner'); b.style.color=c; b.innerHTML=t+(sub?'<small>'+sub+'</small>':''); b.classList.remove('show'); void b.offsetWidth; b.classList.add('show'); }
+function flashScreen(c,a){ const f=document.getElementById('flash'); f.style.background=c; f.style.opacity=a; setTimeout(()=>f.style.opacity=0,90); }
+function hideAllScreens(){ ['menu','pause','results','board'].forEach(id=>document.getElementById(id).classList.add('hidden')); }
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+
+function getBoard(s){ return (quest.boards[s]||[]).slice(); }
+function boardRank(s,sc){ const b=getBoard(s); if(b.length<5)return b.filter(e=>e.s<=sc).length; const worst=b[b.length-1]; return sc<worst.s?b.filter(e=>e.s<=sc).length:-1; }
+function addToBoard(s,name,sc){ const b=getBoard(s); b.push({n:(name||'YOU').toUpperCase().slice(0,3),s:sc}); b.sort((a,c)=>a.s-c.s); quest.boards[s]=b.slice(0,5); save(LS_QUEST,quest); }
+function renderBoard(s){ document.getElementById('board-seed').textContent='Seed '+s+(s===todaySeed()?" · today's course":''); const list=document.getElementById('board-list'); list.innerHTML=''; const b=getBoard(s);
+ if(!b.length){ list.innerHTML='<li class="pill">No scores yet — set the first one!</li>'; return; }
+ b.forEach((e,i)=>{ const li=document.createElement('li'); const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'; li.innerHTML='<span class="brank">'+medal+'</span><span class="bname">'+e.n+'</span><span class="bsc">'+e.s+' shots</span>'; list.appendChild(li); }); }
+
+function wireUI(){
+ document.getElementById('start-btn').onclick=()=>{ readSeed(); startCourse(); };
+ document.getElementById('rand-btn').onclick=()=>{ seed=(Math.random()*1e9)|0; document.getElementById('seed-input').value=seed; document.getElementById('seed-note').textContent='Random course #'+seed; refreshBestNote(); };
+ document.getElementById('daily-btn').onclick=()=>{ seed=todaySeed(); document.getElementById('seed-input').value=seed; document.getElementById('seed-note').textContent="Today's course — same for everyone."; refreshBestNote(); };
+ document.getElementById('seed-input').oninput=()=>{ readSeed(); refreshBestNote(); };
+ document.getElementById('board-btn').onclick=()=>{ renderBoard(seed); hideAllScreens(); show('board'); };
+ document.getElementById('board-close-btn').onclick=()=>{ hideAllScreens(); show(gameState==='OVER'?'results':'menu'); };
+ document.getElementById('res-board-btn').onclick=()=>{ renderBoard(seed); hideAllScreens(); show('board'); };
+ document.getElementById('resethole').onclick=()=>{ if(gameState==='AIM'||gameState==='FLY'){ total-=holeStrokes; holeStrokes=0; starsHole=0; hole.stars.forEach(s=>s.got=false); resetProbe(); gameState='AIM'; hidePreview(); updateHUD(); } };
+ document.getElementById('pause-btn').onclick=togglePause; document.getElementById('resume-btn').onclick=togglePause;
+ document.getElementById('restart-btn').onclick=()=>{ hideAllScreens(); startCourse(); };
+ document.getElementById('quit-btn').onclick=toMenu; document.getElementById('res-menu-btn').onclick=toMenu;
+ document.getElementById('retry-btn').onclick=()=>{ hideAllScreens(); startCourse(); };
+ document.getElementById('next-seed-btn').onclick=()=>{ seed=(Math.random()*1e9)|0; document.getElementById('seed-input').value=seed; hideAllScreens(); startCourse(); };
+ document.getElementById('add-board-btn').onclick=()=>{ if(!pendingBoard)return; const nm=document.getElementById('initials-input').value.trim()||'YOU'; addToBoard(seed,nm,pendingBoard.score); pendingBoard=null; document.getElementById('add-board-btn').textContent='ADDED ✓'; document.getElementById('add-board-btn').disabled=true; };
+ document.getElementById('copy-btn').onclick=()=>{ const s=document.getElementById('share-str').value; const done=()=>{ document.getElementById('copy-btn').textContent='COPIED ✓'; setTimeout(()=>document.getElementById('copy-btn').textContent='COPY',1500); };
+   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(done).catch(selShare); else selShare(); };
+ const ab=document.getElementById('audio-btn'); ab.onclick=()=>{ SETTINGS.audio=!SETTINGS.audio; SFX.on=SETTINGS.audio; ab.textContent=SETTINGS.audio?'🔊':'🔇'; if(SETTINGS.audio)SFX.init(); save(LS_SET,SETTINGS); };
+ document.getElementById('preview-btn').onclick=()=>{ SETTINGS.preview=!SETTINGS.preview; applySettingsUI(); if(!SETTINGS.preview)hidePreview(); save(LS_SET,SETTINGS); };
+ document.getElementById('calm-btn').onclick=()=>{ SETTINGS.calm=!SETTINGS.calm; applySettingsUI(); save(LS_SET,SETTINGS); };
+}
+function selShare(){ const i=document.getElementById('share-str'); i.focus(); i.select(); document.getElementById('copy-note').textContent='Press ⌘/Ctrl+C to copy.'; }
+function readSeed(){ const v=parseInt(document.getElementById('seed-input').value); if(!isNaN(v)&&v>0)seed=v>>>0; }
+function refreshBestNote(){ const b=quest.bestBySeed[seed], st=quest.starsBySeed[seed]; document.getElementById('best-note').textContent=b!==undefined?('Your best on seed '+seed+': '+b+' shots'+(st?' · ★'+st:'')):('No score on seed '+seed+' yet.'); }
+function applySettingsUI(){ SFX.on=SETTINGS.audio; document.getElementById('audio-btn').textContent=SETTINGS.audio?'🔊':'🔇';
+ document.getElementById('preview-btn').textContent='PREVIEW: '+(SETTINGS.preview?'ON':'OFF');
+ document.getElementById('calm-btn').textContent='CALM FX: '+(SETTINGS.calm?'ON':'OFF');
+ if(bloomPass)bloomPass.strength=SETTINGS.calm?0.65:1.0; }
+function togglePause(){ if(gameState==='AIM'||gameState==='FLY'){ gameState='PAUSE'; show('pause'); } else if(gameState==='PAUSE'){ document.getElementById('pause').classList.add('hidden'); gameState='AIM'; } }
+function toMenu(){ gameState='MENU'; probeMesh.visible=false; goalMesh.visible=false; startMesh.visible=false; clearHoleMeshes(); hidePreview(); clearTrail(); hideAllScreens(); show('menu'); refreshBestNote(); }
+function onKey(e){ if(e.code==='KeyP')togglePause(); else if(e.code==='Space'&&gameState==='FLY'){ e.preventDefault(); doBoost(); } else if(e.code==='KeyR'&&(gameState==='AIM'||gameState==='FLY'))document.getElementById('resethole').onclick(); }
+function onResize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight); }
+
+let _last=performance.now(),_acc=0; const STEP=1000/60;
+function animate(now){ requestAnimationFrame(animate); if(now===undefined)now=performance.now(); let dtMs=now-_last; _last=now; if(dtMs>250)dtMs=250; _acc+=dtMs;
+ const running=(gameState==='FLY'||gameState==='WIN'||gameState==='RESET'||gameState==='AIM'); let guard=0;
+ while(_acc>=STEP&&guard<6){ if(running)stepSim(); _acc-=STEP; guard++; }
+ if(gameState==='FLY')updatePowerHud();
+ renderFrame(dtMs/1000);
+}
+
+init();
+</script>
+</body>
+</html>
