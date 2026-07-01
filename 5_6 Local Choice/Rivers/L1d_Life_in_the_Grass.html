@@ -930,6 +930,34 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 </style>
 </head>
 <body>
+<style>
+/* ===== Upgrade components (namespaced 'u-') ===== */
+@keyframes u-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes u-pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+/* Sequence the steps */
+.u-seqlist{display:flex;flex-direction:column;gap:.5em;margin:.5em 0}
+.u-seq{border:2px solid var(--earth);background:#fff;border-radius:10px;padding:.6em .8em;font-family:Georgia;cursor:pointer;display:flex;align-items:center;gap:.7em;transition:transform .1s,box-shadow .15s}
+.u-seq:hover{transform:translateX(3px);box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.u-seq .num{width:1.8em;height:1.8em;border-radius:50%;background:var(--earth);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
+.u-seq.done{border-color:var(--moss-deep);background:#eef6e6;cursor:default}
+.u-seq.done .num{background:var(--moss-deep)}
+.u-seq.shake{animation:u-shake .4s}
+/* Virtual quadrat */
+.u-vq{display:flex;gap:1em;flex-wrap:wrap;align-items:flex-start}
+.u-quad{position:relative;width:270px;height:270px;flex-shrink:0;border:3px solid var(--earth-deep);border-radius:6px;background:repeating-linear-gradient(0deg,#e7f0dc,#e7f0dc 26px,#dfeace 27px),repeating-linear-gradient(90deg,transparent,transparent 26px,rgba(0,0,0,.05) 27px)}
+.u-plant{position:absolute;transform:translate(-50%,-50%);font-size:1.6rem;line-height:1;cursor:pointer;background:none;border:none;padding:0;transition:transform .1s,opacity .2s;animation:u-pop .3s}
+.u-plant:hover{transform:translate(-50%,-50%) scale(1.25)}
+.u-plant.counted{opacity:.4;transform:translate(-50%,-50%) scale(.9);cursor:default}
+.u-tally{flex:1;min-width:210px}
+.u-trow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #ccc;padding:.3em 0;font-family:Georgia;font-size:.92rem}
+.u-trow .c{font-weight:bold;min-width:2.2em;text-align:right;color:var(--moss-deep)}
+.u-vqcount{margin:.3em 0 .6em;font-style:italic;color:#555}
+/* Per-section 'print for books' isolation */
+@media print{
+  body.print-only #print-area .print-doc{display:none !important}
+  body.print-only #print-area .print-doc.print-target{display:block !important}
+}
+</style>
 
 <div class="progress-bar" id="progressBar" style="width: 12%"></div>
 <div class="xp-bar" id="xpBar"></div>
@@ -992,6 +1020,7 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 <!-- ========== SLIDE 2: ARRIVAL ========== -->
 <section class="slide" data-slide="2">
   <span class="slide-tag">Arrival · 🌱 2 min</span>
+  <p style="color:var(--moss-deep); font-style:italic; margin-bottom:.3em;">Welcome back — that's the river done. Same trip, calmer gears now.</p>
   <h2>One step of grass. How many different plants?</h2>
   <p>Picture a patch of meadow the size of one footstep. How many <em>different types</em> of plant do you think live in it?</p>
   <div class="box moss">
@@ -1050,23 +1079,15 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 <!-- ========== SLIDE 4: WE DO · MATCHING GAME ========== -->
 <section class="slide wedo" data-slide="4">
   <span class="slide-tag wedo">We do · 🔗 3 min</span>
-  <h2>Match each word to its meaning.</h2>
-  <p>Tap a <strong>word</strong> on the left, then its <strong>meaning</strong> on the right. Wrong = shake. Right = locked.</p>
+  <h2>Put the sampling steps in order.</h2>
+  <p><strong>Tap the steps 1 → 5</strong>, in the order you'd actually do them. Right = it locks with its number. Wrong = shake.</p>
 
-  <div class="match-game">
-    <div class="match-terms">
-      <button class="match-term" data-id="quadrat" onclick="tapTerm(this)">Quadrat</button>
-      <button class="match-term" data-id="transect" onclick="tapTerm(this)">Transect</button>
-      <button class="match-term" data-id="random" onclick="tapTerm(this)">Random sampling</button>
-      <button class="match-term" data-id="biodiversity" onclick="tapTerm(this)">Biodiversity</button>
-      <button class="match-term" data-id="species" onclick="tapTerm(this)">Species</button>
-    </div>
-    <div class="match-defs" id="matchDefs"><!-- populated by initMatch() --></div>
-  </div>
+  <div class="u-seqlist" id="seqList"><!-- injected by initSeq() --></div>
 
-  <div id="matchProgress" class="box yellow" style="margin-top: 0.8em;">
-    <p>📌 Matched: <strong>0 / 5</strong></p>
+  <div id="seqProgress" class="box yellow" style="margin-top: 0.8em;">
+    <p>📌 In order: <strong>0 / 5</strong></p>
   </div>
+  <button class="reveal-btn" style="margin-top:.6em;" onclick="printWeDo('wedoEvidenceD')">🖨 Done as a class? Print this for books</button>
 </section>
 
 <!-- ========== SLIDE 5: NOTICE & BREATHE (wellbeing core) ========== -->
@@ -1129,48 +1150,25 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 
 <!-- ========== SLIDE 7: INDEPENDENT ========== -->
 <section class="slide independent" data-slide="7">
-  <span class="slide-tag independent">Independent · ✍️ 4 min</span>
-  <h2>Your turn — pick your tier.</h2>
-  <p style="margin-bottom: .4em;">First — <strong>tap the words you'll try to use.</strong> They turn green when claimed.</p>
-  <div class="wordbank" id="wordbank">
-    <span class="word-chip" onclick="tapWord(this)">quadrat</span>
-    <span class="word-chip" onclick="tapWord(this)">transect</span>
-    <span class="word-chip" onclick="tapWord(this)">random sampling</span>
-    <span class="word-chip" onclick="tapWord(this)">biodiversity</span>
-    <span class="word-chip" onclick="tapWord(this)">species</span>
-    <span class="word-chip" onclick="tapWord(this)">trampling</span>
-    <span class="word-chip" onclick="tapWord(this)">meadow</span>
-  </div>
-  <div class="wb-tracker" id="wbTracker">Key words ready: 0</div>
+  <span class="slide-tag independent">Independent · 🔲 4 min</span>
+  <h2>Do a virtual quadrat — count what's living.</h2>
+  <p><strong>Tap every living thing</strong> in the square to tally it. Take your time — how many <em>different</em> species can you find?</p>
 
-  <div class="tier-block">
-    <span class="tier-label">F · Foundation</span>
-    <div class="question"><strong>Q1.</strong> Draw a quadrat and write down what you'd count inside it. Name <em>two</em> plants you might find.</div>
-    <div class="stem">Stem: "Inside my quadrat I would count __________. Two plants I might find are __________ and __________."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">A quadrat is a square frame. Think: grass, daisy, clover, buttercup, dandelion, plantain.</div>
+  <div class="u-vq">
+    <div class="u-quad" id="quad"><!-- plants injected by initQuadrat() --></div>
+    <div class="u-tally">
+      <div class="u-vqcount" id="vqCount">Counted: 0 / 14</div>
+      <div id="tallyList"></div>
+      <div id="vqResult" class="box moss" style="display:none; margin-top:.6em;"></div>
+    </div>
   </div>
 
-  <div class="tier-block middle">
-    <span class="tier-label">M · Middle</span>
-    <div class="question"><strong>Q2.</strong> One patch of meadow had 20 kinds of plant. A worn path had just 3. <em>Explain why.</em></div>
-    <div class="stem">Stem: "The path had fewer kinds of plant because... The meadow had more because..."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">Think about trampling: what does walking on the same spot over and over do to the plants and soil?</div>
+  <div class="box moss" style="margin-top:.7em;">
+    <p><strong>Now record it.</strong> On your <em>Field sheet</em>: sketch your quadrat, fill in the tally, then compare the meadow with the worn path.</p>
   </div>
-
-  <div class="tier-block higher">
-    <span class="tier-label">H · Higher</span>
-    <div class="question"><strong>Q3.</strong> Explain why scientists <em>sample small squares</em> instead of counting every plant in the whole field.</div>
-    <div class="stem">Stem: "We sample instead of counting everything because... To keep it fair, we..."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">Counting a whole field would take forever. Random samples give a fair picture without the impossible job.</div>
-  </div>
-
-  <button class="finish-btn" onclick="finishTier(this)">✓ I've finished my tier</button>
 
   <div class="aspire-box" style="margin-top: .8em;">
-    <h3>🌟 Finished? A quiet reflection.</h3>
+    <h3>🌟 A quiet reflection.</h3>
     <p>Only share if you want to. Tap to lock your choices:</p>
     <div class="postcard">
       <div class="pc-grid">
@@ -1311,6 +1309,26 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
     <p style="font-size: 0.85rem;"><strong>Quadrat:</strong> "<em>A square you share with the daisies.</em>" 🔲</p>
     <p style="font-size: 0.85rem;"><strong>Sample, don't count all:</strong> "<em>Small squares, done fair, tell you what's there.</em>"</p>
     <p style="font-size: 0.85rem;"><strong>Biodiversity:</strong> "<em>More kinds = more life.</em>" 🦋</p>
+  </div>
+
+  <!-- We Do evidence (class capture) -->
+  <div class="print-doc" id="wedoEvidenceD">
+    <h1>L1d · We Do — The Sampling Steps, In Order</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:170px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span class="wedo-date" style="border-bottom:1px solid black; min-width:90px; display:inline-block;">&nbsp;</span>
+    </div>
+    <p>✅ <strong>Completed together as a class.</strong> This is the order we agreed. Write the number 1–5 in each box to show you know it.</p>
+    <div style="margin:.4em 0;">
+      <div style="display:flex; align-items:center; gap:.6em; margin:.35em 0;"><span style="border:1px solid #333; width:1.6em; height:1.6em; display:inline-block;"></span> Choose your spot — randomly, to be fair</div>
+      <div style="display:flex; align-items:center; gap:.6em; margin:.35em 0;"><span style="border:1px solid #333; width:1.6em; height:1.6em; display:inline-block;"></span> Place the quadrat down</div>
+      <div style="display:flex; align-items:center; gap:.6em; margin:.35em 0;"><span style="border:1px solid #333; width:1.6em; height:1.6em; display:inline-block;"></span> Count what's inside it</div>
+      <div style="display:flex; align-items:center; gap:.6em; margin:.35em 0;"><span style="border:1px solid #333; width:1.6em; height:1.6em; display:inline-block;"></span> Record it on your sheet</div>
+      <div style="display:flex; align-items:center; gap:.6em; margin:.35em 0;"><span style="border:1px solid #333; width:1.6em; height:1.6em; display:inline-block;"></span> Move along and repeat</div>
+    </div>
+    <p class="stem" style="margin-top:.5em;">Why does doing them in this order matter?</p>
+    <div class="lines" style="height:34px;"></div>
   </div>
 
   <!-- Field recording + reflection sheet -->
@@ -1623,10 +1641,99 @@ function toggleCard(card) {
   if (!wasExpanded) addXP(xpPerAction);
 }
 
+// ===== Data + state for new interactions (before init to avoid TDZ) =====
+const seqData = [
+  { order:1, text:'Choose your spot — randomly, to be fair' },
+  { order:2, text:'Place the quadrat down' },
+  { order:3, text:'Count what\'s inside it' },
+  { order:4, text:'Record it on your sheet' },
+  { order:5, text:'Move along and repeat' }
+];
+const speciesMeta = {
+  daisy:    { emoji:'🌼', label:'Daisy' },
+  clover:   { emoji:'🍀', label:'Clover' },
+  grass:    { emoji:'🌾', label:'Grass' },
+  bee:      { emoji:'🐝', label:'Bee' },
+  ladybird: { emoji:'🐞', label:'Ladybird' }
+};
+const quadData = [
+  {sp:'daisy',x:18,y:20},{sp:'grass',x:42,y:15},{sp:'clover',x:70,y:18},{sp:'daisy',x:85,y:30},
+  {sp:'grass',x:25,y:44},{sp:'ladybird',x:55,y:38},{sp:'clover',x:80,y:50},{sp:'daisy',x:15,y:62},
+  {sp:'grass',x:40,y:64},{sp:'bee',x:62,y:58},{sp:'daisy',x:88,y:72},{sp:'clover',x:30,y:82},
+  {sp:'grass',x:58,y:84},{sp:'ladybird',x:78,y:86}
+];
+let seqNext = 1;
+let quadCounts = {};
+let quadCountedTotal = 0;
+
 // ===== Init (data consts declared above are ready) =====
 setKoDate();
-initMatch();
+initSeq();
+initQuadrat();
 showSlide(1);
+
+// ===== Sequence the steps (slide 4) =====
+function initSeq() {
+  const list = document.getElementById('seqList');
+  if (!list) return;
+  const shuffled = [...seqData].sort(()=>Math.random()-0.5);
+  list.innerHTML = shuffled.map(s =>
+    `<button class="u-seq" data-order="${s.order}" onclick="tapSeq(this)"><span class="num">?</span><span>${s.text}</span></button>`
+  ).join('');
+}
+function tapSeq(btn) {
+  if (btn.classList.contains('done')) return;
+  if (parseInt(btn.dataset.order,10) === seqNext) {
+    btn.classList.add('done');
+    btn.querySelector('.num').textContent = seqNext;
+    seqNext++;
+    const p = document.querySelector('#seqProgress strong');
+    if (p) p.textContent = (seqNext-1) + ' / 5';
+    addXP(xpPerAction);
+    if (seqNext > 5) {
+      document.getElementById('seqProgress').innerHTML = '<p>✅ <strong>Spot on.</strong> Choose a spot, place the quadrat, count, record, move on. That\'s the routine you\'ll use for real.</p>';
+    }
+  } else {
+    btn.classList.add('shake');
+    setTimeout(()=>btn.classList.remove('shake'), 400);
+  }
+}
+
+// ===== Virtual quadrat (slide 7) =====
+function initQuadrat() {
+  const quad = document.getElementById('quad');
+  if (!quad) return;
+  quadCounts = { daisy:0, clover:0, grass:0, bee:0, ladybird:0 };
+  quad.innerHTML = quadData.map((p,i) =>
+    `<button class="u-plant" data-sp="${p.sp}" data-i="${i}" style="left:${p.x}%;top:${p.y}%;" onclick="tapPlant(this)">${speciesMeta[p.sp].emoji}</button>`
+  ).join('');
+  const tally = document.getElementById('tallyList');
+  if (tally) {
+    tally.innerHTML = Object.keys(speciesMeta).map(sp =>
+      `<div class="u-trow"><span>${speciesMeta[sp].emoji} ${speciesMeta[sp].label}</span><span class="c" id="c-${sp}">0</span></div>`
+    ).join('');
+  }
+}
+function tapPlant(btn) {
+  if (btn.classList.contains('counted')) return;
+  btn.classList.add('counted');
+  const sp = btn.dataset.sp;
+  quadCounts[sp]++;
+  const cell = document.getElementById('c-'+sp);
+  if (cell) cell.textContent = quadCounts[sp];
+  quadCountedTotal++;
+  const cnt = document.getElementById('vqCount');
+  if (cnt) cnt.textContent = 'Counted: ' + quadCountedTotal + ' / ' + quadData.length;
+  addXP(2);
+  if (quadCountedTotal === quadData.length) {
+    const kinds = Object.values(quadCounts).filter(n=>n>0).length;
+    const res = document.getElementById('vqResult');
+    if (res) {
+      res.style.display = 'block';
+      res.innerHTML = '<h3>🌱 ' + kinds + ' different species — good biodiversity!</h3><p>A worn path might have just 1 or 2. More kinds of living thing = a healthier habitat. That\'s exactly what you\'ll measure on the day.</p>';
+    }
+  }
+}
 
 // ===== Word bank (slide 7) =====
 function tapWord(chip) {
@@ -1642,6 +1749,21 @@ function finishTier(btn) {
   btn.textContent = '✓ Nice work — well done';
   addXP(xpPerAction);
 }
+
+// ===== Print a single We Do evidence sheet for books =====
+function printWeDo(id) {
+  const doc = document.getElementById(id);
+  if (!doc) return;
+  doc.querySelectorAll('.wedo-date').forEach(s => s.textContent = new Date().toLocaleDateString('en-GB'));
+  document.querySelectorAll('#print-area .print-doc').forEach(d => d.classList.remove('print-target'));
+  doc.classList.add('print-target');
+  document.body.classList.add('print-only');
+  window.print();
+}
+window.addEventListener('afterprint', function () {
+  document.body.classList.remove('print-only');
+  document.querySelectorAll('#print-area .print-doc.print-target').forEach(d => d.classList.remove('print-target'));
+});
 
 // ===== Calm mode: pause SVG motion if reduced-motion is preferred =====
 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

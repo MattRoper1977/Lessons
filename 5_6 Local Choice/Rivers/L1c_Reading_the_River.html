@@ -930,6 +930,67 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 </style>
 </head>
 <body>
+<style>
+/* ===== Upgrade components (namespaced 'u-') ===== */
+@keyframes u-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes u-pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+/* Bar-chart poll */
+.u-votes{display:flex;gap:.5em;flex-wrap:wrap;margin:.3em 0 1em}
+.u-vote{flex:1;min-width:130px;border:2px solid var(--earth);background:#fff;border-radius:12px;padding:.6em .5em;cursor:pointer;font-family:Georgia;font-weight:bold;font-size:1rem;color:var(--earth-deep);transition:transform .1s,box-shadow .15s}
+.u-vote:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.13)}
+.u-vote .s{display:block;font-weight:normal;font-size:.78rem;margin-top:.2em;color:#555}
+.u-vote.on{border-color:var(--water);box-shadow:0 0 0 3px rgba(46,124,184,.28)}
+.u-chart{display:flex;align-items:flex-end;justify-content:space-around;gap:1em;height:180px;border-bottom:3px solid var(--earth-deep);padding:0 .3em}
+.u-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.u-bar{width:72%;max-width:110px;background:var(--water);border-radius:8px 8px 0 0;height:0;min-height:3px;position:relative;transition:height .7s cubic-bezier(.2,.8,.2,1),background .3s}
+.u-col.lead .u-bar{background:var(--moss-deep)}
+.u-val{position:absolute;top:-1.7em;left:50%;transform:translateX(-50%);font-family:Georgia;font-weight:bold;font-size:1.05rem;color:var(--earth-deep);white-space:nowrap}
+.u-val .n{font-size:.7rem;color:#666;font-weight:normal}
+.u-cap{margin-top:.5em;font-family:Georgia;font-weight:bold;font-size:.86rem;text-align:center;color:var(--earth-deep)}
+.u-cap .e{display:block;font-size:1.35rem}
+.u-lead-tag{display:block;font-size:.66rem;color:var(--moss-deep);font-weight:bold;height:1em;visibility:hidden}
+.u-col.lead .u-lead-tag{visibility:visible}
+.u-total{text-align:center;margin-top:.5em;font-style:italic;color:#555}
+/* Sort-into-bins */
+.u-src{display:flex;flex-wrap:wrap;gap:.5em;justify-content:center;margin:.3em 0 .8em;min-height:2.4em}
+.u-card{border:2px solid var(--earth);background:#fff;border-radius:10px;padding:.5em .7em;font-family:Georgia;font-size:.92rem;cursor:pointer;max-width:250px;transition:transform .1s,box-shadow .15s}
+.u-card:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.13)}
+.u-card.sel{border-color:var(--water);box-shadow:0 0 0 3px rgba(46,124,184,.3)}
+.u-card.shake{animation:u-shake .4s}
+.u-bins{display:flex;gap:.8em}
+.u-bin{flex:1;border:2.5px dashed var(--earth);border-radius:14px;padding:.6em;min-height:140px;transition:background .2s,border-color .2s}
+.u-bin.armed{background:rgba(46,124,184,.06)}
+.u-bin.good{border-color:var(--moss-deep)}
+.u-bin.bad{border-color:var(--magritte-red)}
+.u-bin h3{text-align:center;margin:.1em 0 .4em}
+.u-chip{border-radius:8px;padding:.35em .5em;margin:.3em 0;font-size:.84rem;font-family:Georgia;animation:u-pop .25s}
+.u-bin.good .u-chip{background:#dcfce7}
+.u-bin.bad .u-chip{background:#fde2e2}
+/* Virtual lab */
+.u-lab{display:flex;gap:.8em;flex-wrap:wrap}
+.u-samp{flex:1;min-width:250px;border:2px solid var(--earth);border-radius:14px;padding:.7em;background:#fff}
+.u-samp h3{margin:.1em 0 .5em;text-align:center}
+.u-tbtns{display:flex;flex-wrap:wrap;gap:.4em;justify-content:center}
+.u-tbtn{border:2px solid var(--water);background:#fff;color:var(--water-deep);border-radius:20px;padding:.35em .7em;font-family:Georgia;font-size:.8rem;cursor:pointer;transition:transform .1s}
+.u-tbtn:hover{transform:translateY(-2px)}
+.u-tbtn.run{background:var(--water);color:#fff;cursor:default;opacity:.85}
+.u-read{margin-top:.5em}
+.u-lrow{display:flex;justify-content:space-between;border-bottom:1px dashed #ccc;padding:.22em 0;font-size:.85rem;font-family:Georgia;animation:u-pop .25s}
+.u-lrow .v{font-weight:bold}
+.u-lrow .good{color:var(--moss-deep)}.u-lrow .bad{color:var(--magritte-red)}
+.u-verdict{margin-top:.8em;text-align:center}
+.u-vbtn{border:2px solid var(--earth);background:#fff;border-radius:10px;padding:.5em 1em;margin:.2em .3em;font-family:Georgia;font-weight:bold;cursor:pointer;transition:transform .1s}
+.u-vbtn:hover{transform:translateY(-2px)}
+.u-vbtn.correct{background:#dcfce7;border-color:var(--moss-deep)}
+.u-vbtn.wrong{background:#fde2e2;border-color:var(--magritte-red)}
+/* Per-section 'print for books' isolation */
+@media print{
+  body.print-only #print-area .print-doc{display:none !important}
+  body.print-only #print-area .print-doc.print-target{display:block !important}
+}
+.u-evcols{display:flex;gap:1em}
+.u-evcol{flex:1;border:1.5px solid #333;padding:.5em .7em}
+</style>
 
 <div class="progress-bar" id="progressBar" style="width: 8%"></div>
 <div class="xp-bar" id="xpBar"></div>
@@ -1096,23 +1157,24 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 <!-- ========== SLIDE 5: WE DO · MATCHING GAME ========== -->
 <section class="slide wedo" data-slide="5">
   <span class="slide-tag wedo">We do · 🔬 4 min</span>
-  <h2>Match each test to what it tells you.</h2>
-  <p>Tap a <strong>test</strong> on the left, then tap what it <strong>tells you</strong> on the right. Wrong = shake. Right = locked.</p>
+  <h2>Sort the clues: healthy river, or warning sign?</h2>
+  <p><strong>Tap a clue</strong>, then tap the bin it belongs in. Right = it drops in. Wrong = shake.</p>
 
-  <div class="match-game">
-    <div class="match-terms">
-      <button class="match-term" data-id="ph" onclick="tapTerm(this)">pH</button>
-      <button class="match-term" data-id="turbidity" onclick="tapTerm(this)">Turbidity</button>
-      <button class="match-term" data-id="oxygen" onclick="tapTerm(this)">Dissolved oxygen</button>
-      <button class="match-term" data-id="nitrate" onclick="tapTerm(this)">Nitrate</button>
-      <button class="match-term" data-id="inverts" onclick="tapTerm(this)">Invertebrates</button>
+  <div class="u-src" id="sortSrc"><!-- cards injected by initSort() --></div>
+
+  <div class="u-bins">
+    <div class="u-bin good" id="binGood" onclick="tapBin('good')">
+      <h3>🟢 Healthy river</h3>
     </div>
-    <div class="match-defs" id="matchDefs"><!-- populated by initMatch() --></div>
+    <div class="u-bin bad" id="binBad" onclick="tapBin('bad')">
+      <h3>🔴 Warning sign</h3>
+    </div>
   </div>
 
-  <div id="matchProgress" class="box yellow" style="margin-top: 0.8em;">
-    <p>📌 Matched: <strong>0 / 5</strong></p>
+  <div id="sortProgress" class="box yellow" style="margin-top: 0.8em;">
+    <p>📌 Sorted: <strong>0 / 6</strong></p>
   </div>
+  <button class="reveal-btn" style="margin-top:.6em;" onclick="printWeDo('wedoEvidenceC')">🖨 Done as a class? Print this for books</button>
 </section>
 
 <!-- ========== SLIDE 6: PREDICT · VOTE & TALK BRIDGE ========== -->
@@ -1120,21 +1182,17 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
   <span class="slide-tag bridge">Predict · 🗳️ 2 min</span>
   <h2>Before we go — what's your bet?</h2>
   <p>The tidal Tees at Portrack: how healthy do you think it is? <strong>Tap one vote</strong> — then tell the person next to you <em>why</em>.</p>
-  <div class="poll" id="teesPoll">
-    <div class="poll-row">
-      <button class="poll-btn" onclick="votePoll(this,0)">Healthy<span class="pb-sub">🐟 clean &amp; full of life</span></button>
-      <div class="poll-track"><div class="poll-fill" id="pf0"></div><span class="poll-pct" id="pp0">0%</span></div>
-    </div>
-    <div class="poll-row">
-      <button class="poll-btn" onclick="votePoll(this,1)">Mixed<span class="pb-sub">🌫️ some good, some bad</span></button>
-      <div class="poll-track"><div class="poll-fill" id="pf1"></div><span class="poll-pct" id="pp1">0%</span></div>
-    </div>
-    <div class="poll-row">
-      <button class="poll-btn" onclick="votePoll(this,2)">Struggling<span class="pb-sub">⚠️ pollution winning</span></button>
-      <div class="poll-track"><div class="poll-fill" id="pf2"></div><span class="poll-pct" id="pp2">0%</span></div>
-    </div>
-    <div class="poll-total" id="pollTotal">No votes yet — tap to start.</div>
+  <div class="u-votes">
+    <button class="u-vote" id="vote0" onclick="votePoll(0)">Healthy<span class="s">🐟 clean &amp; full of life</span></button>
+    <button class="u-vote" id="vote1" onclick="votePoll(1)">Mixed<span class="s">🌫️ some good, some bad</span></button>
+    <button class="u-vote" id="vote2" onclick="votePoll(2)">Struggling<span class="s">⚠️ pollution winning</span></button>
   </div>
+  <div class="u-chart" id="pollChart">
+    <div class="u-col" id="col0"><div class="u-bar" id="bar0"><span class="u-val" id="val0"></span></div><div class="u-lead-tag">▲ leading</div><div class="u-cap"><span class="e">🐟</span>Healthy</div></div>
+    <div class="u-col" id="col1"><div class="u-bar" id="bar1"><span class="u-val" id="val1"></span></div><div class="u-lead-tag">▲ leading</div><div class="u-cap"><span class="e">🌫️</span>Mixed</div></div>
+    <div class="u-col" id="col2"><div class="u-bar" id="bar2"><span class="u-val" id="val2"></span></div><div class="u-lead-tag">▲ leading</div><div class="u-cap"><span class="e">⚠️</span>Struggling</div></div>
+  </div>
+  <div class="u-total" id="pollTotal">No votes yet — tap your choice above.</div>
   <div class="bridge-prompt" style="margin-top: .6em;">
     <h3>NOW TALK</h3>
     <p class="prompt">"I think it's ______ because ______." · Clue: it sits right next to a <em>sewage works</em> — but it's also a protected <em>SSSI</em> full of birds and seals. Both are true.</p>
@@ -1199,59 +1257,44 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 
 <!-- ========== SLIDE 9: INDEPENDENT ========== -->
 <section class="slide independent" data-slide="9">
-  <span class="slide-tag independent">Independent · ✍️ 6 min</span>
-  <h2>Your turn — three questions, your tier.</h2>
-  <p style="margin-bottom: .4em;">First — <strong>tap the words you'll try to use.</strong> They turn green when claimed.</p>
-  <div class="wordbank" id="wordbank">
-    <span class="word-chip" onclick="tapWord(this)">pH</span>
-    <span class="word-chip" onclick="tapWord(this)">turbidity</span>
-    <span class="word-chip" onclick="tapWord(this)">dissolved oxygen</span>
-    <span class="word-chip" onclick="tapWord(this)">nitrate</span>
-    <span class="word-chip" onclick="tapWord(this)">phosphate</span>
-    <span class="word-chip" onclick="tapWord(this)">invertebrate</span>
-    <span class="word-chip" onclick="tapWord(this)">indicator species</span>
-    <span class="word-chip" onclick="tapWord(this)">brackish</span>
-    <span class="word-chip" onclick="tapWord(this)">high tide</span>
-    <span class="word-chip" onclick="tapWord(this)">sewage</span>
-  </div>
-  <div class="wb-tracker" id="wbTracker">Key words ready: 0</div>
+  <span class="slide-tag independent">Independent · 🧪 6 min</span>
+  <h2>Your lab — which river is healthier?</h2>
+  <p>Two water samples. <strong>Tap the tests</strong> to run them, read the results, then decide. Your call, scientist.</p>
 
-  <div class="tier-block">
-    <span class="tier-label">F · Foundation</span>
-    <div class="question"><strong>Q1.</strong> Name <em>two</em> things we will test in the river, and say what each one tells us.</div>
-    <div class="stem">Stem: "One test is __________. It tells us __________. Another test is __________. It tells us __________."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">Look back at the bench: temperature, turbidity, pH, oxygen, nutrients, invertebrates. Pick any two.</div>
-  </div>
-
-  <div class="tier-block middle">
-    <span class="tier-label">M · Middle</span>
-    <div class="question"><strong>Q2.</strong> Portrack sits right next to a sewage works. <em>Predict</em> what our nitrate reading and our oxygen reading might show — and why.</div>
-    <div class="stem">Stem: "I predict the nitrate will be ______ because... I predict the oxygen will be ______ because..."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">Sewage and fertiliser add nutrients. Nutrients feed algae. Algae then use up the oxygen. Follow the chain.</div>
-  </div>
-
-  <div class="tier-block higher">
-    <span class="tier-label">H · Higher</span>
-    <div class="question"><strong>Q3.</strong> Explain <em>why</em> we test the water in three ways — physical, chemical <em>and</em> biological — instead of just one.</div>
-    <div class="stem">Stem: "Using more than one test is better because... For example, a chemical test might miss..."</div>
-    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
-    <div class="hint-text">A single reading is one moment in time. Bugs live there for months — they show the <em>long-term</em> story. Clear water can still be sick.</div>
-  </div>
-
-  <button class="finish-btn" onclick="finishTier(this)">✓ I've finished my tier</button>
-
-  <div class="aspire-box" style="margin-top: .8em;">
-    <h3>🌟 Finished? You're the lead scientist.</h3>
-    <p>Plan your own fair test for the day. Tap to lock your three decisions:</p>
-    <div class="postcard">
-      <div class="pc-grid">
-        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>WHERE</strong>Which exact spot will you sample — and why there?</div>
-        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>FAIR TEST</strong>How will two groups compare fairly? (same method, same time…)</div>
-        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>STAY SAFE</strong>One rule you'll follow near the water.</div>
+  <div class="u-lab">
+    <div class="u-samp">
+      <h3>Sample A · upstream</h3>
+      <div class="u-tbtns">
+        <button class="u-tbtn" onclick="runTest('A','ph',this)">pH</button>
+        <button class="u-tbtn" onclick="runTest('A','o2',this)">Oxygen</button>
+        <button class="u-tbtn" onclick="runTest('A','turb',this)">Turbidity</button>
+        <button class="u-tbtn" onclick="runTest('A','nit',this)">Nitrate</button>
+        <button class="u-tbtn" onclick="runTest('A','bugs',this)">Bugs</button>
       </div>
+      <div class="u-read" id="read-A"></div>
     </div>
+    <div class="u-samp">
+      <h3>Sample B · by the works</h3>
+      <div class="u-tbtns">
+        <button class="u-tbtn" onclick="runTest('B','ph',this)">pH</button>
+        <button class="u-tbtn" onclick="runTest('B','o2',this)">Oxygen</button>
+        <button class="u-tbtn" onclick="runTest('B','turb',this)">Turbidity</button>
+        <button class="u-tbtn" onclick="runTest('B','nit',this)">Nitrate</button>
+        <button class="u-tbtn" onclick="runTest('B','bugs',this)">Bugs</button>
+      </div>
+      <div class="u-read" id="read-B"></div>
+    </div>
+  </div>
+
+  <div class="u-verdict">
+    <p><strong>Which is the healthier river?</strong></p>
+    <button class="u-vbtn" onclick="labVerdict('A',this)">Sample A</button>
+    <button class="u-vbtn" onclick="labVerdict('B',this)">Sample B</button>
+    <div id="labFeedback" style="margin-top:.6em;"></div>
+  </div>
+
+  <div class="box water" style="margin-top:.7em;">
+    <p><strong>Now record it.</strong> On your <em>lab sheet</em>: jot each reading, your verdict, and one reason. Written Q1–Q3 are on the sheet too, for your book.</p>
   </div>
 </section>
 
@@ -1336,8 +1379,8 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
     <li data-delay="1250"><span class="check">✓</span>Described a human impact on the Tees — and <strong>why we go at high tide</strong>.</li>
   </ul>
   <div class="box water" style="margin-top: 1.4em;">
-    <h3>Next lesson · L1d</h3>
-    <p>"Life in the Grass." The afternoon session — how we sample a grassland habitat <em>fairly</em>, and our impact on it.</p>
+    <h3>Quick 5-minute break → then L1d</h3>
+    <p>Straight after your break: <strong>"Life in the Grass"</strong> — how we sample the grassland <em>fairly</em>, and our impact on it. (That's the afternoon session on the day.)</p>
     <p style="margin-top:.5em;"><strong>See you Thursday 9 July · 10:00 · Portrack Marsh (Canal &amp; River Trust car park).</strong></p>
   </div>
 </section>
@@ -1461,6 +1504,58 @@ nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
       <div class="ko-cell"><strong>Nutrient pollution</strong>Too much nitrate/phosphate feeding algae.</div>
       <div class="ko-cell"><strong>SSSI</strong>Site of Special Scientific Interest — legally protected.</div>
     </div>
+  </div>
+
+  <!-- We Do evidence (class capture) -->
+  <div class="print-doc" id="wedoEvidenceC">
+    <h1>L1c · We Do — Healthy River or Warning Sign?</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:170px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span class="wedo-date" style="border-bottom:1px solid black; min-width:90px; display:inline-block;">&nbsp;</span>
+    </div>
+    <p>✅ <strong>Completed together as a class.</strong> Here is how we sorted the clues. Tick each one you got right.</p>
+    <div class="u-evcols">
+      <div class="u-evcol">
+        <h2 style="margin-top:0;">🟢 Healthy river</h2>
+        <ul class="tick-list">
+          <li>Lots of mayflies &amp; stoneflies</li>
+          <li>Clear water — you can see the bottom</li>
+          <li>High dissolved oxygen</li>
+        </ul>
+      </div>
+      <div class="u-evcol">
+        <h2 style="margin-top:0;">🔴 Warning sign</h2>
+        <ul class="tick-list">
+          <li>Only worms &amp; leeches</li>
+          <li>Green algae over the surface</li>
+          <li>Smells of sewage</li>
+        </ul>
+      </div>
+    </div>
+    <p class="stem" style="margin-top:.6em;">One clue I want to remember on the day — and why:</p>
+    <div class="lines" style="height:34px;"></div>
+  </div>
+
+  <!-- Lab record (hands-on) -->
+  <div class="print-doc">
+    <h1>L1c · Run the Tests — Lab Record</h1>
+    <div class="meta-line">Name: <span style="display:inline-block; min-width:170px; border-bottom:1px solid black;">&nbsp;</span> &nbsp; Sample / spot: <span style="display:inline-block; min-width:120px; border-bottom:1px solid black;">&nbsp;</span></div>
+    <p class="do-note">Use this at the river. <strong>Predict</strong> first, then <strong>measure</strong>, then <strong>decide</strong>.</p>
+    <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+      <tr><th style="border:1px solid #333; padding:5px; text-align:left;">Test</th><th style="border:1px solid #333; padding:5px; width:32%;">What I predict</th><th style="border:1px solid #333; padding:5px; width:32%;">What I measured</th></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">Temperature (°C)</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">Turbidity (clear/cloudy)</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">pH</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">Dissolved oxygen</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">Nitrate / phosphate</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:5px;">Invertebrates (which bugs?)</td><td style="border:1px solid #333; height:26px;"></td><td style="border:1px solid #333;"></td></tr>
+    </table>
+    <h2>My verdict</h2>
+    <p class="stem">This water looks <strong>healthy / mixed / struggling</strong> (circle one) because…</p>
+    <div class="lines" style="height:46px;"></div>
+    <p class="stem">The reading that convinced me most was…</p>
+    <div class="lines" style="height:30px;"></div>
   </div>
 
   <!-- Work pack -->
@@ -1845,25 +1940,121 @@ function toggleCard(card) {
   if (!wasExpanded) addXP(xpPerAction);
 }
 
+// ===== Data for new interactions (declared before init to avoid TDZ) =====
+const sortData = [
+  { id:'mayfly', cat:'good', text:'🦟 Lots of mayflies &amp; stoneflies' },
+  { id:'clear',  cat:'good', text:'💧 Clear water — you can see the bottom' },
+  { id:'oxygen', cat:'good', text:'🫧 High dissolved oxygen' },
+  { id:'worms',  cat:'bad',  text:'🪱 Only worms &amp; leeches' },
+  { id:'algae',  cat:'bad',  text:'🟢 Green algae over the surface' },
+  { id:'smell',  cat:'bad',  text:'👃 Smells of sewage' }
+];
+const labData = {
+  A: { ph:{v:'pH 7.2',ok:true}, o2:{v:'High',ok:true}, turb:{v:'Clear',ok:true}, nit:{v:'Low',ok:true}, bugs:{v:'Mayflies &amp; stoneflies',ok:true} },
+  B: { ph:{v:'pH 8.6',ok:false}, o2:{v:'Low',ok:false}, turb:{v:'Cloudy',ok:false}, nit:{v:'High',ok:false}, bugs:{v:'Only worms &amp; leeches',ok:false} }
+};
+
 // ===== Init (data consts declared above are ready) =====
 setKoDate();
-initMatch();
+initSort();
 showSlide(1);
 
-// ===== Live poll (slide 6) =====
+// ===== Live poll → bar chart (slide 6) =====
 let pollVotes = [0, 0, 0];
 let polled = false;
-function votePoll(btn, i) {
+function votePoll(i) {
   pollVotes[i]++;
-  const total = pollVotes.reduce((a, b) => a + b, 0);
-  for (let k = 0; k < 3; k++) {
-    const pct = total ? Math.round(pollVotes[k] / total * 100) : 0;
-    document.getElementById('pf' + k).style.width = pct + '%';
-    document.getElementById('pp' + k).textContent = pct + '%';
-  }
-  document.getElementById('pollTotal').textContent = total + (total === 1 ? ' vote in' : ' votes in');
-  btn.classList.add('voted');
+  document.getElementById('vote'+i).classList.add('on');
   if (!polled) { polled = true; addXP(xpPerAction); }
+  renderPollChart();
+}
+function renderPollChart() {
+  const total = pollVotes.reduce((a,b)=>a+b,0);
+  const max = Math.max(...pollVotes, 1);
+  let leadV = 0;
+  pollVotes.forEach(v=>{ if(v>leadV) leadV=v; });
+  const leaders = pollVotes.filter(v=>v===leadV && leadV>0).length;
+  for (let k=0;k<3;k++){
+    const v = pollVotes[k];
+    const pct = total ? Math.round(v/total*100) : 0;
+    const h = v ? Math.max(4, Math.round(v/max*100)) : 0;
+    document.getElementById('bar'+k).style.height = h + '%';
+    document.getElementById('val'+k).innerHTML = v ? (pct+'%<span class="n"> · '+v+'</span>') : '';
+    document.getElementById('col'+k).classList.toggle('lead', (v===leadV && leaders===1));
+  }
+  document.getElementById('pollTotal').textContent = total
+    ? (total + (total===1?' vote in — talk it through.':' votes in — talk it through.'))
+    : 'No votes yet — tap your choice above.';
+}
+
+// ===== Sort into bins (slide 5) =====
+let sortSelected = null;
+let sortDone = 0;
+function initSort() {
+  const src = document.getElementById('sortSrc');
+  if (!src) return;
+  const shuffled = [...sortData].sort(()=>Math.random()-0.5);
+  src.innerHTML = shuffled.map(c =>
+    `<button class="u-card" data-id="${c.id}" data-cat="${c.cat}" onclick="tapSortCard(this)">${c.text}</button>`
+  ).join('');
+}
+function tapSortCard(btn) {
+  document.querySelectorAll('#sortSrc .u-card').forEach(c=>c.classList.remove('sel'));
+  btn.classList.add('sel');
+  sortSelected = btn;
+  document.getElementById('binGood').classList.add('armed');
+  document.getElementById('binBad').classList.add('armed');
+}
+function tapBin(cat) {
+  if (!sortSelected) return;
+  const bin = document.getElementById(cat==='good'?'binGood':'binBad');
+  if (sortSelected.dataset.cat === cat) {
+    const chip = document.createElement('div');
+    chip.className = 'u-chip';
+    chip.innerHTML = sortSelected.innerHTML;
+    bin.appendChild(chip);
+    sortSelected.remove();
+    sortSelected = null;
+    document.querySelectorAll('.u-bin').forEach(b=>b.classList.remove('armed'));
+    sortDone++;
+    const p = document.querySelector('#sortProgress strong');
+    if (p) p.textContent = sortDone + ' / 6';
+    addXP(xpPerAction);
+    if (sortDone === 6) {
+      document.getElementById('sortProgress').innerHTML = '<p>✅ <strong>All sorted.</strong> Clean-water bugs, clear water and high oxygen = healthy. Algae, a sewage smell and worms-only = warning. You just read a river.</p>';
+    }
+  } else {
+    bin.classList.add('shake');
+    sortSelected.classList.add('shake');
+    const s = sortSelected;
+    setTimeout(()=>{ bin.classList.remove('shake'); s.classList.remove('shake'); }, 400);
+  }
+}
+
+// ===== Virtual lab (slide 9) =====
+const testLabels = { ph:'pH', o2:'Oxygen', turb:'Turbidity', nit:'Nitrate', bugs:'Invertebrates' };
+let labVerdictDone = false;
+function runTest(sample, test, btn) {
+  if (btn.classList.contains('run')) return;
+  btn.classList.add('run');
+  const d = labData[sample][test];
+  const row = document.createElement('div');
+  row.className = 'u-lrow';
+  row.innerHTML = `<span>${testLabels[test]}</span><span class="v ${d.ok?'good':'bad'}">${d.v} ${d.ok?'✓':'✗'}</span>`;
+  document.getElementById('read-'+sample).appendChild(row);
+  addXP(2);
+}
+function labVerdict(choice, btn) {
+  if (labVerdictDone) return;
+  labVerdictDone = true;
+  const correct = (choice === 'A');
+  document.querySelectorAll('.u-vbtn').forEach(b=>{ b.style.pointerEvents='none'; });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById('labFeedback');
+  fb.innerHTML = correct
+    ? '✅ <strong>Sample A.</strong> Good pH, high oxygen, clear water, low nitrate and clean-water bugs — every sign points to health. Sample B, by the works, shows the opposite.'
+    : '❌ Look again — <strong>Sample A</strong> has the healthy readings. Sample B has low oxygen, high nitrate, cloudy water and only pollution-tolerant worms.';
+  addXP(xpPerAction * 2);
 }
 
 // ===== Word bank (slide 9) =====
@@ -1880,6 +2071,21 @@ function finishTier(btn) {
   btn.textContent = '✓ Nice work — keep going if you can';
   addXP(xpPerAction);
 }
+
+// ===== Print a single We Do evidence sheet for books =====
+function printWeDo(id) {
+  const doc = document.getElementById(id);
+  if (!doc) return;
+  doc.querySelectorAll('.wedo-date').forEach(s => s.textContent = new Date().toLocaleDateString('en-GB'));
+  document.querySelectorAll('#print-area .print-doc').forEach(d => d.classList.remove('print-target'));
+  doc.classList.add('print-target');
+  document.body.classList.add('print-only');
+  window.print();
+}
+window.addEventListener('afterprint', function () {
+  document.body.classList.remove('print-only');
+  document.querySelectorAll('#print-area .print-doc.print-target').forEach(d => d.classList.remove('print-target'));
+});
 
 // ===== Calm mode: pause SVG motion if reduced-motion is preferred =====
 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
