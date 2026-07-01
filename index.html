@@ -96,14 +96,18 @@
   .brand { display: flex; align-items: center; gap: 10px; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; font-weight: 700; color: #38bdf8; }
   .brand::before { content: ""; display: inline-block; width: 20px; height: 2px; background: #38bdf8; border-radius: 2px; }
 
-  .header-actions { display: flex; align-items: center; gap: 10px; }
-  .theme-toggle { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: background .2s, border-color .2s, color .2s, transform .15s; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .theme-toggle { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: background .2s, border-color .2s, color .2s, transform .15s; flex-shrink: 0; }
   .theme-toggle:hover { background: #38bdf8; border-color: #38bdf8; color: var(--slate-900); transform: translateY(-1px); }
   .theme-toggle svg { width: 18px; height: 18px; }
 
-  .header-cta { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; text-decoration: none; font-size: .82rem; font-weight: 600; padding: 8px 16px; border-radius: 10px; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); transition: background .2s, border-color .2s, color .2s; }
+  .header-cta { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; text-decoration: none; font-size: .82rem; font-weight: 600; padding: 8px 16px; border-radius: 10px; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); transition: background .2s, border-color .2s, color .2s, box-shadow .2s; }
   .header-cta:hover { background: #38bdf8; border-color: #38bdf8; color: var(--slate-900); box-shadow: 0 0 15px rgba(56,189,248,.4); }
   .header-cta svg { width: 14px; height: 14px; }
+  
+  /* Style for secondary macro link configuration */
+  .header-cta.plan-cta { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.08); color: #94a3b8; }
+  .header-cta.plan-cta:hover { background: rgba(255,255,255,0.09); border-color: #a5b4fc; color: #f8fafc; box-shadow: 0 0 12px rgba(165,180,252,0.2); }
 
   header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; margin-top: 20px; letter-spacing: -.02em; line-height: 1.1; }
   header h1 span { color: #38bdf8; text-shadow: 0 0 20px rgba(56,189,248,.2); }
@@ -177,7 +181,6 @@
   .sec-chevron svg { width: 18px; height: 18px; }
   .subject-head:hover .sec-chevron { background: var(--chip-ct); color: var(--ink); }
   .subject.collapsed:not(.force-open) .sec-chevron { transform: rotate(-90deg); }
-  /* grid uses a height/opacity fold; display:none kills reflow cost once closed */
   .subject .grid { transition: none; }
   .subject.collapsed:not(.force-open) .grid { display: none; }
   html[data-theme="dark"] .subject-head:hover .sec-chevron { color: var(--ink); }
@@ -225,7 +228,6 @@
 
   .tile-thumb { position: relative; height: 125px; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--slate-800); user-select: none; }
   .tile-thumb svg, .tile-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  /* hover shine sweep */
   .tile-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 32%, rgba(255,255,255,.26) 50%, transparent 68%); transform: translateX(-130%); transition: transform .7s var(--ease); pointer-events: none; }
   .tile:hover .tile-thumb::after { transform: translateX(130%); }
   .tile:hover .thumb-code-text { transform: scale(1.1) rotate(-1deg); text-shadow: 0 4px 12px rgba(0,0,0,.3); }
@@ -302,7 +304,6 @@
   .subject.arcade-zone .tile:hover .open { color: #fff; }
   .subject.arcade-zone .badge.game { background: rgba(99,102,241,.22); color: #c7d2fe; }
   .subject.arcade-zone .fav-btn.is-fav { background: rgba(251,191,36,.28); }
-  /* arcade jump-nav pill stands out from the educational pills */
   .jn-pill[data-subject="Games"] { border-color: rgba(99,102,241,.55); box-shadow: 0 0 0 1px rgba(99,102,241,.25), 0 0 12px rgba(99,102,241,.25); }
   @media (max-width: 768px) { .subject.arcade-zone { padding: 22px 18px 26px; } }
 
@@ -336,7 +337,7 @@
     .mini { flex-basis: 200px; }
   }
 
-  /* ============ SPOTLIGHT STRIPS (New this week / Jump back in) ============ */
+  /* ============ SPOTLIGHT STRIPS ============ */
   #spotlight { display: flex; flex-direction: column; gap: 6px; }
   .strip-block { margin-top: 24px; animation: fadeInUp .5s var(--ease) both; }
   .strip-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -416,6 +417,11 @@
     <div class="header-top">
       <div class="brand">Matt's Apps · Ecosystem</div>
       <div class="header-actions">
+        <!-- New Primary Configuration Link Entry -->
+        <a href="year-plan.html" class="header-cta plan-cta" title="Launch Year Plan · Build · Grow · Launch Module Suite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Year Plan · Build · Grow · Launch</span>
+        </a>
         <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme"></button>
         <a href="https://mattroper1977.github.io/Matt-s-Apps-/" class="header-cta" title="Switch to Core Developer Suite">
           <span>Launch Studio Suite</span>
@@ -530,7 +536,7 @@
    ================================================================ */
 const LIVE_CONFIG = {
   show: true,
-  state: "live",            // flip between: "live" | "soon" | "off"
+  state: "live",
   url: "https://mattroper1977.pythonanywhere.com/",
   states: {
     live: { colour: "#16a34a", aria: "Live Lessons portal is open",      text: "Live Lessons portal is open — tap to enter" },
@@ -541,10 +547,6 @@ const LIVE_CONFIG = {
 
 /* ================================================================
    RESOURCE DATA
-   Freshness: add  added:"YYYY-MM-DD"  to an entry. It auto-shows a pulsing
-   NEW badge and appears in the "New this week" strip for NEW_WINDOW_DAYS,
-   then ages out on its own — no need to come back and remove it.
-   (Legacy  new:true  still forces a permanent badge if you ever want one.)
    ================================================================ */
 const LESSONS = [
   {subject:"Live Lessons", title:"Live Lessons",  file:"https://mattroper1977.pythonanywhere.com/",      tag:"pupil"},
@@ -635,8 +637,7 @@ const LESSONS = [
   {subject:"Games", title:"🧱 VoxelCraft",           file:"Games/voxelcraft.html",           tag:"game", added:"2026-06-25"},
   {subject:"Games", title:"🌀 Vortex",               file:"Games/Vortex.html",               tag:"game", added:"2026-06-26"},
   {subject:"Games", title:"🌐 Globe Snake",          file:"Games/Globe_Snake (1).html",      tag:"game", added:"2026-06-26"},
-  {subject:"Games", title:"⚡ Neon Snake Overdrive",  file:"Games/Neon_Snake_Overdrive.html", tag:"game", added:"2026-06-26"},
-
+  {subject:"Games", title:"⚡ Neon Snake Overdrive",  file:"Games/Neon_Snake_Overdrive.html", tag:"game", added:"2026-06-26"}
 ];
 
 /* ================================================================
@@ -690,16 +691,13 @@ const TYPE_ORDER = ['lesson','game','revision','pupil','teacher','support'];
 const TYPE_LABEL = {all:'All', lesson:'Lessons', game:'Games', revision:'Revision', pupil:'Pupil', teacher:'Teacher', support:'Support'};
 function typeLabel(t){ return TYPE_LABEL[t] || t; }
 
-/* ---- Type colours: card top border + strip accent ---- */
 const TAG_COLOURS = { lesson:'#2563eb', game:'#16a34a', revision:'#db2777', pupil:'#f97316', teacher:'#7c3aed', support:'#d97706' };
 function tagColour(t){ return TAG_COLOURS[t] || 'var(--border)'; }
 
-/* ---- Freshness: a dated entry auto-badges, then quietly ages out ---- */
 const NEW_WINDOW_DAYS = 14;
 function daysSince(dateStr){ if(!dateStr) return Infinity; const d = new Date(dateStr); if(isNaN(d.getTime())) return Infinity; return (Date.now() - d.getTime()) / 86400000; }
 function isNew(l){ return l.new === true || daysSince(l.added) <= NEW_WINDOW_DAYS; }
 
-/* ---- Recently opened (personal, no scores, capped) ---- */
 const RECENT_KEY = 'progressLessonHubRecent_v1';
 function loadRecent(){ try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch(e){ return []; } }
 function recordOpen(file){
@@ -707,10 +705,9 @@ function recordOpen(file){
   let r = loadRecent().filter(f => f !== file);
   r.unshift(file); r = r.slice(0, 8);
   try { localStorage.setItem(RECENT_KEY, JSON.stringify(r)); } catch(e){}
-  setTimeout(buildSpotlight, 60); /* deferred so a card's launch isn't interrupted */
+  setTimeout(buildSpotlight, 60);
 }
 
-/* ---- Spotlight strips: "Jump back in" + "New this week" ---- */
 const ICON_SPARK = '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/>';
 const ICON_CLOCK = '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>';
 function lessonByFile(file){ return LESSONS.find(l => l.file === file); }
@@ -754,7 +751,6 @@ function buildSpotlight(){
   host.innerHTML = html;
 }
 
-/* ---- Live preview lightbox ---- */
 let pvTimer = null;
 let pvCurrentFile = null;
 function openPreview(file, title, colour){
@@ -795,12 +791,10 @@ function closePreview(){
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const state = { type:'all', q:'', favsOnly:false };
 
-/* ---- Favourites (safe localStorage) ---- */
 const FAV_KEY = 'progressLessonHubFavs_v1';
 function loadFavs(){ try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); } catch(e){ return new Set(); } }
 function saveFavs(){ try { localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); } catch(e){} }
 
-/* ---- Collapsed sections (safe localStorage) ---- */
 const COLLAPSE_KEY = 'progressLessonHubCollapsed_v1';
 function loadCollapsed(){ try { const v = JSON.parse(localStorage.getItem(COLLAPSE_KEY)); return Array.isArray(v) ? new Set(v) : null; } catch(e){ return null; } }
 function saveCollapsed(set){ try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...set])); } catch(e){} }
@@ -813,7 +807,6 @@ function setCollapsedState(sec, isCollapsed){
 }
 const favs = loadFavs();
 
-/* ---- Theme ---- */
 const THEME_KEY = 'progressLessonHubTheme_v1';
 function setTheme(t, animate){
   if (animate && !reduce){ document.documentElement.classList.add('theme-anim'); setTimeout(()=>document.documentElement.classList.remove('theme-anim'), 420); }
@@ -874,7 +867,8 @@ function createProceduralThumb(lesson, theme, subjectIconPath, index){
     const vectorGlyph = TAG_ICONS[lesson.tag] || TAG_ICONS['lesson'];
     coreHeroGraphic = `<g class="thumb-icon-circle" style="transition: transform 0.25s var(--ease); transform-origin: center;"><circle cx="130" cy="62" r="26" fill="#ffffff" filter="drop-shadow(0 6px 12px rgba(0,0,0,0.18))" /><svg x="116" y="48" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="${theme.g1}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${vectorGlyph}</svg></g>`;
   }
-  const safeId = `tile_art_${index}_${getDeterministicHash(lesson.title).toString(36)}`;
+  
+  const safeId = `tile_art_${index}_${getDeterministicHash(lesson.title).toString(36)}_${index}`;
   const seed = getDeterministicHash(lesson.title);
   let structuralPatternMarkup = '';
   if (seed % 3 === 0){ structuralPatternMarkup = `<path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.2"/>`; }
@@ -893,7 +887,6 @@ function build(){
   countUp(document.getElementById('statLessons'), LESSONS.length, ' applications');
   countUp(document.getElementById('statSubjects'), order.length, ' modules');
 
-  /* ---- subject jump nav ---- */
   const jn = document.getElementById('jumpnav');
   order.forEach(sub => {
     const theme = SUBJECT_COLOURS[sub] || {c:'var(--navy)'};
@@ -913,7 +906,6 @@ function build(){
     jn.appendChild(pill);
   });
 
-  /* ---- filter chips ---- */
   const counts = {};
   LESSONS.forEach(l => { counts[l.tag] = (counts[l.tag] || 0) + 1; });
   let chipHTML = `<button class="chip" data-type="all"><svg viewBox="0 0 24 24">${ALL_ICON}</svg>All<span class="chip-ct">${LESSONS.length}</span></button>`;
@@ -931,7 +923,6 @@ function build(){
     setType(c.dataset.type);
   });
 
-  /* ---- sections + cards ---- */
   const host = document.getElementById('sections');
   const arcadeHost = document.getElementById('arcade');
   order.forEach((sub, i) => {
@@ -999,7 +990,6 @@ function build(){
     }
   });
 
-  /* ---- delegated clicks: favourite + badge-as-filter ---- */
   const cardClick = e => {
     const favBtn = e.target.closest('.fav-btn');
     if (favBtn){ e.preventDefault(); e.stopPropagation(); toggleFav(favBtn.closest('.tile').dataset.file, favBtn); return; }
@@ -1008,12 +998,11 @@ function build(){
     const badge = e.target.closest('.badge');
     if (badge){ e.preventDefault(); e.stopPropagation(); setType(badge.dataset.tag); return; }
     const tile = e.target.closest('.tile');
-    if (tile) recordOpen(tile.dataset.file); /* genuine launch */
+    if (tile) recordOpen(tile.dataset.file);
   };
   host.addEventListener('click', cardClick);
   arcadeHost.addEventListener('click', cardClick);
 
-  /* ---- collapsible sections: toggle, keyboard, initial state ---- */
   const allSecs = () => [...document.querySelectorAll('.subject')];
   function toggleSection(sec){
     setCollapsedState(sec, !sec.classList.contains('collapsed'));
@@ -1023,7 +1012,6 @@ function build(){
     const head = sec.querySelector('.subject-head');
     if (!head) return;
     head.addEventListener('click', e => {
-      /* ignore clicks on interactive children (none currently, but future-proof) */
       if (e.target.closest('a,button:not(.subject-head)')) return;
       toggleSection(sec);
     });
@@ -1033,7 +1021,6 @@ function build(){
   }
   allSecs().forEach(wireHead);
 
-  /* first-visit default: fold everything except sections holding NEW work */
   const saved = loadCollapsed();
   allSecs().forEach(sec => {
     const sub = sec.dataset.subject;
@@ -1044,10 +1031,9 @@ function build(){
   });
   if (!saved) saveCollapsed(collapsed);
 
-  /* expand / collapse all */
   const setAll = wantCollapsed => {
     allSecs().forEach(sec => {
-      if (sec.style.display === 'none') return; /* leave filtered-out sections alone */
+      if (sec.style.display === 'none') return;
       setCollapsedState(sec, wantCollapsed);
     });
     saveCollapsed(collapsed);
@@ -1057,7 +1043,6 @@ function build(){
   if (ea) ea.addEventListener('click', () => setAll(false));
   if (ca) ca.addEventListener('click', () => setAll(true));
 
-  /* ---- cursor-follow sheen on thumbnails ---- */
   if (!reduce){
     const sheen = e => {
       const t = e.target.closest('.tile');
@@ -1073,7 +1058,6 @@ function build(){
     arcadeHost.addEventListener('mousemove', sheen);
   }
 
-  /* ---- Surprise me: launch a random currently-visible resource ---- */
   const surprise = document.getElementById('surpriseMe');
   if (surprise) surprise.addEventListener('click', () => {
     const pool = [...document.querySelectorAll('.subject')]
@@ -1143,7 +1127,6 @@ function applyFilter(){
     perSubject[sub] = shown;
     shownTotal += shown;
     sec.style.display = shown ? '' : 'none';
-    /* while filtering, reveal matches even inside folded sections; restore fold when cleared */
     sec.classList.toggle('force-open', filtering && shown > 0);
     const c = sec.querySelector('.count');
     if (c) c.textContent = shown;
@@ -1157,7 +1140,7 @@ function applyFilter(){
   let label = `Showing ${shownTotal} of ${LESSONS.length} resources`;
   if (state.favsOnly) label += ' · ⭐ Favourites';
   if (state.type !== 'all') label += ` · ${typeLabel(state.type)}`;
-  if (q) label += ` · “${state.q.trim()}”`;
+  if (q) label += ` · "${state.q.trim()}"`;
   document.getElementById('resultCount').textContent = label;
 
   document.getElementById('noResults').style.display = shownTotal ? 'none' : 'block';
@@ -1181,7 +1164,6 @@ function renderGreeting(){
   el.innerHTML = `${night ? moon : sun}<span>${word}, <b>Matt</b></span><span class="g-dot"></span><span>${date}</span>`;
 }
 
-/* gentle favourite sparkle — respects reduced motion via CSS + guard */
 function sparkleAt(x, y){
   if (reduce) return;
   const colours = ['#fbbf24', '#f97316', '#16a34a', '#2563eb', '#db2777'];
@@ -1222,12 +1204,10 @@ document.addEventListener('keydown', e => {
   if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); searchInput.focus(); }
 });
 
-/* preview lightbox close */
 document.getElementById('pvClose').addEventListener('click', closePreview);
 document.getElementById('pvOverlay').addEventListener('click', e => { if (e.target.id === 'pvOverlay') closePreview(); });
 document.getElementById('pvLaunch').addEventListener('click', () => { recordOpen(pvCurrentFile); });
 
-/* spotlight strip launches count as opens */
 document.getElementById('spotlight').addEventListener('click', e => {
   const mini = e.target.closest('.mini');
   if (mini) recordOpen(mini.dataset.open);
