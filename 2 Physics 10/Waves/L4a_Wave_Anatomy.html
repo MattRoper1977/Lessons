@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L4a: Wave Anatomy</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .mc{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:1.02rem;color:#0f172a}
+    .mc span{padding:6px 10px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-weight:600}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .label-chip{padding:8px 16px;border-radius:999px;font-weight:900;font-size:.95rem;border:3px solid #cbd5e1;background:#fff;cursor:pointer;user-select:none;transition:.2s;display:inline-block;margin:3px}.label-chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1)}.label-chip.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);transform:scale(1.05)}.label-chip.placed{opacity:.4;pointer-events:none;border-style:dashed}
+    .label-slot{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:36px;border:3px dashed #cbd5e1;border-radius:10px;background:#f8fafc;font-weight:900;font-size:.9rem;color:var(--muted);cursor:pointer;transition:.25s;margin:2px}.label-slot:hover{border-color:var(--wedo-border);background:#fce7f3}.label-slot.filled{border-style:solid;background:#fff;color:#0f172a}.label-slot.correct{border-color:var(--success);background:#f0fdf4;color:#166534}.label-slot.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+    /* Match cards for We Do 2 */
+    .match-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:.25s;min-height:60px;display:flex;align-items:center;justify-content:center}.match-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}.match-card.sel-m{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2)}.match-card.matched-m{border-color:var(--success);background:#f0fdf4;pointer-events:none}.match-card.wrong-m{border-color:var(--error);animation:shake .4s}
+    /* TF cards for We Do 3 */
+    .tf-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:8px;transition:.3s}.tf-card.correct-tf{border-color:var(--success);background:#f0fdf4}.tf-card.wrong-tf{border-color:var(--error);animation:shake .4s}
+    .tf-btns{display:flex;gap:8px;margin-top:6px}.tf-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .time-badge+.slide-tag,.flex-badge+.slide-tag{margin-top:30px}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-200px);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:1150;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+    /* ═══ V5 UPGRADE: chassis ported from L4 Aerobic ═══ */
+    @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+    .slide[data-type="observe"]{border-top-color:#dc2626}
+    .tag-observe{background:#fee2e2;color:#991b1b}
+
+    /* Teacher toolbar (TA Focus / Cold Call / Board / XP / Watch) */
+    .teacher-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;border-radius:999px;padding:5px 8px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+    .teacher-bar button{padding:7px 12px;font-size:.85rem;border-radius:999px}
+    .tb-ta{background:#0ea5e9}.tb-ta:hover{background:#0369a1}
+    .tb-cc{background:#7c3aed}.tb-cc:hover{background:#5b21b6}
+    .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
+    .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
+    .xp-chip.xp-pop{animation:popIn .4s}
+
+    /* Modals: TA Focus / Cold Call / Video / Board */
+    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-back.open{display:flex;animation:fadeIn .2s}
+    .modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;border-top:8px solid var(--lo-border)}
+    .modal h2{margin-right:0;border:none;padding:0}
+    .modal .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}
+    .modal-ta{border-top-color:#0ea5e9}.modal-cc{border-top-color:#7c3aed}.modal-board{border-top-color:#f59e0b}
+    .cc-name{font-size:1.6rem;font-weight:900;text-align:center;color:var(--lo-border);margin:6px 0 14px;min-height:38px}
+    .cc-q{padding:12px 14px;border-radius:12px;margin:8px 0;border-left:6px solid}
+    .cc-f{background:#dcfce7;border-color:#22c55e}.cc-m{background:#ffedd5;border-color:#f97316}.cc-h{background:#dbeafe;border-color:#1e3a8a}
+    .cc-q .tier{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .roster-row{display:flex;gap:8px;margin-top:10px}
+    .roster-row input{flex:1;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem}
+    .ta-modal-body p{margin:8px 0}.ta-modal-body li{margin:5px 0}
+    .lb-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;margin:5px 0;background:#f8fafc;font-weight:bold}
+    .lb-row.me{background:#fef3c7}
+
+    /* Hint button */
+    .hint-btn{background:#10b981;font-size:.85rem}.hint-btn:hover{background:#047857}
+    .hint-text{display:none;margin-top:8px;padding:10px 12px;background:#ecfdf5;border-left:5px solid #10b981;border-radius:10px;font-weight:bold;color:#065f46}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+
+    /* Title hero + LO checks + success-criteria box */
+    .title-hero{display:flex;gap:18px;justify-content:center;margin:6px 0 4px;font-size:2.4rem}
+    .title-hero span{display:inline-block;animation:iconBounce 2.2s infinite}
+    .title-hero span:nth-child(2){animation-delay:.2s}.title-hero span:nth-child(3){animation-delay:.4s}.title-hero span:nth-child(4){animation-delay:.6s}.title-hero span:nth-child(5){animation-delay:.8s}
+    .float-dots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-dots i{position:absolute;width:14px;height:14px;border-radius:50%;opacity:.35;animation:floatDot 4s infinite ease-in-out}
+    .lo-anim li{opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li.done::before{content:'✅ ';}
+    .sc1-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 16px;border-radius:12px;max-width:680px;margin:14px auto;text-align:left}
+    .sc1-box h3{margin:0 0 6px;color:#9a3412}
+
+    /* V5: step reveal + turn & talk */
+    .v5-step{display:none}.v5-step.revealed{display:block;animation:fadeInUp .4s}
+    .step-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 4px}
+    .step-ctrl .step-count{font-weight:900;color:var(--ido-border);font-size:.9rem}
+    .turn-talk{background:#eef2ff;border:2px dashed #6366f1;border-radius:14px;padding:14px 16px;margin-top:12px;position:relative}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-11px;left:14px;background:#6366f1;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Misconception + exam-tip callouts */
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Lesson complete overlay + confetti */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+    .lesson-complete{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:2600;display:none;align-items:center;justify-content:center;padding:24px}
+    .lesson-complete.open{display:flex;animation:fadeIn .3s}
+    .lc-card{background:#fff;border-radius:22px;padding:34px 40px;text-align:center;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:10px solid var(--aspire-border);animation:popIn .5s}
+    .lc-card h1{border:none;font-size:2.2rem;display:block;color:var(--aspire-text)}
+    .lc-xp{font-size:3rem;font-weight:900;color:#f59e0b;margin:6px 0}
+
+    @media print{
+      .teacher-bar,.modal-back,.lesson-complete,#timer-widget,#confetti-canvas{display:none!important}
+      #print-area{padding:2px}
+      @page{margin:11mm}
+      .print-section{page-break-after:auto!important}
+      .print-section.visible{border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+    }
+
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
+      h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
+      .content-grid,.arrival-grid,.mc{grid-template-columns:1fr!important}
+      .logo{width:96px;top:14px;right:14px}
+      .teacher-bar{top:8px;padding:4px 6px;gap:4px;max-width:96%}
+      .teacher-bar button{padding:7px 9px}
+      .tb-label{display:none}
+      .xp-chip{padding:6px 8px;font-size:.8rem}
+      .title-hero{font-size:1.7rem;gap:10px}
+    }
+  </style>
+</head>
+<body>
+<!-- ═══ TEACHER TOOLBAR (V4/V5) ═══ -->
+<div class="teacher-bar">
+  <span class="xp-chip">⭐ <span id="xp-val">0</span> XP</span>
+  <button class="tb-ta small" onclick="openTA()">🎓 <span class="tb-label">TA Focus</span></button>
+  <button class="tb-cc small" onclick="openCC()">🎯 <span class="tb-label">Cold Call</span></button>
+  <button class="tb-board small" onclick="openBoard()">🏆 <span class="tb-label">Board</span></button>
+  <button class="small" style="background:#dc2626" onclick="openVideo()">📺 <span class="tb-label">Watch</span></button>
+</div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" data-title="Title">
+    <div class="float-dots"></div>
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:2%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 4a — Waves</p>
+      <h1>Wave Anatomy</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 10px">Spec 3.3</p>
+      <div class="title-hero"><span>🌊</span><span>📏</span><span>🔺</span><span>🔻</span><span>〰️</span></div>
+      <div class="li-box" style="margin:14px auto;max-width:700px;text-align:left"><strong>Learning Objectives:</strong>
+        <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px">
+          <li><strong>3.3</strong> – Know the definitions of amplitude, wavelength, wavefront, crest, trough and rest position.</li>
+          <li><strong>3.1</strong> – Use the units: metre (m).</li>
+        </ul>
+      </div>
+      <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
+        <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> name the parts of a wave and label a wave diagram.</p>
+        <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> define amplitude, wavelength, crest and trough with correct units.</p>
+        <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> explain what a wavefront is and distinguish it from wavelength.</p>
+      </div>
+      <p style="font-size:1.05rem;margin-top:6px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+        <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
+      </div></div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do → We Do → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>FLEX slide</strong> (Observe): Use if time allows, or as next-lesson warm-up. Marked with 🟠 FLEX badge. This is part 1 of 3 — followed by 4b Frequency &amp; Period and 4c Energy Transfer.</p>
+    </div></div>
+  </div>
+
+  <!-- SLIDE 2: ARRIVAL -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – What Do You Already Know?</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. This is a new topic — do your best!</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p style="margin:0 0 8px">Which of these is an example of a <strong>wave</strong>?</p><div class="mc"><span>A) A book</span><span>B) Sound from a speaker</span><span>C) A chair</span><span>D) A pencil</span></div><p class="answer">✅ B) Sound from a speaker.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p style="margin:0 0 8px">If you drop a stone into a pond, what happens to the water?</p><div class="mc"><span>A) It disappears</span><span>B) Ripples spread outward</span><span>C) It turns to ice</span><span>D) Nothing happens</span></div><p class="answer">✅ B) Ripples (waves) spread outward in circles from where the stone entered.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p style="margin:0 0 8px">Does a duck on a pond move across the water when a wave passes?</p><div class="mc"><span>A) Yes, it travels with the wave</span><span>B) No, it just bobs up and down</span><span>C) It sinks</span><span>D) It speeds up</span></div><p class="answer">✅ B) No — it bobs up and down. The duck doesn't travel with the wave.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p style="margin:0 0 8px">If you looked at a wave's shape, what would you call the very <strong>top</strong> of it?</p><div class="mc"><span>A) The bottom</span><span>B) The crest (top)</span><span>C) The middle</span><span>D) The width</span></div><p class="answer">✅ B) The crest — the highest point of a wave.</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p style="margin:0 0 8px">Which of these is <strong>NOT</strong> usually described as a wave?</p><div class="mc"><span>A) Sound</span><span>B) Water</span><span>C) A brick</span><span>D) Light</span></div><p class="answer">✅ C) A brick. Sound, water and light all travel as waves.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p style="margin:0 0 8px">What do you think <strong>"amplitude"</strong> might mean, just from the sound of the word?</p><div class="mc"><span>A) How loud/tall something is</span><span>B) How fast it moves</span><span>C) A type of fish</span><span>D) A colour</span></div><p class="answer">✅ A) "Ample" means large — amplitude is about how tall/big the wave is.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p style="margin:0 0 8px">In a wave diagram, what do you think <strong>"wavelength"</strong> might measure?</p><div class="mc"><span>A) The height of the wave</span><span>B) The distance from one wave to the next</span><span>C) The speed of the wave</span><span>D) The colour of the wave</span></div><p class="answer">✅ B) The distance from one point on a wave to the same point on the next wave.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p style="margin:0 0 8px">If a wave has a <strong>"trough"</strong>, what do you think this means?</p><div class="mc"><span>A) The highest point</span><span>B) The lowest point</span><span>C) The middle</span><span>D) The edge</span></div><p class="answer">✅ B) The lowest point of a wave.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p style="margin:0 0 8px">What is the <strong>crest</strong> of a wave?</p><div class="mc"><span>A) The lowest point</span><span>B) The highest point</span><span>C) The middle</span><span>D) The distance between waves</span></div><p class="answer">✅ B) The highest point. (The trough is the lowest point.)</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p style="margin:0 0 8px">What do you think a <strong>"wavefront"</strong> might be?</p><div class="mc"><span>A) A single point on a wave</span><span>B) A line joining points at the same stage of a wave</span><span>C) The front of a boat</span><span>D) The end of a wave</span></div><p class="answer">✅ B) A line joining all the points on a wave at the same stage of vibration (e.g. all the crests).</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p style="margin:0 0 8px">The <strong>"rest position"</strong> of a wave is…</p><div class="mc"><span>A) Where the wave never moves</span><span>B) The middle level the wave oscillates around</span><span>C) The highest point</span><span>D) The lowest point</span></div><p class="answer">✅ B) The middle level the wave moves up and down around.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🌊</h3><p style="margin:0 0 8px">Amplitude and wavelength are both measured in the same unit. What is it?</p><div class="mc"><span>A) Seconds</span><span>B) Hertz</span><span>C) Metres</span><span>D) Degrees</span></div><p class="answer">✅ C) Metres (m) — both are distances.</p></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: STARTER -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Where Have You Seen Waves? 🌊</h2>
+    <div class="li-box"><strong>Instructions:</strong> <strong>No science knowledge needed!</strong> Just think about your everyday life. In your book, answer the 3 questions below. <strong>3 minutes.</strong></div>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box"><h3 style="margin-top:0">📝 Think &amp; Write</h3>
+          <p><strong>1.</strong> List <strong>3 places</strong> you've seen waves in real life. (Think: beach, pond, music speaker, microwave…)</p>
+          <p><strong>2.</strong> Draw a simple picture of a wave — what shape is it?</p>
+          <p><strong>3.</strong> Draw a wave shape, then have a guess: what would you call the very top of your drawing? And the very bottom?</p>
+        </div>
+        <div class="scaffold-box"><strong>💡 Need ideas?</strong> Ocean, ripples in a puddle, sound from a speaker, the wiggly line on a heart monitor, the mexican wave at football…</div>
+      </div>
+      <div>
+        <div class="diagram-container"><h3 style="margin-top:0;color:var(--ido-border)">🖼️ Can you spot waves here?</h3>
+          <svg width="280" height="200" viewBox="0 0 280 200">
+            <!-- Ocean scene -->
+            <rect x="10" y="10" width="125" height="85" fill="#bfdbfe" rx="6"/>
+            <path d="M10,60 Q30,50 50,60 T90,60 T135,60" stroke="#1e40af" stroke-width="2.5" fill="none"/>
+            <path d="M10,75 Q30,65 50,75 T90,75 T135,75" stroke="#1e40af" stroke-width="2.5" fill="none"/>
+            <text x="72" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">🌊 Ocean</text>
+            <!-- Speaker / sound -->
+            <rect x="145" y="10" width="125" height="85" fill="#fef3c7" rx="6"/>
+            <rect x="155" y="40" width="20" height="30" fill="#92400e"/>
+            <circle cx="165" cy="55" r="6" fill="#fbbf24"/>
+            <path d="M180,40 Q200,55 180,70" stroke="#92400e" stroke-width="2" fill="none"/>
+            <path d="M190,35 Q215,55 190,75" stroke="#92400e" stroke-width="2" fill="none"/>
+            <path d="M200,30 Q230,55 200,80" stroke="#92400e" stroke-width="2" fill="none"/>
+            <text x="207" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">🔊 Sound</text>
+            <!-- Light / sun rays -->
+            <rect x="10" y="105" width="125" height="85" fill="#fef08a" rx="6"/>
+            <circle cx="72" cy="150" r="14" fill="#fbbf24"/>
+            <line x1="72" y1="130" x2="72" y2="120" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="72" y1="170" x2="72" y2="180" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="52" y1="150" x2="42" y2="150" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="92" y1="150" x2="102" y2="150" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="58" y1="136" x2="50" y2="128" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="86" y1="164" x2="94" y2="172" stroke="#f59e0b" stroke-width="2"/>
+            <text x="72" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">☀️ Light</text>
+            <!-- ECG / heartbeat -->
+            <rect x="145" y="105" width="125" height="85" fill="#fecaca" rx="6"/>
+            <polyline points="150,150 160,150 164,145 168,155 172,130 176,170 180,150 195,150 205,150 209,145 213,155 217,130 221,170 225,150 265,150" stroke="#dc2626" stroke-width="2" fill="none"/>
+            <text x="207" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#991b1b">❤️ Heartbeat</text>
+          </svg>
+          <p style="font-size:.9rem;margin-top:4px;color:var(--muted)">These are all waves! They move energy but not matter.</p>
+        </div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg);margin-top:8px"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p style="font-size:.95rem;margin:0">The loudest sound ever recorded was the 1883 Krakatoa eruption — heard <strong>4,800 km away</strong>. That's the same wave physics you're about to study!</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: I DO 1 – WAVE ANATOMY DEFINITIONS -->
+  <div class="slide" data-title="I Do – Wave Anatomy" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Wave Anatomy (3.3)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> You must know 6 parts of a wave: <strong>crest, trough, rest position, amplitude, wavelength, wavefront</strong>.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="step-ctrl">
+          <button class="small" style="background:var(--ido-border)" onclick="revealStep('idodefs')">▶ Reveal next definition</button>
+          <span class="step-count" id="idodefs-count">0 / 6 revealed</span>
+        </div>
+        <div class="ido-box animate-enter" id="idodefs"><h3 style="margin-top:0">📐 The 6 Key Definitions</h3>
+          <p class="v5-step"><strong>Crest</strong> — the highest point of a wave.</p>
+          <p class="v5-step"><strong>Trough</strong> — the lowest point of a wave.</p>
+          <p class="v5-step"><strong>Rest position</strong> — the middle level a wave oscillates around when there's no disturbance.</p>
+          <p class="v5-step"><strong>Amplitude</strong> — the maximum displacement from the rest position. How "tall" the wave is. Measured in <strong>metres (m)</strong>.</p>
+          <p class="v5-step"><strong>Wavelength (λ)</strong> — the distance from one point on a wave to the same point on the next wave (e.g. crest to crest). Measured in <strong>metres (m)</strong>.</p>
+          <p class="v5-step"><strong>Wavefront</strong> — an imaginary line joining all the points on a wave that are at the same stage of vibration (e.g. all the crests).</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">Anatomy of a Wave</h3>
+          <svg width="340" height="200" viewBox="0 0 340 200">
+            <!-- Rest position -->
+            <line x1="10" y1="100" x2="330" y2="100" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6"/>
+            <text x="335" y="104" font-size="10" fill="#94a3b8">Rest</text>
+            <!-- Wave -->
+            <path d="M10,100 Q50,20 90,100 Q130,180 170,100 Q210,20 250,100 Q290,180 330,100" fill="none" stroke="#7c3aed" stroke-width="3"/>
+            <!-- Crest label -->
+            <line x1="50" y1="22" x2="50" y2="40" stroke="#dc2626" stroke-width="1.5"/><text x="50" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">Crest</text>
+            <!-- Trough label -->
+            <line x1="130" y1="178" x2="130" y2="160" stroke="#2563eb" stroke-width="1.5"/><text x="130" y="195" text-anchor="middle" font-size="11" font-weight="bold" fill="#2563eb">Trough</text>
+            <!-- Amplitude arrow -->
+            <line x1="210" y1="100" x2="210" y2="22" stroke="#16a34a" stroke-width="2.5" marker-end="url(#a1)"/><defs><marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+            <text x="225" y="60" font-size="11" font-weight="bold" fill="#16a34a">Amplitude</text>
+            <!-- Wavelength arrow -->
+            <line x1="10" y1="100" x2="170" y2="100" stroke="#f59e0b" stroke-width="0"/>
+            <line x1="50" y1="40" x2="210" y2="40" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="50" y1="36" x2="50" y2="44" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="210" y1="36" x2="210" y2="44" stroke="#f59e0b" stroke-width="2"/>
+            <text x="130" y="35" text-anchor="middle" font-size="11" font-weight="bold" fill="#d97706">Wavelength (λ)</text>
+          </svg>
+        </div>
+        <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>Surfers read wave height (amplitude) and spacing (wavelength) to catch the perfect wave. Engineers measure amplitude to predict flood risk from waves. Every wave — water, sound, or light — has the same basic anatomy.</p></div>
+        <div class="scaffold-box animate-enter anim-delay-1"><strong>💡 Memory tricks:</strong><br>
+          <strong>A</strong>mplitude = how <strong>A</strong>mazing (tall) the wave is<br>
+          <strong>λ</strong> (lambda) = <strong>L</strong>ength of one wave<br>
+          Crest is at the top, like the <strong>crest</strong> of a hill</div>
+      </div>
+    </div>
+    <div class="scaffold-box" style="margin-top:8px"><h3 style="margin-top:0;color:#0369a1">🔑 Keywords to Know</h3><table style="width:100%;font-size:.95rem;border-collapse:collapse"><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Crest / Trough</td><td style="padding:4px 8px;color:#334155">Highest / lowest point of a wave.</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Amplitude</td><td style="padding:4px 8px;color:#334155">How TALL the wave is — maximum displacement from rest. Metres (m).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Wavelength (λ)</td><td style="padding:4px 8px;color:#334155">Distance from one crest to the next. Metres (m).</td></tr><tr><td style="padding:4px 8px;font-weight:900;color:#1e3a8a;white-space:nowrap">Wavefront</td><td style="padding:4px 8px;color:#334155">Line joining points at the same stage of vibration.</td></tr></table></div>
+    <div class="turn-talk"><strong>Talk to your partner:</strong> Point to the diagram and take turns naming each of the 6 parts in your own words. Be ready to label the wave yourself next.</div>
+  </div>
+
+  <!-- SLIDE 5: WE DO 1 – LABEL THE WAVE -->
+  <div class="slide" data-title="We Do – Label the Wave" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 5 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Label the Wave 🏷️</h2>
+    <div class="li-box"><strong>Instructions:</strong> Select a label, then click the correct slot. Match all 7!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div style="text-align:center;margin-bottom:6px">
+        <span class="label-chip" onclick="selLabel(this)" data-val="Crest">Crest</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Trough">Trough</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Amplitude">Amplitude</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Wavelength">Wavelength</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Rest position">Rest position</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Wavefront">Wavefront</span>
+        <span class="label-chip" onclick="selLabel(this)" data-val="Metres (m)">Metres (m)</span>
+      </div>
+      <div class="content-grid" style="height:auto;gap:14px">
+        <div style="background:#f8fafc;border-radius:12px;padding:14px;border:2px solid #e2e8f0">
+          <h3 style="margin:0 0 6px;color:var(--wedo-border)">Parts of a Wave</h3>
+          <p style="margin:4px 0">The highest point is called the <span class="label-slot" onclick="placeLabel(this)" data-answer="Crest">?</span></p>
+          <p style="margin:4px 0">The lowest point is called the <span class="label-slot" onclick="placeLabel(this)" data-answer="Trough">?</span></p>
+          <p style="margin:4px 0">The height from rest to crest is the <span class="label-slot" onclick="placeLabel(this)" data-answer="Amplitude">?</span></p>
+          <p style="margin:4px 0">The distance from one crest to the next is the <span class="label-slot" onclick="placeLabel(this)" data-answer="Wavelength">?</span></p>
+          <p style="margin:4px 0">The flat line the wave oscillates around is the <span class="label-slot" onclick="placeLabel(this)" data-answer="Rest position">?</span></p>
+        </div>
+        <div style="background:#f8fafc;border-radius:12px;padding:14px;border:2px solid #e2e8f0">
+          <h3 style="margin:0 0 6px;color:var(--wedo-border)">More Vocabulary</h3>
+          <p style="margin:4px 0">A line joining points at the same stage of vibration is the <span class="label-slot" onclick="placeLabel(this)" data-answer="Wavefront">?</span></p>
+          <p style="margin:4px 0">Wavelength and amplitude are both measured in <span class="label-slot" onclick="placeLabel(this)" data-answer="Metres (m)">?</span></p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px">
+        <div class="snap-score">Matched: <span id="lbl-count">0</span> / 7</div>
+        <div id="lbl-msg" style="font-weight:900;font-size:1.1rem;min-height:24px"></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+        <button class="ghost small" onclick="resetLabels()">🔄 Reset</button><button class="small" onclick="revealLabels()">✅ Reveal All</button>
+      </div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: OBSERVE – SEE WAVE ANATOMY IN ACTION (FLEX) -->
+  <div class="slide" data-title="Observe: See Wave Anatomy in Action" data-type="observe">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="flex-badge">⏱️ 4 min · FLEX</div>
+    <span class="slide-tag tag-observe">📺 Observe</span>
+    <h2>Observe: See Wave Anatomy in Action</h2>
+    <div class="li-box"><strong>Watch &amp; check:</strong> You've met all 6 wave parts — now <strong>see</strong> real water waves in a ripple tank. Watch the clip, spot the things below, then finish the sentences.</div>
+    <div class="content-grid" style="height:auto">
+      <div>
+        <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:14px;overflow:hidden;background:#000;border:3px solid #fecaca">
+          <iframe id="observe-frame" title="Ripple tank waves video" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+          <button class="small" style="background:#dc2626" onclick="loadObserve()">▶ Load video</button>
+          <a id="observe-link" href="https://www.youtube.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#1d4ed8;text-decoration:none;font-size:.9rem;border:2px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:10px">Open on YouTube ↗</a>
+          <a href="https://www.youtube.com/results?search_query=ripple+tank+waves+GCSE+physics" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#1d4ed8;text-decoration:none;font-size:.9rem;border:2px solid #bfdbfe;background:#eff6ff;padding:6px 12px;border-radius:10px">Backup clips ↗</a>
+        </div>
+        <p style="font-size:.78rem;color:var(--muted);margin:6px 0 0">If the video is blocked on the network, use the links above — or revisit the wave diagram on the I Do slide.</p>
+      </div>
+      <div>
+        <div class="scaffold-box" style="margin-top:0"><strong>👀 While you watch, spot:</strong>
+          <ol style="margin:6px 0 0;padding-left:20px;line-height:1.7">
+            <li>The <strong>crests</strong> and <strong>troughs</strong> as the waves ripple out</li>
+            <li>How the <strong>wavelength</strong> is measured — crest to crest</li>
+            <li>The <strong>rest position</strong> the water returns to between waves</li>
+          </ol>
+        </div>
+        <div class="exam-tip-box"><p style="margin:0"><strong>Listen carefully:</strong> the exam-safe word for "how tall" is always <strong>amplitude</strong>, not "wavelength" — they're easy to mix up.</p></div>
+      </div>
+    </div>
+    <div class="li-box" style="background:#f0fdf4;border-left-color:#22c55e;color:#14532d;margin:12px 0 8px"><strong>✍️ Now finish these — say it out loud first, then jot it down:</strong></div>
+    <div class="animate-enter" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="scaffold-box" style="margin:0">The wavelength is measured from one ____________ to the next.<br>The amplitude is measured from the ____________ position to the crest.</div>
+      <div class="scaffold-box" style="margin:0">The highest point of a wave is the ____________.<br>The lowest point of a wave is the ____________.</div>
+    </div>
+    <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Reveal the answers</button><div class="hint-text">Wavelength: crest <strong>to the next crest</strong>. Amplitude: <strong>rest</strong> position to the crest. Highest point: <strong>crest</strong>. Lowest point: <strong>trough</strong>.</div></div>
+    <div class="turn-talk"><strong>Ready check:</strong> Cover the screen — can you say all 6 wave parts out loud, in order? If yes, you're ready for independent work.</div>
+  </div>
+
+  <!-- SLIDE 7: INDEPENDENT -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3>
+        <p><strong>Section A:</strong> Multiple Choice (4 questions)</p><p><strong>Section B:</strong> Short Answer — label a wave, name units</p><p><strong>Section C:</strong> Long Answer — explain wave anatomy</p><p><strong>Section D:</strong> Exam-Style Question</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for definitions and the labelled wave diagram.</div>
+        <div class="exam-tip-box" style="margin-top:10px"><strong>Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Label</strong> = write the correct word next to the arrow/part.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can name the parts of a wave and label a wave diagram.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can define amplitude, wavelength, crest and trough with correct units.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can explain what a wavefront is and distinguish it from wavelength.</p></div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define crest, trough and rest position</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define amplitude and wavelength, with units</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can label all 6 parts on a wave diagram</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain what a wavefront is (Middle/Higher)</span></div></div>
+  </div>
+
+  <!-- SLIDE 8: EXIT TICKET -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Check Your Learning</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+    </div>
+    <div style="text-align:center;margin:4px 0 8px">
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
+      <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
+      <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
+    </div>
+
+    <div id="exit-foundation" class="task-box"><p><strong>1) What is the amplitude of a wave?</strong></p><p class="answer">The maximum displacement from the rest position (height of the wave).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What is the highest point of a wave called?</strong></p><p class="answer">The crest.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What is the lowest point of a wave called?</strong></p><p class="answer">The trough.</p></div>
+    <div id="exit-middle" class="task-box" style="display:none"><p><strong>1) Define wavelength.</strong></p><p class="answer">The distance from one point on a wave to the same point on the next wave (e.g. crest to crest). Measured in metres.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What unit is amplitude measured in?</strong></p><p class="answer">Metres (m).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Explain what the "rest position" of a wave is.</strong></p><p class="answer">The middle level the wave oscillates around when there's no disturbance — the flat line the wave moves up and down from.</p></div>
+    <div id="exit-higher" class="task-box" style="display:none"><p><strong>1) Distinguish between a wavefront and a wavelength.</strong></p><p class="answer">A wavefront is a line joining points at the same stage of vibration (e.g. all crests). Wavelength is the distance between two adjacent wavefronts (or between any two identical points on consecutive waves).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) A pupil says amplitude is "the distance from crest to trough". Explain why this is not quite correct.</strong></p><p class="answer">Amplitude is measured from the rest position to the crest (or trough) — not crest to trough directly. Crest-to-trough distance is actually double the amplitude.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Sketch a simple wave in your head. Explain where you would draw the amplitude arrow and the wavelength arrow.</strong></p><p class="answer">Amplitude arrow: a vertical line from the rest position up to a crest. Wavelength arrow: a horizontal line from one crest to the next crest (or any two matching points one wave apart).</p>
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Next lesson:</strong> Frequency &amp; Period — how many waves pass per second, and how that links to the time each wave takes.</div>
+    <div style="text-align:center;margin-top:10px"><button style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish Lesson</button></div>
+  </div>
+  </div>
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+    <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can define crest, trough and rest position.</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can define amplitude and wavelength, with units.</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can label all 6 parts on a wave diagram.</p></div>
+    <h1 style="text-align:center">Knowledge Organiser: Wave Anatomy (L4a)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Crest</strong></td><td>The highest point of a wave.</td></tr>
+      <tr><td><strong>Trough</strong></td><td>The lowest point of a wave.</td></tr>
+      <tr><td><strong>Rest position</strong></td><td>The middle level a wave oscillates around with no disturbance.</td></tr>
+      <tr><td><strong>Amplitude</strong></td><td>Maximum displacement from rest position. Measured in metres (m).</td></tr>
+      <tr><td><strong>Wavelength (λ)</strong></td><td>Distance from one point to same point on next wave (crest→crest). Metres (m).</td></tr>
+      <tr><td><strong>Wavefront</strong></td><td>Line joining points at the same stage of vibration.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>A</strong>mplitude = how <strong>A</strong>mazing (tall) the wave is.</p><p style="margin:2px 0;font-size:.9rem"><strong>λ</strong> (lambda) looks like an upside-down <strong>V</strong> = the <strong>V</strong>alley between two crests = wavelength.</p><p style="margin:2px 0;font-size:.9rem">Crest is at the top, like the crest of a hill.</p></div>
+    <div class="prevent-break" style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Label the part.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Definition + correct unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full explanation. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write something for every question. Even a label = 1 mark.</p></div>
+  </div>
+  <div id="print-arrival" class="print-section">
+    <h2>Arrival Task – Multiple Choice (circle a letter)</h2>
+    <div class="foundation-content"><h3>Foundation 🟢</h3>
+      <p>1) Which of these is an example of a wave? &nbsp;&nbsp; A) A book &nbsp; B) Sound from a speaker &nbsp; C) A chair &nbsp; D) A pencil</p>
+      <p>2) If you drop a stone into a pond, what happens to the water? &nbsp;&nbsp; A) It disappears &nbsp; B) Ripples spread outward &nbsp; C) It turns to ice &nbsp; D) Nothing happens</p>
+      <p>3) Does a duck on a pond move across the water when a wave passes? &nbsp;&nbsp; A) Yes, it travels with the wave &nbsp; B) No, it just bobs up and down &nbsp; C) It sinks &nbsp; D) It speeds up</p>
+      <p>4) If you looked at a wave's shape, what would you call the very top of it? &nbsp;&nbsp; A) The bottom &nbsp; B) The crest (top) &nbsp; C) The middle &nbsp; D) The width</p></div>
+    <div class="middle-content"><h3>Middle 🟠</h3>
+      <p>1) Which of these is NOT usually described as a wave? &nbsp;&nbsp; A) Sound &nbsp; B) Water &nbsp; C) A brick &nbsp; D) Light</p>
+      <p>2) What do you think "amplitude" might mean, just from the sound of the word? &nbsp;&nbsp; A) How loud/tall something is &nbsp; B) How fast it moves &nbsp; C) A type of fish &nbsp; D) A colour</p>
+      <p>3) In a wave diagram, what do you think "wavelength" might measure? &nbsp;&nbsp; A) The height of the wave &nbsp; B) The distance from one wave to the next &nbsp; C) The speed of the wave &nbsp; D) The colour of the wave</p>
+      <p>4) If a wave has a "trough", what do you think this means? &nbsp;&nbsp; A) The highest point &nbsp; B) The lowest point &nbsp; C) The middle &nbsp; D) The edge</p></div>
+    <div class="higher-content"><h3>Higher 🔵</h3>
+      <p>1) What is the crest of a wave? &nbsp;&nbsp; A) The lowest point &nbsp; B) The highest point &nbsp; C) The middle &nbsp; D) The distance between waves</p>
+      <p>2) What do you think a "wavefront" might be? &nbsp;&nbsp; A) A single point on a wave &nbsp; B) A line joining points at the same stage of a wave &nbsp; C) The front of a boat &nbsp; D) The end of a wave</p>
+      <p>3) The "rest position" of a wave is… &nbsp;&nbsp; A) Where the wave never moves &nbsp; B) The middle level the wave oscillates around &nbsp; C) The highest point &nbsp; D) The lowest point</p>
+      <p>4) Amplitude and wavelength are both measured in the same unit. What is it? &nbsp;&nbsp; A) Seconds &nbsp; B) Hertz &nbsp; C) Metres &nbsp; D) Degrees</p></div>
+  </div>
+  <div id="print-starter" class="print-section"><h2>Starter: Spot the Wave Shape</h2>
+    <p>1. List 3 places you've seen waves in real life.</p>
+    <div class="print-line"></div><div class="print-line"></div>
+    <p>2. Draw a simple picture of a wave — what shape is it?</p>
+    <div class="print-box" style="min-height:80px"></div>
+    <p>3. Look at your drawn wave — what would you call the very top part? And the very bottom part?</p>
+    <div class="print-line"></div>
+  </div>
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
+    <div class="prevent-break"><h3>Part A: Label the Wave</h3><p>Write the correct label next to each description.</p>
+      <p>1. Highest point: _________ 2. Lowest point: _________ 3. Height from rest to crest: _________ 4. Distance crest to crest: _________ 5. Flat line wave oscillates around: _________</p>
+      <p><strong>Word bank:</strong> Crest · Trough · Amplitude · Wavelength · Rest position</p></div>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part B: More Vocabulary</h3>
+      <p>6. A line joining points at the same stage of vibration is the: _________</p>
+      <p>7. Wavelength and amplitude are both measured in: _________</p></div>
+  </div>
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Wave Anatomy</h3>
+      <table class="ko-table"><tr><th>Term</th><th>Definition</th><th>Unit</th></tr><tr><td>Crest</td><td>Highest point</td><td>—</td></tr><tr><td>Trough</td><td>Lowest point</td><td>—</td></tr><tr><td>Rest position</td><td>Middle level wave oscillates around</td><td>—</td></tr><tr><td>Amplitude</td><td>Max displacement from rest</td><td>m</td></tr><tr><td>Wavelength (λ)</td><td>Distance: one point → same point on next wave</td><td>m</td></tr><tr><td>Wavefront</td><td>Line joining points at same vibration stage</td><td>—</td></tr></table></div>
+    <div class="scaffold-print-box"><h3>Key Rule</h3><p>Amplitude is measured from the <strong>rest position</strong> up to the crest — not crest to trough.</p><p>Wavelength is measured between two <strong>matching</strong> points — e.g. crest to crest.</p></div>
+  </div>
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Point to the diagram before you answer each question.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. The highest point of a wave is called the… [&nbsp;&nbsp;] Trough [&nbsp;&nbsp;] Crest [&nbsp;&nbsp;] Amplitude</p>
+      <p>2. Amplitude is measured in… [&nbsp;&nbsp;] Metres [&nbsp;&nbsp;] Hertz [&nbsp;&nbsp;] Seconds</p>
+      <p>3. The lowest point of a wave is called the… [&nbsp;&nbsp;] Crest [&nbsp;&nbsp;] Trough [&nbsp;&nbsp;] Wavefront</p>
+      <p>4. The distance from one crest to the next is called the… [&nbsp;&nbsp;] Wavelength [&nbsp;&nbsp;] Amplitude [&nbsp;&nbsp;] Rest position</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
+      <p>5. Label this wave: write "Crest", "Trough", "Amplitude", "Wavelength" and "Rest position" on the diagram.</p><div class="print-box" style="min-height:100px">[Wave diagram — draw your own and label it]</div>
+      <p style="margin-top:10px">6. State what unit amplitude is measured in.</p><div class="print-line"></div>
+      <p style="margin-top:10px">7. What is the "rest position" of a wave?</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>8. (4 marks)</strong> Complete the sentences about wave anatomy.</p>
+      <p>The highest point of a wave is called the _________________________ . [1 mark]</p>
+      <p>The lowest point of a wave is called the _________________________ . [1 mark]</p>
+      <p>Amplitude is measured from the _________________________ position to the _________________________ . [2 marks]</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
+      <p><strong>9. (3 marks)</strong> Define the following wave properties:</p><p>(a) Amplitude [1 mark]</p><div class="print-line"></div><p>(b) Wavelength [1 mark]</p><div class="print-line"></div><p>(c) Crest [1 mark]</p><div class="print-line"></div></div>
+  </div>
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Use full sentences for explanations. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. Which quantity has the unit metres? [&nbsp;&nbsp;] Amplitude [&nbsp;&nbsp;] Time [&nbsp;&nbsp;] Neither</p>
+      <p>2. The rest position is… [&nbsp;&nbsp;] The highest point [&nbsp;&nbsp;] The middle level [&nbsp;&nbsp;] The lowest point</p>
+      <p>3. Define wavelength.</p><div class="print-line"></div>
+      <p>4. What is a wavefront?</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>5. Label the parts on this wave diagram:</p><div class="print-box" style="min-height:100px">[Wave diagram — draw your own and label crest, trough, amplitude, wavelength, rest position]</div>
+      <p style="margin-top:10px">6. Explain, in your own words, the difference between amplitude and wavelength. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>7. (4 marks)</strong> A student says "amplitude is the distance from the crest to the trough." Explain why this is wrong, and describe how amplitude should be measured. [4 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>8. (5 marks)</strong> A student draws a wave diagram. Describe how they would correctly mark on: (a) the amplitude [2 marks] (b) the wavelength [2 marks] (c) the rest position [1 mark]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes a Grade 5 challenge — show the examiner you can reason, not just label.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. Define wavelength and state its unit. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Distinguish between a wavefront and a wavelength. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3. Explain how amplitude is correctly measured. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>4. Sketch and fully label a wave diagram, including the rest position, amplitude and wavelength. [4 marks]</p><div class="print-box" style="min-height:100px"></div>
+      <p style="margin-top:10px">5. Two waves have the same wavelength but different amplitudes. Explain what this would look like on a diagram. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>6. (5 marks)</strong> A pupil says amplitude is "the distance from crest to trough." Explain why this is not quite correct, and describe the correct method, using the rest position in your answer. [5 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 5 Challenge)</h3>
+      <p><strong>7. (4 marks)</strong> Explain the difference between a wavefront and a wavelength, using a diagram description to support your answer. [4 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Foundation (U–1)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+<p>1) What is the amplitude of a wave?</p><div class="print-line"></div><p>2) What is the highest point of a wave called?</p><div class="print-line"></div><p>3) What is the lowest point of a wave called?</p><div class="print-line"></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2><p>1) Define wavelength.</p><div class="print-line"></div><p>2) What unit is amplitude measured in?</p><div class="print-line"></div><p>3) Explain what the "rest position" of a wave is.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5)</h2><p>1) Distinguish between wavefront and wavelength.</p><div class="print-line"></div><div class="print-line"></div><p>2) A pupil says amplitude is "the distance from crest to trough." Explain why this is not quite correct.</p><div class="print-line"></div><div class="print-line"></div><p>3) Describe where you would draw the amplitude arrow and wavelength arrow on a wave diagram.</p><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<!-- ═══ V4/V5 MODALS / OVERLAYS ═══ -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="modal-back" id="ta-modal"><div class="modal modal-ta">
+  <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+  <h2>🎓 TA Focus</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px" id="ta-slide-name"></p>
+  <div class="ta-modal-body" id="ta-body"></div>
+</div></div>
+
+<div class="modal-back" id="cc-modal"><div class="modal modal-cc">
+  <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+  <h2>🎯 Cold Call</h2>
+  <div class="roster-row"><input id="cc-roster-input" placeholder="Names, comma separated (saved for all lessons)"><button class="small" onclick="saveRoster()">Save</button></div>
+  <button class="small" style="margin-top:10px;background:#7c3aed" onclick="pickPupil()">🎲 Pick a pupil</button>
+  <div class="cc-name" id="cc-name">—</div>
+  <div id="cc-questions"></div>
+</div></div>
+
+<div class="modal-back" id="video-modal"><div class="modal" style="max-width:760px;border-top-color:#dc2626">
+  <button class="modal-close small" onclick="closeVideo()">✕ Close</button>
+  <h2>📺 Waves in a Ripple Tank</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px">BBC Teach clip measuring frequency, wavelength and speed of water waves (spec 3.1/3.3). Teacher: swap the link in the code if you prefer another.</p>
+  <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000">
+    <iframe id="video-frame" title="Ripple tank waves video" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div></div>
+
+<div class="modal-back" id="board-modal"><div class="modal modal-board">
+  <button class="modal-close small" onclick="closeModal('board-modal')">✕ Close</button>
+  <h2>🏆 Class Progress Board</h2>
+  <p style="color:var(--muted);font-size:.9rem">XP earned this lesson through the interactive tasks.</p>
+  <div id="board-body"></div>
+</div></div>
+
+<div class="lesson-complete" id="lesson-complete"><div class="lc-card">
+  <h1>🎉 Lesson Complete!</h1>
+  <p>Wave Anatomy — Lesson 4a</p>
+  <div class="lc-xp">⭐ <span id="lc-xp-val">0</span> XP</div>
+  <p id="lc-msg" style="color:var(--muted)"></p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('open')">Close</button>
+</div></div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility();const cur=slides[i];if(cur){const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve()}}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(document.querySelector('.modal-back.open,.lesson-complete.open'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'block':'none';document.getElementById('exit-middle').style.display=l==='middle'?'block':'none';document.getElementById('exit-higher').style.display=l==='higher'?'block':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function stampDate(){const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB')}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');stampDate();window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}stampDate();window.print()}
+  function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');stampDate();window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.tf-fb,.label-slot.correct').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // WE DO 1: LABEL
+  let selChip=null,lblCount=0;
+  function selLabel(el){if(el.classList.contains('placed'))return;document.querySelectorAll('.label-chip').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selChip=el}
+  function placeLabel(slot){if(!selChip)return;if(slot.classList.contains('correct'))return;if(selChip.dataset.val===slot.dataset.answer){slot.innerText=selChip.dataset.val;slot.classList.remove('wrong');slot.classList.add('filled','correct');selChip.classList.remove('selected');selChip.classList.add('placed');selChip=null;lblCount++;document.getElementById('lbl-count').innerText=lblCount;addXP(5,'Label the Wave');if(lblCount>=7){document.getElementById('lbl-msg').innerText='🎉 ALL MATCHED!';confetti()}}else{slot.classList.add('wrong');playBuzz();setTimeout(()=>slot.classList.remove('wrong'),500)}}
+  function resetLabels(){selChip=null;lblCount=0;document.getElementById('lbl-count').innerText='0';document.getElementById('lbl-msg').innerText='';document.querySelectorAll('.label-chip').forEach(c=>c.classList.remove('selected','placed'));document.querySelectorAll('.label-slot').forEach(s=>{s.innerText='?';s.classList.remove('filled','correct','wrong')})}
+  function revealLabels(){document.querySelectorAll('.label-slot').forEach(s=>{s.innerText=s.dataset.answer;s.classList.add('filled','correct')});document.querySelectorAll('.label-chip').forEach(c=>c.classList.add('placed'));lblCount=7;document.getElementById('lbl-count').innerText='7';document.getElementById('lbl-msg').innerText='✅ Revealed.'}
+
+  // WE DO 2: MATCH
+  let mTerm=null,mDef=null,matchCount=0;
+  function matchSel(card,type){if(card.classList.contains('matched-m'))return;if(type==='term'){document.querySelectorAll('#match-terms .match-card').forEach(c=>c.classList.remove('sel-m'));card.classList.add('sel-m');mTerm=card;if(mDef)tryMatch()}else{document.querySelectorAll('#match-defs .match-card').forEach(c=>c.classList.remove('sel-m'));card.classList.add('sel-m');mDef=card;if(mTerm)tryMatch()}}
+  function tryMatch(){if(!mTerm||!mDef)return;if(mTerm.dataset.id===mDef.dataset.id){mTerm.classList.remove('sel-m');mTerm.classList.add('matched-m');mDef.classList.remove('sel-m');mDef.classList.add('matched-m');matchCount++;document.getElementById('match-count').innerText=matchCount;addXP(6,'Match the Definition');if(matchCount>=5){document.getElementById('match-msg').innerText='🎉 ALL MATCHED!';confetti()}}else{mTerm.classList.add('wrong-m');mDef.classList.add('wrong-m');playBuzz();setTimeout(()=>{mTerm.classList.remove('sel-m','wrong-m');mDef.classList.remove('sel-m','wrong-m');mTerm=null;mDef=null},500);return}mTerm=null;mDef=null}
+
+  // WE DO 3: TRUE/FALSE
+  let tfCount=0;
+  const tfExps=['✅ The water stays — only ENERGY crosses the ocean!','✅ Radio waves carry information — no matter moves from the tower!','✅ Fans stay seated — the PATTERN (energy) moves around the stadium!','✅ Air particles vibrate in place — SOUND ENERGY travels to your friend!','✅ Rocks vibrate in place — SEISMIC ENERGY travels through them!'];
+  function tfCheck(idx,btn,correct){const card=document.getElementById('tf'+idx);const fb=document.getElementById('tff'+idx);if(card.classList.contains('correct-tf'))return;card.querySelectorAll('button').forEach(b=>b.style.border='');if(correct){btn.style.border='3px solid var(--success)';card.classList.remove('wrong-tf');card.classList.add('correct-tf');fb.innerText=tfExps[idx];fb.style.color='var(--success)';tfCount++;document.getElementById('tf-count').innerText=tfCount;addXP(6,'Energy or Matter?');if(tfCount>=5)confetti()}else{btn.style.border='3px solid var(--error)';card.classList.add('wrong-tf');fb.innerText='❌ Think again — does the matter really travel?';fb.style.color='var(--error)';playBuzz();setTimeout(()=>{card.classList.remove('wrong-tf');btn.style.border='';fb.innerText=''},700)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+  // ═══════════════ V4/V5 ENGAGEMENT MODULE (ported from L4 Aerobic) ═══════════════
+  // --- Sounds (WebAudio, no assets) ---
+  let _ac=null;function _audio(){if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return _ac}
+  function _tone(freq,dur,type){const a=_audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.start();o.stop(a.currentTime+dur)}
+  function playDing(){_tone(880,.18);setTimeout(()=>_tone(1320,.22),90)}
+  function playBuzz(){_tone(150,.25,'square')}
+  function playClick(){_tone(520,.06,'triangle')}
+  document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
+
+  // --- Confetti ---
+  function confetti(){const c=document.getElementById('confetti-canvas');if(!c)return;c.style.display='block';c.width=innerWidth;c.height=innerHeight;const ctx=c.getContext('2d');const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb','#eab308'];const P=[];for(let i=0;i<140;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[i%cols.length],v:2+Math.random()*4,a:Math.random()*6.28});let t=0;const id=setInterval(()=>{ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.05)*1.5;ctx.fillStyle=p.c;ctx.beginPath();ctx.rect(p.x,p.y,p.r,p.r*1.6);ctx.fill()});if(++t>140){clearInterval(id);ctx.clearRect(0,0,c.width,c.height);c.style.display='none'}},25)}
+
+  // --- XP system ---
+  let xp=0;const xpLog={};
+  function addXP(n,label){xp+=n;const v=document.getElementById('xp-val');v.textContent=xp;v.parentElement.classList.remove('xp-pop');void v.parentElement.offsetWidth;v.parentElement.classList.add('xp-pop');if(label)xpLog[label]=(xpLog[label]||0)+n;playDing()}
+
+  // --- Modals ---
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  const VIDEO_ID='4ySBKUmQ9Go'; // BBC Teach: measuring waves in a ripple tank (spec 3.1/3.3) — swap to change clip
+  function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
+  function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  // --- Observe slide: lazy-load the embedded video + set the out-link ---
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID}
+  function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
+
+  // --- Cold Call (roster shared across all PS lessons) ---
+  function loadRoster(){return JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]')}
+  function saveRoster(){const raw=document.getElementById('cc-roster-input').value;const names=raw.split(',').map(s=>s.trim()).filter(Boolean);localStorage.setItem('ps_coldcall_roster',JSON.stringify(names));document.getElementById('cc-name').textContent=names.length?'Saved '+names.length+' names ✓':'—';playClick()}
+  function pickPupil(){const r=loadRoster();const el=document.getElementById('cc-name');if(!r.length){el.textContent='Add names first ↑';return}let i=0,n=12;const id=setInterval(()=>{el.textContent=r[Math.floor(Math.random()*r.length)];if(++i>n){clearInterval(id);el.textContent=r[Math.floor(Math.random()*r.length)];playDing()}},70)}
+  function openCC(){document.getElementById('cc-roster-input').value=loadRoster().join(', ');const d=CC_DATA[currentSlide];const box=document.getElementById('cc-questions');if(!d){box.innerHTML='<p style="color:var(--muted)">No targeted questions for this slide — use a recall question from earlier.</p>'}else{box.innerHTML=`<div class="cc-q cc-f"><div class="tier">Foundation · U/1</div>${d.f}</div><div class="cc-q cc-m"><div class="tier">Middle · 1–2</div>${d.m}</div><div class="cc-q cc-h"><div class="tier">Higher · 3–5</div>${d.h}</div>`}document.getElementById('cc-name').textContent='—';document.getElementById('cc-modal').classList.add('open')}
+
+  // --- TA Focus ---
+  function openTA(){const d=TA_DATA[currentSlide]||{name:slides[currentSlide].getAttribute('data-title')||'',body:'<p>Support pupils to stay on task and re-voice the key idea in their own words.</p>'};document.getElementById('ta-slide-name').textContent=d.name;document.getElementById('ta-body').innerHTML=d.body;document.getElementById('ta-modal').classList.add('open')}
+
+  // --- Per-slide data (index matches slide order: 0 Title,1 Arrival,2 Starter,3 IDo1,4 WeDo1,5 IDo2,6 WeDo2,7 IDo3-FLEX,8 WeDo3-FLEX,9 Observe-FLEX,10 Independent,11 Exit) ---
+  const TA_DATA={
+    1:{name:'Arrival – What Do You Already Know?',body:'<p><strong>Your job:</strong> this is a brand-new topic — there are no wrong answers yet, only starting points.</p><ul><li>Praise any sensible guess about waves in real life; the goal is activating prior experience, not testing recall.</li><li>The "lead-in" question (Q4) previews today\'s big idea (crest/top of a wave) — don\'t over-explain it yet, just bank the guess.</li></ul>'},
+    2:{name:'Starter – Spot the Wave Shape',body:'<p><strong>Your job:</strong> low-stakes noticing task — accept everyday examples and rough sketches freely.</p><ul><li>If pupils are stuck, point to the four scene pictures (ocean, speaker, light, heartbeat) as prompts.</li><li>Q3 (guessing names for the top/bottom of their sketch) is the key pre-load for I Do — don\'t correct wrong guesses here, just note them.</li></ul>'},
+    3:{name:'I Do – Wave Anatomy',body:'<p><strong>Your job:</strong> use the "Reveal next definition" button to pace the class through all 6 terms together — don\'t let pupils read ahead.</p><ul><li>Keep referring back to the diagram: point at the crest/trough/amplitude/wavelength/rest position as each definition appears.</li><li>Wavefront is the one pupils forget — link it explicitly to "all the crests joined up".</li></ul>'},
+    4:{name:'We Do – Label the Wave',body:'<p><strong>Your job:</strong> Think-Pair-Share — let pupils try solo first, then confirm with a partner before locking in an answer.</p><ul><li>If a pair is stuck, point them back to the I Do diagram rather than telling them the label.</li><li>The units slot (metres) trips pupils up more than the wave-part labels — check that one especially.</li></ul>'},
+    5:{name:'Observe (FLEX) – Ripple Tank Video',body:'<p><strong>Your job:</strong> eyes on the clip, then hold pupils to the sentence stems before any writing.</p><ul><li>Pause and ask "which bit is the crest here?" / "where\'s the rest position?" during the clip if you have control of playback.</li><li>The "ready check" (saying all 6 parts aloud) is the gate to independent work — don\'t let pupils skip it.</li></ul>'},
+    6:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first few minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
+    7:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>The confidence traffic-light gives you a quick honest read of the room before you mark anything.</li><li>Note who still can\'t label crest/trough/amplitude/wavelength — that\'s the secure-for-all goal and a starter for lesson 4b.</li></ul>'}
+  };
+  const CC_DATA={
+    1:{f:'Name <strong>one</strong> place you\'ve seen a wave.',m:'What do you think <strong>"amplitude"</strong> might mean, just from the word?',h:'What is the <strong>"rest position"</strong> of a wave?'},
+    2:{f:'What shape is a wave — draw it with your finger in the air.',m:'What would you call the <strong>top</strong> of your drawn wave?',h:'What would you call the <strong>bottom</strong> of your drawn wave?'},
+    3:{f:'What is the highest point of a wave called?',m:'What unit is <strong>wavelength</strong> measured in?',h:'What is a <strong>wavefront</strong>?'},
+    4:{f:'Which side of the wave is the <strong>trough</strong>?',m:'What is <strong>amplitude</strong> measured from and to?',h:'Explain the difference between <strong>wavelength</strong> and <strong>wavefront</strong>.'},
+    5:{f:'What is the highest point of a wave called, in the video?',m:'How is <strong>wavelength</strong> measured in a ripple tank?',h:'Why might "how tall" be an unsafe way to describe amplitude in an exam?'},
+    6:{f:'Name the 6 parts of a wave.',m:'Explain the difference between amplitude and wavelength.',h:'Explain why amplitude is not "crest to trough".'},
+    7:{f:'What unit is amplitude measured in?',m:'What is the rest position of a wave?',h:'Distinguish between wavefront and wavelength.'}
+  };
+
+  // --- Hints ---
+  function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+
+  // --- V5: progressive step reveal (I Do 1 definitions) ---
+  function revealStep(id){const host=document.getElementById(id);if(!host)return;const steps=host.querySelectorAll('.v5-step');let n=0;steps.forEach(s=>{if(s.classList.contains('revealed'))n++});if(n<steps.length){steps[n].classList.add('revealed');n++;playClick()}const cnt=document.getElementById(id+'-count');if(cnt)cnt.textContent=n+' / '+steps.length+' revealed';if(n>=steps.length)addXP(5,'Wave Definitions')}
+
+  // --- Lesson complete overlay ---
+  function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=50?'Outstanding effort across the whole lesson!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
+
+  // --- Slide-1 LO checkmark animation ---
+  function animateLOs(){document.querySelectorAll('.lo-anim li').forEach((li,i)=>{li.style.animationDelay=(.3+i*.4)+'s';setTimeout(()=>li.classList.add('done'),(800+i*900))})}
+
+  // --- Float dots on title slide ---
+  function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#7c3aed','#db2777','#f59e0b','#2563eb','#22c55e'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
+
+  // --- Init ---
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots()});
+
+</script>
+</body>
+</html>
