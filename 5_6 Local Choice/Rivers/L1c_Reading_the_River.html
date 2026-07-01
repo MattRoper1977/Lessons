@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1c · Reading the River — Is the Tees Healthy?</title>
+<style>
+:root {
+  --sky: #6E9DB8;
+  --sky-deep: #4A7891;
+  --cream: #F5F0E1;
+  --cream-light: #FAF7EC;
+  --earth: #8B6F47;
+  --earth-deep: #5C4A30;
+  --moss: #6B8E4E;
+  --moss-deep: #4C6837;
+  --magritte-red: #B33A3A;
+  --water: #2E7CB8;
+  --water-light: #B8DDF0;
+  --water-deep: #1A5485;
+  --sand: #E8D9B5;
+  --rock: #8A7A6A;
+  --ink: #1C1C1C;
+  --warn-yellow: #FFF4D6;
+  --warn-yellow-border: #C99A2E;
+  --sc-bg: #FFEDD5;
+  --sc-border: #F97316;
+  --aspire-bg: #DCFCE7;
+  --aspire-border: #16A34A;
+  --f-color: #16A34A;
+  --m-color: #F97316;
+  --h-color: #1E3A8A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* === Slides === */
+.slide {
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  flex-direction: column;
+  padding: 5vh 5vw 11vh;
+  position: relative;
+  border-top: 10px solid var(--sky-deep);
+  background: var(--cream);
+  overflow-y: auto;
+}
+.slide.ido { border-top-color: var(--water-deep); }
+.slide.wedo { border-top-color: var(--moss-deep); }
+.slide.independent { border-top-color: var(--earth-deep); }
+.slide.exit { border-top-color: var(--magritte-red); }
+.slide.bridge { border-top-color: var(--warn-yellow-border); }
+.slide.active {
+  display: flex;
+  animation: fadeInUp 0.55s ease-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Chrome === */
+.logo {
+  position: fixed;
+  top: 1.5vh;
+  right: 2vw;
+  font-family: Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--cream);
+  padding: 0.4em 0.9em;
+  border: 2px solid var(--ink);
+  z-index: 100;
+}
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: var(--water-deep);
+  z-index: 99;
+  transition: width 0.4s ease;
+}
+.xp-bar {
+  position: fixed;
+  top: 4px;
+  left: 0;
+  height: 3px;
+  background: var(--moss);
+  z-index: 99;
+  transition: width 0.6s ease-out;
+  width: 0%;
+}
+
+/* === Slide tag === */
+.slide-tag {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 0.4em 1em;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.2em;
+  align-self: flex-start;
+}
+.slide-tag.ido { background: var(--water-deep); }
+.slide-tag.wedo { background: var(--moss-deep); }
+.slide-tag.independent { background: var(--earth-deep); }
+.slide-tag.exit { background: var(--magritte-red); }
+.slide-tag.bridge { background: var(--warn-yellow-border); color: var(--ink); }
+
+/* === Typography === */
+h1 {
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  font-weight: bold;
+  line-height: 1.05;
+  margin-bottom: 0.3em;
+}
+h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  font-weight: bold;
+  line-height: 1.12;
+  margin-bottom: 0.55em;
+}
+h3 {
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: bold;
+  margin-bottom: 0.4em;
+}
+p, li { font-size: clamp(1rem, 1.55vw, 1.3rem); line-height: 1.5; margin-bottom: 0.5em; }
+
+/* === Hero === */
+.hero { text-align: center; padding-top: 3vh; position: relative; }
+.hero h1 { margin-bottom: 0.2em; }
+.hero .subtitle {
+  font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+  color: var(--earth-deep);
+  font-style: italic;
+  margin-bottom: 0.7em;
+}
+.hero .strap {
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  margin-bottom: 1em;
+}
+.icon-row {
+  display: flex;
+  justify-content: center;
+  gap: 2.2em;
+  margin: 1em 0 0.6em;
+}
+.icon-row .ico {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  animation: iconBounce 2.2s ease-in-out infinite;
+}
+.icon-row .ico:nth-child(2) { animation-delay: 0.25s; }
+.icon-row .ico:nth-child(3) { animation-delay: 0.5s; }
+.icon-row .ico:nth-child(4) { animation-delay: 0.75s; }
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+/* floating title dots */
+.title-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--water-light);
+  opacity: 0.5;
+  animation: dotFloat 6s ease-in-out infinite;
+}
+.title-dot:nth-child(1) { width: 14px; height: 14px; top: 8%; left: 12%; animation-delay: 0s; }
+.title-dot:nth-child(2) { width: 18px; height: 18px; top: 18%; right: 14%; animation-delay: 1.5s; }
+.title-dot:nth-child(3) { width: 10px; height: 10px; bottom: 18%; left: 18%; animation-delay: 3s; }
+.title-dot:nth-child(4) { width: 16px; height: 16px; bottom: 26%; right: 10%; animation-delay: 4.5s; }
+@keyframes dotFloat {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(8px); }
+}
+
+/* === Boxes === */
+.box {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1em 1.3em;
+  margin-bottom: 0.8em;
+  border-left: 8px solid var(--sky-deep);
+}
+.box.water { border-left-color: var(--water-deep); background: #EFF7FC; }
+.box.moss { border-left-color: var(--moss-deep); }
+.box.earth { border-left-color: var(--earth-deep); }
+.box.yellow { background: var(--warn-yellow); border-left-color: var(--warn-yellow-border); }
+.box ul { margin-left: 1.3em; margin-top: 0.3em; }
+
+.sc-box {
+  background: var(--sc-bg);
+  border: 2px solid var(--ink);
+  border-left: 8px solid var(--sc-border);
+  padding: 0.9em 1.2em;
+  margin-bottom: 0.7em;
+}
+.sc-box h3 { color: var(--sc-border); margin-bottom: 0.3em; }
+.sc-box ul { margin-left: 1.3em; }
+.sc-box li { font-size: 0.98rem; margin-bottom: 0.25em; }
+
+.aspire-box {
+  background: var(--aspire-bg);
+  border: 2px solid var(--ink);
+  border-left: 8px solid var(--aspire-border);
+  padding: 0.9em 1.2em;
+  margin-bottom: 0.7em;
+}
+.aspire-box h3 { color: var(--aspire-border); margin-bottom: 0.3em; }
+.aspire-box p { font-size: 1rem; }
+
+/* === Step-by-step reveal === */
+.step {
+  opacity: 0.15;
+  transition: opacity 0.5s, transform 0.5s;
+  margin-bottom: 0.7em;
+}
+.step.revealed { opacity: 1; transform: translateX(0); }
+.step.hidden { opacity: 0.15; pointer-events: none; }
+
+.reveal-btn {
+  background: var(--water-deep);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  padding: 0.5em 1.2em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin-top: 0.5em;
+  transition: all 0.2s;
+}
+.reveal-btn:hover { background: var(--water); transform: translateY(-2px); }
+.reveal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* === Two-col === */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; }
+
+/* === River SVG schematic === */
+.river-map {
+  width: 100%;
+  margin: 0.5em 0 0.8em;
+}
+.river-map svg {
+  width: 100%;
+  max-height: 34vh;
+  background: linear-gradient(180deg, #FAF7EC 0%, #E8F2F8 100%);
+  border: 2px solid var(--ink);
+  display: block;
+}
+
+/* === Match / drag === */
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.55em 0;
+  border-bottom: 1px dashed var(--earth);
+}
+.match-row .term {
+  flex: 0 0 32%;
+  font-weight: bold;
+  font-size: 1.05rem;
+  background: var(--water-light);
+  padding: 0.4em 0.8em;
+  border: 2px solid var(--water-deep);
+}
+.match-row .def {
+  flex: 1;
+  font-size: 0.98rem;
+  padding: 0.3em 0.6em;
+  background: var(--cream-light);
+  border: 1px dashed var(--earth);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.match-row .def.revealed { background: var(--moss); color: white; border-style: solid; }
+
+/* === Landmark cards (slide 6) === */
+.landmark-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  margin-top: 0.6em;
+}
+.landmark-card {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1.1em;
+  text-align: center;
+  position: relative;
+}
+.landmark-card .lm-ico { font-size: 2.5rem; margin-bottom: 0.2em; }
+.landmark-card h3 { margin-bottom: 0.3em; font-size: 1.15rem; }
+.landmark-card p { font-size: 0.95rem; line-height: 1.4; }
+.landmark-card .lm-tag {
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  background: var(--water-deep);
+  color: var(--cream);
+  padding: 0.15em 0.6em;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* === Independent tier blocks === */
+.tier-block {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1em 1.2em;
+  margin-bottom: 0.6em;
+  border-left: 8px solid var(--f-color);
+  position: relative;
+}
+.tier-block.middle { border-left-color: var(--m-color); }
+.tier-block.higher { border-left-color: var(--h-color); }
+.tier-block .tier-label {
+  display: inline-block;
+  background: var(--f-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  padding: 0.2em 0.7em;
+  margin-bottom: 0.4em;
+  text-transform: uppercase;
+}
+.tier-block.middle .tier-label { background: var(--m-color); }
+.tier-block.higher .tier-label { background: var(--h-color); }
+.tier-block .question { font-size: 1.02rem; line-height: 1.4; }
+.tier-block .stem {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--earth-deep);
+  margin-top: 0.4em;
+}
+
+.hint-btn {
+  background: var(--earth);
+  color: white;
+  border: none;
+  padding: 0.35em 0.8em;
+  font-size: 0.78rem;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  margin-top: 0.4em;
+  border-radius: 0;
+}
+.hint-btn:hover { background: var(--earth-deep); }
+.hint-text {
+  display: none;
+  background: var(--warn-yellow);
+  border-left: 4px solid var(--warn-yellow-border);
+  padding: 0.5em 0.8em;
+  margin-top: 0.4em;
+  font-size: 0.92rem;
+}
+.hint-text.shown { display: block; }
+
+/* === MCQ === */
+.mcq-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+.mcq-opt {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 0.7em 1em;
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+.mcq-opt:hover { background: var(--water-light); }
+.mcq-opt.correct { background: var(--moss); color: white; pointer-events: none; }
+.mcq-opt.wrong { background: #F5C2C0; pointer-events: none; opacity: 0.6; }
+.mcq-feedback {
+  margin-top: 0.5em;
+  padding: 0.6em 0.9em;
+  font-size: 0.95rem;
+  display: none;
+}
+.mcq-feedback.shown { display: block; }
+.mcq-feedback.correct { background: #DCFCE7; border-left: 4px solid var(--moss); }
+.mcq-feedback.wrong { background: #FFE4E4; border-left: 4px solid var(--magritte-red); }
+
+/* === Bridge === */
+.bridge-prompt {
+  background: var(--warn-yellow);
+  border: 3px dashed var(--warn-yellow-border);
+  padding: 1.4em;
+  margin: 0.8em 0;
+  text-align: center;
+}
+.bridge-prompt h3 {
+  color: var(--warn-yellow-border);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4em;
+}
+.bridge-prompt .prompt { font-size: 1.2rem; font-weight: bold; font-style: italic; }
+
+/* === LO checks === */
+.lo-list { list-style: none; margin-top: 0.6em; }
+.lo-list li {
+  padding: 0.8em 0 0.8em 3.3em;
+  position: relative;
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  border-bottom: 1px solid var(--earth);
+}
+.lo-list li .check {
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 2.3em;
+  height: 2.3em;
+  border: 3px solid var(--moss-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--moss-deep);
+  font-weight: bold;
+  opacity: 0;
+  transform: scale(0.5);
+}
+.lo-list li.checked .check { animation: checkPop 0.55s ease-out forwards; }
+@keyframes checkPop {
+  0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+  60% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* === Navigation === */
+nav.controls {
+  position: fixed;
+  bottom: 2vh;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw;
+  z-index: 100;
+  pointer-events: none;
+}
+nav.controls button {
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 0.6em 1.3em;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  pointer-events: auto;
+  transition: background 0.2s;
+}
+nav.controls button:hover { background: var(--water-deep); }
+nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+.slide-counter {
+  position: fixed;
+  bottom: 2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  color: var(--earth-deep);
+  background: var(--cream);
+  padding: 0.3em 1em;
+  border: 1px solid var(--ink);
+  z-index: 100;
+}
+
+/* === Utility buttons === */
+.util-btn {
+  position: fixed;
+  border: none;
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  z-index: 100;
+  padding: 0.5em 1em;
+}
+.ta-focus-btn { bottom: 8vh; right: 2vw; background: var(--moss-deep); }
+.cold-call-btn { bottom: 8vh; right: 11vw; background: var(--water-deep); }
+.print-link { top: 1.5vh; left: 2vw; background: var(--earth-deep); }
+.util-btn:hover { filter: brightness(1.15); }
+
+/* === Modals === */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--cream-light);
+  border: 3px solid var(--ink);
+  border-top: 12px solid var(--moss-deep);
+  padding: 1.7em 1.9em;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: fadeInUp 0.3s ease-out;
+}
+.modal.cold-call { border-top-color: var(--water-deep); }
+.modal h3 { color: var(--moss-deep); margin-bottom: 0.4em; font-size: 1.45rem; }
+.modal.cold-call h3 { color: var(--water-deep); }
+.modal .tag {
+  display: inline-block;
+  background: var(--moss-deep);
+  color: var(--cream);
+  font-size: 0.68rem;
+  padding: 0.22em 0.85em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.7em;
+  font-weight: bold;
+}
+.modal.cold-call .tag { background: var(--water-deep); }
+.modal ul { margin-left: 1.3em; }
+.modal li { margin-bottom: 0.4em; font-size: 1rem; line-height: 1.4; }
+.modal-close {
+  margin-top: 1.3em;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 0.55em 1.3em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+.cold-call-pupil {
+  background: var(--water-deep);
+  color: var(--cream);
+  padding: 1em;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.8em;
+  letter-spacing: 0.05em;
+}
+.cold-call-q {
+  background: var(--cream);
+  border-left: 6px solid var(--ink);
+  padding: 0.8em 1em;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+.cold-call-tier {
+  display: inline-block;
+  padding: 0.15em 0.7em;
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4em;
+  color: white;
+}
+.cold-call-tier.f { background: var(--f-color); }
+.cold-call-tier.m { background: var(--m-color); }
+.cold-call-tier.h { background: var(--h-color); }
+.cc-reroll {
+  background: var(--earth);
+  color: white;
+  border: none;
+  padding: 0.45em 1em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.4em;
+  font-size: 0.85rem;
+}
+
+/* === Completion overlay === */
+.completion {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 120, 145, 0.92);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+}
+.completion.shown { display: flex; animation: fadeInUp 0.6s ease-out; }
+.completion h1 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 0.3em; }
+.completion p { font-size: 1.3rem; margin-bottom: 1.5em; }
+.completion button {
+  background: var(--cream);
+  color: var(--ink);
+  border: none;
+  padding: 0.7em 1.6em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  z-index: 301;
+  pointer-events: none;
+  animation: confetti-fall 3s linear forwards;
+}
+@keyframes confetti-fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* === Print === */
+#print-area { display: none; }
+
+@media (max-width: 640px) {
+  .slide { padding: 7vh 5vw 14vh; }
+  .icon-row { gap: 1em; }
+  .two-col, .three-col, .landmark-grid { grid-template-columns: 1fr; }
+  .mcq-options { grid-template-columns: 1fr; }
+  nav.controls button { padding: 0.5em 0.85em; font-size: 0.8rem; }
+  .slide-counter { font-size: 0.7rem; padding: 0.22em 0.7em; }
+  .ta-focus-btn, .cold-call-btn { font-size: 0.72rem; padding: 0.42em 0.8em; }
+  .ta-focus-btn { bottom: 9vh; right: 2vw; }
+  .cold-call-btn { bottom: 9vh; right: 38vw; }
+  .print-link { font-size: 0.68rem; padding: 0.32em 0.7em; }
+  .logo { font-size: 0.65rem; padding: 0.28em 0.65em; }
+  .river-map svg { max-height: 28vh; }
+  .match-row { flex-direction: column; align-items: stretch; gap: 0.3em; }
+  .match-row .term, .match-row .def { flex: 1; }
+}
+
+@media print {
+  body { overflow: visible; background: white; }
+  .slide, nav.controls, .logo, .progress-bar, .xp-bar, .util-btn,
+  .slide-counter, .modal-backdrop, .completion { display: none !important; }
+  #print-area { display: block; }
+  .print-doc {
+    page-break-after: always;
+    padding: 1.1cm 1.4cm;
+    font-family: Georgia, serif;
+    color: black;
+    background: white;
+  }
+  .print-doc:last-child { page-break-after: auto; }
+  .print-doc h1 {
+    font-size: 1.55rem;
+    border-bottom: 2.5px solid black;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.5em;
+  }
+  .print-doc h2 {
+    font-size: 1.1rem;
+    margin-top: 0.85em;
+    margin-bottom: 0.3em;
+  }
+  .print-doc h3 { font-size: 0.95rem; margin-bottom: 0.2em; }
+  .print-doc p, .print-doc li { font-size: 0.88rem; line-height: 1.4; margin-bottom: 0.35em; }
+  .print-doc .meta-line { font-size: 0.85rem; margin-bottom: 0.7em; border-bottom: 1px dashed #888; padding-bottom: 0.5em; }
+  .ko-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8em;
+    margin-bottom: 0.6em;
+  }
+  .ko-cell {
+    border: 1px solid black;
+    padding: 0.5em 0.7em;
+    page-break-inside: avoid;
+  }
+  .ko-cell strong { display: block; font-size: 0.95rem; margin-bottom: 0.2em; }
+  .sc-checklist { margin: 0.5em 0; }
+  .sc-checklist li { list-style: none; padding-left: 1.4em; position: relative; margin-bottom: 0.3em; }
+  .sc-checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid black;
+  }
+  .quiz-q {
+    border-left: 3px solid black;
+    padding: 0.3em 0.7em;
+    margin-bottom: 0.45em;
+    page-break-inside: avoid;
+  }
+  .quiz-q strong { font-size: 0.92rem; }
+  .quiz-q .ans-line { display: block; border-bottom: 1px solid #888; margin-top: 0.3em; min-height: 1em; }
+  .do-note { font-size: 0.8rem; font-style: italic; color: #333; margin-bottom: 0.5em; }
+  .tf-list { margin: 0.3em 0 0.5em; }
+  .tf-list .tf-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted #999; padding: 0.28em 0; font-size: 0.86rem; }
+  .tf-list .tf-row .tf { white-space: nowrap; font-weight: bold; letter-spacing: 0.12em; }
+  .tick-list { margin: 0.3em 0 0.5em; }
+  .tick-list li { list-style: none; padding-left: 1.4em; position: relative; margin-bottom: 0.28em; font-size: 0.86rem; }
+  .tick-list li::before { content: ''; position: absolute; left: 0; top: 3px; width: 12px; height: 12px; border: 1.5px solid black; }
+  .q-block { page-break-inside: avoid; margin-bottom: 0.6em; border-top: 1px dashed #999; padding-top: 0.5em; }
+  .q-block .q { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.25em; }
+  .q-tier { font-size: 0.68rem; letter-spacing: 0.05em; border: 1px solid black; padding: 0.02em 0.4em; }
+  .wordbox { border: 1px dashed black; padding: 0.35em 0.7em; margin: 0.3em 0; font-size: 0.84rem; }
+  .wordbox b { display: block; font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.1em; }
+  .stem { font-size: 0.86rem; margin: 0.3em 0 0.12em; }
+  .lines { border: 1px solid black; background: repeating-linear-gradient(0deg, transparent, transparent 21px, #ccc 22px); }
+  .examiner { border-left: 4px solid black; background: #eee; padding: 0.35em 0.7em; font-size: 0.8rem; margin: 0.35em 0; }
+  .key-fact {
+    background: #f5f5f5;
+    padding: 0.4em 0.6em;
+    margin-bottom: 0.3em;
+    font-size: 0.85rem;
+    border-left: 3px solid black;
+  }
+}
+
+/* === Interactive landmarks (slide 4) === */
+.landmark {
+  transition: filter 0.3s, opacity 0.3s;
+  cursor: pointer;
+}
+.landmark:hover { filter: brightness(1.15) drop-shadow(0 0 4px rgba(46, 124, 184, 0.4)); }
+.landmark.discovered { filter: drop-shadow(0 0 6px #4C6837); }
+.landmark.discovered .tap-me { display: none; }
+.landmark .tap-me { animation: tapPulse 1.6s ease-in-out infinite; }
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* === Matching game (slide 5) === */
+.match-game {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
+  margin-top: 0.5em;
+}
+.match-terms { display: flex; flex-direction: column; gap: 0.4em; }
+.match-term {
+  background: var(--water-light);
+  border: 2px solid var(--water-deep);
+  padding: 0.6em 0.8em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.match-term:hover:not(.matched) { background: var(--water); color: white; }
+.match-term.selected {
+  background: var(--water-deep);
+  color: white;
+  transform: scale(1.04);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+.match-term.matched {
+  background: var(--moss);
+  color: white;
+  border-color: var(--moss-deep);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.match-defs { display: flex; flex-direction: column; gap: 0.4em; }
+.match-def {
+  background: var(--cream-light);
+  border: 2px solid var(--earth);
+  padding: 0.55em 0.85em;
+  font-family: Georgia, serif;
+  font-size: 0.97rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  line-height: 1.35;
+}
+.match-def:hover:not(.matched) { background: white; border-color: var(--water-deep); }
+.match-def.matched {
+  background: var(--moss);
+  color: white;
+  border-color: var(--moss-deep);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.match-def.wrong { animation: shake 0.4s; background: #F5C2C0; border-color: var(--magritte-red); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* === Expandable landmark cards (slide 7) === */
+.landmark-card { cursor: pointer; transition: all 0.25s; }
+.landmark-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.landmark-card .tap-hint {
+  font-size: 0.78rem;
+  color: var(--water-deep);
+  font-weight: bold;
+  margin-top: 0.4em;
+  animation: tapPulse 1.6s ease-in-out infinite;
+}
+.landmark-card .more {
+  display: none;
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+  border-top: 1px dashed var(--earth);
+  font-size: 0.88rem;
+  color: var(--earth-deep);
+  text-align: left;
+}
+.landmark-card.expanded { background: #EFF7FC; }
+.landmark-card.expanded .more { display: block; animation: fadeInUp 0.3s ease-out; }
+.landmark-card.expanded .tap-hint { display: none; }
+
+@media (max-width: 640px) {
+  .match-game { grid-template-columns: 1fr; }
+  .match-term { font-size: 0.95rem; padding: 0.5em 0.7em; }
+  .match-def { font-size: 0.88rem; padding: 0.45em 0.7em; }
+}
+/* ============================================================
+   ENGAGEMENT UPGRADES (v2) — river anim · poll · video · word-bank
+   ============================================================ */
+/* Animated river ribbon (hero) */
+.river-anim { max-width: 900px; margin: 1.3em auto 0.2em; }
+.river-anim svg { width: 100%; height: auto; display: block; }
+.river-flow { stroke-dasharray: 10 14; animation: riverFlow 2.4s linear infinite; }
+@keyframes riverFlow { to { stroke-dashoffset: -48; } }
+.river-cap { font: 700 12px system-ui, sans-serif; fill: var(--water-deep); letter-spacing: .04em; }
+.river-label { font: 600 12px system-ui, sans-serif; fill: var(--earth-deep); }
+
+/* Live class poll */
+.poll { max-width: 760px; margin: 0.5em auto 0; }
+.poll-row { display: flex; align-items: center; gap: .7em; margin: .55em 0; }
+.poll-btn {
+  flex: 0 0 auto; min-width: 150px; padding: .8em 1em; border: none; border-radius: 12px;
+  background: var(--water); color: #fff; font-weight: 800; font-size: 1rem; cursor: pointer;
+  transition: transform .12s, filter .12s; text-align: left; line-height: 1.15;
+}
+.poll-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.poll-btn:active { transform: scale(.97); }
+.poll-btn.voted { outline: 3px solid var(--warn-yellow-border); }
+.poll-btn .pb-sub { display: block; font-weight: 500; font-size: .76rem; opacity: .92; margin-top: .15em; }
+.poll-track { flex: 1 1 auto; background: var(--sand); border-radius: 999px; height: 32px; overflow: hidden; position: relative; }
+.poll-fill { height: 100%; width: 0%; border-radius: 999px; background: var(--moss); transition: width .6s cubic-bezier(.22,1,.36,1); }
+.poll-row:nth-child(2) .poll-fill { background: var(--water-deep); }
+.poll-row:nth-child(3) .poll-fill { background: var(--earth); }
+.poll-pct { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: .9rem; color: var(--ink); }
+.poll-total { text-align: center; font-weight: 700; color: var(--earth-deep); margin-top: .45em; }
+
+/* Watch-it-for-real video */
+.video-wrap { max-width: 880px; margin: .3em auto 0; }
+.video-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 3px solid var(--water-deep); background: #000; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-fallback { display: flex; flex-wrap: wrap; gap: .6em; justify-content: center; margin-top: .7em; }
+.video-out { display: inline-block; padding: .7em 1.2em; background: var(--magritte-red); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 700; }
+.video-out.alt { background: var(--earth-deep); }
+.video-out:hover { filter: brightness(1.08); }
+
+/* Tappable word bank (independent) */
+.wordbank { display: flex; flex-wrap: wrap; gap: .5em; margin: .3em 0 .2em; }
+.word-chip {
+  padding: .55em .85em; border-radius: 999px; border: 2px solid var(--water-deep);
+  background: #fff; color: var(--water-deep); font-weight: 700; cursor: pointer; font-size: .95rem;
+  transition: transform .1s, background .15s, color .15s;
+}
+.word-chip:hover { transform: translateY(-1px); }
+.word-chip.claimed { background: var(--moss); border-color: var(--moss-deep); color: #fff; }
+.wb-tracker { text-align: center; font-weight: 800; color: var(--moss-deep); margin: .3em 0 .5em; }
+.finish-btn {
+  display: block; margin: .8em auto 0; padding: .8em 1.6em; border: none; border-radius: 12px;
+  background: var(--moss-deep); color: #fff; font-weight: 800; font-size: 1.05rem; cursor: pointer;
+  transition: transform .12s, filter .12s;
+}
+.finish-btn:hover { filter: brightness(1.08); }
+.finish-btn:active { transform: scale(.97); }
+.finish-btn:disabled { opacity: .6; cursor: default; transform: none; }
+
+/* Postcard finisher */
+.postcard { border: 2px dashed var(--earth); border-radius: 14px; padding: .9em 1em; background: var(--cream-light); margin-top: .4em; }
+.pc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .6em; }
+.pc-pick { background: #fff; border: 2px solid var(--sand); border-radius: 10px; padding: .7em; cursor: pointer; transition: border .15s, transform .1s; font-size: .92rem; }
+.pc-pick:hover { transform: translateY(-1px); }
+.pc-pick.on { border-color: var(--moss); background: #f1f8ec; }
+.pc-pick strong { display: block; font-size: .72rem; letter-spacing: .03em; color: var(--earth-deep); margin-bottom: .25em; }
+
+/* Calm / reduced-motion — freezes all motion for SEMH-safe delivery */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .river-flow { stroke-dasharray: none; }
+}
+/* Mobile */
+@media (max-width: 640px) {
+  .pc-grid { grid-template-columns: 1fr; }
+  .poll-btn { min-width: 120px; font-size: .9rem; padding: .65em .7em; }
+  .poll-row { gap: .5em; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width: 8%"></div>
+<div class="xp-bar" id="xpBar"></div>
+<div class="logo">Progress Schools</div>
+<button class="util-btn print-link" onclick="window.print()">🖨 Print pack</button>
+
+<!-- ========== SLIDE 1: TITLE HERO ========== -->
+<section class="slide active hero" data-slide="1">
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <div style="height: 4vh"></div>
+  <h1>Reading the River</h1>
+  <div class="subtitle">Is the Tees Healthy?</div>
+  <div class="strap">L1c · Year 10 · Outdoor Ed<br><strong>Field-trip prep · Trip: Thu 9 July · Portrack Marsh</strong></div>
+  <div class="icon-row">
+    <div class="ico">🌡️</div>
+    <div class="ico">🧪</div>
+    <div class="ico">🫧</div>
+    <div class="ico">🦐</div>
+  </div>
+
+  <div class="river-anim" role="img" aria-label="The River Tees flowing from its source to the sea, with Portrack Marsh near the mouth">
+    <svg viewBox="0 0 900 120" xmlns="http://www.w3.org/2000/svg">
+      <text x="10" y="20" class="river-cap">UPSTREAM</text>
+      <text x="10" y="37" class="river-label">fresh &amp; fast 🏔️</text>
+      <text x="890" y="20" text-anchor="end" class="river-cap">MOUTH</text>
+      <text x="890" y="37" text-anchor="end" class="river-label">North Sea 🌊</text>
+      <path d="M 24 96 C 170 96 190 64 330 72 S 545 104 665 80 S 840 72 876 90"
+            fill="none" stroke="var(--water-light)" stroke-width="14" stroke-linecap="round"/>
+      <path class="river-flow" d="M 24 96 C 170 96 190 64 330 72 S 545 104 665 80 S 840 72 876 90"
+            fill="none" stroke="var(--water)" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="700" cy="79" r="5" fill="var(--magritte-red)"/>
+      <text x="700" y="67" text-anchor="middle" class="river-label">📍 Portrack (us)</text>
+      <circle r="9" fill="var(--water-deep)" stroke="#fff" stroke-width="2.5">
+        <animateMotion dur="6s" repeatCount="indefinite" rotate="auto"
+          path="M 24 96 C 170 96 190 64 330 72 S 545 104 665 80 S 840 72 876 90"/>
+      </circle>
+    </svg>
+  </div>
+
+  <div style="max-width: 900px; margin: 1em auto 0; text-align: left;">
+    <div class="sc-box">
+      <h3>Success criteria · I will...</h3>
+      <ul>
+        <li>Name the ways scientists test if a river is healthy.</li>
+        <li>Say what a reading (pH, oxygen, bugs) tells us about the water.</li>
+        <li>Describe one human impact on the Tees at Portrack.</li>
+      </ul>
+    </div>
+    <div class="aspire-box">
+      <h3>🌟 Aspire</h3>
+      <p>Explain <strong>why</strong> we test the water in three ways — and why the trip is timed for <strong>high tide</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 2: ARRIVAL ========== -->
+<section class="slide" data-slide="2">
+  <span class="slide-tag">Arrival · ☂️ 3 min</span>
+  <h2>Name three things that pollute a river.</h2>
+  <p>On your whiteboard or in your book. No phones. First three that come into your head.</p>
+  <div class="box water">
+    <h3>Go.</h3>
+    <p>Thirty seconds. Three things that could make river water dirty or dangerous.</p>
+  </div>
+  <button class="reveal-btn" onclick="revealAnswer(this, 'arrival-reveal')">Show common answers</button>
+  <div id="arrival-reveal" class="box yellow" style="display: none; margin-top: 0.8em;">
+    <p>💧 Common: <strong>litter · oil · sewage · farm fertiliser · chemicals · warm outflows · plastic.</strong></p>
+    <p style="margin-top: 0.4em;"><em>On Thursday we'll test the real Tees for signs of some of these. Today we learn how.</em></p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 3: STARTER ========== -->
+<section class="slide" data-slide="3">
+  <span class="slide-tag">Starter · 🤔 3 min</span>
+  <h2>Healthy river, or sick river?</h2>
+  <p>Finish this sentence in your head, or say it to the person next to you:</p>
+  <div class="box yellow" style="text-align: center; padding: 1.5em;">
+    <p style="font-size: clamp(1.2rem, 2.4vw, 1.8rem); font-style: italic; font-weight: bold;">
+      "You could tell a river was <em>healthy</em> if..."
+    </p>
+  </div>
+  <div class="two-col" style="margin-top: 0.8em;">
+    <div class="box">
+      <h3>Clues you can SEE</h3>
+      <ul style="margin-left: 1.3em;">
+        <li>Is it clear or cloudy?</li>
+        <li>Any smell?</li>
+        <li>Fish? Birds? Bugs?</li>
+        <li>Litter or foam?</li>
+      </ul>
+    </div>
+    <div class="box moss">
+      <h3>The catch</h3>
+      <p>Some pollution is <strong>invisible</strong>. Clear water can still be sick. That's why we <em>test</em> — not just look.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 4: I DO · WATER-TESTING BENCH (tap each test) ========== -->
+<section class="slide ido" data-slide="4">
+  <span class="slide-tag ido">I do · 🧪 6 min</span>
+  <h2>The water-testing bench — tap each test.</h2>
+  <p>What does each one measure? <strong>Tested: <span id="landmarkCounter">0 / 6</span></strong></p>
+
+  <div class="river-map">
+    <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg" aria-label="Interactive water-testing bench">
+      <!-- bench top -->
+      <rect x="10" y="16" width="880" height="218" rx="12" fill="#FAF7EC" stroke="#8A7A6A" stroke-width="2"/>
+      <text x="450" y="12" text-anchor="middle" font-family="Georgia" font-size="11" fill="#5C4A30" font-style="italic">PHYSICAL · CHEMICAL · BIOLOGICAL</text>
+
+      <!-- Station 1: Temperature -->
+      <g class="landmark" data-id="temp" onclick="tapLandmark('temp')">
+        <rect x="60" y="34" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="160" y="70" text-anchor="middle" font-size="26">🌡️</text>
+        <text x="160" y="94" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">Temperature</text>
+        <text class="tap-me" x="160" y="112" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <!-- Station 2: Turbidity -->
+      <g class="landmark" data-id="turbidity" onclick="tapLandmark('turbidity')">
+        <rect x="350" y="34" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="450" y="70" text-anchor="middle" font-size="26">🌫️</text>
+        <text x="450" y="94" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">Turbidity</text>
+        <text class="tap-me" x="450" y="112" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <!-- Station 3: pH -->
+      <g class="landmark" data-id="ph" onclick="tapLandmark('ph')">
+        <rect x="640" y="34" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="740" y="70" text-anchor="middle" font-size="26">🧪</text>
+        <text x="740" y="94" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">pH</text>
+        <text class="tap-me" x="740" y="112" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <!-- Station 4: Dissolved Oxygen -->
+      <g class="landmark" data-id="oxygen" onclick="tapLandmark('oxygen')">
+        <rect x="60" y="140" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="160" y="176" text-anchor="middle" font-size="26">🫧</text>
+        <text x="160" y="200" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">Dissolved O₂</text>
+        <text class="tap-me" x="160" y="218" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <!-- Station 5: Nutrients -->
+      <g class="landmark" data-id="nutrients" onclick="tapLandmark('nutrients')">
+        <rect x="350" y="140" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="450" y="176" text-anchor="middle" font-size="26">🧫</text>
+        <text x="450" y="200" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">Nitrate / Phosphate</text>
+        <text class="tap-me" x="450" y="218" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <!-- Station 6: Invertebrates -->
+      <g class="landmark" data-id="inverts" onclick="tapLandmark('inverts')">
+        <rect x="640" y="140" width="200" height="86" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="740" y="176" text-anchor="middle" font-size="26">🦐</text>
+        <text x="740" y="200" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="bold" fill="#1C1C1C">Invertebrates</text>
+        <text class="tap-me" x="740" y="218" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+    </svg>
+  </div>
+
+  <div id="landmarkInfo" class="box water">
+    <p style="color: var(--earth-deep); font-style: italic; margin: 0;">👆 Tap any test on the bench. Find all 6 — that's how scientists judge a river.</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 5: WE DO · MATCHING GAME ========== -->
+<section class="slide wedo" data-slide="5">
+  <span class="slide-tag wedo">We do · 🔬 4 min</span>
+  <h2>Match each test to what it tells you.</h2>
+  <p>Tap a <strong>test</strong> on the left, then tap what it <strong>tells you</strong> on the right. Wrong = shake. Right = locked.</p>
+
+  <div class="match-game">
+    <div class="match-terms">
+      <button class="match-term" data-id="ph" onclick="tapTerm(this)">pH</button>
+      <button class="match-term" data-id="turbidity" onclick="tapTerm(this)">Turbidity</button>
+      <button class="match-term" data-id="oxygen" onclick="tapTerm(this)">Dissolved oxygen</button>
+      <button class="match-term" data-id="nitrate" onclick="tapTerm(this)">Nitrate</button>
+      <button class="match-term" data-id="inverts" onclick="tapTerm(this)">Invertebrates</button>
+    </div>
+    <div class="match-defs" id="matchDefs"><!-- populated by initMatch() --></div>
+  </div>
+
+  <div id="matchProgress" class="box yellow" style="margin-top: 0.8em;">
+    <p>📌 Matched: <strong>0 / 5</strong></p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 6: PREDICT · VOTE & TALK BRIDGE ========== -->
+<section class="slide bridge" data-slide="6">
+  <span class="slide-tag bridge">Predict · 🗳️ 2 min</span>
+  <h2>Before we go — what's your bet?</h2>
+  <p>The tidal Tees at Portrack: how healthy do you think it is? <strong>Tap one vote</strong> — then tell the person next to you <em>why</em>.</p>
+  <div class="poll" id="teesPoll">
+    <div class="poll-row">
+      <button class="poll-btn" onclick="votePoll(this,0)">Healthy<span class="pb-sub">🐟 clean &amp; full of life</span></button>
+      <div class="poll-track"><div class="poll-fill" id="pf0"></div><span class="poll-pct" id="pp0">0%</span></div>
+    </div>
+    <div class="poll-row">
+      <button class="poll-btn" onclick="votePoll(this,1)">Mixed<span class="pb-sub">🌫️ some good, some bad</span></button>
+      <div class="poll-track"><div class="poll-fill" id="pf1"></div><span class="poll-pct" id="pp1">0%</span></div>
+    </div>
+    <div class="poll-row">
+      <button class="poll-btn" onclick="votePoll(this,2)">Struggling<span class="pb-sub">⚠️ pollution winning</span></button>
+      <div class="poll-track"><div class="poll-fill" id="pf2"></div><span class="poll-pct" id="pp2">0%</span></div>
+    </div>
+    <div class="poll-total" id="pollTotal">No votes yet — tap to start.</div>
+  </div>
+  <div class="bridge-prompt" style="margin-top: .6em;">
+    <h3>NOW TALK</h3>
+    <p class="prompt">"I think it's ______ because ______." · Clue: it sits right next to a <em>sewage works</em> — but it's also a protected <em>SSSI</em> full of birds and seals. Both are true.</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 7: I DO · HUMAN IMPACT AT PORTRACK (cards) ========== -->
+<section class="slide ido" data-slide="7">
+  <span class="slide-tag ido">I do · 📍 4 min</span>
+  <h2>Our stretch of the Tees — three things to know.</h2>
+  <p>Portrack Marsh is where we're going. <strong>Tap each card</strong> for the story behind it.</p>
+  <div class="landmark-grid">
+    <div class="landmark-card" onclick="toggleCard(this)">
+      <span class="lm-tag">History</span>
+      <div class="lm-ico">✂️</div>
+      <h3>The Big Cut</h3>
+      <p>In 1830 people straightened the Tees here to speed up ships. Over <strong>90%</strong> of the marshland was drained. Portrack is the <strong>last wetland</strong> on the lower Tees.</p>
+      <div class="tap-hint">👆 Tap for did-you-know</div>
+      <div class="more"><strong>Did you know?</strong> "Port Rack" comes from "racking" — horses dragging ships up the old river loop. The place is named after human muscle.</div>
+    </div>
+    <div class="landmark-card" onclick="toggleCard(this)">
+      <span class="lm-tag">Today</span>
+      <div class="lm-ico">🏭</div>
+      <h3>The Works Next Door</h3>
+      <p>A large <strong>sewage treatment works</strong> sits right beside the reserve. Cleaned water flows back to the river — a real source of the <strong>nitrate &amp; phosphate</strong> we'll test for.</p>
+      <div class="tap-hint">👆 Tap for did-you-know</div>
+      <div class="more"><strong>Did you know?</strong> After heavy rain, more pollution gets washed in. That's often when a river's problems actually show up in the readings.</div>
+    </div>
+    <div class="landmark-card" onclick="toggleCard(this)">
+      <span class="lm-tag">The tide</span>
+      <div class="lm-ico">🌊</div>
+      <h3>Why High Tide?</h3>
+      <p>The <strong>Tees Barrage</strong> is 300m upstream and holds the river fresh above it. So Portrack is the <strong>last tidal stretch</strong> — at high tide the sea pushes <strong>brackish</strong> (salty) water up to the barrage.</p>
+      <div class="tap-hint">👆 Tap for did-you-know</div>
+      <div class="more"><strong>Did you know?</strong> Seals swim up on the tide — you might spot one. That's why our river session is timed for <strong>high water</strong>: more to see, and the tidal river at its fullest.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 8: WATCH IT (video) ========== -->
+<section class="slide ido" data-slide="8">
+  <span class="slide-tag ido">Watch it · 🎬 2 min</span>
+  <h2>Kick sampling — watch it first.</h2>
+  <p>This is one thing you might do at the river. <strong>Watch for:</strong> how they disturb the riverbed, catch the bugs in a net, then <em>identify</em> them to score the water.</p>
+  <div class="video-wrap">
+    <!-- SWAP THE CLIP: change only the ID after /embed/ to your school-approved video -->
+    <div class="video-frame">
+      <iframe src="https://www.youtube-nocookie.com/embed/RzY9z_Z6_3U?rel=0&amp;modestbranding=1"
+        title="Using kick sampling to determine the quality of water in a river"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="video-fallback">
+      <a class="video-out" href="https://www.youtube.com/watch?v=RzY9z_Z6_3U" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+      <a class="video-out alt" href="https://www.youtube.com/watch?v=EfpSzRmQKhs" target="_blank" rel="noopener">▶ Backup clip (river invertebrates)</a>
+    </div>
+  </div>
+  <div class="box water" style="margin-top: .7em;">
+    <p><strong>Say it back:</strong> "Scientists ______ the riverbed, catch the ______ in a net, then ______ them. Clean-water bugs = a ______ river."</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 9: INDEPENDENT ========== -->
+<section class="slide independent" data-slide="9">
+  <span class="slide-tag independent">Independent · ✍️ 6 min</span>
+  <h2>Your turn — three questions, your tier.</h2>
+  <p style="margin-bottom: .4em;">First — <strong>tap the words you'll try to use.</strong> They turn green when claimed.</p>
+  <div class="wordbank" id="wordbank">
+    <span class="word-chip" onclick="tapWord(this)">pH</span>
+    <span class="word-chip" onclick="tapWord(this)">turbidity</span>
+    <span class="word-chip" onclick="tapWord(this)">dissolved oxygen</span>
+    <span class="word-chip" onclick="tapWord(this)">nitrate</span>
+    <span class="word-chip" onclick="tapWord(this)">phosphate</span>
+    <span class="word-chip" onclick="tapWord(this)">invertebrate</span>
+    <span class="word-chip" onclick="tapWord(this)">indicator species</span>
+    <span class="word-chip" onclick="tapWord(this)">brackish</span>
+    <span class="word-chip" onclick="tapWord(this)">high tide</span>
+    <span class="word-chip" onclick="tapWord(this)">sewage</span>
+  </div>
+  <div class="wb-tracker" id="wbTracker">Key words ready: 0</div>
+
+  <div class="tier-block">
+    <span class="tier-label">F · Foundation</span>
+    <div class="question"><strong>Q1.</strong> Name <em>two</em> things we will test in the river, and say what each one tells us.</div>
+    <div class="stem">Stem: "One test is __________. It tells us __________. Another test is __________. It tells us __________."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">Look back at the bench: temperature, turbidity, pH, oxygen, nutrients, invertebrates. Pick any two.</div>
+  </div>
+
+  <div class="tier-block middle">
+    <span class="tier-label">M · Middle</span>
+    <div class="question"><strong>Q2.</strong> Portrack sits right next to a sewage works. <em>Predict</em> what our nitrate reading and our oxygen reading might show — and why.</div>
+    <div class="stem">Stem: "I predict the nitrate will be ______ because... I predict the oxygen will be ______ because..."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">Sewage and fertiliser add nutrients. Nutrients feed algae. Algae then use up the oxygen. Follow the chain.</div>
+  </div>
+
+  <div class="tier-block higher">
+    <span class="tier-label">H · Higher</span>
+    <div class="question"><strong>Q3.</strong> Explain <em>why</em> we test the water in three ways — physical, chemical <em>and</em> biological — instead of just one.</div>
+    <div class="stem">Stem: "Using more than one test is better because... For example, a chemical test might miss..."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">A single reading is one moment in time. Bugs live there for months — they show the <em>long-term</em> story. Clear water can still be sick.</div>
+  </div>
+
+  <button class="finish-btn" onclick="finishTier(this)">✓ I've finished my tier</button>
+
+  <div class="aspire-box" style="margin-top: .8em;">
+    <h3>🌟 Finished? You're the lead scientist.</h3>
+    <p>Plan your own fair test for the day. Tap to lock your three decisions:</p>
+    <div class="postcard">
+      <div class="pc-grid">
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>WHERE</strong>Which exact spot will you sample — and why there?</div>
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>FAIR TEST</strong>How will two groups compare fairly? (same method, same time…)</div>
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>STAY SAFE</strong>One rule you'll follow near the water.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 10: ON THE DAY (logistics) ========== -->
+<section class="slide" data-slide="10">
+  <span class="slide-tag">On the day · 🗓️ 2 min</span>
+  <h2>The day — Thursday 9 July.</h2>
+  <div class="two-col">
+    <div class="box water">
+      <h3>⏱️ The plan</h3>
+      <ul style="margin-left: 1.2em;">
+        <li><strong>10:00</strong> — arrive, Portrack Marsh. Meet in the <strong>Canal &amp; River Trust car park</strong> — <em>not</em> the Talpore / Premier Inn one.</li>
+        <li><strong>Morning</strong> — Rivers session (high tide): water quality &amp; human impact.</li>
+        <li><strong>~12:00</strong> — lunch. Toilets at the Talpore pub.</li>
+        <li><strong>Afternoon</strong> — Biology session: sampling the grassland (that's L1d).</li>
+        <li><strong>2:00–2:30</strong> — finish.</li>
+      </ul>
+    </div>
+    <div class="box moss">
+      <h3>🎒 Bring</h3>
+      <ul style="margin-left: 1.2em;">
+        <li>Warm layers + a <strong>waterproof</strong> (Teesside, July, still can rain).</li>
+        <li>Sturdy shoes or wellies — it can be muddy.</li>
+        <li>Packed lunch + a drink.</li>
+        <li>Sun cream / hat just in case.</li>
+        <li>Your recording sheet + a pencil.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box yellow" style="margin-top:.7em;">
+    <h3>⚠️ Water rules — non-negotiable</h3>
+    <p>Respect the water. <strong>Stay behind the line staff set.</strong> Tell an adult before you move. Wash hands before eating. Listen to the Trust staff and your teachers — they know this river.</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 11: EXIT TICKET ========== -->
+<section class="slide exit" data-slide="11">
+  <span class="slide-tag exit">Exit · 🎫 2 min</span>
+  <h2>Three quick ones. Then you're out.</h2>
+
+  <div class="box">
+    <h3>Q1. Why is our river session timed for HIGH tide?</h3>
+    <div class="mcq-options" data-q="1">
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ The river always flows — the tide changes its level and saltiness, not whether it flows.')">Because the river only flows at high tide</button>
+      <button class="mcq-opt" data-correct="true" onclick="answerMCQ(this, '✅ Yes — Portrack is the last tidal stretch, so high tide pushes brackish water up to the barrage.')">Portrack is the last tidal stretch — high tide fills it and pushes salty water up</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ There is still water at low tide — it is just lower.')">Because there's no water there at low tide</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ Seals come up ON the tide, but they do not only exist then.')">Because seals only exist at high tide</button>
+    </div>
+    <div class="mcq-feedback"></div>
+  </div>
+
+  <div class="box">
+    <h3>Q2. You find only worms and leeches — no mayflies. What does that suggest?</h3>
+    <div class="mcq-options" data-q="2">
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ Opposite — mayflies are the clean-water sign, and they are missing.')">The water is very clean</button>
+      <button class="mcq-opt" data-correct="true" onclick="answerMCQ(this, '✅ Right — sensitive species are missing, so the water is probably polluted.')">The water is probably polluted — sensitive species are missing</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ Bugs are indicator species — they tell us a lot.')">Nothing — bugs don't tell us anything</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ Temperature is a different test — the bugs point to pollution.')">The river is too cold</button>
+    </div>
+    <div class="mcq-feedback"></div>
+  </div>
+
+  <div class="box">
+    <h3>Q3. Where do we meet on Thursday 9 July?</h3>
+    <div class="mcq-options" data-q="3">
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ That car park is customers-only — they get funny about school vehicles. Not there.')">The Talpore / Premier Inn car park</button>
+      <button class="mcq-opt" data-correct="true" onclick="answerMCQ(this, '✅ Yes — the Canal & River Trust car park at Portrack Marsh, for 10:00.')">The Canal &amp; River Trust car park at Portrack (10:00)</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ Not this time — we go straight to the river.')">At school as normal</button>
+      <button class="mcq-opt" data-correct="false" onclick="answerMCQ(this, '❌ That is the source — 85 miles upstream in the Pennines!')">At the source, Cross Fell</button>
+    </div>
+    <div class="mcq-feedback"></div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 12: LO COMPLETE ========== -->
+<section class="slide" data-slide="12">
+  <span class="slide-tag">Done</span>
+  <h2>Today, you've ticked:</h2>
+  <ul class="lo-list" id="loList">
+    <li data-delay="250"><span class="check">✓</span>Named the ways we test a river — <strong>physical, chemical, biological</strong>.</li>
+    <li data-delay="750"><span class="check">✓</span>Said what a reading (<strong>pH, oxygen, bugs</strong>) tells us about the water.</li>
+    <li data-delay="1250"><span class="check">✓</span>Described a human impact on the Tees — and <strong>why we go at high tide</strong>.</li>
+  </ul>
+  <div class="box water" style="margin-top: 1.4em;">
+    <h3>Next lesson · L1d</h3>
+    <p>"Life in the Grass." The afternoon session — how we sample a grassland habitat <em>fairly</em>, and our impact on it.</p>
+    <p style="margin-top:.5em;"><strong>See you Thursday 9 July · 10:00 · Portrack Marsh (Canal &amp; River Trust car park).</strong></p>
+  </div>
+</section>
+
+<nav class="controls">
+  <button id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+  <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</nav>
+
+<div class="slide-counter" id="slideCounter">1 / 12</div>
+<button class="util-btn ta-focus-btn" onclick="openTaFocus()">👁 TA Focus</button>
+<button class="util-btn cold-call-btn" onclick="openColdCall()">🎲 Cold Call</button>
+
+<!-- TA FOCUS MODAL -->
+<div class="modal-backdrop" id="taModal" onclick="if(event.target===this) closeTaFocus()">
+  <div class="modal">
+    <span class="tag">TA Focus · This slide</span>
+    <h3 id="taTitle">—</h3>
+    <div id="taBody"></div>
+    <button class="modal-close" onclick="closeTaFocus()">Close</button>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL -->
+<div class="modal-backdrop" id="ccModal" onclick="if(event.target===this) closeColdCall()">
+  <div class="modal cold-call">
+    <span class="tag">Cold call · random pupil</span>
+    <div class="cold-call-pupil" id="ccPupil">—</div>
+    <span class="cold-call-tier" id="ccTier">Tier</span>
+    <div class="cold-call-q" id="ccQuestion">—</div>
+    <div style="margin-top: 1em;">
+      <button class="cc-reroll" onclick="rollColdCall()">🎲 Re-roll</button>
+      <button class="modal-close" onclick="closeColdCall()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION OVERLAY -->
+<div class="completion" id="completion">
+  <h1>🌊 Ready.</h1>
+  <p>You can read a river now. Thursday, you test the real one.</p>
+  <button onclick="hideCompletion()">Close</button>
+</div>
+
+<!-- ========== PRINT AREA: PUPIL PACK ========== -->
+<section id="print-area">
+  <!-- Do Now -->
+  <div class="print-doc">
+    <h1>L1c · Do Now — While You Settle In</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:180px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span style="display:inline-block; min-width:90px; border-bottom:1px solid black;">&nbsp;</span>
+    </div>
+    <p class="do-note">Get started on your own — no phones, no looking it up. We'll begin properly in a few minutes.</p>
+
+    <h2>1 · Warm up your brain</h2>
+    <p>Write down <strong>three things</strong> that could pollute a river.</p>
+    <div class="lines" style="height:46px;"></div>
+
+    <h2>2 · True or false?</h2>
+    <p style="font-size:0.84rem;">Circle <strong>T</strong> or <strong>F</strong>. Have a go even if you're not sure.</p>
+    <div class="tf-list">
+      <div class="tf-row"><span>Clear water is always clean and healthy.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>Warm water holds less oxygen than cold water.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>The kinds of bugs in a river can tell you how clean it is.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>Sewage and farm fertiliser can add nutrients to a river.</span><span class="tf">T / F</span></div>
+    </div>
+
+    <h2>3 · Getting ready</h2>
+    <p style="font-size:0.84rem;">Tick anything that's true for you:</p>
+    <ul class="tick-list">
+      <li>I know where Portrack Marsh is.</li>
+      <li>I've done a science test outdoors before.</li>
+      <li>I've got a waterproof / wellies for Thursday.</li>
+      <li>I know we meet at 10:00.</li>
+    </ul>
+    <p class="stem">One thing I still need to sort before Thursday:</p>
+    <div class="lines" style="height:30px;"></div>
+  </div>
+
+  <!-- KO -->
+  <div class="print-doc">
+    <h1>L1c · Reading the River — Knowledge Organiser</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:180px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span style="display:inline-block; min-width:90px; border-bottom:1px solid black;" id="koDate">&nbsp;</span>
+    </div>
+
+    <h2>Lesson learning outcomes</h2>
+    <ul class="sc-checklist">
+      <li>Name the ways scientists test if a river is healthy</li>
+      <li>Say what a reading (pH, oxygen, invertebrates) tells us</li>
+      <li>Describe one human impact on the Tees at Portrack — and why we go at high tide</li>
+    </ul>
+
+    <h2>The water-testing toolkit</h2>
+    <div class="ko-grid">
+      <div class="ko-cell"><strong>Temperature (physical)</strong>Warm water holds less oxygen — bad for fish.</div>
+      <div class="ko-cell"><strong>Turbidity (physical)</strong>How cloudy the water is. Cloudy blocks light &amp; clogs gills.</div>
+      <div class="ko-cell"><strong>pH (chemical)</strong>Acidic or alkaline. Most river life needs 6.5–8.0.</div>
+      <div class="ko-cell"><strong>Dissolved oxygen (chemical)</strong>The gas fish &amp; bugs breathe. Low = river in trouble.</div>
+      <div class="ko-cell"><strong>Nitrate / phosphate (chemical)</strong>Nutrients from sewage &amp; fertiliser. Too much feeds algae.</div>
+      <div class="ko-cell"><strong>Invertebrates (biological)</strong>Indicator species. Mayfly = clean; worms only = polluted.</div>
+    </div>
+
+    <h2>Key facts — our stretch</h2>
+    <div class="key-fact"><strong>Where:</strong> Portrack Marsh, Stockton — the <em>last wetland</em> on the lower Tees, and an SSSI.</div>
+    <div class="key-fact"><strong>Tidal limit:</strong> the Tees Barrage (300m upstream) holds the river fresh above it; Portrack is the last <em>tidal, brackish</em> stretch.</div>
+    <div class="key-fact"><strong>Human impact:</strong> straightened in 1830 (&gt;90% of marsh lost); a sewage works sits right next door.</div>
+    <div class="key-fact"><strong>Why high tide:</strong> the sea pushes brackish water up to the barrage — the tidal river at its fullest (and seals may come up).</div>
+    <div class="key-fact"><strong>Trip:</strong> Thu 9 July, 10:00 — Canal &amp; River Trust car park (NOT the Talpore). Finish 2:00–2:30.</div>
+
+    <h2>Key terms</h2>
+    <div class="ko-grid">
+      <div class="ko-cell"><strong>Indicator species</strong>A creature whose presence reveals the water's health.</div>
+      <div class="ko-cell"><strong>Turbidity</strong>How cloudy or clear the water is.</div>
+      <div class="ko-cell"><strong>Brackish</strong>A mix of fresh and salt water.</div>
+      <div class="ko-cell"><strong>Tidal limit</strong>The furthest point the tide reaches upstream.</div>
+      <div class="ko-cell"><strong>Nutrient pollution</strong>Too much nitrate/phosphate feeding algae.</div>
+      <div class="ko-cell"><strong>SSSI</strong>Site of Special Scientific Interest — legally protected.</div>
+    </div>
+  </div>
+
+  <!-- Work pack -->
+  <div class="print-doc">
+    <h1>L1c · Your Work — Reading the River</h1>
+    <div class="meta-line">Name: <span style="display:inline-block; min-width:200px; border-bottom:1px solid black;">&nbsp;</span></div>
+    <p class="do-note">Pick the question that's right for you — or do all three if you can. Use the word banks and sentence starters to help.</p>
+
+    <div class="q-block">
+      <div class="q">Q1. Name <em>two</em> tests we will do, and say what each tells us. <span class="q-tier">F</span></div>
+      <div class="wordbox"><b>Word bank</b>temperature · turbidity · pH · dissolved oxygen · nitrate · invertebrates</div>
+      <p class="stem">One test is ________________. It tells us ________________.</p>
+      <div class="lines" style="height:24px;"></div>
+      <p class="stem">Another test is ________________. It tells us ________________.</p>
+      <div class="lines" style="height:24px;"></div>
+    </div>
+
+    <div class="q-block">
+      <div class="q">Q2. Portrack sits next to a sewage works. Predict our nitrate and oxygen readings — and why. <span class="q-tier">M</span></div>
+      <div class="wordbox"><b>Chain to follow</b>sewage/fertiliser → nutrients → algae grow → algae use up oxygen</div>
+      <p class="stem">I predict the nitrate will be… because…</p>
+      <div class="lines" style="height:46px;"></div>
+      <p class="stem">I predict the oxygen will be… because…</p>
+      <div class="lines" style="height:46px;"></div>
+    </div>
+
+    <div class="q-block">
+      <div class="q">Q3. Explain why we test in three ways — physical, chemical AND biological. <span class="q-tier">H</span></div>
+      <p class="stem">Using more than one test is better because…</p>
+      <div class="lines" style="height:46px;"></div>
+      <p class="stem">For example, a single chemical reading might miss…</p>
+      <div class="lines" style="height:46px;"></div>
+      <div class="examiner"><strong>The examiner wants:</strong> the idea that one reading is a single moment, but invertebrates show the long-term story — and that clear water can still be polluted.</div>
+    </div>
+
+    <h2>🌟 Finished? Plan your fair test</h2>
+    <p style="font-size:0.84rem;">Write WHERE you'd sample, HOW two groups could compare fairly (same method, same time), and one SAFETY rule.</p>
+    <div class="lines" style="height:64px;"></div>
+  </div>
+
+  <!-- Revision sheet -->
+  <div class="print-doc">
+    <h1>L1c · Revision &amp; Self-Quiz</h1>
+    <div class="meta-line">Name: <span style="display:inline-block; min-width:200px; border-bottom:1px solid black;">&nbsp;</span></div>
+
+    <h2>Self-quiz · cover the answers</h2>
+    <div class="quiz-q"><strong>Q1.</strong> Name the three types of water test. <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q2.</strong> What does turbidity measure? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q3.</strong> What pH range do most river creatures need? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q4.</strong> Why is warm water bad for fish? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q5.</strong> Where do nitrate and phosphate come from? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q6.</strong> What is an indicator species? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q7.</strong> Which bugs mean clean water? Which mean polluted? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q8.</strong> What does "brackish" mean? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q9.</strong> Why is our trip timed for high tide? <span class="ans-line"></span></div>
+    <div class="quiz-q"><strong>Q10.</strong> Which car park do we meet at on 9 July? <span class="ans-line"></span></div>
+
+    <h2>Memory hooks</h2>
+    <p style="font-size: 0.85rem;"><strong>Three tests:</strong> "<em>Physical, Chemical, Biological — Please Check Bugs.</em>" 🐛</p>
+    <p style="font-size: 0.85rem;"><strong>pH range:</strong> "<em>Six-and-a-half to eight — life feels great.</em>" 🧪</p>
+    <p style="font-size: 0.85rem;"><strong>Oxygen &amp; heat:</strong> "<em>Warm water, less air — fish gasp everywhere.</em>" 🫧</p>
+    <p style="font-size: 0.85rem;"><strong>Bugs:</strong> "<em>Mayfly means clean; worms alone mean mean.</em>" 🦐</p>
+    <p style="font-size: 0.85rem;"><strong>High tide:</strong> "<em>Barrage above, brackish below — that's why at high tide we go.</em>" 🌊</p>
+
+    <h2>Common mark-losers</h2>
+    <ul style="font-size: 0.85rem; margin-left: 1.3em;">
+      <li>Saying clear water is definitely clean (pollution can be invisible).</li>
+      <li>Mixing up <em>high</em> nutrients (bad) with <em>high</em> oxygen (good).</li>
+      <li>Thinking one test is enough — you need all three types.</li>
+      <li>Forgetting the tide: Portrack is the <em>last tidal stretch</em>, below the barrage.</li>
+      <li>Meeting at the Talpore car park — it's the Canal &amp; River Trust one.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+// ===== TA Focus content =====
+const taContent = {
+  1: { title: "Settling in", body: "<ul><li>SC + Aspire visible — pupils read or are read to.</li><li>This is the 'get ready' lesson — the pay-off is a real trip Thursday. Keep it purposeful, not anxious about the water.</li><li>Watch for who's quiet vs disengaged — different responses needed.</li></ul>" },
+  2: { title: "Arrival task", body: "<ul><li>Genuinely 30 seconds — quick win. Any sensible answer counts (litter, oil, poo, chemicals, plastic).</li><li>Reveal adds dopamine and previews what we'll test for real.</li></ul>" },
+  3: { title: "Starter — healthy vs sick", body: "<ul><li>Let them use everyday words (smelly, clear, fishy). We swap in the science words next.</li><li>The key hook: clear water can still be sick — that's why we test, not just look. Say it.</li></ul>" },
+  4: { title: "The testing bench (6 tests)", body: "<ul><li>6 tests — tap to reveal. Don't rush all 6. Link oxygen + temperature (warm = less oxygen).</li><li>Group them out loud: physical / chemical / biological.</li><li>Cold Call works well here.</li></ul>" },
+  5: { title: "Match test → meaning", body: "<ul><li>Pupils tap when they think they have it. Some will guess — fine.</li><li>Pair strugglers. The invertebrate one is the big idea — flag it, the video's next.</li></ul>" },
+  6: { title: "Predict poll", body: "<ul><li>90 seconds, then 2–3 voices. No wrong vote — it's a prediction.</li><li>The tension is real: struggling (sewage works) vs protected SSSI (birds, seals). Both true.</li></ul>" },
+  7: { title: "Human impact at Portrack", body: "<ul><li>The high-tide card answers 'why are we going at high tide?' — say it twice.</li><li>Tie the sewage works to the nitrate test they'll do.</li><li>Any pupil who's been to Portrack / seen a seal — give them voice.</li></ul>" },
+  8: { title: "Watch it — kick sampling", body: "<ul><li>60–90 seconds, then move on. Don't let it drift into screen-time.</li><li>If the embed won't load on a Chromebook, tap 'Watch on YouTube' — the fallback link is there.</li><li>Ask the 'say it back' stem before advancing.</li></ul>" },
+  9: { title: "Independent work", body: "<ul><li>Pupils self-select tier. Q2/Q3 are predictions — reward reasoning, not a 'right' answer.</li><li>Hint buttons + word-bank chips for scaffolding. 8 minutes — circulate, prompt, don't dictate.</li></ul>" },
+  10: { title: "On the day", body: "<ul><li>Read the timeline together. Nail the car park point — NOT the Talpore / Premier Inn.</li><li>Quietly clock who has a kit gap (waterproof, wellies, lunch) so it can be sorted before Thursday.</li></ul>" },
+  11: { title: "Exit ticket MCQs", body: "<ul><li>3 questions, click to answer, locks on click.</li><li>Q3 is the logistics check — anyone wrong on the car park needs a quiet reminder before Thursday.</li></ul>" },
+  12: { title: "Lesson complete", body: "<ul><li>LO ticks animate — point them out.</li><li>Tease L1d (grassland). End on the trip: Thursday, 10:00, Portrack.</li><li>Pupil pack home if revision is set — KO + revision sheet.</li></ul>" }
+};
+
+// ===== Cold Call pool =====
+const ccPupils = ["Ava", "Eden", "Cienna", "Harry", "Maisie", "Lilly-Grace", "Ethan", "Leon", "Terry"];
+const ccQuestions = {
+  f: [
+    "Name one way we test if river water is healthy.",
+    "What does turbidity mean?",
+    "Which car park do we meet at on Thursday?",
+    "Name one thing that pollutes a river.",
+    "What time do we arrive on Thursday?"
+  ],
+  m: [
+    "Explain why warm water is bad news for fish.",
+    "What do mayflies tell us about a river?",
+    "Why do we test for nitrate and phosphate?",
+    "Why is our river session timed for high tide?",
+    "What does 'brackish' water mean?"
+  ],
+  h: [
+    "Justify why we test the water in three ways instead of one.",
+    "It's a protected SSSI right next to a sewage works — explain that tension.",
+    "Predict what our oxygen reading might show, and why.",
+    "How could two groups make sure their results are a fair comparison?"
+  ]
+};
+
+// ===== State =====
+let currentSlide = 1;
+const totalSlides = 12;
+let xp = 0;
+const xpPerAction = 8;
+
+// ===== Slide nav =====
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`.slide[data-slide="${n}"]`);
+  if (target) target.classList.add('active');
+  document.getElementById('progressBar').style.width = (n / totalSlides * 100) + '%';
+  document.getElementById('slideCounter').textContent = `${n} / ${totalSlides}`;
+  document.getElementById('prevBtn').disabled = (n === 1);
+  document.getElementById('nextBtn').disabled = (n === totalSlides);
+  if (n === totalSlides) {
+    animateLOTicks();
+    setTimeout(() => showCompletion(), 1800);
+  }
+}
+
+function changeSlide(delta) {
+  const next = currentSlide + delta;
+  if (next >= 1 && next <= totalSlides) {
+    currentSlide = next;
+    showSlide(currentSlide);
+    addXP(2);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  // skip nav if focus is in input/textarea/select
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+  if (document.getElementById('taModal').classList.contains('open') ||
+      document.getElementById('ccModal').classList.contains('open')) {
+    if (e.key === 'Escape') { closeTaFocus(); closeColdCall(); }
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  else if (e.key === 't' || e.key === 'T') openTaFocus();
+  else if (e.key === 'c' || e.key === 'C') openColdCall();
+});
+
+// ===== Generic reveal =====
+function revealAnswer(btn, id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'block';
+    btn.disabled = true;
+    btn.textContent = '✓ Shown';
+    addXP(xpPerAction);
+  }
+}
+
+// ===== Hint toggle =====
+function toggleHint(btn) {
+  const hint = btn.nextElementSibling;
+  if (hint && hint.classList.contains('hint-text')) {
+    hint.classList.toggle('shown');
+    btn.textContent = hint.classList.contains('shown') ? 'Hide hint' : 'Hint?';
+  }
+}
+
+// ===== MCQ =====
+function answerMCQ(btn, feedbackText) {
+  const opts = btn.parentElement;
+  const feedback = opts.nextElementSibling;
+  const correct = btn.dataset.correct === 'true';
+  opts.querySelectorAll('.mcq-opt').forEach(o => {
+    if (o.dataset.correct === 'true') o.classList.add('correct');
+    else if (o === btn) o.classList.add('wrong');
+    else o.style.pointerEvents = 'none';
+  });
+  feedback.textContent = feedbackText;
+  feedback.classList.remove('correct', 'wrong');
+  feedback.classList.add(correct ? 'correct' : 'wrong', 'shown');
+  addXP(correct ? xpPerAction * 2 : xpPerAction);
+}
+
+// ===== XP =====
+function addXP(n) {
+  xp = Math.min(100, xp + n);
+  document.getElementById('xpBar').style.width = xp + '%';
+}
+
+// ===== LO ticks =====
+function animateLOTicks() {
+  document.querySelectorAll('#loList li').forEach(li => li.classList.remove('checked'));
+  document.querySelectorAll('#loList li').forEach(li => {
+    const delay = parseInt(li.dataset.delay || 0);
+    setTimeout(() => li.classList.add('checked'), delay);
+  });
+}
+
+// ===== Completion overlay + confetti =====
+function showCompletion() {
+  if (xp < 60) xp = 60;
+  document.getElementById('xpBar').style.width = '100%';
+  document.getElementById('completion').classList.add('shown');
+  launchConfetti();
+}
+function hideCompletion() {
+  document.getElementById('completion').classList.remove('shown');
+}
+function launchConfetti() {
+  const colors = ['#2E7CB8', '#6B8E4E', '#C99A2E', '#B33A3A', '#4A7891'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = (Math.random() * 0.6) + 's';
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+// ===== TA Focus =====
+function openTaFocus() {
+  const c = taContent[currentSlide];
+  if (!c) return;
+  document.getElementById('taTitle').textContent = c.title;
+  document.getElementById('taBody').innerHTML = c.body;
+  document.getElementById('taModal').classList.add('open');
+}
+function closeTaFocus() {
+  document.getElementById('taModal').classList.remove('open');
+}
+
+// ===== Cold Call =====
+function openColdCall() {
+  rollColdCall();
+  document.getElementById('ccModal').classList.add('open');
+}
+function closeColdCall() {
+  document.getElementById('ccModal').classList.remove('open');
+}
+function rollColdCall() {
+  const pupil = ccPupils[Math.floor(Math.random() * ccPupils.length)];
+  // tier from phase: 1-4 -> F, 5-8 -> M, 9-12 -> H
+  let tier = 'f';
+  if (currentSlide >= 5 && currentSlide <= 8) tier = 'm';
+  else if (currentSlide >= 9) tier = 'h';
+  const questions = ccQuestions[tier];
+  const q = questions[Math.floor(Math.random() * questions.length)];
+  const tierLabel = { f: 'Foundation', m: 'Middle', h: 'Higher' };
+  const tierEl = document.getElementById('ccTier');
+  tierEl.textContent = tierLabel[tier];
+  tierEl.className = 'cold-call-tier ' + tier;
+  document.getElementById('ccPupil').textContent = pupil;
+  document.getElementById('ccQuestion').textContent = q;
+}
+
+// ===== KO date stamp =====
+function setKoDate() {
+  const d = new Date().toLocaleDateString('en-GB');
+  const el = document.getElementById('koDate');
+  if (el) el.textContent = d;
+}
+
+// ===== Testing-bench interactivity (slide 4) =====
+const landmarkData = {
+  'temp': {
+    name: '🌡️ Temperature · PHYSICAL',
+    text: 'Warm water holds LESS oxygen. Hot days or warm outflows can stress fish. Measured in °C.'
+  },
+  'turbidity': {
+    name: '🌫️ Turbidity · PHYSICAL',
+    text: 'How cloudy the water is. Cloudy water blocks light and clogs fish gills. Clear is usually healthier. We use a clarity tube.'
+  },
+  'ph': {
+    name: '🧪 pH · CHEMICAL',
+    text: 'How acidic or alkaline the water is. Most river life needs pH 6.5–8.0. A test strip changes colour to show it.'
+  },
+  'oxygen': {
+    name: '🫧 Dissolved oxygen · CHEMICAL',
+    text: 'The oxygen IN the water that fish and bugs breathe. Low oxygen = a river in trouble. Warmth and pollution lower it.'
+  },
+  'nutrients': {
+    name: '🧫 Nitrate / phosphate · CHEMICAL',
+    text: 'Nutrients from sewage and farm fertiliser. Too much feeds algae, which then steal the oxygen. Strips show the level.'
+  },
+  'inverts': {
+    name: '🦐 Invertebrates · BIOLOGICAL',
+    text: 'The bugs in the mud tell the real story. Mayfly & stonefly = clean water. Worms & leeches only = polluted. These are indicator species.'
+  }
+};
+const discovered = new Set();
+function tapLandmark(id) {
+  if (discovered.has(id)) return;
+  discovered.add(id);
+  const counter = document.getElementById('landmarkCounter');
+  if (counter) counter.textContent = `${discovered.size} / 6`;
+  const info = landmarkData[id];
+  const panel = document.getElementById('landmarkInfo');
+  if (panel && info) {
+    panel.innerHTML = `<h3 style="color: var(--water-deep); margin-bottom: 0.3em;">${info.name}</h3><p style="margin: 0;">${info.text}</p>`;
+  }
+  document.querySelectorAll(`.landmark[data-id="${id}"]`).forEach(g => g.classList.add('discovered'));
+  addXP(xpPerAction);
+  if (discovered.size === 6) {
+    setTimeout(() => {
+      if (panel) panel.innerHTML += '<p style="margin-top: 0.6em; font-weight: bold; color: var(--moss-deep);">✅ All 6 tests met — physical, chemical AND biological. That\'s how scientists judge a river.</p>';
+    }, 500);
+  }
+}
+
+// ===== Matching game (slide 5) =====
+const matchData = [
+  { id: 'ph', def: 'How acidic or alkaline the water is — most life needs 6.5 to 8.0.' },
+  { id: 'turbidity', def: 'How cloudy the water is — cloudy blocks light and clogs gills.' },
+  { id: 'oxygen', def: 'The gas dissolved in the water that fish and bugs breathe.' },
+  { id: 'nitrate', def: 'A nutrient from sewage and fertiliser — too much feeds algae.' },
+  { id: 'inverts', def: 'Living creatures whose presence reveals how clean the water is.' }
+];
+let matchSelectedTerm = null;
+let matchedCount = 0;
+
+function initMatch() {
+  const defsEl = document.getElementById('matchDefs');
+  if (!defsEl) return;
+  const shuffled = [...matchData].sort(() => Math.random() - 0.5);
+  defsEl.innerHTML = shuffled.map(d =>
+    `<button class="match-def" data-id="${d.id}" onclick="tapDef(this)">${d.def}</button>`
+  ).join('');
+}
+
+function tapTerm(btn) {
+  if (btn.classList.contains('matched')) return;
+  document.querySelectorAll('.match-term').forEach(t => t.classList.remove('selected'));
+  btn.classList.add('selected');
+  matchSelectedTerm = btn.dataset.id;
+}
+
+function tapDef(btn) {
+  if (!matchSelectedTerm) return;
+  if (btn.classList.contains('matched')) return;
+  if (btn.dataset.id === matchSelectedTerm) {
+    btn.classList.add('matched');
+    const termBtn = document.querySelector(`.match-term[data-id="${matchSelectedTerm}"]`);
+    if (termBtn) termBtn.classList.add('matched');
+    document.querySelectorAll('.match-term').forEach(t => t.classList.remove('selected'));
+    matchSelectedTerm = null;
+    matchedCount++;
+    const progress = document.querySelector('#matchProgress strong');
+    if (progress) progress.textContent = `${matchedCount} / 5`;
+    addXP(xpPerAction);
+    if (matchedCount === 5) {
+      const mp = document.getElementById('matchProgress');
+      if (mp) mp.innerHTML = '<p>✅ <strong>All 5 matched.</strong> You can read a river from its numbers AND its bugs. On Thursday (9 July) you\'ll do this for real.</p>';
+    }
+  } else {
+    btn.classList.add('wrong');
+    setTimeout(() => btn.classList.remove('wrong'), 400);
+  }
+}
+
+// ===== Expandable impact cards (slide 7) =====
+function toggleCard(card) {
+  const wasExpanded = card.classList.contains('expanded');
+  card.classList.toggle('expanded');
+  if (!wasExpanded) addXP(xpPerAction);
+}
+
+// ===== Init (data consts declared above are ready) =====
+setKoDate();
+initMatch();
+showSlide(1);
+
+// ===== Live poll (slide 6) =====
+let pollVotes = [0, 0, 0];
+let polled = false;
+function votePoll(btn, i) {
+  pollVotes[i]++;
+  const total = pollVotes.reduce((a, b) => a + b, 0);
+  for (let k = 0; k < 3; k++) {
+    const pct = total ? Math.round(pollVotes[k] / total * 100) : 0;
+    document.getElementById('pf' + k).style.width = pct + '%';
+    document.getElementById('pp' + k).textContent = pct + '%';
+  }
+  document.getElementById('pollTotal').textContent = total + (total === 1 ? ' vote in' : ' votes in');
+  btn.classList.add('voted');
+  if (!polled) { polled = true; addXP(xpPerAction); }
+}
+
+// ===== Word bank (slide 9) =====
+function tapWord(chip) {
+  chip.classList.toggle('claimed');
+  const claimed = document.querySelectorAll('#wordbank .word-chip.claimed').length;
+  document.getElementById('wbTracker').textContent = 'Key words ready: ' + claimed;
+  if (chip.classList.contains('claimed')) addXP(2);
+}
+
+// ===== Finish check (slide 9) =====
+function finishTier(btn) {
+  btn.disabled = true;
+  btn.textContent = '✓ Nice work — keep going if you can';
+  addXP(xpPerAction);
+}
+
+// ===== Calm mode: pause SVG motion if reduced-motion is preferred =====
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('svg').forEach(s => { try { s.pauseAnimations(); } catch (e) {} });
+}
+
+window.addEventListener('beforeprint', setKoDate);
+</script>
+</body>
+</html>

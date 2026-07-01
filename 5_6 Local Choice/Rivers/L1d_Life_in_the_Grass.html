@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1d · Life in the Grass — Sampling a Habitat</title>
+<style>
+:root {
+  --sky: #6E9DB8;
+  --sky-deep: #4A7891;
+  --cream: #F5F0E1;
+  --cream-light: #FAF7EC;
+  --earth: #8B6F47;
+  --earth-deep: #5C4A30;
+  --moss: #6B8E4E;
+  --moss-deep: #4C6837;
+  --magritte-red: #B33A3A;
+  --water: #2E7CB8;
+  --water-light: #B8DDF0;
+  --water-deep: #1A5485;
+  --sand: #E8D9B5;
+  --rock: #8A7A6A;
+  --ink: #1C1C1C;
+  --warn-yellow: #FFF4D6;
+  --warn-yellow-border: #C99A2E;
+  --sc-bg: #FFEDD5;
+  --sc-border: #F97316;
+  --aspire-bg: #DCFCE7;
+  --aspire-border: #16A34A;
+  --f-color: #16A34A;
+  --m-color: #F97316;
+  --h-color: #1E3A8A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* === Slides === */
+.slide {
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  flex-direction: column;
+  padding: 5vh 5vw 11vh;
+  position: relative;
+  border-top: 10px solid var(--sky-deep);
+  background: var(--cream);
+  overflow-y: auto;
+}
+.slide.ido { border-top-color: var(--water-deep); }
+.slide.wedo { border-top-color: var(--moss-deep); }
+.slide.independent { border-top-color: var(--earth-deep); }
+.slide.exit { border-top-color: var(--magritte-red); }
+.slide.bridge { border-top-color: var(--warn-yellow-border); }
+.slide.active {
+  display: flex;
+  animation: fadeInUp 0.55s ease-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Chrome === */
+.logo {
+  position: fixed;
+  top: 1.5vh;
+  right: 2vw;
+  font-family: Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--cream);
+  padding: 0.4em 0.9em;
+  border: 2px solid var(--ink);
+  z-index: 100;
+}
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: var(--water-deep);
+  z-index: 99;
+  transition: width 0.4s ease;
+}
+.xp-bar {
+  position: fixed;
+  top: 4px;
+  left: 0;
+  height: 3px;
+  background: var(--moss);
+  z-index: 99;
+  transition: width 0.6s ease-out;
+  width: 0%;
+}
+
+/* === Slide tag === */
+.slide-tag {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 0.4em 1em;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.2em;
+  align-self: flex-start;
+}
+.slide-tag.ido { background: var(--water-deep); }
+.slide-tag.wedo { background: var(--moss-deep); }
+.slide-tag.independent { background: var(--earth-deep); }
+.slide-tag.exit { background: var(--magritte-red); }
+.slide-tag.bridge { background: var(--warn-yellow-border); color: var(--ink); }
+
+/* === Typography === */
+h1 {
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  font-weight: bold;
+  line-height: 1.05;
+  margin-bottom: 0.3em;
+}
+h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  font-weight: bold;
+  line-height: 1.12;
+  margin-bottom: 0.55em;
+}
+h3 {
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: bold;
+  margin-bottom: 0.4em;
+}
+p, li { font-size: clamp(1rem, 1.55vw, 1.3rem); line-height: 1.5; margin-bottom: 0.5em; }
+
+/* === Hero === */
+.hero { text-align: center; padding-top: 3vh; position: relative; }
+.hero h1 { margin-bottom: 0.2em; }
+.hero .subtitle {
+  font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+  color: var(--earth-deep);
+  font-style: italic;
+  margin-bottom: 0.7em;
+}
+.hero .strap {
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  margin-bottom: 1em;
+}
+.icon-row {
+  display: flex;
+  justify-content: center;
+  gap: 2.2em;
+  margin: 1em 0 0.6em;
+}
+.icon-row .ico {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  animation: iconBounce 2.2s ease-in-out infinite;
+}
+.icon-row .ico:nth-child(2) { animation-delay: 0.25s; }
+.icon-row .ico:nth-child(3) { animation-delay: 0.5s; }
+.icon-row .ico:nth-child(4) { animation-delay: 0.75s; }
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+/* floating title dots */
+.title-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--water-light);
+  opacity: 0.5;
+  animation: dotFloat 6s ease-in-out infinite;
+}
+.title-dot:nth-child(1) { width: 14px; height: 14px; top: 8%; left: 12%; animation-delay: 0s; }
+.title-dot:nth-child(2) { width: 18px; height: 18px; top: 18%; right: 14%; animation-delay: 1.5s; }
+.title-dot:nth-child(3) { width: 10px; height: 10px; bottom: 18%; left: 18%; animation-delay: 3s; }
+.title-dot:nth-child(4) { width: 16px; height: 16px; bottom: 26%; right: 10%; animation-delay: 4.5s; }
+@keyframes dotFloat {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(8px); }
+}
+
+/* === Boxes === */
+.box {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1em 1.3em;
+  margin-bottom: 0.8em;
+  border-left: 8px solid var(--sky-deep);
+}
+.box.water { border-left-color: var(--water-deep); background: #EFF7FC; }
+.box.moss { border-left-color: var(--moss-deep); }
+.box.earth { border-left-color: var(--earth-deep); }
+.box.yellow { background: var(--warn-yellow); border-left-color: var(--warn-yellow-border); }
+.box ul { margin-left: 1.3em; margin-top: 0.3em; }
+
+.sc-box {
+  background: var(--sc-bg);
+  border: 2px solid var(--ink);
+  border-left: 8px solid var(--sc-border);
+  padding: 0.9em 1.2em;
+  margin-bottom: 0.7em;
+}
+.sc-box h3 { color: var(--sc-border); margin-bottom: 0.3em; }
+.sc-box ul { margin-left: 1.3em; }
+.sc-box li { font-size: 0.98rem; margin-bottom: 0.25em; }
+
+.aspire-box {
+  background: var(--aspire-bg);
+  border: 2px solid var(--ink);
+  border-left: 8px solid var(--aspire-border);
+  padding: 0.9em 1.2em;
+  margin-bottom: 0.7em;
+}
+.aspire-box h3 { color: var(--aspire-border); margin-bottom: 0.3em; }
+.aspire-box p { font-size: 1rem; }
+
+/* === Step-by-step reveal === */
+.step {
+  opacity: 0.15;
+  transition: opacity 0.5s, transform 0.5s;
+  margin-bottom: 0.7em;
+}
+.step.revealed { opacity: 1; transform: translateX(0); }
+.step.hidden { opacity: 0.15; pointer-events: none; }
+
+.reveal-btn {
+  background: var(--water-deep);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  padding: 0.5em 1.2em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin-top: 0.5em;
+  transition: all 0.2s;
+}
+.reveal-btn:hover { background: var(--water); transform: translateY(-2px); }
+.reveal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* === Two-col === */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; }
+
+/* === River SVG schematic === */
+.river-map {
+  width: 100%;
+  margin: 0.5em 0 0.8em;
+}
+.river-map svg {
+  width: 100%;
+  max-height: 34vh;
+  background: linear-gradient(180deg, #FAF7EC 0%, #E8F2F8 100%);
+  border: 2px solid var(--ink);
+  display: block;
+}
+
+/* === Match / drag === */
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.55em 0;
+  border-bottom: 1px dashed var(--earth);
+}
+.match-row .term {
+  flex: 0 0 32%;
+  font-weight: bold;
+  font-size: 1.05rem;
+  background: var(--water-light);
+  padding: 0.4em 0.8em;
+  border: 2px solid var(--water-deep);
+}
+.match-row .def {
+  flex: 1;
+  font-size: 0.98rem;
+  padding: 0.3em 0.6em;
+  background: var(--cream-light);
+  border: 1px dashed var(--earth);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.match-row .def.revealed { background: var(--moss); color: white; border-style: solid; }
+
+/* === Landmark cards (slide 6) === */
+.landmark-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  margin-top: 0.6em;
+}
+.landmark-card {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1.1em;
+  text-align: center;
+  position: relative;
+}
+.landmark-card .lm-ico { font-size: 2.5rem; margin-bottom: 0.2em; }
+.landmark-card h3 { margin-bottom: 0.3em; font-size: 1.15rem; }
+.landmark-card p { font-size: 0.95rem; line-height: 1.4; }
+.landmark-card .lm-tag {
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  background: var(--water-deep);
+  color: var(--cream);
+  padding: 0.15em 0.6em;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* === Independent tier blocks === */
+.tier-block {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 1em 1.2em;
+  margin-bottom: 0.6em;
+  border-left: 8px solid var(--f-color);
+  position: relative;
+}
+.tier-block.middle { border-left-color: var(--m-color); }
+.tier-block.higher { border-left-color: var(--h-color); }
+.tier-block .tier-label {
+  display: inline-block;
+  background: var(--f-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  padding: 0.2em 0.7em;
+  margin-bottom: 0.4em;
+  text-transform: uppercase;
+}
+.tier-block.middle .tier-label { background: var(--m-color); }
+.tier-block.higher .tier-label { background: var(--h-color); }
+.tier-block .question { font-size: 1.02rem; line-height: 1.4; }
+.tier-block .stem {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--earth-deep);
+  margin-top: 0.4em;
+}
+
+.hint-btn {
+  background: var(--earth);
+  color: white;
+  border: none;
+  padding: 0.35em 0.8em;
+  font-size: 0.78rem;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  margin-top: 0.4em;
+  border-radius: 0;
+}
+.hint-btn:hover { background: var(--earth-deep); }
+.hint-text {
+  display: none;
+  background: var(--warn-yellow);
+  border-left: 4px solid var(--warn-yellow-border);
+  padding: 0.5em 0.8em;
+  margin-top: 0.4em;
+  font-size: 0.92rem;
+}
+.hint-text.shown { display: block; }
+
+/* === MCQ === */
+.mcq-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+.mcq-opt {
+  background: var(--cream-light);
+  border: 2px solid var(--ink);
+  padding: 0.7em 1em;
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+.mcq-opt:hover { background: var(--water-light); }
+.mcq-opt.correct { background: var(--moss); color: white; pointer-events: none; }
+.mcq-opt.wrong { background: #F5C2C0; pointer-events: none; opacity: 0.6; }
+.mcq-feedback {
+  margin-top: 0.5em;
+  padding: 0.6em 0.9em;
+  font-size: 0.95rem;
+  display: none;
+}
+.mcq-feedback.shown { display: block; }
+.mcq-feedback.correct { background: #DCFCE7; border-left: 4px solid var(--moss); }
+.mcq-feedback.wrong { background: #FFE4E4; border-left: 4px solid var(--magritte-red); }
+
+/* === Bridge === */
+.bridge-prompt {
+  background: var(--warn-yellow);
+  border: 3px dashed var(--warn-yellow-border);
+  padding: 1.4em;
+  margin: 0.8em 0;
+  text-align: center;
+}
+.bridge-prompt h3 {
+  color: var(--warn-yellow-border);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4em;
+}
+.bridge-prompt .prompt { font-size: 1.2rem; font-weight: bold; font-style: italic; }
+
+/* === LO checks === */
+.lo-list { list-style: none; margin-top: 0.6em; }
+.lo-list li {
+  padding: 0.8em 0 0.8em 3.3em;
+  position: relative;
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  border-bottom: 1px solid var(--earth);
+}
+.lo-list li .check {
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 2.3em;
+  height: 2.3em;
+  border: 3px solid var(--moss-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--moss-deep);
+  font-weight: bold;
+  opacity: 0;
+  transform: scale(0.5);
+}
+.lo-list li.checked .check { animation: checkPop 0.55s ease-out forwards; }
+@keyframes checkPop {
+  0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+  60% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* === Navigation === */
+nav.controls {
+  position: fixed;
+  bottom: 2vh;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw;
+  z-index: 100;
+  pointer-events: none;
+}
+nav.controls button {
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 0.6em 1.3em;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  pointer-events: auto;
+  transition: background 0.2s;
+}
+nav.controls button:hover { background: var(--water-deep); }
+nav.controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+.slide-counter {
+  position: fixed;
+  bottom: 2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  color: var(--earth-deep);
+  background: var(--cream);
+  padding: 0.3em 1em;
+  border: 1px solid var(--ink);
+  z-index: 100;
+}
+
+/* === Utility buttons === */
+.util-btn {
+  position: fixed;
+  border: none;
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  z-index: 100;
+  padding: 0.5em 1em;
+}
+.ta-focus-btn { bottom: 8vh; right: 2vw; background: var(--moss-deep); }
+.cold-call-btn { bottom: 8vh; right: 11vw; background: var(--water-deep); }
+.print-link { top: 1.5vh; left: 2vw; background: var(--earth-deep); }
+.util-btn:hover { filter: brightness(1.15); }
+
+/* === Modals === */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--cream-light);
+  border: 3px solid var(--ink);
+  border-top: 12px solid var(--moss-deep);
+  padding: 1.7em 1.9em;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: fadeInUp 0.3s ease-out;
+}
+.modal.cold-call { border-top-color: var(--water-deep); }
+.modal h3 { color: var(--moss-deep); margin-bottom: 0.4em; font-size: 1.45rem; }
+.modal.cold-call h3 { color: var(--water-deep); }
+.modal .tag {
+  display: inline-block;
+  background: var(--moss-deep);
+  color: var(--cream);
+  font-size: 0.68rem;
+  padding: 0.22em 0.85em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.7em;
+  font-weight: bold;
+}
+.modal.cold-call .tag { background: var(--water-deep); }
+.modal ul { margin-left: 1.3em; }
+.modal li { margin-bottom: 0.4em; font-size: 1rem; line-height: 1.4; }
+.modal-close {
+  margin-top: 1.3em;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 0.55em 1.3em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+.cold-call-pupil {
+  background: var(--water-deep);
+  color: var(--cream);
+  padding: 1em;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.8em;
+  letter-spacing: 0.05em;
+}
+.cold-call-q {
+  background: var(--cream);
+  border-left: 6px solid var(--ink);
+  padding: 0.8em 1em;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+.cold-call-tier {
+  display: inline-block;
+  padding: 0.15em 0.7em;
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4em;
+  color: white;
+}
+.cold-call-tier.f { background: var(--f-color); }
+.cold-call-tier.m { background: var(--m-color); }
+.cold-call-tier.h { background: var(--h-color); }
+.cc-reroll {
+  background: var(--earth);
+  color: white;
+  border: none;
+  padding: 0.45em 1em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.4em;
+  font-size: 0.85rem;
+}
+
+/* === Completion overlay === */
+.completion {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 120, 145, 0.92);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+}
+.completion.shown { display: flex; animation: fadeInUp 0.6s ease-out; }
+.completion h1 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 0.3em; }
+.completion p { font-size: 1.3rem; margin-bottom: 1.5em; }
+.completion button {
+  background: var(--cream);
+  color: var(--ink);
+  border: none;
+  padding: 0.7em 1.6em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  z-index: 301;
+  pointer-events: none;
+  animation: confetti-fall 3s linear forwards;
+}
+@keyframes confetti-fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* === Print === */
+#print-area { display: none; }
+
+@media (max-width: 640px) {
+  .slide { padding: 7vh 5vw 14vh; }
+  .icon-row { gap: 1em; }
+  .two-col, .three-col, .landmark-grid { grid-template-columns: 1fr; }
+  .mcq-options { grid-template-columns: 1fr; }
+  nav.controls button { padding: 0.5em 0.85em; font-size: 0.8rem; }
+  .slide-counter { font-size: 0.7rem; padding: 0.22em 0.7em; }
+  .ta-focus-btn, .cold-call-btn { font-size: 0.72rem; padding: 0.42em 0.8em; }
+  .ta-focus-btn { bottom: 9vh; right: 2vw; }
+  .cold-call-btn { bottom: 9vh; right: 38vw; }
+  .print-link { font-size: 0.68rem; padding: 0.32em 0.7em; }
+  .logo { font-size: 0.65rem; padding: 0.28em 0.65em; }
+  .river-map svg { max-height: 28vh; }
+  .match-row { flex-direction: column; align-items: stretch; gap: 0.3em; }
+  .match-row .term, .match-row .def { flex: 1; }
+}
+
+@media print {
+  body { overflow: visible; background: white; }
+  .slide, nav.controls, .logo, .progress-bar, .xp-bar, .util-btn,
+  .slide-counter, .modal-backdrop, .completion { display: none !important; }
+  #print-area { display: block; }
+  .print-doc {
+    page-break-after: always;
+    padding: 1.1cm 1.4cm;
+    font-family: Georgia, serif;
+    color: black;
+    background: white;
+  }
+  .print-doc:last-child { page-break-after: auto; }
+  .print-doc h1 {
+    font-size: 1.55rem;
+    border-bottom: 2.5px solid black;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.5em;
+  }
+  .print-doc h2 {
+    font-size: 1.1rem;
+    margin-top: 0.85em;
+    margin-bottom: 0.3em;
+  }
+  .print-doc h3 { font-size: 0.95rem; margin-bottom: 0.2em; }
+  .print-doc p, .print-doc li { font-size: 0.88rem; line-height: 1.4; margin-bottom: 0.35em; }
+  .print-doc .meta-line { font-size: 0.85rem; margin-bottom: 0.7em; border-bottom: 1px dashed #888; padding-bottom: 0.5em; }
+  .ko-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8em;
+    margin-bottom: 0.6em;
+  }
+  .ko-cell {
+    border: 1px solid black;
+    padding: 0.5em 0.7em;
+    page-break-inside: avoid;
+  }
+  .ko-cell strong { display: block; font-size: 0.95rem; margin-bottom: 0.2em; }
+  .sc-checklist { margin: 0.5em 0; }
+  .sc-checklist li { list-style: none; padding-left: 1.4em; position: relative; margin-bottom: 0.3em; }
+  .sc-checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid black;
+  }
+  .quiz-q {
+    border-left: 3px solid black;
+    padding: 0.3em 0.7em;
+    margin-bottom: 0.45em;
+    page-break-inside: avoid;
+  }
+  .quiz-q strong { font-size: 0.92rem; }
+  .quiz-q .ans-line { display: block; border-bottom: 1px solid #888; margin-top: 0.3em; min-height: 1em; }
+  .do-note { font-size: 0.8rem; font-style: italic; color: #333; margin-bottom: 0.5em; }
+  .tf-list { margin: 0.3em 0 0.5em; }
+  .tf-list .tf-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted #999; padding: 0.28em 0; font-size: 0.86rem; }
+  .tf-list .tf-row .tf { white-space: nowrap; font-weight: bold; letter-spacing: 0.12em; }
+  .tick-list { margin: 0.3em 0 0.5em; }
+  .tick-list li { list-style: none; padding-left: 1.4em; position: relative; margin-bottom: 0.28em; font-size: 0.86rem; }
+  .tick-list li::before { content: ''; position: absolute; left: 0; top: 3px; width: 12px; height: 12px; border: 1.5px solid black; }
+  .q-block { page-break-inside: avoid; margin-bottom: 0.6em; border-top: 1px dashed #999; padding-top: 0.5em; }
+  .q-block .q { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.25em; }
+  .q-tier { font-size: 0.68rem; letter-spacing: 0.05em; border: 1px solid black; padding: 0.02em 0.4em; }
+  .wordbox { border: 1px dashed black; padding: 0.35em 0.7em; margin: 0.3em 0; font-size: 0.84rem; }
+  .wordbox b { display: block; font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.1em; }
+  .stem { font-size: 0.86rem; margin: 0.3em 0 0.12em; }
+  .lines { border: 1px solid black; background: repeating-linear-gradient(0deg, transparent, transparent 21px, #ccc 22px); }
+  .examiner { border-left: 4px solid black; background: #eee; padding: 0.35em 0.7em; font-size: 0.8rem; margin: 0.35em 0; }
+  .key-fact {
+    background: #f5f5f5;
+    padding: 0.4em 0.6em;
+    margin-bottom: 0.3em;
+    font-size: 0.85rem;
+    border-left: 3px solid black;
+  }
+}
+
+/* === Interactive landmarks (slide 4) === */
+.landmark {
+  transition: filter 0.3s, opacity 0.3s;
+  cursor: pointer;
+}
+.landmark:hover { filter: brightness(1.15) drop-shadow(0 0 4px rgba(46, 124, 184, 0.4)); }
+.landmark.discovered { filter: drop-shadow(0 0 6px #4C6837); }
+.landmark.discovered .tap-me { display: none; }
+.landmark .tap-me { animation: tapPulse 1.6s ease-in-out infinite; }
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* === Matching game (slide 5) === */
+.match-game {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
+  margin-top: 0.5em;
+}
+.match-terms { display: flex; flex-direction: column; gap: 0.4em; }
+.match-term {
+  background: var(--water-light);
+  border: 2px solid var(--water-deep);
+  padding: 0.6em 0.8em;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.match-term:hover:not(.matched) { background: var(--water); color: white; }
+.match-term.selected {
+  background: var(--water-deep);
+  color: white;
+  transform: scale(1.04);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+.match-term.matched {
+  background: var(--moss);
+  color: white;
+  border-color: var(--moss-deep);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.match-defs { display: flex; flex-direction: column; gap: 0.4em; }
+.match-def {
+  background: var(--cream-light);
+  border: 2px solid var(--earth);
+  padding: 0.55em 0.85em;
+  font-family: Georgia, serif;
+  font-size: 0.97rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  line-height: 1.35;
+}
+.match-def:hover:not(.matched) { background: white; border-color: var(--water-deep); }
+.match-def.matched {
+  background: var(--moss);
+  color: white;
+  border-color: var(--moss-deep);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.match-def.wrong { animation: shake 0.4s; background: #F5C2C0; border-color: var(--magritte-red); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* === Expandable landmark cards (slide 7) === */
+.landmark-card { cursor: pointer; transition: all 0.25s; }
+.landmark-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.landmark-card .tap-hint {
+  font-size: 0.78rem;
+  color: var(--water-deep);
+  font-weight: bold;
+  margin-top: 0.4em;
+  animation: tapPulse 1.6s ease-in-out infinite;
+}
+.landmark-card .more {
+  display: none;
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+  border-top: 1px dashed var(--earth);
+  font-size: 0.88rem;
+  color: var(--earth-deep);
+  text-align: left;
+}
+.landmark-card.expanded { background: #EFF7FC; }
+.landmark-card.expanded .more { display: block; animation: fadeInUp 0.3s ease-out; }
+.landmark-card.expanded .tap-hint { display: none; }
+
+@media (max-width: 640px) {
+  .match-game { grid-template-columns: 1fr; }
+  .match-term { font-size: 0.95rem; padding: 0.5em 0.7em; }
+  .match-def { font-size: 0.88rem; padding: 0.45em 0.7em; }
+}
+/* ============================================================
+   ENGAGEMENT UPGRADES (v2) — river anim · poll · video · word-bank
+   ============================================================ */
+/* Animated river ribbon (hero) */
+.river-anim { max-width: 900px; margin: 1.3em auto 0.2em; }
+.river-anim svg { width: 100%; height: auto; display: block; }
+.river-flow { stroke-dasharray: 10 14; animation: riverFlow 2.4s linear infinite; }
+@keyframes riverFlow { to { stroke-dashoffset: -48; } }
+.river-cap { font: 700 12px system-ui, sans-serif; fill: var(--water-deep); letter-spacing: .04em; }
+.river-label { font: 600 12px system-ui, sans-serif; fill: var(--earth-deep); }
+
+/* Live class poll */
+.poll { max-width: 760px; margin: 0.5em auto 0; }
+.poll-row { display: flex; align-items: center; gap: .7em; margin: .55em 0; }
+.poll-btn {
+  flex: 0 0 auto; min-width: 150px; padding: .8em 1em; border: none; border-radius: 12px;
+  background: var(--water); color: #fff; font-weight: 800; font-size: 1rem; cursor: pointer;
+  transition: transform .12s, filter .12s; text-align: left; line-height: 1.15;
+}
+.poll-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.poll-btn:active { transform: scale(.97); }
+.poll-btn.voted { outline: 3px solid var(--warn-yellow-border); }
+.poll-btn .pb-sub { display: block; font-weight: 500; font-size: .76rem; opacity: .92; margin-top: .15em; }
+.poll-track { flex: 1 1 auto; background: var(--sand); border-radius: 999px; height: 32px; overflow: hidden; position: relative; }
+.poll-fill { height: 100%; width: 0%; border-radius: 999px; background: var(--moss); transition: width .6s cubic-bezier(.22,1,.36,1); }
+.poll-row:nth-child(2) .poll-fill { background: var(--water-deep); }
+.poll-row:nth-child(3) .poll-fill { background: var(--earth); }
+.poll-pct { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: .9rem; color: var(--ink); }
+.poll-total { text-align: center; font-weight: 700; color: var(--earth-deep); margin-top: .45em; }
+
+/* Watch-it-for-real video */
+.video-wrap { max-width: 880px; margin: .3em auto 0; }
+.video-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 3px solid var(--water-deep); background: #000; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-fallback { display: flex; flex-wrap: wrap; gap: .6em; justify-content: center; margin-top: .7em; }
+.video-out { display: inline-block; padding: .7em 1.2em; background: var(--magritte-red); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 700; }
+.video-out.alt { background: var(--earth-deep); }
+.video-out:hover { filter: brightness(1.08); }
+
+/* Tappable word bank (independent) */
+.wordbank { display: flex; flex-wrap: wrap; gap: .5em; margin: .3em 0 .2em; }
+.word-chip {
+  padding: .55em .85em; border-radius: 999px; border: 2px solid var(--water-deep);
+  background: #fff; color: var(--water-deep); font-weight: 700; cursor: pointer; font-size: .95rem;
+  transition: transform .1s, background .15s, color .15s;
+}
+.word-chip:hover { transform: translateY(-1px); }
+.word-chip.claimed { background: var(--moss); border-color: var(--moss-deep); color: #fff; }
+.wb-tracker { text-align: center; font-weight: 800; color: var(--moss-deep); margin: .3em 0 .5em; }
+.finish-btn {
+  display: block; margin: .8em auto 0; padding: .8em 1.6em; border: none; border-radius: 12px;
+  background: var(--moss-deep); color: #fff; font-weight: 800; font-size: 1.05rem; cursor: pointer;
+  transition: transform .12s, filter .12s;
+}
+.finish-btn:hover { filter: brightness(1.08); }
+.finish-btn:active { transform: scale(.97); }
+.finish-btn:disabled { opacity: .6; cursor: default; transform: none; }
+
+/* Postcard finisher */
+.postcard { border: 2px dashed var(--earth); border-radius: 14px; padding: .9em 1em; background: var(--cream-light); margin-top: .4em; }
+.pc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .6em; }
+.pc-pick { background: #fff; border: 2px solid var(--sand); border-radius: 10px; padding: .7em; cursor: pointer; transition: border .15s, transform .1s; font-size: .92rem; }
+.pc-pick:hover { transform: translateY(-1px); }
+.pc-pick.on { border-color: var(--moss); background: #f1f8ec; }
+.pc-pick strong { display: block; font-size: .72rem; letter-spacing: .03em; color: var(--earth-deep); margin-bottom: .25em; }
+
+/* Calm / reduced-motion — freezes all motion for SEMH-safe delivery */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .river-flow { stroke-dasharray: none; }
+}
+/* Mobile */
+@media (max-width: 640px) {
+  .pc-grid { grid-template-columns: 1fr; }
+  .poll-btn { min-width: 120px; font-size: .9rem; padding: .65em .7em; }
+  .poll-row { gap: .5em; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width: 12%"></div>
+<div class="xp-bar" id="xpBar"></div>
+<div class="logo">Progress Schools</div>
+<button class="util-btn print-link" onclick="window.print()">🖨 Print pack</button>
+
+<!-- ========== SLIDE 1: TITLE HERO ========== -->
+<section class="slide active hero" data-slide="1">
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <span class="title-dot"></span>
+  <div style="height: 4vh"></div>
+  <h1>Life in the Grass</h1>
+  <div class="subtitle">Look closer. Breathe slower.</div>
+  <div class="strap">L1d · Year 10 · Outdoor Ed &amp; Wellbeing<br><strong>Afternoon session · Thu 9 July · Portrack Marsh</strong></div>
+  <div class="icon-row">
+    <div class="ico">🌱</div>
+    <div class="ico">🔲</div>
+    <div class="ico">🦋</div>
+    <div class="ico">🌼</div>
+  </div>
+
+  <div class="river-anim" role="img" aria-label="A calm meadow with swaying grass and a butterfly">
+    <svg viewBox="0 0 900 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="96" width="900" height="24" fill="var(--moss)" opacity="0.35"/>
+      <g stroke="var(--moss-deep)" stroke-width="3" stroke-linecap="round" fill="none">
+        <path d="M60 100 q -6 -34 4 -50"><animateTransform attributeName="transform" type="rotate" values="-3 60 100; 3 60 100; -3 60 100" dur="5s" repeatCount="indefinite"/></path>
+        <path d="M150 100 q 6 -30 -3 -48"><animateTransform attributeName="transform" type="rotate" values="3 150 100; -3 150 100; 3 150 100" dur="6s" repeatCount="indefinite"/></path>
+        <path d="M250 100 q -5 -38 5 -54"><animateTransform attributeName="transform" type="rotate" values="-3 250 100; 3 250 100; -3 250 100" dur="5.5s" repeatCount="indefinite"/></path>
+        <path d="M660 100 q 5 -32 -4 -50"><animateTransform attributeName="transform" type="rotate" values="3 660 100; -3 660 100; 3 660 100" dur="5.2s" repeatCount="indefinite"/></path>
+        <path d="M760 100 q -6 -36 4 -52"><animateTransform attributeName="transform" type="rotate" values="-3 760 100; 3 760 100; -3 760 100" dur="6.2s" repeatCount="indefinite"/></path>
+        <path d="M840 100 q 5 -28 -3 -44"><animateTransform attributeName="transform" type="rotate" values="3 840 100; -3 840 100; 3 840 100" dur="5.8s" repeatCount="indefinite"/></path>
+      </g>
+      <circle cx="360" cy="70" r="4" fill="var(--sand-deep)"/><circle cx="360" cy="70" r="9" fill="none" stroke="var(--earth)" stroke-width="2"/>
+      <circle cx="470" cy="60" r="4" fill="var(--magritte-red)"/><circle cx="470" cy="60" r="9" fill="none" stroke="var(--earth)" stroke-width="2"/>
+      <g>
+        <text x="560" y="55" font-size="20">🦋</text>
+        <animateMotion dur="9s" repeatCount="indefinite" path="M 0 0 q 40 -20 80 0 q 40 20 80 0 q 40 -20 80 0"/>
+      </g>
+    </svg>
+  </div>
+
+  <div style="max-width: 900px; margin: 1em auto 0; text-align: left;">
+    <div class="sc-box">
+      <h3>Success criteria · I will...</h3>
+      <ul>
+        <li>Name how scientists sample a habitat (quadrat, transect).</li>
+        <li>Say why we sample instead of counting everything.</li>
+        <li>Notice the living things around me — and how being outside feels.</li>
+      </ul>
+    </div>
+    <div class="aspire-box">
+      <h3>🌟 Aspire</h3>
+      <p>Explain why one patch of grass has <strong>more kinds of plant</strong> than another — and why that matters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 2: ARRIVAL ========== -->
+<section class="slide" data-slide="2">
+  <span class="slide-tag">Arrival · 🌱 2 min</span>
+  <h2>One step of grass. How many different plants?</h2>
+  <p>Picture a patch of meadow the size of one footstep. How many <em>different types</em> of plant do you think live in it?</p>
+  <div class="box moss">
+    <h3>Have a guess.</h3>
+    <p>1? 5? 10? 20? Write your number down — no wrong answers.</p>
+  </div>
+  <button class="reveal-btn" onclick="revealAnswer(this, 'arrival-reveal')">Show the answer</button>
+  <div id="arrival-reveal" class="box yellow" style="display: none; margin-top: 0.8em;">
+    <p>🌼 A healthy meadow can have <strong>20–40 different plants</strong> in a single square metre.</p>
+    <p style="margin-top: 0.4em;"><em>More kinds of plant = more insects, more birds, more life. That variety has a name: <strong>biodiversity</strong>.</em></p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 3: I DO · HOW WE SAMPLE (tap each method) ========== -->
+<section class="slide ido" data-slide="3">
+  <span class="slide-tag ido">I do · 🔲 4 min</span>
+  <h2>How do you count a whole field? You don't.</h2>
+  <p>You <strong>sample</strong> — small bits, done fairly. Tap each method. <strong>Learned: <span id="landmarkCounter">0 / 4</span></strong></p>
+
+  <div class="river-map">
+    <svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" aria-label="Interactive: how to sample a habitat">
+      <rect x="10" y="14" width="880" height="212" rx="12" fill="#EAF0E2" stroke="#6B8E4E" stroke-width="2"/>
+
+      <g class="landmark" data-id="quadrat" onclick="tapLandmark('quadrat')">
+        <rect x="60" y="34" width="360" height="82" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="110" y="82" text-anchor="middle" font-size="30">🔲</text>
+        <text x="255" y="68" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="bold" fill="#1C1C1C">Quadrat</text>
+        <text class="tap-me" x="255" y="98" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <g class="landmark" data-id="random" onclick="tapLandmark('random')">
+        <rect x="480" y="34" width="360" height="82" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="530" y="82" text-anchor="middle" font-size="30">🎲</text>
+        <text x="680" y="68" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="bold" fill="#1C1C1C">Random sampling</text>
+        <text class="tap-me" x="680" y="98" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <g class="landmark" data-id="transect" onclick="tapLandmark('transect')">
+        <rect x="60" y="132" width="360" height="82" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="110" y="180" text-anchor="middle" font-size="30">📏</text>
+        <text x="255" y="166" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="bold" fill="#1C1C1C">Transect</text>
+        <text class="tap-me" x="255" y="196" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+      <g class="landmark" data-id="key" onclick="tapLandmark('key')">
+        <rect x="480" y="132" width="360" height="82" rx="10" fill="#FFF" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="530" y="180" text-anchor="middle" font-size="30">🔑</text>
+        <text x="680" y="166" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="bold" fill="#1C1C1C">ID key / spotter sheet</text>
+        <text class="tap-me" x="680" y="196" text-anchor="middle" font-family="Georgia" font-size="10" fill="#B33A3A" font-weight="bold">👆 tap</text>
+      </g>
+    </svg>
+  </div>
+
+  <div id="landmarkInfo" class="box moss">
+    <p style="color: var(--earth-deep); font-style: italic; margin: 0;">👆 Tap each method. Find all 4 — that's the whole sampling toolkit.</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 4: WE DO · MATCHING GAME ========== -->
+<section class="slide wedo" data-slide="4">
+  <span class="slide-tag wedo">We do · 🔗 3 min</span>
+  <h2>Match each word to its meaning.</h2>
+  <p>Tap a <strong>word</strong> on the left, then its <strong>meaning</strong> on the right. Wrong = shake. Right = locked.</p>
+
+  <div class="match-game">
+    <div class="match-terms">
+      <button class="match-term" data-id="quadrat" onclick="tapTerm(this)">Quadrat</button>
+      <button class="match-term" data-id="transect" onclick="tapTerm(this)">Transect</button>
+      <button class="match-term" data-id="random" onclick="tapTerm(this)">Random sampling</button>
+      <button class="match-term" data-id="biodiversity" onclick="tapTerm(this)">Biodiversity</button>
+      <button class="match-term" data-id="species" onclick="tapTerm(this)">Species</button>
+    </div>
+    <div class="match-defs" id="matchDefs"><!-- populated by initMatch() --></div>
+  </div>
+
+  <div id="matchProgress" class="box yellow" style="margin-top: 0.8em;">
+    <p>📌 Matched: <strong>0 / 5</strong></p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 5: NOTICE & BREATHE (wellbeing core) ========== -->
+<section class="slide" data-slide="5">
+  <span class="slide-tag">Notice &amp; breathe · 🍃 4 min</span>
+  <h2>Now — just notice.</h2>
+  <p>Scientists observe. So do calm minds. This one's for both. Go at your own pace — <strong>you don't have to share anything.</strong></p>
+
+  <div class="two-col" style="align-items:center;">
+    <div class="box" style="text-align:center;">
+      <svg viewBox="0 0 200 150" width="180" height="135" xmlns="http://www.w3.org/2000/svg" aria-label="A slow breathing circle">
+        <circle cx="100" cy="75" r="26" fill="var(--moss)" opacity="0.35">
+          <animate attributeName="r" values="26;54;54;26;26" keyTimes="0;0.33;0.5;0.83;1" dur="10s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.30;0.55;0.55;0.30;0.30" keyTimes="0;0.33;0.5;0.83;1" dur="10s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="100" cy="75" r="6" fill="var(--moss-deep)"/>
+      </svg>
+      <p style="margin-top:.4em; font-style:italic; color:var(--moss-deep);"><strong>Breathe in… 4</strong> · hold · <strong>out… 6</strong></p>
+    </div>
+    <div class="box moss">
+      <h3>Notice, one at a time</h3>
+      <ul style="margin-left: 1.2em; line-height:1.7;">
+        <li>👀 <strong>5</strong> things you can see</li>
+        <li>👂 <strong>4</strong> things you can hear</li>
+        <li>✋ <strong>3</strong> things you can feel</li>
+        <li>👃 <strong>2</strong> things you can smell</li>
+        <li>🌬️ <strong>1</strong> slow breath</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box water" style="margin-top:.6em;">
+    <p>Being in green space can help us feel <strong>calmer and less stressed</strong> — that's real, and it's free. You can do this noticing any time you're somewhere green.</p>
+  </div>
+</section>
+
+<!-- ========== SLIDE 6: I DO · HUMAN IMPACT (cards) ========== -->
+<section class="slide ido" data-slide="6">
+  <span class="slide-tag ido">I do · 👣 3 min</span>
+  <h2>Our footprints — and our care.</h2>
+  <p>People change a grassland two ways. <strong>Tap each card.</strong></p>
+  <div class="landmark-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="landmark-card" onclick="toggleCard(this)">
+      <span class="lm-tag">Harm</span>
+      <div class="lm-ico">👣</div>
+      <h3>The worn path</h3>
+      <p>Walking the same line squashes the soil and kills the plants — that's how bare paths form. Litter and dog mess harm it too.</p>
+      <div class="tap-hint">👆 Tap for did-you-know</div>
+      <div class="more"><strong>Did you know?</strong> Even one walk off the path through a meadow can leave a mark that lasts for weeks. That's why we stick to the paths.</div>
+    </div>
+    <div class="landmark-card" onclick="toggleCard(this)">
+      <span class="lm-tag">Care</span>
+      <div class="lm-ico">🌾</div>
+      <h3>How it's looked after</h3>
+      <p>The Wildlife Trust cuts or grazes the grassland at the right time, and leaves some areas wild — so lots of different species survive.</p>
+      <div class="tap-hint">👆 Tap for did-you-know</div>
+      <div class="more"><strong>Did you know?</strong> A meadow cut too often — or never — loses its variety. It needs the <em>right</em> care. Look after it, and it fills with orchids, insects and birds.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 7: INDEPENDENT ========== -->
+<section class="slide independent" data-slide="7">
+  <span class="slide-tag independent">Independent · ✍️ 4 min</span>
+  <h2>Your turn — pick your tier.</h2>
+  <p style="margin-bottom: .4em;">First — <strong>tap the words you'll try to use.</strong> They turn green when claimed.</p>
+  <div class="wordbank" id="wordbank">
+    <span class="word-chip" onclick="tapWord(this)">quadrat</span>
+    <span class="word-chip" onclick="tapWord(this)">transect</span>
+    <span class="word-chip" onclick="tapWord(this)">random sampling</span>
+    <span class="word-chip" onclick="tapWord(this)">biodiversity</span>
+    <span class="word-chip" onclick="tapWord(this)">species</span>
+    <span class="word-chip" onclick="tapWord(this)">trampling</span>
+    <span class="word-chip" onclick="tapWord(this)">meadow</span>
+  </div>
+  <div class="wb-tracker" id="wbTracker">Key words ready: 0</div>
+
+  <div class="tier-block">
+    <span class="tier-label">F · Foundation</span>
+    <div class="question"><strong>Q1.</strong> Draw a quadrat and write down what you'd count inside it. Name <em>two</em> plants you might find.</div>
+    <div class="stem">Stem: "Inside my quadrat I would count __________. Two plants I might find are __________ and __________."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">A quadrat is a square frame. Think: grass, daisy, clover, buttercup, dandelion, plantain.</div>
+  </div>
+
+  <div class="tier-block middle">
+    <span class="tier-label">M · Middle</span>
+    <div class="question"><strong>Q2.</strong> One patch of meadow had 20 kinds of plant. A worn path had just 3. <em>Explain why.</em></div>
+    <div class="stem">Stem: "The path had fewer kinds of plant because... The meadow had more because..."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">Think about trampling: what does walking on the same spot over and over do to the plants and soil?</div>
+  </div>
+
+  <div class="tier-block higher">
+    <span class="tier-label">H · Higher</span>
+    <div class="question"><strong>Q3.</strong> Explain why scientists <em>sample small squares</em> instead of counting every plant in the whole field.</div>
+    <div class="stem">Stem: "We sample instead of counting everything because... To keep it fair, we..."</div>
+    <button class="hint-btn" onclick="toggleHint(this)">Hint?</button>
+    <div class="hint-text">Counting a whole field would take forever. Random samples give a fair picture without the impossible job.</div>
+  </div>
+
+  <button class="finish-btn" onclick="finishTier(this)">✓ I've finished my tier</button>
+
+  <div class="aspire-box" style="margin-top: .8em;">
+    <h3>🌟 Finished? A quiet reflection.</h3>
+    <p>Only share if you want to. Tap to lock your choices:</p>
+    <div class="postcard">
+      <div class="pc-grid">
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>ONE THING I NOTICED</strong>A sound, a colour, a creature — anything.</div>
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>A GREEN PLACE NEAR ME</strong>Somewhere I could go to notice again.</div>
+        <div class="pc-pick" onclick="this.classList.toggle('on')"><strong>WHEN OUTSIDE HELPS</strong>A time being outdoors made me feel a bit better.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 8: LO COMPLETE / REFLECTION ========== -->
+<section class="slide" data-slide="8">
+  <span class="slide-tag">Done</span>
+  <h2>Today, you've ticked:</h2>
+  <ul class="lo-list" id="loList">
+    <li data-delay="250"><span class="check">✓</span>Named how we sample a habitat — <strong>quadrat, transect</strong>.</li>
+    <li data-delay="750"><span class="check">✓</span>Said <strong>why</strong> we sample instead of counting everything.</li>
+    <li data-delay="1250"><span class="check">✓</span>Noticed the living things around me — and <strong>how being outside feels</strong>.</li>
+  </ul>
+  <div class="box moss" style="margin-top: 1.4em;">
+    <h3>That's your trip prep done.</h3>
+    <p>Thursday: the <strong>river</strong> in the morning, the <strong>grassland</strong> in the afternoon. Look closely. Breathe slowly.</p>
+    <p style="margin-top:.5em;"><strong>It's your river, and your green space. Look after the place — and yourself.</strong></p>
+  </div>
+</section>
+
+<nav class="controls">
+  <button id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+  <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</nav>
+
+<div class="slide-counter" id="slideCounter">1 / 8</div>
+<button class="util-btn ta-focus-btn" onclick="openTaFocus()">👁 TA Focus</button>
+<button class="util-btn cold-call-btn" onclick="openColdCall()">🎲 Cold Call</button>
+
+<!-- TA FOCUS MODAL -->
+<div class="modal-backdrop" id="taModal" onclick="if(event.target===this) closeTaFocus()">
+  <div class="modal">
+    <span class="tag">TA Focus · This slide</span>
+    <h3 id="taTitle">—</h3>
+    <div id="taBody"></div>
+    <button class="modal-close" onclick="closeTaFocus()">Close</button>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL -->
+<div class="modal-backdrop" id="ccModal" onclick="if(event.target===this) closeColdCall()">
+  <div class="modal cold-call">
+    <span class="tag">Cold call · random pupil</span>
+    <div class="cold-call-pupil" id="ccPupil">—</div>
+    <span class="cold-call-tier" id="ccTier">Tier</span>
+    <div class="cold-call-q" id="ccQuestion">—</div>
+    <div style="margin-top: 1em;">
+      <button class="cc-reroll" onclick="rollColdCall()">🎲 Re-roll</button>
+      <button class="modal-close" onclick="closeColdCall()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION OVERLAY -->
+<div class="completion" id="completion">
+  <h1>🍃 Well done.</h1>
+  <p>You're ready for Thursday. Look after the place — and yourself.</p>
+  <button onclick="hideCompletion()">Close</button>
+</div>
+
+<!-- ========== PRINT AREA: PUPIL PACK ========== -->
+<section id="print-area">
+  <!-- Do Now -->
+  <div class="print-doc">
+    <h1>L1d · Do Now — While You Settle In</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:180px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span style="display:inline-block; min-width:90px; border-bottom:1px solid black;">&nbsp;</span>
+    </div>
+    <p class="do-note">Settle in quietly. No phones. We'll begin in a few minutes.</p>
+
+    <h2>1 · Have a guess</h2>
+    <p>How many <strong>different plants</strong> do you think live in one footstep-sized patch of meadow? Write your number.</p>
+    <div class="lines" style="height:34px;"></div>
+
+    <h2>2 · True or false?</h2>
+    <p style="font-size:0.84rem;">Circle <strong>T</strong> or <strong>F</strong>. Have a go even if you're not sure.</p>
+    <div class="tf-list">
+      <div class="tf-row"><span>A quadrat is a square frame you use to count what's inside.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>Placing samples randomly makes the results fairer.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>A worn path usually has more plant types than an untouched meadow.</span><span class="tf">T / F</span></div>
+      <div class="tf-row"><span>Being outside in green space can help us feel calmer.</span><span class="tf">T / F</span></div>
+    </div>
+
+    <h2>3 · Ready for the afternoon?</h2>
+    <p style="font-size:0.84rem;">Tick anything that's true for you:</p>
+    <ul class="tick-list">
+      <li>I've got shoes I can walk on grass in.</li>
+      <li>I know we stick to the paths to protect the meadow.</li>
+      <li>I'm okay to have a go at the quiet noticing activity.</li>
+    </ul>
+  </div>
+
+  <!-- KO -->
+  <div class="print-doc">
+    <h1>L1d · Life in the Grass — Knowledge Organiser</h1>
+    <div class="meta-line">
+      Name: <span style="display:inline-block; min-width:180px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Class: <span style="display:inline-block; min-width:80px; border-bottom:1px solid black;">&nbsp;</span> &nbsp;
+      Date: <span style="display:inline-block; min-width:90px; border-bottom:1px solid black;" id="koDate">&nbsp;</span>
+    </div>
+
+    <h2>Lesson learning outcomes</h2>
+    <ul class="sc-checklist">
+      <li>Name how scientists sample a habitat (quadrat, transect)</li>
+      <li>Say why we sample instead of counting everything</li>
+      <li>Notice the living things around me — and how being outside feels</li>
+    </ul>
+
+    <h2>The sampling toolkit</h2>
+    <div class="ko-grid">
+      <div class="ko-cell"><strong>Quadrat</strong>A square frame (often 50cm). Put it down, count what's inside.</div>
+      <div class="ko-cell"><strong>Transect</strong>A line across a habitat — sample along it to see how it changes.</div>
+      <div class="ko-cell"><strong>Random sampling</strong>Placing samples by chance so results are fair, not biased.</div>
+      <div class="ko-cell"><strong>ID key</strong>A spotter sheet to name what you find (daisy, clover, plantain…).</div>
+      <div class="ko-cell"><strong>Biodiversity</strong>The variety of different living things in a place.</div>
+      <div class="ko-cell"><strong>Species</strong>One particular type of living thing, e.g. a daisy.</div>
+    </div>
+
+    <h2>Key facts</h2>
+    <div class="key-fact"><strong>Where:</strong> the grassland at Portrack Marsh — part of a protected SSSI mosaic (ponds, reedbeds, grassland, scrub).</div>
+    <div class="key-fact"><strong>Why sample:</strong> you can't count a whole field — small fair samples give a picture of the whole habitat.</div>
+    <div class="key-fact"><strong>Human impact:</strong> trampling and litter harm a meadow; the right care (cutting/grazing at the right time) keeps it full of life.</div>
+
+    <h2>Looking after yourself outdoors</h2>
+    <p style="font-size:0.85rem;">Being in green space can help us feel calmer and less stressed. A simple way to steady yourself anywhere green — the <strong>5-4-3-2-1</strong>:</p>
+    <p style="font-size:0.85rem;">👀 5 things you can see · 👂 4 you can hear · ✋ 3 you can feel · 👃 2 you can smell · 🌬️ 1 slow breath (in for 4, out for 6).</p>
+
+    <h2>Memory hooks</h2>
+    <p style="font-size: 0.85rem;"><strong>Quadrat:</strong> "<em>A square you share with the daisies.</em>" 🔲</p>
+    <p style="font-size: 0.85rem;"><strong>Sample, don't count all:</strong> "<em>Small squares, done fair, tell you what's there.</em>"</p>
+    <p style="font-size: 0.85rem;"><strong>Biodiversity:</strong> "<em>More kinds = more life.</em>" 🦋</p>
+  </div>
+
+  <!-- Field recording + reflection sheet -->
+  <div class="print-doc">
+    <h1>L1d · Field Recording &amp; Reflection</h1>
+    <div class="meta-line">Name: <span style="display:inline-block; min-width:200px; border-bottom:1px solid black;">&nbsp;</span> &nbsp; Spot / area: <span style="display:inline-block; min-width:120px; border-bottom:1px solid black;">&nbsp;</span></div>
+    <p class="do-note">Take this out to the grassland. Fill it in as you go — no rush.</p>
+
+    <h2>1 · Your quadrat</h2>
+    <p style="font-size:0.84rem;">Sketch what's inside your square. Draw roughly where each plant sits.</p>
+    <div style="border: 1.5px solid black; height: 150px; margin-top: 0.3em; background: repeating-linear-gradient(0deg, transparent, transparent 24px, #eee 25px), repeating-linear-gradient(90deg, transparent, transparent 24px, #eee 25px);"></div>
+
+    <h2>2 · Tally — what did you find?</h2>
+    <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+      <tr><th style="border:1px solid #333; padding:4px; text-align:left;">Plant / living thing</th><th style="border:1px solid #333; padding:4px; width:45%;">Tally / how many</th></tr>
+      <tr><td style="border:1px solid #333; padding:4px; height:26px;">&nbsp;</td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:4px; height:26px;">&nbsp;</td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:4px; height:26px;">&nbsp;</td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:4px; height:26px;">&nbsp;</td><td style="border:1px solid #333;"></td></tr>
+      <tr><td style="border:1px solid #333; padding:4px; height:26px;">&nbsp;</td><td style="border:1px solid #333;"></td></tr>
+    </table>
+    <p class="stem">How many <em>different</em> types did you find in total? ________</p>
+
+    <h2>3 · Compare two spots</h2>
+    <p class="stem">Which had more variety — the path edge or the open meadow? Why do you think that is?</p>
+    <div class="lines" style="height:46px;"></div>
+
+    <h2>4 · Reflection <span style="font-weight:normal; font-size:0.8rem;">(only share if you want to)</span></h2>
+    <p class="stem">One thing I noticed outside today:</p>
+    <div class="lines" style="height:30px;"></div>
+    <p class="stem">One word for how the green space felt:</p>
+    <div class="lines" style="height:30px;"></div>
+  </div>
+</section>
+
+<script>
+// ===== TA Focus content =====
+const taContent = {
+  1: { title: "Settling in — calm start", body: "<ul><li>This is the wellbeing slot as well as biology — set a slower, quieter tone from the off.</li><li>SC + Aspire visible; read to pupils who'd rather listen.</li><li>No rush. Regulation first, content second.</li></ul>" },
+  2: { title: "Arrival — quick guess", body: "<ul><li>Genuinely 30–40 seconds. Any number is fine — it's a guess, not a test.</li><li>The reveal (20–40 plants) usually lands as a nice surprise. Let them react.</li></ul>" },
+  3: { title: "How we sample (4 methods)", body: "<ul><li>4 taps — quadrat, random, transect, ID key. Don't rush; link them: 'small squares, placed fairly, named carefully'.</li><li>Keep it concrete — a real quadrat frame in hand helps if you have one.</li></ul>" },
+  4: { title: "Match word → meaning", body: "<ul><li>Pupils tap when ready; guessing is fine. Pair anyone who's stuck.</li><li>Biodiversity is the key idea — flag 'more kinds = more life'.</li></ul>" },
+  5: { title: "Notice & breathe — WELLBEING", body: "<ul><li>This is the heart of the slot. <strong>Offer, don't pressure.</strong> Pupils can just sit and breathe — that's a full success.</li><li>No sharing required. Don't put anyone on the spot here — this is NOT a cold-call slide.</li><li>The breathing circle + 5-4-3-2-1 works outdoors too — you can re-run it at the real grassland.</li><li>Keep your own voice slow and low. Model the breathing.</li></ul>" },
+  6: { title: "Human impact — harm & care", body: "<ul><li>Two cards: the worn path (harm) and how it's cared for (hope). Land BOTH — end on care, not doom.</li><li>Ties to sticking to the paths on the day.</li></ul>" },
+  7: { title: "Independent — low pressure", body: "<ul><li>Self-select tier. Short and gentle — reward having a go.</li><li>The reflection is opt-in. Nobody has to share. Circulate quietly.</li></ul>" },
+  8: { title: "Close — warm & calm", body: "<ul><li>LO ticks animate — point them out.</li><li>End on the trip and the wellbeing message: look after the place and yourself. Don't over-talk it.</li></ul>" }
+};
+
+// ===== Cold Call pool =====
+const ccPupils = ["Ava", "Eden", "Cienna", "Harry", "Maisie", "Lilly-Grace", "Ethan", "Leon", "Terry"];
+const ccQuestions = {
+  f: [
+    "What is a quadrat?",
+    "Name one plant you might find in a meadow.",
+    "Why don't we count every single plant in a field?",
+    "What does the word 'species' mean?"
+  ],
+  m: [
+    "Why do we place quadrats randomly?",
+    "What is a transect used for?",
+    "Why might a worn path have fewer plants than a meadow?",
+    "What does 'biodiversity' mean?"
+  ],
+  h: [
+    "Explain how sampling small squares can tell us about a whole field.",
+    "Why does a meadow need the right care to stay full of variety?",
+    "How could two groups sample the grassland fairly?"
+  ]
+};
+
+// ===== State =====
+let currentSlide = 1;
+const totalSlides = 8;
+let xp = 0;
+const xpPerAction = 8;
+
+// ===== Slide nav =====
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`.slide[data-slide="${n}"]`);
+  if (target) target.classList.add('active');
+  document.getElementById('progressBar').style.width = (n / totalSlides * 100) + '%';
+  document.getElementById('slideCounter').textContent = `${n} / ${totalSlides}`;
+  document.getElementById('prevBtn').disabled = (n === 1);
+  document.getElementById('nextBtn').disabled = (n === totalSlides);
+  if (n === totalSlides) {
+    animateLOTicks();
+    setTimeout(() => showCompletion(), 1800);
+  }
+}
+
+function changeSlide(delta) {
+  const next = currentSlide + delta;
+  if (next >= 1 && next <= totalSlides) {
+    currentSlide = next;
+    showSlide(currentSlide);
+    addXP(2);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+  if (document.getElementById('taModal').classList.contains('open') ||
+      document.getElementById('ccModal').classList.contains('open')) {
+    if (e.key === 'Escape') { closeTaFocus(); closeColdCall(); }
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  else if (e.key === 't' || e.key === 'T') openTaFocus();
+  else if (e.key === 'c' || e.key === 'C') openColdCall();
+});
+
+// ===== Generic reveal =====
+function revealAnswer(btn, id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'block';
+    btn.disabled = true;
+    btn.textContent = '✓ Shown';
+    addXP(xpPerAction);
+  }
+}
+
+// ===== Hint toggle =====
+function toggleHint(btn) {
+  const hint = btn.nextElementSibling;
+  if (hint && hint.classList.contains('hint-text')) {
+    hint.classList.toggle('shown');
+    btn.textContent = hint.classList.contains('shown') ? 'Hide hint' : 'Hint?';
+  }
+}
+
+// ===== XP =====
+function addXP(n) {
+  xp = Math.min(100, xp + n);
+  document.getElementById('xpBar').style.width = xp + '%';
+}
+
+// ===== LO ticks =====
+function animateLOTicks() {
+  document.querySelectorAll('#loList li').forEach(li => li.classList.remove('checked'));
+  document.querySelectorAll('#loList li').forEach(li => {
+    const delay = parseInt(li.dataset.delay || 0);
+    setTimeout(() => li.classList.add('checked'), delay);
+  });
+}
+
+// ===== Completion overlay + confetti =====
+function showCompletion() {
+  if (xp < 60) xp = 60;
+  document.getElementById('xpBar').style.width = '100%';
+  document.getElementById('completion').classList.add('shown');
+  launchConfetti();
+}
+function hideCompletion() {
+  document.getElementById('completion').classList.remove('shown');
+}
+function launchConfetti() {
+  const colors = ['#6B8E4E', '#C99A2E', '#4A7891', '#8FAE6B', '#B9A24E'];
+  for (let i = 0; i < 32; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = (Math.random() * 0.6) + 's';
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+// ===== TA Focus =====
+function openTaFocus() {
+  const c = taContent[currentSlide];
+  if (!c) return;
+  document.getElementById('taTitle').textContent = c.title;
+  document.getElementById('taBody').innerHTML = c.body;
+  document.getElementById('taModal').classList.add('open');
+}
+function closeTaFocus() {
+  document.getElementById('taModal').classList.remove('open');
+}
+
+// ===== Cold Call =====
+function openColdCall() {
+  rollColdCall();
+  document.getElementById('ccModal').classList.add('open');
+}
+function closeColdCall() {
+  document.getElementById('ccModal').classList.remove('open');
+}
+function rollColdCall() {
+  const pupil = ccPupils[Math.floor(Math.random() * ccPupils.length)];
+  // tier from phase: 1-3 -> F, 4-5 -> M, 6-8 -> H
+  let tier = 'f';
+  if (currentSlide >= 4 && currentSlide <= 5) tier = 'm';
+  else if (currentSlide >= 6) tier = 'h';
+  const questions = ccQuestions[tier];
+  const q = questions[Math.floor(Math.random() * questions.length)];
+  const tierLabel = { f: 'Foundation', m: 'Middle', h: 'Higher' };
+  const tierEl = document.getElementById('ccTier');
+  tierEl.textContent = tierLabel[tier];
+  tierEl.className = 'cold-call-tier ' + tier;
+  document.getElementById('ccPupil').textContent = pupil;
+  document.getElementById('ccQuestion').textContent = q;
+}
+
+// ===== KO date stamp =====
+function setKoDate() {
+  const d = new Date().toLocaleDateString('en-GB');
+  const el = document.getElementById('koDate');
+  if (el) el.textContent = d;
+}
+
+// ===== Sampling-method interactivity (slide 3) =====
+const landmarkData = {
+  'quadrat': {
+    name: '🔲 Quadrat',
+    text: 'A square frame — often 50cm across. Put it down, count what\'s inside. One small, countable sample of the habitat.'
+  },
+  'random': {
+    name: '🎲 Random sampling',
+    text: 'Place your quadrats randomly — not just the pretty bits. That keeps it fair and stops the results being biased.'
+  },
+  'transect': {
+    name: '📏 Transect',
+    text: 'A line stretched across the habitat. Sample along it to see how things change — e.g. from a trampled path into open meadow.'
+  },
+  'key': {
+    name: '🔑 ID key / spotter sheet',
+    text: 'How you name what you find: clover, daisy, plantain, buttercup, different grasses. No need to know them all by heart.'
+  }
+};
+const discovered = new Set();
+function tapLandmark(id) {
+  if (discovered.has(id)) return;
+  discovered.add(id);
+  const counter = document.getElementById('landmarkCounter');
+  if (counter) counter.textContent = `${discovered.size} / 4`;
+  const info = landmarkData[id];
+  const panel = document.getElementById('landmarkInfo');
+  if (panel && info) {
+    panel.innerHTML = `<h3 style="color: var(--moss-deep); margin-bottom: 0.3em;">${info.name}</h3><p style="margin: 0;">${info.text}</p>`;
+  }
+  document.querySelectorAll(`.landmark[data-id="${id}"]`).forEach(g => g.classList.add('discovered'));
+  addXP(xpPerAction);
+  if (discovered.size === 4) {
+    setTimeout(() => {
+      if (panel) panel.innerHTML += '<p style="margin-top: 0.6em; font-weight: bold; color: var(--moss-deep);">✅ That\'s the toolkit — small samples, placed fairly, named carefully. That\'s how you measure a whole habitat.</p>';
+    }, 500);
+  }
+}
+
+// ===== Matching game (slide 4) =====
+const matchData = [
+  { id: 'quadrat', def: 'A square frame you place down to count what\'s inside a small area.' },
+  { id: 'transect', def: 'A line across a habitat that you sample along to see how it changes.' },
+  { id: 'random', def: 'Placing samples by chance so the results are fair, not biased.' },
+  { id: 'biodiversity', def: 'The variety of different living things in a place.' },
+  { id: 'species', def: 'One particular type of living thing, e.g. a daisy.' }
+];
+let matchSelectedTerm = null;
+let matchedCount = 0;
+
+function initMatch() {
+  const defsEl = document.getElementById('matchDefs');
+  if (!defsEl) return;
+  const shuffled = [...matchData].sort(() => Math.random() - 0.5);
+  defsEl.innerHTML = shuffled.map(d =>
+    `<button class="match-def" data-id="${d.id}" onclick="tapDef(this)">${d.def}</button>`
+  ).join('');
+}
+
+function tapTerm(btn) {
+  if (btn.classList.contains('matched')) return;
+  document.querySelectorAll('.match-term').forEach(t => t.classList.remove('selected'));
+  btn.classList.add('selected');
+  matchSelectedTerm = btn.dataset.id;
+}
+
+function tapDef(btn) {
+  if (!matchSelectedTerm) return;
+  if (btn.classList.contains('matched')) return;
+  if (btn.dataset.id === matchSelectedTerm) {
+    btn.classList.add('matched');
+    const termBtn = document.querySelector(`.match-term[data-id="${matchSelectedTerm}"]`);
+    if (termBtn) termBtn.classList.add('matched');
+    document.querySelectorAll('.match-term').forEach(t => t.classList.remove('selected'));
+    matchSelectedTerm = null;
+    matchedCount++;
+    const progress = document.querySelector('#matchProgress strong');
+    if (progress) progress.textContent = `${matchedCount} / 5`;
+    addXP(xpPerAction);
+    if (matchedCount === 5) {
+      const mp = document.getElementById('matchProgress');
+      if (mp) mp.innerHTML = '<p>✅ <strong>All 5 matched.</strong> On Thursday you\'ll use these for real in the grassland.</p>';
+    }
+  } else {
+    btn.classList.add('wrong');
+    setTimeout(() => btn.classList.remove('wrong'), 400);
+  }
+}
+
+// ===== Expandable impact cards (slide 6) =====
+function toggleCard(card) {
+  const wasExpanded = card.classList.contains('expanded');
+  card.classList.toggle('expanded');
+  if (!wasExpanded) addXP(xpPerAction);
+}
+
+// ===== Init (data consts declared above are ready) =====
+setKoDate();
+initMatch();
+showSlide(1);
+
+// ===== Word bank (slide 7) =====
+function tapWord(chip) {
+  chip.classList.toggle('claimed');
+  const claimed = document.querySelectorAll('#wordbank .word-chip.claimed').length;
+  document.getElementById('wbTracker').textContent = 'Key words ready: ' + claimed;
+  if (chip.classList.contains('claimed')) addXP(2);
+}
+
+// ===== Finish check (slide 7) =====
+function finishTier(btn) {
+  btn.disabled = true;
+  btn.textContent = '✓ Nice work — well done';
+  addXP(xpPerAction);
+}
+
+// ===== Calm mode: pause SVG motion if reduced-motion is preferred =====
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('svg').forEach(s => { try { s.pauseAnimations(); } catch (e) {} });
+}
+
+window.addEventListener('beforeprint', setKoDate);
+</script>
+</body>
+</html>
