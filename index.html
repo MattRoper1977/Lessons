@@ -170,6 +170,27 @@
   .subject-head h2 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; color: var(--slate-900); }
   .subject-head .count { margin-left: auto; font-size: .75rem; font-weight: 700; color: var(--muted); background: var(--chip-ct); border-radius: var(--radius-sm); padding: 5px 14px; letter-spacing: .04em; }
 
+  /* ============ COLLAPSIBLE SECTIONS ============ */
+  .subject-head { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+  .subject-head:focus-visible { outline: 2px solid var(--sc, var(--blue)); outline-offset: 4px; border-radius: 6px; }
+  .sec-chevron { flex: 0 0 auto; margin-left: 10px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); border-radius: 8px; transition: transform .25s var(--ease), background .2s; }
+  .sec-chevron svg { width: 18px; height: 18px; }
+  .subject-head:hover .sec-chevron { background: var(--chip-ct); color: var(--ink); }
+  .subject.collapsed:not(.force-open) .sec-chevron { transform: rotate(-90deg); }
+  /* grid uses a height/opacity fold; display:none kills reflow cost once closed */
+  .subject .grid { transition: none; }
+  .subject.collapsed:not(.force-open) .grid { display: none; }
+  html[data-theme="dark"] .subject-head:hover .sec-chevron { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .sec-chevron { transition: none; } }
+
+  /* section tools (expand / collapse all) */
+  .sec-tools { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; flex-wrap: wrap; }
+  .sec-tools button { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: border-color .2s, transform .12s, box-shadow .2s; }
+  .sec-tools button:hover { border-color: var(--slate-700); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(15,23,42,.05); }
+  .sec-tools button svg { width: 15px; height: 15px; }
+  .sec-tools .st-hint { font-size: .72rem; color: var(--muted); margin-left: auto; }
+  @media (max-width: 640px) { .sec-tools .st-hint { display: none; } }
+
   /* ============ APP CARDS ============ */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; margin-top: 20px; }
   .tile { position: relative; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); border-top: 3px solid var(--tc, var(--border)); box-shadow: 0 4px 6px -1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.01); display: flex; flex-direction: column; overflow: hidden; transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s; animation: tileIn .45s var(--ease) both; animation-delay: calc(var(--d, 0) * 45ms); }
@@ -416,6 +437,18 @@
     <div class="result-count" id="resultCount" aria-live="polite"></div>
   </div>
 
+  <div class="sec-tools" id="secTools">
+    <button type="button" id="expandAll" title="Open every subject">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      Expand all
+    </button>
+    <button type="button" id="collapseAll" title="Fold every subject">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      Collapse all
+    </button>
+    <span class="st-hint">Tap a subject heading to fold or unfold it — your choices are remembered.</span>
+  </div>
+
   <div id="sections"></div>
 
   <div id="arcade"></div>
@@ -507,6 +540,9 @@ const LESSONS = [
   {subject:"Physics", title:"L5 · Wave Properties & Definitions",        file:"2 Physics 10/L4_Wave_Properties_Definitions-1.html",           tag:"lesson"},
   {subject:"Physics", title:"L6 · Wave Speed Equation",                 file:"2 Physics 10/L5_Wave_Speed_Equation-1.html",                   tag:"lesson"},
   {subject:"Physics", title:"L7 · Waves: Reflection & Refraction",       file:"2 Physics 10/L6_Waves_Context_Reflection_Refraction-1.html",   tag:"lesson"},
+  {subject:"Physics", title:"Waves · L4a · Wave Anatomy",                 file:"2 Physics 10/Waves/L4a_Wave_Anatomy.html",                     tag:"lesson", added:"2026-07-01"},
+  {subject:"Physics", title:"Waves · L4b · Frequency & Period",           file:"2 Physics 10/Waves/L4b_Frequency_Period.html",                 tag:"lesson", added:"2026-07-01"},
+  {subject:"Physics", title:"Waves · L4c · Energy Transfer",              file:"2 Physics 10/Waves/L4c_Energy_Transfer.html",                  tag:"lesson", added:"2026-07-01"},
   {subject:"Physics", title:"Consolidation · Electricity Review",        file:"2 Physics 10/Consolidation_Electricity_Review-1.html",         tag:"revision"},
   {subject:"Physics", title:"Current Rush",        file:"2 Physics 10/current_rush.html",         tag:"game"},
   {subject:"Intervention (Y10)", title:"V = I × R · Pupil App",          file:"5 Intervention 10/Lesson_VIR_Pupil_App.html",                          tag:"pupil"},
@@ -733,6 +769,18 @@ const state = { type:'all', q:'', favsOnly:false };
 const FAV_KEY = 'progressLessonHubFavs_v1';
 function loadFavs(){ try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); } catch(e){ return new Set(); } }
 function saveFavs(){ try { localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); } catch(e){} }
+
+/* ---- Collapsed sections (safe localStorage) ---- */
+const COLLAPSE_KEY = 'progressLessonHubCollapsed_v1';
+function loadCollapsed(){ try { const v = JSON.parse(localStorage.getItem(COLLAPSE_KEY)); return Array.isArray(v) ? new Set(v) : null; } catch(e){ return null; } }
+function saveCollapsed(set){ try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...set])); } catch(e){} }
+const collapsed = new Set();
+function setCollapsedState(sec, isCollapsed){
+  sec.classList.toggle('collapsed', isCollapsed);
+  const head = sec.querySelector('.subject-head');
+  if (head) head.setAttribute('aria-expanded', String(!isCollapsed));
+  if (isCollapsed) collapsed.add(sec.dataset.subject); else collapsed.delete(sec.dataset.subject);
+}
 const favs = loadFavs();
 
 /* ---- Theme ---- */
@@ -827,7 +875,10 @@ function build(){
     pill.innerHTML = `<span class="jn-dot"></span>${sub}`;
     pill.addEventListener('click', () => {
       const sec = document.querySelector(`.subject[data-subject="${CSS.escape(sub)}"]`);
-      if (sec) sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (sec){
+        setCollapsedState(sec, false); saveCollapsed(collapsed);
+        sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
     });
     jn.appendChild(pill);
   });
@@ -863,7 +914,7 @@ function build(){
     sec.style.setProperty('--sc', theme.c);
     sec.style.setProperty('--sl', theme.l);
     sec.style.animationDelay = (i * 0.04) + 's';
-    sec.innerHTML = `<div class="subject-head"><span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${subjectPath}</svg></span><h2>${sub}</h2><span class="count">${groups[sub].length}</span></div>`;
+    sec.innerHTML = `<div class="subject-head" role="button" tabindex="0" aria-expanded="true" aria-label="Toggle ${sub} section"><span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${subjectPath}</svg></span><h2>${sub}</h2><span class="count">${groups[sub].length}</span><span class="sec-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div>`;
 
     const grid = document.createElement('div');
     grid.className = 'grid';
@@ -932,6 +983,50 @@ function build(){
   host.addEventListener('click', cardClick);
   arcadeHost.addEventListener('click', cardClick);
 
+  /* ---- collapsible sections: toggle, keyboard, initial state ---- */
+  const allSecs = () => [...document.querySelectorAll('.subject')];
+  function toggleSection(sec){
+    setCollapsedState(sec, !sec.classList.contains('collapsed'));
+    saveCollapsed(collapsed);
+  }
+  function wireHead(sec){
+    const head = sec.querySelector('.subject-head');
+    if (!head) return;
+    head.addEventListener('click', e => {
+      /* ignore clicks on interactive children (none currently, but future-proof) */
+      if (e.target.closest('a,button:not(.subject-head)')) return;
+      toggleSection(sec);
+    });
+    head.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleSection(sec); }
+    });
+  }
+  allSecs().forEach(wireHead);
+
+  /* first-visit default: fold everything except sections holding NEW work */
+  const saved = loadCollapsed();
+  allSecs().forEach(sec => {
+    const sub = sec.dataset.subject;
+    let startCollapsed;
+    if (saved){ startCollapsed = saved.has(sub); }
+    else { startCollapsed = !(groups[sub] || []).some(isNew); }
+    setCollapsedState(sec, startCollapsed);
+  });
+  if (!saved) saveCollapsed(collapsed);
+
+  /* expand / collapse all */
+  const setAll = wantCollapsed => {
+    allSecs().forEach(sec => {
+      if (sec.style.display === 'none') return; /* leave filtered-out sections alone */
+      setCollapsedState(sec, wantCollapsed);
+    });
+    saveCollapsed(collapsed);
+  };
+  const ea = document.getElementById('expandAll');
+  const ca = document.getElementById('collapseAll');
+  if (ea) ea.addEventListener('click', () => setAll(false));
+  if (ca) ca.addEventListener('click', () => setAll(true));
+
   updateFavCount();
   applyFilter();
   buildSpotlight();
@@ -957,6 +1052,7 @@ function updateFavCount(){
 
 function applyFilter(){
   const q = state.q.trim().toLowerCase();
+  const filtering = !!q || state.type !== 'all' || state.favsOnly;
   let shownTotal = 0;
   const perSubject = {};
 
@@ -974,6 +1070,8 @@ function applyFilter(){
     perSubject[sub] = shown;
     shownTotal += shown;
     sec.style.display = shown ? '' : 'none';
+    /* while filtering, reveal matches even inside folded sections; restore fold when cleared */
+    sec.classList.toggle('force-open', filtering && shown > 0);
     const c = sec.querySelector('.count');
     if (c) c.textContent = shown;
   });
