@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L4c: Waves Transfer Energy, Not Matter</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .mc{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:1.02rem;color:#0f172a}
+    .mc span{padding:6px 10px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-weight:600}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .label-chip{padding:8px 16px;border-radius:999px;font-weight:900;font-size:.95rem;border:3px solid #cbd5e1;background:#fff;cursor:pointer;user-select:none;transition:.2s;display:inline-block;margin:3px}.label-chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1)}.label-chip.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);transform:scale(1.05)}.label-chip.placed{opacity:.4;pointer-events:none;border-style:dashed}
+    .label-slot{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:36px;border:3px dashed #cbd5e1;border-radius:10px;background:#f8fafc;font-weight:900;font-size:.9rem;color:var(--muted);cursor:pointer;transition:.25s;margin:2px}.label-slot:hover{border-color:var(--wedo-border);background:#fce7f3}.label-slot.filled{border-style:solid;background:#fff;color:#0f172a}.label-slot.correct{border-color:var(--success);background:#f0fdf4;color:#166534}.label-slot.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+    /* Match cards for We Do 2 */
+    .match-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:.25s;min-height:60px;display:flex;align-items:center;justify-content:center}.match-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}.match-card.sel-m{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2)}.match-card.matched-m{border-color:var(--success);background:#f0fdf4;pointer-events:none}.match-card.wrong-m{border-color:var(--error);animation:shake .4s}
+    /* TF cards for We Do 3 */
+    .tf-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:8px;transition:.3s}.tf-card.correct-tf{border-color:var(--success);background:#f0fdf4}.tf-card.wrong-tf{border-color:var(--error);animation:shake .4s}
+    .tf-btns{display:flex;gap:8px;margin-top:6px}.tf-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .time-badge+.slide-tag,.flex-badge+.slide-tag{margin-top:30px}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-200px);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:1150;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+    /* ═══ V5 UPGRADE: chassis ported from L4 Aerobic ═══ */
+    @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+    .slide[data-type="observe"]{border-top-color:#dc2626}
+    .tag-observe{background:#fee2e2;color:#991b1b}
+
+    /* Teacher toolbar (TA Focus / Cold Call / Board / XP / Watch) */
+    .teacher-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;border-radius:999px;padding:5px 8px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+    .teacher-bar button{padding:7px 12px;font-size:.85rem;border-radius:999px}
+    .tb-ta{background:#0ea5e9}.tb-ta:hover{background:#0369a1}
+    .tb-cc{background:#7c3aed}.tb-cc:hover{background:#5b21b6}
+    .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
+    .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
+    .xp-chip.xp-pop{animation:popIn .4s}
+
+    /* Modals: TA Focus / Cold Call / Video / Board */
+    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-back.open{display:flex;animation:fadeIn .2s}
+    .modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;border-top:8px solid var(--lo-border)}
+    .modal h2{margin-right:0;border:none;padding:0}
+    .modal .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}
+    .modal-ta{border-top-color:#0ea5e9}.modal-cc{border-top-color:#7c3aed}.modal-board{border-top-color:#f59e0b}
+    .cc-name{font-size:1.6rem;font-weight:900;text-align:center;color:var(--lo-border);margin:6px 0 14px;min-height:38px}
+    .cc-q{padding:12px 14px;border-radius:12px;margin:8px 0;border-left:6px solid}
+    .cc-f{background:#dcfce7;border-color:#22c55e}.cc-m{background:#ffedd5;border-color:#f97316}.cc-h{background:#dbeafe;border-color:#1e3a8a}
+    .cc-q .tier{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .roster-row{display:flex;gap:8px;margin-top:10px}
+    .roster-row input{flex:1;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem}
+    .ta-modal-body p{margin:8px 0}.ta-modal-body li{margin:5px 0}
+    .lb-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;margin:5px 0;background:#f8fafc;font-weight:bold}
+    .lb-row.me{background:#fef3c7}
+
+    /* Hint button */
+    .hint-btn{background:#10b981;font-size:.85rem}.hint-btn:hover{background:#047857}
+    .hint-text{display:none;margin-top:8px;padding:10px 12px;background:#ecfdf5;border-left:5px solid #10b981;border-radius:10px;font-weight:bold;color:#065f46}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+
+    /* Title hero + LO checks + success-criteria box */
+    .title-hero{display:flex;gap:18px;justify-content:center;margin:6px 0 4px;font-size:2.4rem}
+    .title-hero span{display:inline-block;animation:iconBounce 2.2s infinite}
+    .title-hero span:nth-child(2){animation-delay:.2s}.title-hero span:nth-child(3){animation-delay:.4s}.title-hero span:nth-child(4){animation-delay:.6s}.title-hero span:nth-child(5){animation-delay:.8s}
+    .float-dots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-dots i{position:absolute;width:14px;height:14px;border-radius:50%;opacity:.35;animation:floatDot 4s infinite ease-in-out}
+    .lo-anim li{opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li.done::before{content:'✅ ';}
+    .sc1-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 16px;border-radius:12px;max-width:680px;margin:14px auto;text-align:left}
+    .sc1-box h3{margin:0 0 6px;color:#9a3412}
+
+    /* V5: step reveal + turn & talk */
+    .v5-step{display:none}.v5-step.revealed{display:block;animation:fadeInUp .4s}
+    .step-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 4px}
+    .step-ctrl .step-count{font-weight:900;color:var(--ido-border);font-size:.9rem}
+    .turn-talk{background:#eef2ff;border:2px dashed #6366f1;border-radius:14px;padding:14px 16px;margin-top:12px;position:relative}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-11px;left:14px;background:#6366f1;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Misconception + exam-tip callouts */
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Lesson complete overlay + confetti */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+    .lesson-complete{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:2600;display:none;align-items:center;justify-content:center;padding:24px}
+    .lesson-complete.open{display:flex;animation:fadeIn .3s}
+    .lc-card{background:#fff;border-radius:22px;padding:34px 40px;text-align:center;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:10px solid var(--aspire-border);animation:popIn .5s}
+    .lc-card h1{border:none;font-size:2.2rem;display:block;color:var(--aspire-text)}
+    .lc-xp{font-size:3rem;font-weight:900;color:#f59e0b;margin:6px 0}
+
+    @media print{
+      .teacher-bar,.modal-back,.lesson-complete,#timer-widget,#confetti-canvas{display:none!important}
+      #print-area{padding:2px}
+      @page{margin:11mm}
+      .print-section{page-break-after:auto!important}
+      .print-section.visible{border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+    }
+
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
+      h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
+      .content-grid,.arrival-grid,.mc{grid-template-columns:1fr!important}
+      .logo{width:96px;top:14px;right:14px}
+      .teacher-bar{top:8px;padding:4px 6px;gap:4px;max-width:96%}
+      .teacher-bar button{padding:7px 9px}
+      .tb-label{display:none}
+      .xp-chip{padding:6px 8px;font-size:.8rem}
+      .title-hero{font-size:1.7rem;gap:10px}
+    }
+  </style>
+</head>
+<body>
+<!-- ═══ TEACHER TOOLBAR (V4/V5) ═══ -->
+<div class="teacher-bar">
+  <span class="xp-chip">⭐ <span id="xp-val">0</span> XP</span>
+  <button class="tb-ta small" onclick="openTA()">🎓 <span class="tb-label">TA Focus</span></button>
+  <button class="tb-cc small" onclick="openCC()">🎯 <span class="tb-label">Cold Call</span></button>
+  <button class="tb-board small" onclick="openBoard()">🏆 <span class="tb-label">Board</span></button>
+  <button class="small" style="background:#dc2626" onclick="openVideo()">📺 <span class="tb-label">Watch</span></button>
+</div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" data-title="Title">
+    <div class="float-dots"></div>
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:2%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 4c — Waves</p>
+      <h1>Waves Transfer Energy, Not Matter</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 10px">Spec 3.4</p>
+      <div class="title-hero"><span>🦆</span><span>🌊</span><span>📡</span><span>🏟️</span><span>⚡</span></div>
+      <div class="li-box" style="margin:14px auto;max-width:700px;text-align:left"><strong>Learning Objectives:</strong>
+        <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px">
+          <li><strong>3.4</strong> – Know that waves transfer energy and information without transferring matter.</li>
+        </ul>
+      </div>
+      <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
+        <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> state that waves transfer energy not matter, using the duck test.</p>
+        <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> explain the duck test and apply the rule to everyday examples.</p>
+        <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> apply the energy-not-matter rule to unfamiliar real-world scenarios and justify my reasoning.</p>
+      </div>
+      <p style="font-size:1.05rem;margin-top:6px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+        <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
+      </div></div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do → We Do → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Part 3 of 3</strong> — follows 4a Wave Anatomy and 4b Frequency &amp; Period. Next: the wave speed equation, v = f × λ.</p>
+    </div></div>
+  </div>
+
+  <!-- SLIDE 2: ARRIVAL -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – What Do You Already Know?</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. This is a new topic — do your best!</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p style="margin:0 0 8px">What is frequency the measure of?</p><div class="mc"><span>A) Waves per second</span><span>B) Height of a wave</span><span>C) Colour of a wave</span><span>D) Wave speed</span></div><p class="answer">✅ A) Waves per second.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p style="margin:0 0 8px">If you drop a stone into a pond, what happens to the water?</p><div class="mc"><span>A) It disappears</span><span>B) Ripples spread outward</span><span>C) It turns to ice</span><span>D) Nothing happens</span></div><p class="answer">✅ B) Ripples (waves) spread outward in circles from where the stone entered.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p style="margin:0 0 8px">Does a duck on a pond move across the water when a wave passes?</p><div class="mc"><span>A) Yes, it travels with the wave</span><span>B) No, it just bobs up and down</span><span>C) It sinks</span><span>D) It speeds up</span></div><p class="answer">✅ B) No — it bobs up and down. The duck doesn't travel with the wave.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🦆</h3><p style="margin:0 0 8px">If the duck doesn't move forward, what <strong>does</strong> the wave carry?</p><div class="mc"><span>A) Water</span><span>B) Energy (and information)</span><span>C) Ice</span><span>D) Nothing</span></div><p class="answer">✅ B) Energy (and information). The wave carries energy outwards but the water stays roughly in place.</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p style="margin:0 0 8px">A wave has a frequency of 4 Hz. What is its period?</p><div class="mc"><span>A) 4 s</span><span>B) 0.25 s</span><span>C) 40 s</span><span>D) 0.4 s</span></div><p class="answer">✅ B) T = 1/f = 1/4 = 0.25 s.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p style="margin:0 0 8px">Which of these is <strong>NOT</strong> usually described as a wave?</p><div class="mc"><span>A) Sound</span><span>B) Water</span><span>C) A brick</span><span>D) Light</span></div><p class="answer">✅ C) A brick. Sound, water and light all travel as waves.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p style="margin:0 0 8px">When you shout across a field, what actually reaches your friend?</p><div class="mc"><span>A) Air from your mouth</span><span>B) Just the sound (energy)</span><span>C) Nothing</span><span>D) Your voice box</span></div><p class="answer">✅ B) Just the sound (energy). The air particles vibrate but don't travel across the field.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🦆</h3><p style="margin:0 0 8px">If waves don't move matter, what <strong>two things</strong> do they transfer?</p><div class="mc"><span>A) Energy and information</span><span>B) Air only</span><span>C) Water only</span><span>D) Nothing</span></div><p class="answer">✅ A) Energy and information.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p style="margin:0 0 8px">T = 0.02 s. What is the frequency?</p><div class="mc"><span>A) 5 Hz</span><span>B) 50 Hz</span><span>C) 0.02 Hz</span><span>D) 20 Hz</span></div><p class="answer">✅ B) f = 1/T = 1/0.02 = 50 Hz.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p style="margin:0 0 8px">Earthquakes send seismic waves through the Earth. Do the rocks travel, or just the energy?</p><div class="mc"><span>A) The rocks travel to your house</span><span>B) Just the energy — rocks vibrate in place</span><span>C) Nothing moves</span><span>D) Sound moves but not energy</span></div><p class="answer">✅ B) Just the energy travels — the rocks vibrate in place.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p style="margin:0 0 8px">What is a wavefront?</p><div class="mc"><span>A) A single point on a wave</span><span>B) A line joining points at the same stage of a wave</span><span>C) The front of a boat</span><span>D) The end of a wave</span></div><p class="answer">✅ B) A line joining all the points on a wave at the same stage of vibration.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🦆</h3><p style="margin:0 0 8px">A tsunami can destroy a coastline thousands of km from the earthquake that caused it. What travels that distance?</p><div class="mc"><span>A) The original seawater</span><span>B) The energy, through the water</span><span>C) Nothing travels that far</span><span>D) Sound only</span></div><p class="answer">✅ B) The energy travels through the water — the water itself doesn't travel that far.</p></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: STARTER -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Does the Duck Travel? 🦆</h2>
+    <div class="li-box"><strong>Instructions:</strong> <strong>No science knowledge needed!</strong> Just think about your everyday life. In your book, answer the 3 questions below. <strong>3 minutes.</strong></div>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box"><h3 style="margin-top:0">📝 Think &amp; Write</h3>
+          <p><strong>1.</strong> List <strong>3 places</strong> you've seen waves in real life. (Think: beach, pond, music speaker, microwave…)</p>
+          <p><strong>2.</strong> If you drop a stone in a pond, a duck floating nearby starts bobbing. Does the duck travel across the pond, or stay roughly where it is?</p>
+          <p><strong>3.</strong> When a wave moves, what do you think actually travels — the water itself, or just the energy?</p>
+        </div>
+        <div class="scaffold-box"><strong>💡 Need ideas?</strong> Ocean, ripples in a puddle, sound from a speaker, the wiggly line on a heart monitor, the mexican wave at football…</div>
+      </div>
+      <div>
+        <div class="diagram-container"><h3 style="margin-top:0;color:var(--ido-border)">🖼️ Can you spot waves here?</h3>
+          <svg width="280" height="200" viewBox="0 0 280 200">
+            <!-- Ocean scene -->
+            <rect x="10" y="10" width="125" height="85" fill="#bfdbfe" rx="6"/>
+            <path d="M10,60 Q30,50 50,60 T90,60 T135,60" stroke="#1e40af" stroke-width="2.5" fill="none"/>
+            <path d="M10,75 Q30,65 50,75 T90,75 T135,75" stroke="#1e40af" stroke-width="2.5" fill="none"/>
+            <text x="72" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">🌊 Ocean</text>
+            <!-- Speaker / sound -->
+            <rect x="145" y="10" width="125" height="85" fill="#fef3c7" rx="6"/>
+            <rect x="155" y="40" width="20" height="30" fill="#92400e"/>
+            <circle cx="165" cy="55" r="6" fill="#fbbf24"/>
+            <path d="M180,40 Q200,55 180,70" stroke="#92400e" stroke-width="2" fill="none"/>
+            <path d="M190,35 Q215,55 190,75" stroke="#92400e" stroke-width="2" fill="none"/>
+            <path d="M200,30 Q230,55 200,80" stroke="#92400e" stroke-width="2" fill="none"/>
+            <text x="207" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">🔊 Sound</text>
+            <!-- Light / sun rays -->
+            <rect x="10" y="105" width="125" height="85" fill="#fef08a" rx="6"/>
+            <circle cx="72" cy="150" r="14" fill="#fbbf24"/>
+            <line x1="72" y1="130" x2="72" y2="120" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="72" y1="170" x2="72" y2="180" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="52" y1="150" x2="42" y2="150" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="92" y1="150" x2="102" y2="150" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="58" y1="136" x2="50" y2="128" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="86" y1="164" x2="94" y2="172" stroke="#f59e0b" stroke-width="2"/>
+            <text x="72" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">☀️ Light</text>
+            <!-- ECG / heartbeat -->
+            <rect x="145" y="105" width="125" height="85" fill="#fecaca" rx="6"/>
+            <polyline points="150,150 160,150 164,145 168,155 172,130 176,170 180,150 195,150 205,150 209,145 213,155 217,130 221,170 225,150 265,150" stroke="#dc2626" stroke-width="2" fill="none"/>
+            <text x="207" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#991b1b">❤️ Heartbeat</text>
+          </svg>
+          <p style="font-size:.9rem;margin-top:4px;color:var(--muted)">These are all waves! They move energy but not matter.</p>
+        </div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg);margin-top:8px"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p style="font-size:.95rem;margin:0">The loudest sound ever recorded was the 1883 Krakatoa eruption — heard <strong>4,800 km away</strong>. That's the same wave physics you're about to study!</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: I DO – ENERGY TRANSFER -->
+  <div class="slide" data-title="I Do – Energy Transfer" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 6 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Waves Transfer Energy, Not Matter (3.4)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> Waves transfer <strong>energy</strong> and <strong>information</strong> from one place to another <strong>without transferring matter</strong>.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="ido-box animate-enter"><h3 style="margin-top:0">🌊 The Duck Test</h3>
+          <p>Drop a stone in a pond. Waves ripple outward. But a <strong>floating duck</strong> just bobs up and down — it doesn't travel with the wave.</p>
+          <p>This proves the <strong>water</strong> (matter) stays put. Only the <strong>energy</strong> moves outward.</p>
+        </div>
+        <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0">📡 What DO Waves Carry?</h3>
+          <p>✅ <strong>Energy</strong> — a tsunami carries massive energy from an earthquake across an entire ocean.</p>
+          <p>✅ <strong>Information</strong> — radio waves carry music, Wi-Fi carries data, light lets you see.</p>
+          <p>❌ <strong>Matter</strong> — the particles vibrate in place but don't travel with the wave.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter">
+          <h3 style="margin-top:0;color:var(--ido-border)">Energy Travels, Matter Doesn't</h3>
+          <svg width="300" height="160" viewBox="0 0 300 160">
+            <rect x="10" y="80" width="280" height="60" rx="4" fill="#dbeafe" opacity="0.3"/>
+            <path d="M10,80 Q40,50 70,80 Q100,110 130,80 Q160,50 190,80 Q220,110 250,80 Q265,65 280,80" fill="none" stroke="#3b82f6" stroke-width="3"/>
+            <!-- Duck -->
+            <ellipse cx="70" cy="72" rx="12" ry="8" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+            <circle cx="65" cy="66" r="6" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+            <circle cx="63" cy="64" r="1.5" fill="#1f2937"/>
+            <text x="70" y="55" text-anchor="middle" font-size="9" font-weight="bold" fill="#d97706">🦆 bobs only!</text>
+            <!-- Energy arrow -->
+            <line x1="30" y1="140" x2="260" y2="140" stroke="#dc2626" stroke-width="3" marker-end="url(#ae)"/><defs><marker id="ae" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#dc2626"/></marker></defs>
+            <text x="145" y="155" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">Energy travels →</text>
+            <!-- Matter label -->
+            <text x="145" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#64748b">Water particles stay in place ↕</text>
+          </svg>
+        </div>
+        <div class="aspire-box animate-enter anim-delay-1"><strong>🌟 Think Deeper:</strong> A Mexican wave in a stadium is a great example — the <em>pattern</em> moves around the stadium but the <em>people</em> (matter) stay in their seats. They just stand up and sit down.</div>
+      </div>
+    </div>
+    <div class="misc-box animate-enter"><p><strong>Don't write:</strong> <span class="misc-wrong">"the wave pushes the water forward to the beach"</span> (matter doesn't travel)</p><p><strong>Write:</strong> <span class="misc-right">"the wave transfers energy — the water particles vibrate but stay roughly in place"</span></p><p style="font-size:.9rem;color:#991b1b;margin-top:4px">This is the single most common wave misconception — always check pupils separate "energy travels" from "matter travels".</p></div>
+    <div class="turn-talk"><strong>Talk to your partner:</strong> Pick one example — a tsunami, a Mexican wave, or a shout across a field. Explain what travels and what stays put. Be ready to sort more examples yourself next.</div>
+  </div>
+
+  <!-- SLIDE 5: WE DO – ENERGY OR MATTER? -->
+  <div class="slide" data-title="We Do – Energy or Matter?" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 6 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Energy or Matter? ✅❌</h2>
+    <div class="li-box"><strong>Instructions:</strong> For each scenario, decide: does the wave transfer <strong>matter</strong>, or just <strong>energy/information</strong>?</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo3')">📸 Print Evidence</button>
+    <div id="wedo3" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:10px">
+        <div>
+          <div class="tf-card" id="tf0"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">1. 🌊 A tsunami crosses the Pacific Ocean.</p><p style="margin:0;font-size:1rem">Does the water from Japan arrive in California?</p>
+            <div class="tf-btns"><button class="ghost small" onclick="tfCheck(0,this,false)">Yes — water travels</button><button class="ghost small" onclick="tfCheck(0,this,true)">No — only energy travels</button></div><div class="tf-fb" id="tff0"></div></div>
+          <div class="tf-card" id="tf1"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">2. 📻 A radio signal reaches your car.</p><p style="margin:0;font-size:1rem">Does any matter move from the radio tower to your car?</p>
+            <div class="tf-btns"><button class="ghost small" onclick="tfCheck(1,this,false)">Yes — particles travel</button><button class="ghost small" onclick="tfCheck(1,this,true)">No — information travels as a wave</button></div><div class="tf-fb" id="tff1"></div></div>
+          <div class="tf-card" id="tf2"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">3. 🏟️ A Mexican wave goes around a stadium.</p><p style="margin:0;font-size:1rem">Do the fans travel around the stadium?</p>
+            <div class="tf-btns"><button class="ghost small" onclick="tfCheck(2,this,true)">No — fans stay seated, pattern moves</button><button class="ghost small" onclick="tfCheck(2,this,false)">Yes — fans run around</button></div><div class="tf-fb" id="tff2"></div></div>
+        </div>
+        <div>
+          <div class="tf-card" id="tf3"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">4. 🔊 You shout across a playground.</p><p style="margin:0;font-size:1rem">Do air particles from your mouth reach your friend's ear?</p>
+            <div class="tf-btns"><button class="ghost small" onclick="tfCheck(3,this,true)">No — air vibrates in place, sound energy travels</button><button class="ghost small" onclick="tfCheck(3,this,false)">Yes — your air goes to them</button></div><div class="tf-fb" id="tff3"></div></div>
+          <div class="tf-card" id="tf4"><p style="font-weight:900;color:#1e3a8a;margin:0 0 4px">5. 🌍 An earthquake sends seismic waves 1000 km.</p><p style="margin:0;font-size:1rem">Do the rocks travel 1000 km?</p>
+            <div class="tf-btns"><button class="ghost small" onclick="tfCheck(4,this,false)">Yes — rocks fly 1000 km</button><button class="ghost small" onclick="tfCheck(4,this,true)">No — rocks vibrate, energy travels</button></div><div class="tf-fb" id="tff4"></div></div>
+          <div class="snap-score" style="margin-top:8px">Correct: <span id="tf-count">0</span> / 5 🌊</div>
+        </div>
+      </div>
+      <div id="wedo3-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: INDEPENDENT -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3>
+        <p><strong>Section A:</strong> Multiple Choice (4 questions)</p><p><strong>Section B:</strong> Short Answer — explain the duck test</p><p><strong>Section C:</strong> Long Answer — energy vs matter reasoning</p><p><strong>Section D:</strong> Exam-Style Question</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for the key rule and worked examples.</div>
+        <div class="exam-tip-box" style="margin-top:10px"><strong>Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).<br>
+          <strong>Compare</strong> = say what's similar AND different between two things.</div></div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can state that waves transfer energy not matter, using the duck test.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can explain the duck test and apply the rule to everyday examples.</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can apply the energy-not-matter rule to unfamiliar scenarios and justify my reasoning.</p></div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I know waves transfer energy, not matter</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain the duck test in my own words</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can name 2 things waves DO carry (energy, information)</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can apply the rule to a new scenario (Middle/Higher)</span></div></div>
+  </div>
+
+  <!-- SLIDE 7: EXIT TICKET -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Check Your Learning</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+    </div>
+    <div style="text-align:center;margin:4px 0 8px">
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
+      <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
+      <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
+    </div>
+
+    <div id="exit-foundation" class="task-box"><p><strong>1) Do waves transfer energy or matter?</strong></p><p class="answer">Energy (and information). Not matter.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) In the duck test, does the duck travel with the wave?</strong></p><p class="answer">No — it bobs up and down, it doesn't travel with the wave.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Name one thing waves DO carry.</strong></p><p class="answer">Energy, or information (either answer is correct).</p></div>
+    <div id="exit-middle" class="task-box" style="display:none"><p><strong>1) Explain why a duck on a pond doesn't move forward when a wave passes.</strong></p><p class="answer">The wave transfers energy, not matter. The water particles bob up and down but don't travel forward, so the duck stays in place.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) Give one everyday example that shows waves transfer energy without transferring matter.</strong></p><p class="answer">Any valid example: a Mexican wave, shouting across a field, a radio signal, etc. — with a brief explanation of what travels and what stays put.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What is the "misconception" that this lesson corrects?</strong></p><p class="answer">The idea that the wave "pushes the water/matter along" — actually the particles vibrate in place and only the energy moves.</p></div>
+    <div id="exit-higher" class="task-box" style="display:none"><p><strong>1) Explain how a tsunami can destroy buildings 10,000 km away without the original water travelling that distance.</strong></p><p class="answer">The wave transfers energy through the water without the water itself travelling. Each water particle passes the energy to the next by vibrating, so the energy can travel 10,000 km while the water particles only move up and down locally. The energy arriving at the coast is enough to cause destruction.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) A pupil says "sound is just moving air." Explain why this is an oversimplification.</strong></p><p class="answer">Sound is a wave — the air particles vibrate back and forth in place, passing energy to neighbouring particles. It's the energy (as sound) that travels to your ear, not a "gust" of the original air.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Compare a Mexican wave and a water wave in terms of what travels and what stays still.</strong></p><p class="answer">In both, the pattern (energy) travels while the matter stays roughly in place — fans stand up and sit down without moving seats; water particles bob up and down without travelling with the wave.</p>
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Next lesson:</strong> The wave speed equation — <strong>v = f × λ</strong>. One formula that explains everything from bat echolocation to Wi-Fi signals!</div>
+    <div style="text-align:center;margin-top:10px"><button style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish Lesson</button></div>
+  </div>
+  </div>
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+    <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I know waves transfer energy, not matter.</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can explain the duck test in my own words.</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can apply the rule to new, real-world scenarios.</p></div>
+    <h1 style="text-align:center">Knowledge Organiser: Waves Transfer Energy, Not Matter (L4c)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Key rule</strong></td><td>Waves transfer energy and information WITHOUT transferring matter.</td></tr>
+      <tr><td><strong>The duck test</strong></td><td>A duck on a pond bobs up and down when a wave passes — it doesn't travel with the wave.</td></tr>
+      <tr><td><strong>What travels</strong></td><td>Energy (e.g. a tsunami's power) and information (e.g. radio, Wi-Fi, sound).</td></tr>
+      <tr><td><strong>What doesn't travel</strong></td><td>Matter — the particles vibrate in place but don't move along with the wave.</td></tr>
+      <tr><td><strong>Mexican wave analogy</strong></td><td>The pattern moves around the stadium; the fans (matter) stay in their seats.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Trick</h3><p style="margin:2px 0;font-size:.9rem"><strong>Waves transfer energy, not matter</strong> = "The duck bobs but doesn't travel!"</p><p style="margin:2px 0;font-size:.9rem">Always separate "what travels" (energy/information) from "what stays put" (matter/particles).</p></div>
+    <div class="prevent-break" style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State the rule (energy not matter).</p><p style="margin:2px 0;font-size:.9rem"><strong>2+ marks</strong> = Explain using a named example (duck, Mexican wave, tsunami, sound).</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Always name what DOES travel (energy/information) AND what DOESN'T (matter).</p></div>
+  </div>
+  <div id="print-arrival" class="print-section">
+    <h2>Arrival Task – Multiple Choice (circle a letter)</h2>
+    <div class="foundation-content"><h3>Foundation 🟢</h3>
+      <p>1) What is frequency the measure of? &nbsp;&nbsp; A) Waves per second &nbsp; B) Height of a wave &nbsp; C) Colour of a wave &nbsp; D) Wave speed</p>
+      <p>2) If you drop a stone into a pond, what happens to the water? &nbsp;&nbsp; A) It disappears &nbsp; B) Ripples spread outward &nbsp; C) It turns to ice &nbsp; D) Nothing happens</p>
+      <p>3) Does a duck on a pond move across the water when a wave passes? &nbsp;&nbsp; A) Yes, it travels with the wave &nbsp; B) No, it just bobs up and down &nbsp; C) It sinks &nbsp; D) It speeds up</p>
+      <p>4) If the duck doesn't move forward, what does the wave carry? &nbsp;&nbsp; A) Water &nbsp; B) Energy (and information) &nbsp; C) Ice &nbsp; D) Nothing</p></div>
+    <div class="middle-content"><h3>Middle 🟠</h3>
+      <p>1) A wave has a frequency of 4 Hz. What is its period? &nbsp;&nbsp; A) 4 s &nbsp; B) 0.25 s &nbsp; C) 40 s &nbsp; D) 0.4 s</p>
+      <p>2) Which of these is NOT usually described as a wave? &nbsp;&nbsp; A) Sound &nbsp; B) Water &nbsp; C) A brick &nbsp; D) Light</p>
+      <p>3) When you shout across a field, what actually reaches your friend? &nbsp;&nbsp; A) Air from your mouth &nbsp; B) Just the sound (energy) &nbsp; C) Nothing &nbsp; D) Your voice box</p>
+      <p>4) If waves don't move matter, what two things do they transfer? &nbsp;&nbsp; A) Energy and information &nbsp; B) Air only &nbsp; C) Water only &nbsp; D) Nothing</p></div>
+    <div class="higher-content"><h3>Higher 🔵</h3>
+      <p>1) T = 0.02 s. What is the frequency? &nbsp;&nbsp; A) 5 Hz &nbsp; B) 50 Hz &nbsp; C) 0.02 Hz &nbsp; D) 20 Hz</p>
+      <p>2) Earthquakes send seismic waves through the Earth. Do the rocks travel, or just the energy? &nbsp;&nbsp; A) The rocks travel to your house &nbsp; B) Just the energy — rocks vibrate in place &nbsp; C) Nothing moves &nbsp; D) Sound moves but not energy</p>
+      <p>3) What is a wavefront? &nbsp;&nbsp; A) A single point on a wave &nbsp; B) A line joining points at the same stage of a wave &nbsp; C) The front of a boat &nbsp; D) The end of a wave</p>
+      <p>4) A tsunami can destroy a coastline thousands of km from the earthquake that caused it. What travels that distance? &nbsp;&nbsp; A) The original seawater &nbsp; B) The energy, through the water &nbsp; C) Nothing travels that far &nbsp; D) Sound only</p></div>
+  </div>
+  <div id="print-starter" class="print-section"><h2>Starter: Does the Duck Travel?</h2>
+    <p>1. List 3 places you've seen waves in real life.</p><div class="print-line"></div>
+    <p>2. If you drop a stone in a pond, a duck floating nearby starts bobbing. Does the duck travel across the pond, or stay roughly where it is?</p><div class="print-line"></div>
+    <p>3. When a wave moves, what do you think actually travels — the water itself, or just the energy?</p><div class="print-line"></div>
+  </div>
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet: Energy or Matter?</h2>
+    <p>For each scenario, write "Energy" or "Matter" for what actually travels.</p>
+    <p>1. A tsunami crosses an ocean. What travels? _________</p>
+    <p>2. A radio signal reaches your car. What transfers? _________</p>
+    <p>3. A Mexican wave goes around a stadium. What travels? _________</p>
+    <p>4. Sound travels from a speaker to your ear. What moves? _________</p>
+    <p>5. An earthquake sends seismic waves 1000 km. What travels that far? _________</p>
+  </div>
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Key Rule</h3><p>Waves transfer <strong>energy</strong> and <strong>information</strong> without transferring <strong>matter</strong>.</p><p>The particles vibrate in place — only the pattern (energy) moves forward.</p></div>
+    <div class="scaffold-print-box"><h3>Sentence Starters</h3>
+      <p>"In this example, the ____________ travels, but the ____________ stays roughly in place."</p>
+      <p>"This is because the particles ____________ rather than ____________ with the wave."</p></div>
+  </div>
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Always name what travels AND what doesn't.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. Waves transfer… [&nbsp;&nbsp;] Matter [&nbsp;&nbsp;] Energy [&nbsp;&nbsp;] Atoms</p>
+      <p>2. In the duck test, the duck… [&nbsp;&nbsp;] Travels with the wave [&nbsp;&nbsp;] Bobs up and down [&nbsp;&nbsp;] Sinks</p>
+      <p>3. A tsunami carries… [&nbsp;&nbsp;] Water from Japan to California [&nbsp;&nbsp;] Energy across the ocean [&nbsp;&nbsp;] Nothing</p>
+      <p>4. Waves transferring information include… [&nbsp;&nbsp;] Radio waves [&nbsp;&nbsp;] Bricks [&nbsp;&nbsp;] Chairs</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
+      <p>5. State what waves transfer.</p><div class="print-line"></div>
+      <p style="margin-top:10px">6. A duck sits on a pond. A wave passes under it. Describe what happens to the duck.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>7. (4 marks)</strong> Complete the sentences about waves and energy.</p>
+      <p>When you drop a stone in a pond, _________________________ spread outward. [1 mark]</p>
+      <p>A duck floating on the pond does not travel with the wave. It just _________________________ . [1 mark]</p>
+      <p>This shows that waves transfer _________________________ but not _________________________ . [2 marks]</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
+      <p><strong>8. (3 marks)</strong> Explain the duck test. What does it show us about waves? [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Use full sentences for explanations. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. Waves transfer energy and… [&nbsp;&nbsp;] Matter [&nbsp;&nbsp;] Information [&nbsp;&nbsp;] Particles</p>
+      <p>2. Sound reaching your ear from a speaker proves… [&nbsp;&nbsp;] Air travels to you [&nbsp;&nbsp;] Only energy travels [&nbsp;&nbsp;] Nothing moves</p>
+      <p>3. Explain the duck test.</p><div class="print-line"></div>
+      <p>4. Name two things waves DO carry.</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>5. Give one everyday example (not the duck) that shows waves transfer energy without matter. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">6. Explain, using a named example, how a wave transfers information. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>7. (4 marks)</strong> A student says "when you shout across a room, the air from your mouth reaches the listener." Explain why this is wrong. [4 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>8. (5 marks)</strong> Compare a Mexican wave in a stadium with a water wave in a pond. What is similar about what travels and what stays still in each case? [5 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes a Grade 5 challenge — these go beyond the basics. Show the examiner you can reason, not just recall.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. State the key rule about what waves transfer and don't transfer. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Explain the duck test and what it demonstrates. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3. Give two examples of information carried by waves. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>4. A seismic wave travels 500 km through the Earth. Explain why the rocks at the destination did not come from the epicentre. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div>
+      <p style="margin-top:10px">5. A pupil says "sound is just moving air." Explain why this is an oversimplification. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>6. (5 marks)</strong> Compare how a Mexican wave in a stadium and a water wave in the ocean both demonstrate the principle that waves transfer energy without transferring matter. [5 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 5 Challenge)</h3>
+      <p><strong>7. (6 marks)</strong> Explain how a tsunami can destroy buildings 10,000 km away without the original water travelling that distance. Use the words "energy", "particle" and "vibrate" in your answer. [6 marks]</p>
+      <div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Energy Not Matter (Foundation U–1)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+<p>1) Do waves transfer energy or matter?</p><div class="print-line"></div><p>2) In the duck test, does the duck travel with the wave?</p><div class="print-line"></div><p>3) Name one thing waves DO carry.</p><div class="print-line"></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Energy Not Matter (Middle 1–2)</h2><p>1) Explain why a duck doesn't move forward when a wave passes.</p><div class="print-line"></div><div class="print-line"></div><p>2) Give one everyday example that shows waves transfer energy without matter.</p><div class="print-line"></div><p>3) What is the misconception this lesson corrects?</p><div class="print-line"></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Energy Not Matter (Higher 3–5)</h2><p>1) How can a tsunami destroy buildings 10,000 km away without the water travelling that far?</p><div class="print-line"></div><div class="print-line"></div><p>2) Why is "sound is just moving air" an oversimplification?</p><div class="print-line"></div><div class="print-line"></div><p>3) Compare a Mexican wave and a water wave in terms of what travels and what stays still.</p><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<!-- ═══ V4/V5 MODALS / OVERLAYS ═══ -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="modal-back" id="ta-modal"><div class="modal modal-ta">
+  <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+  <h2>🎓 TA Focus</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px" id="ta-slide-name"></p>
+  <div class="ta-modal-body" id="ta-body"></div>
+</div></div>
+
+<div class="modal-back" id="cc-modal"><div class="modal modal-cc">
+  <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+  <h2>🎯 Cold Call</h2>
+  <div class="roster-row"><input id="cc-roster-input" placeholder="Names, comma separated (saved for all lessons)"><button class="small" onclick="saveRoster()">Save</button></div>
+  <button class="small" style="margin-top:10px;background:#7c3aed" onclick="pickPupil()">🎲 Pick a pupil</button>
+  <div class="cc-name" id="cc-name">—</div>
+  <div id="cc-questions"></div>
+</div></div>
+
+<div class="modal-back" id="video-modal"><div class="modal" style="max-width:760px;border-top-color:#dc2626">
+  <button class="modal-close small" onclick="closeVideo()">✕ Close</button>
+  <h2>📺 Waves in a Ripple Tank</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px">BBC Teach clip measuring frequency, wavelength and speed of water waves (spec 3.1/3.3). Teacher: swap the link in the code if you prefer another.</p>
+  <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000">
+    <iframe id="video-frame" title="Ripple tank waves video" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div></div>
+
+<div class="modal-back" id="board-modal"><div class="modal modal-board">
+  <button class="modal-close small" onclick="closeModal('board-modal')">✕ Close</button>
+  <h2>🏆 Class Progress Board</h2>
+  <p style="color:var(--muted);font-size:.9rem">XP earned this lesson through the interactive tasks.</p>
+  <div id="board-body"></div>
+</div></div>
+
+<div class="lesson-complete" id="lesson-complete"><div class="lc-card">
+  <h1>🎉 Lesson Complete!</h1>
+  <p>Waves Transfer Energy, Not Matter — Lesson 4c</p>
+  <div class="lc-xp">⭐ <span id="lc-xp-val">0</span> XP</div>
+  <p id="lc-msg" style="color:var(--muted)"></p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('open')">Close</button>
+</div></div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility();const cur=slides[i];if(cur){const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve()}}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(document.querySelector('.modal-back.open,.lesson-complete.open'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'block':'none';document.getElementById('exit-middle').style.display=l==='middle'?'block':'none';document.getElementById('exit-higher').style.display=l==='higher'?'block':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function stampDate(){const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB')}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');stampDate();window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}stampDate();window.print()}
+  function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');stampDate();window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.tf-fb,.label-slot.correct').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // WE DO: ENERGY OR MATTER? (TRUE/FALSE)
+  let tfCount=0;
+  const tfExps=['✅ The water stays — only ENERGY crosses the ocean!','✅ Radio waves carry information — no matter moves from the tower!','✅ Fans stay seated — the PATTERN (energy) moves around the stadium!','✅ Air particles vibrate in place — SOUND ENERGY travels to your friend!','✅ Rocks vibrate in place — SEISMIC ENERGY travels through them!'];
+  function tfCheck(idx,btn,correct){const card=document.getElementById('tf'+idx);const fb=document.getElementById('tff'+idx);if(card.classList.contains('correct-tf'))return;card.querySelectorAll('button').forEach(b=>b.style.border='');if(correct){btn.style.border='3px solid var(--success)';card.classList.remove('wrong-tf');card.classList.add('correct-tf');fb.innerText=tfExps[idx];fb.style.color='var(--success)';tfCount++;document.getElementById('tf-count').innerText=tfCount;addXP(6,'Energy or Matter?');if(tfCount>=5)confetti()}else{btn.style.border='3px solid var(--error)';card.classList.add('wrong-tf');fb.innerText='❌ Think again — does the matter really travel?';fb.style.color='var(--error)';playBuzz();setTimeout(()=>{card.classList.remove('wrong-tf');btn.style.border='';fb.innerText=''},700)}}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+  // ═══════════════ V4/V5 ENGAGEMENT MODULE (ported from L4 Aerobic) ═══════════════
+  // --- Sounds (WebAudio, no assets) ---
+  let _ac=null;function _audio(){if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return _ac}
+  function _tone(freq,dur,type){const a=_audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.start();o.stop(a.currentTime+dur)}
+  function playDing(){_tone(880,.18);setTimeout(()=>_tone(1320,.22),90)}
+  function playBuzz(){_tone(150,.25,'square')}
+  function playClick(){_tone(520,.06,'triangle')}
+  document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
+
+  // --- Confetti ---
+  function confetti(){const c=document.getElementById('confetti-canvas');if(!c)return;c.style.display='block';c.width=innerWidth;c.height=innerHeight;const ctx=c.getContext('2d');const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb','#eab308'];const P=[];for(let i=0;i<140;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[i%cols.length],v:2+Math.random()*4,a:Math.random()*6.28});let t=0;const id=setInterval(()=>{ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.05)*1.5;ctx.fillStyle=p.c;ctx.beginPath();ctx.rect(p.x,p.y,p.r,p.r*1.6);ctx.fill()});if(++t>140){clearInterval(id);ctx.clearRect(0,0,c.width,c.height);c.style.display='none'}},25)}
+
+  // --- XP system ---
+  let xp=0;const xpLog={};
+  function addXP(n,label){xp+=n;const v=document.getElementById('xp-val');v.textContent=xp;v.parentElement.classList.remove('xp-pop');void v.parentElement.offsetWidth;v.parentElement.classList.add('xp-pop');if(label)xpLog[label]=(xpLog[label]||0)+n;playDing()}
+
+  // --- Modals ---
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  const VIDEO_ID='4ySBKUmQ9Go'; // BBC Teach: measuring waves in a ripple tank (spec 3.1/3.3) — swap to change clip
+  function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
+  function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  // --- Observe slide: lazy-load the embedded video + set the out-link ---
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID}
+  function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
+
+  // --- Cold Call (roster shared across all PS lessons) ---
+  function loadRoster(){return JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]')}
+  function saveRoster(){const raw=document.getElementById('cc-roster-input').value;const names=raw.split(',').map(s=>s.trim()).filter(Boolean);localStorage.setItem('ps_coldcall_roster',JSON.stringify(names));document.getElementById('cc-name').textContent=names.length?'Saved '+names.length+' names ✓':'—';playClick()}
+  function pickPupil(){const r=loadRoster();const el=document.getElementById('cc-name');if(!r.length){el.textContent='Add names first ↑';return}let i=0,n=12;const id=setInterval(()=>{el.textContent=r[Math.floor(Math.random()*r.length)];if(++i>n){clearInterval(id);el.textContent=r[Math.floor(Math.random()*r.length)];playDing()}},70)}
+  function openCC(){document.getElementById('cc-roster-input').value=loadRoster().join(', ');const d=CC_DATA[currentSlide];const box=document.getElementById('cc-questions');if(!d){box.innerHTML='<p style="color:var(--muted)">No targeted questions for this slide — use a recall question from earlier.</p>'}else{box.innerHTML=`<div class="cc-q cc-f"><div class="tier">Foundation · U/1</div>${d.f}</div><div class="cc-q cc-m"><div class="tier">Middle · 1–2</div>${d.m}</div><div class="cc-q cc-h"><div class="tier">Higher · 3–5</div>${d.h}</div>`}document.getElementById('cc-name').textContent='—';document.getElementById('cc-modal').classList.add('open')}
+
+  // --- TA Focus ---
+  function openTA(){const d=TA_DATA[currentSlide]||{name:slides[currentSlide].getAttribute('data-title')||'',body:'<p>Support pupils to stay on task and re-voice the key idea in their own words.</p>'};document.getElementById('ta-slide-name').textContent=d.name;document.getElementById('ta-body').innerHTML=d.body;document.getElementById('ta-modal').classList.add('open')}
+
+  // --- Per-slide data (index matches slide order: 0 Title,1 Arrival,2 Starter,3 IDo1,4 WeDo1,5 IDo2,6 WeDo2,7 IDo3-FLEX,8 WeDo3-FLEX,9 Observe-FLEX,10 Independent,11 Exit) ---
+  const TA_DATA={
+    1:{name:'Arrival – Recall from Last Lesson',body:'<p><strong>Your job:</strong> Q1–3 recap 4b (frequency/period) — Q4 previews today\'s big idea (energy vs matter).</p><ul><li>Don\'t over-explain the lead-in question yet — just bank pupils\' guesses, I Do will confirm or correct them.</li></ul>'},
+    2:{name:'Starter – Does the Duck Travel?',body:'<p><strong>Your job:</strong> low-stakes noticing task — accept everyday examples freely.</p><ul><li>If pupils are stuck, point to the four scene pictures (ocean, speaker, light, heartbeat) as prompts.</li><li>Q3 ("what actually travels — water or energy?") is the key pre-load for I Do. Don\'t correct wrong guesses here, just note them.</li></ul>'},
+    3:{name:'I Do – Energy Transfer',body:'<p><strong>Your job:</strong> this is the single most-tested misconception in the topic — slow down here.</p><ul><li>Use the misconception box explicitly: "the wave pushes the water forward" is WRONG, "the wave transfers energy" is RIGHT.</li><li>The duck test and Mexican wave analogies are your two go-to re-explanations if a pupil is still unsure.</li></ul>'},
+    4:{name:'We Do – Energy or Matter?',body:'<p><strong>Your job:</strong> five real-world scenarios testing the energy-not-matter rule.</p><ul><li>The Mexican wave (Q3) is usually the easiest for pupils to reason through — use it as the anchor example if others are stuck.</li><li>Push pupils to say WHY, not just pick an answer — the feedback text gives the reasoning, make them repeat it.</li></ul>'},
+    5:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first few minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt pupils to name BOTH what travels and what doesn\'t in every answer.</li></ul>'},
+    6:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>The confidence traffic-light gives you a quick honest read of the room before you mark anything.</li><li>Note who still can\'t state "energy not matter" independently — that\'s the secure-for-all goal for this mini-unit.</li></ul>'}
+  };
+  const CC_DATA={
+    1:{f:'Does the <strong>duck</strong> move across the pond, or bob up and down?',m:'When you shout, does <strong>air</strong> travel to your friend, or just sound?',h:'What <strong>two things</strong> do waves transfer from place to place?'},
+    2:{f:'Name <strong>one</strong> place you\'ve seen a wave.',m:'What do you think actually travels when a wave moves?',h:'Why might "the wave pushes the water along" be a tempting but wrong idea?'},
+    3:{f:'Do waves transfer <strong>matter</strong>?',m:'What <strong>two things</strong> do waves transfer instead of matter?',h:'Why does a <strong>tsunami</strong> destroy things far from the earthquake, without the water travelling there?'},
+    4:{f:'In a Mexican wave, do the <strong>fans</strong> travel around the stadium?',m:'Does a <strong>radio wave</strong> carry matter to your car?',h:'Explain why a <strong>tsunami</strong> can cross an ocean without the water travelling that far.'},
+    5:{f:'State the key rule about waves and matter.',m:'Explain the duck test in your own words.',h:'Give a scenario NOT covered in class where the energy-not-matter rule applies.'},
+    6:{f:'Name one thing waves DO carry.',m:'Explain why a duck doesn\'t move forward when a wave passes.',h:'Compare a Mexican wave and a water wave — what\'s similar about what travels?'}
+  };
+
+  // --- Hints ---
+  function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+
+  // --- V5: progressive step reveal (I Do 1 definitions) ---
+  function revealStep(id){const host=document.getElementById(id);if(!host)return;const steps=host.querySelectorAll('.v5-step');let n=0;steps.forEach(s=>{if(s.classList.contains('revealed'))n++});if(n<steps.length){steps[n].classList.add('revealed');n++;playClick()}const cnt=document.getElementById(id+'-count');if(cnt)cnt.textContent=n+' / '+steps.length+' revealed';if(n>=steps.length)addXP(5,'Wave Definitions')}
+
+  // --- Lesson complete overlay ---
+  function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=50?'Outstanding effort across the whole lesson!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
+
+  // --- Slide-1 LO checkmark animation ---
+  function animateLOs(){document.querySelectorAll('.lo-anim li').forEach((li,i)=>{li.style.animationDelay=(.3+i*.4)+'s';setTimeout(()=>li.classList.add('done'),(800+i*900))})}
+
+  // --- Float dots on title slide ---
+  function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#7c3aed','#db2777','#f59e0b','#2563eb','#22c55e'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
+
+  // --- Init ---
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots()});
+
+</script>
+</body>
+</html>
