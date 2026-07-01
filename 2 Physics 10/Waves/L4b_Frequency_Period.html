@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>L4b: Frequency &amp; Period</title>
+  <style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}.anim-delay-3{animation-delay:.45s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}.slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button:active{transform:translateY(0)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(234,179,8,.2)}
+    .scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}
+    .sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .mc{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:1.02rem;color:#0f172a}
+    .mc span{padding:6px 10px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-weight:600}
+    .diagram-container{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:16px;text-align:center;margin:10px 0}
+    .data-table{width:100%;border-collapse:collapse;font-size:1.05rem;background:#fff}.data-table th,.data-table td{border:2px solid var(--task-border);padding:10px;text-align:center}.data-table th{background:rgba(234,179,8,.2)}
+    .editable[contenteditable="true"]{outline:2px dashed rgba(234,179,8,.5);border-radius:6px}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.8rem;font-weight:900;letter-spacing:1px}
+    .evidence-btn{background:var(--wedo-border);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,.12);transition:.25s}.evidence-btn:hover{background:#9d174d;transform:translateY(-2px)}
+    .formula-display{background:#1e293b;color:#fff;padding:14px 20px;border-radius:14px;font-size:1.5rem;text-align:center;font-weight:900;letter-spacing:1px;margin:8px 0;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .label-chip{padding:8px 16px;border-radius:999px;font-weight:900;font-size:.95rem;border:3px solid #cbd5e1;background:#fff;cursor:pointer;user-select:none;transition:.2s;display:inline-block;margin:3px}.label-chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1)}.label-chip.selected{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2);transform:scale(1.05)}.label-chip.placed{opacity:.4;pointer-events:none;border-style:dashed}
+    .label-slot{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:36px;border:3px dashed #cbd5e1;border-radius:10px;background:#f8fafc;font-weight:900;font-size:.9rem;color:var(--muted);cursor:pointer;transition:.25s;margin:2px}.label-slot:hover{border-color:var(--wedo-border);background:#fce7f3}.label-slot.filled{border-style:solid;background:#fff;color:#0f172a}.label-slot.correct{border-color:var(--success);background:#f0fdf4;color:#166534}.label-slot.wrong{border-color:var(--error);background:#fef2f2;animation:shake .4s}
+    .snap-score{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border:2px solid var(--wedo-border);border-radius:12px;padding:10px 16px;text-align:center;font-weight:900;font-size:1.1rem;color:#9d174d}
+    /* Match cards for We Do 2 */
+    .match-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:.25s;min-height:60px;display:flex;align-items:center;justify-content:center}.match-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}.match-card.sel-m{border-color:var(--wedo-border);box-shadow:0 0 0 4px rgba(219,39,119,.2)}.match-card.matched-m{border-color:var(--success);background:#f0fdf4;pointer-events:none}.match-card.wrong-m{border-color:var(--error);animation:shake .4s}
+    /* TF cards for We Do 3 */
+    .tf-card{background:#fff;border:3px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:8px;transition:.3s}.tf-card.correct-tf{border-color:var(--success);background:#f0fdf4}.tf-card.wrong-tf{border-color:var(--error);animation:shake .4s}
+    .tf-btns{display:flex;gap:8px;margin-top:6px}.tf-fb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:4px}
+    .slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    #print-area{display:none}
+    @media print{body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-grid-2x2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.print-box{border:1px solid #000;padding:10px;min-height:80px}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-foundation .middle-content,body.print-foundation .higher-content{display:none!important}body.print-middle .foundation-content,body.print-middle .higher-content{display:none!important}body.print-higher .foundation-content,body.print-higher .middle-content{display:none!important}}
+  
+    /* TIMING */
+    .time-badge{position:absolute;top:22px;left:40px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:var(--muted);z-index:200}
+    .time-badge+.slide-tag,.flex-badge+.slide-tag{margin-top:30px}
+    .flex-badge{position:absolute;top:22px;left:40px;background:var(--sc-bg);border:2px solid var(--sc-border);border-radius:10px;padding:4px 12px;font-size:.8rem;font-weight:900;color:#9a3412;z-index:200}
+  
+    /* FLOATING TIMER WIDGET */
+    #timer-widget{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-200px);background:white;border:3px solid var(--lo-border);border-radius:16px;padding:10px 20px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:1150;display:flex;align-items:center;gap:15px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275)}
+    #timer-widget.visible{transform:translateX(-50%) translateY(0)}
+    #timer-display{font-size:2.5rem;font-weight:900;color:var(--lo-border);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+    .timer-controls{display:flex;gap:5px}
+    .timer-btn{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;transition:background .2s;box-shadow:none}
+    .timer-btn:hover{background:#e2e8f0;transform:none}
+    .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
+    .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
+
+    /* ═══ V5 UPGRADE: chassis ported from L4 Aerobic ═══ */
+    @keyframes floatDot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+    .slide[data-type="observe"]{border-top-color:#dc2626}
+    .tag-observe{background:#fee2e2;color:#991b1b}
+
+    /* Teacher toolbar (TA Focus / Cold Call / Board / XP / Watch) */
+    .teacher-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;border-radius:999px;padding:5px 8px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+    .teacher-bar button{padding:7px 12px;font-size:.85rem;border-radius:999px}
+    .tb-ta{background:#0ea5e9}.tb-ta:hover{background:#0369a1}
+    .tb-cc{background:#7c3aed}.tb-cc:hover{background:#5b21b6}
+    .tb-board{background:#f59e0b}.tb-board:hover{background:#b45309}
+    .xp-chip{display:inline-flex;align-items:center;gap:5px;font-weight:900;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:6px 12px;border-radius:999px;font-size:.85rem}
+    .xp-chip.xp-pop{animation:popIn .4s}
+
+    /* Modals: TA Focus / Cold Call / Video / Board */
+    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-back.open{display:flex;animation:fadeIn .2s}
+    .modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;border-top:8px solid var(--lo-border)}
+    .modal h2{margin-right:0;border:none;padding:0}
+    .modal .modal-close{position:absolute;top:14px;right:16px;background:#e2e8f0;color:#0f172a;padding:6px 12px}
+    .modal-ta{border-top-color:#0ea5e9}.modal-cc{border-top-color:#7c3aed}.modal-board{border-top-color:#f59e0b}
+    .cc-name{font-size:1.6rem;font-weight:900;text-align:center;color:var(--lo-border);margin:6px 0 14px;min-height:38px}
+    .cc-q{padding:12px 14px;border-radius:12px;margin:8px 0;border-left:6px solid}
+    .cc-f{background:#dcfce7;border-color:#22c55e}.cc-m{background:#ffedd5;border-color:#f97316}.cc-h{background:#dbeafe;border-color:#1e3a8a}
+    .cc-q .tier{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .roster-row{display:flex;gap:8px;margin-top:10px}
+    .roster-row input{flex:1;padding:9px 12px;border:2px solid #cbd5e1;border-radius:10px;font-size:.95rem}
+    .ta-modal-body p{margin:8px 0}.ta-modal-body li{margin:5px 0}
+    .lb-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;margin:5px 0;background:#f8fafc;font-weight:bold}
+    .lb-row.me{background:#fef3c7}
+
+    /* Hint button */
+    .hint-btn{background:#10b981;font-size:.85rem}.hint-btn:hover{background:#047857}
+    .hint-text{display:none;margin-top:8px;padding:10px 12px;background:#ecfdf5;border-left:5px solid #10b981;border-radius:10px;font-weight:bold;color:#065f46}
+    .hint-text.show{display:block;animation:fadeInUp .25s}
+
+    /* Title hero + LO checks + success-criteria box */
+    .title-hero{display:flex;gap:18px;justify-content:center;margin:6px 0 4px;font-size:2.4rem}
+    .title-hero span{display:inline-block;animation:iconBounce 2.2s infinite}
+    .title-hero span:nth-child(2){animation-delay:.2s}.title-hero span:nth-child(3){animation-delay:.4s}.title-hero span:nth-child(4){animation-delay:.6s}.title-hero span:nth-child(5){animation-delay:.8s}
+    .float-dots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-dots i{position:absolute;width:14px;height:14px;border-radius:50%;opacity:.35;animation:floatDot 4s infinite ease-in-out}
+    .lo-anim li{opacity:0;animation:fadeInUp .5s forwards}
+    .lo-anim li.done::before{content:'✅ ';}
+    .sc1-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:14px 16px;border-radius:12px;max-width:680px;margin:14px auto;text-align:left}
+    .sc1-box h3{margin:0 0 6px;color:#9a3412}
+
+    /* V5: step reveal + turn & talk */
+    .v5-step{display:none}.v5-step.revealed{display:block;animation:fadeInUp .4s}
+    .step-ctrl{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 4px}
+    .step-ctrl .step-count{font-weight:900;color:var(--ido-border);font-size:.9rem}
+    .turn-talk{background:#eef2ff;border:2px dashed #6366f1;border-radius:14px;padding:14px 16px;margin-top:12px;position:relative}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-11px;left:14px;background:#6366f1;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Misconception + exam-tip callouts */
+    .misc-box{background:#fef2f2;border-left:6px solid #dc2626;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ MISCONCEPTION ALERT';position:absolute;top:-11px;left:12px;background:#dc2626;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;text-decoration:line-through;font-weight:bold}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 EXAMINER\'S TIP';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+
+    /* Lesson complete overlay + confetti */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+    .lesson-complete{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:2600;display:none;align-items:center;justify-content:center;padding:24px}
+    .lesson-complete.open{display:flex;animation:fadeIn .3s}
+    .lc-card{background:#fff;border-radius:22px;padding:34px 40px;text-align:center;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:10px solid var(--aspire-border);animation:popIn .5s}
+    .lc-card h1{border:none;font-size:2.2rem;display:block;color:var(--aspire-text)}
+    .lc-xp{font-size:3rem;font-weight:900;color:#f59e0b;margin:6px 0}
+
+    @media print{
+      .teacher-bar,.modal-back,.lesson-complete,#timer-widget,#confetti-canvas{display:none!important}
+      #print-area{padding:2px}
+      @page{margin:11mm}
+      .print-section{page-break-after:auto!important}
+      .print-section.visible{border-top:2px dashed #777;margin-top:7mm;padding-top:5mm;break-inside:avoid-page;page-break-inside:avoid}
+      #print-ko.visible{border-top:none;margin-top:0;padding-top:0}
+    }
+
+    @media (max-width:640px){
+      .slide{width:96%;height:94%;padding:20px 16px;border-radius:14px}
+      h1{font-size:1.7rem}h2{font-size:1.3rem;margin-right:0}p,li{font-size:1rem}
+      .content-grid,.arrival-grid,.mc{grid-template-columns:1fr!important}
+      .logo{width:96px;top:14px;right:14px}
+      .teacher-bar{top:8px;padding:4px 6px;gap:4px;max-width:96%}
+      .teacher-bar button{padding:7px 9px}
+      .tb-label{display:none}
+      .xp-chip{padding:6px 8px;font-size:.8rem}
+      .title-hero{font-size:1.7rem;gap:10px}
+    }
+  </style>
+</head>
+<body>
+<!-- ═══ TEACHER TOOLBAR (V4/V5) ═══ -->
+<div class="teacher-bar">
+  <span class="xp-chip">⭐ <span id="xp-val">0</span> XP</span>
+  <button class="tb-ta small" onclick="openTA()">🎓 <span class="tb-label">TA Focus</span></button>
+  <button class="tb-cc small" onclick="openCC()">🎯 <span class="tb-label">Cold Call</span></button>
+  <button class="tb-board small" onclick="openBoard()">🏆 <span class="tb-label">Board</span></button>
+  <button class="small" style="background:#dc2626" onclick="openVideo()">📺 <span class="tb-label">Watch</span></button>
+</div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">08:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="btn-play" onclick="startIndTimer()" title="Play">▶</button>
+    <button class="timer-btn" id="btn-pause" onclick="pauseIndTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetIndTimer(8)" title="8 min">↻8</button>
+    <button class="timer-btn" onclick="resetIndTimer(5)" title="5 min">↻5</button>
+    <button class="timer-btn" onclick="resetIndTimer(3)" title="3 min">↻3</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" data-title="Title">
+    <div class="float-dots"></div>
+    <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div style="text-align:center;margin-top:2%"><div class="animate-enter">
+      <p style="font-size:1rem;color:var(--muted);margin:0">Physics Lesson 4b — Waves</p>
+      <h1>Frequency &amp; Period</h1>
+      <p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 10px">Spec 3.1 · 3.3</p>
+      <div class="title-hero"><span>⏱️</span><span>🔢</span><span>🔁</span><span>📻</span><span>📐</span></div>
+      <div class="li-box" style="margin:14px auto;max-width:700px;text-align:left"><strong>Learning Objectives:</strong>
+        <ul class="lo-anim" style="font-size:1.05rem;margin-top:8px">
+          <li><strong>3.1</strong> – Use the units: hertz (Hz), second (s).</li>
+          <li><strong>3.3</strong> – Know the definitions of frequency and period, and the relationship T = 1/f.</li>
+        </ul>
+      </div>
+      <div class="sc1-box"><h3>🏆 By the end I will be able to…</h3>
+        <p style="margin:4px 0"><strong style="color:#22c55e">All:</strong> define frequency and period, and name their units.</p>
+        <p style="margin:4px 0"><strong style="color:#f97316">Most:</strong> use T = 1/f to calculate period from frequency (and back).</p>
+        <p style="margin:4px 0"><strong style="color:#1e3a8a">Some:</strong> explain why frequency and period are inversely related, with worked examples.</p>
+      </div>
+      <p style="font-size:1.05rem;margin-top:6px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
+    </div>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
+        <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
+        <button onclick="printPack('higher')" style="background:#1e3a8a">🖨️ Higher (3–5)</button>
+        <button class="ghost" onclick="printSection('ko')">🗂️ KO</button>
+      </div></div>
+    <div class="li-box" style="margin:10px auto;max-width:700px;text-align:left;background:#fff;border-color:#e2e8f0">
+      <h3 style="margin-top:0;color:var(--muted)">⏱️ 40-Minute Pacing Guide</h3>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Core path (40 min):</strong> Arrival → Starter → I Do → We Do → Independent → Exit Ticket</p>
+      <p style="font-size:.95rem;margin:4px 0"><strong>Part 2 of 3</strong> — follows 4a Wave Anatomy, and leads into 4c Energy Transfer.</p>
+    </div></div>
+  </div>
+
+  <!-- SLIDE 2: ARRIVAL -->
+  <div class="slide" id="arrival-slide" data-title="Arrival Task">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 4 min</div>
+    <span class="slide-tag tag-arrival">Arrival Task</span>
+    <h2>Arrival Task – Recall from Last Lesson</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer from memory. Questions 1–3 recap 4a — question 4 previews today.</div>
+    <div class="level-toggle" style="margin-top:4px">
+      <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchArrival('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div id="arrival-foundation" class="arrival-grid" style="margin-top:8px">
+      <div class="task-box animate-enter"><h3>1. 🟢</h3><p style="margin:0 0 8px">What is the highest point of a wave called?</p><div class="mc"><span>A) Trough</span><span>B) Crest</span><span>C) Amplitude</span><span>D) Wavelength</span></div><p class="answer">✅ B) Crest.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟢</h3><p style="margin:0 0 8px">What is amplitude?</p><div class="mc"><span>A) How tall the wave is</span><span>B) How fast it moves</span><span>C) The colour</span><span>D) The smell</span></div><p class="answer">✅ A) How tall the wave is.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟢</h3><p style="margin:0 0 8px">If something happens "frequently", it happens…</p><div class="mc"><span>A) Rarely</span><span>B) Often</span><span>C) Never</span><span>D) Slowly</span></div><p class="answer">✅ B) Often.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🔢</h3><p style="margin:0 0 8px">If 5 waves pass a point in 1 second, how many is that per second?</p><div class="mc"><span>A) 1</span><span>B) 5</span><span>C) 10</span><span>D) 0</span></div><p class="answer">✅ B) 5. That's a frequency of 5 per second.</p></div>
+    </div>
+    <div id="arrival-middle" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🟠</h3><p style="margin:0 0 8px">Define wavelength.</p><div class="mc"><span>A) Height of the wave</span><span>B) Distance from one wave to the next</span><span>C) The wave's speed</span><span>D) The wave's colour</span></div><p class="answer">✅ B) Distance from one point on a wave to the same point on the next wave.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🟠</h3><p style="margin:0 0 8px">What do you think "frequency" might measure?</p><div class="mc"><span>A) How tall waves are</span><span>B) How often waves happen each second</span><span>C) How wide waves are</span><span>D) The wave's colour</span></div><p class="answer">✅ B) How often waves happen each second.</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🟠</h3><p style="margin:0 0 8px">If a clock ticks once per second, how many ticks happen in 5 seconds?</p><div class="mc"><span>A) 1</span><span>B) 5</span><span>C) 10</span><span>D) 0.5</span></div><p class="answer">✅ B) 5 ticks.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🔢</h3><p style="margin:0 0 8px">A "class period" is a length of time. What do you think "period" might mean for a wave?</p><div class="mc"><span>A) The colour of a wave</span><span>B) The time for one wave to pass</span><span>C) The height of a wave</span><span>D) The number of waves</span></div><p class="answer">✅ B) The time for one wave to pass.</p></div>
+    </div>
+    <div id="arrival-higher" class="arrival-grid" style="margin-top:8px;display:none">
+      <div class="task-box animate-enter"><h3>1. 🔵</h3><p style="margin:0 0 8px">What is a wavefront?</p><div class="mc"><span>A) A single point on a wave</span><span>B) A line joining points at the same stage of a wave</span><span>C) The front of a boat</span><span>D) The end of a wave</span></div><p class="answer">✅ B) A line joining points at the same stage of vibration.</p></div>
+      <div class="task-box animate-enter anim-delay-1"><h3>2. 🔵</h3><p style="margin:0 0 8px">An event happens 10 times in 2 seconds. How many times per second?</p><div class="mc"><span>A) 5</span><span>B) 10</span><span>C) 20</span><span>D) 2</span></div><p class="answer">✅ A) 5 per second (10 ÷ 2).</p></div>
+      <div class="task-box animate-enter anim-delay-2"><h3>3. 🔵</h3><p style="margin:0 0 8px">Event A happens every 0.5 s. Event B happens every 2 s. Which happens more often?</p><div class="mc"><span>A) A</span><span>B) B</span><span>C) Same</span><span>D) Can't tell</span></div><p class="answer">✅ A) A — a shorter gap between events means it happens more often.</p></div>
+      <div class="task-box animate-enter anim-delay-3" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3>4. Lead-in 🔢</h3><p style="margin:0 0 8px">If frequency tells you how many waves per second, what do you think "period" tells you?</p><div class="mc"><span>A) How many waves in total</span><span>B) The time for ONE wave</span><span>C) The colour of the wave</span><span>D) The height of the wave</span></div><p class="answer">✅ B) The time for ONE wave to pass.</p></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: STARTER -->
+  <div class="slide" data-title="Starter">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-starter">Starter</span>
+    <h2>Starter: Units Match-Up 🔢</h2>
+    <div class="li-box"><strong>Instructions:</strong> In your book, match each quantity to its correct unit and symbol using the word bank. <strong>3 minutes.</strong></div>
+    <div class="content-grid" style="margin-top:8px">
+      <div>
+        <div class="task-box"><h3 style="margin-top:0">📝 Complete the Table</h3>
+          <table class="data-table" style="font-size:.95rem"><thead><tr><th>Quantity</th><th>Unit</th><th>Symbol</th></tr></thead><tbody>
+            <tr><td>Frequency</td><td>?</td><td>?</td></tr>
+            <tr><td>Wavelength</td><td>?</td><td>?</td></tr>
+            <tr><td>Wave speed</td><td>?</td><td>?</td></tr>
+            <tr><td>Period</td><td>?</td><td>?</td></tr>
+          </tbody></table>
+        </div>
+        <div class="scaffold-box"><strong>💡 Word bank:</strong> Hz (hertz) · m (metre) · m/s · s (second)</div>
+      </div>
+      <div>
+        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg)"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p style="font-size:.95rem;margin:0">A hummingbird's wings beat about <strong>50 times per second</strong> — that's a frequency of 50 Hz! Human ears can hear frequencies from about 20 Hz up to 20,000 Hz.</p></div>
+        <div class="aspire-box" style="margin-top:8px"><strong>🌟 Think ahead:</strong> If frequency is "per second", what unit do you think would make sense for something measured "in seconds"? Have a guess before I Do.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SLIDE 4: I DO – FREQUENCY & PERIOD -->
+  <div class="slide" data-title="I Do – Frequency & Period" data-type="ido">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 6 min</div>
+    <span class="slide-tag tag-ido">I Do</span>
+    <h2>I Do: Frequency &amp; Period (3.3)</h2>
+    <div class="li-box"><strong>Key Idea:</strong> Frequency and period both describe how fast a wave repeats — and they're linked by one formula.</div>
+    <div class="content-grid" style="margin-top:6px">
+      <div>
+        <div class="step-ctrl">
+          <button class="small" style="background:var(--ido-border)" onclick="revealStep('idodefs')">▶ Reveal next step</button>
+          <span class="step-count" id="idodefs-count">0 / 4 revealed</span>
+        </div>
+        <div class="ido-box animate-enter" id="idodefs"><h3 style="margin-top:0">🔄 Frequency, Period &amp; the Link</h3>
+          <p class="v5-step"><strong>Frequency (f)</strong> — the number of complete waves passing a point per second. Measured in <strong>hertz (Hz)</strong>.</p>
+          <p class="v5-step"><strong>Period (T)</strong> — the time taken for one complete wave to pass. Measured in <strong>seconds (s)</strong>.</p>
+          <p class="v5-step">They're <strong>inverses</strong> of each other: <span class="formula-display" style="display:inline-block;padding:8px 14px;font-size:1.1rem;margin:4px 0">T = 1 ÷ f &nbsp;&nbsp; f = 1 ÷ T</span></p>
+          <p class="v5-step">Example: if <strong>f = 5 Hz</strong> → each wave takes <strong>T = 1 ÷ 5 = 0.2 s</strong>. If <strong>T = 0.02 s</strong> → <strong>f = 1 ÷ 0.02 = 50 Hz</strong>.</p>
+        </div>
+      </div>
+      <div>
+        <div class="diagram-container animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">Frequency vs Period</h3>
+          <svg width="320" height="160" viewBox="0 0 320 160">
+            <text x="160" y="14" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">HIGH frequency = SHORT period</text>
+            <path d="M10,50 Q25,25 40,50 Q55,75 70,50 Q85,25 100,50 Q115,75 130,50 Q145,25 160,50 Q175,75 190,50 Q205,25 220,50 Q235,75 250,50 Q265,25 280,50 Q295,75 310,50" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+            <text x="160" y="95" text-anchor="middle" font-size="11" font-weight="bold" fill="#2563eb">LOW frequency = LONG period</text>
+            <path d="M10,130 Q50,90 90,130 Q130,170 170,130 Q210,90 250,130 Q290,170 310,130" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <table class="data-table" style="font-size:.9rem;margin-top:8px"><thead><tr><th>Quantity</th><th>Symbol</th><th>Unit</th></tr></thead><tbody>
+          <tr><td>Frequency</td><td>f</td><td>Hz</td></tr>
+          <tr><td>Period</td><td>T</td><td>s</td></tr>
+        </tbody></table>
+        <div class="exam-tip-box">If they ask "what happens to the period when frequency increases?" — the answer is always: <strong>period decreases</strong>. They are inversely proportional.</div>
+      </div>
+    </div>
+    <div class="turn-talk"><strong>Talk to your partner:</strong> If f = 10 Hz, what is T? Work it out together, then check with T = 1/f. Be ready to match some pairs yourself next.</div>
+  </div>
+
+  <!-- SLIDE 5: WE DO – MATCH FREQUENCY TO PERIOD -->
+  <div class="slide" data-title="We Do – Match Frequency to Period" data-type="wedo">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 6 min</div>
+    <span class="slide-tag tag-wedo">We Do</span>
+    <h2>We Do: Match Frequency to Period 🔢</h2>
+    <div class="li-box"><strong>Instructions:</strong> Click a <strong>frequency</strong> card on the left, then click the matching <strong>period</strong> card on the right. Use T = 1/f to work each one out. Get all 5!</div>
+    <div style="display:inline-block;background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:6px 14px;margin:6px 0;font-size:.9rem;font-weight:900;color:#9d174d">👥 Think-Pair-Share: Try it yourself → discuss with your partner → agree on the answer.</div>
+    <button class="evidence-btn" style="position:absolute;top:26px;left:40px;z-index:200" onclick="printWeDoEvidence('wedo1')">📸 Print Evidence</button>
+    <div id="wedo1" class="wedo-capture" style="margin-top:6px">
+      <div class="content-grid" style="height:auto;gap:14px">
+        <div>
+          <p style="text-align:center;color:var(--muted);font-size:.9rem;margin:0 0 6px"><strong>Frequency</strong> (click first)</p>
+          <div style="display:flex;flex-direction:column;gap:8px" id="match-terms">
+            <div class="match-card" onclick="matchSel(this,'term')" data-id="p1"><strong>f = 2 Hz</strong></div>
+            <div class="match-card" onclick="matchSel(this,'term')" data-id="p2"><strong>f = 5 Hz</strong></div>
+            <div class="match-card" onclick="matchSel(this,'term')" data-id="p3"><strong>f = 10 Hz</strong></div>
+            <div class="match-card" onclick="matchSel(this,'term')" data-id="p4"><strong>f = 4 Hz</strong></div>
+            <div class="match-card" onclick="matchSel(this,'term')" data-id="p5"><strong>f = 20 Hz</strong></div>
+          </div>
+        </div>
+        <div>
+          <p style="text-align:center;color:var(--muted);font-size:.9rem;margin:0 0 6px"><strong>Period</strong> (then click match)</p>
+          <div style="display:flex;flex-direction:column;gap:8px" id="match-defs">
+            <div class="match-card" onclick="matchSel(this,'def')" data-id="p3" style="font-size:.95rem">T = 0.1 s</div>
+            <div class="match-card" onclick="matchSel(this,'def')" data-id="p1" style="font-size:.95rem">T = 0.5 s</div>
+            <div class="match-card" onclick="matchSel(this,'def')" data-id="p5" style="font-size:.95rem">T = 0.05 s</div>
+            <div class="match-card" onclick="matchSel(this,'def')" data-id="p2" style="font-size:.95rem">T = 0.2 s</div>
+            <div class="match-card" onclick="matchSel(this,'def')" data-id="p4" style="font-size:.95rem">T = 0.25 s</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px">
+        <div class="snap-score">Matched: <span id="match-count">0</span> / 5</div>
+        <div id="match-msg" style="font-weight:900;font-size:1.1rem;min-height:24px"></div>
+      </div>
+      <div class="scaffold-box" style="margin-top:10px"><strong>🧡 Tip:</strong> T = 1 ÷ f. So f = 2 Hz gives T = 1 ÷ 2 = 0.5 s. Work through each card the same way.</div>
+      <div style="text-align:center;margin-top:8px"><button class="hint-btn small" onclick="toggleHint(this)">💡 Need a hint?</button><div class="hint-text">f=2→T=0.5s &nbsp;·&nbsp; f=5→T=0.2s &nbsp;·&nbsp; f=10→T=0.1s &nbsp;·&nbsp; f=4→T=0.25s &nbsp;·&nbsp; f=20→T=0.05s</div></div>
+      <div id="wedo1-notes" contenteditable="true" style="margin-top:8px;min-height:28px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;font-size:1rem;color:#334155" data-placeholder="Teacher notes..."></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: INDEPENDENT -->
+  <div class="slide" data-title="Independent Work" data-type="independent" data-timer="8">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 8 min</div>
+    <span class="slide-tag tag-independent">Independent Work</span>
+    <h2>Independent Work</h2>
+    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
+    <div class="content-grid" style="margin-top:10px">
+      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3>
+        <p><strong>Section A:</strong> Multiple Choice (4 questions)</p><p><strong>Section B:</strong> Short Answer — calculate T and f</p><p><strong>Section C:</strong> Long Answer — explain the relationship</p><p><strong>Section D:</strong> Exam-Style Question</p>
+        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for the formula and worked examples.</div>
+        <div class="exam-tip-box" style="margin-top:10px"><strong>Exam Command Words:</strong><br>
+          <strong>State</strong> = write a fact, no explanation needed.<br>
+          <strong>Calculate</strong> = show the formula, substitute, get the answer + unit.<br>
+          <strong>Explain</strong> = say what happens AND why (use "because").<br>
+          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
+      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can define frequency and period, and name their units.</p>
+        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can use T = 1/f to calculate period from frequency (and back).</p>
+        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can explain why frequency and period are inversely related, with worked examples.</p></div>
+    </div>
+    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define frequency (Hz) and period (s)</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can use T = 1/f</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can use f = 1/T</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain why they're inversely related (Middle/Higher)</span></div></div>
+  </div>
+
+  <!-- SLIDE 7: EXIT TICKET -->
+  <div class="slide" id="exit-slide" data-title="Exit Ticket" data-timer="3">
+    <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
+    <div class="time-badge">⏱️ 3 min</div>
+    <span class="slide-tag tag-exit">Exit Ticket</span>
+    <h2>Exit Ticket – Check Your Learning</h2>
+    <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+    <div class="level-toggle">
+      <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
+      <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
+      <button onclick="switchExit('higher')" style="background:#1e3a8a" >Higher (3–5)</button>
+      <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
+      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
+      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
+      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+    </div>
+    <div style="text-align:center;margin:4px 0 8px">
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
+      <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
+      <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
+    </div>
+
+    <div id="exit-foundation" class="task-box"><p><strong>1) What is frequency the measure of?</strong></p><p class="answer">The number of complete waves passing a point per second.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What unit is frequency measured in?</strong></p><p class="answer">Hertz (Hz).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What unit is period measured in?</strong></p><p class="answer">Seconds (s).</p></div>
+    <div id="exit-middle" class="task-box" style="display:none"><p><strong>1) Define period.</strong></p><p class="answer">The time taken for one complete wave to pass.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) A wave has a frequency of 4 Hz. What is its period?</strong></p><p class="answer">T = 1/f = 1/4 = 0.25 seconds.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) A wave has a period of 0.1 s. What is its frequency?</strong></p><p class="answer">f = 1/T = 1/0.1 = 10 Hz.</p></div>
+    <div id="exit-higher" class="task-box" style="display:none"><p><strong>1) Explain why frequency and period are described as "inverses" of each other.</strong></p><p class="answer">As one increases, the other decreases proportionally — multiplying them together always gives 1. A high frequency means each individual wave takes very little time (a short period), and vice versa.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) A wave has a period of 0.005 s. Calculate its frequency.</strong></p><p class="answer">f = 1/T = 1/0.005 = 200 Hz.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Two waves have frequencies of 100 Hz and 1000 Hz. Which has the shorter period, and why?</strong></p><p class="answer">The 1000 Hz wave has the shorter period (0.001 s vs 0.01 s) — a higher frequency always means a shorter period, since T = 1/f.</p>
+    <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Next lesson:</strong> Waves Transfer Energy, Not Matter — why a duck bobbing on a pond never actually travels anywhere!</div>
+    <div style="text-align:center;margin-top:10px"><button style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish Lesson</button></div>
+  </div>
+  </div>
+</div>
+
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/11</div>
+
+<!-- PRINT AREA -->
+<div id="print-area">
+  <div id="print-ko" class="print-section">
+    <div class="print-box" style="margin-bottom:10px"><p style="margin:0"><strong>Name:</strong> ________________________ &nbsp;&nbsp; <strong>Class:</strong> __________ &nbsp;&nbsp; <strong>Date:</strong> <span id="print-date" style="font-weight:bold">____________</span></p></div>
+    <div class="print-box" style="margin-bottom:12px"><strong>🏆 Success Criteria — tick at the END of the lesson:</strong>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can define frequency (Hz) and period (s).</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can use T = 1/f.</p>
+      <p style="margin:5px 0 0;font-size:1.02rem">☐ I can use f = 1/T and explain why they're inversely related.</p></div>
+    <h1 style="text-align:center">Knowledge Organiser: Frequency &amp; Period (L4b)</h1>
+    <p style="font-style:italic;color:#666;margin:0 0 10px;font-size:.9rem"><strong>How to use:</strong> Read this before starting. Refer back during independent work. Cover it up for the exit ticket — that tests what you actually remember!</p>
+    <table class="ko-table"><tr><th>Concept</th><th>Details</th></tr>
+      <tr><td><strong>Frequency (f)</strong></td><td>Number of complete waves per second. Hertz (Hz).</td></tr>
+      <tr><td><strong>Period (T)</strong></td><td>Time for one complete wave. Seconds (s).</td></tr>
+      <tr><td><strong>T = 1/f</strong></td><td>Period equals 1 divided by frequency.</td></tr>
+      <tr><td><strong>f = 1/T</strong></td><td>Frequency equals 1 divided by period.</td></tr>
+      <tr><td><strong>Inverse relationship</strong></td><td>High frequency = short period. Low frequency = long period.</td></tr>
+      <tr><td><strong>Worked example</strong></td><td>f = 5 Hz → T = 1 ÷ 5 = 0.2 s.</td></tr>
+    </table>
+    <div style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">🧠 Memory Tricks</h3><p style="margin:2px 0;font-size:.9rem"><strong>F</strong>requency = how <strong>F</strong>ast they come (per second).</p><p style="margin:2px 0;font-size:.9rem">"Period" like a class period = a length of <strong>time</strong>.</p><p style="margin:2px 0;font-size:.9rem">Flip it: T and f are always on <strong>opposite sides</strong> of "1 ÷".</p></div>
+    <div class="prevent-break" style="border:2px solid #9c27b0;border-radius:8px;padding:10px;margin-top:12px;background:#faf5ff"><h3 style="margin:0 0 4px">📋 Exam Technique — Every Mark Counts!</h3><p style="margin:2px 0;font-size:.9rem"><strong>1 mark</strong> = State / Name / Write the formula.</p><p style="margin:2px 0;font-size:.9rem"><strong>2 marks</strong> = Show the formula + substitute + answer with unit.</p><p style="margin:2px 0;font-size:.9rem"><strong>3+ marks</strong> = Full working + answer + unit. Explain questions need "because".</p><p style="margin:2px 0;font-size:.9rem"><strong>Golden rule:</strong> Write the formula first, every time — even if you get stuck after that, it's still a mark.</p></div>
+  </div>
+  <div id="print-arrival" class="print-section">
+    <h2>Arrival Task – Multiple Choice (circle a letter)</h2>
+    <div class="foundation-content"><h3>Foundation 🟢</h3>
+      <p>1) What is the highest point of a wave called? &nbsp;&nbsp; A) Trough &nbsp; B) Crest &nbsp; C) Amplitude &nbsp; D) Wavelength</p>
+      <p>2) What is amplitude? &nbsp;&nbsp; A) How tall the wave is &nbsp; B) How fast it moves &nbsp; C) The colour &nbsp; D) The smell</p>
+      <p>3) If something happens "frequently", it happens… &nbsp;&nbsp; A) Rarely &nbsp; B) Often &nbsp; C) Never &nbsp; D) Slowly</p>
+      <p>4) If 5 waves pass a point in 1 second, how many is that per second? &nbsp;&nbsp; A) 1 &nbsp; B) 5 &nbsp; C) 10 &nbsp; D) 0</p></div>
+    <div class="middle-content"><h3>Middle 🟠</h3>
+      <p>1) Define wavelength. &nbsp;&nbsp; A) Height of the wave &nbsp; B) Distance from one wave to the next &nbsp; C) The wave's speed &nbsp; D) The wave's colour</p>
+      <p>2) What do you think "frequency" might measure? &nbsp;&nbsp; A) How tall waves are &nbsp; B) How often waves happen each second &nbsp; C) How wide waves are &nbsp; D) The wave's colour</p>
+      <p>3) If a clock ticks once per second, how many ticks happen in 5 seconds? &nbsp;&nbsp; A) 1 &nbsp; B) 5 &nbsp; C) 10 &nbsp; D) 0.5</p>
+      <p>4) A "class period" is a length of time. What do you think "period" might mean for a wave? &nbsp;&nbsp; A) The colour of a wave &nbsp; B) The time for one wave to pass &nbsp; C) The height of a wave &nbsp; D) The number of waves</p></div>
+    <div class="higher-content"><h3>Higher 🔵</h3>
+      <p>1) What is a wavefront? &nbsp;&nbsp; A) A single point on a wave &nbsp; B) A line joining points at the same stage of a wave &nbsp; C) The front of a boat &nbsp; D) The end of a wave</p>
+      <p>2) An event happens 10 times in 2 seconds. How many times per second? &nbsp;&nbsp; A) 5 &nbsp; B) 10 &nbsp; C) 20 &nbsp; D) 2</p>
+      <p>3) Event A happens every 0.5 s. Event B happens every 2 s. Which happens more often? &nbsp;&nbsp; A) A &nbsp; B) B &nbsp; C) Same &nbsp; D) Can't tell</p>
+      <p>4) If frequency tells you how many waves per second, what do you think "period" tells you? &nbsp;&nbsp; A) How many waves in total &nbsp; B) The time for ONE wave &nbsp; C) The colour of the wave &nbsp; D) The height of the wave</p></div>
+  </div>
+  <div id="print-starter" class="print-section"><h2>Starter: Units Match-Up</h2>
+    <table class="ko-table"><tr><th>Quantity</th><th>Unit</th><th>Symbol</th></tr><tr><td>Frequency</td><td style="height:28px"></td><td></td></tr><tr><td>Wavelength</td><td></td><td></td></tr><tr><td>Wave speed</td><td></td><td></td></tr><tr><td>Period</td><td></td><td></td></tr></table>
+    <p><strong>Word bank:</strong> Hz (hertz) · m (metre) · m/s · s (second)</p>
+  </div>
+  <div id="print-wedo" class="print-section"><h2>We Do Worksheet</h2>
+    <div class="prevent-break"><h3>Part A: Match Frequency to Period</h3><p>Use T = 1/f to complete the table.</p>
+      <table class="ko-table"><tr><th>Frequency (Hz)</th><th>Period (s)</th></tr><tr><td>2</td><td style="height:28px"></td></tr><tr><td>5</td><td></td></tr><tr><td>10</td><td></td></tr><tr><td>4</td><td></td></tr><tr><td>20</td><td></td></tr></table></div>
+    <div class="prevent-break" style="margin-top:14px"><h3>Part B: Reverse It</h3><p>Use f = 1/T to complete the table.</p>
+      <table class="ko-table"><tr><th>Period (s)</th><th>Frequency (Hz)</th></tr><tr><td>0.5</td><td style="height:28px"></td></tr><tr><td>0.1</td><td></td></tr><tr><td>0.25</td><td></td></tr></table></div>
+  </div>
+  <div id="print-scaffold" class="print-section"><h2>Scaffolding Sheet</h2>
+    <div class="scaffold-print-box"><h3>Frequency &amp; Period</h3>
+      <table class="ko-table"><tr><th>Term</th><th>Definition</th><th>Unit</th></tr><tr><td>Frequency (f)</td><td>Waves per second</td><td>Hz</td></tr><tr><td>Period (T)</td><td>Time for 1 wave</td><td>s</td></tr></table></div>
+    <div class="scaffold-print-box"><h3>The Formula</h3><p><strong>T = 1 ÷ f</strong> &nbsp;&nbsp; and &nbsp;&nbsp; <strong>f = 1 ÷ T</strong></p><p>Write the formula first, then substitute the number you're given, then calculate.</p></div>
+  </div>
+  <!-- FOUNDATION -->
+  <div id="print-worksheet-foundation" class="print-section foundation-content"><h2>Independent Work – Foundation (Grades U–1)</h2>
+    <p style="font-style:italic;color:#166534;margin:0 0 10px"><strong>You've got this!</strong> Use your scaffolding sheet. Write the formula first every time. Show your working — even partial working earns marks.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice</h3>
+      <p>1. Frequency is measured in… [&nbsp;&nbsp;] Metres [&nbsp;&nbsp;] Hertz [&nbsp;&nbsp;] Seconds</p>
+      <p>2. Period is measured in… [&nbsp;&nbsp;] Metres [&nbsp;&nbsp;] Hertz [&nbsp;&nbsp;] Seconds</p>
+      <p>3. Frequency means… [&nbsp;&nbsp;] Waves per second [&nbsp;&nbsp;] Height of a wave [&nbsp;&nbsp;] Colour of a wave</p>
+      <p>4. The formula for period is… [&nbsp;&nbsp;] T = 1 ÷ f [&nbsp;&nbsp;] T = f ÷ 1 [&nbsp;&nbsp;] T = f + 1</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Short Answer</h3>
+      <p>5. State what unit frequency is measured in.</p><div class="print-line"></div>
+      <p style="margin-top:10px">6. State what unit period is measured in.</p><div class="print-line"></div>
+      <p style="margin-top:10px">7. A wave has a frequency of 2 Hz. Use T = 1 ÷ f to calculate the period. Show your working.</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer (Grade 2 Challenge — scaffolded)</h3>
+      <p><strong>8. (4 marks)</strong> Complete the sentences about frequency and period.</p>
+      <p>Frequency measures how many _________________________ pass a point every _________________________ . [2 marks]</p>
+      <p>Period measures the _________________________ for _________________________ complete wave to pass. [2 marks]</p></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style</h3>
+      <p><strong>9. (3 marks)</strong> A wave has a frequency of 10 Hz. Calculate the period. Show the formula, substitution and answer with unit.</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <!-- MIDDLE -->
+  <div id="print-worksheet-middle" class="print-section middle-content"><h2>Independent Work – Middle (Grades 1–2)</h2>
+    <p style="font-style:italic;color:#9a3412;margin:0 0 10px"><strong>Push yourself!</strong> Show full working for every calculation. Section D is your Grade 3 stretch — give it your best shot.</p>
+    <div class="prevent-break"><h3>Section A: Multiple Choice &amp; Recall</h3>
+      <p>1. Which quantity has the unit hertz? [&nbsp;&nbsp;] Wavelength [&nbsp;&nbsp;] Frequency [&nbsp;&nbsp;] Period</p>
+      <p>2. T = 1/f. If f = 10 Hz, T = … [&nbsp;&nbsp;] 10 s [&nbsp;&nbsp;] 0.1 s [&nbsp;&nbsp;] 100 s</p>
+      <p>3. Define frequency.</p><div class="print-line"></div>
+      <p>4. Define period.</p><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>5. Complete the table:</p><table class="ko-table"><tr><th>Frequency (Hz)</th><th>Period (s)</th></tr><tr><td>2</td><td style="height:28px"></td></tr><tr><td>5</td><td></td></tr><tr><td>50</td><td></td></tr><tr><td></td><td>0.01</td></tr></table>
+      <p style="margin-top:10px">6. Explain what it means for two quantities to be "inversely related", using frequency and period as your example. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>7. (4 marks)</strong> A student says "frequency and period mean the same thing." Explain why this is wrong. [4 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (Grade 3 Stretch)</h3>
+      <p><strong>8. (5 marks)</strong> A student counts 20 complete waves passing a point in 10 seconds.</p>
+      <p>(a) Calculate the frequency. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Calculate the period. [3 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <!-- HIGHER -->
+  <div id="print-worksheet-higher" class="print-section higher-content"><h2>Independent Work – Higher (Grades 3–5)</h2>
+    <p style="font-style:italic;color:#1e3a8a;margin:0 0 10px"><strong>Aim high!</strong> Full sentences for explanations. Section D includes Grade 5 challenges — these go beyond the basics. Show the examiner you can reason, not just calculate.</p>
+    <div class="prevent-break"><h3>Section A: Recall</h3>
+      <p>1. Define frequency and state its unit. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>2. Define period and state its unit. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>3. Explain the relationship between period and frequency. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section B: Application</h3>
+      <p>4. Complete the table and show working:</p><table class="ko-table"><tr><th>f (Hz)</th><th>T (s)</th><th>Working</th></tr><tr><td>250</td><td style="height:32px"></td><td></td></tr><tr><td></td><td>0.002</td><td></td></tr><tr><td>50000</td><td></td><td></td></tr></table>
+      <p style="margin-top:10px">5. Two waves have frequencies of 100 Hz and 1000 Hz. Explain, with calculations, which has the shorter period. [3 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section C: Long Answer</h3>
+      <p><strong>6. (5 marks)</strong> Explain why frequency and period are described as "inverses" of each other, and why this relationship always holds true. Use a worked example to support your answer. [5 marks]</p><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div><div class="print-line"></div></div>
+    <div class="prevent-break" style="margin-top:16px"><h3>Section D: Exam-Style (includes Grade 5 Challenge)</h3>
+      <p><strong>7. (6 marks)</strong> A wave source produces 40 complete waves in 8 seconds.</p>
+      <p>(a) Calculate the frequency. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(b) Calculate the period. [2 marks]</p><div class="print-line"></div><div class="print-line"></div>
+      <p>(c) The source is adjusted so the period halves. Explain what happens to the frequency. [2 marks]</p><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-exit" class="print-section">
+    <div class="foundation-content prevent-break"><h2>Exit Ticket – Frequency &amp; Period (Foundation U–1)</h2>
+      <p><strong>Name:</strong> _________________________ <strong>Date:</strong> _____________</p>
+<p>1) What is frequency the measure of?</p><div class="print-line"></div><p>2) What unit is frequency measured in?</p><div class="print-line"></div><p>3) What unit is period measured in?</p><div class="print-line"></div></div>
+    <div class="middle-content prevent-break"><h2>Exit Ticket – Frequency &amp; Period (Middle 1–2)</h2><p>1) Define period.</p><div class="print-line"></div><p>2) f = 4 Hz. Calculate T.</p><div class="print-line"></div><p>3) T = 0.1 s. Calculate f.</p><div class="print-line"></div></div>
+    <div class="higher-content prevent-break"><h2>Exit Ticket – Frequency &amp; Period (Higher 3–5)</h2><p>1) Explain why frequency and period are inverses.</p><div class="print-line"></div><div class="print-line"></div><p>2) T = 0.005 s. Calculate f.</p><div class="print-line"></div><p>3) Two waves have frequencies of 100 Hz and 1000 Hz. Which has the shorter period, and why?</p><div class="print-line"></div><div class="print-line"></div></div>
+  </div>
+  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+</div>
+
+<!-- ═══ V4/V5 MODALS / OVERLAYS ═══ -->
+<canvas id="confetti-canvas"></canvas>
+
+<div class="modal-back" id="ta-modal"><div class="modal modal-ta">
+  <button class="modal-close small" onclick="closeModal('ta-modal')">✕ Close</button>
+  <h2>🎓 TA Focus</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px" id="ta-slide-name"></p>
+  <div class="ta-modal-body" id="ta-body"></div>
+</div></div>
+
+<div class="modal-back" id="cc-modal"><div class="modal modal-cc">
+  <button class="modal-close small" onclick="closeModal('cc-modal')">✕ Close</button>
+  <h2>🎯 Cold Call</h2>
+  <div class="roster-row"><input id="cc-roster-input" placeholder="Names, comma separated (saved for all lessons)"><button class="small" onclick="saveRoster()">Save</button></div>
+  <button class="small" style="margin-top:10px;background:#7c3aed" onclick="pickPupil()">🎲 Pick a pupil</button>
+  <div class="cc-name" id="cc-name">—</div>
+  <div id="cc-questions"></div>
+</div></div>
+
+<div class="modal-back" id="video-modal"><div class="modal" style="max-width:760px;border-top-color:#dc2626">
+  <button class="modal-close small" onclick="closeVideo()">✕ Close</button>
+  <h2>📺 Waves in a Ripple Tank</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin:2px 0 12px">BBC Teach clip measuring frequency, wavelength and speed of water waves (spec 3.1/3.3). Teacher: swap the link in the code if you prefer another.</p>
+  <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000">
+    <iframe id="video-frame" title="Ripple tank waves video" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div></div>
+
+<div class="modal-back" id="board-modal"><div class="modal modal-board">
+  <button class="modal-close small" onclick="closeModal('board-modal')">✕ Close</button>
+  <h2>🏆 Class Progress Board</h2>
+  <p style="color:var(--muted);font-size:.9rem">XP earned this lesson through the interactive tasks.</p>
+  <div id="board-body"></div>
+</div></div>
+
+<div class="lesson-complete" id="lesson-complete"><div class="lc-card">
+  <h1>🎉 Lesson Complete!</h1>
+  <p>Frequency &amp; Period — Lesson 4b</p>
+  <div class="lc-xp">⭐ <span id="lc-xp-val">0</span> XP</div>
+  <p id="lc-msg" style="color:var(--muted)"></p>
+  <button onclick="document.getElementById('lesson-complete').classList.remove('open')">Close</button>
+</div></div>
+
+<script>
+  let currentSlide=0;const slides=document.querySelectorAll('.slide');
+  function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();checkTimerVisibility();const cur=slides[i];if(cur){const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve()}}
+  function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+  document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(document.querySelector('.modal-back.open,.lesson-complete.open'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+  function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}updateProgress();
+  function switchExit(l){document.getElementById('exit-foundation').style.display=l==='foundation'?'block':'none';document.getElementById('exit-middle').style.display=l==='middle'?'block':'none';document.getElementById('exit-higher').style.display=l==='higher'?'block':'none'}
+  function switchArrival(l){document.getElementById('arrival-foundation').style.display=l==='foundation'?'grid':'none';document.getElementById('arrival-middle').style.display=l==='middle'?'grid':'none';document.getElementById('arrival-higher').style.display=l==='higher'?'grid':'none'}
+  function stampDate(){const pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB')}
+  function printSection(id){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-'+id).classList.add('visible');stampDate();window.print()}
+  function printPack(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));['ko','arrival','starter','wedo','scaffold','exit'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});if(level==='foundation'){document.body.classList.add('print-foundation');document.getElementById('print-worksheet-foundation').classList.add('visible')}else if(level==='middle'){document.body.classList.add('print-middle');document.getElementById('print-worksheet-middle').classList.add('visible')}else{document.body.classList.add('print-higher');document.getElementById('print-worksheet-higher').classList.add('visible')}stampDate();window.print()}
+  function printExit(level){document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);document.getElementById('print-exit').classList.add('visible');stampDate();window.print()}
+  function printWeDoEvidence(wedoId){const area=document.getElementById(wedoId);if(!area)return;const ts=new Date().toLocaleString('en-GB');const title=slides[currentSlide].getAttribute('data-title')||'We Do';let results=[];area.querySelectorAll('.tf-fb,.label-slot.correct').forEach((el,i)=>{if(el.innerText)results.push((i+1)+': '+el.innerText)});const notesEl=area.querySelector('[contenteditable]');const notes=notesEl?notesEl.innerText:'';let content='CLASS EVIDENCE – '+title+'\nDate/Time: '+ts+'\n'+'─'.repeat(50)+'\n\n';if(results.length)content+='RESULTS:\n'+results.join('\n')+'\n\n';if(notes&&notes!==notesEl?.getAttribute('data-placeholder'))content+='TEACHER NOTES:\n'+notes+'\n';document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');window.print()}
+
+  // WE DO: MATCH FREQUENCY TO PERIOD
+  let mTerm=null,mDef=null,matchCount=0;
+  function matchSel(card,type){if(card.classList.contains('matched-m'))return;if(type==='term'){document.querySelectorAll('#match-terms .match-card').forEach(c=>c.classList.remove('sel-m'));card.classList.add('sel-m');mTerm=card;if(mDef)tryMatch()}else{document.querySelectorAll('#match-defs .match-card').forEach(c=>c.classList.remove('sel-m'));card.classList.add('sel-m');mDef=card;if(mTerm)tryMatch()}}
+  function tryMatch(){if(!mTerm||!mDef)return;if(mTerm.dataset.id===mDef.dataset.id){mTerm.classList.remove('sel-m');mTerm.classList.add('matched-m');mDef.classList.remove('sel-m');mDef.classList.add('matched-m');matchCount++;document.getElementById('match-count').innerText=matchCount;addXP(6,'Match Frequency to Period');if(matchCount>=5){document.getElementById('match-msg').innerText='🎉 ALL MATCHED!';confetti()}}else{mTerm.classList.add('wrong-m');mDef.classList.add('wrong-m');playBuzz();setTimeout(()=>{mTerm.classList.remove('sel-m','wrong-m');mDef.classList.remove('sel-m','wrong-m');mTerm=null;mDef=null},500);return}mTerm=null;mDef=null}
+
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')})});
+
+  // Floating Timer Widget
+  let indTimerInterval,indTimeLeft=0,indTimerRunning=false;
+  function checkTimerVisibility(){const s=slides[currentSlide];const t=s.getAttribute('data-timer');const w=document.getElementById('timer-widget');if(t){w.classList.add('visible');if(!indTimerRunning)resetIndTimer(parseInt(t))}else{w.classList.remove('visible');pauseIndTimer()}}
+  function updateIndTimerDisplay(){const m=Math.floor(indTimeLeft/60);const s=indTimeLeft%60;const el=document.getElementById('timer-display');el.innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.style.color=indTimeLeft<60?'var(--error)':'var(--lo-border)';if(indTimeLeft<=0){pauseIndTimer();el.innerText='⏰ TIME!';el.style.color='var(--error)'}}
+  function startIndTimer(){if(indTimerRunning||indTimeLeft<=0)return;indTimerRunning=true;document.getElementById('btn-play').classList.add('active-play');document.getElementById('btn-pause').classList.remove('active-pause');indTimerInterval=setInterval(()=>{indTimeLeft--;updateIndTimerDisplay()},1000)}
+  function pauseIndTimer(){indTimerRunning=false;clearInterval(indTimerInterval);document.getElementById('btn-play').classList.remove('active-play');document.getElementById('btn-pause').classList.add('active-pause')}
+  function resetIndTimer(minutes){pauseIndTimer();document.getElementById('btn-pause').classList.remove('active-pause');indTimeLeft=minutes*60;updateIndTimerDisplay()}
+
+  // ═══════════════ V4/V5 ENGAGEMENT MODULE (ported from L4 Aerobic) ═══════════════
+  // --- Sounds (WebAudio, no assets) ---
+  let _ac=null;function _audio(){if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return _ac}
+  function _tone(freq,dur,type){const a=_audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.start();o.stop(a.currentTime+dur)}
+  function playDing(){_tone(880,.18);setTimeout(()=>_tone(1320,.22),90)}
+  function playBuzz(){_tone(150,.25,'square')}
+  function playClick(){_tone(520,.06,'triangle')}
+  document.addEventListener('pointerdown',()=>{const a=_audio();if(a&&a.state==='suspended')a.resume()},{once:true});
+
+  // --- Confetti ---
+  function confetti(){const c=document.getElementById('confetti-canvas');if(!c)return;c.style.display='block';c.width=innerWidth;c.height=innerHeight;const ctx=c.getContext('2d');const cols=['#f59e0b','#7c3aed','#22c55e','#db2777','#2563eb','#eab308'];const P=[];for(let i=0;i<140;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[i%cols.length],v:2+Math.random()*4,a:Math.random()*6.28});let t=0;const id=setInterval(()=>{ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.05)*1.5;ctx.fillStyle=p.c;ctx.beginPath();ctx.rect(p.x,p.y,p.r,p.r*1.6);ctx.fill()});if(++t>140){clearInterval(id);ctx.clearRect(0,0,c.width,c.height);c.style.display='none'}},25)}
+
+  // --- XP system ---
+  let xp=0;const xpLog={};
+  function addXP(n,label){xp+=n;const v=document.getElementById('xp-val');v.textContent=xp;v.parentElement.classList.remove('xp-pop');void v.parentElement.offsetWidth;v.parentElement.classList.add('xp-pop');if(label)xpLog[label]=(xpLog[label]||0)+n;playDing()}
+
+  // --- Modals ---
+  function closeModal(id){document.getElementById(id).classList.remove('open')}
+  const VIDEO_ID='4ySBKUmQ9Go'; // BBC Teach: measuring waves in a ripple tank (spec 3.1/3.3) — swap to change clip
+  function openVideo(){const f=document.getElementById('video-frame');f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';document.getElementById('video-modal').classList.add('open')}
+  function closeVideo(){const f=document.getElementById('video-frame');f.src='';document.getElementById('video-modal').classList.remove('open')}
+  // --- Observe slide: lazy-load the embedded video + set the out-link ---
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID}
+  function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
+
+  // --- Cold Call (roster shared across all PS lessons) ---
+  function loadRoster(){return JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]')}
+  function saveRoster(){const raw=document.getElementById('cc-roster-input').value;const names=raw.split(',').map(s=>s.trim()).filter(Boolean);localStorage.setItem('ps_coldcall_roster',JSON.stringify(names));document.getElementById('cc-name').textContent=names.length?'Saved '+names.length+' names ✓':'—';playClick()}
+  function pickPupil(){const r=loadRoster();const el=document.getElementById('cc-name');if(!r.length){el.textContent='Add names first ↑';return}let i=0,n=12;const id=setInterval(()=>{el.textContent=r[Math.floor(Math.random()*r.length)];if(++i>n){clearInterval(id);el.textContent=r[Math.floor(Math.random()*r.length)];playDing()}},70)}
+  function openCC(){document.getElementById('cc-roster-input').value=loadRoster().join(', ');const d=CC_DATA[currentSlide];const box=document.getElementById('cc-questions');if(!d){box.innerHTML='<p style="color:var(--muted)">No targeted questions for this slide — use a recall question from earlier.</p>'}else{box.innerHTML=`<div class="cc-q cc-f"><div class="tier">Foundation · U/1</div>${d.f}</div><div class="cc-q cc-m"><div class="tier">Middle · 1–2</div>${d.m}</div><div class="cc-q cc-h"><div class="tier">Higher · 3–5</div>${d.h}</div>`}document.getElementById('cc-name').textContent='—';document.getElementById('cc-modal').classList.add('open')}
+
+  // --- TA Focus ---
+  function openTA(){const d=TA_DATA[currentSlide]||{name:slides[currentSlide].getAttribute('data-title')||'',body:'<p>Support pupils to stay on task and re-voice the key idea in their own words.</p>'};document.getElementById('ta-slide-name').textContent=d.name;document.getElementById('ta-body').innerHTML=d.body;document.getElementById('ta-modal').classList.add('open')}
+
+  // --- Per-slide data (index matches slide order: 0 Title,1 Arrival,2 Starter,3 IDo1,4 WeDo1,5 IDo2,6 WeDo2,7 IDo3-FLEX,8 WeDo3-FLEX,9 Observe-FLEX,10 Independent,11 Exit) ---
+  const TA_DATA={
+    1:{name:'Arrival – Recall from Last Lesson',body:'<p><strong>Your job:</strong> Q1–3 recap 4a (wave anatomy) — Q4 previews today\'s numeracy focus.</p><ul><li>If pupils are shaky on crest/amplitude, flag them for extra support today since frequency/period builds on the same diagram.</li><li>The lead-in question is really just division — reassure pupils this is simpler than it sounds.</li></ul>'},
+    2:{name:'Starter – Units Match-Up',body:'<p><strong>Your job:</strong> quick recall/prediction task — accept sensible guesses for symbols they haven\'t seen yet.</p><ul><li>Frequency (Hz) and wavelength (m) may be familiar from 4a; wave speed (m/s) and period (s) are new — don\'t expect certainty.</li></ul>'},
+    3:{name:'I Do – Frequency & Period',body:'<p><strong>Your job:</strong> use the "Reveal next step" button to pace the class through definitions → formula → example together.</p><ul><li>The inverse relationship (T = 1/f) is the main hurdle — use the worked numeric examples on screen, not just the formula in the abstract.</li><li>Keep saying "high frequency = short period" out loud until it sticks.</li></ul>'},
+    4:{name:'We Do – Match Frequency to Period',body:'<p><strong>Your job:</strong> Think-Pair-Share — let pupils calculate before matching, not guess-and-check.</p><ul><li>Insist on written working for each pair before they click — this is a calculation task, not a memory task.</li><li>The hint button gives all 5 answers — use it as a check, not a starting point.</li></ul>'},
+    5:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first few minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt pupils to write the formula first, every time, even if they get stuck after that.</li></ul>'},
+    6:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>The confidence traffic-light gives you a quick honest read of the room before you mark anything.</li><li>Note who still can\'t use T = 1/f independently — that\'s the secure-for-all goal and a starter for lesson 4c.</li></ul>'}
+  };
+  const CC_DATA={
+    1:{f:'What is the highest point of a wave called?',m:'What is amplitude?',h:'If 10 waves pass a point in 2 seconds, what is the frequency?'},
+    2:{f:'What unit is frequency measured in?',m:'What unit is wave speed measured in?',h:'What unit is period measured in?'},
+    3:{f:'What does frequency measure?',m:'What does period measure?',h:'Why are frequency and period called "inverses"?'},
+    4:{f:'f = 2 Hz. What is T?',m:'f = 10 Hz. What is T?',h:'T = 0.25 s. What is f?'},
+    5:{f:'What formula links period and frequency?',m:'A wave has f = 8 Hz. Calculate T.',h:'A wave has T = 0.02 s. Calculate f.'},
+    6:{f:'What unit is period measured in?',m:'f = 4 Hz. Calculate T.',h:'Explain why high frequency means short period.'}
+  };
+
+  // --- Hints ---
+  function toggleHint(btn){const t=btn.parentElement.querySelector('.hint-text');if(t){t.classList.toggle('show');playClick()}}
+
+  // --- V5: progressive step reveal (I Do 1 definitions) ---
+  function revealStep(id){const host=document.getElementById(id);if(!host)return;const steps=host.querySelectorAll('.v5-step');let n=0;steps.forEach(s=>{if(s.classList.contains('revealed'))n++});if(n<steps.length){steps[n].classList.add('revealed');n++;playClick()}const cnt=document.getElementById(id+'-count');if(cnt)cnt.textContent=n+' / '+steps.length+' revealed';if(n>=steps.length)addXP(5,'Wave Definitions')}
+
+  // --- Lesson complete overlay ---
+  function fireLessonComplete(){const o=document.getElementById('lesson-complete');if(o.classList.contains('open'))return;document.getElementById('lc-xp-val').textContent=xp;document.getElementById('lc-msg').textContent=xp>=50?'Outstanding effort across the whole lesson!':xp>0?'Good work — every bit of effort counts.':'Lesson delivered.';o.classList.add('open');confetti()}
+
+  // --- Slide-1 LO checkmark animation ---
+  function animateLOs(){document.querySelectorAll('.lo-anim li').forEach((li,i)=>{li.style.animationDelay=(.3+i*.4)+'s';setTimeout(()=>li.classList.add('done'),(800+i*900))})}
+
+  // --- Float dots on title slide ---
+  function buildFloatDots(){const host=document.querySelector('.float-dots');if(!host)return;const cols=['#7c3aed','#db2777','#f59e0b','#2563eb','#22c55e'];for(let i=0;i<12;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.background=cols[i%cols.length];d.style.animationDelay=(Math.random()*4)+'s';host.appendChild(d)}}
+
+  // --- Init ---
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
+  window.addEventListener('load',()=>{animateLOs();buildFloatDots()});
+
+</script>
+</body>
+</html>
