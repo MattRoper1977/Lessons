@@ -439,9 +439,28 @@
   .sign-check-result .hc-warn { color: var(--orange); }
   .sign-check-result .hc-skip { color: var(--muted); }
   .sign-check-result .hc-file { color: var(--muted); word-break: break-all; }
+
+  /* ============ HUB PULSE (honest fun-stats; device-truthful until a live endpoint is set) ============ */
+  .pulse { display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch; margin-top: 18px; }
+  .pulse-chip { flex: 1 1 180px; display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 13px 16px; min-width: 0; transition: transform .2s var(--ease), box-shadow .2s, border-color .2s; }
+  .pulse-chip:hover { transform: translateY(-2px); border-color: var(--pc, var(--blue)); box-shadow: 0 8px 16px -8px rgba(15,23,42,.12); }
+  .pulse-ico { width: 36px; height: 36px; border-radius: 10px; flex: none; display: flex; align-items: center; justify-content: center; background: var(--pl, #eef2f7); }
+  .pulse-ico svg { width: 18px; height: 18px; stroke: var(--pc, var(--blue)); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .pulse-body { min-width: 0; }
+  .pulse-num { font-size: 1.05rem; font-weight: 800; color: var(--ink); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pulse-lbl { font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .pulse-scope { flex-basis: 100%; font-size: .7rem; color: var(--muted); font-weight: 600; padding: 0 2px; }
+  .pulse-scope .ps-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: middle; }
+  .pulse-scope.is-live .ps-dot { background: var(--green); box-shadow: 0 0 8px rgba(22,163,74,.6); }
+
+  /* ============ POLISH: skip link + unified keyboard focus ============ */
+  .skip-link { position: absolute; left: -9999px; top: 12px; z-index: 300; background: var(--blue); color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 10px; text-decoration: none; }
+  .skip-link:focus { left: 12px; }
+  .chip:focus-visible, .jn-pill:focus-visible, .sec-tools button:focus-visible, .header-cta:focus-visible, .theme-toggle:focus-visible, .pulse-chip:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 </style>
 </head>
 <body>
+<a href="#search" class="skip-link">Skip to search</a>
 
 <div id="liveTicker" class="ticker-wrap">
   <a id="tickerLink" href="#" target="_blank" rel="noopener noreferrer">
@@ -510,6 +529,8 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
     </a>
   </div>
+
+  <div id="pulse" class="pulse" aria-label="Hub activity"></div>
 
   <div id="spotlight"></div>
 
@@ -723,6 +744,11 @@ const LESSONS = [
   {subject:"Games", title:"🌐 Globe Snake",          file:"Games/Globe_Snake (1).html",      tag:"game", added:"2026-06-26"},
   {subject:"Games", title:"⚡ Neon Snake Overdrive",  file:"Games/Neon_Snake_Overdrive.html", tag:"game", added:"2026-06-26"},
   {subject:"Games", title:"🛡️ Neon Siege",           file:"Games/Neon_Siege.html",           tag:"game", added:"2026-07-01"},
+  {subject:"Games", title:"🛰️ Orbital",              file:"Games/Orbital_source.html",       tag:"game", added:"2026-07-01"},
+  {subject:"Games", title:"🏁 Grid Chase",            file:"Games/Grid_Chase.html",           tag:"game", added:"2026-07-02"},
+  {subject:"Games", title:"🔺 Prism",                 file:"Games/Prism.html",                tag:"game", added:"2026-07-02"},
+  {subject:"Games", title:"🪝 Grapple",               file:"Games/Grapple.html",              tag:"game", added:"2026-07-02"},
+  {subject:"Games", title:"⚪ Marble",                file:"Games/Marble.html",               tag:"game", added:"2026-07-02"},
 
 ];
 
@@ -795,7 +821,7 @@ function recordOpen(file){
   r.unshift(file); r = r.slice(0, 8);
   try { localStorage.setItem(RECENT_KEY, JSON.stringify(r)); } catch(e){}
   logEvent(file);
-  setTimeout(buildSpotlight, 60); /* deferred so a card's launch isn't interrupted */
+  setTimeout(() => { buildSpotlight(); buildPulse(null); }, 60); /* deferred so a card's launch isn't interrupted */
 }
 
 /* ============ SIGN IN + ACTIVITY LOG (device-local; no passwords) ============ */
@@ -804,6 +830,8 @@ const LOG_KEY  = 'progressLessonHubLog_v1';
 const LOG_MAX  = 300;
 /* Optional: set to a PythonAnywhere endpoint later to also send events off-device. Empty = device-only. */
 const LOG_ENDPOINT = '';
+/* Optional: set to a stats JSON endpoint (see hub_stats.py) to show real cross-device figures. Empty = this-device figures. */
+const STATS_ENDPOINT = '';
 
 function cleanName(s){ return String(s || '').replace(/[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g, '').replace(/\s+/g, ' ').trim().slice(0, 20); }
 function loadUser(){ try { const u = JSON.parse(localStorage.getItem(USER_KEY)); return (u && u.name) ? u : null; } catch(e){ return null; } }
@@ -883,6 +911,61 @@ async function checkLinks(onProgress){
     }
   }
   return results;
+}
+
+/* ============ HUB PULSE — fun stats that never lie ============
+   Device-only mode (default): figures come from THIS device's log, labelled as such.
+   Live mode: if STATS_ENDPOINT is set and responds, shows real cross-device figures. */
+function pulseChip(icon, num, lbl, colour, light){
+  return `<div class="pulse-chip" style="--pc:${colour};--pl:${light}" tabindex="0">
+    <span class="pulse-ico"><svg viewBox="0 0 24 24">${icon}</svg></span>
+    <span class="pulse-body"><span class="pulse-num">${num}</span><br><span class="pulse-lbl">${lbl}</span></span>
+  </div>`;
+}
+function buildPulse(globalStats){
+  const host = document.getElementById('pulse');
+  if (!host) return;
+  const I_FLAME = '<path d="M12 22c4.4 0 7-2.8 7-6.5 0-3-2-5-3.5-6.5C14 7.5 13 5.5 13 3c-3 2-4.5 4.5-4.5 7C7 9 6.5 8 6.5 6.5 5 8.5 5 11 5 12.5 5 19.2 7.6 22 12 22z"/>';
+  const I_STAR  = '<polygon points="12 2 15 9 22 9 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 9 9 9"/>';
+  const I_BOX   = '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>';
+  const I_USERS = '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>';
+  const newest = LESSONS.filter(l => l.added).sort((a,b) => new Date(b.added) - new Date(a.added))[0];
+  let chips = '', scope = '';
+  if (globalStats && typeof globalStats.online === 'number'){
+    const top = (globalStats.top && globalStats.top[0]) ? lessonByFile(globalStats.top[0].f) : null;
+    chips =
+      pulseChip(I_USERS, String(globalStats.online), 'using the hub now', 'var(--green)', '#dcfce7') +
+      (top ? pulseChip(I_FLAME, top.title, 'most opened this week', 'var(--orange)', '#ffedd5') : '') +
+      (newest ? pulseChip(I_STAR, newest.title, 'newest arrival', 'var(--purple)', '#ede9fe') : '') +
+      pulseChip(I_BOX, String(LESSONS.length), 'resources ready', 'var(--blue)', '#dbeafe');
+    scope = '<span class="pulse-scope is-live"><span class="ps-dot"></span>Live across all devices</span>';
+  } else {
+    const log = loadLog().filter(e => e.f && e.f !== '(hub visit)');
+    const weekAgo = Date.now() - 7 * 86400000;
+    const recent = log.filter(e => new Date(e.t).getTime() > weekAgo);
+    const tally = {};
+    recent.forEach(e => { tally[e.f] = (tally[e.f] || 0) + 1; });
+    const topFile = Object.keys(tally).sort((a,b) => tally[b] - tally[a])[0];
+    const top = topFile ? lessonByFile(topFile) : null;
+    chips =
+      (top ? pulseChip(I_FLAME, top.title, 'most opened here this week', 'var(--orange)', '#ffedd5') : '') +
+      pulseChip(I_USERS, String(recent.length), 'opens here this week', 'var(--green)', '#dcfce7') +
+      (newest ? pulseChip(I_STAR, newest.title, 'newest arrival', 'var(--purple)', '#ede9fe') : '') +
+      pulseChip(I_BOX, String(LESSONS.length), 'resources ready', 'var(--blue)', '#dbeafe');
+    scope = '<span class="pulse-scope"><span class="ps-dot"></span>Stats from this device only</span>';
+  }
+  host.innerHTML = chips + scope;
+}
+async function initPulse(){
+  buildPulse(null);
+  if (!STATS_ENDPOINT) return;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    const res = await fetch(STATS_ENDPOINT, { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(timer);
+    if (res.ok) buildPulse(await res.json());
+  } catch(e){ /* quietly stay in device-only mode */ }
 }
 
 async function runHealthCheck(){
@@ -1347,9 +1430,9 @@ function applyFilter(){
   });
 
   document.querySelectorAll('.jn-pill').forEach(p => p.classList.toggle('is-empty', !(perSubject[p.dataset.subject] > 0)));
-  document.querySelectorAll('.chip[data-type]').forEach(c => c.classList.toggle('active', c.dataset.type === state.type));
+  document.querySelectorAll('.chip[data-type]').forEach(c => { const on = c.dataset.type === state.type; c.classList.toggle('active', on); c.setAttribute('aria-pressed', String(on)); });
   const favChip = document.querySelector('.chip.fav');
-  if (favChip) favChip.classList.toggle('active', state.favsOnly);
+  if (favChip){ favChip.classList.toggle('active', state.favsOnly); favChip.setAttribute('aria-pressed', String(state.favsOnly)); }
 
   let label = `Showing ${shownTotal} of ${LESSONS.length} resources`;
   if (state.favsOnly) label += ' · ⭐ Favourites';
@@ -1412,6 +1495,7 @@ try {
   renderGreeting();
   initLiveBanner();
   build();
+  initPulse();
   const _issues = auditData();
   if (_issues.length){
     console.warn('[Lesson Hub] ' + _issues.length + ' data issue(s) found — open Sign in → “Check all links & data” to review:');
