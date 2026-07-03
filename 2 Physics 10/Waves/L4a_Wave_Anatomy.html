@@ -147,6 +147,34 @@
       .xp-chip{padding:6px 8px;font-size:.8rem}
       .title-hero{font-size:1.7rem;gap:10px}
     }
+
+    /* ═══ ACTIVE-LESSON ADDITIONS ═══ */
+    .mc span{cursor:pointer;transition:all .15s}
+    .mc span:hover{border-color:#7c3aed}
+    .mc span.ok{background:#dcfce7;border-color:#22c55e;color:#166534;font-weight:900}
+    .mc span.no{background:#fee2e2;border-color:#ef4444;animation:shake .35s}
+    .mc.locked span{pointer-events:none;opacity:.55}.mc.locked span.ok{opacity:1}
+    .caller-box{background:#0f172a;border-radius:18px;padding:26px 18px;text-align:center;color:#fff;display:flex;flex-direction:column;justify-content:center}
+    #caller-display{font-size:2.8rem;font-weight:900;min-height:70px;line-height:1.1}
+    #caller-display.pop{animation:popIn .35s}
+    #caller-sub{font-size:1.25rem;color:#94a3b8;font-weight:800;min-height:30px;margin-top:6px}
+    .wave-wrap{background:#0f172a;border-radius:14px;padding:8px;text-align:center}
+    .wave-wrap canvas{max-width:100%;height:auto}
+    .wave-controls label{display:block;font-weight:800;font-size:.85rem;color:#334155;margin-top:6px}
+    .wave-controls input[type=range]{width:100%;accent-color:#7c3aed}
+    .quiz-q{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:8px 12px;margin:8px 0}
+    .qopt{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid #e2e8f0;color:#334155;border-radius:10px;padding:7px 12px;margin:5px 0;font-weight:700;font-size:.95rem;cursor:pointer}
+    .qopt.ok{background:#dcfce7;border-color:#22c55e;color:#166534}
+    .qopt.no{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+    .quiz-q.locked .qopt{pointer-events:none;opacity:.6}.quiz-q.locked .qopt.ok,.quiz-q.locked .qopt.no{opacity:1}
+    .qfb{font-weight:900;font-size:.9rem;min-height:18px;margin-top:2px}
+    .chk-item{display:flex;align-items:center;gap:8px;margin:5px 0;cursor:pointer;user-select:none}
+    .chk-item .box{width:20px;height:20px;border:2px solid #7c3aed;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:transparent}
+    .chk-item.done .box{background:#7c3aed;color:#fff}
+    .chk-item.done span:last-child{text-decoration:line-through;color:#7c3aed}
+    .name-input{border:2px solid #cbd5e1;border-radius:10px;padding:8px 12px;font-size:1rem;font-weight:700;font-family:inherit}
+    .conf-opt{cursor:pointer;transition:transform .15s}.conf-opt:hover{transform:scale(1.05)}
+  
   </style>
 </head>
 <body>
@@ -195,7 +223,7 @@
       </div>
       <p style="font-size:1.05rem;margin-top:6px"><strong>Navigation:</strong> Arrow Keys or Spacebar</p>
     </div>
-    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Pupil Packs</h3>
+    <div class="scaffold-box" style="display:inline-block;margin-top:14px;text-align:left"><h3 style="margin-top:0">🖨️ Paper Packs (backup — today is screen-first!)</h3>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <button onclick="printPack('foundation')" style="background:#22c55e">🖨️ Foundation (U–1)</button>
         <button onclick="printPack('middle')" style="background:#f97316">🖨️ Middle (1–2)</button>
@@ -215,7 +243,7 @@
     <div class="time-badge">⏱️ 4 min</div>
     <span class="slide-tag tag-arrival">Arrival Task</span>
     <h2>Arrival Task – What Do You Already Know?</h2>
-    <div class="li-box"><strong>Instructions:</strong> Answer from memory. This is a new topic — do your best!</div>
+    <div class="li-box"><strong>Instructions:</strong> <strong>Tap your answer</strong> on the board or your device — green = correct, keep trying if it shakes! New topic, so best guesses welcome.</div>
     <div class="level-toggle" style="margin-top:4px">
       <button onclick="switchArrival('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
       <button onclick="switchArrival('middle')" style="background:#f97316" >Middle (1–2)</button>
@@ -245,53 +273,25 @@
   <!-- SLIDE 3: STARTER -->
   <div class="slide" data-title="Starter">
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
-    <div class="time-badge">⏱️ 3 min</div>
+    <div class="time-badge">⏱️ 4 min</div>
     <span class="slide-tag tag-starter">Starter</span>
-    <h2>Starter: Where Have You Seen Waves? 🌊</h2>
-    <div class="li-box"><strong>Instructions:</strong> <strong>No science knowledge needed!</strong> Just think about your everyday life. In your book, answer the 3 questions below. <strong>3 minutes.</strong></div>
+    <h2>Starter: BE the Wave! 🌊🙌</h2>
+    <div class="li-box"><strong>Everyone becomes the wave</strong> — standing up, or arms-only from your seat. <strong>Arms UP = crest 🔺 · Crouch / arms DOWN = trough 🔻 · Arms flat = rest position ➖ · Big moves = big amplitude 💪</strong>. Watch the caller and react FAST!</div>
     <div class="content-grid" style="margin-top:8px">
-      <div>
-        <div class="task-box"><h3 style="margin-top:0">📝 Think &amp; Write</h3>
-          <p><strong>1.</strong> List <strong>3 places</strong> you've seen waves in real life. (Think: beach, pond, music speaker, microwave…)</p>
-          <p><strong>2.</strong> Draw a simple picture of a wave — what shape is it?</p>
-          <p><strong>3.</strong> Draw a wave shape, then have a guess: what would you call the very top of your drawing? And the very bottom?</p>
-        </div>
-        <div class="scaffold-box"><strong>💡 Need ideas?</strong> Ocean, ripples in a puddle, sound from a speaker, the wiggly line on a heart monitor, the mexican wave at football…</div>
+      <div class="caller-box">
+        <div id="caller-display">Ready…</div>
+        <div id="caller-sub">Press start when everyone is set</div>
+        <div><button id="caller-btn" style="background:#7c3aed;margin-top:12px" onclick="startCaller()">▶ Start the caller</button></div>
       </div>
       <div>
-        <div class="diagram-container"><h3 style="margin-top:0;color:var(--ido-border)">🖼️ Can you spot waves here?</h3>
-          <svg width="280" height="200" viewBox="0 0 280 200">
-            <!-- Ocean scene -->
-            <rect x="10" y="10" width="125" height="85" fill="#bfdbfe" rx="6"/>
-            <path d="M10,60 Q30,50 50,60 T90,60 T135,60" stroke="#1e40af" stroke-width="2.5" fill="none"/>
-            <path d="M10,75 Q30,65 50,75 T90,75 T135,75" stroke="#1e40af" stroke-width="2.5" fill="none"/>
-            <text x="72" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">🌊 Ocean</text>
-            <!-- Speaker / sound -->
-            <rect x="145" y="10" width="125" height="85" fill="#fef3c7" rx="6"/>
-            <rect x="155" y="40" width="20" height="30" fill="#92400e"/>
-            <circle cx="165" cy="55" r="6" fill="#fbbf24"/>
-            <path d="M180,40 Q200,55 180,70" stroke="#92400e" stroke-width="2" fill="none"/>
-            <path d="M190,35 Q215,55 190,75" stroke="#92400e" stroke-width="2" fill="none"/>
-            <path d="M200,30 Q230,55 200,80" stroke="#92400e" stroke-width="2" fill="none"/>
-            <text x="207" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">🔊 Sound</text>
-            <!-- Light / sun rays -->
-            <rect x="10" y="105" width="125" height="85" fill="#fef08a" rx="6"/>
-            <circle cx="72" cy="150" r="14" fill="#fbbf24"/>
-            <line x1="72" y1="130" x2="72" y2="120" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="72" y1="170" x2="72" y2="180" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="52" y1="150" x2="42" y2="150" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="92" y1="150" x2="102" y2="150" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="58" y1="136" x2="50" y2="128" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="86" y1="164" x2="94" y2="172" stroke="#f59e0b" stroke-width="2"/>
-            <text x="72" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">☀️ Light</text>
-            <!-- ECG / heartbeat -->
-            <rect x="145" y="105" width="125" height="85" fill="#fecaca" rx="6"/>
-            <polyline points="150,150 160,150 164,145 168,155 172,130 176,170 180,150 195,150 205,150 209,145 213,155 217,130 221,170 225,150 265,150" stroke="#dc2626" stroke-width="2" fill="none"/>
-            <text x="207" y="120" text-anchor="middle" font-size="10" font-weight="bold" fill="#991b1b">❤️ Heartbeat</text>
-          </svg>
-          <p style="font-size:.9rem;margin-top:4px;color:var(--muted)">These are all waves! They move energy but not matter.</p>
+        <div class="task-box" style="margin:0"><h3 style="margin-top:0">🗝️ The moves</h3>
+          <p style="margin:4px 0">🔺 <strong>CREST</strong> — arms stretched UP high</p>
+          <p style="margin:4px 0">🔻 <strong>TROUGH</strong> — crouch / arms down low</p>
+          <p style="margin:4px 0">➖ <strong>REST POSITION</strong> — arms out flat and level</p>
+          <p style="margin:4px 0">💪 <strong>BIG amplitude</strong> — huge swings · 🤏 <strong>small amplitude</strong> — tiny wiggles</p>
+          <p style="margin:4px 0">➡️ <strong>MEXICAN WAVE</strong> — ripple across the room in seat order!</p>
         </div>
-        <div class="task-box" style="border-color:var(--ido-border);background:var(--ido-bg);margin-top:8px"><h3 style="margin-top:0;color:var(--ido-border)">💡 Did You Know?</h3><p style="font-size:.95rem;margin:0">The loudest sound ever recorded was the 1883 Krakatoa eruption — heard <strong>4,800 km away</strong>. That's the same wave physics you're about to study!</p></div>
+        <div class="turn-talk" style="margin-top:8px"><strong>Shout-out round (while you catch your breath):</strong> Where have you seen a real wave this week? Sea, puddle, speaker, heart monitor…</div>
       </div>
     </div>
   </div>
@@ -320,27 +320,17 @@
       </div>
       <div>
         <div class="diagram-container animate-enter">
-          <h3 style="margin-top:0;color:var(--ido-border)">Anatomy of a Wave</h3>
-          <svg width="340" height="200" viewBox="0 0 340 200">
-            <!-- Rest position -->
-            <line x1="10" y1="100" x2="330" y2="100" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6"/>
-            <text x="335" y="104" font-size="10" fill="#94a3b8">Rest</text>
-            <!-- Wave -->
-            <path d="M10,100 Q50,20 90,100 Q130,180 170,100 Q210,20 250,100 Q290,180 330,100" fill="none" stroke="#7c3aed" stroke-width="3"/>
-            <!-- Crest label -->
-            <line x1="50" y1="22" x2="50" y2="40" stroke="#dc2626" stroke-width="1.5"/><text x="50" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">Crest</text>
-            <!-- Trough label -->
-            <line x1="130" y1="178" x2="130" y2="160" stroke="#2563eb" stroke-width="1.5"/><text x="130" y="195" text-anchor="middle" font-size="11" font-weight="bold" fill="#2563eb">Trough</text>
-            <!-- Amplitude arrow -->
-            <line x1="210" y1="100" x2="210" y2="22" stroke="#16a34a" stroke-width="2.5" marker-end="url(#a1)"/><defs><marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
-            <text x="225" y="60" font-size="11" font-weight="bold" fill="#16a34a">Amplitude</text>
-            <!-- Wavelength arrow -->
-            <line x1="10" y1="100" x2="170" y2="100" stroke="#f59e0b" stroke-width="0"/>
-            <line x1="50" y1="40" x2="210" y2="40" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="50" y1="36" x2="50" y2="44" stroke="#f59e0b" stroke-width="2"/>
-            <line x1="210" y1="36" x2="210" y2="44" stroke="#f59e0b" stroke-width="2"/>
-            <text x="130" y="35" text-anchor="middle" font-size="11" font-weight="bold" fill="#d97706">Wavelength (λ)</text>
-          </svg>
+          <h3 style="margin-top:0;color:var(--ido-border)">🎛️ Live Wave Machine — come up and drive it!</h3>
+          <div class="wave-wrap"><canvas id="wm-ido" width="360" height="200"></canvas></div>
+          <div class="wave-controls">
+            <label>💪 Amplitude (how TALL) <input type="range" min="10" max="90" value="55" oninput="setWave('wm-ido','amp',this.value)"></label>
+            <label>↔️ Wavelength (how SPREAD OUT) <input type="range" min="60" max="300" value="140" oninput="setWave('wm-ido','wl',this.value)"></label>
+            <label>⚡ Speed <input type="range" min="0" max="6" step="0.5" value="2" oninput="setWave('wm-ido','spd',this.value)"></label>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:6px;flex-wrap:wrap;align-items:center">
+            <button class="small" style="background:var(--ido-border)" onclick="toggleWaveRun('wm-ido',this)">⏸ Freeze</button>
+            <label style="font-weight:800;font-size:.9rem;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked onchange="toggleWaveLabels('wm-ido',this)"> Show labels</label>
+          </div>
         </div>
         <div class="task-box" style="border-color:var(--lo-border);background:var(--lo-bg)"><h3 style="margin-top:0;color:var(--lo-border)">🌍 Why This Matters</h3><p>Surfers read wave height (amplitude) and spacing (wavelength) to catch the perfect wave. Engineers measure amplitude to predict flood risk from waves. Every wave — water, sound, or light — has the same basic anatomy.</p></div>
         <div class="scaffold-box animate-enter anim-delay-1"><strong>💡 Memory tricks:</strong><br>
@@ -428,7 +418,7 @@
         <div class="exam-tip-box"><p style="margin:0"><strong>Listen carefully:</strong> the exam-safe word for "how tall" is always <strong>amplitude</strong>, not "wavelength" — they're easy to mix up.</p></div>
       </div>
     </div>
-    <div class="li-box" style="background:#f0fdf4;border-left-color:#22c55e;color:#14532d;margin:12px 0 8px"><strong>✍️ Now finish these — say it out loud first, then jot it down:</strong></div>
+    <div class="li-box" style="background:#f0fdf4;border-left-color:#22c55e;color:#14532d;margin:12px 0 8px"><strong>🗣️ Say the missing words OUT LOUD with your partner — no writing:</strong></div>
     <div class="animate-enter" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div class="scaffold-box" style="margin:0">The wavelength is measured from one ____________ to the next.<br>The amplitude is measured from the ____________ position to the crest.</div>
       <div class="scaffold-box" style="margin:0">The highest point of a wave is the ____________.<br>The lowest point of a wave is the ____________.</div>
@@ -442,23 +432,45 @@
     <img class="logo" alt="Logo" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png">
     <div class="time-badge">⏱️ 8 min</div>
     <span class="slide-tag tag-independent">Independent Work</span>
-    <h2>Independent Work</h2>
-    <div class="li-box"><strong>Instructions:</strong> Complete the tasks in your printed pack independently.</div>
-    <div class="content-grid" style="margin-top:10px">
-      <div class="task-box"><h3 style="margin-top:0">📝 Your Pack Contains:</h3>
-        <p><strong>Section A:</strong> Multiple Choice (4 questions)</p><p><strong>Section B:</strong> Short Answer — label a wave, name units</p><p><strong>Section C:</strong> Long Answer — explain wave anatomy</p><p><strong>Section D:</strong> Exam-Style Question</p>
-        <div class="scaffold-box" style="margin-top:10px"><strong>Need help?</strong> Check the Scaffolding Sheet for definitions and the labelled wave diagram.</div>
-        <div class="exam-tip-box" style="margin-top:10px"><strong>Exam Command Words:</strong><br>
-          <strong>State</strong> = write a fact, no explanation needed.<br>
-          <strong>Label</strong> = write the correct word next to the arrow/part.<br>
-          <strong>Explain</strong> = say what happens AND why (use "because").<br>
-          <strong>Describe</strong> = say what happens step by step (no "why" needed).</div></div>
-      <div class="sc-box"><h3 style="margin-top:0;color:var(--sc-border)">🏆 Success Criteria</h3>
-        <p style="color:#431407;margin-bottom:10px"><strong style="color:#22c55e">Foundation (Grades U–1):</strong> I can name the parts of a wave and label a wave diagram.</p>
-        <p style="color:#431407;margin-bottom:10px"><strong style="color:#f97316">Middle (Grades 1–2):</strong> I can define amplitude, wavelength, crest and trough with correct units.</p>
-        <p style="color:#431407"><strong style="color:#1e3a8a">Higher (Grades 3–5):</strong> I can explain what a wavefront is and distinguish it from wavelength.</p></div>
+    <h2>Independent Work: Wave Challenge Zone 🎮</h2>
+    <div class="li-box"><strong>Instructions:</strong> Two challenges, all on screen — no worksheets! Work on your device, or take turns driving the board. Type your name at the bottom and <strong>print your evidence</strong> when done.</div>
+    <div class="content-grid" style="margin-top:8px">
+      <div class="task-box" style="margin:0"><h3 style="margin-top:0">🌊 Challenge 1: Wave Builder</h3>
+        <p id="wb-task" style="font-weight:800;color:#7c3aed;margin:4px 0">1️⃣ Make a wave with a BIG amplitude — push the amplitude above 70.</p>
+        <div class="wave-wrap"><canvas id="wm-ind" width="330" height="160"></canvas></div>
+        <div class="wave-controls">
+          <label>💪 Amplitude <input type="range" min="5" max="90" value="30" oninput="setWave('wm-ind','amp',this.value)"></label>
+          <label>↔️ Wavelength <input type="range" min="50" max="300" value="90" oninput="setWave('wm-ind','wl',this.value)"></label>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">
+          <button class="small" style="background:var(--task-border)" onclick="wbCheck()">✅ Check my wave</button>
+          <span id="wb-msg" style="font-weight:900;font-size:.95rem"></span>
+        </div>
+      </div>
+      <div class="task-box" style="margin:0"><h3 style="margin-top:0">⚡ Challenge 2: Rapid Quiz — tap your answers</h3>
+        <div class="level-toggle" style="margin:4px 0">
+          <button class="small" onclick="switchIndQuiz('f')" style="background:#22c55e">Foundation (U–1)</button>
+          <button class="small" onclick="switchIndQuiz('m')" style="background:#f97316">Middle (1–2)</button>
+          <button class="small" onclick="switchIndQuiz('h')" style="background:#1e3a8a">Higher (3–5)</button>
+        </div>
+        <div id="indq-f"></div>
+        <div id="indq-m" style="display:none"></div>
+        <div id="indq-h" style="display:none"></div>
+        <div class="exam-tip-box" style="margin-top:8px"><strong>Exam tip:</strong> "how tall" = <strong>amplitude</strong> · "how spread out" = <strong>wavelength</strong>. Don't mix them up!</div>
+      </div>
     </div>
-    <div style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:14px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tick as you go — Success checklist</h3><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define crest, trough and rest position</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can define amplitude and wavelength, with units</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can label all 6 parts on a wave diagram</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="display:inline-block;width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0"></span><span style="font-size:.95rem;color:#334155">I can explain what a wavefront is (Middle/Higher)</span></div></div>
+    <div id="ind-checklist" style="background:#faf5ff;border:2px solid #9c27b0;border-radius:12px;padding:12px;margin-top:10px"><h3 style="margin:0 0 6px;color:#7c3aed">✅ Tap to tick — Success checklist</h3>
+      <div class="chk-item" data-txt="I can define crest, trough and rest position" onclick="toggleChk(this)"><span class="box">✓</span><span>I can define crest, trough and rest position</span></div>
+      <div class="chk-item" data-txt="I can define amplitude and wavelength, with units" onclick="toggleChk(this)"><span class="box">✓</span><span>I can define amplitude and wavelength, with units</span></div>
+      <div class="chk-item" data-txt="I completed the Wave Builder challenges" onclick="toggleChk(this)"><span class="box">✓</span><span>I completed the Wave Builder challenges</span></div>
+      <div class="chk-item" data-txt="I can explain what a wavefront is (Middle/Higher)" onclick="toggleChk(this)"><span class="box">✓</span><span>I can explain what a wavefront is (Middle/Higher)</span></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap">
+      <input class="name-input" id="ind-name" placeholder="Your name…">
+      <button style="background:var(--task-border)" onclick="printIndEvidence()">🖨️ Print My Evidence</button>
+      <span style="font-size:.8rem;color:var(--muted)">Paper backup: <button class="ghost small" onclick="printPack('foundation')">F</button> <button class="ghost small" onclick="printPack('middle')">M</button> <button class="ghost small" onclick="printPack('higher')">H</button></span>
+    </div>
+    <div class="aspire-box" style="margin-top:8px;text-align:center;padding:8px"><strong>🚀 Aspire:</strong> Finished? Set the Wave Builder to the biggest amplitude AND shortest wavelength — what kind of real sea would that be? Would you sail in it?</div>
   </div>
 
   <!-- SLIDE 8: EXIT TICKET -->
@@ -467,7 +479,7 @@
     <div class="time-badge">⏱️ 3 min</div>
     <span class="slide-tag tag-exit">Exit Ticket</span>
     <h2>Exit Ticket – Check Your Learning</h2>
-    <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+    <div class="li-box"><strong>Instructions:</strong> <strong>Tap your answers</strong> on screen — no notes, no books, no conferring. Then tap a traffic light to show how you feel.</div>
     <div class="level-toggle">
       <button onclick="switchExit('foundation')" style="background:#22c55e" >Foundation (U–1)</button>
       <button onclick="switchExit('middle')" style="background:#f97316" >Middle (1–2)</button>
@@ -475,20 +487,24 @@
       <button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button>
     </div>
     <div style="display:flex;gap:14px;justify-content:center;margin:8px 0;flex-wrap:wrap">
-      <div style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — I could teach this</div>
-      <div style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — need more practice</div>
-      <div style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — I need help</div>
+      <div class="conf-opt" onclick="setConf(this,'GREEN – confident, could teach it')" style="background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#166534">🟢 I'm confident — tap me</div>
+      <div class="conf-opt" onclick="setConf(this,'AMBER – getting there, needs practice')" style="background:#fef9c3;border:2px solid #eab308;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#92400e">🟡 Getting there — tap me</div>
+      <div class="conf-opt" onclick="setConf(this,'RED – stuck, needs help')" style="background:#fecaca;border:2px solid #ef4444;border-radius:10px;padding:6px 16px;font-weight:900;font-size:.9rem;color:#991b1b">🔴 I'm stuck — tap me</div>
     </div>
     <div style="text-align:center;margin:4px 0 8px">
-      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Print written exit ticket:</span>
+      <span style="font-size:.85rem;color:var(--muted);font-weight:bold;margin-right:6px">🖨️ Paper backup exit ticket:</span>
       <button class="small" style="background:#22c55e" onclick="printExit('foundation')">Foundation</button>
       <button class="small" style="background:#f97316" onclick="printExit('middle')">Middle</button>
       <button class="small" style="background:#1e3a8a" onclick="printExit('higher')">Higher</button>
     </div>
 
-    <div id="exit-foundation" class="task-box"><p><strong>1) What is the amplitude of a wave?</strong></p><p class="answer">The maximum displacement from the rest position (height of the wave).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What is the highest point of a wave called?</strong></p><p class="answer">The crest.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) What is the lowest point of a wave called?</strong></p><p class="answer">The trough.</p></div>
-    <div id="exit-middle" class="task-box" style="display:none"><p><strong>1) Define wavelength.</strong></p><p class="answer">The distance from one point on a wave to the same point on the next wave (e.g. crest to crest). Measured in metres.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) What unit is amplitude measured in?</strong></p><p class="answer">Metres (m).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Explain what the "rest position" of a wave is.</strong></p><p class="answer">The middle level the wave oscillates around when there's no disturbance — the flat line the wave moves up and down from.</p></div>
-    <div id="exit-higher" class="task-box" style="display:none"><p><strong>1) Distinguish between a wavefront and a wavelength.</strong></p><p class="answer">A wavefront is a line joining points at the same stage of vibration (e.g. all crests). Wavelength is the distance between two adjacent wavefronts (or between any two identical points on consecutive waves).</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>2) A pupil says amplitude is "the distance from crest to trough". Explain why this is not quite correct.</strong></p><p class="answer">Amplitude is measured from the rest position to the crest (or trough) — not crest to trough directly. Crest-to-trough distance is actually double the amplitude.</p><hr style="border:0;border-top:1px solid var(--task-border)"><p><strong>3) Sketch a simple wave in your head. Explain where you would draw the amplitude arrow and the wavelength arrow.</strong></p><p class="answer">Amplitude arrow: a vertical line from the rest position up to a crest. Wavelength arrow: a horizontal line from one crest to the next crest (or any two matching points one wave apart).</p>
+    <div id="exit-foundation" class="task-box" style="padding:8px 14px"><div id="exq-f"></div></div>
+    <div id="exit-middle" class="task-box" style="display:none;padding:8px 14px"><div id="exq-m"></div></div>
+    <div id="exit-higher" class="task-box" style="display:none;padding:8px 14px"><div id="exq-h"></div></div>
+    <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px;flex-wrap:wrap">
+      <input class="name-input" id="exit-name" placeholder="Your name…">
+      <button style="background:var(--aspire-border)" onclick="printExitEvidence()">🖨️ Print My Evidence</button>
+    </div>
     <div class="aspire-box" style="margin-top:10px;text-align:center"><strong>🌊 Next lesson:</strong> Frequency &amp; Period — how many waves pass per second, and how that links to the time each wave takes.</div>
     <div style="text-align:center;margin-top:10px"><button style="background:var(--aspire-border)" onclick="fireLessonComplete()">🎉 Finish Lesson</button></div>
   </div>
@@ -619,7 +635,7 @@
     <div class="middle-content prevent-break"><h2>Exit Ticket – Middle (1–2)</h2><p>1) Define wavelength.</p><div class="print-line"></div><p>2) What unit is amplitude measured in?</p><div class="print-line"></div><p>3) Explain what the "rest position" of a wave is.</p><div class="print-line"></div><div class="print-line"></div></div>
     <div class="higher-content prevent-break"><h2>Exit Ticket – Higher (3–5)</h2><p>1) Distinguish between wavefront and wavelength.</p><div class="print-line"></div><div class="print-line"></div><p>2) A pupil says amplitude is "the distance from crest to trough." Explain why this is not quite correct.</p><div class="print-line"></div><div class="print-line"></div><p>3) Describe where you would draw the amplitude arrow and wavelength arrow on a wave diagram.</p><div class="print-line"></div><div class="print-line"></div></div>
   </div>
-  <div id="print-wedo-evidence" class="print-section"><h2>We Do – Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
+  <div id="print-wedo-evidence" class="print-section"><h2>Pupil / Class Evidence</h2><div id="wedo-evidence-content" style="white-space:pre-wrap"></div></div>
 </div>
 
 <!-- ═══ V4/V5 MODALS / OVERLAYS ═══ -->
@@ -743,12 +759,12 @@
   // --- Per-slide data (index matches slide order: 0 Title,1 Arrival,2 Starter,3 IDo1,4 WeDo1,5 IDo2,6 WeDo2,7 IDo3-FLEX,8 WeDo3-FLEX,9 Observe-FLEX,10 Independent,11 Exit) ---
   const TA_DATA={
     1:{name:'Arrival – What Do You Already Know?',body:'<p><strong>Your job:</strong> this is a brand-new topic — there are no wrong answers yet, only starting points.</p><ul><li>Praise any sensible guess about waves in real life; the goal is activating prior experience, not testing recall.</li><li>The "lead-in" question (Q4) previews today\'s big idea (crest/top of a wave) — don\'t over-explain it yet, just bank the guess.</li></ul>'},
-    2:{name:'Starter – Spot the Wave Shape',body:'<p><strong>Your job:</strong> low-stakes noticing task — accept everyday examples and rough sketches freely.</p><ul><li>If pupils are stuck, point to the four scene pictures (ocean, speaker, light, heartbeat) as prompts.</li><li>Q3 (guessing names for the top/bottom of their sketch) is the key pre-load for I Do — don\'t correct wrong guesses here, just note them.</li></ul>'},
-    3:{name:'I Do – Wave Anatomy',body:'<p><strong>Your job:</strong> use the "Reveal next definition" button to pace the class through all 6 terms together — don\'t let pupils read ahead.</p><ul><li>Keep referring back to the diagram: point at the crest/trough/amplitude/wavelength/rest position as each definition appears.</li><li>Wavefront is the one pupils forget — link it explicitly to "all the crests joined up".</li></ul>'},
+    2:{name:'Starter – BE the Wave!',body:'<p><strong>Your job:</strong> full-energy physical starter — model the moves yourself first, big and unembarrassed.</p><ul><li>Quietly offer the seated arms-only version to pupils who won\'t stand — everyone can join without being singled out.</li><li>Watch the amplitude calls: big swings vs tiny wiggles shows they\'ve already linked amplitude to size.</li><li>Cap the moving at ~3 min, then run the shout-out round to settle the room.</li></ul>'},
+    3:{name:'I Do – Wave Anatomy (Live Wave Machine)',body:'<p><strong>Your job:</strong> pace the 6 definitions with the reveal button, then hand the Wave Machine to pupils.</p><ul><li>Invite pupils up one at a time to move ONE slider — ask the class "what changed: the height or the spacing?"</li><li>Use ⏸ Freeze to hold the wave still while you point at crest / trough / amplitude / wavelength.</li><li>Wavefront is the one they forget — link it to "all the crests joined up".</li></ul>'},
     4:{name:'We Do – Label the Wave',body:'<p><strong>Your job:</strong> Think-Pair-Share — let pupils try solo first, then confirm with a partner before locking in an answer.</p><ul><li>If a pair is stuck, point them back to the I Do diagram rather than telling them the label.</li><li>The units slot (metres) trips pupils up more than the wave-part labels — check that one especially.</li></ul>'},
     5:{name:'Observe (FLEX) – Ripple Tank Video',body:'<p><strong>Your job:</strong> eyes on the clip, then hold pupils to the sentence stems before any writing.</p><ul><li>Pause and ask "which bit is the crest here?" / "where\'s the rest position?" during the clip if you have control of playback.</li><li>The "ready check" (saying all 6 parts aloud) is the gate to independent work — don\'t let pupils skip it.</li></ul>'},
-    6:{name:'Independent Work',body:'<p><strong>Your job:</strong> protect independent effort — minimal talk for the first few minutes.</p><ul><li>Hand the scaffold sheet to named pupils only (don\'t blanket-give).</li><li>Prompt with the success criteria, not the answer.</li></ul>'},
-    7:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> books closed, no notes — this is assessment.</p><ul><li>The confidence traffic-light gives you a quick honest read of the room before you mark anything.</li><li>Note who still can\'t label crest/trough/amplitude/wavelength — that\'s the secure-for-all goal and a starter for lesson 4b.</li></ul>'}
+    6:{name:'Independent – Wave Challenge Zone',body:'<p><strong>Your job:</strong> circulate — everything is on screen and self-marking.</p><ul><li>Wave Builder: read the target aloud with pupils who struggle with text; the check button gives instant feedback.</li><li>Rapid Quiz: note who needed the correct answer highlighted — that\'s your reteach list for 4b.</li><li>Make sure each pupil types their name BEFORE printing their evidence sheet.</li></ul>'},
+    7:{name:'Exit Ticket',body:'<p><strong>Your job:</strong> pupils tap answers on screen — no conferring, no books.</p><ul><li>The traffic-light tap is an honest self-report — glance at it before anything is printed.</li><li>The evidence printout captures name, answers, score and confidence — one per pupil for their file.</li><li>Note who missed crest/trough/amplitude/wavelength — that\'s the secure-for-all goal and the 4b starter.</li></ul>'}
   };
   const CC_DATA={
     1:{f:'Name <strong>one</strong> place you\'ve seen a wave.',m:'What do you think <strong>"amplitude"</strong> might mean, just from the word?',h:'What is the <strong>"rest position"</strong> of a wave?'},
@@ -778,6 +794,115 @@
   // --- Init ---
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-back.open').forEach(m=>m.classList.remove('open'));const f=document.getElementById('video-frame');if(f)f.src=''}});
   window.addEventListener('load',()=>{animateLOs();buildFloatDots()});
+
+
+  // ═══════════════ ACTIVE-LESSON MODULE (hands-on revamp) ═══════════════
+  // --- Clickable Arrival MCQs (correct option index per box, per tier) ---
+  const ARR_OK={'arrival-foundation':[1,1,1,1],'arrival-middle':[2,0,1,1],'arrival-higher':[1,1,1,2]};
+  function initArrivalMC(){Object.entries(ARR_OK).forEach(([gid,arr])=>{const g=document.getElementById(gid);if(!g)return;g.querySelectorAll('.task-box').forEach((box,bi)=>{box.querySelectorAll('.mc span').forEach((sp,si)=>{sp.addEventListener('click',()=>{const mc=sp.parentElement;if(mc.classList.contains('locked'))return;if(si===arr[bi]){sp.classList.add('ok');mc.classList.add('locked');addXP(2,'Arrival Task')}else{sp.classList.add('no');playBuzz();setTimeout(()=>sp.classList.remove('no'),450)}})})})})}
+
+  // --- Starter: BE the Wave caller ---
+  const CALLS=[['🔺 CREST!','Arms UP high!'],['🔻 TROUGH!','Crouch down low!'],['➖ REST POSITION','Arms flat & level'],['💪 BIG AMPLITUDE','Huge arm swings!'],['🤏 small amplitude','Tiny arm wiggles'],['➡️ MEXICAN WAVE','Ripple across the room!'],['🧊 FREEZE!','Hold your pose!']];
+  let callerId=null;
+  function startCaller(){const d=document.getElementById('caller-display'),sub=document.getElementById('caller-sub'),btn=document.getElementById('caller-btn');if(callerId){clearInterval(callerId);callerId=null;btn.textContent='▶ Start the caller';d.textContent='Nice work! 🎉';sub.textContent='Now the shout-out round →';return}btn.textContent='⏹ Stop';let last=-1;const next=()=>{let i;do{i=Math.floor(Math.random()*CALLS.length)}while(i===last);last=i;d.textContent=CALLS[i][0];sub.textContent=CALLS[i][1];d.classList.remove('pop');void d.offsetWidth;d.classList.add('pop');playDing()};next();callerId=setInterval(next,4000)}
+
+  // --- Wave Machine (shared canvas engine) ---
+  const WAVES={};
+  function initWave(id,labels){const cv=document.getElementById(id);if(!cv||!cv.getContext)return;let ctx;try{ctx=cv.getContext('2d')}catch(e){return}if(!ctx)return;
+    const st={amp:id==='wm-ind'?30:55,wl:id==='wm-ind'?90:140,spd:2,ph:0,labels:!!labels,run:true};WAVES[id]=st;
+    function draw(){const w=cv.width,h=cv.height,mid=h/2;ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle='#64748b';ctx.setLineDash([6,6]);ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(w,mid);ctx.stroke();ctx.setLineDash([]);
+      const amp=Math.min(st.amp,mid-8);
+      ctx.strokeStyle='#38bdf8';ctx.lineWidth=4;ctx.beginPath();
+      for(let x=0;x<=w;x++){const y=mid-amp*Math.sin((x-st.ph)*2*Math.PI/st.wl);x?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+      ctx.stroke();ctx.lineWidth=1;
+      if(st.labels){let xc=st.ph%st.wl+st.wl/4;while(xc<30)xc+=st.wl;while(xc>w-60)xc-=st.wl;
+        const yc=mid-amp,xt=xc+st.wl/2,yt=mid+amp;
+        ctx.font='bold 13px sans-serif';
+        ctx.fillStyle='#f87171';ctx.fillText('Crest 🔺',xc-24,Math.max(14,yc-8));
+        if(xt<w-30){ctx.fillStyle='#60a5fa';ctx.fillText('Trough 🔻',xt-28,Math.min(h-4,yt+16))}
+        ctx.strokeStyle='#4ade80';ctx.beginPath();ctx.moveTo(xc,mid);ctx.lineTo(xc,yc);ctx.stroke();
+        ctx.fillStyle='#4ade80';ctx.fillText('Amp',xc+5,(mid+yc)/2+4);
+        const x2=xc+st.wl;ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.moveTo(xc,Math.max(10,yc-4));ctx.lineTo(Math.min(x2,w-2),Math.max(10,yc-4));ctx.stroke();
+        ctx.fillStyle='#fbbf24';ctx.fillText('λ',Math.min(xc+st.wl/2,w-20),Math.max(22,yc+14));
+        ctx.fillStyle='#94a3b8';ctx.fillText('Rest',w-36,mid-6)}}
+    st.draw=draw;
+    if(typeof requestAnimationFrame==='function'){const loop=()=>{if(st.run)st.ph+=st.spd;draw();requestAnimationFrame(loop)};loop()}else draw()}
+  function setWave(id,k,v){const st=WAVES[id];if(st){st[k]=parseFloat(v);if(!st.run&&st.draw)st.draw()}}
+  function toggleWaveRun(id,btn){const st=WAVES[id];if(!st)return;st.run=!st.run;btn.textContent=st.run?'⏸ Freeze':'▶ Play';playClick()}
+  function toggleWaveLabels(id,cb){const st=WAVES[id];if(st){st.labels=cb.checked;if(!st.run&&st.draw)st.draw()}}
+
+  // --- Independent: Wave Builder challenges ---
+  const WB=[
+    {txt:'1️⃣ Make a wave with a BIG amplitude — push the amplitude above 70.',chk:s=>s.amp>=70},
+    {txt:'2️⃣ Now gentle ripples: LONG wavelength (over 200) AND small amplitude (under 35).',chk:s=>s.wl>=200&&s.amp<=35},
+    {txt:'3️⃣ Precision! Amplitude between 40–60 AND wavelength between 100–140.',chk:s=>s.amp>=40&&s.amp<=60&&s.wl>=100&&s.wl<=140}];
+  let wbRound=0,wbDone=0;
+  function wbCheck(){const st=WAVES['wm-ind'];const msg=document.getElementById('wb-msg');if(!st||!msg)return;
+    if(wbRound>=WB.length){msg.innerText='🏆 All done!';return}
+    if(WB[wbRound].chk(st)){wbDone++;wbRound++;addXP(8,'Wave Builder');msg.innerText='✅ Challenge '+wbDone+' complete!';msg.style.color='var(--success)';
+      document.getElementById('wb-task').innerText=wbRound<WB.length?WB[wbRound].txt:'🏆 All 3 complete — you are a wave engineer!';if(wbRound>=WB.length)confetti()}
+    else{msg.innerText='❌ Not yet — check the sliders against the target.';msg.style.color='var(--error)';playBuzz()}}
+
+  // --- Quiz engine (Independent + Exit) ---
+  const IQ={
+    f:[{q:'What is the highest point of a wave called?',o:['Crest','Trough','Rest position','Wavefront'],a:0},
+       {q:'What is the lowest point of a wave called?',o:['Crest','Trough','Amplitude','Wavelength'],a:1},
+       {q:'Amplitude is measured from the ______ up to the crest.',o:['trough','rest position','wavefront','floor'],a:1},
+       {q:'What unit is wavelength measured in?',o:['seconds (s)','hertz (Hz)','metres (m)','kilograms (kg)'],a:2},
+       {q:'The dashed line through the middle of a wave diagram is the…',o:['wavelength','crest','rest position','amplitude'],a:2}],
+    m:[{q:'Which is the best definition of wavelength?',o:['The height of the wave','The distance from one crest to the next crest','How fast the wave moves','The time for one wave'],a:1},
+       {q:'What unit is amplitude measured in?',o:['metres (m)','hertz (Hz)','seconds (s)','newtons (N)'],a:0},
+       {q:'The rest position of a wave is…',o:['the highest point','the lowest point','the middle level the wave oscillates around','the front of the wave'],a:2},
+       {q:'The distance from a crest straight down to the next trough equals…',o:['the amplitude','double the amplitude','the wavelength','the wavefront'],a:1},
+       {q:'Which TWO quantities are both measured in metres?',o:['Amplitude and wavelength','Amplitude and time','Wavelength and frequency','Speed and time'],a:0}],
+    h:[{q:'What is a wavefront?',o:['A single point on a wave','A line joining points at the same stage of vibration','The front edge of the sea','The first wave in a set'],a:1},
+       {q:'A pupil says amplitude is "crest to trough". Why is this wrong?',o:['That distance is double the amplitude','That distance is the wavelength','Amplitude is measured in seconds','It is actually correct'],a:0},
+       {q:'The distance between two adjacent wavefronts is…',o:['the amplitude','the rest position','one wavelength','one crest'],a:2},
+       {q:'On a diagram, the amplitude arrow should start at…',o:['the trough','the crest','the rest position','the wavefront'],a:2},
+       {q:'The symbol λ (lambda) stands for…',o:['amplitude','wavelength','wavefront','frequency'],a:1}]};
+  const XQ={
+    f:[{q:'What is the amplitude of a wave?',o:['The distance between two waves','The maximum displacement from the rest position','The speed of the wave','The lowest point'],a:1},
+       {q:'What is the highest point of a wave called?',o:['Trough','Rest position','Crest','Wavefront'],a:2},
+       {q:'What is the lowest point of a wave called?',o:['Crest','Trough','Amplitude','Wavelength'],a:1}],
+    m:[{q:'Define wavelength.',o:['The height of a wave from rest','The distance from one point on a wave to the same point on the next wave','How many waves pass per second','The line joining all crests'],a:1},
+       {q:'What unit is amplitude measured in?',o:['Hertz (Hz)','Seconds (s)','Metres (m)','Watts (W)'],a:2},
+       {q:'What is the "rest position" of a wave?',o:['The flat middle level the wave moves up and down from','The place the wave stops','The highest point','The deepest point'],a:0}],
+    h:[{q:'Which statement correctly distinguishes wavefront and wavelength?',o:['They are the same thing','A wavefront is a line joining points at the same stage; wavelength is the distance between adjacent wavefronts','A wavefront is the distance between crests; wavelength is a line','Wavelength is in hertz; wavefront in metres'],a:1},
+       {q:'Amplitude is NOT "crest to trough" because…',o:['crest to trough is double the amplitude','crest to trough is the wavelength','amplitude has no units','amplitude is a time'],a:0},
+       {q:'Where should the amplitude and wavelength arrows be drawn?',o:['Amplitude: rest→crest (vertical); Wavelength: crest→next crest (horizontal)','Amplitude: crest→trough; Wavelength: rest→crest','Both vertical from the trough','Both along the rest line'],a:0}]};
+  const QS={};
+  function buildQuiz(hostId,key,qs){const host=document.getElementById(hostId);if(!host)return;QS[key]={score:0,done:0,total:qs.length,answers:[],data:qs};
+    host.innerHTML=qs.map((q,i)=>'<div class="quiz-q" id="'+key+'-q'+i+'"><p style="margin:0 0 4px;font-weight:900">'+(i+1)+') '+q.q+'</p>'+q.o.map((o,j)=>'<button class="qopt" onclick="qAns(\''+key+'\','+i+','+j+',this)">'+o+'</button>').join('')+'<div class="qfb" id="'+key+'-fb'+i+'"></div></div>').join('')+'<div class="snap-score" style="margin-top:6px">Score: <span id="'+key+'-score">0</span> / '+qs.length+'</div>'}
+  function qAns(key,qi,oi,btn){const st=QS[key];const q=st.data[qi];const qd=document.getElementById(key+'-q'+qi);if(qd.classList.contains('locked'))return;
+    qd.classList.add('locked');st.done++;st.answers[qi]=q.o[oi];const fb=document.getElementById(key+'-fb'+qi);
+    if(oi===q.a){btn.classList.add('ok');st.score++;fb.innerText='✅ Correct!';fb.style.color='var(--success)';addXP(4,'Rapid Quiz')}
+    else{btn.classList.add('no');qd.querySelectorAll('.qopt')[q.a].classList.add('ok');fb.innerText='❌ Correct answer highlighted.';fb.style.color='var(--error)';playBuzz()}
+    document.getElementById(key+'-score').innerText=st.score;if(st.done>=st.total&&st.score===st.total)confetti()}
+  function switchIndQuiz(t){['f','m','h'].forEach(k=>{const el=document.getElementById('indq-'+k);if(el)el.style.display=k===t?'block':'none'});playClick()}
+
+  // --- Checklist + confidence ---
+  function toggleChk(el){el.classList.toggle('done');playClick()}
+  let exitConf='';
+  function setConf(el,v){exitConf=v;document.querySelectorAll('.conf-opt').forEach(o=>o.style.outline='');el.style.outline='4px solid #7c3aed';playClick()}
+
+  // --- Evidence printing (per pupil) ---
+  function printEvidenceText(content){document.getElementById('wedo-evidence-content').innerText=content;document.body.classList.remove('print-foundation','print-middle','print-higher');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.getElementById('print-wedo-evidence').classList.add('visible');stampDate();window.print()}
+  function collectQuiz(key,label){const st=QS[key];if(!st||!st.done)return '';let out=label+': '+st.score+'/'+st.total+'\n';st.data.forEach((q,i)=>{if(st.answers[i]!==undefined)out+='  Q'+(i+1)+': '+st.answers[i]+(q.o[q.a]===st.answers[i]?' ✓':' ✗ (correct: '+q.o[q.a]+')')+'\n'});return out+'\n'}
+  function printIndEvidence(){const name=(document.getElementById('ind-name').value||'').trim()||'(no name)';
+    let c='INDEPENDENT WORK EVIDENCE – Wave Anatomy (L4a)\nPupil: '+name+'\nDate: '+new Date().toLocaleString('en-GB')+'\n'+'─'.repeat(50)+'\n\nWAVE BUILDER: '+wbDone+' / '+WB.length+' challenges completed\n\n';
+    c+=collectQuiz('indf','RAPID QUIZ – Foundation')+collectQuiz('indm','RAPID QUIZ – Middle')+collectQuiz('indh','RAPID QUIZ – Higher');
+    const ticks=[].slice.call(document.querySelectorAll('#ind-checklist .chk-item')).map(el=>(el.classList.contains('done')?'[✓] ':'[ ] ')+el.dataset.txt).join('\n');
+    c+='SUCCESS CHECKLIST:\n'+ticks+'\n';printEvidenceText(c)}
+  function printExitEvidence(){const name=(document.getElementById('exit-name').value||'').trim()||'(no name)';
+    let c='EXIT TICKET EVIDENCE – Wave Anatomy (L4a)\nPupil: '+name+'\nDate: '+new Date().toLocaleString('en-GB')+'\n'+'─'.repeat(50)+'\n\n';
+    c+=collectQuiz('exf','EXIT – Foundation')+collectQuiz('exm','EXIT – Middle')+collectQuiz('exh','EXIT – Higher');
+    c+='CONFIDENCE (self-report): '+(exitConf||'not selected')+'\n';printEvidenceText(c)}
+
+  // --- Active-module init (after all data constants — TDZ safe) ---
+  window.addEventListener('load',()=>{initArrivalMC();initWave('wm-ido',true);initWave('wm-ind',false);
+    buildQuiz('indq-f','indf',IQ.f);buildQuiz('indq-m','indm',IQ.m);buildQuiz('indq-h','indh',IQ.h);
+    buildQuiz('exq-f','exf',XQ.f);buildQuiz('exq-m','exm',XQ.m);buildQuiz('exq-h','exh',XQ.h)});
 
 </script>
 </body>
