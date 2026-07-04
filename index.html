@@ -205,6 +205,16 @@
   .sec-tools .st-hint { font-size: .72rem; color: var(--muted); margin-left: auto; }
   @media (max-width: 640px) { .sec-tools .st-hint { display: none; } }
 
+  /* ============ PANELS VIEW: each subject becomes its own window ============ */
+  body.panels #sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 18px; align-items: start; margin-top: 26px; }
+  body.panels .subject { margin-top: 0; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 12px; box-shadow: 0 4px 14px rgba(15,23,42,.05); display: flex; flex-direction: column; max-height: 56vh; }
+  body.panels .subject-head { padding-bottom: 10px; }
+  body.panels .subject .grid { overflow-y: auto; min-height: 0; flex: 1; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 14px; margin-top: 14px; padding: 2px 6px 8px 2px; scrollbar-width: thin; }
+  body.panels .subject .grid::-webkit-scrollbar { width: 8px; }
+  body.panels .subject .grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+  body.panels .subject.collapsed:not(.force-open) { max-height: none; } /* a folded panel = a minimised window */
+  @media (max-width: 760px) { body.panels #sections { grid-template-columns: 1fr; } body.panels .subject { max-height: 48vh; } }
+
   /* ============ APP CARDS ============ */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; margin-top: 20px; }
   .tile { position: relative; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); border-top: 3px solid var(--tc, var(--border)); box-shadow: 0 4px 6px -1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.01); display: flex; flex-direction: column; overflow: hidden; transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s; animation: tileIn .45s var(--ease) both; animation-delay: calc(var(--d, 0) * 45ms); }
@@ -556,6 +566,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
       Collapse all
     </button>
+    <button type="button" id="viewMode" title="Switch between the classic list and side-by-side subject windows">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Panels view</span>
+    </button>
     <button type="button" id="surpriseMe" title="Launch a random resource">
       <svg class="dice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/></svg>
       Surprise me
@@ -752,6 +766,7 @@ const LESSONS = [
   {subject:"Games", title:"⚪ Marble",                file:"Games/Marble.html",               tag:"game", added:"2026-07-02"},
   {subject:"Games", title:"⚪ Slipstream",            file:"Games/Slipstream.html",               tag:"game", added:"2026-07-03"},
   {subject:"Games", title:"⚪ Slipstream - GP",            file:"Games/Slipstream_GP (1).html",    tag:"game", added:"2026-07-03"},
+  {subject:"Games", title:"🔨 Wrecking Crew",         file:"Games/Wrecking_Crew.html",        tag:"game", added:"2026-07-04"},
 ];
 
 /* ================================================================
@@ -1338,6 +1353,20 @@ function build(){
   const ca = document.getElementById('collapseAll');
   if (ea) ea.addEventListener('click', () => setAll(false));
   if (ca) ca.addEventListener('click', () => setAll(true));
+
+  /* ---- view mode: classic list vs windows-within-windows panels ---- */
+  const VIEW_KEY = 'progressHubView_v1';
+  const viewBtn = document.getElementById('viewMode');
+  function applyView(m){
+    document.body.classList.toggle('panels', m === 'panels');
+    const lbl = viewBtn && viewBtn.querySelector('span');
+    if (lbl) lbl.textContent = m === 'panels' ? 'List view' : 'Panels view';
+    try { localStorage.setItem(VIEW_KEY, m); } catch(e){}
+  }
+  let viewMode = 'list';
+  try { viewMode = localStorage.getItem(VIEW_KEY) || 'list'; } catch(e){}
+  applyView(viewMode);
+  if (viewBtn) viewBtn.addEventListener('click', () => { viewMode = viewMode === 'panels' ? 'list' : 'panels'; applyView(viewMode); });
 
   /* ---- cursor-follow sheen on thumbnails ---- */
   if (!reduce){
