@@ -1699,6 +1699,134 @@ toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce
   }, { capture: true }); // Capture flag guarantees interception prior to anchor link activation
 })();
 
+/* ================================================================
+   SPECULAR TACTILE GLARE & 3D SPATIAL PARALLAX ENGINE
+   ================================================================ */
+(function() {
+  // 1. Terminate immediately if user profile or OS requests reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // 2. Inject performance-optimized hardware-accelerated 3D stylesheets
+  const structuralStyles = document.createElement('style');
+  structuralStyles.textContent = `
+    #sections, #arcade {
+      perspective: 1600px; /* Establishes spatial depth boundary fields */
+    }
+    .tile {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.1s cubic-bezier(.22,1,.36,1), box-shadow 0.25s ease;
+    }
+    /* Separate content planes to execute deep true 3D layering */
+    .tile-thumb {
+      position: relative;
+      transform: translateZ(12px); /* Suspends vectors above the base frame */
+      transform-style: preserve-3d;
+    }
+    .tile-body {
+      transform: translateZ(24px); /* Pushes typography closer to user viewport */
+    }
+    /* Custom physical reflective glare element */
+    .hub-specular-reflection {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 100%);
+      z-index: 4;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease);
+      box-sizing: border-box;
+    }
+    .tile:hover .hub-specular-reflection {
+      opacity: 0.75;
+    }
+  `;
+  document.head.appendChild(structuralStyles);
+
+  // 3. Append dynamic glare layers to generated cards
+  const injectGlareLayers = () => {
+    document.querySelectorAll('.tile').forEach(tile => {
+      const targetThumb = tile.querySelector('.tile-thumb');
+      if (targetThumb && !targetThumb.querySelector('.hub-specular-reflection')) {
+        const reflectionSheet = document.createElement('div');
+        reflectionSheet.className = 'hub-specular-reflection';
+        targetThumb.appendChild(reflectionSheet);
+      }
+    });
+  };
+
+  // Run initial injection
+  injectGlareLayers();
+
+  // 4. Matrix coordinate calculations for rotational transformations
+  const coordinateTrackingTilt = (event) => {
+    const tileCard = event.target.closest('.tile');
+    if (!tileCard) return;
+
+    const dimensions = tileCard.getBoundingClientRect();
+    const cursorLocationX = event.clientX - dimensions.left; 
+    const cursorLocationY = event.clientY - dimensions.top; 
+
+    // Locate spatial geometric midpoints
+    const centerPointX = dimensions.width / 2;
+    const centerPointY = dimensions.height / 2;
+
+    // Convert pixels to a unified spatial vector scale (-1.00 to 1.00)
+    const calculationVectorX = (cursorLocationX - centerPointX) / centerPointX;
+    const calculationVectorY = (cursorLocationY - centerPointY) / centerPointY;
+
+    // Maximum safe angular tilt threshold in degrees
+    const maxAngularTiltDegree = 8;
+    const computeRotationAxisX = (-calculationVectorY * maxAngularTiltDegree).toFixed(2);
+    const computeRotationAxisY = (calculationVectorX * maxAngularTiltDegree).toFixed(2);
+
+    // Dynamic light tracking vector path angles
+    const dynamicGlareAngle = Math.atan2(cursorLocationY - centerPointY, cursorLocationX - centerPointX) * (180 / Math.PI);
+    const trackingIntensity = Math.sqrt(Math.pow(cursorLocationX - centerPointX, 2) + Math.pow(cursorLocationY - centerPointY, 2)) / Math.sqrt(Math.pow(centerPointX, 2) + Math.pow(centerPointY, 2));
+
+    // Execute transformation matrix
+    tileCard.style.transform = `perspective(1000px) rotateX(${computeRotationAxisX}deg) rotateY(${computeRotationAxisY}deg) translateY(-6px)`;
+    
+    const individualSpecularSheet = tileCard.querySelector('.hub-specular-reflection');
+    if (individualSpecularSheet) {
+      individualSpecularSheet.style.background = `linear-gradient(${dynamicGlareAngle - 45}deg, rgba(255,255,255,${trackingIntensity * 0.42}) 0%, rgba(255,255,255,0) 75%)`;
+    }
+  };
+
+  // 5. Instantly neutralise matrix parameters when pointer exits bounding box
+  const absoluteNeutralReset = (event) => {
+    const tileCard = event.target.closest('.tile');
+    if (!tileCard) return;
+
+    tileCard.style.transform = '';
+    const individualSpecularSheet = tileCard.querySelector('.hub-specular-reflection');
+    if (individualSpecularSheet) {
+      individualSpecularSheet.style.background = '';
+    }
+  };
+
+  // 6. Bind event listening pipelines onto unified container grids
+  const bindGridZones = (elementId) => {
+    const structuralContainer = document.getElementById(elementId);
+    if (!structuralContainer) return;
+
+    // Using continuous tracking filters for maximum rendering efficiency
+    structuralContainer.addEventListener('mousemove', coordinateTrackingTilt, { passive: true });
+    structuralContainer.addEventListener('mouseleave', absoluteNeutralReset, { passive: true });
+  };
+
+  bindGridZones('sections');
+  bindGridZones('arcade');
+
+  // Guard mechanism: Run a hook to keep glare assets matched if the user triggers search queries
+  const activeInputFilter = document.getElementById('search');
+  if (activeInputFilter) {
+    activeInputFilter.addEventListener('input', () => {
+      setTimeout(injectGlareLayers, 10);
+    });
+  }
+})();
 
 </script>
 </body>
