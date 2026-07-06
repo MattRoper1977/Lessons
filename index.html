@@ -12,6 +12,9 @@
 <meta property="og:title" content="Lesson Hub — Matt's Apps">
 <meta property="og:description" content="Interactive lessons, revision resources and brain-break games — all in one place.">
 <meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f172a'/%3E%3Cpath d='M4 18.5A2.5 2.5 0 0 1 6.5 16H19' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M6.5 4H19v16H6.5A2.5 2.5 0 0 1 4 17.5v-11A2.5 2.5 0 0 1 6.5 4z' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root {
@@ -37,6 +40,7 @@
     --radius-sm: 999px;
     --ease: cubic-bezier(.22,1,.36,1);
     --ticker-bg: #16a34a;
+    --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
   }
   /* ============ CALM / DARK THEME ============ */
   html[data-theme="dark"] {
@@ -102,7 +106,7 @@
 
   .hero-inner { position: relative; max-width: 1200px; margin: 0 auto; padding: 50px 24px 40px; }
   .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  .brand { display: flex; align-items: center; gap: 10px; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; font-weight: 700; color: #38bdf8; }
+  .brand { font-family: var(--font-display); display: flex; align-items: center; gap: 10px; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; font-weight: 700; color: #38bdf8; }
   .brand::before { content: ""; display: inline-block; width: 20px; height: 2px; background: #38bdf8; border-radius: 2px; }
 
   .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -119,8 +123,8 @@
   .header-cta.plan-cta:hover { background: #6366f1; border-color: #6366f1; color: #fff; box-shadow: 0 0 15px rgba(99,102,241,.5); }
   .header-cta.plan-cta svg { width: 13px; height: 13px; }
 
-  header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; margin-top: 20px; letter-spacing: -.02em; line-height: 1.1; }
-  header h1 span { color: #38bdf8; text-shadow: 0 0 20px rgba(56,189,248,.2); }
+  header h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; margin-top: 20px; letter-spacing: -.03em; line-height: 1.1; }
+  header h1 span { background: linear-gradient(100deg, #7dd3fc 0%, #38bdf8 40%, #818cf8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 16px rgba(56,189,248,.28)); }
   .tagline { opacity: .85; margin-top: 12px; font-size: 1.05rem; max-width: 650px; line-height: 1.6; color: #cbd5e1; }
   .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
   .stat { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); padding: 8px 18px; font-size: .84rem; font-weight: 600; backdrop-filter: blur(4px); color: #e2e8f0; }
@@ -133,7 +137,7 @@
   .ecosystem-banner { background: linear-gradient(135deg, var(--slate-900) 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 24px; margin-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; box-shadow: 0 10px 25px -5px rgba(15,23,42,.3); }
   .eb-left { display: flex; flex-direction: column; gap: 6px; }
   .eb-badge { align-self: flex-start; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; background: rgba(56,189,248,.12); color: #38bdf8; padding: 4px 10px; border-radius: var(--radius-sm); }
-  .eb-left h3 { color: #fff; font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; }
+  .eb-left h3 { font-family: var(--font-display); color: #fff; font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; }
   .eb-left p { color: #94a3b8; font-size: .88rem; line-height: 1.5; max-width: 680px; }
   .eb-btn { background: #38bdf8; color: var(--slate-900); text-decoration: none; font-weight: 700; font-size: .9rem; padding: 12px 22px; border-radius: 10px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; transition: background .2s, transform .2s, box-shadow .2s; }
   .eb-btn:hover { background: #7dd3fc; transform: translateY(-2px); box-shadow: 0 0 16px rgba(56,189,248,.3); }
@@ -148,6 +152,20 @@
   .jn-pill:hover { transform: translateY(-1px); border-color: var(--jc, var(--slate-700)); box-shadow: 0 2px 8px rgba(15,23,42,.05); }
   .jn-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--jc, #888); flex: none; }
   .jn-pill.is-empty { opacity: .35; pointer-events: none; }
+  /* scrollspy: the pill for the section currently on screen */
+  .jn-pill.is-active { border-color: var(--jc, var(--slate-700)); box-shadow: inset 0 0 0 1px var(--jc, var(--slate-700)); font-weight: 700; }
+  .jn-pill.is-active .jn-dot { box-shadow: 0 0 8px var(--jc, transparent); }
+
+  /* ============ READING PROGRESS BAR ============ */
+  #scrollProgress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 400; background: linear-gradient(90deg, #38bdf8, #818cf8, #f472b6); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+
+  /* ============ HERO GRAIN — subtle film texture over the gradient ============ */
+  .grain { position: absolute; inset: 0; pointer-events: none; opacity: .05; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  /* subject-tinted glow on hover, where colour-mixing is supported */
+  @supports (color: color-mix(in srgb, red 50%, blue)) {
+    .tile:hover { box-shadow: 0 20px 25px -5px rgba(15,23,42,.06), 0 10px 10px -5px rgba(15,23,42,.02), 0 0 0 1px var(--sc), 0 8px 28px -6px color-mix(in srgb, var(--sc) 30%, transparent); }
+  }
 
   /* ============ STICKY CONTROLS (search + filter chips) ============ */
   .controls { position: sticky; top: 0; z-index: 25; background: rgba(248,250,252,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 14px 0 8px; margin-top: 6px; }
@@ -181,7 +199,7 @@
   .subject-head::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 80px; height: 3px; background: var(--sc, var(--navy)); border-radius: 2px; }
   .s-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--sl, #eef2f7); display: flex; align-items: center; justify-content: center; flex: none; }
   .s-icon svg { width: 22px; height: 22px; stroke: var(--sc, var(--navy)); }
-  .subject-head h2 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; color: var(--slate-900); }
+  .subject-head h2 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; color: var(--slate-900); }
   .subject-head .count { margin-left: auto; font-size: .75rem; font-weight: 700; color: var(--muted); background: var(--chip-ct); border-radius: var(--radius-sm); padding: 5px 14px; letter-spacing: .04em; }
 
   /* ============ COLLAPSIBLE SECTIONS ============ */
@@ -367,7 +385,7 @@
   .strip-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
   .sh-ico { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex: none; }
   .sh-ico svg { width: 17px; height: 17px; }
-  .strip-head h3 { font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; color: var(--ink); }
+  .strip-head h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; color: var(--ink); }
   .sh-sub { font-size: .76rem; color: var(--muted); font-weight: 600; margin-left: 2px; }
   .strip { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 10px; scroll-snap-type: x proximity; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
   .strip::-webkit-scrollbar { height: 6px; }
@@ -457,7 +475,7 @@
   .pulse-ico { width: 36px; height: 36px; border-radius: 10px; flex: none; display: flex; align-items: center; justify-content: center; background: var(--pl, #eef2f7); }
   .pulse-ico svg { width: 18px; height: 18px; stroke: var(--pc, var(--blue)); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .pulse-body { min-width: 0; }
-  .pulse-num { font-size: 1.05rem; font-weight: 800; color: var(--ink); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pulse-num { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; color: var(--ink); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pulse-lbl { font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
   .pulse-scope { flex-basis: 100%; font-size: .7rem; color: var(--muted); font-weight: 600; padding: 0 2px; }
   .pulse-scope .ps-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: middle; }
@@ -470,6 +488,7 @@
 </style>
 </head>
 <body>
+<div id="scrollProgress" aria-hidden="true"></div>
 <a href="#search" class="skip-link">Skip to search</a>
 
 <div id="liveTicker" class="ticker-wrap">
@@ -484,6 +503,7 @@
 
 <header>
   <div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+  <div class="grain" aria-hidden="true"></div>
   <svg class="hero-art" viewBox="0 0 1200 280" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" fill="none">
     <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.6">
       <path d="M-20 235 Q 180 165 380 225 T 760 215 T 1230 230" />
@@ -521,7 +541,7 @@
     <div class="stats">
       <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span id="statLessons">0 applications</span></span>
       <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span id="statSubjects">0 modules</span></span>
-      <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Cloud Optimised</span>
+      <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.1 5.6L20 9.5l-5.9 1.9L12 17l-2.1-5.6L4 9.5l5.9-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span id="statNew">0 new</span></span>
     </div>
   </div>
   <svg class="hero-wave" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 L0 20 Q 300 0 600 18 T 1200 14 L1200 34 Z" fill="var(--bg)"/></svg>
@@ -642,6 +662,7 @@
     <span class="foot-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Matt's Apps Workspace</span>
     <span class="dotsep"></span><span>System Engine Architect</span>
     <span class="dotsep"></span><span>All resources stay fully functional offline once compiled.</span>
+    <span class="dotsep"></span><span id="catStamp"></span>
   </div>
 </footer>
 
@@ -749,8 +770,13 @@ const LESSONS = [
   {subject:"Art", title:"L6 · Dalí Study",           file:"6 Art/Lesson6_Dali_Study_v4.html",        tag:"lesson"},
   {subject:"Art", title:"L7 · Hannah Höch",          file:"6 Art/Lesson7_Hoch_v5 (1).html",          tag:"lesson"},
   {subject:"Art", title:"L8 · Höch Fact File",       file:"6 Art/Lesson8_Hoch_FactFile_v5.html",     tag:"lesson"},
-  {subject:"Art", title:"L10 - Surrealist Collage",  file:"6 Art/Lesson10_SurrealistCollage_HANDSON_v5 (1).html",     tag:"lesson", added:"2026-06-20"},
-  {subject:"Art", title:"L11 - Surrealism Eye Study",  file:"6 Art/Surrealism_Eye_Study_v5.html", tag:"lesson", added:"2026-06-29"},
+  {subject:"Art", title:"L10 · Surrealist Collage · Hands-On",    file:"6 Art/Lesson10_SurrealistCollage_HANDSON_v5 (1).html",      tag:"lesson", added:"2026-06-20"},
+  {subject:"Art", title:"L10 · Surrealist Collage · Observation", file:"6 Art/Lesson10_SurrealistCollage_OBSERVATION_v5 (1).html",  tag:"lesson", added:"2026-06-20"},
+  {subject:"Art", title:"L11 · Surrealism Eye Study",  file:"6 Art/Surrealism_Eye_Study_v5.html",           tag:"lesson", added:"2026-06-29"},
+  {subject:"Art", title:"L12 · Finish the Eye · Dream It", file:"6 Art/Lesson12_FinishTheEye_DreamIt_v5.html", tag:"lesson", added:"2026-07-06"},
+  {subject:"Art", title:"L13 · The Final Idea",        file:"6 Art/Lesson13_TheFinalIdea_v5.html",          tag:"lesson", added:"2026-07-06"},
+  {subject:"Art", title:"L14 · The Test Lab",          file:"6 Art/Lesson14_TheTestLab_v5.html",            tag:"lesson", added:"2026-07-06"},
+  {subject:"Art", title:"L15 · Mini Masterpiece",      file:"6 Art/Lesson15_MiniMasterpiece_v5.html",       tag:"lesson", added:"2026-07-06"},
   /* ================================================================
      FEATURE ZONE GAMES (WITH DESCRIPTIONS)
      ================================================================ */
@@ -1193,6 +1219,7 @@ function build(){
 
   countUp(document.getElementById('statLessons'), LESSONS.length, ' applications');
   countUp(document.getElementById('statSubjects'), order.length, ' modules');
+  countUp(document.getElementById('statNew'), LESSONS.filter(isNew).length, ' new this fortnight');
 
   /* ---- subject jump nav ---- */
   const jn = document.getElementById('jumpnav');
@@ -1344,6 +1371,21 @@ function build(){
     setCollapsedState(sec, startCollapsed);
   });
   if (!saved) saveCollapsed(collapsed);
+
+  /* ---- scrollspy: light the jump-nav pill for the section on screen ---- */
+  if ('IntersectionObserver' in window){
+    const pillFor = {};
+    document.querySelectorAll('.jn-pill').forEach(p => { pillFor[p.dataset.subject] = p; });
+    const spy = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        Object.values(pillFor).forEach(p => p.classList.remove('is-active'));
+        const p = pillFor[en.target.dataset.subject];
+        if (p) p.classList.add('is-active');
+      });
+    }, { rootMargin: '-12% 0px -74% 0px' });
+    allSecs().forEach(sec => spy.observe(sec));
+  }
 
   /* expand / collapse all */
   const setAll = wantCollapsed => {
@@ -1607,6 +1649,16 @@ document.getElementById('signCheck').addEventListener('click', runHealthCheck);
 updateUserUI();
 logEvent('(hub visit)');
 
+/* footer: honest, auto-derived catalogue stamp */
+(function(){
+  const el = document.getElementById('catStamp');
+  if (!el) return;
+  const dates = LESSONS.map(l => new Date(l.added)).filter(d => !isNaN(d));
+  if (!dates.length){ el.parentElement && el.previousElementSibling && (el.previousElementSibling.style.display = 'none'); return; }
+  const latest = new Date(Math.max(...dates));
+  el.textContent = 'Catalogue updated ' + latest.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+})();
+
 /* preview lightbox close */
 document.getElementById('pvClose').addEventListener('click', closePreview);
 document.getElementById('pvOverlay').addEventListener('click', e => { if (e.target.id === 'pvOverlay') closePreview(); });
@@ -1619,7 +1671,14 @@ document.getElementById('spotlight').addEventListener('click', e => {
 });
 
 const toTop = document.getElementById('toTop');
-window.addEventListener('scroll', () => { toTop.classList.toggle('show', window.scrollY > 500); }, { passive: true });
+const progressBar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  toTop.classList.toggle('show', window.scrollY > 500);
+  if (progressBar){
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+  }
+}, { passive: true });
 toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
 /* ================================================================
    DYNAMIC GAME DESCRIPTION OVERLAY INTERCEPTOR (HOVER & TOUCH)
