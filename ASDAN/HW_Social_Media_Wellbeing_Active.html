@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media &amp; Emotional Wellbeing — Active Lesson</title>
+<style>
+:root{
+  --arrival:#0d9488; --ido:#2563eb; --wedo:#f59e0b; --indep:#7c3aed; --exit:#e11d48;
+  --ink:#1e293b; --muted:#64748b; --bg:#f8fafc; --card:#ffffff;
+  --green:#16a34a; --orange:#f97316; --navy:#1e3a8a; --red:#dc2626; --amber:#d97706;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg)}
+h1{font-size:2.5rem;margin:.2em 0}
+h2{font-size:1.7rem;margin:.2em 0 .4em}
+h3{font-size:1.2rem}
+
+/* ============ SLIDES ============ */
+.slide{display:none;width:100vw;min-height:100vh;padding:24px 40px 90px;flex-direction:column;border-top:10px solid var(--ido);position:relative;animation:fadeInUp .45s ease}
+.slide.active{display:flex}
+.slide[data-type="arrival"]{border-top-color:var(--arrival)}
+.slide[data-type="ido"]{border-top-color:var(--ido)}
+.slide[data-type="wedo"]{border-top-color:var(--wedo)}
+.slide[data-type="independent"]{border-top-color:var(--indep)}
+.slide[data-type="exit"]{border-top-color:var(--exit)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.logo{position:absolute;top:14px;right:20px;height:46px;z-index:5}
+.logo-fallback{position:absolute;top:18px;right:20px;font-weight:800;color:var(--navy);display:none;z-index:5}
+.slide-tag{display:inline-block;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700;color:#fff;margin-bottom:6px}
+.tag-arrival{background:var(--arrival)} .tag-ido{background:var(--ido)} .tag-wedo{background:var(--wedo)} .tag-indep{background:var(--indep)} .tag-exit{background:var(--exit)}
+.time-chip{display:inline-block;margin-left:8px;padding:4px 12px;border-radius:999px;background:#e2e8f0;color:var(--muted);font-size:.8rem;font-weight:700}
+
+/* ============ BOXES ============ */
+.li-box{background:#dbeafe;border-left:6px solid var(--ido);padding:14px 18px;border-radius:10px;margin:10px 0}
+.task-box{background:#fef3c7;border-left:6px solid var(--amber);padding:14px 18px;border-radius:10px;margin:10px 0}
+.scaffold-box{background:#f1f5f9;border-left:6px solid #94a3b8;padding:12px 16px;border-radius:10px;margin:10px 0}
+.sc-box{background:#ffedd5;border-left:6px solid #f97316;padding:14px 18px;border-radius:10px;margin:10px 0}
+.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d;padding:12px 16px;border-radius:10px;margin:10px 0}
+.misc-box{background:#fee2e2;border-left:6px solid var(--red);padding:12px 16px;border-radius:10px;margin:10px 0}
+.exam-tip-box{background:#fef9c3;border-left:6px solid #eab308;padding:12px 16px;border-radius:10px;margin:10px 0}
+.safe-chip{display:inline-block;background:#e0f2fe;border:1.5px solid #0284c7;color:#075985;font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:999px}
+
+/* ============ NAV / PROGRESS / XP ============ */
+#nav-prev,#nav-next{position:fixed;bottom:18px;z-index:60;border:none;border-radius:12px;padding:12px 22px;font-size:1rem;font-weight:800;color:#fff;background:var(--navy);cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+#nav-prev{left:18px} #nav-next{right:18px}
+#nav-prev:active,#nav-next:active{transform:scale(.96)}
+#progress-bar{position:fixed;top:0;left:0;height:6px;background:linear-gradient(90deg,#0d9488,#2563eb,#7c3aed);width:0%;z-index:70;transition:width .3s}
+#xp-wrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);width:min(340px,44vw);z-index:55;background:#e2e8f0;border-radius:999px;height:16px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.15)}
+#xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:999px;transition:width .5s}
+#xp-label{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:.75rem;font-weight:800;color:var(--muted);z-index:55}
+
+/* ============ TIMER ============ */
+#timer-widget{position:fixed;top:14px;left:16px;z-index:60;background:#0f172a;color:#fff;border-radius:12px;padding:8px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+#timer-display{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.05rem}
+.timer-btn{background:#334155;color:#fff;border:none;border-radius:8px;padding:4px 9px;cursor:pointer;font-size:.9rem}
+
+/* ============ FLOATING TOOL BUTTONS ============ */
+#ta-focus-btn,#cold-call-btn,#calm-btn{position:fixed;z-index:60;border:none;border-radius:999px;padding:9px 16px;font-weight:800;font-size:.85rem;cursor:pointer;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+#ta-focus-btn{top:70px;left:16px;background:#0891b2}
+#cold-call-btn{top:112px;left:16px;background:#7c3aed}
+#calm-btn{top:154px;left:16px;background:#64748b}
+body.calm #calm-btn{background:#16a34a}
+
+/* ============ MODALS ============ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:90;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:92%;padding:20px 24px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:86vh;overflow:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #e2e8f0;padding-bottom:8px;margin-bottom:10px}
+.modal-close{background:#e2e8f0;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-weight:800}
+.cc-name{font-size:2rem;font-weight:900;color:var(--indep);text-align:center;margin:10px 0}
+.cc-q{background:#f1f5f9;border-radius:10px;padding:12px;font-size:1.05rem;text-align:center}
+.cc-rate{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.cc-rate button{border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;font-size:1rem}
+.cc-u{background:#e2e8f0} .cc-f{background:#dcfce7;color:#14532d} .cc-m{background:#ffedd5;color:#7c2d12} .cc-h{background:#dbeafe;color:#1e3a8a}
+.cc-map{font-size:.78rem;color:var(--muted);text-align:center;margin-top:8px}
+.cc-btn-primary{background:var(--indep);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:800;cursor:pointer;margin-top:10px;width:100%}
+
+/* ============ LESSON COMPLETE ============ */
+#lc-overlay{z-index:120}
+.lc-stars{font-size:2.2rem;text-align:center;letter-spacing:.4em}
+.lc-summary{display:flex;flex-direction:column;gap:6px;background:#f1f5f9;border-radius:10px;padding:12px;margin:10px 0;font-size:.95rem}
+#lc-overlay button{background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px 20px;font-weight:800;font-size:1.05rem;cursor:pointer;width:100%}
+
+/* ============ TITLE HERO ============ */
+.title-hero{display:flex;gap:16px;justify-content:center;align-items:center;margin:14px 0;flex-wrap:wrap}
+.hero-icon{font-size:3rem;animation:heroFloat 2.6s ease-in-out infinite}
+.hero-icon:nth-child(2){animation-delay:.3s}.hero-icon:nth-child(3){animation-delay:.6s}.hero-icon:nth-child(4){animation-delay:.9s}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.lo-anim li{opacity:0;animation:fadeInUp .5s ease forwards}
+.lo-anim li:nth-child(1){animation-delay:.3s}.lo-anim li:nth-child(2){animation-delay:.7s}.lo-anim li:nth-child(3){animation-delay:1.1s}
+.lo-anim li::marker{content:"✔ ";color:var(--green);font-weight:900}
+
+/* ============ POLLS (Slide 2) ============ */
+.poll-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.poll-btn{flex:1 1 150px;max-width:210px;background:var(--card);border:3px solid #cbd5e1;border-radius:16px;padding:16px 10px;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;transition:transform .12s, border-color .2s}
+.poll-btn:active{transform:scale(.95)}
+.poll-btn .big{font-size:2.4rem;display:block;margin-bottom:6px}
+.poll-btn .count{display:inline-block;margin-top:8px;background:#0f172a;color:#fff;border-radius:999px;min-width:36px;padding:3px 10px;font-size:1.1rem;font-weight:900}
+.poll-btn.popped{border-color:var(--arrival)}
+
+/* ============ SHOOT-OUT (Slide 3) ============ */
+.pitch{position:relative;background:linear-gradient(#15803d,#166534);border-radius:16px;padding:18px;overflow:hidden;margin:8px 0}
+.pitch .goal{position:absolute;top:10px;right:14px;font-size:2.2rem}
+.shot-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.94);border-radius:12px;padding:10px 14px;margin:8px 0;position:relative}
+.shot-num{font-size:1.4rem;font-weight:900;color:var(--green);min-width:32px}
+.shot-q{flex:1;font-size:1.05rem;font-weight:600}
+.shot-ans{display:none;background:#dcfce7;border-radius:8px;padding:6px 10px;font-weight:700;color:#14532d}
+.shot-row.revealed .shot-ans{display:block;animation:fadeInUp .35s ease}
+.shot-btn{background:var(--green);color:#fff;border:none;border-radius:999px;padding:8px 14px;font-weight:800;cursor:pointer;white-space:nowrap}
+.shot-row.revealed .shot-btn{display:none}
+.ball{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:1.3rem;opacity:0;pointer-events:none}
+.shot-row.revealed .ball{animation:ballFly .7s ease forwards}
+@keyframes ballFly{0%{opacity:1;left:8px}100%{opacity:0;left:92%}}
+#shootout-score{text-align:center;font-weight:900;color:#fff;font-size:1.15rem;margin-top:6px}
+
+/* ============ I DO (Slide 4) ============ */
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0}
+.bal-col{border-radius:14px;padding:12px}
+.bal-help{background:#f0fdf4;border:2px solid #86efac}
+.bal-harm{background:#fef2f2;border:2px solid #fca5a5}
+.bal-col h3{margin:0 0 8px;text-align:center}
+.reveal-card{background:#fff;border:2px dashed #cbd5e1;border-radius:10px;padding:10px 12px;margin:7px 0;cursor:pointer;font-weight:600;transition:border-color .2s}
+.reveal-card .rc-body{display:none;font-weight:400;color:var(--muted);margin-top:5px;font-size:.92rem}
+.reveal-card.open{border-style:solid;border-color:var(--ido)}
+.reveal-card.open .rc-body{display:block;animation:fadeInUp .3s ease}
+.vocab-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.vocab-chip{background:#ede9fe;border:2px solid #a78bfa;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:800;color:#4c1d95;min-width:160px;text-align:center;transition:transform .15s}
+.vocab-chip:active{transform:scale(.96)}
+.vocab-chip .vc-def{display:none;font-weight:500;font-size:.85rem;margin-top:5px;color:#5b21b6}
+.vocab-chip.flipped .vc-def{display:block}
+.strike-target{position:relative;display:inline-block;font-weight:800}
+.strike-target.struck::after{content:"";position:absolute;left:0;top:52%;height:3px;background:var(--red);animation:strikeGrow .6s ease forwards}
+@keyframes strikeGrow{from{width:0}to{width:100%}}
+
+/* ============ STAND UP / SIT DOWN (Slide 5) ============ */
+.vote-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.vote-legend span{background:#fff;border-radius:999px;padding:7px 14px;font-weight:800;border:2px solid #e2e8f0}
+#scn-card{background:#fff;border-radius:18px;border:3px solid var(--wedo);padding:22px 26px;font-size:1.5rem;font-weight:700;text-align:center;min-height:110px;display:flex;align-items:center;justify-content:center;margin:10px auto;max-width:860px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+#scn-dots{text-align:center;font-size:1.1rem;letter-spacing:.35em;color:#cbd5e1;margin-bottom:4px}
+#scn-dots .done{color:var(--wedo)}
+.tally-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.tally-box{background:#fff;border-radius:14px;padding:10px 14px;text-align:center;border:2px solid #e2e8f0;min-width:150px}
+.tally-box h4{margin:0 0 6px;font-size:.95rem}
+.tally-count{font-size:1.9rem;font-weight:900;margin:2px 0}
+.tally-box button{border:none;border-radius:8px;padding:6px 14px;font-weight:900;cursor:pointer;font-size:1.05rem;margin:0 3px}
+.t-plus{background:#dcfce7} .t-minus{background:#fee2e2}
+#scn-verdict{display:none;background:#eef2ff;border-left:6px solid var(--indep);border-radius:10px;padding:12px 16px;margin:10px auto;max-width:860px;animation:fadeInUp .35s ease}
+#scn-verdict.show{display:block}
+.scn-controls{display:flex;gap:12px;justify-content:center;margin-top:8px}
+.scn-controls button{border:none;border-radius:12px;padding:12px 22px;font-weight:800;font-size:1rem;cursor:pointer;color:#fff}
+#btn-lock{background:var(--indep)} #btn-next-scn{background:var(--wedo)}
+
+/* ============ TEAM BOARD (Slide 6) ============ */
+.bank-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.chip{background:#fff;border:2.5px solid #94a3b8;border-radius:999px;padding:9px 16px;font-weight:800;cursor:pointer;transition:transform .12s,border-color .2s,background .2s;font-size:1rem}
+.chip:active{transform:scale(.94)}
+.chip.selected{border-color:var(--navy);background:#dbeafe}
+.chip.placed{display:none}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0}
+.team-sheet{border-radius:14px;padding:12px;min-height:170px;cursor:pointer}
+.ts-help{background:#f0fdf4;border:3px solid #22c55e}
+.ts-harm{background:#fef2f2;border:3px solid #ef4444}
+.team-sheet h3{margin:0 0 8px;text-align:center}
+.team-sheet .placed-chip{display:inline-block;background:#fff;border-radius:999px;padding:7px 14px;margin:4px;font-weight:800;border:2px solid #cbd5e1;cursor:pointer}
+.team-sheet.armed{outline:4px dashed var(--navy);outline-offset:3px}
+.wedo-capture{background:#fff7ed;border:2px dashed var(--orange);border-radius:12px;padding:10px 14px;margin:8px 0;font-size:.92rem;color:#7c2d12}
+
+/* ============ LEVEL TOGGLES + FRAMES (Slide 7) ============ */
+.level-toggle{display:flex;gap:10px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+.level-toggle button{border:none;border-radius:999px;padding:9px 20px;font-weight:900;cursor:pointer;color:#fff;opacity:.45;font-size:.95rem}
+.level-toggle button.on{opacity:1;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.lv-f{background:var(--green)} .lv-m{background:var(--orange)} .lv-h{background:var(--navy)}
+.tier{display:none}
+body.show-f .tier-f{display:block} body.show-m .tier-m{display:block} body.show-h .tier-h{display:block}
+.frame-box{background:#fff;border-radius:12px;padding:14px 18px;margin:8px 0;font-size:1.15rem;line-height:1.9}
+.tier-f .frame-box{border:3px solid var(--green)}
+.tier-m .frame-box{border:3px solid var(--orange)}
+.tier-h .frame-box{border:3px solid var(--navy)}
+.blank{display:inline-block;min-width:130px;border-bottom:2.5px solid var(--muted)}
+.hint-btn{background:#fef9c3;border:2px solid #eab308;border-radius:999px;padding:7px 16px;font-weight:800;cursor:pointer;color:#713f12}
+.hint-body{display:none;background:#fefce8;border-radius:10px;padding:10px 14px;margin-top:8px}
+.hint-body.show{display:block;animation:fadeInUp .3s ease}
+
+/* ============ EXIT (Slide 8) ============ */
+.ghost{filter:blur(7px);transition:filter .5s;user-select:none}
+.ghost.revealed{filter:none}
+.show-ans-btn{background:var(--exit);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:1rem;cursor:pointer;margin-top:8px}
+
+/* ============ CONFETTI ============ */
+.confetti-bit{position:fixed;top:-16px;z-index:130;font-size:1.2rem;animation:confFall linear forwards;pointer-events:none}
+@keyframes confFall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* ============ CALM / REDUCED MOTION ============ */
+body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ============ MOBILE ============ */
+@media (max-width:640px){
+  .slide{padding:16px 14px 110px}
+  h1{font-size:1.7rem} h2{font-size:1.3rem}
+  .balance-grid,.team-grid{grid-template-columns:1fr}
+  #scn-card{font-size:1.15rem;padding:16px}
+  #ta-focus-btn,#cold-call-btn,#calm-btn{padding:7px 11px;font-size:.75rem}
+  #xp-wrap{width:38vw}
+  .logo{height:34px}
+}
+
+/* ============ PRINT ============ */
+#print-area{display:none}
+@media print{
+  @page{margin:11mm}
+  body>*:not(#print-area){display:none!important}
+  #print-area{display:block!important;font-size:11pt;color:#000}
+  .slip{break-inside:avoid;border:1.5px solid #000;border-radius:8px;padding:8mm;margin-bottom:6mm}
+  .cutline{border-top:2px dashed #888;margin:4mm 0;text-align:center;color:#888;font-size:9pt}
+  .p-tier{display:none}
+  html.print-f .p-tier-f{display:block}
+  html.print-m .p-tier-m{display:block}
+  html.print-h .p-tier-h{display:block}
+  html.print-ev #ev-sheet{display:block}
+  html.print-f #slips,html.print-m #slips,html.print-h #slips{display:block}
+  #ev-sheet,#slips{display:none}
+  .writeline{border-bottom:1.5px solid #000;display:block;height:9mm}
+  .ev-table{width:100%;border-collapse:collapse;margin:4mm 0}
+  .ev-table th,.ev-table td{border:1px solid #000;padding:2mm 3mm;text-align:left;font-size:10pt}
+  .p-dash{border-top:1.5px dashed #777;margin:5mm 0}
+}
+</style>
+</head>
+<body class="show-f show-m show-h">
+
+<div id="progress-bar"></div>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div id="timer-display">00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" onclick="startTimer()" title="Play">▶</button>
+    <button class="timer-btn" onclick="pauseTimer()" title="Pause">⏸</button>
+    <button class="timer-btn" onclick="resetTimer()" title="Reset">↺</button>
+  </div>
+</div>
+
+<button id="ta-focus-btn" onclick="showTABrief()">TA Focus</button>
+<button id="cold-call-btn" onclick="showColdCall()">Cold Call</button>
+<button id="calm-btn" onclick="toggleCalm()">Calm Mode</button>
+
+<!-- TA FOCUS MODAL -->
+<div class="overlay" id="ta-overlay" onclick="if(event.target.id==='ta-overlay')hideTABrief()">
+  <div class="modal">
+    <div class="modal-header"><h3 style="margin:0">TA Focus — this slide</h3><button class="modal-close" onclick="hideTABrief()">✕</button></div>
+    <div id="ta-body"></div>
+  </div>
+</div>
+
+<!-- COLD CALL MODAL -->
+<div class="overlay" id="cc-overlay" onclick="if(event.target.id==='cc-overlay')hideColdCall()">
+  <div class="modal">
+    <div class="modal-header"><h3 style="margin:0">Cold Call</h3><button class="modal-close" onclick="hideColdCall()">✕</button></div>
+    <div id="cc-body"></div>
+  </div>
+</div>
+
+<!-- LESSON COMPLETE OVERLAY -->
+<div class="overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="modal">
+    <div class="lc-stars"><span>⭐</span><span>🏆</span><span>⭐</span></div>
+    <h2 style="text-align:center">Full Time — Lesson Complete!</h2>
+    <div class="lc-summary">
+      <span><strong>✓</strong> I can explain how social media can help wellbeing</span>
+      <span><strong>✓</strong> I can explain how it can harm wellbeing</span>
+      <span><strong>✓</strong> I voted, explained and made my own verdict</span>
+    </div>
+    <button onclick="hideLessonComplete()">Onwards! 🚀</button>
+  </div>
+</div>
+
+<div class="slide-container">
+
+<!-- ============ SLIDE 1: TITLE ============ -->
+<div class="slide active" data-type="arrival" data-title="Title" data-time="2">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none';document.getElementById('logo-fb1').style.display='block'">
+  <span class="logo-fallback" id="logo-fb1">Progress Schools</span>
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <span class="slide-tag tag-arrival">Health &amp; Wellbeing — ASDAN</span>
+    <h1>Social Media &amp; Emotional Wellbeing</h1>
+    <p style="color:var(--muted);margin:-4px 0 4px;font-weight:600">One big match weekend. One big question. Almost no writing. 😉</p>
+    <div class="title-hero">
+      <div class="hero-icon" title="Your phone">📱</div>
+      <div class="hero-icon" title="Your mind">🧠</div>
+      <div class="hero-icon" title="Connection">👍</div>
+      <div class="hero-icon" title="Pressure">⚠️</div>
+    </div>
+    <div class="li-box" style="text-align:left">
+      <strong>Main question:</strong> What is one way social media <em>helps</em> wellbeing, and one way it might <em>harm</em> it?<br><br>
+      <strong>Learning objective:</strong>
+      <ul class="lo-anim" style="margin:6px 0 0">
+        <li>To explore how social media can affect young people's emotional wellbeing in positive <strong>and</strong> negative ways.</li>
+      </ul>
+    </div>
+    <div class="sc-box" style="text-align:left">
+      <strong>Success criteria — I will…</strong>
+      <ul style="margin:6px 0 0">
+        <li>vote on real scenarios and give <strong>one reason out loud</strong></li>
+        <li>help build our class team of helps vs harms</li>
+        <li>write my <strong>verdict</strong> — just two sentences</li>
+      </ul>
+    </div>
+    <p style="font-size:.95rem;color:var(--muted)"><strong>Navigation:</strong> Arrow keys / Spacebar &nbsp;|&nbsp; <strong>40 minutes</strong> &nbsp;|&nbsp; Skills: Use of English · Discussion</p>
+    <div class="scaffold-box" style="display:inline-block;text-align:left">
+      <strong>🖨️ Teacher prints (before lesson):</strong>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+        <button class="lv-f" style="border:none;border-radius:8px;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer" onclick="printPack('f')">Build slips</button>
+        <button class="lv-m" style="border:none;border-radius:8px;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer" onclick="printPack('m')">Grow slips</button>
+        <button class="lv-h" style="border:none;border-radius:8px;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer" onclick="printPack('h')">Launch slips</button>
+        <button style="border:none;border-radius:8px;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer;background:#0f172a" onclick="printEvidence()">Class evidence (after)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 2: KICK-OFF CHECK-IN ============ -->
+<div class="slide" data-type="arrival" data-title="Kick-Off Check-In" data-time="3">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-arrival">Kick-Off Check-In</span><span class="time-chip">⏱ 3 min · no books, no pens</span>
+  <h2>How's the tank this morning?</h2>
+  <p style="margin:0;color:var(--muted)">Hands up for each one — I'll tap the count. This <strong>is</strong> the topic: how we feel = <strong>wellbeing</strong>.</p>
+  <div class="poll-row">
+    <button class="poll-btn" onclick="tapPoll(this,'p1a')"><span class="big">🔋🔋🔋</span>Fully charged<span class="count" data-poll="p1a">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p1b')"><span class="big">🔋🔋</span>Doing OK<span class="count" data-poll="p1b">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p1c')"><span class="big">🔋</span>Running low<span class="count" data-poll="p1c">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p1d')"><span class="big">🪫</span>Flat battery<span class="count" data-poll="p1d">0</span></button>
+  </div>
+  <h2 style="margin-top:10px">Sunday night's match — were you up for it? ⚽</h2>
+  <div class="poll-row">
+    <button class="poll-btn" onclick="tapPoll(this,'p2a')"><span class="big">⚽</span>Watched it all — 3 a.m. finish!<span class="count" data-poll="p2a">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p2b')"><span class="big">📱</span>Followed it on my phone<span class="count" data-poll="p2b">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p2c')"><span class="big">⚽📱</span>Both — no regrets<span class="count" data-poll="p2c">0</span></button>
+    <button class="poll-btn" onclick="tapPoll(this,'p2d')"><span class="big">😴</span>Slept through it<span class="count" data-poll="p2d">0</span></button>
+  </div>
+  <div class="task-box"><strong>Talk pair (60 sec):</strong> A late one on Sunday — can you still feel it two days later? That link — screens, sleep, mood — is exactly what we're exploring.</div>
+</div>
+
+<!-- ============ SLIDE 3: WARM-UP SHOOT-OUT ============ -->
+<div class="slide" data-type="ido" data-title="Warm-Up Shoot-Out" data-time="4">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-ido">Retrieval — Fab 4 Shoot-Out</span><span class="time-chip">⏱ 4 min · say it, don't write it</span>
+  <h2>Four penalties. Shout the answer, then we reveal. 🥅</h2>
+  <div class="pitch">
+    <div class="goal">🥅</div>
+    <div class="shot-row" id="shot1"><span class="ball">⚽</span><span class="shot-num">1</span><span class="shot-q">Name one <strong>trusted health advice website</strong> for young people.</span><span class="shot-ans">e.g. NHS website / Childline</span><button class="shot-btn" onclick="revealShot(1)">Shoot!</button></div>
+    <div class="shot-row" id="shot2"><span class="ball">⚽</span><span class="shot-num">2</span><span class="shot-q">What does <strong>"mental health"</strong> mean?</span><span class="shot-ans">How we think, feel and cope day to day</span><button class="shot-btn" onclick="revealShot(2)">Shoot!</button></div>
+    <div class="shot-row" id="shot3"><span class="ball">⚽</span><span class="shot-num">3</span><span class="shot-q">Give one example of a <strong>healthy habit</strong>.</span><span class="shot-ans">e.g. sleep, exercise, eating well, time offline</span><button class="shot-btn" onclick="revealShot(3)">Shoot!</button></div>
+    <div class="shot-row" id="shot4"><span class="ball">⚽</span><span class="shot-num">4</span><span class="shot-q">What should someone do if they feel <strong>unsafe online</strong>?</span><span class="shot-ans">Tell a trusted adult · block · report</span><button class="shot-btn" onclick="revealShot(4)">Shoot!</button></div>
+    <div id="shootout-score">Shots taken: 0 / 4</div>
+  </div>
+  <div class="safe-chip">🛡️ Safe examples only — no personal stories needed today.</div>
+</div>
+
+<!-- ============ SLIDE 4: I DO — THE BALANCE ============ -->
+<div class="slide" data-type="ido" data-title="I Do — The Balance" data-time="4">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-ido">I Do — A Balanced View</span><span class="time-chip">⏱ 4 min · listen, then tap to reveal</span>
+  <h2>We're not deciding "good" or "bad" — we're looking at <em>balance</em>.</h2>
+  <div class="misc-box">❌ Misconception: <span class="strike-target" id="strike1" onclick="strikeIt()">"Social media is always bad for young people."</span><br><strong>✅ Truth:</strong> it depends on <strong>how</strong> it's used, <strong>what</strong> you see, and <strong>how you feel afterwards</strong>. <em>(Tap the myth to bin it.)</em></div>
+  <div class="balance-grid">
+    <div class="bal-col bal-help">
+      <h3>Can HELP wellbeing ✅</h3>
+      <div class="reveal-card" onclick="toggleCard(this)">🤝 Keeps people connected<span class="rc-body">Group chats, calls, staying close to family and friends far away.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">🎓 Helps people learn<span class="rc-body">Revision pages, tutorials, new skills — free and instant.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">🛟 Gives support networks<span class="rc-body">Finding people who get it — hobbies, fandoms, communities.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">🎨 Creativity &amp; self-expression<span class="rc-body">Making, sharing, editing — being seen for what you create.</span></div>
+    </div>
+    <div class="bal-col bal-harm">
+      <h3>Can HARM wellbeing ⚠️</h3>
+      <div class="reveal-card" onclick="toggleCard(this)">🪞 Comparison anxiety<span class="rc-body">Everyone's highlight reel vs your behind-the-scenes.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">💬 Cyberbullying<span class="rc-body">Unkind messages that follow you home in your pocket.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">😴 Sleep loss<span class="rc-body">"One more scroll" at 2 a.m. — the brain pays for it tomorrow.</span></div>
+      <div class="reveal-card" onclick="toggleCard(this)">⏰ Pressure to be online<span class="rc-body">Streaks, replies, FOMO — feeling you can't switch off.</span></div>
+    </div>
+  </div>
+  <p style="margin:4px 0;text-align:center;color:var(--muted);font-weight:700">Key vocab — tap a chip to flip it:</p>
+  <div class="vocab-row">
+    <div class="vocab-chip" onclick="this.classList.toggle('flipped');blip()">Wellbeing<span class="vc-def">How someone feels in their mind and body</span></div>
+    <div class="vocab-chip" onclick="this.classList.toggle('flipped');blip()">Comparison anxiety<span class="vc-def">Feeling bad comparing your life to others online</span></div>
+    <div class="vocab-chip" onclick="this.classList.toggle('flipped');blip()">Cyberbullying<span class="vc-def">Bullying using phones, games, apps or social media</span></div>
+    <div class="vocab-chip" onclick="this.classList.toggle('flipped');blip()">Support network<span class="vc-def">People or groups who help you</span></div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 5: STAND UP / SIT DOWN ============ -->
+<div class="slide" data-type="wedo" data-title="Stand Up / Sit Down" data-time="8">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-wedo">We Do — Vote With Your Body</span><span class="time-chip">⏱ 8 min · whole class</span>
+  <div class="vote-legend">
+    <span>🧍 STAND = Helpful</span>
+    <span>🪑 SIT = Harmful</span>
+    <span>🙌 HANDS ON HEAD = Both</span>
+  </div>
+  <div id="scn-dots"></div>
+  <div id="scn-card">Loading…</div>
+  <div class="tally-row">
+    <div class="tally-box"><h4>🧍 Helpful</h4><div class="tally-count" id="tc-h">0</div><button class="t-plus" onclick="tally('h',1)">＋</button><button class="t-minus" onclick="tally('h',-1)">－</button></div>
+    <div class="tally-box"><h4>🪑 Harmful</h4><div class="tally-count" id="tc-x">0</div><button class="t-plus" onclick="tally('x',1)">＋</button><button class="t-minus" onclick="tally('x',-1)">－</button></div>
+    <div class="tally-box"><h4>🙌 Both</h4><div class="tally-count" id="tc-b">0</div><button class="t-plus" onclick="tally('b',1)">＋</button><button class="t-minus" onclick="tally('b',-1)">－</button></div>
+  </div>
+  <div id="scn-verdict"></div>
+  <div class="scn-controls">
+    <button id="btn-lock" onclick="lockScenario()">🔒 Lock in &amp; discuss</button>
+    <button id="btn-next-scn" onclick="nextScenario()">Next scenario ➜</button>
+  </div>
+  <div class="aspire-box">🌱 <strong>Aspire:</strong> spot the hidden factor — is it ever really the <em>app</em>, or is it <em>how</em> it's being used?</div>
+  <div style="text-align:center"><span class="safe-chip">🛡️ Safe examples only — no real names, no personal stories.</span></div>
+</div>
+
+<!-- ============ SLIDE 6: PICK THE TEAM ============ -->
+<div class="slide" data-type="wedo" data-title="Pick the Team" data-time="6">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-wedo">We Do — Pick the Team</span><span class="time-chip">⏱ 6 min · come to the board</span>
+  <h2>Build our idea bank — which team does each one play for? ⚽</h2>
+  <p style="margin:0 0 4px;color:var(--muted)">Tap a chip, then tap a team sheet. Tap a placed chip to send it back. Aim for <strong>at least 4 a side</strong> — and say <strong>why</strong> as you place it.</p>
+  <div class="bank-row" id="chip-bank"></div>
+  <div class="team-grid">
+    <div class="team-sheet ts-help" id="team-help" onclick="dropChip('help')"><h3>✅ Helps Wellbeing XI</h3><div id="team-help-list"></div></div>
+    <div class="team-sheet ts-harm" id="team-harm" onclick="dropChip('harm')"><h3>⚠️ Harms Wellbeing XI</h3><div id="team-harm-list"></div></div>
+  </div>
+  <div class="wedo-capture">📸 <strong>Evidence capture:</strong> this board prints on the class evidence sheet — it's your pros/cons bank for the verdict.</div>
+  <div class="aspire-box">🌱 <strong>Captain's pick:</strong> which ONE chip matters most for wellbeing? Be ready to defend it.</div>
+</div>
+
+<!-- ============ SLIDE 7: MY VERDICT ============ -->
+<div class="slide" data-type="independent" data-title="My Verdict" data-time="7">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-indep">You Do — My Verdict</span><span class="time-chip">⏱ 7 min · the ONLY writing today</span>
+  <h2>The pundit's verdict 🎙️ — your slip, your call.</h2>
+  <p style="margin:0;color:var(--muted)">Use the team boards we just built. Pick your pathway. Two sentences done well beats a page done badly.</p>
+  <div class="level-toggle">
+    <button class="lv-f on" id="lt-f" onclick="toggleTier('f')">Build</button>
+    <button class="lv-m on" id="lt-m" onclick="toggleTier('m')">Grow</button>
+    <button class="lv-h on" id="lt-h" onclick="toggleTier('h')">Launch</button>
+  </div>
+  <div class="tier tier-f">
+    <div class="frame-box">🟢 <strong>Build:</strong> finish the sentences using the team boards.<br>
+      Social media can <strong>help</strong> because <span class="blank"></span>.<br>
+      Social media can <strong>harm</strong> because <span class="blank"></span>.</div>
+  </div>
+  <div class="tier tier-m">
+    <div class="frame-box">🟠 <strong>Grow:</strong> full sentences, then rank.<br>
+      One positive effect is <span class="blank"></span> because <span class="blank"></span>.<br>
+      One negative effect is <span class="blank"></span> because <span class="blank"></span>.<br>
+      The bigger effect is <span class="blank"></span>.</div>
+  </div>
+  <div class="tier tier-h">
+    <div class="frame-box">🔵 <strong>Launch:</strong> add a judgement.<br>
+      The most serious impact is <span class="blank"></span> because <span class="blank"></span>.<br>
+      This is more serious than <span class="blank"></span> because <span class="blank"></span>.</div>
+    <div class="exam-tip-box">💡 <strong>Evidence tip:</strong> one clear reason beats three vague ones. "…because it affects sleep, which affects mood" scores; "…because it's bad" doesn't.</div>
+  </div>
+  <button class="hint-btn" onclick="document.getElementById('hint1').classList.toggle('show');blip()">💡 Stuck? Sentence starters</button>
+  <div class="hint-body" id="hint1">Try: "…because it keeps people connected" · "…because comparing yourself to edited posts lowers confidence" · "…because losing sleep changes your mood the next day".</div>
+  <div class="aspire-box">🌱 <strong>Aspire:</strong> finished early? Flip your verdict — argue the <em>opposite</em> side out loud to a partner. Can you make it convincing?</div>
+</div>
+
+<!-- ============ SLIDE 8: EXIT — FULL-TIME WHISTLE ============ -->
+<div class="slide" data-type="exit" data-title="Exit — Full Time" data-time="5">
+  <img class="logo" alt="Progress Schools" src="https://www.randstad.co.uk/s3fs-media/uk/public/2023-02/The-progress-Schools-logo-for-landing-page%20(1).png" onerror="this.style.display='none'">
+  <span class="slide-tag tag-exit">Exit Ticket — Full-Time Whistle</span><span class="time-chip">⏱ 5 min</span>
+  <h2>Answer the main question on your slip. 📣</h2>
+  <div class="li-box"><strong>Main question:</strong> What is one way social media <strong>helps</strong> wellbeing, and one way it might <strong>harm</strong> it?</div>
+  <div class="task-box"><strong>Two sentences.</strong> Frames if you need them:<br>
+    Social media can help wellbeing because <span class="blank"></span>.<br>
+    It can harm wellbeing because <span class="blank"></span>.</div>
+  <div class="scaffold-box"><strong>Stretch:</strong> which impact do you think is <em>most serious</em>? Why?</div>
+  <p style="font-weight:700;margin:8px 0 4px">Model answer (revealed after slips are in):</p>
+  <div class="ghost" id="ghost1">
+    <div class="frame-box" style="border:3px solid var(--exit)">Social media can help wellbeing because it connects people to friends and support networks. It can harm wellbeing because staying up late scrolling causes sleep loss, which lowers mood the next day.</div>
+  </div>
+  <button class="show-ans-btn" onclick="revealGhost()">👁 Show model answer — Full Time!</button>
+  <div class="aspire-box">🌱 One helpful habit to try this week: take a break from scrolling · follow positive accounts · talk to a trusted adult if something feels wrong.</div>
+</div>
+
+</div><!-- /slide-container -->
+
+<button id="nav-prev" onclick="prevSlide()">◀ Back</button>
+<button id="nav-next" onclick="nextSlide()">Next ▶</button>
+<div id="xp-label">XP</div>
+<div id="xp-wrap"><div id="xp-fill"></div></div>
+
+<!-- ============ PRINT AREA ============ -->
+<div id="print-area">
+
+  <!-- VERDICT SLIPS (2 per A4, tier-filtered) -->
+  <div id="slips">
+    <div class="slip">
+      <strong>My Verdict — Social Media &amp; Emotional Wellbeing</strong> &nbsp;·&nbsp; ASDAN Health &amp; Wellbeing<br>
+      Name: ____________________________ &nbsp;&nbsp; Date: <span class="print-date"></span><br>
+      <em>LO: To explore how social media can affect young people's emotional wellbeing in positive and negative ways.</em>
+      <div class="p-dash"></div>
+      ☐ I voted in Stand Up / Sit Down &nbsp;&nbsp; ☐ I placed a chip on the team board &nbsp;&nbsp; ☐ I gave a reason out loud
+      <div class="p-dash"></div>
+      <div class="p-tier p-tier-f">
+        <strong>Build — finish the sentences:</strong><br>
+        Social media can help because <span class="writeline"></span>
+        Social media can harm because <span class="writeline"></span>
+      </div>
+      <div class="p-tier p-tier-m">
+        <strong>Grow — full sentences, then rank:</strong><br>
+        One positive effect is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        One negative effect is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        The bigger effect is: ______________________
+      </div>
+      <div class="p-tier p-tier-h">
+        <strong>Launch — add a judgement:</strong><br>
+        The most serious impact is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        This is more serious than <span class="writeline"></span>
+        because <span class="writeline"></span>
+      </div>
+      <div class="p-dash"></div>
+      <strong>Exit — Full Time:</strong> one way social media helps wellbeing, and one way it might harm it:
+      <span class="writeline"></span><span class="writeline"></span>
+      <em>Stretch: the most serious impact is… because…</em>
+      <span class="writeline"></span>
+    </div>
+    <div class="cutline">✂ — — — — — — — — — — — — — — — — — — — — — — ✂</div>
+    <div class="slip">
+      <strong>My Verdict — Social Media &amp; Emotional Wellbeing</strong> &nbsp;·&nbsp; ASDAN Health &amp; Wellbeing<br>
+      Name: ____________________________ &nbsp;&nbsp; Date: <span class="print-date"></span><br>
+      <em>LO: To explore how social media can affect young people's emotional wellbeing in positive and negative ways.</em>
+      <div class="p-dash"></div>
+      ☐ I voted in Stand Up / Sit Down &nbsp;&nbsp; ☐ I placed a chip on the team board &nbsp;&nbsp; ☐ I gave a reason out loud
+      <div class="p-dash"></div>
+      <div class="p-tier p-tier-f">
+        <strong>Build — finish the sentences:</strong><br>
+        Social media can help because <span class="writeline"></span>
+        Social media can harm because <span class="writeline"></span>
+      </div>
+      <div class="p-tier p-tier-m">
+        <strong>Grow — full sentences, then rank:</strong><br>
+        One positive effect is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        One negative effect is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        The bigger effect is: ______________________
+      </div>
+      <div class="p-tier p-tier-h">
+        <strong>Launch — add a judgement:</strong><br>
+        The most serious impact is <span class="writeline"></span>
+        because <span class="writeline"></span>
+        This is more serious than <span class="writeline"></span>
+        because <span class="writeline"></span>
+      </div>
+      <div class="p-dash"></div>
+      <strong>Exit — Full Time:</strong> one way social media helps wellbeing, and one way it might harm it:
+      <span class="writeline"></span><span class="writeline"></span>
+      <em>Stretch: the most serious impact is… because…</em>
+      <span class="writeline"></span>
+    </div>
+  </div>
+
+  <!-- CLASS EVIDENCE SHEET (built from live state at print time) -->
+  <div id="ev-sheet"></div>
+</div>
+
+<script>
+/* =====================================================
+   DATA (all consts BEFORE any init calls)
+===================================================== */
+const DEFAULT_ROSTER = ["Ava","Eden","Cienna","Harry","Maisie","Lilly-Grace","Ethan","Leon","Terry"];
+
+const SCENARIOS = [
+  {text:"Sam follows revision pages and learns study tips.", ans:"Helpful", why:"Learning + confidence — free study support in your pocket."},
+  {text:"Mia sees edited photos online and starts feeling bad about how she looks.", ans:"Harmful", why:"Comparison anxiety — highlight reels vs real life."},
+  {text:"Jay joins an online gaming group and makes new friends.", ans:"Helpful", why:"Connection + support network — finding your people."},
+  {text:"Noor stays up past 2 a.m. on a school night watching football, then scrolling, and is shattered the next day. ⚽", ans:"Both / Harmful", why:"Connection to a big shared moment — but sleep loss hits mood and focus for days after. Sound familiar this week?"},
+  {text:"A footballer makes a mistake in a big game and gets a wave of unkind replies.", ans:"Harmful", why:"Cyberbullying — it happens to famous adults too, and it's never deserved. Block · report · tell someone."},
+  {text:"A group chat keeps friends connected — but arguments kick off late at night.", ans:"Both", why:"Same app, two effects: connection AND pressure. It depends on how it's used."}
+];
+
+const CHIPS = ["friends","support","learning","creativity","hobbies","confidence","bullying","pressure","sleep loss","comparison","stress","FOMO"];
+
+const TA_BRIEFS = [
+  "Meet & greet at the door. Seat anyone flagging near the front. Low-key check-ins — it's a tired morning, keep it light.",
+  "Stand near pupils reluctant to raise hands — a quiet nudge or voting on their behalf is fine. Gesture anchor: tap your own head for 'wellbeing = mind and body'.",
+  "Prompt quieter pupils with 'you know this one' before reveal. If a pupil calls out early, make them the official 'keeper' who confirms answers.",
+  "Sit with target pupils during reveals. After each card, ask them to repeat the idea back in their own words — 5-second rehearsal before any cold call.",
+  "Movement slide: model the actions yourself (stand/sit/hands on head). Watch for anyone copying others — ask THEM first for the reason so voting stays honest. If the footballer scenario lands close to home for anyone, steer to 'block, report, tell someone' and move on.",
+  "Board slide: escort reluctant pupils up in pairs. Feed them a chip + a starter: 'sleep loss goes on harms because…'. Everyone touches the board once.",
+  "Writing slide (the only one): scribe for Build pupils if needed — their words, your handwriting is valid ASDAN evidence. Push Grow pupils for a 'because'.",
+  "Collect slips personally with a positive comment each. Check every slip has a name and at least one full sentence before pupils leave."
+];
+
+const CC_QUESTIONS = [
+  "In one sentence: what is today's lesson about?",
+  "Why might a late night change how you feel at school today?",
+  "Pick any shoot-out question and answer it again — no reveal this time.",
+  "What does 'comparison anxiety' mean, in your own words?",
+  "You voted on the last scenario — give me your reason.",
+  "Pick one chip on the board and tell me WHY it's on that team.",
+  "Read me one of your verdict sentences.",
+  "One way social media helps wellbeing — go."
+];
+
+/* =====================================================
+   STATE
+===================================================== */
+let current = 0;
+let xp = 0;
+let audioCtx = null;
+let timerSecs = 0, timerInt = null;
+let shotCount = 0;
+const polls = {};
+let scnIndex = 0;
+let scnLocked = false;
+const scnResults = [];   // {text, h, x, b}
+let curTally = {h:0, x:0, b:0};
+let selectedChip = null;
+const teams = {help:[], harm:[]};
+let ccPool = [];
+
+/* =====================================================
+   AUDIO (resumed on first gesture)
+===================================================== */
+function getAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function tone(freq, dur, type, vol){
+  if(document.body.classList.contains('calm')) return;
+  try{
+    const ctx = getAudio(), o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type||'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol||0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur||0.15));
+    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + (dur||0.15));
+  }catch(e){}
+}
+function blip(){ tone(660,0.08,'sine',0.08); }
+function ding(){ tone(880,0.18,'sine',0.12); setTimeout(()=>tone(1320,0.22,'sine',0.1),110); }
+function whistle(){ tone(2200,0.28,'square',0.05); setTimeout(()=>tone(2200,0.34,'square',0.05),320); }
+
+/* =====================================================
+   NAV / PROGRESS / XP
+===================================================== */
+function slides(){ return document.querySelectorAll('.slide'); }
+function goToSlide(i){
+  const s = slides();
+  if(i<0 || i>=s.length) return;
+  s[current].classList.remove('active');
+  current = i;
+  s[current].classList.add('active');
+  document.getElementById('progress-bar').style.width = ((current)/(s.length-1)*100)+'%';
+  window.scrollTo(0,0);
+}
+function nextSlide(){ goToSlide(current+1); blip(); }
+function prevSlide(){ goToSlide(current-1); blip(); }
+document.addEventListener('keydown', e=>{
+  const t = e.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT') return;
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); nextSlide(); }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); prevSlide(); }
+});
+function addXP(n){
+  xp = Math.min(100, xp+n);
+  document.getElementById('xp-fill').style.width = xp+'%';
+  document.getElementById('xp-label').textContent = 'XP '+xp+'%';
+}
+
+/* =====================================================
+   TIMER
+===================================================== */
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function tickTimer(){ timerSecs++; document.getElementById('timer-display').textContent = fmt(timerSecs); }
+function startTimer(){ if(!timerInt) timerInt = setInterval(tickTimer,1000); }
+function pauseTimer(){ clearInterval(timerInt); timerInt = null; }
+function resetTimer(){ pauseTimer(); timerSecs = 0; document.getElementById('timer-display').textContent = '00:00'; }
+
+/* =====================================================
+   CALM MODE
+===================================================== */
+function toggleCalm(){ document.body.classList.toggle('calm'); }
+
+/* =====================================================
+   TA FOCUS
+===================================================== */
+function showTABrief(){
+  document.getElementById('ta-body').innerHTML =
+    '<p style="margin:0 0 6px"><strong>'+slides()[current].dataset.title+'</strong> · suggested '+slides()[current].dataset.time+' min</p><p style="margin:0">'+TA_BRIEFS[current]+'</p>';
+  document.getElementById('ta-overlay').classList.add('show');
+}
+function hideTABrief(){ document.getElementById('ta-overlay').classList.remove('show'); }
+
+/* =====================================================
+   COLD CALL (shared roster: ps_coldcall_roster, legacy fallback)
+===================================================== */
+function loadRoster(){
+  try{
+    let r = JSON.parse(localStorage.getItem('ps_coldcall_roster')||'null');
+    if(!r || !r.length) r = JSON.parse(localStorage.getItem('coldCall_y10')||'null');
+    if(!r || !r.length){ r = DEFAULT_ROSTER.slice(); localStorage.setItem('ps_coldcall_roster', JSON.stringify(r)); }
+    return r;
+  }catch(e){ return DEFAULT_ROSTER.slice(); }
+}
+function showColdCall(){
+  const roster = loadRoster();
+  if(!ccPool.length) ccPool = roster.slice().sort(()=>Math.random()-0.5);
+  const name = ccPool.pop();
+  const q = CC_QUESTIONS[current] || CC_QUESTIONS[0];
+  document.getElementById('cc-body').innerHTML =
+    '<div class="cc-name">'+name+'</div>'+
+    '<div class="cc-q">'+q+'</div>'+
+    '<div class="cc-rate">'+
+      '<button class="cc-u" onclick="blip()">U</button>'+
+      '<button class="cc-f" onclick="blip()">1</button>'+
+      '<button class="cc-m" onclick="blip()">2</button>'+
+      '<button class="cc-h" onclick="blip()">3</button>'+
+      '<button class="cc-h" onclick="blip()">4</button>'+
+      '<button class="cc-h" onclick="blip()">5</button>'+
+    '</div>'+
+    '<div class="cc-map">U/1 → Foundation support · 2 → Middle · 3–5 → Higher stretch</div>'+
+    '<button class="cc-btn-primary" onclick="showColdCall()">🎲 Next pupil</button>';
+  document.getElementById('cc-overlay').classList.add('show');
+  blip();
+}
+function hideColdCall(){ document.getElementById('cc-overlay').classList.remove('show'); }
+
+/* =====================================================
+   SLIDE 2 — POLLS
+===================================================== */
+function tapPoll(btn, id){
+  polls[id] = (polls[id]||0)+1;
+  btn.querySelector('.count').textContent = polls[id];
+  btn.classList.add('popped');
+  blip(); addXP(1);
+}
+
+/* =====================================================
+   SLIDE 3 — SHOOT-OUT
+===================================================== */
+function revealShot(n){
+  const row = document.getElementById('shot'+n);
+  if(row.classList.contains('revealed')) return;
+  row.classList.add('revealed');
+  shotCount++;
+  document.getElementById('shootout-score').textContent = 'Shots taken: '+shotCount+' / 4' + (shotCount===4 ? ' — perfect shoot-out! 🏆' : '');
+  ding(); addXP(4);
+  if(shotCount===4) whistle();
+}
+
+/* =====================================================
+   SLIDE 4 — I DO
+===================================================== */
+function toggleCard(el){ el.classList.toggle('open'); blip(); }
+function strikeIt(){ document.getElementById('strike1').classList.add('struck'); ding(); addXP(2); }
+
+/* =====================================================
+   SLIDE 5 — STAND UP / SIT DOWN
+===================================================== */
+function renderScenario(){
+  const s = SCENARIOS[scnIndex];
+  document.getElementById('scn-card').textContent = s.text;
+  document.getElementById('scn-dots').innerHTML = SCENARIOS.map((_,i)=>'<span class="'+(i<scnIndex?'done':'')+'">●</span>').join('');
+  curTally = {h:0,x:0,b:0}; scnLocked = false;
+  ['h','x','b'].forEach(k=>document.getElementById('tc-'+k).textContent = 0);
+  const v = document.getElementById('scn-verdict'); v.classList.remove('show'); v.innerHTML = '';
+}
+function tally(k, d){
+  if(scnLocked) return;
+  curTally[k] = Math.max(0, curTally[k]+d);
+  document.getElementById('tc-'+k).textContent = curTally[k];
+  blip();
+}
+function lockScenario(){
+  if(scnLocked) return;
+  scnLocked = true;
+  const s = SCENARIOS[scnIndex];
+  scnResults[scnIndex] = {text:s.text, h:curTally.h, x:curTally.x, b:curTally.b};
+  document.getElementById('scn-verdict').innerHTML =
+    '<strong>Most agree: '+s.ans+'.</strong> '+s.why+'<br><em>Cold call: "…because…?"</em>';
+  document.getElementById('scn-verdict').classList.add('show');
+  ding(); addXP(5);
+}
+function nextScenario(){
+  if(scnIndex < SCENARIOS.length-1){ scnIndex++; renderScenario(); blip(); }
+  else{ document.getElementById('scn-card').textContent = 'All done — six scenarios sorted! ➜ Next slide.'; whistle(); }
+}
+
+/* =====================================================
+   SLIDE 6 — PICK THE TEAM
+===================================================== */
+function renderBank(){
+  document.getElementById('chip-bank').innerHTML = CHIPS.map((c,i)=>
+    '<span class="chip" id="chip'+i+'" onclick="pickChip('+i+')">'+c+'</span>').join('');
+}
+function pickChip(i){
+  if(selectedChip!==null){ const p = document.getElementById('chip'+selectedChip); if(p) p.classList.remove('selected'); }
+  selectedChip = i;
+  document.getElementById('chip'+i).classList.add('selected');
+  document.getElementById('team-help').classList.add('armed');
+  document.getElementById('team-harm').classList.add('armed');
+  blip();
+}
+function dropChip(side){
+  if(selectedChip===null) return;
+  const i = selectedChip;
+  teams[side].push(i);
+  document.getElementById('chip'+i).classList.remove('selected');
+  document.getElementById('chip'+i).classList.add('placed');
+  selectedChip = null;
+  document.getElementById('team-help').classList.remove('armed');
+  document.getElementById('team-harm').classList.remove('armed');
+  renderTeams();
+  ding(); addXP(3);
+}
+function returnChip(side, i, ev){
+  ev.stopPropagation();
+  teams[side] = teams[side].filter(x=>x!==i);
+  document.getElementById('chip'+i).classList.remove('placed');
+  renderTeams();
+  blip();
+}
+function renderTeams(){
+  ['help','harm'].forEach(side=>{
+    document.getElementById('team-'+side+'-list').innerHTML =
+      teams[side].map(i=>'<span class="placed-chip" onclick="returnChip(\''+side+'\','+i+',event)">'+CHIPS[i]+' ✕</span>').join('');
+  });
+}
+
+/* =====================================================
+   SLIDE 7 — LEVEL TOGGLES
+===================================================== */
+function toggleTier(t){
+  document.body.classList.toggle('show-'+t);
+  document.getElementById('lt-'+t).classList.toggle('on');
+  blip();
+}
+
+/* =====================================================
+   SLIDE 8 — EXIT / LESSON COMPLETE / CONFETTI
+===================================================== */
+function revealGhost(){
+  document.getElementById('ghost1').classList.add('revealed');
+  addXP(100);
+  whistle();
+  confetti();
+  setTimeout(()=>document.getElementById('lc-overlay').classList.add('show'), 600);
+}
+function hideLessonComplete(){ document.getElementById('lc-overlay').classList.remove('show'); }
+function confetti(){
+  if(document.body.classList.contains('calm')) return;
+  const bits = ['🎉','⚽','✨','🎊','🏆','💚'];
+  for(let i=0;i<36;i++){
+    const b = document.createElement('span');
+    b.className = 'confetti-bit';
+    b.textContent = bits[i%bits.length];
+    b.style.left = (Math.random()*100)+'vw';
+    b.style.animationDuration = (2+Math.random()*2)+'s';
+    b.style.animationDelay = (Math.random()*0.8)+'s';
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(), 5200);
+  }
+}
+
+/* =====================================================
+   PRINTING
+===================================================== */
+function stampDates(){
+  const d = new Date().toLocaleDateString('en-GB');
+  document.querySelectorAll('.print-date').forEach(el=>el.textContent = d);
+}
+function printPack(tier){
+  stampDates();
+  document.documentElement.className = 'print-'+tier;
+  window.print();
+  document.documentElement.className = '';
+}
+function printEvidence(){
+  stampDates();
+  const d = new Date().toLocaleDateString('en-GB');
+  let rows = '';
+  SCENARIOS.forEach((s,i)=>{
+    const r = scnResults[i];
+    rows += '<tr><td>'+s.text+'</td><td>'+(r?r.h:'—')+'</td><td>'+(r?r.x:'—')+'</td><td>'+(r?r.b:'—')+'</td><td>'+s.ans+'</td></tr>';
+  });
+  const helpList = teams.help.map(i=>CHIPS[i]).join(', ') || '—';
+  const harmList = teams.harm.map(i=>CHIPS[i]).join(', ') || '—';
+  document.getElementById('ev-sheet').innerHTML =
+    '<h2>Class Evidence — Social Media &amp; Emotional Wellbeing</h2>'+
+    '<p><strong>ASDAN Health &amp; Wellbeing</strong> · Date: '+d+' · Class: Year 10 · Teacher: ______________</p>'+
+    '<p><em>LO: To explore how social media can affect young people\'s emotional wellbeing in positive and negative ways. Skills: Use of English · Discussion.</em></p>'+
+    '<h3>Stand Up / Sit Down — whole-class votes</h3>'+
+    '<table class="ev-table"><tr><th>Scenario</th><th>Helpful</th><th>Harmful</th><th>Both</th><th>Agreed</th></tr>'+rows+'</table>'+
+    '<h3>Class idea bank (built live on the board)</h3>'+
+    '<p><strong>✅ Helps wellbeing:</strong> '+helpList+'</p>'+
+    '<p><strong>⚠️ Harms wellbeing:</strong> '+harmList+'</p>'+
+    '<div class="p-dash"></div>'+
+    '<p>Individual pupil verdicts + exit answers: see attached slips. Teacher signature: ____________________</p>';
+  document.documentElement.className = 'print-ev';
+  window.print();
+  document.documentElement.className = '';
+}
+
+/* =====================================================
+   INIT (after all data consts)
+===================================================== */
+document.addEventListener('pointerdown', function once(){ getAudio(); document.removeEventListener('pointerdown', once); }, {once:true});
+renderScenario();
+renderBank();
+addXP(0);
+document.getElementById('progress-bar').style.width = '0%';
+</script>
+</body>
+</html>
