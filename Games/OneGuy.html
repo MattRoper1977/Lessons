@@ -109,6 +109,26 @@
     padding:6px 16px;font-size:15px;font-weight:800;letter-spacing:1px}
   #hudDist{color:var(--cyan)} #hudGhost{color:var(--magenta);font-size:13px;font-weight:600}
 
+  /* how to play */
+  #scrHelp{justify-content:flex-start;overflow-y:auto;padding-top:calc(24px + env(safe-area-inset-top));touch-action:pan-y}
+  .helpcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 18px;
+    width:min(420px,90vw);text-align:left;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  .helpcard h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+  .helpcard p{font-size:14px;color:var(--ink);line-height:1.5}
+  .helpcard b{color:var(--gold)}
+  .helpcard.boss{border-color:rgba(251,113,133,.55);box-shadow:0 0 18px rgba(251,113,133,.18)}
+  .helpcard.boss h4{color:#fb7185}
+  .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;
+    padding:1px 8px;font-size:12px;font-family:ui-monospace,Consolas,monospace;color:var(--cyan);background:#0a1122}
+
+  /* boss stomp hint — persists until the player lands their first reflect */
+  #stompHint{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:var(--panel);border:1px solid var(--gold);color:var(--gold);font-size:14px;font-weight:800;
+    letter-spacing:.5px;padding:9px 18px;border-radius:999px;z-index:6;pointer-events:none;max-width:92vw;
+    text-align:center;box-shadow:0 0 18px rgba(251,191,36,.35);animation:hintPulse 1.1s ease-in-out infinite}
+  @keyframes hintPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.05)}}
+  @media (prefers-reduced-motion: reduce){ #stompHint{animation:none} }
+
   @media (max-width:640px){ .btn{padding:13px 24px;font-size:16px} }
   @media (prefers-reduced-motion: reduce){ .logo{animation:none} }
 </style>
@@ -147,6 +167,7 @@
   </div>
   <div class="row">
     <button class="btn quiet" id="btnCopyGhost">copy my ghost code</button>
+    <button class="btn quiet" id="btnHelp">❓ how to play</button>
     <button class="btn quiet" id="btnLocker">🎒 locker</button>
     <button class="btn quiet" id="btnNewTrack">new track</button>
   </div>
@@ -181,6 +202,37 @@
   <div class="lockgrid" id="trailGrid"></div>
   <button class="btn quiet" id="btnLockerClose" style="margin:14px 0 30px">← back</button>
 </div>
+
+<!-- HOW TO PLAY -->
+<div id="scrHelp" class="overlay hidden">
+  <div class="logo" style="font-size:clamp(28px,6vw,44px)">HOW TO PLAY</div>
+  <div class="helpcard">
+    <h4>🏃 Running</h4>
+    <p>One button. <span class="kbd">TAP</span> / <span class="kbd">CLICK</span> / <span class="kbd">SPACE</span> to jump.
+    <b>Hold</b> to jump higher &mdash; <b>release early</b> for a short hop. Spikes and gaps end your run.</p>
+  </div>
+  <div class="helpcard">
+    <h4>👻 The ghost</h4>
+    <p>You race a recording of the last run on this device (or a pasted code). Sprint past the spot where it fell
+    to <b>take the crown</b> &mdash; then every metre sets a new bar. Beat a run? Copy your code and send the challenge on.</p>
+  </div>
+  <div class="helpcard boss">
+    <h4>👹 Boss fights — how to win</h4>
+    <p>Every zone ends in a boss arena. The boss fires orbs at you: some <b>roll along the ground</b>, some <b>bounce</b>.</p>
+    <p style="margin-top:6px">🦶 <b>Land on TOP of an orb</b> while falling to <b>smash it back</b> at the boss.
+    Every returned orb knocks off <b>1 ♥</b> &mdash; empty its hearts and the gate opens.</p>
+    <p style="margin-top:6px">⚠️ Touching an orb from the side is fatal, and so is running into the boss before it&rsquo;s beaten.
+    Jump over what you can&rsquo;t stomp!</p>
+  </div>
+  <div class="helpcard">
+    <h4>🎒 Locker &amp; extras</h4>
+    <p>Metres run, ghosts beaten and bosses slain unlock <b>skins and trails</b> in the locker.
+    🌙 <b>Calm mode</b> softens flashes and screen-shake.</p>
+  </div>
+  <button class="btn quiet" id="btnHelpClose" style="margin:14px 0 30px">← back</button>
+</div>
+
+<div id="stompHint" class="hidden">🦶 LAND ON AN ORB to smash it back at the boss!</div>
 
 <div class="banner" id="banner"></div>
 
@@ -241,7 +293,7 @@ const DEATH_LINES = {
   gap:   ['Gravity won this round.','The abyss says thanks for visiting.','That gap had your name on it.'],
   spike: ['Ouch. Pointy.','The spikes send their regards.','A prickly ending.'],
   bonk:  ['Walls: 1, You: 0.','Head, meet wall.','That block wasn\u2019t moving.'],
-  boss:  ['The guardian holds the gate.','Stomp the orbs back next time!','So near \u2014 the boss was sweating too.']
+  boss:  ['The guardian holds the gate \u2014 land on its orbs to smash them back!','Tip: fall onto the TOP of an orb to volley it at the boss.','So near \u2014 the boss was sweating too.']
 };
 const CLOSE_LINES = ['SO close \u2014 the ghost is trembling.','You could hear the ghost sweating.','One more jump and it\u2019s yours.'];
 
@@ -269,6 +321,10 @@ const TRAILS=[
 ];
 const STAT_LABELS={totalM:'m',bestM:'m',runs:'',ghostsBeaten:'',bossesSlain:'',bestZone:''};
 let stats={totalM:0,bestM:0,runs:0,ghostsBeaten:0,bossesSlain:0,bestZone:0};
+let stompLearned=false; try{stompLearned=localStorage.getItem('og_stomp_v1')==='1';}catch(e){}
+function learnStomp(){ if(stompLearned)return; stompLearned=true;
+  try{localStorage.setItem('og_stomp_v1','1');}catch(e){}
+  banner('\ud83d\udca5 That\u2019s it \u2014 smash every orb back!'); }
 let equip={skin:'cyan',trail:'none'};
 function loadStats(){
   try{const s=JSON.parse(localStorage.getItem('og_stats_v1'));if(s)stats={totalM:s.totalM|0,bestM:s.bestM|0,runs:s.runs|0,ghostsBeaten:s.ghostsBeaten|0,bossesSlain:s.bossesSlain|0,bestZone:s.bestZone|0};}catch(e){}
@@ -912,7 +968,7 @@ function bossStep(f){
       const dx=Math.abs(o.sx-PLAYER_X);
       if(dx<24){
         if(p.vy>0 && p.y>=o.y-26 && p.y<=o.y+6){
-          o.re=true; p.vy=JUMP_V*0.72; p.grounded=false; sfx('stomp');
+          o.re=true; p.vy=JUMP_V*0.72; p.grounded=false; sfx('stomp'); learnStomp();
           if(!calmOn)burst('#ffffff',PLAYER_X,o.y,6);
         }
         else if(o.y>p.y-PH-4 && o.y<p.y+4){ kill(p,f,'boss'); }
@@ -964,7 +1020,7 @@ function simStep(){
   if(inArenaTile(pti)){
     if(!G.bossS || G.bossS.zone!==z){
       G.bossS=makeBoss(z); sfx('roar');
-      banner('\ud83d\udc79 '+bossTitle(z)+(z===0?' \u2014 JUMP its orbs, or STOMP them back!':' blocks the gate \u2014 stomp!'));
+      banner('\ud83d\udc79 '+bossTitle(z)+(stompLearned?' blocks the gate \u2014 stomp its orbs back!':' \u2014 LAND ON its orbs to smash them back!'));
     }
   } else if(G.bossS && G.bossS.zone!==z && G.bossS.orbs.length===0){ G.bossS=null; }
   if(G.bossS) bossStep(G.frame);
@@ -1125,6 +1181,8 @@ function show(mode){
   document.getElementById('scrTitle').classList.toggle('hidden',mode!=='title');
   document.getElementById('scrDeath').classList.toggle('hidden',mode!=='dead');
   document.getElementById('scrLocker').classList.add('hidden');
+  document.getElementById('scrHelp').classList.add('hidden');
+  if(mode!=='play')document.getElementById('stompHint').classList.add('hidden');
   document.getElementById('hud').classList.toggle('hidden',mode!=='play');
   if(mode!=='play')draw();
 }
@@ -1137,11 +1195,13 @@ function updateHud(){
     else{gEl.textContent='👻 '+G.ghostData.name+' fell at '+G.ghostData.dist+'m';gEl.style.color='';}
   } else gEl.textContent='👻 no ghost yet — set the first!';
   const bEl=document.getElementById('hudBoss');
+  const hEl=document.getElementById('stompHint');
   if(G.bossS&&G.bossS.alive){
     bEl.classList.remove('hidden');
     bEl.textContent='👹 '+'♥'.repeat(G.bossS.hp)+'♡'.repeat(G.bossS.maxHp-G.bossS.hp);
     bEl.style.color='#fb7185';
-  } else bEl.classList.add('hidden');
+    hEl.classList.toggle('hidden',stompLearned);
+  } else { bEl.classList.add('hidden'); hEl.classList.add('hidden'); }
 }
 function updateTitleCard(){
   const g=loadGhost();
@@ -1214,6 +1274,16 @@ function boot(){
   document.getElementById('btnRun').addEventListener('click',(e)=>{e.stopPropagation();startRun();});
   document.getElementById('btnAgain').addEventListener('click',(e)=>{e.stopPropagation();startRun();});
   document.getElementById('btnHome').addEventListener('click',(e)=>{e.stopPropagation();show('title');updateTitleCard();});
+  document.getElementById('btnHelp').addEventListener('click',(e)=>{
+    e.stopPropagation();
+    document.getElementById('scrTitle').classList.add('hidden');
+    document.getElementById('scrHelp').classList.remove('hidden');
+  });
+  document.getElementById('btnHelpClose').addEventListener('click',(e)=>{
+    e.stopPropagation();
+    document.getElementById('scrHelp').classList.add('hidden');
+    document.getElementById('scrTitle').classList.remove('hidden');
+  });
   document.getElementById('btnLocker').addEventListener('click',(e)=>{
     e.stopPropagation(); buildLocker();
     document.getElementById('scrTitle').classList.add('hidden');
