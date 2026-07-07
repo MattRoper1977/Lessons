@@ -21,6 +21,8 @@ canvas.a-canvas{touch-action:none!important}
 #hotbar{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;padding:5px;background:rgba(0,0,0,0.45);border-radius:10px;border:1px solid rgba(255,255,255,0.15);width:min(95vw,720px);pointer-events:auto}
 .slot{width:36px;height:36px;border-radius:5px;background-color:#888;border:2px solid transparent;image-rendering:pixelated;image-rendering:crisp-edges;position:relative;cursor:pointer}
 .slot.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,0.7);transform:scale(1.08)}
+.slot .cnt{position:absolute;right:1px;bottom:0;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 2px #000,0 0 3px #000;pointer-events:none}
+.slot.empty{opacity:.35}
 #active-name{color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 3px #000;background:rgba(0,0,0,0.35);padding:3px 10px;border-radius:10px;pointer-events:none;min-height:14px}
 .btn{position:absolute;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:#fff;border:2px solid rgba(255,255,255,0.55);border-radius:50%;font-weight:700;font-size:12px;letter-spacing:.5px;touch-action:manipulation;cursor:pointer;transition:transform .08s,background .1s}
 .btn:active{background:rgba(255,255,255,0.25);transform:scale(.92)}
@@ -53,17 +55,50 @@ canvas.a-canvas{touch-action:none!important}
 #arcade-hud.on{display:block}
 #arcade-hud .row{display:flex;gap:14px;align-items:center}
 #arcade-hud .lbl{color:#ffd84a;font-size:10px;letter-spacing:.6px;font-weight:600;margin-right:3px}
+/* Storm HUD (survival day/night) */
+#storm-hud{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:calc(env(safe-area-inset-left,0px) + 16px);background:rgba(0,0,0,.6);border:2px solid #7dd3fc;border-radius:10px;padding:7px 12px;color:#fff;font-size:13px;font-weight:700;display:none;pointer-events:none;z-index:20}
+#storm-hud.on{display:block}
+#storm-hud .row{display:flex;gap:10px;align-items:center;margin-bottom:4px}
+#warmth-wrap{width:110px;height:7px;background:rgba(255,255,255,.18);border-radius:4px;overflow:hidden}
+#warmth-fill{height:100%;width:100%;background:#4ade80;border-radius:4px;transition:width .25s linear,background .4s}
+#storm-flash{position:fixed;inset:0;background:radial-gradient(circle,rgba(20,32,64,.0),rgba(8,12,30,.92));opacity:0;transition:opacity .35s;pointer-events:none;z-index:40}
+#storm-flash.on{opacity:1}
 /* Template card */
 .template{margin:8px 0;padding:11px 12px;background:rgba(0,0,0,.3);border-radius:8px;border:1px solid rgba(255,255,255,.1)}
 .template h3{margin:0 0 4px;font-size:14px}
 .template .desc{color:#bbb;font-size:12px;margin:0 0 8px;line-height:1.4}
 .template .place-btn{background:#4a8a6a;color:#fff;border:0;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
 .template .place-btn:active{background:#5a9a7a}
-#intro{position:absolute;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:100;color:#fff;text-align:center;padding:20px}
-#intro .card{background:rgba(30,30,40,.95);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:24px 20px;max-width:340px}
-#intro h1{margin:0 0 10px;font-size:28px;letter-spacing:1px}
-#intro p{margin:6px 0;font-size:13px;line-height:1.5;opacity:.9}
-#intro .tap{margin-top:16px;padding:12px 24px;background:#4a9;color:#fff;border-radius:8px;font-weight:700;font-size:15px;display:inline-block;cursor:pointer}
+#intro{position:absolute;inset:0;background:linear-gradient(180deg,#0c1626 0%,#12233a 55%,#1a3a2a 100%);display:flex;align-items:center;justify-content:center;z-index:100;color:#fff;text-align:center;padding:20px}
+#intro .card{background:rgba(16,22,36,.92);border:2px solid rgba(125,211,252,.35);border-radius:16px;padding:22px 20px;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#intro h1{margin:0 0 2px;font-size:34px;letter-spacing:3px;font-weight:900;background:linear-gradient(100deg,#7ee08a 20%,#7dd3fc 50%,#ffb84a 80%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.65))}
+#intro .sub{font-size:12px;letter-spacing:2.5px;color:#7dd3fc;text-transform:uppercase;margin:0 0 12px;opacity:.9}
+#intro .chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:0 0 12px}
+#intro .chip{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;background:rgba(125,211,252,.14);border:1px solid rgba(125,211,252,.3);color:#cfe8ff}
+#intro .ctrl{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;text-align:left;font-size:11.5px;line-height:1.45;color:#b9c6da;background:rgba(0,0,0,.28);border-radius:9px;padding:9px 11px;margin:0 0 10px}
+#intro .ctrl b{color:#fff}
+#intro p{margin:6px 0;font-size:12px;line-height:1.5;opacity:.9}
+#intro .tap{margin-top:12px;padding:13px 34px;background:linear-gradient(100deg,#2f9e44,#28848f);color:#fff;border-radius:10px;font-weight:800;font-size:16px;letter-spacing:1px;display:inline-block;cursor:pointer;box-shadow:0 4px 16px rgba(47,158,68,.4);animation:tapPulse 1.8s ease-in-out infinite}
+@keyframes tapPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+#intro .credit{margin-top:10px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase}
+/* Matt's Apps splash — plays above the title, then fades to reveal it. Tap to skip. */
+#splash{position:fixed;inset:0;z-index:200;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 40%,#12233a,#05070d 75%);animation:splashOut .6s ease 2.3s forwards}
+#splash .s-brand{font-weight:900;font-style:italic;font-size:clamp(34px,9vw,68px);letter-spacing:5px;line-height:1;background:linear-gradient(110deg,#7ee08a 15%,#7dd3fc 45%,#ffb84a 60%,#7ee08a 85%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(125,211,252,.3));animation:sBrandIn .8s cubic-bezier(.2,.9,.3,1.15) both,sSheen 2.2s linear .4s infinite}
+#splash .s-sub{color:#ffb84a;letter-spacing:8px;font-size:13px;font-weight:700;text-transform:uppercase;animation:sSubIn .7s ease .55s both}
+#splash .s-blocks{display:flex;gap:8px;margin-top:10px;animation:sSubIn .7s ease .8s both}
+#splash .s-blocks span{width:16px;height:16px;border-radius:3px;image-rendering:pixelated;box-shadow:2px 2px 0 rgba(0,0,0,.55);animation:sHop 1s ease-in-out infinite}
+#splash .s-blocks span:nth-child(1){background:#5aa845;animation-delay:0s}
+#splash .s-blocks span:nth-child(2){background:#8a6244;animation-delay:.12s}
+#splash .s-blocks span:nth-child(3){background:#808080;animation-delay:.24s}
+#splash .s-blocks span:nth-child(4){background:#2656be;animation-delay:.36s}
+#splash .s-blocks span:nth-child(5){background:#ffb84a;animation-delay:.48s}
+#splash .s-skip{position:absolute;bottom:calc(24px + env(safe-area-inset-bottom,0));color:rgba(226,232,240,.45);font-size:11px;letter-spacing:3px;text-transform:uppercase;animation:sSubIn .7s ease 1.1s both}
+@keyframes sBrandIn{from{opacity:0;transform:scale(.74) translateY(18px);letter-spacing:18px}to{opacity:1;transform:none;letter-spacing:5px}}
+@keyframes sSheen{from{background-position:0% 0}to{background-position:250% 0}}
+@keyframes sSubIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes sHop{0%,100%{transform:translateY(0)}40%{transform:translateY(-9px)}}
+@keyframes splashOut{to{opacity:0;visibility:hidden}}
+#splash.skipped{animation:splashOut .35s ease forwards}
 </style>
 </head>
 <body>
@@ -78,6 +113,8 @@ canvas.a-canvas{touch-action:none!important}
   <div id="btn-save"  class="btn">💾</div>
   <div id="btn-menu"  class="btn">☰</div>
   <div id="arcade-hud"><div class="row"><span><span class="lbl">TIME</span><span id="arcade-time">60</span>s</span><span><span class="lbl">SCORE</span><span id="arcade-score">0</span></span></div></div>
+  <div id="storm-hud"><div class="row"><span id="sh-phase">☀️ Day</span><span id="sh-flags"></span></div><div id="warmth-wrap"><div id="warmth-fill"></div></div></div>
+  <div id="storm-flash"></div>
   <div id="toast"></div>
   <!-- Main menu modal -->
   <div id="menu-modal" class="modal">
@@ -85,9 +122,12 @@ canvas.a-canvas{touch-action:none!important}
       <button class="close-x" data-close="menu-modal">✕</button>
       <h2>☰ Menu</h2>
       <button class="mbtn" id="m-arcade">🎮 Arcade Mode (Speed Miner)</button>
+      <button class="mbtn" id="m-mode">⛏️ Mode <span id="m-mode-name" style="color:#aac;float:right;font-weight:400"></span></button>
+      <button class="mbtn" id="m-craft">🔨 Crafting</button>
       <button class="mbtn" id="m-guide">📘 Build Guide / Templates</button>
       <button class="mbtn" id="m-theme">🎨 Change Theme <span id="m-theme-name" style="color:#aac;float:right;font-weight:400"></span></button>
       <button class="mbtn" id="m-save">💾 Save World</button>
+      <button class="mbtn" id="m-daily">🗓 Daily World</button>
       <button class="mbtn danger" id="m-reset">🌱 New World</button>
     </div>
   </div>
@@ -98,6 +138,15 @@ canvas.a-canvas{touch-action:none!important}
       <h2>📘 Build Guide</h2>
       <p style="font-size:12px;color:#bbb;margin:0 0 8px">Each template builds in front of you, lined up with where you're looking. Stand on flat ground for best results.</p>
       <div id="templates-list"></div>
+    </div>
+  </div>
+  <!-- Crafting -->
+  <div id="craft-modal" class="modal">
+    <div class="card">
+      <button class="close-x" data-close="craft-modal">✕</button>
+      <h2>🔨 Crafting</h2>
+      <p style="font-size:12px;color:#bbb;margin:0 0 8px">Mine materials in Survival mode, then turn them into tools and fancy blocks here.</p>
+      <div id="craft-list"></div>
     </div>
   </div>
   <!-- Arcade confirm -->
@@ -132,15 +181,34 @@ canvas.a-canvas{touch-action:none!important}
   </div>
   <div id="intro">
     <div class="card">
-      <h1>VOXEL CRAFT</h1>
-      <p><b>Touch:</b> joystick to move · drag to look · tap on-screen buttons</p>
-      <p><b>Keyboard:</b> WASD/arrows move · Space jump · Shift sprint · F fly</p>
-      <p><b>Mouse:</b> drag to look · click = dig · right-click = place</p>
-      <p><b>Hotbar:</b> tap slot · 1–0 keys · scroll wheel · Q/E cycle</p>
-      <p style="background:rgba(80,150,90,.25);padding:6px 10px;border-radius:6px;font-size:12px"><b>☰ Menu:</b> 🎮 Arcade mode · 📘 Build guide · 🎨 Themes</p>
-      <div class="tap" id="intro-start">TAP TO PLAY</div>
+      <h1>VOXELCRAFT</h1>
+      <p class="sub">A Tees Valley Survival Builder</p>
+      <div class="chips">
+        <span class="chip">⛏️ Survival</span><span class="chip">⛈ The Storm</span><span class="chip">🌊 The River</span><span class="chip">🗓 Daily World</span><span class="chip">🎮 Arcade</span>
+      </div>
+      <p style="background:rgba(60,100,160,.3);padding:7px 10px;border-radius:8px;font-size:12px;text-align:left"><b>⛏️ Survive:</b> mine → craft picks → dig deeper. At dusk <b>the Storm</b> rolls in — get a roof over your head and a 🔥 campfire lit before dark!</p>
+      <div class="ctrl">
+        <span><b>Move</b> joystick / WASD</span><span><b>Look</b> drag screen</span>
+        <span><b>Dig</b> DIG / click</span><span><b>Place</b> PLACE / right-click</span>
+        <span><b>Jump</b> JUMP / Space</span><span><b>Hotbar</b> tap · 1–0 · Q/E</span>
+      </div>
+      <div class="tap" id="intro-start">⛏️ TAP TO PLAY</div>
+      <p class="credit">A Matt's Apps Production</p>
     </div>
   </div>
+  <div id="splash">
+    <div class="s-brand">MATT'S&nbsp;APPS</div>
+    <div class="s-sub">Presents…</div>
+    <div class="s-blocks"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="s-skip">Tap to skip</div>
+  </div>
+  <script>
+    (function(){
+      const sp = document.getElementById('splash');
+      sp.addEventListener('pointerdown', () => sp.classList.add('skipped'), { once:true });
+      sp.addEventListener('animationend', (e) => { if (e.animationName === 'splashOut') sp.remove(); });
+    })();
+  </script>
 </div>
 
 <script>
@@ -177,8 +245,151 @@ const BLOCKS={
   BOOKSHELF:{name:'Bookshelf', top:[4,0], bottom:[4,0], side:[0,3]},
   TNT:{name:'TNT', top:[2,3], bottom:[2,3], side:[1,3]},
   NETHERRACK:{name:'Netherrack', all:[3,3]},
+  TORCH:{name:'Campfire', all:[4,3]},
+  WATER:{name:'Water', all:[5,3], transparent:true},
 };
 const BLOCK_IDS=Object.keys(BLOCKS);
+
+/* ===== SURVIVAL CORE: finite blocks, tools, recipes ===== */
+let mode = localStorage.getItem('voxelcraft:mode') || 'creative';
+let inv = {};
+try { const _i = localStorage.getItem('voxelcraft:inv'); if (_i) inv = JSON.parse(_i); } catch(e){}
+function saveInv(){ try { localStorage.setItem('voxelcraft:inv', JSON.stringify(inv)); } catch(e){} }
+function survivalOn(){ return mode === 'survival' && !arcade.active; }
+function invCount(id){ return inv[id] || 0; }
+function invAdd(id, n){ inv[id] = (inv[id] || 0) + n; saveInv(); }
+function invTake(id, n){ if (invCount(id) < n) return false; inv[id] -= n; if (inv[id] <= 0) delete inv[id]; saveInv(); return true; }
+
+/* Picks live in the inventory too; your effective tier is the best pick you own. */
+const PICKS = [
+  { id:'WOOD_PICK',  name:'Wooden Pick', emoji:'🪵⛏️', tier:1 },
+  { id:'STONE_PICK', name:'Stone Pick',  emoji:'🪨⛏️', tier:2 },
+  { id:'IRON_PICK',  name:'Iron Pick',   emoji:'⚙️⛏️', tier:3 },
+];
+function toolTier(){ let t = 0; PICKS.forEach(p => { if (invCount(p.id) > 0 && p.tier > t) t = p.tier; }); return t; }
+function toolName(){ let best = null; PICKS.forEach(p => { if (invCount(p.id) > 0) best = p; }); return best ? best.name : 'Bare Hands'; }
+const TIER_LABEL = ['bare hands', 'a Wooden Pick', 'a Stone Pick', 'an Iron Pick'];
+
+/* What it takes to mine each block (0 = hands). Unlisted = hands. */
+const TIER = {
+  STONE:1, COBBLE:1, COAL_ORE:1, BRICK:1, MOSSY:1, NETHERRACK:1, QUARTZ:1, ICE:1, IRON_BLOCK:1,
+  IRON_ORE:2, GOLD_BLOCK:2, DIAMOND_BLOCK:2,
+  GOLD_ORE:3, DIAMOND_ORE:3, OBSIDIAN:3
+};
+/* What a block gives you when broken (classic twists included). */
+const DROPS = { GRASS:'DIRT', STONE:'COBBLE' };
+
+const RECIPES = [
+  { emoji:'🪵', name:'Planks ×4',       cost:{LOG:1},                 out:'WOOD',        outN:4, desc:'One log becomes four planks.' },
+  { emoji:'⛏️', name:'Wooden Pick',     cost:{WOOD:3},                out:'WOOD_PICK',   outN:1, tool:true, desc:'Mines stone, cobble and coal.' },
+  { emoji:'⛏️', name:'Stone Pick',      cost:{COBBLE:3, WOOD:2},      out:'STONE_PICK',  outN:1, tool:true, desc:'Mines iron ore.' },
+  { emoji:'⛏️', name:'Iron Pick',       cost:{IRON_ORE:3, WOOD:2},    out:'IRON_PICK',   outN:1, tool:true, desc:'Mines gold, diamond and obsidian.' },
+  { emoji:'🔥', name:'Campfire ×2',     cost:{COAL_ORE:1, LOG:1},     out:'TORCH',       outN:2, desc:'Keeps the Storm\'s chill off your camp.' },
+  { emoji:'🪟', name:'Glass',           cost:{SAND:2},                out:'GLASS',       outN:1, desc:'Beach sand, melted down.' },
+  { emoji:'🧱', name:'Brick ×4',        cost:{COBBLE:4},              out:'BRICK',       outN:4, desc:'Tidy walls from rough cobble.' },
+  { emoji:'⬜', name:'Quartz ×2',       cost:{STONE:2},               out:'QUARTZ',      outN:2, desc:'Polished stone, very smart.' },
+  { emoji:'📚', name:'Bookshelf',       cost:{WOOD:6},                out:'BOOKSHELF',   outN:1, desc:'Every base needs a library.' },
+  { emoji:'🩶', name:'Iron Block',      cost:{IRON_ORE:9},            out:'IRON_BLOCK',  outN:1, desc:'Nine ores, one gleaming block.' },
+  { emoji:'🟨', name:'Gold Block',      cost:{GOLD_ORE:9},            out:'GOLD_BLOCK',  outN:1, desc:'Pure flex.' },
+  { emoji:'💎', name:'Diamond Block',   cost:{DIAMOND_ORE:9},         out:'DIAMOND_BLOCK', outN:1, desc:'The endgame trophy.' },
+];
+
+/* ===== DAILY WORLD: date-seeded terrain — the whole class shares today's map ===== */
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function todaySeed(){ const d = new Date(); return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); }
+function todayName(){ return new Date().toLocaleDateString('en-GB', { weekday:'long' }); }
+
+/* ===== PHASE 3: THE STORM — weather is the antagonist, shelter is the answer ===== */
+const CYCLE = { DAY:240, DUSK:20, NIGHT:75, DAWN:12 };   // seconds per phase
+let cyc = { phase:'DAY', t:0, warmth:100, timer:null };
+let campfires = [];
+function refreshCampfires(){
+  campfires = [];
+  for (const [k,v] of world) if (v === 'TORCH') campfires.push(k.split(',').map(Number));
+}
+function isSheltered(px, py, pz){
+  for (let y = py + 2; y <= 34; y++) if (world.has(key(px, y, pz))) return true;
+  return false;
+}
+function nearCampfire(px, py, pz){
+  return campfires.some(c => Math.abs(c[0]-px) <= 5 && Math.abs(c[1]-py) <= 4 && Math.abs(c[2]-pz) <= 5);
+}
+/* Sky blend: k=0 full day → k=1 full Storm night */
+const DAY_SKY   = { sky:[135,206,235], fog:[135,206,235], near:30, far:55, amb:0.65, ambC:[255,255,255], dir:0.9,  dirC:[255,243,214] };
+const STORM_SKY = { sky:[11,15,34],    fog:[14,20,40],    near:9,  far:26, amb:0.22, ambC:[136,153,204], dir:0.25, dirC:[136,153,204] };
+const chLerp = (a,b,k) => Math.round(a + (b-a)*k);
+const rgbLerp = (a,b,k) => 'rgb(' + chLerp(a[0],b[0],k) + ',' + chLerp(a[1],b[1],k) + ',' + chLerp(a[2],b[2],k) + ')';
+function applyStormSky(k){
+  const scene = document.querySelector('a-scene'); if (!scene) return;
+  const D = DAY_SKY, S = STORM_SKY;
+  scene.setAttribute('background', 'color: ' + rgbLerp(D.sky, S.sky, k));
+  scene.setAttribute('fog', 'type: linear; color: ' + rgbLerp(D.fog, S.fog, k) + '; near: ' + (D.near+(S.near-D.near)*k) + '; far: ' + (D.far+(S.far-D.far)*k));
+  const lights = scene.querySelectorAll('a-light');
+  if (lights[0]) { lights[0].setAttribute('intensity', D.amb+(S.amb-D.amb)*k); lights[0].setAttribute('color', rgbLerp(D.ambC, S.ambC, k)); }
+  if (lights[1]) { lights[1].setAttribute('intensity', D.dir+(S.dir-D.dir)*k); lights[1].setAttribute('color', rgbLerp(D.dirC, S.dirC, k)); }
+}
+function updateStormHUD(sheltered, nearFire){
+  const hud = document.getElementById('storm-hud'); if (!hud) return;
+  hud.classList.add('on');
+  const remain = Math.max(0, CYCLE[cyc.phase] - cyc.t);
+  const mm = Math.floor(remain/60), ss = String(Math.floor(remain%60)).padStart(2,'0');
+  const label = { DAY:'☀️ Day', DUSK:'🌅 Dusk', NIGHT:'⛈ STORM', DAWN:'🌄 Dawn' }[cyc.phase];
+  document.getElementById('sh-phase').textContent = label + ' ' + mm + ':' + ss;
+  document.getElementById('sh-flags').textContent =
+    (sheltered ? '🏠' : (cyc.phase === 'NIGHT' ? '❄️' : '')) + (nearFire ? '🔥' : '');
+  const fill = document.getElementById('warmth-fill');
+  fill.style.width = cyc.warmth + '%';
+  fill.style.background = cyc.warmth > 50 ? '#4ade80' : (cyc.warmth > 25 ? '#fbbf24' : '#ef4444');
+}
+function sweep(){
+  cyc.warmth = 60;
+  const fl = document.getElementById('storm-flash');
+  if (fl) { fl.classList.add('on'); setTimeout(() => fl.classList.remove('on'), 700); }
+  toast('⛈ Swept back to camp! Get a roof over your head — a campfire helps too.');
+  playSound('rumble');
+  spawnPlayer();
+}
+function stormTick(){
+  if (mode !== 'survival' || arcade.active) {
+    const hud = document.getElementById('storm-hud'); if (hud) hud.classList.remove('on');
+    return;   // cycle pauses in Creative and Arcade
+  }
+  cyc.t += 0.25;
+  if (cyc.phase === 'DAY'   && cyc.t >= CYCLE.DAY)   { cyc.phase='DUSK';  cyc.t=0; toast('🌅 Dusk — the Storm is coming. Get under cover!'); playSound('rumble'); }
+  else if (cyc.phase === 'DUSK'  && cyc.t >= CYCLE.DUSK)  { cyc.phase='NIGHT'; cyc.t=0; toast('⛈ The Storm is here!'); playSound('rumble'); }
+  else if (cyc.phase === 'NIGHT' && cyc.t >= CYCLE.NIGHT) { cyc.phase='DAWN';  cyc.t=0; toast('🌄 Dawn — the Storm passes. You made it.'); }
+  else if (cyc.phase === 'DAWN'  && cyc.t >= CYCLE.DAWN)  { cyc.phase='DAY';   cyc.t=0; }
+  let k = 0;
+  if (cyc.phase === 'DUSK') k = cyc.t / CYCLE.DUSK;
+  else if (cyc.phase === 'NIGHT') k = 1;
+  else if (cyc.phase === 'DAWN') k = 1 - cyc.t / CYCLE.DAWN;
+  applyStormSky(k);
+  const p = document.getElementById('player'); if (!p) return;
+  const pos = p.object3D.position;
+  const px = Math.floor(pos.x), py = Math.floor(pos.y), pz = Math.floor(pos.z);
+  const sheltered = isSheltered(px, py, pz);
+  const nearFire = nearCampfire(px, py, pz);
+  let d = 0;
+  if (cyc.phase === 'NIGHT' && !sheltered) d -= 0.8;     // −3.2 warmth/s in the open
+  if (nearFire) d += 2.0;                                 // +8/s by a campfire
+  else if (cyc.phase === 'DAY' || cyc.phase === 'DAWN') d += 1.0;  // +4/s in daylight
+  cyc.warmth = Math.max(0, Math.min(100, cyc.warmth + d));
+  updateStormHUD(sheltered, nearFire);
+  if (cyc.warmth <= 0) sweep();
+}
+function startStormCycle(){
+  cyc.phase = 'DAY'; cyc.t = 0; cyc.warmth = 100;
+  refreshCampfires();
+  applyStormSky(0);
+  if (cyc.timer) clearInterval(cyc.timer);
+  cyc.timer = setInterval(stormTick, 250);
+  const hud = document.getElementById('storm-hud'); if (hud) hud.classList.add('on');
+}
+function stopStormCycle(){
+  if (cyc.timer) { clearInterval(cyc.timer); cyc.timer = null; }
+  const hud = document.getElementById('storm-hud'); if (hud) hud.classList.remove('on');
+  applyTheme(currentTheme);
+}
 
 /* ---------- Procedural texture atlas ---------- */
 function createAtlas(){
@@ -390,6 +601,25 @@ function createAtlas(){
     ctx.fillStyle='rgba(180,60,40,.3)';
     ctx.fillRect(1,1,1,1);ctx.fillRect(13,10,1,1);ctx.fillRect(7,14,1,1);
   });
+  // Campfire — charred stone ring, roaring amber core, drifting embers
+  tile(4,3,ctx=>{
+    noise(ctx,[40,32,30],14,18);
+    ctx.fillStyle='rgb(24,18,16)';ctx.fillRect(0,12,16,4);
+    ctx.fillStyle='rgb(70,45,28)';ctx.fillRect(2,12,4,2);ctx.fillRect(10,13,4,2);
+    ctx.fillStyle='rgb(255,120,20)';ctx.fillRect(5,6,6,7);
+    ctx.fillStyle='rgb(255,190,40)';ctx.fillRect(6,8,4,5);
+    ctx.fillStyle='rgb(255,240,150)';ctx.fillRect(7,10,2,3);
+    ctx.fillStyle='rgb(255,150,30)';ctx.fillRect(4,9,1,3);ctx.fillRect(11,8,1,4);ctx.fillRect(7,4,2,2);
+    ctx.fillStyle='rgba(255,200,80,.9)';ctx.fillRect(3,3,1,1);ctx.fillRect(12,2,1,1);ctx.fillRect(9,1,1,1);
+  });
+  // Water — the Tees itself: deep blue with drifting ripple lines
+  tile(5,3,ctx=>{
+    ctx.fillStyle='rgba(38,86,190,.68)';ctx.fillRect(0,0,TILE_PX,TILE_PX);
+    for(let y=0;y<TILE_PX;y++)for(let x=0;x<TILE_PX;x++){if((x*5+y*13+2)%7===0){ctx.fillStyle='rgba(90,150,240,.5)';ctx.fillRect(x,y,1,1)}}
+    ctx.strokeStyle='rgba(190,220,255,.55)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,4.5);ctx.lineTo(4,3.5);ctx.lineTo(9,5.5);ctx.lineTo(TILE_PX,3.5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,10.5);ctx.lineTo(6,11.5);ctx.lineTo(11,9.5);ctx.lineTo(TILE_PX,11.5);ctx.stroke();
+  });
   return c;
 }
 
@@ -400,14 +630,28 @@ const key = (x,y,z) => x+','+y+','+z;
 const hasBlock = (x,y,z) => world.has(key(x,y,z));
 const getBlock = (x,y,z) => world.get(key(x,y,z));
 
-function generateTerrain(){
+function generateTerrain(rand){
+  rand = rand || Math.random;
   world.clear();
-  const n = new SimplexNoise(Math.random);
+  const n = new SimplexNoise(rand);
+  const PEAK = { x:9, z:-9, h:12, slope:1.9 };   // the landmark tor — snow-capped, visible from anywhere
   for (let x=-WORLD_R; x<=WORLD_R; x++) {
+    const riverZ = Math.round(n.noise2D(x*0.05, 77.7) * 4);   // the river winds across the whole map
     for (let z=-WORLD_R; z<=WORLD_R; z++) {
+      const dRiver = Math.abs(z - riverZ);
+      if (dRiver <= 1) {
+        // River channel: stone floor, sandy bed, two blocks of water
+        world.set(key(x,0,z),'STONE'); world.set(key(x,1,z),'STONE'); world.set(key(x,2,z),'SAND');
+        world.set(key(x,3,z),'WATER');
+        continue;
+      }
       const a = n.noise2D(x*0.08, z*0.08);
       const b = n.noise2D(x*0.22, z*0.22)*0.35;
-      const h = Math.floor(SEA_LEVEL + a*5 + b*2 + 3);
+      let h = Math.floor(SEA_LEVEL + a*5 + b*2 + 3);
+      if (dRiver === 2) h = Math.min(h, SEA_LEVEL + 1);   // gentle sandy banks
+      const pd = Math.hypot(x - PEAK.x, z - PEAK.z);
+      h += Math.max(0, Math.round(PEAK.h - pd * PEAK.slope));   // the tor rises
+      if (h > 16) h = 16;
       for (let y=0; y<=h; y++) {
         let t = 'STONE';
         if (y === h) t = 'GRASS';
@@ -417,7 +661,7 @@ function generateTerrain(){
         if (y === h && h >= SEA_LEVEL+8) t = 'SNOW';
         world.set(key(x,y,z), t);
       }
-      if (h > SEA_LEVEL+1 && h < SEA_LEVEL+8 && Math.random() < 0.012) {
+      if (h > SEA_LEVEL+1 && h < SEA_LEVEL+8 && dRiver > 2 && rand() < 0.012) {
         const th = 4 + ((x*37 + z*19) & 1);
         for (let k=1; k<=th; k++) world.set(key(x, h+k, z), 'LOG');
         for (let dx=-2; dx<=2; dx++)
@@ -444,7 +688,7 @@ function generateTerrain(){
     const [x,y,z] = k.split(',').map(Number);
     for (const o of ores) {
       if (y < o.minY || y > o.maxY) continue;
-      if (Math.random() < o.chance) { world.set(k, o.type); break; }
+      if (rand() < o.chance) { world.set(k, o.type); break; }
     }
   }
 }
@@ -463,6 +707,7 @@ let atlasTex = null, atlasDataURL = '';
 const worldGroup = { opaque:null, trans:null };
 
 function buildWorldMesh(){
+  refreshCampfires();
   const op = { p:[], n:[], u:[], i:[] };
   const tr = { p:[], n:[], u:[], i:[] };
   const INSET = 0.25 / (ATLAS_N*TILE_PX);
@@ -688,8 +933,10 @@ AFRAME.registerComponent('player-controller', {
     const zmin = Math.floor(pz-r), zmax = Math.floor(pz+r);
     for (let bx=xmin; bx<=xmax; bx++)
       for (let by=ymin; by<=ymax; by++)
-        for (let bz=zmin; bz<=zmax; bz++)
-          if (hasBlock(bx,by,bz)) return true;
+        for (let bz=zmin; bz<=zmax; bz++){
+          const b = getBlock(bx,by,bz);
+          if (b && b !== 'WATER') return true;   // you can wade the river
+        }
     return false;
   },
   tick: function(t, dtMs){
@@ -885,6 +1132,7 @@ function applyTheme(name){
   if (nameEl) nameEl.textContent = name;
 }
 function cycleTheme(){
+  if (mode === 'survival' && !arcade.active) { toast('The sky follows the day and the Storm in Survival'); return; }
   const names = Object.keys(THEMES);
   const idx = names.indexOf(currentTheme);
   applyTheme(names[(idx + 1) % names.length]);
@@ -948,6 +1196,17 @@ const TEMPLATES = [
       ['CCCCC','C...C','C.W.C','C...C','CCCCC'],
       ['.....','.....','..W..','.....','.....']
     ]},
+  { name:'🌉 Transporter Bridge', desc:'Two iron towers, a high span, and a hanging gondola — pure Teesside.',
+    layers:[
+      ['I.........I','...........','I.........I'],
+      ['I.........I','...........','I.........I'],
+      ['I.........I','....PPP....','I.........I'],
+      ['I.........I','.....P.....','I.........I'],
+      ['I.........I','.....P.....','I.........I'],
+      ['I.........I','.....P.....','I.........I'],
+      ['I.........I','IIIIIIIIIII','I.........I'],
+      ['...........','IIIIIIIIIII','...........']
+    ]},
   { name:'📚 Bookshelf Library', desc:'A cosy little nook filled with bookshelves.',
     layers:[
       ['PPPPP','PPPPP','PPPPP','PPPPP','PPPPP'],
@@ -984,6 +1243,7 @@ function placeAtPlayer(template){
   const ox = cx - Math.floor(w / 2);
   const oz = cz - Math.floor(d / 2);
   const oy = Math.floor(pos.y);
+  if (survivalOn()) { toast('Templates are Creative-only — in Survival you build it yourself!'); return; }
   placeTemplate(template, ox, oy, oz);
   closeModal('guide-modal');
   toast('Built: ' + template.name);
@@ -1033,6 +1293,7 @@ function startArcade(){
   // Back up the sandbox world before clobbering it
   try { localStorage.setItem('voxelcraft:world', JSON.stringify([...world])); } catch(e){}
   arcade.active = true;
+  if (mode === 'survival') applyStormSky(0);   // arcade always plays in daylight
   arcade.score = 0;
   arcade.timeLeft = ARCADE_DURATION;
   generateArcadeWorld();
@@ -1077,6 +1338,7 @@ function exitArcade(){
   } else generateTerrain();
   buildWorldMesh();
   spawnPlayer();
+  if (mode === 'survival') startStormCycle();   // fresh morning back at the sandbox
 }
 
 /* ---------- Modal helpers ---------- */
@@ -1111,11 +1373,21 @@ function updateHotbar(){
     slot.style.backgroundSize = `${ATLAS_N*displayPx}px ${ATLAS_N*displayPx}px`;
     slot.style.backgroundPosition = `-${tile[0]*displayPx}px -${tile[1]*displayPx}px`;
     slot.title = info.name;
+    if (mode === 'survival') {
+      const c = invCount(id);
+      if (c > 0) { const b = document.createElement('span'); b.className = 'cnt'; b.textContent = c > 99 ? '99+' : c; slot.appendChild(b); }
+      else slot.classList.add('empty');
+    }
     slot.addEventListener('click', () => { selectedIndex = i; updateHotbar(); });
     hb.appendChild(slot);
   });
   const nameEl = document.getElementById('active-name');
-  if (nameEl) nameEl.textContent = BLOCKS[BLOCK_IDS[selectedIndex]].name;
+  if (nameEl) {
+    const id = BLOCK_IDS[selectedIndex];
+    nameEl.textContent = mode === 'survival'
+      ? BLOCKS[id].name + ' ×' + invCount(id) + '  ·  ⛏️ ' + toolName()
+      : BLOCKS[id].name;
+  }
 }
 
 function getCameraRay(){
@@ -1133,12 +1405,17 @@ function doBreak(){
   if (!hit) { toast('Nothing in range'); return; }
   if (hit.y === 0) { toast("Can't break bedrock"); return; }
   const type = getBlock(hit.x, hit.y, hit.z);
+  if (survivalOn()) {
+    const need = TIER[type] || 0;
+    if (toolTier() < need) { toast('You need ' + TIER_LABEL[need] + ' to mine ' + BLOCKS[type].name); return; }
+  }
   if (arcade.active && ARCADE_SCORES[type]) {
     arcade.score += ARCADE_SCORES[type];
     document.getElementById('arcade-score').textContent = arcade.score;
     toast('+' + ARCADE_SCORES[type] + ' ' + BLOCKS[type].name);
   }
   world.delete(key(hit.x, hit.y, hit.z));
+  if (survivalOn()) { invAdd(DROPS[type] || type, 1); updateHotbar(); }
   buildWorldMesh();
   playSound('break');
 }
@@ -1148,10 +1425,13 @@ function doPlace(){
   if (!hit) { toast('Aim at a block'); return; }
   const px = hit.x + hit.normal[0], py = hit.y + hit.normal[1], pz = hit.z + hit.normal[2];
   if (world.has(key(px,py,pz))) return;
+  const placeId = BLOCK_IDS[selectedIndex];
+  if (survivalOn() && invCount(placeId) < 1) { toast('No ' + BLOCKS[placeId].name + ' — mine or craft some first'); return; }
   const ppos = document.getElementById('player').object3D.position;
   const pc = document.getElementById('player').components['player-controller'];
   world.set(key(px,py,pz), BLOCK_IDS[selectedIndex]);
   if (pc && pc.collides(ppos.x, ppos.y, ppos.z)) { world.delete(key(px,py,pz)); toast("You're in the way"); return; }
+  if (survivalOn()) { invTake(placeId, 1); updateHotbar(); }
   buildWorldMesh();
   playSound('place');
 }
@@ -1163,7 +1443,8 @@ function resetWorld(){
   if (!confirm('Generate a new world? Current progress will be lost.')) return;
   generateTerrain(); buildWorldMesh(); spawnPlayer();
   localStorage.removeItem('voxelcraft:world');
-  toast('New world generated');
+  if (mode === 'survival') { inv = {}; saveInv(); updateHotbar(); toast('New world — fresh start, empty pockets'); }
+  else toast('New world generated');
 }
 function spawnPlayer(){
   let maxH = 10;
@@ -1194,6 +1475,13 @@ function playSound(type){
     g.gain.setValueAtTime(0.18, t);
     g.gain.exponentialRampToValueAtTime(0.001, t+0.22);
     o.start(t); o.stop(t+0.24);
+  } else if (type === 'rumble') {
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(64, t);
+    o.frequency.exponentialRampToValueAtTime(28, t+0.7);
+    g.gain.setValueAtTime(0.22, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.8);
+    o.start(t); o.stop(t+0.85);
   } else {
     o.type = 'square';
     o.frequency.setValueAtTime(240, t);
@@ -1297,10 +1585,70 @@ function initGame(){
 
   // Menu modal buttons
   document.getElementById('m-arcade').addEventListener('click', () => { closeModal('menu-modal'); showArcadeConfirm(); });
+  const modeLbl = document.getElementById('m-mode-name');
+  function refreshModeLbl(){ modeLbl.textContent = mode === 'survival' ? 'Survival' : 'Creative'; }
+  refreshModeLbl();
+  document.getElementById('m-mode').addEventListener('click', () => {
+    mode = (mode === 'survival') ? 'creative' : 'survival';
+    try { localStorage.setItem('voxelcraft:mode', mode); } catch(e){}
+    refreshModeLbl(); updateHotbar();
+    if (mode === 'survival') {
+      startStormCycle();
+      toast('⛏️ Survival: blocks are finite — mine to earn, craft to progress');
+      let hasOre = false; for (const v of world.values()) { if (TIER[v] >= 1 && v.endsWith('_ORE')) { hasOre = true; break; } }
+      if (!hasOre) setTimeout(() => toast('Tip: start a 🌱 New World to generate ore seams'), 2600);
+    } else { stopStormCycle(); toast('🎨 Creative: infinite blocks, templates unlocked'); }
+  });
+  document.getElementById('m-craft').addEventListener('click', () => { closeModal('menu-modal'); renderCrafting(); openModal('craft-modal'); });
+  function renderCrafting(){
+    const list = document.getElementById('craft-list');
+    list.innerHTML = '';
+    if (mode !== 'survival') {
+      list.innerHTML = '<p style="font-size:13px;color:#bbb;text-align:center">Crafting is a Survival-mode thing — in Creative you already have everything!</p>';
+      return;
+    }
+    RECIPES.forEach(rc => {
+      const owned = rc.tool && invCount(rc.out) > 0;
+      const afford = Object.keys(rc.cost).every(k => invCount(k) >= rc.cost[k]);
+      const costStr = Object.keys(rc.cost).map(k =>
+        '<span style="color:' + (invCount(k) >= rc.cost[k] ? '#8f8' : '#f88') + '">' + rc.cost[k] + ' ' + BLOCKS[k].name + ' (' + invCount(k) + ')</span>'
+      ).join(' + ');
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:8px;padding:7px 9px;margin:4px 0';
+      row.innerHTML = '<span style="font-size:20px">' + rc.emoji + '</span>'
+        + '<span style="flex:1;min-width:0"><b style="font-size:13px">' + rc.name + '</b>'
+        + '<br><span style="font-size:11px;color:#aab">' + rc.desc + '</span>'
+        + '<br><span style="font-size:11px">' + costStr + '</span></span>';
+      const btn = document.createElement('button');
+      btn.className = 'mbtn'; btn.style.cssText = 'width:auto;padding:6px 12px;margin:0;font-size:12px';
+      btn.textContent = owned ? 'Owned ✓' : 'CRAFT';
+      btn.disabled = owned || !afford;
+      if (btn.disabled) btn.style.opacity = '.45';
+      btn.addEventListener('click', () => {
+        if (!Object.keys(rc.cost).every(k => invCount(k) >= rc.cost[k])) return;
+        Object.keys(rc.cost).forEach(k => invTake(k, rc.cost[k]));
+        invAdd(rc.out, rc.outN);
+        playSound('place');
+        toast(rc.tool ? '🔓 Crafted: ' + rc.name + '!' : '+' + rc.outN + ' ' + BLOCKS[rc.out].name);
+        updateHotbar(); renderCrafting();
+      });
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  }
   document.getElementById('m-guide').addEventListener('click', () => { closeModal('menu-modal'); openModal('guide-modal'); });
   document.getElementById('m-theme').addEventListener('click', cycleTheme);
   document.getElementById('m-save').addEventListener('click', () => { closeModal('menu-modal'); saveWorld(); });
   document.getElementById('m-reset').addEventListener('click', () => { closeModal('menu-modal'); resetWorld(); });
+  document.getElementById('m-daily').addEventListener('click', () => {
+    closeModal('menu-modal');
+    if (!confirm("Load today's Daily World? Everyone in class gets the SAME map today. Your current world will be replaced.")) return;
+    generateTerrain(mulberry32(todaySeed()));
+    buildWorldMesh(); spawnPlayer();
+    localStorage.removeItem('voxelcraft:world');
+    if (mode === 'survival') { inv = {}; saveInv(); updateHotbar(); startStormCycle(); }
+    toast('🗓 THE ' + todayName().toUpperCase() + ' WORLD — same map for everyone today');
+  });
 
   // Arcade modal buttons
   document.getElementById('arcade-start').addEventListener('click', startArcade);
@@ -1312,8 +1660,9 @@ function initGame(){
     el.addEventListener('click', () => closeModal(el.getAttribute('data-close')));
   });
 
-  // Apply saved theme on boot
+  // Apply saved theme on boot (Survival's day/night cycle takes over from here if active)
   applyTheme(currentTheme);
+  if (mode === 'survival') startStormCycle();
   const tn = document.getElementById('m-theme-name'); if (tn) tn.textContent = currentTheme;
 
   // Click backdrop to close on menu/guide (but not arcade modals - those need a deliberate choice)
