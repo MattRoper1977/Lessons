@@ -259,6 +259,47 @@
 
         /* ===== PRO POLISH LAYERS ===== */
 
+        /* Matt's Apps splash — plays above the boot screen, then fades to reveal it. Tap to skip. */
+        #splash {
+            position: fixed; inset: 0; z-index: 300; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+            background: radial-gradient(circle at 50% 38%, #0a1424, #010103 72%);
+            animation: splashOut .6s ease 2.3s forwards;
+        }
+        #splash .s-brand {
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-style: italic;
+            font-size: clamp(36px, 9vw, 74px); letter-spacing: 6px; line-height: 1;
+            background: linear-gradient(110deg, #00d4ff 15%, #ffb703 42%, #ff0055 58%, #00d4ff 85%);
+            background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 22px rgba(0,212,255,.35));
+            animation: sBrandIn .8s cubic-bezier(.2,.9,.3,1.15) both, sSheen 2.2s linear .4s infinite;
+        }
+        #splash .s-sub {
+            font-family: 'Rajdhani', sans-serif; color: #ffb703; letter-spacing: 8px;
+            font-size: 14px; text-transform: uppercase; animation: sSubIn .7s ease .55s both;
+        }
+        #splash .s-trail { position: relative; width: min(320px, 70vw); height: 14px; margin-top: 10px; animation: sSubIn .7s ease .8s both; }
+        #splash .s-trail::before {
+            content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,.55), transparent);
+        }
+        #splash .s-runner {
+            position: absolute; top: 1px; left: 0; width: 12px; height: 12px; border-radius: 50%;
+            background: #00d4ff; box-shadow: 0 0 14px #00d4ff, 0 0 34px rgba(0,212,255,.6);
+            animation: sRun 1.5s cubic-bezier(.45,0,.55,1) .8s infinite alternate;
+        }
+        #splash .s-skip {
+            position: absolute; bottom: calc(24px + env(safe-area-inset-bottom)); font-family: 'Rajdhani', sans-serif;
+            color: rgba(226,232,240,.45); font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+            animation: sSubIn .7s ease 1.1s both;
+        }
+        @keyframes sBrandIn { from { opacity: 0; transform: scale(.74) translateY(18px); letter-spacing: 20px; } to { opacity: 1; transform: none; letter-spacing: 6px; } }
+        @keyframes sSheen { from { background-position: 0% 0; } to { background-position: 250% 0; } }
+        @keyframes sSubIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes sRun { from { left: 0; } to { left: calc(100% - 12px); } }
+        @keyframes splashOut { to { opacity: 0; visibility: hidden; } }
+        #splash.skipped { animation: splashOut .35s ease forwards; }
+
         /* Boot / loading screen — shown until the 3D scene is ready, then fades out. */
         #boot-screen {
             position: fixed; inset: 0; z-index: 200; background: #010103;
@@ -386,6 +427,20 @@
 </head>
 <body>
 
+    <div id="splash">
+        <div class="s-brand">MATT'S&nbsp;APPS</div>
+        <div class="s-sub">Presents…</div>
+        <div class="s-trail"><div class="s-runner"></div></div>
+        <div class="s-skip">Tap to skip</div>
+    </div>
+    <script>
+        (function () {
+            const sp = document.getElementById('splash');
+            sp.addEventListener('pointerdown', () => sp.classList.add('skipped'), { once: true });
+            sp.addEventListener('animationend', (e) => { if (e.animationName === 'splashOut') sp.remove(); });
+        })();
+    </script>
+
     <div id="boot-screen">
         <div id="boot-title">TRAIL RUNNER</div>
         <div id="boot-bar"></div>
@@ -447,6 +502,7 @@
             <p style="color:#ffd700; font-size:14px;">⚡ <strong>PACE:</strong> chain pickups to keep your streak (max ×10).</p>
         </div>
         <button class="btn" id="start-btn">START RUN</button>
+        <button class="btn" id="daily-btn" style="border-color:#00d4ff; color:#7dd3fc;">🗓 DAILY TRAIL</button>
         <button class="btn" id="leaderboard-btn" style="border-color: #ffd700; color: #ffd700;">🏆 SCORES &amp; BEST</button>
         <button class="btn" id="settings-btn" style="border-color: #ffffff; color: #ffffff;">SETTINGS</button>
         <button class="btn" id="calm-toggle" style="border-color: #16a34a; color: #4ade80;">CALM MODE: OFF</button>
@@ -592,6 +648,59 @@
             { emoji: '🌊', title: '⑤ Teal Coast',      sub: 'The coast at dusk — the toughest Storm of all.' },
         ];
         let quest = { best: 0, runs: 0, legs: 1, badges: {} };
+
+        // ===== DAILY TRAIL: whole class runs the SAME seeded trail each day =====
+        // "Did you beat the Tuesday trail" — a shared course, not a shared scoreboard.
+        function mulberry32(a) { return function() { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+        function todaySeed() { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); }
+        function todayName() { return new Date().toLocaleDateString('en-GB', { weekday: 'long' }); }
+        let dailyMode = false, dailyRng = Math.random;
+        function rnd() { return dailyMode ? dailyRng() : Math.random(); }   // spawns only — cosmetics stay wild
+        let daily = { date: 0, best: 0 };
+        try { const _d = localStorage.getItem('trekTrailDaily_v1'); if (_d) daily = Object.assign(daily, JSON.parse(_d)); } catch(e) {}
+        function saveDaily() { try { localStorage.setItem('trekTrailDaily_v1', JSON.stringify(daily)); } catch(e) {} }
+
+        // ===== STORM LOG LORE: each defeated Storm writes its own one-line entry =====
+        let bossShotsLanded = 0;
+        function stormLogEntry() {
+            const s = STORM_TYPES[(level - 1) % STORM_TYPES.length];
+            const untouched = (lives === livesAtBossStart);
+            const clutch = lives <= 1;
+            let how;
+            if (untouched && comboMultiplier >= 5) how = 'dismantled at ×' + comboMultiplier + ' pace, untouched';
+            else if (untouched) how = 'picked apart without taking a scratch';
+            else if (clutch) how = 'downed on the last heart — ' + bossShotsLanded + ' blasts of pure nerve';
+            else if (comboMultiplier >= 5) how = 'fell to a ×' + comboMultiplier + '-pace blast storm';
+            else how = 'worn down blast by blast (' + bossShotsLanded + ' landed)';
+            if (!Array.isArray(quest.stormLog)) quest.stormLog = [];
+            quest.stormLog.unshift({ e: s.emoji, n: s.name, l: level, t: how, d: new Date().toLocaleDateString('en-GB') });
+            quest.stormLog = quest.stormLog.slice(0, 12);
+            saveQuest();
+        }
+
+        // ===== UNLOCK CHAIN: each skin is freed by a named challenge =====
+        const SKIN_KEYS = { 'Cyber-Gold': 'dist1000', 'Phantom': 'storm', 'Lava Core': 'pace10' };
+        function checkSkinUnlocks() {
+            let changed = false;
+            for (const skin in SKIN_KEYS) {
+                if (quest.badges[SKIN_KEYS[skin]] && !settings.unlockedSkins.includes(skin)) {
+                    settings.unlockedSkins.push(skin); changed = true;
+                    FX.milestone('🔓 SKIN UNLOCKED: ' + skin.toUpperCase() + '!');
+                }
+            }
+            if (changed) saveSettings();
+        }
+
+        // ===== CHEESE V2: failure lines keyed to what actually got you =====
+        let lastHitCause = '';
+        const GO_POOLS = {
+            block:  ["That Block came out of nowhere — it happens to everyone. ⬛", "Blocks are sneaky like that. Spin through the next one. 🌀", "One Block doesn't define a run this good. 💪"],
+            mine:   ["Mines are pure mischief. You'll read it next time. 💥", "That mine was hiding in plain sight. Sharp eyes now. 👀", "A mine got lucky. Distance still banked. 📈"],
+            spike:  ["Caught by a ceiling spike — stay low through the arches. 🔻", "Those spikes bite. Duck earlier, fly further. 🛬"],
+            laser:  ["The Storm's laser got lucky. It won't twice. ⚡", "Zapped — but you were reading its pattern. Finish it next run. 👁", "The Storm cheats with that laser. Make it pay. ⛈️"],
+            storm:  ["The Storm got you — even the best get caught out. Go again. 🌧️", "Storm 1, Scout 0. That score never lasts. 🌀", "It threw everything at you. Nearly wasn't enough. ⛈️"],
+            crate:  ["A crate?! Spin next time and it's +50 instead. 🌀", "That crate owes you points. Collect with a spin. 📦"]
+        };
         function loadQuest() {
             try { const raw = localStorage.getItem('trekTrailRunner_v1'); if (raw) quest = Object.assign(quest, JSON.parse(raw)); } catch (e) {}
             if (!quest.badges) quest.badges = {};
@@ -689,6 +798,7 @@
         function awardBadge(id) {
             if (quest.badges[id]) return;
             quest.badges[id] = true; saveQuest();
+            checkSkinUnlocks();   // badges are keys — this one may free a skin
             if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') {
                 const c = CHALLENGES.find(x => x.id === id);
                 if (c) FX.milestone('🏅 ' + c.emoji + ' ' + c.name);
@@ -815,6 +925,67 @@
         let comboTimer = 0;
         let comboMultiplier = 1;
 
+        // ----- FEATURE: near-miss grazing (skimming hazards builds pace) -----
+        const GRAZE_MARGIN = 1.5;           // extra lateral window beyond the hitbox
+        let runGrazes = 0;
+
+        // ----- FEATURE: adaptive Storm (learns your favourite lane across runs) -----
+        const STORM_LEARN_MIN = 900;        // ~15s of tracked play before it "knows" you
+        let laneFrames = { "-1": 0, "0": 0, "1": 0 };
+        try { const _sr = localStorage.getItem('trekTrailStorm_v1'); if (_sr) laneFrames = Object.assign(laneFrames, JSON.parse(_sr)); } catch(e) {}
+        function stormTotal() { return laneFrames["-1"] + laneFrames["0"] + laneFrames["1"]; }
+        function stormFavLane() { let best = 0; for (const k of ["-1","0","1"]) if (laneFrames[k] > laneFrames[best]) best = k; return parseInt(best, 10); }
+        function saveStormMemory() {
+            // Decay old habits so the Storm adapts if the pupil changes style.
+            for (const k in laneFrames) laneFrames[k] = Math.floor(laneFrames[k] * 0.9);
+            try { localStorage.setItem('trekTrailStorm_v1', JSON.stringify(laneFrames)); } catch(e) {}
+        }
+
+        // ----- FEATURE: ghost of your best run (personal rival, no social comparison) -----
+        const GHOST_STEP = 5, GHOST_MAX = 7200;   // sample every 5 ticks, cap ~10 min
+        let ghostBest = null, ghostRec = [], ghostFrame = 0, ghostMesh = null, ghostBeaten = false;
+        try { const _gr = localStorage.getItem('trekTrailGhost_v1'); if (_gr) ghostBest = JSON.parse(_gr); } catch(e) {}
+        function makeGhostMesh() {
+            const g = new THREE.Group();
+            const body = new THREE.Mesh(new THREE.SphereGeometry(0.45, 12, 10), new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.26, depthWrite: false }));
+            const tail = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.9, 10), new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.14, depthWrite: false }));
+            tail.rotation.x = -Math.PI / 2; tail.position.z = 0.6;
+            g.add(body); g.add(tail); g.visible = false; scene.add(g);
+            return g;
+        }
+        function ghostStart() {
+            ghostRec = []; ghostFrame = 0; ghostBeaten = false;
+            if (ghostBest && ghostBest.t && ghostBest.t.length > 2) {
+                if (!ghostMesh) ghostMesh = makeGhostMesh();
+                ghostMesh.visible = true;
+                ghostMesh.children.forEach(m => m.material.opacity = m === ghostMesh.children[0] ? 0.26 : 0.14);
+                ghostMesh.position.set(ghostBest.t[0][0], ghostBest.t[0][1], 3.2);
+            } else if (ghostMesh) ghostMesh.visible = false;
+        }
+        function ghostTick() {
+            ghostFrame++;
+            if (ghostFrame % GHOST_STEP === 0 && ghostRec.length < GHOST_MAX)
+                ghostRec.push([Math.round(player.position.x * 50) / 50, Math.round(player.position.y * 50) / 50]);
+            if (!ghostMesh || !ghostMesh.visible || !ghostBest) return;
+            const idx = Math.floor(ghostFrame / GHOST_STEP);
+            if (idx < ghostBest.t.length) {
+                const s = ghostBest.t[idx];
+                ghostMesh.position.x += (s[0] - ghostMesh.position.x) * 0.25;
+                ghostMesh.position.y += (s[1] - ghostMesh.position.y) * 0.25;
+            } else {
+                // The best run ended here — the scout fades, the pupil runs on alone.
+                ghostMesh.children.forEach(m => m.material.opacity *= 0.94);
+                if (!ghostBeaten) { ghostBeaten = true; FX.milestone('👻 PAST YOUR BEST RUN!'); if (settings.audio) SFX.playTone(880, 'sine', 0.35, 0.08); }
+                if (ghostMesh.children[0].material.opacity < 0.01) ghostMesh.visible = false;
+            }
+        }
+        function ghostSave(finalScore) {
+            if (ghostRec.length > 2 && (!ghostBest || finalScore > ghostBest.s)) {
+                ghostBest = { s: finalScore, t: ghostRec };
+                try { localStorage.setItem('trekTrailGhost_v1', JSON.stringify(ghostBest)); } catch(e) {}
+            }
+        }
+
         // ===== ARCADE JUICE =====
         // Hit-stop = freeze frames for impact; timeScale = slow-motion; cameraShake = trauma (0..1).
         let hitStop = 0, timeScale = 1, slowAcc = 0, lastMilestone = 0;
@@ -876,6 +1047,8 @@
             loadSettings();
             loadLeaderboard();
             loadQuest();
+            // Migration: pupils who already hold a qualifying badge get their skin immediately.
+            for (const sk in SKIN_KEYS) { if (quest.badges[SKIN_KEYS[sk]] && !settings.unlockedSkins.includes(sk)) settings.unlockedSkins.push(sk); }
             const _bs = document.getElementById('boot-sub'); if (_bs) _bs.innerText = pick(BOOT_LINES);
             // First run on a touch device defaults to Low graphics (kinder to phone/Chromebook GPUs).
             if (!localStorage.getItem('trekTrailSettings_v1') && (('ontouchstart' in window) || navigator.maxTouchPoints > 0)) {
@@ -1209,7 +1382,10 @@
         }
 
         function setupUI() {
-            document.getElementById('start-btn').onclick = () => { if(settings.audio) SFX.init(); startGame(); };
+            document.getElementById('start-btn').onclick = () => { if(settings.audio) SFX.init(); dailyMode = false; startGame(); };
+            const _db = document.getElementById('daily-btn');
+            _db.innerText = '🗓 DAILY TRAIL — ' + todayName().toUpperCase();
+            _db.onclick = () => { if(settings.audio) SFX.init(); dailyMode = true; startGame(); };
             document.getElementById('restart-btn').onclick = () => { countTrek(); resetGame(); };
             document.getElementById('continue-btn').onclick = () => continueFromCheckpoint();
             document.getElementById('resume-btn').onclick = () => togglePause();
@@ -1260,7 +1436,11 @@
             settings.allSkins.forEach(skinName => {
                 const btn = document.createElement('button'); btn.className = 'skin-btn'; btn.innerText = skinName;
                 if (settings.skin === skinName) btn.classList.add('active');
-                if (!settings.unlockedSkins.includes(skinName)) { btn.innerText += ' 🔒'; btn.disabled = true; }
+                if (!settings.unlockedSkins.includes(skinName)) {
+                    btn.disabled = true;
+                    const ch = CHALLENGES.find(c => c.id === SKIN_KEYS[skinName]);
+                    btn.innerHTML = skinName + '<br><small style="font-size:10px;opacity:.75;">🔒 ' + (ch ? ch.emoji + ' ' + ch.desc : 'Locked') + '</small>';
+                }
                 btn.onclick = () => { 
                     settings.skin = skinName; 
                     createPlayer(); 
@@ -1277,6 +1457,13 @@
                 tag.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(15,23,42,0.85);border:1px solid #334155;border-radius:8px;padding:6px 10px;margin:4px;font-size:13px;color:#cbd5e1;';
                 tag.innerHTML = '<span style="font-size:18px;">' + s.emoji + '</span><span><b style="color:#fff;">' + s.name + '</b> · Leg ' + (i + 1) + '</span>';
                 bContainer.appendChild(tag);
+            });
+            // Lore entries: every defeated Storm's one-line obituary, newest first.
+            (quest.stormLog || []).forEach(en => {
+                const row = document.createElement('div');
+                row.style.cssText = 'width:100%;max-width:440px;text-align:left;background:rgba(15,23,42,0.7);border-left:3px solid #00d4ff;border-radius:6px;padding:6px 10px;margin:3px 0;font-size:12.5px;color:#94a3b8;';
+                row.innerHTML = en.e + ' <b style="color:#e2e8f0;">' + en.n + '</b> (Leg ' + en.l + ') — ' + en.t + ' <span style="opacity:.6;">· ' + en.d + '</span>';
+                bContainer.appendChild(row);
             });
         }
         function loadLeaderboard() { try { const stored = localStorage.getItem('trekTrailScores_v1'); highScores = stored ? JSON.parse(stored) : []; } catch(e){ highScores = []; } }
@@ -1318,9 +1505,10 @@
                 const got = !!quest.badges[c.id];
                 const d = document.createElement('div');
                 d.className = 'badge' + (got ? ' earned' : '');
+                const frees = Object.keys(SKIN_KEYS).find(k => SKIN_KEYS[k] === c.id);
                 d.innerHTML = '<div class="b-emoji">' + (got ? c.emoji : '🔒') + '</div>'
                     + '<div class="b-name">' + c.name + '</div>'
-                    + '<div class="b-desc">' + c.desc + '</div>';
+                    + '<div class="b-desc">' + c.desc + (frees ? '<br><b style="color:#7dd3fc;">🔑 Frees ' + frees + '</b>' : '') + '</div>';
                 grid.appendChild(d);
             });
         }
@@ -1378,6 +1566,13 @@
             document.getElementById('start-screen').classList.add('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.add('hidden'); document.getElementById('board-screen').classList.add('hidden');
             if (lives <= 0) lives = 5; player.visible = true; player.position.set(0, 0.4, 2); gameState = 'RUNNING'; scoreSubmitted = false;
             bonusActive = false; bonusTimer = 0; runCompass = 0; runBonusGrabs = 0; runPaceMax = 1; livesAtBossStart = lives;
+            runGrazes = 0; ghostStart();
+            bossShotsLanded = 0; lastHitCause = '';
+            if (dailyMode) {
+                dailyRng = mulberry32(todaySeed());   // identical trail on every retry today
+                if (daily.date !== todaySeed()) { daily.date = todaySeed(); daily.best = 0; saveDaily(); }
+                FX.milestone('🗓 THE ' + todayName().toUpperCase() + ' TRAIL');
+            }
             applyLegTheme(1, true);
             const _bt = document.getElementById('bonus-tint'); if (_bt) _bt.classList.remove('on');
             const _btm = document.getElementById('bonus-timer'); if (_btm) _btm.style.display = 'none';
@@ -1388,6 +1583,7 @@
         }
         function returnToMenu() {
             lives = 5; score = 0; levelScore = 0; level = 1; speed = BASE_SPEED;
+            if (ghostMesh) ghostMesh.visible = false;
             checkpointLeg = 0; checkpointScore = 0; trekCounted = false; // brand-new trek
             objects.forEach(o => scene.remove(o.mesh)); objects = [];
             enemyProjectiles.forEach(p => scene.remove(p.mesh)); enemyProjectiles = [];
@@ -1477,7 +1673,7 @@
             }
 
             // DYNAMIC FOV BASED ON COMBO
-            const targetFOV = 70 + (comboMultiplier * 3);
+            const targetFOV = settings.calm ? 70 : 70 + (comboMultiplier * 3);
             camera.fov += (targetFOV - camera.fov) * 0.05;
             camera.updateProjectionMatrix();
 
@@ -1514,13 +1710,13 @@
             updateUI();
             const currentScore = Math.floor(score);
             const unlockedBefore = settings.unlockedSkins.length + settings.unlockedBossSkins.length;
-            if (currentScore >= 5000 && !settings.unlockedSkins.includes('Cyber-Gold')) settings.unlockedSkins.push('Cyber-Gold');
-            if (currentScore >= 10000 && !settings.unlockedSkins.includes('Phantom')) settings.unlockedSkins.push('Phantom');
-            if (currentScore >= 20000 && !settings.unlockedSkins.includes('Lava Core')) settings.unlockedSkins.push('Lava Core');
+            // Scout skins now unlock through named challenges (see SKIN_KEYS) — visible keys beat silent thresholds.
             if (level >= 3 && !settings.unlockedBossSkins.includes('Interceptor')) settings.unlockedBossSkins.push('Interceptor');
             if (level >= 6 && !settings.unlockedBossSkins.includes('Golden God')) settings.unlockedBossSkins.push('Golden God');
             if (settings.unlockedSkins.length + settings.unlockedBossSkins.length !== unlockedBefore) saveSettings();
             frame++;
+            laneFrames[String(currentLane)]++;   // the Storm is quietly learning where you like to run
+            ghostTick();
         }
 
         function incrementCombo() {
@@ -1563,6 +1759,12 @@
             livesAtBossStart = lives;
             bossMaxHP = (level === 1) ? 80 : (level === 2) ? 120 : 140 + ((level - 2) * 50); bossCurrentHP = bossMaxHP; updateBossHP();
             const bw = document.getElementById('boss-warning'); if (bw) bw.innerText = pick(STORM_LINES);
+            // If the Storm has learned this pupil's habits, say so — fair warning, big "it knows me" moment.
+            if (stormTotal() > STORM_LEARN_MIN) {
+                const _fl = stormFavLane();
+                const _side = _fl < 0 ? 'LEFT' : (_fl > 0 ? 'RIGHT' : 'CENTRE');
+                setTimeout(() => { if (gameState === 'BOSS' || gameState === 'WARNING') FX.milestone('👁 IT KNOWS YOUR ' + _side + '…'); }, 1600);
+            }
             document.getElementById('boss-warning').style.display = 'block';
             playerGun.visible = true; boss.visible = true;
             objects.forEach(o => { scene.remove(o.mesh); }); objects = [];
@@ -1603,7 +1805,15 @@
                     if (Math.random() < 0.01) {
                         boss.userData.laserState = 1; // Charge
                         boss.userData.laserTimer = 60;
-                        boss.userData.laserTargetX = player.position.x; // Lock onto player lane
+                        boss.userData.shotCount = (boss.userData.shotCount || 0) + 1;
+                        // Adaptive Storm: once it has watched enough play, every other shot
+                        // pre-aims at the pupil's habitual lane instead of where they are now.
+                        // Still fully dodgeable — it just punishes autopilot, not the pupil.
+                        if (stormTotal() > STORM_LEARN_MIN && boss.userData.shotCount % 2 === 0) {
+                            boss.userData.laserTargetX = player.position.x * 0.35 + (stormFavLane() * LANE_WIDTH) * 0.65;
+                        } else {
+                            boss.userData.laserTargetX = player.position.x; // Lock onto player lane
+                        }
                         if(settings.audio) SFX.playTone(300, 'sawtooth', 1.0, 0.1); // Charge sound
                     }
                 } else if (boss.userData.laserState === 1) { // Charging
@@ -1623,7 +1833,7 @@
                     boss.userData.laserTimer--;
                     // Check Collision
                     if (Math.abs(player.position.x - boss.position.x) < 1.0 && Math.abs(player.position.y - (boss.position.y - 1)) < 20) {
-                        takeDamage();
+                        takeDamage(false, 'laser');
                     }
                     if(boss.userData.laserTimer <= 0) {
                         boss.userData.laserState = 0;
@@ -1707,13 +1917,35 @@
                         smash(obj); 
                         showFloatingText(obj.mesh.position, "+50", "#86efac"); 
                     } else if(obj.type === 'DEADLY_BLOCK' || obj.type === 'MINE') { 
-                        takeDamage(true); 
+                        takeDamage(true, obj.type === 'MINE' ? 'mine' : 'block'); 
                     } else if(obj.type === 'CEILING_SPIKE') { 
-                        takeDamage(); obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
+                        takeDamage(false, 'spike'); obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
                     } else { 
-                        takeDamage(); obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
+                        takeDamage(false, 'crate'); obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
                     } 
                 } 
+                // Near-miss graze: hazard just crossed the player's plane without touching them.
+                // Skimming close rewards points AND feeds the pace streak — bravery over lane-camping.
+                if (!obj.grazed && obj.mesh.position.z >= player.position.z && obj.mesh.position.z - speed < player.position.z) {
+                    obj.grazed = true;
+                    const isHazard = !(obj.type === 'WUMPA' || obj.type === 'LIFE' || obj.type === 'SHIELD_ITEM' || obj.type === 'COMBO_ORB');
+                    if (isHazard && obj.active !== false && gameState !== 'GAMEOVER') {
+                        const hw = obj.mesh.geometry && obj.mesh.geometry.parameters ? (obj.mesh.geometry.parameters.width || 1) / 2 : 0.5;
+                        const gdx = Math.abs(obj.mesh.position.x - player.position.x);
+                        const gdy = Math.abs(obj.mesh.position.y - player.position.y);
+                        const inHitbox = gdx < (hw + 0.5) && gdy < 1.0;   // this would've been a collision, not a graze
+                        if (!inHitbox && gdx < hw + 0.5 + GRAZE_MARGIN && gdy < 1.6) {
+                            runGrazes++;
+                            const pts = 15 * comboMultiplier;
+                            score += pts;
+                            comboCount++;
+                            comboTimer = Math.max(comboTimer, Math.floor(MAX_COMBO_TIMER * 0.6));
+                            comboMultiplier = Math.min(10, 1 + Math.floor(comboCount / 5));
+                            showFloatingText(player.position, '⚡ CLOSE! +' + pts, '#7dd3fc');
+                            if (settings.audio) SFX.playTone(620 + comboMultiplier * 30, 'sine', 0.12, 0.05);
+                        }
+                    }
+                }
                 if(obj.mesh.position.z > 6) { disposeMesh(obj.mesh); scene.remove(obj.mesh); objects.splice(i,1); } 
             }
             updateProjectiles();
@@ -1733,18 +1965,18 @@
         }
 
         function spawnObstacle() {
-            const lanes = [-LANE_WIDTH, 0, LANE_WIDTH]; const x = lanes[Math.floor(Math.random()*3)]; const z = -60; 
-            const r = Math.random(); 
-            const isCeiling = Math.random() > 0.72; 
+            const lanes = [-LANE_WIDTH, 0, LANE_WIDTH]; const x = lanes[Math.floor(rnd()*3)]; const z = -60; 
+            const r = rnd(); 
+            const isCeiling = rnd() > 0.72; 
             let type, mesh;
 
             if (isCeiling) {
                 type = 'CEILING_SPIKE';
-                const h = 1.5 + Math.random();
+                const h = 1.5 + rnd();
                 mesh = new THREE.Mesh(new THREE.ConeGeometry(0.5, h, 6), materials.ceilingSpike);
                 mesh.rotation.x = Math.PI; 
                 // Hang into the upper flight band (player ceiling is y=3.0) so high-flyers must duck.
-                mesh.position.set(x, 3.6 + Math.random() * 0.3, z); 
+                mesh.position.set(x, 3.6 + rnd() * 0.3, z); 
             } else {
                 if (r < 0.03) { 
                     type = 'SHIELD_ITEM';
@@ -1761,16 +1993,16 @@
                     mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 1), materials.spaceMine);
                     for(let i=0; i<6; i++) {
                         const spike = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.8), materials.deadlyBlockEdge);
-                        spike.position.set((Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)).normalize().multiplyScalar(0.4);
+                        spike.position.set((rnd()-0.5), (rnd()-0.5), (rnd()-0.5)).normalize().multiplyScalar(0.4);
                         spike.lookAt(0,0,0);
                         mesh.add(spike);
                     }
-                    mesh.position.set(x, 1.0 + Math.random(), z);
+                    mesh.position.set(x, 1.0 + rnd(), z);
                 }
                 else if(r < 0.26) { 
                     type = 'DEADLY_BLOCK'; 
-                    const h = 0.8 + Math.random() * 2.5; 
-                    const y = 1.0 + Math.random() * 1.5; 
+                    const h = 0.8 + rnd() * 2.5; 
+                    const y = 1.0 + rnd() * 1.5; 
                     mesh = new THREE.Mesh(new THREE.BoxGeometry(2, h, 0.5), materials.deadlyBlock); 
                     const border = new THREE.Mesh(new THREE.BoxGeometry(2.1, h+0.1, 0.1), materials.deadlyBlockEdge); 
                     mesh.add(border); 
@@ -1827,8 +2059,9 @@
 
         function checkCollision(mesh, radius) { if(boss.userData.isWreck && mesh === boss.getObjectByName('Fuselage')) return false; if(!mesh.visible || (gameState !== 'RUNNING' && gameState !== 'BOSS' && gameState !== 'BOSS_WRECK')) return false; const dx = Math.abs(mesh.position.x - player.position.x); const dy = Math.abs(mesh.position.y - player.position.y); const dz = Math.abs(mesh.position.z - player.position.z); const objHalfWidth = mesh.geometry ? (mesh.geometry.parameters.width || 1) / 2 : 0.5; return dx < (objHalfWidth + 0.5) && dy < 1.0 && dz < 0.5; }
         
-        function takeDamage(instaKill = false) { 
+        function takeDamage(instaKill = false, cause = '') { 
             if(gameState === 'GAMEOVER') return;
+            if (cause) lastHitCause = cause;
             if (shieldActive) {
                 shieldActive = false;
                 playerShieldMesh.visible = false;
@@ -1848,12 +2081,22 @@
             FX.shake(instaKill ? 0.85 : 0.55); FX.stop(6); FX.flash('#ff0033', 0.45); 
             if(lives <= 0) { 
                 gameState = 'GAMEOVER'; player.visible = false; boss.visible = false; 
+                if (ghostMesh) ghostMesh.visible = false;
+                ghostSave(Math.floor(score)); saveStormMemory();
                 recordRun(Math.floor(score));
                 if (checkpointLeg === 0) countTrek(); // no checkpoint → this trek is over now
                 scoreSubmitted = false;
                 const _ni = document.getElementById('player-name-input'); if(_ni){ _ni.value=''; _ni.disabled=false; }
                 const _sb = document.getElementById('submit-score-btn'); if(_sb){ _sb.disabled=false; _sb.innerText='🏆 ADD TO LEADERBOARD'; }
-                const goc = document.getElementById('go-cheese'); if (goc) goc.innerText = pick(GAME_OVER_LINES);
+                const goc = document.getElementById('go-cheese'); if (goc) goc.innerText = pick(GO_POOLS[lastHitCause] || GAME_OVER_LINES);
+                // Daily Trail: track and announce today's personal best on this shared course.
+                if (dailyMode) {
+                    const fs = Math.floor(score);
+                    const isNewBest = fs > daily.best;
+                    if (isNewBest) { daily.best = fs; saveDaily(); }
+                    const bl = document.getElementById('best-line');
+                    if (bl) bl.innerText = (isNewBest ? '🗓 NEW ' + todayName().toUpperCase() + ' TRAIL BEST: ' + fs : '🗓 ' + todayName() + ' Trail best: ' + daily.best + ' — this run: ' + fs);
+                }
                 // Offer Continue only when a checkpoint is banked.
                 const _cont = document.getElementById('continue-btn');
                 if (_cont) {
@@ -1922,10 +2165,11 @@
                     } 
                 } 
                 if(gameState === 'BOSS' && p.mesh.position.z < boss.position.z + 2 && Math.abs(p.mesh.position.x - boss.position.x) < 2.5) { 
-                    bossCurrentHP -= 5; boss.userData.hitTimer=5; updateBossHP(); 
+                    bossCurrentHP -= 5; bossShotsLanded++; boss.userData.hitTimer=5; updateBossHP(); 
                     p.mesh.geometry.dispose(); scene.remove(p.mesh); playerProjectiles.splice(i, 1); spawnParticles(p.mesh.position, 0xff0000, 12); if(settings.audio) SFX.bossHit(); 
                     score += 20 * comboMultiplier;
                     FX.shake(0.16); FX.stop(2); FX.flash('#ff3344', 0.22); FX.scorePop();
+                    if (!settings.calm) { camera.fov = Math.min(camera.fov + 3, 96); camera.updateProjectionMatrix(); }
                     incrementCombo();
                 } 
                 else if (p.mesh.position.z < -60 || p.mesh.position.y < -1) { p.mesh.geometry.dispose(); scene.remove(p.mesh); playerProjectiles.splice(i, 1); } 
@@ -1935,12 +2179,13 @@
                 const dx = Math.abs(p.mesh.position.x - player.position.x); 
                 const dy = Math.abs(p.mesh.position.y - player.position.y); 
                 const dz = Math.abs(p.mesh.position.z - player.position.z); 
-                if (dx < 0.6 && dy < 0.8 && dz < 0.8) { takeDamage(); p.mesh.geometry.dispose(); scene.remove(p.mesh); enemyProjectiles.splice(i,1); spawnParticles(p.mesh.position, 0xff0000, 10); } 
+                if (dx < 0.6 && dy < 0.8 && dz < 0.8) { takeDamage(false, 'storm'); p.mesh.geometry.dispose(); scene.remove(p.mesh); enemyProjectiles.splice(i,1); spawnParticles(p.mesh.position, 0xff0000, 10); } 
                 else if (p.mesh.position.z > 8) { p.mesh.geometry.dispose(); scene.remove(p.mesh); enemyProjectiles.splice(i,1); } 
             } 
         }
         
         function defeatBoss() {
+            stormLogEntry();   // lore: this Storm writes its own obituary
             if(settings.audio) SFX.bossExplode();
             score += 1000 * comboMultiplier;
             FX.scorePop();
@@ -1948,6 +2193,7 @@
             spawnParticles(boss.position, 0xff5500, 90); spawnParticles(boss.position, 0x333333, 55); 
             // Cinematic kill: white flash, deep freeze-frame, full-trauma shake, then slow-motion wreck.
             FX.flash('#ffffff', 0.85); FX.stop(14); FX.shake(1.0); FX.slow(0.25);
+            if (!settings.calm) { camera.fov = Math.min(camera.fov + 7, 100); camera.updateProjectionMatrix(); }
             boss.getObjectByName('Fuselage').material = materials.bossWreck;
             boss.getObjectByName('WingR').material = materials.bossWreck;
             boss.getObjectByName('WingL').material = materials.bossWreck;
