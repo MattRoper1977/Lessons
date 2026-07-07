@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1e · Final Briefing — River Ready</title>
+<!-- Magritte V4 board-only chassis. Font: Space Grotesk if installed locally, else system fallback (no Google Fonts). -->
+<style>
+:root{
+  --navy:#0f2740; --green:#16a34a; --blue:#2563eb; --orange:#f97316;
+  --ink:#0f2740; --paper:#f7fafc; --card:#ffffff; --line:#e2e8f0;
+  --green-bg:#dcfce7; --green-ink:#14532d;
+  --orange-bg:#ffedd5;
+  --blue-bg:#dbeafe; --navy-bg:#e2e8f0;
+  --font:'Space Grotesk','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);color:var(--ink);background:var(--navy);overflow:hidden}
+body.calm *{animation:none !important;transition:none !important}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+
+/* ---- slide chassis ---- */
+.slide{position:fixed;inset:0;width:100vw;height:100vh;background:var(--paper);
+  display:none;flex-direction:column;padding:34px 46px 74px;overflow-y:auto;border-top:9px solid var(--navy)}
+.slide.active{display:flex;animation:fadeInUp .45s ease}
+.slide[data-type="plan"]{border-top-color:var(--blue)}
+.slide[data-type="science"]{border-top-color:var(--navy)}
+.slide[data-type="bugs"]{border-top-color:var(--green)}
+.slide[data-type="predict"]{border-top-color:var(--orange)}
+.slide[data-type="exit"]{border-top-color:var(--orange)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---- logo + tag ---- */
+.logo{position:fixed;top:14px;right:20px;z-index:40;background:var(--navy);color:#fff;
+  font-weight:700;font-size:13px;letter-spacing:.4px;padding:6px 13px;border-radius:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.slide-tag{display:inline-block;background:var(--navy);color:#fff;font-size:12px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;padding:5px 12px;border-radius:14px;margin-bottom:12px}
+.slide-tag.plan{background:var(--blue)} .slide-tag.science{background:var(--navy)}
+.slide-tag.bugs{background:var(--green)} .slide-tag.predict{background:var(--orange)}
+
+h1{font-size:38px;line-height:1.1;margin-bottom:6px}
+h2{font-size:30px;line-height:1.15;margin-bottom:14px}
+h3{font-size:20px;margin:14px 0 8px}
+p,li{font-size:18px;line-height:1.5}
+
+/* ---- boxes ---- */
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:10px 0;
+  box-shadow:0 2px 8px rgba(15,39,64,.06)}
+.li-box{background:#fff;border-left:6px solid var(--navy)}
+.sc-box{background:var(--orange-bg);border-left:6px solid var(--orange)}
+.task-box{background:var(--blue-bg);border-left:6px solid var(--blue)}
+.scaffold-box{background:#f1f5f9;border-left:6px solid #64748b}
+.aspire-box{background:var(--green-bg);border-left:6px solid var(--green);color:var(--green-ink)}
+.exam-tip-box{background:#fef9c3;border-left:6px solid #ca8a04;color:#713f12}
+.misc-box{background:#fee2e2;border-left:6px solid #dc2626}
+.misc-box .wrong{text-decoration:line-through;opacity:.7}
+.brief-box{background:#fff;border:2px dashed var(--navy);border-radius:14px;padding:16px 18px;margin:10px 0}
+.brief-box .tag{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.6px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+ul{padding-left:22px} li{margin:4px 0}
+
+/* ---- tally buttons ---- */
+.tally-wrap{display:grid;gap:12px;margin-top:10px}
+.tally{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 16px;
+  cursor:pointer;font-size:18px;font-weight:600;text-align:left;transition:transform .12s,border-color .12s}
+.tally:hover{transform:translateY(-2px)}
+.tally .count{min-width:46px;height:38px;border-radius:10px;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}
+.tally.correct{border-color:var(--green);background:var(--green-bg)}
+.tally.correct .count{background:var(--green)}
+.tally.trap{border-color:#dc2626}
+.mini-btn{background:none;border:none;color:var(--navy);font-weight:700;cursor:pointer;
+  font-size:14px;text-decoration:underline;padding:4px}
+
+/* ---- readiness bar ---- */
+.readiness{position:fixed;left:46px;bottom:78px;right:46px;z-index:20}
+.readiness .track{height:22px;background:#dbe3ec;border-radius:12px;overflow:hidden;border:1px solid #cbd5e1}
+.readiness .fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));
+  transition:width .5s ease}
+.readiness .lab{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;display:flex;justify-content:space-between}
+
+/* ---- roles ---- */
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:12px}
+.role-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.role-card .name{font-weight:800;font-size:18px;margin-bottom:6px}
+.role-card select{width:100%;font-family:var(--font);font-size:15px;padding:8px;border-radius:10px;
+  border:2px solid var(--line);background:#fff}
+.role-card.set{border-color:var(--green);background:var(--green-bg)}
+
+/* ---- attendance chips ---- */
+.att-panel{background:#fff;border:2px dashed var(--navy);border-radius:14px;padding:14px 16px;margin:10px 0}
+.att-panel .att-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.att-panel .att-head b{font-size:16px}
+.att-count{font-size:13px;font-weight:700;color:var(--green);background:var(--green-bg);padding:4px 10px;border-radius:12px}
+.att-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.att-chip{border:2px solid var(--green);background:var(--green-bg);color:var(--green-ink);border-radius:20px;
+  padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer;font-family:var(--font);transition:all .12s}
+.att-chip:hover{transform:translateY(-1px)}
+.att-chip.absent{border-color:#cbd5e1;background:#f1f5f9;color:#94a3b8;text-decoration:line-through}
+.print-cta{font-size:16px;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:11px 20px;
+  font-weight:800;cursor:pointer;font-family:var(--font);margin-top:10px}
+
+/* ---- level toggles ---- */
+.levels{display:flex;gap:8px;margin:8px 0}
+.lvl{border:2px solid var(--line);background:#fff;border-radius:20px;padding:6px 16px;font-weight:700;
+  cursor:pointer;font-size:14px}
+.lvl.f.on{background:var(--green);color:#fff;border-color:var(--green)}
+.lvl.m.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+.lvl.h.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tier{display:none} .tier.show{display:block}
+
+/* ---- controls / nav ---- */
+.nav{position:fixed;bottom:16px;right:20px;z-index:40;display:flex;gap:10px}
+.nav button{background:var(--navy);color:#fff;border:none;border-radius:12px;width:52px;height:44px;
+  font-size:22px;cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:default}
+.progress{position:fixed;bottom:0;left:0;height:6px;background:var(--green);z-index:40;transition:width .4s}
+.toolbar{position:fixed;top:14px;left:20px;z-index:40;display:flex;gap:8px}
+.toolbar button{background:#fff;border:2px solid var(--line);border-radius:10px;padding:7px 12px;
+  font-weight:700;cursor:pointer;font-size:13px;font-family:var(--font)}
+.timer-widget{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:40;
+  background:var(--navy);color:#fff;border-radius:12px;padding:6px 14px;font-weight:800;font-size:16px;
+  display:none;align-items:center;gap:8px}
+.timer-widget.on{display:flex}
+.timer-widget button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;
+  padding:4px 8px;cursor:pointer;font-weight:700}
+
+/* ---- slot divider banner ---- */
+.slot-banner{display:inline-block;background:var(--orange);color:#fff;font-weight:800;padding:6px 16px;
+  border-radius:20px;font-size:14px;margin-bottom:12px}
+
+/* ---- hero ---- */
+.hero-icons{display:flex;gap:18px;font-size:44px;margin:16px 0}
+.hero-icons span{animation:bob 2.4s ease-in-out infinite}
+.hero-icons span:nth-child(2){animation-delay:.3s}
+.hero-icons span:nth-child(3){animation-delay:.6s}
+.hero-icons span:nth-child(4){animation-delay:.9s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.countdown{font-size:22px;font-weight:800;color:var(--orange)}
+
+/* LO checkmarks */
+.lo-item{display:flex;align-items:center;gap:10px;margin:6px 0}
+.lo-item .chk{width:24px;height:24px;border-radius:6px;border:2px solid var(--navy);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;cursor:pointer}
+.lo-item.done .chk{background:var(--green);border-color:var(--green)}
+
+/* ---- modal ---- */
+.modal-bg{position:fixed;inset:0;background:rgba(15,39,64,.55);z-index:60;display:none;
+  align-items:center;justify-content:center;padding:24px}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:18px;padding:26px 28px;max-width:560px;width:100%;
+  box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal h3{margin-top:0}
+.modal .close{float:right;cursor:pointer;font-weight:800;font-size:22px;border:none;background:none}
+.coldcall-name{font-size:34px;font-weight:900;color:var(--navy);text-align:center;margin:14px 0}
+
+/* ---- complete overlay ---- */
+.complete{position:fixed;inset:0;z-index:70;background:rgba(15,39,64,.92);color:#fff;
+  display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
+.complete.on{display:flex}
+.complete h1{font-size:52px;color:#fff}
+.xp-track{width:min(520px,80vw);height:20px;background:rgba(255,255,255,.2);border-radius:12px;
+  overflow:hidden;margin:18px 0}
+.xp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--orange));transition:width 1.2s}
+.complete button{margin-top:16px;background:#fff;color:var(--navy);border:none;border-radius:12px;
+  padding:12px 24px;font-weight:800;font-size:17px;cursor:pointer;font-family:var(--font)}
+
+/* ---- print ---- */
+#print-area{display:none}
+@media print{
+  @page{margin:11mm}
+  body{background:#fff;overflow:visible;height:auto}
+  .slide,.nav,.toolbar,.timer-widget,.readiness,.logo,.modal-bg,.complete,.progress{display:none !important}
+  #print-area{display:block !important;color:#000;font-family:var(--font)}
+  .p-section{border-top:2px dashed #333;padding-top:12px;margin-top:14px;break-inside:avoid}
+  .p-section:first-child{border-top:none}
+  .p-card{border:1.5px solid #333;border-radius:8px;padding:12px;margin:8px 0;break-inside:avoid}
+  .p-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  table.p-tab{width:100%;border-collapse:collapse;margin-top:6px}
+  table.p-tab td,table.p-tab th{border:1px solid #333;padding:6px 8px;font-size:13px;text-align:left}
+  .p-line{border-bottom:1px solid #333;height:22px;margin:6px 0}
+  h2.p-h{font-size:18px;margin:0 0 4px} .p-small{font-size:12px;color:#333}
+  .p-name{font-weight:800;font-size:15px;margin-bottom:2px}
+  .p-fill{display:inline-block;border-bottom:1px solid #333;width:64px;height:13px;margin:0 6px}
+  .p-card .p-small{margin:2px 0}
+}
+@media (max-width:640px){
+  .slide{padding:24px 18px 78px} h1{font-size:28px} h2{font-size:23px}
+  .two-col,.arrival-grid{grid-template-columns:1fr}
+  .readiness{left:18px;right:18px}
+}
+</style>
+</head>
+<body>
+
+<div class="logo">Progress Schools · Tees Valley</div>
+
+<div class="toolbar">
+  <button onclick="prevSlide()" title="Previous">‹</button>
+  <button onclick="toggleCalm()" id="calmBtn">🌙 Calm</button>
+  <button onclick="openTA()">🧑‍🏫 TA</button>
+  <button onclick="coldCall()">🎯 Cold call</button>
+  <button onclick="startTimer(300)">⏱️ 5:00</button>
+</div>
+
+<div class="timer-widget" id="timer"><span id="timerText">05:00</span>
+  <button onclick="stopTimer()">✕</button></div>
+
+<!-- ============ SLIDE 1 : HERO ============ -->
+<section class="slide active" data-type="plan">
+  <span class="slide-tag plan">Slot 1 · Final Briefing</span>
+  <h1>River Ready 🛰️ Final Briefing</h1>
+  <div class="hero-icons"><span>🥾</span><span>🔬</span><span>🐛</span><span>🌊</span></div>
+  <p class="countdown" id="countdown">⏳ Portrack Marsh on the Tees — Thursday 9 July 2026.</p>
+  <div class="box li-box">
+    <h3>Today's mission</h3>
+    <div class="lo-item" onclick="toggleLO(this)"><span class="chk">✓</span><span>Recap what we test on a river and why — so nobody's lost on Thursday.</span></div>
+    <div class="lo-item" onclick="toggleLO(this)"><span class="chk">✓</span><span>Lock in a personal <b>prediction</b> about the health of the Tees.</span></div>
+    <div class="lo-item" onclick="toggleLO(this)"><span class="chk">✓</span><span>Know our jobs and be calm & confident for the trip.</span></div>
+  </div>
+  <div class="box sc-box">
+    <b>Success criteria</b> — by the end I can: name the 3 tests · read a reading (good/bad) ·
+    say what bugs tell us · state my prediction · say my job for Thursday.
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 : ARRIVAL CATCH-UP ============ -->
+<section class="slide" data-type="plan">
+  <span class="slide-tag plan">Do Now · Catch-up</span>
+  <h2>Warm up — what do we remember?</h2>
+  <p class="p-small">Have a go even if you missed last week — we'll fill the gaps together.</p>
+  <div class="arrival-grid">
+    <div class="box task-box"><b>1.</b> Name <b>one thing</b> we test in river water.
+      <div class="tier-ans" style="display:none;color:var(--green);font-weight:700">e.g. pH, oxygen, temperature, the bugs living in it.</div></div>
+    <div class="box task-box"><b>2.</b> Where does our river start and end? (one word each)
+      <div class="tier-ans" style="display:none;color:var(--green);font-weight:700">Source (hills) → Mouth (sea).</div></div>
+    <div class="box task-box"><b>3.</b> What tool do we use to sample a patch of ground?
+      <div class="tier-ans" style="display:none;color:var(--green);font-weight:700">A quadrat.</div></div>
+    <div class="box task-box"><b>4.</b> True or false: clear water is always clean water.
+      <div class="tier-ans" style="display:none;color:var(--green);font-weight:700">False — you can't see chemicals or bacteria.</div></div>
+  </div>
+  <button class="mini-btn" onclick="revealArrival(this)">👁️ Reveal answers</button>
+</section>
+
+<!-- ============ SLIDE 3 : STARTER — TRIP OR TRAP ============ -->
+<section class="slide" data-type="plan">
+  <span class="slide-tag plan">Starter · Trip or Trap</span>
+  <h2>Trip or Trap? 🪤 Tap how many think it's TRUE</h2>
+  <p>Read each one out. Hands up if you think it's true — tap the number. Then reveal.</p>
+  <div class="tally-wrap" id="tallyStarter">
+    <button class="tally" data-key="st1" data-correct="0" onclick="bump(this)">
+      <span>“You can drink from the river if it looks clear.” <b>(TRUE?)</b></span><span class="count">0</span></button>
+    <button class="tally" data-key="st2" data-correct="1" onclick="bump(this)">
+      <span>“Some bugs only live in clean water, so finding them is good news.”</span><span class="count">0</span></button>
+    <button class="tally" data-key="st3" data-correct="0" onclick="bump(this)">
+      <span>“The tide never reaches the Tees where we're going.”</span><span class="count">0</span></button>
+    <button class="tally" data-key="st4" data-correct="1" onclick="bump(this)">
+      <span>“We wash our hands before eating — no exceptions.”</span><span class="count">0</span></button>
+  </div>
+  <button class="mini-btn" onclick="revealTally('tallyStarter')">✅ Reveal which are true</button>
+  <div class="box misc-box" style="margin-top:12px">
+    <b>Watch out:</b> <span class="wrong">clear = clean</span> — chemicals and bacteria are invisible. That's why we <b>test</b>.
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : ROUND 1 — PLAN ============ -->
+<section class="slide" data-type="plan">
+  <span class="slide-tag plan">Round 1 · The Plan</span>
+  <h2>🥾 Round 1 — Kit, meeting point & staying safe</h2>
+  <div class="brief-box"><span class="tag">20-SEC BRIEF</span>
+    <p>We meet at the minibus, coats + wellies, hand gel in the bag. By the water: <b>stay behind the line, never go in alone, wash hands before food.</b> If you feel wobbly, tell an adult — that's the plan, not a problem.</p>
+  </div>
+  <h3>Challenge — what's missing from the bag?</h3>
+  <div class="tally-wrap">
+    <button class="tally" data-key="r1a" data-correct="1" onclick="bump(this)"><span>Waterproof coat & wellies</span><span class="count">0</span></button>
+    <button class="tally" data-key="r1b" data-correct="1" onclick="bump(this)"><span>Hand gel / soap</span><span class="count">0</span></button>
+    <button class="tally" data-key="r1c" data-correct="0" onclick="bump(this)"><span>Fizzy drinks to pour in the river 🥤</span><span class="count">0</span></button>
+    <button class="tally" data-key="r1d" data-correct="1" onclick="bump(this)"><span>Clipboard & recording sheet</span><span class="count">0</span></button>
+  </div>
+  <button class="mini-btn" onclick="revealTally(this.previousElementSibling)">✅ Reveal essentials</button>
+  <div class="aspire-box box">🌟 <b>Higher:</b> why do we <i>never</i> sample alone — give two reasons (safety + reliable data).</div>
+  <button class="mini-btn" onclick="completeRound('r1',this)">✔️ Round 1 complete → charge readiness</button>
+</section>
+
+<!-- ============ SLIDE 5 : ROUND 2 — SCIENCE ============ -->
+<section class="slide" data-type="science">
+  <span class="slide-tag science">Round 2 · The Science</span>
+  <h2>🔬 Round 2 — The three tests & reading a reading</h2>
+  <div class="brief-box"><span class="tag">20-SEC BRIEF</span>
+    <p><b>Physical</b> (temperature, how cloudy) · <b>Chemical</b> (pH, oxygen) · <b>Biological</b> (which creatures live there). A reading only means something when you know what's <i>good</i> and what's <i>bad</i>.</p>
+  </div>
+  <div class="levels">
+    <button class="lvl f on" onclick="setTier(this,'sci','f')">Foundation</button>
+    <button class="lvl m" onclick="setTier(this,'sci','m')">Middle</button>
+    <button class="lvl h" onclick="setTier(this,'sci','h')">Higher</button>
+  </div>
+  <div class="tier show" data-tier="sci-f">
+    <h3>Which test is it? “We count the mayfly larvae.”</h3>
+    <div class="tally-wrap">
+      <button class="tally" data-key="r2fa" data-correct="0" onclick="bump(this)"><span>Physical</span><span class="count">0</span></button>
+      <button class="tally" data-key="r2fb" data-correct="0" onclick="bump(this)"><span>Chemical</span><span class="count">0</span></button>
+      <button class="tally" data-key="r2fc" data-correct="1" onclick="bump(this)"><span>Biological</span><span class="count">0</span></button>
+    </div>
+    <button class="mini-btn" onclick="revealTally(this.previousElementSibling)">✅ Reveal</button>
+  </div>
+  <div class="tier" data-tier="sci-m">
+    <h3>Oxygen reads <b>3 mg/L</b> (low). Good or bad for fish?</h3>
+    <div class="tally-wrap">
+      <button class="tally" data-key="r2ma" data-correct="0" onclick="bump(this)"><span>Good — plenty of oxygen</span><span class="count">0</span></button>
+      <button class="tally" data-key="r2mb" data-correct="1" onclick="bump(this)"><span>Bad — fish struggle to breathe</span><span class="count">0</span></button>
+    </div>
+    <button class="mini-btn" onclick="revealTally(this.previousElementSibling)">✅ Reveal</button>
+    <div class="exam-tip-box box">💡 Say the <i>consequence</i>: “low oxygen → fish can't survive → poor health.”</div>
+  </div>
+  <div class="tier" data-tier="sci-h">
+    <h3>pH is 5 upstream, 7 downstream of a works. What does that suggest?</h3>
+    <div class="tally-wrap">
+      <button class="tally" data-key="r2ha" data-correct="1" onclick="bump(this)"><span>Something acidic is entering the river</span><span class="count">0</span></button>
+      <button class="tally" data-key="r2hb" data-correct="0" onclick="bump(this)"><span>The river is naturally getting cleaner</span><span class="count">0</span></button>
+    </div>
+    <button class="mini-btn" onclick="revealTally(this.previousElementSibling)">✅ Reveal</button>
+    <div class="aspire-box box">🌟 Link it to the human-impact story from L1c — pollution changes the reading.</div>
+  </div>
+  <button class="mini-btn" onclick="completeRound('r2',this)">✔️ Round 2 complete → charge readiness</button>
+</section>
+
+<!-- ============ SLIDE 6 : ROUND 3 — BUGS ============ -->
+<section class="slide" data-type="bugs">
+  <span class="slide-tag bugs">Round 3 · The Bugs</span>
+  <h2>🐛 Round 3 — Quadrats, bugs & biodiversity</h2>
+  <div class="brief-box"><span class="tag">20-SEC BRIEF</span>
+    <p>A <b>quadrat</b> is a square we drop to sample fairly. More <b>different</b> creatures = higher <b>biodiversity</b> = usually a healthier habitat. Some bugs are “clean-water only” — finding them is a great sign.</p>
+  </div>
+  <h3>Challenge — which quadrat suggests the healthier habitat?</h3>
+  <div class="tally-wrap">
+    <button class="tally" data-key="r3a" data-correct="0" onclick="bump(this)"><span>A: 30 of the <b>same</b> tolerant worm</span><span class="count">0</span></button>
+    <button class="tally" data-key="r3b" data-correct="1" onclick="bump(this)"><span>B: mayfly, shrimp, snail, beetle — <b>many kinds</b></span><span class="count">0</span></button>
+  </div>
+  <button class="mini-btn" onclick="revealTally(this.previousElementSibling)">✅ Reveal</button>
+  <div class="misc-box box"><b>Common slip:</b> <span class="wrong">more bugs = healthier</span>. It's more <i>variety</i>, not just more bodies.</div>
+  <div class="aspire-box box">🌟 <b>Higher:</b> why do we take several quadrats, not just one? (reliable, representative results)</div>
+  <button class="mini-btn" onclick="completeRound('r3',this)">✔️ Round 3 complete → charge readiness</button>
+</section>
+
+<!-- ============ SLIDE 7 : PREDICTION LOCK ============ -->
+<section class="slide" data-type="predict">
+  <span class="slide-tag predict">Prediction Lock 🔒</span>
+  <h2>Place your bet — how healthy is the Tees?</h2>
+  <p>Fill in your <b>paper prediction card</b> (name, pH guess, oxygen guess, bugs you'll find). Then we tally the class verdict on the board — we'll check it for real on Thursday.</p>
+  <div class="tally-wrap" style="grid-template-columns:1fr 1fr 1fr;display:grid">
+    <button class="tally" data-key="pHealthy" onclick="bump(this)" style="flex-direction:column;text-align:center">
+      <span style="font-size:34px">💚</span><span>Healthy</span><span class="count">0</span></button>
+    <button class="tally" data-key="pMixed" onclick="bump(this)" style="flex-direction:column;text-align:center">
+      <span style="font-size:34px">💛</span><span>Mixed</span><span class="count">0</span></button>
+    <button class="tally" data-key="pStruggling" onclick="bump(this)" style="flex-direction:column;text-align:center">
+      <span style="font-size:34px">❤️</span><span>Struggling</span><span class="count">0</span></button>
+  </div>
+  <div class="box sc-box" style="margin-top:14px">
+    🎯 <b>This is our headline:</b> we've predicted the Tees is mostly ___. On Thursday we find out who's right.
+  </div>
+  <button class="mini-btn" onclick="finishSlot1(this)">🚀 Lock predictions → Mission Ready!</button>
+</section>
+
+<!-- ============ SLIDE 8 : SLOT 2 TITLE ============ -->
+<section class="slide" data-type="predict">
+  <span class="slot-banner">⏸️ Slot 2 · Rehearse &amp; Walk (~25 min)</span>
+  <h1>Welcome back, crew 👋</h1>
+  <p>We're mission-ready on paper. Now: <b>who does what</b> on Thursday, then a real practice of our calm-noticing on the walk.</p>
+  <div class="box li-box">
+    <div class="lo-item" onclick="toggleLO(this)"><span class="chk">✓</span><span>Get a clear job for the trip.</span></div>
+    <div class="lo-item" onclick="toggleLO(this)"><span class="chk">✓</span><span>Practise 5-4-3-2-1 grounding on our walk — just like we will at the marsh.</span></div>
+  </div>
+  <div class="readiness" style="position:static;margin-top:14px">
+    <div class="lab"><span>Mission Readiness</span><span id="readOut2">0%</span></div>
+    <div class="track"><div class="fill" id="readFill2"></div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : MISSION ROLES ============ -->
+<section class="slide" data-type="bugs">
+  <span class="slide-tag bugs">Mission Roles</span>
+  <h2>🎖️ Everyone gets a job</h2>
+  <p>Tap each person a role. A job means you always know what you're doing — no surprises Thursday.</p>
+
+  <div class="att-panel">
+    <div class="att-head">
+      <b>👋 Who's here today?</b>
+      <span class="att-count" id="attCount">—</span>
+    </div>
+    <p class="p-small" style="margin-bottom:8px;color:#475569">Tap a name to grey it out if they're absent. Greyed-out pupils are left off the role list and every printout.</p>
+    <div class="att-wrap" id="attWrap"></div>
+  </div>
+
+  <div class="roles-grid" id="rolesGrid"></div>
+  <div class="aspire-box box" style="margin-top:12px">🌟 Roles can pair up — a Spotter + Recorder make a good team. Whatever we end up doing, every job is a real job.</div>
+
+  <p style="margin-top:12px">🥾 <b>Before we head out on the walk</b>, print a named field card for each pupil who's here — they take it on the rehearsal walk today and on Thursday.</p>
+  <button class="print-cta" onclick="printFieldCards()">🖨️ Print field cards for the walk</button>
+</section>
+
+<!-- ============ SLIDE 10 : 5-4-3-2-1 WALK REHEARSAL ============ -->
+<section class="slide" data-type="science">
+  <span class="slide-tag science">Walk Rehearsal</span>
+  <h2>🌳 Our walk = the real thing</h2>
+  <p>Same grounding we practised indoors — now for real on the walk. At Portrack we'll do this while the others sample. Read it, then out we go.</p>
+  <div class="box scaffold-box">
+    <h3>5 · 4 · 3 · 2 · 1</h3>
+    <ul>
+      <li><b>5</b> things you can <b>see</b></li>
+      <li><b>4</b> things you can <b>hear</b></li>
+      <li><b>3</b> things you can <b>feel</b> (wind, ground, coat)</li>
+      <li><b>2</b> things you can <b>smell</b></li>
+      <li><b>1</b> slow breath — you're grounded 🌿</li>
+    </ul>
+  </div>
+  <div class="box sc-box">On the walk: try one round out loud as a group, then everyone does their own quietly. This is a <b>skill for Thursday</b>, not just today.</div>
+</section>
+
+<!-- ============ SLIDE 11 : FINAL CHECK + CAPTURE ============ -->
+<section class="slide" data-type="exit">
+  <span class="slide-tag predict">Exit · Capture</span>
+  <h2>✅ Final check &amp; save everything</h2>
+  <div class="two-col">
+    <div class="box task-box"><b>By Thursday I'll know…</b>
+      <ul><li>My job</li><li>The 3 tests</li><li>My prediction</li><li>The safety line</li></ul>
+      <p style="margin-top:8px;font-size:15px;color:#334155">Not all locked in yet? No stress — we'll top it up tomorrow.</p></div>
+    <div class="box aspire-box"><b>See you tomorrow — then at the minibus Thursday!</b> Coat, wellies, positive head. We've got this. 🌊</div>
+  </div>
+  <p style="margin-top:12px">Tap below to print a class evidence sheet <b>and</b> a named prediction / field card for each pupil — those cards double as their clipboard sheet on the day.</p>
+  <button class="mini-btn" style="font-size:18px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block"
+    onclick="captureEverything()">📸 Capture Everything → Print</button>
+</section>
+
+<!-- ============ NAV / READINESS / MODALS ============ -->
+<div class="readiness" id="readinessBar">
+  <div class="lab"><span>🛰️ Mission Readiness</span><span id="readOut">0%</span></div>
+  <div class="track"><div class="fill" id="readFill"></div></div>
+</div>
+<div class="progress" id="progress"></div>
+<div class="nav"><button onclick="prevSlide()" id="prevBtn">‹</button><button onclick="nextSlide()" id="nextBtn">›</button></div>
+
+<div class="modal-bg" id="taModal"><div class="modal">
+  <button class="close" onclick="closeModal('taModal')">✕</button>
+  <h3>🧑‍🏫 TA Focus — Olivia</h3>
+  <div id="taBody"></div>
+</div></div>
+
+<div class="modal-bg" id="ccModal"><div class="modal">
+  <button class="close" onclick="closeModal('ccModal')">✕</button>
+  <h3>🎯 Cold Call</h3>
+  <div class="coldcall-name" id="ccName">—</div>
+  <p id="ccQ" style="text-align:center"></p>
+</div></div>
+
+<div class="complete" id="complete">
+  <h1>🛰️ MISSION READY</h1>
+  <p>Predictions locked. Jobs assigned. Tees, here we come.</p>
+  <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+  <button onclick="closeComplete()">Continue →</button>
+</div>
+
+<div id="print-area"></div>
+
+<script>
+/* ---------- data ---------- */
+var DEFAULT_ROSTER=['Ava','Eden','Cienna','Harry','Maisie','Lilly-Grace','Ethan','Leon','Terry'];
+var ROLES=['— pick —','Team Leader','Recorder','Kit Manager','Safety Spotter','Navigator','Photographer','Nature Spotter','Wellbeing Buddy'];
+var STORE_KEY='ps_rivers_briefing_v1';
+var TRIP_DATE=new Date(2026,6,9);            /* Thursday 9 July 2026 (month is 0-indexed) */
+var TRIP_DATE_STR='Thursday 9 July 2026';
+var TA_BRIEFS={
+  0:'Sit beside anyone anxious about the trip — name it as normal excitement. Gesture: thumbs-up for “ready”.',
+  1:'Prompt returners quietly with the sentence stems; don\'t single out who was absent.',
+  2:'Read statements slowly; let hands settle before tapping the count.',
+  3:'Anchor kit talk to the real bag if it\'s in the room — point to each item.',
+  4:'Use the tier toggle to drop to Foundation for anyone stuck; keep it low-stakes.',
+  5:'Watch for “more = better” slip on biodiversity; re-voice “variety”.',
+  6:'Keep the prediction private on paper first — the board tally is anonymous.',
+  8:'Re-settle after the break; point to the readiness bar as a win.',
+  9:'Let pupils request their own role where possible — ownership calms.',
+  10:'Model one round of 5-4-3-2-1 yourself before the walk. Calm voice, slow pace.',
+  11:'Hand each pupil their printed card as they leave — that\'s their Thursday sheet.'
+};
+var CC_Q={
+  4:'Name one thing that must be in the bag.',
+  5:'Which test counts the creatures — physical, chemical or biological?',
+  6:'Which is healthier: many kinds of bug, or lots of one bug?',
+  7:'What\'s your prediction — healthy, mixed or struggling?'
+};
+
+/* ---------- roster ---------- */
+function getRoster(){
+  try{var r=JSON.parse(localStorage.getItem('ps_coldcall_roster'));
+    if(Array.isArray(r)&&r.length)return r;}catch(e){}
+  return DEFAULT_ROSTER.slice();
+}
+
+/* ---------- attendance ---------- */
+function isPresent(n){return state.present[n]!==false;}              /* default present */
+function presentRoster(){return getRoster().filter(isPresent);}
+function toggleAttend(n){
+  state.present[n]=!isPresent(n);   /* flip */
+  saveState();buildAttend();buildRoles();
+}
+function buildAttend(){
+  var g=document.getElementById('attWrap');if(!g)return;g.innerHTML='';
+  getRoster().forEach(function(n){
+    var b=document.createElement('button');
+    b.className='att-chip'+(isPresent(n)?'':' absent');
+    b.textContent=n;
+    b.onclick=function(){toggleAttend(n);ping();};
+    g.appendChild(b);
+  });
+  var c=document.getElementById('attCount');
+  if(c)c.textContent=presentRoster().length+' of '+getRoster().length+' present';
+}
+
+/* ---------- persistent state ---------- */
+var state={tallies:{},rounds:{},roles:{},readiness:0,present:{}};
+function loadState(){
+  try{var s=JSON.parse(localStorage.getItem(STORE_KEY));if(s)state=Object.assign(state,s);}catch(e){}
+}
+function saveState(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}}
+
+/* ---------- tallies ---------- */
+function bump(btn){
+  var k=btn.getAttribute('data-key');
+  state.tallies[k]=(state.tallies[k]||0)+1;
+  btn.querySelector('.count').textContent=state.tallies[k];
+  saveState();ping();
+}
+function restoreTallies(){
+  document.querySelectorAll('.tally').forEach(function(b){
+    var k=b.getAttribute('data-key');
+    if(state.tallies[k]!=null)b.querySelector('.count').textContent=state.tallies[k];
+  });
+}
+function revealTally(ref){
+  var wrap=(typeof ref==='string')?document.getElementById(ref):ref;
+  if(!wrap)return;
+  wrap.querySelectorAll('.tally').forEach(function(b){
+    var c=b.getAttribute('data-correct');
+    if(c==='1')b.classList.add('correct');
+    if(c==='0'&&b.getAttribute('data-key')&&b.getAttribute('data-key').indexOf('st')===0)b.classList.add('trap');
+  });
+}
+function revealArrival(btn){
+  btn.closest('.slide').querySelectorAll('.tier-ans').forEach(function(a){a.style.display='block';});
+}
+
+/* ---------- readiness ---------- */
+function setReadiness(pct){
+  state.readiness=Math.min(100,pct);
+  ['readFill','readFill2'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.width=state.readiness+'%';});
+  ['readOut','readOut2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=state.readiness+'%';});
+  saveState();
+}
+function completeRound(id,btn){
+  if(!state.rounds[id]){state.rounds[id]=1;setReadiness(state.readiness+25);}
+  btn.textContent='✔️ '+id.toUpperCase()+' charged';btn.disabled=true;ping();
+}
+function finishSlot1(btn){
+  if(!state.rounds.predict){state.rounds.predict=1;setReadiness(100);}
+  btn.textContent='🔒 Locked';btn.disabled=true;
+  showComplete();
+}
+
+/* ---------- roles ---------- */
+function buildRoles(){
+  var g=document.getElementById('rolesGrid');if(!g)return;g.innerHTML='';
+  presentRoster().forEach(function(name){
+    var card=document.createElement('div');card.className='role-card';
+    var opts=ROLES.map(function(r){var sel=(state.roles[name]===r)?' selected':'';return '<option'+sel+'>'+r+'</option>';}).join('');
+    card.innerHTML='<div class="name">'+name+'</div><select data-name="'+name+'">'+opts+'</select>';
+    if(state.roles[name]&&state.roles[name]!=='— pick —')card.classList.add('set');
+    var sel=card.querySelector('select');
+    sel.addEventListener('change',function(){
+      state.roles[name]=this.value;saveState();
+      if(this.value&&this.value!=='— pick —')card.classList.add('set');else card.classList.remove('set');
+      ping();
+    });
+    g.appendChild(card);
+  });
+}
+
+/* ---------- level tiers ---------- */
+function setTier(btn,grp,t){
+  btn.parentElement.querySelectorAll('.lvl').forEach(function(l){l.classList.remove('on');});
+  btn.classList.add('on');
+  btn.closest('.slide').querySelectorAll('[data-tier]').forEach(function(el){
+    el.classList.toggle('show',el.getAttribute('data-tier')===grp+'-'+t);
+  });
+}
+
+/* ---------- LO checks ---------- */
+function toggleLO(el){el.classList.toggle('done');}
+
+/* ---------- navigation ---------- */
+var slides=[],cur=0;
+function showSlide(i){
+  slides.forEach(function(s,n){s.classList.toggle('active',n===i);});
+  cur=i;
+  document.getElementById('progress').style.width=((i+1)/slides.length*100)+'%';
+  document.getElementById('prevBtn').disabled=(i===0);
+  document.getElementById('nextBtn').disabled=(i===slides.length-1);
+  var rb=document.getElementById('readinessBar');
+  rb.style.display=(i>=slides.length-4)?'none':'block'; // hide once slot-2 static bar takes over
+}
+function nextSlide(){if(cur<slides.length-1)showSlide(cur+1);}
+function prevSlide(){if(cur>0)showSlide(cur-1);}
+
+/* ---------- modals ---------- */
+function openTA(){
+  document.getElementById('taBody').innerHTML='<p>'+(TA_BRIEFS[cur]||'Support this slide: keep it calm, low-stakes, and celebrate any attempt.')+'</p>';
+  document.getElementById('taModal').classList.add('on');
+}
+function coldCall(){
+  var r=presentRoster();if(!r.length)r=getRoster();
+  var name=r[Math.floor(Math.random()*r.length)];
+  document.getElementById('ccName').textContent=name;
+  document.getElementById('ccQ').textContent=CC_Q[cur]||'Tell us one thing you\'ve learned this lesson.';
+  document.getElementById('ccModal').classList.add('on');
+}
+function closeModal(id){document.getElementById(id).classList.remove('on');}
+
+/* ---------- timer ---------- */
+var tInt=null;
+function startTimer(sec){
+  stopTimer();var t=sec;var w=document.getElementById('timer');w.classList.add('on');
+  function tick(){var m=Math.floor(t/60),s=t%60;
+    document.getElementById('timerText').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if(t<=0){stopTimer();ping();return;}t--;}
+  tick();tInt=setInterval(tick,1000);
+}
+function stopTimer(){if(tInt)clearInterval(tInt);tInt=null;document.getElementById('timer').classList.remove('on');}
+
+/* ---------- calm mode ---------- */
+function toggleCalm(){
+  document.body.classList.toggle('calm');
+  var on=document.body.classList.contains('calm');
+  document.getElementById('calmBtn').textContent=on?'☀️ Calm on':'🌙 Calm';
+  try{localStorage.setItem('ps_calm',on?'1':'0');}catch(e){}
+}
+
+/* ---------- complete overlay ---------- */
+function showComplete(){
+  document.getElementById('complete').classList.add('on');
+  setTimeout(function(){document.getElementById('xpFill').style.width='100%';},120);
+  confetti();
+}
+function closeComplete(){document.getElementById('complete').classList.remove('on');nextSlide();}
+
+/* ---------- sound + confetti ---------- */
+var actx=null;
+function ping(){
+  if(document.body.classList.contains('calm'))return;
+  try{if(!actx)return;var o=actx.createOscillator(),g=actx.createGain();
+    o.connect(g);g.connect(actx.destination);o.frequency.value=660;g.gain.value=.05;
+    o.start();o.stop(actx.currentTime+.08);}catch(e){}
+}
+function confetti(){
+  if(document.body.classList.contains('calm'))return;
+  for(var i=0;i<60;i++){(function(){
+    var d=document.createElement('div');
+    d.style.cssText='position:fixed;top:-10px;left:'+Math.random()*100+'vw;width:9px;height:9px;z-index:80;'+
+      'background:'+['#16a34a','#2563eb','#f97316','#0f2740'][i%4]+';border-radius:2px;pointer-events:none;';
+    document.body.appendChild(d);
+    var y=0,x=(Math.random()-.5)*2,r=Math.random()*360;
+    var iv=setInterval(function(){y+=6;r+=12;d.style.transform='translate('+x*y+'px,'+y+'px) rotate('+r+'deg)';
+      if(y>window.innerHeight){clearInterval(iv);d.remove();}},16);
+  })();}
+}
+
+/* ---------- CAPTURE / PRINT ---------- */
+function tv(k){return state.tallies[k]||0;}
+/* one named evidence / field card — shared by both print buttons */
+function pupilCard(n){
+  var role=(state.roles[n]&&state.roles[n]!=='— pick —')?state.roles[n]:'________________';
+  return '<div class="p-card">'+
+    '<div class="p-name">'+n+'</div>'+
+    '<div class="p-small">Year 10 Science · Portrack Marsh (River Tees) · '+TRIP_DATE_STR+'</div>'+
+    '<div class="p-small"><b>My job for Thursday:</b> '+role+'</div>'+
+    '<div class="p-small" style="margin-top:4px"><b>I can… (tick):</b></div>'+
+    '<div class="p-small">☐ name the 3 tests &nbsp; ☐ say if a reading is good/bad &nbsp; ☐ say what the bugs tell us &nbsp; ☐ state my prediction &nbsp; ☐ know my job</div>'+
+    '<div class="p-small" style="margin-top:4px"><b>My prediction (circle):</b> &nbsp; Healthy &nbsp;/&nbsp; Mixed &nbsp;/&nbsp; Struggling</div>'+
+    '<div class="p-small">pH guess:<span class="p-fill"></span> Oxygen guess:<span class="p-fill"></span></div>'+
+    '<div class="p-small">Bugs I think we\'ll find:</div><div class="p-line"></div>'+
+    '<div class="p-small" style="margin-top:4px"><b>ON THE DAY — what we actually found:</b></div>'+
+    '<div class="p-line"></div><div class="p-line"></div>'+
+    '<div class="p-small">Was my prediction right? &nbsp; Y &nbsp;/&nbsp; N &nbsp; — because…</div><div class="p-line"></div>'+
+    '<div class="p-small" style="margin-top:4px">Grounding on the walk (5·4·3·2·1): ☐ done</div>'+
+    '<div class="p-small" style="margin-top:4px">Pupil: ____________ &nbsp;·&nbsp; Teacher: M. Roper &nbsp;·&nbsp; '+TRIP_DATE_STR+'</div>'+
+    '</div>';
+}
+
+/* PRE-WALK: named field cards only, present pupils only */
+function printFieldCards(){
+  var r=presentRoster();
+  if(!r.length){alert('Everyone is marked absent — tap at least one name back on.');return;}
+  var pr='<h2 class="p-h">River Tees — Field / Evidence Cards</h2>'+
+    '<p class="p-small">Progress Schools (Tees Valley) · Portrack Marsh · '+TRIP_DATE_STR+' · '+r.length+' pupil'+(r.length===1?'':'s')+'</p>'+
+    '<div class="p-grid">';
+  r.forEach(function(n){pr+=pupilCard(n);});
+  pr+='</div>';
+  document.getElementById('print-area').innerHTML=pr;
+  window.print();
+}
+
+/* END OF LESSON: full class evidence pack, present pupils only */
+function captureEverything(){
+  var d=new Date().toLocaleDateString('en-GB');
+  var roster=presentRoster();
+  var absent=getRoster().filter(function(n){return !isPresent(n);});
+  var pr='<h2 class="p-h">River Ready — Final Briefing · Class Evidence Pack</h2>'+
+    '<p class="p-small">Progress Schools (Tees Valley) · Portrack Marsh trip ('+TRIP_DATE_STR+') · Printed '+d+'</p>';
+
+  /* class summary */
+  pr+='<div class="p-section"><h2 class="p-h">Class summary</h2>'+
+    '<p><b>Mission Readiness:</b> '+state.readiness+'%</p>'+
+    '<p class="p-small"><b>Present:</b> '+(roster.length?roster.join(', '):'—')+'</p>'+
+    (absent.length?'<p class="p-small"><b>Absent:</b> '+absent.join(', ')+'</p>':'')+
+    '<p class="p-small"><b>Class prediction tally:</b> '+
+      '💚 Healthy '+tv('pHealthy')+' · 💛 Mixed '+tv('pMixed')+' · ❤️ Struggling '+tv('pStruggling')+'</p>'+
+    '<p class="p-small"><b>Starter (Trip or Trap) true-votes:</b> '+
+      'Q1 '+tv('st1')+' · Q2 '+tv('st2')+' · Q3 '+tv('st3')+' · Q4 '+tv('st4')+'</p></div>';
+
+  /* roles table */
+  pr+='<div class="p-section"><h2 class="p-h">Mission roles for Thursday</h2><table class="p-tab"><tr><th>Pupil</th><th>Role</th></tr>';
+  roster.forEach(function(n){pr+='<tr><td>'+n+'</td><td>'+((state.roles[n]&&state.roles[n]!=='— pick —')?state.roles[n]:'&nbsp;')+'</td></tr>';});
+  pr+='</table></div>';
+
+  /* per-pupil evidence / field cards */
+  pr+='<div class="p-section"><h2 class="p-h">Per-pupil evidence &amp; field cards <span class="p-small">(one per present pupil — take on Thursday)</span></h2><div class="p-grid">';
+  roster.forEach(function(n){pr+=pupilCard(n);});
+  pr+='</div></div>';
+
+  document.getElementById('print-area').innerHTML=pr;
+  window.print();
+}
+
+/* ---------- keyboard (exempt inputs) ---------- */
+document.addEventListener('keydown',function(e){
+  var t=e.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(e.key==='ArrowRight')nextSlide();
+  else if(e.key==='ArrowLeft')prevSlide();
+});
+/* resume AudioContext on first gesture */
+document.addEventListener('click',function once(){
+  try{actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}catch(e){}
+  document.removeEventListener('click',once);
+},{once:true});
+
+/* ---------- init (after all data consts) ---------- */
+loadState();
+slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+try{if(localStorage.getItem('ps_calm')==='1')toggleCalm();}catch(e){}
+restoreTallies();
+buildAttend();
+buildRoles();
+setReadiness(state.readiness);
+(function(){
+  var el=document.getElementById('countdown');if(!el)return;
+  var t=new Date();t.setHours(0,0,0,0);
+  var days=Math.round((TRIP_DATE-t)/86400000);
+  if(days>1)el.textContent='⏳ '+days+' days until we\'re at Portrack Marsh on the Tees — '+TRIP_DATE_STR+'.';
+  else if(days===1)el.textContent='⏳ Tomorrow we\'re at Portrack Marsh on the Tees!';
+  else if(days===0)el.textContent='🎉 Today\'s the day — Portrack Marsh on the Tees!';
+  else el.textContent='🌊 Portrack Marsh — '+TRIP_DATE_STR+'.';
+})();
+showSlide(0);
+</script>
+</body>
+</html>
