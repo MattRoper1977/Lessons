@@ -56,6 +56,39 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
 .inv{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
 .inv span{font-family:'Orbitron',sans-serif;font-size:11px;background:#0d1630;border:1px solid var(--line);
   border-radius:8px;padding:4px 8px;color:var(--mut)}
+/* ===== seals ===== */
+.seals{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 4px}
+.seal-t{font-family:'Orbitron',sans-serif;font-size:12px;background:#0d1630;border:1px solid var(--line);
+  border-radius:10px;padding:6px 10px;color:var(--mut)}
+.seal-t.have{border-color:rgba(57,255,158,.5);color:#d9ffef}
+.seal-big{font-size:52px;line-height:1;margin:4px 0 2px;display:inline-block;animation:sealPop .6s cubic-bezier(.2,1.6,.4,1) both}
+.seal-big.gold{filter:drop-shadow(0 0 14px rgba(255,215,80,.75));animation:sealPop .6s cubic-bezier(.2,1.6,.4,1) both, sealGlow 1.6s ease-in-out .6s infinite}
+.seal-name{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:2px;margin-bottom:8px}
+.seal-name.g0{color:var(--mut)} .seal-name.g1{color:#e8a05c} .seal-name.g2{color:#cfd8ea} .seal-name.g3{color:#ffd750}
+.newbest{display:inline-block;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;color:#04141c;
+  background:var(--green);border-radius:8px;padding:3px 8px;margin-left:6px;vertical-align:middle}
+@keyframes sealPop{0%{transform:scale(.2) rotate(-18deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes sealGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(255,215,80,.5))}50%{filter:drop-shadow(0 0 20px rgba(255,215,80,.95))}}
+/* ===== level select ===== */
+.lvl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.lvl-tile{background:#0d1630;border:1px solid var(--line);border-radius:12px;padding:12px 10px;cursor:pointer;
+  text-align:center;transition:transform .12s,border-color .12s}
+.lvl-tile:hover{transform:translateY(-2px);border-color:var(--cyan)}
+.lvl-tile .lt-seal{font-size:26px;line-height:1;margin-bottom:4px}
+.lvl-tile .lt-name{font-family:'Orbitron',sans-serif;font-size:11px;color:var(--ink);letter-spacing:.5px}
+.lvl-tile .lt-best{font-size:11px;color:var(--mut);margin-top:3px}
+.lvl-tile.lock{opacity:.45;cursor:not-allowed}
+.lvl-tile.lock:hover{transform:none;border-color:var(--line)}
+.constel{margin:2px 0 4px;letter-spacing:5px}
+.cs{font-style:normal;font-size:15px}
+.cs.on{color:var(--green);text-shadow:0 0 8px rgba(57,255,158,.6);animation:csTw 1.7s ease-in-out infinite}
+.cs.off{color:#3a4767}
+@keyframes csTw{0%,100%{opacity:1}50%{opacity:.4}}
+.chal{background:rgba(255,110,169,.1);border:1px solid rgba(255,110,169,.4);border-radius:12px;
+  padding:9px 12px;font-size:13px;color:#ffd6e6;margin:10px 0;font-family:'Orbitron',sans-serif;letter-spacing:.4px}
+.chal.winby{background:rgba(57,255,158,.1);border-color:rgba(57,255,158,.45);color:#d9ffef}
+.seal-tally{font-family:'Orbitron',sans-serif;font-size:12px;color:var(--mut);margin-bottom:4px}
+@media (max-width:640px){ .lvl-grid{grid-template-columns:1fr 1fr} .seal-big{font-size:44px} }
 .cbtn{margin-top:8px;padding:12px 26px;border:none;border-radius:12px;font-family:'Orbitron',sans-serif;
   font-weight:800;letter-spacing:1px;font-size:15px;cursor:pointer;background:var(--cyan);color:#04141c}
 .cbtn.alt{background:rgba(255,255,255,.08);color:var(--ink);border:1px solid var(--line);margin-left:8px}
@@ -181,6 +214,8 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
     <button class="ctrl" id="c-end">🏁 END</button>
     <button class="ctrl" id="c-sound">🔈 SOUND</button>
     <button class="ctrl" id="c-calm">☾ CALM</button>
+    <button class="ctrl" id="c-daily">🔆 DAILY</button>
+    <button class="ctrl" id="c-lvls">🗺 LEVELS</button>
     <button class="ctrl" id="c-lb">🏆 SCORES</button>
     <button class="ctrl" id="c-edit">✏️ MAKE</button>
   </div>
@@ -201,6 +236,11 @@ var CELL=18, WALKINT=2, FALLINT=1, FLOATINT=3, DIGINT=5, BASHINT=4, BUILDINT=6,
     SPAWNINT=18, BUILDLEN=10, MAXFALL=6, TICKHZ=30;
 
 /* Skills: order = toolbar order */
+/* Seals + saved progress (data lives here so boot-time cards can read it) */
+var SEALICON=["","🥉","🥈","🥇"], SEALNAME=["NO SEAL","BRONZE SEAL","SILVER SEAL","GOLD SEAL"];
+var RUN={best:{}};
+try{ RUN.best=JSON.parse(localStorage.getItem("lumins_run")||"{}"); }catch(e){}
+
 var SKILLDEF=[
   {id:"block", nm:"Blocker", ic:"🛑", col:"#ffc14d"},
   {id:"dig",   nm:"Digger",  ic:"⛏️", col:"#ff9a4c"},
@@ -308,7 +348,38 @@ var LEVELS=[
  ]
 },
 {
- name:'04 · All Together', start:1, total:8, target:5, spawn:14,
+ name:'04 · Feather Fall', start:1, total:6, target:4, spawn:45,
+ skills:{block:0, dig:0, bash:0, build:0, float:6},
+ hint:'That drop is far too big to survive… unless you can drift. Tap <b>Floater</b>, then tap each lumin — <b>even while they fall</b> — and they will glide down safely.',
+ map:[
+ "........................................",
+ "........................................",
+ "........................................",
+ "....E...................................",
+ "..=======...............................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "..............................X.........",
+ "========================================",
+ "........................................",
+ "........................................"
+ ]
+},
+{
+ name:'05 · All Together', start:1, total:8, target:5, spawn:14,
  skills:{block:2, dig:1, bash:3, build:3, float:4},
  hint:'Everything together: bridge the gap, bash the wall, then pick your way down the ledges. Floaters are there for a soft landing if you want one. Save 5 of 8.',
  map:[
@@ -337,6 +408,162 @@ var LEVELS=[
  "........................................",
  "........................................"
  ]
+},
+{
+ name:'06 · The Choice', start:1, total:8, target:5, silver:6, gold:7, spawn:24,
+ skills:{block:1, dig:0, bash:2, build:0, float:0},
+ hint:'They march right — straight off the cliff. Only a <b>Blocker</b> can turn them… and a blocker never walks again. Choose who stands. Then <b>Bash</b> the old wall on the left to reach the portal. Not everyone is coming home.',
+ map:[
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........E...............................",
+ ".=......................................",
+ ".=......................................",
+ ".=......................................",
+ ".=....#.................................",
+ ".=..X.#.................................",
+ ".====================================...",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................"
+ ]
+},
+{
+ name:'07 · Eclipse: Last Light', start:1, total:10, target:6, silver:8, spawn:40,
+ skills:{block:0, dig:1, bash:1, build:1, float:0},
+ eclipse:true,
+ hint:'One builder. One basher. One digger. No spares. Bridge the void, break the wall, sink the shaft at the cracked stone — before the stream catches your pathfinder. Gold means <b>everyone</b> lives. Barely possible. Prove it.',
+ map:[
+ "........................................",
+ "........................................",
+ "=.......................................",
+ "=..E....................................",
+ "=........................#..............",
+ "=........................#..............",
+ "===========......============#==........",
+ "...................=.........#..........",
+ "...................=.........#..........",
+ "...................=.........#..........",
+ "...................=..........X.........",
+ "...................=============........",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................"
+ ]
+},
+{
+ name:'08 · Soft Ground', start:1, total:8, target:5, spawn:16,
+ skills:{block:0, dig:0, bash:0, build:0, float:0},
+ hint:'The golden stone is <b>soft</b> — it shakes when stepped on, then crumbles away. Watch the bridge vanish behind the leaders… and don\u2019t worry: down is sometimes the way. No tools needed. Just watch.',
+ map:[
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ ".=..E...................................",
+ ".=......................................",
+ ".=......................................",
+ ".==========%%%%%%====...................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "..............................X.........",
+ "........===========================.....",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................"
+ ]
+},
+{
+ name:'09 · One Way Out', start:1, total:9, target:6, spawn:18,
+ skills:{block:0, dig:2, bash:2, build:0, float:0},
+ hint:'Energy gates only open <b>one way</b> — walk through, and there\u2019s no going back. The gate pens your lumins safely behind the old wall. <b>Bash</b> the wall when you\u2019re ready, then <b>dig</b> at the marked stone before anyone reaches the shade crystals. Purple means <b>never touch</b>.',
+ map:[
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "..=..E..................................",
+ "..=...........>.......#.................",
+ "..=...........>.......#.........**......",
+ "..============================#====.....",
+ ".....=........................#=........",
+ ".....=........................#=........",
+ ".....=..X......................=........",
+ ".....===========================........",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................"
+ ]
+},
+{
+ name:'10 · Shade Garden', start:1, total:10, target:6, silver:9, spawn:11,
+ skills:{block:0, dig:1, bash:0, build:0, float:0},
+ hint:'Soft stone, shade crystals, and one digger. The pioneers must cross the crumbling span and <b>sink the shaft at the cracked stone</b> before they touch the shade. Latecomers… will find the ground opens its own way down. Move fast. Trust the fall.',
+ map:[
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ ".=..E...................................",
+ ".=......................................",
+ ".=...........................**.........",
+ ".============%%%%%%========#===.........",
+ ".....=.....................#=...........",
+ ".....=.....................#=...........",
+ ".....=......................=...........",
+ ".....=...X..................=...........",
+ ".....========================...........",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................",
+ "........................................"
+ ]
 }
 ];
 
@@ -353,7 +580,7 @@ function defFromMap(L){
   var grid=new Uint8Array(w*rows.length), ent={c:0,r:0}, ex={c:0,r:0};
   for(var r=0;r<rows.length;r++){ var line=rows[r];
     for(var c=0;c<w;c++){ var ch=c<line.length?line[c]:'.'; var v=0;
-      if(ch==='#')v=1; else if(ch==='=')v=2;
+      if(ch==='#')v=1; else if(ch==='=')v=2; else if(ch==='%')v=3; else if(ch==='>')v=4; else if(ch==='<')v=5; else if(ch==='*')v=6;
       else if(ch==='E'){ent={c:c,r:r};} else if(ch==='X'){ex={c:c,r:r};}
       grid[r*w+c]=v; } }
   return {cols:w, rows:rows.length, grid:grid, entrance:ent, exit:ex,
@@ -365,7 +592,7 @@ function loadDef(d){
   G.grid=new Uint8Array(d.grid);
   G.entrance={c:d.entrance.c,r:d.entrance.r}; G.exit={c:d.exit.c,r:d.exit.r};
   G.lumins=[]; G.parts=[]; G.saved=0; G.out=0; G.spawned=0; G.dead=0;
-  G.spawnT=0; G.armed=null; G.terrainDirty=true; G.mode="play";
+  G.spawnT=0; G.armed=null; G.terrainDirty=true; G.mode="play"; G.crumbs={};
   G.lvl=(typeof d.lvl==="number")?d.lvl:-1;
   G.skills={}; for(var s in d.skills) G.skills[s]=d.skills[s];
   resizeCanvas();
@@ -374,7 +601,7 @@ function loadLevel(i){ var d=defFromMap(LEVELS[i]); d.lvl=i; loadDef(d); }
 
 /* ============================ GRID HELPERS ============================ */
 function cellType(c,r){ if(c<0||r<0||c>=G.cols||r>=G.rows) return (r>=G.rows?0:2); return G.grid[r*G.cols+c]; }
-function solid(c,r){ var t=cellType(c,r); return t===1||t===2; }
+function solid(c,r){ var t=cellType(c,r); return t===1||t===2||t===3; }
 function steel(c,r){ return cellType(c,r)===2; }
 function setEmpty(c,r){ if(c>=0&&r>=0&&c<G.cols&&r<G.rows && G.grid[r*G.cols+c]===1){ G.grid[r*G.cols+c]=0; G.terrainDirty=true; puff(c,r,"#7fa8ff",4);} }
 function setTerrain(c,r){ if(c>=0&&r>=0&&c<G.cols&&r<G.rows && G.grid[r*G.cols+c]===0){ G.grid[r*G.cols+c]=1; G.terrainDirty=true; } }
@@ -391,13 +618,16 @@ function spawn(){
 function stepLumin(L){
   if(L.state==="exit"||L.state==="dead") return;
   if(isExit(L.c,L.r)){ L.state="exit"; G.saved++; G.out++; ping(880); puff(L.c,L.r,"#39ff9e",10); return; }
-  if(L.r>=G.rows+2){ L.state="dead"; G.dead++; G.out++; return; }
+  if(L.r>=G.rows+2){ L.state="dead"; L.dtime=performance.now(); G.dead++; G.out++; return; }
+  if(cellType(L.c,L.r)===6){ L.state="dead"; L.dtime=performance.now(); G.dead++; G.out++; puff(L.c,L.r,"#b18cff",10); ping(150); return; }
+  if(cellType(L.c,L.r+1)===3){ if(!G.crumbs) G.crumbs={}; var cidx=(L.r+1)*G.cols+L.c; if(!(cidx in G.crumbs)) G.crumbs[cidx]=22; }
   L.timer++;
   switch(L.state){
     case "walk":{
       if(L.timer<WALKINT) return; L.timer=0;
       if(!solid(L.c,L.r+1)){ L.state="fall"; L.fall=0; return; }
       if(blockerAt(L.c+L.dir,L.r)){ L.dir*=-1; return; }
+      var gt=cellType(L.c+L.dir,L.r); if((gt===4&&L.dir<0)||(gt===5&&L.dir>0)){ L.dir*=-1; return; }
       if(solid(L.c+L.dir,L.r)){
         // wall: step up 1 if room
         if(!solid(L.c+L.dir,L.r-1) && !solid(L.c,L.r-1)){ L.c+=L.dir; L.r-=1; }
@@ -415,11 +645,12 @@ function stepLumin(L){
       var iv = L.floater?FLOATINT:FALLINT;
       if(L.timer<iv) return; L.timer=0;
       if(solid(L.c,L.r+1)){
-        if(!L.floater && L.fall>MAXFALL){ L.state="dead"; G.dead++; G.out++; puff(L.c,L.r,"#9aa4b6",8); ping(180); }
-        else { L.state="walk"; if(L.pending) applyPending(L); }
+        if(!L.floater && L.fall>MAXFALL){ L.state="dead"; L.dtime=performance.now(); G.dead++; G.out++; puff(L.c,L.r,"#9aa4b6",8); ping(180); }
+        else { L.state="walk"; L.wave=false; if(L.pending) applyPending(L); }
         return;
       }
       L.r+=1; L.fall++;
+      if(!L.floater && L.fall>MAXFALL) L.wave=true;
       return;
     }
     case "dig":{
@@ -490,14 +721,19 @@ function step(){
   // spawn
   if(G.spawned<G.def.total){ G.spawnT++; if(G.spawnT>=(G.def.spawn||SPAWNINT)){ G.spawnT=0; spawn(); } }
   for(var i=0;i<G.lumins.length;i++) stepLumin(G.lumins[i]);
+  // crumbling soft stone
+  if(G.crumbs){ for(var ck in G.crumbs){ if(--G.crumbs[ck]<=0){ var ci2=+ck;
+    if(G.grid[ci2]===3){ G.grid[ci2]=0; G.terrainDirty=true; puff(ci2%G.cols,(ci2/G.cols)|0,"#ffc14d",6); ping(240); }
+    delete G.crumbs[ck]; } } }
   // particles
   for(var p=G.parts.length-1;p>=0;p--){ var q=G.parts[p]; q.life--; q.x+=q.vx; q.y+=q.vy; q.vy+=0.05; if(q.life<=0) G.parts.splice(p,1); }
   // end condition
-  var active=0; for(var j=0;j<G.lumins.length;j++){ var s=G.lumins[j].state; if(s!=="exit"&&s!=="dead") active++; }
+  var active=0; for(var j=0;j<G.lumins.length;j++){ var s=G.lumins[j].state; if(s!=="exit"&&s!=="dead"&&s!=="block") active++; }
   if(G.spawned>=G.def.total && active===0){ endLevel(); }
 }
 function endLevel(){
   G.state="over";
+  try{ localStorage.setItem("lumins_total", (((+localStorage.getItem("lumins_total"))||0)+G.saved)+""); }catch(e){}
   noteResult();
   showResult(G.saved>=G.def.target);
 }
@@ -625,7 +861,7 @@ function tileSeed(c,r){ var h=((c*73856093)^(r*19349663))>>>0; return (h%1000)/1
 function drawTerrain(){
   terCtx.clearRect(0,0,terCv.width,terCv.height);
   for(var r=0;r<G.rows;r++) for(var c=0;c<G.cols;c++){
-    var t=G.grid[r*G.cols+c]; if(!t) continue;
+    var t=G.grid[r*G.cols+c]; if(!t||t>3) continue;
     var x=c*CELL, y=r*CELL;
     var expT=!solid(c,r-1), expB=!solid(c,r+1), expL=!solid(c-1,r), expR=!solid(c+1,r);
     if(t===1){
@@ -643,6 +879,16 @@ function drawTerrain(){
       if(expB){ terCtx.fillStyle="rgba(0,0,0,.35)"; terCtx.fillRect(x,y+CELL-3,CELL,3); }
       if(expL){ terCtx.fillStyle="rgba(150,200,255,.22)"; terCtx.fillRect(x,y,2,CELL); }
       if(expR){ terCtx.fillStyle="rgba(0,0,0,.25)"; terCtx.fillRect(x+CELL-2,y,2,CELL); }
+    } else if(t===3){
+      var g3=terCtx.createLinearGradient(x,y,x,y+CELL);
+      g3.addColorStop(0,"#8a6a34"); g3.addColorStop(1,"#553f1d");
+      terCtx.fillStyle=g3; terCtx.fillRect(x,y,CELL,CELL);
+      var s3=tileSeed(c,r);
+      terCtx.strokeStyle="rgba(30,20,8,.55)"; terCtx.lineWidth=1;
+      terCtx.beginPath(); terCtx.moveTo(x+3+s3*6,y+2); terCtx.lineTo(x+8-s3*4,y+9); terCtx.lineTo(x+4+s3*8,y+CELL-3); terCtx.stroke();
+      terCtx.beginPath(); terCtx.moveTo(x+CELL-4,y+4+s3*5); terCtx.lineTo(x+9,y+11); terCtx.stroke();
+      if(expT){ terCtx.fillStyle="rgba(255,214,140,.85)"; terCtx.fillRect(x,y,CELL,2); }
+      if(expB){ terCtx.fillStyle="rgba(0,0,0,.35)"; terCtx.fillRect(x,y+CELL-2,CELL,2); }
     } else {
       var g2=terCtx.createLinearGradient(x,y,x,y+CELL);
       g2.addColorStop(0,"#4d4838"); g2.addColorStop(1,"#332f22");
@@ -708,7 +954,19 @@ function lumColor(L){
 function drawLumins(){
   var now=performance.now();
   for(var i=0;i<G.lumins.length;i++){
-    var L=G.lumins[i]; if(L.state==="exit"||L.state==="dead") continue;
+    var L=G.lumins[i]; if(L.state==="exit") continue;
+    if(L.state==="dead"){
+      if(!L.dtime || now-L.dtime>650 || reduced) continue;
+      var gp=(now-L.dtime)/650, gx=L.rx, gy=L.ry-gp*10, gR=CELL*0.34;
+      ctx.save(); ctx.globalAlpha=(1-gp)*0.85;
+      ctx.fillStyle="#aeb8cc"; ctx.beginPath(); ctx.arc(gx,gy,gR,0,6.283); ctx.fill();
+      ctx.strokeStyle="#0a1226"; ctx.lineWidth=1.4;
+      ctx.beginPath(); ctx.moveTo(gx-gR*0.42,gy-gR*0.28); ctx.lineTo(gx-gR*0.12,gy);
+      ctx.moveTo(gx-gR*0.12,gy-gR*0.28); ctx.lineTo(gx-gR*0.42,gy);
+      ctx.moveTo(gx+gR*0.12,gy-gR*0.28); ctx.lineTo(gx+gR*0.42,gy);
+      ctx.moveTo(gx+gR*0.42,gy-gR*0.28); ctx.lineTo(gx+gR*0.12,gy); ctx.stroke();
+      ctx.restore(); continue;
+    }
     var tx=L.c*CELL+CELL/2, ty=L.r*CELL+CELL-CELL*0.42;
     L.rx += (tx-L.rx)*0.35; L.ry += (ty-L.ry)*0.35;
     var col=lumColor(L), R=CELL*0.36;
@@ -813,6 +1071,16 @@ function drawLumins(){
     if(L.state==="build"){ ctx.fillStyle="rgba(57,255,158,.9)"; ctx.fillRect(px+L.dir*R*1.1-2,py+R*0.8,5,3); }
     if(L.pending){ ctx.fillStyle=skillCol(L.pending); ctx.globalAlpha=.95;
       ctx.beginPath(); ctx.arc(px,py-R*2.2,3,0,6.283); ctx.fill(); ctx.globalAlpha=1; }
+    if(L.wave && L.state==="fall" && !still){
+      var wa=Math.sin(fastph*2.2)*0.5, hx=px+L.dir*R*0.9, hy=py-R*1.15;
+      ctx.strokeStyle=lumColor(L); ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(px+L.dir*R*0.45,py-R*0.2);
+      ctx.lineTo(hx+Math.cos(wa)*R*0.5, hy+Math.sin(wa)*R*0.35); ctx.stroke();
+      ctx.fillStyle="#fff"; ctx.beginPath();
+      ctx.arc(hx+Math.cos(wa)*R*0.5, hy+Math.sin(wa)*R*0.35, R*0.16,0,6.283); ctx.fill();
+      ctx.globalAlpha=.8; ctx.fillStyle="#cfe0ff"; ctx.font="italic 9px sans-serif"; ctx.textAlign="center";
+      ctx.fillText("bye…",px,py-R*2.1); ctx.globalAlpha=1;
+    }
     if(G.armed && hoverL===L && assignable(L,G.armed)){
       ctx.strokeStyle=skillCol(G.armed); ctx.lineWidth=2;
       ctx.setLineDash([4,4]); ctx.beginPath(); ctx.arc(px,py,R*1.9,0,6.283); ctx.stroke(); ctx.setLineDash([]);
@@ -825,6 +1093,44 @@ function shade(hex,amt){ var n=parseInt(hex.slice(1),16),
   b=Math.max(0,Math.min(255,(n&255)+amt*255));
   return "rgb("+(r|0)+","+(g|0)+","+(b|0)+")"; }
 
+function drawHazards(){
+  var now=performance.now(), still=(G.calm||reduced);
+  for(var r=0;r<G.rows;r++) for(var c=0;c<G.cols;c++){
+    var t=G.grid[r*G.cols+c]; if(t<4) continue;
+    var x=c*CELL, y=r*CELL;
+    if(t===4||t===5){
+      var dir=(t===4?1:-1), ph=still?0.25:((now/500)%1);
+      ctx.save();
+      var gg=ctx.createLinearGradient(x,y,x+CELL,y);
+      gg.addColorStop(0,"rgba(39,224,255,0)"); gg.addColorStop(.5,"rgba(39,224,255,.28)"); gg.addColorStop(1,"rgba(39,224,255,0)");
+      ctx.fillStyle=gg; ctx.fillRect(x,y,CELL,CELL);
+      ctx.strokeStyle="rgba(140,240,255,.9)"; ctx.lineWidth=1.8;
+      for(var k=0;k<2;k++){ var off=(((ph+k*0.5)%1)-0.5)*CELL*0.7;
+        var bx=x+CELL/2+dir*off;
+        ctx.beginPath(); ctx.moveTo(bx-dir*3.5,y+3); ctx.lineTo(bx+dir*2.5,y+CELL/2); ctx.lineTo(bx-dir*3.5,y+CELL-3); ctx.stroke(); }
+      ctx.restore();
+    } else if(t===6){
+      var tw=still?0.5:(0.5+0.5*Math.sin(now/260+c*7+r*13));
+      ctx.save();
+      var sg=ctx.createRadialGradient(x+CELL/2,y+CELL/2,1,x+CELL/2,y+CELL/2,CELL*0.95);
+      sg.addColorStop(0,"rgba(177,140,255,"+(0.28+0.24*tw).toFixed(3)+")"); sg.addColorStop(1,"rgba(177,140,255,0)");
+      ctx.fillStyle=sg; ctx.fillRect(x-CELL*0.45,y-CELL*0.45,CELL*1.9,CELL*1.9);
+      ctx.fillStyle="#b18cff";
+      ctx.beginPath(); ctx.moveTo(x+CELL*0.5,y+2); ctx.lineTo(x+CELL*0.72,y+CELL-2); ctx.lineTo(x+CELL*0.28,y+CELL-2); ctx.closePath(); ctx.fill();
+      ctx.fillStyle="rgba(220,200,255,.9)";
+      ctx.beginPath(); ctx.moveTo(x+CELL*0.24,y+CELL*0.36); ctx.lineTo(x+CELL*0.34,y+CELL-2); ctx.lineTo(x+CELL*0.14,y+CELL-2); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  }
+  if(G.crumbs && !still){ ctx.save();
+    for(var ck2 in G.crumbs){ var ii=+ck2, cc=ii%G.cols, rr=(ii/G.cols)|0;
+      var jx=Math.sin(now/23+ii)*1.4, urg=1-(G.crumbs[ck2]/22);
+      ctx.globalAlpha=0.25+urg*0.4; ctx.fillStyle="#ffdf9e";
+      ctx.fillRect(cc*CELL+jx, rr*CELL, CELL, 2);
+      ctx.globalAlpha=urg*0.28; ctx.fillStyle="#ff9a4c";
+      ctx.fillRect(cc*CELL+jx, rr*CELL, CELL, CELL); }
+    ctx.restore(); ctx.globalAlpha=1; }
+}
 function drawMotes(){
   if(G.calm||reduced||!G.motes) return;
   var now=performance.now();
@@ -844,6 +1150,7 @@ function render(){
   drawMotes();
   if(G.terrainDirty) drawTerrain();
   ctx.drawImage(terCv,0,0);
+  drawHazards();
   drawPortal(G.entrance,"#b18cff",false);
   drawPortal(G.exit,"#39ff9e",true);
   drawLumins();
@@ -907,12 +1214,23 @@ function tip(msg){ var el=document.getElementById("tip"); el.textContent=msg; el
 /* ============================ OVERLAYS ============================ */
 function showIntro(){
   G.state="intro";
-  var L=G.def, custom=(G.lvl<0);
+  var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily);
   var inv=SKILLDEF.filter(function(s){return (L.skills[s.id]|0)>0;})
     .map(function(s){return '<span>'+s.ic+' '+s.nm+' ×'+L.skills[s.id]+'</span>';}).join("");
+  var bs=(custom||daily)?0:bestSeal(G.lvl);
+  var sealRow=(custom||daily)?'<div class="sub">Save '+L.target+' of '+L.total+' lumins'+
+      (daily&&dailyBest(L.daily)?' — your best today: '+dailyBest(L.daily):'')+(daily&&dailyStreak()>=2?' · 🔥 '+dailyStreak()+'-day streak':'')+'</div>':
+    '<div class="sub">'+L.total+' lumins are coming'+(bs?(' — your best: '+SEALICON[bs]):'')+'</div>'+
+    '<div class="seals">'+
+      '<span class="seal-t'+(bs>=1?' have':'')+'">🥉 Save '+L.target+'</span>'+
+      '<span class="seal-t'+(bs>=2?' have':'')+'">🥈 Save '+silverOf(L)+'</span>'+
+      '<span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+(goldOf(L)<L.total?('Save '+goldOf(L)+' — not all can make it'):'Save all '+L.total)+'</span>'+
+    '</div>';
   document.getElementById("card").innerHTML=
-    '<h1>'+L.name+'</h1><div class="sub">Save '+L.target+' of '+L.total+' lumins</div>'+
-    '<div class="hint">'+L.hint+'</div><div class="inv">'+inv+'</div>'+
+    '<h1>'+L.name+'</h1>'+sealRow+
+    '<div class="hint">'+L.hint+'</div>'+
+    (G.challenge?'<div class="chal">⚔️ <b>'+lbEsc(G.challenge.by)+'</b> saved <b>'+G.challenge.sc+'</b> here — beat it!</div>':'')+
+    '<div class="inv">'+inv+'</div>'+
     '<button class="cbtn" id="go">START ▸</button>'+
     (custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'');
   document.getElementById("ov").classList.add("show");
@@ -921,30 +1239,108 @@ function showIntro(){
   buildTools();
 }
 function showResult(win){
-  var L=G.def, custom=(G.lvl<0), last=(G.lvl>=LEVELS.length-1);
+  var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily), last=(G.lvl>=LEVELS.length-1);
   var h=win?'<h1 class="win">RESCUED</h1>':'<h1 class="lose">SO CLOSE</h1>';
   var sub=win?('You saved '+G.saved+' of '+L.total+' — target was '+L.target+'.')
              :('Saved '+G.saved+', needed '+L.target+'. Give it another go.');
+  var chalLine='';
+  if(G.challenge){
+    chalLine=(G.saved>G.challenge.sc)
+      ?'<div class="chal winby">🏆 You beat <b>'+lbEsc(G.challenge.by)+'</b> ('+G.challenge.sc+') with <b>'+G.saved+'</b>!</div>'
+      :(G.saved===G.challenge.sc
+        ?'<div class="chal">🤝 Dead level with <b>'+lbEsc(G.challenge.by)+'</b> on '+G.saved+'. One more run?</div>'
+        :'<div class="chal">⚔️ <b>'+lbEsc(G.challenge.by)+'</b> still leads with '+G.challenge.sc+' — try again!</div>');
+  }
+  var sealHtml='';
+  if(daily){
+    var prevD=dailyBest(L.daily); dailyBest(L.daily,G.saved);
+    if(G.saved>prevD&&prevD>0) sub+=' <span class="newbest">NEW BEST</span>';
+    else if(prevD>G.saved) sub+=' Your best today is '+prevD+'.';
+  }
+  else if(!custom){
+    var s=sealFor(L,G.saved), prev=sealFor(L,G.prevBest|0), isNew=(G.saved>(G.prevBest|0));
+    if(s>0){
+      sealHtml='<div class="seal-big'+(s===3?' gold':'')+'">'+SEALICON[s]+'</div>'+
+        '<div class="seal-name g'+s+'">'+SEALNAME[s]+(s===3?' — PERFECT!':'')+
+        (isNew&&s>=prev&&s>0?'<span class="newbest">NEW BEST</span>':'')+'</div>';
+      if(s===3&&G.sound){ ping(660); setTimeout(function(){ping(880);},120); setTimeout(function(){ping(1175);},240); }
+    }
+    /* nudge toward the next seal */
+    if(s<3){
+      var need=(s<1?L.target:(s<2?silverOf(L):goldOf(L)))-G.saved;
+      var nxtName=(s<1?'Bronze':(s<2?'Silver':'Gold'));
+      sub+=' '+SEALICON[s+1]+' '+nxtName+' at '+(s<1?L.target:(s<2?silverOf(L):goldOf(L)))+
+        (need===1?' — just one more!':' — '+need+' more.');
+    }
+  }
   var btns='';
-  if(custom) btns=(win?'<div class="hint">Nice — you beat this custom level!</div>':'')+
-    '<button class="cbtn" id="again">REPLAY</button><button class="cbtn alt" id="edit-lvl">✏️ EDIT</button><button class="cbtn alt" id="share-lvl">🔗 SHARE</button>';
-  else if(win && !last) btns='<button class="cbtn" id="next">NEXT ▸</button><button class="cbtn alt" id="again">REPLAY</button>';
-  else if(win && last) btns='<div class="hint">You finished all levels. Nicely done!</div><button class="cbtn" id="lb-go">🏆 ADD TO SCORES</button><button class="cbtn alt" id="again">PLAY AGAIN</button>';
-  else btns='<button class="cbtn" id="again">TRY AGAIN</button>';
-  document.getElementById("card").innerHTML=h+'<div class="sub">'+sub+'</div>'+btns;
+  if(daily) btns='<button class="cbtn" id="share-res">📣 SHARE RESULT</button>'+
+    '<button class="cbtn alt" id="chal-res">⚔️ CHALLENGE A FRIEND</button>'+
+    '<button class="cbtn alt" id="again">REPLAY</button>';
+  else if(custom) btns=(win?'<div class="hint">Nice — you beat this custom level!</div>':'')+
+    '<button class="cbtn" id="again">REPLAY</button>'+
+    (win?'<button class="cbtn alt" id="chal-res">⚔️ CHALLENGE</button>':'')+
+    '<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button><button class="cbtn alt" id="share-lvl">🔗 SHARE</button>';
+  else if(win && !last) btns='<button class="cbtn" id="next">NEXT ▸</button><button class="cbtn alt" id="again">REPLAY</button><button class="cbtn alt" id="chal-res">⚔️ CHALLENGE</button><button class="cbtn alt" id="lvls-go">🗺 LEVELS</button>';
+  else if(win && last) btns='<div class="hint">You finished all levels. Nicely done!</div><button class="cbtn" id="lb-go">🏆 ADD TO SCORES</button><button class="cbtn alt" id="chal-res">⚔️ CHALLENGE</button><button class="cbtn alt" id="again">PLAY AGAIN</button><button class="cbtn alt" id="lvls-go">🗺 LEVELS</button>';
+  else btns='<button class="cbtn" id="again">TRY AGAIN</button><button class="cbtn alt" id="lvls-go">🗺 LEVELS</button>';
+  var stars=''; for(var st2=0;st2<L.total;st2++){
+    stars+=(st2<G.saved)?'<i class="cs on" style="animation-delay:'+((st2*0.12).toFixed(2))+'s">✦</i>':'<i class="cs off">◇</i>'; }
+  var constel='<div class="constel">'+stars+'</div>';
+  document.getElementById("card").innerHTML=h+constel+sealHtml+'<div class="sub">'+sub+'</div>'+chalLine+btns;
   document.getElementById("ov").classList.add("show");
-  var nx=document.getElementById("next"); if(nx) nx.onclick=function(){ document.getElementById("ov").classList.remove("show"); loadLevel(Math.min(G.lvl+1,LEVELS.length-1)); showIntro(); };
+  var lv=document.getElementById("lvls-go"); if(lv) lv.onclick=function(){ showLevelSelect(); };
+  var sr=document.getElementById("share-res"); if(sr) sr.onclick=function(){ copyBtn(this,shareText()); };
+  var cr=document.getElementById("chal-res"); if(cr) cr.onclick=function(){ copyBtn(this,challengeUrl()); };
+  var nx=document.getElementById("next"); if(nx) nx.onclick=function(){ G.challenge=null; document.getElementById("ov").classList.remove("show"); loadLevel(Math.min(G.lvl+1,LEVELS.length-1)); showIntro(); };
   var lg=document.getElementById("lb-go"); if(lg) lg.onclick=function(){ showBoard(true); };
   var eb=document.getElementById("edit-lvl"); if(eb) eb.onclick=function(){ document.getElementById("ov").classList.remove("show"); defToED(G.def); enterEditor(); };
   var sb=document.getElementById("share-lvl"); if(sb) sb.onclick=function(){ document.getElementById("ov").classList.remove("show"); defToED(G.def); enterEditor(); shareLevel(defFromED()); };
-  var ag=document.getElementById("again"); if(ag) ag.onclick=function(){ document.getElementById("ov").classList.remove("show"); if(custom){loadDef(G.def);} else if(win&&last){loadLevel(0);} else {loadLevel(G.lvl);} showIntro(); };
+  var ag=document.getElementById("again"); if(ag) ag.onclick=function(){ document.getElementById("ov").classList.remove("show"); if(custom||daily){loadDef(G.def);} else if(win&&last){loadLevel(0);} else {loadLevel(G.lvl);} showIntro(); };
+}
+
+function showLevelSelect(){
+  if(G.state==="play"){ G.paused=true; var pb=document.getElementById("c-pause"); pb.classList.add("act"); pb.textContent="▶ RESUME"; }
+  var t=sealTally();
+  var tiles='';
+  for(var i=0;i<LEVELS.length;i++){
+    var L=LEVELS[i], ok=unlocked(i), bs=bestSeal(i), b=RUN.best[i]|0;
+    tiles+='<div class="lvl-tile'+(ok?'':' lock')+'" data-i="'+i+'">'+
+      '<div class="lt-seal">'+(ok?(bs?SEALICON[bs]:'◇'):'🔒')+'</div>'+
+      '<div class="lt-name">'+L.name+'</div>'+
+      '<div class="lt-best">'+(ok?(b?('best '+b+'/'+L.total):'not solved yet'):'earn 🥉 on the level before')+'</div>'+
+    '</div>';
+  }
+  document.getElementById("card").innerHTML=
+    '<h1>LEVELS</h1>'+
+    '<div class="seal-tally">🥇×'+t[3]+'&nbsp;&nbsp;🥈×'+t[2]+'&nbsp;&nbsp;🥉×'+t[1]+'</div>'+
+    '<div class="seal-tally">✦ '+lanternTotal()+' lumins guided home</div>'+
+    '<div class="lvl-grid">'+tiles+'</div>'+
+    '<button class="cbtn alt" id="lvls-close">CLOSE</button>';
+  document.getElementById("ov").classList.add("show");
+  document.getElementById("lvls-close").onclick=function(){
+    document.getElementById("ov").classList.remove("show");
+    if(G.state==="intro") showIntro();
+    else if(G.state==="over") showResult(G.saved>=G.def.target);
+  };
+  var ts=document.querySelectorAll(".lvl-tile");
+  for(var k=0;k<ts.length;k++){ ts[k].onclick=function(){
+    var i=+this.getAttribute("data-i");
+    if(!unlocked(i)){ tip("Earn 🥉 on the level before to unlock"); return; }
+    G.challenge=null;
+    document.getElementById("ov").classList.remove("show");
+    loadLevel(i); showIntro();
+  }; }
 }
 
 /* ============================ CONTROLS ============================ */
 document.getElementById("c-pause").onclick=function(){ G.paused=!G.paused; this.classList.toggle("act",G.paused); this.textContent=G.paused?"▶ RESUME":"⏸ PAUSE"; };
 document.getElementById("c-speed").onclick=function(){ G.speed=G.speed===1?2:(G.speed===2?0.5:1); this.textContent=(G.speed===0.5?"▶ ½×":G.speed===2?"▶ 2×":"▶ 1×"); };
 document.getElementById("c-restart").onclick=function(){ if(G.lvl<0){ loadDef(G.def); } else { loadLevel(G.lvl); } showIntro(); };
-document.getElementById("c-end").onclick=function(){ if(G.state==="play"){ G.state="over"; showResult(G.saved>=G.def.target); } };
+document.getElementById("c-end").onclick=function(){ if(G.state==="play"){ G.state="over"; noteResult(); showResult(G.saved>=G.def.target); } };
+document.getElementById("c-lvls").onclick=function(){ if(G.mode!=="edit") showLevelSelect(); };
+document.getElementById("c-daily").onclick=function(){ if(G.mode==="edit") return;
+  G.challenge=null; loadDef(makeDaily(todayStr())); showIntro(); };
 document.getElementById("c-sound").onclick=function(){ G.sound=!G.sound; this.classList.toggle("act",G.sound); this.textContent=G.sound?"🔊 SOUND":"🔈 SOUND"; if(G.sound && !AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } };
 document.getElementById("c-calm").onclick=function(){ G.calm=!G.calm; this.classList.toggle("act",G.calm); };
 document.addEventListener("keydown", function(e){
@@ -963,9 +1359,15 @@ function frame(t){
 }
 
 /* ============================ BOOT ============================ */
-(function(){ var code=null; try{ code=new URLSearchParams(location.search).get("lvl"); }catch(e){}
-  if(code){ try{ var d=decodeLevel(code); d.lvl=-1; loadDef(d); }catch(e){ loadLevel(0); } }
+(function(){ var q=null; try{ q=new URLSearchParams(location.search); }catch(e){}
+  var code=q&&q.get("lvl"), day=q&&q.get("daily"), ch=q&&q.get("ch");
+  var sc=q&&q.get("sc"), by=q&&q.get("by");
+  if(ch){ var p=ch.split("-"); var idx=Math.min(Math.max(parseInt(p[0],10)||0,0),LEVELS.length-1);
+    if(p.length>1){ sc=p[1]; by=p[2]||by; } loadLevel(idx); }
+  else if(day&&/^\d{8}$/.test(day)){ try{ loadDef(makeDaily(day)); }catch(e){ loadLevel(0); } }
+  else if(code){ try{ var d=decodeLevel(code); d.lvl=-1; loadDef(d); }catch(e){ loadLevel(0); } }
   else { loadLevel(0); }
+  if(sc!==null&&sc!==undefined&&sc!==""){ G.challenge={sc:parseInt(sc,10)|0, by:decodeURIComponent(by||"A friend").slice(0,12)}; }
   showIntro(); requestAnimationFrame(frame);
 })();
 
@@ -988,11 +1390,102 @@ function frame(t){
       security rules from the deploy notes. Leave "" to hide the board.  */
 var LB_URL="";                       // e.g. "https://lumins-xxxx-default-rtdb.europe-west1.firebasedatabase.app"
 var LB_GAME="lumins", LB_MAXSCORE=25;
-var RUN={best:{}};                   // best saved per level index this session
-try{ RUN.best=JSON.parse(localStorage.getItem("lumins_run")||"{}"); }catch(e){}
+/* RUN (best per level) now initialised in CONFIG section, before boot */
 function runTotal(){ var t=0; for(var k in RUN.best) t+=RUN.best[k]; return t; }
-function noteResult(){ if(G.lvl<0) return; var b=RUN.best[G.lvl]|0; if(G.saved>b){ RUN.best[G.lvl]=G.saved;
+function noteResult(){ if(G.lvl<0) return; var b=RUN.best[G.lvl]|0; G.prevBest=b; if(G.saved>b){ RUN.best[G.lvl]=G.saved;
   try{localStorage.setItem("lumins_run",JSON.stringify(RUN.best));}catch(e){} } }
+
+/* ===== seals: bronze = target, silver = midpoint (or level.silver), gold = all ===== */
+function silverOf(L){ return L.silver || Math.min(goldOf(L), L.target + Math.ceil((goldOf(L)-L.target)/2)); }
+function goldOf(L){ return L.gold || L.total; }
+function sealFor(L,saved){ if(saved>=goldOf(L)) return 3; if(saved>=silverOf(L)) return 2; if(saved>=L.target) return 1; return 0; }
+function bestSeal(i){ var L=LEVELS[i]; if(!L) return 0; return sealFor(L, RUN.best[i]|0); }
+function unlocked(i){ return i===0 || bestSeal(i-1)>=1; }
+function sealTally(){ var t=[0,0,0,0]; for(var i=0;i<LEVELS.length;i++) t[bestSeal(i)]++; return t; }
+
+/* ===== Daily Lumin: seeded, constructive, verified by the solver bot ===== */
+function mulberry(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function todayStr(){ var d=new Date(), m=d.getMonth()+1, dy=d.getDate();
+  return ""+d.getFullYear()+(m<10?"0":"")+m+(dy<10?"0":"")+dy; }
+function prettyDay(s){ var mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return (+s.slice(6,8))+" "+mo[(+s.slice(4,6))-1]+" "+s.slice(0,4); }
+function genDaily(seed,attempt){
+  var rng=mulberry(seed*131+attempt*7919+11), cols=40, rows=24, grid=new Uint8Array(cols*rows);
+  function set(c,r,v){ if(c>=0&&r>=0&&c<cols&&r<rows) grid[r*cols+c]=v; }
+  function floorTo(a,b,R){ for(var c=a;c<=b;c++) set(c,R,2); }
+  var R=9, c=2, sk={block:0,dig:0,bash:0,build:0,float:0}, usedDig=false;
+  for(var r0=R-5;r0<=R;r0++) set(1,r0,2);                    // left boundary
+  var ent={c:3,r:R-3};
+  var pad=4+((rng()*3)|0); floorTo(c,c+pad,R); c+=pad+1;
+  var nH=3+((rng()*3)|0);
+  for(var h=0;h<nH && c<27;h++){
+    var roll=rng(), type=(!usedDig&&roll<0.3&&h>0)?"dig":(roll<0.62?"gap":"wall");
+    if(type==="gap"){ var w=3+((rng()*3)|0); sk.build++; c+=w; }
+    else if(type==="wall"){ set(c,R-1,1); set(c,R-2,1); set(c,R,2); c+=1; sk.bash++; }
+    else { // dig descent R -> 15
+      set(c,R,1); for(var rr=R+1;rr<=R+4;rr++) set(c,rr,1);
+      set(c+1,R-1,2); set(c+1,R-2,2); set(c+1,R,2);
+      usedDig=true; sk.dig++; var oldR=R; R=15; floorTo(c,c+2,R); c+=2; }
+    var p2=3+((rng()*3)|0); floorTo(c,c+p2,R); c+=p2+1;
+  }
+  floorTo(c,Math.min(c+3,38),R);
+  var ex={c:Math.min(c+1,37), r:R-1};
+  // one spare tool of a used type, for kindness
+  var used=["build","bash","dig"].filter(function(k){return sk[k]>0;});
+  if(used.length) sk[used[(rng()*used.length)|0]]++;
+  var total=8+((rng()*5)|0), target=Math.max(3,Math.round(total*(0.55+rng()*0.15)));
+  return {cols:cols,rows:rows,grid:grid,entrance:ent,exit:ex,skills:sk,
+    total:total,target:target,spawn:16+((rng()*12)|0),start:1,
+    name:"Daily Lumin", hint:"A brand-new board, the same for everyone today. Save as many as you can, then share your score — tomorrow brings a new one."};
+}
+function makeDaily(dateStr){
+  var seed=parseInt(dateStr,10)||20260101, d=null, r={solved:false};
+  for(var a=0;a<60;a++){ d=genDaily(seed,a); r=simulate(d); if(r.solved && r.saved>=d.target) break; }
+  d.daily=dateStr; d.name="Daily Lumin · "+prettyDay(dateStr);
+  return d;
+}
+function dailyBest(dateStr,val){
+  var o={}; try{ o=JSON.parse(localStorage.getItem("lumins_daily")||"{}"); }catch(e){}
+  if(typeof val==="number" && val>(o[dateStr]|0)){ o[dateStr]=val;
+    try{ localStorage.setItem("lumins_daily",JSON.stringify(o)); }catch(e){} }
+  return o[dateStr]|0;
+}
+function lanternTotal(){ try{ return (+localStorage.getItem("lumins_total"))||0; }catch(e){ return 0; } }
+function dailyStreak(){
+  var o={}; try{ o=JSON.parse(localStorage.getItem("lumins_daily")||"{}"); }catch(e){}
+  var n=0, d=new Date();
+  for(;;){ var m=d.getMonth()+1, dy=d.getDate();
+    var k=""+d.getFullYear()+(m<10?"0":"")+m+(dy<10?"0":"")+dy;
+    if((o[k]|0)>0){ n++; d.setDate(d.getDate()-1); } else break; }
+  return n;
+}
+/* ===== challenges & sharing ===== */
+function playerName(){
+  var n=""; try{ n=localStorage.getItem("lumins_name")||""; }catch(e){}
+  if(!n){ try{ n=window.prompt("Name for your challenge link?")||""; }catch(e){} }
+  n=(n||"Lumin").trim().slice(0,12)||"Lumin";
+  try{ localStorage.setItem("lumins_name",n); }catch(e){}
+  return n;
+}
+function copyBtn(btn,text){
+  var old=btn.textContent;
+  function done(ok){ btn.textContent=ok?"✅ COPIED":"⚠️ COPY FAILED"; setTimeout(function(){ btn.textContent=old; },1600); }
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});
+  else done(false);
+}
+function baseUrl(){ return location.origin+location.pathname; }
+function challengeUrl(){
+  var nm=encodeURIComponent(playerName());
+  if(G.def.daily) return baseUrl()+"?daily="+G.def.daily+"&sc="+G.saved+"&by="+nm;
+  if(G.lvl>=0)   return baseUrl()+"?ch="+G.lvl+"-"+G.saved+"-"+nm;
+  return baseUrl()+"?lvl="+encodeLevel(G.def)+"&sc="+G.saved+"&by="+nm;
+}
+function shareText(){
+  var head=G.def.daily?("🔆 LUMINS Daily "+prettyDay(G.def.daily)):("🔦 LUMINS · "+G.def.name);
+  var st=G.def.daily?dailyStreak():0;
+  return head+" — I saved "+G.saved+"/"+G.def.total+"!"+(st>=2?" 🔥"+st+"-day streak.":"")+" Beat me: "+challengeUrl();
+}
 
 function lbClean(n){ n=(n||"").trim().slice(0,12);
   return /^[A-Za-z0-9 _\-]{2,12}$/.test(n)?n:null; }
@@ -1136,11 +1629,11 @@ function edPaint(cx,cy){
   var t=ED.tool;
   if(t==="entrance"){ ED.entrance={c:cx,r:cy}; }
   else if(t==="exit"){ ED.exit={c:cx,r:cy}; }
-  else { ED.grid[cy*ED.cols+cx]=(t==="terrain"?1:(t==="steel"?2:0)); }
+  else { ED.grid[cy*ED.cols+cx]=(t==="terrain"?1:(t==="steel"?2:(t==="crumble"?3:(t==="gateR"?4:(t==="gateL"?5:(t==="shade"?6:0)))))); }
   G.terrainDirty=true;
 }
 function buildEditorUI(){
-  var tools=[["terrain","🟦 Land"],["steel","🟧 Steel"],["erase","⌫ Erase"],["entrance","🚪 Start"],["exit","🏁 Exit"]];
+  var tools=[["terrain","🟦 Land"],["steel","🟧 Steel"],["crumble","🟨 Soft"],["gateR","⏩ Gate"],["gateL","⏪ Gate"],["shade","🔮 Shade"],["erase","⌫ Erase"],["entrance","🚪 Start"],["exit","🏁 Exit"]];
   document.getElementById("ed-tools").innerHTML=tools.map(function(t){
     return '<button class="ctrl ed-t'+(ED.tool===t[0]?" act":"")+'" data-tool="'+t[0]+'">'+t[1]+'</button>'; }).join("");
   Array.prototype.forEach.call(document.querySelectorAll("#ed-tools .ed-t"),function(b){
@@ -1233,7 +1726,7 @@ document.getElementById("c-edit").onclick=function(){ if(!ED.grid) initED(); ent
 
 /* expose for headless tests */
 window.__LUMINS={G:G,step:step,assign:assign,loadLevel:loadLevel,loadDef:loadDef,defFromMap:defFromMap,defFromED:defFromED,defToED:defToED,ED:ED,encodeLevel:encodeLevel,decodeLevel:decodeLevel,simulate:simulate,enterEditor:enterEditor,spawn:spawn,render:render,drawMotes:drawMotes,
-  solid:solid,cellType:cellType,LEVELS:LEVELS,stepLumin:stepLumin};
+  solid:solid,cellType:cellType,LEVELS:LEVELS,stepLumin:stepLumin,makeDaily:makeDaily,genDaily:genDaily,challengeUrl:challengeUrl,shareText:shareText};
 })();
 </script>
 </body>
