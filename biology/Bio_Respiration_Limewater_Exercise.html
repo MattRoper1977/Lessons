@@ -244,6 +244,9 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .loop-btn.s1{background:#fef9c3;border-color:#eab308;color:#854d0e}
 .loop-btn.s2{background:#16a34a;border-color:#16a34a;color:#fff}
 .loop-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px}
+.photo-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#475569;white-space:nowrap;display:inline-block}
+.photo-btn.has{background:#dcfce7;border-color:#16a34a;color:#166534}
+.photo-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;border:1px solid #cbd5e1;vertical-align:middle;margin-left:4px;cursor:pointer}
 .board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
 .board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
 .loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
@@ -252,6 +255,10 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .loop-agg .hint{font-size:11px;color:#94a3b8;margin-top:8px}
 .pupil-card .write-stem{font-style:italic;font-size:12.5px;margin:3px 0 4px}
 .pupil-card .write-lines{border-bottom:1px solid #999;height:17px;margin:8px 0}
+.pupil-card .pc-photo{margin:6px 0}
+.pupil-card .pc-photo img{max-width:190px;max-height:170px;border:1px solid #bbb;border-radius:8px;display:block}
+.pupil-card .pc-q{background:#f8fafc;border-left:4px solid #64748b;padding:6px 9px;border-radius:5px;font-size:12.5px;line-height:1.5}
+.pupil-card .pc-q b{color:#334155}
 .legend{display:flex;gap:16px;font-size:13px;font-weight:700;margin-bottom:8px}
 .legend .k{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
 
@@ -261,14 +268,6 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .complete h2{color:#fff;font-size:38px}
 .confetti{position:fixed;width:10px;height:16px;top:-20px;z-index:95;pointer-events:none}
 
-/* per-pupil marking-photo evidence */
-.cam-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-.cam-btn:hover{border-color:#f97316;color:#c2410c}
-.ev-shots{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.ev-shots figure{margin:0;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden;width:150px}
-.ev-shots img{display:block;width:100%;height:110px;object-fit:cover}
-.ev-shots figcaption{font-size:10px;padding:3px 5px;color:#334155;background:#f8fafc}
-@media print{.ev-shots figure{width:44mm;break-inside:avoid}.ev-shots img{height:auto;object-fit:contain}}
 /* print */
 #print-area{display:none}
 @media print{
@@ -290,6 +289,8 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   .pupil-card .pc-sec:last-child{border-bottom:none}
   .pupil-card .lab{font-weight:700;color:#111;font-size:13px}
   .pupil-card .story{font-size:13px;line-height:1.45}
+  .pupil-card .pc-photo img{max-width:150px;max-height:130px}
+  .pupil-card .pc-q{background:#f4f4f4;border-left:3px solid #666}
   .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
   .pupil-card .minibar.a{background:#f97316}
   .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
@@ -643,7 +644,6 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 
 <!-- PRINT AREA -->
 <div id="print-area"></div>
-<input id="camInput" type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="_camAdd(this.files)">
 
 <script>
 /* ---------- DATA (declared before any init that reads them) ---------- */
@@ -652,12 +652,12 @@ const arrivalQs=[
   {q:"2. When that gas is present, clear limewater turns…",opts:["Blue","Cloudy / milky","Bright red"],a:1}
 ];
 const breathData=[
-  {name:"Pupil 1",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0},
-  {name:"Pupil 2",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0},
-  {name:"Pupil 3",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0},
-  {name:"Pupil 4",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0},
-  {name:"Pupil 5",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0},
-  {name:"Pupil 6",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0}
+  {name:"Pupil 1",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
+  {name:"Pupil 2",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
+  {name:"Pupil 3",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
+  {name:"Pupil 4",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
+  {name:"Pupil 5",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
+  {name:"Pupil 6",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null}
 ];
 const taBriefs={
   title:"Read the LOs aloud with the class. Names/faces check who is regulated before we handle glassware. Flag today = practical + short exercise burst.",
@@ -907,6 +907,11 @@ function setNS(btn,txt){
 /* ---------- feedback-loop tracker (R-gate) ---------- */
 const LOOP=[['','◻ Not started'],['s1','🟡 VF given'],['s2','🟢 R — responded']];
 function loopState(p){return p.loop||0;}
+
+function resizePhoto(file,cb){var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var w=img.width,h=img.height,M=760;if(w>h&&w>M){h=Math.round(h*M/w);w=M;}else if(h>M){w=Math.round(w*M/h);h=M;}var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',0.5));};img.onerror=function(){cb(null);};img.src=r.result;};r.onerror=function(){cb(null);};r.readAsDataURL(file);}
+function photoCtl(i){var p=breathData[i];return '<label class="photo-btn'+(p.photo?' has':'')+'">'+(p.photo?'✔ photo':'📷 photo')+'<input type="file" accept="image/*" capture="environment" style="display:none" onchange="setPhoto('+i+',this)"></label>'+(p.photo?'<img class="photo-thumb" src="'+p.photo+'" onclick="removePhoto('+i+')" title="tap to remove">':'');}
+function setPhoto(i,input){var f=input.files&&input.files[0];if(!f)return;resizePhoto(f,function(data){if(!data)return;breathData[i].photo=data;renderExit();try{saveState();}catch(e){}beep(700);addXP(3);});}
+function removePhoto(i){breathData[i].photo=null;renderExit();saveState();beep(360);}
 function renderExit(){
   const el=document.getElementById('exitPanel');if(!el)return;el.innerHTML='';
   if(boardMode){
@@ -918,11 +923,7 @@ function renderExit(){
     const L=LOOP[loopState(p)];
     const row=document.createElement('div');row.className='loop-row';
     row.innerHTML='<div class="nm"><input value="'+esc(p.name)+'" oninput="setName('+i+',this.value)"></div>'+
-      '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'+
-        '<button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+
-        '<button class="cam-btn" onclick="pupilCam('+i+')" title="Attach photo of work">📷'+((p.photos&&p.photos.length)?(' <b>'+p.photos.length+'</b>'):'')+'</button>'+
-        ((p.photos&&p.photos.length)?('<button class="cam-btn" onclick="delLast('+i+')" title="Remove last photo">↺</button>'):'')+
-      '</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+photoCtl(i)+'</div>'+
       '<input class="loop-note" placeholder="Optional next-step note for their sheet…" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)">';
     el.appendChild(row);
   });
@@ -940,15 +941,6 @@ function updateLoopTally(){
 function setNote(i,v){breathData[i].note=v;saveState();}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
-/* ---------- per-pupil marking-photo evidence (policy loop, Option A) ---------- */
-let _camTarget=-1;
-function pupilCam(i){_camTarget=i;const f=document.getElementById('camInput');if(f){f.value='';f.click();}}
-function _camStage(p){const s=p.loop||0;return s===2?'🟢 R — responded':s===1?'🟡 VF / NS+ given':'📷 evidence';}
-function _compress(file){return new Promise(res=>{const img=new Image(),r=new FileReader();r.onload=e=>{img.onload=()=>{const max=900,sc=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.7));};img.onerror=()=>res(null);img.src=e.target.result;};r.onerror=()=>res(null);r.readAsDataURL(file);});}
-async function _camAdd(files){if(_camTarget<0||!breathData[_camTarget])return;const p=breathData[_camTarget];if(!p.photos)p.photos=[];for(const file of files){const data=await _compress(file);if(!data)continue;p.photos.push({data:data,tag:_camStage(p),date:new Date().toLocaleDateString('en-GB')});}try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode}));}catch(err){p.photos.pop();alert('Photo storage is full on this device — print your evidence pack, then reset, to free space.');}renderExit();if(typeof buildPrint==='function')buildPrint();}
-function delLast(i){if(breathData[i]&&breathData[i].photos&&breathData[i].photos.length){if(confirm('Remove the last photo for '+breathData[i].name+'?')){breathData[i].photos.pop();saveState();renderExit();buildPrint();}}}
-function _photoBlock(p){if(!p.photos||!p.photos.length)return '';return '<div class="pc-sec story photos"><span class="lab">Marking evidence:</span><div class="ev-shots">'+p.photos.map(ph=>'<figure><img src="'+ph.data+'"><figcaption>'+ph.tag+' · '+ph.date+'</figcaption></figure>').join('')+'</div></div>';}
-
 /* ---------- completion ---------- */
 function fireConfetti(){
   const cols=['#f59e0b','#16a34a','#4338ca','#ef4444','#0d9488'];
@@ -965,7 +957,7 @@ function fireConfetti(){
 function finishLesson(){addXP(20);const cl=document.getElementById('completeLoop');if(cl){const c=loopCounts();cl.textContent=c.given?('🟢 Feedback loop closed: '+c.closed+' of '+c.given+' given a next step'):'';}document.getElementById('complete').classList.add('show');fireConfetti();beep(660);setTimeout(()=>beep(820),160);setTimeout(()=>beep(980),320);}
 
 /* ---------- print pack ---------- */
-function used(p,i){return (p.name&&p.name!=='Pupil '+(i+1))||p.pred||p.rest!=null||p.active!=null||(p.loop&&p.loop>0)||(p.note&&p.note.trim())||(p.photos&&p.photos.length);}
+function used(p,i){return (p.name&&p.name!=='Pupil '+(i+1))||p.pred||p.rest!=null||p.active!=null||(p.loop&&p.loop>0)||(p.note&&p.note.trim())||p.photo;}
 function ragLabel(r){return r==='g'?'<span class="rag" style="background:#16a34a">Secure</span>':r==='a'?'<span class="rag" style="background:#eab308">Developing</span>':r==='r'?'<span class="rag" style="background:#ef4444">Needs support</span>':'–';}
 function predLabel(v){return v==='more'?'More CO₂':v==='less'?'Less CO₂':v==='same'?'Same':'–';}
 function pcLabel(v){return v===true?'<b>Correct ✓</b>':v===false?'<b>Not quite ✗</b>':'–';}
@@ -983,6 +975,7 @@ function pupilStory(p){
   s+='This happens because exercise makes your muscles <b>respire</b> faster, and respiration produces carbon dioxide.';
   return s;
 }
+const QUESTIONS='<b>Foundation:</b> Which reading had more CO₂ — rest or after exercise?<br><b>Middle:</b> Explain, using respiration, why the beaker was cloudier after exercise.<br><b>Higher:</b> Write the word equation for respiration, then explain why exercise increases CO₂ in exhaled breath (and why we kept the breaths the same).';
 function pupilCard(p,d){
   const rbar=p.rest!=null?'<span class="minibar" style="width:'+(p.rest*18)+'px"></span> '+p.rest+'/5':'not recorded';
   const abar=p.active!=null?'<span class="minibar a" style="width:'+(p.active*18)+'px"></span> '+p.active+'/5':'not recorded';
@@ -992,12 +985,14 @@ function pupilCard(p,d){
     '<p style="font-size:11px;color:#555;margin-bottom:4px">Class: __________   Date: '+d+'</p>'+
     '<div class="pc-sec story"><span class="lab">My prediction:</span> '+predLabel(p.pred)+' after exercise. &nbsp; <span class="lab">Was I right?</span> '+pcLabel(autoPredCorrect(p))+'</div>'+
     '<div class="pc-sec story"><span class="lab">My readings (same breaths each time):</span><br>Rest: '+rbar+' &nbsp;&nbsp; After exercise: '+abar+'</div>'+
+    (p.photo?'<div class="pc-sec story"><span class="lab">Photo — my beakers / result:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
     '<div class="pc-sec story"><span class="lab">What I found:</span> '+pupilStory(p)+'</div>'+
+    '<div class="pc-sec story pc-q"><b>What I was asked (exit ticket):</b><br>'+QUESTIONS+'</div>'+
     '<div class="pc-sec"><span class="lab">My answer:</span> <span style="font-size:11.5px;color:#555">complete the stem — add the equation / why if you can</span>'+
       '<div class="write-stem">"A higher cloudiness score means there was ______ carbon dioxide in my breath, because exercise increases ______."</div>'+
       '<div class="write-lines"></div><div class="write-lines"></div></div>'+
     '<div class="pc-sec story"><span class="lab">Feedback loop:</span> '+loopLabel(p)+'</div>'+
-    note+_photoBlock(p)+
+    note+
     '<div class="pc-sec recap"><b>Revision recap:</b> Respiration: glucose + oxygen → carbon dioxide + water. Limewater tests for carbon dioxide — it turns from clear to <b>cloudy/milky</b>; the more CO₂, the cloudier. Exercise → more respiration → more CO₂ → cloudier beaker. <b>Memory hook: "Move more → make more CO₂ → cloudier beaker."</b></div>'+
   '</div>';
 }

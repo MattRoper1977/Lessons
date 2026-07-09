@@ -244,6 +244,9 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .loop-btn.s1{background:#fef9c3;border-color:#eab308;color:#854d0e}
 .loop-btn.s2{background:#16a34a;border-color:#16a34a;color:#fff}
 .loop-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px}
+.photo-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#475569;white-space:nowrap;display:inline-block}
+.photo-btn.has{background:#dcfce7;border-color:#16a34a;color:#166534}
+.photo-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;border:1px solid #cbd5e1;vertical-align:middle;margin-left:4px;cursor:pointer}
 .board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
 .board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
 .loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
@@ -252,6 +255,10 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .loop-agg .hint{font-size:11px;color:#94a3b8;margin-top:8px}
 .pupil-card .write-stem{font-style:italic;font-size:12.5px;margin:3px 0 4px}
 .pupil-card .write-lines{border-bottom:1px solid #999;height:17px;margin:8px 0}
+.pupil-card .pc-photo{margin:6px 0}
+.pupil-card .pc-photo img{max-width:190px;max-height:170px;border:1px solid #bbb;border-radius:8px;display:block}
+.pupil-card .pc-q{background:#f8fafc;border-left:4px solid #64748b;padding:6px 9px;border-radius:5px;font-size:12.5px;line-height:1.5}
+.pupil-card .pc-q b{color:#334155}
 .legend{display:flex;gap:16px;font-size:13px;font-weight:700;margin-bottom:8px}
 .legend .k{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
 
@@ -282,12 +289,14 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   .pupil-card .pc-sec:last-child{border-bottom:none}
   .pupil-card .lab{font-weight:700;color:#111;font-size:13px}
   .pupil-card .story{font-size:13px;line-height:1.45}
+  .pupil-card .pc-photo img{max-width:150px;max-height:130px}
+  .pupil-card .pc-q{background:#f4f4f4;border-left:3px solid #666}
   .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
   .pupil-card .minibar.a{background:#f97316}
   .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
   .rag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff}
   /* desk scale cards */
-  .scard-grid{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+  .scard-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
   .scard{break-inside:avoid;border:2px solid #222;border-radius:8px;padding:8px 10px}
   .scard h4{font-size:13px;margin:0 0 6px;color:#111}
   .scard .lv{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dotted #bbb}
@@ -295,6 +304,12 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   .scard .sw2{width:34px;height:22px;border:1.5px solid #333;border-radius:4px;flex:none}
   .scard .lv b{font-size:13px}
   .scard .lv span{font-size:11px;color:#333}
+  .scard.bcard{padding:6px 9px}
+  .bcard h4{font-size:11.5px;margin:0 0 3px}
+  .bcard .bc-label{border:1.3px dashed #333;border-radius:4px;padding:3px 5px;font-size:10px;font-weight:700;margin-bottom:4px}
+  .bcard .bc-steps{margin:0 0 4px;font-size:9.8px;line-height:1.32}
+  .bcard .bc-safe{font-size:9px;color:#333;border-top:1px dotted #bbb;padding-top:3px}
+  .bcard .bc-stand{font-size:9.7px;font-weight:800;color:#166534;margin-top:3px;text-align:center;border:1.3px solid #16a34a;border-radius:4px;padding:2px}
 }
 
 @media(max-width:640px){
@@ -478,6 +493,8 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
     <div id="exitPanel"></div>
   </div>
 
+  <button class="btn ghost" onclick="printBenchCards()">🖨 Print bench cards</button>
+  <button class="btn ghost" onclick="printPack()">🖨 Print evidence pack</button>
   <button class="btn" onclick="finishLesson()">✔ Finish lesson</button>
 </section>
 
@@ -522,7 +539,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 const LSKEY='ps_limewater_v1';
 let cur=0, xp=0, level='f', muted=false, boardMode=false, actx=null;
 let tSec=0, tRun=false, tInt=null;
-const pupils=[]; for(let i=0;i<8;i++) pupils.push({name:'Pupil '+(i+1), made:false, loop:0, note:''});
+const pupils=[]; for(let i=0;i<8;i++) pupils.push({name:'Pupil '+(i+1), made:false, loop:0, note:'', photo:null});
 const slides=[...document.querySelectorAll('.slide')];
 const types=slides.map(s=>s.dataset.type);
 const taBriefs={
@@ -568,7 +585,7 @@ function toggleLessonTimer(){ tRun=!tRun; if(tRun){ tInt=setInterval(ttick,1000)
 function fireConfetti(){ const c=['#ef4444','#f59e0b','#16a34a','#3b82f6','#a855f7']; for(let i=0;i<60;i++){ const d=document.createElement('div'); d.className='confetti'; d.style.left=Math.random()*100+'vw'; d.style.background=c[i%c.length]; d.style.animationDelay=(Math.random()*.3)+'s'; document.body.appendChild(d); setTimeout(()=>d.remove(),2600);} }
 
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function used(p){ return (p.name && !/^Pupil \d+$/.test(p.name)) || p.made || (p.loop&&p.loop>0) || (p.note&&p.note.trim()); }
+function used(p){ return (p.name && !/^Pupil \d+$/.test(p.name)) || p.made || (p.loop&&p.loop>0) || (p.note&&p.note.trim()) || p.photo; }
 function saveState(){ try{ localStorage.setItem(LSKEY,JSON.stringify({data:pupils,muted:muted,boardMode:boardMode})); }catch(e){} }
 function loadState(){ try{ const s=localStorage.getItem(LSKEY); if(!s)return; const o=JSON.parse(s); if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(pupils[i])Object.assign(pupils[i],r);}); if(o&&typeof o.muted==='boolean')muted=o.muted; if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode; }catch(e){} }
 function setName(i,v){ pupils[i].name=v; saveState(); }
@@ -579,6 +596,11 @@ function confirmFrame(el){ const on=el.classList.toggle('confirmed'); beep(on?72
 function setNS(btn,txt){ const chips=[...document.querySelectorAll('.ns-chip')]; const already=btn.classList.contains('on'); chips.forEach(c=>c.classList.remove('on')); const box=document.getElementById('nsActive'); if(!box)return; if(already){box.classList.remove('show');box.textContent='';beep(360);return;} btn.classList.add('on'); box.textContent='\ud83d\udfe1 Next step: '+txt; box.classList.add('show'); beep(640); }
 const LOOP=[['','\u25fb Not started'],['s1','\ud83d\udfe1 VF given'],['s2','\ud83d\udfe2 R \u2014 responded']];
 function loopState(p){ return p.loop||0; }
+
+function resizePhoto(file,cb){var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var w=img.width,h=img.height,M=760;if(w>h&&w>M){h=Math.round(h*M/w);w=M;}else if(h>M){w=Math.round(w*M/h);h=M;}var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',0.5));};img.onerror=function(){cb(null);};img.src=r.result;};r.onerror=function(){cb(null);};r.readAsDataURL(file);}
+function photoCtl(i){var p=pupils[i];return '<label class="photo-btn'+(p.photo?' has':'')+'">'+(p.photo?'✔ photo':'📷 photo')+'<input type="file" accept="image/*" capture="environment" style="display:none" onchange="setPhoto('+i+',this)"></label>'+(p.photo?'<img class="photo-thumb" src="'+p.photo+'" onclick="removePhoto('+i+')" title="tap to remove">':'');}
+function setPhoto(i,input){var f=input.files&&input.files[0];if(!f)return;resizePhoto(f,function(data){if(!data)return;pupils[i].photo=data;renderExit();try{saveState();}catch(e){}beep(700);addXP(3);});}
+function removePhoto(i){pupils[i].photo=null;renderExit();saveState();beep(360);}
 function renderExit(){
   const el=document.getElementById('exitPanel'); if(!el)return; el.innerHTML='';
   if(boardMode){ const c=loopCounts(), m=madeCount(); el.innerHTML='<div class="loop-agg"><div class="big">\ud83d\udfe2 '+c.closed+' / '+c.given+'</div><div class="cap">feedback loops closed'+(c.given?'':' \u2014 none opened yet')+'</div><div class="hint">Made &amp; labelled: '+m+' of '+pupils.length+' \u00b7 names hidden for the board \u00b7 switch Board-safe off to capture</div></div>'; updateLoopTally(); return; }
@@ -589,6 +611,7 @@ function renderExit(){
       '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
         '<button class="loop-btn '+(p.made?'s2':'')+'" style="min-width:118px" onclick="toggleMade('+i+')">'+(p.made?'\u2714 made &amp; labelled':'\u25fb made &amp; labelled')+'</button>'+
         '<button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+
+        photoCtl(i)+
       '</div>'+
       '<input class="loop-note" placeholder="Optional next-step note\u2026" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)">';
     el.appendChild(row);
@@ -607,15 +630,19 @@ function finishLesson(){ addXP(20); const cl=document.getElementById('completeLo
 /* ---- print ---- */
 function madeLabel(p){ return p.made?'<span class="rag" style="background:#16a34a">\u2714 Made &amp; labelled</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
 function loopLabel(p){ const s=p.loop||0; return s===2?'<span class="rag" style="background:#16a34a">\ud83d\udfe2 Loop closed \u2014 responded (R)</span>':s===1?'<span class="rag" style="background:#eab308">\ud83d\udfe1 Feedback given (VF)</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
+const QUESTIONS='<b>Foundation:</b> Which gas turns limewater milky?<br><b>Middle:</b> What will you see next lesson, and what does it tell you?<br><b>Higher:</b> Write the word (and symbol) equation for limewater + carbon dioxide.';
 function pupilCard(p){
   return '<div class="pupil-card">'+
     '<div class="pc-sec"><b>'+esc(p.name)+'</b> \u00b7 Making Limewater \u00b7 '+new Date().toLocaleDateString('en-GB')+'</div>'+
     '<div class="pc-sec"><span class="lab">Made &amp; labelled:</span> '+madeLabel(p)+'</div>'+
+    (p.photo?'<div class="pc-sec"><span class="lab">Photo — my finished, labelled limewater:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
+    '<div class="pc-sec pc-q"><b>What I was asked (exit ticket):</b><br>'+QUESTIONS+'</div>'+
     '<div class="pc-sec"><span class="lab">My answer:</span> <span style="font-size:11.5px;color:#555">which gas? what do you see? (add the equation if you can)</span>'+
       '<div class="write-stem">\u201cLimewater tests for ______. It goes ______ when the gas is bubbled through, because ______ forms.\u201d</div>'+
       '<div class="write-lines"></div><div class="write-lines"></div></div>'+
     '<div class="pc-sec"><span class="lab">Feedback loop:</span> '+loopLabel(p)+'</div>'+
-    (p.note&&p.note.trim()?'<div class="pc-sec"><span class="lab">Next step:</span> '+esc(p.note)+'</div>':'')+
+    (p.note&&p.note.trim()?'<div class="pc-sec"><span class="lab">Teacher next step:</span> '+esc(p.note)+'</div>':'')+
+    '<div class="pc-sec recap"><b>Revision recap:</b> Limewater is calcium hydroxide, Ca(OH)₂, dissolved in water. It tests for carbon dioxide: CO₂ turns it cloudy/milky as calcium carbonate forms. Word: calcium hydroxide + carbon dioxide → calcium carbonate + water. Symbol: Ca(OH)₂ + CO₂ → CaCO₃ + H₂O. <b>Memory hook: CO₂ → cloudy.</b></div>'+
     '</div>';
 }
 function buildPrint(){
@@ -641,6 +668,17 @@ function buildPrint(){
       '<p style="font-size:12px;margin-top:6px"><b>Made &amp; labelled: '+made+' of '+list.length+'.</b>'+(lg?(' <b>Feedback loop closed (R): '+lc+' of '+lg+' given a next step.</b>'):'')+'</p></div>';
   }
   document.getElementById('print-area').innerHTML=ko+cards;
+}
+function printBenchCards(){
+  var card='<div class="scard bcard">'+
+    '<h4>Making Limewater — bench card</h4>'+
+    '<div class="bc-label">✍ Label your beaker with your NAME (marker pen): ____________________</div>'+
+    '<div class="bc-steps"><b>Method:</b> 1 Goggles on. 2 About 500 ml water. 3 Add the powder I bring round, then stir. 4 Write your name on the beaker. 5 Leave to stand — do NOT tip away.</div>'+
+    '<div class="bc-safe"><b>Safety:</b> goggles · only the dilute solution · mind the glass · wash hands.</div>'+
+    '<div class="bc-stand">⏳ LEAVE TO STAND — we test it next lesson.</div>'+
+  '</div>';
+  document.getElementById('print-area').innerHTML='<div class="scard-grid">'+card.repeat(6)+'</div>';
+  setTimeout(function(){window.print();},50);
 }
 function printPack(){ buildPrint(); window.print(); }
 
