@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Making Limewater · Science</title>
+<style>
+:root{
+  --f:#16a34a; --m:#f97316; --h:#1e3a8a;
+  --ido:#ef4444; --wedo:#f59e0b; --ind:#16a34a; --exit:#7c3aed;
+  --title:#4338ca; --arrival:#0d9488; --starter:#0284c7; --board:#4f46e5;
+  --ink:#1f2937; --sky:#e0f2fe; --paper:#fbfdff;
+  --rest:#2563eb; --active:#f97316;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#cfeaff 0%,#eaf6ff 40%,#f6fbff 100%);overflow:hidden}
+.stage{width:100vw;height:100vh;position:relative}
+
+/* progress + logo */
+.progress-bar{position:fixed;top:0;left:0;height:5px;background:linear-gradient(90deg,#4f46e5,#0d9488);width:0;z-index:60;transition:width .3s}
+.logo{position:fixed;top:10px;right:14px;z-index:55;display:flex;align-items:center;gap:6px;background:#fff;padding:5px 10px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-weight:700;font-size:12px;color:#4338ca}
+.phase-timer{position:fixed;top:8px;left:12px;z-index:56;background:#fff;border:2px solid transparent;border-radius:20px;padding:4px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:12px;font-weight:700;color:#4338ca;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.phase-timer .pt-name{font-size:11px;color:#64748b;font-weight:600}
+.phase-timer .pt-time{font-size:17px;font-variant-numeric:tabular-nums}
+.phase-timer .pt-total{font-size:10px;color:#94a3b8;font-weight:600}
+.phase-timer.ok .pt-time{color:#16a34a}
+.phase-timer.warn{border-color:#f59e0b}.phase-timer.warn .pt-time{color:#d97706}
+.phase-timer.over{border-color:#ef4444;background:#fef2f2}.phase-timer.over .pt-time{color:#ef4444}
+.phase-timer.idle .pt-name{color:#94a3b8}
+.logo svg{display:block}
+
+/* slides */
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:flex-start;padding:44px 40px 84px;overflow-y:auto;background:var(--paper);border-top:9px solid #999;animation:fadeInUp .45s ease}
+.slide.active{display:flex}
+.slide[data-type=title]{border-color:var(--title)}
+.slide[data-type=arrival]{border-color:var(--arrival)}
+.slide[data-type=starter]{border-color:var(--starter)}
+.slide[data-type=ido]{border-color:var(--ido)}
+.slide[data-type=wedo]{border-color:var(--wedo)}
+.slide[data-type=ind]{border-color:var(--ind)}
+.slide[data-type=board]{border-color:var(--board)}
+.slide[data-type=exit]{border-color:var(--exit)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+h1{font-size:34px;line-height:1.1;color:#312e81;margin-bottom:6px}
+h2{font-size:26px;color:#3730a3;margin-bottom:12px}
+.sub{color:#475569;font-size:16px;margin-bottom:14px}
+.slide-tag{display:inline-block;background:#312e81;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px;padding:4px 12px;border-radius:20px;margin-bottom:12px;text-transform:uppercase}
+p,li{font-size:17px;line-height:1.5}
+.wrap{max-width:1000px;width:100%;margin:0 auto}
+
+/* boxes */
+.box{border-radius:12px;padding:14px 18px;margin:10px 0;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.li-box{background:#eef2ff;border-left:6px solid #4338ca}
+.sc-box{background:#ffedd5;border-left:6px solid #f97316}
+.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d}
+.task-box{background:#e0f2fe;border-left:6px solid #0284c7}
+.scaffold-box{background:#fef9c3;border-left:6px solid #ca8a04}
+.ido-box{background:#fee2e2;border-left:6px solid var(--ido)}
+.wedo-box{background:#fef3c7;border-left:6px solid var(--wedo)}
+.stem-box{background:#f1f5f9;border:1px dashed #64748b;font-style:italic}
+.exam-tip-box{background:#fef08a;border-left:6px solid #eab308}
+.misc-box{background:#fee2e2;border-left:6px solid #ef4444}
+.misc-box .cross{text-decoration:line-through;color:#991b1b}
+.box b{color:#111}
+.box h3{margin-bottom:6px;color:#1e293b;font-size:18px}
+ul.tick{list-style:none}
+ul.tick li{padding-left:26px;position:relative;margin:5px 0}
+ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-weight:700}
+.lo-anim li::before{content:'▢';color:#94a3b8}
+.lo-anim li.on::before{content:'✔';color:#16a34a}
+
+/* title hero */
+.hero{display:flex;gap:18px;margin:14px 0;flex-wrap:wrap}
+.hero .ic{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.12);animation:bob 2.4s ease-in-out infinite}
+.hero .ic:nth-child(2){animation-delay:.3s}
+.hero .ic:nth-child(3){animation-delay:.6s}
+.hero .ic:nth-child(4){animation-delay:.9s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* arrival grid */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.q-card{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:14px}
+.q-card p.q{font-weight:700;margin-bottom:8px}
+.mcq-opt{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid #e2e8f0;border-radius:8px;padding:9px 12px;margin:6px 0;font-size:15px;cursor:pointer;transition:.15s}
+.mcq-opt:hover{border-color:#94a3b8}
+.mcq-opt.correct{background:#dcfce7;border-color:#16a34a;font-weight:700}
+.mcq-opt.wrong{background:#fee2e2;border-color:#ef4444}
+.mcq-opt.locked{cursor:default}
+
+/* buttons */
+.btn{display:inline-block;background:#4338ca;color:#fff;border:none;border-radius:24px;padding:10px 20px;font-size:15px;font-weight:600;cursor:pointer;margin:6px 6px 6px 0;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:.15s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.alt{background:#0d9488}
+.btn.warn{background:#ef4444}
+.btn.ghost{background:#fff;color:#4338ca;border:2px solid #c7d2fe}
+.reveal{background:#eef2ff;border:1px dashed #6366f1;border-radius:10px;padding:12px 16px;margin:10px 0;display:none}
+.reveal.show{display:block;animation:fadeInUp .3s}
+
+/* level toggle */
+.levels{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.lvl-btn{border:2px solid;border-radius:20px;padding:6px 16px;font-weight:700;font-size:14px;cursor:pointer;background:#fff}
+.lvl-btn[data-l=f]{border-color:var(--f);color:var(--f)}
+.lvl-btn[data-l=m]{border-color:var(--m);color:var(--m)}
+.lvl-btn[data-l=h]{border-color:var(--h);color:var(--h)}
+.lvl-btn.on[data-l=f]{background:var(--f);color:#fff}
+.lvl-btn.on[data-l=m]{background:var(--m);color:#fff}
+.lvl-btn.on[data-l=h]{background:var(--h);color:#fff}
+.tier{display:none}
+.tier.show{display:block}
+.ind-f{border-left:6px solid var(--f)}
+.ind-m{border-left:6px solid var(--m)}
+.ind-h{border-left:6px solid var(--h)}
+.owl-badge{float:right;font-size:26px}
+
+/* timer */
+.timer-widget{display:inline-flex;align-items:center;gap:10px;background:#111827;color:#fff;border-radius:14px;padding:10px 16px;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.timer-widget button{background:#374151;color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+
+/* xp */
+.xp-wrap{position:fixed;bottom:14px;left:16px;z-index:55;background:#fff;border-radius:20px;padding:6px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-weight:700;font-size:13px;color:#4338ca;display:flex;align-items:center;gap:8px}
+.xp-track{width:120px;height:8px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.xp-fill{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#16a34a);transition:width .4s}
+
+/* nav */
+.nav{position:fixed;bottom:14px;right:16px;z-index:55;display:flex;gap:8px}
+.nav button{width:48px;height:48px;border-radius:50%;border:none;background:#4338ca;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav button:disabled{opacity:.35;cursor:default}
+.tools{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:55;display:flex;gap:8px}
+.tools button{background:#fff;border:2px solid #c7d2fe;color:#4338ca;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
+.modal.show{display:flex}
+.modal .card{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:86vh;overflow:auto}
+.modal h3{color:#3730a3;margin-bottom:10px}
+.modal .close{float:right;cursor:pointer;font-size:22px;color:#64748b;background:none;border:none}
+.cc-pick{font-size:30px;font-weight:800;color:#4338ca;text-align:center;margin:12px 0}
+.cc-tier{text-align:center;font-size:15px;padding:8px;border-radius:10px;margin-top:8px}
+
+/* animated cloudy bench */
+.bench{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;margin:12px 0}
+.tube-svg{width:120px}
+.tube-liquid{transition:opacity 3s linear}
+.bubble{opacity:0}
+.bench.run .bubble{animation:rise 1.2s ease-in infinite}
+.bench.run .clear-liq{opacity:0}
+.bench.run .milky-liq{opacity:1}
+@keyframes rise{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(-120px)}}
+.bench .bubble:nth-child(2){animation-delay:.2s}
+.bench .bubble:nth-child(3){animation-delay:.5s}
+.bench .bubble:nth-child(4){animation-delay:.8s}
+
+/* Class Breath Lab board */
+.board{background:#fff;border:2px solid #c7d2fe;border-radius:14px;padding:14px 16px;margin:10px 0}
+.board-row{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed #e2e8f0}
+.board-row input.name{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar-line{display:flex;align-items:center;gap:8px}
+.bar-line label{font-size:11px;width:44px;color:#475569;font-weight:700}
+.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:20px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bar-fill.rest{background:var(--rest)}
+.bar-fill.active{background:var(--active)}
+.bar-line .num{width:64px}
+.bar-line .num input{width:52px;border:1px solid #cbd5e1;border-radius:6px;padding:4px;text-align:center;font-size:14px}
+.scale-strip{display:flex;gap:6px;margin:8px 0 12px}
+.scale-strip .sw{flex:1;text-align:center;font-size:12px;font-weight:700;color:#334155}
+.scale-strip .chip{height:38px;border-radius:8px;border:1.5px solid #cbd5e1;margin-bottom:3px;position:relative;overflow:hidden}
+/* colour-blind-safe: hatch density increases with cloudiness (non-colour cue) */
+.scale-strip .sw:nth-child(2) .chip::after,.scale-strip .sw:nth-child(3) .chip::after,.scale-strip .sw:nth-child(4) .chip::after,.scale-strip .sw:nth-child(5) .chip::after{content:"";position:absolute;inset:0}
+.scale-strip .sw:nth-child(2) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.22) 0 1.5px,transparent 1.5px 9px)}
+.scale-strip .sw:nth-child(3) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.24) 0 1.5px,transparent 1.5px 6px)}
+.scale-strip .sw:nth-child(4) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.26) 0 2px,transparent 2px 4.5px)}
+.scale-strip .sw:nth-child(5) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.30) 0 2px,transparent 2px 3px)}
+.anom-flag{display:none;font-size:15px;margin-left:5px;cursor:help}
+.scale-cap{font-size:13px;color:#334155;background:#f8fafc;border:1px dashed #94a3b8;border-radius:8px;padding:8px 10px;margin:2px 0 10px}
+/* capture panels */
+.capture{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin:12px 0}
+.cap-head{font-weight:700;color:#3730a3;margin-bottom:8px}
+.cap-head span{font-weight:400;font-size:13px;color:#64748b}
+.cap-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed #e2e8f0}
+.cap-row:last-child{border-bottom:none}
+.cap-row .nm input{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.cap-opts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;transition:.12s}
+.pill:hover{border-color:#94a3b8}
+.pill.on{background:#4338ca;border-color:#4338ca;color:#fff}
+.pill.on.good{background:#16a34a;border-color:#16a34a}
+.pill.on.warn{background:#f97316;border-color:#f97316}
+.pill.on.rag-g{background:#16a34a;border-color:#16a34a}
+.pill.on.rag-a{background:#eab308;border-color:#eab308}
+.pill.on.rag-r{background:#ef4444;border-color:#ef4444}
+.cap-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px;margin-top:5px}
+.sep{width:1px;height:20px;background:#e2e8f0;margin:0 2px}
+.board-summary{background:#eef2ff;border-left:6px solid #4338ca;border-radius:10px;padding:14px;margin-top:10px;display:none}
+.board-summary.show{display:block;animation:fadeInUp .3s}
+.reveal-flex{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin:10px 0}
+.reveal-tbl-wrap{flex:1;min-width:260px}
+.reveal-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.reveal-tbl th,.reveal-tbl td{border:1px solid #cbd5e1;padding:4px 7px;text-align:center}
+.reveal-tbl th{background:#eef2ff;color:#3730a3}
+.reveal-tbl td:first-child,.reveal-tbl th:first-child{text-align:left}
+.avg-graph{display:flex;align-items:flex-end;gap:10px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px 10px;flex-wrap:wrap}
+.ag-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.ag-bar{width:52px;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;min-height:22px;transition:height .7s cubic-bezier(.2,.8,.2,1)}
+.ag-bar span{color:#fff;font-weight:800;font-size:15px;margin-top:4px}
+.ag-bar.rest{background:var(--rest)}
+.ag-bar.active{background:var(--active)}
+.ag-lab{font-size:12px;font-weight:700;color:#475569;text-align:center;margin-top:4px}
+.ag-arrow{font-size:26px;color:#94a3b8;align-self:center;padding-bottom:24px}
+.ag-cap{flex-basis:100%;font-size:12px;color:#64748b;margin-top:6px}
+.pred-guide{font-size:12.5px;color:#334155;background:#eef2ff;border-radius:6px;padding:4px 8px;margin-bottom:5px;display:inline-block}
+/* --- conclusion redesign: verbal model + yellow box + feedback loop --- */
+.concl-frames{display:grid;gap:8px;margin:2px 0 10px}
+.cframe{border:2px solid;border-radius:12px;padding:9px 12px;cursor:pointer;background:#fff;transition:.15s}
+.cframe:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.cframe .cf-h{font-weight:800;font-size:13px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.cframe .cf-say{font-weight:600;color:#64748b}
+.cframe .cf-model{display:none;margin-top:7px;font-size:14px;line-height:1.5}
+.cframe.confirmed .cf-model{display:block;animation:fadeInUp .3s ease}
+.cframe.confirmed .cf-say{display:none}
+.cframe.confirmed .cf-h::after{content:"\2713 model confirmed";font-size:11px;font-weight:700;color:#16a34a;margin-left:auto}
+.cframe[data-p=build]{border-color:var(--f)} .cframe[data-p=build] .cf-h{color:var(--f)}
+.cframe[data-p=grow]{border-color:var(--m)} .cframe[data-p=grow] .cf-h{color:var(--m)}
+.cframe[data-p=launch]{border-color:var(--h)} .cframe[data-p=launch] .cf-h{color:var(--h)}
+.cframe .kw{font-weight:800}
+.ybox{background:#fef9c3;border:2px solid #fde047;border-left:7px solid #eab308;border-radius:12px;padding:10px 12px;margin:10px 0}
+.ybox h4{font-size:13px;color:#854d0e;margin:0 0 6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ns-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ns-chip{border:2px solid #fbbf24;background:#fff;border-radius:16px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:#7c4a03}
+.ns-chip:hover{background:#fffbeb}
+.ns-chip.on{background:#eab308;border-color:#eab308;color:#fff}
+.ns-active{margin-top:8px;font-size:14px;font-weight:700;color:#713f12;background:#fffbeb;border:1px dashed #eab308;border-radius:8px;padding:7px 10px;display:none}
+.ns-active.show{display:block;animation:fadeInUp .25s ease}
+.loop-head{font-weight:700;color:#3730a3;margin:6px 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.loop-tally{font-size:12.5px;font-weight:700;color:#166534;background:#dcfce7;border-radius:20px;padding:3px 12px}
+.loop-tally.none{color:#64748b;background:#f1f5f9}
+.loop-sub{font-weight:400;font-size:12px;color:#64748b;margin:-1px 0 6px}
+.loop-row{display:grid;grid-template-columns:118px auto 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed #e2e8f0}
+.loop-row:last-child{border-bottom:none}
+.loop-row .nm input{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.loop-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;min-width:140px;text-align:center;transition:.12s}
+.loop-btn.s1{background:#fef9c3;border-color:#eab308;color:#854d0e}
+.loop-btn.s2{background:#16a34a;border-color:#16a34a;color:#fff}
+.loop-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px}
+.board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
+.board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
+.loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
+.loop-agg .big{font-size:34px;font-weight:800;color:#166534;line-height:1.1}
+.loop-agg .cap{font-size:13px;color:#3f6212;margin-top:4px}
+.loop-agg .hint{font-size:11px;color:#94a3b8;margin-top:8px}
+.pupil-card .write-stem{font-style:italic;font-size:12.5px;margin:3px 0 4px}
+.pupil-card .write-lines{border-bottom:1px solid #999;height:17px;margin:8px 0}
+.legend{display:flex;gap:16px;font-size:13px;font-weight:700;margin-bottom:8px}
+.legend .k{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
+
+/* completion overlay */
+.complete{position:fixed;inset:0;background:rgba(49,46,129,.94);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:90;text-align:center;padding:30px}
+.complete.show{display:flex;animation:fadeInUp .4s}
+.complete h2{color:#fff;font-size:38px}
+.confetti{position:fixed;width:10px;height:16px;top:-20px;z-index:95;pointer-events:none}
+
+/* print */
+#print-area{display:none}
+@media print{
+  body *{visibility:hidden}
+  #print-area,#print-area *{visibility:visible}
+  #print-area{display:block;position:absolute;inset:0;padding:0}
+  @page{margin:11mm}
+  .p-sec{border-bottom:1.5px dashed #666;padding-bottom:10px;margin-bottom:12px;break-inside:avoid}
+  .p-sec:last-child{border-bottom:none}
+  .p-sec h3{font-size:15px;margin-bottom:5px;color:#111}
+  .p-sec table{width:100%;border-collapse:collapse;font-size:12px}
+  .p-sec td,.p-sec th{border:1px solid #999;padding:4px 6px;text-align:left}
+  .nameline{font-size:13px;margin:6px 0}
+  ul.tick li::before{content:'▢ '}
+  .p-hide{display:none!important}
+  .pupil-card{break-before:page;break-inside:avoid;border:2px solid #333;border-radius:8px;padding:12px 14px}
+  .pupil-card h2{font-size:17px;color:#111;margin-bottom:2px}
+  .pupil-card .pc-sec{border-bottom:1px dashed #999;padding:7px 0}
+  .pupil-card .pc-sec:last-child{border-bottom:none}
+  .pupil-card .lab{font-weight:700;color:#111;font-size:13px}
+  .pupil-card .story{font-size:13px;line-height:1.45}
+  .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
+  .pupil-card .minibar.a{background:#f97316}
+  .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
+  .rag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff}
+  /* desk scale cards */
+  .scard-grid{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+  .scard{break-inside:avoid;border:2px solid #222;border-radius:8px;padding:8px 10px}
+  .scard h4{font-size:13px;margin:0 0 6px;color:#111}
+  .scard .lv{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dotted #bbb}
+  .scard .lv:last-child{border-bottom:none}
+  .scard .sw2{width:34px;height:22px;border:1.5px solid #333;border-radius:4px;flex:none}
+  .scard .lv b{font-size:13px}
+  .scard .lv span{font-size:11px;color:#333}
+}
+
+@media(max-width:640px){
+  .slide{padding:40px 18px 90px}
+  h1{font-size:26px}h2{font-size:21px}
+  .arrival-grid{grid-template-columns:1fr}
+  .board-row{grid-template-columns:1fr}
+  .hero .ic{width:52px;height:52px;font-size:26px}
+  .tools{flex-wrap:wrap;justify-content:center;width:90%}
+}
+</style>
+
+</head>
+<body>
+<div class="progress-bar" id="pbar"></div>
+<div class="phase-timer" id="phaseTimer" onclick="toggleLessonTimer()" title="Space or tap: start / pause">⏱ Press SPACE to start</div>
+<div class="logo">
+  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#4338ca"/><path d="M7 13l3 3 7-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Progress Schools
+</div>
+
+<div class="stage" id="stage">
+
+<!-- 1. TITLE -->
+<section class="slide active" data-type="title">
+  <div class="slide-tag">Science · Practical</div>
+  <div class="hero">
+    <div class="lo-anim" style="font-size:44px;letter-spacing:10px">🧪 🥽 🧴</div>
+    <h1>Making Limewater</h1>
+    <p class="sub">The solution we’ll use to test for carbon dioxide — today we make it and leave it to stand.</p>
+  </div>
+  <div class="box li-box">
+    <b>Today I will…</b>
+    <ul class="lo-anim">
+      <li>Recall how we test for the three gases</li>
+      <li>Explain what limewater is and why it goes milky with CO₂</li>
+      <li>Safely <b>make and label</b> a batch to test next lesson</li>
+    </ul>
+  </div>
+  <div class="box sc-box"><b>Success criteria:</b> I can name the CO₂ test · I can state 3 safety musts · I make &amp; label my limewater</div>
+</section>
+
+<!-- 2. ARRIVAL -->
+<section class="slide" data-type="arrival">
+  <div class="slide-tag">Arrival · Recall</div>
+  <h2>Which test shows carbon dioxide?</h2>
+  <p>Tap the test that means the gas is <b>carbon dioxide</b>.</p>
+  <div class="arrival-grid">
+    <div class="mcq-opt" onclick="mcq(this,false)">🔥 Squeaky “pop” with a burning splint</div>
+    <div class="mcq-opt" onclick="mcq(this,false)">✨ Relights a glowing splint</div>
+    <div class="mcq-opt" onclick="mcq(this,true)">🧴 Turns limewater cloudy / milky</div>
+    <div class="mcq-opt" onclick="mcq(this,false)">💧 Turns damp litmus red</div>
+  </div>
+  <button class="btn ghost" onclick="toggle('arrRecall')">Reveal all three tests</button>
+  <div class="reveal" id="arrRecall">
+    <table class="reveal-tbl"><tr><th>Gas</th><th>Test</th><th>Result</th></tr>
+      <tr><td>Hydrogen (H₂)</td><td>Burning splint</td><td>Squeaky “pop”</td></tr>
+      <tr><td>Oxygen (O₂)</td><td>Glowing splint</td><td>Relights</td></tr>
+      <tr><td>Carbon dioxide (CO₂)</td><td>Bubble through limewater</td><td>Goes cloudy / milky</td></tr>
+    </table>
+  </div>
+  <div class="box scaffold-box"><b>Stuck?</b> Think of our <b>Gas Tests</b> lesson — which liquid went milky? That’s the one we’re making today.</div>
+</section>
+
+<!-- 3. STARTER -->
+<section class="slide" data-type="starter">
+  <div class="slide-tag">Starter · Safety</div>
+  <h2>Safety first — spot the musts</h2>
+  <div class="box li-box">Limewater is made from <b>calcium hydroxide</b> — an <b>irritant</b>. It can sting skin, eyes and airways, and we’re using glassware.</div>
+  <div class="box task-box"><b>Talk task:</b> what are the <b>3 safety musts</b> for today? Tell the person next to you.</div>
+  <button class="btn ghost" onclick="toggle('safeRules')">Reveal the 3 musts</button>
+  <div class="reveal" id="safeRules">
+    <p><b>1. Goggles on</b> — the whole time we’re at the bench.</p>
+    <p><b>2. Only the dilute solution</b> — I handle the powder, you handle the finished liquid.</p>
+    <p><b>3. Mind the glass, wash your hands</b> — and tell me about any spill (we rinse with water).</p>
+  </div>
+  <div class="box misc-box"><s>It’s just water, so it’s fine.</s> — no: calcium hydroxide is alkaline and irritant, so goggles stay on.</div>
+</section>
+
+<!-- 4. I DO -->
+<section class="slide" data-type="ido">
+  <div class="slide-tag">I Do · What is limewater?</div>
+  <h2>What limewater is — and why it goes milky</h2>
+  <div class="box ido-box">Limewater is a <b>solution of calcium hydroxide, Ca(OH)₂</b>, dissolved in water. We make it so we can <b>test for carbon dioxide</b>.</div>
+  <button class="btn" onclick="toggle('idoReveal')">🧪 Bubble CO₂ through it…</button>
+  <div class="reveal" id="idoReveal">
+    <p>It turns <b>cloudy / milky</b> — a white solid (<b>calcium carbonate</b>) forms and hangs in the liquid.</p>
+    <p><b>Word:</b> calcium hydroxide + carbon dioxide → calcium carbonate + water</p>
+    <p><b>Symbol:</b> Ca(OH)₂ + CO₂ → CaCO₃ + H₂O</p>
+  </div>
+  <div class="box exam-tip-box"><b>Exam tip:</b> cloudy = CO₂ is present. Staying <b>clear</b> is a result too — it means the gas is <b>not</b> CO₂.</div>
+</section>
+
+<!-- 5. WE DO -->
+<section class="slide" data-type="wedo">
+  <div class="slide-tag">We Do · The method</div>
+  <h2>Let’s sequence the method</h2>
+  <div class="box wedo-box">Read these with me — what order do they go in? Then tap to check.</div>
+  <button class="btn ghost" onclick="toggle('methodReveal')">Reveal the method in order</button>
+  <div class="reveal" id="methodReveal">
+    <p>1. Goggles on.</p>
+    <p>2. Measure about <b>500 ml of water</b> into a beaker.</p>
+    <p>3. Add a <b>little calcium hydroxide</b> (about half a teaspoon) — I’ll bring it round.</p>
+    <p>4. Stir well.</p>
+    <p>5. <b>Label your beaker with your name.</b></p>
+    <p>6. <b>Leave it to stand</b> until next lesson so the extra settles out.</p>
+    <p>7. Next time: pour off / filter the <b>clear</b> liquid — that’s your limewater, ready to test.</p>
+  </div>
+  <div class="box aspire-box"><b>🌟 Aspire:</b> why does <i>old</i> limewater sometimes stay clear even with CO₂? (It’s already reacted with carbon dioxide in the air.)</div>
+</section>
+
+<!-- 6. INDEPENDENT -->
+<section class="slide" data-type="ind">
+  <div class="slide-tag">Independent · Make it</div>
+  <h2>Your turn — make your limewater <span class="owl-badge">🦉</span></h2>
+  <div class="levels">
+    <div class="lvl-btn" data-l="f" onclick="setLevel('f')">Foundation</div>
+    <div class="lvl-btn" data-l="m" onclick="setLevel('m')">Middle</div>
+    <div class="lvl-btn" data-l="h" onclick="setLevel('h')">Higher</div>
+  </div>
+  <div class="box li-box"><b>On the bench:</b> beaker · ~500 ml water · calcium hydroxide (from me) · stirrer · label + pen · goggles.</div>
+  <div class="tier ind-f" data-tier="f">
+    <div class="box"><b>Foundation.</b> Follow the steps, make your limewater, and <b>label it</b>.
+      <div class="stem-box">“I made limewater and labelled it ______.”</div></div>
+    <div class="box aspire-box">🌟 Finished? Draw what you think it will look like next lesson.</div>
+  </div>
+  <div class="tier ind-m" data-tier="m">
+    <div class="box"><b>Middle.</b> Make and label it, then write <b>what it will show next lesson and why</b>.
+      <div class="stem-box">“Next lesson it will go ______ because ______, which shows the gas is ______.”</div></div>
+    <div class="box aspire-box">🌟 Finished? Explain why we leave it to stand.</div>
+  </div>
+  <div class="tier ind-h" data-tier="h">
+    <div class="box"><b>Higher.</b> Make and label it, then write the <b>word and symbol equation</b> for limewater + CO₂.
+      <div class="stem-box">Word: ______ + ______ → ______ + ______<br>Symbol: Ca(OH)₂ + CO₂ → ______ + ______</div></div>
+    <div class="box exam-tip-box"><b>Exam tip:</b> name the <b>observation</b> (milky) <i>and</i> the <b>product</b> (calcium carbonate) for full marks.</div>
+    <div class="box aspire-box">🌟 Finished? Suggest how you’d check your limewater still works next lesson.</div>
+  </div>
+</section>
+
+<!-- 7. EXIT / CONCLUSION -->
+<section class="slide" data-type="exit">
+  <div class="slide-tag">Conclusion &amp; Exit</div>
+  <h2>Show what you know</h2>
+  <div class="levels">
+    <div class="lvl-btn" data-l="f" onclick="setLevel('f')">Foundation</div>
+    <div class="lvl-btn" data-l="m" onclick="setLevel('m')">Middle</div>
+    <div class="lvl-btn" data-l="h" onclick="setLevel('h')">Higher</div>
+  </div>
+  <div class="tier" data-tier="f"><div class="box"><b>Exit · Foundation:</b> Which gas turns limewater milky?</div></div>
+  <div class="tier" data-tier="m"><div class="box"><b>Exit · Middle:</b> What will you see next lesson, and what does it tell you?</div></div>
+  <div class="tier" data-tier="h"><div class="box"><b>Exit · Higher:</b> Write the word (and symbol) equation for limewater + carbon dioxide.</div></div>
+
+  <div class="capture">
+    <div class="cap-head">🗣️ Say the conclusion, then close the loop <span>(teacher-led — the class says it aloud at their depth; you confirm the model live)</span></div>
+    <div class="concl-frames">
+      <div class="cframe" data-p="build" onclick="confirmFrame(this)">
+        <div class="cf-h">🟩 BUILD <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model">Limewater is <span class="kw">calcium hydroxide</span> dissolved in water. It goes <span class="kw">cloudy</span> when <span class="kw">carbon dioxide</span> is bubbled through.</div>
+      </div>
+      <div class="cframe" data-p="grow" onclick="confirmFrame(this)">
+        <div class="cf-h">🟧 GROW <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model">…because a <span class="kw">white solid</span> (<span class="kw">calcium carbonate</span>) forms. That’s how we <span class="kw">test for carbon dioxide</span>.</div>
+      </div>
+      <div class="cframe" data-p="launch" onclick="confirmFrame(this)">
+        <div class="cf-h">🟦 LAUNCH <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model"><span class="kw">calcium hydroxide + carbon dioxide → calcium carbonate + water</span> · <span class="kw">Ca(OH)₂ + CO₂ → CaCO₃ + H₂O</span>. <i>Old limewater can stay clear because it’s already reacted with CO₂ in the air.</i></div>
+      </div>
+    </div>
+    <div class="ybox">
+      <h4>🟡 Yellow Box — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
+      <div class="ns-chips">
+        <button class="ns-chip" onclick="setNS(this,'Name the observation — what do you actually see?')">Name the observation</button>
+        <button class="ns-chip" onclick="setNS(this,'Which gas does limewater test for?')">Which gas?</button>
+        <button class="ns-chip" onclick="setNS(this,'Add the word equation.')">Add the word equation</button>
+        <button class="ns-chip" onclick="setNS(this,'Add the symbol equation: Ca(OH)₂ + CO₂ → CaCO₃ + H₂O.')">Add the symbol equation</button>
+      </div>
+      <div class="ns-active" id="nsActive"></div>
+    </div>
+    <div class="loop-head">🔁 Feedback loop <span class="loop-tally none" id="loopTally">no loops opened yet</span><button class="board-toggle" id="boardModeBtn" onclick="toggleBoardMode()">📺 Board-safe: off</button></div>
+    <div class="loop-sub">Per pupil: mark <b>made &amp; labelled</b>, then close the loop ◻ → 🟡 VF given → 🟢 R (responded).</div>
+    <div id="exitPanel"></div>
+  </div>
+
+  <button class="btn" onclick="finishLesson()">✔ Finish lesson</button>
+</section>
+
+</div><!-- /stage -->
+
+<div class="xp-wrap"><span>⭐ XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div><span id="xpNum">0</span></div>
+
+<div class="tools">
+  <button onclick="printPack()">🖨 Print</button>
+  <button onclick="openTA()">👩‍🏫 TA</button>
+  <button onclick="openCC()">🎯 Cold Call</button>
+  <button id="muteBtn" onclick="toggleMute()">🔊 Sound on</button>
+</div>
+
+<div class="nav"><button id="prevBtn" onclick="prev()">‹</button><button id="nextBtn" onclick="next()">›</button></div>
+
+<div class="modal" id="taModal"><div class="card">
+  <button class="close" onclick="closeModal('taModal')">×</button>
+  <h3>👩‍🏫 TA Focus — this slide</h3>
+  <div id="taBody"></div>
+</div></div>
+
+<div class="modal" id="ccModal"><div class="card">
+  <button class="close" onclick="closeModal('ccModal')">×</button>
+  <h3>🎯 Cold Call</h3>
+  <p>Roll to pick a pupil, then match the question tier to the number.</p>
+  <div class="cc-pick" id="ccPick">—</div>
+  <div class="cc-tier" id="ccTier"></div>
+  <button class="btn" onclick="rollCC()">🎲 Roll</button>
+</div></div>
+
+<div class="complete" id="complete">
+  <h2>🎉 Lesson complete!</h2>
+  <p style="font-size:20px;margin-top:8px">You made your limewater and explained how it tests for carbon dioxide.</p>
+  <p style="margin-top:6px">Don’t forget to print your evidence pack — and check every beaker is labelled.</p>
+  <p id="completeLoop" style="margin-top:8px;font-weight:700;color:#166534"></p>
+  <button class="btn" style="margin-top:16px" onclick="document.getElementById('complete').classList.remove('show')">Back to lesson</button>
+</div>
+
+<div id="print-area"></div>
+<script>
+const LSKEY='ps_limewater_v1';
+let cur=0, xp=0, level='f', muted=false, boardMode=false, actx=null;
+let tSec=0, tRun=false, tInt=null;
+const pupils=[]; for(let i=0;i<8;i++) pupils.push({name:'Pupil '+(i+1), made:false, loop:0, note:''});
+const slides=[...document.querySelectorAll('.slide')];
+const types=slides.map(s=>s.dataset.type);
+const taBriefs={
+  title:"Settle the group; read the LOs; remind them today is make-and-leave \u2014 we test next time.",
+  arrival:"Prompt the gas\u2192test recall; Foundation only needs the CO\u2082/limewater pair. Cold-call gently.",
+  starter:"Draw out the 3 safety musts; stress goggles on and only handling the dilute solution.",
+  ido:"Check they grasp limewater = calcium hydroxide in water, and cloudy = CO\u2082.",
+  wedo:"Get them ordering the method; make sure everyone knows to LABEL their beaker.",
+  ind:"Circulate; you dispense the powder; watch safety and labelling; scribe where needed.",
+  exit:"Lead the spoken conclusion; give a Yellow Box next step; close each pupil's loop as they respond."
+};
+
+function resumeAudio(){ try{ if(actx&&actx.state==='suspended')actx.resume(); }catch(e){} }
+function beep(f){ if(muted)return; try{ if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)(); const o=actx.createOscillator(),g=actx.createGain(); o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.value=.12;o.start();g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);o.stop(actx.currentTime+.26);}catch(e){} }
+function addXP(n){ xp+=n; const el=document.getElementById('xpFill'); if(el)el.style.width=Math.min(100,xp)+'%'; const nn=document.getElementById('xpNum'); if(nn)nn.textContent=xp; }
+
+function showSlide(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  const pb=document.getElementById('pbar'); if(pb)pb.style.width=((cur+1)/slides.length*100)+'%';
+  const pv=document.getElementById('prevBtn'), nx=document.getElementById('nextBtn');
+  if(pv)pv.disabled=cur===0; if(nx)nx.disabled=cur===slides.length-1;
+  if(types[cur]==='exit') renderExit();
+  window.scrollTo(0,0);
+}
+function next(){ if(cur<slides.length-1){showSlide(cur+1);beep(520);} }
+function prev(){ if(cur>0){showSlide(cur-1);beep(400);} }
+
+function setLevel(l){ level=l; document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.toggle('on',b.dataset.l===l)); document.querySelectorAll('.tier').forEach(t=>t.classList.toggle('show',t.dataset.tier===l)); beep(560); }
+function toggle(id){ const el=document.getElementById(id); if(!el)return; el.classList.toggle('show'); if(el.classList.contains('show')){addXP(5);beep(600);} }
+function mcq(el,ok){ if(el.classList.contains('locked'))return; el.classList.add('locked'); if(ok){el.classList.add('correct');addXP(6);beep(680);} else {el.classList.add('wrong');beep(240);} }
+
+function openTA(){ document.getElementById('taBody').innerHTML='<p>'+(taBriefs[types[cur]]||'Support pupils as needed.')+'</p>'; document.getElementById('taModal').classList.add('show'); }
+function openCC(){ document.getElementById('ccModal').classList.add('show'); document.getElementById('ccPick').textContent='\u2014'; document.getElementById('ccTier').textContent=''; }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function rollCC(){ const pool=pupils.filter(used); const arr=pool.length?pool:pupils; const who=arr[Math.floor(Math.random()*arr.length)].name; const n=Math.floor(Math.random()*5)+1; const tier=n===1?'Foundation (recall)':n===2?'Middle (explain)':'Higher (equation)'; document.getElementById('ccPick').textContent=who; document.getElementById('ccTier').textContent='Ask a '+tier+' question'; beep(600); }
+function toggleMute(){ muted=!muted; document.getElementById('muteBtn').textContent=muted?'\ud83d\udd07 Sound off':'\ud83d\udd0a Sound on'; saveState(); if(!muted)beep(600); }
+
+function fmt(s){ const m=Math.floor(s/60),ss=s%60; return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss; }
+function ttick(){ tSec++; const el=document.getElementById('phaseTimer'); if(el)el.textContent='\u23f1 '+fmt(tSec); }
+function toggleLessonTimer(){ tRun=!tRun; if(tRun){ tInt=setInterval(ttick,1000); const el=document.getElementById('phaseTimer'); if(el)el.textContent='\u23f1 '+fmt(tSec);} else { clearInterval(tInt);} }
+
+function fireConfetti(){ const c=['#ef4444','#f59e0b','#16a34a','#3b82f6','#a855f7']; for(let i=0;i<60;i++){ const d=document.createElement('div'); d.className='confetti'; d.style.left=Math.random()*100+'vw'; d.style.background=c[i%c.length]; d.style.animationDelay=(Math.random()*.3)+'s'; document.body.appendChild(d); setTimeout(()=>d.remove(),2600);} }
+
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function used(p){ return (p.name && !/^Pupil \d+$/.test(p.name)) || p.made || (p.loop&&p.loop>0) || (p.note&&p.note.trim()); }
+function saveState(){ try{ localStorage.setItem(LSKEY,JSON.stringify({data:pupils,muted:muted,boardMode:boardMode})); }catch(e){} }
+function loadState(){ try{ const s=localStorage.getItem(LSKEY); if(!s)return; const o=JSON.parse(s); if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(pupils[i])Object.assign(pupils[i],r);}); if(o&&typeof o.muted==='boolean')muted=o.muted; if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode; }catch(e){} }
+function setName(i,v){ pupils[i].name=v; saveState(); }
+function setNote(i,v){ pupils[i].note=v; saveState(); }
+
+/* ---- marking console ---- */
+function confirmFrame(el){ const on=el.classList.toggle('confirmed'); beep(on?720:360); }
+function setNS(btn,txt){ const chips=[...document.querySelectorAll('.ns-chip')]; const already=btn.classList.contains('on'); chips.forEach(c=>c.classList.remove('on')); const box=document.getElementById('nsActive'); if(!box)return; if(already){box.classList.remove('show');box.textContent='';beep(360);return;} btn.classList.add('on'); box.textContent='\ud83d\udfe1 Next step: '+txt; box.classList.add('show'); beep(640); }
+const LOOP=[['','\u25fb Not started'],['s1','\ud83d\udfe1 VF given'],['s2','\ud83d\udfe2 R \u2014 responded']];
+function loopState(p){ return p.loop||0; }
+function renderExit(){
+  const el=document.getElementById('exitPanel'); if(!el)return; el.innerHTML='';
+  if(boardMode){ const c=loopCounts(), m=madeCount(); el.innerHTML='<div class="loop-agg"><div class="big">\ud83d\udfe2 '+c.closed+' / '+c.given+'</div><div class="cap">feedback loops closed'+(c.given?'':' \u2014 none opened yet')+'</div><div class="hint">Made &amp; labelled: '+m+' of '+pupils.length+' \u00b7 names hidden for the board \u00b7 switch Board-safe off to capture</div></div>'; updateLoopTally(); return; }
+  pupils.forEach((p,i)=>{
+    const L=LOOP[loopState(p)];
+    const row=document.createElement('div'); row.className='loop-row';
+    row.innerHTML='<div class="nm"><input value="'+esc(p.name)+'" oninput="setName('+i+',this.value)"></div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<button class="loop-btn '+(p.made?'s2':'')+'" style="min-width:118px" onclick="toggleMade('+i+')">'+(p.made?'\u2714 made &amp; labelled':'\u25fb made &amp; labelled')+'</button>'+
+        '<button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+
+      '</div>'+
+      '<input class="loop-note" placeholder="Optional next-step note\u2026" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)">';
+    el.appendChild(row);
+  });
+  updateLoopTally();
+}
+function toggleMade(i){ pupils[i].made=!pupils[i].made; renderExit(); saveState(); beep(pupils[i].made?700:360); if(pupils[i].made)addXP(3); }
+function cycleLoop(i){ pupils[i].loop=((pupils[i].loop||0)+1)%3; renderExit(); saveState(); const s=pupils[i].loop; beep(s===2?820:s===1?620:360); if(s===2)addXP(4); }
+function loopCounts(){ let given=0,closed=0; pupils.forEach(p=>{const s=p.loop||0; if(s>=1)given++; if(s===2)closed++;}); return {given:given,closed:closed}; }
+function madeCount(){ return pupils.filter(p=>p.made).length; }
+function updateLoopTally(){ const t=document.getElementById('loopTally'); if(!t)return; const c=loopCounts(); if(c.given===0){t.textContent='no loops opened yet';t.className='loop-tally none';} else {t.textContent='\ud83d\udfe2 loop closed: '+c.closed+' of '+c.given+' given a next step';t.className='loop-tally';} }
+function applyBoardBtn(){ const b=document.getElementById('boardModeBtn'); if(b){b.textContent='\ud83d\udcfa Board-safe: '+(boardMode?'on':'off');b.classList.toggle('on',boardMode);} }
+function toggleBoardMode(){ boardMode=!boardMode; applyBoardBtn(); renderExit(); saveState(); beep(boardMode?520:360); }
+function finishLesson(){ addXP(20); const cl=document.getElementById('completeLoop'); if(cl){const c=loopCounts(), m=madeCount(); cl.textContent='\ud83e\uddf4 Made & labelled: '+m+' of '+pupils.length+(c.given?('   \u00b7   \ud83d\udfe2 Loop closed: '+c.closed+' of '+c.given):''); } document.getElementById('complete').classList.add('show'); fireConfetti(); beep(660); setTimeout(function(){beep(820);},160); setTimeout(function(){beep(980);},320); }
+
+/* ---- print ---- */
+function madeLabel(p){ return p.made?'<span class="rag" style="background:#16a34a">\u2714 Made &amp; labelled</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
+function loopLabel(p){ const s=p.loop||0; return s===2?'<span class="rag" style="background:#16a34a">\ud83d\udfe2 Loop closed \u2014 responded (R)</span>':s===1?'<span class="rag" style="background:#eab308">\ud83d\udfe1 Feedback given (VF)</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
+function pupilCard(p){
+  return '<div class="pupil-card">'+
+    '<div class="pc-sec"><b>'+esc(p.name)+'</b> \u00b7 Making Limewater \u00b7 '+new Date().toLocaleDateString('en-GB')+'</div>'+
+    '<div class="pc-sec"><span class="lab">Made &amp; labelled:</span> '+madeLabel(p)+'</div>'+
+    '<div class="pc-sec"><span class="lab">My answer:</span> <span style="font-size:11.5px;color:#555">which gas? what do you see? (add the equation if you can)</span>'+
+      '<div class="write-stem">\u201cLimewater tests for ______. It goes ______ when the gas is bubbled through, because ______ forms.\u201d</div>'+
+      '<div class="write-lines"></div><div class="write-lines"></div></div>'+
+    '<div class="pc-sec"><span class="lab">Feedback loop:</span> '+loopLabel(p)+'</div>'+
+    (p.note&&p.note.trim()?'<div class="pc-sec"><span class="lab">Next step:</span> '+esc(p.note)+'</div>':'')+
+    '</div>';
+}
+function buildPrint(){
+  const list=pupils.filter(used);
+  const ko='<div class="pupil-card">'+
+    '<div class="pc-sec"><b>Class Knowledge Organiser \u2014 Making Limewater</b> \u00b7 '+new Date().toLocaleDateString('en-GB')+'</div>'+
+    '<div class="pc-sec"><span class="lab">Learning:</span> what limewater is, why it goes milky with CO\u2082, and how to make it safely.</div>'+
+    '<div class="pc-sec"><span class="lab">Success criteria:</span> \u25a2 name the CO\u2082 test \u25a2 state 3 safety musts \u25a2 make &amp; label my limewater</div>'+
+    '<div class="pc-sec"><span class="lab">The test:</span> carbon dioxide turns limewater cloudy/milky (a white solid, calcium carbonate, forms). Stays clear = not CO\u2082.</div>'+
+    '<div class="pc-sec"><span class="lab">Word equation:</span> calcium hydroxide + carbon dioxide \u2192 calcium carbonate + water</div>'+
+    '<div class="pc-sec"><span class="lab">Symbol equation:</span> Ca(OH)\u2082 + CO\u2082 \u2192 CaCO\u2083 + H\u2082O</div>'+
+    '<div class="pc-sec"><span class="lab">Method:</span> goggles on \u00b7 ~500 ml water \u00b7 add a little calcium hydroxide (teacher dispenses) \u00b7 stir \u00b7 LABEL your beaker \u00b7 leave to stand \u00b7 next time pour off / filter the clear liquid.</div>'+
+    '<div class="pc-sec"><span class="lab">Safety:</span> calcium hydroxide is an irritant \u2014 goggles on, only handle the dilute solution, wash hands, tell the teacher about spills (rinse with water).</div>'+
+    '</div>';
+  let cards='';
+  if(list.length){
+    cards=list.map(pupilCard).join('');
+    const made=list.filter(p=>p.made).length;
+    const lc=list.filter(p=>(p.loop||0)===2).length, lg=list.filter(p=>(p.loop||0)>=1).length;
+    const rows=list.map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+(p.made?'\u2714':'\u2013')+'</td><td>'+(((p.loop||0)===2)?'\ud83d\udfe2 R':((p.loop||0)===1)?'\ud83d\udfe1 VF':'\u2013')+'</td><td>'+esc(p.note||'')+'</td></tr>').join('');
+    cards+='<div class="pupil-card"><div class="pc-sec"><b>Class summary</b></div>'+
+      '<table class="reveal-tbl"><tr><th>Name</th><th>Made &amp; labelled</th><th>Feedback loop</th><th>Next step</th></tr>'+rows+'</table>'+
+      '<p style="font-size:12px;margin-top:6px"><b>Made &amp; labelled: '+made+' of '+list.length+'.</b>'+(lg?(' <b>Feedback loop closed (R): '+lc+' of '+lg+' given a next step.</b>'):'')+'</p></div>';
+  }
+  document.getElementById('print-area').innerHTML=ko+cards;
+}
+function printPack(){ buildPrint(); window.print(); }
+
+/* ---- keyboard + init ---- */
+function onKey(e){ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return; if(e.key==='ArrowRight'){next();} else if(e.key==='ArrowLeft'){prev();} else if(e.code==='Space'){e.preventDefault();toggleLessonTimer();} }
+function init(){
+  loadState();
+  const mb=document.getElementById('muteBtn'); if(mb)mb.textContent=muted?'\ud83d\udd07 Sound off':'\ud83d\udd0a Sound on';
+  setLevel('f');
+  applyBoardBtn();
+  buildPrint();
+  showSlide(0);
+  document.addEventListener('keydown',onKey);
+  const resume=function(){ resumeAudio(); document.removeEventListener('click',resume); document.removeEventListener('keydown',resume); };
+  document.addEventListener('click',resume); document.addEventListener('keydown',resume);
+}
+init();
+</script>
+
+</body>
+</html>
