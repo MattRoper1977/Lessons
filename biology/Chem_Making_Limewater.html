@@ -490,12 +490,14 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
     </div>
     <div class="loop-head">🔁 Feedback loop <span class="loop-tally none" id="loopTally">no loops opened yet</span><button class="board-toggle" id="boardModeBtn" onclick="toggleBoardMode()">📺 Board-safe: off</button></div>
     <div class="loop-sub">Per pupil: mark <b>made &amp; labelled</b>, then close the loop ◻ → 🟡 VF given → 🟢 R (responded).</div>
+    <div class="box exam-tip-box p-hide" style="margin:4px 0 8px">📷 Snap each pupil’s <b>finished, labelled</b> limewater on their row (📷 button) before it goes to stand — it prints on their sheet.</div>
     <div id="exitPanel"></div>
   </div>
 
   <button class="btn ghost" onclick="printBenchCards()">🖨 Print bench cards</button>
   <button class="btn ghost" onclick="printPack()">🖨 Print evidence pack</button>
   <button class="btn" onclick="finishLesson()">✔ Finish lesson</button>
+  <button class="btn ghost" onclick="clearAll()">🗑 New class</button>
 </section>
 
 </div><!-- /stage -->
@@ -506,6 +508,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   <button onclick="printPack()">🖨 Print</button>
   <button onclick="openTA()">👩‍🏫 TA</button>
   <button onclick="openCC()">🎯 Cold Call</button>
+  <button onclick="clearAll()">🗑 New class</button>
   <button id="muteBtn" onclick="toggleMute()">🔊 Sound on</button>
 </div>
 
@@ -534,6 +537,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   <button class="btn" style="margin-top:16px" onclick="document.getElementById('complete').classList.remove('show')">Back to lesson</button>
 </div>
 
+<div id="storeWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;color:#92400e;border-bottom:2px solid #f59e0b;padding:8px 14px;font-size:13px;font-weight:600;text-align:center">⚠ Storage is full — recent photos/notes may not be saved. Print your evidence now (🖨), then use “New class” to clear. <button onclick="document.getElementById('storeWarn').style.display='none'" style="margin-left:8px;cursor:pointer">✕</button></div>
 <div id="print-area"></div>
 <script>
 const LSKEY='ps_limewater_v1';
@@ -586,7 +590,7 @@ function fireConfetti(){ const c=['#ef4444','#f59e0b','#16a34a','#3b82f6','#a855
 
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 function used(p){ return (p.name && !/^Pupil \d+$/.test(p.name)) || p.made || (p.loop&&p.loop>0) || (p.note&&p.note.trim()) || p.photo; }
-function saveState(){ try{ localStorage.setItem(LSKEY,JSON.stringify({data:pupils,muted:muted,boardMode:boardMode})); }catch(e){} }
+function saveState(){ try{ localStorage.setItem(LSKEY,JSON.stringify({data:pupils,muted:muted,boardMode:boardMode})); }catch(e){ var w=document.getElementById('storeWarn'); if(w)w.style.display='block'; } }
 function loadState(){ try{ const s=localStorage.getItem(LSKEY); if(!s)return; const o=JSON.parse(s); if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(pupils[i])Object.assign(pupils[i],r);}); if(o&&typeof o.muted==='boolean')muted=o.muted; if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode; }catch(e){} }
 function setName(i,v){ pupils[i].name=v; saveState(); }
 function setNote(i,v){ pupils[i].note=v; saveState(); }
@@ -675,12 +679,19 @@ function printBenchCards(){
     '<div class="bc-label">✍ Label your beaker with your NAME (marker pen): ____________________</div>'+
     '<div class="bc-steps"><b>Method:</b> 1 Goggles on. 2 About 500 ml water. 3 Add the powder I bring round, then stir. 4 Write your name on the beaker. 5 Leave to stand — do NOT tip away.</div>'+
     '<div class="bc-safe"><b>Safety:</b> goggles · only the dilute solution · mind the glass · wash hands.</div>'+
-    '<div class="bc-stand">⏳ LEAVE TO STAND — we test it next lesson.</div>'+
+    '<div class="bc-stand">⏳ LEAVE TO STAND — we test it next lesson. 📷 photo it first.</div>'+
   '</div>';
   document.getElementById('print-area').innerHTML='<div class="scard-grid">'+card.repeat(6)+'</div>';
   setTimeout(function(){window.print();},50);
 }
 function printPack(){ buildPrint(); window.print(); }
+function clearAll(){
+  if(!confirm('Start a NEW class? This clears all names, photos, loops and notes on this device. This cannot be undone.'))return;
+  pupils.forEach(function(p,i){p.name='Pupil '+(i+1);p.made=false;p.loop=0;p.note='';p.photo=null;});
+  try{localStorage.removeItem(LSKEY);}catch(e){}
+  var w=document.getElementById('storeWarn');if(w)w.style.display='none';
+  renderExit();buildPrint();beep(400);
+}
 
 /* ---- keyboard + init ---- */
 function onKey(e){ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return; if(e.key==='ArrowRight'){next();} else if(e.key==='ArrowLeft'){prev();} else if(e.code==='Space'){e.preventDefault();toggleLessonTimer();} }

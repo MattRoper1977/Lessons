@@ -593,6 +593,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
     </div>
     <div class="loop-head">🔁 Feedback loop <span class="loop-tally none" id="loopTally">no loops opened yet</span><button class="board-toggle" id="boardModeBtn" onclick="toggleBoardMode()">📺 Board-safe: off</button></div>
     <div class="loop-sub">One tap per pupil: ◻ → 🟡 VF given → 🟢 R (responded). Reach 🟢 R only once they've acted on your feedback.</div>
+    <div class="box exam-tip-box p-hide" style="margin:4px 0 8px">📷 Snap each pupil’s <b>beakers / result</b> on their row (📷 button) — it prints on their evidence sheet.</div>
     <div id="exitPanel"></div>
   </div>
   <button class="btn" onclick="finishLesson()">✔ Finish lesson</button>
@@ -643,6 +644,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 </div>
 
 <!-- PRINT AREA -->
+<div id="storeWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;color:#92400e;border-bottom:2px solid #f59e0b;padding:8px 14px;font-size:13px;font-weight:600;text-align:center">⚠ Storage is full — recent photos/notes may not be saved. Print your evidence now (🖨), then use “New class” to clear. <button onclick="document.getElementById('storeWarn').style.display='none'" style="margin-left:8px;cursor:pointer">✕</button></div>
 <div id="print-area"></div>
 
 <script>
@@ -676,13 +678,14 @@ const types=slides.map(s=>s.dataset.type);
 /* ---------- persistence (works when file is deployed/opened directly) ---------- */
 const LSKEY='ps_co2_lab_v1';
 let muted=false;
-function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode}));}catch(e){}}
+function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode}));}catch(e){var w=document.getElementById('storeWarn');if(w)w.style.display='block';}}
 function loadState(){try{const s=localStorage.getItem(LSKEY);if(!s)return;const o=JSON.parse(s);if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(breathData[i])Object.assign(breathData[i],r);});if(o&&typeof o.muted==='boolean')muted=o.muted;if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode;}catch(e){}}
 function clearAll(){
   if(!confirm('Clear ALL names, readings, predictions and notes for a new class? This cannot be undone.'))return;
-  breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;});
+  breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;p.photo=null;});
   try{localStorage.removeItem(LSKEY);}catch(e){}
-  buildBoard();renderPredict();renderExit();
+  var sw=document.getElementById('storeWarn');if(sw)sw.style.display='none';
+  buildBoard();renderPredict();renderExit();buildPrint();
   const bs=document.getElementById('boardSummary');if(bs)bs.classList.remove('show');
   beep(300);
 }
@@ -1006,7 +1009,7 @@ function printScaleCards(){
     ['#ffffff','5','Milky','can\'t see through at all']
   ];
   const rows=lv.map(l=>'<div class="lv"><span class="sw2" style="background:'+l[0]+'"></span><b>'+l[1]+' '+l[2]+'</b> <span>— '+l[3]+'</span></div>').join('');
-  const card='<div class="scard"><h4>Cloudiness scale — stand your beaker on this (or hold it up)</h4>'+rows+'<p style="font-size:10px;margin-top:5px">Rate by how much you can see through the beaker.</p></div>';
+  const card='<div class="scard"><h4>Cloudiness scale — stand your beaker on this (or hold it up)</h4>'+rows+'<p style="font-size:10px;margin-top:5px">Rate by how much you can see through the beaker.</p><div style="font-size:10px;font-weight:700;margin-top:3px">✍ Name on your beaker: ____________</div></div>';
   document.getElementById('print-area').innerHTML='<div class="scard-grid">'+card.repeat(6)+'</div>';
   setTimeout(()=>window.print(),50);
 }
