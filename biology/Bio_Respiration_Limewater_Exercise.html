@@ -247,6 +247,11 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .photo-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#475569;white-space:nowrap;display:inline-block}
 .photo-btn.has{background:#dcfce7;border-color:#16a34a;color:#166534}
 .photo-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;border:1px solid #cbd5e1;vertical-align:middle;margin-left:4px;cursor:pointer}
+.tier-seg{display:inline-flex;border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;align-self:center}
+.tier-btn{border:none;background:#fff;padding:6px 9px;font-size:12px;font-weight:800;cursor:pointer;color:#64748b;border-left:1px solid #e2e8f0}
+.tier-btn:first-child{border-left:none}
+.tier-btn.on{background:#4338ca;color:#fff}
+.pupil-card .pc-model{background:#ecfdf5;border-left:4px solid #10b981;padding:6px 9px;border-radius:5px;font-size:12.5px}
 .board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
 .board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
 .loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
@@ -291,6 +296,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   .pupil-card .story{font-size:13px;line-height:1.45}
   .pupil-card .pc-photo img{max-width:150px;max-height:130px}
   .pupil-card .pc-q{background:#f4f4f4;border-left:3px solid #666}
+  .pupil-card .pc-model{background:#eef7f0;border-left:3px solid #059669}
   .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
   .pupil-card .minibar.a{background:#f97316}
   .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
@@ -654,12 +660,12 @@ const arrivalQs=[
   {q:"2. When that gas is present, clear limewater turns…",opts:["Blue","Cloudy / milky","Bright red"],a:1}
 ];
 const breathData=[
-  {name:"Pupil 1",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
-  {name:"Pupil 2",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
-  {name:"Pupil 3",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
-  {name:"Pupil 4",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
-  {name:"Pupil 5",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null},
-  {name:"Pupil 6",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null}
+  {name:"Pupil 1",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null},
+  {name:"Pupil 2",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null},
+  {name:"Pupil 3",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null},
+  {name:"Pupil 4",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null},
+  {name:"Pupil 5",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null},
+  {name:"Pupil 6",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null}
 ];
 const taBriefs={
   title:"Read the LOs aloud with the class. Names/faces check who is regulated before we handle glassware. Flag today = practical + short exercise burst.",
@@ -682,7 +688,7 @@ function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathD
 function loadState(){try{const s=localStorage.getItem(LSKEY);if(!s)return;const o=JSON.parse(s);if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(breathData[i])Object.assign(breathData[i],r);});if(o&&typeof o.muted==='boolean')muted=o.muted;if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode;}catch(e){}}
 function clearAll(){
   if(!confirm('Clear ALL names, readings, predictions and notes for a new class? This cannot be undone.'))return;
-  breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;p.photo=null;});
+  breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;p.photo=null;p.tier=null;});
   try{localStorage.removeItem(LSKEY);}catch(e){}
   var sw=document.getElementById('storeWarn');if(sw)sw.style.display='none';
   buildBoard();renderPredict();renderExit();buildPrint();
@@ -915,6 +921,8 @@ function resizePhoto(file,cb){var r=new FileReader();r.onload=function(){var img
 function photoCtl(i){var p=breathData[i];return '<label class="photo-btn'+(p.photo?' has':'')+'">'+(p.photo?'✔ photo':'📷 photo')+'<input type="file" accept="image/*" capture="environment" style="display:none" onchange="setPhoto('+i+',this)"></label>'+(p.photo?'<img class="photo-thumb" src="'+p.photo+'" onclick="removePhoto('+i+')" title="tap to remove">':'');}
 function setPhoto(i,input){var f=input.files&&input.files[0];if(!f)return;resizePhoto(f,function(data){if(!data)return;breathData[i].photo=data;renderExit();try{saveState();}catch(e){}beep(700);addXP(3);});}
 function removePhoto(i){breathData[i].photo=null;renderExit();saveState();beep(360);}
+function tierCtl(i){var t=breathData[i].tier;function b(k,lab){return '<button class="tier-btn'+(t===k?' on':'')+'" onclick="setTier('+i+',\''+k+'\')">'+lab+'</button>';}return '<span class="tier-seg" title="Question level for this pupil (F/M/H)">'+b('f','F')+b('m','M')+b('h','H')+'</span>';}
+function setTier(i,t){breathData[i].tier=(breathData[i].tier===t?null:t);renderExit();saveState();beep(560);}
 function renderExit(){
   const el=document.getElementById('exitPanel');if(!el)return;el.innerHTML='';
   if(boardMode){
@@ -926,7 +934,7 @@ function renderExit(){
     const L=LOOP[loopState(p)];
     const row=document.createElement('div');row.className='loop-row';
     row.innerHTML='<div class="nm"><input value="'+esc(p.name)+'" oninput="setName('+i+',this.value)"></div>'+
-      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+photoCtl(i)+'</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+photoCtl(i)+tierCtl(i)+'</div>'+
       '<input class="loop-note" placeholder="Optional next-step note for their sheet…" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)">';
     el.appendChild(row);
   });
@@ -978,8 +986,12 @@ function pupilStory(p){
   s+='This happens because exercise makes your muscles <b>respire</b> faster, and respiration produces carbon dioxide.';
   return s;
 }
-const QUESTIONS='<b>Foundation:</b> Which reading had more CO₂ — rest or after exercise?<br><b>Middle:</b> Explain, using respiration, why the beaker was cloudier after exercise.<br><b>Higher:</b> Write the word equation for respiration, then explain why exercise increases CO₂ in exhaled breath (and why we kept the breaths the same).';
+const QTIER={f:'Which reading had more carbon dioxide — rest or after exercise?',m:'Explain, using respiration, why the beaker was cloudier after exercise.',h:'Write the word equation for respiration, then explain why exercise increases CO₂ in exhaled breath (and why we kept the breaths the same).'};
+const ATIER={f:'After exercise — the limewater was cloudier, so there was more carbon dioxide.',m:'Exercise makes your muscles respire faster; respiration makes carbon dioxide, so there is more CO₂ in your breath, which turns the limewater cloudier.',h:'glucose + oxygen → carbon dioxide + water. Exercise raises the rate of respiration, releasing more energy and more CO₂, so more leaves in each breath. We kept the number of breaths the same so it was a fair test.'};
+const TNAME={f:'Foundation',m:'Middle',h:'Higher'};
+function tierOf(p){return p.tier||level||'f';}
 function pupilCard(p,d){
+  var t=tierOf(p), tn=TNAME[t], q=QTIER[t], a=ATIER[t];
   const rbar=p.rest!=null?'<span class="minibar" style="width:'+(p.rest*18)+'px"></span> '+p.rest+'/5':'not recorded';
   const abar=p.active!=null?'<span class="minibar a" style="width:'+(p.active*18)+'px"></span> '+p.active+'/5':'not recorded';
   const note=p.note&&p.note.trim()?'<div class="pc-sec story"><span class="lab">Teacher note:</span> '+esc(p.note)+'</div>':'';
@@ -990,10 +1002,10 @@ function pupilCard(p,d){
     '<div class="pc-sec story"><span class="lab">My readings (same breaths each time):</span><br>Rest: '+rbar+' &nbsp;&nbsp; After exercise: '+abar+'</div>'+
     (p.photo?'<div class="pc-sec story"><span class="lab">Photo — my beakers / result:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
     '<div class="pc-sec story"><span class="lab">What I found:</span> '+pupilStory(p)+'</div>'+
-    '<div class="pc-sec story pc-q"><b>What I was asked (exit ticket):</b><br>'+QUESTIONS+'</div>'+
-    '<div class="pc-sec"><span class="lab">My answer:</span> <span style="font-size:11.5px;color:#555">complete the stem — add the equation / why if you can</span>'+
-      '<div class="write-stem">"A higher cloudiness score means there was ______ carbon dioxide in my breath, because exercise increases ______."</div>'+
+    '<div class="pc-sec story pc-q"><b>The question you were asked ('+tn+'):</b><br>'+q+'</div>'+
+    '<div class="pc-sec"><span class="lab">Write your answer:</span> <span style="font-size:11.5px;color:#555">have a go, then check the model answer below</span>'+
       '<div class="write-lines"></div><div class="write-lines"></div></div>'+
+    '<div class="pc-sec story pc-model"><b>Model answer — check yours:</b> '+a+'</div>'+
     '<div class="pc-sec story"><span class="lab">Feedback loop:</span> '+loopLabel(p)+'</div>'+
     note+
     '<div class="pc-sec recap"><b>Revision recap:</b> Respiration: glucose + oxygen → carbon dioxide + water. Limewater tests for carbon dioxide — it turns from clear to <b>cloudy/milky</b>; the more CO₂, the cloudier. Exercise → more respiration → more CO₂ → cloudier beaker. <b>Memory hook: "Move more → make more CO₂ → cloudier beaker."</b></div>'+
