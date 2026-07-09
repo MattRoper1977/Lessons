@@ -58,6 +58,15 @@ p,li{font-size:17px;line-height:1.5}
 .scaffold-box{background:#fef9c3;border-left:6px solid #ca8a04}
 .ido-box{background:#fee2e2;border-left:6px solid var(--ido)}
 .wedo-box{background:#fef3c7;border-left:6px solid var(--wedo)}
+.seq-slots{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.seq-slot{display:flex;align-items:center;gap:9px;background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:8px 12px;font-weight:600;color:#14532d;animation:fadeInUp .3s ease}
+.seq-slot .num{background:#16a34a;color:#fff;min-width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.seq-pool{display:flex;flex-direction:column;gap:7px;margin:8px 0}
+.seq-chip{text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:9px 13px;font-weight:600;font-size:15px;cursor:pointer;transition:.12s;color:#1f2937}
+.seq-chip:hover{border-color:#6366f1;background:#eef2ff}
+.seq-chip.wrong{animation:seqShake .35s;border-color:#ef4444;background:#fef2f2}
+.seq-actions{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+@keyframes seqShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
 .stem-box{background:#f1f5f9;border:1px dashed #64748b;font-style:italic}
 .exam-tip-box{background:#fef08a;border-left:6px solid #eab308}
 .misc-box{background:#fee2e2;border-left:6px solid #ef4444}
@@ -247,6 +256,11 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .photo-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#475569;white-space:nowrap;display:inline-block}
 .photo-btn.has{background:#dcfce7;border-color:#16a34a;color:#166534}
 .photo-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;border:1px solid #cbd5e1;vertical-align:middle;margin-left:4px;cursor:pointer}
+.tier-seg{display:inline-flex;border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;align-self:center}
+.tier-btn{border:none;background:#fff;padding:6px 9px;font-size:12px;font-weight:800;cursor:pointer;color:#64748b;border-left:1px solid #e2e8f0}
+.tier-btn:first-child{border-left:none}
+.tier-btn.on{background:#4338ca;color:#fff}
+.pupil-card .pc-model{background:#ecfdf5;border-left:4px solid #10b981;padding:6px 9px;border-radius:5px;font-size:12.5px}
 .board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
 .board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
 .loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
@@ -291,6 +305,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
   .pupil-card .story{font-size:13px;line-height:1.45}
   .pupil-card .pc-photo img{max-width:150px;max-height:130px}
   .pupil-card .pc-q{background:#f4f4f4;border-left:3px solid #666}
+  .pupil-card .pc-model{background:#eef7f0;border-left:3px solid #059669}
   .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
   .pupil-card .minibar.a{background:#f97316}
   .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
@@ -406,18 +421,15 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 <!-- 5. WE DO -->
 <section class="slide" data-type="wedo">
   <div class="slide-tag">We Do · The method</div>
-  <h2>Let’s sequence the method</h2>
-  <div class="box wedo-box">Read these with me — what order do they go in? Then tap to check.</div>
-  <button class="btn ghost" onclick="toggle('methodReveal')">Reveal the method in order</button>
-  <div class="reveal" id="methodReveal">
-    <p>1. Goggles on.</p>
-    <p>2. Measure about <b>500 ml of water</b> into a beaker.</p>
-    <p>3. Add a <b>little calcium hydroxide</b> (about half a teaspoon) — I’ll bring it round.</p>
-    <p>4. Stir well.</p>
-    <p>5. <b>Label your beaker with your name.</b></p>
-    <p>6. <b>Leave it to stand</b> until next lesson so the extra settles out.</p>
-    <p>7. Next time: pour off / filter the <b>clear</b> liquid — that’s your limewater, ready to test.</p>
+  <h2>Let’s put the method in order — together</h2>
+  <div class="box wedo-box">Which step comes <b>next</b>? Tap the steps into the right order — green locks in; a wrong tap just wobbles, so try another.</div>
+  <div class="seq-slots" id="seqSlots"></div>
+  <div class="seq-pool" id="seqPool"></div>
+  <div class="seq-actions">
+    <button class="btn ghost" onclick="seqReset()">↺ Start again</button>
+    <button class="btn ghost" onclick="seqReveal()">Show me the order</button>
   </div>
+  <div class="reveal" id="seqDone"><b>✅ Method sorted!</b> Now let’s make it — grab your bench card and go.</div>
   <div class="box aspire-box"><b>🌟 Aspire:</b> why does <i>old</i> limewater sometimes stay clear even with CO₂? (It’s already reacted with carbon dioxide in the air.)</div>
 </section>
 
@@ -543,7 +555,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 const LSKEY='ps_limewater_v1';
 let cur=0, xp=0, level='f', muted=false, boardMode=false, actx=null;
 let tSec=0, tRun=false, tInt=null;
-const pupils=[]; for(let i=0;i<8;i++) pupils.push({name:'Pupil '+(i+1), made:false, loop:0, note:'', photo:null});
+const pupils=[]; for(let i=0;i<8;i++) pupils.push({name:'Pupil '+(i+1), made:false, loop:0, note:'', photo:null, tier:null});
 const slides=[...document.querySelectorAll('.slide')];
 const types=slides.map(s=>s.dataset.type);
 const taBriefs={
@@ -605,6 +617,8 @@ function resizePhoto(file,cb){var r=new FileReader();r.onload=function(){var img
 function photoCtl(i){var p=pupils[i];return '<label class="photo-btn'+(p.photo?' has':'')+'">'+(p.photo?'✔ photo':'📷 photo')+'<input type="file" accept="image/*" capture="environment" style="display:none" onchange="setPhoto('+i+',this)"></label>'+(p.photo?'<img class="photo-thumb" src="'+p.photo+'" onclick="removePhoto('+i+')" title="tap to remove">':'');}
 function setPhoto(i,input){var f=input.files&&input.files[0];if(!f)return;resizePhoto(f,function(data){if(!data)return;pupils[i].photo=data;renderExit();try{saveState();}catch(e){}beep(700);addXP(3);});}
 function removePhoto(i){pupils[i].photo=null;renderExit();saveState();beep(360);}
+function tierCtl(i){var t=pupils[i].tier;function b(k,lab){return '<button class="tier-btn'+(t===k?' on':'')+'" onclick="setTier('+i+',\''+k+'\')">'+lab+'</button>';}return '<span class="tier-seg" title="Question level for this pupil (F/M/H)">'+b('f','F')+b('m','M')+b('h','H')+'</span>';}
+function setTier(i,t){pupils[i].tier=(pupils[i].tier===t?null:t);renderExit();saveState();beep(560);}
 function renderExit(){
   const el=document.getElementById('exitPanel'); if(!el)return; el.innerHTML='';
   if(boardMode){ const c=loopCounts(), m=madeCount(); el.innerHTML='<div class="loop-agg"><div class="big">\ud83d\udfe2 '+c.closed+' / '+c.given+'</div><div class="cap">feedback loops closed'+(c.given?'':' \u2014 none opened yet')+'</div><div class="hint">Made &amp; labelled: '+m+' of '+pupils.length+' \u00b7 names hidden for the board \u00b7 switch Board-safe off to capture</div></div>'; updateLoopTally(); return; }
@@ -616,6 +630,7 @@ function renderExit(){
         '<button class="loop-btn '+(p.made?'s2':'')+'" style="min-width:118px" onclick="toggleMade('+i+')">'+(p.made?'\u2714 made &amp; labelled':'\u25fb made &amp; labelled')+'</button>'+
         '<button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')">'+L[1]+'</button>'+
         photoCtl(i)+
+        tierCtl(i)+
       '</div>'+
       '<input class="loop-note" placeholder="Optional next-step note\u2026" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)">';
     el.appendChild(row);
@@ -634,16 +649,20 @@ function finishLesson(){ addXP(20); const cl=document.getElementById('completeLo
 /* ---- print ---- */
 function madeLabel(p){ return p.made?'<span class="rag" style="background:#16a34a">\u2714 Made &amp; labelled</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
 function loopLabel(p){ const s=p.loop||0; return s===2?'<span class="rag" style="background:#16a34a">\ud83d\udfe2 Loop closed \u2014 responded (R)</span>':s===1?'<span class="rag" style="background:#eab308">\ud83d\udfe1 Feedback given (VF)</span>':'<span class="rag" style="background:#94a3b8">\u25fb Not yet</span>'; }
-const QUESTIONS='<b>Foundation:</b> Which gas turns limewater milky?<br><b>Middle:</b> What will you see next lesson, and what does it tell you?<br><b>Higher:</b> Write the word (and symbol) equation for limewater + carbon dioxide.';
+const QTIER={f:'Which gas turns limewater milky?',m:'What will you see next lesson, and what does it tell you?',h:'Write the word (and symbol) equation for limewater + carbon dioxide.'};
+const ATIER={f:'Carbon dioxide (CO₂).',m:'It goes cloudy / milky — that shows carbon dioxide is present.',h:'Word: calcium hydroxide + carbon dioxide → calcium carbonate + water.  Symbol: Ca(OH)₂ + CO₂ → CaCO₃ + H₂O.'};
+const TNAME={f:'Foundation',m:'Middle',h:'Higher'};
+function tierOf(p){return p.tier||level||'f';}
 function pupilCard(p){
+  var t=tierOf(p), tn=TNAME[t], q=QTIER[t], a=ATIER[t];
   return '<div class="pupil-card">'+
     '<div class="pc-sec"><b>'+esc(p.name)+'</b> \u00b7 Making Limewater \u00b7 '+new Date().toLocaleDateString('en-GB')+'</div>'+
     '<div class="pc-sec"><span class="lab">Made &amp; labelled:</span> '+madeLabel(p)+'</div>'+
     (p.photo?'<div class="pc-sec"><span class="lab">Photo — my finished, labelled limewater:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
-    '<div class="pc-sec pc-q"><b>What I was asked (exit ticket):</b><br>'+QUESTIONS+'</div>'+
-    '<div class="pc-sec"><span class="lab">My answer:</span> <span style="font-size:11.5px;color:#555">which gas? what do you see? (add the equation if you can)</span>'+
-      '<div class="write-stem">\u201cLimewater tests for ______. It goes ______ when the gas is bubbled through, because ______ forms.\u201d</div>'+
+    '<div class="pc-sec pc-q"><b>The question you were asked ('+tn+'):</b><br>'+q+'</div>'+
+    '<div class="pc-sec"><span class="lab">Write your answer:</span> <span style="font-size:11.5px;color:#555">have a go, then check the model answer below</span>'+
       '<div class="write-lines"></div><div class="write-lines"></div></div>'+
+    '<div class="pc-sec pc-model"><b>Model answer — check yours:</b> '+a+'</div>'+
     '<div class="pc-sec"><span class="lab">Feedback loop:</span> '+loopLabel(p)+'</div>'+
     (p.note&&p.note.trim()?'<div class="pc-sec"><span class="lab">Teacher next step:</span> '+esc(p.note)+'</div>':'')+
     '<div class="pc-sec recap"><b>Revision recap:</b> Limewater is calcium hydroxide, Ca(OH)₂, dissolved in water. It tests for carbon dioxide: CO₂ turns it cloudy/milky as calcium carbonate forms. Word: calcium hydroxide + carbon dioxide → calcium carbonate + water. Symbol: Ca(OH)₂ + CO₂ → CaCO₃ + H₂O. <b>Memory hook: CO₂ → cloudy.</b></div>'+
@@ -687,7 +706,7 @@ function printBenchCards(){
 function printPack(){ buildPrint(); window.print(); }
 function clearAll(){
   if(!confirm('Start a NEW class? This clears all names, photos, loops and notes on this device. This cannot be undone.'))return;
-  pupils.forEach(function(p,i){p.name='Pupil '+(i+1);p.made=false;p.loop=0;p.note='';p.photo=null;});
+  pupils.forEach(function(p,i){p.name='Pupil '+(i+1);p.made=false;p.loop=0;p.note='';p.photo=null;p.tier=null;});
   try{localStorage.removeItem(LSKEY);}catch(e){}
   var w=document.getElementById('storeWarn');if(w)w.style.display='none';
   renderExit();buildPrint();beep(400);
@@ -695,12 +714,32 @@ function clearAll(){
 
 /* ---- keyboard + init ---- */
 function onKey(e){ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return; if(e.key==='ArrowRight'){next();} else if(e.key==='ArrowLeft'){prev();} else if(e.code==='Space'){e.preventDefault();toggleLessonTimer();} }
+/* ---- We Do: order the method together ---- */
+const METHOD=['Goggles on.','Measure ~500 ml of water into a beaker.','Add a little calcium hydroxide (I bring it round), then stir well.','Label your beaker with your name.','Leave it to stand until next lesson.','Next time: pour off / filter the clear liquid — that\'s your limewater.'];
+let seqNext=0, seqPool=[];
+function seqShuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function seqInit(){seqNext=0;seqPool=seqShuffle(METHOD.map(function(_,i){return i;}));renderSeq();}
+function renderSeq(){
+  var slots=document.getElementById('seqSlots'),pool=document.getElementById('seqPool');if(!slots||!pool)return;
+  var sh='';for(var k=0;k<seqNext;k++){sh+='<div class="seq-slot"><span class="num">'+(k+1)+'</span><span>'+METHOD[k]+'</span></div>';}
+  slots.innerHTML=sh;
+  var ph='';seqPool.forEach(function(i){if(i>=seqNext){ph+='<button class="seq-chip" data-i="'+i+'" onclick="seqTap('+i+')">'+METHOD[i]+'</button>';}});
+  pool.innerHTML=ph;
+  var done=document.getElementById('seqDone');if(done)done.classList.toggle('show',seqNext>=METHOD.length);
+}
+function seqTap(i){
+  if(i===seqNext){seqNext++;beep(560+seqNext*45);addXP(4);renderSeq();if(seqNext>=METHOD.length){try{fireConfetti();}catch(e){}beep(900);}}
+  else{var el=document.querySelector('.seq-chip[data-i="'+i+'"]');if(el){el.classList.add('wrong');setTimeout(function(){el.classList.remove('wrong');},380);}beep(240);}
+}
+function seqReset(){seqInit();beep(400);}
+function seqReveal(){seqNext=METHOD.length;renderSeq();beep(700);}
 function init(){
   loadState();
   const mb=document.getElementById('muteBtn'); if(mb)mb.textContent=muted?'\ud83d\udd07 Sound off':'\ud83d\udd0a Sound on';
   setLevel('f');
   applyBoardBtn();
   buildPrint();
+  seqInit();
   showSlide(0);
   document.addEventListener('keydown',onKey);
   const resume=function(){ resumeAudio(); document.removeEventListener('click',resume); document.removeEventListener('keydown',resume); };
