@@ -366,6 +366,17 @@ button,.btn,.hinge,.voice-choice,.route-card,.pill,.lvl-btn,.code-btn,.loop-btn{
  body{overflow:hidden}.slide{padding:72px 14px 112px}.wrap{max-width:none}h1{font-size:28px}h2{font-size:24px}.sub,p,li{font-size:16px}.logo{top:10px;right:8px}.phase-timer{top:9px;left:8px}.tools{left:8px;right:112px;transform:none;bottom:8px;justify-content:flex-start;overflow-x:auto;gap:5px;padding:2px;scrollbar-width:none}.tools::-webkit-scrollbar{display:none}.tools button{flex:0 0 auto;padding:7px 10px;font-size:12px}.xp-wrap{display:none}.nav{bottom:8px;right:8px}.nav button{width:46px;height:46px}.lundy-ribbon{display:none}.route-banner,.hinge-grid,.role-grid{grid-template-columns:1fr}.hinge{min-height:92px}.loop-row{grid-template-columns:1fr;gap:6px}.board-row,.cap-row{grid-template-columns:1fr}.end-actions{margin-bottom:38px}.btn{min-height:46px}.choice-row{gap:6px}
 }
 @media print{.pupil-card{break-before:page;page-break-before:always}.pupil-card:first-child{break-before:auto;page-break-before:auto}.print-cover{break-after:page;page-break-after:always}.pc-sec{break-inside:avoid}}
+
+/* SEMH: respect OS reduced-motion + user-toggled Calm Mode */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .bench.run .bubble{animation:none!important;opacity:0!important}
+}
+body.calm{background:#eef4f8!important}
+body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition-duration:.001ms!important}
+body.calm .bench.run .bubble{opacity:0!important}
+.calm-tag{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:54;display:none;background:#0d9488;color:#fff;border-radius:16px;padding:3px 12px;font-size:11px;font-weight:800;letter-spacing:.04em}
+body.calm .calm-tag{display:block}
 </style>
 </head>
 <body>
@@ -789,8 +800,10 @@ button,.btn,.hinge,.voice-choice,.route-card,.pill,.lvl-btn,.code-btn,.loop-btn{
   <button onclick="printIndividualEvidence()">🖨 Evidence</button>
   <button onclick="openTA()">👩‍🏫 TA</button>
   <button onclick="openCC()">🎯 Cold Call</button>
+  <button id="calmBtn" onclick="toggleCalm()">🌿 Calm</button>
   <button id="muteBtn" onclick="toggleMute()">🔊 Sound on</button>
 </div>
+<div class="calm-tag">🌿 Calm mode — animations &amp; sounds paused</div>
 
 <!-- nav -->
 <div class="nav"><button id="prevBtn" onclick="prev()">‹</button><button id="nextBtn" onclick="next()">›</button></div>
@@ -857,9 +870,11 @@ const types=slides.map(s=>s.dataset.type);
 
 /* ---------- persistence (works when file is deployed/opened directly) ---------- */
 const LSKEY='ps_co2_final_observation_v1';
-let muted=false;
-function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode}));}catch(e){var w=document.getElementById('storeWarn');if(w)w.style.display='block';}}
-function loadState(){try{const s=localStorage.getItem(LSKEY);if(!s)return;const o=JSON.parse(s);if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(breathData[i])Object.assign(breathData[i],r);});if(o&&typeof o.muted==='boolean')muted=o.muted;if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode;}catch(e){}}
+let muted=false, calm=false;
+function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode,calm:calm}));}catch(e){var w=document.getElementById('storeWarn');if(w)w.style.display='block';}}
+function loadState(){try{const s=localStorage.getItem(LSKEY);if(!s)return;const o=JSON.parse(s);if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(breathData[i])Object.assign(breathData[i],r);});if(o&&typeof o.muted==='boolean')muted=o.muted;if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode;if(o&&typeof o.calm==='boolean')calm=o.calm;}catch(e){}}
+function applyCalm(){document.body.classList.toggle('calm',calm);const b=document.getElementById('calmBtn');if(b){b.textContent=calm?'🌿 Calm: on':'🌿 Calm';b.classList.toggle('on',calm);}}
+function toggleCalm(){calm=!calm;applyCalm();saveState();if(!calm)beep(520);}
 function clearAll(){
   if(!confirm('Clear ALL names, readings, predictions and notes for a new class? This cannot be undone.'))return;
   breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;p.photo=null;p.tier=null;p.mode=null;p.voice=null;p.influence='';p.efl=false;});
@@ -873,12 +888,15 @@ function toggleMute(){muted=!muted;const b=document.getElementById('muteBtn');if
 
 /* ---------- audio ---------- */
 let actx=null;
-function beep(freq){if(muted)return;try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;o.connect(g);g.connect(actx.destination);g.gain.value=.12;o.start();g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);o.stop(actx.currentTime+.26);}catch(e){}}
-window.addEventListener('pointerdown',()=>{if(actx&&actx.state==='suspended')actx.resume();},{once:true});
+function beep(freq){if(muted||calm)return;try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;o.connect(g);g.connect(actx.destination);g.gain.value=.12;o.start();g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);o.stop(actx.currentTime+.26);}catch(e){}}
+function resumeAudio(){if(actx&&actx.state==='suspended')actx.resume();}
+window.addEventListener('pointerdown',resumeAudio,{once:true});
+window.addEventListener('keydown',resumeAudio,{once:true});
 
 /* ---------- phase timers (per-slide pacing; space-bar starts, then pauses/resumes) ---------- */
 const slideMins={arrival:3,starter:4,voice:5,ido:4,wedo:7,ind:9,board:8,exit:6};
 const phaseNames={arrival:'Arrival',starter:'Starter',voice:'Lundy Loop',ido:'I Do',wedo:'We Do',ind:'Active',board:'Analysis',exit:'Exit'};
+const LESSON_TOTAL_MIN=types.reduce((a,t)=>a+(slideMins[t]||0),0);
 let ptStarted=false, ptPaused=false, phaseLeft=0, totalElapsed=0, ptInterval=null;
 function fmtAbs(sec){sec=Math.abs(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
 function startPhase(t){phaseLeft=(slideMins[t]||0)*60;}
@@ -896,7 +914,7 @@ function updateTimer(){
     el.className='phase-timer '+(over?'over':(phaseLeft<=60?'warn':'ok'));
     html='<span class="pt-name">'+(phaseNames[t]||'')+(ptPaused?' ⏸':'')+'</span><b class="pt-time">'+(over?'+':'')+fmtAbs(phaseLeft)+'</b>';
   }
-  el.innerHTML=html+'<span class="pt-total">Σ '+fmtAbs(totalElapsed)+' / 49</span>';
+  el.innerHTML=html+'<span class="pt-total">Σ '+fmtAbs(totalElapsed)+' / '+LESSON_TOTAL_MIN+'</span>';
 }
 
 /* ---------- nav ---------- */
@@ -916,8 +934,13 @@ function showSlide(i){
 function next(){showSlide(cur+1);}
 function prev(){showSlide(cur-1);}
 document.addEventListener('keydown',e=>{
-  if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
-  if(e.key===' '||e.code==='Space'){e.preventDefault();toggleLessonTimer();return;}
+  const tag=e.target.tagName;
+  if(['INPUT','TEXTAREA','SELECT'].includes(tag))return;
+  if(e.key==='Escape'){['taModal','ccModal'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('show');});const c=document.getElementById('complete');if(c)c.classList.remove('show');return;}
+  if(e.key===' '||e.code==='Space'){
+    if(['BUTTON','A','LABEL','SUMMARY'].includes(tag))return; /* let Space activate the focused control */
+    e.preventDefault();toggleLessonTimer();return;
+  }
   if(e.key==='ArrowRight')next();
   if(e.key==='ArrowLeft')prev();
 });
@@ -975,8 +998,9 @@ function openTA(){document.getElementById('taBody').innerHTML='<p>'+(taBriefs[ty
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 function openCC(){document.getElementById('ccModal').classList.add('show');document.getElementById('ccPick').textContent='—';document.getElementById('ccTier').textContent='';}
 function rollCC(){
-  const names=breathData.map(p=>p.name);
-  const pick=names[Math.floor(Math.random()*names.length)];
+  let pool=breathData.filter((p,i)=>p.name&&p.name!=='Pupil '+(i+1));
+  if(!pool.length)pool=breathData;
+  const pick=pool[Math.floor(Math.random()*pool.length)].name;
   const n=Math.floor(Math.random()*5)+1; // 1-5
   let tier,txt,col;
   if(n===1){tier='Foundation';col='#dcfce7';txt='Ask a recall question (what does cloudy mean?)';}
@@ -1121,10 +1145,11 @@ function updateLoopTally(){
   else{t.textContent='R: '+c.closed+' of '+c.given+' VF loops closed after Audience';t.className='loop-tally';}
 }
 function setNote(i,v){breathData[i].note=v;saveState();}
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 /* ---------- completion ---------- */
 function fireConfetti(){
+  if(calm||(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))return;
   const cols=['#f59e0b','#16a34a','#4338ca','#ef4444','#0d9488'];
   for(let i=0;i<70;i++){
     const c=document.createElement('div');c.className='confetti';
@@ -1290,9 +1315,11 @@ function init(){
   buildPrint();
   const mb=document.getElementById('muteBtn');if(mb)mb.textContent=muted?'🔇 Sound off':'🔊 Sound on';
   applyBoardBtn();
+  applyCalm();
   restoreLundyUI();
   populatePupilPrintSelect();
   showSlide(0);
+  window.addEventListener('afterprint',()=>{try{buildPrint();}catch(e){}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 </script>
