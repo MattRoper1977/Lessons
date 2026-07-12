@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing Breath — FINAL Observation Lesson</title>
+<style>
+:root{
+  --f:#16a34a; --m:#f97316; --h:#1e3a8a;
+  --ido:#ef4444; --wedo:#f59e0b; --ind:#16a34a; --exit:#7c3aed;
+  --title:#4338ca; --arrival:#0d9488; --starter:#0284c7; --board:#4f46e5;
+  --ink:#1f2937; --sky:#e0f2fe; --paper:#fbfdff;
+  --rest:#2563eb; --active:#f97316;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#cfeaff 0%,#eaf6ff 40%,#f6fbff 100%);overflow:hidden}
+.stage{width:100vw;height:100vh;position:relative}
+
+/* progress + logo */
+.progress-bar{position:fixed;top:0;left:0;height:5px;background:linear-gradient(90deg,#4f46e5,#0d9488);width:0;z-index:60;transition:width .3s}
+.logo{position:fixed;top:10px;right:14px;z-index:55;display:flex;align-items:center;gap:6px;background:#fff;padding:5px 10px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-weight:700;font-size:12px;color:#4338ca}
+.phase-timer{position:fixed;top:8px;left:12px;z-index:56;background:#fff;border:2px solid transparent;border-radius:20px;padding:4px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:12px;font-weight:700;color:#4338ca;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.phase-timer .pt-name{font-size:11px;color:#64748b;font-weight:600}
+.phase-timer .pt-time{font-size:17px;font-variant-numeric:tabular-nums}
+.phase-timer .pt-total{font-size:10px;color:#94a3b8;font-weight:600}
+.phase-timer.ok .pt-time{color:#16a34a}
+.phase-timer.warn{border-color:#f59e0b}.phase-timer.warn .pt-time{color:#d97706}
+.phase-timer.over{border-color:#ef4444;background:#fef2f2}.phase-timer.over .pt-time{color:#ef4444}
+.phase-timer.idle .pt-name{color:#94a3b8}
+.logo svg{display:block}
+
+/* slides */
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:flex-start;padding:44px 40px 84px;overflow-y:auto;background:var(--paper);border-top:9px solid #999;animation:fadeInUp .45s ease}
+.slide.active{display:flex}
+.slide[data-type=title]{border-color:var(--title)}
+.slide[data-type=arrival]{border-color:var(--arrival)}
+.slide[data-type=starter]{border-color:var(--starter)}
+.slide[data-type=ido]{border-color:var(--ido)}
+.slide[data-type=wedo]{border-color:var(--wedo)}
+.slide[data-type=ind]{border-color:var(--ind)}
+.slide[data-type=board]{border-color:var(--board)}
+.slide[data-type=voice]{border-color:#db2777}
+.slide[data-type=exit]{border-color:var(--exit)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+h1{font-size:34px;line-height:1.1;color:#312e81;margin-bottom:6px}
+h2{font-size:26px;color:#3730a3;margin-bottom:12px}
+.sub{color:#475569;font-size:16px;margin-bottom:14px}
+.slide-tag{display:inline-block;background:#312e81;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px;padding:4px 12px;border-radius:20px;margin-bottom:12px;text-transform:uppercase}
+p,li{font-size:17px;line-height:1.5}
+.wrap{max-width:1000px;width:100%;margin:0 auto}
+
+/* boxes */
+.box{border-radius:12px;padding:14px 18px;margin:10px 0;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.li-box{background:#eef2ff;border-left:6px solid #4338ca}
+.sc-box{background:#ffedd5;border-left:6px solid #f97316}
+.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d}
+.task-box{background:#e0f2fe;border-left:6px solid #0284c7}
+.scaffold-box{background:#fef9c3;border-left:6px solid #ca8a04}
+.ido-box{background:#fee2e2;border-left:6px solid var(--ido)}
+.wedo-box{background:#fef3c7;border-left:6px solid var(--wedo)}
+.stem-box{background:#f1f5f9;border:1px dashed #64748b;font-style:italic}
+.exam-tip-box{background:#fef08a;border-left:6px solid #eab308}
+.misc-box{background:#fee2e2;border-left:6px solid #ef4444}
+.misc-box .cross{text-decoration:line-through;color:#991b1b}
+.box b{color:#111}
+.box h3{margin-bottom:6px;color:#1e293b;font-size:18px}
+ul.tick{list-style:none}
+ul.tick li{padding-left:26px;position:relative;margin:5px 0}
+ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-weight:700}
+.lo-anim li::before{content:'▢';color:#94a3b8}
+.lo-anim li.on::before{content:'✔';color:#16a34a}
+
+/* title hero */
+.hero{display:flex;gap:18px;margin:14px 0;flex-wrap:wrap}
+.hero .ic{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.12);animation:bob 2.4s ease-in-out infinite}
+.hero .ic:nth-child(2){animation-delay:.3s}
+.hero .ic:nth-child(3){animation-delay:.6s}
+.hero .ic:nth-child(4){animation-delay:.9s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* arrival grid */
+.arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.q-card{background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:14px}
+.q-card p.q{font-weight:700;margin-bottom:8px}
+.mcq-opt{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid #e2e8f0;border-radius:8px;padding:9px 12px;margin:6px 0;font-size:15px;cursor:pointer;transition:.15s}
+.mcq-opt:hover{border-color:#94a3b8}
+.mcq-opt.correct{background:#dcfce7;border-color:#16a34a;font-weight:700}
+.mcq-opt.wrong{background:#fee2e2;border-color:#ef4444}
+.mcq-opt.locked{cursor:default}
+
+/* buttons */
+.btn{display:inline-block;background:#4338ca;color:#fff;border:none;border-radius:24px;padding:10px 20px;font-size:15px;font-weight:600;cursor:pointer;margin:6px 6px 6px 0;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:.15s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.alt{background:#0d9488}
+.btn.warn{background:#ef4444}
+.btn.ghost{background:#fff;color:#4338ca;border:2px solid #c7d2fe}
+.reveal{background:#eef2ff;border:1px dashed #6366f1;border-radius:10px;padding:12px 16px;margin:10px 0;display:none}
+.reveal.show{display:block;animation:fadeInUp .3s}
+
+/* level toggle */
+.levels{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.lvl-btn{border:2px solid;border-radius:20px;padding:6px 16px;font-weight:700;font-size:14px;cursor:pointer;background:#fff}
+.lvl-btn[data-l=f]{border-color:var(--f);color:var(--f)}
+.lvl-btn[data-l=m]{border-color:var(--m);color:var(--m)}
+.lvl-btn[data-l=h]{border-color:var(--h);color:var(--h)}
+.lvl-btn.on[data-l=f]{background:var(--f);color:#fff}
+.lvl-btn.on[data-l=m]{background:var(--m);color:#fff}
+.lvl-btn.on[data-l=h]{background:var(--h);color:#fff}
+.tier{display:none}
+.tier.show{display:block}
+.ind-f{border-left:6px solid var(--f)}
+.ind-m{border-left:6px solid var(--m)}
+.ind-h{border-left:6px solid var(--h)}
+.owl-badge{float:right;font-size:26px}
+
+/* timer */
+.timer-widget{display:inline-flex;align-items:center;gap:10px;background:#111827;color:#fff;border-radius:14px;padding:10px 16px;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.timer-widget button{background:#374151;color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+
+/* xp */
+.xp-wrap{position:fixed;bottom:14px;left:16px;z-index:55;background:#fff;border-radius:20px;padding:6px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-weight:700;font-size:13px;color:#4338ca;display:flex;align-items:center;gap:8px}
+.xp-track{width:120px;height:8px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.xp-fill{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#16a34a);transition:width .4s}
+
+/* nav */
+.nav{position:fixed;bottom:14px;right:16px;z-index:55;display:flex;gap:8px}
+.nav button{width:48px;height:48px;border-radius:50%;border:none;background:#4338ca;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav button:disabled{opacity:.35;cursor:default}
+.tools{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:55;display:flex;gap:8px}
+.tools button{background:#fff;border:2px solid #c7d2fe;color:#4338ca;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
+.modal.show{display:flex}
+.modal .card{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:86vh;overflow:auto}
+.modal h3{color:#3730a3;margin-bottom:10px}
+.modal .close{float:right;cursor:pointer;font-size:22px;color:#64748b;background:none;border:none}
+.cc-pick{font-size:30px;font-weight:800;color:#4338ca;text-align:center;margin:12px 0}
+.cc-tier{text-align:center;font-size:15px;padding:8px;border-radius:10px;margin-top:8px}
+
+/* animated cloudy bench */
+.bench{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;margin:12px 0}
+.tube-svg{width:120px}
+.tube-liquid{transition:opacity 3s linear}
+.bubble{opacity:0}
+.bench.run .bubble{animation:rise 1.2s ease-in infinite}
+.bench.run .clear-liq{opacity:0}
+.bench.run .milky-liq{opacity:1}
+@keyframes rise{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(-120px)}}
+.bench .bubble:nth-child(2){animation-delay:.2s}
+.bench .bubble:nth-child(3){animation-delay:.5s}
+.bench .bubble:nth-child(4){animation-delay:.8s}
+
+/* Class Breath Lab board */
+.board{background:#fff;border:2px solid #c7d2fe;border-radius:14px;padding:14px 16px;margin:10px 0}
+.board-row{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed #e2e8f0}
+.board-row input.name{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar-line{display:flex;align-items:center;gap:8px}
+.bar-line label{font-size:11px;width:44px;color:#475569;font-weight:700}
+.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:20px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bar-fill.rest{background:var(--rest)}
+.bar-fill.active{background:var(--active)}
+.bar-line .num{width:64px}
+.bar-line .num input{width:52px;border:1px solid #cbd5e1;border-radius:6px;padding:4px;text-align:center;font-size:14px}
+.scale-strip{display:flex;gap:6px;margin:8px 0 12px}
+.scale-strip .sw{flex:1;text-align:center;font-size:12px;font-weight:700;color:#334155}
+.scale-strip .chip{height:38px;border-radius:8px;border:1.5px solid #cbd5e1;margin-bottom:3px;position:relative;overflow:hidden}
+/* colour-blind-safe: hatch density increases with cloudiness (non-colour cue) */
+.scale-strip .sw:nth-child(2) .chip::after,.scale-strip .sw:nth-child(3) .chip::after,.scale-strip .sw:nth-child(4) .chip::after,.scale-strip .sw:nth-child(5) .chip::after{content:"";position:absolute;inset:0}
+.scale-strip .sw:nth-child(2) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.22) 0 1.5px,transparent 1.5px 9px)}
+.scale-strip .sw:nth-child(3) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.24) 0 1.5px,transparent 1.5px 6px)}
+.scale-strip .sw:nth-child(4) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.26) 0 2px,transparent 2px 4.5px)}
+.scale-strip .sw:nth-child(5) .chip::after{background:repeating-linear-gradient(45deg,rgba(30,58,138,.30) 0 2px,transparent 2px 3px)}
+.anom-flag{display:none;font-size:15px;margin-left:5px;cursor:help}
+.scale-cap{font-size:13px;color:#334155;background:#f8fafc;border:1px dashed #94a3b8;border-radius:8px;padding:8px 10px;margin:2px 0 10px}
+/* capture panels */
+.capture{background:#f8fafc;border:2px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin:12px 0}
+.cap-head{font-weight:700;color:#3730a3;margin-bottom:8px}
+.cap-head span{font-weight:400;font-size:13px;color:#64748b}
+.cap-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed #e2e8f0}
+.cap-row:last-child{border-bottom:none}
+.cap-row .nm input{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.cap-opts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;transition:.12s}
+.pill:hover{border-color:#94a3b8}
+.pill.on{background:#4338ca;border-color:#4338ca;color:#fff}
+.pill.on.good{background:#16a34a;border-color:#16a34a}
+.pill.on.warn{background:#f97316;border-color:#f97316}
+.pill.on.rag-g{background:#16a34a;border-color:#16a34a}
+.pill.on.rag-a{background:#eab308;border-color:#eab308}
+.pill.on.rag-r{background:#ef4444;border-color:#ef4444}
+.cap-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px;margin-top:5px}
+.sep{width:1px;height:20px;background:#e2e8f0;margin:0 2px}
+.board-summary{background:#eef2ff;border-left:6px solid #4338ca;border-radius:10px;padding:14px;margin-top:10px;display:none}
+.board-summary.show{display:block;animation:fadeInUp .3s}
+.reveal-flex{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin:10px 0}
+.reveal-tbl-wrap{flex:1;min-width:260px}
+.reveal-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.reveal-tbl th,.reveal-tbl td{border:1px solid #cbd5e1;padding:4px 7px;text-align:center}
+.reveal-tbl th{background:#eef2ff;color:#3730a3}
+.reveal-tbl td:first-child,.reveal-tbl th:first-child{text-align:left}
+.avg-graph{display:flex;align-items:flex-end;gap:10px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px 10px;flex-wrap:wrap}
+.ag-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.ag-bar{width:52px;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;min-height:22px;transition:height .7s cubic-bezier(.2,.8,.2,1)}
+.ag-bar span{color:#fff;font-weight:800;font-size:15px;margin-top:4px}
+.ag-bar.rest{background:var(--rest)}
+.ag-bar.active{background:var(--active)}
+.ag-lab{font-size:12px;font-weight:700;color:#475569;text-align:center;margin-top:4px}
+.ag-arrow{font-size:26px;color:#94a3b8;align-self:center;padding-bottom:24px}
+.ag-cap{flex-basis:100%;font-size:12px;color:#64748b;margin-top:6px}
+.pred-guide{font-size:12.5px;color:#334155;background:#eef2ff;border-radius:6px;padding:4px 8px;margin-bottom:5px;display:inline-block}
+/* --- conclusion redesign: verbal model + yellow box + feedback loop --- */
+.concl-frames{display:grid;gap:8px;margin:2px 0 10px}
+.cframe{border:2px solid;border-radius:12px;padding:9px 12px;cursor:pointer;background:#fff;transition:.15s}
+.cframe:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.cframe .cf-h{font-weight:800;font-size:13px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.cframe .cf-say{font-weight:600;color:#64748b}
+.cframe .cf-model{display:none;margin-top:7px;font-size:14px;line-height:1.5}
+.cframe.confirmed .cf-model{display:block;animation:fadeInUp .3s ease}
+.cframe.confirmed .cf-say{display:none}
+.cframe.confirmed .cf-h::after{content:"\2713 model confirmed";font-size:11px;font-weight:700;color:#16a34a;margin-left:auto}
+.cframe[data-p=build]{border-color:var(--f)} .cframe[data-p=build] .cf-h{color:var(--f)}
+.cframe[data-p=grow]{border-color:var(--m)} .cframe[data-p=grow] .cf-h{color:var(--m)}
+.cframe[data-p=launch]{border-color:var(--h)} .cframe[data-p=launch] .cf-h{color:var(--h)}
+.cframe .kw{font-weight:800}
+.ybox{background:#fef9c3;border:2px solid #fde047;border-left:7px solid #eab308;border-radius:12px;padding:10px 12px;margin:10px 0}
+.ybox h4{font-size:13px;color:#854d0e;margin:0 0 6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ns-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ns-chip{border:2px solid #fbbf24;background:#fff;border-radius:16px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:#7c4a03}
+.ns-chip:hover{background:#fffbeb}
+.ns-chip.on{background:#eab308;border-color:#eab308;color:#fff}
+.ns-active{margin-top:8px;font-size:14px;font-weight:700;color:#713f12;background:#fffbeb;border:1px dashed #eab308;border-radius:8px;padding:7px 10px;display:none}
+.ns-active.show{display:block;animation:fadeInUp .25s ease}
+.loop-head{font-weight:700;color:#3730a3;margin:6px 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.loop-tally{font-size:12.5px;font-weight:700;color:#166534;background:#dcfce7;border-radius:20px;padding:3px 12px}
+.loop-tally.none{color:#64748b;background:#f1f5f9}
+.loop-sub{font-weight:400;font-size:12px;color:#64748b;margin:-1px 0 6px}
+.loop-row{display:grid;grid-template-columns:118px auto 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed #e2e8f0}
+.loop-row:last-child{border-bottom:none}
+.loop-row .nm input{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:14px;font-weight:600}
+.loop-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;min-width:140px;text-align:center;transition:.12s}
+.loop-btn.s1{background:#fef9c3;border-color:#eab308;color:#854d0e}
+.loop-btn.s2{background:#16a34a;border-color:#16a34a;color:#fff}
+.loop-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:13px}
+.photo-btn{border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:6px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#475569;white-space:nowrap;display:inline-block}
+.photo-btn.has{background:#dcfce7;border-color:#16a34a;color:#166534}
+.photo-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;border:1px solid #cbd5e1;vertical-align:middle;margin-left:4px;cursor:pointer}
+.tier-seg{display:inline-flex;border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;align-self:center}
+.tier-btn{border:none;background:#fff;padding:6px 9px;font-size:12px;font-weight:800;cursor:pointer;color:#64748b;border-left:1px solid #e2e8f0}
+.tier-btn:first-child{border-left:none}
+.tier-btn.on{background:#4338ca;color:#fff}
+.pupil-card .pc-model{background:#ecfdf5;border-left:4px solid #10b981;padding:6px 9px;border-radius:5px;font-size:12.5px}
+.board-toggle{margin-left:auto;border:2px solid #cbd5e1;background:#fff;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#475569}
+.board-toggle.on{background:#3730a3;border-color:#3730a3;color:#fff}
+.loop-agg{text-align:center;padding:18px 12px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px}
+.loop-agg .big{font-size:34px;font-weight:800;color:#166534;line-height:1.1}
+.loop-agg .cap{font-size:13px;color:#3f6212;margin-top:4px}
+.loop-agg .hint{font-size:11px;color:#94a3b8;margin-top:8px}
+.pupil-card .write-stem{font-style:italic;font-size:12.5px;margin:3px 0 4px}
+.pupil-card .write-lines{border-bottom:1px solid #999;height:17px;margin:8px 0}
+.pupil-card .pc-photo{margin:6px 0}
+.pupil-card .pc-photo img{max-width:190px;max-height:170px;border:1px solid #bbb;border-radius:8px;display:block}
+.pupil-card .pc-q{background:#f8fafc;border-left:4px solid #64748b;padding:6px 9px;border-radius:5px;font-size:12.5px;line-height:1.5}
+.pupil-card .pc-q b{color:#334155}
+.legend{display:flex;gap:16px;font-size:13px;font-weight:700;margin-bottom:8px}
+.legend .k{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
+
+/* completion overlay */
+.complete{position:fixed;inset:0;background:rgba(49,46,129,.94);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:90;text-align:center;padding:30px}
+.complete.show{display:flex;animation:fadeInUp .4s}
+.complete h2{color:#fff;font-size:38px}
+.confetti{position:fixed;width:10px;height:16px;top:-20px;z-index:95;pointer-events:none}
+
+/* print */
+#print-area{display:none}
+@media print{
+  body *{visibility:hidden}
+  #print-area,#print-area *{visibility:visible}
+  #print-area{display:block;position:absolute;inset:0;padding:0}
+  @page{margin:11mm}
+  .p-sec{border-bottom:1.5px dashed #666;padding-bottom:10px;margin-bottom:12px;break-inside:avoid}
+  .p-sec:last-child{border-bottom:none}
+  .p-sec h3{font-size:15px;margin-bottom:5px;color:#111}
+  .p-sec table{width:100%;border-collapse:collapse;font-size:12px}
+  .p-sec td,.p-sec th{border:1px solid #999;padding:4px 6px;text-align:left}
+  .nameline{font-size:13px;margin:6px 0}
+  ul.tick li::before{content:'▢ '}
+  .p-hide{display:none!important}
+  .pupil-card{break-before:page;break-inside:avoid;border:2px solid #333;border-radius:8px;padding:12px 14px}
+  .pupil-card h2{font-size:17px;color:#111;margin-bottom:2px}
+  .pupil-card .pc-sec{border-bottom:1px dashed #999;padding:7px 0}
+  .pupil-card .pc-sec:last-child{border-bottom:none}
+  .pupil-card .lab{font-weight:700;color:#111;font-size:13px}
+  .pupil-card .story{font-size:13px;line-height:1.45}
+  .pupil-card .pc-photo img{max-width:150px;max-height:130px}
+  .pupil-card .pc-q{background:#f4f4f4;border-left:3px solid #666}
+  .pupil-card .pc-model{background:#eef7f0;border-left:3px solid #059669}
+  .pupil-card .minibar{display:inline-block;height:11px;background:#2563eb;border-radius:3px;vertical-align:middle}
+  .pupil-card .minibar.a{background:#f97316}
+  .pupil-card .recap{font-size:11.5px;background:#f4f4f4;padding:6px 8px;border-radius:6px}
+  .rag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff}
+  /* desk scale cards */
+  .scard-grid{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+  .scard{break-inside:avoid;border:2px solid #222;border-radius:8px;padding:8px 10px}
+  .scard h4{font-size:13px;margin:0 0 6px;color:#111}
+  .scard .lv{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dotted #bbb}
+  .scard .lv:last-child{border-bottom:none}
+  .scard .sw2{width:34px;height:22px;border:1.5px solid #333;border-radius:4px;flex:none}
+  .scard .lv b{font-size:13px}
+  .scard .lv span{font-size:11px;color:#333}
+}
+
+@media(max-width:640px){
+  .slide{padding:40px 18px 90px}
+  h1{font-size:26px}h2{font-size:21px}
+  .arrival-grid{grid-template-columns:1fr}
+  .board-row{grid-template-columns:1fr}
+  .hero .ic{width:52px;height:52px;font-size:26px}
+  .tools{flex-wrap:wrap;justify-content:center;width:90%}
+}
+
+/* Lundy Loop observation edition */
+.lundy-ribbon{position:fixed;top:9px;left:50%;transform:translateX(-50%);z-index:57;background:#fff;border:2px solid #f9a8d4;border-radius:22px;padding:5px 12px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px;font-weight:800;color:#9d174d;white-space:nowrap}
+.lundy-ribbon span{color:#64748b;font-weight:600}
+.lundy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.lundy-step{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center;font-size:13px;font-weight:800;color:#475569}
+.lundy-step.on{border-color:#db2777;background:#fdf2f8;color:#9d174d;box-shadow:0 2px 8px rgba(219,39,119,.16)}
+.lundy-step .ico{display:block;font-size:23px;margin-bottom:2px}
+.voice-box{background:#fdf2f8;border-left:6px solid #db2777}
+.influence-box{background:#ecfdf5;border:2px solid #86efac;border-left:7px solid #16a34a;border-radius:12px;padding:12px 14px;margin:10px 0}
+.influence-box h3{color:#166534;margin-bottom:5px}
+.choice-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.voice-choice{border:2px solid #f9a8d4;background:#fff;color:#9d174d;border-radius:20px;padding:8px 13px;font-weight:700;cursor:pointer;font-size:14px}
+.voice-choice:hover{background:#fdf2f8}.voice-choice.on{background:#db2777;color:#fff;border-color:#db2777}
+.voice-other{width:100%;border:2px solid #e2e8f0;border-radius:10px;padding:9px 11px;font-size:14px;margin-top:5px}
+.commitment{background:#fff;border:2px dashed #16a34a;border-radius:10px;padding:10px 12px;margin-top:8px;font-weight:700;color:#166534;min-height:42px}
+.role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.role-card{background:#fff;border:2px solid #cbd5e1;border-radius:11px;padding:10px;text-align:center;font-size:13px;font-weight:700}
+.role-card b{display:block;color:#3730a3;font-size:14px;margin-bottom:3px}
+.caution{background:#fff7ed;border:2px solid #fdba74;border-radius:12px;padding:11px 14px;margin:9px 0;color:#7c2d12}
+.pulse-green{animation:greenPulse 1.2s ease 2}@keyframes greenPulse{50%{box-shadow:0 0 0 8px rgba(22,163,74,.15)}}
+@media(max-width:800px){.lundy-grid,.role-grid{grid-template-columns:1fr 1fr}.lundy-ribbon{display:none}}
+
+
+/* Feedback Policy 2025/26 code capture */
+.code-key{background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:12px;line-height:1.55}
+.code-key b{display:inline-block;background:#1e293b;color:#fff;border-radius:5px;padding:1px 6px;margin:1px 3px 1px 7px}.code-key b:first-child{margin-left:0}
+.policy-controls{display:flex;gap:5px;flex-wrap:wrap;align-items:center}.code-btn{border:2px solid #cbd5e1;background:#fff;border-radius:14px;padding:5px 8px;font-size:12px;font-weight:800;cursor:pointer;color:#475569}.code-btn.on{background:#334155;border-color:#334155;color:#fff}.voice-select{border:1px solid #cbd5e1;border-radius:7px;padding:5px;font-size:12px;background:#fff}.influence-note{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:5px 7px;font-size:12px;margin-top:4px}.policy-strip{border:1.5px solid #333;border-radius:6px;padding:6px 8px;margin:5px 0;font-size:11.5px;line-height:1.5}.policy-code{display:inline-block;border:1px solid #333;border-radius:4px;padding:1px 5px;margin-right:4px;font-weight:800}.audience-stamp{border:2px solid #16a34a;color:#166534;background:#f0fdf4;border-radius:7px;padding:5px 7px;font-weight:700}.ns-print{background:#fffbea;border-left:4px solid #eab308;padding:5px 8px;border-radius:4px}.influence-print{background:#eff6ff;border-left:4px solid #2563eb;padding:5px 8px;border-radius:4px}
+@media print{.policy-strip{break-inside:avoid}.policy-code{color:#111}.audience-stamp{color:#111;background:#fff}}
+
+/* Ultimate observation edition: adaptive route + practical R-gates */
+.route-banner{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.route-card{border:2px solid;border-radius:12px;padding:9px;text-align:center;font-weight:800;background:#fff;cursor:pointer}.route-card small{display:block;font-weight:600;color:#64748b;margin-top:2px}.route-card.build{border-color:#16a34a;color:#166534}.route-card.grow{border-color:#f97316;color:#9a3412}.route-card.launch{border-color:#1e3a8a;color:#1e3a8a}.route-card.on{color:#fff}.route-card.build.on{background:#16a34a}.route-card.grow.on{background:#f97316}.route-card.launch.on{background:#1e3a8a}.route-card.on small{color:#fff}
+.hinge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.hinge{border:2px solid #cbd5e1;background:#fff;border-radius:12px;padding:12px;cursor:pointer;text-align:left;font-size:14px}.hinge b{display:block;color:#3730a3;margin-bottom:4px}.hinge.on{border-color:#16a34a;background:#f0fdf4}.teacher-whisper{background:#1e293b;color:#fff;border-radius:10px;padding:8px 11px;font-size:12px;margin:8px 0}.teacher-whisper b{color:#fde68a}
+.attempt-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:8px 0}.attempt-box{border:2px solid #cbd5e1;border-radius:10px;padding:9px;background:#fff}.attempt-box.after{border-color:#16a34a;background:#f0fdf4}.attempt-arrow{font-size:24px;color:#7c3aed}.attempt-tag{font-size:11px;font-weight:800;color:#64748b}.space-toggle{border:2px solid #cbd5e1;background:#fff;border-radius:14px;padding:5px 8px;font-size:12px;font-weight:800;cursor:pointer}.space-toggle.on{background:#0d9488;color:#fff;border-color:#0d9488}.pass-note{font-size:11px;color:#64748b;margin-top:4px}.minimal-note{font-size:12px;color:#475569;background:#f8fafc;border-left:4px solid #64748b;padding:7px 9px;border-radius:5px}.mission{border:2px solid #c7d2fe;background:#eef2ff;border-radius:12px;padding:10px 12px;margin:8px 0}.mission b{color:#3730a3}.observer-evidence{border:2px dashed #7c3aed;background:#faf5ff;border-radius:12px;padding:10px 12px;margin:10px 0}.observer-evidence h3{color:#6b21a8;margin-bottom:4px}
+@media(max-width:800px){.route-banner,.hinge-grid{grid-template-columns:1fr}.attempt-pair{grid-template-columns:1fr}.attempt-arrow{transform:rotate(90deg);text-align:center}}
+
+/* Final mobile/interactivity and evidence-print fixes */
+button,.btn,.hinge,.voice-choice,.route-card,.pill,.lvl-btn,.code-btn,.loop-btn{touch-action:manipulation;-webkit-tap-highlight-color:rgba(67,56,202,.18)}
+.end-actions{background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:3px solid #4338ca;border-radius:16px;padding:16px;margin:16px 0 30px;box-shadow:0 4px 16px rgba(67,56,202,.14)}
+.end-actions h3{color:#312e81;margin-bottom:6px}.end-actions .btn{font-size:16px;padding:12px 18px}.print-note{font-size:12px;color:#475569;margin-top:5px;line-height:1.45}
+.print-select{border:2px solid #c7d2fe;border-radius:9px;padding:9px 10px;background:#fff;color:#312e81;font-weight:700;max-width:260px}
+@media(max-width:700px){
+ body{overflow:hidden}.slide{padding:72px 14px 112px}.wrap{max-width:none}h1{font-size:28px}h2{font-size:24px}.sub,p,li{font-size:16px}.logo{top:10px;right:8px}.phase-timer{top:9px;left:8px}.tools{left:8px;right:112px;transform:none;bottom:8px;justify-content:flex-start;overflow-x:auto;gap:5px;padding:2px;scrollbar-width:none}.tools::-webkit-scrollbar{display:none}.tools button{flex:0 0 auto;padding:7px 10px;font-size:12px}.xp-wrap{display:none}.nav{bottom:8px;right:8px}.nav button{width:46px;height:46px}.lundy-ribbon{display:none}.route-banner,.hinge-grid,.role-grid{grid-template-columns:1fr}.hinge{min-height:92px}.loop-row{grid-template-columns:1fr;gap:6px}.board-row,.cap-row{grid-template-columns:1fr}.end-actions{margin-bottom:38px}.btn{min-height:46px}.choice-row{gap:6px}
+}
+@media print{.pupil-card{break-before:page;page-break-before:always}.pupil-card:first-child{break-before:auto;page-break-before:auto}.print-cover{break-after:page;page-break-after:always}.pc-sec{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pbar"></div>
+<div class="lundy-ribbon" id="lundyRibbon">LUNDY LOOP <span>Space → Voice → Audience → Influence</span></div>
+<div class="phase-timer" id="phaseTimer" onclick="toggleLessonTimer()" title="Space or tap: start / pause">⏱ Press SPACE to start</div>
+<div class="logo">
+  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#4338ca"/><path d="M7 13l3 3 7-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Progress Schools
+</div>
+
+<div class="stage" id="stage">
+
+<!-- 1. TITLE -->
+<section class="slide active" data-type="title">
+ <div class="wrap">
+  <span class="slide-tag">Biology · Respiration · Practical science</span>
+  <h1>Mission: Can Your Breath Change the Evidence?</h1>
+  <p class="sub">Predict · shape the method · test · improve · explain</p>
+  <div class="hero">
+    <div class="ic">🫁</div><div class="ic">🧪</div><div class="ic">🏃</div><div class="ic">📊</div>
+  </div>
+  <div class="box li-box">
+    <h3>Learning objectives</h3>
+    <ul class="tick lo-anim" id="loList">
+      <li>Use limewater <b>safely</b> to test for carbon dioxide</li>
+      <li>Compare how my breath affects limewater at <b>rest</b> and after <b>activity</b></li>
+      <li>Explain the results using <b>respiration</b></li>
+    </ul>
+    <button class="btn ghost" onclick="animateLOs()">Reveal &amp; check ▶</button>
+  </div>
+  <div class="box sc-box">
+    <h3>Success criteria</h3>
+    <ul class="tick">
+      <li>I follow all 3 safety rules with no reminders</li>
+      <li>I record and compare two cloudiness scores: rest and active</li>
+      <li>I can finish the sentence: "More cloudy means…"</li>
+    </ul>
+  </div>
+  <div class="mission"><b>🦉 Mission:</b> Everyone starts with the same investigation. Your response—not a label—decides whether your next move is Build, Grow or Launch.</div><div class="box aspire-box">
+    <b>🌟 Aspire:</b> Link your result to respiration, evaluate the method, and help improve the investigation for the next class.
+  </div>
+ </div>
+</section>
+
+<!-- 2. ARRIVAL RECALL -->
+<section class="slide" data-type="arrival">
+ <div class="wrap">
+  <span class="slide-tag">Arrival · Recall</span>
+  <h2>Quick recap — limewater &amp; CO₂</h2>
+  <p class="sub">Two you already know from before. Tap your answer — we confirm together, then print for your file.</p>
+  <div class="arrival-grid" id="arrivalGrid"></div>
+  <div class="box scaffold-box" style="margin-top:14px"><b>Stuck?</b> Think back to Friday — you <i>made</i> the limewater. What was it for?</div>
+ </div>
+</section>
+
+<!-- 3. STARTER HOOK -->
+<section class="slide" data-type="starter">
+ <div class="wrap">
+  <span class="slide-tag">Starter · Hook</span>
+  <h2>Your breath is full of clues</h2>
+  <div class="box task-box">
+    <p>The air you breathe <b>IN</b> is about <b>0.04%</b> carbon dioxide.</p>
+    <p>The air you breathe <b>OUT</b> is about <b>4%</b> carbon dioxide.</p>
+    <p style="margin-top:6px">That's roughly <b>100× more</b> CO₂ coming out than going in. Your body is <i>making</i> it.</p>
+  </div>
+  <div class="box stem-box">
+    <b>Predict:</b> After 90 seconds of activity, do you predict that your breath will make limewater <u>more cloudy</u>, <u>less cloudy</u>, or show <u>no clear change</u>? Turn and tell your partner <i>why</i>.
+  </div>
+  <button class="btn ghost" onclick="toggle('starterRev')">Reveal the science ▶</button>
+  <div class="reveal" id="starterRev">
+    Activity makes muscles work harder, increasing respiration and carbon dioxide production. Our prediction is that, using the same breathing routine, more CO₂ may reach the limewater after activity. We will test the prediction and treat any different result as useful evidence.
+  </div>
+  <div class="capture">
+    <div class="cap-head">📝 Capture predictions <span>(tap each pupil's guess — it prints on their sheet)</span></div>
+    <div id="predPanel"></div>
+  </div>
+ </div>
+</section>
+
+
+<!-- LUNDY LOOP — PUPILS SHAPE THE TEST -->
+<section class="slide" data-type="voice">
+ <div class="wrap">
+  <span class="slide-tag" style="background:#db2777">Lundy Loop · Shape the investigation</span>
+  <h2>Your voice changes what happens next</h2>
+  <div class="teacher-whisper"><b>SPACE first:</b> private check-in, predictable choices and the right to pass. A pass is information—re-offer later or through another modality.</div>
+  <div class="choice-row">
+   <button class="space-toggle on" id="spaceReady" onclick="setClassSpace('ready')">✓ Ready to take part</button>
+   <button class="space-toggle" id="spaceQuiet" onclick="setClassSpace('quiet')">Need quiet thinking time</button>
+   <button class="space-toggle" id="spaceAlt" onclick="setClassSpace('alternative')">Need an alternative role</button>
+  </div>
+  <div class="lundy-grid">
+   <div class="lundy-step on"><span class="ico">🟪</span>SPACE<br><small>safe ways to contribute</small></div>
+   <div class="lundy-step on"><span class="ico">🗣️</span>VOICE<br><small>say, point, type or ask a TA</small></div>
+   <div class="lundy-step on"><span class="ico">👂</span>AUDIENCE<br><small>teacher and class listen</small></div>
+   <div class="lundy-step"><span class="ico">🔧</span>INFLUENCE<br><small>we change the method</small></div>
+  </div>
+  <div class="box voice-box">
+   <h3>Question 1 — What must we keep the same to make our comparison fair?</h3>
+   <p>Listen first. Select only ideas pupils actually contribute. Safety boundaries stay with the adult; explain any idea we cannot use.</p>
+   <div class="choice-row" id="fairChoices">
+    <button class="voice-choice" data-v="same amount of limewater" onclick="toggleVoiceChoice(this,'fair')">Same limewater amount</button>
+    <button class="voice-choice" data-v="same number of gentle breaths" onclick="toggleVoiceChoice(this,'fair')">Same number of breaths</button>
+    <button class="voice-choice" data-v="same type of beaker and viewing method" onclick="toggleVoiceChoice(this,'fair')">Same beaker/view</button>
+    <button class="voice-choice" data-v="test quickly after activity" onclick="toggleVoiceChoice(this,'fair')">Test quickly</button>
+   </div>
+   <input class="voice-other" id="fairOther" placeholder="Pupil idea (optional)…" oninput="saveLundyText('fairOther',this.value)">
+  </div>
+  <div class="box voice-box">
+   <h3>Question 2 — What support would help everyone take part safely?</h3>
+   <div class="choice-row" id="supportChoices">
+    <button class="voice-choice" data-v="a clear teacher countdown" onclick="toggleVoiceChoice(this,'support')">Clear countdown</button>
+    <button class="voice-choice" data-v="a desk cloudiness card" onclick="toggleVoiceChoice(this,'support')">Desk scale card</button>
+    <button class="voice-choice" data-v="an extra demonstration" onclick="toggleVoiceChoice(this,'support')">Demo again</button>
+    <button class="voice-choice" data-v="a seated or non-exercise role" onclick="toggleVoiceChoice(this,'support')">Alternative role</button>
+   </div>
+   <input class="voice-other" id="supportOther" placeholder="Pupil idea (optional)…" oninput="saveLundyText('supportOther',this.value)">
+  </div>
+  <button class="btn" onclick="commitLundyDesign()">✔ Listen, decide and show our changes</button>
+  <div class="influence-box" id="designCommit" style="display:none">
+   <h3>✅ YOU SAID → SO WE WILL</h3>
+   <div id="designCommitText"></div>
+   <p style="font-size:13px;margin-top:6px"><b>Teacher promise:</b> if an idea cannot be used safely today, I will explain why—not ignore it.</p>
+  </div>
+ </div>
+</section>
+
+<!-- 4. I DO — SAFETY + METHOD -->
+<section class="slide" data-type="ido">
+ <div class="wrap">
+  <span class="slide-tag">I Do · Quick lead-in</span>
+  <h2>You know this test — here's the safe way to do it</h2>
+  <div class="box task-box">
+    <b>Recap:</b> you did the limewater test in gas-tests week, and you <b>made this limewater on Friday</b>. So the test itself is old news. <b>Only two new things today:</b> (1) do it <b>safely with a straw</b>, and (2) use a shared <b>1–5 observation scale</b>.
+  </div>
+  <div class="box misc-box">
+    <b>The danger:</b> <span class="cross">sucking</span> the limewater up the straw. Limewater is an <b>irritant</b>. We only ever <b>blow OUT</b>.
+  </div>
+  <div class="box ido-box">
+    <h3>🥽 Rule 1 — Goggles ON</h3> Splash protection. On before you touch a beaker.
+    <h3 style="margin-top:8px">💨 Rule 2 — BLOW, never suck</h3> Gentle out-breaths, like blowing out candles. If you feel like breathing in — <b>take the straw out of your mouth first</b>.
+    <h3 style="margin-top:8px">🧍 Rule 3 — Your straw, your beaker</h3> No sharing. Wash hands after. Tell me instantly if any gets in your mouth or eyes.
+  </div>
+  <h3 style="margin-top:8px">Quick reminder — cloudy is the endpoint</h3>
+  <div class="bench" id="bench">
+    <svg class="tube-svg" viewBox="0 0 120 130" style="width:120px">
+      <!-- beaker outline with pouring spout -->
+      <path d="M30,36 L22,32 L30,42" fill="none" stroke="#334155" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M30,34 L30,104 Q30,116 42,116 L78,116 Q90,116 90,104 L90,34" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+      <!-- graduation marks -->
+      <line x1="32" y1="70" x2="40" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="32" y1="88" x2="40" y2="88" stroke="#94a3b8" stroke-width="2"/>
+      <clipPath id="tubeClip"><path d="M31,62 L31,104 Q31,115 42,115 L78,115 Q89,115 89,104 L89,62 Z"/></clipPath>
+      <g clip-path="url(#tubeClip)">
+        <rect class="tube-liquid clear-liq" x="30" y="62" width="60" height="55" fill="#cfe8ff"/>
+        <rect class="tube-liquid milky-liq" x="30" y="62" width="60" height="55" fill="#f1f5f9" opacity="0"/>
+        <circle class="bubble" cx="60" cy="110" r="3" fill="#93c5fd"/>
+        <circle class="bubble" cx="52" cy="110" r="2.4" fill="#93c5fd"/>
+        <circle class="bubble" cx="68" cy="110" r="2.6" fill="#93c5fd"/>
+        <circle class="bubble" cx="60" cy="110" r="2" fill="#93c5fd"/>
+      </g>
+    </svg>
+    <div>
+      <button class="btn" onclick="runBench()">▶ Blow into it</button>
+      <button class="btn ghost" onclick="resetBench()">↺ Reset</button>
+      <p style="margin-top:8px;max-width:360px">CO₂ + limewater → the liquid goes <b>cloudy / milky</b>. Cloudiness shows that carbon dioxide has reacted with the limewater.</p>
+    </div>
+  </div>
+  <div class="box wedo-box">
+    <b>How we measure — the fair test:</b> everyone follows the <b>same counted gentle-breath routine</b> (I'll count us in). Then rate your beaker on the <b>cloudiness scale, 1–5</b>, using the reference strip. <b>A higher score suggests more CO₂ reached and reacted with the limewater during our routine.</b>
+    <div style="margin-top:6px;font-size:15px"><b>Same beaker, same amount</b> of limewater each time (<b>3 cm deep</b>, never more than half full — gentle breaths so it doesn't froth over). View it the same way every time so the comparison is fair.</div>
+  </div>
+  <div class="scale-strip">
+    <div class="sw"><div class="chip" style="background:#bcd9f2"></div>1 Clear</div>
+    <div class="sw"><div class="chip" style="background:#cfe0f0"></div>2</div>
+    <div class="sw"><div class="chip" style="background:#e2eaf2"></div>3</div>
+    <div class="sw"><div class="chip" style="background:#eef2f6"></div>4</div>
+    <div class="sw"><div class="chip" style="background:#ffffff"></div>5 Milky</div>
+  </div>
+  <p class="scale-cap">👀 The trick: rate by <b>how much you can see through the beaker</b>. <b>1</b> = read text straight through · <b>3</b> = fuzzy · <b>5</b> = can't see through. Everyone uses the same rule, so our scores match.</p>
+  <button class="btn ghost" onclick="printScaleCards()">🖨 Print desk scale cards</button>
+  <button class="btn ghost" onclick="openTA()">👩‍🏫 TA Focus</button>
+ </div>
+</section>
+
+
+<!-- ADAPTIVE HINGE — RESPONSE DECIDES ROUTE -->
+<section class="slide" data-type="voice">
+ <div class="wrap">
+  <span class="slide-tag" style="background:#7c3aed">Adaptive Hinge · everybody thinks</span>
+  <h2>Which claim is scientifically safest?</h2>
+  <p class="sub">Think alone, then <b>tap 1, 2 or 3</b> (or say, point, sign or ask an adult to carry your answer). Your choice will highlight before the reveal.</p>
+  <div class="hinge-grid">
+   <button class="hinge" onclick="hingePick(this,1)"><b>1</b>A cloudier score gives the exact percentage of CO₂ in a person's breath.</button>
+   <button class="hinge" onclick="hingePick(this,2)"><b>2</b>A cloudier score suggests more CO₂ reached and reacted with the limewater during our routine.</button>
+   <button class="hinge" onclick="hingePick(this,3)"><b>3</b>If one result is unexpected, it must be wrong and should be removed.</button>
+  </div>
+  <div class="reveal" id="hingeReveal"><b>Best claim: 2.</b> Our scale is an observation, not an exact gas sensor. Unexpected evidence stays—we explain possible reasons.</div>
+  <button class="btn" onclick="showHingeRoute()">Reveal and adapt the next question</button>
+  <div class="route-banner" id="hingeRoutes" style="display:none">
+   <div class="route-card build" onclick="selectRoute(this,'f')"><b>BUILD</b><small>Point to what cloudier means; use the sentence stem.</small></div>
+   <div class="route-card grow" onclick="selectRoute(this,'m')"><b>GROW</b><small>Explain the respiration link in a complete sentence.</small></div>
+   <div class="route-card launch" onclick="selectRoute(this,'h')"><b>LAUNCH</b><small>Evaluate one limitation and improve the method.</small></div>
+  </div>
+  <div class="minimal-note"><b>Teacher move:</b> 1 or 3 is not failure—it changes the explanation, scaffold and next question. Secure 2 moves straight to explanation/evaluation.</div>
+ </div>
+</section>
+
+<!-- 5. WE DO — REST READING -->
+<section class="slide" data-type="wedo">
+ <div class="wrap">
+  <span class="slide-tag">We Do · Together</span>
+  <h2>Reading 1 — at REST: first attempt</h2><div class="attempt-pair"><div class="attempt-box"><span class="attempt-tag">ATTEMPT 1</span><br>Carry out the agreed routine.</div><div class="attempt-arrow">→</div><div class="attempt-box after"><span class="attempt-tag">FEEDBACK FEEDS FORWARD</span><br>Your class change improves Attempt 2.</div></div>
+  <div class="box task-box">
+    <ol style="margin-left:18px">
+      <li>Goggles on. Limewater exactly <b>3 cm deep</b> in your <b>REST</b> beaker. Straw in that beaker only.</li>
+      <li>On my count, everyone follows the <b>same counted gentle-breath routine</b> together — then <b>straws out, hands still</b>.</li>
+      <li>Look through your beaker (same amount, same way each time) and rate it <b>1–5</b> against the strip. That's your rest score.</li>
+    </ol>
+  </div>
+  <div class="scale-strip">
+    <div class="sw"><div class="chip" style="background:#bcd9f2"></div>1 Clear</div>
+    <div class="sw"><div class="chip" style="background:#cfe0f0"></div>2</div>
+    <div class="sw"><div class="chip" style="background:#e2eaf2"></div>3</div>
+    <div class="sw"><div class="chip" style="background:#eef2f6"></div>4</div>
+    <div class="sw"><div class="chip" style="background:#ffffff"></div>5 Milky</div>
+  </div>
+  <p class="scale-cap">👀 Judge it by <b>how much you can see through the beaker</b>: <b>1</b> = read text straight through · <b>3</b> = text looks fuzzy · <b>5</b> = can't see through at all. <i>Use your desk card.</i></p>
+  <div class="box stem-box">Write your rest score on your card: <b>"At rest my cloudiness was ____ / 5."</b></div>
+  <div class="box scaffold-box"><b>Watch for:</b> we all blow the <b>same</b> number of breaths — that's what makes it a fair comparison. Don't sneak extra puffs!</div>
+
+  <div class="influence-box">
+   <h3>🔁 Micro-loop before Reading 2</h3>
+   <p><b>Voice:</b> What needs changing so the next trial is safer, clearer or fairer?</p>
+   <div class="choice-row" id="microChoices">
+    <button class="voice-choice" data-v="count breaths aloud" onclick="chooseMicro(this)">Count aloud</button>
+    <button class="voice-choice" data-v="move the scale card closer" onclick="chooseMicro(this)">Scale closer</button>
+    <button class="voice-choice" data-v="repeat the blow-not-suck model" onclick="chooseMicro(this)">Model again</button>
+    <button class="voice-choice" data-v="use an alternative activity role" onclick="chooseMicro(this)">Alternative role</button>
+   </div>
+   <input class="voice-other" id="microOther" placeholder="Another pupil suggestion…" oninput="saveLundyText('microOther',this.value)">
+   <button class="btn alt" onclick="commitMicroChange()">Apply the class change</button>
+   <div class="commitment" id="microCommit">No change chosen yet — listen first.</div>
+  </div>
+
+  <button class="btn ghost" onclick="openCC()">🎯 Cold Call</button>
+  <button class="btn ghost" onclick="openTA()">👩‍🏫 TA Focus</button>
+ </div>
+</section>
+
+<!-- 6. ACTIVE — EXERCISE + AFTER -->
+<section class="slide" data-type="ind">
+ <div class="wrap">
+  <span class="slide-tag">Get Active · Reading 2</span>
+  <h2>Reading 2 — improved attempt <span class="owl-badge">🦉</span></h2><div class="observer-evidence"><h3>Practical R-gate</h3><p><b>Voice</b> is the changed second attempt. <b>Audience</b> is the adult watching it. <b>Influence</b> is the safer/fairer method and the next calibrated question. No worksheet is needed to prove this.</p></div>
+  <div class="box ido-box">
+    <b>⏱ Speed matters:</b> the moment you sit back down, blow into your <b>ACTIVE</b> beaker <u>immediately</u> — before your breathing calms down. Don't chat first!
+  </div>
+  <div class="box task-box">
+    <ol style="margin-left:18px">
+      <li>Leave goggles on. Line up calmly at the door.</li>
+      <li><b>90-second activity</b> chosen for you: standing movement, seated movement, or a scientific support role. Nobody has to run.</li>
+      <li>Walk straight back, sit, and blow the <b>same number of breaths</b> into your <b>ACTIVE</b> beaker. Rate it <b>1–5</b> straight away.</li>
+    </ol>
+  </div>
+
+  <div class="role-grid">
+   <div class="role-card"><b>🏃 Active tester</b>Complete suitable movement, then test.</div>
+   <div class="role-card"><b>🪑 Seated tester</b>Use safe seated movement, then test.</div>
+   <div class="role-card"><b>🔢 Breath counter</b>Count the agreed breaths clearly.</div>
+   <div class="role-card"><b>👀 Method checker</b>Check 3 cm depth, timing and viewing.</div>
+  </div>
+  <div class="scale-strip">
+    <div class="sw"><div class="chip" style="background:#bcd9f2"></div>1 Clear</div>
+    <div class="sw"><div class="chip" style="background:#cfe0f0"></div>2</div>
+    <div class="sw"><div class="chip" style="background:#e2eaf2"></div>3</div>
+    <div class="sw"><div class="chip" style="background:#eef2f6"></div>4</div>
+    <div class="sw"><div class="chip" style="background:#ffffff"></div>5 Milky</div>
+  </div>
+  <p class="scale-cap">👀 Same rule: <b>1</b> = see straight through · <b>5</b> = can't see through. Rate against your <b>desk card</b> before your breathing settles.</p>
+  <div style="margin:10px 0"><div class="timer-widget"><span id="clock">1:30</span><button onclick="startTimer(90)">Start</button><button onclick="resetTimer()">Reset</button></div></div>
+  <div class="box stem-box">Add to your card: <b>"After exercise my cloudiness was ____ / 5."</b></div>
+  <div class="box aspire-box p-hide"><b>🌟 Finished?</b> Whisper a prediction: will the class average be higher or lower after exercise?</div>
+  <button class="btn ghost" onclick="openTA()">👩‍🏫 TA Focus</button>
+ </div>
+</section>
+
+<!-- 7. CLASS BREATH LAB -->
+<section class="slide" data-type="board">
+ <div class="wrap">
+  <span class="slide-tag">Class Breath Lab · Analyse</span>
+  <h2>Put every score on the wall</h2>
+  <p class="sub">Enter the observations, then let pupils notice before the computer tells them: pattern · exception · cautious conclusion · improvement.</p><div class="mission"><b>🐍 Choose your challenge:</b> BUILD—point to the higher bar and complete “This suggests…” · GROW—link the pattern to respiration · LAUNCH—evaluate validity and propose a tighter control.</div>
+  <div class="scale-strip">
+    <div class="sw"><div class="chip" style="background:#bcd9f2"></div>1 Clear</div>
+    <div class="sw"><div class="chip" style="background:#cfe0f0"></div>2</div>
+    <div class="sw"><div class="chip" style="background:#e2eaf2"></div>3</div>
+    <div class="sw"><div class="chip" style="background:#eef2f6"></div>4</div>
+    <div class="sw"><div class="chip" style="background:#ffffff"></div>5 Milky</div>
+  </div>
+  <div class="legend"><span><span class="k" style="background:var(--rest)"></span>Rest cloudiness</span><span><span class="k" style="background:var(--active)"></span>After-exercise cloudiness</span></div>
+  <div class="board" id="board"></div>
+
+  <div class="caution"><b>Scientific caution:</b> our score is an observation, not a direct CO₂ concentration measurement. Even with the same number of breaths, breath volume, bubble size, timing and judgement can differ. We will say <b>“more CO₂ reached the limewater during our test”</b>, not claim that we measured an exact percentage.</div>
+
+  <div class="levels" style="margin-top:8px">
+    <button class="btn" onclick="revealPattern()">🔍 Reveal the pattern</button>
+    <button class="btn ghost" onclick="resetBoard()">↺ Clear readings</button>
+    <button class="btn ghost" onclick="clearAll()">🗑 New class</button>
+  </div>
+  <div class="board-summary" id="boardSummary"></div>
+  <button class="btn ghost" onclick="openTA()">👩‍🏫 TA Focus</button>
+ </div>
+</section>
+
+<!-- 8. EXIT -->
+<section class="slide" data-type="exit">
+ <div class="wrap">
+  <span class="slide-tag">Exit Ticket</span>
+  <h2>Show what you know — your response sets the next step</h2><div class="route-banner"><div class="route-card build" onclick="selectRoute(this,'f')"><b>BUILD</b><small>identify evidence and use key vocabulary</small></div><div class="route-card grow" onclick="selectRoute(this,'m')"><b>GROW</b><small>explain the causal chain</small></div><div class="route-card launch" onclick="selectRoute(this,'h')"><b>LAUNCH</b><small>evaluate and improve validity</small></div></div>
+  <div class="box li-box">
+    <h3>🎯 Back to our objectives — did we meet them?</h3>
+    <ul class="tick lo-anim" id="loCheck">
+      <li>Use limewater <b>safely</b> — goggles on, blow not suck, our 3 rules</li>
+      <li>Measure CO₂ at <b>rest &amp; after exercise</b> — your two cloudiness scores</li>
+      <li>Explain it with <b>respiration</b> — more movement → more CO₂</li>
+    </ul>
+    <p style="margin:4px 0 8px">👍 Thumbs up if you can now do each one.</p>
+    <button class="btn ghost" onclick="checkLOs()">✓ Show we met them</button>
+  </div>
+  <div class="levels">
+    <button class="lvl-btn on" data-l="f" onclick="setLevel('f')">Foundation</button>
+    <button class="lvl-btn" data-l="m" onclick="setLevel('m')">Middle</button>
+    <button class="lvl-btn" data-l="h" onclick="setLevel('h')">Higher</button>
+  </div>
+  <div class="tier show" data-tier="f">
+    <div class="box task-box ind-f"><b>Foundation:</b> Ade's limewater was cloudiness <b>2 / 5</b> at rest, but <b>5 / 5</b> after exercise (same number of breaths each time). Which reading had <u>more</u> CO₂? Tick one: ▢ rest ▢ after exercise.</div>
+  </div>
+  <div class="tier" data-tier="m">
+    <div class="box task-box ind-m"><b>Middle:</b> Explain, using the word <b>respiration</b>, why Ade's beaker was cloudier after exercise.</div>
+  </div>
+  <div class="tier" data-tier="h">
+    <div class="box task-box ind-h"><b>Higher:</b> Write the word equation for respiration, then explain why exercise increases the CO₂ in exhaled breath. Why did we keep the number of breaths the <i>same</i> each time?
+      <div class="box exam-tip-box" style="margin-top:8px"><b>Exam tip:</b> name the gas (carbon dioxide) <i>and</i> the process (respiration) to secure both marks.</div>
+    </div>
+  </div>
+  <div class="box stem-box">Sentence stem: <i>"A higher cloudiness score means there was ____ carbon dioxide in my breath, because exercise increases ____."</i></div>
+  <div class="capture">
+    <div class="cap-head">🗣️ Say the conclusion, then close the loop <span>(teacher-led — the class says it aloud at their depth; you confirm the model live)</span></div>
+    <div class="concl-frames">
+      <div class="cframe" data-p="build" onclick="confirmFrame(this)">
+        <div class="cf-h">🟩 BUILD <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model">After exercise my limewater was <span class="kw">cloudier</span>, so my breath had <span class="kw">more carbon dioxide</span>.</div>
+      </div>
+      <div class="cframe" data-p="grow" onclick="confirmFrame(this)">
+        <div class="cf-h">🟧 GROW <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model">Exercise makes my muscles <span class="kw">respire</span> faster. Respiration <span class="kw">makes carbon dioxide</span>, so there was <span class="kw">more CO₂</span> in my breath after exercise — the limewater went <span class="kw">cloudier</span>.</div>
+      </div>
+      <div class="cframe" data-p="launch" onclick="confirmFrame(this)">
+        <div class="cf-h">🟦 LAUNCH <span class="cf-say">— say it aloud, then tap to confirm</span></div>
+        <div class="cf-model"><span class="kw">glucose + oxygen → carbon dioxide + water.</span> Exercise raises the <span class="kw">rate of respiration</span>, releasing more energy and more CO₂, so each breath out carries <span class="kw">more carbon dioxide</span> and the limewater turns cloudier. <i>An odd reading can happen if the breaths weren't counted equally, the beaker wasn't viewed the same way, or breathing had already settled.</i></div>
+      </div>
+    </div>
+    <div class="ybox">
+      <h4>🟡 Yellow Box — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
+      <div class="ns-chips">
+        <button class="ns-chip" onclick="setNS(this,'Say it again using the word respiration.')">Say it using <i>respiration</i></button>
+        <button class="ns-chip" onclick="setNS(this,'Add the word equation: glucose + oxygen → carbon dioxide + water.')">Add the word equation</button>
+        <button class="ns-chip" onclick="setNS(this,'Why might one reading not fit the pattern?')">Why might a reading not fit?</button>
+        <button class="ns-chip" onclick="setNS(this,'Name the gas (carbon dioxide) AND the process (respiration) — that secures both marks.')">Name the gas + the process</button>
+      </div>
+      <div class="ns-active" id="nsActive"></div>
+    </div>
+    <div class="loop-head">🔁 Feedback loop <span class="loop-tally none" id="loopTally">no loops opened yet</span><button class="board-toggle" id="boardModeBtn" onclick="toggleBoardMode()">📺 Board-safe: off</button></div>
+    <div class="loop-sub">Use the policy codes live. Mark <b>I</b> or <b>WS</b>, give one precise <b>NS</b>, then <b>VF</b>. Add <b>R</b> only after the pupil responds <i>and</i> an adult genuinely receives that response (Audience).</div>
+    <div class="box exam-tip-box p-hide" style="margin:4px 0 8px">📷 Snap each pupil’s <b>beakers / result</b> on their row (📷 button) — it prints on their evidence sheet.</div>
+    <div class="code-key"><b>Practical family:</b> most loops are watched re-attempts—capture only when the evidence already has value. <br><b>I</b> Independent <b>WS</b> Worked with support <b>VF</b> Verbal feedback <b>NS</b> Specific next step <b>E</b> Evidence on EFL <b>R</b> Response received / loop closed <b>//</b> Self-edit <b>?</b> Read this back to me</div><div id="exitPanel"></div>
+  </div>
+
+  <div class="box voice-box" style="margin-top:14px">
+   <h3>🔁 Close the Lundy Loop — improve this for the next class</h3>
+   <p>Every pupil can say, point, type or ask an adult to communicate one view.</p>
+   <div class="choice-row" id="reviewChoices">
+    <button class="voice-choice" data-v="KEEP the pupil-designed fair-test rules" onclick="chooseReview(this)">✅ Keep our fair-test rules</button>
+    <button class="voice-choice" data-v="KEEP the choice of participation roles" onclick="chooseReview(this)">✅ Keep role choices</button>
+    <button class="voice-choice" data-v="CHANGE the cloudiness scoring guidance" onclick="chooseReview(this)">🔧 Change score guidance</button>
+    <button class="voice-choice" data-v="CHANGE the timing or breathing routine" onclick="chooseReview(this)">🔧 Change timing/routine</button>
+   </div>
+   <input class="voice-other" id="reviewOther" placeholder="A pupil's own keep/change/remove idea…" oninput="saveLundyText('reviewOther',this.value)">
+   <button class="btn alt" onclick="closeLundyLoop()">Show how pupils will influence the next lesson</button>
+   <div class="influence-box" id="reviewCommit" style="display:none">
+    <h3>👂 AUDIENCE → 🔧 INFLUENCE</h3>
+    <div id="reviewCommitText"></div>
+    <p style="font-size:13px;margin-top:6px"><b>What happens next:</b> Mr Roper will use this view when editing the lesson for the next class and will tell us what changed. If it cannot change, he will explain why.</p>
+   </div>
+  </div>
+
+
+  <div class="end-actions">
+   <h3>🖨 End-of-lesson book evidence</h3>
+   <p>Creates <b>one separate evidence sheet per pupil</b>, each beginning on a new page. The sheet includes their prediction, results, practical evidence, question level, own-colour response space, <b>I / WS · VF · NS+ · // / ? · R · E</b>, response modality, Audience and the <b>Influence on next learning</b>.</p>
+   <button class="btn" onclick="printIndividualEvidence()">🖨 Print all individual pupil evidence sheets</button>
+   <select class="print-select" id="singlePupilSelect" aria-label="Choose one pupil to print"></select>
+   <button class="btn ghost" onclick="printOnePupil()">Print selected pupil only</button>
+   <div class="print-note"><b>Before printing:</b> use the final capture rows above. Add <b>R</b> only after the pupil responded and an adult received the response. In “Influence”, record the real next move, for example: “Next lesson: revisit control variables” or “Next question moved to GROW”. Blank placeholder pupils are excluded from the batch.</div>
+  </div>
+
+  <button class="btn" onclick="finishLesson()">✔ Finish lesson</button>
+  <button class="btn ghost" onclick="printIndividualEvidence()">🖨 Print individual evidence sheets</button>
+ </div>
+</section>
+
+</div><!-- /stage -->
+
+<!-- XP -->
+<div class="xp-wrap"><span>⭐ XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div><span id="xpNum">0</span></div>
+
+<!-- tools -->
+<div class="tools">
+  <button onclick="printIndividualEvidence()">🖨 Evidence</button>
+  <button onclick="openTA()">👩‍🏫 TA</button>
+  <button onclick="openCC()">🎯 Cold Call</button>
+  <button id="muteBtn" onclick="toggleMute()">🔊 Sound on</button>
+</div>
+
+<!-- nav -->
+<div class="nav"><button id="prevBtn" onclick="prev()">‹</button><button id="nextBtn" onclick="next()">›</button></div>
+
+<!-- TA modal -->
+<div class="modal" id="taModal"><div class="card">
+  <button class="close" onclick="closeModal('taModal')">×</button>
+  <h3>👩‍🏫 TA Focus — this slide</h3>
+  <div id="taBody"></div>
+</div></div>
+
+<!-- Cold Call modal -->
+<div class="modal" id="ccModal"><div class="card">
+  <button class="close" onclick="closeModal('ccModal')">×</button>
+  <h3>🎯 Cold Call</h3>
+  <p>Roll to pick a pupil, then match the question tier to the number.</p>
+  <div class="cc-pick" id="ccPick">—</div>
+  <div class="cc-tier" id="ccTier"></div>
+  <button class="btn" onclick="rollCC()">🎲 Roll</button>
+</div></div>
+
+<!-- completion -->
+<div class="complete" id="complete">
+  <h2>🎉 Lesson complete!</h2>
+  <p style="font-size:20px;margin-top:8px">You tested your own breath and explained it with science.</p>
+  <p style="margin-top:6px">Don't forget to print your evidence pack.</p>
+  <p id="completeLoop" style="margin-top:8px;font-weight:700;color:#166534"></p>
+  <button class="btn" style="margin-top:16px" onclick="document.getElementById('complete').classList.remove('show')">Back to lesson</button>
+</div>
+
+<!-- PRINT AREA -->
+<div id="storeWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;color:#92400e;border-bottom:2px solid #f59e0b;padding:8px 14px;font-size:13px;font-weight:600;text-align:center">⚠ Storage is full — recent photos/notes may not be saved. Print your evidence now (🖨), then use “New class” to clear. <button onclick="document.getElementById('storeWarn').style.display='none'" style="margin-left:8px;cursor:pointer">✕</button></div>
+<div id="print-area"></div>
+
+<script>
+/* ---------- DATA (declared before any init that reads them) ---------- */
+const arrivalQs=[
+  {q:"1. What does limewater test for?",opts:["Oxygen","Carbon dioxide","Water"],a:1},
+  {q:"2. When that gas is present, clear limewater turns…",opts:["Blue","Cloudy / milky","Bright red"],a:1}
+];
+const breathData=[
+  {name:"Pupil 1",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false},
+  {name:"Pupil 2",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false},
+  {name:"Pupil 3",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false},
+  {name:"Pupil 4",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false},
+  {name:"Pupil 5",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false},
+  {name:"Pupil 6",pred:null,rest:null,active:null,predCorrect:null,rag:null,note:"",loop:0,photo:null,tier:null,mode:null,voice:null,influence:"",efl:false}
+];
+const taBriefs={
+  title:"Read the LOs aloud with the class. Names/faces check who is regulated before we handle glassware. Flag today = practical + short exercise burst.",
+  arrival:"Circulate with mini-whiteboards. Praise attempts, not just correct answers. Note who recalls the limewater purpose from Friday — that's the anchor.",
+  voice:"Protect Space: accept point/sign/pass; repeat pupil words back; help teacher make influence visible.",
+  starter:"Keep the predict-and-share to 30s. Gesture anchor: hand in = little CO₂, hand out = lots. Watch for pupils who need the prediction scaffolded verbally.",
+  ido:"Stand beside the demo. Model 'straw out to breathe in'. Pre-check goggles fit. Quietly confirm any ASTHMA pupils have inhalers and will do a lighter burst.",
+  wedo:"Watch the practical re-attempt. Name exactly what changed after feedback; that watched second attempt is the R-gate. One adult may capture one valuable photo only.",
+  wedo_old:"This is the high-risk moment — eyes on hands, not the board. One TA watches the two pupils most likely to rush. Praise slow, gentle blowing loudly.",
+  ind:"Own the transition. Line-up cue agreed in advance. Escort the burst; bring pupils straight back so they test within 30s. Hold the door, count them in.",
+  board:"Read numbers calmly as pupils call them. Frame any odd result as 'interesting' not 'wrong' — protects self-esteem and sets up the anomaly talk.",
+  exit:"Offer the sentence stem to anyone stuck. Tier up quietly — nudge secure pupils to Middle/Higher without announcing it."
+};
+let cur=0, xp=0, level='f', boardMode=false;
+const slides=[...document.querySelectorAll('.slide')];
+const types=slides.map(s=>s.dataset.type);
+
+/* ---------- persistence (works when file is deployed/opened directly) ---------- */
+const LSKEY='ps_co2_final_observation_v1';
+let muted=false;
+function saveState(){try{localStorage.setItem(LSKEY,JSON.stringify({data:breathData,muted:muted,boardMode:boardMode}));}catch(e){var w=document.getElementById('storeWarn');if(w)w.style.display='block';}}
+function loadState(){try{const s=localStorage.getItem(LSKEY);if(!s)return;const o=JSON.parse(s);if(o&&Array.isArray(o.data))o.data.forEach((r,i)=>{if(breathData[i])Object.assign(breathData[i],r);});if(o&&typeof o.muted==='boolean')muted=o.muted;if(o&&typeof o.boardMode==='boolean')boardMode=o.boardMode;}catch(e){}}
+function clearAll(){
+  if(!confirm('Clear ALL names, readings, predictions and notes for a new class? This cannot be undone.'))return;
+  breathData.forEach((p,i)=>{p.name='Pupil '+(i+1);p.pred=null;p.rest=null;p.active=null;p.predCorrect=null;p.rag=null;p.note='';p.loop=0;p.photo=null;p.tier=null;p.mode=null;p.voice=null;p.influence='';p.efl=false;});
+  try{localStorage.removeItem(LSKEY);localStorage.removeItem('ps_co2_lundy_final_v1');}catch(e){}
+  var sw=document.getElementById('storeWarn');if(sw)sw.style.display='none';
+  buildBoard();renderPredict();renderExit();buildPrint();
+  const bs=document.getElementById('boardSummary');if(bs)bs.classList.remove('show');
+  beep(300);
+}
+function toggleMute(){muted=!muted;const b=document.getElementById('muteBtn');if(b)b.textContent=muted?'🔇 Sound off':'🔊 Sound on';saveState();if(!muted)beep(600);}
+
+/* ---------- audio ---------- */
+let actx=null;
+function beep(freq){if(muted)return;try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;o.connect(g);g.connect(actx.destination);g.gain.value=.12;o.start();g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);o.stop(actx.currentTime+.26);}catch(e){}}
+window.addEventListener('pointerdown',()=>{if(actx&&actx.state==='suspended')actx.resume();},{once:true});
+
+/* ---------- phase timers (per-slide pacing; space-bar starts, then pauses/resumes) ---------- */
+const slideMins={arrival:3,starter:4,voice:5,ido:4,wedo:7,ind:9,board:8,exit:6};
+const phaseNames={arrival:'Arrival',starter:'Starter',voice:'Lundy Loop',ido:'I Do',wedo:'We Do',ind:'Active',board:'Analysis',exit:'Exit'};
+let ptStarted=false, ptPaused=false, phaseLeft=0, totalElapsed=0, ptInterval=null;
+function fmtAbs(sec){sec=Math.abs(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
+function startPhase(t){phaseLeft=(slideMins[t]||0)*60;}
+function startLesson(){ptStarted=true;ptPaused=false;startPhase(types[cur]);if(!ptInterval)ptInterval=setInterval(phaseTick,1000);updateTimer();beep(560);}
+function togglePauseTimer(){ptPaused=!ptPaused;updateTimer();beep(ptPaused?300:560);}
+function toggleLessonTimer(){ptStarted?togglePauseTimer():startLesson();}
+function phaseTick(){if(!ptStarted||ptPaused)return;phaseLeft--;totalElapsed++;if(phaseLeft===0)beep(660);updateTimer();}
+function updateTimer(){
+  const el=document.getElementById('phaseTimer');if(!el)return;
+  if(!ptStarted){el.className='phase-timer';el.innerHTML='⏱ Press SPACE to start';return;}
+  const t=types[cur],budget=slideMins[t]||0;let html;
+  if(budget===0){el.className='phase-timer idle';html='<span class="pt-name">Launch — advance to begin</span>';}
+  else{
+    const over=phaseLeft<0;
+    el.className='phase-timer '+(over?'over':(phaseLeft<=60?'warn':'ok'));
+    html='<span class="pt-name">'+(phaseNames[t]||'')+(ptPaused?' ⏸':'')+'</span><b class="pt-time">'+(over?'+':'')+fmtAbs(phaseLeft)+'</b>';
+  }
+  el.innerHTML=html+'<span class="pt-total">Σ '+fmtAbs(totalElapsed)+' / 49</span>';
+}
+
+/* ---------- nav ---------- */
+function showSlide(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,n)=>s.classList.toggle('active',n===cur));
+  document.getElementById('pbar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').disabled=cur===slides.length-1;
+  slides[cur].scrollTop=0;
+  const t=types[cur];
+  if(t==='starter')renderPredict();
+  if(t==='exit')renderExit();
+  if(ptStarted){startPhase(t);ptPaused=false;}
+  updateTimer();
+}
+function next(){showSlide(cur+1);}
+function prev(){showSlide(cur-1);}
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+  if(e.key===' '||e.code==='Space'){e.preventDefault();toggleLessonTimer();return;}
+  if(e.key==='ArrowRight')next();
+  if(e.key==='ArrowLeft')prev();
+});
+
+/* ---------- xp ---------- */
+function addXP(n){xp+=n;const max=100;const pct=Math.min(100,xp/max*100);document.getElementById('xpFill').style.width=pct+'%';document.getElementById('xpNum').textContent=xp;}
+
+/* ---------- title ---------- */
+function animateLOs(){const items=[...document.querySelectorAll('#loList li')];items.forEach((li,i)=>setTimeout(()=>{li.classList.add('on');beep(520+i*60);},i*400));addXP(5);}
+function checkLOs(){const items=[...document.querySelectorAll('#loCheck li')];items.forEach((li,i)=>setTimeout(()=>{li.classList.add('on');beep(560+i*80);},i*450));addXP(10);}
+
+/* ---------- generic reveal ---------- */
+function toggle(id){const el=document.getElementById(id);el.classList.toggle('show');if(el.classList.contains('show')){addXP(5);beep(600);}}
+
+/* ---------- arrival mcq ---------- */
+function buildArrival(){
+  const g=document.getElementById('arrivalGrid');
+  arrivalQs.forEach((item,qi)=>{
+    const card=document.createElement('div');card.className='q-card';
+    const p=document.createElement('p');p.className='q';p.textContent=item.q;card.appendChild(p);
+    item.opts.forEach((opt,oi)=>{
+      const b=document.createElement('button');b.className='mcq-opt';b.textContent=opt;
+      b.onclick=()=>{
+        if(card.dataset.done)return;
+        [...card.querySelectorAll('.mcq-opt')].forEach(x=>x.classList.add('locked'));
+        if(oi===item.a){b.classList.add('correct');beep(660);addXP(5);}
+        else{b.classList.add('wrong');card.querySelectorAll('.mcq-opt')[item.a].classList.add('correct');beep(200);}
+        card.dataset.done='1';
+      };
+      card.appendChild(b);
+    });
+    g.appendChild(card);
+  });
+}
+
+/* ---------- level toggle ---------- */
+function setLevel(l){
+  level=l;
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
+  document.querySelectorAll('.tier').forEach(t=>t.classList.toggle('show',t.dataset.tier===l));
+}
+
+/* ---------- animated bench ---------- */
+function runBench(){document.getElementById('bench').classList.add('run');beep(560);}
+function resetBench(){document.getElementById('bench').classList.remove('run');}
+
+/* ---------- timer ---------- */
+let tInt=null,tLeft=90;
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function startTimer(sec){resetTimer();tLeft=sec;document.getElementById('clock').textContent=fmt(tLeft);tInt=setInterval(()=>{tLeft--;document.getElementById('clock').textContent=fmt(Math.max(0,tLeft));if(tLeft<=0){clearInterval(tInt);beep(880);setTimeout(()=>beep(880),200);}},1000);}
+function resetTimer(){if(tInt)clearInterval(tInt);tLeft=90;document.getElementById('clock').textContent='1:30';}
+
+/* ---------- modals ---------- */
+function openTA(){document.getElementById('taBody').innerHTML='<p>'+(taBriefs[types[cur]]||'Support pupils as needed.')+'</p>';document.getElementById('taModal').classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function openCC(){document.getElementById('ccModal').classList.add('show');document.getElementById('ccPick').textContent='—';document.getElementById('ccTier').textContent='';}
+function rollCC(){
+  const names=breathData.map(p=>p.name);
+  const pick=names[Math.floor(Math.random()*names.length)];
+  const n=Math.floor(Math.random()*5)+1; // 1-5
+  let tier,txt,col;
+  if(n===1){tier='Foundation';col='#dcfce7';txt='Ask a recall question (what does cloudy mean?)';}
+  else if(n===2){tier='Middle';col='#ffedd5';txt='Ask them to explain using "respiration".';}
+  else{tier='Higher';col='#e0e7ff';txt='Ask for the word equation or an anomaly reason.';}
+  document.getElementById('ccPick').textContent=pick+'  🎲'+n;
+  const t=document.getElementById('ccTier');t.style.background=col;t.textContent=tier+' — '+txt;
+  beep(500);
+}
+
+/* ---------- Breath Lab board ---------- */
+function buildBoard(){
+  const b=document.getElementById('board');if(!b)return;b.innerHTML='';
+  breathData.forEach((p,i)=>{
+    const row=document.createElement('div');row.className='board-row';
+    row.innerHTML=
+      '<input class="name" value="'+esc(p.name)+'" oninput="setName('+i+',this.value)">'+
+      '<div class="bars">'+
+        '<div class="bar-line"><label>Rest</label><div class="bar-track"><div class="bar-fill rest" id="rf'+i+'"></div></div><span class="num"><input type="number" min="1" max="5" placeholder="1–5" value="'+(p.rest!=null?p.rest:'')+'" oninput="setVal('+i+',\'rest\',this.value)"></span></div>'+
+        '<div class="bar-line"><label>Active</label><div class="bar-track"><div class="bar-fill active" id="af'+i+'"></div></div><span class="num"><input type="number" min="1" max="5" placeholder="1–5" value="'+(p.active!=null?p.active:'')+'" oninput="setVal('+i+',\'active\',this.value)"></span><span class="anom-flag" id="an'+i+'" title="Anomaly — active not higher than rest">🔎</span></div>'+
+      '</div>';
+    b.appendChild(row);
+  });
+  redrawBars();
+}
+function setName(i,v){breathData[i].name=v;saveState();populatePupilPrintSelect();}
+function boardMax(){return 5;} /* fixed 1–5 cloudiness scale */
+function redrawBars(){
+  const max=boardMax();
+  breathData.forEach((p,idx)=>{
+    const rf=document.getElementById('rf'+idx),af=document.getElementById('af'+idx),an=document.getElementById('an'+idx);
+    if(rf)rf.style.width=(p.rest?p.rest/max*100:0)+'%';
+    if(af)af.style.width=(p.active?p.active/max*100:0)+'%';
+    if(an)an.style.display=(p.rest!=null&&p.active!=null&&p.active<=p.rest)?'inline':'none';
+  });
+}
+function setVal(i,k,v){
+  const n=v===''?null:Math.max(1,Math.min(5,parseInt(v)||1));
+  breathData[i][k]=n;
+  redrawBars();
+  saveState();
+}
+function revealPattern(){
+  const done=breathData.filter(p=>p.rest!=null&&p.active!=null);
+  const box=document.getElementById('boardSummary');
+  if(done.length===0){box.innerHTML='<b>Enter at least one pair of scores first.</b>';box.classList.add('show');return;}
+  const more=done.filter(p=>p.active>p.rest);
+  const anom=done.filter(p=>p.active<=p.rest);
+  const avg=arr=>Math.round(arr.reduce((s,p)=>s+p,0)/arr.length*10)/10;
+  const avgR=avg(done.map(p=>p.rest)), avgA=avg(done.map(p=>p.active));
+  // predictions correct (auto from data: predicting 'more' matches a cloudier result)
+  const predDone=done.filter(p=>p.pred);
+  const predOK=predDone.filter(p=>{const d=p.active>p.rest?'more':(p.active<p.rest?'less':'same');return p.pred===d;});
+  // --- results table ---
+  let rows=done.map(p=>{
+    const d=p.active-p.rest;
+    const arrow=d>0?'<span style="color:#16a34a">▲ +'+d+'</span>':(d<0?'<span style="color:#ef4444">▼ '+d+'</span>':'–');
+    const pc=p.pred?(p.pred===(p.active>p.rest?'more':(p.active<p.rest?'less':'same'))?'✅':'❌'):'–';
+    return '<tr><td>'+esc(p.name)+'</td><td>'+(p.pred?({more:'More',less:'Less',same:'Same'})[p.pred]:'–')+'</td><td>'+p.rest+'</td><td>'+p.active+'</td><td>'+arrow+'</td><td>'+pc+'</td></tr>';
+  }).join('');
+  const table='<table class="reveal-tbl"><tr><th>Name</th><th>Predicted</th><th>Rest</th><th>Active</th><th>Change</th><th>Right?</th></tr>'+rows+'</table>';
+  // --- class-average before/after graph ---
+  const h=v=>Math.round(v/5*120)+'px';
+  const graph='<div class="avg-graph"><div class="ag-col"><div class="ag-bar rest" style="height:'+h(avgR)+'"><span>'+avgR+'</span></div><div class="ag-lab">Rest</div></div>'+
+    '<div class="ag-arrow">→</div>'+
+    '<div class="ag-col"><div class="ag-bar active" style="height:'+h(avgA)+'"><span>'+avgA+'</span></div><div class="ag-lab">After<br>exercise</div></div>'+
+    '<div class="ag-cap">Class average cloudiness (out of 5). Taller after exercise = more CO₂.</div></div>';
+  let html='<h3>What the wall shows</h3>'+
+    '<p><b>'+more.length+' of '+done.length+'</b> people had a <b>cloudier</b> beaker after exercise'+(predDone.length?' · <b>'+predOK.length+' of '+predDone.length+'</b> predictions were correct':'')+'.</p>'+
+    '<div class="reveal-flex">'+graph+'<div class="reveal-tbl-wrap">'+table+'</div></div>'+
+    '<p style="margin-top:6px">A cloudier result suggests <b>more CO₂ reached the limewater during our routine</b>. This is consistent with increased respiration during activity, while our limitations mean we should not claim an exact breath concentration. ✔</p>';
+  if(anom.length>0){
+    html+='<div class="box misc-box" style="margin-top:8px"><b>🔎 Talking point ('+anom.map(p=>p.name).join(', ')+'):</b> these didn\'t fit the pattern. Why might that happen? (didn\'t push in the burst · rated too quickly · beaker already a bit cloudy · didn\'t blow the full breaths). Real data is messy — good scientists <i>explain</i> anomalies, they don\'t hide them.</div>';
+  }
+  box.innerHTML=html;box.classList.add('show');
+  addXP(15);beep(700);setTimeout(()=>beep(900),150);
+}
+function resetBoard(){breathData.forEach(p=>{p.rest=null;p.active=null;});buildBoard();document.getElementById('boardSummary').classList.remove('show');}
+
+/* ---------- prediction capture ---------- */
+function renderPredict(){
+  const el=document.getElementById('predPanel');if(!el)return;el.innerHTML='';
+  breathData.forEach((p,i)=>{
+    const opts=[['more','More CO₂'],['less','Less CO₂'],['same','Same']];
+    let btns=opts.map(o=>'<button class="pill'+(p.pred===o[0]?' on':'')+'" onclick="setPredict('+i+',\''+o[0]+'\')">'+o[1]+'</button>').join('');
+    const row=document.createElement('div');row.className='cap-row';
+    row.innerHTML='<div class="nm"><input value="'+esc(p.name)+'" oninput="setName('+i+',this.value)"></div><div class="cap-opts">'+btns+'</div>';
+    el.appendChild(row);
+  });
+}
+function setPredict(i,v){breathData[i].pred=v;renderPredict();saveState();beep(520);}
+
+/* ---------- exit capture ---------- */
+function resultDir(p){ if(p.rest==null||p.active==null)return null; return p.active>p.rest?'more':(p.active<p.rest?'less':'same'); }
+function predResultLine(p){
+  const pw=p.pred?({more:'MORE',less:'LESS',same:'SAME'})[p.pred]:'—';
+  const dir=resultDir(p);
+  const dirTxt=dir==null?'no readings yet':(p.rest+'→'+p.active+' ('+({more:'cloudier',less:'less cloudy',same:'no change'})[dir]+')');
+  return 'Predicted <b>'+pw+'</b> → result '+dirTxt;
+}
+/* ---------- conclusion: verbal shared model + yellow box ---------- */
+function confirmFrame(el){const on=el.classList.toggle('confirmed');beep(on?720:360);}
+function setNS(btn,txt){
+  const chips=[...document.querySelectorAll('.ns-chip')];
+  const already=btn.classList.contains('on');
+  chips.forEach(c=>c.classList.remove('on'));
+  const box=document.getElementById('nsActive');if(!box)return;
+  if(already){box.classList.remove('show');box.textContent='';beep(360);return;}
+  btn.classList.add('on');box.textContent='🟡 Next step: '+txt;box.classList.add('show');beep(640);
+}
+/* ---------- feedback-loop tracker (R-gate) ---------- */
+const LOOP=[['','◻ No VF yet'],['s1','🟡 VF'],['s2','🟢 R']];
+function loopState(p){return p.loop||0;}
+function modeCtl(i){const p=breathData[i],lab=p.mode||'I / WS';return '<button class="code-btn'+(p.mode?' on':'')+'" onclick="cycleMode('+i+')" title="Policy code: Independent / Worked with support">'+lab+'</button>';}
+function cycleMode(i){const p=breathData[i];p.mode=p.mode===null?'I':p.mode==='I'?'WS':null;renderExit();saveState();beep(520);}
+function eflCtl(i){const p=breathData[i];return '<button class="code-btn'+(p.efl?' on':'')+'" onclick="toggleEFL('+i+')" title="E = evidence on EFL">E'+(p.efl?' ✓':'')+'</button>';}
+function toggleEFL(i){breathData[i].efl=!breathData[i].efl;renderExit();saveState();beep(520);}
+function voiceCtl(i){const v=breathData[i].voice||'';return '<select class="voice-select" onchange="setVoice('+i+',this.value)" title="How the pupil responded (Voice)"><option value="">Voice…</option><option value="verbal"'+(v==='verbal'?' selected':'')+'>verbal reply</option><option value="edit"'+(v==='edit'?' selected':'')+'>// self-edit</option><option value="reattempt"'+(v==='reattempt'?' selected':'')+'>re-attempt</option><option value="demonstration"'+(v==='demonstration'?' selected':'')+'>demonstration</option><option value="point/sign"'+(v==='point/sign'?' selected':'')+'>point / sign</option><option value="read-back"'+(v==='read-back'?' selected':'')+'>? read back</option><option value="EFL clip"'+(v==='EFL clip'?' selected':'')+'>EFL clip</option></select>';}
+function setVoice(i,v){breathData[i].voice=v||null;saveState();}
+function setInfluence(i,v){breathData[i].influence=v;saveState();}
+
+function resizePhoto(file,cb){var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var w=img.width,h=img.height,M=760;if(w>h&&w>M){h=Math.round(h*M/w);w=M;}else if(h>M){w=Math.round(w*M/h);h=M;}var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',0.5));};img.onerror=function(){cb(null);};img.src=r.result;};r.onerror=function(){cb(null);};r.readAsDataURL(file);}
+function photoCtl(i){var p=breathData[i];return '<label class="photo-btn'+(p.photo?' has':'')+'">'+(p.photo?'✔ photo':'📷 photo')+'<input type="file" accept="image/*" capture="environment" style="display:none" onchange="setPhoto('+i+',this)"></label>'+(p.photo?'<img class="photo-thumb" src="'+p.photo+'" onclick="removePhoto('+i+')" title="tap to remove">':'');}
+function setPhoto(i,input){var f=input.files&&input.files[0];if(!f)return;resizePhoto(f,function(data){if(!data)return;breathData[i].photo=data;renderExit();try{saveState();}catch(e){}beep(700);addXP(3);});}
+function removePhoto(i){breathData[i].photo=null;renderExit();saveState();beep(360);}
+function tierCtl(i){var t=breathData[i].tier;function b(k,lab){return '<button class="tier-btn'+(t===k?' on':'')+'" onclick="setTier('+i+',\''+k+'\')">'+lab+'</button>';}return '<span class="tier-seg" title="Question level for this pupil (F/M/H)">'+b('f','F')+b('m','M')+b('h','H')+'</span>';}
+function setTier(i,t){breathData[i].tier=(breathData[i].tier===t?null:t);renderExit();saveState();beep(560);}
+function renderExit(){
+  const el=document.getElementById('exitPanel');if(!el)return;el.innerHTML='';
+  if(boardMode){const c=loopCounts();el.innerHTML='<div class="loop-agg"><div class="big">🟢 '+c.closed+' / '+c.given+'</div><div class="cap">feedback loops closed'+(c.given?'':' — none opened yet')+'</div><div class="hint">R means pupil responded AND adult received it · names hidden</div></div>';updateLoopTally();return;}
+  breathData.forEach((p,i)=>{const L=LOOP[loopState(p)];const row=document.createElement('div');row.className='loop-row';row.innerHTML=
+    '<div class="nm"><input value="'+esc(p.name)+'" oninput="setName('+i+',this.value)"></div>'+
+    '<div><div class="policy-controls">'+modeCtl(i)+'<button class="loop-btn '+L[0]+'" onclick="cycleLoop('+i+')" title="VF then R only after Audience">'+L[1]+'</button>'+voiceCtl(i)+eflCtl(i)+photoCtl(i)+tierCtl(i)+'</div></div>'+
+    '<div><input class="loop-note" placeholder="NS+: one specific next step…" value="'+esc(p.note)+'" oninput="setNote('+i+',this.value)"><input class="influence-note" placeholder="Influence: because of the response, next…" value="'+esc(p.influence||'')+'" oninput="setInfluence('+i+',this.value)"></div>';el.appendChild(row);});updateLoopTally();}
+function applyBoardBtn(){const b=document.getElementById('boardModeBtn');if(b){b.textContent='📺 Board-safe: '+(boardMode?'on':'off');b.classList.toggle('on',boardMode);}}
+function toggleBoardMode(){boardMode=!boardMode;applyBoardBtn();renderExit();saveState();beep(boardMode?520:360);}
+function cycleLoop(i){const p=breathData[i],next=((p.loop||0)+1)%3;if(next===2&&!p.voice){alert('Choose how the pupil responded (Voice) before adding R. R means the adult has genuinely received that response.');return;}p.loop=next;renderExit();saveState();beep(next===2?820:next===1?620:360);if(next===2)addXP(4);}
+function loopCounts(){let given=0,closed=0;breathData.forEach(p=>{const st=p.loop||0;if(st>=1)given++;if(st===2)closed++;});return{given:given,closed:closed};}
+function updateLoopTally(){
+  const t=document.getElementById('loopTally');if(!t)return;const c=loopCounts();
+  if(c.given===0){t.textContent='no loops opened yet';t.className='loop-tally none';}
+  else{t.textContent='R: '+c.closed+' of '+c.given+' VF loops closed after Audience';t.className='loop-tally';}
+}
+function setNote(i,v){breathData[i].note=v;saveState();}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+/* ---------- completion ---------- */
+function fireConfetti(){
+  const cols=['#f59e0b','#16a34a','#4338ca','#ef4444','#0d9488'];
+  for(let i=0;i<70;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];
+    c.style.transform='rotate('+Math.random()*360+'deg)';
+    document.body.appendChild(c);
+    const dur=2200+Math.random()*1600;
+    c.animate([{top:'-20px',opacity:1},{top:'100vh',opacity:.9}],{duration:dur,easing:'ease-in'});
+    setTimeout(()=>c.remove(),dur);
+  }
+}
+function finishLesson(){addXP(20);const cl=document.getElementById('completeLoop');if(cl){const c=loopCounts();cl.textContent=c.given?('🟢 Feedback loop closed: '+c.closed+' of '+c.given+' given a next step'):'';}document.getElementById('complete').classList.add('show');fireConfetti();beep(660);setTimeout(()=>beep(820),160);setTimeout(()=>beep(980),320);}
+
+/* ---------- print pack ---------- */
+function used(p,i){return (p.name&&p.name!=='Pupil '+(i+1))||p.pred||p.rest!=null||p.active!=null||(p.loop&&p.loop>0)||(p.note&&p.note.trim())||p.photo||p.mode||p.voice||p.efl||(p.influence&&p.influence.trim());}
+function ragLabel(r){return r==='g'?'<span class="rag" style="background:#16a34a">Secure</span>':r==='a'?'<span class="rag" style="background:#eab308">Developing</span>':r==='r'?'<span class="rag" style="background:#ef4444">Needs support</span>':'–';}
+function predLabel(v){return v==='more'?'More CO₂':v==='less'?'Less CO₂':v==='same'?'Same':'–';}
+function pcLabel(v){return v===true?'<b>Correct ✓</b>':v===false?'<b>Not quite ✗</b>':'–';}
+function autoPredCorrect(p){const d=resultDir(p);if(!p.pred||d==null)return null;return (p.pred==='more'&&d==='more')||(p.pred==='less'&&d==='less')||(p.pred==='same'&&d==='same');}
+function loopLabel(p){const s=p.loop||0;return s===2?'<span class="rag" style="background:#16a34a">R — response received; loop closed</span>':s===1?'<span class="rag" style="background:#eab308">VF — response still due / not yet received</span>':'<span class="rag" style="background:#94a3b8">No VF recorded</span>';}
+function codeSummary(p){let x=[];if(p.mode)x.push('<span class="policy-code">'+p.mode+'</span> '+(p.mode==='I'?'Independent':'Worked with support'));if((p.loop||0)>=1)x.push('<span class="policy-code">VF</span> Verbal feedback');if(p.note&&p.note.trim())x.push('<span class="policy-code">NS+</span> '+esc(p.note));if(p.voice==='edit')x.push('<span class="policy-code">//</span> Self-edit');if(p.voice==='read-back')x.push('<span class="policy-code">?</span> Read back');if(p.efl)x.push('<span class="policy-code">E</span> Evidence on EFL');if((p.loop||0)===2)x.push('<span class="policy-code">R</span> Response received');return x.length?x.join(' &nbsp; '):'No policy code recorded.';}
+function pupilStory(p){
+  const pw=p.pred?predLabel(p.pred).replace(' CO₂',' carbon dioxide'):null;
+  let s=pw?('You predicted there would be <b>'+pw+'</b> after exercise. '):'';
+  if(p.rest!=null&&p.active!=null){
+    const dir=p.active>p.rest?'cloudier':(p.active<p.rest?'less cloudy':'about the same');
+    const res=p.active>p.rest?'more':(p.active<p.rest?'less':'about the same');
+    s+='Your limewater went from <b>'+p.rest+'/5</b> at rest to <b>'+p.active+'/5</b> after exercise — that is <b>'+dir+'</b>. A cloudier beaker suggests <b>more carbon dioxide reached the limewater</b> during the active routine. ';
+    if(p.pred){const match=(p.pred==='more'&&res==='more')||(p.pred==='less'&&res==='less')||(p.pred==='same'&&res==='about the same');s+='So your prediction was <b>'+(match?'correct ✓':'not quite what happened')+'</b>. ';}
+  } else { s+='(Readings were not fully recorded.) '; }
+  s+='This happens because exercise makes your muscles <b>respire</b> faster, and respiration produces carbon dioxide.';
+  return s;
+}
+const QTIER={f:'Which reading had more carbon dioxide — rest or after exercise?',m:'Explain, using respiration, why the beaker was cloudier after exercise.',h:'Write the word equation for respiration, then explain why exercise increases CO₂ in exhaled breath (and why we kept the breaths the same).'};
+const ATIER={f:'After exercise — the limewater was cloudier, so there was more carbon dioxide.',m:'Exercise makes your muscles respire faster; respiration makes carbon dioxide, so there is more CO₂ in your breath, which turns the limewater cloudier.',h:'glucose + oxygen → carbon dioxide + water. Exercise raises the rate of respiration, releasing more energy and more CO₂, so more leaves in each breath. We kept the number of breaths the same so it was a fair test.'};
+const TNAME={f:'Foundation',m:'Middle',h:'Higher'};
+function tierOf(p){return p.tier||level||'f';}
+function pupilCard(p,d){
+  var t=tierOf(p), tn=TNAME[t], q=QTIER[t], a=ATIER[t];
+  const rbar=p.rest!=null?'<span class="minibar" style="width:'+(p.rest*18)+'px"></span> '+p.rest+'/5':'not recorded';
+  const abar=p.active!=null?'<span class="minibar a" style="width:'+(p.active*18)+'px"></span> '+p.active+'/5':'not recorded';
+  const note='';
+  return '<div class="pupil-card">'+
+    '<h2>'+esc(p.name)+' — Testing Breath: practical evidence + my response</h2>'+
+    '<p style="font-size:11px;color:#555;margin-bottom:4px">Class: __________   Date: '+d+'</p>'+
+    '<div class="pc-sec story"><span class="lab">My prediction:</span> '+predLabel(p.pred)+' after exercise. &nbsp; <span class="lab">Was I right?</span> '+pcLabel(autoPredCorrect(p))+'</div>'+
+    '<div class="pc-sec story"><span class="lab">My readings (same breaths each time):</span><br>Rest: '+rbar+' &nbsp;&nbsp; After exercise: '+abar+'</div>'+
+    (p.photo?'<div class="pc-sec story"><span class="lab">Photo — my beakers / result:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
+    '<div class="pc-sec story"><span class="lab">Result summary:</span> '+pupilStory(p)+'</div>'+
+    '<div class="pc-sec story pc-q"><b>The question you were asked ('+tn+'):</b><br>'+q+'</div>'+
+    '<div class="pc-sec"><span class="lab">Respond in your own colour:</span> <span style="font-size:11.5px;color:#555">this is the meaningful book artefact; improve it after live feedback</span>'+
+      '<div class="write-lines"></div><div class="write-lines"></div></div>'+
+    '<div class="pc-sec story pc-model"><b>Model for comparison after your response:</b> '+a+'</div>'+
+    '<div class="pc-sec policy-strip"><b>Live-loop codes (not a comment count):</b><br>'+codeSummary(p)+'</div>'+
+    '<div class="pc-sec story"><span class="lab">VOICE — how I responded:</span> '+(p.voice?esc(p.voice):'not recorded')+'</div>'+
+    '<div class="pc-sec story"><span class="lab">AUDIENCE:</span> '+loopLabel(p)+'</div>'+
+    (p.influence&&p.influence.trim()?'<div class="pc-sec influence-print"><b>INFLUENCE — what changed next:</b> '+esc(p.influence)+'</div>':'')+
+    '<div class="pc-sec recap"><b>Revision recap:</b> Respiration: glucose + oxygen → carbon dioxide + water. Limewater tests for carbon dioxide — it turns from clear to <b>cloudy/milky</b>; more CO₂ reacting usually produces greater cloudiness. Exercise → more respiration → more CO₂ → cloudier beaker. <b>Memory hook: "Move more → make more CO₂ → cloudier beaker."</b></div>'+
+  '</div>';
+}
+function printPack(){buildPrint();setTimeout(()=>window.print(),50);}
+function printScaleCards(){
+  const lv=[
+    ['#bcd9f2','1','Clear','read text straight through'],
+    ['#cfe0f0','2','Slight haze','text still easy to read'],
+    ['#e2eaf2','3','Cloudy','text looks fuzzy'],
+    ['#eef2f6','4','Very cloudy','text barely visible'],
+    ['#ffffff','5','Milky','can\'t see through at all']
+  ];
+  const rows=lv.map(l=>'<div class="lv"><span class="sw2" style="background:'+l[0]+'"></span><b>'+l[1]+' '+l[2]+'</b> <span>— '+l[3]+'</span></div>').join('');
+  const card='<div class="scard"><h4>Cloudiness scale — stand your beaker on this (or hold it up)</h4>'+rows+'<p style="font-size:10px;margin-top:5px">Rate by how much you can see through the beaker.</p><div style="font-size:10px;font-weight:700;margin-top:3px">✍ Name on your beaker: ____________</div></div>';
+  document.getElementById('print-area').innerHTML='<div class="scard-grid">'+card.repeat(6)+'</div>';
+  setTimeout(()=>window.print(),50);
+}
+function buildPrint(){
+  const d=new Date().toLocaleDateString('en-GB');
+  const arrHTML=arrivalQs.map(q=>'<tr><td>'+q.q.replace(/^\d+\.\s/,'')+'</td><td><b>'+q.opts[q.a]+'</b></td></tr>').join('');
+  let list=breathData.filter((p,i)=>used(p,i));
+  if(list.length===0)list=breathData.slice(); // fallback: blank templates
+  const collRows=list.map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+predLabel(p.pred)+'</td><td>'+(p.rest!=null?p.rest:'–')+'</td><td>'+(p.active!=null?p.active:'–')+'</td><td>'+(autoPredCorrect(p)===true?'✓ Yes':autoPredCorrect(p)===false?'✗ No':'–')+'</td><td>'+(((p.loop||0)===2)?'R':((p.loop||0)===1)?'VF':'–')+'</td><td>'+esc((p.note||'')+(p.influence?' | Next: '+p.influence:''))+'</td></tr>').join('');
+  const pcDone=list.filter(p=>autoPredCorrect(p)!=null);
+  const pcYes=pcDone.filter(p=>autoPredCorrect(p)===true).length;
+  const cards=list.map(p=>pupilCard(p,d)).join('');
+  document.getElementById('print-area').innerHTML=
+  '<div class="p-sec"><h3>Class Knowledge Organiser — CO₂ in your breath</h3>'+
+    '<p><b>Learning objectives:</b> use limewater safely · measure CO₂ at rest &amp; after exercise · explain results with respiration.</p>'+
+    '<table><tr><th>Key term</th><th>Meaning</th></tr>'+
+      '<tr><td>Respiration</td><td>Releasing energy: glucose + oxygen → carbon dioxide + water</td></tr>'+
+      '<tr><td>Carbon dioxide</td><td>Gas made by respiration; ~4% of exhaled air</td></tr>'+
+      '<tr><td>Limewater</td><td>Clear liquid that turns <b>cloudy / milky</b> with CO₂ — more CO₂ reacting usually produces greater cloudiness</td></tr>'+
+      '<tr><td>Fair test</td><td>Same number of breaths each time; we only change rest → exercise</td></tr>'+
+      '<tr><td>Exercise link</td><td>More movement → more respiration → more CO₂ → <b>cloudier</b> limewater (higher score)</td></tr></table>'+
+    '<p style="margin-top:6px"><b>Cloudiness scale:</b> 1 = clear · 2 · 3 · 4 · 5 = milky</p>'+
+    '<p><b>Book codes:</b> I = independent · WS = worked with support · VF = verbal feedback · NS+ = one specific next step · E = evidence on EFL · R = response received / loop closed · // = self-edit · ? = read this back to me.</p><p><b>Common mark-losers:</b> saying "oxygen" not "carbon dioxide"; forgetting to name <b>respiration</b>; not explaining <i>why</i> cloudier = more CO₂.</p></div>'+
+  '<div class="p-sec"><h3>Arrival recall — class answers</h3><table><tr><th>Question</th><th>Answer</th></tr>'+arrHTML+'</table></div>'+
+  '<div class="p-sec"><h3>Class results — collated evidence</h3><table><tr><th>Name</th><th>Prediction</th><th>Rest /5</th><th>Active /5</th><th>Prediction right?</th><th>Codes</th><th>NS / Influence</th></tr>'+collRows+'</table>'+
+    (pcDone.length?'<p style="font-size:12px;margin-top:4px"><b>Predictions correct: '+pcYes+' of '+pcDone.length+'.</b> </p>':'')+(function(){var lg=list.filter(function(p){return (p.loop||0)>=1;}).length,lc=list.filter(function(p){return (p.loop||0)===2;}).length;return lg?'<p style="font-size:12px;margin-top:2px"><b>Feedback loop closed (R): '+lc+' of '+lg+' pupils given a next step.</b></p>':'';})()+
+    '<p style="font-size:11px">Same number of breaths each time — cloudiness (1 clear → 5 milky) is the measured result.</p></div>'+
+  cards;
+}
+
+
+/* ---------- final reliable interaction + individual printing ---------- */
+function selectRoute(el,lvl){
+ const parent=el.parentElement;if(parent)parent.querySelectorAll('.route-card').forEach(x=>x.classList.remove('on'));
+ el.classList.add('on');setLevel(lvl);beep(lvl==='h'?760:lvl==='m'?650:560);
+}
+function activePupils(){let list=breathData.filter((p,i)=>used(p,i));return list.length?list:breathData.slice();}
+function populatePupilPrintSelect(){const e=document.getElementById('singlePupilSelect');if(!e)return;const old=e.value;e.innerHTML='';breathData.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=p.name||('Pupil '+(i+1));e.appendChild(o);});if(old)e.value=old;}
+function evidenceCover(){return '<div class="print-cover pupil-card"><h2>Testing Breath — class evidence</h2><div class="pc-sec"><b>Lesson:</b> pupil-influenced practical investigation of respiration and carbon dioxide</div><div class="pc-sec"><b>Lundy Loop:</b> Space → Voice → Audience → Influence</div><div class="pc-sec"><b>Practical R-gate:</b> the pupil changed or improved the next attempt; an adult watched and received that response.</div><div class="pc-sec"><b>Codes:</b> I independent · WS with support · VF verbal feedback · NS+ next step · // self-edit · ? read/check · R response received and loop closed · E evidence on EFL.</div><div class="pc-sec"><b>QA:</b> each following page is an individual pupil sheet. R is shown only where Voice and Audience were recorded.</div></div>';}
+function printIndividualEvidence(){
+ const d=new Date().toLocaleDateString('en-GB'),list=activePupils();
+ document.getElementById('print-area').innerHTML=evidenceCover()+list.map(p=>pupilCard(p,d)).join('');
+ setTimeout(()=>{try{window.focus();window.print();}catch(e){alert('Open this file in Chrome or Edge and choose Print from the browser menu.');}},180);
+}
+function printOnePupil(){
+ const e=document.getElementById('singlePupilSelect'),i=e?parseInt(e.value):0,p=breathData[i]||breathData[0],d=new Date().toLocaleDateString('en-GB');
+ document.getElementById('print-area').innerHTML=pupilCard(p,d);
+ setTimeout(()=>{try{window.focus();window.print();}catch(err){alert('Open this file in Chrome or Edge and choose Print from the browser menu.');}},180);
+}
+/* Handle Android taps consistently even when a browser suppresses synthetic click styling. */
+document.addEventListener('pointerup',function(e){const b=e.target.closest&&e.target.closest('.hinge');if(b&&!b.classList.contains('on')){const all=[...document.querySelectorAll('.hinge')],n=all.indexOf(b)+1;if(n>0)hingePick(b,n);}}, {passive:true});
+
+/* ---------- observation edition: Space and adaptive hinge ---------- */
+let classSpace='ready',hingeChoice=null;
+function setClassSpace(v){classSpace=v;document.querySelectorAll('.space-toggle').forEach(b=>b.classList.remove('on'));const id=v==='ready'?'spaceReady':v==='quiet'?'spaceQuiet':'spaceAlt';const e=document.getElementById(id);if(e)e.classList.add('on');beep(540);}
+function hingePick(btn,n){document.querySelectorAll('.hinge').forEach(x=>x.classList.remove('on'));btn.classList.add('on');hingeChoice=n;beep(n===2?700:420);}
+function showHingeRoute(){const r=document.getElementById('hingeReveal'),routes=document.getElementById('hingeRoutes');if(r)r.classList.add('show');if(routes)routes.style.display='grid';document.querySelectorAll('#hingeRoutes .route-card').forEach(x=>x.classList.remove('on'));const cards=document.querySelectorAll('#hingeRoutes .route-card');if(hingeChoice===2){if(cards[1])cards[1].classList.add('on');}else{if(cards[0])cards[0].classList.add('on');}addXP(7);beep(760);}
+
+/* ---------- Lundy Loop: Space → Voice → Audience → Influence ---------- */
+const lundy={fair:[],support:[],fairOther:'',supportOther:'',micro:null,microOther:'',review:null,reviewOther:'',designCommitted:false,microCommitted:false,reviewCommitted:false};
+function saveLundy(){try{localStorage.setItem('ps_co2_lundy_final_v1',JSON.stringify(lundy));}catch(e){}}
+function loadLundy(){try{const x=JSON.parse(localStorage.getItem('ps_co2_lundy_final_v1')||'{}');Object.assign(lundy,x||{});}catch(e){}}
+function saveLundyText(k,v){lundy[k]=v;saveLundy();}
+function toggleVoiceChoice(btn,key){const v=btn.dataset.v,arr=lundy[key]||[];const n=arr.indexOf(v);if(n>=0)arr.splice(n,1);else arr.push(v);lundy[key]=arr;btn.classList.toggle('on',n<0);saveLundy();beep(n<0?620:360);}
+function listWords(arr,other){const a=(arr||[]).slice();if(other&&other.trim())a.push(other.trim());return a.length?a.join(', '):'no class choice recorded yet';}
+function commitLundyDesign(){
+ const fair=document.getElementById('fairOther');const support=document.getElementById('supportOther');if(fair)lundy.fairOther=fair.value;if(support)lundy.supportOther=support.value;
+ lundy.designCommitted=true;saveLundy();
+ const box=document.getElementById('designCommit'),txt=document.getElementById('designCommitText');
+ if(txt)txt.innerHTML='<p><b>For fairness:</b> '+esc(listWords(lundy.fair,lundy.fairOther))+'.</p><p><b>To help everyone participate:</b> '+esc(listWords(lundy.support,lundy.supportOther))+'.</p>';
+ if(box){box.style.display='block';box.classList.add('pulse-green');}
+ document.querySelectorAll('.lundy-step').forEach(x=>x.classList.add('on'));addXP(10);beep(780);
+}
+function chooseMicro(btn){document.querySelectorAll('#microChoices .voice-choice').forEach(x=>x.classList.remove('on'));btn.classList.add('on');lundy.micro=btn.dataset.v;saveLundy();beep(600);}
+function commitMicroChange(){const o=document.getElementById('microOther');if(o)lundy.microOther=o.value;const choice=(lundy.microOther||'').trim()||lundy.micro||'pause and ask for a pupil suggestion';lundy.microCommitted=true;saveLundy();const box=document.getElementById('microCommit');if(box){box.innerHTML='✅ <b>You said:</b> '+esc(choice)+'. <b>So we will do that in Reading 2.</b>';box.classList.add('pulse-green');}addXP(6);beep(760);}
+function chooseReview(btn){document.querySelectorAll('#reviewChoices .voice-choice').forEach(x=>x.classList.remove('on'));btn.classList.add('on');lundy.review=btn.dataset.v;saveLundy();beep(600);}
+function closeLundyLoop(){const o=document.getElementById('reviewOther');if(o)lundy.reviewOther=o.value;const view=(lundy.reviewOther||'').trim()||lundy.review||'collect another pupil view verbally';lundy.reviewCommitted=true;saveLundy();const box=document.getElementById('reviewCommit'),txt=document.getElementById('reviewCommitText');if(txt)txt.innerHTML='<p><b>Pupils said:</b> '+esc(view)+'.</p><p><b>Decision:</b> This will be reviewed before the next class. The outcome will be fed back to pupils.</p>';if(box){box.style.display='block';box.classList.add('pulse-green');}addXP(10);beep(820);}
+function restoreLundyUI(){
+ ['fair','support'].forEach(k=>document.querySelectorAll('#'+k+'Choices .voice-choice').forEach(b=>b.classList.toggle('on',(lundy[k]||[]).includes(b.dataset.v))));
+ ['fairOther','supportOther','microOther','reviewOther'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=lundy[k]||'';});
+ if(lundy.micro)document.querySelectorAll('#microChoices .voice-choice').forEach(b=>b.classList.toggle('on',b.dataset.v===lundy.micro));
+ if(lundy.review)document.querySelectorAll('#reviewChoices .voice-choice').forEach(b=>b.classList.toggle('on',b.dataset.v===lundy.review));
+ if(lundy.designCommitted)commitLundyDesign();if(lundy.microCommitted)commitMicroChange();if(lundy.reviewCommitted)closeLundyLoop();
+}
+
+/* ---------- init (runs after all consts above are defined) ---------- */
+function init(){
+  loadState();
+  loadLundy();
+  buildArrival();
+  buildBoard();
+  buildPrint();
+  const mb=document.getElementById('muteBtn');if(mb)mb.textContent=muted?'🔇 Sound off':'🔊 Sound on';
+  applyBoardBtn();
+  restoreLundyUI();
+  populatePupilPrintSelect();
+  showSlide(0);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>
