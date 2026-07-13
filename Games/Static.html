@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <title>STATIC — Signal Lost</title>
 <style>
 :root{
@@ -233,6 +235,37 @@ body.calm #crt{opacity:.18} body.calm #flick{animation:none;opacity:0}
 .cf{position:fixed;top:-14px;width:8px;height:13px;z-index:90;pointer-events:none;border-radius:2px;animation:cfall linear forwards}
 @keyframes cfall{to{transform:translateY(112vh) rotate(680deg)}}
 
+/* ---------- Matt's Apps splash (plays first, then hands off to the CRT power-on) ---------- */
+#msplash{position:fixed;inset:0;z-index:110;background:#020204;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;cursor:pointer;opacity:1;transition:opacity .38s}
+#msplash.out{opacity:0;pointer-events:none}
+.ms-word{font-family:'Orbitron',var(--mono);font-weight:900;font-style:italic;letter-spacing:.1em;
+  font-size:clamp(34px,9vw,74px);line-height:1;
+  background:linear-gradient(100deg,var(--lamp) 10%,var(--red) 50%,var(--blue) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(246,214,138,.22));opacity:0}
+.ms-sub{font-family:var(--mono);font-size:12px;letter-spacing:.5em;color:#9aa0b2;margin-top:14px;opacity:0;text-indent:.5em}
+.ms-pins{width:min(300px,70vw);margin-top:26px;opacity:0}
+.ms-pins .ms-str{stroke-dasharray:300;stroke-dashoffset:300}
+.ms-skip{position:absolute;bottom:26px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#5b6072;opacity:0}
+#msplash.go .ms-word{animation:msWord .7s .15s cubic-bezier(.2,.9,.3,1) forwards}
+#msplash.go .ms-sub{animation:msFade .5s .75s forwards}
+#msplash.go .ms-pins{animation:msFade .4s .55s forwards}
+#msplash.go .ms-str{animation:msDraw .9s .7s cubic-bezier(.3,.8,.4,1) forwards}
+#msplash.go .ms-skip{animation:msFade .5s .9s forwards}
+@keyframes msWord{0%{opacity:0;transform:skewX(-14deg) translateX(-26px);filter:blur(6px) drop-shadow(0 0 18px rgba(246,214,138,.22))}
+  60%{opacity:1;transform:skewX(-8deg) translateX(4px);filter:blur(0) drop-shadow(0 0 18px rgba(246,214,138,.22))}
+  100%{opacity:1;transform:skewX(-8deg)}}
+@keyframes msFade{to{opacity:1}}
+@keyframes msDraw{to{stroke-dashoffset:0}}
+#msplash.gentle .ms-word{animation:msFade .8s .1s forwards;transform:skewX(-8deg)}
+#msplash.gentle .ms-sub{animation:msFade .8s .4s forwards}
+#msplash.gentle .ms-pins{animation:msFade .8s .3s forwards}
+#msplash.gentle .ms-str{stroke-dashoffset:0}
+#msplash.gentle .ms-skip{animation:msFade .6s .5s forwards}
+@media (prefers-reduced-motion:reduce){#msplash.go .ms-word{animation:msFade .8s .1s forwards;transform:skewX(-8deg)}
+  #msplash.go .ms-str{animation:none;stroke-dashoffset:0}}
+
 /* ---------- splash (CRT power-on) ---------- */
 #splash{position:fixed;inset:0;z-index:100;background:#020204;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;transition:opacity .45s}
 #splash.done{opacity:0;pointer-events:none}
@@ -258,12 +291,59 @@ body.calm #crt{opacity:.18} body.calm #flick{animation:none;opacity:0}
 #splash.calmpath #crtline,#splash.calmpath #snoise{display:none}
 #splash.calmpath #splogo{animation:fadeup 1s .1s forwards}
 #splash.calmpath #sptag{animation:fadeup .8s .6s forwards}
+
+/* ===== PHASE 5 — ADVANCED REASONING WORKBENCH ===== */
+#workbenchBtn{display:grid}.workbench-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.wbtab{font:700 10px var(--mono);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#111521;color:#aeb6c8}.wbtab.on{border-color:var(--lamp);color:var(--lamp);background:#271f12}.wbpanel{display:none}.wbpanel.on{display:block}.budget{display:flex;gap:8px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:9px;background:#0d1017;margin:9px 0 14px}.budget b{color:var(--lamp);font-family:var(--mono)}.budget i{width:14px;height:14px;border-radius:50%;background:var(--lamp);box-shadow:0 0 8px rgba(246,214,138,.4)}.budget i.used{background:#343948;box-shadow:none}.infer-grid{display:grid;grid-template-columns:1fr 55px 1fr;gap:8px;align-items:center}.infer-slot{min-height:90px;border:1px dashed #51596b;border-radius:10px;padding:10px;background:#11141d;color:#aeb6c8}.infer-slot.filled{border-style:solid;border-color:var(--blue);color:#e4e8f1}.infer-plus{text-align:center;font:700 28px var(--mono);color:var(--lamp)}.pick-list{max-height:260px;overflow:auto;display:grid;gap:6px;margin:10px 0}.pick{padding:10px;border:1px solid var(--line);border-radius:8px;background:#121622;text-align:left}.pick.sel{border-color:var(--lamp);background:#251e12}.pick b{display:block;color:#e6eaf3}.pick small{color:#9098aa}.inference-card{padding:13px;border:1px solid var(--blue);border-left:4px solid var(--blue);background:#101a23;border-radius:9px;margin:10px 0}.inference-card b{font-family:var(--mono);color:#9fc9e5}.confidence{display:flex;gap:5px;margin-top:8px}.confidence i{height:5px;flex:1;background:#303645;border-radius:4px}.confidence i.on{background:var(--blue)}
+.theory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.theory{border:1px solid var(--line);border-radius:11px;background:#11141d;padding:11px;min-height:220px}.theory h3{font:700 12px var(--mono);color:var(--lamp);margin:0 0 8px}.theory select,.theory textarea{width:100%;background:#0d1017;color:#dfe3ee;border:1px solid var(--line);border-radius:7px;padding:8px;margin:5px 0;font:12px var(--sans)}.theory textarea{height:62px;resize:vertical}.theory-score{font:700 10px var(--mono);margin-top:8px;color:#9aa0b2}.theory-score strong{color:var(--good);font-size:18px}.theory.active{border-color:var(--lamp);box-shadow:0 0 18px rgba(246,214,138,.12)}
+.recon-strip{display:flex;gap:8px;overflow:auto;padding:10px 2px;min-height:120px}.event-token{flex:0 0 145px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#151925;cursor:grab}.event-token b{font:700 10px var(--mono);color:var(--lamp)}.event-token small{display:block;color:#a4adbe;margin-top:5px}.event-token.dragging{opacity:.45}.recon-check{padding:11px;border-left:3px solid var(--amber);background:#171a24;border-radius:7px;margin-top:10px}.recon-check.good{border-left-color:var(--good)}
+.prov-card{padding:10px;border:1px solid var(--line);border-radius:8px;background:#121622;margin:7px 0}.prov-card b{color:#e5e9f2}.prov-path{font:10px var(--mono);color:#86a6c0;margin-top:5px}.prov-risk{display:inline-block;margin-top:5px;padding:2px 6px;border-radius:8px;font:8px var(--mono);border:1px solid currentColor}.risk-low{color:var(--good)}.risk-med{color:var(--amber)}.risk-high{color:var(--red)}
+.lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.labtest{padding:11px;border:1px solid var(--line);border-radius:9px;background:#121622;text-align:left}.labtest:disabled{opacity:.4}.labtest b{display:block;color:var(--lamp)}.lab-result{padding:12px;border-left:3px solid var(--blue);background:#101923;border-radius:7px;margin-top:10px}.advanced-chip{font:700 8px var(--mono);color:#d7bc72;border:1px solid #806a35;border-radius:8px;padding:2px 5px;margin-left:auto}
+@media(max-width:680px){.theory-grid{grid-template-columns:1fr}.infer-grid{grid-template-columns:1fr}.infer-plus{transform:rotate(90deg)}.lab-grid{grid-template-columns:1fr}}
+
+
+/* ===== PHASES 6–9 — CREATION, LONGEVITY, ACCESSIBILITY & MASTERY ===== */
+#studioBtn{display:grid}.studio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.studio-card{padding:13px;border:1px solid var(--line);border-radius:11px;background:#11151f;text-align:left}.studio-card:hover{border-color:var(--lamp)}.studio-card b{display:block;color:var(--lamp);font-family:var(--mono);margin-bottom:4px}.studio-card small{color:#969eb0;line-height:1.4}.daily-seed{font:700 18px var(--mono);letter-spacing:.15em;text-align:center;padding:12px;color:var(--lamp)}
+.sharebox{width:100%;min-height:84px;background:#0b0e14;color:#b8d3e6;border:1px solid var(--line);border-radius:8px;padding:9px;font:10px var(--mono);resize:vertical}.report{background:#f0eadb;color:#232733;border-radius:6px;padding:14px;font-size:13px;line-height:1.55}.report h3{font-family:var(--mono);margin:0 0 7px}.report-line{border-bottom:1px solid #0002;padding:5px 0}.report b{color:#633d18}.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.badge{padding:10px;border:1px solid var(--line);border-radius:9px;text-align:center;background:#11141d;opacity:.42}.badge.have{opacity:1;border-color:var(--gold);box-shadow:0 0 15px rgba(230,179,74,.12)}.badge i{display:block;font-size:25px}.badge b{display:block;font:9px var(--mono);color:var(--lamp);margin-top:5px}.badge small{color:#8f97a8}.mastery-head{display:flex;align-items:center;gap:12px;padding:11px;background:#11141d;border:1px solid var(--line);border-radius:10px}.mastery-rank{font:700 18px var(--mono);color:var(--gold)}
+.builder label{display:block;font:10px var(--mono);letter-spacing:.08em;color:#a7afc0;margin-top:9px}.builder input,.builder textarea,.builder select{width:100%;background:#0d1017;color:#e1e5ee;border:1px solid var(--line);border-radius:7px;padding:8px;margin-top:4px}.builder textarea{min-height:70px}.validator{padding:10px;border-left:3px solid var(--good);background:#102019;border-radius:7px;margin:10px 0}.validator.warn{border-left-color:var(--amber);background:#211b10}.micro-board{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.micro-clue{padding:9px;border:1px solid var(--line);border-radius:8px;background:#121622;font-size:11px}.micro-clue b{display:block;color:var(--lamp);font-family:var(--mono)}
+body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbody,body.large-text .card .quote{font-size:14px}body.readable-font,body.readable-font *{font-family:Arial,sans-serif!important}body.high-contrast{--paper:#fff;--paper2:#f4f4f4;--paperInk:#050505;--line:#68718a}body.high-contrast .card{border:2px solid #000}body.no-static #crt,body.no-static #flick{display:none}.focus-mode .card:not(.focus-keep){opacity:.18;filter:grayscale(1)}
+.access-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.access-opt{padding:11px;border:1px solid var(--line);border-radius:9px;background:#121622;text-align:left}.access-opt.on{border-color:var(--lamp);background:#261f12}.access-opt b{display:block;color:#e5e9f2}.access-opt small{color:#929aac}.achievement-pop{position:fixed;left:50%;bottom:25px;transform:translate(-50%,120px);z-index:95;background:#11141d;border:1px solid var(--gold);border-radius:12px;padding:13px 18px;box-shadow:0 15px 45px #000b;transition:.35s;text-align:center}.achievement-pop.show{transform:translate(-50%,0)}.achievement-pop b{color:var(--gold);font-family:var(--mono)}
+@media(max-width:620px){.studio-grid,.badge-grid,.micro-board,.access-grid{grid-template-columns:1fr}}
+
+/* ---------- print: isolate the investigation report as a clean A4 sheet ---------- */
+@media print{
+  @page{margin:14mm}
+  body{background:#fff!important;overflow:visible!important;height:auto!important}
+  #vign,#crt,#flick,#flash,#topbar,#viewport,#zoomctl,#hintbar,#notes,#toast,#splash,#achievementPop,.screen{display:none!important}
+  #modal{position:static!important;display:block!important;background:#fff!important;padding:0!important;backdrop-filter:none!important}
+  .modal-card{width:100%!important;max-height:none!important;box-shadow:none!important;border:none!important;background:#fff!important;color:#000!important;padding:0!important;overflow:visible!important}
+  .modal-card h2,.modal-card .sub{color:#000!important}
+  .report{background:#fff!important;color:#000!important;border:1px solid #999;border-radius:0}
+  .report b{color:#000!important}
+  .report-line{border-bottom:1px solid #bbb}
+  .modal-actions,.workbench-tabs{display:none!important}
+}
+
 </style>
 </head>
 <body>
 
 <!-- atmosphere -->
 <div id="vign"></div><div id="crt"></div><div id="flick"></div><div id="flash"></div>
+
+<!-- ===== MATT'S APPS SPLASH ===== -->
+<div id="msplash">
+  <div class="ms-word">MATT'S&nbsp;APPS</div>
+  <div class="ms-sub">PRESENTS</div>
+  <svg class="ms-pins" viewBox="0 0 300 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="ms-str" d="M28,30 L150,14 L272,34" fill="none" stroke="#c53a2f" stroke-width="2.4" stroke-linecap="round"/>
+    <g>
+      <circle cx="28" cy="30" r="7" fill="#e6b34a"/><circle cx="28" cy="30" r="3" fill="#8a6a20"/>
+      <circle cx="150" cy="14" r="7" fill="#e6b34a"/><circle cx="150" cy="14" r="3" fill="#8a6a20"/>
+      <circle cx="272" cy="34" r="7" fill="#e6b34a"/><circle cx="272" cy="34" r="3" fill="#8a6a20"/>
+    </g>
+  </svg>
+  <div class="ms-skip">TAP TO SKIP</div>
+</div>
 
 <!-- ===== SPLASH ===== -->
 <div id="splash">
@@ -287,6 +367,7 @@ body.calm #crt{opacity:.18} body.calm #flick{animation:none;opacity:0}
   <div style="font-family:var(--mono);color:#5b6072;font-size:11px;margin-top:30px;letter-spacing:.1em">
     tune in · connect the evidence · name the truth
   </div>
+  <div style="font-family:var(--mono);color:#4a4f63;font-size:10px;margin-top:12px;letter-spacing:.14em">A MATT'S APPS PRODUCTION</div>
 </div>
 
 <!-- ===== TOP BAR ===== -->
@@ -296,9 +377,9 @@ body.calm #crt{opacity:.18} body.calm #flick{animation:none;opacity:0}
   <div class="progress-pill">Leads <b id="pLeads">0</b>/<span id="pTotal">0</span></div>
   <button class="icon-btn" id="casesBtn" title="Case files">📁</button>
   <button class="icon-btn" id="tlBtn" title="Timeline">🕑</button>
-  <button class="icon-btn" id="briefBtn" title="Case brief">📻</button>
+  <button class="icon-btn" id="briefBtn" title="Case brief">📻</button><button class="icon-btn" id="workbenchBtn" title="Advanced workbench">🧠</button>
   <button class="icon-btn" id="notesBtn" title="Case notes">🗒️</button>
-  <button class="icon-btn" id="setBtn2" title="Settings">⚙️</button>
+  <button class="icon-btn" id="studioBtn" title="Investigation studio">🧰</button><button class="icon-btn" id="setBtn2" title="Settings">⚙️</button>
   <button class="accuse-btn" id="accuseBtn">Name the truth</button>
 </div>
 
@@ -326,7 +407,7 @@ body.calm #crt{opacity:.18} body.calm #flick{animation:none;opacity:0}
 </div>
 
 <!-- toast -->
-<div id="toast"></div>
+<div id="toast"></div><div id="achievementPop" class="achievement-pop"></div>
 
 <!-- modal -->
 <div id="modal"><div class="modal-card" id="modalCard"></div></div>
@@ -476,7 +557,7 @@ const SIGNAL_LOST={
     {id:"st_priya",suspect:"priya",
       quote:"“I clocked off at one. But I saw Marion still here well after midnight — said she was ‘finishing something’.”",
       confirms:["c_access"],
-      onConfirm:{effect:"support",
+      onConfirm:{effect:"support",target:"marion",
         note:"Priya's sighting of Marion after midnight is <b>soft testimony</b> — but the Hard access log backs it up. That's a safe pairing."}
     }
   ],
@@ -790,9 +871,12 @@ const CASES=[SIGNAL_LOST,THE_UNDERSTUDY,COLD_STORAGE];
 /* ============================================================
    STATE
 ============================================================ */
+const META=store.get("static_meta_v9",{xp:0,rank:"PROBATIONARY",badges:{},daily:{},access:{large:false,font:false,contrast:false,static:false}});
+function saveMeta(){store.set("static_meta_v9",META)}
+function rankFor(x){return x>=600?"ARCHIVIST":x>=350?"SENIOR INVESTIGATOR":x>=180?"CASE OFFICER":x>=70?"DETECTIVE":"PROBATIONARY"}
 const state={
   caseData:null,
-  tone: store.get("static_tone","noir"),
+  tone: store.get("static_tone","safe"),
   calm: store.get("static_calm",false),
   sound: store.get("static_sound",true),
   scale:1, panX:0, panY:0,
@@ -801,7 +885,7 @@ const state={
   cracked:{}, verified:{},
   suspicion:{}, cleared:{},
   linking:null,        // {type:'clue'|'statement', id}
-  notes:[],
+  notes:[], sessionLog:[], startTs:0, inferences:[], theories:[{},{},{}], activeTheory:0, labCredits:3, labResults:{}, reconOrder:[],
   verdict:{culprit:null,method:null,motive:null}
 };
 
@@ -809,6 +893,8 @@ const $=s=>document.querySelector(s);
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const isReduced=()=>window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 function toneText(v){return (v&&typeof v==="object")?(v[state.tone]??v.noir):v;}
+function provenance(cl){if(cl.provenance)return cl.provenance;const map={hard:{path:"Independent system → original record → case file",risk:"low"},soft:{path:"Witness memory → interview summary → case file",risk:"med"},rumour:{path:"Unknown speaker → repeated retelling → case file",risk:"high"}};return map[cl.rel]||map.soft}
+
 
 /* ============================================================
    AUDIO (procedural, resumed on first gesture)
@@ -862,7 +948,7 @@ function buildBoard(){
   strings.innerHTML="";
   state.cards={}; state.links=[]; state.cracked={}; state.verified={};
   state.suspicion={}; state.cleared={}; state.notes=[]; state.linking=null;
-  state.verdict={culprit:null,method:null,motive:null};
+  state.verdict={culprit:null,method:null,motive:null};state.sessionLog=[];state.startTs=Date.now();state.inferences=[];state.theories=[{},{},{}];state.activeTheory=0;state._reconSel=null;state._inf={a:null,b:null};state.labCredits=3;state.labResults={};state.reconOrder=[];
 
   // layout columns (board coords)
   const sx=[80,340,600,860];
@@ -1055,7 +1141,7 @@ function tryCompleteLink(cardEl){
   const type=cardEl.classList.contains("clue")?"clue":"statement";
   resolveLink(state.linking,{type,id});
 }
-function resolveLink(a,b){
+function resolveLink(a,b){logAction("test",{a:a.id,b:b.id});
   const clueId=a.type==="clue"?a.id:b.id;
   const stId  =a.type==="statement"?a.id:b.id;
   if(tutActive()&&!(clueId==="c_access"&&stId==="st_marion")){ tutBlock(); return; }
@@ -1102,7 +1188,7 @@ function doVerify(st,clueId){
   beep("verify");
   const oc=st.onConfirm||{};
   if(oc.effect==="exonerate") clearSuspect(st.suspect,"Confirmed elsewhere — in the clear");
-  if(oc.effect==="support") bumpSuspicion(state.caseData.solution.culprit,1);
+  if(oc.effect==="support"&&oc.target) bumpSuspicion(oc.target,1);
   addNote("verify", toneText(oc.note));
   toast("✓ Account confirmed","ver");
   updateProgress(); checkComplete();
@@ -1236,7 +1322,7 @@ function showHow(){
     <p><b>Test a clue</b> — tap <b>🔗</b> on a clue, then tap an account (or the other way round). If the clue <span style="color:var(--red)">contradicts</span> the account, the string snaps red and the story <b>cracks</b> — sometimes revealing new evidence. A clue that <span style="color:var(--blue)">confirms</span> an account turns blue.</p>
     <p><b>Timeline 🕑</b> — the whole night on one line: hard timestamps above, their claims below. Lies stick out.</p>
     <p><b>Reliability matters</b> — <span class="chip-hard">Hard</span> evidence is timestamped fact; <span class="chip-soft">Soft</span> is testimony; <span class="chip-rumour">Rumour</span> is hearsay. A <em>safe</em> conviction has to rest on a Hard contradiction — not a hunch.</p>
-    <p><b>Name the truth</b> — when you're ready, pick the culprit, method and motive. A weak case still gets a verdict; a strong one closes it for good.</p>
+    <p><b>Advanced workbench 🧠</b> — combine two clues into an inference, maintain competing theories, reconstruct event order, inspect provenance and spend a limited investigation budget.</p><p><b>Investigation studio 🧰</b> — daily micro-cases, case-maker outlines, proof-graph sharing, review mode, printable process reports and mastery commendations.</p><p><b>Name the truth</b> — when you're ready, pick the culprit, method and motive. A weak case still gets a verdict; a strong one closes it for good.</p>
     <div class="modal-actions"><button class="btn primary small" id="mClose">Got it</button></div>`);
   $("#mClose").onclick=closeModal;
 }
@@ -1250,17 +1336,31 @@ function showSettings(){
       <div class="switch ${state.calm?'on':''}" id="swCalm"><i></i></div></div>
     <div class="toggle-row"><div><b>Sound</b></div><div class="switch ${state.sound?'on':''}" id="swSound"><i></i></div></div>
     <div class="modal-actions" style="margin-top:16px">
-      <button class="btn small" id="mTut">👟 Replay tutorial</button>
+      <button class="btn small" id="mAccess">Accessibility</button><button class="btn small" id="mTut">👟 Replay tutorial</button>
       <button class="btn small" id="mReset">Reset the case</button>
       <button class="btn primary small" id="mClose">Close</button></div>`);
   $("#mClose").onclick=closeModal;
+  $("#mAccess").onclick=showAccessibility;
   $("#mTut").onclick=()=>{ store.set("static_tut_done",false); closeModal(); startCase(0); };
   $("#swTone").onclick=e=>{ state.tone=state.tone==='safe'?'noir':'safe'; store.set("static_tone",state.tone); showSettings(); };
-  $("#swCalm").onclick=()=>{ state.calm=!state.calm; store.set("static_calm",state.calm); document.body.classList.toggle("calm",state.calm); showSettings(); };
+  $("#swCalm").onclick=()=>{ state.calm=!state.calm; store.set("static_calm",state.calm); document.body.classList.toggle("calm",state.calm);applyAccess(); showSettings(); };
   $("#swSound").onclick=()=>{ state.sound=!state.sound; store.set("static_sound",state.sound); showSettings(); };
   $("#mReset").onclick=()=>{ closeModal(); startCase(); };
 }
 
+function showWorkbench(tab){if(!state.caseData)return;tab=tab||"infer";openModal(`<h2>🧠 Investigation workbench</h2><div class="sub">Build explanations, not just links. Advanced tools never reveal the solution automatically.</div><div class="workbench-tabs"><button class="wbtab ${tab==='infer'?'on':''}" data-t="infer">Combined inference</button><button class="wbtab ${tab==='theory'?'on':''}" data-t="theory">Competing theories</button><button class="wbtab ${tab==='recon'?'on':''}" data-t="recon">Reconstruction</button><button class="wbtab ${tab==='prov'?'on':''}" data-t="prov">Provenance</button><button class="wbtab ${tab==='lab'?'on':''}" data-t="lab">Investigation budget</button></div><div id="wbBody"></div><div class="modal-actions"><button class="btn small" id="wbClose">Return to board</button></div>`);modalCard.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>showWorkbench(b.dataset.t));$('#wbClose').onclick=closeModal;renderWorkbench(tab)}
+function renderWorkbench(tab){const b=$('#wbBody');if(tab==='infer')renderInference(b);if(tab==='theory')renderTheories(b);if(tab==='recon')renderReconstruction(b);if(tab==='prov')renderProvenance(b);if(tab==='lab')renderLab(b)}
+function visibleClues(){return state.caseData.clues.filter(c=>state.cards[c.id]&&!c.locked)}
+function renderInference(b){const inf=state._inf||{a:null,b:null};state._inf=inf;b.innerHTML=`<div class="mech-intro">Select two independent clues. STATIC will test whether they create a useful combined inference.</div><div class="infer-grid"><button class="infer-slot ${inf.a?'filled':''}" id="infA">${inf.a?clueName(inf.a):'SELECT CLUE A'}</button><div class="infer-plus">+</div><button class="infer-slot ${inf.b?'filled':''}" id="infB">${inf.b?clueName(inf.b):'SELECT CLUE B'}</button></div><button class="btn primary small" id="buildInf" style="width:100%;margin-top:10px">Build combined inference</button>${state.inferences.map((x,i)=>`<div class="inference-card"><b>INFERENCE ${i+1}</b><br>${x.text}<div class="confidence">${[1,2,3,4].map(n=>`<i class="${n<=x.strength?'on':''}"></i>`).join('')}</div></div>`).join('')}`;$('#infA').onclick=()=>pickInference('a');$('#infB').onclick=()=>pickInference('b');$('#buildInf').onclick=buildInference}
+function clueName(id){const c=state.caseData.clues.find(x=>x.id===id);return c?c.title:id}
+function pickInference(slot){const list=visibleClues();openModal(`<h2>Select evidence</h2><div class="pick-list">${list.map(c=>`<button class="pick" data-id="${c.id}"><b>${c.title}</b><small>${c.rel.toUpperCase()} · ${c.body.replace(/<[^>]+>/g,'')}</small></button>`).join('')}</div><button class="btn small" id="pickBack">Cancel</button>`);modalCard.querySelectorAll('[data-id]').forEach(o=>o.onclick=()=>{state._inf[slot]=o.dataset.id;showWorkbench('infer')});$('#pickBack').onclick=()=>showWorkbench('infer')}
+function buildInference(){const z=state._inf;if(!z.a||!z.b||z.a===z.b){toast("Choose two different evidence items.","fizzle");return}const a=state.caseData.clues.find(x=>x.id===z.a),b=state.caseData.clues.find(x=>x.id===z.b),ind=a.rel==='hard'&&b.rel==='hard',shared=(a.time&&b.time)||(a.visual&&b.visual&&a.visual.kind===b.visual.kind);let text=`Together, ${a.title} and ${b.title} establish a relationship that neither proves alone.`;if(ind&&a.time&&b.time)text=`The two independent records constrain the timeline between ${a.time} and ${b.time}. Any account must fit both events.`;else if(ind)text=`Two independent Hard sources corroborate the same investigation thread. This is stronger than either source alone.`;else if(a.rel==='rumour'||b.rel==='rumour')text=`This combination is fragile: one source is hearsay. It may suggest a line of enquiry but cannot safely anchor a verdict.`;state.inferences.push({a:z.a,b:z.b,text,strength:ind?4:shared?2:1});state._inf={a:null,b:null};beep(ind?'verify':'tick');renderInference($('#wbBody'))}
+function renderTheories(b){const c=state.caseData;b.innerHTML=`<div class="mech-intro">Maintain up to three explanations. The score rewards coverage and penalises unsupported assumptions; it does not mark the culprit.</div><div class="theory-grid">${state.theories.map((t,i)=>`<div class="theory ${state.activeTheory===i?'active':''}" data-th="${i}"><h3>THEORY ${String.fromCharCode(65+i)}</h3><select data-f="culprit"><option value="">Possible person…</option>${c.suspects.map(s=>`<option value="${s.id}" ${t.culprit===s.id?'selected':''}>${s.name}</option>`).join('')}</select><select data-f="method"><option value="">Possible method…</option>${c.methods.map(m=>`<option value="${m.id}" ${t.method===m.id?'selected':''}>${m.text}</option>`).join('')}</select><select data-f="motive"><option value="">Possible motive…</option>${c.motives.map(m=>`<option value="${m.id}" ${t.motive===m.id?'selected':''}>${m.text}</option>`).join('')}</select><textarea data-f="why" placeholder="What evidence supports this theory?">${t.why||''}</textarea><div class="theory-score">COHERENCE <strong>${theoryScore(t)}%</strong></div><button class="btn small" data-activate="${i}">Use as verdict</button></div>`).join('')}</div>`;b.querySelectorAll('.theory').forEach((box,i)=>box.querySelectorAll('[data-f]').forEach(q=>q.onchange=()=>{state.theories[i][q.dataset.f]=q.value;renderTheories(b)}));b.querySelectorAll('[data-activate]').forEach(q=>q.onclick=()=>{const i=+q.dataset.activate,t=state.theories[i];state.activeTheory=i;state.verdict={culprit:t.culprit||null,method:t.method||null,motive:t.motive||null};toast("Theory loaded into verdict form.","ver");renderTheories(b)})}
+function theoryScore(t){let n=0;if(t.culprit)n+=25;if(t.method)n+=20;if(t.motive)n+=20;if((t.why||'').trim().length>25)n+=15;n+=Math.min(20,state.inferences.length*7);return Math.min(100,n)}
+function renderReconstruction(b){if(!state.reconOrder.length)state.reconOrder=(state.caseData.timeline.pins||[]).map((x,i)=>({id:i,t:x.t,l:x.l}));b.innerHTML=`<div class="mech-intro">Tap an event to pick it up, then tap another to swap places. Test the sequence against fixed timestamps.</div><div class="recon-strip" id="reconStrip">${state.reconOrder.map(x=>`<div class="event-token${state._reconSel==x.id?' dragging':''}" data-e="${x.id}"><b>${x.t}</b><small>${x.l}</small></div>`).join('')}</div><button class="btn primary small" id="checkRecon" style="width:100%">Test reconstruction</button><div id="reconResult"></div>`;b.querySelectorAll('.event-token').forEach(e=>{e.onclick=()=>{const id=e.dataset.e;if(state._reconSel==null){state._reconSel=id;}else if(state._reconSel==id){state._reconSel=null;}else{const ai=state.reconOrder.findIndex(q=>q.id==state._reconSel),di=state.reconOrder.findIndex(q=>q.id==id),tmp=state.reconOrder[ai];state.reconOrder[ai]=state.reconOrder[di];state.reconOrder[di]=tmp;state._reconSel=null;beep("tick")}renderReconstruction(b)}});$('#checkRecon').onclick=()=>{const mins=t=>{const p=String(t).split(':');return p.length===2?(+p[0]*60+ +p[1]):+t},ok=state.reconOrder.every((x,i,a)=>i===0||mins(a[i-1].t)<=mins(x.t));$('#reconResult').innerHTML=`<div class="recon-check ${ok?'good':''}">${ok?'Sequence is chronologically possible. Now ask whether it explains every fixed event.':'At least one event occurs before an event placed ahead of it. Revise the sequence.'}</div>`;beep(ok?'verify':'fizzle')}}
+function renderProvenance(b){b.innerHTML=`<div class="mech-intro">Trace where each claim came from. Multiple cards can still depend on one original source.</div>${visibleClues().map(c=>{const p=provenance(c);return `<div class="prov-card"><b>${c.title}</b><div class="prov-path">${p.path}</div><span class="prov-risk risk-${p.risk}">${p.risk.toUpperCase()} SOURCE RISK</span></div>`}).join('')}`}
+function renderLab(b){const tests=[{id:'auth',name:'Authenticate document',desc:'Check whether a document is original, copied or altered.'},{id:'metadata',name:'Recover metadata',desc:'Inspect timestamps and device provenance.'},{id:'travel',name:'Travel-time analysis',desc:'Test whether a claimed journey is physically possible.'},{id:'audio',name:'Signal analysis',desc:'Inspect cuts, hum and recording continuity.'}];b.innerHTML=`<div class="budget"><b>INVESTIGATION BUDGET</b>${[0,1,2].map(i=>`<i class="${i>=state.labCredits?'used':''}"></i>`).join('')} <span>${state.labCredits}/3 credits</span></div><div class="lab-grid">${tests.map(t=>`<button class="labtest" data-test="${t.id}" ${state.labCredits<=0||state.labResults[t.id]?'disabled':''}><b>${t.name}</b><small>${t.desc}</small></button>`).join('')}</div><div id="labOut">${Object.values(state.labResults).map(x=>`<div class="lab-result">${x}</div>`).join('')}</div>`;b.querySelectorAll('[data-test]').forEach(q=>q.onclick=()=>runLab(q.dataset.test))}
+function runLab(id){if(state.labCredits<=0)return;state.labCredits--;const c=state.caseData;let out={auth:'The selected case documents show consistent paper, layout and creation method. No universal forgery is indicated.',metadata:'System-generated timestamps are internally consistent. Witness estimates remain less precise.',travel:'At least one claimed journey should be tested against the case timeline; physical possibility is not the same as proof of identity.',audio:'No continuous audio source is available in this file; the examination yields no useful result.'}[id];if(c.id==='signal-lost'&&id==='audio')out='The broadcast contains a continuous room hum until the final interruption. The cut occurs in the studio, not at the transmitter.';if(c.id==='cold-storage'&&id==='auth')out='The rental signature and archived handwriting share stable letter formations; this supports the existing handwriting comparison.';state.labResults[id]=out;beep('tick');renderLab($('#wbBody'))}
 /* verdict */
 function showVerdict(){
   if(tutActive()){ tutBlock(); return; }
@@ -1270,8 +1370,8 @@ function showVerdict(){
   const motiveOpts=c.motives.map(m=>optHtml("motive",m.id,m.text)).join("");
   const anchored=!!state.cracked[c.hardAnchor];
   openModal(`<h2>⚖️ Name the truth</h2>
-    <div class="sub">Commit to a theory. You can always reopen the case.</div>
-    <div class="strength">Case strength: leads resolved <b>${solvedLeads()}/${totalLeads()}</b> · Hard contradiction on the central account: <b style="color:${anchored?'var(--good)':'var(--bad)'}">${anchored?'SECURED':'not yet'}</b></div>
+    <div class="sub">Commit to a theory. You can always reopen the case.</div><div class="strength">Workbench: <b>${state.inferences.length}</b> combined inference(s) · <b>${state.labCredits}/3</b> investigation credits remaining · active theory <b>${String.fromCharCode(65+state.activeTheory)}</b></div>
+    <div class="strength">Case strength: leads resolved <b>${solvedLeads()}/${totalLeads()}</b> · connections attempted <b>${state.sessionLog.filter(x=>x.type==="test").length}</b> · Hard contradiction on the central account: <b style="color:${anchored?'var(--good)':'var(--bad)'}">${anchored?'SECURED':'not yet'}</b></div>
     <div class="vsection"><label>The culprit</label>${suspectOpts}</div>
     <div class="vsection"><label>The method</label>${methodOpts}</div>
     <div class="vsection"><label>The motive</label>${motiveOpts}</div>
@@ -1317,6 +1417,15 @@ function deliverVerdict(){
   const starsN=(stars.match(/★/g)||[]).length, sk="static_stars_"+c.id;
   if(starsN>store.get(sk,-1)) store.set(sk,starsN);
   if(cls==="win") spawnConfetti();
+  if(!META.badges.first&&solvedLeads()>0)award(15,"FIRST THREAD","📌","first");
+  if(anchored&&!META.badges.hard)award(25,"HARD ANCHOR","⚖️","hard");
+  if(cls==="win"){
+    award(40,"CASE CLOSED","★");
+    const tests=state.sessionLog.filter(x=>x.type==="test").length;
+    if(!META.badges.economy&&tests<=totalLeads()+2)award(20,"LEAN CASE","🧠","economy");
+    const devTheories=state.theories.filter(t=>t&&t.culprit&&t.method).length;
+    if(!META.badges.theory&&(devTheories>=2||state.inferences.length>1))award(20,"RIVAL THEORIES","🔀","theory");
+  }
   const nextIdx=state.caseIndex+1, hasNext=cls==="win"&&nextIdx<CASES.length;
   openModal(`<div class="verdict-head ${cls}">${head}</div>
     <div class="stars">${stars}</div>
@@ -1328,12 +1437,31 @@ function deliverVerdict(){
                    :`<button class="btn primary small" id="mReopen">Reopen the case</button>
                      <button class="btn small" id="mFile">Give up · replay</button>`}
     </div>`);
-  const re=$("#mReopen"); if(re)re.onclick=()=>{ closeModal(); showVerdict(); };
+  const re=$("#mReopen"); if(re)re.onclick=()=>{ closeModal(); showHint("Case reopened. Pin the <b>Hard</b> contradiction on the central account, then name the truth again.",false); };
   const nx=$("#mNext"); if(nx)nx.onclick=()=>{ closeModal(); startCase(nextIdx); };
   const cf=$("#mCases"); if(cf)cf.onclick=()=>{ closeModal(); showCaseSelect(); };
   $("#mFile").onclick=()=>{ closeModal(); startCase(state.caseIndex); };
 }
 
+function showStudio(){openModal(`<h2>🧰 Investigation studio</h2><div class="sub">Creation, replay and evidence-review tools.</div><div class="studio-grid"><button class="studio-card" id="dailyCard"><b>☀ DAILY MICRO-CASE</b><small>A five-minute seeded contradiction puzzle for today.</small></button><button class="studio-card" id="makerCard"><b>✎ CASE MAKER</b><small>Draft and validate a shareable case outline.</small></button><button class="studio-card" id="shareCard"><b>🔗 EXPORT PROOF GRAPH</b><small>Share your links, notes and active theory without revealing the official answer.</small></button><button class="studio-card" id="importCard"><b>⇩ REVIEW A CASE</b><small>Load another investigator's exported proof graph.</small></button><button class="studio-card" id="teacherCard"><b>▤ INVESTIGATION REPORT</b><small>Generate a process summary for reflection or teaching.</small></button><button class="studio-card" id="masteryCard"><b>★ MASTERY FILE</b><small>Ranks, badges and campaign progress.</small></button></div><div class="modal-actions"><button class="btn small" id="studioClose">Close</button></div>`);$('#dailyCard').onclick=showDaily;$('#makerCard').onclick=showMaker;$('#shareCard').onclick=showExport;$('#importCard').onclick=showImport;$('#teacherCard').onclick=showReport;$('#masteryCard').onclick=showMastery;$('#studioClose').onclick=closeModal}
+function daySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function seeded(n){let x=n|0;return()=>((x=Math.imul(1664525,x)+1013904223|0)>>>0)/4294967296}
+function showDaily(){const seed=daySeed(),r=seeded(seed),persons=['Avery','Blake','Casey'],places=['archive','platform','studio'],times=['18:20','18:35','18:50'];const guilty=Math.floor(r()*3),hard=(guilty+1+Math.floor(r()*2))%3;openModal(`<h2>☀ Daily micro-case</h2><div class="daily-seed">FILE ${seed}</div><div class="sub">One hard record contradicts one account. Identify the broken account.</div><div class="micro-board">${persons.map((p,i)=>`<button class="micro-clue" data-p="${i}"><b>${p}</b>“I was at the ${places[i]} at ${times[i]}.”</button>`).join('')}</div><div class="report"><b>ACCESS RECORD</b><br>${persons[guilty]}'s pass was used at the ${places[hard]} at ${times[guilty]}. The location conflicts with the account.</div><div id="dailyOut"></div><div class="modal-actions"><button class="btn small" id="dailyBack">Back</button></div>`);modalCard.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const correct=(+b.dataset.p===guilty);$('#dailyOut').innerHTML=`<div class="validator ${correct?'':'warn'}">${correct?'Correct: the account breaks against the independent access record.':'That is not the strongest contradiction. Compare person, place and time together.'}</div>`;if(correct&&!META.daily[seed]){META.daily[seed]=1;award(20,'DAILY FILE CLOSED','☀')}});$('#dailyBack').onclick=showStudio}
+function showMaker(){openModal(`<h2>✎ Case maker</h2><div class="sub">Draft the logical skeleton. The validator checks structure before export.</div><div class="builder"><label>CASE TITLE<input id="mkTitle" value="Untitled File"></label><label>PREMISE<textarea id="mkPrem" placeholder="What happened?"></textarea></label><label>CENTRAL ACCOUNT<textarea id="mkClaim" placeholder="A precise claim that can be tested"></textarea></label><label>HARD CONTRADICTION<textarea id="mkHard" placeholder="Independent evidence that breaks the account"></textarea></label><label>UNLOCKED EVIDENCE<textarea id="mkUnlock" placeholder="What new evidence is revealed?"></textarea></label><label>FINAL EXPLANATION<textarea id="mkSolve" placeholder="Culprit, method and motive"></textarea></label></div><div id="mkValid"></div><div class="modal-actions"><button class="btn primary small" id="mkCheck">Validate</button><button class="btn small" id="mkExport">Export outline</button><button class="btn small" id="mkBack">Back</button></div>`);$('#mkCheck').onclick=validateMaker;$('#mkExport').onclick=exportMaker;$('#mkBack').onclick=showStudio}
+function makerData(){return {title:$('#mkTitle').value,premise:$('#mkPrem').value,claim:$('#mkClaim').value,hard:$('#mkHard').value,unlock:$('#mkUnlock').value,solution:$('#mkSolve').value}}
+function validateMaker(){const d=makerData(),miss=Object.entries(d).filter(([k,v])=>!v.trim()).map(x=>x[0]);$('#mkValid').innerHTML=`<div class="validator ${miss.length?'warn':''}">${miss.length?'Missing: '+miss.join(', ')+'. A solvable case needs a precise claim, independent contradiction and complete explanation.':'Structure passes: the case has a premise, testable account, hard anchor, reveal and solution.'}</div>`}
+function exportMaker(){const d=makerData();openModal(`<h2>Case outline export</h2><textarea class="sharebox" id="makerCode">${btoa(unescape(encodeURIComponent(JSON.stringify(d))))}</textarea><div class="modal-actions"><button class="btn primary small" id="copyMaker">Copy</button><button class="btn small" id="makerReturn">Back</button></div>`);$('#copyMaker').onclick=()=>copyText($('#makerCode').value);$('#makerReturn').onclick=showMaker}
+function proofPayload(){return {v:1,caseId:state.caseData.id,caseTitle:state.caseData.title,links:state.links.filter(x=>x.kind!=='fizzle'),notes:state.notes,verdict:state.verdict,inferences:state.inferences,log:state.sessionLog}}
+function showExport(){const code=btoa(unescape(encodeURIComponent(JSON.stringify(proofPayload()))));openModal(`<h2>🔗 Export proof graph</h2><div class="sub">Contains your reasoning, not the official solution.</div><textarea class="sharebox" id="proofCode">${code}</textarea><div class="modal-actions"><button class="btn primary small" id="copyProof">Copy</button><button class="btn small" id="exBack">Back</button></div>`);$('#copyProof').onclick=()=>copyText(code);$('#exBack').onclick=showStudio}
+function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t);toast('Copied to clipboard.','ver')}
+function showImport(){openModal(`<h2>⇩ Review a case</h2><textarea class="sharebox" id="importCode" placeholder="Paste a STATIC proof code"></textarea><div id="importOut"></div><div class="modal-actions"><button class="btn primary small" id="loadProof">Load review</button><button class="btn small" id="imBack">Back</button></div>`);$('#loadProof').onclick=()=>{try{const d=JSON.parse(decodeURIComponent(escape(atob($('#importCode').value.trim()))));$('#importOut').innerHTML=`<div class="report"><h3>${d.caseTitle||'Imported case'}</h3><div class="report-line">Connections: <b>${(d.links||[]).length}</b></div><div class="report-line">Notes: <b>${(d.notes||[]).length}</b></div><div class="report-line">Combined inferences: <b>${(d.inferences||[]).length}</b></div><div class="report-line">Proposed culprit: <b>${(function(){const v=d.verdict&&d.verdict.culprit;if(!v)return 'not selected';const kc=CASES.find(c=>c.id===d.caseId);const s=kc&&kc.suspects.find(x=>x.id===v);return s?s.name:v})()}</b></div></div>`}catch(e){$('#importOut').innerHTML='<div class="validator warn">That proof code could not be read.</div>'}};$('#imBack').onclick=showStudio}
+function showReport(){const examined=state.sessionLog.filter(x=>x.type==='examine').length,tests=state.sessionLog.filter(x=>x.type==='test').length,dur=Math.round((Date.now()-state.startTs)/60000);const stamp=new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});openModal(`<h2>▤ Investigation report</h2><div class="report"><h3>${state.caseData.title}</h3><div class="report-line">Date: <b>${stamp}</b> · Investigator: <b>____________________</b></div><div class="report-line">Time in file: <b>${dur} minutes</b></div><div class="report-line">Evidence examinations: <b>${examined}</b></div><div class="report-line">Connections attempted: <b>${tests}</b></div><div class="report-line">Resolved accounts: <b>${solvedLeads()}/${totalLeads()}</b></div><div class="report-line">Combined inferences: <b>${state.inferences.length}</b></div><div class="report-line">Investigation credits used: <b>${3-state.labCredits}/3</b></div><div class="report-line">Current theory: <b>${state.verdict.culprit||'not committed'}</b></div><p><b>Reflection:</b> Which conclusion is supported by independent evidence, and which still depends on an assumption?</p></div><div class="modal-actions"><button class="btn primary small" id="printReport">Print</button><button class="btn small" id="repBack">Back</button></div>`);$('#printReport').onclick=()=>window.print();$('#repBack').onclick=showStudio}
+const BADGES={first:{i:'📌',n:'FIRST THREAD',d:'Resolve a lead'},hard:{i:'⚖️',n:'HARD ANCHOR',d:'Secure central evidence'},economy:{i:'🧠',n:'LEAN CASE',d:'Close with efficient testing'},daily:{i:'☀',n:'DAY SHIFT',d:'Close a daily file'},archive:{i:'🗄️',n:'ARCHIVIST',d:'Reach 600 XP'},theory:{i:'🔀',n:'RIVAL THEORIES',d:'Develop multiple explanations'}};
+function award(xp,name,icon,key){META.xp+=xp;META.rank=rankFor(META.xp);if(key)META.badges[key]=1;saveMeta();const p=$('#achievementPop');p.innerHTML=`${icon||'★'} <b>${name}</b><br>+${xp} CASEWORK XP`;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3500)}
+function dailyStreak(){let n=0;const d=new Date();for(;;){const k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();if(META.daily[k]){n++;d.setDate(d.getDate()-1);}else break;}return n}
+function showMastery(){if(META.xp>=600)META.badges.archive=1;if(META.daily[daySeed()])META.badges.daily=1;openModal(`<h2>★ Mastery file</h2><div class="mastery-head"><div class="mastery-rank">${META.rank}</div><div>${META.xp} XP<br><small>${Object.keys(META.badges).length} commendations${dailyStreak()>1?` · ☀ ${dailyStreak()}-day streak`:""}</small></div></div><div class="badge-grid" style="margin-top:12px">${Object.entries(BADGES).map(([k,v])=>`<div class="badge ${META.badges[k]?'have':''}"><i>${v.i}</i><b>${v.n}</b><small>${v.d}</small></div>`).join('')}</div><div class="modal-actions"><button class="btn small" id="mastBack">Back</button></div>`);$('#mastBack').onclick=showStudio}
+function showAccessibility(){const a=META.access;openModal(`<h2>Accessibility & display</h2><div class="access-grid"><button class="access-opt ${a.large?'on':''}" data-a="large"><b>Large evidence text</b><small>Increases card reading size.</small></button><button class="access-opt ${a.font?'on':''}" data-a="font"><b>Readable font</b><small>Replaces decorative mono type.</small></button><button class="access-opt ${a.contrast?'on':''}" data-a="contrast"><b>High contrast paper</b><small>Stronger text and card borders.</small></button><button class="access-opt ${a.static?'on':''}" data-a="static"><b>Remove CRT static</b><small>Disables scanlines and flicker.</small></button></div><div class="modal-actions"><button class="btn primary small" id="accessDone">Apply</button></div>`);modalCard.querySelectorAll('[data-a]').forEach(q=>q.onclick=()=>{a[q.dataset.a]=!a[q.dataset.a];q.classList.toggle('on')});$('#accessDone').onclick=()=>{saveMeta();applyAccess();closeModal()}}
+function applyAccess(){const a=META.access;document.body.classList.toggle('large-text',a.large);document.body.classList.toggle('readable-font',a.font);document.body.classList.toggle('high-contrast',a.contrast);document.body.classList.toggle('no-static',a.static)}
 /* ============================================================
    FLOW
 ============================================================ */
@@ -1388,8 +1516,9 @@ function spawnConfetti(){
 }
 
 /* ---------- examine lightbox + playable tape ---------- */
+function logAction(type,data){state.sessionLog.push({t:Math.round((Date.now()-state.startTs)/1000),type,data:data||null})}
 function openExamine(id){
-  const cl=state.caseData.clues.find(x=>x.id===id); if(!cl||cl.locked)return;
+  const cl=state.caseData.clues.find(x=>x.id===id); if(!cl||cl.locked)return;logAction("examine",id);
   if(tutActive()&&id!=="c_access"){ tutBlock(); return; }
   if(state.tut===1) state.tut=2;
   const relLabel={hard:"HARD EVIDENCE — timestamped fact",soft:"SOFT — testimony",rumour:"RUMOUR — hearsay, handle with tongs"}[cl.rel];
@@ -1457,7 +1586,7 @@ function showTimeline(){
 
 /* case files */
 function showCaseSelect(){
-  openModal(`<h2>📁 Case files</h2><div class="sub">Pick a file. Your best verdict is stamped on each — verdicts are remembered on this device.</div>`+
+  openModal(`<h2>📁 Case files</h2><div class="sub">Investigator rank: <b style="color:var(--gold)">${META.rank}</b> · ${META.xp} XP · Pick a file — your best verdict is stamped on each.</div>`+
     CASES.map((c,i)=>{
       const st=store.get("static_stars_"+c.id,-1);
       const stamp= st===3?`<span style="color:var(--gold)">CASE CLOSED ★★★</span>`
@@ -1496,8 +1625,8 @@ $("#casesBtn").onclick=showCaseSelect;
 $("#tlBtn").onclick=showTimeline;
 $("#howBtn").onclick=showHow;
 $("#setBtn").onclick=showSettings;
-$("#setBtn2").onclick=showSettings;
-$("#briefBtn").onclick=showBrief;
+$("#setBtn2").onclick=showSettings;$("#studioBtn").onclick=showStudio;
+$("#briefBtn").onclick=showBrief;$("#workbenchBtn").onclick=()=>showWorkbench("infer");
 $("#accuseBtn").onclick=showVerdict;
 $("#notesBtn").onclick=()=>$("#notes").classList.toggle("open");
 $("#notesClose").onclick=()=>$("#notes").classList.remove("open");
@@ -1514,20 +1643,33 @@ document.addEventListener("keydown",e=>{
   if(e.key==="-")zoomAt(viewport.clientWidth/2,viewport.clientHeight/2,1/1.15);
 });
 
-/* splash (runs once at boot; tap to skip; gentle path for calm/reduced-motion) */
+/* boot splashes: Matt's Apps brand first, then the CRT power-on (both tap-skippable; gentle path for calm/reduced-motion) */
 (function(){
-  const sp=$("#splash"); if(!sp)return;
-  let doneT=null;
-  function finish(){
-    if(sp.classList.contains("done"))return;
-    if(doneT)clearTimeout(doneT);
-    sp.classList.add("done");
-    setTimeout(()=>{ sp.style.display="none"; },500);
-  }
+  const ms=$("#msplash"), sp=$("#splash");
   const gentle=state.calm||isReduced();
-  sp.classList.add(gentle?"calmpath":"on");
-  doneT=setTimeout(finish, gentle?1600:3300);
-  sp.addEventListener("pointerdown",finish);
+  function startCrt(){
+    if(!sp)return;
+    let doneT=null;
+    function finish(){
+      if(sp.classList.contains("done"))return;
+      if(doneT)clearTimeout(doneT);
+      sp.classList.add("done");
+      setTimeout(()=>{ sp.style.display="none"; },500);
+    }
+    sp.classList.add(gentle?"calmpath":"on");
+    doneT=setTimeout(finish, gentle?1600:3300);
+    sp.addEventListener("pointerdown",finish);
+  }
+  if(!ms){ startCrt(); return; }
+  ms.classList.add(gentle?"gentle":"go");
+  let handed=false;
+  function msFinish(){
+    if(handed)return; handed=true;
+    ms.classList.add("out");
+    setTimeout(()=>{ ms.remove(); startCrt(); },380);
+  }
+  ms.addEventListener("pointerdown",e=>{ e.stopPropagation(); msFinish(); });
+  setTimeout(msFinish, gentle?1400:2400);
 })();
 
 /* title flicker */
