@@ -485,6 +485,42 @@
   .skip-link { position: absolute; left: -9999px; top: 12px; z-index: 300; background: var(--blue); color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 10px; text-decoration: none; }
   .skip-link:focus { left: 12px; }
   .chip:focus-visible, .jn-pill:focus-visible, .sec-tools button:focus-visible, .header-cta:focus-visible, .theme-toggle:focus-visible, .pulse-chip:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  /* ============ TODAY DASHBOARD + AUDIENCE MODES ============ */
+  .today-dashboard { margin-top: 24px; padding: 22px; border: 1px solid var(--border); border-radius: 20px; background: linear-gradient(135deg, var(--card), color-mix(in srgb, var(--card) 88%, #38bdf8)); box-shadow: 0 14px 34px -24px rgba(15,23,42,.35); }
+  .today-top { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+  .today-kicker { color:var(--blue); font-size:.7rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+  .today-dashboard h2 { font-family:var(--font-display); font-size:1.55rem; margin-top:3px; }
+  .today-sub { color:var(--muted); margin-top:5px; font-size:.9rem; }
+  .mode-switch { display:inline-flex; padding:4px; gap:4px; border:1px solid var(--border); background:var(--bg); border-radius:12px; }
+  .mode-btn { border:0; background:transparent; color:var(--muted); font-weight:800; padding:9px 14px; border-radius:9px; cursor:pointer; }
+  .mode-btn.active { background:var(--blue); color:#fff; box-shadow:0 4px 12px rgba(37,99,235,.24); }
+  .today-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:18px; }
+  .today-card { min-width:0; border:1px solid var(--border); background:var(--bg); border-radius:14px; padding:14px; }
+  .today-label { color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+  .today-items { display:flex; flex-direction:column; gap:8px; margin-top:9px; }
+  .today-link { display:flex; align-items:center; gap:9px; min-width:0; color:var(--ink); text-decoration:none; font-weight:700; font-size:.88rem; padding:8px; border-radius:10px; background:var(--card); border:1px solid var(--border); }
+  .today-link:hover { border-color:var(--blue); }
+  .today-link span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .today-empty { color:var(--muted); font-size:.82rem; line-height:1.45; }
+  .pin-btn { position:absolute; top:8px; right:46px; z-index:4; width:30px; height:30px; border-radius:50%; border:0; background:rgba(15,23,42,.45); color:#fff; cursor:pointer; display:grid; place-items:center; }
+  .pin-btn svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2; }
+  .pin-btn.is-pinned { background:#2563eb; }
+  .families-dashboard { margin-top:28px; }
+  .families-head { display:flex; justify-content:space-between; align-items:end; gap:12px; }
+  .families-head h2 { font-family:var(--font-display); font-size:1.25rem; }
+  .families-head p { color:var(--muted); font-size:.82rem; }
+  .family-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:12px; margin-top:12px; }
+  .family-card { border:1px solid var(--border); background:var(--card); border-radius:14px; padding:14px; }
+  .family-title { font-weight:800; color:var(--ink); }
+  .family-sub { color:var(--muted); font-size:.74rem; margin-top:3px; }
+  .family-actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:11px; }
+  .family-actions a { text-decoration:none; color:var(--ink); border:1px solid var(--border); background:var(--bg); border-radius:999px; padding:6px 10px; font-size:.72rem; font-weight:700; }
+  .family-actions a:hover { border-color:var(--blue); color:var(--blue); }
+  body.mode-pupil .teacher-only { display:none !important; }
+  body.mode-pupil .tile[data-tag="teacher"] { display:none !important; }
+  @media (max-width:800px){ .today-grid{grid-template-columns:1fr;} }
+
 </style>
 </head>
 <body>
@@ -548,6 +584,26 @@
 </header>
 
 <div class="wrap">
+
+  <section class="today-dashboard" id="todayDashboard" aria-labelledby="todayTitle">
+    <div class="today-top">
+      <div><div class="today-kicker">Your launchpad</div><h2 id="todayTitle">Today</h2><p class="today-sub" id="todayDate"></p></div>
+      <div class="mode-switch" role="group" aria-label="Choose hub mode">
+        <button class="mode-btn" type="button" data-mode="teacher">Teacher</button>
+        <button class="mode-btn" type="button" data-mode="pupil">Pupil</button>
+      </div>
+    </div>
+    <div class="today-grid">
+      <article class="today-card"><div class="today-label">Pinned for today</div><div class="today-items" id="todayPinned"></div></article>
+      <article class="today-card"><div class="today-label">Continue</div><div class="today-items" id="todayRecent"></div></article>
+      <article class="today-card"><div class="today-label">Quick launch</div><div class="today-items" id="todayQuick"></div></article>
+    </div>
+  </section>
+  <section class="families-dashboard" id="familiesDashboard" aria-labelledby="familiesTitle">
+    <div class="families-head"><div><h2 id="familiesTitle">Resource families</h2><p>Related lesson, pupil, teacher and support files grouped together.</p></div></div>
+    <div class="family-grid" id="familyGrid"></div>
+  </section>
+
   <div class="ecosystem-banner">
     <div class="eb-left">
       <div class="eb-badge">Developer Suite</div>
@@ -640,12 +696,12 @@
       <button id="signSave" class="sign-go" type="button">Let's go →</button>
       <button id="signOutBtn" class="sign-off" type="button" style="display:none;">Sign out</button>
     </div>
-    <button id="signExport" class="sign-export" type="button" title="Teacher tool: download this device's activity log">
+    <button id="signExport" class="sign-export teacher-only" type="button" title="Teacher tool: download this device's activity log">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download activity on this device (CSV)
     </button>
     <br>
-    <button id="signCheck" class="sign-export" type="button" title="Teacher tool: verify every resource link and check the data for typos">
+    <button id="signCheck" class="sign-export teacher-only" type="button" title="Teacher tool: verify every resource link and check the data for typos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       Check all links &amp; data
     </button>
@@ -688,126 +744,27 @@ const LIVE_CONFIG = {
    then ages out on its own — no need to come back and remove it.
    (Legacy  new:true  still forces a permanent badge if you ever want one.)
    ================================================================ */
-const LESSONS = [
-  {subject:"Live Lessons", title:"Live Lessons",  file:"https://mattroper1977.pythonanywhere.com/",      tag:"pupil"},
-  {subject:"Chemistry", title:"L1 · Indicators",            file:"chemistry/Lesson1_Indicators-1.html",      tag:"lesson"},
-  {subject:"Chemistry", title:"L2 · The pH Scale",          file:"chemistry/Lesson2_pH_Scale_v4.html",          tag:"lesson"},
-  {subject:"Chemistry", title:"L3 · Ions & Neutralisation", file:"chemistry/Lesson3_Ions_Neutralisation_v4.html",tag:"lesson"},
-  {subject:"Chemistry", title:"L4a · Gas Tests I (H₂ O₂ CO₂)", file:"chemistry/Lesson4a_Gas_Tests_H2_O2_CO2 (1).html",   tag:"lesson"},
-  {subject:"Chemistry", title:"L4b · Gas Tests II (NH₃ Cl₂)",  file:"chemistry/Lesson4b_Gas_Tests_NH3_Cl2.html",  tag:"lesson", added:"2026-06-16"},
-  {subject:"Chemistry", title:"L5 · Flame Tests",           file:"chemistry/Lesson5_Flame_Tests.html",       tag:"lesson"},
-  {subject:"Chemistry", title:"L6 · Anion & Water Tests",   file:"chemistry/Lesson6_Anion_Water_Tests.html", tag:"lesson"},
-  {subject:"Chemistry", title:"L6 - Consolidation",   file:"chemistry/Lesson6b_Consolidation.html", tag:"lesson", added:"2026-06-12"},
+let LESSONS = [];
 
-  {subject:"Chemistry", title:"Rev5 · Bonding",             file:"chemistry/Rev5_Chem_Bonding.html",         tag:"revision"},
-  {subject:"Chemistry", title:"Chem Arcade",                file:"chemistry/Chem_Arcade.html",               tag:"game"},
-  {subject:"Chemistry", title:"Lab Escape: Acid Crisis",    file:"chemistry/Lab_Escape_Acid_Crisis.html",    tag:"game"},
-  {subject:"Chemistry", title:"Virtual Lab · Acids & Alkalis (L3c)", file:"chemistry/L3c_VirtualLab_AcidsAlkalis (2).html",  tag:"lesson"},
-  {subject:"Physics", title:"L1 · Circuits, Symbols, Series & Parallel", file:"2 Physics 10/L1_Circuits_Symbols_Series_Parallel-1.html",       tag:"lesson"},
-  {subject:"Physics", title:"L2 · Voltage, Current & Resistance",        file:"2 Physics 10/L2_Voltage_Current_Resistance.html",              tag:"lesson"},
-  {subject:"Physics", title:"L2b · Ohm's Law PhET Practical",            file:"2 Physics 10/L2b_Ohms_Law_PhET_Practical-1.html",              tag:"lesson"},
-  {subject:"Physics", title:"L2c · Ohm's Law PhET (Take 2)",             file:"2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html",                tag:"lesson"},
-  {subject:"Physics", title:"L3 · Ohm's Law in Action",                 file:"2 Physics 10/L3_Ohms_Law_Action.html",                         tag:"lesson"},
-  {subject:"Physics", title:"L4a · Electron Flow",                        file:"2 Physics 10/L4a_Electron_Flow_in_Metals.html",       tag:"lesson"},
-  {subject:"Physics", title:"L5 · Wave Properties & Definitions",        file:"2 Physics 10/L4_Wave_Properties_Definitions-1.html",           tag:"lesson"},
-  {subject:"Physics", title:"L6 · Wave Speed Equation",                 file:"2 Physics 10/L5_Wave_Speed_Equation-1.html",                   tag:"lesson"},
-  {subject:"Physics", title:"L7 · Waves: Reflection & Refraction",       file:"2 Physics 10/L6_Waves_Context_Reflection_Refraction-1.html",   tag:"lesson"},
-  {subject:"Physics", title:"Waves · L4a · Wave Anatomy",                 file:"2 Physics 10/Waves/L4a_Wave_Anatomy.html",                     tag:"lesson", added:"2026-07-01"},
-  {subject:"Physics", title:"Waves · L4b · Frequency & Period",           file:"2 Physics 10/Waves/L4b_Frequency_Period.html",                 tag:"lesson", added:"2026-07-01"},
-  {subject:"Physics", title:"Waves · L4c · Energy Transfer",              file:"2 Physics 10/Waves/L4c_Energy_Transfer.html",                  tag:"lesson", added:"2026-07-01"},
-  {subject:"Physics", title:"Consolidation · Electricity Review",        file:"2 Physics 10/Consolidation_Electricity_Review-1.html",         tag:"revision"},
-  {subject:"Physics", title:"Current Rush",        file:"2 Physics 10/current_rush.html",         tag:"game"},
-  {subject:"Intervention (Y10)", title:"V = I × R · Pupil App",          file:"5 Intervention 10/Lesson_VIR_Pupil_App.html",                          tag:"pupil"},
-  {subject:"Intervention (Y10)", title:"V = I × R · Teacher App",        file:"5 Intervention 10/Lesson_VIR_Intervention.html",                       tag:"teacher"},
-  {subject:"Intervention (Y10)", title:"Battle Arena",                   file:"5 Intervention 10/InterventionA_Battle_Arena (1).html",                tag:"game"},
-  {subject:"Intervention (Y10)", title:"Escape Room",                    file:"5 Intervention 10/InterventionB_Escape_Room.html",                     tag:"game"},
-  {subject:"Intervention (Y10)", title:"Gut Reaction · Digestion & Absorption", file:"5 Intervention 10/Intervention_Digestion_Absorption_Gut_Reaction.html", tag:"lesson"},
-  {subject:"Intervention (Y10)", title:"L8a · Powerhouse Arena Team Quiz",file:"5 Intervention 10/L8a_Powerhouse_Arena_TeamQuiz.html",                  tag:"game"},
-  {subject:"Intervention (Y10)", title:"L8a · Respiration & ATP (Aerobic)",file:"5 Intervention 10/L8a_Respiration_ATP_Aerobic.html",                   tag:"lesson"},
-  {subject:"Biology", title:"L1 · Digestion & Absorption",   file:"biology/Digestion_and_Absorption (1).html",   tag:"lesson"},
-  {subject:"Biology", title:"L2 · Absorption",               file:"biology/Lesson_2_Absorption_v4-6.html",       tag:"lesson"},
-  {subject:"Biology", title:"L3 · Respiration & ATP",        file:"biology/Respiration_and_ATP_Lesson_1.html",   tag:"lesson"},
-  {subject:"Biology", title:"L4 · Aerobic Respiration",      file:"biology/L4_Aerobic.html",                     tag:"lesson", added:"2026-06-18"},
-  {subject:"Biology", title:"L4 · Bridge Sheet · Standard",   file:"biology/L4_Aerobic_Bridge_Sheet.pdf",         tag:"support"},
-  {subject:"Biology", title:"L4 · Bridge Sheet · Middle",     file:"biology/L4_Aerobic_Bridge_Sheet_Middle.pdf",  tag:"support"},
-  {subject:"Biology", title:"L4 · Bridge Sheet · Easy-Start", file:"biology/L4_Aerobic_Bridge_Sheet_Support.pdf", tag:"support"},
-  {subject:"Biology", title:"L5 · Anaerobic Respiration",    file:"biology/L5_Anaerobic.html",                   tag:"lesson", added:"2026-06-10"},
-  {subject:"Biology", title:"Structure of the Thorax",       file:"biology/Structure_of_the_Thorax.html",        tag:"lesson", added:"2026-07-06"},
-  {subject:"Biology", title:"Limewater · Making It (Prep)",  file:"biology/Chem_Making_Limewater.html",          tag:"lesson", added:"2026-07-09"},
-  {subject:"Biology", title:"Limewater · CO₂ & Respiration", file:"biology/Testing Breath - FINAL Observation Lesson (1).html", tag:"lesson", added:"2026-07-12"},
-  {subject:"Biology", title:"Respiration & ATP Recap",       file:"biology/Respiration_ATP_Recap.html",          tag:"revision"},
-  {subject:"Tees Trekkers", title:"AQA Evidence · L1 Building Evidence",     file:"5_6 Local Choice/Trekkers_AQA_Evidence_L1.html",             tag:"pupil"},
-  {subject:"Tees Trekkers", title:"AQA Evidence · L2 Reflection & Sign-off", file:"5_6 Local Choice/Trekkers_AQA_Evidence_L2.html",             tag:"pupil"},
-  {subject:"Tees Trekkers", title:"L18 · Risk & Sampling",                   file:"5_6 Local Choice/L18_Risk_Sampling.html",                    tag:"lesson"},
-  {subject:"Tees Trekkers", title:"L19 · Fieldwork Day",                     file:"5_6 Local Choice/L19_Fieldwork_Day.html",                    tag:"lesson"},
-  {subject:"Tees Trekkers", title:"Coatham Expedition · Pupil",              file:"5_6 Local Choice/Tees_Trekkers_Coatham_Expedition (1).html",  tag:"pupil"},
-  {subject:"Tees Trekkers", title:"Coatham Expedition · Teacher",            file:"5_6 Local Choice/Tees_Trekkers_Coatham_Teacher (2).html",    tag:"teacher"},
-  {subject:"Tees Trekkers", title:"🎮 Trail Runner · Side Quest",            file:"5_6 Local Choice/Trekkers_Trail_Runner (2).html",            tag:"game"},
-  {subject:"Rivers", title:"L1a · Tees: Source to Sea",                      file:"5_6 Local Choice/Rivers/L1a_Tees_Source_to_Sea.html",        tag:"lesson", added:"2026-06-24"},
-  {subject:"Rivers", title:"L1b · Your River, Your Home",                    file:"5_6 Local Choice/Rivers/L1b_Your_River_Your_Home.html",      tag:"lesson", added:"2026-06-24"},
-  {subject:"Rivers", title:"L1c · Reading the River",                    file:"5_6 Local Choice/Rivers/L1c_Reading_the_River.html",      tag:"lesson", added:"2026-06-24"},
-  {subject:"Rivers", title:"L1d · Life in the Grass",                    file:"5_6 Local Choice/Rivers/L1d_Life_in_the_Grass.html",      tag:"lesson", added:"2026-06-24"},
-  {subject:"Rivers", title:"L1e · Final Briefing",                       file:"5_6 Local Choice/Rivers/L1e_Final_Briefing.html",         tag:"lesson", added:"2026-07-07"},
-
-  {subject:"PSHE & ASDAN", title:"Know the Law · Homework",  file:"pshe/HW_L1_Know_the_Law_PUPIL.html",      tag:"pupil"},
-  {subject:"PSHE & ASDAN", title:"Consent P1 · Lesson",             file:"ASDAN/Consent_Aimee_La.html",                  tag:"lesson",  added:"2026-06-22"},
-  {subject:"PSHE & ASDAN", title:"Consent P1 · Knowledge Organiser",file:"ASDAN/Consent_Aimee_KO.html",                  tag:"support", added:"2026-06-22"},
-  {subject:"PSHE & ASDAN", title:"Consent P1 · Pack (Foundation)",  file:"ASDAN/Consent_Aimee_Pack_Foundation.html",     tag:"pupil",   added:"2026-06-22"},
-  {subject:"PSHE & ASDAN", title:"Consent P1 · Pack (Middle)",      file:"ASDAN/Consent_Aimee_Pack_Middle.html",         tag:"pupil",   added:"2026-06-22"},
-  {subject:"PSHE & ASDAN", title:"Consent P1 · Pack (Higher)",      file:"ASDAN/Consent_Aimee_Pack_Higher.html",         tag:"pupil",   added:"2026-06-22"},
-  {subject:"PSHE & ASDAN", title:"Consent P2 · Lesson",             file:"ASDAN/Consent_Aimee_P2.html",                  tag:"lesson",  added:"2026-06-23"},
-  {subject:"PSHE & ASDAN", title:"Consent P2 · Knowledge Organiser",file:"ASDAN/Consent_Aimee_P2_KO.html",               tag:"support", added:"2026-06-23"},
-  {subject:"PSHE & ASDAN", title:"Consent P2 · Pack (Foundation)",  file:"ASDAN/Consent_Aimee_P2_Pack_Foundation.html",  tag:"pupil",   added:"2026-06-23"},
-  {subject:"PSHE & ASDAN", title:"Consent P2 · Pack (Middle)",      file:"ASDAN/Consent_Aimee_P2_Pack_Middle.html",      tag:"pupil",   added:"2026-06-23"},
-  {subject:"PSHE & ASDAN", title:"Consent P2 · Pack (Higher)",      file:"ASDAN/Consent_Aimee_P2_Pack_Higher.html",      tag:"pupil",   added:"2026-06-23"},
-  {subject:"PSHE & ASDAN", title:"Social Media & Wellbeing · Homework", file:"ASDAN/HW_Social_Media_Wellbeing_Active.html", tag:"pupil",   added:"2026-07-06"},
-  {subject:"Assembly", title:"Behaviour · Resilience",            file:"Assembly/Behaviour Focus/resilience_assembly.html",  tag:"lesson",  added:"2026-06-29"},
-  {subject:"Assembly", title:"Behaviour · Resilience · Poster",    file:"Assembly/Behaviour Focus/resilience_poster.html",    tag:"support", added:"2026-06-29"},
-  {subject:"Assembly", title:"British Values · Rule of Law",          file:"Assembly/British Value/rule_of_law_assembly.html", tag:"lesson",  added:"2026-06-29"},
-  {subject:"Assembly", title:"British Values · Rule of Law · Poster", file:"Assembly/British Value/rule_of_law_poster.html",   tag:"support", added:"2026-06-29"},
-  {subject:"Assembly", title:"KCSIE · Emergency",            file:"Assembly/KCSIE/emergency_kcsie_assembly (1).html", tag:"lesson",  added:"2026-06-29"},
-  {subject:"Assembly", title:"KCSIE · Emergency · Poster",   file:"Assembly/KCSIE/emergency_kcsie_poster (1).html",   tag:"support", added:"2026-06-29"},
-  {subject:"Art", title:"L1 · What is Surrealism?",  file:"6 Art/lesson1_what_is_surrealism-3.html", tag:"lesson"},
-  {subject:"Art", title:"L2 · Magritte",             file:"6 Art/lesson2_magritte-2.html",           tag:"lesson"},
-  {subject:"Art", title:"L3 · Magritte Study",       file:"6 Art/Lesson3_Magritte_Study_v4.html",    tag:"lesson"},
-  {subject:"Art", title:"L4 · Miró",                 file:"6 Art/Lesson4_Miro_v4.html",              tag:"lesson"},
-  {subject:"Art", title:"L5 · Dalí Research",        file:"6 Art/Lesson5_Dali_Research_v4-1.html",   tag:"lesson"},
-  {subject:"Art", title:"L6 · Dalí Study",           file:"6 Art/Lesson6_Dali_Study_v4.html",        tag:"lesson"},
-  {subject:"Art", title:"L7 · Hannah Höch",          file:"6 Art/Lesson7_Hoch_v5 (1).html",          tag:"lesson"},
-  {subject:"Art", title:"L8 · Höch Fact File",       file:"6 Art/Lesson8_Hoch_FactFile_v5.html",     tag:"lesson"},
-  {subject:"Art", title:"L10 · Surrealist Collage · Hands-On",    file:"6 Art/Lesson10_SurrealistCollage_HANDSON_v5 (1).html",      tag:"lesson", added:"2026-06-20"},
-  {subject:"Art", title:"L10 · Surrealist Collage · Observation", file:"6 Art/Lesson10_SurrealistCollage_OBSERVATION_v5 (1).html",  tag:"lesson", added:"2026-06-20"},
-  {subject:"Art", title:"L11 · Surrealism Eye Study",  file:"6 Art/Surrealism_Eye_Study_v5.html",           tag:"lesson", added:"2026-06-29"},
-  {subject:"Art", title:"L12 · Finish the Eye · Dream It", file:"6 Art/Lesson12_FinishTheEye_DreamIt_v5.html", tag:"lesson", added:"2026-07-06"},
-  {subject:"Art", title:"L13 · The Final Idea",        file:"6 Art/Lesson13_TheFinalIdea_v5.html",          tag:"lesson", added:"2026-07-06"},
-  {subject:"Art", title:"L14 · The Test Lab",          file:"6 Art/Lesson14_TheTestLab_v5.html",            tag:"lesson", added:"2026-07-06"},
-  {subject:"Art", title:"L15 · Mini Masterpiece",      file:"6 Art/Lesson15_MiniMasterpiece_v5.html",       tag:"lesson", added:"2026-07-06"},
-  {subject:"Art", title:"L16 · Art Exquistie Corpse",  file:"6 Art/Art_Exquisite_Corpse_STAGE_COUNTDOWNS_FINAL.html",       tag:"lesson", added:"2026-07-13"},
-  {subject:"Art", title:"L17 · Art Miro Mural",        file:"6 Art/Art_Miro_Mural_STAGE_COUNTDOWNS_FINAL.html",       tag:"lesson", added:"2026-07-13"},
-
-  /* ================================================================
-     FEATURE ZONE GAMES (WITH DESCRIPTIONS)
-     ================================================================ */
-  {subject:"Games", title:"🎮 Trail Runner",         file:"Games/Trail_Runner.html",         tag:"game", added:"2026-06-25", desc:"A fast-paced reflex runner navigating procedural terrain hazards. Ideal for a quick motor-skills reset."},
-  {subject:"Games", title:"🧱 VoxelCraft",           file:"Games/voxelcraft.html",           tag:"game", added:"2026-06-25", desc:"A localized 3D sandbox block builder exploring spatial coordinates, geometry, and structural placement."},
-  {subject:"Games", title:"🌀 Vortex",               file:"Games/Vortex.html",               tag:"game", added:"2026-06-26", desc:"A high-intensity tunnel-dodging experience testing rapid peripheral processing and predictive tracking accuracy."},
-  {subject:"Games", title:"🌐 Globe Snake",          file:"Games/Globe_Snake (1).html",      tag:"game", added:"2026-06-26", desc:"A unique 3D spherical twist on classic mechanics, mapping directional inputs onto non-Euclidean global surfaces."},
-  {subject:"Games", title:"⚡ Neon Snake Overdrive",  file:"Games/Neon_Snake_Overdrive.html", tag:"game", added:"2026-06-26", desc:"An optimized, high-performance vector snake arena calibrated for fluid mobile and desktop response pathways."},
-  {subject:"Games", title:"🛡️ Neon Siege",           file:"Games/Neon_Siege.html",           tag:"game", added:"2026-07-01", desc:"A localized matrix defense challenge requiring calculated tactical placement and rapid prioritization under pressure."},
-  {subject:"Games", title:"🌸 Neon Garden",           file:"Games/Neon_Garden.html",          tag:"game", added:"2026-07-02", desc:"An ambient, low-arousal pattern-generation loop designed for focus conditioning and cognitive pacing."},
-  {subject:"Games", title:"🛰️ Orbital",              file:"Games/Orbital.html",              tag:"game", added:"2026-07-01", desc:"A physics-based gravitational simulation mapping kinetic momentum, planetary vectors, and circular mechanics."},
-  {subject:"Games", title:"🏁 Grid Chase",            file:"Games/Grid_Chase.html",           tag:"game", added:"2026-07-02", desc:"A high-speed coordinate grid maze testing rapid directional corrections and immediate geometric mapping layout transitions."},
-  {subject:"Games", title:"🔺 Prism",                 file:"Games/Prism.html",                tag:"game", added:"2026-07-02", desc:"A perspective-shifting puzzle manipulating light angles, alignment paths, and spatial refraction lines."},
-  {subject:"Games", title:"🪝 Grapple",               file:"Games/Grapple.html",              tag:"game", added:"2026-07-02", desc:"A momentum-centric physics playground focusing on vector hook connections and conservation of kinetic energy."},
-  {subject:"Games", title:"⚪ Marble",                file:"Games/Marble.html",               tag:"game", added:"2026-07-02", desc:"A tilt-and-gravity simulator testing meticulous physical adjustment, balancing thresholds, and micro-coordination."},
-  {subject:"Games", title:"⚪ Slipstream",            file:"Games/Slipstream.html",           tag:"game", added:"2026-07-03", desc:"A streamlined rhythmic velocity test tracking uninterrupted forward momentum and rapid gap synchronization."},
-  {subject:"Games", title:"⚪ Slipstream - GP",         file:"Games/Slipstream_GP.html",    tag:"game", added:"2026-07-07", desc:"An advanced grand-prix variant of the velocity engine introducing complex velocity paths and tracking scales."},
-  {subject:"Games", title:"🔨 Wrecking Crew",         file:"Games/Wrecking_Crew.html",        tag:"game", added:"2026-07-04", desc:"A destructive physics environment evaluating structural integrity, mass distributions, and center-of-gravity impacts."},
-  {subject:"Games", title:"✨ Lumins",                file:"Games/Lumins.html",               tag:"game", added:"2026-07-07", desc:"A Lemmings-style rescue puzzle: assign roles to your Lumins to dig, build and bridge them safely to the exit — complete with a full level editor."},
-  {subject:"Games", title:"📺 Static",                file:"Games/Static.html",               tag:"game", added:"2026-07-07", desc:"The newest addition to the arcade — a fresh reflex-and-focus challenge for quick brain-break sessions."},
-  {subject:"Games", title:"👻 One Guy",               file:"Games/OneGuy.html",               tag:"game", added:"2026-07-07", desc:"A solo ghost-runner: each attempt races the recorded 'ghost' of the last run on this device, so pupils compete against their own past best rather than each other. Shareable ghost codes let a run be passed on."}
-];
-
+async function loadCatalogue(){
+  const response = await fetch('resources.json', { cache:'no-store' });
+  if (!response.ok) throw new Error('Could not load resources.json (HTTP ' + response.status + ')');
+  const data = await response.json();
+  const allowed = new Set(['lesson','game','revision','pupil','teacher','support']);
+  const ids = new Set();
+  const errors = [];
+  if (!Array.isArray(data)) errors.push('Catalogue root must be an array.');
+  (Array.isArray(data) ? data : []).forEach((r,i) => {
+    const at = 'Entry ' + (i + 1);
+    ['id','subject','title','file','type','family'].forEach(k => { if (!r[k] || typeof r[k] !== 'string') errors.push(at + ': invalid ' + k); });
+    if (!allowed.has(r.type)) errors.push(at + ': unsupported type "' + r.type + '"');
+    if (ids.has(r.id)) errors.push(at + ': duplicate id "' + r.id + '"');
+    ids.add(r.id);
+    if (!Array.isArray(r.keywords)) errors.push(at + ': keywords must be an array');
+  });
+  if (errors.length) throw new Error('Catalogue validation failed:\n' + errors.slice(0,12).join('\n'));
+  LESSONS = data.map(r => ({ ...r, tag:r.type }));
+}
 
 /* ================================================================
    PALETTE, ICONS, HELPERS
@@ -1130,7 +1087,13 @@ function closePreview(){
 }
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const state = { type:'all', q:'', favsOnly:false };
+const state = { type:'all', q:'', favsOnly:false, mode:'teacher' };
+const PIN_KEY = 'progressLessonHubTodayPins_v1';
+const MODE_KEY = 'progressLessonHubMode_v1';
+function loadPins(){ try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY)) || []); } catch(e){ return new Set(); } }
+const pins = loadPins();
+function savePins(){ try { localStorage.setItem(PIN_KEY, JSON.stringify([...pins])); } catch(e){} }
+function modeAllows(l){ return state.mode === 'teacher' || l.tag !== 'teacher'; }
 
 /* ---- Favourites (safe localStorage) ---- */
 const FAV_KEY = 'progressLessonHubFavs_v1';
@@ -1220,6 +1183,39 @@ function createProceduralThumb(lesson, theme, subjectIconPath, index){
   return `<svg viewBox="0 0 260 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="grad-${safeId}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${theme.g1}" /><stop offset="100%" stop-color="${theme.g2}" /></linearGradient><pattern id="pat-${safeId}" width="16" height="16" patternUnits="userSpaceOnUse">${structuralPatternMarkup}</pattern></defs><rect width="100%" height="100%" fill="url(#grad-${safeId})" /><rect width="100%" height="100%" fill="url(#pat-${safeId})" /><g transform="translate(140, 10) scale(3.5)" opacity="0.08" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">${subjectIconPath}</g>${coreHeroGraphic}</svg>`;
 }
 
+
+function dashboardLink(l){
+  return `<a class="today-link" href="${encodeURI(l.file)}" target="_blank" rel="noopener noreferrer" data-open="${l.file}"><span>${l.title}</span></a>`;
+}
+function buildToday(){
+  const date = document.getElementById('todayDate');
+  if(date) date.textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const visible = LESSONS.filter(modeAllows);
+  const pinned = visible.filter(l => pins.has(l.file));
+  const recent = loadRecent().map(lessonByFile).filter(Boolean).filter(modeAllows).slice(0,3);
+  const live = visible.filter(l => l.subject === 'Live Lessons').slice(0,1);
+  const fresh = visible.filter(isNew).sort((a,b)=>new Date(b.added||0)-new Date(a.added||0)).slice(0,2);
+  const put = (id, list, empty) => { const el=document.getElementById(id); if(el) el.innerHTML=list.length ? list.map(dashboardLink).join('') : `<p class="today-empty">${empty}</p>`; };
+  put('todayPinned', pinned.slice(0,4), 'Pin resources from any card to prepare today’s lesson tray.');
+  put('todayRecent', recent, 'Recently opened resources will appear here.');
+  put('todayQuick', [...live,...fresh].slice(0,3), 'New and live resources will appear here.');
+}
+function buildFamilies(){
+  const host=document.getElementById('familyGrid'); if(!host) return;
+  const map=new Map();
+  LESSONS.filter(modeAllows).forEach(l => { const key=l.subject+'||'+l.family; if(!map.has(key)) map.set(key,[]); map.get(key).push(l); });
+  const groups=[...map.values()].filter(g=>g.length>1).sort((a,b)=>a[0].subject.localeCompare(b[0].subject)||a[0].family.localeCompare(b[0].family));
+  host.innerHTML=groups.length ? groups.map(g=>`<article class="family-card"><div class="family-title">${g[0].family}</div><div class="family-sub">${g[0].subject} · ${g.length} connected resources</div><div class="family-actions">${g.map(l=>`<a href="${encodeURI(l.file)}" target="_blank" rel="noopener noreferrer" data-open="${l.file}">${typeLabel(l.tag)} · ${l.title}</a>`).join('')}</div></article>`).join('') : '<p class="today-empty">No multi-resource families are available in this mode.</p>';
+}
+function applyMode(mode){
+  state.mode = mode === 'pupil' ? 'pupil' : 'teacher';
+  document.body.classList.toggle('mode-pupil', state.mode === 'pupil');
+  document.body.classList.toggle('mode-teacher', state.mode === 'teacher');
+  document.querySelectorAll('.mode-btn').forEach(b=>{ const on=b.dataset.mode===state.mode; b.classList.toggle('active',on); b.setAttribute('aria-pressed',String(on)); });
+  try { localStorage.setItem(MODE_KEY,state.mode); } catch(e){}
+  buildToday(); buildFamilies(); applyFilter();
+}
+
 /* ================================================================
    BUILD
    ================================================================ */
@@ -1296,7 +1292,7 @@ function build(){
       card.dataset.file = l.file;
       card.dataset.title = l.title;
       card.dataset.colour = theme.c;
-      card.dataset.search = (sub + ' ' + l.title + ' ' + l.file + ' ' + (l.tag || '')).toLowerCase();
+      card.dataset.search = (sub + ' ' + l.title + ' ' + l.file + ' ' + (l.tag || '') + ' ' + (l.family || '') + ' ' + (l.keywords || []).join(' ')).toLowerCase();
       card.style.setProperty('--tc', tagColour(l.tag));
 
       const constructedThumb = createProceduralThumb(l, theme, subjectPath, (i * 100) + j);
@@ -1307,6 +1303,7 @@ function build(){
         <div class="tile-thumb">
           ${constructedThumb}
           ${newBadge}
+          <button class="pin-btn ${pins.has(l.file) ? 'is-pinned' : ''}" type="button" aria-pressed="${pins.has(l.file)}" aria-label="Pin ${l.title} for today" title="Pin for today"><svg viewBox="0 0 24 24"><path d="M14 4l6 6-3 1-4 4-1 5-2-2-2-2 5-1 4-4 1-3zM5 19l4-4"/></svg></button>
           <button class="fav-btn ${fav ? 'is-fav' : ''}" type="button" aria-pressed="${fav}" aria-label="Toggle favourite for ${l.title}" title="Favourite">
             <svg viewBox="0 0 24 24">${STAR_ICON}</svg>
           </button>
@@ -1339,6 +1336,8 @@ function build(){
 
   /* ---- delegated clicks: favourite + badge-as-filter ---- */
   const cardClick = e => {
+    const pinBtn = e.target.closest('.pin-btn');
+    if (pinBtn){ e.preventDefault(); e.stopPropagation(); const file=pinBtn.closest('.tile').dataset.file; if(pins.has(file)) pins.delete(file); else pins.add(file); savePins(); pinBtn.classList.toggle('is-pinned',pins.has(file)); pinBtn.setAttribute('aria-pressed',String(pins.has(file))); buildToday(); return; }
     const favBtn = e.target.closest('.fav-btn');
     if (favBtn){ e.preventDefault(); e.stopPropagation(); toggleFav(favBtn.closest('.tile').dataset.file, favBtn); return; }
     const prev = e.target.closest('[data-preview]');
@@ -1500,10 +1499,11 @@ function applyFilter(){
     const sub = sec.dataset.subject;
     let shown = 0;
     sec.querySelectorAll('.tile').forEach(t => {
+      const matchMode = state.mode === 'teacher' || t.dataset.tag !== 'teacher';
       const matchType = state.type === 'all' || t.dataset.tag === state.type;
       const matchFav  = !state.favsOnly || favs.has(t.dataset.file);
       const matchQ    = !q || t.dataset.search.includes(q);
-      const hit = matchType && matchFav && matchQ;
+      const hit = matchMode && matchType && matchFav && matchQ;
       t.style.display = hit ? '' : 'none';
       if (hit) shown++;
     });
@@ -1577,11 +1577,18 @@ function sparkleAt(x, y){
   }
 }
 
+async function startApp(){
+await loadCatalogue();
 try {
   initTheme();
   renderGreeting();
   initLiveBanner();
   build();
+  let savedMode = 'teacher'; try { savedMode = localStorage.getItem(MODE_KEY) || 'teacher'; } catch(e){}
+  document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', ()=>applyMode(b.dataset.mode)));
+  applyMode(savedMode);
+  document.getElementById('todayDashboard').addEventListener('click', e => { const a=e.target.closest('[data-open]'); if(a) recordOpen(a.dataset.open); });
+  document.getElementById('familiesDashboard').addEventListener('click', e => { const a=e.target.closest('[data-open]'); if(a) recordOpen(a.dataset.open); });
   initPulse();
   const _issues = auditData();
   if (_issues.length){
@@ -1896,6 +1903,8 @@ toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce
   }
 })();
 
+}
+startApp().catch(err => { console.error(err); const host=document.getElementById('sections'); if(host) host.innerHTML=`<div class="boot-error"><strong>⚠️ The catalogue could not be loaded.</strong><code>${String(err.message||err).replace(/[<>&]/g,'')}</code></div>`; });
 </script>
 </body>
 </html>
