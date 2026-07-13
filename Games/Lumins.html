@@ -754,20 +754,28 @@ function undoIntervention(){
   G.fields=h.fields.map(function(f){return Object.assign({},f)});G.skills=Object.assign({},h.skills);G.interventions=h.interventions;G.terrainDirty=true;G.preview=null;buildTools();updateUndo();tone(350,.09,"triangle",.035);tone(270,.14,"triangle",.03,.06);tip("Last intervention restored");
 }
 function updateUndo(){var b=document.getElementById("c-undo");if(b)b.disabled=!G.history.length;}
-function useWorldTool(type,c,r){
-  if((G.skills[type]|0)<=0){tip("None left");return false;}
-  var pr=environmentalPreview(type,c,r); if(!pr.ok){tip(pr.msg);return false;}
-  G.history.push(takeSnapshot(type,c,r,pr));if(G.history.length>12)G.history.shift();updateUndo();
+/* Pure grid/field mutation shared by live play AND the solver — keeps them in lockstep. */
+function applyToolCore(type,c,r,pr){
   if(type==="block")G.fields.push({type:"block",c:c,r:r,w:0,h:0,t:TICKHZ*14});
   else if(type==="float")G.fields.push({type:"float",c:c,r:r-2,w:0,h:4,t:TICKHZ*14});
   else if(type==="dig"||type==="bash"){for(var i=0;i<pr.cells.length;i++)setEmpty(pr.cells[i][0],pr.cells[i][1]);}
   else if(type==="build"){for(var j=0;j<pr.cells.length;j++)setTerrain(pr.cells[j][0],pr.cells[j][1]);}
+}
+function useWorldTool(type,c,r){
+  if((G.skills[type]|0)<=0){tip("None left");return false;}
+  var pr=environmentalPreview(type,c,r); if(!pr.ok){tip(pr.msg);return false;}
+  G.history.push(takeSnapshot(type,c,r,pr));if(G.history.length>12)G.history.shift();updateUndo();
+  applyToolCore(type,c,r,pr);
   spendTool(type); puff(c,r,skillCol(type),12); G.preview=null; return true;
 }
-/* Kept for the level-maker's conservative solver API. Live play never turns a lumin into a tool. */
-function assignable(L,type){return false;}
+/* Solver-side tool use: same preview + core as live play, no UI/sound/history. */
+function simUseTool(type,c,r){
+  if((G.skills[type]|0)<=0)return false;
+  var pr=environmentalPreview(type,c,r); if(!pr.ok)return false;
+  applyToolCore(type,c,r,pr); G.skills[type]--; G.simTools=(G.simTools|0)+1; return true;
+}
 function applyPending(L){}
-function assign(L,type){return false;}
+function assignable(L,type){return false;}
 function skillCol(id){ for(var i=0;i<SKILLDEF.length;i++) if(SKILLDEF[i].id===id) return SKILLDEF[i].col; return "#fff"; }
 
 /* ============================ SIM STEP ============================ */
@@ -1401,13 +1409,15 @@ document.getElementById("c-pause").onclick=function(){ G.paused=!G.paused; this.
 document.getElementById("c-speed").onclick=function(){G.speed=G.speed===0.75?1:(G.speed===1?1.5:0.75);this.textContent=G.speed===0.75?"▶ 0.75×":G.speed===1.5?"▶ 1.5×":"▶ 1×";tone(430+G.speed*160,.08,"square",.025);};
 document.getElementById("c-undo").onclick=undoIntervention;
 document.getElementById("c-restart").onclick=function(){ if(G.lvl<0){ loadDef(G.def); } else { loadLevel(G.lvl); } showIntro(); };
-document.getElementById("c-end").onclick=function(){ if(G.state==="play"){ G.state="over"; noteResult(); showResult(G.saved>=G.def.target); } };
+document.getElementById("c-end").onclick=function(){ if(G.state==="play") endLevel(); };
 document.getElementById("c-lvls").onclick=function(){ if(G.mode!=="edit") showLevelSelect(); };
 document.getElementById("c-daily").onclick=function(){ if(G.mode==="edit") return;
   G.challenge=null; loadDef(makeDaily(todayStr())); showIntro(); };
 document.getElementById("c-sound").onclick=function(){ G.sound=!G.sound; this.classList.toggle("act",G.sound); this.textContent=G.sound?"🔊 SOUND":"🔈 SOUND"; if(G.sound && !AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } };
 document.getElementById("c-calm").onclick=function(){ G.calm=!G.calm; this.classList.toggle("act",G.calm); };
 document.addEventListener("keydown", function(e){
+  var tg=e.target&&e.target.tagName;
+  if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT")return;
   if(e.key>="1"&&e.key<="5"){ var sd=SKILLDEF[+e.key-1]; if(sd&&(G.skills[sd.id]|0)>0){ G.armed=(G.armed===sd.id?null:sd.id); buildTools(); } }
   else if(e.key===" "){ e.preventDefault(); document.getElementById("c-pause").click(); }
   else if(e.key==="r"||e.key==="R"){ document.getElementById("c-restart").click(); }
@@ -1637,6 +1647,8 @@ function decodeLevel(str){
   var d={cols:cols, rows:rows, entrance:{c:b[3],r:b[4]}, exit:{c:b[5],r:b[6]},
     total:b[7], target:b[8], spawn:b[9],
     skills:{block:b[10],dig:b[11],bash:b[12],build:b[13],float:b[14]}};
+  if(d.entrance.c>=cols||d.entrance.r>=rows||d.exit.c>=cols||d.exit.r>=rows) throw "bounds";
+  if(!d.total||d.total>30||!d.target||d.target>d.total) throw "counts";
   var grid=new Uint8Array(cols*rows), gi=0, k=15;
   while(k+1<b.length && gi<grid.length){ var v=b[k++], cnt=b[k++]; for(var q=0;q<cnt&&gi<grid.length;q++) grid[gi++]=v; }
   if(gi!==grid.length) throw "size";
@@ -1726,8 +1738,8 @@ function buildEditorUI(){
   document.getElementById("ed-test").onclick=testEditor;
   document.getElementById("ed-check").onclick=function(){ var r=simulate(defFromED());
     document.getElementById("ed-msg").textContent = r.solved
-      ? ("✓ Looks solvable — auto-solver saved "+r.saved+"/"+ED.target+".")
-      : ("⚠ Auto-solver only saved "+r.saved+"/"+ED.target+". Could be tough or impossible — check there's a path from Start to Exit."); };
+      ? ("✓ Looks solvable — auto-solver saved "+r.saved+"/"+ED.target+" using "+r.tools+" tool"+(r.tools===1?"":"s")+".")
+      : ("⚠ Auto-solver only saved "+r.saved+"/"+ED.target+" (used "+r.tools+" tool"+(r.tools===1?"":"s")+"). Could be tough or impossible — check there's a path from Start to Exit, and enough tools for every hazard."); };
   document.getElementById("ed-share-btn").onclick=function(){ shareLevel(defFromED()); };
   document.getElementById("ed-clear").onclick=function(){ ED.grid.fill(0); G.terrainDirty=true;
     document.getElementById("ed-msg").textContent="Cleared — paint a floor so lumins have somewhere to stand."; };
@@ -1753,31 +1765,38 @@ function drawEditorOverlay(){
 }
 /* in-browser solvability check (reuses the real engine on a temp state) */
 function simulate(d){
-  var keys=["grid","cols","rows","lumins","parts","saved","out","spawned","dead","entrance","exit","skills","def","state","spawnT","armed","sound","mode"];
+  var keys=["grid","cols","rows","lumins","parts","saved","out","spawned","dead","entrance","exit","skills","def","state","spawnT","armed","sound","mode","crumbs","fields","simTools"];
   var snap={}; for(var q=0;q<keys.length;q++) snap[keys[q]]=G[keys[q]];
   G.cols=d.cols; G.rows=d.rows; G.grid=new Uint8Array(d.grid);
   G.entrance={c:d.entrance.c,r:d.entrance.r}; G.exit={c:d.exit.c,r:d.exit.r};
   G.lumins=[]; G.parts=[]; G.saved=0; G.out=0; G.spawned=0; G.dead=0; G.spawnT=0; G.armed=null;
+  G.crumbs={}; G.fields=[]; G.simTools=0;
   G.skills={}; for(var s in d.skills) G.skills[s]=d.skills[s];
   G.def={total:d.total,target:d.target,spawn:d.spawn,start:d.start||1}; G.state="play"; G.sound=false; G.mode="sim";
   for(var t=0;t<12000;t++){
+    for(var fi=G.fields.length-1;fi>=0;fi--){if(--G.fields[fi].t<=0)G.fields.splice(fi,1);}
     if(G.spawned<G.def.total){ G.spawnT++; if(G.spawnT>=(G.def.spawn||SPAWNINT)){ G.spawnT=0; spawn(); } }
     for(var i=0;i<G.lumins.length;i++) stepLumin(G.lumins[i]);
+    /* soft stone crumbles in the sim exactly as in live play */
+    if(G.crumbs){ for(var ck in G.crumbs){ if(--G.crumbs[ck]<=0){ var ci2=+ck;
+      if(G.grid[ci2]===3){ G.grid[ci2]=0; G.terrainDirty=true; }
+      delete G.crumbs[ck]; } } }
+    /* guardian AI: use real world tools via the same preview+core path as a player */
     for(var j=0;j<G.lumins.length;j++){ var L=G.lumins[j]; if(L.state!=="walk") continue;
       var c2=L.c+L.dir;
       var gap=!solid(c2,L.r+1)&&!solid(c2,L.r);
       var big=gap&&!solid(c2,L.r+2)&&!solid(c2,L.r+3)&&!solid(c2,L.r+4)&&!solid(c2,L.r+5);
       var wallT=cellType(c2,L.r)===1&&solid(c2,L.r-1);
       var steelW=cellType(c2,L.r)===2&&solid(c2,L.r-1);
-      if(big&&(G.skills.float|0)>0) assign(L,"float");
-      else if(gap&&(G.skills.build|0)>0) assign(L,"build");
-      else if(wallT&&(G.skills.bash|0)>0) assign(L,"bash");
-      else if(steelW&&cellType(L.c,L.r+1)===1&&(G.skills.dig|0)>0) assign(L,"dig");
+      if(gap&&(G.skills.build|0)>0) simUseTool("build",L.c,L.r);
+      else if(big&&(G.skills.float|0)>0&&!fieldAt("float",c2,L.r)) simUseTool("float",c2,L.r);
+      else if(wallT&&(G.skills.bash|0)>0) simUseTool("bash",c2,L.r);
+      else if(steelW&&cellType(L.c,L.r+1)===1&&(G.skills.dig|0)>0) simUseTool("dig",L.c,L.r+1);
     }
     var active=0; for(var k=0;k<G.lumins.length;k++){ var st=G.lumins[k].state; if(st!=="exit"&&st!=="dead") active++; }
     if(G.spawned>=G.def.total && active===0) break;
   }
-  var res={solved:G.saved>=d.target, saved:G.saved};
+  var res={solved:G.saved>=d.target, saved:G.saved, tools:G.simTools|0};
   for(var q2=0;q2<keys.length;q2++) G[keys[q2]]=snap[keys[q2]];
   G.terrainDirty=true;
   return res;
@@ -1791,7 +1810,7 @@ window.addEventListener("pointerup", function(){ ED.painting=false; });
 document.getElementById("c-edit").onclick=function(){ if(!ED.grid) initED(); enterEditor(); };
 
 /* expose for headless tests */
-window.__LUMINS={G:G,step:step,assign:assign,loadLevel:loadLevel,loadDef:loadDef,defFromMap:defFromMap,defFromED:defFromED,defToED:defToED,ED:ED,encodeLevel:encodeLevel,decodeLevel:decodeLevel,simulate:simulate,enterEditor:enterEditor,spawn:spawn,render:render,drawMotes:drawMotes,
+window.__LUMINS={G:G,step:step,simUseTool:simUseTool,loadLevel:loadLevel,loadDef:loadDef,defFromMap:defFromMap,defFromED:defFromED,defToED:defToED,ED:ED,encodeLevel:encodeLevel,decodeLevel:decodeLevel,simulate:simulate,enterEditor:enterEditor,spawn:spawn,render:render,drawMotes:drawMotes,
   solid:solid,cellType:cellType,LEVELS:LEVELS,stepLumin:stepLumin,makeDaily:makeDaily,genDaily:genDaily,challengeUrl:challengeUrl,shareText:shareText};
 })();
 </script>
