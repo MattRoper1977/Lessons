@@ -118,11 +118,60 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
 .t-card .who{font-family:'Orbitron';font-weight:900;letter-spacing:.3em;font-size:clamp(20px,5.4vw,40px);color:#e2e8f0;text-shadow:0 0 18px rgba(0,212,255,.55)}
 .t-card .game{font-family:'Orbitron';font-weight:900;letter-spacing:.12em;font-size:clamp(30px,9vw,76px);color:#ffaa00;text-shadow:0 0 8px #fff3,0 0 30px rgba(255,170,0,.7)}
 /* TITLE-CSS-END */
+
+/* ===== PHASE 1 + 2 — IMPACT, MATERIALS & STRUCTURAL BEHAVIOUR ===== */
+#struct-hud{position:fixed;left:14px;bottom:16px;z-index:18;width:min(300px,58vw);padding:10px 12px;border:1px solid #32405c;border-radius:11px;background:#090e1ccc;backdrop-filter:blur(7px);display:none;pointer-events:none}#struct-hud.show{display:block}.sh-row{display:flex;justify-content:space-between;font:700 9px var(--mono);letter-spacing:.1em;color:#aab5cc}.sh-row b{color:#ffd36a}.sh-bar{height:7px;background:#151b2b;border-radius:6px;overflow:hidden;margin:6px 0}.sh-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#41d48b,#ffd35a,#ff6b38,#ff244f);transition:width .18s}.sh-note{font:9px var(--mono);color:#7f8aa4}.material-key{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}.material-key span{font:700 7px var(--mono);padding:2px 5px;border:1px solid #39445a;border-radius:7px}.mat-brick{color:#e38b64}.mat-concrete{color:#b7c2d5}.mat-steel{color:#69c7e8}.mat-glass{color:#91ddff}
+#impact-caption{position:fixed;left:50%;top:66px;z-index:23;transform:translate(-50%,-10px);opacity:0;padding:7px 12px;border-radius:9px;background:#090e1ddd;border:1px solid #43526d;font:700 10px var(--mono);letter-spacing:.12em;pointer-events:none;transition:.2s}#impact-caption.show{opacity:1;transform:translate(-50%,0)}
+.damage-flash{animation:damagePulse .38s ease}@keyframes damagePulse{50%{filter:brightness(1.8) saturate(1.4)}}
+
+
+/* ===== PHASES 3–5 — TOOLS, PRECISION CONTRACTS & OPERATOR PROGRESSION ===== */
+#objective-hud{position:fixed;right:14px;top:58px;z-index:18;width:min(310px,48vw);padding:10px 12px;border:1px solid #3b4660;border-radius:11px;background:#090e1cdd;backdrop-filter:blur(7px);display:none;pointer-events:none}#objective-hud.show{display:block}.obj-title{font:700 10px var(--mono);letter-spacing:.12em;color:#ffd36a}.obj-text{font-size:11px;color:#b6c0d4;line-height:1.4;margin-top:4px}.obj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.obj-cell{padding:5px;border:1px solid #29344b;border-radius:7px;text-align:center}.obj-cell b{display:block;font:700 8px var(--mono);color:#7f8ba6}.obj-cell strong{font-size:14px;color:#e7ebf4}.obj-cell.good strong{color:#4ade9b}.obj-cell.bad strong{color:#ff6d72}
+.precision-chip{font:700 8px var(--mono);padding:3px 6px;border:1px solid #52617b;border-radius:8px;color:#a9b6cf}.protected-zone{position:fixed;left:50%;top:105px;transform:translateX(-50%);z-index:19;padding:6px 10px;border:1px solid #54d8ff;border-radius:9px;background:#07131ddd;color:#bfeeff;font:700 9px var(--mono);letter-spacing:.1em;display:none}.protected-zone.show{display:block}.career-bars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}.career-bar{padding:7px 4px;background:#101526;border:1px solid #29344a;border-radius:7px;text-align:center}.career-bar b{display:block;font:7px var(--mono);color:#8290a9}.career-bar strong{color:#ffd36a}.tool.locked{opacity:.35;filter:grayscale(1)}
+
+
+/* ===== PHASES 6–9 — ADAPTATION, CAMPAIGN, CREATION & FINAL REFINEMENT ===== */
+.advanced-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}.mini-btn{padding:8px 11px;border:1px solid #34415a;border-radius:8px;background:#101628;color:#c6d1e5;font:700 10px var(--mono);cursor:pointer}.mini-btn:hover{border-color:#ffaa00;color:#ffaa00}.mode-badge{font:700 9px var(--mono);padding:4px 7px;border:1px solid #5a6781;border-radius:9px;color:#b3c5df}.skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}.skill{padding:6px 3px;background:#0d1323;border:1px solid #26334b;border-radius:7px;text-align:center}.skill b{display:block;font:7px var(--mono);color:#8290a8}.skill strong{font-size:14px;color:#ffd36a}
+#adapt-nudge{position:fixed;right:14px;bottom:18px;z-index:28;width:min(330px,70vw);padding:11px 13px;border:1px solid #8d70cf;border-radius:11px;background:#0b0e1ddd;box-shadow:0 12px 35px #0009;transform:translateX(120%);transition:.3s}.show-nudge{transform:none!important}#adapt-nudge b{color:#d8c3ff;font:700 10px var(--mono)}#adapt-nudge small{color:#aeb8cb}.tier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tier{padding:12px;border:1px solid #344056;border-radius:9px;background:#111626;color:#c9d2e3;text-align:left}.tier.sel{border-color:#ffaa00;background:#2b2010}.tier b{display:block;color:#ffaa00;font-family:var(--mono)}.tier small{color:#8f99ad}
+.lab-panel{max-width:720px}.lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.lab-card{padding:12px;border:1px solid #344159;border-radius:10px;background:#101627;text-align:left;color:#dbe4f2}.lab-card b{display:block;color:#ffaa00;font-family:var(--mono)}.builder-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.builder-grid label{font:700 9px var(--mono);color:#97a4bb}.builder-grid input,.builder-grid select{width:100%;margin-top:4px;padding:8px;background:#090e1c;color:#e5ebf5;border:1px solid #35415a;border-radius:7px}.share-code{width:100%;min-height:80px;background:#090e1c;color:#a9dafa;border:1px solid #34415a;border-radius:8px;padding:9px;font:9px var(--mono)}
+body.wc-large .contract,body.wc-large .sub{font-size:16px}body.wc-contrast{filter:contrast(1.18)}body.wc-contrast .panel{border:2px solid #fff}body.wc-reducefx #slowmo-tag,body.wc-reducefx #impact-caption{display:none!important}.chapter{font:700 9px var(--mono);letter-spacing:.16em;color:#ff5e97;margin:12px 0 5px;text-align:left}.access-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.access-opt{padding:10px;border:1px solid #35415a;border-radius:8px;background:#101628;color:#d4dceb;text-align:left}.access-opt.on{border-color:#ffaa00;background:#2b2010}.access-opt b{display:block}.access-opt small{color:#8e99ac}.mastery-card{padding:10px;background:#0e1424;border:1px solid #29374f;border-radius:9px;margin-top:9px}.mastery-card h3{margin:0;color:#ffd36a;font-family:var(--mono)}
+@media(max-width:620px){.skill-grid{grid-template-columns:repeat(3,1fr)}.tier-grid,.lab-grid,.builder-grid,.access-grid{grid-template-columns:1fr}}
+
+
+/* ===== VISUAL PHASE A–C — SPECTACLE, CINEMATIC REPLAY & ENVIRONMENTS ===== */
+#cinema-bars:before,#cinema-bars:after{content:"";position:fixed;left:0;right:0;height:0;background:#02040a;z-index:34;transition:height .35s;pointer-events:none}#cinema-bars:before{top:0}#cinema-bars:after{bottom:0}body.director #cinema-bars:before,body.director #cinema-bars:after{height:7vh}#director-card{position:fixed;left:18px;top:18px;z-index:35;padding:8px 12px;border-left:3px solid #ffaa00;background:#070b15d9;color:#dce6f6;font:700 10px var(--mono);letter-spacing:.12em;opacity:0;transform:translateY(-12px);transition:.25s;pointer-events:none}body.director #director-card{opacity:1;transform:none}.visual-grade{position:fixed;inset:0;z-index:8;pointer-events:none;mix-blend-mode:screen;opacity:.24}.grade-docks{background:linear-gradient(180deg,#c46a2418,transparent 45%,#1d91a51a)}.grade-city{background:radial-gradient(circle at 70% 16%,#ffd88a25,transparent 34%),linear-gradient(#161b3822,transparent)}.grade-coast{background:linear-gradient(115deg,#345b7528,transparent 52%),linear-gradient(0deg,#4cb7c51a,transparent 35%)}.grade-night{background:radial-gradient(circle at 20% 18%,#6a4cff24,transparent 30%),linear-gradient(#05071944,transparent)}
+#weather-label{position:fixed;right:16px;top:16px;z-index:20;font:700 9px var(--mono);letter-spacing:.12em;color:#9fb2cb;padding:5px 8px;border:1px solid #34445c;border-radius:8px;background:#07101bcc;display:none}#weather-label.show{display:block}.signature-ribbon{position:absolute;left:50%;top:18%;transform:translateX(-50%) rotate(-2deg);z-index:3;padding:8px 18px;border:2px solid #ffd36a;color:#ffd36a;font:900 15px var(--mono);letter-spacing:.18em;background:#190f04cc;box-shadow:0 0 25px #ffb13b44;animation:ribbonIn .45s cubic-bezier(.2,1.25,.4,1)}@keyframes ribbonIn{from{opacity:0;transform:translateX(-50%) scale(1.45) rotate(-8deg)}}
+
+
+/* ===== PHASE 10 — STRUCTURAL SYMPHONY & COLLAPSE MEMORY ===== */
+#voice-hud{position:fixed;left:14px;bottom:132px;z-index:19;width:min(300px,58vw);padding:9px 11px;border:1px solid #46577a;border-radius:10px;background:#08101ddd;backdrop-filter:blur(7px);display:none;pointer-events:none}#voice-hud.show{display:block}.voice-head{display:flex;justify-content:space-between;align-items:center;font:700 9px var(--mono);letter-spacing:.11em;color:#a7b7d4}.voice-head b{color:#d9c2ff}.voice-wave{height:34px;display:flex;align-items:center;gap:3px;margin:5px 0}.voice-wave i{flex:1;min-width:2px;height:8%;border-radius:3px;background:linear-gradient(180deg,#d9c2ff,#5da9d6);box-shadow:0 0 5px #6aa8ff55;transition:height .12s}.voice-note{font:8px var(--mono);color:#8391aa}.voice-bands{display:flex;gap:5px;margin-top:5px}.voice-bands span{flex:1;padding:3px;border:1px solid #2d3c58;border-radius:6px;text-align:center;font:700 7px var(--mono);color:#71819e}.voice-bands span.on{color:#fff;border-color:currentColor;box-shadow:0 0 9px currentColor}.vb-brick.on{color:#e28a62!important}.vb-concrete.on{color:#aebbd0!important}.vb-steel.on{color:#62c7e7!important}.vb-glass.on{color:#b9ebff!important}
+.memory-legend{position:fixed;right:14px;bottom:18px;z-index:18;padding:7px 9px;background:#080f1bd8;border:1px solid #384760;border-radius:9px;font:700 8px var(--mono);color:#8f9db5;display:none}.memory-legend.show{display:block}.memory-legend b{color:#ffaa00}.resonance-pulse{animation:resPulse .5s ease}@keyframes resPulse{50%{filter:brightness(1.8) saturate(1.6)}}
+
+
+/* ===== PHASE 11 — LIVING SITE & MACRO-COLLAPSE SPECTACLE ===== */
+#collapse-stage{position:fixed;left:50%;top:58px;transform:translateX(-50%);z-index:27;min-width:220px;padding:8px 13px;border:1px solid #566985;border-radius:10px;background:#070c17dd;text-align:center;opacity:0;transition:.22s;pointer-events:none}#collapse-stage.show{opacity:1}.cs-kicker{font:700 7px var(--mono);letter-spacing:.2em;color:#7f90ab}.cs-name{font:900 11px var(--mono);letter-spacing:.12em;color:#ffd36a;margin-top:2px}.cs-track{display:flex;gap:3px;margin-top:6px}.cs-track i{height:3px;flex:1;background:#273146;border-radius:3px}.cs-track i.on{background:#ffaa00;box-shadow:0 0 8px #ff9d3b}.site-alarm{position:fixed;inset:0;z-index:7;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,transparent 45%,rgba(255,30,30,.15));transition:opacity .18s}.site-alarm.on{opacity:1;animation:alarmPulse 1.1s ease-in-out infinite}@keyframes alarmPulse{50%{opacity:.3}}.debris-vignette{position:fixed;inset:0;z-index:9;pointer-events:none;box-shadow:inset 0 0 100px rgba(7,7,8,.35);opacity:0;transition:.4s}.debris-vignette.on{opacity:1}.interior-tag{position:fixed;right:14px;top:47px;z-index:19;font:700 8px var(--mono);color:#ffd990;letter-spacing:.12em;opacity:0;transition:.25s}.interior-tag.show{opacity:1}
+
+
+/* ===== PHASES 12–15 — DIRECTOR'S CUT, SIGNATURES, GHOSTS & MASTERY ===== */
+#replay-console{position:fixed;left:50%;bottom:72px;transform:translateX(-50%);z-index:46;width:min(720px,92vw);padding:9px 12px;background:#070b14e8;border:1px solid #43516c;border-radius:11px;display:none}body.director #replay-console{display:block}.replay-head{display:flex;align-items:center;gap:8px;font:700 9px var(--mono);color:#a8b4c9}.replay-head b{color:#ffd36a}.replay-head input{flex:1}.replay-tools{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:7px}.replay-tools button{padding:5px 8px;border:1px solid #344058;border-radius:7px;background:#111726;color:#cbd5e5;font:700 8px var(--mono)}.replay-tools button.on{border-color:#ffaa00;color:#ffaa00}.ghost-path{position:fixed;left:50%;top:112px;transform:translateX(-50%);z-index:22;padding:5px 9px;border:1px solid #55d6ff;border-radius:8px;background:#07131ddd;color:#bdeeff;font:700 8px var(--mono);display:none}.ghost-path.show{display:block}
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.modifier{padding:10px;border:1px solid #344159;border-radius:9px;background:#101627;color:#d8e0ee;text-align:left}.modifier.on{border-color:#ff5e97;background:#28101d}.modifier b{display:block;color:#ff94bb;font:700 9px var(--mono)}.modifier small{color:#8f9bae}.rival-grid{display:grid;gap:7px}.rival{padding:9px;border:1px solid #2d3a52;border-radius:8px;background:#0d1424;display:flex;justify-content:space-between;gap:8px}.rival b{color:#ffd36a}.rival small{color:#8e9bb0}.sig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.sig-card{padding:9px;border:1px solid #344159;border-radius:9px;background:#101627;text-align:center;opacity:.34}.sig-card.have{opacity:1;border-color:#ffd36a}.sig-card i{display:block;font-size:22px}.sig-card b{display:block;font:700 8px var(--mono);color:#ffd36a}.sig-card small{color:#8995aa}.mastery-tool{padding:9px;border:1px solid #303e57;border-radius:8px;background:#0d1424;margin:6px 0}.mastery-tool header{display:flex;justify-content:space-between;font:700 9px var(--mono);color:#d9e2f0}.mastery-tool header b{color:#ffaa00}.tmeter{height:5px;background:#202a3c;border-radius:5px;margin-top:5px;overflow:hidden}.tmeter i{display:block;height:100%;background:linear-gradient(90deg,#00d4ff,#ffaa00)}.benchmark{padding:7px 9px;border-left:3px solid #55d6ff;background:#0b1824;margin-top:8px;font-size:11px}.before-after{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0}.ba-card{padding:10px;border:1px solid #334058;border-radius:8px;background:#0d1321}.ba-card b{font:700 8px var(--mono);color:#9eabc0}.ba-card strong{display:block;font-size:18px;color:#ffd36a}.completion-ring{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ffaa00 var(--p),#252d3e 0);margin:auto;position:relative}.completion-ring:after{content:"";position:absolute;inset:7px;border-radius:50%;background:#101522}.completion-ring b{z-index:1;color:#fff}.compare-overlay{position:fixed;inset:0;z-index:44;pointer-events:none;display:none;background:linear-gradient(90deg,rgba(20,82,115,.11) 50%,rgba(255,128,40,.08) 50%)}body.compare .compare-overlay{display:block}
+@media(max-width:620px){.sig-grid,.mod-grid{grid-template-columns:1fr 1fr}.before-after{grid-template-columns:1fr}}
+
+
+/* ===== PHASES 16–20 — QA, ONBOARDING, CONTRACT PACK & PERFECT COLLAPSE ===== */
+.qa-chip{font:700 8px var(--mono);color:#77d7a4;border:1px solid #386f55;border-radius:8px;padding:3px 6px}.guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.guide-card{padding:11px;border:1px solid #344159;border-radius:9px;background:#101627;text-align:left;color:#d9e2ef}.guide-card b{display:block;color:#ffd36a;font:700 10px var(--mono)}.guide-card small{color:#8f9bae;line-height:1.45}.archive-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}.archive-tabs button{padding:6px 8px;border:1px solid #344159;border-radius:7px;background:#101627;color:#b7c3d6;font:700 8px var(--mono)}.archive-entry{padding:9px;border-left:3px solid #55d6ff;background:#0b1624;margin:6px 0;text-align:left}.archive-entry b{display:block;color:#c9ebff;font-family:var(--mono)}.tutorial-step{padding:13px;border:1px solid #44536e;border-radius:10px;background:#101727;line-height:1.55}.tutorial-step strong{color:#ffd36a}.tutorial-progress{display:flex;gap:4px;margin:10px 0}.tutorial-progress i{height:4px;flex:1;background:#283247}.tutorial-progress i.on{background:#ffaa00}.signature-objective{padding:7px 10px;border:1px solid #ffd36a;border-radius:9px;color:#ffd36a;background:#251a09;font:700 9px var(--mono);letter-spacing:.08em;margin:7px 0}.perfect-panel{border:1px solid #ff5e97;background:linear-gradient(145deg,#1a0e18,#0c1424);border-radius:12px;padding:14px}.perfect-panel h3{color:#ff94bb;font-family:var(--mono)}.perfect-checks{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.perfect-check{padding:7px;border:1px solid #38465f;border-radius:7px;font-size:11px}.perfect-check.good{border-color:#4ade9b;color:#baf5d6}.commit-lock{position:fixed;inset:0;z-index:29;pointer-events:none;border:0 solid #ff2d78;transition:.25s}.commit-lock.on{border-width:8px;box-shadow:inset 0 0 80px #ff2d7833}.qa-toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,100px);z-index:90;padding:10px 14px;border:1px solid #4ade9b;border-radius:9px;background:#08150f;color:#c8f8dc;font:700 9px var(--mono);transition:.3s}.qa-toast.show{transform:translate(-50%,0)}
+@media(max-width:620px){.guide-grid,.perfect-checks{grid-template-columns:1fr}}
+
+
+/* Faster-collapse feedback */
+#speed-rush{position:fixed;inset:0;z-index:10;pointer-events:none;opacity:0;transition:opacity .16s;background:repeating-radial-gradient(ellipse at center,transparent 0 9%,rgba(255,190,92,.025) 9.4% 9.8%,transparent 10.2% 14%)}
+#speed-rush.on{opacity:1}
+
 </style>
 </head>
 <body>
 <div id="vignette"></div>
-<div id="ui">
+<div id="ui"><div id="commit-lock" class="commit-lock"></div><div id="speed-rush"></div><div id="qa-toast" class="qa-toast"></div><div id="cinema-bars"></div><div class="compare-overlay"></div><div id="ghost-path" class="ghost-path">PERSONAL GHOST · PREVIOUS PLAN</div><div id="collapse-stage"><div class="cs-kicker">MACRO FAILURE SEQUENCE</div><div class="cs-name" id="cs-name">IMPACT</div><div class="cs-track" id="cs-track"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div id="site-alarm" class="site-alarm"></div><div id="debris-vignette" class="debris-vignette"></div><div id="interior-tag" class="interior-tag">INTERIOR EXPOSED · EMERGENCY LIGHTING</div><div id="director-card">DIRECTOR · ESTABLISHING</div><div id="visual-grade" class="visual-grade"></div><div id="weather-label"></div>
   <div id="hud">
     <div id="c-title"><b>CONTRACT</b><small></small></div>
     <div id="charges-left">💣💣💣</div>
@@ -138,6 +187,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <button id="detonate">DETONATE</button>
     <div id="slowmo-tag">◤ SLOW-MO ◢</div>
   </div>
+  <div id="voice-hud"><div class="voice-head"><span>STRUCTURAL VOICE</span><b id="voice-state">QUIET</b></div><div class="voice-wave" id="voice-wave">${'<i></i>'*18}</div><div class="voice-note" id="voice-note">Listen for changing resonance as load paths move.</div><div class="voice-bands"><span class="vb-brick">BRICK</span><span class="vb-concrete">CONCRETE</span><span class="vb-steel">STEEL</span><span class="vb-glass">GLASS</span></div></div><div id="memory-legend" class="memory-legend"><b>COLLAPSE MEMORY</b> · cracks darken along repeated force paths</div><div id="struct-hud"><div class="sh-row"><span>STRUCTURAL LOAD</span><b id="stress-pct">0%</b></div><div class="sh-bar"><i id="stress-fill"></i></div><div class="sh-note" id="stress-note">Surveying load paths…</div><div class="material-key"><span class="mat-brick">BRICK · BRITTLE</span><span class="mat-concrete">CONCRETE · HEAVY</span><span class="mat-steel">STEEL · DUCTILE</span><span class="mat-glass">GLASS · FRAGILE</span></div></div><div id="impact-caption"></div><div id="objective-hud"><div class="obj-title" id="obj-title">CONTRACT OBJECTIVE</div><div class="obj-text" id="obj-text"></div><div class="obj-grid"><div class="obj-cell" id="oc-safety"><b>SAFETY</b><strong>100</strong></div><div class="obj-cell" id="oc-precision"><b>PRECISION</b><strong>100</strong></div><div class="obj-cell" id="oc-cost"><b>COST</b><strong>100</strong></div></div></div><div id="protected-zone" class="protected-zone">◈ PROTECTED ASSET — KEEP CLEAR</div><div id="adapt-nudge"><b>CREW ADVISER</b><br><small id="nudge-text"></small></div>
   <div id="ball-ui">
     <div class="bbtn" id="b-left">◀</div><div class="bbtn" id="b-right">▶</div>
     <div class="bbtn" id="b-fwd">▲</div><div class="bbtn" id="b-bck">▼</div>
@@ -154,7 +204,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <div style="margin-top:10px;font-size:14px;color:#94a3b8">
       <label style="cursor:pointer;margin-right:14px"><input type="checkbox" id="opt-calm"> 🌙 Calm mode</label>
       <label style="cursor:pointer"><input type="checkbox" id="opt-sound" checked> 🔊 Sound</label>
-    </div>
+    </div><div class="advanced-row"><button class="mini-btn" id="difficulty-btn">⚙ DIFFICULTY</button><button class="mini-btn" id="lab-btn">🧪 COLLAPSE LAB</button><button class="mini-btn" id="builder-btn">▦ SITE MAKER</button><button class="mini-btn" id="mastery-btn">★ CREW PROFILE</button><button class="mini-btn" id="modifier-btn">◆ MODIFIERS</button><button class="mini-btn" id="signature-btn">◈ SIGNATURES</button><button class="mini-btn" id="training-btn">🎓 TRAINING</button><button class="mini-btn" id="archive-btn">▤ MECHANICS</button><button class="mini-btn" id="perfect-btn">◆ ONE PERFECT COLLAPSE</button></div><div id="career-skills" class="skill-grid"></div>
   </div></div>
 
   <!-- Score -->
@@ -163,7 +213,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <div id="score-stars"><span>★</span><span>★</span><span>★</span></div>
     <div id="score-lines"></div>
     <p class="sub" id="score-note"></p>
-    <button class="btn cyan" id="sc-replay">🎬 REPLAY</button>
+    <button class="btn cyan" id="sc-replay">🎬 DIRECTOR REPLAY</button><button class="btn" id="sc-signatures">◈ SIGNATURES</button><button class="btn" id="sc-rivals">⚑ RIVAL BENCHMARKS</button>
     <button class="btn" id="sc-photo">📸 SITE PHOTO</button>
     <button class="btn" id="sc-retry">RETRY</button>
     <button class="btn" id="sc-next">NEXT CONTRACT</button>
@@ -181,12 +231,14 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <button class="btn big" id="b-begin">BEGIN</button>
   </div></div>
   <!-- Replay bar -->
+  <div id="replay-console"><div class="replay-head"><b id="rp-time">00:00</b><input id="rp-scrub" type="range" min="0" max="1000" value="0"><span id="rp-speed">1.0×</span></div><div class="replay-tools"><button id="rp-pause">Ⅱ PAUSE</button><button data-spd="0.25">¼×</button><button data-spd="0.5">½×</button><button data-spd="1">1×</button><button data-spd="2">2×</button><button id="rp-cam">CAMERA: AUTO</button><button id="rp-engineer">LOAD PATHS</button><button id="rp-compare">BEFORE / AFTER</button></div></div>
   <div id="replay-bar" class="hidden" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:45;pointer-events:auto">
     <button class="btn cyan" id="rp-again">▶ AGAIN</button>
     <button class="btn" id="rp-done">DONE</button>
   </div>
 </div>
 
+<div id="utility-screen" class="screen hidden"><div class="panel lab-panel" id="utility-panel"></div></div>
 <!-- TITLE-DOM-START -->
 <div id="title-screen">
   <canvas id="title-canvas"></canvas>
@@ -224,14 +276,18 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 const CFG={
   g:-22, blockFriction:0.55, blockRest:0.04,
   blastR:8.0, blastP:230, blastCoreR:2.9, blastGlueR:11.5, cutterR:2.2, thumpP:240, thumpR:4.4,
-  mortarSlack:0.22, mortarTol:0.26, mortarForcePerKg:550, mortarForceMin:1500, mortarForceMax:12000, mortarVelTol:4.5, impactBreak:4.6, reinBlast:0.22, reinTolMul:2.5,
-  detonStagger:0.13, collapseCap:12, settleKE:1.2,
+  mortarSlack:0.22, mortarTol:0.26, mortarForcePerKg:550, mortarForceMin:1500, mortarForceMax:12000, mortarVelTol:4.5, impactBreak:4.6, stressWarn:0.58, stressCritical:0.83, fatigueRate:0.075, delayedFail:0.8, reinBlast:0.22, reinTolMul:2.5,
+  detonStagger:0.13, collapseCap:12, settleKE:1.2, collapseSpeedBoost:1.75, shardSpeedBoost:2.35, collapseAccel:15.5,
   demolishDrop:0.72, demolishMove:3.2,
   recordHz:20,
   ballMass:110, ballR:1.5, railSpeed:7, swingF:900,
   starT:[0.50,0.70,0.85],
 };
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function qaToast(t){const e=document.getElementById('qa-toast');if(!e)return;e.textContent='QA · '+t;e.classList.add('show');clearTimeout(state._qaT);state._qaT=setTimeout(()=>e.classList.remove('show'),3200)}
+function safeNum(v,d=0){return Number.isFinite(v)?v:d}
+function validateContract(c){const issues=[];if(!c||!GEN[c.gen])issues.push('unknown structure generator');if(c.tool!=='ball'&&(!Number.isFinite(c.charges)||c.charges<1))issues.push('invalid intervention allowance');if(c.budget!==undefined&&c.budget<20)issues.push('budget too low');if(c.signatureTarget&&!SIGNATURES?.[c.signatureTarget])issues.push('unknown signature target');return issues}
+
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const REDUCED=(typeof matchMedia==='function')&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -245,7 +301,16 @@ const CONTRACTS=[
   {id:4,ico:'🏢',name:'HIGH RISER',     desc:'Ten-floor tower · 4 charges',            gen:'tower',   arg:{floors:10,cols:3},charges:4, tool:'charges', need:8, tip:"Ten floors want to fall somewhere. Decide where before you press the button."},
   {id:5,ico:'🏰',name:'GRAND HOTEL',    desc:'Three-storey monster · 5 charges',       gen:'mansion', arg:{storeys:3},       charges:5, tool:'charges', need:11, tip:"Five charges, big footprint. Containment pays as much as demolition here."},
   {id:6,ico:'⛓️',name:'BALL: THE SHED',desc:'Warehouse · wrecking ball only',          gen:'warehouse',arg:{},               charges:0, tool:'ball',    need:6, tip:"Slide the rail, build a rhythm, and let the weight of the ball do the talking."},
-  {id:7,ico:'⛓️',name:'BALL: SKYFALL', desc:'Tower block · wrecking ball only',        gen:'tower',   arg:{floors:8,cols:4}, charges:0, tool:'ball',    need:12, tip:"A tower vs a swinging 110-kilo ball. Aim low — buildings fall from the bottom."},
+  {id:7,ico:'⛓️',name:'BALL: SKYFALL',desc:'Tower block · wrecking ball only',gen:'tower',arg:{floors:8,cols:4},charges:0,tool:'ball',need:12,tip:"A tower vs a swinging 110-kilo ball. Aim low — buildings fall from the bottom."},
+  {id:8,ico:'🎯',name:'THE NARROW JOB',desc:'Warehouse · collapse corridor',gen:'warehouse',arg:{},charges:5,tool:'charges',need:10,objective:'corridor',budget:120,tip:"Keep every major fragment inside the lines. Braces and cable pulls count."},
+  {id:9,ico:'🏛️',name:'OLD FACE',desc:'Mansion · preserve the frontage',gen:'mansion',arg:{storeys:2},charges:5,tool:'charges',need:13,objective:'preserve',budget:105,protected:'front',tip:"Remove the rear structure while keeping the front façade standing."},
+  {id:10,ico:'♻️',name:'CLEAN RECOVERY',desc:'Bridge · salvage contract',gen:'bridge',arg:{},charges:5,tool:'charges',need:16,objective:'salvage',budget:95,tip:"A controlled dismantling scores higher than a violent spill."},
+  {id:11,ico:'🔔',name:'LEANING BELL',desc:'Tower annex · preserve the monument',gen:'tower',arg:{floors:7,cols:3},charges:6,tool:'charges',need:18,objective:'preserve',budget:125,signatureTarget:'catch',tip:"Brace the protected face, release the annex, and preserve the core."},
+  {id:12,ico:'⚓',name:'DOCK NINE',desc:'Warehouse crane base · inward fold',gen:'warehouse',arg:{},charges:6,tool:'charges',need:20,objective:'corridor',budget:130,signatureTarget:'fold',tip:"Use opposite pulls and a delayed centre release to create a Controlled Fold."},
+  {id:13,ico:'🏠',name:'THE GLASS HOUSE',desc:'Mansion frame · protect glazing',gen:'mansion',arg:{storeys:3},charges:6,tool:'charges',need:22,objective:'preserve',budget:118,signatureTarget:'zero',tip:"Torch and brace work can preserve the shell while the inner frame drops."},
+  {id:14,ico:'⛓️',name:'DEAD WEIGHT',desc:'Suspended span · progressive release',gen:'bridge',arg:{},charges:5,tool:'charges',need:24,objective:'salvage',budget:108,signatureTarget:'cascade',tip:"Release supports in sequence. The contract asks for a Progressive Cascade."},
+  {id:15,ico:'🌐',name:'FAULT LINE',desc:'High-rise · low-energy clearance',gen:'tower',arg:{floors:9,cols:4},charges:6,tool:'charges',need:26,objective:'corridor',budget:132,signatureTarget:'soft',tip:"Control energy, not just damage. Produce a Soft Landing inside the lines."},
+  {id:16,ico:'⏱️',name:'THREE SECONDS APART',desc:'Chimney pair · precision topple',gen:'chimney',arg:{rings:13},charges:5,tool:'charges',need:28,objective:'corridor',budget:100,signatureTarget:'topple',tip:"Stagger the release and produce a Clean Topple."},
 ];
 const DAILY_GENS=[['tower','🏢'],['chimney','🏭'],['mansion','🏰'],['warehouse','🏬']];
 function dailyContract(){
@@ -262,21 +327,25 @@ function dailyContract(){
 }
 const LICENCES=[[0,'TRAINEE'],[3,'LABOURER'],[6,'BLASTER'],[10,'FOREMAN'],[15,'SITE LEGEND']];
 const TOOLS=[
-  {key:'blast', name:'💣 BLAST',  need:0, tip:'Radial shove — knock legs out'},
-  {key:'cutter',name:'✂️ CUTTER', need:4, tip:'Deletes one block cleanly — surgical'},
-  {key:'thump', name:'🔨 THUMP',  need:8, tip:'Directional ram — push it where you want it'},
+  {key:'blast', name:'💣 BLAST',need:0,cost:30,tip:'Radial shove — knock legs out'},
+  {key:'cutter',name:'✂️ TORCH',need:4,cost:18,tip:'Cut one connection cleanly — surgical'},
+  {key:'thump',name:'🔨 RAM',need:8,cost:22,tip:'Directional hydraulic push'},
+  {key:'brace',name:'🛡️ BRACE',need:5,cost:14,tip:'Temporarily strengthen a critical element'},
+  {key:'cable',name:'🪝 CABLE',need:9,cost:20,tip:'Pull a weakened element towards site centre'},
+  {key:'pulse',name:'〰️ ECHO',need:12,cost:12,tip:'Survey pulse reveals stressed joints'},
 ];
 
 /* ================= SAVE ================= */
+const TIERS={apprentice:{n:'APPRENTICE',d:'Full stress overlays, generous budgets and active coaching.',budget:1.3,hints:2},operator:{n:'OPERATOR',d:'Standard structural information and balanced budgets.',budget:1,hints:3},engineer:{n:'ENGINEER',d:'Reduced overlays, tighter budgets and stronger collateral penalties.',budget:.85,hints:4},expert:{n:'DEMOLITION EXPERT',d:'Minimal assistance, hidden live load percentage and strict budgets.',budget:.72,hints:5},black:{n:'BLACK CONTRACT',d:'No adaptive cues, severe cost limits and incomplete structural readout.',budget:.62,hints:99}};
 const SAVE_KEY='wreckingCrew_v1';
-let profile={stars:{},calm:false,sound:true,ghost:true,heat:true,stg:0,skin:'classic'};
-try{const r=localStorage.getItem(SAVE_KEY);if(r)profile=Object.assign(profile,JSON.parse(r));}catch(e){}
+let profile={stars:{},calm:false,sound:true,ghost:true,heat:true,stg:0,skin:'classic',xp:0,rank:'TRAINEE',skills:{safety:0,precision:0,efficiency:0,engineering:0,environment:0},tier:'operator',adaptive:true,mistakes:0,assists:0,access:{large:false,contrast:false,fx:false},customSites:[],signatures:{},toolXP:{blast:0,cutter:0,thump:0,brace:0,cable:0,pulse:0,ball:0},ghosts:{},modifiers:{},rivalWins:{},tutorialDone:false,archiveSeen:{},perfectBest:null,qaVersion:20};
+try{const r=localStorage.getItem(SAVE_KEY);if(r)profile=Object.assign(profile,JSON.parse(r));}catch(e){}profile.signatures=profile.signatures||{};profile.toolXP=Object.assign({blast:0,cutter:0,thump:0,brace:0,cable:0,pulse:0,ball:0},profile.toolXP||{});profile.ghosts=profile.ghosts||{};profile.modifiers=profile.modifiers||{};profile.rivalWins=profile.rivalWins||{};profile.archiveSeen=profile.archiveSeen||{};profile.qaVersion=20;
 function saveProfile(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));}catch(e){}}
 function totalStars(){return Object.values(profile.stars).reduce((a,b)=>a+b,0);}
 
 /* ================= AUDIO ================= */
 const AudioSys={
-  ctx:null,master:null,started:false,lastImpact:0,
+  ctx:null,master:null,started:false,lastImpact:0,resonators:null,voiceMix:0,
   init(){if(this.started)return;try{
     this.ctx=new (window.AudioContext||window.webkitAudioContext)();
     this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);this.started=true;this.applyVol();
@@ -314,6 +383,10 @@ const AudioSys={
     g.gain.setValueAtTime(vol,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+dur);
     o.connect(g);g.connect(this.master);o.start();o.stop(this.ctx.currentTime+dur+.02);},
   ding(i){const P=[523,587,659,784,880];this.blip(P[i%5],0.16,'triangle',0.3);},
+  ensureResonators(){if(!this.started||this.resonators)return;const bands={brick:[82,'triangle'],concrete:[43,'sine'],steel:[118,'sawtooth'],glass:[740,'sine']};this.resonators={};for(const [k,[f,type]] of Object.entries(bands)){const o=this.ctx.createOscillator(),g=this.ctx.createGain(),flt=this.ctx.createBiquadFilter();o.type=type;o.frequency.value=f;flt.type='bandpass';flt.frequency.value=f*(k==='glass'?1.5:1);flt.Q.value=k==='steel'?5:2.2;g.gain.value=0;o.connect(flt);flt.connect(g);g.connect(this.master);o.start();this.resonators[k]={o,g,flt,base:f}}},
+  setStructureVoice(level,kind,stress){if(!this.started||!profile.sound)return;this.ensureResonators();const now=this.ctx.currentTime,calm=profile.calm?.45:1;for(const [k,r] of Object.entries(this.resonators)){const active=k===kind?1:k==='concrete'?.22:.08,target=clamp(level,0,1)*active*.095*calm;r.g.gain.setTargetAtTime(target,now,.18);const bend=1+stress*(k==='steel'?.24:k==='glass'?.09:.14);r.o.frequency.setTargetAtTime(r.base*bend,now,.22);r.flt.frequency.setTargetAtTime(r.base*(1.1+stress*.8),now,.2)}},
+  silenceStructure(){if(!this.resonators||!this.ctx)return;for(const r of Object.values(this.resonators))r.g.gain.setTargetAtTime(0,this.ctx.currentTime,.3)},
+  materialHit(kind,v){if(!this.started||!profile.sound)return;const q=clamp(v/24,.12,.55);if(kind==='steel'){this.blip(95+v*3,.28,'sawtooth',q*.55);this.blip(620,.08,'triangle',q*.35)}else if(kind==='glass'){this.noise(.16,2200,q*.5);this.blip(1300,.12,'sine',q*.25)}else if(kind==='brick'){this.noise(.24,650,q*.7);this.blip(64,.18,'triangle',q*.25)}else{this.noise(.2,380,q*.65);this.blip(46,.22,'sine',q*.3)}},
   groan(){if(!this.started||!profile.sound)return; // steel remembering it's heavy
     const o=this.ctx.createOscillator(),g=this.ctx.createGain(),t=this.ctx.currentTime;
     o.type='sawtooth';o.frequency.setValueAtTime(95,t);o.frequency.exponentialRampToValueAtTime(36,t+0.85);
@@ -335,6 +408,15 @@ scene.background=new THREE.Color(0x0a0f1e);
 const camera=new THREE.PerspectiveCamera(58,window.innerWidth/window.innerHeight,0.1,900);
 scene.add(new THREE.AmbientLight(0x8899cc,0.6));
 const key=new THREE.DirectionalLight(0xffeecc,0.9);key.position.set(50,90,30);scene.add(key);
+const fill=new THREE.DirectionalLight(0x6aa8ff,.32);fill.position.set(-40,35,-30);scene.add(fill);
+const siteFloods=[];for(let i=0;i<3;i++){const L=new THREE.SpotLight(0xaadaff,0,150,Math.PI/6,.45,1.2);L.position.set((i-1)*28,20,-24);L.target.position.set((i-1)*8,4,0);scene.add(L,L.target);siteFloods.push(L)}
+const COLLAPSE_STAGES=['IMPACT','LOCAL FRACTURE','LOAD REDISTRIBUTION','RESISTANCE','CRITICAL RELEASE','PRIMARY COLLAPSE','SECONDARY COLLAPSE','DUST SETTLEMENT'];
+function setCollapseStage(n,force=false){n=clamp(n,0,COLLAPSE_STAGES.length-1);if(!force&&n===state.collapseStage)return;state.collapseStage=n;state.collapseStageT=0;const box=document.getElementById('collapse-stage');document.getElementById('cs-name').textContent=COLLAPSE_STAGES[n];document.querySelectorAll('#cs-track i').forEach((x,i)=>x.classList.toggle('on',i<=n));box.classList.add('show');clearTimeout(state._stageHide);state._stageHide=setTimeout(()=>box.classList.remove('show'),1800)}
+function updateCollapseStage(dt){if(!(state.mode==='BOOM'||state.mode==='BALL'))return;state.collapseStageT+=dt;const ke=worldKE(),demo=demolitionPct(),crit=state.blocks.filter(b=>!b.gone&&!b.isShard&&(b.stress>.82||b.unsupported)).length;if(!state.collapseStarted&&ke>45){state.collapseStarted=true;setCollapseStage(0,true)}else if(state.collapseStage<1&&state.fractureCount>0)setCollapseStage(1);else if(state.collapseStage<2&&state.stressPeak>35)setCollapseStage(2);else if(state.collapseStage<3&&state.stressPeak>50&&demo<.22)setCollapseStage(3);else if(state.collapseStage<4&&(crit>2||state.stressPeak>72))setCollapseStage(4);else if(state.collapseStage<5&&demo>.28)setCollapseStage(5);else if(state.collapseStage<6&&demo>.58)setCollapseStage(6);else if(state.collapseStage<7&&demo>.72&&ke<state.blocks.length*15)setCollapseStage(7)}
+function setEnvironment(c){const themes={tower:{name:'CITY DUSK',bg:0x080d1b,fog:0x11182c,key:0xffd49a,fill:0x6f8fff,grade:'grade-city',wind:[.8,.15]},chimney:{name:'INDUSTRIAL HAZE',bg:0x15101a,fog:0x2b1822,key:0xffa05e,fill:0x9c65aa,grade:'grade-docks',wind:[1.8,.4]},mansion:{name:'NIGHT SHIFT',bg:0x070915,fog:0x121329,key:0xc9d7ff,fill:0x765bff,grade:'grade-night',wind:[.35,.2]},bridge:{name:'COASTAL WIND',bg:0x07141d,fog:0x153442,key:0xc8f3ff,fill:0x4ab7d2,grade:'grade-coast',wind:[2.7,1.1]},warehouse:{name:'DOCKYARD',bg:0x0d111b,fog:0x1c2634,key:0xffc27a,fill:0x51a6c8,grade:'grade-docks',wind:[1.2,.55]}};const t=themes[c.gen]||themes.warehouse;state.visualTheme=t.name;state.wind={x:t.wind[0],z:t.wind[1]};scene.background.setHex(t.bg);scene.fog.color.setHex(t.fog);key.color.setHex(t.key);fill.color.setHex(t.fill);const g=document.getElementById('visual-grade');g.className='visual-grade '+t.grade;const w=document.getElementById('weather-label');w.textContent=t.name+' · WIND '+Math.hypot(...t.wind).toFixed(1)+' m/s';w.classList.add('show');siteFloods.forEach((L,i)=>{L.intensity=t.name==='NIGHT SHIFT'?3.2:t.name==='CITY DUSK'?1.4:.7;L.color.setHex(i===1?0xffb36b:0x8edcff)})}
+
+function clearSiteProps(){for(const o of(state.siteProps||[]))scene.remove(o);state.siteProps=[]}
+function buildLivingSite(c){clearSiteProps();const add=(m)=>{scene.add(m);state.siteProps.push(m);return m};for(let i=0;i<8;i++){const post=add(new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,1.4,6),new THREE.MeshStandardMaterial({color:0xf47820,emissive:0x441100,emissiveIntensity:.15})));const side=i<4?-1:1,j=i%4;post.position.set(side*(state.siteHalf.x+3),.7,(j-1.5)*6)}for(let i=0;i<5;i++){const lamp=add(new THREE.Mesh(new THREE.BoxGeometry(.45,.24,.2),new THREE.MeshStandardMaterial({color:0xffd27a,emissive:0xff9b35,emissiveIntensity:1.8})));lamp.position.set((i-2)*5,1.1,-state.siteHalf.z-2.5)}if(c.gen==='warehouse'||c.gen==='chimney'){for(let i=0;i<4;i++){const drum=add(new THREE.Mesh(new THREE.CylinderGeometry(.65,.65,1.35,12),new THREE.MeshStandardMaterial({color:i%2?0x29455a:0xb85624,metalness:.55,roughness:.5})));drum.position.set(state.siteHalf.x+4,.68,(i-1.5)*1.8)}}}
 const composer=new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene,camera));
 const bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight),0.9,0.5,0.2);
@@ -375,7 +457,7 @@ const state={
   record:null, recFrames:0, recAccum:0, peakFrame:0, peakKE:0,
   replayT:0, replaying:false, replayAgainCount:0,
   ball:null, ballLinks:[], rail:null, railX:0, chainMeshes:[],
-  siteHalf:{x:16,z:16}, shake:0, slowmoLive:0,
+  siteHalf:{x:16,z:16}, shake:0, slowmoLive:0, structuralT:0, stressPeak:0, fractureCount:0, pendingFails:[], impactCaptionT:0, toolCost:0, protectedDamage:0, braces:[], cables:[], precision:{safety:100,precision:100,cost:100}, actionCount:0, nudgeLevel:0, lastUseful:0, visualTheme:'city', wind:{x:0,z:0}, weatherT:0, directorShot:0, directorCut:0, voiceLevel:0, voiceTarget:0, voiceKind:'concrete', voiceT:0, voicePulse:0, memoryLinks:[], collapseStage:0, collapseStageT:0, exposedInteriors:0, siteProps:[], boltVfx:[], shockwaves:[], collapseStarted:false,replaySpeed:1,replayPaused:false,replayCamera:'auto',replayEngineering:false,planActions:[],ghostMeshes:[],activeModifiers:[],beforeStats:null,scoreCommitted:false,settleWatch:0,qaWarnings:[],tutorialStep:0,perfectMode:false,perfectCommitted:false,perfectTarget:null,perfectPlanSnapshot:null,collapseBoostActive:false,collapseBoostPeak:0,
   orbit:{yaw:0.7,pitch:0.42,dist:52,cx:0,cy:8,cz:0},
 };
 const blockMats={};
@@ -390,6 +472,9 @@ function glassMat(){if(!glMat)glMat=new THREE.MeshStandardMaterial({color:0x9fd8
 function reinforcedMat(){if(!reMat)reMat=new THREE.MeshStandardMaterial({color:0x2f3a55,roughness:.4,metalness:.6,emissive:0xff2d30,emissiveIntensity:.28});return reMat;}
 
 /* ================= BLOCK FACTORY ================= */
+function inferMaterial(colHex,opts){if(opts.glass)return "glass";if(opts.reinforced)return "steel";if(colHex===0x6b3a2a)return "brick";if(colHex===0x506090||colHex===0x33406b||colHex===0x2b3550)return "concrete";return "masonry";}
+function materialProps(kind){return {glass:{tough:.26,ductile:0,dust:.15},brick:{tough:.72,ductile:.04,dust:1},steel:{tough:2.8,ductile:.9,dust:.08},concrete:{tough:1.35,ductile:.08,dust:.72},masonry:{tough:.9,ductile:.05,dust:.85}}[kind];}
+function impactCaption(t,c){const e=document.getElementById('impact-caption');e.textContent=t;e.style.borderColor=c||'#52617d';e.classList.add('show');clearTimeout(state._cap);state._cap=setTimeout(()=>e.classList.remove('show'),900);}
 function addBlock(sx,sy,sz,x,y,z,colHex,opts={}){
   const massMul=(opts.massMul||1)*(opts.reinforced?3:1)*(opts.glass?0.35:1);
   const body=new CANNON.Body({mass:sx*sy*sz*1.4*massMul,material:mat,
@@ -401,12 +486,12 @@ function addBlock(sx,sy,sz,x,y,z,colHex,opts={}){
     // mass gate: the wrecking ball and falling masonry crack joints; a raking chain link tickles them
     if(e.body.mass<8&&e.body.mass!==0)return;
     const iv=Math.abs(e.contact.getImpactVelocityAlongNormal());
-    if(iv>CFG.impactBreak*(opts.glass?0.45:1))state.impactQ.push({body,iv,sx:e.body.velocity.x,sy:e.body.velocity.y,sz:e.body.velocity.z});
+    const kind=inferMaterial(colHex,opts),mp=materialProps(kind);if(iv>CFG.impactBreak*mp.tough)state.impactQ.push({body,iv,sx:e.body.velocity.x,sy:e.body.velocity.y,sz:e.body.velocity.z,kind});
   });
   const mesh=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),opts.reinforced?reinforcedMat():opts.glass?glassMat():blockMat(colHex));
   mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),opts.reinforced?edgeMatRe:edgeMat));
   scene.add(mesh);
-  const b={body,mesh,mat0:mesh.material,home:new THREE.Vector3(x,y,z),size:[sx,sy,sz],gone:false,reinforced:!!opts.reinforced,glass:!!opts.glass,isShard:!!opts.isShard};
+  const kind=inferMaterial(colHex,opts),b={body,mesh,mat0:mesh.material,home:new THREE.Vector3(x,y,z),size:[sx,sy,sz],gone:false,reinforced:!!opts.reinforced,glass:!!opts.glass,isShard:!!opts.isShard,kind,stress:0,damage:0,fatigue:0,lastHit:0,unsupported:false};
   state.blocks.push(b);
   return b;
 }
@@ -426,7 +511,7 @@ function buildMortar(){
       const c=new CANNON.LockConstraint(A.body,B.body,{maxForce:mf});
       world.addConstraint(c);
       const tol=CFG.mortarTol*((A.reinforced||B.reinforced)?CFG.reinTolMul:1);
-      state.glue.push({A,B,c,tol,rest:{x:B.home.x-A.home.x,y:B.home.y-A.home.y,z:B.home.z-A.home.z}});
+      state.glue.push({A,B,c,tol,strength:mf,fatigue:0,warning:false,pending:0,rest:{x:B.home.x-A.home.x,y:B.home.y-A.home.y,z:B.home.z-A.home.z}});
     }
   }
 }
@@ -436,7 +521,7 @@ function checkGlue(){
   if(state.impactQ.length){
     const flung=new Set();
     for(const hit of state.impactQ){
-      let victim=null;
+      let victim=null;const block=state.blocks.find(x=>x.body===hit.body);if(block){const mp=materialProps(block.kind);block.damage=clamp(block.damage+hit.iv/(28*mp.tough),0,1.4);block.stress=clamp(block.stress+hit.iv/(34*mp.tough),0,1.3);block.lastHit=performance.now();addForceMemory(block,hit.iv);if(hit.iv>12)spawnBoltBurst(block.body.position.x,block.body.position.y,block.body.position.z,Math.round(4+hit.iv*.35));if(block.damage>.48&&Math.random()<.18)exposeInterior(block);if(block.kind==='steel'&&hit.iv>9)spawnSparks(block.body.position.x,block.body.position.y,block.body.position.z,12);AudioSys.materialHit(block.kind,hit.iv);if(block.damage>.32&&block.damage<.72)impactCaption((block.kind==='steel'?'STEEL YIELDING':block.kind==='glass'?'GLASS FRACTURE':block.kind.toUpperCase()+' CRACKING'),block.kind==='brick'?'#e38b64':'#78cce9');}
       for(let i=state.glue.length-1;i>=0;i--){
         const g=state.glue[i];
         if(g.A.body!==hit.body&&g.B.body!==hit.body)continue;
@@ -466,10 +551,12 @@ function checkGlue(){
     const vx=g.B.body.velocity.x-g.A.body.velocity.x,
           vy=g.B.body.velocity.y-g.A.body.velocity.y,
           vz=g.B.body.velocity.z-g.A.body.velocity.z;
-    if(dx*dx+dy*dy+dz*dz>g.tol*g.tol||vx*vx+vy*vy+vz*vz>CFG.mortarVelTol*CFG.mortarVelTol){
-      snapGlue(g);state.glue.splice(i,1);
-      spawnBurst((g.A.body.position.x+g.B.body.position.x)/2,(g.A.body.position.y+g.B.body.position.y)/2,(g.A.body.position.z+g.B.body.position.z)/2,3,2);
-    }
+    const strain=Math.sqrt(dx*dx+dy*dy+dz*dz)/(g.tol||.01),speed=Math.sqrt(vx*vx+vy*vy+vz*vz)/CFG.mortarVelTol;
+    const load=Math.max(strain,speed,(g.A.stress+g.B.stress)*.55);g.fatigue=clamp(g.fatigue+Math.max(0,load-.38)*CFG.fatigueRate,0,1.4);
+    if(!g.warning&&(load>CFG.stressWarn||g.fatigue>.5)){g.warning=true;AudioSys.blip(g.A.kind==='steel'?155:g.A.kind==='glass'?980:72,.14,g.A.kind==='steel'?'sawtooth':'triangle',.12);spawnBurst((g.A.body.position.x+g.B.body.position.x)/2,(g.A.body.position.y+g.B.body.position.y)/2,(g.A.body.position.z+g.B.body.position.z)/2,2,1.1);}
+    if((load>CFG.stressCritical||g.fatigue>1)&&!g.pending){g.pending=CFG.delayedFail*(.55+Math.random()*.7);state.fractureCount++;}
+    if(g.pending){g.pending-=1/60;if(g.pending<=0){snapGlue(g);state.glue.splice(i,1);spawnBurst((g.A.body.position.x+g.B.body.position.x)/2,(g.A.body.position.y+g.B.body.position.y)/2,(g.A.body.position.z+g.B.body.position.z)/2,7,3);spawnDustCloud((g.A.body.position.x+g.B.body.position.x)/2,(g.A.body.position.y+g.B.body.position.y)/2,(g.A.body.position.z+g.B.body.position.z)/2,2.5,'joint');AudioSys.materialHit(g.A.kind,9);}}
+
   }
 }
 function breakGlueAt(px,py,pz,r,inclRein){
@@ -482,16 +569,20 @@ function breakGlueAt(px,py,pz,r,inclRein){
     if(mx*mx+my*my+mz*mz<r*r){snapGlue(g);state.glue.splice(i,1);}
   }
 }
+const damageMats={};
+function damageMat(kind,tier){const k=kind+tier;if(damageMats[k])return damageMats[k];const cols={brick:[0x6b3a2a,0x8d4930,0xa73328],concrete:[0x506090,0x6b6f79,0x7f4945],steel:[0x2f3a55,0x5b6677,0x854b42],glass:[0x9fd8ff,0x70b9d8,0xd6f7ff],masonry:[0x33406b,0x595b66,0x81443e]};const c=(cols[kind]||cols.masonry)[tier];damageMats[k]=new THREE.MeshStandardMaterial({color:c,roughness:kind==='steel'?.35:.82,metalness:kind==='steel'?.72:.08,emissive:tier===2?0x6b1010:c,emissiveIntensity:tier===2?.24:.05,transparent:kind==='glass',opacity:kind==='glass'?.38:1});return damageMats[k]}
+function updateStructureVoice(dt,avg,critical){const blocks=state.blocks.filter(b=>!b.gone&&!b.isShard),weights={brick:0,concrete:0,steel:0,glass:0,masonry:0};for(const b of blocks)weights[b.kind]=(weights[b.kind]||0)+Math.max(b.stress,b.damage*.7)*(b.body.mass||1);let kind='concrete',best=-1;for(const [k,v] of Object.entries(weights))if(v>best){best=v;kind=k==='masonry'?'brick':k}state.voiceKind=kind;state.voiceTarget=clamp(avg/100+critical*.045,0,1);state.voiceLevel+=(state.voiceTarget-state.voiceLevel)*Math.min(1,dt*3);AudioSys.setStructureVoice(state.voiceLevel,kind,state.voiceTarget);const hud=document.getElementById('voice-hud'),show=state.mode==='PLACE'||state.mode==='BOOM'||state.mode==='BALL';hud.classList.toggle('show',show);document.getElementById('memory-legend').classList.toggle('show',show&&state.memoryLinks.length>0);const label=state.voiceLevel>.82?'FAILURE CHORD':state.voiceLevel>.58?'STRAINING':state.voiceLevel>.3?'RESONATING':'QUIET';document.getElementById('voice-state').textContent=label;document.getElementById('voice-note').textContent=label==='FAILURE CHORD'?'Multiple load paths are approaching release.':label==='STRAINING'?'The dominant '+kind+' band is rising.':label==='RESONATING'?'Load is moving through '+kind+' elements.':'Listen for changing resonance as load paths move.';document.querySelectorAll('.voice-bands span').forEach(x=>x.classList.toggle('on',x.classList.contains('vb-'+kind)));const bars=document.querySelectorAll('#voice-wave i');bars.forEach((x,i)=>{const harmonic=.22+.78*Math.abs(Math.sin(performance.now()*.0025*(1+i*.035)+i*.72));x.style.height=(8+state.voiceLevel*harmonic*90)+'%'})}
+function updateStructuralState(dt){let sum=0,n=0,critical=0;for(const b of state.blocks){if(b.gone||b.isShard)continue;b.stress=Math.max(0,b.stress-dt*(b.kind==='steel'?.025:.07));const attached=(state.glue||[]).filter(g=>g.A===b||g.B===b);const support=attached.filter(g=>{const o=g.A===b?g.B:g.A;return o.body.position.y<b.body.position.y-.2}).length;b.unsupported=b.home.y>b.size[1]&&support===0;if(b.unsupported)b.stress=clamp(b.stress+dt*.17,0,1.2);const fatigue=attached.length?attached.reduce((a,g)=>a+g.fatigue,0)/attached.length:1;b.fatigue=fatigue;b.stress=Math.max(b.stress,fatigue*.82);if(state.contract&&state.contract.objective==='preserve'&&b.home.z<-state.siteHalf.z*.55)state.protectedDamage=Math.max(state.protectedDamage,b.gone?100:b.damage*100);if(b.mesh.userData.echoUntil>performance.now()&&b.mesh.material&&'emissiveIntensity' in b.mesh.material)b.mesh.material.emissiveIntensity=.55;else if(b.mesh.material===b.mat0&&b.mesh.material&&'emissiveIntensity' in b.mesh.material)b.mesh.material.emissiveIntensity=.07;const tier=b.damage>.68||b.stress>.84?2:b.damage>.25||b.stress>.48?1:0;if(!profile.ghost&&b.mesh.material!==damageMat(b.kind,tier))b.mesh.material=tier?damageMat(b.kind,tier):b.mat0;if(tier===2)critical++;sum+=Math.max(b.stress,b.damage*.8);n++;}const pct=n?clamp(sum/n*100,0,100):0;state.stressPeak=Math.max(state.stressPeak,pct);updateStructureVoice(dt,pct,critical);updateMemoryVisuals(dt);const hud=document.getElementById('struct-hud');hud.classList.toggle('show',state.mode==='PLACE'||state.mode==='BOOM'||state.mode==='BALL');document.getElementById('stress-pct').textContent=Math.round(pct)+'%';document.getElementById('stress-fill').style.width=pct+'%';updateObjectiveHUD();updateCollapseStage(dt);document.getElementById('stress-note').textContent=critical?critical+' CRITICAL ELEMENT'+(critical===1?'':'S')+' · delayed failure possible':pct>52?'LOAD PATHS SHIFTING · watch the dust':'STRUCTURE STABLE · survey supports and joints';}
 function clearSite(){
   for(const g of(state.glue||[]))snapGlue(g);
   state.glue=[];
   for(const b of state.blocks){world.removeBody(b.body);scene.remove(b.mesh);}
-  state.blocks=[];
+  for(const l of(state.memoryLinks||[]))scene.remove(l);state.memoryLinks=[];state.collapseStage=0;state.collapseStarted=false;state.scoreCommitted=false;state.settleWatch=0;state.collapseBoostActive=false;state.collapseBoostPeak=0;document.getElementById('speed-rush').classList.remove('on');state.qaWarnings=[];state.perfectCommitted=false;state.exposedInteriors=0;clearSiteProps();for(const q of(vfx.bolts||[]))scene.remove(q.mesh);vfx.bolts=[];for(const q of(vfx.shock||[]))scene.remove(q.ring);vfx.shock=[];for(const q of(vfx.interiors||[]))scene.remove(q.box);vfx.interiors=[];AudioSys.silenceStructure();document.getElementById('voice-hud').classList.remove('show');document.getElementById('memory-legend').classList.remove('show');state.blocks=[];state.stressPeak=0;state.fractureCount=0;state.toolCost=0;state.protectedDamage=0;state.braces=[];state.cables=[];state.actionCount=0;state.nudgeLevel=0;state.lastUseful=performance.now();
   for(const c of state.charges){scene.remove(c.sprite);if(c.preview)scene.remove(c.preview);if(c.numSprite)scene.remove(c.numSprite);}
-  state.charges=[];
+  state.charges=[];state.planActions=[];for(const g of(state.ghostMeshes||[]))scene.remove(g);state.ghostMeshes=[];
   removeBall();
   if(state.siteLines){scene.remove(state.siteLines);state.siteLines=null;}
-  clearScorch();
+  clearScorch();for(const d of(vfx.dust||[]))scene.remove(d.sp);vfx.dust=[];for(const q of(vfx.sparks||[]))scene.remove(q.ln);vfx.sparks=[];document.getElementById('weather-label').classList.remove('show');
 }
 
 /* ================= STRUCTURE GENERATORS ================= */
@@ -728,21 +819,9 @@ function updatePigeons(dt){
 }
 
 /* ================= COLLAPSE SIGNATURE ================= */
-function collapseSignature(demo,cont){
-  let n=0,mx=0,mz=0,md=0;
-  for(const b of state.blocks){ if(b.isShard||b.gone)continue;
-    const dx=b.body.position.x-b.home.x,dz=b.body.position.z-b.home.z;
-    mx+=dx;mz+=dz;md+=Math.hypot(dx,dz);n++;
-  }
-  if(!n)return null;
-  mx/=n;mz/=n;md/=n;
-  const bias=Math.hypot(mx,mz)/(md||1); // →1 when the whole building agreed on a direction
-  if(demo<0.3)return '🧱 STILL STANDING';
-  if(cont<0.5)return '🌪️ WIDE SPRAY';
-  if(demo>=0.85&&cont>=0.9&&md<3.4)return '🥞 PANCAKE';
-  if(demo>=0.7&&bias>0.6)return '🌊 CLEAN TOPPLE';
-  return null;
-}
+const SIGNATURES={standing:{i:'🧱',n:'STILL STANDING',d:'Less than 30% demolition'},spray:{i:'🌪️',n:'WIDE SPRAY',d:'Major debris outside the lines'},pancake:{i:'🥞',n:'PANCAKE',d:'Vertical compact collapse'},topple:{i:'🌊',n:'CLEAN TOPPLE',d:'Strong directional bias'},fold:{i:'📐',n:'CONTROLLED FOLD',d:'High containment with opposing inward movement'},cascade:{i:'⛓️',n:'PROGRESSIVE CASCADE',d:'Many staged fractures'},minimal:{i:'🎯',n:'ONE-HIT WONDER',d:'Contract closed with one intervention'},soft:{i:'🪶',n:'SOFT LANDING',d:'High demolition with low peak energy'},zero:{i:'◈',n:'ZERO-SPILL',d:'Exceptional containment and safety'},catch:{i:'🛡️',n:'LAST-SECOND CATCH',d:'Brace preserves a critical protected section'}};
+function collapseSignature(demo,cont){let n=0,mx=0,mz=0,md=0;for(const b of state.blocks){if(b.isShard||b.gone)continue;const dx=b.body.position.x-b.home.x,dz=b.body.position.z-b.home.z;mx+=dx;mz+=dz;md+=Math.hypot(dx,dz);n++}mx/=n||1;mz/=n||1;md/=n||1;const bias=Math.hypot(mx,mz)/(md||1),m=objectiveMetrics();let key=null;if(demo<.3)key='standing';else if(cont<.5)key='spray';else if(demo>.82&&cont>.96&&m.safety>94)key='zero';else if(state.actionCount<=1&&demo>.72)key='minimal';else if(demo>.78&&state.peakKE<state.blocks.length*25)key='soft';else if(state.braces.length&&state.contract.objective==='preserve'&&m.safety>85)key='catch';else if(state.fractureCount>Math.max(7,state.blocks.length*.15)&&demo>.65)key='cascade';else if(demo>=.85&&cont>=.9&&md<3.4)key='pancake';else if(demo>=.72&&cont>.84&&bias<.28)key='fold';else if(demo>=.7&&bias>.6)key='topple';if(key){profile.signatures[key]=(profile.signatures[key]||0)+1;saveProfile();return SIGNATURES[key].i+' '+SIGNATURES[key].n}return null}
+
 
 /* ================= BALL SKINS ================= */
 const SKINS=[
@@ -818,7 +897,7 @@ function updateBall(dt){
 
 /* ================= CHARGES ================= */
 /* ================= VFX ================= */
-const vfx={scorchGroup:new THREE.Group(),flashes:[],rings:[],N:600,alive:0};
+const vfx={scorchGroup:new THREE.Group(),flashes:[],rings:[],N:900,alive:0,dust:[],sparks:[],trails:[],weather:null,interiors:[],bolts:[],shock:[]};
 scene.add(vfx.scorchGroup);
 { const pos=new Float32Array(vfx.N*3);
   vfx.pGeo=new THREE.BufferGeometry();
@@ -833,6 +912,19 @@ scene.add(vfx.scorchGroup);
   for(let i=0;i<4;i++){const r=new THREE.Mesh(new THREE.RingGeometry(0.6,1.0,36),new THREE.MeshBasicMaterial({color:0xffaa00,transparent:true,opacity:0,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
     r.rotation.x=-Math.PI/2;scene.add(r);vfx.rings.push({r,t:1});}
 }
+function radialTexture(inner,outer){const cv=document.createElement('canvas');cv.width=cv.height=128;const x=cv.getContext('2d'),g=x.createRadialGradient(64,64,2,64,64,62);g.addColorStop(0,inner);g.addColorStop(.38,inner);g.addColorStop(1,outer);x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(cv)}
+const dustTex=radialTexture('rgba(190,174,145,.55)','rgba(90,80,65,0)'),smokeTex=radialTexture('rgba(85,88,94,.42)','rgba(25,28,34,0)');
+function spawnDustCloud(x,y,z,scale=5,kind='collapse'){if(profile.access&&profile.access.fx)return;const n=kind==='settle'?3:kind==='floor'?5:7;for(let i=0;i<n;i++){const mat=new THREE.SpriteMaterial({map:kind==='settle'?smokeTex:dustTex,transparent:true,opacity:.05+(Math.random()*.12),depthWrite:false});const sp=new THREE.Sprite(mat);sp.position.set(x+(Math.random()-.5)*scale,y+Math.random()*2,z+(Math.random()-.5)*scale);const s=scale*(.55+Math.random());sp.scale.set(s,s*.62,1);scene.add(sp);vfx.dust.push({sp,t:0,life:2.8+Math.random()*2.2,vx:state.wind.x*(.12+Math.random()*.14),vy:.28+Math.random()*.34,vz:state.wind.z*(.12+Math.random()*.14),grow:1.5+Math.random()*1.6})}}
+function spawnSparks(x,y,z,n=16){if(profile.calm)return;for(let i=0;i<n;i++){const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3(0,-.7,0)]),mat=new THREE.LineBasicMaterial({color:i%3?0xffb137:0xe7f5ff,transparent:true,opacity:1}),ln=new THREE.Line(geo,mat);ln.position.set(x,y,z);ln.rotation.set(Math.random()*6,Math.random()*6,Math.random()*6);scene.add(ln);vfx.sparks.push({ln,t:0,v:new THREE.Vector3((Math.random()-.5)*8,2+Math.random()*9,(Math.random()-.5)*8)})}}
+function memoryColour(kind,intensity){const c={brick:0x3a130c,concrete:0x5d2524,steel:0xff7838,glass:0xbdeeff,masonry:0x351614}[kind]||0x351614;return new THREE.Color(c).multiplyScalar(.72+intensity*.28)}
+function propagateMemory(start,power){if(!start||power<8)return;const visited=new Set([start]);let frontier=[start],depth=0;while(frontier.length&&depth<3){const next=[];for(const b of frontier){const links=(state.glue||[]).filter(g=>g.A===b||g.B===b);for(const g of links){const o=g.A===b?g.B:g.A;if(visited.has(o)||o.gone)continue;visited.add(o);const strength=power*Math.pow(.58,depth+1);addForceMemory(o,strength,true);g.memory=clamp((g.memory||0)+strength/28,0,1);next.push(o)}}frontier=next;depth++}}
+function updateMemoryVisuals(dt){for(const g of(state.glue||[])){if(!g.memory)continue;g.memory=Math.max(0,g.memory-dt*.008);if(g.memory>.15&&!g.memoryLine){const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),mat=new THREE.LineBasicMaterial({color:0xff8a43,transparent:true,opacity:.15});g.memoryLine=new THREE.Line(geo,mat);scene.add(g.memoryLine);state.memoryLinks.push(g.memoryLine)}if(g.memoryLine){const a=g.A.body.position,b=g.B.body.position,ar=g.memoryLine.geometry.attributes.position.array;ar[0]=a.x;ar[1]=a.y;ar[2]=a.z;ar[3]=b.x;ar[4]=b.y;ar[5]=b.z;g.memoryLine.geometry.attributes.position.needsUpdate=true;g.memoryLine.material.opacity=.08+g.memory*.55;g.memoryLine.material.color.set(g.A.kind==='steel'?0xff7733:0x6f2a1d)}}}
+function addForceMemory(b,power,propagated=false){if(!b||b.gone||power<(propagated?3.5:7))return;b.memory=clamp((b.memory||0)+power/34,0,1.5);if(!b.forceMemories)b.forceMemories=[];if(b.forceMemories.length<3){const pts=[],seed=(b.home.x*31+b.home.y*17+b.home.z*13+b.forceMemories.length*7),count=6;for(let i=0;i<count;i++){const t=i/(count-1),wave=Math.sin(seed+i*2.17)*.15;pts.push(new THREE.Vector3((t-.5)*b.size[0],wave*b.size[1],b.size[2]/2+.016+b.forceMemories.length*.003))}const geo=new THREE.BufferGeometry().setFromPoints(pts),mat=new THREE.LineBasicMaterial({color:memoryColour(b.kind,b.memory),transparent:true,opacity:propagated?.22:.58});const line=new THREE.Line(geo,mat);b.mesh.add(line);b.forceMemories.push(line)}for(const l of b.forceMemories){l.material.opacity=clamp(l.material.opacity+power*.012,.18,.94);l.material.color.copy(memoryColour(b.kind,b.memory))}if(!propagated)propagateMemory(b,power)}
+function spawnBoltBurst(x,y,z,n=10){if(profile.access&&profile.access.fx)return;for(let i=0;i<n;i++){const mesh=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.35,5),new THREE.MeshBasicMaterial({color:i%2?0xe9eef7:0xff9f32}));mesh.position.set(x,y,z);mesh.rotation.set(Math.random()*6,Math.random()*6,Math.random()*6);scene.add(mesh);vfx.bolts.push({mesh,t:0,v:new THREE.Vector3((Math.random()-.5)*10,2+Math.random()*8,(Math.random()-.5)*10),spin:new THREE.Vector3(Math.random()*8,Math.random()*8,Math.random()*8)})}}
+function spawnGroundShock(x,z,power=1){const ring=new THREE.Mesh(new THREE.RingGeometry(.8,1.05,48),new THREE.MeshBasicMaterial({color:0xd8be8b,transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(x,.045,z);scene.add(ring);vfx.shock.push({ring,t:0,power});document.getElementById('debris-vignette').classList.add('on');setTimeout(()=>document.getElementById('debris-vignette').classList.remove('on'),500)}
+function exposeInterior(b){if(!b||b.interiorShown||b.gone||b.isShard)return;b.interiorShown=true;const mat=new THREE.MeshBasicMaterial({color:0xffb45c,transparent:true,opacity:.52,depthWrite:false}),box=new THREE.Mesh(new THREE.BoxGeometry(Math.max(.3,b.size[0]*.82),Math.max(.3,b.size[1]*.82),Math.max(.3,b.size[2]*.82)),mat);box.position.copy(b.body.position);box.quaternion.copy(b.body.quaternion);scene.add(box);vfx.interiors.push({box,b,t:0});state.exposedInteriors++;const tag=document.getElementById('interior-tag');tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),1800)}
+function updateMacroVfx(dt){for(let i=vfx.bolts.length-1;i>=0;i--){const q=vfx.bolts[i];q.t+=dt;q.v.y-=18*dt;q.mesh.position.addScaledVector(q.v,dt);q.mesh.rotation.x+=q.spin.x*dt;q.mesh.rotation.y+=q.spin.y*dt;if(q.t>1.5||q.mesh.position.y<0){scene.remove(q.mesh);vfx.bolts.splice(i,1)}}for(let i=vfx.shock.length-1;i>=0;i--){const q=vfx.shock[i];q.t+=dt;q.ring.scale.setScalar(1+q.t*11*q.power);q.ring.material.opacity=Math.max(0,.45-q.t*.55);if(q.t>.85){scene.remove(q.ring);vfx.shock.splice(i,1)}}for(let i=vfx.interiors.length-1;i>=0;i--){const q=vfx.interiors[i];q.t+=dt;if(!q.b.gone){q.box.position.copy(q.b.body.position);q.box.quaternion.copy(q.b.body.quaternion)}q.box.material.opacity=Math.max(.08,.52-q.t*.055);if(q.t>8||q.b.gone){scene.remove(q.box);vfx.interiors.splice(i,1)}}}
+function updateAtmosphere(dt){updateMacroVfx(dt);for(let i=vfx.dust.length-1;i>=0;i--){const d=vfx.dust[i];d.t+=dt;d.sp.position.x+=d.vx*dt;d.sp.position.y+=d.vy*dt;d.sp.position.z+=d.vz*dt;const k=1+d.grow*dt;d.sp.scale.multiplyScalar(k);d.sp.material.opacity=Math.sin(Math.min(1,d.t/d.life)*Math.PI)*.13;if(d.t>d.life){scene.remove(d.sp);d.sp.material.dispose();vfx.dust.splice(i,1)}}for(let i=vfx.sparks.length-1;i>=0;i--){const q=vfx.sparks[i];q.t+=dt;q.v.y-=18*dt;q.ln.position.addScaledVector(q.v,dt);q.ln.material.opacity=1-q.t/.8;if(q.t>.8){scene.remove(q.ln);vfx.sparks.splice(i,1)}}}
 let pCursor=0;
 function spawnBurst(x,y,z,n,power){
   for(let k=0;k<n;k++){
@@ -844,7 +936,7 @@ function spawnBurst(x,y,z,n,power){
     vfx.pVel[i*3+2]=Math.sin(a)*Math.cos(e)*power*(0.5+Math.random());
     vfx.pLife[i]=0.9+Math.random()*0.6;
   }
-  vfx.pAttr.needsUpdate=true;
+  vfx.pAttr.needsUpdate=true;if(power>6&&n>12)spawnDustCloud(x,Math.max(.2,y),z,Math.min(8,2+n*.08),y<2?'floor':'impact');
 }
 function spawnFlash(x,y,z){
   const f=vfx.flashes.reduce((a,b)=>a.t>b.t?a:b);
@@ -875,7 +967,7 @@ function updateVfx(dt){
   if(any)vfx.pAttr.needsUpdate=true;
   for(const f of vfx.flashes){if(f.t<1){f.t=Math.min(1,f.t+dt*3.4);f.L.intensity=140*(1-f.t);f.m.material.opacity=0.95*(1-f.t);f.m.scale.setScalar(1+f.t*4);}}
   for(const g of vfx.rings){if(g.t<1){g.t=Math.min(1,g.t+dt*1.7);g.r.scale.setScalar(1+g.t*12);g.r.material.opacity=0.85*(1-g.t);}}
-  updatePigeons(dt);
+  updatePigeons(dt);updateAtmosphere(dt);
 }
 
 const chargeTex={};
@@ -919,7 +1011,7 @@ function chargeSprite(kind){
 const previewMats={};
 function previewMat(kind){
   if(!previewMats[kind])previewMats[kind]=new THREE.MeshBasicMaterial({wireframe:true,transparent:true,depthWrite:false,
-    opacity:kind==='cutter'?0.18:0.09,color:kind==='blast'?0xffaa00:kind==='cutter'?0x00d4ff:0xff2d78});
+    opacity:kind==='cutter'?0.18:0.09,color:kind==='blast'?0xffaa00:kind==='cutter'?0x00d4ff:kind==='brace'?0x4ade9b:kind==='cable'?0xb6f0ff:kind==='pulse'?0xc59cff:0xff2d78});
   return previewMats[kind];
 }
 function placeCharge(block,point,normal){
@@ -929,11 +1021,11 @@ function placeCharge(block,point,normal){
   sprite.position.copy(point).addScaledVector(normal,0.6);
   scene.add(sprite);
   // see the kill zone before you commit — precision is the whole game
-  const pr=state.toolSel==='blast'?CFG.blastR:state.toolSel==='cutter'?CFG.cutterR:CFG.thumpR;
+  const pr=state.toolSel==='blast'?CFG.blastR:state.toolSel==='cutter'?CFG.cutterR:state.toolSel==='thump'?CFG.thumpR:state.toolSel==='pulse'?7:2.5;
   const preview=new THREE.Mesh(new THREE.SphereGeometry(pr,18,12),previewMat(state.toolSel));
   preview.position.copy(point);
   scene.add(preview);
-  const grp=Math.min(5,state.charges.length+1); // default: sequential groups, same feel as before
+  const grp=Math.min(5,state.charges.length+1);state.toolCost+=(TOOLS.find(t=>t.key===state.toolSel)||{cost:20}).cost;state.actionCount++;state.planActions.push({tool:state.toolSel,x:point.x,y:point.y,z:point.z,grp});profile.toolXP[state.toolSel]=(profile.toolXP[state.toolSel]||0)+2;adaptiveCheck(); // default: sequential groups, same feel as before
   const numSprite=makeNumSprite(grp,sprite.position);
   state.charges.push({kind:state.toolSel,block,point:point.clone(),normal:normal.clone(),sprite,preview,numSprite,grp});
   AudioSys.blip(660,0.08,'square',0.25);
@@ -957,7 +1049,7 @@ function refreshChargesHUD(){
 }
 function shatterGlass(b){ // glass doesn't argue with shockwaves
   b.gone=true;world.removeBody(b.body);scene.remove(b.mesh);
-  spawnBurst(b.body.position.x,b.body.position.y,b.body.position.z,10,6);
+  AudioSys.materialHit('glass',16);impactCaption('GLASS CASCADE','#91ddff');spawnBurst(b.body.position.x,b.body.position.y,b.body.position.z,18,8);
   const sh=addBlock(b.size[0]/3,Math.max(0.3,b.size[1]/3),b.size[2]/3,
     b.body.position.x,b.body.position.y,b.body.position.z,0x9fd8ff,{massMul:0.25,isShard:true,glass:true});
   sh.body.velocity.set((Math.random()-0.5)*12,3+Math.random()*4,(Math.random()-0.5)*12);
@@ -967,14 +1059,15 @@ function fireCharge(ch){
   state.shake=Math.min(state.shake+0.9,1.4);
   // wake EVERYTHING: sleeping blocks otherwise float when their support is blasted away
   for(const b of state.blocks)if(!b.gone)b.body.wakeUp();
-  if(ch.kind==='blast'){
+  if(ch.kind==='brace'){const b=ch.block;if(b&&!b.gone){b.stress=Math.max(0,b.stress-.45);b.damage=Math.max(0,b.damage-.18);b.braced=true;for(const g of state.glue){if(g.A===b||g.B===b){g.fatigue=Math.max(0,g.fatigue-.6);g.tol*=1.55;g.pending=0;}}state.braces.push(b);impactCaption('TEMPORARY BRACE SET','#54d8ff');AudioSys.blip(440,.18,'triangle',.3);}}else if(ch.kind==='cable'){const b=ch.block;if(b&&!b.gone){const dir=new CANNON.Vec3(-b.body.position.x,0,-b.body.position.z);if(dir.length()<.1)dir.set(1,0,0);dir.normalize();b.body.wakeUp();b.body.applyImpulse(dir.scale(b.body.mass*7.5),b.body.position);breakGlueAt(b.body.position.x,b.body.position.y,b.body.position.z,2.5,false);state.cables.push(b);impactCaption('CABLE PULL — INWARD','#a9f2d0');AudioSys.blip(160,.32,'sawtooth',.28);}}else if(ch.kind==='pulse'){for(const b of state.blocks){if(b.gone||b.isShard)continue;const d=b.body.position.distanceTo(new CANNON.Vec3(ch.point.x,ch.point.y,ch.point.z));if(d<7){b.stress=clamp(b.stress+.12*(1-d/7),0,1.2);addForceMemory(b,7*(1-d/7),true);b.mesh.userData.echoUntil=performance.now()+650;}}impactCaption('STRUCTURAL ECHO RETURNED','#d4b5ff');AudioSys.blip(280,.45,'sine',.22);setTimeout(()=>AudioSys.blip(190,.35,'sine',.18),120);}else if(ch.kind==='blast'){
     spawnFlash(ch.point.x,ch.point.y,ch.point.z);spawnRing(ch.point.x,ch.point.z);
     spawnScorch(ch.point.x,ch.point.z,3.2);spawnBurst(ch.point.x,ch.point.y,ch.point.z,30,9);
     breakGlueAt(ch.point.x,ch.point.y,ch.point.z,CFG.blastGlueR,false); // shockwave shatters mortar wider than it shoves — but never reinforced joints
     for(const b of [...state.blocks]){ if(b.gone)continue;
       const d=b.body.position.distanceTo(new CANNON.Vec3(ch.point.x,ch.point.y,ch.point.z));
       if(d<CFG.blastCoreR&&!b.reinforced&&!b.isShard){
-        // inner core: the block is destroyed outright — charges shatter, they don't shove
+        // inner core: staged material failure
+        b.damage=1.2;AudioSys.materialHit(b.kind,22);impactCaption(b.kind==='brick'?'BRICKWORK FAILURE':b.kind==='steel'?'STEEL CONNECTION RELEASED':'CONCRETE SPALL','#ff8a55');
         b.gone=true;world.removeBody(b.body);scene.remove(b.mesh);
         for(let k=0;k<2;k++){
           const sh=addBlock(b.size[0]/2.4,b.size[1]/2.4,b.size[2]/2.4,
@@ -997,8 +1090,9 @@ function fireCharge(ch){
   }else if(ch.kind==='cutter'){
     const tgt=ch.block;
     if(tgt&&!tgt.gone){
+      breakGlueAt(tgt.body.position.x,tgt.body.position.y,tgt.body.position.z,1.8,true);tgt.damage=clamp(tgt.damage+.55,0,1.2);tgt.stress=clamp(tgt.stress+.35,0,1.2);
       spawnBurst(tgt.body.position.x,tgt.body.position.y,tgt.body.position.z,18,5);
-      tgt.gone=true;world.removeBody(tgt.body);scene.remove(tgt.mesh);
+      if(!tgt.reinforced){tgt.gone=true;world.removeBody(tgt.body);scene.remove(tgt.mesh);}
       // shards
       for(let i=0;i<4;i++){
         const s=addBlock(tgt.size[0]/2.2,tgt.size[1]/2.2,tgt.size[2]/2.2,
@@ -1027,6 +1121,11 @@ function fireCharge(ch){
   if(ch.numSprite)scene.remove(ch.numSprite);
 }
 
+function applyTier(){const t=profile.tier||'operator',hud=document.getElementById('struct-hud');hud.style.opacity=profile.modifiers.noOverlay?'0':t==='expert'?'.65':t==='black'?'.42':'1';document.getElementById('mode-label')?.remove();const b=document.createElement('span');b.id='mode-label';b.className='mode-badge';b.textContent=TIERS[t].n+(profile.adaptive?' · AUTO':'');document.querySelector('#licence-bar>div').appendChild(b);}
+function adaptiveCheck(){if(!profile.adaptive||profile.tier==='black')return;const threshold=TIERS[profile.tier||'operator'].hints;if(state.actionCount>threshold*2&&state.nudgeLevel<3){state.nudgeLevel++;const msg=state.nudgeLevel===1?'Survey the lowest supports. Force travels upward only after the base releases.':state.nudgeLevel===2?'Try a brace on the protected side, then create a hinge opposite it.':'Cable pulls and staggered groups can fold debris inward instead of throwing it outward.';const n=document.getElementById('adapt-nudge');document.getElementById('nudge-text').textContent=msg;n.classList.add('show-nudge');setTimeout(()=>n.classList.remove('show-nudge'),6500);state.actionCount=0;profile.assists=(profile.assists||0)+1;saveProfile();}}
+function objectiveMetrics(){const c=state.contract||{},cont=containmentPct(),demo=demolitionPct();let safety=clamp(100-state.protectedDamage,0,100),precision=Math.round(cont*100),cost=Math.round(clamp(100-(state.toolCost-((c.budget||Math.max(80,c.charges*30))*(TIERS[profile.tier||'operator'].budget)*(profile.modifiers.budget?.7:1)))*1.4,0,100));if(c.objective==='preserve'){let total=0,ok=0;for(const b of state.blocks){if(b.isShard||b.home.z>-state.siteHalf.z*.55)continue;total++;if(!b.gone&&b.body.position.y>b.home.y-b.size[1]*.5)ok++;}safety=total?Math.round(ok/total*100):100;precision=Math.round(demo*100*.7+safety*.3);}else if(c.objective==='salvage'){precision=Math.round(cont*70+(1-Math.min(1,state.fractureCount/Math.max(1,state.blocks.length*.35)))*30);}state.precision={safety,precision,cost};return state.precision;}
+function updateObjectiveHUD(){const c=state.contract,h=document.getElementById('objective-hud');if(!c)return;const show=state.mode==='PLACE'||state.mode==='BOOM'||state.mode==='BALL';h.classList.toggle('show',show);const title=c.objective==='corridor'?'COLLAPSE CORRIDOR':c.objective==='preserve'?'HERITAGE PRESERVATION':c.objective==='salvage'?'CONTROLLED SALVAGE':'STANDARD CONTRACT';document.getElementById('obj-title').textContent=title;document.getElementById('obj-text').textContent=(c.signatureTarget?'Required: '+SIGNATURES[c.signatureTarget].n+' · ':'')+(c.objective==='corridor'?'Bring the structure down inside the marked site boundary.':c.objective==='preserve'?'Demolish the rear while protecting the front façade.':c.objective==='salvage'?'Minimise violent fractures and keep material recoverable.':'Balance demolition, containment and tool use.');const m=objectiveMetrics();for(const [k,v] of Object.entries(m)){const e=document.getElementById('oc-'+k);e.querySelector('strong').textContent=Math.round(v);e.classList.toggle('good',v>=80);e.classList.toggle('bad',v<50);}document.getElementById('protected-zone').classList.toggle('show',show&&c.objective==='preserve');}
+function updateCareer(m,stars){const s=profile.skills||{safety:0,precision:0,efficiency:0,engineering:0,environment:0};s.safety=Math.round((s.safety*3+m.safety)/4);s.precision=Math.round((s.precision*3+m.precision)/4);s.efficiency=Math.round((s.efficiency*3+m.cost)/4);s.engineering=Math.round((s.engineering*3+Math.min(100,state.stressPeak+state.fractureCount*2))/4);s.environment=Math.round((s.environment*3+(m.safety+m.cost)/2)/4);profile.skills=s;const mult=Object.entries(profile.modifiers).filter(x=>x[1]).reduce((a,[k])=>a*(MODIFIERS[k]?.xp||1),1);profile.xp=(profile.xp||0)+Math.round((stars*20+(m.safety+m.precision+m.cost)/30)*mult);profile.rank=profile.xp>=900?'SITE LEGEND':profile.xp>=550?'FOREMAN':profile.xp>=280?'BLASTER':profile.xp>=100?'OPERATOR':'TRAINEE';}
 /* ================= SCORING ================= */
 const _upIn=new CANNON.Vec3(0,1,0),_upOut=new CANNON.Vec3();
 function demolitionPct(){
@@ -1088,7 +1187,7 @@ function startReplay(){
     let pk=0;state.record.ke.forEach((k,i)=>{if(k>state.record.ke[pk])pk=i;});
     state.peakFrame=pk;
   }
-  state.mode='REPLAY';state.replayT=0;state.replaying=true;
+  state.mode='REPLAY';state.replayT=0;state.replaying=true;state.replaySpeed=1;state.replayPaused=false;state.replayCamera='auto';state.replayEngineering=false;state.directorShot=-1;state.directorCut=0;document.body.classList.add('director');document.getElementById('director-card').textContent='DIRECTOR · ESTABLISHING';
   document.getElementById('score-screen').classList.add('hidden');
   document.getElementById('replay-bar').classList.remove('hidden');
   document.getElementById('hud').style.display='none';
@@ -1097,9 +1196,9 @@ function updateReplay(dt){
   const rec=state.record;if(!rec||!rec.frames.length)return endReplay();
   const peakT=state.peakFrame/CFG.recordHz;
   const near=Math.abs(state.replayT-peakT)<1.2;
-  const speed=(near&&!REDUCED)?0.32:1;
+  const autoSpeed=(near&&!REDUCED)?0.32:1,speed=autoSpeed*state.replaySpeed;
   document.getElementById('slowmo-tag').style.opacity=near?1:0;
-  state.replayT+=dt*speed;
+  if(!state.replayPaused)state.replayT+=dt*speed;const dur=rec.frames.length/CFG.recordHz;document.getElementById('rp-scrub').value=Math.round(state.replayT/dur*1000);document.getElementById('rp-time').textContent=Math.floor(state.replayT/60)+':'+String(Math.floor(state.replayT%60)).padStart(2,'0');document.getElementById('rp-speed').textContent=state.replaySpeed.toFixed(2).replace(/0$/,'')+'×';
   const fi=state.replayT*CFG.recordHz;
   const i=Math.floor(fi);
   if(i>=rec.frames.length-1)return endReplay();
@@ -1113,15 +1212,16 @@ function updateReplay(dt){
       A.f[bi*7+2]+(B.f[bi*7+2]-A.f[bi*7+2])*fr);
     b.mesh.quaternion.set(A.f[bi*7+3],A.f[bi*7+4],A.f[bi*7+5],A.f[bi*7+6]);
   });
-  // cinematic orbit
-  state.orbit.yaw+=dt*0.35*speed;
-  applyCamera(dt,true);
+  // automatic replay director: establishing → impact → debris-level → aftermath
+  const part=state.replayT/(rec.frames.length/CFG.recordHz);let shot=part<.18?0:part<.48?1:part<.78?2:3;
+  if(state.replayCamera==='auto'&&shot!==state.directorShot){state.directorShot=shot;const names=['ESTABLISHING','CRITICAL RELEASE','DEBRIS CAMERA','AFTERMATH'];document.getElementById('director-card').textContent='DIRECTOR · '+names[shot];if(shot===0){state.orbit.pitch=.42;state.orbit.dist=54}else if(shot===1){state.orbit.pitch=.27;state.orbit.dist=34}else if(shot===2){state.orbit.pitch=.11;state.orbit.dist=24}else{state.orbit.pitch=.55;state.orbit.dist=64}}
+  if(state.replayCamera==='auto')state.orbit.yaw+=dt*(shot===2?.16:.38)*speed;if(state.replayEngineering){for(const g of(state.memoryLinks||[]))if(g.material)g.material.opacity=.9;}applyCamera(dt,true);
 }
 function endReplay(){
-  state.replaying=false;
+  state.replaying=false;document.body.classList.remove('director','compare');
   document.getElementById('slowmo-tag').style.opacity=0;
   document.getElementById('replay-bar').classList.add('hidden');
-  state.mode='SCORE';
+  state.mode='SCORE';document.getElementById('collapse-stage').classList.remove('show');document.getElementById('site-alarm').classList.remove('on');
   document.getElementById('score-screen').classList.remove('hidden');
   // restore final resting pose
   for(const b of state.blocks){b.mesh.visible=!b.gone;syncMesh(b);}
@@ -1129,18 +1229,18 @@ function endReplay(){
 
 /* ================= CONTRACT FLOW ================= */
 function openContract(id){
-  const c=id==='daily'?dailyContract():CONTRACTS[id];
+  const c=id==='daily'?dailyContract():CONTRACTS.find(x=>x.id===id);
   if(totalStars()<c.need)return;
-  state.contract=c;
+  if(id!=='perfect')state.perfectMode=false;if(!c){qaToast('Contract missing — returned to board');return toBoard()}const issues=validateContract(c);if(issues.length){console.warn('Contract validation',issues);qaToast(issues.join(' · '))}state.contract=c;setEnvironment(c);
   clearSite();
   const rnd=mulberry32(c.seed!==undefined?c.seed:hashStr(c.name)+id*31);
   state.siteHalf=GEN[c.gen](rnd,c.arg);
   buildMortar(); // glue the structure so it stands rigid and cracks honestly
-  state.siteLines=buildSiteLines(state.siteHalf);
+  state.siteLines=buildSiteLines(state.siteHalf);buildLivingSite(c);setTimeout(showPlanGhost,500);
   // settle-freeze: let stacks micro-settle asleep
   for(const b of state.blocks){b.body.sleep();}
   state.toolSel='blast';
-  state.mode=c.tool==='ball'?'BALL':'PLACE';
+  state.mode=c.tool==='ball'?'BALL':'PLACE';state.stressPeak=0;state.fractureCount=0;
   if(c.tool==='ball'){buildBall();state.ballT=0;}
   state.orbit={yaw:0.7,pitch:0.42,dist:Math.max(state.siteHalf.x,state.siteHalf.z)*3.1,cx:0,cy:7,cz:0};
   state.sweepT=1.4; // cinematic establishing sweep
@@ -1157,7 +1257,7 @@ function openContract(id){
   const t=document.getElementById('c-title');
   t.querySelector('b').textContent=c.ico+' '+c.name;
   t.querySelector('small').textContent=c.desc;
-  renderTools();refreshChargesHUD();
+  renderTools();refreshChargesHUD();applyTier();
   affected.clear();
   if(c.tool!=='ball')computeLoads();
   applyPlanView();
@@ -1181,28 +1281,30 @@ function openContractWithBrief(id){
   document.getElementById('b-charges').textContent=c.tool==='ball'?'⛓️ ball':(c.charges+' charges');
   const best=(profile.best||{})[c.id];
   document.getElementById('b-best').textContent=best?best+'%':'—';
-  document.getElementById('b-tip').textContent='💡 '+(c.tip||'');
+  document.getElementById('b-tip').innerHTML=(c.signatureTarget?`<div class="signature-objective">REQUIRED SIGNATURE · ${SIGNATURES[c.signatureTarget].i} ${SIGNATURES[c.signatureTarget].n}</div>`:'')+'💡 '+(c.tip||'');
   document.getElementById('brief-screen').classList.remove('hidden');
 }
 document.getElementById('b-begin').onclick=()=>{
   document.getElementById('brief-screen').classList.add('hidden');
   AudioSys.init();AudioSys.resume();AudioSys.ding(2);
 };
+function saveGhost(){if(!state.contract||String(state.contract.id)==='lab')return;profile.ghosts[state.contract.id]={actions:state.planActions.map(x=>Object.assign({},x)),score:state.lastScore?state.lastScore.stars:0};saveProfile()}
+function showPlanGhost(){const g=profile.ghosts[state.contract&&state.contract.id];if(!g||!g.actions.length)return;for(const old of state.ghostMeshes)scene.remove(old);state.ghostMeshes=[];for(const a of g.actions){const mesh=new THREE.Mesh(new THREE.SphereGeometry(.38,10,8),new THREE.MeshBasicMaterial({color:0x55d6ff,transparent:true,opacity:.34,wireframe:true,depthWrite:false}));mesh.position.set(a.x,a.y,a.z);scene.add(mesh);state.ghostMeshes.push(mesh)}document.getElementById('ghost-path').classList.add('show');setTimeout(()=>document.getElementById('ghost-path').classList.remove('show'),3200)}
 function detonate(){
   if(state.mode!=='PLACE')return;
-  if(state.charges.length===0)return popup('Place at least one charge first','#ffaa00');
+  if(profile.modifiers.three&&state.planActions.length>3)return popup('Modifier failed — maximum three interventions','#ef4444');if(state.charges.length===0)return popup('Place at least one charge first','#ffaa00');
   state.firedCount=state.charges.length;
-  state.mode='BOOM';state.boomT=-0.95;state.settleT=0; // the groan: one breath between decision and consequence
+  state.mode='BOOM';state.boomT=-0.95;if(state.perfectMode){state.perfectCommitted=true;document.getElementById('commit-lock').classList.add('on');setTimeout(()=>document.getElementById('commit-lock').classList.remove('on'),1800);qaToast('Plan locked · execution committed')}state.settleT=0; // the groan: one breath between decision and consequence
   affected.clear();applyPlanView(); // survey over — the building turns solid the instant you commit
   AudioSys.groan();
-  popup('⚠️ FIRE IN THE HOLE','#ff2d30');
+  popup('⚠️ FIRE IN THE HOLE','#ff2d30');document.getElementById('site-alarm').classList.add('on');setTimeout(()=>document.getElementById('site-alarm').classList.remove('on'),2800);setCollapseStage(0,true);
   spawnPigeons(); // they always know first
   state.detonQueue=[...state.charges].sort((a,b)=>a.grp-b.grp);state.charges=[];
   startRecording();
   document.getElementById('detonate').style.display='none';
 }
 function updateBoom(dt){
-  state.boomT+=dt;
+  state.boomT+=dt;state.settleWatch+=dt;if(state.settleWatch>CFG.collapseCap+4&&!state.scoreCommitted){qaToast('Settle watchdog closed a long-running simulation');return scoreContract()}
   if(state.boomT<0){ // arming window: charges blink faster as zero approaches
     const bl=0.35+0.65*Math.abs(Math.sin(state.boomT*18));
     for(const ch of state.detonQueue){ch.sprite.material.opacity=bl;if(ch.numSprite)ch.numSprite.material.opacity=bl;}
@@ -1216,45 +1318,45 @@ function updateBoom(dt){
   AudioSys.setRumble(state.boomT<0?0:clamp(ke/(state.blocks.length*260+1),0,1)); // the building's voice while it falls
   const live=!state.detonQueue.length&&state.boomT>1.2;
   state.slowmoLive=(!profile.calm&&!REDUCED&&state.boomT>0.45&&ke>1500)?1:0; // never throttle the clock at detonation instant
-  if(live&&(ke<CFG.settleKE*state.blocks.length||state.boomT>CFG.collapseCap)){
+  if(live&&Math.random()<dt*.7)spawnDustCloud(0,.4,0,7,'settle');if(live&&(ke<CFG.settleKE*state.blocks.length||state.boomT>CFG.collapseCap)){
     state.settleT+=dt;
     if(state.settleT>0.9)scoreContract();
   }else state.settleT=0;
 }
 function scoreContract(){
-  AudioSys.stopRumble();
+  if(state.scoreCommitted)return;state.scoreCommitted=true;AudioSys.stopRumble();AudioSys.silenceStructure();
   const c=state.contract;
   const demo=demolitionPct(),cont=containmentPct();
   const savedN=c.tool==='ball'?0:Math.max(0,c.charges-(state.firedCount||0));
-  const score=c.tool==='ball'
-    ? demo*0.7+cont*0.3
-    : demo*0.5+cont*0.3+(savedN/c.charges)*0.2; // precision pays: containment and thrift matter more
+  const metrics=objectiveMetrics();
+  const score=c.tool==='ball'?demo*.6+cont*.25+metrics.safety/100*.15:c.objective?demo*.28+metrics.safety/100*.25+metrics.precision/100*.30+metrics.cost/100*.17:demo*.45+cont*.25+(savedN/c.charges)*.15+metrics.safety/100*.15; // precision pays: containment and thrift matter more
   let stars=0;for(const t of CFG.starT)if(score>=t)stars++;
-  const prev=profile.stars[c.id]||0;
-  if(stars>prev)profile.stars[c.id]=stars;
+  const scoredCampaign=Number.isInteger(c.id);const prev=scoredCampaign?(profile.stars[c.id]||0):0;
+  if(scoredCampaign&&stars>prev)profile.stars[c.id]=stars;
   profile.best=profile.best||{};
   const pct=Math.round(demo*100);
   const newBest=pct>(profile.best[c.id]||0);
   if(newBest)profile.best[c.id]=pct;
-  saveProfile();
-  state.mode='SCORE';
+  if(state.perfectMode){const perfect=sigPass&&metrics.safety>=90&&metrics.precision>=88&&metrics.cost>=60;profile.perfectBest={passed:perfect,signature:c.signatureTarget,safety:metrics.safety,precision:metrics.precision,cost:metrics.cost,date:new Date().toISOString()};if(!perfect)stars=Math.min(stars,1);qaToast(perfect?'One Perfect Collapse certified':'Perfect Collapse criteria not met')}updateCareer(metrics,stars);state.lastScore={demo,cont,stars,name:c.name,ico:c.ico,stamp:'',metrics};saveGhost();saveProfile();
+  state.mode='SCORE';document.getElementById('collapse-stage').classList.remove('show');document.getElementById('site-alarm').classList.remove('on');
   document.getElementById('hud').style.display='none';
   document.getElementById('ball-ui').style.display='none';
   const fin=document.getElementById('ball-finish');if(fin)fin.remove();
   // fill screen
   const st=document.getElementById('score-title');
-  const sig=collapseSignature(demo,cont);
-  st.textContent=sig||(demo>=0.85?'TEXTBOOK DEMOLITION':demo>=0.55?'SITE CLEARED':'SITE INSPECTED');
+  const sig=collapseSignature(demo,cont),sigPass=!c.signatureTarget||(sig&&sig.includes(SIGNATURES[c.signatureTarget].n));if(c.signatureTarget&&!sigPass)stars=Math.min(stars,1);
+  st.textContent=c.signatureTarget&&!sigPass?'SIGNATURE INCOMPLETE':sig||(demo>=0.85?'TEXTBOOK DEMOLITION':demo>=0.55?'SITE CLEARED':'SITE INSPECTED');
   state.lastScore={demo,cont,stars,name:c.name,ico:c.ico,stamp:st.textContent}; // photo mode reads this
-  st.classList.add('stamp');
+  st.classList.add('stamp');const oldRibbon=document.querySelector('.signature-ribbon');if(oldRibbon)oldRibbon.remove();if(sig){const rb=document.createElement('div');rb.className='signature-ribbon';rb.textContent=sig;document.getElementById('score-screen').appendChild(rb);}
   const L=document.getElementById('score-lines');
   L.innerHTML=`<div class="res-line"><span>Demolition</span><b>${Math.round(demo*100)}%</b></div>
     <div class="res-line"><span>Inside the lines</span><b>${Math.round(cont*100)}%</b></div>`+
     (c.tool==='ball'?'' :`<div class="res-line"><span>Charges saved</span><b>${savedN} / ${c.charges}</b></div>`)+
+    `${c.signatureTarget?`<div class="res-line"><span>Required signature</span><b>${sigPass?'ACHIEVED ✓':'NOT ACHIEVED'}</b></div>`:''}<div class="res-line"><span>Safety</span><b>${metrics.safety}%</b></div><div class="res-line"><span>Precision</span><b>${metrics.precision}%</b></div><div class="res-line"><span>Cost control</span><b>${metrics.cost}%</b></div><div class="res-line"><span>Operator rank</span><b>${profile.rank}</b></div><div class="res-line"><span>Peak structural load</span><b>${Math.round(state.stressPeak)}%</b></div><div class="res-line"><span>Progressive fractures</span><b>${state.fractureCount}</b></div><div class="res-line"><span>Dominant structural voice</span><b>${String(state.voiceKind).toUpperCase()}</b></div><div class="res-line"><span>Force paths recorded</span><b>${state.memoryLinks.length}</b></div><div class="res-line"><span>Interiors exposed</span><b>${state.exposedInteriors}</b></div><div class="res-line"><span>Macro sequence</span><b>${COLLAPSE_STAGES[Math.max(state.collapseStage,0)]}</b></div><div class="res-line"><span>Fastest collapse debris</span><b>${state.collapseBoostPeak.toFixed(1)} m/s</b></div><div class="before-after"><div class="ba-card"><b>BEFORE</b><strong>${state.blocks.filter(b=>!b.isShard).length} elements</strong></div><div class="ba-card"><b>AFTER</b><strong>${Math.round(demo*100)}% cleared</strong></div></div>`+
     (newBest?`<div class="res-line"><span>Best demolition</span><b style="color:#ffd700">${pct}% 🏆</b></div>`:'')+
     (stars>prev?`<div class="res-line"><span>New best!</span><b style="color:#ffd700">★ ${stars}</b></div>`:'');
   document.getElementById('score-note').textContent=
-    stars===3?'Flawless. The crew is talking about this one.':
+    stars===3?'Flawless. Use REPLAY for a four-shot director cut of the collapse.':
     stars===2?'Proper job. One tweak and it\u2019s perfect.':
     stars===1?'Contract paid. Watch the replay — where did the load go?':
     'Nothing wasted — watch the replay, read the structure, go again.';
@@ -1273,7 +1375,7 @@ function popup(txt,col='#ffaa00'){
 
 /* ================= BOARD UI ================= */
 function renderBoard(){
-  const stars=totalStars();
+  const stars=totalStars();if(!profile.tutorialDone&&!state._trainingOffered){state._trainingOffered=true;setTimeout(()=>showTraining(0),450)};
   document.getElementById('lic-stars').textContent='★ '+stars;
   let lic=LICENCES[0][1],next=15;
   for(const[n,name]of LICENCES)if(stars>=n)lic=name;
@@ -1281,7 +1383,7 @@ function renderBoard(){
   document.getElementById('lic-name').textContent='LICENCE: '+lic;
   document.getElementById('lic-fill').style.width=clamp(stars/15*100,0,100)+'%';
   const list=document.getElementById('contract-list');list.innerHTML='';
-  for(const c of CONTRACTS){
+  let lastChapter='';for(const c of CONTRACTS){const chapter=c.id<3?'CHAPTER 1 · FORCE':c.id<6?'CHAPTER 2 · CONTROLLED FAILURE':c.id<8?'CHAPTER 3 · HEAVY PLANT':c.id<11?'CHAPTER 4 · PRECISION CONTRACTS':'CHAPTER 5 · SIGNATURE CONTRACTS';if(chapter!==lastChapter){const h=document.createElement('div');h.className='chapter';h.textContent=chapter;list.appendChild(h);lastChapter=chapter;}
     const locked=stars<c.need;
     const st=profile.stars[c.id]||0;
     const row=document.createElement('div');
@@ -1304,6 +1406,7 @@ function renderBoard(){
     if(!locked)row.onclick=()=>{AudioSys.init();AudioSys.resume();AudioSys.ding(1);openContractWithBrief('daily');};
     list.appendChild(row);
   }
+  const cg=document.getElementById('career-skills');cg.innerHTML=Object.entries(profile.skills||{}).map(([k,v])=>`<div class="skill"><b>${k.toUpperCase()}</b><strong>${v}</strong></div>`).join('');
   const sr=document.getElementById('skin-row');
   sr.innerHTML='<span style="font-size:13px;color:#94a3b8;margin-right:8px">⛓️ BALL:</span>';
   for(const s of SKINS){
@@ -1321,7 +1424,7 @@ function renderTools(){
   const row=document.getElementById('tool-row');row.innerHTML='';
   const stars=totalStars();
   for(const t of TOOLS){
-    const locked=stars<t.need;
+    const modLocked=(profile.modifiers.noBlast&&t.key==='blast')||(profile.modifiers.silent&&!['cutter','brace','cable'].includes(t.key));const locked=stars<t.need||modLocked;
     const d=document.createElement('div');
     d.className='tool'+(state.toolSel===t.key?' sel':'')+(locked?' locked':'');
     d.textContent=locked?t.name+' 🔒':t.name;
@@ -1419,6 +1522,34 @@ addEventListener('keydown',e=>{
 });
 addEventListener('keyup',e=>{keys[e.code]=false;});
 
+/* Collapse acceleration: once the primary collapse starts, detached pieces gain
+   momentum so the failure reads as decisive rather than floaty. Intact supported
+   structure is never accelerated. */
+function accelerateCollapseBits(dt){
+  const active=(state.mode==='BOOM'||state.mode==='BALL')&&state.collapseStage>=5;
+  state.collapseBoostActive=active;
+  document.getElementById('speed-rush').classList.toggle('on',active&&!profile.calm&&!(profile.access&&profile.access.fx));
+  if(!active)return;
+  const stageGain=state.collapseStage>=6?1.22:1;
+  let fastest=0;
+  for(const b of state.blocks){
+    if(b.gone)continue;
+    const detached=b.isShard||b.unsupported||!state.glue.some(g=>g.A===b||g.B===b);
+    if(!detached)continue;
+    const v=b.body.velocity,sp=Math.hypot(v.x,v.y,v.z);
+    if(sp<.35)continue;
+    const target=b.isShard?CFG.shardSpeedBoost:CFG.collapseSpeedBoost;
+    const gain=1+(target-1)*dt*stageGain;
+    v.x*=gain;v.z*=gain;
+    if(v.y<0)v.y-=CFG.collapseAccel*dt*stageGain;
+    else v.y*=1+(.22*dt);
+    b.body.angularVelocity.scale(1+dt*(b.isShard?.8:.35),b.body.angularVelocity);
+    const capped=Math.hypot(v.x,v.y,v.z),cap=b.isShard?44:34;
+    if(capped>cap){const k=cap/capped;v.x*=k;v.y*=k;v.z*=k}
+    fastest=Math.max(fastest,Math.hypot(v.x,v.y,v.z));
+  }
+  state.collapseBoostPeak=Math.max(state.collapseBoostPeak,fastest);
+}
 /* ================= PHYSICS STEP + SYNC ================= */
 function syncMesh(b){
   b.mesh.position.copy(b.body.position);
@@ -1427,7 +1558,7 @@ function syncMesh(b){
 function stepPhysics(dt){
   const slow=state.slowmoLive?0.35:1;
   world.step(1/60,dt*slow,3);
-  checkGlue();
+  checkGlue();updateStructuralState(dt*slow);accelerateCollapseBits(dt*slow);
   for(const b of state.blocks){if(!b.gone)syncMesh(b);}
   if(state.ball){
     state.ballLinks.forEach((lb,i)=>{
@@ -1452,11 +1583,31 @@ function stepPhysics(dt){
   if(loudest>6)AudioSys.impact(loudest);
   if(loudest>9&&state.dustCd<=0){state.dustCd=0.12;
     for(const b of state.blocks){if(!b.gone&&b.body.velocity.length()>9&&b.body.position.y<b.size[1]*1.4){
-      spawnBurst(b.body.position.x,b.body.position.y,b.body.position.z,5,4);break;}}}
+      const mp=materialProps(b.kind);if(loudest>13)spawnGroundShock(b.body.position.x,b.body.position.z,Math.min(1.8,loudest/18));spawnBurst(b.body.position.x,b.body.position.y,b.body.position.z,Math.round(4+mp.dust*10),4+mp.dust*3);if(b.kind==='steel'&&Math.random()<.55)spawnSparks(b.body.position.x,b.body.position.y,b.body.position.z,10);if(b.kind==='steel'&&Math.random()<.25)spawnFlash(b.body.position.x,b.body.position.y,b.body.position.z);break;}}}
   state.dustCd=Math.max(0,(state.dustCd||0)-dt);
 }
 
+function utility(html){document.getElementById('utility-panel').innerHTML=html;document.getElementById('utility-screen').classList.remove('hidden')}
+function closeUtility(){document.getElementById('utility-screen').classList.add('hidden')}
+const TUTORIAL=[{t:'WELCOME TO THE SITE',x:'Orbit the camera and inspect the whole structure before choosing a tool. The contract is won in planning, not in the explosion.'},{t:'READ THE STRUCTURE',x:'Blue and green indicate stable load paths; amber and red indicate stress. Dust, movement and Structural Voice remain useful when overlays are hidden.'},{t:'CHOOSE AN INTERVENTION',x:'Blast releases broad areas. Torch creates hinges. Ram directs force. Brace protects. Cable folds inward. Echo traces hidden load paths.'},{t:'BUILD A SEQUENCE',x:'Charges with the same number fire together. SNAP, ROLL and WAVE change the delay between groups.'},{t:'CONTROL THE OUTCOME',x:'Demolition alone is not enough. Keep debris inside the lines, protect marked assets and stay within budget.'},{t:'LEARN FROM REPLAY',x:'Use Director Replay, slow motion and Load Paths to identify the exact moment your plan succeeded or failed.'}];
+function showTraining(step=0){step=clamp(step,0,TUTORIAL.length-1);const q=TUTORIAL[step];utility(`<h2 class="amber orb">🎓 OPERATOR TRAINING</h2><div class="tutorial-progress">${TUTORIAL.map((x,i)=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div><div class="tutorial-step"><strong>${step+1}. ${q.t}</strong><p>${q.x}</p></div><button class="btn" id="t-prev" ${step===0?'disabled':''}>BACK</button><button class="btn cyan" id="t-next">${step===TUTORIAL.length-1?'COMPLETE':'NEXT'}</button><button class="btn" id="t-launch">LAUNCH TRAINING SITE</button>`);document.getElementById('t-prev').onclick=()=>showTraining(step-1);document.getElementById('t-next').onclick=()=>{if(step===TUTORIAL.length-1){profile.tutorialDone=true;saveProfile();closeUtility();qaToast('Operator training complete')}else showTraining(step+1)};document.getElementById('t-launch').onclick=()=>{profile.tutorialDone=true;saveProfile();closeUtility();const c={id:'training',ico:'🎓',name:'TRAINING YARD',desc:'Guided warehouse practice',gen:'warehouse',arg:{},charges:8,tool:'charges',need:0,budget:999,tip:'Experiment with every intervention. Training does not affect campaign stars.'};const i=CONTRACTS.findIndex(x=>x.id==='training');if(i>=0)CONTRACTS.splice(i,1);CONTRACTS.push(c);openContract('training')}}
+const ARCHIVE={materials:[['BRICK','Brittle; cracks early and produces heavy dust.'],['CONCRETE','Heavy; transfers load and resists small impacts.'],['STEEL','Ductile; bends, resonates and carries force farther.'],['GLASS','Fragile; structurally weak but sensitive to vibration.']],tools:[['BLAST','Broad radial release; expensive and difficult to contain.'],['TORCH','Cuts connections and creates a controlled hinge.'],['RAM','Applies a directional hydraulic push.'],['BRACE','Reduces stress and protects a chosen section.'],['CABLE','Pulls weakened material towards site centre.'],['ECHO','Reveals and stimulates structural pathways.']],systems:[['STRUCTURAL VOICE','Material resonance rises with stress.'],['COLLAPSE MEMORY','Persistent cracks show where force travelled.'],['MACRO STAGES','The simulation identifies impact through dust settlement.'],['DIRECTOR REPLAY','Scrub, slow and analyse every recorded collapse.']],scoring:[['SAFETY','Protect designated assets and avoid uncontrolled hazards.'],['PRECISION','Meet the contract-specific structural objective.'],['COST','Use tools within the professional budget.'],['SIGNATURES','Advanced contracts require a particular shape of collapse.']]};
+function showArchive(tab='materials'){utility(`<h2 class="amber orb">▤ MECHANICS ARCHIVE</h2><div class="archive-tabs">${Object.keys(ARCHIVE).map(k=>`<button data-arc="${k}">${k.toUpperCase()}</button>`).join('')}</div><div>${ARCHIVE[tab].map(([a,b])=>`<div class="archive-entry"><b>${a}</b>${b}</div>`).join('')}</div><button class="btn" id="util-close">BACK</button>`);document.querySelectorAll('[data-arc]').forEach(b=>b.onclick=()=>showArchive(b.dataset.arc));document.getElementById('util-close').onclick=closeUtility;profile.archiveSeen[tab]=1;saveProfile()}
+function showPerfect(){const target='fold';utility(`<h2 class="amber orb">◆ ONE PERFECT COLLAPSE</h2><div class="perfect-panel"><h3>THE FINAL WAREHOUSE</h3><p>Plan once. Commit once. No mid-collapse intervention. Required signature: <b>${SIGNATURES[target].n}</b>.</p><div class="perfect-checks"><div class="perfect-check">Safety ≥ 90</div><div class="perfect-check">Precision ≥ 88</div><div class="perfect-check">Cost ≥ 60</div><div class="perfect-check">Signature achieved</div></div>${profile.perfectBest?`<div class="benchmark">LAST ATTEMPT · ${profile.perfectBest.passed?'CERTIFIED':'INCOMPLETE'} · S ${profile.perfectBest.safety} P ${profile.perfectBest.precision} C ${profile.perfectBest.cost}</div>`:''}</div><button class="btn cyan" id="perfect-launch">BEGIN FINAL PLANNING</button><button class="btn" id="util-close">BACK</button>`);document.getElementById('perfect-launch').onclick=()=>{closeUtility();state.perfectMode=true;const c={id:'perfect',ico:'◆',name:'ONE PERFECT COLLAPSE',desc:'Final warehouse · one committed execution',gen:'warehouse',arg:{},charges:7,tool:'charges',need:0,budget:125,objective:'corridor',signatureTarget:target,tip:'Inspect fully. Once committed, the plan cannot be changed.'};const i=CONTRACTS.findIndex(x=>x.id==='perfect');if(i>=0)CONTRACTS.splice(i,1);CONTRACTS.push(c);openContract('perfect')};document.getElementById('util-close').onclick=closeUtility}
+function showDifficulty(){utility(`<h2 class="amber orb">DIFFICULTY & ADAPTATION</h2><div class="tier-grid">${Object.entries(TIERS).map(([k,t])=>`<button class="tier ${profile.tier===k?'sel':''}" data-tier="${k}"><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div><label style="display:block;margin:12px"><input id="adapt-check" type="checkbox" ${profile.adaptive?'checked':''}> Adaptive crew adviser</label><button class="btn" id="util-close">APPLY</button>`);document.querySelectorAll('[data-tier]').forEach(b=>b.onclick=()=>{profile.tier=b.dataset.tier;document.querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')});document.getElementById('util-close').onclick=()=>{profile.adaptive=document.getElementById('adapt-check').checked;saveProfile();closeUtility();renderBoard()}}
+function showLab(){utility(`<h2 class="amber orb">🧪 COLLAPSE LAB</h2><p class="sub">Launch an unrestricted test structure with every tool available.</p><div class="lab-grid"><button class="lab-card" data-lab="warehouse"><b>WAREHOUSE LAB</b>Brick, concrete and roof spans.</button><button class="lab-card" data-lab="tower"><b>LOAD-PATH TOWER</b>Columns, slabs and reinforced core.</button><button class="lab-card" data-lab="chimney"><b>TOPPLE LAB</b>Direction and base failure.</button><button class="lab-card" data-lab="bridge"><b>SPAN LAB</b>Piers, decks and salvage.</button></div><button class="btn" id="util-close">BACK</button>`);document.querySelectorAll('[data-lab]').forEach(b=>b.onclick=()=>{const gen=b.dataset.lab,c={id:'lab',ico:'🧪',name:'COLLAPSE LAB',desc:'Unlimited structural experiment',gen,arg:gen==='tower'?{floors:7,cols:4}:gen==='chimney'?{rings:12}:{},charges:12,tool:'charges',need:0,budget:999,tip:'Experiment freely. Lab results do not affect campaign stars.'};closeUtility();const old=CONTRACTS.findIndex(x=>x.id==='lab');if(old>=0)CONTRACTS.splice(old,1);CONTRACTS.push(c);openContract('lab')});document.getElementById('util-close').onclick=closeUtility}
+function showBuilder(){utility(`<h2 class="amber orb">▦ SITE MAKER</h2><div class="builder-grid"><label>STRUCTURE<select id="mk-gen"><option>warehouse</option><option>tower</option><option>chimney</option><option>mansion</option><option>bridge</option></select></label><label>OBJECTIVE<select id="mk-obj"><option value="corridor">collapse corridor</option><option value="preserve">heritage preservation</option><option value="salvage">controlled salvage</option></select></label><label>TOOLS / ACTIONS<input id="mk-ch" type="number" min="2" max="12" value="6"></label><label>BUDGET<input id="mk-bg" type="number" min="40" max="400" value="140"></label></div><button class="btn cyan" id="mk-run">TEST SITE</button><button class="btn" id="mk-export">EXPORT CODE</button><textarea id="mk-code" class="share-code" placeholder="Challenge code appears here"></textarea><button class="btn" id="util-close">BACK</button>`);const data=()=>({gen:document.getElementById('mk-gen').value,objective:document.getElementById('mk-obj').value,charges:+document.getElementById('mk-ch').value,budget:+document.getElementById('mk-bg').value});document.getElementById('mk-export').onclick=()=>document.getElementById('mk-code').value=btoa(JSON.stringify(data()));document.getElementById('mk-run').onclick=()=>{const d=data(),c={id:'custom',ico:'▦',name:'CUSTOM CONTRACT',desc:'Crew-built site',gen:d.gen,arg:d.gen==='tower'?{floors:7,cols:3}:d.gen==='chimney'?{rings:11}:d.gen==='mansion'?{storeys:2}:{},charges:d.charges,tool:'charges',need:0,budget:d.budget,objective:d.objective,tip:'A custom precision contract.'};closeUtility();CONTRACTS.push(c);openContract('custom')};document.getElementById('util-close').onclick=closeUtility}
+const MODIFIERS={noBlast:{n:'NO EXPLOSIVES',d:'Blast tool disabled',xp:1.25},three:{n:'THREE MOVES',d:'Maximum three interventions',xp:1.35},silent:{n:'SILENT CONTRACT',d:'Cutter, brace and cable only',xp:1.3},noOverlay:{n:'BLIND ENGINEER',d:'Stress overlay hidden',xp:1.25},zero:{n:'ZERO SPILL',d:'Containment target 95%',xp:1.4},budget:{n:'SHOESTRING',d:'Budget reduced by 30%',xp:1.35}};
+const RIVALS=[{n:'HAMMERHEAD',style:'Fast and forceful',safety:58,precision:67,cost:88},{n:'NEEDLEPOINT',style:'Slow precision',safety:94,precision:91,cost:62},{n:'GREENLINE',style:'Salvage specialists',safety:90,precision:79,cost:82},{n:'REDLINE',style:'Timed charges',safety:72,precision:87,cost:70}];
+function showModifiers(){utility(`<h2 class="amber orb">◆ CONTRACT MODIFIERS</h2><p class="sub">Optional challenges increase career XP without changing physics.</p><div class="mod-grid">${Object.entries(MODIFIERS).map(([k,m])=>`<button class="modifier ${profile.modifiers[k]?'on':''}" data-mod="${k}"><b>${m.n} · ${m.xp}× XP</b><small>${m.d}</small></button>`).join('')}</div><button class="btn" id="util-close">SAVE</button>`);document.querySelectorAll('[data-mod]').forEach(b=>b.onclick=()=>{profile.modifiers[b.dataset.mod]=!profile.modifiers[b.dataset.mod];b.classList.toggle('on')});document.getElementById('util-close').onclick=()=>{saveProfile();closeUtility()}}
+function showSignatures(){utility(`<h2 class="amber orb">◈ COLLAPSE SIGNATURES</h2><div class="completion-ring" style="--p:${Object.keys(profile.signatures).length/Object.keys(SIGNATURES).length*360}deg"><b>${Object.keys(profile.signatures).length}/${Object.keys(SIGNATURES).length}</b></div><div class="sig-grid" style="margin-top:10px">${Object.entries(SIGNATURES).map(([k,v])=>`<div class="sig-card ${profile.signatures[k]?'have':''}"><i>${v.i}</i><b>${v.n}</b><small>${profile.signatures[k]?profile.signatures[k]+' recorded':v.d}</small></div>`).join('')}</div><button class="btn" id="util-close">BACK</button>`);document.getElementById('util-close').onclick=closeUtility}
+function showRivals(){const m=state.precision||{safety:0,precision:0,cost:0};utility(`<h2 class="amber orb">⚑ RIVAL BENCHMARKS</h2><div class="rival-grid">${RIVALS.map(r=>{const beat=(m.safety>r.safety)+(m.precision>r.precision)+(m.cost>r.cost);return `<div class="rival"><div><b>${r.n}</b><small>${r.style}</small></div><div>${beat>=2?'BEATEN ✓':'TARGET'}<br><small>S ${r.safety} · P ${r.precision} · C ${r.cost}</small></div></div>`}).join('')}</div><button class="btn" id="util-close">BACK</button>`);document.getElementById('util-close').onclick=closeUtility}
+function toolMasteryHtml(){const names={blast:'BLAST',cutter:'TORCH',thump:'RAM',brace:'BRACE',cable:'CABLE',pulse:'ECHO',ball:'WRECKING BALL'};return Object.entries(profile.toolXP).map(([k,v])=>`<div class="mastery-tool"><header><span>${names[k]}</span><b>LEVEL ${Math.min(5,Math.floor(v/40)+1)}</b></header><div class="tmeter"><i style="width:${Math.min(100,v%40/40*100)}%"></i></div></div>`).join('')}
+function showMastery(){utility(`<h2 class="amber orb">★ CREW PROFILE</h2><div class="mastery-card"><h3>${profile.rank||'TRAINEE'}</h3><p>${profile.xp||0} career XP · ${totalStars()} contract stars · ${profile.assists||0} adviser interventions</p><div class="skill-grid">${Object.entries(profile.skills||{}).map(([k,v])=>`<div class="skill"><b>${k.toUpperCase()}</b><strong>${v}</strong></div>`).join('')}</div></div><h3>TOOL MASTERY</h3>${toolMasteryHtml()}<h3>ACCESSIBILITY</h3><div class="access-grid"><button class="access-opt ${profile.access.large?'on':''}" data-acc="large"><b>Large interface</b><small>Larger contract and report text.</small></button><button class="access-opt ${profile.access.contrast?'on':''}" data-acc="contrast"><b>High contrast</b><small>Sharper panels and boundaries.</small></button><button class="access-opt ${profile.access.fx?'on':''}" data-acc="fx"><b>Reduced effects</b><small>Hides captions and slow-motion labels.</small></button><button class="access-opt" id="reset-career"><b>Reset career profile</b><small>Leaves the game file unchanged.</small></button></div><button class="btn" id="util-close">SAVE & BACK</button>`);document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{profile.access[b.dataset.acc]=!profile.access[b.dataset.acc];b.classList.toggle('on')});document.getElementById('reset-career').onclick=()=>{profile.xp=0;profile.skills={safety:0,precision:0,efficiency:0,engineering:0,environment:0};saveProfile();showMastery()};document.getElementById('util-close').onclick=()=>{applyAccess();saveProfile();closeUtility();renderBoard()}}
+function applyAccess(){profile.access=profile.access||{large:false,contrast:false,fx:false};document.body.classList.toggle('wc-large',profile.access.large);document.body.classList.toggle('wc-contrast',profile.access.contrast);document.body.classList.toggle('wc-reducefx',profile.access.fx)}
+document.getElementById('rp-scrub').oninput=e=>{if(state.record)state.replayT=(+e.target.value/1000)*(state.record.frames.length/CFG.recordHz)};document.getElementById('rp-pause').onclick=()=>{state.replayPaused=!state.replayPaused;document.getElementById('rp-pause').textContent=state.replayPaused?'▶ PLAY':'Ⅱ PAUSE'};document.querySelectorAll('[data-spd]').forEach(b=>b.onclick=()=>{state.replaySpeed=+b.dataset.spd;document.querySelectorAll('[data-spd]').forEach(x=>x.classList.remove('on'));b.classList.add('on')});document.getElementById('rp-cam').onclick=()=>{state.replayCamera=state.replayCamera==='auto'?'free':'auto';document.getElementById('rp-cam').textContent='CAMERA: '+state.replayCamera.toUpperCase()};document.getElementById('rp-engineer').onclick=()=>{state.replayEngineering=!state.replayEngineering;document.getElementById('rp-engineer').classList.toggle('on',state.replayEngineering)};document.getElementById('rp-compare').onclick=()=>document.body.classList.toggle('compare');
 /* ================= SETTINGS ================= */
+document.getElementById('difficulty-btn').onclick=showDifficulty;document.getElementById('lab-btn').onclick=showLab;document.getElementById('builder-btn').onclick=showBuilder;document.getElementById('mastery-btn').onclick=showMastery;document.getElementById('modifier-btn').onclick=showModifiers;document.getElementById('signature-btn').onclick=showSignatures;document.getElementById('training-btn').onclick=()=>showTraining(0);document.getElementById('archive-btn').onclick=()=>showArchive('materials');document.getElementById('perfect-btn').onclick=showPerfect;applyAccess();
 document.getElementById('opt-calm').checked=!!profile.calm;
 document.getElementById('opt-sound').checked=!!profile.sound;
 document.getElementById('opt-calm').onchange=e=>{profile.calm=e.target.checked;AudioSys.applyVol();saveProfile();};
@@ -1470,7 +1621,7 @@ document.getElementById('back-btn').onclick=()=>toBoard();
 document.getElementById('sc-retry').onclick=()=>openContract(state.contract.id);
 document.getElementById('sc-board').onclick=()=>toBoard();
 document.getElementById('sc-replay').onclick=()=>startReplay();
-document.getElementById('sc-photo').onclick=()=>makeSitePhoto();
+document.getElementById('sc-photo').onclick=()=>makeSitePhoto();document.getElementById('sc-signatures').onclick=showSignatures;document.getElementById('sc-rivals').onclick=showRivals;
 function makeSitePhoto(){
   try{
     const S=state.lastScore;if(!S)return;
@@ -1509,11 +1660,11 @@ function makeSitePhoto(){
     },'image/png');
   }catch(e){popup('Photo failed on this device','#ef4444');}
 }
-document.getElementById('sc-next').onclick=()=>{const n=CONTRACTS[state.contract.id+1];if(n)openContractWithBrief(n.id);};
+document.getElementById('sc-next').onclick=()=>{const idx=CONTRACTS.findIndex(x=>x.id===state.contract.id),n=CONTRACTS[idx+1];if(n)openContractWithBrief(n.id);};
 document.getElementById('rp-again').onclick=()=>{state.replayT=0;};
 document.getElementById('rp-done').onclick=()=>endReplay();
 function toBoard(){
-  state.mode='BOARD';clearSite();
+  state.mode='BOARD';state.perfectMode=false;clearSite();
   const fin=document.getElementById('ball-finish');if(fin)fin.remove();
   document.getElementById('hud').style.display='none';
   document.getElementById('ball-ui').style.display='none';
@@ -1736,7 +1887,8 @@ setTimeout(()=>{if(Title.active&&Title.seq<SEQ.reveal+3){Title.seq=SEQ.reveal+3;
 
 /* ================= INIT ================= */
 loop();
-window.__WC={state,profile,openContract,openContractWithBrief,dismissTitle,Title,detonate,scoreContract,tick,world,CONTRACTS,demolitionPct,containmentPct,worldKE,keys,ballKeys,CFG,placeCharge,fireCharge,totalStars,startReplay,endReplay};
+applyAccess();
+window.__WC={state,profile,openContract,openContractWithBrief,dismissTitle,Title,detonate,scoreContract,tick,world,CONTRACTS,demolitionPct,containmentPct,worldKE,keys,ballKeys,CFG,placeCharge,fireCharge,totalStars,updateStructuralState,materialProps,objectiveMetrics,updateCareer,showLab,showBuilder,showDifficulty,showMastery,setEnvironment,spawnDustCloud,spawnSparks,propagateMemory,updateStructureVoice,spawnBoltBurst,spawnGroundShock,exposeInterior,showModifiers,showSignatures,showRivals,showPlanGhost,showTraining,showArchive,showPerfect,validateContract,accelerateCollapseBits,startReplay,endReplay};
 </script>
 </body>
 </html>
