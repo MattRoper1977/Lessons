@@ -177,19 +177,54 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
 .ed-step b{font-family:'Orbitron',sans-serif;min-width:22px;text-align:center;color:var(--cyan)}
 .ed-b{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);background:#0d1630;color:var(--ink);font-size:15px;cursor:pointer}
 .ed-share{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#0d1630;color:var(--cyan);font-size:11px}
+
+/* ===== Guardian toolkit: world-first rescue controls ===== */
+#tools{min-height:58px}
+#tools::before{content:"GUARDIAN TOOLS";width:100%;text-align:center;font-family:Orbitron,sans-serif;font-size:9px;letter-spacing:2px;color:var(--mut);margin-bottom:-2px}
+.skill .nm{max-width:76px}
+#focus-wrap{position:absolute;right:8px;bottom:8px;width:116px;padding:5px 7px;border-radius:9px;background:rgba(6,10,24,.78);border:1px solid var(--line);pointer-events:none}
+#focus-wrap b{display:block;font:8px Orbitron,sans-serif;letter-spacing:1.4px;color:var(--cyan);margin-bottom:3px}
+#focus-meter{height:5px;border-radius:4px;background:rgba(255,255,255,.09);overflow:hidden}
+#focus-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));box-shadow:0 0 8px rgba(39,224,255,.7)}
+#hold-ring{position:absolute;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;display:none;pointer-events:none;z-index:12;background:conic-gradient(var(--cyan) var(--hold,0%),rgba(39,224,255,.13) 0);filter:drop-shadow(0 0 7px rgba(39,224,255,.55))}
+#hold-ring::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(6,10,24,.88)}
+#tool-wheel{position:absolute;width:224px;height:224px;margin:-112px 0 0 -112px;display:none;z-index:13;pointer-events:none;filter:drop-shadow(0 12px 28px rgba(0,0,0,.55))}
+#tool-wheel.show{display:block}
+.wedge{position:absolute;left:82px;top:82px;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:rgba(12,20,43,.96);border:2px solid var(--line);color:var(--ink);transform:translate(var(--wx),var(--wy));transition:transform .1s,border-color .1s,background .1s;box-shadow:0 0 18px rgba(0,0,0,.35)}
+.wedge .wi{font-size:21px;line-height:1}.wedge .wn{font:7px Orbitron,sans-serif;letter-spacing:.4px;margin-top:2px;color:var(--mut)}
+.wedge.hot{border-color:var(--cyan);background:rgba(20,54,75,.98);transform:translate(var(--wx),var(--wy)) scale(1.15);box-shadow:0 0 18px rgba(39,224,255,.42)}
+.wedge.off{opacity:.35;filter:grayscale(1)}
+.wheel-core{position:absolute;left:91px;top:91px;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#091126;border:1px solid var(--line);font-size:16px}
+#preview-note{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:11;display:none;padding:5px 10px;border-radius:8px;background:rgba(6,10,24,.82);border:1px solid var(--cyan);font:10px Orbitron,sans-serif;color:var(--cyan);pointer-events:none;white-space:nowrap}
+#preview-note.show{display:block}
+@media(max-width:520px){#focus-wrap{width:92px}.wedge{width:56px;height:56px}.skill .nm{font-size:8px}}
+
+
+/* ===== audiovisual polish ===== */
+#ma-splash{background:#030611}#splash-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.ma-nebula{position:absolute;border-radius:50%;filter:blur(55px);mix-blend-mode:screen;opacity:.35;animation:nDrift 7s ease-in-out infinite alternate}.n1{width:52vmax;height:36vmax;left:-16vmax;top:-12vmax;background:radial-gradient(circle,#572cb9,transparent 68%)}.n2{width:52vmax;height:38vmax;right:-17vmax;bottom:-15vmax;background:radial-gradient(circle,#087fa9,transparent 68%);animation-delay:-3s}
+.ma-stage{padding:35px 44px;border-radius:30px;background:radial-gradient(circle at 50% 0,rgba(39,224,255,.1),transparent 66%);box-shadow:0 0 100px rgba(39,224,255,.1)}.ma-title{filter:drop-shadow(0 0 18px #27e0ff) drop-shadow(0 0 44px rgba(100,80,255,.5))}.ma-tag{font-weight:700;color:#a8d5f5}.ma-crew{display:flex;justify-content:center;gap:12px;margin:24px 0 7px}.ma-crew i{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#70efff 40%,#177ca9);box-shadow:0 0 12px #27e0ff;animation:cWalk 1.8s ease-in-out infinite}.ma-crew i:nth-child(2){animation-delay:-.3s}.ma-crew i:nth-child(3){animation-delay:-.6s}.ma-crew i:nth-child(4){animation-delay:-.9s}.ma-crew i:nth-child(5){animation-delay:-1.2s}
+@keyframes nDrift{to{transform:translate(5vw,3vh) scale(1.12)}}@keyframes cWalk{50%{transform:translateY(-8px);opacity:.65}}
+.card.mission{max-width:520px;padding:0;overflow:hidden;background:linear-gradient(150deg,#122044,#070d20);border-color:rgba(39,224,255,.45);box-shadow:0 25px 90px #000b,0 0 45px rgba(39,224,255,.15)}.mission-head{padding:24px;background:radial-gradient(circle at 50% -30%,rgba(39,224,255,.3),transparent 60%),linear-gradient(135deg,rgba(177,140,255,.15),transparent);border-bottom:1px solid rgba(39,224,255,.2)}.mission-k{font:700 9px Orbitron;letter-spacing:3px;color:#27e0ff}.mission-head h1{font-size:clamp(25px,6vw,38px);margin:8px 0 5px;background:linear-gradient(#fff,#8deeff);-webkit-background-clip:text;color:transparent}.mission-body{padding:18px 22px 22px}.mission-tip{text-align:left;padding:11px 13px;border-radius:12px;background:rgba(39,224,255,.07);border:1px solid rgba(39,224,255,.2);line-height:1.5;color:#d9edff}.mission-controls{margin:11px 0;color:#8fa6c8;font-size:11px}.mission-controls b{color:#27e0ff}
+canvas#cv{border-color:rgba(91,217,255,.42);box-shadow:0 20px 70px #000b,0 0 45px rgba(39,224,255,.12),inset 0 0 70px rgba(0,0,0,.45)}#wrap:before{content:"";position:absolute;inset:-5px;border:1px solid rgba(177,140,255,.18);border-radius:17px;pointer-events:none;box-shadow:0 0 28px rgba(39,224,255,.1)}
+
+/* ===== final single-player mastery pass ===== */
+#route-warning{position:absolute;left:8px;bottom:8px;z-index:11;display:none;max-width:250px;padding:6px 9px;border-radius:9px;background:rgba(40,12,34,.82);border:1px solid rgba(255,110,169,.5);color:#ffd5e6;font-size:11px;pointer-events:none}
+#route-warning.show{display:block;animation:warnPulse 1.3s ease-in-out infinite}
+@keyframes warnPulse{50%{box-shadow:0 0 18px rgba(255,110,169,.32)}}
+.mastery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.mastery div{padding:9px 5px;border-radius:10px;background:#0d1630;border:1px solid var(--line)}.mastery b{display:block;font:700 15px Orbitron;color:var(--cyan)}.mastery small{font:8px Orbitron;letter-spacing:.8px;color:var(--mut)}
+.achievement{margin:9px 0;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,193,77,.35);background:rgba(255,193,77,.08);color:#ffe6ae;font-size:12px}
+#c-undo:disabled{opacity:.35;cursor:not-allowed}
 </style>
 </head>
 <body>
 <div id="ma-splash" aria-hidden="true">
+  <canvas id="splash-canvas"></canvas><div class="ma-nebula n1"></div><div class="ma-nebula n2"></div>
   <div class="ma-ring mr1"></div><div class="ma-ring mr2"></div><div class="ma-ring mr3"></div>
-  <div class="ma-stage">
-    <div class="ma-pre">MATT'S APPS</div>
-    <div class="ma-word">PRESENTS</div>
-    <div class="ma-line"><i class="ma-orb"></i></div>
-    <div class="ma-title">LUMINS</div>
-    <div class="ma-tag">guide the light home</div>
-    <div class="ma-skip">tap to skip</div>
-  </div>
+  <div class="ma-stage"><div class="ma-pre">MATT'S GAMES</div><div class="ma-word">PRESENTS</div>
+    <div class="ma-line"><i class="ma-orb"></i></div><div class="ma-title">LUMINS</div>
+    <div class="ma-tag">THE LIGHT REMEMBERS THE WAY</div><div class="ma-crew"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="ma-skip">TAP TO ENTER THE CONSTELLATION</div></div>
 </div>
 
 <div id="app">
@@ -202,6 +237,11 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
   <div id="stage">
     <div id="wrap">
       <canvas id="cv" width="720" height="432"></canvas>
+      <div id="hold-ring"></div>
+      <div id="tool-wheel" role="menu" aria-label="Guardian tools"><div class="wheel-core">✦</div></div>
+      <div id="preview-note"></div>
+      <div id="route-warning"></div>
+      <div id="focus-wrap"><b>FOCUS</b><div id="focus-meter"><div id="focus-fill"></div></div></div>
       <div id="tip"></div>
       <div class="ov" id="ov"><div class="card" id="card"></div></div>
     </div>
@@ -209,8 +249,9 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
   <div id="tools"></div>
   <div id="bar">
     <button class="ctrl" id="c-pause">⏸ PAUSE</button>
-    <button class="ctrl" id="c-speed">▶ 1×</button>
+    <button class="ctrl" id="c-speed">▶ 0.75×</button>
     <button class="ctrl" id="c-restart">↻ RESTART</button>
+    <button class="ctrl" id="c-undo">↶ UNDO</button>
     <button class="ctrl" id="c-end">🏁 END</button>
     <button class="ctrl" id="c-sound">🔈 SOUND</button>
     <button class="ctrl" id="c-calm">☾ CALM</button>
@@ -232,7 +273,7 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
 (function(){
 "use strict";
 /* ============================ CONFIG ============================ */
-var CELL=18, WALKINT=2, FALLINT=1, FLOATINT=3, DIGINT=5, BASHINT=4, BUILDINT=6,
+var CELL=18, WALKINT=5, FALLINT=1, FLOATINT=3, DIGINT=5, BASHINT=4, BUILDINT=6,
     SPAWNINT=18, BUILDLEN=10, MAXFALL=6, TICKHZ=30;
 
 /* Skills: order = toolbar order */
@@ -242,11 +283,11 @@ var RUN={best:{}};
 try{ RUN.best=JSON.parse(localStorage.getItem("lumins_run")||"{}"); }catch(e){}
 
 var SKILLDEF=[
-  {id:"block", nm:"Blocker", ic:"🛑", col:"#ffc14d"},
-  {id:"dig",   nm:"Digger",  ic:"⛏️", col:"#ff9a4c"},
-  {id:"bash",  nm:"Basher",  ic:"➡️", col:"#ff6ea9"},
-  {id:"build", nm:"Builder", ic:"🧱", col:"#39ff9e"},
-  {id:"float", nm:"Floater", ic:"🪂", col:"#27e0ff"}
+  {id:"block", nm:"Barrier", ic:"🛡️", col:"#ffc14d", desc:"Place a turning field"},
+  {id:"dig",   nm:"Carve Down",  ic:"⬇️", col:"#ff9a4c", desc:"Carve a shaft"},
+  {id:"bash",  nm:"Tunnel",  ic:"↔️", col:"#ff6ea9", desc:"Carve sideways"},
+  {id:"build", nm:"Bridge", ic:"🌉", col:"#39ff9e", desc:"Shape a light bridge"},
+  {id:"float", nm:"Updraft", ic:"🌀", col:"#27e0ff", desc:"Cushion a fall"}
 ];
 
 /* ============================ LEVELS ============================
@@ -257,7 +298,7 @@ var LEVELS=[
 {
  name:'01 · First Steps', start:1, total:5, target:3, spawn:60,
  skills:{block:1, dig:0, bash:0, build:4, float:0},
- hint:'They walk on their own. Tap <b>Builder</b>, then tap a lumin to bridge the gap and reach the green portal. Get 3 across.',
+ hint:'They walk on their own. Open the toolkit and place a <b>Bridge</b> across the gap and reach the green portal. Get 3 across.',
  map:[
  "........................................",
  "........................................",
@@ -288,7 +329,7 @@ var LEVELS=[
 {
  name:'02 · Turn & Drop', start:1, total:6, target:4, spawn:16,
  skills:{block:2, dig:5, bash:0, build:1, float:0},
- hint:'The path dead-ends at a steel wall. Use a <b>Digger</b> to sink through the floor to the exit below. A <b>Blocker</b> can hold the crowd while you think.',
+ hint:'The path dead-ends at a steel wall. Use <b>Carve Down</b> on the floor to the exit below. A <b>Barrier</b> can turn and hold the crowd while you think.',
  map:[
  "........................................",
  "........................................",
@@ -319,7 +360,7 @@ var LEVELS=[
 {
  name:'03 · Break Through', start:1, total:6, target:4, spawn:16,
  skills:{block:1, dig:0, bash:4, build:2, float:4},
- hint:'A thick wall blocks the way. <b>Basher</b> tunnels sideways through it. Mind the long drop after — a <b>Floater</b> lands safely.',
+ hint:'A thick wall blocks the way. The <b>Tunnel</b> tool carves sideways through it. Mind the long drop after — an <b>Updraft</b> cushions the fall.',
  map:[
  "........................................",
  "........................................",
@@ -350,7 +391,7 @@ var LEVELS=[
 {
  name:'04 · Feather Fall', start:1, total:6, target:4, spawn:45,
  skills:{block:0, dig:0, bash:0, build:0, float:6},
- hint:'That drop is far too big to survive… unless you can drift. Tap <b>Floater</b>, then tap each lumin — <b>even while they fall</b> — and they will glide down safely.',
+ hint:'That drop is far too big to survive… unless you can drift. Place an <b>Updraft</b> through the fall route to cushion everyone passing through.',
  map:[
  "........................................",
  "........................................",
@@ -412,7 +453,7 @@ var LEVELS=[
 {
  name:'06 · The Choice', start:1, total:8, target:5, silver:6, gold:7, spawn:24,
  skills:{block:1, dig:0, bash:2, build:0, float:0},
- hint:'They march right — straight off the cliff. Only a <b>Blocker</b> can turn them… and a blocker never walks again. Choose who stands. Then <b>Bash</b> the old wall on the left to reach the portal. Not everyone is coming home.',
+ hint:'They march right — straight off the cliff. Place a <b>Barrier</b> to turn the whole stream. Then use <b>Tunnel</b> the old wall on the left to reach the portal. Not everyone is coming home.',
  map:[
  "........................................",
  "........................................",
@@ -506,7 +547,7 @@ var LEVELS=[
 {
  name:'09 · One Way Out', start:1, total:9, target:6, spawn:18,
  skills:{block:0, dig:2, bash:2, build:0, float:0},
- hint:'Energy gates only open <b>one way</b> — walk through, and there\u2019s no going back. The gate pens your lumins safely behind the old wall. <b>Bash</b> the wall when you\u2019re ready, then <b>dig</b> at the marked stone before anyone reaches the shade crystals. Purple means <b>never touch</b>.',
+ hint:'Energy gates only open <b>one way</b> — walk through, and there\u2019s no going back. The gate pens your lumins safely behind the old wall. use <b>Tunnel</b> on the wall when you\u2019re ready, then <b>Carve Down</b> at the marked stone before anyone reaches the shade crystals. Purple means <b>never touch</b>.',
  map:[
  "........................................",
  "........................................",
@@ -537,7 +578,7 @@ var LEVELS=[
 {
  name:'10 · Shade Garden', start:1, total:10, target:6, silver:9, spawn:11,
  skills:{block:0, dig:1, bash:0, build:0, float:0},
- hint:'Soft stone, shade crystals, and one digger. The pioneers must cross the crumbling span and <b>sink the shaft at the cracked stone</b> before they touch the shade. Latecomers… will find the ground opens its own way down. Move fast. Trust the fall.',
+ hint:'Soft stone, shade crystals, and one downward carve. The pioneers must cross the crumbling span and <b>sink the shaft at the cracked stone</b> before they touch the shade. Latecomers… will find the ground opens its own way down. Move fast. Trust the fall.',
  map:[
  "........................................",
  "........................................",
@@ -570,8 +611,8 @@ var LEVELS=[
 /* ============================ STATE ============================ */
 var G={grid:null,cols:0,rows:0,lumins:[],parts:[],saved:0,out:0,spawned:0,dead:0,
   entrance:{c:0,r:0}, exit:{c:0,r:0}, skills:{}, def:null, lvl:0,
-  state:"intro", paused:false, speed:1, spawnT:0, armed:null,
-  sound:false, calm:false, terrainDirty:true};
+  state:"intro", paused:false, speed:0.75, spawnT:0, armed:null,
+  sound:false, calm:false, terrainDirty:true, fields:[], focus:100, focusSlow:false, interventions:0, reversals:0, holdTicks:0, wheel:null, preview:null, history:[], peakAtRisk:0, noLossStreak:0};
 var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ============================ LOAD LEVEL ============================ */
@@ -593,6 +634,7 @@ function loadDef(d){
   G.entrance={c:d.entrance.c,r:d.entrance.r}; G.exit={c:d.exit.c,r:d.exit.r};
   G.lumins=[]; G.parts=[]; G.saved=0; G.out=0; G.spawned=0; G.dead=0;
   G.spawnT=0; G.armed=null; G.terrainDirty=true; G.mode="play"; G.crumbs={};
+  G.fields=[]; G.focus=100; G.focusSlow=false; G.interventions=0; G.reversals=0; G.holdTicks=0; G.wheel=null; G.preview=null; G.history=[]; G.peakAtRisk=0;
   G.lvl=(typeof d.lvl==="number")?d.lvl:-1;
   G.skills={}; for(var s in d.skills) G.skills[s]=d.skills[s];
   resizeCanvas();
@@ -605,7 +647,9 @@ function solid(c,r){ var t=cellType(c,r); return t===1||t===2||t===3; }
 function steel(c,r){ return cellType(c,r)===2; }
 function setEmpty(c,r){ if(c>=0&&r>=0&&c<G.cols&&r<G.rows && G.grid[r*G.cols+c]===1){ G.grid[r*G.cols+c]=0; G.terrainDirty=true; puff(c,r,"#7fa8ff",4);} }
 function setTerrain(c,r){ if(c>=0&&r>=0&&c<G.cols&&r<G.rows && G.grid[r*G.cols+c]===0){ G.grid[r*G.cols+c]=1; G.terrainDirty=true; } }
-function blockerAt(c,r){ for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i]; if(L.state==="block"&&L.c===c&&L.r===r) return true;} return false; }
+function fieldAt(type,c,r){ for(var i=0;i<G.fields.length;i++){var f=G.fields[i]; if(f.type===type && Math.abs(f.c-c)<= (f.w||0) && Math.abs(f.r-r)<= (f.h||0)) return f;} return null; }
+function blockerAt(c,r){ return !!fieldAt("block",c,r); }
+function inUpdraft(c,r){ return !!fieldAt("float",c,r); }
 function isExit(c,r){ return c===G.exit.c && (r===G.exit.r || r===G.exit.r-1); }
 
 /* ============================ LUMIN ============================ */
@@ -626,8 +670,8 @@ function stepLumin(L){
     case "walk":{
       if(L.timer<WALKINT) return; L.timer=0;
       if(!solid(L.c,L.r+1)){ L.state="fall"; L.fall=0; return; }
-      if(blockerAt(L.c+L.dir,L.r)){ L.dir*=-1; return; }
-      var gt=cellType(L.c+L.dir,L.r); if((gt===4&&L.dir<0)||(gt===5&&L.dir>0)){ L.dir*=-1; return; }
+      if(blockerAt(L.c+L.dir,L.r)){ L.dir*=-1; G.reversals++; L.mood="startled"; return; }
+      var gt=cellType(L.c+L.dir,L.r); if((gt===4&&L.dir<0)||(gt===5&&L.dir>0)){ L.dir*=-1; G.reversals++; return; }
       if(solid(L.c+L.dir,L.r)){
         // wall: step up 1 if room
         if(!solid(L.c+L.dir,L.r-1) && !solid(L.c,L.r-1)){ L.c+=L.dir; L.r-=1; }
@@ -642,15 +686,15 @@ function stepLumin(L){
       return;
     }
     case "fall":{
-      var iv = L.floater?FLOATINT:FALLINT;
+      var lifted=L.floater||inUpdraft(L.c,L.r); var iv = lifted?FLOATINT:FALLINT;
       if(L.timer<iv) return; L.timer=0;
       if(solid(L.c,L.r+1)){
-        if(!L.floater && L.fall>MAXFALL){ L.state="dead"; L.dtime=performance.now(); G.dead++; G.out++; puff(L.c,L.r,"#9aa4b6",8); ping(180); }
+        if(!lifted && L.fall>MAXFALL){ L.state="dead"; L.dtime=performance.now(); G.dead++; G.out++; puff(L.c,L.r,"#9aa4b6",8); ping(180); }
         else { L.state="walk"; L.wave=false; if(L.pending) applyPending(L); }
         return;
       }
       L.r+=1; L.fall++;
-      if(!L.floater && L.fall>MAXFALL) L.wave=true;
+      if(!lifted && L.fall>MAXFALL) L.wave=true;
       return;
     }
     case "dig":{
@@ -686,38 +730,54 @@ function stepLumin(L){
   }
 }
 
-/* ============================ ASSIGN SKILL ============================ */
-function assignable(L,type){
-  if(L.state==="exit"||L.state==="dead"||L.state==="block") return false;
-  if(type==="float") return !L.floater;                 // trait, even mid-air
-  if(L.pending) return false;                            // one queued skill max
-  return L.state==="walk"||L.state==="fall";             // falling? we queue it
+/* ============================ GUARDIAN WORLD TOOLS ============================ */
+function spendTool(type){ if((G.skills[type]|0)<=0)return false; G.skills[type]--; G.interventions++; toolSound(type); buildTools(); return true; }
+function validCell(c,r){return c>=0&&r>=0&&c<G.cols&&r<G.rows;}
+function nearestLumin(c,r){var best=null,bd=1e9;for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i];if(L.state==="dead"||L.state==="exit")continue;var d=Math.abs(L.c-c)+Math.abs(L.r-r);if(d<bd){bd=d;best=L;}}return best;}
+function environmentalPreview(type,c,r){
+  var cells=[], ok=false, msg="";
+  if(!validCell(c,r))return {ok:false,cells:[],msg:"Outside the rescue field"};
+  if(type==="block"){ok=!solid(c,r);cells.push([c,r]);msg="Turns lumins around for 14 seconds";}
+  else if(type==="dig"){for(var y=r;y<Math.min(G.rows,r+5);y++)if(cellType(c,y)===1)cells.push([c,y]);ok=cells.length>0;msg=ok?"Carve this shaft":"Aim at blue destructible ground";}
+  else if(type==="bash"){for(var x=Math.max(0,c-3);x<=Math.min(G.cols-1,c+3);x++)if(cellType(x,r)===1)cells.push([x,r]);ok=cells.length>0;msg=ok?"Open a horizontal tunnel":"Aim at blue destructible ground";}
+  else if(type==="build"){var L=nearestLumin(c,r),dir=L?L.dir:1;for(var n=0;n<5;n++){var bx=c+n*dir,br=r+Math.floor(n/2);if(validCell(bx,br)&&cellType(bx,br)===0)cells.push([bx,br]);}ok=cells.length>=3;msg=ok?"Shape a five-segment light bridge":"Need clear space for a bridge";}
+  else if(type==="float"){ok=!solid(c,r);for(var yy=Math.max(0,r-5);yy<=Math.min(G.rows-1,r+2);yy++)cells.push([c,yy]);msg="Updraft lasts 14 seconds";}
+  return {ok:ok,cells:cells,msg:msg};
 }
-function applyPending(L){
-  var p=L.pending; L.pending=null; L.timer=0;
-  if(p==="block") L.state="block";
-  else if(p==="dig") L.state="dig";
-  else if(p==="bash") L.state="bash";
-  else if(p==="build"){ L.state="build"; L.bricks=BUILDLEN; }
+function takeSnapshot(type,c,r,pr){
+  var cells=[];for(var i=0;i<pr.cells.length;i++){var q=pr.cells[i],idx=q[1]*G.cols+q[0];cells.push({c:q[0],r:q[1],v:G.grid[idx]});}
+  return {type:type,c:c,r:r,cells:cells,fields:G.fields.map(function(f){return Object.assign({},f)}),skills:Object.assign({},G.skills),interventions:G.interventions};
 }
-function assign(L,type){
-  if((G.skills[type]|0)<=0) return false;
-  if(!assignable(L,type)) return false;
-  if(type!=="float" && L.state==="fall"){               // queue for landing
-    L.pending=type; G.skills[type]--; puff(L.c,L.r,skillCol(type),8); return true;
-  }
-  if(type==="float"){ L.floater=true; }
-  else if(type==="block"){ L.state="block"; L.timer=0; }
-  else if(type==="dig"){ L.state="dig"; L.timer=0; }
-  else if(type==="bash"){ L.state="bash"; L.timer=0; }
-  else if(type==="build"){ L.state="build"; L.timer=0; L.bricks=BUILDLEN; }
-  G.skills[type]--; puff(L.c,L.r,skillCol(type),8); return true;
+function undoIntervention(){
+  var h=G.history.pop();if(!h){tip("Nothing to undo");return;}
+  for(var i=0;i<h.cells.length;i++){var q=h.cells[i];G.grid[q.r*G.cols+q.c]=q.v;}
+  G.fields=h.fields.map(function(f){return Object.assign({},f)});G.skills=Object.assign({},h.skills);G.interventions=h.interventions;G.terrainDirty=true;G.preview=null;buildTools();updateUndo();tone(350,.09,"triangle",.035);tone(270,.14,"triangle",.03,.06);tip("Last intervention restored");
 }
+function updateUndo(){var b=document.getElementById("c-undo");if(b)b.disabled=!G.history.length;}
+function useWorldTool(type,c,r){
+  if((G.skills[type]|0)<=0){tip("None left");return false;}
+  var pr=environmentalPreview(type,c,r); if(!pr.ok){tip(pr.msg);return false;}
+  G.history.push(takeSnapshot(type,c,r,pr));if(G.history.length>12)G.history.shift();updateUndo();
+  if(type==="block")G.fields.push({type:"block",c:c,r:r,w:0,h:0,t:TICKHZ*14});
+  else if(type==="float")G.fields.push({type:"float",c:c,r:r-2,w:0,h:4,t:TICKHZ*14});
+  else if(type==="dig"||type==="bash"){for(var i=0;i<pr.cells.length;i++)setEmpty(pr.cells[i][0],pr.cells[i][1]);}
+  else if(type==="build"){for(var j=0;j<pr.cells.length;j++)setTerrain(pr.cells[j][0],pr.cells[j][1]);}
+  spendTool(type); puff(c,r,skillCol(type),12); G.preview=null; return true;
+}
+/* Kept for the level-maker's conservative solver API. Live play never turns a lumin into a tool. */
+function assignable(L,type){return false;}
+function applyPending(L){}
+function assign(L,type){return false;}
 function skillCol(id){ for(var i=0;i<SKILLDEF.length;i++) if(SKILLDEF[i].id===id) return SKILLDEF[i].col; return "#fff"; }
 
 /* ============================ SIM STEP ============================ */
 function step(){
   if(G.state!=="play") return;
+  for(var fi=G.fields.length-1;fi>=0;fi--){if(--G.fields[fi].t<=0)G.fields.splice(fi,1);}
+  if(G.focusSlow)G.focus=Math.max(0,G.focus-0.42);else G.focus=Math.min(100,G.focus+0.11);
+  if(G.focus<=0)closeToolWheel(true);
+  var waiting=0,atRisk=0;for(var wi=0;wi<G.lumins.length;wi++){var WL=G.lumins[wi];if(WL.state==="block")waiting++;if(WL.state!=="dead"&&WL.state!=="exit"){if(WL.state==="fall"&&WL.fall>MAXFALL-2){WL.mood="afraid";atRisk++;}else if(blockerAt(WL.c+WL.dir,WL.r)){WL.mood="waiting";}else if(WL.mood&&Math.random()<.018)WL.mood=null;}}
+  G.peakAtRisk=Math.max(G.peakAtRisk,atRisk);G.holdTicks+=waiting;
   // spawn
   if(G.spawned<G.def.total){ G.spawnT++; if(G.spawnT>=(G.def.spawn||SPAWNINT)){ G.spawnT=0; spawn(); } }
   for(var i=0;i<G.lumins.length;i++) stepLumin(G.lumins[i]);
@@ -752,6 +812,10 @@ function ping(f){ if(!G.sound) return; try{ if(!AC) AC=new (window.AudioContext|
   var o=AC.createOscillator(), g=AC.createGain(); o.type="sine"; o.frequency.value=f;
   g.gain.value=0.05; o.connect(g); g.connect(AC.destination); o.start();
   g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime+0.12); o.stop(AC.currentTime+0.13);}catch(e){} }
+function tone(f,d,type,v,delay){if(!G.sound)return;try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.04,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);}catch(e){}}
+function noiseSpark(d,cut,v){if(!G.sound)return;try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();var n=(AC.sampleRate*d)|0,b=AC.createBuffer(1,n,AC.sampleRate),a=b.getChannelData(0);for(var i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);var q=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();q.buffer=b;f.type="lowpass";f.frequency.value=cut;g.gain.value=v;q.connect(f);f.connect(g);g.connect(AC.destination);q.start();}catch(e){}}
+function toolSound(k){if(k==="block"){tone(330,.15,"square",.05);tone(660,.2,"sine",.04,.06)}else if(k==="dig"){noiseSpark(.23,650,.1);tone(165,.2,"sawtooth",.035)}else if(k==="bash"){noiseSpark(.18,900,.09);tone(220,.11,"square",.035);tone(170,.13,"square",.03,.09)}else if(k==="build"){tone(392,.12,"triangle",.05);tone(523,.14,"triangle",.045,.08);tone(659,.18,"triangle",.04,.16)}else if(k==="float"){tone(280,.4,"sine",.035);tone(560,.33,"sine",.027,.06);tone(840,.25,"sine",.02,.12)}}
+function uiSound(k){if(k==="wheel"){tone(440,.08,"sine",.03);tone(880,.14,"triangle",.025,.05)}else{tone(392,.12,"triangle",.04);tone(587,.15,"triangle",.035,.1);tone(784,.24,"sine",.03,.2)}}
 
 /* ============================ RENDER ============================ */
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
@@ -951,6 +1015,16 @@ function lumColor(L){
   return "#8fe9ff";
 }
 
+function drawGuardianFields(){
+  var now=performance.now(),still=G.calm||reduced;
+  ctx.save();
+  for(var i=0;i<G.fields.length;i++){var f=G.fields[i],x=f.c*CELL+CELL/2,y=f.r*CELL+CELL/2,a=still?0.7:0.55+Math.sin(now/180+i)*0.18;
+    if(f.type==="block"){ctx.strokeStyle="#ffc14d";ctx.lineWidth=3;ctx.globalAlpha=a;ctx.beginPath();ctx.moveTo(x,y-CELL*.8);ctx.lineTo(x,y+CELL*.8);ctx.stroke();ctx.fillStyle="#fff3b0";ctx.beginPath();ctx.arc(x,y-CELL*.9,3,0,6.283);ctx.fill();}
+    else {var g=ctx.createLinearGradient(x,y-CELL*5,x,y+CELL*3);g.addColorStop(0,"rgba(39,224,255,0)");g.addColorStop(.55,"rgba(39,224,255,.25)");g.addColorStop(1,"rgba(39,224,255,0)");ctx.globalAlpha=a;ctx.fillStyle=g;ctx.fillRect(x-CELL*.55,y-CELL*4.5,CELL*1.1,CELL*7);}
+  }
+  if(G.preview&&G.preview.cells){ctx.globalAlpha=.45;ctx.fillStyle=G.preview.ok?skillCol(G.preview.type):"#ff4d63";for(var j=0;j<G.preview.cells.length;j++){var q=G.preview.cells[j];ctx.fillRect(q[0]*CELL+2,q[1]*CELL+2,CELL-4,CELL-4);}}
+  ctx.restore();ctx.globalAlpha=1;
+}
 function drawLumins(){
   var now=performance.now();
   for(var i=0;i<G.lumins.length;i++){
@@ -984,7 +1058,7 @@ function drawLumins(){
       var ag=ctx.createRadialGradient(px,py,1,px,py,R*2.7);
       ag.addColorStop(0,col); ag.addColorStop(1,"rgba(0,0,0,0)");
       ctx.fillStyle=ag; ctx.beginPath(); ctx.arc(px,py,R*2.7,0,6.283); ctx.fill(); ctx.restore(); }
-    if(L.floater&&L.state==="fall"){
+    if((L.floater||inUpdraft(L.c,L.r))&&L.state==="fall"){
       var cg=ctx.createLinearGradient(px,py-R*3.2,px,py-R*1.1);
       cg.addColorStop(0,"rgba(39,224,255,.9)"); cg.addColorStop(1,"rgba(39,224,255,.3)");
       ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(px,py-R*1.7,R*1.45,Math.PI,0); ctx.closePath(); ctx.fill();
@@ -1153,6 +1227,7 @@ function render(){
   drawHazards();
   drawPortal(G.entrance,"#b18cff",false);
   drawPortal(G.exit,"#39ff9e",true);
+  drawGuardianFields();
   drawLumins();
   // particles: additive glow
   if(G.parts.length){ ctx.save(); if(!G.calm&&!reduced) ctx.globalCompositeOperation="lighter";
@@ -1168,14 +1243,17 @@ function updateHUD(){
   document.getElementById("s-saved").textContent="✦ "+G.saved+"/"+G.def.target;
   document.getElementById("s-out").textContent="◇ "+(G.def.total-G.out)+" left";
   document.getElementById("lvlname").textContent=G.def.name;
+  document.getElementById("focus-fill").style.width=G.focus.toFixed(1)+"%";
+  var rw=document.getElementById("route-warning"),risk=0;for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i];if(L.state==="fall"&&L.fall>MAXFALL-2&&L.state!=="dead")risk++;}if(risk){rw.textContent="⚠ "+risk+" lumin"+(risk===1?" is":"s are")+" in danger";rw.classList.add("show");}else rw.classList.remove("show");
+  updateUndo();
 }
 function buildTools(){
   var box=document.getElementById("tools"); box.innerHTML="";
   SKILLDEF.forEach(function(sd){
     var n=G.skills[sd.id]|0;
     var el=document.createElement("div"); el.className="skill"+(n<=0?" empty":"")+(G.armed===sd.id?" on":"");
-    el.innerHTML='<div class="ic">'+sd.ic+'</div><div class="nm">'+sd.nm+'</div><div class="ct">'+n+'</div>';
-    el.onclick=function(){ if((G.skills[sd.id]|0)<=0){ tip("None left"); return; } G.armed=(G.armed===sd.id?null:sd.id); buildTools(); };
+    el.innerHTML='<div class="ic">'+sd.ic+'</div><div class="nm">'+sd.nm+'</div><div class="ct">'+n+'</div>'; el.title=(sd.desc||sd.nm)+' · key '+(SKILLDEF.indexOf(sd)+1);
+    el.onclick=function(){ if((G.skills[sd.id]|0)<=0){ tip("None left"); return; } G.armed=(G.armed===sd.id?null:sd.id); buildTools(); tip(G.armed?(sd.nm+": tap the world to place"):"Tool cancelled"); };
     box.appendChild(el);
   });
 }
@@ -1186,25 +1264,30 @@ function canvasCell(ev){
   var px=(ev.clientX-rect.left)/scale, py=(ev.clientY-rect.top)/scale;
   return {c:Math.floor(px/CELL), r:Math.floor(py/CELL), px:px, py:py};
 }
-function pickLumin(px,py){
-  var rad=Math.max(CELL*1.4, 34/(scale||1));       // ~34 screen px whatever the zoom
-  var best=null,bd=rad, bestOk=null,bdOk=rad;
-  for(var i=0;i<G.lumins.length;i++){ var L=G.lumins[i]; if(L.state==="exit"||L.state==="dead") continue;
-    var d=Math.hypot(L.rx-px, L.ry-py); if(d>=rad) continue;
-    if(d<bd){ bd=d; best=L; }
-    if(G.armed && d<bdOk && assignable(L,G.armed)){ bdOk=d; bestOk=L; }
-  }
-  return bestOk||best;                              // prefer one that can take the skill
-}
-cv.addEventListener("pointermove", function(ev){ var p=canvasCell(ev); hoverL=pickLumin(p.px,p.py); });
-cv.addEventListener("pointerleave", function(){ hoverL=null; });
-cv.addEventListener("pointerdown", function(ev){
-  if(G.state!=="play") return; if(!G.armed){ tip("Pick a skill first"); return; }
-  var p=canvasCell(ev), L=pickLumin(p.px,p.py);
-  if(!L){ tip("Tap right on a lumin"); return; }
-  if(assign(L,G.armed)){ ping(520); buildTools(); if((G.skills[G.armed]|0)<=0) G.armed=null; buildTools(); }
-  else tip("Can't use that here");
+function pickLumin(px,py){var rad=Math.max(CELL*1.4,34/(scale||1)),best=null,bd=rad;for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i];if(L.state==="exit"||L.state==="dead")continue;var d=Math.hypot(L.rx-px,L.ry-py);if(d<bd){bd=d;best=L;}}return best;}
+var HOLD_MS=460,holdTimer=null,holdStart=null,pointerId=null;
+var wheel=document.getElementById("tool-wheel"),holdRing=document.getElementById("hold-ring"),previewNote=document.getElementById("preview-note");
+function wheelPos(){return [[0,-72],[69,-22],[43,60],[-43,60],[-69,-22]];}
+function buildWheel(){wheel.querySelectorAll(".wedge").forEach(function(e){e.remove();});var pos=wheelPos();SKILLDEF.forEach(function(sd,i){var e=document.createElement("div");e.className="wedge"+((G.skills[sd.id]|0)<=0?" off":"");e.dataset.id=sd.id;e.style.setProperty("--wx",pos[i][0]+"px");e.style.setProperty("--wy",pos[i][1]+"px");e.innerHTML='<span class="wi">'+sd.ic+'</span><span class="wn">'+sd.nm+'</span>';wheel.appendChild(e);});}
+function placeOverlay(el,p){var rect=cv.getBoundingClientRect(),x=p.clientX-rect.left,y=p.clientY-rect.top;x=Math.max(118,Math.min(rect.width-118,x));y=Math.max(118,Math.min(rect.height-118,y));el.style.left=x+"px";el.style.top=y+"px";}
+function openToolWheel(ev){if(!holdStart||G.focus<8)return;clearTimeout(holdTimer);buildWheel();placeOverlay(wheel,ev);wheel.classList.add("show");holdRing.style.display="none";G.focusSlow=true;G.wheel={x:ev.clientX,y:ev.clientY,cell:canvasCell(ev),hot:null};if(navigator.vibrate)navigator.vibrate(18);uiSound("wheel");}
+function closeToolWheel(cancel){clearTimeout(holdTimer);holdRing.style.display="none";wheel.classList.remove("show");previewNote.classList.remove("show");G.focusSlow=false;if(cancel){G.wheel=null;G.preview=null;}}
+function updateWheel(ev){if(!G.wheel)return;var dx=ev.clientX-G.wheel.x,dy=ev.clientY-G.wheel.y,d=Math.hypot(dx,dy),hot=null;if(d>28){var best=1e9,pos=wheelPos();for(var i=0;i<pos.length;i++){var dd=Math.hypot(dx-pos[i][0],dy-pos[i][1]);if(dd<best){best=dd;hot=i;}}}var wedges=wheel.querySelectorAll(".wedge");for(var j=0;j<wedges.length;j++)wedges[j].classList.toggle("hot",j===hot);G.wheel.hot=hot;if(hot!==null){var sd=SKILLDEF[hot],pr=environmentalPreview(sd.id,G.wheel.cell.c,G.wheel.cell.r);pr.type=sd.id;G.preview=pr;previewNote.textContent=sd.nm+" · "+pr.msg;previewNote.classList.add("show");}else{G.preview=null;previewNote.classList.remove("show");}}
+cv.addEventListener("contextmenu",function(e){e.preventDefault();if(G.state==="play"){holdStart={x:e.clientX,y:e.clientY,t:performance.now()};openToolWheel(e);}});
+cv.addEventListener("pointermove",function(ev){if(holdStart&&!G.wheel){var d=Math.hypot(ev.clientX-holdStart.x,ev.clientY-holdStart.y);if(d>12){clearTimeout(holdTimer);holdRing.style.display="none";holdStart=null;}}if(G.wheel)updateWheel(ev);else if(G.armed){var p=canvasCell(ev),pr=environmentalPreview(G.armed,p.c,p.r);pr.type=G.armed;G.preview=pr;}});
+cv.addEventListener("pointerleave",function(){if(!G.wheel)G.preview=null;});
+cv.addEventListener("pointerdown",function(ev){
+  if(G.state!=="play"||G.mode==="edit")return;pointerId=ev.pointerId;holdStart={x:ev.clientX,y:ev.clientY,t:performance.now()};placeOverlay(holdRing,ev);holdRing.style.display="block";holdRing.style.setProperty("--hold","0%");var began=performance.now();
+  holdTimer=setTimeout(function(){openToolWheel(ev);},HOLD_MS);
+  (function pulse(){if(!holdStart||G.wheel)return;var pc=Math.min(100,(performance.now()-began)/HOLD_MS*100);holdRing.style.setProperty("--hold",pc+"%");requestAnimationFrame(pulse);})();
 });
+cv.addEventListener("pointerup",function(ev){
+  if(G.state!=="play"||G.mode==="edit")return;clearTimeout(holdTimer);holdRing.style.display="none";
+  if(G.wheel){updateWheel(ev);var hot=G.wheel.hot,cell=G.wheel.cell;if(hot!==null){var sd=SKILLDEF[hot];if((G.skills[sd.id]|0)>0)useWorldTool(sd.id,cell.c,cell.r);else tip("None left");}closeToolWheel(true);holdStart=null;return;}
+  var moved=holdStart?Math.hypot(ev.clientX-holdStart.x,ev.clientY-holdStart.y):99;holdStart=null;if(moved>12)return;
+  if(!G.armed){tip("Hold for Guardian tools — or choose one below");return;}var p=canvasCell(ev);if(useWorldTool(G.armed,p.c,p.r)){if((G.skills[G.armed]|0)<=0)G.armed=null;buildTools();}
+});
+cv.addEventListener("pointercancel",function(){holdStart=null;closeToolWheel(true);});
 
 /* ============================ TIP ============================ */
 var tipT=null;
@@ -1212,32 +1295,7 @@ function tip(msg){ var el=document.getElementById("tip"); el.textContent=msg; el
   clearTimeout(tipT); tipT=setTimeout(function(){ el.classList.remove("show"); },1200); }
 
 /* ============================ OVERLAYS ============================ */
-function showIntro(){
-  G.state="intro";
-  var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily);
-  var inv=SKILLDEF.filter(function(s){return (L.skills[s.id]|0)>0;})
-    .map(function(s){return '<span>'+s.ic+' '+s.nm+' ×'+L.skills[s.id]+'</span>';}).join("");
-  var bs=(custom||daily)?0:bestSeal(G.lvl);
-  var sealRow=(custom||daily)?'<div class="sub">Save '+L.target+' of '+L.total+' lumins'+
-      (daily&&dailyBest(L.daily)?' — your best today: '+dailyBest(L.daily):'')+(daily&&dailyStreak()>=2?' · 🔥 '+dailyStreak()+'-day streak':'')+'</div>':
-    '<div class="sub">'+L.total+' lumins are coming'+(bs?(' — your best: '+SEALICON[bs]):'')+'</div>'+
-    '<div class="seals">'+
-      '<span class="seal-t'+(bs>=1?' have':'')+'">🥉 Save '+L.target+'</span>'+
-      '<span class="seal-t'+(bs>=2?' have':'')+'">🥈 Save '+silverOf(L)+'</span>'+
-      '<span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+(goldOf(L)<L.total?('Save '+goldOf(L)+' — not all can make it'):'Save all '+L.total)+'</span>'+
-    '</div>';
-  document.getElementById("card").innerHTML=
-    '<h1>'+L.name+'</h1>'+sealRow+
-    '<div class="hint">'+L.hint+'</div>'+
-    (G.challenge?'<div class="chal">⚔️ <b>'+lbEsc(G.challenge.by)+'</b> saved <b>'+G.challenge.sc+'</b> here — beat it!</div>':'')+
-    '<div class="inv">'+inv+'</div>'+
-    '<button class="cbtn" id="go">START ▸</button>'+
-    (custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'');
-  document.getElementById("ov").classList.add("show");
-  document.getElementById("go").onclick=function(){ document.getElementById("ov").classList.remove("show"); G.state="play"; };
-  var eb=document.getElementById("edit-lvl"); if(eb) eb.onclick=function(){ document.getElementById("ov").classList.remove("show"); defToED(G.def); enterEditor(); };
-  buildTools();
-}
+function showIntro(){G.state="intro";var L=G.def,daily=!!L.daily,custom=(G.lvl<0&&!daily),inv=SKILLDEF.filter(function(q){return(L.skills[q.id]|0)>0}).map(function(q){return'<span>'+q.ic+' '+q.nm+' ×'+L.skills[q.id]+'</span>'}).join("");var bs=(custom||daily)?0:bestSeal(G.lvl),seals='<div class="seals"><span class="seal-t'+(bs>=1?' have':'')+'">🥉 '+L.target+'</span><span class="seal-t'+(bs>=2?' have':'')+'">🥈 '+silverOf(L)+'</span><span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+goldOf(L)+'</span></div>';var card=document.getElementById("card");card.className="card mission";card.innerHTML='<div class="mission-head"><div class="mission-k">GUARDIAN MISSION</div><h1>'+L.name+'</h1><div class="sub">Guide '+L.target+' of '+L.total+' lights home</div></div><div class="mission-body">'+seals+'<div class="mission-tip">'+L.hint+'</div><div class="mission-controls"><b>HOLD</b> to open tools · <b>SLIDE</b> to choose · <b>RELEASE</b> to shape the world</div><div class="inv">'+inv+'</div><button class="cbtn" id="go">BEGIN RESCUE ▸</button>'+(custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'')+'</div>';document.getElementById("ov").classList.add("show");document.getElementById("go").onclick=function(){uiSound("start");document.getElementById("ov").classList.remove("show");card.className="card";G.state="play"};var eb=document.getElementById("edit-lvl");if(eb)eb.onclick=function(){document.getElementById("ov").classList.remove("show");card.className="card";defToED(G.def);enterEditor()};buildTools()}
 function showResult(win){
   var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily), last=(G.lvl>=LEVELS.length-1);
   var h=win?'<h1 class="win">RESCUED</h1>':'<h1 class="lose">SO CLOSE</h1>';
@@ -1273,6 +1331,11 @@ function showResult(win){
         (need===1?' — just one more!':' — '+need+' more.');
     }
   }
+  var rescuePct=L.total?G.saved/L.total:0, stewardship=Math.max(0,100-Math.max(0,G.interventions-1)*6), flow=Math.max(0,100-G.reversals*4-Math.floor(G.holdTicks/90));
+  var tri='<div class="hint"><b>RESCUE</b> '+Math.round(rescuePct*100)+'% &nbsp; · &nbsp; <b>STEWARDSHIP</b> '+stewardship+'% &nbsp; · &nbsp; <b>FLOW</b> '+flow+'%<br><span style="color:var(--mut)">'+G.interventions+' world intervention'+(G.interventions===1?'':'s')+' · '+G.reversals+' route reversal'+(G.reversals===1?'':'s')+'</span></div>';
+  var rescueScore=Math.round((G.saved/L.total)*100),stewardScore=Math.max(0,100-Math.max(0,G.interventions-1)*7),flowScore=Math.max(0,100-G.reversals*5-G.peakAtRisk*4);
+  var mastery='<div class="mastery"><div><b>'+rescueScore+'%</b><small>RESCUE</small></div><div><b>'+stewardScore+'%</b><small>STEWARDSHIP</small></div><div><b>'+flowScore+'%</b><small>FLOW</small></div></div>';
+  var award='';if(G.saved===L.total&&G.interventions<=2)award='<div class="achievement">✦ CONSTELLATION KEEPER — every light home with two interventions or fewer</div>';else if(G.saved===L.total)award='<div class="achievement">✦ NO LIGHT LEFT BEHIND — every lumin rescued</div>';else if(flowScore>=90&&win)award='<div class="achievement">✦ SILKEN PATH — an exceptionally smooth rescue</div>';
   var btns='';
   if(daily) btns='<button class="cbtn" id="share-res">📣 SHARE RESULT</button>'+
     '<button class="cbtn alt" id="chal-res">⚔️ CHALLENGE A FRIEND</button>'+
@@ -1287,7 +1350,7 @@ function showResult(win){
   var stars=''; for(var st2=0;st2<L.total;st2++){
     stars+=(st2<G.saved)?'<i class="cs on" style="animation-delay:'+((st2*0.12).toFixed(2))+'s">✦</i>':'<i class="cs off">◇</i>'; }
   var constel='<div class="constel">'+stars+'</div>';
-  document.getElementById("card").innerHTML=h+constel+sealHtml+'<div class="sub">'+sub+'</div>'+chalLine+btns;
+  document.getElementById("card").innerHTML=h+constel+sealHtml+'<div class="sub">'+sub+'</div>'+mastery+award+tri+chalLine+btns;
   document.getElementById("ov").classList.add("show");
   var lv=document.getElementById("lvls-go"); if(lv) lv.onclick=function(){ showLevelSelect(); };
   var sr=document.getElementById("share-res"); if(sr) sr.onclick=function(){ copyBtn(this,shareText()); };
@@ -1335,7 +1398,8 @@ function showLevelSelect(){
 
 /* ============================ CONTROLS ============================ */
 document.getElementById("c-pause").onclick=function(){ G.paused=!G.paused; this.classList.toggle("act",G.paused); this.textContent=G.paused?"▶ RESUME":"⏸ PAUSE"; };
-document.getElementById("c-speed").onclick=function(){ G.speed=G.speed===1?2:(G.speed===2?0.5:1); this.textContent=(G.speed===0.5?"▶ ½×":G.speed===2?"▶ 2×":"▶ 1×"); };
+document.getElementById("c-speed").onclick=function(){G.speed=G.speed===0.75?1:(G.speed===1?1.5:0.75);this.textContent=G.speed===0.75?"▶ 0.75×":G.speed===1.5?"▶ 1.5×":"▶ 1×";tone(430+G.speed*160,.08,"square",.025);};
+document.getElementById("c-undo").onclick=undoIntervention;
 document.getElementById("c-restart").onclick=function(){ if(G.lvl<0){ loadDef(G.def); } else { loadLevel(G.lvl); } showIntro(); };
 document.getElementById("c-end").onclick=function(){ if(G.state==="play"){ G.state="over"; noteResult(); showResult(G.saved>=G.def.target); } };
 document.getElementById("c-lvls").onclick=function(){ if(G.mode!=="edit") showLevelSelect(); };
@@ -1347,13 +1411,14 @@ document.addEventListener("keydown", function(e){
   if(e.key>="1"&&e.key<="5"){ var sd=SKILLDEF[+e.key-1]; if(sd&&(G.skills[sd.id]|0)>0){ G.armed=(G.armed===sd.id?null:sd.id); buildTools(); } }
   else if(e.key===" "){ e.preventDefault(); document.getElementById("c-pause").click(); }
   else if(e.key==="r"||e.key==="R"){ document.getElementById("c-restart").click(); }
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){e.preventDefault();undoIntervention();}
 });
 
 /* ============================ MAIN LOOP ============================ */
 var acc=0,last=0;
 function frame(t){
   if(!last) last=t; var dt=t-last; last=t;
-  if(!G.paused && G.state==="play"){ acc+=dt*G.speed; var STEP=1000/TICKHZ; var guard=0;
+  if(!G.paused && G.state==="play"){ acc+=dt*G.speed*(G.focusSlow?0.24:1); var STEP=1000/TICKHZ; var guard=0;
     while(acc>=STEP && guard<8){ step(); acc-=STEP; guard++; } if(acc>300)acc=0; }
   render(); if(G.mode==="edit") drawEditorOverlay(); requestAnimationFrame(frame);
 }
@@ -1372,13 +1437,14 @@ function frame(t){
 })();
 
 
+(function(){var c=document.getElementById("splash-canvas");if(!c)return;var x=c.getContext("2d"),S=[],O=[],id;function z(){c.width=innerWidth;c.height=innerHeight;S=[];for(var i=0;i<120;i++)S.push({x:Math.random()*c.width,y:Math.random()*c.height,r:.3+Math.random()*1.3,p:Math.random()*7});O=[];for(var j=0;j<8;j++)O.push({x:-j*70,y:c.height*(.58+j*.02),p:j*.8})}function f(t){x.clearRect(0,0,c.width,c.height);x.fillStyle="#e7f4ff";for(var i=0;i<S.length;i++){var q=S[i];x.globalAlpha=.25+.55*(.5+.5*Math.sin(t*.0015+q.p));x.beginPath();x.arc(q.x,q.y,q.r,0,7);x.fill()}x.globalCompositeOperation="lighter";for(var j=0;j<O.length;j++){var o=O[j];o.x+=.17;if(o.x>c.width+40)o.x=-40;var y=o.y+Math.sin(t*.002+o.p)*9,g=x.createRadialGradient(o.x,y,0,o.x,y,20);g.addColorStop(0,"#fff");g.addColorStop(.2,"rgba(39,224,255,.8)");g.addColorStop(1,"rgba(39,224,255,0)");x.fillStyle=g;x.globalAlpha=.65;x.beginPath();x.arc(o.x,y,20,0,7);x.fill()}x.globalCompositeOperation="source-over";x.globalAlpha=1;id=requestAnimationFrame(f)}z();addEventListener("resize",z);id=requestAnimationFrame(f);window.stopSplash=function(){cancelAnimationFrame(id)}})();
 /* ============================ SPLASH ============================ */
 (function(){
   var el=document.getElementById("ma-splash"); if(!el) return;
-  if(sessionStorage.getItem("ma_splash_lumins")){ el.remove(); return; }
+  if(sessionStorage.getItem("ma_splash_lumins_final")){ el.remove(); return; }
   var gone=false;
-  function done(){ if(gone) return; gone=true; el.classList.add("ma-out");
-    try{sessionStorage.setItem("ma_splash_lumins","1");}catch(e){}
+  function done(){ if(gone) return; gone=true; if(window.stopSplash)stopSplash(); el.classList.add("ma-out");
+    try{sessionStorage.setItem("ma_splash_lumins_final","1");}catch(e){}
     setTimeout(function(){ el.remove(); },500); }
   el.addEventListener("pointerdown",done);
   setTimeout(done, reduced?900:3200);
