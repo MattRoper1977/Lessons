@@ -15,7 +15,7 @@
    Track-space physics: the car cannot leave the track by
    construction. Edges are magnetic rumble strips.
    ============================================================ */
-body{margin:0;overflow:hidden;background:#05060d;font-family:'Rajdhani','Segoe UI',sans-serif;user-select:none;touch-action:none;color:#e2e8f0}
+body{margin:0;overflow:hidden;background:#05060d;font-family:'Rajdhani','Segoe UI',sans-serif;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;color:#e2e8f0}
 h1,h2,h3,.orb,.btn,#pos-badge,#lap-badge,#banner,#countdown{font-family:'Orbitron','Rajdhani',sans-serif}
 canvas{display:block;position:absolute;top:0;left:0;z-index:1}
 #vignette{position:absolute;inset:0;background:radial-gradient(circle,transparent 58%,rgba(0,0,0,.78) 100%);pointer-events:none;z-index:5}
@@ -204,6 +204,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-calm"> 🌙 Calm mode (softer glow, no shake, gentler sound)</label>
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-sound" checked> 🔊 Sound</label>
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-school"> 📊 School mode — velocity–time graph after every race</label>
+      <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-close"> 🤝 Close racing — rivals ease off when you fall behind</label>
     </div>
     <button class="btn pink" id="opt-reset" style="margin-top:12px">RESET ALL PROGRESS</button><br>
     <button class="btn" id="s-close">BACK TO LOBBY</button>
@@ -219,6 +220,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <div id="telem-notes" style="display:none;font-size:12.5px;color:#94a3b8;text-align:left;margin-top:6px"></div>
     <div id="res-quote"></div>
     <div id="res-btns"></div>
+    <button class="btn" id="card-btn" style="font-size:13px;padding:7px 16px">📸 RACE CARD</button>
   </div></div>
 
   <!-- Pause -->
@@ -311,7 +313,7 @@ const S2LINES=[
 const SAVE_KEY='slipstreamGP_v1';
 const COLOURS=[{c:0x00d4ff,cost:0},{c:0xff2d78,cost:80},{c:0x22c55e,cost:80},{c:0xffd700,cost:80},{c:0xf97316,cost:120},{c:0xa78bfa,cost:120}];
 const TRAILS=[{n:'ION',c:0x00d4ff,cost:0},{n:'EMBER',c:0xf97316,cost:120},{n:'GHOST',c:0xffffff,cost:120}];
-let profile={rung:0, defeated:[], scrap:0, up:{engine:0,grip:0,boost:0}, colour:0, trail:0, owned:{colours:[0],trails:[0]}, pbs:{}, daily:{}, pname:'', rung2:0, s2:[], gbest:0, school:false, calm:false, sound:true};
+let profile={rung:0, defeated:[], scrap:0, up:{engine:0,grip:0,boost:0}, colour:0, trail:0, owned:{colours:[0],trails:[0]}, pbs:{}, daily:{}, pname:'', rung2:0, s2:[], gbest:0, school:false, calm:false, sound:true, close:false};
 function loadProfile(){try{const raw=localStorage.getItem(SAVE_KEY);if(raw)profile=Object.assign(profile,JSON.parse(raw));}catch(e){}}
 function saveProfile(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));}catch(e){}}
 loadProfile();
@@ -611,6 +613,7 @@ refreshParkedRival();
 const keys={};
 addEventListener('keydown',e=>{
   if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+  if(inputMode!=='keys'){inputMode='keys';const tv=document.getElementById('touch');if(tv)tv.style.display='none';}
   keys[e.code]=true;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
   if(e.code==='KeyP'||e.code==='Escape'){ if(state.mode==='RACE')togglePause(); }
@@ -618,21 +621,24 @@ addEventListener('keydown',e=>{
   AudioSys.init(); AudioSys.resume();
 });
 addEventListener('keyup',e=>{keys[e.code]=false;});
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.left=touch.right=touch.boost=false;if(state.mode==='RACE'&&!state.paused)togglePause();});
+addEventListener('contextmenu',e=>{if(state.mode==='RACE')e.preventDefault();});
 addEventListener('pointerdown',()=>{AudioSys.init();AudioSys.resume();},{once:false});
 // touch
 const touch={left:false,right:false,boost:false};
 const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+let inputMode=isTouch?'touch':'keys';
 if(isTouch){
   document.getElementById('touch').style.display='block';
   for(const[id,prop]of[['t-left','left'],['t-right','right'],['t-boost','boost']]){
     const el=document.getElementById(id);
-    const on=e=>{e.preventDefault();touch[prop]=true;el.classList.add('held');AudioSys.init();AudioSys.resume();};
+    const on=e=>{e.preventDefault();if(inputMode!=='touch'){inputMode='touch';document.getElementById('touch').style.display='block';}touch[prop]=true;el.classList.add('held');AudioSys.init();AudioSys.resume();};
     const off=e=>{e.preventDefault();touch[prop]=false;el.classList.remove('held');};
-    el.addEventListener('touchstart',on); el.addEventListener('touchend',off); el.addEventListener('touchcancel',off);
+    el.addEventListener('touchstart',on); el.addEventListener('touchend',off); el.addEventListener('touchcancel',off); el.addEventListener('contextmenu',e=>e.preventDefault());
   }
 }
 function inputSteer(){ return (keys.ArrowLeft||keys.KeyA||touch.left?-1:0)+(keys.ArrowRight||keys.KeyD||touch.right?1:0); }
-function inputThrottle(){ return isTouch?1:((keys.ArrowUp||keys.KeyW)?1:0); }
+function inputThrottle(){ return inputMode==='touch'?1:((keys.ArrowUp||keys.KeyW)?1:0); }
 function inputBrake(){ return (keys.ArrowDown||keys.KeyS)?1:0; }
 function inputBoost(){ return keys.Space||touch.boost; }
 
@@ -738,6 +744,15 @@ function applyPlayerCosmetics(){
   if(state.player)state.player.mesh=fresh;
 }
 const PLAYER_MESH={car:playerCar};
+/* slipstream wake — the draft made visible */
+const wakeMat=new THREE.LineBasicMaterial({color:0x00d4ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending});
+const wake=new THREE.Group();
+for(let i=0;i<12;i++){
+  const a=i/12*Math.PI*2, r=1.25+((i%3)*0.28);
+  const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(Math.cos(a)*r,Math.sin(a)*0.55,0),new THREE.Vector3(Math.cos(a)*r,Math.sin(a)*0.55,-1.5)]);
+  wake.add(new THREE.Line(g,wakeMat));
+}
+wake.userData.ph=0; wake.visible=false; scene.add(wake);
 
 /* ================= LADDER UI ================= */
 function renderLadder(){
@@ -1031,7 +1046,9 @@ function updateAI(c,dt){
   let tv=c.vmax*(1-corner);
   if(state.player){
     const gap=totalD(state.player)-totalD(c);          // + = player ahead
-    tv*=1+clamp(gap*0.0007,-c.band,c.band);            // rubber band
+    const ease=(profile.close&&gap<0)?2:1;             // close racing: rivals ease off harder when you trail
+    const floor=(profile.close&&gap<0)?-Math.max(c.band,0.16):-c.band;
+    tv*=1+clamp(gap*0.0007*ease,floor,c.band);         // rubber band (never made faster by the toggle)
   }
   c.v+=clamp(tv-c.v,-32*dt,(15+9*c.skill)*dt);
   c.v=Math.max(0,c.v);
@@ -1364,6 +1381,21 @@ function updateRace(dt){
   updatePlayer(dt);
   for(const c of state.cars)if(!c.isPlayer&&!c.finished)updateAI(c,dt);
   for(const c of state.cars)placeCarMesh(c);
+  // slipstream wake follows the player while drafting; turns gold when the slingshot is charged
+  const dw=state.lastDraft||0;
+  if(dw>0.05&&!profile.calm&&!REDUCED){
+    wake.visible=true;
+    const wsm=state.track.at(state.player.s);
+    const wp=wsm.p.clone().addScaledVector(wsm.lat,state.player.t);
+    wake.position.set(wp.x,0.9,wp.z);
+    wake.rotation.y=Math.atan2(wsm.tan.x,wsm.tan.z);
+    wake.userData.ph=(wake.userData.ph+dt*(9+14*dw))%3;
+    const wch=wake.children;
+    for(let wi=0;wi<wch.length;wi++)wch[wi].position.z=1.1-((wake.userData.ph+wi*3/wch.length)%3);
+    const hot=(state.draftT>=1.5||state.slingT>0);
+    wakeMat.opacity=Math.min(0.85,dw*0.9);
+    wakeMat.color.setHex(hot?0xffd700:0x00d4ff);
+  }else wake.visible=false;
   updateRanks();
   // final-lap heartbeat
   if(state.finalLapDone&&!profile.calm){
@@ -1420,13 +1452,36 @@ function updateCountdown(dt){
 }
 
 /* ================= SETTINGS ================= */
-function syncSettings(){ $('opt-calm').checked=!!profile.calm; $('opt-sound').checked=!!profile.sound; $('opt-school').checked=!!profile.school; }
+function syncSettings(){ $('opt-calm').checked=!!profile.calm; $('opt-sound').checked=!!profile.sound; $('opt-school').checked=!!profile.school; $('opt-close').checked=!!profile.close; }
 function applyCalm(){
   bloom.strength=profile.calm?0.35:1.05;
   document.getElementById('scanlines').style.opacity=profile.calm?0.2:0.5;
   AudioSys.applyVol();
 }
 $('opt-calm').onchange=e=>{profile.calm=e.target.checked;applyCalm();saveProfile();};
+$('opt-close').onchange=e=>{profile.close=e.target.checked;saveProfile();};
+$('card-btn').onclick=()=>{try{
+  const cv=document.createElement('canvas');cv.width=900;cv.height=560;const x=cv.getContext('2d');
+  const bg=x.createLinearGradient(0,0,0,560);bg.addColorStop(0,'#0b1030');bg.addColorStop(1,'#05060d');x.fillStyle=bg;x.fillRect(0,0,900,560);
+  x.strokeStyle='#1e2a52';x.lineWidth=2;x.strokeRect(14,14,872,532);
+  x.fillStyle='#00d4ff';x.font="900 30px Orbitron, sans-serif";x.fillText('SLIPSTREAM GP',40,68);
+  x.fillStyle='#64748b';x.font="700 15px Rajdhani, sans-serif";x.fillText('RACE CARD · '+new Date().toLocaleDateString()+(profile.pname?(' · '+profile.pname):''),40,94);
+  x.font='52px serif';x.fillText($('res-medal').textContent,40,168);
+  x.fillStyle=$('res-title').style.color||'#00d4ff';x.font="900 34px Orbitron, sans-serif";x.fillText($('res-title').textContent.slice(0,30),118,158);
+  x.fillStyle='#94a3b8';x.font="700 17px Rajdhani, sans-serif";x.fillText(($('res-sub').textContent||'').slice(0,70),40,208);
+  let yy=250;x.font="700 19px Rajdhani, sans-serif";
+  for(const row of $('res-lines').querySelectorAll('.res-line')){
+    const cells=[...row.children].map(el=>el.textContent);
+    x.fillStyle='#7dd3fc';x.fillText(cells[0]||'',40,yy);
+    x.fillStyle='#e2e8f0';x.textAlign='right';x.fillText(cells[1]||'',560,yy);x.textAlign='left';
+    yy+=30;if(yy>470)break;
+  }
+  x.strokeStyle='#ff2d78';x.lineWidth=3;x.beginPath();x.moveTo(640,420);x.bezierCurveTo(700,340,760,470,850,392);x.stroke();
+  x.strokeStyle='#00d4ff';x.beginPath();x.moveTo(628,436);x.bezierCurveTo(690,356,752,486,842,408);x.stroke();
+  x.fillStyle='#475569';x.font="700 14px Rajdhani, sans-serif";x.fillText('race the ladder · mattroper1977.github.io/Lessons',40,512);
+  const a=document.createElement('a');a.download='slipstream_race_card.png';a.href=cv.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();
+  const b=$('card-btn');b.textContent='SAVED ✓';setTimeout(()=>b.textContent='📸 RACE CARD',1400);
+}catch(e){}};
 $('opt-sound').onchange=e=>{profile.sound=e.target.checked;AudioSys.applyVol();saveProfile();};
 $('opt-school').onchange=e=>{profile.school=e.target.checked;saveProfile();};
 $('opt-reset').onclick=()=>{
