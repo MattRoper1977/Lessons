@@ -1,0 +1,2350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Evidence Binder v7 · ASDAN PEQ — Matt's Apps</title>
+<style>
+:root{--ink:#15203a;--acc:#b4892c;--accSoft:#f6ecd4;--stage:#f1f2f5;--line:#d8dde6;--good:#16a34a;--shadow:0 5px 16px rgba(21,32,58,.13)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:var(--ink);background:var(--stage);display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:0;border-radius:11px;background:#fff;color:var(--ink);font-weight:600;font-size:14px;min-height:42px;padding:0 14px;box-shadow:0 2px 8px rgba(21,32,58,.07)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+button:disabled{opacity:.4;cursor:default}
+input[type=text],textarea,select{font-family:inherit;font-size:15px;border:2px solid var(--line);border-radius:10px;padding:9px;background:#fff;width:100%;color:var(--ink)}
+.hidden{display:none!important}
+#top{background:var(--ink);color:#fff;display:flex;align-items:center;gap:9px;padding:8px 12px;flex:0 0 auto}
+#brand{display:flex;align-items:center;gap:9px}
+#brand svg{width:30px;height:30px}
+#brand .wm{display:flex;flex-direction:column;line-height:1.04}
+#brand .wm b{font-size:16px}
+#brand .wm span{font-size:9px;letter-spacing:2.2px;opacity:.72;font-weight:700}
+#top .sp{flex:1}
+#top button{background:rgba(255,255,255,.13);color:#fff;min-width:42px;box-shadow:none}
+#binderBar{background:#0f1830;color:#fff;display:flex;align-items:center;gap:8px;padding:6px 12px;flex:0 0 auto}
+#binderBar .lbl2{font-size:11px;font-weight:800;letter-spacing:1px;opacity:.7}
+#binderSel{flex:1;min-width:0;border:0;border-radius:9px;padding:7px 9px;font-size:13.5px;font-weight:700;background:rgba(255,255,255,.12);color:#fff}
+#binderSel option{color:#15203a}
+#fwBadge{font-size:10.5px;font-weight:800;background:var(--acc);border-radius:999px;padding:4px 10px;white-space:nowrap}
+#nag{background:#fff7e0;border-bottom:1px solid #eadfb5;color:#7a5c12;font-size:12.5px;font-weight:600;padding:7px 12px;display:none;align-items:center;gap:8px;flex:0 0 auto}
+#nag.open{display:flex}
+#nag button{min-height:30px;font-size:12px;padding:0 10px;background:#f3e6bd;box-shadow:none;color:#7a5c12}
+#tabs{display:flex;gap:4px;padding:8px 10px 0;flex:0 0 auto;overflow-x:auto}
+#tabs button{flex:1;min-height:42px;font-size:12.5px;border-radius:12px 12px 0 0;background:#dde3ea;box-shadow:none;color:#5b6678;white-space:nowrap;min-width:84px}
+#tabs button.on{background:#fff;color:var(--ink);font-weight:800}
+#main{flex:1;min-height:0;overflow-y:auto;background:#fff;padding:14px;padding-bottom:30px}
+.wrap{max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:13px}
+.card{background:#f7f8fa;border:1px solid var(--line);border-radius:16px;padding:15px}
+.card h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:#5b6678}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.row+.row{margin-top:9px}
+.lbl{font-size:12px;font-weight:700;color:#5b6678;min-width:62px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border-radius:999px;background:#eef1f7;min-height:38px;padding:0 13px;font-size:13.5px;box-shadow:none}
+.chip.on{background:var(--accSoft);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+.loHead{width:100%;font-size:11px;font-weight:800;color:#7a869c;letter-spacing:.4px;margin:7px 0 0;text-transform:uppercase}
+.big{font-size:15.5px;min-height:50px;font-weight:800}
+.gold{background:var(--acc);color:#fff}
+.warn{background:#fde7e9;color:#a31621}
+.note{font-size:12.5px;color:#5b6678;line-height:1.5;margin-top:7px}
+#pendStrip{display:flex;gap:8px;overflow-x:auto;padding:4px 0}
+#pendStrip img{height:74px;border-radius:10px;border:1px solid var(--line)}
+#pendStrip .txtPend{height:74px;min-width:74px;border-radius:10px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.ev{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;display:flex;flex-direction:column;min-height:0;box-shadow:none}
+.ev img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ev .txtBody{width:100%;aspect-ratio:4/3;padding:8px;font-size:11px;line-height:1.4;color:#3c4961;overflow:hidden;background:#fbf6e9;text-align:left}
+.ev .cap{font-size:10.5px;font-weight:700;padding:5px 7px;text-align:left;color:#5b6678;line-height:1.3}
+#covTable{border-collapse:collapse;width:100%;font-size:13px}
+#covTable th,#covTable td{border:1px solid var(--line);padding:7px 6px;text-align:center}
+#covTable th{background:#eef1f7;font-size:11px;white-space:nowrap}
+#covTable td:first-child,#covTable th:first-child{text-align:left;font-weight:700;white-space:nowrap}
+#covTable td.hit{background:#e2f5e9;color:var(--good);font-weight:800;cursor:pointer}
+#covTable td.miss{background:#fdf0f0;color:#c66;cursor:default}
+.qbar{height:14px;border-radius:999px;background:#e8ebf1;overflow:hidden;margin:6px 0}
+.qbar div{height:100%;background:var(--good);border-radius:999px;transition:width .3s}
+.qwarn{background:#fff2f2;border:1px solid #f2c9c9;border-radius:10px;padding:8px 11px;font-size:12.5px;color:#a31621;font-weight:600;margin-top:7px}
+.qok{background:#eefaf1;border:1px solid #c7e8d1;border-radius:10px;padding:8px 11px;font-size:12.5px;color:#166a34;font-weight:600;margin-top:7px}
+.li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:8px;margin-top:8px}
+.li .t{flex:1;font-weight:700;font-size:14px}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:14px}
+.modal.open{display:flex}
+.sheet{background:#fff;border-radius:18px;padding:18px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+.sheet h3{margin:0 0 12px;font-size:17px}
+.sheet img{max-width:100%;border-radius:12px;border:1px solid var(--line)}
+.sheet label{display:block;font-size:12px;font-weight:800;margin:11px 0 5px;color:#5b6678;text-transform:uppercase;letter-spacing:.5px}
+.sheet ol{padding-left:20px;line-height:1.6;font-size:14px;margin:8px 0}
+.sheet .tips{background:#f1f3f8;border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.5;color:#3c4961;margin-top:8px}
+.acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.acts button{flex:1;min-width:110px}
+.acts .primary{background:var(--acc);color:#fff}
+.unitBlock{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin-top:9px}
+.unitBlock .ubTop{display:flex;gap:8px;align-items:center}
+.unitBlock .ubTop select{flex:1}
+.unitBlock .ubTop button{min-height:36px;padding:0 10px;font-size:13px;background:#fde7e9;color:#a31621;box-shadow:none}
+#busy{position:fixed;inset:0;background:rgba(255,255,255,.78);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:70;font-weight:700;text-align:center;padding:18px}
+#busy.open{display:flex}
+#busy .spin{width:42px;height:42px;border-radius:50%;border:5px solid var(--accSoft);border-top-color:var(--acc);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;display:none;z-index:80;max-width:92vw;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition:none!important}}
+
+/* ===== Evidence Binder v3 upgrade ===== */
+.statusPill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800}
+.st-none{background:#eef1f7;color:#657087}.st-collected{background:#e5f1ff;color:#185fa8}.st-review{background:#fff1c7;color:#805d00}.st-partial{background:#ffe8c2;color:#924b00}.st-achieved{background:#dcf7e5;color:#126b35}.st-iqa{background:#eee7ff;color:#5d35a8}.st-action{background:#fde3e6;color:#9e1c2c}
+.reviewItem{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:9px}.reviewItem h4{margin:0 0 7px;font-size:14px}.reqList{display:grid;gap:7px;margin-top:9px}.reqCheck{display:flex;gap:8px;align-items:flex-start;background:#f7f8fa;border-radius:9px;padding:8px}.reqCheck input{width:20px;height:20px;flex:0 0 auto}.mini{font-size:11.5px;color:#69758a;line-height:1.45}.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}.metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px}.metric b{display:block;font-size:22px;color:var(--ink)}.planRow{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin-top:9px}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.dangerBox{background:#fff3f3;border:1px solid #efc6cb;border-radius:11px;padding:10px;color:#8d1e2b;font-size:12.5px}.infoBox{background:#edf6ff;border:1px solid #c9e1f7;border-radius:11px;padding:10px;color:#1d557d;font-size:12.5px}.integrityOk{background:#edf9f0;border:1px solid #c8e8d0;border-radius:11px;padding:10px;color:#176b35;font-size:12.5px}.covStatus{font-size:9px;display:block;margin-top:2px;white-space:nowrap}
+@media(max-width:650px){.two,.three{grid-template-columns:1fr}.metric b{font-size:18px}}
+
+/* ===== v4 workflow upgrade ===== */
+.readyGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.readyBox{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px}.readyBox strong{display:block;font-size:20px}.inboxBtn{width:100%;display:flex;align-items:center;gap:8px;justify-content:space-between;margin-top:7px;box-shadow:none;border:1px solid var(--line)}
+.cov-none{background:#eef1f7!important;color:#657087!important}.cov-collected,.cov-review{background:#dcebff!important;color:#185fa8!important}.cov-partial{background:#fff0c7!important;color:#805d00!important}.cov-achieved{background:#dcf7e5!important;color:#126b35!important}.cov-iqa{background:#eee7ff!important;color:#5d35a8!important}.cov-action{background:#fde3e6!important;color:#9e1c2c!important}.evref{font-family:ui-monospace,monospace;font-weight:800;color:#42516a}.recordPanel{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:13px}.recordPanel label{display:block;font-size:11px;font-weight:800;color:#5b6678;margin:9px 0 4px;text-transform:uppercase}.legend{display:flex;flex-wrap:wrap;gap:6px}.legend span{font-size:10px;padding:4px 7px;border-radius:999px}
+.how{background:#eef4ff;border:1px solid #c9dcf7;border-radius:13px;padding:2px 13px 2px}
+.how summary{cursor:pointer;font-weight:800;font-size:13px;color:#1d557d;padding:9px 0;user-select:none}
+.how ol{margin:2px 0 11px;padding-left:22px;font-size:13px;line-height:1.55;color:#1d3d5c}
+.how li{margin-bottom:5px}
+.how b{color:#15203a}
+</style>
+</head>
+<body>
+<header id="top">
+  <div id="brand">
+    <svg viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="7" y="5" width="26" height="30" rx="4" fill="#b4892c"/>
+      <rect x="12" y="5" width="17" height="30" rx="2" fill="#fff" opacity=".92"/>
+      <path d="M7 12h6M7 19h6M7 26h6" stroke="#15203a" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M16 17l3 3 6-7" fill="none" stroke="#16a34a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 26h9" stroke="#b4892c" stroke-width="2.6" stroke-linecap="round"/>
+    </svg>
+    <div class="wm"><b>Evidence Binder</b><span>ASDAN PEQ · V4 · MATT'S APPS</span></div>
+  </div>
+  <div class="sp"></div>
+  <button id="helpB" title="Help" aria-label="Help">?</button>
+</header>
+<div id="binderBar">
+  <span class="lbl2">BINDER</span>
+  <select id="binderSel" aria-label="Choose binder"></select>
+  <span id="fwBadge">ASDAN PEQ</span>
+</div>
+<div id="nag"><span id="nagMsg"></span><button id="nagGoB">Back up now</button><button id="nagLaterB">Later</button></div>
+<div id="tabs">
+  <button id="tabColl" class="on">🧭 Collect</button>
+  <button id="tabCap">📷 Capture</button>
+  <button id="tabBrowse">🗂 Browse</button>
+  <button id="tabReview">🔎 Review</button>
+  <button id="tabCov">✅ Coverage</button>
+  <button id="tabPlan">🗓 Plan</button>
+  <button id="tabPort">📄 Portfolios</button>
+  <button id="tabSetup">⚙ Setup</button>
+</div>
+<div id="main">
+
+ <div class="wrap" id="secColl">
+  <details class="how"><summary>❓ How this tab works — the app leads, you collect</summary><ol>
+   <li>Pick the <b>level</b>, then the <b>pupil</b> — each pupil has their own working level, so Entry 3 and Level 1 evidence never mix.</li>
+   <li>Pick a <b>unit</b>: the app selects the <b>next criterion that needs evidence</b> and states exactly what it must contain, straight from the spec.</li>
+   <li>Tap a capture button — the <b>pupil and criterion are pre-ticked</b> for you. Add the photo or record, press Save.</li>
+   <li>You come straight back here with the next gap already lined up.</li>
+  </ol></details>
+  <div class="card">
+   <h3>1 · Who are you collecting for?</h3>
+   <div class="row"><span class="lbl">Level</span><div class="chips" id="clLevels"></div></div>
+   <div class="row" style="margin-top:9px"><span class="lbl">Pupil</span><select id="clPupil" style="flex:1"></select><select id="clSetLevel" style="max-width:170px"></select></div>
+   <div class="note" id="clPupilNote">Each pupil works at one level. Set it once here and the app only ever offers that level's units for them.</div>
+  </div>
+  <div class="card">
+   <h3>2 · What's needed next</h3>
+   <div class="row"><span class="lbl">Unit</span><select id="clUnit" style="flex:1"></select></div>
+   <div class="row" style="margin-top:9px"><span class="lbl">Criterion</span><select id="clAc" style="flex:1"></select></div>
+   <div id="clBrief" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+   <h3>3 · Capture it</h3>
+   <div class="chips" id="clActions"></div>
+   <div class="note">Gold buttons are the best-fit evidence types for this criterion. Whichever you tap, the pupil and criterion are already ticked — just add the evidence and press Save.</div>
+  </div>
+ </div>
+
+ <div class="wrap hidden" id="secCap">
+  <div id="guidedBanner" class="infoBox hidden" style="margin-bottom:4px"></div>
+  <details class="how"><summary>❓ How this tab works — capture evidence</summary><ol><li><b>📷 Camera / 🖼 Photos</b> for pictures of work, or add a typed record — <b>👁 witness</b>, <b>💬 oral questioning</b> or <b>📒 learning log</b>.</li><li>Pick the <b>planned activity, method, date and independence level</b> — this appears on portfolios and keeps moderators happy.</li><li><b>Tick every criterion</b> the evidence genuinely shows. Use ＋ to tag a second unit if one piece covers both.</li><li><b>Tick the pupils</b> it belongs to, then Save. Every item gets a permanent EV number for cross-referencing.</li></ol></details>
+  <div class="card">
+   <h3>Add evidence</h3>
+   <div class="row">
+    <button id="camB" class="big gold">📷 Camera</button>
+    <button id="fileB" class="big">🖼 From files</button>
+    <button id="writeB" class="big">✍ Written</button>
+   </div>
+   <div class="row" style="margin-top:8px"><button id="witnessB" class="chip">👁 Structured witness record</button><button id="oralB" class="chip">💬 Oral-questioning record</button><button id="logB" class="chip">📒 Learning log entry</button></div>
+   <div class="note">Photos stay on this device and are shrunk automatically. Structured records retain the witness, question, response, support and authenticity details in backups and portfolios.</div>
+  </div>
+  <div class="card hidden recordPanel" id="recordCard">
+   <h3 id="recordTitle">Structured record</h3><input id="recKind" type="hidden">
+   <div id="witnessFields"><div class="two"><input id="recWitness" type="text" placeholder="Witness name"><select id="recRole"><option value="">Witness role…</option><option>Teacher</option><option>Teaching assistant</option><option>Support staff</option><option>Course leader</option><option>Employer / placement supervisor</option><option>External visitor</option><option>Other adult</option></select></div><textarea id="recObserved" rows="3" style="margin-top:8px" placeholder="What the learner personally did"></textarea></div>
+   <div id="oralFields" class="hidden"><textarea id="recQuestion" rows="2" placeholder="Question asked"></textarea><textarea id="recResponse" rows="3" style="margin-top:8px" placeholder="Learner response — faithful summary"></textarea></div>
+   <div id="logFields" class="hidden"><textarea id="recActivity" rows="2" placeholder="Activity — what the learner did"></textarea><textarea id="recReflect" rows="3" style="margin-top:8px" placeholder="Learner reflection — what went well, what to improve next"></textarea></div>
+   <div class="two" style="margin-top:8px"><input id="recDate" type="date" aria-label="Observation or questioning date"><select id="recSupport"><option>Independent — no prompting</option><option>Minimal prompts</option><option>Supported response</option><option>Group context — individual contribution identified</option></select></div>
+   <textarea id="recContext" rows="2" style="margin-top:8px" placeholder="Activity/context and any support or reasonable adjustment"></textarea>
+   <label><input id="recAuthentic" type="checkbox"> I confirm this is an accurate record of the learner’s own contribution or response.</label>
+   <div class="acts"><button id="recCancel">Cancel</button><button class="primary" id="recAdd">Add to tagging ✓</button></div>
+  </div>
+  <div class="card hidden" id="writeCard">
+   <h3>Written evidence</h3>
+   <textarea id="writeIn" rows="5" placeholder="e.g. Witness statement: Harry led the group discussion, invited quieter members in, and summarised the decision…"></textarea>
+   <div class="row" style="margin-top:8px">
+    <span class="lbl">Written by</span>
+    <div class="chips" id="writeWho">
+     <button class="chip on" id="wTeacher">Teacher</button>
+     <button class="chip" id="wPupil">Pupil</button>
+    </div>
+   </div>
+   <div class="acts"><button id="writeCancel">Cancel</button><button class="primary" id="writeAdd">Add to tagging ✓</button></div>
+  </div>
+  <div class="card hidden" id="tagCard">
+   <h3>Tag <span id="pendCount"></span></h3>
+   <div id="pendStrip"></div>
+   <div id="unitBlocks"></div>
+   <div class="row" style="margin-top:8px"><button id="addUnitB" class="chip">＋ Tag another unit (cross-unit evidence)</button></div>
+   <label class="lbl" style="display:block;margin-top:10px">Pupils</label>
+   <div class="chips" id="pupChips"></div>
+   <label class="lbl" style="display:block;margin-top:10px">Planned activity / assessment method</label>
+   <div class="two"><select id="tagPlan"><option value="">No linked plan</option></select><select id="tagMethod"><option>Observation</option><option>Written work</option><option>Oral questioning</option><option>Witness statement</option><option>Learner statement</option><option>Presentation</option><option>Research log</option><option>Assessment booklet</option><option>Other</option></select></div>
+   <div class="two" style="margin-top:8px"><input type="date" id="tagActivityDate" aria-label="Activity date"><select id="tagIndependence"><option>Independently</option><option>With prompts</option><option>With support</option><option>Group evidence — individual contribution annotated</option></select></div>
+   <label class="lbl" style="display:block;margin-top:10px">Note (optional)</label>
+   <input type="text" id="noteIn" maxlength="140" placeholder="e.g. plotted the bearing unaided">
+   <div class="acts">
+    <button id="tagCancel">Cancel</button>
+    <button class="primary" id="tagSave">Save evidence ✓</button>
+   </div>
+  </div>
+ </div>
+
+ <div class="wrap hidden" id="secBrowse">
+  <details class="how"><summary>❓ How this tab works — find evidence</summary><ol><li>Filter by <b>unit, pupil or criterion</b> to find any item; the EV number shows on each card.</li><li><b>Tap an item</b> to fix its note, criteria or pupils — or delete it.</li></ol></details>
+  <div class="card">
+   <h3>Find evidence</h3>
+   <div class="row">
+    <select id="fUnit" style="flex:1;min-width:130px"></select>
+    <select id="fPupil" style="flex:1;min-width:130px"></select>
+    <select id="fOut" style="flex:1;min-width:110px"></select>
+   </div>
+  </div>
+  <div id="grid"></div>
+  <div class="note" id="browseNote"></div>
+ </div>
+
+ <div class="wrap hidden" id="secCov">
+  <details class="how"><summary>❓ How this tab works — check coverage</summary><ol><li>Choose a unit to see <b>pupils × criteria</b> with live decision status — grey means no evidence yet.</li><li><b>Tap any cell</b> to jump straight to that criterion in Review.</li><li>Set each pupil's <b>target qualification</b> in the tracker below — credits count <b>confirmed decisions only</b>, and the Plan tab uses these targets.</li></ol></details>
+  <div class="card">
+   <h3>Criteria coverage</h3>
+   <select id="covUnit"></select>
+   <div style="overflow-x:auto;margin-top:11px"><table id="covTable"></table></div>
+   <div class="note">Numbers = pieces of evidence per assessment criterion. Tap a green cell to see them; tap a column heading to read the full criterion. Red = nothing yet.</div>
+  </div>
+  <div class="card" id="qualCard">
+   <h3>🎯 Qualification tracker</h3>
+   <div class="row">
+    <select id="qPupil" style="flex:1;min-width:130px"></select>
+    <select id="qQual" style="flex:1;min-width:170px"></select>
+   </div>
+   <div id="qualOut" class="note"></div>
+  </div>
+ </div>
+
+
+ <div class="wrap hidden" id="secReview">
+  <details class="how"><summary>❓ How this tab works — make assessment decisions</summary><ol><li>The <b>readiness panel</b> shows what stands between you and submission; the <b>inbox</b> jumps you to whatever needs a decision next.</li><li>Choose a <b>pupil and unit</b>. For each criterion: read the linked evidence, tick the requirement checklist, record a decision.</li><li><b>Achieved needs every requirement ticked</b> — otherwise it saves as “further evidence required”. That's deliberate.</li><li>Add a short rationale — future-you at IQA sampling will be grateful.</li></ol></details>
+  <div class="card">
+   <h3>Submission readiness</h3><div id="readyOverall" class="note"></div><div id="readyGrid" class="readyGrid"></div>
+  </div>
+  <div class="card">
+   <h3>Assessment inbox</h3><div id="inboxList"></div>
+  </div>
+  <div class="card">
+   <h3>Assessment review</h3>
+   <div class="infoBox">Tagging shows where evidence may apply. A criterion only becomes achieved after an assessor records a decision here. Qualification credits use confirmed decisions, not raw evidence counts.</div>
+    <div class="infoBox" style="margin-top:8px"><b>ASDAN ground rules:</b> teamwork groups need 3+ learners and the assessor cannot be part of the group · recording documents must be in the learner’s own words (note any scribe) · plans, logs and reviews are signed by candidate, assessor and IQA.</div>
+   <div class="row" style="margin-top:10px"><select id="rvPupil" style="flex:1"></select><select id="rvUnit" style="flex:1"></select></div>
+   <div id="rvSummary" class="dash" style="margin-top:10px"></div>
+  </div>
+  <div id="rvList"></div>
+ </div>
+ <div class="wrap hidden" id="secPlan">
+  <details class="how"><summary>❓ How this tab works — plan the course</summary><ol><li>Fill the <b>cohort details</b> once — the fields mirror ASDAN's assessment planning record.</li><li>Set <b>pathway, weeks left and hours per week</b> — the time budget checks every pupil's target against reality (Award ≈ 40h · Extended Award ≈ 90h · Certificate ≈ 140h+).</li><li>Add each <b>planned assessment activity</b>; <b>Quick map</b> stamps a whole skill family across levels in one tap.</li><li><b>📄 Planning record (PDF)</b> produces the document for pre-delivery IQA sign-off.</li></ol></details>
+  <div class="card">
+   <h3>Cohort & course plan</h3>
+   <div class="two"><input id="plCohort" type="text" placeholder="Cohort name"><input id="plLearnerCount" type="text" placeholder="Number of learners"></div>
+   <div class="two" style="margin-top:8px"><input id="plStart" type="date" aria-label="Course start date"><input id="plFinish" type="date" aria-label="Planned course finish date"></div>
+   <textarea id="plAdjust" rows="2" style="margin-top:8px" placeholder="Reasonable-adjustment summary — do not include identifying learner details"></textarea>
+   <div class="two" style="margin-top:8px"><input id="plChallengeTitles" type="text" placeholder="Challenge title(s)"><input id="plChallengeCodes" type="text" placeholder="Challenge code(s)"></div>
+   <div class="two" style="margin-top:8px"><input id="plAssessor" type="text" placeholder="Assessor / educator"><input id="plIqa" type="text" placeholder="IQA name"></div>
+   <div class="two" style="margin-top:8px"><input id="plIqaDate" type="date" aria-label="Date submitted for pre-delivery IQA"><select id="plIqaStatus"><option>Not submitted</option><option>Submitted</option><option>Actions required</option><option>Approved</option></select></div>
+   <textarea id="plIqaActions" rows="2" style="margin-top:8px" placeholder="Pre-delivery IQA feedback, actions, owner and due date"></textarea>
+   <div class="acts"><button class="primary" id="plSaveMeta">Save course plan</button><button id="plPdfB">📄 Planning record (PDF)</button></div>
+  </div>
+  <div class="card">
+   <h3>Pathway &amp; time budget</h3>
+   <div class="three"><select id="pwPathway"><option>Build</option><option>Grow</option><option>Launch</option></select><select id="pwWeeks"><option value="">Weeks left…</option><option>6</option><option>10</option><option>12</option><option>15</option><option>19</option><option>25</option><option>30</option><option>38</option><option>45</option><option>57</option><option>66</option><option>76</option></select><select id="pwHrs"><option value="">Hours / week…</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+   <div class="row" style="margin-top:8px"><button class="chip" id="pwY11">Y11 · 1 year (38 wks)</button><button class="chip" id="pwY10">Y10 · 2 years (76 wks)</button></div>
+   <div id="pwOut" style="margin-top:10px"></div>
+   <div class="note">PEQ runs at ~10 GLH per credit (Award 40h · Extended Award 90h · Certificate 140–150h). This compares each pupil's remaining credits for their target qualification (set in ✅ Coverage) against the hours this cohort actually has left, and suggests the biggest award that fits.</div>
+  </div>
+  <div class="card">
+   <h3>Assessment activities</h3>
+   <div class="three"><select id="paTerm"><option value="">Term…</option><option>Autumn 1</option><option>Autumn 2</option><option>Spring 1</option><option>Spring 2</option><option>Summer 1</option><option>Summer 2</option></select><select id="paWeek"><option value="">Week…</option><option>Wk 1</option><option>Wk 2</option><option>Wk 3</option><option>Wk 4</option><option>Wk 5</option><option>Wk 6</option><option>Wk 7</option><option>Wk 8</option></select><select id="paMethod"><option>Observation</option><option>Written work</option><option>Oral questioning</option><option>Professional discussion</option><option>Witness statement</option><option>Presentation</option><option>Research log</option><option>Assessment booklet</option><option>Other</option></select></div>
+   <input id="paTitle" type="text" style="margin-top:8px" placeholder="Activity title (e.g. Portrack Marsh group survey)">
+   <textarea id="paActivity" rows="3" style="margin-top:8px" placeholder="Teaching and learning activity, learner actions and differentiation"></textarea>
+   <textarea id="paEvidence" rows="2" style="margin-top:8px" placeholder="Assessment evidence expected from learners"></textarea>
+   <div class="row" style="margin-top:8px"><span class="lbl">Quick map</span><div class="chips" id="paFam"></div></div>
+    <div class="two" style="margin-top:8px"><input id="paMapping" type="text" placeholder="Unit and AC mapping"><input id="paAdditional" type="text" placeholder="Additional mapping"></div>
+   <div class="acts"><button class="primary" id="paAdd">＋ Add planned activity</button></div>
+   <div id="paList"></div>
+  </div>
+ </div>
+ <div class="wrap hidden" id="secPort">
+  <details class="how"><summary>❓ How this tab works — build portfolios</summary><ol><li>Choose a <b>unit</b>, tick pupils — or <b>Select all with evidence</b>.</li><li>One PDF per pupil: cover sheet, assessment-decision pages, then every dated evidence page with its EV number.</li><li>Decisions come straight from the Review tab, so finish assessing before you print.</li></ol></details>
+  <div class="card">
+   <h3>Generate portfolios</h3>
+   <label class="lbl" style="display:block">Unit</label>
+   <select id="portUnit"></select>
+   <label class="lbl" style="display:block;margin-top:10px">Pupils</label>
+   <div class="chips" id="portPups"></div>
+   <div class="row" style="margin-top:8px"><button id="portAllB" class="chip">Select all with evidence</button></div>
+   <div class="acts"><button class="primary big" id="portGo">📄 Build PDF portfolios</button></div>
+   <div class="note">One PDF per pupil: cover sheet, dynamically paginated assessment-decision checklist, evidence references, requirement checks, feedback and dated evidence pages. Company cover pages slot in here when they arrive.</div>
+  </div>
+ </div>
+
+ <div class="wrap hidden" id="secSetup">
+  <details class="how"><summary>❓ How this tab works — set up</summary><ol><li>Create <b>one binder per cohort</b> (e.g. “Y10 PEQ 2026-28”); tick the PEQ levels and the real units load themselves.</li><li>Paste the <b>class list</b>, one name per line. Removing a name archives the pupil — their evidence is kept.</li><li>Official PEQ criteria are <b>locked</b> so your evidence mappings can't drift; deleting a unit archives it instead.</li><li><b>💾 Back up weekly</b> — everything lives in this browser until you do, and the integrity check proves every link still resolves.</li></ol></details>
+  <div class="card">
+   <h3>Binders</h3>
+   <div class="row">
+    <input type="text" id="nbName" placeholder="New binder name (e.g. Y10 PEQ 2026-27)" style="flex:2;min-width:170px">
+   </div>
+   <div class="row" id="nbLevelsRow">
+    <span class="lbl">PEQ levels</span>
+    <div class="chips" id="nbLevels"></div>
+   </div>
+   <div class="acts">
+    <button class="primary" id="nbCreateB">＋ Create binder</button>
+    <button id="bRenameB">Rename current</button>
+    <button id="bDeleteB" class="warn">Delete current</button>
+   </div>
+   <div class="note">Each binder is a self-contained ASDAN PEQ submission context — its own pupils, units and evidence. New binders arrive pre-loaded with the real PEQ units and criteria for the levels you tick.</div>
+  </div>
+  <div class="card">
+   <h3>Units &amp; criteria</h3>
+   <select id="suUnit"></select>
+   <div class="row" style="margin-top:9px">
+    <input type="text" id="suName" placeholder="Unit name" style="flex:2;min-width:150px">
+    <input type="text" id="suCode" placeholder="Unit code" style="flex:1;min-width:90px">
+   </div>
+   <label class="lbl" style="display:block;margin-top:10px">Outcomes / criteria (one per line — PEQ units arrive pre-filled from the spec)</label>
+   <textarea id="suOuts" rows="6"></textarea>
+   <div class="acts">
+    <button id="suNewB">＋ New unit</button>
+    <button id="suPeqB" class="hidden">＋ Add PEQ unit</button>
+    <button id="suDelB" class="warn">Delete unit</button>
+    <button class="primary" id="suSaveB">Save unit</button>
+   </div>
+   <div class="note" id="suNote"></div>
+  </div>
+  <div class="card">
+   <h3>Pupils</h3>
+   <label class="lbl" style="display:block">Class list (one name per line)</label>
+   <textarea id="suPups" rows="6"></textarea>
+   <div class="acts"><button class="primary" id="suPupSaveB">Save pupils</button></div>
+   <div class="note">Removing a name keeps their existing evidence but hides them from new tagging.</div>
+  </div>
+  <div class="card">
+   <h3>Teacher, centre &amp; qualification source</h3>
+   <input type="text" id="suTeacher" placeholder="Teacher name (appears on portfolios)">
+   <input type="text" id="suSchool" style="margin-top:8px" placeholder="School / centre name">
+   <input type="text" id="suCentre" style="margin-top:8px" placeholder="ASDAN centre number (optional)">
+   <div class="infoBox" style="margin-top:9px">Embedded reference: ASDAN PEQ specification v1.2 (October 2025). Qualification information checked against ASDAN Qualifications 2026, updated June 2026. PEQ review date shown in that document: 31 August 2027. Funding/performance status should be verified before registration.</div><div class="acts"><button class="primary" id="suMetaSaveB">Save</button></div>
+  </div>
+  <div class="card">
+   <h3>Data integrity</h3>
+   <div id="integrityOut"></div>
+   <div class="acts"><button id="integrityB">Run integrity check</button></div>
+  </div>
+  <div class="card">
+   <h3>Backup</h3>
+   <div class="row">
+    <button id="bakB" class="big gold">💾 Backup this binder (.zip)</button>
+    <button id="restB" class="big">📂 Restore from backup</button>
+   </div>
+   <div class="note" id="storeNote">Everything lives in this browser on this device. Back up weekly and after big capture sessions — each .zip holds one binder’s photos and tags. Old (v1) backups restore as their own binder.</div>
+  </div>
+ </div>
+
+</div>
+
+<div class="modal" id="evModal">
+  <div class="sheet">
+    <h3 id="evTitle">Evidence</h3>
+    <img id="evImg" alt="Evidence photo">
+    <div id="evText" class="tips hidden" style="white-space:pre-wrap"></div>
+    <div class="note" id="evMeta"></div>
+    <label>Note</label>
+    <input type="text" id="evNote" maxlength="140">
+    <label>Tagged criteria</label>
+    <div class="chips" id="evOuts"></div>
+    <label>Pupils</label>
+    <div class="chips" id="evPups"></div>
+    <div class="acts">
+      <button id="evDelB" class="warn">🗑 Delete</button>
+      <button id="evClose">Close</button>
+      <button class="primary" id="evSaveB">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="acModal">
+  <div class="sheet">
+    <h3 id="acTitle">Criterion</h3>
+    <div class="tips" id="acBody"></div>
+    <div class="acts"><button class="primary" id="acClose">Got it</button></div>
+  </div>
+</div>
+
+<div class="modal" id="helpModal">
+  <div class="sheet">
+    <h3>How to use Evidence Binder</h3>
+    <ol>
+      <li><b>⚙ Setup</b> — one binder per cohort; tick PEQ levels and the real units load pre-filled. Paste your class list.</li>
+      <li><b>🗓 Plan</b> — cohort details, pathway time-budget check, planned activities, and the printable ASDAN planning record for pre-delivery IQA.</li>
+      <li><b>📷 Capture</b> — photograph work or add witness / oral / learning-log records, tag criteria and pupils. Every item gets a permanent EV number.</li>
+      <li><b>🔎 Review</b> — the assessor records a decision per criterion. Tagging suggests; only decisions achieve. The inbox queues what's next.</li>
+      <li><b>✅ Coverage</b> — pupils × criteria at a glance with decision status; the qualification tracker counts confirmed credits and flags barred combinations.</li>
+      <li><b>📄 Portfolios</b> — print-ready PDF per pupil: cover, decisions, evidence pages.</li>
+      <li><b>💾 Back up</b> each binder weekly — everything lives only in this browser until you do.</li>
+    </ol>
+    <div class="tips"><b>Safeguarding note:</b> photos stay on this device — nothing is uploaded anywhere. Treat the device and backups with the same care as a paper portfolio.</div>
+    <div class="acts"><button class="primary" id="helpClose">Got it</button></div>
+  </div>
+</div>
+
+<div id="busy"><div class="spin"></div><div id="busyMsg">Working…</div></div>
+<div id="toast" role="status"></div>
+<input type="file" id="camFile" accept="image/*" capture="environment" multiple hidden>
+<input type="file" id="picFile" accept="image/*" multiple hidden>
+<input type="file" id="zipFile" accept=".zip" hidden>
+
+<script id="app">
+"use strict";
+function fitRect(sw,sh,dw,dh,mode){
+ var s=mode==="cover"?Math.max(dw/sw,dh/sh):Math.min(dw/sw,dh/sh);
+ var w=sw*s,h=sh*s;
+ return[(dw-w)/2,(dh-h)/2,w,h];
+}
+function strBytes(s){var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i)&255;return u;}
+function pad10(n){var s=""+n;while(s.length<10)s="0"+s;return s;}
+function fmtN(v){return Math.round(v*100)/100;}
+function buildPdf(pages,ptW,ptH){
+ var chunks=[],pos=0,total=2+pages.length*3,offsets=new Array(total+1),i;
+ function push(u){if(typeof u==="string")u=strBytes(u);chunks.push(u);pos+=u.length;}
+ function obj(num,body){offsets[num]=pos;push(num+" 0 obj\n"+body+"\nendobj\n");}
+ push("%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n");
+ var kids=[];for(i=0;i<pages.length;i++)kids.push((3+i*3)+" 0 R");
+ obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
+ obj(2,"<< /Type /Pages /Kids ["+kids.join(" ")+"] /Count "+pages.length+" >>");
+ for(i=0;i<pages.length;i++){
+  var p=pages[i],r=fitRect(p.w,p.h,ptW,ptH,"contain"),yb=ptH-r[1]-r[3];
+  var pn=3+i*3,cn=4+i*3,im=5+i*3;
+  obj(pn,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+ptW+" "+ptH+"] /Resources << /XObject << /Im"+i+" "+im+" 0 R >> >> /Contents "+cn+" 0 R >>");
+  var content="q "+fmtN(r[2])+" 0 0 "+fmtN(r[3])+" "+fmtN(r[0])+" "+fmtN(yb)+" cm /Im"+i+" Do Q";
+  obj(cn,"<< /Length "+content.length+" >>\nstream\n"+content+"\nendstream");
+  offsets[im]=pos;
+  push(im+" 0 obj\n<< /Type /XObject /Subtype /Image /Width "+p.w+" /Height "+p.h+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+p.jpeg.length+" >>\nstream\n");
+  push(p.jpeg);
+  push("\nendstream\nendobj\n");
+ }
+ var xref=pos,x="xref\n0 "+(total+1)+"\n0000000000 65535 f \n";
+ for(i=1;i<=total;i++)x+=pad10(offsets[i])+" 00000 n \n";
+ x+="trailer\n<< /Size "+(total+1)+" /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF";
+ push(x);
+ var out=new Uint8Array(pos),o=0;
+ for(i=0;i<chunks.length;i++){out.set(chunks[i],o);o+=chunks[i].length;}
+ return out;
+}
+/* ===================== Evidence Binder engine ===================== */
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+var _id=0;function uid(){return "e"+(++_id)+"_"+Date.now().toString(36);}
+function fmtDate(ts){
+ var d=new Date(ts),M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+ return d.getDate()+" "+M[d.getMonth()]+" "+d.getFullYear();
+}
+function scaleDims(w,h,max){
+ if(w<=max&&h<=max)return[w,h];
+ var f=max/Math.max(w,h);
+ return[Math.max(1,Math.round(w*f)),Math.max(1,Math.round(h*f))];
+}
+/* coverage: items -> {pupilId:{outcomeId:count}} for one unit (tags model) */
+function coverage(items,unitId,pupilIds,outcomeIds){
+ var g={};
+ pupilIds.forEach(function(p){g[p]={};outcomeIds.forEach(function(o){g[p][o]=0;});});
+ items.forEach(function(it){
+  var hits=(it.tags||[]).filter(function(t){return t.u===unitId;});
+  if(!hits.length)return;
+  it.pupilIds.forEach(function(p){
+   if(!g[p])return;
+   hits.forEach(function(t){if(t.a in g[p])g[p][t.a]++;});
+  });
+ });
+ return g;
+}
+
+/* ===================== minimal ZIP (store method) ===================== */
+var CRC_T=(function(){
+ var t=new Uint32Array(256),n,k,c;
+ for(n=0;n<256;n++){c=n;for(k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c>>>0;}
+ return t;
+})();
+function crc32(bytes){
+ var c=0xFFFFFFFF,i;
+ for(i=0;i<bytes.length;i++)c=CRC_T[(c^bytes[i])&0xFF]^(c>>>8);
+ return (c^0xFFFFFFFF)>>>0;
+}
+function dosTime(d){
+ d=d||new Date(2026,0,1,12,0,0);
+ var time=((d.getHours()&31)<<11)|((d.getMinutes()&63)<<5)|((d.getSeconds()>>1)&31);
+ var date=(((d.getFullYear()-1980)&127)<<9)|(((d.getMonth()+1)&15)<<5)|(d.getDate()&31);
+ return[time,date];
+}
+function writeZip(files){
+ /* files: [{name:string, data:Uint8Array}] -> Uint8Array (store, no compression) */
+ var chunks=[],pos=0,central=[],td=dosTime(new Date());
+ function u16(v){return new Uint8Array([v&255,(v>>8)&255]);}
+ function u32(v){return new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>24)&255]);}
+ function push(u){chunks.push(u);pos+=u.length;}
+ function nameBytes(s){var b=new Uint8Array(s.length);for(var i=0;i<s.length;i++)b[i]=s.charCodeAt(i)&0xFF;return b;}
+ files.forEach(function(f){
+  var nb=nameBytes(f.name),crc=crc32(f.data),off=pos;
+  push(new Uint8Array([0x50,0x4B,3,4]));push(u16(20));push(u16(0));push(u16(0));
+  push(u16(td[0]));push(u16(td[1]));push(u32(crc));push(u32(f.data.length));push(u32(f.data.length));
+  push(u16(nb.length));push(u16(0));push(nb);push(f.data);
+  central.push({nb:nb,crc:crc,size:f.data.length,off:off});
+ });
+ var cdStart=pos;
+ central.forEach(function(c){
+  push(new Uint8Array([0x50,0x4B,1,2]));push(u16(20));push(u16(20));push(u16(0));push(u16(0));
+  push(u16(td[0]));push(u16(td[1]));push(u32(c.crc));push(u32(c.size));push(u32(c.size));
+  push(u16(c.nb.length));push(u16(0));push(u16(0));push(u16(0));push(u16(0));push(u32(0));push(u32(c.off));push(c.nb);
+ });
+ var cdSize=pos-cdStart;
+ push(new Uint8Array([0x50,0x4B,5,6]));push(u16(0));push(u16(0));
+ push(u16(central.length));push(u16(central.length));push(u32(cdSize));push(u32(cdStart));push(u16(0));
+ var out=new Uint8Array(pos),o=0;
+ for(var i=0;i<chunks.length;i++){out.set(chunks[i],o);o+=chunks[i].length;}
+ return out;
+}
+function readZip(bytes){
+ /* returns {name:Uint8Array} for store-method zips (the ones we write) */
+ function u16(o){return bytes[o]|(bytes[o+1]<<8);}
+ function u32(o){return (bytes[o]|(bytes[o+1]<<8)|(bytes[o+2]<<16)|(bytes[o+3]<<24))>>>0;}
+ var eocd=-1,i;
+ for(i=bytes.length-22;i>=Math.max(0,bytes.length-66000);i--){
+  if(bytes[i]===0x50&&bytes[i+1]===0x4B&&bytes[i+2]===5&&bytes[i+3]===6){eocd=i;break;}
+ }
+ if(eocd<0)throw new Error("not a zip");
+ var n=u16(eocd+10),cd=u32(eocd+16),out={},p=cd,k;
+ for(k=0;k<n;k++){
+  if(!(bytes[p]===0x50&&bytes[p+1]===0x4B&&bytes[p+2]===1&&bytes[p+3]===2))throw new Error("bad central dir");
+  var method=u16(p+10),size=u32(p+24),nlen=u16(p+28),elen=u16(p+30),clen=u16(p+32),off=u32(p+42);
+  var name="";for(i=0;i<nlen;i++)name+=String.fromCharCode(bytes[p+46+i]);
+  if(method!==0)throw new Error("compressed entry not supported");
+  var lnlen=u16(off+26),lelen=u16(off+28),start=off+30+lnlen+lelen;
+  out[name]=bytes.slice(start,start+size);
+  p+=46+nlen+elen+clen;
+ }
+ return out;
+}
+function strToBytes(s){
+ /* UTF-8 encode */
+ return new TextEncoder().encode(s);
+}
+function bytesToStr(b){return new TextDecoder().decode(b);}
+
+/* ===================== portfolio page painters ===================== */
+var PG_W=1240,PG_H=1754,NAVY="#1e3a5f",GOLD="#b4892c";
+function pageCanvas(){
+ var c=document.createElement("canvas");c.width=PG_W;c.height=PG_H;
+ var x=c.getContext("2d");
+ x.fillStyle="#ffffff";x.fillRect(0,0,PG_W,PG_H);
+ return c;
+}
+function wrapText(x,text,maxW){
+ var words=String(text).split(/\s+/),lines=[],cur="";
+ words.forEach(function(w){
+  var t=cur?cur+" "+w:w;
+  if(x.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}
+  else cur=t;
+ });
+ if(cur)lines.push(cur);
+ return lines;
+}
+function paintCover(meta,unit,pupil,stats){
+ var c=pageCanvas(),x=c.getContext("2d");
+ x.fillStyle=NAVY;x.fillRect(0,0,PG_W,330);
+ x.fillStyle=GOLD;x.fillRect(0,330,PG_W,14);
+ x.fillStyle="#ffffff";x.textAlign="left";
+ x.font="800 44px Arial";x.fillText(meta.school||"Matt\u2019s Apps",70,120);
+ x.font="700 30px Arial";x.globalAlpha=0.85;x.fillText((meta.fwLabel||"Unit Award Scheme")+" \u2014 Evidence Portfolio",70,175);x.globalAlpha=1;
+ x.font="800 52px Arial";
+ wrapText(x,unit.name+(unit.code?"  ("+unit.code+")":""),PG_W-140).forEach(function(l,i){x.fillText(l,70,255+i*60);});
+ x.fillStyle=NAVY;x.font="800 84px Arial";
+ x.fillText(pupil.name,70,560);
+ x.fillStyle="#5b6678";x.font="600 32px Arial";
+ x.fillText("Teacher: "+(meta.teacher||"________________"),70,650);
+ x.fillText("Evidence items: "+stats.count,70,710);
+ if(stats.first)x.fillText("Evidence dates: "+fmtDate(stats.first)+" \u2013 "+fmtDate(stats.last),70,770);
+ x.fillText("Generated: "+fmtDate(Date.now()),70,830);
+ x.fillStyle=GOLD;x.fillRect(70,900,260,8);
+ x.fillStyle="#8b97ad";x.font="600 24px Arial";
+ x.fillText("All evidence captured and stored on-device with Evidence Binder.",70,PG_H-80);
+ return c;
+}
+function paintChecklist(meta,unit,pupil,grid){
+ var c=pageCanvas(),x=c.getContext("2d");
+ x.fillStyle=NAVY;x.fillRect(0,0,PG_W,140);
+ x.fillStyle="#fff";x.font="800 40px Arial";x.textAlign="left";
+ x.fillText((meta.checkTitle||"Outcome checklist")+" \u2014 "+pupil.name,70,90);
+ var y=230;
+ unit.outcomes.forEach(function(o,i){
+  var n=grid[o.id]||0,met=n>0;
+  x.fillStyle=met?"#16a34a":"#c66";
+  x.font="800 40px Arial";
+  x.fillText(met?"\u2713":"\u2014",70,y+8);
+  x.fillStyle=NAVY;x.font="800 30px Arial";
+  x.fillText(o.lab||("LO"+(i+1)),130,y);
+  x.fillStyle="#15203a";x.font="500 28px Arial";
+  var lines=wrapText(x,o.text,PG_W-460);
+  lines.forEach(function(l,j){x.fillText(l,270,y+j*36);});
+  x.fillStyle="#5b6678";x.font="700 26px Arial";x.textAlign="right";
+  x.fillText(n+" item"+(n===1?"":"s"),PG_W-70,y);
+  x.textAlign="left";
+  y+=Math.max(1,lines.length)*36+34;
+  x.strokeStyle="#e4e8ef";x.beginPath();x.moveTo(70,y-26);x.lineTo(PG_W-70,y-26);x.stroke();
+ });
+ y=Math.max(y+50,PG_H-340);
+ x.fillStyle="#15203a";x.font="600 26px Arial";
+ x.fillText("Assessor signature: ______________________  Date: ____________",70,y);
+ x.fillText("Learner signature:  ______________________  Date: ____________",70,y+64);
+ x.fillText("IQA (where sampled): _____________________  Date: ____________",70,y+128);
+ return c;
+}
+function paintEvidencePage(meta,unit,pupil,item,img,idx,total,outLabels){
+ var c=pageCanvas(),x=c.getContext("2d");
+ x.fillStyle=NAVY;x.fillRect(0,0,PG_W,110);
+ x.fillStyle="#fff";x.font="800 32px Arial";x.textAlign="left";
+ x.fillText(pupil.name+" \u2014 evidence "+idx+" of "+total,70,72);
+ var frame={x:70,y:160,w:PG_W-140,h:1150};
+ x.strokeStyle="#d8dde6";x.lineWidth=2;x.strokeRect(frame.x,frame.y,frame.w,frame.h);
+ var r=fitRect(img.width,img.height,frame.w-20,frame.h-20,"contain");
+ x.drawImage(img,frame.x+10+r[0],frame.y+10+r[1],r[2],r[3]);
+ var y=frame.y+frame.h+70;
+ x.fillStyle=GOLD;x.fillRect(70,y-44,10,150);
+ x.fillStyle=NAVY;x.font="800 30px Arial";
+ x.fillText("Outcomes: "+outLabels,100,y);
+ x.fillStyle="#15203a";x.font="500 28px Arial";
+ if(item.note)wrapText(x,"Note: "+item.note,PG_W-200).forEach(function(l,i){x.fillText(l,100,y+50+i*36);});
+ x.fillStyle="#5b6678";x.font="600 26px Arial";
+ x.fillText("Date: "+fmtDate(item.ts)+"    Unit: "+unit.name+(unit.code?" ("+unit.code+")":""),100,y+(item.note?160:60));
+ return c;
+}
+function b64ToBytes(b64){var bin=atob(b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function canvasJpeg(c){
+ return b64ToBytes(c.toDataURL("image/jpeg",0.88).split(",")[1]);
+}
+/* ===================== IndexedDB ===================== */
+var DBP=null;
+function db(){
+ if(DBP)return DBP;
+ DBP=new Promise(function(res){
+  if(typeof indexedDB==="undefined"){res(null);return;}
+  var done=false;function fin(v){if(!done){done=true;res(v);}}
+  setTimeout(function(){fin(null);},2500);
+  try{
+   var rq=indexedDB.open("evbinderPEQ",1);
+   rq.onupgradeneeded=function(){
+    var d=rq.result;
+    d.createObjectStore("meta");
+    d.createObjectStore("items",{keyPath:"id"});
+   };
+   rq.onsuccess=function(){fin(rq.result);};
+   rq.onerror=function(){fin(null);};
+   rq.onblocked=function(){fin(null);};
+  }catch(e){fin(null);}
+ });
+ return DBP;
+}
+function idbReq(r){return new Promise(function(res,rej){r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});}
+function metaSave(){return db().then(function(d){if(!d)return;return idbReq(d.transaction("meta","readwrite").objectStore("meta").put(META,"data"));});}
+function metaLoad(){return db().then(function(d){if(!d)return null;return idbReq(d.transaction("meta","readonly").objectStore("meta").get("data"));});}
+function itemPut(it){return db().then(function(d){if(!d)return;return idbReq(d.transaction("items","readwrite").objectStore("items").put(it));});}
+function itemDel(id){return db().then(function(d){if(!d)return;return idbReq(d.transaction("items","readwrite").objectStore("items").delete(id));});}
+function itemsAll(){return db().then(function(d){if(!d)return[];return idbReq(d.transaction("items","readonly").objectStore("items").getAll());});}
+function itemsClear(){return db().then(function(d){if(!d)return;return idbReq(d.transaction("items","readwrite").objectStore("items").clear());});}
+/* ===================== ASDAN PEQ seed (spec v1.2 Oct 2025) ===================== */
+/* Unit builder: code, barring family, level, display name, Ofqual code, credits, GLH, LOs.
+   LO: [loCode, loText, ACs]. AC: [acCode, acText, elements?, requirement?] */
+function U(code,fam,lv,name,ofq,cr,glh,los){return{code:code,fam:fam,level:lv,name:name,ofq:ofq,cr:cr,glh:glh,los:los};}
+var PEQ={
+ fwLabel:"ASDAN Personal Effectiveness Qualification",
+ levels:["E3","L1","L2","L3"],
+ levelNames:{E3:"Entry 3",L1:"Level 1",L2:"Level 2",L3:"Level 3"},
+ allowedUnitLevels:{E3:["E3","L1"],L1:["E3","L1","L2"],L2:["L1","L2","L3"],L3:["L2","L3"]},
+ quals:[
+  {id:"E3A", level:"E3",name:"Entry Level Award in Personal Effectiveness (Entry 3)",qan:"610/5901/8",total:4, minAtLevel:4, maxOff:0},
+  {id:"E3EA",level:"E3",name:"Entry Level Extended Award in Personal Effectiveness (Entry 3)",qan:"610/5903/1",total:9, minAtLevel:6, maxOff:3},
+  {id:"E3C", level:"E3",name:"Entry Level Certificate in Personal Effectiveness (Entry 3)",qan:"610/5902/X",total:14,minAtLevel:11,maxOff:3},
+  {id:"L1A", level:"L1",name:"Level 1 Award in Personal Effectiveness",qan:"610/5904/3",total:4, minAtLevel:4, maxOff:0},
+  {id:"L1EA",level:"L1",name:"Level 1 Extended Award in Personal Effectiveness",qan:"610/5906/7",total:9, minAtLevel:6, maxOff:3},
+  {id:"L1C", level:"L1",name:"Level 1 Certificate in Personal Effectiveness",qan:"610/5905/5",total:14,minAtLevel:11,maxOff:3},
+  {id:"L2A", level:"L2",name:"Level 2 Award in Personal Effectiveness",qan:"610/5907/9",total:4, minAtLevel:4, maxOff:0},
+  {id:"L2EA",level:"L2",name:"Level 2 Extended Award in Personal Effectiveness",qan:"610/5909/2",total:9, minAtLevel:6, maxOff:3},
+  {id:"L2C", level:"L2",name:"Level 2 Certificate in Personal Effectiveness",qan:"610/5908/0",total:15,minAtLevel:12,maxOff:3},
+  {id:"L3A", level:"L3",name:"Level 3 Award in Personal Effectiveness",qan:"610/5919/5",total:6, minAtLevel:6, maxOff:0},
+  {id:"L3EA",level:"L3",name:"Level 3 Extended Award in Personal Effectiveness",qan:"610/5921/3",total:11,minAtLevel:8, maxOff:3},
+  {id:"L3C", level:"L3",name:"Level 3 Certificate in Personal Effectiveness",qan:"610/5920/1",total:18,minAtLevel:15,maxOff:3}
+ ],
+ units:[
+ /* ---------- ENTRY 3 ---------- */
+ U("ComSkE3","Com","E3","Communication skills","R/651/6411",3,30,[
+  ["E3.1","Know what is meant by 'communication'.",[
+   ["E3.1.1","State what is meant by 'communication'."],
+   ["E3.1.2","List a range of ways that people communicate.",null,"Min 3 ways"],
+   ["E3.1.3","List a range of components of effective communication.",null,"Min 3 components"],
+   ["E3.1.4","List difficulties that can occur when communicating.",null,"Min 2 difficulties"]]],
+  ["E3.2","Know what is meant by 'active listening'.",[
+   ["E3.2.1","State what is meant by 'active listening'."],
+   ["E3.2.2","State the importance of using active listening skills."],
+   ["E3.2.3","List components of active listening skills."]]],
+  ["E3.3","Know the importance of feedback in communication.",[
+   ["E3.3.1","State what is meant by 'feedback'."],
+   ["E3.3.2","State why feedback is important for communication."],
+   ["E3.3.3","List ways that feedback can be demonstrated during communication."]]],
+  ["E3.4","Be able to create a plan for a communication activity.",[
+   ["E3.4.1","Create a plan for a communication activity.",["purpose","audience","types of communication","an outline of the content","resources","potential audience questions and responses"],"Min 2 questions. Usually via a challenge for another PEQ unit"]]],
+  ["E3.5","Be able to use a plan for a communication activity.",[
+   ["E3.5.1","Use the plan.",null,"Presentation min 2 min / discussion min 5 min / text min 100 words. Group min 3"]]],
+  ["E3.6","Be able to identify own success in relation to communication activity.",[
+   ["E3.6.1","Identify personal progress in relation to the communication activity.",["a positive outcome","use of active listening skills","how communication difficulties were managed","use of peer feedback to inform future skills development","an area of further development","a situation where communication skills will be used in the future"]]]]
+ ]),
+ U("DecMkSkE3","DecMk","E3","Decision making skills","K/651/6419",2,20,[
+  ["E3.1","Know what is meant by 'decision making'.",[
+   ["E3.1.1","State what is meant by 'decision making'."],
+   ["E3.1.2","State factors that are important in decision making.",null,"Min 2 factors"]]],
+  ["E3.2","Know the tools and techniques used for decision making.",[
+   ["E3.2.1","List examples of decision-making tools or techniques.",null,"Min 2 tools/techniques"]]],
+  ["E3.3","Know how to identify a situation that needs a decision.",[
+   ["E3.3.1","List situations where you need to make a decision.",null,"Min 2 situations"],
+   ["E3.3.2","State why these situations are relevant to you."]]],
+  ["E3.4","Be able to create a plan to improve own decision making.",[
+   ["E3.4.1","Create a plan to improve own decision making.",["SMART targets","reasons for choosing targets","use of a decision-making tool or technique","a possible difficulty that might be experienced","routes for support and guidance","resources"],"Min 2 SMART targets, 1 reason per target"]]],
+  ["E3.5","Be able to use a plan to improve own decision making.",[
+   ["E3.5.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["E3.6","Be able to identify own success in relation to decision making.",[
+   ["E3.6.1","Identify personal progress in relation to the decision-making activity.",["a positive outcome, including targets met","use of a decision-making tool or technique","something you did differently during the activity to change the way you make decisions","how difficulties were managed","an area of further development","a situation where decision-making skills will be used in the future"]]]]
+ ]),
+ U("LSkE3","LSk","E3","Learning skills","A/651/6423",2,20,[
+  ["E3.1","Know what is meant by 'learning skills'.",[
+   ["E3.1.1","State what is meant by the term 'learning skills'."],
+   ["E3.1.2","State ways that people learn.",null,"Min 2 ways"],
+   ["E3.1.3","State motivations that a person can have to improve learning skills.",null,"Min 2 motivations"]]],
+  ["E3.2","Know the factors that can improve learning skills.",[
+   ["E3.2.1","State why it is important to improve learning skills."],
+   ["E3.2.2","State ways of improving learning skills.",null,"Min 2 ways"]]],
+  ["E3.3","Be able to create a plan to improve own learning skills.",[
+   ["E3.3.1","Create a plan to improve own learning skills.",["SMART targets","reasons for choosing targets","a possible barrier to success","routes for support and guidance","resources"],"Min 2 SMART targets, 1 reason per target"]]],
+  ["E3.4","Be able to use a plan to improve own learning skills.",[
+   ["E3.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["E3.5","Be able to identify own success in relation to learning skills.",[
+   ["E3.5.1","Identify personal progress in relation to learning skills.",["a positive outcome, including targets met","something you did differently during the activity to change the way you learn","how barriers were managed","an area of further development","a situation where learning skills will be used in the future"]]]]
+ ]),
+ U("TmWkSkE3","TmWk","E3","Team working skills","K/651/6428",2,20,[
+  ["E3.1","Know what is meant by 'teamwork'.",[
+   ["E3.1.1","State what is meant by 'teamwork'."],
+   ["E3.1.2","List the advantages of working in a team.",null,"Min 2 advantages"],
+   ["E3.1.3","List the challenges of working in a team.",null,"Min 2 challenges"]]],
+  ["E3.2","Know the features of effective teamwork.",[
+   ["E3.2.1","List a range of features of effective teamwork.",null,"Min 3 features"]]],
+  ["E3.3","Be able to create a plan to undertake a teamwork activity.",[
+   ["E3.3.1","Work collaboratively to create a plan for a teamwork activity.",["a team goal","team members roles, responsibilities and tasks","team ground rules","potential barriers to the success of the teamwork activity","routes for support and guidance","resources"],"Goal/roles/rules decided with team. Team min 3"]]],
+  ["E3.4","Be able to use a plan to improve team working.",[
+   ["E3.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["E3.5","Be able to identify own success in relation to team working.",[
+   ["E3.5.1","Identify personal progress in relation to team working.",["a positive outcome, including team goal achieved","how barriers were managed","something you did differently during the activity to change the way you work in a team","an area of further development","a situation where team working skills might be used in the future"]]]]
+ ]),
+ U("ThSkE3","Th","E3","Thinking skills","D/651/6415",2,20,[
+  ["E3.1","Know what is meant by 'thinking skills'.",[
+   ["E3.1.1","State what is meant by 'thinking skills'."],
+   ["E3.1.2","State why thinking skills are important."],
+   ["E3.1.3","List the characteristics of an effective thinker.",null,"Min 2 characteristics"]]],
+  ["E3.2","Know the tools and techniques used for thinking skills.",[
+   ["E3.2.1","Identify tools or techniques used to support thinking skills.",null,"Min 2 tools/techniques"]]],
+  ["E3.3","Know how to identify accurate information sources.",[
+   ["E3.3.1","State what is meant by: a fact; an opinion.",["a fact","an opinion"]],
+   ["E3.3.2","Give an example of: a fact; an opinion.",["a fact","an opinion"]]]],
+  ["E3.4","Be able to create a plan to improve own thinking skills.",[
+   ["E3.4.1","Create a plan to improve own thinking skills.",["a topic for investigation","a tool or technique to support thinking skills","routes for support and guidance","resources, including potential information sources","how findings will be communicated"]]]],
+  ["E3.5","Be able to use a plan to improve own thinking skills.",[
+   ["E3.5.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["E3.6","Be able to identify own success in relation to thinking skills.",[
+   ["E3.6.1","Identify personal progress in relation to the thinking skills activity.",["a positive outcome","use of a tool or technique to support thinking skills","an area of further development","a situation where thinking skills might be used in the future"]]]]
+ ]),
+ U("WellbLeE3","Wellb","E3","Wellbeing in learning","A/651/6432",3,30,[
+  ["E3.1","Know what is meant by 'learner wellbeing'.",[
+   ["E3.1.1","State what is meant by 'learner wellbeing'."]]],
+  ["E3.2","Know how personal wellbeing impacts learning.",[
+   ["E3.2.1","Identify factors that can affect a learner's wellbeing.",null,"Min 2 factors"],
+   ["E3.2.2","State how these factors can impact learning."]]],
+  ["E3.3","Know the techniques, individuals and services that can support learner wellbeing.",[
+   ["E3.3.1","State ways that learners can support their wellbeing while learning.",null,"Min 2 ways"],
+   ["E3.3.2","Identify a technique that can be used to improve wellbeing while learning."],
+   ["E3.3.3","Identify an individual who can support learner wellbeing."],
+   ["E3.3.4","Identify a service that can support learner wellbeing."]]],
+  ["E3.4","Know why mistakes are an important part of learning.",[
+   ["E3.4.1","State why mistakes are important for learning."],
+   ["E3.4.2","State how mistakes can be positive for learner wellbeing."]]],
+  ["E3.5","Be able to create a plan to improve own wellbeing while learning.",[
+   ["E3.5.1","Create a plan to improve own wellbeing while learning.",["SMART targets","reasons for choosing the targets","routes for support and guidance","resources"],"Min 2 SMART targets, 1 reason per target"]]],
+  ["E3.6","Be able to use a plan to improve own wellbeing while learning.",[
+   ["E3.6.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["E3.7","Be able to identify own success in relation to wellbeing in learning.",[
+   ["E3.7.1","Identify personal progress in relation to wellbeing in learning.",["a positive outcome","something you did differently during the activity to change the way you manage your own wellbeing while learning","how difficulties were managed","an area of further development","a situation where skills in managing own wellbeing during learning might be used in the future"]]]]
+ ]),
+ /* ---------- LEVEL 1 ---------- */
+ U("ComSk1","Com","L1","Communication skills","T/651/6412",3,27,[
+  ["1.1","Know what is meant by 'communication'.",[
+   ["1.1.1","Outline what is meant by 'communication'."],
+   ["1.1.2","Outline a range of ways that people communicate.",null,"Min 3 ways"],
+   ["1.1.3","Outline components of effective communication.",null,"Min 4 components"],
+   ["1.1.4","Outline a range of difficulties that can occur when communicating.",null,"Min 3 difficulties"]]],
+  ["1.2","Know what is meant by 'active listening'.",[
+   ["1.2.1","Outline what is meant by 'active listening'."],
+   ["1.2.2","Outline the importance of using active listening skills."],
+   ["1.2.3","Outline components of active listening skills."]]],
+  ["1.3","Know the importance of feedback in communication.",[
+   ["1.3.1","Outline what is meant by 'feedback'."],
+   ["1.3.2","Outline why feedback is important for communication."],
+   ["1.3.3","Give examples of ways that feedback can be demonstrated during communication."]]],
+  ["1.4","Be able to create a plan for a communication activity.",[
+   ["1.4.1","Create a plan for a communication activity.",["purpose","audience","types of communication","an outline of the content","resources","potential audience questions and responses"],"Min 4 audience questions. Usually via a challenge for another PEQ unit"]]],
+  ["1.5","Be able to use a plan for a communication activity.",[
+   ["1.5.1","Use the plan.",null,"Presentation min 3 min / discussion min 8 min / text min 250 words. Group min 3"]]],
+  ["1.6","Be able to identify own success in relation to communication activity.",[
+   ["1.6.1","Describe personal progress in relation to the communication activity.",["positive outcomes","use of active listening skills","how communication difficulties were managed","use of peer feedback to inform future skills development","areas of further development","a situation where communication skills will be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ U("DecMkSk1","DecMk","L1","Decision making skills","R/651/6420",2,18,[
+  ["1.1","Know what is meant by 'decision making'.",[
+   ["1.1.1","Outline what is meant by 'decision making'."],
+   ["1.1.2","Outline a range of factors that are important in decision making.",null,"Min 3 factors"]]],
+  ["1.2","Know the tools and techniques used for decision making.",[
+   ["1.2.1","Give examples of decision-making tools or techniques.",null,"Min 2 tools/techniques"]]],
+  ["1.3","Know how to identify a situation that needs a decision.",[
+   ["1.3.1","Outline situations where you need to make a decision.",null,"Min 2 situations"],
+   ["1.3.2","Outline why these situations are relevant to you."]]],
+  ["1.4","Be able to create a plan to improve own decision making.",[
+   ["1.4.1","Create a plan to improve own decision making.",["SMART targets","reasons for choosing targets","use of decision-making tools or techniques","potential difficulties that might be experienced","routes for support and guidance","resources","a review point"],"Min 2 targets, 1 reason each, 2 difficulties"]]],
+  ["1.5","Be able to use a plan to improve own decision making.",[
+   ["1.5.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["1.6","Be able to identify own success in relation to decision making.",[
+   ["1.6.1","Describe personal progress in relation to decision making.",["positive outcomes, including targets met","use of decision-making tools or techniques","things you did differently during the activity to change the way you make decisions","how difficulties were managed","areas of further development","a situation where decision-making skills will be used in the future"],"Min 2 positives, 2 changes, 2 areas of development"]]]
+ ]),
+ U("LSk1","LSk","L1","Learning skills","D/651/6424",2,18,[
+  ["1.1","Know what is meant by 'learning skills'.",[
+   ["1.1.1","Outline what is meant by the term 'learning skills'."],
+   ["1.1.2","Identify a range of ways that people learn.",null,"Min 3 ways"],
+   ["1.1.3","Give examples of a range of motivations that a person can have to improve learning skills.",null,"Min 3 motivations"]]],
+  ["1.2","Know the factors that can improve own learning skills.",[
+   ["1.2.1","Outline why it is important to improve own learning skills."],
+   ["1.2.2","Identify ways of improving own learning skills.",null,"Min 3 ways"]]],
+  ["1.3","Be able to create a plan to improve own learning skills.",[
+   ["1.3.1","Create a plan to improve own learning skills.",["SMART targets","reasons for choosing targets","potential barriers to success","routes for support and guidance","resources","a review point"],"Min 2 SMART targets, 1 reason per target"]]],
+  ["1.4","Be able to use a plan to improve own learning skills.",[
+   ["1.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["1.5","Be able to identify own success in relation to learning skills.",[
+   ["1.5.1","Describe personal progress in relation to learning skills.",["positive outcomes including targets met","something you did differently during the activity to change the way you learn","how barriers to success were managed","areas of further development","a situation where learning skills will be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ U("TmWkSk1","TmWk","L1","Team working skills","L/651/6429",2,18,[
+  ["1.1","Know what is meant by 'teamwork'.",[
+   ["1.1.1","Outline what is meant by 'teamwork'."],
+   ["1.1.2","Give examples of a range of advantages of working in a team.",null,"Min 3 advantages"],
+   ["1.1.3","Give examples of a range of challenges of working in a team.",null,"Min 3 challenges"]]],
+  ["1.2","Know the features of effective teamwork.",[
+   ["1.2.1","Outline a range of features of effective teamwork.",null,"Min 3 features"]]],
+  ["1.3","Be able to create a plan to undertake a teamwork activity.",[
+   ["1.3.1","Work collaboratively to create a plan for a teamwork activity.",["team goals","team members roles, responsibilities and tasks","team ground rules","potential barriers to successful team working","routes for support and guidance","resources","a review point"],"Min 2 SMART goals, decided with team. Team min 3"]]],
+  ["1.4","Be able to use a plan to improve team working.",[
+   ["1.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["1.5","Be able to identify own success in relation to team working.",[
+   ["1.5.1","Describe personal progress in relation to team working.",["positive outcomes, including own role in completing team goals","how difficulties were managed","something you did differently during the activity to change the way you work in a team","areas of further development","a situation where teamwork skills might be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ U("ThSk1","Th","L1","Thinking skills","F/651/6416",3,27,[
+  ["1.1","Know what is meant by 'thinking skills'.",[
+   ["1.1.1","Outline what is meant by 'thinking skills'."],
+   ["1.1.2","Outline why thinking skills are important."],
+   ["1.1.3","Give examples of a range of characteristics of an effective thinker.",null,"Min 3 characteristics"],
+   ["1.1.4","Give examples of a range of barriers to improving thinking skills.",null,"Min 3 barriers"]]],
+  ["1.2","Know the tools and techniques used for thinking.",[
+   ["1.2.1","Identify a range of tools or techniques used to support thinking skills.",null,"Min 3 tools/techniques"]]],
+  ["1.3","Know how to identify accurate information sources.",[
+   ["1.3.1","Outline what is meant by: a fact; an opinion; an assumption.",["a fact","an opinion","an assumption"]],
+   ["1.3.2","Give an example of: a fact; an opinion; an assumption.",["a fact","an opinion","an assumption"]]]],
+  ["1.4","Know about primary and secondary research sources.",[
+   ["1.4.1","Outline what is meant by primary and secondary research sources.",["primary research sources","secondary research sources"]],
+   ["1.4.2","Give examples of primary and secondary information sources.",["primary information sources","secondary information sources"]]]],
+  ["1.5","Be able to create a plan to improve own thinking skills.",[
+   ["1.5.1","Create a plan to improve own thinking skills.",["a topic for investigation","a tool or technique to be used to investigate the topic","potential barriers to success","routes for support and guidance","resources, including potential information sources","a review point","how findings will be communicated"]]]],
+  ["1.6","Be able to use a plan to improve own thinking skills.",[
+   ["1.6.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["1.7","Be able to identify own success in relation to thinking skills.",[
+   ["1.7.1","Describe personal progress in relation to thinking skills.",["positive outcomes","use of a thinking tool or technique","how difficulties were managed","areas of further development","a situation where thinking skills might be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ U("WellbLe1","Wellb","L1","Wellbeing in learning","D/651/6433",3,27,[
+  ["1.1","Know what is meant by 'learner wellbeing'.",[
+   ["1.1.1","Outline what is meant by 'learner wellbeing'.",["emotional wellbeing","social wellbeing","physical wellbeing","mental wellbeing"]]]],
+  ["1.2","Know how personal wellbeing impacts learning.",[
+   ["1.2.1","Outline factors that can affect a learner's wellbeing.",null,"Min 2 factors"],
+   ["1.2.2","Indicate how these factors can impact learning."]]],
+  ["1.3","Know the techniques, individuals and services that can support learner wellbeing.",[
+   ["1.3.1","Give examples of ways that learners can support their wellbeing while learning.",null,"Min 2 ways"],
+   ["1.3.2","Outline techniques that can be used to improve wellbeing while learning.",null,"Min 2 techniques"],
+   ["1.3.3","Give examples of individuals who can support learner wellbeing.",null,"Min 2 people"],
+   ["1.3.4","Give examples of services that can support learner wellbeing.",null,"Min 2 services"]]],
+  ["1.4","Know why mistakes are an important part of learning.",[
+   ["1.4.1","Outline why mistakes are important for learning."],
+   ["1.4.2","Outline how mistakes can be positive for learner wellbeing."]]],
+  ["1.5","Be able to create a plan to improve own wellbeing while learning.",[
+   ["1.5.1","Create a plan to improve own wellbeing while learning.",["SMART targets","reasons for choosing the targets","routes for support and guidance","resources","a review point"],"Min 2 SMART targets, 2 reasons"]]],
+  ["1.6","Be able to use a plan to improve own wellbeing while learning.",[
+   ["1.6.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["1.7","Be able to identify own success in relation to wellbeing in learning.",[
+   ["1.7.1","Describe personal progress in relation to managing own wellbeing while learning.",["positive outcomes including targets met","something you did differently during the activity to change the way you manage your own wellbeing while learning","how difficulties were managed","areas of further development","situations where skills in managing own wellbeing while learning might be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ /* ---------- LEVEL 2 ---------- */
+ U("ComSk2","Com","L2","Communication skills","Y/651/6413",3,24,[
+  ["2.1","Understand what is meant by 'communication'.",[
+   ["2.1.1","Describe what is meant by 'communication'.",["ways that people communicate","different types of communication","different purposes of communication"],"Min 4 ways, 3 types, 3 purposes"],
+   ["2.1.2","Describe components of effective communication.",null,"Min 4 components"],
+   ["2.1.3","Explain difficulties that can occur when communicating and the potential impact of poor communication.",null,"Min 4 difficulties"]]],
+  ["2.2","Understand what is meant by 'active listening'.",[
+   ["2.2.1","Describe what is meant by 'active listening'."],
+   ["2.2.2","Explain the importance of using active listening skills."],
+   ["2.2.3","Describe components of active listening skills."]]],
+  ["2.3","Understand the importance of feedback in communication.",[
+   ["2.3.1","Define what is meant by 'feedback'."],
+   ["2.3.2","Explain why feedback is important for communication."],
+   ["2.3.3","Describe ways that feedback can be demonstrated, with examples across ways, types and purposes of communication."]]],
+  ["2.4","Be able to create plans for different types of communication activities.",[
+   ["2.4.1","Create plans for communication activities.",["purpose","audience","types of communication with reason for choice","an outline of the content","resources","potential audience questions and responses"],"Min 2 plans covering 2 different ways of communicating; min 4 questions (2 per activity)"]]],
+  ["2.5","Be able to use plans for communication activities.",[
+   ["2.5.1","Use the plans.",null,"Presentation min 4 min / discussion min 10 min / text min 500 words. Group min 3"]]],
+  ["2.6","Be able to assess own success in relation to communication activities.",[
+   ["2.6.1","Evaluate personal progress in relation to communication.",["a range of positive outcomes","use of active listening skills","how communication difficulties were managed","use of peer feedback to inform future skills development","areas of further development","situations where communication skills may be used in the future"],"Min 3 positives, 2 areas of development"]]]
+ ]),
+ U("DecMkSk2","DecMk","L2","Decision making skills","T/651/6421",2,16,[
+  ["2.1","Understand what is meant by 'decision making'.",[
+   ["2.1.1","Define what is meant by 'decision making'."],
+   ["2.1.2","Describe a range of factors that are important in decision making.",null,"Min 3 factors"]]],
+  ["2.2","Understand the tools and techniques used for decision making.",[
+   ["2.2.1","Compare decision-making tools or techniques that can be used for a range of different situations.",null,"Min 3 tools/techniques"]]],
+  ["2.3","Understand how to identify a situation that needs a decision.",[
+   ["2.3.1","Describe examples of situations where you need to make a decision in the short-, medium- and long-term.",null,"Min 3 situations"],
+   ["2.3.2","Explain why these situations are relevant to you and the potential impact of poor decision making in these situations."]]],
+  ["2.4","Be able to create a plan to improve own decision making.",[
+   ["2.4.1","Create a plan to improve own decision making.",["SMART targets","reasons for choosing targets","use of decision-making tools or techniques","potential difficulties that might be experienced during the decision-making activity","routes for support and guidance","resources","a review point"],"Min 2 targets, 1 reason each, 2 difficulties"]]],
+  ["2.5","Be able to use a plan to improve own decision making.",[
+   ["2.5.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["2.6","Be able to assess own success in relation to decision making.",[
+   ["2.6.1","Evaluate personal progress in relation to decision making.",["positive outcomes, including targets met","use of decision-making tools or techniques","things you did differently during the activity to change the way you make decisions","how difficulties were managed","areas of further development","situations where decision-making skills will be used in the future"],"Min 2 positives, 2 changes, 2 areas of development"]]]
+ ]),
+ U("LSk2","LSk","L2","Learning skills","F/651/6425",2,16,[
+  ["2.1","Understand what is meant by 'learning skills'.",[
+   ["2.1.1","Define what is meant by 'learning skills'."],
+   ["2.1.2","Describe a range of ways that people learn.",null,"Min 3 ways"],
+   ["2.1.3","Describe a range of motivations that a person can have to improve learning skills.",null,"Min 3 motivations"]]],
+  ["2.2","Understand the factors that can improve learning skills.",[
+   ["2.2.1","Explain the importance of improving learning skills, and the impact of engaging in learning throughout life."],
+   ["2.2.2","Compare ways of improving learning skills and reflect on personal preferences.",null,"Min 3 ways"]]],
+  ["2.3","Be able to create a plan to improve own learning skills.",[
+   ["2.3.1","Create a plan to improve own learning skills.",["SMART targets","reasons for choosing targets","potential barriers to success","routes for support and guidance","resource requirements","a review point"],"Min 2 targets, 1 reason each, 2 barriers"]]],
+  ["2.4","Be able to use a plan to improve own learning skills.",[
+   ["2.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["2.5","Be able to assess own success in relation to learning skills.",[
+   ["2.5.1","Evaluate personal progress in relation to learning skills.",["positive outcomes including targets met","things you did differently during the activity to change the way you learn","how difficulties were managed","areas of further development","situations where learning skills may be used in the future"],"Min 2 positives, 2 changes, 2 areas of development"]]]
+ ]),
+ U("TmWkSk2","TmWk","L2","Team working skills","T/651/6430",2,16,[
+  ["2.1","Understand what is meant by 'teamwork'.",[
+   ["2.1.1","Define what is meant by 'teamwork'."],
+   ["2.1.2","Explain the advantages and challenges of team working, using own experiences or real-world examples.",null,"Min 3 advantages and 3 challenges"]]],
+  ["2.2","Understand the features of effective teamwork.",[
+   ["2.2.1","Describe a range of features of effective teamwork, with real-world examples for each.",null,"Min 3 features"]]],
+  ["2.3","Be able to create a plan to undertake a teamwork activity.",[
+   ["2.3.1","Create a plan for a teamwork activity.",["a range of SMART team goals","team members roles, responsibilities and tasks","team ground rules","potential barriers to successful team working","routes for support and guidance","resources","a review point"],"Min 3 SMART goals, decided with team. Team min 3"]]],
+  ["2.4","Be able to use a plan to improve team working.",[
+   ["2.4.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["2.5","Be able to assess own success in relation to team working.",[
+   ["2.5.1","Evaluate personal progress in relation to team working.",["positive outcomes, including own role in completing team goals","how challenges were managed","things that you did differently during the activity to change the way you work in a team","areas of further development","situations where teamwork skills may be used in the future"],"Min 2 positives, 2 changes, 2 areas, 2 situations"]]]
+ ]),
+ U("CrThSk2","Th","L2","Critical thinking skills","H/651/6417",3,24,[
+  ["2.1","Understand what is meant by 'critical thinking skills'.",[
+   ["2.1.1","Define what is meant by 'critical thinking skills'."],
+   ["2.1.2","Explain why critical thinking is important."],
+   ["2.1.3","Describe characteristics of an effective critical thinker.",null,"Min 4 characteristics"],
+   ["2.1.4","Describe a range of barriers to critical thinking.",null,"Min 3 barriers"]]],
+  ["2.2","Understand the tools and techniques used for critical thinking.",[
+   ["2.2.1","Compare a range of critical thinking tools or techniques, reflecting on own preferences.",null,"Min 3 tools/techniques"]]],
+  ["2.3","Understand how to assess information when using critical thinking skills.",[
+   ["2.3.1","Assess information for facts, opinions and assumptions.",null,"Min 1 information source"],
+   ["2.3.2","Assess information sources for credibility, accuracy and bias.",null,"Min 2 information sources"]]],
+  ["2.4","Understand primary and secondary research sources.",[
+   ["2.4.1","Explain and illustrate with examples primary and secondary research sources.",["primary research sources","secondary research sources"]]]],
+  ["2.5","Be able to create a plan to improve own critical thinking skills.",[
+   ["2.5.1","Create a plan to improve own thinking skills.",["a topic for investigation","how critical thinking tools or techniques will be used","routes for support and guidance","resources, including potential information sources","a review point","how findings will be communicated"]]]],
+  ["2.6","Be able to use a plan to improve own critical thinking skills.",[
+   ["2.6.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["2.7","Be able to assess own success in relation to critical thinking.",[
+   ["2.7.1","Evaluate personal progress in relation to critical thinking.",["positive outcomes","use of critical thinking tools or techniques","how difficulties were managed","areas of further development","situations where critical thinking skills may be used in the future"],"Min 2 positives, 2 areas of development"]]]
+ ]),
+ U("WellbLe2","Wellb","L2","Wellbeing in learning","F/651/6434",3,24,[
+  ["2.1","Understand what is meant by 'learner wellbeing'.",[
+   ["2.1.1","Describe what is meant by 'learner wellbeing'.",["emotional wellbeing","social wellbeing","physical wellbeing","mental wellbeing"],"1 description per category"]]],
+  ["2.2","Understand how personal wellbeing impacts learning.",[
+   ["2.2.1","Describe a range of factors that can affect a learner's wellbeing.",null,"Min 3 factors"],
+   ["2.2.2","Explain how these factors can impact learning."]]],
+  ["2.3","Understand techniques, individuals and services that can support learner wellbeing.",[
+   ["2.3.1","Describe a range of ways that learners can support their wellbeing while learning.",null,"Min 3 ways"],
+   ["2.3.2","Compare techniques that could be used to improve wellbeing while learning, reflecting on personal preferences.",null,"Min 2 techniques"],
+   ["2.3.3","Describe a range of people who can support learner wellbeing.",null,"Min 3 people"],
+   ["2.3.4","Describe a range of services that can support learner wellbeing.",null,"Min 3 services"]]],
+  ["2.4","Understand why mistakes are an important part of learning.",[
+   ["2.4.1","Explain why mistakes are important for learning."],
+   ["2.4.2","Explain how mistakes can be positive for learner wellbeing, providing examples."]]],
+  ["2.5","Be able to create a plan to improve own wellbeing while learning.",[
+   ["2.5.1","Create a plan to improve own wellbeing while learning.",["SMART targets","reasons for choosing the targets","routes for support and guidance","resources","a review point"],"Min 2 SMART targets, 1 reason per target"]]],
+  ["2.6","Be able to use a plan to improve own wellbeing while learning.",[
+   ["2.6.1","Use the plan.",null,"Plan used over min 10 hours"]]],
+  ["2.7","Be able to assess own success in relation to wellbeing in learning.",[
+   ["2.7.1","Evaluate personal progress in relation to managing own wellbeing while learning.",["positive outcomes, including targets met","changes to the way they view their own learner wellbeing","how difficulties experienced during learning were managed","areas of further development","situations where skills in managing own wellbeing while learning will be used in the future"],"Min 2 positives, 2 changes, 2 areas of development"]]]
+ ]),
+ /* ---------- LEVEL 3 ---------- */
+ U("ComSk3","Com","L3","Communication skills","A/651/6414",4,28,[
+  ["3.1","Understand what is meant by 'communication'.",[
+   ["3.1.1","Explain the importance of good communication skills in personal, social and working life, and the impact poor communication could have on own and others' wellbeing.",["definition of communication","ways of communicating","types of communication","purposes for communicating","components of effective communication","barriers or difficulties"],"Guidance: explanation should cover all elements"]]],
+  ["3.2","Understand 'active listening'.",[
+   ["3.2.1","Compare the effectiveness of different ways of demonstrating active listening across ways, types and purposes of communication.",null,"Include the importance of active listening"]]],
+  ["3.3","Understand the importance of feedback in communication.",[
+   ["3.3.1","Analyse examples of feedback on communication, given in a range of different ways, explaining the potential impact of positive and negative feedback."]]],
+  ["3.4","Be able to create plans for communication activities.",[
+   ["3.4.1","Develop plans to communicate information in different ways.",["purpose","audience","choice of type with rationale","outline of content","resources","timings where appropriate","potential audience questions"],"Min 2 plans in 2 different ways"]]],
+  ["3.5","Be able to use plans for communication activities.",[
+   ["3.5.1","Implement the plans.",null,"Presentation min 10 min / discussion min 15 min / text min 750 words. Group min 4"]]],
+  ["3.6","Be able to review own success in relation to communication activities.",[
+   ["3.6.1","Evaluate personal progress in relation to communication activities.",["a range of positive outcomes","use of active listening skills","how barriers or challenges were avoided or overcome","a range of areas of further development","how peer feedback can support further development","how communication skills might be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ]),
+ U("DecMkSk3","DecMk","L3","Decision making skills","Y/651/6422",3,21,[
+  ["3.1","Understand what is meant by 'decision making'.",[
+   ["3.1.1","Evaluate own decision making skills, using examples to illustrate positive and negative outcomes.",["definition of decision making","factors to consider when making decisions","potential barriers or challenges"],"Guidance: could cover all elements"]]],
+  ["3.2","Understand the tools and techniques used for decision making.",[
+   ["3.2.1","Compare and contrast decision-making tools or techniques used in a variety of situations.",null,"Min 3 tools/techniques"]]],
+  ["3.3","Understand how to identify a situation that needs a decision.",[
+   ["3.3.1","Determine situations in own short-, medium- and long-term future, and explain the impact poor decision making could have."]]],
+  ["3.4","Be able to create a plan to improve own decision making.",[
+   ["3.4.1","Develop a plan to improve own decision making.",["a clear overall goal or decision to be made","why this decision is significant and the impact of a poor decision","SMART targets","rationale for the SMART targets","review points","timings"],"Activity planned over min 10 hours"]]],
+  ["3.5","Be able to use a plan to improve own decision making.",[
+   ["3.5.1","Implement the plan.",null,"Min 10 hours"]]],
+  ["3.6","Be able to review own success in relation to decision making.",[
+   ["3.6.1","Evaluate personal progress in relation to decision making.",["a range of positive outcomes","effectiveness of chosen tools or techniques","factors or outcomes not considered during planning","how barriers or challenges were avoided or overcome","a range of areas for further development","how decision making skills will be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ]),
+ U("LSk3","LSk","L3","Learning skills","J/651/6427",3,21,[
+  ["3.1","Understand what is meant by 'learning skills'.",[
+   ["3.1.1","Evaluate own learning skills, using examples from own experience to illustrate progress to date.",null,"Include a range of learning theories"]]],
+  ["3.2","Understand the factors that can improve learning skills.",[
+   ["3.2.1","Establish the importance of improving own learning skills."],
+   ["3.2.2","Analyse ways of improving learning skills across a range of different learning contexts."]]],
+  ["3.3","Be able to create a plan to improve own learning skills.",[
+   ["3.3.1","Develop a plan to improve own learning skills.",["a clear overall learning goal","SMART targets supporting the goal","reasons for choice of SMART targets","sources of support and guidance","review points"],"Activity planned over min 10 hours"]]],
+  ["3.4","Be able to use a plan to improve own learning skills.",[
+   ["3.4.1","Implement the plan.",null,"Min 10 hours"]]],
+  ["3.5","Be able to review own success in relation to learning skills.",[
+   ["3.5.1","Evaluate personal progress in relation to learning skills.",["a range of positive outcomes","effectiveness of the chosen learning strategy","how challenges or barriers were avoided or overcome","a range of areas of further development","how learning skills will be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ]),
+ U("TmWkSk3","TmWk","L3","Team working skills","Y/651/6431",3,21,[
+  ["3.1","Understand what is meant by 'teamwork'.",[
+   ["3.1.1","Investigate the use of team working in a range of different situations."]]],
+  ["3.2","Understand the stages of team development.",[
+   ["3.2.1","Compare the different stages of team development, providing real-world examples of each."]]],
+  ["3.3","Understand the features of effective teamwork.",[
+   ["3.3.1","Explain a range of features of effective teamwork, illustrating each with real-world examples."]]],
+  ["3.4","Be able to create a plan to undertake a teamwork activity.",[
+   ["3.4.1","Develop a plan for a teamwork activity.",["an overall team goal","SMART targets","team ground rules","appropriate support and guidance","resource requirements","review points"],"Negotiated with team. Team min 4. Planned over min 10 hours"]]],
+  ["3.5","Be able to use a plan to improve team working.",[
+   ["3.5.1","Implement the plan.",null,"Min 10 hours"]]],
+  ["3.6","Be able to review own success in relation to team working.",[
+   ["3.6.1","Evaluate personal progress in relation to team working.",["a range of positive outcomes","a range of areas of further development","how barriers or challenges were avoided or overcome","use of peer feedback to inform future skills development","how teamwork skills might be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ]),
+ U("CrThSk3","Th","L3","Critical thinking skills","J/651/6418",4,28,[
+  ["3.1","Understand what is meant by 'critical thinking skills'.",[
+   ["3.1.1","Evaluate own critical thinking skills, using examples from own experience to illustrate progress to date.",["the importance of critical thinking","a range of characteristics of a critical thinker","a range of barriers to critical thinking"],"Guidance: evaluation should include all elements"]]],
+  ["3.2","Understand the tools and techniques used for critical thinking.",[
+   ["3.2.1","Compare and contrast a range of critical thinking tools or techniques."]]],
+  ["3.3","Understand how to assess information when using critical thinking skills.",[
+   ["3.3.1","Explain and illustrate how to evaluate information sources for credibility, accuracy and bias.",null,"Include references to or extracts from appropriate sources"]]],
+  ["3.4","Understand primary and secondary research sources.",[
+   ["3.4.1","Explain and illustrate primary and secondary research sources.",["primary research sources","secondary research sources"]]]],
+  ["3.5","Be able to create a plan to improve own critical thinking skills.",[
+   ["3.5.1","Develop a plan to demonstrate own critical thinking skills.",["topic for investigation with rationale","choice of tools or techniques with rationale","potential barriers to investigating the topic","support and guidance needed","resources needed, including a range of information sources","format for communicating findings with rationale","progress review points"],"Activity planned over min 10 hours"]]],
+  ["3.6","Be able to use a plan to improve own critical thinking skills.",[
+   ["3.6.1","Implement the plan.",null,"Min 10 hours"]]],
+  ["3.7","Be able to review own success in relation to critical thinking skills.",[
+   ["3.7.1","Evaluate personal progress in relation to critical thinking skills.",["a range of positive outcomes","effectiveness of chosen tools or techniques","how barriers or challenges were avoided or overcome","a range of areas for further development","how critical thinking skills may be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ]),
+ U("WellbLe3","Wellb","L3","Wellbeing in learning","H/651/6435",3,21,[
+  ["3.1","Understand what is meant by 'learner wellbeing'.",[
+   ["3.1.1","Explain what is meant by 'learner wellbeing', using examples.",["emotional wellbeing","social wellbeing","physical wellbeing","mental wellbeing"],"Guidance: include all four aspects"]]],
+  ["3.2","Understand how personal wellbeing impacts learning.",[
+   ["3.2.1","Analyse a range of factors that can affect a learner's wellbeing."]]],
+  ["3.3","Understand techniques, individuals and services that can support learner wellbeing.",[
+   ["3.3.1","Compare and contrast a range of ways learners can support their wellbeing while learning, taking into account own preferences.",null,"Include techniques, people and services"]]],
+  ["3.4","Understand why mistakes are an important part of learning.",[
+   ["3.4.1","Explain why mistakes are an important part of learning."]]],
+  ["3.5","Be able to create a plan to improve own wellbeing while learning.",[
+   ["3.5.1","Develop a plan to improve own wellbeing while learning.",["a range of SMART targets","rationale for chosen targets","appropriate sources of support and guidance","review points"],"Activity planned over min 10 hours"]]],
+  ["3.6","Be able to use a plan to improve own wellbeing while learning.",[
+   ["3.6.1","Implement the plan.",null,"Min 10 hours"]]],
+  ["3.7","Be able to review own success in relation to wellbeing in learning.",[
+   ["3.7.1","Evaluate personal progress in relation to wellbeing in learning.",["a range of positive outcomes","how challenges to maintaining wellbeing were avoided or overcome","effectiveness of support or guidance","a range of areas of further development","how skills in supporting own wellbeing may be used in the future"],"Guidance: evaluation should reflect on all elements"]]]
+ ])
+ ]
+};
+/* Flatten a PEQ unit definition into an app unit: outcomes carry AC labels + LO headings */
+function peqToUnit(def){
+ var outs=[];
+ def.los.forEach(function(lo){
+  lo[2].forEach(function(ac){
+   outs.push({id:uid(),lab:ac[0],lo:lo[0]+" "+lo[1],text:ac[1],el:ac[2]||null,req:ac[3]||null});
+  });
+ });
+ return{id:uid(),name:def.name+" \u2014 "+PEQ.levelNames[def.level],code:def.code,ofq:def.ofq,level:def.level,fam:def.fam,cr:def.cr,glh:def.glh,outcomes:outs};
+}
+
+/* ===================== state ===================== */
+var META={v:2,binders:[],active:null};
+var ITEMS=[];          /* all items, every binder */
+var PEND=[];           /* pending evidence awaiting tags: {type:"photo",blob,thumb,thumbUrl} | {type:"text",text,author} */
+var tagBlocks=[];      /* [{unitId, sel:{acId:true}}] */
+var tagPups={};
+var evCur=null;
+var URLS=new Map();
+var LV_ORDER={E3:0,L1:1,L2:2,L3:3};
+
+function curBinder(){
+ for(var i=0;i<META.binders.length;i++)if(META.binders[i].id===META.active)return META.binders[i];
+ return META.binders[0]||null;
+}
+function bItems(){
+ var b=curBinder();if(!b)return[];
+ return ITEMS.filter(function(it){return it.binderId===b.id;});
+}
+function unitById(id){
+ var b=curBinder();if(!b)return null;
+ for(var i=0;i<b.units.length;i++)if(b.units[i].id===id)return b.units[i];
+ return null;
+}
+function pupilById(id){
+ var b=curBinder();if(!b)return null;
+ for(var i=0;i<b.pupils.length;i++)if(b.pupils[i].id===id)return b.pupils[i];
+ return null;
+}
+function outById(u,oid){
+ for(var i=0;i<u.outcomes.length;i++)if(u.outcomes[i].id===oid)return u.outcomes[i];
+ return null;
+}
+function outLabel(unit,oid){
+ for(var i=0;i<unit.outcomes.length;i++)if(unit.outcomes[i].id===oid)return unit.outcomes[i].lab||("LO"+(i+1));
+ return "?";
+}
+function fwLabel(b){
+ return PEQ.fwLabel;
+}
+function thumbUrl(it){
+ if(!URLS.has(it.id))URLS.set(it.id,URL.createObjectURL(it.thumb||it.blob));
+ return URLS.get(it.id);
+}
+var toastT=null;
+function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){t.style.display="none";},3200);}
+function busy(m){var b=$("busy");if(m){$("busyMsg").textContent=m;b.classList.add("open");}else b.classList.remove("open");}
+function setTab(k){
+ [["Cap","secCap"],["Browse","secBrowse"],["Cov","secCov"],["Port","secPort"],["Setup","secSetup"]].forEach(function(d){
+  $("tab"+d[0]).classList.toggle("on",k===d[0]);
+  $(d[1]).classList.toggle("hidden",k!==d[0]);
+ });
+ if(k==="Browse")renderGrid();
+ if(k==="Cov"){renderCov();renderQual();}
+ if(k==="Port")renderPort();
+ if(k==="Setup")renderSetup();
+}
+
+/* ===================== migration & binder plumbing ===================== */
+function newBinderObj(name){
+ return{id:uid(),name:name,framework:"peq",teacher:"",school:"",centre:"",pupils:[],units:[],quals:{},lastBackup:0};
+}
+function seedPeqBinder(b,levels){
+ PEQ.units.forEach(function(def){
+  if(levels.indexOf(def.level)>=0)b.units.push(peqToUnit(def));
+ });
+}
+function renderBinderBar(){
+ var sel=$("binderSel");sel.innerHTML="";
+ META.binders.forEach(function(b){
+  var o=document.createElement("option");o.value=b.id;o.textContent=b.name;sel.appendChild(o);
+ });
+ var b=curBinder();
+ if(b){sel.value=b.id;$("fwBadge").textContent="ASDAN PEQ";}
+}
+function switchBinder(id){
+ META.active=id;
+ tagBlocks=[];tagPups={};
+ metaSave().then(function(){
+  renderBinderBar();renderTagCard();
+  setTab("Cap");
+  toast("Binder: "+curBinder().name);
+ });
+}
+
+/* ===================== backup nag & persistence ===================== */
+function checkNag(){
+ var b=curBinder();if(!b)return;
+ var n=bItems().length;
+ var stale=n>0&&(Date.now()-(b.lastBackup||0))>7*24*3600*1000;
+ $("nag").classList.toggle("open",stale);
+ if(stale)$("nagMsg").textContent="\u201c"+b.name+"\u201d has "+n+" evidence item"+(n===1?"":"s")+" and no backup this week.";
+}
+
+/* ===================== capture & tagging ===================== */
+function importPics(files){
+ var jobs=[];
+ for(var i=0;i<files.length;i++)if(/^image\//.test(files[i].type))jobs.push(shrink(files[i]));
+ if(!jobs.length){toast("No photos found there");return;}
+ busy("Preparing photos\u2026");
+ Promise.all(jobs).then(function(res){
+  res.forEach(function(r){if(r){r.type="photo";PEND.push(r);}});
+  busy(false);
+  if(!PEND.length){toast("Couldn't read those photos");return;}
+  renderTagCard();
+ });
+}
+function shrink(file){
+ return new Promise(function(res){
+  var img=new Image();
+  img.onload=function(){
+   var d=scaleDims(img.width,img.height,1600);
+   var c=document.createElement("canvas");c.width=d[0];c.height=d[1];
+   c.getContext("2d").drawImage(img,0,0,d[0],d[1]);
+   var dt=scaleDims(img.width,img.height,260);
+   var tc=document.createElement("canvas");tc.width=dt[0];tc.height=dt[1];
+   tc.getContext("2d").drawImage(img,0,0,dt[0],dt[1]);
+   c.toBlob(function(big){
+    tc.toBlob(function(small){
+     URL.revokeObjectURL(img.src);
+     res(big&&small?{blob:big,thumb:small,thumbUrl:URL.createObjectURL(small)}:null);
+    },"image/jpeg",0.8);
+   },"image/jpeg",0.85);
+  };
+  img.onerror=function(){res(null);};
+  img.src=URL.createObjectURL(file);
+ });
+}
+function addWritten(){
+ var t=($("writeIn").value||"").trim();
+ if(!t){toast("Type the statement first");return;}
+ PEND.push({type:"text",text:t,author:$("wPupil").classList.contains("on")?"pupil":"teacher"});
+ $("writeIn").value="";
+ $("writeCard").classList.add("hidden");
+ renderTagCard();
+}
+function renderTagCard(){
+ var b=curBinder(),tc=$("tagCard");
+ if(!PEND.length||!b){tc.classList.add("hidden");return;}
+ tc.classList.remove("hidden");
+ $("pendCount").textContent=PEND.length+" item"+(PEND.length===1?"":"s");
+ var st=$("pendStrip");st.innerHTML="";
+ PEND.forEach(function(p){
+  if(p.type==="photo"){var im=document.createElement("img");im.src=p.thumbUrl;im.alt="pending photo";st.appendChild(im);}
+  else{var d=document.createElement("div");d.className="txtPend";d.textContent="\ud83d\udcdd";d.title=p.text.slice(0,80);st.appendChild(d);}
+ });
+ if(!b.units.length){toast("Add a unit in \u2699 Setup first");setTab("Setup");return;}
+ if(!tagBlocks.length)tagBlocks=[{unitId:b.units[0].id,sel:{}}];
+ renderUnitBlocks();
+ chipRow($("pupChips"),b.pupils,tagPups,function(p){return p.name;});
+}
+function chipRow(box,list,selMap,labelFn){
+ box.innerHTML="";
+ list.forEach(function(o){
+  var btn=document.createElement("button");
+  btn.className="chip"+(selMap[o.id]?" on":"");
+  btn.textContent=labelFn(o);
+  btn.onclick=function(){
+   if(selMap[o.id])delete selMap[o.id];else selMap[o.id]=true;
+   btn.classList.toggle("on",!!selMap[o.id]);
+  };
+  box.appendChild(btn);
+ });
+}
+function acChipRow(box,unit,selMap){
+ box.innerHTML="";
+ var lastLo=null;
+ unit.outcomes.forEach(function(o,i){
+  if(o.lo&&o.lo!==lastLo){
+   lastLo=o.lo;
+   var h=document.createElement("div");h.className="loHead";h.textContent=o.lo;box.appendChild(h);
+  }
+  var btn=document.createElement("button");
+  btn.className="chip"+(selMap[o.id]?" on":"");
+  var lab=o.lab||("LO"+(i+1));
+  btn.textContent=lab+" \u00b7 "+(o.text.length>26?o.text.slice(0,26)+"\u2026":o.text);
+  btn.title=o.text+(o.req?"  ["+o.req+"]":"");
+  btn.onclick=function(){
+   if(selMap[o.id])delete selMap[o.id];else selMap[o.id]=true;
+   btn.classList.toggle("on",!!selMap[o.id]);
+  };
+  box.appendChild(btn);
+ });
+}
+function renderUnitBlocks(){
+ var b=curBinder(),box=$("unitBlocks");box.innerHTML="";
+ tagBlocks.forEach(function(blk,idx){
+  var d=document.createElement("div");d.className="unitBlock";
+  var top=document.createElement("div");top.className="ubTop";
+  var sel=document.createElement("select");
+  b.units.forEach(function(u){
+   var o=document.createElement("option");o.value=u.id;o.textContent=u.name+(u.code?" ("+u.code+")":"");sel.appendChild(o);
+  });
+  if(!unitById(blk.unitId))blk.unitId=b.units[0].id;
+  sel.value=blk.unitId;
+  sel.onchange=function(){blk.unitId=sel.value;blk.sel={};renderUnitBlocks();};
+  top.appendChild(sel);
+  if(tagBlocks.length>1){
+   var rm=document.createElement("button");rm.textContent="\u2715";rm.title="Remove this unit";
+   rm.onclick=function(){tagBlocks.splice(idx,1);renderUnitBlocks();};
+   top.appendChild(rm);
+  }
+  d.appendChild(top);
+  var chips=document.createElement("div");chips.className="chips";chips.style.marginTop="8px";
+  d.appendChild(chips);
+  acChipRow(chips,unitById(blk.unitId),blk.sel);
+  box.appendChild(d);
+ });
+ $("addUnitB").style.display=tagBlocks.length>=3?"none":"";
+}
+function saveTagged(){
+ var b=curBinder();
+ var tags=[];
+ tagBlocks.forEach(function(blk){
+  Object.keys(blk.sel).forEach(function(a){tags.push({u:blk.unitId,a:a});});
+ });
+ var pups=Object.keys(tagPups);
+ if(!tags.length){toast("Tick at least one criterion");return;}
+ if(!pups.length){toast("Tick at least one pupil");return;}
+ busy("Saving evidence\u2026");
+ var seq=Promise.resolve();
+ PEND.forEach(function(p){
+  var it={id:uid(),binderId:b.id,type:p.type,pupilIds:pups.slice(),tags:tags.slice(),note:($("noteIn").value||"").trim(),ts:Date.now()};
+  if(p.type==="photo"){it.blob=p.blob;it.thumb=p.thumb;}
+  else{it.text=p.text;it.author=p.author;}
+  ITEMS.push(it);
+  seq=seq.then(function(){return itemPut(it);});
+ });
+ seq.then(function(){
+  var n=PEND.length;
+  PEND.forEach(function(p){if(p.thumbUrl)URL.revokeObjectURL(p.thumbUrl);});
+  PEND=[];$("noteIn").value="";
+  tagBlocks.forEach(function(blk){blk.sel={};});
+  renderTagCard();busy(false);checkNag();
+  toast(n+" item"+(n===1?"":"s")+" saved \u2713");
+ });
+}
+
+/* ===================== browse ===================== */
+function selFill(sel,opts,allLabel){
+ var v=sel.value;
+ sel.innerHTML="";
+ var a=document.createElement("option");a.value="";a.textContent=allLabel;sel.appendChild(a);
+ opts.forEach(function(o){
+  var e=document.createElement("option");e.value=o.id;e.textContent=o.label;sel.appendChild(e);
+ });
+ sel.value=v&&Array.prototype.some.call(sel.options,function(op){return op.value===v;})?v:"";
+}
+function itemUnits(it){
+ var seen={},out=[];
+ (it.tags||[]).forEach(function(t){if(!seen[t.u]){seen[t.u]=1;out.push(t.u);}});
+ return out;
+}
+function renderGrid(){
+ var b=curBinder();if(!b)return;
+ selFill($("fUnit"),b.units.map(function(u){return{id:u.id,label:u.name};}),"All units");
+ selFill($("fPupil"),b.pupils.map(function(p){return{id:p.id,label:p.name};}),"All pupils");
+ var u=unitById($("fUnit").value);
+ selFill($("fOut"),u?u.outcomes.map(function(o,i){return{id:o.id,label:o.lab||("LO"+(i+1))};}):[],"All criteria");
+ var fu=$("fUnit").value,fp=$("fPupil").value,fo=$("fOut").value;
+ var list=bItems().filter(function(it){
+  if(fu&&!(it.tags||[]).some(function(t){return t.u===fu;}))return false;
+  if(fp&&it.pupilIds.indexOf(fp)<0)return false;
+  if(fo&&!(it.tags||[]).some(function(t){return t.a===fo;}))return false;
+  return true;
+ }).sort(function(a,c){return c.ts-a.ts;});
+ var g=$("grid");g.innerHTML="";
+ list.forEach(function(it){
+  var btn=document.createElement("button");btn.className="ev";
+  if(it.type==="text"){
+   var tb=document.createElement("div");tb.className="txtBody";tb.textContent="\ud83d\udcdd "+it.text;btn.appendChild(tb);
+  }else{
+   var im=document.createElement("img");im.src=thumbUrl(it);im.alt="evidence";btn.appendChild(im);
+  }
+  var cp=document.createElement("div");cp.className="cap";
+  var who=it.pupilIds.map(function(p){var pp=pupilById(p);return pp?pp.name.split(" ")[0]:"?";}).join(", ");
+  var labs=(it.tags||[]).slice(0,4).map(function(t){var un=unitById(t.u);return un?outLabel(un,t.a):"?";}).join(" ");
+  if((it.tags||[]).length>4)labs+=" +"+(it.tags.length-4);
+  cp.textContent=who+" \u00b7 "+labs+" \u00b7 "+fmtDate(it.ts);
+  btn.appendChild(cp);
+  btn.onclick=function(){openEv(it);};
+  g.appendChild(btn);
+ });
+ $("browseNote").textContent=list.length?list.length+" item"+(list.length===1?"":"s"):"No evidence matches \u2014 try widening the filters.";
+}
+function openEv(it){
+ evCur=it;
+ $("evTitle").textContent="Evidence \u00b7 "+fmtDate(it.ts)+(it.type==="text"?(it.author==="pupil"?" \u00b7 pupil statement":" \u00b7 witness statement"):"");
+ if(it.type==="text"){
+  $("evImg").classList.add("hidden");$("evImg").src="";
+  $("evText").classList.remove("hidden");$("evText").textContent=it.text;
+ }else{
+  $("evText").classList.add("hidden");
+  $("evImg").classList.remove("hidden");$("evImg").src=URL.createObjectURL(it.blob);
+ }
+ var us=itemUnits(it).map(function(uId){var un=unitById(uId);return un?un.name:"?";}).join(" + ");
+ $("evMeta").textContent=us;
+ $("evNote").value=it.note||"";
+ var sel={},pups={};
+ (it.tags||[]).forEach(function(t){sel[t.u+"|"+t.a]=true;});
+ it.pupilIds.forEach(function(p){pups[p]=true;});
+ evCur._sel=sel;evCur._pups=pups;
+ var box=$("evOuts");box.innerHTML="";
+ itemUnits(it).forEach(function(uId){
+  var un=unitById(uId);if(!un)return;
+  var h=document.createElement("div");h.className="loHead";h.textContent=un.name;box.appendChild(h);
+  un.outcomes.forEach(function(o,i){
+   var key=uId+"|"+o.id;
+   var btn=document.createElement("button");
+   btn.className="chip"+(sel[key]?" on":"");
+   btn.textContent=(o.lab||("LO"+(i+1)));
+   btn.title=o.text;
+   btn.onclick=function(){
+    if(sel[key])delete sel[key];else sel[key]=true;
+    btn.classList.toggle("on",!!sel[key]);
+   };
+   box.appendChild(btn);
+  });
+ });
+ chipRow($("evPups"),curBinder().pupils,pups,function(p){return p.name;});
+ $("evModal").classList.add("open");
+}
+function closeEv(){
+ $("evModal").classList.remove("open");
+ var im=$("evImg");if(im.src)URL.revokeObjectURL(im.src);im.src="";
+ evCur=null;
+}
+function saveEv(){
+ if(!evCur)return;
+ var tags=Object.keys(evCur._sel).map(function(k){var p=k.split("|");return{u:p[0],a:p[1]};});
+ var pups=Object.keys(evCur._pups);
+ if(!tags.length||!pups.length){toast("Keep at least one criterion and one pupil");return;}
+ evCur.tags=tags;evCur.pupilIds=pups;evCur.note=($("evNote").value||"").trim();
+ delete evCur._sel;delete evCur._pups;
+ itemPut(evCur).then(function(){toast("Updated \u2713");closeEv();renderGrid();});
+}
+function delEv(){
+ if(!evCur)return;
+ if(!confirm("Delete this piece of evidence? This can't be undone."))return;
+ var id=evCur.id;
+ ITEMS.splice(ITEMS.indexOf(evCur),1);
+ if(URLS.has(id)){URL.revokeObjectURL(URLS.get(id));URLS.delete(id);}
+ itemDel(id).then(function(){toast("Deleted");closeEv();renderGrid();});
+}
+
+/* ===================== coverage ===================== */
+function showAc(u,o){
+ $("acTitle").textContent=(o.lab||"Criterion")+" \u2014 "+u.name;
+ var html=o.lo?("<b>"+o.lo+"</b><br><br>"):"";
+ html+=o.text;
+ if(o.el)html+="<br><br><b>To include:</b><ul>"+o.el.map(function(e){return "<li>"+e+"</li>";}).join("")+"</ul>";
+ if(o.req)html+="<br><b>Requirement:</b> "+o.req;
+ $("acBody").innerHTML=html;
+ $("acModal").classList.add("open");
+}
+function renderCov(){
+ var b=curBinder();if(!b)return;
+ selFill($("covUnit"),b.units.map(function(u){return{id:u.id,label:u.name+(u.code?" ("+u.code+")":"")};}),"Choose a unit\u2026");
+ var t=$("covTable");t.innerHTML="";
+ var u=unitById($("covUnit").value);
+ if(!u)return;
+ var pupIds=b.pupils.map(function(p){return p.id;});
+ var outIds=u.outcomes.map(function(o){return o.id;});
+ var g=coverage(bItems(),u.id,pupIds,outIds);
+ var tr=document.createElement("tr"),th0=document.createElement("th");th0.textContent="Pupil";tr.appendChild(th0);
+ u.outcomes.forEach(function(o,i){
+  var th=document.createElement("th");th.textContent=o.lab||("LO"+(i+1));th.title=o.text;th.style.cursor="pointer";
+  th.onclick=function(){showAc(u,o);};
+  tr.appendChild(th);
+ });
+ t.appendChild(tr);
+ b.pupils.forEach(function(p){
+  var r=document.createElement("tr"),td0=document.createElement("td");td0.textContent=p.name;r.appendChild(td0);
+  u.outcomes.forEach(function(o){
+   var td=document.createElement("td"),n=g[p.id][o.id];
+   td.textContent=n||"\u2014";
+   td.className=n?"hit":"miss";
+   if(n)td.onclick=function(){
+    setTab("Browse");
+    $("fUnit").value=u.id;$("fPupil").value=p.id;
+    renderGrid();
+    $("fOut").value=o.id;renderGrid();
+   };
+   r.appendChild(td);
+  });
+  t.appendChild(r);
+ });
+}
+
+/* ===================== qualification tracker (PEQ rules of combination) ===================== */
+function unitProgress(u,pupilId){
+ var g=coverage(bItems(),u.id,[pupilId],u.outcomes.map(function(o){return o.id;}));
+ var done=0;
+ u.outcomes.forEach(function(o){if(g[pupilId][o.id]>0)done++;});
+ return{done:done,total:u.outcomes.length,achieved:done===u.outcomes.length&&u.outcomes.length>0};
+}
+function qualStatus(b,pupilId,qual){
+ var allowed=PEQ.allowedUnitLevels[qual.level];
+ var achieved=[],inProgress=[],warnings=[];
+ b.units.forEach(function(u){
+  if(!u.level||!u.fam)return;
+  var pr=unitProgress(u,pupilId);
+  if(allowed.indexOf(u.level)<0){
+   if(pr.done>0)warnings.push(u.code+" is at "+PEQ.levelNames[u.level]+", outside the levels allowed for this qualification ("+allowed.map(function(l){return PEQ.levelNames[l];}).join(", ")+").");
+   return;
+  }
+  if(pr.achieved)achieved.push(u);
+  else if(pr.done>0)inProgress.push({u:u,pr:pr});
+ });
+ /* barred combinations: one unit per family; highest level counts */
+ var byFam={};
+ achieved.forEach(function(u){
+  var cur=byFam[u.fam];
+  if(!cur||LV_ORDER[u.level]>LV_ORDER[cur.level]){
+   if(cur)warnings.push("Barred combination: "+cur.code+" and "+u.code+" are the same skill at two levels \u2014 only "+u.code+" (highest) counts.");
+   byFam[u.fam]=u;
+  }else warnings.push("Barred combination: "+cur.code+" and "+u.code+" are the same skill at two levels \u2014 only "+cur.code+" (highest) counts.");
+ });
+ var kept=Object.keys(byFam).map(function(f){return byFam[f];});
+ var atLevel=0,offLevel=0;
+ kept.forEach(function(u){if(u.level===qual.level)atLevel+=u.cr;else offLevel+=u.cr;});
+ var offCounted=Math.min(offLevel,qual.maxOff);
+ if(offLevel>qual.maxOff)warnings.push("Only "+qual.maxOff+" credit"+(qual.maxOff===1?"":"s")+" from other levels can count ("+offLevel+" achieved off-level).");
+ var counted=atLevel+offCounted;
+ return{kept:kept,inProgress:inProgress,atLevel:atLevel,offCounted:offCounted,counted:counted,warnings:warnings};
+}
+function renderQual(){
+ var b=curBinder();if(!b)return;
+ var isPeq=b.framework==="peq";
+ $("qualCard").classList.toggle("hidden",!isPeq);
+ if(!isPeq)return;
+ selFill($("qPupil"),b.pupils.map(function(p){return{id:p.id,label:p.name};}),"Choose a pupil\u2026");
+ selFill($("qQual"),PEQ.quals.map(function(q){return{id:q.id,label:q.name.replace(" in Personal Effectiveness","")};}),"Target qualification\u2026");
+ var pid=$("qPupil").value;
+ if(pid&&b.quals[pid]&&!$("qQual").value)$("qQual").value=b.quals[pid];
+ var out=$("qualOut");out.innerHTML="";
+ var qual=null;
+ PEQ.quals.forEach(function(q){if(q.id===$("qQual").value)qual=q;});
+ if(!pid||!qual){out.textContent="Choose a pupil and their target qualification to see credit progress, barred-combination checks and gaps.";return;}
+ if(b.quals[pid]!==qual.id){b.quals[pid]=qual.id;metaSave();}
+ var st=qualStatus(b,pid,qual);
+ var pct=Math.min(100,Math.round(st.counted/qual.total*100));
+ var html="<b>"+st.counted+" / "+qual.total+" credits</b> counted ("+st.atLevel+" at "+PEQ.levelNames[qual.level]+", need "+qual.minAtLevel+" at level"+(qual.maxOff?"; up to "+qual.maxOff+" may come from one level above or below":"; all must be at level")+").";
+ html+="<div class='qbar'><div style='width:"+pct+"%'></div></div>";
+ if(st.kept.length)html+="<b>Achieved:</b> "+st.kept.map(function(u){return u.code+" ("+u.cr+"cr)";}).join(", ")+"<br>";
+ if(st.inProgress.length)html+="<b>In progress:</b> "+st.inProgress.map(function(x){return x.u.code+" ("+x.pr.done+"/"+x.pr.total+" criteria)";}).join(", ")+"<br>";
+ var metTotal=st.counted>=qual.total,metLevel=st.atLevel>=qual.minAtLevel;
+ if(metTotal&&metLevel)html+="<div class='qok'>\u2713 Credit requirements met for "+qual.name+" \u2014 subject to assessment, IQA and EQA sampling.</div>";
+ else{
+  var need=[];
+  if(!metLevel)need.push((qual.minAtLevel-st.atLevel)+" more credit"+(qual.minAtLevel-st.atLevel===1?"":"s")+" at "+PEQ.levelNames[qual.level]);
+  if(!metTotal)need.push((qual.total-st.counted)+" more credit"+(qual.total-st.counted===1?"":"s")+" overall");
+  html+="<div class='note'>Still needed: "+need.join(" and ")+". A unit counts once every criterion has at least one piece of evidence.</div>";
+ }
+ st.warnings.forEach(function(w){html+="<div class='qwarn'>\u26a0 "+w+"</div>";});
+ out.innerHTML=html;
+}
+
+/* ===================== portfolios ===================== */
+var portSel={};
+function renderPort(){
+ var b=curBinder();if(!b)return;
+ selFill($("portUnit"),b.units.map(function(u){return{id:u.id,label:u.name+(u.code?" ("+u.code+")":"")};}),"Choose a unit\u2026");
+ chipRow($("portPups"),b.pupils,portSel,function(p){return p.name;});
+}
+function pupilItems(unitId,pupilId){
+ return bItems().filter(function(it){
+  return it.pupilIds.indexOf(pupilId)>=0&&(it.tags||[]).some(function(t){return t.u===unitId;});
+ }).sort(function(a,c){return a.ts-c.ts;});
+}
+function loadImg(blob){
+ return new Promise(function(res,rej){
+  var im=new Image();
+  im.onload=function(){res(im);};
+  im.onerror=rej;
+  im.src=URL.createObjectURL(blob);
+ });
+}
+function paintTextPage(meta,unit,pupil,item,idx,total,outLabels){
+ var c=pageCanvas(),x=c.getContext("2d");
+ x.fillStyle=NAVY;x.fillRect(0,0,PG_W,110);
+ x.fillStyle="#fff";x.font="800 32px Arial";x.textAlign="left";
+ x.fillText(pupil.name+" \u2014 evidence "+idx+" of "+total,70,72);
+ x.fillStyle="#5b6678";x.font="700 30px Arial";
+ x.fillText(item.author==="pupil"?"Pupil statement":"Witness statement (teacher)",70,190);
+ x.fillStyle="#15203a";x.font="500 30px Arial";
+ var y=260;
+ wrapText(x,item.text,PG_W-160).forEach(function(l){x.fillText(l,70,y);y+=44;});
+ y=Math.max(y+60,PG_H-460);
+ x.fillStyle=GOLD;x.fillRect(70,y-44,10,150);
+ x.fillStyle=NAVY;x.font="800 30px Arial";
+ x.fillText("Criteria: "+outLabels,100,y);
+ x.fillStyle="#15203a";x.font="500 28px Arial";
+ if(item.note)wrapText(x,"Note: "+item.note,PG_W-200).forEach(function(l,i){x.fillText(l,100,y+50+i*36);});
+ x.fillStyle="#5b6678";x.font="600 26px Arial";
+ x.fillText("Date: "+fmtDate(item.ts)+"    Unit: "+unit.name+(unit.code?" ("+unit.code+")":""),100,y+(item.note?160:60));
+ return c;
+}
+function portMeta(b){
+ return{school:(b.school||"Matt\u2019s Apps")+(b.centre?" \u00b7 Centre "+b.centre:""),teacher:b.teacher,fwLabel:fwLabel(b),checkTitle:b.framework==="peq"?"Criteria checklist":"Outcome checklist"};
+}
+function buildPortfolio(unit,pupil){
+ var b=curBinder(),meta=portMeta(b);
+ var list=pupilItems(unit.id,pupil.id);
+ var grid={};
+ unit.outcomes.forEach(function(o){grid[o.id]=0;});
+ list.forEach(function(it){(it.tags||[]).forEach(function(t){if(t.u===unit.id&&(t.a in grid))grid[t.a]++;});});
+ var stats={count:list.length,first:list.length?list[0].ts:0,last:list.length?list[list.length-1].ts:0};
+ var pages=[];
+ function pagePush(c){pages.push({jpeg:canvasJpeg(c),w:c.width,h:c.height});}
+ pagePush(paintCover(meta,unit,pupil,stats));
+ pagePush(paintChecklist(meta,unit,pupil,grid));
+ var seq=Promise.resolve();
+ list.forEach(function(it,i){
+  seq=seq.then(function(){
+   var labels=(it.tags||[]).filter(function(t){return t.u===unit.id;}).map(function(t){return outLabel(unit,t.a);}).join(", ");
+   if(it.type==="text"){
+    pagePush(paintTextPage(meta,unit,pupil,it,i+1,list.length,labels));
+    return Promise.resolve();
+   }
+   return loadImg(it.blob).then(function(img){
+    pagePush(paintEvidencePage(meta,unit,pupil,it,img,i+1,list.length,labels));
+    URL.revokeObjectURL(img.src);
+   });
+  });
+ });
+ return seq.then(function(){return buildPdf(pages,595,842);});
+}
+function genPortfolios(){
+ var u=unitById($("portUnit").value);
+ if(!u){toast("Choose a unit first");return;}
+ var b=curBinder();
+ var pups=b.pupils.filter(function(p){return portSel[p.id];});
+ if(!pups.length){toast("Tick at least one pupil");return;}
+ var seq=Promise.resolve(),done=0;
+ busy("Building portfolios\u2026");
+ pups.forEach(function(p){
+  seq=seq.then(function(){
+   $("busyMsg").textContent="Building "+p.name+"\u2019s portfolio ("+(done+1)+" of "+pups.length+")\u2026";
+   return buildPortfolio(u,p).then(function(bytes){
+    var safe=(p.name+" "+(u.code||u.name)).replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase();
+    saveBytes(bytes,"application/pdf",safe+"-portfolio.pdf");
+    done++;
+   });
+  });
+ });
+ seq.then(function(){busy(false);toast(done+" portfolio"+(done===1?"":"s")+" saved \u2713");})
+  .catch(function(){busy(false);toast("Something went wrong building the PDF");});
+}
+function saveBytes(bytes,mime,name){
+ var a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([bytes],{type:mime}));
+ a.download=name;
+ document.body.appendChild(a);a.click();
+ setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},5000);
+}
+
+/* ===================== setup ===================== */
+function renderSetup(){
+ var b=curBinder();if(!b)return;
+ renderNbLevels();
+ var us=$("suUnit");
+ var v=us.value;
+ us.innerHTML="";
+ b.units.forEach(function(u){
+  var o=document.createElement("option");o.value=u.id;o.textContent=u.name+(u.code?" ("+u.code+")":"");us.appendChild(o);
+ });
+ if(b.units.length){
+  us.value=v&&unitById(v)?v:b.units[0].id;
+  fillUnitForm(unitById(us.value));
+ }else fillUnitForm(null);
+ $("suPeqB").classList.remove("hidden");
+ $("suNote").textContent="PEQ criteria come straight from the spec (v1.2 Oct 2025) \u2014 editing the text here is fine for phrasing tweaks, but the AC codes are what portfolios and coverage key on.";
+ $("suPups").value=b.pupils.map(function(p){return p.name;}).join("\n");
+ $("suTeacher").value=b.teacher||"";
+ $("suSchool").value=b.school||"";
+ $("suCentre").value=b.centre||"";
+ if(navigator.storage&&navigator.storage.estimate){
+  navigator.storage.estimate().then(function(e){
+   var mb=Math.round((e.usage||0)/1048576*10)/10;
+   $("storeNote").textContent="All binders: ~"+mb+" MB \u00b7 this binder: "+bItems().length+" evidence items. Back up weekly and after big capture sessions.";
+  }).catch(function(){});
+ }
+}
+var nbLevelSel={E3:true,L1:true};
+function renderNbLevels(){
+ var box=$("nbLevels");box.innerHTML="";
+ PEQ.levels.forEach(function(lv){
+  var btn=document.createElement("button");
+  btn.className="chip"+(nbLevelSel[lv]?" on":"");
+  btn.textContent=PEQ.levelNames[lv];
+  btn.onclick=function(){
+   if(nbLevelSel[lv])delete nbLevelSel[lv];else nbLevelSel[lv]=true;
+   btn.classList.toggle("on",!!nbLevelSel[lv]);
+  };
+  box.appendChild(btn);
+ });
+}
+function createBinder(){
+ var name=($("nbName").value||"").trim();
+ if(!name){toast("Give the binder a name");return;}
+ var lvls=PEQ.levels.filter(function(l){return nbLevelSel[l];});
+ if(!lvls.length){toast("Tick at least one PEQ level");return;}
+ var b=newBinderObj(name);
+ seedPeqBinder(b,lvls);
+ /* carry teacher/school across for convenience */
+ var cur=curBinder();
+ if(cur){b.teacher=cur.teacher;b.school=cur.school;b.centre=cur.centre;}
+ META.binders.push(b);
+ META.active=b.id;
+ $("nbName").value="";
+ metaSave().then(function(){
+  renderBinderBar();renderSetup();
+  toast("Binder created \u2014 "+b.units.length+" PEQ units loaded \u2713");
+ });
+}
+function renameBinder(){
+ var b=curBinder();if(!b)return;
+ var n=prompt("Rename binder:",b.name);
+ if(!n||!n.trim())return;
+ b.name=n.trim();
+ metaSave().then(function(){renderBinderBar();toast("Renamed \u2713");});
+}
+function deleteBinder(){
+ var b=curBinder();if(!b)return;
+ if(META.binders.length===1){toast("Can't delete the only binder \u2014 make another first");return;}
+ var n=bItems().length;
+ if(!confirm("Delete binder \u201c"+b.name+"\u201d and its "+n+" evidence item"+(n===1?"":"s")+"? This can't be undone. (Back it up first?)"))return;
+ var ids=bItems().map(function(it){return it.id;});
+ var seq=Promise.resolve();
+ ids.forEach(function(id){
+  var idx=-1;
+  ITEMS.forEach(function(it,i){if(it.id===id)idx=i;});
+  if(idx>=0)ITEMS.splice(idx,1);
+  if(URLS.has(id)){URL.revokeObjectURL(URLS.get(id));URLS.delete(id);}
+  seq=seq.then(function(){return itemDel(id);});
+ });
+ META.binders.splice(META.binders.indexOf(b),1);
+ META.active=META.binders[0].id;
+ seq.then(metaSave).then(function(){
+  renderBinderBar();renderSetup();renderTagCard();
+  toast("Binder deleted");
+ });
+}
+function fillUnitForm(u){
+ $("suName").value=u?u.name:"";
+ $("suCode").value=u?u.code:"";
+ $("suOuts").value=u?u.outcomes.map(function(o){return (o.lab?o.lab+" | ":"")+o.text;}).join("\n"):"";
+}
+function saveUnit(){
+ var b=curBinder();
+ var us=$("suUnit"),u=unitById(us.value);
+ var name=($("suName").value||"").trim();
+ if(!name){toast("Give the unit a name");return;}
+ var lines=($("suOuts").value||"").split("\n").map(function(s){return s.trim();}).filter(Boolean);
+ if(!lines.length){toast("Paste at least one outcome");return;}
+ if(!u){u={id:uid(),outcomes:[]};b.units.push(u);}
+ u.name=name;u.code=($("suCode").value||"").trim();
+ var old=u.outcomes;
+ u.outcomes=lines.map(function(txt,i){
+  var lab=null,body=txt;
+  var m=txt.match(/^([^|]{1,14})\s*\|\s*(.+)$/);
+  if(m){lab=m[1].trim();body=m[2];}
+  var prev=old[i]||{};
+  return{id:prev.id||uid(),lab:lab||prev.lab||null,lo:prev.lo||null,el:prev.el||null,req:prev.req||null,text:body};
+ });
+ metaSave().then(function(){toast("Unit saved \u2713");renderSetup();});
+}
+function newUnit(){
+ var b=curBinder();
+ var u={id:uid(),name:"New unit",code:"",outcomes:[{id:uid(),text:"Paste the outcome wording from the unit spec"}]};
+ b.units.push(u);
+ metaSave().then(function(){renderSetup();$("suUnit").value=u.id;fillUnitForm(u);});
+}
+function addPeqUnit(){
+ var b=curBinder();
+ var have={};
+ b.units.forEach(function(u){if(u.code)have[u.code]=1;});
+ var missing=PEQ.units.filter(function(d){return !have[d.code];});
+ if(!missing.length){toast("All 24 PEQ units are already in this binder");return;}
+ $("acTitle").textContent="Add a PEQ unit";
+ var body=$("acBody");body.innerHTML="";
+ missing.forEach(function(d){
+  var btn=document.createElement("button");
+  btn.className="chip";btn.style.margin="3px";
+  btn.textContent=d.code+" \u00b7 "+PEQ.levelNames[d.level]+" ("+d.cr+"cr)";
+  btn.onclick=function(){
+   b.units.push(peqToUnit(d));
+   metaSave().then(function(){
+    $("acModal").classList.remove("open");
+    renderSetup();toast(d.code+" added \u2713");
+   });
+  };
+  body.appendChild(btn);
+ });
+ $("acModal").classList.add("open");
+}
+function delUnit(){
+ var b=curBinder();
+ var u=unitById($("suUnit").value);
+ if(!u)return;
+ var n=bItems().filter(function(it){return (it.tags||[]).some(function(t){return t.u===u.id;});}).length;
+ if(!confirm("Delete \u201c"+u.name+"\u201d? "+(n?n+" evidence items stay stored but lose their tags for this unit.":"")))return;
+ b.units.splice(b.units.indexOf(u),1);
+ metaSave().then(function(){toast("Unit deleted");renderSetup();});
+}
+function savePupils(){
+ var b=curBinder();
+ var lines=($("suPups").value||"").split("\n").map(function(s){return s.trim();}).filter(Boolean);
+ var byName={};
+ b.pupils.forEach(function(p){byName[p.name.toLowerCase()]=p;});
+ b.pupils=lines.map(function(nm){
+  return byName[nm.toLowerCase()]||{id:uid(),name:nm};
+ });
+ metaSave().then(function(){toast(b.pupils.length+" pupils saved \u2713");renderSetup();});
+}
+function saveMetaForm(){
+ var b=curBinder();
+ b.teacher=($("suTeacher").value||"").trim();
+ b.school=($("suSchool").value||"").trim();
+ b.centre=($("suCentre").value||"").trim();
+ metaSave().then(function(){toast("Saved \u2713");});
+}
+
+/* ===================== backup / restore ===================== */
+function doBackup(){
+ var b=curBinder();if(!b)return;
+ busy("Packing backup\u2026");
+ var files=[],manifest={v:2,binder:b,items:[]};
+ var seq=Promise.resolve();
+ bItems().forEach(function(it){
+  manifest.items.push({id:it.id,type:it.type,pupilIds:it.pupilIds,tags:it.tags,note:it.note,ts:it.ts,text:it.text||null,author:it.author||null});
+  if(it.type!=="photo")return;
+  seq=seq.then(function(){
+   return it.blob.arrayBuffer().then(function(ab){
+    files.push({name:"img/"+it.id+".jpg",data:new Uint8Array(ab)});
+    return it.thumb.arrayBuffer();
+   }).then(function(tb){
+    files.push({name:"thumb/"+it.id+".jpg",data:new Uint8Array(tb)});
+   });
+  });
+ });
+ seq.then(function(){
+  files.unshift({name:"binder.json",data:strToBytes(JSON.stringify(manifest))});
+  var zip=writeZip(files);
+  var d=new Date(),stamp=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+  var safe=b.name.replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"binder";
+  saveBytes(zip,"application/zip",safe+"-"+stamp+".zip");
+  b.lastBackup=Date.now();
+  return metaSave();
+ }).then(function(){
+  busy(false);checkNag();
+  toast("Backup saved \u2014 keep it somewhere safe \u2713");
+ }).catch(function(){busy(false);toast("Backup failed");});
+}
+function restoreItems(binderId,items,z){
+ var seq=Promise.resolve();
+ items.forEach(function(m){
+  var it={id:m.id,binderId:binderId,type:m.type||"photo",pupilIds:m.pupilIds||[],tags:m.tags||[],note:m.note||"",ts:m.ts||Date.now()};
+  if(m.unitId&&!m.tags)it.tags=(m.outcomeIds||[]).map(function(o){return{u:m.unitId,a:o};});
+  if(it.type==="photo"){
+   var img=z["img/"+m.id+".jpg"],th=z["thumb/"+m.id+".jpg"];
+   if(!img)return;
+   it.blob=new Blob([img],{type:"image/jpeg"});
+   it.thumb=new Blob([th||img],{type:"image/jpeg"});
+  }else{it.text=m.text||"";it.author=m.author||"teacher";}
+  ITEMS.push(it);
+  seq=seq.then(function(){return itemPut(it);});
+ });
+ return seq;
+}
+function doRestore(file){
+ busy("Restoring\u2026");
+ file.arrayBuffer().then(function(ab){
+  var z=readZip(new Uint8Array(ab));
+  if(!z["binder.json"])throw new Error("no manifest");
+  var man=JSON.parse(bytesToStr(z["binder.json"]));
+  if(man.v>=2&&man.binder){
+   var b=man.binder,existing=null;
+   b.framework="peq";
+   if(!b.quals)b.quals={};
+   META.binders.forEach(function(x){if(x.id===b.id)existing=x;});
+   if(existing){
+    if(!confirm("A binder called \u201c"+existing.name+"\u201d already exists \u2014 replace its contents with this backup?")){busy(false);return null;}
+    var old=ITEMS.filter(function(it){return it.binderId===b.id;});
+    var seq=Promise.resolve();
+    old.forEach(function(it){
+     ITEMS.splice(ITEMS.indexOf(it),1);
+     if(URLS.has(it.id)){URL.revokeObjectURL(URLS.get(it.id));URLS.delete(it.id);}
+     seq=seq.then(function(){return itemDel(it.id);});
+    });
+    META.binders[META.binders.indexOf(existing)]=b;
+    META.active=b.id;
+    return seq.then(function(){return restoreItems(b.id,man.items||[],z);}).then(metaSave);
+   }
+   META.binders.push(b);META.active=b.id;
+   return restoreItems(b.id,man.items||[],z).then(metaSave);
+  }
+  /* v1 backup: {meta:{units,pupils,teacher,school}, items:[...]} -> import as a new binder */
+  if(man.meta){
+   var nb=newBinderObj("Restored (v1) "+fmtDate(Date.now()));
+   nb.teacher=man.meta.teacher||"";nb.school=man.meta.school||"";
+   nb.pupils=man.meta.pupils||[];nb.units=man.meta.units||[];
+   META.binders.push(nb);META.active=nb.id;
+   return restoreItems(nb.id,man.items||[],z).then(metaSave);
+  }
+  throw new Error("unknown manifest");
+ }).then(function(r){
+  busy(false);
+  if(r===null)return;
+  renderBinderBar();setTab("Setup");renderSetup();checkNag();
+  toast("Restored \u201c"+curBinder().name+"\u201d \u2014 "+bItems().length+" items \u2713");
+ }).catch(function(){busy(false);toast("That doesn't look like an Evidence Binder backup");});
+}
+
+/* ===================== init ===================== */
+function init(){
+ $("tabCap").onclick=function(){setTab("Cap");};
+ $("tabBrowse").onclick=function(){setTab("Browse");};
+ $("tabCov").onclick=function(){setTab("Cov");};
+ $("tabPort").onclick=function(){setTab("Port");};
+ $("tabSetup").onclick=function(){setTab("Setup");};
+ $("camB").onclick=function(){$("camFile").click();};
+ $("fileB").onclick=function(){$("picFile").click();};
+ $("writeB").onclick=function(){$("writeCard").classList.toggle("hidden");};
+ $("wTeacher").onclick=function(){$("wTeacher").classList.add("on");$("wPupil").classList.remove("on");};
+ $("wPupil").onclick=function(){$("wPupil").classList.add("on");$("wTeacher").classList.remove("on");};
+ $("writeAdd").onclick=addWritten;
+ $("writeCancel").onclick=function(){$("writeIn").value="";$("writeCard").classList.add("hidden");};
+ ["camFile","picFile"].forEach(function(id){
+  $(id).addEventListener("change",function(){if(this.files.length)importPics(this.files);this.value="";});
+ });
+ $("addUnitB").onclick=function(){
+  var b=curBinder();if(!b||!b.units.length)return;
+  tagBlocks.push({unitId:b.units[0].id,sel:{}});
+  renderUnitBlocks();
+ };
+ $("tagSave").onclick=saveTagged;
+ $("tagCancel").onclick=function(){
+  PEND.forEach(function(p){if(p.thumbUrl)URL.revokeObjectURL(p.thumbUrl);});
+  PEND=[];renderTagCard();
+ };
+ ["fUnit","fPupil","fOut"].forEach(function(id){$(id).addEventListener("change",renderGrid);});
+ $("covUnit").addEventListener("change",renderCov);
+ $("qPupil").addEventListener("change",function(){
+  var b=curBinder(),pid=this.value;
+  if(b&&pid&&b.quals[pid])$("qQual").value=b.quals[pid];
+  renderQual();
+ });
+ $("qQual").addEventListener("change",renderQual);
+ $("portUnit").addEventListener("change",renderPort);
+ $("portAllB").onclick=function(){
+  var u=unitById($("portUnit").value);
+  if(!u){toast("Choose a unit first");return;}
+  portSel={};
+  curBinder().pupils.forEach(function(p){if(pupilItems(u.id,p.id).length)portSel[p.id]=true;});
+  renderPort();
+ };
+ $("portGo").onclick=genPortfolios;
+ $("binderSel").addEventListener("change",function(){switchBinder(this.value);});
+ $("nbCreateB").onclick=createBinder;
+ $("bRenameB").onclick=renameBinder;
+ $("bDeleteB").onclick=deleteBinder;
+ $("suUnit").addEventListener("change",function(){fillUnitForm(unitById(this.value));});
+ $("suSaveB").onclick=saveUnit;
+ $("suNewB").onclick=newUnit;
+ $("suPeqB").onclick=addPeqUnit;
+ $("suDelB").onclick=delUnit;
+ $("suPupSaveB").onclick=savePupils;
+ $("suMetaSaveB").onclick=saveMetaForm;
+ $("bakB").onclick=doBackup;
+ $("restB").onclick=function(){$("zipFile").click();};
+ $("zipFile").addEventListener("change",function(){if(this.files.length)doRestore(this.files[0]);this.value="";});
+ $("nagGoB").onclick=function(){setTab("Setup");doBackup();};
+ $("nagLaterB").onclick=function(){$("nag").classList.remove("open");};
+ $("evClose").onclick=closeEv;
+ $("evSaveB").onclick=saveEv;
+ $("evDelB").onclick=delEv;
+ $("acClose").onclick=function(){$("acModal").classList.remove("open");};
+ $("helpB").onclick=function(){$("helpModal").classList.add("open");};
+ $("helpClose").onclick=function(){$("helpModal").classList.remove("open");};
+ ["evModal","helpModal","acModal"].forEach(function(id){
+  $(id).addEventListener("click",function(e){
+   if(e.target===this){if(id==="evModal")closeEv();else this.classList.remove("open");}
+  });
+ });
+ if(navigator.storage&&navigator.storage.persist){
+  navigator.storage.persist().catch(function(){});
+ }
+ metaLoad().then(function(m){
+  return itemsAll().then(function(its){
+   ITEMS=its||[];
+   if(!m||!m.v||!m.binders){
+    var b=newBinderObj("PEQ Binder");
+    seedPeqBinder(b,["E3","L1"]);
+    META={v:2,binders:[b],active:b.id};
+    return metaSave();
+   }
+   META=m;
+   META.binders.forEach(function(x){x.framework="peq";if(!x.quals)x.quals={};});
+   if(!curBinder())META.active=META.binders[0]&&META.binders[0].id;
+   ITEMS.forEach(function(it){
+    if(!it.tags)it.tags=(it.outcomeIds||[]).map(function(o){return{u:it.unitId,a:o};});
+    if(!it.type)it.type="photo";
+   });
+   return Promise.resolve();
+  });
+ }).then(function(){
+  renderBinderBar();renderSetup();renderTagCard();checkNag();
+  db().then(function(d){
+   if(!d){
+    toast("Storage unavailable here \u2014 running in-session only; changes won\u2019t persist");
+    var sn=$("storeNote");if(sn)sn.textContent="Storage is blocked in this environment (e.g. a preview pane), so the binder is running in memory only. Host the file (GitHub Pages) or open it directly in a browser for saving and backups.";
+   }
+  });
+ });
+}
+/* ===== Evidence Binder v3: review, planning and integrity ===== */
+function esc3(s){return String(s==null?'':s).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function ensureV3(b){if(!b)return;if(!b.assessments)b.assessments={};if(!b.plan)b.plan={activities:[],iqaStatus:'Not submitted'};if(!b.plan.activities)b.plan.activities=[];b.specVersion=b.specVersion||'PEQ v1.2 Oct 2025';b.units.forEach(function(u){u.archived=!!u.archived;u.outcomes.forEach(function(o){o.key=o.key||b.specVersion+'|'+(u.code||u.id)+'|'+(o.lab||o.id);});});b.pupils.forEach(function(p){p.status=p.status||'active';});}
+function akey(p,u,o){return p+'|'+(u.code||u.id)+'|'+(o.lab||o.id);}
+function geta(b,p,u,o){ensureV3(b);return b.assessments[akey(p,u,o)]||{status:'collected',checks:{},rationale:'',feedback:'',assessor:b.teacher||'',date:'',iqa:'Not sampled',history:[]};}
+function evfor(p,u,o){return bItems().filter(function(i){return i.pupilIds.indexOf(p)>=0&&(i.tags||[]).some(function(t){return t.u===u.id&&t.a===o.id;});});}
+function slabel(s){return {none:'No evidence',collected:'Evidence collected',review:'Awaiting assessment',partial:'Further evidence required',achieved:'Achieved',iqa:'IQA confirmed',action:'IQA action required'}[s]||s;}
+function activePupils(b){return b.pupils.filter(function(p){return p.status==='active';});}
+setTab=function(k){[['Cap','secCap'],['Browse','secBrowse'],['Review','secReview'],['Cov','secCov'],['Plan','secPlan'],['Port','secPort'],['Setup','secSetup']].forEach(function(d){if($('tab'+d[0]))$('tab'+d[0]).classList.toggle('on',k===d[0]);$(d[1]).classList.toggle('hidden',k!==d[0]);});if(k==='Browse')renderGrid();if(k==='Review')renderReview();if(k==='Cov'){renderCov();renderQual();}if(k==='Plan')renderPlan();if(k==='Port')renderPort();if(k==='Setup')renderSetup();};
+function renderReview(){var b=curBinder();ensureV3(b);selFill($('rvPupil'),b.pupils.map(function(p){return{id:p.id,label:p.name+(p.status==='active'?'':' ('+p.status+')')};}),'Choose a pupil…');selFill($('rvUnit'),b.units.filter(function(u){return !u.archived;}).map(function(u){return{id:u.id,label:u.name+' ('+u.code+')'};}),'Choose a unit…');var p=$('rvPupil').value,u=unitById($('rvUnit').value),box=$('rvList'),sm=$('rvSummary');box.innerHTML='';sm.innerHTML='';if(!p||!u){box.innerHTML='<div class="card"><div class="note">Choose a pupil and unit. Tags identify possible evidence; achievement requires an assessor decision.</div></div>';return;}var n={e:0,r:0,a:0,x:0};u.outcomes.forEach(function(o){var ev=evfor(p,u,o),a=geta(b,p,u,o);if(!ev.length)a.status='none';if(ev.length)n.e++;if(a.status==='achieved'||a.status==='iqa')n.a++;else if(a.status==='partial'||a.status==='action')n.x++;else if(ev.length)n.r++;var req=(o.el||[]).slice();if(o.req)req.push(o.req);var d=document.createElement('div');d.className='card reviewItem';d.innerHTML='<div class="row"><h4 style="flex:1">'+esc3((o.lab||'Criterion')+' · '+o.text)+'</h4><span class="statusPill st-'+a.status+'">'+slabel(a.status)+'</span></div><div class="mini">'+ev.length+' linked evidence item'+(ev.length===1?'':'s')+'</div>'+(req.length?'<div class="reqList">'+req.map(function(q,i){return '<label class="reqCheck"><input type="checkbox" data-r="'+i+'" '+(a.checks[i]?'checked':'')+'><span>'+esc3(q)+'</span></label>';}).join('')+'</div>':'<div class="mini" style="margin-top:8px">Assess against the full criterion wording.</div>')+'<div class="two" style="margin-top:9px"><select class="as"><option value="collected">Evidence collected</option><option value="review">Awaiting assessment</option><option value="partial">Further evidence required</option><option value="achieved">Achieved</option><option value="iqa">IQA confirmed</option><option value="action">IQA action required</option></select><input class="ad" type="date" value="'+esc3(a.date)+'"></div><div class="two" style="margin-top:8px"><input class="aa" placeholder="Assessor" value="'+esc3(a.assessor)+'"><select class="ai"><option>Not sampled</option><option>Sampled — agreed</option><option>Sampled — action required</option></select></div><textarea class="ar" rows="2" style="margin-top:8px" placeholder="Assessment rationale">'+esc3(a.rationale)+'</textarea><textarea class="af" rows="2" style="margin-top:8px" placeholder="Feedback / further evidence required">'+esc3(a.feedback)+'</textarea><div class="acts"><button class="primary saveA">Save decision</button></div>';d.querySelector('.as').value=a.status==='none'?'collected':a.status;d.querySelector('.ai').value=a.iqa||'Not sampled';d.querySelector('.saveA').onclick=function(){var old=JSON.parse(JSON.stringify(a));a.history=a.history||[];if(old.date)a.history.push(old);a.status=d.querySelector('.as').value;a.date=d.querySelector('.ad').value||new Date().toISOString().slice(0,10);a.assessor=d.querySelector('.aa').value.trim();a.iqa=d.querySelector('.ai').value;a.rationale=d.querySelector('.ar').value.trim();a.feedback=d.querySelector('.af').value.trim();a.checks={};d.querySelectorAll('[data-r]').forEach(function(c){if(c.checked)a.checks[c.dataset.r]=true;});if(a.status==='achieved'&&req.length&&Object.keys(a.checks).length<req.length){a.status='partial';toast('Checklist incomplete — saved as further evidence required');}b.assessments[akey(p,u,o)]=a;metaSave().then(renderReview);};box.appendChild(d);});[['Evidence',n.e],['Awaiting review',n.r],['Achieved',n.a],['Actions',n.x]].forEach(function(x){var d=document.createElement('div');d.className='metric';d.innerHTML='<b>'+x[1]+'</b><span class="mini">'+x[0]+'</span>';sm.appendChild(d);});}
+function renderPlan(){var b=curBinder();ensureV3(b);var p=b.plan;[['plCohort','cohort'],['plLearnerCount','learnerCount'],['plStart','start'],['plFinish','finish'],['plAdjust','adjustments'],['plChallengeTitles','challengeTitles'],['plChallengeCodes','challengeCodes'],['plAssessor','assessor'],['plIqa','iqa'],['plIqaDate','iqaDate'],['plIqaStatus','iqaStatus'],['plIqaActions','iqaActions']].forEach(function(x){$(x[0]).value=p[x[1]]||'';});renderActivities();}
+function savePlan(){var p=curBinder().plan;[['plCohort','cohort'],['plLearnerCount','learnerCount'],['plStart','start'],['plFinish','finish'],['plAdjust','adjustments'],['plChallengeTitles','challengeTitles'],['plChallengeCodes','challengeCodes'],['plAssessor','assessor'],['plIqa','iqa'],['plIqaDate','iqaDate'],['plIqaStatus','iqaStatus'],['plIqaActions','iqaActions']].forEach(function(x){p[x[1]]=$(x[0]).value.trim();});metaSave().then(function(){toast('Course plan saved ✓');});}
+function addActivity(){var b=curBinder(),a={id:uid(),when:$('paWhen').value.trim(),title:$('paTitle').value.trim(),method:$('paMethod').value,activity:$('paActivity').value.trim(),evidence:$('paEvidence').value.trim(),mapping:$('paMapping').value.trim(),additional:$('paAdditional').value.trim(),status:'Planned'};if(!a.title||!a.activity){toast('Add an activity title and description');return;}b.plan.activities.push(a);metaSave().then(function(){['paWhen','paTitle','paActivity','paEvidence','paMapping','paAdditional'].forEach(function(i){$(i).value='';});renderActivities();});}
+function renderActivities(){var b=curBinder(),box=$('paList');box.innerHTML='';b.plan.activities.forEach(function(a){var d=document.createElement('div');d.className='planRow';d.innerHTML='<div class="row"><b style="flex:1">'+esc3((a.when?a.when+' · ':'')+a.title)+'</b><select class="ps" style="width:auto"><option>Planned</option><option>Delivered</option><option>Evidence outstanding</option><option>Complete</option></select><button class="warn pd">Delete</button></div><div class="mini">'+esc3(a.activity)+'</div><div class="mini"><b>Method:</b> '+esc3(a.method)+' · <b>Evidence:</b> '+esc3(a.evidence||'Not stated')+' · <b>Mapping:</b> '+esc3(a.mapping||'Not stated')+'</div>';d.querySelector('.ps').value=a.status;d.querySelector('.ps').onchange=function(){a.status=this.value;metaSave();};d.querySelector('.pd').onclick=function(){if(confirm('Delete this planned activity?')){b.plan.activities.splice(b.plan.activities.indexOf(a),1);metaSave().then(renderActivities);}};box.appendChild(d);});}
+function fillPlans(){var b=curBinder(),s=$('tagPlan'),v=s.value;s.innerHTML='<option value="">No linked plan</option>';b.plan.activities.forEach(function(a){var o=document.createElement('option');o.value=a.id;o.textContent=(a.when?a.when+' · ':'')+a.title;s.appendChild(o);});s.value=v;}
+var rtc=renderTagCard;renderTagCard=function(){rtc();if(PEND.length){ensureV3(curBinder());fillPlans();if(!$('tagActivityDate').value)$('tagActivityDate').value=new Date().toISOString().slice(0,10);}};
+var st=saveTagged;saveTagged=function(){var n=ITEMS.length,meta={planId:$('tagPlan').value,method:$('tagMethod').value,activityDate:$('tagActivityDate').value,independence:$('tagIndependence').value};st();var t=setInterval(function(){if(ITEMS.length>n){clearInterval(t);ITEMS.slice(n).forEach(function(i){Object.assign(i,meta);itemPut(i);});}},100);setTimeout(function(){clearInterval(t);},5000);};
+unitProgress=function(u,p){var b=curBinder();ensureV3(b);var done=0,provisional=0;u.outcomes.forEach(function(o){if(evfor(p,u,o).length)provisional++;var a=geta(b,p,u,o);if(a.status==='achieved'||a.status==='iqa')done++;});return{done:done,total:u.outcomes.length,provisional:provisional,achieved:done===u.outcomes.length&&u.outcomes.length>0};};
+var rs=renderSetup;renderSetup=function(){ensureV3(curBinder());rs();$('suPups').value=activePupils(curBinder()).map(function(p){return p.name;}).join('\n');runIntegrity();};
+savePupils=function(){var b=curBinder(),names=($('suPups').value||'').split('\n').map(function(x){return x.trim();}).filter(Boolean),wanted={};names.forEach(function(n){wanted[n.toLowerCase()]=1;});var by={};b.pupils.forEach(function(p){by[p.name.toLowerCase()]=p;p.status=wanted[p.name.toLowerCase()]?'active':'archived';});names.forEach(function(n){if(!by[n.toLowerCase()])b.pupils.push({id:uid(),name:n,status:'active'});});metaSave().then(function(){toast('Pupils saved; removed names archived ✓');renderSetup();});};
+var su=saveUnit;saveUnit=function(){var u=unitById($('suUnit').value);if(u&&PEQ.units.some(function(d){return d.code===u.code;})){toast('Official PEQ criteria are locked to protect evidence mappings');fillUnitForm(u);return;}su();};
+delUnit=function(){var u=unitById($('suUnit').value);if(u&&confirm('Archive this unit? Evidence and mappings will be retained.')){u.archived=true;metaSave().then(renderSetup);}};
+function runIntegrity(){var b=curBinder();if(!b)return[];ensureV3(b);var issues=[],ps={},us={},os={};b.pupils.forEach(function(p){if(ps[p.id])issues.push('Duplicate pupil ID '+p.id);ps[p.id]=1;});b.units.forEach(function(u){if(us[u.id])issues.push('Duplicate unit ID '+u.id);us[u.id]=1;u.outcomes.forEach(function(o){os[u.id+'|'+o.id]=1;});});bItems().forEach(function(i){i.pupilIds.forEach(function(p){if(!ps[p])issues.push('Evidence '+i.id+' has a missing pupil');});(i.tags||[]).forEach(function(t){if(!us[t.u])issues.push('Evidence '+i.id+' has a missing unit');else if(!os[t.u+'|'+t.a])issues.push('Evidence '+i.id+' has a missing criterion');});});if($('integrityOut'))$('integrityOut').innerHTML=issues.length?'<div class="dangerBox"><b>'+issues.length+' issue(s)</b><br>'+issues.slice(0,12).map(esc3).join('<br>')+'</div>':'<div class="integrityOk">✓ All evidence links resolve to existing or archived records.</div>';return issues;}
+(function(){var original=init;init=function(){original();$('tabReview').onclick=function(){setTab('Review');};$('tabPlan').onclick=function(){setTab('Plan');};$('rvPupil').onchange=renderReview;$('rvUnit').onchange=renderReview;$('plSaveMeta').onclick=savePlan;$('paAdd').onclick=addActivity;$('integrityB').onclick=runIntegrity;};})();
+
+/* ===================== v4 submission workflow ===================== */
+function ensureV4(b){if(!b)return;ensureV3(b);b.nextEvidenceNo=b.nextEvidenceNo||1;b.audit=b.audit||[];var used={};bItems().forEach(function(i){if(i.ref){used[i.ref]=1;var m=i.ref.match(/EV-(\d+)/);if(m)b.nextEvidenceNo=Math.max(b.nextEvidenceNo,parseInt(m[1],10)+1);}});bItems().sort(function(a,c){return a.ts-c.ts;}).forEach(function(i){if(!i.ref){do{i.ref='EV-'+String(b.nextEvidenceNo++).padStart(4,'0');}while(used[i.ref]);used[i.ref]=1;itemPut(i);}});}
+function newEvidenceRef(b){ensureV4(b);return 'EV-'+String(b.nextEvidenceNo++).padStart(4,'0');}
+function audit4(action,detail){var b=curBinder();ensureV4(b);b.audit.push({ts:Date.now(),action:action,detail:detail||''});metaSave();}
+function status4(b,p,u,o){var ev=evfor(p,u,o),a=geta(b,p,u,o);if(!ev.length)return'none';return a.status||'collected';}
+function readyData(){var b=curBinder();ensureV4(b);var r={items:bItems().length,noDate:0,noPlan:0,awaiting:0,partial:0,achieved:0,iqaAction:0,integrity:runIntegrity().length,backupDays:b.lastBackup?Math.floor((Date.now()-b.lastBackup)/86400000):999,confirmedUnits:0,totalUnits:0};bItems().forEach(function(i){if(!i.activityDate)r.noDate++;if(!i.planId)r.noPlan++;});activePupils(b).forEach(function(p){b.units.filter(function(u){return !u.archived;}).forEach(function(u){r.totalUnits++;var complete=true;u.outcomes.forEach(function(o){var st=status4(b,p.id,u,o);if(st==='achieved'||st==='iqa')r.achieved++;else complete=false;if(st==='collected'||st==='review')r.awaiting++;if(st==='partial')r.partial++;if(st==='action')r.iqaAction++;});if(complete&&u.outcomes.length)r.confirmedUnits++;});});return r;}
+function renderReadiness(){var r=readyData(),grid=$('readyGrid');grid.innerHTML='';var rows=[['Evidence items',r.items],['Awaiting assessment',r.awaiting],['Further evidence',r.partial],['Confirmed units',r.confirmedUnits+' / '+r.totalUnits],['IQA actions',r.iqaAction],['Integrity issues',r.integrity],['Without activity date',r.noDate],['Last backup',r.backupDays===999?'Never':r.backupDays+' day(s) ago']];rows.forEach(function(x){var d=document.createElement('div');d.className='readyBox';d.innerHTML='<strong>'+x[1]+'</strong><span class="mini">'+x[0]+'</span>';grid.appendChild(d);});var bad=r.awaiting+r.partial+r.iqaAction+r.integrity+r.noDate;var text=bad?'NOT YET READY — '+bad+' assessment, metadata or integrity action(s) remain.':'READY ON RECORDED CHECKS — complete organisational approval and current ASDAN checks before submission.';$('readyOverall').innerHTML='<b>'+text+'</b>';}
+function renderInbox(){var b=curBinder(),r=readyData(),box=$('inboxList');box.innerHTML='';var queues=[['Awaiting assessment',r.awaiting,'review'],['Further evidence required',r.partial,'partial'],['IQA action required',r.iqaAction,'action'],['Evidence without activity date',r.noDate,'nodate'],['Evidence without linked plan',r.noPlan,'noplan']];queues.forEach(function(q){var bt=document.createElement('button');bt.className='inboxBtn';bt.innerHTML='<span>'+q[0]+'</span><b>'+q[1]+'</b>';bt.disabled=!q[1];bt.onclick=function(){if(q[2]==='nodate'||q[2]==='noplan'){setTab('Browse');toast('Use an evidence item to add or correct its metadata.');return;}var hit=null;b.pupils.some(function(p){return b.units.some(function(u){return u.outcomes.some(function(o){if(status4(b,p.id,u,o)===q[2]||(q[2]==='review'&&status4(b,p.id,u,o)==='collected')){hit={p:p.id,u:u.id};return true;}return false;});});});if(hit){$('rvPupil').value=hit.p;$('rvUnit').value=hit.u;renderReview();}};box.appendChild(bt);});}
+var rr4=renderReview;renderReview=function(){ensureV4(curBinder());renderReadiness();renderInbox();rr4();};
+
+/* status-aware coverage */
+renderCov=function(){var b=curBinder();if(!b)return;ensureV4(b);selFill($('covUnit'),b.units.filter(function(u){return !u.archived;}).map(function(u){return{id:u.id,label:u.name+(u.code?' ('+u.code+')':'')};}),'Choose a unit…');var t=$('covTable');t.innerHTML='';var oldLg=t.parentNode.parentNode.querySelector('.legend');if(oldLg)oldLg.remove();var u=unitById($('covUnit').value);if(!u)return;var tr=document.createElement('tr'),h=document.createElement('th');h.textContent='Pupil';tr.appendChild(h);u.outcomes.forEach(function(o){var th=document.createElement('th');th.textContent=o.lab;th.onclick=function(){showAc(u,o);};tr.appendChild(th);});t.appendChild(tr);b.pupils.forEach(function(p){var row=document.createElement('tr'),n=document.createElement('td');n.textContent=p.name+(p.status==='active'?'':' ('+p.status+')');row.appendChild(n);u.outcomes.forEach(function(o){var ev=evfor(p.id,u,o),st=status4(b,p.id,u,o),td=document.createElement('td');td.className='cov-'+st;td.innerHTML='<b>'+(ev.length||'—')+'</b><span class="covStatus">'+slabel(st)+'</span>';td.title=ev.length+' evidence item(s) · '+slabel(st);td.onclick=function(){if(ev.length){setTab('Review');$('rvPupil').value=p.id;$('rvUnit').value=u.id;renderReview();setTimeout(function(){var cards=$('rvList').querySelectorAll('.reviewItem');u.outcomes.forEach(function(x,i){if(x.id===o.id&&cards[i])cards[i].scrollIntoView({behavior:'smooth',block:'start'});});},50);}};row.appendChild(td);});t.appendChild(row);});var lg=document.createElement('div');lg.className='legend';lg.style.marginTop='9px';[['none','No evidence'],['collected','Collected'],['partial','Further evidence'],['achieved','Achieved'],['iqa','IQA confirmed'],['action','IQA action']].forEach(function(x){lg.innerHTML+='<span class="cov-'+x[0]+'">'+x[1]+'</span>';});t.parentNode.parentNode.appendChild(lg);};
+
+/* permanent references and structured records */
+function openRecord(kind){$('recordCard').classList.remove('hidden');$('recKind').value=kind;$('recordTitle').textContent=kind==='witness'?'Structured witness record':'Oral-questioning record';$('witnessFields').classList.toggle('hidden',kind!=='witness');$('oralFields').classList.toggle('hidden',kind!=='oral');$('recDate').value=new Date().toISOString().slice(0,10);$('recordCard').scrollIntoView({behavior:'smooth'});}
+function clearRecord(){['recWitness','recRole','recObserved','recQuestion','recResponse','recContext'].forEach(function(i){$(i).value='';});$('recAuthentic').checked=false;$('recordCard').classList.add('hidden');}
+function addStructured(){var k=$('recKind').value,data={kind:k,date:$('recDate').value,support:$('recSupport').value,context:$('recContext').value.trim(),authentic:$('recAuthentic').checked};if(!data.authentic){toast('Confirm the record is accurate before adding it');return;}var text;if(k==='witness'){data.witness=$('recWitness').value.trim();data.role=$('recRole').value.trim();data.observed=$('recObserved').value.trim();if(!data.witness||!data.observed){toast('Add the witness name and what was observed');return;}text='Structured witness record\nWitness: '+data.witness+(data.role?' — '+data.role:'')+'\nDate: '+data.date+'\nObserved: '+data.observed+'\nIndependence/support: '+data.support+(data.context?'\nContext: '+data.context:'')+'\nAuthenticity confirmed: Yes';}else{data.question=$('recQuestion').value.trim();data.response=$('recResponse').value.trim();if(!data.question||!data.response){toast('Record the question and learner response');return;}text='Oral-questioning record\nDate: '+data.date+'\nQuestion: '+data.question+'\nLearner response: '+data.response+'\nPrompting/support: '+data.support+(data.context?'\nContext: '+data.context:'')+'\nAuthenticity confirmed: Yes';}PEND.push({type:'text',text:text,author:k==='witness'?'teacher':'pupil',recordKind:k,recordData:data});clearRecord();renderTagCard();}
+var st4=saveTagged;saveTagged=function(){var b=curBinder();ensureV4(b);var start=ITEMS.length,snap=PEND.slice();st4();var timer=setInterval(function(){if(ITEMS.length>start){clearInterval(timer);ITEMS.slice(start).forEach(function(i,j){if(!i.ref)i.ref=newEvidenceRef(b);var p=snap[j];if(p&&p.recordKind){i.recordKind=p.recordKind;i.recordData=p.recordData;}itemPut(i);});metaSave();audit4('Evidence saved',ITEMS.slice(start).map(function(i){return i.ref;}).join(', '));}},100);setTimeout(function(){clearInterval(timer);},6000);};
+var rg4=renderGrid;renderGrid=function(){ensureV4(curBinder());rg4();Array.prototype.forEach.call($('grid').children,function(card,idx){var fu=$('fUnit').value,fp=$('fPupil').value,fo=$('fOut').value;var list=bItems().filter(function(it){if(fu&&!(it.tags||[]).some(function(t){return t.u===fu;}))return false;if(fp&&it.pupilIds.indexOf(fp)<0)return false;if(fo&&!(it.tags||[]).some(function(t){return t.a===fo;}))return false;return true;}).sort(function(a,c){return c.ts-a.ts;});var it=list[idx],cap=card.querySelector('.cap');if(it&&cap)cap.innerHTML='<span class="evref">'+esc3(it.ref)+'</span> · '+esc3(cap.textContent);});};
+
+/* v4 backup: retain all evidence metadata and assessment records */
+doBackup=function(){var b=curBinder();ensureV4(b);busy('Packing verified v4 backup…');var files=[],manifest={v:4,app:'Evidence Binder PEQ',exportedAt:new Date().toISOString(),binder:b,items:[]};var seq=Promise.resolve();bItems().forEach(function(it){var m={};Object.keys(it).forEach(function(k){if(k!=='blob'&&k!=='thumb'&&k.charAt(0)!=='_')m[k]=it[k];});manifest.items.push(m);if(it.type==='photo')seq=seq.then(function(){return it.blob.arrayBuffer().then(function(ab){files.push({name:'img/'+it.id+'.jpg',data:new Uint8Array(ab)});return it.thumb.arrayBuffer();}).then(function(ab){files.push({name:'thumb/'+it.id+'.jpg',data:new Uint8Array(ab)});});});});seq.then(function(){files.unshift({name:'binder.json',data:strToBytes(JSON.stringify(manifest))});var zip=writeZip(files),stamp=new Date().toISOString().slice(0,10),safe=b.name.replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-').toLowerCase()||'binder';saveBytes(zip,'application/zip',safe+'-'+stamp+'-v4.zip');b.lastBackup=Date.now();audit4('Backup generated',manifest.items.length+' evidence items');return metaSave();}).then(function(){busy(false);checkNag();toast('Verified v4 backup saved ✓');}).catch(function(){busy(false);toast('Backup failed');});};
+restoreItems=function(binderId,items,z){var seq=Promise.resolve();items.forEach(function(m){var it={};Object.keys(m).forEach(function(k){it[k]=m[k];});it.binderId=binderId;it.type=it.type||'photo';it.pupilIds=it.pupilIds||[];it.tags=it.tags||[];it.ts=it.ts||Date.now();if(it.type==='photo'){var img=z['img/'+it.id+'.jpg'],th=z['thumb/'+it.id+'.jpg'];if(!img)return;it.blob=new Blob([img],{type:'image/jpeg'});it.thumb=new Blob([th||img],{type:'image/jpeg'});}else{it.text=it.text||'';}ITEMS.push(it);seq=seq.then(function(){return itemPut(it);});});return seq;};
+
+/* dynamic decision-checklist and text pagination */
+function basePage(title){var c=pageCanvas(),x=c.getContext('2d');x.fillStyle=NAVY;x.fillRect(0,0,PG_W,125);x.fillStyle='#fff';x.font='800 36px Arial';x.fillText(title,65,80);return c;}
+function decisionPages(b,unit,pupil){var pages=[],c=basePage('Assessment decisions — '+pupil.name),x=c.getContext('2d'),y=185;function fresh(){pages.push(c);c=basePage('Assessment decisions continued — '+pupil.name);x=c.getContext('2d');y=185;}unit.outcomes.forEach(function(o){var a=geta(b,pupil.id,unit,o),ev=evfor(pupil.id,unit,o),req=(o.el||[]).slice();if(o.req)req.push(o.req);var lines=wrapText(x,o.text,850),height=95+lines.length*31+req.length*27+(a.rationale?55:0)+(a.feedback?55:0);if(y+height>PG_H-110)fresh();x.fillStyle=(a.status==='achieved'||a.status==='iqa')?'#16a34a':a.status==='partial'?'#a16207':'#5b6678';x.font='800 29px Arial';x.fillText((o.lab||'Criterion')+' — '+slabel(status4(b,pupil.id,unit,o)),65,y);x.fillStyle='#15203a';x.font='500 24px Arial';lines.forEach(function(l){y+=30;x.fillText(l,65,y);});y+=35;x.fillStyle='#5b6678';x.font='600 21px Arial';x.fillText('Evidence: '+(ev.map(function(i){return i.ref;}).join(', ')||'None')+'   Assessor: '+(a.assessor||'Not recorded')+'   Date: '+(a.date||'—'),65,y);req.forEach(function(q,i){y+=27;x.fillText((a.checks&&a.checks[i]?'✓ ':'□ ')+q,85,y);});if(a.rationale){y+=32;wrapText(x,'Rationale: '+a.rationale,1080).slice(0,2).forEach(function(l){x.fillText(l,65,y);y+=25;});}if(a.feedback){y+=10;wrapText(x,'Feedback: '+a.feedback,1080).slice(0,2).forEach(function(l){x.fillText(l,65,y);y+=25;});}y+=30;x.strokeStyle='#d8dde6';x.beginPath();x.moveTo(65,y-12);x.lineTo(PG_W-65,y-12);x.stroke();});pages.push(c);return pages;}
+function textEvidencePages(meta,unit,pupil,item,idx,total,labels){var words=wrapText(pageCanvas().getContext('2d'),item.text,1100),pages=[],pos=0,pageNo=1;while(pos<words.length||pageNo===1){var c=basePage(pupil.name+' — '+item.ref+' — evidence '+idx+' of '+total+(pageNo>1?' continued':'')),x=c.getContext('2d'),y=190;x.fillStyle='#15203a';x.font='500 29px Arial';var max=30,count=0;while(pos<words.length&&count<max){x.fillText(words[pos++],70,y);y+=42;count++;}x.fillStyle=GOLD;x.fillRect(70,PG_H-300,10,170);x.fillStyle=NAVY;x.font='800 27px Arial';x.fillText('Criteria: '+labels,100,PG_H-285);x.fillStyle='#5b6678';x.font='600 23px Arial';x.fillText('Date: '+fmtDate(item.ts)+'   Activity date: '+(item.activityDate||'not recorded'),100,PG_H-235);x.fillText('Method: '+(item.method||'not recorded')+'   Independence: '+(item.independence||'not recorded'),100,PG_H-195);pages.push(c);pageNo++;}return pages;}
+buildPortfolio=function(unit,pupil){var b=curBinder();ensureV4(b);var meta=portMeta(b),list=pupilItems(unit.id,pupil.id),stats={count:list.length,first:list.length?list[0].ts:0,last:list.length?list[list.length-1].ts:0},pages=[];function add(c){pages.push({jpeg:canvasJpeg(c),w:c.width,h:c.height});}add(paintCover(meta,unit,pupil,stats));decisionPages(b,unit,pupil).forEach(add);var seq=Promise.resolve();list.forEach(function(it,i){seq=seq.then(function(){var labels=(it.tags||[]).filter(function(t){return t.u===unit.id;}).map(function(t){return outLabel(unit,t.a);}).join(', ');if(it.type==='text'){textEvidencePages(meta,unit,pupil,it,i+1,list.length,labels).forEach(add);return;}return loadImg(it.blob).then(function(img){var c=paintEvidencePage(meta,unit,pupil,it,img,i+1,list.length,labels),x=c.getContext('2d');x.fillStyle='#fff';x.font='800 24px Arial';x.fillText(it.ref,PG_W-230,72);add(c);URL.revokeObjectURL(img.src);});});});return seq.then(function(){return buildPdf(pages,595,842);});};
+
+(function(){var old=init;init=function(){old();$('witnessB').onclick=function(){openRecord('witness');};$('oralB').onclick=function(){openRecord('oral');};$('recCancel').onclick=clearRecord;$('recAdd').onclick=addStructured;ensureV4(curBinder());metaSave();};})();
+
+
+/* ===================== v5: pathway planning, learning log, planning-record PDF ===================== */
+var FAM_NAMES={Com:"Communication",DecMk:"Decision making",LSk:"Learning skills",TmWk:"Team working",Th:"Thinking skills",Wellb:"Wellbeing",SAw:"Self awareness",Res:"Resilience"};
+function qualById5(id){var q=null;PEQ.quals.forEach(function(x){if(x.id===id)q=x;});return q;}
+function remainingGlh(b,pid,qual){var st=qualStatus(b,pid,qual);return{rem:Math.max(0,qual.total-st.counted)*10,counted:st.counted};}
+openRecord=function(kind){$('recordCard').classList.remove('hidden');$('recKind').value=kind;
+ $('recordTitle').textContent=kind==='witness'?'Structured witness record':(kind==='oral'?'Oral-questioning record':'Learning log entry');
+ $('witnessFields').classList.toggle('hidden',kind!=='witness');
+ $('oralFields').classList.toggle('hidden',kind!=='oral');
+ $('logFields').classList.toggle('hidden',kind!=='log');
+ $('recDate').value=new Date().toISOString().slice(0,10);
+ $('recordCard').scrollIntoView({behavior:'smooth'});};
+clearRecord=function(){['recWitness','recRole','recObserved','recQuestion','recResponse','recContext','recActivity','recReflect'].forEach(function(i){$(i).value='';});$('recAuthentic').checked=false;$('recordCard').classList.add('hidden');};
+addStructured=function(){var k=$('recKind').value,data={kind:k,date:$('recDate').value,support:$('recSupport').value,context:$('recContext').value.trim(),authentic:$('recAuthentic').checked};
+ if(!data.authentic){toast('Confirm the record is accurate before adding it');return;}
+ var text;
+ if(k==='witness'){data.witness=$('recWitness').value.trim();data.role=$('recRole').value.trim();data.observed=$('recObserved').value.trim();
+  if(!data.witness||!data.observed){toast('Add the witness name and what was observed');return;}
+  text='Structured witness record\nWitness: '+data.witness+(data.role?' \u2014 '+data.role:'')+'\nDate: '+data.date+'\nObserved: '+data.observed+'\nIndependence/support: '+data.support+(data.context?'\nContext: '+data.context:'')+'\nAuthenticity confirmed: Yes';
+ }else if(k==='oral'){data.question=$('recQuestion').value.trim();data.response=$('recResponse').value.trim();
+  if(!data.question||!data.response){toast('Record the question and learner response');return;}
+  text='Oral-questioning record\nDate: '+data.date+'\nQuestion: '+data.question+'\nLearner response: '+data.response+'\nPrompting/support: '+data.support+(data.context?'\nContext: '+data.context:'')+'\nAuthenticity confirmed: Yes';
+ }else{data.activity=$('recActivity').value.trim();data.reflect=$('recReflect').value.trim();
+  if(!data.activity||!data.reflect){toast('Record the activity and the learner reflection');return;}
+  text='Learning log entry\nDate: '+data.date+'\nActivity: '+data.activity+'\nSelf-reflection: '+data.reflect+'\nIndependence/support: '+data.support+(data.context?'\nContext: '+data.context:'')+'\nAuthenticity confirmed: Yes';}
+ PEND.push({type:'text',text:text,author:k==='witness'?'teacher':'pupil',recordKind:k,recordData:data});
+ clearRecord();renderTagCard();};
+function renderPathway(){var b=curBinder();if(!b)return;ensureV4(b);var pl=b.plan;
+ if(pl.pathway)$('pwPathway').value=pl.pathway;$('pwWeeks').value=pl.weeks||'';$('pwHrs').value=pl.hrs||'';
+ var out=$('pwOut');out.innerHTML='';
+ var weeks=parseFloat(pl.weeks)||0,hrs=parseFloat(pl.hrs)||0,avail=Math.round(weeks*hrs);
+ if(!weeks||!hrs){out.innerHTML='<div class="mini">Enter weeks and hours per week to check each pupil\u2019s target against the time actually available.</div>';return;}
+ var head=document.createElement('div');head.className='mini';head.innerHTML='<b>'+avail+' GLH available</b> ('+weeks+' wks \u00d7 '+hrs+' h/wk) \u00b7 '+esc3(pl.pathway||'')+' pathway';out.appendChild(head);
+ activePupils(b).forEach(function(p){var qid=b.quals[p.id];var d=document.createElement('div');d.className='planRow';
+  if(!qid){d.innerHTML='<div class="row"><b style="flex:1">'+esc3(p.name)+'</b><span class="statusPill st-none">No target set</span></div><div class="mini">Set a target qualification in \u2705 Coverage \u2192 Qualification tracker.</div>';out.appendChild(d);return;}
+  var q=qualById5(qid),r=remainingGlh(b,p.id,q),cls,msg;
+  if(!r.rem){cls='st-achieved';msg='Target credits confirmed';}
+  else if(avail>=r.rem*1.15){cls='st-achieved';msg='On track';}
+  else if(avail>=r.rem){cls='st-partial';msg='Tight \u2014 protect the timetable';}
+  else{cls='st-action';msg='At risk';}
+  var achievableCr=r.counted+Math.floor(avail/10),best=null;
+  PEQ.quals.forEach(function(x){if(x.level===q.level&&x.total<=achievableCr&&(!best||x.total>best.total))best=x;});
+  var sug='';
+  if(cls==='st-action')sug=best&&best.id!==q.id?' \u00b7 realistic fit: <b>'+esc3(best.name.replace(' in Personal Effectiveness',''))+'</b>':(best?'':' \u00b7 consider more weekly hours or a different level');
+  d.innerHTML='<div class="row"><b style="flex:1">'+esc3(p.name)+'</b><span class="statusPill '+cls+'">'+msg+'</span></div><div class="mini">'+esc3(q.name.replace(' in Personal Effectiveness',''))+' \u00b7 '+r.counted+'/'+q.total+' credits confirmed \u00b7 ~'+r.rem+' GLH still needed'+sug+'</div>';
+  out.appendChild(d);});}
+function renderFam(){var b=curBinder();if(!b)return;var box=$('paFam');box.innerHTML='';var fams={};
+ b.units.forEach(function(u){if(u.fam&&!u.archived)(fams[u.fam]=fams[u.fam]||[]).push(u.code);});
+ Object.keys(fams).forEach(function(f){var btn=document.createElement('button');btn.className='chip';
+  btn.textContent=(FAM_NAMES[f]||f)+' \u00d7'+fams[f].length;btn.title='Map this skill family across every level in the binder';
+  btn.onclick=function(){var cur=$('paMapping').value.trim();$('paMapping').value=(cur?cur+'; ':'')+fams[f].join(', ');};
+  box.appendChild(btn);});}
+var rp5=renderPlan;renderPlan=function(){rp5();renderPathway();renderFam();};
+function planPdf(){var b=curBinder();if(!b)return;ensureV4(b);var p=b.plan;busy('Building assessment planning record\u2026');
+ try{
+ var pages=[];function add(c){pages.push({jpeg:canvasJpeg(c),w:c.width,h:c.height});}
+ var c=basePage('PEQ assessment planning record'),x=c.getContext('2d'),y=200;
+ function field(l,v){x.fillStyle='#5b6678';x.font='800 24px Arial';x.fillText(l,70,y);
+  x.fillStyle='#15203a';x.font='500 26px Arial';var ls=wrapText(x,v&&String(v).trim()?String(v):'\u2014',740);
+  ls.forEach(function(t,i){x.fillText(t,430,y+i*32);});y+=Math.max(1,ls.length)*32+16;}
+ field('Centre',(b.school||'')+(b.centre?' \u00b7 Centre '+b.centre:''));
+ field('Cohort',(p.cohort||'')+(p.learnerCount?' \u00b7 '+p.learnerCount+' learners':''));
+ field('Pathway',(p.pathway||'')+(p.weeks?' \u00b7 '+p.weeks+' wks \u00d7 '+(p.hrs||'?')+' h/wk':''));
+ field('Course dates',(p.start||'?')+' \u2192 '+(p.finish||'?'));
+ field('Units',b.units.filter(function(u){return !u.archived;}).map(function(u){return u.code;}).join(', '));
+ field('Challenges',(p.challengeTitles||'')+(p.challengeCodes?' ('+p.challengeCodes+')':''));
+ field('Reasonable adjustments',p.adjustments||'None recorded');
+ field('Spec reference',b.specVersion||'PEQ v1.2 Oct 2025');
+ add(c);
+ c=basePage('Planned assessment activities');x=c.getContext('2d');y=190;
+ function fresh(){add(c);c=basePage('Planned assessment activities (continued)');x=c.getContext('2d');y=190;}
+ (p.activities||[]).forEach(function(a){
+  var body=wrapText(x,a.activity||'',1080),ev=wrapText(x,'Evidence: '+(a.evidence||'not stated'),1080),
+      map=wrapText(x,'Mapping: '+(a.mapping||'not stated')+(a.additional?' \u00b7 '+a.additional:''),1080);
+  var h=64+body.length*30+ev.length*28+map.length*28+42;if(y+h>PG_H-100)fresh();
+  x.fillStyle=NAVY;x.font='800 27px Arial';
+  wrapText(x,(a.when?a.when+' \u00b7 ':'')+a.title+'  ['+a.method+'] \u2014 '+(a.status||'Planned'),1080).forEach(function(l){x.fillText(l,65,y);y+=34;});
+  x.fillStyle='#15203a';x.font='500 25px Arial';body.forEach(function(l){x.fillText(l,65,y);y+=30;});
+  x.fillStyle='#5b6678';x.font='600 22px Arial';ev.forEach(function(l){x.fillText(l,65,y);y+=28;});map.forEach(function(l){x.fillText(l,65,y);y+=28;});
+  y+=16;x.strokeStyle='#d8dde6';x.lineWidth=2;x.beginPath();x.moveTo(65,y-8);x.lineTo(PG_W-65,y-8);x.stroke();y+=14;});
+ if(!(p.activities||[]).length){x.fillStyle='#5b6678';x.font='500 26px Arial';x.fillText('No planned activities recorded yet.',65,y);y+=40;}
+ if(y>PG_H-320){add(c);c=basePage('Sign-off');x=c.getContext('2d');y=210;}
+ y+=40;x.fillStyle=NAVY;x.font='800 27px Arial';x.fillText('Sign-off',65,y);
+ x.fillStyle='#15203a';x.font='500 25px Arial';
+ x.fillText('Assessor/Educator: '+(p.assessor||'____________________')+'    Signature: ____________________',65,y+46);
+ x.fillText('Submitted for pre-delivery IQA: '+(p.iqaDate||'____________')+'    IQA: '+(p.iqa||'____________________')+'    Status: '+(p.iqaStatus||'Not submitted'),65,y+92);
+ if(p.iqaActions){x.fillStyle='#5b6678';x.font='600 22px Arial';wrapText(x,'IQA feedback/actions: '+p.iqaActions,1080).slice(0,3).forEach(function(l,i){x.fillText(l,65,y+134+i*28);});}
+ x.fillStyle='#7a869c';x.font='600 20px Arial';x.fillText('Format aligned to the ASDAN PEQ assessment planning record (Sept 2025 draft) \u00b7 generated by Evidence Binder',65,PG_H-70);
+ add(c);
+ var bytes=buildPdf(pages,595,842),stamp=new Date().toISOString().slice(0,10);
+ var safe=(p.cohort||b.name).replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-').toLowerCase()||'cohort';
+ saveBytes(bytes,'application/pdf','peq-planning-record-'+safe+'-'+stamp+'.pdf');
+ busy(false);toast('Planning record PDF saved \u2713');
+ }catch(e){busy(false);toast('Planning record failed');}}
+(function(){var old=init;init=function(){old();
+ $('logB').onclick=function(){openRecord('log');};
+ $('plPdfB').onclick=planPdf;
+ ['pwPathway','pwWeeks','pwHrs'].forEach(function(id){$(id).onchange=function(){var pl=curBinder().plan;pl.pathway=$('pwPathway').value;pl.weeks=$('pwWeeks').value.trim();pl.hrs=$('pwHrs').value.trim();metaSave().then(renderPathway);};});
+ $('pwY11').onclick=function(){$('pwWeeks').value='38';$('pwWeeks').onchange();};
+ $('pwY10').onclick=function(){$('pwWeeks').value='76';$('pwWeeks').onchange();};
+};})();
+
+
+
+/* ===================== v5.1: storage-less preview resilience ===================== */
+var rd51=readyData;readyData=function(){return curBinder()?rd51():null;};
+var rrd51=renderReadiness;renderReadiness=function(){if(!curBinder())return;rrd51();};
+var rib51=renderInbox;renderInbox=function(){if(!curBinder())return;rib51();};
+var rr51=renderReview;renderReview=function(){var b=curBinder();
+ if(!b){["readyGrid","inboxList","rvSummary","rvList"].forEach(function(i){if($(i))$(i).innerHTML="";});
+  if($("readyOverall"))$("readyOverall").innerHTML="<b>No binder loaded yet.</b> Create one in \u2699 Setup. In preview panes with storage blocked, the app now falls back to an in-session binder after a moment.";
+  return;}
+ rr51();};
+var rs51=renderSetup;renderSetup=function(){if(!curBinder())return;rs51();};
+var rp51=renderPlan;renderPlan=function(){if(!curBinder())return;rp51();};
+
+
+
+/* ===================== v6: guided inputs ===================== */
+addActivity=function(){var b=curBinder();if(!b)return;
+ var when=[$('paTerm').value,$('paWeek').value].filter(Boolean).join(' \u00b7 ');
+ var a={id:uid(),when:when,title:$('paTitle').value.trim(),method:$('paMethod').value,activity:$('paActivity').value.trim(),evidence:$('paEvidence').value.trim(),mapping:$('paMapping').value.trim(),additional:$('paAdditional').value.trim(),status:'Planned'};
+ if(!a.title||!a.activity){toast('Add an activity title and description');return;}
+ b.plan.activities.push(a);
+ metaSave().then(function(){['paTerm','paWeek','paTitle','paActivity','paEvidence','paMapping','paAdditional'].forEach(function(i){$(i).value='';});renderActivities();fillPlans();toast('Activity added \u2713');});};
+
+
+
+/* ===================== v7: guided criterion-first collection ===================== */
+var clSel={level:null,pupil:null,unit:null,ac:null};
+var guidedCtx=null;
+function binderLevels(b){var seen={},out=[];["E3","L1","L2","L3"].forEach(function(l){b.units.forEach(function(u){if(u.level===l&&!u.archived&&!seen[l]){seen[l]=1;out.push(l);}});});return out;}
+function acAdvice(o){var t=(o.text||"").toLowerCase();
+ if(/create a plan|create.*plan for/.test(t))return{types:["cam","pic","witness"],hint:"Photograph the pupil\u2019s completed plan \u2014 in their own words (note any scribe). A witness record can confirm how they created it."};
+ if(/use the plan/.test(t))return{types:["cam","witness","oral"],hint:"Evidence of the plan in action, gathered over time: photos of the activity happening plus a witness record of what the pupil personally did."};
+ if(/personal progress|own success/.test(t))return{types:["log","oral","cam"],hint:"The pupil\u2019s own review \u2014 a learning log entry or oral-questioning record in their words. It must cover every bullet listed above."};
+ if(/^state|^list|^give|^identify what|know /.test(t))return{types:["oral","cam","pic"],hint:"Knowledge check \u2014 an oral-questioning record or a photo of written work. Short answers are fine if they meet the requirement."};
+ if(/work collaboratively|team/.test(t))return{types:["cam","witness"],hint:"Group activity \u2014 remember: 3+ learners and the assessor cannot be in the group. Photos plus a witness record identifying this pupil\u2019s individual contribution."};
+ return{types:["cam","pic","witness","oral","log"],hint:"Any format works if it clearly shows this criterion in the pupil\u2019s own words or actions."};}
+function clNextAc(b,pid,u){var next=null,fallback=null;
+ u.outcomes.forEach(function(o){var a=geta(b,pid,u,o),done=(a.status==="achieved"||a.status==="iqa");
+  if(done)return;
+  var st=status4(b,pid,u,o);
+  if(!next&&st==="none")next=o;
+  if(!fallback)fallback=o;});
+ return next||fallback||u.outcomes[0];}
+function renderCollect(){var b=curBinder();if(!b)return;ensureV4(b);
+ var lvls=binderLevels(b);
+ if(!clSel.level||lvls.indexOf(clSel.level)<0)clSel.level=lvls[0]||null;
+ var box=$("clLevels");box.innerHTML="";
+ lvls.forEach(function(l){var btn=document.createElement("button");
+  btn.className="chip"+(clSel.level===l?" on":"");
+  var n=activePupils(b).filter(function(p){return p.level===l;}).length;
+  btn.textContent=PEQ.levelNames[l]+(n?" \u00b7 "+n+" pupil"+(n===1?"":"s"):"");
+  btn.onclick=function(){clSel.level=l;clSel.pupil=null;clSel.unit=null;clSel.ac=null;renderCollect();};
+  box.appendChild(btn);});
+ var pups=activePupils(b).filter(function(p){return !clSel.level||!p.level||p.level===clSel.level;});
+ selFill($("clPupil"),pups.map(function(p){return{id:p.id,label:p.name+(p.level?" \u00b7 "+PEQ.levelNames[p.level]:" \u00b7 level not set")};}),"Choose a pupil\u2026");
+ if(clSel.pupil)$("clPupil").value=clSel.pupil;
+ clSel.pupil=$("clPupil").value||null;
+ var pupil=clSel.pupil?pupilById(clSel.pupil):null;
+ var sl=$("clSetLevel");sl.innerHTML="";
+ var o0=document.createElement("option");o0.value="";o0.textContent=pupil?"Working at\u2026":"\u2014";sl.appendChild(o0);
+ lvls.forEach(function(l){var e=document.createElement("option");e.value=l;e.textContent=PEQ.levelNames[l];sl.appendChild(e);});
+ sl.value=pupil&&pupil.level?pupil.level:"";
+ sl.disabled=!pupil;
+ $("clPupilNote").textContent=pupil&&!pupil.level?"Set "+pupil.name+"\u2019s working level \u2192 then the app only offers that level\u2019s units.":"Each pupil works at one level. Set it once here and the app only ever offers that level\u2019s units for them.";
+ var units=b.units.filter(function(u){return !u.archived&&u.level===clSel.level;});
+ selFill($("clUnit"),units.map(function(u){var pr=pupil?unitProgress(u,pupil.id):null;
+  return{id:u.id,label:u.code+" \u00b7 "+u.name.replace(" \u2014 "+PEQ.levelNames[u.level],"")+(pr?" \u2014 "+pr.provisional+"/"+pr.total+" evidenced, "+pr.done+" confirmed":"")};}),"Choose a unit\u2026");
+ if(clSel.unit)$("clUnit").value=clSel.unit;
+ clSel.unit=$("clUnit").value||null;
+ var unit=clSel.unit?unitById(clSel.unit):null;
+ var brief=$("clBrief"),acts=$("clActions");brief.innerHTML="";acts.innerHTML="";
+ if(!pupil||!unit){selFill($("clAc"),[],"\u2014");brief.innerHTML='<div class="mini">'+(!pupil?"Choose a pupil to see what they need next.":"Choose a unit \u2014 the app will line up the next criterion that needs evidence.")+"</div>";return;}
+ selFill($("clAc"),unit.outcomes.map(function(o){var st=status4(curBinder(),pupil.id,unit,o);
+  return{id:o.id,label:(o.lab||"?")+" \u2014 "+slabel(st)};}),"Choose a criterion\u2026");
+ if(clSel.ac&&outById(unit,clSel.ac))$("clAc").value=clSel.ac;
+ if(!$("clAc").value){var nx=clNextAc(curBinder(),pupil.id,unit);if(nx)$("clAc").value=nx.id;}
+ clSel.ac=$("clAc").value||null;
+ var o=clSel.ac?outById(unit,clSel.ac):null;
+ if(!o)return;
+ var st=status4(curBinder(),pupil.id,unit,o),ev=evfor(pupil.id,unit,o),adv=acAdvice(o);
+ var h='<div class="row"><span class="statusPill st-'+st+'">'+slabel(st)+'</span><span class="mini">'+ev.length+' evidence item'+(ev.length===1?"":"s")+' so far for '+esc3(pupil.name)+'</span></div>';
+ h+='<div class="tips" style="margin-top:9px"><b>'+esc3(o.lab||"")+'</b> \u00b7 '+esc3(o.text)+'</div>';
+ if(o.el&&o.el.length){h+='<div class="mini" style="margin-top:9px"><b>The evidence must include:</b></div><ol class="how" style="background:none;border:0;padding:0 0 0 4px;margin:4px 0 0">'+o.el.map(function(x){return"<li style=\"font-size:13px;color:#1d3d5c;margin:3px 0 3px 18px;list-style:disc\">"+esc3(x)+"</li>";}).join("")+"</ol>";}
+ if(o.req)h+='<div class="qwarn" style="margin-top:8px">Requirement: '+esc3(o.req)+'</div>';
+ h+='<div class="mini" style="margin-top:9px">\ud83d\udca1 '+adv.hint+'</div>';
+ brief.innerHTML=h;
+ var defs=[["cam","\ud83d\udcf7 Camera"],["pic","\ud83d\uddbc Photos"],["witness","\ud83d\udc41 Witness record"],["oral","\ud83d\udcac Oral questioning"],["log","\ud83d\udcd2 Learning log"]];
+ defs.forEach(function(d){var btn=document.createElement("button");
+  var best=adv.types.indexOf(d[0])>=0;
+  btn.className=best?"chip gold":"chip";
+  if(best)btn.style.color="#fff";
+  btn.textContent=d[1];
+  btn.onclick=function(){guidedGo(d[0],pupil,unit,o);};
+  acts.appendChild(btn);});}
+function guidedGo(kind,pupil,unit,o){
+ guidedCtx={p:pupil.id,u:unit.id,a:o.id};
+ tagBlocks=[{unitId:unit.id,sel:{}}];tagBlocks[0].sel[o.id]=true;
+ tagPups={};tagPups[pupil.id]=true;
+ setTab("Cap");renderTagCard();
+ var bn=$("guidedBanner");
+ bn.innerHTML="\ud83e\udded Collecting for <b>"+esc3(pupil.name)+"</b> \u00b7 "+esc3(unit.code)+" <b>"+esc3(o.lab||"")+"</b> \u2014 pupil and criterion are pre-ticked below. Add the evidence, then Save.";
+ bn.classList.remove("hidden");
+ if(kind==="cam")$("camFile").click();
+ else if(kind==="pic")$("picFile").click();
+ else openRecord(kind);}
+setTab=function(k){[["Coll","secColl"],["Cap","secCap"],["Browse","secBrowse"],["Review","secReview"],["Cov","secCov"],["Plan","secPlan"],["Port","secPort"],["Setup","secSetup"]].forEach(function(d){
+  if($("tab"+d[0]))$("tab"+d[0]).classList.toggle("on",k===d[0]);
+  if($(d[1]))$(d[1]).classList.toggle("hidden",k!==d[0]);});
+ if(k==="Coll")renderCollect();
+ if(k==="Browse")renderGrid();
+ if(k==="Review")renderReview();
+ if(k==="Cov"){renderCov();renderQual();}
+ if(k==="Plan")renderPlan();
+ if(k==="Port")renderPort();
+ if(k==="Setup")renderSetup();};
+var st7=saveTagged;saveTagged=function(){var had=PEND.length;st7();
+ if(!guidedCtx||!had)return;
+ var t=setInterval(function(){if(!PEND.length){clearInterval(t);
+  var g=guidedCtx;guidedCtx=null;$("guidedBanner").classList.add("hidden");
+  clSel.pupil=g.p;clSel.unit=g.u;clSel.ac=null;
+  setTab("Coll");toast("Saved \u2713 \u2014 next gap lined up");}},150);
+ setTimeout(function(){clearInterval(t);},8000);};
+(function(){var old=init;init=function(){old();
+ $("tabColl").onclick=function(){setTab("Coll");};
+ $("clPupil").onchange=function(){clSel.pupil=this.value||null;clSel.unit=null;clSel.ac=null;renderCollect();};
+ $("clUnit").onchange=function(){clSel.unit=this.value||null;clSel.ac=null;renderCollect();};
+ $("clAc").onchange=function(){clSel.ac=this.value||null;renderCollect();};
+ $("clSetLevel").onchange=function(){var p=clSel.pupil?pupilById(clSel.pupil):null;if(!p)return;p.level=this.value||null;metaSave().then(renderCollect);};
+ $("tagCancel").addEventListener("click",function(){guidedCtx=null;$("guidedBanner").classList.add("hidden");});
+ var t7=setInterval(function(){if(curBinder()){clearInterval(t7);renderCollect();}},150);
+ setTimeout(function(){clearInterval(t7);},9000);
+};})();
+
+
+init();
+
+</script>
+</body>
+</html>
