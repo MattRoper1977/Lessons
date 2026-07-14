@@ -1,0 +1,229 @@
+window.LESSON = {
+ "lessonId": "BLD-VOC-A1-W1",
+ "title": "Vocational L1 · Kitchen Tools & Safety Induction",
+ "slot": "Vocational",
+ "version": "both",
+ "term": "Autumn 1",
+ "week": 1,
+ "tag": "VOCATIONAL · Lesson 1 · BUILD · Slot 2",
+ "hero": "Kitchen Tools & Safety",
+ "sub": "Name it · Carry it · Respect it",
+ "icons": "🥄 🥣 🧤 🔪 🧼",
+ "learningObjective": "To name kitchen tools and follow the four safety rules.",
+ "successCriteria": [
+  "I can name six kitchen tools.",
+  "I can say the four kitchen safety rules.",
+  "I can carry equipment safely and pass the safe-carry challenge."
+ ],
+ "scText": "By the end you will have named six real tools, passed the safe-carry challenge, and signed your kitchen safety promise — your licence to cook in this room all year.",
+ "aspire1": "explain WHY one rule exists, not just what it is.",
+ "aspire2": "name a tool nobody else found, or teach the wash-up order to a partner.",
+ "arrival": {
+  "heading": "Which tools can you use by yourself — and which need an adult (for now)?",
+  "tipWait": "tell your partner one thing you have ever made in a kitchen — anything counts.",
+  "items": [
+   {
+    "n": "Wooden spoon",
+    "g": 0
+   },
+   {
+    "n": "Measuring jug",
+    "g": 0
+   },
+   {
+    "n": "Sharp knife",
+    "g": 1
+   },
+   {
+    "n": "Hot oven",
+    "g": 1
+   }
+  ],
+  "buckets": [
+   "I can use these myself",
+   "Only with an adult (for now)"
+  ]
+ },
+ "starter": {
+  "heading": "What could go wrong in a kitchen?",
+  "prompt": "With your partner: list three things that could go wrong in a busy kitchen. Real answers — you will not scare us.",
+  "stems": "“Something that could go wrong is…”<br>“That would be dangerous because…”<br>“To stop it, you could…”",
+  "hint": "Think: hot things, sharp things, wet floors, things left out, hands that touched raw food."
+ },
+ "iDo": {
+  "heading": "The four kitchen rules (these never change)",
+  "cards": [
+   [
+    "c2",
+    "🚶",
+    "1 · We walk",
+    "Never run. A kitchen is full of hot, sharp and breakable things."
+   ],
+   [
+    "c1",
+    "🔪",
+    "2 · Point down",
+    "Carry anything sharp point-down, close to your side, blade back."
+   ],
+   [
+    "c3",
+    "🧤",
+    "3 · Hot = gloves",
+    "If it has been near heat, oven gloves. Every time. No testing with fingers."
+   ],
+   [
+    "c4",
+    "🧼",
+    "4 · Clean as you go",
+    "Wipe spills straight away; wash up as you work, not at the end."
+   ]
+  ],
+  "miscWrong": "“Safety rules are for babies — I already know all this.”",
+  "miscRight": "Professional chefs follow these exact rules every shift for their whole career. Following them IS what being trusted with real equipment looks like."
+ },
+ "weDo": {
+  "heading": "Safe or unsafe? Sort the kitchen moments",
+  "hint": "Ask: could this moment burn, cut, trip or contaminate? If yes — unsafe.",
+  "items": [
+   {
+    "n": "Walking with the knife point down",
+    "g": 0
+   },
+   {
+    "n": "Running to grab the timer",
+    "g": 1
+   },
+   {
+    "n": "Oven gloves for the hot tray",
+    "g": 0
+   },
+   {
+    "n": "Testing hot food with a finger",
+    "g": 1
+   },
+   {
+    "n": "Wiping a spill straight away",
+    "g": 0
+   },
+   {
+    "n": "Leaving the tap running",
+    "g": 1
+   },
+   {
+    "n": "Sleeves rolled up, apron on",
+    "g": 0
+   },
+   {
+    "n": "Bag left on the kitchen floor",
+    "g": 1
+   }
+  ],
+  "buckets": [
+   "SAFE — good kitchen habit",
+   "UNSAFE — stop and fix"
+  ]
+ },
+ "practical": {
+  "heading": "Tool stations 🧰",
+  "tipLabel": "Hygiene first (60 seconds):",
+  "tip": "wash hands, sleeves up, hair back, apron on. This routine starts every practical in this room, all year.",
+  "stations": [
+   [
+    "TOOL TREASURE HUNT",
+    "Ten real tools are hidden around the room, each numbered. Find them, name them on your card, and say what each one does. Check tricky ones with a partner."
+   ],
+   [
+    "SAFE-CARRY CHALLENGE",
+    "Carry the mixing bowl, the (blunt training) knife point-down, and the loaded tray across the room the professional way. TA signs your card for each safe carry."
+   ],
+   [
+    "WASH-UP STATION",
+    "Learn the wash-up order: scrape → hot soapy wash → rinse → drain → wipe down. Do one full round. This station makes you genuinely useful in any kitchen on Earth."
+   ]
+  ]
+ },
+ "evidence": {
+  "tag": "EVIDENCE · ASDAN taster / AQA UAS · kitchen safety",
+  "intro": "TA photographs your safe-carry and signs your card. Then complete:",
+  "p1Label": "The four kitchen rules are:",
+  "p2Label": "Today I learned to use/name these tools:",
+  "skillsLine": "Ability to learn · Problem solving · Teamwork",
+  "printTitle": "Vocational · L1 Kitchen Tools & Safety Induction · evidence",
+  "lessonLine": "Vocational Lesson 1 (BUILD · Slot 2)",
+  "ref": "ASDAN taster / AQA UAS kitchen safety ___",
+  "curriculumSkills": [
+   "FOOD-02",
+   "FOOD-05",
+   "WORK-02"
+  ],
+  "programme": "ASDAN taster · AQA UAS",
+  "criterion": null,
+  "portfolioReady": false
+ },
+ "mcqs": [
+  [
+   "q1",
+   "1",
+   "1. How do you carry anything sharp?",
+   [
+    "Waving it to warn people",
+    "Point down, close to your side",
+    "In your pocket"
+   ]
+  ],
+  [
+   "q2",
+   "0",
+   "2. Food has just come out of the oven. You…",
+   [
+    "Use oven gloves, every time",
+    "Poke it quickly",
+    "Ask someone else to touch it"
+   ]
+  ],
+  [
+   "q3",
+   "2",
+   "3. “Clean as you go” means…",
+   [
+    "Clean once a week",
+    "Leave it all for the TA",
+    "Wipe and wash while you work"
+   ]
+  ]
+ ],
+ "overlay": "Kitchen licence earned — you are trusted with real equipment from today.",
+ "taBriefs": [
+  "Meet & greet. Aprons and equipment laid out before pupils arrive. Blunt training knife only today.",
+  "Arrival task: note anyone bravado-ing about knives — they get extra safe-carry practice, framed as promotion not punishment.",
+  "LO slide: read together. The word 'licence' is motivational — use it.",
+  "Starter: accept every danger suggested without drama. Scribe on whiteboard.",
+  "I Do: pupils listening. Physically model each rule as teacher narrates.",
+  "We Do: rotate tapping. Ask 'why?' after every correct sort.",
+  "PRACTICAL: you run the Safe-Carry Challenge — sign cards only for genuinely safe carries; warm redo otherwise. Watch the floor for bags/trip hazards.",
+  "Evidence: photograph carries. Countersign every safety promise. Scribe if needed, note 'TA scribed'.",
+  "Exit ticket: alone, one tap. Anyone not finished printing evidence does it now."
+ ],
+ "feedback": {
+  "good": [
+   "Spot on — say your reason out loud.",
+   "Correct! Tell your partner why.",
+   "Yes! Use the key word in a full sentence."
+  ],
+  "bad": [
+   "Not this one — think again about what it does.",
+   "Close — check the bucket labels once more.",
+   "Have another look; talk it through with a partner."
+  ]
+ },
+ "safety": {
+  "foodLesson": true,
+  "allergyStatement": "No food is consumed this lesson; training equipment only. Run the printed allergy check for any tasting variation.",
+  "hygieneOrder": [
+   "Hair back",
+   "Apron on",
+   "Wash hands",
+   "Wipe surface"
+  ]
+ }
+};

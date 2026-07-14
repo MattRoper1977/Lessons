@@ -1,0 +1,217 @@
+window.LESSON = {
+ "lessonId": "BLD-CAR-A1-W1",
+ "title": "Careers L1 · My Strengths Profile",
+ "slot": "Careers",
+ "version": "both",
+ "term": "Autumn 1",
+ "week": 1,
+ "tag": "CAREERS · Lesson 1 · BUILD · Slot 1",
+ "hero": "My Strengths Profile",
+ "sub": "Find it · Say it · Show it",
+ "icons": "💪 🧩 🤝 🛠️ ⭐",
+ "learningObjective": "To name my strengths and match them to kinds of work.",
+ "successCriteria": [
+  "I can name three of my strengths.",
+  "I can match strengths to kinds of work.",
+  "I can start my strengths profile for my careers portfolio."
+ ],
+ "scText": "By the end you will have interviewed a partner, sorted strength cards, and made the first page of your strengths profile — evidence for your careers portfolio (Version A: ASDAN Living Independently Module 8).",
+ "aspire1": "use the sentence “One of my strengths is ___, which would help me in ___.”",
+ "aspire2": "link one strength to a real job: “A ___ needs my strength of ___.”",
+ "arrival": {
+  "heading": "Match the strength to the kind of work it suits",
+  "tipWait": "tell your partner one thing you are good at outside school.",
+  "items": [
+   {
+    "n": "Good listener",
+    "g": 0
+   },
+   {
+    "n": "Enjoys making things",
+    "g": 1
+   },
+   {
+    "n": "Likes puzzles",
+    "g": 2
+   }
+  ],
+  "buckets": [
+   "Working with people",
+   "Working with hands & tools",
+   "Working with ideas"
+  ]
+ },
+ "starter": {
+  "heading": "Who do you know who is brilliant at their job?",
+  "prompt": "With your partner: think of someone you know (family, neighbour, someone at school) who is good at what they do. What makes them good at it?",
+  "stems": "“___ is really good at ___ because…”<br>“You can tell they are good because…”<br>“A strength they have is…”",
+  "hint": "Stuck? Think about who made your last meal out, cut your hair, fixed something, or helped you when you were younger."
+ },
+ "iDo": {
+  "heading": "Everyone has strengths — including you",
+  "cards": [
+   [
+    "c4",
+    "🤝",
+    "People strengths",
+    "Listening, helping, cheering others up, working in a team."
+   ],
+   [
+    "c1",
+    "🛠️",
+    "Hands & tools strengths",
+    "Making, fixing, building, cooking, growing."
+   ],
+   [
+    "c3",
+    "🧩",
+    "Ideas strengths",
+    "Sorting, spotting patterns, remembering, checking carefully."
+   ],
+   [
+    "c2",
+    "⭐",
+    "Character strengths",
+    "Turning up, trying again, being honest, being kind."
+   ]
+  ],
+  "miscWrong": "“I have no strengths — I am rubbish at school stuff.”",
+  "miscRight": "School subjects are a tiny slice of strengths. Reliability, kindness, and being good with your hands are strengths employers actually ask for."
+ },
+ "weDo": {
+  "heading": "Sort the strengths — tap a card, then its work family",
+  "hint": "Ask: is this strength mostly about people, about making/fixing, or about thinking and sorting?",
+  "items": [
+   {
+    "n": "Kind helper",
+    "g": 0
+   },
+   {
+    "n": "Team player",
+    "g": 0
+   },
+   {
+    "n": "Good with tools",
+    "g": 1
+   },
+   {
+    "n": "Fixing things",
+    "g": 1
+   },
+   {
+    "n": "Careful checker",
+    "g": 2
+   },
+   {
+    "n": "Good at sorting",
+    "g": 2
+   },
+   {
+    "n": "Calms people down",
+    "g": 0
+   },
+   {
+    "n": "Builds models",
+    "g": 1
+   }
+  ],
+  "buckets": [
+   "Working with people",
+   "Working with hands & tools",
+   "Working with ideas"
+  ]
+ },
+ "practical": {
+  "heading": "Strengths stations 💪",
+  "tipLabel": "Ground rule (60 seconds):",
+  "tip": "no put-downs of yourself or anyone else. In this room we talk about strengths like scientists — with evidence.",
+  "stations": [
+   [
+    "SPEED INTERVIEW",
+    "Pair up. Ask your partner: “What are you good at? How do you know?” Swap after 2 minutes. Write ONE strength you spotted in them on a sticky note and give it to them."
+   ],
+   [
+    "CARD SORT",
+    "Real strength cards on the table. Pick the 5 that sound most like you. Get a partner or TA to challenge one: “prove it — when did you show that?”"
+   ],
+   [
+    "PROFILE BUILD",
+    "Start your strengths profile poster: name, photo space, top 3 strengths, one sentence of proof for each. This is page 1 of your careers portfolio."
+   ]
+  ]
+ },
+ "evidence": {
+  "tag": "EVIDENCE · Careers portfolio (vA: ASDAN LI Module 8 · Section A)",
+  "intro": "TA photographs your profile poster. Then complete your sentences:",
+  "p1Label": "My top three strengths are:",
+  "p2Label": "A job that could use my strengths is ___ because:",
+  "skillsLine": "Ability to learn · Teamwork · Literacy",
+  "printTitle": "Careers · L1 My Strengths Profile · portfolio evidence",
+  "lessonLine": "Careers Lesson 1 (BUILD · Slot 1)",
+  "ref": "Careers portfolio · vA: ASDAN LI 8A ___ · AQA UAS",
+  "curriculumSkills": [
+   "COM-04",
+   "WORK-03"
+  ],
+  "programme": "vA: ASDAN Living Independently M8 · AQA UAS",
+  "criterion": null,
+  "portfolioReady": false
+ },
+ "mcqs": [
+  [
+   "q1",
+   "1",
+   "1. Which of these is a strength employers value?",
+   [
+    "Never making mistakes",
+    "Turning up on time, every time",
+    "Being loud"
+   ]
+  ],
+  [
+   "q2",
+   "2",
+   "2. “Good with tools and fixing things” suits work with…",
+   [
+    "Only computers",
+    "Only offices",
+    "Hands and practical trades"
+   ]
+  ],
+  [
+   "q3",
+   "0",
+   "3. The best proof of a strength is…",
+   [
+    "A real example of when you showed it",
+    "Saying it loudly",
+    "A guess"
+   ]
+  ]
+ ],
+ "overlay": "Page 1 of your careers portfolio banked — your strengths are on record.",
+ "taBriefs": [
+  "Meet & greet. Seat plan as normal. Have strength cards ready on tables.",
+  "Arrival task: no adult answers. Note who self-deprecates — they are your focus in the practical.",
+  "LO slide: read aloud together. Pre-teach the word 'strength' vs 'skill' if needed.",
+  "Starter: steer pupils to real people they respect. Scribe examples on the whiteboard.",
+  "I Do: pupils listening. If anyone says 'I have no strengths', park it warmly — the stations will answer it.",
+  "We Do: rotate the tapping. Praise reasoning, not just correct buckets.",
+  "PRACTICAL: you run the Speed Interview station — keep pairs talking with the stems. Enforce the no-put-downs rule instantly but gently.",
+  "Evidence: photograph every poster. Scribe sentences if needed and note 'TA scribed'. Sticky-note strengths go home with pupils.",
+  "Exit ticket: pupils alone, one tap each. Print evidence for anyone who missed it."
+ ],
+ "feedback": {
+  "good": [
+   "Spot on — say your reason out loud.",
+   "Correct! Tell your partner why.",
+   "Yes! Use the key word in a full sentence."
+  ],
+  "bad": [
+   "Not this one — think again about what it does.",
+   "Close — check the bucket labels once more.",
+   "Have another look; talk it through with a partner."
+  ]
+ },
+ "safety": {}
+};
