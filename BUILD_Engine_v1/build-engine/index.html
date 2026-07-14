@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build Engine · Lesson Hub</title>
+<style>
+body{font-family:'Segoe UI',system-ui,sans-serif;max-width:860px;margin:36px auto;padding:0 20px;color:#111;background:#fafaf7;}
+h1{color:#1f2a56;} h1 span{color:#d6006d;}
+.filters button{background:#fff;border:2px solid #1f2a56;border-radius:999px;padding:8px 16px;font-weight:700;cursor:pointer;margin:0 6px 12px 0;}
+.filters button.on{background:#1f2a56;color:#fff;}
+.card{background:#fff;border:2px solid #e5e7eb;border-left:8px solid #d6006d;border-radius:12px;padding:14px 18px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.card .meta{font-size:.9rem;color:#4b5563;}
+.card a{background:#d6006d;color:#fff;text-decoration:none;border-radius:8px;padding:10px 16px;font-weight:700;}
+.badge{display:inline-block;background:#1f2a56;color:#fff;border-radius:999px;padding:2px 10px;font-size:.78rem;font-weight:700;margin-left:6px;}
+.badge.vA{background:#2563eb;} .badge.vB{background:#d97706;}
+.note{background:#fef9c3;border-left:6px solid #ca8a04;padding:10px 14px;border-radius:8px;font-size:.92rem;margin:14px 0;}
+</style></head><body>
+<h1><span>P</span> Build Engine · Lesson Hub</h1>
+<p>One core engine (<code>core/engine.js</code> + <code>core/styles.css</code>), content in <code>lessons/*.json</code>. Fix once, fixed everywhere.</p>
+<div class="note">This hub and its lessons contain <strong>no pupil data</strong> and are safe for GitHub Pages. The Build Passport (pupil records, evidence, photos) lives in SharePoint/Power Apps only — never here.</div>
+<div class="filters" id="filters"></div>
+<div id="list"></div>
+<script src="manifest.js"></script>
+<script>
+var filter = 'all';
+function draw(){
+ var list = document.getElementById('list');
+ list.innerHTML = '';
+ window.MANIFEST.filter(function(m){
+  return filter==='all' || m.version===filter || m.version==='both';
+ }).forEach(function(m){
+  var d = document.createElement('div'); d.className='card';
+  var vb = m.version==='both' ? '<span class="badge">A + B</span>'
+    : '<span class="badge v'+m.version+'">Version '+m.version+'</span>';
+  d.innerHTML = '<div><strong>'+m.title+'</strong>'+vb+
+   '<div class="meta">'+m.lessonId+' \u00b7 '+m.slot+' \u00b7 '+m.term+' \u00b7 Week '+m.week+'</div></div>'+
+   '<a href="'+m.stem+'.html">Open lesson</a>';
+  list.appendChild(d);
+ });
+}
+function drawFilters(){
+ var f = document.getElementById('filters');
+ f.innerHTML = '';
+ [['all','All lessons'],['A','Version A set'],['B','Version B set']].forEach(function(p){
+  var b = document.createElement('button');
+  b.textContent = p[1];
+  b.className = (filter===p[0]) ? 'on' : '';
+  b.onclick = function(){ filter = p[0]; drawFilters(); draw(); };
+  f.appendChild(b);
+ });
+}
+drawFilters(); draw();
+</script></body></html>
