@@ -1901,5 +1901,90 @@ toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce
 }
 startApp().catch(err=>{console.error(err);document.getElementById('sections').innerHTML=`<div class="boot-error"><strong>Catalogue could not be loaded.</strong><code>${String(err.message||err).replace(/[<>&]/g,'')}</code></div>`});
 </script>
+
+<!-- ============ HUB AUGMENTATION MODULE v1 (self-contained; appended after core engine) ============ -->
+<style>
+.gotd-spot{margin:0 0 16px;padding:16px 18px;border-radius:16px;border:1px solid rgba(129,140,248,.4);background:linear-gradient(135deg,rgba(49,46,129,.92),rgba(88,28,135,.88));color:#f1f5f9;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.gotd-spot .gotd-k{font-size:.66rem;font-weight:900;letter-spacing:.14em;color:#fbbf24;text-transform:uppercase}
+.gotd-spot .gotd-t{font-family:var(--font-display,inherit);font-weight:850;font-size:1.05rem}
+.gotd-spot .gotd-d{color:#c7d2fe;font-size:.8rem;max-width:520px}
+.gotd-spot a.gotd-go{margin-left:auto;background:#fbbf24;color:#3a2c00;font-weight:900;text-decoration:none;border-radius:10px;padding:10px 16px;font-size:.85rem}
+.gotd-spot .gotd-sealed{display:none;font-weight:850;letter-spacing:.06em;color:#c4b5fd}
+body.games-locked .gotd-spot .gotd-open{display:none}
+body.games-locked .gotd-spot .gotd-sealed{display:block}
+</style>
+<script>
+"use strict";
+(function(){
+  /* Augmentation: Game of the Day · Enter-to-launch · 1–5 pinned hotkeys.
+     Reads the core engine's globals (LESSONS, pins, loadRecent, RECENT_KEY,
+     buildToday) — makes no changes to existing behaviour. */
+  function recordRecent(f){
+    try{
+      const r=[f, ...loadRecent().filter(x=>x!==f)].slice(0,8);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+      if(typeof buildToday==="function") buildToday();
+    }catch(e){}
+  }
+  function launch(f){ recordRecent(f); window.open(encodeURI(f), "_blank", "noopener"); }
+
+  /* ---- Game of the Day (date-seeded, zero maintenance) ---- */
+  function seedFromDate(){
+    const s=new Date().toISOString().slice(0,10);
+    let x=0; for(let i=0;i<s.length;i++){ x=(x*31 + s.charCodeAt(i))>>>0; }
+    return x;
+  }
+  function injectGOTD(){
+    const games=(window.LESSONS||LESSONS||[]).filter(l=>l.subject==="Games");
+    if(!games.length) return;
+    const g=games[seedFromDate()%games.length];
+    const sec=document.querySelector('.subject[data-subject="Games"]');
+    if(!sec || document.getElementById("gotdSpot")) return;
+    const d=document.createElement("div");
+    d.className="gotd-spot"; d.id="gotdSpot";
+    d.innerHTML='<div><div class="gotd-k">\ud83c\udfae Game of the Day \u00b7 '+new Date().toLocaleDateString("en-GB",{weekday:"long"})+'</div>'
+      +'<div class="gotd-open"><div class="gotd-t">'+g.title+'</div><div class="gotd-d">'+(g.desc||"")+'</div></div>'
+      +'<div class="gotd-sealed">\ud83d\udd12 SEALED \u2014 ask your teacher to unlock today\u2019s featured game\u2026</div></div>'
+      +'<a class="gotd-go gotd-open" href="'+encodeURI(g.file)+'" target="_blank" rel="noopener noreferrer" data-open="'+g.file+'">Play today\u2019s pick \u2192</a>';
+    sec.insertBefore(d, sec.firstChild);
+    d.querySelector("a.gotd-go").addEventListener("click", ()=>recordRecent(g.file));
+  }
+
+  /* ---- Hotkeys: Enter opens top search hit; 1\u20135 open pinned ---- */
+  function firstVisibleTile(){
+    const tiles=document.querySelectorAll(".tile");
+    for(const t of tiles){ if(t.offsetParent!==null && t.dataset.file) return t; }
+    return null;
+  }
+  document.addEventListener("keydown", function(e){
+    const tag=(document.activeElement&&document.activeElement.tagName)||"";
+    const typing=/INPUT|TEXTAREA|SELECT/.test(tag);
+    if(e.key==="Enter" && typing && document.activeElement.id==="search" && document.activeElement.value.trim()){
+      const t=firstVisibleTile();
+      if(t){ e.preventDefault(); launch(t.dataset.file); }
+      return;
+    }
+    if(!typing && /^[1-5]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey){
+      try{
+        const arr=[...pins];
+        const f=arr[parseInt(e.key,10)-1];
+        if(f){ e.preventDefault(); launch(f); }
+      }catch(err){}
+    }
+  });
+
+  /* ---- boot: wait for catalogue + sections to exist ---- */
+  let tries=0;
+  const iv=setInterval(function(){
+    tries++;
+    try{
+      if((window.LESSONS||LESSONS||[]).length && document.querySelector('.subject[data-subject="Games"]')){
+        clearInterval(iv); injectGOTD();
+      }
+    }catch(e){}
+    if(tries>75) clearInterval(iv);
+  }, 200);
+})();
+</script>
 </body>
 </html>

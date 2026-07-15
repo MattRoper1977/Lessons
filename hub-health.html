@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🩺 Hub Health · Lesson Hub diagnostics</title>
+<style>
+  body{margin:0;background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-serif;padding:28px;box-sizing:border-box}
+  h1{font-size:1.5rem} .sub{color:#94a3b8;font-size:.85rem;margin-bottom:18px}
+  .cards{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+  .stat{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px 20px;min-width:130px}
+  .stat b{display:block;font-size:1.6rem} .ok b{color:#4ade80}.bad b{color:#f87171}.warn b{color:#fbbf24}
+  table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:14px}
+  th,td{border-bottom:1px solid #334155;padding:8px 10px;text-align:left}
+  tr.dead td{color:#fca5a5} tr.warned td{color:#fcd34d}
+  .pill{font-size:.66rem;font-weight:800;border-radius:999px;padding:2px 9px;background:#334155}
+  button{background:#6366f1;border:0;color:#fff;font-weight:800;border-radius:10px;padding:12px 20px;cursor:pointer;font-size:.9rem}
+  progress{width:100%;height:8px;margin-top:12px}
+  a{color:#93c5fd}
+</style>
+</head>
+<body>
+<h1>🩺 Hub Health</h1>
+<p class="sub">Teacher diagnostic — checks every catalogue entry against the live site: broken links, missing descriptions, missing dates, duplicate ids. Run me after any upload.</p>
+<button id="run">▶ Run full check</button>
+<progress id="prog" value="0" max="100" style="display:none"></progress>
+<div class="cards" id="cards"></div>
+<table id="tbl" style="display:none"><thead><tr><th>Status</th><th>Title</th><th>File</th><th>Issues</th></tr></thead><tbody id="rows"></tbody></table>
+<script>
+"use strict";
+document.getElementById('run').addEventListener('click', async function(){
+  const btn=this; btn.disabled=true; btn.textContent='Checking…';
+  const prog=document.getElementById('prog'); prog.style.display='block';
+  let data;
+  try{
+    const r=await fetch('resources.json',{cache:'no-store'});
+    data=await r.json();
+  }catch(e){ btn.textContent='Could not load resources.json'; return; }
+  const rows=document.getElementById('rows'); rows.innerHTML='';
+  document.getElementById('tbl').style.display='table';
+  let dead=0, warned=0, okc=0;
+  const ids=new Set(), dupes=new Set();
+  data.forEach(x=>{ if(ids.has(x.id)) dupes.add(x.id); ids.add(x.id); });
+  for(let i=0;i<data.length;i++){
+    const x=data[i]; const issues=[];
+    let status='✅';
+    if(/^https?:/.test(x.file)){ issues.push('external — not checked'); }
+    else{
+      try{
+        const r=await fetch(encodeURI(x.file),{method:'HEAD',cache:'no-store'});
+        if(!r.ok){ status='💀'; issues.push('HTTP '+r.status+' — file missing'); }
+      }catch(e){ status='💀'; issues.push('unreachable'); }
+    }
+    if(!x.desc) issues.push('no desc (empty preview)');
+    if(!x.added) issues.push('no added date (never shows NEW)');
+    if(dupes.has(x.id)) issues.push('duplicate id');
+    const isDead=status==='💀';
+    const isWarn=!isDead && issues.length>0;
+    if(isDead) dead++; else if(isWarn) warned++; else okc++;
+    if(isDead||isWarn){
+      const tr=document.createElement('tr');
+      tr.className=isDead?'dead':'warned';
+      tr.innerHTML='<td>'+status+'</td><td>'+x.title+'</td><td><a href="'+encodeURI(x.file)+'" target="_blank" rel="noopener">'+x.file+'</a></td><td>'+issues.join(' · ')+'</td>';
+      rows.appendChild(tr);
+    }
+    prog.value=Math.round((i+1)/data.length*100);
+  }
+  document.getElementById('cards').innerHTML=
+    '<div class="stat ok"><b>'+okc+'</b>healthy</div>'+
+    '<div class="stat warn"><b>'+warned+'</b>warnings</div>'+
+    '<div class="stat bad"><b>'+dead+'</b>dead links</div>'+
+    '<div class="stat"><b>'+data.length+'</b>total entries</div>';
+  btn.disabled=false; btn.textContent='▶ Run again';
+});
+</script>
+</body>
+</html>
