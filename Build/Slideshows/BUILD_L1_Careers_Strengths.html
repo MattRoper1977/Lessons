@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Careers L1 · My Strengths Profile</title>
+<style>
+:root{--ink:#1f2a56;--pink:#d6006d;--teach:#2563eb;--wedo:#7c3aed;--prac:#16a34a;--exit:#dc2626;--paper:#fafaf7;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--paper);color:#111827;overflow:hidden;}
+.slide{width:100vw;height:100vh;display:none;flex-direction:column;padding:56px 64px 92px;overflow-y:auto;}
+.slide.active{display:flex;}
+.slide h1{font-size:2.6rem;color:var(--ink);margin-bottom:10px;}
+.slide h2{font-size:1.9rem;color:var(--ink);margin-bottom:14px;}
+.slide p,.slide li{font-size:1.15rem;line-height:1.55;}
+.bt-title{border-top:10px solid var(--pink);}
+.bt-teach{border-top:10px solid var(--teach);}
+.bt-wedo{border-top:10px solid var(--wedo);}
+.bt-prac{border-top:10px solid var(--prac);}
+.bt-exit{border-top:10px solid var(--exit);}
+.logo{position:fixed;top:14px;right:20px;font-weight:800;color:var(--pink);font-size:1.05rem;z-index:50;}
+.logo span{color:var(--ink);}
+#progressbar{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:60;transition:width .3s;}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);display:flex;align-items:center;gap:10px;padding:10px 18px;z-index:60;}
+nav button{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:1rem;}
+nav button:hover{background:#ffe3f1;}
+nav .spacer{flex:1;}
+#slidecount{color:#fff;font-weight:600;}
+#xpwrap{background:#0f1733;border-radius:999px;height:14px;width:160px;overflow:hidden;}
+#xpbar{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width .5s;}
+#xplabel{color:#fbbf24;font-weight:700;font-size:.9rem;}
+.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;}
+.hero h1{font-size:3.4rem;}
+.hero .sub{font-size:1.4rem;color:#4b5563;margin-top:6px;}
+.iconrow{display:flex;gap:26px;font-size:3.2rem;margin:26px 0;}
+.iconrow span{animation:bob 2.2s ease-in-out infinite;}
+.iconrow span:nth-child(2){animation-delay:.25s}.iconrow span:nth-child(3){animation-delay:.5s}
+.iconrow span:nth-child(4){animation-delay:.75s}.iconrow span:nth-child(5){animation-delay:1s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.tag{display:inline-block;background:var(--ink);color:#fff;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.5px;margin-bottom:14px;width:max-content;}
+.box{border-radius:12px;padding:16px 20px;margin:12px 0;}
+.sc-box{background:#ffedd5;border-left:6px solid #f97316;}
+.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d;}
+.misc-box{background:#fee2e2;border-left:6px solid #dc2626;}
+.misc-box s{opacity:.75;}
+.evidence-box{background:#e0f2fe;border-left:6px solid #0284c7;}
+.stem-box{background:#f3e8ff;border-left:6px solid #7c3aed;}
+.tip-box{background:#fef9c3;border-left:6px solid #ca8a04;}
+.lo-item{display:flex;align-items:center;gap:12px;font-size:1.3rem;margin:10px 0;opacity:0;transform:translateX(-16px);transition:all .5s;}
+.lo-item.show{opacity:1;transform:none;}
+.lo-item .chk{color:#16a34a;font-size:1.5rem;font-weight:900;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:14px;}
+.gcard{border-radius:14px;padding:16px;color:#fff;}
+.gcard h3{font-size:1.25rem;margin-bottom:6px;}
+.c1{background:#d97706;}.c2{background:#dc2626;}.c3{background:#2563eb;}.c4{background:#16a34a;}.c5{background:#7c3aed;}
+.chipzone{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+.chip{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-size:1.15rem;cursor:pointer;user-select:none;transition:transform .15s;}
+.chip:hover{transform:scale(1.06);}
+.chip.selected{background:var(--ink);color:#fff;}
+.chip.done{opacity:.45;pointer-events:none;border-style:dashed;}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+.bucket{border:3px dashed #9ca3af;border-radius:14px;min-height:110px;padding:10px;text-align:center;cursor:pointer;font-weight:700;font-size:1.05rem;}
+.bucket .drops{font-weight:400;font-size:.98rem;margin-top:6px;}
+.bucket .mark{font-size:1.5rem;font-weight:900;min-height:1.6rem;}
+.bucket.flash-good{border-color:#16a34a;background:#dcfce7;}
+.bucket.flash-bad{border-color:#dc2626;background:#fee2e2;}
+#wedofb{min-height:54px;margin-top:10px;font-weight:600;}
+button.act{background:var(--pink);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer;margin:8px 8px 0 0;}
+button.act.secondary{background:var(--ink);}
+.mcq{margin:14px 0;}
+.mcq .q{font-weight:700;font-size:1.2rem;margin-bottom:8px;}
+.mcq .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 16px;font-size:1.1rem;margin:6px 0;cursor:pointer;}
+.mcq .opt:hover{border-color:var(--ink);}
+.mcq.locked .opt{pointer-events:none;opacity:.85;}
+.opt.correct{border-color:#16a34a;background:#dcfce7;}
+.opt.wrong{border-color:#dc2626;background:#fee2e2;}
+.stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:12px;}
+.station{background:#fff;border:3px solid var(--prac);border-radius:14px;padding:16px;}
+.station h3{color:var(--prac);margin-bottom:6px;font-size:1.2rem;}
+.modal{position:fixed;inset:0;background:rgba(15,23,51,.72);display:none;align-items:center;justify-content:center;z-index:100;}
+.modal.open{display:flex;}
+.modal .card{background:#fff;border-radius:16px;max-width:640px;width:92%;max-height:80vh;overflow-y:auto;padding:26px;}
+.modal h2{margin-bottom:10px;}
+#overlay{position:fixed;inset:0;background:rgba(22,163,74,.93);display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;z-index:120;}
+#overlay.open{display:flex;}
+#overlay h1{font-size:3rem;color:#fff;}
+#confetticanvas{position:fixed;inset:0;pointer-events:none;z-index:130;}
+.toolbtns{position:fixed;top:14px;left:20px;display:flex;gap:8px;z-index:50;}
+.toolbtns button{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.9rem;}
+body.calm .iconrow span{animation:none;}
+body.calm{--pink:#6b7280;}
+body.calm .slide{background:#f5f5f4;}
+input,textarea{font-family:inherit;}
+@media (prefers-reduced-motion: reduce){.iconrow span{animation:none;}.lo-item{transition:none;}}
+@media (max-width:640px){
+ .slide{padding:70px 18px 100px;}
+ .slide h1{font-size:1.8rem;}.hero h1{font-size:2rem;}
+ .slide h2{font-size:1.4rem;}
+ .iconrow{font-size:2.1rem;gap:14px;}
+ nav{flex-wrap:wrap;}#xpwrap{width:100px;}
+}
+@media print{
+ nav,.toolbtns,.logo,#progressbar{display:none!important;}
+ .slide{display:none!important;}
+ #printarea{display:block!important;}
+}
+#printarea{display:none;padding:20px;font-size:11pt;}
+#printarea h1{font-size:15pt;border-bottom:2px solid #000;padding-bottom:4px;}
+#printarea .prow{border:1px solid #999;border-radius:6px;padding:8px;margin:7px 0;}
+#printarea .ybox{border:3px solid #ca8a04;border-radius:6px;min-height:88px;padding:8px;margin:7px 0;}
+#printarea .small{font-size:9pt;color:#333;}
+</style>
+</head>
+<body>
+<div id="progressbar"></div>
+<div class="logo">P<span>rogress Schools</span></div>
+<div class="toolbtns">
+ <button onclick="toggleModal('tamodal')">TA Focus</button>
+ <button onclick="coldCall()">Cold Call</button>
+ <button onclick="toggleCalm()" id="calmbtn">Calm Mode</button>
+</div>
+
+<section class="slide bt-title active" id="s1">
+ <div class="hero">
+  <div class="tag">CAREERS · Lesson 1 · BUILD · Slot 1</div>
+  <h1>My Strengths Profile</h1>
+  <p class="sub">Find it · Say it · Show it</p>
+  <div class="iconrow"><span>💪</span><span>🧩</span><span>🤝</span><span>🛠️</span><span>⭐</span></div>
+  <p class="sub">Today is a <strong>hands-on</strong> lesson — we learn by doing.</p>
+ </div>
+</section>
+
+<section class="slide bt-teach" id="s2">
+ <div class="tag">ARRIVAL TASK · do now, no help needed</div>
+ <h2>Match the strength to the kind of work it suits</h2>
+ <p>Tap a card, then tap where it belongs. Have a go — wrong answers are welcome here.</p>
+ <div class="chipzone" id="arr-chips"></div>
+ <div class="buckets" id="arr-buckets"></div>
+ <div class="box tip-box"><strong>While you wait:</strong> tell your partner one thing you are good at outside school.</div>
+</section>
+
+<section class="slide bt-teach" id="s3">
+ <div class="tag">LEARNING OBJECTIVE</div>
+ <h2>LO: To name my strengths and match them to kinds of work.</h2>
+ <div id="lolist"><div class="lo-item"><span class="chk">✓</span> I can name three of my strengths.</div><div class="lo-item"><span class="chk">✓</span> I can match strengths to kinds of work.</div><div class="lo-item"><span class="chk">✓</span> I can start my strengths profile for my careers portfolio.</div></div>
+ <div class="box sc-box"><strong>Success criteria:</strong> By the end you will have interviewed a partner, sorted strength cards, and made the first page of your strengths profile — evidence for your careers portfolio (Version A: ASDAN Living Independently Module 8).</div>
+ <div class="box aspire-box"><strong>Aspire:</strong> use the sentence “One of my strengths is ___, which would help me in ___.”</div>
+</section>
+
+<section class="slide bt-teach" id="s4">
+ <div class="tag">STARTER · talk task</div>
+ <h2>Who do you know who is brilliant at their job?</h2>
+ <p>With your partner: think of someone you know (family, neighbour, someone at school) who is good at what they do. What makes them good at it?</p>
+ <div class="box stem-box"><strong>Sentence stems:</strong><br>“___ is really good at ___ because…”<br>“You can tell they are good because…”<br>“A strength they have is…”</div>
+ <button class="act" onclick="hint('starter')">Hint</button>
+ <p id="hint-starter" style="display:none;margin-top:8px;">Stuck? Think about who made your last meal out, cut your hair, fixed something, or helped you when you were younger.</p>
+</section>
+
+<section class="slide bt-teach" id="s5">
+ <div class="tag">I DO · teacher explains</div>
+ <h2>Everyone has strengths — including you</h2>
+ <div class="grid"><div class="gcard c4"><h3>🤝 People strengths</h3><p>Listening, helping, cheering others up, working in a team.</p></div><div class="gcard c1"><h3>🛠️ Hands & tools strengths</h3><p>Making, fixing, building, cooking, growing.</p></div><div class="gcard c3"><h3>🧩 Ideas strengths</h3><p>Sorting, spotting patterns, remembering, checking carefully.</p></div><div class="gcard c2"><h3>⭐ Character strengths</h3><p>Turning up, trying again, being honest, being kind.</p></div></div>
+ <div class="box misc-box"><strong>Misconception:</strong> <s>“I have no strengths — I am rubbish at school stuff.”</s> School subjects are a tiny slice of strengths. Reliability, kindness, and being good with your hands are strengths employers actually ask for.</div>
+</section>
+
+<section class="slide bt-wedo" id="s6">
+ <div class="tag">WE DO · together on the board</div>
+ <h2>Sort the strengths — tap a card, then its work family</h2>
+ <div class="chipzone" id="wedo-chips"></div>
+ <div class="buckets" id="wedo-buckets"></div>
+ <div id="wedofb"></div>
+ <button class="act secondary" onclick="hint('wedo')">Hint</button>
+ <p id="hint-wedo" style="display:none;">Ask: is this strength mostly about people, about making/fixing, or about thinking and sorting?</p>
+</section>
+
+<section class="slide bt-prac" id="s7">
+ <div class="tag">HANDS-ON · the main event</div>
+ <h2>Strengths stations 💪</h2>
+ <div class="box tip-box"><strong>Ground rule (60 seconds):</strong> no put-downs of yourself or anyone else. In this room we talk about strengths like scientists — with evidence.</div>
+ <div class="stations"><div class="station"><h3>Station 1 · SPEED INTERVIEW</h3><p>Pair up. Ask your partner: “What are you good at? How do you know?” Swap after 2 minutes. Write ONE strength you spotted in them on a sticky note and give it to them.</p></div><div class="station"><h3>Station 2 · CARD SORT</h3><p>Real strength cards on the table. Pick the 5 that sound most like you. Get a partner or TA to challenge one: “prove it — when did you show that?”</p></div><div class="station"><h3>Station 3 · PROFILE BUILD</h3><p>Start your strengths profile poster: name, photo space, top 3 strengths, one sentence of proof for each. This is page 1 of your careers portfolio.</p></div></div>
+ <div class="box aspire-box"><strong>Aspire:</strong> link one strength to a real job: “A ___ needs my strength of ___.”</div>
+</section>
+
+<section class="slide bt-prac" id="s8">
+ <div class="tag">EVIDENCE · Careers portfolio (vA: ASDAN LI Module 8 · Section A)</div>
+ <h2>Capture your evidence</h2>
+ <p>TA photographs your profile poster. Then complete your sentences:</p>
+ <div class="box evidence-box">
+  <p><strong>My name:</strong> <input id="ev-name" style="font-size:1.1rem;padding:6px;width:220px;"></p>
+  <p style="margin-top:8px;"><strong>My top three strengths are:</strong><br><textarea id="ev-p1" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
+  <p style="margin-top:8px;"><strong>A job that could use my strengths is ___ because:</strong><br><textarea id="ev-p2" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
+  <p style="margin-top:8px;"><strong>Skills I used today (tick with your TA):</strong> Ability to learn · Teamwork · Literacy</p>
+ </div>
+ <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will deep-mark <em>one</em> part of this in dark green and draw a <strong>Yellow Box</strong>. Next lesson you respond inside it in a coloured pen of your choice.</div>
+ <button class="act" onclick="printEvidence()">🖨️ Print my evidence sheet</button>
+</section>
+
+<section class="slide bt-exit" id="s9">
+ <div class="tag">EXIT TICKET</div>
+ <h2>Show what you know</h2>
+ <div class="mcq" id="q1" data-ans="1"><div class="q">1. Which of these is a strength employers value?</div><button class="opt" data-i="0">Never making mistakes</button><button class="opt" data-i="1">Turning up on time, every time</button><button class="opt" data-i="2">Being loud</button></div><div class="mcq" id="q2" data-ans="2"><div class="q">2. “Good with tools and fixing things” suits work with…</div><button class="opt" data-i="0">Only computers</button><button class="opt" data-i="1">Only offices</button><button class="opt" data-i="2">Hands and practical trades</button></div><div class="mcq" id="q3" data-ans="0"><div class="q">3. The best proof of a strength is…</div><button class="opt" data-i="0">A real example of when you showed it</button><button class="opt" data-i="1">Saying it loudly</button><button class="opt" data-i="2">A guess</button></div>
+ <button class="act" onclick="showAnswers()">Show answers</button>
+</section>
+
+<nav>
+ <button onclick="prevSlide()">◀ Back</button>
+ <button onclick="nextSlide()">Next ▶</button>
+ <span id="slidecount">1 / 9</span>
+ <span class="spacer"></span>
+ <span id="xplabel">XP 0</span>
+ <div id="xpwrap"><div id="xpbar"></div></div>
+</nav>
+
+<div class="modal" id="tamodal" onclick="if(event.target===this)toggleModal('tamodal')">
+ <div class="card">
+  <h2>TA Focus — this slide</h2>
+  <p id="tabrief"></p>
+  <p style="margin-top:12px;font-size:.95rem;color:#4b5563;">Gesture anchor: open palm = “your idea please”; thumb-to-table = “check with your partner first”.</p>
+  <button class="act" onclick="toggleModal('tamodal')">Close</button>
+ </div>
+</div>
+
+<div class="modal" id="ccmodal" onclick="if(event.target===this)toggleModal('ccmodal')">
+ <div class="card" style="text-align:center;">
+  <h2>Cold Call</h2>
+  <p id="ccname" style="font-size:2rem;font-weight:800;margin:14px 0;color:var(--pink);"></p>
+  <p id="cctier" style="font-size:1.1rem;"></p>
+  <button class="act" onclick="coldCall()">Again</button>
+  <button class="act secondary" onclick="toggleModal('ccmodal')">Close</button>
+ </div>
+</div>
+
+<div id="overlay">
+ <h1>Lesson complete! 🎉</h1>
+ <p style="font-size:1.3rem;margin:12px 0;">Page 1 of your careers portfolio banked — your strengths are on record.</p>
+ <button class="act" onclick="document.getElementById('overlay').classList.remove('open')">Close</button>
+</div>
+
+<canvas id="confetticanvas"></canvas>
+<div id="printarea"></div>
+
+<script>
+/* ---------- LESSON DATA (consts first, init at the bottom) ---------- */
+const LESSON = {"arrItems": [{"n": "Good listener", "g": 0}, {"n": "Enjoys making things", "g": 1}, {"n": "Likes puzzles", "g": 2}], "arrBuckets": ["Working with people", "Working with hands & tools", "Working with ideas"], "wedoItems": [{"n": "Kind helper", "g": 0}, {"n": "Team player", "g": 0}, {"n": "Good with tools", "g": 1}, {"n": "Fixing things", "g": 1}, {"n": "Careful checker", "g": 2}, {"n": "Good at sorting", "g": 2}, {"n": "Calms people down", "g": 0}, {"n": "Builds models", "g": 1}], "wedoBuckets": ["Working with people", "Working with hands & tools", "Working with ideas"], "fbGood": ["Spot on — say your reason out loud.", "Correct! Tell your partner why.", "Yes! Use the key word in a full sentence."], "fbBad": ["Not this one — think again about what it does.", "Close — check the bucket labels once more.", "Have another look; talk it through with a partner."], "taBriefs": ["Meet & greet. Seat plan as normal. Have strength cards ready on tables.", "Arrival task: no adult answers. Note who self-deprecates — they are your focus in the practical.", "LO slide: read aloud together. Pre-teach the word 'strength' vs 'skill' if needed.", "Starter: steer pupils to real people they respect. Scribe examples on the whiteboard.", "I Do: pupils listening. If anyone says 'I have no strengths', park it warmly — the stations will answer it.", "We Do: rotate the tapping. Praise reasoning, not just correct buckets.", "PRACTICAL: you run the Speed Interview station — keep pairs talking with the stems. Enforce the no-put-downs rule instantly but gently.", "Evidence: photograph every poster. Scribe sentences if needed and note 'TA scribed'. Sticky-note strengths go home with pupils.", "Exit ticket: pupils alone, one tap each. Print evidence for anyone who missed it."], "lo": "To name my strengths and match them to kinds of work.", "evTitle": "Careers · L1 My Strengths Profile · portfolio evidence", "evLessonLine": "Careers Lesson 1 (BUILD · Slot 1)", "evRef": "Careers portfolio · vA: ASDAN LI 8A ___ · AQA UAS", "evP1Label": "My top three strengths are:", "evP2Label": "A job that could use my strengths is ___ because:", "skillsLine": "Ability to learn · Teamwork · Literacy"};
+const XP_PER = 12;
+let current = 0, xp = 0, audioCtx = null;
+
+function ping(freq){
+ try{
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.frequency.value = freq; o.type = 'sine';
+  g.gain.setValueAtTime(.12, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + .3);
+  o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + .3);
+ }catch(e){}
+}
+function showSlide(i){
+ const slides = document.querySelectorAll('.slide');
+ if(i < 0 || i >= slides.length) return;
+ slides[current].classList.remove('active');
+ current = i;
+ slides[current].classList.add('active');
+ document.getElementById('slidecount').textContent = (current+1) + ' / ' + slides.length;
+ document.getElementById('progressbar').style.width = ((current+1)/slides.length*100) + '%';
+ document.getElementById('tabrief').textContent = LESSON.taBriefs[current];
+ if(current === 2) animateLO();
+}
+function nextSlide(){ showSlide(current+1); }
+function prevSlide(){ showSlide(current-1); }
+function animateLO(){
+ document.querySelectorAll('#lolist .lo-item').forEach((el,idx)=>{
+  setTimeout(()=>el.classList.add('show'), 300 + idx*450);
+ });
+}
+function addXP(n){
+ xp += n;
+ document.getElementById('xplabel').textContent = 'XP ' + xp;
+ document.getElementById('xpbar').style.width = Math.min(100, xp) + '%';
+}
+function shuffle(arr){
+ const a = arr.slice();
+ for(let i = a.length-1; i > 0; i--){
+  const j = Math.floor(Math.random()*(i+1));
+  [a[i],a[j]] = [a[j],a[i]];
+ }
+ return a;
+}
+function buildSort(chipZoneId, bucketZoneId, items, buckets, onCorrect, onWrong){
+ const cz = document.getElementById(chipZoneId);
+ const bz = document.getElementById(bucketZoneId);
+ cz.innerHTML = ''; bz.innerHTML = '';
+ let selected = null;
+ shuffle(items).forEach(item=>{
+  const c = document.createElement('button');
+  c.className = 'chip'; c.textContent = item.n; c.dataset.g = item.g;
+  c.addEventListener('click', ()=>{
+   cz.querySelectorAll('.chip').forEach(x=>x.classList.remove('selected'));
+   c.classList.add('selected'); selected = c; ping(520);
+  });
+  cz.appendChild(c);
+ });
+ buckets.forEach((label, gi)=>{
+  const b = document.createElement('div');
+  b.className = 'bucket';
+  b.innerHTML = '<div>' + label + '</div><div class="mark"></div><div class="drops"></div>';
+  b.addEventListener('click', ()=>{
+   if(!selected) return;
+   if(parseInt(selected.dataset.g) === gi){
+    b.classList.add('flash-good'); setTimeout(()=>b.classList.remove('flash-good'), 700);
+    b.querySelector('.drops').textContent += '\u2713 ' + selected.textContent + '  ';
+    const mk=b.querySelector('.mark'); mk.textContent='\u2713 correct'; setTimeout(()=>mk.textContent='',900);
+    selected.classList.remove('selected'); selected.classList.add('done');
+    selected = null; ping(880); addXP(XP_PER); onCorrect && onCorrect();
+    if(document.getElementById(chipZoneId).querySelectorAll('.chip:not(.done)').length === 0){
+     confetti();
+    }
+   } else {
+    b.classList.add('flash-bad'); setTimeout(()=>b.classList.remove('flash-bad'), 700);
+    const mk=b.querySelector('.mark'); mk.textContent='\u2717 not here'; setTimeout(()=>mk.textContent='',900);
+    ping(220); onWrong && onWrong();
+   }
+  });
+  bz.appendChild(b);
+ });
+}
+function hint(id){
+ const el = document.getElementById('hint-' + id);
+ el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function toggleModal(id){ document.getElementById(id).classList.toggle('open'); }
+function toggleCalm(){
+ document.body.classList.toggle('calm');
+ document.getElementById('calmbtn').textContent = document.body.classList.contains('calm') ? 'Calm ✓' : 'Calm Mode';
+}
+function coldCall(){
+ let roster = [];
+ try{ roster = JSON.parse(localStorage.getItem('ps_coldcall_roster') || '[]'); }catch(e){}
+ if(!roster.length) roster = ['Add roster in ps_coldcall_roster'];
+ const name = roster[Math.floor(Math.random()*roster.length)];
+ const r = Math.ceil(Math.random()*5);
+ const tier = (r<=1) ? 'Foundation question' : (r===2) ? 'Middle question' : 'Higher question';
+ document.getElementById('ccname').textContent = name;
+ document.getElementById('cctier').textContent = 'U/1→F, 2→M, 3–5→H · rolled ' + r + ' → ' + tier;
+ const m = document.getElementById('ccmodal');
+ if(!m.classList.contains('open')) m.classList.add('open');
+ ping(660);
+}
+function wireMCQ(){
+ document.querySelectorAll('.mcq').forEach(q=>{
+  q.querySelectorAll('.opt').forEach(opt=>{
+   opt.addEventListener('click', ()=>{
+    if(q.classList.contains('locked')) return;
+    q.classList.add('locked');
+    q.dataset.chosen = opt.dataset.i;
+    opt.style.borderColor = '#1f2a56';
+    opt.style.fontWeight = '700';
+    ping(520);
+   });
+  });
+ });
+}
+function showAnswers(){
+ let correct = 0;
+ document.querySelectorAll('.mcq').forEach(q=>{
+  const ans = q.dataset.ans, chosen = q.dataset.chosen;
+  q.classList.add('locked');
+  q.querySelectorAll('.opt').forEach(opt=>{
+   if(opt.dataset.i === ans){ opt.classList.add('correct'); opt.textContent = '\u2713 ' + opt.textContent; }
+   else if(opt.dataset.i === chosen){ opt.classList.add('wrong'); opt.textContent = '\u2717 ' + opt.textContent; }
+  });
+  if(chosen === ans) correct++;
+ });
+ addXP(correct * 10);
+ document.getElementById('overlay').classList.add('open');
+ confetti();
+}
+/* ---------- EVIDENCE PRINT (DOM-clone + Marking & Fair Assessment block) ---------- */
+function printEvidence(){
+ const pa = document.getElementById('printarea');
+ const name = document.getElementById('ev-name').value || '________________';
+ const p1 = document.getElementById('ev-p1').value || '';
+ const p2 = document.getElementById('ev-p2').value || '';
+ const d = new Date().toLocaleDateString('en-GB');
+ pa.innerHTML = '';
+ function row(txt, cls){
+  const el = document.createElement('div');
+  el.className = cls || 'prow'; el.textContent = txt;
+  pa.appendChild(el); return el;
+ }
+ const h = document.createElement('h1'); h.textContent = LESSON.evTitle; pa.appendChild(h);
+ row('Name: ' + name + '   ·   Date: ' + d + '   ·   ' + LESSON.evLessonLine);
+ row('LO: ' + LESSON.lo);
+ row(LESSON.evP1Label + ' ' + p1);
+ row(LESSON.evP2Label + ' ' + p2);
+ row('Skills used (tick): ' + LESSON.skillsLine + '   ·   Photo evidence attached: [ ]');
+ row('Evidence ref: ' + LESSON.evRef + '   ·   Verified by: ________________   ·   Date: ____________');
+ /* Marking & Fair Assessment Policy block */
+ const yb = document.createElement('div'); yb.className = 'ybox';
+ yb.textContent = 'YELLOW BOX — teacher deep-marks ONE section (dark green pen). Pupil improvement/redraft goes here:';
+ pa.appendChild(yb);
+ row('WWW (What Went Well): ______________________________________________');
+ row('EBI (Even Better If): _______________________________________________');
+ row('Next Steps: ________________________________________________________');
+ row('My response (coloured pen of my choice): ____________________________');
+ row('Formative judgement (circle one): Emerging · Developing · Secure · Exceeding   →   recorded on Arbor formative tab');
+ const foot = document.createElement('div'); foot.className = 'small';
+ foot.textContent = 'Literacy codes (dark green, in margin): Sp spelling · P punctuation · Cap capital letter · T tense · // new paragraph · ^ missing word. Portfolio evidence: upload to Teams/ItsLearning for IQA.';
+ pa.appendChild(foot);
+ window.print();
+}
+function confetti(){
+ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+ if(document.body.classList.contains('calm')) return;
+ const cv = document.getElementById('confetticanvas');
+ const ctx = cv.getContext('2d');
+ cv.width = window.innerWidth; cv.height = window.innerHeight;
+ const bits = Array.from({length: 90}, ()=>({
+  x: Math.random()*cv.width, y: -20 - Math.random()*200,
+  v: 2 + Math.random()*3, r: 4 + Math.random()*5,
+  c: ['#d6006d','#1f2a56','#f59e0b','#16a34a'][Math.floor(Math.random()*4)]
+ }));
+ let t = 0;
+ (function fall(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  bits.forEach(b=>{ b.y += b.v; ctx.fillStyle = b.c; ctx.fillRect(b.x, b.y, b.r, b.r); });
+  t++;
+  if(t < 140) requestAnimationFrame(fall); else ctx.clearRect(0,0,cv.width,cv.height);
+ })();
+}
+document.addEventListener('keydown', (e)=>{
+ const tag = (e.target && e.target.tagName) || '';
+ if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+ if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+ if(e.key === 'ArrowLeft') prevSlide();
+});
+/* ---------- INIT (after all data consts) ---------- */
+function init(){
+ buildSort('arr-chips','arr-buckets', LESSON.arrItems, LESSON.arrBuckets, null, null);
+ let fbGood = 0, fbBad = 0;
+ buildSort('wedo-chips','wedo-buckets', LESSON.wedoItems, LESSON.wedoBuckets,
+  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbGood[(fbGood++)%LESSON.fbGood.length]; },
+  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbBad[(fbBad++)%LESSON.fbBad.length]; });
+ wireMCQ();
+ document.getElementById('tabrief').textContent = LESSON.taBriefs[0];
+}
+init();
+</script>
+</body>
+</html>

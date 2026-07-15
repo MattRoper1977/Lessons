@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Art L2 — My Identity Picture (Arts Award Discover)</title>
+<style>
+  /* ============ PROGRESS SCHOOLS — Studio Board (v5, hands-on Art) ============
+     Subject-grounded art-studio palette: canvas-paper ground, tactile rounded
+     cards, six joyful (not neon) paint colours. SEMH-calm: gentle motion,
+     generous spacing, big tap targets, no leaderboard. ===========================*/
+  :root{
+    --canvas:#FBF7F0;        /* paper ground */
+    --ink:#2C2A26;           /* warm near-black */
+    --muted:#6E675C;
+    --card:#ffffff;
+    --line:#E7DFD2;          /* hairline on paper */
+    --shadow:0 6px 22px rgba(60,45,20,.10);
+    /* paint palette (warm, bright, calm) */
+    --c-yellow:#F4B73E; --c-coral:#E5573F; --c-teal:#2BA39A;
+    --c-cobalt:#3F6FB0; --c-magenta:#C24E86; --c-green:#5BA64A;
+    /* Matt's standing box tokens */
+    --sc-bg:#ffedd5; --sc-bd:#f97316;          /* success-criteria orange */
+    --asp-bg:#dcfce7; --asp-bd:#16a34a; --asp-ink:#14532d; /* aspire green */
+    --tip-bg:#fef9c3; --tip-bd:#eab308;        /* exam/say-it yellow */
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:var(--canvas); color:var(--ink); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* subtle paint-fleck texture on the canvas (very low-key, SEMH-safe) */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(229,87,63,.05) 0 9px, transparent 10px),
+      radial-gradient(circle at 84% 12%, rgba(63,111,176,.05) 0 11px, transparent 12px),
+      radial-gradient(circle at 70% 78%, rgba(43,163,154,.05) 0 8px, transparent 9px),
+      radial-gradient(circle at 28% 84%, rgba(244,183,62,.06) 0 10px, transparent 11px);
+  }
+
+  /* ---------- sticky studio bar ---------- */
+  .bar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:10px 18px; background:rgba(251,247,240,.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  }
+  .brand{font-weight:bold; letter-spacing:.5px; font-size:1.05rem; color:var(--ink);
+    display:flex; align-items:center; gap:8px}
+  .brand .dot{width:14px;height:14px;border-radius:50%;
+    background:conic-gradient(var(--c-coral),var(--c-yellow),var(--c-teal),var(--c-cobalt),var(--c-magenta),var(--c-coral))}
+  .bar .spacer{flex:1}
+  .badge-s{font-size:.72rem; font-weight:bold; color:#3b2f10;
+    background:linear-gradient(var(--c-yellow),#e0a32f); padding:4px 9px; border-radius:999px;
+    border:1px solid #d49a2c}
+  .timer{display:flex; align-items:center; gap:6px; background:var(--card);
+    border:1px solid var(--line); border-radius:999px; padding:4px 6px 4px 12px; box-shadow:var(--shadow)}
+  .timer #clock{font-variant-numeric:tabular-nums; font-weight:bold; font-size:1.15rem; min-width:62px; text-align:center}
+  .btn{cursor:pointer; border:none; border-radius:999px; font-family:inherit; font-weight:bold;
+    padding:8px 14px; font-size:.86rem; transition:transform .12s ease, box-shadow .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:focus-visible{outline:3px solid var(--c-cobalt); outline-offset:2px}
+  .btn.primary{background:var(--ink); color:#fff}
+  .btn.ghost{background:var(--card); color:var(--ink); border:1px solid var(--line); box-shadow:var(--shadow)}
+  .btn.mini{padding:6px 10px; font-size:.78rem}
+  .btn.ta{background:linear-gradient(var(--c-teal),#23867f); color:#fff}
+
+  /* ---------- layout ---------- */
+  .wrap{position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:22px 18px 90px}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:22px;
+    box-shadow:var(--shadow); padding:26px 28px; margin:22px 0;
+    opacity:0; transform:translateY(14px); animation:rise .55s ease forwards}
+  @keyframes rise{to{opacity:1; transform:none}}
+  .eyebrow{font-size:.78rem; font-weight:bold; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted)}
+  h1{font-size:2.1rem; margin:.15em 0 .1em; line-height:1.12}
+  h2{font-size:1.5rem; margin:.1em 0 .5em}
+  .lo{display:flex; gap:12px; align-items:flex-start; background:var(--asp-bg);
+    border:2px solid var(--asp-bd); color:var(--asp-ink); border-radius:16px; padding:14px 18px; font-size:1.18rem; font-weight:bold}
+  .lo .star{font-size:1.4rem; line-height:1}
+  .quiet{color:var(--muted); font-size:.95rem}
+
+  /* hero icon row */
+  .hero-icons{display:flex; gap:10px; font-size:2rem; margin:6px 0 2px}
+  .hero-icons span{animation:bob 2.6s ease-in-out infinite}
+  .hero-icons span:nth-child(2){animation-delay:.3s}
+  .hero-icons span:nth-child(3){animation-delay:.6s}
+  .hero-icons span:nth-child(4){animation-delay:.9s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+  /* ---------- vocab strip ---------- */
+  .vocab{display:flex; gap:10px; flex-wrap:wrap}
+  .word{cursor:pointer; background:var(--canvas); border:2px solid var(--line); border-radius:14px;
+    padding:10px 16px; font-weight:bold; font-size:1.05rem; transition:all .15s ease}
+  .word:hover,.word:focus-visible{border-color:var(--c-magenta); transform:translateY(-2px); outline:none}
+  .word.say{border-color:var(--c-magenta); background:#fdeef5}
+  #vocab-stem{margin-top:14px}
+  .stem-box{background:var(--tip-bg); border:2px dashed var(--tip-bd); border-radius:14px; padding:14px 18px; font-size:1.1rem}
+
+  /* ---------- colour warm-up ---------- */
+  .mix{display:grid; grid-template-columns:1fr 1.3fr; gap:22px; align-items:stretch}
+  .swatches{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  .swatch{aspect-ratio:1/1; border-radius:18px; border:none; cursor:pointer; color:#fff;
+    font-weight:bold; font-size:1rem; display:flex; align-items:flex-end; padding:12px;
+    text-shadow:0 1px 4px rgba(0,0,0,.35); box-shadow:var(--shadow); transition:transform .12s ease}
+  .swatch:hover{transform:scale(1.04)}
+  .swatch:focus-visible{outline:4px solid var(--ink); outline-offset:3px}
+  #pad{position:relative; background:#fff; border:2px solid var(--line); border-radius:18px; overflow:hidden; min-height:240px}
+  #pad .hint{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:var(--muted); font-size:1.05rem; text-align:center; padding:20px}
+  .splat{position:absolute; border-radius:50%; transform:translate(-50%,-50%) scale(0);
+    animation:pop .5s ease forwards; pointer-events:none}
+  @keyframes pop{to{transform:translate(-50%,-50%) scale(1)}}
+  #feel{margin-top:14px; font-size:1.12rem; font-weight:bold; min-height:1.5em}
+
+  /* ---------- artist (Part B) ---------- */
+  .artist{display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start}
+  .frame{background:var(--canvas); border:10px solid #fff; outline:1px solid var(--line);
+    box-shadow:var(--shadow); border-radius:6px; aspect-ratio:4/5; display:flex; align-items:center;
+    justify-content:center; text-align:center; color:var(--muted); padding:18px; overflow:hidden}
+  .frame img{width:100%; height:100%; object-fit:cover; border-radius:2px}
+  .respond li{margin:8px 0; font-size:1.08rem}
+  .chip-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .chip{background:var(--canvas); border:2px solid var(--line); border-radius:999px; padding:8px 14px; font-weight:bold; cursor:pointer}
+  .chip:hover{border-color:var(--c-teal)}
+  .chip.on{background:var(--asp-bg); border-color:var(--asp-bd); color:var(--asp-ink)}
+
+  /* ---------- technique cards (Part A) ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px}
+  .tcard{border:2px solid var(--line); border-radius:18px; padding:18px; cursor:pointer;
+    background:var(--card); transition:all .15s ease; position:relative}
+  .tcard:hover{transform:translateY(-3px); box-shadow:var(--shadow)}
+  .tcard.open{border-color:var(--c-coral); background:#fff6f4}
+  .tcard .ic{font-size:2.4rem}
+  .tcard h3{margin:.3em 0 .1em; font-size:1.25rem}
+  .tcard .how{color:var(--muted); margin:.2em 0 .6em}
+  .tcard .word-tag{display:inline-block; font-size:.78rem; font-weight:bold; letter-spacing:.5px;
+    text-transform:uppercase; background:var(--canvas); border:1px solid var(--line); border-radius:999px; padding:3px 10px}
+  .tcard .say{margin-top:10px; font-size:.98rem; background:var(--tip-bg); border:2px dashed var(--tip-bd);
+    border-radius:12px; padding:10px 12px; display:none}
+  .tcard.open .say{display:block}
+
+  /* ---------- evidence helper ---------- */
+  .evi{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .evi-col h3{margin:.1em 0 .4em; display:flex; align-items:center; gap:8px}
+  .evi-col.partA h3{color:var(--c-coral)} .evi-col.partB h3{color:var(--c-cobalt)}
+  .check{list-style:none; margin:0; padding:0}
+  .check li{display:flex; gap:10px; align-items:flex-start; padding:7px 0; cursor:pointer; font-size:1.02rem}
+  .check li .box{flex:0 0 22px; height:22px; border:2px solid var(--muted); border-radius:6px; margin-top:1px; display:flex; align-items:center; justify-content:center; font-weight:bold}
+  .check li.done .box{background:var(--asp-bd); border-color:var(--asp-bd); color:#fff}
+  .check li.done{color:var(--muted); text-decoration:line-through}
+  .note{background:var(--sc-bg); border:2px solid var(--sc-bd); border-radius:14px; padding:12px 16px; margin-top:8px; font-size:.98rem}
+
+  /* ---------- close ---------- */
+  .close-grid{display:flex; gap:18px; flex-wrap:wrap; align-items:center}
+  .name-out{font-size:1.3rem; font-weight:bold; min-width:160px}
+
+  /* ---------- modal ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(44,42,38,.55); display:none; align-items:center;
+    justify-content:center; z-index:100; padding:18px}
+  .overlay.show{display:flex}
+  .modal{background:#fff; border-radius:20px; max-width:560px; width:100%; max-height:86vh; overflow:auto; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal h2{margin-top:0}
+  .ta-step{border-left:4px solid var(--c-teal); padding:6px 0 6px 14px; margin:14px 0}
+  .ta-step b{display:block; margin-bottom:2px}
+  .modal .x{float:right}
+
+  /* confetti */
+  .confetti{position:fixed; top:-12px; width:10px; height:14px; z-index:120; pointer-events:none; border-radius:2px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:760px){
+    .mix,.artist,.evi{grid-template-columns:1fr}
+    h1{font-size:1.7rem}
+    .frame{max-width:280px; margin:0 auto}
+  }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+    .panel{opacity:1; transform:none}
+  }
+
+  /* ================= PRINT: TA capture sheet only ================= */
+  #capture-sheet{display:none}
+  @media print{
+    @page{margin:11mm}
+    body{background:#fff}
+    body::before,.bar,.wrap{display:none !important}
+    #capture-sheet{display:block; color:#000; font-size:11.5pt}
+    .cs-head{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:10px}
+    .cs-head .t{font-size:15pt; font-weight:bold}
+    .cs-row{display:flex; gap:18px; margin:8px 0; flex-wrap:wrap}
+    .cs-field{flex:1; min-width:160px; border-bottom:1px solid #000; padding-bottom:2px}
+    .cs-field small{color:#333; font-size:8.5pt; display:block}
+    .cs-block{border:1.5px solid #000; border-radius:8px; padding:10px 12px; margin:10px 0; break-inside:avoid}
+    .cs-block h4{margin:0 0 6px; font-size:11.5pt}
+    .cs-ticks{display:flex; gap:18px; flex-wrap:wrap; margin:4px 0}
+    .cs-ticks span{display:inline-flex; align-items:center; gap:6px}
+    .cs-box{display:inline-block; width:15px; height:15px; border:1.5px solid #000; border-radius:3px}
+    .cs-write{border-bottom:1px dotted #000; min-height:20px; margin-top:4px}
+    .cs-tip{font-size:9pt; color:#222; font-style:italic}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== STICKY STUDIO BAR ===== -->
+<div class="bar">
+  <span class="brand"><span class="dot"></span>Progress Schools</span>
+  <span class="badge-s" title="Sensory / Supported pathway">Pathway&nbsp;S</span>
+  <span class="spacer"></span>
+  <div class="timer">
+    <span id="clock">15:00</span>
+    <button class="btn ghost mini" id="t-start">Start</button>
+    <button class="btn ghost mini" id="t-reset">Reset</button>
+  </div>
+  <button class="btn ghost mini" id="pick-name">🎲 Whose turn?</button>
+  <button class="btn ta" id="open-ta">👩‍🏫 TA Focus</button>
+  <button class="btn primary" id="print-cs">🖨️ Capture sheet</button>
+</div>
+
+<div class="wrap">
+
+  <!-- LO / TITLE -->
+  <section class="panel">
+    <div class="eyebrow">Creative Arts · Arts Award Discover (Part A & B)</div>
+    <h1>My Identity Picture</h1>
+    <div class="hero-icons"><span>🪞</span><span>🎨</span><span>🧑</span><span>✨</span></div>
+    <div class="lo" style="margin-top:14px">
+      <span class="star">🌟</span>
+      <span>I can make an <u>identity picture</u> of myself using a <u>medium</u> I <b>choose</b>.</span>
+    </div>
+    <p class="quiet" style="margin-bottom:0">This picture is <b>you</b>. There is no wrong way — you <b>choose</b> how to make it.</p>
+  </section>
+
+  <!-- VOCAB STRIP -->
+  <section class="panel">
+    <div class="eyebrow">Our words</div>
+    <h2>Say it as you make it</h2>
+    <div class="vocab" id="vocab"></div>
+    <div id="vocab-stem"></div>
+  </section>
+
+  <!-- MIRROR WARM-UP -->
+  <section class="panel">
+    <div class="eyebrow">Warm-up · Part A · look in the mirror</div>
+    <h2>What makes me, me?</h2>
+    <p class="quiet">Look in your <b>mirror</b>. 🪞 Tap the things that are part of <b>you</b> — they can go in your picture.</p>
+    <div class="mix">
+      <div class="swatches" id="swatches"></div>
+      <div>
+        <div id="pad"><div class="hint">Tap things that are you →<br>they collect here</div></div>
+        <div id="feel">My picture can show… <span style="color:var(--muted)">(tap to begin)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTIST (Part B) -->
+  <section class="panel">
+    <div class="eyebrow">Look &amp; respond · Part B · Black History Month</div>
+    <h2>An artist who shows people &amp; identity</h2>
+    <div class="artist">
+      <div>
+        <div class="frame" id="artist-frame">
+          <span>Drop the artist image here<br><small>(replace this box with a licensed image of the chosen portrait)</small></span>
+        </div>
+        <button class="btn ghost mini" id="artist-link" style="margin-top:10px; width:100%">🔗 See more of their work</button>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Looking at <span id="artist-name">Faith Ringgold</span></h3>
+        <ul class="respond">
+          <li>👉 <b>Point</b> to the person in the picture.</li>
+          <li>🌈 What do their <b>colours</b> or clothes tell you about them?</li>
+          <li>💭 If I made a picture of <b>me</b>, I would show… <i>(say it out loud)</i></li>
+        </ul>
+        <p class="quiet">Tap how this artist's picture makes you feel:</p>
+        <div class="chip-row" id="artist-chips"></div>
+        <div class="note">📸 <b>TA capture (Part B):</b> note the pupil's chosen response — a point, a thumb, or their words. One photo of them looking + their reaction completes a Part&nbsp;B entry.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDIA (Part A make-it) -->
+  <section class="panel">
+    <div class="eyebrow">Make it · Part A · your choice</div>
+    <h2>Choose your medium &amp; make your 'me' picture</h2>
+    <p class="quiet">Tap a card to open it. <b>Choose one</b> to make your picture — there's no wrong choice. Aprons on if it's messy. 🎨</p>
+    <div class="cards" id="cards"></div>
+    <div class="note" style="margin-top:16px">⏱️ Use the <b>timer</b> at the top for making time. When it ends, we tidy and look at what we made.</div>
+  </section>
+
+  <!-- EVIDENCE HELPER -->
+  <section class="panel" id="evidence">
+    <div class="eyebrow">For the adult in the room</div>
+    <h2>Capturing the evidence</h2>
+    <p class="quiet">Tick as you go — this mirrors the printable capture sheet (🖨️ top right). Capture <b>in the moment</b>, not after.</p>
+    <div class="evi">
+      <div class="evi-col partA">
+        <h3>🎨 Part A — Explore (took part)</h3>
+        <ul class="check" data-group="A">
+          <li><span class="box"></span> Photo of them <b>making</b> their identity picture (the doing)</li>
+          <li><span class="box"></span> The <b>medium they chose</b> noted + the finished picture photographed</li>
+          <li><span class="box"></span> Their <b>'I like… because…'</b> scribed or voice-recorded (= ladder to Explore)</li>
+        </ul>
+      </div>
+      <div class="evi-col partB">
+        <h3>🖼️ Part B — Discover an artist</h3>
+        <ul class="check" data-group="B">
+          <li><span class="box"></span> Photo of pupil <b>looking</b> at the artist's work</li>
+          <li><span class="box"></span> Their response logged (point / thumb / "reminds me of…")</li>
+          <li><span class="box"></span> Artist's name written on the entry</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">🔒 <b>Consent first:</b> if face-consent isn't in place, frame <b>hands and work only</b> — that still evidences taking part. File to: <code>[Pupil]_Discover_[date]</code>.</div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="panel">
+    <div class="eyebrow">Calm close</div>
+    <h2>Say what you like — and why</h2>
+    <div class="close-grid">
+      <button class="btn ta" id="name-tech">🗣️ I like… because…</button>
+      <span class="name-out" id="tech-said"></span>
+    </div>
+    <p class="quiet" style="margin-top:16px">🤝 <b>Show a friend</b> your picture and say one thing you like about it. <i>(This seeds Part C — sharing — for next time.)</i></p>
+    <button class="btn primary" id="done" style="margin-top:6px">✨ I made my identity picture today</button>
+  </section>
+
+</div>
+
+<!-- ===== TA FOCUS MODAL ===== -->
+<div class="overlay" id="ta-overlay">
+  <div class="modal">
+    <button class="btn ghost mini x" id="close-ta">Close ✕</button>
+    <h2>👩‍🏫 TA Focus — your job, stage by stage</h2>
+    <div class="ta-step"><b>Set up & safety</b>Mirrors out, aprons on, water nearby, clay mats / devices ready. Keep stations spaced. Watch for sensory overwhelm — offer a quieter spot if needed.</div>
+    <div class="ta-step"><b>Mirror-look</b>Hand them a mirror: "What makes you, you?" Let them lead. Echo their words and note what they want in their picture.</div>
+    <div class="ta-step"><b>Artist (Part B)</b>Show the portrait. Ask them to point, not write. Capture <b>one photo + their reaction</b>. That's the Part B entry done.</div>
+    <div class="ta-step"><b>Choose & make (Part A)</b>Offer all four media; model each briefly, then hands off. Let them <b>choose</b>. Photograph <b>the making</b> and note the medium they picked.</div>
+    <div class="ta-step"><b>Say a preference</b>Before tidy-up, prompt: <b>"I like ___ because ___."</b> Capture the reason (voice is fine) — this is the rung toward Arts Award Explore.</div>
+    <div class="ta-step"><b>Consent & filing</b>No face-consent → hands/work only. Drop straight into the pupil's Discover folder so the logbook fills itself.</div>
+  </div>
+</div>
+
+<!-- ===== PRINT-ONLY: TA EVIDENCE CAPTURE SHEET ===== -->
+<div id="capture-sheet">
+  <div class="cs-head">
+    <div>
+      <div class="t">Arts Award Discover — Evidence Capture</div>
+      <div>My Identity Picture · Part A &amp; B</div>
+    </div>
+    <div style="text-align:right; font-weight:bold">Progress Schools<br><span style="font-weight:normal; font-size:9pt">Tees Valley</span></div>
+  </div>
+
+  <div class="cs-row">
+    <div class="cs-field">Pupil<small>name</small></div>
+    <div class="cs-field">Class<small>group</small></div>
+    <div class="cs-field"><span id="cs-date"></span><small>date</small></div>
+  </div>
+  <div class="cs-ticks" style="margin-top:6px">
+    <span><span class="cs-box"></span> <b>Face-photo consent in place?</b></span>
+    <span><span class="cs-box"></span> Yes — faces OK</span>
+    <span><span class="cs-box"></span> No — hands &amp; work only</span>
+  </div>
+
+  <div class="cs-block">
+    <h4>🎨 Part A — Make an identity picture (took part)</h4>
+    <div class="cs-ticks">Medium chosen:
+      <span><span class="cs-box"></span> Paint</span>
+      <span><span class="cs-box"></span> Collage</span>
+      <span><span class="cs-box"></span> Clay</span>
+      <span><span class="cs-box"></span> Digital</span>
+    </div>
+    <div class="cs-ticks">
+      <span><span class="cs-box"></span> Photo of them making it</span>
+      <span><span class="cs-box"></span> Finished picture photographed</span>
+    </div>
+    <div>In their words <span class="cs-tip">(scribe what the pupil says):</span></div>
+    <div class="cs-write"></div><div class="cs-write"></div>
+  </div>
+
+  <div class="cs-block">
+    <h4>🖼️ Part B — Discover an artist</h4>
+    <div class="cs-row"><div class="cs-field">Artist looked at<small>name</small></div></div>
+    <div class="cs-ticks" style="margin-top:6px">Their response:
+      <span><span class="cs-box"></span> pointed to favourite part</span>
+      <span><span class="cs-box"></span> thumbs up / down</span>
+      <span><span class="cs-box"></span> "it reminds me of…"</span>
+    </div>
+    <div class="cs-write"></div>
+  </div>
+
+  <div class="cs-block">
+    <div class="cs-ticks">Words heard / used:
+      <span><span class="cs-box"></span> portrait</span><span><span class="cs-box"></span> self</span>
+      <span><span class="cs-box"></span> colour</span><span><span class="cs-box"></span> choose</span>
+      <span><span class="cs-box"></span> create</span><span><span class="cs-box"></span> like</span>
+    </div>
+    <div class="cs-ticks">
+      <span><span class="cs-box"></span> <b>Said a preference + reason</b> (rung to Explore):</span>
+    </div>
+    <div>"I like ……………………… because ………………………"</div>
+    <div class="cs-write"></div>
+    <div class="cs-ticks">How it felt:
+      <span><span class="cs-box"></span> I made it</span>
+      <span><span class="cs-box"></span> I liked it</span>
+      <span><span class="cs-box"></span> it felt ……………</span>
+    </div>
+  </div>
+
+  <div class="cs-ticks">
+    <span><span class="cs-box"></span> Filed to logbook — folder <b>[Pupil]_Discover_[date]</b></span>
+    <span class="cs-field" style="min-width:180px">TA signature</span>
+  </div>
+</div>
+
+<script>
+/* ============================== DATA (defined first) ============================== */
+const VOCAB = [
+  {w:"portrait", stem:"A <b>portrait</b> is a picture of a person. Mine is a picture of <b>me</b>."},
+  {w:"self",     stem:"This is my<b>self</b> — it shows who I am."},
+  {w:"colour",   stem:"I chose the <b>colour</b> ___ for my picture because ___."},
+  {w:"choose",   stem:"I <b>choose</b> to make my picture with ___ (paint / collage / clay / digital)."},
+  {w:"create",   stem:"Today I <b>create</b> a picture of me."},
+  {w:"like",     stem:"I <b>like</b> ___ in my picture because ___."}
+];
+
+const FEATURES = [
+  {emoji:"👀", label:"My eyes",     hex:"var(--c-cobalt)"},
+  {emoji:"💇", label:"My hair",     hex:"var(--c-coral)"},
+  {emoji:"😄", label:"My smile",    hex:"var(--c-yellow)"},
+  {emoji:"🎨", label:"My colour",   hex:"var(--c-teal)"},
+  {emoji:"❤️", label:"What I love", hex:"var(--c-magenta)"},
+  {emoji:"✨", label:"My style",    hex:"var(--c-green)"}
+];
+
+const MEDIA = [
+  {ic:"🎨", name:"Paint",   word:"paint",   how:"Brush or finger. Colours that are you.",   say:"I chose <b>paint</b> because ___."},
+  {ic:"✂️", name:"Collage", word:"collage", how:"Tear, cut and stick pieces that are you.", say:"I chose <b>collage</b> because ___."},
+  {ic:"🏺", name:"Clay",    word:"clay",    how:"Squeeze and shape a 3D you.",              say:"I chose <b>clay</b> because ___."},
+  {ic:"💻", name:"Digital", word:"digital", how:"Draw on a screen. Undo and try again.",    say:"I chose <b>digital</b> because ___."}
+];
+
+const FEELING_CHIPS = ["proud","happy","calm","bold","curious"];
+
+/* default artist (swap freely) — alternatives: Kerry James Marshall, Basquiat */
+const ARTIST = "Faith Ringgold";
+
+/* ============================== AUDIO (gentle) ============================== */
+let AC=null;
+function blip(freq=440){
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended") AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type="sine"; o.frequency.value=freq;
+    g.gain.setValueAtTime(.0001,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.06,AC.currentTime+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.28);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+.3);
+  }catch(e){}
+}
+/* resume audio on first gesture */
+document.addEventListener("pointerdown", function once(){ try{if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); AC.resume();}catch(e){} document.removeEventListener("pointerdown",once); }, {once:true});
+
+/* ============================== RENDERERS ============================== */
+function renderVocab(){
+  const box=document.getElementById("vocab");
+  VOCAB.forEach(v=>{
+    const b=document.createElement("button");
+    b.className="word"; b.type="button"; b.textContent=v.w;
+    b.addEventListener("click",()=>{
+      document.querySelectorAll(".word.say").forEach(e=>e.classList.remove("say"));
+      b.classList.add("say");
+      document.getElementById("vocab-stem").innerHTML='<div class="stem-box">🗣️ '+v.stem+'</div>';
+      blip(520);
+    });
+    box.appendChild(b);
+  });
+}
+
+function renderMirror(){
+  const box=document.getElementById("swatches");
+  const pad=document.getElementById("pad");
+  const feel=document.getElementById("feel");
+  pad.style.padding="14px"; pad.style.display="flex"; pad.style.flexWrap="wrap";
+  pad.style.alignContent="flex-start"; pad.style.gap="8px";
+  const chosen=[];
+  FEATURES.forEach(f=>{
+    const b=document.createElement("button");
+    b.className="swatch"; b.type="button"; b.style.background=f.hex;
+    b.style.alignItems="center"; b.style.justifyContent="center"; b.style.flexDirection="column"; b.style.textAlign="center";
+    b.innerHTML='<span style="display:block; font-size:1.8rem; text-shadow:none">'+f.emoji+'</span>'+f.label;
+    b.addEventListener("click",()=>{
+      const h=pad.querySelector(".hint"); if(h) h.remove();
+      if(b.classList.contains("picked")){
+        b.classList.remove("picked"); b.style.outline="";
+        const i=chosen.indexOf(f.label); if(i>-1) chosen.splice(i,1);
+        const chip=pad.querySelector('[data-f="'+f.label+'"]'); if(chip) chip.remove();
+      }else{
+        b.classList.add("picked"); b.style.outline="4px solid var(--ink)"; b.style.outlineOffset="2px";
+        chosen.push(f.label);
+        const chip=document.createElement("span"); chip.className="chip on"; chip.setAttribute("data-f",f.label);
+        chip.textContent=f.emoji+" "+f.label; pad.appendChild(chip);
+      }
+      feel.innerHTML = chosen.length
+        ? 'My picture can show <b>'+chosen.join(", ").toLowerCase()+'</b> — because it is <b>me</b>.'
+        : 'My picture can show… <span style="color:var(--muted)">(tap to begin)</span>';
+      blip(420+Math.random()*180);
+    });
+    box.appendChild(b);
+  });
+}
+
+function renderArtist(){
+  document.getElementById("artist-name").textContent=ARTIST;
+  document.getElementById("artist-link").addEventListener("click",()=>{
+    window.open("https://www.google.com/search?tbm=isch&q="+encodeURIComponent(ARTIST+" paintings"),"_blank");
+  });
+  const row=document.getElementById("artist-chips");
+  FEELING_CHIPS.forEach(f=>{
+    const c=document.createElement("button");
+    c.className="chip"; c.type="button"; c.textContent=f;
+    c.addEventListener("click",()=>{ c.classList.toggle("on"); blip(500); });
+    row.appendChild(c);
+  });
+}
+
+function renderCards(){
+  const box=document.getElementById("cards");
+  MEDIA.forEach(t=>{
+    const d=document.createElement("div");
+    d.className="tcard"; d.tabIndex=0; d.setAttribute("role","button");
+    d.innerHTML='<div class="ic">'+t.ic+'</div><h3>'+t.name+'</h3>'+
+                '<div class="how">'+t.how+'</div>'+
+                '<span class="word-tag">medium: '+t.word+'</span>'+
+                '<div class="say">🗣️ '+t.say+'</div>';
+    const toggle=()=>{ d.classList.toggle("open"); blip(460); };
+    d.addEventListener("click",toggle);
+    d.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+    box.appendChild(d);
+  });
+}
+
+function wireEvidence(){
+  document.querySelectorAll(".check li").forEach(li=>{
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      li.querySelector(".box").textContent=li.classList.contains("done")?"✓":"";
+      blip(540);
+    });
+  });
+}
+
+/* ============================== TIMER ============================== */
+let tRemain=15*60, tId=null;
+function fmt(s){ const m=Math.floor(s/60), ss=s%60; return m+":"+String(ss).padStart(2,"0"); }
+function paintClock(){ document.getElementById("clock").textContent=fmt(tRemain); }
+function startTimer(){
+  const btn=document.getElementById("t-start");
+  if(tId){ clearInterval(tId); tId=null; btn.textContent="Start"; return; }
+  btn.textContent="Pause";
+  tId=setInterval(()=>{
+    tRemain--; paintClock();
+    if(tRemain<=0){ clearInterval(tId); tId=null; btn.textContent="Start"; tRemain=0; paintClock(); blip(300); fireConfetti(20); }
+  },1000);
+}
+function resetTimer(){ if(tId){clearInterval(tId); tId=null;} tRemain=15*60; document.getElementById("t-start").textContent="Start"; paintClock(); }
+
+/* ============================== NAME PICKER (shared roster) ============================== */
+function pickName(){
+  let roster=[];
+  try{ roster=JSON.parse(localStorage.getItem("ps_coldcall_roster")||"[]"); }catch(e){ roster=[]; }
+  if(!Array.isArray(roster)||roster.length===0){
+    const input=prompt("No class list found. Type names separated by commas to set the shared roster:");
+    if(input){ roster=input.split(",").map(s=>s.trim()).filter(Boolean);
+      try{ localStorage.setItem("ps_coldcall_roster",JSON.stringify(roster)); }catch(e){} }
+  }
+  if(roster.length){
+    const n=roster[Math.floor(Math.random()*roster.length)];
+    alert("👉  "+n+"'s turn");
+    blip(560);
+  }
+}
+
+/* ============================== CLOSE / CELEBRATE ============================== */
+function nameTech(){
+  const said=document.querySelectorAll(".tcard.open");
+  let media=[...said].map(c=>c.querySelector(".word-tag").textContent.replace("medium: ",""));
+  const out=document.getElementById("tech-said");
+  out.textContent = media.length
+    ? "👉 I like my "+media.join(" / ")+" picture because… (say your reason)"
+    : "(choose a medium card above first)";
+  if(media.length) blip(520);
+}
+function fireConfetti(n=40){
+  const cols=["#F4B73E","#E5573F","#2BA39A","#3F6FB0","#C24E86","#5BA64A"];
+  for(let i=0;i<n;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=cols[i%cols.length];
+    c.style.transform="rotate("+Math.random()*360+"deg)";
+    document.body.appendChild(c);
+    const fall=900+Math.random()*900;
+    c.animate([{top:"-12px",opacity:1},{top:"100vh",opacity:.85}],{duration:fall,easing:"ease-in"});
+    setTimeout(()=>c.remove(),fall);
+  }
+}
+
+/* ============================== MODAL ============================== */
+function openTA(){ document.getElementById("ta-overlay").classList.add("show"); }
+function closeTA(){ document.getElementById("ta-overlay").classList.remove("show"); }
+
+/* ============================== KEYBOARD ============================== */
+document.addEventListener("keydown",e=>{
+  const tag=(e.target.tagName||"").toUpperCase();
+  if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT") return; /* exempt fields */
+  if(e.key==="Escape") closeTA();
+});
+
+/* ============================== INIT (after all data + fns) ============================== */
+renderVocab();
+renderMirror();
+renderArtist();
+renderCards();
+wireEvidence();
+paintClock();
+
+document.getElementById("t-start").addEventListener("click",startTimer);
+document.getElementById("t-reset").addEventListener("click",resetTimer);
+document.getElementById("pick-name").addEventListener("click",pickName);
+document.getElementById("open-ta").addEventListener("click",openTA);
+document.getElementById("close-ta").addEventListener("click",closeTA);
+document.getElementById("ta-overlay").addEventListener("click",e=>{ if(e.target.id==="ta-overlay") closeTA(); });
+document.getElementById("name-tech").addEventListener("click",nameTech);
+document.getElementById("done").addEventListener("click",()=>{ fireConfetti(46); blip(600); });
+document.getElementById("print-cs").addEventListener("click",()=>{
+  const d=new Date();
+  document.getElementById("cs-date").textContent=d.toLocaleDateString("en-GB");
+  window.print();
+});
+</script>
+</body>
+</html>

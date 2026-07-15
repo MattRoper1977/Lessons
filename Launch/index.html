@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year Plan · Build · Grow · Launch</title>
+<style>
+:root{
+  /* Matt's Lesson Hub palette */
+  --green:#16a34a; --blue:#2563eb; --orange:#f97316; --purple:#7c3aed; --teal:#0d9488;
+  --navy-dark:#0f1e33; --slate900:#0f172a; --slate700:#334155;
+  --bg:#f8fafc; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --border:#e2e8f0; --chip:#eaeef4;
+  --hero-blue:#3b9eff;
+  --build:#2563eb; --grow:#16a34a; --launch:#f97316;
+  --radius:16px; --ease:cubic-bezier(.22,1,.36,1);
+  --ticker-bg:#16a34a;
+  --shadow:0 16px 38px -22px rgba(15,30,55,.35);
+}
+[data-theme="dark"]{
+  --bg:#0a1424; --card:#0f2138; --ink:#eaf1fb; --muted:#9fb2cc; --border:rgba(255,255,255,.09); --chip:rgba(255,255,255,.06);
+  --shadow:0 18px 40px -22px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.5; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- ticker ---------- */
+.ticker{width:100%;overflow:hidden;background:var(--ticker-bg);border-bottom:1px solid rgba(0,0,0,.12);position:relative;z-index:100}
+.ticker-track{display:flex;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#fff;
+  font-weight:700;font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;padding-top:11px;padding-bottom:11px}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-text{display:flex;align-items:center;gap:22px;padding-right:48px}
+.ticker-text b{opacity:.65;font-weight:700}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+/* ---------- hero (always dark) ---------- */
+.hero{
+  position:relative; overflow:hidden; padding:30px 0 56px;
+  background:
+    radial-gradient(120% 130% at 88% -20%,rgba(59,158,255,.20),transparent 55%),
+    radial-gradient(90% 120% at -5% 120%,rgba(22,163,74,.18),transparent 52%),
+    linear-gradient(165deg,#16335a,var(--navy-dark) 70%);
+  color:#eaf1fb;
+}
+.hero::after{content:"";position:absolute;inset:0;opacity:.6;pointer-events:none;
+  background:repeating-linear-gradient(118deg,transparent 0 42px,rgba(255,255,255,.02) 42px 43px)}
+.hero-inner{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.74rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--hero-blue)}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--hero-blue);border-radius:2px}
+.controls{display:flex;align-items:center;gap:10px}
+.hublink{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#eaf1fb;
+  font-size:.84rem;font-weight:600;padding:9px 15px;border-radius:12px;transition:.2s var(--ease)}
+.hublink:hover{background:rgba(255,255,255,.13);transform:translateY(-1px)}
+.toggle{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.07);color:#eaf1fb;cursor:pointer;font-size:16px;display:grid;place-items:center;transition:.2s var(--ease)}
+.toggle:hover{background:rgba(255,255,255,.13);transform:translateY(-1px)}
+.hero h1{font-size:clamp(40px,6.2vw,70px);font-weight:700;line-height:1.02;letter-spacing:-.022em}
+.hero h1 b{color:var(--hero-blue);font-weight:700}
+.hero p{max-width:580px;margin-top:16px;color:#9fb2cc;font-size:1.06rem}
+.hero p b{color:#cfe0f5;font-weight:600}
+.stats{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px}
+.stat{display:inline-flex;align-items:center;gap:9px;padding:10px 17px;border-radius:999px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);font-size:.86rem;font-weight:500;color:#eaf1fb}
+.stat .ph{display:inline-flex;gap:4px}
+.stat .ph i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+/* ---------- container ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 80px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:40px 2px 20px}
+.sec-head h2{font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.sec-head span{color:var(--muted);font-size:.9rem}
+
+/* ---------- tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px}
+.tile{--accent:var(--green);position:relative;text-align:left;cursor:pointer;overflow:hidden;
+  padding:24px 22px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);
+  color:var(--ink);font-family:inherit;transition:.24s var(--ease);display:flex;flex-direction:column;gap:5px;min-height:176px;
+  animation:rise .5s var(--ease) both}
+.tile::before{content:"";position:absolute;left:0;top:0;height:4px;width:100%;background:var(--accent)}
+.tile::after{content:"";position:absolute;right:-34px;bottom:-34px;width:128px;height:128px;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 24%,transparent),transparent 70%);opacity:0;transition:.25s var(--ease)}
+.tile:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 50%,var(--border));box-shadow:var(--shadow)}
+.tile:hover::after{opacity:1}
+.tile:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.tile-icon{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:26px;margin-bottom:8px;
+  background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.tile-name{font-size:1.28rem;font-weight:700}
+.tile-tag{font-size:.85rem;color:var(--muted)}
+.tile-status{margin-top:auto;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:#fff;background:var(--accent);align-self:flex-start;padding:4px 11px;border-radius:999px}
+.tile-status.soft{color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+
+/* ---------- subject banner (always dark) ---------- */
+.subj-banner{position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#16335a,var(--navy-dark) 75%);color:#eaf1fb;padding:26px 0 30px}
+.subj-banner::after{content:"";position:absolute;inset:0;opacity:.55;pointer-events:none;
+  background:repeating-linear-gradient(118deg,transparent 0 42px,rgba(255,255,255,.02) 42px 43px)}
+.banner-inner{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.banner-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.back{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:#9fb2cc;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);cursor:pointer;font-family:inherit;
+  padding:8px 14px;border-radius:11px;transition:.18s var(--ease)}
+.back:hover{color:#fff;background:rgba(255,255,255,.13);gap:11px}
+.subj-banner h2{font-size:2rem;font-weight:700;letter-spacing:-.015em;display:flex;align-items:center;gap:13px}
+.subj-banner h2 .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;
+  background:color-mix(in srgb,var(--accent) 26%,transparent)}
+.subj-banner .st{color:#9fb2cc;font-size:.96rem;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px}
+.legend span{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#cbd8e8}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* ---------- weeks ---------- */
+.weeks{display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.week{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;animation:rise .45s var(--ease) both}
+.week-head{display:flex;align-items:center;gap:14px;padding:15px 22px;border-bottom:1px solid var(--border);
+  background:color-mix(in srgb,var(--ink) 3%,var(--card))}
+.week-n{font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);
+  padding:5px 11px;border-radius:999px;background:color-mix(in srgb,var(--blue) 12%,transparent);white-space:nowrap}
+.week-theme{font-weight:600;font-size:1.02rem}
+.phases{display:grid;grid-template-columns:repeat(3,1fr)}
+.phase{padding:18px 20px;border-right:1px solid var(--border);position:relative}
+.phase:last-child{border-right:none}
+.phase::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:var(--pc)}
+.phase-build{--pc:var(--build)} .phase-grow{--pc:var(--grow)} .phase-launch{--pc:var(--launch)}
+.phase-label{font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--pc);
+  margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.phase-label .n{opacity:.5;font-weight:700}
+.phase-focus{font-size:.92rem;color:var(--ink);margin-bottom:14px;min-height:40px}
+.slot-link{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;text-decoration:none;
+  color:#fff;background:var(--pc);padding:8px 14px;border-radius:10px;transition:.18s var(--ease)}
+.slot-link:hover{filter:brightness(1.07);transform:translateX(2px)}
+.slot-empty{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:500;color:var(--muted);
+  padding:8px 13px;border-radius:10px;border:1.5px dashed var(--border)}
+.slot-empty::before{content:"+";font-size:15px;line-height:1}
+
+/* ---------- empty ---------- */
+.empty{text-align:center;padding:58px 30px;border-radius:var(--radius);margin-top:24px;
+  border:1.5px dashed var(--border);background:var(--card)}
+.empty .em-ic{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;font-size:34px;margin:0 auto 16px;
+  background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.empty h3{font-size:1.32rem;font-weight:700;margin-bottom:10px}
+.empty p{color:var(--muted);max-width:450px;margin:0 auto;font-size:.96rem}
+
+/* ---------- footer ---------- */
+.foot{max-width:1180px;margin:36px auto 0;padding:22px 24px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:.84rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:680px){
+  .hero{padding:24px 0 40px}
+  .hero-top,.banner-top{flex-wrap:wrap}
+  .phases{grid-template-columns:1fr}
+  .phase{border-right:none;border-bottom:1px solid var(--border)}
+  .phase:last-child{border-bottom:none}
+  .week-head{flex-wrap:wrap}
+  .sec-head{flex-direction:column;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-text">Year Plan 2026–27 <b>·</b> Build → Grow → Launch, every week <b>·</b> Pick a subject to start planning <b>·</b> One plan · four subjects · their own spaces</span>
+    <span class="ticker-text">Year Plan 2026–27 <b>·</b> Build → Grow → Launch, every week <b>·</b> Pick a subject to start planning <b>·</b> One plan · four subjects · their own spaces</span>
+  </div>
+</div>
+
+<main id="app"></main>
+
+<footer class="foot">
+  <span>Year Plan 2026–27 · Build · Grow · Launch</span>
+  <span>Progress Schools · Tees Valley</span>
+</footer>
+
+<script>
+/* ============================================================
+   PLAN DATA — edit here to grow the year.
+   Each week has build / grow / launch.
+   To wire a lesson: set its "href" to the file's URL.
+   Empty href:"" shows the slot as "To plan".
+   ============================================================ */
+const PLAN = {
+  year:"2026–27",
+  subjects:[
+    {
+      id:"science", name:"Science", tag:"Edexcel IGCSE · 4SS0 Foundation",
+      icon:"🔬", accent:"#16a34a",
+      weeks:[
+        { n:1, theme:"Indicators & the pH scale",
+          build:{ focus:"Meet acids, alkalis and indicators", href:"https://mattroper1977.github.io/Lessons/" },
+          grow:{ focus:"Read the pH scale; place real samples", href:"" },
+          launch:{ focus:"Triage mystery solutions challenge", href:"" } },
+        { n:2, theme:"Ions & neutralisation",
+          build:{ focus:"Build the picture of what an ion is", href:"" },
+          grow:{ focus:"Neutralisation — acid + alkali → salt + water", href:"" },
+          launch:{ focus:"Plan and predict a neutralisation", href:"" } },
+        { n:3, theme:"Gas tests",
+          build:{ focus:"The four gas tests — set up the bench", href:"" },
+          grow:{ focus:"Run and record each test carefully", href:"" },
+          launch:{ focus:"Identify the unknown gases (Super Six)", href:"" } }
+      ]
+    },
+    { id:"art", name:"Art", tag:"Surrealism unit", icon:"🎨", accent:"#7c3aed",
+      weeks:[
+        { n:1, theme:"Colours, lines & line — like me",
+          build:{ focus:"Warm up — colour and line as feeling", href:"" },
+          grow:{ focus:"Develop a personal colour-and-line study", href:"" },
+          launch:{ focus:"Colours, Lines, Like Me — full lesson", href:"Launch/Art_L1_Colours_Lines_Like_Me_v5.html" } },
+        { n:2, theme:"My identity picture",
+          build:{ focus:"Gather symbols that say 'me'", href:"" },
+          grow:{ focus:"Compose the identity picture", href:"" },
+          launch:{ focus:"My Identity Picture — full lesson", href:"Launch/Art_L2_My_Identity_Picture_v5.html" } }
+      ]
+    },
+    { id:"pshe", name:"PSHE / ASDAN", tag:"Personal development", icon:"🧭", accent:"#0d9488", weeks:[] },
+    { id:"outdoor", name:"Outdoor Education", tag:"Tees Trekkers · AQA Walking", icon:"⛰️", accent:"#f97316", weeks:[] }
+  ]
+};
+
+const PHASE={ build:"Build", grow:"Grow", launch:"Launch" };
+const PHASE_N={ build:"01", grow:"02", launch:"03" };
+
+function controls(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  return `<div class="controls">
+      <a class="hublink" href="https://mattroper1977.github.io/Lessons/" target="_blank" rel="noopener">Lesson Hub ↗</a>
+      <button class="toggle" id="themeBtn" aria-label="Toggle light and dark">${dark?'☀️':'🌙'}</button>
+    </div>`;
+}
+function bindControls(){
+  const b=document.getElementById('themeBtn');
+  if(!b) return;
+  b.addEventListener('click',()=>{
+    const root=document.documentElement;
+    root.setAttribute('data-theme', root.getAttribute('data-theme')==='dark'?'light':'dark');
+    b.textContent=root.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+  });
+}
+
+function slot(key,d){
+  const linked=d.href && d.href.trim();
+  const action=linked
+    ? `<a class="slot-link" href="${d.href}" target="_blank" rel="noopener">Open lesson →</a>`
+    : `<span class="slot-empty">To plan</span>`;
+  return `<div class="phase phase-${key}">
+      <div class="phase-label"><span class="n">${PHASE_N[key]}</span>${PHASE[key]}</div>
+      <div class="phase-focus">${d.focus||""}</div>
+      ${action}
+    </div>`;
+}
+function weekCard(w){
+  return `<article class="week">
+      <header class="week-head"><span class="week-n">Week ${w.n}</span><span class="week-theme">${w.theme}</span></header>
+      <div class="phases">${slot('build',w.build)}${slot('grow',w.grow)}${slot('launch',w.launch)}</div>
+    </article>`;
+}
+
+function showHome(){
+  const tiles=PLAN.subjects.map(s=>{
+    const c=s.weeks.length;
+    const status=c?`${c} week${c>1?'s':''} mapped`:"Ready to fill";
+    const cls=c?'':' soft';
+    return `<button class="tile" style="--accent:${s.accent}" data-id="${s.id}">
+        <span class="tile-icon">${s.icon}</span>
+        <span class="tile-name">${s.name}</span>
+        <span class="tile-tag">${s.tag}</span>
+        <span class="tile-status${cls}">${status}</span>
+      </button>`;
+  }).join("");
+
+  document.getElementById('app').innerHTML=`
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-top"><div class="eyebrow">Matt's Apps · Year Planner</div>${controls()}</div>
+        <h1>Year <b>Plan</b></h1>
+        <p>One plan for the whole year. Pick a subject to open its space — every week runs the same rhythm: <b>Build</b> to introduce, <b>Grow</b> to develop, <b>Launch</b> to apply.</p>
+        <div class="stats">
+          <span class="stat">📚 ${PLAN.subjects.length} subjects</span>
+          <span class="stat">🗓️ Year ${PLAN.year}</span>
+          <span class="stat"><span class="ph"><i style="background:var(--build)"></i><i style="background:var(--grow)"></i><i style="background:var(--launch)"></i></span> Build · Grow · Launch</span>
+        </div>
+      </div>
+    </section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Subjects</h2><span>Each one organised its own way</span></div>
+      <div class="tiles">${tiles}</div>
+    </div>`;
+
+  document.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>showSubject(t.dataset.id)));
+  bindControls();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function showSubject(id){
+  const s=PLAN.subjects.find(x=>x.id===id);
+  if(!s) return showHome();
+  const body=s.weeks.length
+    ? `<div class="wrap"><div class="weeks">${s.weeks.map(weekCard).join("")}</div></div>`
+    : `<div class="wrap"><div class="empty" style="--accent:${s.accent}">
+         <div class="em-ic">${s.icon}</div>
+         <h3>${s.name} is ready to fill</h3>
+         <p>Science is the worked example for now. Say the word and ${s.name} fills in with exactly the same rhythm — Build, Grow and Launch, every week of the year.</p>
+       </div></div>`;
+
+  document.getElementById('app').innerHTML=`
+    <section class="subj-banner" style="--accent:${s.accent}">
+      <div class="banner-inner">
+        <div class="banner-top"><button class="back" id="backBtn">← All subjects</button>${controls()}</div>
+        <h2><span class="ic">${s.icon}</span>${s.name}</h2>
+        <div class="st">${s.tag} · ${PLAN.year}</div>
+        <div class="legend">
+          <span><i style="background:var(--build)"></i> Build — introduce</span>
+          <span><i style="background:var(--grow)"></i> Grow — develop</span>
+          <span><i style="background:var(--launch)"></i> Launch — apply</span>
+        </div>
+      </div>
+    </section>
+    ${body}`;
+
+  document.getElementById('backBtn').addEventListener('click',showHome);
+  bindControls();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* init — after data + functions defined */
+showHome();
+</script>
+</body>
+</html>
