@@ -1,1 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ga-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2A1A4A"/>
+      <stop offset="45%" stop-color="#B65D7E"/>
+      <stop offset="75%" stop-color="#F2955F"/>
+      <stop offset="100%" stop-color="#F9C784"/>
+    </linearGradient>
+    <linearGradient id="ga-sun" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0C0"/>
+      <stop offset="55%" stop-color="#FFB25E"/>
+      <stop offset="100%" stop-color="#FF5E78"/>
+    </linearGradient>
+    <linearGradient id="ga-floor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A0F30"/>
+      <stop offset="100%" stop-color="#0D0820"/>
+    </linearGradient>
+    <linearGradient id="ga-gridfade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF7BAC" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FF7BAC" stop-opacity="0.08"/>
+    </linearGradient>
+    <filter id="ga-soft"><feGaussianBlur stdDeviation="2"/></filter>
+    <filter id="ga-hazy"><feGaussianBlur stdDeviation="30"/></filter>
+    <!-- scanline mask: sun with horizontal slices removed near its base -->
+    <mask id="ga-scan">
+      <rect x="660" y="120" width="600" height="560" fill="#fff"/>
+      <rect x="660" y="480" width="600" height="14" fill="#000"/>
+      <rect x="660" y="516" width="600" height="18" fill="#000"/>
+      <rect x="660" y="556" width="600" height="22" fill="#000"/>
+      <rect x="660" y="600" width="600" height="26" fill="#000"/>
+    </mask>
+  </defs>
 
+  <!-- dusk sky -->
+  <rect width="1920" height="660" fill="url(#ga-sky)"/>
+
+  <!-- early stars in the upper band -->
+  <g fill="#ffffff">
+    <circle cx="180" cy="80" r="1.6" opacity="0.7"/>
+    <circle cx="420" cy="140" r="1.2" opacity="0.5"/>
+    <circle cx="700" cy="60" r="1.4" opacity="0.6"/>
+    <circle cx="1240" cy="90" r="1.3" opacity="0.55"/>
+    <circle cx="1520" cy="60" r="1.6" opacity="0.7"/>
+    <circle cx="1760" cy="150" r="1.2" opacity="0.5"/>
+    <circle cx="960" cy="40" r="1.8" opacity="0.8"/>
+  </g>
+
+  <!-- sun glow then scanline sun, kissing the horizon -->
+  <circle cx="960" cy="420" r="300" fill="#FFB25E" opacity="0.28" filter="url(#ga-hazy)"/>
+  <circle cx="960" cy="420" r="240" fill="url(#ga-sun)" mask="url(#ga-scan)"/>
+
+  <!-- distant hill silhouettes: a Teesside horizon, not palm trees -->
+  <g fill="#3A1E4E">
+    <path d="M0 660 L0 610 Q180 570 360 606 Q520 636 700 616 L700 660 Z" opacity="0.9"/>
+    <path d="M1150 660 L1150 620 Q1330 580 1520 610 Q1720 640 1920 600 L1920 660 Z" opacity="0.9"/>
+    <!-- transporter-bridge-ish gantry silhouette, far left -->
+    <g opacity="0.85">
+      <path d="M120 660 V560 M300 660 V560 M120 560 H300" stroke="#3A1E4E" stroke-width="10" fill="none"/>
+      <path d="M120 560 L210 600 L300 560" stroke="#3A1E4E" stroke-width="5" fill="none"/>
+      <path d="M210 600 V660" stroke="#3A1E4E" stroke-width="4"/>
+    </g>
+  </g>
+
+  <!-- horizon line -->
+  <rect x="0" y="656" width="1920" height="4" fill="#FF7BAC" opacity="0.8" filter="url(#ga-soft)"/>
+
+  <!-- floor -->
+  <rect x="0" y="660" width="1920" height="420" fill="url(#ga-floor)"/>
+
+  <!-- perspective grid on floor -->
+  <g stroke="url(#ga-gridfade)" stroke-width="1.5" fill="none">
+    <path d="M960 660 L960 1080"/>
+    <path d="M960 660 L640 1080"/><path d="M960 660 L1280 1080"/>
+    <path d="M960 660 L280 1080"/><path d="M960 660 L1640 1080"/>
+    <path d="M960 660 L-160 1080"/><path d="M960 660 L2080 1080"/>
+    <path d="M960 660 L-680 1080"/><path d="M960 660 L2600 1080"/>
+  </g>
+  <g stroke="#FF7BAC" fill="none">
+    <path d="M0 690 H1920" stroke-opacity="0.40"/>
+    <path d="M0 730 H1920" stroke-opacity="0.32"/>
+    <path d="M0 785 H1920" stroke-opacity="0.26"/>
+    <path d="M0 855 H1920" stroke-opacity="0.20"/>
+    <path d="M0 945 H1920" stroke-opacity="0.14"/>
+    <path d="M0 1050 H1920" stroke-opacity="0.10"/>
+  </g>
+</svg>
