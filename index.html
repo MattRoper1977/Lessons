@@ -97,7 +97,7 @@ border-bottom:1px solid #B9E6CD26;padding-bottom:.5rem}
 <label>Search<input id="search" type="search" placeholder="Try: bonding, trekkers, pH…" autocomplete="off"></label>
 <label>Subject<select id="subject"><option value="">All subjects</option></select></label>
 <label>Type<select id="type"><option value="">All types</option></select></label>
-</div><p class="status" id="status"></p><div class="grid" id="cards"></div>
+</div><div class="toolbar" id="quicknav" style="padding-top:.2rem;gap:.5rem"></div><p class="status" id="status"></p><div id="cards"></div>
 </main>
 <footer class="footer"><div class="bar"><svg class="mono" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg>
 <div><p>Made by Matt · Learn • Build • Explore</p>
@@ -112,14 +112,33 @@ const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
 const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
 let ALL=[];
 function card(r){return `<article class="card"><div class="kind">${esc(r.subject)} · ${esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${esc(r.file)}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>
+<h3><a href="${esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file))}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>
 <div class="chips"><span class="chip">${esc(r.family)}</span></div></article>`}
 function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value;
 const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t));
-$("#cards").innerHTML=a.map(card).join("")||'<p class="status">No matches — try fewer words.</p>';
+const browsing=!q&&!s&&!t;
+if(browsing){ // organised view: one section per subject
+  const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
+  $("#cards").innerHTML=Object.keys(bySub).sort().map(sub=>
+    `<section class="cat"><h2>${esc(sub)} · ${bySub[sub].length}</h2></section>
+     <div class="grid">${bySub[sub].map(card).join("")}</div>`).join("");
+}else{
+  $("#cards").innerHTML=`<div class="grid">${a.map(card).join("")}</div>`||'<p class="status">No matches — try fewer words.</p>';
+  if(!a.length)$("#cards").innerHTML='<p class="status">No matches — try fewer words.</p>';
+}
 $("#count").textContent=`${a.length} of ${ALL.length} resources`}
+function buildQuicknav(){
+  const counts={};ALL.forEach(r=>{counts[r.subject]=(counts[r.subject]||0)+1});
+  const chip=(label,val)=>`<button class="chip" style="cursor:pointer;font:inherit;color:var(--off)" data-sub="${esc(val)}">${esc(label)}</button>`;
+  $("#quicknav").innerHTML=chip("All subjects","")+Object.keys(counts).sort().map(su=>chip(`${su} · ${counts[su]}`,su)).join("");
+  $("#quicknav").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-sub]");if(!b)return;
+    $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";render();
+    $("#cards").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+}
 fetch("resources.json").then(r=>r.json()).then(d=>{ALL=d;
-fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));render()})
+fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();render()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
 ["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",render));</script></body></html>
