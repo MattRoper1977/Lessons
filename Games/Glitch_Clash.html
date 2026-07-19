@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Glitch Clash (Beta) — Card Battle | Made by Matt</title>
+<title>Glitch Clash — Card Battle | Made by Matt</title>
 <style>
 :root{
   --bg:#0d1322; --panel:#151d33; --panel2:#1c2742; --ink:#eef3ff; --dim:#9fb0d4;
@@ -105,6 +105,9 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:.02em;}
 .shake{animation:shake .3s ease;}
 @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .calm .shake{animation:none;}
+.tut{background:#0f3b52;border:1px solid var(--emm);color:var(--emm);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:14px;font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+.tut button{color:var(--dim);font-weight:700;min-height:0;font-size:12px;}
+.act.tut-target{outline:3px solid var(--harmony);outline-offset:2px;}
 .calm .pop{animation-duration:1.2s;}
 /* ---------- Clash overlay (signature) ---------- */
 #clash{position:fixed;inset:0;display:none;z-index:50;align-items:center;justify-content:center;
@@ -149,15 +152,15 @@ body.hc .card{box-shadow:none;border-width:3px;}
     <h1 class="logo">Glitch<br>Clash<small>Card Battle</small></h1>
     <p class="muted" style="max-width:34ch;margin:14px auto">The Glitches are back — and this time it's card against card. Build your team. Charge your energy. Hold the Mark.</p>
     <button class="btn primary" data-go="home" style="max-width:280px;margin:18px auto">▶ Play</button>
-    <button class="btn small" data-open="settings">⚙ Settings</button>
+    <button class="btn small" data-open="settings" aria-label="Open settings">⚙ Settings</button>
   </div>
-  <div class="footer">A <b>Made by Matt</b> game · Hold the Mark universe · v1.0.0 <span style="color:var(--harmony);font-weight:800">BETA</span></div>
+  <div class="footer">A <b>Made by Matt</b> game · Hold the Mark universe · v1.1</div>
 </section>
 
 <!-- ============ HOME ============ -->
 <section class="screen" id="scr-home">
   <div class="spread">
-    <h2>Home</h2><button class="btn small" data-open="settings">⚙</button>
+    <h2>Home</h2><button class="btn small" data-open="settings" aria-label="Open settings">⚙</button>
   </div>
   <div class="panel">
     <div class="spread"><span class="eyebrow">Keeper Rank</span><span class="chip" id="rankchip">Rank 1</span></div>
@@ -167,7 +170,7 @@ body.hc .card{box-shadow:none;border-width:3px;}
   <button class="btn" data-go="team">🃏 Team &amp; Collection</button>
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
-  <div class="footer">Made by Matt · v1.0.0 <span style="color:var(--harmony);font-weight:800">BETA</span></div>
+  <div class="footer">Made by Matt · v1.1</div>
 </section>
 
 <!-- ============ STAGES ============ -->
@@ -199,6 +202,7 @@ body.hc .card{box-shadow:none;border-width:3px;}
     <!-- player -->
     <div class="fighter" id="pf"></div>
     <div class="bench" id="bench"></div>
+    <div class="tut" id="tutbub" hidden></div>
     <div class="actionbar" id="actions"></div>
     <div id="log" role="log">Ready.</div>
   </div>
@@ -216,23 +220,27 @@ body.hc .card{box-shadow:none;border-width:3px;}
 </div>
 
 <!-- ============ SETTINGS SHEET ============ -->
-<div class="overlay" id="ov-settings"><div class="sheet">
-  <div class="spread"><h3>Settings</h3><button class="btn small" data-close>✕</button></div>
+<div class="overlay" id="ov-settings"><div class="sheet" role="dialog" aria-modal="true" aria-label="Settings">
+  <div class="spread"><h3>Settings</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
   <button class="btn" id="calmtoggle">Calm Mode: Off</button>
   <button class="btn" id="motiontoggle">Reduced Motion: Auto</button>
   <button class="btn" id="hctoggle">High Contrast: Off</button>
+  <button class="btn" id="tutreplay">🎓 Replay tutorial</button>
+  <button class="btn" id="exportbtn">⬇ Export save</button>
+  <label class="btn" style="cursor:pointer">⬆ Import save<input type="file" id="importfile" accept="application/json,.json" style="display:none" aria-label="Import save file"></label>
   <button class="btn" id="resetbtn" style="border-color:var(--soft);color:var(--soft)">Reset progress</button>
   <p class="muted">Glitch Clash saves only on this device. No accounts, no sign-in, no leaderboards — just you and the Glitches.</p>
 </div></div>
 
 <!-- ============ STICKERS SHEET ============ -->
-<div class="overlay" id="ov-stickers"><div class="sheet">
-  <div class="spread"><h3>Sticker Shelf</h3><button class="btn small" data-close>✕</button></div>
+<div class="overlay" id="ov-stickers"><div class="sheet" role="dialog" aria-modal="true" aria-label="Sticker shelf">
+  <div class="spread"><h3>Sticker Shelf</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
   <div id="stickerlist"></div>
 </div></div>
 
 <!-- ============ PACK / RESULT SHEET ============ -->
-<div class="overlay" id="ov-result"><div class="sheet" id="resultsheet"></div></div>
+<div class="overlay" id="ov-result"><div class="sheet" id="resultsheet" role="dialog" aria-modal="true" aria-label="Battle result"></div></div>
+<div class="overlay" id="ov-card"><div class="sheet" id="cardsheet" role="dialog" aria-modal="true" aria-label="Card details"></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -242,8 +250,8 @@ body.hc .card{box-shadow:none;border-width:3px;}
    GLITCH CLASH v1.0.0 — Made by Matt (Hold the Mark universe)
    Engine is DOM-free so it can be simulated in node.
 ================================================================= */
-const GAME_VERSION = "1.0.0";
-const SAVE_VERSION = 1;
+const GAME_VERSION = "1.1.0";
+const SAVE_VERSION = 2;
 
 /* ---------- Card data ---------- */
 // shape: R ring, M m, S star, B bastion | rarity: C R E L
@@ -360,6 +368,8 @@ const Engine = {
   // resolves one simultaneous turn; returns event list
   resolveTurn(p, e, pAct, eAct, rng){
     const ev = [];
+    if(pAct==="special" && p.en<60) pAct="strike";
+    if(eAct==="special" && e.en<60) eAct="strike";
     const pGuard = pAct==="guard", eGuard = eAct==="guard";
     // energy gains first
     if(pAct==="strike") p.en=Math.min(100,p.en+25);
@@ -422,8 +432,9 @@ const Engine = {
     }
     // boss phase 2
     if(e.trait==="boss" && e.phase===1 && e.hp<=e.maxhp*0.4){
-      e.phase=2; e.atk=Math.round(e.atk*1.25); e.hp=Math.min(e.maxhp,e.hp+20);
-      ev.push({t:"phase2"});
+      const reborn = e.hp<=0;
+      e.phase=2; e.atk=Math.round(e.atk*1.25); e.hp=Math.max(20,Math.min(e.maxhp,e.hp+20));
+      ev.push({t:"phase2",reborn});
     }
     return ev;
   },
@@ -445,6 +456,29 @@ const Engine = {
   dailyIndex(dateStr, n){
     let h=0; for(const ch of dateStr){ h=(h*31+ch.charCodeAt(0))>>>0; }
     return h % n;
+  },
+  sanitizeSave(d, def){
+    if(!d || typeof d!=="object") return def;
+    const sv=Object.assign({},def,d);
+    sv.settings=Object.assign({},def.settings,(d.settings&&typeof d.settings==="object")?d.settings:{});
+    sv.stats=Object.assign({},def.stats,(d.stats&&typeof d.stats==="object")?d.stats:{});
+    sv.stats.wins=Math.max(0,Math.floor(Number(sv.stats.wins)||0));
+    sv.stats.clashWins=Math.max(0,Math.floor(Number(sv.stats.clashWins)||0));
+    sv.owned=[...new Set(Array.isArray(d.owned)?d.owned:def.owned)].filter(id=>CARD_BY_ID[id]);
+    for(const st of STARTERS) if(!sv.owned.includes(st)) sv.owned.push(st);
+    sv.team=(Array.isArray(d.team)?d.team:[]).filter((id,i,a)=>CARD_BY_ID[id]&&sv.owned.includes(id)&&a.indexOf(id)===i);
+    for(const st of STARTERS){ if(sv.team.length>=3) break; if(!sv.team.includes(st)) sv.team.push(st); }
+    sv.team=sv.team.slice(0,3);
+    sv.cleared=[...new Set(Array.isArray(d.cleared)?d.cleared:[])].filter(id=>GLITCHES.some(g=>g.id===id));
+    sv.xp=Math.max(0,Number(sv.xp)||0);
+    const dd={}; const src=(d.dups&&typeof d.dups==="object")?d.dups:{};
+    for(const k in src){ if(CARD_BY_ID[k]){ const n=Math.max(0,Math.floor(Number(src[k])||0)); if(n) dd[k]=n; } }
+    sv.dups=dd;
+    sv.stickers=(d.stickers&&typeof d.stickers==="object")?d.stickers:{};
+    sv.dailyDone=typeof d.dailyDone==="string"?d.dailyDone:"";
+    sv.tutorialDone=!!d.tutorialDone;
+    sv.v=SAVE_VERSION;
+    return sv;
   },
   packPull(ownedIds, rng){
     // 2 cards; weighted rarity; pity: if both dup, force a new card if any remain
@@ -477,18 +511,17 @@ function store(){
 const DEFAULT_SAVE = ()=>({
   v:SAVE_VERSION, owned:[...STARTERS], dups:{}, team:[...STARTERS],
   cleared:[], xp:0, stickers:{}, settings:{calm:false,motion:"auto",hc:false},
-  dailyDone:"", stats:{wins:0, clashWins:0}
+  dailyDone:"", tutorialDone:false, stats:{wins:0, clashWins:0}
 });
 let SV = DEFAULT_SAVE();
+function localDateKey(dt=new Date()){
+  return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
 function loadSave(){
   try{
     const raw = store().getItem("glitchclash_save");
     if(!raw) return;
-    const d = JSON.parse(raw);
-    if(typeof d!=="object"||!d) return;
-    SV = Object.assign(DEFAULT_SAVE(), d);
-    SV.settings = Object.assign(DEFAULT_SAVE().settings, d.settings||{});
-    SV.v = SAVE_VERSION;
+    SV = Engine.sanitizeSave(JSON.parse(raw), DEFAULT_SAVE());
   }catch(e){}
 }
 function save(){ try{ store().setItem("glitchclash_save", JSON.stringify(SV)); }catch(e){} }
@@ -516,8 +549,21 @@ document.addEventListener("click",e=>{
   const o=e.target.closest("[data-open]"); if(o){ openSheet(o.dataset.open); return; }
   const c=e.target.closest("[data-close]"); if(c){ closeSheets(); return; }
 });
-function openSheet(n){ if(n==="stickers") renderStickers(); $("#ov-"+n).classList.add("show"); }
-function closeSheets(){ $$(".overlay").forEach(o=>o.classList.remove("show")); }
+let lastFocus=null;
+function showOv(ov){ lastFocus=document.activeElement; ov.classList.add("show");
+  const f=ov.querySelector("button,[href],input,select"); if(f) f.focus(); }
+function openSheet(n){ if(n==="stickers") renderStickers(); showOv($("#ov-"+n)); }
+function closeSheets(){ $$(".overlay").forEach(o=>o.classList.remove("show"));
+  if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus(); lastFocus=null; }
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Tab") return;
+  const ov=$$(".overlay.show")[0]; if(!ov) return;
+  const f=[...ov.querySelectorAll("button,[href],input,select")].filter(x=>!x.disabled);
+  if(!f.length) return;
+  const i=f.indexOf(document.activeElement);
+  if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); }
+  else if(!e.shiftKey&&i===f.length-1){ e.preventDefault(); f[0].focus(); }
+});
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeSheets(); });
 
 /* ----- toast + live announcements ----- */
@@ -551,6 +597,29 @@ $("#motiontoggle").onclick=()=>{
   SV.settings.motion=order[(order.indexOf(SV.settings.motion)+1)%3];
   save();applySettings();
 };
+$("#tutreplay").onclick=()=>{ SV.tutorialDone=false; save(); closeSheets();
+  toast("Tutorial will run on your next Stage 1 battle."); };
+$("#exportbtn").onclick=()=>{
+  try{
+    const blob=new Blob([JSON.stringify(SV)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="glitch-clash-save.json"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    toast("Save exported — keep it somewhere safe.");
+  }catch(e){ toast("Export isn't available in this browser."); }
+};
+$("#importfile").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      SV=Engine.sanitizeSave(JSON.parse(r.result), DEFAULT_SAVE());
+      save(); applySettings(); closeSheets(); go("home");
+      toast("Save imported — welcome back, Keeper.");
+    }catch(err){ toast("That file didn't look like a Glitch Clash save."); }
+  };
+  r.readAsText(f); e.target.value="";
+});
 let resetArm=false;
 $("#resetbtn").onclick=()=>{
   if(!resetArm){ resetArm=true; $("#resetbtn").textContent="Tap again to confirm reset"; setTimeout(()=>{resetArm=false;$("#resetbtn").textContent="Reset progress";},3000); return; }
@@ -575,11 +644,11 @@ function renderHome(){
   const rank = Math.floor(SV.xp/RANK_XP)+1;
   $("#rankchip").textContent = "Rank "+rank;
   $("#xpfill").style.width = (SV.xp%RANK_XP)+"%";
-  const today = new Date().toISOString().slice(0,10);
+  const today = localDateKey();
   $("#dailybtn").textContent = SV.dailyDone===today ? "📅 Daily Clash ✓ (done today)" : "📅 Daily Clash";
 }
 $("#dailybtn").onclick=()=>{
-  const today=new Date().toISOString().slice(0,10);
+  const today=localDateKey();
   const idx=Engine.dailyIndex(today, GLITCHES.length-1); // never the final boss
   startBattle(idx, {daily:true, dateStr:today});
 };
@@ -627,12 +696,33 @@ function renderTeam(){
       <span class="m-sub">${SHAPES[c.shape].name} · ${RARITY[c.rar].n}${d?` · +${Math.min(10,d*2)}% spark`:""}</span></span>`;
     b.disabled=!owned;
     b.onclick=()=>{
-      if(pickSlot===null){ toast("Tap a team slot first, then choose a Keeper."); return; }
+      if(pickSlot===null){ openCardDetail(c); return; }
       if(SV.team.includes(c.id) && SV.team[pickSlot]!==c.id){ toast(c.name+" is already on the team."); return; }
       SV.team[pickSlot]=c.id; pickSlot=null; save(); renderTeam();
     };
     grid.appendChild(b);
   });
+}
+
+function openCardDetail(c){
+  const boost=Math.min(10,(SV.dups[c.id]||0)*2);
+  const sp=SPECIALS[c.shape];
+  const inTeam=SV.team.includes(c.id);
+  $("#cardsheet").innerHTML=`
+    <div class="spread"><h3>${c.name}</h3><button class="btn small" data-close aria-label="Close card details">✕</button></div>
+    <div class="card s${c.rar}" style="--shape:${SHAPES[c.shape].color};max-width:260px;margin:10px auto">
+      <div class="spread"><div><span class="cname">${c.name}</span><br><span class="role">${SHAPES[c.shape].name} · ${SHAPES[c.shape].role}</span></div><span class="rar">${RARITY[c.rar].n}</span></div>
+      <div class="art"><span class="aura"></span>${glyphSVG(c.shape)}</div>
+      <div class="stats"><span>❤ ${c.hp}</span><span>⚔ ${c.atk}</span><span>🛡 ${c.def}</span></div>
+    </div>
+    <p class="muted"><b style="color:var(--energy)">${sp.name}</b> — ${sp.desc}.</p>
+    <p class="muted">${c.asc?`✦ Ascends into <b>${c.asc}</b> when the battle turns desperate.`:"No ascended form — commons fight exactly as they are."}${boost?` · Spark bonus <b>+${boost}%</b>`:""}</p>
+    ${inTeam?`<div class="chip harmony">On the team ✓</div>`:`<div class="row" id="slotrow">${[0,1,2].map(i=>`<button class="btn small" data-slot="${i}">→ Slot ${i+1} (${CARD_BY_ID[SV.team[i]].name})</button>`).join("")}</div>`}`;
+  $("#cardsheet").querySelectorAll("[data-slot]").forEach(b=>b.onclick=()=>{
+    SV.team[+b.dataset.slot]=c.id; save(); closeSheets(); renderTeam();
+    toast(c.name+" joins slot "+(+b.dataset.slot+1)+".");
+  });
+  showOv($("#ov-card"));
 }
 
 /* ----- battle ----- */
@@ -648,7 +738,8 @@ function startBattle(stageIdx, opts){
   battle={
     stageIdx, glitch:Engine.mkGlitch(g), daily:!!opts.daily, dateStr:opts.dateStr||"",
     team:SV.team.map(id=>Engine.mkFighter(CARD_BY_ID[id], bonus, dupBoost(id))),
-    active:0, turn:1, over:false, dmgTaken:0, usedClash:false, bonus
+    active:0, turn:1, over:false, dmgTaken:0, usedClash:false, bonus,
+    tut:(stageIdx===0 && !opts.daily && !SV.tutorialDone) ? 1 : 0
   };
   $("#stagechip").textContent=(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · ")+g.name;
   logSet(`<b>${g.name}</b> appears! ${g.line}`);
@@ -665,15 +756,15 @@ function fighterCard(f, isEnemy){
       ${isEnemy?"":`<span class="rar">${RARITY[f.rar].n}</span>`}
     </div>
     <div class="art"><span class="aura"></span>${glyphSVG(isEnemy?"G":f.shape, isEnemy?"#f06292":null)}</div>
-    <div class="bar hp${lowClass}" aria-label="HP"><i style="width:${100*f.hp/f.maxhp}%"></i></div>
+    <div class="bar hp${lowClass}" role="progressbar" aria-label="${f.name} health" aria-valuemin="0" aria-valuemax="${f.maxhp}" aria-valuenow="${f.hp}"><i style="width:${100*f.hp/f.maxhp}%"></i></div>
     <div class="spread" style="margin-top:4px"><small class="muted">HP ${f.hp}/${f.maxhp}${f.shield?" · 🛡":""}</small>
       <small class="muted">⚡ ${f.en}/100</small></div>
-    <div class="bar en" aria-label="Energy" style="margin-top:4px;height:8px"><i style="width:${f.en}%"></i></div>
+    <div class="bar en" role="progressbar" aria-label="${f.name} energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.en}" style="margin-top:4px;height:8px"><i style="width:${f.en}%"></i></div>
   </div>`;
 }
 function renderBattle(){
   const p=P(), e=battle.glitch;
-  $("#ef").innerHTML=fighterCard(e,true);
+  $("#ef").innerHTML=fighterCard(e,true)+((e.en>=60&&!battle.over)?`<div class="chip" style="margin-top:6px;border-color:var(--energy);color:var(--energy)">⚡ Static gathers around ${e.name}…</div>`:"");
   $("#pf").innerHTML=fighterCard(p,false);
   // bench
   const bench=$("#bench"); bench.innerHTML="";
@@ -684,17 +775,29 @@ function renderBattle(){
     b.style.setProperty("--shape",SHAPES[f.shape].color);
     b.style.flex="1";
     b.innerHTML=`${glyphSVG(f.shape)}<span><span class="m-name" style="font-size:12px">${f.name}</span><br><span class="m-sub">${f.hp<=0?"Resting":"HP "+f.hp}</span></span>`;
-    b.disabled = f.hp<=0 || battle.over;
+    b.disabled = f.hp<=0 || battle.over || !!battle.tut;
     b.onclick=()=>{ if(battle.over) return; doTurn({swap:i}); };
     bench.appendChild(b);
   });
   // actions
+  const TUT_STEPS=[
+    {k:"charge", msg:"Build energy first — <b>Charge</b> gives you +45."},
+    {k:"strike", msg:"<b>Strike</b> deals damage and adds +25 energy. Your Special is nearly ready."},
+    {k:"special",msg:"Spend 60 energy — unleash your Keeper's <b>Special</b>!"}
+  ];
+  const tut = battle.tut ? TUT_STEPS[battle.tut-1] : null;
+  const bub=$("#tutbub");
+  if(tut){
+    bub.hidden=false;
+    bub.innerHTML=`<span>${tut.msg}</span><button id="tutskip" aria-label="Skip tutorial">Skip</button>`;
+    bub.querySelector("#tutskip").onclick=()=>{ battle.tut=0; SV.tutorialDone=true; save(); renderBattle(); };
+  } else bub.hidden=true;
   const ab=$("#actions"); ab.innerHTML="";
   ACTS.forEach((a,idx)=>{
     const b=document.createElement("button");
-    b.className="act "+(a.cls||"");
+    b.className="act "+(a.cls||"")+(tut&&tut.k===a.k?" tut-target":"");
     b.innerHTML=`${a.label}<small>${a.sub}</small>`;
-    b.disabled = battle.over || (a.k==="special" && p.en<60);
+    b.disabled = battle.over || (a.k==="special" && p.en<60) || (tut && tut.k!==a.k);
     b.onclick=()=>doTurn({act:a.k});
     b.setAttribute("data-key",idx+1);
     ab.appendChild(b);
@@ -739,6 +842,10 @@ function doTurn(cmd){
     ev=Engine.resolveTurn(p,e,pAct,eAct,rng);
   }
   battle.dmgTaken += Math.max(0,hpBefore-P().hp);
+  if(battle.tut && ["charge","strike","special"][battle.tut-1]===pAct){
+    battle.tut++;
+    if(battle.tut>3){ battle.tut=0; SV.tutorialDone=true; save(); toast("You've got it — the arena is yours. ✦"); }
+  }
   const clashEv=ev.find(x=>x.t==="clash");
   const narrate=()=>{
     let out=[];
@@ -753,7 +860,9 @@ function doTurn(cmd){
       if(x.t==="fx"&&x.fx==="shield") out.push(`A stone shield forms around you. 🛡`);
       if(x.t==="eshield") out.push(`${e.name} raises a static shield.`);
       if(x.t==="revive") out.push(`⚠ ${e.name} flickers… and reforms at partial power!`);
-      if(x.t==="phase2") out.push(`⚡ <b>${e.name} enters its second form!</b>`);
+      if(x.t==="phase2") out.push(x.reborn
+        ? `⛈ <b>${e.name} shatters — but the fragments reform into its final phase!</b>`
+        : `⚡ <b>${e.name} enters its second form!</b>`);
     });
     logSet(prefix + (out.join("<br>")||"…"));
     announce(out.map(s=>s.replace(/<[^>]+>/g,"")).join(" "));
@@ -812,16 +921,19 @@ function endBattle(won, timeout){
   const sheet=$("#resultsheet");
   let html="";
   if(won){
-    SV.stats.wins++; SV.xp+=battle.daily?15:20;
+    SV.stats.wins++;
+    const firstDaily = battle.daily && SV.dailyDone!==battle.dateStr;
+    const firstClear = !battle.daily && !SV.cleared.includes(g.id);
+    const xpEarned = battle.daily ? (firstDaily?15:0) : 20;
+    SV.xp += xpEarned;
     stick("firstwin");
     if(battle.bonus===0.10) stick("harmony");
     if(battle.dmgTaken<=10) stick("tough");
     let packHTML="";
-    const firstClear = !battle.daily && !SV.cleared.includes(g.id);
     if(firstClear){
       SV.cleared.push(g.id);
       const pulls=Engine.packPull(SV.owned, rng);
-      packHTML=`<h3 style="margin-top:12px">Card pack!</h3><div class="row" style="margin-top:8px">`;
+      packHTML=`<h3 style="margin-top:12px">First clear — card pack!</h3><div class="row" style="margin-top:8px">`;
       pulls.forEach(id=>{
         const c=CARD_BY_ID[id];
         const isNew=!SV.owned.includes(id);
@@ -835,13 +947,32 @@ function endBattle(won, timeout){
       if(SV.owned.length>=12) stick("collector");
       if(g.id==="g10") stick("storm");
     }
-    if(battle.daily){ SV.dailyDone=battle.dateStr; stick("daily"); }
-    html=`<div class="center"><h2 style="color:var(--good)">Victory! ✦</h2>
-      <p class="muted">${timeout?"Time's up — and you held the most ground.":g.name+" dissolves into pixels."}</p></div>
-      ${packHTML}
-      <div class="panel"><div class="spread"><span>XP earned</span><b>+${battle.daily?15:20}</b></div></div>
-      <button class="btn primary" data-close data-go="${battle.daily?"home":"stages"}">Continue</button>`;
-    announce("Victory!");
+    if(firstDaily){ SV.dailyDone=battle.dateStr; stick("daily"); }
+    const xpRow=`<div class="panel"><div class="spread"><span>XP earned</span><b>+${xpEarned}</b></div>${
+      battle.daily&&!firstDaily?`<p class="muted" style="margin:6px 0 0">Daily reward already collected — nice practice run!</p>`:
+      (!battle.daily&&!firstClear?`<p class="muted" style="margin:6px 0 0">Replay clear — XP only. Card packs come from first clears.</p>`:"")}</div>`;
+    if(g.id==="g10" && firstClear){
+      html=`<div class="center"><h2 style="color:var(--harmony)">The Mark holds — for now. ⛈✦</h2>
+        <p class="muted">Static Storm dissolves into quiet pixels. The campaign is complete, Keeper.</p></div>
+        ${packHTML}
+        <div class="panel">
+          <div class="spread"><span>Keepers collected</span><b>${SV.owned.length}/${CARDS.length}</b></div>
+          <div class="spread"><span>Stickers earned</span><b>${Object.keys(SV.stickers).length}/${STICKERS.length}</b></div>
+          <div class="spread"><span>Total victories</span><b>${SV.stats.wins}</b></div>
+          <div class="spread"><span>Clash wins</span><b>${SV.stats.clashWins}</b></div>
+        </div>
+        ${xpRow}
+        <p class="muted center">Static Storm will re-form one day. Until then — the collection won't complete itself. 🃏</p>
+        <button class="btn primary" data-close data-go="home">Continue</button>`;
+      announce("The campaign is complete. The Mark holds.");
+    } else {
+      html=`<div class="center"><h2 style="color:var(--good)">Victory! ✦</h2>
+        <p class="muted">${timeout?"Time's up — and you held the most ground.":g.name+" dissolves into pixels."}</p></div>
+        ${packHTML}
+        ${xpRow}
+        <button class="btn primary" data-close data-go="${battle.daily?"home":"stages"}">Continue</button>`;
+      announce("Victory!");
+    }
   } else {
     SV.xp+=5;
     html=`<div class="center"><h2>Regroup 💙</h2>
@@ -852,7 +983,7 @@ function endBattle(won, timeout){
   }
   save();
   sheet.innerHTML=html;
-  $("#ov-result").classList.add("show");
+  showOv($("#ov-result"));
 }
 const STICKERS=[
   {id:"firstwin",ic:"🏅",n:"First Victory",d:"Win your first Clash."},
