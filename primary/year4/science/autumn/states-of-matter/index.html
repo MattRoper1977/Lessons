@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y4 Autumn 1.1 · States of matter · Scheme of Work &amp; Lesson Plans · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+  a{color:var(--forest)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;color:var(--cream)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--forest);margin:.2em 0 .4em}
+  h3{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--bark);margin:.1em 0 .3em}
+  h4{font-family:var(--display);font-weight:600;color:var(--forest);font-size:1rem;margin:.2em 0}
+  p,li,td,th{font-size:1.02rem}
+
+  /* hero */
+  .hero{background:var(--navy);border-radius:0 0 26px 26px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,44px) clamp(30px,4vw,44px);
+    border-top:12px solid var(--amber);position:relative;margin-bottom:26px}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;
+    font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem}
+  .hero .eyebrow{font-family:var(--display);font-weight:600;color:var(--mint);letter-spacing:.02em}
+  .hero .enquiry{margin-top:1em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+    border-left:5px solid var(--amber);border-radius:12px;padding:12px 16px;color:var(--cream);max-width:70ch}
+  .hero .enquiry b{color:var(--amber);font-family:var(--display)}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.1em}
+  .facts span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 14px;font-size:.9rem}
+
+  /* sticky jump nav */
+  .jump{position:sticky;top:0;z-index:10;background:rgba(250,247,239,.94);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:9px clamp(12px,3vw,24px);margin:0 calc(-1*clamp(16px,4vw,40px)) 26px}
+  .jump a{font-family:var(--display);font-weight:600;font-size:.86rem;text-decoration:none;color:var(--navy);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .jump a:hover{border-color:var(--forest)}
+  .jump .sp{flex:1}
+  .jump button{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;
+    padding:6px 14px;background:var(--amber);color:var(--navy);cursor:pointer}
+
+  section.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(16px,2.4vw,30px);
+    box-shadow:0 4px 0 rgba(107,79,54,.07);margin-bottom:22px}
+  .lead{max-width:72ch}
+
+  table{width:100%;border-collapse:collapse;margin:.5em 0;font-size:.98rem}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--display);color:var(--forest);background:var(--moss);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .mins{font-family:var(--display);font-weight:600;color:var(--bark)}
+  .phase-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  ul.sprout{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.sprout li{position:relative;padding-left:1.6em}
+  ul.sprout li::before{content:"🌱";position:absolute;left:0;top:0}
+  ul.tick{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.tick li{position:relative;padding-left:1.5em}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--leaf);font-weight:800}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4em 0}
+  .chips span{background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 11px;font-size:.9rem;font-weight:500}
+
+  .tiergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:.5em 0}
+  @media(max-width:720px){.tiergrid{grid-template-columns:1fr}}
+  .tcard{border-radius:12px;padding:11px 14px;border:2px solid;font-size:.96rem}
+  .tcard.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tcard.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tcard.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tcard b{font-family:var(--display);display:block;margin-bottom:2px}
+  .tcard.seed b{color:#2e6b8c}.tcard.sap b{color:#227a4c}.tcard.oak b{color:#b06a12}
+
+  .miscon{background:#fbeee8;border:1px solid #e6b7a6;border-left:5px solid var(--berry);border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .miscon b{font-family:var(--display);color:#9d5a7d;display:block;margin-bottom:3px}
+  .res{background:var(--moss);border:1px solid #cfe0c6;border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .res b{font-family:var(--display);color:var(--forest)}
+
+  .lessonhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lnum{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:12px;
+    width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:none}
+  .open{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;color:var(--navy);
+    background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.3em}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:30px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+
+  @media print{
+    body{background:#fff}
+    .jump{display:none}
+    .hero{background:#fff;border:0;border-top:4px solid #000;border-radius:0}
+    .hero h1,.hero .eyebrow,.hero .enquiry,.hero .mark{color:#000!important}
+    .hero .enquiry{background:#fff;border-color:#999}
+    .hero .enquiry b{color:#000}
+    section.card{box-shadow:none;break-inside:avoid}
+    .lesson{break-before:page}
+    .open{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </div>
+  <div class="wrap" style="padding-bottom:0">
+    <p style="margin-bottom:.35em"><a href="../../../../index.html" style="color:var(--mint);font-family:var(--display);font-weight:600;text-decoration:none">&larr; Primary hub</a></p>
+    <p class="eyebrow">Year 4 &middot; Science &middot; Autumn 1.1</p>
+    <h1>States of matter</h1>
+    <p style="color:var(--cream);opacity:.9;margin-top:.3em">Scheme of work &amp; lesson plans &middot; 10 lessons</p>
+    <div class="enquiry"><b>Enquiry question:</b> How do solids, liquids and gases behave, and how does temperature change their state &mdash; from melting ice to the water cycle?</div>
+    <div class="facts">
+      <span>10 lessons</span><span>&asymp; 44 min each</span><span>3 tiers per lesson</span><span>Video + animation</span><span>Print packs included</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="jump">
+    <a href="#sow">Overview</a>
+    <a href="#l1">1 &middot; Explore states</a>
+    <a href="#l2">2 &middot; Think differently</a>
+    <a href="#l3">3 &middot; Change states</a>
+    <a href="#l4">4 &middot; Use equipment</a>
+    <a href="#l5">5 &middot; Plan melting</a>
+    <a href="#l6">6 &middot; Investigate melting</a>
+    <a href="#l7">7 &middot; Water cycle</a>
+    <a href="#l8">8 &middot; Plan evaporation</a>
+    <a href="#l9">9 &middot; Investigate evaporation</a>
+    <a href="#l10">10 &middot; Evaluate</a>
+    <span class="sp"></span>
+    <a href="Y4_StatesOfMatter_SoW_and_Plans.docx" download>&#8681; Word version</a>
+    <button onclick="window.print()">&#128424; Print</button>
+  </nav>
+
+  <section class="card" id="sow">
+    <h2>Scheme of work &mdash; at a glance</h2>
+    <p class="lead">This is a big White Rose block that runs across the Year 4 autumn term. Ten lessons take pupils from sorting <em>solids, liquids and gases</em>, through changes of state and using scientific equipment, into two full enquiry arcs &mdash; a <b>melting</b> investigation and an <b>evaporation</b> investigation (each planned, carried out and evaluated) &mdash; by way of the <b>water cycle</b>. Every lesson runs the same structure &mdash; Arrival &rarr; Starter &rarr; I do &rarr; We do &rarr; Independent &rarr; Exit &mdash; in about 44 minutes, differentiated across three primary tiers.</p>
+    <table>
+      <tr><th>#</th><th>Lesson</th><th>Learning objective</th><th>Key vocabulary</th><th></th></tr>
+      <tr><td>1</td><td><b>Explore solids, liquids and gases</b></td><td>Group materials as solids, liquids or gases by how they behave &mdash; keeping shape, keeping volume, or filling space.</td><td>solid, liquid, gas, state of matter</td><td><a href="Lesson1_ExploreStates.html">Open &rarr;</a></td></tr>
+      <tr><td>2</td><td><b>Think differently: tricky materials</b></td><td>Explore materials that test the definitions &mdash; pouring solids like sand and slow liquids like honey.</td><td>pouring solid, liquid, sorting</td><td><a href="Lesson2_ThinkDifferently.html">Open &rarr;</a></td></tr>
+      <tr><td>3</td><td><b>Change states</b></td><td>Melting, freezing, evaporation and condensation; temperature changes state, and the changes are reversible.</td><td>melt, freeze, evaporation, condensation</td><td><a href="Lesson3_ChangeStates.html">Open &rarr;</a></td></tr>
+      <tr><td>4</td><td><b>Use equipment</b></td><td>Use a thermometer and stopwatch accurately; read &deg;C at eye level; keep water below 50&deg;C.</td><td>thermometer, temperature, &deg;C, stopwatch</td><td><a href="Lesson4_UseEquipment.html">Open &rarr;</a></td></tr>
+      <tr><td>5</td><td><b>Plan: a melting experiment</b></td><td>Plan a fair test &mdash; does the water&rsquo;s temperature affect how fast ice melts?</td><td>fair test, change, measure</td><td><a href="Lesson5_PlanMelting.html">Open &rarr;</a></td></tr>
+      <tr><td>6</td><td><b>Investigate: melting</b></td><td>Carry out the melting fair test, take careful readings, and conclude warmer water melts ice faster.</td><td>temperature, conclusion, &deg;C</td><td><a href="Lesson6_InvestigateMelting.html">Open &rarr;</a></td></tr>
+      <tr><td>7</td><td><b>The water cycle</b></td><td>Evaporation, condensation and precipitation; water is recycled and no new water is made.</td><td>water cycle, evaporation, condensation, precipitation</td><td><a href="Lesson7_WaterCycle.html">Open &rarr;</a></td></tr>
+      <tr><td>8</td><td><b>Plan: an evaporation experiment</b></td><td>Plan a fair test &mdash; does the temperature of a place affect how fast water evaporates?</td><td>evaporation, fair test, volume</td><td><a href="Lesson8_PlanEvaporation.html">Open &rarr;</a></td></tr>
+      <tr><td>9</td><td><b>Investigate: evaporation</b></td><td>Carry out the evaporation test and find that warmer places evaporate water faster.</td><td>evaporation, temperature, conclusion</td><td><a href="Lesson9_InvestigateEvaporation.html">Open &rarr;</a></td></tr>
+      <tr><td>10</td><td><b>Evaluate: evaporation</b></td><td>Draw a conclusion from the data, compare with other groups, and suggest improvements.</td><td>conclusion, evaluate, improve</td><td><a href="Lesson10_EvaluateEvaporation.html">Open &rarr;</a></td></tr>
+    </table>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>National Curriculum coverage</h3>
+        <ul class="tick">
+          <li>Compare and group materials together, according to whether they are solids, liquids or gases.</li>
+          <li>Observe that some materials change state when heated or cooled, and measure the temperature at which this happens in &deg;C.</li>
+          <li>Identify the part played by evaporation and condensation in the water cycle, and associate the rate of evaporation with temperature.</li>
+        </ul>
+        <h4>Working scientifically</h4>
+        <ul class="tick">
+          <li>Making careful observations and accurate measurements using a thermometer (L4, L6, L9).</li>
+          <li>Setting up comparative and fair tests &mdash; change one thing, measure, keep the rest the same (L5, L6, L8, L9).</li>
+          <li>Gathering and presenting data, and reporting conclusions (L6, L9, L10).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Vocabulary across the block</h3>
+        <div class="chips"><span>solid</span><span>liquid</span><span>gas</span><span>state of matter</span><span>melt</span><span>freeze</span><span>evaporation</span><span>condensation</span><span>water cycle</span><span>precipitation</span><span>thermometer</span><span>temperature</span><span>degrees Celsius (&deg;C)</span><span>volume</span><span>fair test</span></div>
+        <h3 style="margin-top:1em">Assessment</h3>
+        <ul class="tick">
+          <li>A tiered <b>exit ticket</b> every lesson (Seedling / Sapling / Oak).</li>
+          <li>Interactive independent sorter self-checks understanding in the moment.</li>
+          <li>Two full enquiry arcs &mdash; melting and evaporation &mdash; through plan, investigate and evaluate.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Prior learning &amp; next steps</h3>
+        <p><b>Builds on (Y3):</b> materials &mdash; comparing and grouping materials by their properties. <b>Working scientifically:</b> the first fair tests in Year 4 &mdash; plan, investigate and evaluate.</p>
+        <p style="margin-top:.4em"><b>Leads to (Y5):</b> properties and changes of materials &mdash; dissolving, separating, and reversible/irreversible changes.</p>
+      </div>
+      <div>
+        <h3>How each lesson is built</h3>
+        <p>Every lesson is a single interactive web page: six-phase structure with on-screen timings; three tiers on the four pupil-facing tasks; a short teaching video; a self-contained animation targeting the lesson&rsquo;s key misconception; TA Focus and Cold Call prompts; and a one-click print pack.</p>
+        <p class="note" style="font-size:.9rem;color:#6a6d64;margin-top:.4em"><em>Differentiation tiers map to attainment bands: &#127793; Seedling = working towards &middot; &#127807; Sapling = expected &middot; &#127795; Oak = greater depth.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LESSON PLANS ===================== -->
+  <!-- L1 -->
+  <section class="card lesson" id="l1">
+    <div class="lessonhead"><span class="lnum">1</span><h2 style="margin:0">Explore solids, liquids and gases</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Group materials into solids, liquids and gases, and describe the properties of each state.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Sorts a solid, a liquid and a gas with support.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Names a property of each state and gives an example.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how you can tell a liquid from a gas.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>New topic &mdash; recap Year 3 materials and properties.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Solid, liquid or gas? Agree the key properties.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>The three states and how each behaves (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort familiar things by state together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Same jar, three states (animation: solid keeps shape, liquid fills, gas spreads).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false on the properties.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>State sorter (solid / liquid / gas) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That all solids are hard and can never change shape (some bend or squash), and that a liquid&rsquo;s amount changes when poured.</div>
+      <div class="res"><b>Resources:</b> video <em>States of matter &mdash; KS2</em>; three-jars animation; State Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson1_ExploreStates.html">Open Lesson 1 &rarr;</a>
+  </section>
+
+  <!-- L2 -->
+  <section class="card lesson" id="l2">
+    <div class="lessonhead"><span class="lnum">2</span><h2 style="margin:0">Think differently: tricky materials</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Explore materials that are hard to categorise, understanding that pouring solids are still solids and some liquids flow slowly.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows sand is made of tiny solids.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains why sand is a solid even though it pours.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why materials like toothpaste are hard to sort.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L1 (the three states).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Pouring solids and slow liquids introduced.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Sand, honey and toothpaste examined (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort tricky materials together &mdash; some sit between groups.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Sand looks like a liquid (animation: grains vs a puddle).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Solid, liquid or tricky? Reason each one.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Tricky materials sorter (solid / liquid / hard to sort) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That anything that pours must be a liquid &mdash; sand pours but is many tiny solid grains.</div>
+      <div class="res"><b>Resources:</b> video <em>States of matter for kids</em>; sand-vs-water animation; Tricky Materials Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson2_ThinkDifferently.html">Open Lesson 2 &rarr;</a>
+  </section>
+
+  <!-- L3 -->
+  <section class="card lesson" id="l3">
+    <div class="lessonhead"><span class="lnum">3</span><h2 style="margin:0">Change states</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that heating and cooling change a material&rsquo;s state, and that melting, freezing, evaporation and condensation are reversible.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows ice melts when heated.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Names the four changes of state.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why changes of state are reversible.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L2 (tricky materials).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>The four changes of state and their names.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Melting, freezing, evaporation and condensation (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Match everyday examples to each change.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Melting and freezing go both ways (animation: ice &harr; water).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Heating or cooling? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Changing states sorter (heating / cooling / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That once a material melts it can&rsquo;t turn back (it can &mdash; reversible), and that evaporation only happens at 100&deg;C (it happens at everyday temperatures too).</div>
+      <div class="res"><b>Resources:</b> video <em>Changing states of matter</em>; ice-water animation; Changing States Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson3_ChangeStates.html">Open Lesson 3 &rarr;</a>
+  </section>
+
+  <!-- L4 -->
+  <section class="card lesson" id="l4">
+    <div class="lessonhead"><span class="lnum">4</span><h2 style="margin:0">Use equipment: thermometer &amp; stopwatch</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Use a thermometer and a stopwatch accurately to measure temperature (in &deg;C) and time, ready for the experiments to come.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows a thermometer measures temperature.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains how to read a thermometer accurately.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why measuring beats guessing and what &deg;C means.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L3 (changes of state).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Right tool for the job; safety &mdash; water below 50&deg;C.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>How to read a thermometer accurately (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Practise reading example scales together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Read it at eye level (animation: thermometer and &deg;C).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Which tool &mdash; thermometer or stopwatch?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Right tool sorter (thermometer / stopwatch / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>Reading the scale from an angle, guessing instead of measuring, and confusing &deg;C (degrees Celsius) with centimetres.</div>
+      <div class="res"><b>Resources:</b> video <em>How to read a thermometer</em>; thermometer animation; Right Tool Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson4_UseEquipment.html">Open Lesson 4 &rarr;</a>
+  </section>
+
+  <!-- L5 -->
+  <section class="card lesson" id="l5">
+    <div class="lessonhead"><span class="lnum">5</span><h2 style="margin:0">Plan: a melting experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Plan a fair test to investigate whether the temperature of the water affects the time it takes for ice to melt.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Says what we will change.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Says what we change, measure and keep the same.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why keeping things the same makes the test fair.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L4 (using equipment).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Fair testing in child-friendly words &mdash; change / measure / keep the same.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Model the plan; recall how ice melts (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Make a prediction and agree the plan.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Our fair test (animation: identical ice in warm vs cold water).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Change, measure or keep the same? Sort.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Fair test sorter (change / measure / keep the same) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>Wanting to change more than one thing at once, which makes the test unfair.</div>
+      <div class="res"><b>Resources:</b> Enquiry: <em>does water temperature affect how fast ice melts?</em> video <em>Melting</em>; fair-test animation; Fair Test Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson5_PlanMelting.html">Open Lesson 5 &rarr;</a>
+  </section>
+
+  <!-- L6 -->
+  <section class="card lesson" id="l6">
+    <div class="lessonhead"><span class="lnum">6</span><h2 style="margin:0">Investigate: the melting experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Carry out the melting fair test, take careful thermometer readings, and form a conclusion.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Says which water melts ice faster.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes a conclusion about temperature and melting.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why warmer water melts ice faster.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L5 (the melting plan).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Set up safely (water below 50&deg;C); record units in the header.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Model careful observation and recording (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Compare the containers; start a conclusion.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Warm melts faster (animation: two beakers).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Faster or slower? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Melting results sorter (faster / slower / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That the water&rsquo;s temperature makes no difference, or that colder water melts ice faster.</div>
+      <div class="res"><b>Resources:</b> video <em>Melting</em>; two-beakers animation; Melting Results Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson6_InvestigateMelting.html">Open Lesson 6 &rarr;</a>
+  </section>
+
+  <!-- L7 -->
+  <section class="card lesson" id="l7">
+    <div class="lessonhead"><span class="lnum">7</span><h2 style="margin:0">The water cycle</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Identify the part played by evaporation and condensation in the water cycle, and know that water is recycled.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names evaporation and precipitation.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Names the stages of the water cycle.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why no new water is ever made.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L6 (the melting investigation).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Name the stages: evaporation, condensation, precipitation, collection.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>The water cycle traced from sea to cloud to rain (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Label the stages on a diagram together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Round and round (animation: the water cycle).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Which stage is it? Sort examples.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Water cycle sorter (evaporation / condensation / precipitation) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That the Sun &lsquo;absorbs&rsquo; the water (its heat evaporates it), and that clouds are a gas (they are tiny liquid droplets).</div>
+      <div class="res"><b>Resources:</b> video <em>The water cycle for kids</em>; water-cycle animation; Water Cycle Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson7_WaterCycle.html">Open Lesson 7 &rarr;</a>
+  </section>
+
+  <!-- L8 -->
+  <section class="card lesson" id="l8">
+    <div class="lessonhead"><span class="lnum">8</span><h2 style="margin:0">Plan: an evaporation experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Plan a fair test to investigate whether the temperature of a place affects how fast water evaporates.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Says what we will change.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Says what we change, measure and keep the same.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why this makes a fair evaporation test.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L7 (the water cycle).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Same water in three places; measured over hours.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Model the plan; recall evaporation (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Predict and agree the plan.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Our evaporation test (animation: three dishes, fridge/room/radiator).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Change, measure or keep the same? Sort.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Fair test sorter (change / measure / keep the same) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That evaporation won&rsquo;t happen below 100&deg;C &mdash; it happens at everyday temperatures.</div>
+      <div class="res"><b>Resources:</b> Enquiry: <em>does the temperature of a place affect how fast water evaporates?</em> video <em>Evaporation</em>; three-dishes animation; Fair Test Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson8_PlanEvaporation.html">Open Lesson 8 &rarr;</a>
+  </section>
+
+  <!-- L9 -->
+  <section class="card lesson" id="l9">
+    <div class="lessonhead"><span class="lnum">9</span><h2 style="margin:0">Investigate: the evaporation experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Carry out the evaporation fair test, take careful measurements, and find the link between temperature and evaporation.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Says which place dried fastest.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes a conclusion about temperature and evaporation.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why warmer places dry the water fastest.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L8 (the evaporation plan).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Measure each place&rsquo;s temperature; a small volume is easier to watch.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Model careful recording over time (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Compare the places; start a conclusion.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Warm places dry fastest (animation: warm dish empties, fridge stays full).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>More or less evaporation? Sort.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Evaporation results sorter (more / less / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That evaporation only happens at 100&deg;C, or that temperature makes no difference to it.</div>
+      <div class="res"><b>Resources:</b> video <em>Evaporation</em>; days animation; Evaporation Results Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson9_InvestigateEvaporation.html">Open Lesson 9 &rarr;</a>
+  </section>
+
+  <!-- L10 -->
+  <section class="card lesson" id="l10">
+    <div class="lessonhead"><span class="lnum">10</span><h2 style="margin:0">Evaluate: the evaporation experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Analyse the data, draw a conclusion, compare with other groups, and suggest improvements to the experiment.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Says what we concluded.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes a conclusion and one improvement.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Writes a conclusion, an improvement and a question for next time.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L9 and review the whole block.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Conclusion, comparison, improvement, further questions.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Model drawing a conclusion from data (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Write a class conclusion; spot improvements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The pattern in our data (animation: bar chart cold&rarr;hot).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Conclusion, improvement or not relevant? Sort.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Evaluation sorter (conclusion / improvement / not relevant) + write the evaluation.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; block review.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>Writing a conclusion that ignores the data, or thinking temperature doesn&rsquo;t matter despite the results.</div>
+      <div class="res"><b>Resources:</b> video <em>Evaporation review</em>; bar-chart animation; Evaluation Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson10_EvaluateEvaporation.html">Open Lesson 10 &rarr;</a>
+  </section>
+
+  <footer>
+    <p class="sig">&#128075; Made by Matt</p>
+    <p>Year 4 Science &middot; States of matter &middot; contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>
