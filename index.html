@@ -71,6 +71,11 @@ border-radius:18px;padding:1.6rem;display:flex;gap:1.4rem;align-items:center;fle
 .feature p{color:#E8E2D4b3;max-width:38rem;margin:.3rem 0 .7rem}
 .btn{display:inline-block;background:var(--amber);color:var(--navy);border-radius:99px;
 font-weight:700;text-decoration:none;padding:.65rem 1.3rem;font-size:.9rem}
+.yearband{max-width:var(--max);margin:2.2rem auto 0;padding:0 1rem}
+.yearband .inner{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;border-bottom:2px solid var(--amber);padding-bottom:.55rem}
+.yearband h2{color:var(--off);font-size:1.25rem;letter-spacing:.06em;margin:0}
+.yearband .yb-tag{background:var(--amber);color:var(--navy);border-radius:99px;font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.25rem .7rem}
+.yearband .yb-sub{color:#E8E2D499;font-size:.85rem}
 .cat{max-width:var(--max);margin:auto;padding:1.6rem 1rem 0}
 .cat h2{color:var(--hub);letter-spacing:.14em;text-transform:uppercase;font-size:.95rem;
 border-bottom:1px solid #B9E6CD26;padding-bottom:.5rem}
@@ -112,6 +117,7 @@ display:flex;gap:.9rem;align-items:flex-start;font-size:.9rem;line-height:1.55;c
 <label>Search<input id="search" type="search" placeholder="Try: bonding, trekkers, pH…" autocomplete="off"></label>
 <label>Subject<select id="subject"><option value="">All subjects</option></select></label>
 <label>Type<select id="type"><option value="">All types</option></select></label>
+<label>Year<select id="year"><option value="">All years</option><option value="2026-27">2026–27 (new)</option><option value="2025-26">2025–26</option></select></label>
 </div><div class="toolbar" id="quicknav" style="padding-top:.2rem;gap:.5rem"></div><p class="status" id="status"></p><div id="cards"></div>
 </main>
 <aside class="sig"><div><span class="wave" aria-hidden="true">👋</span><p><b>From Matt</b> — I teach science and art in an alternative provision in the North East, and every file on this shelf started life in front of a real class. It’s all free and it stays that way. Spotted a bug or got an idea? <a href="mailto:contactmadebymatt@gmail.com">Tell me</a> — I read everything.</p></div></aside>
@@ -129,16 +135,22 @@ const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",te
 let ALL=[];
 function card(r){return `<article class="card"><div class="kind">${esc(r.subject)} · ${esc(NICE[r.type]||r.type)}</div>
 <h3><a href="${esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file))}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>
-<div class="chips"><span class="chip">${esc(r.family)}</span></div></article>`}
-function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value;
+<div class="chips"><span class="chip">${esc(r.family)}</span><span class="chip">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div></article>`}
+function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=$("#year").value;
 const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
-&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t));
-const browsing=!q&&!s&&!t;
-if(browsing){ // organised view: one section per subject
-  const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-  $("#cards").innerHTML=Object.keys(bySub).sort().map(sub=>
-    `<section class="cat"><h2>${esc(sub)} · ${bySub[sub].length}</h2></section>
-     <div class="grid">${bySub[sub].map(card).join("")}</div>`).join("");
+&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y));
+const browsing=!q&&!s&&!t&&!y;
+if(browsing){ // organised view: academic-year bands, then one section per subject
+  const YEARS=[["2026-27","2026–27","NEW THIS YEAR","Built for the new academic year — primary science, BUILD · GROW · LAUNCH and more."],
+               ["2025-26","2025–26","THE LIBRARY","Everything made and classroom-tested last year — still ready to use."]];
+  $("#cards").innerHTML=YEARS.map(([key,label,tag,sub])=>{
+    const yr=a.filter(r=>r.year===key);if(!yr.length)return "";
+    const bySub={};yr.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
+    return `<section class="yearband"><div class="inner"><span class="yb-tag">${tag}</span><h2>${label} · ${yr.length} resources</h2><span class="yb-sub">${sub}</span></div></section>`+
+      Object.keys(bySub).sort().map(subj=>
+      `<section class="cat"><h2>${esc(subj)} · ${bySub[subj].length}</h2></section>
+       <div class="grid">${bySub[subj].map(card).join("")}</div>`).join("");
+  }).join("");
 }else{
   $("#cards").innerHTML=`<div class="grid">${a.map(card).join("")}</div>`||'<p class="status">No matches — try fewer words.</p>';
   if(!a.length)$("#cards").innerHTML='<p class="status">No matches — try fewer words.</p>';
@@ -150,11 +162,11 @@ function buildQuicknav(){
   $("#quicknav").innerHTML=chip("All subjects","")+Object.keys(counts).sort().map(su=>chip(`${su} · ${counts[su]}`,su)).join("");
   $("#quicknav").addEventListener("click",e=>{
     const b=e.target.closest("button[data-sub]");if(!b)return;
-    $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";render();
+    $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";$("#year").value="";render();
     $("#cards").scrollIntoView({behavior:"smooth",block:"start"});
   });
 }
 fetch("resources.json").then(r=>r.json()).then(d=>{ALL=d;
 fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();render()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",render));</script></body></html>
+["search","subject","type","year"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",render));</script></body></html>
