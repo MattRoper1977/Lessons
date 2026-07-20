@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y5 Forces · L4 Investigate the parachute · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --alive:#3f9e6a; --notalive:#c4694a; --tricky:#d9a72c;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+    --p-arrival:var(--sky); --p-starter:var(--sun); --p-ido:var(--forest);
+    --p-wedo:var(--leaf); --p-indep:var(--bark); --p-exit:var(--berry);
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--body);color:var(--ink);overflow:hidden;
+    background:radial-gradient(1200px 420px at 50% -10%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .punch{position:fixed;left:6px;top:0;bottom:70px;width:6px;display:flex;flex-direction:column;
+    justify-content:space-around;padding:46px 0;z-index:3;pointer-events:none}
+  .punch i{width:12px;height:12px;border-radius:50%;background:#d8cfba;box-shadow:inset 0 1px 2px rgba(0,0,0,.25);margin-left:-3px}
+  .deck{width:100vw;height:100vh;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;
+    padding:clamp(22px,3.4vw,54px) clamp(30px,5vw,88px) 96px;overflow:auto;
+    background:var(--paper);border-top:11px solid var(--forest);border-left:14px solid #e9dfc6;}
+  .slide.on{display:flex;animation:in .28s ease}
+  @keyframes in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+  .slide[data-p="arrival"]{border-top-color:var(--p-arrival)}
+  .slide[data-p="starter"]{border-top-color:var(--p-starter)}
+  .slide[data-p="ido"]{border-top-color:var(--p-ido)}
+  .slide[data-p="wedo"]{border-top-color:var(--p-wedo)}
+  .slide[data-p="indep"]{border-top-color:var(--p-indep)}
+  .slide[data-p="exit"]{border-top-color:var(--p-exit)}
+  .slide[data-p="cover"]{border-top-color:var(--amber);background:var(--navy)}
+  .phase{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin-left:-42px;
+    font-family:var(--display);font-weight:600;color:#fff;padding:7px 16px 7px 46px;
+    border-radius:0 14px 14px 0;box-shadow:2px 2px 0 rgba(0,0,0,.12);font-size:clamp(.85rem,1.3vw,1.05rem)}
+  .slide[data-p="arrival"] .phase{background:var(--p-arrival);color:#0f2f42}
+  .slide[data-p="starter"] .phase{background:var(--p-starter);color:#4a3a0e}
+  .slide[data-p="ido"] .phase{background:var(--p-ido)}
+  .slide[data-p="wedo"] .phase{background:var(--p-wedo)}
+  .slide[data-p="indep"] .phase{background:var(--p-indep)}
+  .slide[data-p="exit"] .phase{background:var(--p-exit)}
+  .phase .mins{background:rgba(255,255,255,.28);border-radius:8px;padding:1px 9px;font-size:.85em}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,5.5vw,3.8rem);line-height:1;color:var(--cream);margin:.2em 0 .12em}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.6vw,2.5rem);line-height:1.05;color:var(--forest);margin:.28em 0 .3em}
+  .lead{max-width:58ch;font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.55}
+  p,li{font-size:clamp(1rem,1.55vw,1.26rem);line-height:1.5}
+  .teach{font-family:var(--display);color:var(--bark);font-weight:600;margin-top:.15em}
+  .slide[data-p="cover"] .teach{color:var(--mint)}
+  .mark{position:fixed;top:16px;right:20px;display:flex;align-items:center;gap:8px;z-index:5;font-family:var(--display);font-weight:600;color:var(--forest);font-size:.9rem}
+  .row{display:grid;gap:clamp(12px,1.7vw,22px);margin-top:.6em}
+  .two{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .leaf{background:#fff;border:2px solid var(--line);border-radius:20px 20px 20px 6px;padding:clamp(13px,1.7vw,22px);box-shadow:0 4px 0 rgba(107,79,54,.08)}
+  .leaf h3{font-family:var(--display);color:var(--bark);font-size:1.15rem;margin-bottom:.25em}
+  ul.sprout{list-style:none;display:grid;gap:7px}
+  ul.sprout li{position:relative;padding-left:1.7em}
+  ul.sprout li::before{content:"\1F331";position:absolute;left:0;top:0}
+  .say{background:var(--moss);border:2px solid #cfe0c6;border-left:7px solid var(--forest);border-radius:12px;padding:13px 17px;margin-top:.6em}
+  .say b{font-family:var(--display);color:var(--forest);display:block;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .talk{background:#eef7f1;border:2px solid #b9ddc6;border-radius:12px;padding:13px 17px;margin-top:.6em}
+  .talk b{font-family:var(--display);color:var(--leaf);display:block;margin-bottom:3px}
+  .stem{background:#fff;border:1px dashed var(--leaf);border-radius:10px;padding:7px 11px;margin-top:7px;font-style:italic}
+  .note{font-size:.9rem;color:#6a6d64;margin-top:.5em;font-style:italic}
+  .garden{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:.6em}
+  .plot{background:var(--moss);border:2px solid #cfe0c6;border-radius:14px;padding:11px 13px;text-align:center}
+  .plot .l{font-family:var(--display);font-weight:700;font-size:1.35rem;color:var(--forest);line-height:1.05}
+  .plot b{display:block;font-family:var(--display);margin-top:3px}
+  .plot small{display:block;color:#5b6b58;margin-top:2px;font-size:.85rem}
+  .media{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(14px,2vw,26px);margin-top:.6em;align-items:start}
+  @media(max-width:760px){.media{grid-template-columns:1fr}}
+  .video{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#000;aspect-ratio:16/9}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vfallback{display:block;text-align:center;font-family:var(--display);font-weight:600;font-size:.92rem;margin-top:6px;color:var(--forest);text-decoration:none}
+  .vfallback:hover{text-decoration:underline}
+  .grow-wrap{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#eef6fb}
+  .grow-wrap svg{width:100%;height:auto;display:block}
+  .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
+
+  @keyframes fall{0%{transform:translateY(-6px)}100%{transform:translateY(70px)}}
+  @keyframes fallslow{0%{transform:translateY(-6px)}100%{transform:translateY(46px)}}
+  @keyframes puls{0%,100%{opacity:.5}50%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.fa,.fb,.pz{animation:none!important}}
+
+  .sorter{display:flex;flex-direction:column;gap:12px;margin-top:.5em;flex:1;min-height:0}
+  .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+  .crit{font-family:var(--display);font-weight:600;background:#fff;border:2px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer;user-select:none;transition:.16s;font-size:1rem}
+  .crit:hover{transform:translateY(-2px)}
+  .crit.placed{opacity:.35;pointer-events:none;text-decoration:line-through}
+  .bins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-height:100px}
+  .bin{border:3px dashed;border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:100px}
+  .bin.b1{border-color:var(--alive);background:#eef8f1}
+  .bin.b2{border-color:var(--notalive);background:#fbeee8}
+  .bin.b3{border-color:var(--tricky);background:#fdf6e3}
+  .bin h4{font-family:var(--display);text-align:center;font-size:1rem}
+  .bin.b1 h4{color:var(--alive)}.bin.b2 h4{color:var(--notalive)}.bin.b3 h4{color:#b8860b}
+  .drop{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start}
+  .drop .crit{cursor:default;font-size:.88rem;padding:4px 10px}
+  .fb{font-family:var(--display);color:var(--forest);min-height:1.3em;font-size:1rem}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:.7em}
+  @media(max-width:820px){.tiers{grid-template-columns:1fr}}
+  .tier{border-radius:16px;padding:14px 16px;border:2px solid;background:#fff;display:flex;flex-direction:column}
+  .tier.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tier.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tier.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tier .th{font-family:var(--display);font-weight:700;font-size:1.08rem;display:flex;align-items:center;gap:7px}
+  .tier.seed .th{color:#2e6b8c}.tier.sap .th{color:#227a4c}.tier.oak .th{color:#b06a12}
+  .tier .band{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600;opacity:.75;margin:1px 0 8px}
+  .tier p,.tier li{font-size:1rem;line-height:1.45}
+  .tier .wb{background:rgba(255,255,255,.7);border:1px dashed currentColor;border-radius:9px;padding:6px 10px;margin-top:7px;font-size:.92rem}
+  .tier ul{list-style:none;display:grid;gap:5px}
+  .tier ol{margin-left:1.2em;display:grid;gap:5px}
+  body[data-tier="seed"] .tier:not(.seed),
+  body[data-tier="sap"] .tier:not(.sap),
+  body[data-tier="oak"] .tier:not(.oak){display:none}
+  body[data-tier="seed"] .tiers,
+  body[data-tier="sap"] .tiers,
+  body[data-tier="oak"] .tiers{grid-template-columns:1fr;max-width:640px}
+  .map{display:flex;flex-wrap:wrap;gap:8px;margin-top:1em}
+  .map span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 13px;font-size:.9rem;display:inline-flex;gap:7px;align-items:center}
+  .map span i{width:10px;height:10px;border-radius:50%;font-style:normal}
+  .tierkey{display:flex;flex-wrap:wrap;gap:10px;margin-top:.8em}
+  .tierkey span{font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem;display:inline-flex;gap:6px;align-items:center}
+  .total{color:var(--mint);font-family:var(--display);font-weight:600;margin-top:.9em}
+  .bar{position:fixed;left:0;right:0;bottom:0;height:70px;background:var(--navy);display:flex;align-items:center;gap:9px;padding:0 16px;z-index:20;flex-wrap:wrap}
+  .bar button{font-family:var(--display);font-weight:600;font-size:.95rem;border:0;border-radius:12px;padding:9px 14px;cursor:pointer;background:#2a3358;color:var(--cream);transition:.15s}
+  .bar button:hover{background:#374173}
+  .bar .sp{flex:1}
+  .prog{color:var(--mint);font-family:var(--display);font-weight:600}
+  .seg{display:inline-flex;background:#2a3358;border-radius:12px;overflow:hidden}
+  .seg button{border-radius:0;background:transparent;padding:9px 12px}
+  .seg button[aria-pressed="true"]{background:var(--amber);color:var(--navy)}
+  .go{background:var(--amber)!important;color:var(--navy)!important}
+  dialog{border:0;border-radius:20px;padding:0;max-width:540px;width:92vw}
+  dialog::backdrop{background:rgba(20,29,61,.55)}
+  .mh{background:var(--navy);color:var(--cream);font-family:var(--display);font-weight:600;padding:15px 22px;font-size:1.15rem}
+  .mb{padding:18px 24px}.mb li,.mb p{font-size:1rem;line-height:1.5}
+  .mb h5{font-family:var(--display);color:var(--bark);margin:.5em 0 .2em}
+  .mc{margin:0 24px 20px;background:var(--amber);color:var(--navy);border:0;border-radius:12px;padding:10px 16px;font-family:var(--display);font-weight:600;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+  @media print{
+    body{overflow:visible;background:#fff}
+    .bar,.mark,.punch,dialog,.video{display:none!important}
+    .slide{position:relative;display:flex!important;inset:auto;height:auto;page-break-after:always;border-left:6px solid #bbb;padding:18px 26px}
+    .slide[data-p="cover"]{background:#fff}
+    .slide[data-p="cover"] h1,.slide[data-p="cover"] .teach,.slide[data-p="cover"] .total,.slide[data-p="cover"] .tierkey span{color:#000}
+    .tiers{grid-template-columns:1fr 1fr 1fr!important}
+    body[data-tier] .tier{display:flex!important}
+    .crit.placed{opacity:1;text-decoration:none}
+  }
+</style></head>
+<body data-tier="all">
+<div class="punch" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>Made by Matt</div>
+<div class="deck" id="deck">
+  <section class="slide on" data-p="cover">
+    <span class="phase" style="background:var(--amber);color:var(--navy)">Year 5 · Autumn 1.1 · Step 4</span>
+    <p class="teach">Earth &amp; Space</p>
+    <h1>Investigate — parachute experiment</h1>
+    <p class="lead" style="color:var(--cream);opacity:.92;max-width:52ch">Carrying out the fair test: at least three sizes, same height, timed in parts of a second, repeated.</p>
+    <div class="map">
+      <span><i style="background:var(--sky)"></i>Arrival</span>
+      <span><i style="background:var(--sun)"></i>Starter</span>
+      <span><i style="background:var(--forest)"></i>I do</span>
+      <span><i style="background:var(--leaf)"></i>We do</span>
+      <span><i style="background:var(--bark)"></i>Independent</span>
+      <span><i style="background:var(--berry)"></i>Exit ticket</span>
+    </div>
+    <div class="tierkey">
+      <span>🌱 Seedling <span style="opacity:.7">· Working towards</span></span>
+      <span>🌿 Sapling <span style="opacity:.7">· Expected</span></span>
+      <span>🌳 Oak <span style="opacity:.7">· Greater depth</span></span>
+    </div>
+    <p class="total">⏱ Whole lesson ≈ 44 min · pick a tier in the bar, or leave on "All"</p>
+  </section>
+  <section class="slide" data-p="arrival">
+    <span class="phase">Arrival <span class="mins">4 min</span></span>
+    <p class="teach">Recap of last lesson: the plan &amp; variables.</p>
+    <h2>Recap: our plan</h2>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p>We change the ____ and measure the ____.</p></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <ol><li>Name our independent variable.</li><li>Name our dependent variable.</li><li>Name one controlled variable.</li></ol></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>How could we make our results more <b>reliable</b> — that is, more likely to repeat?</p></div>
+    </div>
+    <div class="talk"><b>Bridge into today</b>The plan is set. Today we <b>carry out</b> the test carefully and record accurate results.</div>
+  </section>
+  <section class="slide" data-p="starter">
+    <span class="phase">Starter <span class="mins">5 min</span></span>
+    <p class="teach">Practise the stopwatch: start, stop, reset to zero.</p>
+    <h2>Measuring carefully</h2>
+    <p class="lead">Use at least <b>three</b> parachute sizes. Time in <b>parts of a second</b> (whole seconds are too rough). Drop from the <b>same height</b> every time.</p>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p>Show me: start, stop, reset the stopwatch.</p></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <p>Why time in parts of a second rather than whole seconds?</p></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>Why repeat each size and take an average? What does that improve?</p></div>
+    </div>
+  </section>
+  <section class="slide" data-p="ido">
+    <span class="phase">I do · 1 <span class="mins">6 min</span></span>
+    <p class="teach">Teacher models a clean drop and how to record it, then watch the science.</p>
+    <h2>Run the test well</h2>
+    <div class="media">
+      <div>
+        <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/x6ovQErh4Mw" title="Air resistance — Year 5 Forces" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <a class="vfallback" href="https://www.youtube.com/watch?v=x6ovQErh4Mw" target="_blank" rel="noopener">▶ Can't see it? Watch "Air resistance — Year 5 Forces" on YouTube</a>
+        <p class="note">Swap the clip: change the ID after <code>/embed/</code> (now <code>x6ovQErh4Mw</code>).</p>
+      </div>
+      <div>
+        <div class="say"><b>Say this</b>Drop from the <b>same height</b>, start the stopwatch as you <b>release</b>, stop it as it <b>lands</b>. Record in a <b>table</b>. Repeat each size and take an <b>average</b> so results are reliable.</div>
+        <div class="garden">
+          <div class="plot"><div class="l">⏱️</div><b>Time in s.ss</b><small>parts of a second</small></div>
+          <div class="plot"><div class="l">📏</div><b>Same height</b><small>every drop</small></div>
+          <div class="plot"><div class="l">🔁</div><b>Repeat</b><small>then average</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="slide" data-p="wedo">
+    <span class="phase">We do · 1 <span class="mins">6 min</span></span>
+    <p class="teach">Build the results table together and do one drop as a class.</p>
+    <h2>Record as we go</h2>
+    <div class="leaf" style="margin-top:.4em"><p>Size (cm²) | Try 1 | Try 2 | Try 3 | Average time (s)</p></div>
+    <div class="talk"><b>One clean drop</b>
+      <div class="stem">Release → start · lands → stop · write the time · reset to zero.</div>
+      Same weight, same height, same person timing — only the <b>size</b> changes.</div>
+  </section>
+  <section class="slide" data-p="ido">
+    <span class="phase">I do · 2 <span class="mins">4 min</span></span>
+    <p class="teach">Play the animation. Bust: it's the wind slowing it, not air resistance.</p>
+    <h2>Big canopy, slow fall</h2>
+    <div class="media">
+      <div class="grow-wrap" style="background:#0d1230"><svg viewBox="0 0 400 200" role="img" aria-label="A big parachute falling slowly next to a small parachute falling quickly, both dropped from the same height.">
+  <g font-family="Fredoka, sans-serif" font-weight="600">
+  <line x1="10" y1="34" x2="390" y2="34" stroke="#9d8f7a" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="200" y="26" fill="#6b4f36" font-size="9" text-anchor="middle">same drop height</text>
+  <g class="fb" style="animation:fallslow 3s ease-in infinite">
+    <path d="M40 60 q56 -40 112 0" fill="#6aa9cf"/><line x1="48" y1="60" x2="96" y2="96" stroke="#2e6b8c" stroke-width="1.5"/><line x1="144" y1="60" x2="96" y2="96" stroke="#2e6b8c" stroke-width="1.5"/><circle cx="96" cy="100" r="7" fill="#6b4f36"/>
+  </g>
+  <text x="96" y="176" fill="#2e6b8c" font-size="10" text-anchor="middle">big → slow</text>
+  <g class="fa" style="animation:fall 1.7s ease-in infinite">
+    <path d="M264 60 q30 -22 60 0" fill="#c56a3a"/><line x1="270" y1="60" x2="294" y2="88" stroke="#8a4a26" stroke-width="1.5"/><line x1="318" y1="60" x2="294" y2="88" stroke="#8a4a26" stroke-width="1.5"/><circle cx="294" cy="92" r="6" fill="#6b4f36"/>
+  </g>
+  <text x="294" y="176" fill="#8a4a26" font-size="10" text-anchor="middle">small → fast</text>
+  </g>
+</svg><p class="grow-cap">From the same height, the big parachute falls more slowly — more air resistance.</p></div>
+      <div>
+        <div class="say"><b>Model the rule</b>The bigger canopy meets <b>more air</b>, so <b>air resistance</b> slows it — this is the force we're testing, not a random gust. Keep the test indoors or shielded so wind doesn't spoil it.</div>
+        <p class="note">Watch for: "it's the wind slowing it, not air resistance", and stopwatch slips (forgetting to reset).</p>
+      </div>
+    </div>
+  </section>
+  <section class="slide" data-p="wedo">
+    <span class="phase">We do · 2 <span class="mins">5 min</span></span>
+    <p class="teach">Spot what would spoil the results.</p>
+    <h2>Keep it reliable</h2>
+    <div class="talk"><b>Fair or spoiled?</b>
+      <div class="stem">"Drop each from a different height." &nbsp; "Repeat each size three times." &nbsp; "A window is open and it's windy."</div>
+      Which of these would spoil our results, and why?</div>
+  </section>
+  <section class="slide" data-p="indep">
+    <span class="phase">Independent <span class="mins">10 min</span></span>
+    <p class="teach">On your own. Sort each action, then run and record at your tier.</p>
+    <h2>Reliable results sorter</h2>
+    <div class="sorter">
+      <div class="tray" id="tray"></div>
+      <div class="bins">
+        <div class="bin b1"><h4>✅ Makes results reliable</h4><div class="drop" data-bin="reliable"></div></div>
+        <div class="bin b2"><h4>⚠️ Would spoil the results</h4><div class="drop" data-bin="spoil"></div></div>
+        <div class="bin b3"><h4>🚫 Myth to bust</h4><div class="drop" data-bin="myth"></div></div>
+      </div>
+      <p class="fb" id="fb">Tap a card to sort it…</p>
+    </div>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p>Sort the cards, then record your times in the table.</p></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <p>Sort them, then record three sizes with repeats and work out each average.</p></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>Sort them, then explain how repeating and averaging makes your results more reliable.</p></div>
+    </div>
+  </section>
+  <section class="slide" data-p="exit">
+    <span class="phase">Exit ticket <span class="mins">4 min</span></span>
+    <p class="teach">Answer at your tier, then hand it in.</p>
+    <h2>Show what you know</h2>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <ul><li>Why drop from the same height each time?</li><li>What do we measure?</li></ul></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <ul><li>Why time in parts of a second?</li><li>Why repeat each size?</li></ul></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>How do you know your results are reliable? Give two reasons.</p></div>
+    </div>
+  </section>
+</div>
+<dialog id="ta"><div class="mh">TA Focus · Running the test</div><div class="mb">Stopwatch skill first: start on release, stop on landing, reset to zero. Keep drops from the same height. For the sorter, ask 'does this make it more trustworthy, or spoil it?' The myth is 'it's the wind, not air resistance'.</div><button class="mc" onclick="ta.close()">Got it</button></dialog>
+<dialog id="cc"><div class="mh">Cold Call · Question bank</div><div class="mb"><ul><li>Why drop from the same height?</li><li>Why time in parts of a second?</li><li>How many sizes should we test?</li><li>Why repeat each size and average?</li><li>What force are we actually testing?</li></ul></div><button class="mc" onclick="cc.close()">Close</button></dialog>
+<div class="bar">
+  <button id="prev">‹ Back</button><button id="next">Next ›</button>
+  <span class="prog"><span id="cur">1</span> / <span id="tot">9</span></span>
+  <span class="sp"></span>
+  <span class="seg" role="group" aria-label="Differentiation tier">
+    <button data-tier="all" aria-pressed="true">All</button>
+    <button data-tier="seed" aria-pressed="false">🌱 Seedling</button>
+    <button data-tier="sap" aria-pressed="false">🌿 Sapling</button>
+    <button data-tier="oak" aria-pressed="false">🌳 Oak</button>
+  </span>
+  <button id="taB">TA Focus</button><button id="ccB">Cold Call</button><button id="prB" class="go">Print pack</button>
+</div>
+<script>
+  const specimens=[{"t": "Drop every parachute from the same height", "bin": "reliable", "why": "Keeps the test fair — a controlled variable."}, {"t": "Time each drop in parts of a second", "bin": "reliable", "why": "More precise than whole seconds."}, {"t": "Repeat each size three times and average", "bin": "reliable", "why": "Reduces the effect of odd results."}, {"t": "Reset the stopwatch to zero each time", "bin": "reliable", "why": "Stops errors building up between drops."}, {"t": "Change the drop height for each size", "bin": "spoil", "why": "Two things changing — no longer a fair test."}, {"t": "Use a different weight on each parachute", "bin": "spoil", "why": "Changes a controlled variable — unfair."}, {"t": "Doing it by an open, windy window", "bin": "spoil", "why": "Wind adds an extra force and spoils the data."}, {"t": "“It's the wind slowing it, not air resistance”", "bin": "myth", "why": "Myth — air resistance is the force we're testing."}];
+  const tray=document.getElementById("tray");
+  const fb=document.getElementById("fb");
+  function placeChip(spec, btn){
+    btn.classList.add("placed");
+    const drop=document.querySelector('.drop[data-bin="'+spec.bin+'"]');
+    const chip=document.createElement("span");
+    chip.className="crit";chip.textContent=spec.t;
+    drop.appendChild(chip);
+    fb.textContent=spec.t+": "+spec.why;
+    if(document.querySelectorAll(".crit.placed").length===specimens.length){
+      fb.textContent="🌟 All sorted! Now write your evidence at your tier.";
+    }
+  }
+  function buildTray(){
+    if(!tray) return;
+    specimens.forEach(s=>{
+      const b=document.createElement("button");
+      b.className="crit";b.type="button";b.textContent=s.t;
+      b.addEventListener("click",()=>placeChip(s,b));
+      tray.appendChild(b);
+    });
+  }
+  const slides=[...document.querySelectorAll(".slide")];
+  let idx=0;
+  const curEl=document.getElementById("cur"), totEl=document.getElementById("tot");
+  function show(n){idx=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle("on",i===idx));curEl.textContent=idx+1;}
+  function nav(d){show(idx+d)}
+  const body=document.body;
+  const tierBtns=[...document.querySelectorAll('.seg button[data-tier]')];
+  function setTier(t){body.dataset.tier=t;tierBtns.forEach(b=>b.setAttribute("aria-pressed", b.dataset.tier===t));}
+  totEl.textContent=slides.length;
+  buildTray();
+  document.getElementById("next").onclick=()=>nav(1);
+  document.getElementById("prev").onclick=()=>nav(-1);
+  tierBtns.forEach(b=>b.onclick=()=>setTier(b.dataset.tier));
+  document.getElementById("taB").onclick=()=>document.getElementById("ta").showModal();
+  document.getElementById("ccB").onclick=()=>document.getElementById("cc").showModal();
+  document.getElementById("prB").onclick=()=>window.print();
+  document.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();nav(1)}
+    if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();nav(-1)}
+  });
+  show(0);
+</script>
+</body></html>

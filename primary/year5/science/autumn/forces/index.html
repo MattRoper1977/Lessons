@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y5 Autumn 1.1 · Forces · Scheme of Work &amp; Lesson Plans · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+  a{color:var(--forest)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;color:var(--cream)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--forest);margin:.2em 0 .4em}
+  h3{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--bark);margin:.1em 0 .3em}
+  h4{font-family:var(--display);font-weight:600;color:var(--forest);font-size:1rem;margin:.2em 0}
+  p,li,td,th{font-size:1.02rem}
+
+  /* hero */
+  .hero{background:var(--navy);border-radius:0 0 26px 26px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,44px) clamp(30px,4vw,44px);
+    border-top:12px solid var(--amber);position:relative;margin-bottom:26px}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;
+    font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem}
+  .hero .eyebrow{font-family:var(--display);font-weight:600;color:var(--mint);letter-spacing:.02em}
+  .hero .enquiry{margin-top:1em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+    border-left:5px solid var(--amber);border-radius:12px;padding:12px 16px;color:var(--cream);max-width:70ch}
+  .hero .enquiry b{color:var(--amber);font-family:var(--display)}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.1em}
+  .facts span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 14px;font-size:.9rem}
+
+  /* sticky jump nav */
+  .jump{position:sticky;top:0;z-index:10;background:rgba(250,247,239,.94);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:9px clamp(12px,3vw,24px);margin:0 calc(-1*clamp(16px,4vw,40px)) 26px}
+  .jump a{font-family:var(--display);font-weight:600;font-size:.86rem;text-decoration:none;color:var(--navy);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .jump a:hover{border-color:var(--forest)}
+  .jump .sp{flex:1}
+  .jump button{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;
+    padding:6px 14px;background:var(--amber);color:var(--navy);cursor:pointer}
+
+  section.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(16px,2.4vw,30px);
+    box-shadow:0 4px 0 rgba(107,79,54,.07);margin-bottom:22px}
+  .lead{max-width:72ch}
+
+  table{width:100%;border-collapse:collapse;margin:.5em 0;font-size:.98rem}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--display);color:var(--forest);background:var(--moss);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .mins{font-family:var(--display);font-weight:600;color:var(--bark)}
+  .phase-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  ul.sprout{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.sprout li{position:relative;padding-left:1.6em}
+  ul.sprout li::before{content:"🌱";position:absolute;left:0;top:0}
+  ul.tick{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.tick li{position:relative;padding-left:1.5em}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--leaf);font-weight:800}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4em 0}
+  .chips span{background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 11px;font-size:.9rem;font-weight:500}
+
+  .tiergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:.5em 0}
+  @media(max-width:720px){.tiergrid{grid-template-columns:1fr}}
+  .tcard{border-radius:12px;padding:11px 14px;border:2px solid;font-size:.96rem}
+  .tcard.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tcard.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tcard.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tcard b{font-family:var(--display);display:block;margin-bottom:2px}
+  .tcard.seed b{color:#2e6b8c}.tcard.sap b{color:#227a4c}.tcard.oak b{color:#b06a12}
+
+  .miscon{background:#fbeee8;border:1px solid #e6b7a6;border-left:5px solid var(--berry);border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .miscon b{font-family:var(--display);color:#9d5a7d;display:block;margin-bottom:3px}
+  .res{background:var(--moss);border:1px solid #cfe0c6;border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .res b{font-family:var(--display);color:var(--forest)}
+
+  .lessonhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lnum{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:12px;
+    width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:none}
+  .open{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;color:var(--navy);
+    background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.3em}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:30px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+
+  @media print{
+    body{background:#fff}
+    .jump{display:none}
+    .hero{background:#fff;border:0;border-top:4px solid #000;border-radius:0}
+    .hero h1,.hero .eyebrow,.hero .enquiry,.hero .mark{color:#000!important}
+    .hero .enquiry{background:#fff;border-color:#999}
+    .hero .enquiry b{color:#000}
+    section.card{box-shadow:none;break-inside:avoid}
+    .lesson{break-before:page}
+    .open{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </div>
+  <div class="wrap" style="padding-bottom:0">
+    <p style="margin-bottom:.35em"><a href="../../../../index.html" style="color:var(--mint);font-family:var(--display);font-weight:600;text-decoration:none">&larr; Primary hub</a></p>
+    <p class="eyebrow">Year 5 &middot; Science &middot; Autumn 1.1</p>
+    <h1>Forces</h1>
+    <p style="color:var(--cream);opacity:.9;margin-top:.3em">Scheme of work &amp; lesson plans &middot; 9 lessons</p>
+    <div class="enquiry"><b>Enquiry question:</b> How do forces like friction, air resistance, water resistance and gravity affect the way things move?</div>
+    <div class="facts">
+      <span>9 lessons</span><span>&asymp; 44 min each</span><span>3 tiers per lesson</span><span>Video + animation</span><span>Print packs included</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="jump">
+    <a href="#sow">Overview</a>
+    <a href="#l1">1 &middot; Friction</a>
+    <a href="#l2">2 &middot; Air resistance</a>
+    <a href="#l3">3 &middot; Plan</a>
+    <a href="#l4">4 &middot; Investigate</a>
+    <a href="#l5">5 &middot; Evaluate</a>
+    <a href="#l6">6 &middot; Water plan</a>
+    <a href="#l7">7 &middot; Water test</a>
+    <a href="#l8">8 &middot; Gravity</a>
+    <a href="#l9">9 &middot; Mechanisms</a>
+    <span class="sp"></span>
+    <a href="Y5_Forces_SoW_and_Plans.docx" download>&#8681; Word version</a>
+    <button onclick="window.print()">&#128424; Print</button>
+  </nav>
+
+  <section class="card" id="sow">
+    <h2>Scheme of work &mdash; at a glance</h2>
+    <p class="lead">Nine lessons take pupils from <em>&ldquo;what is friction?&rdquo;</em> to levers, pulleys and gears &mdash; with a full <b>plan &rarr; investigate &rarr; evaluate</b> parachute enquiry and a water-resistance investigation building working-scientifically skills along the way. Each lesson runs the same structure &mdash; Arrival &rarr; Starter &rarr; I do &rarr; We do &rarr; Independent &rarr; Exit &mdash; in about 44 minutes, differentiated across three primary tiers.</p>
+    <table>
+      <tr><th>#</th><th>Lesson</th><th>Learning objective</th><th>Key vocabulary</th><th></th></tr>
+      <tr><td>1</td><td><b>Friction</b></td><td>Know friction is a contact force between two surfaces that always opposes motion &mdash; it can help (grip, brakes) or hinder.</td><td>force, contact force, friction, motion</td><td><a href="Lesson1_Friction.html">Open &rarr;</a></td></tr>
+      <tr><td>2</td><td><b>Air resistance</b></td><td>Know air resistance is a type of friction between air and a moving object; larger surfaces meet more air.</td><td>air resistance, friction, surface area, streamlined</td><td><a href="Lesson2_AirResistance.html">Open &rarr;</a></td></tr>
+      <tr><td>3</td><td><b>Plan &mdash; parachute</b></td><td>Plan a fair test of whether parachute size affects fall time; identify independent, dependent and controlled variables.</td><td>fair test, independent, dependent, controlled</td><td><a href="Lesson3_PlanParachute.html">Open &rarr;</a></td></tr>
+      <tr><td>4</td><td><b>Investigate &mdash; parachute</b></td><td>Carry out the test with at least three sizes, timing in parts of a second and repeating for reliable results.</td><td>repeatability, precision, surface area</td><td><a href="Lesson4_InvestigateParachute.html">Open &rarr;</a></td></tr>
+      <tr><td>5</td><td><b>Evaluate &mdash; parachute</b></td><td>Conclude that greater surface area means more air resistance and a longer fall; evaluate and improve.</td><td>conclusion, anomalous result, evaluate</td><td><a href="Lesson5_EvaluateParachute.html">Open &rarr;</a></td></tr>
+      <tr><td>6</td><td><b>Plan &mdash; water resistance</b></td><td>Know water resistance is a type of friction; plan a comparative test of whether shape affects how fast an object sinks.</td><td>water resistance, streamlined, comparative test</td><td><a href="Lesson6_PlanWaterResistance.html">Open &rarr;</a></td></tr>
+      <tr><td>7</td><td><b>Investigate &mdash; water resistance</b></td><td>Carry out the test with equal-mass shapes and conclude that streamlined shapes have less water resistance.</td><td>water resistance, streamlined, reliability</td><td><a href="Lesson7_InvestigateWaterResistance.html">Open &rarr;</a></td></tr>
+      <tr><td>8</td><td><b>Explore gravity</b></td><td>Know gravity is a non-contact force pulling objects to Earth&rsquo;s centre; distinguish mass and weight; same-size objects fall at the same rate.</td><td>gravitational force, non-contact force, mass, weight</td><td><a href="Lesson8_ExploreGravity.html">Open &rarr;</a></td></tr>
+      <tr><td>9</td><td><b>Small forces, greater effects</b></td><td>Recognise that levers, pulleys and gears let a smaller force have a greater effect; smaller gears turn faster.</td><td>lever, pulley, gear, machine</td><td><a href="Lesson9_SmallForcesGreaterEffects.html">Open &rarr;</a></td></tr>
+    </table>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>National Curriculum coverage</h3>
+        <ul class="tick">
+          <li>Explain that unsupported objects fall towards the Earth because of the force of gravity acting between the Earth and the falling object.</li>
+          <li>Identify the effects of air resistance, water resistance and friction, that act between moving surfaces.</li>
+          <li>Recognise that some mechanisms, including levers, pulleys and gears, allow a smaller force to have a greater effect.</li>
+        </ul>
+        <h4>Working scientifically</h4>
+        <ul class="tick">
+          <li>Planning enquiries and recognising and controlling variables where necessary (L3, L6).</li>
+          <li>Taking measurements with increasing accuracy and precision, and repeat readings (L4, L7).</li>
+          <li>Recording data, reporting findings, and using results to draw conclusions and suggest improvements (L5, L7).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Vocabulary across the block</h3>
+        <div class="chips"><span>force</span><span>contact force</span><span>friction</span><span>motion</span><span>air resistance</span><span>parachute</span><span>independent variable</span><span>dependent variable</span><span>controlled variables</span><span>repeatability</span><span>precision</span><span>surface area</span><span>anomalous result</span><span>water resistance</span><span>streamlined</span><span>gravitational force</span><span>weight</span><span>non-contact force</span><span>lever</span><span>gear</span><span>pulley</span><span>machine</span></div>
+        <h3 style="margin-top:1em">Assessment</h3>
+        <ul class="tick">
+          <li>A tiered <b>exit ticket</b> every lesson (Seedling / Sapling / Oak).</li>
+          <li>Interactive independent sorter self-checks understanding in the moment.</li>
+          <li>End-of-block assessment covers friction, air and water resistance, fair testing, gravity and mechanisms.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Prior learning &amp; next steps</h3>
+        <p><b>Builds on (Y3):</b> forces and magnets &mdash; pushes and pulls, and how things move on surfaces. This block introduces pupils&rsquo; first formal <b>fair and comparative tests</b> and the language of variables.</p>
+        <p style="margin-top:.4em"><b>Leads to (KS3):</b> forces, gravity and weight, speed, and simple machines.</p>
+      </div>
+      <div>
+        <h3>How each lesson is built</h3>
+        <p>Every lesson is a single interactive web page: six-phase structure with on-screen timings; three tiers on the four pupil-facing tasks; a short teaching video; a self-contained animation targeting the lesson&rsquo;s key misconception; TA Focus and Cold Call prompts; and a one-click print pack.</p>
+        <p class="note" style="font-size:.9rem;color:#6a6d64;margin-top:.4em"><em>Differentiation tiers map to attainment bands: &#127793; Seedling = working towards &middot; &#127807; Sapling = expected &middot; &#127795; Oak = greater depth.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LESSON PLANS ===================== -->
+  <!-- L1 -->
+  <section class="card lesson" id="l1">
+    <div class="lessonhead"><span class="lnum">1</span><h2 style="margin:0">Friction</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that friction is a contact force between two surfaces that always acts against the direction of motion, and that it can be useful or a nuisance.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Sorts help / hinder with support; knows friction opposes motion.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives a place friction helps and one where it is a nuisance, with reasons.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why brakes rely on friction yet the same force wears parts out.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Year 3 recap &mdash; forces are pushes and pulls; bridge to friction.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Grip or slip? Friction as a contact force that opposes motion.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What friction is: contact, opposes motion, useful (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort examples: friction helps or gets in the way.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Which way does friction push? (animation: box slides, friction opposes).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false on the two friction myths.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Friction sorter (helps / hinders / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Friction only happens when surfaces move&rdquo; and &ldquo;friction only happens on rough surfaces&rdquo; &mdash; it acts even at rest and on smooth surfaces like glass.</div>
+      <div class="res"><b>Resources:</b> video <em>Friction &mdash; Year 5 Forces</em>; box-and-arrows animation; Friction Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson1_Friction.html">Open Lesson 1 &rarr;</a>
+  </section>
+
+  <!-- L2 -->
+  <section class="card lesson" id="l2">
+    <div class="lessonhead"><span class="lnum">2</span><h2 style="margin:0">Air resistance</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that air resistance is a type of friction between air and a moving object, and that its size depends on shape and surface area.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows a bigger surface catches more air and falls slower.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains why a parachute slows a fall but a streamlined train speeds up.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why air resistance is friction and acts in more than one direction.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L1 (friction).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Pushing through the air; air resistance as friction with air.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What air resistance is; shape &amp; surface area; acts in any direction (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Catch air or cut through it? Sort designs.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Big surface, slow fall (animation: big vs small falling).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Label the two forces on a falling parachute.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Air resistance sorter (more / less / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Air resistance only acts when things fall&rdquo; and &ldquo;invisible forces do nothing&rdquo; &mdash; it acts in any direction and changes speed, shape or direction.</div>
+      <div class="res"><b>Resources:</b> video <em>What is air resistance? &mdash; Year 5 Forces</em>; big-vs-small fall animation; Air Resistance Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson2_AirResistance.html">Open Lesson 2 &rarr;</a>
+  </section>
+
+  <!-- L3 -->
+  <section class="card lesson" id="l3">
+    <div class="lessonhead"><span class="lnum">3</span><h2 style="margin:0">Plan &mdash; parachute experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Plan a fair test of whether the size of a parachute affects its fall time, identifying the independent, dependent and controlled variables.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Identifies what we change and what we measure.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes the plan: change&hellip; measure&hellip; keep the same&hellip;</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why changing one variable makes the test fair and the results trustworthy.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L2 (air resistance).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Enquiry: does parachute size affect fall time? Gather predictions.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Independent, dependent and controlled variables (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Apply the three variable types to our parachute test.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Change one, measure one, keep the rest the same (animation: variable boxes).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Label items as independent / dependent / controlled.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Variable sorter (independent / dependent / controlled) + write the plan.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; prediction with reasoning.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>Mixing up the three variable types. Keep the mantra: change one thing, measure one thing, keep the rest the same.</div>
+      <div class="res"><b>Resources:</b> video <em>Variables: independent, dependent, controlled</em>; variable-boxes animation; Variable Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson3_PlanParachute.html">Open Lesson 3 &rarr;</a>
+  </section>
+
+  <!-- L4 -->
+  <section class="card lesson" id="l4">
+    <div class="lessonhead"><span class="lnum">4</span><h2 style="margin:0">Investigate &mdash; parachute experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Carry out the parachute fair test using at least three sizes, timing in parts of a second and repeating readings for reliable results.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Records times with support; drops from the same height.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Records three sizes with repeats and works out averages.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how repeating and averaging make results reliable.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L3 (the plan &amp; variables).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Stopwatch practice; three sizes; same height; time in parts of a second.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Run the test well; record and repeat for reliability (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build the results table; one clean class drop.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Big canopy, slow fall (animation: big vs small parachute).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Fair or spoiled? Spot what would ruin the results.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Reliable-results sorter (reliable / spoils / myth) + record data.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions on reliability.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;It&rsquo;s the wind slowing it, not air resistance&rdquo;, plus stopwatch errors such as forgetting to reset to zero.</div>
+      <div class="res"><b>Resources:</b> video <em>Air resistance &mdash; Year 5 Forces</em>; big-vs-small parachute animation; Reliable-Results Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson4_InvestigateParachute.html">Open Lesson 4 &rarr;</a>
+  </section>
+
+  <!-- L5 -->
+  <section class="card lesson" id="l5">
+    <div class="lessonhead"><span class="lnum">5</span><h2 style="margin:0">Evaluate &mdash; parachute experiment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Draw a conclusion from the data &mdash; greater surface area means more air resistance and a longer fall &mdash; and suggest genuine improvements.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>States that bigger parachutes took longer to fall.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes a conclusion and one way to improve the test.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why repeating an unfair test won&rsquo;t help, and how to extend it.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L4 (our results).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Read the pattern: bigger surface &rarr; more air resistance &rarr; longer fall.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Conclude from data; improve by changing a parameter, not repeating (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Write a class conclusion sentence.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>See the pattern (animation: surface-area vs fall-time bar chart).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Real improvement or not? Sort ideas.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Evaluate sorter (conclusion / improvement / not) + conclusion &amp; improvement.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; repeating vs extending.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Just repeat the same test to get better results&rdquo; &mdash; repeating an unfair test won&rsquo;t fix it; extending means changing a parameter.</div>
+      <div class="res"><b>Resources:</b> video <em>Fair tests &amp; variables recap</em>; surface-area bar-chart animation; Evaluate Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson5_EvaluateParachute.html">Open Lesson 5 &rarr;</a>
+  </section>
+
+  <!-- L6 -->
+  <section class="card lesson" id="l6">
+    <div class="lessonhead"><span class="lnum">6</span><h2 style="margin:0">Plan &mdash; water resistance</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that water resistance is a type of friction, and plan a comparative test of whether an object&rsquo;s shape affects how fast it sinks.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows a streamlined shape has less water resistance.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes the plan and names the controlled variables.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why equal-mass clay makes the shape test fair.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L5 (air resistance &amp; fair tests).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Moving through water; water resistance &amp; streamlining.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What water resistance is; streamlined shapes; a friction force (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Plan the shape test; variables again; same-mass clay.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Streamlined sinks faster (animation: two cylinders).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Rank shapes by streamlining.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Streamlined sorter (streamlined / blunt / myth) + write the plan.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; predict the fastest shape.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Water resistance only happens in water&rdquo; (it acts in any liquid) and &ldquo;water resistance isn&rsquo;t friction&rdquo; (it is).</div>
+      <div class="res"><b>Resources:</b> video <em>What is water resistance? &mdash; Year 5 Forces</em>; streamlined-vs-blunt animation; Streamlined Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson6_PlanWaterResistance.html">Open Lesson 6 &rarr;</a>
+  </section>
+
+  <!-- L7 -->
+  <section class="card lesson" id="l7">
+    <div class="lessonhead"><span class="lnum">7</span><h2 style="margin:0">Investigate &mdash; water resistance</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Carry out the water-resistance comparative test with equal-mass shapes and conclude that more streamlined shapes have less water resistance.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Identifies which shape sank fastest.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Concludes which shape had the least water resistance.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains the conclusion and suggests a way to extend the test.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L6 (the water plan).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Set up: same clay mass, same cylinder, same water; time to the bottom.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Run the water test; release, time, repeat, average (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Record results; compare streamlined vs blunt.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Shape decides the speed (animation: two shapes, same mass).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Fair or spoiled? Spot what would ruin it.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Reliable water-test sorter (reliable / spoils / myth) + conclude.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; does water resistance need water?</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Water resistance isn&rsquo;t a type of friction&rdquo; and &ldquo;it only happens in water&rdquo; &mdash; it is friction and acts in any liquid.</div>
+      <div class="res"><b>Resources:</b> video <em>Water resistance &mdash; Year 5 Forces</em>; two-shape sink animation; Reliable-Water-Test Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson7_InvestigateWaterResistance.html">Open Lesson 7 &rarr;</a>
+  </section>
+
+  <!-- L8 -->
+  <section class="card lesson" id="l8">
+    <div class="lessonhead"><span class="lnum">8</span><h2 style="margin:0">Explore gravity</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that gravity is a non-contact force pulling objects towards Earth&rsquo;s centre; distinguish mass and weight; know same-size objects fall at the same rate.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows gravity pulls objects towards Earth.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains the difference between mass and weight.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why same-sized objects of different mass land together.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L7 (resistance forces).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Which hits the ground first? Gravity as a non-contact force.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Gravity, mass and weight; Newtons and the Newton meter (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Measure weight in Newtons; mass vs weight.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Same size, same fall (animation: two balls land together).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True / myth / mass-weight sort.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Gravity sorter (true / myth / mass &amp; weight) + explain mass vs weight.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; gravity on the Moon.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Heavier objects always fall faster&rdquo; and &ldquo;there is no gravity on the Moon&rdquo; &mdash; same-size objects fall together; the Moon&rsquo;s gravity is weaker, not absent.</div>
+      <div class="res"><b>Resources:</b> video <em>What is gravity? &mdash; Year 5 Forces</em>; equal-fall animation; Gravity Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson8_ExploreGravity.html">Open Lesson 8 &rarr;</a>
+  </section>
+
+  <!-- L9 -->
+  <section class="card lesson" id="l9">
+    <div class="lessonhead"><span class="lnum">9</span><h2 style="margin:0">Use small forces for greater effects</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Recognise that mechanisms including levers, pulleys and gears allow a smaller force to have a greater effect, and that smaller gears turn faster.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names the three mechanisms.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives a real example of a lever, a pulley and a gear.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how one mechanism lets a smaller force have a greater effect.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L8 (gravity, mass, weight).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Make the job easier; mechanisms turn a small force into a larger one.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Levers, pulleys and gears; smaller gears turn faster (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Spot the mechanism in everyday objects.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Small force, big effect (animation: lever on a pivot).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Lever, pulley or gear? Sort examples.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Mechanism sorter (lever / pulley / gear) + explain how one works.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; block review.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Bigger gears spin faster&rdquo; &mdash; it is the smaller gear with fewer teeth that turns faster.</div>
+      <div class="res"><b>Resources:</b> video <em>Simple machines &mdash; KS2</em>; lever animation; Mechanism Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson9_SmallForcesGreaterEffects.html">Open Lesson 9 &rarr;</a>
+  </section>
+
+  <footer>
+    <p class="sig">&#128075; Made by Matt</p>
+    <p>Year 5 Science &middot; Forces &middot; contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>
