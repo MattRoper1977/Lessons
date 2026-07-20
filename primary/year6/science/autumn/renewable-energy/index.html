@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y6 Autumn 1.2 · Renewable energy · Scheme of Work &amp; Lesson Plans · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+  a{color:var(--forest)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;color:var(--cream)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--forest);margin:.2em 0 .4em}
+  h3{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--bark);margin:.1em 0 .3em}
+  h4{font-family:var(--display);font-weight:600;color:var(--forest);font-size:1rem;margin:.2em 0}
+  p,li,td,th{font-size:1.02rem}
+
+  /* hero */
+  .hero{background:var(--navy);border-radius:0 0 26px 26px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,44px) clamp(30px,4vw,44px);
+    border-top:12px solid var(--amber);position:relative;margin-bottom:26px}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;
+    font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem}
+  .hero .eyebrow{font-family:var(--display);font-weight:600;color:var(--mint);letter-spacing:.02em}
+  .hero .enquiry{margin-top:1em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+    border-left:5px solid var(--amber);border-radius:12px;padding:12px 16px;color:var(--cream);max-width:70ch}
+  .hero .enquiry b{color:var(--amber);font-family:var(--display)}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.1em}
+  .facts span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 14px;font-size:.9rem}
+
+  /* sticky jump nav */
+  .jump{position:sticky;top:0;z-index:10;background:rgba(250,247,239,.94);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:9px clamp(12px,3vw,24px);margin:0 calc(-1*clamp(16px,4vw,40px)) 26px}
+  .jump a{font-family:var(--display);font-weight:600;font-size:.86rem;text-decoration:none;color:var(--navy);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .jump a:hover{border-color:var(--forest)}
+  .jump .sp{flex:1}
+  .jump button{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;
+    padding:6px 14px;background:var(--amber);color:var(--navy);cursor:pointer}
+
+  section.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(16px,2.4vw,30px);
+    box-shadow:0 4px 0 rgba(107,79,54,.07);margin-bottom:22px}
+  .lead{max-width:72ch}
+
+  table{width:100%;border-collapse:collapse;margin:.5em 0;font-size:.98rem}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--display);color:var(--forest);background:var(--moss);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .mins{font-family:var(--display);font-weight:600;color:var(--bark)}
+  .phase-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  ul.sprout{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.sprout li{position:relative;padding-left:1.6em}
+  ul.sprout li::before{content:"🌱";position:absolute;left:0;top:0}
+  ul.tick{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.tick li{position:relative;padding-left:1.5em}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--leaf);font-weight:800}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4em 0}
+  .chips span{background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 11px;font-size:.9rem;font-weight:500}
+
+  .tiergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:.5em 0}
+  @media(max-width:720px){.tiergrid{grid-template-columns:1fr}}
+  .tcard{border-radius:12px;padding:11px 14px;border:2px solid;font-size:.96rem}
+  .tcard.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tcard.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tcard.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tcard b{font-family:var(--display);display:block;margin-bottom:2px}
+  .tcard.seed b{color:#2e6b8c}.tcard.sap b{color:#227a4c}.tcard.oak b{color:#b06a12}
+
+  .miscon{background:#fbeee8;border:1px solid #e6b7a6;border-left:5px solid var(--berry);border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .miscon b{font-family:var(--display);color:#9d5a7d;display:block;margin-bottom:3px}
+  .res{background:var(--moss);border:1px solid #cfe0c6;border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .res b{font-family:var(--display);color:var(--forest)}
+
+  .lessonhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lnum{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:12px;
+    width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:none}
+  .open{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;color:var(--navy);
+    background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.3em}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:30px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+
+  @media print{
+    body{background:#fff}
+    .jump{display:none}
+    .hero{background:#fff;border:0;border-top:4px solid #000;border-radius:0}
+    .hero h1,.hero .eyebrow,.hero .enquiry,.hero .mark{color:#000!important}
+    .hero .enquiry{background:#fff;border-color:#999}
+    .hero .enquiry b{color:#000}
+    section.card{box-shadow:none;break-inside:avoid}
+    .lesson{break-before:page}
+    .open{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </div>
+  <div class="wrap" style="padding-bottom:0">
+    <p style="margin-bottom:.35em"><a href="../../../../index.html" style="color:var(--mint);font-family:var(--display);font-weight:600;text-decoration:none">&larr; Primary hub</a></p>
+    <p class="eyebrow">Year 6 &middot; Science &middot; Autumn 1.2</p>
+    <h1>Renewable energy</h1>
+    <p style="color:var(--cream);opacity:.9;margin-top:.3em">Scheme of work &amp; lesson plans &middot; 7 lessons</p>
+    <div class="enquiry"><b>Enquiry question:</b> What is renewable energy, and how can we use it to power our world more sustainably?</div>
+    <div class="facts">
+      <span>7 lessons</span><span>&asymp; 44 min each</span><span>3 tiers per lesson</span><span>Video + animation</span><span>Print packs included</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="jump">
+    <a href="#sow">Overview</a>
+    <a href="#l1">1 &middot; What is it</a>
+    <a href="#l2">2 &middot; Fossil fuels</a>
+    <a href="#l3">3 &middot; Solar</a>
+    <a href="#l4">4 &middot; Wind</a>
+    <a href="#l5">5 &middot; Weighing up</a>
+    <a href="#l6">6 &middot; Community</a>
+    <a href="#l7">7 &middot; School plan</a>
+    <span class="sp"></span>
+    <a href="Y6_Renewable_SoW_and_Plans.docx" download>&#8681; Word version</a>
+    <button onclick="window.print()">&#128424; Print</button>
+  </nav>
+
+  <section class="card" id="sow">
+    <h2>Scheme of work &mdash; at a glance</h2>
+    <p class="lead">This White Rose <b>sustainability</b> block is spread across the whole of Autumn 1.2. Seven lessons take pupils from <em>&ldquo;what is renewable energy?&rdquo;</em> through solar and wind power to a culminating <b>plan-and-present</b> proposal for their own school. Each lesson runs the same structure &mdash; Arrival &rarr; Starter &rarr; I do &rarr; We do &rarr; Independent &rarr; Exit &mdash; in about 44 minutes, differentiated across three primary tiers.</p>
+    <table>
+      <tr><th>#</th><th>Lesson</th><th>Learning objective</th><th>Key vocabulary</th><th></th></tr>
+      <tr><td>1</td><td><b>What is renewable energy?</b></td><td>Know the difference between renewable and non-renewable sources; fossil fuels (coal, oil, gas) run out.</td><td>renewable, non-renewable, fossil fuels, solar, wind</td><td><a href="Lesson1_WhatIsRenewableEnergy.html">Open &rarr;</a></td></tr>
+      <tr><td>2</td><td><b>Fossil fuels &amp; the environment</b></td><td>Know that burning fossil fuels releases greenhouse gases, causing global warming and climate change.</td><td>greenhouse gases, global warming, climate change</td><td><a href="Lesson2_FossilFuelsAndEnvironment.html">Open &rarr;</a></td></tr>
+      <tr><td>3</td><td><b>Solar power</b></td><td>Know that solar panels turn the Sun&rsquo;s light into electricity; give advantages and disadvantages.</td><td>solar power, solar panels, renewable</td><td><a href="Lesson3_SolarPower.html">Open &rarr;</a></td></tr>
+      <tr><td>4</td><td><b>Wind power</b></td><td>Know that wind turbines use wind to generate electricity; give advantages and disadvantages.</td><td>wind power, wind turbine, generator</td><td><a href="Lesson4_WindPower.html">Open &rarr;</a></td></tr>
+      <tr><td>5</td><td><b>Weighing it up</b></td><td>Compare renewable and non-renewable sources fairly; renewables don&rsquo;t run out but can be weather-dependent.</td><td>renewable, non-renewable, evidence</td><td><a href="Lesson5_WeighingItUp.html">Open &rarr;</a></td></tr>
+      <tr><td>6</td><td><b>Renewable energy in our community</b></td><td>Research how communities use renewable energy to limit global warming; find local opportunities.</td><td>sustainability, community, environment</td><td><a href="Lesson6_RenewableInOurCommunity.html">Open &rarr;</a></td></tr>
+      <tr><td>7</td><td><b>Plan &amp; present for our school</b></td><td>Design and present a renewable-energy proposal for the school, giving evidence-based reasons.</td><td>proposal, evidence, reason, sustainability</td><td><a href="Lesson7_PlanForOurSchool.html">Open &rarr;</a></td></tr>
+    </table>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Curriculum coverage</h3>
+        <ul class="tick">
+          <li>A White Rose <b>sustainability</b> block: it develops working scientifically and links to the Year 6 electricity unit and Year 5 work on Earth, space and global warming.</li>
+          <li>Children distinguish renewable and non-renewable sources, and explain how burning fossil fuels drives global warming and climate change.</li>
+        </ul>
+        <h4>Working scientifically</h4>
+        <ul class="tick">
+          <li>Identifying scientific evidence used to support or refute ideas or arguments (especially L5, L7).</li>
+          <li>Reporting and presenting findings from research, including causal relationships (L6, L7).</li>
+          <li>Using evidence to build and present a reasoned argument &mdash; the school proposal (L7).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Vocabulary across the block</h3>
+        <div class="chips"><span>renewable</span><span>non-renewable</span><span>fossil fuels</span><span>solar power</span><span>solar panels</span><span>wind power</span><span>wind turbine</span><span>generator</span><span>electricity</span><span>global warming</span><span>greenhouse gases</span><span>greenhouse effect</span><span>climate change</span><span>sustainability</span><span>environment</span></div>
+        <h3 style="margin-top:1em">Assessment</h3>
+        <ul class="tick">
+          <li>A tiered <b>exit ticket</b> every lesson (Seedling / Sapling / Oak).</li>
+          <li>Interactive independent sorter self-checks understanding in the moment.</li>
+          <li>The block ends with a designed, evidence-based <b>proposal</b> for the school.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Prior learning &amp; next steps</h3>
+        <p><b>Builds on (Y5):</b> Earth and space, and global warming / the greenhouse effect. <b>Cross-curricular:</b> the Year 6 electricity unit &mdash; circuits and generating electricity.</p>
+        <p style="margin-top:.4em"><b>Leads to (KS3):</b> energy resources, generating electricity, and climate science.</p>
+      </div>
+      <div>
+        <h3>How each lesson is built</h3>
+        <p>Every lesson is a single interactive web page: six-phase structure with on-screen timings; three tiers on the four pupil-facing tasks; a short teaching video; a self-contained animation targeting the lesson&rsquo;s key misconception; TA Focus and Cold Call prompts; and a one-click print pack.</p>
+        <p class="note" style="font-size:.9rem;color:#6a6d64;margin-top:.4em"><em>Differentiation tiers map to attainment bands: &#127793; Seedling = working towards &middot; &#127807; Sapling = expected &middot; &#127795; Oak = greater depth.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LESSON PLANS ===================== -->
+  <!-- L1 -->
+  <section class="card lesson" id="l1">
+    <div class="lessonhead"><span class="lnum">1</span><h2 style="margin:0">What is renewable energy?</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand the difference between renewable and non-renewable energy sources, and know that fossil fuels (coal, oil and gas) are non-renewable because they run out.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Sorts a renewable source from a non-renewable one with support.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Names renewable and non-renewable sources and the three fossil fuels.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why fossil fuels are non-renewable and can&rsquo;t be replaced.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>New topic &mdash; recap Y5 global warming and Y6 electricity.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>&ldquo;Will it run out?&rdquo; &mdash; sort sources into runs-out / keeps-going.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Renewable vs non-renewable; fossil fuels run out (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort sources renewable / non-renewable together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>One keeps going, one runs out (animation: sun vs shrinking coal).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false on the two myths.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Energy source sorter (renewable / non-renewable / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Fossil fuels will last forever&rdquo; and &ldquo;renewables have no downsides at all&rdquo; &mdash; fossil fuels run out; renewables can be weather-dependent.</div>
+      <div class="res"><b>Resources:</b> video <em>Renewable energy for kids</em>; sun-vs-coal animation; Energy Source Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson1_WhatIsRenewableEnergy.html">Open Lesson 1 &rarr;</a>
+  </section>
+
+  <!-- L2 -->
+  <section class="card lesson" id="l2">
+    <div class="lessonhead"><span class="lnum">2</span><h2 style="margin:0">Fossil fuels and the environment</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand that burning fossil fuels releases greenhouse gases, which trap heat and cause global warming and climate change.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows greenhouse gases trap heat.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains how burning fossil fuels warms the Earth.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why the greenhouse effect is natural but extra gases are a problem.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L1 (renewable vs non-renewable).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Recall Y5: greenhouse gases, the greenhouse effect, climate change.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Greenhouse gases, global warming and climate change (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build the burn &rarr; gases &rarr; heat &rarr; warming chain.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Heat gets trapped (animation: the greenhouse effect).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Add or cut? Sort actions together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Greenhouse gas sorter (releases / cuts / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;The greenhouse effect is always bad&rdquo; (it&rsquo;s natural; the extra gases are the problem) and &ldquo;climate change just means hotter&rdquo; (also floods, droughts, storms).</div>
+      <div class="res"><b>Resources:</b> video <em>Climate change for kids</em>; greenhouse-effect animation; Greenhouse Gas Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson2_FossilFuelsAndEnvironment.html">Open Lesson 2 &rarr;</a>
+  </section>
+
+  <!-- L3 -->
+  <section class="card lesson" id="l3">
+    <div class="lessonhead"><span class="lnum">3</span><h2 style="margin:0">Solar power</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know that solar panels absorb light from the Sun and convert it into electricity, and give advantages and disadvantages of solar power.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows solar panels use light from the Sun.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives one advantage and one disadvantage of solar power.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how solar panels work and why they still generate power on cloudy days.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L2 (fossil fuels &amp; the environment).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Power from the Sun &mdash; where have you seen solar panels?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>How solar panels turn light into electricity (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build a pros/cons list for solar.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Sunlight becomes electricity (animation: panel powers a home).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Advantage or disadvantage? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Solar power sorter (advantage / disadvantage / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Solar panels don&rsquo;t work in the UK&rdquo; (they work even when cloudy, just less) and &ldquo;solar power makes greenhouse gases&rdquo; (it makes none).</div>
+      <div class="res"><b>Resources:</b> video <em>How does solar energy work? &mdash; KS2</em>; sunlight-to-electricity animation; Solar Power Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson3_SolarPower.html">Open Lesson 3 &rarr;</a>
+  </section>
+
+  <!-- L4 -->
+  <section class="card lesson" id="l4">
+    <div class="lessonhead"><span class="lnum">4</span><h2 style="margin:0">Wind power</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know that wind turbines use wind to turn blades and generate electricity, and give advantages and disadvantages of wind power.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows wind turbines use wind to make electricity.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives one advantage and one disadvantage of wind power.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how a turbine generates electricity and answers the &lsquo;birds&rsquo; myth fairly.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L3 (solar power).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Power from the wind &mdash; where have you seen turbines?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>How wind turbines generate electricity (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build a pros/cons list for wind.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Wind becomes electricity (animation: turbine lights a bulb).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Advantage or disadvantage? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Wind power sorter (advantage / disadvantage / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Wind turbines kill lots of birds&rdquo; (risk is kept low) and &ldquo;wind power is really expensive&rdquo; (now one of the cheapest sources).</div>
+      <div class="res"><b>Resources:</b> video <em>How does wind energy work? &mdash; KS2</em>; turbine animation; Wind Power Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson4_WindPower.html">Open Lesson 4 &rarr;</a>
+  </section>
+
+  <!-- L5 -->
+  <section class="card lesson" id="l5">
+    <div class="lessonhead"><span class="lnum">5</span><h2 style="margin:0">Weighing it up</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Compare renewable and non-renewable sources fairly, recognising that renewables don&rsquo;t run out or make greenhouse gases but can be weather-dependent, and are now often cheaper.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Knows renewables don&rsquo;t run out.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives one strength and one limitation of renewables.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Argues which is the better choice using evidence for both sides.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L4 (wind power).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Compare the sources &mdash; strengths and limitations.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>The honest picture: renewables aren&rsquo;t perfect (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build a two-column pros/cons table.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Weighing it up (animation: a balance scale).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Strength, limitation or myth? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Weighing-it-up sorter (strength / limitation / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Renewables have no downsides at all&rdquo; and &ldquo;renewable energy is always more expensive&rdquo; &mdash; they&rsquo;re weather-dependent, but now often the cheapest.</div>
+      <div class="res"><b>Resources:</b> video <em>Comparing renewable energy sources</em>; balance-scale animation; Weighing-It-Up Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson5_WeighingItUp.html">Open Lesson 5 &rarr;</a>
+  </section>
+
+  <!-- L6 -->
+  <section class="card lesson" id="l6">
+    <div class="lessonhead"><span class="lnum">6</span><h2 style="margin:0">Renewable energy in our community</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Research how renewable energy is used in communities to limit global warming, and identify where renewable energy could be used locally.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names one renewable choice for a community.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives two ways a community could use renewable energy.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why many small local changes add up to a big difference.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L5 (weighing renewable vs non-renewable).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Renewables near us &mdash; what have you spotted?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Renewables in real communities; why they cut warming (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Spot greener choices in a pretend town.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>A greener community (animation: solar roofs + community turbine).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Where could our area add renewables?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Greener community sorter (cuts carbon / adds warming / myth) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;One school can&rsquo;t make a difference&rdquo; and &ldquo;renewables are only for big cities&rdquo; &mdash; many small changes add up; homes and villages use them too.</div>
+      <div class="res"><b>Resources:</b> video <em>Cutting our carbon &mdash; communities</em>; greener-town animation; Greener Community Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson6_RenewableInOurCommunity.html">Open Lesson 6 &rarr;</a>
+  </section>
+
+  <!-- L7 -->
+  <section class="card lesson" id="l7">
+    <div class="lessonhead"><span class="lnum">7</span><h2 style="margin:0">Plan &amp; present: a renewable plan for our school</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Use knowledge from the block to design and present a renewable-energy proposal for the school, giving evidence-based reasons.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Chooses a renewable source for the school and gives a reason.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Writes a proposal with a claim and one strong reason.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Writes a proposal with a claim and two strong, evidence-based reasons, ready to present.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L6 and review the whole block.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Set the task: a proposal for the head teacher &mdash; claim, evidence, reason.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Strong reason vs weak reason; gather ideas (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Draft a class proposal together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Our plan brought to life (animation: school gains solar + turbine).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Strong reason or not? Sort statements.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Proposal reason sorter (strong / weak / not relevant) + write &amp; present the proposal.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; block review.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That a good proposal needs evidence-based reasons, not just opinions like &ldquo;it looks cool&rdquo;.</div>
+      <div class="res"><b>Resources:</b> video <em>Renewable energy &mdash; ideas for a greener school</em>; school-design animation; Proposal Reason Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson7_PlanForOurSchool.html">Open Lesson 7 &rarr;</a>
+  </section>
+
+  <footer>
+    <p class="sig">&#128075; Made by Matt</p>
+    <p>Year 6 Science &middot; Renewable energy &middot; contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>
