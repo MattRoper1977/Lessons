@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y5 Block 2 · Space · Scheme of Work &amp; Lesson Plans · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+  a{color:var(--forest)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;color:var(--cream)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--forest);margin:.2em 0 .4em}
+  h3{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--bark);margin:.1em 0 .3em}
+  h4{font-family:var(--display);font-weight:600;color:var(--forest);font-size:1rem;margin:.2em 0}
+  p,li,td,th{font-size:1.02rem}
+
+  /* hero */
+  .hero{background:var(--navy);border-radius:0 0 26px 26px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,44px) clamp(30px,4vw,44px);
+    border-top:12px solid var(--amber);position:relative;margin-bottom:26px}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;
+    font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem}
+  .hero .eyebrow{font-family:var(--display);font-weight:600;color:var(--mint);letter-spacing:.02em}
+  .hero .enquiry{margin-top:1em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+    border-left:5px solid var(--amber);border-radius:12px;padding:12px 16px;color:var(--cream);max-width:70ch}
+  .hero .enquiry b{color:var(--amber);font-family:var(--display)}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.1em}
+  .facts span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 14px;font-size:.9rem}
+
+  /* sticky jump nav */
+  .jump{position:sticky;top:0;z-index:10;background:rgba(250,247,239,.94);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:9px clamp(12px,3vw,24px);margin:0 calc(-1*clamp(16px,4vw,40px)) 26px}
+  .jump a{font-family:var(--display);font-weight:600;font-size:.86rem;text-decoration:none;color:var(--navy);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .jump a:hover{border-color:var(--forest)}
+  .jump .sp{flex:1}
+  .jump button{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;
+    padding:6px 14px;background:var(--amber);color:var(--navy);cursor:pointer}
+
+  section.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(16px,2.4vw,30px);
+    box-shadow:0 4px 0 rgba(107,79,54,.07);margin-bottom:22px}
+  .lead{max-width:72ch}
+
+  table{width:100%;border-collapse:collapse;margin:.5em 0;font-size:.98rem}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--display);color:var(--forest);background:var(--moss);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .mins{font-family:var(--display);font-weight:600;color:var(--bark)}
+  .phase-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  ul.sprout{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.sprout li{position:relative;padding-left:1.6em}
+  ul.sprout li::before{content:"🌱";position:absolute;left:0;top:0}
+  ul.tick{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.tick li{position:relative;padding-left:1.5em}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--leaf);font-weight:800}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4em 0}
+  .chips span{background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 11px;font-size:.9rem;font-weight:500}
+
+  .tiergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:.5em 0}
+  @media(max-width:720px){.tiergrid{grid-template-columns:1fr}}
+  .tcard{border-radius:12px;padding:11px 14px;border:2px solid;font-size:.96rem}
+  .tcard.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tcard.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tcard.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tcard b{font-family:var(--display);display:block;margin-bottom:2px}
+  .tcard.seed b{color:#2e6b8c}.tcard.sap b{color:#227a4c}.tcard.oak b{color:#b06a12}
+
+  .miscon{background:#fbeee8;border:1px solid #e6b7a6;border-left:5px solid var(--berry);border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .miscon b{font-family:var(--display);color:#9d5a7d;display:block;margin-bottom:3px}
+  .res{background:var(--moss);border:1px solid #cfe0c6;border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .res b{font-family:var(--display);color:var(--forest)}
+
+  .lessonhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lnum{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:12px;
+    width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:none}
+  .open{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;color:var(--navy);
+    background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.3em}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:30px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+
+  @media print{
+    body{background:#fff}
+    .jump{display:none}
+    .hero{background:#fff;border:0;border-top:4px solid #000;border-radius:0}
+    .hero h1,.hero .eyebrow,.hero .enquiry,.hero .mark{color:#000!important}
+    .hero .enquiry{background:#fff;border-color:#999}
+    .hero .enquiry b{color:#000}
+    section.card{box-shadow:none;break-inside:avoid}
+    .lesson{break-before:page}
+    .open{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </div>
+  <div class="wrap" style="padding-bottom:0">
+    <p style="margin-bottom:.35em"><a href="../../../../index.html" style="color:var(--mint);font-family:var(--display);font-weight:600;text-decoration:none">&larr; Primary hub</a></p>
+    <p class="eyebrow">Year 5 &middot; Science &middot; Autumn Block 2</p>
+    <h1>Space</h1>
+    <p style="color:var(--cream);opacity:.9;margin-top:.3em">Scheme of work &amp; lesson plans &middot; 8 lessons</p>
+    <div class="enquiry"><b>Enquiry question:</b> How have ideas about the Solar System changed over time?</div>
+    <div class="facts">
+      <span>8 lessons</span><span>&asymp; 44 min each</span><span>3 tiers per lesson</span><span>Video + animation</span><span>Print packs included</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="jump">
+    <a href="#sow">Overview</a>
+    <a href="#l1">1 &middot; Solar System</a>
+    <a href="#l2">2 &middot; Planets</a>
+    <a href="#l3">3 &middot; Modelling</a>
+    <a href="#l4">4 &middot; Motion</a>
+    <a href="#l5">5 &middot; Ideas over time</a>
+    <a href="#l6">6 &middot; Planet Earth</a>
+    <a href="#l7">7 &middot; Night &amp; day</a>
+    <a href="#l8">8 &middot; The Moon</a>
+    <span class="sp"></span>
+    <a href="Y5_Space_SoW_and_Plans.docx" download>&#8681; Word version</a>
+    <button onclick="window.print()">&#128424; Print</button>
+  </nav>
+
+  <section class="card" id="sow">
+    <h2>Scheme of work &mdash; at a glance</h2>
+    <p class="lead">Eight lessons take pupils from <em>&ldquo;what is the Solar System?&rdquo;</em> to the Moon, threading the block&rsquo;s enquiry question throughout &mdash; with the payoff landing in Lesson 5. Each lesson runs the same structure &mdash; Arrival &rarr; Starter &rarr; I do &rarr; We do &rarr; Independent &rarr; Exit &mdash; in about 44 minutes, differentiated across three primary tiers.</p>
+    <table>
+      <tr><th>#</th><th>Lesson</th><th>Learning objective</th><th>Key vocabulary</th><th></th></tr>
+      <tr><td>1</td><td><b>The Solar System</b></td><td>Know the Sun is the only star; eight planets, their moons and smaller bodies orbit it.</td><td>Solar System, star, planet, orbit, satellite, dwarf planet</td><td><a href="Lesson1_TheSolarSystem.html">Open &rarr;</a></td></tr>
+      <tr><td>2</td><td><b>The planets</b></td><td>Order the eight planets; first four rocky, last four gas giants; the Sun dwarfs Earth.</td><td>planet, rocky, gas giant, orbit, moon</td><td><a href="Lesson2_ThePlanets.html">Open &rarr;</a></td></tr>
+      <tr><td>3</td><td><b>Modelling</b></td><td>Use models of the Solar System; weigh their advantages, limits and scale.</td><td>model, scale, representation, orbit</td><td><a href="Lesson3_Modelling.html">Open &rarr;</a></td></tr>
+      <tr><td>4</td><td><b>Motion of the Earth and planets</b></td><td>The Sun&rsquo;s gravity holds planets in orbit; each planet&rsquo;s year is a different length.</td><td>gravity, gravitational pull, orbit, heliocentric model</td><td><a href="Lesson4_MotionOfEarthAndPlanets.html">Open &rarr;</a></td></tr>
+      <tr><td>5</td><td><b>The Solar System &mdash; ideas over time</b></td><td>Trace geocentric to heliocentric and the evidence that changed the model.</td><td>geocentric model, heliocentric model, evidence, telescope</td><td><a href="Lesson5_IdeasOverTime.html">Open &rarr;</a></td></tr>
+      <tr><td>6</td><td><b>Planet Earth</b></td><td>Earth rotates on its axis every 24 hours; the Sun stays still.</td><td>rotate, axis, North Pole, South Pole</td><td><a href="Lesson6_PlanetEarth.html">Open &rarr;</a></td></tr>
+      <tr><td>7</td><td><b>Night and day</b></td><td>Earth&rsquo;s rotation causes day (facing the Sun) and night (facing away).</td><td>day, night, rotate, axis</td><td><a href="Lesson7_NightAndDay.html">Open &rarr;</a></td></tr>
+      <tr><td>8</td><td><b>The Moon</b></td><td>The Moon orbits Earth, held by gravity, and reflects the Sun&rsquo;s light.</td><td>moon, satellite, orbit, gravitational force, reflect</td><td><a href="Lesson8_TheMoon.html">Open &rarr;</a></td></tr>
+    </table>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>National Curriculum coverage</h3>
+        <ul class="tick">
+          <li>Describe the movement of the Earth, and other planets, relative to the Sun in the solar system.</li>
+          <li>Describe the movement of the Moon relative to the Earth.</li>
+          <li>Describe the Sun, Earth and Moon as approximately spherical bodies.</li>
+          <li>Use the idea of the Earth&rsquo;s rotation to explain day and night and the apparent movement of the sun across the sky.</li>
+        </ul>
+        <h4>Working scientifically</h4>
+        <ul class="tick">
+          <li>Identifying scientific evidence used to support or refute ideas or arguments (L5).</li>
+          <li>Using models to represent and explain the Solar System, recognising their advantages and limitations (L3&ndash;L4).</li>
+          <li>Reporting and presenting findings from enquiries, including oral and written explanations (L3, L5).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Vocabulary across the block</h3>
+        <div class="chips"><span>Solar System</span><span>star</span><span>planet</span><span>orbit</span><span>Sun</span><span>Pluto</span><span>dwarf planet</span><span>celestial body</span><span>model</span><span>gravity</span><span>gravitational force</span><span>heliocentric model</span><span>geocentric model</span><span>rotate</span><span>axis</span><span>North Pole</span><span>South Pole</span><span>Earth</span><span>night</span><span>day</span><span>moon</span><span>satellite</span></div>
+        <h3 style="margin-top:1em">Assessment</h3>
+        <ul class="tick">
+          <li>A tiered <b>exit ticket</b> every lesson (Seedling / Sapling / Oak).</li>
+          <li>Interactive independent sorter self-checks understanding in the moment.</li>
+          <li>End-of-block assessment covers the Solar System, planets, models, motion, ideas over time, day/night and the Moon.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Prior learning &amp; next steps</h3>
+        <p><b>Builds on:</b> space is a new topic &mdash; children have not studied the Solar System before. <b>Earlier (Y3):</b> forces and magnets; light and shadows.</p>
+        <p style="margin-top:.4em"><b>Leads to (KS3):</b> gravity, the Solar System, the seasons and the Earth&ndash;Sun&ndash;Moon system.</p>
+      </div>
+      <div>
+        <h3>How each lesson is built</h3>
+        <p>Every lesson is a single interactive web page: six-phase structure with on-screen timings; three tiers on the four pupil-facing tasks; a short teaching video; a self-contained animation targeting the lesson&rsquo;s key misconception; TA Focus and Cold Call prompts; and a one-click print pack.</p>
+        <p class="note" style="font-size:.9rem;color:#6a6d64;margin-top:.4em"><em>Differentiation tiers map to attainment bands: &#127793; Seedling = working towards &middot; &#127807; Sapling = expected &middot; &#127795; Oak = greater depth.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LESSON PLANS ===================== -->
+  <!-- L1 -->
+  <section class="card lesson" id="l1">
+    <div class="lessonhead"><span class="lnum">1</span><h2 style="margin:0">The Solar System</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know that the Solar System is the Sun (its only star), eight planets, their moons and smaller celestial bodies, and that the planets orbit the Sun.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names the star and sorts a star from a planet with support.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Sorts star / planet / other body and uses the word orbit.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why the Moon and Pluto are not planets, using satellite and dwarf planet.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>New topic &mdash; elicit prior knowledge about space; introduce the block.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Star, planet or moon? &mdash; define the three terms.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What makes up the Solar System &mdash; Sun, planets, moons, celestial bodies (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Name each object: does it make light / orbit a star / orbit a planet?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>One star, and a dwarf called Pluto (animation: Sun-centred orbits).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Sort star / planet / other together; define satellite.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Solar System Sorter (Star / Planet / Other body) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; introduce the block enquiry question.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;There is more than one star in the Solar System&rdquo; (only the Sun); &ldquo;Pluto is a planet&rdquo; (reclassified as a dwarf planet).</div>
+      <div class="res"><b>Resources:</b> video <em>The Solar System &mdash; KS2</em>; Sun-centred orbit animation; Solar System Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson1_TheSolarSystem.html">Open Lesson 1 &rarr;</a>
+  </section>
+
+  <!-- L2 -->
+  <section class="card lesson" id="l2">
+    <div class="lessonhead"><span class="lnum">2</span><h2 style="margin:0">The planets</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know the eight planets and their order from the Sun; that the first four are rocky and the last four are gas giants; and that the Sun is far larger than Earth.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Orders the first four planets and names a rocky planet.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Orders all eight; sorts rocky / gas / not a planet.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why Earth is tiny beside the Sun, and why the Sun and Moon are not planets.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L1 (Solar System, only one star, Pluto).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Order the eight planets (mnemonic).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Meet the eight planets; rocky vs gas; moons (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort rocky vs gas; spot the pattern (near = rocky).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The Sun is enormous (animation: Sun &asymp;109&times; wider than Earth).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false on the three big planet myths.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Rocky / Gas giant / Not-a-planet Sorter + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Earth is bigger than the Sun&rdquo;; &ldquo;all planets are rocky&rdquo;; &ldquo;only Earth has a moon&rdquo; (e.g. Uranus has 27).</div>
+      <div class="res"><b>Resources:</b> video <em>Planet order from the Sun</em>; Sun-vs-Earth size animation; Planet Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson2_ThePlanets.html">Open Lesson 2 &rarr;</a>
+  </section>
+
+  <!-- L3 -->
+  <section class="card lesson" id="l3">
+    <div class="lessonhead"><span class="lnum">3</span><h2 style="margin:0">Modelling</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand what a model is and why scientists use models; recognise the advantages and limitations of a Solar System model, especially scale.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names a way to model the planets and one good thing about a model.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Gives one advantage and one disadvantage of a Solar System model.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Designs a better model in words and explains what it still cannot show to scale.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L2 (planets, rocky/gas, the Sun&rsquo;s size).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>How would you build a Solar System? &mdash; introduce models.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What a model is; why scientists use them; scale (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Critique a model &mdash; shows order/orbits, gets sizes/gaps wrong.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Great for orbits, wrong for scale (animation: orrery model).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Advantage or disadvantage? &mdash; sort statements together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Model Sorter (Advantage / Disadvantage / Can&rsquo;t-show-to-scale) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Planets are really this close together / this size&rdquo; &mdash; a table-top model cannot show true distances or sizes to scale.</div>
+      <div class="res"><b>Resources:</b> video <em>Our Solar System &mdash; size comparison</em>; orrery animation; Model Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson3_Modelling.html">Open Lesson 3 &rarr;</a>
+  </section>
+
+  <!-- L4 -->
+  <section class="card lesson" id="l4">
+    <div class="lessonhead"><span class="lnum">4</span><h2 style="margin:0">Motion of the Earth and planets</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Describe how the Sun&rsquo;s gravity holds the planets in orbit, and that each planet takes a different length of time to orbit the Sun.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names gravity as the force that keeps planets in orbit.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains why Mercury&rsquo;s year is shorter than Neptune&rsquo;s.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains, using gravity and orbit, why the planets circle the Sun and none fly away.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L3 (models).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Why don&rsquo;t the planets fly away? &mdash; introduce gravity.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Gravity, orbits and years; Mercury fast, Neptune slow (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Order planets by orbit time; near = faster.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Not every year is 365 days (animation: different orbit speeds).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Day vs year &mdash; separate the spin from the orbit.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Year / Day / Gravity Sorter + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Every planet takes about 365 days to orbit the Sun&rdquo; &mdash; each planet&rsquo;s year differs (Jupiter &asymp; 12 Earth years).</div>
+      <div class="res"><b>Resources:</b> video <em>The Solar System &mdash; movement of the planets</em>; different-speed orbit animation; Year/Day/Gravity Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson4_MotionOfEarthAndPlanets.html">Open Lesson 4 &rarr;</a>
+  </section>
+
+  <!-- L5 -->
+  <section class="card lesson" id="l5">
+    <div class="lessonhead"><span class="lnum">5</span><h2 style="margin:0">The Solar System &mdash; ideas over time</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know how ideas changed from the geocentric (Earth-centred) to the heliocentric (Sun-centred) model, and how evidence from Copernicus, Galileo and Newton drove the change.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Sorts &lsquo;Earth-centred&rsquo; and &lsquo;Sun-centred&rsquo; statements with support.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Names a scientist who argued the Sun is at the centre and one difference between the models.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains how the model improved as tools like the telescope gave new evidence.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L4 (gravity, orbits, heliocentric).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Why did people once think everything went round the Earth?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Geocentric vs heliocentric; Aristotle to Newton (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Match each scientist to their idea.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The idea that changed (animation: geocentric to heliocentric).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Geocentric vs heliocentric &mdash; spot the difference.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Geocentric / Heliocentric / New-evidence Sorter + answer the enquiry question.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Answer the block enquiry question at tier.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;Earth is flat&rdquo; and &ldquo;Earth is at the centre&rdquo; &mdash; both once believed, now known to be wrong.</div>
+      <div class="res"><b>Resources:</b> video <em>The heliocentric model &mdash; Year 5</em>; geo-to-helio animation; Ideas-over-time Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson5_IdeasOverTime.html">Open Lesson 5 &rarr;</a>
+  </section>
+
+  <!-- L6 -->
+  <section class="card lesson" id="l6">
+    <div class="lessonhead"><span class="lnum">6</span><h2 style="margin:0">Planet Earth</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know that Earth rotates on its axis once every 24 hours, that this makes the Sun appear to move, and that the Sun itself stays still.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>Names what Earth spins on and how long one spin takes.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains what the axis is and names the two poles.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why the Sun appears to move across the sky even though it stays still.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L5 (geocentric/heliocentric, scientists).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Does the Sun move across the sky? &mdash; surface the misconception.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Earth rotates on its axis every 24h; axis and poles (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Torch-and-globe demonstration of rotation.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The Sun stays still (animation: Earth spins on a tilted axis).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false about Earth.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Rotation / Seasons / The-Sun Sorter + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;The Sun rotates around Earth&rdquo;; &ldquo;Earth is the biggest object&rdquo;; &ldquo;other planets support life&rdquo; (only Earth is known to).</div>
+      <div class="res"><b>Resources:</b> video <em>Earth&rsquo;s rotation &mdash; day and night</em>; Earth-spin animation; All-about-Earth Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson6_PlanetEarth.html">Open Lesson 6 &rarr;</a>
+  </section>
+
+  <!-- L7 -->
+  <section class="card lesson" id="l7">
+    <div class="lessonhead"><span class="lnum">7</span><h2 style="margin:0">Night and day</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Use Earth&rsquo;s rotation to explain day and night: the side facing the Sun has day, the side facing away has night.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>States which side of Earth has day.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains in one sentence what causes night and day.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why different countries do not experience day at the same time.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L6 (Earth spins on its axis, 24h, Sun stays still).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Day here, night in Australia &mdash; how?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>How night and day happen; day and night sides (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Torch-and-globe: find the day&ndash;night line.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The Sun doesn&rsquo;t go anywhere (animation: rotating terminator + &lsquo;you are here&rsquo;).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Why doesn&rsquo;t everyone have day at once? (time zones).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Day-side / Night-side / Myth Sorter + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;The Sun switches off at night&rdquo;; &ldquo;the Sun moves around the Earth&rdquo; &mdash; Earth rotates; the Sun stays still.</div>
+      <div class="res"><b>Resources:</b> video <em>Earth&rsquo;s rotation &mdash; day and night</em>; day/night terminator animation; Day-Night Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson7_NightAndDay.html">Open Lesson 7 &rarr;</a>
+  </section>
+
+  <!-- L8 -->
+  <section class="card lesson" id="l8">
+    <div class="lessonhead"><span class="lnum">8</span><h2 style="margin:0">The Moon</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Describe the movement of the Moon relative to Earth: a natural satellite held by Earth&rsquo;s gravity, orbiting about every 27&ndash;28 days, that reflects the Sun&rsquo;s light.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>&#127793; Seedling</b>States what the Moon orbits and where its light comes from.</div>
+      <div class="tcard sap"><b>&#127807; Sapling</b>Explains what keeps the Moon in orbit and where its light comes from.</div>
+      <div class="tcard oak"><b>&#127795; Oak</b>Explains why other planets have moons too, using gravity and orbit.</div>
+    </div>
+    <h4>Lesson structure (&asymp;44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L7 (night and day).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>Where does the Moon&rsquo;s light come from?</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Earth&rsquo;s natural satellite; orbit, gravity, reflected light (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Link orbits, gravity and light across the block.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Borrowed light (animation: Moon orbits Earth, lit half only).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>True/false on the Moon myths.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>True / Myth / Orbit-&amp;-gravity Sorter + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; look back at the enquiry question; block review.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>&ldquo;The Moon makes its own light&rdquo; (it reflects the Sun&rsquo;s); &ldquo;the Moon is only out at night&rdquo;; &ldquo;only Earth has a moon&rdquo;.</div>
+      <div class="res"><b>Resources:</b> video <em>The Moon, Earth and Sun &mdash; KS2</em>; Moon-orbit animation; The-Moon Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson8_TheMoon.html">Open Lesson 8 &rarr;</a>
+  </section>
+
+  <footer>
+    <p class="sig">&#128075; Made by Matt</p>
+    <p>Year 5 Science &middot; Space &middot; contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>
