@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y6 Block 1 · Scheme of Work &amp; Lesson Plans · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+  a{color:var(--forest)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;color:var(--cream)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--forest);margin:.2em 0 .4em}
+  h3{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--bark);margin:.1em 0 .3em}
+  h4{font-family:var(--display);font-weight:600;color:var(--forest);font-size:1rem;margin:.2em 0}
+  p,li,td,th{font-size:1.02rem}
+
+  /* hero */
+  .hero{background:var(--navy);border-radius:0 0 26px 26px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,44px) clamp(30px,4vw,44px);
+    border-top:12px solid var(--amber);position:relative;margin-bottom:26px}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;
+    font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem}
+  .hero .eyebrow{font-family:var(--display);font-weight:600;color:var(--mint);letter-spacing:.02em}
+  .hero .enquiry{margin-top:1em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+    border-left:5px solid var(--amber);border-radius:12px;padding:12px 16px;color:var(--cream);max-width:70ch}
+  .hero .enquiry b{color:var(--amber);font-family:var(--display)}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.1em}
+  .facts span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 14px;font-size:.9rem}
+
+  /* sticky jump nav */
+  .jump{position:sticky;top:0;z-index:10;background:rgba(250,247,239,.94);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:9px clamp(12px,3vw,24px);margin:0 calc(-1*clamp(16px,4vw,40px)) 26px}
+  .jump a{font-family:var(--display);font-weight:600;font-size:.86rem;text-decoration:none;color:var(--navy);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .jump a:hover{border-color:var(--forest)}
+  .jump .sp{flex:1}
+  .jump button{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;
+    padding:6px 14px;background:var(--amber);color:var(--navy);cursor:pointer}
+
+  section.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(16px,2.4vw,30px);
+    box-shadow:0 4px 0 rgba(107,79,54,.07);margin-bottom:22px}
+  .lead{max-width:72ch}
+
+  table{width:100%;border-collapse:collapse;margin:.5em 0;font-size:.98rem}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--display);color:var(--forest);background:var(--moss);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .mins{font-family:var(--display);font-weight:600;color:var(--bark)}
+  .phase-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  ul.sprout{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.sprout li{position:relative;padding-left:1.6em}
+  ul.sprout li::before{content:"🌱";position:absolute;left:0;top:0}
+  ul.tick{list-style:none;display:grid;gap:6px;margin:.3em 0}
+  ul.tick li{position:relative;padding-left:1.5em}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--leaf);font-weight:800}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4em 0}
+  .chips span{background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 11px;font-size:.9rem;font-weight:500}
+
+  .tiergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:.5em 0}
+  @media(max-width:720px){.tiergrid{grid-template-columns:1fr}}
+  .tcard{border-radius:12px;padding:11px 14px;border:2px solid;font-size:.96rem}
+  .tcard.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tcard.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tcard.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tcard b{font-family:var(--display);display:block;margin-bottom:2px}
+  .tcard.seed b{color:#2e6b8c}.tcard.sap b{color:#227a4c}.tcard.oak b{color:#b06a12}
+
+  .miscon{background:#fbeee8;border:1px solid #e6b7a6;border-left:5px solid var(--berry);border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .miscon b{font-family:var(--display);color:#9d5a7d;display:block;margin-bottom:3px}
+  .res{background:var(--moss);border:1px solid #cfe0c6;border-radius:10px;padding:11px 15px;margin:.5em 0}
+  .res b{font-family:var(--display);color:var(--forest)}
+
+  .lessonhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lnum{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:12px;
+    width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:none}
+  .open{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;color:var(--navy);
+    background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.3em}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:30px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+
+  @media print{
+    body{background:#fff}
+    .jump{display:none}
+    .hero{background:#fff;border:0;border-top:4px solid #000;border-radius:0}
+    .hero h1,.hero .eyebrow,.hero .enquiry,.hero .mark{color:#000!important}
+    .hero .enquiry{background:#fff;border-color:#999}
+    .hero .enquiry b{color:#000}
+    section.card{box-shadow:none;break-inside:avoid}
+    .lesson{break-before:page}
+    .open{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </div>
+  <div class="wrap" style="padding-bottom:0">
+    <p style="margin-bottom:.35em"><a href="../../../../index.html" style="color:var(--mint);font-family:var(--display);font-weight:600;text-decoration:none">← Primary hub</a></p>
+    <p class="eyebrow">Year 6 · Science · Autumn Block 1</p>
+    <h1>Living things &amp; their habitats</h1>
+    <p style="color:var(--cream);opacity:.9;margin-top:.3em">Scheme of work &amp; lesson plans · 7 lessons</p>
+    <div class="enquiry"><b>Enquiry question:</b> How can animals, plants and microorganisms be identified, grouped and classified?</div>
+    <div class="facts">
+      <span>7 lessons</span><span>≈ 44 min each</span><span>3 tiers per lesson</span><span>Video + animation</span><span>Print packs included</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="jump">
+    <a href="#sow">Overview</a>
+    <a href="#l1">1 · Alive</a>
+    <a href="#l2">2 · Group</a>
+    <a href="#l3">3 · Animals</a>
+    <a href="#l4">4 · Plants</a>
+    <a href="#l5">5 · Microbes</a>
+    <a href="#l6">6 · Classify microbes</a>
+    <a href="#l7">7 · Linnaeus</a>
+    <span class="sp"></span>
+    <a href="Y6_LivingThings_SoW_and_Plans.docx" download>⬇ Word version</a>
+    <button onclick="window.print()">🖨 Print</button>
+  </nav>
+
+  <!-- ===================== SCHEME OF WORK ===================== -->
+  <section class="card" id="sow">
+    <h2>Scheme of work — at a glance</h2>
+    <p class="lead">Seven lessons take pupils from <em>"what counts as alive?"</em> to Linnaeus's classification system, threading the block's enquiry question throughout. Each lesson runs the same structure — Arrival → Starter → I do → We do → Independent → Exit — in about 44 minutes, differentiated across three primary tiers.</p>
+    <table>
+      <tr><th>#</th><th>Lesson</th><th>Learning objective</th><th>Key vocabulary</th><th></th></tr>
+      <tr><td>1</td><td><b>Conditions for life</b></td><td>Know what makes something living or non-living, and what living things need to survive.</td><td>organism, living, non-living, excretion, reproduction</td><td><a href="Lesson1_ConditionsForLife.html">Open →</a></td></tr>
+      <tr><td>2</td><td><b>Group organisms</b></td><td>Group animals and plants by observable features (vertebrates/invertebrates; flowering/non-flowering).</td><td>vertebrate, invertebrate, mollusc, arachnid, flowering plant</td><td><a href="Lesson2_GroupOrganisms.html">Open →</a></td></tr>
+      <tr><td>3</td><td><b>Classify animals</b></td><td>Use and create classification keys with closed yes/no questions to identify animals.</td><td>classification key, closed question, observable, identify</td><td><a href="Lesson3_ClassifyAnimals.html">Open →</a></td></tr>
+      <tr><td>4</td><td><b>Classify plants</b></td><td>Classify plants with keys; distinguish flowering/non-flowering and deciduous/evergreen/coniferous.</td><td>deciduous, evergreen, coniferous, non-flowering, spores</td><td><a href="Lesson4_ClassifyPlants.html">Open →</a></td></tr>
+      <tr><td>5</td><td><b>Microorganisms</b></td><td>Know bacteria, viruses and fungi; that some are helpful and some harmful; that a microscope is needed to see them.</td><td>microorganism, bacteria, virus, fungi, microscope</td><td><a href="Lesson5_Microorganisms.html">Open →</a></td></tr>
+      <tr><td>6</td><td><b>Classify microorganisms</b></td><td>Classify microorganisms by shape/features and answer the block enquiry question.</td><td>classification, bacteria, virus, fungi</td><td><a href="Lesson6_ClassifyMicroorganisms.html">Open →</a></td></tr>
+      <tr><td>7</td><td><b>Carl Linnaeus</b></td><td>Know Linnaeus's classification system, its limitations, and how science has improved it.</td><td>classification, hierarchy, system</td><td><a href="Lesson7_CarlLinnaeus.html">Open →</a></td></tr>
+    </table>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>National Curriculum coverage</h3>
+        <ul class="tick">
+          <li>Describe how living things are classified into broad groups according to common observable characteristics and based on similarities and differences, including microorganisms, plants and animals.</li>
+          <li>Give reasons for classifying plants and animals based on specific characteristics.</li>
+        </ul>
+        <h4>Working scientifically</h4>
+        <ul class="tick">
+          <li>Identifying scientific evidence used to support or refute ideas (L1).</li>
+          <li>Using and developing keys and other records to identify, classify and describe living things (L2–L6).</li>
+          <li>Reporting and presenting findings, including conclusions and explanations (L6–L7).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Vocabulary across the block</h3>
+        <div class="chips">
+          <span>organism</span><span>living</span><span>non-living</span><span>excretion</span><span>reproduction</span>
+          <span>vertebrate</span><span>invertebrate</span><span>mollusc</span><span>arachnid</span>
+          <span>flowering plant</span><span>non-flowering plant</span><span>classification key</span><span>classification</span>
+          <span>deciduous</span><span>evergreen</span><span>coniferous</span>
+          <span>microorganism</span><span>bacteria</span><span>virus</span><span>fungi</span><span>microscope</span>
+        </div>
+        <h3 style="margin-top:1em">Assessment</h3>
+        <ul class="tick">
+          <li>A tiered <b>exit ticket</b> every lesson (Seedling / Sapling / Oak).</li>
+          <li>Interactive independent task self-checks understanding in the moment.</li>
+          <li>End-of-block assessment covers living/non-living, grouping, keys and microorganisms.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:1.2em">
+      <div>
+        <h3>Prior learning &amp; next steps</h3>
+        <p><b>Builds on (Y5):</b> life cycles and reproduction of plants and animals. <b>Earlier (Y4):</b> grouping and simple classification keys, habitats.</p>
+        <p style="margin-top:.4em"><b>Leads to (KS3):</b> cells, the five kingdoms, variation and adaptation.</p>
+      </div>
+      <div>
+        <h3>How each lesson is built</h3>
+        <p>Every lesson is a single interactive web page: six-phase structure with on-screen timings; three tiers on the four pupil-facing tasks; a short teaching video; a self-contained animation targeting the lesson's key misconception; TA Focus and Cold Call prompts; and a one-click print pack.</p>
+        <p class="note" style="font-size:.9rem;color:#6a6d64;margin-top:.4em"><em>Differentiation tiers map to attainment bands: 🌱 Seedling = working towards · 🌿 Sapling = expected · 🌳 Oak = greater depth.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LESSON PLANS ===================== -->
+  <!-- L1 -->
+  <section class="card lesson" id="l1">
+    <div class="lessonhead"><span class="lnum">1</span><h2 style="margin:0">Conditions for life</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Understand what makes something living or non-living, and what living things need to survive.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Sorts living / non-living with picture and word-bank support.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Gives evidence for "alive" using a life process (MRS GREN).</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Justifies the tricky cases (car, flame, virus) with reasoning.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Year 5 recap — life cycles &amp; reproduction; bridge to "reproduction is a sign of life".</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"Is it alive?" thumbs task; surface the car / flame / leaf misconceptions.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Define <em>organism</em>; introduce MRS GREN (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Prove a dog and an oak are alive; "…because it can…" stems.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Tricky cases + what animals vs plants need (animation: germinating plant bends to light).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Sort living / non-living / tricky with evidence.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Alive Sorter + write three pieces of evidence for one organism.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Three tiered questions; preview the block enquiry question.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>"Moves = alive" (car, flame); "plants don't move"; a fallen leaf is no longer living.</div>
+      <div class="res"><b>Resources:</b> video <em>Life Processes — MRS GREN</em>; germinating-plant animation; Alive Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson1_ConditionsForLife.html">Open Lesson 1 →</a>
+  </section>
+
+  <!-- L2 -->
+  <section class="card lesson" id="l2">
+    <div class="lessonhead"><span class="lnum">2</span><h2 style="margin:0">Group organisms</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Group animals and plants by observable features — vertebrates and invertebrates, the five vertebrate groups, flowering and non-flowering plants.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Sorts animals into vertebrate / invertebrate.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Names a group and gives a feature as evidence.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Separates vertebrate groups by feature; explains why a whale isn't a fish.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L1 (is it alive? / MRS GREN); bridge to grouping.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"How would you group these animals?" — introduces the enquiry question.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Vertebrate vs invertebrate + the five vertebrate groups (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort animals: backbone or not, then which group and clue.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Flowering vs non-flowering plants (animation: whale surfaces to breathe).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Sort plants flowering / non-flowering; quick invertebrate check.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Grouping Sorter (Vertebrate / Invertebrate / Plant) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; preview classification keys.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>"All sea animals are fish" (whale = mammal); "all plants have flowers"; the <em>backbone</em> decides — not size or shell.</div>
+      <div class="res"><b>Resources:</b> video <em>Vertebrates &amp; Invertebrates</em>; whale animation; Grouping Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson2_GroupOrganisms.html">Open Lesson 2 →</a>
+  </section>
+
+  <!-- L3 -->
+  <section class="card lesson" id="l3">
+    <div class="lessonhead"><span class="lnum">3</span><h2 style="margin:0">Classify animals</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Use and create classification keys with closed yes/no questions to identify animals.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Spots a fair yes/no question vs an opinion.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Uses a key correctly; writes a two-question key.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Builds a three-question key and justifies the order.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L2 (vertebrate/invertebrate, five groups).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"Twenty questions" — guess the animal using only yes/no questions.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What a classification key is; closed &amp; observable questions (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Follow a key together to identify animals.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Good vs poor questions (animation: a branching key builds).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Turn opinion questions into fair, observable ones.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>"Good question" sorter + build your own key.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; preview classifying plants.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>Classifying by habitat ("lives in water") or movement; opinion questions ("Is it cute?") in a key.</div>
+      <div class="res"><b>Resources:</b> video <em>Using a classification key</em>; branching-key animation; question sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson3_ClassifyAnimals.html">Open Lesson 3 →</a>
+  </section>
+
+  <!-- L4 -->
+  <section class="card lesson" id="l4">
+    <div class="lessonhead"><span class="lnum">4</span><h2 style="margin:0">Classify plants</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Classify plants using keys; distinguish flowering / non-flowering and deciduous / evergreen / coniferous.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Sorts trees into loses-leaves / keeps-leaves.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Names the tree type and a feature.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Untangles evergreen vs coniferous (holly vs pine).</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L3 (classification keys).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"Odd one out" among a set of plants (and a fungus).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Flowering vs non-flowering; introduce the plant groups (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Classify plants with a key together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Deciduous / evergreen / coniferous (animation: deciduous drops leaves).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Sort trees by type; name a feature.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Tree Sorter (deciduous / evergreen / coniferous) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; preview microorganisms.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>"A mushroom is a plant because it has a stem" (it's a fungus); the new term <em>coniferous</em> (cones + evergreen).</div>
+      <div class="res"><b>Resources:</b> video <em>Deciduous &amp; Evergreen Trees</em>; leaves-falling animation; Tree Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson4_ClassifyPlants.html">Open Lesson 4 →</a>
+  </section>
+
+  <!-- L5 -->
+  <section class="card lesson" id="l5">
+    <div class="lessonhead"><span class="lnum">5</span><h2 style="margin:0">Microorganisms</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know bacteria, viruses and fungi; that some are helpful and some harmful; and that a microscope is needed to see them.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Names the three types; knows a microscope is needed.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Gives a helpful and a harmful example.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Argues that not all bacteria are harmful, with evidence.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L4 (plant groups).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"What grew on the bread?" — mouldy-bread discussion.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>What a microorganism is; bacteria / viruses / fungi; microscope (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Sort examples helpful or harmful.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The mouldy-bread investigation + myths (animation: mould spreads).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Match each microorganism to what it does.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Microbe Sorter (Bacteria / Virus / Fungi) + tiered write-up.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; preview classifying microbes.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>"All bacteria are harmful" (gut bacteria help digestion); "you can see microbes" (need a microscope).</div>
+      <div class="res"><b>Resources:</b> video <em>What are microorganisms?</em>; mould animation; Microbe Sorter; TA Focus; Cold Call; print pack. <b>Safety:</b> mould-bread bags stay sealed.</div>
+    </div>
+    <a class="open" href="Lesson5_Microorganisms.html">Open Lesson 5 →</a>
+  </section>
+
+  <!-- L6 -->
+  <section class="card lesson" id="l6">
+    <div class="lessonhead"><span class="lnum">6</span><h2 style="margin:0">Classify microorganisms</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Classify microorganisms by shape and features, and answer the block's enquiry question.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Matches shape to microbe type.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>Writes a yes/no question for each type.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Builds a full shape key and answers the enquiry question.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap L5 (microorganisms, helpful/harmful).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"Can you sort what you can't see?"</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Classify by feature/shape — same key skill, new subject (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Build a shape key together.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>The three shapes; gather key questions (animation: shapes reveal).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Classify described microbes by shape.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>Shape Sorter (tail / spherical / tubes) + build a key.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Answer the enquiry question; preview Linnaeus.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>"Microbes can't be classified" — they can, by shape and features (bacteria = tail, virus = spherical, fungi = tubes).</div>
+      <div class="res"><b>Resources:</b> video <em>Using a classification key</em>; three-shapes animation; Shape Sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson6_ClassifyMicroorganisms.html">Open Lesson 6 →</a>
+  </section>
+
+  <!-- L7 -->
+  <section class="card lesson" id="l7">
+    <div class="lessonhead"><span class="lnum">7</span><h2 style="margin:0">Carl Linnaeus</h2></div>
+    <p class="lead" style="margin-top:.5em"><b>LO:</b> Know Linnaeus's classification system, understand its limitations, and how science has improved it since.</p>
+    <div class="tiergrid">
+      <div class="tcard seed"><b>🌱 Seedling</b>Sorts "then / now" statements about his system.</div>
+      <div class="tcard sap"><b>🌿 Sapling</b>States one strength and one gap.</div>
+      <div class="tcard oak"><b>🌳 Oak</b>Explains why the model improved as tools improved.</div>
+    </div>
+    <h4>Lesson structure (≈44 min)</h4>
+    <table>
+      <tr><th>Phase</th><th>Min</th><th>What happens</th></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sky)"></span>Arrival</td><td class="mins">4</td><td>Recap the whole block.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--sun)"></span>Starter</td><td class="mins">5</td><td>"Sort the world" — organise all life with no modern tools.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 1</td><td class="mins">6</td><td>Who Linnaeus was; his hierarchy of groups (video).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 1</td><td class="mins">6</td><td>Place organisms into a simple hierarchy.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--forest)"></span>I do 2</td><td class="mins">4</td><td>Limits of his model (animation: tree of life branches).</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--leaf)"></span>We do 2</td><td class="mins">5</td><td>Then vs now — what science added and why.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--bark)"></span>Independent</td><td class="mins">10</td><td>"Then &amp; now" sorter + final answer to the enquiry question.</td></tr>
+      <tr><td><span class="phase-dot" style="background:var(--berry)"></span>Exit</td><td class="mins">4</td><td>Tiered questions; block review.</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="miscon"><b>Misconceptions to address</b>That scientific models are fixed/perfect — Linnaeus missed microorganisms and didn't separate reptiles; science updates as evidence grows.</div>
+      <div class="res"><b>Resources:</b> video <em>Carl Linnaeus' Classification System (KS2)</em>; tree-of-life animation; then/now sorter; TA Focus; Cold Call; print pack.</div>
+    </div>
+    <a class="open" href="Lesson7_CarlLinnaeus.html">Open Lesson 7 →</a>
+  </section>
+
+  <footer>
+    <p class="sig">👋 Made by Matt</p>
+    <p>Year 6 Science · Living things &amp; their habitats · contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y6 · Microorganisms · Made by Matt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --alive:#3f9e6a; --notalive:#c4694a; --tricky:#d9a72c;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+    --body:'Lexend','Segoe UI',system-ui,sans-serif;
+    --p-arrival:var(--sky); --p-starter:var(--sun); --p-ido:var(--forest);
+    --p-wedo:var(--leaf); --p-indep:var(--bark); --p-exit:var(--berry);
+    --t-seed:#6aa9cf; --t-sap:#3f9e6a; --t-oak:#e08a2b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--body);color:var(--ink);overflow:hidden;
+    background:radial-gradient(1200px 420px at 50% -10%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  .punch{position:fixed;left:6px;top:0;bottom:70px;width:6px;display:flex;flex-direction:column;
+    justify-content:space-around;padding:46px 0;z-index:3;pointer-events:none}
+  .punch i{width:12px;height:12px;border-radius:50%;background:#d8cfba;box-shadow:inset 0 1px 2px rgba(0,0,0,.25);margin-left:-3px}
+  .deck{width:100vw;height:100vh;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;
+    padding:clamp(22px,3.4vw,54px) clamp(30px,5vw,88px) 96px;overflow:auto;
+    background:var(--paper);border-top:11px solid var(--forest);border-left:14px solid #e9dfc6;}
+  .slide.on{display:flex;animation:in .28s ease}
+  @keyframes in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+  .slide[data-p="arrival"]{border-top-color:var(--p-arrival)}
+  .slide[data-p="starter"]{border-top-color:var(--p-starter)}
+  .slide[data-p="ido"]{border-top-color:var(--p-ido)}
+  .slide[data-p="wedo"]{border-top-color:var(--p-wedo)}
+  .slide[data-p="indep"]{border-top-color:var(--p-indep)}
+  .slide[data-p="exit"]{border-top-color:var(--p-exit)}
+  .slide[data-p="cover"]{border-top-color:var(--amber);background:var(--navy)}
+  .phase{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin-left:-42px;
+    font-family:var(--display);font-weight:600;color:#fff;padding:7px 16px 7px 46px;
+    border-radius:0 14px 14px 0;box-shadow:2px 2px 0 rgba(0,0,0,.12);font-size:clamp(.85rem,1.3vw,1.05rem)}
+  .slide[data-p="arrival"] .phase{background:var(--p-arrival);color:#0f2f42}
+  .slide[data-p="starter"] .phase{background:var(--p-starter);color:#4a3a0e}
+  .slide[data-p="ido"] .phase{background:var(--p-ido)}
+  .slide[data-p="wedo"] .phase{background:var(--p-wedo)}
+  .slide[data-p="indep"] .phase{background:var(--p-indep)}
+  .slide[data-p="exit"] .phase{background:var(--p-exit)}
+  .phase .mins{background:rgba(255,255,255,.28);border-radius:8px;padding:1px 9px;font-size:.85em}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,5.5vw,3.8rem);line-height:1;color:var(--cream);margin:.2em 0 .12em}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.6vw,2.5rem);line-height:1.05;color:var(--forest);margin:.28em 0 .3em}
+  .lead{max-width:58ch;font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.55}
+  p,li{font-size:clamp(1rem,1.55vw,1.26rem);line-height:1.5}
+  .teach{font-family:var(--display);color:var(--bark);font-weight:600;margin-top:.15em}
+  .slide[data-p="cover"] .teach{color:var(--mint)}
+  .mark{position:fixed;top:16px;right:20px;display:flex;align-items:center;gap:8px;z-index:5;font-family:var(--display);font-weight:600;color:var(--forest);font-size:.9rem}
+  .row{display:grid;gap:clamp(12px,1.7vw,22px);margin-top:.6em}
+  .two{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .leaf{background:#fff;border:2px solid var(--line);border-radius:20px 20px 20px 6px;padding:clamp(13px,1.7vw,22px);box-shadow:0 4px 0 rgba(107,79,54,.08)}
+  .leaf h3{font-family:var(--display);color:var(--bark);font-size:1.15rem;margin-bottom:.25em}
+  ul.sprout{list-style:none;display:grid;gap:7px}
+  ul.sprout li{position:relative;padding-left:1.7em}
+  ul.sprout li::before{content:"\1F331";position:absolute;left:0;top:0}
+  .say{background:var(--moss);border:2px solid #cfe0c6;border-left:7px solid var(--forest);border-radius:12px;padding:13px 17px;margin-top:.6em}
+  .say b{font-family:var(--display);color:var(--forest);display:block;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .talk{background:#eef7f1;border:2px solid #b9ddc6;border-radius:12px;padding:13px 17px;margin-top:.6em}
+  .talk b{font-family:var(--display);color:var(--leaf);display:block;margin-bottom:3px}
+  .stem{background:#fff;border:1px dashed var(--leaf);border-radius:10px;padding:7px 11px;margin-top:7px;font-style:italic}
+  .note{font-size:.9rem;color:#6a6d64;margin-top:.5em;font-style:italic}
+  .garden{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:.6em}
+  .plot{background:var(--moss);border:2px solid #cfe0c6;border-radius:14px;padding:11px 13px;text-align:center}
+  .plot .l{font-family:var(--display);font-weight:700;font-size:1.35rem;color:var(--forest);line-height:1.05}
+  .plot b{display:block;font-family:var(--display);margin-top:3px}
+  .plot small{display:block;color:#5b6b58;margin-top:2px;font-size:.85rem}
+  .media{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(14px,2vw,26px);margin-top:.6em;align-items:start}
+  @media(max-width:760px){.media{grid-template-columns:1fr}}
+  .video{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#000;aspect-ratio:16/9}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vfallback{display:block;text-align:center;font-family:var(--display);font-weight:600;font-size:.92rem;margin-top:6px;color:var(--forest);text-decoration:none}
+  .vfallback:hover{text-decoration:underline}
+  .grow-wrap{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#eef6fb}
+  .grow-wrap svg{width:100%;height:auto;display:block}
+  .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
+
+  @keyframes spore{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+  .mo{transform-box:fill-box;transform-origin:center;opacity:0;animation:spore .7s ease forwards}
+  #m1{animation-delay:.6s}#m2{animation-delay:1.2s}#m3{animation-delay:1.8s}#m4{animation-delay:2.4s}#m5{animation-delay:3s}#m6{animation-delay:3.4s}
+  @media (prefers-reduced-motion:reduce){.mo{animation:none;opacity:1}}
+
+  .sorter{display:flex;flex-direction:column;gap:12px;margin-top:.5em;flex:1;min-height:0}
+  .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+  .crit{font-family:var(--display);font-weight:600;background:#fff;border:2px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer;user-select:none;transition:.16s;font-size:1rem}
+  .crit:hover{transform:translateY(-2px)}
+  .crit.placed{opacity:.35;pointer-events:none;text-decoration:line-through}
+  .bins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-height:100px}
+  .bin{border:3px dashed;border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:100px}
+  .bin.b1{border-color:var(--alive);background:#eef8f1}
+  .bin.b2{border-color:var(--notalive);background:#fbeee8}
+  .bin.b3{border-color:var(--tricky);background:#fdf6e3}
+  .bin h4{font-family:var(--display);text-align:center;font-size:1rem}
+  .bin.b1 h4{color:var(--alive)}.bin.b2 h4{color:var(--notalive)}.bin.b3 h4{color:#b8860b}
+  .drop{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start}
+  .drop .crit{cursor:default;font-size:.88rem;padding:4px 10px}
+  .fb{font-family:var(--display);color:var(--forest);min-height:1.3em;font-size:1rem}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:.7em}
+  @media(max-width:820px){.tiers{grid-template-columns:1fr}}
+  .tier{border-radius:16px;padding:14px 16px;border:2px solid;background:#fff;display:flex;flex-direction:column}
+  .tier.seed{border-color:var(--t-seed);background:#eef5fb}
+  .tier.sap{border-color:var(--t-sap);background:#eef8f1}
+  .tier.oak{border-color:var(--t-oak);background:#fdf3e3}
+  .tier .th{font-family:var(--display);font-weight:700;font-size:1.08rem;display:flex;align-items:center;gap:7px}
+  .tier.seed .th{color:#2e6b8c}.tier.sap .th{color:#227a4c}.tier.oak .th{color:#b06a12}
+  .tier .band{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600;opacity:.75;margin:1px 0 8px}
+  .tier p,.tier li{font-size:1rem;line-height:1.45}
+  .tier .wb{background:rgba(255,255,255,.7);border:1px dashed currentColor;border-radius:9px;padding:6px 10px;margin-top:7px;font-size:.92rem}
+  .tier ul{list-style:none;display:grid;gap:5px}
+  .tier ol{margin-left:1.2em;display:grid;gap:5px}
+  body[data-tier="seed"] .tier:not(.seed),
+  body[data-tier="sap"] .tier:not(.sap),
+  body[data-tier="oak"] .tier:not(.oak){display:none}
+  body[data-tier="seed"] .tiers,
+  body[data-tier="sap"] .tiers,
+  body[data-tier="oak"] .tiers{grid-template-columns:1fr;max-width:640px}
+  .map{display:flex;flex-wrap:wrap;gap:8px;margin-top:1em}
+  .map span{font-family:var(--display);font-weight:600;color:var(--navy);background:var(--cream);border-radius:999px;padding:6px 13px;font-size:.9rem;display:inline-flex;gap:7px;align-items:center}
+  .map span i{width:10px;height:10px;border-radius:50%;font-style:normal}
+  .tierkey{display:flex;flex-wrap:wrap;gap:10px;margin-top:.8em}
+  .tierkey span{font-family:var(--display);font-weight:600;color:var(--cream);font-size:.9rem;display:inline-flex;gap:6px;align-items:center}
+  .total{color:var(--mint);font-family:var(--display);font-weight:600;margin-top:.9em}
+  .bar{position:fixed;left:0;right:0;bottom:0;height:70px;background:var(--navy);display:flex;align-items:center;gap:9px;padding:0 16px;z-index:20;flex-wrap:wrap}
+  .bar button{font-family:var(--display);font-weight:600;font-size:.95rem;border:0;border-radius:12px;padding:9px 14px;cursor:pointer;background:#2a3358;color:var(--cream);transition:.15s}
+  .bar button:hover{background:#374173}
+  .bar .sp{flex:1}
+  .prog{color:var(--mint);font-family:var(--display);font-weight:600}
+  .seg{display:inline-flex;background:#2a3358;border-radius:12px;overflow:hidden}
+  .seg button{border-radius:0;background:transparent;padding:9px 12px}
+  .seg button[aria-pressed="true"]{background:var(--amber);color:var(--navy)}
+  .go{background:var(--amber)!important;color:var(--navy)!important}
+  dialog{border:0;border-radius:20px;padding:0;max-width:540px;width:92vw}
+  dialog::backdrop{background:rgba(20,29,61,.55)}
+  .mh{background:var(--navy);color:var(--cream);font-family:var(--display);font-weight:600;padding:15px 22px;font-size:1.15rem}
+  .mb{padding:18px 24px}.mb li,.mb p{font-size:1rem;line-height:1.5}
+  .mb h5{font-family:var(--display);color:var(--bark);margin:.5em 0 .2em}
+  .mc{margin:0 24px 20px;background:var(--amber);color:var(--navy);border:0;border-radius:12px;padding:10px 16px;font-family:var(--display);font-weight:600;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+  @media print{
+    body{overflow:visible;background:#fff}
+    .bar,.mark,.punch,dialog,.video{display:none!important}
+    .slide{position:relative;display:flex!important;inset:auto;height:auto;page-break-after:always;border-left:6px solid #bbb;padding:18px 26px}
+    .slide[data-p="cover"]{background:#fff}
+    .slide[data-p="cover"] h1,.slide[data-p="cover"] .teach,.slide[data-p="cover"] .total,.slide[data-p="cover"] .tierkey span{color:#000}
+    .tiers{grid-template-columns:1fr 1fr 1fr!important}
+    body[data-tier] .tier{display:flex!important}
+    .crit.placed{opacity:1;text-decoration:none}
+  }
+</style></head>
+<body data-tier="all">
+<div class="punch" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>Made by Matt</div>
+<div class="deck" id="deck">
+  <section class="slide on" data-p="cover">
+    <span class="phase" style="background:var(--amber);color:var(--navy)">Year 6 · Block 1 · Step 5</span>
+    <p class="teach">Living things &amp; their habitats</p>
+    <h1>Microorganisms</h1>
+    <p class="lead" style="color:var(--cream);opacity:.92;max-width:52ch">Living things far too small to see — bacteria, viruses and fungi. Some make us ill; some keep us alive.</p>
+    <div class="map">
+      <span><i style="background:var(--sky)"></i>Arrival</span>
+      <span><i style="background:var(--sun)"></i>Starter</span>
+      <span><i style="background:var(--forest)"></i>I do</span>
+      <span><i style="background:var(--leaf)"></i>We do</span>
+      <span><i style="background:var(--bark)"></i>Independent</span>
+      <span><i style="background:var(--berry)"></i>Exit ticket</span>
+    </div>
+    <div class="tierkey">
+      <span>🌱 Seedling <span style="opacity:.7">· Working towards</span></span>
+      <span>🌿 Sapling <span style="opacity:.7">· Expected</span></span>
+      <span>🌳 Oak <span style="opacity:.7">· Greater depth</span></span>
+    </div>
+    <p class="total">⏱ Whole lesson ≈ 44 min · pick a tier in the bar, or leave on "All"</p>
+  </section>
+  <section class="slide" data-p="arrival">
+    <span class="phase">Arrival <span class="mins">4 min</span></span>
+    <p class="teach">Whiteboard task as you come in — recap of last lesson: classifying plants.</p>
+    <h2>Recap: plant groups</h2>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p><b>Circle</b> the coniferous tree:</p><div class="wb">oak · pine · rose</div><p style="margin-top:7px">A ____ plant makes flowers.</p></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <ol><li>Difference between deciduous and evergreen?</li><li>What do conifers make instead of flowers?</li><li>Name a non-flowering plant.</li></ol></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>Explain why a mushroom is <b>not</b> a plant. What group does it belong to?</p></div>
+    </div>
+    <div class="talk"><b>Bridge into today</b>Plants, animals… and a whole hidden world too small to see. Today: <b>microorganisms</b>.</div>
+  </section>
+  <section class="slide" data-p="starter">
+    <span class="phase">Starter <span class="mins">5 min</span></span>
+    <p class="teach">Show a photo of mouldy bread. Talk it through.</p>
+    <h2>What grew on the bread?</h2>
+    <p class="lead">Something living appeared on the bread — but no one put it there. What is it, and where did it come from?</p>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p>Is the mould <b>alive</b>? Yes / No. How do you know?</p></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <p>The mould is a living thing too small to see clearly. What might it need to grow?</p></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>If mould is alive, which MRS GREN signs must it show? Give two.</p></div>
+    </div>
+  </section>
+  <section class="slide" data-p="ido">
+    <span class="phase">I do · 1 <span class="mins">6 min</span></span>
+    <p class="teach">Teacher models. Watch, then meet the three types.</p>
+    <h2>What is a microorganism?</h2>
+    <div class="media">
+      <div>
+        <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/9JW63U2mzqo" title="What are microorganisms? Bacteria, Viruses and Fungi" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <a class="vfallback" href="https://www.youtube.com/watch?v=9JW63U2mzqo" target="_blank" rel="noopener">▶ Can't see it? Watch "What are microorganisms? Bacteria, Viruses and Fungi" on YouTube</a>
+        <p class="note">Swap the clip: change the ID after <code>/embed/</code> (now <code>9JW63U2mzqo</code>).</p>
+      </div>
+      <div>
+        <div class="say"><b>Say this</b>A <b>microorganism</b> is a living thing so small you need a <b>microscope</b> to see it. There are three main types: bacteria, viruses and fungi.</div>
+        <div class="garden">
+          <div class="plot"><div class="l">🦠</div><b>Bacteria</b><small>helpful &amp; harmful</small></div>
+          <div class="plot"><div class="l">🧬</div><b>Viruses</b><small>cause colds &amp; flu</small></div>
+          <div class="plot"><div class="l">🍄</div><b>Fungi</b><small>mould, yeast</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="slide" data-p="wedo">
+    <span class="phase">We do · 1 <span class="mins">6 min</span></span>
+    <p class="teach">Sort examples helpful or harmful together.</p>
+    <h2>Helpful or harmful?</h2>
+    <div class="leaf" style="margin-top:.4em"><p>gut bacteria · flu virus · yeast in bread · food-poisoning bug · mould</p></div>
+    <div class="talk"><b>Not all bad!</b>
+      <div class="stem">"Friendly bacteria in our tummy help us <b>digest</b> food." · "Yeast helps bread rise."</div>
+      Some microorganisms keep us healthy; others make us ill.</div>
+  </section>
+  <section class="slide" data-p="ido">
+    <span class="phase">I do · 2 <span class="mins">4 min</span></span>
+    <p class="teach">Explain the mouldy-bread investigation and bust the myths.</p>
+    <h2>The mouldy bread test</h2>
+    <div class="media">
+      <div class="grow-wrap" style="background:#f6efdc"><svg viewBox="0 0 400 200" role="img" aria-label="A slice of bread growing patches of mould over time.">
+  <rect x="70" y="40" width="260" height="130" rx="40" fill="#e8c98c"/>
+  <rect x="86" y="56" width="228" height="98" rx="28" fill="#f3e2b8"/>
+  <circle class="mo" id="m1" cx="150" cy="96" r="12" fill="#5b7d3a"/>
+  <circle class="mo" id="m2" cx="210" cy="80" r="9" fill="#6d8f45"/>
+  <circle class="mo" id="m3" cx="245" cy="118" r="14" fill="#4f6b33"/>
+  <circle class="mo" id="m4" cx="180" cy="128" r="8" fill="#7a9a52"/>
+  <circle class="mo" id="m5" cx="120" cy="120" r="7" fill="#5b7d3a"/>
+  <circle class="mo" id="m6" cx="270" cy="86" r="7" fill="#6d8f45"/>
+</svg><p class="grow-cap">Mould is a fungus — it spreads and grows over time.</p></div>
+      <div>
+        <div class="say"><b>Model the myths</b>Not all bacteria are harmful — many help us. And you <b>can't</b> see a single microbe with your eyes; you need a microscope. Seal damp and dry bread in bags and watch the mould over days.</div>
+        <p class="note">Safety: keep the bags <b>sealed shut</b> — never open them once the bread is inside.</p>
+      </div>
+    </div>
+  </section>
+  <section class="slide" data-p="wedo">
+    <span class="phase">We do · 2 <span class="mins">5 min</span></span>
+    <p class="teach">Match each microorganism to what it does.</p>
+    <h2>Match it up</h2>
+    <div class="talk"><b>Together</b>
+      <div class="stem">Bacteria → food poisoning &amp; helping digestion · Viruses → colds &amp; flu · Fungi → mould, yeast, athlete's foot</div>
+      Which are helpful? Which are harmful? Some are both!</div>
+  </section>
+  <section class="slide" data-p="indep">
+    <span class="phase">Independent <span class="mins">10 min</span></span>
+    <p class="teach">On your own. Sort each one, then write your evidence at your tier.</p>
+    <h2>The Microbe Sorter</h2>
+    <div class="sorter">
+      <div class="tray" id="tray"></div>
+      <div class="bins">
+        <div class="bin b1"><h4>🦠 Bacteria</h4><div class="drop" data-bin="bacteria"></div></div>
+        <div class="bin b2"><h4>🧬 Virus</h4><div class="drop" data-bin="virus"></div></div>
+        <div class="bin b3"><h4>🍄 Fungi</h4><div class="drop" data-bin="fungi"></div></div>
+      </div>
+      <p class="fb" id="fb">Tap a card to sort it…</p>
+    </div>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <p>Sort the cards. Then finish:</p><div class="wb">"A microorganism is a tiny living thing you need a ____ to see."</div></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <p>Sort all three. Write one <b>helpful</b> and one <b>harmful</b> example, and why.</p></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>"All bacteria are harmful." Is that true? <b>Explain</b> with two examples that prove your answer.</p></div>
+    </div>
+  </section>
+  <section class="slide" data-p="exit">
+    <span class="phase">Exit ticket <span class="mins">4 min</span></span>
+    <p class="teach">Answer at your tier, then hand it in.</p>
+    <h2>Show what you know</h2>
+    <div class="tiers">
+      <div class="tier seed"><div class="th">🌱 Seedling</div><div class="band">Working towards</div>
+        <ul><li>You need a ____ to see a microorganism.</li><li><b>Tick</b> the microorganisms: bacteria · dog · virus · fungi</li></ul></div>
+      <div class="tier sap"><div class="th">🌿 Sapling</div><div class="band">Expected</div>
+        <ol><li>Name the three types of microorganism.</li><li>Give one helpful microorganism.</li><li>Give one harmful one.</li></ol></div>
+      <div class="tier oak"><div class="th">🌳 Oak</div><div class="band">Greater depth</div>
+        <p>Explain how a microorganism can be <b>both</b> helpful and harmful, with an example.</p></div>
+    </div>
+    <div class="talk" style="border-color:var(--amber);background:#fdf4df"><b style="color:#a9781a">🧭 Coming next</b>We've met microorganisms. Next: can we <b>classify</b> them, just like animals and plants?</div>
+  </section>
+</div>
+<dialog id="ta"><div class="mh">TA Focus · Microorganisms</div><div class="mb"><h5>Traps to watch</h5><p>"All bacteria are harmful" — many help us digest food. "You can see them" — a single microbe needs a microscope.</p><h5>Tier steer</h5><ul><li>🌱 Name the three types; microscope.</li><li>🌿 Helpful vs harmful examples.</li><li>🌳 Both-helpful-and-harmful reasoning.</li></ul><h5>Safety</h5><p>Mould-bread bags stay sealed shut — never opened.</p></div><button class="mc" onclick="ta.close()">Got it</button></dialog>
+<dialog id="cc"><div class="mh">Cold Call · Question bank</div><div class="mb"><ul><li>What is a microorganism?</li><li>Name the three types.</li><li>What do you need to see one?</li><li>Give a helpful microorganism.</li><li>What causes colds and flu?</li><li>Is all bacteria harmful?</li></ul></div><button class="mc" onclick="cc.close()">Close</button></dialog>
+<div class="bar">
+  <button id="prev">‹ Back</button><button id="next">Next ›</button>
+  <span class="prog"><span id="cur">1</span> / <span id="tot">9</span></span>
+  <span class="sp"></span>
+  <span class="seg" role="group" aria-label="Differentiation tier">
+    <button data-tier="all" aria-pressed="true">All</button>
+    <button data-tier="seed" aria-pressed="false">🌱 Seedling</button>
+    <button data-tier="sap" aria-pressed="false">🌿 Sapling</button>
+    <button data-tier="oak" aria-pressed="false">🌳 Oak</button>
+  </span>
+  <button id="taB">TA Focus</button><button id="ccB">Cold Call</button><button id="prB" class="go">Print pack</button>
+</div>
+<script>
+  const specimens=[{"t": "Gut bacteria", "bin": "bacteria", "why": "Bacteria — helpful! They live in your tummy and help digest food."}, {"t": "Food-poisoning bug", "bin": "bacteria", "why": "Bacteria — harmful. Some bacteria cause food poisoning."}, {"t": "Throat infection", "bin": "bacteria", "why": "Bacteria — can cause throat infections."}, {"t": "Common cold", "bin": "virus", "why": "Virus — colds and flu are caused by viruses."}, {"t": "Flu", "bin": "virus", "why": "Virus — needs a living host to multiply."}, {"t": "Bread mould", "bin": "fungi", "why": "Fungi — mould is a fungus that grows on old food."}, {"t": "Yeast", "bin": "fungi", "why": "Fungi — helpful! Yeast makes bread rise."}, {"t": "Athlete's foot", "bin": "fungi", "why": "Fungi — a fungus can cause skin infections."}];
+  const tray=document.getElementById("tray");
+  const fb=document.getElementById("fb");
+  function placeChip(spec, btn){
+    btn.classList.add("placed");
+    const drop=document.querySelector('.drop[data-bin="'+spec.bin+'"]');
+    const chip=document.createElement("span");
+    chip.className="crit";chip.textContent=spec.t;
+    drop.appendChild(chip);
+    fb.textContent=spec.t+": "+spec.why;
+    if(document.querySelectorAll(".crit.placed").length===specimens.length){
+      fb.textContent="🌟 All sorted! Now write your evidence at your tier.";
+    }
+  }
+  function buildTray(){
+    if(!tray) return;
+    specimens.forEach(s=>{
+      const b=document.createElement("button");
+      b.className="crit";b.type="button";b.textContent=s.t;
+      b.addEventListener("click",()=>placeChip(s,b));
+      tray.appendChild(b);
+    });
+  }
+  const slides=[...document.querySelectorAll(".slide")];
+  let idx=0;
+  const curEl=document.getElementById("cur"), totEl=document.getElementById("tot");
+  function show(n){idx=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle("on",i===idx));curEl.textContent=idx+1;}
+  function nav(d){show(idx+d)}
+  const body=document.body;
+  const tierBtns=[...document.querySelectorAll('.seg button[data-tier]')];
+  function setTier(t){body.dataset.tier=t;tierBtns.forEach(b=>b.setAttribute("aria-pressed", b.dataset.tier===t));}
+  totEl.textContent=slides.length;
+  buildTray();
+  document.getElementById("next").onclick=()=>nav(1);
+  document.getElementById("prev").onclick=()=>nav(-1);
+  tierBtns.forEach(b=>b.onclick=()=>setTier(b.dataset.tier));
+  document.getElementById("taB").onclick=()=>document.getElementById("ta").showModal();
+  document.getElementById("ccB").onclick=()=>document.getElementById("cc").showModal();
+  document.getElementById("prB").onclick=()=>window.print();
+  document.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();nav(1)}
+    if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();nav(-1)}
+  });
+  show(0);
+</script>
+</body></html>

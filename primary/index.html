@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primary · Made by Matt</title>
+<meta name="description" content="Primary school lessons and planning from Made by Matt — interactive, differentiated and classroom-ready. New for 2026–27.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161D3D; --mint:#B9E6CD; --amber:#F2A24A; --cream:#E8E2D4;
+    --forest:#2f6d4f; --leaf:#5aa06e; --bark:#6b4f36; --sun:#f5b840; --sky:#6aa9cf; --berry:#9d5a7d;
+    --moss:#e5efe0; --paper:#faf7ef; --paper2:#f2ecdd; --ink:#2a2b26; --line:#d8cfba;
+    --display:'Fredoka','Trebuchet MS',system-ui,sans-serif; --body:'Lexend','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    background:radial-gradient(1100px 380px at 50% -8%, #eef6ea 0, transparent 60%),
+      repeating-linear-gradient(var(--paper) 0 30px, var(--paper2) 30px 31px);}
+  a{color:var(--forest)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 clamp(16px,4vw,36px) 70px}
+  .top{display:flex;align-items:center;gap:12px;padding:14px clamp(16px,4vw,36px)}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:600;color:var(--forest);text-decoration:none}
+  .top nav{margin-left:auto;display:flex;gap:14px}
+  .top nav a{font-family:var(--display);font-weight:600;font-size:.92rem;text-decoration:none;color:var(--navy)}
+  .top nav a:hover{color:var(--forest)}
+
+  .hero{background:var(--navy);border-radius:24px;padding:clamp(26px,4vw,48px) clamp(22px,4vw,44px);border-top:12px solid var(--amber);margin:8px 0 26px;position:relative}
+  .newbadge{display:inline-block;background:var(--amber);color:var(--navy);font-family:var(--display);font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;font-size:.82rem;border-radius:999px;padding:6px 15px;margin-bottom:.7em}
+  .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,6vw,3.6rem);color:var(--cream);line-height:1}
+  .hero p{color:var(--cream);opacity:.9;max-width:60ch;margin-top:.5em}
+  .hero .mark{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;color:var(--cream);font-size:.85rem}
+
+  .crumbs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px;font-family:var(--display);font-weight:600;color:var(--bark)}
+  .crumbs span{background:var(--cream);border-radius:999px;padding:5px 13px;font-size:.9rem;color:var(--navy)}
+  .crumbs .arw{color:var(--leaf)}
+
+  h2{font-family:var(--display);font-weight:700;color:var(--forest);font-size:1.5rem;margin:1.2em 0 .5em}
+  .block{display:block;background:#fff;border:2px solid var(--line);border-radius:20px;padding:clamp(16px,2.4vw,26px);
+    box-shadow:0 4px 0 rgba(107,79,54,.08);text-decoration:none;color:inherit;transition:transform .15s ease}
+  .block:hover{transform:translateY(-3px)}
+  .block .tag{display:inline-block;background:var(--moss);border:1px solid #cfe0c6;border-radius:999px;padding:3px 12px;font-size:.82rem;font-weight:600;color:#227a4c;margin-bottom:.5em}
+  .block h3{font-family:var(--display);font-weight:700;color:var(--forest);font-size:1.5rem}
+  .block .enq{background:#fdf4df;border-left:5px solid var(--amber);border-radius:10px;padding:9px 14px;margin:.6em 0;font-size:.98rem}
+  .block .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:.5em}
+  .block .meta span{background:var(--moss);border-radius:999px;padding:4px 12px;font-size:.86rem;font-weight:500}
+  .block .cta{display:inline-block;font-family:var(--display);font-weight:600;color:var(--navy);background:var(--amber);border-radius:999px;padding:8px 16px;margin-top:.7em}
+
+  .lessons{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:1em}
+  .lessons a{display:flex;gap:9px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 13px;text-decoration:none;color:var(--ink);font-size:.95rem}
+  .lessons a:hover{border-color:var(--forest)}
+  .lessons .n{font-family:var(--display);font-weight:700;color:#fff;background:var(--forest);border-radius:8px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex:none}
+
+  .soon{background:#fff;border:2px dashed var(--line);border-radius:18px;padding:18px 22px;color:#6a6d64;margin-top:14px}
+  .soon b{font-family:var(--display);color:var(--bark)}
+
+  footer{text-align:center;color:#6a6d64;font-size:.92rem;margin-top:36px}
+  footer .sig{font-family:var(--display);color:var(--forest);font-weight:600}
+  @media (prefers-reduced-motion:reduce){.block:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="brand" href="../../index.html">
+    <svg width="22" height="22" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#2f6d4f"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+    Made by Matt
+  </a>
+  <nav><a href="../index.html">Lesson Hub</a><a href="../../index.html">Home</a></nav>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 22 22"><rect width="22" height="22" rx="5" fill="#232C55"/><circle cx="11" cy="11" r="7" fill="none" stroke="#B9E6CD" stroke-width="2"/><path d="M11 6l1.2 2.6L15 9l-2 1.9.5 2.8L11 12.3 8.5 13.7 9 10.9 7 9l2.8-.4z" fill="#F2A24A"/></svg>
+      Made by Matt
+    </div>
+    <span class="newbadge">🌱 New for 2026–27</span>
+    <h1>Primary</h1>
+    <p>Interactive, differentiated primary lessons and planning — built the same way as everything else here: classroom-ready, three tiers, offline-friendly. Starting with Year 6 science, and growing.</p>
+  </header>
+
+  <div class="crumbs">
+    <span>Primary</span><span class="arw">→</span><span>Year 6</span><span class="arw">→</span><span>Science</span><span class="arw">→</span><span>Autumn term</span>
+  </div>
+
+  <h2>Year 6 · Science · Autumn term</h2>
+
+  <a class="block" href="year6/science/autumn/living-things/index.html">
+    <span class="tag">Block 1 · New for 2026–27</span>
+    <h3>Living things &amp; their habitats</h3>
+    <div class="enq"><b>Enquiry question:</b> How can animals, plants and microorganisms be identified, grouped and classified?</div>
+    <div class="meta"><span>7 lessons</span><span>≈44 min each</span><span>3 tiers</span><span>SoW &amp; lesson plans</span><span>Video + animation</span></div>
+    <span class="cta">Open the scheme of work →</span>
+  </a>
+
+  <ul class="lessons">
+    <li><a href="year6/science/autumn/living-things/Lesson1_ConditionsForLife.html"><span class="n">1</span> Conditions for life</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson2_GroupOrganisms.html"><span class="n">2</span> Group organisms</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson3_ClassifyAnimals.html"><span class="n">3</span> Classify animals</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson4_ClassifyPlants.html"><span class="n">4</span> Classify plants</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson5_Microorganisms.html"><span class="n">5</span> Microorganisms</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson6_ClassifyMicroorganisms.html"><span class="n">6</span> Classify microorganisms</a></li>
+    <li><a href="year6/science/autumn/living-things/Lesson7_CarlLinnaeus.html"><span class="n">7</span> Carl Linnaeus</a></li>
+  </ul>
+
+  <div class="soon"><b>More on the way.</b> Spring and Summer science blocks, and other Year 6 subjects, will land here through 2026–27.</div>
+
+  <footer>
+    <p class="sig">👋 Made by Matt</p>
+    <p>Primary lessons &amp; planning · contactmadebymatt@gmail.com</p>
+  </footer>
+
+</div>
+</body>
+</html>
