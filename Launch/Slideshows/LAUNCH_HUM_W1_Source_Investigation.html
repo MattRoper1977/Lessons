@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humanities W1 · The Source Investigation</title>
+<style>
+:root{--ink:#1f2a56;--pink:#d6006d;--teach:#2563eb;--wedo:#7c3aed;--prac:#16a34a;--exit:#dc2626;--paper:#fafaf7;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--paper);color:#111827;overflow:hidden;}
+.slide{width:100vw;height:100vh;display:none;flex-direction:column;padding:56px 64px 92px;overflow-y:auto;}
+.slide.active{display:flex;}
+.slide h1{font-size:2.6rem;color:var(--ink);margin-bottom:10px;}
+.slide h2{font-size:1.9rem;color:var(--ink);margin-bottom:14px;}
+.slide p,.slide li{font-size:1.15rem;line-height:1.55;}
+.bt-title{border-top:10px solid var(--pink);}
+.bt-teach{border-top:10px solid var(--teach);}
+.bt-wedo{border-top:10px solid var(--wedo);}
+.bt-prac{border-top:10px solid var(--prac);}
+.bt-exit{border-top:10px solid var(--exit);}
+.logo{position:fixed;top:14px;right:20px;font-weight:800;color:var(--pink);font-size:1.05rem;z-index:50;}
+.logo span{color:var(--ink);}
+#progressbar{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:60;transition:width .3s;}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);display:flex;align-items:center;gap:10px;padding:10px 18px;z-index:60;}
+nav button{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:1rem;}
+nav button:hover{background:#ffe3f1;}
+nav .spacer{flex:1;}
+#slidecount{color:#fff;font-weight:600;}
+#xpwrap{background:#0f1733;border-radius:999px;height:14px;width:160px;overflow:hidden;}
+#xpbar{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width .5s;}
+#xplabel{color:#fbbf24;font-weight:700;font-size:.9rem;}
+.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;}
+.hero h1{font-size:3.4rem;}
+.hero .sub{font-size:1.4rem;color:#4b5563;margin-top:6px;}
+.iconrow{display:flex;gap:26px;font-size:3.2rem;margin:26px 0;}
+.iconrow span{animation:bob 2.2s ease-in-out infinite;}
+.iconrow span:nth-child(2){animation-delay:.25s}.iconrow span:nth-child(3){animation-delay:.5s}
+.iconrow span:nth-child(4){animation-delay:.75s}.iconrow span:nth-child(5){animation-delay:1s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.tag{display:inline-block;background:var(--ink);color:#fff;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.5px;margin-bottom:14px;width:max-content;}
+.box{border-radius:12px;padding:16px 20px;margin:12px 0;}
+.sc-box{background:#ffedd5;border-left:6px solid #f97316;}
+.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d;}
+.misc-box{background:#fee2e2;border-left:6px solid #dc2626;}
+.misc-box s{opacity:.75;}
+.evidence-box{background:#e0f2fe;border-left:6px solid #0284c7;}
+.stem-box{background:#f3e8ff;border-left:6px solid #7c3aed;}
+.tip-box{background:#fef9c3;border-left:6px solid #ca8a04;}
+.lo-item{display:flex;align-items:center;gap:12px;font-size:1.3rem;margin:10px 0;opacity:0;transform:translateX(-16px);transition:all .5s;}
+.lo-item.show{opacity:1;transform:none;}
+.lo-item .chk{color:#16a34a;font-size:1.5rem;font-weight:900;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:14px;}
+.gcard{border-radius:14px;padding:16px;color:#fff;}
+.gcard h3{font-size:1.25rem;margin-bottom:6px;}
+.c1{background:#d97706;}.c2{background:#dc2626;}.c3{background:#2563eb;}.c4{background:#16a34a;}.c5{background:#7c3aed;}
+.chipzone{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+.chip{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-size:1.15rem;cursor:pointer;user-select:none;transition:transform .15s;}
+.chip:hover{transform:scale(1.06);}
+.chip.selected{background:var(--ink);color:#fff;}
+.chip.done{opacity:.45;pointer-events:none;border-style:dashed;}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+.bucket{border:3px dashed #9ca3af;border-radius:14px;min-height:110px;padding:10px;text-align:center;cursor:pointer;font-weight:700;font-size:1.05rem;}
+.bucket .drops{font-weight:400;font-size:.98rem;margin-top:6px;}
+.bucket .mark{font-size:1.5rem;font-weight:900;min-height:1.6rem;}
+.bucket.flash-good{border-color:#16a34a;background:#dcfce7;}
+.bucket.flash-bad{border-color:#dc2626;background:#fee2e2;}
+#wedofb{min-height:54px;margin-top:10px;font-weight:600;}
+button.act{background:var(--pink);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer;margin:8px 8px 0 0;}
+button.act.secondary{background:var(--ink);}
+.mcq{margin:14px 0;}
+.mcq .q{font-weight:700;font-size:1.2rem;margin-bottom:8px;}
+.mcq .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 16px;font-size:1.1rem;margin:6px 0;cursor:pointer;}
+.mcq .opt:hover{border-color:var(--ink);}
+.mcq.locked .opt{pointer-events:none;opacity:.85;}
+.opt.correct{border-color:#16a34a;background:#dcfce7;}
+.opt.wrong{border-color:#dc2626;background:#fee2e2;}
+.stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:12px;}
+.station{background:#fff;border:3px solid var(--prac);border-radius:14px;padding:16px;}
+.station h3{color:var(--prac);margin-bottom:6px;font-size:1.2rem;}
+.modal{position:fixed;inset:0;background:rgba(15,23,51,.72);display:none;align-items:center;justify-content:center;z-index:100;}
+.modal.open{display:flex;}
+.modal .card{background:#fff;border-radius:16px;max-width:640px;width:92%;max-height:80vh;overflow-y:auto;padding:26px;}
+.modal h2{margin-bottom:10px;}
+#overlay{position:fixed;inset:0;background:rgba(22,163,74,.93);display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;z-index:120;}
+#overlay.open{display:flex;}
+#overlay h1{font-size:3rem;color:#fff;}
+#confetticanvas{position:fixed;inset:0;pointer-events:none;z-index:130;}
+.toolbtns{position:fixed;top:14px;left:20px;display:flex;gap:8px;z-index:50;}
+.toolbtns button{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.9rem;}
+body.calm .iconrow span{animation:none;}
+body.calm{--pink:#6b7280;}
+body.calm .slide{background:#f5f5f4;}
+input,textarea{font-family:inherit;}
+@media (prefers-reduced-motion: reduce){.iconrow span{animation:none;}.lo-item{transition:none;}}
+@media (max-width:640px){
+ .slide{padding:70px 18px 100px;}
+ .slide h1{font-size:1.8rem;}.hero h1{font-size:2rem;}
+ .slide h2{font-size:1.4rem;}
+ .iconrow{font-size:2.1rem;gap:14px;}
+ nav{flex-wrap:wrap;}#xpwrap{width:100px;}
+}
+@media print{
+ nav,.toolbtns,.logo,#progressbar{display:none!important;}
+ .slide{display:none!important;}
+ #printarea{display:block!important;}
+}
+#printarea{display:none;padding:20px;font-size:11pt;}
+#printarea h1{font-size:15pt;border-bottom:2px solid #000;padding-bottom:4px;}
+#printarea .prow{border:1px solid #999;border-radius:6px;padding:8px;margin:7px 0;}
+#printarea .ybox{border:3px solid #ca8a04;border-radius:6px;min-height:88px;padding:8px;margin:7px 0;}
+#printarea .small{font-size:9pt;color:#333;}
+</style>
+</head>
+<body>
+<div id="progressbar"></div>
+<div class="logo">Made by <span>Matt</span></div>
+<div class="toolbtns">
+ <button onclick="toggleModal('tamodal')">TA Focus</button>
+ <button onclick="coldCall()">Cold Call</button>
+ <button onclick="toggleCalm()" id="calmbtn">Calm Mode</button>
+</div>
+
+<section class="slide bt-title active" id="s1">
+ <div class="hero">
+  <div class="tag">HUMANITIES · Week 1 · LAUNCH · Migration, Identity &amp; 20th-Century Britain</div>
+  <h1>The Source Investigation</h1>
+  <p class="sub">Describe · Infer · Never overclaim</p>
+  <div class="iconrow"><span>🔍</span><span>📷</span><span>🧳</span><span>📜</span><span>🗂️</span></div>
+  <p class="sub">Today is a <strong>hands-on</strong> lesson — we learn by doing.</p>
+ </div>
+</section>
+
+<section class="slide bt-teach" id="s2">
+ <div class="tag">ARRIVAL TASK · do now, no help needed</div>
+ <h2>Source or interpretation? Sort the evidence</h2>
+ <p>Tap a card, then tap where it belongs. Have a go — wrong answers are welcome here.</p>
+ <div class="chipzone" id="arr-chips"></div>
+ <div class="buckets" id="arr-buckets"></div>
+ <div class="box tip-box"><strong>While you wait:</strong> tell your partner the difference between seeing something happen and being told about it later.</div>
+</section>
+
+<section class="slide bt-teach" id="s3">
+ <div class="tag">LEARNING OBJECTIVE</div>
+ <h2>LO: To use sources to investigate migration and identity in modern Britain.</h2>
+ <div id="lolist"><div class="lo-item"><span class="chk">✓</span> I can tell a source from an interpretation.</div><div class="lo-item"><span class="chk">✓</span> I can make an inference: &ldquo;this source suggests&hellip;&rdquo;</div><div class="lo-item"><span class="chk">✓</span> I can build events onto our class timeline.</div></div>
+ <div class="box sc-box"><strong>Success criteria:</strong> By the end you will have investigated the case-file stations, annotated a source with at least one inference, and pegged events onto the washing-line timeline — evidence for your Humanities portfolio (banks AQA UAS &lsquo;Historical enquiry&rsquo;; builds toward optional GCSE History 8145 source skills).</div>
+ <div class="box aspire-box"><strong>GCSE Stretch:</strong> add provenance to your inference: &ldquo;this suggests&hellip; and I can trust it this far because it was made by ___ at the time.&rdquo;</div>
+</section>
+
+<section class="slide bt-teach" id="s4">
+ <div class="tag">STARTER · talk task</div>
+ <h2>What&rsquo;s the difference between a witness and a storyteller?</h2>
+ <p>With your partner: a photo taken at the docks in 1948, and a history book written in 2020. Both about the same day. What can each one do that the other can&rsquo;t? Which would a courtroom prefer — and why might a historian want BOTH?</p>
+ <div class="box stem-box"><strong>Sentence stems:</strong><br>&ldquo;The photo can&hellip; but it can&rsquo;t&hellip;&rdquo;<br>&ldquo;The book can&hellip; but it can&rsquo;t&hellip;&rdquo;<br>&ldquo;A historian wants both because&hellip;&rdquo;</div>
+ <button class="act" onclick="hint('starter')">Hint</button>
+ <p id="hint-starter" style="display:none;margin-top:8px;">Stuck? The photo was THERE — but it shows one second, chosen by one photographer. The book sees the whole story — but second-hand. Strengths and limits, both.</p>
+</section>
+
+<section class="slide bt-teach" id="s5">
+ <div class="tag">I DO · teacher explains</div>
+ <h2>Sources: describe, infer — never overclaim</h2>
+ <div class="grid"><div class="gcard c3"><h3>📷 Source vs interpretation</h3><p>A SOURCE is from the time (photo, letter, object, passenger list). An INTERPRETATION looks back (memoir, documentary, textbook). Both are evidence — of different things.</p></div><div class="gcard c1"><h3>🔍 Describe first</h3><p>&ldquo;I can see smart coats, suitcases, the ship&rsquo;s rail.&rdquo; Description is the safe ground every good answer starts from.</p></div><div class="gcard c4"><h3>💡 Then infer</h3><p>&ldquo;This SUGGESTS people arrived hopeful and prepared.&rdquo; An inference is a fair step beyond the visible — the step GCSE questions reward.</p></div><div class="gcard c2"><h3>🚫 Never overclaim</h3><p>&ldquo;This proves everyone was happy&rdquo; — no. One photo cannot prove a feeling or a whole story. Knowing where inference ends is a top-grade skill.</p></div></div>
+ <div class="box misc-box"><strong>Misconception:</strong> <s>&ldquo;The camera never lies, so a photo is the whole truth.&rdquo;</s> A photo is one second, one angle, one photographer&rsquo;s choice. It doesn&rsquo;t lie — but it selects. That is why we describe, infer carefully, and check against other sources.</div>
+</section>
+
+<section class="slide bt-wedo" id="s6">
+ <div class="tag">WE DO · together on the board</div>
+ <h2>One Windrush photo — DESCRIBES, INFERS, or GOES TOO FAR?</h2>
+ <div class="chipzone" id="wedo-chips"></div>
+ <div class="buckets" id="wedo-buckets"></div>
+ <div id="wedofb"></div>
+ <button class="act secondary" onclick="hint('wedo')">Hint</button>
+ <p id="hint-wedo" style="display:none;">DESCRIBES = visible in the frame. INFERS = a fair &ldquo;suggests&rdquo; step from a visible clue. GOES TOO FAR = claims a feeling, a sound, or the whole story from one image.</p>
+</section>
+
+<section class="slide bt-prac" id="s7">
+ <div class="tag">HANDS-ON · the main event</div>
+ <h2>Open the investigation 🔍</h2>
+ <div class="box tip-box"><strong>Ground rule (60 seconds):</strong> describe before you decide, two hands on every object — and &ldquo;suggests&rdquo; is the strongest verb anyone uses today.</div>
+ <div class="stations"><div class="station"><h3>Station 1 · CASE FILES</h3><p>Rotate the stations: photos, handling objects, extracts from our anchor texts. Every text has a tinted-copy, overlay and read-aloud option — or take the object/picture route to the same findings. Annotate: one DESCRIBE + one SUGGESTS per station.</p></div><div class="station"><h3>Station 2 · WASHING LINE</h3><p>Build the migration timeline: peg the event cards in order along the line. Say the century out loud as you peg — chronology anchors everything that follows this term.</p></div><div class="station"><h3>Station 3 · STRUCTURED NOTE</h3><p>Complete your source-annotation note: source &rarr; what I see &rarr; what it suggests. Verbal annotation to an adult counts and is scribed verbatim.</p></div></div>
+ <div class="box aspire-box"><strong>GCSE Stretch:</strong> pick your best inference and add its provenance: who made this source, when, and how far that lets us trust it.</div>
+</section>
+
+<section class="slide bt-prac" id="s8">
+ <div class="tag">EVIDENCE · Humanities portfolio (banks AQA UAS &lsquo;Historical enquiry&rsquo; · toward GCSE 8145 source skills)</div>
+ <h2>Capture your evidence</h2>
+ <p>Your annotated note is the evidence — TA photographs it and the pegged timeline. Log your best line (verbal-then-scribed counts):</p>
+ <div class="box evidence-box">
+  <p><strong>My name:</strong> <input id="ev-name" style="font-size:1.1rem;padding:6px;width:220px;"></p>
+  <p style="margin-top:8px;"><strong>My source, and one thing I can SEE in it:</strong><br><textarea id="ev-p1" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
+  <p style="margin-top:8px;"><strong>What it SUGGESTS, and why that is fair:</strong><br><textarea id="ev-p2" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
+  <p style="margin-top:8px;"><strong>Skills I used today (tick with your TA):</strong> Ability to learn · Analysis · Communication</p>
+ </div>
+ <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will deep-mark <em>one</em> part of this in dark green and draw a <strong>Yellow Box</strong>. Next lesson you respond inside it in a coloured pen of your choice.</div>
+ <button class="act" onclick="printEvidence()">🖨️ Print my evidence sheet</button>
+</section>
+
+<section class="slide bt-exit" id="s9">
+ <div class="tag">EXIT TICKET</div>
+ <h2>Show what you know</h2>
+ <div class="mcq" id="q1" data-ans="1"><div class="q">1. A source is&hellip;</div><button class="opt" data-i="0">Anything about the past</button><button class="opt" data-i="1">Evidence made at the time</button><button class="opt" data-i="2">Always reliable</button></div><div class="mcq" id="q2" data-ans="2"><div class="q">2. &ldquo;This suggests&hellip;&rdquo; signals&hellip;</div><button class="opt" data-i="0">A lie</button><button class="opt" data-i="1">A description</button><button class="opt" data-i="2">An inference — a fair step beyond the visible</button></div><div class="mcq" id="q3" data-ans="0"><div class="q">3. &ldquo;This photo proves everyone was happy&rdquo; is&hellip;</div><button class="opt" data-i="0">Overclaiming — one image can&rsquo;t prove feelings</button><button class="opt" data-i="1">A strong inference</button><button class="opt" data-i="2">A description</button></div>
+ <button class="act" onclick="showAnswers()">Show answers</button>
+</section>
+
+<nav>
+ <button onclick="prevSlide()">◀ Back</button>
+ <button onclick="nextSlide()">Next ▶</button>
+ <span id="slidecount">1 / 9</span>
+ <span class="spacer"></span>
+ <span id="xplabel">XP 0</span>
+ <div id="xpwrap"><div id="xpbar"></div></div>
+</nav>
+
+<div class="modal" id="tamodal" onclick="if(event.target===this)toggleModal('tamodal')">
+ <div class="card">
+  <h2>TA Focus — this slide</h2>
+  <p id="tabrief"></p>
+  <p style="margin-top:12px;font-size:.95rem;color:#4b5563;">Gesture anchor: open palm = “your idea please”; thumb-to-table = “check with your partner first”.</p>
+  <button class="act" onclick="toggleModal('tamodal')">Close</button>
+ </div>
+</div>
+
+<div class="modal" id="ccmodal" onclick="if(event.target===this)toggleModal('ccmodal')">
+ <div class="card" style="text-align:center;">
+  <h2>Cold Call</h2>
+  <p id="ccname" style="font-size:2rem;font-weight:800;margin:14px 0;color:var(--pink);"></p>
+  <p id="cctier" style="font-size:1.1rem;"></p>
+  <button class="act" onclick="coldCall()">Again</button>
+  <button class="act secondary" onclick="toggleModal('ccmodal')">Close</button>
+ </div>
+</div>
+
+<div id="overlay">
+ <h1>Lesson complete! 🎉</h1>
+ <p style="font-size:1.3rem;margin:12px 0;">Described, inferred, never overclaimed — investigation one is on file.</p>
+ <button class="act" onclick="document.getElementById('overlay').classList.remove('open')">Close</button>
+</div>
+
+<canvas id="confetticanvas"></canvas>
+<div id="printarea"></div>
+
+<script>
+/* ---------- LESSON DATA (consts first, init at the bottom) ---------- */
+const LESSON = {"arrItems": [{"n": "Photo of arrivals, 1948", "g": 0}, {"n": "Ship's passenger list", "g": 0}, {"n": "Memoir written years later", "g": 1}, {"n": "Historian's book, 2020", "g": 1}], "arrBuckets": ["SOURCE — from the time", "INTERPRETATION — looking back"], "wedoItems": [{"n": "Smart coats and hats", "g": 0}, {"n": "Suitcases in hands", "g": 0}, {"n": "The ship's rail behind them", "g": 0}, {"n": "Suggests they came prepared to stay", "g": 1}, {"n": "Suggests the arrival felt like an occasion", "g": 1}, {"n": "Suggests a long journey lay behind them", "g": 1}, {"n": "Proves everyone on board was happy", "g": 2}, {"n": "Tells us each passenger's whole story", "g": 2}], "wedoBuckets": ["DESCRIBES — I can see it", "INFERS — it suggests", "GOES TOO FAR"], "fbGood": ["Spot on — say your reason out loud.", "Correct! Tell your partner why.", "Yes! Use the key word in a full sentence."], "fbBad": ["Not this one — is it in the frame, a fair step, or a leap?", "Close — could one photo really prove that? Check again.", "Have another look; talk it through with a partner."], "taBriefs": ["Meet & greet. Case files staged BEFORE arrival: photos, objects, extracts — with tinted copies, overlays and the read-aloud option ready at every text station, plus a full object/picture route to the same findings. Washing line up.", "Arrival task: no adult answers. Cards carry words and pictures — never rely on colour alone. Source vs interpretation is the year's foundation — note who has it already.", "LO slide: read aloud together. Pre-teach 'inference' — the one word doing this term's heavy lifting: a fair step, not a leap.", "Starter: the witness/storyteller framing lands the whole unit — draw out that historians want BOTH.", "I Do: pupils listening. Model describe → infer → stop, on one photo, slowly. Say 'suggests' with weight every time.", "We Do: rotate the tapping. Celebrate every correctly spotted 'goes too far' — that bucket is the top-grade skill.", "PRACTICAL: rotation is the movement; breaks BEFORE heads go down. Text-heavy stations: offer the tinted/overlay/read-aloud options without being asked, or steer to the object route — same findings, different door. Verbal annotations scribed VERBATIM.", "Evidence: photograph notes and the pegged line. Note 'TA scribed' where used.", "Exit ticket: pupils alone, one tap each. Print evidence for anyone who missed it."], "lo": "To use sources to investigate migration and identity in modern Britain.", "evTitle": "Humanities · W1 The Source Investigation · portfolio evidence", "evLessonLine": "Humanities Week 1 (LAUNCH · Migration, Identity & 20th-C Britain)", "evRef": "Humanities portfolio · AQA UAS 'Historical enquiry' ___ · GCSE 8145 stretch", "evP1Label": "My source, and one thing I can SEE in it:", "evP2Label": "What it SUGGESTS, and why that is fair:", "skillsLine": "Ability to learn · Analysis · Communication"};
+const XP_PER = 12;
+let current = 0, xp = 0, audioCtx = null;
+
+function ping(freq){
+ try{
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.frequency.value = freq; o.type = 'sine';
+  g.gain.setValueAtTime(.12, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + .3);
+  o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + .3);
+ }catch(e){}
+}
+function showSlide(i){
+ const slides = document.querySelectorAll('.slide');
+ if(i < 0 || i >= slides.length) return;
+ slides[current].classList.remove('active');
+ current = i;
+ slides[current].classList.add('active');
+ document.getElementById('slidecount').textContent = (current+1) + ' / ' + slides.length;
+ document.getElementById('progressbar').style.width = ((current+1)/slides.length*100) + '%';
+ document.getElementById('tabrief').textContent = LESSON.taBriefs[current];
+ if(current === 2) animateLO();
+}
+function nextSlide(){ showSlide(current+1); }
+function prevSlide(){ showSlide(current-1); }
+function animateLO(){
+ document.querySelectorAll('#lolist .lo-item').forEach((el,idx)=>{
+  setTimeout(()=>el.classList.add('show'), 300 + idx*450);
+ });
+}
+function addXP(n){
+ xp += n;
+ document.getElementById('xplabel').textContent = 'XP ' + xp;
+ document.getElementById('xpbar').style.width = Math.min(100, xp) + '%';
+}
+function shuffle(arr){
+ const a = arr.slice();
+ for(let i = a.length-1; i > 0; i--){
+  const j = Math.floor(Math.random()*(i+1));
+  [a[i],a[j]] = [a[j],a[i]];
+ }
+ return a;
+}
+function buildSort(chipZoneId, bucketZoneId, items, buckets, onCorrect, onWrong){
+ const cz = document.getElementById(chipZoneId);
+ const bz = document.getElementById(bucketZoneId);
+ cz.innerHTML = ''; bz.innerHTML = '';
+ let selected = null;
+ shuffle(items).forEach(item=>{
+  const c = document.createElement('button');
+  c.className = 'chip'; c.textContent = item.n; c.dataset.g = item.g;
+  c.addEventListener('click', ()=>{
+   cz.querySelectorAll('.chip').forEach(x=>x.classList.remove('selected'));
+   c.classList.add('selected'); selected = c; ping(520);
+  });
+  cz.appendChild(c);
+ });
+ buckets.forEach((label, gi)=>{
+  const b = document.createElement('div');
+  b.className = 'bucket';
+  b.innerHTML = '<div>' + label + '</div><div class="mark"></div><div class="drops"></div>';
+  b.addEventListener('click', ()=>{
+   if(!selected) return;
+   if(parseInt(selected.dataset.g) === gi){
+    b.classList.add('flash-good'); setTimeout(()=>b.classList.remove('flash-good'), 700);
+    b.querySelector('.drops').textContent += '\u2713 ' + selected.textContent + '  ';
+    const mk=b.querySelector('.mark'); mk.textContent='\u2713 correct'; setTimeout(()=>mk.textContent='',900);
+    selected.classList.remove('selected'); selected.classList.add('done');
+    selected = null; ping(880); addXP(XP_PER); onCorrect && onCorrect();
+    if(document.getElementById(chipZoneId).querySelectorAll('.chip:not(.done)').length === 0){
+     confetti();
+    }
+   } else {
+    b.classList.add('flash-bad'); setTimeout(()=>b.classList.remove('flash-bad'), 700);
+    const mk=b.querySelector('.mark'); mk.textContent='\u2717 not here'; setTimeout(()=>mk.textContent='',900);
+    ping(220); onWrong && onWrong();
+   }
+  });
+  bz.appendChild(b);
+ });
+}
+function hint(id){
+ const el = document.getElementById('hint-' + id);
+ el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function toggleModal(id){ document.getElementById(id).classList.toggle('open'); }
+function toggleCalm(){
+ document.body.classList.toggle('calm');
+ document.getElementById('calmbtn').textContent = document.body.classList.contains('calm') ? 'Calm ✓' : 'Calm Mode';
+}
+function coldCall(){
+ let roster = [];
+ try{ roster = JSON.parse(localStorage.getItem('ps_coldcall_roster') || '[]'); }catch(e){}
+ if(!roster.length) roster = ['Add roster in ps_coldcall_roster'];
+ const name = roster[Math.floor(Math.random()*roster.length)];
+ const r = Math.ceil(Math.random()*5);
+ const tier = (r<=1) ? 'Foundation question' : (r===2) ? 'Middle question' : 'Higher question';
+ document.getElementById('ccname').textContent = name;
+ document.getElementById('cctier').textContent = 'U/1→F, 2→M, 3–5→H · rolled ' + r + ' → ' + tier;
+ const m = document.getElementById('ccmodal');
+ if(!m.classList.contains('open')) m.classList.add('open');
+ ping(660);
+}
+function wireMCQ(){
+ document.querySelectorAll('.mcq').forEach(q=>{
+  q.querySelectorAll('.opt').forEach(opt=>{
+   opt.addEventListener('click', ()=>{
+    if(q.classList.contains('locked')) return;
+    q.classList.add('locked');
+    q.dataset.chosen = opt.dataset.i;
+    opt.style.borderColor = '#1f2a56';
+    opt.style.fontWeight = '700';
+    ping(520);
+   });
+  });
+ });
+}
+function showAnswers(){
+ let correct = 0;
+ document.querySelectorAll('.mcq').forEach(q=>{
+  const ans = q.dataset.ans, chosen = q.dataset.chosen;
+  q.classList.add('locked');
+  q.querySelectorAll('.opt').forEach(opt=>{
+   if(opt.dataset.i === ans){ opt.classList.add('correct'); opt.textContent = '\u2713 ' + opt.textContent; }
+   else if(opt.dataset.i === chosen){ opt.classList.add('wrong'); opt.textContent = '\u2717 ' + opt.textContent; }
+  });
+  if(chosen === ans) correct++;
+ });
+ addXP(correct * 10);
+ document.getElementById('overlay').classList.add('open');
+ confetti();
+}
+/* ---------- EVIDENCE PRINT (DOM-clone + Marking & Fair Assessment block) ---------- */
+function printEvidence(){
+ const pa = document.getElementById('printarea');
+ const name = document.getElementById('ev-name').value || '________________';
+ const p1 = document.getElementById('ev-p1').value || '';
+ const p2 = document.getElementById('ev-p2').value || '';
+ const d = new Date().toLocaleDateString('en-GB');
+ pa.innerHTML = '';
+ function row(txt, cls){
+  const el = document.createElement('div');
+  el.className = cls || 'prow'; el.textContent = txt;
+  pa.appendChild(el); return el;
+ }
+ const h = document.createElement('h1'); h.textContent = LESSON.evTitle; pa.appendChild(h);
+ row('Name: ' + name + '   ·   Date: ' + d + '   ·   ' + LESSON.evLessonLine);
+ row('LO: ' + LESSON.lo);
+ row(LESSON.evP1Label + ' ' + p1);
+ row(LESSON.evP2Label + ' ' + p2);
+ row('Skills used (tick): ' + LESSON.skillsLine + '   ·   Photo evidence attached: [ ]');
+ row('Evidence ref: ' + LESSON.evRef + '   ·   Verified by: ________________   ·   Date: ____________');
+ /* Marking & Fair Assessment Policy block */
+ const yb = document.createElement('div'); yb.className = 'ybox';
+ yb.textContent = 'YELLOW BOX — teacher deep-marks ONE section (dark green pen). Pupil improvement/redraft goes here:';
+ pa.appendChild(yb);
+ row('WWW (What Went Well): ______________________________________________');
+ row('EBI (Even Better If): _______________________________________________');
+ row('Next Steps: ________________________________________________________');
+ row('My response (coloured pen of my choice): ____________________________');
+ row('Formative judgement (circle one): Emerging · Developing · Secure · Exceeding   →   recorded in your school’s assessment system');
+ const foot = document.createElement('div'); foot.className = 'small';
+ foot.textContent = 'Literacy codes (dark green, in margin): Sp spelling · P punctuation · Cap capital letter · T tense · // new paragraph · ^ missing word. Portfolio evidence: upload to your school’s evidence platform for IQA.';
+ pa.appendChild(foot);
+ window.print();
+}
+function confetti(){
+ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+ if(document.body.classList.contains('calm')) return;
+ const cv = document.getElementById('confetticanvas');
+ const ctx = cv.getContext('2d');
+ cv.width = window.innerWidth; cv.height = window.innerHeight;
+ const bits = Array.from({length: 90}, ()=>({
+  x: Math.random()*cv.width, y: -20 - Math.random()*200,
+  v: 2 + Math.random()*3, r: 4 + Math.random()*5,
+  c: ['#d6006d','#1f2a56','#f59e0b','#16a34a'][Math.floor(Math.random()*4)]
+ }));
+ let t = 0;
+ (function fall(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  bits.forEach(b=>{ b.y += b.v; ctx.fillStyle = b.c; ctx.fillRect(b.x, b.y, b.r, b.r); });
+  t++;
+  if(t < 140) requestAnimationFrame(fall); else ctx.clearRect(0,0,cv.width,cv.height);
+ })();
+}
+document.addEventListener('keydown', (e)=>{
+ const tag = (e.target && e.target.tagName) || '';
+ if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+ if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+ if(e.key === 'ArrowLeft') prevSlide();
+});
+/* ---------- INIT (after all data consts) ---------- */
+function init(){
+ buildSort('arr-chips','arr-buckets', LESSON.arrItems, LESSON.arrBuckets, null, null);
+ let fbGood = 0, fbBad = 0;
+ buildSort('wedo-chips','wedo-buckets', LESSON.wedoItems, LESSON.wedoBuckets,
+  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbGood[(fbGood++)%LESSON.fbGood.length]; },
+  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbBad[(fbBad++)%LESSON.fbBad.length]; });
+ wireMCQ();
+ document.getElementById('tabrief').textContent = LESSON.taBriefs[0];
+}
+init();
+</script>
+</body>
+</html>
