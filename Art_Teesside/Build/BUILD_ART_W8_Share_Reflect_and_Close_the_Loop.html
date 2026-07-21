@@ -1,127 +1,497 @@
-<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUILD Art W8 · Share, Reflect and Close the Loop</title><style>
-:root{--ink:#18233F;--steel:#4F869C;--oxide:#D06438;--foundry:#E1AB32;--river:#16877A;--paper:#FFF8EC;--concrete:#D8D6CF;--charcoal:#252A31;--accent:#4F869C}
-*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Segoe UI,system-ui,sans-serif;background:var(--paper);color:var(--ink);overflow:hidden}.slide{display:none;width:100vw;height:100vh;padding:62px 64px 92px;overflow:auto;border-top:10px solid var(--accent)}.slide.active{display:block}.kicker{display:inline-block;background:var(--ink);color:#fff;padding:7px 14px;border-radius:999px;font-weight:800;letter-spacing:.05em}.hero{display:grid;place-content:center;text-align:center;min-height:75vh}.hero h1{font-size:clamp(2.5rem,6vw,5rem);margin:.2em 0;color:var(--accent)}h2{font-size:clamp(1.7rem,3.4vw,2.7rem);margin:.35em 0;color:var(--ink)}p,li,button,label,textarea{font-size:1.08rem;line-height:1.45}.route{background:var(--ink);color:white;padding:15px;border-radius:14px;font-weight:900;margin:16px 0}.grid2,.grid3,.grid4{display:grid;gap:14px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.card{background:#fff;border:3px solid var(--concrete);border-radius:15px;padding:16px;box-shadow:0 7px 18px #18233f12}.card h3{margin:.1em 0;color:var(--accent)}.choice{display:block;width:100%;text-align:left;background:#fff;border:3px solid var(--concrete);border-radius:12px;padding:12px;margin:8px 0;cursor:pointer}.choice.selected{border-color:var(--accent);background:#f0fdfa}.choice.correct{border-color:#16877A;background:#dcfce7}.choice.wrong{border-color:#D06438;background:#ffedd5}.box{padding:15px 18px;border-radius:13px;margin:13px 0;background:#fff;border-left:7px solid var(--accent)}.evidence{background:#fff7d6;border-left-color:var(--foundry)}.lundy{background:#e8f7f4;border-left-color:var(--river)}.caution{background:#eaf4f8;border-left-color:var(--steel)}textarea,input{width:100%;padding:10px;border:2px solid var(--concrete);border-radius:10px;background:#fff;color:var(--ink)}.studio-routes button,.action{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:800;cursor:pointer;margin:5px}.studio-routes button{min-height:72px}.studio-routes button.on{outline:5px solid var(--foundry)}nav{position:fixed;left:0;right:0;bottom:0;background:var(--ink);display:flex;gap:9px;align-items:center;padding:10px 18px;z-index:20}nav button{border:0;border-radius:9px;padding:9px 15px;font-weight:800;cursor:pointer}#count{color:#fff;margin-left:auto}.progress{position:fixed;top:0;left:0;height:6px;background:var(--foundry);z-index:30}.tools{position:fixed;top:14px;right:18px;z-index:30}.tools button{border:2px solid var(--ink);background:#fff;border-radius:8px;padding:7px 10px;font-weight:800}.visual{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px;min-height:260px;display:grid;place-items:center}.visual svg{width:100%;max-height:280px}.visual .beam,.visual path{stroke:var(--ink);stroke-width:9;fill:none;stroke-linecap:round}.visual .fill{fill:var(--accent);stroke:var(--ink);stroke-width:5}.visual .move{animation:move 5s ease-in-out infinite}.visual .dash{stroke-dasharray:16 12;animation:dash 6s linear infinite}.mission{border-top:8px solid var(--accent)}.mission.done{background:#dcfce7}.small{font-size:.92rem;color:#475569}.modal{position:fixed;inset:0;background:#18233fdd;display:none;align-items:center;justify-content:center;z-index:50}.modal.open{display:flex}.modal>div{background:#fff;border-radius:18px;padding:24px;max-width:720px;width:92%;max-height:80vh;overflow:auto}.calm *{animation-play-state:paused!important}.calm{--accent:#65747d}.calm .slide{background:#f5f5f4}@keyframes dash{to{stroke-dashoffset:-112}}@keyframes move{50%{transform:translateX(170px)}}@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}@media(max-width:850px){.slide{padding:70px 20px 98px}.grid2,.grid3,.grid4{grid-template-columns:1fr}.tools{left:12px;right:auto}.hero{min-height:68vh}}@media print{nav,.tools,.progress,.modal{display:none!important}.slide{display:none!important}.print-sheet{display:block!important}}.print-sheet{display:none;padding:12mm;color:#18233F}.print-line{height:38px;border-bottom:1px solid #94a3b8}
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUILD Art W8 · Share, Reflect and Close the Loop</title>
+<style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Highlight-bio block */
+    .bio-block{background:#fdfdfd;border:2px solid #cbd5e1;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:1.02rem;line-height:1.7;max-height:280px;overflow-y:auto;color:#1f2937}
+    .bio-block p{margin:6px 0}
+    .bio-block .key-fact.revealed{background:#fef08a;padding:1px 4px;border-radius:3px;box-shadow:0 0 0 2px rgba(234,179,8,.4);transition:all .3s}
+    /* Live-click sentence highlighting */
+    .hl-sentence{cursor:pointer;padding:2px 3px;border-radius:4px;transition:background .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+    .hl-sentence:hover{background:#fef9c3}
+    .hl-sentence.highlighted{background:#fde047;box-shadow:0 0 0 2px rgba(234,179,8,.5);font-weight:500}
+    .hl-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 8px;font-size:.95rem}
+    .hl-counter{background:#1e293b;color:#fef08a;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.9rem;letter-spacing:.5px}
+    /* WAGOLL Ghost Typer */
+    .wagoll-trigger{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);color:#fff;font-weight:900;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 4px 12px rgba(124,58,237,.3);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+    .wagoll-trigger:hover{background:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);transform:translateY(-2px)}
+    .wagoll-panel{display:none;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,rgba(219,39,119,.06) 100%);border:3px solid var(--ido-border);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;animation:fadeInUp .4s ease-out}
+    .wagoll-panel.visible{display:block}
+    .wagoll-panel::before{content:'🪄 WAGOLL — What A Good One Looks Like';position:absolute;top:-12px;left:14px;background:var(--ido-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+    .wagoll-text{font-family:'Georgia',serif;font-size:1rem;line-height:1.65;color:#1e293b;min-height:80px;padding:6px 4px}
+    .wagoll-text .cursor{display:inline-block;width:2px;height:1em;background:var(--ido-border);margin-left:2px;vertical-align:text-bottom;animation:caretBlink .9s steps(2) infinite}
+    @keyframes caretBlink{50%{opacity:0}}
+    .wagoll-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .wagoll-tag{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:5px;letter-spacing:.5px;display:none}
+    .wagoll-tag.show{display:inline-block;animation:fadeInUp .3s}
+    /* Mid-Point Peer Check overlay */
+    @keyframes midpointPulse{0%,100%{box-shadow:0 0 30px rgba(56,189,248,.6),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(56,189,248,.9),0 0 100px rgba(124,58,237,.6)}}
+    .midpoint-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:8500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .25s ease}
+    .midpoint-overlay.visible{display:flex}
+    .midpoint-modal{background:linear-gradient(135deg,#e0f2fe 0%,#ede9fe 100%);border:4px solid var(--scaffold-border);border-radius:24px;padding:30px 36px;text-align:center;animation:lessonCompletePop .55s cubic-bezier(.34,1.56,.64,1),midpointPulse 2.4s ease-in-out 0.55s infinite;max-width:600px;width:90%}
+    .midpoint-modal .mp-tag{display:inline-block;background:var(--scaffold-border);color:#fff;padding:4px 14px;border-radius:6px;font-size:.78rem;font-weight:900;letter-spacing:1.5px;margin-bottom:8px}
+    .midpoint-modal h2{margin:6px 0 10px;color:#0c4a6e;font-size:1.7rem;border:none;padding:0}
+    .midpoint-modal .mp-prompt{background:rgba(255,255,255,.85);border-left:6px solid var(--task-border);padding:14px 16px;border-radius:10px;margin:10px 0;font-size:1.1rem;color:#1e293b;font-weight:600;text-align:left}
+    .midpoint-modal .mp-prompt strong{color:#9a3412}
+    .midpoint-modal .mp-sub{font-size:.92rem;color:#475569;font-style:italic;margin:6px 0}
+    .midpoint-modal button{background:var(--scaffold-border);color:#fff;border:none;padding:11px 26px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;font-size:1.05rem;transition:all .2s}
+    .midpoint-modal button:hover{background:#0284c7;transform:translateY(-2px)}
+    @media (max-width:640px){
+      .wagoll-panel{padding:14px 12px}.wagoll-text{font-size:.92rem}
+      .midpoint-modal{padding:22px 20px;max-width:94%}
+      .midpoint-modal h2{font-size:1.3rem}
+      .midpoint-modal .mp-prompt{font-size:.95rem;padding:10px 12px}
+      .hl-toolbar{font-size:.85rem;gap:6px}
+    }
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-supported .standard-content,body.print-supported .stretch-content{display:none!important}body.print-standard .supported-content,body.print-standard .stretch-content{display:none!important}body.print-stretch .supported-content,body.print-stretch .standard-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ================= V5 ADDITIONS ================= */
+    /* (1) Animated floating title dots */
+    @keyframes floatDot{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+    .title-dots{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .title-dot{position:absolute;border-radius:50%;animation:floatDot ease-in-out infinite;will-change:transform}
+    .title-stage{position:relative;z-index:1}
+    /* (2) Step-by-step reveal on I Do slides */
+    .v5-step-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ido-bg);border:2px solid var(--ido-border);border-radius:12px;padding:8px 14px;margin:8px 0 12px}
+    .v5-step-controls button{background:var(--ido-border);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-weight:900;cursor:pointer;font-size:.95rem;box-shadow:0 3px 8px rgba(124,58,237,.25)}
+    .v5-step-controls button:hover{background:#5b21b6;transform:translateY(-2px)}
+    .v5-step-controls button:disabled{background:var(--success);cursor:default;transform:none;opacity:.85}
+    .v5-step-label{font-weight:900;color:var(--ido-border);font-size:.92rem;letter-spacing:.5px}
+    .v5-step-hint{font-size:.85rem;color:var(--muted)}
+    .v5-step{display:none}
+    .v5-step.revealed{display:block;animation:fadeInUp .45s ease-out}
+    .compare-grid-3 .v5-step.revealed{display:block}
+    /* (3) TURN & TALK bridge prompt */
+    @keyframes ttPulse{0%,100%{box-shadow:0 0 0 0 rgba(219,39,119,.0)}50%{box-shadow:0 0 0 5px rgba(219,39,119,.12)}}
+    .turn-talk{background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 100%);border:3px solid var(--wedo-border);border-radius:14px;padding:14px 18px;margin-top:14px;position:relative;animation:ttPulse 2.6s ease-in-out infinite}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-12px;left:16px;background:var(--wedo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.74rem;font-weight:900;letter-spacing:1px}
+    .turn-talk p{margin:4px 0;font-size:1.05rem;color:#831843;font-weight:600}
+    .turn-talk .tt-sub{font-size:.85rem;color:#9d174d;font-style:italic;font-weight:500}
+    @media (max-width:640px){.v5-step-controls{padding:6px 10px;gap:8px}.v5-step-controls button{padding:6px 12px;font-size:.85rem}.turn-talk p{font-size:.95rem}.title-dot{display:none}}
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L6 Dalí → L7 Höch';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+      .fact-carousel{padding:18px 14px;min-height:140px}
+      .fact-text{font-size:1rem}
+      .fact-num{font-size:1.8rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+      .bio-block{font-size:.92rem;padding:12px;max-height:240px}
+    }
+  
 
-/* ===== Made by Matt magic-touch layer (Teesside) ===== */
-:root{--navy:#161D3D;--mint:#B9E6CD;--amber:#F2A24A}
-.logo{position:fixed;top:14px;left:18px;z-index:31;font-weight:800;color:var(--accent);font-size:1rem}
-.logo span{color:var(--ink)}
-.art-spine{display:flex;gap:10px;flex-wrap:wrap;margin:14px auto;max-width:820px;font-size:.9rem;text-align:left}
-.art-spine div{flex:1;min-width:230px;border-radius:10px;padding:8px 12px;line-height:1.4}
-.art-spine .inh{background:#eef4f7;border-left:5px solid var(--steel)}
-.art-spine .fwd{background:#e8f7f4;border-left:5px solid var(--river)}
-.art-spine b{display:block;font-size:.72rem;letter-spacing:.4px;color:#475569;margin-bottom:2px}
-.lundy-ringwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:8px 0}
-.lundy-ringwrap p{flex:1;min-width:220px;color:#334155;font-size:.98rem}
-.mission.z-space{border-top-color:var(--steel)}.mission.z-space h3{color:var(--steel)}
-.mission.z-voice{border-top-color:var(--oxide)}.mission.z-voice h3{color:var(--oxide)}
-.mission.z-aud{border-top-color:var(--river)}.mission.z-aud h3{color:var(--river)}
-.mission.z-infl{border-top-color:var(--foundry)}.mission.z-infl h3{color:#8a6a12}
-.art-ticket{background:#fff7d6;border:2px dashed var(--foundry);border-radius:13px;padding:13px 16px;margin:13px 0}
-.art-ticket h3{color:#8a6a12;margin:0 0 6px;font-size:1.05rem}
-.art-ticket .stamp{display:inline-block;border:2px solid var(--river);color:var(--river);border-radius:8px;padding:3px 12px;font-weight:800;font-size:.82rem;transform:rotate(-4deg);margin-top:6px}
-.art-ticket .hard{font-size:.78rem;color:#64748b;margin-left:10px;font-weight:600}
-.art-ladderwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
-.art-ladderwrap p{flex:1;min-width:220px;color:#334155;font-size:.98rem}
-.art-ladder{flex:0 0 auto;max-width:320px}
-.cue{background:var(--navy);color:#fff;border-radius:13px;padding:13px 16px;margin:13px 0;font-size:1.02rem;line-height:1.5}
-.cue b{color:var(--amber)}
-body[data-theme="cream"]{--paper:#fbf3e2}
-body[data-theme="pink"]{--paper:#fdeef2}
-body[data-theme="blue"]{--paper:#eaf1fb}
-@keyframes mbmOrbit{to{transform:rotate(360deg)}}
-@keyframes mbmPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}}
-@keyframes mbmDraw{to{stroke-dashoffset:0}}
-.mbm-orbit{animation:mbmOrbit 6s linear infinite}
-.mbm-pulse{animation:mbmPulse 2.2s ease-in-out infinite}
-.mbm-draw{stroke-dasharray:600;stroke-dashoffset:600;animation:mbmDraw 1.4s ease forwards}
-</style><style id="mbmStdLayer">
-.mbm-sc{background:#FBF2DF;border-left:6px solid #E1AB32;border-radius:12px;padding:14px 16px;margin:14px 0 4px;color:#18233F}
-.mbm-sc h4{margin:0 0 6px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#E1AB32}
-.mbm-sc ul{margin:0;padding-left:0;list-style:none}
-.mbm-sc li{margin:4px 0;padding-left:1.5em;text-indent:-1.5em;line-height:1.45}
-.mbm-sc li::before{content:"✔";margin-right:.55em;color:#E1AB32;font-weight:700}
-.mbm-asp{background:#E9F3EA;border-left:5px solid #16877A;border-radius:12px;padding:10px 14px;margin:8px 0 4px;color:#18233F;line-height:1.45}
-.mbm-asp b{color:#16877A;letter-spacing:.08em;font-size:.78rem;text-transform:uppercase}
-.mbmK-lo{border-top:6px solid #4F869C!important}
-.mbmK-ido{border-top:6px solid #4F869C!important}
-.mbmK-wedo{border-top:6px dashed #4F869C!important}
-.mbmK-youdo{border-top:6px solid #D06438!important}
-.mbmK-lundy{border-top:6px solid #16877A!important}
-.mbmK-ev{border-top:6px solid #E1AB32!important}
-.mbm-modal{position:fixed;inset:0;background:#000000b3;display:none;align-items:center;justify-content:center;z-index:9000;padding:4vh 4vw}
-.mbm-modal.open{display:flex}
-.mbm-card{background:#FFFFFF;color:#18233F;max-width:640px;width:100%;max-height:88vh;overflow:auto;border-radius:16px;padding:22px 24px;border:1px solid #00000022;box-shadow:0 12px 40px #0008}
-.mbm-card h2{margin:0 0 4px;color:#4F869C}
-.mbm-phase{display:grid;grid-template-columns:minmax(96px,auto) 1fr;gap:6px 12px;margin:12px 0;font-size:.9rem;line-height:1.45}
-.mbm-phase b{color:#E1AB32}
-.mbm-focus{border-left:4px solid #D06438;padding:8px 12px;margin:10px 0;background:#00000010;border-radius:8px}
-.mbm-close{display:inline-block;margin-top:12px;background:#4F869C;color:#fff;border:none;border-radius:10px;padding:9px 18px;font:inherit;cursor:pointer}
-.mbm-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
-.mbm-in{flex:1;min-width:130px;padding:8px 10px;border:2px solid #00000022;border-radius:10px;font:inherit;background:transparent;color:#18233F}
-.mbm-band{border:2px solid #4F869C;border-radius:999px;padding:4px 11px;cursor:pointer;font-size:.8rem;background:transparent;color:#18233F}
-.mbm-band.sel{background:#4F869C;color:#fff}
-.mbm-chip{display:inline-flex;gap:6px;align-items:center;border:1.5px solid #00000022;border-radius:999px;padding:4px 10px;margin:3px;font-size:.85rem}
-.mbm-chip .x{cursor:pointer;opacity:.7;font-weight:700}
-.mbm-pick{text-align:center;font-size:1.5rem;font-weight:800;margin:14px 0 4px;min-height:2.2rem}
-.mbm-pass{text-align:center;font-size:.8rem;opacity:.8}
-.mbm-bandtag{font-size:.68rem;border-radius:99px;padding:2px 8px;background:#E1AB32;color:#1b2027;font-weight:700;vertical-align:middle}
-@media print{.mbm-modal{display:none!important}}
-@media (prefers-reduced-motion:reduce){.mbm-modal,.mbm-card{transition:none!important}}
-</style></head><body style="--accent:#C48A16"><div class="progress"></div><div class="logo">Made by <span>Matt</span></div><div class="tools"><button onclick="openTA()">TA Focus</button> <button onclick="mbmCC.open()">🎯 Cold Call</button> <button onclick="calm()">Calm Mode</button> <button onclick="cycleTheme()" id="readbtn">📖 Reading</button></div>
-<section class="slide active"><div class="hero"><span class="kicker">STUDIO SUITE · BUILD ART · WEEK 8</span><h1>Share, Reflect and Close the Loop</h1><p>Finalise &amp; Present · Teesside, place and professional studio habits</p><div class="route">RETRIEVE → SHARE → RECEIVE → REFLECT → AUDIT → INFLUENCE → REPORT BACK</div><div class="art-spine"><div class="inh"><b>◀ INHERITED</b>Week 7&rsquo;s curated showcase and access plan.</div><div class="fwd"><b>FEEDS ▶</b>A named adult acts on one pupil recommendation and reports the decision and deadline back — the loop is paid, the unit CLOSES.</div></div><p><b>Enquiry:</b> What did I develop, what did the audience receive and what should happen next?</p></div><div class="mbm-sc"><h4>Success looks like</h4><ul><li>I can share my work with a real audience</li><li>I can say what I'd do differently next time</li><li>I can name one skill I'm taking into GROW</li></ul></div><div class="mbm-asp"><b>Aspire</b> · GROW reach: set yourself the first Bronze-style challenge for next term.</div></section>
-<section class="slide"><span class="kicker">ARRIVAL GRID · 3–5 MINUTES</span><h2>Settle, notice and choose</h2><div class="grid2"><div class="card"><h3>1. NOTICE</h3><p>Retrieve your Week 1 starting point. What changed most?</p><textarea rows="2" aria-label="Arrival response 1"></textarea></div><div class="card"><h3>2. CHOOSE</h3><p>Choose the evidence that best proves development.</p><textarea rows="2" aria-label="Arrival response 2"></textarea></div><div class="card"><h3>3. CONNECT</h3><p>What did the audience actually receive?</p><textarea rows="2" aria-label="Arrival response 3"></textarea></div><div class="card"><h3>4. QUESTION</h3><p>What artistic or provision change should happen next?</p><textarea rows="2" aria-label="Arrival response 4"></textarea></div></div><div class="box caution"><b>Access:</b> pointing, circling, selecting, speaking, typing or accurate scribing all count. Place knowledge is optional; visual attention is the task.</div></section>
-<section class="slide mbmK-lo"><span class="kicker">LEARNING ROUTE</span><h2>What did I develop, what did the audience receive and what should happen next?</h2><div class="route">RETRIEVE → SHARE → RECEIVE → REFLECT → AUDIT → INFLUENCE → REPORT BACK</div><div class="grid3"><div class="card"><h3>BUILD</h3><p>Notice, try, compare, select and explain one decision.</p></div><div class="card"><h3>STRETCH</h3><p>Compare alternatives and identify what each would change for an audience.</p></div><div class="card"><h3>FRESH TRANSFER</h3><p>Apply today’s routine to a new image, material, audience or display problem.</p></div></div></section>
-<section class="slide"><span class="kicker">CHEESE LAYER · VISUAL EXPLAINER</span><div class="cue"><b>Not an art specialist? Say this:</b> Say: &ldquo;Close the loop for real. What did you develop, and what did the audience actually RECEIVE? Then make a recommendation a named adult will act on &mdash; and make sure they REPORT BACK. If pupils never hear the result, the loop corrodes.&rdquo;</div><h2>See the studio thinking</h2><div class="visual"><svg viewBox="0 0 720 280"><path class="beam dash" d="M100 140c0-90 120-110 180-45 50-70 160-70 210 0 60-65 130-35 130 45s-70 110-130 45c-50 70-160 70-210 0-60 65-180 45-180-45z"/><circle class="fill" cx="180" cy="140" r="38"/><circle class="fill" cx="360" cy="140" r="38"/><circle class="fill" cx="540" cy="140" r="38"/><text x="180" y="145" text-anchor="middle">SHARE</text><text x="360" y="145" text-anchor="middle">CHANGE</text><text x="540" y="132" text-anchor="middle">REPORT</text><text x="540" y="158" text-anchor="middle">BACK</text></svg></div><div class="box"><b>Think aloud:</b> What changed? What stayed? Which decision had the strongest effect?</div></section>
-<section class="slide mbmK-ido"><span class="kicker">I DO · MODEL ONE DECISION CHAIN</span><h2>Watch the thinking, not just the hand</h2><div class="box">Model a concise Explore sharing response: what inspired me, what I made, what I enjoyed, what I achieved, and what I would do next.</div><div class="grid3"><div class="card"><h3>Intention</h3><p>What effect is the artist trying to create?</p></div><div class="card"><h3>Alternatives</h3><p>What could be kept, changed, combined or rejected?</p></div><div class="card"><h3>Evidence</h3><p>What result justifies the selection?</p></div></div></section>
-<section class="slide mbmK-wedo"><span class="kicker">WE DO · CLASS-CONTROLLED TEST</span><h2>Every voice needs a route</h2><div class="box">Build an audience-receipt response and distinguish praise from evidence that the pupil’s expression was understood.</div><div class="grid4"><button class="choice" onclick="choose(this)">Point / place a token</button><button class="choice" onclick="choose(this)">Use a choice card</button><button class="choice" onclick="choose(this)">Type / write</button><button class="choice" onclick="choose(this)">Speak / adult relay</button></div><div class="box lundy"><b>Receipt check:</b> “The decision we followed was ____. It changed ____.”</div></section>
-<section class="slide mbmK-youdo"><span class="kicker">YOU DO · STUDIO ROUTE</span><h2>Choose a genuinely usable route</h2><div class="studio-routes grid4"><button onclick="selectRoute(this)">Draw</button><button onclick="selectRoute(this)">Collage / arrange</button><button onclick="selectRoute(this)">Digital</button><button onclick="selectRoute(this)">Direct and decide</button></div><div class="box">Share through a chosen route, gather evidence of receipt, complete the personal arts log audit, identify gaps and propose the next action.</div><label>My first independent decision:<textarea rows="3"></textarea></label></section>
-<section class="slide mbmK-lundy"><span class="kicker">LUNDY LOOP · FOUR MISSIONS</span><div class="lundy-ringwrap"><svg class="lundy-ring" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Lundy loop: Space, Voice, Audience, Influence"><circle cx="60" cy="60" r="46" fill="none" stroke="#e5e7eb" stroke-width="12"/><path d="M60 14 A46 46 0 0 1 106 60" fill="none" stroke="var(--steel)" stroke-width="12" stroke-linecap="round"/><path d="M106 60 A46 46 0 0 1 60 106" fill="none" stroke="var(--oxide)" stroke-width="12" stroke-linecap="round"/><path d="M60 106 A46 46 0 0 1 14 60" fill="none" stroke="var(--river)" stroke-width="12" stroke-linecap="round"/><path d="M14 60 A46 46 0 0 1 60 14" fill="none" stroke="var(--foundry)" stroke-width="12" stroke-linecap="round"/><g class="mbm-orbit" style="transform-origin:60px 60px"><circle cx="60" cy="14" r="6" fill="#fff" stroke="var(--ink)" stroke-width="2"/></g><text x="60" y="57" text-anchor="middle" font-size="9" font-weight="800" fill="var(--ink)">CLOSE</text><text x="60" y="70" text-anchor="middle" font-size="9" font-weight="800" fill="var(--ink)">THE LOOP</text></svg><p>Four zones, one loop — same everywhere. Colour marks the zone; the loop always closes, even if only with the ticket below.</p></div><h2>Close the loop, don’t just collect choices</h2><div class="grid4"><div class="card mission z-space" onclick="mission(this)"><h3>SPACE</h3><p>Choose a usable route, tool, scale, communication method and public/private boundary.</p></div><div class="card mission z-voice" onclick="mission(this)"><h3>VOICE</h3><p>Control a meaningful artistic decision—not merely the colour of a worksheet.</p></div><div class="card mission z-aud" onclick="mission(this)"><h3>AUDIENCE</h3><p>A recipient names the intention, evidence and uncertainty they actually received.</p></div><div class="card mission z-infl" onclick="mission(this)"><h3>INFLUENCE</h3><p>A named adult acts on one pupil recommendation and reports the decision and deadline back to the group.</p></div></div><div class="art-ticket"><h3>🎟️ THE INFLUENCE TICKET<span class="hard">— on a hard day, THIS alone closes the loop</span></h3><p>My recommendation is <b>____</b>, for <b>____</b>. The named adult acting on it is <b>____</b>. They will report back by <b>____</b>.</p><span class="stamp">STAMP → INFLUENCE</span></div><div class="box lundy"><b>Report-back:</b> “You showed us ____. We changed ____. You will see it by ____.”</div></section>
-<section class="slide"><span class="kicker">AUDIENCE PROTOCOL</span><h2>Gallery walk with evidence, not “good”</h2><div class="grid3"><div class="card"><h3>I notice…</h3><p>Name a line, shape, material, surface, composition or curatorial decision.</p></div><div class="card"><h3>I think the intention may be…</h3><p>Use visible evidence and allow uncertainty.</p></div><div class="card"><h3>One question is…</h3><p>Ask without demanding private disclosure.</p></div></div><div class="box"><b>Maker response:</b> The audience noticed what I intended / something unexpected / something I may test next.</div></section>
-<section class="slide mbmK-ev"><span class="kicker">EVIDENCE CHECKPOINT</span><h2>Photographs need meaning attached</h2><div class="art-ladderwrap"><svg class="art-ladder" viewBox="0 0 300 120" role="img" aria-label="Evidence lift: BUILD entry, BUILD secure, GROW reach"><rect x="8" y="80" width="86" height="30" rx="6" fill="#eaf4f8" stroke="var(--steel)" stroke-width="2"/><text x="51" y="99" text-anchor="middle" font-size="10" font-weight="800" fill="#255e73">BUILD entry</text><rect x="100" y="50" width="92" height="30" rx="6" fill="#e8f7f4" stroke="var(--river)" stroke-width="2"/><text x="146" y="69" text-anchor="middle" font-size="10" font-weight="800" fill="#0f5f56">BUILD secure</text><rect class="mbm-pulse" x="198" y="18" width="94" height="32" rx="6" fill="#fff7d6" stroke="var(--foundry)" stroke-width="3"/><text x="245" y="38" text-anchor="middle" font-size="10" font-weight="900" fill="#8a6a12">GROW reach</text><path class="mbm-draw" d="M51 80 V70 h95 V50 h99 V50" fill="none" stroke="var(--oxide)" stroke-width="2.5"/></svg><p>Every capture reaches for the top step: <b>GROW reach</b> — compare alternatives, adapt for an audience, and transfer the routine to something new.</p></div><div class="box evidence">Starting point + final work + enjoyed/achieved + sharing route + audience receipt + gap audit + next artistic direction.</div><div class="grid2"><div class="card"><h3>Pupil authorship</h3><p>What did I select, arrange, make, direct, explain or decide?</p><textarea rows="4"></textarea></div><div class="card"><h3>Exact support</h3><p>What was prepared, modelled, prompted, scribed, stabilised or technically operated?</p><textarea rows="4"></textarea></div></div><div class="box caution"><b>Explore position:</b> this lesson may contribute evidence. A trained adviser audits the complete personal arts log before confirming qualification requirements.</div><button class="action" onclick="printEvidence()">Print evidence sheet</button></section>
-<section class="slide"><span class="kicker">TRANSFER + NEXT-WEEK BRIDGE</span><h2>Make today change what happens next</h2><div class="grid2"><div class="card"><h3>Fresh transfer</h3><p>Use today’s routine on an unfamiliar reference, material, audience or display situation.</p><textarea rows="4"></textarea></div><div class="card"><h3>My influence request</h3><p>A named adult acts on one pupil recommendation and reports the decision and deadline back to the group.</p><textarea rows="4"></textarea></div></div><div class="box lundy"><b>Responsible adult:</b> _______ &nbsp; <b>Deadline:</b> _______ &nbsp; <b>Report-back route:</b> _______</div></section>
-<section class="slide"><span class="kicker">EXIT · ONE DECISION, ONE REASON</span><h2>What moved your work forward?</h2><button class="choice" onclick="answer(this,true)">I compared alternatives and selected with a reason.</button><button class="choice" onclick="answer(this,false)">I completed something but cannot yet explain the decision.</button><button class="choice" onclick="answer(this,false)">I need a different route, model or material before I can show the learning.</button><div id="feedback" class="box">Choose the most accurate statement—this is planning evidence, not a score.</div></section><nav><button onclick="back()">◀ Back</button><button onclick="next()">Next ▶</button><span id="count">1 / 12</span></nav><div class="modal" id="ta" onclick="if(event.target===this)closeTA()"><div><h2>TA Focus</h2><p>Regulate before redirecting. Preserve the pupil’s artistic decision. Offer access routes without completing the decision for them. Record exact support, including prompts, preparation, scribing, stabilisation and technical operation.</p><p><b>This lesson’s bridge:</b> A named adult acts on one pupil recommendation and reports the decision and deadline back to the group.</p><h3 style='margin:14px 0 0;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85'>Phase-by-phase</h3><div class="mbm-phase"><b>Arrival 2×2</b><span>Connection before correction — settle and regulate first. The grid runs itself; you circulate.</span><b>I&nbsp;Do</b><span>Pupils watch the model — you watch the pupils. Note who tracks the reasoning; no interruptions yet.</span><b>We&nbsp;Do · sabotage</b><span>The error is deliberate — let pupils catch it. Hold it open; never fix it for them.</span><b>You&nbsp;Do</b><span>Tier-match: Supported route ready before it's needed. Prompt, don't tell; record the exact support given.</span><b>Lundy loop</b><span>All four missions are pupil-voice moments — scribe verbatim where possible; a quote beats a summary.</span><b>Evidence</b><span>Capture work, not faces (unless consent is filed). Individual attribution — a group photo isn't one pupil's evidence.</span><b>Exit</b><span>Honest audit, pass allowed. Flag anyone leaving dysregulated for check-out follow-up.</span></div><div class="mbm-focus"><b>This lesson:</b> Close the loop out loud: read back what changed because of pupil voice this term. That report-back is the capture.</div><button class="action" onclick="closeTA()">Close</button></div></div><div class="print-sheet"><h1>BUILD Art W8 Evidence · Share, Reflect and Close the Loop</h1><p>Enquiry: What did I develop, what did the audience receive and what should happen next?</p><p>What is shown?</p><div class="print-line"></div><p>My intention and decision:</p><div class="print-line"></div><p>Alternatives compared:</p><div class="print-line"></div><p>What I made/selected/directed:</p><div class="print-line"></div><p>Exact support:</p><div class="print-line"></div><p>Audience receipt:</p><div class="print-line"></div><p>Influence and report-back:</p><div class="print-line"></div></div><script>let i=0;const slides=[...document.querySelectorAll('.slide')];function show(n){if(n<0||n>=slides.length)return;slides[i].classList.remove('active');i=n;slides[i].classList.add('active');document.getElementById('count').textContent=(i+1)+' / '+slides.length;document.querySelector('.progress').style.width=((i+1)/slides.length*100)+'%'}function next(){show(i+1)}function back(){show(i-1)}function choose(b){b.classList.toggle('selected')}function selectRoute(b){document.querySelectorAll('.studio-routes button').forEach(x=>x.classList.remove('on'));b.classList.add('on')}function mission(c){c.classList.toggle('done')}function answer(b,good){document.querySelectorAll('.slide.active .choice').forEach(x=>x.classList.remove('correct','wrong'));b.classList.add(good?'correct':'wrong');document.getElementById('feedback').textContent=good?'Strong BUILD evidence: add the exact decision and evidence.':'Useful self-audit: record the barrier or support needed so the next route changes.'}function calm(){document.body.classList.toggle('calm')}function openTA(){document.getElementById('ta').classList.add('open')}function closeTA(){document.getElementById('ta').classList.remove('open')}function printEvidence(){window.print()}document.addEventListener('keydown',e=>{if(e.target.matches('textarea,input'))return;if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')back()});</script>
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+/* ===== NEW SAVED-STYLE PUPIL PACK (continuous flow, no page-break-after) ===== */
+@page{margin:11mm}
+@media print{
+  #print-area{padding:0!important}
+  .print-section{page-break-after:auto!important;break-after:auto!important}
+  .print-section.visible{border-bottom:2px dashed #94a3b8;margin-bottom:14px;padding-bottom:14px}
+  .print-section.visible.print-last{border-bottom:0;margin-bottom:0;padding-bottom:0}
+  .print-section h1{font-size:1.2rem;margin:0 0 8px;border:0;display:block}
+  .print-section h2{font-size:1.02rem;margin:0 0 6px;border:0;padding:0}
+  .print-section h3{font-size:.95rem;margin:8px 0 4px;color:#000}
+  .print-section p,.print-section li,.print-section td,.print-section th{font-size:.9rem;line-height:1.4}
+  .print-section ul,.print-section ol{margin:4px 0 8px;padding-left:20px}
+  .ko-table{break-inside:avoid;margin-bottom:12px}
+  .scaffold-print-box{break-inside:avoid;margin-bottom:12px}
+  .prevent-break,.rev-block{break-inside:avoid}
+  .cover-line{font-size:.95rem;border:1px solid #000;padding:7px 10px;border-radius:6px;margin:0 0 12px}
+  .rev-block{margin:10px 0}
+  .self-quiz li{margin:3px 0}
+}
+
+.tag-lundy{background:#f3e8ff;color:#6b21a8}
+.lundy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lundy-box{border-radius:12px;padding:12px 14px;border:2px solid;background:#fff}
+.lundy-box h3{margin:0 0 4px;font-size:1rem}
+.lundy-box p{margin:0;font-size:.92rem}
+.sow-strip{display:inline-block;background:#eef2f7;border:1.5px solid #94a3b8;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#334155;margin:4px 4px 8px}
+.award-strip{display:inline-block;background:#fdf4dc;border:1.5px solid #C18B2D;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#7a5a10;margin:4px 4px 8px}
+.sc-v4{background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:10px 16px;margin:10px auto;max-width:660px;text-align:left}
+.sc-v4 h3{margin:0 0 6px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
+.asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
+@media print{.lundy-grid{display:block}}
+:root{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d}</style></head><body>
+<div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
+  <span id="auto-timer-icon">⏱</span>
+  <span id="auto-timer-display">00:00</span>
+  <button class="at-btn" onclick="autoTimerToggle()" title="Play/Pause">▶</button>
+  <button class="at-btn" onclick="autoTimerReset()" title="Reset">↺</button>
+</div>
+<div class="slide-container"><div class="slide active" data-title="Title" data-timer="1" data-no-autostart="true"><div class="title-dots" aria-hidden="true"><span class="title-dot" style="left:28%;top:23%;width:27px;height:20px;background:#4F869C;opacity:.2;animation-duration:5s;animation-delay:0.0s"></span><span class="title-dot" style="left:73%;top:77%;width:15px;height:23px;background:#D06438;opacity:.2;animation-duration:6s;animation-delay:0.3s"></span><span class="title-dot" style="left:12%;top:54%;width:29px;height:17px;background:#16877A;opacity:.2;animation-duration:7s;animation-delay:0.6s"></span><span class="title-dot" style="left:14%;top:13%;width:23px;height:15px;background:#E1AB32;opacity:.2;animation-duration:8s;animation-delay:0.9s"></span><span class="title-dot" style="left:48%;top:78%;width:29px;height:20px;background:#4F869C;opacity:.2;animation-duration:9s;animation-delay:1.2s"></span><span class="title-dot" style="left:68%;top:68%;width:29px;height:27px;background:#D06438;opacity:.2;animation-duration:10s;animation-delay:1.5s"></span></div>
+<div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div>
+<div class="title-stage" style="text-align:center;margin-top:0"><div class="animate-enter">
+<span class="slide-tag tag-lesson" style="background:#E08A2E;color:#fff">BUILD · Explore · Week 8 of 8</span>
+<h1>Share, Reflect and Close the Loop</h1>
+<p style="font-size:1.05rem;color:var(--muted);margin:-6px 0 4px">Teesside Art Studio Suite · Trinity Arts Award Explore</p>
+<div><span class="sow-strip">Progress SoW · Arts Aut 1 · 2026–27 · BUILD · Week 8</span><span class="award-strip">🎨 Explore Part D · Present & Share (Reflect)</span></div>
+<div class="li-box" style="margin:8px auto;max-width:660px;text-align:left"><strong>Enquiry:</strong> What did I develop, what did the audience receive and what should happen next?</div>
+<div class="sc-v4"><h3 style="color:var(--sc-border)">Success looks like</h3><ul><li>I can share my work with a real audience</li><li>I can say what I'd do differently next time</li><li>I can name one skill I'm taking into GROW</li></ul></div>
+<div class="asp-v4"><strong>Aspire</strong> · GROW reach: set yourself the first Bronze-style challenge for next term.</div>
+<div class="scaffold-box" style="display:inline-block;margin-top:6px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools — Week 8</h3><div style="display:flex;gap:12px;flex-wrap:wrap"><button onclick="printPack('supported')" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:8px 15px;font-weight:800;cursor:pointer">🖨 Supported pack</button><button onclick="printPack('standard')" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:8px 15px;font-weight:800;cursor:pointer">🖨 Standard pack</button><button onclick="printPack('stretch')" style="background:#1e3a8a;color:#fff;border:none;border-radius:8px;padding:8px 15px;font-weight:800;cursor:pointer">🖨 Stretch pack</button></div></div>
+</div></div></div><div class="slide" data-title="Arrival Task" data-timer="4" id="arrival-slide">
+<span class="slide-tag tag-arrival">Retrieval Quiz</span>
+<h2>Arrival Task – What Do You Already Know?</h2>
+<button class="ghost small" style="position:absolute;top:18px;right:20px;z-index:200" onclick="document.getElementById('arrival-slide').classList.toggle('show-ans')">👁️ Reveal Answers</button>
+<div class="level-toggle"><button onclick="switchLevel('arrival','supported')" style="background:#22c55e">Supported</button><button onclick="switchLevel('arrival','standard')" style="background:#f97316">Standard</button><button onclick="switchLevel('arrival','stretch')" style="background:#1e3a8a">Stretch</button></div>
+<div id="arrival-supported" class="arrival-grid"><div class="task-box animate-enter"><h3>1. Show (Last week)</h3><p>What did visitors read when you weren't there?</p><p class="answer">The labels.</p></div><div class="task-box animate-enter anim-delay-1"><h3>2. Journey (Recall)</h3><p>Name one technique you couldn't do in Week 1.</p><p class="answer">Own answer.</p></div><div class="task-box animate-enter anim-delay-2"><h3>3. Proud (Think)</h3><p>Point at (or name) the page you're proudest of.</p><p class="answer">Own answer — pride allowed.</p></div><div class="task-box animate-enter anim-delay-3"><h3>4. Evidence (Recall)</h3><p>Where has your evidence been going all term?</p><p class="answer">The Arts Award portfolio — photos + labels + notes.</p></div></div>
+<div id="arrival-standard" class="arrival-grid" style="display:none"><div class="task-box animate-enter"><h3>1. Retrieval (Last week)</h3><p>Why is access a hanging decision?</p><p class="answer">Placement decides who can meet the work.</p></div><div class="task-box animate-enter anim-delay-1"><h3>2. Reflect (Recall)</h3><p>What makes reflection different from description?</p><p class="answer">Description says what; reflection says what CHANGED and what's next.</p></div><div class="task-box animate-enter anim-delay-2"><h3>3. Audience (Recall)</h3><p>What's an audience receipt?</p><p class="answer">Evidence the audience received something — comments, votes, photos of visitors.</p></div><div class="task-box animate-enter anim-delay-3"><h3>4. Audit (Think)</h3><p>Why audit the portfolio BEFORE claiming the award?</p><p class="answer">Gaps found now are fixable; claims need every part evidenced.</p></div></div>
+<div id="arrival-stretch" class="arrival-grid" style="display:none"><div class="task-box animate-enter"><h3>1. Retrieval (Last week)</h3><p>What dialogue did your section create?</p><p class="answer">Own answer.</p></div><div class="task-box animate-enter anim-delay-1"><h3>2. Growth (Think)</h3><p>'I got better' — upgrade that sentence.</p><p class="answer">Name the skill, the evidence, the before/after — measurable growth.</p></div><div class="task-box animate-enter anim-delay-2"><h3>3. Transfer (Think)</h3><p>Which studio habit transfers OUTSIDE art? How?</p><p class="answer">Critique protocol, plan B thinking, the enough-declaration — own answer.</p></div><div class="task-box animate-enter anim-delay-3"><h3>4. Close (Recall)</h3><p>What does 'closing the loop' mean in our studio?</p><p class="answer">Audience feedback returns to the maker and changes what happens next.</p></div></div>
+</div><div class="slide" data-title="Starter" data-timer="4">
+<span class="slide-tag tag-starter">Starter</span>
+<h2>Starter: The Term in Four Photos</h2>
+<div class="li-box"><strong>Key Question:</strong> Week 1's shaky element sheet. Week 3's best strip. Week 6's finished piece. Week 7's hung wall. Lay them in a row — that row is the story you tell today.</div>
+<div class="product-grid"><div class="product-card"><div class="icon">📄</div><h4>The First Page</h4><p>Where the hands started</p><span class="country-badge">Week 1</span></div><div class="product-card"><div class="icon">🧪</div><h4>The Best Strip</h4><p>Where technique arrived</p><span class="country-badge">Week 3</span></div><div class="product-card"><div class="icon">🖼️</div><h4>The Finished Piece</h4><p>Where decisions happened</p><span class="country-badge">Week 6</span></div><div class="product-card"><div class="icon">👥</div><h4>The Audience</h4><p>Where it stopped being private</p><span class="country-badge">Week 7</span></div></div>
+<p style="text-align:center;color:var(--muted);margin-top:8px">Pairs: swap rows. Tell your partner's story back to them in two sentences — being witnessed matters today.</p>
+</div><div class="slide" data-title="I Do 1" data-timer="5">
+<span class="slide-tag tag-ido">I Do</span>
+<h2>I Do: Reflection That Counts</h2>
+<div class="li-box"><strong>Key Idea:</strong> Explore reflection has three moves: the change (before/after), the evidence (point at it), the next step (specific and wanted).</div>
+<div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 4</span></div><div class="v5-steps"><div class="v5-step"><h3>The change</h3><p>'In Week 1 my lines were timid; by Week 6 my stipple held a focal point.' Before/after — not 'I got better'.</p></div><div class="v5-step"><h3>The evidence</h3><p>I physically point: page 1 beside the finished piece. Reflection without pointing is just claiming.</p></div><div class="v5-step"><h3>The next step</h3><p>'Next I want scratch-back on a bigger scale.' Specific, wanted, and it names a real technique — the sentence a Bronze year is built on.</p></div><div class="v5-step"><h3>Audience receipts in</h3><p>Two visitor comments from the show get stapled beside the reflection — what I sent vs what they received, side by side.</p></div></div>
+</div><div class="slide" data-title="We Do 1" data-timer="6">
+<span class="slide-tag tag-wedo">We Do</span>
+<h2>We Do: Tap the Portfolio Part</h2>
+<div class="li-box"><strong>How it works:</strong> Explore audit: tap each part to reveal what counts as evidence — check your own folder as we go. <span style="float:right;font-weight:900">Found: <span id="pres-num">0</span>/6</span></div>
+<div style="text-align:center;margin:8px 0" id="pres-pills"><div class="sort-pill" data-id="parta" onclick="presTap(this)">🎨 Part A · Take part</div><div class="sort-pill" data-id="partb" onclick="presTap(this)">🔍 Part B · Explore artists</div><div class="sort-pill" data-id="partc" onclick="presTap(this)">🖌️ Part C · Create</div><div class="sort-pill" data-id="partd" onclick="presTap(this)">👥 Part D · Present & share</div><div class="sort-pill" data-id="gaps" onclick="presTap(this)">🕳️ The gap hunt</div><div class="sort-pill" data-id="adviser" onclick="presTap(this)">✅ The adviser check</div></div>
+<div id="pres-caps" style="max-width:820px;margin:0 auto"></div>
+<div style="text-align:center;margin-top:6px"><button class="ghost small" onclick="presReset()">🔄 Reset</button></div>
+</div><div class="slide" data-title="I Do 2" data-timer="4">
+<span class="slide-tag tag-ido">I Do</span>
+<h2>I Do: Closing the Loop</h2>
+<div class="li-box"><strong>Key Idea:</strong> The loop closes when audience feedback returns to the maker and CHANGES something — this term's last influence is next term's first decision.</div>
+<div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 3</span></div><div class="v5-steps"><div class="v5-step"><h3>Read the receipts</h3><p>Visitor comments from Week 7's show, read aloud — what actually landed vs what we intended.</p></div><div class="v5-step"><h3>Name one change</h3><p>'Visitors kept asking about techniques — next show gets a process wall.' Feedback → decision, witnessed by the room.</p></div><div class="v5-step"><h3>Hand it forward</h3><p>The class's keep/change/add verdicts go into the real SoW review — next year's BUILD studio starts where your influence left it.</p></div></div>
+</div><div class="slide" data-title="We Do 2" data-timer="6" id="wedo2">
+<span class="slide-tag tag-wedo">We Do</span>
+<h2>We Do: Match the Explore Part → Its Star Evidence</h2>
+<div class="li-box"><strong>Step 1:</strong> Tap a card, then its partner. <strong>Step 2:</strong> Watch the WAGOLL write itself. <span style="float:right;font-weight:900">Score: <span id="match-score">0</span>/6</span></div>
+<div style="text-align:right;margin:2px 0"><button class="ghost small" onclick="resetMatch()">🔄 Reset</button> <button class="ghost small" onclick="revealMatch()">👁️ Reveal</button></div>
+<div style="text-align:center;margin-bottom:8px" id="kw-pills"><div class="match-pill" onclick="selectKW(this,'pa')">🎨 Part A</div><div class="match-pill" onclick="selectKW(this,'pb')">🔍 Part B</div><div class="match-pill" onclick="selectKW(this,'pc')">🖌️ Part C</div><div class="match-pill" onclick="selectKW(this,'pd')">👥 Part D</div><div class="match-pill" onclick="selectKW(this,'ref')">🪞 Reflection</div><div class="match-pill" onclick="selectKW(this,'loop')">🔁 Closed loop</div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><div class="match-target" data-correct="ref" onclick="pickTarget(this)">Change + pointed evidence + next step</div><div class="match-target" data-correct="pd" onclick="pickTarget(this)">Hung work + label + audience receipts</div><div class="match-target" data-correct="pb" onclick="pickTarget(this)">Artist cards in your own words</div><div class="match-target" data-correct="pc" onclick="pickTarget(this)">Brief → critique → finished piece journey</div><div class="match-target" data-correct="pa" onclick="pickTarget(this)">Labelled pages of taking part</div><div class="match-target" data-correct="loop" onclick="pickTarget(this)">Feedback that changed a decision</div></div>
+<p id="match-fb" style="text-align:center;font-weight:800;min-height:1.2rem;margin:6px 0"></p>
+<div style="text-align:center"><button class="ghost small" onclick="startWagoll()">✍️ Show me a WAGOLL</button> <button class="ghost small" onclick="skipWagoll()">⏩ Skip to full text</button></div>
+<div id="wagoll-panel" class="scaffold-box" style="margin-top:8px"><div id="wagoll-tags"><span class="wagoll-tag" data-trigger="point at both">🪞 Pointed evidence</span><span class="wagoll-tag" data-trigger="four Explore parts">✅ Full audit</span><span class="wagoll-tag" data-trigger="next step">➡️ Next step</span><span class="wagoll-tag" data-trigger="closes the loop">🔁 Loop closed</span></div><p id="wagoll-text"></p></div>
+</div><div class="slide" data-title="Independent Work" data-timer="20">
+<span class="slide-tag tag-independent">Independent Work</span>
+<h2>Independent Work — Studio Time</h2>
+<div class="li-box"><strong>Instructions:</strong> Work at your level. Evidence photos go in your Arts Award portfolio — your reflection sheet + audience receipts — the completed Explore portfolio check (Part D + final audit).</div>
+<div class="timer-widget"><div class="timer-display" id="timerDisplay">20:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div>
+<div class="content-grid" style="height:auto;margin-top:8px;grid-template-columns:repeat(3,1fr)"><div class="task-box"><h3 style="margin-top:0;color:#22c55e">Supported</h3><p><strong>Task:</strong> Reflection sheet with the frame (change/point/next) + gap-hunt with a partner using the part cards.</p><p><strong>Steps:</strong> Three frame sentences · folder open beside partner · sticky note per gap.</p></div><div class="task-box"><h3 style="margin-top:0;color:#f97316">Standard</h3><p><strong>Task:</strong> Full reflection (three moves + receipts stapled) + complete four-part audit with every gap noted and one fixed TODAY.</p><p><strong>Steps:</strong> Reflection written · audit against the tap-cards · the today-fix done, not promised.</p></div><div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">Stretch</h3><p><strong>Task:</strong> Reflection + audit + the transfer paragraph: which studio habit you'll use outside art, evidenced from the term.</p><p><strong>Steps:</strong> All Standard steps · the habit named · a term moment cited · where it transfers, specifically.</p></div></div>
+</div><div class="slide" data-title="Lundy Loop" data-timer="4">
+<span class="slide-tag tag-lundy">Lundy Loop</span>
+<h2>Lundy Loop — Your Voice in the Studio</h2>
+<div class="li-box"><strong>Why:</strong> Article 12 — your view on this work counts, and it changes what the studio does next.</div>
+<div class="lundy-grid"><div class="lundy-box" style="border-color:#4F869C;background:#4F869C14"><h3 style="color:#4F869C">🚪 SPACE</h3><p>The whole studio becomes the audit floor — folders spread, photo rows laid out, the term physically visible.</p></div><div class="lundy-box" style="border-color:#D06438;background:#D0643814"><h3 style="color:#D06438">📣 VOICE</h3><p>The term testimony: one minute each, recorded — the skill you're keeping and the moment it clicked.</p></div><div class="lundy-box" style="border-color:#16877A;background:#16877A14"><h3 style="color:#16877A">👥 AUDIENCE</h3><p>Reflections + receipts are the portfolio's closing pages — the adviser is the audience now, and your folder speaks for you.</p></div><div class="lundy-box" style="border-color:#E1AB32;background:#E1AB3214"><h3 style="color:#E1AB32">⭐ INFLUENCE</h3><p>The binding one: keep/change/add verdicts (one line each) go into the SoW review for next year's BUILD studio. Last year's class put the Skills Lab where it is.</p></div></div>
+</div><div class="slide" data-title="Exit Ticket" data-timer="4" id="exit-slide">
+<span class="slide-tag tag-exit">Exit Ticket</span>
+<h2>Exit Ticket</h2>
+<div class="li-box"><strong>Instructions:</strong> Answer independently. No sketchbooks.</div>
+<div class="level-toggle"><button onclick="switchLevel('exit','supported')" style="background:#22c55e">Supported</button><button onclick="switchLevel('exit','standard')" style="background:#f97316">Standard</button><button onclick="switchLevel('exit','stretch')" style="background:#1e3a8a">Stretch</button><button class="ghost" onclick="document.getElementById('exit-slide').classList.toggle('show-ans')">👁️ Answers</button></div>
+<div id="exit-supported" class="arrival-grid"><div class="task-box"><h3>1.</h3><p>Name the three reflection moves.</p><p class="answer">Change, point at evidence, next step.</p></div><div class="task-box"><h3>2.</h3><p>What did your gap hunt find?</p><p class="answer">Own answer (or 'no gaps' — verified).</p></div><div class="task-box"><h3>3.</h3><p>Name all four Explore parts.</p><p class="answer">Take part, explore artists, create, present/share.</p></div></div>
+<div id="exit-standard" class="arrival-grid" style="display:none"><div class="task-box"><h3>1.</h3><p>Upgrade 'I got better' using your own term.</p><p class="answer">Own before/after with pointed evidence.</p></div><div class="task-box"><h3>2.</h3><p>What counts as an audience receipt?</p><p class="answer">Comments, votes, visitor photos — proof of receipt.</p></div><div class="task-box"><h3>3.</h3><p>What loop closed today?</p><p class="answer">Feedback → changed decision — own example.</p></div></div>
+<div id="exit-stretch" class="arrival-grid" style="display:none"><div class="task-box"><h3>1.</h3><p>Your transfer habit + where it goes next.</p><p class="answer">Own answer — habit + destination.</p></div><div class="task-box"><h3>2.</h3><p>Why do gaps found at claim-time hurt more?</p><p class="answer">Unfixable then; the audit's whole point is NOW.</p></div><div class="task-box"><h3>3.</h3><p>Your one-line SoW verdict: keep/change/add.</p><p class="answer">Own testimony — it genuinely goes to the review.</p></div></div>
+</div></div>
+<div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="showTABrief()">🧑‍🏫 TA Brief</button><button onclick="showColdCall()">🎯 Cold Call</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal"><div class="lc-stars"><span>👁️</span><span>✍️</span><span>🖼️</span></div><h2>Eye Finished &amp; Annotated!</h2><p>Stated · Described · Explained ✍️</p><div class="lc-summary"><span><strong>✓</strong> Finished the tonal eye, full light-to-dark range</span><span><strong>✓</strong> Learned the annotation structure: State → Describe → Explain</span><span><strong>✓</strong> Watched a full evaluation build, then sorted the parts</span><span><strong>✓</strong> Knew what a finished, mounted page needs</span><span style="margin-top:8px;font-style:italic;color:var(--ido-border)"><strong>Next lesson:</strong> turn this skill into ideas for your final surreal eye.</span></div><button onclick="hideLessonComplete()">Onwards! 🚀</button></div>
+</div><div class="midpoint-overlay" id="mp-overlay">
+  <div class="midpoint-modal"><span class="mp-tag">⏸ MID-POINT PEER CHECK</span><h2>Pens down — quick partner check!</h2><div class="mp-prompt">📣 Read your partner your <strong>annotation so far</strong>. Decide together: have you got all three parts — <strong>STATE, DESCRIBE and EXPLAIN</strong>? If anything is missing, help them add the one that’s not there.</div><p class="mp-sub">2 minutes max. Then I’ll resume the timer.</p><button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button></div>
+</div>
+<div id="print-area"><div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.55rem">Knowledge Organiser (BUILD W8): Share, Reflect and Close the Loop</h1>
+<p style="text-align:center;margin:2px 0 8px"><strong>Teesside Art Studio Suite · Trinity Arts Award Explore · Explore Part D · Present & Share (Reflect)</strong></p>
+<table class="ko-table"><tr><th>Key Word</th><th>Definition</th></tr><tr><td>Reflection</td><td>Change + pointed evidence + next step</td></tr><tr><td>Audience receipt</td><td>Proof the audience received the work</td></tr><tr><td>Portfolio audit</td><td>Checking every part is evidenced</td></tr><tr><td>Gap hunt</td><td>Finding fixable holes before the claim</td></tr><tr><td>Closing the loop</td><td>Feedback returning to change a decision</td></tr><tr><td>Adviser check</td><td>The final audit before any award claim</td></tr></table>
+<h2 style="margin-top:12px">Key Facts</h2><ul><li>Reflection points at evidence; claiming doesn't.</li><li>All four Explore parts need evidence in YOUR words and images.</li><li>Gaps found today are fixable this week.</li><li>Your keep/change/add verdicts shape next year's studio — the influence is real and annual.</li></ul></div><div id="print-intro" class="print-section"><h2>Share, Reflect and Close the Loop</h2><p><strong>Name:</strong> ____________________ &nbsp; <strong>Class:</strong> __________ &nbsp; <strong>Date:</strong> <span id="print-date"></span></p>
+<div class="rev-block"><h3>This week's enquiry</h3><p>What did I develop, what did the audience receive and what should happen next?</p><h3>Arts Award evidence</h3><p>your reflection sheet + audience receipts — the completed Explore portfolio check (Part D + final audit).</p></div></div><div id="print-arrival" class="print-section"><h2>Arrival Task</h2>
+<div class="supported-content"><p>1) What did visitors read when you weren't there?</p><div class='print-line'></div><p>2) Name one technique you couldn't do in Week 1.</p><div class='print-line'></div><p>3) Point at (or name) the page you're proudest of.</p><div class='print-line'></div><p>4) Where has your evidence been going all term?</p><div class='print-line'></div></div>
+<div class="standard-content"><p>1) Why is access a hanging decision?</p><div class='print-line'></div><p>2) What makes reflection different from description?</p><div class='print-line'></div><p>3) What's an audience receipt?</p><div class='print-line'></div><p>4) Why audit the portfolio BEFORE claiming the award?</p><div class='print-line'></div></div>
+<div class="stretch-content"><p>1) What dialogue did your section create?</p><div class='print-line'></div><p>2) 'I got better' — upgrade that sentence.</p><div class='print-line'></div><p>3) Which studio habit transfers OUTSIDE art? How?</p><div class='print-line'></div><p>4) What does 'closing the loop' mean in our studio?</p><div class='print-line'></div></div></div><div id="print-starter" class="print-section"><h2>Starter: The Term in Four Photos</h2><p><strong>Key Question:</strong> Week 1's shaky element sheet. Week 3's best strip. Week 6's finished piece. Week 7's hung wall. Lay them in a row — that row is the story you tell today.</p><div class="print-line"></div><div class="print-line"></div></div><div id="print-wedo" class="print-section prevent-break"><h2>We Do 1: We Do: Tap the Portfolio Part</h2><p>🎨 Part A · Take part, 🔍 Part B · Explore artists, 🖌️ Part C · Create, 👥 Part D · Present & share, 🕳️ The gap hunt, ✅ The adviser check</p>
+<h2 style="margin-top:14px">We Do 2: We Do: Match the Explore Part → Its Star Evidence</h2><p>Draw lines to match:</p><p>🎨 Part A · 🔍 Part B · 🖌️ Part C · 👥 Part D · 🪞 Reflection · 🔁 Closed loop</p><p>Change + pointed evidence + next step · Hung work + label + audience receipts · Artist cards in your own words · Brief → critique → finished piece journey · Labelled pages of taking part · Feedback that changed a decision</p></div><div id="print-scaffold-supported" class="print-section"><h2>Scaffolding – Supported</h2><div class="scaffold-print-box"><h3>Word Bank</h3><p>changed, before, after, next, gap, fixed</p><h3>Reflection Frame</h3><p>"In Week 1 ___; by Week ___ ___" | "The evidence is ___" | "Next I want ___"</p></div></div><div id="print-scaffold-standard" class="print-section"><h2>Scaffolding – Standard</h2><div class="scaffold-print-box"><h3>Audit Structure</h3><p><strong>Per part:</strong> star evidence present? □ dated? □ your words? □ <strong>Gaps:</strong> sticky per gap. <strong>Fix:</strong> one done today. <strong>Receipts:</strong> stapled to the reflection.</p></div></div><div id="print-scaffold-stretch" class="print-section"><h2>Scaffolding – Stretch</h2><div class="scaffold-print-box"><h3>Transfer frames</h3><p>"The habit I'm keeping is ___" | "It showed in Week ___ when ___" | "Outside art it transfers to ___ because ___"</p></div></div><div id="print-worksheet-supported" class="print-section"><h2>Independent Work – Supported</h2><div class="prevent-break"><p><strong>Reflection Sheet</strong></p><p>My change (before/after):</p><div class='print-line'></div><div class='print-line'></div><p>The evidence I can point at:</p><div class='print-line'></div><p>My next step:</p><div class='print-line'></div></div></div><div id="print-worksheet-standard" class="print-section"><h2>Independent Work – Standard</h2><div class="prevent-break"><p><strong>Reflection + Audit</strong></p><p>Reflection complete □ Receipts stapled □</p><p>Audit: Part A □ Part B □ Part C □ Part D □</p><p>Gaps found / fixed today:</p><div class='print-line'></div><div class='print-line'></div></div></div><div id="print-worksheet-stretch" class="print-section"><h2>Independent Work – Stretch</h2><div class="prevent-break"><p><strong>Reflection + Audit + Transfer</strong></p><p>All Standard items □</p><p>Transfer paragraph (habit + term moment + destination):</p><div class='print-line'></div><div class='print-line'></div><div class='print-line'></div></div></div><div id="print-exit" class="print-section"><div class="supported-content"><h2>Exit Ticket – Supported</h2><p>1) Name the three reflection moves.</p><div class='print-line'></div><p>2) What did your gap hunt find?</p><div class='print-line'></div><p>3) Name all four Explore parts.</p><div class='print-line'></div></div><div class="standard-content"><h2>Exit Ticket – Standard</h2><p>1) Upgrade 'I got better' using your own term.</p><div class='print-line'></div><p>2) What counts as an audience receipt?</p><div class='print-line'></div><p>3) What loop closed today?</p><div class='print-line'></div></div><div class="stretch-content"><h2>Exit Ticket – Stretch</h2><p>1) Your transfer habit + where it goes next.</p><div class='print-line'></div><p>2) Why do gaps found at claim-time hurt more?</p><div class='print-line'></div><p>3) Your one-line SoW verdict: keep/change/add.</p><div class='print-line'></div></div></div><div id="print-feedback" class="print-section"><h2 style="text-align:center">Share, Reflect and Close the Loop — Feedback Sheet</h2><p style="font-size:.95rem;color:#444">Keep with your sketchbook / portfolio.</p>
+<table class="ko-table"><tr><td style="width:50%"><strong>Pupil name:</strong></td><td><strong>Date:</strong></td></tr>
+<tr><td colspan="2"><strong>WWW (What Went Well):</strong><div class='print-line'></div><div class='print-line'></div></td></tr>
+<tr><td colspan="2"><strong>EBI (Even Better If):</strong><div class='print-line'></div><div class='print-line'></div></td></tr>
+<tr><td><strong>Level worked at:</strong> Supported / Standard / Stretch</td><td><strong>Arts Award evidence filed:</strong> Yes / Not yet</td></tr>
+<tr><td colspan="2"><strong>Pupil response — my next step:</strong><div class='print-line'></div></td></tr></table></div></div>
 <script>
-(function(){var T=["cream","pink","blue"];
- try{var s=localStorage.getItem("mbm_reading_theme");if(s)document.body.dataset.theme=s;}catch(e){}
- window.cycleTheme=function(){var c=document.body.dataset.theme||"";var n=T[(T.indexOf(c)+1)%T.length];
-  document.body.dataset.theme=n;try{localStorage.setItem("mbm_reading_theme",n);}catch(e){}
-  var b=document.getElementById("readbtn");if(b)b.textContent="\uD83D\uDCD6 "+n.charAt(0).toUpperCase()+n.slice(1);};})();
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['supported','standard','stretch'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+/* V5 step-by-step reveal on I Do slides */
+function v5UpdateLabel(slide){const total=slide.querySelectorAll('.v5-step').length;const shown=slide.querySelectorAll('.v5-step.revealed').length;const lbl=slide.querySelector('.v5-step-label');if(lbl)lbl.textContent='Step '+shown+' of '+total;const btn=slide.querySelector('.v5-step-controls button');if(btn){if(shown>=total){btn.textContent='\u2713 All revealed';btn.disabled=true;}else{btn.textContent='\u25b6 Reveal next step';btn.disabled=false;}}}
+function v5RevealNext(btn){const slide=btn.closest('.slide');if(!slide)return;const next=slide.querySelector('.v5-step:not(.revealed)');if(next){next.classList.add('revealed');try{playDing()}catch(e){}}v5UpdateLabel(slide);}
+/* WAGOLL ghost typer */
+
+let _wagollTimer=null,_wagollIdx=0;
+function _wagollClearTags(){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>t.classList.remove('show'));}
+function _wagollCheckTags(soFar){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>{const trig=t.getAttribute('data-trigger');if(trig&&soFar.toLowerCase().includes(trig.toLowerCase())&&!t.classList.contains('show')){t.classList.add('show');try{playDing()}catch(e){}}});}
+const _wagollText='This term I moved from timid Week 1 lines to a stippled focal point that held a wall, and I can point at both pages to prove the change. My portfolio covers all four Explore parts: my labelled element sheets for taking part, my artist cards in my own words, the journey from brief to critique to finished piece, and my hung section with its label and two audience receipts. My gap hunt found one missing date, which I fixed today. My next step is scratch-back at a bigger scale. The audience kept asking about technique, so our next show will include a process wall — their feedback changed our plan, which closes the loop.';
+function startWagoll(){const panel=document.getElementById('wagoll-panel');if(!panel)return;panel.classList.add('visible');restartWagoll();}
+function restartWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=0;const out=document.getElementById('wagoll-text');if(!out)return;out.innerHTML='<span class="cursor"></span>';_wagollClearTags();_wagollTimer=setInterval(()=>{_wagollIdx++;if(_wagollIdx>_wagollText.length){clearInterval(_wagollTimer);out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);return;}const so=_wagollText.slice(0,_wagollIdx);out.innerHTML=so+'<span class="cursor"></span>';_wagollCheckTags(so);},22);}
+function skipWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=_wagollText.length;const out=document.getElementById('wagoll-text');if(out)out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);}
+/* MATCH game: tap a pill, tap its target (#wedo2 / #kw-pills, 3 pairs) */
+let selectedKWId=null;let matchScore=0;
+function selectKW(el,id){selectedKWId=id;document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedKWId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedKWId){el.classList.add('correct');const sel=document.querySelector('#kw-pills .match-pill.selected');if(sel)sel.classList.add('placed');matchScore++;const ms=document.getElementById('match-score');if(ms)ms.textContent=matchScore;if(fb){fb.textContent='\u2705 Correct!';fb.style.color='var(--success)';}}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);if(fb){fb.textContent='\u274c Try again!';fb.style.color='var(--error)';}}selectedKWId=null;}
+function resetMatch(){selectedKWId=null;matchScore=0;const ms=document.getElementById('match-score');if(ms)ms.textContent='0';const fb=document.getElementById('match-fb');if(fb)fb.textContent='';document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.add('placed'));const ms=document.getElementById('match-score');const n=document.querySelectorAll('#wedo2 .match-target').length;matchScore=n;if(ms)ms.textContent=n;}
+/* INDEPENDENT timer + mid-point peer check */
+let timerTotal=900,timerLeft=900,timerInterval=null,timerRunning=false,midpointFired=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;const d=document.getElementById('timerDisplay');if(!d)return;d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;const b=document.getElementById('timerBar');if(b)b.style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)d.style.color='#dc2626';else if(timerLeft<=300)d.style.color='#f97316';else d.style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();if(timerLeft===Math.floor(timerTotal/2)&&!midpointFired){midpointFired=true;fireMidpoint();}}else{clearInterval(timerInterval);timerRunning=false;const d=document.getElementById('timerDisplay');if(d)d.textContent='\u23f0 TIME!';try{playBuzz()}catch(e){}}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
+function fireMidpoint(){pauseTimer();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
+function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();}
+function printPack(level){document.body.classList.remove('print-supported','print-standard','print-stretch');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','intro','arrival','starter','wedo','exit','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');_stampAndMark();window.print()}
+function _stampAndMark(){var pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');var vis=document.querySelectorAll('.print-section.visible');vis.forEach(function(e){e.classList.remove('print-last')});if(vis.length)vis[vis.length-1].classList.add('print-last')}
+function printSection(id,level){document.body.classList.remove('print-supported','print-standard','print-stretch');if(level)document.body.classList.add('print-'+level);document.querySelectorAll('.print-section').forEach(function(el){el.classList.remove('visible')});var el=document.getElementById('print-'+id);if(el)el.classList.add('visible');_stampAndMark();window.print()}
 </script>
-<div class="mbm-modal" id="mbmCC" onclick="if(event.target===this)this.classList.remove('open')">
-<div class="mbm-card"><h2>🎯 Cold Call</h2>
-<p style="opacity:.8;font-size:.85rem;margin:.2rem 0 6px">Add your class once — names stay on this device only, and every Made by Matt lesson on it shares the list. Band each pupil so questions are tier-matched.</p>
-<div class="mbm-row"><input class="mbm-in" id="mbmCCn" placeholder="Pupil name" onkeydown="if(event.key==='Enter')mbmCC.add()">
-<button class="mbm-band" data-b="SUP" onclick="mbmCC.band(this)">Supported</button>
-<button class="mbm-band sel" data-b="STD" onclick="mbmCC.band(this)">Standard</button>
-<button class="mbm-band" data-b="STR" onclick="mbmCC.band(this)">Stretch</button>
-<button class="mbm-close" style="margin-top:0" onclick="mbmCC.add()">+ Add</button></div>
-<div id="mbmCCr"></div>
-<div class="mbm-row" style="justify-content:center">
-<select class="mbm-in" id="mbmCCf" style="flex:none;width:auto" onchange="mbmCC.newbag()"><option value="">All bands</option><option value="SUP">Supported only</option><option value="STD">Standard only</option><option value="STR">Stretch only</option></select>
-<button class="mbm-close" style="margin-top:0" onclick="mbmCC.draw()">🎲 Draw</button>
-<button class="mbm-band" onclick="mbmCC.clear()">Clear class</button></div>
-<div class="mbm-pick" id="mbmCCp" aria-live="polite"></div>
-<p class="mbm-pass">Pass is always allowed — passing still counts as taking part.</p>
-<button class="mbm-close" onclick="document.getElementById('mbmCC').classList.remove('open')">Close</button></div></div><script id="mbmStdJS">
-var mbmCC=(function(){
-var KEY="mbm_cc_v1",band="STD",bag=[];
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]})}
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
-function save(l){try{localStorage.setItem(KEY,JSON.stringify(l))}catch(e){}}
-function roster(){var l=load(),r=document.getElementById("mbmCCr");if(!r)return;
-r.innerHTML=l.map(function(p,i){return '<span class="mbm-chip">'+esc(p.n)+' <span class="mbm-bandtag">'+p.b+'</span> <span class="x" role="button" aria-label="Remove" onclick="mbmCC.rm('+i+')">✕</span></span>'}).join("")||'<p style="opacity:.7;font-size:.85rem">No pupils added yet on this device.</p>'}
-function pool(){var f=document.getElementById("mbmCCf"),l=load();return f&&f.value?l.filter(function(p){return p.b===f.value}):l}
-return{
- open:function(){var m=document.getElementById("mbmCC");roster();m.classList.add("open");},
- band:function(el){band=el.dataset.b;var bs=el.parentNode.querySelectorAll(".mbm-band[data-b]");for(var i=0;i<bs.length;i++)bs[i].classList.toggle("sel",bs[i]===el)},
- add:function(){var i=document.getElementById("mbmCCn"),n=(i.value||"").trim();if(!n)return;var l=load();l.push({n:n.slice(0,30),b:band});save(l);i.value="";bag=[];roster()},
- rm:function(ix){var l=load();l.splice(ix,1);save(l);bag=[];roster()},
- clear:function(){if(confirm("Remove the whole class list from this device?")){save([]);bag=[];roster();document.getElementById("mbmCCp").textContent=""}},
- newbag:function(){bag=[]},
- draw:function(){var p=pool(),o=document.getElementById("mbmCCp");if(!p.length){o.textContent="Add pupils first";return}
-  if(!bag.length){bag=p.map(function(x){return x});for(var i=bag.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=bag[i];bag[i]=bag[j];bag[j]=t}}
-  var pick=bag.pop();o.innerHTML="🎯 "+esc(pick.n)+' <span class="mbm-bandtag">'+pick.b+"</span>"}
-};})();
-function mbmTAopen(){var m=document.getElementById("mbmTA");if(m)m.classList.add("open")}
-</script></body></html>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textContent=xpTotal}
+function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'\ud83d\udca1 Hide hint':'\ud83d\udca1 Give me a hint'}
+document.addEventListener('DOMContentLoaded',()=>{registerXP(7);});
+const _origPickTarget=window.pickTarget;
+window.pickTarget=function(el){if(!selectedKWId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedKWId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
+
+  /* ============== V4/V5 POLISH JS ============== */
+  
+  const _ccQuestions = {"Title": {"F": "What two jobs do we have today?", "M": "What does it mean to 'annotate' your work?", "H": "Why does annotating make your portfolio stronger?"}, "Recap Bridge": {"F": "Which is darkest — pupil or iris?", "M": "What is the golden rule of tone?", "H": "Why add reflected light to the iris?"}, "Arrival Task": {"F": "What does tone mean?", "M": "Name the five tonal zones.", "H": "Difference between describe and explain?"}, "Starter: First Look": {"F": "Name one thing that makes the eye look finished.", "M": "Why does a full tonal range help?", "H": "How does the catchlight make it look alive?"}, "I Do: The Annotation Structure": {"F": "What does STATE tell the reader?", "M": "Give a starter for DESCRIBE.", "H": "Why must explain come last?"}, "We Do: State, Describe or Explain?": {"F": "'I have drawn an eye' — which part?", "M": "Turn 'I used blending' into a fuller DESCRIBE sentence.", "H": "Say an EXPLAIN sentence using 'because'."}, "I Do: WAGOLL Annotation": {"F": "Which words start the STATE part?", "M": "Which techniques did the WAGOLL name?", "H": "What made it evaluation, not just description?"}, "We Do: Presentation Check": {"F": "Name one thing you mount on the page.", "M": "Why include a small photocopy?", "H": "Why mount the annotation next to the eye?"}, "Independent Work": {"F": "Read me your STATE sentence.", "M": "Have you got all three parts yet?", "H": "What is your 'even better if' for this piece?"}, "Exit Ticket": {"F": "Q1 — the three annotation parts?", "M": "Q2 — what goes in EXPLAIN?", "H": "Q1 — why does annotation strengthen your work?"}};
+  const _CC_KEY='mbm_cc_v1';
+  
+  const _ccDefault=[];function _ccNorm(p){if(p&&p.b){return {n:p.n,g:({SUP:'1',STD:'2',STR:'3'})[p.b]||'2',b:p.b}}return p}
+function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return (Array.isArray(d)&&d.length?d:_ccDefault.slice()).map(_ccNorm)}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'STD';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'SUP';if(g==='2')return 'STD';return 'STR'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+  const _taBriefs={"Title": "Folders + the term's photo prints laid ready; four-photo row spaces marked on tables; sticky notes + staplers out; the recording corner set for testimonies.", "Arrival Task": "'Point at the page you're proudest of' — physically point. Pride first, audit second; the order matters emotionally.", "Starter": "Partner story-swaps: listen for pupils who can't tell their OWN story — they need the reflection frame most.", "I Do 1": "Model pointing at real before/after pages. The 'next step' sentence gets written on the board as the term's last model sentence.", "We Do 1": "The audit taps double as a live folder check — after each part's reveal, thirty seconds of folder-flicking before the next tap.", "I Do 2": "Read real visitor receipts aloud (pre-select kind ones). The feedback→decision move happens publicly.", "We Do 2": "Match + WAGOLL; the WAGOLL is a complete model reflection — pupils may crib its structure openly.", "Independent Work": "Gap-fixing happens NOW not 'later' — hold the room until every sticky has a fix or a plan. Photograph reflections for the folder's final page.", "Exit Ticket": "Collect keep/change/add lines — they go to the real SoW review. Say so; the influence being real is the point.", "Lundy Loop": "Scribe pupil voice verbatim where you can — a quote beats a summary. Space·Voice·Audience·Influence, and pass is allowed."};
+function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83d\udc65 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';document.body.appendChild(modal);}
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the \u270f\ufe0f Edit list button.');return}
+    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Middle',H:'Stretch'}[tier];const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83c\udfb2 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">\u2014</div><span class="cc-tier" id="cc-tier">\u2014</span><div class="cc-question" id="cc-q">\u2014</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">\u270f\ufe0f Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">\ud83c\udfb2 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';document.body.appendChild(modal);}
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');nameEl.textContent=pick.n;nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');try{playDing()}catch(e){}
+  }
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\u270f\ufe0f Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">\ud83d\udcbe Save</button></div></div>';document.body.appendChild(modal);}
+    const list=_ccLoad();document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){const txt=document.getElementById('cc-edit-area').value;const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);_ccSave(list);_ccRecent=[];document.getElementById('cc-edit-modal').classList.remove('visible');}
+
+  /* AUTO TIMER (reads data-timer minutes per slide) */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){_atPause();const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}const minStr=slide.getAttribute('data-timer');const noAuto=slide.getAttribute('data-no-autostart')==='true';const min=parseInt(minStr,10);if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}document.body.classList.remove('no-timer');_atTotal=min*60;_atSeconds=_atTotal;_atRender();if(!noAuto)setTimeout(()=>{_atStart()},250);}
+
+  /* LESSON COMPLETE (fires when #exit-slide reveals answers) */
+  let _lcShown=false;
+  function _lcShowComplete(){if(_lcShown)return;_lcShown=true;setTimeout(()=>{try{fireConfetti()}catch(e){}try{playLevelUp()}catch(e){}const ov=document.getElementById('lc-overlay');if(ov)ov.classList.add('visible');},400);}
+  function hideLessonComplete(){const ov=document.getElementById('lc-overlay');if(ov)ov.classList.remove('visible');}
+  (function(){const exit=document.getElementById('exit-slide');if(!exit)return;const obs=new MutationObserver(()=>{if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();});obs.observe(exit,{attributes:true,attributeFilter:['class']});})();
+
+  if(typeof showSlide==='function'){const _origShowSlide=showSlide;window.showSlide=function(i){_origShowSlide(i);try{_atOnSlideChange()}catch(e){}};}
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){['ta-modal','cc-modal','cc-edit-modal','lc-overlay','mp-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('visible');});}});
+</script>
+<script>const _pres={parta:{text:'<strong>Counts:</strong> labelled element pages, strip records, photos of you working. <strong>Check:</strong> dates + labels on every page.'},partb:{text:'<strong>Counts:</strong> artist cards, steal sentences, gallery/organisation notes. <strong>Check:</strong> YOUR words, not printouts.'},partc:{text:'<strong>Counts:</strong> brief, critique card, development photos, final piece + decisions note. <strong>Check:</strong> the JOURNEY is visible, not just the ending.'},partd:{text:'<strong>Counts:</strong> hung section photo, your label, audience receipts, today\'s reflection. <strong>Check:</strong> evidence someone RECEIVED it.'},gaps:{text:'<strong>Today\'s job:</strong> one sticky note per gap. Gaps found today are fixable this week; gaps found at claim-time are not.'},adviser:{text:'<strong>Final step:</strong> the Arts Award adviser audits parts + hours before any claim — your folder makes their yes easy.'}};
+registerXP(12);
+var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
+</body></html>
