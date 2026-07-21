@@ -1,0 +1,60 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LAUNCH Humanities · Teesside Migration &amp; Identity · Printable Evidence, Lundy &amp; Transfer Pack</title><style>
+:root{--ink:#18233F;--steel:#557D91;--rust:#A06043;--teal:#278B7E;--gold:#b3862c}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);background:#f2ede2;margin:0;padding:26px;line-height:1.5}
+h1{color:var(--ink);border-bottom:3px solid var(--rust);padding-bottom:6px;font-size:1.5rem}
+.note{background:#fbf4e3;border-left:6px solid var(--gold);padding:10px 14px;border-radius:8px;font-size:.93rem}
+.controls{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}
+.controls button{background:var(--rust);color:#fff;font-weight:700;cursor:pointer}
+.sheet{background:#fff;border:1px solid #d5d2c8;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #18233f11}
+.asdbadge{display:inline-block;background:var(--gold);color:#3a2c07;font-weight:800;font-size:.72rem;padding:3px 10px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}
+.spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}.spine .inh{background:#eaf1f4;border-left:5px solid var(--steel)}.spine .fwd{background:#e6f5f1;border-left:5px solid var(--teal)}
+.spine b{display:block;font-size:.7rem;color:#5b6b6a}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.fld{flex:1;min-width:200px;border:1px solid #9ca3af;border-radius:8px;padding:8px 10px;min-height:40px}.fld b{display:block;font-size:.78rem;color:#5b6b6a}
+.lundy4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.lundy4>div{border-radius:10px;padding:8px;color:#fff;font-size:.8rem;min-height:64px}
+.z-space{background:var(--steel)}.z-voice{background:var(--rust)}.z-aud{background:var(--teal)}.z-infl{background:var(--gold);color:#3a2c07}
+.lundy4 b{display:block;margin-bottom:3px}
+.ticket{background:#fbf4e3;border:2px dashed var(--gold);border-radius:12px;padding:12px 14px;margin:10px 0}.ticket h3{color:#9a6f1e;margin:0 0 6px;font-size:1rem}
+.stamp{display:inline-block;border:2px solid var(--teal);color:var(--teal);border-radius:8px;padding:3px 10px;font-weight:800;font-size:.8rem;transform:rotate(-4deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.ladder>div{border-radius:10px;padding:9px;font-size:.8rem;color:#fff}
+.le{background:var(--steel)}.ls{background:var(--teal)}.lr{background:var(--gold);color:#3a2c07}
+.ybox{border:3px solid var(--gold);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9ca3af;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eaf1f4}
+@media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
+</style></head><body>
+<h1>LAUNCH Humanities · Teesside Migration &amp; Identity · Printable Evidence, Lundy &amp; Transfer Pack</h1>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-locked Lundy zones, same LAUNCH&rarr;GCSE ladder. <b>Week 7 is assessed</b> &mdash; apply centre-approved conditions and each learner&rsquo;s access arrangements. One sheet per pupil per week. Capture reasoning and independence, not volume. Match UAS evidence to the exact registered unit; AO mapping is developmental, not a GCSE grade. No pupil names are stored in any file.</p>
+<div class="controls noprint">Show week:
+<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select>
+<button onclick="window.print()">🖨️ Print</button></div><div id="out"></div>
+<script>
+const WEEKS=[
+{w:1,t:"Source Investigation",tk:"THE SOURCE TICKET",tp:"This source supports the claim as far as ____. Its provenance/context limits it because ____. My weighed judgement is ____.",inh:"Unit start — investigating Teesside&rsquo;s migration sources.",fwd:"The unresolved source issue sets Week 2&rsquo;s causal charge.",asd:false},
+{w:2,t:"Cause &amp; Consequence Courtroom",tk:"THE VERDICT TICKET",tp:"Decisive cause: ____. Contributing: ____. Background: ____. The verdict &mdash; which carried it &mdash; is ____, because ____.",inh:"Week 1&rsquo;s unresolved source issue.",fwd:"The appeal question selects Week 3&rsquo;s archive source.",asd:false},
+{w:3,t:"Archive: Nature, Origin &amp; Purpose",tk:"THE UTILITY TICKET",tp:"Nature/origin/purpose: ____. This source is genuinely useful for ____, but useless for ____. For this enquiry it counts because ____.",inh:"Week 2&rsquo;s causal verdict and appeal.",fwd:"Utility decisions control the evidence admitted to Week 4.",asd:false},
+{w:4,t:"Century of Change",tk:"THE TURNING-POINT TICKET",tp:"What changed: ____. What continued: ____. How far a turning point: ____. My strongest evidence is ____.",inh:"Week 3&rsquo;s admitted evidence.",fwd:"The turning point and continuity open Week 5&rsquo;s agency debate.",asd:false},
+{w:5,t:"People &amp; Modern Britain",tk:"THE AGENCY TICKET",tp:"The individual is ____. Agency: they shaped ____. Structure: the conditions ____. My defended judgement + counter is ____.",inh:"Week 4&rsquo;s turning-point judgement.",fwd:"The defended judgement becomes Week 6&rsquo;s thesis choice.",asd:false},
+{w:6,t:"Structured Account",tk:"THE THESIS TICKET",tp:"My thesis is ____. Paragraph order serving it: ____. My strongest evidence is ____. The support I&rsquo;ve agreed is ____.",inh:"Week 5&rsquo;s defended agency judgement.",fwd:"The plan and access contract set Week 7 conditions.",asd:false},
+{w:7,t:"Source Assessment",tk:"THE ASSESSMENT TICKET ★ ASSESSED",tp:"Enquiry: ____. Most useful source + why: ____. Least useful + why: ____. My substantiated judgement is ____. Access support used: ____.",inh:"Week 6&rsquo;s thesis plan and access contract.",fwd:"Assessment evidence determines Week 8 transfer and intervention.",asd:true},
+{w:8,t:"OS Map Skills: Unfamiliar Problem",tk:"THE TRANSFER TICKET",tp:"Unfamiliar problem: ____. Map evidence used (grid/scale/relief): ____. My solution is ____. Recommendation + named adult acting: ____; reports back by ____.",inh:"Week 7&rsquo;s assessed source judgement.",fwd:"A named adult acts on one evidence-led recommendation and reports back.",asd:false}
+];
+function sheet(x){return `<div class="sheet"><h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}${x.asd?'<span class="asdbadge">★ ASSESSED</span>':''}</h2>
+<div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
+<div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / access support used</b></div></div>
+<p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
+<div class="lundy4"><div class="z-space"><b>SPACE</b>a usable reasoning &amp; evidence route</div><div class="z-voice"><b>VOICE</b>a real enquiry / assessment decision</div><div class="z-aud"><b>AUDIENCE</b>claim, evidence &amp; issue restated to you</div><div class="z-infl"><b>INFLUENCE</b>your judgement changes next week</div></div>
+<div class="ticket"><h3>🎟️ ${x.tk} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#6b7676">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#6b7676">Peer stamp: ______</span></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence lift · LAUNCH → GCSE</p>
+<div class="ladder"><div class="le"><b>LAUNCH entry</b><br>Weigh or judge with support.</div><div class="ls"><b>LAUNCH secure</b><br>Substantiate with evidence &amp; counter-evidence.</div><div class="lr"><b>GCSE reach</b><br>Sustain a thesis, weigh counter-argument &amp; transfer to a new enquiry.</div></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence (stick source / annotate reasoning)</p><div class="ybox"></div>
+<div class="row" style="font-size:.8rem;color:#5b6b6a"><div class="fld"><b>Authorship</b>what I reasoned / judged / argued independently</div><div class="fld"><b>Exact support</b>modelled / prompted / scribed / access arrangement</div><div class="fld"><b>UAS unit + AO note + verified by</b></div></div></div>`;}
+const RB=`<div class="sheet noprint" style="border-top:8px solid var(--teal)"><h2 style="color:var(--ink)">Report-back contract log (adult copy)</h2>
+<p class="note">The loop only works if pupils hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
+<table><tr><th>Week</th><th>What pupils showed/argued</th><th>What we changed</th><th>Owner</th><th>Told pupils on (date)</th></tr>
+${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}${w==7?' ★':''}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
+function render(){const v=document.getElementById('wk').value;const l=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);document.getElementById('out').innerHTML=l.map(sheet).join('')+(v==='all'?RB:'');}
+(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t.replace(/&amp;/g,'&')+(x.asd?' ★':'');s.appendChild(o);});render();})();
+</script></body></html>

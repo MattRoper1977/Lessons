@@ -1,452 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humanities W7 · Write the Account</title>
-<style>
-:root{--ink:#1f2a56;--pink:#d6006d;--teach:#2563eb;--wedo:#7c3aed;--prac:#16a34a;--exit:#dc2626;--paper:#fafaf7;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--paper);color:#111827;overflow:hidden;}
-.slide{width:100vw;height:100vh;display:none;flex-direction:column;padding:56px 64px 92px;overflow-y:auto;}
-.slide.active{display:flex;}
-.slide h1{font-size:2.6rem;color:var(--ink);margin-bottom:10px;}
-.slide h2{font-size:1.9rem;color:var(--ink);margin-bottom:14px;}
-.slide p,.slide li{font-size:1.15rem;line-height:1.55;}
-.bt-title{border-top:10px solid var(--pink);}
-.bt-teach{border-top:10px solid var(--teach);}
-.bt-wedo{border-top:10px solid var(--wedo);}
-.bt-prac{border-top:10px solid var(--prac);}
-.bt-exit{border-top:10px solid var(--exit);}
-.logo{position:fixed;top:14px;right:20px;font-weight:800;color:var(--pink);font-size:1.05rem;z-index:50;}
-.logo span{color:var(--ink);}
-#progressbar{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:60;transition:width .3s;}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);display:flex;align-items:center;gap:10px;padding:10px 18px;z-index:60;}
-nav button{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:1rem;}
-nav button:hover{background:#ffe3f1;}
-nav .spacer{flex:1;}
-#slidecount{color:#fff;font-weight:600;}
-#xpwrap{background:#0f1733;border-radius:999px;height:14px;width:160px;overflow:hidden;}
-#xpbar{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width .5s;}
-#xplabel{color:#fbbf24;font-weight:700;font-size:.9rem;}
-.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;}
-.hero h1{font-size:3.4rem;}
-.hero .sub{font-size:1.4rem;color:#4b5563;margin-top:6px;}
-.iconrow{display:flex;gap:26px;font-size:3.2rem;margin:26px 0;}
-.iconrow span{animation:bob 2.2s ease-in-out infinite;}
-.iconrow span:nth-child(2){animation-delay:.25s}.iconrow span:nth-child(3){animation-delay:.5s}
-.iconrow span:nth-child(4){animation-delay:.75s}.iconrow span:nth-child(5){animation-delay:1s}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-.tag{display:inline-block;background:var(--ink);color:#fff;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.5px;margin-bottom:14px;width:max-content;}
-.box{border-radius:12px;padding:16px 20px;margin:12px 0;}
-.sc-box{background:#ffedd5;border-left:6px solid #f97316;}
-.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d;}
-.misc-box{background:#fee2e2;border-left:6px solid #dc2626;}
-.misc-box s{opacity:.75;}
-.evidence-box{background:#e0f2fe;border-left:6px solid #0284c7;}
-.stem-box{background:#f3e8ff;border-left:6px solid #7c3aed;}
-.tip-box{background:#fef9c3;border-left:6px solid #ca8a04;}
-.lo-item{display:flex;align-items:center;gap:12px;font-size:1.3rem;margin:10px 0;opacity:0;transform:translateX(-16px);transition:all .5s;}
-.lo-item.show{opacity:1;transform:none;}
-.lo-item .chk{color:#16a34a;font-size:1.5rem;font-weight:900;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:14px;}
-.gcard{border-radius:14px;padding:16px;color:#fff;}
-.gcard h3{font-size:1.25rem;margin-bottom:6px;}
-.c1{background:#d97706;}.c2{background:#dc2626;}.c3{background:#2563eb;}.c4{background:#16a34a;}.c5{background:#7c3aed;}
-.chipzone{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
-.chip{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-size:1.15rem;cursor:pointer;user-select:none;transition:transform .15s;}
-.chip:hover{transform:scale(1.06);}
-.chip.selected{background:var(--ink);color:#fff;}
-.chip.done{opacity:.45;pointer-events:none;border-style:dashed;}
-.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
-.bucket{border:3px dashed #9ca3af;border-radius:14px;min-height:110px;padding:10px;text-align:center;cursor:pointer;font-weight:700;font-size:1.05rem;}
-.bucket .drops{font-weight:400;font-size:.98rem;margin-top:6px;}
-.bucket .mark{font-size:1.5rem;font-weight:900;min-height:1.6rem;}
-.bucket.flash-good{border-color:#16a34a;background:#dcfce7;}
-.bucket.flash-bad{border-color:#dc2626;background:#fee2e2;}
-#wedofb{min-height:54px;margin-top:10px;font-weight:600;}
-button.act{background:var(--pink);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer;margin:8px 8px 0 0;}
-button.act.secondary{background:var(--ink);}
-.mcq{margin:14px 0;}
-.mcq .q{font-weight:700;font-size:1.2rem;margin-bottom:8px;}
-.mcq .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 16px;font-size:1.1rem;margin:6px 0;cursor:pointer;}
-.mcq .opt:hover{border-color:var(--ink);}
-.mcq.locked .opt{pointer-events:none;opacity:.85;}
-.opt.correct{border-color:#16a34a;background:#dcfce7;}
-.opt.wrong{border-color:#dc2626;background:#fee2e2;}
-.stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:12px;}
-.station{background:#fff;border:3px solid var(--prac);border-radius:14px;padding:16px;}
-.station h3{color:var(--prac);margin-bottom:6px;font-size:1.2rem;}
-.modal{position:fixed;inset:0;background:rgba(15,23,51,.72);display:none;align-items:center;justify-content:center;z-index:100;}
-.modal.open{display:flex;}
-.modal .card{background:#fff;border-radius:16px;max-width:640px;width:92%;max-height:80vh;overflow-y:auto;padding:26px;}
-.modal h2{margin-bottom:10px;}
-#overlay{position:fixed;inset:0;background:rgba(22,163,74,.93);display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;z-index:120;}
-#overlay.open{display:flex;}
-#overlay h1{font-size:3rem;color:#fff;}
-#confetticanvas{position:fixed;inset:0;pointer-events:none;z-index:130;}
-.toolbtns{position:fixed;top:14px;left:20px;display:flex;gap:8px;z-index:50;}
-.toolbtns button{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.9rem;}
-body.calm .iconrow span{animation:none;}
-body.calm{--pink:#6b7280;}
-body.calm .slide{background:#f5f5f4;}
-input,textarea{font-family:inherit;}
-@media (prefers-reduced-motion: reduce){.iconrow span{animation:none;}.lo-item{transition:none;}}
-@media (max-width:640px){
- .slide{padding:70px 18px 100px;}
- .slide h1{font-size:1.8rem;}.hero h1{font-size:2rem;}
- .slide h2{font-size:1.4rem;}
- .iconrow{font-size:2.1rem;gap:14px;}
- nav{flex-wrap:wrap;}#xpwrap{width:100px;}
-}
-@media print{
- nav,.toolbtns,.logo,#progressbar{display:none!important;}
- .slide{display:none!important;}
- #printarea{display:block!important;}
-}
-#printarea{display:none;padding:20px;font-size:11pt;}
-#printarea h1{font-size:15pt;border-bottom:2px solid #000;padding-bottom:4px;}
-#printarea .prow{border:1px solid #999;border-radius:6px;padding:8px;margin:7px 0;}
-#printarea .ybox{border:3px solid #ca8a04;border-radius:6px;min-height:88px;padding:8px;margin:7px 0;}
-#printarea .small{font-size:9pt;color:#333;}
-</style>
-</head>
-<body>
-<div id="progressbar"></div>
-<div class="logo">Made by <span>Matt</span></div>
-<div class="toolbtns">
- <button onclick="toggleModal('tamodal')">TA Focus</button>
- <button onclick="coldCall()">Cold Call</button>
- <button onclick="toggleCalm()" id="calmbtn">Calm Mode</button>
-</div>
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GROW Humanities W7 · Write the Account</title><style>
+:root{--bg:#151E26;--panel:#202C35;--panel2:#293A45;--text:#F1EEE6;--muted:#C9D0CD;--accent:#4E8093;--gold:#D4A33D;--rust:#A56145;--teal:#2B9081;--line:#ffffff27}*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}.slide{display:none;width:100vw;height:100vh;overflow:auto;padding:64px 62px 94px;border-top:10px solid var(--accent);background:radial-gradient(circle at 92% 4%,#ffffff0c,transparent 34%),var(--bg)}.slide.active{display:block}.hero{min-height:76vh;display:grid;place-content:center;text-align:center}.hero h1{font-size:clamp(2.7rem,6vw,5.2rem);line-height:1.03;margin:.15em;color:var(--accent)}.kicker{display:inline-block;background:var(--text);color:var(--bg);padding:7px 14px;border-radius:999px;font-weight:900;letter-spacing:.05em}.route{background:#0F161C;color:white;padding:15px 18px;border:2px solid var(--accent);border-radius:14px;font-weight:900;margin:16px 0}h2{font-size:clamp(1.8rem,3.4vw,2.8rem);margin:.35em 0;color:var(--accent)}p,li,button,label,textarea{font-size:1.07rem;line-height:1.45}.g2,.g3,.g4{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.card{background:var(--panel);border:2px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 9px 22px #0004}.card h3{margin:.1em 0;color:var(--gold)}.box{background:var(--panel);border-left:7px solid var(--accent);padding:15px 18px;border-radius:13px;margin:13px 0}.lund{border-left-color:var(--teal)}.evidence{border-left-color:var(--gold)}.warn{border-left-color:var(--rust)}textarea,input{width:100%;background:#10171D;color:var(--text);border:2px solid var(--line);border-radius:10px;padding:10px}.choice,.action{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:12px 15px;font-weight:800;cursor:pointer;margin:8px 0}.choice.on{border-color:var(--gold);background:#424A31}.choice.good{border-color:var(--teal);background:#173D38}.choice.need{border-color:var(--rust);background:#472C22}.mission{border-top:8px solid var(--accent);cursor:pointer}.mission.done{background:#173D38}.visual{background:#F1EEE6;color:#151E26;border:4px solid var(--accent);border-radius:18px;padding:12px;min-height:270px;display:grid;place-items:center}.visual svg{width:100%;max-height:285px}.visual .line{fill:none;stroke:#151E26;stroke-width:9;stroke-linecap:round}.visual .fill{fill:var(--accent);stroke:#151E26;stroke-width:5}.visual .dash{stroke-dasharray:16 12;animation:dash 6s linear infinite}.visual .move{animation:move 5s ease-in-out infinite}.tools{position:fixed;right:16px;top:14px;z-index:30}.tools button{background:var(--text);color:var(--bg);border:0;border-radius:8px;padding:8px 11px;font-weight:900}nav{position:fixed;left:0;right:0;bottom:0;background:#0D1318;display:flex;gap:9px;padding:10px 18px;align-items:center;z-index:30}nav button{width:auto;border:0;border-radius:9px;padding:9px 15px;font-weight:900}.count{margin-left:auto}.progress{position:fixed;left:0;top:0;height:6px;background:var(--gold);z-index:40}.modal{position:fixed;inset:0;background:#000c;display:none;place-items:center;z-index:60}.modal.open{display:grid}.modal>div{background:var(--panel);border:3px solid var(--accent);border-radius:18px;padding:24px;max-width:760px;width:92%;max-height:82vh;overflow:auto}.calm *{animation-play-state:paused!important}.calm{--accent:#7C8A91}.print{display:none;color:#17212A;padding:12mm}.pline{height:38px;border-bottom:1px solid #667}@keyframes dash{to{stroke-dashoffset:-112}}@keyframes move{50%{transform:translateX(175px)}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}@media(max-width:850px){.slide{padding:68px 18px 96px}.g2,.g3,.g4{grid-template-columns:1fr}.tools{left:12px;right:auto}}@media print{.slide,nav,.tools,.progress,.modal{display:none!important}.print{display:block!important}}
 
-<section class="slide bt-title active" id="s1">
- <div class="hero">
-  <div class="tag">HUMANITIES · Week 7 · GROW · Migration &amp; Identity in Britain</div>
-  <h1>Write the Account</h1>
-  <p class="sub">From plan to page</p>
-  <div class="iconrow"><span>✏️</span><span>📖</span><span>✅</span><span>🗂️</span><span>🌟</span></div>
-  <p class="sub">Today is a <strong>hands-on</strong> lesson — we learn by doing.</p>
- </div>
-</section>
-
-<section class="slide bt-teach" id="s2">
- <div class="tag">ARRIVAL TASK · do now, no help needed</div>
- <h2>Warm up — sort what a good account needs</h2>
- <p>Tap a card, then tap where it belongs. Have a go — wrong answers are welcome here.</p>
- <div class="chipzone" id="arr-chips"></div>
- <div class="buckets" id="arr-buckets"></div>
- <div class="box tip-box"><strong>While you wait:</strong> read your Week 6 planning grid through once, quietly, start to finish.</div>
-</section>
-
-<section class="slide bt-teach" id="s3">
- <div class="tag">LEARNING OBJECTIVE</div>
- <h2>LO: To write a short account about migration and say if a source is useful.</h2>
- <div id="lolist"><div class="lo-item"><span class="chk">✓</span> I can turn my plan into 2&ndash;3 written sentences.</div><div class="lo-item"><span class="chk">✓</span> I can add one sentence: &ldquo;this source is useful because&hellip;&rdquo;</div><div class="lo-item"><span class="chk">✓</span> I can check my work against the picture success criteria.</div></div>
- <div class="box sc-box"><strong>Success criteria:</strong> By the end you will have written your migration account from last week&rsquo;s plan, judged your source&rsquo;s usefulness, and checked it against the success criteria. This piece BANKS toward the October assessment and your Functional Skills writing evidence (AQA UAS &lsquo;Historical enquiry&rsquo;).</div>
- <div class="box aspire-box"><strong>GCSE Stretch:</strong> extend to 4&ndash;5 sentences using two sources, add a usefulness judgement AND a counter-point (&ldquo;however&hellip;&rdquo;) — marked at the higher end.</div>
-</section>
-
-<section class="slide bt-teach" id="s4">
- <div class="tag">STARTER · talk task</div>
- <h2>What does &ldquo;useful&rdquo; actually mean?</h2>
- <p>With your partner: a blurry photo of the Windrush deck. Useless? Or useful for SOME questions and not others? What decides whether a source is useful — the source, or the question you ask it?</p>
- <div class="box stem-box"><strong>Sentence stems:</strong><br>&ldquo;It IS useful for finding out&hellip;&rdquo;<br>&ldquo;It is NOT useful for&hellip;&rdquo;<br>&ldquo;Useful depends on&hellip;&rdquo;</div>
- <button class="act" onclick="hint('starter')">Hint</button>
- <p id="hint-starter" style="display:none;margin-top:8px;">Stuck? Even a blurry photo proves the ship existed and people were aboard. Useful always means &ldquo;useful FOR a question&rdquo; — that idea is pure GCSE.</p>
-</section>
-
-<section class="slide bt-teach" id="s5">
- <div class="tag">I DO · teacher explains</div>
- <h2>From plan to page — watch it happen once</h2>
- <div class="grid"><div class="gcard c3"><h3>✏️ The move</h3><p>Watch: box one of a plan becomes a sentence. Key words grow their joining words. That is the whole trick — you did the thinking LAST week.</p></div><div class="gcard c1"><h3>🔗 Keep the thread</h3><p>First&hellip; Then&hellip; This meant&hellip; — the frame holds your sentences together so the reader never gets lost.</p></div><div class="gcard c4"><h3>⚖️ The usefulness line</h3><p>One more sentence: &ldquo;My source is useful because&hellip;&rdquo; Name what it shows AND what question it answers.</p></div><div class="gcard c5"><h3>✅ The check</h3><p>Picture success criteria, ticked privately at the end. You are checking your own work like the person marking it will — no surprises in October.</p></div></div>
- <div class="box misc-box"><strong>Misconception:</strong> <s>&ldquo;Real writers get it perfect first time.&rdquo;</s> Real writers draft from plans, check against criteria and improve. Perfect-first-time is a myth that stops people starting. Your plan has done the hard thinking — today is assembly.</div>
-</section>
-
-<section class="slide bt-wedo" id="s6">
- <div class="tag">WE DO · together on the board</div>
- <h2>One Windrush photo — what CAN it show, and what can&rsquo;t it prove?</h2>
- <div class="chipzone" id="wedo-chips"></div>
- <div class="buckets" id="wedo-buckets"></div>
- <div id="wedofb"></div>
- <button class="act secondary" onclick="hint('wedo')">Hint</button>
- <p id="hint-wedo" style="display:none;">CAN = visible in the photo or a fair working-out. CAN&rsquo;T = feelings, sounds, and what happened after — you would need a different source.</p>
-</section>
-
-<section class="slide bt-prac" id="s7">
- <div class="tag">HANDS-ON · the main event</div>
- <h2>Write it ✏️</h2>
- <div class="box tip-box"><strong>Ground rule (60 seconds):</strong> quiet writing room today: support is on every desk already, so nobody needs to ask — and nobody comments on anyone else&rsquo;s page.</div>
- <div class="stations"><div class="station"><h3>Station 1 · DRAFT</h3><p>Write your account from the Week 6 grid: 2&ndash;3 sentences using First / Then / This meant. Voice-note or scribe your ideas first if that is your route — then write your sentences with the word bank. BOTH are banked.</p></div><div class="station"><h3>Station 2 · THE USEFULNESS LINE</h3><p>Add the judgement sentence: &ldquo;My source is useful because&hellip;&rdquo; Say it aloud to yourself first; then write it.</p></div><div class="station"><h3>Station 3 · TICK &amp; CHECK</h3><p>Take the picture success criteria and tick your own work, privately. One tick missing? Fix it now — that is what checking is FOR.</p></div></div>
- <div class="box aspire-box"><strong>GCSE Stretch:</strong> add the counter-point: &ldquo;however, my source can&rsquo;t tell us&hellip;&rdquo; — the sentence that separates good from strong.</div>
-</section>
-
-<section class="slide bt-prac" id="s8">
- <div class="tag">EVIDENCE · ASSESSED — banks toward October summative + Functional Skills writing (AQA UAS &lsquo;Historical enquiry&rsquo;)</div>
- <h2>Capture your evidence</h2>
- <p>Your written account is the evidence and is banked today. Log it here (ideas-stage scribing/voice-notes are banked alongside the writing, never instead of it):</p>
- <div class="box evidence-box">
-  <p><strong>My name:</strong> <input id="ev-name" style="font-size:1.1rem;padding:6px;width:220px;"></p>
-  <p style="margin-top:8px;"><strong>My account in brief (First / Then / This meant):</strong><br><textarea id="ev-p1" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
-  <p style="margin-top:8px;"><strong>My source is useful because:</strong><br><textarea id="ev-p2" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
-  <p style="margin-top:8px;"><strong>Skills I used today (tick with your TA):</strong> Literacy · Ability to learn · Independence</p>
- </div>
- <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will deep-mark <em>one</em> part of this in dark green and draw a <strong>Yellow Box</strong>. Next lesson you respond inside it in a coloured pen of your choice.</div>
- <button class="act" onclick="printEvidence()">🖨️ Print my evidence sheet</button>
-</section>
-
-<section class="slide bt-exit" id="s9">
- <div class="tag">EXIT TICKET</div>
- <h2>Show what you know</h2>
- <div class="mcq" id="q1" data-ans="1"><div class="q">1. Today&rsquo;s writing comes from&hellip;</div><button class="opt" data-i="0">Nowhere — start fresh</button><button class="opt" data-i="1">Last week&rsquo;s planning grid</button><button class="opt" data-i="2">Copying the board</button></div><div class="mcq" id="q2" data-ans="2"><div class="q">2. &ldquo;Useful&rdquo; always means&hellip;</div><button class="opt" data-i="0">Old</button><button class="opt" data-i="1">Long</button><button class="opt" data-i="2">Useful FOR a question</button></div><div class="mcq" id="q3" data-ans="0"><div class="q">3. Checking against success criteria means&hellip;</div><button class="opt" data-i="0">Marking your own work like the assessor will</button><button class="opt" data-i="1">Rubbing it all out</button><button class="opt" data-i="2">Asking a friend to write it</button></div>
- <button class="act" onclick="showAnswers()">Show answers</button>
-</section>
-
-<nav>
- <button onclick="prevSlide()">◀ Back</button>
- <button onclick="nextSlide()">Next ▶</button>
- <span id="slidecount">1 / 9</span>
- <span class="spacer"></span>
- <span id="xplabel">XP 0</span>
- <div id="xpwrap"><div id="xpbar"></div></div>
-</nav>
-
-<div class="modal" id="tamodal" onclick="if(event.target===this)toggleModal('tamodal')">
- <div class="card">
-  <h2>TA Focus — this slide</h2>
-  <p id="tabrief"></p>
-  <p style="margin-top:12px;font-size:.95rem;color:#4b5563;">Gesture anchor: open palm = “your idea please”; thumb-to-table = “check with your partner first”.</p>
-  <button class="act" onclick="toggleModal('tamodal')">Close</button>
- </div>
-</div>
-
-<div class="modal" id="ccmodal" onclick="if(event.target===this)toggleModal('ccmodal')">
- <div class="card" style="text-align:center;">
-  <h2>Cold Call</h2>
-  <p id="ccname" style="font-size:2rem;font-weight:800;margin:14px 0;color:var(--pink);"></p>
-  <p id="cctier" style="font-size:1.1rem;"></p>
-  <button class="act" onclick="coldCall()">Again</button>
-  <button class="act secondary" onclick="toggleModal('ccmodal')">Close</button>
- </div>
-</div>
-
-<div id="overlay">
- <h1>Lesson complete! 🎉</h1>
- <p style="font-size:1.3rem;margin:12px 0;">Account written, judged and checked — October just got easier.</p>
- <button class="act" onclick="document.getElementById('overlay').classList.remove('open')">Close</button>
-</div>
-
-<canvas id="confetticanvas"></canvas>
-<div id="printarea"></div>
-
+/* ===== Made by Matt magic-touch layer (GROW Humanities · Teesside · dark-aware) ===== */
+:root{--navy:#161D3D;--mint:#B9E6CD;--amber:#F2A24A}
+.logo{position:fixed;top:14px;left:18px;z-index:40;font-weight:800;color:var(--accent);font-size:1rem}
+.logo span{color:var(--text)}
+.art-spine{display:flex;gap:10px;flex-wrap:wrap;margin:14px auto;max-width:840px;font-size:.9rem;text-align:left}
+.art-spine div{flex:1;min-width:230px;border-radius:10px;padding:9px 12px;line-height:1.4;background:var(--panel2)}
+.art-spine .inh{border-left:5px solid #4E8093}
+.art-spine .fwd{border-left:5px solid #2B9081}
+.art-spine b{display:block;font-size:.72rem;letter-spacing:.4px;color:var(--muted);margin-bottom:2px}
+.lundy-ringwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.lundy-ringwrap p{flex:1;min-width:220px;color:var(--muted);font-size:.98rem}
+.mission.z-space{border-top-color:#4E8093}.mission.z-space h3{color:#7fb0c2}
+.mission.z-voice{border-top-color:#A56145}.mission.z-voice h3{color:#d08e6f}
+.mission.z-aud{border-top-color:#2B9081}.mission.z-aud h3{color:#4fc2b0}
+.mission.z-infl{border-top-color:#D4A33D}.mission.z-infl h3{color:#D4A33D}
+.art-ticket{background:var(--panel2);border:2px dashed #D4A33D;border-radius:13px;padding:13px 16px;margin:13px 0}
+.art-ticket h3{color:#D4A33D;margin:0 0 6px;font-size:1.05rem}
+.art-ticket p{color:var(--text)}
+.art-ticket .stamp{display:inline-block;border:2px solid #2B9081;color:#4fc2b0;border-radius:8px;padding:3px 12px;font-weight:800;font-size:.82rem;transform:rotate(-4deg);margin-top:6px}
+.art-ticket .hard{font-size:.78rem;color:var(--muted);margin-left:10px;font-weight:600}
+.art-ladderwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+.art-ladderwrap p{flex:1;min-width:220px;color:var(--muted);font-size:.98rem}
+.art-ladder{flex:0 0 auto;max-width:320px}
+.cue{background:var(--panel2);border-left:6px solid #D4A33D;border-radius:13px;padding:13px 16px;margin:13px 0;font-size:1.02rem;line-height:1.5;color:var(--text)}
+.cue b{color:#D4A33D}
+body[data-theme="cream"]{--bg:#fbf3e2;--panel:#ffffff;--panel2:#f3ecda;--text:#18233F;--muted:#4b5563}
+body[data-theme="pink"]{--bg:#fdeef2;--panel:#ffffff;--panel2:#f7e5ec;--text:#18233F;--muted:#4b5563}
+body[data-theme="blue"]{--bg:#eaf1fb;--panel:#ffffff;--panel2:#e4eef9;--text:#18233F;--muted:#334155}
+@keyframes mbmOrbit{to{transform:rotate(360deg)}}
+@keyframes mbmPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.82}}
+@keyframes mbmDraw{to{stroke-dashoffset:0}}
+.mbm-orbit{animation:mbmOrbit 6s linear infinite}
+.mbm-pulse{animation:mbmPulse 2.2s ease-in-out infinite;transform-origin:245px 34px}
+.mbm-draw{stroke-dasharray:600;stroke-dashoffset:600;animation:mbmDraw 1.4s ease forwards}
+</style></head><body style="--accent:#3D829E"><div class="logo">Made by <span>Matt</span></div><div class="progress"></div><div class="tools"><button onclick="ta()">TA Focus</button> <button onclick="calm()">Calm Mode</button> <button onclick="cycleTheme()" id="readbtn">📖 Reading</button></div><section class="slide active"><div class="hero"><span class="kicker">HISTORY STUDIO · GROW HUMANITIES · WEEK 7</span><h1>Write the Account</h1><p>Assessed historical account · Migration to Britain and Teesside impact</p><div class="route">ORIENTATE → RETRIEVE PLAN → WRITE/RECORD → EMBED SOURCE → EXPLAIN → EVALUATE → CHECK</div><div class="art-spine"><div class="inh"><b>◀ INHERITED</b>Week 6&rsquo;s plan and agreed support contract.</div><div class="fwd"><b>FEEDS ▶</b>Assessment evidence and reflections set Week 8 reteaching, mapping links and future assessment.</div></div><p><b>Enquiry:</b> How can I construct an independent account that uses evidence, explanation and a qualified judgement?</p></div></section>
+<section class="slide"><span class="kicker">2×2 ARRIVAL · MICRO-CAPTURE BUILT IN</span><h2>Connect, retrieve, challenge and capture</h2><div class="g2"><div class="card"><h3>RETRIEVE</h3><p>Retrieve a dated fact, source insight or decision from the previous stage.</p><textarea rows="2"></textarea></div><div class="card"><h3>SPACE</h3><p>Choose the condition or support that will protect independent thinking today.</p><textarea rows="2"></textarea></div><div class="card"><h3>CHALLENGE</h3><p>Analyse a short date/source/claim and identify its strongest clue or weakness.</p><textarea rows="2"></textarea></div><div class="card"><h3>EVIDENCE ACTION</h3><p>Create one labelled micro-capture: claim + evidence + uncertainty; photo, typed note or ≤30-second audio.</p><textarea rows="2"></textarea></div></div><div class="box lund"><b>Connection before correction:</b> quiet route · read-aloud · enlarged source · reduced visual field · paired start · planned break · audio/pointed/signed response.</div></section>
+<section class="slide"><span class="kicker">GROW → LAUNCH STANDARD</span><h2>Move beyond activity into defensible history</h2><div class="g3"><div class="card"><h3>GROW</h3><p>Use provenance, inference, comparison and multi-causal reasoning.</p></div><div class="card"><h3>STRETCH</h3><p>Weigh evidence, perspective, significance and source utility for a question.</p></div><div class="card"><h3>LAUNCH BRIDGE</h3><p>Qualify conclusions, expose limitations and transfer independently.</p></div></div><div class="route">ORIENTATE → RETRIEVE PLAN → WRITE/RECORD → EMBED SOURCE → EXPLAIN → EVALUATE → CHECK</div></section>
+<section class="slide"><span class="kicker">CHEESE LAYER · ANIMATED EXPLANATION</span><div class="cue"><b>Not a history specialist? Say this:</b> Say: &ldquo;This is the ASSESSED account. Construct it independently: make a claim, use evidence, explain, and qualify with uncertainty. Apply the centre-approved assessment conditions and each learner&rsquo;s agreed access support. This is their proof.&rdquo;</div><h2>See the disciplinary structure</h2><div class="visual"><svg viewBox="0 0 720 280"><circle class="fill" cx="120" cy="140" r="50"/><circle class="fill move" cx="360" cy="140" r="50"/><circle class="fill" cx="600" cy="140" r="50"/><path class="line dash" d="M170 140h140m100 0h140"/><text x="120" y="145" text-anchor="middle">PLAN</text><text x="360" y="132" text-anchor="middle">ACCOUNT +</text><text x="360" y="158" text-anchor="middle">SOURCE</text><text x="600" y="132" text-anchor="middle">JUDGEMENT +</text><text x="600" y="158" text-anchor="middle">USEFULNESS</text></svg></div><div class="box"><b>Owl prompt:</b> What is directly evidenced? What is inferred? Which alternative or limitation changes the conclusion?</div></section>
+<section class="slide"><span class="kicker">I DO · MODEL THE REASONING CHAIN</span><h2>Expose assumptions and evidence thresholds</h2><div class="box">Teacher models question → provenance/context → evidence → inference → counterpoint → qualified judgement, including one plausible error and why it is tempting.</div><div class="g3"><div class="card"><h3>Claim</h3><p>What precisely is being argued?</p></div><div class="card"><h3>Evidence</h3><p>Which specific clue supports it?</p></div><div class="card"><h3>Qualification</h3><p>What alternative, limit or condition remains?</p></div></div></section>
+<section class="slide"><span class="kicker">WE DO · SABOTAGE LAB</span><h2>Diagnose the weak historical move</h2><div class="g4"><button class="choice" onclick="pick(this)">I found the chronology/source error</button><button class="choice" onclick="pick(this)">Its consequence is…</button><button class="choice" onclick="pick(this)">The evidence/repair is…</button><button class="choice" onclick="pick(this)">A limitation still remains…</button></div><div class="box lund"><b>Voice routes:</b> move a card, annotate, sequence, private note, speech, sign, recorded response or adult relay. No speed-of-speech advantage.</div></section>
+<section class="slide"><span class="kicker">YOU DO · GROW HISTORY CHALLENGE</span><h2>Apply, compare and qualify</h2><div class="box">Complete the scheduled summative account through an approved written, typed or recorded route; use a source as evidence, explain connections and evaluate usefulness for the enquiry.</div><div class="g4"><button class="choice" onclick="routeChoice(this)">Written / typed</button><button class="choice" onclick="routeChoice(this)">Cards / diagram / map</button><button class="choice" onclick="routeChoice(this)">Audio / spoken</button><button class="choice" onclick="routeChoice(this)">Direct and decide</button></div><label>My first independent decision and evidence:<textarea rows="3"></textarea></label></section>
+<section class="slide"><span class="kicker">GAMIFIED LUNDY LOOP · FOUR MISSIONS</span><div class="lundy-ringwrap"><svg class="lundy-ring" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Lundy loop: Space, Voice, Audience, Influence"><circle cx="60" cy="60" r="46" fill="none" stroke="#ffffff22" stroke-width="12"/><path d="M60 14 A46 46 0 0 1 106 60" fill="none" stroke="#4E8093" stroke-width="12" stroke-linecap="round"/><path d="M106 60 A46 46 0 0 1 60 106" fill="none" stroke="#A56145" stroke-width="12" stroke-linecap="round"/><path d="M60 106 A46 46 0 0 1 14 60" fill="none" stroke="#2B9081" stroke-width="12" stroke-linecap="round"/><path d="M14 60 A46 46 0 0 1 60 14" fill="none" stroke="#D4A33D" stroke-width="12" stroke-linecap="round"/><g class="mbm-orbit" style="transform-origin:60px 60px"><circle cx="60" cy="14" r="6" fill="var(--text)" stroke="var(--bg)" stroke-width="2"/></g><text x="60" y="57" text-anchor="middle" font-size="9" font-weight="800" fill="var(--text)">CLOSE</text><text x="60" y="70" text-anchor="middle" font-size="9" font-weight="800" fill="var(--text)">THE LOOP</text></svg><p>Four zones, one loop — same everywhere. Colour marks the zone; the loop always closes, even if only with the ticket below.</p></div><h2>Earn the loop through consequence</h2><div class="g4"><div class="card mission z-space" onclick="mission(this)"><h3>SPACE</h3><p>A safe, usable communication and evidence route exists.</p></div><div class="card mission z-voice" onclick="mission(this)"><h3>VOICE</h3><p>The pupil controls a real historical question, interpretation, support contract or presentation decision.</p></div><div class="card mission z-aud" onclick="mission(this)"><h3>AUDIENCE</h3><p>A recipient identifies the claim, evidence and qualification received.</p></div><div class="card mission z-infl" onclick="mission(this)"><h3>INFLUENCE</h3><p>Assessment evidence and pupil reflections determine Week 8 reteaching, mapping links and future assessment-access planning.</p></div></div><div class="art-ticket"><h3>🎟️ THE ACCOUNT TICKET ★ ASSESSED<span class="hard">— on a hard day, THIS alone closes the loop</span></h3><p>My claim is <b>____</b>. My strongest evidence is <b>____</b>. I explained it by <b>____</b>. My stated uncertainty is <b>____</b>. Access support used: <b>____</b>.</p><span class="stamp">STAMP → INFLUENCE</span></div><div class="box lund"><b>Close the loop:</b> “You showed/told us ____. We changed ____. The owner is ____. You will see it by ____.”</div></section>
+<section class="slide"><span class="kicker">RAPID GALLERY · EVIDENCE RECEIPTS</span><h2>Peer review validates reasoning—not popularity</h2><div class="g3"><div class="card"><h3>I heard your claim…</h3><p>State it accurately.</p></div><div class="card"><h3>Your evidence was…</h3><p>Name the date, source clue, causal link or criterion.</p></div><div class="card"><h3>Your conclusion depends on…</h3><p>Name a perspective, timescale, source limit or missing check.</p></div></div><div class="box">Pupil response: retain · clarify · revise · qualify · corroborate.</div></section>
+<section class="slide"><span class="kicker">GROW EVIDENCE CHECKPOINT</span><div class="art-ladderwrap"><svg class="art-ladder" viewBox="0 0 300 120" role="img" aria-label="Evidence lift: GROW entry, GROW secure, LAUNCH reach"><rect x="8" y="80" width="86" height="30" rx="6" fill="#4E8093"/><text x="51" y="99" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">GROW entry</text><rect x="100" y="50" width="92" height="30" rx="6" fill="#2B9081"/><text x="146" y="69" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">GROW secure</text><rect class="mbm-pulse" x="198" y="18" width="94" height="32" rx="6" fill="#D4A33D"/><text x="245" y="38" text-anchor="middle" font-size="10" font-weight="900" fill="#3a2c07">LAUNCH reach</text><path class="mbm-draw" d="M51 80 V70 h95 V50 h99 V50" fill="none" stroke="#A56145" stroke-width="2.5"/></svg><p>Every capture reaches for the top step: <b>LAUNCH reach</b> — corroborate, weigh competing interpretations, and transfer the reasoning to an unfamiliar source or enquiry.</p></div><h2>Map reasoning, authorship and support</h2><div class="box evidence">Final account, source integration, usefulness judgement, chronology/causation, overall judgement, independence, exact approved support and self-check.</div><div class="g2"><div class="card"><h3>Pupil action</h3><textarea rows="5" placeholder="Dated, sourced, inferred, compared, weighed, planned, argued, evaluated…"></textarea></div><div class="card"><h3>Exact support</h3><textarea rows="5" placeholder="Read aloud, reduced field, scribed, prompted, enlarged, operated under direction…"></textarea></div></div><div class="box warn"><b>AQA UAS position:</b> map each artefact to the exact selected unit code, version, outcome and required evidence. This module supports evidence generation; it does not itself certify an unspecified unit.</div><button class="action" onclick="window.print()">Print evidence sheet</button></section>
+<section class="slide"><span class="kicker">STUDIO ARCHIVIST + TRANSFER</span><h2>Capture the room while preserving individual evidence</h2><div class="g2"><div class="card"><h3>Archivist mission</h3><p>Capture shared processes, label dates/sources, identify whose decision changed the outcome and check secure filenames. Never substitute group evidence for individual attribution.</p><textarea rows="4"></textarea></div><div class="card"><h3>Fresh transfer</h3><p>Apply today’s method to an unfamiliar date set, source, causal claim, figure, significance case or map.</p><textarea rows="4"></textarea></div></div><div class="box lund"><b>Influence owner:</b> ______ &nbsp; <b>Action:</b> ______ &nbsp; <b>Deadline:</b> ______ &nbsp; <b>Report-back:</b> ______</div></section>
+<section class="slide"><span class="kicker">EXIT · CRITICAL SELF-AUDIT</span><h2>What does the evidence justify?</h2><button class="choice" onclick="answer(this,'good')">I used evidence, explained the reasoning and identified a qualification or limitation.</button><button class="choice" onclick="answer(this,'need')">I completed the task, but reasoning, source use or attribution needs strengthening.</button><button class="choice" onclick="answer(this,'need')">I need another source, model, route or support adjustment.</button><div id="fb" class="box">This changes the next action; it is not a behaviour score.</div></section><nav><button onclick="back()">◀ Back</button><button onclick="next()">Next ▶</button><span class="count">1 / 12</span></nav><div class="modal" id="ta" onclick="if(event.target===this)ta()"><div><h2>TA Focus</h2><p>Connect before correcting. Preserve historical judgement and assessment validity. Record exactly what the pupil selected, inferred, compared, weighed or evaluated. Apply only the agreed Week 7 support contract and distinguish access support from supplied content.</p><p><b>Lesson consequence:</b> Assessment evidence and pupil reflections determine Week 8 reteaching, mapping links and future assessment-access planning.</p><button class="action" onclick="ta()">Close</button></div></div><div class="print"><h1>GROW Humanities W7 Evidence · Write the Account</h1><p>Enquiry: How can I construct an independent account that uses evidence, explanation and a qualified judgement?</p><p>Claim / question:</p><div class="pline"></div><p>Evidence / provenance:</p><div class="pline"></div><p>Reasoning / comparison / weighting:</p><div class="pline"></div><p>Qualification / limitation:</p><div class="pline"></div><p>Pupil action:</p><div class="pline"></div><p>Exact support:</p><div class="pline"></div><p>Audience receipt / transfer / influence:</p><div class="pline"></div></div><script>let i=0,s=[...document.querySelectorAll('.slide')];function show(n){if(n<0||n>=s.length)return;s[i].classList.remove('active');i=n;s[i].classList.add('active');document.querySelector('.count').textContent=(i+1)+' / '+s.length;document.querySelector('.progress').style.width=((i+1)/s.length*100)+'%'}function next(){show(i+1)}function back(){show(i-1)}function pick(b){b.classList.toggle('on')}function routeChoice(b){document.querySelectorAll('.slide.active .choice').forEach(x=>x.classList.remove('on'));b.classList.add('on')}function mission(c){c.classList.toggle('done')}function answer(b,c){document.querySelectorAll('.slide.active .choice').forEach(x=>x.classList.remove('good','need'));b.classList.add(c);document.getElementById('fb').textContent=c==='good'?'Strong GROW-to-LAUNCH evidence: state the exact qualification and transfer.':'Useful audit: record the missing evidence or support change.'}function calm(){document.body.classList.toggle('calm')}function ta(){document.getElementById('ta').classList.toggle('open')}document.addEventListener('keydown',e=>{if(e.target.matches('textarea,input'))return;if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')back()});</script>
 <script>
-/* ---------- LESSON DATA (consts first, init at the bottom) ---------- */
-const LESSON = {"arrItems": [{"n": "A plan to write from", "g": 0}, {"n": "First / Then / This meant", "g": 0}, {"n": "Perfect first-time spelling", "g": 1}, {"n": "Writing with no evidence", "g": 1}], "arrBuckets": ["A good account NEEDS this", "A good account does NOT need this"], "wedoItems": [{"n": "Shows what arrivals wore", "g": 0}, {"n": "Shows the ship's name", "g": 0}, {"n": "Shows suitcases and smart coats", "g": 0}, {"n": "Suggests people came hopeful and prepared", "g": 0}, {"n": "Proves how everyone felt inside", "g": 1}, {"n": "Tells us what they said on board", "g": 1}, {"n": "Shows every migrant's story", "g": 1}, {"n": "Tells us what happened next", "g": 1}], "wedoBuckets": ["The photo CAN show this", "The photo CAN'T prove this"], "fbGood": ["Spot on — say your reason out loud.", "Correct! Tell your partner why.", "Yes! Use the key word in a full sentence."], "fbBad": ["Not this one — is it visible, or would you need another source?", "Close — seen/worked out, or unknowable from a photo?", "Have another look; talk it through with a partner."], "taBriefs": ["Meet & greet. W6 grids handed back FIRST THING. Frames, word banks and coloured-paper versions already on desks — nobody should have to ask. Printed models out, never copy-from-board. This is an assessed writing lesson: calm is the plan.", "Arrival task: no adult answers. Quiet start — reading their own grid counts as the settle.", "LO slide: read aloud together. Name the assessment calmly: 'today banks — and your plan already did the hard part.'", "Starter: the blurry-photo question sets up the usefulness sentence — land 'useful FOR a question' before moving on.", "I Do: model the plan-to-sentence move ONCE, slowly, on a neutral example. Do not write their sentences for them.", "We Do: quick and light — save the energy for writing. Short bursts.", "PRACTICAL: writing routes — voice-note/scribe the ideas first where that is the route, THEN the pupil writes with the word bank; both are banked so assessment is fair AND writing still develops. Highest attainers: the extended account with counter-point, structure checklist only. Extra time for presentation is honoured without comment; criteria are ticked PRIVATELY.", "Evidence: bank the written account + the ideas-stage record together. Note 'TA scribed' precisely — it matters for fair FS assessment. Photograph before pupils leave.", "Exit ticket: pupils alone, one tap each. Print evidence for anyone who missed it."], "lo": "To write a short account about migration and say if a source is useful.", "evTitle": "Humanities · W7 Write the Account · ASSESSED portfolio evidence", "evLessonLine": "Humanities Week 7 (GROW · Migration & Identity) · assessed FS writing", "evRef": "Humanities portfolio · AQA UAS 'Historical enquiry' ___ · Oct summative bank", "evP1Label": "My account in brief (First / Then / This meant):", "evP2Label": "My source is useful because:", "skillsLine": "Literacy · Ability to learn · Independence"};
-const XP_PER = 12;
-let current = 0, xp = 0, audioCtx = null;
-
-function ping(freq){
- try{
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.frequency.value = freq; o.type = 'sine';
-  g.gain.setValueAtTime(.12, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + .3);
-  o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + .3);
- }catch(e){}
-}
-function showSlide(i){
- const slides = document.querySelectorAll('.slide');
- if(i < 0 || i >= slides.length) return;
- slides[current].classList.remove('active');
- current = i;
- slides[current].classList.add('active');
- document.getElementById('slidecount').textContent = (current+1) + ' / ' + slides.length;
- document.getElementById('progressbar').style.width = ((current+1)/slides.length*100) + '%';
- document.getElementById('tabrief').textContent = LESSON.taBriefs[current];
- if(current === 2) animateLO();
-}
-function nextSlide(){ showSlide(current+1); }
-function prevSlide(){ showSlide(current-1); }
-function animateLO(){
- document.querySelectorAll('#lolist .lo-item').forEach((el,idx)=>{
-  setTimeout(()=>el.classList.add('show'), 300 + idx*450);
- });
-}
-function addXP(n){
- xp += n;
- document.getElementById('xplabel').textContent = 'XP ' + xp;
- document.getElementById('xpbar').style.width = Math.min(100, xp) + '%';
-}
-function shuffle(arr){
- const a = arr.slice();
- for(let i = a.length-1; i > 0; i--){
-  const j = Math.floor(Math.random()*(i+1));
-  [a[i],a[j]] = [a[j],a[i]];
- }
- return a;
-}
-function buildSort(chipZoneId, bucketZoneId, items, buckets, onCorrect, onWrong){
- const cz = document.getElementById(chipZoneId);
- const bz = document.getElementById(bucketZoneId);
- cz.innerHTML = ''; bz.innerHTML = '';
- let selected = null;
- shuffle(items).forEach(item=>{
-  const c = document.createElement('button');
-  c.className = 'chip'; c.textContent = item.n; c.dataset.g = item.g;
-  c.addEventListener('click', ()=>{
-   cz.querySelectorAll('.chip').forEach(x=>x.classList.remove('selected'));
-   c.classList.add('selected'); selected = c; ping(520);
-  });
-  cz.appendChild(c);
- });
- buckets.forEach((label, gi)=>{
-  const b = document.createElement('div');
-  b.className = 'bucket';
-  b.innerHTML = '<div>' + label + '</div><div class="mark"></div><div class="drops"></div>';
-  b.addEventListener('click', ()=>{
-   if(!selected) return;
-   if(parseInt(selected.dataset.g) === gi){
-    b.classList.add('flash-good'); setTimeout(()=>b.classList.remove('flash-good'), 700);
-    b.querySelector('.drops').textContent += '\u2713 ' + selected.textContent + '  ';
-    const mk=b.querySelector('.mark'); mk.textContent='\u2713 correct'; setTimeout(()=>mk.textContent='',900);
-    selected.classList.remove('selected'); selected.classList.add('done');
-    selected = null; ping(880); addXP(XP_PER); onCorrect && onCorrect();
-    if(document.getElementById(chipZoneId).querySelectorAll('.chip:not(.done)').length === 0){
-     confetti();
-    }
-   } else {
-    b.classList.add('flash-bad'); setTimeout(()=>b.classList.remove('flash-bad'), 700);
-    const mk=b.querySelector('.mark'); mk.textContent='\u2717 not here'; setTimeout(()=>mk.textContent='',900);
-    ping(220); onWrong && onWrong();
-   }
-  });
-  bz.appendChild(b);
- });
-}
-function hint(id){
- const el = document.getElementById('hint-' + id);
- el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-function toggleModal(id){ document.getElementById(id).classList.toggle('open'); }
-function toggleCalm(){
- document.body.classList.toggle('calm');
- document.getElementById('calmbtn').textContent = document.body.classList.contains('calm') ? 'Calm ✓' : 'Calm Mode';
-}
-function coldCall(){
- let roster = [];
- try{ roster = JSON.parse(localStorage.getItem('ps_coldcall_roster') || '[]'); }catch(e){}
- if(!roster.length) roster = ['Add roster in ps_coldcall_roster'];
- const name = roster[Math.floor(Math.random()*roster.length)];
- const r = Math.ceil(Math.random()*5);
- const tier = (r<=1) ? 'Foundation question' : (r===2) ? 'Middle question' : 'Higher question';
- document.getElementById('ccname').textContent = name;
- document.getElementById('cctier').textContent = 'U/1→F, 2→M, 3–5→H · rolled ' + r + ' → ' + tier;
- const m = document.getElementById('ccmodal');
- if(!m.classList.contains('open')) m.classList.add('open');
- ping(660);
-}
-function wireMCQ(){
- document.querySelectorAll('.mcq').forEach(q=>{
-  q.querySelectorAll('.opt').forEach(opt=>{
-   opt.addEventListener('click', ()=>{
-    if(q.classList.contains('locked')) return;
-    q.classList.add('locked');
-    q.dataset.chosen = opt.dataset.i;
-    opt.style.borderColor = '#1f2a56';
-    opt.style.fontWeight = '700';
-    ping(520);
-   });
-  });
- });
-}
-function showAnswers(){
- let correct = 0;
- document.querySelectorAll('.mcq').forEach(q=>{
-  const ans = q.dataset.ans, chosen = q.dataset.chosen;
-  q.classList.add('locked');
-  q.querySelectorAll('.opt').forEach(opt=>{
-   if(opt.dataset.i === ans){ opt.classList.add('correct'); opt.textContent = '\u2713 ' + opt.textContent; }
-   else if(opt.dataset.i === chosen){ opt.classList.add('wrong'); opt.textContent = '\u2717 ' + opt.textContent; }
-  });
-  if(chosen === ans) correct++;
- });
- addXP(correct * 10);
- document.getElementById('overlay').classList.add('open');
- confetti();
-}
-/* ---------- EVIDENCE PRINT (DOM-clone + Marking & Fair Assessment block) ---------- */
-function printEvidence(){
- const pa = document.getElementById('printarea');
- const name = document.getElementById('ev-name').value || '________________';
- const p1 = document.getElementById('ev-p1').value || '';
- const p2 = document.getElementById('ev-p2').value || '';
- const d = new Date().toLocaleDateString('en-GB');
- pa.innerHTML = '';
- function row(txt, cls){
-  const el = document.createElement('div');
-  el.className = cls || 'prow'; el.textContent = txt;
-  pa.appendChild(el); return el;
- }
- const h = document.createElement('h1'); h.textContent = LESSON.evTitle; pa.appendChild(h);
- row('Name: ' + name + '   ·   Date: ' + d + '   ·   ' + LESSON.evLessonLine);
- row('LO: ' + LESSON.lo);
- row(LESSON.evP1Label + ' ' + p1);
- row(LESSON.evP2Label + ' ' + p2);
- row('Skills used (tick): ' + LESSON.skillsLine + '   ·   Photo evidence attached: [ ]');
- row('Evidence ref: ' + LESSON.evRef + '   ·   Verified by: ________________   ·   Date: ____________');
- /* Marking & Fair Assessment Policy block */
- const yb = document.createElement('div'); yb.className = 'ybox';
- yb.textContent = 'YELLOW BOX — teacher deep-marks ONE section (dark green pen). Pupil improvement/redraft goes here:';
- pa.appendChild(yb);
- row('WWW (What Went Well): ______________________________________________');
- row('EBI (Even Better If): _______________________________________________');
- row('Next Steps: ________________________________________________________');
- row('My response (coloured pen of my choice): ____________________________');
- row('Formative judgement (circle one): Emerging · Developing · Secure · Exceeding   →   recorded in your school’s assessment system');
- const foot = document.createElement('div'); foot.className = 'small';
- foot.textContent = 'Literacy codes (dark green, in margin): Sp spelling · P punctuation · Cap capital letter · T tense · // new paragraph · ^ missing word. Portfolio evidence: upload to your school’s evidence platform for IQA.';
- pa.appendChild(foot);
- window.print();
-}
-function confetti(){
- if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
- if(document.body.classList.contains('calm')) return;
- const cv = document.getElementById('confetticanvas');
- const ctx = cv.getContext('2d');
- cv.width = window.innerWidth; cv.height = window.innerHeight;
- const bits = Array.from({length: 90}, ()=>({
-  x: Math.random()*cv.width, y: -20 - Math.random()*200,
-  v: 2 + Math.random()*3, r: 4 + Math.random()*5,
-  c: ['#d6006d','#1f2a56','#f59e0b','#16a34a'][Math.floor(Math.random()*4)]
- }));
- let t = 0;
- (function fall(){
-  ctx.clearRect(0,0,cv.width,cv.height);
-  bits.forEach(b=>{ b.y += b.v; ctx.fillStyle = b.c; ctx.fillRect(b.x, b.y, b.r, b.r); });
-  t++;
-  if(t < 140) requestAnimationFrame(fall); else ctx.clearRect(0,0,cv.width,cv.height);
- })();
-}
-document.addEventListener('keydown', (e)=>{
- const tag = (e.target && e.target.tagName) || '';
- if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
- if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
- if(e.key === 'ArrowLeft') prevSlide();
-});
-/* ---------- INIT (after all data consts) ---------- */
-function init(){
- buildSort('arr-chips','arr-buckets', LESSON.arrItems, LESSON.arrBuckets, null, null);
- let fbGood = 0, fbBad = 0;
- buildSort('wedo-chips','wedo-buckets', LESSON.wedoItems, LESSON.wedoBuckets,
-  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbGood[(fbGood++)%LESSON.fbGood.length]; },
-  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbBad[(fbBad++)%LESSON.fbBad.length]; });
- wireMCQ();
- document.getElementById('tabrief').textContent = LESSON.taBriefs[0];
-}
-init();
+(function(){var T=["studio","cream","pink","blue"];
+ try{var s=localStorage.getItem("mbm_reading_theme");if(s&&s!=="studio")document.body.dataset.theme=s;}catch(e){}
+ window.cycleTheme=function(){var c=document.body.dataset.theme||"studio";var n=T[(T.indexOf(c)+1)%T.length];
+  if(n==="studio")delete document.body.dataset.theme;else document.body.dataset.theme=n;
+  try{localStorage.setItem("mbm_reading_theme",n);}catch(e){}
+  var b=document.getElementById("readbtn");if(b)b.textContent="\uD83D\uDCD6 "+n.charAt(0).toUpperCase()+n.slice(1);};})();
 </script>
-</body>
-</html>
+</body></html>

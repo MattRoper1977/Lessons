@@ -1,452 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humanities W2 · Cause, Consequence &amp; the Courtroom</title>
-<style>
-:root{--ink:#1f2a56;--pink:#d6006d;--teach:#2563eb;--wedo:#7c3aed;--prac:#16a34a;--exit:#dc2626;--paper:#fafaf7;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--paper);color:#111827;overflow:hidden;}
-.slide{width:100vw;height:100vh;display:none;flex-direction:column;padding:56px 64px 92px;overflow-y:auto;}
-.slide.active{display:flex;}
-.slide h1{font-size:2.6rem;color:var(--ink);margin-bottom:10px;}
-.slide h2{font-size:1.9rem;color:var(--ink);margin-bottom:14px;}
-.slide p,.slide li{font-size:1.15rem;line-height:1.55;}
-.bt-title{border-top:10px solid var(--pink);}
-.bt-teach{border-top:10px solid var(--teach);}
-.bt-wedo{border-top:10px solid var(--wedo);}
-.bt-prac{border-top:10px solid var(--prac);}
-.bt-exit{border-top:10px solid var(--exit);}
-.logo{position:fixed;top:14px;right:20px;font-weight:800;color:var(--pink);font-size:1.05rem;z-index:50;}
-.logo span{color:var(--ink);}
-#progressbar{position:fixed;top:0;left:0;height:6px;background:var(--pink);width:0;z-index:60;transition:width .3s;}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);display:flex;align-items:center;gap:10px;padding:10px 18px;z-index:60;}
-nav button{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:1rem;}
-nav button:hover{background:#ffe3f1;}
-nav .spacer{flex:1;}
-#slidecount{color:#fff;font-weight:600;}
-#xpwrap{background:#0f1733;border-radius:999px;height:14px;width:160px;overflow:hidden;}
-#xpbar{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width .5s;}
-#xplabel{color:#fbbf24;font-weight:700;font-size:.9rem;}
-.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;}
-.hero h1{font-size:3.4rem;}
-.hero .sub{font-size:1.4rem;color:#4b5563;margin-top:6px;}
-.iconrow{display:flex;gap:26px;font-size:3.2rem;margin:26px 0;}
-.iconrow span{animation:bob 2.2s ease-in-out infinite;}
-.iconrow span:nth-child(2){animation-delay:.25s}.iconrow span:nth-child(3){animation-delay:.5s}
-.iconrow span:nth-child(4){animation-delay:.75s}.iconrow span:nth-child(5){animation-delay:1s}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-.tag{display:inline-block;background:var(--ink);color:#fff;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.5px;margin-bottom:14px;width:max-content;}
-.box{border-radius:12px;padding:16px 20px;margin:12px 0;}
-.sc-box{background:#ffedd5;border-left:6px solid #f97316;}
-.aspire-box{background:#dcfce7;border-left:6px solid #16a34a;color:#14532d;}
-.misc-box{background:#fee2e2;border-left:6px solid #dc2626;}
-.misc-box s{opacity:.75;}
-.evidence-box{background:#e0f2fe;border-left:6px solid #0284c7;}
-.stem-box{background:#f3e8ff;border-left:6px solid #7c3aed;}
-.tip-box{background:#fef9c3;border-left:6px solid #ca8a04;}
-.lo-item{display:flex;align-items:center;gap:12px;font-size:1.3rem;margin:10px 0;opacity:0;transform:translateX(-16px);transition:all .5s;}
-.lo-item.show{opacity:1;transform:none;}
-.lo-item .chk{color:#16a34a;font-size:1.5rem;font-weight:900;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:14px;}
-.gcard{border-radius:14px;padding:16px;color:#fff;}
-.gcard h3{font-size:1.25rem;margin-bottom:6px;}
-.c1{background:#d97706;}.c2{background:#dc2626;}.c3{background:#2563eb;}.c4{background:#16a34a;}.c5{background:#7c3aed;}
-.chipzone{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
-.chip{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-size:1.15rem;cursor:pointer;user-select:none;transition:transform .15s;}
-.chip:hover{transform:scale(1.06);}
-.chip.selected{background:var(--ink);color:#fff;}
-.chip.done{opacity:.45;pointer-events:none;border-style:dashed;}
-.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
-.bucket{border:3px dashed #9ca3af;border-radius:14px;min-height:110px;padding:10px;text-align:center;cursor:pointer;font-weight:700;font-size:1.05rem;}
-.bucket .drops{font-weight:400;font-size:.98rem;margin-top:6px;}
-.bucket .mark{font-size:1.5rem;font-weight:900;min-height:1.6rem;}
-.bucket.flash-good{border-color:#16a34a;background:#dcfce7;}
-.bucket.flash-bad{border-color:#dc2626;background:#fee2e2;}
-#wedofb{min-height:54px;margin-top:10px;font-weight:600;}
-button.act{background:var(--pink);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer;margin:8px 8px 0 0;}
-button.act.secondary{background:var(--ink);}
-.mcq{margin:14px 0;}
-.mcq .q{font-weight:700;font-size:1.2rem;margin-bottom:8px;}
-.mcq .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 16px;font-size:1.1rem;margin:6px 0;cursor:pointer;}
-.mcq .opt:hover{border-color:var(--ink);}
-.mcq.locked .opt{pointer-events:none;opacity:.85;}
-.opt.correct{border-color:#16a34a;background:#dcfce7;}
-.opt.wrong{border-color:#dc2626;background:#fee2e2;}
-.stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:12px;}
-.station{background:#fff;border:3px solid var(--prac);border-radius:14px;padding:16px;}
-.station h3{color:var(--prac);margin-bottom:6px;font-size:1.2rem;}
-.modal{position:fixed;inset:0;background:rgba(15,23,51,.72);display:none;align-items:center;justify-content:center;z-index:100;}
-.modal.open{display:flex;}
-.modal .card{background:#fff;border-radius:16px;max-width:640px;width:92%;max-height:80vh;overflow-y:auto;padding:26px;}
-.modal h2{margin-bottom:10px;}
-#overlay{position:fixed;inset:0;background:rgba(22,163,74,.93);display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;z-index:120;}
-#overlay.open{display:flex;}
-#overlay h1{font-size:3rem;color:#fff;}
-#confetticanvas{position:fixed;inset:0;pointer-events:none;z-index:130;}
-.toolbtns{position:fixed;top:14px;left:20px;display:flex;gap:8px;z-index:50;}
-.toolbtns button{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.9rem;}
-body.calm .iconrow span{animation:none;}
-body.calm{--pink:#6b7280;}
-body.calm .slide{background:#f5f5f4;}
-input,textarea{font-family:inherit;}
-@media (prefers-reduced-motion: reduce){.iconrow span{animation:none;}.lo-item{transition:none;}}
-@media (max-width:640px){
- .slide{padding:70px 18px 100px;}
- .slide h1{font-size:1.8rem;}.hero h1{font-size:2rem;}
- .slide h2{font-size:1.4rem;}
- .iconrow{font-size:2.1rem;gap:14px;}
- nav{flex-wrap:wrap;}#xpwrap{width:100px;}
-}
-@media print{
- nav,.toolbtns,.logo,#progressbar{display:none!important;}
- .slide{display:none!important;}
- #printarea{display:block!important;}
-}
-#printarea{display:none;padding:20px;font-size:11pt;}
-#printarea h1{font-size:15pt;border-bottom:2px solid #000;padding-bottom:4px;}
-#printarea .prow{border:1px solid #999;border-radius:6px;padding:8px;margin:7px 0;}
-#printarea .ybox{border:3px solid #ca8a04;border-radius:6px;min-height:88px;padding:8px;margin:7px 0;}
-#printarea .small{font-size:9pt;color:#333;}
-</style>
-</head>
-<body>
-<div id="progressbar"></div>
-<div class="logo">Made by <span>Matt</span></div>
-<div class="toolbtns">
- <button onclick="toggleModal('tamodal')">TA Focus</button>
- <button onclick="coldCall()">Cold Call</button>
- <button onclick="toggleCalm()" id="calmbtn">Calm Mode</button>
-</div>
-
-<section class="slide bt-title active" id="s1">
- <div class="hero">
-  <div class="tag">HUMANITIES · Week 2 · LAUNCH · Migration, Identity &amp; 20th-Century Britain</div>
-  <h1>Cause, Consequence &amp; the Courtroom</h1>
-  <p class="sub">Why · What changed · Can we trust it?</p>
-  <div class="iconrow"><span>➡️</span><span>🁢</span><span>⚖️</span><span>🧑‍⚖️</span><span>✏️</span></div>
-  <p class="sub">Today is a <strong>hands-on</strong> lesson — we learn by doing.</p>
- </div>
-</section>
-
-<section class="slide bt-teach" id="s2">
- <div class="tag">ARRIVAL TASK · do now, no help needed</div>
- <h2>Cause or consequence? Sort the cards</h2>
- <p>Tap a card, then tap where it belongs. Have a go — wrong answers are welcome here.</p>
- <div class="chipzone" id="arr-chips"></div>
- <div class="buckets" id="arr-buckets"></div>
- <div class="box tip-box"><strong>While you wait:</strong> tell your partner one thing that changed in Britain because people arrived.</div>
-</section>
-
-<section class="slide bt-teach" id="s3">
- <div class="tag">LEARNING OBJECTIVE</div>
- <h2>LO: To explain causes and consequences of migration and begin a structured account.</h2>
- <div id="lolist"><div class="lo-item"><span class="chk">✓</span> I can explain a cause and a consequence of migration.</div><div class="lo-item"><span class="chk">✓</span> I can judge whether a source is reliable, with a reason.</div><div class="lo-item"><span class="chk">✓</span> I can write one structured paragraph with a frame.</div></div>
- <div class="box sc-box"><strong>Success criteria:</strong> By the end you will have built a human-domino chain of causes and consequences, put a source on trial in the courtroom game, and written one framed paragraph of your structured account — evidence for your Humanities portfolio (banks AQA UAS &lsquo;Historical enquiry&rsquo;).</div>
- <div class="box aspire-box"><strong>GCSE Stretch:</strong> answer the full GCSE question: &ldquo;how useful is this source?&rdquo; — weigh its CONTENT and its PROVENANCE in one verdict.</div>
-</section>
-
-<section class="slide bt-teach" id="s4">
- <div class="tag">STARTER · talk task</div>
- <h2>Why did Britain ask people to come?</h2>
- <p>With your partner: 1948 — Britain is rebuilding after the war and short of workers. Trace the chain: war &rarr; ? &rarr; ? &rarr; Windrush. How many links can you find between the war ending and the ship arriving?</p>
- <div class="box stem-box"><strong>Sentence stems:</strong><br>&ldquo;The war meant that&hellip;&rdquo;<br>&ldquo;So Britain needed&hellip;&rdquo;<br>&ldquo;Which led to&hellip;&rdquo;</div>
- <button class="act" onclick="hint('starter')">Hint</button>
- <p id="hint-starter" style="display:none;margin-top:8px;">Stuck? War damage &rarr; rebuilding needed &rarr; not enough workers &rarr; Britain advertises across the Empire &rarr; people answer the call. Every arrow is a cause becoming a consequence.</p>
-</section>
-
-<section class="slide bt-teach" id="s5">
- <div class="tag">I DO · teacher explains</div>
- <h2>Chains of consequence — and whether the evidence holds up</h2>
- <div class="grid"><div class="gcard c1"><h3>➡️ The chain</h3><p>Causes chain into consequences: war &rarr; labour shortage &rarr; invitation &rarr; arrival &rarr; new communities. History is dominoes, not single events.</p></div><div class="gcard c4"><h3>🁢 Push and pull</h3><p>PUSH factors drive people out (danger, hardship); PULL factors draw them in (jobs, family, safety). Most migrations have both — GCSE answers name both.</p></div><div class="gcard c2"><h3>⚖️ Reliability</h3><p>Before evidence enters your account, test it: who made it, when, and why? An eyewitness at the scene beats a rumour written fifty years later.</p></div><div class="gcard c3"><h3>✏️ The paragraph</h3><p>Point &rarr; Evidence &rarr; Explain. One claim, one source to back it, one sentence on why it matters. That structure carries you to grade 3 and beyond.</p></div></div>
- <div class="box misc-box"><strong>Misconception:</strong> <s>&ldquo;One cause, one effect — history is simple.&rdquo;</s> Real history is CHAINS: several causes feeding one event, one event driving many consequences. The Windrush had push factors, pull factors and an invitation — a strong answer names more than one.</div>
-</section>
-
-<section class="slide bt-wedo" id="s6">
- <div class="tag">WE DO · together on the board</div>
- <h2>The courtroom warm-up — does it make the source MORE or LESS reliable?</h2>
- <div class="chipzone" id="wedo-chips"></div>
- <div class="buckets" id="wedo-buckets"></div>
- <div id="wedofb"></div>
- <button class="act secondary" onclick="hint('wedo')">Hint</button>
- <p id="hint-wedo" style="display:none;">MORE: close to the event, made at the time, official record, matches other sources. LESS: far from the event, long after, made to sell or persuade, contradicted elsewhere.</p>
-</section>
-
-<section class="slide bt-prac" id="s7">
- <div class="tag">HANDS-ON · the main event</div>
- <h2>Dominoes, then the courtroom ⚖️</h2>
- <div class="box tip-box"><strong>Ground rule (60 seconds):</strong> in the courtroom, we attack the SOURCE, never the speaker — verdicts need reasons, and verdicts can be given out loud.</div>
- <div class="stations"><div class="station"><h3>Station 1 · HUMAN DOMINOES</h3><p>Each of you holds a card — causes and consequences of migration. Build the physical chain across the room: each domino must justify its link to the next before it stands.</p></div><div class="station"><h3>Station 2 · THE COURTROOM</h3><p>A source takes the stand. Prosecution argues it is unreliable; defence argues for it; the jury tests both against the checklist. Verdicts can be delivered verbally — then one line goes on paper.</p></div><div class="station"><h3>Station 3 · THE PARAGRAPH</h3><p>Write ONE structured paragraph with the frame: Point &rarr; Evidence (name your source) &rarr; Explain. Oral rehearsal first, then write. This paragraph seeds the Week 6 account.</p></div></div>
- <div class="box aspire-box"><strong>GCSE Stretch:</strong> the full verdict: &ldquo;this source is useful because [content]&hellip; and because [provenance]&hellip; however&hellip;&rdquo;</div>
-</section>
-
-<section class="slide bt-prac" id="s8">
- <div class="tag">EVIDENCE · Humanities portfolio (banks AQA UAS &lsquo;Historical enquiry&rsquo;)</div>
- <h2>Capture your evidence</h2>
- <p>TA photographs the domino chain and courtroom. Your paragraph is the evidence — log it (oral rehearsal then writing; scribed verdicts noted):</p>
- <div class="box evidence-box">
-  <p><strong>My name:</strong> <input id="ev-name" style="font-size:1.1rem;padding:6px;width:220px;"></p>
-  <p style="margin-top:8px;"><strong>My paragraph&rsquo;s point and its source:</strong><br><textarea id="ev-p1" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
-  <p style="margin-top:8px;"><strong>My courtroom verdict and reason:</strong><br><textarea id="ev-p2" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>
-  <p style="margin-top:8px;"><strong>Skills I used today (tick with your TA):</strong> Analysis · Literacy · Communication</p>
- </div>
- <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will deep-mark <em>one</em> part of this in dark green and draw a <strong>Yellow Box</strong>. Next lesson you respond inside it in a coloured pen of your choice.</div>
- <button class="act" onclick="printEvidence()">🖨️ Print my evidence sheet</button>
-</section>
-
-<section class="slide bt-exit" id="s9">
- <div class="tag">EXIT TICKET</div>
- <h2>Show what you know</h2>
- <div class="mcq" id="q1" data-ans="2"><div class="q">1. A PULL factor is&hellip;</div><button class="opt" data-i="0">What drives people out</button><button class="opt" data-i="1">A kind of rope</button><button class="opt" data-i="2">What draws people to a place</button></div><div class="mcq" id="q2" data-ans="0"><div class="q">2. Which makes a source MORE reliable?</div><button class="opt" data-i="0">An eyewitness, writing at the time</button><button class="opt" data-i="1">Written 50 years later from rumour</button><button class="opt" data-i="2">Made to sell newspapers</button></div><div class="mcq" id="q3" data-ans="1"><div class="q">3. A structured paragraph runs&hellip;</div><button class="opt" data-i="0">Guess &rarr; Hope &rarr; Stop</button><button class="opt" data-i="1">Point &rarr; Evidence &rarr; Explain</button><button class="opt" data-i="2">Evidence only</button></div>
- <button class="act" onclick="showAnswers()">Show answers</button>
-</section>
-
-<nav>
- <button onclick="prevSlide()">◀ Back</button>
- <button onclick="nextSlide()">Next ▶</button>
- <span id="slidecount">1 / 9</span>
- <span class="spacer"></span>
- <span id="xplabel">XP 0</span>
- <div id="xpwrap"><div id="xpbar"></div></div>
-</nav>
-
-<div class="modal" id="tamodal" onclick="if(event.target===this)toggleModal('tamodal')">
- <div class="card">
-  <h2>TA Focus — this slide</h2>
-  <p id="tabrief"></p>
-  <p style="margin-top:12px;font-size:.95rem;color:#4b5563;">Gesture anchor: open palm = “your idea please”; thumb-to-table = “check with your partner first”.</p>
-  <button class="act" onclick="toggleModal('tamodal')">Close</button>
- </div>
-</div>
-
-<div class="modal" id="ccmodal" onclick="if(event.target===this)toggleModal('ccmodal')">
- <div class="card" style="text-align:center;">
-  <h2>Cold Call</h2>
-  <p id="ccname" style="font-size:2rem;font-weight:800;margin:14px 0;color:var(--pink);"></p>
-  <p id="cctier" style="font-size:1.1rem;"></p>
-  <button class="act" onclick="coldCall()">Again</button>
-  <button class="act secondary" onclick="toggleModal('ccmodal')">Close</button>
- </div>
-</div>
-
-<div id="overlay">
- <h1>Lesson complete! 🎉</h1>
- <p style="font-size:1.3rem;margin:12px 0;">Chain built, source tried, paragraph banked — the account has begun.</p>
- <button class="act" onclick="document.getElementById('overlay').classList.remove('open')">Close</button>
-</div>
-
-<canvas id="confetticanvas"></canvas>
-<div id="printarea"></div>
-
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LAUNCH HUM W2 Cause and Consequence Courtroom</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Segoe UI,system-ui;background:#10171d;color:#f3efe7;overflow:hidden}.s{display:none;height:100vh;overflow:auto;padding:64px 5vw 95px;border-top:9px solid var(--a)}.s.on{display:block}.hero{min-height:75vh;display:grid;place-content:center;text-align:center}h1{font-size:clamp(2.7rem,6vw,5rem);color:var(--a);margin:.2em}h2{color:var(--a);font-size:clamp(1.8rem,3vw,2.7rem)}.tag{display:inline-block;background:#f3efe7;color:#10171d;padding:7px 14px;border-radius:30px;font-weight:900}.route,.box,.card{background:#1d2932;border-radius:15px;padding:16px}.route{border:2px solid var(--a);font-weight:900}.box{border-left:7px solid var(--a);margin:13px 0}.g2,.g3,.g4{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.card{border:2px solid #ffffff25}.card h3{color:#d1a13d}.choice{width:100%;padding:13px;background:#293943;color:white;border:2px solid #ffffff2d;border-radius:11px;font-weight:800;text-align:left;margin:6px 0}.choice.sel,.mission.done{border-color:#d1a13d;background:#3e4128}.mission{cursor:pointer;border-top:7px solid var(--a)}textarea{width:100%;background:#0c1217;color:white;border:2px solid #ffffff2d;border-radius:9px;padding:10px}.visual{background:#f3efe7;color:#10171d;border-radius:16px;padding:20px;text-align:center;border:4px solid var(--a)}.visual b{display:inline-block;padding:16px;margin:8px;background:var(--a);border-radius:50%;border:4px solid #10171d}.warn{border-left-color:#a06043}.lund{border-left-color:#278b7e}nav{position:fixed;bottom:0;left:0;right:0;background:#090e12;padding:10px 18px;display:flex;gap:8px}nav button{padding:9px 15px;border:0;border-radius:8px;font-weight:900}.count{margin-left:auto}.tools{position:fixed;right:14px;top:14px;z-index:4}.calm *{animation:none!important}.calm{--a:#78858b}.print{display:none;color:#111}@media(max-width:800px){.g2,.g3,.g4{grid-template-columns:1fr}.s{padding:68px 18px 95px}}@media print{.s,nav,.tools{display:none!important}.print{display:block}}
+/* ===== Made by Matt magic-touch layer (LAUNCH Humanities · Teesside GCSE bridge · dark-aware) ===== */
+.logo{position:fixed;top:12px;left:16px;z-index:60;font-weight:800;color:var(--a);font-size:1rem;background:#10171dcc;padding:3px 9px;border-radius:8px}
+.logo span{color:#f3efe7}
+.art-spine{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;font-size:.9rem;text-align:left}
+.art-spine div{flex:1;min-width:220px;border-radius:10px;padding:9px 12px;line-height:1.4;background:#1d2932;color:#f3efe7}
+.art-spine .inh{border-left:5px solid #557D91}
+.art-spine .fwd{border-left:5px solid #278B7E}
+.art-spine b{display:block;font-size:.72rem;letter-spacing:.4px;color:#aeb6b9;margin-bottom:2px}
+.lundy-ringwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.lundy-ringwrap p{flex:1;min-width:220px;color:#d7dcde;font-size:.98rem}
+.mission.z-space{border-top:6px solid #557D91!important}.mission.z-space h3{color:#557D91}
+.mission.z-voice{border-top:6px solid #A06043!important}.mission.z-voice h3{color:#A06043}
+.mission.z-aud{border-top:6px solid #278B7E!important}.mission.z-aud h3{color:#278B7E}
+.mission.z-infl{border-top:6px solid #C28A2E!important}.mission.z-infl h3{color:#C28A2E}
+.art-ticket{background:#1d2932;border:2px dashed #C28A2E;border-radius:13px;padding:13px 16px;margin:13px 0}
+.art-ticket h3{color:#C28A2E;margin:0 0 6px;font-size:1.05rem}
+.art-ticket p{color:#f3efe7}
+.art-ticket .stamp{display:inline-block;border:2px solid #278B7E;color:#7fd8c9;border-radius:8px;padding:3px 12px;font-weight:800;font-size:.82rem;transform:rotate(-4deg);margin-top:6px}
+.art-ticket .hard{font-size:.78rem;color:#aeb6b9;margin-left:10px;font-weight:600}
+.art-ladderwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.art-ladderwrap p{flex:1;min-width:220px;color:#d7dcde;font-size:.98rem}
+.art-ladder{flex:0 0 auto;max-width:320px}
+.cue{background:#1d2932;border-left:6px solid #C28A2E;border-radius:13px;padding:13px 16px;margin:13px 0;font-size:1.02rem;line-height:1.5;color:#f3efe7}
+.cue b{color:#C28A2E}
+body[data-theme="cream"]{background:#faf3e2!important;color:#18233F!important}
+body[data-theme="pink"]{background:#fdeef2!important;color:#18233F!important}
+body[data-theme="blue"]{background:#eef3fb!important;color:#18233F!important}
+body[data-theme] .route,body[data-theme] .box,body[data-theme] .card{background:#ffffff!important;color:#18233F!important;border-color:#e3e3e3}
+body[data-theme] .art-spine div,body[data-theme] .art-ticket,body[data-theme] .cue{background:#fff!important;color:#18233F!important}
+body[data-theme] .art-spine b,body[data-theme] .lundy-ringwrap p,body[data-theme] .art-ladderwrap p,body[data-theme] .art-ticket .hard{color:#5b6b6a!important}
+body[data-theme] h1,body[data-theme] h2{color:#18233F}
+body[data-theme] .mission.z-space{border-top-color:#557D91!important}body[data-theme] .mission.z-voice{border-top-color:#A06043!important}
+body[data-theme] .mission.z-aud{border-top-color:#278B7E!important}body[data-theme] .mission.z-infl{border-top-color:#C28A2E!important}
+@keyframes mbmOrbit{to{transform:rotate(360deg)}}
+@keyframes mbmPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.82}}
+@keyframes mbmDraw{to{stroke-dashoffset:0}}
+.mbm-orbit{animation:mbmOrbit 6s linear infinite}
+.mbm-pulse{animation:mbmPulse 2.2s ease-in-out infinite;transform-origin:245px 34px}
+.mbm-draw{stroke-dasharray:600;stroke-dashoffset:600;animation:mbmDraw 1.4s ease forwards}
+@media (prefers-reduced-motion:reduce){.mbm-orbit,.mbm-pulse,.mbm-draw{animation:none}.mbm-draw{stroke-dashoffset:0}}
+</style></head><body style="--a:#A06043"><div class="tools"><button onclick="document.body.classList.toggle('calm')">Calm Mode</button> <button onclick="cycleTheme()" id="readbtn">📖 Reading</button></div><div class="logo">Made by <span>Matt</span></div><section class="s on"><div class="hero"><span class="tag">LAUNCH HUMANITIES · WEEK 2</span><h1>Cause and Consequence Courtroom</h1><p>Which causes were decisive, contributing or background?</p><div class="route">CHARGE → EVIDENCE → ROLE → INTERACTION → VERDICT → APPEAL</div></div></section><section class="s"><span class="tag">2×2 ARRIVAL</span><h2>Connection before correction</h2><div class="g2"><div class="card"><h3>CONNECT</h3><p>Name the condition that will protect your independent thinking.</p><textarea rows="2"></textarea></div><div class="card"><h3>RETRIEVE</h3><p>Retrieve the previous week’s judgement and unresolved issue.</p><textarea rows="2"></textarea></div><div class="card"><h3>CHALLENGE</h3><p>Interrogate one short claim, source detail or map clue.</p><textarea rows="2"></textarea></div><div class="card"><h3>EVIDENCE ACTION</h3><p>Capture claim + precise evidence + unresolved issue by photo, audio or digital scribing.</p><textarea rows="2"></textarea></div></div><div class="box lund">Act on the check-in: quiet route, enlarged source, read-aloud, planned break, assistive technology, audio, sign, point or pupil-directed scribing.</div></section><section class="s"><span class="tag">LAUNCH → GCSE</span><div class="art-spine"><div class="inh"><b>◀ INHERITED</b>Week 1&rsquo;s unresolved source issue.</div><div class="fwd"><b>FEEDS ▶</b>The appeal question selects Week 3&rsquo;s archive source.</div></div><h2>Raise the evidence threshold</h2><div class="g3"><div class="card"><h3>LAUNCH</h3><p>Weigh content, provenance, context, causation, change and significance.</p></div><div class="card"><h3>GCSE BRIDGE</h3><p>Reach substantiated judgements through sustained explanation.</p></div><div class="card"><h3>TRANSFER</h3><p>Apply the routine independently to unfamiliar material.</p></div></div></section><section class="s"><span class="tag">CHEESE LAYER</span><div class="cue"><b>Not a history specialist? Say this:</b> Say: &ldquo;This is a causal courtroom. Sort the causes into DECISIVE, CONTRIBUTING and BACKGROUND, then argue which carried the verdict. &lsquo;X was decisive because ___; Y only contributed because ___.&rsquo; A ranked, argued verdict beats a list of causes.&rdquo;</div><h2>See the disciplinary chain</h2><div class="visual"><b>CLAIM</b> → <b>EVIDENCE</b> → <b>TEST</b> → <b>COUNTER</b> → <b>JUDGE</b></div><div class="box">Ask: what would make a reasonable historian change this conclusion?</div></section><section class="s"><span class="tag">I DO</span><h2>Model the invisible reasoning</h2><div class="box">Teacher models question → precise evidence → contextual knowledge → provenance/concept consequence → counter-evidence → qualified judgement, including one tempting misconception.</div></section><section class="s"><span class="tag">WE DO · SABOTAGE</span><h2>Catch and repair the weak move</h2><div class="g4"><button class="choice" onclick="pick(this)">Error located</button><button class="choice" onclick="pick(this)">Consequence explained</button><button class="choice" onclick="pick(this)">Repair evidenced</button><button class="choice" onclick="pick(this)">Limit remains</button></div><div class="box lund">Voice may be spoken, signed, typed, pointed, sequenced or relayed. No speed-of-speech advantage.</div></section><section class="s"><span class="tag">YOU DO</span><h2>Independent enquiry challenge</h2><div class="box">Cross-examine necessary, trigger, contributing and background causes; consider interaction, consequence, timescale and perspective.</div><textarea rows="5" placeholder="My judgement, strongest evidence, counter-evidence and qualification…"></textarea></section><section class="s"><span class="tag">TIGER · LUNDY MISSIONS</span><h2>Participation must change something</h2><div class="lundy-ringwrap"><svg class="lundy-ring" viewBox="0 0 120 120" width="118" height="118" role="img" aria-label="Lundy loop: Space, Voice, Audience, Influence"><circle cx="60" cy="60" r="46" fill="none" stroke="#ffffff20" stroke-width="12"/><path d="M60 14 A46 46 0 0 1 106 60" fill="none" stroke="#557D91" stroke-width="12" stroke-linecap="round"/><path d="M106 60 A46 46 0 0 1 60 106" fill="none" stroke="#A06043" stroke-width="12" stroke-linecap="round"/><path d="M60 106 A46 46 0 0 1 14 60" fill="none" stroke="#278B7E" stroke-width="12" stroke-linecap="round"/><path d="M14 60 A46 46 0 0 1 60 14" fill="none" stroke="#C28A2E" stroke-width="12" stroke-linecap="round"/><g class="mbm-orbit" style="transform-origin:60px 60px"><circle cx="60" cy="14" r="6" fill="#f3efe7" stroke="#10171d" stroke-width="2"/></g><text x="60" y="57" text-anchor="middle" font-size="9" font-weight="800" fill="#f3efe7">CLOSE</text><text x="60" y="70" text-anchor="middle" font-size="9" font-weight="800" fill="#f3efe7">THE LOOP</text></svg><p>Four zones, one loop — same everywhere in the Teesside programme. Colour marks the zone; the loop always closes, even if only with the ticket below.</p></div><div class="g4"><div class="card mission z-space" onclick="mis(this)"><h3>SPACE</h3><p>Usable route before performance.</p></div><div class="card mission z-voice" onclick="mis(this)"><h3>VOICE</h3><p>Real enquiry or assessment decision.</p></div><div class="card mission z-aud" onclick="mis(this)"><h3>AUDIENCE</h3><p>Claim, evidence and issue restated.</p></div><div class="card mission z-infl" onclick="mis(this)"><h3>INFLUENCE</h3><p>The appeal question selects Week 3’s archive source.</p></div></div><div class="art-ticket"><h3>🎟️ THE VERDICT TICKET<span class="hard">— on a hard day, THIS alone closes the loop</span></h3><p>Decisive cause: <b>____</b>. Contributing: <b>____</b>. Background: <b>____</b>. The verdict &mdash; which carried it &mdash; is <b>____</b>, because <b>____</b>.</p><span class="stamp">STAMP → INFLUENCE</span></div><div class="box lund">Report back: You showed us __. We changed __. Owner __. Visible by __.</div></section><section class="s"><span class="tag">COURTROOM GALLERY</span><h2>Receipt before response</h2><div class="g3"><div class="card"><h3>Claim</h3><p>I restate your claim as…</p></div><div class="card"><h3>Evidence</h3><p>Your strongest evidence was…</p></div><div class="card"><h3>Unresolved</h3><p>Your judgement depends on / still leaves open…</p></div></div><div class="box">Originator: retain · clarify · rebut · qualify · corroborate · reopen.</div></section><section class="s"><span class="tag">LAUNCH–GCSE EVIDENCE</span><h2>Map meaning and authorship</h2><div class="art-ladderwrap"><svg class="art-ladder" viewBox="0 0 300 120" role="img" aria-label="Evidence lift: LAUNCH entry, LAUNCH secure, GCSE reach"><rect x="8" y="80" width="86" height="30" rx="6" fill="#557D91"/><text x="51" y="99" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">LAUNCH entry</text><rect x="100" y="50" width="92" height="30" rx="6" fill="#278B7E"/><text x="146" y="69" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">LAUNCH secure</text><rect class="mbm-pulse" x="198" y="18" width="94" height="32" rx="6" fill="#C28A2E"/><text x="245" y="38" text-anchor="middle" font-size="10" font-weight="900" fill="#2e2306">GCSE reach</text><path class="mbm-draw" d="M51 80 V70 h95 V50 h99 V50" fill="none" stroke="#A06043" stroke-width="2.5"/></svg><p>Every capture reaches for the top step: <b>GCSE reach</b> — sustain a thesis, weigh competing evidence with counter-argument, and transfer the reasoning to an unfamiliar enquiry.</p></div><div class="g2"><div class="card"><h3>Reasoning</h3><textarea rows="6" placeholder="Claim, evidence, context, counter, judgement…"></textarea></div><div class="card"><h3>Authorship and support</h3><textarea rows="6" placeholder="Independent action and exact access support…"></textarea></div></div><div class="box warn">Map UAS evidence to the exact registered outcome. AO mapping is developmental only and does not itself award a GCSE mark or grade.</div><button class="choice" onclick="window.print()">Print evidence sheet</button></section><section class="s"><span class="tag">ARCHIVIST + TRANSFER</span><h2>Preserve the enquiry trail</h2><div class="g2"><div class="card"><h3>Studio Archivist</h3><p>Capture competing positions, source references and whose decision changed the model. Never replace individual assessment evidence.</p><textarea rows="4"></textarea></div><div class="card"><h3>Fresh transfer</h3><p>Apply today’s routine to unfamiliar evidence or a new problem with reduced scaffolding.</p><textarea rows="4"></textarea></div></div></section><section class="s"><span class="tag">EXIT AUDIT</span><h2>What does the evidence justify?</h2><button class="choice" onclick="pick(this)">Substantiated judgement + counter-evidence + qualification</button><button class="choice" onclick="pick(this)">Reasoning or attribution needs strengthening</button><button class="choice" onclick="pick(this)">Another source, model or access adjustment is needed</button></section><nav><button onclick="bk()">◀ Back</button><button onclick="nx()">Next ▶</button><span class="count">1 / 12</span></nav><div class="print"><h1>LAUNCH W2 Evidence · Cause and Consequence Courtroom</h1><p>Enquiry: Which causes were decisive, contributing or background?</p><p>Claim / evidence / contextual knowledge / counter-evidence / qualified judgement / pupil action / exact support / independent transfer / Lundy influence:</p></div><script>let i=0,s=[...document.querySelectorAll('.s')];function sh(n){if(n<0||n>=s.length)return;s[i].classList.remove('on');i=n;s[i].classList.add('on');document.querySelector('.count').textContent=(i+1)+' / '+s.length}function nx(){sh(i+1)}function bk(){sh(i-1)}function pick(x){x.classList.toggle('sel')}function mis(x){x.classList.toggle('done')}document.addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA')return;if(e.key==='ArrowRight'||e.key===' ')nx();if(e.key==='ArrowLeft')bk()});</script>
 <script>
-/* ---------- LESSON DATA (consts first, init at the bottom) ---------- */
-const LESSON = {"arrItems": [{"n": "Britain needed workers after the war", "g": 0}, {"n": "New communities grew", "g": 1}, {"n": "Family already settled here", "g": 0}, {"n": "British food and music changed", "g": 1}], "arrBuckets": ["CAUSE", "CONSEQUENCE"], "wedoItems": [{"n": "Eyewitness at the scene", "g": 0}, {"n": "Written at the time", "g": 0}, {"n": "An official record", "g": 0}, {"n": "Matches other sources", "g": 0}, {"n": "Written 50 years later from memory", "g": 1}, {"n": "Made to sell newspapers", "g": 1}, {"n": "Author never left home", "g": 1}, {"n": "Exaggerates for effect", "g": 1}], "wedoBuckets": ["MORE reliable", "LESS reliable"], "fbGood": ["Spot on — say your reason out loud.", "Correct! Tell your partner why.", "Yes! Use the key word in a full sentence."], "fbBad": ["Not this one — close to the event, or far from it?", "Close — who made it, when, and why? Run the checklist.", "Have another look; talk it through with a partner."], "taBriefs": ["Meet & greet. Domino cards, courtroom props (gavel optional, checklist essential) and paragraph frames ready — frames already on desks so nobody has to ask. Any source text: tinted copy, overlay and read-aloud on offer.", "Arrival task: no adult answers. Cards carry words and pictures — never rely on colour alone.", "LO slide: read aloud together. Pre-teach push/pull with the gesture: push away, pull in.", "Starter: build the war→Windrush chain on the board as pupils find links — it becomes the domino model.", "I Do: pupils listening. Point-Evidence-Explain on your fingers each time — the frame must feel physical before it feels written.", "We Do: rotate the tapping. The reliability checklist is the courtroom's law — praise checklist language.", "PRACTICAL: dominoes are the movement — every pupil in the chain, justifications out loud. Courtroom verdicts can be fully verbal before one written line; scribe verdicts verbatim where needed. Paragraph: oral rehearsal sentence-by-sentence for anyone who wants it.", "Evidence: photograph the chain and the trial. Bank paragraphs with 'TA scribed' noted on any scribed stage.", "Exit ticket: pupils alone, one tap each. Print evidence for anyone who missed it."], "lo": "To explain causes and consequences of migration and begin a structured account.", "evTitle": "Humanities · W2 Cause, Consequence & the Courtroom · portfolio evidence", "evLessonLine": "Humanities Week 2 (LAUNCH · Migration, Identity & 20th-C Britain)", "evRef": "Humanities portfolio · AQA UAS 'Historical enquiry' ___ · GCSE 8145 stretch", "evP1Label": "My paragraph&rsquo;s point and its source:", "evP2Label": "My courtroom verdict and reason:", "skillsLine": "Analysis · Literacy · Communication"};
-const XP_PER = 12;
-let current = 0, xp = 0, audioCtx = null;
-
-function ping(freq){
- try{
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.frequency.value = freq; o.type = 'sine';
-  g.gain.setValueAtTime(.12, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + .3);
-  o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + .3);
- }catch(e){}
-}
-function showSlide(i){
- const slides = document.querySelectorAll('.slide');
- if(i < 0 || i >= slides.length) return;
- slides[current].classList.remove('active');
- current = i;
- slides[current].classList.add('active');
- document.getElementById('slidecount').textContent = (current+1) + ' / ' + slides.length;
- document.getElementById('progressbar').style.width = ((current+1)/slides.length*100) + '%';
- document.getElementById('tabrief').textContent = LESSON.taBriefs[current];
- if(current === 2) animateLO();
-}
-function nextSlide(){ showSlide(current+1); }
-function prevSlide(){ showSlide(current-1); }
-function animateLO(){
- document.querySelectorAll('#lolist .lo-item').forEach((el,idx)=>{
-  setTimeout(()=>el.classList.add('show'), 300 + idx*450);
- });
-}
-function addXP(n){
- xp += n;
- document.getElementById('xplabel').textContent = 'XP ' + xp;
- document.getElementById('xpbar').style.width = Math.min(100, xp) + '%';
-}
-function shuffle(arr){
- const a = arr.slice();
- for(let i = a.length-1; i > 0; i--){
-  const j = Math.floor(Math.random()*(i+1));
-  [a[i],a[j]] = [a[j],a[i]];
- }
- return a;
-}
-function buildSort(chipZoneId, bucketZoneId, items, buckets, onCorrect, onWrong){
- const cz = document.getElementById(chipZoneId);
- const bz = document.getElementById(bucketZoneId);
- cz.innerHTML = ''; bz.innerHTML = '';
- let selected = null;
- shuffle(items).forEach(item=>{
-  const c = document.createElement('button');
-  c.className = 'chip'; c.textContent = item.n; c.dataset.g = item.g;
-  c.addEventListener('click', ()=>{
-   cz.querySelectorAll('.chip').forEach(x=>x.classList.remove('selected'));
-   c.classList.add('selected'); selected = c; ping(520);
-  });
-  cz.appendChild(c);
- });
- buckets.forEach((label, gi)=>{
-  const b = document.createElement('div');
-  b.className = 'bucket';
-  b.innerHTML = '<div>' + label + '</div><div class="mark"></div><div class="drops"></div>';
-  b.addEventListener('click', ()=>{
-   if(!selected) return;
-   if(parseInt(selected.dataset.g) === gi){
-    b.classList.add('flash-good'); setTimeout(()=>b.classList.remove('flash-good'), 700);
-    b.querySelector('.drops').textContent += '\u2713 ' + selected.textContent + '  ';
-    const mk=b.querySelector('.mark'); mk.textContent='\u2713 correct'; setTimeout(()=>mk.textContent='',900);
-    selected.classList.remove('selected'); selected.classList.add('done');
-    selected = null; ping(880); addXP(XP_PER); onCorrect && onCorrect();
-    if(document.getElementById(chipZoneId).querySelectorAll('.chip:not(.done)').length === 0){
-     confetti();
-    }
-   } else {
-    b.classList.add('flash-bad'); setTimeout(()=>b.classList.remove('flash-bad'), 700);
-    const mk=b.querySelector('.mark'); mk.textContent='\u2717 not here'; setTimeout(()=>mk.textContent='',900);
-    ping(220); onWrong && onWrong();
-   }
-  });
-  bz.appendChild(b);
- });
-}
-function hint(id){
- const el = document.getElementById('hint-' + id);
- el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-function toggleModal(id){ document.getElementById(id).classList.toggle('open'); }
-function toggleCalm(){
- document.body.classList.toggle('calm');
- document.getElementById('calmbtn').textContent = document.body.classList.contains('calm') ? 'Calm ✓' : 'Calm Mode';
-}
-function coldCall(){
- let roster = [];
- try{ roster = JSON.parse(localStorage.getItem('ps_coldcall_roster') || '[]'); }catch(e){}
- if(!roster.length) roster = ['Add roster in ps_coldcall_roster'];
- const name = roster[Math.floor(Math.random()*roster.length)];
- const r = Math.ceil(Math.random()*5);
- const tier = (r<=1) ? 'Foundation question' : (r===2) ? 'Middle question' : 'Higher question';
- document.getElementById('ccname').textContent = name;
- document.getElementById('cctier').textContent = 'U/1→F, 2→M, 3–5→H · rolled ' + r + ' → ' + tier;
- const m = document.getElementById('ccmodal');
- if(!m.classList.contains('open')) m.classList.add('open');
- ping(660);
-}
-function wireMCQ(){
- document.querySelectorAll('.mcq').forEach(q=>{
-  q.querySelectorAll('.opt').forEach(opt=>{
-   opt.addEventListener('click', ()=>{
-    if(q.classList.contains('locked')) return;
-    q.classList.add('locked');
-    q.dataset.chosen = opt.dataset.i;
-    opt.style.borderColor = '#1f2a56';
-    opt.style.fontWeight = '700';
-    ping(520);
-   });
-  });
- });
-}
-function showAnswers(){
- let correct = 0;
- document.querySelectorAll('.mcq').forEach(q=>{
-  const ans = q.dataset.ans, chosen = q.dataset.chosen;
-  q.classList.add('locked');
-  q.querySelectorAll('.opt').forEach(opt=>{
-   if(opt.dataset.i === ans){ opt.classList.add('correct'); opt.textContent = '\u2713 ' + opt.textContent; }
-   else if(opt.dataset.i === chosen){ opt.classList.add('wrong'); opt.textContent = '\u2717 ' + opt.textContent; }
-  });
-  if(chosen === ans) correct++;
- });
- addXP(correct * 10);
- document.getElementById('overlay').classList.add('open');
- confetti();
-}
-/* ---------- EVIDENCE PRINT (DOM-clone + Marking & Fair Assessment block) ---------- */
-function printEvidence(){
- const pa = document.getElementById('printarea');
- const name = document.getElementById('ev-name').value || '________________';
- const p1 = document.getElementById('ev-p1').value || '';
- const p2 = document.getElementById('ev-p2').value || '';
- const d = new Date().toLocaleDateString('en-GB');
- pa.innerHTML = '';
- function row(txt, cls){
-  const el = document.createElement('div');
-  el.className = cls || 'prow'; el.textContent = txt;
-  pa.appendChild(el); return el;
- }
- const h = document.createElement('h1'); h.textContent = LESSON.evTitle; pa.appendChild(h);
- row('Name: ' + name + '   ·   Date: ' + d + '   ·   ' + LESSON.evLessonLine);
- row('LO: ' + LESSON.lo);
- row(LESSON.evP1Label + ' ' + p1);
- row(LESSON.evP2Label + ' ' + p2);
- row('Skills used (tick): ' + LESSON.skillsLine + '   ·   Photo evidence attached: [ ]');
- row('Evidence ref: ' + LESSON.evRef + '   ·   Verified by: ________________   ·   Date: ____________');
- /* Marking & Fair Assessment Policy block */
- const yb = document.createElement('div'); yb.className = 'ybox';
- yb.textContent = 'YELLOW BOX — teacher deep-marks ONE section (dark green pen). Pupil improvement/redraft goes here:';
- pa.appendChild(yb);
- row('WWW (What Went Well): ______________________________________________');
- row('EBI (Even Better If): _______________________________________________');
- row('Next Steps: ________________________________________________________');
- row('My response (coloured pen of my choice): ____________________________');
- row('Formative judgement (circle one): Emerging · Developing · Secure · Exceeding   →   recorded in your school’s assessment system');
- const foot = document.createElement('div'); foot.className = 'small';
- foot.textContent = 'Literacy codes (dark green, in margin): Sp spelling · P punctuation · Cap capital letter · T tense · // new paragraph · ^ missing word. Portfolio evidence: upload to your school’s evidence platform for IQA.';
- pa.appendChild(foot);
- window.print();
-}
-function confetti(){
- if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
- if(document.body.classList.contains('calm')) return;
- const cv = document.getElementById('confetticanvas');
- const ctx = cv.getContext('2d');
- cv.width = window.innerWidth; cv.height = window.innerHeight;
- const bits = Array.from({length: 90}, ()=>({
-  x: Math.random()*cv.width, y: -20 - Math.random()*200,
-  v: 2 + Math.random()*3, r: 4 + Math.random()*5,
-  c: ['#d6006d','#1f2a56','#f59e0b','#16a34a'][Math.floor(Math.random()*4)]
- }));
- let t = 0;
- (function fall(){
-  ctx.clearRect(0,0,cv.width,cv.height);
-  bits.forEach(b=>{ b.y += b.v; ctx.fillStyle = b.c; ctx.fillRect(b.x, b.y, b.r, b.r); });
-  t++;
-  if(t < 140) requestAnimationFrame(fall); else ctx.clearRect(0,0,cv.width,cv.height);
- })();
-}
-document.addEventListener('keydown', (e)=>{
- const tag = (e.target && e.target.tagName) || '';
- if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
- if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
- if(e.key === 'ArrowLeft') prevSlide();
-});
-/* ---------- INIT (after all data consts) ---------- */
-function init(){
- buildSort('arr-chips','arr-buckets', LESSON.arrItems, LESSON.arrBuckets, null, null);
- let fbGood = 0, fbBad = 0;
- buildSort('wedo-chips','wedo-buckets', LESSON.wedoItems, LESSON.wedoBuckets,
-  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbGood[(fbGood++)%LESSON.fbGood.length]; },
-  ()=>{ document.getElementById('wedofb').textContent = LESSON.fbBad[(fbBad++)%LESSON.fbBad.length]; });
- wireMCQ();
- document.getElementById('tabrief').textContent = LESSON.taBriefs[0];
-}
-init();
+(function(){var T=["studio","cream","pink","blue"];
+ try{var s=localStorage.getItem("mbm_reading_theme");if(s&&s!=="studio")document.body.dataset.theme=s;}catch(e){}
+ window.cycleTheme=function(){var c=document.body.dataset.theme||"studio";var n=T[(T.indexOf(c)+1)%T.length];
+  if(n==="studio")delete document.body.dataset.theme;else document.body.dataset.theme=n;
+  try{localStorage.setItem("mbm_reading_theme",n);}catch(e){}
+  var b=document.getElementById("readbtn");if(b)b.textContent="\uD83D\uDCD6 "+n.charAt(0).toUpperCase()+n.slice(1);};})();
 </script>
-</body>
-</html>
+</body></html>

@@ -1,0 +1,60 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GROW Humanities · Teesside Migration &amp; Identity · Printable Evidence, Lundy &amp; Transfer Pack</title><style>
+:root{--ink:#18233F;--steel:#3f6f83;--rust:#9a5540;--teal:#237a6e;--gold:#b3862c}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);background:#f2ede2;margin:0;padding:26px;line-height:1.5}
+h1{color:var(--ink);border-bottom:3px solid var(--rust);padding-bottom:6px;font-size:1.5rem}
+.note{background:#fbf4e3;border-left:6px solid var(--gold);padding:10px 14px;border-radius:8px;font-size:.93rem}
+.controls{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}
+.controls button{background:var(--rust);color:#fff;font-weight:700;cursor:pointer}
+.sheet{background:#fff;border:1px solid #d5d2c8;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #18233f11}
+.asdbadge{display:inline-block;background:var(--gold);color:#3a2c07;font-weight:800;font-size:.72rem;padding:3px 10px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}
+.spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}.spine .inh{background:#eaf1f4;border-left:5px solid var(--steel)}.spine .fwd{background:#e6f5f1;border-left:5px solid var(--teal)}
+.spine b{display:block;font-size:.7rem;color:#5b6b6a}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.fld{flex:1;min-width:200px;border:1px solid #9ca3af;border-radius:8px;padding:8px 10px;min-height:40px}.fld b{display:block;font-size:.78rem;color:#5b6b6a}
+.lundy4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.lundy4>div{border-radius:10px;padding:8px;color:#fff;font-size:.8rem;min-height:60px}
+.z-space{background:var(--steel)}.z-voice{background:var(--rust)}.z-aud{background:var(--teal)}.z-infl{background:var(--gold);color:#3a2c07}
+.lundy4 b{display:block;margin-bottom:3px}
+.ticket{background:#fbf4e3;border:2px dashed var(--gold);border-radius:12px;padding:12px 14px;margin:10px 0}.ticket h3{color:#9a6f1e;margin:0 0 6px;font-size:1rem}
+.stamp{display:inline-block;border:2px solid var(--teal);color:var(--teal);border-radius:8px;padding:3px 10px;font-weight:800;font-size:.8rem;transform:rotate(-4deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.ladder>div{border-radius:10px;padding:9px;font-size:.8rem;color:#fff}
+.le{background:var(--steel)}.ls{background:var(--teal)}.lr{background:var(--gold);color:#3a2c07}
+.ybox{border:3px solid var(--gold);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9ca3af;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eaf1f4}
+@media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
+</style></head><body>
+<h1>GROW Humanities · Teesside Migration &amp; Identity · Printable Evidence, Lundy &amp; Transfer Pack</h1>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-tinted Lundy zones, same GROW&rarr;LAUNCH ladder. <b>Week 7 is assessed</b> &mdash; apply centre-approved assessment conditions and each learner&rsquo;s access arrangements. One sheet per pupil per week. Capture reasoning and independence, not volume. Match evidence to the exact AQA UAS unit code before any claim. No pupil names are stored in any file.</p>
+<div class="controls noprint">Show week:
+<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select>
+<button onclick="window.print()">🖨️ Print</button></div><div id="out"></div>
+<script>
+const WEEKS=[
+{w:1,t:"Time Detectives",tk:"THE CHRONOLOGY TICKET",tp:"My chronology claim is ____ came before ____ because ____. I&rsquo;d be more certain if ____. My challenge to it is ____.",inh:"Unit start — building and challenging Teesside&rsquo;s chronology.",fwd:"Your chronology misconceptions and questions set the date supports and source set used in Week 2.",asd:false},
+{w:2,t:"Source Detectives",tk:"THE PROVENANCE TICKET",tp:"Provenance: ____. This source is STRONG evidence for ____ but WEAK for ____. What it can&rsquo;t prove is ____.",inh:"Week 1&rsquo;s chronology and open questions.",fwd:"Your source challenges set which corroborating evidence and causal claims enter Week 3.",asd:false},
+{w:3,t:"Cause and Consequence",tk:"THE MULTI-CAUSE TICKET",tp:"Motive: ____. Condition: ____. Trigger: ____. The cause I rank highest is ____, because ____.",inh:"Week 2&rsquo;s evaluated sources.",fwd:"Your causal rankings set the people, communities and questions offered in Week 4.",asd:false},
+{w:4,t:"People Who Shaped Britain",tk:"THE AGENCY TICKET",tp:"The person / community is ____. They changed ____. The context that made it possible is ____. My evidence is ____.",inh:"Week 3&rsquo;s causal rankings.",fwd:"Evidence-led nominations (not a vote alone) set which figures and communities enter Week 5 significance.",asd:false},
+{w:5,t:"How Big a Deal?",tk:"THE SIGNIFICANCE TICKET",tp:"How big a deal? ____ &mdash; significant to ____, over ____, by the criterion ____. A challenger might say ____; I&rsquo;d defend / revise by ____.",inh:"Week 4&rsquo;s nominated figures and communities.",fwd:"Your significance judgements and support requests set Week 6 account questions, source pairings and support.",asd:false},
+{w:6,t:"Plan the Account",tk:"THE PLAN TICKET",tp:"My account&rsquo;s main claim is ____. Order: first ____, then ____. Key source evidence: ____. The support I&rsquo;ve agreed is ____.",inh:"Week 5&rsquo;s significance judgements.",fwd:"Each learner&rsquo;s evidenced support contract sets Week 7 access; changes are reported back before the assessment.",asd:false},
+{w:7,t:"Write the Account",tk:"THE ACCOUNT TICKET ★ ASSESSED",tp:"My claim is ____. My strongest evidence is ____. I explained it by ____. My stated uncertainty is ____. Access support used: ____.",inh:"Week 6&rsquo;s plan and agreed support contract.",fwd:"Assessment evidence and reflections set Week 8 reteaching, mapping links and future assessment.",asd:true},
+{w:8,t:"Where in the World?",tk:"THE INFLUENCE TICKET",tp:"Migration routes mapped: ____ to ____. What the geography adds is ____. My recommendation is ____. The named adult acting is ____; reports back by ____.",inh:"Week 7&rsquo;s assessed account.",fwd:"A named adult responds to one evidence-led curriculum, resource or cultural recommendation with an action and deadline.",asd:false}
+];
+function sheet(x){return `<div class="sheet"><h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}${x.asd?'<span class="asdbadge">★ ASSESSED</span>':''}</h2>
+<div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
+<div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / support used</b></div></div>
+<p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
+<div class="lundy4"><div class="z-space"><b>SPACE</b>a usable reasoning &amp; evidence route</div><div class="z-voice"><b>VOICE</b>a real historical judgement</div><div class="z-aud"><b>AUDIENCE</b>a peer validates the reasoning</div><div class="z-infl"><b>INFLUENCE</b>your judgement changes next week</div></div>
+<div class="ticket"><h3>🎟️ ${x.tk} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#6b7676">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#6b7676">Peer stamp: ______</span></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence lift · GROW → LAUNCH</p>
+<div class="ladder"><div class="le"><b>GROW entry</b><br>State or date with support.</div><div class="ls"><b>GROW secure</b><br>Rank, qualify &amp; explain with evidence.</div><div class="lr"><b>LAUNCH reach</b><br>Corroborate, weigh interpretations &amp; transfer to a new source.</div></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence (stick source / annotate reasoning)</p><div class="ybox"></div>
+<div class="row" style="font-size:.8rem;color:#5b6b6a"><div class="fld"><b>Authorship</b>what I reasoned / judged / decided independently</div><div class="fld"><b>Exact support</b>modelled / prompted / scribed / access arrangement</div><div class="fld"><b>AQA UAS unit + verified by</b></div></div></div>`;}
+const RB=`<div class="sheet noprint" style="border-top:8px solid var(--teal)"><h2 style="color:var(--ink)">Report-back contract log (adult copy)</h2>
+<p class="note">The loop only works if pupils hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
+<table><tr><th>Week</th><th>What pupils showed/reasoned</th><th>What we changed</th><th>Owner</th><th>Told pupils on (date)</th></tr>
+${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}${w==7?' ★':''}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
+function render(){const v=document.getElementById('wk').value;const l=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);document.getElementById('out').innerHTML=l.map(sheet).join('')+(v==='all'?RB:'');}
+(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t+(x.asd?' ★':'');s.appendChild(o);});render();})();
+</script></body></html>
