@@ -1,0 +1,38 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evidence Tracker (online) · Tutor Time · Made by Matt</title><style>
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#1b2027;color:#eef1f4;max-width:1100px;margin:0 auto;padding:26px}
+h1{color:#B05C7E;margin:.2em 0}.sub{color:#b9c2cb}
+input{font:inherit;background:#2b343e;color:#eef1f4;border:1px solid #ffffff2b;border-radius:8px;padding:6px 10px}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:14px}
+th,td{border:1px solid #ffffff26;padding:8px 9px;text-align:left}th{background:#232b34;color:#b9c2cb}
+button.t{font:inherit;font-weight:800;background:#2b343e;color:#b9c2cb;border:2px solid #ffffff26;border-radius:9px;padding:5px 12px;cursor:pointer}
+button.t.on{background:#3f9d78;color:#08251a;border-color:#3f9d78}
+.bar{margin:14px 0;background:#232b34;border-radius:999px;overflow:hidden;height:18px}.fill{height:100%;background:#B05C7E;width:0;transition:width .3s}
+.top{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.btn{font:inherit;font-weight:700;background:#B05C7E;color:#140a10;border:none;border-radius:9px;padding:8px 14px;cursor:pointer}
+.note{color:#b9c2cb;font-size:12.5px;margin-top:12px}</style></head><body>
+<h1>Tutor Time — Evidence Tracker</h1><p class="sub">Made by Matt · BV · Behaviour Focus · KCSIE · saves on this device</p>
+<div class="top"><label>Tutor group <input id="grp" placeholder="e.g. B1"></label><button class="btn" onclick="window.print()">Print</button><button class="btn" onclick="resetAll()">Reset sheet</button></div>
+<div class="bar"><div class="fill" id="fill"></div></div><div id="pct" class="sub"></div>
+<table id="tbl"><tr><th>Wk</th><th>Strand</th><th>Session</th><th>Date</th><th>Photo</th><th>Caption</th><th>Captain role</th><th>V</th><th>A</th><th>I</th><th>Launch</th><th>Staff initials</th></tr></table>
+<p class="note">Photos show work, not faces, unless consent is filed. Evidence is filed in the school's evidence system, tagged strand + tutor group. KCSIE disclosures follow the school safeguarding procedure. Data stays in this browser only.</p>
+<script>
+var ROWS=[{"n": 1, "tag": "BV", "s": "Democracy"}, {"n": 2, "tag": "BV", "s": "The Rule of Law"}, {"n": 3, "tag": "BV", "s": "Individual Liberty"}, {"n": 4, "tag": "BV", "s": "Respect & Tolerance"}, {"n": 5, "tag": "BF", "s": "Ready \u00b7 Respectful \u00b7 Safe"}, {"n": 6, "tag": "BF", "s": "Repair & Restart"}, {"n": 7, "tag": "KCSIE", "s": "Pressure Points"}, {"n": 8, "tag": "KCSIE", "s": "My Trusted Five"}];var KEY='tt_tracker_v2';
+var st=JSON.parse(localStorage.getItem(KEY)||'{}');
+var tbl=document.getElementById('tbl');
+ROWS.forEach(function(r){
+ var tr=document.createElement('tr');var id=r.n;
+ function tick(k){var on=(st[id]&&st[id][k]);return '<button class="t'+(on?' on':'')+'" data-id="'+id+'" data-k="'+k+'">'+(on?'✓':'·')+'</button>'}
+ function inp(k,ph){var v=(st[id]&&st[id][k])||'';return '<input style="width:7.5em" data-id="'+id+'" data-k="'+k+'" value="'+v.replace(/"/g,'&quot;')+'" placeholder="'+ph+'">'}
+ tr.innerHTML='<td><b>W'+r.n+'</b></td><td>'+r.tag+'</td><td>'+r.s+'</td><td>'+inp('date','')+'</td><td>'+tick('photo')+'</td><td>'+tick('cap')+'</td><td>'+inp('captain','role')+'</td><td>'+tick('v')+'</td><td>'+tick('a')+'</td><td>'+tick('i')+'</td><td>'+tick('lx')+'</td><td>'+inp('staff','')+'</td>';
+ tbl.appendChild(tr);
+});
+document.getElementById('grp').value=st._grp||'';
+function save(){localStorage.setItem(KEY,JSON.stringify(st));prog()}
+tbl.addEventListener('click',function(e){var b=e.target;if(!b.classList||!b.classList.contains('t'))return;var id=b.dataset.id,k=b.dataset.k;st[id]=st[id]||{};st[id][k]=!st[id][k];b.classList.toggle('on',st[id][k]);b.textContent=st[id][k]?'✓':'·';save();});
+tbl.addEventListener('input',function(e){var b=e.target;if(b.tagName!=='INPUT')return;var id=b.dataset.id;st[id]=st[id]||{};st[id][b.dataset.k]=b.value;save();});
+document.getElementById('grp').addEventListener('input',function(e){st._grp=e.target.value;save()});
+function prog(){var done=0;ROWS.forEach(function(r){var s=st[r.n]||{};if(s.photo&&s.cap)done++;});var p=Math.round(done/ROWS.length*100);document.getElementById('fill').style.width=p+'%';document.getElementById('pct').textContent=done+' of '+ROWS.length+' sessions evidenced ('+p+'%)';}
+function resetAll(){if(confirm('Clear this sheet?')){st={};localStorage.removeItem(KEY);location.reload();}}
+prog();
+</script></body></html>
