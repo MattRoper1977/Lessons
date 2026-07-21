@@ -1,0 +1,60 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LAUNCH Art Silver · Teesside Studio Suite · Evidence &amp; Lundy Pack</title><style>
+:root{--deep:#1C2B36;--accent:#356F83;--copper:#9B5B3D;--gold:#C18B2D;--teal:#238C80;--violet:#7659A7}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#17212A;background:#f4f1ea;margin:0;padding:26px;line-height:1.5}
+h1{color:var(--deep);border-bottom:3px solid var(--copper);padding-bottom:6px;font-size:1.5rem}
+.note{background:#FFF7DA;border-left:6px solid var(--gold);padding:10px 14px;border-radius:8px;font-size:.94rem}
+.unitband{background:var(--deep);color:#fff;border-radius:10px;padding:8px 14px;margin:14px 0 4px;font-weight:800}
+.controls{background:var(--deep);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}.controls button{background:var(--copper);color:#fff;font-weight:700;cursor:pointer}
+.sheet{background:#fff;border:1px solid #ccd3d4;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #17212a11}
+.tag{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:2px 9px;font-size:.72rem;font-weight:800;margin-left:8px;vertical-align:middle}
+.spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}.spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}
+.spine .inh{background:#eef4f6;border-left:5px solid var(--accent)}.spine .fwd{background:#E8F6F3;border-left:5px solid var(--teal)}.spine b{display:block;font-size:.7rem;color:#556}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.fld{flex:1;min-width:200px;border:1px solid #9aa;border-radius:8px;padding:8px 10px;min-height:40px}.fld b{display:block;font-size:.78rem;color:#556}
+.lundy4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.lundy4>div{border-radius:10px;padding:8px;color:#fff;font-size:.8rem;min-height:64px}
+.z-space{background:var(--accent)}.z-voice{background:var(--violet)}.z-aud{background:var(--copper)}.z-infl{background:var(--teal)}.lundy4 b{display:block;margin-bottom:3px}
+.ticket{background:#FFF7DA;border:2px dashed var(--gold);border-radius:12px;padding:12px 14px;margin:10px 0}.ticket h3{color:#8a6316;margin:0 0 6px;font-size:1rem}
+.stamp{display:inline-block;border:2px solid var(--teal);color:var(--teal);border-radius:8px;padding:3px 10px;font-weight:800;font-size:.8rem;transform:rotate(-4deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.ladder>div{border-radius:10px;padding:9px;font-size:.8rem}
+.le{background:#E8F2F5}.ls{background:#DFF5EE}.lr{background:#FFF7DA;border:2px solid var(--gold)}
+.ybox{border:3px solid var(--gold);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9aa;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f6}
+@media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
+</style></head><body>
+<h1>LAUNCH Art Silver · Teesside Studio Suite · Evidence &amp; Lundy Pack</h1>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same deep-Teesside Lundy zones, same LAUNCH&rarr;GOLD ladder. Weeks 1&ndash;4 evidence <b>Unit 1</b>; Weeks 5&ndash;8 evidence the <b>Unit 2</b> leadership project. Record learner authorship and adult support separately. No pupil names are stored in any file.</p>
+<div class="controls noprint">Show week:<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select><button onclick="window.print()">🖨️ Print</button></div>
+<div id="out"></div>
+<script>
+const WEEKS=[
+{w:1,t:"Frame the Local Challenge",u:"Unit 1A",ticket:"THE CHALLENGE TICKET",tp:"My Teesside challenge is ____. My baseline is ____. My two routes are ____. The evidence of success will be ____.",inh:"Unit 1 start — framing a Teesside arts challenge.",fwd:"Your challenge choices set the media, references, equipment and modelling supplied in Week 2."},
+{w:2,t:"Practice, Careers &amp; Pathways",u:"Unit 1D",ticket:"THE PATHWAY TICKET",tp:"The practitioner / career pathway I researched is ____. What it means for my practice is ____. A potential partner is ____.",inh:"Week 1&rsquo;s framed challenge and baseline.",fwd:"Your research interests shape Week 3 demonstrations and identify potential cultural partners or professionals."},
+{w:3,t:"Implement &amp; Critically Develop",u:"Unit 1B",ticket:"THE DEVELOP TICKET",tp:"The weak link I found is ____. I fixed it with the evidence ____. A limitation that still remains is ____.",inh:"Week 2&rsquo;s researched pathways and partners.",fwd:"Your unresolved practical and contextual questions set the focus of the Week 4 arts experience."},
+{w:4,t:"Arts Experience: Attend, Analyse &amp; Share",u:"Unit 1C",ticket:"THE EXPERIENCE TICKET",tp:"The arts experience was ____. What I actually noticed is ____. It changes my project by ____.",inh:"Week 3&rsquo;s unresolved practical questions.",fwd:"Your reviews change future cultural opportunities, access formats and the leadership project&rsquo;s audience design."},
+{w:5,t:"Design the Leadership Project",u:"Unit 2A–B",ticket:"THE LEADERSHIP-DESIGN TICKET",tp:"My leadership project is ____, for ____. My aim is ____. The access / risk I planned for is ____.",inh:"Week 4&rsquo;s arts-experience reviews (Unit 1 → Unit 2).",fwd:"Your participant consultation changes the Week 6 pilot, resources, timings and communication route."},
+{w:6,t:"Pilot, Lead &amp; Adapt",u:"Unit 2C–D",ticket:"THE PILOT TICKET",tp:"My pilot showed ____. I adapted by ____. The final delivery will change to ____.",inh:"Week 5&rsquo;s leadership-project design and consultation.",fwd:"Your pilot evidence sets the final delivery format, support roles, resources and access conditions in Week 7."},
+{w:7,t:"Deliver &amp; Curate the Arts Project",u:"Unit 2C–D",ticket:"THE DELIVERY TICKET",tp:"I delivered ____. The participants / audience received ____. My curation decision is ____.",inh:"Week 6&rsquo;s piloted, adapted plan.",fwd:"Your participant and audience feedback set Week 8 evaluation and one real future provision or partnership."},
+{w:8,t:"Review, Influence &amp; Portfolio Audit",u:"Unit 2E + review",ticket:"THE INFLUENCE TICKET",tp:"My recommendation is ____, for ____. The named adult acting on it is ____. They report back by ____. My portfolio still needs ____.",inh:"Week 7&rsquo;s delivered, curated project.",fwd:"A named adult responds to your recommendation with a decision, action, responsibility and deadline — the loop is paid; the Silver portfolio is audited across both units."}
+];
+function sheet(x){return `<div class="sheet">
+<h2 style="color:var(--deep);margin:.1em 0">Week ${x.w} · ${x.t}<span class="tag">${x.u}</span></h2>
+<div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
+<div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / support used</b></div></div>
+<p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
+<div class="lundy4"><div class="z-space"><b>SPACE</b>a usable route before performance</div><div class="z-voice"><b>VOICE</b>controls the artistic/leadership decision</div><div class="z-aud"><b>AUDIENCE</b>a recipient names what they received</div><div class="z-infl"><b>INFLUENCE</b>a real consequence + report-back</div></div>
+<div class="ticket"><h3>🎟️ ${x.ticket} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#667">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#667">Owner: ______ Deadline: ______</span></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence lift · LAUNCH → GOLD</p>
+<div class="ladder"><div class="le"><b>LAUNCH entry</b><br>Run the routine with support.</div><div class="ls"><b>LAUNCH secure</b><br>Qualify a claim with a limitation and a comparison.</div><div class="lr"><b>GOLD reach</b><br>Qualify, adapt for an audience, lead others, transfer to something new.</div></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence (photo / document / annotate)</p><div class="ybox"></div>
+<div class="row" style="font-size:.8rem;color:#556"><div class="fld"><b>Learner authorship</b>enquired / created / planned / led / evaluated</div><div class="fld"><b>Exact support &amp; collaboration</b>advised / modelled / scribed / operated / collaborated</div><div class="fld"><b>Adviser verify / date</b></div></div>
+</div>`;}
+const REPORTBACK=`<div class="sheet noprint" style="border-top:8px solid var(--teal)"><h2 style="color:var(--deep)">Report-back contract log (adult copy)</h2>
+<p class="note">The loop only works if learners hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
+<table><tr><th>Week</th><th>What the learner showed/told us</th><th>What we decided/actioned</th><th>Owner</th><th>Told learner on (date)</th></tr>
+${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
+function render(){const v=document.getElementById('wk').value;const list=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);
+ let html='';if(v==='all'){html+='<div class="unitband">UNIT 1 · Arts practice, experience &amp; pathways (Weeks 1–4)</div>';html+=list.filter(x=>x.w<=4).map(sheet).join('');html+='<div class="unitband">UNIT 2 · Arts leadership project (Weeks 5–8)</div>';html+=list.filter(x=>x.w>=5).map(sheet).join('');html+=REPORTBACK;}else{html=list.map(sheet).join('');}
+ document.getElementById('out').innerHTML=html;}
+(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t;s.appendChild(o);});render();})();
+</script></body></html>

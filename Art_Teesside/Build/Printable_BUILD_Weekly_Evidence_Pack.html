@@ -1,0 +1,67 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BUILD Art · Teesside Studio Suite · Printable Weekly Evidence Pack</title><style>
+:root{--ink:#18233F;--steel:#4F869C;--oxide:#D06438;--foundry:#E1AB32;--river:#16877A;--paper:#FFF8EC}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#18233F;background:#faf7ef;margin:0;padding:26px;line-height:1.5}
+h1{color:var(--ink);border-bottom:3px solid var(--oxide);padding-bottom:6px;font-size:1.55rem}
+.note{background:#fff7d6;border-left:6px solid var(--foundry);padding:10px 14px;border-radius:8px;font-size:.94rem}
+.controls{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}
+.controls button{background:var(--oxide);color:#fff;font-weight:700;cursor:pointer}
+.sheet{background:#fff;border:1px solid #d8d6cf;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #18233f11}
+.spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}
+.spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}
+.spine .inh{background:#eef4f7;border-left:5px solid var(--steel)}.spine .fwd{background:#e8f7f4;border-left:5px solid var(--river)}
+.spine b{display:block;font-size:.7rem;color:#475569}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.fld{flex:1;min-width:200px;border:1px solid #9ca3af;border-radius:8px;padding:8px 10px;min-height:40px}
+.fld b{display:block;font-size:.78rem;color:#475569}
+.lundy4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.lundy4>div{border-radius:10px;padding:8px;color:#fff;font-size:.8rem;min-height:62px}
+.z-space{background:var(--steel)}.z-voice{background:var(--oxide)}.z-aud{background:var(--river)}.z-infl{background:var(--foundry);color:#3a2c07}
+.lundy4 b{display:block;margin-bottom:3px}
+.ticket{background:#fff7d6;border:2px dashed var(--foundry);border-radius:12px;padding:12px 14px;margin:10px 0}
+.ticket h3{color:#8a6a12;margin:0 0 6px;font-size:1rem}
+.stamp{display:inline-block;border:2px solid var(--river);color:var(--river);border-radius:8px;padding:3px 10px;font-weight:800;font-size:.8rem;transform:rotate(-4deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.ladder>div{border-radius:10px;padding:9px;font-size:.8rem}
+.le{background:#eaf4f8}.ls{background:#e8f7f4}.lr{background:#fff7d6;border:2px solid var(--foundry)}
+.ybox{border:3px solid var(--foundry);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9ca3af;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f7}
+@media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
+</style></head><body>
+<h1>BUILD Art · Teesside Studio Suite · Printable Weekly Evidence Pack</h1>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-tinted Lundy zones, same BUILD&rarr;GROW ladder. One sheet per pupil per week. Capture independence, not volume. No pupil names are stored in any file.</p>
+<div class="controls noprint">Show week:
+<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select>
+<button onclick="window.print()">🖨️ Print</button></div>
+<div id="out"></div>
+<script>
+const WEEKS=[
+{w:1,t:"The Local Canvas",ticket:"THE LOCAL CANVAS TICKET",tp:"My reference is ____. I cropped/simplified to ____. My three colours create ____. Next week I want ____.",inh:"Unit start — discovering Teesside as your canvas.",fwd:"Your Week 1 choices set the structures, surfaces and place themes offered in Week 2."},
+{w:2,t:"Artists, Makers &amp; Teesside Connections",ticket:"THE CONNECTION TICKET",tp:"The Teesside artist/maker I connected with is ____. One thing they do with place is ____. I will borrow ____.",inh:"Week 1&rsquo;s place study and chosen themes.",fwd:"Your selections set the processes and examples prepared for the Week 3 Skills Lab."},
+{w:3,t:"Industrial Surface Skills Lab",ticket:"THE SURFACE TICKET",tp:"The surface I explored is ____. The material or process that worked is ____. I will use it to ____.",inh:"Week 2&rsquo;s chosen artists, processes and examples.",fwd:"Your selected processes set which materials and demonstrations stay available in Week 4."},
+{w:4,t:"Build the Brief",ticket:"THE BRIEF TICKET",tp:"My Teesside artwork will communicate ____. I will test it by ____. The exact support I want is ____.",inh:"Week 3&rsquo;s tested surface processes and materials.",fwd:"Your individual brief sets the materials, modelling and support field prepared for Week 5."},
+{w:5,t:"Critique, Test &amp; Redirect",ticket:"THE REDIRECT TICKET",tp:"I will PROTECT ____, TEST ____, and reject ____. My next decision is ____.",inh:"Week 4&rsquo;s brief and what it must communicate.",fwd:"Your maker&rsquo;s decision controls Week 6 refinement; class access feedback changes the studio setup."},
+{w:6,t:"Resolve the Artwork",ticket:"THE RESOLVE TICKET",tp:"My final decision is ____. I stopped before overworking because ____. It is ready to show / it still needs ____.",inh:"Week 5&rsquo;s protect / test / change / reject decisions.",fwd:"Your presentation and privacy choices set the curation roles and display options in Week 7."},
+{w:7,t:"Curate the Showcase",ticket:"THE CURATOR TICKET",tp:"My display choice is ____. It changes the meaning by ____. My access decision is ____. Public / private: ____.",inh:"Week 6&rsquo;s resolved artwork and privacy choices.",fwd:"Your decisions set the real exhibition layout, labels, access route and what is or is not public."},
+{w:8,t:"Share, Reflect &amp; Close the Loop",ticket:"THE INFLUENCE TICKET",tp:"My recommendation is ____, for ____. The named adult acting on it is ____. They will report back by ____.",inh:"Week 7&rsquo;s curated showcase and access plan.",fwd:"A named adult acts on one pupil recommendation and reports the decision and deadline back — the loop is paid, the unit CLOSES."}
+];
+function sheet(x){return `<div class="sheet">
+<h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}</h2>
+<div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
+<div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / support used</b></div></div>
+<p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
+<div class="lundy4"><div class="z-space"><b>SPACE</b>a usable route &amp; boundary</div><div class="z-voice"><b>VOICE</b>a real artistic decision</div><div class="z-aud"><b>AUDIENCE</b>a recipient names what they received</div><div class="z-infl"><b>INFLUENCE</b>your choice changes next week</div></div>
+<div class="ticket"><h3>🎟️ ${x.ticket} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#64748b">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#64748b">Partner stamp: ______</span></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence lift · BUILD → GROW</p>
+<div class="ladder"><div class="le"><b>BUILD entry</b><br>Notice, try, select with support.</div><div class="ls"><b>BUILD secure</b><br>Compare alternatives and explain one decision.</div><div class="lr"><b>GROW reach</b><br>Compare for an audience, adapt, and transfer to something new.</div></div>
+<p style="margin:12px 0 4px;font-weight:700">Photo / made-work evidence (stick / annotate)</p><div class="ybox"></div>
+<div class="row" style="font-size:.8rem;color:#475569"><div class="fld"><b>Authorship</b>what I selected / made / directed / decided</div><div class="fld"><b>Exact support</b>prepared / modelled / prompted / scribed</div><div class="fld"><b>Verified by / date</b></div></div>
+</div>`;}
+const REPORTBACK=`<div class="sheet noprint" style="border-top:8px solid var(--river)"><h2 style="color:var(--ink)">Report-back contract log (adult copy)</h2>
+<p class="note">The loop only works if pupils hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
+<table><tr><th>Week</th><th>What pupils showed us</th><th>What we changed</th><th>Owner</th><th>Told pupils on (date)</th></tr>
+${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
+function render(){const v=document.getElementById('wk').value;const list=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);document.getElementById('out').innerHTML=list.map(sheet).join('')+(v==='all'?REPORTBACK:'');}
+(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t;s.appendChild(o);});render();})();
+</script></body></html>

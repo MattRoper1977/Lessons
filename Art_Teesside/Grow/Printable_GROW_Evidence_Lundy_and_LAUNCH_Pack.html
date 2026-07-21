@@ -1,0 +1,59 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GROW Bronze Art · Teesside Studio Suite · Printable Evidence, Lundy &amp; LAUNCH Pack</title><style>
+:root{--ink:#141C24;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#141C24;background:#f7f4ec;margin:0;padding:26px;line-height:1.5}
+h1{color:var(--ink);border-bottom:3px solid var(--oxide);padding-bottom:6px;font-size:1.5rem}
+.note{background:#fbf1d6;border-left:6px solid var(--gold);padding:10px 14px;border-radius:8px;font-size:.93rem}
+.controls{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}
+.controls button{background:var(--oxide);color:#fff;font-weight:700;cursor:pointer}
+.sheet{background:#fff;border:1px solid #d5d2c8;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #141c2411}
+.spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}
+.spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}.spine .inh{background:#eaf1f4;border-left:5px solid var(--steel)}.spine .fwd{background:#e6f5f1;border-left:5px solid var(--teal)}
+.spine b{display:block;font-size:.7rem;color:#475569}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.fld{flex:1;min-width:200px;border:1px solid #9ca3af;border-radius:8px;padding:8px 10px;min-height:40px}.fld b{display:block;font-size:.78rem;color:#475569}
+.lundy4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.lundy4>div{border-radius:10px;padding:8px;color:#fff;font-size:.8rem;min-height:60px}
+.z-space{background:var(--steel)}.z-voice{background:var(--oxide)}.z-aud{background:var(--teal)}.z-infl{background:var(--gold);color:#3a2c07}
+.lundy4 b{display:block;margin-bottom:3px}
+.ticket{background:#fbf1d6;border:2px dashed var(--gold);border-radius:12px;padding:12px 14px;margin:10px 0}.ticket h3{color:#8a6a12;margin:0 0 6px;font-size:1rem}
+.stamp{display:inline-block;border:2px solid var(--teal);color:var(--teal);border-radius:8px;padding:3px 10px;font-weight:800;font-size:.8rem;transform:rotate(-4deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.ladder>div{border-radius:10px;padding:9px;font-size:.8rem;color:#fff}
+.le{background:var(--steel)}.ls{background:var(--teal)}.lr{background:var(--gold);color:#3a2c07}
+.ybox{border:3px solid var(--gold);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9ca3af;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eaf1f4}
+@media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
+</style></head><body>
+<h1>GROW Bronze Art · Teesside Studio Suite · Printable Evidence, Lundy &amp; LAUNCH Pack</h1>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-tinted Lundy zones, same GROW&rarr;LAUNCH ladder. One sheet per pupil per week. Capture independence, not volume. No pupil names are stored in any file.</p>
+<div class="controls noprint">Show week:
+<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select>
+<button onclick="window.print()">🖨️ Print</button></div><div id="out"></div>
+<script>
+const WEEKS=[
+{w:1,t:"The Local Canvas",tk:"THE MAPPING TICKET",tp:"My structure is ____. I mapped it by digital / physical. My strongest transformation was ____. Next week I want ____.",inh:"Unit start — mapping Teesside as your canvas.",fwd:"Your choice of digital, physical or directed routes changes the Week 2 studio setup and demonstrations."},
+{w:2,t:"Studio Skills &amp; Safe Practice",tk:"THE SKILLS TICKET",tp:"The process I controlled is ____. My &ldquo;glitch&rdquo; was ____ and I repaired it by ____. One safe-practice point is ____.",inh:"Week 1&rsquo;s mapping choices and preferred routes.",fwd:"Your glitch patterns and preferred routes set Week 3&rsquo;s independent-challenge supports."},
+{w:3,t:"Independent Studio Challenge",tk:"THE CHALLENGE TICKET",tp:"My independent piece develops ____. The process I&rsquo;m pushing furthest is ____. My unresolved question is ____.",inh:"Week 2&rsquo;s controlled processes and safe practice.",fwd:"Your unresolved questions and interests set the Week 4 arts-event attention route."},
+{w:4,t:"Arts Event: Attend, Capture &amp; Review",tk:"THE EVENT TICKET",tp:"The arts event was ____. I noticed / valued / questioned ____. It changes what I want to seek out next: ____.",inh:"Week 3&rsquo;s independent studio piece and open questions.",fwd:"Your event review shapes future event choices, pacing, access tools and practitioner follow-up."},
+{w:5,t:"Practitioner, Career &amp; Inspiration",tk:"THE PRACTITIONER TICKET",tp:"My practitioner is ____. One career strategy they use is ____. What it could change in my practice is ____.",inh:"Week 4&rsquo;s arts-event review.",fwd:"The practitioner strategies you pick become the menu of skills to teach in Weeks 6&ndash;7."},
+{w:6,t:"Plan &amp; Rehearse the Skill Share",tk:"THE PLAN-TO-TEACH TICKET",tp:"The skill I will teach is ____. My learner needs ____ to succeed. My steps / tools / timing are ____.",inh:"Week 5&rsquo;s chosen practitioner strategies.",fwd:"Your learner needs and teaching choices set the Week 7 studio stations, tools and timings."},
+{w:7,t:"Deliver the Skill Share &amp; Curate",tk:"THE SKILL-SHARE TICKET",tp:"I taught ____. I adapted by ____ when my learner ____. My curation choice is ____.",inh:"Week 6&rsquo;s rehearsed skill-share plan.",fwd:"Your and your learner&rsquo;s feedback changes the final display, access route and next-term arts provision."},
+{w:8,t:"Reflect, Audit &amp; Close the Loop",tk:"THE INFLUENCE TICKET",tp:"Across 8 weeks I developed ____ and influenced ____. My recommendation is ____. The named adult acting is ____; they report back by ____.",inh:"Week 7&rsquo;s delivered skill share and curation.",fwd:"A named adult acts on a recommendation and reports the decision, action and deadline back to learners."}
+];
+function sheet(x){return `<div class="sheet"><h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}</h2>
+<div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
+<div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / support used</b></div></div>
+<p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
+<div class="lundy4"><div class="z-space"><b>SPACE</b>a usable route &amp; boundary</div><div class="z-voice"><b>VOICE</b>a real artistic/teaching decision</div><div class="z-aud"><b>AUDIENCE</b>a recipient names what they received</div><div class="z-infl"><b>INFLUENCE</b>your choice changes next week</div></div>
+<div class="ticket"><h3>🎟️ ${x.tk} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#64748b">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#64748b">Partner stamp: ______</span></div>
+<p style="margin:12px 0 4px;font-weight:700">Evidence lift · GROW → LAUNCH</p>
+<div class="ladder"><div class="le"><b>GROW entry</b><br>Develop a process with support.</div><div class="ls"><b>GROW secure</b><br>Compare, refine &amp; explain a decision for an audience.</div><div class="lr"><b>LAUNCH reach</b><br>Synthesise, adapt for an audience, transfer to something new.</div></div>
+<p style="margin:12px 0 4px;font-weight:700">Photo / made-work evidence (stick / annotate)</p><div class="ybox"></div>
+<div class="row" style="font-size:.8rem;color:#475569"><div class="fld"><b>Authorship</b>what I developed / made / taught / decided</div><div class="fld"><b>Exact support</b>prepared / modelled / prompted / scribed</div><div class="fld"><b>Verified by / date</b></div></div></div>`;}
+const RB=`<div class="sheet noprint" style="border-top:8px solid var(--teal)"><h2 style="color:var(--ink)">Report-back contract log (adult copy)</h2>
+<p class="note">The loop only works if learners hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
+<table><tr><th>Week</th><th>What pupils showed/told us</th><th>What we changed</th><th>Owner</th><th>Told learners on (date)</th></tr>
+${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
+function render(){const v=document.getElementById('wk').value;const l=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);document.getElementById('out').innerHTML=l.map(sheet).join('')+(v==='all'?RB:'');}
+(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t;s.appendChild(o);});render();})();
+</script></body></html>
