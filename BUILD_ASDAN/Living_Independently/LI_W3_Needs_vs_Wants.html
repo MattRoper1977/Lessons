@@ -1,78 +1,169 @@
 <!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BUILD Living Independently · W3 Needs vs Wants · Made by Matt</title><style>
-:root{--bg:#1b2027;--panel:#232b34;--panel2:#2b343e;--text:#eef1f4;--muted:#b9c2cb;--line:#ffffff1f;--model:#5E93A6;--indep:#C88A34;--good:#3f9d78;--brand:#7E6BA6}
-*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
-.wrap{max-width:940px;margin:0 auto;padding:20px 18px 80px}
-.bar{position:sticky;top:0;z-index:20;background:#161c22ee;backdrop-filter:blur(4px);border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 14px}
-.logo{font-weight:800;color:var(--brand);margin-right:auto}.logo .b2{color:var(--text)}
-.bar button{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:9px;padding:6px 11px;cursor:pointer}
-.bar button.on{background:var(--brand);color:#0d1418;border-color:var(--brand)}
-h1{font-size:1.7rem;margin:.3em 0 .1em}.sub{color:var(--muted);margin:0 0 4px}.eyebrow{color:var(--brand);font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:.72rem}
-section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0}
-.zone{border-left:8px solid var(--line)}.zone.model{border-left-color:var(--model)}.zone.indep{border-left-color:var(--indep)}
-.ztag{display:inline-flex;align-items:center;gap:8px;font-weight:800;padding:4px 12px;border-radius:999px;font-size:.8rem}
-.zone.model .ztag{background:#12303a;color:#9fd0e0;border:2px solid var(--model)}.zone.indep .ztag{background:#2f2410;color:#e7bd7c;border:2px solid var(--indep)}
-.ztag .ico{width:16px;height:16px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.qcard{background:var(--panel2);border-radius:11px;padding:11px 12px;min-height:60px}
-.qn{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#0d1418;font-weight:800;align-items:center;justify-content:center;font-size:.8rem;margin-right:7px}
-ul{margin:8px 0 4px 20px}li{margin:3px 0}
-.ws{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}#wsgrid{display:grid;gap:3px;background:var(--panel2);padding:8px;border-radius:12px;user-select:none}
-.wc{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:#1b2027;border-radius:6px;font-weight:700;cursor:pointer;font-size:.9rem}
+:root{--bg:#1b2027;--panel:#232b34;--panel2:#2b343e;--text:#eef1f4;--muted:#b9c2cb;--line:#ffffff1f;--model:#5E93A6;--indep:#C88A34;--good:#3f9d78;--brand:#7E6BA6;--mint:#B9E6CD;--amber:#F2A24A}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.slide{display:none;min-height:100vh;padding:6vh 7vw 12vh;flex-direction:column;justify-content:center}.slide.on{display:flex}
+.eyebrow{color:var(--brand);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:clamp(.75rem,1.4vw,1rem)}
+h1{font-size:clamp(2.1rem,5.8vw,4.2rem);margin:.08em 0;line-height:1.05}
+h2{font-size:clamp(1.5rem,3.5vw,2.6rem);margin:.1em 0 .45em;color:var(--brand)}
+.sub{color:var(--muted);font-size:clamp(1rem,2.1vw,1.45rem)}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:5vw;align-items:center}
+.split svg{width:100%;height:auto;max-height:54vh}
+.statement{font-size:clamp(2rem,5.2vw,3.7rem);font-weight:800;line-height:1.18}.statement em{color:var(--amber);font-style:normal}
+.big{font-size:clamp(1.25rem,2.8vw,2rem);background:var(--panel);border-left:12px solid var(--brand);border-radius:16px;padding:3.2vh 3vw;font-weight:600;line-height:1.45}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1vh}
+.qcard{background:var(--panel);border-radius:13px;padding:2.4vh 1.6vw;font-size:clamp(1rem,2vw,1.45rem);min-height:9vh}
+.qn{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--brand);color:#0d1418;font-weight:800;align-items:center;justify-content:center;margin-right:10px}
+ul.pts{font-size:clamp(1.2rem,2.7vw,1.95rem);line-height:1.6;margin:0 0 0 1em;padding:0}ul.pts li{margin:.45em 0}
+.zonehead{display:inline-flex;align-items:center;gap:12px;font-weight:800;font-size:clamp(1rem,2vw,1.4rem);border-radius:999px;padding:7px 22px;margin-bottom:14px;align-self:flex-start}
+.zonehead.model{background:#12303a;color:#9fd0e0;border:2.5px solid var(--model)}
+.zonehead.indep{background:#2f2410;color:#e7bd7c;border:2.5px solid var(--indep)}
+.zonehead svg{width:18px;height:18px}
+.task{background:var(--panel);border-radius:16px;padding:2.8vh 3vw;font-size:clamp(1.15rem,2.5vw,1.85rem);margin:8px 0}
+.task b{color:var(--brand)}.supported{display:none}body.sup .standard{display:none}body.sup .supported{display:block}
+.ws{display:flex;gap:3vw;flex-wrap:wrap;align-items:flex-start}
+#wsgrid{display:grid;gap:4px;background:var(--panel);padding:12px;border-radius:16px;user-select:none}
+.wc{width:clamp(24px,3.3vw,42px);height:clamp(24px,3.3vw,42px);display:flex;align-items:center;justify-content:center;background:#1b2027;border-radius:8px;font-weight:700;cursor:pointer;font-size:clamp(.8rem,1.6vw,1.2rem)}
 .wc.sel{background:var(--model);color:#08222b}.wc.found{background:var(--good);color:#08251a}
-.wlist{list-style:none;margin:0;padding:0;min-width:150px}.wlist li{padding:3px 0;font-weight:600}.wlist li.done{text-decoration:line-through;color:var(--muted)}
-.task{background:var(--panel2);border-radius:12px;padding:12px 14px;margin-top:8px}.supported{display:none}body.sup .standard{display:none}body.sup .supported{display:block}
-.ev{background:#20303a;border-radius:12px;padding:12px 14px}.bank{color:var(--muted);font-size:.82rem;margin-top:6px}
-.tracker{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.tracker div{flex:1;min-width:150px;background:var(--panel2);border-radius:10px;padding:10px}.tracker b{color:var(--brand)}
-.lundy{background:#20303a;border-left:8px solid var(--good);border-radius:12px;padding:12px 14px}
-.unitnav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;background:#232b34;border:1px solid var(--line);border-radius:12px;padding:11px 15px;margin:18px 0 6px}
-.unitnav a{color:var(--brand);font-weight:800;text-decoration:none}.unitnav span{color:var(--muted);font-size:.85rem}
-.foot{color:var(--muted);font-size:.8rem;margin-top:14px;text-align:center}
-@media (max-width:640px){.grid2{grid-template-columns:1fr}.wc{width:26px;height:26px}}
-body.calm{--panel:#20262d;--panel2:#252c34;--brand:#9aa6b0;--model:#6f93a0;--indep:#b39a6a}
-@media print{.bar,.unitnav{display:none}body{background:#fff;color:#111}section{border-color:#ccc;background:#fff;break-inside:avoid}.supported,.standard{display:block!important}}
+.wlist{list-style:none;margin:0;padding:0;font-size:clamp(1rem,2vw,1.35rem)}.wlist li{padding:4px 0;font-weight:600}.wlist li.done{text-decoration:line-through;color:var(--muted)}
+.wbtn,.abtn{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:8px 14px;cursor:pointer;margin-top:12px}
+.mcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mbtn{font:inherit;text-align:left;font-weight:700;font-size:clamp(1rem,2vw,1.4rem);background:var(--panel);color:var(--text);border:3px solid var(--line);border-radius:13px;padding:14px 16px;cursor:pointer}
+.mbtn.sel{border-color:var(--model)}.mbtn.lock{border-color:var(--good);background:#1d3a2e;cursor:default}
+.oddwrap .round{margin:1.6vh 0}
+.obtn{font:inherit;font-weight:700;font-size:clamp(.95rem,1.9vw,1.35rem);background:var(--panel);color:var(--text);border:3px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;margin:4px 8px 4px 0}
+.obtn.hit{border-color:var(--good);background:#1d3a2e}.obtn.dim{opacity:.45}
+.owhy{color:var(--mint);font-size:clamp(.95rem,1.8vw,1.25rem);min-height:1.4em;margin:4px 0 0}
+.schip{font:inherit;font-weight:700;font-size:clamp(1rem,2vw,1.4rem);background:var(--panel);color:var(--text);border:3px solid var(--line);border-radius:12px;padding:12px 18px;cursor:pointer;margin:5px 8px 5px 0}
+.schip .num{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--amber);color:#0d1418;font-weight:800;align-items:center;justify-content:center;margin-right:9px;visibility:hidden}
+.schip.done .num{visibility:visible}.schip.done{border-color:var(--amber)}
+.card{font-size:clamp(.95rem,1.9vw,1.35rem);font-weight:700;background:var(--panel);border:3px solid var(--line);border-radius:13px;padding:13px 17px;cursor:pointer;user-select:none;display:inline-block;margin:5px 8px 5px 0}
+.bl{margin-top:1.6vh;color:var(--muted);font-size:clamp(.9rem,1.7vw,1.2rem)}
+.qzgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qz{background:var(--panel);border-top:7px solid var(--brand);border-radius:14px;padding:16px 18px;cursor:pointer;min-height:11vh}
+.qz b{display:block;font-size:clamp(1rem,2vw,1.45rem)}.qz span{display:none;color:var(--mint);font-size:clamp(.95rem,1.9vw,1.3rem);margin-top:8px}
+.qz.open span{display:block}.qz.open{border-top-color:var(--good)}
+.lundy{background:#20303a;border-left:14px solid var(--good);border-radius:18px;padding:4.2vh 3.4vw}
+.lundy .lz{color:var(--good);font-weight:800;letter-spacing:.1em;font-size:clamp(1rem,2vw,1.4rem)}
+.ev ol{font-size:clamp(1.1rem,2.4vw,1.7rem);line-height:1.6;margin:0 0 0 1.2em}
+.capfr{font-size:clamp(1.25rem,2.8vw,2rem);font-style:italic;background:var(--panel);border-radius:16px;padding:2.8vh 3vw;margin:1.8vh 0;border-left:12px solid var(--brand)}
+.lx{color:var(--muted);font-size:clamp(.95rem,1.9vw,1.3rem)}
+.bank{display:inline-block;background:#1d3a2e;color:#9fd8bd;border:2px solid var(--good);border-radius:999px;padding:5px 18px;font-weight:700;font-size:clamp(.85rem,1.6vw,1.1rem);margin-top:1.4vh}
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:12px;background:#161c22ee;border-top:1px solid var(--line);padding:10px 18px;z-index:30;flex-wrap:wrap}
+.nav .logo{font-weight:800;color:var(--brand)}.nav .logo .b2{color:var(--text)}
+.nav button,.nav a{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.nav button.on{background:var(--brand);color:#0d1418;border-color:var(--brand)}
+.dots{margin-left:auto;display:flex;gap:7px}.dot{width:11px;height:11px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);cursor:pointer}.dot.on{background:var(--brand)}
+body.calm{--panel:#20262d;--panel2:#252c34;--brand:#9aa6b0;--amber:#c9b17e;--mint:#a9bfb2;--good:#7fa895}
+@media (max-width:760px){.split,.mcol,.qzgrid,.grid2{grid-template-columns:1fr}}
+@media print{.nav{display:none}.slide{display:block;min-height:auto;page-break-after:always;padding:20px}body{background:#fff;color:#111}}
 </style></head><body>
-<div class="bar"><span class="logo"><span class="b1">Made by </span><span class="b2">Matt</span></span>
-<button onclick="document.body.classList.toggle('calm')">Calm Mode</button>
+<div class="slide on split"><div>
+<p class="eyebrow">BUILD · Living Independently · Week 3 of 6</p><h1>Needs vs Wants</h1>
+<p class="sub">Sort and justify</p>
+<div class="big" style="margin-top:2.6vh">Name something you NEED.</div></div>
+<svg viewBox="0 0 400 300" role="img" aria-label="Lesson illustration"><ellipse cx="200" cy="262" rx="160" ry="14" fill="#00000033"/><circle cx="140" cy="170" r="72" fill="none" stroke="#B9E6CD" stroke-width="10"/><circle cx="260" cy="170" r="72" fill="none" stroke="#F2A24A" stroke-width="10"/><text x="140" y="90" font-size="20" text-anchor="middle" font-family="Segoe UI" font-weight="700" fill="#B9E6CD">NEED</text><text x="260" y="90" font-size="20" text-anchor="middle" font-family="Segoe UI" font-weight="700" fill="#F2A24A">WANT</text><circle cx="140" cy="170" r="16" fill="#E8E2D4"/><circle cx="260" cy="170" r="16" fill="#E8E2D4"/><circle cx="200" cy="170" r="16" fill="#7E6BA6"/></svg></div>
+
+<div class="slide"><p class="eyebrow">Warm-up · round the room</p><h2>Quick four</h2>
+<div class="grid2"><div class="qcard"><span class="qn">1</span>Name something you NEED.</div><div class="qcard"><span class="qn">2</span>Name something you WANT.</div><div class="qcard"><span class="qn">3</span>Thumb check: is a phone a need or a want?</div><div class="qcard"><span class="qn">4</span>Point to a &#x27;need&#x27; in the room.</div></div></div>
+
+<div class="slide"><p class="eyebrow">Spark</p><div class="statement"><em>Needs first.</em> Wants can wait.</div></div>
+
+<div class="slide"><span class="zonehead model"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>▣ MODEL · I do / we do</span>
+<h2>Watch, then try together</h2><ul class="pts"><li>The difference between a need and a want.</li><li>Why needs come first when money is tight.</li><li>Justifying a choice with a reason.</li></ul></div>
+
+<div class="slide"><p class="eyebrow">Everyone plays · Odd one out</p><h2>Odd one out</h2><div id="act"></div></div>
+
+<div class="slide"><span class="zonehead indep"><svg viewBox="0 0 16 16"><path d="M8 1 L15 8 L8 15 L1 8 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>◆ INDEPENDENT · you do</span>
+<h2>Your task</h2>
+<div class="task standard"><b>Standard:</b> Sort the item cards into needs and wants, then justify two tricky ones with a reason.</div>
+<div class="task supported"><b>Supported:</b> Post items into NEED and WANT hoops with an adult and say why for one.</div></div>
+
+<div class="slide"><div class="lundy"><div class="lz">LUNDY LOOP · INFLUENCE</div>
+<h2 style="color:var(--text)">Onto the Money-Smart Board</h2>
+<p style="font-size:clamp(1.15rem,2.5vw,1.8rem);line-height:1.5;margin:0">Decide one &#x27;want&#x27; you could wait for — why? Today's outcome goes onto the Money-Smart Board — up in our room all term.</p></div></div>
+
+<div class="slide ev"><p class="eyebrow">Evidence slot · pupil &amp; TA run</p><h2>Prove it</h2>
+<ol><li>DOCUMENTARIAN: photo your needs/wants sort.</li><li>ANNOTATE: &#x27;___ is a need because ___&#x27;.</li><li>WITNESS: staff tick &#x27;sorted + justified&#x27;, sign.</li></ol>
+<p class="lx">Launch extension: the Captain (or a volunteer) adds one written line — the "why it matters" author line.</p>
+<span class="bank">banks ASDAN LI M1 challenge 3</span></div>
+
+<div class="slide split"><div><p class="eyebrow">Until next time</p>
+<div class="statement" style="font-size:clamp(1.5rem,3.8vw,2.7rem)">Next week: Everyday Prices — estimate &amp; compare.</div></div>
+<div style="opacity:.9"><svg viewBox="0 0 400 300" role="img" aria-label="Lesson illustration"><ellipse cx="200" cy="262" rx="150" ry="14" fill="#00000033"/><g transform="translate(90,130) rotate(-8)"><rect x="0" y="0" width="64" height="84" rx="10" fill="#B9E6CD"/><circle cx="32" cy="14" r="6" fill="#1b2027"/><text x="32" y="55" font-size="20" text-anchor="middle" font-family="Segoe UI" font-weight="700" fill="#161D3D">£2</text></g><g transform="translate(170,130) rotate(-2)"><rect x="0" y="0" width="64" height="84" rx="10" fill="#E8E2D4"/><circle cx="32" cy="14" r="6" fill="#1b2027"/><text x="32" y="55" font-size="20" text-anchor="middle" font-family="Segoe UI" font-weight="700" fill="#161D3D">£1.50</text></g><g transform="translate(250,130) rotate(4)"><rect x="0" y="0" width="64" height="84" rx="10" fill="#F2A24A"/><circle cx="32" cy="14" r="6" fill="#1b2027"/><text x="32" y="55" font-size="20" text-anchor="middle" font-family="Segoe UI" font-weight="700" fill="#161D3D">99p</text></g><g transform="translate(330,100) scale(0.8)"><circle r="26" fill="#F2A24A"/><path d="M0 -18 l6 12 13 2 -9 9 2 13 -12 -6 -12 6 2 -13 -9 -9 13 -2 z" fill="#161D3D"/></g></svg></div></div>
+
+<nav class="nav"><span class="logo"><span class="b1">Made by </span><span class="b2">Matt</span></span>
+<button onclick="go(-1)">◀</button><button onclick="go(1)">▶</button>
+<button onclick="document.body.classList.toggle('calm')">Calm</button>
 <button id="sstd" class="on" onclick="setMode('std')">Standard</button><button id="ssup" onclick="setMode('sup')">Supported</button>
-<button onclick="revealWS()">Reveal words</button><button onclick="window.print()">Print</button></div>
-<div class="wrap">
-<p class="eyebrow">BUILD · Living Independently · Week 3</p><h1>Needs vs Wants</h1><p class="sub">Sort and justify</p>
-<section><p class="eyebrow">Arrival · 10 min</p><h2>Settle &amp; recap</h2><div class="grid2"><div class="qcard"><span class="qn">1</span>Name something you NEED.</div><div class="qcard"><span class="qn">2</span>Name something you WANT.</div><div class="qcard"><span class="qn">3</span>Thumb check: is a phone a need or a want?</div><div class="qcard"><span class="qn">4</span>Point to a &#x27;need&#x27; in the room.</div></div>
-<p style="margin-top:14px"><b>Vocabulary wordsearch</b> — find the words (no crosswords):</p>
-<div class="ws"><div id="wsgrid"></div><ul class="wlist" id="wslist"><li data-w="NEED">NEED</li><li data-w="WANT">WANT</li><li data-w="CHOICE">CHOICE</li><li data-w="PRIORITY">PRIORITY</li><li data-w="ESSENTIAL">ESSENTIAL</li><li data-w="BUDGET">BUDGET</li><li data-w="DECIDE">DECIDE</li><li data-w="VALUE">VALUE</li></ul></div></section>
-<section class="zone model"><span class="ztag"><svg class="ico" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>MODEL zone · I do / we do</span>
-<p class="eyebrow" style="margin-top:8px">Instruction · 15 min</p><h2>Watch, then try together</h2><ul><li>The difference between a need and a want.</li><li>Why needs come first when money is tight.</li><li>Justifying a choice with a reason.</li></ul></section>
-<section class="zone indep"><span class="ztag"><svg class="ico" viewBox="0 0 16 16"><path d="M8 1 L15 8 L8 15 L1 8 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>INDEPENDENT zone · you do</span>
-<p class="eyebrow" style="margin-top:8px">Independent task · 20 min</p><h2>Your task</h2>
-<div class="task standard"><b>Standard:</b> Sort the item cards into needs and wants, then justify two tricky ones with a reason.</div><div class="task supported"><b>Supported:</b> Post items into NEED and WANT hoops with an adult and say why for one.</div></section>
-<section><p class="eyebrow">Evidence &amp; review · 10 min</p><h2>Prove it — the launch-level loop</h2>
-<div class="ev"><ul><li>DOCUMENTARIAN: photo your needs/wants sort.</li><li>ANNOTATE: &#x27;___ is a need because ___&#x27;.</li><li>WITNESS: staff tick &#x27;sorted + justified&#x27;, sign.</li></ul><p class="bank"><b>ASDAN evidence:</b> banks ASDAN LI M1 challenge 3.</p></div>
-<div class="tracker"><div><b>ASDAN tracker:</b> log today's competency.</div><div><b>Predicted grade:</b> review after evidence is filed.</div></div></section>
-<section class="lundy"><b>Lundy Loop · INFLUENCE:</b> Decide one &#x27;want&#x27; you could wait for — why?</section>
-<nav class="unitnav"><a href="LI_W2_Notes_and_Coins.html">◀ Week 2</a><span><a href="START_HERE.html" style="color:var(--muted)">Living Independently</a> · Week 3 of 6</span><a href="LI_W4_Everyday_Prices.html">Week 4 ▶</a></nav>
-<p class="foot">Made by Matt · BUILD Living Independently · SEMH-safe: calm · colour+label zones · no pupil names</p></div>
+<a href="LI_W2_Notes_and_Coins.html">◀ W2</a> <a href="LI_W4_Everyday_Prices.html">W4 ▶</a><a href="#" onclick="window.print();return false">Print</a>
+<span class="dots" id="dots"></span></nav>
 <script>
-var WORDS=["NEED", "WANT", "CHOICE", "PRIORITY", "ESSENTIAL", "BUDGET", "DECIDE", "VALUE"];
+var ACTC={"type": "odd", "rounds": [{"items": ["Rent", "Food", "Bus fare", "Gold trainers"], "odd": 3, "why": "The first three are needs — trainers are a want."}, {"items": ["Wages", "Pocket money", "Benefits", "Spending"], "odd": 3, "why": "The first three are money IN; spending is money OUT."}]};
+var slides=document.querySelectorAll('.slide'),i=0,dots=document.getElementById('dots');
+slides.forEach(function(_,k){var d=document.createElement('span');d.className='dot'+(k?'':' on');d.onclick=function(){show(k)};dots.appendChild(d);});
+function show(k){i=Math.max(0,Math.min(slides.length-1,k));slides.forEach(function(s,j){s.classList.toggle('on',j===i)});dots.querySelectorAll('.dot').forEach(function(d,j){d.classList.toggle('on',j===i)});}
+function go(d){show(i+d)}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);});
 function setMode(m){document.body.classList.toggle('sup',m==='sup');document.getElementById('sstd').classList.toggle('on',m==='std');document.getElementById('ssup').classList.toggle('on',m==='sup');}
-(function(){var N=12,grid=[],place=[],dirs=[[0,1],[1,0],[1,1],[-1,1]];
- function empty(){grid=[];for(var r=0;r<N;r++){grid.push([]);for(var c=0;c<N;c++)grid[r].push('');}}
- function fits(w,r,c,d){for(var i=0;i<w.length;i++){var rr=r+d[0]*i,cc=c+d[1]*i;if(rr<0||cc<0||rr>=N||cc>=N)return false;if(grid[rr][cc]&&grid[rr][cc]!==w[i])return false;}return true;}
- function put(w){for(var t=0;t<200;t++){var d=dirs[Math.floor(Math.random()*dirs.length)],r=Math.floor(Math.random()*N),c=Math.floor(Math.random()*N);if(fits(w,r,c,d)){var cells=[];for(var i=0;i<w.length;i++){var rr=r+d[0]*i,cc=c+d[1]*i;grid[rr][cc]=w[i];cells.push(rr*N+cc);}place.push({w:w,cells:cells});return;}}}
- empty();WORDS.forEach(put);var AL='ABCDEFGHIJKLMNOPQRSTUVWXYZ';for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(!grid[r][c])grid[r][c]=AL[Math.floor(Math.random()*26)];
- var g=document.getElementById('wsgrid');g.style.gridTemplateColumns='repeat('+N+',1fr)';
- for(var r=0;r<N;r++)for(var c=0;c<N;c++){var el=document.createElement('div');el.className='wc';el.textContent=grid[r][c];el.dataset.i=r*N+c;g.appendChild(el);}
- var first=null;
- g.addEventListener('click',function(e){var t=e.target;if(!t.classList.contains('wc'))return;
-  if(first===null){first=+t.dataset.i;t.classList.add('sel');return;}
-  var a=first,b=+t.dataset.i;first=null;g.querySelectorAll('.sel').forEach(function(x){x.classList.remove('sel');});
-  var ar=Math.floor(a/N),ac=a%N,br=Math.floor(b/N),bc=b%N,dr=Math.sign(br-ar),dc=Math.sign(bc-ac);
-  var len=Math.max(Math.abs(br-ar),Math.abs(bc-ac))+1,line=[];
-  for(var i=0;i<len;i++){var rr=ar+dr*i,cc=ac+dc*i;if((ar+dr*(len-1))!==br||(ac+dc*(len-1))!==bc)return;line.push(rr*N+cc);}
-  var s=line.map(function(i){return grid[Math.floor(i/N)][i%N];}).join('');
-  place.forEach(function(p){if(s===p.w||s===p.w.split('').reverse().join('')){p.cells.forEach(function(i){g.children[i].classList.add('found');});mark(p.w);}});
- });
- function mark(w){document.querySelectorAll('#wslist li').forEach(function(li){if(li.dataset.w===w)li.classList.add('done');});}
- window.revealWS=function(){place.forEach(function(p){p.cells.forEach(function(i){g.children[i].classList.add('found');});mark(p.w);});};
+(function(){
+ if(ACTC.type==='ws'){
+  var N=12,grid=[],place=[],dirs=[[0,1],[1,0],[1,1],[-1,1]],W=ACTC.words;
+  function empty(){grid=[];for(var r=0;r<N;r++){grid.push([]);for(var c=0;c<N;c++)grid[r].push('');}}
+  function fits(w,r,c,d){for(var k=0;k<w.length;k++){var rr=r+d[0]*k,cc=c+d[1]*k;if(rr<0||cc<0||rr>=N||cc>=N)return false;if(grid[rr][cc]&&grid[rr][cc]!==w[k])return false;}return true;}
+  function put(w){for(var t=0;t<200;t++){var d=dirs[Math.floor(Math.random()*dirs.length)],r=Math.floor(Math.random()*N),c=Math.floor(Math.random()*N);if(fits(w,r,c,d)){var cells=[];for(var k=0;k<w.length;k++){var rr=r+d[0]*k,cc=c+d[1]*k;grid[rr][cc]=w[k];cells.push(rr*N+cc);}place.push({w:w,cells:cells});return;}}}
+  empty();W.forEach(put);var AL='ABCDEFGHIJKLMNOPQRSTUVWXYZ';for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(!grid[r][c])grid[r][c]=AL[Math.floor(Math.random()*26)];
+  var g=document.getElementById('wsgrid');g.style.gridTemplateColumns='repeat('+N+',1fr)';
+  for(var r=0;r<N;r++)for(var c=0;c<N;c++){var el=document.createElement('div');el.className='wc';el.textContent=grid[r][c];el.dataset.i=r*N+c;g.appendChild(el);}
+  var first=null;
+  g.addEventListener('click',function(e){var t=e.target;if(!t.classList.contains('wc'))return;
+   if(first===null){first=+t.dataset.i;t.classList.add('sel');return;}
+   var a=first,b=+t.dataset.i;first=null;g.querySelectorAll('.sel').forEach(function(x){x.classList.remove('sel');});
+   var ar=Math.floor(a/N),ac=a%N,br=Math.floor(b/N),bc=b%N,dr=Math.sign(br-ar),dc=Math.sign(bc-ac);
+   var len=Math.max(Math.abs(br-ar),Math.abs(bc-ac))+1,line=[];
+   for(var k=0;k<len;k++){var rr=ar+dr*k,cc=ac+dc*k;if((ar+dr*(len-1))!==br||(ac+dc*(len-1))!==bc)return;line.push(rr*N+cc);}
+   var s=line.map(function(x){return grid[Math.floor(x/N)][x%N];}).join('');
+   place.forEach(function(p){if(s===p.w||s===p.w.split('').reverse().join('')){p.cells.forEach(function(x){g.children[x].classList.add('found');});mark(p.w);}});
+  });
+  function mark(w){document.querySelectorAll('#wslist li').forEach(function(li){if(li.dataset.w===w)li.classList.add('done');});}
+  window.revealWS=function(){place.forEach(function(p){p.cells.forEach(function(x){g.children[x].classList.add('found');});mark(p.w);});};
+  return;
+ }
+ var A=document.getElementById('act');
+ if(ACTC.type==='match'){
+  var L=ACTC.pairs.map(function(p,k){return {t:p[0],k:k}}),R=ACTC.pairs.map(function(p,k){return {t:p[1],k:k}});
+  R.sort(function(){return Math.random()-.5});
+  A.innerHTML='<div class="mcol"><div>'+L.map(function(o){return '<button class="mbtn" data-s="L" data-k="'+o.k+'">'+o.t+'</button>'}).join('<br>')+'</div><div>'+R.map(function(o){return '<button class="mbtn" data-s="R" data-k="'+o.k+'">'+o.t+'</button>'}).join('<br>')+'</div></div><p class="bl">Tap one on the left, then its partner on the right. Locked green = matched.</p>';
+  var sel=null;
+  A.addEventListener('click',function(e){var b=e.target;if(!b.classList||!b.classList.contains('mbtn')||b.classList.contains('lock'))return;
+   if(sel===null){sel=b;b.classList.add('sel');return;}
+   if(sel===b){b.classList.remove('sel');sel=null;return;}
+   if(sel.dataset.s!==b.dataset.s&&sel.dataset.k===b.dataset.k){sel.classList.remove('sel');sel.classList.add('lock');b.classList.add('lock');}
+   else{sel.classList.remove('sel');}
+   sel=null;});
+ } else if(ACTC.type==='odd'){
+  A.innerHTML='<div class="oddwrap">'+ACTC.rounds.map(function(r,ri){return '<div class="round">'+r.items.map(function(it,ii){return '<button class="obtn" data-r="'+ri+'" data-i="'+ii+'">'+it+'</button>'}).join('')+'<p class="owhy" id="why'+ri+'"></p></div>'}).join('')+'</div><p class="bl">One in each row doesn\'t belong. Talk first — then tap it.</p>';
+  A.addEventListener('click',function(e){var b=e.target;if(!b.classList||!b.classList.contains('obtn'))return;
+   var r=+b.dataset.r,ii=+b.dataset.i,R=ACTC.rounds[r];
+   if(ii===R.odd){b.classList.add('hit');document.getElementById('why'+r).textContent=R.why;
+    A.querySelectorAll('.obtn[data-r="'+r+'"]').forEach(function(x){if(+x.dataset.i!==R.odd)x.classList.add('dim');});}
+   else{b.classList.add('dim');setTimeout(function(){b.classList.remove('dim');},700);}});
+ } else if(ACTC.type==='seq'){
+  var order=[],steps=ACTC.steps.map(function(s,k){return {s:s,k:k}});steps.sort(function(){return Math.random()-.5});
+  A.innerHTML=steps.map(function(o){return '<button class="schip" data-k="'+o.k+'"><span class="num"></span>'+o.s+'</button>'}).join('')+'<br><button class="abtn" id="rst">Start again</button><p class="bl">Tap the steps in the order they happen — they number as you go.</p>';
+  A.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.schip'):null;
+   if(e.target.id==='rst'){order=[];A.querySelectorAll('.schip').forEach(function(x){x.classList.remove('done');x.querySelector('.num').textContent='';});return;}
+   if(!b||b.classList.contains('done'))return;order.push(+b.dataset.k);b.classList.add('done');b.querySelector('.num').textContent=order.length;});
+ } else if(ACTC.type==='sort'){
+  var BC=['#5E93A6','#C88A34','#3f9d78'];
+  A.innerHTML='<p class="bl" style="margin-top:0">'+ACTC.q+' Tap a card to cycle: '+ACTC.buckets.join(' → ')+'</p>'+ACTC.cards.map(function(c,k){return '<span class="card" data-b="-1" id="cd'+k+'">'+c[0]+'</span>'}).join('');
+  A.addEventListener('click',function(e){var c=e.target;if(!c.classList||!c.classList.contains('card'))return;
+   var nb=+c.dataset.b+1;if(nb>=ACTC.buckets.length)nb=-1;c.dataset.b=nb;
+   var base=c.textContent.replace(/^.*?\|\s*/,'');
+   if(nb<0){c.style.borderColor='';c.textContent=base;}else{c.textContent=ACTC.buckets[nb]+' | '+base;c.style.borderColor=BC[nb%BC.length];}});
+ } else if(ACTC.type==='quiz'){
+  A.innerHTML='<div class="qzgrid">'+ACTC.qs.map(function(q){return '<div class="qz"><b>'+q[0]+'</b><span>'+q[1]+'</span></div>'}).join('')+'</div><p class="bl">Team talk first — then tap the card to reveal. No scores; the talk is the win.</p>';
+  A.addEventListener('click',function(e){var c=e.target.closest?e.target.closest('.qz'):null;if(c)c.classList.toggle('open');});
+ }
 })();
 </script></body></html>
