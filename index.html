@@ -89,7 +89,7 @@ justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .cat .tot{color:var(--mut);font-size:.85rem}
 .grid{max-width:var(--max);margin:auto;padding:.8rem 1rem 1.2rem;display:grid;
 grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem}
-.card{background:var(--card);border:2px solid #161D3D22;border-radius:16px;padding:1rem 1.1rem;
+.card{background:var(--card);border:2px solid #161D3D22;border-radius:16px;padding:.85rem .95rem;
 display:flex;flex-direction:column;gap:.45rem;box-shadow:0 1px 4px #161D3D0d}
 .card.t-BUILD{border-color:var(--b-build)}
 .card.t-GROW{border-color:var(--b-grow)}
@@ -103,6 +103,21 @@ display:flex;flex-direction:column;gap:.45rem;box-shadow:0 1px 4px #161D3D0d}
 .card h3 a:hover{text-decoration:underline}
 .card p{color:var(--mut);font-size:.85rem;line-height:1.5;flex:1}
 .chips{display:flex;gap:.4rem;flex-wrap:wrap}
+.fmt{display:flex;gap:.45rem;align-items:center}
+.fmt svg{width:21px;height:21px;color:var(--mut)}
+.actrow{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.15rem}
+a.go{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-decoration:none;color:#FFF6E8;background:var(--navy);border-radius:999px;padding:.42rem .85rem;white-space:nowrap}
+a.go:hover{background:#232C55}
+a.go:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.legend{max-width:var(--max);margin:auto;padding:.15rem 1rem .3rem;font-size:.7rem;color:var(--mut);display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
+.legend svg{width:16px;height:16px;vertical-align:-3px;color:var(--mut)}
+.callout{background:linear-gradient(150deg,#FDF6E4,#FBEDD8);border:2px solid var(--amber);border-radius:16px;padding:1rem 1.1rem;margin:.3rem 0 .9rem;display:flex;flex-direction:column;gap:.5rem}
+.callout .stamp{align-self:flex-start;font-size:.62rem;font-weight:800;letter-spacing:.1em;background:#E4F0E8;color:#2F6B4D;border:1.5px solid #2F6B4D;border-radius:999px;padding:.25rem .7rem}
+.callout h3{font-size:1.02rem;color:var(--navy)}
+.callout p{font-size:.82rem;color:var(--mut);line-height:1.5}
+.callout .acts{display:flex;gap:.5rem;flex-wrap:wrap}
+.callout .acts button{font:inherit;font-size:.7rem;font-weight:800;letter-spacing:.06em;border:1.5px solid var(--navy);background:var(--card);color:var(--navy);border-radius:999px;padding:.42rem .95rem;cursor:pointer}
+.callout .acts button:hover,.callout .acts button:focus-visible{background:var(--navy);color:#FFF6E8;outline:none}
 .pill{font-size:.68rem;font-weight:700;border-radius:99px;padding:.22rem .65rem;
 border:1.5px solid #161D3D44;color:var(--ink);letter-spacing:.03em}
 .pill.tier{border:none;color:var(--navy)}
@@ -201,6 +216,7 @@ display:flex;gap:.8rem;align-items:flex-start;color:var(--mut);font-size:.9rem;l
 </div>
 <div class="chiprow" id="quicknav" aria-label="Browse by subject"></div>
 <p class="status" id="status"></p>
+<p class="legend"><span><b>Formats:</b></span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> slides</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg> print pack inside</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg> 3 tiers</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg> game</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg> interactive</span></p>
 <div id="cards"></div>
 </main>
 <aside class="sig"><div><span class="wave" aria-hidden="true">👋</span><p><b>From Matt</b> — I teach science and art in an alternative provision in the North East, and every file on this shelf started life in front of a real class. It’s all free and it stays that way. Spotted a bug or got an idea? <a href="mailto:contactmadebymatt@gmail.com">Tell me</a> — I read everything.</p></div></aside>
@@ -215,7 +231,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 function fillSelect(id,vals){const el=$("#"+id);[...new Set(vals)].sort().forEach(v=>{
 const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
 const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
-let ALL=[],TIER="",YEAR="2026-27";
+let ALL=[],TIER="",YEAR="2026-27",BROWSING=true;
 function tierOf(r){const f=r.file||"";
 if(/(?:^|\/)Build\//.test(f))return"BUILD";
 if(/(?:^|\/)Grow\//.test(f))return"GROW";
@@ -235,14 +251,30 @@ LAUNCH:{name:"LAUNCH PATHWAY",sub:"Mastery in action — independent, critical a
 svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42 42 H22 L22 32 Q22 18 32 8 Z" fill="#DDE3EA"/><circle cx="32" cy="27" r="5" fill="#232C55"/><path d="M27 42 Q32 54 37 42 Q32 47 27 42 Z" fill="#F2A24A"/></svg>'},
 OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
 function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
-function card(r){const t=r._tier;
-return `<article class="card${t?" t-"+t:""}"><div class="kind">${t?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file))}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>
-<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}${r.family&&r.family!==r.subject?`<span class="pill">${esc(r.family)}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div></article>`}
+const SUITE="Art · Teesside Studio Suite";
+const PRINTPACK=new Set([SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA"]);
+const IC={screen:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',print:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',tiers:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',pad:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg>',tab:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg>'};
+function isPack(r){return r.year==="2026-27"&&(r.type==="lesson"||r.type==="revision")&&PRINTPACK.has(r.subject)}
+function fmtIcons(r){const o=[];
+if(r.type==="lesson"||r.type==="revision")o.push([IC.screen,"whiteboard slideshow"]);
+if(isPack(r)){o.push([IC.print,"print pack inside the lesson"]);o.push([IC.tiers,"three tiers"])}
+if(r.type==="game")o.push([IC.pad,"game"]);
+if(r.type==="teacher"||r.type==="pupil")o.push([IC.tab,"interactive"]);
+return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="${x[1]}" role="img">${x[0]}</span>`).join("")}</div>`:""}
+function actLabel(r){return {lesson:"LAUNCH SLIDES →",revision:"LAUNCH SLIDES →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
+function card(r){const t=r._tier,href=esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file));
+const pills=BROWSING?"":`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div>`;
+return `<article class="card${t?" t-"+t:""}"><div class="kind">${t&&BROWSING?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
+<h3><a href="${href}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>${pills}
+<div class="actrow">${fmtIcons(r)}<a class="go" href="${href}">${actLabel(r)}</a></div></article>`}
+function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS AWARD MAPPED ✓ · AQA UAS ALIGNED</span>
+<h3>Teesside Art Studio Suite</h3>
+<p>The full-term art programme: ${n} studio lessons across BUILD (Explore), GROW (Bronze) and LAUNCH (Silver) — every lesson a whiteboard slideshow with three tiers and a complete print pack off the title slide.</p>
+<div class="acts"><button type="button" data-suite="">Browse the whole suite</button><button type="button" data-suite="BUILD">BUILD · Explore</button><button type="button" data-suite="GROW">GROW · Bronze</button><button type="button" data-suite="LAUNCH">LAUNCH · Silver</button></div></div>`}
 function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
 const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
-const browsing=!q&&!s&&!t&&!TIER;
+const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
 if(browsing){ // organised view: one section per subject, A→Z
   const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
   const subs=Object.keys(bySub).sort((x,z)=>x.localeCompare(z));
@@ -254,10 +286,10 @@ if(browsing){ // organised view: one section per subject, A→Z
     const oneGroup=tiers.length===1;
     const body=tiers.map(t=>
       (oneGroup&&t==="OTHER"?"":pathhead(t,byT[t].length))+`<div class="grid">${byT[t].map(card).join("")}</div>`).join("");
-    return `<section class="cat"><h2>${esc(subj)} (${rows.length})</h2>${i===0?`<span class="tot">${inYear} in this collection</span>`:""}</section>`+body;
+    return `<section class="cat"><h2>${esc(subj)} (${rows.length})</h2>${i===0?`<span class="tot">${inYear} in this collection</span>`:""}</section>`+(subj===SUITE?suiteCallout(rows.length):"")+body;
   }).join("");
 }else{
-  $("#cards").innerHTML=a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:'<p class="status">No matches — try fewer words.</p>';
+  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:'<p class="status">No matches — try fewer words.</p>');
 }
 const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
 $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`}
@@ -298,4 +330,7 @@ fetch("resources.json").then(r=>r.json()).then(d=>{ALL=d;
 ALL.forEach(r=>{r._tier=tierOf(r)});
 fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();fillTabCounts();render()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));</script></body></html>
+["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
+$("#subject").value=SUITE;TIER=b.getAttribute("data-suite")||"";$("#search").value="";render();
+const top=document.querySelector(".callout");if(top&&top.scrollIntoView)top.scrollIntoView({behavior:"smooth",block:"start"});});
+</script></body></html>
