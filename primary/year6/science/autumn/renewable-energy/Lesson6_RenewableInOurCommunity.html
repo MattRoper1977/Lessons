@@ -368,4 +368,77 @@
   });
   show(0);
 </script>
+<script>
+/* Made by Matt — Primary Sparkle layer (Field Journal edition)
+   Celebration + encouragement + reading support. Self-contained; can never break a lesson. */
+(function(){"use strict";
+if(window.__mbmSparkle)return;window.__mbmSparkle=true;
+try{
+var css=""
++".spk-toast{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);z-index:9000;background:#3f9e6a;color:#fff;font:700 15px/1.3 inherit;border-radius:999px;padding:10px 20px;box-shadow:0 6px 18px rgba(42,43,38,.25);opacity:0;transition:opacity .4s ease;pointer-events:none}"
++".spk-toast.on{opacity:1}"
++".spk-cele{position:fixed;inset:0;z-index:9500;display:none;align-items:center;justify-content:center;background:rgba(42,43,38,.45)}"
++".spk-cele.on{display:flex}"
++".spk-card{background:#faf7ef;border:3px solid #3f9e6a;border-radius:20px;padding:26px 30px;text-align:center;max-width:min(86vw,440px);box-shadow:0 14px 40px rgba(42,43,38,.35);cursor:pointer}"
++".spk-card .big{font-size:2.2rem;line-height:1}"
++".spk-card h2{margin:.5rem 0 .3rem;font-size:1.15rem;color:#2a2b26}"
++".spk-card p{margin:0;font-size:.9rem;color:#5a5b52}"
++".spk-leaf{position:fixed;top:-30px;z-index:9400;font-size:1.3rem;animation:spkfall 3.2s linear forwards;pointer-events:none}"
++"@keyframes spkfall{to{transform:translateY(105vh) rotate(320deg);opacity:.2}}"
++"#spk-read{position:fixed;right:10px;bottom:10px;z-index:8900;background:rgba(250,247,239,.92);border:2px solid #d8cfba;border-radius:999px;padding:7px 12px;font:800 13px/1 inherit;color:#2a2b26;cursor:pointer;box-shadow:0 3px 10px rgba(42,43,38,.15)}"
++"#spk-read[aria-pressed=\"true\"]{background:#3f9e6a;color:#fff;border-color:#2f7a51}"
++"body.spk-easy .slide p,body.spk-easy .slide li{line-height:1.75;letter-spacing:.015em;font-size:1.04em}"
++"@media(prefers-reduced-motion:reduce){.spk-leaf{display:none}}"
++"@media print{.spk-toast,.spk-cele,#spk-read,.spk-leaf{display:none!important}}";
+var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
+
+var slides=[].slice.call(document.querySelectorAll(".slide"));
+if(!slides.length)return;
+var total=slides.length,mid=Math.floor(total/2),firedMid=false,firedEnd=false;
+var title=(document.querySelector(".slide h1")||{textContent:document.title}).textContent.trim();
+
+function toast(msg){
+  var t=document.createElement("div");t.className="spk-toast";t.textContent=msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(function(){t.classList.add("on")});
+  setTimeout(function(){t.classList.remove("on");setTimeout(function(){t.remove()},500)},2600);
+}
+function leaves(){
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  var glyphs=["\uD83C\uDF43","\uD83C\uDF31","\u2728","\uD83C\uDF42"];
+  for(var i=0;i<14;i++){
+    var l=document.createElement("span");l.className="spk-leaf";
+    l.textContent=glyphs[i%glyphs.length];
+    l.style.left=(4+Math.random()*92)+"vw";
+    l.style.animationDelay=(Math.random()*0.9)+"s";
+    document.body.appendChild(l);
+    setTimeout(function(el){return function(){el.remove()}}(l),4500);
+  }
+}
+function celebrate(){
+  var ov=document.createElement("div");ov.className="spk-cele on";
+  ov.innerHTML='<div class="spk-card" role="dialog" aria-label="Lesson complete"><div class="big">\uD83C\uDF89</div><h2>'+title.replace(/</g,"&lt;")+' \u2014 explored!</h2><p>Brilliant work, scientists. Tap to close.</p></div>';
+  ov.addEventListener("click",function(){ov.remove()});
+  document.body.appendChild(ov);leaves();
+}
+function onSlide(i){
+  if(i>=mid&&!firedMid&&i<total-1){firedMid=true;toast("Halfway there \u2014 great scientists keep going! \uD83C\uDF31")}
+  if(i===total-1&&!firedEnd){firedEnd=true;celebrate()}
+}
+var mo=new MutationObserver(function(){
+  for(var i=0;i<slides.length;i++)if(slides[i].classList.contains("on")){onSlide(i);break}
+});
+slides.forEach(function(s){mo.observe(s,{attributes:true,attributeFilter:["class"]})});
+
+var rb=document.createElement("button");rb.id="spk-read";rb.type="button";rb.textContent="Aa";
+rb.setAttribute("aria-label","Easier reading mode");
+var on=false;try{on=localStorage.getItem("mbm_primary_read")==="1"}catch(e){}
+function apply(){document.body.classList.toggle("spk-easy",on);rb.setAttribute("aria-pressed",on?"true":"false")}
+rb.addEventListener("click",function(){on=!on;try{localStorage.setItem("mbm_primary_read",on?"1":"0")}catch(e){};apply()});
+document.body.appendChild(rb);apply();
+}catch(e){}
+})();
+
+</script>
+<script defer src="/hud.js"></script>
 </body></html>
