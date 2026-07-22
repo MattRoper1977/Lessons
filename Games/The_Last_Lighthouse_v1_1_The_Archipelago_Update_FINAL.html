@@ -578,4 +578,62 @@ addEventListener('keydown',dismiss);
 addEventListener('resize',resize);resize();requestAnimationFrame(loop);
 })();
 </script>
-</body></html>
+<style id="mbm-ll-primer-css">
+#mbm-ll-help{position:fixed;right:10px;bottom:10px;z-index:2147482000;background:rgba(10,16,34,.75);color:#9fd8d0;border:1.5px solid rgba(159,216,208,.45);border-radius:999px;padding:6px 13px;font:700 12px/1 'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;cursor:pointer;opacity:.75}
+#mbm-ll-help:hover,#mbm-ll-help:focus-visible{opacity:1;outline:none;border-color:#9fd8d0}
+#mbm-ll-primer{position:fixed;inset:0;z-index:2147482500;display:none;align-items:center;justify-content:center;background:rgba(5,9,20,.88);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:14px}
+#mbm-ll-primer.on{display:flex}
+#mbm-ll-card{max-width:560px;max-height:88vh;overflow-y:auto;background:linear-gradient(170deg,#0E1730,#0A1122);border:1.5px solid #2c3a5e;border-radius:16px;padding:20px 22px;color:#C9D4E8;font:14px/1.55 'Segoe UI',system-ui,sans-serif}
+#mbm-ll-card h2{margin:0 0 2px;font-size:19px;letter-spacing:.12em;color:#F0E2B6}
+#mbm-ll-card .sub{font-size:11px;letter-spacing:.18em;color:#7d8bb0;margin-bottom:12px}
+#mbm-ll-card h3{margin:14px 0 4px;font-size:12px;letter-spacing:.16em;color:#9fd8d0}
+#mbm-ll-card p{margin:0 0 8px}
+#mbm-ll-card ol{margin:0 0 8px;padding-left:20px}
+#mbm-ll-card li{margin-bottom:6px}
+#mbm-ll-card .keys{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+#mbm-ll-card .keys span{background:#16223f;border:1px solid #2c3a5e;border-radius:7px;padding:4px 9px;font-size:11.5px;color:#C9D4E8;white-space:nowrap}
+#mbm-ll-card .keys b{color:#F0E2B6}
+#mbm-ll-begin{display:block;width:100%;margin-top:12px;background:#F0E2B6;color:#141B33;border:0;border-radius:999px;padding:11px;font:800 13.5px 'Segoe UI',sans-serif;letter-spacing:.1em;cursor:pointer}
+#mbm-ll-begin:hover{filter:brightness(1.05)}
+#mbm-ll-card .again{margin-top:8px;font-size:11px;color:#7d8bb0;text-align:center}
+@media print{#mbm-ll-help,#mbm-ll-primer{display:none!important}}
+</style>
+<button id="mbm-ll-help" type="button" aria-haspopup="dialog">? GUIDE</button>
+<div id="mbm-ll-primer" role="dialog" aria-modal="true" aria-label="Keeper's primer — how to play">
+<div id="mbm-ll-card">
+<h2>THE KEEPER'S PRIMER</h2>
+<div class="sub">WHO YOU ARE · WHY YOU'RE HERE · HOW TO KEEP THE LIGHT</div>
+<p>You are the keeper of the <b style="color:#F0E2B6">last active lighthouse</b> on the archipelago. The western station failed three nights ago. The eastern tower has not answered in twenty-seven years. A severe storm is moving into the bay — and two vessels are still out there: <b>Mara Bell</b>, and behind her, <b>The Tern</b>.</p>
+<h3>THE AIM</h3>
+<p>Bring both vessels safely home across five acts — without letting the mechanism seize or the light go dark. If the coast goes dark, the watch is lost.</p>
+<h3>HOW TO KEEP THE LIGHT</h3>
+<ol>
+<li><b>Paint the sea.</b> Aim with the pointer and hold (or press <b>SPACE</b>) to lay light onto the water. Bright light leaves <i>sea-memory</i> — a glowing remembered route the vessels will trust and follow.</li>
+<li><b>Work the shore.</b> Charge the white stones and hold clean Focused light on the old green glass until its words wake. Switch lenses: <b>1</b> is Wide, <b>2</b> is Focused — the beam's centre carries more energy than its edge.</li>
+<li><b>Listen to the mechanism.</b> The lamp builds <i>Wear</i> as she works: warm, then strained, then failing. Douse her with <b>Q</b> before she seizes, press <b>E</b> to choose how she rests — <i>Cooling</i> repairs fastest, <i>Charging</i> restores power, <i>Alignment</i> steadies the beam — then relight when she's ready.</li>
+<li><b>Trust what the bay remembers.</b> While the lamp is doused, watch for the cyan ring — the vessel choosing her next guide from your stones and sea-memories. In the storm, rest deliberately and let your painted route do the work.</li>
+</ol>
+<h3>CONTROLS</h3>
+<div class="keys"><span><b>Pointer</b> aim</span><span><b>Hold / SPACE</b> paint</span><span><b>1</b> wide lens</span><span><b>2</b> focused lens</span><span><b>Q</b> douse / relight</span><span><b>E</b> rest mode</span><span><b>M</b> sound</span><span><b>C</b> visual sound cues</span><span><b>ESC</b> pause</span><span><b>R</b> restart</span></div>
+<p style="font-size:12px;color:#9fd8d0">First time? The <b>First Watch</b> teaches all of this in play, one lesson at a time — take it before the storm.</p>
+<button id="mbm-ll-begin" type="button">TAKE THE WATCH</button>
+<div class="again">Reopen this any time from the <b>? GUIDE</b> button.</div>
+</div></div>
+<script>
+(function(){"use strict";
+try{
+var KEY="mbm_ll_primer_seen";
+var ov=document.getElementById("mbm-ll-primer");
+var help=document.getElementById("mbm-ll-help");
+function open(){ov.classList.add("on")}
+function close(){ov.classList.remove("on");try{localStorage.setItem(KEY,"1")}catch(e){}}
+help.addEventListener("click",open);
+document.getElementById("mbm-ll-begin").addEventListener("click",close);
+ov.addEventListener("click",function(e){if(e.target===ov)close()});
+document.addEventListener("keydown",function(e){if(e.code==="Escape"&&ov.classList.contains("on")){e.stopPropagation();close()}},true);
+var seen=null;try{seen=localStorage.getItem(KEY)}catch(e){}
+if(!seen)open();
+}catch(e){}
+})();
+</script>
+<script defer src="/hud.js"></script></body></html>

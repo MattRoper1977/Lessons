@@ -118,6 +118,14 @@ a.go:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .callout .acts{display:flex;gap:.5rem;flex-wrap:wrap}
 .callout .acts button{font:inherit;font-size:.7rem;font-weight:800;letter-spacing:.06em;border:1.5px solid var(--navy);background:var(--card);color:var(--navy);border-radius:999px;padding:.42rem .95rem;cursor:pointer}
 .callout .acts button:hover,.callout .acts button:focus-visible{background:var(--navy);color:#FFF6E8;outline:none}
+details.legacy{margin:.2rem 0 1rem;border:1.5px dashed #C9C0AB;border-radius:14px;background:#F3EDDD}
+details.legacy>summary{cursor:pointer;list-style:none;padding:.8rem 1rem;font-size:.82rem;font-weight:800;letter-spacing:.05em;color:#4A5170;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+details.legacy>summary::-webkit-details-marker{display:none}
+details.legacy>summary::before{content:"▸";color:#C97F2E;transition:transform .15s ease}
+details.legacy[open]>summary::before{transform:rotate(90deg)}
+details.legacy .grid{padding:.2rem .8rem .9rem}
+details.legacy .cat{margin-top:0}
+details.legacy>summary .note{font-weight:600;color:#8A8261;font-size:.72rem;letter-spacing:0}
 .pill{font-size:.68rem;font-weight:700;border-radius:99px;padding:.22rem .65rem;
 border:1.5px solid #161D3D44;color:var(--ink);letter-spacing:.03em}
 .pill.tier{border:none;color:var(--navy)}
@@ -277,7 +285,15 @@ const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,r._tier,...(r.keyw
 const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
 if(browsing){ // organised view: one section per subject, A→Z
   const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-  const subs=Object.keys(bySub).sort((x,z)=>x.localeCompare(z));
+  const PRIORITY=[SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
+  const LEGACY={"Art":"Original series — superseded by the Teesside Studio Suite above. Kept for reference."};
+  const subs=Object.keys(bySub).sort((x,z)=>{
+    const lx=x in LEGACY?1:0,lz=z in LEGACY?1:0;
+    if(lx!==lz)return lx-lz;
+    const px=PRIORITY.indexOf(x),pz=PRIORITY.indexOf(z);
+    if((px>=0)!==(pz>=0))return px>=0?-1:1;
+    if(px>=0&&pz>=0)return px-pz;
+    return x.localeCompare(z)});
   const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
   $("#cards").innerHTML=subs.map((subj,i)=>{
     const rows=bySub[subj],byT={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
@@ -286,6 +302,7 @@ if(browsing){ // organised view: one section per subject, A→Z
     const oneGroup=tiers.length===1;
     const body=tiers.map(t=>
       (oneGroup&&t==="OTHER"?"":pathhead(t,byT[t].length))+`<div class="grid">${byT[t].map(card).join("")}</div>`).join("");
+    if(LEGACY[subj])return `<details class="legacy"><summary>${esc(subj)} · ${rows.length} <span class="note">${LEGACY[subj]} Tap to show.</span></summary>${body}</details>`;
     return `<section class="cat"><h2>${esc(subj)} (${rows.length})</h2>${i===0?`<span class="tot">${inYear} in this collection</span>`:""}</section>`+(subj===SUITE?suiteCallout(rows.length):"")+body;
   }).join("");
 }else{
