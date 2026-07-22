@@ -232,6 +232,23 @@
     }
   
 
+
+.pres-wrap{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:8px;align-items:start}
+@media(max-width:640px){.pres-wrap{grid-template-columns:1fr}}
+.pres-cards{display:flex;flex-direction:column;gap:8px}
+.pres-card{cursor:pointer;background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:10px 12px;font-weight:800;font-size:.95rem;color:#334155;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.pres-card:hover{border-color:var(--ido-border);background:#f5f3ff;transform:translateY(-2px)}
+.pres-card.done{border-color:var(--success);background:rgba(34,197,94,.12);color:#166534;cursor:default}
+.pres-side{display:flex;flex-direction:column;gap:10px}
+.pres-scorebar{display:flex;align-items:center;gap:10px;background:#1e293b;color:#fff;border-radius:10px;padding:8px 14px;font-weight:900}
+.pres-scorebar .pres-num{color:#eab308;font-size:1.3rem}
+.pres-msg{min-height:18px;font-weight:800;color:var(--scaffold-border);font-size:.92rem}
+.pres-caps{display:flex;flex-direction:column;gap:8px}
+.pres-cap{background:#fff;border-left:5px solid var(--ido-border);border-radius:10px;padding:8px 12px;font-size:.95rem;color:#3730a3;animation:fadeInUp .35s}.pres-cap strong{color:var(--ido-border)}
+@media print{.pres-wrap{display:none!important}}
+
+
+
 .xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
 .xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
 .hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
@@ -312,8 +329,9 @@
 <span class="slide-tag tag-wedo">We Do</span>
 <h2>We Do: Tap the Leadership Plan Decision</h2>
 <div class="li-box"><strong>How it works:</strong> Tap each planning fork — the leader's move, and the trap. <span style="float:right;font-weight:900">Found: <span id="pres-num">0</span>/6</span></div>
-<div style="text-align:center;margin:8px 0" id="pres-pills"><div class="sort-pill" data-id="solo" onclick="presTap(this)">🧍 'Easier to do it all myself'</div><div class="sort-pill" data-id="vague" onclick="presTap(this)">🌫️ 'The aim: make art fun'</div><div class="sort-pill" data-id="need2" onclick="presTap(this)">📋 'I just want to run a comic club'</div><div class="sort-pill" data-id="crew" onclick="presTap(this)">👥 'My mates as crew'</div><div class="sort-pill" data-id="perm" onclick="presTap(this)">📝 'Permissions can wait'</div><div class="sort-pill" data-id="risk2" onclick="presTap(this)">🧩 'Nothing will go wrong'</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0" id="pres-pills"><div class="pres-card" data-id="solo" onclick="presTap(this)">🧍 'Easier to do it all myself'</div><div class="pres-card" data-id="vague" onclick="presTap(this)">🌫️ 'The aim: make art fun'</div><div class="pres-card" data-id="need2" onclick="presTap(this)">📋 'I just want to run a comic club'</div><div class="pres-card" data-id="crew" onclick="presTap(this)">👥 'My mates as crew'</div><div class="pres-card" data-id="perm" onclick="presTap(this)">📝 'Permissions can wait'</div><div class="pres-card" data-id="risk2" onclick="presTap(this)">🧩 'Nothing will go wrong'</div></div>
 <div id="pres-caps" style="max-width:820px;margin:0 auto"></div>
+<p id="pres-msg" class="pres-msg" style="text-align:center;font-weight:800;min-height:1.1rem;margin:4px 0"></p>
 <div style="text-align:center;margin-top:6px"><button class="ghost small" onclick="presReset()">🔄 Reset</button></div>
 </div><div class="slide" data-title="I Do 2" data-timer="4">
 <span class="slide-tag tag-ido">I Do</span>
@@ -354,9 +372,9 @@
 <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
 <div class="progress-label" id="progressLabel">Slide 1/10</div>
 <div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
-  <div class="lesson-complete-modal"><div class="lc-stars"><span>👁️</span><span>✍️</span><span>🖼️</span></div><h2>Eye Finished &amp; Annotated!</h2><p>Stated · Described · Explained ✍️</p><div class="lc-summary"><span><strong>✓</strong> Finished the tonal eye, full light-to-dark range</span><span><strong>✓</strong> Learned the annotation structure: State → Describe → Explain</span><span><strong>✓</strong> Watched a full evaluation build, then sorted the parts</span><span><strong>✓</strong> Knew what a finished, mounted page needs</span><span style="margin-top:8px;font-style:italic;color:var(--ido-border)"><strong>Next lesson:</strong> turn this skill into ideas for your final surreal eye.</span></div><button onclick="hideLessonComplete()">Onwards! 🚀</button></div>
+  <div class="lesson-complete-modal"><div class="lc-stars"><span>🎨</span><span>✍️</span><span>🖼️</span></div><h2>Design the Leadership Project — complete!</h2><p>Signed, sketched, filed 🎨</p><div class="lc-summary"><span><strong>✓</strong> I can design an arts leadership project with roles and steps</span><span><strong>✓</strong> I can plan for risk, access and consent</span><span><strong>✓</strong> I can define what my participants will gain</span><span style="margin-top:8px;font-style:italic;color:var(--ido-border)">Next lesson: the studio moves on — bring today's page.</span></div><button onclick="hideLessonComplete()">Onwards! 🚀</button></div>
 </div><div class="midpoint-overlay" id="mp-overlay">
-  <div class="midpoint-modal"><span class="mp-tag">⏸ MID-POINT PEER CHECK</span><h2>Pens down — quick partner check!</h2><div class="mp-prompt">📣 Read your partner your <strong>annotation so far</strong>. Decide together: have you got all three parts — <strong>STATE, DESCRIBE and EXPLAIN</strong>? If anything is missing, help them add the one that’s not there.</div><p class="mp-sub">2 minutes max. Then I’ll resume the timer.</p><button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button></div>
+  <div class="midpoint-modal"><span class="mp-tag">⏸ MID-POINT PEER CHECK</span><h2>Pens down — quick partner check!</h2><div class="mp-prompt">📣 Read your partner your work so far. Check together against today’s success criteria: <strong>I can design an arts leadership project with roles and steps</strong> and <strong>I can plan for risk, access and consent</strong>. If anything is missing, help them add it — kindly.</div><p class="mp-sub">2 minutes max. Then I’ll resume the timer.</p><button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button></div>
 </div>
 <div id="print-area"><div id="print-ko" class="print-section"><h1 style="text-align:center;font-size:1.55rem">Knowledge Organiser (LAUNCH W5): Design the Leadership Project</h1>
 <p style="text-align:center;margin:2px 0 8px"><strong>Teesside Art Studio Suite · Silver Arts Award · Silver Unit 2A-2B · Identify & Plan the Leadership Project</strong></p>
@@ -492,6 +510,7 @@ function showTABrief(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){['ta-modal','cc-modal','cc-edit-modal','lc-overlay','mp-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('visible');});}});
 </script>
 <script>const _pres={solo:{text:'<strong>The classic trap.</strong> Doing isn\'t leading — Unit 2 assesses the LEADING. Design roles others can succeed in; your Bronze scaffolding skills, applied to crew.'},vague:{text:'<strong>Unmeasurable.</strong> Fun for whom, shown how? Upgrade with counts: participants, outcomes, receipts. Week 8 reviews against THESE numbers.'},need2:{text:'<strong>Wanting isn\'t needing.</strong> Find the evidence: who asked? what do receipts show? If the need is real, name its proof; if not, find the need that is.'},crew:{text:'<strong>Fine IF roles fit.</strong> Cast for the role, not the friendship — and brief them like your Week 6 pilot depends on it. It does.'},perm:{text:'<strong>They can\'t.</strong> Space, staff cover, consent for photos, materials budget — the producer layer from 1D. One unpermissioned dependency sinks a delivery week.'},risk2:{text:'<strong>Something will.</strong> The risk register isn\'t pessimism, it\'s Bronze\'s fault plan at project scale: top three risks, each with a mitigation and a shrink.'}};
+let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;document.getElementById('pres-caps').appendChild(c);document.getElementById('pres-num').textContent=_presDone.length;if(_presDone.length===6){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});document.getElementById('pres-caps').innerHTML='';document.getElementById('pres-num').textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
 registerXP(12);
 var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
 </body></html>

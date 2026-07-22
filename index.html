@@ -110,6 +110,29 @@ border:1.5px solid #161D3D44;color:var(--ink);letter-spacing:.03em}
 .pill.tier.GROW{background:var(--b-grow);color:#fff}
 .pill.tier.LAUNCH{background:var(--b-launch)}
 .pill.yr-new{background:var(--mint);border-color:var(--mint-deep)}
+
+/* ---------- year collection tabs ---------- */
+.ytabs{max-width:var(--max);margin:1.2rem auto 0;padding:0 1rem;display:flex;gap:.6rem;flex-wrap:wrap}
+.ytab{flex:1 1 240px;text-align:left;background:var(--card);border:2px solid #161D3D2b;border-radius:14px;
+padding:.75rem 1rem;font:inherit;cursor:pointer;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.ytab:hover{border-color:#161D3D66}
+.ytab[aria-pressed="true"]{border-color:var(--navy);box-shadow:0 3px 10px #161D3D1c;background:var(--cream-dk)}
+.ytab .yt-k{display:flex;align-items:center;gap:.5rem;font-weight:800;letter-spacing:.04em;font-size:.92rem}
+.ytab .yt-badge{font-size:.62rem;font-weight:800;letter-spacing:.08em;background:var(--mint);color:var(--mint-deep);
+border-radius:99px;padding:.18rem .55rem;text-transform:uppercase}
+.ytab.lib .yt-badge{background:var(--cream-dk);color:var(--mut);border:1px solid #161D3D2b}
+.ytab[aria-pressed="true"].lib .yt-badge{background:#fff}
+.ytab .yt-n{display:block;color:var(--mut);font-size:.76rem;margin-top:.25rem}
+/* ---------- pathway subgroups ---------- */
+.pathhead{display:flex;align-items:center;gap:.55rem;margin:1.15rem 0 .55rem;padding:.4rem .8rem;
+border-left:5px solid;border-radius:8px;background:var(--card)}
+.pathhead svg{width:26px;height:26px;flex:none}
+.pathhead .ph-name{font-weight:800;letter-spacing:.06em;font-size:.9rem}
+.pathhead .ph-sub{color:var(--mut);font-size:.78rem}
+.pathhead.BUILD{border-color:var(--b-build)}.pathhead.BUILD .ph-name{color:var(--t-build)}
+.pathhead.GROW{border-color:var(--b-grow)}.pathhead.GROW .ph-name{color:var(--t-grow)}
+.pathhead.LAUNCH{border-color:var(--b-launch)}.pathhead.LAUNCH .ph-name{color:var(--t-launch)}
+.pathhead.OTHER{border-color:#161D3D33}.pathhead.OTHER .ph-name{color:var(--mut)}
 /* ---------- signature + footer ---------- */
 .sig{max-width:var(--max);margin:2rem auto 0;padding:0 1rem}
 .sig>div{background:var(--cream-dk);border:1px solid #161D3D1f;border-radius:14px;padding:1rem 1.2rem;
@@ -165,11 +188,16 @@ display:flex;gap:.8rem;align-items:flex-start;color:var(--mut);font-size:.9rem;l
 </div>
 </section>
 
+<div class="ytabs" id="ytabs" role="group" aria-label="Choose an academic year collection">
+<button class="ytab" data-year="2026-27" aria-pressed="true"><span class="yt-k">2026–27 ACADEMIC YEAR <span class="yt-badge">Current</span></span><span class="yt-n" data-count>—</span></button>
+<button class="ytab lib" data-year="2025-26" aria-pressed="false"><span class="yt-k">2025–26 · THE LIBRARY <span class="yt-badge">Past year</span></span><span class="yt-n" data-count>—</span></button>
+<button class="ytab lib" data-year="" aria-pressed="false"><span class="yt-k">EVERYTHING <span class="yt-badge">All years</span></span><span class="yt-n" data-count>—</span></button>
+</div>
 <div class="toolbar">
 <label>Search<input id="search" type="search" placeholder="Try: bonding, trekkers, pH…" autocomplete="off"></label>
 <label>Subject<select id="subject"><option value="">All subjects</option></select></label>
 <label>Type<select id="type"><option value="">All types</option></select></label>
-<label>Year<select id="year"><option value="">All years</option><option value="2026-27">2026–27 (new)</option><option value="2025-26">2025–26</option></select></label>
+
 </div>
 <div class="chiprow" id="quicknav" aria-label="Browse by subject"></div>
 <p class="status" id="status"></p>
@@ -187,7 +215,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 function fillSelect(id,vals){const el=$("#"+id);[...new Set(vals)].sort().forEach(v=>{
 const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
 const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
-let ALL=[],TIER="";
+let ALL=[],TIER="",YEAR="2026-27";
 function tierOf(r){const f=r.file||"";
 if(/(?:^|\/)Build\//.test(f))return"BUILD";
 if(/(?:^|\/)Grow\//.test(f))return"GROW";
@@ -198,24 +226,40 @@ if(base.indexOf(t+"_")===0||first.indexOf(t+"_")===0)return t;}
 const m=(r.title||"").match(/^(BUILD|GROW|LAUNCH)(?![A-Za-z])/);if(m)return m[1];
 if(/^BUILD(?![A-Za-z])/.test(r.subject||""))return"BUILD";
 return null}
+const PATH={
+BUILD:{name:"BUILD PATHWAY",sub:"Laying the groundwork — core concepts and baseline techniques.",
+svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="38" width="18" height="12" rx="2.5" fill="#E08A2E"/><rect x="30" y="38" width="18" height="12" rx="2.5" fill="#4C9A6F"/><rect x="20" y="24" width="18" height="12" rx="2.5" fill="#DFB62B"/></svg>'},
+GROW:{name:"GROW PATHWAY",sub:"Developing independence — experiment, review, improve.",
+svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 52 V30" stroke="#2F6B4D" stroke-width="5" stroke-linecap="round"/><path d="M32 36 Q18 34 16 20 Q30 22 32 36 Z" fill="#4C9A6F"/><path d="M32 30 Q46 28 48 14 Q34 16 32 30 Z" fill="#6FBF8F"/></svg>'},
+LAUNCH:{name:"LAUNCH PATHWAY",sub:"Mastery in action — independent, critical application.",
+svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42 42 H22 L22 32 Q22 18 32 8 Z" fill="#DDE3EA"/><circle cx="32" cy="27" r="5" fill="#232C55"/><path d="M27 42 Q32 54 37 42 Q32 47 27 42 Z" fill="#F2A24A"/></svg>'},
+OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
+function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
 function card(r){const t=r._tier;
 return `<article class="card${t?" t-"+t:""}"><div class="kind">${t?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
 <h3><a href="${esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file))}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>
 <div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}${r.family&&r.family!==r.subject?`<span class="pill">${esc(r.family)}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div></article>`}
-function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=$("#year").value;
+function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
 const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
-const browsing=!q&&!s&&!t&&!y&&!TIER;
+const browsing=!q&&!s&&!t&&!TIER;
 if(browsing){ // organised view: one section per subject, A→Z
   const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
   const subs=Object.keys(bySub).sort((x,z)=>x.localeCompare(z));
-  $("#cards").innerHTML=subs.map((subj,i)=>
-    `<section class="cat"><h2>${esc(subj)} · ${bySub[subj].length}</h2>${i===0?`<span class="tot">${ALL.length} resources</span>`:""}</section>
-     <div class="grid">${bySub[subj].map(card).join("")}</div>`).join("");
+  const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
+  $("#cards").innerHTML=subs.map((subj,i)=>{
+    const rows=bySub[subj],byT={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
+    rows.forEach(r=>{(byT[r._tier&&byT[r._tier]?r._tier:"OTHER"]).push(r)});
+    const tiers=["BUILD","GROW","LAUNCH","OTHER"].filter(t=>byT[t].length);
+    const oneGroup=tiers.length===1;
+    const body=tiers.map(t=>
+      (oneGroup&&t==="OTHER"?"":pathhead(t,byT[t].length))+`<div class="grid">${byT[t].map(card).join("")}</div>`).join("");
+    return `<section class="cat"><h2>${esc(subj)} (${rows.length})</h2>${i===0?`<span class="tot">${inYear} in this collection</span>`:""}</section>`+body;
+  }).join("");
 }else{
   $("#cards").innerHTML=a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:'<p class="status">No matches — try fewer words.</p>';
 }
-const bits=[];if(TIER)bits.push(TIER+" stage");if(y)bits.push(y==="2026-27"?"2026–27":"2025–26");
+const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
 $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`}
 function buildQuicknav(){
   const counts={};ALL.forEach(r=>{counts[r.subject]=(counts[r.subject]||0)+1});
@@ -225,10 +269,20 @@ function buildQuicknav(){
 }
 $("#quicknav").addEventListener("click",e=>{
   const b=e.target.closest("button[data-sub]");if(!b)return;
-  $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";$("#year").value="";
+  $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";
   buildQuicknav();render();
   $("#cards").scrollIntoView({behavior:"smooth",block:"start"});
 });
+
+document.querySelectorAll(".ytab").forEach(b=>b.addEventListener("click",()=>{
+  YEAR=b.dataset.year;
+  document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+  render();
+}));
+function fillTabCounts(){const c={"2026-27":0,"2025-26":0,"":ALL.length};
+  ALL.forEach(r=>{if(c[r.year]!==undefined)c[r.year]++});
+  document.querySelectorAll(".ytab").forEach(b=>{const n=c[b.dataset.year];
+  b.querySelector("[data-count]").textContent=`${n} resources`})}
 // journey strip: collapse detail + tier filtering
 (function(){const j=$("#journey"),tg=$("#jtoggle");
 j.classList.add("collapsed");tg.hidden=false;tg.setAttribute("aria-expanded","false");
@@ -242,6 +296,6 @@ render();if(TIER)$("#cards").scrollIntoView({behavior:"smooth",block:"start"})})
 })();
 fetch("resources.json").then(r=>r.json()).then(d=>{ALL=d;
 ALL.forEach(r=>{r._tier=tierOf(r)});
-fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();render()})
+fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();fillTabCounts();render()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","type","year"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();render()}));</script></body></html>
+["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));</script></body></html>
