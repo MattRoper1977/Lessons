@@ -317,6 +317,9 @@
 .ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
 .ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
 @media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+
+.pres-card,.match-pill,.match-target,button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:3px solid var(--ido-border);outline-offset:2px}
 </style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
@@ -425,7 +428,7 @@ let currentSlide=0;const slides=document.querySelectorAll('.slide');
 function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();}
 function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
 function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
-document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;if(tag==='BUTTON'&&e.key===' ')return;if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
 function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
 updateProgress();
 function switchLevel(prefix,level){['supported','standard','stretch'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
@@ -453,8 +456,8 @@ function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft
 function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();if(timerLeft===Math.floor(timerTotal/2)&&!midpointFired){midpointFired=true;fireMidpoint();}}else{clearInterval(timerInterval);timerRunning=false;const d=document.getElementById('timerDisplay');if(d)d.textContent='\u23f0 TIME!';try{playBuzz()}catch(e){}}},1000);}
 function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
 function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
-function fireMidpoint(){pauseTimer();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
-function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();}
+function fireMidpoint(){pauseTimer();window._atWasRun=(typeof _atRunning!=='undefined'&&_atRunning);_atPause();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
+function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();if(window._atWasRun)_atStart();}
 function printPack(level){document.body.classList.remove('print-supported','print-standard','print-stretch');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','intro','arrival','starter','wedo','exit','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');_stampAndMark();window.print()}
 function _stampAndMark(){var pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');var vis=document.querySelectorAll('.print-section.visible');vis.forEach(function(e){e.classList.remove('print-last')});if(vis.length)vis[vis.length-1].classList.add('print-last')}
 function printSection(id,level){document.body.classList.remove('print-supported','print-standard','print-stretch');if(level)document.body.classList.add('print-'+level);document.querySelectorAll('.print-section').forEach(function(el){el.classList.remove('visible')});var el=document.getElementById('print-'+id);if(el)el.classList.add('visible');_stampAndMark();window.print()}
@@ -470,19 +473,30 @@ function registerXP(n){xpTotal+=(n||1);document.getElementById('xpTotal').textCo
 function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;document.getElementById('xpCount').textContent=xpCount;document.getElementById('xpFill').style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
 function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
 function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'\ud83d\udca1 Hide hint':'\ud83d\udca1 Give me a hint'}
-document.addEventListener('DOMContentLoaded',()=>{registerXP(7);});
+document.addEventListener('DOMContentLoaded',()=>{registerXP(document.querySelectorAll('.pres-card').length);});
 const _origPickTarget=window.pickTarget;
 window.pickTarget=function(el){if(!selectedKWId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedKWId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
 
   /* ============== V4/V5 POLISH JS ============== */
   
-  const _ccQuestions = {"Title": {"F": "What two jobs do we have today?", "M": "What does it mean to 'annotate' your work?", "H": "Why does annotating make your portfolio stronger?"}, "Recap Bridge": {"F": "Which is darkest — pupil or iris?", "M": "What is the golden rule of tone?", "H": "Why add reflected light to the iris?"}, "Arrival Task": {"F": "What does tone mean?", "M": "Name the five tonal zones.", "H": "Difference between describe and explain?"}, "Starter: First Look": {"F": "Name one thing that makes the eye look finished.", "M": "Why does a full tonal range help?", "H": "How does the catchlight make it look alive?"}, "I Do: The Annotation Structure": {"F": "What does STATE tell the reader?", "M": "Give a starter for DESCRIBE.", "H": "Why must explain come last?"}, "We Do: State, Describe or Explain?": {"F": "'I have drawn an eye' — which part?", "M": "Turn 'I used blending' into a fuller DESCRIBE sentence.", "H": "Say an EXPLAIN sentence using 'because'."}, "I Do: WAGOLL Annotation": {"F": "Which words start the STATE part?", "M": "Which techniques did the WAGOLL name?", "H": "What made it evaluation, not just description?"}, "We Do: Presentation Check": {"F": "Name one thing you mount on the page.", "M": "Why include a small photocopy?", "H": "Why mount the annotation next to the eye?"}, "Independent Work": {"F": "Read me your STATE sentence.", "M": "Have you got all three parts yet?", "H": "What is your 'even better if' for this piece?"}, "Exit Ticket": {"F": "Q1 — the three annotation parts?", "M": "Q2 — what goes in EXPLAIN?", "H": "Q1 — why does annotation strengthen your work?"}};
+  const _ccQuestions = {
+"Title":{F:"What are we learning to do today? Read one line from the board.",M:"Put today's learning goal into your own words.",H:"Which success criterion looks hardest today, and why?"},
+"Arrival Task":{F:"Point to the arrival question you chose.",M:"Share your arrival answer in a full sentence.",H:"Defend your arrival answer \u2014 what makes you sure?"},
+"Starter":{F:"What is one thing this lesson banks for your portfolio?",M:"Why does today's work count as evidence?",H:"How does today's work build on what we did last week?"},
+"I Do 1":{F:"Tell me one step I just showed you.",M:"Explain the steps I modelled, in order.",H:"Which step matters most, and what happens if we skip it?"},
+"We Do 1":{F:"Which card did you tap, and why?",M:"Explain one answer our class got right.",H:"Which one could trick people? Explain the catch."},
+"I Do 2":{F:"What evidence do we need to capture today?",M:"Explain how we will record today's evidence.",H:"Why does strong evidence need more than just a photo?"},
+"We Do 2":{F:"Read out the WAGOLL line you liked best.",M:"What makes the WAGOLL a strong example?",H:"How would you improve the WAGOLL even further?"},
+"Independent Work":{F:"Show me what you have done so far.",M:"Talk me through your work and one choice you made.",H:"What is your next step, and how did you decide it?"},
+"Lundy Loop":{F:"Which zone is your voice in right now?",M:"How does your choice shape what we do next?",H:"Why does your voice matter in planning our lessons?"},
+"Exit Ticket":{F:"Did you meet today's goal? Show me your proof.",M:"Which exit answer are you most confident about, and why?",H:"What would you do differently next time, and why?"}
+};
   const _CC_KEY='mbm_cc_v1';
   
   const _ccDefault=[];function _ccNorm(p){if(p&&p.b){return {n:p.n,g:({SUP:'1',STD:'2',STR:'3'})[p.b]||'2',b:p.b}}return p}
 function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return (Array.isArray(d)&&d.length?d:_ccDefault.slice()).map(_ccNorm)}catch(e){return _ccDefault.slice()}}
   function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
-  function _gradeToTier(g){if(!g)return 'STD';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'SUP';if(g==='2')return 'STD';return 'STR'}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
   let _ccRecent=[];
   function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
   const _taBriefs={"Title": "Before the room fills: Round the room, pass allowed — this is the settle. Keep the pace gentle.", "Arrival Task": "Round the room, pass allowed — this is the settle. Keep the pace gentle.", "Starter": "One statement, read aloud twice. Let the silence do some work.", "I Do 1": "Pupils watch the try-together — you watch the pupils. Note who's ready to go solo.", "We Do 1": "Click-only and gentle by design — no timers, no scores. Sit with whoever finds starting hard.", "I Do 2": "Pupil & TA run it: one photo (work, not faces, unless consent filed), caption frame read aloud, filed in the school's evidence system.", "We Do 2": "Pairs game — let pupils drive the matching; you referee, not play.", "Independent Work": "Standard/Supported is per pupil, not per class. Record which route and exactly what support.", "Lundy Loop": "Today's outcome goes on the display — the pupil places it, you witness it.", "Exit Ticket": "Trail next week in one sentence — leave them curious, leave on time."};
@@ -502,7 +516,7 @@ function showTABrief(){
     const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
     const pick=_ccPick();
     if(!pick){alert('Add pupil names first via the \u270f\ufe0f Edit list button.');return}
-    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Middle',H:'Stretch'}[tier];const q=pool[tier]||pool.M;
+    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Standard',H:'Stretch'}[tier];const q=pool[tier]||pool.M;
     let modal=document.getElementById('cc-modal');
     if(!modal){modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83c\udfb2 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">\u2014</div><span class="cc-tier" id="cc-tier">\u2014</span><div class="cc-question" id="cc-q">\u2014</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">\u270f\ufe0f Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">\ud83c\udfb2 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';document.body.appendChild(modal);}
     document.getElementById('cc-modal-tag').textContent=t;
@@ -541,6 +555,6 @@ function showTABrief(){
 </script>
 <script>const _pres={t0:{text:'Pairs with: £1'},t1:{text:'Pairs with: £3'},t2:{text:'Pairs with: 50p'},t3:{text:'Pairs with: £10'}};
 let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;document.getElementById('pres-caps').appendChild(c);document.getElementById('pres-num').textContent=_presDone.length;if(_presDone.length===4){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});document.getElementById('pres-caps').innerHTML='';document.getElementById('pres-num').textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
-registerXP(8);
+registerXP(document.querySelectorAll('.match-pill').length);
 var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
 <script defer src="/hud.js"></script></body></html>
