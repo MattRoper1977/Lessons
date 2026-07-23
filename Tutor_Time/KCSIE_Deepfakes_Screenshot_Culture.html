@@ -152,6 +152,8 @@ li{font-size:1.12rem;line-height:1.5;margin-bottom:8px;color:var(--ink)}
   .li-box .lo-anim{opacity:1}
   .step{opacity:1;transform:none}
 }
+
+button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 </style>
 </head>
 <body>
@@ -374,6 +376,7 @@ function show(i){
 function go(d){show(cur+d)}
 document.getElementById('cTot').textContent=slides.length;
 document.addEventListener('keydown',e=>{
+  const _ae=document.activeElement,_tg=_ae?_ae.tagName:'';if(_tg==='INPUT'||_tg==='TEXTAREA'||_tg==='SELECT'||(_ae&&_ae.isContentEditable))return;if(_tg==='BUTTON'&&e.key===' ')return;
   if(e.key==='ArrowRight'||e.key==='PageDown')go(1);
   if(e.key==='ArrowLeft'||e.key==='PageUp')go(-1);
 });

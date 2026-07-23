@@ -56,6 +56,8 @@
 .mbm-pass{text-align:center;font-size:.8rem;opacity:.8}
 .mbm-bandtag{font-size:.68rem;border-radius:99px;padding:2px 8px;background:#f97316;color:#fff;font-weight:700;vertical-align:middle}
 @media print{.mbm-modal{display:none!important}}
+
+button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 </style></head><body>
 <div class="slide-container"><div class="slide active" data-title="Title">
 <div style="text-align:center;margin-top:10px"><svg width="72" height="72" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div>
@@ -169,7 +171,7 @@ let currentSlide=0;const slides=document.querySelectorAll('.slide');
 function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();}
 function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
 function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+document.addEventListener('keydown',e=>{const _ae=document.activeElement,_tg=_ae?_ae.tagName:'';if(_tg==='INPUT'||_tg==='TEXTAREA'||_tg==='SELECT'||(_ae&&_ae.isContentEditable))return;if(_tg==='BUTTON'&&e.key===' ')return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
 function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' • '+(currentSlide+1)+'/'+slides.length}
 updateProgress();
 function switchLevel(prefix,level){['supported','standard','stretch'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
