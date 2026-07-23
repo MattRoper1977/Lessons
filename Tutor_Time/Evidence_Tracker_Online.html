@@ -14,7 +14,7 @@ button.t.on{background:#3f9d78;color:#08251a;border-color:#3f9d78}
 <h1>Tutor Time — Evidence Tracker</h1><p class="sub">Made by Matt · BV · Behaviour Focus · KCSIE · saves on this device</p>
 <div class="top"><label>Tutor group <input id="grp" placeholder="e.g. B1"></label><button class="btn" onclick="window.print()">Print</button><button class="btn" onclick="resetAll()">Reset sheet</button></div>
 <div class="bar"><div class="fill" id="fill"></div></div><div id="pct" class="sub"></div>
-<table id="tbl"><tr><th>Wk</th><th>Strand</th><th>Session</th><th>Date</th><th>Photo</th><th>Caption</th><th>Captain role</th><th>V</th><th>A</th><th>I</th><th>Launch</th><th>Staff initials</th></tr></table>
+<table id="tbl"><tr><th>Wk</th><th>Strand</th><th>Session</th><th>Date</th><th>Photo</th><th>Caption</th><th>Captain role</th><th>S</th><th>V</th><th>A</th><th>I</th><th>Launch</th><th>Staff initials</th></tr></table>
 <p class="note">Photos show work, not faces, unless consent is filed. Evidence is filed in the school's evidence system, tagged strand + tutor group. KCSIE disclosures follow the school safeguarding procedure. Data stays in this browser only.</p>
 <script>
 var ROWS=[{"n": 1, "tag": "BV", "s": "Democracy"}, {"n": 2, "tag": "BV", "s": "The Rule of Law"}, {"n": 3, "tag": "BV", "s": "Individual Liberty"}, {"n": 4, "tag": "BV", "s": "Respect & Tolerance"}, {"n": 5, "tag": "BF", "s": "Ready \u00b7 Respectful \u00b7 Safe"}, {"n": 6, "tag": "BF", "s": "Repair & Restart"}, {"n": 7, "tag": "KCSIE", "s": "Pressure Points"}, {"n": 8, "tag": "KCSIE", "s": "My Trusted Five"}];var KEY='tt_tracker_v2';
@@ -24,7 +24,7 @@ ROWS.forEach(function(r){
  var tr=document.createElement('tr');var id=r.n;
  function tick(k){var on=(st[id]&&st[id][k]);return '<button class="t'+(on?' on':'')+'" data-id="'+id+'" data-k="'+k+'">'+(on?'✓':'·')+'</button>'}
  function inp(k,ph){var v=(st[id]&&st[id][k])||'';return '<input style="width:7.5em" data-id="'+id+'" data-k="'+k+'" value="'+v.replace(/"/g,'&quot;')+'" placeholder="'+ph+'">'}
- tr.innerHTML='<td><b>W'+r.n+'</b></td><td>'+r.tag+'</td><td>'+r.s+'</td><td>'+inp('date','')+'</td><td>'+tick('photo')+'</td><td>'+tick('cap')+'</td><td>'+inp('captain','role')+'</td><td>'+tick('v')+'</td><td>'+tick('a')+'</td><td>'+tick('i')+'</td><td>'+tick('lx')+'</td><td>'+inp('staff','')+'</td>';
+ tr.innerHTML='<td><b>W'+r.n+'</b></td><td>'+r.tag+'</td><td>'+r.s+'</td><td>'+inp('date','')+'</td><td>'+tick('photo')+'</td><td>'+tick('cap')+'</td><td>'+inp('captain','role')+'</td><td>'+tick('s')+'</td><td>'+tick('v')+'</td><td>'+tick('a')+'</td><td>'+tick('i')+'</td><td>'+tick('lx')+'</td><td>'+inp('staff','')+'</td>';
  tbl.appendChild(tr);
 });
 document.getElementById('grp').value=st._grp||'';
@@ -35,4 +35,4 @@ document.getElementById('grp').addEventListener('input',function(e){st._grp=e.ta
 function prog(){var done=0;ROWS.forEach(function(r){var s=st[r.n]||{};if(s.photo&&s.cap)done++;});var p=Math.round(done/ROWS.length*100);document.getElementById('fill').style.width=p+'%';document.getElementById('pct').textContent=done+' of '+ROWS.length+' sessions evidenced ('+p+'%)';}
 function resetAll(){if(confirm('Clear this sheet?')){st={};localStorage.removeItem(KEY);location.reload();}}
 prog();
-</script></body></html>
+</script><p class="note"><b>Lundy Loop keys:</b> S = Space (safe, supported chance to form a view) · V = Voice (expressed it) · A = Audience (heard by someone who can act) · I = Influence (it changed something)</p></body></html>
