@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e4edf1;--lo-border:#4E8093;--ido-bg:#f2e5dc;--ido-border:#C0684A;--wedo-bg:#e3efeb;--wedo-border:#2F9080;--task-bg:#f8f0d8;--task-border:#D5A23E;--btn-bg:#4E8093;--btn-hover:#3a6373;--sc-border:#D5A23E;--sc-bg:#faf3dc;--aspire-bg:#edf3f6;--aspire-border:#4E8093;--aspire-text:#31586a}</style></head><body>
+:root{--lo-bg:#e4edf1;--lo-border:#4E8093;--ido-bg:#f2e5dc;--ido-border:#C0684A;--wedo-bg:#e3efeb;--wedo-border:#2F9080;--task-bg:#f8f0d8;--task-border:#D5A23E;--btn-bg:#4E8093;--btn-hover:#3a6373;--sc-border:#D5A23E;--sc-bg:#faf3dc;--aspire-bg:#edf3f6;--aspire-border:#4E8093;--aspire-text:#31586a}
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#EAF2F5;border:2px solid #4E8093;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#2f5a68;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>The Model — Partner Update</h2>
 <div class="li-box"><strong>Key Idea:</strong> Partners deserve updates.</div>
+<div class="ilm" role="img" aria-label="A message flies from the team to the partner and a reply returns"><svg viewBox="0 0 560 190" aria-hidden="true"><rect x="42" y="58" width="120" height="80" rx="12" fill="#2f5a68"/><text x="102" y="94" text-anchor="middle" font-size="24">🧑‍🤝‍🧑</text><text x="102" y="124" text-anchor="middle" font-size="10" fill="#fff">OUR TEAM</text><rect x="398" y="58" width="120" height="80" rx="12" fill="#4E8093"/><text x="458" y="94" text-anchor="middle" font-size="24">🏢</text><text x="458" y="124" text-anchor="middle" font-size="10" fill="#fff">OUR PARTNER</text><g class="ride" style="--ride:216px"><rect x="172" y="66" width="44" height="30" rx="5" fill="#fff" stroke="#2f5a68" stroke-width="3"/><path d="M172 70 L194 88 L216 70" stroke="#2f5a68" stroke-width="3" fill="none"/></g><g class="ride" style="--ride:-216px;animation-delay:2.2s"><g transform="translate(344 100)"><circle r="16" fill="#7CBF7C" stroke="#2f5a68" stroke-width="3"/><text y="6" text-anchor="middle" font-size="13" fill="#fff">✓</text></g></g><text x="280" y="46" text-anchor="middle" font-size="10" fill="#2f5a68">THIS WEEK: photos + progress</text><text x="280" y="184" text-anchor="middle" font-size="11" fill="#2f5a68">KEEP THEM IN THE LOOP</text></svg><p class="ilm-cap">🎬 Watch: keep the partner in the loop — message out, reply back, trust grows.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 3</span></div><div class="v5-steps"><div class="v5-step"><h3>Why we keep our community partner updated.</h3><p>Partners gave us their site and their trust — updates are the rent. An informed partner stays an ally; a surprised one becomes a doubter.</p></div><div class="v5-step"><h3>Preparing a short, polite progress update.</h3><p>A good update is short, polite and honest: what's done, what's stuck, what's next. Three beats of news, no padding.</p></div><div class="v5-step"><h3>Using photos to show progress.</h3><p>Photos carry progress better than promises — a picture of the sanded frame outweighs a paragraph about effort.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>

@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e4edf1;--lo-border:#4E8093;--ido-bg:#f2e5dc;--ido-border:#C0684A;--wedo-bg:#e3efeb;--wedo-border:#2F9080;--task-bg:#f8f0d8;--task-border:#D5A23E;--btn-bg:#4E8093;--btn-hover:#3a6373;--sc-border:#D5A23E;--sc-bg:#faf3dc;--aspire-bg:#edf3f6;--aspire-border:#4E8093;--aspire-text:#31586a}</style></head><body>
+:root{--lo-bg:#e4edf1;--lo-border:#4E8093;--ido-bg:#f2e5dc;--ido-border:#C0684A;--wedo-bg:#e3efeb;--wedo-border:#2F9080;--task-bg:#f8f0d8;--task-border:#D5A23E;--btn-bg:#4E8093;--btn-hover:#3a6373;--sc-border:#D5A23E;--sc-bg:#faf3dc;--aspire-bg:#edf3f6;--aspire-border:#4E8093;--aspire-text:#31586a}
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#EAF2F5;border:2px solid #4E8093;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#2f5a68;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>The Model — The Handover &amp; Its Benefit</h2>
 <div class="li-box"><strong>Key Idea:</strong> We left it better than we found it.</div>
+<div class="ilm" role="img" aria-label="The finished build passes from team hands to community hands"><svg viewBox="0 0 560 190" aria-hidden="true"><path class="draw" d="M96 130 C 96 96 140 96 150 112" stroke="#2f5a68" stroke-width="9" fill="none" stroke-linecap="round"/><path class="draw" style="animation-delay:.5s" d="M464 130 C 464 96 420 96 410 112" stroke="#4E8093" stroke-width="9" fill="none" stroke-linecap="round"/><g class="pop" style="animation-delay:1.0s"><rect x="216" y="72" width="128" height="66" rx="10" fill="#8f6a4a"/><rect x="226" y="60" width="108" height="18" rx="6" fill="#7CBF7C"/><text x="280" y="112" text-anchor="middle" font-size="11" fill="#fff">OUR PLANTER</text></g><g class="rip" style="animation-delay:1.8s"><circle cx="280" cy="100" r="70" fill="none" stroke="#F2C14E" stroke-width="3"/></g><g class="rip" style="animation-delay:2.6s"><circle cx="280" cy="100" r="70" fill="none" stroke="#F2C14E" stroke-width="3"/></g><g class="pop" style="animation-delay:1.5s"><rect x="227" y="19" width="106" height="26" rx="13" fill="#2f5a68"/><text x="280" y="36" text-anchor="middle" font-size="10" fill="#fff">HANDOVER DAY</text></g><text x="280" y="184" text-anchor="middle" font-size="11" fill="#2f5a68">MADE BY US, USED BY EVERYONE</text></svg><p class="ilm-cap">🎬 Watch: made by us, used by everyone — the moment the work becomes a gift.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 3</span></div><div class="v5-steps"><div class="v5-step"><h3>Handing over the asset calmly and safely.</h3><p>A calm handover is the plan performed: steady carry, careful placement, clear words — the team's whole term visible in ten good minutes.</p></div><div class="v5-step"><h3>Recording the community benefit (photos/quotes).</h3><p>The benefit gets recorded on the spot: the asset in place, the partner's words captured verbatim — evidence gathered in the moment beats memory.</p></div><div class="v5-step"><h3>Filing it as ASDAN community evidence.</h3><p>Filing closes the loop: photos, quote, witness signature into the ASDAN community evidence. The project ends banked, not just finished.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>

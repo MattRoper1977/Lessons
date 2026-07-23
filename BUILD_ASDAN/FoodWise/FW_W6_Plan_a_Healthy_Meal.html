@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e6f0e6;--lo-border:#5B9E5B;--ido-bg:#f3e6da;--ido-border:#C9803B;--wedo-bg:#e4edf2;--wedo-border:#4D82A0;--task-bg:#f8f1d9;--task-border:#D8A63B;--btn-bg:#5B9E5B;--btn-hover:#457e45;--sc-border:#D8A63B;--sc-bg:#faf4dd;--aspire-bg:#eef6ee;--aspire-border:#5B9E5B;--aspire-text:#356035}</style></head><body>
+:root{--lo-bg:#e6f0e6;--lo-border:#5B9E5B;--ido-bg:#f3e6da;--ido-border:#C9803B;--wedo-bg:#e4edf2;--wedo-border:#4D82A0;--task-bg:#f8f1d9;--task-border:#D8A63B;--btn-bg:#5B9E5B;--btn-hover:#457e45;--sc-border:#D8A63B;--sc-bg:#faf4dd;--aspire-bg:#eef6ee;--aspire-border:#5B9E5B;--aspire-text:#356035}
+/* ===== I-Do Illuminator (FW) ===== */
+.ilm{background:#EDF6ED;border:2px solid #5B9E5B;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#3f7a3f;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>The Model — Plan a Healthy Meal</h2>
 <div class="li-box"><strong>Key Idea:</strong> Plan it, plate it, prove it.</div>
+<div class="ilm" role="img" aria-label="A meal plan card assembles a balanced plate with a budget tag"><svg viewBox="0 0 560 190" aria-hidden="true"><rect x="52" y="34" width="170" height="126" rx="12" fill="#fff" stroke="#3f7a3f" stroke-width="4"/><text x="137" y="58" text-anchor="middle" font-size="11" fill="#3f7a3f">MY MEAL PLAN</text><g class="pop" style="animation-delay:0.4s"><text x="76" y="84" font-size="11">✓ Veg — half the plate</text></g><g class="pop" style="animation-delay:1.0s"><text x="76" y="106" font-size="11">✓ Pasta — a quarter</text></g><g class="pop" style="animation-delay:1.6s"><text x="76" y="128" font-size="11">✓ Chicken — a quarter</text></g><circle cx="360" cy="96" r="58" fill="#fff" stroke="#3f7a3f" stroke-width="5"/><path class="pop" style="animation-delay:2.0s" d="M360 96 L360 38 A58 58 0 0 0 302 96 Z" fill="#7CBF7C"/><path class="pop" style="animation-delay:2.0s" d="M360 96 L302 96 A58 58 0 0 0 360 154 Z" fill="#7CBF7C"/><path class="pop" style="animation-delay:2.4s" d="M360 96 L360 38 A58 58 0 0 1 418 96 Z" fill="#E8C86A"/><path class="pop" style="animation-delay:2.7s" d="M360 96 L418 96 A58 58 0 0 1 360 154 Z" fill="#D98A6A"/><g class="pop" style="animation-delay:3.1s"><rect x="446" y="47" width="92" height="26" rx="13" fill="#3f7a3f"/><text x="492" y="64" text-anchor="middle" font-size="9" fill="#fff">£ PLANNED</text></g><text x="280" y="184" text-anchor="middle" font-size="11" fill="#3f7a3f">PLANNED PLATES WIN</text></svg><p class="ilm-cap">🎬 Watch: a planned plate — balanced, priced, and yours.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 3</span></div><div class="v5-steps"><div class="v5-step"><h3>Planning a balanced, affordable meal.</h3><p>A meal plan is ingredients, steps in order, and a rough cost — balanced first, affordable second, and doable in a real kitchen third.</p></div><div class="v5-step"><h3>Checking it against the Eatwell Guide.</h3><p>Checking against the Eatwell Guide is the audit: every group represented, shares roughly right, and the treat slice staying a slice.</p></div><div class="v5-step"><h3>Filing it as FoodWise portfolio evidence.</h3><p>Filing it as FoodWise evidence closes the module: the plan, the check, the cost — dated, witnessed, banked. That's a term of food skills on one page.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>
