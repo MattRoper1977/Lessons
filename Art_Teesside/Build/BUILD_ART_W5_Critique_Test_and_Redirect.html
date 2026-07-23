@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d}</style></head><body>
+:root{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d}
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#FBF3E6;border:2px solid #C97F2E;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#8a5620;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>I Do: Running a Critique That Helps</h2>
 <div class="li-box"><strong>Key Idea:</strong> Owner speaks first, feedback anchors to the brief's message word, and every comment lands in one of four boxes: protect, test, change, reject.</div>
+<div class="ilm" role="img" aria-label="A work in progress receives kind critique arrows and adjusts course"><svg viewBox="0 0 560 190" aria-hidden="true"><g class="" style="animation-delay:0s"><rect x="70" y="36" width="150" height="110" rx="6" fill="#fff" stroke="#8a5620" stroke-width="4"/><rect x="78" y="44" width="134" height="94" rx="3" fill="none" stroke="#8a5620" stroke-width="1.5" opacity=".5"/></g><path class="draw" style="animation-delay:.3s" d="M96 120 C 120 80 170 80 194 110" stroke="#C97F2E" stroke-width="5" fill="none" stroke-linecap="round"/><g class="pop" style="animation-delay:0.9s"><rect x="270" y="39" width="120" height="26" rx="13" fill="#8a5620"/><text x="330" y="56" text-anchor="middle" font-size="9" fill="#fff">⭐ keep the sky</text></g><g class="pop" style="animation-delay:1.6s"><rect x="260" y="79" width="141" height="26" rx="13" fill="#8a5620"/><text x="330" y="96" text-anchor="middle" font-size="9" fill="#fff">💡 try bolder line</text></g><g class="pop" style="animation-delay:2.3s"><rect x="253" y="119" width="155" height="26" rx="13" fill="#8a5620"/><text x="330" y="136" text-anchor="middle" font-size="9" fill="#fff">❓ what’s the focus?</text></g><path class="pop" style="animation-delay:2.8s" d="M420 92 L484 92 M484 92 l-14 -8 l0 16 Z" stroke="#C97F2E" stroke-width="6" fill="#C97F2E" stroke-linecap="round"/><text x="512" y="97" text-anchor="middle" font-size="11" fill="#8a5620" class="pop" style="animation-delay:3.1s">V2</text><text x="280" y="184" text-anchor="middle" font-size="11" fill="#8a5620">HEAR IT → TEST IT → REDIRECT</text></svg><p class="ilm-cap">🎬 Watch: critique is a compass, not a verdict — test it, hear it, redirect.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 4</span></div><div class="v5-steps"><div class="v5-step"><h3>Owner first</h3><p>I state my word (endurance) and my own doubt (is the sky too busy?). The critique now has a target.</p></div><div class="v5-step"><h3>Anchor to the word</h3><p>Feedback form: 'The ___ serves/fights endurance because ___.' No word, no comment.</p></div><div class="v5-step"><h3>Four boxes</h3><p>Watch me sort three comments live: stipple texture → PROTECT; busy sky → TEST on scrap; pale rail → CHANGE (darken). Nothing rejected today — rejection is rare and earned.</p></div><div class="v5-step"><h3>The card</h3><p>The critique card leaves with the owner: their boxes, their decisions. Feedback advises; the artist decides.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>

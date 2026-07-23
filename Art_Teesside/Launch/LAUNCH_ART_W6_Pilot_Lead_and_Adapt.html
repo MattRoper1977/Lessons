@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;--wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;--btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de}</style></head><body>
+:root{--lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;--wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;--btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de}
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#F0F2F5;border:2px solid #7C8698;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#4e5666;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>I Do: Leading a Running Room</h2>
 <div class="li-box"><strong>Key Idea:</strong> The leader's station is the WHOLE room: position for sightlines, communicate in signals, intervene at choke points only, keep the clock.</div>
+<div class="ilm" role="img" aria-label="A pilot session runs, hits a snag, and the leader adapts the plan live"><svg viewBox="0 0 560 190" aria-hidden="true"><g class="pop" style="animation-delay:0.2s"><rect x="29" y="33" width="162" height="26" rx="13" fill="#4e5666"/><text x="110" y="50" text-anchor="middle" font-size="9" fill="#fff">PILOT SESSION — LIVE</text></g><g class="pop" style="animation-delay:0.5s"><circle cx="80" cy="92" r="12" fill="#7C8698"/></g><g class="pop" style="animation-delay:0.7s"><circle cx="116" cy="92" r="12" fill="#7C8698"/></g><g class="pop" style="animation-delay:0.9s"><circle cx="152" cy="92" r="12" fill="#7C8698"/></g><g class="pop" style="animation-delay:1.3s"><rect x="210" y="72" width="120" height="40" rx="10" fill="#C0684A"/><text x="270" y="90" text-anchor="middle" font-size="9" fill="#fff">SNAG: half the</text><text x="270" y="103" text-anchor="middle" font-size="9" fill="#fff">paint didn’t arrive</text></g><path class="pop" style="animation-delay:1.9s" d="M338 92 L382 92 M382 92 l-12 -7 l0 14 Z" stroke="#4e5666" stroke-width="5" fill="#4e5666" stroke-linecap="round"/><g class="pop glow" style="animation-delay:2.2s"><rect x="392" y="66" width="136" height="52" rx="10" fill="#4e5666"/><text x="460" y="86" text-anchor="middle" font-size="9" fill="#F2C14E">ADAPT: split groups,</text><text x="460" y="102" text-anchor="middle" font-size="9" fill="#F2C14E">rotate stations</text></g><g class="pop" style="animation-delay:2.8s"><rect x="160" y="143" width="240" height="26" rx="13" fill="#4e5666"/><text x="280" y="160" text-anchor="middle" font-size="9.5" fill="#fff">THE PLAN BENT — IT DIDN’T BREAK</text></g><text x="280" y="182" text-anchor="middle" font-size="11" fill="#4e5666">LEAD MEANS ADAPT</text></svg><p class="ilm-cap">🎬 Watch: pilots exist to wobble — a Silver leader adapts instead of abandoning.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 4</span></div><div class="v5-steps"><div class="v5-step"><h3>Position</h3><p>I stand where all stations are visible, not AT a station. The leader glued to one table is a worker with a title.</p></div><div class="v5-step"><h3>Signals</h3><p>Agreed in the huddle: raised hand = pause, tap the wrist = two minutes left, the nod = you've got this. Rooms run on signals; shouting is a system failure.</p></div><div class="v5-step"><h3>Intervene at chokes only</h3><p>The inking queue jams: I don't take over the roller — I redirect two guinea pigs to drying first. Leaders fix FLOW; crew fix stations.</p></div><div class="v5-step"><h3>Keep the clock</h3><p>The wrist-tap goes to the demo at minute eight, exactly as planned. Time kept calmly is the leader's quietest, most felt contribution.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>
