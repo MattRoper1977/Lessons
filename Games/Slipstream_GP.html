@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="description" content="Slipstream GP — climb the rival ladder. Draft, boost, overtake. A neon racing grudge match.">
 <meta name="theme-color" content="#0a0f1e">
 <title>Slipstream GP</title>
@@ -130,13 +130,38 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
 #lobby-title div{color:#94a3b8;font-size:14px;letter-spacing:2px}
 #lobby-scrap{position:absolute;top:16px;right:16px;font-size:17px;display:none}
 
-/* Touch controls */
+/* Touch controls — container stays pointer-events:none so taps pass through to the HUD */
 #touch{position:absolute;inset:0;display:none;z-index:20;pointer-events:none}
-.tbtn{position:absolute;bottom:20px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(0,212,255,.5);background:rgba(0,212,255,.10);display:flex;align-items:center;justify-content:center;font-size:28px;pointer-events:auto;color:#00d4ff}
-#t-left{left:18px}#t-right{left:106px}
-#t-boost{right:18px;border-color:rgba(249,115,22,.6);background:rgba(249,115,22,.12);color:#f97316;font-size:22px;font-family:'Orbitron',sans-serif}
+.tbtn{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:74px;height:74px;border-radius:50%;border:2px solid rgba(0,212,255,.5);background:rgba(0,212,255,.10);display:flex;align-items:center;justify-content:center;font-size:28px;pointer-events:auto;color:#00d4ff;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#t-left{left:calc(16px + env(safe-area-inset-left,0px))}
+#t-right{left:calc(104px + env(safe-area-inset-left,0px))}
+#t-brake{right:calc(104px + env(safe-area-inset-right,0px));border-color:rgba(239,68,68,.6);background:rgba(239,68,68,.12);color:#ef4444;font-size:15px;font-weight:700;font-family:'Orbitron',sans-serif}
+#t-boost{right:calc(16px + env(safe-area-inset-right,0px));border-color:rgba(249,115,22,.6);background:rgba(249,115,22,.12);color:#f97316;font-size:15px;font-weight:700;font-family:'Orbitron',sans-serif}
 .tbtn.held{background:rgba(0,212,255,.3)}
+#t-brake.held{background:rgba(239,68,68,.4)}
 #t-boost.held{background:rgba(249,115,22,.35)}
+/* Very narrow portrait (iPhone SE / small Android): tighten so BRAKE never
+   collides with the right steering button */
+@media (max-width:379px){
+  .tbtn{width:62px;height:62px;font-size:24px}
+  #t-left{left:calc(14px + env(safe-area-inset-left,0px))}
+  #t-right{left:calc(88px + env(safe-area-inset-left,0px))}
+  #t-brake{right:calc(88px + env(safe-area-inset-right,0px))}
+  #t-boost{right:calc(14px + env(safe-area-inset-right,0px))}
+  #t-brake,#t-boost{font-size:12px}
+}
+/* Phone landscape: lift telemetry clear of the thumb zone, shrink the chrome */
+@media (orientation:landscape) and (max-height:520px){
+  #meters{top:10px;bottom:auto;width:min(300px,52vw)}
+  .meter{height:7px;margin-bottom:4px}
+  .meter-label{font-size:10px;letter-spacing:1px;margin-bottom:1px}
+  #pos-badge{font-size:22px;top:8px;left:12px}
+  #lap-badge{font-size:15px;top:8px;right:12px}
+  #race-timer{top:34px;left:12px;font-size:12px}
+  #gap-line{top:34px;right:12px;font-size:12px}
+  .tbtn{width:66px;height:66px;font-size:24px}
+  #t-brake,#t-boost{font-size:13px}
+}
 
 /* Confetti */
 .cf{position:absolute;top:-12px;width:9px;height:9px;z-index:60;animation:cfFall 2.6s linear forwards;pointer-events:none}
@@ -204,6 +229,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
     <div style="text-align:left;font-size:16px;line-height:2.1">
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-calm"> 🌙 Calm mode (softer glow, no shake, gentler sound)</label>
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-sound" checked> 🔊 Sound</label>
+      <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-lite"> ⚡ Lite graphics — smoother on phones (softer glow)</label>
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-school"> 📊 School mode — velocity–time graph after every race</label>
       <label style="display:block;cursor:pointer"><input type="checkbox" id="opt-close"> 🤝 Close racing — rivals ease off when you fall behind</label>
     </div>
@@ -235,6 +261,7 @@ canvas{display:block;position:absolute;top:0;left:0;z-index:1}
 <div id="touch">
   <div class="tbtn" id="t-left">◀</div>
   <div class="tbtn" id="t-right">▶</div>
+  <div class="tbtn" id="t-brake">BRAKE</div>
   <div class="tbtn" id="t-boost">BOOST</div>
 </div>
 
@@ -270,6 +297,27 @@ const CFG = {
   camH: 4.1, camBack: 9.5, fovBase: 62,
 };
 const REDUCED = (typeof matchMedia==='function') && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const COARSE  = (typeof matchMedia==='function') && matchMedia('(pointer:coarse)').matches;
+// Auto-lite: coarse pointer AND a phone/tablet-sized viewport. A touchscreen laptop
+// reports a fine primary pointer, so it keeps full glow.
+const LITE_AUTO = COARSE && Math.min(window.innerWidth,window.innerHeight)<=820;
+
+/* ============ ZERO-ALLOCATION SCRATCHPADS ============
+   Track.at() used to clone three Vector3s per call and was hit several times
+   per car per frame; Trail.push cloned two more. That is thousands of short
+   lived objects a second, which is exactly the GC sawtooth you feel as
+   micro-stutter on a phone. Everything below is allocated once.
+   RULE: a scratchpad's value is only valid until the next call that writes it.
+   Never hold one across a function boundary. Distinct pads are used wherever
+   two samples are alive at the same time (_smLook vs _sm1, _smWake vs _sm1). */
+const _v1=new THREE.Vector3(), _v2=new THREE.Vector3(), _v3=new THREE.Vector3();
+const _vCam=new THREE.Vector3(), _vLook=new THREE.Vector3();
+const _mkSm=()=>({p:new THREE.Vector3(),tan:new THREE.Vector3(),lat:new THREE.Vector3(),curv:0});
+const _sm1=_mkSm(), _smLook=_mkSm(), _smWake=_mkSm(), _smB=_mkSm();
+/* Visual randomness runs on its OWN generator. If sparks drew from Math.random
+   they would shift the sequence the AI and gusts consume, so turning effects on
+   or off would silently change how a race plays out. */
+const fxRnd=mulberry32(0xC0FFEE);
 
 /* ================= SEEDED RNG ================= */
 function hashStr(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
@@ -314,7 +362,7 @@ const S2LINES=[
 const SAVE_KEY='slipstreamGP_v1';
 const COLOURS=[{c:0x00d4ff,cost:0},{c:0xff2d78,cost:80},{c:0x22c55e,cost:80},{c:0xffd700,cost:80},{c:0xf97316,cost:120},{c:0xa78bfa,cost:120}];
 const TRAILS=[{n:'ION',c:0x00d4ff,cost:0},{n:'EMBER',c:0xf97316,cost:120},{n:'GHOST',c:0xffffff,cost:120}];
-let profile={rung:0, defeated:[], scrap:0, up:{engine:0,grip:0,boost:0}, colour:0, trail:0, owned:{colours:[0],trails:[0]}, pbs:{}, daily:{}, pname:'', rung2:0, s2:[], gbest:0, school:false, calm:false, sound:true, close:false};
+let profile={rung:0, defeated:[], scrap:0, up:{engine:0,grip:0,boost:0}, colour:0, trail:0, owned:{colours:[0],trails:[0]}, pbs:{}, daily:{}, pname:'', rung2:0, s2:[], gbest:0, school:false, calm:false, sound:true, close:false, lite:null};
 function loadProfile(){try{const raw=localStorage.getItem(SAVE_KEY);if(raw)profile=Object.assign(profile,JSON.parse(raw));}catch(e){}}
 function saveProfile(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));}catch(e){}}
 loadProfile();
@@ -347,8 +395,8 @@ const AudioSys={
 };
 
 /* ================= THREE SETUP ================= */
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
+const renderer=new THREE.WebGLRenderer({antialias:!LITE_AUTO,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,LITE_AUTO?1.35:1.75));
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
 document.body.appendChild(renderer.domElement);
@@ -359,7 +407,8 @@ const camera=new THREE.PerspectiveCamera(CFG.fovBase,window.innerWidth/window.in
 camera.position.set(0,6,14);
 const composer=new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene,camera));
-const bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight),1.05,0.55,0.16);
+const BLOOM_F=()=>liteOn()?0.5:1;
+const bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth*(LITE_AUTO?0.5:1),window.innerHeight*(LITE_AUTO?0.5:1)),1.05,0.55,0.16);
 composer.addPass(bloom);
 scene.add(new THREE.AmbientLight(0x8899cc,0.55));
 const key=new THREE.DirectionalLight(0xffeecc,0.8); key.position.set(60,120,40); scene.add(key);
@@ -413,7 +462,8 @@ function buildCar(colHex){
 }
 class Trail{
   constructor(colHex){
-    this.N=26; this.pts=[];
+    this.N=26; this.count=0; this.head=0;
+    this.bufP=new Float32Array(this.N*3); this.bufL=new Float32Array(this.N*3);
     const geo=new THREE.BufferGeometry();
     this.posAttr=new THREE.BufferAttribute(new Float32Array(this.N*2*3),3);
     geo.setAttribute('position',this.posAttr);
@@ -423,20 +473,112 @@ class Trail{
     this.mesh.frustumCulled=false;
   }
   setColor(colHex){ this.mesh.material.color.set(colHex); }
+  // Circular buffer over two flat arrays: no unshift/pop, no per-frame clones.
+  // Vertex output is identical to the old object-list version.
   push(p,lat){
-    this.pts.unshift({p:p.clone(),lat:lat.clone()});
-    if(this.pts.length>this.N)this.pts.pop();
-    const arr=this.posAttr.array;
-    for(let i=0;i<this.N;i++){
-      const pt=this.pts[Math.min(i,this.pts.length-1)]||{p:new THREE.Vector3(),lat:new THREE.Vector3(1,0,0)};
-      const w=0.85*(1-i/this.N);
-      const y=0.35;
-      arr[i*6+0]=pt.p.x-pt.lat.x*w; arr[i*6+1]=y; arr[i*6+2]=pt.p.z-pt.lat.z*w;
-      arr[i*6+3]=pt.p.x+pt.lat.x*w; arr[i*6+4]=y; arr[i*6+5]=pt.p.z+pt.lat.z*w;
+    this.head=(this.head-1+this.N)%this.N;
+    const h=this.head*3;
+    this.bufP[h]=p.x;   this.bufP[h+1]=p.y;   this.bufP[h+2]=p.z;
+    this.bufL[h]=lat.x; this.bufL[h+1]=lat.y; this.bufL[h+2]=lat.z;
+    if(this.count<this.N)this.count++;
+    const arr=this.posAttr.array, N=this.N;
+    for(let i=0;i<N;i++){
+      const j=((this.head+(i<this.count?i:this.count-1))%N)*3;
+      const w=0.85*(1-i/N), y=0.35;
+      const px=this.bufP[j], pz=this.bufP[j+2], lx=this.bufL[j], lz=this.bufL[j+2];
+      arr[i*6+0]=px-lx*w; arr[i*6+1]=y; arr[i*6+2]=pz-lz*w;
+      arr[i*6+3]=px+lx*w; arr[i*6+4]=y; arr[i*6+5]=pz+lz*w;
     }
     this.posAttr.needsUpdate=true;
   }
-  clear(){ this.pts.length=0; }
+  clear(){ this.count=0; this.head=0; this.bufP.fill(0); this.bufL.fill(0);
+    this.posAttr.array.fill(0); this.posAttr.needsUpdate=true; }
+}
+
+/* ================= PARTICLES =================
+   One THREE.Points object, one draw call, buffers allocated once.
+   Two things that are easy to get wrong and are done deliberately here:
+   (a) frustumCulled=false. The bounding sphere is computed once from the
+       initial (all-zero) positions; since the points then move out to world
+       coordinates the stale sphere would cull the whole system whenever the
+       track origin is off camera — i.e. most of a lap.
+   (b) a real ShaderMaterial. PointsMaterial takes `size` as a uniform and
+       ignores a per-vertex size attribute entirely, so per-particle scaling
+       needs a shader or it is dead code. */
+class ParticlePool{
+  constructor(scene,max=280){
+    this.max=max; this.head=0; this.live=0;
+    this.pos=new Float32Array(max*3); this.col=new Float32Array(max*3);
+    this.siz=new Float32Array(max);   this.vel=new Float32Array(max*3);
+    this.life=new Float32Array(max);  this.sz0=new Float32Array(max);
+    const geo=new THREE.BufferGeometry();
+    this.aPos=new THREE.BufferAttribute(this.pos,3); this.aPos.setUsage(THREE.DynamicDrawUsage);
+    this.aCol=new THREE.BufferAttribute(this.col,3); this.aCol.setUsage(THREE.DynamicDrawUsage);
+    this.aSiz=new THREE.BufferAttribute(this.siz,1); this.aSiz.setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('position',this.aPos);
+    geo.setAttribute('pcolor',this.aCol);
+    geo.setAttribute('psize',this.aSiz);
+    geo.boundingSphere=new THREE.Sphere(new THREE.Vector3(),1e6);
+    const mat=new THREE.ShaderMaterial({
+      uniforms:{ uScale:{value:window.innerHeight*0.5} },
+      transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+      vertexShader:`
+        attribute vec3 pcolor; attribute float psize;
+        varying vec3 vCol; uniform float uScale;
+        void main(){
+          vCol=pcolor;
+          vec4 mv=modelViewMatrix*vec4(position,1.0);
+          gl_PointSize=max(1.0,psize*uScale/max(1.0,-mv.z));
+          gl_Position=projectionMatrix*mv;
+        }`,
+      fragmentShader:`
+        varying vec3 vCol;
+        void main(){
+          vec2 d=gl_PointCoord-vec2(0.5);
+          float a=1.0-smoothstep(0.18,0.5,length(d));
+          if(a<=0.01)discard;
+          gl_FragColor=vec4(vCol,a);
+        }`
+    });
+    this.mat=mat;
+    this.points=new THREE.Points(geo,mat);
+    this.points.frustumCulled=false;   // see (a) above
+    this.points.renderOrder=3;
+    scene.add(this.points);
+  }
+  spawn(p,vx,vy,vz,colHex,sz,life){
+    const i=this.head; this.head=(this.head+1)%this.max;
+    const i3=i*3;
+    this.pos[i3]=p.x; this.pos[i3+1]=p.y; this.pos[i3+2]=p.z;
+    this.vel[i3]=vx;  this.vel[i3+1]=vy;  this.vel[i3+2]=vz;
+    this.col[i3]=((colHex>>16)&255)/255;
+    this.col[i3+1]=((colHex>>8)&255)/255;
+    this.col[i3+2]=(colHex&255)/255;
+    this.siz[i]=sz; this.sz0[i]=sz; this.life[i]=life; this.lifeMax=life;
+    this.maxLifeArr=this.maxLifeArr||new Float32Array(this.max);
+    this.maxLifeArr[i]=life;
+    this.live++;
+  }
+  update(dt){
+    if(this.live<=0)return;
+    let any=false;
+    for(let i=0;i<this.max;i++){
+      const L=this.life[i];
+      if(L<=0)continue;
+      any=true;
+      const n=L-dt, i3=i*3;
+      if(n<=0){ this.life[i]=0; this.siz[i]=0; this.pos[i3+1]=-1e5; this.live--; continue; }
+      this.life[i]=n;
+      this.pos[i3]  +=this.vel[i3]*dt;
+      this.pos[i3+1]+=this.vel[i3+1]*dt;
+      this.pos[i3+2]+=this.vel[i3+2]*dt;
+      this.vel[i3+1]-=14*dt;                       // a little gravity
+      this.siz[i]=this.sz0[i]*(n/this.maxLifeArr[i]);
+    }
+    if(any){ this.aPos.needsUpdate=true; this.aSiz.needsUpdate=true; this.aCol.needsUpdate=true; }
+  }
+  clear(){ this.life.fill(0); this.siz.fill(0); this.pos.fill(-1e5); this.live=0;
+    this.aPos.needsUpdate=true; this.aSiz.needsUpdate=true; }
 }
 
 /* ================= TRACK ================= */
@@ -472,16 +614,16 @@ class Track{
     }
     this.group=this.buildMesh(rnd);
   }
-  at(s){
+  at(s,out){
+    out=out||_sm1;
     s=((s%this.len)+this.len)%this.len;
     const f=s/this.len*this.S, i=Math.floor(f), fr=f-i;
     const A=this.samples[i], B=this.samples[Math.min(i+1,this.S)];
-    return {
-      p:A.p.clone().lerp(B.p,fr),
-      tan:A.tan.clone().lerp(B.tan,fr).normalize(),
-      lat:A.lat.clone().lerp(B.lat,fr).normalize(),
-      curv:A.curv+(B.curv-A.curv)*fr,
-    };
+    out.p.copy(A.p).lerp(B.p,fr);
+    out.tan.copy(A.tan).lerp(B.tan,fr).normalize();
+    out.lat.copy(A.lat).lerp(B.lat,fr).normalize();
+    out.curv=A.curv+(B.curv-A.curv)*fr;
+    return out;
   }
   buildMesh(rnd){
     const g=new THREE.Group(); const hw=CFG.halfW;
@@ -521,7 +663,7 @@ class Track{
     this.rings=[];
     for(let k=0;k<gateN;k++){
       const cp=(k%4===1);
-      const sm=this.at(this.len*(k+0.6)/gateN);
+      const sm=this.at(this.len*(k+0.6)/gateN,_smB);
       const ring=new THREE.Mesh(new THREE.TorusGeometry(hw+(cp?3.0:2.4),cp?0.46:0.32,8,40),
         new THREE.MeshBasicMaterial({color:cp?0xffd700:(k%2?0x00d4ff:0xff2d78)}));
       ring.position.copy(sm.p); ring.position.y=(hw+2.4)*0.42;
@@ -538,7 +680,7 @@ class Track{
       g.add(p);
     }
     // start gantry
-    const st=this.at(0);
+    const st=this.at(0,_smB);
     const gMat=new THREE.MeshStandardMaterial({color:0x1a2038,emissive:0x223,emissiveIntensity:.4});
     for(const side of[-1,1]){
       const post=new THREE.Mesh(new THREE.BoxGeometry(0.8,9,0.8),gMat);
@@ -597,6 +739,9 @@ const lobbyGroup=buildLobby(); scene.add(lobbyGroup);
 const playerCar=buildCar(COLOURS[profile.colour].c);
 scene.add(playerCar);
 const playerTrail=new Trail(TRAILS[profile.trail].c); scene.add(playerTrail.mesh);
+const particles=new ParticlePool(scene, LITE_AUTO?160:280);
+// Sparks are off in calm mode and for reduced-motion users, and thinned on lite.
+function fxOn(){ return !profile.calm && !REDUCED; }
 // parked rival preview in lobby
 let parkedRival=null, parkedLabel=null;
 function refreshParkedRival(){
@@ -622,25 +767,90 @@ addEventListener('keydown',e=>{
   AudioSys.init(); AudioSys.resume();
 });
 addEventListener('keyup',e=>{keys[e.code]=false;});
-addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.left=touch.right=touch.boost=false;if(state.mode==='RACE'&&!state.paused)togglePause();});
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;clearTouch();if(state.mode==='RACE'&&!state.paused)togglePause();});
+addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'){for(const k in keys)keys[k]=false;clearTouch();if(state.mode==='RACE'&&!state.paused)togglePause();}});
 addEventListener('contextmenu',e=>{if(state.mode==='RACE')e.preventDefault();});
 addEventListener('pointerdown',()=>{AudioSys.init();AudioSys.resume();},{once:false});
-// touch
-const touch={left:false,right:false,boost:false};
+// touch — state is derived from live touch geometry, never from per-element
+// touchend. A touch is captured by the element it STARTED on, so sliding from
+// LEFT into RIGHT and lifting would never give RIGHT a touchend and it would
+// stick on. Recomputing every button from e.touches makes that impossible.
+const touch={left:false,right:false,boost:false,brake:false};
 const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 let inputMode=isTouch?'touch':'keys';
+const TBTN=[{id:'t-left',prop:'left'},{id:'t-right',prop:'right'},{id:'t-brake',prop:'brake'},{id:'t-boost',prop:'boost'}];
+const TPAD=18;            // forgiveness ring, in CSS px, around each button
+let TRECT=null;           // cached padded rects; invalidated on resize/rotate
+function touchRects(){
+  TRECT=TBTN.map(b=>{
+    const el=document.getElementById(b.id); if(!el)return null;
+    const r=el.getBoundingClientRect();
+    if(r.width===0&&r.height===0)return null;   // overlay hidden
+    return {l:r.left-TPAD,r:r.right+TPAD,t:r.top-TPAD,b:r.bottom+TPAD,
+            cx:(r.left+r.right)/2, cy:(r.top+r.bottom)/2};
+  });
+}
+function clearTouch(){
+  for(const b of TBTN){ touch[b.prop]=false;
+    const el=document.getElementById(b.id); if(el)el.classList.remove('held'); }
+}
+// Returns true if at least one live touch is on a control.
+function syncTouches(list){
+  if(!TRECT)touchRects();
+  const next={left:false,right:false,boost:false,brake:false};
+  let hit=false;
+  for(let i=0;i<list.length;i++){
+    const t=list[i]; let best=-1,bd=Infinity;
+    for(let j=0;j<TRECT.length;j++){
+      const r=TRECT[j]; if(!r)continue;
+      if(t.clientX<r.l||t.clientX>r.r||t.clientY<r.t||t.clientY>r.b)continue;
+      // padded rings can overlap; a touch belongs to the nearest centre only,
+      // so a single thumb can never assert LEFT and RIGHT at the same time
+      const dx=t.clientX-r.cx, dy=t.clientY-r.cy, d=dx*dx+dy*dy;
+      if(d<bd){bd=d;best=j;}
+    }
+    if(best>=0){ next[TBTN[best].prop]=true; hit=true; }
+  }
+  for(const b of TBTN){
+    touch[b.prop]=next[b.prop];
+    const el=document.getElementById(b.id); if(el)el.classList.toggle('held',next[b.prop]);
+  }
+  return hit;
+}
+let _hapT=-1e9;   // so the first rumble after load is not swallowed by the cooldown
+// Android Chrome only — iOS Safari has no navigator.vibrate at all, and a
+// touchscreen laptop in keyboard mode should never buzz. Calm mode silences it,
+// and REDUCED forces calm, so reduced-motion users get nothing either.
+function haptic(kind){
+  if(inputMode!=='touch'||profile.calm||REDUCED)return;
+  if(typeof navigator==='undefined'||!navigator.vibrate)return;
+  const now=(typeof performance!=='undefined'?performance.now():Date.now());
+  if(kind==='rumble'){ if(now-_hapT<420)return; _hapT=now; try{navigator.vibrate(12);}catch(e){} }
+  else if(kind==='sling'){ _hapT=now; try{navigator.vibrate([25,40,25]);}catch(e){} }
+}
 if(isTouch){
   document.getElementById('touch').style.display='block';
-  for(const[id,prop]of[['t-left','left'],['t-right','right'],['t-boost','boost']]){
-    const el=document.getElementById(id);
-    const on=e=>{e.preventDefault();if(inputMode!=='touch'){inputMode='touch';document.getElementById('touch').style.display='block';}touch[prop]=true;el.classList.add('held');AudioSys.init();AudioSys.resume();};
-    const off=e=>{e.preventDefault();touch[prop]=false;el.classList.remove('held');};
-    el.addEventListener('touchstart',on); el.addEventListener('touchend',off); el.addEventListener('touchcancel',off); el.addEventListener('contextmenu',e=>e.preventDefault());
+  for(const b of TBTN){
+    const el=document.getElementById(b.id);
+    if(el)el.addEventListener('contextmenu',e=>e.preventDefault());
   }
+  // All passive: touch-action:none in CSS already suppresses scroll/zoom on the
+  // buttons, so no preventDefault is needed and the listeners stay off the
+  // main-thread blocking path.
+  addEventListener('touchstart',e=>{
+    const hit=syncTouches(e.touches);
+    if(hit){
+      if(inputMode!=='touch'){ inputMode='touch'; const tv=document.getElementById('touch'); if(tv)tv.style.display='block'; TRECT=null; }
+      AudioSys.init(); AudioSys.resume();
+    }
+  },{passive:true});
+  addEventListener('touchmove',  e=>syncTouches(e.touches),{passive:true});
+  addEventListener('touchend',   e=>syncTouches(e.touches),{passive:true});
+  addEventListener('touchcancel',e=>syncTouches(e.touches),{passive:true});
 }
 function inputSteer(){ return (keys.ArrowLeft||keys.KeyA||touch.left?-1:0)+(keys.ArrowRight||keys.KeyD||touch.right?1:0); }
-function inputThrottle(){ return inputMode==='touch'?1:((keys.ArrowUp||keys.KeyW)?1:0); }
-function inputBrake(){ return (keys.ArrowDown||keys.KeyS)?1:0; }
+function inputThrottle(){ return inputMode==='touch'?(touch.brake?0:1):((keys.ArrowUp||keys.KeyW)?1:0); }
+function inputBrake(){ return (keys.ArrowDown||keys.KeyS||touch.brake)?1:0; }
 function inputBoost(){ return keys.Space||touch.boost; }
 
 /* ================= HUD / UI HELPERS ================= */
@@ -807,7 +1017,14 @@ function startRace(rungIdx, rematch, dailyDate, s2, opts){
   if(state.trackGroup)scene.remove(state.trackGroup);
   for(const c of state.cars){ if(!c.isPlayer){scene.remove(c.mesh);scene.remove(c.trail.mesh);} }
   scene.remove(lobbyGroup);
-  state.track=new Track(opts.seed!==undefined?opts.seed:(dailyDate?hashStr('daily-'+dailyDate):hashStr(rival.name)+rungIdx*77), !!s2);
+  const trackSeed=opts.seed!==undefined?opts.seed:(dailyDate?hashStr('daily-'+dailyDate):hashStr(rival.name)+rungIdx*77);
+  /* Gameplay randomness gets its own generator, seeded from the track seed.
+     It used to come from Math.random() — which three.js ALSO draws on to make
+     object UUIDs, so simply adding a mesh silently re-rolled every rival's
+     cornering weave. It also meant the Daily Sprint's "same race for everyone"
+     promise only held for the track, not the rivals. Now it actually holds. */
+  state.rnd=mulberry32((trackSeed^0x9E3779B9)>>>0);
+  state.track=new Track(trackSeed, !!s2);
   state.trackGroup=state.track.group; scene.add(state.trackGroup);
   state.cars=[];
   const rivalVmax=49+rungIdx*2.3+(s2?2.5:0);
@@ -829,20 +1046,20 @@ function startRace(rungIdx, rematch, dailyDate, s2, opts){
     if(d.isPlayer){
       state.player={isPlayer:true,name:'YOU',mesh:PLAYER_MESH.car,trail:playerTrail,s:s0,t:t0,v:0,lap:0,
         boost:playerTank()*0.35,finished:false,rumble:0,phase:0};
-      playerTrail.clear();
+      playerTrail.clear(); particles.clear();
       state.cars.push(state.player);
     }else{
       const mesh=buildCar(d.col); scene.add(mesh);
       const trail=new Trail(d.col); scene.add(trail.mesh);
       state.cars.push({isPlayer:false,isRival:!!d.isRival,name:d.name,col:d.col,mesh,trail,
-        s:s0,t:t0,v:0,lap:0,skill:d.skill,band:d.band,vmax:d.vmax,finished:false,rumble:0,phase:Math.random()*9});
+        s:s0,t:t0,v:0,lap:0,skill:d.skill,band:d.band,vmax:d.vmax,finished:false,rumble:0,phase:state.rnd()*9});
     }
   });
   state.rival=state.cars.find(c=>c.isRival)||null;
   state.raceT=0; state.finishedOrder=[]; state.overtakes=0; state.combo=0; state.comboT=0;
   state.scrapPend=0; state.finalLapDone=false; state.playerRank=state.cars.length; state.prevRank=state.cars.length;
   state.draftT=0; state.slingT=0; state.wasAhead=undefined; state.rivalDraftT=0; state.radioCD=0;
-  state.telem=[]; state.telemAcc=0; state.cpBest={}; state.lastCpT=0; state.cpIdx=0; state.gustT=3+Math.random()*4; state.gustA=0; state.gustDir=1; state.lastDraft=0;
+  state.telem=[]; state.telemAcc=0; state.cpBest={}; state.lastCpT=0; state.cpIdx=0; state.gustT=3+state.rnd()*4; state.gustA=0; state.gustDir=1; state.lastDraft=0;
   state.mode='COUNT'; state.countT=3.8; state.paused=false;
   $('hud').style.display='block'; $('countdown').style.display='block';
   $('lobby-hint').style.display='none'; $('lobby-title').style.display='none'; $('lobby-scrap').style.display='none';
@@ -944,7 +1161,7 @@ function edgeClamp(c,dt){
     c.t=clamp(c.t,-lim,lim);
     c.v=Math.max(6,c.v-c.v*CFG.edgeScrub*dt);
     c.rumble=1;
-    if(c.isPlayer){ state.shake=Math.min(state.shake+dt*3,0.7); }
+    if(c.isPlayer){ state.shake=Math.min(state.shake+dt*3,0.7); haptic('rumble'); }
   }else c.rumble=Math.max(0,c.rumble-dt*4);
 }
 function updatePlayer(dt){
@@ -976,7 +1193,7 @@ function updatePlayer(dt){
     c.v=Math.min(vmax*1.06,c.v+CFG.draftPull*draft*dt);
     state.draftT+=dt;
   }else{
-    if(state.draftT>=1.5){ state.slingT=1.6; popup('SLINGSHOT READY — overtake now!','#ffd700'); }
+    if(state.draftT>=1.5){ state.slingT=1.6; popup('SLINGSHOT READY — overtake now!','#ffd700'); haptic('sling'); }
     state.draftT=0;
   }
   state.slingT=Math.max(0,state.slingT-dt);
@@ -1032,16 +1249,16 @@ function updatePlayer(dt){
     state.telem.push({t:state.raceT, v:c.v, b:c.boosting?1:0, d:state.lastDraft>0.05?1:0}); }
   if(COND[state.cond].gust){
     state.gustT-=dt;
-    if(state.gustT<=0&&state.gustA===0){ state.gustA=0.0001; state.gustDir=Math.random()<0.5?-1:1; state.gustP=0;
+    if(state.gustT<=0&&state.gustA===0){ state.gustA=0.0001; state.gustDir=state.rnd()<0.5?-1:1; state.gustP=0;
       popup('💨 GUST '+(state.gustDir>0?'→':'←'),'#7dd3fc'); }
     if(state.gustA>0){ state.gustP=(state.gustP||0)+dt;
       state.gustA=Math.sin(Math.min(1,state.gustP/1.6)*Math.PI);
-      if(state.gustP>=1.6){ state.gustA=0; state.gustT=4+Math.random()*5; } }
+      if(state.gustP>=1.6){ state.gustA=0; state.gustT=4+state.rnd()*5; } }
   }
 }
 function updateAI(c,dt){
   const tr=state.track;
-  const look=tr.at(c.s+c.v*0.85+6);
+  const look=tr.at(c.s+c.v*0.85+6,_smLook);
   const cAhead=Math.abs(look.curv);
   const corner=Math.min(0.72,cAhead*CFG.aiCornerK*COND[state.cond].grip*(1.4-c.skill));
   let tv=c.vmax*(1-corner);
@@ -1063,16 +1280,28 @@ function updateAI(c,dt){
   stepCarOnTrack(c,dt);
 }
 function placeCarMesh(c){
-  const sm=state.track.at(c.s);
-  const pos=sm.p.clone().addScaledVector(sm.lat,c.t);
-  c.mesh.position.set(pos.x,0,pos.z);
+  const sm=state.track.at(c.s,_sm1);
+  _v1.copy(sm.p).addScaledVector(sm.lat,c.t);
+  c.mesh.position.set(_v1.x,0,_v1.z);
   const yaw=Math.atan2(sm.tan.x,sm.tan.z);
   const steerLean=c.isPlayer?inputSteer()*0.12:0;
   c.mesh.rotation.set(0,yaw,-steerLean+(c.rumble||0)*Math.sin(state.raceT*70)*0.03);
   const f=c.mesh.userData.flame;
   if(f)f.material.opacity=c.boosting?0.85:(c.isPlayer?0:0.0);
-  const back=pos.clone().addScaledVector(sm.tan,-2.1);
-  c.trail.push(back,sm.lat);
+  _v2.copy(_v1).addScaledVector(sm.tan,-2.1);
+  _v2.y=0;
+  c.trail.push(_v2,sm.lat);
+  // effects only — reads state, writes nothing back into it, and draws from fxRnd
+  if(state.mode==='RACE'&&fxOn()){
+    if(c.rumble>0.5){
+      _v3.copy(_v1).addScaledVector(sm.lat,c.t>0?0.9:-0.9); _v3.y=0.25;
+      particles.spawn(_v3,(fxRnd()-0.5)*5,2+fxRnd()*3,(fxRnd()-0.5)*5,0xffd166,0.10,0.28);
+    }
+    if(c.boosting){
+      _v3.copy(_v1).addScaledVector(sm.tan,-2.4); _v3.y=0.55;
+      particles.spawn(_v3,(fxRnd()-0.5)*3,0.6+fxRnd()*1.4,(fxRnd()-0.5)*3,0xf97316,0.16,0.34);
+    }
+  }
 }
 function finishCar(c){
   if(c.finished)return;
@@ -1332,7 +1561,7 @@ $('p-quit').onclick=()=>{ state.paused=false; enterLobby(); };
 /* ================= LOBBY UPDATE ================= */
 function updateLobby(dt){
   const L=state.lobby;
-  const steer=inputSteer(), thr=isTouch?0.8:(inputThrottle()-inputBrake()*0.6);
+  const steer=inputSteer(), thr=(inputMode==='touch')?(touch.brake?0.1:0.8):(inputThrottle()-inputBrake()*0.6);
   L.v+=thr*22*dt-L.v*1.5*dt; L.v=clamp(L.v,-9,24);
   L.heading-=steer*2.4*dt*Math.sign(L.v||1)*Math.min(1,Math.abs(L.v)/6);
   L.x+=Math.sin(L.heading)*L.v*dt; L.z+=Math.cos(L.heading)*L.v*dt;
@@ -1340,8 +1569,9 @@ function updateLobby(dt){
   if(d>LOBBY_R){ const f=LOBBY_R/d; L.x*=f; L.z*=f; L.v*=0.4; }
   const car=PLAYER_MESH.car;
   car.position.set(L.x,0,L.z); car.rotation.set(0,L.heading,0);
-  playerTrail.push(car.position.clone().add(new THREE.Vector3(-Math.sin(L.heading)*2.1,0,-Math.cos(L.heading)*2.1)),
-    new THREE.Vector3(Math.cos(L.heading),0,-Math.sin(L.heading)));
+  _v1.set(L.x-Math.sin(L.heading)*2.1,0,L.z-Math.cos(L.heading)*2.1);
+  _v2.set(Math.cos(L.heading),0,-Math.sin(L.heading));
+  playerTrail.push(_v1,_v2);
   AudioSys.setEngine(Math.abs(L.v),false); AudioSys.setWind(0);
   // gate triggers
   state.gateCooldown=Math.max(0,state.gateCooldown-dt);
@@ -1362,10 +1592,12 @@ function updateLobby(dt){
     }
   }
   // lobby camera: high chase
-  const camT=new THREE.Vector3(L.x-Math.sin(L.heading)*13,8.5,L.z-Math.cos(L.heading)*13);
-  camera.position.lerp(camT,1-Math.pow(0.001,dt));
+  _vCam.set(L.x-Math.sin(L.heading)*13,8.5,L.z-Math.cos(L.heading)*13);
+  camera.position.lerp(_vCam,1-Math.pow(0.001,dt));
   camera.lookAt(L.x,1.2,L.z);
-  camera.fov+= (CFG.fovBase-camera.fov)*Math.min(1,dt*4); camera.updateProjectionMatrix();
+  if(Math.abs(CFG.fovBase-camera.fov)>0.02){
+    camera.fov+=(CFG.fovBase-camera.fov)*Math.min(1,dt*4); camera.updateProjectionMatrix();
+  }
 }
 
 /* ================= RACE UPDATE ================= */
@@ -1382,13 +1614,14 @@ function updateRace(dt){
   updatePlayer(dt);
   for(const c of state.cars)if(!c.isPlayer&&!c.finished)updateAI(c,dt);
   for(const c of state.cars)placeCarMesh(c);
+  particles.update(dt);
   // slipstream wake follows the player while drafting; turns gold when the slingshot is charged
   const dw=state.lastDraft||0;
   if(dw>0.05&&!profile.calm&&!REDUCED){
     wake.visible=true;
-    const wsm=state.track.at(state.player.s);
-    const wp=wsm.p.clone().addScaledVector(wsm.lat,state.player.t);
-    wake.position.set(wp.x,0.9,wp.z);
+    const wsm=state.track.at(state.player.s,_smWake);
+    _v1.copy(wsm.p).addScaledVector(wsm.lat,state.player.t);
+    wake.position.set(_v1.x,0.9,_v1.z);
     wake.rotation.y=Math.atan2(wsm.tan.x,wsm.tan.z);
     wake.userData.ph=(wake.userData.ph+dt*(9+14*dw))%3;
     const wch=wake.children;
@@ -1415,20 +1648,22 @@ function updateRace(dt){
       :`<span style="color:#22c55e">AHEAD of ${state.rival.name} by ${Math.round(-gap)}m</span>`;
   }else $('gap-line').textContent='';
   // camera chase
-  const sm=state.track.at(state.player.s);
-  const pos=sm.p.clone().addScaledVector(sm.lat,state.player.t);
-  const back=pos.clone().addScaledVector(sm.tan,-CFG.camBack).addScaledVector(sm.lat,state.player.t*-0.12);
-  back.y=CFG.camH;
-  camera.position.lerp(back,1-Math.pow(0.0005,dt));
+  const sm=state.track.at(state.player.s,_sm1);
+  _v1.copy(sm.p).addScaledVector(sm.lat,state.player.t);
+  _vCam.copy(_v1).addScaledVector(sm.tan,-CFG.camBack).addScaledVector(sm.lat,state.player.t*-0.12);
+  _vCam.y=CFG.camH;
+  camera.position.lerp(_vCam,1-Math.pow(0.0005,dt));
   if(state.shake>0&&!profile.calm&&!REDUCED){
     camera.position.x+=(Math.random()-0.5)*state.shake;
     camera.position.y+=(Math.random()-0.5)*state.shake*0.5;
     state.shake=Math.max(0,state.shake-dt*2);
   }
-  const lookAt=sm.p.clone().addScaledVector(sm.tan,10).addScaledVector(sm.lat,state.player.t*0.6);
-  lookAt.y=1.4; camera.lookAt(lookAt);
+  _vLook.copy(sm.p).addScaledVector(sm.tan,10).addScaledVector(sm.lat,state.player.t*0.6);
+  _vLook.y=1.4; camera.lookAt(_vLook);
   const targetFov=CFG.fovBase+state.player.v*0.32+state.boostKick*10;
-  camera.fov+=(targetFov-camera.fov)*Math.min(1,dt*5); camera.updateProjectionMatrix();
+  if(Math.abs(targetFov-camera.fov)>0.02){
+    camera.fov+=(targetFov-camera.fov)*Math.min(1,dt*5); camera.updateProjectionMatrix();
+  }
 }
 function updateCountdown(dt){
   state.countT-=dt;
@@ -1445,22 +1680,35 @@ function updateCountdown(dt){
   }
   for(const c of state.cars)placeCarMesh(c);
   // static grid camera
-  const sm=state.track.at(state.player.s);
-  const pos=sm.p.clone().addScaledVector(sm.lat,state.player.t);
-  const back=pos.clone().addScaledVector(sm.tan,-CFG.camBack); back.y=CFG.camH;
-  camera.position.lerp(back,Math.min(1,dt*3));
-  const la=sm.p.clone().addScaledVector(sm.tan,10); la.y=1.4; camera.lookAt(la);
+  const sm=state.track.at(state.player.s,_sm1);
+  _v1.copy(sm.p).addScaledVector(sm.lat,state.player.t);
+  _vCam.copy(_v1).addScaledVector(sm.tan,-CFG.camBack); _vCam.y=CFG.camH;
+  camera.position.lerp(_vCam,Math.min(1,dt*3));
+  _vLook.copy(sm.p).addScaledVector(sm.tan,10); _vLook.y=1.4; camera.lookAt(_vLook);
 }
 
 /* ================= SETTINGS ================= */
-function syncSettings(){ $('opt-calm').checked=!!profile.calm; $('opt-sound').checked=!!profile.sound; $('opt-school').checked=!!profile.school; $('opt-close').checked=!!profile.close; }
+function syncSettings(){ const ol=$('opt-lite'); if(ol)ol.checked=liteOn(); $('opt-calm').checked=!!profile.calm; $('opt-sound').checked=!!profile.sound; $('opt-school').checked=!!profile.school; $('opt-close').checked=!!profile.close; }
+function liteOn(){ return (profile.lite===null||profile.lite===undefined)?LITE_AUTO:!!profile.lite; }
+// bloom.strength is a shader parameter, not a cost switch — UnrealBloomPass still
+// renders every frame whatever the strength. The saving comes from the pass's own
+// render targets, so lite mode halves the bloom resolution and trims pixel ratio.
+function applyPerf(){
+  const w=window.innerWidth,h=window.innerHeight,f=BLOOM_F();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,liteOn()?1.35:1.75));
+  renderer.setSize(w,h);
+  composer.setSize(w,h);                                   // must come first — it
+  bloom.setSize(Math.max(2,Math.round(w*f)),Math.max(2,Math.round(h*f))); // resets passes
+}
 function applyCalm(){
-  bloom.strength=profile.calm?0.35:1.05;
+  bloom.strength=profile.calm?0.35:(liteOn()?0.75:1.05);
+  applyPerf();
   document.getElementById('scanlines').style.opacity=profile.calm?0.2:0.5;
   AudioSys.applyVol();
 }
 $('opt-calm').onchange=e=>{profile.calm=e.target.checked;applyCalm();saveProfile();};
 $('opt-close').onchange=e=>{profile.close=e.target.checked;saveProfile();};
+$('opt-lite').onchange=e=>{profile.lite=e.target.checked;applyCalm();saveProfile();};
 $('card-btn').onclick=()=>{try{
   const cv=document.createElement('canvas');cv.width=900;cv.height=560;const x=cv.getContext('2d');
   const bg=x.createLinearGradient(0,0,0,560);bg.addColorStop(0,'#0b1030');bg.addColorStop(1,'#05060d');x.fillStyle=bg;x.fillRect(0,0,900,560);
@@ -1514,9 +1762,11 @@ function tick(forcedDt){
 function loop(){ requestAnimationFrame(loop); tick(); }
 addEventListener('resize',()=>{
   camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  composer.setSize(window.innerWidth,window.innerHeight);
+  applyPerf();
+  particles.mat.uniforms.uScale.value=window.innerHeight*0.5;
+  TRECT=null;   // button rects move on rotate/resize
 });
+addEventListener('orientationchange',()=>{TRECT=null;});
 
 /* ================= INIT ================= */
 (function(){
