@@ -288,7 +288,36 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#f4ede1;--lo-border:#C08A3E;--ido-bg:#eee7f1;--ido-border:#7E5FA0;--wedo-bg:#e3eeef;--wedo-border:#3A8B8F;--task-bg:#f8f0d8;--task-border:#C08A3E;--btn-bg:#C08A3E;--btn-hover:#9c6e2e;--sc-border:#C08A3E;--sc-bg:#faf3dc;--aspire-bg:#f7f1e8;--aspire-border:#C08A3E;--aspire-text:#7a5620}</style></head><body>
+:root{--lo-bg:#f4ede1;--lo-border:#C08A3E;--ido-bg:#eee7f1;--ido-border:#7E5FA0;--wedo-bg:#e3eeef;--wedo-border:#3A8B8F;--task-bg:#f8f0d8;--task-border:#C08A3E;--btn-bg:#C08A3E;--btn-hover:#9c6e2e;--sc-border:#C08A3E;--sc-bg:#faf3dc;--aspire-bg:#f7f1e8;--aspire-border:#C08A3E;--aspire-text:#7a5620}
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#F9F2E6;border:2px solid #C08A3E;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#8a5f24;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+</style></head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
   <span id="auto-timer-display">00:00</span>
@@ -324,6 +353,7 @@
 <span class="slide-tag tag-ido">I Do</span>
 <h2>The Model — Money In, Money Out</h2>
 <div class="li-box"><strong>Key Idea:</strong> The numbers decide whether the idea survives.</div>
+<div class="ilm" role="img" aria-label="Money flows in and costs drain out leaving a marked profit level"><svg viewBox="0 0 560 190" aria-hidden="true"><rect x="230" y="40" width="120" height="120" rx="12" fill="none" stroke="#8a5f24" stroke-width="5"/><rect class="fill" style="animation-delay:1.2s" x="236" y="88" width="108" height="66" fill="#F2C14E" opacity=".8"/><path class="draw" d="M96 60 L224 60" stroke="#C08A3E" stroke-width="9" stroke-linecap="round"/><text x="120" y="46" font-size="10" fill="#8a5f24">IN: sales £18</text><path class="draw" style="animation-delay:.7s" d="M356 130 L480 130" stroke="#8a5f24" stroke-width="9" stroke-linecap="round"/><text x="376" y="156" font-size="10" fill="#8a5f24">OUT: costs £7</text><g class="pop" style="animation-delay:2.0s"><line x1="230" y1="88" x2="350" y2="88" stroke="#8a5f24" stroke-width="3" stroke-dasharray="6 6"/><rect x="360" y="66" width="128" height="26" rx="13" fill="#8a5f24"/><text x="424" y="83" text-anchor="middle" font-size="9.5" fill="#fff">WE KEEP £11</text></g><text x="280" y="184" text-anchor="middle" font-size="11" fill="#8a5f24">IN − OUT = KEEP — KNOW YOUR NUMBERS</text></svg><p class="ilm-cap">🎬 Watch: in minus out is what you keep — the tank only rises if in beats out.</p></div>
 <div class="v5-step-controls"><button onclick="v5RevealNext(this.closest('.slide'))">Reveal next step ▸</button><span class="v5-step-label">Step 0 of 3</span></div><div class="v5-steps"><div class="v5-step"><h3>Listing every cost honestly — materials, kit, the hidden ones people forget.</h3><p>The cost list is exhaustive or it's fiction: materials, kit, the float, the waste, the things that break. Every forgotten cost reappears later wearing a bigger number.</p></div><div class="v5-step"><h3>Setting a price customers accept AND costs allow — the squeeze from both sides.</h3><p>Price lives in a squeeze: high enough to cover costs, low enough that customers stay customers. The defensible price cites both sides — 'a pound, because costs say 60p minimum and parents said a pound is fine.'</p></div><div class="v5-step"><h3>Break-even: the sale where it stops costing and starts giving — and what the profit is FOR.</h3><p>Break-even is the sale where the idea stops costing and starts giving — our single most important number. Before it, every sale pays debts; after it, every sale feeds the purpose.</p></div></div>
 </div><div class="slide" data-title="We Do 1" data-timer="6">
 <span class="slide-tag tag-wedo">We Do</span>
