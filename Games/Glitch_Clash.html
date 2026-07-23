@@ -141,9 +141,178 @@ body.hc .card{box-shadow:none;border-width:3px;}
 .footer{margin-top:22px;text-align:center;font-size:12px;color:var(--dim);}
 .footer b{color:var(--emm);}
 @media (min-width:700px){ .grid{grid-template-columns:1fr 1fr 1fr;} }
+
+/* ========== v2 MOBILE: thumb zone, hitboxes, orientation ========== */
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
+#battle{display:flex;flex-direction:column;min-height:100svh;padding-bottom:0;}
+#battle .spread{flex:none;}
+#ef{flex:none;}
+.b-mid{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;}
+/* everything the thumb needs, docked low */
+.thumb-dock{position:sticky;bottom:0;z-index:20;flex:none;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,transparent,var(--bg) 22%);}
+/* 48px physical minimum without visual bloat */
+.act{min-height:52px;touch-action:manipulation;}
+.mini{min-height:48px;touch-action:manipulation;}
+.btn,.btn.small{min-height:48px;touch-action:manipulation;}
+.sic,.stagebtn,.sticker{min-height:48px;min-width:48px;}
+/* tiny icon buttons keep their look but grow an invisible hitbox */
+.hit48{position:relative;}
+.hit48::before{content:"";position:absolute;top:50%;left:50%;width:48px;height:48px;
+  transform:translate3d(-50%,-50%,0);}
+/* landscape: shallower, wider, 4-across so nothing stacks off-screen */
+@media (orientation:landscape) and (max-height:520px){
+  .actionbar{grid-template-columns:repeat(4,1fr);}
+  .act{min-height:46px;font-size:13px;padding:6px;}
+  .act small{display:none;}
+  .fighter .art{height:40px;}
+  #log{max-height:44px;overflow:auto;}
+  .b-mid{flex:0 1 auto;}
+}
+@media (orientation:landscape) and (min-height:521px){
+  .actionbar{grid-template-columns:repeat(4,1fr);}
+}
+/* ========== v2 DRAG ========== */
+.drag-layer{position:fixed;inset:0;pointer-events:none;z-index:60;}
+.drag-ghost{position:fixed;left:0;top:0;width:120px;pointer-events:none;z-index:61;
+  will-change:transform;transform:translate3d(-999px,-999px,0);opacity:.96;
+  filter:drop-shadow(0 12px 22px rgba(0,0,0,.55));}
+.drop-target{outline:3px dashed var(--emm);outline-offset:3px;border-radius:16px;}
+.drop-target.hot{outline-style:solid;box-shadow:0 0 0 4px rgba(94,234,212,.22),0 0 26px rgba(94,234,212,.35);}
+.dragging{opacity:.35;}
+/* ========== v2 ARENA / GLYPH / CORRUPT ========== */
+.arena-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+  border:1px solid var(--tint,#33447a);color:var(--tint,var(--dim));border-radius:999px;padding:4px 10px;}
+.glyphbank{display:flex;gap:6px;margin:6px 0;align-items:center;flex-wrap:wrap;}
+.gb{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:var(--dim);}
+.gb i{width:9px;height:9px;border-radius:50%;background:#2c3b66;display:inline-block;}
+.gb i.on{background:var(--gc,var(--emm));box-shadow:0 0 7px var(--gc,var(--emm));}
+.hybrid-row{display:grid;gap:6px;margin-top:6px;}
+.act.hybrid{border-color:var(--harmony);color:var(--harmony);grid-column:1/-1;}
+.corrupt-card{position:relative;}
+.corrupt-card::after{content:"";position:absolute;inset:0;border-radius:var(--radius);
+  pointer-events:none;border:2px solid #f06292;
+  background:repeating-linear-gradient(0deg,rgba(240,98,146,.10) 0 2px,transparent 2px 5px);}
+/* ========== v2 CLASH RING ========== */
+.ring-wrap{position:relative;width:min(72vw,260px);height:min(72vw,260px);margin:10px auto;}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.ring-hand{transform-origin:50% 50%;will-change:transform;}
+.ring-hint{font-size:13px;color:var(--dim);font-weight:700;}
+.ring-verdict{font-size:26px;font-weight:900;letter-spacing:.04em;min-height:32px;}
+.ring-verdict.perfect{color:var(--harmony);}
+.ring-verdict.good{color:var(--emm);}
+.ring-verdict.ok{color:var(--dim);}
+#ringtap{width:100%;min-height:64px;font-size:18px;}
+/* reduced motion / calm strip the moving parts, keep the function */
+.reduce-motion .drag-ghost{transition:none!important;}
+.reduce-motion .gb i.on{box-shadow:none;}
+.calm .drop-target.hot{box-shadow:none;}
+.hc .arena-chip{border-color:#fff;color:#fff;}
+.hc .gb i.on{background:#fff;box-shadow:none;}
+
+
+/* ========== v2 CUTSCENES ========== */
+#ov-cut .sheet{max-width:520px;}
+.cut-stage{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 20%,#141d3d,#070b18);border:1px solid #2c3b66;}
+.cut-stage svg{position:absolute;inset:0;width:100%;height:100%;}
+.cut-text{min-height:72px;margin:12px 0 6px;font-size:16px;line-height:1.5;font-weight:700;}
+.cut-dots{display:flex;gap:6px;justify-content:center;margin-bottom:8px;}
+.cut-dots i{width:7px;height:7px;border-radius:50%;background:#2c3b66;}
+.cut-dots i.on{background:var(--harmony);}
+.cut-bar{display:flex;gap:8px;}
+.cut-bar .btn{flex:1;}
+/* --- scene primitives, all CSS-animated --- */
+@keyframes cutDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-14px,0)}}
+@keyframes cutSpin{to{transform:rotate(360deg)}}
+@keyframes cutFlick{0%,100%{opacity:.9}42%{opacity:.25}46%{opacity:.85}}
+@keyframes cutRise{from{transform:translate3d(0,18px,0);opacity:0}to{transform:translate3d(0,0,0);opacity:1}}
+@keyframes cutScanCut{from{transform:translate3d(0,-100%,0)}to{transform:translate3d(0,900%,0)}}
+@keyframes cutPulseR{0%,100%{r:16}50%{r:20}}
+.cut-mark{transform-origin:50% 50%;animation:cutSpin 22s linear infinite;}
+.cut-drift{animation:cutDrift 3.4s ease-in-out infinite alternate;}
+.cut-flick{animation:cutFlick 2.6s steps(1,end) infinite;}
+.cut-rise{animation:cutRise .6s ease both;}
+.cut-scan{animation:cutScanCut 4.5s linear infinite;}
+.cut-pulse{animation:cutPulseR 2.8s ease-in-out infinite;}
+.reduce-motion .cut-mark,.reduce-motion .cut-drift,.reduce-motion .cut-flick,
+.reduce-motion .cut-rise,.reduce-motion .cut-scan,.reduce-motion .cut-pulse{animation:none!important;}
+.calm .cut-flick{animation:none!important;opacity:.85;}
+.hc .cut-stage{background:#000;border-color:#fff;}
+
+
+/* ========== v2 ATMOSPHERE ========== */
+#fxbg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(94,234,212,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(94,234,212,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 78%);
+          mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 78%);}
+#fxscan{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.28;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);}
+#fxcanvas{position:fixed;inset:0;z-index:55;pointer-events:none;}
+.screen{position:relative;z-index:2;}
+.calm #fxscan,.hc #fxscan{display:none;}
+.calm #fxbg{opacity:.22;}
+.hc #fxbg{display:none;}
+.reduce-motion #fxscan{display:none;}
+/* ========== v2 CARD SHADERS ========== */
+.card,.mini{position:relative;overflow:hidden;}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.20) 47%,
+             rgba(160,255,240,.16) 51%,transparent 62%);
+  background-size:260% 260%;
+  background-position:calc(var(--mx,50%) * 1.1) calc(var(--my,50%) * 1.1);
+  opacity:var(--foil,0);transition:opacity .25s ease;mix-blend-mode:screen;}
+.card:hover::before,.card.lit::before{opacity:.85;}
+/* rarity aura: pulse rate and colour scale with rarity, brighter when ascended */
+.card{--auraC:var(--rar,#5eead4);}
+.card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:0;
+  box-shadow:inset 0 0 var(--auraSize,18px) var(--auraC);
+  opacity:var(--auraA,.30);animation:auraPulse var(--auraT,3.6s) ease-in-out infinite;}
+@keyframes auraPulse{0%,100%{opacity:calc(var(--auraA,.30) * .55)}50%{opacity:var(--auraA,.30)}}
+.card.ascended{--auraA:.7;--auraSize:30px;--auraT:1.9s;}
+.reduce-motion .card::after{animation:none!important;}
+.reduce-motion .card::before{opacity:0!important;}
+.calm .card::after{--auraA:.18;animation:none!important;}
+.hc .card::before,.hc .card::after{display:none!important;}
+/* ========== v2 IMPACT ========== */
+@keyframes fxShake{10%,90%{transform:translate3d(calc(var(--shk) * -1px),0,0)}
+  20%,80%{transform:translate3d(calc(var(--shk) * 1.4px),0,0)}
+  30%,50%,70%{transform:translate3d(calc(var(--shk) * -2px),0,0)}
+  40%,60%{transform:translate3d(calc(var(--shk) * 2px),0,0)}}
+.shaking{animation:fxShake .42s cubic-bezier(.36,.07,.19,.97) both;will-change:transform;}
+@keyframes fxGlitch{
+  0%{clip-path:inset(0 0 0 0);transform:translate3d(0,0,0);filter:none}
+  18%{clip-path:inset(14% 0 62% 0);transform:translate3d(-5px,0,0);filter:hue-rotate(-30deg)}
+  34%{clip-path:inset(68% 0 12% 0);transform:translate3d(5px,0,0);filter:hue-rotate(25deg)}
+  52%{clip-path:inset(38% 0 40% 0);transform:translate3d(-3px,0,0)}
+  70%{clip-path:inset(4% 0 82% 0);transform:translate3d(3px,0,0)}
+  100%{clip-path:inset(0 0 0 0);transform:translate3d(0,0,0);filter:none}}
+.glitching{animation:fxGlitch .34s steps(2,end) both;will-change:transform,clip-path;}
+.reduce-motion .shaking,.reduce-motion .glitching,
+.calm .shaking,.calm .glitching{animation:none!important;}
+/* springy buttons */
+.btn,.act,.mini{transition:transform .12s cubic-bezier(.34,1.56,.64,1);}
+.btn:active,.act:active:not(:disabled),.mini:active{transform:translate3d(0,1px,0) scale(.96);}
+.reduce-motion .btn,.reduce-motion .act,.reduce-motion .mini{transition:none;}
+@keyframes drawIn{from{transform:translate3d(0,26px,0) scale(.9);opacity:0}
+  60%{transform:translate3d(0,-4px,0) scale(1.02)}to{transform:translate3d(0,0,0) scale(1);opacity:1}}
+.drawn{animation:drawIn .34s cubic-bezier(.34,1.4,.64,1) both;}
+.reduce-motion .drawn{animation:none;}
+
+.sC{--auraA:.16;--auraT:5s}
+.sR{--auraA:.28;--auraT:4s}
+.sE{--auraA:.42;--auraT:3s}
+.sL{--auraA:.58;--auraSize:26px;--auraT:2.2s}
+.card.ascended{--auraA:.78;--auraSize:32px;--auraT:1.6s}
 </style>
 </head>
 <body>
+<div id="fxbg" aria-hidden="true"></div>
+<div id="fxscan" aria-hidden="true"></div>
+<canvas id="fxcanvas" aria-hidden="true"></canvas>
 
 <!-- ============ TITLE ============ -->
 <section class="screen active" id="scr-title">
@@ -154,7 +323,7 @@ body.hc .card{box-shadow:none;border-width:3px;}
     <button class="btn primary" data-go="home" style="max-width:280px;margin:18px auto">▶ Play</button>
     <button class="btn small" data-open="settings" aria-label="Open settings">⚙ Settings</button>
   </div>
-  <div class="footer">A <b>Made by Matt</b> game · Hold the Mark universe · v1.1</div>
+  <div class="footer">A <b>Made by Matt</b> game · Hold the Mark universe · v2.0</div>
 </section>
 
 <!-- ============ HOME ============ -->
@@ -170,7 +339,7 @@ body.hc .card{box-shadow:none;border-width:3px;}
   <button class="btn" data-go="team">🃏 Team &amp; Collection</button>
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
-  <div class="footer">Made by Matt · v1.1</div>
+  <div class="footer">Made by Matt · v2.0</div>
 </section>
 
 <!-- ============ STAGES ============ -->
@@ -195,16 +364,23 @@ body.hc .card{box-shadow:none;border-width:3px;}
   <div id="battle">
     <div class="spread">
       <span class="chip" id="stagechip">Stage</span>
+      <span class="arena-chip" id="arenachip" hidden></span>
       <button class="btn small" id="quitbtn">Quit</button>
     </div>
     <!-- enemy -->
     <div class="fighter" id="ef"></div>
-    <!-- player -->
-    <div class="fighter" id="pf"></div>
-    <div class="bench" id="bench"></div>
-    <div class="tut" id="tutbub" hidden></div>
-    <div class="actionbar" id="actions"></div>
-    <div id="log" role="log">Ready.</div>
+    <div class="b-mid">
+      <div id="log" role="log">Ready.</div>
+    </div>
+    <!-- thumb zone: everything the player touches lives down here -->
+    <div class="thumb-dock">
+      <div class="fighter" id="pf"></div>
+      <div class="glyphbank" id="glyphbank" aria-label="Glyph charges"></div>
+      <div class="bench" id="bench"></div>
+      <div class="tut" id="tutbub" hidden></div>
+      <div class="actionbar" id="actions"></div>
+      <div class="hybrid-row" id="hybrids"></div>
+    </div>
   </div>
 </section>
 
@@ -250,8 +426,8 @@ body.hc .card{box-shadow:none;border-width:3px;}
    GLITCH CLASH v1.0.0 — Made by Matt (Hold the Mark universe)
    Engine is DOM-free so it can be simulated in node.
 ================================================================= */
-const GAME_VERSION = "1.1.0";
-const SAVE_VERSION = 2;
+const GAME_VERSION = "2.0.0";
+const SAVE_VERSION = 3;
 
 /* ---------- Card data ---------- */
 // shape: R ring, M m, S star, B bastion | rarity: C R E L
@@ -262,6 +438,20 @@ const SHAPES = {
   B:{name:"Bastion",color:"var(--bastion)",hex:"#7fb4ff", role:"Defender"}
 };
 const RARITY = {C:{n:"COMMON",mult:1},R:{n:"RARE",mult:1.15},E:{n:"EPIC",mult:1.3},L:{n:"LEGEND",mult:1.45}};
+const ARENAS = [
+  {id:"stable",  name:"Stable Field", desc:"No interference.",              tint:"#5eead4"},
+  {id:"over",    name:"Overclock",    desc:"Energy gains +50%.",            tint:"#ffd166"},
+  {id:"decay",   name:"Data Decay",   desc:"Both sides lose 3 HP a turn.",  tint:"#f06292"},
+  {id:"null",    name:"Null Zone",    desc:"Specials cost 75 and lose their bonus.", tint:"#7fb4ff"}
+];
+// Glyph Alchemy: banked charges, spent on hybrid moves
+const HYBRIDS = {
+  RM:{name:"Tidal Halo",   mult:2.4, fx:"heal",   fxv:18, need:{R:2,M:2}, desc:"Sweeping cut + restore 18 HP"},
+  SB:{name:"Bulwark Nova", mult:2.6, fx:"shield", fxv:2,  need:{S:2,B:2}, desc:"Star burst + 2-turn shield"},
+  RS:{name:"Corona Ring",  mult:3.0, fx:"none",   fxv:0,  need:{R:2,S:2}, desc:"Pure ring of star-fire"},
+  MB:{name:"Anchor Surge", mult:2.2, fx:"refund", fxv:35, need:{M:2,B:2}, desc:"Heavy blow + keep 35 energy"}
+};
+const CORRUPT_TURNS = 3;
 const SPECIALS = {
   R:{name:"Halo Cutter", mult:2.1, fx:"heal", fxv:12, desc:"Big hit + restore 12 HP"},
   M:{name:"Twin Momentum", mult:2.3, fx:"refund", fxv:20, desc:"Big hit + keep 20 energy"},
@@ -329,11 +519,71 @@ const GLITCHES = [
   {id:"g9", name:"Phase Storm",  hp:115, atk:15, def:4, ai:[.55,.35,.1], spMult:2.4, trait:"blur",
    line:"Half Phaser, half thunderstorm."},
   {id:"g10",name:"STATIC STORM", hp:175, atk:16, def:6, ai:[.5,.3,.2],  spMult:2.5, trait:"boss",
-   line:"The finale. It has a second form. So might you."}
+   line:"The finale. It has a second form. So might you."},
+  // ===== ACT II — THE DEEP STATIC =====
+  {id:"g11",name:"Echo Fragment", hp:130, atk:14, def:5, ai:[.5,.3,.2], spMult:2.2, trait:"corrupt", corrupts:true,
+   line:"A shard of something older. It writes itself into you."},
+  {id:"g12",name:"Null Warden",   hp:150, atk:14, def:8, ai:[.35,.25,.4], spMult:2.0, trait:"shieldy",
+   line:"It guards a door that should have stayed shut."},
+  {id:"g13",name:"THE ARCHIVIST", hp:190, atk:17, def:7, ai:[.5,.25,.25], spMult:2.4, trait:"boss", corrupts:true,
+   line:"It has been recording every Keeper who ever fell."},
+  {id:"g14",name:"Cascade",       hp:165, atk:16, def:5, ai:[.6,.3,.1], spMult:2.5, trait:"blur", corrupts:true,
+   line:"One glitch became ten became a hundred."},
+  {id:"g15",name:"THE DEEP STATIC",hp:230, atk:18, def:8, ai:[.45,.3,.25], spMult:2.6, trait:"boss", corrupts:true,
+   line:"The silence underneath the signal. The first Glitch."}
 ];
 
 /* ---------- Engine (pure, DOM-free) ---------- */
 const Engine = {
+  // ---- Arena modifiers ----
+  arenaFor(stageIdx, turn, rng){
+    if(stageIdx < 3) return ARENAS[0];              // stages 1-3 always stable: teaching space
+    const cycle = Math.floor((turn-1)/4);
+    const pool = ARENAS.slice(1);
+    return pool[(stageIdx + cycle) % pool.length];
+  },
+  energyGain(base, arena){
+    return arena.id==="over" ? Math.round(base*1.5) : base;
+  },
+  specialCost(arena){ return arena.id==="null" ? 75 : 60; },
+
+  // ---- Corruption ----
+  corrupt(f, ev, who){
+    if(f.corrupt>0) return false;
+    f.corrupt = CORRUPT_TURNS; f.corruptChoice = null;
+    ev.push({t:"corrupt", who});
+    return true;
+  },
+  // "ride" swaps atk/def and amplifies damage both ways; "purge" clears it but burns the turn
+  applyCorruptChoice(f, choice, ev){
+    if(choice==="purge"){ f.corrupt=0; f.corruptChoice=null; f.purging=true; ev.push({t:"purge"}); return; }
+    if(choice==="ride" && !f.riding){
+      f.riding=true; const a=f.atk; f.atk=f.def*2; f.def=Math.round(a/2);
+      ev.push({t:"ride"});
+    }
+  },
+  clearCorrupt(f, ev){
+    if(f.riding){ const a=f.atk; f.atk=Math.round(f.def*2); f.def=Math.round(a/2); f.riding=false; }
+    f.corrupt=0; f.corruptChoice=null; ev.push({t:"uncorrupt"});
+  },
+
+  // ---- Glyph Alchemy: bank a charge per turn, spend on hybrids ----
+  bankGlyph(battle, shape){
+    battle.glyphs[shape] = Math.min(4, (battle.glyphs[shape]||0) + 1);
+  },
+  hybridReady(battle){
+    const out=[];
+    for(const k in HYBRIDS){
+      const need = HYBRIDS[k].need;
+      if(Object.keys(need).every(s => (battle.glyphs[s]||0) >= need[s])) out.push(k);
+    }
+    return out;
+  },
+  spendHybrid(battle, key){
+    const need = HYBRIDS[key].need;
+    for(const s in need) battle.glyphs[s] = Math.max(0, (battle.glyphs[s]||0) - need[s]);
+  },
+
   harmonyBonus(teamShapes){
     const uniq = new Set(teamShapes).size;
     if(teamShapes.length>=3 && uniq>=3) return 0.10;
@@ -348,7 +598,7 @@ const Engine = {
       ascended:false, asc:card.asc, special:SPECIALS[card.shape] };
   },
   mkGlitch(g){
-    return { id:g.id, name:g.name, maxhp:g.hp, hp:g.hp, atk:g.atk, def:g.def,
+    return { corrupt:0, riding:false, id:g.id, name:g.name, maxhp:g.hp, hp:g.hp, atk:g.atk, def:g.def,
       en:0, shield:0, ai:g.ai, spMult:g.spMult, trait:g.trait,
       revived:false, phase:1 };
   },
@@ -366,71 +616,99 @@ const Engine = {
     return "guard";
   },
   // resolves one simultaneous turn; returns event list
-  resolveTurn(p, e, pAct, eAct, rng){
+  resolveTurn(p, e, pAct, eAct, rng, ctx){
+    ctx = ctx || {};
+    const arena = ctx.arena || ARENAS[0];
+    const skill = typeof ctx.clashSkill === "number" ? ctx.clashSkill : 0.5;
+    const hybrid = ctx.hybrid ? HYBRIDS[ctx.hybrid] : null;
+    const cost = this.specialCost(arena);
     const ev = [];
-    if(pAct==="special" && p.en<60) pAct="strike";
-    if(eAct==="special" && e.en<60) eAct="strike";
+
+    // corruption ticks: a "purging" fighter forfeits its action this turn
+    if(p.purging){ p.purging=false; pAct="guard"; ev.push({t:"purged"}); }
+
+    if(pAct==="special" && p.en<cost) pAct="strike";
+    if(eAct==="special" && e.en<cost) eAct="strike";
     const pGuard = pAct==="guard", eGuard = eAct==="guard";
-    // energy gains first
-    if(pAct==="strike") p.en=Math.min(100,p.en+25);
-    if(pAct==="charge") p.en=Math.min(100,p.en+45);
-    if(pAct==="guard")  p.en=Math.min(100,p.en+10);
-    if(eAct==="strike") e.en=Math.min(100,e.en+25);
-    if(eAct==="charge") e.en=Math.min(100,e.en+45);
-    if(eAct==="guard")  e.en=Math.min(100,e.en+10);
-    // clash?
+
+    const gain = (base)=>this.energyGain(base, arena);
+    if(pAct==="strike") p.en=Math.min(100,p.en+gain(25));
+    if(pAct==="charge") p.en=Math.min(100,p.en+gain(45));
+    if(pAct==="guard")  p.en=Math.min(100,p.en+gain(10));
+    if(eAct==="strike") e.en=Math.min(100,e.en+gain(25));
+    if(eAct==="charge") e.en=Math.min(100,e.en+gain(45));
+    if(eAct==="guard")  e.en=Math.min(100,e.en+gain(10));
+
+    // player's effective special this turn: hybrid overrides signature
+    const pSpec = hybrid || p.special;
+    const nulled = arena.id==="null";
+
+    // ---- clash ----
     if(pAct==="special" && eAct==="special"){
-      p.en-=60; e.en-=60;
-      const pPow = p.atk*p.special.mult + p.en*0.4 + rng()*8;
+      p.en-=cost; e.en-=cost;
+      // skill (0..1) from the timing ring shifts the power balance up to +/-35%
+      const skillMult = 0.65 + skill*0.7;
+      const pPow = p.atk*pSpec.mult*skillMult + p.en*0.4 + rng()*8;
       const ePow = e.atk*e.spMult + e.en*0.4 + rng()*8;
       const share = pPow/(pPow+ePow);
       if(pPow>=ePow){
-        const d=this.dmg(p.atk,p.special.mult*0.9,e.def,false,e.shield>0);
+        let d=this.dmg(p.atk,pSpec.mult*0.9,e.def,false,e.shield>0);
+        d=Math.max(2,Math.round(d*(0.7+skill*0.6)));   // timing scales the payoff
         e.hp=Math.max(0,e.hp-d);
-        ev.push({t:"clash",winner:"p",share,d});
-        this.applyFx(p,ev);
+        ev.push({t:"clash",winner:"p",share,d,skill});
+        if(!nulled) this.applyFx(p,ev,pSpec);
       } else {
-        const d=this.dmg(e.atk,e.spMult*0.9,p.def,false,p.shield>0);
+        let d=this.dmg(e.atk,e.spMult*0.9,p.def,false,p.shield>0);
+        d=Math.max(2,Math.round(d*(1.3-skill*0.5)));   // good timing softens a lost clash
         p.hp=Math.max(0,p.hp-d);
-        ev.push({t:"clash",winner:"e",share,d});
+        ev.push({t:"clash",winner:"e",share,d,skill});
       }
       p.shield=Math.max(0,p.shield-1); e.shield=Math.max(0,e.shield-1);
+      this.tickArena(p,e,arena,ev);
+      this.tickCorrupt(p,ev);
       return ev;
     }
-    // player action
+
+    // ---- player action ----
     if(pAct==="strike"||pAct==="special"){
       let miss=false;
       if(e.trait==="blur" && pAct==="strike" && rng()<0.2) miss=true;
       if(miss){ ev.push({t:"miss",who:"p"}); }
       else{
-        const mult = pAct==="special" ? p.special.mult : 1.0;
-        if(pAct==="special") p.en-=60;
-        const d=this.dmg(p.atk,mult,e.def,eGuard,e.shield>0);
+        const mult = pAct==="special" ? pSpec.mult : 1.0;
+        if(pAct==="special") p.en-=cost;
+        let d=this.dmg(p.atk,mult,e.def,eGuard,e.shield>0);
+        if(p.riding) d=Math.round(d*1.3);            // riding the glitch: hit harder
         e.hp=Math.max(0,e.hp-d);
-        ev.push({t:"hit",who:"p",d,sp:pAct==="special"});
-        if(pAct==="special") this.applyFx(p,ev);
+        ev.push({t:"hit",who:"p",d,sp:pAct==="special",hybrid:!!hybrid});
+        if(pAct==="special" && !nulled) this.applyFx(p,ev,pSpec);
       }
     }
-    // enemy action (only if still up)
+
+    // ---- enemy action ----
     if(e.hp>0 && (eAct==="strike"||eAct==="special")){
       const mult = eAct==="special" ? e.spMult : 1.0;
-      if(eAct==="special") e.en-=60;
-      const d=this.dmg(e.atk,mult,p.def,pGuard,p.shield>0);
+      if(eAct==="special") e.en-=cost;
+      let d=this.dmg(e.atk,mult,p.def,pGuard,p.shield>0);
+      if(p.riding) d=Math.round(d*1.3);              // ...and take more
       p.hp=Math.max(0,p.hp-d);
       ev.push({t:"hit",who:"e",d,sp:eAct==="special"});
+      // corrupting glitches infect on a landed special
+      if(eAct==="special" && (e.trait==="corrupt"||e.corrupts) && p.corrupt<=0 && rng()<0.6) this.corrupt(p,ev,"p");
     }
+
     if(pGuard) ev.push({t:"guard",who:"p"});
     if(eGuard) ev.push({t:"guard",who:"e"});
-    // shields tick down after being applied for a turn
     p.shield=Math.max(0,p.shield-1); e.shield=Math.max(0,e.shield-1);
-    // enemy trait: shieldy sometimes gains shield when guarding
     if(e.trait==="shieldy" && eAct==="guard" && rng()<0.5){ e.shield=1; ev.push({t:"eshield"}); }
-    // revive trait
+
+    this.tickArena(p,e,arena,ev);
+    this.tickCorrupt(p,ev);
+
     if(e.hp<=0 && e.trait==="revive" && !e.revived){
       e.revived=true; e.hp=Math.round(e.maxhp*0.45); e.en=30;
       ev.push({t:"revive"});
     }
-    // boss phase 2
     if(e.trait==="boss" && e.phase===1 && e.hp<=e.maxhp*0.4){
       const reborn = e.hp<=0;
       e.phase=2; e.atk=Math.round(e.atk*1.25); e.hp=Math.max(20,Math.min(e.maxhp,e.hp+20));
@@ -438,8 +716,24 @@ const Engine = {
     }
     return ev;
   },
-  applyFx(p,ev){
-    const f=p.special;
+
+  tickArena(p,e,arena,ev){
+    if(arena.id==="decay"){
+      const before=p.hp;
+      p.hp=Math.max(1,p.hp-3);                       // decay never lands the killing blow on the player
+      e.hp=Math.max(0,e.hp-3);
+      if(before!==p.hp || e.hp>=0) ev.push({t:"decay",v:3});
+    }
+  },
+  tickCorrupt(f,ev){
+    if(f.corrupt>0){
+      f.corrupt--;
+      if(f.corrupt<=0) this.clearCorrupt(f,ev);
+    }
+  },
+
+  applyFx(p,ev,override){
+    const f=override||p.special;
     if(f.fx==="heal"){ p.hp=Math.min(p.maxhp,p.hp+f.fxv); ev.push({t:"fx",fx:"heal",v:f.fxv}); }
     if(f.fx==="refund"){ p.en=Math.min(100,p.en+f.fxv); ev.push({t:"fx",fx:"refund",v:f.fxv}); }
     if(f.fx==="shield"){ p.shield=2; ev.push({t:"fx",fx:"shield",v:1}); }
@@ -477,6 +771,10 @@ const Engine = {
     sv.stickers=(d.stickers&&typeof d.stickers==="object")?d.stickers:{};
     sv.dailyDone=typeof d.dailyDone==="string"?d.dailyDone:"";
     sv.tutorialDone=!!d.tutorialDone;
+    // v3: cutscenes seen — validate against known scene keys only
+    const seenSrc=(d.seen&&typeof d.seen==="object")?d.seen:{};
+    const sv_seen={}; for(const k of ["s1","s5","s10","s13","s15"]) if(seenSrc[k]) sv_seen[k]=true;
+    sv.seen=sv_seen;
     sv.v=SAVE_VERSION;
     return sv;
   },
@@ -511,7 +809,7 @@ function store(){
 const DEFAULT_SAVE = ()=>({
   v:SAVE_VERSION, owned:[...STARTERS], dups:{}, team:[...STARTERS],
   cleared:[], xp:0, stickers:{}, settings:{calm:false,motion:"auto",hc:false},
-  dailyDone:"", tutorialDone:false, stats:{wins:0, clashWins:0}
+  dailyDone:"", tutorialDone:false, seen:{}, stats:{wins:0, clashWins:0}
 });
 let SV = DEFAULT_SAVE();
 function localDateKey(dt=new Date()){
@@ -533,6 +831,7 @@ const rng = Math.random;
 let battle=null, pickSlot=null;
 
 loadSave(); applySettings();
+try{ FX.init(); }catch(_){}
 
 /* ----- navigation ----- */
 function go(name){
@@ -649,7 +948,8 @@ function renderHome(){
 }
 $("#dailybtn").onclick=()=>{
   const today=localDateKey();
-  const idx=Engine.dailyIndex(today, GLITCHES.length-1); // never the final boss
+  const pool=GLITCHES.map((g,i)=>i).filter(i=>GLITCHES[i].trait!=="boss"); // never any boss
+  const idx=pool[Engine.dailyIndex(today, pool.length)];
   startBattle(idx, {daily:true, dateStr:today});
 };
 
@@ -733,12 +1033,17 @@ const ACTS=[
   {k:"special",label:"Special",sub:"Costs 60 energy", cls:"special"}
 ];
 function startBattle(stageIdx, opts){
+  const sceneKey = opts.__scened ? null : sceneForStage(stageIdx);
+  if(sceneKey && !opts.daily && !(SV.seen&&SV.seen[sceneKey])){
+    return playScene(sceneKey, ()=>startBattle(stageIdx, Object.assign({},opts,{__scened:true})));
+  }
   const g=GLITCHES[stageIdx];
   const bonus=Engine.harmonyBonus(SV.team.map(id=>CARD_BY_ID[id].shape));
   battle={
     stageIdx, glitch:Engine.mkGlitch(g), daily:!!opts.daily, dateStr:opts.dateStr||"",
     team:SV.team.map(id=>Engine.mkFighter(CARD_BY_ID[id], bonus, dupBoost(id))),
     active:0, turn:1, over:false, dmgTaken:0, usedClash:false, bonus,
+    glyphs:{R:0,M:0,S:0,B:0}, arena:ARENAS[0], clashSkill:0.5,
     tut:(stageIdx===0 && !opts.daily && !SV.tutorialDone) ? 1 : 0
   };
   $("#stagechip").textContent=(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · ")+g.name;
@@ -762,10 +1067,396 @@ function fighterCard(f, isEnemy){
     <div class="bar en" role="progressbar" aria-label="${f.name} energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.en}" style="margin-top:4px;height:8px"><i style="width:${f.en}%"></i></div>
   </div>`;
 }
+
+/* ================= v2: HAPTICS ================= */
+const Haptics = (()=>{
+  const can = typeof navigator!=="undefined" && typeof navigator.vibrate==="function";
+  const off = ()=> !can || SV.settings.calm || document.body.classList.contains("reduce-motion");
+  const fire = pat => { if(off()) return false; try{ return navigator.vibrate(pat); }catch(_){ return false; } };
+  return {
+    supported: can,
+    select:  ()=>fire(8),          // crisp pick-up
+    lock:    ()=>fire([12,30,12]), // dual tick: target acquired
+    charge:  ()=>fire([6,40,6,40,6]),
+    impact:  n=>fire(Math.min(38, 10+Math.round(n))),
+    fail:    ()=>fire([22,60,22])
+  };
+})();
+
+/* ================= v2: UNIFIED POINTER ENGINE =================
+   One pipeline for sheen, drag, long-press and swipe. rAF-throttled. */
+const Pointer = (()=>{
+  let st=null, raf=0, ghost=null;
+  const LONG_MS=210, SWIPE_MIN=42, DRAG_MIN=12;
+  function ghostEl(){ return ghost || (ghost=$("#dragghost")); }
+  function frame(){
+    raf=0;
+    if(!st||!st.dragging) return;
+    const g=ghostEl();
+    // offset ABOVE the thumb so the card is never under the finger
+    const x=st.x-60, y=st.y-104;
+    const tilt=Math.max(-14,Math.min(14,st.vx*0.9));
+    g.style.transform=`translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(1.04)`;
+    const el=document.elementFromPoint(st.x,st.y);
+    const drop=el&&el.closest?el.closest("[data-drop]"):null;
+    if(drop!==st.drop){
+      if(st.drop) st.drop.classList.remove("hot");
+      st.drop=drop;
+      if(drop){ drop.classList.add("hot"); Haptics.lock(); }
+    }
+  }
+  function down(e,cfg){
+    const t=e.currentTarget;
+    st={x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,vx:0,t0:performance.now(),
+        el:t,cfg,dragging:false,drop:null,longed:false,id:e.pointerId};
+    try{ t.setPointerCapture(e.pointerId); }catch(_){}
+    st.longT=setTimeout(()=>{
+      if(!st||st.dragging) return;
+      st.longed=true; Haptics.lock();
+      if(cfg.onLong) cfg.onLong(st.el);
+    },LONG_MS);
+  }
+  function move(e){
+    if(!st||e.pointerId!==st.id) return;
+    st.vx=e.clientX-st.x; st.x=e.clientX; st.y=e.clientY;
+    const dx=st.x-st.x0, dy=st.y-st.y0;
+    if(!st.dragging && !st.longed && Math.hypot(dx,dy)>DRAG_MIN && st.cfg.onDragStart){
+      st.dragging=true; clearTimeout(st.longT);
+      Haptics.select();
+      const g=ghostEl(); g.innerHTML=st.cfg.ghostHTML?st.cfg.ghostHTML(st.el):st.el.outerHTML;
+      st.el.classList.add("dragging");
+      document.querySelectorAll("[data-drop]").forEach(d=>d.classList.add("drop-target"));
+      st.cfg.onDragStart(st.el);
+    }
+    if(!raf) raf=requestAnimationFrame(frame);
+  }
+  function up(e){
+    if(!st||e.pointerId!==st.id) return;
+    clearTimeout(st.longT);
+    if(raf){ cancelAnimationFrame(raf); raf=0; }
+    const dx=st.x-st.x0, dy=st.y-st.y0, dt=performance.now()-st.t0;
+    const cfg=st.cfg, el=st.el, drop=st.drop, dragging=st.dragging, longed=st.longed;
+    if(dragging){
+      const g=ghostEl();
+      g.style.transform="translate3d(-999px,-999px,0)"; g.innerHTML="";
+      el.classList.remove("dragging");
+      document.querySelectorAll("[data-drop]").forEach(d=>d.classList.remove("drop-target","hot"));
+      if(drop){ Haptics.impact(14); cfg.onDrop&&cfg.onDrop(el,drop); }
+      else cfg.onCancel&&cfg.onCancel(el);
+    } else if(longed){
+      /* long-press already handled */
+    } else if(Math.abs(dy)>SWIPE_MIN && Math.abs(dy)>Math.abs(dx) && cfg.onSwipe){
+      Haptics.select(); cfg.onSwipe(dy<0?"up":"down",el);
+    } else if(dt<600 && Math.hypot(dx,dy)<DRAG_MIN){
+      Haptics.select(); cfg.onTap&&cfg.onTap(el);
+    }
+    st=null;
+  }
+  function cancel(){
+    if(!st) return;
+    clearTimeout(st.longT);
+    const g=ghostEl(); g.style.transform="translate3d(-999px,-999px,0)"; g.innerHTML="";
+    if(st.el) st.el.classList.remove("dragging");
+    document.querySelectorAll("[data-drop]").forEach(d=>d.classList.remove("drop-target","hot"));
+    st.cfg.onCancel&&st.cfg.onCancel(st.el);
+    st=null;
+  }
+  return {
+    bind(el,cfg){
+      el.style.touchAction="none";
+      el.addEventListener("pointerdown",e=>{e.preventDefault();down(e,cfg);});
+      el.addEventListener("pointermove",move);
+      el.addEventListener("pointerup",up);
+      el.addEventListener("pointercancel",cancel);
+      return el;
+    }
+  };
+})();
+
+/* ================= v2: BEAM CLASH TIMING RING ================= */
+function runRing(done){
+  const calm = SV.settings.calm || document.body.classList.contains("reduce-motion");
+  // Calm Mode: half speed, much wider window — slower, not automatic
+  const period = calm ? 2600 : 1300;
+  const zoneDeg = calm ? 96 : 44;
+  const zoneStart = 40 + Math.random()*240;
+  const R=42, C=2*Math.PI*R;
+  const zone=$("#ringzone"), hand=$("#ringhand"), verdict=$("#ringverdict"), btn=$("#ringtap");
+  zone.setAttribute("stroke-dasharray", `${(zoneDeg/360*C).toFixed(1)} ${C.toFixed(1)}`);
+  zone.setAttribute("stroke-dashoffset", `${(-zoneStart/360*C).toFixed(1)}`);
+  $("#ringhint").textContent = calm
+    ? "Take your time — tap when the pointer reaches the bright arc."
+    : "Tap when the pointer hits the bright arc.";
+  verdict.textContent=""; btn.disabled=false;
+  showOv($("#ov-ring"));
+  let raf=0, t0=performance.now(), settled=false;
+  Haptics.charge();
+  function loop(now){
+    const ang=((now-t0)%period)/period*360;
+    hand.style.transform=`rotate(${ang}deg)`;
+    if(now-t0 > period*3 && !settled) return finish(0.15,"TOO SLOW","ok");
+    raf=requestAnimationFrame(loop);
+  }
+  raf=requestAnimationFrame(loop);
+  function tap(){
+    if(settled) return;
+    const ang=((performance.now()-t0)%period)/period*360;
+    let d=Math.abs(((ang-(zoneStart+zoneDeg/2))+540)%360-180); // distance from zone centre
+    const half=zoneDeg/2;
+    let skill,label,cls;
+    if(d<=half*0.34){ skill=1.0;  label="PERFECT!"; cls="perfect"; }
+    else if(d<=half){ skill=0.75; label="GOOD";     cls="good"; }
+    else if(d<=half*2){ skill=0.4; label="CLOSE";   cls="ok"; }
+    else { skill=0.12; label="MISSED"; cls="ok"; }
+    finish(skill,label,cls);
+  }
+  function finish(skill,label,cls){
+    settled=true; cancelAnimationFrame(raf); btn.disabled=true;
+    verdict.className="ring-verdict "+cls; verdict.textContent=label;
+    FX.clash(); if(skill>=0.75) FX.shake(22);
+    if(skill>=1.0) stick("perfect");
+    if(skill>=0.75) Haptics.impact(26); else if(skill<0.4) Haptics.fail();
+    announce("Clash timing: "+label);
+    setTimeout(()=>{ closeSheets(); done(skill); }, 620);
+  }
+  $("#ringtap").onclick=tap;
+  const keyTap=e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tap(); } };
+  document.addEventListener("keydown",keyTap);
+  const clean=setInterval(()=>{ if(settled){ document.removeEventListener("keydown",keyTap); clearInterval(clean); } },200);
+}
+
+/* ================= v2: CORRUPTION PROMPT ================= */
+function askCorrupt(f, done){
+  $("#cortxt").innerHTML = `The Glitch is inside <b>${f.name}</b>'s code. Choose fast.`;
+  showOv($("#ov-corrupt"));
+  const pick = c => { closeSheets(); done(c); };
+  $("#cor-ride").onclick  = ()=>{ Haptics.impact(20); pick("ride"); };
+  $("#cor-purge").onclick = ()=>{ Haptics.select();   pick("purge"); };
+}
+
+/* ================= v2: GLYPH BANK UI ================= */
+function renderGlyphs(){
+  const gb=$("#glyphbank"); if(!gb) return;
+  gb.innerHTML="";
+  ["R","M","S","B"].forEach(s=>{
+    const n=battle.glyphs[s]||0;
+    const d=document.createElement("span");
+    d.className="gb"; d.style.setProperty("--gc",SHAPES[s].hex);
+    d.setAttribute("aria-label",`${SHAPES[s].name} charge ${n} of 4`);
+    d.innerHTML=`<b style="color:${SHAPES[s].hex}">${SHAPES[s].name[0]}</b>`+
+      [0,1,2,3].map(i=>`<i class="${i<n?"on":""}"></i>`).join("");
+    gb.appendChild(d);
+  });
+}
+
+
+/* ================= v2: CUTSCENES ================= */
+const SCENES = {
+  s1:{title:"The Mark", art:"mark", beats:[
+    "The Mark is a promise. Keep it lit, and the Glitches stay out.",
+    "It has held for a long time. Tonight the light stutters.",
+    "Three Keepers step up. That is how it always starts."]},
+  s5:{title:"Something Is Counting", art:"count", beats:[
+    "The Glitches are not attacking at random any more.",
+    "They are testing you. Learning which shapes you favour.",
+    "Somewhere underneath, something is taking notes."]},
+  s10:{title:"The Storm Breaks", art:"storm", beats:[
+    "Static Storm falls apart into quiet pixels.",
+    "Then the quiet keeps going. Too far down to see the bottom.",
+    "The Mark holds. But the floor beneath it just opened."]},
+  s13:{title:"The Archivist", art:"archive", beats:[
+    "It shows you every Keeper who ever fell here.",
+    "Their shapes. Their last moves. Filed and labelled.",
+    "It was never trying to beat you. It was collecting you."]},
+  s15:{title:"Hold the Mark", art:"deep", beats:[
+    "The Deep Static is the silence the signal was built over.",
+    "It does not hate you. It simply wants the noise to stop.",
+    "You are the noise. Good.",
+    "Hold the Mark."]}
+};
+function cutSVG(kind){
+  const G='stroke="var(--harmony)" fill="none" stroke-width="2"';
+  if(kind==="mark") return `<svg viewBox="0 0 320 200">
+    <g class="cut-mark" transform="translate(160,100)">
+      <circle r="52" ${G} opacity=".55"/><circle r="38" stroke="var(--emm)" fill="none" stroke-width="2" opacity=".8"/>
+    </g>
+    <circle cx="160" cy="100" r="16" fill="var(--star)" class="cut-pulse" opacity=".9"/>
+    <g class="cut-drift" opacity=".6">
+      <circle cx="60" cy="60" r="2" fill="var(--emm)"/><circle cx="255" cy="140" r="2" fill="var(--ring)"/>
+      <circle cx="240" cy="48" r="1.6" fill="var(--star)"/><circle cx="78" cy="152" r="1.6" fill="var(--bastion)"/>
+    </g></svg>`;
+  if(kind==="count") return `<svg viewBox="0 0 320 200">
+    <g class="cut-drift">
+      <rect x="40" y="40" width="34" height="34" rx="6" stroke="var(--ring)" fill="none" stroke-width="2"/>
+      <rect x="100" y="70" width="34" height="34" rx="6" stroke="var(--emm)" fill="none" stroke-width="2"/>
+      <rect x="160" y="40" width="34" height="34" rx="6" stroke="var(--star)" fill="none" stroke-width="2"/>
+      <rect x="220" y="70" width="34" height="34" rx="6" stroke="var(--bastion)" fill="none" stroke-width="2"/>
+    </g>
+    <g class="cut-flick" opacity=".8">
+      <line x1="20" y1="150" x2="300" y2="150" stroke="var(--dim)" stroke-width="1"/>
+      <text x="160" y="172" text-anchor="middle" fill="var(--dim)" font-size="13" font-family="monospace">observing…</text>
+    </g></svg>`;
+  if(kind==="storm") return `<svg viewBox="0 0 320 200">
+    <g class="cut-flick"><path d="M150 30 L120 100 L155 100 L135 170" stroke="var(--star)" fill="none" stroke-width="4" stroke-linecap="round"/></g>
+    <g class="cut-drift" opacity=".55">
+      <circle cx="70" cy="120" r="2.4" fill="var(--emm)"/><circle cx="250" cy="70" r="2.4" fill="var(--ring)"/>
+      <circle cx="215" cy="150" r="2" fill="var(--bastion)"/><circle cx="95" cy="55" r="2" fill="var(--star)"/></g>
+    <rect x="0" y="176" width="320" height="24" fill="#070b18"/>
+    <text x="160" y="193" text-anchor="middle" fill="var(--dim)" font-size="12" font-family="monospace">▼ deeper</text></svg>`;
+  if(kind==="archive") return `<svg viewBox="0 0 320 200">
+    <g opacity=".85">
+      <rect x="46" y="46" width="52" height="70" rx="5" stroke="var(--dim)" fill="none" stroke-width="2"/>
+      <rect x="112" y="46" width="52" height="70" rx="5" stroke="var(--dim)" fill="none" stroke-width="2"/>
+      <rect x="178" y="46" width="52" height="70" rx="5" stroke="var(--dim)" fill="none" stroke-width="2"/>
+      <rect x="244" y="46" width="30" height="70" rx="5" stroke="var(--dim)" fill="none" stroke-width="2"/>
+    </g>
+    <g class="cut-flick"><circle cx="72" cy="81" r="9" fill="var(--ring)" opacity=".8"/>
+      <circle cx="138" cy="81" r="9" fill="var(--emm)" opacity=".8"/>
+      <circle cx="204" cy="81" r="9" fill="var(--star)" opacity=".8"/></g>
+    <rect class="cut-scan" x="0" y="0" width="320" height="8" fill="var(--emm)" opacity=".14"/>
+    <text x="160" y="150" text-anchor="middle" fill="var(--dim)" font-size="12" font-family="monospace">FILED · FILED · FILED</text></svg>`;
+  return `<svg viewBox="0 0 320 200">
+    <rect x="0" y="0" width="320" height="200" fill="#04060e"/>
+    <circle cx="160" cy="105" r="70" fill="#02040a" stroke="var(--dim)" stroke-width="1" opacity=".7"/>
+    <g class="cut-mark" transform="translate(160,105)"><circle r="30" stroke="var(--star)" fill="none" stroke-width="3" opacity=".95"/></g>
+    <circle cx="160" cy="105" r="8" fill="var(--star)" class="cut-pulse"/>
+    <g class="cut-drift" opacity=".5">
+      <circle cx="45" cy="45" r="1.6" fill="var(--emm)"/><circle cx="275" cy="160" r="1.6" fill="var(--ring)"/></g></svg>`;
+}
+function playScene(key, done){
+  const sc=SCENES[key]; if(!sc){ done&&done(); return; }
+  let i=0;
+  $("#cuttitle").textContent=sc.title;
+  $("#cutstage").innerHTML=cutSVG(sc.art);
+  const paint=()=>{
+    const t=$("#cuttext");
+    t.textContent=sc.beats[i];
+    t.classList.remove("cut-rise"); void t.offsetWidth; t.classList.add("cut-rise");
+    $("#cutdots").innerHTML=sc.beats.map((_,n)=>`<i class="${n<=i?"on":""}"></i>`).join("");
+    $("#cutnext").textContent = i===sc.beats.length-1 ? "Begin ▸" : "Next ▸";
+  };
+  paint(); showOv($("#ov-cut"));
+  const finish=()=>{ closeSheets(); SV.seen=SV.seen||{}; SV.seen[key]=true; save(); done&&done(); };
+  $("#cutnext").onclick=()=>{ Haptics.select(); if(i<sc.beats.length-1){ i++; paint(); } else finish(); };
+  $("#cutskip").onclick=()=>{ Haptics.select(); finish(); };
+}
+function sceneForStage(idx){ return ({0:"s1",4:"s5",9:"s10",12:"s13",14:"s15"})[idx]||null; }
+
+
+/* ================= v2: PARTICLE ENGINE (pooled, single rAF) ================= */
+const FX = (()=>{
+  const MAX=180; const pool=[]; let live=0, cv=null, cx=null, raf=0, dpr=1;
+  for(let i=0;i<MAX;i++) pool.push({on:false,x:0,y:0,vx:0,vy:0,life:0,max:1,r:2,c:"#fff",g:0.06});
+  function reduced(){ return SV.settings.calm || document.body.classList.contains("reduce-motion"); }
+  function init(){
+    cv=$("#fxcanvas"); if(!cv) return; cx=cv.getContext("2d");
+    const fit=()=>{ dpr=Math.min(2,window.devicePixelRatio||1);
+      cv.width=innerWidth*dpr; cv.height=innerHeight*dpr;
+      cv.style.width=innerWidth+"px"; cv.style.height=innerHeight+"px";
+      cx.setTransform(dpr,0,0,dpr,0,0); };
+    fit(); addEventListener("resize",fit,{passive:true});
+    addEventListener("orientationchange",()=>setTimeout(fit,180),{passive:true});
+  }
+  function spawn(x,y,n,opt){
+    if(!cx||reduced()) return;
+    for(let i=0;i<n&&live<MAX;i++){
+      const p=pool.find(q=>!q.on); if(!p) break;
+      const a=opt.ang!==undefined?opt.ang+(Math.random()-.5)*opt.spread:Math.random()*Math.PI*2;
+      const sp=opt.sp*(0.5+Math.random());
+      p.on=true; p.x=x; p.y=y; p.vx=Math.cos(a)*sp; p.vy=Math.sin(a)*sp;
+      p.max=p.life=opt.life*(0.6+Math.random()*0.7);
+      p.r=opt.r*(0.6+Math.random()*0.8); p.c=opt.c; p.g=opt.g===undefined?0.06:opt.g;
+      live++;
+    }
+    if(!raf) raf=requestAnimationFrame(tick);
+  }
+  function tick(){
+    raf=0; if(!cx) return;
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    for(const p of pool){
+      if(!p.on) continue;
+      p.life-=1/60; 
+      if(p.life<=0){ p.on=false; live--; continue; }
+      p.vy+=p.g; p.x+=p.vx; p.y+=p.vy;
+      const a=Math.max(0,p.life/p.max);
+      cx.globalAlpha=a; cx.fillStyle=p.c;
+      cx.beginPath(); cx.arc(p.x,p.y,p.r*a,0,6.283); cx.fill();
+    }
+    cx.globalAlpha=1;
+    if(live>0) raf=requestAnimationFrame(tick);
+    else cx.clearRect(0,0,innerWidth,innerHeight);
+  }
+  const centreOf=sel=>{ const el=$(sel); if(!el) return {x:innerWidth/2,y:innerHeight/2};
+    const r=el.getBoundingClientRect(); return {x:r.left+r.width/2, y:r.top+r.height/2}; };
+  return {
+    init,
+    strike(sel,power){ const c=centreOf(sel);
+      spawn(c.x,c.y,Math.min(30,10+power),{sp:4.2,life:.55,r:3,c:"#ffd166",spread:6.28,g:.12}); },
+    heal(sel){ const c=centreOf(sel);
+      spawn(c.x,c.y,16,{sp:1.5,life:1.0,r:2.6,c:"#5eead4",spread:6.28,g:-.05}); },
+    charge(sel){ const c=centreOf(sel);
+      spawn(c.x,c.y,12,{sp:1.1,life:.8,r:2.2,c:"#a78bfa",spread:6.28,g:-.03}); },
+    clash(){ spawn(innerWidth/2,innerHeight/2,40,{sp:6,life:.8,r:3.4,c:"#f27ea9",spread:6.28,g:.05}); },
+    corrupt(sel){ const c=centreOf(sel);
+      spawn(c.x,c.y,20,{sp:2.6,life:.7,r:2.8,c:"#f06292",spread:6.28,g:.02}); },
+    // hit-stop: freeze the frame briefly on a big hit
+    async hitstop(ms){ if(reduced()) return; await new Promise(r=>setTimeout(r,ms)); },
+    shake(power){
+      if(reduced()) return;
+      const g=$("#game")||document.body;
+      g.style.setProperty("--shk", Math.max(1,Math.min(5,power/9)).toFixed(2));
+      g.classList.remove("shaking"); void g.offsetWidth; g.classList.add("shaking");
+      setTimeout(()=>g.classList.remove("shaking"),440);
+    },
+    glitch(sel){
+      if(reduced()) return;
+      const el=$(sel); if(!el) return;
+      el.classList.remove("glitching"); void el.offsetWidth; el.classList.add("glitching");
+      setTimeout(()=>el.classList.remove("glitching"),360);
+    }
+  };
+})();
+
+/* ================= v2: FOIL SHEEN (one delegated listener, rAF-throttled) ============ */
+(function foil(){
+  let pending=null, raf=0;
+  const apply=()=>{ raf=0; if(!pending) return;
+    const {el,x,y}=pending; pending=null;
+    const r=el.getBoundingClientRect();
+    el.style.setProperty("--mx", (((x-r.left)/r.width)*100).toFixed(1)+"%");
+    el.style.setProperty("--my", (((y-r.top)/r.height)*100).toFixed(1)+"%");
+  };
+  document.addEventListener("pointermove", e=>{
+    if(document.body.classList.contains("reduce-motion")||document.body.classList.contains("hc")) return;
+    const el = e.target && e.target.closest ? e.target.closest(".card") : null;
+    if(!el) return;
+    el.classList.add("lit"); el.style.setProperty("--foil",".85");
+    pending={el,x:e.clientX,y:e.clientY};
+    if(!raf) raf=requestAnimationFrame(apply);
+  },{passive:true});
+  document.addEventListener("pointerleave", e=>{
+    const el = e.target && e.target.closest ? e.target.closest(".card") : null;
+    if(el){ el.classList.remove("lit"); el.style.setProperty("--foil","0"); }
+  },true);
+})();
+
 function renderBattle(){
   const p=P(), e=battle.glitch;
+  // arena banner
+  const ac=$("#arenachip");
+  if(ac){
+    const a=battle.arena||ARENAS[0];
+    if(a.id==="stable"){ ac.hidden=true; }
+    else { ac.hidden=false; ac.style.setProperty("--tint",a.tint);
+           ac.textContent=`◈ ${a.name}`; ac.title=a.desc;
+           ac.setAttribute("aria-label",`Arena: ${a.name}. ${a.desc}`); }
+  }
+  renderGlyphs();
   $("#ef").innerHTML=fighterCard(e,true)+((e.en>=60&&!battle.over)?`<div class="chip" style="margin-top:6px;border-color:var(--energy);color:var(--energy)">⚡ Static gathers around ${e.name}…</div>`:"");
   $("#pf").innerHTML=fighterCard(p,false);
+  $("#pf").classList.toggle("corrupt-card", p.corrupt>0);
+  const pcard=$("#pf .card");
+  if(pcard && battle.__lastActive!==battle.active){ pcard.classList.add("drawn"); battle.__lastActive=battle.active; }
   // bench
   const bench=$("#bench"); bench.innerHTML="";
   battle.team.forEach((f,i)=>{
@@ -776,7 +1467,15 @@ function renderBattle(){
     b.style.flex="1";
     b.innerHTML=`${glyphSVG(f.shape)}<span><span class="m-name" style="font-size:12px">${f.name}</span><br><span class="m-sub">${f.hp<=0?"Resting":"HP "+f.hp}</span></span>`;
     b.disabled = f.hp<=0 || battle.over || !!battle.tut;
-    b.onclick=()=>{ if(battle.over) return; doTurn({swap:i}); };
+    if(!b.disabled){
+      Pointer.bind(b,{
+        ghostHTML: el=>el.outerHTML,
+        onTap: ()=>{ if(!battle.over) doTurn({swap:i}); },
+        onLong: ()=>openCardDetail(CARD_BY_ID[f.id]||f),
+        onDragStart: ()=>{},
+        onDrop: (el,drop)=>{ if(drop.id==="pf" && !battle.over) doTurn({swap:i}); }
+      });
+    } else { b.onclick=()=>{}; }
     bench.appendChild(b);
   });
   // actions
@@ -802,6 +1501,35 @@ function renderBattle(){
     b.setAttribute("data-key",idx+1);
     ab.appendChild(b);
   });
+  // Glyph Alchemy: offer any hybrid the bank can pay for
+  const hr=$("#hybrids");
+  if(hr){
+    hr.innerHTML="";
+    if(!battle.over && !battle.tut){
+      Engine.hybridReady(battle).forEach(k=>{
+        const H=HYBRIDS[k];
+        const b=document.createElement("button");
+        b.className="act hybrid";
+        b.innerHTML=`✧ ${H.name}<small>${H.desc} · spends glyphs</small>`;
+        b.disabled = p.en < Engine.specialCost(battle.arena);
+        b.onclick=()=>{ Haptics.impact(18); stick("alchemist"); doTurn({hybrid:k}); };
+        hr.appendChild(b);
+      });
+    }
+  }
+  // swipe shortcuts on the player card: up = strike, down = guard
+  const pfEl=$("#pf");
+  if(pfEl && !battle.over && !battle.tut){
+    pfEl.setAttribute("data-drop","swap");
+    Pointer.bind(pfEl,{
+      onSwipe:(dir)=>{ doTurn({act: dir==="up" ? "strike" : "guard"}); },
+      onLong: ()=>openCardDetail(CARD_BY_ID[p.id]||p),
+      onTap: ()=>{}
+    });
+  } else if(pfEl){ pfEl.removeAttribute("data-drop"); }
+  const efEl=$("#ef");
+  if(efEl) Pointer.bind(efEl,{ onLong:()=>toast(`${e.name} · ${e.hp}/${e.maxhp} HP · ${e.line||""}`), onTap:()=>{} });
+
   if(Engine.canAscend(p)){
     const b=document.createElement("button");
     b.className="act ascend";
@@ -825,22 +1553,52 @@ function popOn(sel,text,cls){
 }
 function doTurn(cmd){
   const p=P(), e=battle.glitch;
+  // Corruption demands a decision before anything else happens this turn
+  if(p.corrupt>0 && !p.corruptChoice){
+    return askCorrupt(p, choice=>{
+      p.corruptChoice=choice;
+      Engine.applyCorruptChoice(p, choice, []);
+      logAdd(choice==="ride"
+        ? `<b>${p.name}</b> rides the glitch — attack and defence invert!`
+        : `<b>${p.name}</b> purges the corruption, losing the turn.`);
+      renderBattle();
+      doTurn(cmd);
+    });
+  }
+  battle.arena = Engine.arenaFor(battle.stageIdx, battle.turn, rng);
   let pAct;
   if(cmd.swap!==undefined){
     battle.active=cmd.swap;
     logSet(`You swap in <b>${P().name}</b>!`);
     pAct="__swap";
+  } else if(cmd.hybrid){
+    pAct="special";
   } else pAct=cmd.act;
   const eAct=Engine.aiChoose(e,rng);
   const hpBefore=P().hp;
   let ev=[], prefix="";
-  if(pAct==="__swap"){
-    // enemy gets a free action against the incoming fighter
-    prefix=`You swap in <b>${P().name}</b>!<br>`;
-    ev=Engine.resolveTurn(P(),e,"__none",eAct,rng);
-  } else {
-    ev=Engine.resolveTurn(p,e,pAct,eAct,rng);
+  const ctx=()=>({arena:battle.arena, clashSkill:battle.clashSkill, hybrid:cmd.hybrid||null});
+  const cost=Engine.specialCost(battle.arena);
+  const willClash = pAct==="special" && eAct==="special" && p.en>=cost && e.en>=cost;
+  if(willClash){
+    battle.usedClash=true;
+    return runRing(skill=>{
+      battle.clashSkill=skill;
+      if(cmd.hybrid) Engine.spendHybrid(battle,cmd.hybrid);
+      finishTurn(Engine.resolveTurn(p,e,pAct,eAct,rng,ctx()));
+    });
   }
+  if(pAct==="__swap"){
+    prefix=`You swap in <b>${P().name}</b>!<br>`;
+    ev=Engine.resolveTurn(P(),e,"__none",eAct,rng,ctx());
+  } else {
+    if(cmd.hybrid) Engine.spendHybrid(battle,cmd.hybrid);
+    ev=Engine.resolveTurn(p,e,pAct,eAct,rng,ctx());
+  }
+  finishTurn(ev);
+  function finishTurn(evs){
+    ev=evs;
+    if(pAct!=="__swap") Engine.bankGlyph(battle, P().shape);
   battle.dmgTaken += Math.max(0,hpBefore-P().hp);
   if(battle.tut && ["charge","strike","special"][battle.tut-1]===pAct){
     battle.tut++;
@@ -850,14 +1608,20 @@ function doTurn(cmd){
   const narrate=()=>{
     let out=[];
     ev.forEach(x=>{
-      if(x.t==="hit"&&x.who==="p"){ out.push(`${P().name} ${x.sp?`unleashes <b>${P().special.name}</b>`:"strikes"} — <b>${x.d}</b> damage!`); popOn("#ef","-"+x.d,""); }
-      if(x.t==="hit"&&x.who==="e"){ out.push(`${e.name} ${x.sp?"fires a charged blast":"hits back"} — ${x.d} damage.`); popOn("#pf","-"+x.d,""); }
+      if(x.t==="hit"&&x.who==="p"){ out.push(`${P().name} ${x.sp?`unleashes <b>${x.hybrid?"a hybrid move":P().special.name}</b>`:"strikes"} — <b>${x.d}</b> damage!`); popOn("#ef","-"+x.d,"");
+        FX.strike("#ef",x.d); FX.glitch("#ef"); if(x.sp) FX.shake(x.d); }
+      if(x.t==="hit"&&x.who==="e"){ out.push(`${e.name} ${x.sp?"fires a charged blast":"hits back"} — ${x.d} damage.`); popOn("#pf","-"+x.d,"");
+        FX.strike("#pf",x.d); FX.glitch("#pf"); FX.shake(x.d); Haptics.impact(x.d); }
       if(x.t==="miss") out.push(`${e.name} blinks aside — your strike misses!`);
-      if(x.t==="guard"&&x.who==="p") out.push(`You brace and steady your energy.`);
+      if(x.t==="guard"&&x.who==="p"){ out.push(`You brace and steady your energy.`); FX.charge("#pf"); }
       if(x.t==="guard"&&x.who==="e") out.push(`${e.name} hunkers down.`);
-      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); }
+      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); FX.heal("#pf"); }
       if(x.t==="fx"&&x.fx==="refund"){ out.push(`Momentum flows back — <b>+${x.v} energy</b>.`); popOn("#pf","+"+x.v+"⚡","en"); }
       if(x.t==="fx"&&x.fx==="shield") out.push(`A stone shield forms around you. 🛡`);
+      if(x.t==="corrupt"){ out.push(`⚠ <b>Corruption spreads into ${P().name}!</b>`); FX.corrupt("#pf"); FX.glitch("#pf"); Haptics.fail(); }
+      if(x.t==="uncorrupt") out.push(`The corruption burns out. ${P().name} steadies.`);
+      if(x.t==="purged") out.push(`${P().name} is busy purging — no action this turn.`);
+      if(x.t==="decay"){ out.push(`Data Decay gnaws at the arena — ${x.v} HP each.`); }
       if(x.t==="eshield") out.push(`${e.name} raises a static shield.`);
       if(x.t==="revive") out.push(`⚠ ${e.name} flickers… and reforms at partial power!`);
       if(x.t==="phase2") out.push(x.reborn
@@ -867,8 +1631,10 @@ function doTurn(cmd){
     logSet(prefix + (out.join("<br>")||"…"));
     announce(out.map(s=>s.replace(/<[^>]+>/g,"")).join(" "));
   };
-  if(clashEv){ showClash(clashEv, narrate); }
-  else { narrate(); afterTurn(); }
+    if(clashEv){ showClash(clashEv, narrate); }
+    else { narrate(); afterTurn(); }
+    if(clashEv) battle.__after=afterTurn;
+  }
   function afterTurn(){
     battle.turn++;
     // downed player fighter?
@@ -886,7 +1652,6 @@ function doTurn(cmd){
     }
     renderBattle();
   }
-  if(clashEv) battle.__after=afterTurn;
 }
 function showClash(ev, narrate){
   battle.usedClash=true;
@@ -946,12 +1711,15 @@ function endBattle(won, timeout){
       packHTML+="</div>";
       if(SV.owned.length>=12) stick("collector");
       if(g.id==="g10") stick("storm");
+      if(g.id==="g13") stick("archive");
+      if(g.id==="g15") stick("deep");
+      if(SV.owned.length>=20) stick("curator");
     }
     if(firstDaily){ SV.dailyDone=battle.dateStr; stick("daily"); }
     const xpRow=`<div class="panel"><div class="spread"><span>XP earned</span><b>+${xpEarned}</b></div>${
       battle.daily&&!firstDaily?`<p class="muted" style="margin:6px 0 0">Daily reward already collected — nice practice run!</p>`:
       (!battle.daily&&!firstClear?`<p class="muted" style="margin:6px 0 0">Replay clear — XP only. Card packs come from first clears.</p>`:"")}</div>`;
-    if(g.id==="g10" && firstClear){
+    if(g.id==="g15" && firstClear){
       html=`<div class="center"><h2 style="color:var(--harmony)">The Mark holds — for now. ⛈✦</h2>
         <p class="muted">Static Storm dissolves into quiet pixels. The campaign is complete, Keeper.</p></div>
         ${packHTML}
@@ -993,7 +1761,12 @@ const STICKERS=[
   {id:"collector",ic:"🃏",n:"Collector",d:"Own 12 Keepers."},
   {id:"tough",ic:"🛡",n:"Barely a Scratch",d:"Win taking 10 damage or less."},
   {id:"daily",ic:"📅",n:"Daily Devotee",d:"Complete a Daily Clash."},
-  {id:"storm",ic:"⛈",n:"Storm Breaker",d:"Defeat Static Storm."}
+  {id:"storm",ic:"⛈",n:"Storm Breaker",d:"Defeat Static Storm."},
+  {id:"archive",ic:"📼",n:"Off the Record",d:"Defeat the Archivist."},
+  {id:"deep",ic:"🌑",n:"Held the Mark",d:"Defeat the Deep Static."},
+  {id:"curator",ic:"🗂",n:"Curator",d:"Own 20 Keepers."},
+  {id:"alchemist",ic:"✧",n:"Glyph Alchemist",d:"Unleash a hybrid move."},
+  {id:"perfect",ic:"🎯",n:"Perfect Timing",d:"Nail a Clash dead centre."}
 ];
 function stick(id){
   if(SV.stickers[id]) return;
@@ -1002,11 +1775,25 @@ function stick(id){
   if(s) toast("⭐ Sticker earned: "+s.n);
 }
 function renderStickers(){
-  const el=$("#stickerlist"); el.innerHTML="";
-  STICKERS.forEach(s=>{
-    el.innerHTML+=`<div class="sticker ${SV.stickers[s.id]?"earned":""}">
-      <span class="sic">${s.ic}</span><span><b>${s.n}</b><br><small class="muted">${s.d}</small></span></div>`;
-  });
+  const el=$("#stickerlist");
+  // build the sticker grid FIRST as markup, then prepend live nodes.
+  // (innerHTML += after appendChild re-parses the subtree and drops listeners)
+  el.innerHTML = STICKERS.map(s=>`<div class="sticker ${SV.stickers[s.id]?"earned":""}">
+      <span class="sic">${s.ic}</span><span><b>${s.n}</b><br><small class="muted">${s.d}</small></span></div>`).join("");
+  const seen=Object.keys(SCENES).filter(k=>SV.seen&&SV.seen[k]);
+  if(seen.length){
+    const wrap=document.createElement("div");
+    wrap.className="panel"; wrap.style.marginBottom="10px";
+    wrap.innerHTML='<b>Story moments</b><p class="muted" style="margin:4px 0 8px;font-size:12px">Watch any scene again.</p>';
+    seen.forEach(k=>{
+      const b=document.createElement("button");
+      b.className="btn small"; b.style.marginBottom="6px";
+      b.textContent="▶ "+SCENES[k].title;
+      b.onclick=()=>{ closeSheets(); playScene(k,()=>openSheet("stickers")); };
+      wrap.appendChild(b);
+    });
+    el.insertBefore(wrap, el.firstChild);
+  }
 }
 })();
 /* ---------- node export for sim harness ---------- */
@@ -1014,5 +1801,48 @@ if (typeof module!=="undefined" && module.exports){
   module.exports={Engine,CARDS,GLITCHES,SPECIALS,RARITY,SHAPES,STARTERS};
 }
 </script>
-<script defer src="/hud.js"></script></body>
+<script defer src="/hud.js"></script><div class="drag-ghost" id="dragghost" aria-hidden="true"></div>
+
+<div class="overlay" id="ov-ring" role="dialog" aria-modal="true" aria-labelledby="ringttl">
+  <div class="sheet center">
+    <div class="clash-title" id="ringttl">CLASH!</div>
+    <p class="ring-hint" id="ringhint">Tap when the sweep hits the bright arc.</p>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#2c3b66" stroke-width="7"/>
+        <circle id="ringzone" cx="50" cy="50" r="42" fill="none" stroke="var(--emm)" stroke-width="7"
+                stroke-linecap="round" stroke-dasharray="40 224" stroke-dashoffset="0"/>
+        <g class="ring-hand" id="ringhand">
+          <line x1="50" y1="50" x2="50" y2="6" stroke="var(--star)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+    <div class="ring-verdict" id="ringverdict" role="status" aria-live="polite"></div>
+    <button class="btn primary" id="ringtap">TAP</button>
+  </div>
+</div>
+
+<div class="overlay" id="ov-corrupt" role="dialog" aria-modal="true" aria-labelledby="corttl">
+  <div class="sheet">
+    <h3 id="corttl" style="color:#f06292">⚠ Corruption!</h3>
+    <p class="muted" id="cortxt">The Glitch is in your Keeper\'s code.</p>
+    <button class="btn" id="cor-ride" style="border-color:#f06292;color:#f06292">
+      ⚡ Ride it<small style="display:block;font-weight:700;font-size:11px;color:var(--dim)">Swap attack &amp; defence · deal and take +30%</small></button>
+    <button class="btn" id="cor-purge">
+      🛡 Purge it<small style="display:block;font-weight:700;font-size:11px;color:var(--dim)">Clears it — but you lose this turn</small></button>
+  </div>
+</div>
+<div class="overlay" id="ov-cut" role="dialog" aria-modal="true" aria-labelledby="cuttitle">
+  <div class="sheet">
+    <h3 id="cuttitle" style="margin-top:0"></h3>
+    <div class="cut-stage" id="cutstage" aria-hidden="true"></div>
+    <p class="cut-text" id="cuttext" role="status" aria-live="polite"></p>
+    <div class="cut-dots" id="cutdots"></div>
+    <div class="cut-bar">
+      <button class="btn" id="cutskip">Skip</button>
+      <button class="btn primary" id="cutnext">Next ▸</button>
+    </div>
+  </div>
+</div>
+</body>
 </html>
