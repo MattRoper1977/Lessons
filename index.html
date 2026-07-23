@@ -266,7 +266,7 @@ function fillSelect(id,vals){const el=$("#"+id);[...new Set(vals)].sort().forEac
 const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
 const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
 let ALL=[],TIER="",YEAR="2026-27",BROWSING=true;
-function tierOf(r){const f=r.file||"";
+function tierOf(r){const f=r.file||r.url||"";
 if(/(?:^|\/)Build\//.test(f))return"BUILD";
 if(/(?:^|\/)Grow\//.test(f))return"GROW";
 if(/(?:^|\/)Launch\//.test(f))return"LAUNCH";
@@ -296,17 +296,17 @@ if(r.type==="game")o.push([IC.pad,"game"]);
 if(r.type==="teacher"||r.type==="pupil")o.push([IC.tab,"interactive"]);
 return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="${x[1]}" role="img">${x[0]}</span>`).join("")}</div>`:""}
 function actLabel(r){return {lesson:"LAUNCH SLIDES →",revision:"LAUNCH SLIDES →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
-function card(r){const t=r._tier,href=esc(/^https?:/.test(r.file)?r.file:encodeURI(r.file));
+function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(/^https?:/.test(_s)?_s:encodeURI(_s));
 const pills=BROWSING?"":`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div>`;
 return `<article class="card${t?" t-"+t:""}"><div class="kind">${t&&BROWSING?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${href}">${esc(r.title)}</a></h3><p>${esc(r.desc)}</p>${pills}
+<h3><a href="${href}">${esc(r.title)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}
 <div class="actrow">${fmtIcons(r)}<a class="go" href="${href}">${actLabel(r)}</a></div></article>`}
 function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS AWARD MAPPED ✓ · AQA UAS ALIGNED</span>
 <h3>Teesside Art Studio Suite</h3>
 <p>The full-term art programme: ${n} studio lessons across BUILD (Explore), GROW (Bronze) and LAUNCH (Silver) — every lesson a whiteboard slideshow with three tiers and a complete print pack off the title slide.</p>
 <div class="acts"><button type="button" data-suite="">Browse the whole suite</button><button type="button" data-suite="BUILD">BUILD · Explore</button><button type="button" data-suite="GROW">GROW · Bronze</button><button type="button" data-suite="LAUNCH">LAUNCH · Silver</button></div></div>`}
 function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
-const a=ALL.filter(r=>(!q||[r.title,r.desc,r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
+const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
 const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
 if(browsing){ // organised view: one section per subject, A→Z
