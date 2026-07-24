@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Trail Runner — a neon endless runner. Glide the trail, dodge the obstacles, weather the Storm, and chase your best distance.">
     <meta name="theme-color" content="#0a0f1e">
     <title>Trail Runner</title>
@@ -48,7 +48,7 @@
 
         /* NEW CENTER HUD */
         #center-hud {
-            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; 
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
@@ -65,7 +65,7 @@
 
         /* SCI-FI STAT BOXES */
         #top-bar {
-            position: absolute; top: 15px; left: 20px;
+            position: absolute; top: calc(15px + env(safe-area-inset-top)); left: calc(15px + env(safe-area-inset-left));
             display: flex; flex-direction: column; gap: 8px;
         }
         .stat-box {
@@ -83,7 +83,7 @@
         
         /* COMBO UI */
         #combo-box {
-            position: absolute; top: 80px; right: 20px;
+            position: absolute; top: calc(80px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right));
             text-align: right; display: none;
             transform: skew(-10deg);
         }
@@ -235,23 +235,27 @@
         @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* Mobile Controls */
+        /* Container is INERT: only the buttons themselves take touches, so the
+           bottom 160px band no longer swallows swipes aimed at the canvas. */
         #mobile-controls {
-            position: absolute; bottom: 20px; width: 100%; height: 160px;
-            pointer-events: auto; display: none; justify-content: space-around; align-items: center; padding: 0 10px; box-sizing: border-box; z-index: 80;
+            position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); width: 100%; height: 160px;
+            pointer-events: none; display: none; justify-content: space-around; align-items: center;
+            padding: 0 calc(10px + env(safe-area-inset-left)) 0 calc(10px + env(safe-area-inset-right));
+            box-sizing: border-box; z-index: 80;
         }
-        .control-group { display: flex; gap: 15px; }
+        .control-group { display: flex; gap: 15px; pointer-events: auto; }
         .control-btn {
             width: 65px; height: 65px; background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.2); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 28px; color: white; backdrop-filter: blur(4px); cursor: pointer;
-            user-select: none; -webkit-tap-highlight-color: transparent;
+            user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none;
         }
-        .control-btn:active { background: rgba(0, 212, 255, 0.4); border-color: #00d4ff; transform: scale(0.95); }
+        .control-btn:active, .control-btn.held { background: rgba(0, 212, 255, 0.4); border-color: #00d4ff; transform: scale(0.95); }
 
         /* AUDIO TOGGLE */
         #audio-toggle {
-            position: fixed; top: 20px; right: 20px; z-index: 103;
+            position: fixed; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); z-index: 103;
             background: rgba(0,0,0,0.6); border: 1px solid #555; color: #888; 
             font-size: 20px; cursor: pointer; padding: 8px 12px; border-radius: 4px;
             pointer-events: auto; transition: all 0.2s; backdrop-filter: blur(5px);
@@ -409,6 +413,36 @@
         .badge.earned .b-name { color:#fff; }
         .badge .b-desc { font-size:11px; color:#94a3b8; margin-top:4px; line-height:1.25; }
         @media (max-width:560px){ #challenge-grid { grid-template-columns:repeat(2,1fr); width:96%; } }
+
+        /* --- Narrow portrait: six 65px buttons + gaps overflow a 320-360px viewport. --- */
+        @media (max-width: 400px) {
+            .control-btn { width: 54px; height: 54px; font-size: 22px; }
+            .control-group { gap: 9px; }
+            #mobile-controls { height: 140px; padding-left: 6px; padding-right: 6px; }
+            #progress-container { width: 190px; }
+            #level-display { font-size: 22px; }
+            .stat-box { width: 150px; font-size: 15px; padding: 4px 14px; }
+            #combo-mult { font-size: 46px; }
+        }
+        /* --- Phone LANDSCAPE keys off height, not width: a landscape phone is
+               740-930px WIDE, so a max-width rule never fires there. --- */
+        @media (max-height: 520px) and (pointer: coarse) {
+            .control-btn { width: 50px; height: 50px; font-size: 20px; }
+            .control-group { gap: 10px; }
+            #mobile-controls { height: 110px; bottom: calc(8px + env(safe-area-inset-bottom)); }
+            #center-hud { top: calc(4px + env(safe-area-inset-top)); }
+            #level-display { font-size: 18px; margin-bottom: 0; }
+            #progress-container { width: 200px; height: 5px; }
+            #top-bar { gap: 4px; }
+            .stat-box { padding: 2px 14px; font-size: 14px; width: 150px; }
+            #combo-box { top: calc(62px + env(safe-area-inset-top)); }
+            #combo-mult { font-size: 40px; }
+            #combo-label { font-size: 12px; }
+            #boss-warning { font-size: 26px; top: 84px; }
+            #instructions-box { padding: 10px 16px; }
+            #instructions-box p { margin: 3px 0; font-size: 13px; }
+            .btn { padding: 8px 30px; font-size: 16px; margin-top: 5px; }
+        }
         #board-list { list-style:none; padding:0; margin:0; width:420px; max-width:92%; }
         .board-row { display:flex; align-items:center; gap:12px; background:rgba(15,23,42,0.85); border:1px solid #334155; border-radius:10px; padding:10px 16px; margin:7px 0; }
         .board-row.top { border-color:#ffd700; box-shadow:0 0 14px rgba(255,215,0,0.25); }
@@ -449,7 +483,7 @@
     </div>
 
     <button id="audio-toggle" class="off">🔇</button>
-    <button id="touch-pause" style="position:fixed; top:20px; left:20px; z-index:103; display:none; background:rgba(0,0,0,0.6); border:1px solid #555; color:#e2e8f0; font-size:20px; cursor:pointer; padding:8px 12px; border-radius:4px; pointer-events:auto; backdrop-filter:blur(5px);">⏸</button>
+    <button id="touch-pause" style="position:fixed; top:calc(20px + env(safe-area-inset-top)); right:calc(74px + env(safe-area-inset-right)); z-index:103; display:none; background:rgba(0,0,0,0.6); border:1px solid #555; color:#e2e8f0; font-size:20px; cursor:pointer; padding:8px 12px; border-radius:4px; pointer-events:auto; backdrop-filter:blur(5px);">⏸</button>
     <div id="vignette"></div>
     <div id="scanlines"></div>
 
@@ -823,10 +857,10 @@
         }
         function spawnBonusPickup() {
             const lanes = [-LANE_WIDTH, 0, LANE_WIDTH];
-            const x = lanes[Math.floor(Math.random() * 3)];
-            const y = 1.0 + (Math.random() > 0.5 ? Math.random() * 1.4 : 0);
+            const x = lanes[Math.floor(rnd() * 3)];
+            const y = 1.0 + (rnd() > 0.5 ? rnd() * 1.4 : 0);
             let mesh, type;
-            if (Math.random() < 0.18) { type = 'COMBO_ORB'; mesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4, 0), materials.comboOrb); }
+            if (rnd() < 0.18) { type = 'COMBO_ORB'; mesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4, 0), materials.comboOrb); }
             else { type = 'WUMPA'; mesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.3), materials.wumpa); }
             mesh.position.set(x, y, -60); mesh.castShadow = true; scene.add(mesh);
             objects.push({ mesh, type, active: true, bonus: true });
@@ -894,7 +928,7 @@
             } catch (e) { /* storage full / unavailable — non-fatal */ }
         }
 
-        let scene, camera, renderer, composer;
+        let scene, camera, renderer, composer, bloomPass;
         let player, playerMesh, playerGun, playerShieldMesh, boss;
         let floorTiles = [], objects = [], particles = [], enemyProjectiles = [], playerProjectiles = [];
         let cityBuildings = [], engineTrails = [], warpParticles = [];
@@ -922,6 +956,11 @@
         let inGarage = false;
 
         let shieldActive = false;
+        // Post-hit mercy window. Without it a single hazard sits inside the
+        // dz<0.5 collision slab for 2-3 consecutive frames at Leg-1 speed and
+        // bills the player for every one of them.
+        const INVULN_FRAMES = 45;   // 0.75s at the fixed 60Hz step
+        let invulnTimer = 0;
         let comboCount = 0;
         let comboTimer = 0;
         let comboMultiplier = 1;
@@ -1065,9 +1104,15 @@
             renderer.domElement.id = 'game-canvas'; document.body.appendChild(renderer.domElement);
 
             const renderScene = new RenderPass(scene, camera);
-            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            // Half-resolution bloom targets on coarse-pointer devices. This is the
+            // only knob that actually costs GPU time; bloom *strength* is a shader
+            // uniform and changing it saves nothing.
+            const BLOOM_SCALE = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 0.5 : 1;
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth * BLOOM_SCALE, window.innerHeight * BLOOM_SCALE), 1.5, 0.4, 0.85);
+            bloomPass.userData = { scale: BLOOM_SCALE };
             bloomPass.threshold = 0.1; bloomPass.strength = 1.2; bloomPass.radius = 0.5;
             composer = new EffectComposer(renderer); composer.addPass(renderScene); composer.addPass(bloomPass);
+            window.__bloomPass = bloomPass;
 
             const ambient = new THREE.HemisphereLight(0xffffff, 0x000000, 0.4); scene.add(ambient);
             dirLight = new THREE.DirectionalLight(0xffffff, 2.0); dirLight.position.set(20, 40, -10); dirLight.castShadow = true;
@@ -1080,15 +1125,25 @@
             applyLegTheme(1, true); // set the opening (Dusk Flats) atmosphere
 
             window.addEventListener('resize', onResize); window.addEventListener('keydown', handleInput); window.addEventListener('keyup', handleInput);
+            initHaptics();
             if('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                document.getElementById('mobile-controls').style.display = 'flex'; setupTouch();
+                document.getElementById('mobile-controls').style.display = 'flex'; setupTouch(); setupSwipe();
                 const pb = document.getElementById('touch-pause');
                 if (pb) { pb.style.display = 'block'; const doPause = (e) => { if (e) e.preventDefault(); togglePause(); }; pb.ontouchstart = doPause; pb.onclick = doPause; }
             }
 
             // Auto-pause when the tab/app loses focus (saves battery, avoids resuming into chaos).
+            // Input is cleared on BOTH paths: an interrupting call used to leave
+            // verticalVelocity latched, so the run resumed pinned to the ceiling.
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden && (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK')) togglePause();
+                if (document.hidden) {
+                    clearTouchState();
+                    if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') togglePause();
+                }
+            });
+            window.addEventListener('blur', () => {
+                clearTouchState();
+                if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') togglePause();
             });
 
             // Scene is ready: fade the boot screen out and play the menu title sequence.
@@ -1096,6 +1151,19 @@
             if (boot) { boot.style.opacity = '0'; setTimeout(() => boot.remove(), 650); }
             document.getElementById('start-screen').classList.add('intro');
 
+            window.__TR = {
+                takeDamage, checkCollision, changeLane, swipeStart, swipeEnd, swipeCancel, clearTouchState,
+                haptic, touchLive, climb, drop,
+                get lives() { return lives; }, set lives(v) { lives = v; },
+                get invulnTimer() { return invulnTimer; }, set invulnTimer(v) { invulnTimer = v; },
+                get shieldActive() { return shieldActive; }, set shieldActive(v) { shieldActive = v; },
+                get gameState() { return gameState; }, set gameState(v) { gameState = v; },
+                get currentLane() { return currentLane; }, set currentLane(v) { currentLane = v; },
+                get speed() { return speed; }, set speed(v) { speed = v; },
+                get objects() { return objects; }, get player() { return player; },
+                get verticalVelocity() { return verticalVelocity; },
+                INVULN_FRAMES, SWIPE_MIN
+            };
             animate();
         }
 
@@ -1533,8 +1601,8 @@
                 if (gameState !== 'PAUSED') {
                     if (code === keyConfig.left) changeLane(-1);
                     else if (code === keyConfig.right) changeLane(1);
-                    else if (code === keyConfig.jump && player.position.y < 3.0) { verticalVelocity = ASCEND_FORCE; if(settings.audio) SFX.jump(); }
-                    else if (code === keyConfig.down && player.position.y > 0.4) verticalVelocity = DESCEND_FORCE;
+                    else if (code === keyConfig.jump) climb();
+                    else if (code === keyConfig.down) drop();
                     else if (code === keyConfig.spin && !isSpinning) spin();
                     else if (code === keyConfig.shoot && shootCooldown === 0) shoot();
                 }
@@ -1543,13 +1611,99 @@
                 if (code === keyConfig.jump || code === keyConfig.down) verticalVelocity = 0;
             }
         }
-        function setupTouch() { const btns = { 'btn-left': () => changeLane(-1), 'btn-right': () => changeLane(1), 'btn-up': () => { if (player.position.y < 3.0) { verticalVelocity = ASCEND_FORCE; if(settings.audio) SFX.jump(); } }, 'btn-down': () => { if (player.position.y > 0.4) verticalVelocity = DESCEND_FORCE; }, 'btn-spin': spin, 'btn-shoot': shoot }; for (const id in btns) { const btn = document.getElementById(id); btn.ontouchstart = (e) => { e.preventDefault(); if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') { if (id.includes('left') || id.includes('right')) { if(!btn.classList.contains('active')) { btn.classList.add('active'); btns[id](); } } else btns[id](); } }; btn.ontouchend = () => { btn.classList.remove('active'); if (id === 'btn-up' || id === 'btn-down') verticalVelocity = 0; }; btn.ontouchcancel = () => { btn.classList.remove('active'); if (id === 'btn-up' || id === 'btn-down') verticalVelocity = 0; }; } }
-        function changeLane(direction) { const newLane = currentLane + direction; if (newLane >= -1 && newLane <= 1) { currentLane = newLane; targetX = currentLane * LANE_WIDTH; } }
+        // Every live gameplay state accepts input. WARNING (the 2.5s storm intro)
+        // is included because the world keeps scrolling through it and the
+        // keyboard has always worked there — touch must not be second class.
+        function touchLive() { return gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK' || gameState === 'WARNING'; }
+        function climb() { if (player.position.y < 3.0) { verticalVelocity = ASCEND_FORCE; if(settings.audio) SFX.jump(); haptic('jump'); } }
+        function drop()  { if (player.position.y > 0.4) { verticalVelocity = DESCEND_FORCE; haptic('turn'); } }
+
+        function setupTouch() {
+            const btns = { 'btn-left': () => changeLane(-1), 'btn-right': () => changeLane(1),
+                           'btn-up': climb, 'btn-down': drop, 'btn-spin': spin, 'btn-shoot': shoot };
+            for (const id in btns) {
+                const btn = document.getElementById(id);
+                if (!btn) continue;
+                const onStart = (e) => { e.preventDefault(); if (!touchLive()) return; btn.classList.add('held'); btns[id](); };
+                // touchend/cancel must ALWAYS clear the class and the velocity, even
+                // if the press was ignored — a stuck 'held' used to disable the
+                // button permanently, and a stuck velocity pins the ship to a wall.
+                const onEnd = (e) => { if (e && e.cancelable) e.preventDefault(); btn.classList.remove('held'); if (id === 'btn-up' || id === 'btn-down') verticalVelocity = 0; };
+                btn.addEventListener('touchstart', onStart, { passive: false });
+                btn.addEventListener('touchend', onEnd, { passive: false });
+                btn.addEventListener('touchcancel', onEnd, { passive: false });
+            }
+        }
+
+        // Canvas swipe/tap layer. Tracked per touch IDENTIFIER: reading
+        // touches[0] would pick the OLDEST live finger, so a tap made while a
+        // control button is held would measure from the held thumb and fire a
+        // phantom lane change.
+        const SWIPE_MIN = 46;     // px; 30 was inside normal tap jitter on a moving game
+        const SWIPE_MAX_MS = 600; // a slow drag is not a swipe
+        const TAP_MAX_MS = 250;
+        const DOUBLE_TAP_MS = 300;
+        let _touches = new Map(), _lastTap = 0;
+
+        function fromControls(t) {
+            const el = (t && t.target) ? t.target : null;
+            return !!(el && el.closest && (el.closest('#mobile-controls') || el.closest('button') || el.closest('.screen')));
+        }
+        function swipeStart(e) {
+            if (!touchLive()) return;
+            for (const t of e.changedTouches) {
+                if (fromControls(t)) continue;
+                _touches.set(t.identifier, { x: t.clientX, y: t.clientY, at: performance.now() });
+            }
+        }
+        function swipeEnd(e) {
+            for (const t of e.changedTouches) {
+                const s = _touches.get(t.identifier);
+                _touches.delete(t.identifier);
+                if (!s || !touchLive()) continue;
+                const dx = t.clientX - s.x, dy = t.clientY - s.y, dt = performance.now() - s.at;
+                if ((Math.abs(dx) > SWIPE_MIN || Math.abs(dy) > SWIPE_MIN) && dt < SWIPE_MAX_MS) {
+                    if (Math.abs(dx) > Math.abs(dy)) changeLane(dx > 0 ? 1 : -1);
+                    else if (dy < 0) climb();
+                    else drop();   // self-clears: velocity zeroes when y clamps at the floor
+                } else if (dt < TAP_MAX_MS && Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) {
+                    const now = performance.now();
+                    if (now - _lastTap < DOUBLE_TAP_MS) { spin(); haptic('turn'); _lastTap = 0; }
+                    else { shoot(); _lastTap = now; }
+                }
+            }
+        }
+        function swipeCancel(e) { for (const t of e.changedTouches) _touches.delete(t.identifier); }
+        function clearTouchState() { _touches.clear(); verticalVelocity = 0; keys = {}; document.querySelectorAll('.control-btn.held').forEach(b => b.classList.remove('held')); }
+        function setupSwipe() {
+            window.addEventListener('touchstart', swipeStart, { passive: true });
+            window.addEventListener('touchend', swipeEnd, { passive: true });
+            window.addEventListener('touchcancel', swipeCancel, { passive: true });
+        }
+        // Haptics live here, NOT inside SFX: SFX methods are all called behind
+        // `if (settings.audio)`, and audio defaults to OFF — routing vibration
+        // through them would silently kill it for most players. Placing the
+        // calls in the shared verbs means keyboard, buttons and swipe all
+        // inherit them from one place. (No-op on iOS: navigator.vibrate is
+        // Android/Chrome only.)
+        const HAPTIC_PATTERNS = { turn: 12, jump: 18, hit: [25, 40, 25], pickup: 20, shoot: 15, boss: [35, 30, 35] };
+        let hapticsOK = false;
+        function initHaptics() {
+            hapticsOK = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function'
+                && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        }
+        function haptic(type) {
+            if (!hapticsOK || settings.calm) return;
+            const p = HAPTIC_PATTERNS[type];
+            if (p !== undefined) { try { navigator.vibrate(p); } catch (e) {} }
+        }
+
+        function changeLane(direction) { const newLane = currentLane + direction; if (newLane >= -1 && newLane <= 1) { currentLane = newLane; targetX = currentLane * LANE_WIDTH; haptic('turn'); } }
         function spin() { if (isSpinning) return; isSpinning = true; spinTimer = 30; }
         
         function shoot() { 
             if (shootCooldown > 0) return; 
-            shootCooldown = 15; 
+            shootCooldown = 15; haptic('shoot'); 
             if(settings.audio) SFX.shoot(); 
             playerGun.visible = true; 
             if(gameState !== 'BOSS') setTimeout(() => { playerGun.visible = false; }, 200);
@@ -1578,6 +1732,7 @@
             const _bt = document.getElementById('bonus-tint'); if (_bt) _bt.classList.remove('on');
             const _btm = document.getElementById('bonus-timer'); if (_btm) _btm.style.display = 'none';
             shieldActive = false; playerShieldMesh.visible = false;
+            invulnTimer = 0; if (playerMesh) playerMesh.visible = true;
             hitStop = 0; timeScale = 1; slowAcc = 0; cameraShake = 0;   // clear any leftover juice
             resetCombo();
             document.getElementById('combo-box').style.display = 'block';
@@ -1633,6 +1788,7 @@
             isSpinning = false; spinTimer = 0;
             if (playerMesh) { playerMesh.rotation.set(0, 0, 0); playerMesh.scale.set(1, 1, 1); }
             shieldActive = false; playerShieldMesh.visible = false;
+            invulnTimer = 0; if (playerMesh) playerMesh.visible = true;
             bonusActive = false; bonusTimer = 0;
             const _bt = document.getElementById('bonus-tint'); if (_bt) _bt.classList.remove('on');
             const _btm = document.getElementById('bonus-timer'); if (_btm) _btm.style.display = 'none';
@@ -1679,6 +1835,12 @@
             camera.updateProjectionMatrix();
 
             if (shootCooldown > 0) shootCooldown--;
+            // Mercy window: count down and blink the hull so the state is legible.
+            if (invulnTimer > 0) {
+                invulnTimer--;
+                playerMesh.visible = settings.calm ? true : (Math.floor(invulnTimer / 4) % 2 === 0);
+                if (invulnTimer === 0) playerMesh.visible = true;
+            }
             player.position.x += (targetX - player.position.x) * 0.2;
             if (verticalVelocity === 0) verticalVelocity -= GRAVITY * 0.5;
             player.position.y += verticalVelocity;
@@ -1889,7 +2051,7 @@
                     obj.mesh.rotation.x += 0.05;
                     obj.mesh.rotation.z += 0.05;
                 }
-                if(checkCollision(obj.mesh, 0.7)) { 
+                if(obj.active !== false && checkCollision(obj.mesh, 0.7)) { 
                     if(obj.type === 'WUMPA') { 
                         collect(obj, 10); 
                         if (bonusActive) runBonusGrabs++;
@@ -1919,6 +2081,9 @@
                         showFloatingText(obj.mesh.position, "+50", "#86efac"); 
                     } else if(obj.type === 'DEADLY_BLOCK' || obj.type === 'MINE') { 
                         takeDamage(true, obj.type === 'MINE' ? 'mine' : 'block'); 
+                        obj.active = false;                      // spent: one hazard, one hit
+                        if (obj.type === 'MINE') { spawnParticles(obj.mesh.position, 0xff5a36, 16); disposeMesh(obj.mesh); scene.remove(obj.mesh); }
+                        // A block is solid scenery — leave it visible to scroll past.
                     } else if(obj.type === 'CEILING_SPIKE') { 
                         takeDamage(false, 'spike'); obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
                     } else { 
@@ -1958,7 +2123,7 @@
         }
 
         function activateShield() {
-            shieldActive = true;
+            shieldActive = true; haptic('pickup');
             playerShieldMesh.visible = true;
             if(settings.audio) SFX.shieldUp();
             document.getElementById('shield-overlay').style.opacity = settings.calm ? 0.2 : 0.5;
@@ -2058,21 +2223,25 @@
             checkpointMarkers = [];
         }
 
-        function checkCollision(mesh, radius) { if(boss.userData.isWreck && mesh === boss.getObjectByName('Fuselage')) return false; if(!mesh.visible || (gameState !== 'RUNNING' && gameState !== 'BOSS' && gameState !== 'BOSS_WRECK')) return false; const dx = Math.abs(mesh.position.x - player.position.x); const dy = Math.abs(mesh.position.y - player.position.y); const dz = Math.abs(mesh.position.z - player.position.z); const objHalfWidth = mesh.geometry ? (mesh.geometry.parameters.width || 1) / 2 : 0.5; return dx < (objHalfWidth + 0.5) && dy < 1.0 && dz < 0.5; }
+        function checkCollision(mesh, radius) { if(boss.userData.isWreck && mesh === boss.getObjectByName('Fuselage')) return false; if(!mesh.visible || (gameState !== 'RUNNING' && gameState !== 'BOSS' && gameState !== 'BOSS_WRECK')) return false; const dx = Math.abs(mesh.position.x - player.position.x); const dy = Math.abs(mesh.position.y - player.position.y); const dz = Math.abs(mesh.position.z - player.position.z); const objHalfWidth = mesh.geometry ? (mesh.geometry.parameters.width || 1) / 2 : 0.5; return dx < (objHalfWidth + 0.5) && dy < 1.0 && dz < (0.5 + speed / 2); }
         
         function takeDamage(instaKill = false, cause = '') { 
             if(gameState === 'GAMEOVER') return;
+            if (invulnTimer > 0) return;   // mercy window is running — this is the same hazard, same frame-run
             if (cause) lastHitCause = cause;
             if (shieldActive) {
                 shieldActive = false;
                 playerShieldMesh.visible = false;
+                invulnTimer = INVULN_FRAMES;   // otherwise the block that ate the shield takes a heart next frame too
                 if(settings.audio) SFX.shieldBreak();
+                haptic('hit');
                 spawnParticles(player.position, 0x00ffff, 24);
                 FX.shake(0.38); FX.stop(3); FX.flash('#00d4ff', 0.4);
                 resetCombo(); 
                 return;
             }
-            if(settings.audio) SFX.crash(); 
+            invulnTimer = INVULN_FRAMES;
+            if(settings.audio) SFX.crash(); haptic('hit'); 
             lives--;   // forgiving: any collision costs a single heart (no instant-kills)
             resetCombo();
             if(lives < 0) lives = 0; 
@@ -2113,14 +2282,14 @@
         function updateBossHP() { const pct = Math.max(0, (bossCurrentHP/bossMaxHP)*100); document.getElementById('boss-hp-fill').style.width = pct + '%'; }
         
         function collect(obj, pts) { 
-            if(settings.audio) SFX.collect(); 
+            if(settings.audio) SFX.collect(); haptic('pickup'); 
             obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
             score+=pts * comboMultiplier; 
             FX.scorePop();
             incrementCombo();
         }
         function smash(obj) { 
-            if(settings.audio) SFX.crash(); 
+            if(settings.audio) SFX.crash(); haptic('pickup'); 
             obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh); 
             score+=50 * comboMultiplier; 
             spawnParticles(obj.mesh.position, 0x8B4513, 14); 
@@ -2186,7 +2355,7 @@
         }
         
         function defeatBoss() {
-            stormLogEntry();   // lore: this Storm writes its own obituary
+            stormLogEntry(); haptic('boss');   // lore: this Storm writes its own obituary
             if(settings.audio) SFX.bossExplode();
             score += 1000 * comboMultiplier;
             FX.scorePop();
@@ -2265,7 +2434,15 @@
             while (_acc >= _STEP && guard < 5) { tick(); _acc -= _STEP; guard++; }
             if (settings.quality === 'low') renderer.render(scene, camera); else composer.render();
         }
-        function onResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight); }
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // composer.setSize() propagates to EVERY pass and resets the bloom
+            // render targets, so the bloom scale must be re-applied AFTER it.
+            composer.setSize(window.innerWidth, window.innerHeight);
+            const bp = window.__bloomPass;
+            if (bp && bp.userData && bp.userData.scale !== 1) bp.setSize(window.innerWidth * bp.userData.scale, window.innerHeight * bp.userData.scale);
+        }
         init();
     </script>
 <script defer src="/hud.js"></script></body>
