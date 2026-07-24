@@ -1,12 +1,13 @@
 <!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BUILD Art · Teesside Studio Suite · Printable Weekly Evidence Pack</title><style>
+<title>BUILD Art · Teesside Studio Suite · Printable Weekly Evidence Pack · Made by Matt</title><style>
 :root{--ink:#18233F;--steel:#4F869C;--oxide:#D06438;--foundry:#E1AB32;--river:#16877A;--paper:#FFF8EC}
 body{font-family:'Segoe UI',system-ui,sans-serif;color:#18233F;background:#faf7ef;margin:0;padding:26px;line-height:1.5}
 h1{color:var(--ink);border-bottom:3px solid var(--oxide);padding-bottom:6px;font-size:1.55rem}
+.brand{font-size:.82rem;color:#475569;margin:-6px 0 12px;letter-spacing:.02em}
 .note{background:#fff7d6;border-left:6px solid var(--foundry);padding:10px 14px;border-radius:8px;font-size:.94rem}
 .controls{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;margin:14px 0}
-.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px}
-.controls button{background:var(--oxide);color:#fff;font-weight:700;cursor:pointer}
+.controls select,.controls button{font:inherit;padding:6px 10px;border-radius:8px;border:0;margin-left:6px;min-height:44px}
+.controls button{background:var(--oxide);color:#fff;font-weight:700;cursor:pointer;touch-action:manipulation}
 .sheet{background:#fff;border:1px solid #d8d6cf;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 6px 16px #18233f11}
 .spine{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;font-size:.82rem}
 .spine div{flex:1;min-width:220px;border-radius:9px;padding:7px 11px}
@@ -27,41 +28,75 @@ h1{color:var(--ink);border-bottom:3px solid var(--oxide);padding-bottom:6px;font
 .le{background:#eaf4f8}.ls{background:#e8f7f4}.lr{background:#fff7d6;border:2px solid var(--foundry)}
 .ybox{border:3px solid var(--foundry);border-radius:8px;min-height:80px;padding:8px;margin:8px 0}
 table{border-collapse:collapse;width:100%;font-size:.84rem;margin:8px 0}th,td{border:1px solid #9ca3af;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f7}
+.partbadge{display:inline-block;background:var(--steel);color:#fff;border-radius:999px;padding:3px 12px;font-size:.78rem;font-weight:800;letter-spacing:.03em;vertical-align:middle;margin-left:8px}
+.rec{border:2px solid var(--steel);border-left:9px solid var(--steel);border-radius:10px;padding:10px 13px;margin:10px 0;background:#f2f8fb;font-size:.86rem}
+.rec h4{margin:0 0 5px;font-size:.9rem;color:var(--ink)}
+.rec .rule{display:block;margin-top:7px;font-size:.78rem;color:#3d5566;border-top:1px dashed #9bb8c6;padding-top:6px}
+.partblock{border-top:4px solid var(--oxide);border-radius:10px;padding:2px 12px 10px;margin:14px 0;background:#fffdf7}
+.partblock h3{color:var(--ink);font-size:1rem;margin:10px 0 2px}
+.partblock p.req{font-size:.82rem;color:#5b4a2e;background:#fff7d6;border-radius:7px;padding:6px 9px;margin:6px 0}
 @media print{body{background:#fff;padding:0}.controls,.noprint{display:none!important}.sheet{box-shadow:none;border:none;page-break-after:always}}
 </style></head><body>
 <h1>BUILD Art · Teesside Studio Suite · Printable Weekly Evidence Pack</h1>
-<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-tinted Lundy zones, same BUILD&rarr;GROW ladder. One sheet per pupil per week. Capture independence, not volume. No pupil names are stored in any file.</p>
-<div class="controls noprint">Show week:
-<select id="wk" onchange="render()"><option value="all">All 8 weeks</option></select>
+<p class="brand">Made by Matt · madebymatt.uk · Trinity Arts Award <b>Explore</b> (supported) · Autumn 1 · 2026&ndash;27</p>
+<p class="note"><b>How to use:</b> pick a week, print the sheet, and it matches that lesson on screen &mdash; same stamped ticket, same Teesside-tinted Lundy zones, same BUILD&rarr;GROW ladder. One sheet per pupil per week. Capture independence, not volume. No pupil names are stored in any file.<br>
+<b>Portfolio of record:</b> <u>this weekly sheet is the portfolio of record</u>. The print-sections inside each lesson file are working documents &mdash; they support the task, they are not the evidence the adviser audits. If a piece of working paper matters, mount or photograph it onto the week sheet and give it a reference.</p>
+<div class="controls noprint">Show:
+<select id="wk" onchange="render()"><option value="all">All 8 weeks (pupil bundle)</option></select>
 <button onclick="window.print()">🖨️ Print</button></div>
 <div id="out"></div>
 <script>
 const WEEKS=[
-{w:1,t:"The Local Canvas",ticket:"THE LOCAL CANVAS TICKET",tp:"My reference is ____. I cropped/simplified to ____. My three colours create ____. Next week I want ____.",inh:"Unit start — discovering Teesside as your canvas.",fwd:"Your Week 1 choices set the structures, surfaces and place themes offered in Week 2."},
-{w:2,t:"Artists, Makers &amp; Teesside Connections",ticket:"THE CONNECTION TICKET",tp:"The Teesside artist/maker I connected with is ____. One thing they do with place is ____. I will borrow ____.",inh:"Week 1&rsquo;s place study and chosen themes.",fwd:"Your selections set the processes and examples prepared for the Week 3 Skills Lab."},
-{w:3,t:"Industrial Surface Skills Lab",ticket:"THE SURFACE TICKET",tp:"The surface I explored is ____. The material or process that worked is ____. I will use it to ____.",inh:"Week 2&rsquo;s chosen artists, processes and examples.",fwd:"Your selected processes set which materials and demonstrations stay available in Week 4."},
-{w:4,t:"Build the Brief",ticket:"THE BRIEF TICKET",tp:"My Teesside artwork will communicate ____. I will test it by ____. The exact support I want is ____.",inh:"Week 3&rsquo;s tested surface processes and materials.",fwd:"Your individual brief sets the materials, modelling and support field prepared for Week 5."},
-{w:5,t:"Critique, Test &amp; Redirect",ticket:"THE REDIRECT TICKET",tp:"I will PROTECT ____, TEST ____, and reject ____. My next decision is ____.",inh:"Week 4&rsquo;s brief and what it must communicate.",fwd:"Your maker&rsquo;s decision controls Week 6 refinement; class access feedback changes the studio setup."},
-{w:6,t:"Resolve the Artwork",ticket:"THE RESOLVE TICKET",tp:"My final decision is ____. I stopped before overworking because ____. It is ready to show / it still needs ____.",inh:"Week 5&rsquo;s protect / test / change / reject decisions.",fwd:"Your presentation and privacy choices set the curation roles and display options in Week 7."},
-{w:7,t:"Curate the Showcase",ticket:"THE CURATOR TICKET",tp:"My display choice is ____. It changes the meaning by ____. My access decision is ____. Public / private: ____.",inh:"Week 6&rsquo;s resolved artwork and privacy choices.",fwd:"Your decisions set the real exhibition layout, labels, access route and what is or is not public."},
-{w:8,t:"Share, Reflect &amp; Close the Loop",ticket:"THE INFLUENCE TICKET",tp:"My recommendation is ____, for ____. The named adult acting on it is ____. They will report back by ____.",inh:"Week 7&rsquo;s curated showcase and access plan.",fwd:"A named adult acts on one pupil recommendation and reports the decision and deadline back — the loop is paid, the unit CLOSES."}
+{w:1,t:"The Local Canvas",part:"Explore Part A",ticket:"THE LOCAL CANVAS TICKET",tp:"My reference is ____. I cropped/simplified to ____. My three colours create ____. Next week I want ____.",inh:"Unit start — discovering Teesside as your canvas.",fwd:"Your Week 1 choices set the structures, surfaces and place themes offered in Week 2.",rec:"Choose one reference from the printed Teesside bank, or one photo from your own route. Crop it, name your three colours, and say what they make you feel. Taking part and responding IS the Part A evidence — there is no finished piece required at this stage."},
+{w:2,t:"Artists, Makers &amp; Teesside Connections",part:"Explore Part A + Part B",ticket:"THE CONNECTION TICKET",tp:"The Teesside artist/maker I connected with is ____. One thing they do with place is ____. I will borrow ____.",inh:"Week 1&rsquo;s place study and chosen themes.",fwd:"Your selections set the processes and examples prepared for the Week 3 Skills Lab.",rec:"Complete BOTH the artist card and the organisation card from the printed pack, or from a recorded / online collection walk-through. The organisation half is not optional — Part B needs an artist AND an arts or cultural organisation."},
+{w:3,t:"Industrial Surface Skills Lab",part:"Explore Part C",ticket:"THE SURFACE TICKET",tp:"The surface I explored is ____. The material or process that worked is ____. I will use it to ____.",inh:"Week 2&rsquo;s chosen artists, processes and examples.",fwd:"Your selected processes set which materials and demonstrations stay available in Week 4.",rec:"Bench catch-up: run three surface strips in one sitting from the technique cards. Photograph the strips and name the one that worked and why. Three strips made late evidence the process just as well as three made on the day."},
+{w:4,t:"Build the Brief",part:"Explore Part C",ticket:"THE BRIEF TICKET",tp:"My Teesside artwork will communicate ____. I will test it by ____. The exact support I want is ____.",inh:"Week 3&rsquo;s tested surface processes and materials.",fwd:"Your individual brief sets the materials, modelling and support field prepared for Week 5.",rec:"Build the brief from strips you already have — you do not need new ones. Apply all three tests (message, feasibility, audience) and write the verdict for each. If the plan fails feasibility, shrink the paper, not the idea."},
+{w:5,t:"Critique, Test &amp; Redirect",part:"Explore Part C",ticket:"THE REDIRECT TICKET",tp:"I will PROTECT ____, TEST ____, and reject ____. My next decision is ____.",inh:"Week 4&rsquo;s brief and what it must communicate.",fwd:"Your maker&rsquo;s decision controls Week 6 refinement; class access feedback changes the studio setup.",rec:"Silent route: write your critique onto a photograph of the work instead of speaking it in the trio. One protect, one test, one change. Run the change on scrap and photograph the result. Written critique is the same evidence as spoken critique."},
+{w:6,t:"Resolve the Artwork",part:"Explore Part C",ticket:"THE RESOLVE TICKET",tp:"My final decision is ____. I stopped before overworking because ____. It is ready to show / it still needs ____.",inh:"Week 5&rsquo;s protect / test / change / reject decisions.",fwd:"Your presentation and privacy choices set the curation roles and display options in Week 7.",rec:"Resolve at reduced scale — the shrink line applies here. A smaller finished piece is a finished piece. Photograph the work at two stages so the process and the outcome are both on the sheet; Part C needs both."},
+{w:7,t:"Curate the Showcase",part:"Explore Part D",ticket:"THE CURATOR TICKET",tp:"My display choice is ____. It changes the meaning by ____. My access decision is ____. Public / private: ____.",inh:"Week 6&rsquo;s resolved artwork and privacy choices.",fwd:"Your decisions set the real exhibition layout, labels, access route and what is or is not public.",rec:"Sketch or photograph a two-piece layout plan and label why each piece sits where it does, plus your public / private decision. A planned display is a curation decision and counts — you do not need to have hung the real showcase."},
+{w:8,t:"Share, Reflect &amp; Close the Loop",part:"Explore Parts A + B + C + D",ticket:"THE INFLUENCE TICKET",tp:"My recommendation is ____, for ____. The named adult acting on it is ____. They will report back by ____.",inh:"Week 7&rsquo;s curated showcase and access plan.",fwd:"A named adult acts on one pupil recommendation and reports the decision and deadline back — the loop is paid, the unit CLOSES.",rec:"Recorded or written look-back over the WHOLE unit — not just the final piece — plus the line: &lsquo;I chose to share ____ because ____.&rsquo; Choosing what to share is itself the Part D evidence, so make the choice yours and say why."}
 ];
 function sheet(x){return `<div class="sheet">
-<h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}</h2>
+<h2 style="color:var(--ink);margin:.1em 0">Week ${x.w} · ${x.t}<span class="partbadge">🎨 ${x.part}</span></h2>
 <div class="spine"><div class="inh"><b>◀ INHERITED</b>${x.inh}</div><div class="fwd"><b>FEEDS ▶</b>${x.fwd}</div></div>
 <div class="row"><div class="fld"><b>Name (or code)</b></div><div class="fld"><b>Date</b></div><div class="fld"><b>Route / support used</b></div></div>
 <p style="margin:12px 0 4px;font-weight:700">Close the Lundy loop</p>
 <div class="lundy4"><div class="z-space"><b>SPACE</b>a usable route &amp; boundary</div><div class="z-voice"><b>VOICE</b>a real artistic decision</div><div class="z-aud"><b>AUDIENCE</b>a recipient names what they received</div><div class="z-infl"><b>INFLUENCE</b>your choice changes next week</div></div>
 <div class="ticket"><h3>🎟️ ${x.ticket} <span class="noprint" style="font-size:.75rem;font-weight:400;color:#64748b">(on a hard day, THIS alone closes the loop)</span></h3><p style="font-size:.9rem">${x.tp}</p><span class="stamp">STAMP → INFLUENCE</span> <span style="margin-left:12px;font-size:.8rem;color:#64748b">Partner stamp: ______</span></div>
+<div class="rec"><h4>↩︎ Missed this week? Recovery route — ${x.part}</h4>${x.rec}
+<span class="rule">Recovery evidences the SAME award Part. It is not a lower route and it is not worth less. There is no hours threshold to clear: the adviser audits Parts, not attendance.</span></div>
 <p style="margin:12px 0 4px;font-weight:700">Evidence lift · BUILD → GROW</p>
 <div class="ladder"><div class="le"><b>BUILD entry</b><br>Notice, try, select with support.</div><div class="ls"><b>BUILD secure</b><br>Compare alternatives and explain one decision.</div><div class="lr"><b>GROW reach</b><br>Compare for an audience, adapt, and transfer to something new.</div></div>
 <p style="margin:12px 0 4px;font-weight:700">Photo / made-work evidence (stick / annotate)</p><div class="ybox"></div>
 <div class="row" style="font-size:.8rem;color:#475569"><div class="fld"><b>Authorship</b>what I selected / made / directed / decided</div><div class="fld"><b>Exact support</b>prepared / modelled / prompted / scribed</div><div class="fld"><b>Verified by / date</b></div></div>
+<div style="text-align:right;font-size:.72rem;color:#94a3b8;margin-top:6px">Week ${x.w} sheet · ${x.part} · sheet ref ______</div>
 </div>`;}
-const REPORTBACK=`<div class="sheet noprint" style="border-top:8px solid var(--river)"><h2 style="color:var(--ink)">Report-back contract log (adult copy)</h2>
+const LOCATOR_PARTS=[
+{p:"Part A · Inspire",req:"Took part and gave a personal response. There is no requirement to have completed a finished piece for Part A — participation and response are the evidence.",rows:[["Week 1 · place study, crop and colour choices",""],["Week 3 · surface strips tried in the Skills Lab",""],["Week 8 · look-back over what was tried",""],["Other (name it)",""]]},
+{p:"Part B · Explore",req:"BOTH are required: an artist or craftsperson AND an arts or cultural organisation. A missing organisation card is the most common gap at this level.",rows:[["Week 2 · artist / maker card",""],["Week 2 · arts or cultural organisation card",""],["Recorded or online collection walk-through (if used)",""],["Other (name it)",""]]},
+{p:"Part C · Create",req:"Process AND final piece, both needed. Part C must be a DISTINCT activity — it cannot double-count with the Part A evidence above.",rows:[["Week 4 · the brief, with all three tests recorded",""],["Week 5 · critique card and the scrap test",""],["Week 6 · process photographs (at least two stages)",""],["Week 6 · the final piece (photo or the work itself)",""]]},
+{p:"Part D · Present",req:"A look back over the WHOLE award — not just what was made for Part C — and the pupil must have ACTIVELY CHOSEN what to share, and be able to say why.",rows:[["Week 7 · display / layout choice and access decision",""],["Week 8 · &lsquo;I chose to share ____ because ____&rsquo;",""],["Week 8 · audience receipt / what a recipient named",""],["Week 8 · whole-journey reflection (written or recorded)",""]]}
+];
+const LOCATOR=`<div class="sheet" style="border-top:8px solid var(--oxide)"><h2 style="color:var(--ink);margin:.1em 0">Evidence Locator Form <span class="partbadge" style="background:var(--oxide)">Adviser copy</span></h2>
+<p class="note"><b>Trinity requires evidence to be grouped and labelled</b> so it is clear which section of the award each piece relates to, ordered Part A, then B, then C, then D. Every row needs a real location — a sheet number, a page, a photo reference. Never write &ldquo;in the arts log&rdquo;.</p>
+<div class="row"><div class="fld"><b>Pupil name or code</b></div><div class="fld"><b>Award / level</b>Trinity Arts Award Explore</div><div class="fld"><b>Date range</b></div></div>
+<div class="row"><div class="fld"><b>Adviser (trained at this level)</b></div><div class="fld"><b>Centre</b></div><div class="fld"><b>Adviser audit completed on</b></div></div>
+${LOCATOR_PARTS.map(b=>`<div class="partblock"><h3>${b.p}</h3><p class="req">${b.req}</p>
+<table><tr><th style="width:44%">What the evidence is</th><th style="width:34%">Where to find it (sheet / page / photo ref)</th><th style="width:22%">Verified by / date</th></tr>
+${b.rows.map(r=>`<tr><td>${r[0]}</td><td></td><td></td></tr>`).join('')}</table></div>`).join('')}
+<p class="note" style="margin-top:14px"><b>Before any claim:</b> the adviser audits the complete personal arts log against the current Explore requirements. Recovery routes evidence the same Part as the live session and are not a lower route. <b>There is no minimum-hours gate</b> — Trinity states time figures are guidance only, so attendance volume must never be used to withhold a claim.</p>
+</div>`;
+const REPORTBACK=`<div class="sheet" style="border-top:8px solid var(--river)"><h2 style="color:var(--ink)">Report-back contract log <span class="partbadge" style="background:var(--river)">Adult copy</span></h2>
 <p class="note">The loop only works if pupils hear what their INFLUENCE changed. Log the promise the week it's made, and the week you pay it back.</p>
 <table><tr><th>Week</th><th>What pupils showed us</th><th>What we changed</th><th>Owner</th><th>Told pupils on (date)</th></tr>
 ${[1,2,3,4,5,6,7,8].map(w=>`<tr><td>${w}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table></div>`;
-function render(){const v=document.getElementById('wk').value;const list=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);document.getElementById('out').innerHTML=list.map(sheet).join('')+(v==='all'?REPORTBACK:'');}
-(function(){const s=document.getElementById('wk');WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t;s.appendChild(o);});render();})();
+function render(){const v=document.getElementById('wk').value;
+if(v==='locator'){document.getElementById('out').innerHTML=LOCATOR;return;}
+if(v==='adult'){document.getElementById('out').innerHTML=REPORTBACK;return;}
+const list=v==='all'?WEEKS:WEEKS.filter(x=>x.w==+v);
+document.getElementById('out').innerHTML=list.map(sheet).join('');}
+(function(){const s=document.getElementById('wk');
+WEEKS.forEach(x=>{const o=document.createElement('option');o.value=x.w;o.textContent='Week '+x.w+' · '+x.t.replace(/&amp;/g,'&')+' · '+x.part;s.appendChild(o);});
+[['locator','— Evidence Locator Form (adviser)'],['adult','— Report-back contract log (adult)']].forEach(p=>{const o=document.createElement('option');o.value=p[0];o.textContent=p[1];s.appendChild(o);});
+render();})();
 </script></body></html>
