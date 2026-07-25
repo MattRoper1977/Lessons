@@ -391,6 +391,28 @@ button.ghost:hover{background:#cbd5e1}
   .stm-paragraph{font-size:1rem!important;line-height:1.6!important}
 }
 
+
+/* ===== Neutralisation Ion Animation (ns-*) — added for I Do 2.32 ===== */
+.ns-panel{margin-top:10px;border:2px solid var(--ido-border);background:var(--ido-bg);border-radius:12px;padding:12px 14px}
+.ns-panel h3{margin:0 0 6px;color:var(--ido-border)}
+.ns-acidbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px}
+.ns-acidbtn{font:inherit;font-weight:800;cursor:pointer;border:2px solid var(--lo-border);background:#fff;color:var(--text);
+  border-radius:10px;padding:6px 14px;min-height:44px;line-height:1.1}
+.ns-acidbtn[aria-pressed="true"]{background:var(--ido-border);color:#fff;border-color:var(--ido-border)}
+.ns-acidbtn[aria-pressed="true"]::before{content:"\2714\FE0E  "}
+.ns-stage{background:#fff;border:2px solid var(--lo-border);border-radius:10px;padding:6px}
+.ns-ion{transition:transform .9s cubic-bezier(.4,0,.2,1),opacity .5s ease}
+.ns-fade{transition:opacity .5s ease}
+.ns-say{margin:8px 0 4px;font-weight:800;text-align:center;font-size:1.02rem;min-height:2.6em}
+.ns-eq{text-align:center;font-size:1.15rem;font-weight:900;letter-spacing:.2px;margin:2px 0 6px}
+.ns-steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.ns-dots{display:flex;gap:6px;justify-content:center;margin-top:8px;align-items:center}
+.ns-dot{width:11px;height:11px;border-radius:50%;background:#cbd5e1;border:2px solid #94a3b8}
+.ns-dot[data-on="1"]{background:var(--ido-border);border-color:var(--ido-border)}
+.ns-dotlabel{font-size:.8rem;color:var(--muted);font-weight:700;margin-left:4px}
+@media (prefers-reduced-motion: reduce){
+  .ns-ion,.ns-fade{transition:none !important}
+}
 </style>
 </head>
 <body>
@@ -777,6 +799,87 @@ button.ghost:hover{background:#cbd5e1}
             <button class="ghost small" onclick="resetNeut()">🔄 Reset</button>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="ns-panel animate-enter anim-d2">
+      <h3>🔬 Ion Animation: What the Ions Actually Do</h3>
+      <p style="margin:0 0 4px;font-size:.92rem;color:var(--muted)">
+        Pick an acid, then press <strong>Next step</strong>. The ionic equation is the
+        <strong>same every time</strong> &mdash; only the <strong>salt</strong> changes.
+      </p>
+
+      <div class="ns-acidbar" role="group" aria-label="Choose an acid">
+        <button type="button" class="ns-acidbtn" id="ns-btn-hcl"   aria-pressed="true"  onclick="nsSetAcid('hcl')">HCl</button>
+        <button type="button" class="ns-acidbtn" id="ns-btn-h2so4" aria-pressed="false" onclick="nsSetAcid('h2so4')">H&#8322;SO&#8324;</button>
+        <button type="button" class="ns-acidbtn" id="ns-btn-hno3"  aria-pressed="false" onclick="nsSetAcid('hno3')">HNO&#8323;</button>
+      </div>
+
+      <div class="ns-stage">
+        <svg viewBox="0 0 640 172" width="100%" style="max-height:290px" role="img"
+             aria-labelledby="ns-svg-title ns-svg-desc">
+          <title id="ns-svg-title">Neutralisation ion animation</title>
+          <desc id="ns-svg-desc">Hydrogen ions from the acid join hydroxide ions from the alkali to make water. The remaining two ions are the salt.</desc>
+
+          <g class="ns-fade" id="ns-zones">
+            <rect x="8"   y="6" width="290" height="140" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2" stroke-dasharray="7 4"/>
+            <text x="153" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">ACID &#8212; <tspan id="ns-acid-formula">HCl</tspan></text>
+            <rect x="342" y="6" width="290" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+            <text x="487" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">ALKALI &#8212; NaOH</text>
+          </g>
+
+          <g class="ns-ion" id="ns-h">
+            <circle cx="90" cy="78" r="30" fill="#fca5a5" stroke="#991b1b" stroke-width="3"/>
+            <text x="90" y="85" text-anchor="middle" font-size="19" font-weight="bold" fill="#7f1d1d">H&#8314;</text>
+            <text x="90" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#991b1b">from acid</text>
+          </g>
+          <g class="ns-ion" id="ns-anion">
+            <rect x="185" y="50" width="58" height="56" rx="9" fill="#fed7aa" stroke="#9a3412" stroke-width="3" stroke-dasharray="5 3"/>
+            <text x="214" y="85" text-anchor="middle" font-size="15" font-weight="bold" fill="#7c2d12" id="ns-anion-label">Cl&#8315;</text>
+            <text x="214" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#9a3412" id="ns-anion-cap">from acid</text>
+          </g>
+          <g class="ns-ion" id="ns-na">
+            <rect x="397" y="50" width="58" height="56" rx="9" fill="#ddd6fe" stroke="#5b21b6" stroke-width="3"/>
+            <text x="426" y="85" text-anchor="middle" font-size="16" font-weight="bold" fill="#4c1d95">Na&#8314;</text>
+            <text x="426" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#5b21b6" id="ns-na-cap">from alkali</text>
+          </g>
+          <g class="ns-ion" id="ns-oh">
+            <circle cx="550" cy="78" r="30" fill="#93c5fd" stroke="#1e3a8a" stroke-width="3" stroke-dasharray="6 4"/>
+            <text x="550" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e3a8a">OH&#8315;</text>
+            <text x="550" y="126" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e3a8a">from alkali</text>
+          </g>
+
+          <g class="ns-ion" id="ns-water" opacity="0">
+            <circle cx="320" cy="78" r="34" fill="#bbf7d0" stroke="#166534" stroke-width="3"/>
+            <text x="320" y="78" text-anchor="middle" font-size="17" font-weight="bold" fill="#14532d">H&#8322;O</text>
+            <text x="320" y="95" text-anchor="middle" font-size="11" font-weight="bold" fill="#14532d">water</text>
+          </g>
+
+          <g class="ns-fade" id="ns-plus" opacity="0">
+            <text x="320" y="88" text-anchor="middle" font-size="26" font-weight="bold" fill="#475569">+</text>
+          </g>
+
+          <g class="ns-fade" id="ns-salt" opacity="0">
+            <rect x="352" y="112" width="178" height="44" rx="10" fill="#fef9c3" stroke="#a16207" stroke-width="3"/>
+            <text x="441" y="131" text-anchor="middle" font-size="15" font-weight="bold" fill="#713f12" id="ns-salt-formula">NaCl</text>
+            <text x="441" y="148" text-anchor="middle" font-size="11" font-weight="bold" fill="#713f12" id="ns-salt-name">the salt: sodium chloride</text>
+          </g>
+        </svg>
+      </div>
+
+      <p class="ns-eq" id="ns-eq">H&#8314;(aq) + OH&#8315;(aq) &#8594; H&#8322;O(l)</p>
+      <p class="ns-say" id="ns-say" aria-live="polite">Step 1 of 4 &mdash; Two solutions, four ions. Nothing has reacted yet.</p>
+
+      <div class="ns-dots" aria-hidden="true">
+        <span class="ns-dot" id="ns-dot-0" data-on="1"></span>
+        <span class="ns-dot" id="ns-dot-1"></span>
+        <span class="ns-dot" id="ns-dot-2"></span>
+        <span class="ns-dot" id="ns-dot-3"></span>
+        <span class="ns-dotlabel" id="ns-dotlabel">Step 1 of 4</span>
+      </div>
+
+      <div class="ns-steps">
+        <button type="button" class="small" id="ns-next" onclick="nsStep()">&#9654; Next step</button>
+        <button type="button" class="ghost small" onclick="nsReset()">&#128260; Reset</button>
       </div>
     </div>
   </div>
@@ -1848,6 +1951,114 @@ bindSTM();
 updateProgress();
 checkTimerVisibility();
 loadColdCallNames();
+
+
+/* ---------- NEUTRALISATION ION ANIMATION (ns-*) ---------- */
+var NS_ACIDS = {
+  hcl:   {formula:'HCl',   anion:'Cl⁻',   salt:'NaCl',
+          saltName:'the salt: sodium chloride',
+          eq:'HCl + NaOH → <strong>NaCl</strong> + H₂O'},
+  h2so4: {formula:'H₂SO₄', anion:'SO₄²⁻', salt:'Na₂SO₄',
+          saltName:'the salt: sodium sulfate',
+          eq:'H₂SO₄ + 2NaOH → <strong>Na₂SO₄</strong> + 2H₂O'},
+  hno3:  {formula:'HNO₃',  anion:'NO₃⁻',  salt:'NaNO₃',
+          saltName:'the salt: sodium nitrate',
+          eq:'HNO₃ + NaOH → <strong>NaNO₃</strong> + H₂O'}
+};
+var nsAcid = 'hcl';
+var nsState = 0;
+
+function nsEl(id){ return document.getElementById(id); }
+
+function nsSay(text){
+  var p = nsEl('ns-say'); if(p) p.textContent = text;
+  var d = nsEl('ns-dotlabel'); if(d) d.textContent = 'Step ' + (nsState+1) + ' of 4';
+  for(var i=0;i<4;i++){
+    var dot = nsEl('ns-dot-'+i);
+    if(dot){ if(i<=nsState){ dot.setAttribute('data-on','1'); } else { dot.removeAttribute('data-on'); } }
+  }
+}
+
+function nsMove(id,x,y){
+  var g = nsEl(id);
+  if(g) g.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+}
+
+function nsOpacity(id,v){
+  var g = nsEl(id);
+  if(g) g.setAttribute('opacity', v);
+}
+
+function nsRender(){
+  var a = NS_ACIDS[nsAcid];
+  if(!a) return;
+  var f  = nsEl('ns-acid-formula');  if(f)  f.textContent  = a.formula;
+  var al = nsEl('ns-anion-label');   if(al) al.textContent = a.anion;
+  var sf = nsEl('ns-salt-formula');  if(sf) sf.textContent = a.salt;
+  var sn = nsEl('ns-salt-name');     if(sn) sn.textContent = a.saltName;
+  ['hcl','h2so4','hno3'].forEach(function(k){
+    var b = nsEl('ns-btn-'+k);
+    if(b) b.setAttribute('aria-pressed', k===nsAcid ? 'true' : 'false');
+  });
+}
+
+function nsSetAcid(key){
+  if(!NS_ACIDS[key]) return;
+  nsAcid = key;
+  nsReset();
+}
+
+function nsReset(){
+  nsState = 0;
+  nsMove('ns-h',0,0); nsMove('ns-oh',0,0);
+  nsMove('ns-na',0,0); nsMove('ns-anion',0,0); nsMove('ns-water',0,0);
+  nsOpacity('ns-h',1); nsOpacity('ns-oh',1);
+  nsOpacity('ns-na',1); nsOpacity('ns-anion',1);
+  nsOpacity('ns-na-cap',1); nsOpacity('ns-anion-cap',1);
+  nsOpacity('ns-water',0); nsOpacity('ns-salt',0); nsOpacity('ns-plus',0);
+  nsOpacity('ns-zones',1);
+  var eq = nsEl('ns-eq');
+  if(eq) eq.innerHTML = 'H⁺(aq) + OH⁻(aq) → H₂O(l)';
+  var nx = nsEl('ns-next');
+  if(nx) nx.innerHTML = '▶ Next step';
+  nsRender();
+  nsSay('Step 1 of 4 — Two solutions, four ions. Nothing has reacted yet.');
+}
+
+function nsStep(){
+  nsState = nsState + 1;
+  if(nsState > 3){ nsReset(); return; }
+
+  if(nsState === 1){
+    nsMove('ns-h',185,0);
+    nsMove('ns-oh',-195,0);
+    nsSay('Step 2 of 4 — The H⁺ ion from the acid moves towards the OH⁻ ion from the alkali.');
+
+  } else if(nsState === 2){
+    nsOpacity('ns-h',0); nsOpacity('ns-oh',0);
+    nsOpacity('ns-water',1);
+    var eq2 = nsEl('ns-eq');
+    if(eq2) eq2.innerHTML = '<strong>H⁺(aq) + OH⁻(aq) → H₂O(l)</strong>';
+    nsSay('Step 3 of 4 — H⁺ and OH⁻ join to make water. This happens in every neutralisation.');
+
+  } else {
+    nsMove('ns-water',-120,0);
+    nsOpacity('ns-plus',1);
+    nsMove('ns-anion',187,0);
+    nsMove('ns-na',35,0);
+    nsOpacity('ns-na-cap',0); nsOpacity('ns-anion-cap',0);
+    nsOpacity('ns-zones',0.18);
+    nsOpacity('ns-salt',1);
+    var a = NS_ACIDS[nsAcid];
+    var eq3 = nsEl('ns-eq');
+    if(eq3 && a) eq3.innerHTML = a.eq;
+    var nx2 = nsEl('ns-next');
+    if(nx2) nx2.innerHTML = '↻ Start again';
+    nsSay('Step 4 of 4 — Water is made, and the other two ions are the salt. Acid + Base → Salt + Water.');
+  }
+}
+
+try{ nsRender(); }catch(e){}
 </script>
 </body>
 </html>
