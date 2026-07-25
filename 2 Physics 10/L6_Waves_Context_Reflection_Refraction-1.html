@@ -76,7 +76,20 @@
     .timer-btn.active-play{background:var(--success);color:white;border-color:var(--success)}
     .timer-btn.active-pause{background:var(--error);color:white;border-color:var(--error)}
 
-  </style>
+  
+/* Reduced motion: complete every animation instantly rather than removing it,
+   so anything that fades or slides in still ends up visible. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-delay:0ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    transition-delay:0ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
 </head>
 <body>
 <!-- TIMER WIDGET -->

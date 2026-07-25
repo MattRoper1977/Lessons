@@ -386,6 +386,19 @@ function printPack(level){document.body.classList.remove('print-foundation','pri
 /* TF enhancement */
 .tf-btn.correct-answer{background:#dcfce7;border-color:var(--success);animation:correctFlash .6s ease}
 @media print{.xp-wrap,.hint-btn,.hint-box,.reveal-btn,.mistake-box,.lb-widget,.confetti,.peer-teach{display:none!important}}
+
+/* Reduced motion: complete every animation instantly rather than removing it,
+   so anything that fades or slides in still ends up visible. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-delay:0ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    transition-delay:0ms!important;
+    scroll-behavior:auto!important;
+  }
+}
 </style>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
 <script>
