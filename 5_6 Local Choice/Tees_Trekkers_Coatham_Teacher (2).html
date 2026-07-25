@@ -117,6 +117,25 @@ h1.bigtitle{font-size:3.1rem;margin:.1em 0;line-height:1.05;color:var(--navy-ink
 .handover-card ol{margin:8px 0 0;padding-left:22px}.handover-card li{margin:8px 0;font-weight:bold}
 .big-arrow{font-size:1.8rem;text-align:center;color:var(--gold-ink);margin:6px 0}
 </style>
+
+<!-- ===== reduced-motion v1 =====================================================
+     This file declares infinite CSS animations and had no prefers-reduced-motion
+     rule. Rather than the usual reset (animation-duration:.001ms / iteration-
+     count:1) - which parks a looping animation on its final keyframe, and a lot
+     of them end at opacity:0, so teaching particles would simply vanish - this
+     freezes every animation 0.7s into its cycle. Motion stops; whatever
+     was on screen stays on screen and stays visible.
+============================================================================ -->
+<style>
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-play-state:paused !important;
+    animation-delay:-0.7s !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="crest"><span class="shield">🧭</span><span>Tees Trekkers · South Gare → Majuba</span></div>

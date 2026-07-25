@@ -305,6 +305,25 @@
       h2{margin-right:0}
     }
   .fab4-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.fab4-cell{border:1.6px solid #cbd5e1;border-radius:8px;padding:7px 10px;break-inside:avoid;font-size:1rem}.fab4-cell svg{max-width:100%;height:auto;display:block;margin:4px auto 0}.fab4-info{background:#fffbeb;border:1.6px solid #f59e0b;margin-bottom:10px}#print-ko .ko-table td,#print-ko .ko-table th{padding:4px 8px;line-height:1.25}#print-ko h1{margin:6px 0;font-size:1.4rem}#print-ko .print-box{padding:6px 10px}</style>
+
+<!-- ===== reduced-motion v1 =====================================================
+     This file declares infinite CSS animations and had no prefers-reduced-motion
+     rule. Rather than the usual reset (animation-duration:.001ms / iteration-
+     count:1) - which parks a looping animation on its final keyframe, and a lot
+     of them end at opacity:0, so teaching particles would simply vanish - this
+     freezes every animation 0.7s into its cycle. Motion stops; whatever
+     was on screen stays on screen and stays visible.
+============================================================================ -->
+<style>
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-play-state:paused !important;
+    animation-delay:-0.7s !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
 </head>
 <body>
 <!-- ═══ TEACHER TOOLBAR (V4) ═══ -->
