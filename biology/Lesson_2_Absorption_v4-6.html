@@ -312,12 +312,12 @@
     .villus-stage{position:relative;height:240px;background:linear-gradient(180deg,#fef3c7 0%,#fef9c3 50%,#dbeafe 100%);border-radius:14px;border:2px solid #fde68a;overflow:hidden;margin:6px 0}
     .villus-stage .axis-lab{position:absolute;font-size:.7rem;font-weight:900;letter-spacing:.5px;text-transform:uppercase;z-index:5}
     .villus-stage .axis-gut{left:8px;top:8px;color:#d97706}
-    .villus-stage .axis-blood{right:8px;bottom:90px;color:#1e40af}
+    .villus-stage .axis-blood{left:8px;bottom:52px;color:#1e40af}
     .villus-shell{position:absolute;left:42%;top:8%;width:16%;height:74%;background:radial-gradient(ellipse at center,#fce7f3 30%,#db2777 100%);border-radius:50% 50% 30% 30%/40% 40% 60% 60%;border:3px solid #db2777;animation:villusBreathe 2.4s ease-in-out infinite;z-index:1}
     @keyframes villusBreathe{0%,100%{box-shadow:0 0 12px rgba(219,39,119,.3);transform:scaleY(1)}50%{box-shadow:0 0 28px rgba(219,39,119,.6),0 0 50px rgba(34,197,94,0.3);transform:scaleY(1.04)}}
     .villus-shell::before{content:'';position:absolute;left:8%;right:8%;top:6%;height:4px;background:#831843;border-radius:2px;opacity:.5}
     .villus-shell::after{content:'';position:absolute;left:30%;top:30%;width:40%;height:55%;background:linear-gradient(90deg,#16a34a 0%,#16a34a 40%,#ef4444 60%,#ef4444 100%);border-radius:8px;opacity:.55}
-    .villus-blood{position:absolute;bottom:0;left:0;right:0;height:18%;background:linear-gradient(180deg,rgba(239,68,68,.15) 0%,rgba(239,68,68,.4) 100%);border-top:2px solid #ef4444;z-index:0}
+    .villus-blood{position:absolute;bottom:0;left:0;right:32%;height:18%;background:linear-gradient(180deg,rgba(239,68,68,.15) 0%,rgba(239,68,68,.4) 100%);border-top:2px solid #ef4444;z-index:0}
     .villus-blood::before{content:'CAPILLARY (BLOOD)';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:.7rem;font-weight:900;color:#7f1d1d;letter-spacing:.5px}
     .villus-label{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);font-weight:900;font-size:.78rem;color:#9d174d;text-align:center;pointer-events:none;z-index:3;text-shadow:0 1px 2px rgba(255,255,255,0.8);line-height:1.05}
     .villus-label .pup-line{display:block;font-size:.55rem;font-weight:700;color:#db2777;margin-top:2px;font-style:italic}
@@ -337,7 +337,7 @@
     .vp-fa{background:#f59e0b;border:2px solid #92400e;animation:vpFlowFA 4.5s ease-in-out infinite 1s}
     @keyframes vpFlowGluc{0%{left:8%;top:50%;opacity:0;transform:scale(.6)}10%{opacity:1;transform:scale(1)}40%{left:46%;top:35%;opacity:1}55%{left:50%;top:75%;opacity:1}80%{left:50%;top:90%;opacity:1;transform:scale(1)}90%,100%{left:50%;top:90%;opacity:0;transform:scale(.5)}}
     @keyframes vpFlowAA{0%{left:14%;top:60%;opacity:0;transform:scale(.6)}10%{opacity:1;transform:scale(1)}40%{left:46%;top:40%;opacity:1}55%{left:50%;top:75%;opacity:1}80%{left:50%;top:90%;opacity:1;transform:scale(1)}90%,100%{left:50%;top:90%;opacity:0;transform:scale(.5)}}
-    @keyframes vpFlowFA{0%{left:20%;top:70%;opacity:0;transform:scale(.6)}10%{opacity:1;transform:scale(1)}40%{left:48%;top:45%;opacity:1}55%{left:50%;top:60%;opacity:1}80%{left:80%;top:60%;opacity:1;transform:scale(1)}90%,100%{left:80%;top:60%;opacity:0;transform:scale(.5)}}
+    @keyframes vpFlowFA{0%{left:20%;top:70%;opacity:0;transform:scale(.6)}10%{opacity:1;transform:scale(1)}40%{left:48%;top:45%;opacity:1}55%{left:52%;top:62%;opacity:1}80%{left:84%;top:88%;opacity:1;transform:scale(1)}90%,100%{left:84%;top:88%;opacity:0;transform:scale(.5)}}
 
     .villus-legend{display:flex;justify-content:space-between;font-size:.78rem;font-weight:bold;margin-top:6px;padding:0 4px;flex-wrap:wrap;gap:6px}
     .villus-legend .leg-in{color:#d97706}
@@ -531,7 +531,34 @@
     }
     /* ============== END PRINT GRID LAYOUT ============== */
 
-  </style>
+  
+/* ===== Absorption fix: the lacteal is a destination, not a footnote =====
+   The fatty acid used to finish in the region labelled "Blood side", and the
+   legend claimed every particle went to the blood capillary. Fats are absorbed
+   into the lacteal. This adds the missing destination and re-routes the fat. */
+.villus-lacteal{position:absolute;bottom:0;right:0;width:32%;height:18%;
+  background:linear-gradient(180deg,rgba(34,197,94,.14) 0%,rgba(34,197,94,.40) 100%);
+  border-top:2px dashed #15803d;border-left:2px dashed #15803d;z-index:0}
+.villus-lacteal::before{content:'LACTEAL (LYMPH)';position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);font-size:.66rem;font-weight:900;color:#14532d;letter-spacing:.4px;
+  white-space:nowrap}
+.vp-motion-btn{font:inherit;font-weight:800;font-size:.78rem;cursor:pointer;margin-top:4px;display:inline-flex;align-items:center;gap:6px;
+  border:2px solid var(--lo-border);background:#fff;color:var(--text);border-radius:9px;
+  padding:5px 12px;min-height:36px}
+.vp-ico{width:15px;height:15px;flex:0 0 15px}
+.villus-stage.vp-paused *{animation-play-state:paused !important}
+
+/* Sensory: this file declares 35 infinite animations. Honour the OS setting.
+   A blanket reset would land the flow particles on their 100% keyframe, which
+   is opacity:0 — so the three particles are pinned to their destinations. */
+@media (prefers-reduced-motion: reduce){
+  .villus-stage *,.villus-shell,.mvilli{animation:none !important;transition:none !important}
+  .villus-stage .vparticle{animation:none !important;opacity:1 !important;transform:none !important}
+  .villus-stage .vp-glucose{left:44%;top:84%}
+  .villus-stage .vp-aa{left:56%;top:84%}
+  .villus-stage .vp-fa{left:84%;top:84%}
+}
+</style>
 </head>
 <body>
 
@@ -706,6 +733,7 @@
         <span class="axis-lab axis-blood">Blood side (LOW)</span>
         <div class="villus-shell"></div>
         <div class="villus-blood"></div>
+        <div class="villus-lacteal"></div>
         <div class="villus-label">VILLUS<span class="pup-line">finger-shaped</span></div>
         <div class="mvilli m1"></div><div class="mvilli m2"></div><div class="mvilli m3"></div><div class="mvilli m4"></div><div class="mvilli m5"></div>
         <div class="vparticle vp-glucose">Glucose</div>
@@ -714,8 +742,9 @@
       </div>
       <div class="villus-legend">
         <span class="leg-in">🟡 Microvilli sparkle = ↑ SA</span>
-        <span class="leg-out">🔵 Particles → blood capillary</span>
+        <span class="leg-out">🔵 Glucose + amino acid → capillary</span><span class="leg-fat" style="color:#14532d">🟢 Fatty acid → lacteal</span>
       </div>
+        <button type="button" class="vp-motion-btn" id="vp-motion" aria-pressed="false" onclick="vpToggleMotion()"><svg class="vp-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6.5" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg><span>Pause motion</span></button>
     </div>
     <div>
       <div class="warn-box" style="background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px">
@@ -1771,6 +1800,23 @@ const coldCallQuestions={
 
   /* ============== END V4 POLISH UPGRADE JS ============== */
 
+
+
+/* ---------- villus panel: pupil-controlled motion (sensory) ---------- */
+function vpToggleMotion(){
+  var stage = document.querySelector('.villus-stage');
+  var btn   = document.getElementById('vp-motion');
+  if(!stage || !btn) return;
+  var paused = stage.classList.toggle('vp-paused');
+  btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+  /* Inline SVG, not emoji: U+23F8 renders as a tofu box on some machines. */
+  btn.innerHTML = paused
+    ? '<svg class="vp-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path d="M8 5l11 7-11 7z" fill="currentColor"/></svg><span>Play motion</span>'
+    : '<svg class="vp-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<rect x="6.5" y="5" width="4" height="14" rx="1" fill="currentColor"/>' +
+      '<rect x="13.5" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg><span>Pause motion</span>';
+}
 </script>
 </body>
 </html>
