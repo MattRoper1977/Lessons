@@ -1907,5 +1907,120 @@ if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').m
 window.addEventListener('beforeprint', setKoDate);
 </script>
 
+
+<!-- ===== nv-embed-guard v2 (estate sweep) =====================================
+     Selector-agnostic: finds YouTube iframes by URL, not by wrapper class, so it
+     works across .video / .video-frame / .ratio / .videoBox alike. When the embed
+     cannot load - offline Progress copy, or blocked on the school network - the
+     dead grey box is replaced by a calm labelled panel and the dead external
+     links are visibly disabled. Icons are inline SVG, never emoji (a missing
+     glyph renders as a tofu box, which itself reads as "broken").
+     Does nothing at all when the network is fine.
+============================================================================ -->
+<style>
+.nvg-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  text-align:center;padding:14px;background:#f1f5f9;color:#334155;border:2px solid #cbd5e1;
+  border-radius:12px;width:100%;box-sizing:border-box}
+.nvg-abs{position:absolute;inset:0;border-radius:inherit}
+.nvg-t{font-weight:900;font-size:1rem;display:flex;align-items:center;gap:7px}
+.nvg-b{font-size:.9rem;max-width:44ch;line-height:1.35;font-weight:600}
+.nvg-k{font-weight:800;color:#166534;font-size:.88rem;display:flex;align-items:center;gap:6px}
+.nvg-ico{width:18px;height:18px;flex:0 0 18px}
+a[data-nvg-dead="1"]{opacity:.42;pointer-events:none}
+</style>
+<script>
+(function(){
+  var SVG_OFF = '<svg class="nvg-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+    + '<rect x="2.5" y="4.5" width="19" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>'
+    + '<path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+    + '<path d="M4 3.5l16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  var SVG_OK = '<svg class="nvg-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+    + '<path d="M4 12.5l5.5 5.5L20 7" fill="none" stroke="currentColor" stroke-width="2.6" '
+    + 'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function urlFor(f){
+    var u = f.getAttribute('src') || f.getAttribute('data-src') || '';
+    if(u) return u;
+    var n = f.parentNode, hops = 0;
+    while(n && n.getAttribute && hops < 4){
+      var d = n.getAttribute('data-src');
+      if(d) return d;
+      n = n.parentNode; hops++;
+    }
+    return '';
+  }
+  function ytFrames(){
+    var out = [], all = document.getElementsByTagName('iframe');
+    for(var i=0;i<all.length;i++){ if(/youtube/.test(urlFor(all[i]))) out.push(all[i]); }
+    return out;
+  }
+  function videoId(){
+    var fs = ytFrames();
+    for(var i=0;i<fs.length;i++){
+      var m = urlFor(fs[i]).match(/(?:embed\/|[?&]v=)([A-Za-z0-9_-]{6,})/);
+      if(m) return m[1];
+    }
+    return null;
+  }
+  function degrade(f){
+    if(f.getAttribute('data-nvg') === '1') return;
+    f.setAttribute('data-nvg','1');
+    var cs = window.getComputedStyle ? getComputedStyle(f) : null;
+    var abs = cs && (cs.position === 'absolute' || cs.position === 'fixed');
+    var h = f.offsetHeight;
+    var box = document.createElement('div');
+    box.className = 'nvg-panel' + (abs ? ' nvg-abs' : '');
+    box.setAttribute('role','note');
+    if(!abs){ if(h > 60){ box.style.height = h + 'px'; } else { box.style.aspectRatio = '16 / 9'; } }
+    box.innerHTML = '<div class="nvg-t">' + SVG_OFF + '<span>Video needs the internet</span></div>'
+      + '<div class="nvg-b">This copy is offline, or the video is blocked on this network.</div>'
+      + '<div class="nvg-k">' + SVG_OK + '<span>Nothing is broken — the rest of the slide still works.</span></div>';
+    if(f.parentNode) f.parentNode.insertBefore(box, f.nextSibling);
+    f.style.display = 'none';
+  }
+  function markDeadLinks(){
+    var a = document.getElementsByTagName('a');
+    for(var i=0;i<a.length;i++){
+      var h = a[i].getAttribute('href') || '';
+      if(/youtu\.?be/.test(h)) a[i].setAttribute('data-nvg-dead','1');
+    }
+  }
+  var tripped = false;
+  function unavailable(){
+    tripped = true;
+    var fs = ytFrames();
+    for(var i=0;i<fs.length;i++) degrade(fs[i]);
+    markDeadLinks();
+  }
+  function check(){
+    if(!ytFrames().length) return;
+    if(navigator.onLine === false){ unavailable(); return; }
+    var id = videoId();
+    if(!id) return;
+    var done = false, img = new Image();
+    var t = setTimeout(function(){ if(!done){ done = true; unavailable(); } }, 4000);
+    img.onload  = function(){ if(!done){ done = true; clearTimeout(t); } };
+    img.onerror = function(){ if(!done){ done = true; clearTimeout(t); unavailable(); } };
+    img.src = 'https://i.ytimg.com/vi/' + id + '/default.jpg';
+  }
+  /* Lazy-loaded embeds get their src set later; re-apply if we already tripped. */
+  function watch(){
+    if(!window.MutationObserver) return;
+    new MutationObserver(function(recs){
+      for(var i=0;i<recs.length;i++){
+        var t = recs[i].target;
+        if(t.tagName === 'IFRAME' && /youtube/.test(urlFor(t))){
+          if(tripped) degrade(t); else check();
+        }
+      }
+    }).observe(document.documentElement, {subtree:true, attributes:true, attributeFilter:['src']});
+  }
+  function boot(){ check(); watch(); }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', boot); }
+  else { boot(); }
+  window.addEventListener('offline', unavailable);
+  window.nvgUnavailable = unavailable; /* exposed for testing */
+})();
+</script>
 </body>
 </html>
