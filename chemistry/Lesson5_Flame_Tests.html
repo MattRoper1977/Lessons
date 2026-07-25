@@ -859,7 +859,7 @@
 
 <script>
 let currentSlide=0;const slides=document.querySelectorAll('.slide');
-function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const cur=slides[i];if(cur){const rx=cur.querySelector('.rx-stage[data-autoplay]');if(rx)setTimeout(()=>runRx(rx,true),400);const of=cur.querySelector('#observe-frame');if(of&&!of.src)loadObserve();}}
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();const cur=slides[i];if(cur){const rx=cur.querySelector('.rx-stage[data-autoplay]');if(rx)setTimeout(()=>runRx(rx,true),400);const of=cur.querySelector('#observe-frame');if(of&&!of.getAttribute('src'))loadObserve();}}
 function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
 function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
 document.addEventListener('keydown',e=>{
@@ -1044,7 +1044,7 @@ function fitToPage(host,fit){
     if(!silent&&typeof playClick==='function')playClick();
   }
   // --- Observe slide: lazy-load the embedded video + set the out-link ---
-  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.src)f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID;}
+  function loadObserve(){const f=document.getElementById('observe-frame');if(f&&!f.getAttribute('src'))f.src='https://www.youtube-nocookie.com/embed/'+VIDEO_ID+'?rel=0';const l=document.getElementById('observe-link');if(l)l.href='https://www.youtube.com/watch?v='+VIDEO_ID;}
   function openBoard(){const b=document.getElementById('board-body');let rows=Object.keys(xpLog).length?Object.entries(xpLog).map(([k,v])=>`<div class="lb-row"><span>${k}</span><span>${v} XP</span></div>`).join(''):'<p style="color:var(--muted)">No XP earned yet — complete the We Do tasks!</p>';const roster=JSON.parse(localStorage.getItem('ps_coldcall_roster')||'[]');if(roster.length)rows+=`<div class="lb-row me"><span>🏅 Class total</span><span>${xp} XP</span></div>`;else rows+=`<div class="lb-row me"><span>🏅 Total</span><span>${xp} XP</span></div>`;b.innerHTML=rows;document.getElementById('board-modal').classList.add('open')}
 
   // --- Cold Call (roster shared across all PS lessons) ---

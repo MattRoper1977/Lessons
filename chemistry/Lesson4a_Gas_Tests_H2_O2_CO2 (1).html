@@ -228,7 +228,22 @@
       .wd-evi-line{border:1px solid #000;padding:12px 9px;font-size:1rem}
       #wedo-evidence-content .ko-table td,#wedo-evidence-content .ko-table th{color:#000}
     }
-  </style>
+  
+/* ===== nv-embed-guard v1 — graceful fallback when a video embed cannot load =====
+   Drop-in: this CSS block + the matching JS block. No markup changes required.
+   Optional per-frame copy: <div class="vid-frame" data-nv-alt="...">            */
+.nv-fallback{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  justify-content:center;gap:7px;text-align:center;padding:16px;background:#f1f5f9;color:#0f172a}
+.vid-frame[data-nv-state="unavailable"]{background:#f1f5f9;border-color:#cbd5e1}
+.vid-frame[data-nv-state="unavailable"] iframe{display:none}
+.vid-frame[data-nv-state="unavailable"] .nv-fallback{display:flex}
+.nv-title{font-weight:900;font-size:1.05rem;display:flex;align-items:center;gap:7px;color:#334155}
+.nv-ico{width:19px;height:19px;flex:0 0 19px}
+.nv-body{font-size:.94rem;max-width:44ch;line-height:1.4}
+.nv-ok{font-weight:800;color:#166534;font-size:.92rem;display:flex;align-items:center;gap:6px}
+.vid-btn[data-nv-dead="1"]{opacity:.42;pointer-events:none}
+@media (prefers-reduced-motion: reduce){.nv-fallback{transition:none !important}}
+</style>
 </head>
 <body>
 <div class="teach-tools">
@@ -412,7 +427,7 @@
     </div>
     <div class="content-grid" style="grid-template-columns:1.15fr 1fr;margin-top:8px">
       <div>
-        <div class="vid-frame">
+        <div class="vid-frame" data-nv-alt="Use the Testing Lab above — stations A, B and C run all three tests.">
           <iframe src="https://www.youtube-nocookie.com/embed/P_gPlbExHv0" title="GCSE Science Chemistry (9-1) — Tests for Gases" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
         </div>
         <p style="font-size:.82rem;color:var(--muted);margin:4px 0 0">GCSE Science Chemistry (9-1) · Tests for Gases. If blocked on the school network, use the buttons.</p>
@@ -1106,6 +1121,79 @@
   (function(){const exit=document.getElementById('exit-slide');if(exit&&window.MutationObserver){new MutationObserver(function(){if(exit.classList.contains('show-ans')){const o=document.getElementById('lesson-complete');if(o&&!o.dataset.fired){o.dataset.fired='1';o.classList.add('show');fireConfettiGlobal()}}}).observe(exit,{attributes:true,attributeFilter:['class']})}})();
 
   renderRoster();
+
+
+/* ---------- nv-embed-guard v1 ----------
+   If a YouTube embed cannot load (offline Progress copy, or blocked on the
+   school network) swap the dead grey box for a calm, labelled panel that
+   points at the offline activity. Icon AND words; never colour alone; the
+   wording deliberately does not read as an error.                          */
+(function(){
+  function nvBuildPanel(frame){
+    if(frame.querySelector('.nv-fallback')) return;
+    var alt = frame.getAttribute('data-nv-alt') ||
+              'Use the interactive lab on this slide — it runs the same tests.';
+    var box = document.createElement('div');
+    box.className = 'nv-fallback';
+    box.setAttribute('role','note');
+    var t = document.createElement('div');
+    t.className = 'nv-title';
+    /* Inline SVG, not an emoji: emoji font coverage varies by machine and a
+       missing glyph renders as a tofu box, which reads as "broken".         */
+    t.innerHTML = '<svg class="nv-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<rect x="2.5" y="4.5" width="19" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>' +
+      '<path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M4 3.5l16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '</svg><span>Video needs the internet</span>';
+    var b = document.createElement('div');
+    b.className = 'nv-body';
+    b.textContent = alt;
+    var k = document.createElement('div');
+    k.className = 'nv-ok';
+    k.innerHTML = '<svg class="nv-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path d="M4 12.5l5.5 5.5L20 7" fill="none" stroke="currentColor" stroke-width="2.6" ' +
+      'stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '<span>Nothing is broken \u2014 carry on without it.</span>';
+    box.appendChild(t); box.appendChild(b); box.appendChild(k);
+    frame.appendChild(box);
+  }
+
+  function nvMarkUnavailable(){
+    var frames = document.querySelectorAll('.vid-frame');
+    for(var i=0;i<frames.length;i++){
+      nvBuildPanel(frames[i]);
+      frames[i].setAttribute('data-nv-state','unavailable');
+      var cap = frames[i].parentNode && frames[i].parentNode.querySelector('p');
+      if(cap && !cap.getAttribute('data-nv-rewritten')){
+        cap.setAttribute('data-nv-rewritten','1');
+        cap.textContent = 'Video unavailable on this copy. The lab above works without the internet.';
+      }
+    }
+    var links = document.querySelectorAll('.vid-btn');
+    for(var j=0;j<links.length;j++){ links[j].setAttribute('data-nv-dead','1'); }
+  }
+
+  function nvCheck(){
+    var frame = document.querySelector('.vid-frame iframe');
+    if(!frame) return;
+    if(navigator.onLine === false){ nvMarkUnavailable(); return; }
+    var src = frame.getAttribute('src') || '';
+    var m = src.match(/\/embed\/([A-Za-z0-9_-]{6,})/);
+    if(!m) return;
+    var done = false;
+    var img = new Image();
+    var timer = setTimeout(function(){ if(!done){ done = true; nvMarkUnavailable(); } }, 4000);
+    img.onload  = function(){ if(!done){ done = true; clearTimeout(timer); } };
+    img.onerror = function(){ if(!done){ done = true; clearTimeout(timer); nvMarkUnavailable(); } };
+    img.src = 'https://i.ytimg.com/vi/' + m[1] + '/default.jpg';
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', nvCheck);
+  } else { nvCheck(); }
+  window.addEventListener('offline', nvMarkUnavailable);
+  window.nvMarkUnavailable = nvMarkUnavailable; /* exposed for testing */
+})();
 </script>
 </body>
 </html>
