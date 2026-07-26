@@ -354,3 +354,77 @@ place it earns nothing.
     print measurement happens at 718 × 1047px. At 1280px the overflow check
     reported zero overflows on a pack that was printing 9 pages for 8 sheets: the
     sheet was 1082px tall at A4 width and comfortably short at desktop width.
+
+---
+
+## AT-INST-04 — `assert_kit.py` + `kit_text.py`. **A8 is superseded.**
+
+Specified on **category**: enumerate what the room has, report every craft noun and
+process verb outside it. A8 was a list of press nouns and had no terminating
+condition — four widenings (`plate`, `inking`, `hand-pulled`, `screen print`) each
+found more, and its under-count produced a **false zero in C5**, which reported
+D-PRESS-02 closed when it was not.
+
+**Ordinary language is derived, not listed.** A word is ordinary if it appears in
+≥2 non-art subject folders in this repo — an independent corpus sharing no premise
+with the kit list. `6 Art`, `Build`, `Grow`, `Launch` and `DT_Community_Upcycling`
+are excluded so craft vocabulary cannot launder itself as ordinary.
+
+**Unmatched vocabulary is the deliverable.** 4,265 distinct words in readable text,
+1,660 art-specific after subtraction, **456 at count ≥ 4** — the finite review list
+that makes "have we finished sweeping?" answerable for the first time.
+
+### Rule 13, implemented as intent rather than letter
+
+Rule 13 says exclude script blocks. Taken literally that would create a false
+negative larger than the one it fixes: most pupil-facing prose in this estate lives
+*inside* `<script>` — `_taBriefs`, `_pres` fault cards, the `WEEKS` array behind
+every print pack. Excluding script blocks would have hidden the TA brief that sets
+up an inking bench, the worst string in GROW W2. So `<style>` is dropped whole,
+and inside `<script>` only **string literals** are kept. Selectors, camelCase
+identifiers, CSS declarations and short JSON keys are dropped — `grid-template-columns`
+was the source of 16 phantom `plate` hits.
+
+### What is judgement, not instrument — declared per rule 9
+
+**Sense cannot be derived.** "Press" appears in two non-art folders as *press Escape*,
+so frequency marks it ordinary — yet *press corner* is kit. No corpus method
+separates senses. The `VIOLATIONS` table is a record of **human decisions**, with a
+script attached. Refusal is detected from context (negation within 95 characters),
+which is mechanical; which sense a word carries is not. Anyone quoting a number
+from this instrument is quoting a human decision.
+
+### Baseline, and the true ladder
+
+```
+kit-dependence 47 · vocabulary-residue 4 · refusal-context 8 · offer-scope 2  = 61
+```
+
+A8 said 29. The true figure is **61**, and 8 of those are declared refusals.
+
+| pass | hits | after |
+|---|---|---|
+| — | | **61** |
+| A2d-2 — BUILD A2_W6 3, Run Sheets 1, Autumn2 SoW 2 | 6 | 55 |
+| A2a — GROW W2 | 24 | 31 |
+| A2b — GROW W6 3, GROW W7 3 | 6 | 25 |
+| A2e — LAUNCH W1 2, W5 2, W6 10, W7 3 | 17 | **8** |
+
+Terminal 8 = refusal-context, declared: GROW W2 1, Autumn 2 SoW 4, START_HERE 2,
+Summer 1 SoW 1. Not 2, as previously predicted — the rebuilt check finds more
+legitimate refusals as well as more defects, which is the correct direction.
+
+### Correction to the A2d commit message
+
+`9f87a5a` claims "C5 ROUTE CONTRADICTION 2 -> 0. D-PRESS-02 is closed." **It is
+not.** BUILD_ART_A2_W6 still carries `hand-pulled editions vary`, `hand-pulled
+prints` and `pull it again`, and the Autumn 2 run sheets carry `Pull the remaining
+prints`. C5 did not fail — it faithfully reported what A8's vocabulary let it see.
+The commit message stands as pushed; this register carries the truth, same handling
+as R6's 167px.
+
+### New finding — Summer 1 was never in scope
+
+`Summer1_Scheme_of_Work.html` carries "No screens, squeegees or fabric inks
+needed" — a legitimate refusal, and the first evidence that the screen-print
+question reaches beyond LAUNCH W1 into a term nobody has looked at.
