@@ -70,7 +70,7 @@ VIOLATIONS = [
 NEGATION = re.compile(
     r"(?:\bthere (?:is|are) no\b|\bis no\b|\bare no\b|\bno\b(?=\s+[a-z]+(?:s|ing)?\b[^.;]{0,40}$)"
     r"|\bnone are needed\b|\boff the table\b|\bwithout\b|\bnever (?:use|add|map|label)\b"
-    r"|\bno (?:screens|press|rollers|inks|blades)\b)[^.;]{0,90}$", re.I)
+    r"|\bno (?:screens|press|rollers|inks|blades)\b|\bwould have produced\b)", re.I)
 # Per-file overrides remain available for decisions context cannot carry.
 OVERRIDES = []
 # Governed allow-list: art words that are NOT kit. Each carries its reason.
@@ -108,8 +108,12 @@ def main():
                 seg = text[max(0, m.start() - 40):m.end() + 40]
                 if any(a in seg.lower() for a in ALLOW):
                     continue
-                cls = classify(os.path.basename(rel), pat, default,
-                               text[max(0, m.start() - 95):m.start()])
+                # Sentence-scoped, BOTH directions. Looking only backwards missed
+                # "relief printing. It is off the table:" -- the negation follows.
+                lo = max(0, text.rfind('.', 0, m.start()) + 1)
+                hi = text.find('.', m.end());  hi = len(text) if hi < 0 else hi
+                sentence = text[lo:m.start()] + ' ' + text[m.end():hi + 60]
+                cls = classify(os.path.basename(rel), pat, default, sentence)
                 per_file[rel][cls] += 1
                 per_class[cls] += 1
                 detail[rel].append((cls, m.group(0), seg.strip()))
