@@ -15,6 +15,12 @@ correct. The only external check is re-deriving a finding by a method that share
 premise with the instrument that produced it — and where that has been done, the
 entry says so.
 
+**Last observed true at** `8c384a7` — the instrument list below was checked against
+`tools/` at that commit and matched exactly, 6 listed / 6 actual. This stamp is not a
+mechanism and does not keep the claim true. It makes it **re-checkable**, which is the
+achievable version: a claim that names when it was last observed can be re-observed;
+one that does not, cannot.
+
 **Companion documents.** [`/REGISTER.md`](../../REGISTER.md) — estate conventions,
 exceptions, deliberate absences, storage keys, deletion records and the decisions
 that constrain what a pass may touch. [`/REBRAND.md`](../../REBRAND.md) — the
@@ -100,6 +106,75 @@ its own replacement (standing rule 6).
 
 - **LL-INST-01 `hash_sweep.py` — extension blindness, fixed.** v1 chose near-identity candidates by file extension, *in a repo whose defining defect is that filenames lie*. It never tested `Head_Office_Summary.pdf` (HTML) or `weekly_loop_log.csv` (HTML), so two displaced copies were invisible to the instrument that exists to find displaced copies. Now sniffs content.
 - **LL-INST-03 `print_pack_audit.py` — now calls `classify` as a required first stage** and reports what it classified out, so a zero never leaves the tool unlabelled.
+
+---
+
+## Blind twins — what each instrument's tell hides
+
+**The rule this section exists for:** *a defect found through a symptom will have
+symptomless siblings.* The symptom is what made the defect **findable**, not what
+made it a **defect**. LAUNCH W7's Route Card was found because 45 minutes didn't fit
+a 40-minute period. GROW W7 had the identical breach at 39 minutes — correctly
+sized, therefore silent, and it would have sat there indefinitely. **A plan that fits
+its period looks finished.**
+
+Every instrument here keys on a tell. Each therefore has a twin it cannot see. The
+third column is the one that saves work: **some twins are reachable and some are
+structurally out of reach**, and nobody should spend a week building a detector for
+something no detector can find. That is the zero rule — *absent / not applicable /
+undetermined* — applied to instruments instead of files.
+
+| instrument | the tell it keys on | the twin it cannot see | reachable? |
+|---|---|---|---|
+| **LL-INST-01** `hash_sweep` | byte-identity, or shingle similarity above threshold | a copy that diverged **just past** the threshold; and a file that is semantically the same lesson but shares no text | **Partly.** Threshold twins are reachable by lowering the threshold and reading the extra pairs — that is how `L4_Aerobic` ↔ `L4_Aerobic_Respiration` was found, below the cut but 0.763 by word-set. The no-shared-text twin is **out of reach**: there is nothing to compare. |
+| **LL-INST-02** `link_graph` | a link written as a literal attribute that resolves to a tracked path | links built at runtime by string concatenation (`${href}`); and every inbound link from **outside** the repo — printed QR codes, staff-pack PDFs, bookmarks, emails | **Genuinely unreachable — this one does mean stop.** A printed QR code on a classroom wall is unknowable in principle; no instrument and no inspection recovers it. This is why *zero inbound* is never a deletion warrant. |
+
+**Two kinds of unreachable, and only one means give up.** *Unreachable by instrument*
+means the method is looking rather than measuring — the poster case proves it works.
+*Unreachable in principle* means the information does not exist anywhere accessible.
+Do not read the first as the second.
+| **LL-INST-03** `print_pack_audit` | a slot the code **requests** that the markup does not provide | a slot that is **present and empty** — the shell exists, the pack prints, the page is blank | **Yes, cheaply.** Measure text length inside each slot, not just its existence. Presence of the element is not presence of content. **Not yet built.** |
+| **LL-INST-04** `identity_audit` | extension and content **disagreeing** | a file where extension and content **agree and are both wrong** — a correctly-named `.png` showing the wrong subject | **Unreachable by instrument, reachable by inspection.** No second surface exists to compare, so no comparison can find it — but a person opened ten permuted posters and identified every one by eye. This does not mean stop; it means the method is looking, not measuring. |
+| **LL-INST-05** `classify` | matching a print architecture already known to the module | a genuinely novel architecture | **Reachable, but only by a human.** It returns `NOT_DETERMINED` rather than guessing — honest, and not the same as understanding. 14 files sit there now. |
+| **LL-INST-06** `assessed_conditions_gate` | the Card **mentioning** something, allowed or forbidden | the Card being **silent** about an entire category of offer. The Route Card survived because no clause discussed timing scaffolds at all — **silence read as permission** | **Not fixable in the tool.** See below. |
+
+### The gate's twin was repaired in the artefact, not the instrument
+
+This is the transferable lesson, and it is the more useful half of this section.
+
+No improvement to `assessed_conditions_gate.py` could decide an offer its Card never
+mentions, because the information required is **absent from the document**, not
+merely hard to extract. The repair is to change the artefact:
+
+1. **Closed-world Card** — *"anything not named above is not allowed"*. Converts
+   silence from permission-by-default into prohibition-by-default, which is how
+   assessment conditions work everywhere else: permitted materials are enumerated,
+   not excluded.
+2. **Declared authorisation** — every tier-offer names the Card clause that permits
+   it (`authorised-by: supported-frames`). The gate stops doing string similarity and
+   starts asking three exact questions: does this offer name a clause · does that
+   clause exist · does it permit this?
+
+Together they make the gate decidable **in both directions**, and they retire the
+false-positive class the heuristic produces. Evidence that the heuristic needed
+retiring rather than tuning: `GROW Supported` was flagged as unmentioned while being
+**word-for-word correct** against its Card — a human reads *"Opening Frame / Close
+Frame"* as matching *"the opening and close frames"*; a token comparison does not.
+
+**When a blind spot is caused by missing information rather than weak extraction, fix
+the document.** A better instrument cannot read what was never written down.
+
+### A seventh tell, outside the instruments
+
+`refs/remotes/origin/main` in a working copy is a **cached claim about a remote**,
+and nothing keeps it true. Pushing to an explicit URL rather than to the named remote
+leaves it stale — silently, every time, all session. Its twin is **any other local
+artefact asserting something about a different artefact with no mechanism binding
+them**, which is the dominant failure shape of this entire programme. Enumerated
+separately in `/REGISTER.md`.
+
+**Fetch after every push.** That keeps the claim re-observed, and keeps the token out
+of `.git/config`, which pushing to a token-bearing `origin` would not.
 
 ---
 
