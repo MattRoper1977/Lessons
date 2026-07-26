@@ -65,7 +65,8 @@ ASSERTIONS = {
     "A3_no_grade_bands": r"grade band|\bGCSE\b|Grades \d",
     "A4_no_hours_gate":  r"minimum[- ]hours|hours (?:gate|threshold)|at least \d+ hours|\bGLH\b|\bILH\b|guided[- ]learning",
     "A5_tier_vocab":     r"\b(?:foundation|middle|higher)[- ]tier\b|tier\s*[1-3]\b",
-    "A6_no_pupil_names": r"Full name|First name|Surname|Name of (?:pupil|student)|Name:\s*_",
+    "A6_no_pupil_names": r"Full name|First name|Surname|Name of (?:pupil|student)|Name:\s*_"
+                         r"|Pupil name:|Student name:|Pupil name<|Name of learner",
     "A8_closed_kit":     r"press corner|inking bench|inking queue|inking slab|printing ink|ink load|relief print"
                          r"|\brollers?\b|\bbrayer\b|\blino\b|pre-cut plate|plate wear|re-inked|pull an edition",
 }
@@ -73,7 +74,11 @@ ASSERTIONS = {
 # Non-residual hits expected. Anything but zero is an OPEN FINDING, named here.
 EXPECTED = {
     "A2_no_aos": 0, "A3_no_grade_bands": 0, "A4_no_hours_gate": 0,
-    "A5_tier_vocab": 0, "A6_no_pupil_names": 0,
+    "A5_tier_vocab": 0,
+    # D-NAMES-01, open. 24 feedback sheets print "Pupil name:" as a field while
+    # the estate states in four other files that no pupil names are stored and
+    # codes work everywhere. Awaiting a ruling; not silently fixed.
+    "A6_no_pupil_names": 24,
     # D-PRESS-01 (31, in GROW W2/W3/W6 + LAUNCH W6) and D-PRESS-02 (9, in BUILD
     # A2_W6 + Autumn2 SoW + Autumn2 pack). Open until A2a. A floor, not a total.
     # A few Autumn2 SoW hits name the press in order to refuse it and could be

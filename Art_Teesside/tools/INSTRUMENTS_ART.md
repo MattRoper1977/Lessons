@@ -34,7 +34,7 @@ everything here being wrong, are indistinguishable from inside this file.
 | `A3_no_grade_bands` | 0 | 8 | PASS |
 | `A4_no_hours_gate` | 0 | 30 | PASS |
 | `A5_tier_vocab` | 0 | 0 | PASS |
-| `A6_no_pupil_names` | 0 | 0 | PASS |
+| `A6_no_pupil_names` | **24** | 0 | PASS (open finding D-NAMES-01) |
 | `A8_closed_kit` | **40** | 3 | PASS (open finding, expected) |
 
 `A8` is the only non-zero and is not a defect in the instrument: it is
@@ -175,3 +175,55 @@ future file that argues with itself.
 7. **An instrument returning zero is not trusted until it has been run against a
    commit where the answer is independently known.** Zero and broken are
    indistinguishable from inside the instrument.
+
+
+---
+
+## D-NAMES-01 — the estate collects the names it says it never stores. **HIGH.**
+
+Found during R4 while placing the observer block, not by either instrument.
+
+24 lesson files print a feedback sheet whose first field is:
+
+```
+<tr><td style="width:50%"><strong>Pupil name:</strong></td><td><strong>Date:</strong></td></tr>
+```
+
+All 8 GROW lessons, all 8 LAUNCH lessons, and 8 BUILD lessons. Meanwhile four
+other files in the same estate state the opposite, in terms:
+
+- "It never goes in a pupil portfolio and it carries **no pupil names** — codes only"
+- "**No pupil names are stored in any file**; a code works everywhere a name would"
+- "No pupil names are stored in any file; **a name or a code both work**"
+
+The third of those is itself in tension with the first two, so the estate holds
+three positions, not two. This is the C-class fault exactly: each half is true
+where it sits, and a reviewer reading either one is satisfied.
+
+### AT-INST-01 reported A6 clean, and that was a FALSE NEGATIVE
+
+Worse than a false positive, and the reason it happened is recorded here so the
+method changes and not just the pattern. The A6 pattern was
+`Full name|First name|Surname|Name of (?:pupil|student)|Name:\s*_`. The estate
+writes `<strong>Pupil name:</strong>`, which none of those match — `Name:\s*_`
+requires an underscore, and this field is followed by a table cell boundary.
+
+The calibration that produced that pattern examined `grep ... | sort -u | head -6`
+and found all six unique contexts were prohibitions, so the phrase was ruled
+benign and the pattern was narrowed. There were five unique contexts in total and
+the **first** of them was the field. Sampling the head of a sorted unique list is
+not reading the list. Standing rule 8 below.
+
+### Not fixed here
+
+Whether a printed feedback sheet kept with a sketchbook counts as "a file" is a
+policy question, and the estate's own text argues both ways. `A6` is set to the
+measured 24 so that the count is visible and any *movement* is caught, and the
+finding is declared rather than silently repaired.
+
+## Standing rules adopted during Pass 4 (continued)
+
+8. **A sampled `head` of a unique-context list is not a reading of it.** When a
+   pattern is being narrowed or ruled benign, every distinct context is read, or
+   the narrowing does not happen. A6 was declared clean on six sampled contexts
+   out of five, and missed a field in 24 files.
