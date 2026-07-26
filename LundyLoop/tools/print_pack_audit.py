@@ -36,7 +36,11 @@ STATUS: current
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from classify import Verdict, classify_print_architecture  # REQUIRED STAGE, LL-INST-05
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -60,10 +64,17 @@ def main():
         ["git", "-C", str(REPO), "ls-files", "-z", "*.html"],
         capture_output=True, check=True).stdout.decode().split("\0") if p]
 
-    rows = []
+    rows, skipped = [], []
     for f in files:
         src = (REPO / f).read_text(encoding="utf-8", errors="replace")
-        if "print-area" not in src and "printPack" not in src and "print-section" not in src:
+
+        # REQUIRED STAGE (LL-INST-05): classify before counting. A zero from this
+        # instrument is meaningless until we know whether it means absent, not
+        # applicable, a different model, or "I did not understand this file".
+        cls = classify_print_architecture(src)
+        if cls.verdict is not Verdict.APPLICABLE:
+            skipped.append({"file": f, "verdict": cls.verdict.value,
+                            "model": cls.model, "reason": cls.reason})
             continue
 
         present = set(ID_ATTR.findall(src))
@@ -104,7 +115,10 @@ def main():
         })
 
     rows.sort(key=lambda r: (-len(r["requested_but_absent"]), r["file"]))
+    from collections import Counter
     print(json.dumps({
+        "classified_out": Counter(s["verdict"] for s in skipped),
+        "not_counted": skipped,
         "files_with_print_plumbing": len(rows),
         "files_with_zero_print_sections": [r["file"] for r in rows if r["print_section_elements"] == 0],
         "rows": rows,

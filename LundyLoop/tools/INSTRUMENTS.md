@@ -69,6 +69,45 @@ its own replacement (standing rule 6).
 - **Remedy, and why it is not the broken instrument (standing rule 6):** the level names are no longer a premise at all. v2 derives them literally, per file, from that file's own `printPack('...')` call sites. The failure set of v1 was "files whose vocabulary I assumed wrongly"; v2 has no vocabulary assumption to fail on.
 - **Status:** QUARANTINED. Do not reuse. Retained here as the record.
 
+## LL-INST-04 — `identity_audit.py`
+
+- **Derives:** both directions of the declared↔actual mapping in one run. FORWARD: does the thing this file claims to be exist? REVERSE: is the thing that is here what it claims?
+- **Method:** Literal both ways — magic-byte sniff vs extension, `<title>` vs filename, catalogue entry vs file on disk.
+- **Why both directions, and why one instrument:** every one-directional check in this estate has produced a confident wrong answer. Forward-only reported *four subject posters lost*; all ten existed under permuted names. Forward-only on print slots found dangling requests and binned the reverse result — which was the only real defect in the file. Three separate occasions, three one-directional tools. Both are literal presence checks; the failure was never interpretation, it was **direction**.
+- **Cannot detect:** a file whose name and content agree but are both wrong; semantic mismatch inside a correct type; intent.
+- **Status:** current.
+
+## LL-INST-05 — `classify.py` — **REQUIRED STAGE**
+
+- **Derives:** which print architecture a file uses, *before* anything counts its slots.
+- **The completion criterion it enforces, binding on every counting instrument in `tools/`:** an instrument that cannot say **which** kind of zero it found is not finished. `ABSENT` (defect) · `NOT_APPLICABLE` (convention) · `DIFFERENT_MODEL` (solved another way, and I can name which) · `NOT_DETERMINED` (I could not classify this) · `DYNAMIC` (built at runtime, unverifiable statically) · `UNREADABLE` (my failure). Five of the six are not defects.
+- **`NOT_DETERMINED` is top-level, deliberately.** Folding "I could not classify this" into `DIFFERENT_MODEL` asserts a positive identification the instrument does not have — the zero rule failing one level up. Fourteen files currently sit there. The honest headline is always *N known defects and M files not established*, never one number.
+- **The five false defects that produced it**, all on one subsystem: 691 absent slots across 123 files (hardcoded tier vocabulary) → 12 buttons "wired to nothing" (8 were document-native) → 4 "genuine dead" (3 build at runtime) → 13/0/7 (the dynamic gate, twice wrong) → 7 "dead" including two AQA evidence files (they use `.print-doc` / `.pp` / `.slip`). **Final answer: ABSENT = 0. There is not one dead print control in this estate.**
+- **The lesson, and it is not "be careful":** every one of those five was a **vocabulary test wearing a presence test's clothes**. "Does it have `.print-section`" sounds literal but silently assumes the name. "Does the container have content" is presence, and presence does not need to know what the content is called. **Test for the thing, never for its name.**
+- **Status:** current.
+
+## Fixes applied to existing instruments
+
+- **LL-INST-01 `hash_sweep.py` — extension blindness, fixed.** v1 chose near-identity candidates by file extension, *in a repo whose defining defect is that filenames lie*. It never tested `Head_Office_Summary.pdf` (HTML) or `weekly_loop_log.csv` (HTML), so two displaced copies were invisible to the instrument that exists to find displaced copies. Now sniffs content.
+- **LL-INST-03 `print_pack_audit.py` — now calls `classify` as a required first stage** and reports what it classified out, so a zero never leaves the tool unlabelled.
+
+---
+
+## Standing rules this estate earned, that govern instruments
+
+1. **Report every category you compute, including the ones nobody asked about.** A discarded output is worse than an uncollected one: the work was done and the answer thrown away. A brief that names an expected finding narrows what can be reported — name the question, not the answer.
+2. **Any point where data changes medium is a derivation.** Tool output into prose, screen into manifest, a number leaving the thing that produced it and being retyped. Each needs the same assertion as any other. **Emit, don't transcribe.**
+3. **Any message stating a count and printing a list compares the two before it is sent.** One assertion, no judgement.
+4. **Any change to a classification comes with a re-asserted total in the same message.** A moved bucket without a new sum is a table that looks verified and isn't.
+5. **Check plausibility before the number leaves the tool**, not after it reaches a report. That is a design, not advice.
+6. **A test that can pass without exercising the thing under test proves nothing.** A no-op push does not prove write permission; a control case that was never going to fail does not validate an instrument.
+7. **In this estate a filename is a hint, never a fact.** Derive from content, path and catalogue. Never bucket, scope, route or assert on a name. Seven independent cases: a `.pdf` that is HTML · ten permuted posters · four `.png` files containing text · `Chem_` on a biology-sequence file · `L4_Aerobic` beside `L4_Aerobic_Respiration` · meaningless `(N)` suffixes · a Careers file named W6 carrying W7.
+8. **"The X file" is an unverified singleton.** Any item with a definite article inherits a count nobody derived. Re-ask it as a query before acting.
+9. **Every raised concern gets an explicit disposition** — confirmed, withdrawn, or closed with the reason. Findings do not get to evaporate.
+10. **Every deletion pass records what was removed, why, and the SHA of the commit immediately before it.** A deletion nobody wrote down is irreversible in practice, because recovery depends on knowing to look and knowing where.
+11. **A declaration binds only when what it asserts is verifiable inside the artefact that makes it.** Everything that failed here claimed something about elsewhere — an approval held by a centre, a deploy in a dashboard, keys in other files, scripts in a container that had ended. When a claim points outward, a sentence is not enough; it needs a test, and until it has one it is decoration.
+12. **An inherited control is not a chosen control**, and nobody audits what they don't know is governing them.
+
 ---
 
 ## Seed conventions carried forward

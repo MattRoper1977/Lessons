@@ -64,6 +64,16 @@ A = RNG.integers(1, MASK, NUM_PERM, dtype=np.uint64)
 B = RNG.integers(0, MASK, NUM_PERM, dtype=np.uint64)
 
 
+def _is_texty(raw: bytes) -> bool:
+    """Content sniff, not extension. Binary formats are excluded because shingling
+    them is meaningless, not because of what they are called."""
+    if raw[:8] == b"\x89PNG\r\n\x1a\n" or raw[:3] == b"\xff\xd8\xff" or raw[:4] == b"PK\x03\x04":
+        return False
+    if raw[:4] == b"%PDF" and b"<html" not in raw[:400].lower():
+        return False
+    return b"\x00" not in raw[:8192]
+
+
 def tracked_files():
     out = subprocess.run(
         ["git", "-C", str(REPO), "ls-files", "-z"],
@@ -131,7 +141,12 @@ def main():
         n = normalise(raw)
         norm_h[f] = hashlib.sha256(n).hexdigest()
         norm_sizes[f] = len(n)
-        if f.lower().endswith((".html", ".htm", ".js", ".css", ".json", ".md", ".txt", ".svg")):
+        # EXTENSION BLINDNESS, FIXED. v1 selected candidates by file extension, in a
+        # repo whose defining defect is that filenames lie. It never tested
+        # Head_Office_Summary.pdf (which is HTML) or weekly_loop_log.csv (also
+        # HTML), so two displaced copies were invisible to the instrument that
+        # exists to find displaced copies. Sniff the content instead.
+        if _is_texty(raw):
             s = minhash(n)
             if s is not None:
                 sigs[f] = s
