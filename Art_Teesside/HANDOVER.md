@@ -75,6 +75,44 @@ that the anchor side exists at all before believing the answer.
 
 **Declared human, not mechanical:** sense ("press Escape" vs "press corner") and refusal intent. Both are ratified once and recorded. The classifier **proposes**; it does not decide.
 
+## The half-match class — a count-correct edit that is still wrong
+
+Found in A2a's own work, by the card face `🫳 Dragged edge pull`.
+
+**A substitution can match the right number of times and still be semantically
+incomplete, leaving an orphaned fragment of the unit it sat inside.** The card face
+read `👻 Faint ghost second pull`. The substitution replaced `👻 Faint ghost second`
+— exactly once, as declared — and left `pull` stranded against the new text. Every
+guard passed: not a zero match, not a count mismatch, and read-back found what was
+written. The edit was correct and the result was wrong.
+
+**Note what the obvious check would not have caught.** "No fragment of the replaced
+string adjacent to the replacement" fails here, because `pull` was never in the
+replaced string — it was in the *enclosing unit*, and the substitution was bounded
+by an arbitrary substring rather than by that unit. Any guard that reasons only
+about `old` and `new` is blind to this by construction.
+
+**The guard that works, and is implemented** (`safe_edit.substitute(..., forbid=…)`):
+after writing, take the markup **text run** containing each replacement — everything
+between `>` and `<` — and assert it does not match the domain's forbidden
+vocabulary. The unit, not the substring, is the thing to check. Proven against the
+real case before it was trusted, per rule 7:
+
+```
+HALF-MATCH -- replacement '🫳 Dragged edge' left 'pull' orphaned
+              in its own text run: '🫳 Dragged edge pull'
+```
+
+**Use `forbid=` on every content substitution from here.** The three guards form a
+ladder and each catches what the one before it cannot: zero-match catches an edit
+that did nothing, count-match catches an edit that did too much or too little,
+neighbourhood catches an edit that did exactly what it was told and still left the
+sentence contradicting itself.
+
+That last one is the estate's own defect class turning up inside the tooling for
+the second time — a unit whose halves disagree, where each half is individually
+correct.
+
 ## Rules 1–16
 
 1. One pass, one commit, one push. Report the SHA and that it resolves at origin.
