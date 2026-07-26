@@ -545,3 +545,67 @@ re-adjudicated later. Otherwise the same word is decided differently in March th
 in July and the drift is invisible, because both decisions look like judgement.
 `ALLOW` in `assert_kit.py` is that record; `press` is ruled kit in `press corner`
 and ordinary in `press Escape`, and that ruling stands.
+
+---
+
+## Ratification, and rules 14–15
+
+### BUILD Autumn 2 is finished
+
+`vocabulary-residue 0` **and** `C5 0`. The first thing in this programme that is
+done. The folder that denies the press now carries no press vocabulary anywhere.
+
+### Rule 14 — a defect closes on two independent signals, never one
+
+A2d claimed D-PRESS-02 closed on C5 alone. C5 was not wrong; it was **blind** —
+reporting faithfully against a vocabulary that could not see `hand-pulled`. And
+blindness reads exactly like a pass. Independent means not sharing a vocabulary, a
+corpus or a premise: two checks built on the same word list are one check counted
+twice.
+
+### The refusal classifier proposes; it does not decide
+
+Three versions, three different failures: it swallowed an assertion (`Plate not
+re-inked`), then missed a trailing negation (`is relief printing. It is off the
+table`), then read a fault-card menu as a refusal. A check that decides **intent**
+has no final version.
+
+So intent is now **ratified once by a human** and the classifier's remaining job is
+regression: it flags changes to the ratified set, and anything new is a
+`refusal-candidate` — a question, not a reclassification.
+
+**The ratified nine**, each with its one-line reason, live in `RATIFIED` inside the
+instrument so list and check cannot drift apart:
+
+| file | string | ratified because |
+|---|---|---|
+| Autumn2 SoW | `there is no press, no rollers and no printing inks` | names the kit in order to rule it out |
+| Autumn2 SoW | `No press, no rollers, no inks, no blades beyond classroom scissors` | the kit list, stated as what the room does not hold |
+| Autumn2 SoW | `is relief printing. It is off the table` | names the rejected route so a reader knows it was considered |
+| Autumn2 SoW | `Teaching relief printing in an alternative-provision session` | the pedagogic reason for the refusal; deleting it loses *why* |
+| START_HERE | `No press, no rollers, no inks` | the entry document's refusal |
+| Summer1 SoW | `No screens, squeegees or fabric inks needed` | Summer 1's own refusal of the screen route |
+
+**The tenth was rejected, and the hesitation was the finding.** `GROW_ART_W7`'s
+"Learner stuck at inking" is a fault-card menu, not a refusal — version three of
+the classifier reading a list as a disavowal. It returns to kit-dependence, so
+GROW W7 is **3**, not 2. Corrected: kit-dependence 45, refusal-context 9,
+refusal-candidate 1, offer-scope 2 = 57.
+
+### Rule 15 — word boundaries, which should have been rule 1
+
+All vocabulary assertions match on word boundaries, never substrings. Three
+distinct incidents in one day — `plate` inside *grid-template-columns*, `etched`
+inside *sketched*, `sewhere` inside *elsewhere* — each fixed locally rather than as
+a default. It is now enforced in the harness at import (`_assert_bounded`) so it
+cannot be forgotten per-check.
+
+### Token comparison — hash, never prefix
+
+Fine-grained tokens share a fixed prefix plus an account-scoped segment, so two
+genuinely different tokens from one account agree on their first twenty-odd
+characters. The new token shares **21** with the old. Any prefix comparison is
+guaranteed to pass a duplicate eventually. Compare SHA-256 digests: different
+digests, different tokens, and the secret never returns to screen. Same family as
+"substitution counts are not verification, read-back is" — a check that measures a
+proxy instead of the thing.

@@ -81,15 +81,70 @@ ALLOW = {
     "stipple": "a sponge/brush mark, made with kit that is present",
     "registration": "aligning a stencil to the paper; a stencil concept, not a press one",
 }
-CLASSES = ["kit-dependence", "vocabulary-residue", "exemplar-residue", "refusal-context", "offer-scope"]
+CLASSES = ["kit-dependence", "vocabulary-residue", "exemplar-residue", "refusal-context",
+           "refusal-candidate", "offer-scope"]
 
 
-def classify(fname, term_pat, default, before):
+# ---------------------------------------------------------------- ratified
+# THE CLASSIFIER PROPOSES; IT DOES NOT DECIDE. Three versions of the negation
+# detector were wrong in three different ways -- it swallowed an assertion, then
+# missed a trailing negation, then read a fault-card menu as a refusal. A check
+# that decides INTENT has no final version, so intent is ratified by a human once
+# and the classifier's remaining job is regression.
+#
+# (file fragment, string fragment, ratified reason)
+RATIFIED = [
+ ("Autumn2_Scheme_of_Work", "there is no press, no rollers and no printing inks",
+  "names the kit in order to rule it out; the sentence's whole job is the refusal"),
+ ("Autumn2_Scheme_of_Work", "No press, no rollers, no inks, no blades beyond classroom scissors",
+  "the unit kit list, stated as what the room does NOT hold"),
+ ("Autumn2_Scheme_of_Work", "is relief printing. It is off the table",
+  "names the rejected route so a reader knows it was considered and refused"),
+ ("Autumn2_Scheme_of_Work", "Teaching relief printing in an alternative-provision session",
+  "the pedagogic reason for the refusal; deleting it loses why"),
+ ("START_HERE", "No press, no rollers, no inks",
+  "the entry document's refusal; the first thing anyone reads"),
+ ("Summer1_Scheme_of_Work", "No screens, squeegees or fabric inks needed",
+  "Summer 1's own refusal of the screen route; its spine gets this right"),
+]
+
+
+def ratified(fname, sentence):
+    for f, frag, _ in RATIFIED:
+        if f in fname and frag in sentence:
+            return True
+    return False
+
+
+# Rule 15, enforced in the harness rather than remembered per-check. Three
+# substring incidents in one day -- plate inside grid-template-columns, etched
+# inside sketched, sewhere inside elsewhere -- each fixed locally. Now it fails
+# loudly at import instead.
+def _assert_bounded():
+    bad = []
+    for pat, _ in VIOLATIONS:
+        for alt in pat.split("|"):
+            a = alt.strip()
+            if not a:
+                continue
+            if not (a.startswith(r"\b") or a.startswith("(") or a[0].isupper()
+                    or " " in a or a.startswith("pre-") or a.startswith("hand-")):
+                bad.append(a)
+    if bad:
+        raise AssertionError("rule 15: unbounded alternatives -> " + ", ".join(bad))
+
+
+_assert_bounded()
+
+
+def classify(fname, term_pat, default, before, full):
     for f, pat, cls in OVERRIDES:
         if f in fname and (pat == r".*" or pat == term_pat):
             return cls
-    if NEGATION.search(before):
+    if ratified(fname, full):
         return "refusal-context"
+    if NEGATION.search(before):
+        return "refusal-candidate"     # proposed, NOT decided - needs ratification
     return default
 
 
@@ -113,23 +168,24 @@ def main():
                 lo = max(0, text.rfind('.', 0, m.start()) + 1)
                 hi = text.find('.', m.end());  hi = len(text) if hi < 0 else hi
                 sentence = text[lo:m.start()] + ' ' + text[m.end():hi + 60]
-                cls = classify(os.path.basename(rel), pat, default, sentence)
+                full = text[lo:hi + 60]      # intact, for ratified-string matching
+                cls = classify(os.path.basename(rel), pat, default, sentence, full)
                 per_file[rel][cls] += 1
                 per_class[cls] += 1
                 detail[rel].append((cls, m.group(0), seg.strip()))
 
     total = sum(per_class.values())
     print(f"AT-INST-04 closed-kit assertion - {len(files)} files, readable text only\n")
-    print(f"{'file':<46}{'kit-dep':>8}{'vocab':>7}{'exemp':>7}{'refusal':>9}{'offer':>7}{'total':>7}")
+    print(f"{'file':<46}{'kit-dep':>8}{'vocab':>7}{'exemp':>7}{'refusal':>9}{'cand':>6}{'offer':>7}{'total':>7}")
     print("-" * 91)
     for rel in sorted(per_file, key=lambda r: -sum(per_file[r].values())):
         c = per_file[rel]
         print(f"{rel[-45:]:<46}{c['kit-dependence']:>8}{c['vocabulary-residue']:>7}"
-              f"{c['exemplar-residue']:>7}{c['refusal-context']:>9}{c['offer-scope']:>7}{sum(c.values()):>7}")
+              f"{c['exemplar-residue']:>7}{c['refusal-context']:>9}{c['refusal-candidate']:>6}{c['offer-scope']:>7}{sum(c.values()):>7}")
     print("-" * 91)
     print(f"{'TOTAL':<46}{per_class['kit-dependence']:>8}{per_class['vocabulary-residue']:>7}"
           f"{per_class['exemplar-residue']:>7}{per_class['refusal-context']:>9}"
-          f"{per_class['offer-scope']:>7}{total:>7}")
+          f"{per_class['refusal-candidate']:>6}{per_class['offer-scope']:>7}{total:>7}")
 
     if verbose:
         for rel, hits in detail.items():
