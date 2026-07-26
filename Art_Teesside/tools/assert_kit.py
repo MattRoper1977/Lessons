@@ -50,13 +50,13 @@ KIT = ["paper", "card", "wax crayon", "crayon", "graphite", "scissors", "glue", 
 # (regex, default class). Every entry is a human decision about SENSE, recorded
 # here rather than implied by a pattern. Classes decide which pass owns the hit.
 VIOLATIONS = [
-    (r"\binking\b|inking bench|inking queue|inking slab|inking station", "kit-dependence"),
-    (r"press corner|printing ink|\binks\b|ink load|re-inked|Roll until|\bstarved\b", "kit-dependence"),
+    (r"\binking\b|\binking bench\b|\binking queue\b|\binking slab\b|\binking station\b", "kit-dependence"),
+    (r"\bpress corner\b|\bprinting ink\b|\binks\b|\bink load\b|\bre-inked\b|\bRoll until\b|\bstarved\b", "kit-dependence"),
     (r"\brollers?\b|\bbrayer\b|\blino\b", "kit-dependence"),
-    (r"\bpre-cut plate\b|\bplate wear\b|the plate|\bplates?\b", "kit-dependence"),
-    (r"relief print\w*", "kit-dependence"),
-    (r"pull an edition|hand-pulled|pull it again|Pull the remaining prints", "vocabulary-residue"),
-    (r"screen ?print\w*", "offer-scope"),
+    (r"\bpre-cut plate\b|\bplate wear\b|\bthe plate\b|\bplates?\b", "kit-dependence"),
+    (r"\brelief print\w*", "kit-dependence"),
+    (r"\bpull an edition\b|hand-pulled|\bpull it again\b|\bPull the remaining prints\b", "vocabulary-residue"),
+    (r"\bscreen ?print\w*", "offer-scope"),
 ]
 # Refusal is detected from CONTEXT, not from a file list. A banned term inside a
 # negation is being disavowed, and the whole point of the residuals register is
