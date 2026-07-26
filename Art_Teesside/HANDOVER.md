@@ -7,8 +7,8 @@ Start here. This file is written so a fresh session needs nothing else.
 | | |
 |---|---|
 | Branch | `art-remediation` — **never push to `main`, never force-push, never merge** |
-| Tip | `f9101cf` |
-| `origin/main` when last verified | `8c384a7` — moved eight times in one day by a live Lundy Loop workstream, never once touching `Art_Teesside/`. **Re-fetch and compare; it will have moved again.** |
+| Tip | **read it — `git log -1 --format='%h %s'`.** A handover cannot state its own tip: the commit that writes the SHA changes the SHA. Rule 12 applies to this row. |
+| `origin/main` when last verified | `8c384a7` (stale by design — a fixed reference point, not a claim about now) — moved eight times in one day by a live Lundy Loop workstream, never once touching `Art_Teesside/`. **Re-fetch and compare; it will have moved again.** |
 | Estate | 53 HTML files |
 | Finished | **BUILD Autumn 2** — the only completed thing. `vocabulary-residue 0` **and** `C5 0`, two independent signals per rule 14 |
 
