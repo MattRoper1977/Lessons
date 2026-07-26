@@ -85,3 +85,93 @@ above its own refusal to gate on it and is never pupil-facing.
 
 A standalone `Declared_Residuals.md` is still owed as a staff-facing document.
 This is its machine-readable half, arriving early because the assertions needed it.
+
+---
+
+## AT-INST-02 — `assert_cooccurrence.py`
+
+- **Derives:** contradictions between two things that are each individually true.
+  C1 award level disagreeing between chassis layers within a file; C2 term/week
+  disagreeing between strip, badge and print mirror; C3 kit vocabulary beside a
+  kit disavowal in the same file; C4 a Part described as both banked and open;
+  C5 a route whose scheme of work disavows kit its own lessons teach.
+- **Method:** **Literal** for C1, C2, C3, C5. **Approximate** for C4 — it matches
+  status words inside a ±130-character window near a Part token, so read every C4
+  hit before quoting it.
+- **Independent of:** AT-INST-01 entirely. AT-INST-01 asks whether a banned string
+  is present; every string this instrument reasons about is legitimately present.
+  A finding here is invisible to that one by construction.
+- **Status:** current.
+
+### Why it exists
+
+R1 found seven files carrying `BUILD · Explore` and `Bronze Part A` inches apart
+on the same header strip. Seven human reviews passed them, because whichever half
+you looked at was correct. This estate's characteristic fault is not a false
+statement; it is two true-looking halves that cannot both hold. An absence check
+cannot see that class — every string it hunts for is genuinely there.
+
+### Self-test — the check was validated against known ground truth before use
+
+Run at HEAD the instrument returns zero, which is exactly what a broken check
+returns. It was therefore run against the estate as it stood at `6486176`, one
+commit before R1, where the answer was independently known:
+
+| Assertion | Found at 6486176 | Ground truth | |
+|---|---|---|---|
+| `C1_award_level` | 7 | 7 files, Explore badge + footer against Bronze award-strip | ✓ |
+| `C2_term` | 7 | 7 files, strip Aut 1 against badge Autumn 2 | ✓ |
+| `C2_week` | 6 | 6 files — W1 excluded, its week was coincidentally correct | ✓ |
+
+The W1 exclusion is the useful part of that result: the instrument distinguishes
+a field that is wrong from a field that is right by accident. Zero at HEAD is
+therefore a real zero, not a silent failure.
+
+### Baseline at `023ec96` (post-R1), 53 files
+
+C1 0, C2_term 0, C2_week 0, C3 0, C4 0 — **C5 2**.
+
+`C5` reports `Build/BUILD_ART_A2_W6_Resolve_and_Edition.html` (`pull an edition`
+×5) and `Build/Autumn2_Printable_Weekly_Evidence_Pack.html` (×1) against the
+Autumn 2 scheme of work's own disavowal. This is D-PRESS-02, it predates this
+session, and it arrived with `2106b3f` — the commit that performed the
+press-to-stencil conversion and did not finish inside its own folder.
+
+**Estate headline, wider than any single assertion:** kit is disavowed in 2 files
+and taught in 6 that carry no disavowal — the two above plus GROW W2 (19 hits),
+LAUNCH W6 (6), GROW W3 (4), GROW W6 (2). C5 is folder-scoped and cannot report
+the GROW and LAUNCH four, because their folders contain no disavowal to
+contradict. That is D-PRESS-01 and it closes at A2a.
+
+### C3 returned zero, and the zero was the finding
+
+C3 was specified as within-file: kit vocabulary beside a kit disavowal in the
+same file. It returns zero at every commit, because the estate's contradiction
+does not live inside single files — the file that denies the press and the file
+that teaches it are different files. C5 exists because the within-file question
+was the wrong question. C3 is retained: it costs nothing and it guards against a
+future file that argues with itself.
+
+---
+
+## Session constraints
+
+- **GitHub API is unreachable from this session.** `/repos/{owner}/{repo}/pages`,
+  `/pages/builds` and `/actions/runs` all return *"Access to this GitHub API path
+  is not permitted through this proxy."* Deploy state cannot be observed from
+  here and must be confirmed by a human in Settings → Pages. Recorded so a future
+  run does not spend time rediscovering it. Git over HTTPS works normally.
+
+## Standing rules adopted during Pass 4
+
+5. **NBSP is written as an explicit `\xa0` escape, never as a literal character.**
+   The character survives one heredoc and not the next. In R1 a dry run reported
+   4 of 4 patterns matching and the apply reported 21 of 28, because the literal
+   nbsp in one script had become an ordinary space in the other.
+6. **Substitution counts are not verification. Read-back is.** Every substitution
+   pass ends by reading back every field it claims to have changed and reporting
+   matched against expected. A dry run and an apply that disagree are measuring
+   two different strings, and no count will ever say so.
+7. **An instrument returning zero is not trusted until it has been run against a
+   commit where the answer is independently known.** Zero and broken are
+   indistinguishable from inside the instrument.
