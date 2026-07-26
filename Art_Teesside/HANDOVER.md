@@ -7,7 +7,7 @@ Start here. This file is written so a fresh session needs nothing else.
 | | |
 |---|---|
 | Branch | `art-remediation` — **never push to `main`, never force-push, never merge** |
-| Tip | `46fa538` (Pass A2a) |
+| Tip | `A2a-2` — see git log |
 | `origin/main` at writing | `4023ab5` — moved six times today by a live Lundy Loop workstream, never touching `Art_Teesside/` |
 | Estate | 53 HTML files |
 | Finished | **BUILD Autumn 2** — the only completed thing. `vocabulary-residue 0` **and** `C5 0`, two independent signals per rule 14 |
@@ -49,6 +49,29 @@ All in `Art_Teesside/tools/`. Load `INSTRUMENTS_ART.md` before any measuring pas
 - **AT-INST-03** `assert_print.js` — render at **718×1047px**, 55 sheets / 55 pages, warns under 50px clearance. GROW Week 7 clears by 9px; escalation ladder is in the register.
 - **AT-INST-04** `assert_kit.py` + `kit_text.py` — closed kit, specified on category.
 - `safe_edit.py` — every substitution declares its expected count and is read back.
+
+### A contradiction detector needs both sides present — read this before quoting any C5 zero
+
+C5 is folder-scoped and reports a route whose scheme disavows kit its own lessons
+teach. **It can only fire where a disavowal exists to anchor on.** A folder
+containing no refusal can never report one, and its zero is not evidence of
+anything — it is an unasked question.
+
+| folder | anchor (a disavowal) present? | is a C5 zero informative? |
+|---|---|---|
+| `Build/` | **yes** — Autumn 2 SoW ×6, START_HERE ×2 | yes |
+| `Grow/` | **yes, since A2a** — GROW W2 ×2 | yes — and it immediately reported GROW W6, which was invisible before |
+| `Launch/` | **NO** | **no. C5's silence on LAUNCH means nothing.** |
+
+**LAUNCH is right now in exactly the state GROW was in before A2a** — and it is the
+tier carrying 17 hits and the inking-station staging of the Silver project. C5 on
+LAUNCH stays uninformative until A2e lands a disavowal there. Landing that
+disavowal should be an early step of A2e, not a late one, so the check can see the
+rest of the pass.
+
+**A zero that cannot be non-zero is not a pass.** Rule 7 says replay any zero
+against a commit where it must be non-zero; this is the structural version — check
+that the anchor side exists at all before believing the answer.
 
 **Declared human, not mechanical:** sense ("press Escape" vs "press corner") and refusal intent. Both are ratified once and recorded. The classifier **proposes**; it does not decide.
 
