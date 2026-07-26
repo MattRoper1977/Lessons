@@ -79,12 +79,12 @@ EXPECTED = {
     # the estate states in four other files that no pupil names are stored and
     # codes work everywhere. Awaiting a ruling; not silently fixed.
     "A6_no_pupil_names": 24,
-    # D-PRESS-01 (31, in GROW W2/W3/W6 + LAUNCH W6) and D-PRESS-02 (9, in BUILD
-    # A2_W6 + Autumn2 SoW + Autumn2 pack). Open until A2a. A floor, not a total.
-    # A few Autumn2 SoW hits name the press in order to refuse it and could be
-    # declared residuals; they are deliberately counted live instead, because
-    # under-counting a banned string is the failure that matters here.
-    "A8_closed_kit": 40,
+    # A2d closed the vocabulary and exemplar classes: 40 -> 29.
+    # Remaining 29 = GROW W2 19 + LAUNCH W6 6 + GROW W6 2 (all kit dependence)
+    # + Autumn2 SoW 2 (refusal context, counted live by deliberate conservative
+    # choice -- under-counting a banned string is the failure that matters).
+    # Predicted next: 10 after A2a, 8 after A2b, 2 after A2e.
+    "A8_closed_kit": 29,
 }
 COUNTED = {"tier_supported": r"\bSupported\b", "tier_standard": r"\bStandard\b", "tier_stretch": r"\bStretch\b",
            "attrib_made_by_matt": r"Made by Matt", "attrib_progress_schools": r"Progress Schools"}
