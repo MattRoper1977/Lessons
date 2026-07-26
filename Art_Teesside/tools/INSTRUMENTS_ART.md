@@ -280,3 +280,77 @@ fifth, and neither badge nor locator assigns it one.
    enforces is about a data category and where that data goes. Where an assertion
    cannot be written on category, say so explicitly and it becomes a human check
    on the pre-commit path rather than a number that looks like assurance.
+
+---
+
+## AT-INST-03 — `assert_print.js`
+
+- **Derives:** every sheet's rendered height in every pack at true A4 content size,
+  the real PDF page count, and any sheet exceeding the printable area.
+- **Method:** **Literal** — a render, not a stylesheet reading. Chromium, print
+  media, viewport 718 × 1047px (210 × 297mm at 96dpi less 10mm `@page` margins).
+- **Independent of:** AT-INST-01 and AT-INST-02 entirely; those read text, this
+  measures geometry.
+- **Status:** current.
+
+### Why it exists instead of `min-height: 277mm`
+
+`min-height: 277mm` was proposed to stop sheets reflowing. It cannot: `@media print`
+already sets `.a4{min-height:0;height:auto}`, so no min-height change reaches the
+printed page. Nor does reducing a screen min-height reveal overflow at authoring
+time — content taller than a minimum simply grows past it. What actually catches
+a sheet that has grown is measuring it. That is an instrument, not a stylesheet.
+
+### Self-test — replayed against a commit where it must fail
+
+| Commit | Result | Exit | Ground truth |
+|---|---|---|---|
+| `62dffcd` (pre-R7) | 56 pages / 55 sheets, 1 overflowing, GROW Week 7 +35px | 1 | known defect |
+| `2e2c8e3` (post-R7) | 55 pages / 55 sheets, 0 overflowing | 0 | known fixed |
+
+### Headroom at `2e2c8e3` — the number worth watching
+
+```
+Autumn2 pack     tallest  801px   headroom 246px
+BUILD pack                875px            172px
+Spring1 pack              792px            255px
+GROW pack                1038px              9px   <-- thin
+LAUNCH pack               867px            180px
+Spring2 pack              875px            172px
+Summer1 pack              839px            208px
+Summer2 pack              861px            186px
+```
+
+**GROW Week 7 clears by 9px and nothing else clears by less than 172px.** That
+sheet is one added line away from failing again, and it is the sheet a future
+author is most likely to add to, because it is the fullest. The assertion will
+catch it; this note is so that whoever sees the failure knows it is not a
+regression in the fix but the sheet running out of room.
+
+### Known sensitivity limits — declared, not hidden
+
+- **Renderer disagreement.** Measured in one Chromium build on one machine. A
+  school print driver or a different font stack can differ by a few px, which is
+  why R7 was tightened from a 1px clearance to 9px rather than shipped at 1px.
+- **Content that is wrong rather than tall** is invisible to it. A sheet can fit
+  perfectly and say nothing useful.
+- **A pack that fails to render** reports 0 sheets and 0 overflows, which is
+  indistinguishable from a clean pass. Sheet and page *counts* are therefore
+  asserted against 55/55 as well, so a silent render failure fails the check.
+
+## Withdrawn — `.a4.dense` (was R8)
+
+Dropped, not deleted, with the reason. It was designed as belt-and-braces for a
+global density problem. There is no global density problem: one sheet, 35px, in an
+estate whose next-tallest sheet cleared by 128px before R7 and by 172px after. A
+conditional second density regime firing on `${x.extra}` would be a trapdoor for
+whoever next wonders why two sheets in the estate space differently — the same
+objection that killed a single-pack scoping of the R7 fix. With AT-INST-03 in
+place it earns nothing.
+
+## Standing rules adopted during Pass 4 (continued)
+
+10. **A print measurement taken at screen width is not a print measurement.** All
+    print measurement happens at 718 × 1047px. At 1280px the overflow check
+    reported zero overflows on a pack that was printing 9 pages for 8 sheets: the
+    sheet was 1082px tall at A4 width and comfortably short at desktop width.
