@@ -227,3 +227,56 @@ finding is declared rather than silently repaired.
    pattern is being narrowed or ruled benign, every distinct context is read, or
    the narrowing does not happen. A6 was declared clean on six sampled contexts
    out of five, and missed a field in 24 files.
+
+---
+
+## AT-INST-02 · C6 — scheme mapping as an invariant
+
+Added with R3, on the principle that a one-time fix this estate can keep must be
+an invariant rather than a correction. C6 asks whether each scheme of work states,
+**per week**, which award section that week evidences, and whether that statement
+agrees with the two sources that are the record: the lesson badge and the pack
+evidence locator.
+
+Specified on **category, not phrasing**, per standing rule 9. The question is not
+"does the string `Part B` appear" — that is what produced the withdrawn finding.
+It is "does this scheme declare a per-week award section, and do the three sources
+agree".
+
+### Result at `d805706`
+
+```
+AGREE     Grow/Scheme_of_Work.html            7 weeks agree
+UNMAPPED  Build/Autumn2_Scheme_of_Work.html   declares no per-week award section
+UNMAPPED  Build/Scheme_of_Work.html           "
+UNMAPPED  Build/Spring1_Scheme_of_Work.html   "
+UNMAPPED  Launch/Scheme_of_Work.html          "
+```
+
+**The 22 / 14 / 23 / 0 signal has inverted, and that is a finding.** The other
+three schemes carry Part and Unit tokens in prose — BUILD Autumn 2 has 22 — but
+none of them declares a *per-week* mapping, so an adviser still cannot read
+week → Part off them. GROW is now the only tier that can be checked this way, and
+therefore the only tier where a future divergence between scheme, badge and
+locator will be caught. Raising the other three is not in the current nine-pass
+plan and is not done here; it is recorded so the asymmetry is visible.
+
+W8 is correctly excluded from GROW's seven: it audits the four Parts and adds no
+fifth, and neither badge nor locator assigns it one.
+
+## Withdrawn findings
+
+- **"GROW Part B absent from six lessons"** — withdrawn before R3 ran. It was a
+  token count in files that correctly lack the token. Marked withdrawn in
+  `Defect_Register_Pass4.md` rather than deleted: a silently removed false
+  finding is indistinguishable from a fixed one, and this programme has already
+  been bitten by exactly that difference.
+
+## Standing rules adopted during Pass 4 (continued)
+
+9. **Assertions are specified on category and destination, not on phrasing.**
+   A6 was simultaneously false-positive 73 times and false-negative 24 times, and
+   both failures came from the same cause: it tested wording when the rule it
+   enforces is about a data category and where that data goes. Where an assertion
+   cannot be written on category, say so explicitly and it becomes a human check
+   on the pre-commit path rather than a number that looks like assurance.

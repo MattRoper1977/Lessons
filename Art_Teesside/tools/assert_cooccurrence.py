@@ -155,9 +155,78 @@ def main():
     for rel, hits in estate_kit:
         print(f"      {rel}  {hits}")
 
+    r6 = c6_scheme_mapping()
+    print("\nC6_scheme_mapping")
+    for rel, why in r6["agree"]:
+        print(f"   AGREE     {rel}  ({why})")
+    for rel, why in r6["disagree"]:
+        print(f"   DISAGREE  {rel}  {why}")
+        total += len(why)
+    for rel in r6["unmapped"]:
+        print(f"   UNMAPPED  {rel}  (declares no per-week award section)")
+
     print(f"\nTOTAL {total}")
     print(f"declared legitimate pairings: {len(DECLARED_PAIRS)}")
     return 0 if total == 0 else 1
+
+
+# ---------------------------------------------------------------- C6
+def c6_scheme_mapping():
+    """
+    C6 - does each scheme of work declare its own Part/Unit shape per week, and
+    does that declaration agree with the two sources that are the record: the
+    lesson badge and the pack evidence locator?
+
+    Specified on CATEGORY, not phrasing (standing rule 9): the question is
+    "does this scheme state, per week, which award section the week evidences,
+    and do the three sources agree", not "does the string 'Part B' appear".
+    A scheme that states nothing is reported as unmapped, which is a finding in
+    its own right and is how GROW's gap was visible as 22 / 14 / 23 / 0.
+    """
+    out = {"disagree": [], "unmapped": [], "agree": []}
+    tiers = {"Grow": "Grow", "Build": "Build", "Launch": "Launch"}
+    for folder in tiers:
+        d = os.path.join(ROOT, folder)
+        if not os.path.isdir(d):
+            continue
+        # source 1 - lesson badges
+        badge = {}
+        for f in sorted(glob.glob(os.path.join(d, "*_ART_*W[0-9]*.html"))):
+            w = re.search(r"_W(\d)_", os.path.basename(f))
+            if not w:
+                continue
+            m = re.search(r'award-strip">[^<]*?((?:Part|Unit) [A-E0-9]+)', open(f, encoding="utf-8", errors="replace").read())
+            if m:
+                badge[int(w.group(1))] = m.group(1)
+        # source 2 - pack locator
+        locator = {}
+        for f in glob.glob(os.path.join(d, "*Pack*.html")):
+            s = open(f, encoding="utf-8", errors="replace").read()
+            i = s.find("LOCP=")
+            if i < 0:
+                continue
+            seg = s[i:s.find("];", i) + 2]
+            for pm in re.finditer(r'"p":\s*"((?:Part|Unit) [A-E0-9]+)[^"]*".*?"rows":\s*\[(.*?)\]', seg, re.S):
+                for wk in re.findall(r"Week (\d)", pm.group(2)):
+                    locator.setdefault(int(wk), set()).add(pm.group(1))
+        # source 3 - the scheme's own declaration
+        for sow in sorted(glob.glob(os.path.join(d, "*Scheme_of_Work.html"))):
+            s = open(sow, encoding="utf-8", errors="replace").read()
+            rel = os.path.relpath(sow, ROOT)
+            declared = {int(w): p for w, p in
+                        re.findall(r"<h2>Week (\d):[^<]*</h2>\s*<p><b>Arts Award:</b>[^<]*?((?:Part|Unit) [A-E0-9]+)", s)}
+            if not declared:
+                out["unmapped"].append(rel)
+                continue
+            bad = []
+            for w, p in sorted(declared.items()):
+                b, l = badge.get(w), locator.get(w)
+                if b and b != p:
+                    bad.append(f"W{w}: scheme={p} badge={b}")
+                if l and p not in l:
+                    bad.append(f"W{w}: scheme={p} locator={sorted(l)}")
+            (out["disagree"] if bad else out["agree"]).append((rel, bad or f"{len(declared)} weeks agree"))
+    return out
 
 
 if __name__ == "__main__":
