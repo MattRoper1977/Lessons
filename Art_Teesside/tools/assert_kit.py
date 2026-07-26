@@ -104,6 +104,8 @@ RATIFIED = [
   "the pedagogic reason for the refusal; deleting it loses why"),
  ("START_HERE", "No press, no rollers, no inks",
   "the entry document's refusal; the first thing anyone reads"),
+ ("GROW_ART_W2", "No press, no rollers, no inks — none are needed",
+  "A2a's disavowal in the TA brief; the sentence exists to refuse the kit the lesson used to require"),
  ("Summer1_Scheme_of_Work", "No screens, squeegees or fabric inks needed",
   "Summer 1's own refusal of the screen route; its spine gets this right"),
 ]

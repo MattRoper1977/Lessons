@@ -67,8 +67,12 @@ ASSERTIONS = {
     "A5_tier_vocab":     r"\b(?:foundation|middle|higher)[- ]tier\b|tier\s*[1-3]\b",
     "A6_no_pupil_names": r"Full name|First name|Surname|Name of (?:pupil|student)|Name:\s*_"
                          r"|Pupil name:|Student name:|Pupil name<|Name of learner",
-    "A8_closed_kit":     r"press corner|inking bench|inking queue|inking slab|printing ink|ink load|relief print"
-                         r"|\brollers?\b|\bbrayer\b|\blino\b|pre-cut plate|plate wear|re-inked|pull an edition",
+    # A8 RETIRED at A2a. Superseded by AT-INST-04 (assert_kit.py), which is
+    # specified on category rather than on a list of press nouns. A list-based
+    # A8 undercounted for four widenings and produced a false zero in C5.
+    # Kept commented, not deleted, so the supersession is visible.
+    # "A8_closed_kit":   r"press corner|inking bench|inking queue|inking slab|printing ink|ink load|relief print"
+    #                    r"|\brollers?\b|\bbrayer\b|\blino\b|pre-cut plate|plate wear|re-inked|pull an edition",
 }
 
 # Non-residual hits expected. Anything but zero is an OPEN FINDING, named here.
@@ -79,12 +83,6 @@ EXPECTED = {
     # the estate states in four other files that no pupil names are stored and
     # codes work everywhere. Awaiting a ruling; not silently fixed.
     "A6_no_pupil_names": 24,
-    # A2d closed the vocabulary and exemplar classes: 40 -> 29.
-    # Remaining 29 = GROW W2 19 + LAUNCH W6 6 + GROW W6 2 (all kit dependence)
-    # + Autumn2 SoW 2 (refusal context, counted live by deliberate conservative
-    # choice -- under-counting a banned string is the failure that matters).
-    # Predicted next: 10 after A2a, 8 after A2b, 2 after A2e.
-    "A8_closed_kit": 29,
 }
 COUNTED = {"tier_supported": r"\bSupported\b", "tier_standard": r"\bStandard\b", "tier_stretch": r"\bStretch\b",
            "attrib_made_by_matt": r"Made by Matt", "attrib_progress_schools": r"Progress Schools"}
