@@ -609,3 +609,85 @@ guaranteed to pass a duplicate eventually. Compare SHA-256 digests: different
 digests, different tokens, and the secret never returns to screen. Same family as
 "substitution counts are not verification, read-back is" — a check that measures a
 proxy instead of the thing.
+
+---
+
+## `8f2ae82 → 75612fd → 0dd3ae2` — one event, one cause
+
+Not three failures on a bad afternoon. One compound-command fault and two failed
+attempts to fix it, recorded as a single event so a future reader does not read
+three.
+
+`8f2ae82` shipped an `assert_kit.py` that raised on import: rule 15's own guard,
+added in that commit, fired on `re-inked` — legitimately hyphenated, and the
+allowance covered `pre-` and `hand-` but not `re-`. `75612fd` targeted a string
+that was not in the file, changed nothing, and went out on top of it. `0dd3ae2`
+anchored every alternative and was verified in a separate step first.
+
+### Rule 16 — you cannot read a gate
+
+Both bad pushes had the check and the push in **one compound shell command**, so a
+non-zero exit printed *above* the push instead of preventing it. Verification and
+the action it gates are separate steps, with the exit code checked between them.
+No compound command may contain both a check and the operation that depends on it.
+
+**And notice what the failure was.** A traceback and a SHA on screen together,
+twice, and the reader took the half that fitted. That is `BUILD · Explore` sitting
+inches from `Bronze Part A` — this estate's headline defect class, the co-present
+contradiction, reproduced in the tooling by the person hunting it. It says
+something about the class that it can catch its own auditor.
+
+Branch discipline is what made this two recoverable pushes rather than an incident.
+
+### The allowance principle
+
+Rule 15's guard was fixed by **anchoring**, so the allowance list shrank. That is
+the general form:
+
+> A fix that grows an allowance list is suspect. A fix that shrinks it, or removes
+> the need for one, is the rule being obeyed rather than negotiated with.
+
+Every allowance entry is a place a future defect can hide, and an allowance list
+only ever grows unless someone decides it does not. This applies directly to
+`ALLOW` in `assert_kit.py` and to the ambiguous-word rulings.
+
+### A substitution matching zero occurrences is an error, not a no-op
+
+`safe_edit.substitute()` raises on a zero match, on a count mismatch, and on a
+read-back that does not find what was written. Cheapest rule of the day to
+implement, and it would have caught `75612fd` and the nbsp near-miss both.
+
+---
+
+## The reconciled ladder — enumerated, not derived
+
+Every rung, every file, every count. Buckets sum to the total; the terminal is
+named, not counted.
+
+| file | kit-dep | refusal | cand | offer | total | owner |
+|---|---|---|---|---|---|---|
+| `Grow/GROW_ART_W2` | 25 | 0 | 0 | 0 | **25** | A2a |
+| `Launch/LAUNCH_ART_W6` | 10 | 0 | 0 | 0 | **10** | A2e |
+| `Build/Autumn2_Scheme_of_Work` | 0 | 6 | 0 | 0 | **6** | terminal |
+| `Grow/GROW_ART_W6` | 3 | 0 | 0 | 0 | **3** | A2b |
+| `Grow/GROW_ART_W7` | 2 | 0 | 1 | 0 | **3** | A2b |
+| `Launch/LAUNCH_ART_W7` | 3 | 0 | 0 | 0 | **3** | A2e |
+| `Build/START_HERE` | 0 | 2 | 0 | 0 | **2** | terminal |
+| `Launch/LAUNCH_ART_W1` | 0 | 0 | 0 | 2 | **2** | A2e |
+| `Launch/LAUNCH_ART_W5` | 2 | 0 | 0 | 0 | **2** | A2e |
+| `Summer1_Scheme_of_Work` | 0 | 1 | 0 | 0 | **1** | terminal |
+| **TOTAL** | **45** | **9** | **1** | **2** | **57** | |
+
+```
+57  → A2a  GROW W2                                   −25 → 32
+    → A2b  GROW W6 (3) + GROW W7 (3)                  −6 → 26
+    → A2e  LAUNCH W1 (2) + W5 (2) + W6 (10) + W7 (3) −17 →  9
+```
+
+**Terminal = 9, named:** Autumn 2 SoW ×6, START_HERE ×2, Summer 1 SoW ×1 — the
+ratified refusals listed above with their reasons. Not a number: those nine
+strings.
+
+The candidate is counted in GROW W7's 3 and in A2b's 6 on the reading that it is
+kit-dependence. If it is ruled a refusal instead, GROW W7 becomes 2, A2b becomes
+5, and the terminal becomes 10.
