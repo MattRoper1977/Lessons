@@ -15,6 +15,16 @@ correct. The only external check is re-deriving a finding by a method that share
 premise with the instrument that produced it — and where that has been done, the
 entry says so.
 
+**Companion documents.** [`/REGISTER.md`](../../REGISTER.md) — estate conventions,
+exceptions, deliberate absences, storage keys, deletion records and the decisions
+that constrain what a pass may touch. [`/REBRAND.md`](../../REBRAND.md) — the
+staff-pack rebrand procedure. **Load `/REGISTER.md` too**: this file governs how
+instruments must behave, `/REGISTER.md` governs what they are allowed to conclude.
+
+**Note on location.** These instruments are estate-wide and belong at the repo root
+by the same argument that puts `/REGISTER.md` there. Recorded in `/REGISTER.md`
+R-E06 as a decision made and deliberately deferred, so it is not re-asked.
+
 **Loading order.** Any pass that measures the estate loads this file before it runs.
 An instrument marked QUARANTINED must not be used, and must not be used to validate
 its own replacement (standing rule 6).
