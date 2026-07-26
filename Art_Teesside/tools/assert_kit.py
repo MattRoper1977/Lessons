@@ -53,7 +53,7 @@ VIOLATIONS = [
     (r"\binking\b|inking bench|inking queue|inking slab|inking station", "kit-dependence"),
     (r"press corner|printing ink|\binks\b|ink load|re-inked|Roll until|\bstarved\b", "kit-dependence"),
     (r"\brollers?\b|\bbrayer\b|\blino\b", "kit-dependence"),
-    (r"pre-cut plate|plate wear|the plate|\bplates?\b", "kit-dependence"),
+    (r"\bpre-cut plate\b|\bplate wear\b|the plate|\bplates?\b", "kit-dependence"),
     (r"relief print\w*", "kit-dependence"),
     (r"pull an edition|hand-pulled|pull it again|Pull the remaining prints", "vocabulary-residue"),
     (r"screen ?print\w*", "offer-scope"),
@@ -128,7 +128,7 @@ def _assert_bounded():
             if not a:
                 continue
             if not (a.startswith(r"\b") or a.startswith("(") or a[0].isupper()
-                    or " " in a or a.startswith("pre-") or a.startswith("hand-")):
+                    or " " in a or a.startswith("hand-")):
                 bad.append(a)
     if bad:
         raise AssertionError("rule 15: unbounded alternatives -> " + ", ".join(bad))
