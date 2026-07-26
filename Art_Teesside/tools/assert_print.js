@@ -35,6 +35,7 @@ const LIMIT_PX = 1047;                 // 297mm - 20mm margins, at 96dpi
 const VIEW = { width: 718, height: 1047 };
 const EXPECT_SHEETS = 55;              // 8 packs; also the expected page total
 const EXPECT_PAGES = 55;
+const WARN_PX = 50;   // clearance below which a sheet is one edit from failing
 
 function packs(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => {
@@ -48,7 +49,7 @@ function packs(dir) {
   const files = packs(ROOT).sort();
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
   const pg = await b.newPage({ viewport: VIEW });
-  let sheets = 0, pages = 0, over = [];
+  let sheets = 0, pages = 0, over = [], warn = [];
 
   for (const f of files) {
     await pg.goto('file://' + f);
@@ -64,15 +65,19 @@ function packs(dir) {
       margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' } });
     const n = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
     sheets += r.length; pages += n;
-    for (const s of r) if (s.over > 0) over.push({ file: path.basename(f), ...s });
+    for (const s of r) {
+      if (s.over > 0) over.push({ file: path.basename(f), ...s });
+      else if (LIMIT_PX - s.h < WARN_PX) warn.push({ file: path.basename(f), ...s });
+    }
     if (verbose) console.log(`${path.basename(f).slice(0, 44).padEnd(46)} sheets=${String(r.length).padStart(2)} pages=${String(n).padStart(2)} tallest=${Math.max(...r.map(x => x.h))}px headroom=${LIMIT_PX - Math.max(...r.map(x => x.h))}px`);
   }
   await b.close();
 
   const ok = over.length === 0 && sheets === EXPECT_SHEETS && pages === EXPECT_PAGES;
+  for (const w of warn) console.log(`   WARN  ${w.file} sheet ${w.i} "${w.label}"  ${w.h}px  clears by only ${LIMIT_PX - w.h}px`);
   console.log(`\nsheets ${sheets}/${EXPECT_SHEETS}   pages ${pages}/${EXPECT_PAGES}   overflowing ${over.length}   limit ${LIMIT_PX}px @ ${VIEW.width}x${VIEW.height}`);
   for (const s of over) console.log(`   OVER  ${s.file} sheet ${s.i} "${s.label}"  ${s.h}px  +${s.over}px`);
-  console.log(ok ? 'PRINT ASSERTION PASS - every sheet fits, one page per sheet'
+  console.log(ok ? `PRINT ASSERTION PASS - every sheet fits, one page per sheet${warn.length ? ` (${warn.length} within ${WARN_PX}px of the limit)` : ''}`
                  : 'PRINT ASSERTION FAILED - read above');
   process.exit(ok ? 0 : 1);
 })();

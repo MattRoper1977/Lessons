@@ -62,8 +62,15 @@ VIOLATIONS = [
 # negation is being disavowed, and the whole point of the residuals register is
 # that those survive deliberately. Detected over a window before the hit, because
 # "no press, no rollers and no printing inks" negates three terms with one "no".
-NEGATION = re.compile(r"\b(?:no|not|never|without|off the table|none are needed|"
-                      r"is no|are no|nor)\b[^.;]{0,90}$", re.I)
+# Negation must fall on the KIT'S EXISTENCE, not on any nearby verb. The first
+# version matched a bare "not" and swallowed GROW W2's ghost card -- "Plate not
+# re-inked. Every pull needs its own ink" -- which ASSERTS the press. A false
+# refusal closes a defect instead of opening one, so this pattern requires an
+# existential form: no X, there is no, none are needed, off the table, without.
+NEGATION = re.compile(
+    r"(?:\bthere (?:is|are) no\b|\bis no\b|\bare no\b|\bno\b(?=\s+[a-z]+(?:s|ing)?\b[^.;]{0,40}$)"
+    r"|\bnone are needed\b|\boff the table\b|\bwithout\b|\bnever (?:use|add|map|label)\b"
+    r"|\bno (?:screens|press|rollers|inks|blades)\b)[^.;]{0,90}$", re.I)
 # Per-file overrides remain available for decisions context cannot carry.
 OVERRIDES = []
 # Governed allow-list: art words that are NOT kit. Each carries its reason.

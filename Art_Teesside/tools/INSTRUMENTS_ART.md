@@ -428,3 +428,120 @@ as R6's 167px.
 `Summer1_Scheme_of_Work.html` carries "No screens, squeegees or fabric inks
 needed" — a legitimate refusal, and the first evidence that the screen-print
 question reaches beyond LAUNCH W1 into a term nobody has looked at.
+
+---
+
+## Corrections and additions at the close of Pass 4
+
+### AT-INST-03 gains a warning band
+
+Fails over 1047px; **warns under 50px clearance**. Current output:
+
+```
+WARN  Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html sheet 7 "Week 7"
+      1038px  clears by only 9px
+PRINT ASSERTION PASS (1 within 50px of the limit)
+```
+
+An author told at 20px has a choice. An author told at −3px has a broken pack and
+a deadline.
+
+### Escalation ladder for GROW Week 7 — written now, not under pressure
+
+That sheet's furniture has been tightened twice (R6 styled the ladder, −64px; R7
+trimmed header, spine, Lundy strip, ladder and footer margins, −44px). **There is
+nothing left in the furniture.** When it next fails, do not hunt millimetres. In
+order:
+
+1. **Move a block to the recovery route.** The recovery route is already a
+   separate print section; a diagnostic can live there.
+2. **Shorten the diagnostic prose.** The two `.diag` blocks are 145px and 185px —
+   the largest non-evidence items on the sheet.
+3. **Split the week across two sheets.** Costs a page; costs nothing else.
+
+Evidence fields, mount zones and the recovery route stay untouchable, as always.
+
+### Terminal enumeration — the seven declared refusals, named not counted
+
+A count cannot be checked next session; a named set can. This is how `29` survived
+four widenings.
+
+| file | string | ×|
+|---|---|---|
+| `Build/Autumn2_Scheme_of_Work.html` | `there is no press, no rollers and no printing inks in the room` | 2 |
+| `Build/Autumn2_Scheme_of_Work.html` | `No press, no rollers, no inks, no blades beyond classroom scissors` | 2 |
+| `Build/START_HERE.html` | `No press, no rollers, no inks — rubbings, stencils and sponged acrylic only` | 2 |
+| `Summer1_Scheme_of_Work.html` | `No screens, squeegees or fabric inks needed` | 1 |
+
+### The negation detector was wrong on its first outing — terminal 8 → 7
+
+Its first version matched any nearby `not` and swallowed GROW W2's `ghost` card —
+*"Plate not re-inked. Every pull needs its own ink"* — which **asserts** the press.
+A genuine kit-dependence hit was moved into the safe column, and a false refusal
+closes a defect instead of opening one. Negation must now fall on the kit's
+**existence** (`there is no`, `no press`, `none are needed`, `off the table`,
+`without`), never on a verb.
+
+Corrected counts: **kit-dependence 48, vocabulary-residue 4, refusal-context 7,
+offer-scope 2 = 61.** GROW W2 is 25, not 24.
+
+**Corrected ladder:** 61 → A2d-2 (6) → 55 → A2a (25) → 30 → A2b (6) → 24 →
+A2e (17) → **7**.
+
+### Offer-scope sweep — result, and its limitation
+
+All 53 files, three tiers, every term with content. **4 hits, 2 files.** Only one
+is a genuine offer: `LAUNCH_ART_W1`'s challenge menu offers *"Master screen
+printing from zero"* beside five runnable options. GROW W2's two are already inside
+A2a's 25.
+
+**It does not reach outside LAUNCH.** Summer 1 is not a second instance — its
+"No screens, squeegees or fabric inks needed" is a *refusal*, and its spine gets it
+right.
+
+The first run reported **24 hits in 16 files**, every extra one a substring:
+`etched` inside *sketched*, `etchbooks` inside *sketchbooks*, `sewhere` inside
+*elsewhere*, `ETCHES` inside *SKETCHES*. Recorded because a sweep finding trouble
+in sixteen files reads as a crisis and would have moved the pass boundaries a
+fourth time on nothing.
+
+**Limitation, declared:** this sweep tests offers against a *list* of absent
+processes — A8's old weakness. The category-correct version enumerates every option
+in every choice menu and checks each against the kit. Not built.
+
+## Withdrawn — relayed from the lost sandbox, contradicted by the sibling at HEAD
+
+Phantoms four, five and six. Visible rather than tidy.
+
+| withdrawn | replaced by | reason |
+|---|---|---|
+| fault card `lift` | `island` | `lift` is step five of the chain, where it names the *correct* action; the sibling's own `drag` fix reads "straight down, **lift** straight up". One word on both success and failure in one file. |
+| fault card `shift` | `slip` kept | the sibling says `slip`, the old GROW W2 key said `slip`; the rename broke two alignments and bought nothing. |
+| cue "squeeze until it stops dripping" | "squeeze the sponge out on scrap before you start" | appears nowhere in the sibling; *dripping* has zero hits estate-wide. A sponge that has stopped dripping is still wet enough to `bleed`, the fault directly above it. |
+
+## Standing rules 11–13
+
+11. **An expected value may only change in the same commit as the change that moved
+    it if the message carries the full decomposition.** The register keeps the
+    sequence as a ladder, so a future reader can check each step was justified
+    rather than merely consistent with the last.
+12. **An artefact does not assert its own delivery state.** "Nothing is pushed",
+    "no token has arrived", "not yet committed" describe the world at write-time
+    and expire the moment the artefact moves. That belongs in the report or the
+    commit message, which are timestamped by nature. Same shape as R6's 167px and
+    the phantom SHAs: true when made, carried where it reads as still true.
+13. **Assertions run over readable text — string literals and markup text — not
+    over identifiers, selectors, class names or JSON keys. Location is not the
+    test; role is.** A pupil-facing sentence inside a `<script>` tag is readable
+    text; `grid-template-columns` is not, wherever it sits. *(The first version of
+    this rule said "exclude script blocks" and was wrong — it generalised from one
+    symptom to a location, and would have hidden the TA brief that sets up an
+    inking bench, the worst string in GROW W2.)*
+
+### One addition to the human half — ambiguous words are ruled once
+
+Each ambiguous word gets its ruling recorded once, with the reason, and is not
+re-adjudicated later. Otherwise the same word is decided differently in March than
+in July and the drift is invisible, because both decisions look like judgement.
+`ALLOW` in `assert_kit.py` is that record; `press` is ruled kit in `press corner`
+and ordinary in `press Escape`, and that ruling stands.
