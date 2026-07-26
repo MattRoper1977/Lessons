@@ -51,21 +51,60 @@ obvious selector returns the wrong set.
   `Launch/Slideshows/LAUNCH_HUM_W7_Source_Assessment.html`
 - **Rule** Support access may be changed. **Content, outcomes and success criteria
   may not** — ask first, every time.
-- **SELECTOR — and this is the entry's real value:** use `★ ASSESSED LESSON`, which
-  returns exactly these two. **Do NOT use `★ ASSESSED`, which returns six.** The
-  other four carry the marker as a *reference*, not a designation: the two Printable
-  Packs generate a Week 7 sheet flagged `★ ASSESSED`, and the two Schemes of Work
-  describe it in prose. The rule "two files, identified by the ★ ASSESSED marker" is
-  correct about the files and wrong about the marker. A pass scoping by the short
-  string would edit four files it must not touch.
+- **TWO SELECTORS, ONE PER DIRECTION. Both are correct; neither replaces the other.**
+
+  | selector | returns | use it for |
+  |---|---|---|
+  | `★ ASSESSED LESSON` | **2** | **INCLUSION** — scoping a pass *onto* the assessed files |
+  | `★ ASSESSED` | **6** | **EXCLUSION only** — keeping a pass *away* from anything assessment-related |
+
+  The broader string is *correctly* broader for its job: a pass avoiding assessed
+  material should also avoid the two Printable Packs, which generate the Week 7
+  pupil ticket, and the two Schemes of Work, which describe it in prose. Those four
+  carry the marker as a **reference**, not a designation.
+
+  **Never use `★ ASSESSED` for inclusion.** A pass scoping on it to *find and edit*
+  the assessed files reaches into the Printable Packs and changes what a pupil sits.
+
+### R-A01b · A selector's safety depends on the direction it is used in
+- **STATUS** CONVENTION — read before writing any selector
+- **Over-broad is safe for exclusion and dangerous for inclusion. Under-broad is the
+  reverse.** Nothing about the string changes; the hazard appears the moment the
+  direction flips.
+- `★ ASSESSED` survived because it had only ever been used to keep passes *out* —
+  quarantining four files instead of two costs nothing.
+- Second independent instance: **bucket A** (R-C04) — safe as a list, dangerous as a
+  criterion. Two instances from unrelated parts of the estate, so this is a property
+  of selectors, not a coincidence.
+- **Record both directions with every selector**, rather than replacing one with a
+  single "right" answer. A lone narrow selector gets re-broadened by the next person
+  who finds a case it misses.
 
 ### R-A02 · BUILD files without the LL-3 writing line
-- **STATUS** CONVENTION · **DECLARED** (56 files) · **NOT VERIFIED**
-- Recorded as declared because **no safe selector is known**. No `id`, class or
-  string naming a writing line is greppable in the estate, so any count derived here
-  would be a vocabulary guess — the failure mode that produced five false print
-  defects in one day. **Owed from Matt: the literal marker.** Until then this entry
-  cannot gate a pass.
+- **STATUS** CONVENTION · **VERIFIED** `7226b08`
+- **SELECTOR** the literal string `What I said, and what it changed`
+  *(strip data-URIs before matching — standing rule 10).*
+- **POPULATION, derived literally rather than guessed:** the LL-3 population is the
+  **union of the five commits that created it** — `8dc6abc` (30) · `12ecf55` (29) ·
+  `8f43cea` (18) · `4d574ff` (26) · `d5294e9` (5) = **108 files, all still at HEAD.**
+  This is a presence derivation from the commits, not a word-match over the tree.
+  *(A four-zone word match returns 166 and is over-broad — it catches the LundyLoop
+  pack itself, subject index pages and the schemes of work. Do not use it.)*
+
+  | | files | where |
+  |---|---|---|
+  | **carry** the writing line | **48** | `GROW_ASDAN` 18 · `Art_Teesside` 16 · `Grow` 7 · `Launch` 7 |
+  | **deliberately lack** it | **60** | `BUILD_ASDAN` 31 · `Art_Teesside/Build` 15 · `Build` 14 |
+  | population | **108** | 48 + 60 = 108, cardinality asserted |
+
+- **Independent check:** zero files anywhere in the estate carry the marker from
+  outside the population. The string is exactly co-extensive with the pass that
+  wrote it — so the selector cannot be over-matching.
+- **The figures previously carried were 47 and 56. They are 48 and 60.** Both moved
+  when LL-3e added the five lessons LL-3a–d silently missed. Retired.
+- **The truthful null is already built into the line**, and any LL-5 gate must not
+  re-invent it: *"Saying it aloud starts the loop; writing it is what closes it.
+  **Pass is always allowed.** What I said, and what it changed:"*
 
 ### R-A03 · The **I Do** convention
 - **STATUS** CONVENTION · **DECLARED**
@@ -307,6 +346,31 @@ depends on knowing to look and knowing where.*
 - `biology/L4_Aerobic.html` ↔ `biology/L4_Aerobic_Respiration.html` — same `<title>`,
   0.763 word-set Jaccard, **both separately catalogued.** Two live catalogue entries
   for one lesson. Not a displaced copy; needs a content decision.
+
+### R-F05 · Anything verified by eye in this estate is unverified
+- **STATUS** CONVENTION · **VERIFIED** `7226b08`
+- **This estate has a large invisible text layer.** Of 271 files carrying
+  `Made by Matt`, **193 occurrences live in `aria-label` (110) and `alt` (83)** —
+  attributes that never render as text. A rebranded pack passes a visual check while
+  a screen reader announces the wrong organisation. That is an **accessibility
+  failure wearing a branding costume**, and the principle outlives the rebrand.
+- Any check performed by looking will miss most of the estate. **Grep, don't glance.**
+- **Open follow-up:** are there other strings in `aria-label` and `alt` that would
+  embarrass a rebrand or a public copy — school name, staff name, internal phrasing?
+  Same greps, different needles. Not yet run.
+
+### R-F06 · Mechanise every rule that can be mechanised; call the rest aspirations
+- **STATUS** CONVENTION
+- **Three transcription errors in two days, every one caught by a check and none by
+  care.** The most recent was written into the very document that records the rule
+  against it: `REBRAND.md` said the strip count was 45, read from one bucket of a
+  `uniq -c` output. It is 47, caught by the pre-commit assertion.
+- **A rule in the tooling catches what a rule in the resolve does not.** Where a rule
+  can be a gate, make it one; where it cannot, say plainly that it is an aspiration
+  rather than a control.
+- Currently mechanised: count-vs-list assertion before send · declared-manifest vs
+  committed-files assertion after push · classify-before-count · `identity_audit` as
+  a gate before any extension-scoped pass.
 
 ### R-F04 · Facts do not travel between files
 - **STATUS** CONVENTION — the rule two of this session's corrections earned
