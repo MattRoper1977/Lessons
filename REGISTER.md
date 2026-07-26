@@ -4,6 +4,11 @@
 This file lives at the repo root because a control that isn't found isn't a control,
 and a pass working on Games or Art has no reason to open `LundyLoop/`.
 
+**Last observed true at** `35efefd`. Every count below carries the commit at which it
+was checked. The stamp is not a mechanism and does not keep a claim true — it makes it
+**re-checkable**, which is the achievable version. A claim that names when it was last
+observed can be re-observed; one that does not, cannot.
+
 **Load this before any pass that measures, patches or deletes.**
 Companion documents: [`REBRAND.md`](REBRAND.md) — the staff-pack rebrand procedure ·
 [`LundyLoop/tools/INSTRUMENTS.md`](LundyLoop/tools/INSTRUMENTS.md) — the instrument
@@ -371,6 +376,52 @@ depends on knowing to look and knowing where.*
 - Currently mechanised: count-vs-list assertion before send · declared-manifest vs
   committed-files assertion after push · classify-before-count · `identity_audit` as
   a gate before any extension-scoped pass.
+
+### R-G01 · Cached claims — prose asserting something about elsewhere
+- **STATUS** RECORD · **VERIFIED** `35efefd`
+- The dominant failure shape of this whole programme: a local artefact asserting a
+  fact about a different artefact, with nothing binding them. Every one goes stale
+  silently, because a stale claim has no symptom.
+
+| # | claim | asserts | about | what keeps it true | at `35efefd` |
+|---|---|---|---|---|---|
+| 1 | `refs/remotes/origin/main` | "the remote is at X" | a remote repo | **nothing** — stale on every URL-push | was stale; fetch after every push |
+| 2 | `INSTRUMENTS.md` | which instruments exist | `tools/` | **nothing** | 6 listed / 6 actual ✓ |
+| 3 | `sitemap.xml` | 386 URLs exist & should be indexed | the Lessons repo, **across a repo boundary** | **`sitemap_audit.py`** (LL-INST-07) | 0 dead ✓ |
+| 4 | `resources.json` | 382 files exist | the tree | **`hash_sweep`** | 0 broken ✓ |
+| 5 | `REGISTER.md` counts | estate state | the estate | **nothing** — but each is stamped | true at the commits named |
+| 6 | Knowledge Organisers ×161 | what the lesson contains | the lesson body | **`ko_staleness.py`** (LL-INST-08) | 109 candidates |
+| 7 | Conditions Card ×2 | what each tier may use | the slides | **`assessed_conditions_gate`** | 4 unmentioned offers |
+
+- **Two had a mechanism this morning. Five have one now.** #5 has no mechanism and
+  cannot have one — a count is true at an instant. The stamp is the achievable form.
+- **The rule that produced #3's instrument:** *when a claim spans a boundary no
+  instrument can cross, test the thing the claim is ultimately about — not the
+  artefacts on either side of it.* The sitemap's real assertion is not "these files
+  exist in that repo" but "these URLs resolve", which is testable over HTTP with no
+  repo access at all.
+
+### R-G02 · Knowledge Organiser staleness — candidate list, not a defect count
+- **STATUS** OPEN · **VERIFIED** `35efefd` · derive with `LundyLoop/tools/ko_staleness.py`
+- **161 KO files · 109 candidates · 8 dropped as architecture-only · 44 clean.**
+  Cardinality asserted 109 + 8 + 44 = 161.
+- A candidate is a file whose **visible lesson text** moved after its KO block last
+  moved, in a commit that was a **content** pass rather than architecture. It reads
+  no content and makes no judgement about correctness.
+- **Read first: `Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html`** — assessed,
+  7 content movers, and the first is **`Pass LL-A2a`, which removed the Connective
+  Bank and the Evaluation Deployments**. If its KO names either, or describes
+  scaffolds by name, the KO is describing support that no longer exists inside an
+  assessed file — a **fourth surface** disagreeing with the Card, after the slides,
+  the print pack and the scaffold rows. **Read it against the Card, not the body.**
+  Second: `LAUNCH_HUM_W7_Source_Assessment.html`, 4 content movers.
+- **We are the most recent source of divergence.** Nearly every candidate had an
+  author who wrote a KO that matched, and a series of passes since — ours included —
+  that moved the lesson without looking at it.
+- **The instrument's dangerous part is its `ARCHITECTURE` list**, because a wrong
+  entry silently *drops* a real candidate. That happened on the first run:
+  `Pass LL-A2a` was mislisted as architecture. Removed. Check that list before
+  trusting a shrinking number.
 
 ### R-F04 · Facts do not travel between files
 - **STATUS** CONVENTION — the rule two of this session's corrections earned
