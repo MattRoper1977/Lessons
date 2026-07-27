@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 · KCSIE — The Trap (Sextortion)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0a10;--s1:#1c1218;--s2:#2a1a22;--signal:#fb5e74;--cyan:#2dd4bf;--amber:#ffb020;--red:#e0857e;--green:#22c55e;--purple:#fb7185;--txt:#f8eef1;--muted:#9c818b;--edge:rgba(255,255,255,.08);--evidence:#ffcc00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden;display:flex;justify-content:center;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(900px 600px at 82% -8%,rgba(168,85,247,.16),transparent),radial-gradient(800px 600px at -8% 108%,rgba(236,72,153,.12),transparent);z-index:0}
+body.calm::before{background:none}
+.wrap{width:100%;max-width:1020px;padding:0 22px 104px;position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+.slide{display:none}.slide.active{display:flex;flex-direction:column;animation:slideIn .5s cubic-bezier(.16,1,.3,1) both}
+body.calm .slide.active{animation:none}
+@keyframes slideIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+h1.giant{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.4em,11vw,7.4em);line-height:.86;letter-spacing:.01em}
+h2.hed{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.7em,4vw,2.4em);font-weight:900;text-transform:uppercase;letter-spacing:.03em;border-left:4px solid var(--signal);padding-left:14px;margin-bottom:16px;position:relative}
+.mono{font-family:'JetBrains Mono',monospace}
+.lead{font-size:clamp(1.05em,2.2vw,1.4em);line-height:1.5;color:#d7cee2;max-width:62ch}
+.nav{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,7,16,.97);backdrop-filter:blur(16px);padding:13px 22px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--edge);z-index:1000}
+.slide-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--muted);min-width:64px;font-size:.95em}
+.pbar{flex:1;height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--signal),var(--amber));width:0;transition:width .35s ease}
+.btn{padding:10px 22px;border-radius:6px;border:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.1em;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:.2s;background:var(--signal);color:#150720}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-prev{padding:10px 14px;border-radius:6px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95em;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.btn-prev:disabled{opacity:.3;cursor:not-allowed}
+.toprail{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:1100;align-items:center}
+.tr-btn{background:rgba(10,7,16,.85);backdrop-filter:blur(10px);border:1px solid var(--edge);color:var(--txt);padding:8px 12px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82em;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.tr-btn:hover{border-color:var(--signal);color:var(--signal)}.tr-btn.cold{border-color:rgba(168,85,247,.4);color:var(--signal)}.tr-btn.staff{border-color:rgba(255,176,32,.4);color:var(--amber)}
+.cf-points{background:rgba(10,7,16,.85);backdrop-filter:blur(10px);border:1px solid rgba(255,204,0,.4);color:var(--evidence);padding:6px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.78em;display:flex;align-items:center;gap:6px}
+.cf-points-num{font-family:'Bebas Neue',sans-serif;font-size:1.4em;line-height:1}
+.ribbon{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 4px}
+.chip{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:9px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1em}
+.chip b{color:var(--evidence)}
+.evidence-tag{display:inline-block;background:var(--evidence);color:#000;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:.82em;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-1deg);box-shadow:2px 2px 0 rgba(0,0,0,.3),0 0 22px rgba(255,204,0,.15);margin-bottom:14px}
+.lo-row{display:flex;flex-direction:column;gap:8px;margin-top:18px;max-width:560px}
+.lo-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.18);border-radius:8px;opacity:0;transform:translateX(-12px)}
+.lo-item.in{animation:loSlide .5s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes loSlide{to{opacity:1;transform:translateX(0)}}
+.lo-tick{width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,.15);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:900;flex-shrink:0}
+.lo-txt{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.05em;color:#e7ddf0}
+.kbd-hint{margin-top:18px;font-size:.78em;color:var(--muted);font-family:'JetBrains Mono',monospace}.kbd{display:inline-block;background:var(--s2);border:1px solid var(--edge);border-radius:4px;padding:1px 7px;font-size:.85em}
+.signal-bar{background:repeating-linear-gradient(45deg,#000,#000 10px,var(--evidence) 10px,var(--evidence) 20px);padding:4px;margin-bottom:14px}
+.signal-inner{background:#1a0e22;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.signal-stamp{color:var(--signal);font-family:'JetBrains Mono',monospace;font-size:.74em;letter-spacing:.1em;text-transform:uppercase}
+.classified{background:var(--red);color:#fff;padding:3px 10px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:.86em;letter-spacing:.12em;transform:rotate(-2deg)}
+.stage{background:var(--s1);border-left:4px solid;border-radius:0 10px 10px 0;padding:13px 18px;margin-bottom:8px;display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:center;cursor:pointer;transition:.2s}
+.stage:hover{background:var(--s2);transform:translateX(2px)}.stage-n{font-family:'Bebas Neue',sans-serif;font-size:2em;line-height:1}
+.stage-t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.05em;letter-spacing:.03em;text-transform:uppercase}.stage-d{font-size:.92em;color:var(--muted);margin-top:2px;display:none}.stage.open .stage-d{display:block;animation:slideIn .3s ease both}
+.card{background:var(--s1);border:1px solid var(--edge);border-radius:12px;padding:16px 18px;margin:9px 0}
+.card h3{font-family:'Barlow Condensed',sans-serif;font-size:1.25em;letter-spacing:.03em;text-transform:uppercase;margin-bottom:4px}.card.c1 h3{color:var(--signal)}.card.c2 h3{color:var(--red)}.card.c3 h3{color:var(--amber)}.card p{font-size:.98em;color:#d7cee2;line-height:1.45}
+/* scan game */
+.scan-row{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}
+.scanc{flex:1;min-width:170px;background:var(--s1);border:2px solid var(--edge);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:.2s;position:relative}
+.scanc:hover{border-color:var(--signal)}
+.scanc .img{font-size:3.4em;margin-bottom:8px}
+.scanc .verdict{display:none;font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:.06em;margin-top:8px}
+.scanc.done .verdict{display:block}
+.scanc.fake{border-color:var(--red)}.scanc.fake .verdict{color:var(--red)}
+.scanc.real{border-color:var(--green)}.scanc.real .verdict{color:var(--green)}
+.scanc .bar{height:6px;border-radius:3px;background:#2a1830;overflow:hidden;margin-top:8px;display:none}.scanc.done .bar{display:block}
+.scanc .barf{height:100%;width:0;transition:width .8s ease}
+.lie{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:13px 16px;margin:8px 0;cursor:pointer;transition:.2s}.lie:hover{border-color:var(--red)}
+.lie-q{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.12em;display:flex;gap:10px;align-items:flex-start}.lie-n{color:var(--red);font-family:'Bebas Neue',sans-serif;font-size:1.4em;line-height:.9}
+.lie-a{display:none;margin-top:8px;padding-left:32px;color:var(--green);font-size:.95em;line-height:1.4}.lie.open .lie-a{display:block;animation:slideIn .3s ease both}.lie.open .lie-q{text-decoration:line-through;opacity:.55;text-decoration-color:var(--red)}
+.scn{background:var(--s2);border:1px solid var(--edge);border-radius:12px;padding:16px 18px;margin-bottom:12px;font-size:1.05em;line-height:1.5}
+.opt{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:13px 16px;margin:8px 0;cursor:pointer;transition:.2s;font-weight:600}.opt:hover{border-color:var(--signal)}.opt.right{border-color:var(--green);background:#0f2e1a}.opt.wrong{border-color:var(--red);background:#2a1018}.opt .res{display:none;margin-top:7px;font-size:.9em;color:#d7cee2}.opt.right .res,.opt.wrong .res{display:block}
+.megastat{text-align:center;padding:14px 0}.megastat-n{font-family:'Bebas Neue',sans-serif;font-size:clamp(5em,15vw,9em);line-height:.85;background:linear-gradient(135deg,var(--signal),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent}.megastat-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);max-width:520px;margin:6px auto 0}
+.intercept{background:#150b1c;border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:16px;margin:14px 0;position:relative;font-family:'JetBrains Mono',monospace;font-size:.84em;line-height:1.7}.intercept::before{content:'\2022 FLAGGED IMAGE';position:absolute;top:-10px;left:14px;background:var(--bg);padding:0 10px;color:var(--signal);font-size:.72em;letter-spacing:.1em;font-weight:700}.tw-cursor{display:inline-block;width:8px;height:1em;background:var(--signal);vertical-align:text-bottom;margin-left:2px;animation:twB 1s step-end infinite}@keyframes twB{0%,50%{opacity:1}51%,100%{opacity:0}}
+.case{background:var(--s1);border:1px solid var(--edge);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:13px 16px;margin:8px 0}.case-h{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.08em;text-transform:uppercase;color:var(--amber)}.case-d{font-size:.95em;color:#d7cee2;margin-top:3px;line-height:1.4}
+.quiz-q{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.3em;margin-bottom:10px}.quiz-opt{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:12px 16px;margin:7px 0;cursor:pointer;transition:.2s;font-weight:600}.quiz-opt:hover{border-color:var(--signal)}.quiz-opt.right{border-color:var(--green);background:#0f2e1a}.quiz-opt.wrong{border-color:var(--red);background:#2a1018}.quiz-prog{font-family:'JetBrains Mono',monospace;font-size:.8em;color:var(--muted);margin-bottom:6px}
+.remember{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:8px}.rcard{background:var(--s1);border:1px solid var(--edge);border-radius:12px;padding:18px;text-align:center}.rcard .n{font-family:'Bebas Neue',sans-serif;font-size:2.6em;color:var(--signal);line-height:1}.rcard .t{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}.rcard .d{font-size:.85em;color:var(--muted);margin-top:4px}
+.worry-pad{background:var(--s1);border:2px solid var(--edge);border-radius:14px;padding:22px;position:relative;margin-bottom:14px}.worry-pad::before{content:'\2022 ANONYMOUS \2022 NO NAMES';position:absolute;top:-10px;left:18px;background:var(--bg);padding:0 12px;color:var(--evidence);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.78em;letter-spacing:.12em}
+.worry-input{width:100%;min-height:96px;background:#150b1c;border:1px solid var(--edge);border-radius:8px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:.95em;padding:12px;resize:vertical;line-height:1.5}.worry-input:focus{outline:none;border-color:var(--amber)}
+.worry-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.worry-tag{background:rgba(255,255,255,.04);border:1px solid var(--edge);color:var(--muted);padding:4px 10px;border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-size:.8em;font-weight:700;cursor:pointer;text-transform:uppercase}.worry-tag.sel{background:rgba(255,176,32,.12);border-color:var(--amber);color:var(--amber)}
+.worry-actions{display:flex;gap:10px;margin-top:12px}.worry-actions button{flex:1}
+.worry-saved{display:none;margin-top:12px;padding:11px 14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:8px;color:var(--green);font-weight:700}.worry-saved.show{display:block;animation:slideIn .3s ease both}
+.worry-count{margin-top:12px;font-weight:700;color:var(--evidence)}.worry-privacy{margin-top:10px;font-size:.82em;line-height:1.5;color:var(--muted)}.worry-list{margin-top:12px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}.worry-item{background:var(--s2);border:1px solid var(--edge);border-radius:8px;padding:10px 12px;font-size:.85em;line-height:1.45}.worry-item-meta{font-family:'JetBrains Mono',monospace;font-size:.7em;color:var(--muted);margin-bottom:4px}
+.help{background:rgba(34,197,94,.07);border-left:4px solid var(--green);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:6px}.help b{color:var(--green)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}.modal-bg.show{display:flex;animation:slideIn .25s ease both}
+.modal-card{background:var(--s1);border:1px solid var(--edge);border-radius:14px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto}.modal-hd{padding:16px 20px;border-bottom:2px solid var(--signal);display:flex;justify-content:space-between;align-items:center}.modal-hd.staff{border-bottom-color:var(--amber)}.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6em;letter-spacing:.05em;color:var(--signal)}.modal-title.staff{color:var(--amber)}.modal-x{background:transparent;border:none;color:var(--muted);font-size:1.6em;cursor:pointer}.modal-bd{padding:22px}
+.cc-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4em,7vw,3.6em);line-height:.95;background:linear-gradient(135deg,var(--signal),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}.cc-meta{font-family:'JetBrains Mono',monospace;font-size:.76em;color:var(--muted);margin-bottom:14px;text-transform:uppercase}
+.cc-q{background:var(--s2);border-left:3px solid var(--signal);padding:13px 15px;border-radius:0 8px 8px 0;margin-bottom:10px}.cc-q-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.8em;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:4px}.cc-q.f .cc-q-lbl{color:var(--green)}.cc-q.m .cc-q-lbl{color:var(--amber)}.cc-q.h .cc-q-lbl{color:var(--signal)}
+.cc-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.cc-actions button{flex:1;min-width:130px}.reg-input{width:100%;background:#150b1c;border:1px solid var(--edge);border-radius:8px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:.92em;padding:10px;margin-top:8px}
+.staff-block{margin-bottom:12px}.staff-block-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.8em;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:4px}.staff-block-d{font-size:.92em;line-height:1.5;color:#cdc3d8}
+.complete-bg{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}.complete-bg.show{display:flex;animation:slideIn .4s ease both}.complete-card{max-width:620px;width:100%;text-align:center}
+.complete-stamp{display:inline-block;border:6px solid var(--green);color:var(--green);padding:14px 38px;font-family:'Bebas Neue',sans-serif;font-size:clamp(3em,8vw,5em);letter-spacing:.06em;transform:rotate(-4deg);margin-bottom:18px}.complete-sub{font-family:'Barlow Condensed',sans-serif;font-size:1.2em;letter-spacing:.04em;text-transform:uppercase;color:var(--amber);margin-bottom:18px}
+.complete-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}.complete-stat{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:14px}.complete-stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.2em;color:var(--evidence);line-height:1}.complete-stat-l{font-size:.7em;color:var(--muted);margin-top:4px;text-transform:uppercase}
+.grid-ov{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(168,85,247,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(circle at 50% 38%,#000,transparent 82%);mask-image:radial-gradient(circle at 50% 38%,#000,transparent 82%);animation:gridpan 32s linear infinite}@keyframes gridpan{to{background-position:46px 46px}}.grid-ov::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(rgba(255,255,255,.012) 0 2px,transparent 2px 4px)}body.calm .grid-ov{display:none}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulseDot 1.4s ease-in-out infinite;margin-right:7px;vertical-align:middle}@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}body.calm .live-dot{animation:none}
+h2.hed::after{content:"";position:absolute;left:14px;bottom:-7px;height:3px;width:0;background:linear-gradient(90deg,var(--signal),transparent);border-radius:2px;animation:drawline .7s cubic-bezier(.16,1,.3,1) .12s forwards}@keyframes drawline{to{width:130px}}body.calm h2.hed::after{animation:none;width:130px}
+.slide.active h1.giant{text-shadow:0 0 46px rgba(251,94,116,.16)}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+@keyframes casc{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.rcard,.case,.card{transition:transform .2s ease,box-shadow .2s ease}
+.rcard:hover,.case:hover{transform:perspective(700px) rotateX(4deg) translateY(-5px);box-shadow:0 16px 38px rgba(0,0,0,.45)}
+.pop{animation:popspring .55s cubic-bezier(.2,1.5,.4,1)}@keyframes popspring{0%{transform:scale(1)}28%{transform:scale(1.13)}60%{transform:scale(.97)}100%{transform:scale(1)}}
+.btn:active,.quiz-opt:active{transform:scale(.97)}
+.cf-points{position:relative}
+.ptfloat{position:absolute;left:50%;top:-2px;transform:translateX(-50%);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:1.5em;animation:ptf 1s ease-out forwards;pointer-events:none}
+@keyframes ptf{0%{opacity:0;transform:translate(-50%,2px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-32px)}}
+.cf-points-num.pls{animation:plsk .42s ease}@keyframes plsk{0%{transform:scale(1)}40%{transform:scale(1.45);color:#fff}100%{transform:scale(1)}}
+@media print{.toprail,.modal-bg,.complete-bg,.nav{display:none!important}}
+@media(max-width:640px){.toprail{top:auto;bottom:58px;right:8px;left:8px;justify-content:flex-end;flex-wrap:wrap;gap:6px}}
+
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .lo-item{opacity:1!important;transform:none!important}
+ canvas#cf{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="grid-ov"></div>
+<canvas id="cf"></canvas>
+<div class="wrap">
+<div class="toprail">
+  <div class="cf-points" title="Points">✓ <span class="cf-points-num" id="pts">0</span></div>
+  <button class="tr-btn" onclick="toggleCalm()" id="calmBtn">🌙 Calm</button>
+  <button class="tr-btn" onclick="toggleSound()" id="sndBtn">🔊</button>
+  <button class="tr-btn staff" onclick="openStaff()">👮 Staff</button>
+  <button class="tr-btn cold" onclick="openCold()">🎯 Cold Call</button>
+</div>
+
+<!-- 1 -->
+<section class="slide active">
+  <div class="signal-bar"><div class="signal-inner"><span class="signal-stamp"><span class="live-dot"></span>INCIDENT RESPONSE // CASE OPEN · WK3</span><span class="classified">THE TRAP</span></div></div>
+  <span class="evidence-tag">Week 3 · Online Safety · KCSIE</span>
+  <h1 class="giant">THE<br>TRAP.</h1>
+  <p class="lead" style="margin-top:14px">Sextortion: when someone tricks or pressures you into sending a private image — then threatens to share it unless you pay or send more. Today we learn to see the trap early, and exactly how to shut it down.</p>
+  <div class="ribbon"><span class="chip">💪 Behaviour: <b>Resilience</b></span><span class="chip">⚖️ Value: <b>Rule of Law</b></span></div>
+  <div class="lo-row" id="loRow">
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">Spot how a sextortion trap is set</span></div>
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">Know it is NEVER the victim's fault</span></div>
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">Know the four steps: don't pay · stop · screenshot · tell</span></div>
+  </div>
+  <div class="kbd-hint">Navigate: <span class="kbd">←</span> <span class="kbd">→</span> · Cold-call &amp; staff brief top-right</div>
+</section>
+
+<!-- 2 pipeline -->
+<section class="slide">
+  <h2 class="hed">How the trap is set</h2>
+  <p class="lead" style="margin-bottom:12px">Tap each stage. It usually starts as a friendly message from a stranger.</p>
+  <div class="stage" style="border-left-color:var(--signal)" onclick="this.classList.toggle('open')"><div class="stage-n" style="color:var(--signal)">01</div><div><div class="stage-t">The Contact</div><div class="stage-d">A stranger adds you — often pretending to be someone your age who's into the same stuff.</div></div></div>
+  <div class="stage" style="border-left-color:var(--purple)" onclick="this.classList.toggle('open')"><div class="stage-n" style="color:var(--purple)">02</div><div><div class="stage-t">The Charm</div><div class="stage-d">Fast compliments, fast trust, fast "send me something private" — sometimes within the hour.</div></div></div>
+  <div class="stage" style="border-left-color:var(--red)" onclick="this.classList.toggle('open')"><div class="stage-n" style="color:var(--red)">03</div><div><div class="stage-t">The Flip</div><div class="stage-d">The second they have an image: "Pay or I send it to everyone you know." The charm was never real.</div></div></div>
+  <div class="stage" style="border-left-color:var(--green)" onclick="this.classList.toggle('open')"><div class="stage-n" style="color:var(--green)">04</div><div><div class="stage-t">Your Move</div><div class="stage-d">Don't pay. Stop replying. Screenshot. Tell a trusted adult — it can be stopped and taken down.</div></div></div>
+</section>
+
+<!-- 3 news -->
+<section class="slide">
+  <h2 class="hed">In the news · 2026</h2>
+  <p class="lead">The UK's National Crime Agency has issued repeated alerts about <b>sextortion targeting teenagers</b> — often boys aged 14–17 — through ordinary social and gaming apps.</p>
+  <div class="card c1"><h3>What happens</h3><p>Organised criminal groups overseas run it like a business: friendly contact, a private image, then immediate threats demanding money. It moves fast on purpose — panic is the product.</p></div>
+  <p class="lead" style="margin-top:8px">They rely on victims feeling too ashamed to tell anyone. <b>That's the part we break today.</b></p>
+</section>
+
+<!-- 4 scan game -->
+<section class="slide">
+  <h2 class="hed">Run the check · which DM is the trap?</h2>
+  <p class="lead" style="margin-bottom:6px">Tap a message to run the red-flag check. <span class="mono" style="color:var(--evidence)">(+10 pts for spotting the trap)</span></p>
+  <div class="scan-row">
+    <div class="scanc" data-fake="0" onclick="runScan(this)"><div class="img">💬</div><div class="mono" style="font-size:.8em;color:var(--muted)">"sick goal on FIFA last night lol. rematch at 7?" — mate from school</div><div class="bar"><div class="barf" style="background:var(--green)"></div></div><div class="verdict">✓ NORMAL · known person, no pressure</div></div>
+    <div class="scanc" data-fake="1" onclick="runScan(this)"><div class="img">📩</div><div class="mono" style="font-size:.8em;color:var(--muted)">"heyy you seem really fit 😍 add my other account? let's swap pics, just us 🔒" — added you 20 mins ago</div><div class="bar"><div class="barf" style="background:var(--red)"></div></div><div class="verdict">⚠ RED FLAGS · stranger · rush · secrecy · pics</div></div>
+  </div>
+  <p class="lead" style="margin-top:8px">The trap pattern: <b>stranger + flattery + speed + secrecy + "send pics"</b>. Any one of those is a pause; all of them together is a trap.</p>
+</section>
+
+<!-- 5 lies -->
+<section class="slide">
+  <h2 class="hed">5 lies the blackmailer tells</h2>
+  <p class="lead" style="margin-bottom:10px">Tap each to bust it.</p>
+  <div class="lie" onclick="this.classList.toggle('open')"><div class="lie-q"><span class="lie-n">1</span><span>"Pay and I'll delete it."</span></div><div class="lie-a">They won't. Paying proves you'll pay — the demands get bigger.</div></div>
+  <div class="lie" onclick="this.classList.toggle('open')"><div class="lie-q"><span class="lie-n">2</span><span>"This is your fault."</span></div><div class="lie-a">No. You were tricked by someone who does this for a living. The crime is theirs.</div></div>
+  <div class="lie" onclick="this.classList.toggle('open')"><div class="lie-q"><span class="lie-n">3</span><span>"Everyone you know will see it."</span></div><div class="lie-a">Sending it gains them nothing — the threat is the weapon, and it collapses once you tell someone.</div></div>
+  <div class="lie" onclick="this.classList.toggle('open')"><div class="lie-q"><span class="lie-n">4</span><span>"You're the only one this has happened to."</span></div><div class="lie-a">Thousands of UK teens report this every year. You'd be far from alone — and far from the first to get help.</div></div>
+  <div class="lie" onclick="this.classList.toggle('open')"><div class="lie-q"><span class="lie-n">5</span><span>"No one can help you now."</span></div><div class="lie-a">Wrong. Report Remove takes images down, police take these gangs seriously, and a trusted adult can act today.</div></div>
+</section>
+
+<!-- 6 scenario -->
+<section class="slide">
+  <h2 class="hed">What would you do?</h2>
+  <div class="scn">A mate tells you, in a panic, that someone online has a private image of them and is demanding £100 by tonight. What's the right move?</div>
+  <div class="opt" onclick="pick(this,0)">A · Tell them to pay it — it's only £100 and it ends it.<div class="res">⚠ Paying never ends it. It marks them as someone who pays, and the demands grow.</div></div>
+  <div class="opt" onclick="pick(this,1)">B · Stay with them, help them screenshot &amp; block, and tell a trusted adult together.<div class="res">✓ Right call. Evidence kept, contact cut, and an adult who can act today is in the loop. That's real backup.</div></div>
+  <div class="opt" onclick="pick(this,2)">C · Tell them to delete the app and pretend it never happened.<div class="res">⚠ Hiding it leaves them alone with the threats. The pressure only breaks when a trusted adult knows.</div></div>
+</section>
+
+<!-- 7 megastat -->
+<section class="slide">
+  <h2 class="hed">Why it works — speed</h2>
+  <div class="megastat"><div class="megastat-n"><span id="counter">0</span></div><div class="megastat-lbl">minutes — first friendly message to first threat can take less than an hour. Panic is the whole plan.</div></div>
+  <div class="intercept"><span id="twTarget"></span><span class="tw-cursor" id="twCur"></span></div>
+  <p class="lead">They rush you so you don't think. So do the one thing they can't plan for: <b>slow down and tell someone.</b> That's resilience — and the law is on your side.</p>
+</section>
+
+<!-- 8 cases -->
+<section class="slide">
+  <h2 class="hed">Three patterns. Same trap.</h2>
+  <div class="case"><div class="case-h">The "girl who's into you"</div><div class="case-d">A fake profile flatters fast and asks for a pic "just between us" — then flips to threats the moment it lands.</div></div>
+  <div class="case"><div class="case-h">The gaming-chat "mate"</div><div class="case-d">Weeks of friendly chat in game lobbies builds trust first — the ask comes later, and the threat right after.</div></div>
+  <div class="case"><div class="case-h">The AI shortcut</div><div class="case-d">Some gangs skip the trick entirely — they fake an image with AI and threaten with that. Same trap, same answer: tell.</div></div>
+  <p class="lead" style="margin-top:10px">Every pattern has one thing in common: <b>the victim did nothing wrong — and telling someone ends it.</b></p>
+</section>
+
+<!-- 9 quiz -->
+<section class="slide">
+  <h2 class="hed">Quick check</h2>
+  <div class="quiz-prog">QUESTION <span id="qNum">1</span> / 3 · earn points</div>
+  <div id="quizBox"></div>
+</section>
+
+<!-- 10 remember -->
+<section class="slide">
+  <h2 class="hed">If it happens. Four steps.</h2>
+  <div class="remember">
+    <div class="rcard"><div class="n">1</div><div class="t">Don't pay</div><div class="d">Paying never ends it.</div></div>
+    <div class="rcard"><div class="n">2</div><div class="t">Stop replying</div><div class="d">No more contact. Don't negotiate.</div></div>
+    <div class="rcard"><div class="n">3</div><div class="t">Screenshot</div><div class="d">Save the account &amp; messages, then block.</div></div>
+    <div class="rcard"><div class="n">4</div><div class="t">Tell</div><div class="d">A trusted adult — today.</div></div>
+  </div>
+  <p class="lead" style="margin-top:14px">It is <b>never the victim's fault.</b> This is a crime, the law protects you, and asking for help is the resilient move — not the weak one.</p>
+</section>
+
+<!-- 11 worry -->
+<section class="slide">
+  <h2 class="hed">Something on your mind?</h2>
+  <div class="worry-pad">
+    <textarea class="worry-input" id="worryText" placeholder="Type it here. No names needed. Your teacher reads these to help — nothing leaves the room without your say."></textarea>
+    <div class="worry-tags" id="worryTags">
+      <span class="worry-tag" onclick="toggleTag(this)">Something I sent</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Worried about a mate</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Someone messaging me</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Not sure</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Just want to talk</span>
+    </div>
+    <div class="worry-actions"><button class="btn" onclick="submitWorry()">Drop it in the box</button></div>
+    <div class="worry-saved" id="worrySaved">✓ Sent anonymously. Thank you for trusting us.</div>
+    <div class="worry-count" id="worryCount" aria-live="polite" role="status">Nothing added yet.</div>
+    <div class="worry-privacy">🔒 What you type is <b>never shown on the screen</b> and is <b>not saved on this device</b>. Only a member of staff can open it, and only they decide what happens next.</div>
+  </div>
+  <div class="help"><b>You're never on your own.</b> Trusted adult or DSL · <b>Childline 0800 1111</b> · <b>Report Remove</b> helps under-18s take images down.</div>
+</section>
+
+<!-- 12 close -->
+<section class="slide">
+  <span class="evidence-tag">Pledge</span>
+  <h1 class="giant" style="font-size:clamp(2.4em,7vw,4.2em)">"DON'T PAY.<br>TELL SOMEONE."</h1>
+  <p class="lead" style="margin-top:12px">If the trap ever closes on me or a mate, we don't pay and we don't hide it — we stop, screenshot, and tell a trusted adult. Today.</p>
+  <div class="ribbon"><span class="chip">💪 <b>Resilience</b></span><span class="chip">⚖️ <b>Rule of Law</b></span></div>
+  <button class="btn" style="margin-top:18px" onclick="showComplete()">Close the assembly →</button>
+</section>
+
+</div>
+
+<div class="modal-bg" id="coldModal" onclick="if(event.target===this)closeCold()"><div class="modal-card"><div class="modal-hd"><div class="modal-title">🎯 Cold Call</div><button class="modal-x" onclick="closeCold()">✕</button></div><div class="modal-bd" id="coldBody"></div></div></div>
+<div class="modal-bg" id="staffModal" onclick="if(event.target===this)closeStaff()"><div class="modal-card"><div class="modal-hd staff"><div class="modal-title staff">👮 Staff Focus</div><button class="modal-x" onclick="closeStaff()">✕</button></div><div class="modal-bd" id="staffBody"></div></div></div>
+<div class="complete-bg" id="completeOverlay"><div class="complete-card"><div class="complete-stamp">CASE CLOSED</div><div class="complete-sub">Week 3 · The trap only works in silence</div>
+  <div class="complete-stats"><div class="complete-stat"><div class="complete-stat-n" id="cPts">0</div><div class="complete-stat-l">Points</div></div><div class="complete-stat"><div class="complete-stat-n" id="cWorry">0</div><div class="complete-stat-l">Worry box</div></div><div class="complete-stat"><div class="complete-stat-n">0</div><div class="complete-stat-l">Times it's your fault</div></div></div>
+  <p class="lead" style="margin:0 auto 18px">If anything today rattled you — that's the assembly working. Use the worry box or come find me. <b style="color:var(--evidence)">Nothing leaves this room without your permission.</b></p>
+  <button class="btn" onclick="printEvidence()">🖨 Print evidence</button><button class="btn-prev" onclick="document.getElementById('completeOverlay').classList.remove('show')">Back</button></div></div>
+
+<div class="nav"><span class="slide-lbl" id="slideLbl">01 / 12</span><div class="pbar"><div class="pfill" id="pfill"></div></div><button class="btn-prev" id="prevBtn" onclick="prev()">‹ Back</button><button class="btn" id="nextBtn" onclick="next()">Next ›</button></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];let cur=0,pts=0,counted=false,quizI=0,worries=[];
+let roster=JSON.parse(sessionStorage.getItem('roster2')||'null');
+const MEGA=60,TW="\"They rushed him from hello to threats in under an hour. He told his form tutor the same night — and it stopped.\"";
+const Q={f:["What is sextortion, in your own words?","Name one of the four steps if it happens."],
+ m:["Why does paying never make it stop?","Why do the criminals rush people so fast?"],
+ h:["Why does the trap collapse the moment someone tells a trusted adult?","Why is asking for help here a resilient move, not a weak one?"]};
+const STAFF={0:["Tone","Calm, matter-of-fact, zero shame. This may have already happened to someone in the room — speak as if it has."],
+ 3:["Reluctant learners","The DM check is the way in. Pass the device round; tapping counts. Name the red-flag pattern out loud."],
+ 5:["Behaviour (Resilience)","Use scenario B to model the resilient move: stay with the mate, keep evidence, tell together."],
+ 9:["Watch closely","A pupil who goes quiet or asks 'what if someone already paid' — note for DSL, don't probe in the group."],
+ 10:["Repeat the anchors","Not your fault · not in trouble · don't pay · tell today. Repetition is the point."],
+ 11:["Worry box","Read privately. Any disclosure here is urgent → DSL same day. Never read aloud."]};
+const QUIZ=[{q:"Sextortion is…",a:["A type of phone scam about parcels","Threatening to share a private image unless you pay or send more","An app setting"],c:1,r:"Sextortion is image-based blackmail — tricking someone into a private image, then threatening to share it."},
+ {q:"If it happens, the right first move is…",a:["Pay quickly to make it stop","Stop replying, screenshot, and tell a trusted adult","Delete your account and tell no one"],c:1,r:"Paying feeds it and hiding it traps you alone — stop replying, keep evidence, and tell a trusted adult today."},
+ {q:"Whose fault is it if someone is caught in this trap?",a:["Theirs, for sending anything","The criminal running the trap","Nobody's"],c:1,r:"The blame sits entirely with the criminal. It is never the victim's fault — and help works."}];
+function render(){slides.forEach((s,i)=>s.classList.toggle('active',i===cur));document.getElementById('slideLbl').textContent=String(cur+1).padStart(2,'0')+' / 12';document.getElementById('pfill').style.width=((cur+1)/slides.length*100)+'%';document.getElementById('prevBtn').disabled=cur===0;document.getElementById('nextBtn').textContent=cur===slides.length-1?'Done':'Next ›';const act=slides[cur];act.querySelectorAll('.stage,.card,.lie,.rcard,.case,.opt,.scanc').forEach((el,k)=>{el.style.animation='none';void el.offsetWidth;el.style.animation='casc .45s cubic-bezier(.16,1,.3,1) '+(.03+k*0.05)+'s both';});onEnter(cur);}
+function next(){if(cur<slides.length-1){cur++;snd(600);render();}}function prev(){if(cur>0){cur--;snd(420);render();}}
+document.addEventListener('keydown',e=>{const t=e.target.tagName;if(t==='TEXTAREA'||t==='INPUT'||t==='SELECT')return;if(document.querySelector('.modal-bg.show')){if(e.key==='Escape'){closeCold();closeStaff();}return;}if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev();if(e.key==='Escape'){closeCold();closeStaff();}});
+function onEnter(i){if(i===0)animateLOs();if(i===6&&!counted){counted=true;animateMega();startTW();}if(i===8&&!document.getElementById('quizBox').dataset.init)buildQuiz();if(i===10)loadWorries();}
+function animateLOs(){document.querySelectorAll('#loRow .lo-item').forEach((el,k)=>setTimeout(()=>el.classList.add('in'),200+k*160));}
+function animateMega(){const t=MEGA,el=document.getElementById('counter');let s=0,st=Math.max(1,t/40);const iv=setInterval(()=>{s+=st;if(s>=t){s=t;clearInterval(iv);}el.textContent=Math.floor(s).toLocaleString();},26);}
+function startTW(){const tgt=document.getElementById('twTarget');let k=0;tgt.textContent='';(function type(){if(k<=TW.length){tgt.textContent=TW.slice(0,k++);setTimeout(type,26);}else document.getElementById('twCur').style.display='none';})();}
+function runScan(el){if(el.classList.contains('done'))return;const fake=el.dataset.fake==='1';el.classList.add('done',fake?'fake':'real');el.querySelector('.barf').style.width=fake?'94%':'98%';if(fake){if(!el.dataset.s){el.dataset.s='1';adj(10);el.classList.add('pop');buzz(1);}snd(880);}else snd(300);}
+function pick(el,idx){const opts=el.parentElement.querySelectorAll('.opt');opts.forEach(o=>o.style.pointerEvents='none');el.classList.add(idx===1?'right':'wrong');if(idx===1){el.classList.add('pop');adj(5);snd(880);buzz(1);}else{snd(260);buzz(0);}}
+function buildQuiz(){document.getElementById('quizBox').dataset.init='1';showQ();}
+function showQ(){const box=document.getElementById('quizBox');document.getElementById('qNum').textContent=Math.min(quizI+1,QUIZ.length);if(quizI>=QUIZ.length){box.innerHTML='<div class="card"><h3 style="color:var(--green)">Check complete ✓</h3><p>Points banked. Don\'t pay. Stop. Screenshot. Tell.</p></div>';confetti();return;}const it=QUIZ[quizI];box.innerHTML='<div class="quiz-q">'+it.q+'</div>'+it.a.map((a,i)=>'<div class="quiz-opt" onclick="answer(this,'+i+','+it.c+')">'+a+'</div>').join('');}
+function answer(el,i,c){const opts=el.parentElement.querySelectorAll('.quiz-opt');opts.forEach(o=>o.style.pointerEvents='none');if(i===c){el.classList.add('right','pop');adj(10);snd(880);buzz(1);setTimeout(()=>{quizI++;showQ();},1100);}else{el.classList.add('wrong');opts[c].classList.add('right');snd(240);buzz(0);const rt=document.createElement('div');rt.className='card';rt.style.cssText='margin-top:12px;border-color:var(--amber)';rt.innerHTML='<h3 style="color:var(--amber)">⚡ Quick reteach</h3><p>'+(QUIZ[quizI].r||'')+'</p><div class="cc-actions"><button class="btn" onclick="quizI++;showQ()">Got it — next ›</button></div>';document.getElementById('quizBox').appendChild(rt);}}
+function adj(n){pts+=n;const el=document.getElementById('pts');el.textContent=pts;el.classList.remove('pls');void el.offsetWidth;el.classList.add('pls');const r=document.querySelector('.cf-points');if(r){const f=document.createElement('span');f.className='ptfloat';f.textContent='+'+n;r.appendChild(f);setTimeout(()=>f.remove(),1050);}}
+function buzz(ok){if(document.body.classList.contains('calm'))return;if(navigator.vibrate)navigator.vibrate(ok?40:[30,40,30]);}
+function confetti(){if(document.body.classList.contains('calm'))return;const cv=document.getElementById('cf');if(!cv)return;const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;cv.style.display='block';const cols=['#fb5e74','#2dd4bf','#22c55e','#e0857e','#ffb020','#ffffff'];const ps=[];for(let i=0;i<140;i++)ps.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.4,r:4+Math.random()*5,c:cols[i%cols.length],vy:2.5+Math.random()*3.5,vx:-2+Math.random()*4,a:Math.random()*6.28,va:-.2+Math.random()*.4});let t=0;(function loop(){t++;ctx.clearRect(0,0,cv.width,cv.height);let live=0;ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=p.va;if(p.y<cv.height+20)live++;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6);ctx.restore();});if(live>0&&t<240)requestAnimationFrame(loop);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();}
+let selTags=[];function toggleTag(el){el.classList.toggle('sel');const t=el.textContent;selTags=el.classList.contains('sel')?[...selTags,t]:selTags.filter(x=>x!==t);}
+function submitWorry(){const txt=document.getElementById('worryText').value.trim();if(!txt&&!selTags.length)return;worries.push({txt:txt||'(tag only)',tags:[...selTags],t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});document.getElementById('worryText').value='';document.querySelectorAll('.worry-tag.sel').forEach(e=>e.classList.remove('sel'));selTags=[];const s=document.getElementById('worrySaved');s.classList.add('show');setTimeout(()=>s.classList.remove('show'),2600);loadWorries();snd(700);}
+function loadWorries(){const l=document.getElementById('worryCount');if(!l)return;l.textContent=worries.length?worries.length+' added — thank you. Staff will read these privately.':'Nothing added yet.';const cs=document.getElementById('staffWorryCount');if(cs)cs.textContent=worries.length;}
+function openCold(){if(!roster||!roster.length){document.getElementById('coldBody').innerHTML='<p style="margin-bottom:10px">Set up your class once. Put each pupil in whichever group you choose — pupils only ever see the group name, never an ability label. Difficulty follows the pupil, not the slide.</p><label class="cc-q-lbl" style="color:var(--green)">Group Alpha</label><input class="reg-input" id="rA" placeholder="names, comma-separated"><label class="cc-q-lbl" style="color:var(--amber);display:block;margin-top:8px">Group Beta</label><input class="reg-input" id="rB" placeholder="names, comma-separated"><label class="cc-q-lbl" style="color:var(--signal);display:block;margin-top:8px">Group Nova</label><input class="reg-input" id="rN" placeholder="names, comma-separated"><div class="cc-actions"><button class="btn" onclick="saveReg()">Save groups</button></div><p style="margin-top:10px;font-size:.8em;opacity:.75">Names stay in this browser tab only and are gone when it closes. Clear them yourself with the button after cold call.</p>';}else drawCold();document.getElementById('coldModal').classList.add('show');}
+function saveReg(){const grab=(id,g)=>document.getElementById(id).value.split(',').map(s=>s.trim()).filter(Boolean).map(n=>({n:n,g:g}));const r=[...grab('rA','A'),...grab('rB','B'),...grab('rN','N')];if(r.length){roster=r;sessionStorage.setItem('roster2',JSON.stringify(r));drawCold();}}
+function drawCold(){const p=roster[Math.random()*roster.length|0];const tier={A:'f',B:'m',N:'h'}[p.g],grp={A:'Group Alpha',B:'Group Beta',N:'Group Nova'}[p.g];const q=Q[tier][Math.random()*Q[tier].length|0];document.getElementById('coldBody').innerHTML='<div class="cc-name">'+p.n+'</div><div class="cc-meta">'+grp+' · targeted question</div><div class="cc-q '+tier+'"><div class="cc-q-lbl">'+grp+'</div>'+q+'</div><div class="cc-actions"><button class="btn" onclick="drawCold()">🎲 Another</button><button class="btn" onclick="clearReg()">🧹 Clear names</button><button class="btn-prev" onclick="closeCold()">Done</button></div>';}
+function clearReg(){roster=null;try{sessionStorage.removeItem('roster2');}catch(e){}document.getElementById('coldBody').innerHTML='<p>Class list cleared from this device.</p><div class="cc-actions"><button class="btn" onclick="openCold()">Add a list</button><button class="btn-prev" onclick="closeCold()">Done</button></div>';}
+function closeCold(){document.getElementById('coldModal').classList.remove('show');}
+function openStaff(){const s=STAFF[cur]||["This slide","Keep the pace up; one clear question, then move. Cold call to check understanding."];document.getElementById('staffBody').innerHTML='<div class="staff-block"><div class="staff-block-lbl">'+s[0]+'</div><div class="staff-block-d">'+s[1]+'</div></div><div class="staff-block"><div class="staff-block-lbl">Always</div><div class="staff-block-d">Calm + sound top-right. Worry-box disclosures → DSL. Reinforce: not your fault · Childline 0800 1111 · Report Remove.</div></div>'+'<div class="staff-block"><div class="staff-block-lbl">Worry box — staff only</div><div class="staff-block-d"><b><span id="staffWorryCount">'+worries.length+'</span></b> submission(s) so far. Never read these aloud and never project them. Any disclosure → DSL the same day.<br><button class="btn" style="margin-top:8px" onclick="revealWorries()">Show them here</button><button class="btn" style="margin-top:8px;margin-left:6px" onclick="printEvidence()">Print for DSL</button><div id="staffWorryList" style="margin-top:10px"></div></div></div>';document.getElementById('staffModal').classList.add('show');}
+function revealWorries(){const t=document.getElementById('staffWorryList');if(!t)return;t.innerHTML=worries.length?worries.map(w=>'<div class="worry-item"><div class="worry-item-meta">ANON · '+w.t+(w.tags.length?' · '+w.tags.join(', '):'')+'</div>'+w.txt.replace(/</g,'&lt;')+'</div>').join(''):'<i>Nothing added.</i>';}
+function closeStaff(){document.getElementById('staffModal').classList.remove('show');}
+function showComplete(){document.getElementById('cPts').textContent=pts;document.getElementById('cWorry').textContent=worries.length;document.getElementById('completeOverlay').classList.add('show');snd(660);setTimeout(()=>snd(990,.18),130);confetti();}
+function printEvidence(){const w=window.open('','_blank');w.document.write('<html><head><title>Wk3 Evidence — The Trap</title><style>body{font-family:Arial;padding:30px;color:#111}h1{font-size:20px}td,th{border:1px solid #999;padding:6px 10px;text-align:left;font-size:13px}table{border-collapse:collapse;margin-top:10px}</style></head><body><h1>Assembly Evidence — Week 3: The Trap (Sextortion)</h1><p>Behaviour focus: Resilience · British Value: Rule of Law · '+new Date().toLocaleDateString()+'</p><table><tr><th>Points</th><td>'+pts+'</td></tr><tr><th>Worry-box submissions</th><td>'+worries.length+'</td></tr></table><h3>Anonymous worry-box (review privately)</h3>'+(worries.length?'<table><tr><th>Time</th><th>Tags</th><th>Message</th></tr>'+worries.map(w=>'<tr><td>'+w.t+'</td><td>'+w.tags.join(', ')+'</td><td>'+w.txt.replace(/</g,'&lt;')+'</td></tr>').join('')+'</table>':'<p>None submitted.</p>')+'<h3>KCSIE coverage</h3><p>Online safety: sextortion / image-based blackmail — grooming patterns, refusal of payment, evidence-keeping, blocking, and help-seeking routes including DSL, Childline and Report Remove (KCSIE 2025).</p><h3>Safeguarding sign-off</h3><table><tr><th>Tutor group</th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><th>Delivered by</th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr><tr><th>Items passed to DSL</th><td>&nbsp;</td><th>Date passed</th><td>&nbsp;</td></tr><tr><th>DSL name</th><td>&nbsp;</td><th>DSL signature</th><td>&nbsp;</td></tr></table><p>Nothing typed into the box is saved on the device — this printout is the only record. Hand it to the DSL the same day and file per school policy. Timestamps can identify a pupil in a small group, so treat this sheet as confidential.</p></body></html>');w.document.close();w.print();}
+function toggleCalm(){document.body.classList.toggle('calm');document.getElementById('calmBtn').textContent=document.body.classList.contains('calm')?'☀️ Lively':'🌙 Calm';}
+let sound=true,ac=null;function toggleSound(){sound=!sound;document.getElementById('sndBtn').textContent=sound?'🔊':'🔇';}
+function snd(f,d){if(!sound||document.body.classList.contains('calm'))return;d=d||.07;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='triangle';o.frequency.value=f;g.gain.value=.06;o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d);}catch(e){}}
+document.body.classList.add('calm');document.getElementById('calmBtn').textContent='☀️ Lively';
+render();
+</script>
+</body>
+</html>
