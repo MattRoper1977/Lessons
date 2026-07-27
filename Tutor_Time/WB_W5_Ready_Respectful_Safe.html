@@ -211,7 +211,7 @@ body.calm #confetti{display:none!important}
   <button class="tool-btn" onclick="openTA()">👩‍🏫 TA Focus</button>
   <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
-<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-spot" title="Spot">🔍<span class="seal-lbl">Spot</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
+<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-code" title="Code">🔑<span class="seal-lbl">Code</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
 <div id="print-area"></div>
 
@@ -249,6 +249,20 @@ body.calm #confetti{display:none!important}
     <p class="step" style="margin-bottom:10px"><b>3.</b> SAFE: right place, right choices, hands and words safe.</p>
   </div>
   <button class="btn btn-reveal" onclick="stepReveal(this)">Next point ▸</button>
+
+<div class="ilm">
+<svg viewBox="0 0 560 215" role="img" aria-label="Three keys labelled ready, respectful and safe opening one door, each with a concrete example underneath.">
+  <g class="pop-in" style="animation-delay:.3s"><circle cx="96" cy="62" r="27" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/><text x="96" y="71" text-anchor="middle" font-size="23">&#127890;</text><text x="96" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#3730a3">READY</text><text x="96" y="132" text-anchor="middle" font-size="11" fill="#475569">kit out, phone away</text></g>
+  <g class="pop-in" style="animation-delay:.46s"><circle cx="240" cy="62" r="27" fill="#ffedd5" stroke="#f97316" stroke-width="3"/><text x="240" y="71" text-anchor="middle" font-size="23">&#128172;</text><text x="240" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#9a3412">RESPECTFUL</text><text x="240" y="132" text-anchor="middle" font-size="11" fill="#475569">one voice at a time</text></g>
+  <g class="pop-in" style="animation-delay:.62s"><circle cx="384" cy="62" r="27" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><text x="384" y="71" text-anchor="middle" font-size="23">&#128737;</text><text x="384" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#166534">SAFE</text><text x="384" y="132" text-anchor="middle" font-size="11" fill="#475569">hands, feet, seat</text></g>
+  <path class="draw" d="M96 142 L470 108 M240 142 L470 112 M384 142 L470 118" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="4 5"/>
+  <rect x="470" y="52" width="62" height="112" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="3"/>
+  <circle cx="520" cy="110" r="4.5" fill="#334155"/>
+  <text x="501" y="186" text-anchor="middle" font-size="11.5" font-weight="800" fill="#334155">EVERY DOOR</text>
+  <text x="240" y="186" text-anchor="middle" font-size="14" font-weight="800" fill="#334155">THREE WORDS &#183; BECAUSE THREE IS WHAT YOU REMEMBER</text>
+</svg>
+<div class="ilm-cap">Three, not thirteen — because a code you can't recall at the door isn't a code, it's a poster.</div>
+</div>
 </section>
 
 <section class="slide wedo" data-ta="Reveal one point at a time — let each land before the next. Cold Call a re-say in the pupil's own words.">
@@ -488,7 +502,7 @@ show(0);
 
 
 /* ===== ENGINE v3 ===== */
-var SEALS={think:0,spot:0,voice:0,quiz:0,pledge:0}, _voices=[];
+var SEALS={think:0,code:0,voice:0,quiz:0,pledge:0}, _voices=[];
 function seal(k){ if(SEALS[k])return; SEALS[k]=1; var el=document.getElementById('seal-'+k); if(el)el.classList.add('on');
   if(Object.keys(SEALS).every(function(x){return SEALS[x];})){ try{confetti();}catch(e){} } }
 function toggleCalm(){ document.body.classList.toggle('calm');
@@ -496,8 +510,8 @@ function toggleCalm(){ document.body.classList.toggle('calm');
 (function(){ var _d=window.ding; if(_d) window.ding=function(){ if(document.body.classList.contains('calm'))return; return _d.apply(null,arguments); }; })();
 (function(){
   var _f=window.feelTap; if(_f) window.feelTap=function(b){ _f(b); seal('think'); };
-  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('spot'); return v; };
-  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('spot'); return v; };
+  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('code'); return v; };
+  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('code'); return v; };
   var _fin=window.finish; if(_fin) window.finish=function(){ seal('pledge'); return _fin.apply(null,arguments); };
 })();
 document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('click',function(){ seal('quiz'); o.classList.add('pop'); }); });
