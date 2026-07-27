@@ -195,7 +195,14 @@ details.acc>:last-child{margin-bottom:1rem}
 .hero .lead{font-size:.88rem}
 .hero26{font-size:.82rem;padding:.7rem .85rem}
 }
-</style><style id="mbmTheme">
+</style><style id="mbmFix">
+.chip.lib{border-style:dashed}
+.status .widen{font:inherit;font-size:.82rem;font-weight:800;color:#FFF6E8;background:var(--navy);border:0;border-radius:999px;padding:.5rem 1rem;min-height:44px;cursor:pointer;margin-left:.4rem}
+.status .widen:hover{background:var(--navy-lt)}
+.status .widen:focus-visible{outline:3px solid var(--amber-lt);outline-offset:2px}
+[data-theme="dark"] .status .widen{background:#F2A24A;color:#161D3D}
+</style>
+<style id="mbmTheme">
 /* Made by Matt — reading themes (shared key mbm_reading_theme) */
 [data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA;--ink:#1B2140;--mut:#4A5170}
 [data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF;--ink:#1B2140;--mut:#4A5170}
@@ -357,19 +364,38 @@ if(browsing){ // organised view: one section per subject, A→Z
     return `<details class="acc"${i===0?" open":""}><summary><span class="aname">${esc(subj)}</span><span class="apill main">${rows.length}</span>${mix}${i===0?`<span class="tot2">${inYear} in this collection</span>`:`<span class="chev" aria-hidden="true">▾</span>`}${i===0?`<span class="chev" aria-hidden="true">▾</span>`:""}</summary>${subj===SUITE?suiteCallout(rows.length):""}${body}</details>`;
   }).join("");
 }else{
-  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:'<p class="status">No matches — try fewer words.</p>');
+  let empty='<p class="status">No matches — try fewer words.</p>';
+  if(!a.length&&YEAR){
+    const anywhere=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!TIER||r._tier===TIER)).length;
+    if(anywhere)empty=`<p class="status">Nothing in the ${YEAR==="2026-27"?"2026–27 collection":"2025–26 library"} — but ${anywhere} match${anywhere===1?"":"es"} across all years. <button type="button" id="widenYear" class="widen">Search all years →</button></p>`;
+  }
+  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:empty);
 }
 const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
 $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`}
 function buildQuicknav(){
-  const counts={};ALL.forEach(r=>{counts[r.subject]=(counts[r.subject]||0)+1});
-  const chip=(label,val,on)=>`<button class="chip" data-sub="${esc(val)}" aria-pressed="${on?"true":"false"}">${esc(label)}</button>`;
+  const inCol={},total={};
+  ALL.forEach(r=>{total[r.subject]=(total[r.subject]||0)+1;if(!YEAR||r.year===YEAR)inCol[r.subject]=(inCol[r.subject]||0)+1});
+  const chip=(label,val,on,lib)=>`<button class="chip${lib?" lib":""}" data-sub="${esc(val)}" aria-pressed="${on?"true":"false"}"${lib?' title="Not in this collection - opens the full catalogue"':""}>${esc(label)}</button>`;
   const cur=$("#subject").value;
-  $("#quicknav").innerHTML=chip("All subjects","",!cur)+Object.keys(counts).sort().map(su=>chip(`${su} (${counts[su]})`,su,cur===su)).join("");
+  $("#quicknav").innerHTML=chip("All subjects","",!cur)+Object.keys(total).sort().map(su=>{
+    const n=inCol[su]||0;
+    return chip(`${su} (${n||total[su]})`,su,cur===su,n===0);
+  }).join("");
 }
+
+$("#cards").addEventListener("click",e=>{
+  if(!e.target.closest("#widenYear"))return;
+  YEAR="";document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x.dataset.year===""?"true":"false"));
+  buildQuicknav();render();
+});
 $("#quicknav").addEventListener("click",e=>{
   const b=e.target.closest("button[data-sub]");if(!b)return;
-  $("#subject").value=b.dataset.sub;$("#search").value="";$("#type").value="";
+  const sub=b.dataset.sub;
+  if(sub&&YEAR&&!ALL.some(r=>r.subject===sub&&r.year===YEAR)){
+    YEAR="";document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x.dataset.year===""?"true":"false"));
+  }
+  $("#subject").value=sub;$("#search").value="";$("#type").value="";
   buildQuicknav();render();
   $("#cards").scrollIntoView({behavior:"smooth",block:"start"});
 });
@@ -377,7 +403,7 @@ $("#quicknav").addEventListener("click",e=>{
 document.querySelectorAll(".ytab").forEach(b=>b.addEventListener("click",()=>{
   YEAR=b.dataset.year;
   document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
-  render();
+  buildQuicknav();render();
 }));
 function fillTabCounts(){const c={"2026-27":0,"2025-26":0,"":ALL.length};
   ALL.forEach(r=>{if(c[r.year]!==undefined)c[r.year]++});
