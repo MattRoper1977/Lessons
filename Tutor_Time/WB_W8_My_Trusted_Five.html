@@ -154,15 +154,66 @@ li{font-size:1.12rem;line-height:1.5;margin-bottom:8px;color:var(--ink)}
 }
 
 button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
+/* ===== ENGINE v3 ===== */
+.seal-hud{position:fixed;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:60;
+  background:rgba(255,255,255,.94);border:1px solid #cbd5e1;border-radius:999px;padding:6px 12px;box-shadow:0 4px 14px rgba(15,23,42,.14)}
+.seal{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:1rem;
+  background:#e2e8f0;color:#94a3b8;border:2px solid #cbd5e1;position:relative}
+.seal .seal-lbl{position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);font-size:.52rem;
+  font-weight:800;letter-spacing:.04em;color:#64748b;white-space:nowrap;text-transform:uppercase}
+.seal.on{background:#dcfce7;border-color:var(--independent);color:#166534;animation:sealStamp .5s cubic-bezier(.2,1.5,.4,1)}
+.seal.on .seal-lbl{color:#166534}
+@keyframes sealStamp{0%{transform:scale(1)}30%{transform:scale(1.35) rotate(-7deg)}100%{transform:scale(1)}}
+.slide.active .box,.slide.active .step,.slide.active .dot,.slide.active .opt,.slide.active .ilm{
+  animation:casc .5s cubic-bezier(.16,1,.3,1) both}
+.slide.active .box:nth-of-type(2){animation-delay:.07s}
+.slide.active .box:nth-of-type(3){animation-delay:.14s}
+.slide.active .box:nth-of-type(4){animation-delay:.21s}
+.slide.active .dot:nth-child(2){animation-delay:.09s}.slide.active .dot:nth-child(3){animation-delay:.18s}
+.slide.active .dot:nth-child(4){animation-delay:.27s}.slide.active .dot:nth-child(5){animation-delay:.36s}
+@keyframes casc{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+.pop{animation:popspring .55s cubic-bezier(.2,1.5,.4,1)}
+@keyframes popspring{0%{transform:scale(1)}28%{transform:scale(1.11)}60%{transform:scale(.98)}100%{transform:scale(1)}}
+.ilm{margin:14px 0;text-align:center}
+.ilm svg{max-height:235px;width:100%}
+.ilm-cap{font-size:.92rem;color:var(--muted);margin-top:8px;font-style:italic}
+.ilm .draw{stroke-dasharray:340;stroke-dashoffset:340;animation:ilmDraw 1.5s ease forwards .3s}
+.ilm .pop-in{opacity:0;animation:ilmPop .5s ease forwards}
+@keyframes ilmDraw{to{stroke-dashoffset:0}}
+@keyframes ilmPop{to{opacity:1}}
+.vbox{background:#f8fafc;border:2px dashed #94a3b8;border-radius:14px;padding:18px;margin:14px 0;position:relative}
+.vbox::before{content:'ANONYMOUS \00b7 NO NAMES';position:absolute;top:-10px;left:16px;background:#fff;padding:0 10px;
+  font-size:.68rem;font-weight:800;letter-spacing:.1em;color:#475569}
+.vbox textarea{width:100%;min-height:84px;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit;font-size:.98rem}
+.vcount{margin-top:10px;font-weight:800;color:var(--independent)}
+.vprivacy{margin-top:8px;font-size:.82rem;line-height:1.5;color:var(--muted)}
+body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+body.calm .seal.on{background:#eef2ff;border-color:#94a3b8;color:#334155}
+body.calm #confetti{display:none!important}
+@media print{ body>*{display:none!important} #print-area{display:block!important;font-family:Georgia,serif;color:#111} @page{margin:12mm} }
+#print-area{display:none}
+#print-area h1{font-size:19pt;border-bottom:3px solid #6366f1;padding-bottom:4px}
+#print-area h2{font-size:12.5pt;margin-top:11pt;border-bottom:1px dashed #999}
+#print-area td,#print-area th{border:1px solid #999;padding:6pt;font-size:10.5pt;text-align:left}
+#print-area table{border-collapse:collapse;width:100%;margin-top:6pt}
+@media (prefers-reduced-motion: reduce){
+  .slide.active .box,.slide.active .step,.slide.active .dot,.slide.active .opt,.slide.active .ilm{animation:none!important;opacity:1!important;transform:none!important}
+  .ilm .draw{stroke-dashoffset:0!important;animation:none!important}
+  .ilm .pop-in{opacity:1!important;animation:none!important}
+  .seal.on{animation:none!important}
+}
 </style>
 </head>
 <body>
 <div class="logo">MADE BY MATT<span>Tutor Time · KCSIE</span></div>
 <div class="tools">
   <button class="tool-btn" onclick="openTA()">👩‍🏫 TA Focus</button>
-  <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button>
+  <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
+<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-hand" title="Hand">🖐️<span class="seal-lbl">Hand</span></div><div class="seal" id="seal-reach" title="Reach">📞<span class="seal-lbl">Reach</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
+<div id="print-area"></div>
 
 <!-- 1 TITLE -->
 <section class="slide ido active title-hero" data-ta="Every pupil should leave with a real list. For pupils with complicated home lives, school adults + Childline can be most of the five — that's fine and say so.">
@@ -198,6 +249,20 @@ button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight
     <p class="step" style="margin-bottom:10px"><b>3.</b> Keeps you safe, at school, home or beyond.</p>
   </div>
   <button class="btn btn-reveal" onclick="stepReveal(this)">Next point ▸</button>
+
+<div class="ilm">
+<svg viewBox="0 0 560 210" role="img" aria-label="Five trusted routes: home adult, school adult, wider family, helpline, and one spare. The helpline is marked open now.">
+  <path class="draw" d="M60 175 q0 -60 40 -60 q22 0 30 22" fill="none" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/>
+  <g class="pop-in" style="animation-delay:.35s"><circle cx="118" cy="52" r="21" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/><text x="118" y="59" text-anchor="middle" font-size="19">&#127968;</text><text x="118" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">HOME ADULT</text></g>
+  <g class="pop-in" style="animation-delay:.5s"><circle cx="205" cy="38" r="21" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/><text x="205" y="45" text-anchor="middle" font-size="19">&#127979;</text><text x="205" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">SCHOOL ADULT</text></g>
+  <g class="pop-in" style="animation-delay:.65s"><circle cx="292" cy="34" r="21" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/><text x="292" y="41" text-anchor="middle" font-size="19">&#128106;</text><text x="292" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">WIDER FAMILY</text></g>
+  <g class="pop-in" style="animation-delay:.8s"><circle cx="379" cy="38" r="21" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><text x="379" y="45" text-anchor="middle" font-size="19">&#128222;</text><text x="379" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">HELPLINE</text><text x="379" y="95" text-anchor="middle" font-size="10.5" font-weight="700" fill="#166534">&#10003; OPEN NOW</text></g>
+  <g class="pop-in" style="animation-delay:.95s"><circle cx="466" cy="52" r="21" fill="#fff" stroke="#94a3b8" stroke-width="3" stroke-dasharray="5 4"/><text x="466" y="59" text-anchor="middle" font-size="19">&#10133;</text><text x="466" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">ONE SPARE</text></g>
+  <rect x="90" y="140" width="392" height="42" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="286" y="167" text-anchor="middle" font-size="15" font-weight="800" fill="#334155">FIVE ROUTES &#183; SO ONE BAD DAY NEVER CLOSES THEM ALL</text>
+</svg>
+<div class="ilm-cap">Five is not a wish list. If four are unreachable at 9pm on a Sunday, the fifth still answers.</div>
+</div>
 </section>
 
 <section class="slide wedo" data-ta="Reveal one point at a time — let each land before the next. Cold Call a re-say in the pupil's own words.">
@@ -273,6 +338,17 @@ button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight
     <button class="opt" data-correct="1">Now, while things are okay — so it's ready</button>
   </div>
   <div class="fb" id="fb3"></div>
+
+<div class="vbox">
+  <label for="vText"><b>Anything you want an adult to know?</b> No names needed — not yours, not anyone else's.</label>
+  <textarea id="vText" placeholder="Type it here, or leave it blank."></textarea>
+  <div style="margin-top:10px"><button class="tool-btn" onclick="addVoice()">Put it in the box</button></div>
+  <div class="vcount" id="vCount" aria-live="polite" role="status">Nothing added yet.</div>
+  <div class="vprivacy">🔒 What you type is <b>never shown on this screen</b> and is <b>not saved on this device</b>. Only staff can open it, on paper, and only they decide what happens next.</div>
+</div>
+<div class="box" style="border-left-color:var(--independent);background:#f0fdf4">
+  <b>If you need someone tonight:</b> any adult here, or your form tutor tomorrow morning — outside school, <b>Childline 0800 1111</b> is free, any time, and doesn't show on the bill.
+</div>
 </section>
 
 <div class="modal" id="taModal"><div class="modal-card">
@@ -288,7 +364,7 @@ button,[onclick],[role="button"]{touch-action:manipulation;-webkit-tap-highlight
   <button class="btn btn-reveal" onclick="pickName()" style="margin-top:10px">Pick a pupil</button>
   <p style="margin-top:16px;font-size:.85rem">Roster (one per line — saved on this device, shared with your other lessons):</p>
   <textarea class="roster-in" id="rosterIn" placeholder="Name, 1 / 2 / 3 (Supported / Standard / Stretch)"></textarea>
-  <button class="btn hint-btn" onclick="saveRoster()">Save roster</button>
+  <button class="btn hint-btn" onclick="saveRoster()">Save roster</button><button class="tool-btn" onclick="clearRoster()">🧹 Clear names</button>
 </div></div>
 
 <div class="complete" id="complete">
@@ -423,6 +499,59 @@ function confetti(){
   })();
 }
 show(0);
+
+
+/* ===== ENGINE v3 ===== */
+var SEALS={think:0,hand:0,reach:0,quiz:0,pledge:0}, _voices=[];
+function seal(k){ if(SEALS[k])return; SEALS[k]=1; var el=document.getElementById('seal-'+k); if(el)el.classList.add('on');
+  if(Object.keys(SEALS).every(function(x){return SEALS[x];})){ try{confetti();}catch(e){} } }
+function toggleCalm(){ document.body.classList.toggle('calm');
+  document.getElementById('calmBtn').textContent = document.body.classList.contains('calm') ? '\u2600\ufe0f Calm off' : '\ud83c\udf19 Calm Mode'; }
+(function(){ var _d=window.ding; if(_d) window.ding=function(){ if(document.body.classList.contains('calm'))return; return _d.apply(null,arguments); }; })();
+(function(){
+  var _f=window.feelTap; if(_f) window.feelTap=function(b){ _f(b); seal('think'); };
+  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('hand'); return v; };
+  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('hand'); return v; };
+  var _fin=window.finish; if(_fin) window.finish=function(){ seal('pledge'); return _fin.apply(null,arguments); };
+})();
+document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('click',function(){ seal('quiz'); o.classList.add('pop'); }); });
+function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v=t.value.trim(); if(!v)return;
+  _voices.push({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),txt:v});
+  t.value=''; seal('reach');
+  document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.'; }
+(function(){
+  var _sr=window.saveRoster;
+  if(_sr) window.saveRoster=function(){ var v=_sr.apply(null,arguments);
+    try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
+      var d=localStorage.getItem(k); if(d){ sessionStorage.setItem(k,d); localStorage.removeItem(k); }
+      localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
+    return v; };
+  var _gr=window.getRoster;
+  if(_gr) window.getRoster=function(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
+      var sd=sessionStorage.getItem(k); if(sd){ localStorage.setItem(k,sd); var out=_gr.apply(null,arguments); localStorage.removeItem(k); return out; } }catch(e){}
+    return _gr.apply(null,arguments); };
+})();
+function clearRoster(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
+    sessionStorage.removeItem(k); localStorage.removeItem(k); localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
+  var p=document.getElementById('ccPick'); if(p)p.textContent='Class list cleared from this device.'; }
+function printEvidence(){
+  var earned=Object.keys(SEALS).filter(function(k){return SEALS[k];}).length;
+  var d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var rows=_voices.length ? '<table><tr><th>Time</th><th>Message</th></tr>'+_voices.map(function(v){
+      return '<tr><td>'+v.t+'</td><td>'+v.txt.replace(/</g,'&lt;')+'</td></tr>';}).join('')+'</table>'
+    : '<p>None added.</p>';
+  document.getElementById('print-area').innerHTML =
+    '<h1>Tutor Time Evidence \u00b7 Week 8 — My Trusted Five</h1>'+
+    '<p><strong>Made by Matt \u00b7 Tutor Time</strong> \u00b7 Delivered: '+d+' \u00b7 Seals earned: '+earned+'/5</p>'+
+    '<h2>Coverage</h2><ul><li>KCSIE: identifying trusted adults and speak-up routes; helpline signposting; disclosure kept at pattern level, never personal story in the open room</li><li>Pupils name five reachable routes and test which is reachable today</li><li>Anonymous route offered for anything a pupil could not say aloud</li></ul>'+
+    '<h2>Anonymous box (staff eyes only)</h2>'+rows+
+    '<h2>Safeguarding sign-off</h2>'+
+    '<p>Nothing typed into the box is stored on the device \u2014 this printed sheet is the only record. '+
+    'Timestamps can identify a pupil in a small group: treat as confidential and hand to the DSL the same day.</p>'+
+    '<table><tr><td>Tutor group</td><td>&nbsp;</td><td>Delivered by</td><td>&nbsp;</td></tr>'+
+    '<tr><td>Items passed to DSL</td><td>&nbsp;</td><td>DSL signature / date</td><td>&nbsp;</td></tr></table>';
+  window.print();
+}
 </script>
 <script defer src="/hud.js"></script>
 </body>
