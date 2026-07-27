@@ -556,18 +556,6 @@ function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v
   _voices.push({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),txt:v});
   t.value=''; seal('voice');
   document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.'; }
-(function(){
-  var _sr=window.saveRoster;
-  if(_sr) window.saveRoster=function(){ var v=_sr.apply(null,arguments);
-    try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
-      var d=localStorage.getItem(k); if(d){ sessionStorage.setItem(k,d); localStorage.removeItem(k); }
-      localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
-    return v; };
-  var _gr=window.getRoster;
-  if(_gr) window.getRoster=function(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
-      var sd=sessionStorage.getItem(k); if(sd){ localStorage.setItem(k,sd); var out=_gr.apply(null,arguments); localStorage.removeItem(k); return out; } }catch(e){}
-    return _gr.apply(null,arguments); };
-})();
 function clearRoster(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
     sessionStorage.removeItem(k); localStorage.removeItem(k); localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
   var p=document.getElementById('ccPick'); if(p)p.textContent='Class list cleared from this device.'; }
