@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALUES — Week 2 Friday (Mutual Respect / Respectful)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1e7d0;--s1:#fbf6ea;--s2:#ece0c4;--signal:#1d3f8f;--cyan:#1d3f8f;--amber:#b07d12;--red:#b3243b;--green:#2e7d52;--purple:#6d4c9f;--txt:#23314f;--muted:#7c7257;--edge:rgba(35,49,79,.18);--evidence:#b07d12}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden;display:flex;justify-content:center;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(900px 700px at 82% -10%,rgba(176,125,18,.1),transparent),radial-gradient(800px 600px at -6% 110%,rgba(29,63,143,.07),transparent);z-index:0}
+.grid-ov{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(35,49,79,.05) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:radial-gradient(circle at 50% 40%,#000,transparent 85%);mask-image:radial-gradient(circle at 50% 40%,#000,transparent 85%);opacity:.6}
+body.calm .grid-ov{opacity:.35}
+.wrap{width:100%;max-width:1000px;padding:58px 22px 104px;position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+.slide{display:none}.slide.active{display:flex;flex-direction:column;animation:slideIn .55s cubic-bezier(.16,1,.3,1) both}
+body.calm .slide.active{animation:none}
+@keyframes slideIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes casc{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+h1.giant{font-family:'DM Serif Display',serif;font-size:clamp(3.2em,10vw,6.6em);line-height:.94;letter-spacing:-.01em;color:#1a2742}
+h2.hed{font-family:'DM Serif Display',serif;font-size:clamp(1.9em,4.4vw,2.7em);font-weight:400;letter-spacing:0;padding-left:16px;border-left:4px solid var(--evidence);margin-bottom:16px;position:relative;color:#1a2742}
+h2.hed::after{content:"";position:absolute;left:16px;bottom:-7px;height:3px;width:0;background:linear-gradient(90deg,var(--evidence),transparent);border-radius:2px;animation:drawline .7s cubic-bezier(.16,1,.3,1) .12s forwards}
+@keyframes drawline{to{width:120px}}body.calm h2.hed::after{animation:none;width:120px}
+.mono{font-family:'Inter',sans-serif;font-weight:600}
+.lead{font-size:clamp(1.05em,2.2vw,1.4em);line-height:1.55;color:#3a4869;max-width:62ch}
+.nav{position:fixed;bottom:0;left:0;width:100%;background:rgba(241,231,208,.96);backdrop-filter:blur(14px);padding:13px 22px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--edge);z-index:1000}
+.slide-lbl{font-family:'Inter',sans-serif;font-weight:700;color:var(--muted);min-width:74px;font-size:.84em;letter-spacing:.04em}
+.pbar{flex:1;height:5px;background:rgba(35,49,79,.1);border-radius:3px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--signal),var(--evidence));width:0;transition:width .4s ease}
+.btn{padding:11px 24px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-weight:700;font-size:1.02em;letter-spacing:.01em;cursor:pointer;transition:.2s;background:var(--signal);color:#fff;box-shadow:0 6px 18px rgba(29,63,143,.25)}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.btn:active{transform:scale(.97)}
+.btn-prev{padding:11px 15px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-weight:700;font-size:.92em;cursor:pointer}.btn-prev:disabled{opacity:.35;cursor:not-allowed}
+.toprail{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:1100;align-items:center}
+.tr-btn{background:rgba(251,246,234,.9);backdrop-filter:blur(8px);border:1px solid var(--edge);color:var(--txt);padding:8px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:.8em;letter-spacing:.02em;cursor:pointer;transition:.2s}
+.tr-btn:hover{border-color:var(--signal);color:var(--signal)}.tr-btn.cold{border-color:rgba(29,63,143,.4);color:var(--signal)}.tr-btn.staff{border-color:rgba(176,125,18,.45);color:var(--amber)}
+.cf-points{position:relative;background:rgba(251,246,234,.9);backdrop-filter:blur(8px);border:1px solid rgba(176,125,18,.4);color:var(--evidence);padding:6px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:.8em;display:flex;align-items:center;gap:6px}
+.cf-points-num{font-family:'DM Serif Display',serif;font-size:1.3em;line-height:1}
+.cf-points-num.pls{animation:plsk .42s ease}@keyframes plsk{0%{transform:scale(1)}40%{transform:scale(1.4);color:var(--red)}100%{transform:scale(1)}}
+.ptfloat{position:absolute;left:50%;top:-2px;transform:translateX(-50%);color:var(--green);font-family:'DM Serif Display',serif;font-size:1.3em;animation:ptf 1s ease-out forwards;pointer-events:none}
+@keyframes ptf{0%{opacity:0;transform:translate(-50%,2px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-30px)}}
+.signal-bar{border:1px solid var(--edge);border-top:3px solid var(--evidence);background:var(--s1);border-radius:8px;margin-bottom:14px}
+.signal-inner{padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.signal-stamp{color:var(--signal);font-family:'Inter',sans-serif;font-weight:700;font-size:.74em;letter-spacing:.14em;text-transform:uppercase}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 7px rgba(179,36,59,.5);animation:pulseDot 1.5s ease-in-out infinite;margin-right:7px;vertical-align:middle}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.45}}body.calm .live-dot{animation:none}
+.classified{font-family:'Inter',sans-serif;font-weight:800;font-size:.74em;letter-spacing:.14em;padding:3px 11px;border-radius:5px;border:1.5px solid var(--evidence);color:var(--evidence);background:transparent!important}
+.evidence-tag{display:inline-block;background:var(--evidence);color:#fff;padding:5px 15px;font-family:'Inter',sans-serif;font-weight:700;font-size:.76em;letter-spacing:.08em;text-transform:uppercase;border-radius:30px;margin-bottom:14px}
+.ribbon{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 4px}
+.chip{background:var(--s1);border:1px solid var(--edge);border-radius:30px;padding:9px 16px;font-family:'Inter',sans-serif;font-weight:700;font-size:1em}.chip b{color:var(--red)}
+.lo-row{display:flex;flex-direction:column;gap:8px;margin-top:18px;max-width:580px}
+.lo-item{display:flex;align-items:center;gap:12px;padding:11px 15px;background:rgba(46,125,82,.07);border:1px solid rgba(46,125,82,.25);border-radius:10px;opacity:0;transform:translateX(-12px)}
+.lo-item.in{animation:loSlide .5s cubic-bezier(.16,1,.3,1) forwards}@keyframes loSlide{to{opacity:1;transform:none}}
+.lo-tick{width:30px;height:30px;border-radius:50%;background:rgba(46,125,82,.14);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:800;flex-shrink:0}
+.lo-txt{font-family:'Inter',sans-serif;font-weight:600;font-size:1.05em;color:#2c3a58}
+.kbd-hint{margin-top:18px;font-size:.78em;color:var(--muted);font-family:'Inter',sans-serif}.kbd{display:inline-block;background:var(--s2);border:1px solid var(--edge);border-radius:4px;padding:1px 7px;font-size:.85em}
+.tap-hint{font-size:.8em;color:var(--muted);font-family:'Inter',sans-serif;font-style:italic;margin:0 0 10px}
+.card{background:var(--s1);border:1px solid var(--edge);border-radius:14px;padding:16px 18px;margin:9px 0;position:relative;overflow:hidden;box-shadow:0 3px 10px rgba(35,49,79,.06);transition:transform .2s,box-shadow .2s}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--signal)}
+.card.c1::before{background:var(--signal)}.card.c2::before{background:var(--red)}.card.c3::before{background:var(--green)}
+.card h3{font-family:'DM Serif Display',serif;font-weight:400;font-size:1.3em;margin-bottom:4px}.card.c1 h3{color:var(--signal)}.card.c2 h3{color:var(--red)}.card.c3 h3{color:var(--green)}
+.card p{font-size:.98em;color:#3a4869;line-height:1.5}
+.card.viz{display:grid;grid-template-columns:66px 1fr;gap:16px;align-items:center;cursor:pointer}
+.card.viz:hover{transform:perspective(800px) rotateX(3deg) translateY(-4px);box-shadow:0 14px 30px rgba(35,49,79,.16)}
+.lingo-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:1.9em;flex-shrink:0;background:#fff;border:2px solid var(--evidence);box-shadow:0 2px 8px rgba(176,125,18,.2)}
+.card.c2 .lingo-ic{border-color:var(--red)}.card.c3 .lingo-ic{border-color:var(--green)}
+.tagline{font-family:'Inter',sans-serif;font-weight:700;font-size:.74em;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-top:4px;color:var(--evidence)}
+.lingo-eg{display:none;margin-top:8px;font-size:.92em;color:var(--signal);font-style:italic;border-top:1px dashed var(--edge);padding-top:8px}
+.card.show-eg .lingo-eg{display:block;animation:casc .3s ease both}
+.remember{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:8px}
+.rcard{background:var(--s1);border:1px solid var(--edge);border-radius:14px;padding:18px;text-align:center;box-shadow:0 3px 10px rgba(35,49,79,.06);transition:transform .2s,box-shadow .2s}
+.rcard:hover{transform:perspective(800px) rotateX(3deg) translateY(-4px);box-shadow:0 14px 30px rgba(35,49,79,.16)}
+.rcard .ric{font-size:2.3em;line-height:1;margin-bottom:3px}
+.rcard .t{font-family:'DM Serif Display',serif;font-weight:400;font-size:1.15em;margin-top:2px;color:var(--signal)}
+.rcard .d{font-size:.85em;color:var(--muted);margin-top:4px}
+.megastat{text-align:center;padding:14px 0}
+.megastat-n{font-family:'DM Serif Display',serif;font-size:clamp(5em,15vw,9em);line-height:.85;color:var(--signal)}
+.megastat-lbl{font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.01em;color:var(--muted);max-width:540px;margin:8px auto 0}
+.quiz-q{font-family:'DM Serif Display',serif;font-weight:400;font-size:1.4em;margin-bottom:12px;color:#1a2742}
+.quiz-opt{background:var(--s1);border:1px solid var(--edge);border-radius:10px;padding:13px 16px;margin:8px 0;cursor:pointer;transition:.2s;font-weight:600;box-shadow:0 2px 6px rgba(35,49,79,.05)}
+.quiz-opt:hover{border-color:var(--signal)}
+.quiz-opt.right{border-color:var(--green);background:#e6f3ec;color:#1c5236}.quiz-opt.wrong{border-color:var(--red);background:#f7e4e7;color:#7c1828}
+.quiz-prog{font-family:'Inter',sans-serif;font-weight:700;font-size:.8em;color:var(--muted);margin-bottom:6px;letter-spacing:.03em}
+.worry-pad{background:var(--s1);border:1px solid var(--edge);border-radius:14px;padding:22px;position:relative;margin-bottom:14px;box-shadow:0 4px 14px rgba(35,49,79,.08)}
+.worry-pad::before{content:"🗳 ANONYMOUS · NO NAMES";position:absolute;top:-11px;left:18px;background:var(--bg);padding:0 12px;color:var(--evidence);font-family:'Inter',sans-serif;font-weight:700;font-size:.76em;letter-spacing:.08em}
+.worry-input{width:100%;min-height:96px;background:#fff;border:1px solid var(--edge);border-radius:8px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.95em;padding:12px;resize:vertical;line-height:1.5}.worry-input:focus{outline:none;border-color:var(--signal)}
+.worry-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.worry-tag{background:rgba(35,49,79,.04);border:1px solid var(--edge);color:var(--muted);padding:4px 11px;border-radius:30px;font-family:'Inter',sans-serif;font-size:.8em;font-weight:700;cursor:pointer}
+.worry-tag.sel{background:rgba(29,63,143,.1);border-color:var(--signal);color:var(--signal)}
+.worry-actions{display:flex;gap:10px;margin-top:12px}.worry-actions button{flex:1}
+.worry-saved{display:none;margin-top:12px;padding:11px 14px;background:#e6f3ec;border:1px solid rgba(46,125,82,.35);border-radius:8px;color:var(--green);font-weight:700}.worry-saved.show{display:block;animation:casc .3s ease both}
+.worry-count{margin-top:12px;font-weight:700;color:var(--evidence)}.worry-privacy{margin-top:10px;font-size:.82em;line-height:1.5;color:var(--muted)}.worry-list{margin-top:12px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.worry-item{background:var(--s2);border:1px solid var(--edge);border-radius:8px;padding:10px 12px;font-size:.88em;line-height:1.45}
+.worry-item-meta{font-family:'Inter',sans-serif;font-weight:600;font-size:.72em;color:var(--muted);margin-bottom:4px;letter-spacing:.02em}
+.help{background:#e6f3ec;border-left:4px solid var(--green);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:6px}.help b{color:var(--green)}
+.scn{background:var(--s2);border:1px solid var(--edge);border-radius:12px;padding:16px 18px;margin-bottom:12px;font-size:1.05em;line-height:1.5}
+.pop{animation:popspring .55s cubic-bezier(.2,1.5,.4,1)}@keyframes popspring{0%{transform:scale(1)}28%{transform:scale(1.13)}60%{transform:scale(.97)}100%{transform:scale(1)}}
+.reg-input{width:100%;background:#fff;border:1px solid var(--edge);border-radius:8px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.92em;padding:10px;margin-top:8px}
+.modal-bg{position:fixed;inset:0;background:rgba(26,30,40,.55);backdrop-filter:blur(6px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}.modal-bg.show{display:flex;animation:slideIn .25s ease both}
+.modal-card{background:var(--s1);border:1px solid var(--edge);border-radius:14px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(26,30,40,.3)}
+.modal-hd{padding:16px 20px;border-bottom:2px solid var(--signal);display:flex;justify-content:space-between;align-items:center}.modal-hd.staff{border-bottom-color:var(--amber)}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1.5em;color:var(--signal)}.modal-title.staff{color:var(--amber)}
+.modal-x{background:transparent;border:none;color:var(--muted);font-size:1.6em;cursor:pointer}.modal-bd{padding:22px}
+.cc-name{font-family:'DM Serif Display',serif;font-size:clamp(2.4em,7vw,3.6em);line-height:.95;color:var(--signal);margin-bottom:6px}
+.cc-meta{font-family:'Inter',sans-serif;font-weight:600;font-size:.76em;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.03em}
+.cc-q{background:var(--s2);border-left:3px solid var(--signal);padding:13px 15px;border-radius:0 8px 8px 0;margin-bottom:10px}
+.cc-q-lbl{font-family:'Inter',sans-serif;font-size:.8em;letter-spacing:.03em;text-transform:uppercase;font-weight:700;margin-bottom:4px}.cc-q.f .cc-q-lbl{color:var(--green)}.cc-q.m .cc-q-lbl{color:var(--amber)}.cc-q.h .cc-q-lbl{color:var(--signal)}
+.cc-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.cc-actions button{flex:1;min-width:130px}
+.staff-block{margin-bottom:12px}.staff-block-lbl{font-family:'Inter',sans-serif;font-weight:700;font-size:.8em;color:var(--amber);letter-spacing:.03em;text-transform:uppercase;margin-bottom:4px}.staff-block-d{font-size:.92em;line-height:1.5;color:#3a4869}
+.complete-bg{position:fixed;inset:0;background:rgba(26,30,40,.7);backdrop-filter:blur(10px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}.complete-bg.show{display:flex;animation:slideIn .4s ease both}
+.complete-card{max-width:620px;width:100%;text-align:center;background:var(--s1);border:1px solid var(--edge);border-radius:18px;padding:34px 26px;box-shadow:0 24px 70px rgba(26,30,40,.4)}
+.complete-stamp{display:inline-grid;place-items:center;width:150px;height:150px;border-radius:50%;border:5px double var(--evidence);color:var(--evidence);font-family:'DM Serif Display',serif;font-size:clamp(1.5em,5vw,2em);letter-spacing:.02em;transform:rotate(-6deg);margin-bottom:18px;text-align:center;line-height:.95}
+.complete-sub{font-family:'Inter',sans-serif;font-weight:700;font-size:1.15em;color:var(--red);margin-bottom:18px}
+.complete-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.complete-stat{background:var(--s2);border:1px solid var(--edge);border-radius:10px;padding:14px}
+.complete-stat-n{font-family:'DM Serif Display',serif;font-size:2.2em;color:var(--evidence);line-height:1}
+.complete-stat-l{font-size:.7em;color:var(--muted);margin-top:4px;text-transform:uppercase;font-weight:600;letter-spacing:.03em}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:2500;display:none}
+@media print{.toprail,.modal-bg,.complete-bg,.nav{display:none!important}}
+@media(max-width:640px){.toprail{top:auto;bottom:60px;right:8px;left:8px;justify-content:flex-end;flex-wrap:wrap;gap:6px}}
+
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .lo-item{opacity:1!important;transform:none!important}
+ canvas#cf{display:none!important}
+}
+</style>
+</head>
+
+<body>
+<div class="grid-ov"></div>
+<canvas id="cf"></canvas>
+<div class="wrap">
+
+<div class="toprail">
+  <div class="cf-points" title="Points"><span class="cf-points-num" id="pts">0</span> ✓</div>
+  <button class="tr-btn" onclick="toggleCalm()" id="calmBtn">🌙 Calm</button>
+  <button class="tr-btn" onclick="toggleSound()" id="sndBtn">🔊</button>
+  <button class="tr-btn staff" onclick="openStaff()">👮 Staff</button>
+  <button class="tr-btn cold" onclick="openCold()">🎯 Cold Call</button>
+</div>
+
+<!-- 1 TITLE -->
+<section class="slide active">
+  <div class="signal-bar"><div class="signal-inner"><span class="signal-stamp"><span class="live-dot"></span>WK2 · FRIDAY REFLECTION</span><span class="classified" style="background:var(--signal);color:#04222a">FRIDAY</span></div></div>
+  <span class="evidence-tag">Week 2 · Friday Values</span>
+  <h1 class="giant">RESPECT<br>COUNTS.</h1>
+  <p class="lead" style="margin-top:14px">We close the week on <b>Mutual Respect</b> — what it really means, how it shows up online, and why someone's image is theirs.</p>
+  <div class="ribbon"><span class="chip">🤝 Value: <b>Mutual Respect</b></span><span class="chip">🎯 Behaviour: <b>Respectful</b></span></div>
+  <div class="lo-row" id="loRow">
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">Explain what mutual respect really means</span></div>
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">See why consent &amp; people's images matter</span></div>
+    <div class="lo-item"><span class="lo-tick">✓</span><span class="lo-txt">Reflect on being Respectful this week</span></div>
+  </div>
+  <div class="kbd-hint">Navigate: <span class="kbd">←</span> <span class="kbd">→</span> · Cold-call &amp; staff brief top-right</div>
+</section>
+
+<!-- 2 WHAT IT MEANS -->
+<section class="slide">
+  <h2 class="hed">British Value · Mutual Respect</h2>
+  <p class="tap-hint">Respect is bigger than being polite — tap a card for the part people forget.</p>
+  <div class="card c1 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">🤝</div><div><h3>It's mutual</h3><p>You give it and you're owed it — both ways, by everyone.</p><div class="lingo-eg">Respect isn't earned by being the loudest; everyone starts with it.</div></div></div>
+  <div class="card c2 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">🌍</div><div><h3>It includes difference</h3><p>People you disagree with, or who live differently, are owed it too.</p><div class="lingo-eg">Respecting someone isn't the same as agreeing with them.</div></div></div>
+  <div class="card c3 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">🪪</div><div><h3>It includes consent</h3><p>Someone's body, image and privacy are theirs to control.</p><div class="lingo-eg">Their photo is theirs — not yours to edit, fake or forward.</div></div></div>
+</section>
+
+<!-- 3 NEEDS RESPECT -->
+<section class="slide">
+  <h2 class="hed">Why respect is the whole game online</h2>
+  <p class="lead">Here's this week's big link: deepfakes and shared images attack the one thing respect protects — <b>a person's right to their own image</b>.</p>
+  <div class="card c2"><h3 style="color:var(--red)">The harm</h3><p>Faking or forwarding someone's image treats them as a thing to use, not a person to respect. The image may be fake — the hurt is real.</p></div>
+  <div class="card c3"><h3 style="color:var(--green)">Your part</h3><p>Doubt the image, back the person. Never make or share fakes — and if it happens to someone, support them and tell a trusted adult.</p></div>
+</section>
+
+<!-- 4 WHERE RESPECT SHOWS -->
+<section class="slide">
+  <h2 class="hed">Where respect shows up</h2>
+  <p class="tap-hint">Tap each — most of it is the small, quiet stuff.</p>
+  <div class="card c1 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">👂</div><div><h3>Listening</h3><p>Letting someone finish, even mid-disagreement.</p><div class="lingo-eg">You can disagree hard and still let them speak.</div></div></div>
+  <div class="card c3 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">📱</div><div><h3>What you don't post</h3><p>Not joining the pile-on, not forwarding the image.</p><div class="lingo-eg">The most respectful move is often the share you didn't send.</div></div></div>
+  <div class="card c2 viz" onclick="this.classList.toggle('show-eg')"><div class="lingo-ic">🛡️</div><div><h3>Backing people up</h3><p>Standing with someone being treated unfairly.</p><div class="lingo-eg">Respect is loudest when you defend someone who isn't there.</div></div></div>
+</section>
+
+<!-- 5 WHY NOW -->
+<section class="slide">
+  <h2 class="hed">Why it matters now</h2>
+  <div class="megastat"><div class="megastat-n"><span id="counter">0</span></div><div class="megastat-lbl">the number of times it's ever OK to fake or share a private image of someone — respect means their image is theirs</div></div>
+  <p class="lead">In 2026, with AI able to fake anyone, respect for people's images isn't optional — it's the line between a community and a free-for-all. That's Mutual Respect in action.</p>
+</section>
+
+<!-- 6 REFLECT -->
+<section class="slide">
+  <h2 class="hed">Behaviour Focus · Respectful — reflect</h2>
+  <p class="lead" style="margin-bottom:10px">On Monday you took the <b>Respect Challenge</b>: think before you forward, and give one genuine comment. Take a moment to think it through:</p>
+  <div class="remember">
+    <div class="rcard"><div class="ric">🤔</div><div class="t">Did I check?</div><div class="d">"Is this fair?" before sharing.</div></div>
+    <div class="rcard"><div class="ric">🚫</div><div class="t">Did I hold back?</div><div class="d">A share I chose not to send.</div></div>
+    <div class="rcard"><div class="ric">💬</div><div class="t">Did I lift someone?</div><div class="d">One genuine, kind word.</div></div>
+  </div>
+  <p class="lead" style="margin-top:12px">In your head, finish this sentence: <b>"This week I showed respect when…"</b> — even once counts. That's the habit worth keeping.</p>
+</section>
+
+<!-- 7 QUIZ -->
+<section class="slide">
+  <h2 class="hed">Quick check</h2>
+  <div class="quiz-prog">QUESTION <span id="qNum">1</span> / 3 · earn points</div>
+  <div id="quizBox"></div>
+</section>
+
+<!-- 8 YOUR VOICE -->
+<section class="slide">
+  <h2 class="hed">Your voice · have your say</h2>
+  <p class="lead" style="margin-bottom:8px">Respect includes being heard. Drop a view, an idea, or anything on your mind — anonymously.</p>
+  <div class="worry-pad">
+    <select class="reg-input" onchange="starter(this)" style="margin-top:0;cursor:pointer">
+      <option value="">💬 Need a starter? Pick one…</option>
+      <option value="Something that would make this a more respectful place is ">Something that would make this more respectful is…</option>
+      <option value="I think it would be better if ">I think it would be better if…</option>
+      <option value="Something on my mind is ">Something on my mind is…</option>
+      <option value="An idea I have is ">An idea I have is…</option>
+    </select>
+    <textarea class="worry-input" id="worryText" placeholder="Type it here. No names needed. Your teacher reads these — your voice matters and stays in the room." style="margin-top:10px"></textarea>
+    <div class="worry-tags" id="worryTags">
+      <span class="worry-tag" onclick="toggleTag(this)">An idea</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Something I'd change</span>
+      <span class="worry-tag" onclick="toggleTag(this)">A worry</span>
+      <span class="worry-tag" onclick="toggleTag(this)">Just a thought</span>
+    </div>
+    <div class="worry-actions"><button class="btn" onclick="submitVoice()">Add my voice</button></div>
+    <div class="worry-saved" id="worrySaved">✓ Added anonymously. Thank you for speaking up.</div>
+    <div class="worry-count" id="worryCount" aria-live="polite" role="status">Nothing added yet.</div>
+    <div class="worry-privacy">🔒 What you type is <b>never shown on the screen</b> and is <b>not saved on this device</b>. Only a member of staff can open it, and only they decide what happens next.</div>
+  </div>
+  <div class="help"><b>If it's a worry — especially about an image — you're not on your own.</b> Trusted adult or DSL · <b>Childline 0800 1111</b> · <b>Report Remove</b> helps under-18s take images down.</div>
+</section>
+
+<!-- 9 CLOSE -->
+<section class="slide">
+  <span class="evidence-tag">Pledge</span>
+  <h1 class="giant" style="font-size:clamp(2.4em,7vw,4.4em)">"DOUBT THE<br>IMAGE.<br>BACK THE<br>PERSON."</h1>
+  <p class="lead" style="margin-top:12px">I'll treat people — and their images — with respect, online and off, and back anyone who's being treated unfairly.</p>
+  <div class="ribbon"><span class="chip">🤝 <b>Mutual Respect</b></span><span class="chip">🎯 <b>Respectful</b></span></div>
+  <button class="btn" style="margin-top:18px" onclick="showComplete()">Close the week →</button>
+</section>
+
+</div>
+
+<div class="modal-bg" id="coldModal" onclick="if(event.target===this)closeCold()"><div class="modal-card"><div class="modal-hd"><div class="modal-title">🎯 Cold Call</div><button class="modal-x" onclick="closeCold()">✕</button></div><div class="modal-bd" id="coldBody"></div></div></div>
+<div class="modal-bg" id="staffModal" onclick="if(event.target===this)closeStaff()"><div class="modal-card"><div class="modal-hd staff"><div class="modal-title staff">👮 Staff Focus</div><button class="modal-x" onclick="closeStaff()">✕</button></div><div class="modal-bd" id="staffBody"></div></div></div>
+
+<div class="complete-bg" id="completeOverlay"><div class="complete-card"><div class="complete-stamp">RESPECT</div><div class="complete-sub">Week 2 complete · doubt the image, back the person</div>
+  <div class="complete-stats"><div class="complete-stat"><div class="complete-stat-n" id="cPts">0</div><div class="complete-stat-l">Points</div></div><div class="complete-stat"><div class="complete-stat-n" id="cVoice">0</div><div class="complete-stat-l">Voices added</div></div><div class="complete-stat"><div class="complete-stat-n">∞</div><div class="complete-stat-l">Your worth</div></div></div>
+  <p class="lead" style="margin:0 auto 18px">Respect costs nothing and protects everyone. Carry it into next week.</p>
+  <button class="btn" onclick="printEvidence()">🖨 Print evidence</button><button class="btn-prev" onclick="document.getElementById('completeOverlay').classList.remove('show')">Back</button></div></div>
+
+<div class="nav"><span class="slide-lbl" id="slideLbl">01 / 09</span><div class="pbar"><div class="pfill" id="pfill"></div></div><button class="btn-prev" id="prevBtn" onclick="prev()">‹ Back</button><button class="btn" id="nextBtn" onclick="next()">Next ›</button></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];let cur=0,pts=0,counted=false,quizI=0,voices=[];
+let roster=JSON.parse(sessionStorage.getItem('roster2')||'null');
+const MEGA=0;
+const Q={f:["Name one way to show respect to someone online.","What does mutual respect mean to you?"],
+ m:["Why do we owe respect even to people we disagree with?","Why is sharing a faked image of someone disrespectful?"],
+ h:["Why does respecting someone's image matter as much offline as online?","Why is it never the victim's fault if a fake image of them is shared?"]};
+const STAFF={0:["Reflective tone","Calmer than Monday. Consolidate and celebrate the week's value and behaviour."],
+ 2:["The key link","Land the consent card: someone's image is theirs. This is the heart of the week."],
+ 4:["The number is zero","Make the point plainly and without graphic detail: it is never OK to fake or share someone's private image."],
+ 5:["Celebrate Respectful","Praise specific respectful moments you saw this week. Reflection is private — no need to share aloud."],
+ 7:["Your Voice box","Doubles as a voice channel and a safe disclosure route. Read privately; any worry (especially images) → DSL straight away."]};
+const QUIZ=[{q:"Mutual respect means…",a:["Only respecting people like me","Treating everyone fairly, even those I disagree with","Never disagreeing with anyone"],c:1,r:"Respect isn't agreement — it's treating people fairly even when you don't see eye to eye."},
+ {q:"Sharing a faked or private image of someone is…",a:["Just a joke","A serious breach of respect and consent","Fine if they're well known"],c:1,r:"Someone's image is theirs. Faking or sharing it without consent is never just a joke."},
+ {q:"If a fake image of you is shared, whose fault is it?",a:["Yours, for posting photos","The person who made or shared it","Nobody's"],c:1,r:"It is never the victim's fault — the blame sits entirely with whoever made or shared it."}];
+function render(){slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  document.getElementById('slideLbl').textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  document.getElementById('pfill').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').textContent=cur===slides.length-1?'Done':'Next ›';
+  const act=slides[cur];act.querySelectorAll('.card,.rcard,.opt,.case').forEach((el,k)=>{el.style.animation='none';void el.offsetWidth;el.style.animation='casc .45s cubic-bezier(.16,1,.3,1) '+(.03+k*0.05)+'s both';});
+  onEnter(cur);}
+function next(){if(cur<slides.length-1){cur++;snd(600);render();}}
+function prev(){if(cur>0){cur--;snd(420);render();}}
+document.addEventListener('keydown',e=>{const t=e.target.tagName;if(t==='TEXTAREA'||t==='INPUT'||t==='SELECT')return;if(document.querySelector('.modal-bg.show')){if(e.key==='Escape'){closeCold();closeStaff();}return;}if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev();if(e.key==='Escape'){closeCold();closeStaff();}});
+function onEnter(i){if(i===0)animateLOs();if(i===4&&!counted){counted=true;animateMega();}if(i===6&&!document.getElementById('quizBox').dataset.init)buildQuiz();if(i===7)loadVoice();}
+function animateLOs(){document.querySelectorAll('#loRow .lo-item').forEach((el,k)=>setTimeout(()=>el.classList.add('in'),200+k*160));}
+function animateMega(){document.getElementById('counter').textContent=MEGA;}
+function adj(n){pts+=n;const el=document.getElementById('pts');el.textContent=pts;el.classList.remove('pls');void el.offsetWidth;el.classList.add('pls');
+  const r=document.querySelector('.cf-points');if(r){const f=document.createElement('span');f.className='ptfloat';f.textContent='+'+n;r.appendChild(f);setTimeout(()=>f.remove(),1050);}}
+function buzz(ok){if(document.body.classList.contains('calm'))return;if(navigator.vibrate)navigator.vibrate(ok?40:[30,40,30]);}
+function buildQuiz(){document.getElementById('quizBox').dataset.init='1';showQ();}
+function showQ(){const box=document.getElementById('quizBox');document.getElementById('qNum').textContent=Math.min(quizI+1,QUIZ.length);
+  if(quizI>=QUIZ.length){box.innerHTML='<div class="card"><h3 style="color:var(--green)">Reflection complete ✓</h3><p>Points banked. Doubt the image, back the person.</p></div>';confetti();return;}
+  const it=QUIZ[quizI];box.innerHTML='<div class="quiz-q">'+it.q+'</div>'+it.a.map((a,i)=>'<div class="quiz-opt" onclick="answer(this,'+i+','+it.c+')">'+a+'</div>').join('');}
+function answer(el,i,c){const opts=el.parentElement.querySelectorAll('.quiz-opt');opts.forEach(o=>o.style.pointerEvents='none');
+  if(i===c){el.classList.add('right','pop');adj(10);snd(880);buzz(1);setTimeout(()=>{quizI++;showQ();},1100);}
+  else{el.classList.add('wrong');opts[c].classList.add('right');snd(240);buzz(0);
+    const rt=document.createElement('div');rt.className='card';rt.style.cssText='margin-top:12px;border-color:var(--amber)';
+    rt.innerHTML='<h3 style="color:var(--amber)">⚡ Quick reteach</h3><p>'+(QUIZ[quizI].r||'')+'</p><div class="cc-actions"><button class="btn" onclick="quizI++;showQ()">Got it — next ›</button></div>';
+    document.getElementById('quizBox').appendChild(rt);}}
+let selTags=[];function toggleTag(el){el.classList.toggle('sel');const t=el.textContent;selTags=el.classList.contains('sel')?[...selTags,t]:selTags.filter(x=>x!==t);}
+function starter(sel){if(!sel.value)return;const t=document.getElementById('worryText');t.value=sel.value;t.focus();sel.selectedIndex=0;}
+function submitVoice(){const txt=document.getElementById('worryText').value.trim();if(!txt&&!selTags.length)return;
+  voices.push({txt:txt||'(tag only)',tags:[...selTags],t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+  document.getElementById('worryText').value='';document.querySelectorAll('.worry-tag.sel').forEach(e=>e.classList.remove('sel'));selTags=[];
+  const s=document.getElementById('worrySaved');s.classList.add('show');setTimeout(()=>s.classList.remove('show'),2600);loadVoice();snd(700);}
+function loadVoice(){const l=document.getElementById('worryCount');if(!l)return;l.textContent=voices.length?voices.length+' added — thank you. Staff will read these privately.':'Nothing added yet.';const cs=document.getElementById('staffWorryCount');if(cs)cs.textContent=voices.length;}
+function openCold(){if(!roster||!roster.length){document.getElementById('coldBody').innerHTML=
+  '<p style="margin-bottom:10px">Set up your class once. Put each pupil in whichever group you choose — pupils only ever see the group name, never an ability label. Difficulty follows the pupil, not the slide.</p>'+
+  '<label class="cc-q-lbl" style="color:var(--green)">Group Alpha</label><input class="reg-input" id="rA" placeholder="names, comma-separated">'+
+  '<label class="cc-q-lbl" style="color:var(--amber);display:block;margin-top:8px">Group Beta</label><input class="reg-input" id="rB" placeholder="names, comma-separated">'+
+  '<label class="cc-q-lbl" style="color:var(--signal);display:block;margin-top:8px">Group Nova</label><input class="reg-input" id="rN" placeholder="names, comma-separated">'+
+  '<div class="cc-actions"><button class="btn" onclick="saveReg()">Save groups</button></div><p style="margin-top:10px;font-size:.8em;opacity:.75">Names stay in this browser tab only and are gone when it closes. Clear them yourself with the button after cold call.</p>';}
+  else{drawCold();}document.getElementById('coldModal').classList.add('show');}
+function saveReg(){const grab=(id,g)=>document.getElementById(id).value.split(',').map(s=>s.trim()).filter(Boolean).map(n=>({n:n,g:g}));
+  const r=[...grab('rA','A'),...grab('rB','B'),...grab('rN','N')];
+  if(r.length){roster=r;sessionStorage.setItem('roster2',JSON.stringify(r));drawCold();}}
+function drawCold(){const p=roster[Math.random()*roster.length|0];
+  const tier={A:'f',B:'m',N:'h'}[p.g],grp={A:'Group Alpha',B:'Group Beta',N:'Group Nova'}[p.g];
+  const q=Q[tier][Math.random()*Q[tier].length|0];
+  document.getElementById('coldBody').innerHTML='<div class="cc-name">'+p.n+'</div><div class="cc-meta">'+grp+' · targeted question</div>'+
+    '<div class="cc-q '+tier+'"><div class="cc-q-lbl">'+grp+'</div>'+q+'</div>'+
+    '<div class="cc-actions"><button class="btn" onclick="drawCold()">🎲 Another</button><button class="btn" onclick="clearReg()">🧹 Clear names</button><button class="btn-prev" onclick="closeCold()">Done</button></div>';}
+function clearReg(){roster=null;try{sessionStorage.removeItem('roster2');}catch(e){}document.getElementById('coldBody').innerHTML='<p>Class list cleared from this device.</p><div class="cc-actions"><button class="btn" onclick="openCold()">Add a list</button><button class="btn-prev" onclick="closeCold()">Done</button></div>';}
+function closeCold(){document.getElementById('coldModal').classList.remove('show');}
+function openStaff(){const s=STAFF[cur]||["This slide","Keep the reflective pace; one clear question, then move. Cold-call to check understanding."];
+  document.getElementById('staffBody').innerHTML='<div class="staff-block"><div class="staff-block-lbl">'+s[0]+'</div><div class="staff-block-d">'+s[1]+'</div></div><div class="staff-block"><div class="staff-block-lbl">Always</div><div class="staff-block-d">Calm + sound top-right. Your Voice box: read privately, any worry → DSL. Reinforce: not your fault · Childline 0800 1111 · Report Remove.</div></div>'+'<div class="staff-block"><div class="staff-block-lbl">Your Voice box — staff only</div><div class="staff-block-d"><b><span id="staffWorryCount">'+voices.length+'</span></b> message(s) so far. Never read these aloud and never project them. Any disclosure → DSL the same day.<br><button class="btn" style="margin-top:8px" onclick="revealWorries()">Show them here</button><button class="btn" style="margin-top:8px;margin-left:6px" onclick="printEvidence()">Print for DSL</button><div id="staffWorryList" style="margin-top:10px"></div></div></div>';
+  document.getElementById('staffModal').classList.add('show');}
+function revealWorries(){const t=document.getElementById('staffWorryList');if(!t)return;t.innerHTML=voices.length?voices.map(w=>'<div class="worry-item"><div class="worry-item-meta">ANON · '+w.t+(w.tags.length?' · '+w.tags.join(', '):'')+'</div>'+w.txt.replace(/</g,'&lt;')+'</div>').join(''):'<i>Nothing added.</i>';}
+function closeStaff(){document.getElementById('staffModal').classList.remove('show');}
+function showComplete(){document.getElementById('cPts').textContent=pts;document.getElementById('cVoice').textContent=voices.length;document.getElementById('completeOverlay').classList.add('show');snd(660);setTimeout(()=>snd(990,.18),130);confetti();}
+function confetti(){if(document.body.classList.contains('calm'))return;const cv=document.getElementById('cf');if(!cv)return;
+  const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;cv.style.display='block';
+  const cols=['#1d3f8f','#b07d12','#2e7d52','#b3243b','#6d4c9f','#ffffff'];
+  const ps=[];for(let i=0;i<140;i++)ps.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.4,r:4+Math.random()*5,c:cols[i%cols.length],vy:2.5+Math.random()*3.5,vx:-2+Math.random()*4,a:Math.random()*6.28,va:-.2+Math.random()*.4});
+  let t=0;(function loop(){t++;ctx.clearRect(0,0,cv.width,cv.height);let live=0;
+    ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=p.va;if(p.y<cv.height+20)live++;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6);ctx.restore();});
+    if(live>0&&t<240)requestAnimationFrame(loop);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();}
+function toggleCalm(){document.body.classList.toggle('calm');document.getElementById('calmBtn').textContent=document.body.classList.contains('calm')?'☀️ Lively':'🌙 Calm';}
+let sound=true,ac=null;function toggleSound(){sound=!sound;document.getElementById('sndBtn').textContent=sound?'🔊':'🔇';}
+function snd(f,d){if(!sound||document.body.classList.contains('calm'))return;d=d||.07;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='triangle';o.frequency.value=f;g.gain.value=.06;o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d);}catch(e){}}
+function printEvidence(){const w=window.open('','_blank');w.document.write("<html><head><title>Wk2 Friday Values — Evidence</title><style>body{font-family:Arial;padding:30px;color:#111}h1{font-size:20px}td,th{border:1px solid #999;padding:6px 10px;text-align:left;font-size:13px}table{border-collapse:collapse;margin-top:10px}</style></head><body><h1>Assembly Evidence — Week 2: Friday Values (Mutual Respect)</h1><p>British Value: Mutual Respect &middot; Behaviour: Respectful &middot; "+new Date().toLocaleDateString()+"</p><table><tr><th>Points</th><td>"+pts+"</td></tr><tr><th>Voices added</th><td>"+voices.length+"</td></tr></table><h3>Your Voice box (review privately — escalate any worry to DSL)</h3>"+(voices.length?"<table><tr><th>Time</th><th>Tags</th><th>Message</th></tr>"+voices.map(v=>"<tr><td>"+v.t+"</td><td>"+v.tags.join(', ')+"</td><td>"+v.txt.replace(/</g,'&lt;')+"</td></tr>").join('')+"</table>":"<p>None added.</p>")+"<p>Values assembly reflecting on Mutual Respect and consent for people's images, celebrating the Respectful behaviour focus.</p><h3>Safeguarding sign-off</h3><table><tr><th>Tutor group</th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><th>Delivered by</th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr><tr><th>Items passed to DSL</th><td>&nbsp;</td><th>Date passed</th><td>&nbsp;</td></tr><tr><th>DSL name</th><td>&nbsp;</td><th>DSL signature</th><td>&nbsp;</td></tr></table><p>Nothing typed into the box is saved on the device — this printout is the only record. Hand it to the DSL the same day and file per school policy. Timestamps can identify a pupil in a small group, so treat this sheet as confidential.</p></body></html>");w.document.close();w.print();}
+document.body.classList.add('calm');document.getElementById('calmBtn').textContent='☀️ Lively';
+render();
+</script>
+</body>
+</html>
