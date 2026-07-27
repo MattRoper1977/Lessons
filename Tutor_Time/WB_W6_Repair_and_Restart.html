@@ -211,7 +211,7 @@ body.calm #confetti{display:none!important}
   <button class="tool-btn" onclick="openTA()">👩‍🏫 TA Focus</button>
   <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
-<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-spot" title="Spot">🔍<span class="seal-lbl">Spot</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
+<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-own" title="Own it">🙋<span class="seal-lbl">Own it</span></div><div class="seal" id="seal-fix" title="Fix">🔧<span class="seal-lbl">Fix</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
 <div id="print-area"></div>
 
@@ -249,6 +249,22 @@ body.calm #confetti{display:none!important}
     <p class="step" style="margin-bottom:10px"><b>3.</b> What matters most is what happens NEXT.</p>
   </div>
   <button class="btn btn-reveal" onclick="stepReveal(this)">Next point ▸</button>
+
+<div class="ilm">
+<svg viewBox="0 0 560 215" role="img" aria-label="A broken line mended in four steps: own it, say it, fix it, then move on, with the mend drawn stronger than the original.">
+  <path class="draw" d="M40 96 L150 96" fill="none" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+  <path d="M156 78 L168 96 L156 114" fill="none" stroke="#dc2626" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="162" y="60" text-anchor="middle" font-size="20">&#128165;</text>
+  <text x="162" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991b1b">THE WOBBLE</text>
+  <g class="pop-in" style="animation-delay:.4s"><circle cx="238" cy="96" r="23" fill="#fef9c3" stroke="#eab308" stroke-width="3"/><text x="238" y="103" text-anchor="middle" font-size="17">&#128587;</text><text x="238" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#854d0e">OWN IT</text></g>
+  <g class="pop-in" style="animation-delay:.54s"><circle cx="318" cy="96" r="23" fill="#ffedd5" stroke="#f97316" stroke-width="3"/><text x="318" y="103" text-anchor="middle" font-size="17">&#128483;</text><text x="318" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9a3412">SAY IT</text></g>
+  <g class="pop-in" style="animation-delay:.68s"><circle cx="398" cy="96" r="23" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/><text x="398" y="103" text-anchor="middle" font-size="17">&#128295;</text><text x="398" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1e40af">FIX IT</text></g>
+  <g class="pop-in" style="animation-delay:.82s"><circle cx="486" cy="96" r="23" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><text x="486" y="103" text-anchor="middle" font-size="17">&#10132;</text><text x="486" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#166534">MOVE ON</text></g>
+  <path class="draw" d="M186 96 L212 96 M262 96 L294 96 M342 96 L374 96 M422 96 L462 96" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+  <text x="280" y="188" text-anchor="middle" font-size="14" font-weight="800" fill="#166534">MENDED IS NOT THE SAME AS NEVER BROKEN &#183; IT'S STRONGER</text>
+</svg>
+<div class="ilm-cap">The restart isn't the apology. It's what you do at the start of the next lesson, when nobody's watching for it.</div>
+</div>
 </section>
 
 <section class="slide wedo" data-ta="Reveal one point at a time — let each land before the next. Cold Call a re-say in the pupil's own words.">
@@ -488,7 +504,7 @@ show(0);
 
 
 /* ===== ENGINE v3 ===== */
-var SEALS={think:0,spot:0,voice:0,quiz:0,pledge:0}, _voices=[];
+var SEALS={think:0,own:0,fix:0,quiz:0,pledge:0}, _voices=[];
 function seal(k){ if(SEALS[k])return; SEALS[k]=1; var el=document.getElementById('seal-'+k); if(el)el.classList.add('on');
   if(Object.keys(SEALS).every(function(x){return SEALS[x];})){ try{confetti();}catch(e){} } }
 function toggleCalm(){ document.body.classList.toggle('calm');
@@ -496,14 +512,14 @@ function toggleCalm(){ document.body.classList.toggle('calm');
 (function(){ var _d=window.ding; if(_d) window.ding=function(){ if(document.body.classList.contains('calm'))return; return _d.apply(null,arguments); }; })();
 (function(){
   var _f=window.feelTap; if(_f) window.feelTap=function(b){ _f(b); seal('think'); };
-  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('spot'); return v; };
-  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('spot'); return v; };
+  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('own'); return v; };
+  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('own'); return v; };
   var _fin=window.finish; if(_fin) window.finish=function(){ seal('pledge'); return _fin.apply(null,arguments); };
 })();
 document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('click',function(){ seal('quiz'); o.classList.add('pop'); }); });
 function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v=t.value.trim(); if(!v)return;
   _voices.push({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),txt:v});
-  t.value=''; seal('voice');
+  t.value=''; seal('fix');
   document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.'; }
 function clearRoster(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
     sessionStorage.removeItem(k); localStorage.removeItem(k); localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
