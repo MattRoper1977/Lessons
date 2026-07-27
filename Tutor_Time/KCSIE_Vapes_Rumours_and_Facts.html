@@ -220,7 +220,7 @@ body.calm #confetti{display:none!important}
   <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
 
-<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-spot" title="Spot">🔍<span class="seal-lbl">Spot</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
+<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-check" title="Check it">🔬<span class="seal-lbl">Check it</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Quiz">✅<span class="seal-lbl">Quiz</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
 <div id="print-area"></div>
 
@@ -268,6 +268,29 @@ body.calm #confetti{display:none!important}
   <div class="box misc-box" id="myth" style="margin-top:14px">
     <p style="margin:0"><span class="strike">"It's definitely full of fentanyl."</span> — a rumour isn't a fact until someone checks. <b>Always wait for the evidence.</b></p>
   </div>
+
+<div class="ilm">
+<svg viewBox="0 0 560 215" role="img" aria-label="Two columns side by side: what people say about vapes, and what testing actually found, with the rumour column shown as short and loud.">
+  <g class="pop-in" style="animation-delay:.3s">
+    <rect x="34" y="40" width="230" height="148" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="3"/>
+    <text x="149" y="68" text-anchor="middle" font-size="13.5" font-weight="800" fill="#991b1b">&#128483; WHAT PEOPLE SAY</text>
+    <text x="149" y="98" text-anchor="middle" font-size="12.5" fill="#334155">&#8220;It's basically just water.&#8221;</text>
+    <text x="149" y="122" text-anchor="middle" font-size="12.5" fill="#334155">&#8220;My mate's is a safe one.&#8221;</text>
+    <text x="149" y="146" text-anchor="middle" font-size="12.5" fill="#334155">&#8220;You can tell by the box.&#8221;</text>
+    <text x="149" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">ONE SENTENCE. NO SOURCE.</text>
+  </g>
+  <g class="pop-in" style="animation-delay:.62s">
+    <rect x="296" y="40" width="230" height="148" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/>
+    <text x="411" y="68" text-anchor="middle" font-size="13.5" font-weight="800" fill="#166534">&#128300; WHAT TESTING FOUND</text>
+    <text x="411" y="98" text-anchor="middle" font-size="12.5" fill="#334155">The box tells you nothing.</text>
+    <text x="411" y="122" text-anchor="middle" font-size="12.5" fill="#334155">Confiscated ones get tested.</text>
+    <text x="411" y="146" text-anchor="middle" font-size="12.5" fill="#334155">Contents vary batch to batch.</text>
+    <text x="411" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">SEE THE DECK FOR THE FINDINGS</text>
+  </g>
+  <text x="280" y="206" text-anchor="middle" font-size="12.5" font-weight="800" fill="#475569">A RUMOUR FITS IN A SENTENCE &#183; A FINDING NEEDS A PARAGRAPH</text>
+</svg>
+<div class="ilm-cap">That's why the rumour usually wins the room — it's shorter, not truer.</div>
+</div>
 </section>
 
 <!-- 4: THE REAL RISK -->
@@ -539,7 +562,7 @@ show(0);
 
 
 /* ===== ENGINE v3 ===== */
-var SEALS={think:0,spot:0,voice:0,quiz:0,pledge:0}, _voices=[];
+var SEALS={think:0,check:0,voice:0,quiz:0,pledge:0}, _voices=[];
 function seal(k){ if(SEALS[k])return; SEALS[k]=1; var el=document.getElementById('seal-'+k); if(el)el.classList.add('on');
   if(Object.keys(SEALS).every(function(x){return SEALS[x];})){ try{confetti();}catch(e){} } }
 function toggleCalm(){ document.body.classList.toggle('calm');
@@ -547,8 +570,8 @@ function toggleCalm(){ document.body.classList.toggle('calm');
 (function(){ var _d=window.ding; if(_d) window.ding=function(){ if(document.body.classList.contains('calm'))return; return _d.apply(null,arguments); }; })();
 (function(){
   var _f=window.feelTap; if(_f) window.feelTap=function(b){ _f(b); seal('think'); };
-  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('spot'); return v; };
-  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('spot'); return v; };
+  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('check'); return v; };
+  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('check'); return v; };
   var _fin=window.finish; if(_fin) window.finish=function(){ seal('pledge'); return _fin.apply(null,arguments); };
 })();
 document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('click',function(){ seal('quiz'); o.classList.add('pop'); }); });
