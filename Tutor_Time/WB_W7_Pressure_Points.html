@@ -197,6 +197,39 @@ body.calm #confetti{display:none!important}
 #print-area h2{font-size:12.5pt;margin-top:11pt;border-bottom:1px dashed #999}
 #print-area td,#print-area th{border:1px solid #999;padding:6pt;font-size:10.5pt;text-align:left}
 #print-area table{border-collapse:collapse;width:100%;margin-top:6pt}
+/* ===== device frames: phone feed + breaking-news band ===== */
+.dev{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.phone{width:236px;height:400px;border-radius:30px;background:#0f172a;padding:11px 9px 14px;
+  box-shadow:0 14px 34px rgba(15,23,42,.32);position:relative;flex:0 0 auto}
+.phone::before{content:'';position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  width:78px;height:17px;border-radius:11px;background:#0f172a;z-index:3}
+.pscr{width:100%;height:100%;border-radius:22px;background:#f8fafc;overflow:hidden;position:relative}
+.pfeed{position:absolute;inset:0;display:flex;flex-direction:column;gap:9px;padding:32px 9px 9px;
+  animation:feedRoll 17s linear infinite}
+.pcard{background:#fff;border:1px solid #e2e8f0;border-radius:11px;padding:9px 10px;flex:0 0 auto;text-align:left}
+.pcard.flag{border-color:#dc2626;background:#fef2f2}
+.pcard.fact{border-color:#16a34a;background:#f0fdf4}
+.phandle{font-size:.62rem;font-weight:800;color:#475569;letter-spacing:.03em}
+.ptext{font-size:.68rem;line-height:1.4;color:#1e293b;margin-top:3px}
+.pbar{display:flex;gap:9px;margin-top:6px;font-size:.58rem;color:#64748b;font-weight:700}
+.plabel{position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,.9);color:#fff;
+  font-size:.6rem;font-weight:800;letter-spacing:.05em;text-align:center;padding:5px;z-index:4}
+@keyframes feedRoll{0%{transform:translateY(0)}100%{transform:translateY(-52%)}}
+.newsband{width:100%;max-width:470px;border-radius:12px;overflow:hidden;border:2px solid #0f172a;flex:0 0 auto}
+.nb-top{background:#dc2626;color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.11em;padding:6px 11px}
+.nb-mid{background:#0f172a;color:#fff;padding:11px;font-size:.92rem;font-weight:700;line-height:1.35}
+.nb-tick{background:#f1f5f9;color:#334155;font-size:.7rem;font-weight:700;padding:5px 0;white-space:nowrap;overflow:hidden}
+.nb-tick span{display:inline-block;padding-left:100%;animation:tick 19s linear infinite}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.dev-cap{font-size:.9rem;color:var(--muted);font-style:italic;margin-top:6px;text-align:center;width:100%}
+/* motion is the whole point here, so the still version has to work on its own */
+body.calm .pfeed,body.calm .nb-tick span{animation:none!important}
+body.calm .pfeed{position:static;height:100%;overflow-y:auto}
+@media (prefers-reduced-motion: reduce){
+  .pfeed,.nb-tick span{animation:none!important}
+  .pfeed{position:static;height:100%;overflow-y:auto}
+}
+
 @media (prefers-reduced-motion: reduce){
   .slide.active .box,.slide.active .step,.slide.active .dot,.slide.active .opt,.slide.active .ilm{animation:none!important;opacity:1!important;transform:none!important}
   .ilm .draw{stroke-dashoffset:0!important;animation:none!important}
@@ -250,22 +283,21 @@ body.calm #confetti{display:none!important}
   </div>
   <button class="btn btn-reveal" onclick="stepReveal(this)">Next point ▸</button>
 
-<div class="ilm">
-<svg viewBox="0 0 560 215" role="img" aria-label="Pressure escalates in four steps: a joke, a nudge, a push, then a threat. A marked exit door sits beside every step.">
-  <line class="draw" x1="40" y1="150" x2="520" y2="150" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
-  <g class="pop-in" style="animation-delay:.3s"><circle cx="90" cy="150" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><text x="90" y="157" text-anchor="middle" font-size="16">&#128512;</text><text x="90" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#166534">A JOKE</text></g>
-  <g class="pop-in" style="animation-delay:.45s"><circle cx="230" cy="150" r="18" fill="#fef9c3" stroke="#eab308" stroke-width="3"/><text x="230" y="157" text-anchor="middle" font-size="16">&#128072;</text><text x="230" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#854d0e">A NUDGE</text></g>
-  <g class="pop-in" style="animation-delay:.6s"><circle cx="370" cy="150" r="18" fill="#ffedd5" stroke="#f97316" stroke-width="3"/><text x="370" y="157" text-anchor="middle" font-size="16">&#128074;</text><text x="370" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9a3412">A PUSH</text></g>
-  <g class="pop-in" style="animation-delay:.75s"><circle cx="500" cy="150" r="18" fill="#fee2e2" stroke="#dc2626" stroke-width="3"/><text x="500" y="157" text-anchor="middle" font-size="16">&#9888;</text><text x="500" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991b1b">A THREAT</text></g>
-  <g class="pop-in" style="animation-delay:.95s">
-    <rect x="60" y="34" width="440" height="58" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
-    <text x="280" y="60" text-anchor="middle" font-size="15" font-weight="800" fill="#3730a3">&#128682; THE DOOR IS OPEN AT EVERY SINGLE STEP</text>
-    <text x="280" y="80" text-anchor="middle" font-size="12.5" fill="#334155">&#8220;Nah, I'm not doing that&#8221; works at step one AND at step four.</text>
-  </g>
-  <line class="draw" x1="90" y1="118" x2="90" y2="130" stroke="#6366f1" stroke-width="3"/><line class="draw" x1="230" y1="118" x2="230" y2="130" stroke="#6366f1" stroke-width="3"/>
-  <line class="draw" x1="370" y1="118" x2="370" y2="130" stroke="#6366f1" stroke-width="3"/><line class="draw" x1="500" y1="118" x2="500" y2="130" stroke="#6366f1" stroke-width="3"/>
-</svg>
-<div class="ilm-cap">Pressure works by making step four feel like the first time you could have said no. It wasn't.</div>
+<div class="dev">
+<div class="phone"><div class="pscr"><div class="pfeed">
+  <div class="pcard"><div class="phandle">GROUP CHAT &#183; 21:04</div><div class="ptext">&#8220;come on, everyone's doing it&#8221;</div><div class="pbar"><span>&#128512; a joke</span></div></div>
+  <div class="pcard"><div class="phandle">GROUP CHAT &#183; 21:06</div><div class="ptext">&#8220;why are you being weird about it&#8221;</div><div class="pbar"><span>&#128072; a nudge</span></div></div>
+  <div class="pcard flag"><div class="phandle">GROUP CHAT &#183; 21:11</div><div class="ptext">&#8220;do it or you're out of the chat&#8221;</div><div class="pbar"><span>&#128074; a push</span></div></div>
+  <div class="pcard flag"><div class="phandle">GROUP CHAT &#183; 21:14</div><div class="ptext">&#8220;I'll tell everyone what you said then&#8221;</div><div class="pbar"><span>&#9888; a threat</span></div></div>
+  <div class="pcard fact"><div class="phandle">&#128682; THE LINE THAT WORKS AT ANY OF THEM</div><div class="ptext">&#8220;Nah, I'm not doing that.&#8221; Then put the phone down. You don't owe a reason.</div><div class="pbar"><span>works at 21:04</span><span>works at 21:14</span></div></div>
+  <div class="pcard"><div class="phandle">GROUP CHAT &#183; 21:04</div><div class="ptext">&#8220;come on, everyone's doing it&#8221;</div><div class="pbar"><span>&#128512; a joke</span></div></div>
+</div><div class="plabel">TEN MINUTES, START TO THREAT</div></div></div>
+<div class="newsband">
+  <div class="nb-top">&#9679; HOW IT ACTUALLY GOES</div>
+  <div class="nb-mid">Pressure works by making step four feel like the first point you could have said no. It wasn't.</div>
+  <div class="nb-tick"><span>You can leave at any message &#183; a real mate takes the first no &#183; leaving a chat is not losing &#183; tell someone the same night &#183; </span></div>
+</div>
+<div class="dev-cap">Read the times. The whole thing took ten minutes &#8212; that's the speed you have to spot it at.</div>
 </div>
 </section>
 
@@ -296,6 +328,24 @@ body.calm #confetti{display:none!important}
   <h2>The class pressure rule</h2>
   <p>Together we write ONE class pressure rule ('We don't owe anyone…') — the class's own words, on the wall.</p>
   <div class="box aspire-box"><b>This is the real thing:</b> voice → decision → action. Watch it happen this week.</div>
+
+<div class="ilm">
+<svg viewBox="0 0 560 215" role="img" aria-label="Pressure escalates in four steps: a joke, a nudge, a push, then a threat. A marked exit door sits beside every step.">
+  <line class="draw" x1="40" y1="150" x2="520" y2="150" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
+  <g class="pop-in" style="animation-delay:.3s"><circle cx="90" cy="150" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/><text x="90" y="157" text-anchor="middle" font-size="16">&#128512;</text><text x="90" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#166534">A JOKE</text></g>
+  <g class="pop-in" style="animation-delay:.45s"><circle cx="230" cy="150" r="18" fill="#fef9c3" stroke="#eab308" stroke-width="3"/><text x="230" y="157" text-anchor="middle" font-size="16">&#128072;</text><text x="230" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#854d0e">A NUDGE</text></g>
+  <g class="pop-in" style="animation-delay:.6s"><circle cx="370" cy="150" r="18" fill="#ffedd5" stroke="#f97316" stroke-width="3"/><text x="370" y="157" text-anchor="middle" font-size="16">&#128074;</text><text x="370" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9a3412">A PUSH</text></g>
+  <g class="pop-in" style="animation-delay:.75s"><circle cx="500" cy="150" r="18" fill="#fee2e2" stroke="#dc2626" stroke-width="3"/><text x="500" y="157" text-anchor="middle" font-size="16">&#9888;</text><text x="500" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991b1b">A THREAT</text></g>
+  <g class="pop-in" style="animation-delay:.95s">
+    <rect x="60" y="34" width="440" height="58" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+    <text x="280" y="60" text-anchor="middle" font-size="15" font-weight="800" fill="#3730a3">&#128682; THE DOOR IS OPEN AT EVERY SINGLE STEP</text>
+    <text x="280" y="80" text-anchor="middle" font-size="12.5" fill="#334155">&#8220;Nah, I'm not doing that&#8221; works at step one AND at step four.</text>
+  </g>
+  <line class="draw" x1="90" y1="118" x2="90" y2="130" stroke="#6366f1" stroke-width="3"/><line class="draw" x1="230" y1="118" x2="230" y2="130" stroke="#6366f1" stroke-width="3"/>
+  <line class="draw" x1="370" y1="118" x2="370" y2="130" stroke="#6366f1" stroke-width="3"/><line class="draw" x1="500" y1="118" x2="500" y2="130" stroke="#6366f1" stroke-width="3"/>
+</svg>
+<div class="ilm-cap">Pressure works by making step four feel like the first time you could have said no. It wasn't.</div>
+</div>
 </section>
 
 <!-- 7 CHECK-OUT -->
@@ -368,7 +418,7 @@ body.calm #confetti{display:none!important}
   <button class="btn btn-reveal" onclick="pickName()" style="margin-top:10px">Pick a pupil</button>
   <p style="margin-top:16px;font-size:.85rem">Roster (one per line — saved on this device, shared with your other lessons):</p>
   <textarea class="roster-in" id="rosterIn" placeholder="Name, 1 / 2 / 3 (Supported / Standard / Stretch)"></textarea>
-  <button class="btn hint-btn" onclick="saveRoster()">Save roster</button><button class="tool-btn" onclick="clearRoster()">🧹 Clear names</button>
+  <button class="btn hint-btn" onclick="saveRoster()">Save roster</button><button class="tool-btn" onclick="clearRoster()">🧹 Clear names</button><div id="rosterAge" style="margin-top:8px;font-size:.78em;opacity:.75">Saved on this device · clears itself after 14 days</div>
 </div></div>
 
 <div class="complete" id="complete">
@@ -523,8 +573,34 @@ function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v
   _voices.push({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),txt:v});
   t.value=''; seal('exit');
   document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.'; }
+
+/* ===== roster: persists as before, but time-boxed ===== */
+var ROSTER_TTL_DAYS = 14;
+(function(){
+  function key(){ return (typeof _CC_KEY!=='undefined') ? _CC_KEY : 'ps_coldcall_roster'; }
+  function stampKey(){ return key()+'__stamp'; }
+  /* NEVER read, parse or rewrite the roster value itself \u2014 two different data
+     models live behind these keys and both break if you touch the shape. */
+  try{
+    var k=key(), st=localStorage.getItem(stampKey());
+    if(localStorage.getItem(k)){
+      if(!st){ localStorage.setItem(stampKey(), new Date().toISOString()); }
+      else{
+        var age=(Date.now()-Date.parse(st))/86400000;
+        if(age>ROSTER_TTL_DAYS){ localStorage.removeItem(k); localStorage.removeItem(stampKey()); }
+      }
+    }
+  }catch(e){}
+  var _sr=window.saveRoster;
+  if(_sr) window.saveRoster=function(){ var v=_sr.apply(null,arguments);
+    try{ localStorage.setItem(stampKey(), new Date().toISOString()); }catch(e){}
+    var n=document.getElementById('rosterAge'); if(n)n.textContent='Saved on this device \u00b7 clears itself after '+ROSTER_TTL_DAYS+' days';
+    return v; };
+})();
 function clearRoster(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_coldcall_roster';
-    sessionStorage.removeItem(k); localStorage.removeItem(k); localStorage.removeItem('ps_coldcall_roster'); }catch(e){}
+    sessionStorage.removeItem(k); localStorage.removeItem(k); localStorage.removeItem('ps_coldcall_roster');
+    sessionStorage.removeItem(k); localStorage.removeItem(k+'__stamp'); }catch(e){}
+  var n=document.getElementById('rosterAge'); if(n)n.textContent='Cleared from this device.';
   var p=document.getElementById('ccPick'); if(p)p.textContent='Class list cleared from this device.'; }
 function printEvidence(){
   var earned=Object.keys(SEALS).filter(function(k){return SEALS[k];}).length;
