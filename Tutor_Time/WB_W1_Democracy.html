@@ -211,7 +211,7 @@ body.calm #confetti{display:none!important}
   <button class="tool-btn" onclick="openTA()">👩‍🏫 TA Focus</button>
   <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
-<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-spot" title="Spot">🔍<span class="seal-lbl">Spot</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
+<div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-vote" title="Vote">🗳️<span class="seal-lbl">Vote</span></div><div class="seal" id="seal-voice" title="Voice">💬<span class="seal-lbl">Voice</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
 <div id="print-area"></div>
 
@@ -249,6 +249,22 @@ body.calm #confetti{display:none!important}
     <p class="step" style="margin-bottom:10px"><b>3.</b> We accept the result, even when our side loses.</p>
   </div>
   <button class="btn btn-reveal" onclick="stepReveal(this)">Next point ▸</button>
+
+<div class="ilm">
+<svg viewBox="0 0 560 215" role="img" aria-label="Five different people each posting one slip into a single ballot box, above a bar reading one person equals one voice.">
+  <g class="pop-in" style="animation-delay:.3s"><text x="70" y="46" text-anchor="middle" font-size="24">&#128100;</text><rect x="52" y="56" width="36" height="24" rx="4" fill="#fff" stroke="#6366f1" stroke-width="2.5"/></g>
+  <g class="pop-in" style="animation-delay:.42s"><text x="160" y="42" text-anchor="middle" font-size="24">&#128105;</text><rect x="142" y="52" width="36" height="24" rx="4" fill="#fff" stroke="#6366f1" stroke-width="2.5"/></g>
+  <g class="pop-in" style="animation-delay:.54s"><text x="280" y="38" text-anchor="middle" font-size="24">&#129485;</text><rect x="262" y="48" width="36" height="24" rx="4" fill="#fff" stroke="#6366f1" stroke-width="2.5"/></g>
+  <g class="pop-in" style="animation-delay:.66s"><text x="400" y="42" text-anchor="middle" font-size="24">&#128104;</text><rect x="382" y="52" width="36" height="24" rx="4" fill="#fff" stroke="#6366f1" stroke-width="2.5"/></g>
+  <g class="pop-in" style="animation-delay:.78s"><text x="490" y="46" text-anchor="middle" font-size="24">&#128103;</text><rect x="472" y="56" width="36" height="24" rx="4" fill="#fff" stroke="#6366f1" stroke-width="2.5"/></g>
+  <path class="draw" d="M70 84 L270 120 M160 80 L272 120 M280 76 L280 118 M400 80 L288 120 M490 84 L290 120" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="4 5"/>
+  <rect x="222" y="120" width="116" height="46" rx="8" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+  <rect x="262" y="115" width="36" height="8" rx="3" fill="#3730a3"/>
+  <text x="280" y="150" text-anchor="middle" font-size="13" font-weight="800" fill="#3730a3">ONE BOX</text>
+  <text x="280" y="196" text-anchor="middle" font-size="16" font-weight="800" fill="#334155">1 PERSON &#183; 1 VOICE &#183; NO EXCEPTIONS</text>
+</svg>
+<div class="ilm-cap">The vote you don't cast still counts — it just counts for whoever did turn up.</div>
+</div>
 </section>
 
 <section class="slide wedo" data-ta="Reveal one point at a time — let each land before the next. Cold Call a re-say in the pupil's own words.">
@@ -488,7 +504,7 @@ show(0);
 
 
 /* ===== ENGINE v3 ===== */
-var SEALS={think:0,spot:0,voice:0,quiz:0,pledge:0}, _voices=[];
+var SEALS={think:0,vote:0,voice:0,quiz:0,pledge:0}, _voices=[];
 function seal(k){ if(SEALS[k])return; SEALS[k]=1; var el=document.getElementById('seal-'+k); if(el)el.classList.add('on');
   if(Object.keys(SEALS).every(function(x){return SEALS[x];})){ try{confetti();}catch(e){} } }
 function toggleCalm(){ document.body.classList.toggle('calm');
@@ -496,8 +512,8 @@ function toggleCalm(){ document.body.classList.toggle('calm');
 (function(){ var _d=window.ding; if(_d) window.ding=function(){ if(document.body.classList.contains('calm'))return; return _d.apply(null,arguments); }; })();
 (function(){
   var _f=window.feelTap; if(_f) window.feelTap=function(b){ _f(b); seal('think'); };
-  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('spot'); return v; };
-  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('spot'); return v; };
+  var _r=window.reveal; if(_r) window.reveal=function(){ var v=_r.apply(null,arguments); seal('vote'); return v; };
+  var _s=window.stepReveal; if(_s) window.stepReveal=function(){ var v=_s.apply(null,arguments); seal('vote'); return v; };
   var _fin=window.finish; if(_fin) window.finish=function(){ seal('pledge'); return _fin.apply(null,arguments); };
 })();
 document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('click',function(){ seal('quiz'); o.classList.add('pop'); }); });
