@@ -169,6 +169,17 @@ obvious selector returns the wrong set.
   into every pupil's pack in 45 files. If it is ever wanted, it is a content decision
   with a human behind it. R-E05 applies: the print subsystem is closed to further
   auditing without a concrete report.
+- **BOUNDARY — this rule is NOT universal (added after the Pass V print check).** It
+  governs the **45-file BUILD chassis it was written for, and NOT the six v5 D&T
+  Community Upcycling decks** (`Build/Slideshows/BUILD_DT_W{1..6}_*.html`). On those
+  six, a **physical print check** confirmed the Lundy page prints **between the witness
+  and feedback sheets, as intended**; commits `b1b7ee0`–`7889055`, which add `lundy` to
+  the array on those six, **stand — no revert**, and their id lists are unfrozen.
+  Reading R-A07 as universal is what nearly triggered a wrongful revert of those
+  commits; the boundary is recorded here so it is not re-litigated.
+- **RESIDUAL, non-blocking.** The print check confirmed **order, not wording**. If the
+  printed Lundy page on the six v5 decks ever reads as staff instructions rather than
+  pupil-facing, that is a **wording fix, never a revert**.
 
 ### R-A08 · `printSection()` is defined in 45 files and called from none
 - **STATUS** RECORD · **VERIFIED** `3e2b99d`
