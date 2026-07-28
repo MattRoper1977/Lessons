@@ -798,6 +798,13 @@ building meant the whole episode cost zero repo changes.
   educate"* on pupil paper — survives as a **wording candidate**, kept in R-A07's **RESIDUAL**:
   if the printed Lundy page ever reads as staff instructions rather than pupil-usable, that is a
   **wording fix, never a revert**.
+- **The remedy appears to be taking, observed in flight (`32441c5`, `0ec1da0`).** After the
+  collision, Pass V's own subsequent commits recorded the R-A07 boundary *in this register* and
+  added a provenance note in the R-D03 family (*"Aimee is fictional, not a pupil"*) — the behaviour
+  of a session that has read the estate's conventions. **One instance, not proof** — the commit
+  names are attached so a second can be counted against them. This estate is full of declarations
+  that never bound anything; *a rule observed changing behaviour is a different species from a rule
+  written down*, and this is the first of the second kind.
 
 ### R-H02 · Cross-pass collision — the estate cannot see a pass's work in flight
 - **STATUS** OPEN · **VERIFIED** `0ec1da0`

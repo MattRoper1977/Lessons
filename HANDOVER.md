@@ -228,6 +228,10 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 12. **The specimen pass.** Build one specimen of the day-close + LAUNCH warrant line —
     the specimen chosen to *break* the design, per the LL-G rule — gated, before any batch.
+    **Inputs, all under `LundyLoop/6_designs/`:** the ratified designs (`LL-I_B2_day_close_reader.md`,
+    `LL-I_B3_grow_launch_stepup.md`) and the measurement records they rest on
+    (`LL-I_B1_measurement_map.md`, `LL-I_B2_0_closure_definitions.md` — OBSERVATION RECORDs,
+    re-derive before relying).
     **TRIGGER: a new session with Matt's go; one specimen, gated, before scale.**
 13. **The calibration-game pathway section.** Add the pathway-scoped section to
     `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` (B2 §5): GROW/LAUNCH close on
