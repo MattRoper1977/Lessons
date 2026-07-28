@@ -1,6 +1,11 @@
 # HANDOVER — Lundy Loop programme
 
-**Current as of `35efefd`.** Supersede this file wholesale next session; do not append.
+**Current as of Pass LL-G, commit 6.** Supersede this file wholesale next session; do not append
+— **with one exception: the queue may be appended to, provided each entry carries its own
+trigger**, so it can be carried forward intact by whoever rewrites the file. Carrying
+those entries forward is a **requirement of this header, not a courtesy** — whoever
+supersedes this file is bound by the rule they are rewriting.
+
 It is the one artefact here with no history worth reading.
 
 ---
@@ -160,6 +165,61 @@ Full list: `python3 LundyLoop/tools/ko_staleness.py`.
 6. LL-5 — 58 files, BUILD 28 · GROW 20 · LAUNCH 10. Six specimens across three suites
    before authoring at scale. **L3 settled first.**
 7. KO triage from §7
+
+
+### Added by Pass LL-G — owed, with triggers attached
+
+**Written down rather than remembered.** A shelved item with no written trigger either
+gets forgotten, or gets restarted by someone who does not know why it stopped.
+
+8. **`INSTRUMENTS.md` repair.** Three instruments have no entry of their own —
+   `assessed_conditions_gate.py`, `sitemap_audit.py`, `ko_staleness.py` — while being
+   referenced by ID in the blind-twin table and in R-G01. Re-observe R-G01 row 2, whose
+   *"6 listed / 6 actual"* went stale silently while its own "what keeps it true" column
+   already said `nothing`. **Target after Pass LL-G lands: 10 scripts / 11 entries**
+   (11 includes the quarantined `LL-INST-03-v1`, which has an entry and no script — do
+   not read that as an off-by-one). Registered as **R-G03**.
+   **TRIGGER: none — it is owed now.** Small, self-contained, no dependency on anything
+   below.
+   **Carry the counts fix into it:** *"N listed / N actual"* is a sentence that could be
+   a derivation. Four counts went stale during Pass LL-G alone, every one correct when
+   written and not re-derived when its subject moved. `bundle_facts.py` is the shape —
+   a number a script prints when it runs cannot be stale; a number in prose can.
+
+9. **The `ko_staleness.py` refinement.** Two lines in `visible()`'s caller, excluding
+   regions whose own markup declares them not-KO-relevant (`class="lm-strip"`,
+   `class="lm-own"`). Tested: restores the pre-patch body hash in **45 of 45** files.
+   Take the self-describing region, **not** an entry in the `ARCHITECTURE` list — a wrong
+   entry there silently *drops* a real candidate, which already happened once with
+   `Pass LL-A2a`, and that is the expensive direction. Registered as **R-E07**.
+   **TRIGGER: after Pass LL-G's KO output has been read and judged — never during.**
+   An instrument must not be modified in the pass it is measuring (**R-E09**). Until
+   then the 45 new candidates are an expected artefact, not forty-five stale organisers.
+
+10. **The TA card, both brandings.** Progress Schools variant into the staff pack;
+    Made by Matt variant onto the site. One page each, already built and gate-checked
+    (REBRAND rules 1–5 clean; ~10 lines of headroom at 110% zoom with the estate font
+    substituted).
+    **TRIGGER: before the first staff briefing of term — not the first week of
+    lessons.** A TA who meets the printed strip before they meet the card will fill the
+    box in on the pupil's behalf, which is the exact failure the pass exists to remove.
+    **Until this lands, the 45 files carry a printed strip and nothing else.** The strip
+    is the mechanism; the card is the behaviour that makes it mean anything.
+
+11. **The day card and the tutor-time ninety seconds — SHELVED, not abandoned.**
+    Designed in full (Pass LL-G deliverable B2 §(c) and §(d)): a pupil-held A5 week card,
+    five rows, no second copy; and ninety seconds inside the existing Tutor Time evidence
+    slot, run by the rotating Evidence Captain.
+    **TRIGGER: only if the lesson-level mark is observed working in a real room** — a
+    pupil answering *"what does this ring mean?"* with an event rather than with the
+    sheet, and blanks present rather than absent. See the three-week check.
+    **Why it stopped, and by whose decision:** stopping was the *recommendation* — the
+    lesson-level mark is the smaller true answer and should be shown to work before
+    anything is built on it — and **Matt took it**. This is a decision, not work that
+    ran out of time, and not abandoned work. The design exists in full and is ready.
+    **R-A09 binds anything built here: no second copy, ever.**
+
+*Queue entries 8–11 added by Pass LL-G at `d601842`.*
 
 ---
 

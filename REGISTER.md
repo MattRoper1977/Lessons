@@ -440,6 +440,84 @@ depends on knowing to look and knowing where.*
   that puts this file there. **Not moved**, because churning a directory committed
   hours earlier costs more than it buys. Recorded so the question is not re-asked.
 
+### R-E07 · The KO candidate list is about to grow by 45, and it is an artefact of Pass LL-G
+- **STATUS** RECORD · **VERIFIED** `d601842` — predicted and measured **before** the number moved
+- **Read this before quoting `ko_staleness.py` on any BUILD file.**
+- **What will happen.** `ko_staleness.py` (LL-INST-08) flags a file when its **visible
+  text** last moved *after* its KO block last moved, in a commit classified as a
+  **content** pass. Pass LL-G adds visible text to `print-feedback` in 45 files, and
+  `Pass LL-G` does not match the instrument's `ARCHITECTURE` list. **All 45 therefore
+  become candidates the moment this lands.** All 45 carry `id="print-ko"`, so 45 is both
+  the expected and the maximum increase.
+- **Measured, not predicted:** the instrument's own `visible()` hash moves in **45 of
+  45** files. Its `ko_text()` hash is **unchanged in all 45** — the KO block itself was
+  not touched, which is the point.
+- **THIS IS THE PROXY SHAPE AGAIN.** LL-3's print mirror made `print_has_lundy` true
+  across 104 files and eighteen lessons appeared to gain a level while nothing about
+  them changed (R-E02). Here a staleness proxy will report 45 organisers as candidates
+  because a **feedback control** was added to a **printed sheet** — which is not
+  something a Knowledge Organiser summarises. *The instrument is not wrong; it is
+  answering the question it was built to answer, and that question is a proxy.*
+- **Do not read the new candidates as forty-five stale organisers, and do not "fix"
+  them.** Nothing about what those KOs summarise has changed.
+- **THE FIX, tested and available.** The instrument's v1→v2 lesson was that markup and
+  CSS moving is not the body moving; it strips tags, scripts and styles. It does **not**
+  strip *print-region text*, which is the same class of thing. Excluding regions that
+  declare themselves not-KO-relevant — the Loop Mark carries
+  `<td class="lm-strip">` and `<span class="lm-own">` — **restores the pre-patch body
+  hash in 45 of 45 files**, verified. Two lines in `visible()`'s caller.
+- **Prefer the declaration in the artefact over an entry in the tool's list.** Adding
+  `Pass LL-G` to `ARCHITECTURE` would also work and is the **dangerous direction**: a
+  wrong entry there silently *drops* a real candidate, which already happened once with
+  `Pass LL-A2a`. A region that says in the markup that a KO does not summarise it is
+  self-describing, survives the next pass, and needs no list. This is the
+  `assessed_conditions_gate` lesson reused: **when a blind spot is caused by missing
+  information rather than weak extraction, fix the document.**
+- **Not fixed in Pass LL-G**, deliberately — changing an instrument inside the pass whose
+  output it is about to judge is the error this register exists to prevent. Its own pass.
+
+### R-E09 · An instrument must not be modified in the pass it is measuring
+- **STATUS** CONVENTION — a sequencing rule, and it will read as pedantry to anyone in a hurry
+- **The rule.** If a pass changes files that an instrument scores, that instrument is
+  **frozen for the duration of the pass**. Read its output, judge it, *then* change it.
+  Never adjust the instrument and the files in the same breath.
+- **Why, stated so the hurry does not win.** An instrument altered mid-pass produces a
+  number nobody can attribute. Did the count fall because the estate improved, because
+  the instrument was narrowed, or because both moved and partly cancelled? **There is no
+  way back from that**, because the before-reading was taken with a different instrument
+  than the after-reading. It is not a rigour preference; it destroys the comparison.
+- **The live instance.** Pass LL-G adds visible text to 45 files, which will grow
+  `ko_staleness.py`'s candidate list by 45 (**R-E07**). A two-line fix exists and is
+  tested. Applying it inside Pass LL-G would have produced a KO list that was neither
+  the old measure nor the new one, and the 45 would have been silently absent from a
+  number that had also silently changed meaning.
+- **Precedent, and why this is not hypothetical.** LL-3's print mirror made
+  `print_has_lundy` true across 104 files and eighteen lessons appeared to gain a level
+  while nothing about them changed (**R-E02**). `print_pack_audit` v1's retired figures
+  are unquotable for the same reason (**R-E01**) — the instrument moved, so its numbers
+  cannot be compared to anything.
+- **The corollary that makes it usable:** when a pass will move an instrument's output,
+  **register the expected movement before the pass lands** and fix the instrument
+  afterwards. A predicted artefact is readable; a discovered one starts an investigation.
+
+
+### R-E08 · The stale-copy marker for the Loop Mark 45
+- **STATUS** RECORD · **VERIFIED** `d601842`
+- **The most recent deploy touching these 45 files is now `d601842`** — Pass LL-G sub-pass
+  3 of 3. It was **`14b691c`** (Pass LL-4b, *"name SPACE as the TA's first job"*), and any
+  guard still keyed to `14b691c` will now mismatch — **correctly**, because the files have
+  genuinely moved. Re-key it; do not suppress it.
+- **Why this needs an entry rather than a memory.** A stale-copy guard names a commit. The
+  commit it names stops being the tip of that file's history the moment anything touches
+  it, and **a guard keyed to a superseded SHA has no symptom** — it fails open or it fails
+  loud depending on which direction it was written in, and neither tells you *why*.
+- **The population this marker covers is the 45 of the Pass LL-G set**, enumerated in the
+  three sub-pass manifests, not "the BUILD lessons" — which is ambiguous inside this
+  estate's own record (76 lessons, split 45/16/8/7; see the Pass LL-G derivation).
+- **The 31 files not in the set still key to their own last-touching commit.** Do not
+  apply `d601842` to anything outside the 45. R-F04: a fact travels no further than the
+  file it was observed in.
+
 ---
 
 ## F · Superseded and open
@@ -598,6 +676,51 @@ depends on knowing to look and knowing where.*
   after `LL-INST-09` (Pass LL-G) lands.
 - **Do not read a shrinking discrepancy as progress** without re-running `ls
   LundyLoop/tools/*.py | wc -l` against `grep -c '^## LL-INST-[0-9]'`. Both numbers move.
+
+### R-G04 · A self-referential stamp cannot be maintained by the commit that changes the file
+- **STATUS** CONVENTION · **VERIFIED** Pass LL-G, commit 6
+- **The shape.** A file that states its own currency — *"current as of X"* — cannot have
+  `X` be the commit that most recently changed it, **because that commit's identity does
+  not exist until after the content is written.** The stamp is false the instant it lands.
+- **This is the fifth data point for R-G03 and the cleanest one.** The other four were
+  counts that were correct when written and went stale through neglect. This one is
+  **structurally incapable of being true at the moment it is written.** No amount of care
+  fixes it; only a different form does.
+- **The instance.** `HANDOVER.md`'s header read *"Current as of `35efefd`"* — on the one
+  line in the file that governs how the file is maintained. Pass LL-G commit 6 edits that
+  header, so the stamp was false the moment the commit landed.
+- **Two remedies, both valid:**
+  1. **Name the pass, not the commit** — *"Current as of Pass LL-G, commit 6"*. True when
+     written, and it stays true, because **a pass does not move after it lands**.
+  2. **Patch the value in afterwards**, the way R-E08 takes the pushed SHA as an argument.
+  **Taken here: (1).** A header stamp does not need commit precision, and **a value
+  nothing keeps true is worse than a coarser one that stays true.**
+- **It is the `VERIFIED <commit>` convention run the other way** — not *"here is when this
+  was observed"* but *"here is what this describes"*. Both are useful; only one of them can
+  be written by the thing it describes.
+- **THE DISTINCTION THAT MAKES THIS NARROW, and it was checked rather than assumed.**
+  `REGISTER.md` (*"Last observed true at `35efefd`"*) and `INSTRUMENTS.md` (*"Last observed
+  true at `8c384a7`"*) do **not** have this defect. They make a **historical** claim — a
+  check was run at that commit — which stays true forever, including after the file
+  changes. `HANDOVER.md` made a **currency** claim about its own state, which goes false on
+  the next edit. **Historical stamps are safe; currency stamps are not.** Only one of the
+  three needed fixing.
+- **HISTORICAL STAMPS MUST STAY COMMIT-NAMED. That is not an oversight; it is the
+  point.** Naming the commit is what makes a historical claim **re-observable**:
+  *"6 listed / 6 actual at `8c384a7`"* can be re-run against `8c384a7` and confirmed or
+  refuted. Replace that commit with a pass name and the claim becomes **unfalsifiable** —
+  nobody can return to the exact tree the check was run against. `VERIFIED <commit>` is
+  doing its job. **Do not convert it.**
+- **DO NOT RUN THIS RULE BACKWARDS.** *"Never the commit"* applies **only** to a currency
+  claim a file makes about its own state. Applied to a historical claim it destroys the
+  property that makes the claim worth having. **Two of this estate's three stamps are
+  already in the correct form and must not be touched** — `REGISTER.md` and
+  `INSTRUMENTS.md` stay commit-named, permanently.
+- **Applies to:** any artefact naming its own currency. If a file must state its own
+  freshness, name the pass, the term or the release — never the commit that is about to
+  contain the sentence. If a file records **when a check was run**, name the commit —
+  always.
+
 
 ### R-F04 · Facts do not travel between files
 - **STATUS** CONVENTION — the rule two of this session's corrections earned
