@@ -787,10 +787,16 @@ building meant the whole episode cost zero repo changes.
   every commissioned session's brief carries the register, or the register does not govern that
   session.** Naming a file "protected" in a document one session holds protects it from that
   session alone.
-- Open, and **Matt's, pending a physical print check** — not reverted: does R-A07's prohibition
-  reach the v5 D&T decks (which carry a Lundy print section *by design* in a 14-section pack),
-  and does the adult-facing SPACE line belong on pupil paper? The D&T v5 `printPack` id lists
-  are do-not-touch until that check (§ do-not-touch).
+- **Resolved 2026-07-28 — the physical print check ran (Pass V).** On the six v5 D&T decks the
+  Lundy page prints between the witness and feedback sheets as intended, so **R-A07's prohibition
+  does not reach them** (they carry a Lundy print section *by design* in a 14-section pack);
+  commits `b1b7ee0`–`7889055` **stand, no revert**, and the `printPack` id-list hold is **lifted**.
+  Recorded independently at `32441c5` as R-A07's **BOUNDARY** note — this session and Pass V were
+  both authorised to record it (**R-H02 again**; Pass V landed it first), so this closes the
+  question rather than duplicating it. The **adult-facing SPACE line** — *"regulate before you
+  educate"* on pupil paper — survives as a **wording candidate**, kept in R-A07's **RESIDUAL**:
+  if the printed Lundy page ever reads as staff instructions rather than pupil-usable, that is a
+  **wording fix, never a revert**.
 
 ### R-H02 · Cross-pass collision — the estate cannot see a pass's work in flight
 - **STATUS** OPEN · **VERIFIED** `0ec1da0`
