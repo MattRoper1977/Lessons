@@ -253,3 +253,80 @@ history to tidy the gmail/hotmail author split.
 **Unrun:** `sitemap_audit.py` cannot execute from the agent sandbox — outbound HTTP is
 proxied and returns 403. **It fails loudly rather than reporting a pass**, which is
 correct. Run it from a machine with network egress.
+
+---
+
+# SESSION: Pass V + D&T v5 + estate reduced-motion + Pass S (session_0183, 2026-07-28)
+
+A separate programme from the Lundy Loop work above, sharing the repo. Bootstraps by
+cloning, not by memory. All commits verified from fresh clones / live at pinned SHA.
+
+## Commit ledger (each with rollback)
+| Work | Commit(s) | Rollback |
+|---|---|---|
+| Include Lundy in printed pack, W1–W6 (per-deck) | `b1b7ee0` `4452e46` `9efbdc8` `cf53665` `26d2eb3` `7889055` | `16b5ea5` |
+| W1 title → "The Workshop Audit" (all surfaces) | `32d0f23` | `7889055` |
+| Stale week labels (W6 banner, Print-Tools ×5) | `9210562` | `32d0f23` |
+| RM: Art_Teesside 31 | `e3082d2` | `9210562` |
+| RM: BUILD_ASDAN 31 | `6816fc0` | `e3082d2` |
+| RM: GROW_ASDAN 18 | `cef0c73` | `6816fc0` |
+| RM: Build D&T 6 | `f1d85c0` | `cef0c73` |
+| RM: BUILD_HUM 8 | `6bc13b7` | `f1d85c0` |
+| RM: GROW_HUM 7 (non-assessed) | `47f8494` | `6bc13b7` |
+| RM: GROW_HUM_W7 (assessed, alone) | `e425bb8` | `47f8494` |
+| ASDAN Consent provenance note (×10) | `0ec1da0` | `e425bb8` |
+| REGISTER R-A07 boundary | `32441c5` | `8ead540` |
+| Pass S: W1/W2/W3/W5 (per-file) | `6bbf34e` `1bca277` `96f8294` `b92fe6d` | `7e42831` → each prior |
+
+RM standard applied to **102 files** (86 `.ilm *` CAREERS chassis + 16 HUM). ASDAN 2 and
+LAUNCH_HUM 8 already covered — not touched.
+
+## Standing rules logged this session
+- **Measure the repo before authoring anything a spec calls "new."** Five false premises
+  dissolved before build: hidden-nail sweep already present · chassis is 10 slides not 9 ·
+  LAUNCH_HUM already RM-covered · ASDAN already RM-covered · Pass S A/B ergonomics/chamfer
+  already written.
+- **RM detection must see BOTH implementations:** CSS `@media (prefers-reduced-motion)`
+  AND JS `matchMedia(...)` + class-toggle + class-scoped CSS (e.g. `body.reduce ...`). A
+  CSS-only classifier called ASDAN a defect; it is a better implementation (it gates audio).
+- **Assessed-file edits — house formulation:** diff pre/post, assert exactly one changed
+  hunk lying entirely between the `@media (prefers-reduced-motion)` open brace and its
+  matching close. Proves nothing outside moved, including what nobody enumerated. Beats
+  listing the Card / tiers / print sections.
+- **Whitespace-both-sides:** when normalising whitespace for a containment test, strip it
+  from BOTH needle and haystack, or the match never fires.
+- **Never classify an RM block from a truncated selector capture** — brace-match to the
+  closing `}` and read the whole thing. (Corrected a 24→16 count.)
+- **An instrument wrong twice does not close a question.** Re-run it after every fix to its
+  own blind spot; treat any bucket it calls "clean" as unverified until asked how it knows.
+- **Deliberate print triplication** (per-tier worksheet copy) is marked do-not-de-duplicate
+  in-file; a pupil receives only their own tier's sheet (Pass N print-reference pattern).
+
+## Open queue (this programme)
+1. **LIGHT RM — 10 files, approved, specimens gated:** primary/space 6 · Assembly 3 ·
+   Tutor_Time 1. Each chassis its own specimen back to Matt before its batch. NB Assembly:
+   commit `8bc2b8b` already patched `.phonepop/.tick/.filmyet` for the opacity:0 trap — first
+   establish whether these 3 are those 3 with different residue or a different three.
+2. **MEDIUM RM — 25 files:** 6 Art 13 · 2 Physics 10 12. 6 Art shares CAREERS keyframe
+   names — verify semantics per file; same names ≠ same function in a different chassis.
+3. **Nudge-gap content pass:** all 86 CAREERS files carry the transient `.match-target.wrong`
+   red-border shake nudge with no icon+word at that cue — colour-alone breach candidate
+   needing a text nudge. Content pass, not an RM commit.
+4. **HEAVY RM — 34 files, gated on a fresh go from Matt:** biology 10 · chemistry 8 ·
+   Intervention 6 · Local Choice 10. Four separate chassis. Biology builds print content at
+   runtime → static validation insufficient; jsdom rendering with process-level error
+   handlers is mandatory.
+
+## The human's open calls (not the session's to decide)
+- **Estate `data-timer` question:** the deck timers sum to ~53 min (inherited from the CAREERS
+  donor, likely chassis-wide) while the timetable period is 40 min authoritative. `data-timer`
+  is a per-phase on-screen countdown, not a schedule; drop-first phases exist by design. No
+  session edits timers in passing — candidate estate-wide question.
+- **Games (21 files) decorative-motion question:** motion is the content; suppressing it
+  destroys the artefact. Open sub-question: should decorative splash/title motion respect RM
+  while gameplay does not? Defect class otherwise closed.
+- **Lundy print-page wording sub-check:** the physical print check confirmed ORDER, not
+  wording. If the printed Lundy page on the six v5 decks ever reads as staff instructions
+  rather than pupil-facing, that is a wording fix, never a revert (recorded at R-A07 BOUNDARY).
+- **Pass S recovery route** assumes the TA can help a returning pupil measure the model at the
+  bench (reclaimed-timber build; no "standard sizes" reference exists — confirmed absent).
