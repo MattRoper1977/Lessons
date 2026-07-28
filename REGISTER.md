@@ -511,9 +511,26 @@ depends on knowing to look and knowing where.*
   commit it names stops being the tip of that file's history the moment anything touches
   it, and **a guard keyed to a superseded SHA has no symptom** — it fails open or it fails
   loud depending on which direction it was written in, and neither tells you *why*.
-- **The population this marker covers is the 45 of the Pass LL-G set**, enumerated in the
-  three sub-pass manifests, not "the BUILD lessons" — which is ambiguous inside this
-  estate's own record (76 lessons, split 45/16/8/7; see the Pass LL-G derivation).
+- **The population this marker covers is the 45 of the Pass LL-G set** — not "the BUILD
+  lessons", which is ambiguous inside this estate's own record (76 lessons, split
+  45/16/8/7; see the Pass LL-G derivation). **The set is a derivation, not a manifest:**
+  `git grep -l 'll-g:loop-mark v1' -- '*.html' ':(exclude)LundyLoop/5_staff_training/*'` = **45**.
+  The three container-bound sub-pass manifests were archive-only and never committed — the
+  R-E08 lesson itself, that a derivation which re-runs beats a list that can go stale.
+  Re-derived **45** at `0ec1da0` (2026-07-28), a HEAD already carrying sixteen live commits
+  the sentinel has survived unchanged.
+- **The `-- '*.html'` scope and the `5_staff_training/` exclusion are load-bearing, not
+  tidiness.** `REGISTER.md` already joins the *unscoped* count — R-A09 quotes the sentinel
+  `<!-- ll-g:loop-mark v1 -->` (this file, ~line 185) — so a bare `git grep -l` returns 46,
+  not 45. `LundyLoop/5_staff_training/` will join the *scoped* count the day the Made-by-Matt
+  TA card lands there quoting the sentinel or the `lm-strip`/`lm-own` markup. It contributes
+  **0** today, so the exclusion is a **prospective guard**, not a present correction: with it
+  45, without it 45; control — excluding `BUILD_ASDAN/*` gives 14, so the exclusion is
+  honoured in this git, not a silent no-op.
+- **General form — the R-G03 cached-claim family, one layer out:** *a derivation that
+  measures a marker can be joined by any document that describes the marker.* R-A09
+  describes the sentinel, this entry measures it, and the scope is what keeps the describer
+  out of the count. See R-G03.
 - **The 31 files not in the set still key to their own last-touching commit.** Do not
   apply `d601842` to anything outside the 45. R-F04: a fact travels no further than the
   file it was observed in.
