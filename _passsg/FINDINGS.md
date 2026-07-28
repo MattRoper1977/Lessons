@@ -231,3 +231,38 @@ English & Communication · Maths & Numeracy · Science · RE & World Views (deli
 - **Sentinel-45:** untouched (no `ll-g` file edited); assertion not required.
 - **Base SHA:** `32ca685e1df619b333f3ee4385aed227aa675cdf`. **Branch tip (this pass's substantive commit):** `9b9bde4f8a52` (derived via `git rev-parse`; the tip-stamp commit that records this line sits one above it).
 - **Nothing merged. Stop.**
+
+---
+
+## 10 · Post-Gate-2 addendum — Matt's ruling + deeper-read corrections
+
+Matt answered the §8 consolidated Gate-2 question (2026-07-28):
+- **Art scope:** *Both* GROW art suites in scope — `Grow/Slideshows` = Explore entry, `Art_Teesside/Grow` = Bronze progression (intended dual provision). ✅
+- **Art_Teesside:** *Prep proposed diffs* for (i) the "Aut 1" half-term tag and (ii) the W8 "Silver ambition" line.
+
+### 10.1 ACTIONED — Slideshows GROW_ART "GCSE" stretch → "Bronze" (Tier-2, committed to branch)
+- **Now in scope** (Matt). One defect class across all 8 lessons: aspire-box label read **"GCSE Stretch"** and 3 body phrases named a **"GCSE Art habit / development page"**. The SoW accredits GROW Creative Arts via **Trinity Arts Award Explore/Bronze**; GCSE Art is not in the SoW arts accreditation (GCSE = LAUNCH concept).
+- **Fix:** relabelled → **"Bronze Stretch"** (×16) + 3 body phrases aligned to Bronze. **Task content unchanged.**
+- **SoW cell:** `GROW Weekly - Autumn` · Creative Arts (r102); Pathway Ladder GROW Creative Arts = "Explore / Bronze".
+- **Surface:** `.aspire-box` (2/file, on-screen only; print pack is JS-built from `LESSON.*`, no mirror — verified).
+- **Verification:** occurrence count 19 `GCSE` → **0**; 16 `Bronze Stretch:` labels present; tag-multiset unchanged vs prior; `section`/`div`/`strong` balanced across all 8.
+- **Commit:** `cdc9623` · **Rollback:** `0b4597a`. **Not merged.**
+
+### 10.2 WITHDRAWN as non-defects on deeper read (repo wins over the flag; §4 "never fix deliberate designs")
+The two Art_Teesside proposals were approved on my §8 framing. Closer reading of the files **reverses that framing** — prepping either diff would damage deliberate, correct design. No diff prepped; recorded report-only.
+
+- **W8 "Silver" language — NOT Gate 2(d).** "Silver" appears **16×** in `GROW_ART_W8`, forming the lesson's spine: it is the **Bronze→Silver bridge** close-out (the "Silver prospectus" maps Bronze evidence to Silver's *future* demands; "Silver is Bronze at project scale: today's prospectus is the bridge"). The **award-strip is correctly "🎨 Bronze"**; there is **no claim the portfolio IS Silver / is Silver-accredited** (defect test negative). Silver is the correct next tier (Pathway Ladder: LAUNCH Creative Arts = **Silver/Gold**). This is legitimate laddering, not "Silver-tier language tagging a Bronze artefact." **Recommendation: leave verbatim.** (The brief's Gate 2(d) target — a *false Silver claim/registration on a Bronze artefact* — does not occur here.)
+- **"Arts Aut 1" tag — plausibly correct, not a clear defect.** sow-strip = `Progress SoW · Arts Aut 1 · 2026–27 · GROW · Week N` (nbsp `Aut\xa01`). With dual provision confirmed, the Teesside **Bronze** route may be the school's **Autumn** GROW-art delivery (8-week intensive) alongside the Slideshows Explore suite; the tag is then accurate. Re-tagging to Spring/Summer would assert a term placement the files do not support and the repo does not confirm. **Recommendation: leave as-is unless Matt confirms the Teesside Bronze route is taught in a later term** — in which case a one-line sow-strip re-tag (8 files, `Aut 1` → the taught term) is the entire change, delivered as a proposed diff (quarantine, no auto-commit).
+
+### 10.3 Revised classification for Art_Teesside/Grow (supersedes §4.6 tentative Gate-2(d) on W8)
+- W1–W7: **DELIBERATE-DIVERGENCE** — Bronze A–D build; level is the confirmed Bronze-progression provision (not a defect vs SoW Autumn Explore, given dual provision). Quarantine — report-only.
+- W8: **DELIBERATE-DIVERGENCE** — Bronze close-out with correct Bronze→Silver bridge. **Gate 2(d) cleared** (award correctly Bronze; no false Silver claim). Quarantine — report-only.
+
+### 10.4 Slideshows tier-structure (S/S/S) — Tier-3 recommendation, NOT actioned
+`Grow/Slideshows/GROW_ART` has no Supported/Standard/Stretch differentiated tasks (only `.sc-box`/`.aspire-box`). Adding proper tiers is a **chassis rebuild across 8 lessons** — substantial pedagogical authoring, not a discrete SoW-cell mismatch. Recommended as a **separate scoped build pass** (build-then-ask per lesson), not attempted here (risk of damaging working lessons in a measurement pass). Matt indicated openness ("if you want") — flagged for a future dedicated pass.
+
+### 10.5 Revised tier tally (supersedes §7)
+- **Tier 1 (auto-commit):** 0 — unchanged.
+- **Tier 2 (built on branch, awaiting merge):** **1 defect class** — Slideshows GCSE→Bronze (8 files, commit `cdc9623`).
+- **Tier 3 (report-only):** Art_Teesside level/tag/Silver (all deliberate-correct — leave); Slideshows S/S/S tier rebuild (future pass); ENT/Young Duke coverage; scheme-level items.
+- **Still nothing merged.** Branch tip advances to `cdc9623`; Matt merges.
