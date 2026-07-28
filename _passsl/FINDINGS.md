@@ -305,3 +305,37 @@ divergence**, not a misalignment:
 3. **Merge** — review branch `pass-sl-sow-launch` and run your spot-checks. Nothing merged by me.
 
 _measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Phase 2 final 2026-07-28_
+
+---
+
+# RULINGS FROM MATT (2026-07-28) — recorded verbatim for successor sessions
+
+**Premise corrections ADOPTED (now govern, not the brief):**
+- SoW weekly grid is **Autumn 7/7 · Spring 6/6 · Summer 6/7** (my derivation governs; brief's uniform W1–W7 retires).
+- **No root-`LAUNCH_` files** exist; population is folder-scoped.
+- **`resources.json` lives in THIS repo too** — any catalogue correction is in-repo, one class per commit; the brief's "site-repo read-only" line applies to the *site* repo's own copy only.
+
+## RULING 1 — SCIENCE FROZEN (all 37 files, both directions)
+The `biology/` `chemistry/` `2 Physics 10/` suites are **last year's provision (2025-26)**. This
+year's LAUNCH science is being built fresh & externally (PythonAnywhere-assessed). The 2026-27 SoW
+does **not** govern them and they need not match it.
+- **4SS0 decision pack → RETIRED-UNANSWERED.** No 2-file diff, no wider science spec-code/week-label
+  alignment. Question no longer applies to live provision.
+- **All 37 science verdict rows RECLASSIFIED → `OUT-OF-SCOPE — LEGACY PROVISION (2025-26)`**
+  (superseded by the 2026-27 science rebuild, external/PythonAnywhere-assessed). Rows & the
+  Phys→Spring / Chem→Spring / Bio→Summer mapping are **kept as archival record**; their fix classes retire.
+- **SOW-SILENT respiration/digestion finding RETIRES** — it compared a legacy suite to a SoW that
+  doesn't govern it.
+- **STANDING NO-TOUCH (binds this pass + successors):** no Pass SL commit touches any file under the
+  science folders in either direction (no fixes, no label sweeps, no "harmless" string edits). Any
+  future class that would sweep those folders **excludes them in its manifest and asserts the exclusion**.
+
+## RULING 2 — ART_TEESSIDE/LAUNCH RE-ALIGNMENT AUTHORISED (Tier-2, gated)
+Designed-divergence resolves to: **re-align to the SoW Autumn arc, hard-gated on Trinity Silver
+coverage surviving intact.** Quarantine LIFTED. Gates **G1–G6** (nine-part floor with hyphen-range-aware
+detector; Unit-1=art-form / Unit-2=leadership boundary; hard prohibitions — no public-showing assertion,
+no hours/TQT, no mark schemes; Pass C survivors preserved; four-surface agreement; standard estate gates).
+**Design-first:** deliver a mapping proposal → Matt approves/amends → build. **Silver wins** any genuine
+SoW↔Silver conflict, returned as a decision. Proposal delivered: `_passsl/ART_REALIGN_PROPOSAL.md`.
+
+_measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · rulings 2026-07-28_
