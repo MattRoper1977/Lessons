@@ -12,7 +12,7 @@
 | Base SHA (pinned) | `32ca685e1df619b333f3ee4385aed227aa675cdf` (origin/main @ session start) |
 | Base commit | `LL-I close (final): commit the measurement records + remedy-observed line` (2026-07-28 18:27:26 +0000) |
 | Branch | `pass-sb-sow-build` (off origin/main) |
-| Branch tip | _(derived at close-out, never hand-typed)_ |
+| Branch tip | close-out content commit `45b83ed` (derived via `git rev-parse`); this pointer commit is its child |
 | SoW instrument | `Build SOW 2026-2027.xlsx`, sha256 `730f9a86a105a50fae64cc3560deb33a8f78f8a15959c608fa0c9fc197ce5bac`, committed at `_passsb/inputs/` |
 | Instrument provenance | Supplied by Matt as attachment `Scheme_of_Work_20262027_Build.zip` during session. **Not** the archived `BUILD_SOW_2026-27_vA_with_LivingIndependently.xlsx` (Version A, superseded). |
 
@@ -261,7 +261,7 @@ almost entirely protected/quarantined. No lesson file was modified by this pass.
 |---|---|
 | Base SHA | `32ca685e1df619b333f3ee4385aed227aa675cdf` |
 | Branch | `pass-sb-sow-build` |
-| Branch tip | _(derived below, never hand-typed)_ |
+| Branch tip | `45b83ed` (close-out commit; this pointer commit is its child) |
 | Sibling pass | **Pass SL** (LAUNCH lessons ⇄ LAUNCH SoW) |
 | Sentinel-45 | 45 at base; **unchanged** (no lesson file modified) |
 | Lessons modified | **0** |
