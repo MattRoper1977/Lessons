@@ -229,5 +229,5 @@ English & Communication · Maths & Numeracy · Science · RE & World Views (deli
 - **node --check / jsdom-boot / tag balance:** N/A — no `.html` inline script block was edited (no lesson file changed). Nothing to re-validate.
 - **Print-section counts:** unchanged (no pack edited); GROW ASDAN packs remain 14 sections (witness included) — not "corrected".
 - **Sentinel-45:** untouched (no `ll-g` file edited); assertion not required.
-- **Base SHA:** `32ca685e1df619b333f3ee4385aed227aa675cdf`. **Branch tip:** `__TIP__` (filled at commit; derived via `git rev-parse`).
+- **Base SHA:** `32ca685e1df619b333f3ee4385aed227aa675cdf`. **Branch tip (this pass's substantive commit):** `9b9bde4f8a52` (derived via `git rev-parse`; the tip-stamp commit that records this line sits one above it).
 - **Nothing merged. Stop.**
