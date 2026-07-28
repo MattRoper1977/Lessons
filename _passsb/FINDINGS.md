@@ -1,6 +1,6 @@
 # Pass SB — BUILD lessons ⇄ BUILD SoW 2026-27 audit
 
-**Status:** MEASUREMENT COMPLETE · awaiting Matt on Gate 1 & Gate 2. 0 lesson files modified. Nothing merged. Matt merges.
+**Status:** COMPLETE · Gate 1 & Gate 2 answered by Matt · 1 Tier-1 commit applied (5 Careers files) · Art A2 fixes proposed (quarantine, not committed). Nothing merged. Matt merges.
 
 ## Lineage & provenance
 
@@ -197,7 +197,17 @@ The 7 orphaned `Build/Slideshows/BUILD_L1_*`/`FW_L1` samples (§2.3) are out-of-
 strand is not a defect):** 8 of 14 weekly strands —
 Communication & Literacy · Numeracy · Science · RE & World Views · PSHE & Citizenship · RSHE · Computing & ICT · PE.
 
-## Gate 1 (week mapping) / Gate 2 (accreditation) items awaiting Matt
+## Gate 1 / Gate 2 — RESOLVED by Matt (this session)
+
+- **Gate 1 → "Slot model intended + Careers is 7wk".** The concentrated-slot model is confirmed intended, so every
+  term/week **placement divergence** in §3.2 is **DELIBERATE-DIVERGENCE (confirmed)**, not a defect. The Careers slot is
+  7 weeks → the "of 6" week-count on W1–W5 is stale → **applied as Tier 1** (see below).
+- **Gate 2 → "Explore (fix Discover + Bronze refs)".** BUILD Arts Award level is **Explore**. The Art A2 decks' award-strips
+  claim **Bronze** (a GROW-level award) → **proposed diffs prepared** to align to Explore (Art quarantine §5 → **not committed**).
+  The SoW **weekly** Creative-Arts prog wording "Discover" is instrument-side and under-specifies BUILD (Ladder R11 allows
+  Discover/Explore) → flagged for the next SoW revision; the estate stays Explore.
+
+## Gate 1 (week mapping) / Gate 2 (accreditation) — original tabling
 
 ### GATE 1 — one consolidated question (week/term placement)
 The repo cannot settle two entangled week-mapping facts; both are batched here (never guessed):
@@ -231,26 +241,44 @@ above. (The Humanities pitch question is a Tier-3 curriculum decision, not a Tie
 - **Art Teesside A2 ×7 — proposed diffs (patch quarantine §5; NOT committed):**
   - `sow-strip` week number: change hard-coded "· BUILD · Week 1" → the deck's real week (`Week 2`…`Week 7`) on A2_W2…A2_W7.
   - `sow-strip` term: change "Arts Aut 1" → "Arts Aut 2" on all 7 A2 decks (route is Autumn 2, per weektag).
-  - Accreditation: reconcile award-strip "Bronze Part …" with the intended BUILD level (Gate 2) — do **not** apply until Gate 2 settled.
+  - **Accreditation → Explore (Gate 2 answered).** Proposed award-strip changes (Bronze→Explore); Part letters flagged for
+    Arts-Award-adviser confirmation (Bronze's part structure ≠ Explore's A/B/C/D). **NOT committed** (Art quarantine §5):
+
+    | File | current award-strip | proposed (Explore) — *adviser to confirm Part letter* |
+    |---|---|---|
+    | A2_W1 Surface_Hunt | `🎨 Bronze Part A · Take Part` | `🎨 Explore Part A · Take Part` |
+    | A2_W2 Arts_Inspiration | `🎨 Bronze Part C · Artist and Organisation` | `🎨 Explore Part B · Explore Artists' Work` |
+    | A2_W3 Stencil_Lab | `🎨 Bronze Part A · Take Part` | `🎨 Explore Part C · Create (Technique)` |
+    | A2_W4 Audience_Week | `🎨 Bronze Part B · Audience Member` | `🎨 Explore Part D · Present & Share (Audience)` |
+    | A2_W5 Layer_and_Combine | `🎨 Bronze Part A + C · Make and Borrow` | `🎨 Explore Part C · Create (Make)` |
+    | A2_W6 Resolve_and_Edition | `🎨 Bronze Part A + C · Finish and Repeat` | `🎨 Explore Part C · Create (Resolve)` |
+    | A2_W7 Bank_It_and_Plan | `🎨 Bronze Part C close · Part D scope` | `🎨 Explore Part D · Present & Share (Bank & Plan)` |
   - Success criteria: differentiate the identical per-week SC on A2_W2…A2_W7 (currently all equal to A2_W1's) — content change, needs Matt sign-off.
   - `resources.json` catalogue gaps: add entries for `Art_Teesside/Build/BUILD_ART_A2_W3_Stencil_Lab.html` and `…A2_W4_Audience_Week.html` (proposed; describes quarantined files, so held).
 
 ## Tier 1 commits (with rollback SHAs)
-**None.** Every actionable mechanical mismatch found is entangled with a §4 protection, a §5 quarantine (Art / D&T-v5),
-or a Gate decision — so nothing qualified for free auto-fix. This is the expected outcome for a population that is
-almost entirely protected/quarantined. No lesson file was modified by this pass.
+
+| Commit | Defect class | Files | Rollback SHA |
+|---|---|---|---|
+| `143a194` | stale week-count metadata (Careers slot is 7wk; W1–W5 said "of 6") | `CAREERS_W1–W5` (5) | `2365bbc` |
+
+**Details.** After Gate 1 confirmed the Careers slot is 7 weeks, the weektag `Careers · Week n of 6` on W1–W5 was corrected
+to `of 7` (W6/W7 already said "of 7"). One line per file, weektag surface only (no print copy), zero meaning change; the
+suite is now internally consistent (all 7 = "of 7"). **Guards:** sentinel-45 held (45→45), `node --check` passed on all
+inline script blocks of the 5 files (3 each), div/script tag balance unchanged, `git diff` = 5 files × 1 line.
+Rollback: `git revert 143a194` or reset to `2365bbc`.
 
 ## Final verification sweep (at tip)
 
 | Check | Result |
 |---|---|
-| Sentinel-45 (ll-g set, data-URIs stripped) | **45 → PASS** (unchanged from base) |
-| Lesson (non-`_passsb/`) files modified base..tip | **0** |
-| `node --check` touched inline scripts | **N/A** — no lesson HTML modified |
-| jsdom-boot touched files | **N/A** — none modified |
-| div/script tag balance across 60 | 0 imbalances (measured at base; unchanged) |
-| print-section counts | unchanged (no print surface edited) |
-| Committed paths | only under `_passsb/` |
+| Sentinel-45 (ll-g set, data-URIs stripped) | **45 → PASS** (re-asserted after Tier-1 commit) |
+| Lesson (non-`_passsb/`) files modified base..tip | **5** (Careers W1–W5, week-count only) |
+| `node --check` touched inline scripts | **PASS** — all inline blocks of the 5 Careers files (3 each) |
+| jsdom-boot touched files | not run (change is a static weektag string; node --check + tag-balance suffice for a text-only metadata edit) |
+| div/script tag balance (touched files) | 0 imbalances |
+| print-section counts | unchanged (weektag is a screen-only surface; no print pack edited) |
+| Committed paths | `_passsb/` docs + the 5 Careers lesson files (Tier-1) |
 | Merged | **No** |
 
 ---
@@ -263,7 +291,7 @@ almost entirely protected/quarantined. No lesson file was modified by this pass.
 | Branch | `pass-sb-sow-build` |
 | Branch tip | `45b83ed` (close-out commit; this pointer commit is its child) |
 | Sibling pass | **Pass SL** (LAUNCH lessons ⇄ LAUNCH SoW) |
-| Sentinel-45 | 45 at base; **unchanged** (no lesson file modified) |
-| Lessons modified | **0** |
-| Commits | scaffold · SOW_MATRIX · Phase 2 · Phase 3/close-out (all under `_passsb/`) |
+| Sentinel-45 | 45 at base; re-asserted **45** after the Tier-1 commit (Careers files carry `ll-g`) |
+| Lessons modified | **5** (Careers W1–W5, Tier-1 week-count only) |
+| Commits | scaffold · SOW_MATRIX · Phase 2 · Phase 3/close-out · tip-pointer · status · **Tier-1 `143a194`** · gate-resolution (all `_passsb/` except the Tier-1 lesson commit) |
 | Merged? | **No.** Matt merges. |
