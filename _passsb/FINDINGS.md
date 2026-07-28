@@ -7,7 +7,7 @@
 | Field | Value |
 |---|---|
 | Pass letter | **SB** (no `_passsb/` or prior Pass SB ledger existed at base — letter stands, no self-rename needed) |
-| Sibling pass | **Pass SL** (LAUNCH lessons ⇄ LAUNCH SoW) — this is the BUILD sibling |
+| Sibling passes | **Pass SL** (LAUNCH ⇄ LAUNCH SoW, done) · **Pass SG** & **Pass PQ** (pending) — Pass SB is the BUILD sibling |
 | Repo | `MattRoper1977/Lessons` (the Lessons repo — **not** the site repo `mattroper1977.github.io`) |
 | Base SHA (pinned) | `32ca685e1df619b333f3ee4385aed227aa675cdf` (origin/main @ session start) |
 | Base commit | `LL-I close (final): commit the measurement records + remedy-observed line` (2026-07-28 18:27:26 +0000) |
@@ -268,17 +268,84 @@ suite is now internally consistent (all 7 = "of 7"). **Guards:** sentinel-45 hel
 inline script blocks of the 5 files (3 each), div/script tag balance unchanged, `git diff` = 5 files × 1 line.
 Rollback: `git revert 143a194` or reset to `2365bbc`.
 
+## Close-out ruling (Matt) — verifications & records
+
+### R1 · Residual week-count assertion (Tier-1 completeness)
+Pass H's equivalent edit touched five surfaces per file; asserted here that no stale "of 6" week-string survives on
+**any** surface. **Whole-file occurrence** count (not line count) via `grep -o "of 6" <file> | wc -l` — prints every match
+on its own line across the whole file, long single-lines included, **no `head`/truncation** — completeness asserted:
+
+| File | `of 6` occ (whole file) | broad week-count variants (`of six`/`6 weeks`/`week 6`) | remaining week-string |
+|---|---:|---:|---|
+| CAREERS_W1 | **0** | 0 | `Week 1 of 7` |
+| CAREERS_W2 | **0** | 0 | `Week 2 of 7` |
+| CAREERS_W3 | **0** | 0 | `Week 3 of 7` |
+| CAREERS_W4 | **0** | 0 | `Week 4 of 7` |
+| CAREERS_W5 | **0** | 0 | `Week 5 of 7` |
+
+The other four Pass-H surfaces (title · sow-strip · Teacher-Print-Tools heading · KO heading) carry bare `Week n` with
+**no `of N`**, so never held "of 6". The **weektag is the sole "of N" surface**; print packs are `printPack()`-generated
+from the same tier data and contain no separate week-count string (grep=0 whole-file covers print templates too). **No
+residual, screen or print → Tier-1 fix was complete; no extension.**
+
+### R2 · The 2 resources.json gaps — reachability + proposed Tier-2 entries (NOT committed)
+**Reachability:** `BUILD_ART_A2_W3_Stencil_Lab.html` and `…A2_W4_Audience_Week.html` are referenced by **zero** files
+(no hub, `index.html`, `sitemap.xml`, `START_HERE`, `Scheme_of_Work`, or catalogue) — **unreachable today**.
+
+Proposed entries mirror the sibling shape (`art-tees-build-a2-w1/w2`); `desc` derived **only** from each lesson's own
+title + KO text (nothing invented; no duration claimed — decks state none greppable):
+
+```jsonc
+// PROPOSED — held (Art_Teesside patch quarantine §5); shape copied from sibling A2 entries
+{ "subject":"Art · Teesside Studio Suite", "title":"BUILD · Bronze Art A2 W3 · Stencil Lab",
+  "file":"Art_Teesside/Build/BUILD_ART_A2_W3_Stencil_Lab.html", "id":"art-tees-build-a2-w3",
+  "type":"lesson", "family":"Art Teesside", "keywords":["art","bronze","autumn 2","lesson"],
+  "desc":"Autumn 2 Week 3: stencils and bridges — a cut shape that lets paint through, and the uncut strip that holds a shape's middle.",
+  "added":"2026-07-24", "new":true, "year":"2026-27" },
+{ "subject":"Art · Teesside Studio Suite", "title":"BUILD · Bronze Art A2 W4 · Audience Week",
+  "file":"Art_Teesside/Build/BUILD_ART_A2_W4_Audience_Week.html", "id":"art-tees-build-a2-w4",
+  "type":"lesson", "family":"Art Teesside", "keywords":["art","bronze","autumn 2","lesson"],
+  "desc":"Autumn 2 Week 4: audience and review — the people who receive the work, and giving a view of what you saw with reasons.",
+  "added":"2026-07-24", "new":true, "year":"2026-27" }
+```
+**Gate-2 note:** the sibling A2 entries encode **"Bronze"** in title+keywords; per the Explore ruling, these two AND the
+existing W1/W2/W5/W6 sibling entries take a `Bronze`→`Explore` correction **when the Art quarantine lifts** — batched, not applied now.
+
+### R3 · Instrument provenance pointer
+Added `_passsb/inputs/README.md`: the Matt-supplied vB (2026-07-28) is operative; the archived vA is **superseded for
+audit purposes**. vA is **not** deleted or modified — the pointer is the fix (two copies of one truth is a known estate hazard).
+
+### R4 · WORKBOOK-SIDE items (Matt's file; outside repo scope; no patches by this pass)
+- **(a)** Pathway Ladder R14 (BUILD = "Foodwise/Gardening taster") **contradicts** weekly strand 11 (name+prog "ASDAN
+  Living Independently"). For this audit the **weekly-sheets-operative reading stands** (LI lessons map to strand 11).
+- **(b)** The Autumn **Creative Arts** row still reads **"Discover"** against the **Explore** ruling (Gate 2). Instrument-side; the estate stays Explore.
+
+### R5 · Gate-2 OPERATIONAL consequence (decision, not a patch)
+Running Arts Award **Explore** at BUILD requires the **separate Discover & Explore adviser training** — the Bronze & Silver
+course currently being arranged does **not** cover it. **Owner: Matt / Graham.**
+
+### Register
+- Appended **`REGISTER.md` R-SB01** (RECORD): the **site repo is the environment default**; the "attach the Lessons repo"
+  warning is load-bearing and stays in every future Lessons-repo brief; a pass's first act verifies the working tree.
+
+### Holds unchanged (per ruling)
+- **Art A2 diffs** — proposed-only until Matt lifts the quarantine **in writing**.
+- **Humanities ×8 pitch** — Matt's curriculum call; **hold** (no patch).
+- **7 orphaned `BUILD_L1_*`** — two-signal deletion rule; **no deletion; hold.**
+
 ## Final verification sweep (at tip)
 
 | Check | Result |
 |---|---|
-| Sentinel-45 (ll-g set, data-URIs stripped) | **45 → PASS** (re-asserted after Tier-1 commit) |
+| Residual "of 6" week-string (whole-file, screen+print) | **0** in each CAREERS_W1–W5 (R1); command completeness asserted |
+| Sentinel-45 (ll-g set, data-URIs stripped) | **45 → PASS** (re-asserted after Tier-1 commit; ruling changes touched no `ll-g` file) |
 | Lesson (non-`_passsb/`) files modified base..tip | **5** (Careers W1–W5, week-count only) |
 | `node --check` touched inline scripts | **PASS** — all inline blocks of the 5 Careers files (3 each) |
 | jsdom-boot touched files | not run (change is a static weektag string; node --check + tag-balance suffice for a text-only metadata edit) |
 | div/script tag balance (touched files) | 0 imbalances |
 | print-section counts | unchanged (weektag is a screen-only surface; no print pack edited) |
-| Committed paths | `_passsb/` docs + the 5 Careers lesson files (Tier-1) |
+| Committed paths | `_passsb/` docs + `_passsb/inputs/README.md` + `REGISTER.md` (R-SB01) + the 5 Careers lesson files (Tier-1) |
+| Art_Teesside files committed | **0** (quarantine honoured — A2 fixes proposed only) |
 | Merged | **No** |
 
 ---
@@ -290,7 +357,7 @@ Rollback: `git revert 143a194` or reset to `2365bbc`.
 | Base SHA | `32ca685e1df619b333f3ee4385aed227aa675cdf` |
 | Branch | `pass-sb-sow-build` |
 | Branch tip | `45b83ed` (close-out commit; this pointer commit is its child) |
-| Sibling pass | **Pass SL** (LAUNCH lessons ⇄ LAUNCH SoW) |
+| Sibling passes | **Pass SL** (done) · **Pass SG**, **Pass PQ** (pending) |
 | Sentinel-45 | 45 at base; re-asserted **45** after the Tier-1 commit (Careers files carry `ll-g`) |
 | Lessons modified | **5** (Careers W1–W5, Tier-1 week-count only) |
 | Commits | scaffold · SOW_MATRIX · Phase 2 · Phase 3/close-out · tip-pointer · status · **Tier-1 `143a194`** · gate-resolution (all `_passsb/` except the Tier-1 lesson commit) |

@@ -904,3 +904,15 @@ building meant the whole episode cost zero repo changes.
   the game gains a pathway-scoped section stating plainly that GROW and LAUNCH close differently
   and no adult initial is expected. The estate already owns the truthful null it needs — *"Not yet
   = Voice present, Audience pending"*, staff-facing in this same game.
+
+### R-SB01 · The site repo is the environment default — the attach warning is load-bearing
+- **STATUS** RECORD · **DECLARED** (Matt, Pass SB close-out)
+- Four consecutive sessions (Pass SB and three before it) opened in the **site** repo
+  `mattroper1977.github.io` when the task concerned the **Lessons** repo. This is not a
+  per-session slip: **the site repo is the environment's default working tree**, so any
+  Lessons-repo pass that does not attach the Lessons repo first will silently measure the
+  wrong tree.
+- **Control:** the "ATTACH THE LESSONS REPO BEFORE PASTING" warning stays in every future
+  Lessons-repo brief, and a pass's **first act** is to verify the working tree
+  (`git remote -v` + presence of `resources.json`/`BUILD_ASDAN`/`Art_Teesside`) before any
+  measurement. Pass SB caught it on the first act and stopped — that is the intended behaviour.
