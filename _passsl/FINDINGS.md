@@ -175,3 +175,95 @@ Tally: MAPPING-PENDING 35 · PARTIAL 9 · DECISION/QUAR 8 · ALIGNED\* 7 · SOW-
 - TOTAL rows: 65
 
 _measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf_
+
+---
+
+# PHASE 2 — post-decision (Matt's calls recorded 2026-07-28)
+
+**Decisions received:** D1 → **`_Teesside/` is canonical** (Launch/ART + Launch/HUM slides = legacy).
+D2 → **4SS0 treated as stale, to be fixed** (proposed diff, not auto-committed — N1-flagged).
+D3 → **infer science mapping from SoW content** (done below).
+
+## Committable fixes this pass: **ZERO** — and that is the honest headline.
+Once the canonical suite is fixed as `_Teesside/`, the alignment work collapses to items that are
+each gated, already-done, or a decision:
+- **Canonical Humanities (`Humanities_Teesside/`) is ALREADY ALIGNED.** Its SoW self-describes
+  "Autumn 1 (8 weeks) · AQA UAS 'History around us' + GCSE AO bridge · LAUNCH tier · Week 7 assessed"
+  — consistent with SoW Humanities Aut1 (7-wk History, W7 summative) + a W8 Geography bridge. No
+  code defect, correct NC/UAS framing (N1 ✓). **No fix required.**
+- **Canonical Art (`Art_Teesside/Launch/`) is QUARANTINED** → propose-only; I cannot write to it
+  until Matt lifts the quarantine in writing. It also shows a possible **leadership/careers
+  resequencing** in Autumn (W2 Careers, W5 Design-the-Leadership-Project, W6 Pilot/Lead) vs the SoW
+  Autumn Creative Arts (Unit 1 "developing as an artist" + "experiencing & reviewing") — a
+  DELIBERATE-DIVERGENCE candidate, not an auto-fix. **Needs (a) quarantine lift AND (b) a call on
+  the resequencing** before any edit.
+- **Legacy suites** (`Launch/ART`, `Launch/HUM`, `Launch/Art_L1/2`): report-only per D1; not aligned.
+- **Science:** topic-aligned but carries no SoW week-label / no spec-code — correcting that is a
+  Tier-2 content edit AND is blocked on the same code decision as D2. **Held pending code choice.**
+
+## D2 decision pack — 4SS0 replacement (deliver both options, per brief; NOT patched)
+Exact strings (each appears once, visible accreditation line):
+- `chemistry/Lesson2_pH_Scale_v4.html`: `Edexcel IGCSE 4SS0 — Spec 2.29 & 2.30`
+- `chemistry/Lesson3_Ions_Neutralisation_v4.html`: `Edexcel IGCSE 4SS0 — Spec 2.31 & 2.32`
+
+`4SS0` = Edexcel International GCSE **Science (Double Award)** — absent from the SoW Qualification
+Map. The map offers two defensible targets; **the spec-point numbers are entangled with the code**,
+so neither is a blind string-swap:
+- **Option A — `Edexcel GCSE Combined Science 1SC0 (F)`** (the SoW primary LAUNCH route). Cost:
+  1SC0 is topic-referenced, not "2.29"-style; the point numbers must be **replaced with the 1SC0
+  topic reference**, not kept. Best fit if these lessons are the accessible main-route class.
+- **Option B — `Edexcel IGCSE Chemistry 4CH1`** (the SoW separate-science IGCSE stretch). Cost:
+  4CH1 uses different section numbering; `2.29–2.32` must be **re-mapped to 4CH1 references** (science
+  lead to confirm). Best fit if this is the eligible-students IGCSE stretch class the 4SS0 code implies.
+**I will not invent replacement spec-point numbers** (brief: never author accreditation content
+loosely). Pick A or B and confirm the point refs, and I'll ship the two-file diff for approval.
+
+## D3 — science → SoW mapping (inferred from topic; report-only)
+Physics → SoW **Spring** IGCSE-option (electricity Spr1W6–Spr2W2, waves Spr2W3): 17/17 HIGH.
+Chemistry → SoW **Spring** chem (acids/salts Spr1W3 + analysis): HIGH/MED.
+Biology → SoW **Summer** (ventilation/exchange Sum1W4 HIGH); **respiration & digestion are NOT
+explicit SoW weekly outcomes → SOW-SILENT** (report only, don't delete). Full table:
+
+| File | Inferred SoW target | Week | Conf |
+|--|--|--|--|
+| `2 Physics 10/Consolidation_Electricity_Review-1.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L1_Circuits_Symbols_Series_Parallel-1.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L2_Voltage_Current_Resistance-1.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L2_Voltage_Current_Resistance.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L2b_Ohms_Law_PhET_Practical-1.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L2b_Ohms_Law_PhET_Practical_1.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L3_Ohms_Law_Action.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L4_Electron_Flow_Series_Calculations.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L4_Wave_Properties_Definitions-1.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/L4a_Electron_Flow_in_Metals.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `2 Physics 10/L5_Wave_Speed_Equation-1.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/L6_Waves_Context_Reflection_Refraction-1.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/Waves/L4a_Wave_Anatomy.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/Waves/L4b_Frequency_Period.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/Waves/L4c_Energy_Transfer.html` | IGCSE-option Phys Spr2 W3 'waves – properties, reflection & refraction' | Spr Spr2 W3 | HIGH |
+| `2 Physics 10/current_rush.html` | IGCSE-option Phys Spr1 W6–Spr2 W2 'circuits/current/voltage/resistance/power' | Spr Spr1W6-Spr2W2 | HIGH |
+| `biology/Bio_Respiration_Limewater_Exercise.html` | GCSE Bio Sum1 W4 'exchange surfaces & ventilation' | Sum Sum1 W4 | HIGH |
+| `biology/Chem_Making_Limewater.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/Digestion_and_Absorption (1).html` | GCSE Bio — digestion/enzymes not an explicit SoW weekly outcome | (no direct week) | LOW |
+| `biology/L4_Aerobic.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/L4_Aerobic_Respiration.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/L5_Anaerobic.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/Lesson_2_Absorption_v4-6.html` | GCSE Bio — digestion/enzymes not an explicit SoW weekly outcome | (no direct week) | LOW |
+| `biology/Respiration_ATP_Recap.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/Respiration_and_ATP_Lesson_1.html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `biology/Structure_of_the_Thorax.html` | GCSE Bio Sum1 W4 'exchange surfaces & ventilation' | Sum Sum1 W4 | HIGH |
+| `biology/Testing Breath - FINAL Observation Lesson (1).html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `chemistry/L3c_VirtualLab_AcidsAlkalis (2).html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson1_Indicators-1.html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson2_pH_Scale_v4.html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson3_Ions_Neutralisation_v4.html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson4a_Gas_Tests_H2_O2_CO2 (1).html` | GCSE Bio ~Sum1 (exchange/transport region); respiration NOT an explicit SoW week | Sum1 W3-5 / SOW-SILENT? | MED |
+| `chemistry/Lesson4b_Gas_Tests_NH3_Cl2.html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson5_Flame_Tests.html` | Chem qualitative analysis (flame/gas/anion) — Combined/IGCSE analysis, ~Spring chem | Spr chem (analysis) | MED |
+| `chemistry/Lesson6_Anion_Water_Tests.html` | IGCSE-option Chem Spr1 W3 'acids, bases and preparing salts' | Spr Spr1 W3 | HIGH |
+| `chemistry/Lesson6b_Consolidation.html` | Chem qualitative analysis (flame/gas/anion) — Combined/IGCSE analysis, ~Spring chem | Spr chem (analysis) | MED |
+
+Confidence tally: {'HIGH': 25, 'MED': 10, 'LOW': 2} of 37 files
+
+_measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Phase 2 decisions 2026-07-28_
