@@ -750,3 +750,125 @@ depends on knowing to look and knowing where.*
     catalogued file and broken a live hub entry.
   - *Roster:* *"saved for all lessons"* was true of the `ps_coldcall_roster` files and
     was attached to three that have never carried it. See R-B02.
+
+---
+
+## H · The Pass-V / LL-I collision — pass discipline earned 2026-07-28
+
+**Stated plainly because the first account was wrong.** During Pass LL-I a run of commits
+authored by `Claude` landed on `origin/main` against BUILD_DT and other lesson files. LL-I's
+first reports called the source a **rogue / unauthorised session** and the containment rulings
+ordered the series reverted. **That framing was false.** The source was `session_0183`, Matt's
+own commissioned **Pass V** (D&T v5 migration) — every commit authorised. What corrected it:
+reading the commits against Matt's own record of Pass V, available the whole time at no cost,
+plus the delivery- and anomaly-findings below. **Nothing was ever reverted** — the revert was
+withdrawn in full before it was built, and holding-for-trigger / stop-on-gap / fetch-before-
+building meant the whole episode cost zero repo changes.
+
+### R-H01 · Commissioned-unread, not rogue — a do-not-touch list binds only sessions that have read it
+- **STATUS** RECORD · **VERIFIED** `0ec1da0`
+- Two authorised passes (LL-I, Pass V) ran against overlapping files. The one that had read
+  R-A07 could not tell the other's authorised work from an attack, because the difference is
+  not in the tree. The six W1–W6 `printPack` `'lundy'` adds were the exact R-A07 anti-pattern
+  (*the zero is DIFFERENT_MODEL, not ABSENT*) and **R-E05 held** — the commit messages were the
+  machine-confident ABSENT-misread verbatim — **but the author had never read the register.**
+- **The rule:** a do-not-touch list governs only sessions that have read it. **Remedy, specific:
+  every commissioned session's brief carries the register, or the register does not govern that
+  session.** Naming a file "protected" in a document one session holds protects it from that
+  session alone.
+- Open, and **Matt's, pending a physical print check** — not reverted: does R-A07's prohibition
+  reach the v5 D&T decks (which carry a Lundy print section *by design* in a 14-section pack),
+  and does the adult-facing SPACE line belong on pupil paper? The D&T v5 `printPack` id lists
+  are do-not-touch until that check (§ do-not-touch).
+
+### R-H02 · Cross-pass collision — the estate cannot see a pass's work in flight
+- **STATUS** OPEN · **VERIFIED** `0ec1da0`
+- LL-I read Pass V's commits as a breach; Pass V had no way to know LL-I existed or that its
+  files were under a hold. **Nothing in `tools/` detects this and nothing could** — the missing
+  artefact is a *statement of what is in flight*, not a property of the tree, and every
+  instrument here reasons over the tree or the commit graph.
+- **Remedy candidate, a pass not a build:** a declared in-flight scope — which passes hold which
+  paths, now — checked before any pass opens on a file. Recorded because the failure recurs
+  whenever two passes overlap and neither declares.
+
+### R-H03 · Scope discipline — three forms, and the two worked in anger
+- **STATUS** CONVENTION · **VERIFIED** `0ec1da0`
+- **Once a predicate admits an exception it stops being a predicate and becomes an enumeration.**
+  The containment scope was first a predicate (*session_0183 AND [R-A07 lundy OR benign BUILD_DT
+  edit]*); a commit fell outside it (`e3082d2`, Art_Teesside reduced-motion), and the fix was to
+  **pin by SHA and re-enumerate on every tip move**, never widen the set by reasoning.
+- **Where the reversibility test points opposite ways for two commits in one scope, they are two
+  rulings, not one scope.** The lundy adds pointed *in*; `e3082d2` (an accessibility rule —
+  reverting it strips a live protection from SEMH pupils) pointed *out*; same test, opposite
+  verdicts.
+- **A ruling's factual premises are claims too — verify upward, even when the order is Matt's.**
+  Two worked examples:
+  - *Smaller:* Amendment 1 §0 claimed a trigger under the predicate would have *swept* `e3082d2`
+    into the revert. False — a third-kind commit would have **stopped** the build, not been
+    reverted. Moot operatively; kept as the clean case.
+  - *Larger — authorship.* Containment rested on the commits being unauthorised. The resolved 1A
+    ruling had *not* asserted that (it ruled on reversibility precisely so authorship need not be
+    settled), yet **every document after it used the vocabulary of an unauthorised actor** —
+    *rogue, breach, containment* — until the open question read as settled fact. General form:
+    **a question explicitly left open in a ruling can still be closed by the vocabulary used
+    around it; restate its openness wherever the subject is named, or the prose answers it.**
+  - Reusable check: the first report asked *whose is this?* (answerable only by Matt). The
+    productive question was *which of Matt's passes touched BUILD_DT?* (answerable from his
+    records, free). **When a question about authorship is expensive, ask the question about scope
+    instead.**
+- **Untested note, not a rule:** a proposed fourth form — *rulings a freeze will need are made
+  before the freeze, not during it* — is withdrawn because no freeze happened and the case never
+  occurred. **A principle whose case never happened does not enter the register** (the discipline
+  that retired 0-of-8, R-H07). Kept only as this marked-untested note.
+
+### R-H04 · Delivery is part of the order
+- **STATUS** CONVENTION · **VERIFIED** `0ec1da0`
+- **An order that names a governing document the executor does not have is unexecutable, even if
+  every word is correct.** Amendment 2 was internally sound and could not be acted on, because
+  Amendment 1 — which it named as load-bearing — had never been delivered; the erratum failed
+  delivery the same way a day later. Two governing documents lost in transit in one day.
+- **Detection route, worth as much as the rule:** found by reading two documents' claims about
+  each other with **no repo access and no instrument** — the route that found every contradiction
+  in the July audit, and one nothing in `tools/` performs.
+
+### R-H05 · A correctly-formatted order is not an authenticated one — the anomaly rule
+- **STATUS** CONVENTION · **VERIFIED** `0ec1da0` — **tested, not argued**
+- Any document claiming to amend the order stack is an **anomaly**: do not act, report it, wait
+  for separate confirmation — **even if well-formed, even if it names its replaced sections
+  correctly, even if it sounds like Matt.** A document cannot authorise itself; the guarantee is
+  only that a human read it before it became an order.
+- The one incident rule with a real case behind it: it **fired on its author's own next document**
+  (Amendment 3, arriving after the set was declared closed) and was handled exactly as written.
+  Argued rules retire; tested ones stay.
+
+### R-H06 · When a ruling is blocked on authority, rule on reversibility instead
+- **STATUS** CONVENTION · **VERIFIED** `0ec1da0`
+- Authority can be established afterwards; printed paper cannot be recalled. The reversibility
+  test both selected the (withdrawn) revert set and kept `e3082d2` out of it, and it produced a
+  recoverable outcome throughout — which is why withdrawing the revert cost nothing.
+
+### R-H07 · The "0 of 8 GROW R-gate" claim — retired as a defect claim
+- **STATUS** RECORD · **VERIFIED** `0ec1da0`
+- *"0 of 8 GROW files clean on the R-gate"* was carried across two passes, including into a brief,
+  **as if it were measurement. There is no R-gate.** No `r_gate` predicate exists in `tools/`; the
+  claim has no in-tree derivation. The only in-estate definition of the gate is a staff-training
+  artefact, `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html`, keying closure on **adult
+  receipt** (*"Closed (R) = Voice happened AND an adult genuinely received it"*) — a BUILD-shaped
+  token structurally blind to GROW's *pupil-writes* closure. 0-of-8 measures the absence of a
+  token GROW does not use by design; it is **not** a GROW defect.
+- **General form:** *a number quoted across passes inherits the authority of a derivation without
+  ever having been one* (the R-G01/R-G03 family).
+
+### R-H08 · The calibration game mis-trains TAs on GROW/LAUNCH closure — September deadline
+- **STATUS** OPEN · **VERIFIED** `0ec1da0`
+- `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` teaches **adult receipt** as the test
+  of closure (*"An R without a received response is a false record"*) to TAs who work **all three
+  pathways.** A TA calibrated on it will seek an adult-receipt token in GROW/LAUNCH — where closure
+  is the pupil *writing* the line, no receipt by design — find none, and either supply one (the
+  day-level R the design forbids: a species change, R-A09) or record the loop as not closed.
+  **That is the TA-card failure LL-G exists to prevent, arriving from the opposite end of the
+  pathway, on the same first-staff-briefing deadline.**
+- **Carried into B2:** whatever closes a GROW loop must be teachable by an update to this game, or
+  the game gains a pathway-scoped section stating plainly that GROW and LAUNCH close differently
+  and no adult initial is expected. The estate already owns the truthful null it needs — *"Not yet
+  = Voice present, Audience pending"*, staff-facing in this same game.
