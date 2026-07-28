@@ -6,20 +6,31 @@ Each item names the document that would unlock it, where one is needed.
 
 ---
 
-### Q1 · Is BUILD registered for PEQ at all — or is it short courses + AQA UAS?
-BUILD's lessons bank **ASDAN short courses** (FoodWise, Living Independently) and **AQA Unit
-Award Scheme**, never PEQ (CLAIMS §2, COVERAGE_BUILD §0). The brief's §2 says the SoW
-"scopes PEQ to E3 at BUILD," but the built provision does not reflect that.
-**Decide:** (a) accept BUILD = short courses + UAS (then BUILD is not a PEQ tier), or
-(b) overlay PEQ E3 unit banking onto the existing vocational work (label/architecture work,
-no new teaching). This is the pass's #1 question.
+### Q1 · BUILD's E3 teaching exists and is pitched right — what's missing is *banking*
+**Read this framing first, it is the decision.** BUILD's vocational lessons already teach,
+at the correct Entry 3 level and pitch, evidence that maps to **all six E3 PEQ skills**
+(COVERAGE_BUILD §1). None of it is banked as PEQ — every E3 unit is **UNCLAIMED: free credit
+sitting unbanked**. The lessons bank **ASDAN short courses** (FoodWise, Living Independently)
+and **AQA Unit Award Scheme** instead (CLAIMS §2). So this is **not a teaching gap** — the
+teaching is there and is right — **it is a labelling/registration gap.** The brief's §2 says
+the SoW "scopes PEQ to E3 at BUILD"; the built provision does not reflect that.
+**Decide:** (a) accept BUILD = short courses + UAS (then BUILD is simply not a PEQ tier and
+the E3 skill evidence stays unbanked as PEQ), or (b) claim PEQ E3 by banking the *existing*
+vocational work into the six E3 units (label + architecture work, **no new teaching**). An
+E3 Certificate is reachable that way — all six E3 units = exactly 14 credits. This is the
+pass's #1 question.
 
 ### Q2 · Which PEQ units and sizes do we register each pupil for?
-Model from CREDIT_PATHWAYS.md (recommends nothing):
-- GROW as built → realistic ceiling **L1 Extended Award (9 cr)**.
-- GROW **L1 Certificate (14 cr)** needs the **Wellbeing unit added** (currently a GAP;
-  lands the total at 15). ← the most decision-relevant number in the pass.
-- BUILD, *if* PEQ E3 is claimed → up to **E3 Certificate (all six E3 units = 14)**.
+Model from CREDIT_PATHWAYS.md (recommends nothing). For GROW L1, **three options**:
+1. **Extended Award as-is** — GROW reaches **L1 Extended Award (9 cr)** today, no new work.
+2. **Add WellbLe1 to GROW** — teach + bank Wellbeing at L1 → six L1 units = 15 cr → **L1
+   Certificate** (Route A).
+3. **Adjacent-credit route (PROVISIONAL)** — five taught L1 units = 12 cr at level (≥ min
+   11); bank **Wellbeing at E3** as the sixth skill within the max-3 adjacent allowance →
+   15 cr → **L1 Certificate** with no new L1 teaching (Route B; barred-combination fine —
+   Wellbeing at one level only). Re-verify thresholds against the spec.
+
+BUILD, *if* PEQ E3 is claimed → up to **E3 Certificate (all six E3 units = 14)**.
 
 ### Q3 · Does GROW register anyone at Level 2?
 GROW's Stretch tier is deliberately **written to L2 evidence standard** (design). The Scheme

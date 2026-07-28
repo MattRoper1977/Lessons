@@ -399,6 +399,26 @@ depends on knowing to look and knowing where.*
 - Sequencing that must be repeated if this is ever redone: **provenance first,
   submission second.** The first version a crawler caches must be the framed one.
 
+### R-D05 · The ASDAN/PEQ work lives in the Lessons repo — sessions default to the site repo
+- **STATUS** RECORD · **VERIFIED** Pass PQ (base `32ca685e`)
+- **The BUILD/GROW ASDAN provision, the Evidence Binder and the PEQ audit all live in
+  `MattRoper1977/Lessons`.** Sessions commissioned to work on them keep opening in the
+  **site repo** (`mattroper1977.github.io`) instead, because that is the working tree the
+  harness attaches by default.
+- **Pass PQ is the FIFTH recorded instance.** The brief warned of it explicitly ("three
+  prior sessions defaulted to the site repo"); Pass PQ's own session opened in the site
+  repo and caught it at the attach-check before any audit ran.
+- **The control is two-part and neither half is optional:** (1) the warning stays in every
+  ASDAN/PEQ brief; (2) the session's **first act** is an attach-check — `git remote -v`
+  against the expected `Lessons` origin, and STOP if the working tree is the site repo,
+  attaching Lessons before anything else. A brief warning without the attach-check let three
+  sessions through; the attach-check is what stopped the fourth and fifth.
+- **Why an entry and not just a memory:** a recurring cross-session default has no in-tree
+  symptom — the wrong repo is a perfectly valid repo — so nothing detects it but the
+  discipline of checking the remote first. This is the R-G01 cached-claim shape one layer
+  out: the claim "I am in the right repo" is asserted by every session and kept true by
+  nothing but the check.
+
 ---
 
 ## E · Instruments and metrics

@@ -56,12 +56,14 @@ required activity (E3.5) → identify own success (E3.6)**, at E3 command verbs 
   discrete knowledge/skill challenges, not a single tracked plan. Living Independently,
   Careers and Duke are challenge-sequenced. **Verdict: the arc exists in one of five
   modules; the other four would be PARTIAL on the E3.4→E3.6 chain if PEQ were claimed.**
-- **The "≥10 hours" rule (§2).** BUILD lessons carry **no** "10 hours / minimum period"
-  language (0 occurrences). Whether E3 units actually require a 10-hour clocked use, or
-  the activity minimums the Binder shows (presentation ≥2 min, text ≥100 words, group ≥3)
-  are the real requirement, is a **§2-vs-Binder discrepancy** — the Binder's E3.5.1 shows
-  activity minimums, not hours. **UNDETERMINED — needs spec §(unit assessment) to settle
-  which is authoritative.** Either way, BUILD does not surface a clocked-use requirement.
+- **The "≥10 hours" rule — PROVISIONALLY-RESOLVED (spec-gate open, per close-out ruling).**
+  Not a conflict: the spec's line is *"the plan must be used over a minimum period of 10
+  hours"* — a **cumulative cross-week window on plan use**, stated per-unit in the Additional
+  assessment requirements. The Binder's activity-minimums (presentation ≥2 min, text ≥100
+  words, group ≥3) govern **individual assessed activities**. **Both bind; neither replaces
+  the other.** The finding stands regardless: **BUILD surfaces neither** — 0 occurrences of
+  "10 hours / minimum period", and its challenge-based weeks do not clock cumulative plan
+  use. Re-verify the 10-hour wording against the committed spec PDF.
 - **Command-verb pitch.** BUILD is pitched low (SEMH alternative provision; "Say / Sort /
   photo" tasks), which is **appropriate for E3** (State/List/Identify). Spot-check found no
   over-pitched "explain and evaluate" demands on the Standard tier. This is the one

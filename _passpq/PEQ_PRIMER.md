@@ -62,11 +62,15 @@ describe/evaluate your own success.** [§2] Worked example, Communication at E3 
 - E3.6: **identify own success** (a positive outcome, use of active listening, an area to
   develop, where the skill will be used in future).
 
-**⚠ One discrepancy to resolve at training:** §2 says the "use" step must run **"over a
-minimum period of 10 hours"**, so a unit is evidenced *across weeks, never inside one
-lesson*. The Binder's "use" criterion instead shows **activity minimums** (minutes/words/
-group size), not a 10-hour clock. **These two do not obviously agree** — confirm from the
-spec which governs. It changes how many lessons a unit needs.
+**Two instruments, both binding (not a conflict — resolved provisionally, confirm at
+training):** the spec's *"the plan must be used over a minimum period of 10 hours"* is a
+**cumulative cross-week window on plan use** (stated per-unit in the Additional assessment
+requirements), so a unit is evidenced *across weeks, never inside one lesson*. The Binder's
+**activity minimums** (presentation ≥2 min / discussion ≥5 min / text ≥100 words / group
+≥3) govern **individual assessed activities**. Both apply to different things; neither
+replaces the other. **Practical consequence for you:** a unit needs a plan used over ~10
+cumulative hours *and* at least one assessed activity that meets its own minimum. Re-verify
+the 10-hour wording against the committed spec.
 
 ## 5 · Command verbs set the level
 

@@ -34,6 +34,19 @@ These were **not** guessed at. Any audit finding that depends on one is marked
 - The **PEQ qualification tracker**
 - The **PEQ challenge bank**
 
+## RESUME SEQUENCE (once the three PDFs are dropped here) — from Matt's close-out ruling
+
+1. **Verify each downloaded file is what it claims** — state title page, version, and page
+   count for each before relying on it.
+2. **Commit them** to `_passpq/inputs/`.
+3. **Reconcile every §2 claim against the spec and clear or amend each
+   `UNVERIFIED-AGAINST-SPEC` flag individually — never as a batch stamp.**
+4. **Re-derive CLAIMS and both COVERAGE deltas** wherever a flag moved.
+5. **State any spec-vs-§2 mismatch as a finding** (the spec wins; report the delta).
+6. Then the conditional builds unlock: **T2-2 / T2-3 unit-code corrections** execute only
+   where the **spec and the Evidence Binder agree** on every target code (two-source);
+   any disagreement converts that code to a tabled finding.
+
 ## Note on the strongest internal corroborator
 
 `ASDAN/ASDAN PEQs/Evidence_Binder_PEQ_v7.html` embeds a unit/criterion/credit data model

@@ -54,9 +54,27 @@ PARTIAL — depends on the GCOMM/ENT project strands closing use/review):
 | + WellbLe1 added (3) | **15** | **Certificate (L1)** — 15 ≥ 14 ✓ (min 11 at level ✓) |
 
 → **As built, GROW's realistic PEQ ceiling is an L1 Extended Award (9 cr).** The L1
-**Certificate** (14 cr) is **not reachable without the Wellbeing unit**, which lands the
-total at exactly 15. This is the single most decision-relevant number in the pass: **if
-Cheryl wants pupils to leave with an L1 Certificate, Wellbeing must be taught and banked.**
+**Certificate** (14 cr) is **not reachable without a sixth skill**. There are **two routes**
+to it (below); either satisfies the barred-combination rule because Wellbeing would appear
+at **only one level**.
+
+### Route A · add WellbLe1 to GROW (same-level)
+Teach and bank Wellbeing at **L1** → six L1 units = 15 cr → **L1 Certificate** (min 11 at
+level ✓). Requires new teaching in the GROW strand (COVERAGE_GROW §1 GAP).
+
+### Route B · adjacent-credit route (PROVISIONAL — spec-gated)
+The five taught L1 units already give **12 credits at level (≥ the min 11 at level)**. The
+Certificate allows **max 3 credits adjacent** (one level above/below). Bank the sixth skill,
+**Wellbeing, at E3 (WellbLeE3, 3 cr) or L2** as the adjacent contribution → **12 + 3 = 15 ≥
+14** → **L1 Certificate** with no new L1 Wellbeing teaching, if the E3 Wellbeing evidence
+can be generated (e.g. from BUILD's FoodWise/wellbeing context). **Barred-combination
+satisfied:** Wellbeing appears at one level only (E3), Communication/Decision/Learning/Team/
+Thinking at L1 only. **Flag PROVISIONAL** — re-verify the "max 3 adjacent" and "min 11 at
+level" thresholds against the committed spec before relying on this.
+
+**Decision-relevant summary:** an L1 Certificate is reachable either by teaching Wellbeing at
+L1 (Route A) or by banking Wellbeing at E3 within the adjacent allowance (Route B). Both go
+to Cheryl as options alongside "Extended Award as-is" (QUESTIONS §Q2).
 
 ## Cross-tier pupils — the barred-combination trap
 

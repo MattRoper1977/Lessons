@@ -59,10 +59,13 @@ cross-unit skill evidence over the term.
   the "use" and "review" LOs. Map for whoever registers: PEQ W1–W6 = know + plan + review
   scaffold; GCOMM/ENT Aut1–Aut2 = the clocked use. **PARTIAL until the cross-strand banking
   is confirmed to actually land each unit's E-LOs in the Binder.**
-- **The "≥10 hours" rule (§2).** As in BUILD, **0 occurrences** of "10 hours / minimum
-  period" in the GROW strand. The extended arc *implies* it (a term-long project), but it
-  is never surfaced as a requirement. Same §2-vs-Binder discrepancy (the Binder shows
-  activity minutes/words, not hours). **UNDETERMINED — needs spec.**
+- **The "≥10 hours" rule — PROVISIONALLY-RESOLVED (spec-gate open).** The spec's 10-hour
+  line is a **cumulative cross-week window on plan use** (Additional assessment
+  requirements); the Binder's activity minutes/words govern individual activities — **both
+  bind** (close-out ruling item 1). GROW's design is actually well-placed to satisfy it: the
+  GCOMM/ENT project strands are the term-long clocked use. But it is **never surfaced as a
+  requirement** (0 occurrences of "10 hours"), so there is no check that any pupil's plan use
+  reaches the window. Re-verify the wording against the committed spec.
 - **Command-verb pitch.** The L1 spec verbs per §2 (Outline / Describe / Give examples of a
   range) are **absent** (0 occurrences); the Standard tier uses evidence-production "do"
   verbs (appropriate) plus **"Explain" (12×)**, which leans toward L2. The Stretch tier

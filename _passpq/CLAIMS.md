@@ -28,11 +28,14 @@ fictional, not a pupil" provenance protected under R-D03/R-H01), `ASDAN/HW_Socia
 (wellbeing homework, PEQ-adjacent), `build-engine/` (a lesson-generation toolchain whose
 JSON seeds reference the same short-course challenge labels), `resources.json` (catalogue).
 
-**T-audit reconciliation:** the brief asks to reconcile against the T-audit's 159-lesson
-table's pathway assignments. **That table is not present in this repo** (it lives in the
-T-audit's own artefacts / the site repo). The population above is therefore derived
-mechanically from the tree and the sentinel-45 loop-mark set (all 31 BUILD_ASDAN lessons
-are sentinel-protected). **UNDETERMINED — needs the T-audit 159 table** to table any delta.
+**T-audit reconciliation (source = EXTERNAL-TRANSCRIPT, per close-out ruling item 2).** The
+T-audit's 159-lesson table was **deliberately emitted as transcript text, never committed** —
+it is not a lost artefact. The population is instead reconciled against **REGISTER R-A02 @
+`7226b08`** (as Pass SB did): R-A02's LL-3 population records **BUILD_ASDAN 31** (lacks the
+writing line) and **GROW_ASDAN 18** (carries it) = **49 ASDAN lessons**, matching this
+pass's mechanical derivation exactly and the sentinel-45 loop-mark set (all 31 BUILD_ASDAN
+lessons are sentinel-protected). **No delta.** The full 159-table pathway cross-check remains
+available from the EXTERNAL-TRANSCRIPT source if a wider reconciliation is ever wanted.
 
 ---
 
@@ -178,8 +181,8 @@ target for every Tier-2 unit-label fix.
 | WRONG-LEVEL | **none found** — L2 appears only as declared *Stretch* design, never as a registration/banking level | (GROW Stretch tier) |
 | PLACEHOLDER | PEQ unit codes absent from all 49 lessons (deliberate, pending Cheryl) | whole provision |
 
-**Tier-1 self-inconsistency (mechanical):** `ASDAN Studio · ASDAN Studio` doubled in the
-KO / witness headers of **all 49 ASDAN lessons** (BUILD 31 + GROW 18). Truth is settled
-in-file (the label is "ASDAN Studio", singular, everywhere it is not doubled). *But* all 31
-BUILD lessons are sentinel-45 and both tiers' witness statements are protected, so per brief
-§6 this is **Tier-2 minimum, not a Tier-1 auto-commit.** Diff proposed in FINDINGS §Tier-2.
+**Mechanical self-inconsistency — FIXED (T2-1, authorised & applied):** `ASDAN Studio ·
+ASDAN Studio` doubled in the KO / witness headers of **all 49 ASDAN lessons** (BUILD 31 +
+GROW 18), 98 occurrences. Truth settled in-file (the single form is canonical on the screen
+tag line). Sentinel + witness protection made it Tier-2 not Tier-1; **authorised in the
+close-out ruling and applied** at commit `0a392a7` (98→0, gates passed). See FINDINGS §Tier-2.
