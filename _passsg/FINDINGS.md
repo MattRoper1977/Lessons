@@ -13,12 +13,14 @@ Units used throughout: **lesson** (a taught slide-deck `.html`), **file** (any `
 ## 0 · Lineage block (siblings + provenance)
 
 - **Base measured at:** `32ca685e` (origin/main @ 2026-07-28).
-- **Branch tip:** see close-out (§9) — derived post-commit, never hand-typed.
-- **Sibling passes (verified on origin):**
-  - **Pass SL (LAUNCH SoW):** `origin/pass-sl-sow-launch` @ `40a0637`.
+- **Branch tip:** see close-out (§9) and §11.8 — derived post-commit, never hand-typed.
+- **Sibling passes (verified live via `git ls-remote origin`, authoritative):**
+  - **Pass SL (LAUNCH SoW):** `origin/pass-sl-sow-launch` @ `ad6d1ea` (advanced from `40a0637` during this session).
+  - **Pass SB (BUILD SoW):** `origin/pass-sb-sow-build` @ `4f5c6a4` (ledger `_passsb/FINDINGS.md`).
+  - **Pass PQ (PEQ audit):** `origin/pass-pq-peq-audit` @ `ab9c290`.
   - **Pass U (T-audit / instruments):** `origin/pass-u-audit` @ `7c4b2b4` (ledger `_passu/FINDINGS.md`).
   - **Pass X (instruments):** `origin/pass-x-instruments` @ `98a8dbd`.
-- **Brief-vs-repo mismatch (rule 3):** the brief names **Pass SB (BUILD)** as a live sibling. **No `pass-sb*` branch exists on origin.** Pass SB is either unmerged/local elsewhere or not yet created. Recorded, not blocking.
+- **CORRECTION (supersedes the earlier "no `pass-sb` branch" note):** `pass-sb-sow-build`, `pass-pq-peq-audit` and `pass-sg-sow-grow` **all exist** at the canonical repo. My first-pass "no pass-sb" claim was a **local-tracking-ref artefact** — `git branch -a` lists only *fetched* remote-tracking refs, whereas `git ls-remote origin` enumerates the true remote. Ruling Priority 2 map: §11.2.
 
 ---
 
@@ -26,9 +28,9 @@ Units used throughout: **lesson** (a taught slide-deck `.html`), **file** (any `
 
 | # | Brief claim | Repo reality | Disposition |
 |---|---|---|---|
-| BV-1 | "T-audit's **159-lesson** verdict table (@7889055a) … its **GROW count was 34 files**." | No string `159` exists in any tracked `.md` on any branch (main, pass-u-audit, pass-x-instruments, pass-sl-sow-launch, art-remediation). `7889055` is a real commit ("W6 D&T: include Lundy loop in printed pack") but carries no 159-row verdict table. Pathway counts DO exist in `HANDOVER.md` (GROW_ASDAN 18, GROW_HUM 7+W7) and corroborate parts of "34". | **34 unverifiable as a single table.** Population derived mechanically instead (see §2). "34" is *consistent with* ASDAN 18 + HUM 8 + one art suite 8, but the specific art suite is not fixed by any recoverable T-audit record. |
+| BV-1 | "T-audit's **159-lesson** verdict table (@7889055a) … its **GROW count was 34 files**." | No string `159` exists in any tracked `.md` on any branch (main, pass-u-audit, pass-x-instruments, pass-sl-sow-launch, art-remediation). `7889055` is a real commit ("W6 D&T: include Lundy loop in printed pack") but carries no 159-row verdict table. Pathway counts DO exist in `HANDOVER.md` (GROW_ASDAN 18, GROW_HUM 7+W7) and corroborate parts of "34". | **RESOLVED by ruling — source is EXTERNAL-TRANSCRIPT** (§11.3): the 159/GROW=34 table was deliberately emitted as transcript text, never committed (same ruling as Pass PQ). Not "missing." In-repo reconciliation anchor is **REGISTER R-A02** + `HANDOVER.md` RM ledger, which corroborate **ASDAN 18 + GROW_HUM 8**; the Slideshows art delta is invisible to the writing-line predicate (§11.3). Population of record = my mechanical 42 (§2). |
 | BV-2 | "GROW ASDAN 18 … GROW Humanities ×8 … Art Teesside GROW route ×8" (= 34 GROW lessons). | Mechanically there are **42** GROW `type:lesson` entries: ASDAN 18 + GROW_HUM 8 + **Grow/Slideshows GROW_ART 8** + Art_Teesside/Grow 8. The brief's 34 **omits the `Grow/Slideshows` "GROW · Art & Arts Award" suite (8 lessons)**. | **Delta tabled (§2). +8 lessons.** Do not force the number. |
-| BV-3 | "Sentinel-45 … derive the sentinel set and assert it still returns exactly **45**." | Raw `ll-g` substring appears in **50** `.html` files at base. **None are in the GROW population** (they are `BUILD_ASDAN`, `Art_Teesside/Build`, `Build/Slideshows`, chemistry, Intervention, Games). | Either "45" is stale or "the sentinel set" is a narrower derivation than a raw substring. **Moot for Pass SG:** no scoped GROW lesson carries `ll-g`, and no commit here touches an `ll-g` file, so the gate never engages. Recorded. |
+| BV-3 | "Sentinel-45 … derive the sentinel set and assert it still returns exactly **45**." | My interim raw `grep -rIl 'll-g'` returned **50** — over-broad. The **genuine sentinel token is `ll-g:loop-mark`** (HTML comment `<!-- ll-g:loop-mark v1 -->`); the precise derivation returns **exactly 45** (31 BUILD_ASDAN + 6 Build/DT + 8 Art_Teesside). The 5 extras were incidental substrings ("fi**ll-g**ap", "ski**ll-g**rid"). None in the GROW population. | **RESOLVED — instrument divergence, SB was right** (§11.1/Priority 1). True set = 45; SB's 45→45 did NOT pass a stale predicate. Interim rule adopted: sentinel gates assert **set invariance**, not the constant 45 (§11.1d). Moot for Pass SG regardless (no scoped GROW file carries the token). |
 | BV-4 | Middle SC tier named **"Standard"**. | Confirmed — `#arrival-standard`/`#exit-standard`, `switchLevel(...,'standard')`, "🖨 Standard pack", buttons "🤝 With support / 👤 On your own / 🚀 Take it further". | Brief correct. Tier vocabulary is **Supported · Standard · Stretch** across ASDAN + HUM + Art_Teesside. |
 | BV-5 | GROW Humanities chassis is **v4** (`.task-box`/`.li-box`/`.answer`/`.lundy-box`, no `.v5-step`). | Confirmed for `Grow/Slideshows/GROW_HUM_*`. **Note:** `Grow/Slideshows/GROW_ART_*` is a THIRD chassis (`.tag`/`.lo-item`/`.sc-box`/`.aspire-box`), older than both v4 and ASDAN v5. | Brief correct on HUM. Art-slideshows chassis flagged (§6). |
 
@@ -186,6 +188,7 @@ English & Communication · Maths & Numeracy · Science · RE & World Views (deli
 - **Art_Teesside W7 tri-channel skill-share** (station wording present) and W5 organisation-card escalation — present, quarantined.
 - **Lundy after the timer**, safeguarding lines, calm palettes, icon+label+colour (no colour-alone), no leaderboards, no "REJECTED" verdicts, answer keys staff-side, no mark schemes authored — all consistent with the estate SEMH rules; nothing authored against them.
 - **Witness section makes GROW ASDAN packs 14 sections** — noted; not "corrected" to 13.
+- **🔒 PROTECTED VERBATIM (Matt's close-out ruling) — the Art_Teesside/Grow W8 Bronze→Silver bridge.** The **16** "Silver" occurrences in `Art_Teesside/Grow/GROW_ART_W8_Reflect_Audit_and_Close_the_Loop.html` (the "Silver prospectus", "Silver is Bronze at project scale", Bronze→Silver retrieval/exit/KO/print/wagoll/cold-call) are a **deliberate, correct** ladder to the LAUNCH arts tier (Pathway Ladder: LAUNCH Creative Arts = Silver/Gold). The award-strip is correctly **Bronze**; there is **no false Silver accreditation claim**. **No pass may re-flag this as a Gate 2(d) defect or reword it.** (Deeper-read-before-flag: the estate's repeat lesson.)
 
 ---
 
@@ -266,3 +269,135 @@ The two Art_Teesside proposals were approved on my §8 framing. Closer reading o
 - **Tier 2 (built on branch, awaiting merge):** **1 defect class** — Slideshows GCSE→Bronze (8 files, commit `cdc9623`).
 - **Tier 3 (report-only):** Art_Teesside level/tag/Silver (all deliberate-correct — leave); Slideshows S/S/S tier rebuild (future pass); ENT/Young Duke coverage; scheme-level items.
 - **Still nothing merged.** Branch tip advances to `cdc9623`; Matt merges.
+
+---
+
+## 11 · Close-out ruling responses (Matt, 2026-07-28)
+
+Silver bridge recorded PROTECTED VERBATIM (§6). All items below are report-only maps or verification results; **nothing new merged**; the one Tier-2 commit (`cdc9623`) stands.
+
+### 11.1 · PRIORITY 1 — Sentinel 45 vs 50 reconciliation → INSTRUMENT DIVERGENCE (resolved)
+
+**(a) My interim derivation, VERBATIM (completeness asserted — `grep -rIl` lists each matching file exactly once):**
+
+```
+grep -rIl 'll-g' --include='*.html' .
+```
+Returned **50 files** (full list, no truncation):
+
+ 1. `5 Intervention 10/Lesson_VIR_Intervention.html`
+ 2. `5 Intervention 10/Lesson_VIR_Pupil_App.html`
+ 3. `Art_Teesside/Build/BUILD_ART_W1_The_Local_Canvas.html`
+ 4. `Art_Teesside/Build/BUILD_ART_W2_Artists_Makers_and_Teesside_Connections.html`
+ 5. `Art_Teesside/Build/BUILD_ART_W3_Industrial_Surface_Skills_Lab.html`
+ 6. `Art_Teesside/Build/BUILD_ART_W4_Build_the_Brief.html`
+ 7. `Art_Teesside/Build/BUILD_ART_W5_Critique_Test_and_Redirect.html`
+ 8. `Art_Teesside/Build/BUILD_ART_W6_Resolve_the_Artwork.html`
+ 9. `Art_Teesside/Build/BUILD_ART_W7_Curate_the_Showcase.html`
+10. `Art_Teesside/Build/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html`
+11. `BUILD_ASDAN/Careers/CAREERS_W1_My_Strengths.html`
+12. `BUILD_ASDAN/Careers/CAREERS_W2_Jobs_in_My_Community.html`
+13. `BUILD_ASDAN/Careers/CAREERS_W3_Skills_Employers_Want.html`
+14. `BUILD_ASDAN/Careers/CAREERS_W4_Routines_and_Reliability.html`
+15. `BUILD_ASDAN/Careers/CAREERS_W5_Applying_Myself.html`
+16. `BUILD_ASDAN/Careers/CAREERS_W6_My_Career_Profile.html`
+17. `BUILD_ASDAN/Careers/CAREERS_W7_After_Year_11.html`
+18. `BUILD_ASDAN/Community_Project/COMM_W1_Choose_Our_Asset.html`
+19. `BUILD_ASDAN/Community_Project/COMM_W2_The_Site's_Need.html`
+20. `BUILD_ASDAN/Community_Project/COMM_W3_Our_Team_Roles.html`
+21. `BUILD_ASDAN/Community_Project/COMM_W4_Partner_Update.html`
+22. `BUILD_ASDAN/Community_Project/COMM_W5_Plan_the_Handover.html`
+23. `BUILD_ASDAN/Community_Project/COMM_W6_The_Handover_and_Its_Benefit.html`
+24. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W1_Choose_My_Challenges.html`
+25. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W2_A_Kindness_Challenge.html`
+26. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W3_An_Eco_Challenge.html`
+27. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W4_An_Independence_Challenge.html`
+28. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W5_Our_Social_Enterprise.html`
+29. `BUILD_ASDAN/Duke_and_Enterprise/DUKE_W6_Pitch_and_Reflect.html`
+30. `BUILD_ASDAN/FoodWise/FW_W1_Food_Groups.html`
+31. `BUILD_ASDAN/FoodWise/FW_W2_A_Balanced_Plate.html`
+32. `BUILD_ASDAN/FoodWise/FW_W3_Reading_Labels.html`
+33. `BUILD_ASDAN/FoodWise/FW_W4_Kitchen_Hygiene_and_Safety.html`
+34. `BUILD_ASDAN/FoodWise/FW_W5_Prepare_a_Healthy_Snack.html`
+35. `BUILD_ASDAN/FoodWise/FW_W6_Plan_a_Healthy_Meal.html`
+36. `BUILD_ASDAN/Living_Independently/LI_W1_Where_Money_Comes_From.html`
+37. `BUILD_ASDAN/Living_Independently/LI_W2_Notes_and_Coins.html`
+38. `BUILD_ASDAN/Living_Independently/LI_W3_Needs_vs_Wants.html`
+39. `BUILD_ASDAN/Living_Independently/LI_W4_Everyday_Prices.html`
+40. `BUILD_ASDAN/Living_Independently/LI_W5_A_Simple_Budget.html`
+41. `BUILD_ASDAN/Living_Independently/LI_W6_Shopping_and_Change.html`
+42. `Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html`
+43. `Build/Slideshows/BUILD_DT_W2_Blueprint.html`
+44. `Build/Slideshows/BUILD_DT_W3_Core_Cut.html`
+45. `Build/Slideshows/BUILD_DT_W4_Assembly.html`
+46. `Build/Slideshows/BUILD_DT_W5_Finish.html`
+47. `Build/Slideshows/BUILD_DT_W6_Handover.html`
+48. `Games/Wrecking_Crew.html`
+49. `chemistry/Lesson2_pH_Scale_v4.html`
+50. `chemistry/Lesson4b_Gas_Tests_NH3_Cl2.html`
+
+**(b) SB's recorded derivation (`origin/pass-sb-sow-build` @ `4f5c6a4`, `_passsb/FINDINGS.md`):** "Sentinel-45 (**ll-g set, data-URIs stripped**) = 45 → PASS"; composition "31 BUILD_ASDAN + 6 BUILD_DT + 8 Art-main". **The commands DIFFER** — SB matches the loop-mark *token* with data-URIs stripped; my interim pattern was a **raw `ll-g` substring**. → **Instrument divergence**, the incidental-substring-read-as-PRESENT variant of the known trap.
+
+Files uniquely matched by MY pattern (the 5 false positives; SB ⊂ mine):
+- `5 Intervention 10/Lesson_VIR_Intervention.html` — incidental `ll-g` substring (not the `ll-g:loop-mark` token; no genuine loop-mark comment present)
+- `5 Intervention 10/Lesson_VIR_Pupil_App.html` — incidental `ll-g` substring (not the `ll-g:loop-mark` token; no genuine loop-mark comment present)
+- `Games/Wrecking_Crew.html` — '.ski**ll-g**rid' (skill-grid CSS class)
+- `chemistry/Lesson2_pH_Scale_v4.html` — incidental `ll-g` substring (not the `ll-g:loop-mark` token; no genuine loop-mark comment present)
+- `chemistry/Lesson4b_Gas_Tests_NH3_Cl2.html` — 'fi**ll-g**ap' (fill-gap)
+
+**(c) Corrected PRECISE derivation — the genuine sentinel token is the HTML comment `<!-- ll-g:loop-mark v1 -->`:**
+
+```
+grep -rIl 'll-g:loop-mark' --include='*.html' .
+```
+Returns **exactly 45** — composition **31 BUILD_ASDAN + 6 Build/Slideshows(DT) + 8 Art_Teesside** = SB's set precisely. So **SB's 45→45 did NOT pass against a stale predicate** — SB used the correct token; my interim raw substring was the over-broad instrument. No new provenance commits needed (the 45 are the LL-G evidence-engine ports SB already names).
+
+**(d) INTERIM RULE (adopted, record for every live pass):** sentinel gates assert **SET INVARIANCE** — the *same* derivation run pre- and post-commit returns the *identical file set* — **not** the literal constant 45. The constant is retired until this reconciliation is ratified. The canonical derivation is the precise token above.
+
+### 11.2 · PRIORITY 2 — "The repository moved" map (report-only, change nothing)
+
+- **Old / proxy path:** `mattroper1977/lessons` (lowercase; the session git proxy URL). **Canonical:** **`MattRoper1977/Lessons`** (GitHub API authoritative: id 1266750468, created **2026-06-11**, default `main`, public, `has_pages: true`). The push "This repository moved" notice is GitHub **case-canonicalisation** (owner login `MattRoper1977`, repo `Lessons`), not a rename to a different name; the redirect works (push succeeded).
+- **Branches AT the canonical location** (`git ls-remote origin`, authoritative): `art-remediation · main · pass-pq-peq-audit · pass-sb-sow-build · pass-sg-sow-grow · pass-sl-sow-launch · pass-u-audit · pass-x-instruments · pilot/launch-hum-w1-illuminator`. → **`pass-sb-sow-build` ✓, `pass-pq-peq-audit` ✓, `pass-sg-sow-grow` ✓ all exist.** (The earlier "no pass-sb" was a `git branch -a` fetched-refs artefact — corrected in §0.)
+- **Downstream exposure:**
+  - *Local remotes on the old URL:* this session's `origin` = the proxy `…/mattroper1977/lessons` (lowercase). Works via redirect; a fresh clone should use `https://github.com/MattRoper1977/Lessons.git`. No change made.
+  - *Pinned-SHA / raw fetches in instruments:* no `raw.githubusercontent.com` pinned-SHA fetch of this repo found. Three files reference the **Pages path** `https://mattroper1977.github.io/Lessons/` (`Games/Grapple.html`, `Games/Slipstream_GP.html`, `Launch/index.html`).
+  - *GitHub Pages serving path `/Lessons/`:* `has_pages: true`; the Pages host is always lowercased (`mattroper1977.github.io`) **independent of the owner-login case**, so `https://mattroper1977.github.io/Lessons/` **survives** the canonicalisation. No breakage expected.
+
+### 11.3 · Gate 3 — T-audit table = EXTERNAL-TRANSCRIPT; reconcile vs REGISTER R-A02
+
+- **Source reclassified EXTERNAL-TRANSCRIPT** (not "missing"): the 159-lesson / GROW=34 verdict table was deliberately emitted as transcript text and never committed — same ruling issued to Pass PQ. BV-1 disposition updated accordingly (§1).
+- **R-A02 @ `7226b08`:** at that commit R-A02 ("BUILD files without the LL-3 writing line") is **CONVENTION · DECLARED (56) · NOT VERIFIED** — "no safe selector … cannot gate a pass." Its richer writing-line breakdown exists at base `32ca685e`: **carriers 48 = `GROW_ASDAN` 18 · `Art_Teesside` 16 · `Grow` 7 · `Launch` 7**.
+- **Reconciliation of my 42-lesson population vs R-A02 + HANDOVER RM ledger:** `GROW_ASDAN` **18** ✓ (R-A02 carriers 18; RM 18). `GROW_HUM` **8** ✓ (RM `GROW_HUM 7` + `GROW_HUM_W7`; R-A02 `Grow 7` = the 7 non-assessed HUM carriers). `Art_Teesside/Grow` **8** ✓ (within R-A02 `Art_Teesside 16`). The **`Grow/Slideshows` art suite (+8)** is a *different chassis that does not carry the LL-3 writing line*, so the writing-line predicate is **silent** on it — which is exactly why a writing-line-based count under-reports it. **No contradiction; my mechanical 42 (type=lesson) stands as the population of record**, corroborated on ASDAN 18 + HUM 8.
+
+### 11.5 · Gate 4 — full gate set on `cdc9623` (each result stated)
+
+| Check | Result |
+|---|---|
+| `node --check` on every touched inline `<script>` (1 block/file × 8) | **8/8 PASS** |
+| jsdom boot (all 8; `runScripts:'dangerously'`, VirtualConsole) | **8/8 DOM builds, 0 jsdomErrors**; each shows 9 `section.slide` + exactly 2 `Bronze Stretch:` aspire-boxes |
+| Whole-file occurrence (via `grep -o … | wc -l`, not line count) | **`GCSE` 19 → 0**; **`Bronze Stretch:` = 16** across the 8 |
+| Tag multiset + `section`/`div`/`strong` balance vs prior | **unchanged / balanced** |
+All checks pass; no check failed; the commit is not extended.
+
+### 11.6 · Gate 5 — Slideshows × catalogue ordering (report-only; a LIVE suite is buried)
+
+- The Slideshows GROW art suite is catalogued under subject **`"Art"`** (all 8: `grow-art-aut1-w1…w8`). The Teesside suite uses `"Art · Teesside Studio Suite"`.
+- Site `resources/index.html` `subjOrder()`: `SUBJ_LEGACY = new Set(["Art"])`; legacy subjects get **rank 9999 (sorted last)**; `SUBJ_PRIORITY` (which includes `"GROW Vocational & PfA"`) does **not** contain `"Art"`.
+- **Therefore a suite you have just ruled LIVE for 2026-27 sorts DEAD LAST** in the resources browser — below even `"Art · Teesside Studio Suite"` (rank 1000). **Tabled as a decision.** Fix would be a **subject relabel** in `resources.json` (e.g. `"Art"` → a non-legacy value / a GROW-scoped subject); the ordering logic itself is **site-repo territory — out of scope here**. No change made.
+
+### 11.7 · HOLDS honoured + queued pass
+
+- **Art_Teesside "Aut 1" tag:** held as-is (unchanged) until Matt confirms a later teaching term.
+- **QUEUED — Slideshows S/S/S tier-structure rebuild (scoped pass, NOT started):** add Supported/Standard/Stretch differentiated arrival + independent + exit tasks to the 8 `Grow/Slideshows/GROW_ART` lessons (currently `.sc-box`/`.aspire-box` only, no tiers). **Per-lesson cost estimate:** ~3 differentiated task-sets (arrival/independent/exit) × 3 tiers, + a `switchLevel`/print-tier wiring port from the ASDAN v5 chassis, ≈ **250–400 changed lines/lesson**; **8 lessons ≈ 2.0–3.2k lines**; each is Tier-2 (build-then-ask, one specimen back to Matt before the batch). Recommend running it as its own lettered pass, not folded into an alignment audit.
+
+
+### 11.8 · Final verification sweep at tip
+- **Files touched this pass (whole session):** `_passsg/*` (ledger/matrix/input) + the 8 `Grow/Slideshows/GROW_ART_W1–W8` lessons (Tier-2 commit `cdc9623`). No other lesson file, and no ASDAN/HUM/Art_Teesside file, was modified.
+- **`node --check`** on every touched inline script: **8/8 PASS**.
+- **jsdom boot** of all 8 touched files: **8/8 build, 0 jsdomErrors**.
+- **Whole-file occurrence:** `GCSE` **0**; `Bronze Stretch:` **16** (completeness asserted, `grep -o`).
+- **Tag balance / multiset:** unchanged vs pre-edit; `section`/`div`/`strong` balanced.
+- **Sentinel (precise token `ll-g:loop-mark`):** **45 at tip**, identical set to base — **set-invariant** (Pass SG touched **0** of the 45; the interim rule §11.1d holds). Reduced-motion blocks untouched (no `ll-g` file edited).
+- **Print-section counts:** GROW ASDAN packs remain **14** (witness included) — no ASDAN file touched. Slideshows print pack is JS-built from `LESSON.*` config — no static print section changed by the aspire-box text edits.
+- **`node_modules/`** (transient jsdom install for the boot) removed; **not committed**. Working tree carries only `_passsg/` + the 8 committed lesson edits.
+- **Nothing merged. Branch tip is the ledger-finalisation commit atop `cdc9623`.** Stop.
