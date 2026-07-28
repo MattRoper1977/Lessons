@@ -102,6 +102,27 @@ its own replacement (standing rule 6).
 - **The lesson, and it is not "be careful":** every one of those five was a **vocabulary test wearing a presence test's clothes**. "Does it have `.print-section`" sounds literal but silently assumes the name. "Does the container have content" is presence, and presence does not need to know what the content is called. **Test for the thing, never for its name.**
 - **Status:** current.
 
+## LL-INST-09 — `loop_mark_print_gate.py`
+
+- **Derives:** per tier (`supported` / `standard` / `stretch`), whether a named element actually reaches paper — by loading the file in Chromium, emulating `media=print`, invoking the file's own `printPack(level)`, and reading back the rendered box, the enclosing section's `.visible` state, and the text of every visible print section.
+- **Method:** Literal, but **rendered rather than parsed**. It does not read the `printPack` array and infer. It asks the document what printed.
+- **Independent of:** every other instrument here. LL-INST-01..08 all reason over source text; this one reasons over a render, so it shares no premise with any of them.
+- **Why it exists, and what it caught.** A static read says *"`feedback` is in the array, therefore the section prints"*. That is a **vocabulary test wearing a presence test's clothes** — LL-INST-05's lesson. This instrument re-derived R-A07 (`print-lundy` absent from all three tier packs) by a method sharing no premise with the static read that first found it.
+- **Known limit — must be quoted with the result:** it proves an element is in the print box and in the printed text. It does **not** prove the element is legible, correctly paginated, or that a specific physical printer renders it. Greyscale and glyph-loss are asserted separately, in-page, not by this tool.
+- **Consumed by:** Pass LL-G gate 1 (45 files × 3 tiers × 17 assertions).
+- **Status:** current.
+
+## LL-INST-10 — `verify_commit_set.py`
+
+- **Derives:** whether a declared **set of commits** is present and carries what it should — commit count between two refs, and per commit the exact paths it touches, checked against emitted manifests. Asserted against `git log`, never against a memory of having built it.
+- **Method:** Literal, over the commit graph rather than over file contents. It is the only instrument here whose unit is a *scope*.
+- **Independent of:** all of LL-INST-01..09, which reason within a file or a render. This one cannot see inside a file and does not try to.
+- **Why it exists — R-F08.** A per-sub-pass cardinality assertion counts files inside its own scope and **nothing counted the scopes**. A commit silently failed to be created; the three sub-passes after it each asserted 15/15/15 and passed. The assertion that eventually fired did so for an unrelated reason. **A scope-level check cannot detect a missing scope.**
+- **Exercised against the defect, not just written (standing rule 6):** the set was rebuilt with commit 2 deliberately omitted. All three per-sub-pass cardinality assertions passed 15/15/15; this instrument reported `commit count == 5 · found 4` and refused to check further. **On its first real run it also caught a stale constant in its own declaration** — a path total of 48 carried over from when commit 2 held two files rather than three.
+- **Known limit:** it proves the commits exist and touch the declared paths. It does **not** prove the content of a change is correct — that is LL-INST-09's job and the in-file gates'. A green result here plus a green result there is two different claims.
+- **Consumed by:** any batched deployment. Run before push, not after.
+- **Status:** current.
+
 ## Fixes applied to existing instruments
 
 - **LL-INST-01 `hash_sweep.py` — extension blindness, fixed.** v1 chose near-identity candidates by file extension, *in a repo whose defining defect is that filenames lie*. It never tested `Head_Office_Summary.pdf` (HTML) or `weekly_loop_log.csv` (HTML), so two displaced copies were invisible to the instrument that exists to find displaced copies. Now sniffs content.
