@@ -142,6 +142,72 @@ obvious selector returns the wrong set.
   it is vestigial beside a bespoke print UI). Re-run the query rather than trusting
   the count.
 
+### R-A07 · `print-lundy` is in the markup and not in the print pack
+- **STATUS** RECORD · **VERIFIED** `3e2b99d` — re-derived by two methods sharing no premise
+- **The zero is `DIFFERENT_MODEL`, not `ABSENT`.** Nothing is missing from delivery.
+- `printPack(level)` enumerates `['ko','intro','arrival','starter','wedo','exit',
+  'witness','feedback']` (+ `scaffold-<level>`, `worksheet-<level>`). **`lundy` is in
+  that array in 0 of 45 files.** The section exists, carries content, and is never
+  given `.visible`.
+- **Where the content actually reaches people:** the four `lundy-box` panels on the
+  Lundy Loop slide, front of class (icon + label + colour), and the `taBriefs`
+  `"Lundy Loop"` entry for the adult. The **printed sheet** is what does not appear.
+- **The closure sentence lives only here** — *"Closing the loop: out loud, as a class,
+  is enough here. Any inclusion counts — a nod, a word, a pointed finger… Pass is
+  always allowed."* It is inside `#print-area` and appears on no slide. An adult gets
+  it from the TA brief or not at all.
+- **Two derivations, no shared premise:** (1) static read of the `printPack` array;
+  (2) Chromium at `media=print`, `printPack()` actually invoked, listing the elements
+  that carried `.visible` — 10 sections per tier, `print-lundy` in none.
+  Instrument: `LundyLoop/tools/loop_mark_print_gate.py` (LL-INST-09).
+- **OPERATIONAL CONSEQUENCE, and why this entry exists.** `print-lundy` is the
+  *natural* home for anything that belongs beside the closure line. Anything authored
+  there ships into 45 live lessons and never reaches paper. **Author into
+  `print-feedback`**, which is in the array in 45 of 45. This was caught by a gate,
+  not by reading.
+- **Do not "fix" by adding `lundy` to the array.** That prints an adult-facing page
+  into every pupil's pack in 45 files. If it is ever wanted, it is a content decision
+  with a human behind it. R-E05 applies: the print subsystem is closed to further
+  auditing without a concrete report.
+
+### R-A08 · `printSection()` is defined in 45 files and called from none
+- **STATUS** RECORD · **VERIFIED** `3e2b99d`
+- `function printSection(id,level)` prints one named section. **1 occurrence per file
+  across all 45 — the definition. Zero call sites, no UI control, no key binding.**
+- **Not a defect.** It is the inverse of R-A06's *"`printPack` defined but never called
+  from the UI"* and belongs to the same class: a print utility whose entry point was
+  never wired. It is also the only existing route by which `print-lundy` could reach
+  paper (R-A07).
+- Recorded so the pair is not rediscovered as two separate alarms.
+
+### R-A09 · The Loop Mark has no second copy — the absence *is* the control
+- **STATUS** CONVENTION — read before extending anything in Pass LL-G
+- The Loop Mark (`<!-- ll-g:loop-mark v1 -->`, in `print-feedback`, 45 BUILD lessons)
+  is a ring the pupil makes and an initial the adult adds, **on the pupil's own
+  printed sheet**. It is written down nowhere else and there is no version of it any
+  adult can read without the pupil handing it over.
+- **THE TEST, stated so a future pass can run it:** *if a second copy of the mark
+  exists anywhere — a list, a sheet, a column, a total — the thing has changed species
+  and the pass stops.*
+- **Why this is a control and not a preference.** `LundyLoop/2_leadership/Impact_Framework.html`
+  states it first and independently: *"What we will not do: count Rs, set loop quotas,
+  or build a tracker. The moment the measure becomes the target, R becomes decoration
+  and the framework has failed by its own definition."* `Whole_School_Reference_v2`
+  requires moderation *"without creating a parallel evidence system."* The Loop Mark is
+  compatible with both **only** while no second copy exists.
+- **This entry is the only thing carrying the rule.** It was drafted for a staff note
+  on a pupil-held day card; that card is **shelved** (Pass LL-G deliverable B2 §(c)/(d),
+  to run only if the lesson-level mark is observed working in a real room). With the
+  card shelved, nothing else states it.
+- **The two precedents are registered separately, by subject, so they can be found:**
+  `mbm_tt_evidence` → **R-B04** · `tt_tracker_v2` → **R-B05**. Read both before
+  proposing any aggregation of the Loop Mark; between them they show the two ways this
+  goes wrong — a mark nobody reads, and a number that measures the wrong thing.
+- **Success measure, declared in advance.** "N files now contain a closure control" is
+  a build log, not a finding, and must not be reported as a result. The signal is a
+  Loop Walk sample and one question asked **of a pupil**: *"what does this ring mean?"*
+  A set of sheets with **no blank rows** is the warning sign, not the good one.
+
 ---
 
 ## B · Storage keys
@@ -190,6 +256,47 @@ obvious selector returns the wrong set.
   Merging distinct cohorts would be a **data defect**, not a tidy-up.
 - **Note what protects this: nothing but the key's name.** Naming is not a control.
   This entry is the control.
+
+### R-B04 · `mbm_tt_evidence` — **RETIRED-IN-PLACE**
+- **STATUS** RETIRED · **VERIFIED** `3e2b99d` · 10 files, all in `Tutor_Time/`
+- **Shape** `{ <LESSON_ID>: {completed:true, date, xp} }`. Written by `finish()` in the
+  ten Tutor Time decks (`WB_W1`–`W8`, two KCSIE). Ten `setItem`, ten `getItem`.
+- **The ten `getItem` calls are not readers.** Every one is the read half of a
+  read-modify-write inside `finish()`, merging into the same object. **There is no
+  consumer anywhere in either repository.** A `getItem` count is not a reader count —
+  direction is what makes the difference, as in R-A01b.
+- **RULING: not deleted, not built on, not promoted.** It is not a candidate reader for
+  any future day-loop or evidence carry.
+- **Why, and this is the transferable part:** it records that a deck reached its end
+  screen. That is **attendance at a slideshow, not a closed loop.** Promoting it would
+  give a downstream artefact a field that looks like evidence and means "the last slide
+  was shown". *A tick with a reader and no meaning is worse than a tick with no reader,
+  because now something depends on it.*
+- **Filename/ID drift, noted not fixed:** nine IDs are `tt_*`; the Vapes deck carries
+  `LESSON_ID='mazzvapes'`. Standing rule 7 — a name is a hint, never a fact.
+- Referenced by **R-A09**.
+
+### R-B05 · `tt_tracker_v2` — the tracker store, and the percentage that ignores the loop
+- **STATUS** RECORD · **VERIFIED** `3e2b99d` · 1 file
+  (`Tutor_Time/Evidence_Tracker_Online.html`)
+- The online twin of `Evidence_Tracker_Paper.html` — same columns, same Lundy key,
+  same photo rule. Manual staff entry, device-local.
+- **THE DEFECT, registered and deliberately NOT fixed in Pass LL-G:** `prog()` counts a
+  session evidenced when **`s.photo && s.cap`** and prints *"n of 8 sessions evidenced
+  (n%)"*. **The S/V/A/I ticks sit beside it and are not counted.** The one place in this
+  estate that computes an "evidenced" number computes it from a photo and a caption,
+  with the loop excluded.
+- **Blast radius, derived rather than assumed:** `tt_tracker_v2` is read by exactly one
+  file — itself. The percentage is computed client-side from a device-local store, so an
+  external visitor sees their own empty sheet reading *"0 of 8"*. **It can only ever
+  have been seen by the person who filled that device's sheet in, and there is no path
+  from it to leadership.** A number nobody can reach misled nobody.
+- **Why it is recorded and not corrected:** correcting it is a content decision about
+  what "evidenced" means in Tutor Time, and that belongs to whoever owns the tracker.
+  The entry exists so the next pass does not rediscover it as an alarm, and so that any
+  future consumer of that percentage is a stop.
+- **Not to be merged with R-B04.** Two stores, one folder, no binding between them —
+  the R-G01 shape. Referenced by **R-A09**.
 
 ---
 
@@ -377,6 +484,51 @@ depends on knowing to look and knowing where.*
   committed-files assertion after push · classify-before-count · `identity_audit` as
   a gate before any extension-scoped pass.
 
+
+### R-F08 · A scope-level check cannot detect a missing scope
+- **STATUS** CONVENTION · **VERIFIED** `3e2b99d` — earned by a near-miss in this pass
+- **The instance.** Pass LL-G deployed as three sub-passes of 15, each asserting
+  `declared == touched == staged == 15` before committing. On a rebuild, **commit 2
+  (the gate) silently failed** — its file had been removed from the working tree by a
+  branch reset — and the three sub-passes were built and committed without it.
+- **The assertion fired, but not for the reason it should have.** It reported
+  `touched=16` only because an uncommitted `INSTRUMENTS.md` was sitting in the tree as
+  an unrelated sixteenth change. **Had that file been clean, every sub-pass would have
+  read 15/15/15, passed, and shipped a five-commit set with one commit missing.**
+- **The shape, stated generally:** *a check that validates the contents of a scope is
+  blind to the existence of the scope.* Cardinality within N sub-passes says nothing
+  about whether there are N sub-passes. The count is correct and the set is wrong.
+- **This is the estate's oldest failure arriving in the safety net rather than in the
+  pass** — a check that confirms the instrument rather than the work (LL-INST-05,
+  R-E05). It is more dangerous here, because a green assertion in a deployment gate
+  reads as permission to push.
+- **Mechanised**, per R-F06: `verify_commit_set.py` asserts the **set** against the git
+  log before any push — commit count, and per commit the paths it carries, checked
+  against the emitted manifests. Never against a memory of having built it.
+- **Corollary for any future batched pass:** assert one level above the unit you are
+  batching. If you batch files into commits, assert the commits. If you batch commits
+  into a pass, assert the pass.
+
+### R-F07 · Scope a key search to the object that owns it
+- **STATUS** CONVENTION · **VERIFIED** `3e2b99d` — earned by a defect this pass authored
+- **Standing rule 8 applies to a JSON key, not only to a filename.** *"The X key"* is an
+  unverified singleton in exactly the way *"the X file"* is.
+- **The instance.** Pass LL-G v1 appended a TA instruction anchored on the bare key
+  `"Independent Work":`. That key resolves to **two objects in each of 45 files**:
+  `_ccQuestions` (a pupil-facing cold-call bank, value an object `{F:,M:,H:}`) and
+  `_taBriefs` (value a string). **`_ccQuestions` comes first in source order.** The
+  append landed inside a Foundation-tier question asked aloud to a pupil, producing
+  *"Show me what you have done so far. Give the next step out loud while you circulate
+  — say it, do not write it…"*. Same for `"Lundy Loop":`.
+- **Why it would have survived review.** The corrupted string is grammatical, is in the
+  right file, and reads as almost-plausible on screen. Nothing in the file detects it.
+- **The remedy, and why it is not "be careful":** brace-match the owning object first,
+  then require the value's *type* to be what you expect before writing. A key is not a
+  location. Two structural facts must both hold — right object, right value shape.
+- **Mechanised**, per R-F06: the patch scopes to `_taBriefs` by brace-matching and
+  refuses a non-string value; a gate asserts `_ccQuestions` is **byte-identical**
+  after every apply. That gate is what caught this, and it stays.
+
 ### R-G01 · Cached claims — prose asserting something about elsewhere
 - **STATUS** RECORD · **VERIFIED** `35efefd`
 - The dominant failure shape of this whole programme: a local artefact asserting a
@@ -422,6 +574,30 @@ depends on knowing to look and knowing where.*
   entry silently *drops* a real candidate. That happened on the first run:
   `Pass LL-A2a` was mislisted as architecture. Removed. Check that list before
   trusting a shrinking number.
+
+### R-G03 · The cached-claim shape landed on the entry that catalogues cached claims
+- **STATUS** OPEN · **VERIFIED** `3e2b99d`
+- **R-G01 row 2** records: *`INSTRUMENTS.md` | which instruments exist | `tools/` |
+  what keeps it true: **nothing** | 6 listed / 6 actual ✓*. That was true when observed.
+  At `3e2b99d` there are **8 instrument scripts in `tools/` and 6 full `## LL-INST-0X`
+  entries.** `assessed_conditions_gate.py`, `sitemap_audit.py` and `ko_staleness.py` are
+  referenced by ID in the blind-twin table and in R-G01 itself, but have no entry of
+  their own.
+- **This is the point of the entry.** R-G01 exists to enumerate claims that go stale
+  silently because nothing binds them. **Its own row went stale silently, and its own
+  "what keeps it true" column already said `nothing`.** A cached claim about how many
+  cached claims there are.
+- **The argument it settles, and it is the strongest available:** a count in prose has
+  no mechanism and cannot acquire one by being written more carefully — R-G01 predicted
+  exactly this failure, in writing, and it happened anyway. **Put counts under an
+  assertion or accept that they are re-checkable rather than true.** The stamp is the
+  achievable form; the assertion is the preferable one.
+- **NOT fixed here, deliberately** — repairing it inside a lesson-authoring pass would
+  make the same category error twice. Scoped as its own pass: write the three missing
+  entries, re-observe R-G01 row 2, and correct the count to **9 files / 10 entries**
+  after `LL-INST-09` (Pass LL-G) lands.
+- **Do not read a shrinking discrepancy as progress** without re-running `ls
+  LundyLoop/tools/*.py | wc -l` against `grep -c '^## LL-INST-[0-9]'`. Both numbers move.
 
 ### R-F04 · Facts do not travel between files
 - **STATUS** CONVENTION — the rule two of this session's corrections earned
