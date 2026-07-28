@@ -267,3 +267,41 @@ explicit SoW weekly outcomes → SOW-SILENT** (report only, don't delete). Full 
 Confidence tally: {'HIGH': 25, 'MED': 10, 'LOW': 2} of 37 files
 
 _measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Phase 2 decisions 2026-07-28_
+
+---
+
+# PHASE 2 — FINAL (decisions 2: quarantine lift + 4SS0 park, 2026-07-28)
+
+**Decisions:** Art_Teesside quarantine **LIFTED in writing** (writes now permitted); 4SS0 **PARKED**
+(no chemistry-code action this pass).
+
+## Canonical Art (`Art_Teesside/Launch`) — assessed WITH quarantine lifted → still NO auto-fix
+Even able to write, the correct action is to table, not adapt. The suite is a **coherent designed
+divergence**, not a misalignment:
+- Week arc: W1 Frame the Local Challenge · W2 Practice Careers & Pathways · W3 Implement & Critically
+  Develop · W4 Arts Experience (Attend/Analyse/Share) · W5 Design the Leadership Project · W6 Pilot,
+  Lead & Adapt · W7 Deliver & Curate · W8 Review, Influence & Portfolio Audit.
+- Maps partly to SoW Autumn Creative Arts (W3≈"developing as an artist"; W4≈"experiencing the arts";
+  W8≈"review") but **W1/W2/W5/W6 are an intentional Arts-Award leadership/project blend** (Silver
+  Unit 2 / Gold), coherently sequenced, Trinity Silver/Gold cited correctly (N1 ✓), structure healthy
+  (9 slides · 7 lundy-box · 16 print ids · reduced-motion present · no ll-g sentinel).
+- Per brief §2.3 / Tier-3: a coherent alternative sequence is a **DECISION ITEM for Matt, never an
+  auto-fix**. Rewriting it to the SoW's "identity/developing-artist" Autumn theme (N3) would destroy
+  a designed arc and revert a decision. **Tabled. No edit made.** (Quarantine lift used only to READ
+  and confirm; nothing written.)
+
+## FINAL committable-fix tally this pass: **0 lesson files changed.**
+- Canonical Humanities: already aligned.
+- Canonical Art: designed divergence → decision item (not a fix).
+- Science: topic-aligned; spec-code/week-label correction blocked on the **parked** 4SS0 decision.
+- 4SS0: parked by Matt.
+- Legacy suites: report-only.
+
+## What waits on Matt
+1. **Art_Teesside leadership resequencing** — accept as designed (close the item) OR ask for a
+   re-alignment to SoW Autumn Creative Arts (then it becomes a scoped Tier-2 job).
+2. **4SS0 code** (parked) — pick 1SC0 vs 4CH1 + confirm spec-point refs to unlock the 2-file diff
+   and the wider science spec-code/week-label alignment.
+3. **Merge** — review branch `pass-sl-sow-launch` and run your spot-checks. Nothing merged by me.
+
+_measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Phase 2 final 2026-07-28_
