@@ -807,6 +807,13 @@ building meant the whole episode cost zero repo changes.
 - **Remedy candidate, a pass not a build:** a declared in-flight scope — which passes hold which
   paths, now — checked before any pass opens on a file. Recorded because the failure recurs
   whenever two passes overlap and neither declares.
+- **Recurred live, so this is tested not argued (like R-H05).** Within the same LL-I close, Matt
+  authorised LL-I to record the R-A07 boundary *and* Pass V recorded it independently at `32441c5`;
+  LL-I fetched-before-building, saw the artefact already landed, and **declined to duplicate** —
+  closing its own stale `R-H01` bullet at `195ee37` instead. Two authorised routes to one artefact,
+  first-lander wins, second-lander cross-references rather than duplicates. That is the collision's
+  benign resolution when at least one side fetches first; the malign one (the near-wrongful revert)
+  is what happens when neither does.
 
 ### R-H03 · Scope discipline — three forms, and the two worked in anger
 - **STATUS** CONVENTION · **VERIFIED** `0ec1da0`

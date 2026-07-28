@@ -221,6 +221,27 @@ gets forgotten, or gets restarted by someone who does not know why it stopped.
 
 *Queue entries 8–11 added by Pass LL-G at `d601842`.*
 
+### Added by Pass LL-I — the day-close designs, with triggers
+
+Two ratified designs live at `LundyLoop/6_designs/` (B2 the day-close reader, B3 the
+GROW→LAUNCH warrant step-up). Everything below flows from them.
+
+12. **The specimen pass.** Build one specimen of the day-close + LAUNCH warrant line —
+    the specimen chosen to *break* the design, per the LL-G rule — gated, before any batch.
+    **TRIGGER: a new session with Matt's go; one specimen, gated, before scale.**
+13. **The calibration-game pathway section.** Add the pathway-scoped section to
+    `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` (B2 §5): GROW/LAUNCH close on
+    the pupil writing, no adult initial expected; reuse *"Not yet = Voice present, Audience
+    pending"* verbatim. **TRIGGER: an authoring session, Matt's read before ship — shares the
+    TA-card / first-staff-briefing deadline (R-H08).**
+14. **The LL-5 GROW/LAUNCH population rework.** The 48 written-line files (R-A02) inherit
+    B2's pupil-reader and B3's evidence/warrant step-up. **TRIGGER: after the specimen is
+    judged; L3/L4/L5 settled against the day-close capture route first (R-E02).**
+15. **The LAUNCH line wording.** The pupil-facing warrant clause on LAUNCH's closure line.
+    **TRIGGER: the specimen pass — it is authoring and waits for Matt's read; ship gate applies.**
+
+*Queue entries 12–15 added by Pass LL-I.*
+
 ---
 
 ## What Matt still owes, and what he has ruled out
