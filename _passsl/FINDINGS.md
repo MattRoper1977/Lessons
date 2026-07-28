@@ -339,3 +339,38 @@ no hours/TQT, no mark schemes; Pass C survivors preserved; four-surface agreemen
 SoW↔Silver conflict, returned as a decision. Proposal delivered: `_passsl/ART_REALIGN_PROPOSAL.md`.
 
 _measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · rulings 2026-07-28_
+
+---
+
+# PHASE 2 — ART BUILD COMPLETE (Option A, quarantine lifted; 2026-07-28)
+
+Mapping proposal approved (Option A; Unit 2 stays in Autumn — accepted divergence). Built on branch,
+one class per commit, gates run per file. **7 lesson files changed; surfaces needed no change.**
+
+## Commits (rollback bases named)
+| Class | Commit | Files | What |
+|--|--|--|--|
+| Vocab (N4) | `5b88c23` | W1, W4 | Missing SoW Autumn vocab added to existing KO tables (taught, w/ defs): W1 (Aut1) art form·identity·reflection; W4 (Aut2) critique·inspiration·research |
+| Label (SoW provenance) | `dffeca9` | W4–W8 | W4 Aut1→Aut2; W5–W8 Aut1→"Unit 2 · SoW Spring/Summer" |
+| Label (cont.) | `301acb9` | W2 | W2 (Silver 1D research-artist) Aut1→Aut2 — completes scheme |
+| Surfaces (G5) | — (no-op) | — | START_HERE / Scheme_of_Work / Printable pack already Unit-1/Unit-2 framed and enforce the art-form/leadership boundary themselves; no SURFACE-SPLIT created, no edit needed |
+
+**Final SoW-provenance scheme:** W1/W3 = Aut 1 (1A/1B develop-as-artist) · W2/W4 = Aut 2 (1D/1C
+experience-review) · W5–W8 = Unit 2 · SoW Spring/Summer (leadership, taught early). Delivery "Week N" unchanged.
+
+## Gate results (measured post-build)
+- **G1 nine-part floor:** 1A–1D, 2A–2E all present across the suite ✓ (hyphen-range-aware detector; self-test passed).
+- **G2 Unit boundary:** untouched; the pack's WEEKS[] generator itself enforces "Unit 1 = art form, not leadership".
+- **G3 prohibitions:** public-showing assertions = 0 (5 guardrails preserved, all "Gold-only, not required at Silver"); no hours/TQT; no mark schemes authored.
+- **G4 Pass C survivors:** W1 shrink-line, W2 artist+organisation evidence, W5 crew cards, print-pack authorship/support splits all intact (added-only + label edits; nothing relocated or deleted).
+- **G5 four-surface agreement:** surfaces already consistent; no split.
+- **G6 estate gates (per file, per commit):** slide / .lundy-box / print-id / ko-table counts unchanged; reduced-motion @media block byte-identical; `node --check` 0 failures across inline scripts; stale "Arts Aut 1" asserted gone from every relabelled file; cardinality asserted per commit; no `ll-g` sentinel in touched files.
+- **N4 vocab:** all 11 SoW Aut1+Aut2 Creative-Arts vocab terms now present across W1–W4 (MISSING: none).
+
+## Honest headline for the Art job
+The canonical suite was already ~90% SoW-aligned (correct Silver 9-part coverage, art-form/leadership
+boundary already enforced, accreditation correct). The build was a **light-touch N3/N4 + provenance-label
+pass — 6 vocab terms and 6 label corrections across 7 files — not a resequence.** No lesson task chain
+rewritten; no structure touched. Nothing merged — Matt merges.
+
+_measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Art build 2026-07-28_
