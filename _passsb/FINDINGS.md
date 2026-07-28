@@ -1,6 +1,6 @@
 # Pass SB — BUILD lessons ⇄ BUILD SoW 2026-27 audit
 
-**Status:** IN PROGRESS (measurement phase). Nothing merged. Matt merges.
+**Status:** MEASUREMENT COMPLETE · awaiting Matt on Gate 1 & Gate 2. 0 lesson files modified. Nothing merged. Matt merges.
 
 ## Lineage & provenance
 
