@@ -1185,3 +1185,49 @@ building meant the whole episode cost zero repo changes.
   out: the claim "I am in the right repo" is asserted by every session and kept true by
   nothing but the check.
 
+
+### R-RL01 · Pass RL — re-land PQ + SG + Phase-3, close the SoW alignment chain
+- **STATUS** CLOSE · **VERIFIED** Pass RL (base `59ad56a`, merge `faf5318`)
+- **Forensic verdict (why RL existed).** Ancestry proof found only SB (`4f5c6a4`) on
+  `main`; **PQ (`b137a90`) and SG (`dc41a56`) had NOT landed** — verified by *content*, not
+  tip SHA: `_passpq/`/`_passsg/` trees absent, `R-D05` absent, no `pass-pq`/`pass-sg`
+  commits in `a5092bb..59ad56a`. Both branch refs survived at origin and were the re-land
+  source.
+- **What merged (estate main-wins; `_passXX` branch-wins; REGISTER append-only union).**
+  - `_passpq/` — 8 deliverables, byte-identical to `b137a90`; **`R-D05` appended** (main's
+    62 entries otherwise untouched; SG added none — main already supersets its ledger).
+  - **T2-1** doubled-label fix applied **by MEASUREMENT**: `ASDAN Studio · ASDAN Studio` →
+    `ASDAN Studio`, **49 files (BUILD 31 + GROW 18), 98 → 0**. *(Master prompt predicted 0
+    at BASE; measured 98 — the `>0` branch was taken. `<script>`/reduced-motion blocks
+    byte-identical; tag counts unchanged; GROW packs section count invariant.)*
+  - `_passsg/` — FINDINGS (incl. §11.8), SOW_MATRIX, `inputs/GROW SOW 2026-27.xlsx`,
+    byte-identical to `dc41a56`.
+  - **SG content** re-derived on main's current 8 `Grow/Slideshows/GROW_ART` files
+    (cdc9623 file states NOT reintroduced): predicate `GCSE Stretch` + `GCSE Art habit`
+    **17 → 0** (`GCSE Stretch:`→`Bronze Stretch:` ×16; `Bronze / GCSE Art habit`→
+    `Bronze Art habit` ×1). *(Master prompt predicted 0 in `Grow/Slideshows`; measured 17 —
+    the earlier forensic 0 read `Art_Teesside/Grow`, the wrong tree.)*
+  - **Phase 3** — 8 LAUNCH Art slideshows `launch-art-aut1-w1..w8` subject `Art`→
+    `Arts Award`, **re-derived** on main's current `resources.json` (main had advanced to
+    **386** entries): total 386 unchanged, **Art 42→34, Arts Award 0→8**.
+- **SUPERSEDED / deviation rulings (logged honestly).**
+  - The retired `Bronze Stretch = 16` constant is now **true post-edit** (16) as a natural
+    consequence of `GCSE Stretch`→`Bronze Stretch` — not treated as an independent gate.
+  - **2 non-predicate GCSE mentions** (`GCSE development page`, `GCSE habit`) left in the 8
+    files per the narrow predicate + "task text unchanged"; recorded, not changed.
+  - **Sentinel `ll-g:loop-mark` set:** estate set unchanged (**50**); full-repo **+1**
+    (`_passsg/FINDINGS.md`, a required deliverable that cites the sentinel string in prose).
+    No lesson/estate witness surface changed.
+  - Residual whole-repo doubled-label count **1** = `_passpq/FINDINGS.md` quoting the defect
+    name (documentation, not estate).
+  - **Protected verbatim** `Art_Teesside/Grow/GROW_ART_W8…` blob **`4cf5d81e`** byte-identical
+    (24 occurrences of "Silver" across 16 lines — corrected F-11 units).
+  - **EXCLUDED, untouched (await committed spec / Matt):** T2-2, T2-3, T2-4 learner-signature,
+    Slideshows tiering rebuild.
+- **Gates.** JSON parses; counts 386/34/8; **155** inline script blocks parse-clean; jsdom
+  boot of all **57** touched lessons 0 errors; jsdom real-hub `Arts Award (8)` + `Art (34)`,
+  `Showing 393 of 393`, 0 console errors; tag balance clean; W8 blob protected.
+- **SBX probe (report-only, NOT merged).** `pass-sbx-art-a2` C1 (Bronze→Explore in BUILD A2
+  decks) is **absent at final main** (`Explore Part` = 0, `Bronze Part` = 21). Left for Matt.
+- **Ancestry after land:** PQ `b137a90`, SG `dc41a56`, Phase-3 `710c888`, SB `4f5c6a4` all
+  ancestors of `main`.
