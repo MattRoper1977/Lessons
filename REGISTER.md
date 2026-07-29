@@ -716,7 +716,7 @@ depends on knowing to look and knowing where.*
   trusting a shrinking number.
 
 ### R-G03 · The cached-claim shape landed on the entry that catalogues cached claims
-- **STATUS** OPEN · **VERIFIED** `3e2b99d`
+- **STATUS** CLOSED (`64d8fb4` — H-series H3: INSTRUMENTS.md reconciled to 13 scripts / 13 entries both directions, the "6 listed / 6 actual" claim replaced with a re-derivable form) · **VERIFIED** `3e2b99d`
 - **R-G01 row 2** records: *`INSTRUMENTS.md` | which instruments exist | `tools/` |
   what keeps it true: **nothing** | 6 listed / 6 actual ✓*. That was true when observed.
   At `3e2b99d` there are **8 instrument scripts in `tools/` and 6 full `## LL-INST-0X`
