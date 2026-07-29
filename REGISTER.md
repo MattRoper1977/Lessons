@@ -1025,7 +1025,7 @@ building meant the whole episode cost zero repo changes.
   *lesson* — is the `ko_staleness`/Tier-1 question; all 49 ASDAN KO files appear in Pass E's 117-candidate set and
   were content-read (all 49 STILL-TRUE). This resolution closes only the game-disagreement claim, not
   lesson-staleness. (Pass E self-renamed from provisional letter Z, spent by the pedagogy *Pass Z* of 2026-07-25;
-  see "## Pass E (KO Triage)" at the end of this file, R-E13, and `_passe/KO_TRIAGE_LEDGER.md`.)
+  see "## Pass E (KO Triage)" at the end of this file, R-E16, and `_passe/KO_TRIAGE_LEDGER.md`.)
 
 ### R-H09 · A pass letter is checked against the ledger AND git history — git alone is blind to measurement-only passes
 - **STATUS** CONVENTION · **VERIFIED** `5ee2147`
@@ -1188,7 +1188,9 @@ the Q/U/X/Y instrument chain. Named `## Pass E …` (not `## E ·`) because the 
 by "§E · Instruments and metrics"; pass-letter E and section-letter E coexist as pass-letter H already coexists
 with §H and the R-H## rules.*
 
-### R-E13 · Provisional letter Z was spent — renamed Z → E (R-H09 applied)
+*Renumber note: these entries were authored as R-E13/E14/E15 at base `12cb6d9`, where those numbers were free; the H-series/RL work added estate entries R-E13–R-E15 to §E meanwhile, so at the merged tip Pass E's three renumber to **R-E16/R-E17/R-E18** (R-E11 constant discipline applied to rule numbers; the estate's R-E13–15 are untouched).*
+
+### R-E16 · Provisional letter Z was spent — renamed Z → E (R-H09 applied)
 - **STATUS** RECORD · collision resolved
 - **The collision.** The pass was briefed with provisional letter **Z**. R-H09 (ledger AND git) found **Z spent**:
   a pedagogy *Pass Z* left two commits merged to main — `453b5e6` *"Pass Z: differentiate Careers W7 from W6"*
@@ -1198,7 +1200,7 @@ with §H and the R-H## rules.*
   taken by HANDOVER's "Pass N print-reference pattern". **E** chosen as the lowest free letter. Branch
   `pass-e-ko-triage`; deliverables `_passe/`; rollback SHA `12cb6d9`.
 
-### R-E14 · The carry-forward's artefact shape no longer described the estate — recorded, not inherited
+### R-E17 · The carry-forward's artefact shape no longer described the estate — recorded, not inherited
 - **STATUS** RECORD · **VERIFIED** `12cb6d9`
 - Re-derived candidate count at HEAD: **117** (not the carried 114; the constant had worn 117→109→114 and is
   re-derived per R-E11, +3 within tolerance). Cardinality `117 + 0 arch + 44 clean = 161` KO files, emitted.
@@ -1217,7 +1219,7 @@ with §H and the R-H## rules.*
   record — not a competing claim. `REGISTER.md` and `CAREERS_W7` will conflict at merge (both passes touched
   them); resolution is Matt's, at the merged tip. Full reconciliation: `_passe/COEXISTENCE_PassQ.md`.
 
-### R-E15 · Pass E LANDED — Matt's rulings D1–D3 (2026-07-29)
+### R-E18 · Pass E LANDED — Matt's rulings D1–D3 (2026-07-29)
 - **STATUS** RECORD · landed by merge onto `main` from `pass-e-land` (base = `main` tip at land time)
 - **D1 · IDENTITY — Pass E stays DISTINCT, sibling-of-Q(KO); not folded, not retired.**
   - **(a) Cross-ref E↔Q(KO):** Pass E and Pass Q are the **same brief, twin runs** — both were given provisional
@@ -1239,3 +1241,72 @@ with §H and the R-H## rules.*
   print-pack section counts and `prefers-reduced-motion` rules invariant; sentinel `ll-g:loop-mark` set invariant
   at **45**; all inline `<script>` blocks byte-identical to base + `node --check` clean; Chromium headless boot +
   strict DOM parse clean on all three. Instruments untouched (R-E09).
+
+---
+
+### R-D05 · The ASDAN/PEQ work lives in the Lessons repo — sessions default to the site repo
+- **STATUS** RECORD · **VERIFIED** Pass PQ (base `32ca685e`)
+- **The BUILD/GROW ASDAN provision, the Evidence Binder and the PEQ audit all live in
+  `MattRoper1977/Lessons`.** Sessions commissioned to work on them keep opening in the
+  **site repo** (`mattroper1977.github.io`) instead, because that is the working tree the
+  harness attaches by default.
+- **Pass PQ is the FIFTH recorded instance.** The brief warned of it explicitly ("three
+  prior sessions defaulted to the site repo"); Pass PQ's own session opened in the site
+  repo and caught it at the attach-check before any audit ran.
+- **The control is two-part and neither half is optional:** (1) the warning stays in every
+  ASDAN/PEQ brief; (2) the session's **first act** is an attach-check — `git remote -v`
+  against the expected `Lessons` origin, and STOP if the working tree is the site repo,
+  attaching Lessons before anything else. A brief warning without the attach-check let three
+  sessions through; the attach-check is what stopped the fourth and fifth.
+- **Why an entry and not just a memory:** a recurring cross-session default has no in-tree
+  symptom — the wrong repo is a perfectly valid repo — so nothing detects it but the
+  discipline of checking the remote first. This is the R-G01 cached-claim shape one layer
+  out: the claim "I am in the right repo" is asserted by every session and kept true by
+  nothing but the check.
+
+
+### R-RL01 · Pass RL — re-land PQ + SG + Phase-3, close the SoW alignment chain
+- **STATUS** CLOSE · **VERIFIED** Pass RL (base `59ad56a`, merge `faf5318`)
+- **Forensic verdict (why RL existed).** Ancestry proof found only SB (`4f5c6a4`) on
+  `main`; **PQ (`b137a90`) and SG (`dc41a56`) had NOT landed** — verified by *content*, not
+  tip SHA: `_passpq/`/`_passsg/` trees absent, `R-D05` absent, no `pass-pq`/`pass-sg`
+  commits in `a5092bb..59ad56a`. Both branch refs survived at origin and were the re-land
+  source.
+- **What merged (estate main-wins; `_passXX` branch-wins; REGISTER append-only union).**
+  - `_passpq/` — 8 deliverables, byte-identical to `b137a90`; **`R-D05` appended** (main's
+    62 entries otherwise untouched; SG added none — main already supersets its ledger).
+  - **T2-1** doubled-label fix applied **by MEASUREMENT**: `ASDAN Studio · ASDAN Studio` →
+    `ASDAN Studio`, **49 files (BUILD 31 + GROW 18), 98 → 0**. *(Master prompt predicted 0
+    at BASE; measured 98 — the `>0` branch was taken. `<script>`/reduced-motion blocks
+    byte-identical; tag counts unchanged; GROW packs section count invariant.)*
+  - `_passsg/` — FINDINGS (incl. §11.8), SOW_MATRIX, `inputs/GROW SOW 2026-27.xlsx`,
+    byte-identical to `dc41a56`.
+  - **SG content** re-derived on main's current 8 `Grow/Slideshows/GROW_ART` files
+    (cdc9623 file states NOT reintroduced): predicate `GCSE Stretch` + `GCSE Art habit`
+    **17 → 0** (`GCSE Stretch:`→`Bronze Stretch:` ×16; `Bronze / GCSE Art habit`→
+    `Bronze Art habit` ×1). *(Master prompt predicted 0 in `Grow/Slideshows`; measured 17 —
+    the earlier forensic 0 read `Art_Teesside/Grow`, the wrong tree.)*
+  - **Phase 3** — 8 LAUNCH Art slideshows `launch-art-aut1-w1..w8` subject `Art`→
+    `Arts Award`, **re-derived** on main's current `resources.json` (main had advanced to
+    **386** entries): total 386 unchanged, **Art 42→34, Arts Award 0→8**.
+- **SUPERSEDED / deviation rulings (logged honestly).**
+  - The retired `Bronze Stretch = 16` constant is now **true post-edit** (16) as a natural
+    consequence of `GCSE Stretch`→`Bronze Stretch` — not treated as an independent gate.
+  - **2 non-predicate GCSE mentions** (`GCSE development page`, `GCSE habit`) left in the 8
+    files per the narrow predicate + "task text unchanged"; recorded, not changed.
+  - **Sentinel `ll-g:loop-mark` set:** estate set unchanged (**50**); full-repo **+1**
+    (`_passsg/FINDINGS.md`, a required deliverable that cites the sentinel string in prose).
+    No lesson/estate witness surface changed.
+  - Residual whole-repo doubled-label count **1** = `_passpq/FINDINGS.md` quoting the defect
+    name (documentation, not estate).
+  - **Protected verbatim** `Art_Teesside/Grow/GROW_ART_W8…` blob **`4cf5d81e`** byte-identical
+    (24 occurrences of "Silver" across 16 lines — corrected F-11 units).
+  - **EXCLUDED, untouched (await committed spec / Matt):** T2-2, T2-3, T2-4 learner-signature,
+    Slideshows tiering rebuild.
+- **Gates.** JSON parses; counts 386/34/8; **155** inline script blocks parse-clean; jsdom
+  boot of all **57** touched lessons 0 errors; jsdom real-hub `Arts Award (8)` + `Art (34)`,
+  `Showing 393 of 393`, 0 console errors; tag balance clean; W8 blob protected.
+- **SBX probe (report-only, NOT merged).** `pass-sbx-art-a2` C1 (Bronze→Explore in BUILD A2
+  decks) is **absent at final main** (`Explore Part` = 0, `Bronze Part` = 21). Left for Matt.
+- **Ancestry after land:** PQ `b137a90`, SG `dc41a56`, Phase-3 `710c888`, SB `4f5c6a4` all
+  ancestors of `main`.
