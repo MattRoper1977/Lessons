@@ -1023,3 +1023,24 @@ building meant the whole episode cost zero repo changes.
   and **Pass X** touched **none** of these files — confirmed by diff. The three do **not interact**; recorded so
   no later session re-opens it. (Earlier Pass X drafts mis-attributed the swap to Pass U — corrected here: it is
   Pass H, per the commit.)
+
+### R-E12 · An instrument's assumptions ship with its result — and the banner routes by stream
+- **STATUS** CONVENTION · **VERIFIED** `15fdb0e` (Pass Y)
+- **The rule.** Every result-printing instrument prints the assumptions it rests on **beside the result**
+  (`assumptions: full clone · 161-file corpus · network not required`), so no number is ever read alone —
+  the discipline that would have surfaced the shallow-clone false zero (R-E11 / Pass X) years earlier.
+- **The routing, and it is load-bearing.** The banner goes to **STDERR when the tool's stdout is a machine
+  surface** (JSON: `identity_audit`, `hash_sweep`, `link_graph`, `print_pack_audit`, `assessed_conditions_gate`)
+  — a text line on a JSON stdout corrupts every downstream `json.load`/`jq`, which is the **same fail-silent
+  parser-break the banners exist to prevent, arriving from the other side.** It goes to **STDOUT for a
+  human-read tool** (`sitemap_audit`, `verify_commit_set`, `ko_staleness`). **Census before you add one:**
+  no in-repo consumer, CI, shell or Makefile parses any tool's stdout today (Pass Y, searched
+  `*.sh/*.yml/*.yaml/*.py/Makefile`), but the JSON tools' stdout is a machine contract regardless.
+- **A library declares, it does not print.** `classify.py` has no result surface, so it exports its
+  assumptions as **data** (`ASSUMPTIONS`); its caller `print_pack_audit` **reads** and prints them,
+  attributed. A hand-copied restatement in the caller would be two copies of one truth (R-G01 / standing
+  rule 2, emit-don't-transcribe). Proof it is read: change a value in `classify.ASSUMPTIONS` and the audit's
+  banner changes with no edit to the audit.
+- **`loop_mark_print_gate` has no banner yet** — it needs Chromium/playwright to run, absent in the agent
+  sandbox, so the byte-identical-verdict proof could not be taken. Deferred, not skipped: a banner proved on
+  no run is an unasked question. Add it from a machine that can render the gate.
