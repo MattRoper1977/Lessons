@@ -300,7 +300,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <button class="chip" id="chipHow">How to play</button>
   </div>
   <p class="foot">MADE BY MATT · single-file · offline-first · nothing uploaded — nobody is ever voted out; the Glitch just gets a friendly reformat</p>
-  <p class="foot" style="margin-top:6px">v3.1.1 · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties</p>
+  <p class="foot" style="margin-top:6px">v3.1.2 · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties · for Clara ♥</p>
 </div>
 
 <!-- ============ CINEMATIC ============ -->
@@ -433,7 +433,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <script>
 (function(){
 'use strict';
-var GAME_VERSION='3.1.1';
+var GAME_VERSION='3.1.2';
 /* ================= helpers ================= */
 function $(id){return document.getElementById(id);}
 function clamp(v,a,b){return v<a?a:(v>b?b:v);}
@@ -483,6 +483,10 @@ var CAST=[
  {id:'pip',name:'Pip',shape:'dot',hue:'#7FD8A4'},
  {id:'dash',name:'Dash',shape:'tilde',hue:'#E0B34C'}
 ];
+/* Clara — the workshop's guest of honour: an eight-year-old from London with bright
+   blonde hair. She appears on the title parade and in the Field Guide only; she is never
+   a crew shape and never the Glitch, so the six-shape game logic is entirely unchanged. */
+var CLARA={id:'clara',name:'Clara',shape:'clara',hue:'#EEC96A'};
 
 /* ================= state ================= */
 var S=null, SAVE=null, RM=false;
@@ -496,6 +500,7 @@ function loadSave(){
     if(s&&s.v===3){for(var k in d){if(typeof s[k]==='undefined')s[k]=d[k];}SAVE=s;}
     else SAVE=d;
   }catch(e){SAVE=d;}
+  SAVE.seen=SAVE.seen||{};SAVE.seen.g_clara=1; // Clara's entry is always unlocked
 }
 function store(){try{localStorage.setItem('mbm_offbrand',JSON.stringify(SAVE));}catch(e){}}
 
@@ -1007,7 +1012,9 @@ var GUIDE=[
   {id:'inkout',n:'Ink-out',d:'The ink goes over and the lights go with it. Everyone works blind until it is mopped up.'},
   {id:'surge',n:'Kiln surge',d:'Twenty-six seconds to vent it. Leave it and the whole workshop drifts.'},
   {id:'scramble',n:'Signal scramble',d:'No Focus rewind and no logbook while it runs. The Glitch works best in the dark.'},
-  {id:'seam',n:'Seams',d:'A hex in the corner of every room and one in the Hub. Step on, slip out somewhere else.'}]}
+  {id:'seam',n:'Seams',d:'A hex in the corner of every room and one in the Hub. Step on, slip out somewhere else.'}]},
+ {k:'clara',t:'For Clara',e:[
+  {id:'g_clara',n:'Clara',d:'Eight years old, from London, with bright blonde hair and a heart bigger than the whole workshop. Off-Brand was built for her — every shape, every seam, every gentle ending. She is the reason nobody here is ever voted out. Made with love, always. ♥'}]}
 ];
 function seeIt(id){
   if(!SAVE.seen)SAVE.seen={};
@@ -1958,6 +1965,19 @@ function drawMenuShape(g,c,x,y,t,violet){
   else if(c.shape==='square'){g.fillRect(-10,-10,20,20);}
   else if(c.shape==='dot'){g.beginPath();g.arc(0,0,7,0,7);g.fill();g.beginPath();g.arc(0,0,11,0,7);g.stroke();}
   else if(c.shape==='tilde'){g.font='800 26px Poppins,system-ui,sans-serif';g.textAlign='center';g.fillText('~',0,9);}
+  else if(c.shape==='clara'){
+    // an eight-year-old from London with bright blonde hair — the guest of honour
+    g.fillStyle='#B9E6CD';g.beginPath();g.moveTo(-8,15);g.lineTo(-3.5,-1);g.lineTo(3.5,-1);g.lineTo(8,15);g.closePath();g.fill(); // dress
+    g.strokeStyle='#F6ECD9';g.lineWidth=2.4;g.lineCap='round';g.beginPath();g.moveTo(-5,2);g.lineTo(-9,8);g.moveTo(5,2);g.lineTo(9,8);g.stroke(); // arms
+    g.fillStyle='#EEC96A';g.beginPath();g.arc(0,-7,9,0,7);g.fill(); // blonde hair
+    g.beginPath();g.arc(-8,-4,3.4,0,7);g.fill();g.beginPath();g.arc(8,-4,3.4,0,7);g.fill(); // pigtails
+    g.fillStyle='#F6ECD9';g.beginPath();g.arc(0,-6.5,6.8,0,7);g.fill(); // face
+    g.fillStyle='#F2A24A';g.beginPath();g.arc(8,-7.6,1.9,0,7);g.fill(); // little bow
+    g.fillStyle='#161D3D';g.beginPath();g.arc(-2.4,-6.4,1.4,0,7);g.fill();g.beginPath();g.arc(2.4,-6.4,1.4,0,7);g.fill(); // eyes
+    g.strokeStyle='#161D3D';g.lineWidth=1.4;g.beginPath();g.arc(0,-4.6,2.3,0.12*Math.PI,0.88*Math.PI);g.stroke(); // smile
+    g.fillStyle='rgba(232,226,212,.9)';g.font='700 9px Poppins,system-ui,sans-serif';g.textAlign='center';g.fillText('Clara ♥',0,30); // name
+  }
+  if(c.shape!=='clara'){
   var blink=!RM&&(((t*0.42)+seedOf(c)*0.13)%3.1<0.1);
   var gap=c.shape==='dot'?4:5;
   g.save();g.translate(0,-2);
@@ -1965,6 +1985,7 @@ function drawMenuShape(g,c,x,y,t,violet){
   else{g.fillStyle='#FDFCF8';g.beginPath();g.ellipse(-gap,0,3,3.6,0,0,7);g.fill();g.beginPath();g.ellipse(gap,0,3,3.6,0,0,7);g.fill();
     g.fillStyle='#161D3D';g.beginPath();g.arc(-gap,0.6,1.5,0,7);g.fill();g.beginPath();g.arc(gap,0.6,1.5,0,7);g.fill();}
   g.restore();
+  }
   g.restore();
 }
 function menuFrame(){
@@ -1977,11 +1998,12 @@ function menuFrame(){
   menuT+=1/60;
   if(!RM&&menuT>menuFlick.t){menuFlick.idx=Math.floor(Math.random()*CAST.length);menuFlick.t=menuT+3.5+Math.random()*3;menuFlick.until=menuT+0.16;}
   var pace=RM?0:menuT*26;
-  for(var i=0;i<CAST.length;i++){
+  var parade=CAST.concat([CLARA]); // Clara joins the parade as a guest (index beyond the six shapes)
+  for(var i=0;i<parade.length;i++){
     var span=wCss+90;
-    var x=RM?(wCss/(CAST.length+1))*(i+1):(((pace+i*(span/CAST.length))%span)-45);
+    var x=RM?(wCss/(parade.length+1))*(i+1):(((pace+i*(span/parade.length))%span)-45);
     var violet=!RM&&i===menuFlick.idx&&menuT<menuFlick.until;
-    drawMenuShape(g,CAST[i],x,42,menuT,violet);
+    drawMenuShape(g,parade[i],x,42,menuT,violet);
   }
   if(!RM)menuRaf=requestAnimationFrame(menuFrame);
 }
