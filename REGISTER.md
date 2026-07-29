@@ -1193,3 +1193,9 @@ with §H and the R-H## rules.*
   3 STALE** (Careers W6/W7 KO week-labels lagging the restored slot-swap; BUILD_HUM_W6 KO on the pre-PEEL 4-part
   model). The three STALE fixes are held UNMERGED on `pass-e-ko-triage` for Matt's per-row key. Detail:
   `_passe/KO_TRIAGE_LEDGER.md`.
+- **Coexistence (R-H02): the same briefed pass also ran as Pass Q, which LANDED FIRST on `main` (`59ad56a`)**
+  — 0 STALE / 114, R-G05 refuted 0/49, a CAREERS_W7 *print* fix. Pass Q holds; **Pass E corroborates R-G05
+  independently (0/49 == 0/49)** and adds 3 STALE on axes Pass Q's KO-vs-We-Do-2 read did not cover (KO h1
+  week label; HUM writing-model completeness), all pre-dating Pass Q's head. This entry is the second, honest
+  record — not a competing claim. `REGISTER.md` and `CAREERS_W7` will conflict at merge (both passes touched
+  them); resolution is Matt's, at the merged tip. Full reconciliation: `_passe/COEXISTENCE_PassQ.md`.
