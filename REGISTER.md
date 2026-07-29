@@ -547,6 +547,39 @@ depends on knowing to look and knowing where.*
   apply `d601842` to anything outside the 45. R-F04: a fact travels no further than the
   file it was observed in.
 
+### R-E10 · An exclusion belongs to a named derivation, not to a folder
+- **STATUS** CONVENTION · **VERIFIED** `a5092bb`
+- **The general form.** *A folder is only "excluded" relative to the specific derivation
+  that excludes it. The exclusion is a property of that derivation's pathspec, not of the
+  folder — any other instrument counting the same marker over a different pathspec will
+  see the folder.* Telling a pass "that folder is excluded" as though the folder itself were
+  out of scope is the cached-claim family (R-E08, R-G03) one turn further out: the claim
+  attaches to the wrong object.
+- **Two derivations, not one — the reconciliation.** The order that landed `a5092bb` gated on
+  the **raw** form (`git grep … -- '*.html'`) and called `LundyLoop/5_staff_training/` an
+  "excluded pathspec." It is **not** excluded there. The `5_staff_training/` exclusion lives
+  only in the **derivation of record, R-E08.** Emitted, not described (observed at `a5092bb`):
+    - raw (order §0.4): `git grep -l 'll-g:loop-mark v1' -- '*.html'` = **45** — *counts the folder*
+    - of record (R-E08): `… -- '*.html' ':(exclude)LundyLoop/5_staff_training/*'` = **45** — *excludes the folder*
+    - `5_staff_training/` contribution today: `git grep -l 'll-g:loop-mark v1' -- 'LundyLoop/5_staff_training/*.html'` = **0**
+  Both read 45 **only because the folder contributes 0 today.** Proof the raw form reaches into
+  the folder while R-E08 does not — using a non-sentinel string unique to the game file (never
+  quote a marker in this folder; see the interim guard): `git grep -l 'receipt by the back door'
+  -- '*.html'` returns `…/R_Gate_Calibration_Game.html`; the same grep with
+  `':(exclude)LundyLoop/5_staff_training/*'` returns nothing. Control:
+  `… ':(exclude)BUILD_ASDAN/*'` = **14**, so the exclude is honoured in this git, not a no-op.
+- **What actually kept §5 safe was discipline, not a guard.** The calibration section stayed out
+  of both sentinels because it **quotes neither marker verbatim** — authoring restraint, not the
+  raw grep protecting it. Had it quoted `ll-g:loop-mark v1` or the R-A02 written-line selector,
+  the raw §0.4 gate would have moved (→ 46 / 49) while R-E08's derivation held. The order claimed
+  a structural guard; there was none on the raw form.
+- **Interim guard (in force now).** Until/unless the raw §0.4 gate is rewritten to carry the
+  R-E08 exclusion, the rule for authoring anything under `LundyLoop/5_staff_training/` is: **do
+  not quote either sentinel marker verbatim** — not `<!-- ll-g:loop-mark v1 -->`, not the R-A02
+  written-line selector. §5 already did exactly this. Sentinel-2 has **no** path exclusion (R-A02):
+  its describers stay out of the count only by `-- '*.html'` dropping the `.md` files, so the same
+  discipline is the only thing keeping this folder out of that count too.
+
 ---
 
 ## F · Superseded and open
@@ -916,3 +949,23 @@ building meant the whole episode cost zero repo changes.
   Lessons-repo brief, and a pass's **first act** is to verify the working tree
   (`git remote -v` + presence of `resources.json`/`BUILD_ASDAN`/`Art_Teesside`) before any
   measurement. Pass SB caught it on the first act and stopped — that is the intended behaviour.
+
+### R-SB02 · A session's harness configuration is a claim — verify it against the order's named target first
+- **STATUS** CONVENTION · **VERIFIED** `a5092bb`
+- **The general form.** *A session's harness configuration — working tree, checked-out branch,
+  repo scope — is a claim, not a given. Verify it against the target the order names, before any
+  work; and let the order's explicit target be the thing that catches a mismatch.* This is the
+  executor-side control for R-SB01: R-SB01 records the recurring mis-open; R-SB02 is what makes it
+  caught every time rather than sometimes.
+- **Today's case (September-cluster pass).** The order named `MattRoper1977/Lessons` explicitly and
+  made `git remote -v` step 0. The harness had opened in the **site** repo `mattroper1977.github.io`,
+  on a `claude/september-…` branch, with GitHub scope limited to that repo — the exact R-SB01
+  default. **The order's explicit repo line is what caught it:** the first act was the remote check,
+  it failed against the named target, so the pass attached the Lessons repo, cloned it, re-verified
+  the remote, and did all work there. The site repo was left untouched; the case-redirect
+  (`MattRoper1977/Lessons`) was left alone.
+- **Why it belongs in the tree, not only in a brief.** A brief that names the target while the
+  harness opens elsewhere is R-H04 (delivery is part of the order) meeting R-SB01: the order is
+  correct and **unexecutable against the wrong tree** — and it has **no symptom** where the wrong
+  tree happens to hold similarly-named files. The control is one `git remote -v` before any
+  measurement, and it has now caught the mis-open on two named passes (SB, and this one).

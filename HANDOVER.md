@@ -255,8 +255,11 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 ### September-cluster pass — what landed, what stopped
 
 - **LANDED (one commit):** queue entry 13, the calibration-game pathway section — see entry 13
-  above. Both sentinels re-derived unchanged (45 / 48) after the edit; the file joined neither
-  count (it quotes no marker), so the prospective guard at R-A02 holds.
+  above. Both sentinels re-derived unchanged (45 / 48) after the edit. The section stays out of
+  both counts **by authoring discipline — it quotes neither sentinel marker** — not by any
+  exclusion on the raw §0.4 grep, which reaches into `LundyLoop/5_staff_training/`. The folder's
+  exclusion lives only in the R-E08 derivation of record; see **R-E10** for the reconciliation of
+  the raw grep against the derivation of record.
 - **STOPPED AT INTAKE — no commit made, nothing reconstructed:** H1 (the TA card, both
   brandings — queue 10), H2 (`patch_loopmark.py` + `bundle_facts.py` into `LundyLoop/tools/`),
   and therefore H3 (`INSTRUMENTS.md`, whose count is derived only *after* H2). The pass ran from
