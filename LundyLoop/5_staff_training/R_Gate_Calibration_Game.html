@@ -39,12 +39,46 @@ h1{font-size:26px;color:var(--navy);margin:6px 0}
 @media(max-width:560px){.opts{grid-template-columns:1fr}.card{padding:18px 16px}}
 @media print{body{background:#fff}.card{box-shadow:none;break-inside:avoid;border:1px solid var(--line)}.opts,.bar,.btn,.fb,#screen-note{display:none}.print-answers{display:block!important}}
 .print-answers{display:none;font-size:12px;color:var(--muted);margin-top:6px}
+.pathgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.pway{border:2px solid var(--line);border-radius:10px;padding:14px 16px}
+.pway .tag{display:inline-block;border-radius:99px;padding:1px 10px;font-size:11px;font-weight:800;letter-spacing:.04em;margin-bottom:8px;color:#fff}
+.pway h3{margin:0 0 6px;font-size:15px;color:var(--navy)}
+.pway p{margin:6px 0;font-size:14px}
+.pway.build{border-color:var(--green);background:var(--greenbg)}
+.pway.build .tag{background:var(--green)}
+.pway.grow{border-color:var(--purple);background:var(--purplebg)}
+.pway.grow .tag{background:var(--purple)}
+.falsehood{background:var(--amberbg);border:1.5px solid var(--amber);border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px}
+.falsehood b{color:var(--amber)}
+@media(max-width:560px){.pathgrid{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <div class="card">
 <div class="eyebrow">Progress Schools Tees Valley · Lundy Loop · Staff calibration</div>
 <h1>Is this an R?</h1>
 <p class="sub" id="screen-note">Fourteen real-shaped scenarios. Vote as a room before revealing. The disagreements are the point — calibration happens in the argument, not the answer. Printing this page produces scenario cards with answers for table-top use.</p>
 <div class="legend"><b>Closed (R)</b> = Voice happened AND an adult genuinely received it · <b>Not yet</b> = Voice present, Audience pending · <b>No</b> = the loop hasn't genuinely run · <b>Firewall</b> = feedback stops, safeguarding takes precedence</div>
+</div>
+<div class="card" id="pathway">
+<div class="eyebrow">Read this before you calibrate · which pathway are you in?</div>
+<h1 style="font-size:20px;margin:6px 0 2px">This game is the BUILD close. GROW and LAUNCH close differently.</h1>
+<p class="sub">All fourteen scenarios below key on one test — <b>Voice happened AND an adult genuinely received it</b>. That test is <b>correct for BUILD, and only for BUILD</b>. Carry it into a GROW or LAUNCH room and you will hunt for a receipt that is not meant to exist.</p>
+<div class="pathgrid">
+<div class="pway build">
+<span class="tag">BUILD</span>
+<h3>Closes on adult receipt — ring + R</h3>
+<p>The pupil makes the ring; the adult receives it and adds the initial, on the pupil's own printed sheet. The fourteen scenarios are calibrated for exactly this. Ring and R stand as taught — one copy, on the sheet, never transcribed.</p>
+</div>
+<div class="pway grow">
+<span class="tag">GROW · LAUNCH</span>
+<h3>Closes when the pupil writes the line</h3>
+<p>Saying it aloud starts the loop; <b>writing it is what closes it</b>. No adult initial, no signatory, no receipt mark — nothing stored, copied or counted. The adult is <b>audience, never verifier</b>. <i>Pass is always allowed.</i></p>
+<p>The day-close re-read — the pupil reading their own line back at the end of the day — is a <b>strengthening, not a requirement</b>: a day whose close never happened is still a closed day. Never "catch it up tomorrow" — a backlog of unread lines becomes a portfolio someone audits, which is the thing this design removes.</p>
+</div>
+</div>
+<div class="falsehood">
+<b>The false record you will meet in week one — "receipt by the back door."</b> You are in a GROW room. There is no R box on the sheet, no initial line, nowhere for an adult mark. <b>Nothing is missing</b> — the loop closed when the pupil wrote the line. A TA who supplies a receipt here (an initial, a "seen by", a tick) is not filling a gap; they are inventing an audience-token the pathway never asks for. It is the same defect as end-of-term R-decoration — <i>a mark recording an audience that did not need to happen</i> — arriving from the GROW end. On GROW and LAUNCH, <b>no adult initial is expected</b>, at every tier: supported, standard and stretch alike.
+</div>
+<p class="legend"><b>Not yet = Voice present, Audience pending</b> — a real answer on every pathway.</p>
 </div>
 <div id="game"></div>
 </div>
@@ -104,7 +138,7 @@ function renderSummary(){
   <h2>Calibration complete</h2>
   <div class="stat">${score} / ${SCENARIOS.length}</div>
   <p>${msg}</p>
-  <div class="qa"><b>The one rule, one more time:</b> R only after genuine Audience. Everything else is dialect.</div>
+  <div class="qa"><b>The one rule for BUILD, one more time:</b> R only after genuine Audience. On GROW and LAUNCH the pupil's written line is the close &mdash; no adult initial is expected. Everything else is dialect. (See <b>&ldquo;which pathway are you in?&rdquo;</b> at the top.)</div>
   <div class="row"><button class="btn" id="again">Run it again</button><button class="btn" onclick="window.print()">Print scenario cards</button></div>
  </div>`;
  document.getElementById('again').addEventListener('click',()=>{idx=0;score=0;render();});

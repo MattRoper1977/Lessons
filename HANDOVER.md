@@ -233,11 +233,17 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     (`LL-I_B1_measurement_map.md`, `LL-I_B2_0_closure_definitions.md` — OBSERVATION RECORDs,
     re-derive before relying).
     **TRIGGER: a new session with Matt's go; one specimen, gated, before scale.**
-13. **The calibration-game pathway section.** Add the pathway-scoped section to
-    `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` (B2 §5): GROW/LAUNCH close on
-    the pupil writing, no adult initial expected; reuse *"Not yet = Voice present, Audience
-    pending"* verbatim. **TRIGGER: an authoring session, Matt's read before ship — shares the
-    TA-card / first-staff-briefing deadline (R-H08).**
+13. **The calibration-game pathway section — LANDED (September-cluster pass).** The
+    pathway-scoped section is authored into
+    `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` (B2 §5): the game is scoped to the
+    BUILD close; a GROW · LAUNCH card states closure is the pupil *writing* the line, the adult is
+    audience not verifier, no adult initial is expected, and the day-close re-read is a
+    strengthening not a requirement (a day whose close never happened is a closed day; no
+    "catch it up tomorrow"). The week-one failure case — GROW room, no R box, nothing missing —
+    is named as a false record ("receipt by the back door"); *"Not yet = Voice present, Audience
+    pending"* is reused verbatim; no new vocabulary; both sentinels unmoved (45 / 48). **SHIP
+    still waits on Matt's read** — R-H08 stays OPEN until he has read the section; authoring is
+    not ship.
 14. **The LL-5 GROW/LAUNCH population rework.** The 48 written-line files (R-A02) inherit
     B2's pupil-reader and B3's evidence/warrant step-up. **TRIGGER: after the specimen is
     judged; L3/L4/L5 settled against the day-close capture route first (R-E02).**
@@ -245,6 +251,21 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     **TRIGGER: the specimen pass — it is authoring and waits for Matt's read; ship gate applies.**
 
 *Queue entries 12–15 added by Pass LL-I.*
+
+### September-cluster pass — what landed, what stopped
+
+- **LANDED (one commit):** queue entry 13, the calibration-game pathway section — see entry 13
+  above. Both sentinels re-derived unchanged (45 / 48) after the edit; the file joined neither
+  count (it quotes no marker), so the prospective guard at R-A02 holds.
+- **STOPPED AT INTAKE — no commit made, nothing reconstructed:** H1 (the TA card, both
+  brandings — queue 10), H2 (`patch_loopmark.py` + `bundle_facts.py` into `LundyLoop/tools/`),
+  and therefore H3 (`INSTRUMENTS.md`, whose count is derived only *after* H2). The pass ran from
+  a fresh clone in which the untracked `_intake/` staging folder was absent, so none of the
+  H-series source artefacts were present. Per the order's stop rule they were **not** rebuilt,
+  re-authored or inferred. **Queue entries 8, 9, 10 and R-G03 remain OPEN, unchanged.** Re-run
+  H1 → H2 → H3 from a session that actually carries the artefacts in `_intake/` (a local session,
+  or artefacts committed to a staging branch — an ephemeral remote clone will not see files
+  dropped on a local machine, which is the failure this cluster was commissioned to end).
 
 ---
 
