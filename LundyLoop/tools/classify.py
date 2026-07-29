@@ -93,6 +93,22 @@ class Classification:
         return self.verdict is Verdict.APPLICABLE
 
 
+# --- declared assumptions (Pass Y) ------------------------------------------
+# This is a LIBRARY: it prints nothing and has no result surface, so a banner
+# here would be dead code or fire on import. But its assumptions silently become
+# the assumptions of every caller (print_pack_audit), and an invisible assumption
+# is the fail-silent shape Pass X exists to close. So it DECLARES them as data;
+# the caller READS this and prints it in its own banner, attributed here. A caller
+# that hand-copied this text would be two copies of one truth — the defect this
+# programme keeps closing. Change a value here and the caller's banner changes with
+# no edit to the caller; that is the proof it is read, not restated.
+ASSUMPTIONS = [
+    "print architecture matched STRUCTURALLY, never by selector name",
+    "six verdicts (ABSENT|NOT_APPLICABLE|DIFFERENT_MODEL|NOT_DETERMINED|DYNAMIC|UNREADABLE); five are not defects",
+    "NOT_DETERMINED is honest non-classification, never folded into DIFFERENT_MODEL",
+]
+
+
 # --- print architectures known to this estate -------------------------------
 
 CHASSIS_AREA = re.compile(r"""id\s*=\s*["']print-area["']""")

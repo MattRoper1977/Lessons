@@ -37,6 +37,7 @@ STATUS: current
 
 import re
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -69,6 +70,7 @@ def head(url):
 
 
 def main():
+    declare_assumptions(["network REQUIRED (fetches the sitemap, then each URL)", "resolving is not correct content (200 ≠ correctness) and not indexing"])
     src = sys.argv[1] if len(sys.argv) > 1 else DEFAULT
     try:
         status, body = fetch(src)

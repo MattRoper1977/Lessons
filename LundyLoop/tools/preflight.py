@@ -100,13 +100,16 @@ def require_corpus(expected_min, actual, label="corpus"):
     return True
 
 
-def declare_assumptions(items):
+def declare_assumptions(items, file=sys.stdout):
     """Print the assumptions a result rests on, so the number is never read alone.
 
     `items` is a list of short strings, e.g.
         ['full clone', '161-file KO corpus', 'network not required'].
+    `file` routes the banner: STDOUT for a human-read tool; STDERR for a tool whose
+    stdout is a machine surface (e.g. JSON) that a text line would corrupt. The
+    banner must never break a parser — that is the fail-silent shape this closes.
     """
-    print("assumptions: " + " · ".join(items))
+    print("assumptions: " + " · ".join(items), file=file)
 
 
 if __name__ == "__main__":
