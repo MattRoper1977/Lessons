@@ -848,12 +848,97 @@ def launch_compare_exam():
         svg=_svg(inner))
 
 
+# ================================================================ LAUNCH W7 · L1
+def launch_knowledge_map():
+    V = VIOLET
+    cell = (f'<circle cx="320" cy="150" r="46" fill="{V}" fill-opacity="0.16" stroke="{V}" stroke-width="2.5"/>'
+            f'<text x="320" y="146" text-anchor="middle" font-size="14" font-weight="800" fill="{_INK}">the</text>'
+            f'<text x="320" y="162" text-anchor="middle" font-size="14" font-weight="800" fill="{_INK}">cell</text>')
+    boxes = [(90, 70, "● MAGNIFICATION", "image ÷ actual", V),
+             (400, 70, "↓ DIFFUSION", "high→low · no energy", GROW),
+             (90, 190, "○ OSMOSIS", "water · membrane · no energy", BUILD),
+             (400, 190, "↑ ACTIVE TRANSPORT", "up · needs energy", OCHRE)]
+    parts = []
+    for bx, by, head, fact, col in boxes:
+        # connector to the cell
+        parts.append(f'<line x1="{bx+75}" y1="{by+22}" x2="320" y2="150" stroke="{_MUTE}" stroke-width="1.2" stroke-dasharray="3 4"/>')
+        parts.append(f'<rect x="{bx}" y="{by}" width="150" height="44" rx="8" fill="{col}" fill-opacity="0.10" stroke="{col}" stroke-width="1.8" '
+                     f'style="animation:ilmPop .4s ease-out both;animation-delay:{0.6+boxes.index((bx,by,head,fact,col))*0.15:.2f}s"/>')
+        parts.append(f'<text x="{bx+10}" y="{by+18}" font-size="11.5" font-weight="800" fill="{col}">{head}</text>')
+        parts.append(f'<text x="{bx+10}" y="{by+35}" font-size="10" fill="#475569">{fact}</text>')
+    inner = _hdr(320, "Topic 1 — one thread: the cell", y=34) + "".join(parts) + cell
+    return dict(
+        alt=("A Topic 1 knowledge map: a central cell connected to four boxes — magnification (image "
+             "÷ actual), diffusion (high to low, no energy), osmosis (water, membrane, no energy) and "
+             "active transport (up the gradient, needs energy)."),
+        cap=("One thread ties Topic 1 together — the cell. ● How we see it (magnification), and three "
+             "ways things move: ↓ diffusion, ○ osmosis, ↑ active transport (the only one needing energy)."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W7 · L2
+def launch_command_words():
+    V = VIOLET
+    rows = [("DESCRIBE", "what happens", "‘it gains mass’", GROW),
+            ("EXPLAIN", "why — because…", "‘because water moves in by osmosis’", OCHRE),
+            ("CALCULATE", "number + working + unit", "‘60 ÷ 0.15 = ×400’", V),
+            ("COMPARE", "similarities AND differences", "‘both cross the membrane, but…’", BUILD)]
+    parts = []
+    for i, (cw, ask, ex, col) in enumerate(rows):
+        y = 66 + i * 46
+        parts.append(f'<g style="animation:ilmRise .45s ease-out both;animation-delay:{0.5+i*0.18:.2f}s">'
+                     f'<rect x="44" y="{y}" width="552" height="40" rx="8" fill="{col}" fill-opacity="0.08" stroke="{col}" stroke-width="1.6"/>'
+                     f'<text x="58" y="{y+18}" font-size="13" font-weight="800" fill="{col}">▸ {cw}</text>'
+                     f'<text x="58" y="{y+33}" font-size="10.5" fill="#475569">{ask}</text>'
+                     f'<text x="300" y="{y+26}" font-size="11" font-style="italic" fill="{_INK}">{ex}</text></g>')
+    inner = _hdr(320, "The command word decides the answer", y=34) + "".join(parts)
+    return dict(
+        alt=("A command-word reference card with four rows: DESCRIBE means what happens, EXPLAIN "
+             "means why using because, CALCULATE means a number with working and a unit, COMPARE "
+             "means similarities and differences. Each has a short Topic 1 example."),
+        cap=("Read the command word first — it decides the shape. ▸ DESCRIBE (what), ▸ EXPLAIN "
+             "(why), ▸ CALCULATE (number + working), ▸ COMPARE (both sides)."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W7 · L3
+def launch_exam_practice():
+    V = VIOLET
+    checklist = [("1", "Read the COMMAND WORD"), ("2", "Count the MARKS → that many points"),
+                 ("3", "Show WORKING on a calculation"), ("4", "Check the UNIT (none for magnification)")]
+    rows = "".join(
+        f'<g style="animation:ilmRise .45s ease-out both;animation-delay:{0.5+i*0.22:.2f}s">'
+        f'<rect x="44" y="{70+i*40}" width="26" height="26" rx="5" fill="{V}" fill-opacity="0.4" stroke="{V}" stroke-width="1.6"/>'
+        f'<text x="57" y="{88+i*40}" text-anchor="middle" font-size="13" font-weight="800" fill="{_INK}">{n}</text>'
+        f'<text x="82" y="{88+i*40}" font-size="12.5" font-weight="700" fill="{_INK}">{t}</text></g>'
+        for i, (n, t) in enumerate(checklist))
+    # 3-mark answer bracketed
+    ans = (f'<rect x="360" y="70" width="236" height="150" rx="10" fill="{V}" fill-opacity="0.06" stroke="{V}" stroke-width="1.8"/>'
+           f'<text x="372" y="92" font-size="10.5" font-weight="800" fill="{V}">3-mark ‘explain’</text>'
+           + "".join(f'<text x="372" y="{114+i*32}" font-size="10.5" fill="{_INK}">({n}) {t}</text>'
+                     for i, (n, t) in enumerate([("1", "higher O2 in the alveolus"),
+                                                 ("2", "diffuses down the gradient"),
+                                                 ("3", "thin wall → short distance")])))
+    inner = (_hdr(155, "The exam checklist", y=34) + _hdr(478, "3 marks → 3 points", y=34)
+             + rows + ans)
+    return dict(
+        alt=("An exam checklist: read the command word, count the marks for that many points, show "
+             "working on a calculation, check the unit. Beside it a 3-mark explain answer broken "
+             "into three bracketed points."),
+        cap=("Every exam answer: read the command word, marks → points, show working, check the "
+             "unit. A 3-mark ‘explain’ = three separate points."),
+        svg=_svg(inner))
+
+
 ILLUMINATORS = {
     "SCI_B_W3_Backbones": backbones,
     "SCI_L_W3_L1_Microscopy": launch_microscope,
     "SCI_L_W4_L1_Diffusion": launch_diffusion,
     "SCI_L_W5_L1_Osmosis": launch_osmosis,
     "SCI_L_W6_L1_ActiveTransport": launch_transport_compare,
+    "SCI_L_W7_L1_RoundUp": launch_knowledge_map,
+    "SCI_L_W7_L2_CommandWords": launch_command_words,
+    "SCI_L_W7_L3_ExamPractice": launch_exam_practice,
     "SCI_L_W6_L2_RootAndGut": launch_root_and_gut,
     "SCI_L_W6_L3_Compare": launch_compare_exam,
     "SCI_L_W5_L2_OsmosisCP": launch_osmosis_cp,
