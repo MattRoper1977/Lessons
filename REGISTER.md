@@ -1012,6 +1012,20 @@ building meant the whole episode cost zero repo changes.
   ledger: `_passq/TRIAGE.md` §3B. Scope: KO-vs-We-Do-2 definitional/factual read. The historical question
   (was 37/49 ever true immediately after `9f657b6`, pre Pass W/W2/F/O) is **declined as archaeology** — no
   operative value once the refutation is recorded at a named HEAD (Matt's ruling).
+- **CORROBORATED independently by Pass E (KO Triage) at `12cb6d9` — same 0/49 by a different method; Pass Q
+  (above) landed first, Pass E is the second, agreeing record (R-H02, D1 ruling).** Re-tested, not re-quoted (R-H07). **Method:** per ASDAN
+  KO file, extract the KO key-word table terms and the We-Do-2 `match-pill` terms and count KO terms still drawn
+  from the pills — the exact coupling the original 37/49 measured (KO print table generated from the game pills,
+  gone stale when the pills' targets were rewritten). **Figures at HEAD (49 ASDAN KO files = 31 BUILD + 18 GROW):**
+  **0/49** KO tables are still a full snapshot of the game pills; 13/49 share ≥1 term as legitimate common
+  vocabulary (e.g. CAREERS_W3 `RELIABLE`/`EFFORT`); 36/49 share none. **Disposition: retired by Pass G's rebuild
+  (`9f657b6`), not left unverified** — Pass G decoupled the two artefacts (KO = independently-authored real
+  vocabulary; the We-Do-2 game keeps classification items, some deliberate wrong answers), so the coupling that
+  made "KO disagrees with the game" meaningful no longer exists. The live question — is each KO stale against its
+  *lesson* — is the `ko_staleness`/Tier-1 question; all 49 ASDAN KO files appear in Pass E's 117-candidate set and
+  were content-read (all 49 STILL-TRUE). This resolution closes only the game-disagreement claim, not
+  lesson-staleness. (Pass E self-renamed from provisional letter Z, spent by the pedagogy *Pass Z* of 2026-07-25;
+  see "## Pass E (KO Triage)" at the end of this file, R-E13, and `_passe/KO_TRIAGE_LEDGER.md`.)
 
 ### R-H09 · A pass letter is checked against the ledger AND git history — git alone is blind to measurement-only passes
 - **STATUS** CONVENTION · **VERIFIED** `5ee2147`
@@ -1164,3 +1178,41 @@ building meant the whole episode cost zero repo changes.
 - **The corollary.** When a control is tested repeatedly and each near-match is refused, the refusals **are**
   the evidence it holds; a control never pushed against is untested, not trusted. (Owed by the H-series order's
   confirmed H3 register-payload amendment; carried here, next free letter at author time.)
+
+---
+
+## Pass E (KO Triage) — collision record and outcome
+
+*Appended by Pass E, 2026-07-29. Append-only; no existing entry renumbered. This pass ran the KO-triage body of
+the Q/U/X/Y instrument chain. Named `## Pass E …` (not `## E ·`) because the section-letter `E` is already taken
+by "§E · Instruments and metrics"; pass-letter E and section-letter E coexist as pass-letter H already coexists
+with §H and the R-H## rules.*
+
+### R-E13 · Provisional letter Z was spent — renamed Z → E (R-H09 applied)
+- **STATUS** RECORD · collision resolved
+- **The collision.** The pass was briefed with provisional letter **Z**. R-H09 (ledger AND git) found **Z spent**:
+  a pedagogy *Pass Z* left two commits merged to main — `453b5e6` *"Pass Z: differentiate Careers W7 from W6"*
+  and `d5c8cf1` *"Pass Z remediation: LI W5 becomes a budgeting task…"* (both 2026-07-25). Ledger carried no
+  `Pass Z`, so git was the half that caught it — the mirror image of R-H09's original instance.
+- **The rename.** Free pass-letters (absent from both git subjects and the ledger) were **E and I only**; `N` is
+  taken by HANDOVER's "Pass N print-reference pattern". **E** chosen as the lowest free letter. Branch
+  `pass-e-ko-triage`; deliverables `_passe/`; rollback SHA `12cb6d9`.
+
+### R-E14 · The carry-forward's artefact shape no longer described the estate — recorded, not inherited
+- **STATUS** RECORD · **VERIFIED** `12cb6d9`
+- Re-derived candidate count at HEAD: **117** (not the carried 114; the constant had worn 117→109→114 and is
+  re-derived per R-E11, +3 within tolerance). Cardinality `117 + 0 arch + 44 clean = 161` KO files, emitted.
+- **The break.** The carry-forward characterised 39 "R-E07 Loop-Mark artefacts" as the cheap first clear. At
+  HEAD the Loop-Mark strip (R-E07's own verified remedy, re-run as a diff-class test) cleared **0 of 34** such
+  files, and **0 of 117** candidates were chassis-only: the Loop Mark (2026-07-28) is the most-recent mover, but
+  Pass F/O/W/W2 (07-24/25) and the art-remediation merge (07-29) moved the same bodies earlier. The halt-gate
+  fired and was reported before Tier 2. All 115 non-assessed candidates were then content-read: **112 STILL-TRUE,
+  3 STALE** (Careers W6/W7 KO week-labels lagging the restored slot-swap; BUILD_HUM_W6 KO on the pre-PEEL 4-part
+  model). The three STALE fixes are held UNMERGED on `pass-e-ko-triage` for Matt's per-row key. Detail:
+  `_passe/KO_TRIAGE_LEDGER.md`.
+- **Coexistence (R-H02): the same briefed pass also ran as Pass Q, which LANDED FIRST on `main` (`59ad56a`)**
+  — 0 STALE / 114, R-G05 refuted 0/49, a CAREERS_W7 *print* fix. Pass Q holds; **Pass E corroborates R-G05
+  independently (0/49 == 0/49)** and adds 3 STALE on axes Pass Q's KO-vs-We-Do-2 read did not cover (KO h1
+  week label; HUM writing-model completeness), all pre-dating Pass Q's head. This entry is the second, honest
+  record — not a competing claim. `REGISTER.md` and `CAREERS_W7` will conflict at merge (both passes touched
+  them); resolution is Matt's, at the merged tip. Full reconciliation: `_passe/COEXISTENCE_PassQ.md`.

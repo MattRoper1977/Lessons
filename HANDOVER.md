@@ -433,3 +433,24 @@ this cycle — a diverged branch is the expected state, not a surprise (R-SB02 /
 and `pilot/launch-hum-w1-illuminator` are already merged. Older branches — `art-remediation`,
 `claude/grow-sow-audit-phase-3-*` — are outside this bounded note; enumerate with the derived-base method above
 if they become live.)*
+
+---
+
+## Pass E (KO Triage) — landing note (2026-07-29)
+
+**Held on `pass-e-ko-triage` (base `12cb6d9`); nothing merged.** Re-derived **117** KO-staleness candidates at
+HEAD (not the carried 114; +3, within ±10; `117+0+44=161` KO corpus). Read all 115 non-assessed:
+**112 STILL-TRUE, 3 STALE**. R-G05 re-tested → **0/49** (retired by Pass G's rebuild). Assessed pair read-only,
+held for Matt.
+
+**Held Tier-2 fixes (KO text only, deploy-visible, awaiting Matt's per-row key):**
+- BUILD_ASDAN — `CAREERS_W6` KO h1 W6→W7, `CAREERS_W7` KO h1 W7→W6 (week labels lagged the restored slot-swap).
+- Build — `BUILD_HUM_W6` KO gains the PEEL Link row + completed Key Fact.
+
+**Coexistence (R-H02): a parallel Pass Q (the same briefed pass, renamed Z→Q) already merged to `main`
+(`59ad56a`)** — 0 STALE/114, R-G05 refuted 0/49, a CAREERS_W7 *print* fix. Pass Q landed first and holds;
+Pass E **corroborates R-G05 independently** and **adds 3 STALE** on axes Pass Q's KO-vs-We-Do-2 read did not
+cover (KO h1 week label; HUM writing-model completeness). All 3 pre-date Pass Q's head. Reconciliation and the
+open decisions (letter E-vs-Q; whether to merge the 3 fixes; expected `REGISTER.md`/`CAREERS_W7` merge
+conflicts) are in `_passe/COEXISTENCE_PassQ.md`. **Re-read `origin/main` before any merge** — it has moved twice
+during this pass.
