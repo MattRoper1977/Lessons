@@ -358,3 +358,32 @@ LAUNCH_HUM 8 already covered — not touched.
   rather than pupil-facing, that is a wording fix, never a revert (recorded at R-A07 BOUNDARY).
 - **Pass S recovery route** assumes the TA can help a returning pupil measure the model at the
   bench (reclaimed-timber build; no "standard sizes" reference exists — confirmed absent).
+
+---
+
+## IN-FLIGHT BRANCHES — for a merge session running without the author present
+
+*Added by Pass Y (2026-07-29). Bounded operational note. Branch list and bases **derived from the repo**
+(`git merge-base <branch> origin/main`), not remembered. `main` has moved under in-flight work more than once
+this cycle — a diverged branch is the expected state, not a surprise (R-SB02 / R-H02).*
+
+| branch | cut from (derived base) | ahead | state vs main |
+|---|---|---|---|
+| `pass-sl-sow-launch` | `32ca685` | +11 | diverged — unmerged |
+| `pass-sbx-art-a2` | `4f5c6a4` | +5 | diverged — unmerged |
+| `pass-pq-peq-audit` | `32ca685` | +3 | diverged — unmerged |
+| `pass-sg-sow-grow` | `32ca685` | +5 | diverged — unmerged |
+
+**Each was cut before recent merges landed, so each is now behind `main`.** When merging any of them:
+- **Expect `REGISTER.md` conflicts** — several passes append entries at the file tail, so two branches adding
+  entries collide there. **Resolve by KEEPING EVERY ENTRY from both sides (append-only union), never by
+  choosing one side.** An entry dropped in a merge is a silent deletion of a recorded decision. The same holds
+  for `HANDOVER.md` queue additions.
+- Use an **explicit merge commit (no rebase, no squash)** — the ledgers are SHA-anchored (R-G01 family);
+  a rebase orphans every recorded reference.
+- **Re-read `origin/main` immediately before each merge** and re-prove at the merged tip, not on the branch.
+
+*(`pass-y-assumptions` is being merged in this session and is omitted. `pass-x-instruments`, `pass-sb-sow-build`
+and `pilot/launch-hum-w1-illuminator` are already merged. Older branches — `art-remediation`,
+`claude/grow-sow-audit-phase-3-*` — are outside this bounded note; enumerate with the derived-base method above
+if they become live.)*

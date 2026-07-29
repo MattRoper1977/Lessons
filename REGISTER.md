@@ -1033,14 +1033,42 @@ building meant the whole episode cost zero repo changes.
   surface** (JSON: `identity_audit`, `hash_sweep`, `link_graph`, `print_pack_audit`, `assessed_conditions_gate`)
   — a text line on a JSON stdout corrupts every downstream `json.load`/`jq`, which is the **same fail-silent
   parser-break the banners exist to prevent, arriving from the other side.** It goes to **STDOUT for a
-  human-read tool** (`sitemap_audit`, `verify_commit_set`, `ko_staleness`). **Census before you add one:**
-  no in-repo consumer, CI, shell or Makefile parses any tool's stdout today (Pass Y, searched
-  `*.sh/*.yml/*.yaml/*.py/Makefile`), but the JSON tools' stdout is a machine contract regardless.
+  human-read tool** (`sitemap_audit`, `verify_commit_set`, `ko_staleness`).
+- **The durable rule is RESPECT THE OUTPUT CONTRACT, not enumerate the consumers.** A Pass Y census found no
+  in-repo consumer, CI, shell or Makefile parsing any tool's stdout (`*.sh/*.yml/*.yaml/*.py/Makefile`) — but
+  a census **cannot** cover consumers outside the repo: another session's scripts, a Cowork run capturing
+  output, any machine not in view. So "found no consumer" is **never** a warrant to put prose on a machine
+  stdout. **A tool that emits JSON on stdout has a machine contract whether or not a consumer is visible
+  today, and stdout stays clean by default.** (Following an instruction to the letter — "no consumer, so add
+  the banner to stdout" — would have shipped a rollout that broke quietly and later: the exact fail-silent
+  shape Pass X exists to close.)
+- **The failure signal is the EXIT CODE, never the emptiness of stderr.** An `assumptions:` line on stderr is
+  **not** an error — stderr is where an ordinary run's banner lives. Nothing may ever be built that reads a
+  non-empty stderr as failure; that re-introduces the fail-silent shape one layer out. A guard fails loud by
+  **exiting non-zero** (preflight exit 3, sitemap exit 2), which is the only signal a caller reads.
 - **A library declares, it does not print.** `classify.py` has no result surface, so it exports its
   assumptions as **data** (`ASSUMPTIONS`); its caller `print_pack_audit` **reads** and prints them,
   attributed. A hand-copied restatement in the caller would be two copies of one truth (R-G01 / standing
   rule 2, emit-don't-transcribe). Proof it is read: change a value in `classify.ASSUMPTIONS` and the audit's
   banner changes with no edit to the audit.
-- **`loop_mark_print_gate` has no banner yet** — it needs Chromium/playwright to run, absent in the agent
-  sandbox, so the byte-identical-verdict proof could not be taken. Deferred, not skipped: a banner proved on
-  no run is an unasked question. Add it from a machine that can render the gate.
+- **`loop_mark_print_gate` has no banner yet, and that is a FINDING, not a to-do — see R-E13.**
+
+
+### R-E13 · `loop_mark_print_gate` is FAIL-SILENT BY ABSENCE in the agent sandbox — a finding, not a to-do
+- **STATUS** OPEN · **VERIFIED** `45f0c63` (Pass Y) — the *absence* is verified; the gate's own verdict is not
+- **Precondition, stated explicitly:** LL-INST-09 (`loop_mark_print_gate.py`) needs **playwright + Chromium**
+  to run — it renders each file at `media=print` and reads back what printed. **That environment is absent in
+  the agent sandbox** (`from playwright.sync_api import sync_playwright` → ModuleNotFoundError).
+- **Why it is a finding, and the class Pass X did not census.** An instrument that cannot run **in the
+  environment where passes are executed** is **fail-silent by absence**: it never runs, so it never reports,
+  so its silence is **indistinguishable from a clean result.** That is Pass X's own thesis — a false zero from
+  a check that never examined the thing — pointing at a class Pass X's census (git / network / corpus /
+  encoding / parse-shape) did not include: *the instrument that is simply never invoked here.*
+- **What remains unproven without it.** No `loop_mark_print_gate` verdict exists at current HEAD; the
+  print-reaches-paper claims it checks (R-A07 family) are **unverified by this instrument in every agent-run
+  pass**, including Pass Y. The Pass Y assumptions banner was **not** added to it — a banner proved on no run
+  is an unasked question (R-E12 / standing rule 6).
+- **Disposition.** Not a special errand. It **attaches to whichever future pass legitimately runs in a
+  Chromium-capable environment** — that pass adds the banner (proving gate (c) on a real render) and takes the
+  gate's verdict. Until then, treat any absence of a `loop_mark_print_gate` result as *not run*, never as
+  *clean*.
