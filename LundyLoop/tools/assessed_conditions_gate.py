@@ -70,6 +70,7 @@ import json
 import re
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -154,6 +155,7 @@ def parse_offers(t: str):
 
 
 def main():
+    declare_assumptions(["git ls-files corpus", "the 2 ★ASSESSED LESSON files (INCLUSION selector)", "token overlap, not semantics — the Card MENTIONING a thing; silence is not consent"], file=sys.stderr)
     report = {"selector": SELECTOR, "files": [], "verdict": None,
               "cannot_see": "runtime state — backward navigation is unguarded in both "
                             "assessed files; a device-based access arrangement puts the "

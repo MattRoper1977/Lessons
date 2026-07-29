@@ -1,5 +1,10 @@
 # CARRYFORWARD — the 114 KO candidates (for the NEXT pass)
 
+> **R-E11 (Pass Y):** "114" is a constant with a unit (candidates) but NOT a fixed scope — it has worn
+> **117 → 109 → 114** across runs as the estate moved. **Re-derive it at the triage pass's OWN HEAD** with the
+> repaired `ko_staleness.py`; do not inherit this figure. The document carrying the estate's most re-quoted
+> count is not exempt from the constant rule.
+
 **This is a CHARACTERISATION: shape and counts only. It states no verdict on any individual KO.** Produced
 with the repaired `ko_staleness.py` on a **full clone** (assumptions banner: full clone · 161-file KO corpus ·
 network not required · co-modification is a proxy, not consistency). Cardinality re-asserted: 114 + 3 arch +

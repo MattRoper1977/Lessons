@@ -44,6 +44,7 @@ import json
 import re
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 from collections import defaultdict
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -125,6 +126,7 @@ def stem_sim(a, b):
 
 
 def main():
+    declare_assumptions(["git ls-files corpus", "exact+normalised hashing is literal; near-identical is a FLOOR not a total (MinHash 0.60)", "catalogue match is percent-decoded"], file=sys.stderr)
     files = tracked_files()
     cat, cat_by_path = load_catalogue()
 

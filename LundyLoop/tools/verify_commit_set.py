@@ -23,6 +23,7 @@ Exit 0 if every assertion passes, 1 otherwise.
 """
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 import os
 
 # The declared shape of Pass LL-G. Edit for a different pass; do not infer it.
@@ -57,6 +58,7 @@ def paths_in(sha):
 
 
 def main(base, mdir):
+    declare_assumptions(["full history + base reachable (guarded)", "the DECLARED commit-set shape is hardcoded per pass", "proves paths touched, not content correct"])
     fails = []
 
     def check(name, ok, detail=""):

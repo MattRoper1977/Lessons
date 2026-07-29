@@ -28,6 +28,7 @@ import json
 import re
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 from collections import defaultdict
 from pathlib import Path
 from posixpath import normpath
@@ -63,6 +64,7 @@ def resolve(src_file: str, raw: str):
 
 
 def main():
+    declare_assumptions(["git ls-files corpus", "in-repo resolution only — zero-inbound means zero IN-REPO, never a deletion warrant", "runtime string-concat links are invisible"], file=sys.stderr)
     files = tracked()
     inbound = defaultdict(list)
     unresolved = defaultdict(list)

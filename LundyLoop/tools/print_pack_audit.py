@@ -37,10 +37,11 @@ import json
 import re
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from classify import Verdict, classify_print_architecture  # REQUIRED STAGE, LL-INST-05
+from classify import Verdict, classify_print_architecture, ASSUMPTIONS as CLASSIFY_ASSUMPTIONS  # REQUIRED STAGE, LL-INST-05
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -60,6 +61,11 @@ CALLSITE = re.compile(r"""printPack\(\s*['"]([A-Za-z0-9_\-]+)['"]\s*\)""")
 
 
 def main():
+    declare_assumptions(
+        ["git ls-files *.html corpus", "classify.py is the REQUIRED first stage",
+         "UNRESOLVED variables are never counted as satisfied",
+         "presence of a slot element is not presence of content"]
+        + [f"(classify.py) {a}" for a in CLASSIFY_ASSUMPTIONS], file=sys.stderr)
     files = [p for p in subprocess.run(
         ["git", "-C", str(REPO), "ls-files", "-z", "*.html"],
         capture_output=True, check=True).stdout.decode().split("\0") if p]

@@ -42,6 +42,7 @@ import json
 import re
 import subprocess
 import sys
+from preflight import declare_assumptions  # LL-INST-11 (Pass Y)
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -77,6 +78,7 @@ def toks(s):
 
 
 def main():
+    declare_assumptions(["git ls-files corpus (whole estate, HEAD)", "literal both directions: extension/magic-byte, title/filename, catalogue/disk", "cannot see a file whose name and content agree and are both wrong"], file=sys.stderr)
     scope = sys.argv[1:] or None
     tracked = [p for p in subprocess.run(
         ["git", "-C", str(REPO), "ls-files", "-z"],
