@@ -296,6 +296,11 @@ check scripts in `_passq/tools/`. Provisional letter Z collided (two `Pass Z` co
 history) → self-renamed **Q** per R-H09 (I ambiguous with Pass LL-I, R clashes with the R-xx prefix;
 check recorded in the ledger §0).
 
+**Disambiguator (cross-repo):** Pass Q (Lessons, KO triage, `38c8f6b`) is distinct from Pass Q (site
+repo, quality sweep, `6845f44`); letter checks must consult BOTH repos' records. Dispositioned, not
+renamed — commits exist and a mid-flight rename is worse than a named collision (R-H09 blind spot in
+the other direction).
+
 - **Denominator, re-derived at HEAD `c034ffd` (R-E11):** 114 candidates / 161-file KO corpus, full
   clone; cardinality 114 + 3 arch-dropped + 44 clean = 161. Inherited none of the 117→109→114 history.
 - **Every one of the 114 read** (KO block vs `print-wedo` + on-screen We-Do-2): **110 STILL-TRUE ·

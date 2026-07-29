@@ -4,6 +4,12 @@
 cut off `origin/main` at `c034ffd`. Tier-1 artefact: this ledger + `_passq/tools/` check scripts.
 Deploy-visible change set on `main`: EMPTY. No KO file was edited by this pass.**
 
+> **Disambiguator (cross-repo, per Matt's disposition):** Pass Q (Lessons, KO triage, `38c8f6b`) is
+> distinct from Pass Q (site repo, quality sweep, `6845f44`); letter checks must consult BOTH repos'
+> records. The Lessons ledger cannot see site-repo letters — R-H09's blind spot appearing in the
+> other direction. Not renamed: commits exist, and a mid-flight rename is worse than a dispositioned
+> collision. See §0.
+
 ---
 
 ## 0 · Letter hygiene (R-H09) — the check, recorded
@@ -23,8 +29,12 @@ git alone cannot clear a letter).
   - **R — rejected**: visually collides with the `R-xx` register-entry prefix used throughout.
   - **Q — selected**: zero hits in Lessons register/handover/git-history/worktree. A `Pass Q` exists
     in the sibling **site** repo (`mattroper1977.github.io`) — a different programme in a different
-    repo, outside R-H09's stated scope (this repo's REGISTER/HANDOVER + git history). Recorded for
-    transparency, not a collision under the rule.
+    repo, outside R-H09's stated scope (this repo's REGISTER/HANDOVER + git history).
+    - **Cross-repo update (Matt's disposition):** the site-repo `Pass Q` is in fact *spent* (quality
+      sweep, closed at `6845f44` there) — a genuine collision the Lessons ledger structurally could
+      not see, which is R-H09's blind spot in the other direction. **Dispositioned, NOT renamed:**
+      commits already exist and a mid-flight rename is worse than a named collision. See the header
+      disambiguator; R-H09 gains a cross-repo clause in this pass's REGISTER commit.
 
 **This pass is Pass Q (KO Triage).** Not a STOP point: the collision was resolvable from the record.
 
