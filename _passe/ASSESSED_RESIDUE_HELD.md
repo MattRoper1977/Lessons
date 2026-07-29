@@ -54,3 +54,30 @@ session.` — i.e. correct assessed design, **not** residue. They are **not** pa
 — Deployed provenance honesty" *echoes* the removed "Evaluation Deployments" support, but "Deployed" may be
 legitimate vocabulary for this assessed enquiry; the hunk above assumes removal, but a **reword** (keeping the
 key word, changing the definition) is the equally valid option. Pass E takes no position — **AWAITING-WORD.**
+
+---
+
+## S4 RESOLVED (2026-07-29) — REWORD path, landed
+
+**Authorisation:** Matt gave the word; Claude concurred. Scope: this one item only, assessed rules in full
+(single hunk, `GROW_HUM_W7` only, never batched).
+
+**Decision by measurement.** Counted the concept's teaching homes in `GROW_HUM_W7` itself (case-insensitive
+`evaluat*` / "evaluation clause"), excluding the KO row under judgment and the Reference-Zone guard strings:
+**10 teaching occurrences** — slides (*"The Brackets: Provenance notes → evaluation lines"*, *"An evaluation
+sentence, pre-planned"*), the match-game (*"An evaluation clause mid-unit"*, *"Which bracket became an
+evaluation clause?"*), the Steps summary (*"every unit carries one evaluation clause"*), and print sections
+(*"☐ One evaluation clause per unit (brackets deployed)"*). The key word is **heavily taught** — so the row is
+**not** stale content, and "deployed" turns out to be the lesson's *own* vocabulary ("brackets deployed", "the
+deployed bracket"). ≥1 ⇒ **REWORD**, not remove: keep the key word, replace only the definition cell with the
+lesson's own framing at GROW pitch.
+
+**Landed hunk (as committed — reword, KO row count unchanged):**
+```diff
+-<tr><td>Evaluation clause</td><td>Deployed provenance honesty</td></tr>
++<tr><td>Evaluation clause</td><td>A per-unit bracket that turns provenance notes into an evaluation line</td></tr>
+```
+Definition drawn from the lesson's own *"every unit carries one evaluation clause"* + *"The Brackets:
+Provenance notes → evaluation lines"* — nothing invented, no new concept. Gates passed: whole-file byte-diff =
+this one hunk; three "Reference Zone" guard strings byte-identical; scripts byte-identical + `node --check`;
+Chromium boot clean; tag balance; print-section count 14→14; KO row count unchanged. **Status: RESOLVED.**

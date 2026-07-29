@@ -1329,3 +1329,21 @@ with §H and the R-H## rules.*
 - **S2 · SBX (report-only, NOT merged): NOT-LANDED.** `pass-sbx-art-a2` C1 Bronze→Explore absent in the 7 BUILD A2 decks — `Explore Part` = 0, `Bronze Part` = 21 (re-probed by content; matches R-RL01). Branch retains 5 unique commits; left for Matt.
 - **S4 · Assessed residue (`GROW_HUM_W7` `Evaluation clause` KO row): HELD, AWAITING-WORD.** It is a pupil-rendered `<td>`, so it fails S4's non-pupil-rendered commit gate; the proposed single hunk is held verbatim in `_passe/ASSESSED_RESIDUE_HELD.md` and `GROW_HUM_W7` is byte-untouched. The file's three `Reference Zone` strings are the assessed guard (*"Do not print a Reference Zone into this session"*), correct design, not residue.
 - **Open items & branch-deletion candidates:** `_close/OPEN_ITEMS.md` (record-derived; 6 open items + 11 zero-unique-commit branches enumerated for Matt's UI deletion; 4 branches with real unique work flagged do-not-delete).
+
+### R-E19 · Assessed residue resolved — `GROW_HUM_W7` `Evaluation clause` KO row REWORDED (Matt's word)
+- **STATUS** CLOSE · assessed single-hunk, landed under Matt's authorisation (Claude concurred)
+- **Decision by measurement (not by assumption).** The concept is taught **10 times** in `GROW_HUM_W7` itself
+  — slides (*"The Brackets: Provenance notes → evaluation lines"*), the match-game, the Steps summary
+  (*"every unit carries one evaluation clause"*), and print sections (*"One evaluation clause per unit
+  (brackets deployed)"*), excluding the KO row and the Reference-Zone guard. ≥1 occurrence ⇒ **REWORD, not
+  remove**: the key word is live taught content, so deleting it would have *broken* the Pass-G snapshot rule,
+  not restored it. "Deployed" was the lesson's own vocabulary, not a stale echo — the residue flag was a false
+  alarm on that word, correctly resolved by rewording the terse definition rather than excising the concept.
+- **The hunk (landed).** `Evaluation clause` definition cell only:
+  `Deployed provenance honesty` → `A per-unit bracket that turns provenance notes into an evaluation line`
+  (drawn verbatim-in-substance from the lesson's own teaching; no new concept). Whole-file byte-diff = this one
+  hunk; three "Reference Zone" guard strings byte-identical; scripts byte-identical + `node --check`; Chromium
+  boot clean; tag balance; print-section count 14→14; KO row count unchanged (reword). `GROW_HUM_W7` otherwise
+  byte-untouched. Record: `_passe/ASSESSED_RESIDUE_HELD.md` (status RESOLVED).
+- **Sentinel corrigendum:** not appended separately — **R-SC01 already records** estate `ll-g:loop-mark` = 45
+  (vs R-RL01's "50"); R-RL01 itself left untouched (append-only).
