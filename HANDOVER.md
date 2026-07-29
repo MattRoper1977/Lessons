@@ -289,6 +289,35 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 ---
 
+## Pass Q (KO Triage) — LANDED on branch `pass-q-ko-triage`, HELD unmerged for Matt's read
+
+Closes queue item **7 (KO triage from §7)**. Full ledger: [`_passq/TRIAGE.md`](_passq/TRIAGE.md);
+check scripts in `_passq/tools/`. Provisional letter Z collided (two `Pass Z` commits in git
+history) → self-renamed **Q** per R-H09 (I ambiguous with Pass LL-I, R clashes with the R-xx prefix;
+check recorded in the ledger §0).
+
+**Disambiguator (cross-repo):** Pass Q (Lessons, KO triage, `38c8f6b`) is distinct from Pass Q (site
+repo, quality sweep, `6845f44`); letter checks must consult BOTH repos' records. Dispositioned, not
+renamed — commits exist and a mid-flight rename is worse than a named collision (R-H09 blind spot in
+the other direction).
+
+- **Denominator, re-derived at HEAD `c034ffd` (R-E11):** 114 candidates / 161-file KO corpus, full
+  clone; cardinality 114 + 3 arch-dropped + 44 clean = 161. Inherited none of the 117→109→114 history.
+- **Every one of the 114 read** (KO block vs `print-wedo` + on-screen We-Do-2): **110 STILL-TRUE ·
+  4 NO-ORGANISER (worksheet template, header-only `print-ko`) · 0 STALE · 0 UNDETERMINED.**
+- **No KO edited. No Tier-2 suite batch awaits approval — there are none** (0 STALE). Deploy-visible
+  change set on `main`: EMPTY; the branch adds only `_passq/`, no `*.html`. Sentinels 45/45 unmoved.
+- **R-G05 REFUTED at HEAD:** 0 of 49 ASDAN KOs disagree with their We-Do-2 slide (the "37 of 49"
+  figure does not reproduce). Reclassify R-G05 accordingly once Matt confirms.
+- **§7 / R-G02 resolved:** neither assessed KO (`GROW_HUM_W7`, `LAUNCH_HUM_W7`) names the removed
+  Connective Bank / Evaluation Deployments. Read-only; nothing edited in the assessed pair.
+- **Tier-3, report-only (not fixed):** `CAREERS_W7` print We-Do-2 answer-bank mismatch (print mirror,
+  not the KO); 4 science worksheets with an organiser-less `print-ko`; documented divergence from
+  CARRYFORWARD (the pure Loop-Mark artefact group is EMPTY at this HEAD).
+- **Follow-ups offered, not done:** historical R-G05 check at `9f657b6`; the two Tier-3 items above.
+
+---
+
 ## What Matt still owes, and what he has ruled out
 
 **Owed:** nothing blocking. **Ruled out:** merging graded cold-call into the shared
