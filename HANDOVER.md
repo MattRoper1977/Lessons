@@ -241,9 +241,14 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     strengthening not a requirement (a day whose close never happened is a closed day; no
     "catch it up tomorrow"). The week-one failure case — GROW room, no R box, nothing missing —
     is named as a false record ("receipt by the back door"); *"Not yet = Voice present, Audience
-    pending"* is reused verbatim; no new vocabulary; both sentinels unmoved (45 / 48). **SHIP
-    still waits on Matt's read** — R-H08 stays OPEN until he has read the section; authoring is
-    not ship.
+    pending"* is reused verbatim; no new vocabulary; both sentinels unmoved (45 / 48).
+    **Rebuilt at `eea4062`** (LL-I, Option 1): the answer-model gap resolved — label 0
+    `Closed (R)→Closed`, the legend broadened pathway-relative — and scenarios 15–16 (GROW/LAUNCH)
+    authored **into the question array itself**, so a question-only TA meets both closes inside the
+    flow (R-H10). Provenance: **card at `a5092bb` · legend, label and scenarios 15–16 at `eea4062`.**
+    **R-H08 CLOSED** on Matt's stated second paper read of the rebuilt game (card at `a5092bb` ·
+    legend, label and scenarios 15–16 at `eea4062`). The read itself is a human observation, not a
+    derivation; no instrument witnessed it.
 14. **The LL-5 GROW/LAUNCH population rework.** The 48 written-line files (R-A02) inherit
     B2's pupil-reader and B3's evidence/warrant step-up. **TRIGGER: after the specimen is
     judged; L3/L4/L5 settled against the day-close capture route first (R-E02).**
