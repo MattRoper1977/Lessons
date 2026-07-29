@@ -1310,3 +1310,22 @@ with §H and the R-H## rules.*
   decks) is **absent at final main** (`Explore Part` = 0, `Bronze Part` = 21). Left for Matt.
 - **Ancestry after land:** PQ `b137a90`, SG `dc41a56`, Phase-3 `710c888`, SB `4f5c6a4` all
   ancestors of `main`.
+
+### R-SC01 · Season close — reconciliation at landed main `8540eee`, proven by content
+- **STATUS** CLOSE · **VERIFIED** by content at `8540eee` (never by SHA alone)
+- **Season ledger — each strand probed at the tip:**
+
+| strand | landed? | content proof at `8540eee` |
+|---|---|---|
+| **SB** | ✓ | `4f5c6a4` ancestor; R-SB01 present; all 7 Careers files read `Week N of 7`, none `of 6` |
+| **PQ** | ✓ | `_passpq/` = 8 docs + `inputs/README`; R-D05 present; doubled `ASDAN Studio · ASDAN Studio` = **0 in the estate** (2 residual hits are documentation prose: `REGISTER.md` R-RL01 + `_passpq/FINDINGS.md`) |
+| **SG** | ✓ | `_passsg/` (3 files) incl. FINDINGS §11.8; `GCSE Stretch`/`GCSE Art habit` = 0 in the 8 GROW_ART Slideshows (2 non-predicate `GCSE` mentions remain, per R-RL01); `Art_Teesside/Grow/GROW_ART_W8…` blob `4cf5d81e` byte-identical |
+| **P3** | ✓ | `resources.json`: total **386**, **Arts Award = 8**, Art = 34 (hub chip render was RL-jsdom-verified; content is ground truth here) |
+| **Q (KO)** | ✓ | `_passq/` (6 files) present; REGISTER carries `R-G05 · … REFUTED AT HEAD (Pass Q)` |
+| **E** | ✓ | 3 KO sheets four-surface green (W6 file = Week 7, W7 file = Week 6 — the deliberate swap); BUILD_HUM_W6 `Link` row present; R-E16/R-E17/R-E18 + renumber note; `_passe/` = **4 files** incl. `ASSESSED_RESIDUE_HELD.md` |
+
+- **Corrections to the expected close (invent nothing):** `_passe/` holds **4** files, not the brief's "5" — the four are the ledger, coexistence, R-G05 append, and assessed residue; nothing is missing. Estate sentinel `ll-g:loop-mark` set = **45 files** (whole-repo 51) — the brief/R-RL01 "50" does not reproduce; recorded, estate witness surface unchanged.
+- **Cross-merge integrity.** Instruments byte-identical vs BASE `59ad56a`, `cc45b37`, and `12cb6d9` (0 diff — R-E09). REGISTER append-only: **67** entries at main = `cc45b37`'s 64 + Pass E's 3 (R-E16/17/18); no entry from either merge parent lost; no duplicate IDs.
+- **S2 · SBX (report-only, NOT merged): NOT-LANDED.** `pass-sbx-art-a2` C1 Bronze→Explore absent in the 7 BUILD A2 decks — `Explore Part` = 0, `Bronze Part` = 21 (re-probed by content; matches R-RL01). Branch retains 5 unique commits; left for Matt.
+- **S4 · Assessed residue (`GROW_HUM_W7` `Evaluation clause` KO row): HELD, AWAITING-WORD.** It is a pupil-rendered `<td>`, so it fails S4's non-pupil-rendered commit gate; the proposed single hunk is held verbatim in `_passe/ASSESSED_RESIDUE_HELD.md` and `GROW_HUM_W7` is byte-untouched. The file's three `Reference Zone` strings are the assessed guard (*"Do not print a Reference Zone into this session"*), correct design, not residue.
+- **Open items & branch-deletion candidates:** `_close/OPEN_ITEMS.md` (record-derived; 6 open items + 11 zero-unique-commit branches enumerated for Matt's UI deletion; 4 branches with real unique work flagged do-not-delete).
