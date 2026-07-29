@@ -12,8 +12,14 @@ AMBER = done, flagged; RED = stopped and asked. Written at the time, never recon
         html universe (45→70) is the one to quote; the all-files number should never be carried.
 [GREEN] The "six files" (the 51-vs-45 gap at fork) identified and checked: LL-I_B1_measurement_map.md,
         INSTRUMENTS.md, bundle_facts.py, patch_loopmark.py, REGISTER.md, _passsg/FINDINGS.md — all
-        NON-html tooling/docs, ALL PRESENT in both 8540eee and HEAD, never removed, never the second
-        writer's (they predate the fork). Not lessons, so outside the sentinel universe.
+        NON-html tooling/docs, ALL PRESENT in both 8540eee and HEAD, never removed, ~~never the second
+        writer's~~ never added by anyone during the pass (they predate the fork). Not lessons, so
+        outside the sentinel universe.
+        [CORRECTION 2026-07-29, SCI-3] The struck phrase "never the second writer's" is retracted:
+        it framed the six files against a "second writer" as if that entity were established. The
+        sentinel NEVER corroborated a second writer. What survives is only the directly observed
+        fact — these six files existed in the authoring container this session did not create, at
+        both fork and HEAD. Nothing about who, or whether anyone, "wrote" alongside is supported.
 [GREEN] Rebuilt both packs on current head (aec32b1) — the pre-clip zips were stale by definition.
         Osmosis clip present in both packs; 219 html rebranded, 0 wordmark residue, x-brand every
         page, assessed conditions intact, crawl clean, both zips unzip -t OK. Delivered to Matt.
