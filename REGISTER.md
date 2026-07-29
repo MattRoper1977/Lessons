@@ -1216,3 +1216,26 @@ with §H and the R-H## rules.*
   week label; HUM writing-model completeness), all pre-dating Pass Q's head. This entry is the second, honest
   record — not a competing claim. `REGISTER.md` and `CAREERS_W7` will conflict at merge (both passes touched
   them); resolution is Matt's, at the merged tip. Full reconciliation: `_passe/COEXISTENCE_PassQ.md`.
+
+### R-E15 · Pass E LANDED — Matt's rulings D1–D3 (2026-07-29)
+- **STATUS** RECORD · landed by merge onto `main` from `pass-e-land` (base = `main` tip at land time)
+- **D1 · IDENTITY — Pass E stays DISTINCT, sibling-of-Q(KO); not folded, not retired.**
+  - **(a) Cross-ref E↔Q(KO):** Pass E and Pass Q are the **same brief, twin runs** — both were given provisional
+    letter Z, both found it spent (pedagogy *Pass Z*, 2026-07-25), both self-renamed (Q, then E). **Pass Q landed
+    first**; **Pass E corroborates R-G05 independently (0/49 == 0/49)** by a different method and adds three STALE
+    on axes Pass Q's KO-vs-We-Do-2 read did not cover. Neither supersedes the other; both records stand.
+  - **(b) Letter disambiguation — "Q" is now overloaded:** it names **both** the **site-repo sweep** (repo
+    `mattroper1977.github.io`, `@6845f44`) **and** this Lessons **KO triage** (`ff0de06`). Future notes citing
+    "Pass Q" **must say which** — *"Pass Q (site sweep)"* vs *"Pass Q (KO triage, Lessons)"*. (Sibling of R-H09's
+    cross-repo clause: the letter namespace is not repo-local.)
+- **D2 · FIXES — all three approved, LANDED.** E1 `CAREERS_W6` KO h1 `W6→W7`, E2 `CAREERS_W7` KO h1 `W7→W6`
+  (as-found, KO-text token only, four-surface agreement proven post-edit); E3 `BUILD_HUM_W6` +1 KO row `Link`
+  (Phase-3 gates: body still teaches Link; wording from this file's own link bank, not GROW_HUM_W6's KO; exactly
+  one row; Pass-G rule holds). **No STOP, no PROPOSED-only outcome — all three passed their gates and landed.**
+- **D3 · ASSESSED RESIDUE — `GROW_HUM_W7` UNTOUCHED** (assessed quarantine). The `Evaluation clause — Deployed
+  provenance honesty` KO row is logged verbatim in `_passe/ASSESSED_RESIDUE_HELD.md` as HELD-FOR-SCOPED-PASS;
+  it lands only on Matt's explicit word.
+- **Counts pre/post (deploy-visible):** 3 KO print sheets changed; `<tr>` totals `21→21`, `21→21`, `23→24`;
+  print-pack section counts and `prefers-reduced-motion` rules invariant; sentinel `ll-g:loop-mark` set invariant
+  at **45**; all inline `<script>` blocks byte-identical to base + `node --check` clean; Chromium headless boot +
+  strict DOM parse clean on all three. Instruments untouched (R-E09).
