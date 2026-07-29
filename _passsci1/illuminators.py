@@ -414,8 +414,132 @@ def the_moon():
         svg=_svg(inner))
 
 
+# ================================================================ LAUNCH W3 · L1
+def launch_microscope():
+    V = VIOLET
+    # light microscope, schematic, on the bench
+    body = (
+        f'<rect x="70" y="228" width="150" height="14" rx="4" fill="{_TRAY}" stroke="{_MUTE}"/>'  # base
+        f'<path d="M 120 228 Q 96 150 130 120" fill="none" stroke="{_INK}" stroke-width="6"/>'      # arm
+        # eyepiece tube + lens (top)
+        f'<rect x="118" y="60" width="26" height="40" rx="4" fill="#fff" stroke="{_INK}" stroke-width="2"/>'
+        f'<ellipse cx="131" cy="60" rx="15" ry="6" fill="{V}" fill-opacity="0.4" stroke="{V}" stroke-width="2"/>'
+        # nosepiece + objectives
+        f'<rect x="112" y="118" width="60" height="14" rx="6" fill="#fff" stroke="{_INK}" stroke-width="2"/>'
+        f'<rect x="118" y="132" width="10" height="22" rx="2" fill="{V}" fill-opacity="0.3" stroke="{V}" stroke-width="1.6"/>'
+        f'<rect x="132" y="132" width="10" height="28" rx="2" fill="{V}" fill-opacity="0.3" stroke="{V}" stroke-width="1.6"/>'
+        f'<rect x="146" y="132" width="10" height="34" rx="2" fill="{V}" fill-opacity="0.3" stroke="{V}" stroke-width="1.6"/>'
+        # stage + slide
+        f'<rect x="96" y="176" width="90" height="10" rx="2" fill="#fff" stroke="{_INK}" stroke-width="2"/>'
+        f'<rect x="122" y="170" width="34" height="6" rx="1" fill="{V}" fill-opacity="0.5" stroke="{V}" stroke-width="1.4"/>'
+        # focus wheel
+        f'<circle cx="96" cy="150" r="10" fill="#fff" stroke="{_INK}" stroke-width="2" '
+        f'style="animation:ilmGlow 3.6s ease-in-out infinite"/>'
+        # light
+        f'<circle cx="141" cy="205" r="9" fill="{GOLD}" fill-opacity="0.6" stroke="{GOLD}" stroke-width="1.6"/>')
+    # two comparison image circles (magnify vs resolve)
+    sharp = "".join(f'<circle cx="{430+ (i%3)*16}" cy="{110+(i//3)*16}" r="3.5" fill="{V}"/>' for i in range(6))
+    blur = "".join(f'<circle cx="{430+(i%3)*16}" cy="{190+(i//3)*16}" r="6" fill="{_MUTE}" fill-opacity="0.5"/>' for i in range(6))
+    circles = (
+        f'<circle cx="446" cy="118" r="42" fill="none" stroke="{_INK}" stroke-width="2"/>{sharp}'
+        f'<circle cx="446" cy="198" r="42" fill="none" stroke="{_INK}" stroke-width="2"/>{blur}')
+    inner = (_hdr(140, "A light microscope on the bench", y=32)
+             + body + circles
+             + _lbl(150, 46, 150, "● EYEPIECE ×10", V, 0.9, fs=12)
+             + _lbl(180, 128, 160, "■ OBJECTIVE ×4/×10/×40", V, 1.1, fs=11)
+             + _lbl(40, 190, 130, "◆ STAGE + SLIDE", _INK, 1.25, fs=11)
+             + _lbl(70, 268, 210, "specimen slide · school lab microscope", _MUTE, 1.4, h=20, fs=10)
+             + _lbl(500, 100, 120, "BIGGER · CLEARER", V, 1.4, h=22, fs=11)
+             + _lbl(500, 190, 120, "BIGGER · BLURRY", _MUTE, 1.5, h=22, fs=11))
+    return dict(
+        alt=("A light microscope on the lab bench with the eyepiece lens (×10), the revolving "
+             "objective lenses (×4, ×10, ×40), the stage with a slide, the focus wheel and the "
+             "light all labelled. Two image circles compare a sharp 'bigger and clearer' view with "
+             "a fuzzy 'bigger but blurry' one."),
+        cap=("On the bench: light enters through the slide, the objective and eyepiece lenses "
+             "multiply to magnify. More magnification only helps if the image stays clear — "
+             "resolution, not just size."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W3 · L2
+def launch_formula_triangle():
+    V = VIOLET
+    # triangle: IMAGE SIZE on top row, MAGNIFICATION x ACTUAL SIZE on bottom row
+    tri = (
+        f'<path d="M 150 70 L 60 210 L 240 210 Z" fill="{V}" fill-opacity="0.10" stroke="{V}" stroke-width="2.5"/>'
+        f'<line x1="60" y1="150" x2="240" y2="150" stroke="{V}" stroke-width="2"/>'      # horizontal divider
+        f'<line x1="150" y1="150" x2="150" y2="210" stroke="{V}" stroke-width="2"/>'     # vertical divider
+        f'<text x="150" y="122" text-anchor="middle" font-size="14" font-weight="800" fill="{_INK}">IMAGE SIZE</text>'
+        f'<text x="105" y="188" text-anchor="middle" font-size="12.5" font-weight="800" fill="{_INK}">MAGNIF.</text>'
+        f'<text x="150" y="140" text-anchor="middle" font-size="16" fill="{V}">×</text>'
+        f'<text x="196" y="188" text-anchor="middle" font-size="12.5" font-weight="800" fill="{_INK}">ACTUAL</text>')
+    # conversion ladder (right)
+    ladder = (
+        f'<rect x="360" y="90" width="70" height="30" rx="6" fill="#fff" stroke="{_INK}" stroke-width="1.8"/>'
+        f'<text x="395" y="110" text-anchor="middle" font-size="15" font-weight="800" fill="{_INK}">mm</text>'
+        f'<rect x="510" y="90" width="70" height="30" rx="6" fill="#fff" stroke="{_INK}" stroke-width="1.8"/>'
+        f'<text x="545" y="110" text-anchor="middle" font-size="15" font-weight="800" fill="{_INK}">µm</text>'
+        + _arrow(432, 100, 508, 100, V, 2.4)
+        + f'<text x="470" y="88" text-anchor="middle" font-size="12" font-weight="800" fill="{V}">×1000</text>'
+        + _arrow(508, 132, 432, 132, OCHRE, 2.4)
+        + f'<rect x="510" y="122" width="70" height="0" />'
+        + f'<text x="470" y="150" text-anchor="middle" font-size="12" font-weight="800" fill="{OCHRE}">÷1000</text>')
+    inner = (_hdr(150, "The magnification triangle", y=40)
+             + _hdr(470, "mm ↔ µm conversion", y=40)
+             + tri + ladder
+             + _lbl(60, 226, 210, "cover the one you want, read the rest", _MUTE, 1.0, h=20, fs=10.5)
+             + _lbl(360, 168, 220, "match the units BEFORE you divide", V, 1.15, h=22, fs=11))
+    return dict(
+        alt=("A formula triangle with IMAGE SIZE across the top and MAGNIFICATION times ACTUAL SIZE "
+             "along the bottom — cover the quantity you want and read off the calculation. Beside it "
+             "a conversion ladder: millimetres to micrometres is times 1000, back is divide by 1000."),
+        cap=("Cover what you want in the triangle: image size on top, magnification × actual size "
+             "below. And match the units first — mm to µm is ×1000, back is ÷1000."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W3 · L3
+def launch_exam_method():
+    V = VIOLET
+    lines = [("1", "EQUATION", "mag = image ÷ actual"),
+             ("2", "UNITS CHECK", "both in mm?"),
+             ("3", "SUBSTITUTE", "60 ÷ 0.15"),
+             ("4", "ANSWER", "×400  (no unit)")]
+    rows = "".join(
+        f'<g style="animation:ilmRise .45s ease-out both;animation-delay:{0.5+i*0.25:.2f}s">'
+        f'<circle cx="60" cy="{78+i*40}" r="13" fill="{V}" fill-opacity="0.4" stroke="{V}" stroke-width="1.8"/>'
+        f'<text x="60" y="{83+i*40}" text-anchor="middle" font-size="13" font-weight="800" fill="{_INK}">{n}</text>'
+        f'<text x="84" y="{76+i*40}" font-size="12.5" font-weight="800" fill="{_INK}">{lab}</text>'
+        f'<text x="84" y="{92+i*40}" font-size="12" fill="#475569">{val}</text></g>'
+        for i, (n, lab, val) in enumerate(lines))
+    cmds = [("CALCULATE", "number + working", V),
+            ("DESCRIBE", "what you see", OCHRE),
+            ("ESTIMATE", "use the scale bar", GROW)]
+    card = "".join(
+        f'<g style="animation:ilmPop .4s ease-out both;animation-delay:{1.4+i*0.15:.2f}s">'
+        f'<rect x="360" y="{70+i*46}" width="230" height="38" rx="8" fill="{col}" fill-opacity="0.10" stroke="{col}" stroke-width="1.8"/>'
+        f'<text x="374" y="{88+i*46}" font-size="13" font-weight="800" fill="{col}">▸ {cw}</text>'
+        f'<text x="374" y="{102+i*46}" font-size="11.5" fill="#475569">{ask}</text></g>'
+        for i, (cw, ask, col) in enumerate(cmds))
+    inner = (_hdr(150, "Four lines, every calculation", y=36)
+             + _hdr(475, "Read the command word", y=36)
+             + rows + card)
+    return dict(
+        alt=("A worked exam answer laid out as four numbered lines: equation, units check, "
+             "substitute, answer with no unit. Beside it a command-word card: CALCULATE means "
+             "number plus working, DESCRIBE means what you see, ESTIMATE means use the scale bar."),
+        cap=("Every calculation, four lines: equation, units check, substitute, answer. And the "
+             "command word decides the shape — ▸ CALCULATE, ▸ DESCRIBE, ▸ ESTIMATE ask for "
+             "different things."),
+        svg=_svg(inner))
+
+
 ILLUMINATORS = {
     "SCI_B_W3_Backbones": backbones,
+    "SCI_L_W3_L1_Microscopy": launch_microscope,
+    "SCI_L_W3_L2_Magnification": launch_formula_triangle,
+    "SCI_L_W3_L3_ExamSkills": launch_exam_method,
     "SCI_B_W4_Muscle_Pairs": muscle_pairs,
     "SCI_B_W5_Right_Nutrition": what_body_needs,
     "SCI_B_W6_Balanced_Plate": balanced_plate,
