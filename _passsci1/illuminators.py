@@ -535,9 +535,114 @@ def launch_exam_method():
         svg=_svg(inner))
 
 
+# ================================================================ LAUNCH W4 · L1
+def launch_diffusion():
+    V = VIOLET
+    import random as _r  # not used; keep deterministic below
+    # two chambers separated by a dashed membrane
+    left = "".join(f'<circle cx="{60 + (i % 6) * 18}" cy="{80 + (i // 6) * 18}" r="4" fill="{V}"/>'
+                   for i in range(24))
+    right = "".join(f'<circle cx="{360 + (i % 3) * 30}" cy="{86 + (i // 3) * 30}" r="4" fill="{_MUTE}"/>'
+                    for i in range(6))
+    chambers = (
+        f'<rect x="44" y="64" width="200" height="120" rx="8" fill="{V}" fill-opacity="0.06" stroke="{_INK}" stroke-width="2"/>'
+        f'<rect x="352" y="64" width="200" height="120" rx="8" fill="{_MUTE}" fill-opacity="0.06" stroke="{_INK}" stroke-width="2"/>'
+        f'<line x1="298" y1="60" x2="298" y2="188" stroke="{_INK}" stroke-width="2.5" stroke-dasharray="5 5"/>'
+        + left + right)
+    net = (_arrow(250, 110, 346, 110, V, 6)
+           + f'<text x="298" y="100" text-anchor="middle" font-size="12" font-weight="800" fill="{V}">NET MOVEMENT</text>'
+           + _arrow(346, 150, 250, 150, _MUTE, 2))
+    factors = "".join(
+        _lbl(40 + i * 200, 210, 180, tag, col, 0.9 + i * 0.15, h=22, fs=11)
+        for i, (tag, col) in enumerate([("↑ STEEPER GRADIENT", V), ("↑ HIGHER TEMPERATURE", OCHRE),
+                                        ("↑ MORE SURFACE AREA", GROW)]))
+    inner = (_lbl(70, 40, 150, "● HIGH CONCENTRATION", V, 0.6, h=22, fs=11)
+             + _lbl(372, 40, 150, "○ LOW CONCENTRATION", _INK, 0.75, h=22, fs=11)
+             + chambers + net + factors)
+    return dict(
+        alt=("Two chambers either side of a dashed membrane. The left is densely dotted, tagged "
+             "circle HIGH CONCENTRATION; the right is sparsely dotted, tagged open-circle LOW "
+             "CONCENTRATION. A thick arrow labelled NET MOVEMENT points from high to low. Three "
+             "tags below name what speeds diffusion up: steeper gradient, higher temperature, "
+             "more surface area."),
+        cap=("Diffusion is the NET movement from ● high to ○ low concentration, down the gradient. "
+             "It goes faster with a steeper gradient, higher temperature or more surface area."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W4 · L2
+def launch_gas_exchange():
+    V = VIOLET
+    # alveolus + capillary
+    alv = (f'<circle cx="150" cy="140" r="60" fill="#fff" stroke="{_INK}" stroke-width="2.5"/>'
+           f'<text x="150" y="145" text-anchor="middle" font-size="12" font-weight="800" fill="{_INK}">alveolus</text>'
+           f'<path d="M 205 100 Q 250 140 205 180" fill="none" stroke="#b91c1c" stroke-width="10" stroke-opacity="0.35"/>'
+           f'<text x="238" y="205" text-anchor="middle" font-size="10.5" fill="#7f1d1d">capillary</text>')
+    o2 = _arrow(180, 120, 214, 128, V, 3) + f'<text x="196" y="112" font-size="11" font-weight="800" fill="{V}">● O2 IN</text>'
+    co2 = _arrow(214, 172, 180, 164, _INK, 3) + f'<text x="150" y="200" font-size="11" font-weight="800" fill="{_INK}">○ CO2 OUT</text>'
+    # two limewater tubes
+    tubes = (
+        f'<rect x="470" y="90" width="26" height="100" rx="10" fill="#e0f2fe" stroke="{_INK}" stroke-width="2"/>'
+        f'<text x="483" y="210" text-anchor="middle" font-size="10" font-weight="800" fill="{_INK}">CLEAR</text>'
+        f'<rect x="540" y="90" width="26" height="100" rx="10" fill="#d9cbe6" stroke="{_INK}" stroke-width="2"/>'
+        f'<text x="553" y="210" text-anchor="middle" font-size="10" font-weight="800" fill="{_INK}">CLOUDY</text>')
+    inner = (_hdr(150, "Gas exchange in one alveolus", y=32)
+             + _hdr(518, "limewater test", y=32)
+             + alv + o2 + co2 + tubes
+             + _lbl(300, 60, 140, "■ LARGE SURFACE AREA", V, 0.9, h=20, fs=10)
+             + _lbl(300, 86, 150, "■ WALL ONE CELL THICK", V, 1.05, h=20, fs=10)
+             + _lbl(300, 112, 150, "■ GOOD BLOOD SUPPLY", V, 1.2, h=20, fs=10)
+             + _lbl(452, 214, 130, "clear = no CO2", _MUTE, 1.3, h=18, fs=9.5)
+             + _lbl(524, 214, 130, "cloudy = CO2 present", V, 1.35, h=18, fs=9.5))
+    return dict(
+        alt=("A single alveolus wrapped by a capillary. An arrow tagged O2 IN shows oxygen "
+             "diffusing into the blood; an arrow tagged CO2 OUT shows carbon dioxide diffusing out. "
+             "Three adaptation tags: large surface area, wall one cell thick, good blood supply. "
+             "Beside it, a clear limewater tube (no CO2) and a cloudy one (CO2 present)."),
+        cap=("At the alveolus, ● O2 diffuses in and ○ CO2 diffuses out — helped by a large surface "
+             "area, a one-cell-thick wall and a good blood supply. Cloudy limewater is the evidence "
+             "the body makes CO2."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W4 · L3
+def launch_diffusion_exam():
+    V = VIOLET
+    cards = (
+        f'<rect x="40" y="70" width="250" height="40" rx="8" fill="{V}" fill-opacity="0.10" stroke="{V}" stroke-width="1.8"/>'
+        f'<text x="54" y="88" font-size="13" font-weight="800" fill="{V}">▸ DESCRIBE</text>'
+        f'<text x="54" y="104" font-size="11.5" fill="#475569">what happens</text>'
+        f'<rect x="40" y="120" width="250" height="40" rx="8" fill="{OCHRE}" fill-opacity="0.10" stroke="{OCHRE}" stroke-width="1.8"/>'
+        f'<text x="54" y="138" font-size="13" font-weight="800" fill="{OCHRE}">▸ EXPLAIN</text>'
+        f'<text x="54" y="154" font-size="11.5" fill="#475569">why … because</text>')
+    pts = [("1", "higher O2 in the alveolus"),
+           ("2", "so it diffuses down the gradient"),
+           ("3", "wall one cell thick → short distance")]
+    ans = "".join(
+        f'<g style="animation:ilmRise .45s ease-out both;animation-delay:{0.6+i*0.25:.2f}s">'
+        f'<circle cx="360" cy="{82+i*44}" r="13" fill="{V}" fill-opacity="0.4" stroke="{V}" stroke-width="1.8"/>'
+        f'<text x="360" y="{87+i*44}" text-anchor="middle" font-size="13" font-weight="800" fill="{_INK}">{n}</text>'
+        f'<text x="384" y="{87+i*44}" font-size="12" fill="{_INK}">{t}</text></g>'
+        for i, (n, t) in enumerate(pts))
+    inner = (_hdr(155, "Command word decides the shape", y=40)
+             + _hdr(470, "3 marks → 3 points", y=40)
+             + cards + ans)
+    return dict(
+        alt=("A command-word card: DESCRIBE means what happens, EXPLAIN means why, using because. "
+             "Beside it a 3-mark explain answer broken into three numbered points: higher oxygen in "
+             "the alveolus, so it diffuses down the gradient, and the wall is one cell thick giving "
+             "a short distance."),
+        cap=("▸ DESCRIBE asks what happens; ▸ EXPLAIN asks why. A 3-mark explain needs three "
+             "points: direction, gradient, adaptation."),
+        svg=_svg(inner))
+
+
 ILLUMINATORS = {
     "SCI_B_W3_Backbones": backbones,
     "SCI_L_W3_L1_Microscopy": launch_microscope,
+    "SCI_L_W4_L1_Diffusion": launch_diffusion,
+    "SCI_L_W4_L2_GasExchange": launch_gas_exchange,
+    "SCI_L_W4_L3_ExamSkills": launch_diffusion_exam,
     "SCI_L_W3_L2_Magnification": launch_formula_triangle,
     "SCI_L_W3_L3_ExamSkills": launch_exam_method,
     "SCI_B_W4_Muscle_Pairs": muscle_pairs,
