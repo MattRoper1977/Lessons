@@ -1109,3 +1109,24 @@ building meant the whole episode cost zero repo changes.
   silently re-scores existing training is worse than the gap it closed. The rejected alternative (Option 2 — leave
   the legend false for two of sixteen items, rely on a card outside the flow to rescue it) was refused as both a
   cached-claim and a second instance of R-H10.
+
+### R-E15 · A pass perturbs the corpus its own instruments measure — verdict-invariance is a SAME-TREE proof
+- **STATUS** CONVENTION · **VERIFIED** `eea4062` (Pass Y close; earned by the gate-(c) DIFFERS diagnosis)
+- **The rule.** A pass adds files to the tree — `_passX/` records, `FINDINGS`, `REGISTER`/`HANDOVER` edits —
+  and those files are **corpus members** of any instrument scoped to the tree (`identity_audit`, `hash_sweep`,
+  `link_graph` scan *all* tracked files; `print_pack_audit`/`assessed_conditions_gate` scope to `*.html`/the
+  two assessed files and so do **not** move). Therefore a corpus-scoped verdict is **NOT invariant across a
+  before/after TREE comparison** — the pass changed the corpus, not only the tool.
+- **How invariance is actually proved.** A **CONTROLLED SAME-TREE comparison**: the same tree, the instrument
+  **with and without** the change (swap the pre-change tool in place — resolve `REPO` from `__file__`, so run it
+  from the real tools dir, never a copy elsewhere), and compare stdout. That, plus "stdout is valid JSON with
+  zero banner lines", is what proves a change added nothing to the verdict. The gate-(c) DIFFERS in Pass Y had
+  an easy wrong reading — *banner leakage* — sitting right beside the true one: the pass's own new `_passy/`
+  file entered the corpus. The same-tree re-proof is the instrument that tells them apart.
+- **The presumption, so the next session does not hunt a phantom.** A corpus count that **moves across a merge
+  is PRESUMED corpus growth until the same-tree comparison says otherwise** — reconcile before reporting a
+  defect. **Corollary for merge sessions:** after each of several merges (the in-flight branches in
+  `HANDOVER.md`), expect corpus-scoped figures to move; **that movement is arithmetic, not regression.**
+- **One family with R-E11 and R-E12.** An instrument's number means nothing without its **unit** (R-E11), its
+  **stream** (R-E12), and its **tree** (this entry). All three are the same lesson: a count read without its
+  frame is a false signal waiting to be believed.
