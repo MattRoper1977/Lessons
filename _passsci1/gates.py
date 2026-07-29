@@ -201,10 +201,25 @@ def gate6_exitleak(html, exit_keys):
     m = re.search(r'<div id="print-area">.*?</div>\s*<script', html, re.S) \
         or re.search(r'<div id="print-area">(.*)$', html, re.S)
     area = m.group(0) if m else ""
-    em = re.search(r'<div id="print-exit"[^>]*>.*?</div>', area, re.S)
-    exit_sec = em.group(0) if em else ""
+    # Split print-area into sections at each '<div id="print-..."' boundary (sections are
+    # siblings; each contains nested divs, so a non-greedy </div> match cannot be used).
+    chunks = re.split(r'(?=<div id="print-)', area)
+    sec = {}
+    for c in chunks:
+        mm = re.match(r'<div id="(print-[a-z-]+)"', c)
+        if mm:
+            sec[mm.group(1)] = c
+    # Teaching surfaces that LEGITIMATELY carry facts, WAGOLLs and model sentence-stems: a KO
+    # fact or a WAGOLL that also happens to equal an exit answer (e.g. the magnification
+    # equation, which is ko_facts[0] AND the supported exit answer) is not an answer-key leak.
+    # §6 protects against a printed answer KEY, enforced by 6a (no answer-class in print) and
+    # 6b (no answer inside print-exit). 6c scans everything EXCEPT those teaching surfaces.
+    EXEMPT = {"print-ko", "print-wedo", "print-scaffold-supported",
+              "print-scaffold-standard", "print-scaffold-stretch"}
+    non_teaching = "".join(t for sid, t in sec.items() if sid not in EXEMPT)
     norm = lambda s: re.sub(r"\s+", " ", s).strip()
-    narea, nexit = norm(area), norm(exit_sec)
+    nexit = norm(sec.get("print-exit", ""))
+    nrest = norm(non_teaching)
     fails = []
     if 'class="answer"' in area:
         fails.append("answer-class element present inside print-area (structural leak)")
@@ -212,9 +227,9 @@ def gate6_exitleak(html, exit_keys):
         pk = norm(k)
         if len(pk) > 8 and pk in nexit:
             fails.append(f"exit answer inside print-exit: {pk[:40]!r}")
-        if len(pk) >= 30 and pk in narea:
-            fails.append(f"distinctive exit answer in print-area: {pk[:40]!r}")
-    return (not fails), f"{len(exit_keys)} exit answers checked (structural + in-exit + distinctive)", fails
+        if len(pk) >= 30 and pk in nrest:
+            fails.append(f"distinctive exit answer outside teaching surfaces: {pk[:40]!r}")
+    return (not fails), f"{len(exit_keys)} exit answers checked (structural + in-exit + distinctive/non-teaching)", fails
 
 
 def run(html_path, exit_keys, jsdom_main):

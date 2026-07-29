@@ -17,6 +17,7 @@ import json
 import pathlib
 import shutil
 import sys
+import re
 
 REPO = pathlib.Path("/workspace/lessons")
 OUT = REPO / "_passsci1/out"
@@ -24,8 +25,26 @@ RES = REPO / "resources.json"
 ADDED = "2026-07-29"
 SUBJECT = "Science · Teesside"
 FAMILY = "Science Teesside"
-TIER_DIR = {"content_build": "Build", "content_grow": "Grow", "content_launch": "Launch"}
-TIER_ID = {"content_build": "b", "content_grow": "g", "content_launch": "l"}
+def _tier(modname):
+    """Resolve (folder, id-letter) from a content module name. LAUNCH topics are split
+    across per-topic modules (content_launch_t1 ...), all landing in Science_Teesside/Launch."""
+    if modname.startswith("content_build"):
+        return "Build", "b"
+    if modname.startswith("content_grow"):
+        return "Grow", "g"
+    if modname.startswith("content_launch"):
+        return "Launch", "l"
+    raise ValueError(f"unknown content module: {modname}")
+
+
+class _D:
+    def __getitem__(self, k):
+        return _tier(k)[0]
+class _I:
+    def __getitem__(self, k):
+        return _tier(k)[1]
+TIER_DIR = _D()
+TIER_ID = _I()
 
 sys.path.insert(0, str(REPO / "_passsci1/inputs"))
 
@@ -39,11 +58,14 @@ def entries_for(modname):
         slug = L["slug"]
         rel = f"Science_Teesside/{tdir}/{slug}.html"
         kw = [mod.PATHWAY.lower(), "science", f"week {L['week']}"] + [t for t, _ in L["ko_vocab"][:4]]
+        # LAUNCH runs 3 lessons per SoW week, so week alone is not unique -> derive from slug.
+        eid = (f"sci-tees-l-{re.sub(r'[^a-z0-9]+', '-', slug.lower()).strip('-')}"
+               if tid == "l" else f"sci-tees-{tid}-w{L['week']}")
         out.append({
             "subject": SUBJECT,
             "title": f'{mod.PATHWAY} · {L["title"]}',
             "file": rel,
-            "id": f"sci-tees-{tid}-w{L['week']}",
+            "id": eid,
             "type": "lesson",
             "family": FAMILY,
             "keywords": [k.lower() for k in kw],
@@ -77,7 +99,12 @@ def main(modnames):
     data = json.loads(raw)
     assert isinstance(data, list), "resources.json is not a list"
     n0 = len(data)
-    data = [e for e in data if not str(e.get("id", "")).startswith("sci-tees-")]  # idempotent
+    # idempotent, but ONLY for the tiers being placed now (don't disturb other committed tiers)
+    tiers_now = {TIER_ID[m] for m in modnames}
+    def _tier_of(e):
+        p = str(e.get("id", "")).split("-")
+        return p[2] if len(p) > 2 and p[0] == "sci" and p[1] == "tees" else None
+    data = [e for e in data if _tier_of(e) not in tiers_now]
     new_entries = []
     for modname in modnames:
         new_entries += entries_for(modname)
