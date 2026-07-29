@@ -4,12 +4,13 @@ Derived **only** from committed records at the landed tip. Nothing invented. Eac
 
 | # | open item | status / blocker | recorded in |
 |--:|---|---|---|
-| 1 | **T2-4 learner-signature** row on ASDAN print packs | awaits Matt's one-line spec (September) | `REGISTER.md` R-RL01 ("EXCLUDED, untouched (await committed spec / Matt): … T2-4 learner-signature") |
+| 1 | **T2-4 learner-signature** row on ASDAN print packs | **CLOSED (2026-07-29)** — approved by Matt's explicit merge-and-close order (the master-order execution + this approval satisfy the "one-line spec"); additive §5 Learner-confirmation block `013121e` merged no-ff to `main` `bc215d1` (rollback `a4cdd36`), 49 ASDAN witness surfaces | `REGISTER.md` R-E20 (the diff) + R-E21 (the close); supersedes R-RL01's "EXCLUDED" framing |
 | 2 | **T2-2 / T2-3 unit codes** ("Delivering a Project" → real GROW GCOMM/ENT unit codes) | blocked — the referenced PEQ unit is NONEXISTENT; needs the committed ASDAN unit spec (the ASDAN PDFs) | `_passpq/FINDINGS.md` §T2-2; `REGISTER.md` R-RL01 |
 | 3 | **Slideshows S/S/S tiering rebuild** (Supported/Standard/Stretch) | deferred to its own lettered pass | `REGISTER.md` R-RL01 ("… Slideshows tiering rebuild") |
 | 4 | **BUILD SoW workbook adoption** | vB (FoodWise-only) is the live instrument audited; vA archived/superseded; workbook-side items are Matt's file, outside repo scope, no patches | `_passsb/FINDINGS.md` §R4 "WORKBOOK-SIDE items" and §3. **Note:** the season-close brief's phrase *"workbook vC-PROPOSED"* does **not** appear in any committed record — the records name **vA (archived)** and **vB (live)** only; corrected here per "invent nothing." |
 | 5 | **Discover & Explore adviser training** | required before Arts Award **Explore** can run at BUILD; a scheme/booking decision (human lead time), Matt's call, not a defect | `_passsb/FINDINGS.md` (l.228, l.324) |
 | 6 | **Assessed residue — `GROW_HUM_W7` `Evaluation clause` KO row** | **AWAITING-WORD** (S4): pupil-rendered `<td>`, so not auto-committable; proposed hunk held verbatim, `GROW_HUM_W7` untouched | `_passe/ASSESSED_RESIDUE_HELD.md` (season-close S4) |
+| 7 | **BUILD_DT witness statements lack the §5 learner line** (`Build/Slideshows/BUILD_DT_W1..W6` — 6 DT decks) | **AWAITING-WORD** — the 6 DT decks carry an Assessor Witness Statement but were **out of T2-4 scope** (ASDAN-only) and correctly left untouched; whether DT evidence needs the same additive §5 Learner-confirmation block is Matt's decision; **no fix made** | Pass PQ T2-4 merge finding (this file); `REGISTER.md` R-E21 |
 
 ## Surviving remote branches with ZERO unique commits vs `main` — safe for Matt's UI deletion
 Enumerated by `git rev-list --count origin/main..origin/<branch>` at `8540eee` (0 = fully merged / no unique work):

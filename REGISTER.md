@@ -1376,3 +1376,19 @@ with §H and the R-H## rules.*
   byte-identical (0 files differ). jsdom DOM parse **0 errors on 49/49**, learner block confirmed inside
   `#print-witness`. Tag balance clean. Print/screen parity: witness + learner block confined to `#print-area`,
   **no on-screen copy** (49/49) — additive change introduces no divergence.
+
+### R-E21 · T2-4 learner-signature MERGED to main — Matt's approval (2026-07-29)
+- **STATUS** CLOSE · merged **no-ff** at `bc215d1` (parents `a4cdd36` + `013121e`, branch tip anchored);
+  **rollback SHA `a4cdd36`**. R-E20 (the diff record) rode in with the merge; not duplicated here.
+- **Authorisation.** Matt's explicit merge-and-close order (2026-07-29), after reading the old→new table and
+  gate results. **Supersedes R-RL01's "EXCLUDED" framing** (superseded, not contradicted) and satisfies
+  `_close/OPEN_ITEMS.md` #1 — now **CLOSED**. T2-4's gate was Matt's explicit word (unlike T2-2/T2-3, which
+  still need the committed spec).
+- **Re-proof at the merged tip.** Byte-diff vs rollback `a4cdd36` confined to the **49 ASDAN files** (`+5/−0`
+  each) + `REGISTER.md` + `_close/OPEN_ITEMS.md`; **no pupil-facing diff beyond the learner block**. Sentinel
+  `ll-g:loop-mark` set **invariant at 45** (empty set diff). RL's `ASDAN Studio` de-double **intact** (0
+  doubled on the 49). **147** inline `<script>` blocks `node --check` clean; jsdom **49/49** with the learner
+  block inside `#print-witness`.
+- **New open item (my finding — no fix).** The 6 `Build/Slideshows/BUILD_DT_W1..W6` witness statements carry
+  **no §5 learner line** — out of T2-4 scope (ASDAN-only), correctly untouched. Whether DT evidence needs the
+  same additive §5 block is **Matt's decision, AWAITING-WORD** (`_close/OPEN_ITEMS.md` #7).
