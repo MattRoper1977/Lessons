@@ -172,7 +172,7 @@ Full list: `python3 LundyLoop/tools/ko_staleness.py`.
 **Written down rather than remembered.** A shelved item with no written trigger either
 gets forgotten, or gets restarted by someone who does not know why it stopped.
 
-8. **`INSTRUMENTS.md` repair.** Three instruments have no entry of their own —
+8. **`INSTRUMENTS.md` repair — LANDED (H-series Route U · H3 `64d8fb4`).** Three instruments had no entry of their own —
    `assessed_conditions_gate.py`, `sitemap_audit.py`, `ko_staleness.py` — while being
    referenced by ID in the blind-twin table and in R-G01. Re-observe R-G01 row 2, whose
    *"6 listed / 6 actual"* went stale silently while its own "what keeps it true" column
@@ -196,7 +196,7 @@ gets forgotten, or gets restarted by someone who does not know why it stopped.
    An instrument must not be modified in the pass it is measuring (**R-E09**). Until
    then the 45 new candidates are an expected artefact, not forty-five stale organisers.
 
-10. **The TA card, both brandings.** Progress Schools variant into the staff pack;
+10. **The TA card, both brandings — LANDED (H-series Route U · H1 `9af1e63`).** Progress Schools variant into the staff pack;
     Made by Matt variant onto the site. One page each, already built and gate-checked
     (REBRAND rules 1–5 clean; ~10 lines of headroom at 110% zoom with the estate font
     substituted).
@@ -274,6 +274,18 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
   H1 → H2 → H3 from a session that actually carries the artefacts in `_intake/` (a local session,
   or artefacts committed to a staging branch — an ephemeral remote clone will not see files
   dropped on a local machine, which is the failure this cluster was commissioned to end).
+- **UPDATE — the H-series LANDED via Route U** (`intake_september.zip`, all four artefact hashes
+  verified against the confirmed v2 manifest; cards taken from the approved tone drafts, not the
+  zip): **H1** `9af1e63` (both TA cards into `5_staff_training/`), **H2** `51d14aa`
+  (`patch_loopmark.py` + `bundle_facts.py` into `tools/`), **H3** `64d8fb4` (INSTRUMENTS.md 13/13
+  both directions + REGISTER R-H11 and R-H08 CLOSED). **Queue 8, 10 and R-G03 are now closed
+  (above).** **Queue 9** (the `ko_staleness.py` R-E07 refinement) is a **separate, gated item —
+  not H-series work** (R-E09 forbids modifying an instrument in a pass that measures it) — and
+  **stays OPEN**; it was not touched by this order. Two dispositioned residues: R-G03's REGISTER
+  STATUS still reads OPEN (its flip was outside H3's confirmed register payload, which carried only
+  the near-match entry + the R-H08 flip); and both TA cards were placed exactly as Matt approved —
+  the Progress card carries no `x-brand` tag and uses `Progress Schools — Tees Valley` rather than
+  the estate strip (REBRAND checks 3–4), flagged, not edited.
 
 ---
 
