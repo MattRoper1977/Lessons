@@ -176,6 +176,22 @@ def s_glance(L):
             f'<div class="content-grid" style="height:auto;grid-template-columns:repeat(3,1fr);gap:14px">{cards}</div></div>')
 
 
+def _clip_box(L, M):
+    """Optional verified clip. §5: a clip that cannot be confirmed embeddable gets a PLAIN
+    LABELLED LINK in both the online and offline copies (never an invented iframe src). No
+    autoplay, opens in a new tab, and the lesson must teach fully without it."""
+    c = L.get("clip")
+    if not c:
+        return ""
+    col = M["COLOUR"]
+    return (f'<div class="clip-box" style="border:2px solid {col};border-left:8px solid {col};'
+            f'border-radius:12px;padding:10px 14px;margin-top:10px;background:{col}12">'
+            f'<strong>📺 Optional clip — {c["source"]}:</strong> '
+            f'<a href="{c["url"]}" target="_blank" rel="noopener noreferrer">{c["label"]}</a>'
+            f'<span style="display:block;font-size:.85rem;color:var(--muted);margin-top:2px">'
+            f'{c["note"]} · needs internet · captions on · this lesson teaches fully without it.</span></div>')
+
+
 def s_ido1(L, M, ilm):
     d = L["ido1"]
     defs = "".join(f"<li><strong>{t}</strong> — {v}</li>" for t, v in L["ko_vocab"][:4])
@@ -184,6 +200,7 @@ def s_ido1(L, M, ilm):
             f'<span class="slide-tag tag-ido">\U0001F469‍\U0001F3EB I Do · watch me think</span>'
             f'<h2>{d["heading"]}</h2>'
             f'<div class="li-box"><strong>\U0001F9E0 Watch me think:</strong> {d["think"]}</div>'
+            f'{_clip_box(L, M)}'
             f'<div class="ilm" role="img" aria-label="{_attr(ilm["alt"])}">{ilm["svg"]}'
             f'<p class="ilm-cap">{ilm["cap"]}</p></div>'
             f'<div class="scaffold-box" style="margin-top:10px"><h3 style="margin-top:0">\U0001F4D6 Key definitions</h3>'

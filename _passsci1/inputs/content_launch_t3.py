@@ -144,6 +144,15 @@ dict(
   week=5, slug="SCI_L_W5_L2_OsmosisCP",
   title="Use: Osmosis Core Practical",
   sow="Aut1·W5 (Use) — Investigate osmosis with the core practical; calculate % change.",
+  # Clip approved by Matt (S4). Ad-free source. Labelled link (Oak page could not be confirmed
+  # embeddable from session — 403 — so no iframe src is fabricated); works in both online and
+  # offline copies; lesson teaches fully without it.
+  clip=dict(
+    source="Oak National Academy · ad-free · Foundation Edexcel",
+    label="Osmosis & sugar concentration on plant tissue — required practical",
+    url="https://www.thenational.academy/teachers/programmes/biology-secondary-ks4-foundation-edexcel/units/coordination-and-control-maintaining-a-constant-internal-environment/lessons/the-effect-of-sugar-concentration-on-the-mass-of-plant-tissue-practical",
+    note="Watch the practical set-up before you run it",
+  ),
   lo="I can carry out the osmosis core practical and calculate the percentage change in mass.",
   sc=[
     "I can name the control variables in the core practical.",
