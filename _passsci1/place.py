@@ -115,6 +115,15 @@ def main(modnames):
         assert (REPO / f).exists(), f"resources entry points at missing file: {f}"
     ids = [e["id"] for e in data if str(e.get("id", "")).startswith("sci-tees-")]
     assert len(ids) == len(set(ids)), "duplicate sci-tees ids"
+    # POST-CONDITION (guards the tier-scoped-strip footgun): every science html on disk MUST
+    # have a resources.json entry, or it is unreachable in the hub. Placing one LAUNCH topic at
+    # a time strips the other topics' launch entries — this assertion fails loudly if that leaves
+    # any file unregistered. Fix: place all modules of a tier together.
+    all_html = {str(p.relative_to(REPO)) for p in (REPO / "Science_Teesside").rglob("*.html")}
+    registered = {e["file"] for e in data if str(e.get("id", "")).startswith("sci-tees-")}
+    orphans = all_html - registered
+    assert not orphans, ("science files on disk with NO resources.json entry (unreachable in the "
+                         f"hub): {sorted(orphans)} — re-run place.py with ALL modules of that tier")
     out = json.dumps(data, ensure_ascii=False, indent=1) + "\n"
     assert json.loads(out) == data, "round-trip mismatch"
     RES.write_text(out, encoding="utf-8")
