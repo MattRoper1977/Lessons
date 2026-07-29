@@ -742,11 +742,120 @@ def launch_osmosis_graph():
         svg=_svg(inner))
 
 
+# ================================================================ LAUNCH W6 · L1
+def launch_transport_compare():
+    V = VIOLET
+    cols = [("↓ DIFFUSION", GROW, ["down", "no", "any particle", "no"]),
+            ("↓ OSMOSIS", BUILD, ["down", "no", "water only", "yes"]),
+            ("↑ ACTIVE TRANS.", V, ["UP", "YES", "dissolved", "yes"])]
+    rows = ["direction", "energy?", "what moves", "membrane?"]
+    parts = []
+    cw = 112
+    x0 = 92
+    # row labels (kept clear of the left edge)
+    for r, rl in enumerate(rows):
+        parts.append(f'<text x="{x0-6}" y="{96+r*30}" text-anchor="end" font-size="10.5" font-weight="700" fill="#475569">{rl}</text>')
+    for c, (head, col, vals) in enumerate(cols):
+        cx = x0 + 6 + c * cw
+        parts.append(f'<rect x="{cx}" y="56" width="{cw-8}" height="{28+4*30}" rx="8" fill="{col}" fill-opacity="0.08" stroke="{col}" stroke-width="1.8"/>')
+        parts.append(_lbl(cx, 58, cw-8, head, col, 0.6+c*0.15, h=22, fs=11))
+        for r, v in enumerate(vals):
+            parts.append(f'<text x="{cx+(cw-8)/2:.0f}" y="{96+r*30}" text-anchor="middle" font-size="11" '
+                         f'font-weight="{"800" if v in ("UP","YES") else "400"}" '
+                         f'fill="{V if v in ("UP","YES") else _INK}">{v}</text>')
+    # small root hair with mitochondria
+    rh = (f'<path d="M 470 90 q 60 10 90 -6" fill="none" stroke="{V}" stroke-width="3"/>'
+          f'<ellipse cx="500" cy="150" rx="46" ry="34" fill="{V}" fill-opacity="0.12" stroke="{V}" stroke-width="2"/>'
+          + "".join(f'<ellipse cx="{482+i*14}" cy="{150+(i%2)*12-6}" rx="7" ry="4" fill="{OCHRE}" fill-opacity="0.6" stroke="{OCHRE}" stroke-width="1"/>' for i in range(4)))
+    inner = (_hdr(215, "Three processes, three questions", y=36)
+             + "".join(parts) + rh
+             + _lbl(452, 190, 130, "⚙ ENERGY FROM RESPIRATION", V, 1.2, h=20, fs=9))
+    return dict(
+        alt=("A three-column comparison table: diffusion (down, no energy, any particle), osmosis "
+             "(down, no energy, water only), and active transport (UP the gradient, needs energy, "
+             "dissolved substances). Beside it a root hair cell with mitochondria tagged energy "
+             "from respiration."),
+        cap=("The three processes on three questions: direction, energy, what moves. Only ↑ active "
+             "transport goes UP the gradient and needs ⚙ energy from respiration."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W6 · L2
+def launch_root_and_gut():
+    V = VIOLET
+    root = (f'<rect x="40" y="70" width="150" height="150" rx="8" fill="#efe7d6" stroke="{_MUTE}" stroke-width="1.5"/>'
+            f'<text x="115" y="86" text-anchor="middle" font-size="9" fill="#6b7280">soil (dilute)</text>'
+            f'<ellipse cx="150" cy="150" rx="34" ry="52" fill="{V}" fill-opacity="0.12" stroke="{V}" stroke-width="2"/>'
+            f'<path d="M 116 150 q -50 0 -74 4" fill="none" stroke="{V}" stroke-width="3"/>'  # hair into soil
+            + "".join(f'<ellipse cx="{140+i*12}" cy="{130+i*14}" rx="7" ry="4" fill="{OCHRE}" fill-opacity="0.6" stroke="{OCHRE}" stroke-width="1"/>' for i in range(3))
+            + _arrow(90, 150, 128, 150, "#b91c1c", 3))   # ion moving in against gradient
+    villus = (f'<path d="M 360 210 Q 375 120 390 210" fill="{V}" fill-opacity="0.14" stroke="{V}" stroke-width="2"/>'
+              f'<path d="M 395 210 Q 410 120 425 210" fill="{V}" fill-opacity="0.14" stroke="{V}" stroke-width="2"/>'
+              + _arrow(383, 175, 383, 145, "#b91c1c", 2.6))
+    # mini graph uptake vs oxygen
+    gx, gy = 470, 90
+    graph = (f'<line x1="{gx}" y1="{gy}" x2="{gx}" y2="{gy+70}" stroke="{_INK}" stroke-width="1.6"/>'
+             f'<line x1="{gx}" y1="{gy+70}" x2="{gx+90}" y2="{gy+70}" stroke="{_INK}" stroke-width="1.6"/>'
+             f'<polyline points="{gx},{gy+66} {gx+45},{gy+40} {gx+88},{gy+8}" fill="none" stroke="{V}" stroke-width="2.5"/>'
+             f'<text x="{gx+45}" y="{gy+86}" text-anchor="middle" font-size="9" fill="{_INK}">oxygen →</text>'
+             f'<text x="{gx-4}" y="{gy+6}" text-anchor="end" font-size="9" fill="{_INK}">uptake</text>')
+    inner = (_hdr(115, "Root hair", y=36) + _hdr(392, "Gut villi", y=36) + _hdr(515, "uptake vs O2", y=36)
+             + root + villus + graph
+             + _lbl(40, 226, 160, "↑ AGAINST THE GRADIENT", "#b91c1c", 1.0, h=20, fs=10)
+             + _lbl(210, 120, 140, "⚙ MANY MITOCHONDRIA", OCHRE, 1.15, h=20, fs=10)
+             + _lbl(345, 226, 120, "↑ GLUCOSE IN", V, 1.25, h=20, fs=10))
+    return dict(
+        alt=("A root hair cell reaching into dilute soil with a red arrow showing a mineral ion "
+             "moving in against the gradient, and mitochondria inside. A small-intestine villus with "
+             "an arrow showing glucose absorbed. A mini-graph shows uptake rising as oxygen rises."),
+        cap=("Root hairs and gut villi both pull substances ↑ against the gradient by active "
+             "transport, powered by ⚙ many mitochondria. The graph shows uptake rising with oxygen — "
+             "the link to respiration."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W6 · L3
+def launch_compare_exam():
+    V = VIOLET
+    rows = [("direction", "down", "UP"), ("energy?", "no", "YES"), ("what moves", "any particle", "dissolved")]
+    tbl = [f'<rect x="40" y="70" width="300" height="{28+3*34}" rx="8" fill="#fff" stroke="{_INK}" stroke-width="1.8"/>',
+           f'<line x1="160" y1="70" x2="160" y2="{70+28+3*34}" stroke="{_MUTE}" stroke-width="1"/>',
+           f'<line x1="250" y1="70" x2="250" y2="{70+28+3*34}" stroke="{_MUTE}" stroke-width="1"/>',
+           f'<text x="205" y="90" text-anchor="middle" font-size="11" font-weight="800" fill="{GROW}">DIFFUSION</text>',
+           f'<text x="295" y="90" text-anchor="middle" font-size="11" font-weight="800" fill="{V}">ACTIVE T.</text>']
+    for r, (rl, d, a) in enumerate(rows):
+        y = 118 + r * 34
+        if rl == "what moves":  # similarity-ish row highlight (both cross membrane) -> highlight header row instead
+            pass
+        tbl.append(f'<text x="52" y="{y}" font-size="10.5" font-weight="700" fill="#475569">{rl}</text>')
+        tbl.append(f'<text x="205" y="{y}" text-anchor="middle" font-size="11" fill="{_INK}">{d}</text>')
+        tbl.append(f'<text x="295" y="{y}" text-anchor="middle" font-size="11" font-weight="{"800" if a in ("UP","YES") else "400"}" fill="{V if a in ("UP","YES") else _INK}">{a}</text>')
+    # shared similarity banner
+    tbl.append(f'<rect x="40" y="{70+28+3*34+6}" width="300" height="24" rx="6" fill="{GOLD}" fill-opacity="0.18" stroke="{GOLD}" stroke-width="1.4"/>')
+    tbl.append(f'<text x="190" y="{70+28+3*34+22}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#8a6d1f">SAME: both cross the membrane</text>')
+    card = (f'<rect x="380" y="90" width="210" height="52" rx="8" fill="{V}" fill-opacity="0.10" stroke="{V}" stroke-width="1.8"/>'
+            f'<text x="394" y="112" font-size="13" font-weight="800" fill="{V}">▸ COMPARE</text>'
+            f'<text x="394" y="130" font-size="11" fill="#475569">similarities AND differences</text>')
+    inner = (_hdr(190, "Compare = both sides", y=36) + _hdr(485, "the command word", y=36)
+             + "".join(tbl) + card)
+    return dict(
+        alt=("A two-column compare table for diffusion versus active transport with rows for "
+             "direction (down vs up), energy (no vs yes) and what moves. A gold banner reads: same, "
+             "both cross the membrane. Beside it a command-word card: COMPARE means similarities "
+             "AND differences."),
+        cap=("A compare answer needs BOTH sides: the SAME (both cross the membrane) and the "
+             "differences (direction, energy). ▸ COMPARE = similarities AND differences."),
+        svg=_svg(inner))
+
+
 ILLUMINATORS = {
     "SCI_B_W3_Backbones": backbones,
     "SCI_L_W3_L1_Microscopy": launch_microscope,
     "SCI_L_W4_L1_Diffusion": launch_diffusion,
     "SCI_L_W5_L1_Osmosis": launch_osmosis,
+    "SCI_L_W6_L1_ActiveTransport": launch_transport_compare,
+    "SCI_L_W6_L2_RootAndGut": launch_root_and_gut,
+    "SCI_L_W6_L3_Compare": launch_compare_exam,
     "SCI_L_W5_L2_OsmosisCP": launch_osmosis_cp,
     "SCI_L_W5_L3_Evaluate": launch_osmosis_graph,
     "SCI_L_W4_L2_GasExchange": launch_gas_exchange,
