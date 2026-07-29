@@ -969,3 +969,57 @@ building meant the whole episode cost zero repo changes.
   correct and **unexecutable against the wrong tree** — and it has **no symptom** where the wrong
   tree happens to hold similarly-named files. The control is one `git remote -v` before any
   measurement, and it has now caught the mis-open on two named passes (SB, and this one).
+
+---
+
+## X · Pass X (instruments) — labelling and identity discipline
+
+*Appended by Pass X (Instrument Integrity), 2026-07-29. Append-only; no existing entry renumbered or re-spaced.
+"Pass X (instruments)" is distinct from the pedagogy "Pass X" closed 2026-07-25 (measurement-only, no commits) — see R-H09.*
+
+### R-E11 · Every recorded constant states its UNIT and its SCOPE in the same string
+- **STATUS** CONVENTION · **VERIFIED** `5ee2147` (Pass X merge exchange)
+- **The defect class, now its third instance.** A constant recorded without its unit or its scope, then
+  re-checked by a different instrument, diverges silently — the number is right about a thing that is not the
+  thing being asserted:
+  - the **45-vs-50 sentinel** — a derivation divergence (two methods, one number, no unit saying which);
+  - the **W8 Silver "16"** — *lines* counted, *occurrences* asserted;
+  - the **"3 commits / 148 insertions" merge gate** (this exchange) — a *subset* counted (X1–X3 tools only),
+    the *whole branch* asserted; it could never have matched the 4-commit branch it was meant to gate.
+- **The rule.** Every recorded constant states its **unit** and its **scope** in the same string —
+  *"16 lines (= 24 occurrences)"*, *"4 commits on branch (X1–X3 tools = 148 insertions; X4 records = 271)"*.
+  **A gate whose constant lacks a unit is ADVISORY, not blocking, until restated. A gate that cannot say what
+  it counted cannot fail you.**
+- **Superseded here:** the 3/148 gate is restated as **4 commits / 419 insertions / 0 deletions (X1–X3 tools =
+  148; X4 records = 271)**. Sibling of R-F06 (mechanise the rule) and R-G01 (a number that leaves its source
+  needs an assertion, not a retype).
+
+### R-G05 · The "37 of 49 KOs" figure — SOURCED to Pass G, UNVERIFIED at HEAD
+- **STATUS** RECORD · sourced, not re-derived
+- Originates in **Pass G's ASDAN Knowledge-Organiser rebuild** (`9f657b6`, *"rebuild the Knowledge Organisers
+  from safe sources (49 lessons)"*): rewriting the We-Do-2 targets is reported to have left **37 of 49 KOs
+  disagreeing with their own slide**. It is a **content-disagreement** claim, **NOT `ko_staleness` output** —
+  that instrument is temporal, reads no content and makes no correctness judgement (R-G02).
+- **Reclassified** from Pass X's initial *"appears nowhere in the record"* (VERDICT_PROVENANCE.md) to **SOURCED
+  (Pass G, ASDAN suite) — UNVERIFIED AT HEAD.** Its status now is unknown; **checking it is a content read that
+  belongs to the KO carry-forward pass, not a `ko_staleness` run.** Do not re-derive it in passing (R-H07: a
+  number quoted across passes inherits an authority it never earned).
+
+### R-H09 · A pass letter is checked against the ledger AND git history — git alone is blind to measurement-only passes
+- **STATUS** CONVENTION · **VERIFIED** `5ee2147`
+- **The instance.** *"Pass X"* was adopted for Instrument Integrity after a git grep showed the letter free.
+  But a pedagogy *"Pass X"* (tier-structure, **closed 2026-07-25**) was **measurement-only and left no commits**,
+  so it is **invisible to a git-history check**. Same shape one turn earlier: a prior content *"Pass W"* existed
+  in commit **subjects** (`2976816`, `71751d2`) and was missed by a `*.md`-only grep — and the earlier **Pass O**
+  double-use. Three instances ⇒ a class, not a coincidence.
+- **The rule.** A pass letter is checked against **`REGISTER.md`/`HANDOVER.md` AND git history** before adoption.
+  **A measurement-only pass leaves no commits**, so git is necessary but not sufficient; the ledger is the other
+  half. **Disambiguator recorded:** *"Pass X (instruments)"* — this pass — vs *"Pass X (pedagogy, closed
+  2026-07-25)"*.
+- **The Careers note, verified against the repo (Ruling 5), because the repo wins.** The Careers **W6/W7 swap**
+  is **Pass H** (`9d19450`, *"post-16 moves to W6, career profile to W7"*) — a **relabel**: the filenames keep
+  their old week numbers, the slot labels swap. It was reverted by the prior *Pass W* and restored at `0706782`.
+  **Pass SB's `143a194`** fixed *"of 6"→"of 7"* on **W1–W5 only**; **Pass U** (timber HT/MB verification, closed)
+  and **Pass X** touched **none** of these files — confirmed by diff. The three do **not interact**; recorded so
+  no later session re-opens it. (Earlier Pass X drafts mis-attributed the swap to Pass U — corrected here: it is
+  Pass H, per the commit.)
