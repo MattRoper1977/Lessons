@@ -46,6 +46,11 @@ def git(*a):
     return subprocess.run(["git", *a], capture_output=True, text=True).stdout
 
 
+def git_rc(*a):
+    p = subprocess.run(["git", *a], capture_output=True, text=True)
+    return p.returncode, p.stdout, p.stderr
+
+
 def paths_in(sha):
     out = git("show", "--pretty=", "--name-only", sha).strip()
     return sorted(p for p in out.splitlines() if p)
@@ -58,6 +63,22 @@ def main(base, mdir):
         print(f"  {'PASS' if ok else 'FAIL'}  {name}" + (f"   {detail}" if detail else ""))
         if not ok:
             fails.append(name)
+
+    # `base..HEAD` is empty and non-erroring to read if `base` is not in history — on a
+    # shallow clone the base commit may sit below the clone's cutoff. Without checking
+    # git's exit code, that empty range reports "commit count found 0", which reads as
+    # "the commits were never created" when the real cause is an unreachable base. Name
+    # the real cause first. (Pass X — earned by the ko_staleness false-zero class.)
+    if git("rev-parse", "--is-shallow-repository").strip() == "true":
+        print("FAIL — shallow clone: base..HEAD cannot be trusted; the base commit may "
+              "be below the history cutoff. Run `git fetch --unshallow` first. "
+              "Nothing checked.")
+        return 1
+    rc, _, _ = git_rc("rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+    if rc != 0:
+        print(f"FAIL — base ref {base!r} does not resolve to a commit in this clone "
+              "(unknown ref, or below a shallow cutoff). Nothing checked.")
+        return 1
 
     shas = [s for s in git("rev-list", "--reverse", f"{base}..HEAD").split() if s]
 

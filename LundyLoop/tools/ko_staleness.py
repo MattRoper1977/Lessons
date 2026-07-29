@@ -42,6 +42,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from preflight import require_full_clone, declare_assumptions  # LL-INST-11
+
 REPO = Path(__file__).resolve().parents[2]
 KO_SLOT = 'id="print-ko"'
 DATA = re.compile(r"data:[a-zA-Z0-9.+/-]+;base64,[A-Za-z0-9+/=\s]+")
@@ -84,8 +86,15 @@ def h(x):
 
 
 def main():
+    # This instrument compares each file across its commit history; a shallow clone
+    # gives every file one commit and would report a FALSE ZERO (0 candidates). Refuse
+    # to run rather than reassure. (Pass X / LL-INST-11; the defect Pass U found.)
+    require_full_clone(REPO)
     files = [p for p in sh("git", "ls-files", "-z", "*.html").split("\0") if p]
     ko_files = [f for f in files if KO_SLOT in sh("git", "show", f"HEAD:{f}")]
+    declare_assumptions(["full clone", f'{len(ko_files)}-file KO corpus (id="print-ko")',
+                         "network not required",
+                         "co-modification is a consistency proxy, not consistency"])
     print(f"files carrying a KO block: {len(ko_files)}")
 
     rows, clean, arch_only = [], 0, 0
