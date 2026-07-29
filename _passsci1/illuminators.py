@@ -223,7 +223,7 @@ def food_chain():
             f'<g style="animation:ilmPop .45s ease-out both;animation-delay:{0.4+i*0.3:.2f}s">'
             f'<circle cx="{cx}" cy="140" r="40" fill="{col}" fill-opacity="0.16" stroke="{col}" stroke-width="2.4"/>'
             f'<text x="{cx}" y="146" text-anchor="middle" font-size="15" font-weight="800" fill="{_INK}">{name}</text></g>')
-        parts.append(_lbl(cx - 92, 190, 184, tag, col, 1.2 + i * 0.2, fs=11))
+        parts.append(_lbl(cx - 88, 190, 176, tag, col, 1.2 + i * 0.2, fs=11))
     arrows = ""
     for (x0, x1) in [(140, 275), (370, 505)]:
         arrows += _arrow(x0, 140, x1, 140, _INK, 3)
@@ -247,7 +247,7 @@ def friction():
     # Frame 1 rough (ramp left), short travel; Frame 2 smooth (ramp right), long travel
     for i, (x, head, hatch, dist, col) in enumerate(
             [(60, "■ ROUGH SURFACE · MORE FRICTION", True, 40, GROW),
-             (360, "▭ SMOOTH SURFACE · LESS FRICTION", False, 150, OCHRE)]):
+             (360, "▭ SMOOTH SURFACE · LESS FRICTION", False, 116, OCHRE)]):
         parts.append(f'<line x1="{x}" y1="90" x2="{x+150}" y2="180" stroke="{_INK}" stroke-width="4"/>')
         parts.append(f'<line x1="{x}" y1="180" x2="{x+230}" y2="180" stroke="{_INK}" stroke-width="4"/>')
         if hatch:
@@ -592,8 +592,7 @@ def launch_gas_exchange():
              + _lbl(300, 60, 140, "■ LARGE SURFACE AREA", V, 0.9, h=20, fs=10)
              + _lbl(300, 86, 150, "■ WALL ONE CELL THICK", V, 1.05, h=20, fs=10)
              + _lbl(300, 112, 150, "■ GOOD BLOOD SUPPLY", V, 1.2, h=20, fs=10)
-             + _lbl(452, 214, 130, "clear = no CO2", _MUTE, 1.3, h=18, fs=9.5)
-             + _lbl(524, 214, 130, "cloudy = CO2 present", V, 1.35, h=18, fs=9.5))
+             + _lbl(454, 214, 132, "clear → cloudy = CO2", V, 1.3, h=18, fs=9.5))
     return dict(
         alt=("A single alveolus wrapped by a capillary. An arrow tagged O2 IN shows oxygen "
              "diffusing into the blood; an arrow tagged CO2 OUT shows carbon dioxide diffusing out. "

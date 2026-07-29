@@ -20,14 +20,25 @@ import pathlib
 HERE = pathlib.Path(__file__).parent
 
 
+# The universe, declared (R-G06 corollary): an emitter that names its sentinel joins the population
+# it counts, so it MUST state its exclusions in output, not merely enact them in code.
+UNIVERSE = ("universe = TRACKED *.html (git grep -- '*.html'). EXCLUDED by construction: gitignored "
+            "build artefacts (_passsci1/out, _passsci1/pack) and all non-html tooling/docs that merely "
+            "mention 'll-g:loop-mark' (this emitter, render_v5.py, FINDINGS*.md, REGISTER.md, …).")
+
+
 def files_at(ref):
     r = subprocess.run(["git", "grep", "-I", "-l", "ll-g:loop-mark", ref, "--", "*.html"],
                        capture_output=True, text=True, cwd=HERE.parent)
     out = [l.split(":", 1)[1] for l in r.stdout.splitlines() if ":" in l]
+    # Belt-and-braces: even within tracked *.html, drop anything under the emitter's own tooling
+    # tree, so the instrument provably cannot count itself. (None today, but declared and enforced.)
+    out = [f for f in out if not f.startswith("_passsci1/")]
     return sorted(out)
 
 
 def main(argv):
+    print(f"# {UNIVERSE}")
     if len(argv) == 2:
         base = files_at(argv[0])
         head = files_at(argv[1])

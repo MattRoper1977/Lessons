@@ -1392,3 +1392,28 @@ with §H and the R-H## rules.*
 - **New open item (my finding — no fix).** The 6 `Build/Slideshows/BUILD_DT_W1..W6` witness statements carry
   **no §5 learner line** — out of T2-4 scope (ASDAN-only), correctly untouched. Whether DT evidence needs the
   same additive §5 block is **Matt's decision, AWAITING-WORD** (`_close/OPEN_ITEMS.md` #7).
+
+### R-G06 · A count is meaningless without its universe (Pass SCI, 2026-07-29)
+- **The rule.** A number is not a measurement until its **universe** is named. Two axes have to be
+  stated every time: *tracked (git) vs working tree vs raw filesystem*, and *`*.html` vs all files*.
+  The same sentinel read **45 · 51 · 70 · 76 · 79 · 235** across one pass — none of them a counting
+  error, all of them universe errors:
+  - **45 / 70** — tracked `*.html` at `8540eee` / at HEAD after the 25 science lessons. The gate's
+    universe (`grep … -- '*.html'`), and the only stable one. Delta +25, exactly the lessons.
+  - **51 / 79** — all-files at fork / now. *Unstable*, and this is the finding: it grew by more than
+    the 25 lessons because the pass's **own committed tooling mentions the string it counts**
+    (`render_v5.py`, `sentinel.py`, `FINDINGS*.md`, and this `REGISTER.md` — 13 mentions here alone).
+  - **76** — a *predicted* `51+25`, never derived. The cached-claim shape (R-G01) in one number.
+  - **235** — a raw filesystem grep that swept the gitignored `out/` and `pack/` build artefacts.
+- **The corollary (the reusable half).** An instrument that **names** the sentinel it counts **joins
+  the population it counts.** Every sentinel emitter must therefore exclude its own tooling and the
+  gitignored trees **explicitly, and say so in its output** — not merely in its code, or the exclusion
+  is itself an unverifiable claim. `_passsci1/sentinel.py` now derives from `git grep … -- '*.html'`
+  (tracked only, artefacts excluded by construction) at emit time and prints both the universe and the
+  file list. No number is carried between reports.
+- **The family.** This is the R-G01 / R-G03 cached-claim shape one axis further out: R-G01 is prose
+  asserting something about elsewhere; R-G03 is the cached-claim landing on the entry that catalogues
+  cached claims; R-G06 is the *unit of measure* being unstated so that the same instrument reads six
+  different true numbers. Independently corroborated: R-E21 (T2-4, same day) recorded the sentinel
+  "invariant at 45" — the `*.html` universe — while SCI-1 was quoting 51. Both were right about
+  different universes; only one said which.

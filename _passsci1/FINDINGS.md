@@ -8,7 +8,15 @@ was done, committed with the work. Companion to `/REGISTER.md` (constraints) and
 (5), LAUNCH 5 topics × Discover/Use/Master (15) — each an animated illuminator, a sort/match
 We-Do-2, a 3-tier print pack with the Assessor Witness Statement and the canonical loop-mark
 strip. Plus: both staff packs rebuilt, and the planner Science rows W03–07 for all three
-pathways. Base pinned at `8540eee`; rebased forward onto the second writer's moving `main`.
+pathways. Base pinned at `8540eee`; rebased forward onto `main` as it advanced during the pass.
+
+> **Retraction (SCI-3, 2026-07-29).** ~~rebased forward onto the *second writer's* moving `main`~~ —
+> the "second writer" framing is retracted. `main` did advance during the pass with commits my
+> session did not author (`a4cdd36`, `013121e`/`bc215d1`, `2236d0b`), but those are **Claude-authored
+> commits from other passes** (PQ / Season-close / T2-4), several "approved by Matt" — not an
+> established separate writer. What survives, directly observed: commits appeared on `main` that this
+> session did not create. The sentinel never corroborated a "second writer", and `main` advancing
+> without adding loop-mark HTML is not evidence either way of who authored those commits.
 
 ---
 
