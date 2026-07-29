@@ -55,18 +55,18 @@ h1{font-size:26px;color:var(--navy);margin:6px 0}
 <div class="card">
 <div class="eyebrow">Progress Schools Tees Valley · Lundy Loop · Staff calibration</div>
 <h1>Is this an R?</h1>
-<p class="sub" id="screen-note">Fourteen real-shaped scenarios. Vote as a room before revealing. The disagreements are the point — calibration happens in the argument, not the answer. Printing this page produces scenario cards with answers for table-top use.</p>
-<div class="legend"><b>Closed (R)</b> = Voice happened AND an adult genuinely received it · <b>Not yet</b> = Voice present, Audience pending · <b>No</b> = the loop hasn't genuinely run · <b>Firewall</b> = feedback stops, safeguarding takes precedence</div>
+<p class="sub" id="screen-note">Sixteen real-shaped scenarios. Vote as a room before revealing. The disagreements are the point — calibration happens in the argument, not the answer. Printing this page produces scenario cards with answers for table-top use.</p>
+<div class="legend"><b>Closed</b> = the loop reached its pathway's close — BUILD: an adult genuinely received it (R); GROW/LAUNCH: the pupil wrote the line, no adult initial expected · <b>Not yet</b> = Voice present, Audience pending · <b>No</b> = the loop hasn't genuinely run · <b>Firewall</b> = feedback stops, safeguarding takes precedence</div>
 </div>
 <div class="card" id="pathway">
 <div class="eyebrow">Read this before you calibrate · which pathway are you in?</div>
 <h1 style="font-size:20px;margin:6px 0 2px">This game is the BUILD close. GROW and LAUNCH close differently.</h1>
-<p class="sub">All fourteen scenarios below key on one test — <b>Voice happened AND an adult genuinely received it</b>. That test is <b>correct for BUILD, and only for BUILD</b>. Carry it into a GROW or LAUNCH room and you will hunt for a receipt that is not meant to exist.</p>
+<p class="sub">Fourteen of the sixteen scenarios below key on one test — <b>Voice happened AND an adult genuinely received it</b> — which is <b>correct for BUILD, and only for BUILD</b>. Carry it into a GROW or LAUNCH room and you will hunt for a receipt that is not meant to exist. The last two scenarios are GROW and LAUNCH, where the pupil's written line is the close.</p>
 <div class="pathgrid">
 <div class="pway build">
 <span class="tag">BUILD</span>
 <h3>Closes on adult receipt — ring + R</h3>
-<p>The pupil makes the ring; the adult receives it and adds the initial, on the pupil's own printed sheet. The fourteen scenarios are calibrated for exactly this. Ring and R stand as taught — one copy, on the sheet, never transcribed.</p>
+<p>The pupil makes the ring; the adult receives it and adds the initial, on the pupil's own printed sheet. The fourteen BUILD scenarios are calibrated for exactly this. Ring and R stand as taught — one copy, on the sheet, never transcribed.</p>
 </div>
 <div class="pway grow">
 <span class="tag">GROW · LAUNCH</span>
@@ -97,9 +97,11 @@ const SCENARIOS=[
 {s:"English",t:"Teacher marks every book with R at the end of term so the sample 'looks complete'.",a:2,w:"No — this is R as decoration, the failure mode the whole policy is built against. An R without a received response is a false record."},
 {s:"D&T / Food",t:"Pupil adjusts oven timing after verbal feedback; the dish improves; the teacher tastes it and sets a harder brief.",a:0,w:"Fully closed, entirely practical. VF needs no written record; the improved outcome received and acted upon is the evidence."},
 {s:"Music",t:"Pupil records a second take at home unprompted and mentions it in passing; no one listens to it.",a:1,w:"Voice — self-initiated, which is gold. But until an adult genuinely listens, Audience hasn't happened. Two minutes of listening closes it."},
-{s:"Science",t:"Pupil answers the NS+ correctly; teacher reads it, says 'good', and nothing about the next lesson changes for anyone.",a:1,w:"The contested one — Voice and Audience happened, so many rooms will (reasonably) say Closed. Strictly, Influence is the thin link here: 'good' received it, but nothing moved. At minimum the pupil's next challenge should step up. Argue this one out — it's where the loop becomes teaching."}
+{s:"Science",t:"Pupil answers the NS+ correctly; teacher reads it, says 'good', and nothing about the next lesson changes for anyone.",a:1,w:"The contested one — Voice and Audience happened, so many rooms will (reasonably) say Closed. Strictly, Influence is the thin link here: 'good' received it, but nothing moved. At minimum the pupil's next challenge should step up. Argue this one out — it's where the loop becomes teaching."},
+{s:"GROW",t:"GROW room. A pupil has written their line for the session. There is no R box on the sheet, no initial line, and no adult has signed anything.",a:0,w:"Closed. Nothing is missing — on GROW the pupil writing the line is the close, and no adult initial is expected. The tempting wrong answer is 'Not yet', as if an audience were pending; nothing is pending — the close already happened when the pupil wrote the line. There is no R box because none is wanted, and supplying one here is receipt by the back door — a false record."},
+{s:"LAUNCH",t:"LAUNCH room. A pupil wrote their line earlier, then leaves early on a trip and never does the end-of-day re-read of it.",a:0,w:"Closed. The line closed when the pupil wrote it — writing it is what closes it. The day-close re-read is a strengthening, not a requirement: a day whose close never happened is still a closed day. 'Not yet' and 'catch it up tomorrow' are both the wrong answer — a backlog of unread lines becomes a portfolio someone audits."}
 ];
-const LABELS=["Closed (R)","Not yet","No","Firewall"];
+const LABELS=["Closed","Not yet","No","Firewall"];
 let idx=0,score=0;
 const game=document.getElementById('game');
 function render(){
@@ -133,7 +135,7 @@ function pick(i){
  document.getElementById('next').focus();
 }
 function renderSummary(){
- const msg=score>=12?"Tightly calibrated — this room can coach others.":score>=9?"Well calibrated. Revisit the ones that split the room.":"A healthy starting point — the disagreements you just had are the CPD. Run it again next term.";
+ const msg=score>=14?"Tightly calibrated — this room can coach others.":score>=11?"Well calibrated. Revisit the ones that split the room.":"A healthy starting point — the disagreements you just had are the CPD. Run it again next term.";
  game.innerHTML=`<div class="card summary">
   <h2>Calibration complete</h2>
   <div class="stat">${score} / ${SCENARIOS.length}</div>

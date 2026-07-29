@@ -1072,3 +1072,40 @@ building meant the whole episode cost zero repo changes.
   Chromium-capable environment** — that pass adds the banner (proving gate (c) on a real render) and takes the
   gate's verdict. Until then, treat any absence of a `loop_mark_print_gate` result as *not run*, never as
   *clean*.
+
+### R-H10 · A training artefact's corrective content must live on the surface the trainee actually uses
+- **STATUS** CONVENTION · **DECLARED** (Matt, Pass LL-I — the calibration rebuild)
+- **The general form.** *A correction reachable only off the training path trains nobody who stays on it.* Where a
+  training artefact has a surface the trainee actually operates — a game's questions, a checklist's items, a form's
+  fields — corrective content placed anywhere else (a preface card, a footnote, a summary) reaches only the trainee
+  who leaves the path to read it, which is not the one who needs correcting.
+- **The case.** `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` at `a5092bb` carried a faithful, complete
+  GROW/LAUNCH correction — a pathway card, a re-scoped summary, a named false record — **entirely outside the
+  fourteen questions**, every one of which still taught the BUILD adult-receipt close (R-H08). A TA playing to
+  completion answering questions only met the correction as a card they could skip plus one summary sentence. The
+  design's own test was *teachable-by-update*, and **an update the trainee can complete without meeting is not
+  teaching.** Caught by a paper read asking *where in the flow the pathway questions were* — not by any instrument.
+- **The fix that earned this entry:** two GROW/LAUNCH scenarios authored **into the question array itself** (pathway
+  named in the question text, correct answer inside the game's answer model), so a question-only TA now meets both
+  closes on the surface they use. R-H08 stays OPEN pending the paper read of the rebuilt game.
+
+### R-E14 · Extending an artefact by one case can require editing the shared model it scores against
+- **STATUS** CONVENTION · **DECLARED** (Matt, Pass LL-I — the calibration rebuild)
+- **The general form.** *An additive change is not always an additive edit.* Adding one item to a set scored against
+  a shared model (a legend, a rubric, a schema, a gate's predicate) can be un-expressible until the model itself is
+  broadened — and broadening a shared model re-scores **every** item already measured against it. **The keyer
+  lesson: fixing a definition upstream moves everything downstream, and the manifest is only the first consumer you
+  notice.**
+- **The case.** Two GROW/LAUNCH scenarios could not be added to the calibration game truthfully: the only "closed"
+  label was legend-defined as *"Voice happened AND an adult genuinely received it"* — BUILD-only, and the card had
+  already scoped it there. The correct answer for a GROW close had **no truthful label** — exhausting all four was
+  the method that proved the gap, not assumed it (the §2-constraint-1 stop). Adding the two scenarios **forced**
+  broadening label 0's legend to be pathway-relative (Option 1): *Closed = the loop reached its pathway's close;
+  BUILD an adult received it (R), GROW/LAUNCH the pupil wrote the line.* A shared-model edit, not an array append.
+- **The gate this creates, and it is the point.** A shared-model edit re-scores every existing item, so **every one
+  is re-verified against the new model before the edit ships** — here all fourteen pre-existing scenarios, one line
+  each, correct-answer-before vs correct-answer-after: **all fourteen unchanged** (the BUILD branch preserves
+  adult-receipt exactly). *Any* item whose correct answer had moved would have been a STOP — a shared-model edit that
+  silently re-scores existing training is worse than the gap it closed. The rejected alternative (Option 2 — leave
+  the legend false for two of sixteen items, rely on a card outside the flow to rescue it) was refused as both a
+  cached-claim and a second instance of R-H10.
