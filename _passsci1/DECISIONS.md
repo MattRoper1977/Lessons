@@ -25,3 +25,28 @@ AMBER = done, flagged; RED = stopped and asked. Written at the time, never recon
 [GREEN] CLIP_REGISTER.md built across all 25 lessons (WIRED 1 / CANDIDATE 4 / SEARCH ~8 / rest
         EMPTY BY DESIGN). Slots prepared via the renderer's clip= field. Nothing wired unverified.
 [GREEN] FINDINGS_SCI2.md written. SCI-2 §6 items 1-5 complete; nothing merged.
+
+# --- SCI-3 close-out ---
+[AMBER] RETRACTED the "second writer" claim (§0). It appeared as fact in FINDINGS.md and
+        FINDINGS_SCI2.md and in the d6df2e5 commit message. Struck in place in the docs (originals
+        kept visible) with the correction: main advanced during the pass with commits this session
+        did not author (a4cdd36, 013121e/bc215d1, 2236d0b), but those are Claude-authored from other
+        passes (PQ/Season-close/T2-4), several "approved by Matt" — not an established separate
+        writer. The sentinel never corroborated one. Commit message d6df2e5 is immutable history
+        (not rewriting a pushed commit); retraction lives in the docs and here.
+[AMBER] The "63 overlapping" coexistence scare (SCI-2 hand-back) was a MALFORMED DIFF read in the
+        wrong direction: `git diff --name-only aec32b1..origin/main` reports files that differ, and
+        since my branch is AHEAD of main it surfaced MY OWN 63 changed paths, not a second writer's.
+        The correct check is whether origin/main advanced past my rebase base and touched my paths —
+        it had not (still 2236d0b). A scare that resolved is still an instrument that lied; logged so
+        the next person knows a diff read in the wrong direction lies this way.
+[GREEN] REGISTER.md R-G06 added — "a count is meaningless without its universe" + the corollary
+        (an emitter that names its sentinel joins the population; exclude own tooling and SAY SO).
+        Cross-refs R-G01/R-G03; notes R-E21's independent "invariant at 45". sentinel.py now prints
+        its universe + exclusions and drops any _passsci1/ path defensively.
+[AMBER] Contact sheet (§2): built for all 25 lessons WITH render-only assertions (no illuminator
+        clipped by viewBox / no label-pill overlap / print p1 not blank/overflow). The assertions
+        CAUGHT 3 clips — food-chain (BUILD W7), friction (GROW W3), gas-exchange (LAUNCH W4 L2) —
+        labels/arrows spilling 2-20px past x=640. Fixed (GREEN, own defect): food-chain labels
+        176w/-88, friction smooth arrow 116, gas-exchange two limewater captions merged to one.
+        All 25 now PASS; 3 touched lessons re-gated ALL PASS, re-placed, packs rebuilt.

@@ -3,21 +3,32 @@
 Autonomy pass. Decisions made under the SCI-2 GREEN/AMBER/RED bands are logged live in
 `_passsci1/DECISIONS.md`; this is the narrative companion. Full detail there.
 
+> **Retraction (SCI-3, 2026-07-29) — the "second writer".** SCI-1's briefing offered the 45→51 gap
+> as six loop-mark files added by a *second writer*, as corroboration one was active. That inference
+> was wrong and the sentinel disproved it: the six are non-html tooling/docs present at both
+> `8540eee` and HEAD, predating the fork, never added or removed. This document originally carried
+> the "second writer" phrasing (retained struck-through below); it is retracted as an established
+> fact. **What survives, directly observed:** `main` advanced during the pass with commits this
+> session did not author (`a4cdd36`, `013121e`/`bc215d1`, `2236d0b`) — Claude-authored, from other
+> passes (PQ / Season-close / T2-4), several "approved by Matt". The sentinel never corroborated a
+> distinct writer, and `main` advancing without adding loop-mark HTML is not evidence either way of
+> who authored those commits. That is the whole of what is known.
+
 ## What was measured
 
 **Sentinel, reconciled and made self-deriving (§1).** The disagreement (45→70 vs 51/76) was a
 **universe** confusion, not an error:
 
-- **Now (HEAD), tracked `*.html`: 70.** At the fork (`8540eee`): **45.** origin/main: **45** (the
-  second writer added no loop-mark html). Delta **+25** = exactly the 25 science lessons.
+- **Now (HEAD), tracked `*.html`: 70.** At the fork (`8540eee`): **45.** origin/main: **45** (no
+  loop-mark html was added on `main`). Delta **+25** = exactly the 25 science lessons.
 - The **51** was the ALL-FILES universe (html + 6 non-html tooling/docs). That universe is
   **unstable**: it reads **79** now, not 51+25=76, because my own committed tooling (`render_v5.py`,
   `FINDINGS.md`, `sentinel.py`) also mentions the string. So the all-files number must never be
   carried; the `*.html` universe is the gate's and the one to quote.
 - **The "six files"** (the 51-vs-45 gap): `LL-I_B1_measurement_map.md`, `INSTRUMENTS.md`,
   `bundle_facts.py`, `patch_loopmark.py`, `REGISTER.md`, `_passsg/FINDINGS.md` — all **non-html
-  tooling/docs**, **all present** in both `8540eee` and HEAD, **never removed**, and **not** the
-  second writer's (they predate the fork). They are outside the sentinel universe.
+  tooling/docs**, **all present** in both `8540eee` and HEAD, **never removed**, and **not newly
+  added by anyone during the pass** (they predate the fork). They are outside the sentinel universe.
 - **`_passsci1/sentinel.py`** now recomputes from git at emit time and prints the file list; a
   single filesystem grep that swept the gitignored `out/` and `pack/` artefacts returned a
   polluted **235**, which is exactly the carried-number failure mode the emitter removes.
