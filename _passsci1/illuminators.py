@@ -637,10 +637,118 @@ def launch_diffusion_exam():
         svg=_svg(inner))
 
 
+# ================================================================ LAUNCH W5 · L1
+def launch_osmosis():
+    V = VIOLET
+    # partially permeable membrane down the middle with pores
+    membrane = (f'<line x1="300" y1="60" x2="300" y2="200" stroke="{_INK}" stroke-width="3"/>'
+                + "".join(f'<rect x="297" y="{70+i*20}" width="6" height="8" fill="#fff"/>' for i in range(6)))
+    # water (small) both sides, sugar (large) only where it belongs, blocked at membrane
+    water_l = "".join(f'<circle cx="{70+(i%4)*30}" cy="{80+(i//4)*30}" r="4" fill="{V}"/>' for i in range(12))
+    water_r = "".join(f'<circle cx="{360+(i%3)*30}" cy="{90+(i//3)*30}" r="4" fill="{V}"/>' for i in range(6))
+    sugar_r = "".join(f'<circle cx="{380+(i%3)*40}" cy="{160+(i//3)*20}" r="9" fill="{OCHRE}" fill-opacity="0.5" stroke="{OCHRE}" stroke-width="1.4"/>' for i in range(4))
+    blocked = (f'<circle cx="280" cy="150" r="9" fill="{OCHRE}" fill-opacity="0.5" stroke="{OCHRE}" stroke-width="1.4"/>'
+               f'<text x="280" y="185" text-anchor="middle" font-size="16" fill="#b91c1c">✕</text>')
+    chambers = (
+        f'<rect x="44" y="60" width="252" height="140" rx="8" fill="{V}" fill-opacity="0.05" stroke="{_INK}" stroke-width="1.6"/>'
+        f'<rect x="304" y="60" width="252" height="140" rx="8" fill="{OCHRE}" fill-opacity="0.05" stroke="{_INK}" stroke-width="1.6"/>'
+        + water_l + water_r + sugar_r + blocked + membrane)
+    net = (_arrow(250, 120, 350, 120, V, 6)
+           + f'<text x="300" y="110" text-anchor="middle" font-size="11.5" font-weight="800" fill="{V}">● WATER MOVES</text>')
+    inner = (_lbl(60, 36, 200, "○ DILUTE (more water)", _INK, 0.6, h=22, fs=11)
+             + _lbl(340, 36, 210, "■ CONCENTRATED (less water)", OCHRE, 0.75, h=22, fs=11)
+             + chambers + net
+             + _lbl(210, 208, 180, "✕ SUGAR BLOCKED by the membrane", OCHRE, 1.1, h=20, fs=10.5))
+    return dict(
+        alt=("A partially permeable membrane with pores down the middle. Small water particles cross "
+             "both ways with a thick net arrow tagged WATER MOVES pointing to the concentrated side. "
+             "Large sugar particles are stopped at the membrane, tagged with a cross SUGAR BLOCKED. "
+             "The left side is dilute (more water), the right concentrated (less water)."),
+        cap=("Osmosis: ● water crosses the partially permeable membrane from ○ dilute to ■ "
+             "concentrated, while ✕ the larger sugar is blocked. Only water moves."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W5 · L2
+def launch_osmosis_cp():
+    V = VIOLET
+    labels = ["pure water", "weak", "medium", "strong", "very strong"]
+    tubes = []
+    for i, lab in enumerate(labels):
+        x = 40 + i * 66
+        tubes.append(
+            f'<g style="animation:ilmPop .4s ease-out both;animation-delay:{0.5+i*0.12:.2f}s">'
+            f'<rect x="{x}" y="60" width="30" height="96" rx="12" fill="#e0f2fe" stroke="{_INK}" stroke-width="1.8"/>'
+            f'<rect x="{x+8}" y="92" width="14" height="34" rx="3" fill="{OCHRE}" fill-opacity="0.5" stroke="{OCHRE}" stroke-width="1.4"/>'
+            f'<text x="{x+15}" y="172" text-anchor="middle" font-size="9" font-weight="800" fill="{_INK}">{lab}</text></g>')
+    # results table
+    tx, ty = 40, 190
+    heads = ["conc.", "initial (g)", "final (g)", "change", "% change"]
+    cw = 104
+    tbl = [f'<rect x="{tx}" y="{ty}" width="{cw*5}" height="44" fill="#fff" stroke="{_INK}" stroke-width="1.5"/>']
+    for c in range(1, 5):
+        tbl.append(f'<line x1="{tx+c*cw}" y1="{ty}" x2="{tx+c*cw}" y2="{ty+44}" stroke="{_MUTE}" stroke-width="1"/>')
+    tbl.append(f'<line x1="{tx}" y1="{ty+22}" x2="{tx+cw*5}" y2="{ty+22}" stroke="{_MUTE}" stroke-width="1"/>')
+    for c, h in enumerate(heads):
+        tbl.append(f'<text x="{tx+c*cw+cw/2:.0f}" y="{ty+14}" text-anchor="middle" font-size="10.5" font-weight="800" fill="{_INK}">{h}</text>')
+    inner = (_hdr(210, "Same potato · only the concentration changes", y=36)
+             + "".join(tubes) + "".join(tbl)
+             + _lbl(360, 62, 210, "◆ blot the same way every time", V, 1.2, h=20, fs=10)
+             + _lbl(360, 88, 210, "record INITIAL mass first", OCHRE, 1.3, h=20, fs=10))
+    return dict(
+        alt=("Five test tubes across a concentration range from pure water to very strong sugar "
+             "solution, each holding a potato cylinder. Beside them a results table with columns for "
+             "concentration, initial mass, final mass, change and percentage change. A tag warns to "
+             "blot the same way every time and record the initial mass first."),
+        cap=("The core practical: one potato, one variable — the concentration. Record the ◆ initial "
+             "mass first, blot every cylinder the same way, then find the % change."),
+        svg=_svg(inner))
+
+
+# ================================================================ LAUNCH W5 · L3
+def launch_osmosis_graph():
+    V = VIOLET
+    ox, oy, w, h = 70, 60, 240, 150   # plot box top-left, size
+    axis = (f'<line x1="{ox}" y1="{oy}" x2="{ox}" y2="{oy+h}" stroke="{_INK}" stroke-width="2"/>'
+            f'<line x1="{ox}" y1="{oy+h/2}" x2="{ox+w}" y2="{oy+h/2}" stroke="{_MUTE}" stroke-width="1.5" stroke-dasharray="4 4"/>'
+            f'<line x1="{ox}" y1="{oy+h}" x2="{ox+w}" y2="{oy+h}" stroke="{_INK}" stroke-width="2"/>'
+            f'<text x="{ox-8}" y="{oy+8}" text-anchor="end" font-size="10" fill="{_INK}">+% </text>'
+            f'<text x="{ox-8}" y="{oy+h}" text-anchor="end" font-size="10" fill="{_INK}">−% </text>'
+            f'<text x="{ox+w/2:.0f}" y="{oy+h+22}" text-anchor="middle" font-size="10.5" fill="{_INK}">sugar concentration →</text>')
+    # downward line crossing zero at ~ 55% across
+    x0, y0 = ox+10, oy+20
+    xz, yz = ox+0.55*w, oy+h/2
+    x1, y1 = ox+w-10, oy+h-16
+    line = (f'<polyline points="{x0:.0f},{y0:.0f} {xz:.0f},{yz:.0f} {x1:.0f},{y1:.0f}" fill="none" '
+            f'stroke="{V}" stroke-width="3"/>'
+            f'<circle cx="{xz:.0f}" cy="{yz:.0f}" r="6" fill="{V}"/>'
+            # anomaly point off the line
+            f'<circle cx="{ox+0.3*w:.0f}" cy="{oy+0.28*h:.0f}" r="5" fill="none" stroke="#b91c1c" stroke-width="2"/>')
+    tags = ("".join(_lbl(360, 60+i*30, 220, t, col, 0.9+i*0.15, h=22, fs=10.5)
+                    for i, (t, col) in enumerate([("■ WHAT WAS GOOD", GROW), ("■ WHAT LIMITED IT", OCHRE),
+                                                  ("■ ONE IMPROVEMENT", V)])))
+    inner = (_hdr(190, "Read the zero-crossing, then evaluate", y=32)
+             + axis + line + tags
+             + _lbl(int(xz)-60, int(yz)+18, 150, "◆ SAME AS INSIDE CELLS", V, 1.2, h=20, fs=9.5)
+             + _lbl(int(ox+0.3*w)-24, int(oy+0.28*h)-24, 110, "○ anomaly — keep it", "#b91c1c", 1.35, h=18, fs=9))
+    return dict(
+        alt=("A graph of percentage change in mass against sugar concentration. The line slopes "
+             "down and crosses zero at one concentration, tagged SAME AS INSIDE CELLS. One point off "
+             "the line is circled and tagged anomaly, keep it. Three evaluate tags: what was good, "
+             "what limited it, one improvement."),
+        cap=("Where the line crosses zero (no mass change) is the concentration ◆ inside the cells. "
+             "Circle the ○ anomaly, keep it, and evaluate: what was good, what limited it, one "
+             "improvement."),
+        svg=_svg(inner))
+
+
 ILLUMINATORS = {
     "SCI_B_W3_Backbones": backbones,
     "SCI_L_W3_L1_Microscopy": launch_microscope,
     "SCI_L_W4_L1_Diffusion": launch_diffusion,
+    "SCI_L_W5_L1_Osmosis": launch_osmosis,
+    "SCI_L_W5_L2_OsmosisCP": launch_osmosis_cp,
+    "SCI_L_W5_L3_Evaluate": launch_osmosis_graph,
     "SCI_L_W4_L2_GasExchange": launch_gas_exchange,
     "SCI_L_W4_L3_ExamSkills": launch_diffusion_exam,
     "SCI_L_W3_L2_Magnification": launch_formula_triangle,
