@@ -374,3 +374,47 @@ pass — 6 vocab terms and 6 label corrections across 7 files — not a resequen
 rewritten; no structure touched. Nothing merged — Matt merges.
 
 _measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · Art build 2026-07-28_
+
+---
+
+# FINAL — FROZEN RECORD (verbatim-checkable · session close-out 2026-07-29)
+
+**Status: PARKED UNMERGED. Do NOT merge.** Merge belongs to the scheduled single sitting on
+**29 August**, order **SL → SBX → PQ → SG**. This section supersedes any earlier line implying merge-now.
+
+- **Base:** `32ca685e1df619b333f3ee4385aed227aa675cdf`
+- **Branch:** `pass-sl-sow-launch` — **12 commits total** = 11 work commits (`40a0637`…`54aec9c`) + this handover commit (12th).
+- **Build SHAs:** vocab `5b88c23` · provenance labels `dffeca9` + `301acb9`.
+- **Final SoW-provenance scheme (Art_Teesside/Launch):** W1/W3 = **Aut 1** (1A/1B develop-as-artist) ·
+  W2/W4 = **Aut 2** (1D/1C experience-review) · W5–W8 = **Unit 2 · SoW Spring/Summer, taught early**
+  (accepted divergence — Silver-wins; Unit 2 stays in the Autumn vehicle until Spring/Summer Art suites exist).
+- **Gates measured green post-build:** G1 nine-part 1A–1D,2A–2E ALL PRESENT (hyphen-range detector, self-test passed) ·
+  G2 art-form/leadership boundary untouched (pack generator enforces it) · G3 public-showing assertions **0**
+  (5 guardrails preserved), no hours/TQT, no mark schemes · G4 Pass C survivors intact (W1 shrink, W2 artist+organisation,
+  W5 crew cards, print authorship/support splits) · G5 four surfaces agree (no split) · G6 per-file per-commit:
+  slide/.lundy-box/print-id/ko-table counts unchanged, reduced-motion @media byte-identical, `node --check` 0 failures,
+  stale "Arts Aut 1" asserted gone from relabelled files, cardinality asserted · **N4: all 11 SoW Autumn Creative-Arts
+  vocab terms present across W1–W4, MISSING none.**
+
+## RULING 1 (frozen) — science
+- **All 37 science rows → `OUT-OF-SCOPE — LEGACY PROVISION (2025-26)`** (external 2026-27 rebuild, PythonAnywhere-assessed).
+- **4SS0 decision pack → RETIRED-UNANSWERED** (no longer applies to live provision).
+- **STANDING NO-TOUCH on the science folders** (`biology/`, `chemistry/`, `2 Physics 10/`) — no Pass SL commit
+  touches them in either direction; any future class that would sweep them excludes them and asserts the exclusion.
+
+## WHERE THE SCIENCE NO-TOUCH LIVES (successor-critical)
+1. **`_passsl/FINDINGS.md`** — RULING 1 section above and the earlier "RULINGS FROM MATT" section.
+2. **`_passsl/HANDOVER.md`** — restated in the parked-branch handover.
+3. **NOT yet in `REGISTER.md`** (the estate standing-rules file successors actually read: *"Load this before any
+   pass that measures, patches or deletes"*). `REGISTER.md` is **main-owned and has advanced past this branch's base
+   (`32ca685` → `59ad56a`)**; editing it from this parked branch would violate the coexistence freeze (it is not one
+   of this branch's changed paths). **ACTION FOR THE 29 AUG MERGE SITTING:** transcribe the science no-touch into
+   `REGISTER.md` at merge time, since a successor pass that never reads this branch will only hit it there.
+
+## COEXISTENCE AT CLOSE (fetched @ origin/main `59ad56a82e4c0c297910fe61df45129bbd231bc9`)
+origin/main advanced `32ca685`→`59ad56a` (74 paths). **Overlap with this branch's changed paths (7 Art files + `_passsl/`)
+= EMPTY** — DISJOINT, no textual conflict. Note: main separately modified `Art_Teesside/Launch/LAUNCH_ART_W3_*` and
+`Art_Teesside/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html` (files this branch did NOT change) — no conflict,
+but the merge sitting should re-verify the W1–W8 + pack provenance scheme is still coherent after main's W3/pack edits.
+
+_measured @ 32ca685e1df619b333f3ee4385aed227aa675cdf · frozen 2026-07-29_
