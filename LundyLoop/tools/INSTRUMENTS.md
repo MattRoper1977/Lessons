@@ -15,11 +15,15 @@ correct. The only external check is re-deriving a finding by a method that share
 premise with the instrument that produced it — and where that has been done, the
 entry says so.
 
-**Last observed true at** `8c384a7` — the instrument list below was checked against
-`tools/` at that commit and matched exactly, 6 listed / 6 actual. This stamp is not a
-mechanism and does not keep the claim true. It makes it **re-checkable**, which is the
-achievable version: a claim that names when it was last observed can be re-observed;
-one that does not, cannot.
+**Last re-derived at the H-series H3 commit** — the list below matches `tools/` in both
+directions: **13 scripts / 13 full `LL-INST` entries, plus 1 QUARANTINED**
+(`LL-INST-03-v1`, an entry with no script by design). Re-check it rather than trust it:
+`git ls-files 'LundyLoop/tools/*.py' | wc -l` against
+`grep -cE '^## LL-INST-[0-9]+ ' INSTRUMENTS.md`. The prior stamp read *6 listed / 6 actual
+at `8c384a7`* and went stale silently (R-G03) — which is why the count now travels with the
+command that re-derives it, not as a bare number (`bundle_facts.py`, LL-INST-12, is the
+runnable form). This stamp is not a mechanism and does not keep the claim true; it makes it
+**re-checkable**, which is the achievable version.
 
 **Companion documents.** [`/REGISTER.md`](../../REGISTER.md) — estate conventions,
 exceptions, deliberate absences, storage keys, deletion records and the decisions
@@ -102,6 +106,36 @@ its own replacement (standing rule 6).
 - **The lesson, and it is not "be careful":** every one of those five was a **vocabulary test wearing a presence test's clothes**. "Does it have `.print-section`" sounds literal but silently assumes the name. "Does the container have content" is presence, and presence does not need to know what the content is called. **Test for the thing, never for its name.**
 - **Status:** current.
 
+## LL-INST-06 — `assessed_conditions_gate.py`
+
+- **Derives:** per assessed file, what the Conditions Card AUTHORISES at each tier, what the file actually OFFERS at each tier, and every offer that appears in neither list — the ones nobody has ruled on.
+- **Method:** Literal — the Card's allowed/forbidden lists vs the file's per-tier offers. The timing mismatch (LAUNCH's 45 min in a 40-min period) was the **symptom** that first exposed it; the gate searches for the fault, not the tell, because a defect found through a symptom has symptomless siblings.
+- **The tell it keys on:** the Card *mentioning* an offer, allowed or forbidden.
+- **The sibling it cannot see:** the Card being **silent** about an entire category of offer — silence read as permission (the Route Card survived because no clause discussed timing scaffolds at all). Not fixable in the tool; the Card gains a closed-world line (REGISTER OPEN RULING 1).
+- **How to run:** `python3 LundyLoop/tools/assessed_conditions_gate.py`
+- **Independent of:** the in-file gates and LL-INST-09 — it reasons over Card↔slide agreement, not over a render.
+- **Status:** current. Entry authored at H3 from the instrument's docstring; instrument predates this pass.
+
+## LL-INST-07 — `sitemap_audit.py`
+
+- **Derives:** every URL in the deployed sitemap, and whether it actually resolves.
+- **Method:** Literal over HTTP — it tests the claim the sitemap is *ultimately* about ("these URLs resolve"), not the cross-repo artefacts on either side of a boundary no instrument can cross.
+- **The tell it keys on:** an HTTP response for each catalogued URL.
+- **The sibling it cannot see:** a URL that resolves (200) but serves the WRONG content — 200 is not correctness. When it cannot reach the sitemap it fails loud ("NOT a pass. Nothing below was checked.") and exits non-zero — it never hands back a reassuring number.
+- **How to run:** `python3 LundyLoop/tools/sitemap_audit.py [sitemap-url]` (defaults to the deployed sitemap). Needs real network egress; a proxied agent sandbox returns 403 — run it from a machine with egress (HANDOVER "Unrun"; the LL-INST-11 / R-E13 fail-loud family).
+- **Independent of:** every repo-internal instrument — it reasons over the deployed site, not the tree.
+- **Status:** current. Entry authored at H3 from the instrument's docstring; instrument predates this pass.
+
+## LL-INST-08 — `ko_staleness.py`
+
+- **Derives:** files whose Knowledge Organiser may be stale — the lesson's VISIBLE text moved in a commit *after* the KO block's text last moved, AND at least one moving commit was a CONTENT pass rather than an architecture pass.
+- **Method:** Literal/temporal — commit ordering of visible-text vs KO-block movement, each moving commit classified. It asks nothing about correctness and reads no content meaning; staleness is temporal.
+- **The tell it keys on:** co-movement timing (body moved after the KO, by a content pass).
+- **The sibling it cannot see (stated up front in its own docstring):** a lesson and its KO changed IN THE SAME COMMIT but inconsistently. Co-modification is a proxy for consistency, not consistency itself — files it calls clean are UNCHECKED, not verified.
+- **How to run:** `python3 LundyLoop/tools/ko_staleness.py`. Needs **full git history**; on a shallow (`--depth 1`) clone it false-zeros — guard it with LL-INST-11.
+- **Independent of:** content-reading instruments; it reasons over the commit graph and visible-text hashes.
+- **Status:** current (v3). Entry authored at H3 from the instrument's docstring; instrument predates this pass.
+
 ## LL-INST-09 — `loop_mark_print_gate.py`
 
 - **Derives:** per tier (`supported` / `standard` / `stretch`), whether a named element actually reaches paper — by loading the file in Chromium, emulating `media=print`, invoking the file's own `printPack(level)`, and reading back the rendered box, the enclosing section's `.visible` state, and the text of every visible print section.
@@ -122,6 +156,36 @@ its own replacement (standing rule 6).
 - **Known limit:** it proves the commits exist and touch the declared paths. It does **not** prove the content of a change is correct — that is LL-INST-09's job and the in-file gates'. A green result here plus a green result there is two different claims.
 - **Consumed by:** any batched deployment. Run before push, not after.
 - **Status:** current.
+
+## LL-INST-11 — `preflight.py`
+
+- **Derives:** a shared guard — each instrument declares the external dependency it rests on (full git history, a reachable host, a corpus of the expected size), and this FAILS LOUD (stderr, non-zero exit) when one is absent, instead of returning a plausible number.
+- **Method:** Literal precondition checks. A guard's whole job is to stop the run, not be caught and swallowed.
+- **The tell it keys on:** the presence or absence of a *declared* external dependency.
+- **The sibling it cannot see:** a dependency the caller never declared — it checks only what each instrument tells it to, so an undeclared assumption stays invisible (the false-zero class it exists to prevent, one turn out). Built by Pass X from Pass U's finding: `ko_staleness` returned "0, all clean" on a shallow clone and did not fail loud.
+- **How to run:** imported by other instruments (its helpers), not a standalone report.
+- **Independent of:** the instruments it guards — it is the shared dependency-declaration layer beneath them.
+- **Status:** current. Added by Pass X; entry authored at H3 from its docstring to close the census.
+
+## LL-INST-12 — `bundle_facts.py`
+
+- **Derives:** one dated OBSERVATION RECORD of the estate's standing figures — each figure beside the exact command that derived it, stamped at HEAD. A figure it cannot trust prints `NOT_DERIVED` with the reason (a truthful null, never a guess).
+- **Method:** Literal — `git grep` / `git ls-files`, read-only by construction (prints to stdout, writes nothing, stages nothing). Emits both sentinel forms per R-E10, so a marker quoted in `5_staff_training/` would show as diverging forms.
+- **The tell it keys on:** literal marker strings and git-tracked file extensions.
+- **The sibling it cannot see:** same-purpose content under other wording; uncommitted working-tree state (it reads HEAD); and whether any counted thing is CORRECT — it bundles cardinalities, not judgements. Its INSTRUMENTS-entry heuristic keys on `## name.py` headings, so it prints `NOT_DERIVED` against this file's `## LL-INST-NN — name.py` format — an honest null; this enumeration is authoritative.
+- **How to run:** `python3 LundyLoop/tools/bundle_facts.py` (no args).
+- **Independent of:** every judgement-based instrument; it emits counts, not verdicts. A number a script prints when it runs cannot go stale — the R-G03 / R-E08 lesson made runnable.
+- **Status:** current. Placed and run read-only at `51d14aa` (H2).
+
+## LL-INST-13 — `patch_loopmark.py`
+
+- **Derives:** a dry-run manifest of which named target files would receive the BUILD loop-mark block ported from a donor (`would-patch` / `skip-reason`), asserted to sum to the targets given. DRY-RUN by default; writes only with `--write`.
+- **Method:** Literal — locates the donor's marker block and its structural anchor (the nearest preceding `id`), inserts by position, confirms by marker text, and FAILS CLOSED on any doubt (a file is never modified on a guess).
+- **The tell it keys on:** the marker string `ll-g:loop-mark v1` plus the donor block's structural anchor.
+- **The sibling it cannot see:** a closure block already present in a target under DIFFERENT wording or a different marker version — the idempotence check keys only on the exact v1 marker, so a same-purpose block in other words is invisible (the LL-E lesson) and would be double-inserted.
+- **How to run:** `python3 LundyLoop/tools/patch_loopmark.py --donor <build.html> <target.html …>` (add `--write` to apply). Refuses targets outside `Build/`, and refuses assessed / `LundyLoop/` / `tools/` paths.
+- **Independent of:** the closure it ports — it moves a block, it does not judge closure. Its marker string is inert to the sentinel derivations (`-- '*.html'`, R-E10).
+- **Status:** current. Placed at `51d14aa` (H2); dry-run verified read-only — fails closed on all six `Build/` donors (no preceding `id` to anchor on), writing nothing.
 
 ## Fixes applied to existing instruments
 

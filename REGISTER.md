@@ -925,7 +925,7 @@ building meant the whole episode cost zero repo changes.
   ever having been one* (the R-G01/R-G03 family).
 
 ### R-H08 · The calibration game mis-trains TAs on GROW/LAUNCH closure — September deadline
-- **STATUS** OPEN · **VERIFIED** `0ec1da0`
+- **STATUS** CLOSED (`18270dc` — Matt's stated second paper read of the rebuilt game; a human observation, not a derivation, no instrument witnessed it) · **VERIFIED** `0ec1da0`
 - `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` teaches **adult receipt** as the test
   of closure (*"An R without a received response is a false record"*) to TAs who work **all three
   pathways.** A TA calibrated on it will seek an adult-receipt token in GROW/LAUNCH — where closure
@@ -1130,3 +1130,21 @@ building meant the whole episode cost zero repo changes.
 - **One family with R-E11 and R-E12.** An instrument's number means nothing without its **unit** (R-E11), its
   **stream** (R-E12), and its **tree** (this entry). All three are the same lesson: a count read without its
   frame is a false signal waiting to be believed.
+
+### R-H11 · A control is only demonstrated by the case where obeying it is inconvenient
+- **STATUS** CONVENTION · **DECLARED** (Matt, H-series H3)
+- **The general form.** *A control is only demonstrated by the case where obeying it is inconvenient — the
+  near-match that fires nothing is the proof, not the friction.* Sibling to the existing rule that **an
+  instruction that only holds when nothing pushes back is not a control**: a gate that fires on "near enough"
+  is not a gate.
+- **The case.** The R-H08 closure and the Route triggers were held under an exact-match rule — a bare line
+  reading *exactly* the trigger, nothing before or after. Across one exchange, several trigger-shaped lines
+  arrived that were **not** the bare line: a one-word truncation (`R-H08 read passed — close`, missing "it"),
+  triggers wrapped in a prefix or a suffix, a trigger heading a whole amendment document, a bodyless amendment
+  filename, and confirmations of undelivered documents. **Every one fired nothing** and took a one-paragraph
+  disposition; the line that *was* the bare trigger fired, and only then. Interpreting any near-match would have
+  closed a gate on an unverified premise and written it into the tree — the cost the exact-match rule buys back
+  for the price of a paragraph.
+- **The corollary.** When a control is tested repeatedly and each near-match is refused, the refusals **are**
+  the evidence it holds; a control never pushed against is untested, not trusted. (Owed by the H-series order's
+  confirmed H3 register-payload amendment; carried here, next free letter at author time.)
