@@ -1347,3 +1347,32 @@ with §H and the R-H## rules.*
   byte-untouched. Record: `_passe/ASSESSED_RESIDUE_HELD.md` (status RESOLVED).
 - **Sentinel corrigendum:** not appended separately — **R-SC01 already records** estate `ll-g:loop-mark` = 45
   (vs R-RL01's "50"); R-RL01 itself left untouched (append-only).
+
+### R-E20 · T2-4 learner-signature APPLIED on branch — HELD for Matt, not merged
+- **STATUS** RECORD · branch `pass-pq-t24-learner-signature` (base = `main` tip `a4cdd36`); **NOT MERGED —
+  held for Matt's read** (same pattern as the CAREERS_W7 print fix). `_close/OPEN_ITEMS.md` #1 stays OPEN
+  until Matt's word; this entry records the prepared diff, not a landing.
+- **Provenance — committed records only.** The authorised-but-unexecuted T2-4 diff (Pass PQ close-out item
+  5a) recovered from `b137a90` + `_passpq/FINDINGS.md` §Tier-2 T2-4 + `_close/OPEN_ITEMS.md` #1. `b137a90`
+  itself touched **no estate file** (docs + R-D05 append only); the diff is the additive block specified
+  **verbatim** in FINDINGS. §2 of the PEQ spec requires records signed by assessor **AND** learner; the
+  witness statement carried assessor sign-off only.
+- **What applied.** Additive **`5 · Learner confirmation`** block (heading + "I confirm this is my own work."
+  + name/signature/date table) inserted **after the §4 Assessor declaration table**, before the statement's
+  closing note, in **all 49 ASDAN witness surfaces (BUILD 31 + GROW 18)**. The protected assessor block
+  (§4) is **byte-untouched**; the change is purely additive.
+- **Semantic re-apply at HEAD (b137a90 is stale).** Pass RL re-landed the same 49 files (T2-1 `ASDAN Studio`
+  de-double); the diff was **re-applied by measurement** at `a4cdd36`, not replayed from `b137a90`. RL's
+  landed fixes are preserved byte-for-byte (script/reduced-motion blocks byte-identical to base; sentinel
+  set unchanged). Anchor was the byte-uniform closing-note line, verified present exactly once and directly
+  after the assessor `</table>` in **49/49** files.
+- **Population.** File count at HEAD = **49** (BUILD_ASDAN 31 + GROW_ASDAN 18), matches FINDINGS — **no
+  delta**. Six `Build/Slideshows/BUILD_DT_W1..W6` files also carry witness statements but are the **BUILD DT**
+  strand, **out of T2-4 scope** (T2-4 is the ASDAN witness surfaces) — deliberately untouched.
+- **Gates (stated per the T2-1 pattern, asserted at branch tip).** 49 files, **245 insertions / 0 deletions**
+  (`+5`/file); per-file byte-diff confined to the inserted witness lines. Sentinel `ll-g:loop-mark` set
+  **invariant at 45** — R-SC01's corrected constant, not R-RL01's "50" — empty set diff before/after.
+  **147** inline `<script>` blocks `node --check` clean and byte-identical to base; reduced-motion blocks
+  byte-identical (0 files differ). jsdom DOM parse **0 errors on 49/49**, learner block confirmed inside
+  `#print-witness`. Tag balance clean. Print/screen parity: witness + learner block confined to `#print-area`,
+  **no on-screen copy** (49/49) — additive change introduces no divergence.
