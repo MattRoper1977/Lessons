@@ -454,3 +454,10 @@ cover (KO h1 week label; HUM writing-model completeness). All 3 pre-date Pass Q'
 open decisions (letter E-vs-Q; whether to merge the 3 fixes; expected `REGISTER.md`/`CAREERS_W7` merge
 conflicts) are in `_passe/COEXISTENCE_PassQ.md`. **Re-read `origin/main` before any merge** — it has moved twice
 during this pass.
+
+
+### PACK-LA — term-start Progress zips built from `91778c3`, handed back as downloads (2026-07-30)
+Built the three staff-pack zips (see REGISTER R-K01) from main and returned them as downloads; **nothing committed** but this records line + this note. Forward ledger for 29 Aug and after:
+- **MARK_SVG / `gen_entry` is unreconciled — hard precondition of the 29 Aug full rebuild.** The committed `rebrand()` misses the aria-less "M"-mark on **12** entry docs (7 LAUNCH + 5 GROW — not the 7 R-J01 first counted). Until `MARK_SVG`/`gen_entry` catches the geometry (not the attribute), the full rebuild must re-run the supplementary PS_MARK pass, or 12 entry docs ship with the Matt logo on Progress branding. **TRIGGER: before the 29 Aug full pack rebuild.**
+- 29 Aug merges SL → SBX (+ a2b, pass-u) with **append-only union** on `resources.json` / `REGISTER.md` (keep both sides, never reorder — per R-J01).
+- PEQ facts remain **UNVERIFIED-AGAINST-SPEC** (ASDAN PDFs absent); reconcile at the Pass PQ resume. Carried into the pack README ("do not promise pupils accreditation yet").
