@@ -83,3 +83,22 @@ land (`_passpq/inputs/README.md` RESUME SEQUENCE), reconcile these, individually
   short-course strands bank short course + UAS only, with PEQ contributions surfaced at
   hub level, not per-lesson (deliberate, to avoid GROW's drift). If Matt wants per-lesson
   by-code PEQ skill banks on those strands, that's a small generator change.
+
+---
+
+## LA-GO UPDATE (2026-07-30) — merged, published, drop-in shipped
+
+Pass LA is no longer parked. **Pass LA-GO** merged it and published it. See REGISTER **R-J01**.
+
+- **Merged:** `pass-la-launch-asdan` (`5ce60e0`) → main via `--no-ff` (`3a74e3a`). New ASDAN total **79** (never 49).
+- **Repo tips at close:** Lessons main **`d283fc0`**, site main **`e074771`**. Both Pages builds triggered with matching push timestamps (in_progress at close; static-content builds, expected to reach `built`).
+- **Published:** `resources.json` 411→447 (+36, mirrors GROW convention); `sitemap.xml` 395→431 (+36); LAUNCH subject added to PRIORITY/PRINTPACK on both the Lesson Hub and the site resources page (SUBJ_LEGACY untouched); reachability gate green (chip 36 == returnable 36). HUD loader already on all 30 lessons (generator-carried).
+- **Ring finding:** written-line 68→98 (+30, GROW/LAUNCH ring); loop-mark 50 unchanged (SET-invariant). The 50-vs-70 gap between LA-base and PACK-1 is pre/post-CLOSE-1, reconciled by derivation in R-J01 — **do not "fix" either number.**
+- **Live-verify caveat:** the agent proxy **403-blocks `madebymatt.uk` / `*.github.io`**, so the live hub URL was not loadable this session; deployed files verified via `raw.githubusercontent.com` at pinned SHAs + jsdom render gate. A future session on an unblocked network should load the live hub once to close that gap.
+
+### Still owed / teed up
+- **Root `/HANDOVER.md` wholesale supersession** — still owed, deferred to **29 Aug merge day** (this pass did not rewrite the whole-estate root HANDOVER; it merges behind SL → SBX).
+- **29 Aug append-only-union:** LA vs SL/SBX overlap only on `resources.json` + `REGISTER.md`; keep both sides, never reorder.
+- **Spring + Summer PEQ (and the four short-course) modules** — same generator (`_passla/build/`), author `content_*` W7+ from the SoW weekly grids. Completing them makes the L1 **Certificate** a *built* reality, not just the hub-level year target (WellbLe1 is homed in the full-year SoW — Summer).
+- **Staff-pack builder finding (before the 29 Aug full rebuild):** the 7 LAUNCH entry-doc Matt logos (hub, 5 START_HERE, SoW) lack `aria-label="Made by Matt"`, so the builder's `MARK_SVG` misses them (the LA-GO drop-in swapped them via a supplementary `PS_MARK` pass). Reconcile before 29 Aug: either give `gen_entry.py`'s mark the `aria-label`, or extend `MARK_SVG` to catch the 56px variant — else the full rebuild ships those 7 with the Matt logo.
+- **Concurrent session:** an Off-Brand CI session pushed `a20de77` (`.github/workflows/verify-offbrand.yml` + `tools/verify_offbrand.sh`) to Lessons main during this pass; my scope commit was rebased onto it cleanly. Expect that CI to run on future pushes.
