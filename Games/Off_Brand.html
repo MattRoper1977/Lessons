@@ -241,6 +241,26 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #taskWrap{flex:1;max-width:220px}
 #taskBar{height:8px;border-radius:99px;background:rgba(232,226,212,.14);overflow:hidden;margin-top:2px}
 #taskFill{height:100%;width:0%;background:var(--mint);border-radius:99px;transition:width .4s}
+#cap{position:absolute;left:50%;top:12px;transform:translateX(-50%);max-width:min(88%,440px);z-index:6;
+  background:rgba(20,26,54,.9);border:1px solid rgba(185,230,205,.45);color:#E8E2D4;
+  padding:7px 12px;border-radius:10px;font:600 13px/1.35 Poppins,system-ui,sans-serif;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .25s ease;}
+#cap.on{opacity:1;}
+body.rm #cap{transition:none;}
+.rcmark{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;font:700 10px/1.6 Poppins,system-ui,sans-serif;letter-spacing:.04em;color:#161D3D;background:#F2A24A;vertical-align:middle;}
+#ovlBoard .panel{max-width:520px;}
+.bdrow{position:relative;border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px 10px;margin:6px 0;background:rgba(255,255,255,.04);}
+.bdrow.pinned{background:rgba(185,230,205,.12);border-color:rgba(185,230,205,.4);}
+.bdrow.sel{outline:2px solid #F2A24A;}
+.bdhead{font-size:13px;margin-bottom:4px;}
+.bdmeta{color:rgba(232,226,212,.7);}
+.bdsus canvas{width:26px;height:26px;vertical-align:middle;margin-right:2px;}
+.bdpin{position:absolute;top:8px;right:10px;font:600 11px Poppins,system-ui,sans-serif;padding:3px 10px;border-radius:8px;border:1px solid rgba(185,230,205,.4);background:transparent;color:#E8E2D4;cursor:pointer;}
+#boardMarks{margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:12px;}
+.bdchip{display:inline-flex;align-items:center;gap:3px;margin:3px 6px 0 0;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.06);}
+.bdchip.marked{background:#F2A24A;color:#161D3D;font-weight:700;}
+.bdchip canvas{width:22px;height:22px;}
+.bdmarkttl{color:rgba(232,226,212,.7);}
 </style>
 </head>
 <body>
@@ -294,13 +314,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   <div class="statrow"><span id="statStars">★ 0</span><span>WORKSHOP XP</span><div class="xpbar"><div class="xpfill" id="xpMenu"></div></div></div>
   <div class="titlerow">
     <button class="chip" id="chipMotion" aria-pressed="false">Motion: on</button>
+    <button class="chip" id="chipVoice" aria-pressed="true">Curator: on</button>
     <button class="chip" id="chipKit">🎒 Kit</button>
     <button class="chip" id="chipGuide">📖 Field Guide</button>
     <button class="chip" id="chipDiff">⚙ Difficulty</button>
     <button class="chip" id="chipHow">How to play</button>
   </div>
   <p class="foot">MADE BY MATT · single-file · offline-first · nothing uploaded — nobody is ever voted out; the Glitch just gets a friendly reformat</p>
-  <p class="foot" style="margin-top:6px">v3.2.1 · steering update — suggested by Clara ♥ · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties</p>
+  <p class="foot" style="margin-top:6px">v3.3.0 · Curator captions + deduction board · steering update — suggested by Clara ♥ · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties</p>
 </div>
 
 <!-- ============ CINEMATIC ============ -->
@@ -316,7 +337,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
       <div id="taskWrap"><div class="barlbl">COMMISSION</div><div id="taskBar"><div id="taskFill"></div></div></div>
       <div id="shields" aria-label="Integrity"><span>🛡</span><span>🛡</span><span>🛡</span></div>
     </div>
-    <div id="cvwrap"><canvas id="cv"></canvas><div id="alert" role="status" aria-live="assertive"></div><div id="toast" role="status" aria-live="polite"></div>
+    <div id="cvwrap"><canvas id="cv"></canvas><div id="alert" role="status" aria-live="assertive"></div><div id="toast" role="status" aria-live="polite"></div><div id="cap" role="status" aria-live="polite" aria-atomic="true"></div>
       <div id="tut" role="status" aria-live="polite"><span id="tutStep"></span><span id="tutTx"></span><button id="tutSkip">SKIP</button></div>
     </div>
     <div id="botbar">
@@ -326,6 +347,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
       <button class="bbtn hid" id="btnAct"><span id="actLbl">Repair</span><small id="actSub">hold steady</small></button>
       <button class="bbtn hid violet" id="btnSkip"><span>⚡ Skip</span><small id="skipSub">dash</small></button>
       <button class="bbtn hid" id="btnRoll"><span>📣 Roll Call</span><small id="rollSub">2 left</small></button>
+      <button class="bbtn hid" id="btnBoard"><span>🧩 Board</span><small>deduce</small></button>
       <button class="bbtn hid violet" id="btnSab"><span>💥 Scene</span><small id="sabSub">sabotage</small></button>
     </div>
   </div>
@@ -401,6 +423,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   </div>
 </div></div>
 
+<div class="ovl" id="ovlBoard"><div class="panel">
+  <h3>🧩 Evidence Board</h3>
+  <p id="boardIntro"></p>
+  <div id="boardList"></div>
+  <div id="boardMarks"></div>
+  <div class="prow">
+    <button class="pbtn ghost" id="btnBoardOk">Done — back to the floor</button>
+  </div>
+</div></div>
+
 <div class="ovl" id="ovlSab"><div class="panel">
   <h3>👾 Cause a scene</h3>
   <p>Pick your move. A scene pulls the crew away from their work — and away from you.</p>
@@ -433,7 +465,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <script>
 (function(){
 'use strict';
-var GAME_VERSION='3.2.1';
+var GAME_VERSION='3.3.0';
 /* ================= helpers ================= */
 function $(id){return document.getElementById(id);}
 function clamp(v,a,b){return v<a?a:(v>b?b:v);}
@@ -500,7 +532,7 @@ var CAST=[
 
 /* ================= state ================= */
 var S=null, SAVE=null, RM=false;
-var DEFSAVE={v:3,motion:null,seenCrew:false,seenGlitch:false,crewStars:[0,0,0],glitchStars:[0,0,0],xp:0,hat:'none',diff:'standard',seen:{},tut:{}};
+var DEFSAVE={v:3,motion:null,seenCrew:false,seenGlitch:false,crewStars:[0,0,0],glitchStars:[0,0,0],xp:0,hat:'none',diff:'standard',seen:{},tut:{},voice:1,feats:{}};
 function loadSave(){
   var d=JSON.parse(JSON.stringify(DEFSAVE));
   try{
@@ -551,6 +583,8 @@ function newRound(mode,round){
      comm:0,rolls:DIF().rolls,maxShields:DIF().shields,maxBodies:DIF().bodies,scenes:[],sceneN:0,seamCd:0,dest:null,
      trails:{},logs:[],
      corruptCd:0,skipCdP:0,verifyBusy:false,toastT:0,lastSampleT:0,verifiedBy:null};
+  S.narr={lastT:-999,cur:null,capT:0,seenKey:{},driftLvl:0,ambT:0};
+  S.board={open:false,pins:[],links:[],marks:{},sel:-1};
   everyChar(function(c){S.trails[c.id]=[];c.visits=[];});
   S.glitchSet.forEach(function(gi){S.chars[gi].gcd=((mode==='crew'?9:0)+(15-round*2.5))*DIF().glitch;});
   if(mode==='crew') S.trails['curator']=[];
@@ -905,6 +939,7 @@ function tick(dt){
   // trails @ ~8/s
   if(S.t-S.lastSampleT>=0.12){S.lastSampleT=S.t;sample();}
   if(S.toastT>0){S.toastT-=dt;if(S.toastT<=0)$('toast').className='';}
+  stepNarr(dt);
   refreshAct(); refreshHud();
   if(S.mode==='crew'&&S.t-(S._logBtnT||0)>0.5){S._logBtnT=S.t;updateLogBtn();}
   if(S.mode==='glitch')updateSabBtn();
@@ -1083,6 +1118,7 @@ function seamHop(c){
   puff(s.x,s.y,'#A78BFA',10,55,0.7,2.4,10);
   c.x=d.x;c.y=d.y;c.path=[];c._ev='seam';
   puff(d.x,d.y,'#A78BFA',10,55,0.7,2.4,10);
+  curatorSay('seam');
   return true;
 }
 
@@ -1394,6 +1430,7 @@ function openRollCall(auto){
     S.rolls--;$('rollSub').textContent=S.rolls+' left';
   }
   var from=Math.max(0,S.t-55);
+  curatorSay('rollcall');
   $('rollIntro').textContent=auto?'You flagged it and the crew came running. Everyone accounts for the last minute — one of them is making it up.'
     :'Everyone downs tools. Each shape accounts for the last minute — one of them is making it up. Cross-check with ◐ Focus before you call it.';
   var list=$('rollList');list.innerHTML='';
@@ -1407,6 +1444,11 @@ function openRollCall(auto){
     var say=el('div','rcsay');
     say.innerHTML='<b>'+c.name+'</b><br><span'+(s.quiet?' class="quiet"':'')+'>“'+s.txt+'”</span>';
     row.appendChild(say);
+    if(S.board&&!c.grey&&obIsMarked(c.id)){
+      var mk=el('span','rcmark','MARKED');
+      mk.setAttribute('aria-label','Marked by your evidence board — your call, not a verdict');
+      row.appendChild(mk);
+    }
     var b=el('button','rcpick',c.cleared?'verified ✓':'Verify');
     b.disabled=!!c.cleared;
     b.onclick=function(){hide('ovlRoll');doVerify(i);};
@@ -1823,6 +1865,7 @@ function openFocus(){
   S.focus.active=true;S.focus.meter=Math.max(0,S.focus.meter-25);
   $('scrub').value=0;$('focusTime').textContent='now';
   $('focusPanel').className='on';
+  curatorSay('rewind');
   $('focusHint').textContent=S.mode==='crew'
    ?'Dotted trails show the last 8s. Real tasks end in a ✨ spark — fakes don\'t. Stretched dots mean someone skipped.'
    :'The dashed line is the Curator\'s current route. Corrupt where they aren\'t heading.';
@@ -2152,6 +2195,8 @@ function startRound(mode,round){
   $('btnVerify').style.display=mode==='crew'?'':'none';
   $('btnSkip').classList.toggle('hid',mode!=='glitch');
   $('btnRoll').classList.toggle('hid',mode!=='crew');
+  $('btnBoard').classList.toggle('hid',mode!=='crew');
+  narrClear();
   $('btnSab').classList.toggle('hid',mode!=='glitch');
   $('rollSub').textContent=S.rolls+' left';
   $('taskWrap').style.display=mode==='crew'?'':'none';
@@ -2215,6 +2260,11 @@ function boot(){
   $('btnGlitch').onclick=function(){startRound('glitch',1);};
   $('chipHow').onclick=function(){showHow('both');};
   $('chipMotion').onclick=function(){RM=!RM;SAVE.motion=!RM;store();document.body.classList.toggle('rm',RM);this.textContent='Motion: '+(RM?'off':'on');this.setAttribute('aria-pressed',String(!RM));};
+  $('chipVoice').textContent='Curator: '+(SAVE.voice?'on':'off');
+  $('chipVoice').setAttribute('aria-pressed',String(!!SAVE.voice));
+  $('chipVoice').onclick=function(){SAVE.voice=SAVE.voice?0:1;store();if(!SAVE.voice)narrClear();this.textContent='Curator: '+(SAVE.voice?'on':'off');this.setAttribute('aria-pressed',String(!!SAVE.voice));};
+  $('btnBoard').onclick=function(){openBoard();};
+  $('btnBoardOk').onclick=function(){closeBoard();};
   $('btnHowOk').onclick=function(){hide('ovlHow');};
   // game buttons
   $('btnFocus').onclick=function(){S.focus.active?closeFocus():openFocus();};
@@ -2273,6 +2323,161 @@ function boot(){
   requestAnimationFrame(frame);
 }
 if(typeof window!=='undefined'&&typeof document!=='undefined'&&document.getElementById&&$('scrTitle')){boot();}
+/* =============== v3.3.0: CURATOR CAPTIONS + DEDUCTION BOARD =============== */
+/* SAVE.voice gates silent text captions only. This game ships no audio of any kind. */
+
+/* ---- Curator captions (narrator) ---- */
+var CURATOR_LINES={
+  seam:["A neat little shortcut. I felt the floor ripple.","In one corner, out another. Cute.","The seams hum when someone slips through."],
+  rewind:["Rewinding? The record remembers what you'd rather it didn't.","Yes, look again. It won't have changed.","Careful — I can rewind too."],
+  rollcall:["Roll Call. Let's see who you trust.","Names, then. The floor is yours."],
+  drift1:["The pattern's fraying. I can see the seams in the story.","Something doesn't add up, and I do love arithmetic."],
+  drift2:["Almost certain now. Almost.","The record is closing in."],
+  ambient:["I keep every version. Even the ones you'd disown.","Off-brand is still a brand. Mine.","The shift moves whether you do or not."]
+};
+var HINT_LINES={
+  drift1:["Keep an eye on who's wandering; the record is starting to notice."],
+  rollcall:["Cross-check with the board before you call it — your evidence, your choice."]
+};
+var NARR_GAP=6.0, NARR_TTL=3.6;
+var NARR_PRI={drift2:70,drift1:60,rollcall:55,seam:45,rewind:40,ambient:10};
+function linesFor(key){var base=CURATOR_LINES[key]||[]; if(SAVE&&SAVE.diff==='gentle'&&HINT_LINES[key])return base.concat(HINT_LINES[key]); return base;}
+function curatorSay(key){
+  if(!S||!S.narr||!SAVE||SAVE.voice===0)return;
+  var arr=linesFor(key); if(!arr.length)return;
+  var now=S.t, pri=NARR_PRI[key]||0, live=S.narr.cur;
+  if(live&&pri<=live.pri)return;
+  var preempting=!!(live&&pri>live.pri);
+  if(!preempting&&(now-S.narr.lastT)<NARR_GAP)return;
+  var lk=S.narr.seenKey[key];
+  if(lk!=null&&(now-lk)<NARR_GAP*2)return;
+  var idx=Math.floor(srnd()*arr.length)%arr.length;
+  S.narr.cur={text:arr[idx],pri:pri,key:key,born:now};
+  S.narr.lastT=now; S.narr.seenKey[key]=now; S.narr.capT=NARR_TTL;
+  var e=$('cap'); if(e){e.textContent='“'+arr[idx]+'”'; e.className='on';}
+}
+function narrClear(){ if(S&&S.narr)S.narr.cur=null; var e=$('cap'); if(e)e.className=''; }
+function stepNarr(dt){
+  if(!S||!S.narr)return;
+  var lvl = S.drift>=80?2 : S.drift>=50?1 : 0;
+  if(lvl>S.narr.driftLvl) curatorSay(lvl===2?'drift2':'drift1');
+  S.narr.driftLvl=lvl;
+  S.narr.ambT+=dt;
+  if(S.narr.ambT>=42){ S.narr.ambT=0; curatorSay('ambient'); }
+  if(S.narr.capT>0){ S.narr.capT-=dt; if(S.narr.capT<=0)narrClear(); }
+}
+
+/* ---- Deduction board (keyed on character id; scenes carry suspects[] of ids) ---- */
+function obRelWindow(){ var d=(SAVE&&SAVE.diff)||'standard'; return d==='gentle'?6.0:d==='sharp'?2.5:4.0; }
+function obPinMax(){ return ((SAVE&&SAVE.diff)==='sharp')?4:6; }
+function obNeed(){ return ((SAVE&&SAVE.diff)==='sharp')?3:2; }
+function obValidLink(i,j){
+  if(i===j)return false;
+  var a=S.scenes[i], b=S.scenes[j]; if(!a||!b)return false;
+  var sb={}; (b.suspects||[]).forEach(function(id){sb[id]=1;});
+  var shared=false; (a.suspects||[]).forEach(function(id){if(sb[id])shared=true;});
+  if(shared)return true;
+  if(a.room!=null&&a.room===b.room)return true;
+  if(a.t!=null&&b.t!=null&&Math.abs(a.t-b.t)<=obRelWindow())return true;
+  return false;
+}
+function obRecomputeMarks(){
+  var m={};
+  S.board.links.forEach(function(L){ if(!L.ok)return;
+    var A=S.scenes[L.a], B=S.scenes[L.b]; if(!A||!B)return;
+    var sb={}; (B.suspects||[]).forEach(function(id){sb[id]=1;});
+    (A.suspects||[]).forEach(function(id){ if(sb[id]) m[id]=(m[id]||0)+1; });
+  });
+  S.board.marks=m;
+}
+function obIsMarked(id){ return !!(S.board&&(S.board.marks[id]||0)>=obNeed()); }
+function obPin(i){
+  if(i<0||i>=S.scenes.length)return false;
+  if(S.board.pins.indexOf(i)>=0)return false;
+  if(S.board.pins.length>=obPinMax())return false;
+  S.board.pins.push(i); return true;
+}
+function obUnpin(i){
+  var k=S.board.pins.indexOf(i); if(k<0)return false;
+  S.board.pins.splice(k,1);
+  S.board.links=S.board.links.filter(function(L){return L.a!==i&&L.b!==i;});
+  if(S.board.sel===i)S.board.sel=-1;
+  obRecomputeMarks(); return true;
+}
+function obLink(A,B){
+  if(A===B)return false;
+  if(S.board.pins.indexOf(A)<0||S.board.pins.indexOf(B)<0)return false;
+  for(var k=0;k<S.board.links.length;k++){var L=S.board.links[k];
+    if((L.a===A&&L.b===B)||(L.a===B&&L.b===A))return false;}
+  if(S.board.links.length>=12)return false;
+  var ok=obValidLink(A,B); S.board.links.push({a:A,b:B,ok:ok}); if(ok)obRecomputeMarks(); return ok;
+}
+function obBoardOpen(){
+  S.board.pins=S.board.pins.filter(function(i){return i>=0&&i<S.scenes.length;});
+  var pinned={}; S.board.pins.forEach(function(i){pinned[i]=1;});
+  S.board.links=S.board.links.filter(function(L){return pinned[L.a]&&pinned[L.b];});
+  if(S.board.sel>=0&&!pinned[S.board.sel])S.board.sel=-1;
+  obRecomputeMarks(); S.board.open=true;
+}
+function obCharById(id){ for(var i=0;i<S.chars.length;i++)if(S.chars[i].id===id)return S.chars[i]; return null; }
+function obSuspectGlyphs(sc){
+  var wrap=el('span','bdsus');
+  (sc.suspects||[]).forEach(function(id){
+    var c=obCharById(id); if(!c)return;
+    var cvs=document.createElement('canvas'); cvs.width=26;cvs.height=26;
+    drawMini(cvs.getContext('2d'),c,26); wrap.appendChild(cvs);
+  });
+  return wrap;
+}
+function renderBoard(){
+  var list=$('boardList'); if(!list)return; list.innerHTML='';
+  if(!S.scenes.length) list.appendChild(el('p','quiet','No scenes yet — a scene is logged when a shape is greyed. Keep watching.'));
+  S.scenes.forEach(function(sc,i){
+    var pinned=S.board.pins.indexOf(i)>=0, seld=S.board.sel===i;
+    var row=el('div','bdrow'+(pinned?' pinned':'')+(seld?' sel':''));
+    var head=el('div','bdhead');
+    head.appendChild(el('b',null,'Scene '+sc.n));
+    head.appendChild(el('span','bdmeta',' · '+sc.room+' · '+sc.victim+' greyed'));
+    row.appendChild(head);
+    row.appendChild(obSuspectGlyphs(sc));
+    var pin=el('button','bdpin',pinned?'📌 Pinned':'Pin');
+    pin.onclick=function(ev){ ev.stopPropagation(); if(pinned)obUnpin(i); else if(!obPin(i))toast('Board is full — unpin a scene first'); renderBoard(); };
+    row.appendChild(pin);
+    if(pinned){
+      row.style.cursor='pointer';
+      row.onclick=function(){
+        if(S.board.sel<0) S.board.sel=i;
+        else if(S.board.sel===i) S.board.sel=-1;
+        else { var A=S.board.sel; var ok=obLink(A,i); S.board.sel=-1; if(!ok)toast('Those scenes don’t connect — try two that share a shape, room or moment'); }
+        renderBoard();
+      };
+    }
+    list.appendChild(row);
+  });
+  renderBoardMarks();
+}
+function renderBoardMarks(){
+  var box=$('boardMarks'); if(!box)return; box.innerHTML='';
+  var ids=Object.keys(S.board.marks).sort(function(a,b){return S.board.marks[b]-S.board.marks[a];});
+  if(!ids.length){ box.appendChild(el('span','quiet','Link two related scenes to build a read.')); return; }
+  box.appendChild(el('span','bdmarkttl','Your read: '));
+  ids.forEach(function(id){
+    var c=obCharById(id); if(!c)return;
+    var chip=el('span','bdchip'+(obIsMarked(id)?' marked':''));
+    var cvs=document.createElement('canvas');cvs.width=24;cvs.height=24;drawMini(cvs.getContext('2d'),c,24);
+    chip.appendChild(cvs);
+    chip.appendChild(el('span',null,' '+c.name+' ×'+S.board.marks[id]+(obIsMarked(id)?' — MARKED':'')));
+    box.appendChild(chip);
+  });
+}
+function openBoard(){
+  if(!S||S.mode!=='crew'||S.over)return;
+  obBoardOpen(); S.paused=true; renderBoard();
+  $('boardIntro').textContent='Pin scenes, then link two that share a shape, a room or a moment. Shapes your links keep pointing at get MARKED — a nudge for Roll Call, never a verdict.';
+  show('ovlBoard');
+}
+function closeBoard(){ if(S&&S.board)S.board.open=false; if(S)S.paused=false; hide('ovlBoard'); }
+
 /* harness hooks */
 if(typeof window!=='undefined'){window.OB={ver:GAME_VERSION,get S(){return S;},newRound:newRound,tick:tick,route:route,witnesses:witnesses,doVerifySim:function(i){var c=S.chars[i];if(c.isGlitch){caughtCrewMode();}else{c.cleared=true;S.integrity--;S.wrongCalls++;if(S.integrity<=0){S.over=true;S.endKind='slip';}}},openFocusSim:function(){S.focus.active=true;S.focus.meter-=25;},closeFocusSim:function(){S.focus.active=false;},CAST:CAST,ROOMS:ROOMS,HUB:HUB,startAct:startAct,finishAct:finishAct,nearThing:nearThing,rseed:rseed,
  SEAMS:SEAMS,SABS:SABS,startSab:startSab,clearSab:clearSab,seamHop:seamHop,HATS:HATS,
@@ -2288,7 +2493,8 @@ if(typeof window!=='undefined'){window.OB={ver:GAME_VERSION,get S(){return S;},n
  doVerify:doVerify,store:store,
  snapTarget:snapTarget,CLARA:CLARA,get PARADE(){return PARADE;},drawClara:drawClara,
  recordScene:recordScene,openScenes:openScenes,wipeScene:wipeScene,sceneOverlap:sceneOverlap,
- stillStanding:stillStanding,bodiesDown:bodiesDown,renderEvidence:renderEvidence,SCENE_RADIUS:SCENE_RADIUS};}
+ stillStanding:stillStanding,bodiesDown:bodiesDown,renderEvidence:renderEvidence,SCENE_RADIUS:SCENE_RADIUS,
+ obValidLink:obValidLink,obPin:obPin,obUnpin:obUnpin,obLink:obLink,obRecomputeMarks:obRecomputeMarks,obIsMarked:obIsMarked,obBoardOpen:obBoardOpen,obNeed:obNeed,obPinMax:obPinMax,obRelWindow:obRelWindow,openBoard:openBoard,closeBoard:closeBoard,openRollCall:openRollCall,renderBoard:renderBoard,curatorSay:curatorSay,narrClear:narrClear,stepNarr:stepNarr,get CURATOR_LINES(){return CURATOR_LINES;},get HINT_LINES(){return HINT_LINES;}};}
 })();
 </script>
 </body>
