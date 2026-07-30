@@ -1417,3 +1417,10 @@ with §H and the R-H## rules.*
   different true numbers. Independently corroborated: R-E21 (T2-4, same day) recorded the sentinel
   "invariant at 45" — the `*.html` universe — while SCI-1 was quoting 51. Both were right about
   different universes; only one said which.
+
+### R-CL01 · Closure invariant corrected (CLOSE-1, 2026-07-30)
+- **loop-mark `ll-g:loop-mark v1` = 50 (BUILD only)** · **written-line `What I said, and what it changed` = 68 (GROW/LAUNCH)**; mutually exclusive by pathway, 0 carry both. Derive: `git grep -l '<marker>' -- '*.html' | wc -l`.
+- The 20 `Science_Teesside/{Grow,Launch}/` decks were re-closed BUILD-ring → written-line; the 5 `Science_Teesside/Build/` keep the ring (they are BUILD). Supersedes the pre-CLOSE-1 leak (loop-mark 70).
+- **Art divergence:** 18 `{Grow,Launch}/Slideshows/*_ART_*` + `Launch/Art_L*_v5` close via the **Arts Award evidence-capture flow** (authorship/witness/next-step) — DELIBERATE-DIVERGENCE (REGISTER P3), **not** a gap. Full record: `_passclose1/INVARIANT_CORRECTED.md`.
+- **Assessed pair** `GROW_HUM_W7`/`LAUNCH_HUM_W7`: neither marker, by supervised-assessment design; open question deferred to September day-close; proposed (unapplied) diff at `_passclose1/assessed_pair_proposed.diff`; R-A01 untouched.
+- **Standing debt:** B3 LAUNCH warrant step-up owed — moves the written-line wording, not its count.
