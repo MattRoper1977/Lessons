@@ -80,3 +80,20 @@ AMBER = done, flagged; RED = stopped and asked. Written at the time, never recon
         Legacy science (biology/ chemistry/ "2 Physics 10/", 40 files) byte-identical to pre-merge
         main. AMBER: jsdom/PIL absent in this container; playwright installed at run time to drive
         the render gates against the pre-installed Chromium.
+
+# --- SCI-3F closing items (post-ship, docs-only, no history rewrite) ---
+[GREEN] SENTINEL UNIVERSE STRING MADE EXACT (closing item A). Everywhere this pass wrote "tracked
+        *.html" for the 45/70 count it meant "tracked *.html CONTAINING 'll-g:loop-mark'" (the
+        lessons) — NOT the raw `git ls-files '*.html' | wc -l`, which is ~433 at fork 8540eee and
+        ~459 at merged main 2ce19ce. The two must never be compared: a future pass reading "tracked
+        *.html = 70" literally would run the raw count, get ~459, and infer a catastrophe (the exact
+        45/51/76/79/235 confusion that cost this programme two turns). sentinel.py now prints BOTH,
+        each labelled with its own universe, both derived at emit time from the SHA: at the merge
+        boundary 2324ddc->2ce19ce, loop-mark = 45->70 (+25, THE sentinel) and ALL tracked *.html =
+        434->459 (+25, context only). Corrected in FINDINGS_SCI2.md and MERGE_DOSSIER.md too. The
+        earlier AMBER "SENTINEL RECONCILED / TRACKED *.html" lines above are left in place (no
+        rewrite); this line is their exact-universe correction.
+[GREEN] MERGE_DOSSIER re-stamped at merged main 2ce19ce (closing item B) with the derivation
+        command, the post-merge parked-branch overlap matrix, an explicit resources.json union
+        policy for the now-GUARANTEED sbx-art-a2 conflict on 29 Aug, and 2324ddc recorded as the
+        pre-SCI-3F rollback SHA inside the dossier itself.

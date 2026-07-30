@@ -19,12 +19,20 @@ Autonomy pass. Decisions made under the SCI-2 GREEN/AMBER/RED bands are logged l
 **Sentinel, reconciled and made self-deriving (§1).** The disagreement (45→70 vs 51/76) was a
 **universe** confusion, not an error:
 
-- **Now (HEAD), tracked `*.html`: 70.** At the fork (`8540eee`): **45.** origin/main: **45** (no
-  loop-mark html was added on `main`). Delta **+25** = exactly the 25 science lessons.
+- **Now (HEAD), tracked `*.html` containing `ll-g:loop-mark`: 70.** At the fork (`8540eee`): **45.**
+  origin/main: **45** (no loop-mark html was added on `main`). Delta **+25** = exactly the 25 science
+  lessons.
 - The **51** was the ALL-FILES universe (html + 6 non-html tooling/docs). That universe is
   **unstable**: it reads **79** now, not 51+25=76, because my own committed tooling (`render_v5.py`,
   `FINDINGS.md`, `sentinel.py`) also mentions the string. So the all-files number must never be
-  carried; the `*.html` universe is the gate's and the one to quote.
+  carried; the loop-mark `*.html` universe is the gate's and the one to quote.
+
+> **Correction (SCI-3F, 2026-07-30) — universe string made exact.** Every "tracked `*.html`" above
+> means **tracked `*.html` CONTAINING `ll-g:loop-mark`** (the lessons), NOT the raw
+> `git ls-files '*.html' | wc -l` (~433 at fork, ~459 at merged main). A future reader running the
+> raw command must not compare its ~459 to the recorded 70 and infer a catastrophe. `sentinel.py`
+> now prints BOTH numbers, each labelled with its own universe, both derived at emit time from the
+> SHA — the loop-mark count IS the sentinel; the all-html count is context only.
 - **The "six files"** (the 51-vs-45 gap): `LL-I_B1_measurement_map.md`, `INSTRUMENTS.md`,
   `bundle_facts.py`, `patch_loopmark.py`, `REGISTER.md`, `_passsg/FINDINGS.md` — all **non-html
   tooling/docs**, **all present** in both `8540eee` and HEAD, **never removed**, and **not newly

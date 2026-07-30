@@ -1,28 +1,49 @@
 # Merge dossier — Science (Pass SCI) into `main`
 
-> **SCI-3F RE-DERIVATION (2026-07-30, at ship time).** This dossier was written at close-out
-> against `origin/main = e3f7212`. Under Matt's SCI-3F authorisation THIS branch is being merged
-> to `main` and pushed. `origin/main` has since advanced to **`2324ddc`** (only `Games/Off_Brand.html`
-> touched — off my surface). The unmerged set below is **re-derived from `git ls-remote` at `2324ddc`**
-> and supersedes §1's e3f7212 table. Rollback SHA recorded in DECISIONS.md before the merge step.
+> **SCI-3F STAMP — re-derived AFTER the ship, at merged `main = 2ce19ce` (2026-07-30).**
+> This dossier was first written at close-out against `origin/main = e3f7212`, then re-derived at
+> `2324ddc` pre-merge; the SCI-3F ship then advanced `main` to **`2ce19ce`**, which makes any
+> pre-merge unmerged-set table false the moment it is read (the "stamp that couldn't be true when
+> written" family — R-G03/R-E12). This block is the authoritative one and is stamped at the tip it
+> describes.
 >
-> **Unmerged branches at `2324ddc` (ahead>0):** the estate has largely converged since close-out —
-> most SoW/audit passes are now IN main. Genuinely unmerged:
+> - **Stamp SHA (describes THIS `main`):** `2ce19ce`.
+> - **Pre-SCI-3F rollback SHA (recorded here, not only in DECISIONS.md):** **`2324ddc`**
+>   ("Off-Brand v3.1.2…"). Undo the ship with `git push --force-with-lease origin 2324ddc:main`.
+> - **Derivation command (re-runnable):**
+>   `for b in $(git ls-remote --heads origin | sed 's#.*refs/heads/##'); do echo "$b $(git rev-list --count origin/main..origin/$b) $(git ls-tree -r --name-only origin/$b | grep -c '^Science_Teesside/')"; done`
 >
-> | Branch | tip | ahead | has `Science_Teesside/` | touches `resources.json` |
+> **Unmerged branches at `2ce19ce` (ahead > 0):**
+>
+> | Branch | tip | ahead vs 2ce19ce | has `Science_Teesside/` | touches `resources.json` |
 > |---|---|---|---|---|
-> | **claude/sci-1-pass-science-build-b2dyew** (mine, rebased) | e9b72b3→rebased | 15 | **yes (25)** | yes (append 25) |
+> | claude/sci-1-pass-science-build-b2dyew (mine) | e9b72b3 | 15* | yes (25) | yes |
 > | pass-sl-sow-launch | 2a1cfda | 12 | no | no |
-> | pass-sbx-art-a2 | 462cfa6 | 5 | no | yes (Art entries) |
+> | pass-sbx-art-a2 | 462cfa6 | 5 | no | **yes (Art entries)** |
 > | pass-art-a2b | 952d260 | 2 | no | no |
 > | pass-u-audit | 7c4b2b4 | 1 | no | no |
-> | *(all others: art-remediation, grow-sow-audit, pass-e/q-ko-triage, pass-pq-*, pass-sb/sg-sow, pass-x, pass-y, pilot/launch-hum)* | — | **0 (MERGED)** | — | — |
+> | *(art-remediation, grow-sow-audit, pass-e/q-ko-triage, pass-pq-*, pass-sb/sg-sow, pass-x, pass-y, pilot/launch-hum)* | — | 0 (MERGED) | — | — |
 >
-> **Load-bearing fact still holds:** NO other unmerged branch contains `Science_Teesside/` — the 25
-> lessons remain unique; **zero lesson-file conflict.** The only both-sides file vs `2324ddc` is
-> `resources.json`, resolved by union (my appends vs main's mid-file `featured` flags are disjoint;
-> the rebase auto-unioned cleanly, 411 entries, all flags preserved). REGISTER.md: NOT touched by
-> main since merge-base `2236d0b` → no conflict this pass.
+> **\* My own branch is CONTENT-MERGED, ref superseded.** The 25 lessons on `e9b72b3` are
+> byte-identical in `2ce19ce` (0 differing); the "ahead 15" is only because the SCI-3F rebase gave
+> the commits new SHAs, so the old ref is not an ancestor. Nothing on it needs merging on 29 Aug —
+> it can be deleted in the UI (Matt deletes branches, not this pass).
+>
+> **Post-merge overlap matrix (my new main ∩ each parked branch's changed paths):**
+> `pass-sl-sow-launch` 12 ahead → **0** overlap · `pass-sbx-art-a2` 5 ahead → **`resources.json` only**
+> (0 sci-tees lines; 37 disjoint Art lines) · `pass-art-a2b` 2 ahead → **0** · `pass-u-audit` 1 ahead → **0**.
+> NO other unmerged branch contains `Science_Teesside/` — the 25 lessons stay unique.
+>
+> **GUARANTEED 29-Aug conflict — `resources.json` on the `pass-sbx-art-a2` merge (policy, explicit):**
+> That branch adds Art entries to the same `resources.json` this ship already extended with 25
+> `sci-tees` objects. The conflict is now certain. Resolution:
+> 1. **Union both sides** — keep every entry from main and every entry sbx-art-a2 adds; the two edit
+>    disjoint regions (my sci block at the array tail, its Art entries elsewhere).
+> 2. **Re-validate JSON** — `python3 -c "import json;json.load(open('resources.json'))"` must pass.
+> 3. **Assert entry count == main_count + sbx_added − duplicates** (there should be 0 duplicate ids;
+>    if any, the union kept one — investigate before committing).
+> 4. **Assert all 25 `sci-tees` ids survive** — `grep -c '"id": "sci-tees' == 25`, ids unique — and
+>    every `featured` flag main carries (4) is preserved.
 
 ---
 *Historical close-out record below (derived at `e3f7212`, retained unchanged):*
@@ -117,10 +138,11 @@ Run against **merged `main`**, not against this branch:
    classified, icon+word survives · LL-INST-09 green all tiers.
 2. **Contact-sheet render assertions** (`build_contact_sheet.py`): 25/25, 0 clips, 0 label overlaps,
    no blank/overflow print p1. (Catches a merge that corrupted a lesson's markup.)
-3. **Sentinel, re-derived on the merged tree, universe stated** (`sentinel.py`): tracked `*.html`,
-   `_passsci1/` excluded. Expect **main's count + 25** with the 25 as the file-list delta. Today
-   main = 45, so a clean merge of this branch alone = **70**; if SL/SG/etc. merge first, re-derive —
-   do not predict (R-G06).
+3. **Sentinel, re-derived on the merged tree, universe stated** (`sentinel.py`): tracked `*.html`
+   **CONTAINING `ll-g:loop-mark`** (NOT raw `git ls-files '*.html'`, which is ~459 and is context
+   only), `_passsci1/` excluded. Expect **main's loop-mark count + 25** with the 25 as the file-list
+   delta. Today main = 45, so a clean merge of this branch alone = **70**; if SL/SG/etc. merge first,
+   re-derive — do not predict (R-G06). [SCI-3F verified: 45→70 at the merge boundary.]
 4. **Hub reachability on merged `resources.json`**: the `Science · Teesside` chip count equals the
    number the 2026-27 collection returns (25). `main`'s `featured` flags do not change the science
    chip; re-derive from the hub filter, do not read a config.
