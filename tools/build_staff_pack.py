@@ -33,7 +33,7 @@ STRIP = "PROGRESS SCHOOLS · TEES VALLEY"
 
 # ---------------------------------------------------------------- scope
 INCLUDE_DIRS = [
-    "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "Humanities_Teesside",
+    "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Humanities_Teesside",
     "Grow/Slideshows", "Launch", "Tutor_Time", "DT_Community_Upcycling",
     "Science_Teesside",   # PACK-1 v2: current science suite IN; frozen biology/chemistry/"2 Physics 10" stay OUT
 ]
