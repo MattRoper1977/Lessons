@@ -316,7 +316,7 @@ svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42
 OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
 function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
 const SUITE="Art · Teesside Studio Suite";
-const PRINTPACK=new Set([SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA"]);
+const PRINTPACK=new Set([SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA"]);
 const IC={screen:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',print:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',tiers:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',pad:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg>',tab:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg>'};
 function isPack(r){return r.year==="2026-27"&&(r.type==="lesson"||r.type==="revision")&&PRINTPACK.has(r.subject)}
 function fmtIcons(r){const o=[];
@@ -341,7 +341,7 @@ const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family
 const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
 if(browsing){ // organised view: one section per subject, A→Z
   const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-  const PRIORITY=[SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
+  const PRIORITY=[SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
   const LEGACY={"Art":"Original series — superseded by the Teesside Studio Suite above. Kept for reference."};
   const subs=Object.keys(bySub).sort((x,z)=>{
     const lx=x in LEGACY?1:0,lz=z in LEGACY?1:0;
