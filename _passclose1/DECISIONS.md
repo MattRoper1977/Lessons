@@ -41,6 +41,6 @@
 ## §4 ASSESSED PAIR — proposed diff only, R-A01 untouched
 - GROW_HUM_W7 + LAUNCH_HUM_W7: no print-lundy, no written-line; ★ASSESSED supervised-conditions.
 - Closure would sit OUTSIDE the conditions block (print pack is separate from the screen assessed card);
-  R-A01 NOT engaged. Exact proposed insertion before print-feedback -> _passclose1/assessed_pair_PROPOSED.diff
+  R-A01 NOT engaged. Exact proposed insertion before print-feedback -> _passclose1/assessed_pair_proposed.diff
 - CHANGE NOTHING. Caveat: full S/V/A/I zones would be authored (RED); minimal diff adds the marker only.
   Open question: should a supervised assessed lesson carry pupil-voice closure at all.
