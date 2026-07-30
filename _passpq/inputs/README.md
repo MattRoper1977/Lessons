@@ -1,57 +1,62 @@
-# _passpq/inputs/ — the official instruments
+# _passpq/inputs/ — the official instruments (COPYRIGHT-GATED)
 
-**Status: EMPTY. Phase 0 blocked.** `asdan.org.uk` is refused by this environment's
-network policy (proxy gateway returns `403 connect_rejected` — a policy denial, not a
-transient error; confirmed via `$HTTPS_PROXY/__agentproxy/status`). Neither `curl` nor
-`WebFetch` can reach it, and there is no per-tool fix. The audit therefore ran against
-the brief's **§2 baseline as PROVISIONAL authority**, with every spec-dependent line
-flagged `UNVERIFIED-AGAINST-SPEC`. The moment the three PDFs below are committed here,
-that flag comes off and the coverage matrices reconcile against the real instrument.
+**STATUS: intentionally EMPTY of ASDAN documents, and it must stay that way.**
 
-## Publicly hosted — download and drop into this folder (no login needed)
+## The hard rule (supersedes every earlier instruction in this file)
 
-1. **PEQ Qualification Specification** — the primary instrument. Expect Version 1.2,
-   October 2025. If a newer version is served, use it and report the version delta.
-   `https://www.asdan.org.uk/media/looduarj/asdan-peq-specification.pdf`
-2. **PEQ flyer**
-   `https://www.asdan.org.uk/media/yoebz1qg/personal-effectiveness-qualifications-flyer.pdf`
-3. **ASDAN qualifications key dates & performance information 2026**
-   `https://www.asdan.org.uk/media/qvxkrtjy/asdan-qualifications-key-dates-and-performance-information-2026.pdf`
+The three ASDAN instruments are **© ASDAN**. They must **never be committed** to this
+public repository — **in whole or in part, in any format**: not here in `inputs/`, not
+anywhere in the tree, not as PDFs, not as extracted full text, not as screenshots.
 
-**Verify each downloaded file is what it claims before relying on it** (open it, confirm
-the title/version) — the estate rule is that any third-party or AI-generated ASDAN
-description has repeatedly fabricated requirements and is never authoritative.
+Work from them **locally only**, git-ignore them, and commit only **your own extracted fact
+tables and findings, each citing section/page.** Facts and figures with citations are fine;
+wholesale reproduction is not. This rule **overrides** the earlier "RESUME SEQUENCE" that
+told a pass to *commit* the PDFs to this folder — that step is **retracted**.
 
-## Member-gated — a shopping list for Matt / Cheryl (ASDAN member login required)
+## What replaced the download-and-commit step
 
-These were **not** guessed at. Any audit finding that depends on one is marked
-`UNDETERMINED — needs <document>` in FINDINGS.md, never inferred.
+The three documents were provided directly to a working session (Aug 2026) and reconciled
+locally. Their facts now live, with citations and **no wholesale copy**, in:
+
+- **`../SPEC_FACTS.md`** — the committed source of truth (units, codes, URNs, credits, GLH,
+  qualification sizes, barred combinations, delivery/assessment/IQA/EQA/admin rules, §17
+  minimum evidence counts). From the **PEQ specification v1.2 October 2025** (verified title
+  page + review history).
+- **`../DATES_2026-27.md`** — from the **Key dates & performance information 2026** PDF plus
+  the spec's operational deadlines.
+- **`../RECONCILIATION.md`** — every prior `UNVERIFIED-AGAINST-SPEC` flag resolved to
+  VERIFIED / CORRECTED / STILL-UNDETERMINED against the above.
+- **`../COMPLIANCE_CHECKLIST.md`** — what "officially compliant" still requires beyond
+  spec-accurate lessons.
+
+The three source files (spec v1.2, key-dates 2026, assessment-plan blank template) are the
+authoritative instruments; keep them on Matt's machine, never in git.
+
+## Verify-on-receipt (kept — still the right discipline)
+
+Before relying on any ASDAN file, open it and confirm title/version/page count. The
+specification used here was confirmed as **"Version 1.2 October 2025"** on p1 and in the p2
+review history. The estate rule stands: any third-party or AI-generated *description* of
+ASDAN requirements has repeatedly fabricated requirements and is **never authoritative** —
+only the instruments themselves are. Authority hierarchy: **committed spec > Evidence
+Binder > nothing.**
+
+## Member-gated — still the shopping list for Matt / Cheryl (ASDAN login required)
+
+These were **not** among the three files provided and remain outstanding. Any audit finding
+that depends on one stays `STILL-UNDETERMINED — needs <document>`, never inferred:
 
 - PEQ **delivery guide**
-- The **unit assessment booklets** (ComSkE3 etc.)
+- The **unit assessment booklets** (ComSkE3 etc.) — hold the per-criterion assessment record
 - **Assessment Planning Guidance**
 - **Internal Quality Assurance Guidance**
-- The **PEQ qualification tracker**
-- The **PEQ challenge bank**
+- The **PEQ qualification progress tracker**
+- The **PEQ challenge bank / suggested activity sheets**
 
-## RESUME SEQUENCE (once the three PDFs are dropped here) — from Matt's close-out ruling
+## Strongest internal corroborator (unchanged, now confirmed)
 
-1. **Verify each downloaded file is what it claims** — state title page, version, and page
-   count for each before relying on it.
-2. **Commit them** to `_passpq/inputs/`.
-3. **Reconcile every §2 claim against the spec and clear or amend each
-   `UNVERIFIED-AGAINST-SPEC` flag individually — never as a batch stamp.**
-4. **Re-derive CLAIMS and both COVERAGE deltas** wherever a flag moved.
-5. **State any spec-vs-§2 mismatch as a finding** (the spec wins; report the delta).
-6. Then the conditional builds unlock: **T2-2 / T2-3 unit-code corrections** execute only
-   where the **spec and the Evidence Binder agree** on every target code (two-source);
-   any disagreement converts that code to a tabled finding.
-
-## Note on the strongest internal corroborator
-
-`ASDAN/ASDAN PEQs/Evidence_Binder_PEQ_v7.html` embeds a unit/criterion/credit data model
-that **carries Ofqual unit reference numbers** (e.g. ComSkE3 = `R/651/6411`, 3 credits /
-30 GLH) and matches §2 line-for-line. It is not the spec, but a fabricated table does not
-carry live Ofqual URNs, so it is treated in this audit as a **strong internal
-corroborator** of §2 — still to be checked against the committed PDF, but load-bearing
-until then.
+`ASDAN/ASDAN PEQs/Evidence_Binder_PEQ_v7.html` embeds a unit/criterion/credit model
+carrying Ofqual URNs (e.g. `ComSkE3 = R/651/6411`, 3 cr / 30 GLH). It was treated as a
+strong corroborator of §2; the committed spec now **confirms it line-for-line** (see
+`../RECONCILIATION.md`). It is the second source for the two-source-agreement gate on unit-
+code corrections.

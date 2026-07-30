@@ -1,5 +1,12 @@
 # FINDINGS.md — Pass PQ · PEQ audit of BUILD & GROW ASDAN
 
+> **⟲ RECONCILED (spec v1.2 Oct 2025 now in hand).** Every `UNVERIFIED-AGAINST-SPEC` flag
+> below is resolved in **`RECONCILIATION.md`** (VERIFIED 24 · CORRECTED 3 · STILL-UNDETERMINED
+> 5). Spec facts: **`SPEC_FACTS.md`**; dates: **`DATES_2026-27.md`**. Two-source agreement
+> (spec + Evidence Binder) is **total**, so T2-2/T2-3 unit-code fixes are unlocked. The one
+> substantive correction: the **"10-hour" plan-use window is NOT on Communication** (it is on
+> the other five skills). This original text is retained as the audit record.
+
 **Letter PQ.** No prior `_passpq/` or "Pass PQ" ledger entry existed → no self-rename.
 **Base SHA** `32ca685e1df619b333f3ee4385aed227aa675cdf` (origin/main), branch
 `pass-pq-peq-audit`. **Nothing merged — Matt merges.** The audit was measure-and-report

@@ -1,8 +1,17 @@
 # QUESTIONS_FOR_CHERYL.md — decisions only the centre/coordinator can settle
 
-**From Pass PQ (PEQ audit), base SHA `32ca685e…`.** These are registration, membership and
-process decisions. The audit **recommends nothing as decided** — it models options.
-Each item names the document that would unlock it, where one is needed.
+**From Pass PQ (PEQ audit), base SHA `32ca685e…`; figures now spec-verified against v1.2
+Oct 2025 (`SPEC_FACTS.md`), dates from `DATES_2026-27.md`.** These are registration,
+membership and process decisions. The audit **recommends nothing as decided** — it models
+options. Each item names the document that would unlock it, where one is needed.
+
+**The dates that now matter (full detail in `DATES_2026-27.md`):** PEQ suite is current
+(review date **31/08/2027**, no registration/certification end date set). **CoPE/AoPE close
+to new registration on 31/12/2025** — so a Sept-2026 cohort must be on **PEQ**. Operational
+sequence: register learners (coordinator, **before any assessment**) → teach/assess → **IQA
+before EQA** → **book the first-year EQA activity** (once ≥1 unit is completed, assessed,
+IQA'd) → **confirm names to ASDAN ≈4 weeks before the EQA sampling date** → EQA feedback +
+certificates within 20 working days each.
 
 ---
 
@@ -25,12 +34,15 @@ Model from CREDIT_PATHWAYS.md (recommends nothing). For GROW L1, **three options
 1. **Extended Award as-is** — GROW reaches **L1 Extended Award (9 cr)** today, no new work.
 2. **Add WellbLe1 to GROW** — teach + bank Wellbeing at L1 → six L1 units = 15 cr → **L1
    Certificate** (Route A).
-3. **Adjacent-credit route (PROVISIONAL)** — five taught L1 units = 12 cr at level (≥ min
-   11); bank **Wellbeing at E3** as the sixth skill within the max-3 adjacent allowance →
-   15 cr → **L1 Certificate** with no new L1 teaching (Route B; barred-combination fine —
-   Wellbeing at one level only). Re-verify thresholds against the spec.
+3. **Adjacent-credit route (VERIFIED)** — five taught L1 units = 12 cr at level (≥ min 11);
+   bank **Wellbeing at E3** as the sixth skill within the max-3 adjacent allowance → 15 cr →
+   **L1 Certificate** with no new L1 teaching (Route B; barred-combination fine — Wellbeing
+   at one level only). Thresholds confirmed against spec §5.1 p10 (min 11 at level, max 3
+   adjacent — RECONCILIATION C3).
 
-BUILD, *if* PEQ E3 is claimed → up to **E3 Certificate (all six E3 units = 14)**.
+BUILD, *if* PEQ E3 is claimed → up to **E3 Certificate (all six E3 units = 14)** — verified.
+(LAUNCH's full-year L1 target reaches the **L1 Certificate**: all six L1 units = 15 ≥ 14,
+RECONCILIATION C1.)
 
 ### Q3 · Does GROW register anyone at Level 2?
 GROW's Stretch tier is deliberately **written to L2 evidence standard** (design). The Scheme
@@ -45,14 +57,21 @@ who registers PEQ candidates with ASDAN, and that it is not being conflated with
 route. Learners must be **registered before assessment counts** (§2).
 
 ### Q5 · Does the school's ASDAN membership already carry PEQ approval?
-Centres previously approved for **CoPE/AoPE transfer to PEQ automatically** (§2 — to verify).
-**Confirm whose approval the school holds** and whether PEQ is live on it. This is a
-membership fact, not a repo fact. **UNDETERMINED — needs the ASDAN centre account.**
+The spec confirms centres must hold **ASDAN Qualifications membership approval** and, **where
+appropriate, request approval for the Personal Effectiveness suite, *before delivering***
+(§8 p16). It does **not** state that CoPE/AoPE centres transfer to PEQ automatically — that
+earlier claim is **not in the spec** and must not be relied on; ASDAN publishes a **"PEQ
+transition guidance"** document (§16) which is the place to check. **Confirm whose approval
+the school holds and whether the PEQ suite is live on it.** Membership fact, not a repo fact.
+**STILL-UNDETERMINED — needs the ASDAN centre account + PEQ transition guidance.**
 
 ### Q6 · Book the first-year EQA sampling activity.
-**First-year centres MUST book an EQA sampling activity in year one**, once ≥1 unit is
-completed, assessed and **IQA'd** (§2). IQA must precede EQA or ASDAN cannot award.
-**Action:** who is the IQA, when does the first unit complete, and when is EQA booked?
+**First-year centres MUST arrange an EQA sampling activity during the first year of
+delivery**, for a date once ≥1 unit is completed, assessed and **IQA'd** (spec §12 p19).
+IQA must precede EQA or ASDAN cannot award (§11 p18). EQA is usually **remote**; names must
+be confirmed to ASDAN **≈4 weeks before** the sampling date (§14 p20). **Action:** who is
+the IQA (they need "IQA for ASDAN qualifications" training first, §15.2), when does the
+first unit complete, and when is the EQA booked?
 
 ### Q7 · Obtain the member-gated documents (the audit is blocked without them).
 An ASDAN member login is needed for: the **PEQ delivery guide**, the **unit assessment
