@@ -461,3 +461,12 @@ Built the three staff-pack zips (see REGISTER R-K01) from main and returned them
 - **MARK_SVG / `gen_entry` is unreconciled — hard precondition of the 29 Aug full rebuild.** The committed `rebrand()` misses the aria-less "M"-mark on **12** entry docs (7 LAUNCH + 5 GROW — not the 7 R-J01 first counted). Until `MARK_SVG`/`gen_entry` catches the geometry (not the attribute), the full rebuild must re-run the supplementary PS_MARK pass, or 12 entry docs ship with the Matt logo on Progress branding. **TRIGGER: before the 29 Aug full pack rebuild.**
 - 29 Aug merges SL → SBX (+ a2b, pass-u) with **append-only union** on `resources.json` / `REGISTER.md` (keep both sides, never reorder — per R-J01).
 - PEQ facts remain **UNVERIFIED-AGAINST-SPEC** (ASDAN PDFs absent); reconcile at the Pass PQ resume. Carried into the pack README ("do not promise pupils accreditation yet").
+
+
+### PACK-LN — LAUNCH network pack + Aut-1 year-plan workbook built from `f8c4bd6` (2026-07-30)
+Network zip returned as a download (never committed); the name-free LAUNCH Autumn year-plan workbook committed to `Planning/LAUNCH/` (see REGISTER R-K02). Forward ledger:
+- **Full pack rebuild has the `MARK_SVG` reconciliation as a HARD PRECONDITION.** The committed `rebrand()`/`gen_entry` still misses the aria-less "M"-mark on the 12 entry docs (7 LAUNCH + 5 GROW); reconcile it before the 29 Aug full rebuild or those docs ship the Matt logo.
+- 29 Aug merges SL → SBX (+ a2b, pass-u) with **append-only union** on `resources.json` / `REGISTER.md` (keep both sides, never reorder).
+- **Root `/HANDOVER.md` wholesale supersession** still owed at merge day.
+- **PEQ facts UNVERIFIED-AGAINST-SPEC** (ASDAN PDFs absent): ComSk1 criterion codes/credits provisional; reconcile at the spec check before assessment. Carried into the pack README + workbook provenance banner.
+- **Spring/Summer + Aut-2 LAUNCH modules** teed up on the same generator (`_passla/build/`); building them lets the Autumn-only workbook grow into the full-year plan and makes the L1 Certificate a built reality.
