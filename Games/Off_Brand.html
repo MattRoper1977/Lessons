@@ -300,7 +300,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <button class="chip" id="chipHow">How to play</button>
   </div>
   <p class="foot">MADE BY MATT · single-file · offline-first · nothing uploaded — nobody is ever voted out; the Glitch just gets a friendly reformat</p>
-  <p class="foot" style="margin-top:6px">v3.1.2 · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties · for Clara ♥</p>
+  <p class="foot" style="margin-top:6px">v3.2 · steering update — suggested by Clara ♥ · scene log · five jobs · Roll Call · scenes · seams · kit · field guide · three difficulties</p>
 </div>
 
 <!-- ============ CINEMATIC ============ -->
@@ -433,7 +433,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <script>
 (function(){
 'use strict';
-var GAME_VERSION='3.1.2';
+var GAME_VERSION='3.2.0';
 /* ================= helpers ================= */
 function $(id){return document.getElementById(id);}
 function clamp(v,a,b){return v<a?a:(v>b?b:v);}
@@ -464,12 +464,26 @@ ROOMS.forEach(function(r){
 });
 function roomOf(p){for(var i=0;i<ROOMS.length;i++){var r=ROOMS[i];if(p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h)return r;}return null;}
 function route(from,to){
+  /* Deterministic, straight-line routing. The old router pushed a RANDOMLY jittered
+     hub waypoint on every call, so identical taps produced different wobbling walks —
+     Clara's "bouncing off walls". Now: exit door → (a fixed hub crossing point on the
+     line between the doors, only if the leg actually crosses the floor) → entry door →
+     target. Same tap, same clean path, every time. */
   var pts=[],fr=roomOf(from),tr=roomOf(to);
-  if(fr&&(!tr||tr.id!==fr.id)) pts.push({x:fr.door.x,y:fr.door.y});
-  if((!fr||!tr||fr.id!==tr.id)&&dist(from,HUB)>HUB.r-10) {
-    if(!(fr&&tr&&fr.id===tr.id)) pts.push({x:HUB.x+(srnd()*60-30),y:HUB.y+(srnd()*60-30)});
+  var a=from, b=to;
+  if(fr&&(!tr||tr.id!==fr.id)){pts.push({x:fr.door.x,y:fr.door.y});a=fr.door;}
+  var entry=(tr&&(!fr||fr.id!==tr.id))?tr.door:null;
+  var legEnd=entry||to;
+  if((!fr||!tr||fr.id!==tr.id)){
+    var mx=(a.x+legEnd.x)/2,my=(a.y+legEnd.y)/2;
+    var dh=dist({x:mx,y:my},HUB);
+    if(dh>HUB.r-14){ // pull the crossing point onto the hub disc so walks sweep through the middle cleanly
+      var k=(HUB.r-14)/(dh||1);
+      mx=HUB.x+(mx-HUB.x)*k; my=HUB.y+(my-HUB.y)*k;
+    }
+    if(dist(a,legEnd)>150)pts.push({x:mx,y:my});
   }
-  if(tr&&(!fr||fr.id!==tr.id)) pts.push({x:tr.door.x,y:tr.door.y});
+  if(entry)pts.push({x:entry.x,y:entry.y});
   pts.push({x:to.x,y:to.y});
   return pts;
 }
@@ -483,10 +497,6 @@ var CAST=[
  {id:'pip',name:'Pip',shape:'dot',hue:'#7FD8A4'},
  {id:'dash',name:'Dash',shape:'tilde',hue:'#E0B34C'}
 ];
-/* Clara — the workshop's guest of honour: an eight-year-old from London with bright
-   blonde hair. She appears on the title parade and in the Field Guide only; she is never
-   a crew shape and never the Glitch, so the six-shape game logic is entirely unchanged. */
-var CLARA={id:'clara',name:'Clara',shape:'clara',hue:'#EEC96A'};
 
 /* ================= state ================= */
 var S=null, SAVE=null, RM=false;
@@ -500,7 +510,6 @@ function loadSave(){
     if(s&&s.v===3){for(var k in d){if(typeof s[k]==='undefined')s[k]=d[k];}SAVE=s;}
     else SAVE=d;
   }catch(e){SAVE=d;}
-  SAVE.seen=SAVE.seen||{};SAVE.seen.g_clara=1; // Clara's entry is always unlocked
 }
 function store(){try{localStorage.setItem('mbm_offbrand',JSON.stringify(SAVE));}catch(e){}}
 
@@ -538,7 +547,7 @@ function newRound(mode,round){
      drift:0,integrity:DIF().shields,wrongCalls:0,repairs:0,caught:false,over:false,endKind:'',
      focus:{meter:100,active:false,at:0},paused:false,
      sab:{kind:null,t:0,room:null,fixedBy:null,responder:null,notice:0},sabCd:(mode==='crew'?26-round*4:10),sabSeen:0,visionT:0,
-     comm:0,rolls:DIF().rolls,maxShields:DIF().shields,maxBodies:DIF().bodies,scenes:[],sceneN:0,seamCd:0,
+     comm:0,rolls:DIF().rolls,maxShields:DIF().shields,maxBodies:DIF().bodies,scenes:[],sceneN:0,seamCd:0,dest:null,
      trails:{},logs:[],
      corruptCd:0,skipCdP:0,verifyBusy:false,toastT:0,lastSampleT:0,verifiedBy:null};
   everyChar(function(c){S.trails[c.id]=[];c.visits=[];});
@@ -769,9 +778,22 @@ function starRule(win){
 }
 
 /* ================= player actions ================= */
+function snapTarget(wx,wy){
+  /* Tap NEAR a station, greyed teammate, the terminal, or (as the Glitch) a seam and
+     the walk lands beside it — no pixel-hunting. Tap open floor and you go exactly there. */
+  var best=null,bd=76;
+  function cand(x,y,ox,oy){var d=Math.hypot(x-wx,y-wy);if(d<bd){bd=d;best={x:x+(ox||0),y:y+(oy||0)};}}
+  ROOMS.forEach(function(r){cand(r.station.x,r.station.y,0,30);});
+  S.chars.forEach(function(c){if(c.grey)cand(c.x,c.y,0,26);});
+  cand(HUB.x,HUB.y,0,34);
+  if(S.mode==='glitch')SEAMS.forEach(function(sm){cand(sm.x,sm.y,0,0);});
+  return best||{x:wx,y:wy};
+}
 function tapWorld(wx,wy){
   if(S.over||S.focus.active)return;
+  var t=snapTarget(wx,wy);wx=t.x;wy=t.y;
   var p=S.player;
+  S.dest={x:wx,y:wy,t:S.t};
   if(S.mode==='glitch'&&S.skipArm){S.skipArm=false;seeIt('g_skip');p.skipT=0.55;p._ev='skip';p._skipSeen=false;S.skipCdP=6;goTo(p,{x:wx,y:wy});updateSkipBtn();return;}
   p.fixing=null;p.fixT=0;p._corrupting=false;p._walked=true;
   goTo(p,{x:wx,y:wy});
@@ -1012,9 +1034,7 @@ var GUIDE=[
   {id:'inkout',n:'Ink-out',d:'The ink goes over and the lights go with it. Everyone works blind until it is mopped up.'},
   {id:'surge',n:'Kiln surge',d:'Twenty-six seconds to vent it. Leave it and the whole workshop drifts.'},
   {id:'scramble',n:'Signal scramble',d:'No Focus rewind and no logbook while it runs. The Glitch works best in the dark.'},
-  {id:'seam',n:'Seams',d:'A hex in the corner of every room and one in the Hub. Step on, slip out somewhere else.'}]},
- {k:'clara',t:'For Clara',e:[
-  {id:'g_clara',n:'Clara',d:'Eight years old, from London, with bright blonde hair and a heart bigger than the whole workshop. Off-Brand was built for her — every shape, every seam, every gentle ending. She is the reason nobody here is ever voted out. Made with love, always. ♥'}]}
+  {id:'seam',n:'Seams',d:'A hex in the corner of every room and one in the Hub. Step on, slip out somewhere else.'}]}
 ];
 function seeIt(id){
   if(!SAVE.seen)SAVE.seen={};
@@ -1558,6 +1578,21 @@ function draw(){
       ctx.restore();
     });
   }
+  // your planned path + destination — so every tap visibly answers you
+  if(S.player.path.length){
+    ctx.save();ctx.setLineDash([2,7]);ctx.strokeStyle='rgba(185,230,205,.45)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(S.player.x,S.player.y);
+    S.player.path.forEach(function(pt){ctx.lineTo(pt.x,pt.y);});
+    ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  }
+  if(S.dest&&S.t-S.dest.t<1.4){
+    var da=1-(S.t-S.dest.t)/1.4, dr=RM?12:10+(S.t-S.dest.t)*14;
+    ctx.save();ctx.globalAlpha=da*0.85;
+    ctx.strokeStyle='#B9E6CD';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(S.dest.x,S.dest.y,dr,0,7);ctx.stroke();
+    ctx.beginPath();ctx.arc(S.dest.x,S.dest.y,3,0,7);ctx.fillStyle='#B9E6CD';ctx.fill();
+    ctx.restore();ctx.globalAlpha=1;
+  }
   // particles under the characters
   drawParts();
   // characters
@@ -1965,19 +2000,6 @@ function drawMenuShape(g,c,x,y,t,violet){
   else if(c.shape==='square'){g.fillRect(-10,-10,20,20);}
   else if(c.shape==='dot'){g.beginPath();g.arc(0,0,7,0,7);g.fill();g.beginPath();g.arc(0,0,11,0,7);g.stroke();}
   else if(c.shape==='tilde'){g.font='800 26px Poppins,system-ui,sans-serif';g.textAlign='center';g.fillText('~',0,9);}
-  else if(c.shape==='clara'){
-    // an eight-year-old from London with bright blonde hair — the guest of honour
-    g.fillStyle='#B9E6CD';g.beginPath();g.moveTo(-8,15);g.lineTo(-3.5,-1);g.lineTo(3.5,-1);g.lineTo(8,15);g.closePath();g.fill(); // dress
-    g.strokeStyle='#F6ECD9';g.lineWidth=2.4;g.lineCap='round';g.beginPath();g.moveTo(-5,2);g.lineTo(-9,8);g.moveTo(5,2);g.lineTo(9,8);g.stroke(); // arms
-    g.fillStyle='#EEC96A';g.beginPath();g.arc(0,-7,9,0,7);g.fill(); // blonde hair
-    g.beginPath();g.arc(-8,-4,3.4,0,7);g.fill();g.beginPath();g.arc(8,-4,3.4,0,7);g.fill(); // pigtails
-    g.fillStyle='#F6ECD9';g.beginPath();g.arc(0,-6.5,6.8,0,7);g.fill(); // face
-    g.fillStyle='#F2A24A';g.beginPath();g.arc(8,-7.6,1.9,0,7);g.fill(); // little bow
-    g.fillStyle='#161D3D';g.beginPath();g.arc(-2.4,-6.4,1.4,0,7);g.fill();g.beginPath();g.arc(2.4,-6.4,1.4,0,7);g.fill(); // eyes
-    g.strokeStyle='#161D3D';g.lineWidth=1.4;g.beginPath();g.arc(0,-4.6,2.3,0.12*Math.PI,0.88*Math.PI);g.stroke(); // smile
-    g.fillStyle='rgba(232,226,212,.9)';g.font='700 9px Poppins,system-ui,sans-serif';g.textAlign='center';g.fillText('Clara ♥',0,30); // name
-  }
-  if(c.shape!=='clara'){
   var blink=!RM&&(((t*0.42)+seedOf(c)*0.13)%3.1<0.1);
   var gap=c.shape==='dot'?4:5;
   g.save();g.translate(0,-2);
@@ -1985,7 +2007,6 @@ function drawMenuShape(g,c,x,y,t,violet){
   else{g.fillStyle='#FDFCF8';g.beginPath();g.ellipse(-gap,0,3,3.6,0,0,7);g.fill();g.beginPath();g.ellipse(gap,0,3,3.6,0,0,7);g.fill();
     g.fillStyle='#161D3D';g.beginPath();g.arc(-gap,0.6,1.5,0,7);g.fill();g.beginPath();g.arc(gap,0.6,1.5,0,7);g.fill();}
   g.restore();
-  }
   g.restore();
 }
 function menuFrame(){
@@ -1998,12 +2019,11 @@ function menuFrame(){
   menuT+=1/60;
   if(!RM&&menuT>menuFlick.t){menuFlick.idx=Math.floor(Math.random()*CAST.length);menuFlick.t=menuT+3.5+Math.random()*3;menuFlick.until=menuT+0.16;}
   var pace=RM?0:menuT*26;
-  var parade=CAST.concat([CLARA]); // Clara joins the parade as a guest (index beyond the six shapes)
-  for(var i=0;i<parade.length;i++){
+  for(var i=0;i<CAST.length;i++){
     var span=wCss+90;
-    var x=RM?(wCss/(parade.length+1))*(i+1):(((pace+i*(span/parade.length))%span)-45);
+    var x=RM?(wCss/(CAST.length+1))*(i+1):(((pace+i*(span/CAST.length))%span)-45);
     var violet=!RM&&i===menuFlick.idx&&menuT<menuFlick.until;
-    drawMenuShape(g,parade[i],x,42,menuT,violet);
+    drawMenuShape(g,CAST[i],x,42,menuT,violet);
   }
   if(!RM)menuRaf=requestAnimationFrame(menuFrame);
 }
@@ -2224,6 +2244,7 @@ if(typeof window!=='undefined'){window.OB={ver:GAME_VERSION,get S(){return S;},n
  DIFFS:DIFFS,DIF:DIF,GUIDE:GUIDE,seeIt:seeIt,guideCount:guideCount,openGuide:openGuide,openDiff:openDiff,
  TUT:TUT,tutStart:tutStart,tutStop:tutStop,stepTut:stepTut,glitchesLeft:glitchesLeft,glitchNames:glitchNames,
  doVerify:doVerify,store:store,
+ snapTarget:snapTarget,
  recordScene:recordScene,openScenes:openScenes,wipeScene:wipeScene,sceneOverlap:sceneOverlap,
  stillStanding:stillStanding,bodiesDown:bodiesDown,renderEvidence:renderEvidence,SCENE_RADIUS:SCENE_RADIUS};}
 })();
