@@ -56,3 +56,27 @@ AMBER = done, flagged; RED = stopped and asked. Written at the time, never recon
         labels/arrows spilling 2-20px past x=640. Fixed (GREEN, own defect): food-chain labels
         176w/-88, friction smooth arrow 116, gas-exchange two limewater captions merged to one.
         All 25 now PASS; 3 touched lessons re-gated ALL PASS, re-placed, packs rebuilt.
+
+# --- SCI-3F merge & ship (Matt-authorised: merge THIS branch to main, push origin/main) ---
+[GREEN] §1 measure-first: all four SCI-3 closeout items (a-d) already landed on branch tip e9b72b3
+        (= d6df2e5 + 2 closeout commits fb4b942, e9b72b3). Retraction struck in place, R-G06 +
+        self-deriving sentinel, contact sheet PNG 1033x5502, MERGE_DOSSIER present. Only (d) was
+        stale: dossier derived at origin/main=e3f7212; main since advanced to 2324ddc, so the
+        unmerged set is re-derived from git below (§2 mandate: derive, never carry).
+[GREEN] ROLLBACK SHA recorded BEFORE any merge step (§3.1): origin/main = 2324ddc
+        ("Off-Brand v3.1.2 — add niece Clara..."). To undo the ship: `git push --force-with-lease
+        origin 2324ddc:main`. Branch tip merged = the rebased science tip (recorded at push time).
+[GREEN] Rebased the 15-commit science branch onto origin/main (2324ddc) per §3.2 — main had
+        advanced. Rebase was CLEAN, zero conflicts across all 15 commits: git auto-unioned
+        resources.json (my 25 entries append at array end; main's 3 `featured:true` flags are
+        mid-file — disjoint hunks). Post-rebase resources.json = 411 entries VALID, 25 unique
+        sci-tees ids, all 4 featured flags preserved (§3.3 keep-both-sides satisfied automatically).
+[GREEN] Post-rebase gates re-run (§3.2): 25 lesson HTML byte-identical pre/post rebase (rebase
+        touched only resources.json) so branch gates still hold. Sentinel 45->70 delta +25.
+        Hub chip gate (index.html buildQuicknav/render filter chain, YEAR=2026-27): 21 subjects,
+        every in-collection chip advertises what render() returns; Science-Teesside 25/25 — the
+        known 25-file chip-count bug is NOT triggered. LL-INST-09 loop-mark gate PASS on 3-lesson
+        sample (BUILD/GROW/LAUNCH), all 3 tiers. Print-parity spot render BUILD W3 all tiers PASS.
+        Legacy science (biology/ chemistry/ "2 Physics 10/", 40 files) byte-identical to pre-merge
+        main. AMBER: jsdom/PIL absent in this container; playwright installed at run time to drive
+        the render gates against the pre-installed Chromium.

@@ -1,5 +1,32 @@
 # Merge dossier — Science (Pass SCI) into `main`
 
+> **SCI-3F RE-DERIVATION (2026-07-30, at ship time).** This dossier was written at close-out
+> against `origin/main = e3f7212`. Under Matt's SCI-3F authorisation THIS branch is being merged
+> to `main` and pushed. `origin/main` has since advanced to **`2324ddc`** (only `Games/Off_Brand.html`
+> touched — off my surface). The unmerged set below is **re-derived from `git ls-remote` at `2324ddc`**
+> and supersedes §1's e3f7212 table. Rollback SHA recorded in DECISIONS.md before the merge step.
+>
+> **Unmerged branches at `2324ddc` (ahead>0):** the estate has largely converged since close-out —
+> most SoW/audit passes are now IN main. Genuinely unmerged:
+>
+> | Branch | tip | ahead | has `Science_Teesside/` | touches `resources.json` |
+> |---|---|---|---|---|
+> | **claude/sci-1-pass-science-build-b2dyew** (mine, rebased) | e9b72b3→rebased | 15 | **yes (25)** | yes (append 25) |
+> | pass-sl-sow-launch | 2a1cfda | 12 | no | no |
+> | pass-sbx-art-a2 | 462cfa6 | 5 | no | yes (Art entries) |
+> | pass-art-a2b | 952d260 | 2 | no | no |
+> | pass-u-audit | 7c4b2b4 | 1 | no | no |
+> | *(all others: art-remediation, grow-sow-audit, pass-e/q-ko-triage, pass-pq-*, pass-sb/sg-sow, pass-x, pass-y, pilot/launch-hum)* | — | **0 (MERGED)** | — | — |
+>
+> **Load-bearing fact still holds:** NO other unmerged branch contains `Science_Teesside/` — the 25
+> lessons remain unique; **zero lesson-file conflict.** The only both-sides file vs `2324ddc` is
+> `resources.json`, resolved by union (my appends vs main's mid-file `featured` flags are disjoint;
+> the rebase auto-unioned cleanly, 411 entries, all flags preserved). REGISTER.md: NOT touched by
+> main since merge-base `2236d0b` → no conflict this pass.
+
+---
+*Historical close-out record below (derived at `e3f7212`, retained unchanged):*
+
 **Purpose (SCI-3 §3):** make Matt's 29-Aug merge sitting boring. A document, not an action.
 **Nothing here merges. Nothing pushes to `main`. No PR.** Matt merges.
 
