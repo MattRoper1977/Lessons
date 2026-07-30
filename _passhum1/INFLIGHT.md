@@ -12,4 +12,6 @@
 - **Run condition:** FIN-1 closed (bug did not reproduce; zero humanities failures; no fix needed) ✓ ;
   no Art-pack fix was required, so no fix-commit to verify; main unchanged at 654962529e74ecae01a642172dda0c378abb42c3 ✓
 - **Rollback SHA (origin/main at pass start):** 654962529e74ecae01a642172dda0c378abb42c3
-- **Status:** §S1 gap-map derivation complete → STOP for Matt's scope ruling. No authoring started.
+- **Status:** **CLOSED.** §S1 gap-map derivation complete. Matt's ruling: **(a) CONFIRM — the 2026-27
+  suite exists, NO BUILD.** No authoring done, no resources.json additions, nothing merges. GAP_MAP.md
+  retained as an OBSERVATION RECORD on this branch. §S2/§S3 not entered.

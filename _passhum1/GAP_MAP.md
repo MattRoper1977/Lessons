@@ -1,5 +1,13 @@
 # Pass HUM-1 §S1 — Humanities Teesside GAP MAP (2026-27)
 
+> **OBSERVATION RECORD · HUM-1 CLOSED — no build.**
+> **Matt's scope ruling (a), quoted verbatim:** *"(a) CONFIRM — the 2026-27 suite exists, NO BUILD.
+> The premise failed on the known folder trap (lessons live in {Build,Grow,Launch}/Slideshows/, not
+> Humanities_Teesside/)."*
+> This document is the record of that finding for successors. Nothing was authored; nothing merges from
+> this branch. The 24 deployed 2026-27 humanities lessons ARE the provision. Retained as an observation
+> record, not a work queue.
+
 ## Headline finding
 **There is no gap.** The 2026-27 Humanities Teesside lesson suite already exists, is complete
 (24 lessons = 3 pathways × 8 weeks), is registered under the active YEAR collection, and the
