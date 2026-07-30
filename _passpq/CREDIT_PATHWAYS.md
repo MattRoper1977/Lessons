@@ -1,18 +1,20 @@
 # CREDIT_PATHWAYS.md — what qualification outcomes each suite can actually reach
 
-**Base SHA** `32ca685e…`. **Authority** §2 rules of combination + Evidence Binder credit
-table, `UNVERIFIED-AGAINST-SPEC`. **Recommends nothing as decided** — models the options
-for Cheryl.
+**Base SHA** `32ca685e…`. **Authority** now the **committed spec v1.2 Oct 2025** (§5.1 p10
+rules of combination) + Evidence Binder credit table — **spec-verified**, two-source
+agreement total (see `RECONCILIATION.md`). **Recommends nothing as decided** — models the
+options for Cheryl.
 
-## Rules of combination (§2, to re-verify against spec)
+## Rules of combination — VERIFIED against spec §5.1 p10 (`SPEC_FACTS §3`)
 
-- 1 credit ≈ 10 hours incl. assessment.
-- **Award** = 4 credits, all at level.
-- **Extended Award** = 9 credits (min 6 at level, max 3 from one level above/below).
-- **Certificate** = 14 credits at E3/L1 (min 11 at level, max 3 adjacent); **L2
-  Certificate = 15**.
+- 1 credit ≈ 10 hours **incl. assessment**. [SPEC §1]
+- **Award** = 4 credits, all at level (E3/L1/L2). **[⟲ L3 Award = 6.]**
+- **Extended Award** = 9 credits (min 6 at level, max 3 from one level above/below) —
+  E3/L1/L2. (L3 Extended Award = 11, min 8.)
+- **Certificate** = 14 credits at E3/L1 (**min 11 at level, max 3 adjacent** — both
+  VERIFIED); **L2 Certificate = 15** (min 12). (L3 Certificate = 18, min 15.)
 - **Barred combination:** the same skill at two levels cannot both count toward one
-  qualification — only the highest counts.
+  qualification — only the highest counts. [SPEC §4]
 
 ## Unit credit values (Evidence Binder, Ofqual-URN-backed)
 
@@ -62,19 +64,36 @@ at **only one level**.
 Teach and bank Wellbeing at **L1** → six L1 units = 15 cr → **L1 Certificate** (min 11 at
 level ✓). Requires new teaching in the GROW strand (COVERAGE_GROW §1 GAP).
 
-### Route B · adjacent-credit route (PROVISIONAL — spec-gated)
+### Route B · adjacent-credit route (VERIFIED — spec-gate cleared)
 The five taught L1 units already give **12 credits at level (≥ the min 11 at level)**. The
-Certificate allows **max 3 credits adjacent** (one level above/below). Bank the sixth skill,
-**Wellbeing, at E3 (WellbLeE3, 3 cr) or L2** as the adjacent contribution → **12 + 3 = 15 ≥
-14** → **L1 Certificate** with no new L1 Wellbeing teaching, if the E3 Wellbeing evidence
-can be generated (e.g. from BUILD's FoodWise/wellbeing context). **Barred-combination
-satisfied:** Wellbeing appears at one level only (E3), Communication/Decision/Learning/Team/
-Thinking at L1 only. **Flag PROVISIONAL** — re-verify the "max 3 adjacent" and "min 11 at
-level" thresholds against the committed spec before relying on this.
+L1 Certificate allows **max 3 credits adjacent** (one level above/below). Bank the sixth
+skill, **Wellbeing, at E3 (WellbLeE3, 3 cr) or L2** as the adjacent contribution → **12 + 3
+= 15 ≥ 14** → **L1 Certificate** with no new L1 Wellbeing teaching, if the E3 Wellbeing
+evidence can be generated (e.g. from BUILD's FoodWise/wellbeing context). **Barred-
+combination satisfied:** Wellbeing appears at one level only (E3), Communication/Decision/
+Learning/Team/Thinking at L1 only. **VERIFIED** against spec §5.1 p10: L1 Certificate = 14
+total, **min 11 at level**, **max 3 adjacent** — 12 at level + 3 adjacent = 15 clears all
+three (RECONCILIATION C3). The provisional flag is lifted.
 
 **Decision-relevant summary:** an L1 Certificate is reachable either by teaching Wellbeing at
 L1 (Route A) or by banking Wellbeing at E3 within the adjacent allowance (Route B). Both go
 to Cheryl as options alongside "Extended Award as-is" (QUESTIONS §Q2).
+
+## LAUNCH (Level 1) — the L1-Certificate ceiling, VERIFIED
+
+LAUNCH's PEQ strand delivers **ComSk1 in Autumn 1**, and its full-year Scheme homes **all
+six L1 units** (`_passla/HANDOVER §3.5`). The claim on the LAUNCH hub/Scheme that the suite
+can reach the **L1 Certificate** is now **VERIFIED**:
+
+| units banked | credits | at level | highest target |
+|---|---|---|---|
+| all six L1 (Com 3 + Dec 2 + LSk 2 + TmWk 2 + ThSk 3 + WellbLe 3) | **15** | 15 | **L1 Certificate** — 15 ≥ 14, min 11 at level ✓ |
+
+So LAUNCH's *year target* of an L1 Certificate is sound arithmetic (RECONCILIATION C1). The
+honest caveat for Cheryl: it becomes a **built** reality only once the Spring/Summer PEQ
+modules author the other five units (Autumn 1 as shipped delivers ComSk1 only); until then
+the Certificate is a full-year *target*, not an as-built ceiling. WellbLe1 is homed in the
+full-year SoW (Summer).
 
 ## Cross-tier pupils — the barred-combination trap
 
