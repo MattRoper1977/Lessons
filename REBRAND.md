@@ -107,6 +107,26 @@ them must not be touched.
 
 ---
 
+## Pack scope (areas)
+
+The builder (`tools/build_staff_pack.py`) is the executable source of truth for scope; this
+section records it in prose. Scope is **complete-current**, never a git-diff.
+
+**IN:** `Art_Teesside` · `BUILD_ASDAN` · `GROW_ASDAN` · `Humanities_Teesside` (docs) ·
+`Build/Slideshows/BUILD_DT_W*` · `Build/Slideshows/BUILD_HUM_W*` · `Grow/Slideshows` ·
+`Launch` · `Tutor_Time` · `DT_Community_Upcycling` · **`Science_Teesside`** (the current
+Teesside science suite, added PACK-1 v2) · root unit hubs (`art_teesside.html`,
+`build_asdan.html`, `build_dt_upcycling.html`, `humanities_teesside.html`) ·
+`LundyLoop/assets/style.css`.
+
+**OUT:** `Games` and personal apps (dual-branding rule — Made-by-Matt only) · **frozen legacy
+science: `biology/`, `chemistry/`, `2 Physics 10/`** (these stay OUT even though
+`Science_Teesside/` is IN) · superseded legacy art tasters (`Build/Slideshows/BUILD_ART_W\d_`) ·
+old `BUILD_L1_` / `FW_L1_` · site furniture (`404.html`, root `index.html`, `hub-health`) ·
+any pupil/student sheets or pupil data (never enter any zip).
+
+---
+
 ## Verification before a pack ships
 
 Run all four. The first two are the ones a human check misses.
