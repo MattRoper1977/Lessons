@@ -97,3 +97,22 @@ AMBER = done, flagged; RED = stopped and asked. Written at the time, never recon
         command, the post-merge parked-branch overlap matrix, an explicit resources.json union
         policy for the now-GUARANTEED sbx-art-a2 conflict on 29 Aug, and 2324ddc recorded as the
         pre-SCI-3F rollback SHA inside the dossier itself.
+
+# --- SCI-3F session close ---
+[GREEN] PAGES PUBLISHED. The docs-only successor commit 88d6d32 (the sentinel/dossier corrections)
+        built and served: "pages build and deployment" status=completed, conclusion=success
+        (2026-07-30T07:49:29Z). At session close the site serves 88d6d32. The science payload was
+        already live one commit earlier at 2ce19ce (also completed/success); a docs-only build
+        failure would have left the site on 2ce19ce, so science stays live either way.
+[GREEN] RULE (registered here, estate-facing): a merge dossier's stamp describes HEAD-AT-WRITING,
+        because a dossier cannot stamp the very commit that carries it. The commit that lands the
+        stamp is a DECLARED docs-only successor — this is the TERMINAL, correct form. Successors of
+        a docs-only tail must NOT demand a re-stamp of that tail; doing so is an infinite regress
+        (every re-stamp needs another). Cross-refs R-G03 (stamp that couldn't be true when written)
+        and the sentinel's R-G06 (a count is meaningless without its universe).
+[GREEN] SESSION CLOSE. The Science · Teesside programme is SHIPPED at 2ce19ce (25 lessons live,
+        legacy science byte-identical, hub chip gate 25/25, all §3.5 gates green, packs rebuilt).
+        Branch claude/sci-1-pass-science-build-b2dyew is CONTENT-MERGED (its 25 lessons byte-
+        identical in main) with its ref SUPERSEDED by the rebase; NOTHING science-side is owed to
+        the 29 Aug sitting. Matt deletes the superseded branch in the UI. This closing commit is
+        itself docs-only; its own Pages build is NOT polled and no successor should reopen the loop.
