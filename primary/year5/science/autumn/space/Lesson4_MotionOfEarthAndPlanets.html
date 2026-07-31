@@ -82,8 +82,18 @@
   .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
 
   @keyframes spin{to{transform:rotate(360deg)}}
-  .orb{transform-box:fill-box;transform-origin:center}
+  /* Rotate about the Sun's real centre in viewBox units. fill-box would use each
+     group's bounding box instead, whose centre is a few px off — that walks every
+     planet off its own orbit ring. */
+  .orb{transform-box:view-box;transform-origin:200px 100px}
   @media (prefers-reduced-motion:reduce){.orb{animation:none!important}}
+
+  .scrub{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.14)}
+  .scrubBtn{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;padding:6px 14px;cursor:pointer;background:var(--amber);color:var(--navy)}
+  .scrubBtn:hover{filter:brightness(1.08)}
+  .scrubLab{font-family:var(--display);font-weight:600;font-size:.86rem;color:#cdd6f4;white-space:nowrap}
+  .scrub input[type=range]{flex:1;min-width:70px;accent-color:var(--amber);cursor:pointer}
+  @media print{.scrub{display:none!important}}
 
   .fast{animation:spin 4s linear infinite}.slow{animation:spin 13s linear infinite}
 
@@ -227,14 +237,35 @@
     <h2>Different speeds</h2>
     <div class="media">
       <div class="grow-wrap" style="background:#0b1020"><svg viewBox="0 0 400 200" role="img" aria-label="Two planets orbiting the Sun — the inner planet moves quickly, the outer planet moves slowly.">
+  <defs>
+    <radialGradient id="s4sun" cx="42%" cy="38%" r="66%">
+      <stop offset="0" stop-color="#fff6cf"/><stop offset="55%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#f0a115"/>
+    </radialGradient>
+    <radialGradient id="s4glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd24a" stop-opacity=".34"/><stop offset="100%" stop-color="#ffd24a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="s4in" cx="34%" cy="30%" r="80%"><stop offset="0" stop-color="#ded6c4"/><stop offset="100%" stop-color="#9a9284"/></radialGradient>
+    <radialGradient id="s4out" cx="34%" cy="30%" r="80%"><stop offset="0" stop-color="#8fa8f0"/><stop offset="100%" stop-color="#3f5cc0"/></radialGradient>
+  </defs>
   <rect width="400" height="200" fill="#0b1020"/>
-  <g class="orb fast"><circle cx="200" cy="100" r="42" fill="none" stroke="#33406a" stroke-width="1.5"/><circle cx="242" cy="100" r="6" fill="#b8b0a0"/></g>
-  <g class="orb slow"><circle cx="200" cy="100" r="78" fill="none" stroke="#33406a" stroke-width="1.5"/><circle cx="278" cy="100" r="8" fill="#5a7fe0"/></g>
-  <circle cx="200" cy="100" r="18" fill="#ffd24a"/><circle cx="200" cy="100" r="18" fill="none" stroke="#ffb020" stroke-width="3"/>
+  <g fill="#5b6690"><circle cx="26" cy="22" r="1"/><circle cx="96" cy="16" r=".9"/><circle cx="334" cy="20" r="1.1"/><circle cx="380" cy="70" r=".9"/><circle cx="22" cy="146" r="1"/><circle cx="356" cy="160" r=".9"/></g>
+  <circle cx="200" cy="100" r="42" fill="url(#s4glow)"/>
+  <!-- The comet tail behind each planet is its own length: the inner one sweeps further per turn. -->
+  <g class="orb fast"><circle cx="200" cy="100" r="42" fill="none" stroke="#3a4870" stroke-width="1.2" stroke-dasharray="3 6"/>
+    <path d="M242 100A42 42 0 0 0 212.3 59.7" fill="none" stroke="#ded6c4" stroke-width="4" stroke-linecap="round" opacity=".38"/>
+    <circle cx="242" cy="100" r="6" fill="url(#s4in)"/></g>
+  <g class="orb slow"><circle cx="200" cy="100" r="78" fill="none" stroke="#3a4870" stroke-width="1.2" stroke-dasharray="3 6"/>
+    <path d="M278 100A78 78 0 0 0 267.6 60.9" fill="none" stroke="#8fa8f0" stroke-width="4" stroke-linecap="round" opacity=".3"/>
+    <circle cx="278" cy="100" r="8" fill="url(#s4out)"/></g>
+  <circle cx="200" cy="100" r="18" fill="url(#s4sun)"/><circle cx="200" cy="100" r="18" fill="none" stroke="#ffb020" stroke-width="2"/>
   <text x="200" y="104" text-anchor="middle" font-size="9" font-weight="700" fill="#7a5a00" font-family="Fredoka,sans-serif">Sun</text>
   <text x="70" y="184" font-size="9" fill="#cdd" font-family="Fredoka,sans-serif">Near the Sun = fast orbit</text>
   <text x="250" y="184" font-size="9" fill="#cdd" font-family="Fredoka,sans-serif">Far away = slow orbit</text>
-</svg><p class="grow-cap" style="color:#cdd6f4">Planets near the Sun orbit <b>fast</b>; planets far out orbit <b>slowly</b>. Each year is different.</p></div>
+</svg><div class="scrub">
+  <button type="button" id="orrPlay" class="scrubBtn" aria-pressed="false">❚❚ Pause</button>
+  <label class="scrubLab" for="orrPos">Move time on</label>
+  <input type="range" id="orrPos" min="0" max="100" step="1" value="0" aria-label="Move time on to see how far each planet has travelled around the Sun">
+</div><p class="grow-cap" style="color:#cdd6f4">Planets near the Sun orbit <b>fast</b>; planets far out orbit <b>slowly</b>. Each year is different.</p></div>
       <div>
         <div class="say"><b>Bust the myth</b>Not every planet takes 365 days! Earth takes about a <b>year</b>, but Jupiter takes about <b>12 Earth years</b>. A planet's <b>day</b> (one spin) is different from its <b>year</b> (one orbit).</div>
         <p class="note">Watch for: pupils assuming every planet has the same length year as Earth.</p>
@@ -331,6 +362,44 @@
     if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();nav(-1)}
   });
   show(0);
+
+  /* Orrery control — stop the system anywhere and compare how far each planet has gone.
+     Each orbit is driven from its own CSS duration, so the inner one really does lap the
+     outer one. The CSS animation stays the baseline: the model turns even if this never runs. */
+  (function(){
+    var slider = document.getElementById("orrPos"), btn = document.getElementById("orrPlay");
+    if(!slider || !btn) return;
+    var orbs = [].slice.call(document.querySelectorAll(".grow-wrap .orb"));
+    if(!orbs.length) return;
+    function secs(v){ v = (v||"").trim(); var n = parseFloat(v);
+      return isNaN(n) ? 0 : (/ms$/.test(v) ? n/1000 : n); }
+    var dur = orbs.map(function(o){ return secs(getComputedStyle(o).animationDuration); });
+    var span = Math.max.apply(null, dur) || 1;
+    var running = true;
+
+    function T(){ return (+slider.value / 100) * span; }
+    function freeze(t){
+      running = false;
+      orbs.forEach(function(o,i){
+        o.style.animation = "none";
+        o.style.transform = "rotate(" + (dur[i] ? 360 * t / dur[i] : 0) + "deg)";
+      });
+      btn.textContent = "\u25b6 Play"; btn.setAttribute("aria-pressed","true");
+    }
+    /* Negative delay restarts each orbit part-way through, so Play carries on from where
+       the slider left it instead of snapping every planet back to the start line. */
+    function resume(t){
+      running = true;
+      orbs.forEach(function(o){
+        o.style.transform = ""; o.style.animation = ""; o.style.animationDelay = (-t) + "s";
+      });
+      btn.textContent = "\u275a\u275a Pause"; btn.setAttribute("aria-pressed","false");
+    }
+    slider.addEventListener("input", function(){ freeze(T()); });
+    btn.addEventListener("click", function(){ if(running) freeze(T()); else resume(T()); });
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) freeze(0);
+  })();
+
 </script>
 <script>
 /* Made by Matt — Primary Sparkle layer (Field Journal edition)
