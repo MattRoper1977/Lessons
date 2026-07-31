@@ -82,10 +82,23 @@
   .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
 
   @keyframes spin{to{transform:rotate(360deg)}}
-  .orb{transform-box:fill-box;transform-origin:center}
-  @media (prefers-reduced-motion:reduce){.orb{animation:none!important}}
+  @keyframes antispin{to{transform:rotate(-360deg)}}
+  /* Rotate about Earth's real centre in viewBox units. fill-box would use the group's
+     bounding box instead — its centre sits a few px off, which walks the Moon off its ring. */
+  .orb{transform-box:view-box;transform-origin:250px 100px}
+  .orb .body{transform-box:fill-box;transform-origin:center}
+  @media (prefers-reduced-motion:reduce){.orb,.orb .body{animation:none!important}}
 
-  .moon{animation:spin 8s linear infinite}
+  /* The orbit carries the Moon round; the body counter-turns so its lit half keeps facing the Sun. */
+  .moon{animation:spin 16s linear infinite}
+  .moon .body{animation:antispin 16s linear infinite}
+
+  .scrub{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.14)}
+  .scrubBtn{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;padding:6px 14px;cursor:pointer;background:var(--amber);color:var(--navy)}
+  .scrubBtn:hover{filter:brightness(1.08)}
+  .scrubLab{font-family:var(--display);font-weight:600;font-size:.86rem;color:#cdd6f4;white-space:nowrap}
+  .scrub input[type=range]{flex:1;min-width:70px;accent-color:var(--amber);cursor:pointer}
+  @media print{.scrub{display:none!important}}
 
   .sorter{display:flex;flex-direction:column;gap:12px;margin-top:.5em;flex:1;min-height:0}
   .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
@@ -225,15 +238,65 @@
     <p class="teach">Play the animation. Bust the "makes its own light" myth.</p>
     <h2>Reflected light</h2>
     <div class="media">
-      <div class="grow-wrap" style="background:#0b1020"><svg viewBox="0 0 400 200" role="img" aria-label="The Sun on the far left lights the scene while the Moon orbits the Earth, reflecting the Sun's light.">
-  <rect width="400" height="200" fill="#0b1020"/>
-  <circle cx="34" cy="100" r="22" fill="#ffd24a"/><text x="34" y="104" text-anchor="middle" font-size="8" font-weight="700" fill="#7a5a00" font-family="Fredoka,sans-serif">Sun</text>
-  <line x1="58" y1="90" x2="150" y2="80" stroke="#ffe08a" stroke-width="1.5" opacity="0.5"/><line x1="58" y1="110" x2="150" y2="120" stroke="#ffe08a" stroke-width="1.5" opacity="0.5"/>
-  <g class="orb moon"><circle cx="250" cy="100" r="74" fill="none" stroke="#33406a" stroke-width="1.5"/><circle cx="324" cy="100" r="9" fill="#cfcfd6"/><circle cx="321" cy="97" r="1.6" fill="#a9a9b2"/><circle cx="327" cy="103" r="1.3" fill="#a9a9b2"/></g>
-  <circle cx="250" cy="100" r="26" fill="#2b6cb0"/><ellipse cx="242" cy="94" rx="9" ry="6" fill="#4caf6e"/><ellipse cx="258" cy="108" rx="8" ry="5" fill="#4caf6e"/>
-  <text x="250" y="103" text-anchor="middle" font-size="8" font-weight="700" fill="#fff" font-family="Fredoka,sans-serif">Earth</text>
-  <text x="250" y="192" text-anchor="middle" font-size="10" fill="#cdd6f4" font-family="Fredoka,sans-serif">The Moon reflects sunlight as it orbits Earth</text>
-</svg><p class="grow-cap" style="color:#cdd6f4">The Moon makes <b>no light of its own</b> — it <b>reflects</b> sunlight as it orbits Earth.</p></div>
+      <div class="grow-wrap" style="background:#0b1020"><svg viewBox="0 0 400 210" role="img" aria-label="The Sun on the far left lights the scene while the Moon orbits the Earth, reflecting the Sun's light.">
+  <defs>
+    <radialGradient id="m8sun" cx="42%" cy="38%" r="66%">
+      <stop offset="0" stop-color="#fff6cf"/><stop offset="55%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#f0a115"/>
+    </radialGradient>
+    <radialGradient id="m8glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd24a" stop-opacity=".38"/><stop offset="100%" stop-color="#ffd24a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="m8sea" cx="34%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#4f9ad8"/><stop offset="62%" stop-color="#2b6cb0"/><stop offset="100%" stop-color="#1b4e85"/>
+    </radialGradient>
+    <clipPath id="m8earthClip"><circle cx="250" cy="100" r="26"/></clipPath>
+  </defs>
+  <rect width="400" height="210" fill="#0b1020"/>
+  <g fill="#5b6690"><circle cx="72" cy="24" r="1"/><circle cx="146" cy="18" r=".9"/><circle cx="356" cy="30" r="1.1"/><circle cx="382" cy="118" r=".9"/><circle cx="120" cy="176" r="1"/><circle cx="44" cy="166" r=".9"/><circle cx="196" cy="14" r=".8"/></g>
+
+  <circle cx="34" cy="100" r="46" fill="url(#m8glow)"/>
+  <circle cx="34" cy="100" r="22" fill="url(#m8sun)"/>
+  <text x="34" y="104" text-anchor="middle" font-size="9" font-weight="700" fill="#7a5a00" font-family="Fredoka,sans-serif">Sun</text>
+  <!-- parallel rays: sunlight arrives from one side, which is why one half is always lit -->
+  <g stroke="#ffe08a" stroke-width="1.6" opacity=".45" stroke-linecap="round">
+    <line x1="62" y1="46" x2="150" y2="46"/><line x1="62" y1="73" x2="150" y2="73"/>
+    <line x1="62" y1="100" x2="150" y2="100"/><line x1="62" y1="127" x2="150" y2="127"/><line x1="62" y1="154" x2="150" y2="154"/>
+  </g>
+  <g fill="#ffe08a" opacity=".45"><path d="M150 42l9 4-9 4z"/><path d="M150 69l9 4-9 4z"/><path d="M150 96l9 4-9 4z"/><path d="M150 123l9 4-9 4z"/><path d="M150 150l9 4-9 4z"/></g>
+
+  <circle cx="250" cy="100" r="74" fill="none" stroke="#33406a" stroke-width="1.5" stroke-dasharray="3 6"/>
+
+  <!-- Earth: the same Sun lights one half of it too -->
+  <circle cx="250" cy="100" r="26" fill="url(#m8sea)"/>
+  <g clip-path="url(#m8earthClip)">
+    <ellipse cx="242" cy="94" rx="9" ry="6" fill="#4caf6e"/><ellipse cx="258" cy="108" rx="8" ry="5" fill="#4caf6e"/>
+    <path d="M250 74a26 26 0 0 1 0 52z" fill="#0b1020" opacity=".6"/>
+  </g>
+  <circle cx="250" cy="100" r="26" fill="none" stroke="#7fb2e6" stroke-width="1" opacity=".5"/>
+  <text x="250" y="103" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" font-family="Fredoka,sans-serif">Earth</text>
+
+  <!-- Moon: the outer group carries it round; the inner group holds its lit half facing the Sun -->
+  <g class="orb moon" id="m8orbit">
+    <g transform="translate(324,100)">
+      <g class="body" id="m8body">
+        <circle r="11" fill="#3c4260"/>
+        <path d="M0 -11A11 11 0 0 0 0 11Z" fill="#e9e9f2"/>
+        <circle cx="-5" cy="-3" r="1.7" fill="#c6c6d4"/><circle cx="-3" cy="4" r="1.2" fill="#c6c6d4"/><circle cx="-7" cy="2" r="1" fill="#c6c6d4"/>
+        <circle r="11" fill="none" stroke="#8e94b4" stroke-width=".8"/>
+      </g>
+    </g>
+  </g>
+
+  <g font-family="Fredoka,sans-serif" font-size="8.5">
+    <rect x="10" y="181" width="11" height="8" rx="2" fill="#e9e9f2"/><text x="25" y="188" fill="#cdd6f4">lit by the Sun</text>
+    <rect x="10" y="194" width="11" height="8" rx="2" fill="#3c4260" stroke="#8e94b4" stroke-width=".7"/><text x="25" y="201" fill="#cdd6f4">in shadow</text>
+  </g>
+  <text x="256" y="199" text-anchor="middle" font-size="9.5" fill="#cdd6f4" font-family="Fredoka,sans-serif">The Moon reflects sunlight as it orbits Earth</text>
+</svg><div class="scrub">
+  <button type="button" id="m8play" class="scrubBtn" aria-pressed="false">❚❚ Pause</button>
+  <label class="scrubLab" for="m8pos">Move the Moon</label>
+  <input type="range" id="m8pos" min="0" max="360" step="1" value="0" aria-label="Move the Moon around its orbit">
+</div><p class="grow-cap" style="color:#cdd6f4">The Moon makes <b>no light of its own</b> — it <b>reflects</b> sunlight as it orbits Earth.</p></div>
       <div>
         <div class="say"><b>Bust the myths</b>The Moon does <b>not</b> make its own light — it reflects the Sun's. It can be seen in the <b>day</b> as well as at night. And Earth is <b>not</b> the only planet with a moon — many planets have their own.</div>
         <p class="note">Watch for: "the Moon is a light" or "only Earth has a moon."</p>
@@ -330,6 +393,41 @@
     if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();nav(-1)}
   });
   show(0);
+
+  /* Orbit scrubber — lets the class stop the Moon anywhere and read which half is lit.
+     The CSS animation is the baseline, so the model still turns if this never runs. */
+  (function(){
+    var PERIOD = 16;                                   /* must match the CSS duration */
+    var orbit = document.getElementById("m8orbit"),
+        body  = document.getElementById("m8body"),
+        slider= document.getElementById("m8pos"),
+        btn   = document.getElementById("m8play");
+    if(!orbit || !body || !slider || !btn) return;
+    var running = true;
+
+    function freeze(deg){
+      running = false;
+      orbit.style.animation = "none"; body.style.animation = "none";
+      orbit.style.transform = "rotate(" + deg + "deg)";
+      body.style.transform  = "rotate(" + (-deg) + "deg)";
+      btn.textContent = "▶ Play"; btn.setAttribute("aria-pressed","true");
+    }
+    /* Negative delay restarts the animation already part-way through, so Play picks up
+       exactly where the slider left the Moon instead of snapping back to the start. */
+    function resume(deg){
+      running = true;
+      var offset = -(deg/360) * PERIOD + "s";
+      orbit.style.transform = ""; body.style.transform = "";
+      orbit.style.animation = ""; body.style.animation = "";
+      orbit.style.animationDelay = offset; body.style.animationDelay = offset;
+      btn.textContent = "❚❚ Pause"; btn.setAttribute("aria-pressed","false");
+    }
+    slider.addEventListener("input", function(){ freeze(+slider.value); });
+    btn.addEventListener("click", function(){
+      if(running) freeze(+slider.value); else resume(+slider.value);
+    });
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) freeze(0);
+  })();
 </script>
 <script>
 /* Made by Matt — Primary Sparkle layer (Field Journal edition)

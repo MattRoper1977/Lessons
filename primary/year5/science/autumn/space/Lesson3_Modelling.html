@@ -82,8 +82,18 @@
   .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
 
   @keyframes spin{to{transform:rotate(360deg)}}
-  .orb{transform-box:fill-box;transform-origin:center}
+  /* Rotate about the Sun's real centre in viewBox units. fill-box would use each
+     group's bounding box instead, whose centre is a few px off — that walks every
+     planet off its own orbit ring. */
+  .orb{transform-box:view-box;transform-origin:200px 96px}
   @media (prefers-reduced-motion:reduce){.orb{animation:none!important}}
+
+  .scrub{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.14)}
+  .scrubBtn{font-family:var(--display);font-weight:600;font-size:.86rem;border:0;border-radius:999px;padding:6px 14px;cursor:pointer;background:var(--amber);color:var(--navy)}
+  .scrubBtn:hover{filter:brightness(1.08)}
+  .scrubLab{font-family:var(--display);font-weight:600;font-size:.86rem;color:var(--forest);white-space:nowrap}
+  .scrub input[type=range]{flex:1;min-width:70px;accent-color:var(--amber);cursor:pointer}
+  @media print{.scrub{display:none!important}}
 
   .oa{animation:spin 6s linear infinite}.ob{animation:spin 10s linear infinite}.oc{animation:spin 15s linear infinite}
 
@@ -226,13 +236,35 @@
     <h2>A model in motion</h2>
     <div class="media">
       <div class="grow-wrap" style="background:#eef3fb"><svg viewBox="0 0 400 200" role="img" aria-label="A model of the Solar System — a Sun on a stand with three planets on arms turning around it.">
+  <defs>
+    <linearGradient id="s3base" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a67c4f"/><stop offset="100%" stop-color="#7a5a38"/></linearGradient>
+    <linearGradient id="s3post" x1="0" x2="1"><stop offset="0" stop-color="#c19468"/><stop offset="50%" stop-color="#a07a52"/><stop offset="100%" stop-color="#7f5f3d"/></linearGradient>
+    <radialGradient id="s3sun" cx="42%" cy="38%" r="66%"><stop offset="0" stop-color="#fff2c2"/><stop offset="58%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#e0a91e"/></radialGradient>
+    <radialGradient id="s3a" cx="34%" cy="30%" r="80%"><stop offset="0" stop-color="#89bdf0"/><stop offset="100%" stop-color="#3a76b8"/></radialGradient>
+    <radialGradient id="s3b" cx="34%" cy="30%" r="80%"><stop offset="0" stop-color="#e0784f"/><stop offset="100%" stop-color="#a53f21"/></radialGradient>
+    <radialGradient id="s3c" cx="34%" cy="30%" r="80%"><stop offset="0" stop-color="#efc186"/><stop offset="100%" stop-color="#c08a41"/></radialGradient>
+  </defs>
   <rect width="400" height="200" fill="#eef3fb"/>
-  <rect x="150" y="170" width="100" height="12" rx="4" fill="#8f6c49"/><rect x="196" y="96" width="8" height="78" fill="#a07a52"/>
-  <g class="orb oa"><circle cx="200" cy="96" r="34" fill="none" stroke="#c7b48f" stroke-width="1.5"/><circle cx="234" cy="96" r="6" fill="#4d90d6"/></g>
-  <g class="orb ob"><circle cx="200" cy="96" r="58" fill="none" stroke="#c7b48f" stroke-width="1.5"/><circle cx="258" cy="96" r="8" fill="#c1502e"/></g>
-  <g class="orb oc"><circle cx="200" cy="96" r="82" fill="none" stroke="#c7b48f" stroke-width="1.5"/><circle cx="282" cy="96" r="10" fill="#d8a15a"/></g>
-  <circle cx="200" cy="96" r="15" fill="#ffd24a"/><circle cx="200" cy="96" r="15" fill="none" stroke="#e0a91e" stroke-width="2"/>
-</svg><p class="grow-cap">A model helps us picture how planets <b>orbit</b> — but it can't show real sizes or distances to scale.</p></div>
+  <ellipse cx="200" cy="184" rx="62" ry="7" fill="#c7cedb" opacity=".7"/>
+  <rect x="150" y="170" width="100" height="12" rx="4" fill="url(#s3base)"/>
+  <rect x="196" y="96" width="8" height="78" fill="url(#s3post)"/>
+  <!-- Each planet rides a real arm, the way a classroom orrery does — that is what makes it a model. -->
+  <g class="orb oa"><circle cx="200" cy="96" r="34" fill="none" stroke="#c7b48f" stroke-width="1.2" stroke-dasharray="3 5"/>
+    <line x1="200" y1="96" x2="234" y2="96" stroke="#b08f63" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="234" cy="96" r="6" fill="url(#s3a)"/></g>
+  <g class="orb ob"><circle cx="200" cy="96" r="58" fill="none" stroke="#c7b48f" stroke-width="1.2" stroke-dasharray="3 5"/>
+    <line x1="200" y1="96" x2="258" y2="96" stroke="#b08f63" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="258" cy="96" r="8" fill="url(#s3b)"/></g>
+  <g class="orb oc"><circle cx="200" cy="96" r="82" fill="none" stroke="#c7b48f" stroke-width="1.2" stroke-dasharray="3 5"/>
+    <line x1="200" y1="96" x2="282" y2="96" stroke="#b08f63" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="282" cy="96" r="10" fill="url(#s3c)"/></g>
+  <circle cx="200" cy="96" r="15" fill="url(#s3sun)"/><circle cx="200" cy="96" r="15" fill="none" stroke="#e0a91e" stroke-width="2"/>
+  <circle cx="200" cy="96" r="4" fill="#8a6a45"/>
+</svg><div class="scrub">
+  <button type="button" id="orrPlay" class="scrubBtn" aria-pressed="false">❚❚ Pause</button>
+  <label class="scrubLab" for="orrPos">Move time on</label>
+  <input type="range" id="orrPos" min="0" max="100" step="1" value="0" aria-label="Move time on to see how far each planet has travelled around the Sun">
+</div><p class="grow-cap">A model helps us picture how planets <b>orbit</b> — but it can't show real sizes or distances to scale.</p></div>
       <div>
         <div class="say"><b>Bust the myth</b>In this model the planets look the <b>same size</b> and <b>evenly spaced</b> — but in real life they are <b>very different sizes</b> and <b>huge distances</b> apart.</div>
         <p class="note">Watch for: pupils believing the model's sizes and gaps are real.</p>
@@ -329,6 +361,44 @@
     if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();nav(-1)}
   });
   show(0);
+
+  /* Orrery control — stop the system anywhere and compare how far each planet has gone.
+     Each orbit is driven from its own CSS duration, so the inner one really does lap the
+     outer one. The CSS animation stays the baseline: the model turns even if this never runs. */
+  (function(){
+    var slider = document.getElementById("orrPos"), btn = document.getElementById("orrPlay");
+    if(!slider || !btn) return;
+    var orbs = [].slice.call(document.querySelectorAll(".grow-wrap .orb"));
+    if(!orbs.length) return;
+    function secs(v){ v = (v||"").trim(); var n = parseFloat(v);
+      return isNaN(n) ? 0 : (/ms$/.test(v) ? n/1000 : n); }
+    var dur = orbs.map(function(o){ return secs(getComputedStyle(o).animationDuration); });
+    var span = Math.max.apply(null, dur) || 1;
+    var running = true;
+
+    function T(){ return (+slider.value / 100) * span; }
+    function freeze(t){
+      running = false;
+      orbs.forEach(function(o,i){
+        o.style.animation = "none";
+        o.style.transform = "rotate(" + (dur[i] ? 360 * t / dur[i] : 0) + "deg)";
+      });
+      btn.textContent = "\u25b6 Play"; btn.setAttribute("aria-pressed","true");
+    }
+    /* Negative delay restarts each orbit part-way through, so Play carries on from where
+       the slider left it instead of snapping every planet back to the start line. */
+    function resume(t){
+      running = true;
+      orbs.forEach(function(o){
+        o.style.transform = ""; o.style.animation = ""; o.style.animationDelay = (-t) + "s";
+      });
+      btn.textContent = "\u275a\u275a Pause"; btn.setAttribute("aria-pressed","false");
+    }
+    slider.addEventListener("input", function(){ freeze(T()); });
+    btn.addEventListener("click", function(){ if(running) freeze(T()); else resume(T()); });
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) freeze(0);
+  })();
+
 </script>
 <script>
 /* Made by Matt — Primary Sparkle layer (Field Journal edition)
