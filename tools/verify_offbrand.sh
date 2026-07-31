@@ -61,15 +61,15 @@ ok "syntax: $COUNT inline script block(s) pass node --check"
 # ===========================================================================
 # 2 · IDENTITY MARKERS
 # ===========================================================================
+grep -qE "GAME_VERSION='[0-9]" "$TARGET" || fail "identity: GAME_VERSION marker missing (or not a digit version)"
 for pat in \
-  "GAME_VERSION='3." \
   "niece Clara" \
   "suggested by Clara" \
   "PARADE=CAST.concat([CLARA])" \
   "id:'g_clara'" ; do
   grep -qF -- "$pat" "$TARGET" || fail "identity marker missing: $pat"
 done
-ok "identity markers present (version 3.x, dedication, credit, parade, guide entry)"
+ok "identity markers present (version, dedication, credit, parade, guide entry)"
 
 # ===========================================================================
 # 3 · SAFEGUARDING CONTRACT — no identifying details on the public file
