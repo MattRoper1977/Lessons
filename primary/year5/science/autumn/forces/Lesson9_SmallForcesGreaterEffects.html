@@ -82,7 +82,7 @@
   .grow-cap{font-family:var(--display);color:var(--forest);font-weight:600;text-align:center;margin:6px 8px;font-size:1rem}
 
   @keyframes seesaw{0%,100%{transform:rotate(-11deg)}50%{transform:rotate(11deg)}}
-  .beam{transform-box:view-box;transform-origin:200px 118px;animation:seesaw 3.2s ease-in-out infinite}
+  .beam{transform-box:view-box;transform-origin:230px 105px;animation:seesaw 3.2s ease-in-out infinite}
   @media (prefers-reduced-motion:reduce){.beam{animation:none}}
 
   .sorter{display:flex;flex-direction:column;gap:12px;margin-top:.5em;flex:1;min-height:0}
@@ -238,15 +238,39 @@
     <p class="teach">Play the animation. Bust: bigger gear / longer lever means faster or easier is not always so.</p>
     <h2>Small force, big effect</h2>
     <div class="media">
-      <div class="grow-wrap" style="background:#f2f8ee"><svg viewBox="0 0 400 200" role="img" aria-label="A lever: a small effort far from the pivot lifts a large load close to the pivot.">
+      <div class="grow-wrap" style="background:#f2f8ee"><svg viewBox="0 0 400 220" role="img" aria-label="A lever: a small effort far from the pivot lifts a large load close to the pivot.">
+  <defs>
+    <linearGradient id="lvBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6647"/><stop offset="100%" stop-color="#5b4330"/></linearGradient>
+  </defs>
   <g font-family="Fredoka, sans-serif" font-weight="600">
   <g class="beam">
-    <rect x="70" y="113" width="260" height="10" rx="5" fill="#6b4f36"/>
-    <rect x="96" y="95" width="26" height="18" rx="3" fill="#2f6d4f"/><text x="109" y="88" fill="#2f6d4f" font-size="9" text-anchor="middle">big load</text>
-    <circle cx="300" cy="118" r="9" fill="#c56a3a"/><text x="300" y="146" fill="#8a4a26" font-size="9" text-anchor="middle">small effort</text>
+    <rect x="100" y="100" width="220" height="10" rx="5" fill="url(#lvBeam)"/>
+    <!-- the big load sits close in to the pivot -->
+    <rect x="248" y="62" width="36" height="38" rx="4" fill="#2f6d4f"/>
+    <rect x="248" y="62" width="36" height="38" rx="4" fill="none" stroke="#1f4d36" stroke-width="2"/>
+    <text x="266" y="54" fill="#2f6d4f" font-size="10" text-anchor="middle">big load</text>
+    <!-- the small effort presses down out at the far end -->
+    <line x1="124" y1="56" x2="124" y2="84" stroke="#c56a3a" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="116,80 124,98 132,80" fill="#c56a3a"/>
+    <text x="124" y="48" fill="#8a4a26" font-size="10" text-anchor="middle">small effort</text>
   </g>
-  <polygon points="200,118 186,150 214,150" fill="#161d3d"/><text x="200" y="166" fill="#161d3d" font-size="9" text-anchor="middle">pivot</text>
-  <text x="200" y="188" fill="#2f6d4f" font-size="11" text-anchor="middle">A lever turns a small force into a greater effect</text>
+  <polygon points="230,110 210,152 250,152" fill="#161d3d"/>
+  <line x1="96" y1="152" x2="334" y2="152" stroke="#9d8f7a" stroke-width="2"/>
+  <text x="230" y="166" fill="#161d3d" font-size="9" text-anchor="middle">pivot</text>
+
+  <!-- the two lever arms, measured — this is the whole point of the picture -->
+  <g stroke="#6b4f36" stroke-width="1.2" opacity=".85">
+    <line x1="124" y1="170" x2="124" y2="182"/><line x1="230" y1="170" x2="230" y2="182"/><line x1="266" y1="170" x2="266" y2="182"/>
+    <line x1="124" y1="176" x2="230" y2="176"/><line x1="230" y1="176" x2="266" y2="176"/>
+  </g>
+  <g fill="#6b4f36" opacity=".85">
+    <polygon points="124,176 132,172 132,180"/><polygon points="230,176 222,172 222,180"/>
+    <polygon points="230,176 238,172 238,180"/><polygon points="266,176 258,172 258,180"/>
+  </g>
+  <text x="177" y="194" fill="#8a4a26" font-size="9" text-anchor="middle">far from pivot</text>
+  <text x="248" y="194" fill="#2f6d4f" font-size="9" text-anchor="middle">close to pivot</text>
+
+  <text x="200" y="212" fill="#2f6d4f" font-size="11" text-anchor="middle">A lever turns a small force into a greater effect</text>
   </g>
 </svg><p class="grow-cap">A small effort far from the pivot lifts a big load close to it.</p></div>
       <div>
