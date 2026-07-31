@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Lesson Hub — Made by Matt</title>
 <meta name="description" content="Single-file, offline-first lessons structured to BUILD core skills, GROW confidence and LAUNCH independent mastery.">
-<meta name="theme-color" content="#161D3D">
+<meta name="theme-color" content="#161D3D"><meta property="og:title" content="The Lesson Hub — Made by Matt"><meta property="og:description" content="Single-file, offline-first lessons across BUILD, GROW and LAUNCH — free, accessible, built in a real classroom."><meta property="og:url" content="https://madebymatt.uk/Lessons/"><meta property="og:type" content="website"><meta property="og:site_name" content="Made by Matt"><meta property="og:image" content="https://madebymatt.uk/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://madebymatt.uk/assets/og-cover.png">
 <link rel="icon" href="https://madebymatt.uk/favicon.svg">
 <style>
 :root{--navy:#161D3D;--navy-lt:#232C55;--mint:#B9E6CD;--mint-deep:#2F6B4D;--amber:#E08A2E;--amber-lt:#F2A24A;
@@ -113,6 +113,15 @@ a.go:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .legend svg{width:16px;height:16px;vertical-align:-3px;color:var(--mut)}
 .callout{background:linear-gradient(150deg,#FDF6E4,#FBEDD8);border:2px solid var(--amber);border-radius:16px;padding:1rem 1.1rem;margin:.3rem 0 .9rem;display:flex;flex-direction:column;gap:.5rem}
 .callout .stamp{align-self:flex-start;font-size:.62rem;font-weight:800;letter-spacing:.1em;background:#E4F0E8;color:#2F6B4D;border:1.5px solid #2F6B4D;border-radius:999px;padding:.25rem .7rem}
+.lx-vid{margin:.4rem 0 0;max-width:420px;display:flex;flex-direction:column;gap:.4rem}
+.lx-vidbtn{position:relative;display:block;width:100%;padding:0;border:1.5px solid var(--amber);background:var(--navy);border-radius:14px;overflow:hidden;cursor:pointer;aspect-ratio:16/9}
+.lx-vidbtn img{display:block;width:100%;height:100%;object-fit:cover}
+.lx-vidbtn::after{content:"";position:absolute;left:50%;top:50%;width:56px;height:56px;transform:translate(-50%,-50%);border-radius:50%;background:var(--amber-lt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7.5v9l7.5-4.5z' fill='%23161D3D'/%3E%3C/svg%3E") center/58% no-repeat;box-shadow:0 6px 18px rgba(22,29,61,.4)}
+.lx-vidbtn:hover{border-color:var(--mint)}
+.lx-vidbtn:focus-visible{outline:3px solid #B9E6CD;outline-offset:3px}
+.lx-vid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:var(--navy)}
+.lx-vid figcaption{font-size:.8rem;font-weight:700;color:var(--mint-deep)}
+[data-theme="dark"] .lx-vid figcaption{color:var(--mint)}
 .callout h3{font-size:1.02rem;color:var(--navy)}
 .callout p{font-size:.82rem;color:var(--mut);line-height:1.5}
 .callout .acts{display:flex;gap:.5rem;flex-wrap:wrap}
@@ -316,6 +325,9 @@ svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42
 OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
 function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
 const SUITE="Art · Teesside Studio Suite";
+const PRIORITY=[SUITE,"Science · Teesside","Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
+const LEGACY={"Art":"Original series — superseded by the Teesside Studio Suite above. Kept for reference."};
+function subjOrder(x,z){const lx=x in LEGACY?1:0,lz=z in LEGACY?1:0;if(lx!==lz)return lx-lz;const px=PRIORITY.indexOf(x),pz=PRIORITY.indexOf(z);if((px>=0)!==(pz>=0))return px>=0?-1:1;if(px>=0&&pz>=0)return px-pz;return x.localeCompare(z)}
 const PRINTPACK=new Set([SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA"]);
 const IC={screen:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',print:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',tiers:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',pad:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg>',tab:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg>'};
 function isPack(r){return r.year==="2026-27"&&(r.type==="lesson"||r.type==="revision")&&PRINTPACK.has(r.subject)}
@@ -328,28 +340,22 @@ return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="
 function actLabel(r){return {lesson:"LAUNCH SLIDES →",revision:"LAUNCH SLIDES →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
 function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(/^https?:/.test(_s)?_s:encodeURI(_s));
 const pills=BROWSING?"":`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div>`;
+let _dt=r.title||"";if(!BROWSING&&t&&_dt.indexOf(t+" · ")===0)_dt=_dt.slice((t+" · ").length);
 return `<article class="card${t?" t-"+t:""}"><div class="kind">${t&&BROWSING?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${href}">${esc(r.title)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}
+<h3><a href="${href}">${esc(_dt)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}
 <div class="actrow">${fmtIcons(r)}<a class="go" href="${href}">${actLabel(r)}</a></div></article>`}
 function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS AWARD MAPPED ✓ · AQA UAS ALIGNED</span>
 <h3>Teesside Art Studio Suite</h3>
 <p>The full-term art programme: ${n} studio lessons across BUILD (Explore), GROW (Bronze) and LAUNCH (Silver) — every lesson a whiteboard slideshow with three tiers and a complete print pack off the title slide.</p>
-<div class="acts"><button type="button" data-suite="">Browse the whole suite</button><button type="button" data-suite="BUILD">BUILD · Explore</button><button type="button" data-suite="GROW">GROW · Bronze</button><button type="button" data-suite="LAUNCH">LAUNCH · Silver</button></div></div>`}
+<div class="acts"><button type="button" data-suite="">Browse the whole suite</button><button type="button" data-suite="BUILD">BUILD · Explore</button><button type="button" data-suite="GROW">GROW · Bronze</button><button type="button" data-suite="LAUNCH">LAUNCH · Silver</button></div>
+<figure class="lx-vid"><button class="lx-vidbtn" type="button" data-yt="vhuk-K_wWas" aria-label="Play video: a full year of art — and it runs itself, 60-second tour"><img src="/assets/video/poster-art.jpg" alt="" loading="lazy" width="1280" height="720"></button><figcaption>▶ Watch: a full year of art — and it runs itself (60-second tour)</figcaption></figure></div>`}
 function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
 const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
 const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
 if(browsing){ // organised view: one section per subject, A→Z
   const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-  const PRIORITY=[SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
-  const LEGACY={"Art":"Original series — superseded by the Teesside Studio Suite above. Kept for reference."};
-  const subs=Object.keys(bySub).sort((x,z)=>{
-    const lx=x in LEGACY?1:0,lz=z in LEGACY?1:0;
-    if(lx!==lz)return lx-lz;
-    const px=PRIORITY.indexOf(x),pz=PRIORITY.indexOf(z);
-    if((px>=0)!==(pz>=0))return px>=0?-1:1;
-    if(px>=0&&pz>=0)return px-pz;
-    return x.localeCompare(z)});
+  const subs=Object.keys(bySub).sort(subjOrder);
   const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
   $("#cards").innerHTML=subs.map((subj,i)=>{
     const rows=bySub[subj],byT={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
@@ -376,11 +382,11 @@ $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" �
 function buildQuicknav(){
   const inCol={},total={};
   ALL.forEach(r=>{total[r.subject]=(total[r.subject]||0)+1;if(!YEAR||r.year===YEAR)inCol[r.subject]=(inCol[r.subject]||0)+1});
-  const chip=(label,val,on,lib)=>`<button class="chip${lib?" lib":""}" data-sub="${esc(val)}" aria-pressed="${on?"true":"false"}"${lib?' title="Not in this collection - opens the full catalogue"':""}>${esc(label)}</button>`;
+  const chip=(label,val,on,lib,titleOverride)=>{const ttl=titleOverride?` title="${esc(titleOverride)}"`:(lib?' title="Not in this collection - opens the full catalogue"':"");return `<button class="chip${lib?" lib":""}" data-sub="${esc(val)}" aria-pressed="${on?"true":"false"}"${ttl}>${esc(label)}</button>`};
   const cur=$("#subject").value;
-  $("#quicknav").innerHTML=chip("All subjects","",!cur)+Object.keys(total).sort().map(su=>{
+  $("#quicknav").innerHTML=chip("All subjects","",!cur)+Object.keys(total).sort(subjOrder).map(su=>{
     const n=inCol[su]||0;
-    return chip(`${su} (${n||total[su]})`,su,cur===su,n===0);
+    return chip(`${su} (${n||total[su]})`,su,cur===su,n===0,su in LEGACY?"Original series — superseded by the Teesside Studio Suite":null);
   }).join("");
 }
 
@@ -427,5 +433,15 @@ fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type
 ["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
 $("#subject").value=SUITE;TIER=b.getAttribute("data-suite")||"";$("#search").value="";render();
 const top=document.querySelector(".callout");if(top&&top.scrollIntoView)top.scrollIntoView({behavior:"smooth",block:"start"});});
+(function(){document.addEventListener("click",function(e){
+var btn=e.target.closest&&e.target.closest(".lx-vidbtn");if(!btn)return;
+var id=btn.getAttribute("data-yt");if(!id)return;
+try{var ifr=document.createElement("iframe");
+ifr.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
+ifr.title="Made by Matt video";
+ifr.setAttribute("allow","autoplay; encrypted-media; picture-in-picture; fullscreen");
+ifr.setAttribute("allowfullscreen","");ifr.setAttribute("loading","lazy");
+ifr.width="1280";ifr.height="720";btn.parentNode.replaceChild(ifr,btn);
+}catch(err){try{window.open("https://youtu.be/"+id,"_blank","noopener");}catch(_){}}});})();
 </script><script defer src="/theme.js"></script>
 </body></html>
