@@ -213,6 +213,10 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
         <button class="btn" id="pPractice">Set a practice checkpoint here</button>
         <button class="btn" id="pClearPractice" style="display:none">Clear practice checkpoint</button>
         <button class="btn ghost" id="pRestart">Restart the Proposition</button>
+        <div class="opt">
+          <div class="k">Calm Pulse<small>Small corner beat only — no background pulse or baseline throb.</small></div>
+          <button class="toggle" id="pCalmToggle" role="switch" aria-checked="false" aria-label="Calm Pulse"><span></span></button>
+        </div>
         <div class="opt" id="pAxiomRow" style="display:none">
           <div class="k">The Axiom Rule<small>Switch off any time — no penalty.</small></div>
           <button class="toggle" id="pAxiomToggle" role="switch" aria-checked="false" aria-label="The Axiom Rule"><span></span></button>
@@ -407,8 +411,19 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
     cur += 2; // tail rest
     ev.sort(function (a, b) { return a.b - b.b; });
     tape.sort(function (a, b) { return a.b - b.b; });
-    // three cosmetic ink drops if not authored
-    if (!drops.length) { drops = [{ b: cur * 0.25, y: 0.9 }, { b: cur * 0.5, y: 1.2 }, { b: cur * 0.75, y: 0.9 }]; }
+    // Three ink drops, placed on Bastion floor-spike apexes. A clean canonical
+    // run is already airborne (y ~= 1.0) at those beats to clear the spike, so
+    // the drops are collectable BY CONSTRUCTION — proven in the harness. If a
+    // level lacks 3 Bastion spikes, fall back to spaced rest-zone points.
+    if (!drops.length) {
+      var probe = { startForm: opts.startForm || 'bastion', gates: gates };
+      var bs = ev.filter(function (e) { return e.t === 'spike' && formAt(probe, e.b) === 'bastion'; })
+                 .map(function (e) { return e.b; });
+      var pick = [];
+      if (bs.length >= 3) { pick = [bs[0], bs[Math.floor(bs.length / 2)], bs[bs.length - 1]]; }
+      else { pick = [cur * 0.25, cur * 0.5, cur * 0.75]; }
+      drops = pick.map(function (b) { return { b: b, y: 0.9 }; });
+    }
     return { id: id, name: name, endBeat: cur, tempoKey: tempoKey || 'standard',
              startForm: opts.startForm || 'bastion', ev: ev, tape: tape,
              gates: gates, checkpoints: checkpoints, drops: drops };
@@ -456,9 +471,10 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
     return {
       level: level, songBeat: 0, form: level.startForm,
       y: 0, vy: 0, grounded: true, holding: false, gravDir: 1,
-      smudges: 0, cleared: false, steps: 0,
+      smudges: 0, cleared: false, steps: 0, hw: 0,
       cpBeat: 0, drops: {}, trace: 2166136261 >>> 0,
       axiomRule: !!opts.axiomRule, seed: seed,
+      force: (opts.forceSmudge || []).slice(), forceFired: {},
       simRng: mulberry32(seed),
       fxRng: mulberry32((seed ^ 0x9e3779b9) >>> 0)   // INDEPENDENT visual stream
     };
@@ -471,6 +487,15 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
   function restoreTo(s, beat) {
     s.songBeat = beat; s.y = 0; s.vy = 0; s.grounded = true;
     s.holding = false; s.gravDir = 1; s.form = formAt(s.level, beat);
+  }
+  // The single smudge/rewind path — used by real hazard contact AND by the
+  // harness's forced-injection, so both exercise identical machinery. The
+  // Axiom Rule sends you to beat 0 with no hidden mercy; otherwise the last
+  // beat-checkpoint. The high-water mark (s.hw) is never rewound.
+  function doSmudge(s) {
+    s.smudges++;
+    if (s.axiomRule) restoreTo(s, 0);
+    else restoreTo(s, lastCheckpoint(s.level, s.songBeat));
   }
   function lastCheckpoint(level, beat) {
     var cp = 0;
@@ -487,7 +512,14 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
       if (maxSteps && s.steps > maxSteps) break;
       var prev = s.songBeat;
       s.songBeat += DBEAT; s.steps++;
+      if (s.songBeat > s.hw) s.hw = s.songBeat;   // progress high-water, never rewound
       var f = FORMS[s.form];
+      // forced-injection contact (test affordance; empty in normal play) —
+      // fires the real smudge machinery exactly once per scripted beat.
+      for (var fi = 0; fi < s.force.length; fi++) {
+        var fb = s.force[fi];
+        if (!s.forceFired[fi] && fb > prev + 1e-12 && fb <= s.songBeat + 1e-12) { s.forceFired[fi] = 1; doSmudge(s); }
+      }
       // apply tape events crossed in (prev, songBeat]
       for (var ti = 0; ti < tape.length; ti++) {
         var tp = tape[ti];
@@ -504,11 +536,7 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
         if (e.b > prev + 1e-12 && e.b <= s.songBeat + 1e-12) {
           if (e.t === 'gate') { s.form = e.form; s.grounded = true; s.vy = 0; s.gravDir = 1; if (s.form !== 'star') s.y = 0; }
           else if (e.t === 'spike' || e.t === 'ceil') {
-            if (!inband(e.t, s.y, e)) {
-              s.smudges++;
-              if (s.axiomRule) restoreTo(s, 0);
-              else restoreTo(s, lastCheckpoint(lvl, s.songBeat));
-            }
+            if (!inband(e.t, s.y, e)) { doSmudge(s); }
           }
         }
       }
@@ -533,7 +561,7 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
     runToBeat(s, tape, maxBeat, guard);
     return {
       cleared: s.cleared, smudges: s.smudges, steps: s.steps,
-      endBeat: s.songBeat, trace: s.trace >>> 0,
+      endBeat: s.songBeat, hw: s.hw, trace: s.trace >>> 0,
       dropsCollected: Object.keys(s.drops).length
     };
   }
@@ -568,6 +596,7 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
     mulberry32: mulberry32, hashStr: hashStr, maxFlashHz: maxFlashHz,
     formAt: formAt, createSim: createSim, runToBeat: runToBeat,
     runTape: runTape, runFromCheckpoint: runFromCheckpoint,
+    lastCheckpoint: lastCheckpoint, doSmudge: doSmudge,
     dailyLevel: dailyLevel, assemble: assemble,
     // migration stub — versioned from first commit
     migrateSave: function (raw) {
@@ -858,7 +887,8 @@ if (typeof document !== 'undefined') {
     var secs = play.level.checkpoints.length;
     var clean = play.st.smudges === 0;
     var stars = 1 + (clean ? 1 : 0) + (Object.keys(play.st.drops).length >= 3 ? 1 : 0);
-    if (lvl.id !== 'daily') {
+    // Practice never banks stars or progress into the real save; nor does Daily.
+    if (lvl.id !== 'daily' && play.practiceAt == null) {
       save.best[lvl.id] = 100;
       save.stars[lvl.id] = Math.max(save.stars[lvl.id] || 0, stars);
       persist();
@@ -908,9 +938,9 @@ if (typeof document !== 'undefined') {
     }
   }
 
-  function startLevel(lvl) {
+  function startLevel(lvl, opts) {
     resize();
-    play = newPlay(lvl, {});
+    play = newPlay(lvl, opts || {});
     show('game');
     announce(lvl.name + '. Tier ' + save.tier + '. Tap or press space.');
   }
@@ -951,6 +981,7 @@ if (typeof document !== 'undefined') {
     if (!play) return; play.running = false;
     $('pAxiomRow').style.display = (play.tier === 'sharp') ? 'flex' : 'none';
     $('pAxiomToggle').setAttribute('aria-checked', save.axiom ? 'true' : 'false');
+    $('pCalmToggle').setAttribute('aria-checked', save.calm ? 'true' : 'false');
     $('pClearPractice').style.display = play.practiceAt != null ? 'block' : 'none';
     show('pause');
   }
@@ -982,13 +1013,22 @@ if (typeof document !== 'undefined') {
 
   $('hudPause').addEventListener('click', openPause);
   $('pResume').addEventListener('click', resumePlay);
-  $('pRestart').addEventListener('click', function () { startLevel(play.level); });
+  $('pRestart').addEventListener('click', function () {
+    // Restart honours a placed practice checkpoint — repeat that section.
+    startLevel(play.level, (play && play.practiceAt != null) ? { fromBeat: play.practiceAt } : {});
+  });
   $('pQuit').addEventListener('click', function () { play = null; show('menu'); refreshTierUI(); });
   $('pPractice').addEventListener('click', function () {
     if (!play) return; play.practiceAt = A.lastCheckpoint(play.level, play.st.songBeat);
     announce('Practice checkpoint set. Restart returns you here.'); resumePlay();
   });
   $('pClearPractice').addEventListener('click', function () { if (play) { play.practiceAt = null; announce('Practice checkpoint cleared.'); resumePlay(); } });
+  $('pCalmToggle').addEventListener('click', function () {
+    save.calm = !save.calm; persist();
+    $('pCalmToggle').setAttribute('aria-checked', save.calm ? 'true' : 'false');
+    document.body.classList.toggle('calm', save.calm);
+    announce('Calm Pulse ' + (save.calm ? 'on — background pulse off' : 'off') + '.');
+  });
   $('pAxiomToggle').addEventListener('click', function () {
     save.axiom = !save.axiom; persist();
     $('pAxiomToggle').setAttribute('aria-checked', save.axiom ? 'true' : 'false');

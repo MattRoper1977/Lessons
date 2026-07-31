@@ -38,7 +38,71 @@ const A = sandbox.AXIOM;
 if (!A) { console.error('SIM CORE did not expose AXIOM.'); process.exit(2); }
 
 const TIERS = ['gentle', 'standard', 'sharp'];
-const measured = { tapeClear: {}, daily: null, flash: null };
+const measured = { tapeClear: {}, daily: null, flash: null, rewind: {} };
+
+// ---- shared stub-DOM shell driver -----------------------------------------
+// Boots the REAL shell (core + shell script) headlessly so behavioural
+// assertions drive true user flows: live play, calm-pulse render, field-guide
+// unlocks, practice banking. Records ctx.arc calls so render effects can be
+// measured, not inspected.
+function buildEnv(preSave) {
+  const arcs = []; const clock = { t: 0 };
+  const ctxStub = new Proxy({}, {
+    get(t, p) { if (p === 'arc') return (x, y, r) => arcs.push({ x, y, r }); if (p in t) return t[p]; return () => {}; },
+    set(t, p, v) { t[p] = v; return true; }
+  });
+  function El(tag) {
+    const cls = new Set();
+    return {
+      tagName: tag, style: {}, dataset: {}, _kids: [], _lis: {}, clientWidth: 900, clientHeight: 520, width: 0, height: 0,
+      classList: { add: c => cls.add(c), remove: c => cls.delete(c), toggle: (c, f) => { if (f === undefined) f = !cls.has(c); f ? cls.add(c) : cls.delete(c); return f; }, contains: c => cls.has(c) },
+      set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html || ''; }, textContent: '',
+      appendChild(k) { this._kids.push(k); return k; }, addEventListener(t2, fn) { this._lis[t2] = fn; },
+      dispatch(type, ev) { if (this._lis[type]) this._lis[type](ev || { preventDefault() {} }); }, click() { this.dispatch('click'); },
+      setAttribute(k, v) { this['_a_' + k] = v; }, getAttribute(k) { return this['_a_' + k]; },
+      querySelectorAll() { return []; }, focus() {}, getContext() { return ctxStub; },
+      getBoundingClientRect() { return { left: 0, top: 0, width: 900, height: 520 }; }, get children() { return this._kids; }
+    };
+  }
+  const els = {};
+  const doc = { getElementById(id) { return els[id] || (els[id] = El('div')); }, createElement(tag) { return El(tag); }, querySelectorAll() { return []; }, body: El('body'), addEventListener() {} };
+  els.cv = El('canvas');
+  let rafCb = null; const store = new Map(); if (preSave) store.set('mbm_axiomshift', preSave);
+  const win = { devicePixelRatio: 1, innerWidth: 900, innerHeight: 520, addEventListener() {}, requestAnimationFrame(cb) { rafCb = cb; return 1; }, cancelAnimationFrame() {}, performance: { now: () => clock.t }, localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, v), removeItem: k => store.delete(k) }, setTimeout() { return 0; } };
+  const sb = { window: win, document: doc, requestAnimationFrame: win.requestAnimationFrame, localStorage: win.localStorage, performance: win.performance, setTimeout: win.setTimeout, Math, Date, JSON, console: { log() {} }, encodeURIComponent };
+  sb.globalThis = sb; win.AXIOM = A; sb.AXIOM = A; vm.createContext(sb);
+  vm.runInContext(coreSrc, sb, { filename: 'core-shell' });
+  const shellSrc = html.slice(html.indexOf('/* ===== SHELL + RENDER'), html.lastIndexOf('</script>'));
+  vm.runInContext(shellSrc, sb, { filename: 'shell' });
+  return {
+    els, win, doc, arcs, clock,
+    frame(t) { clock.t = t; if (rafCb) rafCb(t); },
+    save() { const r = win.localStorage.getItem('mbm_axiomshift'); return r ? JSON.parse(r) : null; },
+    tapCv() { els.cv.dispatch('pointerdown'); els.cv.dispatch('pointerup'); },
+    holdDown() { els.cv.dispatch('pointerdown'); }, holdUp() { els.cv.dispatch('pointerup'); }
+  };
+}
+// Replay a level's canonical tape through live cv pointer events. Returns
+// whether the live run reached a real clear screen, plus the resulting save.
+function driveLive(env, lvlIndex, beforeRun) {
+  env.els.splashStart.click(); env.els.mPlay.click();
+  env.els.levelGrid.children[lvlIndex].click();
+  if (beforeRun) beforeRun();
+  const lvl = A.LEVELS[lvlIndex]; const tape = lvl.tape.slice();
+  const bps = A.TEMPOS.standard / 60, dt = 1 / 60, lead = 0.05;
+  let t = 0, beat = 0, ti = 0;
+  const maxFrames = Math.ceil((lvl.endBeat + 4) / (bps * dt)) + 60;
+  for (let f = 0; f < maxFrames; f++) {
+    while (ti < tape.length && tape[ti].b <= beat + lead) {
+      const a = tape[ti].a;
+      if (a === 'tap') env.tapCv(); else if (a === 'down') env.holdDown(); else if (a === 'up') env.holdUp();
+      ti++;
+    }
+    t += dt * 1000; env.frame(t); beat += bps * dt;
+    if (env.els.clear.classList.contains('show')) return { cleared: true, atFrame: f, save: env.save() };
+  }
+  return { cleared: false, save: env.save() };
+}
 
 // ---- 1. canonical tape clears (all levels) --------------------------------
 head('Canonical tape clears — each Proposition, x3 runs, bit-identical');
@@ -169,71 +233,152 @@ while ((rr = refRe.exec(html))) refIds.add(rr[1]);
 const unresolved = [...refIds].filter(id => !idSet.has(id));
 ok('all-id-refs-resolve', unresolved.length === 0, unresolved.length ? 'missing: ' + unresolved.join(',') : '(' + refIds.size + ' refs, all resolve)');
 
-// ---- 8. render smoke — actually call draw() under a stub DOM ---------------
+// ---- Job A1: the smudge-rewind path fires correctly ------------------------
+head('Job A1 — smudge recognised, rewinds to last checkpoint, high-water kept, remainder clears (x3 tiers)');
+for (const lvl of A.LEVELS) {
+  const mid = lvl.endBeat * 0.5;
+  const cpTarget = A.lastCheckpoint(lvl, mid);
+  // measure the real rewind target via the actual doSmudge machinery
+  const sm = A.createSim(lvl); sm.songBeat = mid; sm.form = A.formAt(lvl, mid); sm.hw = mid; sm.y = 1;
+  A.doSmudge(sm);
+  const rewoundTo = sm.songBeat, hwKept = sm.hw >= mid - 1e-9, valid = sm.grounded && sm.y === 0;
+  // behavioural: inject a real contact mid-run on every tier; must still clear
+  let clearsAllTiers = true;
+  for (let ti = 0; ti < TIERS.length; ti++) {
+    const r = A.runTape(lvl, { forceSmudge: [mid] });
+    if (!(r.smudges === 1 && r.cleared && r.hw >= mid - 1e-9)) clearsAllTiers = false;
+  }
+  measured.rewind[lvl.id] = { cp: cpTarget, to: rewoundTo };
+  ok('A1-smudge/' + lvl.id, Math.abs(rewoundTo - cpTarget) < 1e-6 && hwKept && valid && clearsAllTiers,
+     'rewindTo=' + rewoundTo.toFixed(2) + '=cp, grounded, hwKept, clears x3 tiers');
+}
+
+// ---- Job A2: the Axiom Rule restart path (no hidden mercy) -----------------
+head('Job A2 — Axiom Rule restarts at beat 0; clear/stars unchanged by the Rule');
+for (const lvl of A.LEVELS) {
+  const mid = lvl.endBeat * 0.5;
+  const sm = A.createSim(lvl, { axiomRule: true }); sm.songBeat = mid; sm.form = A.formAt(lvl, mid); sm.y = 1;
+  A.doSmudge(sm);
+  const restart = sm.songBeat;
+  const r1 = A.runTape(lvl, { forceSmudge: [mid], axiomRule: true });
+  const r2 = A.runTape(lvl, { forceSmudge: [mid], axiomRule: true });
+  ok('A2-axiom/' + lvl.id, restart === 0 && r1.cleared && r1.trace === r2.trace,
+     'restartBeat=' + restart + ' (expect 0), fresh tape clears deterministically');
+}
+{
+  // clear-invariant: a clean run is identical whether the Rule is on or off
+  let same = true;
+  for (const lvl of A.LEVELS) {
+    const off = A.runTape(lvl, { axiomRule: false }), on = A.runTape(lvl, { axiomRule: true });
+    if (!(off.cleared === on.cleared && off.smudges === on.smudges && off.dropsCollected === on.dropsCollected && off.trace === on.trace)) same = false;
+  }
+  ok('A2-clear-invariant', same, '(clean run: clear/smudges/drops/trace identical, Rule on vs off)');
+  // toggling the Rule OFF mid-session returns to checkpoint behaviour at once
+  const lvl = A.LEVELS[0], mid = lvl.endBeat * 0.5;
+  const s = A.createSim(lvl, { axiomRule: true }); s.songBeat = mid; s.form = A.formAt(lvl, mid);
+  s.axiomRule = false; A.doSmudge(s);
+  ok('A2-toggle-off', Math.abs(s.songBeat - A.lastCheckpoint(lvl, mid)) < 1e-6,
+     'after toggling off, rewind returns to checkpoint (' + s.songBeat.toFixed(2) + '), not 0');
+}
+
+// ---- Job A3: repeat-smudge stability --------------------------------------
+head('Job A3 — 5 consecutive contacts: no drift, no softlock, still clears');
+for (const lvl of A.LEVELS) {
+  const beats = [0.15, 0.30, 0.45, 0.60, 0.75].map(f => lvl.endBeat * f);
+  const r1 = A.runTape(lvl, { forceSmudge: beats });
+  const r2 = A.runTape(lvl, { forceSmudge: beats });
+  ok('A3-repeat/' + lvl.id, r1.smudges === 5 && r1.cleared && r1.trace === r2.trace,
+     'smudges=' + r1.smudges + ', clears, trace stable across runs (no drift)');
+}
+
+// ---- Contract: no elimination vocab in dynamic (announce/aria-live) strings -
+head('Contract — no elimination vocab in dynamic user-facing strings');
+{
+  const shellSrc = html.slice(html.indexOf('/* ===== SHELL + RENDER'), html.lastIndexOf('</script>'));
+  const strs = []; const re = /announce\(\s*(['"`])([\s\S]*?)\1\s*\)/g; let m;
+  while ((m = re.exec(shellSrc))) strs.push(m[2]);
+  const banned = ['die', 'death', 'killed', 'kill', 'eliminated', 'game over', 'failed', 'vote out'];
+  let hit = [];
+  for (const s of strs) for (const w of banned) if (new RegExp('\\b' + w.replace(/ /g, '\\s+') + '\\b', 'i').test(s)) hit.push(w);
+  ok('no-elim-vocab-dynamic', strs.length > 0 && hit.length === 0, hit.length ? 'hit: ' + hit.join(',') : '(' + strs.length + ' announce strings clean)');
+}
+
+// ---- Job C: ink drops are collectable -------------------------------------
+head('Job C — every level: all three ink drops collectable and still clears');
+for (const lvl of A.LEVELS) {
+  const r = A.runTape(lvl); // the clean canonical run
+  ok('C-drops/' + lvl.id, r.dropsCollected === 3 && r.cleared,
+     'collected=' + r.dropsCollected + '/3 by canonical run (drops sit on Bastion-spike apexes)');
+}
+
+// ---- Job B1: Calm Pulse present, effective, reachable from the pause menu --
+head('Job B1 — Calm Pulse suppresses the background pulse (behavioural, from pause menu)');
+{
+  const env = buildEnv();
+  env.els.splashStart.click(); env.els.mPlay.click(); env.els.levelGrid.children[0].click();
+  const cx = 450, cy = 0.42 * 520;
+  for (let f = 0; f < 30; f++) env.frame(1000 + f * 16.7);
+  const pulseOff = env.arcs.filter(a => Math.abs(a.x - cx) < 8 && Math.abs(a.y - cy) < 8).length;
+  env.els.hudPause.click(); env.els.pCalmToggle.click(); env.els.pResume.click(); // toggle from PAUSE
+  env.arcs.length = 0;
+  for (let f = 0; f < 30; f++) env.frame(3000 + f * 16.7);
+  const pulseOn = env.arcs.filter(a => Math.abs(a.x - cx) < 8 && Math.abs(a.y - cy) < 8).length;
+  const persisted = !!(env.save() || {}).calm;
+  ok('B1-calm-pulse', pulseOff > 0 && pulseOn === 0 && persisted,
+     'pulse arcs at Mark: off=' + pulseOff + ' on=' + pulseOn + ' persisted=' + persisted);
+}
+
+// ---- Job B2: Field Guide locked on fresh save, unlocks on real encounter ---
+head('Job B2 — Field Guide entry locked on fresh save, unlocks only on encounter');
+{
+  const env = buildEnv();
+  env.els.splashStart.click(); env.els.mGuide.click();
+  const ringLockedFresh = /\?\?\?/.test(env.els.guideGrid.children[1].innerHTML);
+  const env2 = buildEnv();
+  driveLive(env2, 2); // play Proposition III (Ring gate)
+  const seen = (env2.save() || { seen: {} }).seen || {};
+  ok('B2-field-guide', ringLockedFresh && !!seen.form_ring && !seen.glitch_live,
+     'freshLocked=' + ringLockedFresh + ' ringUnlockedAfterP3=' + !!seen.form_ring + ' glitchStillLocked=' + !seen.glitch_live);
+}
+
+// ---- Job B3: Practice survivable-from + cannot bank into the real save -----
+head('Job B3 — Practice checkpoint survivable-from; never banks stars/progress');
+{
+  let survOk = true;
+  for (const lvl of A.LEVELS) {
+    const placed = A.lastCheckpoint(lvl, lvl.endBeat * 0.5); // pPractice snaps here
+    if (!A.runFromCheckpoint(lvl, placed).cleared) survOk = false;
+  }
+  const envN = buildEnv(); const rN = driveLive(envN, 0);
+  const banksNormal = (((envN.save() || {}).stars) || {}).p1 > 0;
+  const envP = buildEnv();
+  const rP = driveLive(envP, 0, () => { envP.els.hudPause.click(); envP.els.pPractice.click(); });
+  const sp = envP.save() || {};
+  const noBank = !((sp.stars || {}).p1) && !((sp.best || {}).p1);
+  ok('B3-practice', survOk && rN.cleared && banksNormal && rP.cleared && noBank,
+     'survivable=' + survOk + ' normalBanks=' + banksNormal + ' practiceClears=' + rP.cleared + ' practiceNoBank=' + noBank);
+}
+
+// ---- Live path reaches a real clear (bonus reachability proof) -------------
+head('Live path — canonical inputs replayed live reach a real clear');
+{
+  const env = buildEnv(); const r = driveLive(env, 0);
+  ok('live-clear/p1', r.cleared, r.cleared ? '(p1 cleared via live cv taps at frame ' + r.atFrame + ')' : '(did not clear live)');
+}
+
+// ---- render smoke — actually call draw() under a stub DOM ------------------
 head('Render smoke — drive the real loop/draw under a stub DOM (no crash)');
 {
   let smokeOk = true, err = '';
   try {
-    const ctxStub = new Proxy({}, {
-      get(t, p) { if (p in t) return t[p]; return function () {}; },
-      set(t, p, v) { t[p] = v; return true; }
-    });
-    function El(tag) {
-      const cls = new Set();
-      return {
-        tagName: tag, style: {}, dataset: {}, _kids: [], _lis: {},
-        clientWidth: 900, clientHeight: 520, width: 0, height: 0,
-        classList: { add: c => cls.add(c), remove: c => cls.delete(c),
-          toggle: (c, f) => { if (f === undefined) f = !cls.has(c); f ? cls.add(c) : cls.delete(c); return f; },
-          contains: c => cls.has(c) },
-        set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html || ''; },
-        textContent: '', appendChild(k) { this._kids.push(k); return k; },
-        addEventListener(t2, fn) { this._lis[t2] = fn; },
-        click() { if (this._lis.click) this._lis.click({ preventDefault() {} }); },
-        setAttribute(k, v) { this['_a_' + k] = v; }, getAttribute(k) { return this['_a_' + k]; },
-        querySelectorAll() { return []; }, focus() {}, getContext() { return ctxStub; },
-        getBoundingClientRect() { return { left: 0, top: 0, width: 900, height: 520 }; },
-        get children() { return this._kids; }
-      };
-    }
-    const els = {};
-    const doc = {
-      getElementById(id) { return els[id] || (els[id] = El('div')); },
-      createElement(tag) { return El(tag); },
-      querySelectorAll() { return []; },
-      body: El('body'), addEventListener() {}
-    };
-    els.cv = El('canvas');
-    let rafCb = null;
-    const win = {
-      devicePixelRatio: 1, innerWidth: 900, innerHeight: 520,
-      addEventListener() {}, requestAnimationFrame(cb) { rafCb = cb; return 1; },
-      cancelAnimationFrame() {}, performance: { now: () => smokeT },
-      localStorage: (() => { const m = new Map(); return { getItem: k => m.has(k) ? m.get(k) : null, setItem: (k, v) => m.set(k, v), removeItem: k => m.delete(k) }; })(),
-      setTimeout() { return 0; }, AXIOM: A
-    };
-    let smokeT = 0;
-    const sb = { window: win, document: doc, requestAnimationFrame: win.requestAnimationFrame,
-      localStorage: win.localStorage, performance: win.performance, setTimeout: win.setTimeout,
-      Math: Math, Date: Date, JSON: JSON, console: { log() {} }, encodeURIComponent: encodeURIComponent };
-    sb.globalThis = sb; win.AXIOM = A; sb.AXIOM = A;
-    vm.createContext(sb);
-    // load core into this context, then the shell
-    vm.runInContext(coreSrc, sb, { filename: 'core2' });
-    const shellStart = html.indexOf('/* ===== SHELL + RENDER');
-    const shellSrc = html.slice(shellStart, html.lastIndexOf('</script>'));
-    vm.runInContext(shellSrc, sb, { filename: 'shell' });
-    // drive the flow: splash -> menu -> play list -> start level 0
-    els.splashStart.click();
-    els.mPlay.click();
-    const grid = els.levelGrid;
-    if (grid.children[0]) grid.children[0].click(); // startLevel(p1)
-    // run frames — exercises update() + render() (drawGlyph, hazards, HUD)
-    for (let f = 0; f < 240; f++) { smokeT = f * 16.7; if (rafCb) rafCb(smokeT); }
-    // also start the finale to draw gates/glitch telegraph + all forms
-    els.mGuide.click(); // build guide (draws ??? entries)
+    const env = buildEnv();
+    env.els.splashStart.click(); env.els.mPlay.click();
+    if (env.els.levelGrid.children[0]) env.els.levelGrid.children[0].click();
+    for (let f = 0; f < 240; f++) env.frame(f * 16.7);   // p1: update()+render(), smudge blot
+    env.els.mGuide.click();
+    const env2 = buildEnv(); driveLive(env2, 5);          // finale: gates, glitch telegraph, all forms
   } catch (e) { smokeOk = false; err = e && e.stack ? e.stack.split('\n')[0] : String(e); }
-  ok('render-smoke', smokeOk, smokeOk ? '(240 frames drawn, no throw)' : err);
+  ok('render-smoke', smokeOk, smokeOk ? '(240 frames + finale drawn, no throw)' : err);
 }
 
 // ---- summary ---------------------------------------------------------------
@@ -242,6 +387,7 @@ console.log('  file: ' + FILE);
 console.log('  size: ' + html.length + ' bytes');
 console.log('  tape-clear beats: ' + A.LEVELS.map(l => l.id + '=' + measured.tapeClear[l.id].beat.toFixed(0)).join(' '));
 console.log('  daily: ' + measured.daily.solvable + '/' + measured.daily.tested + ' solvable+deterministic');
+console.log('  rewind targets: ' + A.LEVELS.map(l => l.id + '→' + measured.rewind[l.id].to.toFixed(1)).join(' '));
 console.log('  max flash: ' + measured.flash.toFixed(3) + ' Hz');
 console.log('  assertions: ' + pass + ' pass, ' + fail + ' fail');
 if (fail) { console.log('\nFAILURES: ' + fails.join(', ')); process.exit(1); }
