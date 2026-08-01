@@ -647,7 +647,100 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 }
 
 /* ==========================================================================
-   9 · REDUCED MOTION
+   9 · THE I DO STEP BUILD  (.v5-steps / .v5-step)
+   ---------------------------------------------------------------------------
+   Both I Do slides in every deck hold the same control: a "Reveal next step"
+   button, a "Step 2 of 3" label, and three steps that a teacher uncovers one
+   at a time. 186 steps across the suite, and it is the single place where the
+   decks already teach in sequence rather than all at once.
+
+   Three things were missing from it. A revealed step looked identical to the
+   ones before it, so from the back of the room there was nothing to say which
+   one the teacher had just uncovered. Nothing on the step itself said where it
+   sat in the sequence — only the control strip did, in words. And the heading
+   and its explanation arrived together, so the class was reading the paragraph
+   while the teacher was still saying the heading.
+
+   Now: every step carries its number, the current one takes the zone colour
+   and a solid marker while earlier ones keep an outlined marker and a pale
+   edge, and the explanation follows its heading by a quarter of a second.
+   Earlier steps are never dimmed — a class refers back to them constantly.
+   ========================================================================== */
+.v5-steps{counter-reset:at-step}
+.v5-step{counter-increment:at-step}
+
+/* The revealed step. The leading edge is the pale zone tint until this is the
+   step being talked about, when it takes the full zone colour. */
+.v5-step.revealed{
+  position:relative;
+  padding-left:46px;
+  border-left:4px solid var(--ido-bg);
+  margin-bottom:6px;
+  transition:border-color var(--at-base) var(--at-ease),
+             background var(--at-base) var(--at-ease);
+}
+/* The step's number. Outlined for a step already covered, solid for the one
+   in hand — so which step is current is carried by fill as well as by colour. */
+.v5-step.revealed::before{
+  content:counter(at-step);
+  position:absolute;left:0;top:1px;
+  width:32px;height:32px;border-radius:50%;
+  background:#fff;color:var(--ido-border);
+  border:2px solid var(--ido-border);
+  font-size:.95rem;font-weight:900;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--at-fast) var(--at-ease),color var(--at-fast) var(--at-ease);
+}
+.v5-step.at-step-current{
+  border-left-color:var(--ido-border);
+  background:linear-gradient(90deg,var(--ido-bg),transparent 62%);
+  border-radius:0 10px 10px 0;
+}
+.v5-step.at-step-current::before{background:var(--ido-border);color:#fff}
+
+/* Heading first, explanation a beat later — the class hears the point being
+   made before the paragraph about it arrives to be read. */
+.v5-step.revealed > h3{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.v5-step.revealed > p{animation:atSlideIn var(--at-base) var(--at-ease) .26s backwards}
+
+/* How many steps there are, and how many are out, without reading the label.
+   Built by the framework JS and hidden from assistive tech — the label beside
+   it already says "Step 2 of 3" in words. */
+.v5-step-pips{display:inline-flex;align-items:center;gap:7px}
+.v5-step-pips i{
+  width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--ido-border);background:transparent;opacity:.4;
+  transition:background var(--at-fast) var(--at-ease),opacity var(--at-fast) var(--at-ease),
+             transform var(--at-fast) var(--at-pop);
+}
+.v5-step-pips i.on{background:var(--ido-border);opacity:1}
+.v5-step-pips i.at-just-on{transform:scale(1.35)}
+
+@media (max-width:640px){
+  .v5-step.revealed{padding-left:38px}
+  .v5-step.revealed::before{width:26px;height:26px;font-size:.82rem}
+}
+@media print{
+  .v5-step-pips{display:none!important}
+  .v5-step.at-step-current{background:none!important}
+}
+
+/* ==========================================================================
+   10 · REVEALED ANSWERS  (Arrival and Exit)
+   ---------------------------------------------------------------------------
+   "Reveal Answers" flips all three answers up at once, which is three things
+   to read the moment the teacher wants the class listening to the first one.
+   They now land in reading order over a third of a second, which is a beat per
+   question — long enough to take them one at a time, short enough that a
+   teacher who has already moved on never waits for it.
+   ========================================================================== */
+.show-ans .arrival-grid .answer{animation-fill-mode:backwards}
+.show-ans .arrival-grid > *:nth-child(2) .answer{animation-delay:.16s}
+.show-ans .arrival-grid > *:nth-child(3) .answer{animation-delay:.32s}
+.show-ans .arrival-grid > *:nth-child(n+4) .answer{animation-delay:.48s}
+
+/* ==========================================================================
+   11 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -660,6 +753,8 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   .slide.active > *,
   .ilm .ilm-cap,
   .pres-card.done,
+  .v5-step.revealed > h3,.v5-step.revealed > p,
+  .show-ans .arrival-grid .answer,
   .match-target.correct,.match-target.correct::after,
   .match-pill.selected{
     animation:none!important;
@@ -671,8 +766,15 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   .pres-card::before,#pres-caps .pres-cap[data-at-n]::before{transform:translateY(-50%)!important}
   /* The li-box sweep is decorative light; remove it rather than freeze it mid-pass. */
   .slide.active .li-box::after{display:none!important}
-  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay{transition:none!important}
+  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay,
+  .v5-step.revealed,.v5-step.revealed::before,.v5-step-pips i{transition:none!important}
   .product-card:hover,.pres-card:hover,.ilm-replay:hover{transform:none}
+  /* The current-step marker stays — it is a static state, not motion — but the
+     scale-up on a pip that has just filled is motion, so it goes. */
+  .v5-step-pips i.at-just-on{transform:none!important}
+  /* Answers reveal together rather than in sequence, since the sequence is
+     carried entirely by animation delays that no longer run. */
+  .show-ans .arrival-grid .answer{animation-delay:0s!important}
 }
 </style>
 <!-- ASDAN-TEACH:CSS:END -->
@@ -1269,6 +1371,88 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   }
 
   /* ==================================================================
+     FEATURE · Mark the step the teacher has just revealed
+     ------------------------------------------------------------------
+     The deck's v5RevealNext() uncovers one step at a time and updates a
+     "Step 2 of 3" label. Every revealed step then looked the same, so
+     from the back of the room nothing said which one was being talked
+     about. We move an .at-step-current marker to the newest step and
+     fill one pip per step in the control strip.
+
+     Earlier steps keep their full contrast — a class refers back to them
+     while the teacher is on the next one. The CSS does the rest; without
+     this file the steps still reveal exactly as they did.
+     ================================================================== */
+  function markCurrentStep(group) {
+    var steps = group.querySelectorAll('.v5-step');
+    var current = null;
+    steps.forEach(function (step) {
+      step.classList.remove('at-step-current');
+      if (step.classList.contains('revealed')) current = step;
+    });
+    if (current) current.classList.add('at-step-current');
+
+    var pips = group.parentNode && group.parentNode.querySelector('.v5-step-pips');
+    if (!pips) return;
+    var shown = group.querySelectorAll('.v5-step.revealed').length;
+    Array.prototype.forEach.call(pips.children, function (pip, i) {
+      var on = i < shown;
+      // The pip that has just filled gets a moment of scale, so the eye
+      // is drawn to the progress rather than having to hunt for it.
+      pip.classList.toggle('at-just-on', on && !pip.classList.contains('on'));
+      pip.classList.toggle('on', on);
+    });
+    window.setTimeout(function () {
+      Array.prototype.forEach.call(pips.children, function (pip) {
+        pip.classList.remove('at-just-on');
+      });
+    }, 260);
+  }
+
+  function setupStepBuild() {
+    document.querySelectorAll('.v5-steps').forEach(function (group) {
+      var slide = group.closest ? group.closest('.slide') : null;
+      var controls = slide && slide.querySelector('.v5-step-controls');
+      var count = group.querySelectorAll('.v5-step').length;
+      if (controls && count && !controls.querySelector('.v5-step-pips')) {
+        var pips = document.createElement('span');
+        pips.className = 'v5-step-pips';
+        // The label beside these already reads "Step 2 of 3"; repeating it
+        // to a screen reader as a row of dots would only be noise.
+        pips.setAttribute('aria-hidden', 'true');
+        for (var i = 0; i < count; i++) pips.appendChild(document.createElement('i'));
+        controls.appendChild(pips);
+      }
+      // A deck that opens with steps already revealed still starts in sync.
+      markCurrentStep(group);
+    });
+
+    // The label is rewritten as steps come out; announce it politely so a
+    // pupil using a screen reader hears the same "Step 2 of 3" the room sees.
+    document.querySelectorAll('.v5-step-label').forEach(function (label) {
+      if (!label.getAttribute('aria-live')) {
+        label.setAttribute('role', 'status');
+        label.setAttribute('aria-live', 'polite');
+      }
+    });
+
+    if (typeof window.v5RevealNext === 'function' && !window.v5RevealNext._atWrapped) {
+      var original = window.v5RevealNext;
+      var wrapped = function (btn) {
+        var out = original.apply(this, arguments);
+        try {
+          var slide = btn && btn.closest && btn.closest('.slide');
+          var group = slide && slide.querySelector('.v5-steps');
+          if (group) markCurrentStep(group);
+        } catch (e) {}
+        return out;
+      };
+      wrapped._atWrapped = true;
+      window.v5RevealNext = wrapped;
+    }
+  }
+
+  /* ==================================================================
      Registration
      ================================================================== */
   AT.ready(function () {
@@ -1278,6 +1462,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     setupPresNumbering();
     fitMatchGrid();
     accentLevelCards(document);
+    setupStepBuild();
   });
 
   if (document.readyState === 'loading') {

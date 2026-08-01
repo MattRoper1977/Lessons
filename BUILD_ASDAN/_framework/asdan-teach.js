@@ -306,6 +306,88 @@
   }
 
   /* ==================================================================
+     FEATURE · Mark the step the teacher has just revealed
+     ------------------------------------------------------------------
+     The deck's v5RevealNext() uncovers one step at a time and updates a
+     "Step 2 of 3" label. Every revealed step then looked the same, so
+     from the back of the room nothing said which one was being talked
+     about. We move an .at-step-current marker to the newest step and
+     fill one pip per step in the control strip.
+
+     Earlier steps keep their full contrast — a class refers back to them
+     while the teacher is on the next one. The CSS does the rest; without
+     this file the steps still reveal exactly as they did.
+     ================================================================== */
+  function markCurrentStep(group) {
+    var steps = group.querySelectorAll('.v5-step');
+    var current = null;
+    steps.forEach(function (step) {
+      step.classList.remove('at-step-current');
+      if (step.classList.contains('revealed')) current = step;
+    });
+    if (current) current.classList.add('at-step-current');
+
+    var pips = group.parentNode && group.parentNode.querySelector('.v5-step-pips');
+    if (!pips) return;
+    var shown = group.querySelectorAll('.v5-step.revealed').length;
+    Array.prototype.forEach.call(pips.children, function (pip, i) {
+      var on = i < shown;
+      // The pip that has just filled gets a moment of scale, so the eye
+      // is drawn to the progress rather than having to hunt for it.
+      pip.classList.toggle('at-just-on', on && !pip.classList.contains('on'));
+      pip.classList.toggle('on', on);
+    });
+    window.setTimeout(function () {
+      Array.prototype.forEach.call(pips.children, function (pip) {
+        pip.classList.remove('at-just-on');
+      });
+    }, 260);
+  }
+
+  function setupStepBuild() {
+    document.querySelectorAll('.v5-steps').forEach(function (group) {
+      var slide = group.closest ? group.closest('.slide') : null;
+      var controls = slide && slide.querySelector('.v5-step-controls');
+      var count = group.querySelectorAll('.v5-step').length;
+      if (controls && count && !controls.querySelector('.v5-step-pips')) {
+        var pips = document.createElement('span');
+        pips.className = 'v5-step-pips';
+        // The label beside these already reads "Step 2 of 3"; repeating it
+        // to a screen reader as a row of dots would only be noise.
+        pips.setAttribute('aria-hidden', 'true');
+        for (var i = 0; i < count; i++) pips.appendChild(document.createElement('i'));
+        controls.appendChild(pips);
+      }
+      // A deck that opens with steps already revealed still starts in sync.
+      markCurrentStep(group);
+    });
+
+    // The label is rewritten as steps come out; announce it politely so a
+    // pupil using a screen reader hears the same "Step 2 of 3" the room sees.
+    document.querySelectorAll('.v5-step-label').forEach(function (label) {
+      if (!label.getAttribute('aria-live')) {
+        label.setAttribute('role', 'status');
+        label.setAttribute('aria-live', 'polite');
+      }
+    });
+
+    if (typeof window.v5RevealNext === 'function' && !window.v5RevealNext._atWrapped) {
+      var original = window.v5RevealNext;
+      var wrapped = function (btn) {
+        var out = original.apply(this, arguments);
+        try {
+          var slide = btn && btn.closest && btn.closest('.slide');
+          var group = slide && slide.querySelector('.v5-steps');
+          if (group) markCurrentStep(group);
+        } catch (e) {}
+        return out;
+      };
+      wrapped._atWrapped = true;
+      window.v5RevealNext = wrapped;
+    }
+  }
+
+  /* ==================================================================
      Registration
      ================================================================== */
   AT.ready(function () {
@@ -315,6 +397,7 @@
     setupPresNumbering();
     fitMatchGrid();
     accentLevelCards(document);
+    setupStepBuild();
   });
 
   if (document.readyState === 'loading') {
