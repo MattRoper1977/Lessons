@@ -478,12 +478,17 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   animation:atSlideIn var(--at-base) var(--at-ease) backwards;
   animation-delay:calc(var(--ilm-end,2.4s) + .25s);
 }
+/* The label is the deck's body ink, not the zone colour: measured across the
+   five subject palettes, zone-on-white runs 3.17-3.95:1 and this is 12.5px
+   chrome. The zone identity is carried by the ring and by the hover fill,
+   which is white-on-zone — the pattern the decks already use everywhere.
+   Sized to a 36px target, since a teacher taps this mid-sentence. */
 .ilm-replay{
   position:absolute;top:8px;right:10px;
-  display:inline-flex;align-items:center;gap:5px;
-  background:#fff;color:var(--ido-border);
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  background:#fff;color:var(--text,#1f2937);
   border:2px solid var(--ido-border);border-radius:999px;
-  padding:4px 12px;font-size:.78rem;font-weight:900;letter-spacing:.03em;
+  padding:6px 14px;min-height:36px;font-size:.8rem;font-weight:900;letter-spacing:.03em;
   cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.10);
   transition:background var(--at-fast),color var(--at-fast),transform var(--at-fast);
 }
@@ -647,7 +652,240 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 }
 
 /* ==========================================================================
-   9 · REDUCED MOTION
+   9 · THE I DO STEP BUILD  (.v5-steps / .v5-step)
+   ---------------------------------------------------------------------------
+   Both I Do slides in every deck hold the same control: a "Reveal next step"
+   button, a "Step 2 of 3" label, and three steps that a teacher uncovers one
+   at a time. 186 steps across the suite, and it is the single place where the
+   decks already teach in sequence rather than all at once.
+
+   Three things were missing from it. A revealed step looked identical to the
+   ones before it, so from the back of the room there was nothing to say which
+   one the teacher had just uncovered. Nothing on the step itself said where it
+   sat in the sequence — only the control strip did, in words. And the heading
+   and its explanation arrived together, so the class was reading the paragraph
+   while the teacher was still saying the heading.
+
+   Now: every step carries its number, the current one takes the zone colour
+   and a solid marker while earlier ones keep an outlined marker and a pale
+   edge, and the explanation follows its heading by a quarter of a second.
+   Earlier steps are never dimmed — a class refers back to them constantly.
+   ========================================================================== */
+.v5-steps{counter-reset:at-step}
+.v5-step{counter-increment:at-step}
+
+/* The revealed step. The leading edge is the pale zone tint until this is the
+   step being talked about, when it takes the full zone colour. */
+.v5-step.revealed{
+  position:relative;
+  padding-left:46px;
+  border-left:4px solid var(--ido-bg);
+  margin-bottom:6px;
+  transition:border-color var(--at-base) var(--at-ease),
+             background var(--at-base) var(--at-ease);
+}
+/* The step's number. Outlined for a step already covered, solid for the one
+   in hand — so which step is current is carried by fill as well as by colour.
+   The numeral on the outlined marker is the deck's body ink rather than the
+   zone colour: zone-on-white measures 2.9-4.0:1 across the five subject
+   palettes, and a step number has to be readable from the back of the room.
+   The ring carries the zone colour instead. */
+.v5-step.revealed::before{
+  content:counter(at-step);
+  position:absolute;left:0;top:1px;
+  width:32px;height:32px;border-radius:50%;
+  background:#fff;color:var(--text,#1f2937);
+  border:2px solid var(--ido-border);
+  font-size:.95rem;font-weight:900;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--at-fast) var(--at-ease),color var(--at-fast) var(--at-ease);
+}
+.v5-step.at-step-current{
+  border-left-color:var(--ido-border);
+  background:linear-gradient(90deg,var(--ido-bg),transparent 62%);
+  border-radius:0 10px 10px 0;
+}
+.v5-step.at-step-current::before{background:var(--ido-border);color:#fff}
+
+/* Heading first, explanation a beat later — the class hears the point being
+   made before the paragraph about it arrives to be read. */
+.v5-step.revealed > h3{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.v5-step.revealed > p{animation:atSlideIn var(--at-base) var(--at-ease) .26s backwards}
+
+/* How many steps there are, and how many are out, without reading the label.
+   Built by the framework JS and hidden from assistive tech — the label beside
+   it already says "Step 2 of 3" in words. */
+.v5-step-pips{display:inline-flex;align-items:center;gap:7px}
+.v5-step-pips i{
+  width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--ido-border);background:transparent;opacity:.4;
+  transition:background var(--at-fast) var(--at-ease),opacity var(--at-fast) var(--at-ease),
+             transform var(--at-fast) var(--at-pop);
+}
+.v5-step-pips i.on{background:var(--ido-border);opacity:1}
+.v5-step-pips i.at-just-on{transform:scale(1.35)}
+
+@media (max-width:640px){
+  .v5-step.revealed{padding-left:38px}
+  .v5-step.revealed::before{width:26px;height:26px;font-size:.82rem}
+}
+@media print{
+  .v5-step-pips{display:none!important}
+  .v5-step.at-step-current{background:none!important}
+}
+
+/* ==========================================================================
+   10 · THE ILLUMINATOR DIAGRAM ITSELF
+   ---------------------------------------------------------------------------
+   Two things inside the I Do SVGs were working against the build they sit in.
+
+   LABELS BEFORE THE THING THEY LABEL. 94 of the 225 <text> elements across the
+   31 illuminators carry no animation, so they were painted at t=0 — "¼ CARBS"
+   sitting on empty white for two seconds while the class waited for the wedge
+   it names. The framework JS pairs each such label with the shape it sits
+   inside and holds it until that shape has arrived; the delay is measured per
+   label, so it is right for every deck without anything being written down
+   here. A label whose shape never settles, or that pairs with nothing, keeps
+   its current timing.
+
+   DRAW-ON THAT NEVER DREW. Each deck declares .ilm .draw with a hardcoded
+   stroke-dasharray of 260 against a keyframe that animates the offset from
+   260 to 0. Measured, the 13 paths using it in the suite run 20 to 119 units
+   long — every one of them shorter than the dash. A path of 20 units sits
+   entirely inside the first dash and slides rather than draws; a path of 119
+   is invisible for the first half of its animation and then appears from the
+   wrong end. The JS measures each path and the animation below runs against
+   its real length, so these lines now draw themselves for the first time.
+   ========================================================================== */
+/* Labels wait for their shape. --at-lab-delay is measured per label. */
+@keyframes atIlmLabel{from{opacity:0}to{opacity:1}}
+.ilm .at-ilm-label{
+  animation:atIlmLabel var(--at-fast) var(--at-ease) var(--at-lab-delay,0s) both;
+}
+/* Geometry is measured with the build frozen for one frame, so a shape part
+   way through a scale-from-zero does not measure as a point. */
+.ilm.at-ilm-measuring *{animation:none!important}
+
+/* Diagram height — bound to the room available, not to the artwork.
+   ---------------------------------------------------------------------------
+   The illuminators are 560x190 viewBoxes stretched to the slide width, so their
+   height is decided by how wide the screen is. Measured natural heights:
+   1920x1080 → 554px, 1440x900 → 407px, 1280x720 → 357px, 1024x768 → 279px,
+   390x844 → 106px.
+
+   A fixed width cap is the wrong instrument: it takes the same 100-130px off a
+   projector, where vertical space is abundant, as off a laptop where it is not.
+   The cap here is the vertical room left over instead, so it engages only where
+   space is genuinely scarce and releases entirely at projector size.
+
+   The 500px constant is not a guess: it is the largest value that leaves
+   1920x1080 untouched (1080 - 500 = 580, against a natural 554), rounded to a
+   number someone can reason about. What that yields:
+
+     1920x1080  cap 580  natural 554  → does not engage, artwork unchanged
+     1440x900   cap 400  natural 407  →   7px back
+     1280x720   cap 220  natural 357  → 137px back
+     1024x768   cap 268  natural 279  →  11px back
+      390x844   cap 344  natural 106  → does not engage, phone artwork unchanged
+
+   The artwork scales inside its own viewBox and stays centred; nothing is
+   clipped. The floor stops a very short window collapsing it to nothing.
+
+   Worth knowing: this does not make the I Do slide fit. Measured at 1280x720,
+   everything on that slide *except* the diagram already totals 679px against
+   638px of visible height. Scrolling the revealed step into view is what solves
+   "the class can see what the teacher just revealed"; this is about the caption
+   and the step controls not being pushed under the fixed nav. */
+.ilm svg{
+  max-height:calc(100vh - 500px);       /* fallback where max() is unsupported */
+  max-height:max(190px,calc(100vh - 500px));
+}
+@media print{.ilm svg{max-height:none}}
+
+/* Draw-on against the path's own measured length. */
+@keyframes atIlmDraw{from{stroke-dashoffset:var(--at-len)}to{stroke-dashoffset:0}}
+.ilm .at-drawn{
+  stroke-dasharray:var(--at-len)!important;
+  animation-name:atIlmDraw!important;
+}
+
+/* ==========================================================================
+   11 · REVEALED ANSWERS  (Arrival and Exit)
+   ---------------------------------------------------------------------------
+   "Reveal Answers" flips all three answers up at once, which is three things
+   to read the moment the teacher wants the class listening to the first one.
+   They now land in reading order over a third of a second, which is a beat per
+   question — long enough to take them one at a time, short enough that a
+   teacher who has already moved on never waits for it.
+   ========================================================================== */
+.show-ans .arrival-grid .answer{animation-fill-mode:backwards}
+.show-ans .arrival-grid > *:nth-child(2) .answer{animation-delay:.16s}
+.show-ans .arrival-grid > *:nth-child(3) .answer{animation-delay:.32s}
+.show-ans .arrival-grid > *:nth-child(n+4) .answer{animation-delay:.48s}
+
+/* ==========================================================================
+   12 · SUCCESS LOOKS LIKE  (.sc-v4)
+   ---------------------------------------------------------------------------
+   Every title slide states what success looks like as three "I can ..." lines
+   in a plain bulleted list — 93 of them across the suite, and the first thing
+   a class is asked to take in. As a list of dots it reads as prose to be got
+   through. As a checklist it reads as three things to collect, which is what
+   it is, and it can be scanned rather than read.
+
+   The boxes are deliberately empty: this is what success will look like by the
+   end, not what has been achieved. They arrive one at a time behind the title,
+   so the teacher can name each one.
+   ========================================================================== */
+/* "SUCCESS LOOKS LIKE" is set in --sc-border, inline, in all 31 decks: gold
+   ink at 12.5px on the panel's own cream, measured 2.00-2.09:1 against a 4.5
+   target — the worst teaching text in the suite, and it labels the three
+   things a class is asked to collect. The ink moves to the deck's body colour;
+   the token is untouched and still carries the panel's identity on its 6px
+   left border and on the checkboxes below. Nothing here is a colour-alone
+   signal: the heading is words, and its gold was emphasis, not meaning.
+   !important because the colour is an inline style in the lesson markup. */
+.sc-v4 h3{color:var(--text,#1f2937)!important}
+
+.sc-v4 ul{list-style:none;padding-left:0;margin:0}
+.sc-v4 li{position:relative;padding-left:28px}
+.sc-v4 li::before{
+  content:'';position:absolute;left:2px;top:.42em;
+  width:14px;height:14px;border-radius:4px;
+  border:2px solid var(--sc-border);background:#fff;
+}
+.slide.active .sc-v4 li{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.slide.active .sc-v4 li:nth-child(1){animation-delay:.40s}
+.slide.active .sc-v4 li:nth-child(2){animation-delay:.52s}
+.slide.active .sc-v4 li:nth-child(3){animation-delay:.64s}
+.slide.active .sc-v4 li:nth-child(n+4){animation-delay:.76s}
+@media print{.sc-v4 li::before{border-color:#000}}
+
+/* ==========================================================================
+   13 · THE LUNDY FOUR  (.lundy-grid / .lundy-box)
+   ---------------------------------------------------------------------------
+   Space, Voice, Audience, Influence — the model's own order, and the same four
+   boxes on every deck. They arrived as a block of four paragraphs, so the
+   order that is the whole point of the model was not visible in it.
+
+   They now arrive in that order, and the two rows line up whatever length the
+   text runs to, so the grid reads as a four-part structure rather than four
+   unrelated notes. Each box keeps the colour the lesson gave it.
+   ========================================================================== */
+.lundy-grid{align-items:stretch}
+.lundy-box{
+  display:flex;flex-direction:column;
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+.lundy-box:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.08)}
+.slide.active .lundy-box{animation:atSlideIn var(--at-base) var(--at-ease) backwards}
+.slide.active .lundy-box:nth-child(1){animation-delay:.16s}
+.slide.active .lundy-box:nth-child(2){animation-delay:.28s}
+.slide.active .lundy-box:nth-child(3){animation-delay:.40s}
+.slide.active .lundy-box:nth-child(4){animation-delay:.52s}
+@media print{.lundy-box{box-shadow:none;animation:none}}
+
+/* ==========================================================================
+   14 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -660,6 +898,10 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   .slide.active > *,
   .ilm .ilm-cap,
   .pres-card.done,
+  .v5-step.revealed > h3,.v5-step.revealed > p,
+  .show-ans .arrival-grid .answer,
+  .slide.active .sc-v4 li,
+  .slide.active .lundy-box,
   .match-target.correct,.match-target.correct::after,
   .match-pill.selected{
     animation:none!important;
@@ -671,8 +913,23 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   .pres-card::before,#pres-caps .pres-cap[data-at-n]::before{transform:translateY(-50%)!important}
   /* The li-box sweep is decorative light; remove it rather than freeze it mid-pass. */
   .slide.active .li-box::after{display:none!important}
-  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay{transition:none!important}
-  .product-card:hover,.pres-card:hover,.ilm-replay:hover{transform:none}
+  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay,.lundy-box,
+  .v5-step.revealed,.v5-step.revealed::before,.v5-step-pips i{transition:none!important}
+  .product-card:hover,.pres-card:hover,.ilm-replay:hover,.lundy-box:hover{transform:none}
+  /* The current-step marker stays — it is a static state, not motion — but the
+     scale-up on a pip that has just filled is motion, so it goes. */
+  .v5-step-pips i.at-just-on{transform:none!important}
+  /* Answers reveal together rather than in sequence, since the sequence is
+     carried entirely by animation delays that no longer run. */
+  .show-ans .arrival-grid .answer{animation-delay:0s!important}
+  /* A held-back label and an undrawn line are both content waiting on motion.
+     With motion off they are simply present, drawn, from the start. */
+  .ilm .at-ilm-label{animation:none!important;opacity:1!important}
+  .ilm .at-drawn{
+    animation:none!important;
+    stroke-dasharray:none!important;
+    stroke-dashoffset:0!important;
+  }
 }
 </style>
 <!-- ASDAN-TEACH:CSS:END -->
@@ -1144,6 +1401,149 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   AT.replayIlluminator = replayIlluminator;
 
   /* ==================================================================
+     FEATURE · Draw-on against the path's own length
+     ------------------------------------------------------------------
+     Each deck's .ilm .draw rule sets stroke-dasharray:260 and animates
+     the offset from 260 to 0. Measured, the paths using it run 20 to 119
+     units long — every one shorter than the dash, so none of them ever
+     drew: a short path slides inside its first dash, a longer one stays
+     invisible for half the animation then appears from the wrong end.
+
+     We measure each path and hand its real length to the CSS. Geometry
+     only, so this works while the slide is still hidden.
+     ================================================================== */
+  function fixDrawLengths(block) {
+    block.querySelectorAll('.draw').forEach(function (el) {
+      if (el.classList.contains('at-drawn')) return;
+      if (typeof el.getTotalLength !== 'function') return;
+      var len;
+      try {
+        len = el.getTotalLength();
+      } catch (e) {
+        return;
+      }
+      if (!len || !isFinite(len)) return;
+      el.style.setProperty('--at-len', len.toFixed(1));
+      el.classList.add('at-drawn');
+    });
+  }
+
+  /* ==================================================================
+     FEATURE · A label waits for the thing it labels
+     ------------------------------------------------------------------
+     94 of the 225 <text> elements in the suite's illuminators carry no
+     animation of their own, so they painted at t=0 — "¼ CARBS" sitting
+     on empty white for two seconds until its wedge arrived.
+
+     Each such label is paired with the animated shape it sits inside
+     (the smallest one, which is the most specific) or, failing that, the
+     nearest, and held until that shape has settled. Every delay is read
+     off the deck's own SVG, so nothing is written down per lesson.
+
+     Geometry has to be measured while the slide is visible — a hidden
+     slide measures as zero — and with the build frozen for one frame, or
+     a shape part way through a scale-from-zero measures as a point.
+     ================================================================== */
+  var LABEL_DELAY_CAP = 6; // seconds — a class should never wait longer
+
+  function isAnimated(el, root) {
+    while (el && el !== root) {
+      if (getComputedStyle(el).animationName !== 'none') return true;
+      el = el.parentNode;
+    }
+    return false;
+  }
+
+  function stageIlluminatorLabels(block) {
+    if (block.dataset.atLabels) return;
+    var svg = block.querySelector('svg');
+    if (!svg) return;
+    // A hidden slide has no geometry to measure; wait until it is shown.
+    if (!svg.getBoundingClientRect().width) return;
+    block.dataset.atLabels = '1';
+
+    // Shapes that finish. A looping animation never settles, so a label
+    // must not be held behind one.
+    var shapes = [];
+    svg.querySelectorAll('*').forEach(function (el) {
+      var cs = getComputedStyle(el);
+      if (cs.animationName === 'none' || cs.animationIterationCount === 'infinite') return;
+      shapes.push({
+        el: el,
+        settle: (parseFloat(cs.animationDelay) || 0) + (parseFloat(cs.animationDuration) || 0),
+      });
+    });
+    if (!shapes.length) return;
+
+    var labels = [];
+    svg.querySelectorAll('text').forEach(function (t) {
+      if (!isAnimated(t, svg)) labels.push(t);
+    });
+    if (!labels.length) return;
+
+    // Freeze, measure everything in one pass, unfreeze. Synchronous, so the
+    // browser paints once — the build restarts from the top and is not seen
+    // to stutter.
+    block.classList.add('at-ilm-measuring');
+    void block.offsetWidth;
+    var shapeBoxes = shapes.map(function (s) {
+      return s.el.getBoundingClientRect();
+    });
+    var labelBoxes = labels.map(function (l) {
+      return l.getBoundingClientRect();
+    });
+    block.classList.remove('at-ilm-measuring');
+    void block.offsetWidth;
+
+    var latest = 0;
+    labels.forEach(function (label, i) {
+      var lb = labelBoxes[i];
+      if (!lb.width && !lb.height) return;
+      var cx = lb.left + lb.width / 2;
+      var cy = lb.top + lb.height / 2;
+      var best = null;
+
+      shapes.forEach(function (shape, j) {
+        var b = shapeBoxes[j];
+        if (!b.width && !b.height) return;
+        var inside = cx >= b.left && cx <= b.right && cy >= b.top && cy <= b.bottom;
+        var dx = Math.max(b.left - cx, 0, cx - b.right);
+        var dy = Math.max(b.top - cy, 0, cy - b.bottom);
+        var cand = {
+          inside: inside,
+          area: b.width * b.height,
+          dist: Math.sqrt(dx * dx + dy * dy),
+          settle: shape.settle,
+        };
+        if (!best) {
+          best = cand;
+        } else if (cand.inside !== best.inside) {
+          if (cand.inside) best = cand;
+        } else if (cand.inside ? cand.area < best.area : cand.dist < best.dist) {
+          best = cand;
+        }
+      });
+
+      if (!best || best.settle <= 0) return;
+      var delay = Math.min(best.settle, LABEL_DELAY_CAP);
+      label.style.setProperty('--at-lab-delay', delay.toFixed(2) + 's');
+      label.classList.add('at-ilm-label');
+      if (delay > latest) latest = delay;
+    });
+
+    // The caption names what to notice, so it still comes after everything
+    // it could be naming — including a label that now arrives late.
+    if (latest) {
+      var end = parseFloat(block.style.getPropertyValue('--ilm-end')) || 0;
+      if (latest + 0.25 > end) {
+        block.style.setProperty('--ilm-end', (latest + 0.25).toFixed(2) + 's');
+      }
+    }
+  }
+
+  AT.stageIlluminatorLabels = stageIlluminatorLabels;
+
+  /* ==================================================================
      FEATURE · Keyboard and screen-reader access for the card activities
      ------------------------------------------------------------------
      The We Do activities are built from <div onclick>, which no keyboard
@@ -1269,15 +1669,124 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   }
 
   /* ==================================================================
+     FEATURE · Mark the step the teacher has just revealed
+     ------------------------------------------------------------------
+     The deck's v5RevealNext() uncovers one step at a time and updates a
+     "Step 2 of 3" label. Every revealed step then looked the same, so
+     from the back of the room nothing said which one was being talked
+     about. We move an .at-step-current marker to the newest step and
+     fill one pip per step in the control strip.
+
+     Earlier steps keep their full contrast — a class refers back to them
+     while the teacher is on the next one. The CSS does the rest; without
+     this file the steps still reveal exactly as they did.
+     ================================================================== */
+  function markCurrentStep(group) {
+    var steps = group.querySelectorAll('.v5-step');
+    var current = null;
+    steps.forEach(function (step) {
+      step.classList.remove('at-step-current');
+      if (step.classList.contains('revealed')) current = step;
+    });
+    if (current) {
+      current.classList.add('at-step-current');
+      // Measured on a 1440x900 screen: once all three steps are out, every one
+      // of the 31 I Do slides is 256-345px taller than the space it has, so the
+      // step the teacher has just revealed lands below the fold and the class
+      // never sees it. Bring it into view — 'nearest' so a step already on
+      // screen does not move, and the diagram above stays where it is.
+      if (typeof current.scrollIntoView === 'function') {
+        try {
+          current.scrollIntoView({
+            block: 'nearest',
+            behavior: reduceMotion.matches ? 'auto' : 'smooth',
+          });
+        } catch (e) {
+          current.scrollIntoView(false);
+        }
+      }
+    }
+
+    var pips = group.parentNode && group.parentNode.querySelector('.v5-step-pips');
+    if (!pips) return;
+    var shown = group.querySelectorAll('.v5-step.revealed').length;
+    Array.prototype.forEach.call(pips.children, function (pip, i) {
+      var on = i < shown;
+      // The pip that has just filled gets a moment of scale, so the eye
+      // is drawn to the progress rather than having to hunt for it.
+      pip.classList.toggle('at-just-on', on && !pip.classList.contains('on'));
+      pip.classList.toggle('on', on);
+    });
+    window.setTimeout(function () {
+      Array.prototype.forEach.call(pips.children, function (pip) {
+        pip.classList.remove('at-just-on');
+      });
+    }, 260);
+  }
+
+  function setupStepBuild() {
+    document.querySelectorAll('.v5-steps').forEach(function (group) {
+      var slide = group.closest ? group.closest('.slide') : null;
+      var controls = slide && slide.querySelector('.v5-step-controls');
+      var count = group.querySelectorAll('.v5-step').length;
+      if (controls && count && !controls.querySelector('.v5-step-pips')) {
+        var pips = document.createElement('span');
+        pips.className = 'v5-step-pips';
+        // The label beside these already reads "Step 2 of 3"; repeating it
+        // to a screen reader as a row of dots would only be noise.
+        pips.setAttribute('aria-hidden', 'true');
+        for (var i = 0; i < count; i++) pips.appendChild(document.createElement('i'));
+        controls.appendChild(pips);
+      }
+      // A deck that opens with steps already revealed still starts in sync.
+      markCurrentStep(group);
+    });
+
+    // The label is rewritten as steps come out; announce it politely so a
+    // pupil using a screen reader hears the same "Step 2 of 3" the room sees.
+    document.querySelectorAll('.v5-step-label').forEach(function (label) {
+      if (!label.getAttribute('aria-live')) {
+        label.setAttribute('role', 'status');
+        label.setAttribute('aria-live', 'polite');
+      }
+    });
+
+    if (typeof window.v5RevealNext === 'function' && !window.v5RevealNext._atWrapped) {
+      var original = window.v5RevealNext;
+      var wrapped = function (btn) {
+        var out = original.apply(this, arguments);
+        try {
+          var slide = btn && btn.closest && btn.closest('.slide');
+          var group = slide && slide.querySelector('.v5-steps');
+          if (group) markCurrentStep(group);
+        } catch (e) {}
+        return out;
+      };
+      wrapped._atWrapped = true;
+      window.v5RevealNext = wrapped;
+    }
+  }
+
+  /* ==================================================================
      Registration
      ================================================================== */
   AT.ready(function () {
-    document.querySelectorAll('.ilm').forEach(setupIlluminator);
+    document.querySelectorAll('.ilm').forEach(function (block) {
+      setupIlluminator(block);
+      fixDrawLengths(block);
+    });
+    // Label timing needs the slide on screen to measure, so it is staged the
+    // first time the I Do slide is reached rather than at boot.
+    AT.onSlideChange(function (slide) {
+      if (!slide) return;
+      slide.querySelectorAll('.ilm').forEach(stageIlluminatorLabels);
+    });
     setupCardKeyboard(document);
     setupLiveRegions();
     setupPresNumbering();
     fitMatchGrid();
     accentLevelCards(document);
+    setupStepBuild();
   });
 
   if (document.readyState === 'loading') {
