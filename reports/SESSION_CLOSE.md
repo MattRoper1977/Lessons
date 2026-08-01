@@ -23,22 +23,50 @@ git rebase --onto main claude/launch-animation-philosophy-79lohp claude/gate-cen
 git push --force-with-lease origin claude/gate-census
 ```
 
-**#11 and #12 do not conflict textually.** #12 changes `grow-anim.js`,
-`grow-motion.css` and `grow-svg.js`; #11 changes `grow-svg-bio.js` and
-`grow-svg-phy.js`. Disjoint. Only #11 touches the five GROW decks.
+**#11 and #12 do not conflict.** Their *source* changes are disjoint — #12 edits
+`grow-anim.js`, `grow-anim.css`, `grow-motion.css` and `grow-svg.js`; #11 edits
+`grow-svg-bio.js` and `grow-svg-phy.js`. Both now touch the five GROW decks (see
+the re-check below), and that still merges cleanly.
 
 **All of #11's substantive work is in source, not in generated files** — tested,
 not assumed: regenerating the five decks from #11's own sources reproduces them
 byte-identically. **Nothing needs porting.** Order alone settles it.
 
-**But one re-injection must follow whichever of #11/#12 lands last**, because
-#12's source changes leave the five GROW decks stale (#12 says so itself and
-deliberately did not re-inject). Run:
+**Re-checked 1 Aug, 15:5x — #12 has moved and this changed.** #12 now re-injects
+the GROW decks itself (commit `c866582`, "re-inject GROW"), so it touches the
+same five deck files as #11. Tested rather than assumed: merging #11 and #12
+auto-merges cleanly *and correctly* —
+
+```
+python3 grow-anim/inject.py --check Science_Teesside/Grow/*.html
+  ok ×5     exit 0
+```
+
+The decks match their merged sources, because the injector's marker blocks keep
+the two sets of changes in different regions. The re-injection is therefore no
+longer required for #11+#12 — but running it after any merge costs nothing and
+is the only thing that proves it, so keep doing it:
 
 ```sh
 python3 grow-anim/inject.py Science_Teesside/Grow/*.html
 python3 grow-anim/inject.py --check Science_Teesside/Grow/*.html   # must exit 0
 ```
+
+### ⚠ #12 and #13 DO conflict — on two report files
+
+Both sessions independently created the same two paths, with **different
+documents inside them**:
+
+| file | #13 (this branch) | #12 |
+|---|---|---|
+| `reports/INSTRUMENT_INDEX.md` | 194 lines — every test/gate script in the tree with audit status: 41 instruments, 19 generators, 2 engines, 62 accounted for | 77 lines — *"named future passes… Nothing here has been audited. An entry is a scope, not a finding."* |
+| `reports/SESSION_CLOSE.md` | 166 lines | 162 lines |
+
+`git merge` reports **CONFLICT on both**. They are complementary rather than
+rival — #12's is a scope list, #13's is an audit — and probably want to be one
+document. **That is a reconciliation for whoever merges second to do by hand,
+deliberately.** Neither has been renamed to dodge it: two indexes under two names
+would be worse than one conflict resolved once.
 
 **And #13 needs a rebuild after #12**, because #12 edits `grow-motion.css`, which
 #13 inlines under a pinned SHA-256. `check.js` will refuse to inject against the
