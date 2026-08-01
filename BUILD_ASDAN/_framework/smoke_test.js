@@ -1,6 +1,7 @@
 /* Functional smoke test for a BUILD_ASDAN lesson deck.
    Exercises the interactions teachers rely on and reports anything broken. */
 const { chromium } = require('playwright');
+const path = require('path');
 
 (async () => {
   const files = process.argv.slice(2);
@@ -19,7 +20,7 @@ const { chromium } = require('playwright');
         errs.push('CONSOLE: ' + t);
     });
 
-    await page.goto('file://' + file);
+    await page.goto('file://' + path.resolve(file));
     await page.waitForTimeout(400);
     const checks = [];
     const ok = (name, val) => checks.push([name, !!val]);
@@ -152,7 +153,7 @@ const { chromium } = require('playwright');
     const bad = checks.filter(([, v]) => !v);
     const status = bad.length === 0 && errs.length === 0 ? 'PASS' : 'FAIL';
     if (status === 'FAIL') failures++;
-    console.log(`${status}  ${file.split('/').slice(-1)[0]}  (${checks.length} checks)`);
+    console.log(`${status}  ${path.basename(file)}  (${checks.length} checks)`);
     bad.forEach(([n]) => console.log(`         ✗ ${n}`));
     errs.forEach((e) => console.log(`         ✗ ${e}`));
     await page.close();
