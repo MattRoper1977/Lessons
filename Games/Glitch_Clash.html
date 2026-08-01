@@ -432,6 +432,7 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
   <button class="btn primary" data-go="stages">⚔ Campaign</button>
   <button class="btn" data-go="team">🃏 Team &amp; Collection</button>
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
+  <button class="btn" id="weeklybtn">🏆 Weekly Gauntlet</button>
   <button class="btn" id="endlessbtn">♾ Endless Run</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
   <button class="btn" data-open="themes">🎨 Arena Themes</button>
@@ -874,6 +875,7 @@ const Engine = {
     sv.dups=dd;
     sv.stickers=(d.stickers&&typeof d.stickers==="object")?d.stickers:{};
     sv.dailyDone=typeof d.dailyDone==="string"?d.dailyDone:"";
+    sv.weeklyDone=typeof d.weeklyDone==="string"?d.weeklyDone:"";
     sv.tutorialDone=!!d.tutorialDone;
     // v3: cutscenes seen — validate against known scene keys only
     const seenSrc=(d.seen&&typeof d.seen==="object")?d.seen:{};
@@ -913,11 +915,23 @@ function store(){
 const DEFAULT_SAVE = ()=>({
   v:SAVE_VERSION, owned:[...STARTERS], dups:{}, team:[...STARTERS],
   cleared:[], xp:0, stickers:{}, settings:{calm:false,motion:"auto",hc:false,cb:false},
-  dailyDone:"", tutorialDone:false, seen:{}, stats:{wins:0, clashWins:0}
+  dailyDone:"", weeklyDone:"", tutorialDone:false, seen:{}, stats:{wins:0, clashWins:0}
 });
 let SV = DEFAULT_SAVE();
 function localDateKey(dt=new Date()){
   return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+/* ISO-8601 week key, e.g. "2026-W31". ISO weeks start on Monday and belong to
+   the year containing their Thursday, which is why this shifts to Thursday
+   before reading the year — a naive year+weekNumber disagrees with the calendar
+   for a few days every New Year, and the weekly would reset on the wrong day. */
+function localWeekKey(dt=new Date()){
+  const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+  d.setDate(d.getDate() + 3 - ((d.getDay()+6)%7));          // the Thursday of this week
+  const firstThu=new Date(d.getFullYear(),0,4);
+  firstThu.setDate(firstThu.getDate() + 3 - ((firstThu.getDay()+6)%7));
+  const week=1+Math.round((d-firstThu)/(7*24*60*60*1000));
+  return d.getFullYear()+"-W"+String(week).padStart(2,"0");
 }
 function loadSave(){
   try{
@@ -1073,6 +1087,37 @@ function renderHome(){
   $("#dailybtn").textContent = SV.dailyDone===today ? "📅 Daily Clash ✓ (done today)" : "📅 Daily Clash";
   const bestE=(SV.stats&&SV.stats.bestEndless)||0;
   $("#endlessbtn").textContent = bestE ? ("♾ Endless Run · best round "+bestE) : "♾ Endless Run";
+  $("#weeklybtn").textContent = SV.weeklyDone===localWeekKey()
+    ? "🏆 Weekly Gauntlet ✓ (done this week)" : "🏆 Weekly Gauntlet";
+}
+
+/* ---------- weekly gauntlet ----------
+   Three fixed clashes under one fixed handicap, both drawn from the week key,
+   so everyone playing in the same week gets the same gauntlet and it is
+   reproducible offline with no server. Clearing it pays once per week.
+
+   It runs on the Endless driver rather than a second one of its own: same
+   round chain, same advance and lose paths, just a fixed plan instead of a
+   random draw and a finish line at three. */
+const WEEKLY_LENGTH = 3;
+function weeklyPlan(weekKey){
+  const soft = GLITCHES.map((g,i)=>i).filter(i=>GLITCHES[i].trait!=="boss");
+  const stages=[];
+  for(let n=0;n<WEEKLY_LENGTH;n++){
+    const pick = soft[Engine.dailyIndex(weekKey+":s"+n, soft.length)];
+    stages.push(pick);
+  }
+  const mod = MODIFIERS[Engine.dailyIndex(weekKey+":m", MODIFIERS.length)].id;
+  return { stages, mod };
+}
+function startWeekly(){
+  const key=localWeekKey(), plan=weeklyPlan(key);
+  endlessRun = GCX2.newRun();
+  endlessRun.mods = [plan.mod];
+  endlessRun.weekly = { key, plan };
+  SV.stats=SV.stats||{};
+  toast("Weekly Gauntlet — three clashes, "+modById(plan.mod).name+".");
+  nextEndlessRound();
 }
 /* ---------- Endless run ----------
    A chain of escalating clashes. Every third round you pick one of three
@@ -1160,30 +1205,45 @@ function startEndless(mods){
 function nextEndlessRound(){
   if(!endlessRun) return;
   const mods=endlessRun.mods||[];
+  const wk=endlessRun.weekly;
   /* Hardcore stops holding the bosses back and starts the escalation curve at
      round 5, so the very first clash is already what round 5 would have been. */
   const hard = mods.includes("hardcore");
   const drawRound = hard ? endlessRun.round+4 : endlessRun.round;
-  const pool=endlessPool(drawRound);
-  const idx=pool[Math.floor(Math.random()*pool.length)];
-  announce("Endless round "+endlessRun.round+".");
+  // the weekly draws from its fixed plan; endless draws at random
+  const idx = wk ? wk.plan.stages[endlessRun.round-1]
+                 : (p=>p[Math.floor(Math.random()*p.length)])(endlessPool(drawRound));
+  announce(wk ? ("Weekly Gauntlet, clash "+endlessRun.round+" of "+WEEKLY_LENGTH+".")
+              : ("Endless round "+endlessRun.round+"."));
   startBattle(idx, { __scened:true, endless:{
-    round:endlessRun.round, scaleRound:drawRound, boons:endlessRun.boons, mods:mods } });
+    round:endlessRun.round, scaleRound:drawRound, boons:endlessRun.boons, mods:mods,
+    weekly: wk ? wk.key : null } });
 }
 function endlessAdvance(won){
   if(!endlessRun) return false;
+  const wk=endlessRun.weekly;
   if(!won){
     const r=endlessRun.round;
-    SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, r-1);
+    if(wk){
+      toast("Gauntlet over at clash "+r+" of "+WEEKLY_LENGTH+". It resets on Monday.");
+    }else{
+      SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, r-1);
+      toast("Run over at round "+r+". Best: "+(SV.stats.bestEndless||0));
+    }
     save();
-    toast("Run over at round "+r+". Best: "+(SV.stats.bestEndless||0));
     endlessRun=null;
     return false;
   }
   SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods));
   endlessRun.round++;
-  SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+  if(!wk) SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
   save();
+  /* The weekly has a finish line; endless does not. Falling through to the
+     normal result sheet is how the reward gets shown, so this returns false. */
+  if(wk && endlessRun.round > WEEKLY_LENGTH){
+    endlessRun=null;
+    return false;                       // endBattle carries on and pays out
+  }
   // Purist skips the picker outright rather than offering a choice it then ignores
   if((endlessRun.round-1) % 3 === 0 && !(endlessRun.mods||[]).includes("noboons")) showBoonPick();
   else setTimeout(nextEndlessRound, 500);
@@ -1247,6 +1307,7 @@ $("#dailybtn").onclick=()=>{
   startBattle(idx, {daily:true, dateStr:today});
 };
 $("#endlessbtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} showModPick(); };
+$("#weeklybtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} startWeekly(); };
 
 /* ----- stages ----- */
 function renderStages(){
@@ -1362,8 +1423,12 @@ function startBattle(stageIdx, opts){
   }
   const modTag = (battle.endless && (battle.endless.mods||[]).length)
     ? " · "+battle.endless.mods.map(id=>modById(id).name).join(" + ") : "";
-  $("#stagechip").textContent=(battle.endless?("Endless · Round "+battle.endless.round+modTag+" · ")
-    :(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · "))+g.name;
+  const where = battle.endless
+    ? (battle.endless.weekly
+        ? "Weekly · Clash "+battle.endless.round+" of "+WEEKLY_LENGTH+modTag+" · "
+        : "Endless · Round "+battle.endless.round+modTag+" · ")
+    : (battle.daily ? "Daily · " : "Stage "+(stageIdx+1)+" · ");
+  $("#stagechip").textContent = where+g.name;
   logSet(`<b>${g.name}</b> appears! ${g.line}`);
   announce(g.name+" appears.");
   go("battle"); renderBattle();
@@ -2126,7 +2191,9 @@ const FX = (()=>{
 /* Test seam: lets the offline harness drive a real battle without clicking
    through team selection. Read-only entry point; changes no game behaviour. */
 try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c);
-     window.__GC = ()=>battle; }catch(e){}
+     window.__GC = ()=>battle; window.__GCsave = ()=>SV;
+     window.__GCplan = k=>weeklyPlan(k); window.__GCmod = id=>modById(id);
+     window.__GCglitches = ()=>GLITCHES.map(g=>({id:g.id,trait:g.trait})); }catch(e){}
 function renderBattle(){
   const p=P(), e=battle.glitch;
   // arena banner
@@ -2395,7 +2462,7 @@ $("#quitbtn").onclick=(()=>{ let arm=false; return ()=>{
      so walking away is not punished the way losing is. */
   if(endlessRun){
     SV.stats=SV.stats||{};
-    SV.stats.bestEndless=Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+    if(!endlessRun.weekly) SV.stats.bestEndless=Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
     endlessRun=null; boonPending=false; save();
   }
   battle=null; $("#quitbtn").textContent="Quit"; go("home"); toast("No worries — the Glitch will wait.");
@@ -2414,6 +2481,57 @@ function gcxStatsRows(){
     <div class="spread"><span>Flawless wins</span><b>${st.nohit||0}</b></div>
     <div class="spread"><span>Reality glitches survived</span><b>${st.glitches||0}</b></div>
     <div class="spread"><span>Time in the arena</span><b>${mins} min</b></div>`;
+}
+/* ---- run-mode result sheets ----
+   Kept apart from the campaign result on purpose: no card pack, no stage
+   ticked off, no second win counted. Endless and the weekly already paid
+   their XP round by round. */
+function endlessResult(won, weeklyKey){
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center">
+      <h2>${won?"Clash won":"Run over"}</h2>
+      <p class="muted">${weeklyKey
+        ? "The Weekly Gauntlet resets on Monday. Same three clashes for everyone until then."
+        : "Every cleared round paid out as you went. Best round is on the Home screen."}</p>
+    </div>
+    <div class="panel"><div class="spread"><span>Total XP</span><b>${SV.xp}</b></div></div>
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
+}
+function weeklyComplete(weeklyKey){
+  const first = SV.weeklyDone !== weeklyKey;
+  let packHTML="";
+  if(first){
+    SV.weeklyDone = weeklyKey;
+    SV.xp += 60;
+    /* The one card pack a week that does not come from a campaign first clear.
+       Once per week is a reason to come back; once per run would be a farm. */
+    const pulls=Engine.packPull(SV.owned, rng);
+    packHTML=`<h3 style="margin-top:12px">Gauntlet cleared — card pack!</h3><div class="row" style="margin-top:8px">`;
+    pulls.forEach(id=>{
+      const c=CARD_BY_ID[id];
+      const isNew=!SV.owned.includes(id);
+      if(isNew) SV.owned.push(id); else SV.dups[id]=(SV.dups[id]||0)+1;
+      packHTML+=`<div class="mini owned" style="--shape:${SHAPES[c.shape].color};width:calc(50% - 4px)">
+        ${glyphSVG(c.shape)}<span><span class="m-name">${c.name}</span><br>
+        <span class="m-sub">${isNew?"NEW!":"Spark +2% (duplicate)"}</span></span></div>`;
+    });
+    packHTML+="</div>";
+    stick("daily");
+  }
+  save();
+  try{ GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc)); save(); }catch(e){}
+  announce("Weekly Gauntlet cleared.");
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center">
+      <h2 style="color:var(--harmony)">Weekly Gauntlet cleared 🏆</h2>
+      <p class="muted">Three clashes, one handicap, no second chances. ${
+        first?"":"You already collected this week's reward — that was a practice run."}</p>
+    </div>
+    <div class="panel"><div class="spread"><span>XP earned</span><b>+${first?60:0}</b></div></div>
+    ${packHTML}
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
 }
 function gcxAchPanel(){
   const have=SV.ach||{};
@@ -2450,7 +2568,16 @@ function endBattle(won, timeout){
       GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc));
     }catch(e){}
     save();
+    const wkKey = battle.endless.weekly;
+    const wasLast = wkKey && won && endlessRun && endlessRun.round >= WEEKLY_LENGTH;
     if(endlessAdvance(won)) return;
+    /* Falling through to the generic block would count the win a second time
+       and, on a stage not yet cleared in the campaign, hand out a card pack and
+       tick it off the campaign. Neither is right for a run mode, so both the
+       finished gauntlet and the ended run resolve here and return. */
+    if(wasLast){ weeklyComplete(wkKey); return; }
+    endlessResult(won, wkKey);
+    return;
   }
   try{
     GCX.breakCombo();
