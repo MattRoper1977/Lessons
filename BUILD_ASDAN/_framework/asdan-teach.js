@@ -181,6 +181,149 @@
   AT.replayIlluminator = replayIlluminator;
 
   /* ==================================================================
+     FEATURE · Draw-on against the path's own length
+     ------------------------------------------------------------------
+     Each deck's .ilm .draw rule sets stroke-dasharray:260 and animates
+     the offset from 260 to 0. Measured, the paths using it run 20 to 119
+     units long — every one shorter than the dash, so none of them ever
+     drew: a short path slides inside its first dash, a longer one stays
+     invisible for half the animation then appears from the wrong end.
+
+     We measure each path and hand its real length to the CSS. Geometry
+     only, so this works while the slide is still hidden.
+     ================================================================== */
+  function fixDrawLengths(block) {
+    block.querySelectorAll('.draw').forEach(function (el) {
+      if (el.classList.contains('at-drawn')) return;
+      if (typeof el.getTotalLength !== 'function') return;
+      var len;
+      try {
+        len = el.getTotalLength();
+      } catch (e) {
+        return;
+      }
+      if (!len || !isFinite(len)) return;
+      el.style.setProperty('--at-len', len.toFixed(1));
+      el.classList.add('at-drawn');
+    });
+  }
+
+  /* ==================================================================
+     FEATURE · A label waits for the thing it labels
+     ------------------------------------------------------------------
+     94 of the 225 <text> elements in the suite's illuminators carry no
+     animation of their own, so they painted at t=0 — "¼ CARBS" sitting
+     on empty white for two seconds until its wedge arrived.
+
+     Each such label is paired with the animated shape it sits inside
+     (the smallest one, which is the most specific) or, failing that, the
+     nearest, and held until that shape has settled. Every delay is read
+     off the deck's own SVG, so nothing is written down per lesson.
+
+     Geometry has to be measured while the slide is visible — a hidden
+     slide measures as zero — and with the build frozen for one frame, or
+     a shape part way through a scale-from-zero measures as a point.
+     ================================================================== */
+  var LABEL_DELAY_CAP = 6; // seconds — a class should never wait longer
+
+  function isAnimated(el, root) {
+    while (el && el !== root) {
+      if (getComputedStyle(el).animationName !== 'none') return true;
+      el = el.parentNode;
+    }
+    return false;
+  }
+
+  function stageIlluminatorLabels(block) {
+    if (block.dataset.atLabels) return;
+    var svg = block.querySelector('svg');
+    if (!svg) return;
+    // A hidden slide has no geometry to measure; wait until it is shown.
+    if (!svg.getBoundingClientRect().width) return;
+    block.dataset.atLabels = '1';
+
+    // Shapes that finish. A looping animation never settles, so a label
+    // must not be held behind one.
+    var shapes = [];
+    svg.querySelectorAll('*').forEach(function (el) {
+      var cs = getComputedStyle(el);
+      if (cs.animationName === 'none' || cs.animationIterationCount === 'infinite') return;
+      shapes.push({
+        el: el,
+        settle: (parseFloat(cs.animationDelay) || 0) + (parseFloat(cs.animationDuration) || 0),
+      });
+    });
+    if (!shapes.length) return;
+
+    var labels = [];
+    svg.querySelectorAll('text').forEach(function (t) {
+      if (!isAnimated(t, svg)) labels.push(t);
+    });
+    if (!labels.length) return;
+
+    // Freeze, measure everything in one pass, unfreeze. Synchronous, so the
+    // browser paints once — the build restarts from the top and is not seen
+    // to stutter.
+    block.classList.add('at-ilm-measuring');
+    void block.offsetWidth;
+    var shapeBoxes = shapes.map(function (s) {
+      return s.el.getBoundingClientRect();
+    });
+    var labelBoxes = labels.map(function (l) {
+      return l.getBoundingClientRect();
+    });
+    block.classList.remove('at-ilm-measuring');
+    void block.offsetWidth;
+
+    var latest = 0;
+    labels.forEach(function (label, i) {
+      var lb = labelBoxes[i];
+      if (!lb.width && !lb.height) return;
+      var cx = lb.left + lb.width / 2;
+      var cy = lb.top + lb.height / 2;
+      var best = null;
+
+      shapes.forEach(function (shape, j) {
+        var b = shapeBoxes[j];
+        if (!b.width && !b.height) return;
+        var inside = cx >= b.left && cx <= b.right && cy >= b.top && cy <= b.bottom;
+        var dx = Math.max(b.left - cx, 0, cx - b.right);
+        var dy = Math.max(b.top - cy, 0, cy - b.bottom);
+        var cand = {
+          inside: inside,
+          area: b.width * b.height,
+          dist: Math.sqrt(dx * dx + dy * dy),
+          settle: shape.settle,
+        };
+        if (!best) {
+          best = cand;
+        } else if (cand.inside !== best.inside) {
+          if (cand.inside) best = cand;
+        } else if (cand.inside ? cand.area < best.area : cand.dist < best.dist) {
+          best = cand;
+        }
+      });
+
+      if (!best || best.settle <= 0) return;
+      var delay = Math.min(best.settle, LABEL_DELAY_CAP);
+      label.style.setProperty('--at-lab-delay', delay.toFixed(2) + 's');
+      label.classList.add('at-ilm-label');
+      if (delay > latest) latest = delay;
+    });
+
+    // The caption names what to notice, so it still comes after everything
+    // it could be naming — including a label that now arrives late.
+    if (latest) {
+      var end = parseFloat(block.style.getPropertyValue('--ilm-end')) || 0;
+      if (latest + 0.25 > end) {
+        block.style.setProperty('--ilm-end', (latest + 0.25).toFixed(2) + 's');
+      }
+    }
+  }
+
+  AT.stageIlluminatorLabels = stageIlluminatorLabels;
+
+  /* ==================================================================
      FEATURE · Keyboard and screen-reader access for the card activities
      ------------------------------------------------------------------
      The We Do activities are built from <div onclick>, which no keyboard
@@ -391,7 +534,16 @@
      Registration
      ================================================================== */
   AT.ready(function () {
-    document.querySelectorAll('.ilm').forEach(setupIlluminator);
+    document.querySelectorAll('.ilm').forEach(function (block) {
+      setupIlluminator(block);
+      fixDrawLengths(block);
+    });
+    // Label timing needs the slide on screen to measure, so it is staged the
+    // first time the I Do slide is reached rather than at boot.
+    AT.onSlideChange(function (slide) {
+      if (!slide) return;
+      slide.querySelectorAll('.ilm').forEach(stageIlluminatorLabels);
+    });
     setupCardKeyboard(document);
     setupLiveRegions();
     setupPresNumbering();

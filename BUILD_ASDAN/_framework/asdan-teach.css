@@ -495,7 +495,46 @@
 }
 
 /* ==========================================================================
-   10 · REVEALED ANSWERS  (Arrival and Exit)
+   10 · THE ILLUMINATOR DIAGRAM ITSELF
+   ---------------------------------------------------------------------------
+   Two things inside the I Do SVGs were working against the build they sit in.
+
+   LABELS BEFORE THE THING THEY LABEL. 94 of the 225 <text> elements across the
+   31 illuminators carry no animation, so they were painted at t=0 — "¼ CARBS"
+   sitting on empty white for two seconds while the class waited for the wedge
+   it names. The framework JS pairs each such label with the shape it sits
+   inside and holds it until that shape has arrived; the delay is measured per
+   label, so it is right for every deck without anything being written down
+   here. A label whose shape never settles, or that pairs with nothing, keeps
+   its current timing.
+
+   DRAW-ON THAT NEVER DREW. Each deck declares .ilm .draw with a hardcoded
+   stroke-dasharray of 260 against a keyframe that animates the offset from
+   260 to 0. Measured, the 13 paths using it in the suite run 20 to 119 units
+   long — every one of them shorter than the dash. A path of 20 units sits
+   entirely inside the first dash and slides rather than draws; a path of 119
+   is invisible for the first half of its animation and then appears from the
+   wrong end. The JS measures each path and the animation below runs against
+   its real length, so these lines now draw themselves for the first time.
+   ========================================================================== */
+/* Labels wait for their shape. --at-lab-delay is measured per label. */
+@keyframes atIlmLabel{from{opacity:0}to{opacity:1}}
+.ilm .at-ilm-label{
+  animation:atIlmLabel var(--at-fast) var(--at-ease) var(--at-lab-delay,0s) both;
+}
+/* Geometry is measured with the build frozen for one frame, so a shape part
+   way through a scale-from-zero does not measure as a point. */
+.ilm.at-ilm-measuring *{animation:none!important}
+
+/* Draw-on against the path's own measured length. */
+@keyframes atIlmDraw{from{stroke-dashoffset:var(--at-len)}to{stroke-dashoffset:0}}
+.ilm .at-drawn{
+  stroke-dasharray:var(--at-len)!important;
+  animation-name:atIlmDraw!important;
+}
+
+/* ==========================================================================
+   11 · REVEALED ANSWERS  (Arrival and Exit)
    ---------------------------------------------------------------------------
    "Reveal Answers" flips all three answers up at once, which is three things
    to read the moment the teacher wants the class listening to the first one.
@@ -509,7 +548,7 @@
 .show-ans .arrival-grid > *:nth-child(n+4) .answer{animation-delay:.48s}
 
 /* ==========================================================================
-   11 · REDUCED MOTION
+   12 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -544,4 +583,12 @@
   /* Answers reveal together rather than in sequence, since the sequence is
      carried entirely by animation delays that no longer run. */
   .show-ans .arrival-grid .answer{animation-delay:0s!important}
+  /* A held-back label and an undrawn line are both content waiting on motion.
+     With motion off they are simply present, drawn, from the start. */
+  .ilm .at-ilm-label{animation:none!important;opacity:1!important}
+  .ilm .at-drawn{
+    animation:none!important;
+    stroke-dasharray:none!important;
+    stroke-dashoffset:0!important;
+  }
 }
