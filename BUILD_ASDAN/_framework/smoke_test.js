@@ -27,6 +27,14 @@ const path = require('path');
 
     // --- navigation through every slide, forwards then back
     const total = await page.evaluate(() => document.querySelectorAll('.slide').length);
+    // The documented invocation is `*/[A-Z]*.html`, which also matches each
+    // strand's START_HERE page. Those are not decks and have no deck script,
+    // so every assertion below would throw rather than fail. Skip them.
+    if (!total) {
+      console.log(`SKIP  ${path.basename(file)}  (not a lesson deck)`);
+      await page.close();
+      continue;
+    }
     ok('10 slides', total === 10);
     for (let i = 1; i < total; i++) await page.evaluate(() => nextSlide());
     ok('advances to last slide', (await page.evaluate(() => currentSlide)) === total - 1);
@@ -102,6 +110,57 @@ const path = require('path');
     ok('I Do step reveals', (await page.evaluate(
       () => document.querySelectorAll('.v5-step.revealed').length
     )) >= 1);
+
+    // --- the step build: marker tracks the newest step, pips track the count
+    const build = await page.evaluate(() => {
+      const slide = [...document.querySelectorAll('.slide')].find((x) =>
+        x.querySelector('.v5-step-controls')
+      );
+      const group = slide.querySelector('.v5-steps');
+      const btn = slide.querySelector('.v5-step-controls button');
+      const pips = slide.querySelector('.v5-step-pips');
+      const steps = [...group.querySelectorAll('.v5-step')];
+      // The check above already revealed one, so the walk starts from there.
+      const from = group.querySelectorAll('.v5-step.revealed').length;
+      const seen = [];
+      while (group.querySelector('.v5-step:not(.revealed)')) {
+        btn.click();
+        const cur = group.querySelector('.v5-step.at-step-current');
+        seen.push({
+          at: cur ? steps.indexOf(cur) : -1,
+          lit: pips ? [...pips.children].filter((p) => p.classList.contains('on')).length : -1,
+        });
+      }
+      return { seen, from, pips: pips ? pips.children.length : 0, steps: steps.length };
+    });
+    ok('one pip per step', build.pips === build.steps);
+    ok(
+      'current-step marker follows the reveal',
+      build.seen.length > 0 &&
+        build.seen.every((s, i) => s.at === build.from + i && s.lit === build.from + i + 1)
+    );
+
+    // --- the illuminator: every draw path measured, labels held for their shape
+    const ilm = await page.evaluate(() => {
+      const i = [...document.querySelectorAll('.slide')].findIndex((s) => s.querySelector('.ilm'));
+      if (i < 0) return null;
+      currentSlide = i;
+      showSlide(i);
+      const svg = document.querySelector('.slide.active .ilm svg');
+      const draws = [...svg.querySelectorAll('.draw')];
+      return {
+        draws: draws.length,
+        measured: draws.filter(
+          (e) => e.classList.contains('at-drawn') && parseFloat(e.style.getPropertyValue('--at-len')) > 0
+        ).length,
+        // A label held past the build must still end up visible.
+        stranded: [...svg.querySelectorAll('text.at-ilm-label')].filter(
+          (t) => !parseFloat(t.style.getPropertyValue('--at-lab-delay'))
+        ).length,
+      };
+    });
+    ok('draw paths measured to their own length', !ilm || ilm.measured === ilm.draws);
+    ok('no label held with no delay to wait for', !ilm || ilm.stranded === 0);
 
     // --- independent work timer
     await page.evaluate(() => { startTimer(); });

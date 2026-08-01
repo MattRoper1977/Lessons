@@ -247,12 +247,17 @@
   animation:atSlideIn var(--at-base) var(--at-ease) backwards;
   animation-delay:calc(var(--ilm-end,2.4s) + .25s);
 }
+/* The label is the deck's body ink, not the zone colour: measured across the
+   five subject palettes, zone-on-white runs 3.17-3.95:1 and this is 12.5px
+   chrome. The zone identity is carried by the ring and by the hover fill,
+   which is white-on-zone — the pattern the decks already use everywhere.
+   Sized to a 36px target, since a teacher taps this mid-sentence. */
 .ilm-replay{
   position:absolute;top:8px;right:10px;
-  display:inline-flex;align-items:center;gap:5px;
-  background:#fff;color:var(--ido-border);
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  background:#fff;color:var(--text,#1f2937);
   border:2px solid var(--ido-border);border-radius:999px;
-  padding:4px 12px;font-size:.78rem;font-weight:900;letter-spacing:.03em;
+  padding:6px 14px;min-height:36px;font-size:.8rem;font-weight:900;letter-spacing:.03em;
   cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.10);
   transition:background var(--at-fast),color var(--at-fast),transform var(--at-fast);
 }
@@ -449,12 +454,16 @@
              background var(--at-base) var(--at-ease);
 }
 /* The step's number. Outlined for a step already covered, solid for the one
-   in hand — so which step is current is carried by fill as well as by colour. */
+   in hand — so which step is current is carried by fill as well as by colour.
+   The numeral on the outlined marker is the deck's body ink rather than the
+   zone colour: zone-on-white measures 2.9-4.0:1 across the five subject
+   palettes, and a step number has to be readable from the back of the room.
+   The ring carries the zone colour instead. */
 .v5-step.revealed::before{
   content:counter(at-step);
   position:absolute;left:0;top:1px;
   width:32px;height:32px;border-radius:50%;
-  background:#fff;color:var(--ido-border);
+  background:#fff;color:var(--text,#1f2937);
   border:2px solid var(--ido-border);
   font-size:.95rem;font-weight:900;font-variant-numeric:tabular-nums;
   display:flex;align-items:center;justify-content:center;
@@ -548,7 +557,58 @@
 .show-ans .arrival-grid > *:nth-child(n+4) .answer{animation-delay:.48s}
 
 /* ==========================================================================
-   12 · REDUCED MOTION
+   12 · SUCCESS LOOKS LIKE  (.sc-v4)
+   ---------------------------------------------------------------------------
+   Every title slide states what success looks like as three "I can ..." lines
+   in a plain bulleted list — 93 of them across the suite, and the first thing
+   a class is asked to take in. As a list of dots it reads as prose to be got
+   through. As a checklist it reads as three things to collect, which is what
+   it is, and it can be scanned rather than read.
+
+   The boxes are deliberately empty: this is what success will look like by the
+   end, not what has been achieved. They arrive one at a time behind the title,
+   so the teacher can name each one.
+   ========================================================================== */
+.sc-v4 ul{list-style:none;padding-left:0;margin:0}
+.sc-v4 li{position:relative;padding-left:28px}
+.sc-v4 li::before{
+  content:'';position:absolute;left:2px;top:.42em;
+  width:14px;height:14px;border-radius:4px;
+  border:2px solid var(--sc-border);background:#fff;
+}
+.slide.active .sc-v4 li{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.slide.active .sc-v4 li:nth-child(1){animation-delay:.40s}
+.slide.active .sc-v4 li:nth-child(2){animation-delay:.52s}
+.slide.active .sc-v4 li:nth-child(3){animation-delay:.64s}
+.slide.active .sc-v4 li:nth-child(n+4){animation-delay:.76s}
+@media print{.sc-v4 li::before{border-color:#000}}
+
+/* ==========================================================================
+   13 · THE LUNDY FOUR  (.lundy-grid / .lundy-box)
+   ---------------------------------------------------------------------------
+   Space, Voice, Audience, Influence — the model's own order, and the same four
+   boxes on every deck. They arrived as a block of four paragraphs, so the
+   order that is the whole point of the model was not visible in it.
+
+   They now arrive in that order, and the two rows line up whatever length the
+   text runs to, so the grid reads as a four-part structure rather than four
+   unrelated notes. Each box keeps the colour the lesson gave it.
+   ========================================================================== */
+.lundy-grid{align-items:stretch}
+.lundy-box{
+  display:flex;flex-direction:column;
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+.lundy-box:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.08)}
+.slide.active .lundy-box{animation:atSlideIn var(--at-base) var(--at-ease) backwards}
+.slide.active .lundy-box:nth-child(1){animation-delay:.16s}
+.slide.active .lundy-box:nth-child(2){animation-delay:.28s}
+.slide.active .lundy-box:nth-child(3){animation-delay:.40s}
+.slide.active .lundy-box:nth-child(4){animation-delay:.52s}
+@media print{.lundy-box{box-shadow:none;animation:none}}
+
+/* ==========================================================================
+   14 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -563,6 +623,8 @@
   .pres-card.done,
   .v5-step.revealed > h3,.v5-step.revealed > p,
   .show-ans .arrival-grid .answer,
+  .slide.active .sc-v4 li,
+  .slide.active .lundy-box,
   .match-target.correct,.match-target.correct::after,
   .match-pill.selected{
     animation:none!important;
@@ -574,9 +636,9 @@
   .pres-card::before,#pres-caps .pres-cap[data-at-n]::before{transform:translateY(-50%)!important}
   /* The li-box sweep is decorative light; remove it rather than freeze it mid-pass. */
   .slide.active .li-box::after{display:none!important}
-  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay,
+  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay,.lundy-box,
   .v5-step.revealed,.v5-step.revealed::before,.v5-step-pips i{transition:none!important}
-  .product-card:hover,.pres-card:hover,.ilm-replay:hover{transform:none}
+  .product-card:hover,.pres-card:hover,.ilm-replay:hover,.lundy-box:hover{transform:none}
   /* The current-step marker stays — it is a static state, not motion — but the
      scale-up on a pip that has just filled is motion, so it goes. */
   .v5-step-pips i.at-just-on{transform:none!important}

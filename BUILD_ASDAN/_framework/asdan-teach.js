@@ -468,7 +468,24 @@
       step.classList.remove('at-step-current');
       if (step.classList.contains('revealed')) current = step;
     });
-    if (current) current.classList.add('at-step-current');
+    if (current) {
+      current.classList.add('at-step-current');
+      // Measured on a 1440x900 screen: once all three steps are out, every one
+      // of the 31 I Do slides is 256-345px taller than the space it has, so the
+      // step the teacher has just revealed lands below the fold and the class
+      // never sees it. Bring it into view — 'nearest' so a step already on
+      // screen does not move, and the diagram above stays where it is.
+      if (typeof current.scrollIntoView === 'function') {
+        try {
+          current.scrollIntoView({
+            block: 'nearest',
+            behavior: reduceMotion.matches ? 'auto' : 'smooth',
+          });
+        } catch (e) {
+          current.scrollIntoView(false);
+        }
+      }
+    }
 
     var pips = group.parentNode && group.parentNode.querySelector('.v5-step-pips');
     if (!pips) return;
