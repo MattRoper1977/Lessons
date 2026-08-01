@@ -195,6 +195,21 @@ for (const [lesson, payload] of Object.entries(payloads)) {
     classesIn(ours).forEach(c => {
       if (sharedClasses.has(c)) fail('motion', `sci-engine.css restyles "${c}", which belongs to the shared motion language`);
     });
+    /* THE HOLE THIS CLOSES. Refusing to RESTYLE a .g- class is not enough — a
+       private class under a different name is a rival spelling of the same
+       verb, and nothing above would have caught it. `.sci-spot` was exactly
+       that: a radial-gradient reimplementation of `.g-spot`, carrying the same
+       sentence in its comment. Pupils would have met two spellings of "look
+       here, everything else is off" depending on which pathway they were in.
+       So: no private class may take the NAME of a shared verb. */
+    const verbNames = new Set([...sharedClasses].map(c => c.replace(/^g-/, '')));
+    [...ours.matchAll(/\.sci-([a-z0-9-]+)\s*[,{:[]/g)].map(m => m[1]).forEach(name => {
+      if (verbNames.has(name)) {
+        fail('motion', `sci-engine.css defines ".sci-${name}", a private spelling of the shared verb ".g-${name}". ` +
+          `Use the shared class; if this layer needs to ADD to it, name the addition something the vocabulary does not already own.`);
+      }
+    });
+
     /* and every .g- class the engine applies must actually be defined there */
     const engine = fs.readFileSync(path.join(HERE, 'sci-engine.js'), 'utf8');
     /* The lookbehind matters: it stops `sci-ring-bg` matching as "g-bg" and

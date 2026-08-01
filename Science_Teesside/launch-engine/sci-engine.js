@@ -287,13 +287,19 @@
     var stage = el('div', { cls: 'sci-stage sci-clickable', role: 'img',
       'aria-label': cfg.alt || 'Scientific image to observe. Labels appear only after you have recorded what you notice.' });
     stage.innerHTML = sceneOf(cfg.scene, bare(cfg.sceneOpts));
-    var spot = el('div', { cls: 'sci-spot', 'data-on': '0' });
+    /* the shared SPOT verb, plus this layer's own travel between hotspots */
+    var spot = el('div', { cls: 'g-spot sci-spotmove', 'data-on': '0' });
     stage.appendChild(spot);
     host.appendChild(stage);
 
     var hotspots = cfg.hotspots || [];
     var labelNodes = hotspots.map(function (h) {
-      var n = el('div', { cls: 'sci-label g-in', 'data-shown': '0', text: h.label });
+      /* NO g-in here. `.g-in` is `animation: gIn … both`, and an animation's
+         held final keyframe BEATS a plain `opacity:0` declaration in the
+         cascade — adding it at construction made every label readable at load
+         and silently defeated the entire observation gate. The class goes on at
+         reveal time, never before. */
+      var n = el('div', { cls: 'sci-label', 'data-shown': '0', text: h.label });
       n.style.left = h.x + '%'; n.style.top = h.y + '%';
       n.style.transform = 'translate(-50%,-140%)';
       stage.appendChild(n);
@@ -346,12 +352,15 @@
     }, 1000);
 
     /* PHASE 12 — the spotlight travels; it does not cut. Movement is what tells
-       the class the parts belong to one specimen rather than to a list. */
+       the class the parts belong to one specimen rather than to a list.
+       Hotspot `r` is in viewBox units (every scene is 400 wide), so it converts
+       to a percentage of the stage and stays correct at any projected size. */
     function spotlightTo(h, then) {
+      var pct = ((h.r || 52) * 2 / 400) * 100;
+      spot.style.left = h.x + '%';
+      spot.style.top = h.y + '%';
+      spot.style.width = pct.toFixed(1) + '%';
       spot.setAttribute('data-on', '1');
-      spot.style.background =
-        'radial-gradient(circle at ' + h.x + '% ' + h.y + '%,rgba(15,23,42,0) 0,' +
-        'rgba(15,23,42,0) ' + (h.r || 52) + 'px,rgba(15,23,42,.58) ' + ((h.r || 52) + 68) + 'px)';
       setTimeout(then, REDUCED ? 10 : 620);
     }
 
@@ -376,6 +385,7 @@
          into view before lighting up part of it. */
       try { stage.scrollIntoView({ block: 'nearest', behavior: REDUCED ? 'auto' : 'smooth' }); } catch (e) {}
       spotlightTo(h, function () {
+        labelNodes[revealed].classList.add('g-in');       /* shared "arrive" */
         labelNodes[revealed].setAttribute('data-shown', '1');
         keepInside(stage, labelNodes[revealed]);
         verbActive(host, 'annotate', 1);
@@ -484,11 +494,15 @@
 
     lblBtn.addEventListener('click', function () {
       (cfg.labels || []).forEach(function (L, k) {
-        var n = el('div', { cls: 'sci-label g-in', text: L.label, 'data-shown': '0' });
+        var n = el('div', { cls: 'sci-label', text: L.label, 'data-shown': '0' });
         n.style.left = L.x + '%'; n.style.top = L.y + '%';
         n.style.transform = 'translate(-50%,-140%)';
         stage.appendChild(n);
-        setTimeout(function () { n.setAttribute('data-shown', '1'); keepInside(stage, n); }, REDUCED ? 0 : k * 260);
+        setTimeout(function () {
+          n.classList.add('g-in');
+          n.setAttribute('data-shown', '1');
+          keepInside(stage, n);
+        }, REDUCED ? 0 : k * 260);
       });
       lblBtn.disabled = true; lblBtn.textContent = '✓ Labelled';
       ding(); xp();
@@ -848,7 +862,7 @@
       });
     } else {
       var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + X(p.x).toFixed(1) + ' ' + Y(p.y).toFixed(1); }).join(' ');
-      if (d) s += '<path class="sci-trace" d="' + d + '"/>';
+      if (d) s += '<path class="sci-plotline" d="' + d + '"/>';
       pts.forEach(function (p) {
         s += '<circle cx="' + X(p.x).toFixed(1) + '" cy="' + Y(p.y).toFixed(1) + '" r="4.5" fill="#7A5C9E" stroke="#fff" stroke-width="1.6"/>';
       });

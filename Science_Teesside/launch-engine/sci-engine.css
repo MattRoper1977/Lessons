@@ -110,13 +110,23 @@
 }
 .sci-label[data-shown="1"]{opacity:1;transform:translateY(0)}
 
-/* PHASE 12 · spotlight — the rest of the field dims, one part is lit */
-.sci-spot{
-  position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;
-  transition:opacity .5s ease,background .8s ease;
-  background:radial-gradient(circle at 50% 50%,rgba(15,23,42,0) 0,rgba(15,23,42,0) 60px,rgba(15,23,42,.55) 130px)
+/* PHASE 12 · spotlight.
+   The APPEARANCE and MEANING come from `.g-spot` in grow-motion.css — "fade
+   taken to its conclusion: everything except one thing is off". This file used
+   to define a private radial-gradient equivalent, which was a rival spelling of
+   a verb pupils already read. It is gone; only the TRAVEL is defined here.
+
+   Travel is a genuine LAUNCH addition rather than a redefinition: GROW's
+   spotlight appears on the thing being discussed, whereas LAUNCH's moves from
+   part to part across one specimen, and the movement is what tells the class
+   the parts belong to the same organism rather than to a list. */
+.sci-spotmove{
+  z-index:2;left:50%;top:50%;width:30%;aspect-ratio:1;
+  transform:translate(-50%,-50%);opacity:0;
+  transition:left .62s cubic-bezier(.45,.05,.25,1),top .62s cubic-bezier(.45,.05,.25,1),
+             width .62s cubic-bezier(.45,.05,.25,1),opacity .4s ease
 }
-.sci-spot[data-on="1"]{opacity:1}
+.sci-spotmove[data-on="1"]{opacity:1}
 
 /* ---- PHASE 2 · progressive discovery ------------------------------------- */
 .sci-part{opacity:0;transition:opacity .5s ease}
@@ -204,7 +214,7 @@
 .sci-plot .sci-gridline{stroke:#e2e8f0;stroke-width:1}
 .sci-plot .sci-axis{stroke:#334155;stroke-width:1.5}
 .sci-plot text{font-family:system-ui,sans-serif;font-size:11px;fill:#475569}
-.sci-plot .sci-trace{fill:none;stroke:var(--sci-lens);stroke-width:2.5;stroke-linecap:round;
+.sci-plot .sci-plotline{fill:none;stroke:var(--sci-lens);stroke-width:2.5;stroke-linecap:round;
   transition:stroke-dashoffset 1.1s ease}
 .sci-table{border-collapse:collapse;width:100%;margin-top:8px;font-size:.9rem}
 .sci-table th,.sci-table td{border:1px solid #cbd5e1;padding:4px 8px;text-align:center}
@@ -315,5 +325,5 @@
   .sci-part{opacity:1!important}
   .sci-link{opacity:1!important;border-color:#000}
   .sci-link[data-open="0"] .sci-link-body{display:block}
-  .sci-spot{display:none}
+  .sci-spotmove{display:none}
 }

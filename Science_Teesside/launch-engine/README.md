@@ -161,7 +161,25 @@ them is **invisible in a screenshot of the finished state**.
    may legally repeat, is scoped to the component's own stage, and is what
    grow-anim already uses. Only generated gradient/clip references use `id`.
 
-8. **`margin-inline:auto` on a grid item.** It switches the item out of stretch
+8. **A shared class that defeated the gate it was meant to decorate.** Adopting
+   `.g-in` on labels looked like pure convergence. `.g-in` is
+   `animation: gIn … both`, and an animation's held final keyframe **beats a
+   plain `opacity:0` declaration** in the cascade — so every label in the
+   observation engine became readable at load, and the centrepiece of the whole
+   layer silently stopped working. Shared classes carry behaviour, not just
+   looks; add them at reveal time, never at construction.
+
+9. **A test that asserted bookkeeping instead of legibility.** The above
+   survived because the test counted `.sci-label[data-shown="1"]` — an
+   attribute the bug never touched — while all five labels sat at opacity 1.
+   Then the *fixed* test still passed, because it measured at load, and a
+   component on an inactive slide is inside `display:none` where Chromium never
+   starts animations. `verify.js` now walks to each slide and measures computed
+   opacity there, and it was regression-tested by reintroducing the bug and
+   confirming it fails. **Assert what a pupil can read, on the slide they read
+   it on.**
+
+10. **`margin-inline:auto` on a grid item.** It switches the item out of stretch
    sizing into fit-content, which for an SVG is its 300px intrinsic default —
    the figure silently collapsed to half size inside `.sci-method`.
 

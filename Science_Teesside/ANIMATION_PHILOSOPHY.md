@@ -51,6 +51,13 @@ thing in every pathway and every subject:
 > bounce = that answer is correct · trace = follow this pathway ·
 > zoom = we are going in close
 
+Inheriting a vocabulary is not free, and it is worth knowing why before you do
+the same in BUILD: `.g-in` was adopted onto observation labels as pure
+convergence, and because it is `animation: … both`, its held final keyframe beat
+the `opacity:0` that was gating them. Every label became readable at load. The
+shared classes carry *behaviour*, not just appearance — add them at the moment
+of reveal, not at construction.
+
 **LAUNCH inherits it rather than replacing it.** The layer inlines that file and
 applies `.g-flow-jiggle`, `.g-draw-pop`, `.g-bounce` and `.g-in` for the motions
 that already have a meaning; it only defines motion of its own where nothing
