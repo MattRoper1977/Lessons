@@ -1,0 +1,314 @@
+/* ============================================================================
+   GROW ANIMATION FRAMEWORK · Phase 1 — MOTION LANGUAGE
+   ---------------------------------------------------------------------------
+   This file is the punctuation of the whole GROW suite.
+
+   Ten movements. Each one means EXACTLY one thing, in every lesson, in every
+   subject, all year. Pupils are never taught the code — they absorb it,
+   because it never changes. By week three a pupil who sees something glow
+   already knows "that is the bit that matters" before the teacher says a word.
+
+     MOTION    CLASS        VERB      MEANING TO THE PUPIL
+     ------------------------------------------------------------------------
+     Draw      .g-draw      draw      A structure is forming
+     Glow      .g-glow      glow      This is the important feature
+     Pulse     .g-pulse     pulse     Pay attention — look here now
+     Fade      .g-fade      fade      This matters less right now
+     Morph     .g-morph     morph     Something is CHANGING
+     Flow      .g-flow      flow      Something is MOVING along a path
+     Shake     .g-shake     shake     That idea is incorrect
+     Bounce    .g-bounce    bounce    That answer is correct
+     Trace     .g-trace     trace     Follow this pathway
+     Zoom      .g-zoom      zoom      We are going in close
+
+   Nothing in this file is lesson-specific and nothing in it sets brand colour.
+   It sets MOTION only. Colour comes from the host lesson's own :root, so the
+   framework looks native in GROW, BUILD and LAUNCH without being re-skinned.
+
+   Tunable knobs (override in the lesson's :root if you must):
+     --g-speed   global speed multiplier            (1 = normal, 2 = twice as fast)
+     --g-hi      the "this one" highlight colour
+     --g-good    correct
+     --g-bad     incorrect
+     --g-ink     label / rule ink
+     --g-focus   the colour of attention furniture (bars, dots, rings)
+
+   Works with zero JavaScript: add the class, get the meaning. The engine in
+   grow-anim.js only exists to SEQUENCE these, never to redefine them.
+   ========================================================================== */
+
+:root {
+  --g-speed: 1;
+  --g-hi:    #D8A63B;
+  --g-good:  #16a34a;
+  --g-bad:   #dc2626;
+  --g-ink:   #1f2937;
+  --g-focus: #3F7D6E;
+  --g-soft:  #94a3b8;
+
+  /* Phase 12 easing tokens — used everywhere so the whole suite moves alike */
+  --g-ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --g-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --g-ease-out:    cubic-bezier(.16, 1, .3, 1);
+}
+
+/* ===========================================================================
+   THE TEN MOTIONS
+   ========================================================================= */
+
+/* -- 1. DRAW ------------------------------------------------ structure forming
+   The line draws itself, then the fill arrives. Reads as "being built", which
+   is exactly what a skeleton, a circuit or a bond diagram is doing.           */
+.g-draw {
+  animation: gDraw calc(1.1s / var(--g-speed)) var(--g-ease-out) both;
+}
+@keyframes gDraw {
+  from { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; }
+  55%  { stroke-dasharray: 1; stroke-dashoffset: 0; fill-opacity: 0; }
+  to   { stroke-dasharray: none; stroke-dashoffset: 0; fill-opacity: 1; }
+}
+/* Parts arriving one at a time — vertebrae, atoms in a chain, links in a food
+   chain. Still "structure forming", just countable. The engine staggers the
+   delay so the class can count along out loud. */
+.g-draw-pop {
+  animation: gPop calc(.44s / var(--g-speed)) var(--g-ease-spring) both;
+  transform-box: fill-box; transform-origin: center;
+}
+@keyframes gPop {
+  0%   { opacity: 0; transform: scale(.2); }
+  65%  { transform: scale(1.32); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* -- 2. GLOW --------------------------------------------- important feature
+   A soft breathing halo in the element's own colour. Never a colour change —
+   that is a different message (see .g-hi). Glow says "this is the bit". */
+.g-glow { animation: gGlow 1.8s ease-in-out infinite; }
+@keyframes gGlow {
+  0%, 100% { filter: drop-shadow(0 0 2px currentColor); }
+  50%      { filter: drop-shadow(0 0 11px currentColor) drop-shadow(0 0 22px currentColor); }
+}
+/* HI — the supporting mark to GLOW: "…and THIS is the one we are testing for."
+   Used when two things glow and only one is the answer. */
+.g-hi { color: var(--g-hi) !important; }
+
+/* -- 3. PULSE ------------------------------------------------ pay attention
+   A heartbeat of scale. Deliberately more insistent than glow, and only ever
+   used on the ONE thing the class should be looking at this second. */
+.g-pulse {
+  animation: gPulse 1.15s ease-in-out infinite;
+  transform-box: fill-box; transform-origin: center;
+}
+@keyframes gPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+
+/* -- 4. FADE ------------------------------------------------- less important
+   Not hidden — still there, still part of the picture, just stood down.
+   Pupils learn that faded things come back. */
+.g-fade { opacity: .16 !important; filter: grayscale(1); }
+/* SPOT — fade taken to its conclusion: everything except one thing is off. */
+.g-spot {
+  position: absolute; border-radius: 50%; border: 4px solid var(--g-hi);
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, .45), 0 0 22px var(--g-hi);
+  pointer-events: none; animation: gSpot .5s var(--g-ease-out) both;
+}
+@keyframes gSpot { from { opacity: 0; transform: scale(1.6); } to { opacity: 1; transform: scale(1); } }
+
+/* -- 5. MORPH ------------------------------------------------------- change
+   The single most important motion in science teaching. Something IS NOW
+   SOMETHING ELSE: solid→liquid, reactant→product, atom→ion, food→nutrients.
+   Two layers cross-fade in place, with a slight squash so it reads as a
+   transformation and not merely a swap. */
+.g-morph-out { animation: gMorphOut calc(.85s / var(--g-speed)) var(--g-ease-in-out) both; }
+.g-morph-in  { animation: gMorphIn  calc(.85s / var(--g-speed)) var(--g-ease-in-out) both; }
+@keyframes gMorphOut {
+  0%   { opacity: 1; transform: scale(1); }
+  55%  { opacity: 0; transform: scale(.86) rotate(-2deg); }
+  100% { opacity: 0; transform: scale(.86); }
+}
+@keyframes gMorphIn {
+  0%   { opacity: 0; transform: scale(.86) rotate(2deg); }
+  45%  { opacity: 0; transform: scale(.86); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+.g-morph-out, .g-morph-in { transform-box: fill-box; transform-origin: center; }
+
+/* -- 6. FLOW ------------------------------------------------------ movement
+   Something travels: current round a circuit, blood round a body, energy out
+   of a hot object, water into a cell. Distinct from TRACE — flow is the STUFF
+   moving, trace is the PATH being pointed out. */
+.g-flow {
+  animation: gFlow calc(2.4s / var(--g-speed)) linear infinite;
+  offset-rotate: 0deg;
+}
+@keyframes gFlow { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+/* Fallback for engines without offset-path: a marching-dash current instead. */
+@supports not (offset-path: path('M0 0 L1 1')) {
+  .g-flow { animation: gFlowDash calc(2.4s / var(--g-speed)) linear infinite; }
+  @keyframes gFlowDash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -40; } }
+}
+/* Something going round something else — a planet, a moon, current round a
+   loop. Still FLOW: the meaning to the pupil is "this is moving". The engine
+   writes the centre of rotation from the layer's own data-flow-orbit. */
+.g-flow-orbit {
+  animation: gOrbit calc(var(--g-orbit, 12s) / var(--g-speed)) linear infinite;
+  transform-box: view-box;
+}
+@keyframes gOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* A whole layer drifting steadily — particles diffusing, a wavefront spreading */
+.g-flow-drift { animation: gDrift calc(3.2s / var(--g-speed)) linear infinite; }
+@keyframes gDrift {
+  0%   { transform: translateX(0); opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(var(--g-drift, 260px)); opacity: 0; }
+}
+/* Particles jiggling on the spot — the model of heat that every pupil needs.
+   --g-heat (0…3, written by the engine's `heat` verb) drives BOTH the speed
+   and the size of the vibration, because "hotter" has to look like more energy
+   and not merely like a faster loop. */
+.g-flow-jiggle {
+  animation: gJiggle calc(.42s / (var(--g-speed) * var(--g-heat, 1))) linear infinite;
+  transform-box: fill-box; transform-origin: center;
+}
+@keyframes gJiggle {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(calc( 1.6px * var(--g-heat, 1)), calc(-1.2px * var(--g-heat, 1))); }
+  50%  { transform: translate(calc(-1.3px * var(--g-heat, 1)), calc( 1.5px * var(--g-heat, 1))); }
+  75%  { transform: translate(calc( 1.1px * var(--g-heat, 1)), calc( 1.3px * var(--g-heat, 1))); }
+  100% { transform: translate(0, 0); }
+}
+
+/* -- 7. SHAKE -------------------------------------------------- incorrect idea
+   Reserved. Nothing else in the framework may shake. A pupil who sees a shake
+   knows before any words that the idea on screen is the WRONG one. */
+.g-shake { animation: gShake .44s ease; }
+@keyframes gShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* -- 8. BOUNCE --------------------------------------------------- correct answer
+   Equally reserved. Bounce = right. */
+.g-bounce { animation: gBounce .62s var(--g-ease-spring); }
+@keyframes gBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.16) translateY(-6px); }
+  100% { transform: scale(1); }
+}
+
+/* -- 9. TRACE ------------------------------------------------ follow a pathway
+   A travelling dash along a line: the route of the blood, the path of a ray,
+   the order of a food chain. The line is being POINTED AT, not travelled by
+   a substance — that would be FLOW. */
+.g-trace {
+  stroke-dasharray: 8 6;
+  animation: gTrace calc(2.2s / var(--g-speed)) linear infinite;
+}
+@keyframes gTrace { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -28; } }
+
+/* -- 10. ZOOM ------------------------------------------------------ look closer
+   The camera moves, not the specimen. The engine writes the transform from the
+   part's own bounding box; origin must be the viewBox corner for the maths. */
+.g-zoom-layer {
+  transition: transform .75s var(--g-ease-in-out);
+  transform-box: view-box; transform-origin: 0 0;
+}
+
+/* ===========================================================================
+   SUPPORTING MARKS
+   These are not motions with a meaning of their own. They are the framework's
+   stage directions — the equivalent of a comma rather than a full stop.
+   ========================================================================= */
+
+/* Visibility. Parts a script will switch on start hidden, so pupils cannot
+   read ahead — there is literally nothing on screen yet to read. */
+[data-part].g-hidden { opacity: 0; visibility: hidden; }
+[data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease; }
+.g-in { animation: gIn .5s var(--g-ease-out) both; }
+@keyframes gIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* LABEL — the words arrive AFTER the picture has made the point, never before.
+   This is the whole pedagogy of the framework expressed in two rules. */
+[data-label] { opacity: 0; visibility: hidden; }
+[data-label].g-labelled {
+  opacity: 1; visibility: visible;
+  animation: gLabel .5s var(--g-ease-spring) both;
+}
+@keyframes gLabel {
+  0%   { opacity: 0; transform: translateY(12px) scale(.85); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* THINK — three dots: we are waiting for YOUR answer. The picture greys back
+   so there is nothing to stare at except the question in the pupil's head. */
+.g-think {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: center; gap: 14px; pointer-events: none;
+}
+.g-think b {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--g-focus); animation: gThink 1.25s ease-in-out infinite;
+}
+.g-think b:nth-child(2) { animation-delay: .18s; }
+.g-think b:nth-child(3) { animation-delay: .36s; }
+@keyframes gThink {
+  0%, 100% { transform: translateY(0); opacity: .35; }
+  50%      { transform: translateY(-16px); opacity: 1; }
+}
+.g-thinking .g-svg { filter: grayscale(.55) blur(.4px); opacity: .8; }
+
+/* TICK / CROSS — the verdict lands in the corner, never over the specimen */
+.g-verdict {
+  position: absolute; top: 4px; right: 6px;
+  width: clamp(52px, 9vw, 82px); height: clamp(52px, 9vw, 82px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(32px, 5.6vw, 52px); font-weight: 900; line-height: 1;
+  border-radius: 50%; background: #fff; border: 4px solid currentColor;
+  pointer-events: none; animation: gVerdict .6s var(--g-ease-spring) both;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
+}
+.g-verdict.g-tick  { color: var(--g-good); }
+.g-verdict.g-cross { color: var(--g-bad); }
+@keyframes gVerdict {
+  0%   { opacity: 0; transform: scale(.3) rotate(-18deg); }
+  60%  { opacity: 1; transform: scale(1.2) rotate(6deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* ===========================================================================
+   THE MOTION KEY
+   Print it, put it on the wall, show it in week 1. Ten movements, ten meanings.
+   <div class="g-key"></div> and the engine fills it in.
+   ========================================================================= */
+.g-key { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.g-key > div {
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 10px;
+  padding: 8px 6px; text-align: center; font-size: .8rem; font-weight: 700; color: #334155;
+}
+.g-key > div b { display: block; font-size: 1.45rem; margin-bottom: 3px; color: var(--g-focus); }
+.g-key > div i { display: block; font-style: normal; font-size: .72rem; color: #64748b; font-weight: 600; }
+@media (max-width: 640px) { .g-key { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===========================================================================
+   ACCESSIBILITY & PRINT
+   A pupil who cannot tolerate motion still gets the whole lesson: every part
+   is visible, every label is on. They lose the animation, never the content.
+   ========================================================================= */
+@media print {
+  .g-think, .g-verdict, .g-spot { display: none !important; }
+  [data-part] { opacity: 1 !important; visibility: visible !important; filter: none !important; }
+  [data-label] { opacity: 1 !important; visibility: visible !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .g-draw, .g-draw-pop, .g-glow, .g-pulse, .g-morph-in, .g-morph-out,
+  .g-flow, .g-flow-drift, .g-flow-jiggle, .g-shake, .g-bounce, .g-trace,
+  .g-verdict, .g-think b, [data-label].g-labelled, .g-in, .g-spot {
+    animation: none !important;
+  }
+  .g-zoom-layer { transition: none; }
+  [data-part] { transition: none; }
+  .g-morph-out { opacity: 0; }
+  .g-morph-in  { opacity: 1; }
+}

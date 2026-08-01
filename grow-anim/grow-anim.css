@@ -1,0 +1,275 @@
+/* ============================================================================
+   GROW ANIMATION FRAMEWORK · component styling for Phases 3–11
+   ---------------------------------------------------------------------------
+   grow-motion.css owns MOTION. This file owns the FURNITURE that the teaching
+   behaviours need: the stage, the teacher bar, the We-Do rail, prediction,
+   dual representation, retrieval, the misconception engine and the story spine.
+
+   Load order:  grow-motion.css  ->  grow-anim.css  ->  (optional) grow-polish.css
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ stage */
+.g-stage {
+  position: relative;
+  border: 2px solid #cbd5e1; border-radius: 16px;
+  background: #fbfdff; padding: 8px 10px 6px; margin: 8px 0;
+}
+.g-stage.g-plain { border: 0; background: none; padding: 0; }
+.g-canvas { position: relative; }
+.g-svg { display: block; width: 100%; height: auto; max-height: 46vh; }
+.g-stage[data-grow-frame="wide"] .g-svg { max-height: 34vh; }
+.g-stage[data-grow-frame="mini"] .g-svg { max-height: 20vh; }
+.g-stage[data-grow-frame="tall"] .g-svg { max-height: 58vh; }
+
+/* comparison rail — several specimens side by side, addressable as part#1.. */
+.g-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }
+.g-rail .g-cell { text-align: center; }
+.g-rail .g-cell > span { display: block; font-weight: 800; font-size: .85rem; color: var(--g-ink); }
+.g-rail .g-svg { max-height: 30vh; }
+@media (max-width: 640px) { .g-rail { grid-template-columns: repeat(2, 1fr); } }
+
+/* ------------------------------------------------------- teacher control bar
+   One button. The teacher narrates the line the framework prints for them and
+   presses ▶ Next. Pupils cannot read ahead because nothing is written yet.  */
+.g-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: #eef4f8; border: 2px solid var(--g-focus); border-radius: 12px;
+  padding: 7px 12px; margin-bottom: 8px;
+}
+.g-bar button {
+  background: var(--g-focus); color: #fff; border: 0; border-radius: 9px;
+  padding: 8px 15px; font-weight: 900; font-size: .95rem; cursor: pointer;
+  box-shadow: 0 3px 8px rgba(63, 125, 110, .25);
+  transition: transform .15s var(--g-ease-spring), background .15s, box-shadow .15s;
+}
+.g-bar button:hover { background: #2f6155; transform: translateY(-2px); }
+.g-bar button:active { transform: translateY(0) scale(.97); }
+.g-bar button.g-mini { background: #e2e8f0; color: #0f172a; padding: 6px 11px; font-size: .85rem; box-shadow: none; }
+.g-bar button.g-mini:hover { background: #cbd5e1; }
+.g-bar button:disabled { background: var(--g-good); cursor: default; transform: none; opacity: .9; }
+.g-bar button:focus-visible { outline: 3px solid var(--g-hi); outline-offset: 2px; }
+
+/* the beat pips — Observe · Notice · Think · Explain · Label */
+.g-dots { display: inline-flex; gap: 5px; align-items: center; }
+.g-dots i {
+  width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1;
+  display: block; transition: background .25s, transform .25s;
+}
+.g-dots i.on { background: var(--g-focus); transform: scale(1.25); }
+.g-dots i.g-beat-think { border-radius: 2px; }
+.g-dots i.on.g-beat-think { background: var(--g-hi); }
+
+.g-say {
+  flex: 1 1 240px; min-height: 1.2em; font-weight: 700;
+  color: #0f172a; font-size: 1.02rem; line-height: 1.35;
+}
+.g-say:empty::before {
+  content: 'Press ▶ Start and narrate as it appears.';
+  color: #64748b; font-weight: 600; font-style: italic;
+}
+.g-say.g-said { animation: gSayIn .35s var(--g-ease-out); }
+@keyframes gSayIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+
+/* the beat badge tells the teacher which of the five moves they are on */
+.g-beat {
+  font-size: .68rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px; background: var(--g-focus); color: #fff; white-space: nowrap;
+}
+.g-beat[data-beat="observe"] { background: #4D82A0; }
+.g-beat[data-beat="notice"]  { background: #3F7D6E; }
+.g-beat[data-beat="think"]   { background: var(--g-hi); color: #3f2d05; }
+.g-beat[data-beat="explain"] { background: #7c3aed; }
+.g-beat[data-beat="label"]   { background: #0f172a; }
+.g-beat[data-beat="apply"]   { background: #C9803B; }
+
+/* -------------------------------------------------------------- Phase 3
+   Progressive reveal: text elsewhere on the slide that follows the picture. */
+[data-grow-step] { opacity: 0; visibility: hidden; }
+[data-grow-step].g-shown { opacity: 1; visibility: visible; animation: gSayIn .45s var(--g-ease-out) both; }
+
+.g-note {
+  margin: 6px auto 2px; max-width: 760px; text-align: center;
+  font-weight: 800; font-size: 1.05rem; color: #0f172a;
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; padding: 7px 12px;
+  animation: gSayIn .4s var(--g-ease-out) both;
+}
+
+/* -------------------------------------------------------------- Phase 4
+   The We-Do frame: Question → Prediction → Discussion → Animation →
+   Explanation → Check. Each move unlocks the next. Nothing can be skimmed. */
+.g-wedo { border: 3px solid #4D82A0; border-radius: 16px; padding: 14px 16px 12px; margin: 10px 0; background: #fff; position: relative; }
+.g-wedo::before {
+  content: 'WE DO · teacher-led discovery'; position: absolute; top: -12px; left: 16px;
+  background: #4D82A0; color: #fff; padding: 2px 12px; border-radius: 6px;
+  font-size: .72rem; font-weight: 900; letter-spacing: 1px;
+}
+.g-wedo-track { display: flex; gap: 6px; flex-wrap: wrap; margin: 2px 0 10px; }
+.g-wedo-track span {
+  font-size: .68rem; font-weight: 900; letter-spacing: .6px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 999px; background: #e2e8f0; color: #64748b;
+  transition: background .3s, color .3s, transform .3s var(--g-ease-spring);
+}
+.g-wedo-track span.on { background: #4D82A0; color: #fff; transform: scale(1.06); }
+.g-wedo-track span.done { background: var(--g-good); color: #fff; }
+.g-wedo-track span.done::after { content: ' ✓'; }
+.g-wedo-q { font-size: 1.25rem; font-weight: 900; color: #0f172a; margin: 0 0 8px; line-height: 1.35; }
+.g-wedo-panel { display: none; }
+.g-wedo-panel.on { display: block; animation: gSayIn .4s var(--g-ease-out) both; }
+.g-wedo-prompt {
+  background: #f8fafc; border-left: 6px solid var(--g-hi); border-radius: 10px;
+  padding: 10px 14px; margin: 6px 0; font-size: 1rem; font-weight: 600; color: #1e293b;
+}
+.g-wedo-prompt strong { color: #92400e; }
+
+/* -------------------------------------------------- Phases 4 & 7 · prediction
+   Pupils commit BEFORE the reveal. Cheap, silent, and it makes the animation
+   land as an answer to a question they already own. */
+.g-predict { margin: 6px 0; }
+.g-predict-cards { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 6px 0 8px; }
+.g-pc {
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 12px;
+  padding: 9px 15px; font-weight: 800; font-size: .98rem; color: #334155; cursor: pointer;
+  transition: all .15s; -webkit-tap-highlight-color: transparent;
+}
+.g-pc:hover, .g-pc:focus-visible { border-color: var(--g-focus); background: #f1f6fa; transform: translateY(-2px); outline: none; }
+.g-pc.g-current { border-color: var(--g-focus); background: #e9f2ef; box-shadow: 0 0 0 3px rgba(63, 125, 110, .22); }
+.g-pc.g-done { opacity: .55; }
+.g-pc.g-done::after { content: ' ✓'; color: var(--g-good); font-weight: 900; }
+
+.g-vote { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 4px 0 6px; font-weight: 800; color: #0f172a; }
+.g-vote .g-chip { border-radius: 999px; padding: 7px 16px; font-weight: 900; font-size: .95rem; border: 2px solid var(--g-focus); background: #fff; color: var(--g-focus); cursor: pointer; transition: all .15s; }
+.g-vote .g-chip:hover { background: #eef4f2; transform: translateY(-2px); }
+.g-vote .g-chip.g-chip-b { border-color: #C9803B; color: #C9803B; }
+.g-vote .g-chip.g-chip-b:hover { background: #fdf3e9; }
+.g-vote .g-chip.g-chip-c { border-color: #7c3aed; color: #7c3aed; }
+.g-vote .g-chip .g-n { display: inline-block; min-width: 1.4em; margin-left: 6px; background: currentColor; color: #fff; border-radius: 999px; font-size: .8rem; padding: 0 5px; }
+.g-vote .g-chip .g-n { color: #fff; }
+.g-tally { display: flex; gap: 10px; align-items: center; }
+
+/* PREDICTION PAUSE — Phase 7. The animation physically stops and asks. */
+.g-pause {
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(15, 23, 42, .58); backdrop-filter: blur(3px);
+  border-radius: 14px; animation: gIn .3s ease both; text-align: center; padding: 14px;
+}
+.g-pause h4 {
+  margin: 0; color: #fff; font-size: clamp(1.05rem, 2.6vw, 1.5rem); font-weight: 900;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .5); max-width: 24ch; line-height: 1.3;
+}
+.g-pause .g-pause-tag {
+  background: var(--g-hi); color: #3f2d05; padding: 3px 12px; border-radius: 999px;
+  font-size: .7rem; font-weight: 900; letter-spacing: 1.5px;
+}
+.g-pause button {
+  background: #fff; color: #0f172a; border: 0; border-radius: 10px;
+  padding: 9px 20px; font-weight: 900; cursor: pointer; font-size: 1rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .3); transition: transform .15s var(--g-ease-spring);
+}
+.g-pause button:hover { transform: translateY(-2px) scale(1.03); }
+
+/* -------------------------------------------------------------- Phase 6
+   Invisible science overlays. A toggle strip above the picture; each switch
+   turns on one thing pupils cannot see. The physical scene never changes —
+   they simply see MORE. That is the entire idea and it must feel like that. */
+.g-xray { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 4px 0 8px; }
+.g-xray-label { font-size: .7rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #64748b; margin-right: 2px; }
+.g-xray button {
+  background: #fff; border: 2px solid #cbd5e1; color: #475569; border-radius: 999px;
+  padding: 5px 13px; font-size: .82rem; font-weight: 800; cursor: pointer;
+  transition: all .18s; -webkit-tap-highlight-color: transparent;
+}
+.g-xray button:hover { border-color: var(--g-focus); transform: translateY(-1px); }
+.g-xray button.on { background: var(--g-focus); border-color: var(--g-focus); color: #fff; box-shadow: 0 0 0 3px rgba(63, 125, 110, .18); }
+.g-xray button[data-layer="force"].on    { background: #dc2626; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, .18); }
+.g-xray button[data-layer="energy"].on   { background: #d97706; border-color: #d97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, .18); }
+.g-xray button[data-layer="particle"].on { background: #7c3aed; border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124, 58, 237, .18); }
+.g-xray button[data-layer="field"].on    { background: #0891b2; border-color: #0891b2; box-shadow: 0 0 0 3px rgba(8, 145, 178, .18); }
+/* overlay layers start off and fade in — never pop, so pupils register that
+   the scene did not change, only what they can see of it */
+[data-overlay] { opacity: 0; visibility: hidden; transition: opacity .5s var(--g-ease-in-out); }
+[data-overlay].on { opacity: 1; visibility: visible; }
+
+/* -------------------------------------------------------------- Phase 8
+   Dual representation. Real world on the left, scientific model on the right,
+   driven by ONE script so they can never drift out of step. */
+.g-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+.g-dual > figure { margin: 0; position: relative; }
+.g-dual figcaption {
+  font-size: .68rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  text-align: center; padding: 3px 0 5px; color: #fff; border-radius: 8px 8px 0 0;
+}
+.g-dual > figure:nth-child(1) figcaption { background: #4D82A0; }
+.g-dual > figure:nth-child(2) figcaption { background: #7c3aed; }
+.g-dual .g-svg { max-height: 34vh; }
+.g-dual-link {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-size: 1.4rem; color: var(--g-hi); pointer-events: none; z-index: 5;
+}
+@media (max-width: 640px) { .g-dual { grid-template-columns: 1fr; } }
+
+/* -------------------------------------------------------------- Phase 9
+   Retrieval animation. The picture starts to build, stops, and waits for the
+   class to say what comes next. Feels like recall, not like a test. */
+.g-retrieve { border: 3px dashed #7c3aed; border-radius: 16px; padding: 14px 16px 10px; margin: 10px 0; position: relative; background: #fdfcff; }
+.g-retrieve::before {
+  content: '🧠 RETRIEVE · say it before you see it'; position: absolute; top: -12px; left: 16px;
+  background: #7c3aed; color: #fff; padding: 2px 12px; border-radius: 6px;
+  font-size: .72rem; font-weight: 900; letter-spacing: 1px;
+}
+.g-retrieve-score {
+  display: flex; align-items: center; gap: 10px; background: #1e293b; color: #fff;
+  border-radius: 10px; padding: 7px 14px; font-weight: 900; font-size: .9rem; margin-bottom: 8px;
+}
+.g-retrieve-score .g-n { color: var(--g-hi); font-size: 1.25rem; }
+
+/* -------------------------------------------------------------- Phase 10
+   Misconception engine. The wrong idea is animated FIRST — honestly, without
+   sneering — then the same scene is corrected in front of the class. */
+.g-misc { border: 3px solid #dc2626; border-radius: 16px; padding: 14px 16px 10px; margin: 10px 0; position: relative; background: #fffafa; }
+.g-misc::before {
+  content: '⚠️ WHAT MOST PEOPLE THINK'; position: absolute; top: -12px; left: 16px;
+  background: #dc2626; color: #fff; padding: 2px 12px; border-radius: 6px;
+  font-size: .72rem; font-weight: 900; letter-spacing: 1px;
+}
+.g-misc.g-corrected { border-color: var(--g-good); background: #f8fffb; }
+.g-misc.g-corrected::before { content: '✅ WHAT ACTUALLY HAPPENS'; background: var(--g-good); }
+.g-misc-claim {
+  background: #fee2e2; border-left: 6px solid #dc2626; border-radius: 10px;
+  padding: 10px 14px; font-weight: 700; color: #991b1b; margin: 0 0 8px; font-size: 1.05rem;
+  transition: background .5s, border-color .5s, color .5s;
+}
+.g-misc.g-corrected .g-misc-claim { background: #d1fae5; border-left-color: var(--g-good); color: #065f46; }
+.g-misc-claim s { opacity: .65; }
+
+/* -------------------------------------------------------------- Phase 11
+   Story spine. Question → Investigation → Discovery → Explanation →
+   Application. Sits at the top of a lesson and lights up as the lesson moves,
+   so pupils always know which part of the story they are in. */
+.g-story { display: flex; gap: 4px; align-items: stretch; margin: 8px 0 12px; flex-wrap: wrap; }
+.g-story-beat {
+  flex: 1 1 0; min-width: 92px; text-align: center; padding: 7px 6px 6px;
+  border-radius: 10px; background: #f1f5f9; border: 2px solid #e2e8f0;
+  transition: all .4s var(--g-ease-in-out);
+}
+.g-story-beat b { display: block; font-size: .68rem; font-weight: 900; letter-spacing: .8px; text-transform: uppercase; color: #94a3b8; }
+.g-story-beat span { display: block; font-size: .82rem; font-weight: 700; color: #64748b; line-height: 1.3; margin-top: 2px; }
+.g-story-beat.on { background: #fff; border-color: var(--g-focus); box-shadow: 0 4px 14px rgba(63, 125, 110, .18); transform: translateY(-3px); }
+.g-story-beat.on b { color: var(--g-focus); }
+.g-story-beat.on span { color: #0f172a; }
+.g-story-beat.done { background: #eef7f4; border-color: #a7d3c8; }
+.g-story-beat.done b::after { content: ' ✓'; color: var(--g-good); }
+@media (max-width: 640px) {
+  .g-story-beat { min-width: 0; padding: 5px 3px; }
+  .g-story-beat span { display: none; }
+}
+
+/* ------------------------------------------------------------------- print */
+@media print {
+  .g-bar, .g-xray, .g-predict-cards, .g-vote, .g-pause, .g-wedo-track,
+  .g-retrieve-score, .g-story { display: none !important; }
+  .g-wedo-panel { display: block !important; }
+  [data-grow-step] { opacity: 1 !important; visibility: visible !important; }
+  [data-overlay] { opacity: 1 !important; visibility: visible !important; }
+  .g-stage, .g-wedo, .g-retrieve, .g-misc { break-inside: avoid; }
+}
