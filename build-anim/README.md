@@ -302,3 +302,33 @@ Helpers available inside `svg()`: `g` `shape` `stroke` `path` `ell` `dot`
 
 Keep the viewBox at `0 0 400 300`, keep labels inside `x = 8…392`, and leave the
 top-right corner clear — that is where the ✓ / ✖ badge lands.
+
+---
+
+## Read this before deleting `build-anim/`
+
+`grow-anim/compat-build-anim.js` says that once every BUILD lesson has been
+re-injected against `grow-anim`, this folder can be deleted. That is the right
+destination — one engine is better than two — but **the compatibility layer does
+not yet cover everything the five Autumn 1 science lessons use.** Deleting this
+folder today would silently break them.
+
+Four things are missing from the shim, checked against `compat-build-anim.js`
+and `grow-anim.js` as merged:
+
+| Missing | What breaks |
+|---|---|
+| the `pose` verb | Week 4 entirely. The muscle pair swapping jobs *is* the lesson, and it is one `pose bend`. |
+| `data-ba-cards` (per-card scripts) | The prediction panels in Weeks 4 and 7, where one asset answers several different questions. |
+| `BioSVG.register()` + `BioSVG.helpers` | `body-svg.js`, `food-svg.js` and `chain-svg.js` all register through it. Without it, no muscles, no food, no food chains. |
+| the `pop` animation wrapper | Any icon positioned by a `transform` attribute collapses to the origin when it pops in, and rotated vertebrae snap upright. See the note in `build-anim.js`. |
+
+`data-ba-static`, `data-ba-rail` and `data-ba-for` *are* covered.
+
+The lessons themselves are safe in the meantime: `inject.py` inlines the library
+into each one, so they are self-contained single files and do not load anything
+from this folder at runtime. The risk is only to future re-injection.
+
+So: port those four capabilities into `grow-anim` first, re-inject the five
+lessons against it, run `build-anim/tools/preview.mjs --json` and a full slide
+walk to prove nothing regressed, and only then delete.
