@@ -1,0 +1,90 @@
+# Animation philosophy across the three pathways
+
+Written 1 August 2026, alongside the LAUNCH Scientific Observation Layer.
+
+The three pathways were differentiated by **content difficulty only**. Measured
+at HEAD before this pass, a BUILD deck and a LAUNCH deck were structurally
+identical: ten slides with the same titles, sixteen `v5-step` reveals, one
+static SVG, one sort activity, one match activity, one WAGOLL ghost-typer. The
+words were harder in LAUNCH. Nothing else was.
+
+That is a difficulty ladder. It is not a progression in how pupils work, and it
+is not what the pathway names promise.
+
+## The distinction
+
+| | BUILD | GROW | LAUNCH |
+|---|---|---|---|
+| **Pupil's role** | learn the concept | explore the concept | think like a scientist |
+| **Animation's role** | **replaces text** | **explains a process** | **supports reasoning** |
+| **Teacher's role** | guide and narrate | prompt predictions and discussion | facilitate enquiry, challenge conclusions |
+| **What the animation gives** | the idea, made visible | the mechanism, made followable | a question, and the means to answer it |
+| **What it withholds** | nothing — showing is the job | the outcome, briefly | the label, the pattern and the explanation, until earned |
+
+BUILD reduces reliance on reading by making ideas visible.
+GROW helps pupils understand how scientific processes work.
+LAUNCH shifts the emphasis from being shown science to **doing** science.
+
+## What that means in the markup
+
+LAUNCH is the only pathway where an animation is allowed to refuse.
+
+- A label does not appear until the pupil has recorded what they noticed.
+- A zoom does not go deeper until a prediction has been committed.
+- An explanation is physically unreachable until the pattern has been stated.
+- A comparison does not explain itself until every difference has been found.
+- A graph pauses before the point where predicting it is a real risk.
+
+Each of those is a gate, and each gate records the act that opened it in
+`data-sci-opened-by`. A LAUNCH component you cannot describe in the form
+*"this appears because the pupil did X"* is a GROW component in the wrong
+folder.
+
+## The shared motion language
+
+`grow-anim/grow-motion.css` defines ten movements, and each means exactly one
+thing in every pathway and every subject:
+
+> draw = a structure is forming · glow = this is the important feature ·
+> pulse = look here now · fade = this matters less · morph = something is
+> changing · flow = something is moving · shake = that idea is incorrect ·
+> bounce = that answer is correct · trace = follow this pathway ·
+> zoom = we are going in close
+
+**LAUNCH inherits it rather than replacing it.** The layer inlines that file and
+applies `.g-flow-jiggle`, `.g-draw-pop`, `.g-bounce` and `.g-in` for the motions
+that already have a meaning; it only defines motion of its own where nothing
+shared applies. `launch-engine/check.js` fails the build if `sci-engine.css`
+restyles one of the ten, or if the engine applies a `.g-` class that
+`grow-motion.css` does not define.
+
+This matters because the three pathways sit on one progression. A pupil moving
+GROW → LAUNCH should find the interface already familiar and the *demands*
+higher — not have to relearn what a wobble means. The difference between the
+pathways is in what the animation withholds, not in how it moves.
+
+One small win from the alignment: GROW's jiggle already takes a `--g-heat`
+knob, so the diffusion simulator's temperature slider drives the shared motion
+directly. Turn the temperature up and the particles jiggle harder, in the same
+motion the pupil has been reading since week one.
+
+## Status
+
+- **LAUNCH** — built by this pass. `Science_Teesside/launch-engine/`, injected
+  into all fifteen `Science_Teesside/Launch/SCI_L_*.html` decks. 50 components.
+- **GROW** — built, and on `main` before this pass: `grow-anim/` (the ten-motion
+  language, layered SVG assets for biology, chemistry and physics, and the
+  behaviours engine), wired into the five GROW science decks. Its stated aim is
+  *"the animation is the explanation"* — which is exactly the GROW row of the
+  table above.
+- **BUILD** — `grow-anim/compat-build-anim.js` lets existing BUILD markup run on
+  the GROW engine, so BUILD has motion but not yet a philosophy of its own. The
+  brief is the BUILD row above: animation that carries meaning the text would
+  otherwise carry, so a pupil who finds reading hard still meets the whole idea.
+  It should reveal readily — the LAUNCH gates would be an obstacle there, not a
+  method.
+
+Do not reuse the LAUNCH engine wholesale for BUILD. Its whole design is
+withholding, and withholding is the wrong instrument for a pupil whose barrier
+is reading. Reuse the scenes, the verbs and the shared motion language; rebuild
+the gating.
