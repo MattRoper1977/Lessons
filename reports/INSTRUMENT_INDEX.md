@@ -75,3 +75,38 @@ The brief names a fill-mode enumeration known to be incomplete. Neither the
 enumeration nor the sense in which it is incomplete was checked here, and no file in
 this repository matched a search for `fill-mode` outside CSS animation shorthand.
 Recorded as a backlog with its provenance, not as a finding.
+
+---
+
+## IDX-4 · The breakpoint fires on viewport height alone
+
+**Filed 2026-08-01. Not audited. Do not build the width-banded threshold yet.**
+
+`grow-anim.css`'s short-viewport arrangement switches on `@media (max-height: 960px)`.
+The derivation shows the real constraint is height **and** width together — the
+single-column We Do 2 slide's minimum-fit height rises as the viewport narrows:
+
+| width | worst deck needs |
+|---:|---:|
+| 1920 | 932px |
+| 1536 | 932px |
+| 1366 | 935px |
+| 1280 | 953px |
+| 1093 | 953px |
+| 1024 | 1005px |
+| 819 | 1029px |
+| 683 | 1069px |
+
+A single threshold is therefore a simplification. **The exact failing region is:
+width ≤ 1024, and height above 960 but below that width's own minimum-fit value.**
+A 900×1000 viewport keeps the single column and fits; a 700×1000 viewport keeps it
+and does not. Neither is in the matrix and neither is a classroom anyone has named.
+
+**Why it is filed rather than built.** The last layout change nearly shipped a worse
+regression than the one it fixed — `.slide.wedo2-layout { display: grid }` beat the
+deck's own `.slide { display: none }` and halved every other slide — and that one at
+least had a measured classroom behind it. This one has none. A pass would have to
+(a) establish that any real machine lands in the region, and (b) show a width-banded
+media query is more robust than a single threshold rather than merely more precise.
+
+Raw derivation: `reports/convergence/_data/breakpoint-derivation.json`.
