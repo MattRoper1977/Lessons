@@ -387,6 +387,12 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .g-draw {
   animation: gDraw calc(1.1s / var(--g-speed)) var(--g-ease-out) both;
 }
+/* A [data-part] group carries .g-draw as a MARKER — "this has been drawn" — so
+   that assets can gate their own visibility on it. It must not also run the
+   stroke animation: stroke-dasharray inherits into the children, which are
+   already animating it themselves. Declared here, next to the animation it
+   cancels, and before .g-hidden so hiding still wins. */
+[data-part].g-draw { animation: none; opacity: 1; visibility: visible; }
 @keyframes gDraw {
   from { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; }
   55%  { stroke-dasharray: 1; stroke-dashoffset: 0; fill-opacity: 0; }
@@ -662,10 +668,40 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 }
 .g-stage.g-plain { border: 0; background: none; padding: 0; }
 .g-canvas { position: relative; }
-.g-svg { display: block; width: 100%; height: auto; max-height: 46vh; }
-.g-stage[data-grow-frame="wide"] .g-svg { max-height: 34vh; }
-.g-stage[data-grow-frame="mini"] .g-svg { max-height: 20vh; }
-.g-stage[data-grow-frame="tall"] .g-svg { max-height: 58vh; }
+/* The lesson chrome pins its navigation to the bottom-right of the VIEWPORT,
+   over the slide rather than beside it, so anything a slide draws at its own
+   foot — a comparison rail's captions — ends up underneath the buttons. Padding
+   inside the slide does not help: the slide scrolls, so the caption stays where
+   it was and the space appears below it. Shrinking the slide is worse: it steals
+   the same height from the content it was protecting and the caption goes from
+   "under the nav" to "clipped".
+
+   So the picture is capped twice, and the two caps mean different things:
+
+     the FRAME FACTOR is intent — how big a picture of this kind should ever be,
+     as a fraction of the viewport. It is a design decision and it is a constant.
+
+     --g-fit is fact — how much room there actually is between the top of this
+     particular picture and whatever ends the usable area below it (the fixed
+     navigation, or the foot of the slide), minus whatever this stage draws
+     underneath the picture. grow-anim.js measures it per stage and re-measures
+     on resize and whenever the stage is rebuilt, so a caption that wraps to two
+     lines pushes the PICTURE down rather than pushing itself under the buttons.
+
+   min() of the two: never bigger than intended, never bigger than fits. Nothing
+   here is tuned to a slide, and there is no reserve constant to drift. */
+:root {
+  --g-frame-default: .46;
+  --g-frame-wide: .34;
+  --g-frame-mini: .20;         /* BUILD's were default .46 · wide .34 · mini .24 · */
+  --g-frame-tall: .58;         /* tall .44 — change these four to revert           */
+}
+
+.g-svg { display: block; width: 100%; height: auto;
+         max-height: min(calc(var(--g-frame-default) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="wide"] .g-svg { max-height: min(calc(var(--g-frame-wide) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="mini"] .g-svg { max-height: min(calc(var(--g-frame-mini) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="tall"] .g-svg { max-height: min(calc(var(--g-frame-tall) * 100vh), var(--g-fit, 100vh)); }
 
 /* comparison rail — several specimens side by side, addressable as part#1.. */
 .g-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }
@@ -918,6 +954,74 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   [data-grow-step] { opacity: 1 !important; visibility: visible !important; }
   [data-overlay] { opacity: 1 !important; visibility: visible !important; }
   .g-stage, .g-wedo, .g-retrieve, .g-misc { break-inside: avoid; }
+}
+
+/* ===========================================================================
+   SHORT-VIEWPORT ARRANGEMENT — the same content, laid out differently
+   ---------------------------------------------------------------------------
+   The We Do 2 slide stacks a sort activity, a rule stage and a picture down one
+   column. Measured, that column needs 932-1069px of viewport height depending on
+   width — only 1920x1080 provides it, so on every other real viewport the slide
+   overflows its own scrollport: 106-120px at 1280x720, 72-120px at 1024x768,
+   168-255px at 819x614 (1024x768 at 125% display scaling).
+
+   The picture is already at its 96px floor, so nothing more can come out of the
+   picture, and nothing comes out of the slide: this changes the ARRANGEMENT only.
+
+   THE THRESHOLD IS DERIVED, not chosen. reports/convergence/breakpoint.mjs
+   bisects, for every width in the matrix and every deck, the viewport height at
+   which the single column stops fitting. The worst deck needs 932px at 1920 wide
+   rising to 1069px at 683 wide. Against the real viewports that puts the single
+   column's failures at heights 512-864 and its only success at 1080, so a single
+   max-height breakpoint must satisfy 864 < T <= 1079. 960 is the middle of that
+   band — the most robust point against a viewport not in the set. Raw derivation
+   in reports/convergence/_data/breakpoint-derivation.json.
+
+   WHY THE PICTURE TAKES THE NARROW COLUMN. An even split made things worse
+   everywhere — 819x614 overflow went from 168-255px to 200-374px — because the
+   sort activity is width-hungry and narrowing its bins costs more height than a
+   second column saves. A picture is the one element that scales, so it takes the
+   narrow column and the sort keeps the width.
+
+   THE 55% SPLIT IS MEASURED TOO. Overflow per deck, worst first:
+
+     split   1280x720          1024x768          819x614
+     55%     0 0 0 0 0         0 0 0 0 0         64 116  97 104 163
+     62%     0 0 0 8 0         0 0 0 0 0         62 116  80  96 146
+     68%     0 0 0 2 0         0 9 0 0 0         65 134 100 114 147
+
+   55% is the only ratio that clears every nominal viewport, and no ratio clears
+   819x614, so the nominal viewports decide it.
+
+   Scoped by an explicit .wedo2-layout class on the slide, added to the five BUILD
+   decks. An earlier version used :has(#wedo2-rule); measured, that halved the
+   width of slides whose own .matches() reported they did not match it, so the
+   picture on every I Do slide collapsed to its floor. The class carries no such
+   surprise. The child indices are the slide's own structure, identical across all
+   five decks.
+   ========================================================================= */
+@media (max-height: 960px) {
+  /* .active, because .slide.wedo2-layout would outrank the deck's own
+     .slide { display: none } and leave this slide permanently laid out beside
+     whichever slide is showing — measured: it halved every other slide's width
+     and collapsed their pictures to the floor. */
+  .slide.wedo2-layout.active {
+    display: grid;
+    grid-template-columns: 55% minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    column-gap: 14px;
+    align-content: start;
+  }
+  .slide.wedo2-layout.active > :nth-child(-n+4) { grid-column: 1 / -1; }     /* tag, title, instruction, controls */
+  .slide.wedo2-layout.active > :nth-child(5)  { grid-area: 5 / 1 / 6 / -1; } /* sort pills — need the full width  */
+  .slide.wedo2-layout.active > :nth-child(6)  { grid-area: 6 / 1 / 7 / 2; }  /* sort bins                         */
+  .slide.wedo2-layout.active > :nth-child(7)  { grid-area: 7 / 1 / 8 / 2; }  /* feedback line                     */
+  .slide.wedo2-layout.active > :nth-child(8)  { grid-area: 6 / 2 / 7 / 3; }  /* the rule stage and its picture    */
+  .slide.wedo2-layout.active > :nth-child(9)  { grid-area: 7 / 2 / 8 / 3; }  /* WAGOLL controls                   */
+  .slide.wedo2-layout.active > :nth-child(10) { grid-area: 8 / 1 / 9 / 2; }  /* scaffold                          */
+  .slide.wedo2-layout.active > :nth-child(11) { grid-area: 8 / 2 / 9 / 3; }  /* end-of-period note                */
+  .slide.wedo2-layout.active .sort-bin { min-width: 0; }
+  /* vertical rhythm is arrangement, not content */
 }
 /* GROW-ANIM:COMP:END */
 /* GROW-ANIM:POLISH:BEGIN — generated from grow-anim/grow-polish.css, do not edit here */
@@ -1385,7 +1489,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     }
     return '<svg class="g-svg" data-asset="' + name + '" viewBox="0 0 400 300" role="img" aria-label="' + (a.alt || a.title || name) +
       '" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,Segoe UI,sans-serif">' +
-      (a.css ? '<style>' + a.css + '</style>' : '') +
+      (a.css ? '<style>' + a.css + '<\/style>' : '') +
       '<g class="g-zoom-layer">' + a.svg() + '</g></svg>';
   }
 
@@ -3342,6 +3446,13 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     draw: function (stage, a) {
       parts(stage, a.targets).forEach(function (e) {
         e.classList.remove('g-hidden');
+        /* The class goes on the PART as well as on its shapes. The shapes need
+           it to run the stroke animation; the part needs it because "this has
+           been drawn" is a fact about the part, and assets gate their own
+           visibility on it — food-svg.js hides every drop-/food- part until one
+           of .g-in / .g-draw arrives. Marking only the children left those
+           parts at opacity 0 with the script reporting success. */
+        e.classList.add('g-draw');
         $$('path,line,polyline,polygon,rect,circle,ellipse', e).forEach(function (s) { restart(s, 'g-draw'); });
       });
     },
@@ -3699,6 +3810,124 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
       '</div>';
   }
 
+
+  /* ============================================ fitting a picture to the room
+
+     A picture is capped twice: by its frame factor, which is the intent, and by
+     --g-fit, which is the fact. This measures the fact.
+
+     The usable area ends at whichever comes first — the fixed navigation the
+     lesson chrome pins over the viewport, or the foot of the slide itself. Above
+     that sits whatever the stage draws BELOW the picture: a rail's captions, the
+     notes strip. What is left between the top of the picture and that line is
+     how tall the picture may be.
+
+     Everything here is read from the live layout. There is no reserved constant
+     and nothing tuned to a particular slide, so a caption that wraps to two
+     lines, a longer heading, or a shorter viewport moves the picture rather than
+     pushing the caption under the buttons.
+
+     GAP is the only number, and it is a breathing space rather than a
+     prediction: 8px between the last thing a stage draws and the chrome. */
+  var GAP = 8;
+  /* FLOOR does not move without Matt's say-so, and the reason is pedagogy rather
+     than layout. Both framework READMEs open with "the animation is the
+     explanation"; a picture small enough to stop being legible from the back of
+     a room has stopped explaining anything, so shrinking past this to make a
+     layout test go green would defeat the layer's own purpose. Where a slide
+     still overflows with the picture at this floor, the overflow is the TEXT and
+     the answer is the deck, not the constant. Measured at 96px: the
+     reports/convergence test suite asserts that every overflowing cell has
+     already reached it, so lowering this would hide real content pressure. */
+  var FLOOR = 96;
+
+  function usableBottom(stage) {
+    var vh = (global.innerHeight || doc.documentElement.clientHeight);
+    var end = vh;
+    /* the lesson chrome: any fixed element overlapping the foot of the viewport */
+    $$('.controls, .g-nav', doc).forEach(function (nav) {
+      var cs = getComputedStyle(nav);
+      if (cs.position !== 'fixed' || cs.display === 'none') return;
+      var r = nav.getBoundingClientRect();
+      if (r.height && r.bottom > vh * 0.6) end = Math.min(end, r.top);
+    });
+    /* the slide's own scrollport, which clips anything past it */
+    var slide = stage.closest && (stage.closest('.slide') || stage.closest('section'));
+    if (slide) {
+      var sr = slide.getBoundingClientRect();
+      if (sr.height) {
+        end = Math.min(end, sr.bottom - parseFloat(getComputedStyle(slide).paddingBottom || 0));
+      }
+    }
+    return end;
+  }
+
+  /* How much of the stage is drawn BELOW the picture — rail captions, notes. */
+  function belowPicture(stage, svg) {
+    var svgBottom = svg.getBoundingClientRect().bottom;
+    var extra = 0;
+    $$('.g-cell > span, .g-dual figcaption, .g-notes, .g-say', stage).forEach(function (e) {
+      var r = e.getBoundingClientRect();
+      if (!r.height) return;
+      if (r.top >= svgBottom - 2) extra = Math.max(extra, r.bottom - svgBottom);
+    });
+    var pad = parseFloat(getComputedStyle(stage).paddingBottom || 0) +
+              parseFloat(getComputedStyle(stage).borderBottomWidth || 0);
+    return extra + pad;
+  }
+
+  function fit(stage, depth) {
+    var svgs = $$('.g-svg', stage);
+    if (!svgs.length) return;
+    var top = null;
+    svgs.forEach(function (v) {
+      var r = v.getBoundingClientRect();
+      if (!r.height && !r.top) return;                 /* not laid out yet */
+      top = (top === null) ? r.top : Math.max(top, r.top);
+    });
+    if (top === null) return;
+    var room = usableBottom(stage) - top - belowPicture(stage, svgs[0]) - GAP;
+    /* On a phone, or with a heading long enough to wrap three times, there may
+       be no room left at all. Shrink as far as is still worth looking at and
+       stop there: below FLOOR the picture stops being a teaching aid, and what
+       is overflowing is the text above it, which no picture size can fix. */
+    if (room < FLOOR) room = FLOOR;
+    var was = parseFloat(stage.style.getPropertyValue('--g-fit')) || 0;
+    if (Math.abs(was - room) < 1.5) return;            /* converged; do not loop */
+    stage.style.setProperty('--g-fit', Math.round(room) + 'px');
+    /* Resizing the picture can move what is under it, so the first answer is not
+       always the last one. Settle it here rather than waiting for a resize
+       observer to notice, and cap the passes so a pathological layout cannot
+       spin. Two passes is enough in every case measured; three is the guard. */
+    if ((depth || 0) < 3) fit(stage, (depth || 0) + 1);
+  }
+
+  /* Re-measure when the stage changes size, which covers a slide becoming
+     visible, a caption wrapping, a window resize and a device rotation without
+     any of them having to tell us. */
+  function watchFit(stage) {
+    fit(stage);
+    if (typeof global.ResizeObserver === 'function' && !stage._gFitRO) {
+      stage._gFitRO = new global.ResizeObserver(function () { fit(stage); });
+      stage._gFitRO.observe(stage);
+      var slide = stage.closest && stage.closest('.slide');
+      if (slide) stage._gFitRO.observe(slide);
+    }
+  }
+
+  var refitAll;
+  (function () {
+    var t = null;
+    refitAll = function () {
+      if (t) clearTimeout(t);
+      t = setTimeout(function () { $$('.g-stage', doc).forEach(fit); }, 60);
+    };
+    if (global.addEventListener) {
+      global.addEventListener('resize', refitAll);
+      global.addEventListener('orientationchange', refitAll);
+    }
+  })();
+
   function build(stage) {
     if (stage._g) return stage._g;
     var asset = stage.getAttribute('data-grow-asset');
@@ -3721,6 +3950,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     wireXray(stage);
     if (global.GrowPolish) global.GrowPolish.decorate(stage);
     loadScript(stage, scriptFor(stage));
+    watchFit(stage);
     return st;
   }
 
@@ -3736,6 +3966,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     st.steps = parseScript(src);
     st.hidden = hiddenParts(st.steps);
     reset(stage);
+    fit(stage);                 /* a new script can change what sits below the picture */
   }
 
   /* Text elsewhere on the slide that follows this stage's step count. Tie it
@@ -3754,7 +3985,8 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     st.i = 0; st.paused = false;
     $$('[data-part]', stage).forEach(function (e) {
       e.classList.remove('g-glow', 'g-hi', 'g-fade', 'g-pulse', 'g-bounce', 'g-shake',
-        'g-in', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle', 'g-morph-in', 'g-morph-out');
+        'g-in', 'g-draw', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle',
+        'g-morph-in', 'g-morph-out');
       e.classList.toggle('g-hidden', !!st.hidden[e.getAttribute('data-part')]);
       e.style.animationDelay = '';
       $$('*', e).forEach(function (k) {
@@ -3816,20 +4048,43 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     VERBS.unthink(stage);
     st.paused = false;
     $$('.g-pause', stage).forEach(function (e) { e.remove(); });
+    var last = null;
     while (st.i < st.steps.length) {
       var s = st.steps[st.i];
       s.acts.forEach(function (a) { if (a.verb !== 'pause' && a.verb !== 'think' && VERBS[a.verb]) VERBS[a.verb](stage, a); });
       followers(stage).forEach(function (e) {
         if (parseInt(e.getAttribute('data-grow-step'), 10) === st.i + 1) e.classList.add('g-shown');
       });
+      last = s;
       st.i++;
     }
     st.paused = false;
+    /* Show all lands on the same state as pressing Next to the end, and that
+       includes the line the teacher is meant to say. Leaving the bar on its
+       "press Next" placeholder hands the teacher a finished picture and no
+       words for it. */
+    if (last) {
+      var say = $('.g-say', stage);
+      if (say) { say.textContent = last.say || ''; restart(say, 'g-said'); }
+      var badge = $('.g-beat', stage);
+      if (badge && last.beat) { badge.textContent = last.beat; badge.setAttribute('data-beat', last.beat); }
+    }
     paint(stage);
     if (typeof stage._gDone === 'function') stage._gDone(stage);
   }
 
+  /* Fitting must not depend on the stage having a control bar. A stage carrying
+     data-grow-nobar is driven by the slide's own Next button and paints no bar,
+     and the early return below used to take the fit with it — so every bar-less
+     stage was left relying on the ResizeObserver as its only backstop. The
+     observer does fire, but asynchronously, which is both a visible reflow in
+     the room and invisible to any synchronous check. Fit first-class here. */
   function paint(stage) {
+    paintBar(stage);
+    fit(stage);
+  }
+
+  function paintBar(stage) {
     var st = stage._g, bar = $('.g-bar', stage); if (!st || !bar) return;
     var dots = $('.g-dots', bar);
     if (dots) {
@@ -3849,6 +4104,10 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
         : st.i === 0 ? '▶ Start' : '▶ Next (' + (st.i + 1) + '/' + st.steps.length + ')';
       nb.classList.toggle('g-next-ready', !done && !st.paused);
     }
+    /* The fit runs in paint(), AFTER this — because this is what changes the
+       bar (the dot count, the button labels, the narration just set) and any of
+       those can wrap it to a second line and push the picture down. Measuring
+       before it reads the layout that is about to be replaced. */
   }
 
   /* swap a stage onto a different asset / script at run time */
@@ -4243,6 +4502,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     $$('.g-misc', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildMisc(h); } });
     $$('.g-predict', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildPredict(h); } });
     $$('.g-stage', root).forEach(function (s) { if (!s._g) build(s); });
+    $$('.g-stage', root).forEach(watchFit);   /* stages built earlier still need a fit */
     hookNav();
     syncStory(root);
   }
@@ -4255,6 +4515,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   GA.all = function (x) { return all(stageOf(x)); };
   GA.run = run;
   GA.script = function (x, src) { loadScript(stageOf(x), src); };
+  GA.fit = function (x) { return x ? fit(stageOf(x)) : refitAll(); };
   GA.advanceActive = advanceActive;
   GA.hookNav = hookNav;
   GA.parse = parseScript;

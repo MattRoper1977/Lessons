@@ -16,10 +16,40 @@
 }
 .g-stage.g-plain { border: 0; background: none; padding: 0; }
 .g-canvas { position: relative; }
-.g-svg { display: block; width: 100%; height: auto; max-height: 46vh; }
-.g-stage[data-grow-frame="wide"] .g-svg { max-height: 34vh; }
-.g-stage[data-grow-frame="mini"] .g-svg { max-height: 20vh; }
-.g-stage[data-grow-frame="tall"] .g-svg { max-height: 58vh; }
+/* The lesson chrome pins its navigation to the bottom-right of the VIEWPORT,
+   over the slide rather than beside it, so anything a slide draws at its own
+   foot — a comparison rail's captions — ends up underneath the buttons. Padding
+   inside the slide does not help: the slide scrolls, so the caption stays where
+   it was and the space appears below it. Shrinking the slide is worse: it steals
+   the same height from the content it was protecting and the caption goes from
+   "under the nav" to "clipped".
+
+   So the picture is capped twice, and the two caps mean different things:
+
+     the FRAME FACTOR is intent — how big a picture of this kind should ever be,
+     as a fraction of the viewport. It is a design decision and it is a constant.
+
+     --g-fit is fact — how much room there actually is between the top of this
+     particular picture and whatever ends the usable area below it (the fixed
+     navigation, or the foot of the slide), minus whatever this stage draws
+     underneath the picture. grow-anim.js measures it per stage and re-measures
+     on resize and whenever the stage is rebuilt, so a caption that wraps to two
+     lines pushes the PICTURE down rather than pushing itself under the buttons.
+
+   min() of the two: never bigger than intended, never bigger than fits. Nothing
+   here is tuned to a slide, and there is no reserve constant to drift. */
+:root {
+  --g-frame-default: .46;
+  --g-frame-wide: .34;
+  --g-frame-mini: .20;         /* BUILD's were default .46 · wide .34 · mini .24 · */
+  --g-frame-tall: .58;         /* tall .44 — change these four to revert           */
+}
+
+.g-svg { display: block; width: 100%; height: auto;
+         max-height: min(calc(var(--g-frame-default) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="wide"] .g-svg { max-height: min(calc(var(--g-frame-wide) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="mini"] .g-svg { max-height: min(calc(var(--g-frame-mini) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="tall"] .g-svg { max-height: min(calc(var(--g-frame-tall) * 100vh), var(--g-fit, 100vh)); }
 
 /* comparison rail — several specimens side by side, addressable as part#1.. */
 .g-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }
@@ -272,4 +302,72 @@
   [data-grow-step] { opacity: 1 !important; visibility: visible !important; }
   [data-overlay] { opacity: 1 !important; visibility: visible !important; }
   .g-stage, .g-wedo, .g-retrieve, .g-misc { break-inside: avoid; }
+}
+
+/* ===========================================================================
+   SHORT-VIEWPORT ARRANGEMENT — the same content, laid out differently
+   ---------------------------------------------------------------------------
+   The We Do 2 slide stacks a sort activity, a rule stage and a picture down one
+   column. Measured, that column needs 932-1069px of viewport height depending on
+   width — only 1920x1080 provides it, so on every other real viewport the slide
+   overflows its own scrollport: 106-120px at 1280x720, 72-120px at 1024x768,
+   168-255px at 819x614 (1024x768 at 125% display scaling).
+
+   The picture is already at its 96px floor, so nothing more can come out of the
+   picture, and nothing comes out of the slide: this changes the ARRANGEMENT only.
+
+   THE THRESHOLD IS DERIVED, not chosen. reports/convergence/breakpoint.mjs
+   bisects, for every width in the matrix and every deck, the viewport height at
+   which the single column stops fitting. The worst deck needs 932px at 1920 wide
+   rising to 1069px at 683 wide. Against the real viewports that puts the single
+   column's failures at heights 512-864 and its only success at 1080, so a single
+   max-height breakpoint must satisfy 864 < T <= 1079. 960 is the middle of that
+   band — the most robust point against a viewport not in the set. Raw derivation
+   in reports/convergence/_data/breakpoint-derivation.json.
+
+   WHY THE PICTURE TAKES THE NARROW COLUMN. An even split made things worse
+   everywhere — 819x614 overflow went from 168-255px to 200-374px — because the
+   sort activity is width-hungry and narrowing its bins costs more height than a
+   second column saves. A picture is the one element that scales, so it takes the
+   narrow column and the sort keeps the width.
+
+   THE 55% SPLIT IS MEASURED TOO. Overflow per deck, worst first:
+
+     split   1280x720          1024x768          819x614
+     55%     0 0 0 0 0         0 0 0 0 0         64 116  97 104 163
+     62%     0 0 0 8 0         0 0 0 0 0         62 116  80  96 146
+     68%     0 0 0 2 0         0 9 0 0 0         65 134 100 114 147
+
+   55% is the only ratio that clears every nominal viewport, and no ratio clears
+   819x614, so the nominal viewports decide it.
+
+   Scoped by an explicit .wedo2-layout class on the slide, added to the five BUILD
+   decks. An earlier version used :has(#wedo2-rule); measured, that halved the
+   width of slides whose own .matches() reported they did not match it, so the
+   picture on every I Do slide collapsed to its floor. The class carries no such
+   surprise. The child indices are the slide's own structure, identical across all
+   five decks.
+   ========================================================================= */
+@media (max-height: 960px) {
+  /* .active, because .slide.wedo2-layout would outrank the deck's own
+     .slide { display: none } and leave this slide permanently laid out beside
+     whichever slide is showing — measured: it halved every other slide's width
+     and collapsed their pictures to the floor. */
+  .slide.wedo2-layout.active {
+    display: grid;
+    grid-template-columns: 55% minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    column-gap: 14px;
+    align-content: start;
+  }
+  .slide.wedo2-layout.active > :nth-child(-n+4) { grid-column: 1 / -1; }     /* tag, title, instruction, controls */
+  .slide.wedo2-layout.active > :nth-child(5)  { grid-area: 5 / 1 / 6 / -1; } /* sort pills — need the full width  */
+  .slide.wedo2-layout.active > :nth-child(6)  { grid-area: 6 / 1 / 7 / 2; }  /* sort bins                         */
+  .slide.wedo2-layout.active > :nth-child(7)  { grid-area: 7 / 1 / 8 / 2; }  /* feedback line                     */
+  .slide.wedo2-layout.active > :nth-child(8)  { grid-area: 6 / 2 / 7 / 3; }  /* the rule stage and its picture    */
+  .slide.wedo2-layout.active > :nth-child(9)  { grid-area: 7 / 2 / 8 / 3; }  /* WAGOLL controls                   */
+  .slide.wedo2-layout.active > :nth-child(10) { grid-area: 8 / 1 / 9 / 2; }  /* scaffold                          */
+  .slide.wedo2-layout.active > :nth-child(11) { grid-area: 8 / 2 / 9 / 3; }  /* end-of-period note                */
+  .slide.wedo2-layout.active .sort-bin { min-width: 0; }
+  /* vertical rhythm is arrangement, not content */
 }

@@ -224,6 +224,13 @@
     draw: function (stage, a) {
       parts(stage, a.targets).forEach(function (e) {
         e.classList.remove('g-hidden');
+        /* The class goes on the PART as well as on its shapes. The shapes need
+           it to run the stroke animation; the part needs it because "this has
+           been drawn" is a fact about the part, and assets gate their own
+           visibility on it — food-svg.js hides every drop-/food- part until one
+           of .g-in / .g-draw arrives. Marking only the children left those
+           parts at opacity 0 with the script reporting success. */
+        e.classList.add('g-draw');
         $$('path,line,polyline,polygon,rect,circle,ellipse', e).forEach(function (s) { restart(s, 'g-draw'); });
       });
     },
@@ -581,6 +588,124 @@
       '</div>';
   }
 
+
+  /* ============================================ fitting a picture to the room
+
+     A picture is capped twice: by its frame factor, which is the intent, and by
+     --g-fit, which is the fact. This measures the fact.
+
+     The usable area ends at whichever comes first — the fixed navigation the
+     lesson chrome pins over the viewport, or the foot of the slide itself. Above
+     that sits whatever the stage draws BELOW the picture: a rail's captions, the
+     notes strip. What is left between the top of the picture and that line is
+     how tall the picture may be.
+
+     Everything here is read from the live layout. There is no reserved constant
+     and nothing tuned to a particular slide, so a caption that wraps to two
+     lines, a longer heading, or a shorter viewport moves the picture rather than
+     pushing the caption under the buttons.
+
+     GAP is the only number, and it is a breathing space rather than a
+     prediction: 8px between the last thing a stage draws and the chrome. */
+  var GAP = 8;
+  /* FLOOR does not move without Matt's say-so, and the reason is pedagogy rather
+     than layout. Both framework READMEs open with "the animation is the
+     explanation"; a picture small enough to stop being legible from the back of
+     a room has stopped explaining anything, so shrinking past this to make a
+     layout test go green would defeat the layer's own purpose. Where a slide
+     still overflows with the picture at this floor, the overflow is the TEXT and
+     the answer is the deck, not the constant. Measured at 96px: the
+     reports/convergence test suite asserts that every overflowing cell has
+     already reached it, so lowering this would hide real content pressure. */
+  var FLOOR = 96;
+
+  function usableBottom(stage) {
+    var vh = (global.innerHeight || doc.documentElement.clientHeight);
+    var end = vh;
+    /* the lesson chrome: any fixed element overlapping the foot of the viewport */
+    $$('.controls, .g-nav', doc).forEach(function (nav) {
+      var cs = getComputedStyle(nav);
+      if (cs.position !== 'fixed' || cs.display === 'none') return;
+      var r = nav.getBoundingClientRect();
+      if (r.height && r.bottom > vh * 0.6) end = Math.min(end, r.top);
+    });
+    /* the slide's own scrollport, which clips anything past it */
+    var slide = stage.closest && (stage.closest('.slide') || stage.closest('section'));
+    if (slide) {
+      var sr = slide.getBoundingClientRect();
+      if (sr.height) {
+        end = Math.min(end, sr.bottom - parseFloat(getComputedStyle(slide).paddingBottom || 0));
+      }
+    }
+    return end;
+  }
+
+  /* How much of the stage is drawn BELOW the picture — rail captions, notes. */
+  function belowPicture(stage, svg) {
+    var svgBottom = svg.getBoundingClientRect().bottom;
+    var extra = 0;
+    $$('.g-cell > span, .g-dual figcaption, .g-notes, .g-say', stage).forEach(function (e) {
+      var r = e.getBoundingClientRect();
+      if (!r.height) return;
+      if (r.top >= svgBottom - 2) extra = Math.max(extra, r.bottom - svgBottom);
+    });
+    var pad = parseFloat(getComputedStyle(stage).paddingBottom || 0) +
+              parseFloat(getComputedStyle(stage).borderBottomWidth || 0);
+    return extra + pad;
+  }
+
+  function fit(stage, depth) {
+    var svgs = $$('.g-svg', stage);
+    if (!svgs.length) return;
+    var top = null;
+    svgs.forEach(function (v) {
+      var r = v.getBoundingClientRect();
+      if (!r.height && !r.top) return;                 /* not laid out yet */
+      top = (top === null) ? r.top : Math.max(top, r.top);
+    });
+    if (top === null) return;
+    var room = usableBottom(stage) - top - belowPicture(stage, svgs[0]) - GAP;
+    /* On a phone, or with a heading long enough to wrap three times, there may
+       be no room left at all. Shrink as far as is still worth looking at and
+       stop there: below FLOOR the picture stops being a teaching aid, and what
+       is overflowing is the text above it, which no picture size can fix. */
+    if (room < FLOOR) room = FLOOR;
+    var was = parseFloat(stage.style.getPropertyValue('--g-fit')) || 0;
+    if (Math.abs(was - room) < 1.5) return;            /* converged; do not loop */
+    stage.style.setProperty('--g-fit', Math.round(room) + 'px');
+    /* Resizing the picture can move what is under it, so the first answer is not
+       always the last one. Settle it here rather than waiting for a resize
+       observer to notice, and cap the passes so a pathological layout cannot
+       spin. Two passes is enough in every case measured; three is the guard. */
+    if ((depth || 0) < 3) fit(stage, (depth || 0) + 1);
+  }
+
+  /* Re-measure when the stage changes size, which covers a slide becoming
+     visible, a caption wrapping, a window resize and a device rotation without
+     any of them having to tell us. */
+  function watchFit(stage) {
+    fit(stage);
+    if (typeof global.ResizeObserver === 'function' && !stage._gFitRO) {
+      stage._gFitRO = new global.ResizeObserver(function () { fit(stage); });
+      stage._gFitRO.observe(stage);
+      var slide = stage.closest && stage.closest('.slide');
+      if (slide) stage._gFitRO.observe(slide);
+    }
+  }
+
+  var refitAll;
+  (function () {
+    var t = null;
+    refitAll = function () {
+      if (t) clearTimeout(t);
+      t = setTimeout(function () { $$('.g-stage', doc).forEach(fit); }, 60);
+    };
+    if (global.addEventListener) {
+      global.addEventListener('resize', refitAll);
+      global.addEventListener('orientationchange', refitAll);
+    }
+  })();
+
   function build(stage) {
     if (stage._g) return stage._g;
     var asset = stage.getAttribute('data-grow-asset');
@@ -603,6 +728,7 @@
     wireXray(stage);
     if (global.GrowPolish) global.GrowPolish.decorate(stage);
     loadScript(stage, scriptFor(stage));
+    watchFit(stage);
     return st;
   }
 
@@ -618,6 +744,7 @@
     st.steps = parseScript(src);
     st.hidden = hiddenParts(st.steps);
     reset(stage);
+    fit(stage);                 /* a new script can change what sits below the picture */
   }
 
   /* Text elsewhere on the slide that follows this stage's step count. Tie it
@@ -636,7 +763,8 @@
     st.i = 0; st.paused = false;
     $$('[data-part]', stage).forEach(function (e) {
       e.classList.remove('g-glow', 'g-hi', 'g-fade', 'g-pulse', 'g-bounce', 'g-shake',
-        'g-in', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle', 'g-morph-in', 'g-morph-out');
+        'g-in', 'g-draw', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle',
+        'g-morph-in', 'g-morph-out');
       e.classList.toggle('g-hidden', !!st.hidden[e.getAttribute('data-part')]);
       e.style.animationDelay = '';
       $$('*', e).forEach(function (k) {
@@ -698,20 +826,43 @@
     VERBS.unthink(stage);
     st.paused = false;
     $$('.g-pause', stage).forEach(function (e) { e.remove(); });
+    var last = null;
     while (st.i < st.steps.length) {
       var s = st.steps[st.i];
       s.acts.forEach(function (a) { if (a.verb !== 'pause' && a.verb !== 'think' && VERBS[a.verb]) VERBS[a.verb](stage, a); });
       followers(stage).forEach(function (e) {
         if (parseInt(e.getAttribute('data-grow-step'), 10) === st.i + 1) e.classList.add('g-shown');
       });
+      last = s;
       st.i++;
     }
     st.paused = false;
+    /* Show all lands on the same state as pressing Next to the end, and that
+       includes the line the teacher is meant to say. Leaving the bar on its
+       "press Next" placeholder hands the teacher a finished picture and no
+       words for it. */
+    if (last) {
+      var say = $('.g-say', stage);
+      if (say) { say.textContent = last.say || ''; restart(say, 'g-said'); }
+      var badge = $('.g-beat', stage);
+      if (badge && last.beat) { badge.textContent = last.beat; badge.setAttribute('data-beat', last.beat); }
+    }
     paint(stage);
     if (typeof stage._gDone === 'function') stage._gDone(stage);
   }
 
+  /* Fitting must not depend on the stage having a control bar. A stage carrying
+     data-grow-nobar is driven by the slide's own Next button and paints no bar,
+     and the early return below used to take the fit with it — so every bar-less
+     stage was left relying on the ResizeObserver as its only backstop. The
+     observer does fire, but asynchronously, which is both a visible reflow in
+     the room and invisible to any synchronous check. Fit first-class here. */
   function paint(stage) {
+    paintBar(stage);
+    fit(stage);
+  }
+
+  function paintBar(stage) {
     var st = stage._g, bar = $('.g-bar', stage); if (!st || !bar) return;
     var dots = $('.g-dots', bar);
     if (dots) {
@@ -731,6 +882,10 @@
         : st.i === 0 ? '▶ Start' : '▶ Next (' + (st.i + 1) + '/' + st.steps.length + ')';
       nb.classList.toggle('g-next-ready', !done && !st.paused);
     }
+    /* The fit runs in paint(), AFTER this — because this is what changes the
+       bar (the dot count, the button labels, the narration just set) and any of
+       those can wrap it to a second line and push the picture down. Measuring
+       before it reads the layout that is about to be replaced. */
   }
 
   /* swap a stage onto a different asset / script at run time */
@@ -1125,6 +1280,7 @@
     $$('.g-misc', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildMisc(h); } });
     $$('.g-predict', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildPredict(h); } });
     $$('.g-stage', root).forEach(function (s) { if (!s._g) build(s); });
+    $$('.g-stage', root).forEach(watchFit);   /* stages built earlier still need a fit */
     hookNav();
     syncStory(root);
   }
@@ -1137,6 +1293,7 @@
   GA.all = function (x) { return all(stageOf(x)); };
   GA.run = run;
   GA.script = function (x, src) { loadScript(stageOf(x), src); };
+  GA.fit = function (x) { return x ? fit(stageOf(x)) : refitAll(); };
   GA.advanceActive = advanceActive;
   GA.hookNav = hookNav;
   GA.parse = parseScript;

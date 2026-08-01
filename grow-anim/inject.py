@@ -44,9 +44,29 @@ BEGIN = "/* GROW-ANIM:%s:BEGIN"
 END = "/* GROW-ANIM:%s:END */"
 
 
+# Inlining puts a source inside a <script> or <style> element, and the HTML
+# parser does not care that a token sits inside a JS comment or a string: the
+# first literal "</script" it meets ends the block, and everything after it is
+# parsed as markup. compat-build-anim.js documents its own usage with four
+# <script src=...></script> lines; inlined raw, three of them became real script
+# elements requesting files that were not there, the engine never loaded, and
+# twelve slides of a lesson sat still with no error and exit 0.
+#
+# The escape is the standard one: a backslash before the slash. "<\/script>" is
+# the same string to a JavaScript parser and is not a close tag to an HTML one.
+# In CSS a "\/" is likewise inert inside a comment or a string.
+ESCAPES = [("</script", "<\\/script"), ("</style", "<\\/style")]
+
+
+def escape_for_inline(text):
+    for token, safe in ESCAPES:
+        text = text.replace(token, safe)
+    return text
+
+
 def read(src):
     with open(os.path.join(HERE, src), encoding="utf-8") as fh:
-        return fh.read().rstrip("\n")
+        return escape_for_inline(fh.read().rstrip("\n"))
 
 
 def wrap(name, body):

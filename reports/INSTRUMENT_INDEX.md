@@ -1,4 +1,13 @@
-# Instrument Index
+# Instrument index
+
+One file, two sections, because they answer different questions.
+**Section 1** is what has been audited and what each instrument asserts.
+**Section 2** is what has been named and deliberately not audited.
+Reading a section 2 entry as a finding is the mistake this split exists to prevent.
+
+---
+
+# Section 1 · Audited inventory
 
 Every test/gate script in the tree, with what it claims and whether it has been
 audited. Written for the instrument-close pass, 2026-08-01.
@@ -134,6 +143,26 @@ if (dead.length) { console.error('stages that revealed nothing: ' + dead.join(',
 - `Science_Teesside/launch-engine/sci-engine.js`
 - `grow-anim/grow-anim.js`
 
+
+## BUILD_ASDAN visual framework — three instruments (arriving with #14)
+
+Audited here against the standing requirement, by reading them rather than by
+carrying the claim: each proves its input set is non-empty before it can report a
+zero, which is the false-zero guard rule 2 asks for.
+
+| instrument | asserts | empty-set behaviour | status |
+|---|---|---|---|
+| `BUILD_ASDAN/_framework/contrast_check.js` | contrast ratios per element, counted | `if (!files.length) … exit(2)` | **AUDITED-SOUND** |
+| `BUILD_ASDAN/_framework/smoke_test.js` | `total === 10` slides, forward and back to the last slide and home | `if (!total)` fails rather than passing | **AUDITED-SOUND** |
+| `BUILD_ASDAN/_framework/label_rest_check.js` | label rest-state per deck | `if (!files.length) … exit(2)` | **AUDITED-FLAGGED — deliberately red** |
+
+**`label_rest_check.js` is red on purpose, on four decks: CAREERS_W6, COMM_W1,
+DUKE_W5, LI_W2.** It is not a broken instrument and the reds are not a backlog: the
+question of whether each is design or defect is recorded as open for Matt in
+`reports/close/2026-08-01-convergence.md`. An instrument left red with its reason
+written down is worth more than one silenced — but only while the reason is
+written down, which is what this row is for.
+
 ## Named backlog — four passes, not one sweep
 
 The 27 NOT-YET-AUDITED instruments are **not** a general sweep. Each cluster
@@ -192,3 +221,122 @@ anywhere, enumerated or not — INSTRUMENTS.md standing rule 15.
 gate.** At that moment the fix is only as complete as this enumeration, and this
 enumeration is known not to be. An incompleteness that states its own trigger is
 manageable; one that is quietly carried is not.
+
+---
+
+# Section 2 · Named future passes
+
+Work this session identified but did not open. Each entry names the class, the
+search pattern that would find it, and what a pass would have to prove. **Nothing
+here has been audited.** An entry is a scope, not a finding.
+
+Companion: `LundyLoop/tools/INSTRUMENTS.md` is the instrument register proper
+(LL-INST-NN entries, with derivation and quarantine status). Section 1 above is
+the audited inventory. This section is the *backlog* — classes of defect worth a
+pass, not instruments that exist.
+
+---
+
+## IDX-1 · Early returns that skip trailing work
+
+**Filed 2026-08-01. Not audited.**
+
+`if (!x) return;` at the top of a function whose *tail* does something unrelated to
+`x` is a silent-skip generator: the guard is written for the head, and every later
+addition to the function silently inherits it.
+
+**This estate has been bitten by it once, measurably.** `grow-anim.js`'s `paint()`
+opened with
+
+```js
+function paint(stage) {
+  var st = stage._g, bar = $('.g-bar', stage); if (!st || !bar) return;
+```
+
+and a later pass appended `fit(stage);` to its tail. The guard exists because the
+*bar-painting* code needs a bar; the *fitting* code does not. Result: every stage
+carrying `data-grow-nobar` was never fitted — five stages across the five BUILD
+decks, each left depending on an async `ResizeObserver` as its only backstop. That
+is a visible reflow in the classroom and invisible to any synchronous check. It was
+found only because two probes disagreed by 37px.
+
+**Search pattern.** Functions whose first statement is a guard-return and whose body
+is longer than the guard's concern:
+
+```bash
+# candidate sites: a guard-return in the first two lines of a function
+rg -n --multiline --multiline-dotall \
+  'function [a-zA-Z]+\([^)]*\) \{\n\s*(var [^\n]*)?\n?\s*if \([^)]*\) return;' \
+  --glob '*.js' --glob '!node_modules'
+```
+
+Each hit needs reading, not counting: the question is whether anything after the
+guard is independent of what the guard tests. A pass would have to (a) enumerate
+every guard-return site in `grow-anim/`, `build-anim/` and `LundyLoop/tools/`,
+(b) for each, state what the guard protects and what the tail does, and (c) prove
+by a failing-then-passing test that no tail is unreachable for a live input class.
+
+**Why it is worth a pass rather than a lint.** A lint would flag every guard-return
+in the estate, which is most of them and nearly all correct. The defect is semantic
+— *unrelated* tail work — and only reading separates the two.
+
+---
+
+---
+
+## IDX-2 · Instruments not yet entered in the register — **SUPERSEDED**
+
+Filed unverified, and rightly: the count and its scope were carried from a brief
+and not re-derived. **Section 1 has since derived them.** 27 NOT-YET-AUDITED
+instruments, broken into four discrete passes — BL-1 Glitch Clash (10), BL-2 Art
+Teesside (5), BL-3 `_passsci1`/`_passla` (~8), BL-4 BUILD_ASDAN and build-engine
+(4) — each with the register that must be loaded first. Read §1's *Named backlog*,
+not this entry.
+
+Kept rather than deleted because the transition is the point: an entry marked
+unverified became a verified one, which is rule 3 working as intended.
+
+---
+
+## IDX-3 · Fill-mode enumeration, known incomplete — **SUPERSEDED**
+
+Also filed unverified, also since derived. §1's *Known-incomplete: the fill-mode
+enumeration* names exactly what the census missed — inline `style="…animation:…both"`
+in 5 files, longhand `animation-fill-mode` in the Physics 10 decks, and deck-level
+`<style>` blocks — and states its own trigger: it becomes load-bearing the first
+time anyone patches a call site instead of a gate.
+
+---
+
+## IDX-4 · The breakpoint fires on viewport height alone
+
+**Filed 2026-08-01. Not audited. Do not build the width-banded threshold yet.**
+
+`grow-anim.css`'s short-viewport arrangement switches on `@media (max-height: 960px)`.
+The derivation shows the real constraint is height **and** width together — the
+single-column We Do 2 slide's minimum-fit height rises as the viewport narrows:
+
+| width | worst deck needs |
+|---:|---:|
+| 1920 | 932px |
+| 1536 | 932px |
+| 1366 | 935px |
+| 1280 | 953px |
+| 1093 | 953px |
+| 1024 | 1005px |
+| 819 | 1029px |
+| 683 | 1069px |
+
+A single threshold is therefore a simplification. **The exact failing region is:
+width ≤ 1024, and height above 960 but below that width's own minimum-fit value.**
+A 900×1000 viewport keeps the single column and fits; a 700×1000 viewport keeps it
+and does not. Neither is in the matrix and neither is a classroom anyone has named.
+
+**Why it is filed rather than built.** The last layout change nearly shipped a worse
+regression than the one it fixed — `.slide.wedo2-layout { display: grid }` beat the
+deck's own `.slide { display: none }` and halved every other slide — and that one at
+least had a measured classroom behind it. This one has none. A pass would have to
+(a) establish that any real machine lands in the region, and (b) show a width-banded
+media query is more robust than a single threshold rather than merely more precise.
+
+Raw derivation: `reports/convergence/_data/breakpoint-derivation.json`.
