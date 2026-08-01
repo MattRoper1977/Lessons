@@ -10,12 +10,18 @@
   --ring:#f27ea9; --emm:#5eead4; --star:#ffd166; --bastion:#7fb4ff;
   --energy:#a78bfa; --harmony:#f5b84a; --good:#7ee7b8; --soft:#ff9d8a;
   --rC:#8fa3c8; --rR:#5eead4; --rE:#a78bfa; --rL:#f5b84a;
+  --track:#0a0f1d; --trackline:#26335a;   /* bar chrome, repainted by Arena Themes */
   --radius:14px; --tap:48px;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+/* The page fill lives on <html> only. <body> stays transparent so the ambient
+   backdrop on body::before — which paints above html's background but below
+   body's — is actually visible rather than covered by an opaque body. */
+html,body{margin:0;padding:0;color:var(--ink);
   font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   min-height:100%; overscroll-behavior:none;}
+html{background:var(--bg);}
+body{background:transparent;}
 body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;min-height:var(--tap);}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--emm);outline-offset:2px;border-radius:8px;}
@@ -33,6 +39,55 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:.02em;}
 .logo small{display:block;font-size:.32em;letter-spacing:.42em;color:var(--dim);
   -webkit-text-fill-color:var(--dim);transform:none;font-weight:700;}
 .eyebrow{font-size:11px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);}
+
+/* ---------- Ambient backdrop ----------
+   One fixed pseudo-element behind everything: a slow-drifting signal grid with
+   a soft glow at the top. It is decoration on a pseudo-element, so it is out of
+   the accessibility tree and cannot be tabbed to or read out.
+
+   Every animation here is already killed by the global .reduce-motion rule
+   above; the layer is still legible standing still, so nothing depends on the
+   motion to be visible. Calm Mode drops it entirely — a moving background is
+   exactly what Calm Mode exists to remove. */
+body::before{
+  content:"";position:fixed;inset:-10% -10% -10% -10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(90% 55% at 50% -8%, color-mix(in srgb, var(--emm) 12%, transparent) 0%, transparent 60%),
+    repeating-linear-gradient(0deg,  rgba(255,255,255,.030) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.030) 0 1px, transparent 1px 44px);
+  animation:gc-drift 34s linear infinite;
+  opacity:.9;
+}
+@keyframes gc-drift{ from{transform:translate3d(0,0,0);} to{transform:translate3d(-44px,44px,0);} }
+body.calm::before{animation:none;opacity:.45;}
+/* The global .reduce-motion rule is written as `.reduce-motion *::before`, which
+   needs a DESCENDANT of the flagged element — body::before is on the flagged
+   element itself, so it slips through. Named explicitly. */
+body.reduce-motion::before{animation:none!important;}
+@media (prefers-reduced-motion: reduce){ body::before{animation:none;} }
+
+/* ---------- Title treatment ----------
+   A rare one-frame channel split, so the wordmark reads as something
+   transmitted rather than printed. Deliberately NOT a background-position
+   sheen: the logo's gradient runs teal → gold → pink across its full width,
+   and sliding it would show only two of the three stops at a time, changing
+   the mark's resting colours. This only touches the drop-shadow, so the
+   wordmark's designed palette is exactly as it was between splits. */
+#scr-title .logo{animation:gc-split 9s steps(1) infinite;}
+@keyframes gc-split{
+  0%,96%,100%{filter:drop-shadow(0 3px 0 rgba(0,0,0,.45));}
+  97%{filter:drop-shadow(0 3px 0 rgba(0,0,0,.45)) drop-shadow(2px 0 0 var(--ring)) drop-shadow(-2px 0 0 var(--emm));}
+  98%{filter:drop-shadow(0 3px 0 rgba(0,0,0,.45)) drop-shadow(-3px 0 0 var(--ring)) drop-shadow(3px 0 0 var(--emm));}
+}
+body.calm #scr-title .logo{animation:none;}
+/* The Play button breathes so the entry point is obvious without a "PRESS START" line. */
+#scr-title .btn.primary{animation:gc-breathe 2.8s ease-in-out infinite;}
+@keyframes gc-breathe{
+  0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--emm) 42%, transparent);}
+  55%    {box-shadow:0 0 0 10px color-mix(in srgb, var(--emm) 0%, transparent);}
+}
+body.calm #scr-title .btn.primary{animation:none;}
+
 /* ---------- Panels & chips ---------- */
 .panel{background:var(--panel);border:1px solid #26335a;border-radius:var(--radius);padding:14px;margin:10px 0;}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid #2c3b66;
@@ -50,7 +105,7 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:.02em;}
 .muted{color:var(--dim);font-size:13px;line-height:1.45;}
 .center{text-align:center;}
 /* ---------- Bars ---------- */
-.bar{height:12px;background:#0a0f1d;border-radius:999px;overflow:hidden;border:1px solid #26335a;position:relative;}
+.bar{height:12px;background:var(--track);border-radius:999px;overflow:hidden;border:1px solid var(--trackline);position:relative;}
 .bar>i{display:block;height:100%;border-radius:999px;transition:width .35s ease;}
 .hp>i{background:linear-gradient(90deg,#3ddba6,#7ee7b8);}
 .hp.low>i{background:linear-gradient(90deg,#f0a35e,#ffd166);}
@@ -136,7 +191,11 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:.02em;}
 .sticker.earned .sic{filter:none;opacity:1;}
 .stagebtn{position:relative;}
 .stagebtn .done{color:var(--good);font-weight:900;}
-.hc body,body.hc{--bg:#000;--panel:#0a0a14;--panel2:#141428;--ink:#fff;--dim:#c9d4ee;}
+/* html.hc is listed first and matters most: the page fill is painted from
+   <html>, so setting --bg on <body> alone would leave High Contrast with the
+   ordinary background behind a black UI. applySettings() flags both elements. */
+html.hc,.hc body,body.hc{--bg:#000;--panel:#0a0a14;--panel2:#141428;--ink:#fff;--dim:#c9d4ee;
+  --track:#000;--trackline:#8899bb;}
 body.hc .card{box-shadow:none;border-width:3px;}
 .footer{margin-top:22px;text-align:center;font-size:12px;color:var(--dim);}
 .footer b{color:var(--emm);}
@@ -307,6 +366,41 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 .sE{--auraA:.42;--auraT:3s}
 .sL{--auraA:.58;--auraSize:26px;--auraT:2.2s}
 .card.ascended{--auraA:.78;--auraSize:32px;--auraT:1.6s}
+
+/* ---- GCX: extras layer ---------------------------------------------- */
+.gcx-sys{position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:70;pointer-events:none;
+  text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;animation:gcxSys 1.4s ease-out forwards}
+.gcx-sys .gcx-err{display:block;font-size:clamp(15px,4.4vw,26px);font-weight:900;letter-spacing:.22em;
+  color:#ff4d6d;text-shadow:2px 0 #16f2ff,-2px 0 #ffcc00,0 0 14px rgba(255,77,109,.7)}
+.gcx-sys .gcx-msg{display:block;margin-top:5px;font-size:clamp(10px,2.6vw,13px);letter-spacing:.12em;color:#9fe9ff}
+@keyframes gcxSys{0%{opacity:0;transform:translateX(-50%) scale(.9)}12%{opacity:1;transform:translateX(-50%) scale(1)}
+  78%{opacity:1}100%{opacity:0}}
+.gcx-combo{position:fixed;left:50%;top:34%;transform:translateX(-50%);z-index:70;pointer-events:none;
+  font-weight:900;font-size:clamp(20px,6.5vw,40px);letter-spacing:.06em;color:#ffd54a;
+  text-shadow:0 0 12px rgba(255,213,74,.75),0 2px 0 #1a1030;animation:gcxCombo 1s cubic-bezier(.2,.9,.25,1) forwards}
+@keyframes gcxCombo{0%{opacity:0;transform:translateX(-50%) scale(.5)}18%{opacity:1;transform:translateX(-50%) scale(1.15)}
+  32%{transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(-34px) scale(.95)}}
+.gcx-freeze .arena,.gcx-freeze .card{filter:brightness(1.5) contrast(1.2)}
+body.gcx-invert{filter:invert(1) hue-rotate(180deg)}
+body.gcx-tear .arena{animation:gcxTear .18s steps(2) infinite}
+@keyframes gcxTear{0%{clip-path:inset(0 0 62% 0);transform:translateX(-7px)}
+  50%{clip-path:inset(48% 0 0 0);transform:translateX(7px)}100%{clip-path:none;transform:none}}
+body.gcx-corruptpx .arena{filter:saturate(2.4) contrast(1.5);image-rendering:pixelated}
+body.gcx-lag *{transition:none!important;animation-play-state:paused!important}
+body.gcx-hud .hud,body.gcx-hud .bar,body.gcx-hud .spread{filter:blur(1.4px) hue-rotate(90deg);letter-spacing:.3em}
+body.gcx-flip .arena{transform:rotate(180deg)}
+body.gcx-slowmo .arena{transition:all 1.1s cubic-bezier(.1,.7,.1,1)!important;filter:saturate(.6)}
+body.gcx-crt::after{content:"";position:fixed;inset:0;z-index:65;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.20) 0 1px,transparent 1px 3px);
+  box-shadow:inset 0 0 120px rgba(0,0,0,.55)}
+/* Calm Mode and reduced motion are the authority: no distortion, no flashing */
+body.calm .gcx-sys,body.reduce-motion .gcx-sys{animation:none;opacity:1}
+body.calm .gcx-combo,body.reduce-motion .gcx-combo{animation:none;opacity:1}
+body.calm.gcx-invert,body.reduce-motion.gcx-invert,
+body.calm.gcx-flip,body.reduce-motion.gcx-flip{filter:none}
+body.calm.gcx-flip .arena,body.reduce-motion.gcx-flip .arena{transform:none}
+body.calm.gcx-tear .arena,body.reduce-motion.gcx-tear .arena{animation:none;clip-path:none;transform:none}
+body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
 </style>
 </head>
 <body>
@@ -338,7 +432,10 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
   <button class="btn primary" data-go="stages">⚔ Campaign</button>
   <button class="btn" data-go="team">🃏 Team &amp; Collection</button>
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
+  <button class="btn" id="weeklybtn">🏆 Weekly Gauntlet</button>
+  <button class="btn" id="endlessbtn">♾ Endless Run</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
+  <button class="btn" data-open="themes">🎨 Arena Themes</button>
   <div class="footer">Made by Matt · v2.0</div>
 </section>
 
@@ -365,6 +462,7 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
     <div class="spread">
       <span class="chip" id="stagechip">Stage</span>
       <span class="arena-chip" id="arenachip" hidden></span>
+      <span class="chip" id="clockchip" hidden aria-live="off">⏱ 1:30</span>
       <button class="btn small" id="quitbtn">Quit</button>
     </div>
     <!-- enemy -->
@@ -401,6 +499,7 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
   <button class="btn" id="calmtoggle">Calm Mode: Off</button>
   <button class="btn" id="motiontoggle">Reduced Motion: Auto</button>
   <button class="btn" id="hctoggle">High Contrast: Off</button>
+  <button class="btn" id="cbtoggle">Colourblind Palette: Off</button>
   <button class="btn" id="tutreplay">🎓 Replay tutorial</button>
   <button class="btn" id="exportbtn">⬇ Export save</button>
   <label class="btn" style="cursor:pointer">⬆ Import save<input type="file" id="importfile" accept="application/json,.json" style="display:none" aria-label="Import save file"></label>
@@ -412,6 +511,13 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 <div class="overlay" id="ov-stickers"><div class="sheet" role="dialog" aria-modal="true" aria-label="Sticker shelf">
   <div class="spread"><h3>Sticker Shelf</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
   <div id="stickerlist"></div>
+</div></div>
+
+<!-- ============ ARENA THEMES SHEET ============ -->
+<div class="overlay" id="ov-themes"><div class="sheet" role="dialog" aria-modal="true" aria-label="Arena themes">
+  <div class="spread"><h3>Arena Themes</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
+  <p class="muted">Repaint the arena. Themes unlock as you win clashes — they change the colours only, never the odds.</p>
+  <div id="themelist" style="display:flex;flex-direction:column;gap:8px"></div>
 </div></div>
 
 <!-- ============ PACK / RESULT SHEET ============ -->
@@ -770,6 +876,7 @@ const Engine = {
     sv.dups=dd;
     sv.stickers=(d.stickers&&typeof d.stickers==="object")?d.stickers:{};
     sv.dailyDone=typeof d.dailyDone==="string"?d.dailyDone:"";
+    sv.weeklyDone=typeof d.weeklyDone==="string"?d.weeklyDone:"";
     sv.tutorialDone=!!d.tutorialDone;
     // v3: cutscenes seen — validate against known scene keys only
     const seenSrc=(d.seen&&typeof d.seen==="object")?d.seen:{};
@@ -808,12 +915,24 @@ function store(){
 }
 const DEFAULT_SAVE = ()=>({
   v:SAVE_VERSION, owned:[...STARTERS], dups:{}, team:[...STARTERS],
-  cleared:[], xp:0, stickers:{}, settings:{calm:false,motion:"auto",hc:false},
-  dailyDone:"", tutorialDone:false, seen:{}, stats:{wins:0, clashWins:0}
+  cleared:[], xp:0, stickers:{}, settings:{calm:false,motion:"auto",hc:false,cb:false},
+  dailyDone:"", weeklyDone:"", tutorialDone:false, seen:{}, stats:{wins:0, clashWins:0}
 });
 let SV = DEFAULT_SAVE();
 function localDateKey(dt=new Date()){
   return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+/* ISO-8601 week key, e.g. "2026-W31". ISO weeks start on Monday and belong to
+   the year containing their Thursday, which is why this shifts to Thursday
+   before reading the year — a naive year+weekNumber disagrees with the calendar
+   for a few days every New Year, and the weekly would reset on the wrong day. */
+function localWeekKey(dt=new Date()){
+  const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+  d.setDate(d.getDate() + 3 - ((d.getDay()+6)%7));          // the Thursday of this week
+  const firstThu=new Date(d.getFullYear(),0,4);
+  firstThu.setDate(firstThu.getDate() + 3 - ((firstThu.getDay()+6)%7));
+  const week=1+Math.round((d-firstThu)/(7*24*60*60*1000));
+  return d.getFullYear()+"-W"+String(week).padStart(2,"0");
 }
 function loadSave(){
   try{
@@ -831,7 +950,12 @@ const rng = Math.random;
 let battle=null, pickSlot=null;
 
 loadSave(); applySettings();
-try{ FX.init(); }catch(_){}
+/* FX.init() used to be called here. `const FX` is declared ~1150 lines below,
+   so this ran inside its temporal dead zone, threw a ReferenceError, and the
+   surrounding catch swallowed it — the particle canvas was never sized, `cx`
+   stayed null, and every spawn() returned at its first line. The particle
+   layer has never drawn since it was written. It is now initialised directly
+   after the module that owns it. */
 
 /* ----- navigation ----- */
 function go(name){
@@ -841,6 +965,10 @@ function go(name){
   if(name==="home") renderHome();
   if(name==="stages") renderStages();
   if(name==="team") renderTeam();
+  /* Menu music, so it stops at the door of a battle and picks up on the way
+     out. Both calls are no-ops when the setting is off or the pad is already
+     in that state, so this is safe to fire on every screen change. */
+  try{ name==="battle" ? GCX.musicStop() : GCX.musicStart(); }catch(e){}
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
@@ -851,8 +979,13 @@ document.addEventListener("click",e=>{
 let lastFocus=null;
 function showOv(ov){ lastFocus=document.activeElement; ov.classList.add("show");
   const f=ov.querySelector("button,[href],input,select"); if(f) f.focus(); }
-function openSheet(n){ if(n==="stickers") renderStickers(); showOv($("#ov-"+n)); }
+function openSheet(n){ if(n==="stickers") renderStickers();
+  if(n==="themes") renderThemes();
+  showOv($("#ov-"+n)); }
 function closeSheets(){ $$(".overlay").forEach(o=>o.classList.remove("show"));
+  /* Escape or the backdrop must never strand an Endless run mid-pick — if the
+     boon sheet is dismissed without a choice, carry on with no boon taken. */
+  if(typeof boonPending!=="undefined" && boonPending){ boonPending=false; setTimeout(nextEndlessRound,320); }
   if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus(); lastFocus=null; }
 document.addEventListener("keydown",e=>{
   if(e.key!=="Tab") return;
@@ -882,15 +1015,26 @@ function applySettings(){
   const s=SV.settings;
   document.body.classList.toggle("calm", s.calm);
   document.body.classList.toggle("hc", s.hc);
+  document.documentElement.classList.toggle("hc", s.hc);   // the page fill is painted from <html>
   const sysRM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const rm = s.motion==="on" || (s.motion==="auto" && sysRM);
   document.body.classList.toggle("reduce-motion", rm);
   $("#calmtoggle").textContent = "Calm Mode: "+(s.calm?"On":"Off");
   $("#motiontoggle").textContent = "Reduced Motion: "+({auto:"Auto",on:"On",off:"Off"})[s.motion];
   $("#hctoggle").textContent = "High Contrast: "+(s.hc?"On":"Off");
+  $("#cbtoggle").textContent = "Colourblind Palette: "+(s.cb?"On":"Off");
+  /* Re-run the theme against the class we have just set: it stands down under
+     High Contrast and comes back when High Contrast is switched off again. */
+  try{ GCX2.applyTheme(GCX2.currentTheme()); GCX2.setColourblind(!!s.cb); }catch(e){}
+  /* Anything already drawn was built from the old hexes, so redraw it. */
+  try{ if($("#scr-team.active")) renderTeam();
+       if(battle) renderBattle(); }catch(e){}
 }
 $("#calmtoggle").onclick=()=>{SV.settings.calm=!SV.settings.calm;save();applySettings();};
+
 $("#hctoggle").onclick=()=>{SV.settings.hc=!SV.settings.hc;save();applySettings();};
+$("#cbtoggle").onclick=()=>{SV.settings.cb=!SV.settings.cb;save();applySettings();
+  announce("Colourblind palette "+(SV.settings.cb?"on":"off")+".");};
 $("#motiontoggle").onclick=()=>{
   const order=["auto","on","off"];
   SV.settings.motion=order[(order.indexOf(SV.settings.motion)+1)%3];
@@ -926,8 +1070,14 @@ $("#resetbtn").onclick=()=>{
 };
 
 /* ----- art ----- */
+/* Colourblind mode repaints the CSS variables, but these SVGs are built from
+   the raw hex, so they have to ask for the live value rather than the shipped one. */
+function shapeHex(shape){
+  let cb=null; try{ cb=GCX2.cbHex(shape); }catch(e){}
+  return cb || (SHAPES[shape] ? SHAPES[shape].hex : "#8fa3c8");
+}
 function glyphSVG(shape, hex){
-  const s=hex||SHAPES[shape].hex;
+  const s=hex||shapeHex(shape);
   if(shape==="R") return `<svg class="glyph" viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="none" stroke="${s}" stroke-width="9"/></svg>`;
   if(shape==="M") return `<svg class="glyph" viewBox="0 0 60 60"><path d="M10 48 V16 L30 36 L50 16 V48" fill="none" stroke="${s}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   if(shape==="S") return `<svg class="glyph" viewBox="0 0 60 60"><path d="M30 6 L37 23 L55 24 L41 36 L46 54 L30 43 L14 54 L19 36 L5 24 L23 23 Z" fill="${s}"/></svg>`;
@@ -945,13 +1095,327 @@ function renderHome(){
   $("#xpfill").style.width = (SV.xp%RANK_XP)+"%";
   const today = localDateKey();
   $("#dailybtn").textContent = SV.dailyDone===today ? "📅 Daily Clash ✓ (done today)" : "📅 Daily Clash";
+  const bestE=(SV.stats&&SV.stats.bestEndless)||0;
+  $("#endlessbtn").textContent = bestE ? ("♾ Endless Run · best round "+bestE) : "♾ Endless Run";
+  $("#weeklybtn").textContent = SV.weeklyDone===localWeekKey()
+    ? "🏆 Weekly Gauntlet ✓ (done this week)" : "🏆 Weekly Gauntlet";
 }
+
+/* ---------- weekly gauntlet ----------
+   Three fixed clashes under one fixed handicap, both drawn from the week key,
+   so everyone playing in the same week gets the same gauntlet and it is
+   reproducible offline with no server. Clearing it pays once per week.
+
+   It runs on the Endless driver rather than a second one of its own: same
+   round chain, same advance and lose paths, just a fixed plan instead of a
+   random draw and a finish line at three. */
+const WEEKLY_LENGTH = 3;
+function weeklyPlan(weekKey){
+  const soft = GLITCHES.map((g,i)=>i).filter(i=>GLITCHES[i].trait!=="boss");
+  const stages=[];
+  for(let n=0;n<WEEKLY_LENGTH;n++){
+    const pick = soft[Engine.dailyIndex(weekKey+":s"+n, soft.length)];
+    stages.push(pick);
+  }
+  const mod = MODIFIERS[Engine.dailyIndex(weekKey+":m", MODIFIERS.length)].id;
+  return { stages, mod };
+}
+function startWeekly(){
+  const key=localWeekKey(), plan=weeklyPlan(key);
+  endlessRun = GCX2.newRun();
+  endlessRun.mods = [plan.mod];
+  endlessRun.weekly = { key, plan };
+  SV.stats=SV.stats||{};
+  if(endlessRun.mods.includes("clock")) startRunClock(); else stopRunClock();
+  toast("Weekly Gauntlet — three clashes, "+modById(plan.mod).name+".");
+  nextEndlessRound();
+}
+/* ---------- Endless run ----------
+   A chain of escalating clashes. Every third round you pick one of three
+   boons, which are applied to your fighters at the start of each subsequent
+   battle. The run ends the first time you lose. */
+let endlessRun=null;
+/* `var`, not `let`: closeSheets() is defined above this point and probes it with
+   typeof. typeof does NOT protect against the temporal dead zone, so a let here
+   would throw if a sheet ever closed before this line evaluated. */
+var boonPending=false;
+/* Bosses are held back until round 5. Endless already escalates every enemy's
+   numbers, so drawing a boss on round 1 would end most runs before the player
+   had seen what a run is. */
+function endlessPool(round){
+  const all = GLITCHES.map((g,i)=>i);
+  if(round >= 5) return all;
+  const soft = all.filter(i=>GLITCHES[i].trait!=="boss");
+  return soft.length ? soft : all;
+}
+/* ---------- run modifiers ----------
+   Optional handicaps chosen before a run starts. Each one is a multiplier or a
+   flag read where the run is already assembled — none of them reaches into
+   Engine, so a modified run resolves turns by exactly the same rules. They are
+   stated as text on the sheet and echoed into the stage chip, so you can always
+   see which ones are live. */
+const MODIFIERS = [
+  { id:"hardcore", name:"Hardcore",   desc:"Enemies start at round 5 strength, and bosses appear immediately.",
+    mult:1.00 },
+  { id:"noboons",  name:"Purist",     desc:"No upgrades offered between rounds.",
+    mult:1.00 },
+  { id:"brittle",  name:"Brittle",    desc:"Your Keepers take 25% more damage.",
+    mult:1.00 },
+  { id:"swift",    name:"Sudden Death", desc:"Everyone hits 40% harder. Rounds end fast.",
+    mult:1.00 },
+  { id:"clock",    name:"Time Attack", desc:"90 seconds on the clock. Every round cleared adds 30." }
+];
+/* Reward multiplier is derived from how many are on, not hand-set per modifier,
+   so adding one later cannot quietly unbalance the payout. */
+function modMultiplier(mods){ return 1 + 0.35*((mods||[]).length); }
+function modById(id){ return MODIFIERS.find(m=>m.id===id)||null; }
+let pendingMods=[];
+
+/* ---------- the run clock ----------
+   Time Attack is deliberately a RUN-level clock, not a turn-level one. It never
+   interrupts a turn, never shortens one, and never touches how damage resolves:
+   it watches a deadline on the wall clock and, when that passes, ends the run
+   the same way losing does. The turn in progress is allowed to finish.
+
+   It is paused whenever a sheet is open, so time is never lost to a menu. */
+const CLOCK_START = 90000, CLOCK_BONUS = 30000;
+let runClock = null;                 // {left, deadline, paused, tick, warned}
+function clockActive(){ return !!runClock; }
+function startRunClock(){
+  stopRunClock();
+  runClock = { left:CLOCK_START, deadline:0, paused:true, tick:0, warned:{} };
+  resumeRunClock();
+}
+function stopRunClock(){
+  if(runClock && runClock.tick) clearInterval(runClock.tick);
+  runClock = null;
+  const c=$("#clockchip"); if(c) c.hidden=true;
+}
+function pauseRunClock(){
+  if(!runClock || runClock.paused) return;
+  runClock.left = Math.max(0, runClock.deadline - Date.now());
+  runClock.paused = true;
+}
+function resumeRunClock(){
+  if(!runClock) return;
+  runClock.deadline = Date.now() + runClock.left;
+  runClock.paused = false;
+  if(!runClock.tick) runClock.tick = setInterval(clockTick, 250);
+  renderClock();
+}
+function addRunClock(ms){
+  if(!runClock) return;
+  const left = runClock.paused ? runClock.left : Math.max(0, runClock.deadline - Date.now());
+  runClock.left = left + ms;
+  if(!runClock.paused) runClock.deadline = Date.now() + runClock.left;
+  runClock.warned = {};                    // fresh time, so warn again on the way down
+  toast("+"+Math.round(ms/1000)+" seconds");
+  renderClock();
+}
+function clockLeft(){
+  if(!runClock) return 0;
+  return runClock.paused ? runClock.left : Math.max(0, runClock.deadline - Date.now());
+}
+function renderClock(){
+  const c=$("#clockchip"); if(!c) return;
+  if(!runClock){ c.hidden=true; return; }
+  const ms=clockLeft(), s=Math.ceil(ms/1000);
+  c.hidden=false;
+  c.textContent = "⏱ "+Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+  c.style.color = s<=10 ? "var(--soft)" : "";
+  c.setAttribute("aria-label", s+" seconds remaining");
+}
+function clockTick(){
+  if(!runClock) return;
+  /* A sheet on screen means the player is reading, not playing. */
+  const sheetOpen = !!document.querySelector(".overlay.show");
+  if(sheetOpen && !runClock.paused) pauseRunClock();
+  else if(!sheetOpen && runClock.paused) resumeRunClock();
+  renderClock();
+  if(runClock.paused) return;
+  const s=Math.ceil(clockLeft()/1000);
+  // spoken warnings, because a chip counting down is no use if you can't see it
+  [30,10].forEach(mark=>{
+    if(s<=mark && !runClock.warned[mark]){ runClock.warned[mark]=1;
+      announce(mark+" seconds remaining"); try{ GCX.sfx.click(); }catch(e){} }
+  });
+  if(clockLeft()<=0) timeUp();
+}
+function timeUp(){
+  if(!endlessRun) { stopRunClock(); return; }
+  const cleared = endlessRun.round-1;
+  const weekly  = !!endlessRun.weekly;
+  stopRunClock();
+  if(!weekly) SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, cleared);
+  endlessRun=null; boonPending=false; battle=null;
+  save();
+  try{ GCX.breakCombo(); GCX.sfx.lose(); }catch(e){}
+  announce("Time up.");
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center"><h2>Time up ⏱</h2>
+      <p class="muted">${cleared} ${cleared===1?"round":"rounds"} cleared before the clock ran out.</p></div>
+    <div class="panel"><div class="spread"><span>Total XP</span><b>${SV.xp}</b></div></div>
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
+}
+
+function showModPick(){
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<h2>Endless Run</h2>
+    <p class="muted">Survive as long as you can. Add handicaps for a bigger payout, or start clean.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">` +
+    MODIFIERS.map(m=>`<button class="btn" data-mod="${m.id}"
+      aria-pressed="${pendingMods.includes(m.id)}"
+      style="display:flex;align-items:center;gap:10px;text-align:left">
+      <span data-tick aria-hidden="true" style="flex:0 0 22px;font-weight:900">${pendingMods.includes(m.id)?"☑":"☐"}</span>
+      <span style="flex:1 1 auto;min-width:0"><b>${m.name}</b><br>
+        <small class="muted">${m.desc}</small></span></button>`).join("") +
+    `<div class="chip" id="modpay" style="margin:6px 0">Reward ×${modMultiplier(pendingMods).toFixed(2)}</div>
+     <button class="btn primary" id="modgo">▶ Start run</button>
+     <button class="btn small" data-close style="border-color:var(--soft);color:var(--soft)">Cancel</button></div>`;
+  showOv($("#ov-result"));
+  const refresh=()=>{
+    sheet.querySelectorAll("[data-mod]").forEach(btn=>{
+      const on=pendingMods.includes(btn.dataset.mod);
+      btn.setAttribute("aria-pressed", String(on));
+      btn.querySelector("[data-tick]").textContent = on?"☑":"☐";
+    });
+    $("#modpay").textContent = "Reward ×"+modMultiplier(pendingMods).toFixed(2);
+  };
+  sheet.querySelectorAll("[data-mod]").forEach(btn=>{
+    btn.onclick=()=>{
+      const id=btn.dataset.mod, i=pendingMods.indexOf(id);
+      if(i<0) pendingMods.push(id); else pendingMods.splice(i,1);
+      try{ GCX.sfx.click(); }catch(e){}
+      refresh();
+      announce(modById(id).name+(pendingMods.includes(id)?" on":" off"));
+    };
+  });
+  $("#modgo").onclick=()=>{ closeSheets(); setTimeout(()=>startEndless(pendingMods.slice()),260); };
+}
+
+function startEndless(mods){
+  endlessRun = GCX2.newRun();
+  endlessRun.mods = mods || [];
+  SV.stats=SV.stats||{};
+  if(endlessRun.mods.includes("clock")) startRunClock(); else stopRunClock();
+  const names=endlessRun.mods.map(id=>modById(id).name);
+  toast(names.length ? ("Endless run — "+names.join(" + ")) : "Endless run — survive as long as you can.");
+  nextEndlessRound();
+}
+function nextEndlessRound(){
+  if(!endlessRun) return;
+  /* Guard against being called twice for the same round. go() strips .show
+     from every overlay directly rather than through closeSheets(), so the boon
+     sheet can be dismissed without clearing boonPending — and a later
+     closeSheets() would then fire a second advance on top of the first,
+     starting two battles for one cleared round. */
+  if(battle && !battle.over) return;
+  const mods=endlessRun.mods||[];
+  const wk=endlessRun.weekly;
+  /* Hardcore stops holding the bosses back and starts the escalation curve at
+     round 5, so the very first clash is already what round 5 would have been. */
+  const hard = mods.includes("hardcore");
+  const drawRound = hard ? endlessRun.round+4 : endlessRun.round;
+  // the weekly draws from its fixed plan; endless draws at random
+  const idx = wk ? wk.plan.stages[endlessRun.round-1]
+                 : (p=>p[Math.floor(Math.random()*p.length)])(endlessPool(drawRound));
+  announce(wk ? ("Weekly Gauntlet, clash "+endlessRun.round+" of "+WEEKLY_LENGTH+".")
+              : ("Endless round "+endlessRun.round+"."));
+  startBattle(idx, { __scened:true, endless:{
+    round:endlessRun.round, scaleRound:drawRound, boons:endlessRun.boons, mods:mods,
+    weekly: wk ? wk.key : null } });
+}
+function endlessAdvance(won){
+  if(!endlessRun) return false;
+  const wk=endlessRun.weekly;
+  if(!won){
+    const r=endlessRun.round;
+    if(wk){
+      toast("Gauntlet over at clash "+r+" of "+WEEKLY_LENGTH+". It resets on Monday.");
+    }else{
+      SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, r-1);
+      toast("Run over at round "+r+". Best: "+(SV.stats.bestEndless||0));
+    }
+    save();
+    endlessRun=null; stopRunClock();
+    return false;
+  }
+  SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods));
+  if(clockActive()) addRunClock(CLOCK_BONUS);
+  endlessRun.round++;
+  if(!wk) SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+  save();
+  /* The weekly has a finish line; endless does not. Falling through to the
+     normal result sheet is how the reward gets shown, so this returns false. */
+  if(wk && endlessRun.round > WEEKLY_LENGTH){
+    endlessRun=null; stopRunClock();
+    return false;                       // endBattle carries on and pays out
+  }
+  // Purist skips the picker outright rather than offering a choice it then ignores
+  if((endlessRun.round-1) % 3 === 0 && !(endlessRun.mods||[]).includes("noboons")) showBoonPick();
+  else setTimeout(nextEndlessRound, 500);
+  return true;
+}
+function showBoonPick(){
+  const offer=GCX2.offerBoons(Math.random,3);
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<h2>Round ${endlessRun.round-1} cleared</h2>
+    <p class="muted">Choose one upgrade. It stays with you for the rest of the run.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">` +
+    offer.map(b=>`<button class="btn" data-boon="${b.id}"><b>${b.name}</b><br>
+      <small class="muted">${b.desc}</small></button>`).join("") +
+    `<button class="btn small" data-close style="border-color:var(--soft);color:var(--soft)">Skip</button></div>`;
+  boonPending=true;
+  showOv($("#ov-result"));
+  announce("Round cleared. Choose an upgrade.");
+  sheet.querySelectorAll("[data-boon]").forEach(btn=>{
+    btn.onclick=()=>{ endlessRun.boons.push(btn.dataset.boon);
+      boonPending=false;
+      try{ GCX.sfx.unlock(); }catch(e){}
+      toast(btn.querySelector("b").textContent+" taken.");
+      closeSheets(); setTimeout(nextEndlessRound,320); };
+  });
+}
+
+/* ---------- unlockable themes ---------- */
+function renderThemes(){
+  const wins=(SV.stats&&SV.stats.wins)||0;
+  const cur=GCX2.currentTheme();
+  const host=$("#themelist"); if(!host) return;
+  host.innerHTML = GCX2.themesFor(wins).map(t=>{
+    // a swatch per palette, so a locked theme still shows what you are working towards
+    const sw = (t.vars ? ["--bg","--panel","--panel2"].map(k=>t.vars[k])
+                       : ["#0d1322","#151d33","#1c2742"])
+      .map(c=>`<i style="width:14px;height:14px;border-radius:4px;background:${c};
+                border:1px solid rgba(255,255,255,.18)"></i>`).join("");
+    const lock = t.unlocked ? "" : `<small class="muted">🔒 ${t.need} wins</small>`;
+    return `<button class="btn ${t.id===cur?"primary":""}" data-theme="${t.id}"
+      ${t.unlocked?"":"disabled"} ${t.id===cur?'aria-current="true"':""}
+      aria-label="${t.name}. ${t.desc} ${t.unlocked?(t.id===cur?"Selected.":"Unlocked."):("Locked, needs "+t.need+" wins.")}"
+      style="display:flex;align-items:center;gap:10px;text-align:left">
+      <span style="display:flex;gap:3px;flex:0 0 auto">${sw}</span>
+      <span style="flex:1 1 auto;min-width:0">
+        <b>${t.name}</b> ${lock}<br><small class="muted">${t.desc}</small>
+      </span>
+      ${t.id===cur?'<span aria-hidden="true">✓</span>':""}</button>`;
+  }).join("");
+  host.querySelectorAll("[data-theme]").forEach(b=>{
+    b.onclick=()=>{ const t=GCX2.applyTheme(b.dataset.theme);
+      try{GCX.sfx.click();}catch(e){}
+      announce(t.name+" theme applied.");
+      renderThemes(); };
+  });
+}
+
 $("#dailybtn").onclick=()=>{
   const today=localDateKey();
   const pool=GLITCHES.map((g,i)=>i).filter(i=>GLITCHES[i].trait!=="boss"); // never any boss
   const idx=pool[Engine.dailyIndex(today, pool.length)];
   startBattle(idx, {daily:true, dateStr:today});
 };
+$("#endlessbtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} showModPick(); };
+$("#weeklybtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} startWeekly(); };
 
 /* ----- stages ----- */
 function renderStages(){
@@ -1033,20 +1497,46 @@ const ACTS=[
   {k:"special",label:"Special",sub:"Costs 60 energy", cls:"special"}
 ];
 function startBattle(stageIdx, opts){
+  try{ GCX.unlockAudio(); GCX.breakCombo(); }catch(e){}
+  var __gcxStart = Date.now();
   const sceneKey = opts.__scened ? null : sceneForStage(stageIdx);
   if(sceneKey && !opts.daily && !(SV.seen&&SV.seen[sceneKey])){
     return playScene(sceneKey, ()=>startBattle(stageIdx, Object.assign({},opts,{__scened:true})));
   }
-  const g=GLITCHES[stageIdx];
+  let g=GLITCHES[stageIdx];
+  // Endless scales the ENEMY template before mkGlitch, so Engine's rules and
+  // the player's cards are untouched — only the numbers going in change.
+  if(opts.endless && window.GCX2){
+    g = GCX2.scaleGlitch(g, opts.endless.scaleRound || opts.endless.round);
+    // Sudden Death raises the enemy's attack; the player half is applied below
+    if((opts.endless.mods||[]).includes("swift")) g = Object.assign({}, g, {atk:Math.round(g.atk*1.40)});
+  }
   const bonus=Engine.harmonyBonus(SV.team.map(id=>CARD_BY_ID[id].shape));
   battle={
     stageIdx, glitch:Engine.mkGlitch(g), daily:!!opts.daily, dateStr:opts.dateStr||"",
+    endless: opts.endless||null,
     team:SV.team.map(id=>Engine.mkFighter(CARD_BY_ID[id], bonus, dupBoost(id))),
     active:0, turn:1, over:false, dmgTaken:0, usedClash:false, bonus,
     glyphs:{R:0,M:0,S:0,B:0}, arena:ARENAS[0], clashSkill:0.5,
     tut:(stageIdx===0 && !opts.daily && !SV.tutorialDone) ? 1 : 0
   };
-  $("#stagechip").textContent=(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · ")+g.name;
+  if(opts.endless && window.GCX2){
+    GCX2.applyBoons(battle.team, opts.endless.boons);
+    const mods = opts.endless.mods||[];
+    /* Both of these adjust the fighters' own numbers, exactly the way a boon
+       does. Engine still resolves the turn by the same rules. */
+    if(mods.includes("swift"))   battle.team.forEach(f=>{ f.atk=Math.round(f.atk*1.40); });
+    if(mods.includes("brittle")) battle.team.forEach(f=>{
+      f.maxhp=Math.max(1,Math.round(f.maxhp/1.25)); f.hp=Math.min(f.hp,f.maxhp); });
+  }
+  const modTag = (battle.endless && (battle.endless.mods||[]).length)
+    ? " · "+battle.endless.mods.map(id=>modById(id).name).join(" + ") : "";
+  const where = battle.endless
+    ? (battle.endless.weekly
+        ? "Weekly · Clash "+battle.endless.round+" of "+WEEKLY_LENGTH+modTag+" · "
+        : "Endless · Round "+battle.endless.round+modTag+" · ")
+    : (battle.daily ? "Daily · " : "Stage "+(stageIdx+1)+" · ");
+  $("#stagechip").textContent = where+g.name;
   logSet(`<b>${g.name}</b> appears! ${g.line}`);
   announce(g.name+" appears.");
   go("battle"); renderBattle();
@@ -1241,9 +1731,9 @@ function renderGlyphs(){
   ["R","M","S","B"].forEach(s=>{
     const n=battle.glyphs[s]||0;
     const d=document.createElement("span");
-    d.className="gb"; d.style.setProperty("--gc",SHAPES[s].hex);
+    d.className="gb"; d.style.setProperty("--gc",shapeHex(s));
     d.setAttribute("aria-label",`${SHAPES[s].name} charge ${n} of 4`);
-    d.innerHTML=`<b style="color:${SHAPES[s].hex}">${SHAPES[s].name[0]}</b>`+
+    d.innerHTML=`<b style="color:${shapeHex(s)}">${SHAPES[s].name[0]}</b>`+
       [0,1,2,3].map(i=>`<i class="${i<n?"on":""}"></i>`).join("");
     gb.appendChild(d);
   });
@@ -1344,6 +1834,463 @@ function sceneForStage(idx){ return ({0:"s1",4:"s5",9:"s10",12:"s13",14:"s15"})[
 
 
 /* ================= v2: PARTICLE ENGINE (pooled, single rAF) ================= */
+/* =====================================================================
+   GLITCH CLASH — EXTRAS  (GCX:BEGIN)
+
+   Additive layer. It does not touch Engine, the card data, the damage
+   maths or the AI, so battle balance is exactly as it was. It adds the
+   things the game did not have: sound (there was none at all), a combo
+   chain, sparks, a lethal-blow freeze, reality glitches, achievements,
+   statistics, and a CRT look.
+
+   Everything obeys the existing Calm Mode and prefers-reduced-motion:
+   glitches stop distorting, sparks thin out, the freeze is skipped, and
+   the CRT overlay hides. Nothing that carries information is effect-only —
+   every glitch also announces itself in text.
+   ===================================================================== */
+const GCX = (()=>{
+  "use strict";
+  const calm = ()=> document.body.classList.contains("calm")
+                 || document.body.classList.contains("reduce-motion");
+
+  /* ---------------- audio: fully synthesised, no files ---------------- */
+  const A = { ctx:null, master:null, muted:false };
+  try{ A.muted = localStorage.getItem("gc_muted")==="1"; }catch(e){}
+  function ac(){
+    if(A.ctx){ if(A.ctx.state==="suspended") A.ctx.resume(); return A.ctx; }
+    const C = window.AudioContext||window.webkitAudioContext; if(!C) return null;
+    A.ctx = new C();
+    A.master = A.ctx.createGain();
+    A.master.gain.value = A.muted?0:0.75;
+    A.master.connect(A.ctx.destination);
+    return A.ctx;
+  }
+  function tone(f,dur,type,vol,sweep){
+    const c=ac(); if(!c) return;
+    const t=c.currentTime, o=c.createOscillator(), g=c.createGain();
+    o.type=type||"sine"; o.frequency.setValueAtTime(f,t);
+    if(sweep) o.frequency.exponentialRampToValueAtTime(Math.max(20,sweep),t+dur);
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||.3,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(A.master); o.start(t); o.stop(t+dur+.02);
+  }
+  function noise(dur,freq,q,vol){
+    const c=ac(); if(!c) return;
+    const t=c.currentTime, n=Math.floor(c.sampleRate*Math.max(.05,dur));
+    const b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+    const s=c.createBufferSource(); s.buffer=b;
+    const f=c.createBiquadFilter(); f.type="bandpass"; f.frequency.value=freq; f.Q.value=q||1;
+    const g=c.createGain(); g.gain.setValueAtTime(vol||.3,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    s.connect(f); f.connect(g); g.connect(A.master); s.start(t); s.stop(t+dur+.02);
+  }
+  const SFX = {
+    hit(d){ noise(.05,900+d*22,1.6,.16); tone(180+d*4,.10,"square",.20,70); },
+    crit(d){ noise(.07,1500,1.2,.24); tone(320,.16,"sawtooth",.24,90);
+             setTimeout(()=>tone(640,.12,"square",.16),60); },
+    taken(d){ noise(.09,320,.9,.22); tone(120,.14,"sine",.24,50); },
+    guard(){ tone(300,.14,"triangle",.16,420); },
+    heal(){ tone(520,.14,"sine",.18); setTimeout(()=>tone(780,.20,"sine",.16),90); },
+    corrupt(){ noise(.30,240,.5,.22); tone(90,.30,"sawtooth",.18,40); },
+    glitch(){ noise(.16,2600,.4,.14); tone(1200,.07,"square",.10,300); },
+    boss(){ tone(70,.9,"sawtooth",.28,45); noise(.7,320,.4,.16);
+            setTimeout(()=>tone(110,.7,"square",.18,60),160); },
+    combo(n){ tone(420+Math.min(n,10)*70,.11,"triangle",.18); },
+    win(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.24,"triangle",.20),i*110)); },
+    lose(){ [392,330,262,196].forEach((f,i)=>setTimeout(()=>tone(f,.30,"sine",.20),i*150)); },
+    click(){ tone(760,.035,"square",.07); },
+    unlock(){ [659,880,1175].forEach((f,i)=>setTimeout(()=>tone(f,.22,"triangle",.20),i*90)); }
+  };
+  function setMuted(m){
+    A.muted=m; try{ localStorage.setItem("gc_muted",m?"1":"0"); }catch(e){}
+    if(A.master){ const t=A.ctx.currentTime;
+      A.master.gain.cancelScheduledValues(t);
+      A.master.gain.setValueAtTime(A.master.gain.value,t);
+      A.master.gain.linearRampToValueAtTime(m?0:0.75,t+.08); }   // ramp, never a click
+  }
+
+  /* ---------------- sparks: one pooled canvas ---------------- */
+  let cv=null, cx=null, parts=[], raf=0;
+  function ensureCanvas(){
+    if(cv) return;
+    cv=document.createElement("canvas");
+    cv.id="gcx-spark";
+    cv.setAttribute("aria-hidden","true");
+    cv.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60";
+    document.body.appendChild(cv);
+    cx=cv.getContext("2d");
+    sizeCanvas(); addEventListener("resize",sizeCanvas);
+  }
+  function sizeCanvas(){
+    if(!cv) return;
+    const r=Math.min(devicePixelRatio||1,2);
+    cv.width=innerWidth*r; cv.height=innerHeight*r;
+    cx.setTransform(r,0,0,r,0,0);
+  }
+  function sparkAt(sel,n,hue){
+    ensureCanvas();
+    const host=document.querySelector(sel+" .card")||document.querySelector(sel);
+    if(!host) return;
+    const b=host.getBoundingClientRect();
+    const x=b.left+b.width/2, y=b.top+b.height/2;
+    const count = calm()? Math.min(n,4) : n;
+    for(let i=0;i<count;i++){
+      const a=Math.random()*Math.PI*2, s=1.5+Math.random()*5.5;
+      parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.2,l:1,hue:hue||190});
+    }
+    if(!raf) raf=requestAnimationFrame(step);
+  }
+  function step(){
+    raf=0;
+    if(!cx) return;
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    parts=parts.filter(p=>p.l>0);
+    parts.forEach(p=>{
+      p.l-=.035; p.vy+=.22; p.x+=p.vx; p.y+=p.vy;
+      cx.globalAlpha=Math.max(0,p.l);
+      cx.fillStyle="hsl("+p.hue+",90%,"+(55+p.l*25)+"%)";
+      cx.fillRect(p.x,p.y,2.6,2.6);
+    });
+    cx.globalAlpha=1;
+    if(parts.length) raf=requestAnimationFrame(step);
+    else cx.clearRect(0,0,innerWidth,innerHeight);
+  }
+
+  /* ---------------- reality glitches ----------------
+     Cosmetic only. They never alter damage, energy or AI — the game is
+     already hard enough without lying to the player about the board. */
+  const GLITCH_FX = [
+    {id:"invert",   name:"COLOUR INVERSION",  msg:"Palette desynchronised."},
+    {id:"tear",     name:"SCREEN TEARING",    msg:"Frame buffer torn."},
+    {id:"corruptpx",name:"PIXEL CORRUPTION",  msg:"Texture memory degraded."},
+    {id:"lag",      name:"FAKE LAG",          msg:"Latency spike detected."},
+    {id:"hud",      name:"HUD CORRUPTION",    msg:"Interface data unreadable."},
+    {id:"flip",     name:"GRAVITY SHIFT",     msg:"Orientation vector inverted."},
+    {id:"slowmo",   name:"TIME DILATION",     msg:"Clock drift. Reality unstable..."}
+  ];
+  let glitchTimer=0;
+  function realityGlitch(force){
+    if(calm()) return null;                       // calm mode never distorts
+    const g = force || GLITCH_FX[Math.floor(Math.random()*GLITCH_FX.length)];
+    SFX.glitch();
+    const b=document.createElement("div");
+    b.className="gcx-sys"; b.setAttribute("aria-hidden","true");
+    b.innerHTML='<span class="gcx-err">SYSTEM ERROR</span><span class="gcx-msg">'+g.msg+'</span>';
+    document.body.appendChild(b);
+    document.body.classList.add("gcx-"+g.id);
+    clearTimeout(glitchTimer);
+    const dur = g.id==="lag"?900:1500;
+    glitchTimer=setTimeout(()=>{
+      document.body.classList.remove("gcx-"+g.id);
+      b.remove();
+    },dur);
+    return g;                                     // caller announces it in text
+  }
+
+  /* ---------------- combo ---------------- */
+  let combo=0, best=0;
+  function bump(){
+    combo++; if(combo>best) best=combo;
+    if(combo>=2){
+      SFX.combo(combo);
+      const el=document.createElement("div");
+      el.className="gcx-combo"; el.setAttribute("aria-hidden","true");
+      el.textContent=combo+"× CHAIN";
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),1100);
+    }
+    return combo;
+  }
+  function breakCombo(){ combo=0; }
+
+  /* ---------------- lethal-blow freeze ---------------- */
+  function freeze(ms){
+    if(calm()) return;
+    document.body.classList.add("gcx-freeze");
+    setTimeout(()=>document.body.classList.remove("gcx-freeze"), ms||420);
+  }
+
+  /* ---------------- achievements + stats ---------------- */
+  const ACH = [
+    {id:"first",   name:"First Blood",     desc:"Win your first clash.",           test:s=>s.stats.wins>=1},
+    {id:"ten",     name:"Ten Down",        desc:"Win ten clashes.",                test:s=>s.stats.wins>=10},
+    {id:"combo5",  name:"Chain Reaction",  desc:"Land a 5× chain.",                test:s=>(s.stats.bestCombo||0)>=5},
+    {id:"combo10", name:"Combo Master",    desc:"Land a 10× chain.",               test:s=>(s.stats.bestCombo||0)>=10},
+    {id:"nohit",   name:"Untouchable",     desc:"Win a clash without taking damage.",test:s=>(s.stats.nohit||0)>=1},
+    {id:"boss1",   name:"Giant Killer",    desc:"Defeat a boss.",                  test:s=>(s.stats.bosses||0)>=1},
+    {id:"boss3",   name:"Corruption Purge",desc:"Defeat three bosses.",            test:s=>(s.stats.bosses||0)>=3},
+    {id:"glitched",name:"Reality Unstable",desc:"Survive twenty reality glitches.",test:s=>(s.stats.glitches||0)>=20},
+    {id:"collect", name:"Archivist",       desc:"Own twelve different cards.",     test:s=>(s.owned||[]).length>=12},
+    {id:"clear15", name:"The Deep Static", desc:"Clear every stage.",              test:s=>(s.cleared||[]).length>=15}
+  ];
+  function checkAch(SV,onUnlock){
+    SV.ach = SV.ach||{};
+    const got=[];
+    ACH.forEach(a=>{ if(!SV.ach[a.id]){ try{ if(a.test(SV)){ SV.ach[a.id]=1; got.push(a); } }catch(e){} } });
+    if(got.length){ SFX.unlock(); got.forEach(a=>onUnlock&&onUnlock(a)); }
+    return got;
+  }
+
+  /* ---------------- CRT + boot ---------------- */
+  function setCRT(on){
+    document.body.classList.toggle("gcx-crt",!!on);
+    try{ localStorage.setItem("gc_crt",on?"1":"0"); }catch(e){}
+  }
+  function crtOn(){ try{ return localStorage.getItem("gc_crt")==="1"; }catch(e){ return false; } }
+
+  /* ---------------- menu music ----------------
+     A slow four-chord pad, synthesised like everything else here — no files,
+     nothing to download. It hangs off the same master gain as the SFX, so the
+     existing mute switch covers it and there is only ever one volume to reason
+     about.
+
+     Off by default and deliberately so: autoplay is blocked without a gesture,
+     and a loop under a game played in two-minute bursts is muted more often
+     than it is enjoyed. It also stops the moment a battle starts — it is menu
+     music, not a soundtrack. Calm Mode silences it outright. */
+  const CHORDS = [            // A minor, i - VI - III - VII, one every 8 seconds
+    [220.00, 261.63, 329.63],
+    [174.61, 220.00, 261.63],
+    [261.63, 329.63, 392.00],
+    [196.00, 246.94, 293.66]
+  ];
+  const M = { on:false, nodes:[], gain:null, filt:null, lfo:null, timer:0, step:0 };
+  try{ M.on = localStorage.getItem("gc_music")==="1"; }catch(e){}
+  function musicWanted(){ return M.on && !calm(); }
+  function buildMusic(){
+    const c=ac(); if(!c || M.gain) return;
+    M.gain=c.createGain(); M.gain.gain.value=0;
+    M.filt=c.createBiquadFilter(); M.filt.type="lowpass";
+    M.filt.frequency.value=900; M.filt.Q.value=0.6;
+    M.filt.connect(M.gain); M.gain.connect(A.master);
+    // a slow sweep on the filter so the pad breathes instead of sitting still
+    M.lfo=c.createOscillator(); M.lfo.type="sine"; M.lfo.frequency.value=0.05;
+    const lg=c.createGain(); lg.gain.value=320;
+    M.lfo.connect(lg); lg.connect(M.filt.frequency); M.lfo.start();
+  }
+  function voiceChord(freqs){
+    const c=ac(); if(!c) return;
+    M.nodes.forEach(n=>{ try{ n.g.gain.cancelScheduledValues(c.currentTime);
+      n.g.gain.setValueAtTime(n.g.gain.value,c.currentTime);
+      n.g.gain.linearRampToValueAtTime(0.0001,c.currentTime+2.4);
+      n.o.stop(c.currentTime+2.6); }catch(e){} });
+    M.nodes=[];
+    freqs.forEach((f,i)=>{
+      [0,-4].forEach(det=>{                    // two slightly detuned voices per note
+        const o=c.createOscillator(), g=c.createGain();
+        o.type = i===0 ? "triangle" : "sine";
+        o.frequency.value=f; o.detune.value=det;
+        g.gain.setValueAtTime(0.0001,c.currentTime);
+        g.gain.linearRampToValueAtTime(0.055,c.currentTime+2.2);
+        o.connect(g); g.connect(M.filt); o.start();
+        M.nodes.push({o,g});
+      });
+    });
+  }
+  function musicStart(){
+    if(!musicWanted() || M.timer) return;
+    const c=ac(); if(!c) return;                 // no gesture yet: try again later
+    buildMusic();
+    M.gain.gain.cancelScheduledValues(c.currentTime);
+    M.gain.gain.setValueAtTime(M.gain.gain.value, c.currentTime);
+    M.gain.gain.linearRampToValueAtTime(0.5, c.currentTime+1.6);
+    voiceChord(CHORDS[M.step % CHORDS.length]); M.step++;
+    M.timer=setInterval(()=>{ voiceChord(CHORDS[M.step % CHORDS.length]); M.step++; }, 8000);
+  }
+  function musicStop(){
+    if(M.timer){ clearInterval(M.timer); M.timer=0; }
+    const c=A.ctx; if(!c || !M.gain) return;
+    M.gain.gain.cancelScheduledValues(c.currentTime);
+    M.gain.gain.setValueAtTime(M.gain.gain.value, c.currentTime);
+    M.gain.gain.linearRampToValueAtTime(0.0001, c.currentTime+1.2);   // fade, never a cut
+    setTimeout(()=>{ if(!M.timer) M.nodes.forEach(n=>{ try{ n.o.stop(); }catch(e){} }); M.nodes=[]; }, 1400);
+  }
+  function setMusic(on){
+    M.on=!!on; try{ localStorage.setItem("gc_music", on?"1":"0"); }catch(e){}
+    on ? musicStart() : musicStop();
+  }
+  function musicOn(){ return M.on; }
+  function musicPlaying(){ return !!M.timer; }
+  /* Diagnostics: the timer running is not proof of sound. These report the
+     live oscillator count and the pad's own gain, so a silent-but-ticking
+     pad is distinguishable from a working one. */
+  function musicVoices(){ return M.nodes.length; }
+  function musicGain(){ return M.gain ? M.gain.gain.value : 0; }
+
+  function init(){
+    ensureCanvas();
+    if(crtOn()) document.body.classList.add("gcx-crt");
+  try{ if(window.GCX2) GCX2.applyTheme(GCX2.currentTheme()); }catch(e){}
+    /* The audio context may only be created inside a gesture, so the pad cannot
+       start on load however much the setting wants it to. The first tap builds
+       the context and then starts it — which is also why this listener is not
+       {once:true}: a tap that lands while the pad is off still needs to arm it
+       if the player turns it on later. */
+    const unlock=()=>{ ac(); if(musicWanted()) musicStart(); };
+    document.addEventListener("pointerdown",unlock,{once:false});
+  }
+
+  return { init, sfx:SFX, setMuted, isMuted:()=>A.muted, unlockAudio:ac,
+           spark:sparkAt, glitch:realityGlitch, GLITCH_FX,
+           combo:bump, breakCombo, comboNow:()=>combo, bestCombo:()=>best,
+           freeze, ACH, checkAch, setCRT, crtOn, calm,
+           setMusic, musicOn, musicPlaying, musicStart, musicStop, musicVoices, musicGain };
+})();
+/* GCX:END */
+
+/* ---------------- GCX2: Endless run, boons, unlockable themes ----------------
+   Still additive. Boons are applied to the fighter objects that mkFighter has
+   already produced, so Engine's damage maths is untouched — a boon changes the
+   numbers going in, never the rules. */
+const GCX2 = (()=>{
+  "use strict";
+
+  /* ---- unlockable palettes ----
+     A theme repaints the ARENA CHROME only — background and panel fills. It
+     deliberately leaves --ring/--emm/--star/--bastion alone, because those four
+     are the Keepers' identity colours: recolouring them would make the shape
+     you are reading on a card disagree with the colour beside it.
+
+     Every palette below is a dark fill against the unchanged light --ink, so
+     text contrast survives whichever one is picked. */
+  const THEMES = [
+    {id:"default", name:"Signal",      need:0,  desc:"The arena as it shipped."},
+    {id:"amber",   name:"Amber CRT",   need:3,  desc:"Warm phosphor burn.",
+      vars:{"--bg":"#150f08","--panel":"#241a0e","--panel2":"#33260f","--track":"#0c0803","--trackline":"#5a4520"}},
+    {id:"viridian",name:"Viridian",    need:8,  desc:"Cold terminal green.",
+      vars:{"--bg":"#07150f","--panel":"#0d2419","--panel2":"#123324","--track":"#040d09","--trackline":"#1f5a3f"}},
+    {id:"magenta", name:"Null Magenta",need:15, desc:"Corrupted memory bank.",
+      vars:{"--bg":"#170a16","--panel":"#261027","--panel2":"#361538","--track":"#0d050d","--trackline":"#5a2555"}},
+    {id:"mono",    name:"Monochrome",  need:25, desc:"Colour channel offline.",
+      vars:{"--bg":"#101012","--panel":"#1a1a1e","--panel2":"#26262c","--track":"#08080a","--trackline":"#3d3d46"}}
+  ];
+  function themesFor(wins){
+    return THEMES.map(t=>Object.assign({},t,{unlocked: wins >= t.need}));
+  }
+  /* Written to <html>, not <body>: the page background is painted from :root,
+     so a body-scoped override leaves the strip below a short screen unthemed. */
+  const root = ()=>document.documentElement;
+
+  /* ---- colourblind palette ----
+     The one place the four Keeper identity colours ARE allowed to change,
+     because here that is the whole point. Shape glyph, name and role are
+     already shown alongside every colour, so this is a second cue made
+     sharper rather than the only cue.
+
+     Not picked by eye. Each candidate set was run through a Viénot–Brettel
+     dichromat simulation and scored on its worst pairwise CIELAB distance
+     across normal, deuteranopic, protanopic and tritanopic vision. The
+     shipped palette's worst case is ΔE 15.9 (teal and blue collapse into
+     each other under tritanopia); this one's is ΔE 40.8. Every swatch also
+     clears 4.5:1 against the panel fill. */
+  const CB = { "--ring":"#EE4687", "--emm":"#09FDFA", "--star":"#D6F438", "--bastion":"#C656EA" };
+  const CB_HEX = { R:CB["--ring"], M:CB["--emm"], S:CB["--star"], B:CB["--bastion"] };
+  function setColourblind(on){
+    if(on) Object.keys(CB).forEach(k=>root().style.setProperty(k,CB[k]));
+    else   Object.keys(CB).forEach(k=>root().style.removeProperty(k));
+    document.body.classList.toggle("cb", !!on);
+  }
+  function cbHex(shape){
+    return document.body.classList.contains("cb") ? (CB_HEX[shape]||null) : null;
+  }
+  function clearThemeVars(){
+    THEMES.forEach(x=>{ if(x.vars) Object.keys(x.vars).forEach(k=>{
+      root().style.removeProperty(k); document.body.style.removeProperty(k); }); });
+  }
+  function applyTheme(id){
+    const t = THEMES.find(x=>x.id===id) || THEMES[0];
+    clearThemeVars();
+    /* High Contrast wins outright. Its rule sets the same variables on <body>,
+       which is nearer the content than <html>, but standing down entirely is
+       clearer than relying on that. The choice is still saved either way. */
+    const hc = document.body.classList.contains("hc");
+    if(t.vars && !hc) Object.keys(t.vars).forEach(k=>root().style.setProperty(k,t.vars[k]));
+    try{ localStorage.setItem("gc_theme", t.id); }catch(e){}
+    return t;
+  }
+  function currentTheme(){ try{ return localStorage.getItem("gc_theme")||"default"; }catch(e){ return "default"; } }
+
+  /* ---- boons. Chosen between Endless rounds, applied at battle start. ---- */
+  const BOONS = [
+    {id:"edge",    name:"Sharpened Edge", desc:"+15% attack.",          apply:f=>{ f.atk=Math.round(f.atk*1.15); }},
+    {id:"plate",   name:"Hardened Plate", desc:"+15% defence.",         apply:f=>{ f.def=Math.round(f.def*1.15)+1; }},
+    {id:"vital",   name:"Extra Vitals",   desc:"+20 maximum HP.",       apply:f=>{ f.maxhp+=20; f.hp+=20; }},
+    {id:"cell",    name:"Spare Cell",     desc:"Start each clash with +20 energy.", apply:f=>{ f.en=Math.min(100,(f.en||0)+20); }},
+    {id:"siphon",  name:"Siphon",         desc:"+8 HP at the start of every round.", apply:f=>{ f.siphon=(f.siphon||0)+8; }},
+    {id:"overclock",name:"Overclock",     desc:"+10% attack and +10 max HP.", apply:f=>{ f.atk=Math.round(f.atk*1.10); f.maxhp+=10; f.hp+=10; }}
+  ];
+  function offerBoons(rng, n){
+    const pool=BOONS.slice();
+    const out=[];
+    for(let i=0;i<(n||3) && pool.length;i++){
+      out.push(pool.splice(Math.floor((rng||Math.random)()*pool.length),1)[0]);
+    }
+    return out;
+  }
+  function applyBoons(team, held){
+    (held||[]).forEach(id=>{
+      const b=BOONS.find(x=>x.id===id);
+      if(b) team.forEach(f=>{ try{ b.apply(f); }catch(e){} });
+    });
+  }
+
+  /* ---- Endless run state ---- */
+  function newRun(){ return { round:1, boons:[], alive:true, score:0 }; }
+  /* Escalation is applied to the ENEMY template before mkGlitch, so the
+     player's cards and Engine's rules are untouched. */
+  function scaleGlitch(base, round){
+    const k = 1 + (round-1)*0.14;
+    return Object.assign({}, base, {
+      hp:  Math.round(base.hp  * k),
+      atk: Math.round(base.atk * (1 + (round-1)*0.09)),
+      def: Math.round(base.def * (1 + (round-1)*0.05))
+    });
+  }
+  function roundReward(round){ return 10 + round*5; }
+
+  return { THEMES, themesFor, applyTheme, currentTheme, clearThemeVars,
+           CB, CB_HEX, setColourblind, cbHex,
+           BOONS, offerBoons, applyBoons,
+           newRun, scaleGlitch, roundReward };
+})();
+/* GCX2:END */
+
+try{
+  window.GCX = GCX;                       // debug + test handle
+  window.GCX2 = GCX2;
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",()=>GCX.init());
+  else GCX.init();
+  /* applySettings() runs during boot, before this const initialises, so its
+     call to these is swallowed by its own catch. Re-apply here, once GCX2
+     genuinely exists, before Home is first painted. */
+  GCX2.applyTheme(GCX2.currentTheme());
+  GCX2.setColourblind(!!(SV.settings && SV.settings.cb));
+}catch(e){}
+
+/* Sound and CRT are stored outside SV so they survive a save reset, and both
+   default to a state that respects Calm Mode. */
+(function(){
+  const host = $("#calmtoggle") && $("#calmtoggle").parentNode;
+  if(!host) return;
+  const mk=(id,label)=>{ const b=document.createElement("button");
+    b.className=$("#calmtoggle").className; b.id=id; b.textContent=label; host.appendChild(b); return b; };
+  const snd = mk("gcxsound","Sound: "+(GCX.isMuted()?"Off":"On"));
+  snd.onclick=()=>{ GCX.unlockAudio(); GCX.setMuted(!GCX.isMuted());
+    snd.textContent="Sound: "+(GCX.isMuted()?"Off":"On"); if(!GCX.isMuted()) GCX.sfx.click(); };
+  const mus = mk("gcxmusic","Menu Music: "+(GCX.musicOn()?"On":"Off"));
+  mus.onclick=()=>{ GCX.unlockAudio(); const on=!GCX.musicOn(); GCX.setMusic(on);
+    mus.textContent="Menu Music: "+(on?"On":"Off"); GCX.sfx.click();
+    // switching it on from inside a battle arms it for when you come back out
+    if(on && $("#scr-battle.active")) toast("Menu music on — it plays outside battles.");
+    announce("Menu music "+(on?"on":"off")+".");
+    if(on && !$("#scr-battle.active")) GCX.musicStart(); };
+  const crt = mk("gcxcrt","CRT Scanlines: "+(GCX.crtOn()?"On":"Off"));
+  crt.onclick=()=>{ const on=!GCX.crtOn(); GCX.setCRT(on);
+    crt.textContent="CRT Scanlines: "+(on?"On":"Off"); GCX.sfx.click(); };
+})();
+
 const FX = (()=>{
   const MAX=180; const pool=[]; let live=0, cv=null, cx=null, raf=0, dpr=1;
   for(let i=0;i<MAX;i++) pool.push({on:false,x:0,y:0,vx:0,vy:0,life:0,max:1,r:2,c:"#fff",g:0.06});
@@ -1416,6 +2363,9 @@ const FX = (()=>{
     }
   };
 })();
+/* Immediately after the module, not 1150 lines before it. No try/catch: if this
+   ever fails again it should be a visible error, not a silently dead layer. */
+FX.init();
 
 /* ================= v2: FOIL SHEEN (one delegated listener, rAF-throttled) ============ */
 (function foil(){
@@ -1440,6 +2390,16 @@ const FX = (()=>{
   },true);
 })();
 
+/* Test seam: lets the offline harness drive a real battle without clicking
+   through team selection. Read-only entry point; changes no game behaviour. */
+try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c);
+     window.__GC = ()=>battle; window.__GCsave = ()=>SV;
+     window.__GCplan = k=>weeklyPlan(k); window.__GCmod = id=>modById(id);
+     window.__GCglitches = ()=>GLITCHES.map(g=>({id:g.id,trait:g.trait}));
+     window.__GCclock = ()=>runClock ? {left:clockLeft(), paused:runClock.paused} : null;
+     window.__GCclockSet = ms=>{ if(runClock){ runClock.left=ms; runClock.deadline=Date.now()+ms; } };
+     window.__GCrun = ()=>endlessRun; window.__GCov = n=>showOv($("#ov-"+n));
+     window.__GCclose = ()=>closeSheets(); }catch(e){}
 function renderBattle(){
   const p=P(), e=battle.glitch;
   // arena banner
@@ -1565,6 +2525,14 @@ function doTurn(cmd){
       doTurn(cmd);
     });
   }
+  /* Siphon (an Endless boon) tops the active Keeper up at the top of the turn.
+     It is a heal on the fighter object, not a change to how Engine resolves the
+     turn — the damage maths below never sees it. */
+  if(p.siphon && !battle.over && p.hp>0 && p.hp<p.maxhp){
+    const before=p.hp;
+    p.hp=Math.min(p.maxhp, p.hp+p.siphon);
+    if(p.hp>before) popOn("#pf","+"+(p.hp-before),"heal");
+  }
   battle.arena = Engine.arenaFor(battle.stageIdx, battle.turn, rng);
   let pAct;
   if(cmd.swap!==undefined){
@@ -1600,30 +2568,50 @@ function doTurn(cmd){
     ev=evs;
     if(pAct!=="__swap") Engine.bankGlyph(battle, P().shape);
   battle.dmgTaken += Math.max(0,hpBefore-P().hp);
+  if(!battle.startedAt) battle.startedAt = Date.now();
   if(battle.tut && ["charge","strike","special"][battle.tut-1]===pAct){
     battle.tut++;
     if(battle.tut>3){ battle.tut=0; SV.tutorialDone=true; save(); toast("You've got it — the arena is yours. ✦"); }
+  }
+  // Reality glitches: cosmetic only, never touching damage, energy or AI.
+  // They fire on a minority of turns and always announce themselves in the log.
+  if(!battle.over && Math.random() < 0.16){
+    const gg = GCX.glitch();
+    if(gg){
+      battle.glitchCount = (battle.glitchCount||0)+1;
+      ev.push({t:"reality", name:gg.name, msg:gg.msg});
+    }
   }
   const clashEv=ev.find(x=>x.t==="clash");
   const narrate=()=>{
     let out=[];
     ev.forEach(x=>{
       if(x.t==="hit"&&x.who==="p"){ out.push(`${P().name} ${x.sp?`unleashes <b>${x.hybrid?"a hybrid move":P().special.name}</b>`:"strikes"} — <b>${x.d}</b> damage!`); popOn("#ef","-"+x.d,"");
-        FX.strike("#ef",x.d); FX.glitch("#ef"); if(x.sp) FX.shake(x.d); }
+        FX.strike("#ef",x.d); FX.glitch("#ef"); if(x.sp) FX.shake(x.d);
+        GCX.spark("#ef", x.sp?26:14, x.sp?48:190);
+        (x.sp||x.d>=18) ? GCX.sfx.crit(x.d) : GCX.sfx.hit(x.d);
+        const cmb=GCX.combo(); if(cmb>(battle.bestCombo||0)) battle.bestCombo=cmb;
+        battle.dmgDealt = (battle.dmgDealt||0) + x.d;
+        if(e.hp<=0){ GCX.freeze(460); GCX.spark("#ef",34,48); }   // lethal blow lands hard
+      }
       if(x.t==="hit"&&x.who==="e"){ out.push(`${e.name} ${x.sp?"fires a charged blast":"hits back"} — ${x.d} damage.`); popOn("#pf","-"+x.d,"");
-        FX.strike("#pf",x.d); FX.glitch("#pf"); FX.shake(x.d); Haptics.impact(x.d); }
+        FX.strike("#pf",x.d); FX.glitch("#pf"); FX.shake(x.d); Haptics.impact(x.d);
+        GCX.spark("#pf", 12, 350); GCX.sfx.taken(x.d); GCX.breakCombo(); }
       if(x.t==="miss") out.push(`${e.name} blinks aside — your strike misses!`);
-      if(x.t==="guard"&&x.who==="p"){ out.push(`You brace and steady your energy.`); FX.charge("#pf"); }
+      if(x.t==="guard"&&x.who==="p"){ out.push(`You brace and steady your energy.`); FX.charge("#pf"); GCX.sfx.guard(); }
       if(x.t==="guard"&&x.who==="e") out.push(`${e.name} hunkers down.`);
-      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); FX.heal("#pf"); }
+      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); FX.heal("#pf"); GCX.sfx.heal(); GCX.spark("#pf",10,140); }
       if(x.t==="fx"&&x.fx==="refund"){ out.push(`Momentum flows back — <b>+${x.v} energy</b>.`); popOn("#pf","+"+x.v+"⚡","en"); }
       if(x.t==="fx"&&x.fx==="shield") out.push(`A stone shield forms around you. 🛡`);
-      if(x.t==="corrupt"){ out.push(`⚠ <b>Corruption spreads into ${P().name}!</b>`); FX.corrupt("#pf"); FX.glitch("#pf"); Haptics.fail(); }
+      if(x.t==="corrupt"){ out.push(`⚠ <b>Corruption spreads into ${P().name}!</b>`); FX.corrupt("#pf"); FX.glitch("#pf"); Haptics.fail();
+        GCX.sfx.corrupt(); GCX.breakCombo(); }
+      if(x.t==="reality") out.push(`<b>⚠ ${x.name}</b> — ${x.msg} <i>The arena flickers, but the numbers hold.</i>`);
       if(x.t==="uncorrupt") out.push(`The corruption burns out. ${P().name} steadies.`);
       if(x.t==="purged") out.push(`${P().name} is busy purging — no action this turn.`);
       if(x.t==="decay"){ out.push(`Data Decay gnaws at the arena — ${x.v} HP each.`); }
       if(x.t==="eshield") out.push(`${e.name} raises a static shield.`);
       if(x.t==="revive") out.push(`⚠ ${e.name} flickers… and reforms at partial power!`);
+      if(x.t==="phase2"){ GCX.sfx.boss(); GCX.freeze(520); GCX.spark("#ef",40,300); }
       if(x.t==="phase2") out.push(x.reborn
         ? `⛈ <b>${e.name} shatters — but the fragments reform into its final phase!</b>`
         : `⚡ <b>${e.name} enters its second form!</b>`);
@@ -1676,13 +2664,133 @@ function showClash(ev, narrate){
 }
 $("#quitbtn").onclick=(()=>{ let arm=false; return ()=>{
   if(!arm){ arm=true; $("#quitbtn").textContent="Sure?"; setTimeout(()=>{arm=false;$("#quitbtn").textContent="Quit";},2500); return; }
+  /* Quitting ends an endless run — but it banks the rounds already cleared,
+     so walking away is not punished the way losing is. */
+  if(endlessRun){
+    SV.stats=SV.stats||{};
+    if(!endlessRun.weekly) SV.stats.bestEndless=Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+    endlessRun=null; boonPending=false; stopRunClock(); save();
+  }
   battle=null; $("#quitbtn").textContent="Quit"; go("home"); toast("No worries — the Glitch will wait.");
 };})();
 
 /* ----- results, packs, XP, stickers ----- */
+/* Extended statistics and the achievement wall. Both read only from SV, so an
+   older save simply shows zeroes rather than breaking. */
+function gcxStatsRows(){
+  const st=SV.stats||{};
+  const mins=Math.round((st.playMs||0)/60000);
+  return `
+    <div class="spread"><span>Longest chain</span><b>${st.bestCombo||0}\u00d7</b></div>
+    <div class="spread"><span>Damage dealt</span><b>${(st.dmgDealt||0).toLocaleString()}</b></div>
+    <div class="spread"><span>Bosses beaten</span><b>${st.bosses||0}</b></div>
+    <div class="spread"><span>Flawless wins</span><b>${st.nohit||0}</b></div>
+    <div class="spread"><span>Reality glitches survived</span><b>${st.glitches||0}</b></div>
+    <div class="spread"><span>Time in the arena</span><b>${mins} min</b></div>`;
+}
+/* ---- run-mode result sheets ----
+   Kept apart from the campaign result on purpose: no card pack, no stage
+   ticked off, no second win counted. Endless and the weekly already paid
+   their XP round by round. */
+function endlessResult(won, weeklyKey){
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center">
+      <h2>${won?"Clash won":"Run over"}</h2>
+      <p class="muted">${weeklyKey
+        ? "The Weekly Gauntlet resets on Monday. Same three clashes for everyone until then."
+        : "Every cleared round paid out as you went. Best round is on the Home screen."}</p>
+    </div>
+    <div class="panel"><div class="spread"><span>Total XP</span><b>${SV.xp}</b></div></div>
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
+}
+function weeklyComplete(weeklyKey){
+  const first = SV.weeklyDone !== weeklyKey;
+  let packHTML="";
+  if(first){
+    SV.weeklyDone = weeklyKey;
+    SV.xp += 60;
+    /* The one card pack a week that does not come from a campaign first clear.
+       Once per week is a reason to come back; once per run would be a farm. */
+    const pulls=Engine.packPull(SV.owned, rng);
+    packHTML=`<h3 style="margin-top:12px">Gauntlet cleared — card pack!</h3><div class="row" style="margin-top:8px">`;
+    pulls.forEach(id=>{
+      const c=CARD_BY_ID[id];
+      const isNew=!SV.owned.includes(id);
+      if(isNew) SV.owned.push(id); else SV.dups[id]=(SV.dups[id]||0)+1;
+      packHTML+=`<div class="mini owned" style="--shape:${SHAPES[c.shape].color};width:calc(50% - 4px)">
+        ${glyphSVG(c.shape)}<span><span class="m-name">${c.name}</span><br>
+        <span class="m-sub">${isNew?"NEW!":"Spark +2% (duplicate)"}</span></span></div>`;
+    });
+    packHTML+="</div>";
+    stick("daily");
+  }
+  save();
+  try{ GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc)); save(); }catch(e){}
+  announce("Weekly Gauntlet cleared.");
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center">
+      <h2 style="color:var(--harmony)">Weekly Gauntlet cleared 🏆</h2>
+      <p class="muted">Three clashes, one handicap, no second chances. ${
+        first?"":"You already collected this week's reward — that was a practice run."}</p>
+    </div>
+    <div class="panel"><div class="spread"><span>XP earned</span><b>+${first?60:0}</b></div></div>
+    ${packHTML}
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
+}
+function gcxAchPanel(){
+  const have=SV.ach||{};
+  const got=GCX.ACH.filter(a=>have[a.id]).length;
+  return `<div class="panel"><h3>Achievements ${got} / ${GCX.ACH.length}</h3>` +
+    GCX.ACH.map(a=>`<div class="spread" style="opacity:${have[a.id]?1:.45}">
+      <span>${have[a.id]?"\ud83c\udfc6":"\ud83d\udd12"} ${a.name}<br>
+      <small class="muted">${a.desc}</small></span></div>`).join("") + `</div>`;
+}
+
 function endBattle(won, timeout){
   battle.over=true;
   const g=GLITCHES[battle.stageIdx];
+  // extended statistics — additive, so an older save just starts from zero
+  SV.stats = SV.stats||{}; 
+  SV.stats.battles = (SV.stats.battles||0)+1;
+  SV.stats.bestCombo = Math.max(SV.stats.bestCombo||0, battle.bestCombo||0);
+  SV.stats.glitches = (SV.stats.glitches||0) + (battle.glitchCount||0);
+  SV.stats.dmgDealt = (SV.stats.dmgDealt||0) + (battle.dmgDealt||0);
+  SV.stats.playMs = (SV.stats.playMs||0) + (Date.now()-(battle.startedAt||Date.now()));
+  if(won){
+    if(battle.dmgTaken===0) SV.stats.nohit=(SV.stats.nohit||0)+1;
+    if(g && g.trait==="boss") SV.stats.bosses=(SV.stats.bosses||0)+1;
+  }
+  if(battle.endless){
+    /* An endless round resolves into the next round or ends the run. A cleared
+       round is a real win — it counts toward wins and achievements — but it
+       deliberately does NOT pull a card pack or mark a campaign stage cleared,
+       or the run would be an infinite card farm. XP comes from roundReward. */
+    if(won) SV.stats.wins++;
+    try{
+      GCX.breakCombo();
+      won ? GCX.sfx.win() : GCX.sfx.lose();
+      GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc));
+    }catch(e){}
+    save();
+    const wkKey = battle.endless.weekly;
+    const wasLast = wkKey && won && endlessRun && endlessRun.round >= WEEKLY_LENGTH;
+    if(endlessAdvance(won)) return;
+    /* Falling through to the generic block would count the win a second time
+       and, on a stage not yet cleared in the campaign, hand out a card pack and
+       tick it off the campaign. Neither is right for a run mode, so both the
+       finished gauntlet and the ended run resolve here and return. */
+    if(wasLast){ weeklyComplete(wkKey); return; }
+    endlessResult(won, wkKey);
+    return;
+  }
+  try{
+    GCX.breakCombo();
+    won ? GCX.sfx.win() : GCX.sfx.lose();
+    const got = GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc));
+    if(got.length) save();
+  }catch(e){}
   const sheet=$("#resultsheet");
   let html="";
   if(won){
@@ -1728,7 +2836,9 @@ function endBattle(won, timeout){
           <div class="spread"><span>Stickers earned</span><b>${Object.keys(SV.stickers).length}/${STICKERS.length}</b></div>
           <div class="spread"><span>Total victories</span><b>${SV.stats.wins}</b></div>
           <div class="spread"><span>Clash wins</span><b>${SV.stats.clashWins}</b></div>
+          ${gcxStatsRows()}
         </div>
+        ${gcxAchPanel()}
         ${xpRow}
         <p class="muted center">Static Storm will re-form one day. Until then — the collection won't complete itself. 🃏</p>
         <button class="btn primary" data-close data-go="home">Continue</button>`;

@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GROW Animation Framework — living reference</title>
+<link rel="stylesheet" href="grow-motion.css">
+<link rel="stylesheet" href="grow-anim.css">
+<link rel="stylesheet" href="grow-polish.css">
+<style>
+  :root { --g-focus: #3F7D6E; --g-hi: #D8A63B; }
+  body { font-family: system-ui, 'Segoe UI', sans-serif; margin: 0; background: #f6f8fa; color: #1f2937; }
+  header { background: linear-gradient(135deg, #3F7D6E, #4D82A0); color: #fff; padding: 26px 24px 20px; }
+  header h1 { margin: 0 0 4px; font-size: 1.7rem; }
+  header p { margin: 0; opacity: .92; font-size: .98rem; max-width: 70ch; line-height: 1.5; }
+  main { max-width: 1080px; margin: 0 auto; padding: 20px 16px 60px; }
+  section { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; margin: 16px 0; }
+  h2 { margin: 0 0 4px; font-size: 1.25rem; color: #0f172a; }
+  h2 .ph { font-size: .7rem; background: #3F7D6E; color: #fff; padding: 2px 9px; border-radius: 999px; vertical-align: middle; margin-right: 8px; letter-spacing: .5px; }
+  .lead { margin: 0 0 12px; color: #475569; font-size: .95rem; line-height: 1.55; max-width: 78ch; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 12px 14px; border-radius: 10px; overflow-x: auto; font-size: .82rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 780px) { .grid2 { grid-template-columns: 1fr; } }
+  .assets { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 10px; }
+  .assets figure { margin: 0; border: 1px solid #e2e8f0; border-radius: 12px; padding: 6px; background: #fbfdff; text-align: center; cursor: pointer; transition: all .15s; }
+  .assets figure:hover { border-color: #3F7D6E; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  .assets figcaption { font-size: .78rem; font-weight: 800; color: #334155; padding-top: 4px; }
+  .assets svg { max-height: 110px; }
+  .subject-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .subject-tabs button { border: 2px solid #cbd5e1; background: #fff; border-radius: 999px; padding: 5px 14px; font-weight: 800; font-size: .85rem; cursor: pointer; color: #475569; }
+  .subject-tabs button.on { background: #3F7D6E; border-color: #3F7D6E; color: #fff; }
+  .def { background: #f8fafc; border-left: 5px solid var(--g-hi); border-radius: 10px; padding: 10px 14px; font-size: .95rem; margin: 6px 0; }
+  footer { text-align: center; color: #64748b; font-size: .85rem; padding: 20px; }
+</style>
+</head><body>
+
+<header>
+  <h1>GROW Animation Framework</h1>
+  <p>Every lesson in the GROW suite is composed from the same teaching behaviours, so pupils learn the language of the interface as well as the science. Open this page first — everything below is live, and every snippet is copy-paste ready.</p>
+</header>
+
+<main>
+
+<!-- ============================================== PHASE 1 -->
+<section>
+  <h2><span class="ph">PHASE 1</span>Motion language</h2>
+  <p class="lead">Ten movements. Each means exactly one thing, in every subject, all year. Pupils are never taught this table — they absorb it, because it never changes. Print it and put it on the wall in week one.</p>
+  <div class="g-key"></div>
+  <pre><code>&lt;link rel="stylesheet" href="grow-motion.css"&gt;
+&lt;!-- works with zero JavaScript: add the class, get the meaning --&gt;
+&lt;g data-part="spine" class="g-glow"&gt;…&lt;/g&gt;</code></pre>
+</section>
+
+<!-- ============================================== PHASE 2 -->
+<section>
+  <h2><span class="ph">PHASE 2</span>SVG science library</h2>
+  <p class="lead">Nothing is a picture; everything is layers. Every structure a teacher might want to draw, glow, fade, morph, trace or zoom on its own is its own layer. Click any asset to load it into the stage below.</p>
+  <div class="subject-tabs" id="tabs"></div>
+  <div class="assets" id="assets"></div>
+  <div class="g-stage g-lit" id="picked" data-grow-asset="skeleton" data-grow-script="@teach" style="margin-top:14px"></div>
+</section>
+
+<!-- ============================================== PHASE 3 -->
+<section>
+  <h2><span class="ph">PHASE 3</span>Progressive reveal engine</h2>
+  <p class="lead">Replaces “everything appears” with <strong>observe → notice → think → explain → label</strong>. The teacher presses ▶ Next and narrates the line the framework prints for them. Pupils cannot read ahead, because nothing has been written yet — the words arrive only once the picture has made the point.</p>
+  <div class="g-stage g-lit" data-grow-asset="circuit" data-grow-script="@teach" id="revealDemo"></div>
+  <div class="def" data-grow-step="6" data-grow-for="revealDemo"><strong>circuit</strong> — a complete loop that current can travel all the way round.</div>
+  <pre><code>&lt;div class="g-stage" data-grow-asset="circuit" data-grow-script="@teach" id="s1"&gt;&lt;/div&gt;
+&lt;div data-grow-step="6" data-grow-for="s1"&gt;&lt;b&gt;circuit&lt;/b&gt; — a complete loop…&lt;/div&gt;</code></pre>
+</section>
+
+<!-- ============================================== PHASE 4 -->
+<section>
+  <h2><span class="ph">PHASE 4</span>Interactive “We Do” framework</h2>
+  <p class="lead">Question → Prediction → Discussion → Animation → Explanation → Check. Each move unlocks the next, so the lesson pauses naturally and nobody skim-reads ahead of the class.</p>
+  <div class="g-wedo"
+       data-grow-q="Will the lamp light when I close the switch?"
+       data-grow-options="Yes|No|Only if the loop is complete"
+       data-grow-discuss="Turn and talk. You must give a REASON, not just an answer."
+       data-grow-asset="circuit" data-grow-script="@teach"
+       data-grow-explain="Current only flows when there is a complete loop from one end of the cell all the way back to the other."
+       data-grow-check="Draw one circuit that works and one that cannot, and label why."></div>
+</section>
+
+<!-- ============================================== PHASE 5 -->
+<section>
+  <h2><span class="ph">PHASE 5</span>Scientific process animations</h2>
+  <p class="lead">Instead of “heat transfers…”, pupils watch particles vibrate, energy spread and temperature rise. Every asset that describes a process carries an <code>@process</code> script.</p>
+  <div class="grid2">
+    <div class="g-stage g-lit" data-grow-asset="heating" data-grow-script="@process" data-grow-title="Physics · conduction"></div>
+    <div class="g-stage g-lit" data-grow-asset="digestion" data-grow-script="@process" data-grow-title="Biology · digestion"></div>
+  </div>
+</section>
+
+<!-- ============================================== PHASE 6 -->
+<section>
+  <h2><span class="ph">PHASE 6</span>Invisible science</h2>
+  <p class="lead">Pupils cannot see forces, fields, particles, energy, pressure or current — so show them. Switch a layer on and <em>nothing physical changes</em>: they simply see more. That experience is the whole point, and it is why the scene is drawn once and never redrawn.</p>
+  <div class="g-stage g-lit" data-grow-asset="forces" data-grow-overlays="force,friction,gravity,reaction,energy"
+       data-grow-script="@teach" data-grow-title="Push a box — then switch on what was always there"></div>
+  <pre><code>&lt;div class="g-stage" data-grow-asset="forces"
+     data-grow-overlays="force,friction,gravity,reaction,energy"&gt;&lt;/div&gt;</code></pre>
+</section>
+
+<!-- ============================================== PHASE 7 -->
+<section>
+  <h2><span class="ph">PHASE 7</span>Prediction mode</h2>
+  <p class="lead">Every major animation stops and asks. The class discusses, the teacher reveals, the animation continues. Instead of passive watching, pupils think before every reveal. Written as one verb in the script: <code>pause "What happens next?"</code></p>
+  <div class="g-stage g-lit" data-grow-asset="moonphases" data-grow-script="@teach"></div>
+</section>
+
+<!-- ============================================== PHASE 8 -->
+<section>
+  <h2><span class="ph">PHASE 8</span>Dual representation</h2>
+  <p class="lead">Real world on the left, scientific model on the right, driven by one script so they can never drift out of step. Pupils constantly connect the concrete to the abstract.</p>
+  <div class="g-stage g-lit" data-grow-dual="forces:REAL WORLD|states:SCIENTIFIC MODEL"
+       data-grow-script="observe: show ground#1, person#1, box#1 :: A box being pushed.
+notice: overlay force + show boxes#2, solid#2 + jiggle solid#2 :: And the same event, as a model.
+explain: overlay friction, energy :: Friction where they rub — and the particles gain energy.
+label: label pair#1 :: Two ways of seeing one thing."></div>
+</section>
+
+<!-- ============================================== PHASE 9 -->
+<section>
+  <h2><span class="ph">PHASE 9</span>Retrieval animations</h2>
+  <p class="lead">Not a quiz. The picture starts to build, stops, and waits for the class to say what comes next. It feels far more active than multiple choice, and it is faster to run.</p>
+  <div class="g-retrieve" data-grow-asset="foodchain" data-grow-script="@retrieve"
+       data-grow-stop="2" data-grow-cue="Say the next organism — out loud, before I click."></div>
+</section>
+
+<!-- ============================================== PHASE 10 -->
+<section>
+  <h2><span class="ph">PHASE 10</span>Misconception engine</h2>
+  <p class="lead">Rather than telling pupils they are wrong, the wrong idea is animated first — honestly, without sneering — and then the same scene is corrected in front of them. A pupil whose idea has never been taken seriously does not give it up.</p>
+  <div class="g-misc" data-grow-asset="forces"
+       data-grow-claim="Pushing a box? That’s one force. The push."
+       data-grow-wrong="@wrong" data-grow-right="@right"></div>
+</section>
+
+<!-- ============================================== PHASE 11 -->
+<section>
+  <h2><span class="ph">PHASE 11</span>Scientific storytelling</h2>
+  <p class="lead">Question → Investigation → Discovery → Explanation → Application, instead of definition → example → question. The spine sits at the top of the lesson and lights up as the lesson moves, so pupils always know where they are in the story.</p>
+  <div class="g-story" data-grow-at="2"
+       data-grow-story="Why do we slip on ice?|Test three surfaces|Rough grips, smooth slides|Friction between two surfaces|Choosing the right sole"></div>
+  <pre><code>&lt;div class="g-story" data-grow-story="Question|Investigation|Discovery|Explanation|Application"&gt;&lt;/div&gt;
+&lt;!-- each slide declares which beat it belongs to --&gt;
+&lt;div class="slide" data-grow-beat="2"&gt;…&lt;/div&gt;</code></pre>
+</section>
+
+<!-- ============================================== PHASE 12 -->
+<section>
+  <h2><span class="ph">PHASE 12</span>Premium polish</h2>
+  <p class="lead">Soft lighting, depth, parallax, particle fields, camera pans and micro-interactions — not because they are pretty, but because they keep attention exactly where the teacher wants it. Everything here is opt-in and switches itself off under <code>prefers-reduced-motion</code>.</p>
+  <div class="g-stage g-lit g-depth g-parallax" data-g-particles="dust:16"
+       data-grow-asset="solarsystem" data-grow-script="@teach"
+       data-grow-title="Lit, depth-layered, parallaxed, with an ambient particle field"></div>
+  <pre><code>&lt;div class="g-stage g-lit g-depth g-parallax" data-g-particles="dust:16"&gt;&lt;/div&gt;</code></pre>
+</section>
+
+<!-- ============================================== authoring -->
+<section>
+  <h2>Authoring a script</h2>
+  <p class="lead">One line = one press of ▶ Next. The optional beat prefix tells the teacher which of the five moves they are on.</p>
+  <pre><code>[beat] verb targets + verb targets :: what the teacher says out loud
+
+observe: show ground, person, box    :: Somebody pushing a box.
+think:   pause "How many forces?"    :: Hold up fingers.
+notice:  overlay force + pulse box   :: One. The push.
+notice:  overlay friction            :: And a second one, pushing back.
+explain: label push                  :: Four forces. They were always there.</code></pre>
+  <p class="lead"><strong>Verbs.</strong> The ten: <code>draw pop glow pulse fade morph flow shake bounce trace zoom</code>.
+  Supporting: <code>show hide unglow hi unhi unfade only unpulse untrace unzoom spot unspot label unlabel tick cross think unthink note wait</code>.
+  Teaching: <code>pause overlay unoverlay heat beat</code>.</p>
+  <p class="lead"><strong>Targets.</strong> Part names, comma-separated. <code>morph ice&gt;water</code> for a change.
+  <code>body#2</code> addresses the second panel of a rail or a dual stage.</p>
+</section>
+
+</main>
+
+<footer>GROW Animation Framework · every lesson built from the same teaching behaviours</footer>
+
+<script src="grow-svg.js"></script>
+<script src="grow-svg-bio.js"></script>
+<script src="grow-svg-bio-animals.js"></script>
+<script src="grow-svg-phy.js"></script>
+<script src="grow-svg-chem.js"></script>
+<script src="grow-anim.js"></script>
+<script src="grow-polish.js"></script>
+<script>
+/* the asset browser — reads whatever the libraries registered */
+(function () {
+  var SUBJECTS = ['biology', 'animals', 'physics', 'chemistry'];
+  var tabs = document.getElementById('tabs');
+  var wrap = document.getElementById('assets');
+  var stage = document.getElementById('picked');
+
+  function paint(subject) {
+    Array.prototype.forEach.call(tabs.children, function (b) {
+      b.classList.toggle('on', b.textContent.toLowerCase() === subject);
+    });
+    wrap.innerHTML = GrowSVG.list(subject).map(function (k) {
+      return '<figure data-a="' + k + '">' + GrowSVG.render(k) +
+        '<figcaption>' + GrowSVG.title(k) + '</figcaption></figure>';
+    }).join('');
+    Array.prototype.forEach.call(wrap.children, function (f) {
+      f.addEventListener('click', function () {
+        GrowAnim.load(stage, f.getAttribute('data-a'), 'teach');
+      });
+    });
+  }
+
+  tabs.innerHTML = SUBJECTS.map(function (s) {
+    return '<button type="button">' + s.charAt(0).toUpperCase() + s.slice(1) + '</button>';
+  }).join('');
+  Array.prototype.forEach.call(tabs.children, function (b) {
+    b.addEventListener('click', function () { paint(b.textContent.toLowerCase()); });
+  });
+  paint('biology');
+})();
+</script>
+</body></html>
