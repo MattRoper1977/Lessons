@@ -17,10 +17,14 @@ lesson drops close to zero.
 | File | What it is |
 |---|---|
 | `build-anim.css` | The motion primitives. Every animation the framework can do. |
-| `bio-svg.js` | The layered biology asset library (13 animals, each part animatable on its own). |
+| `bio-svg.js` | The core asset library — 13 layered animals — and the registry every other library plugs into. |
+| `body-svg.js` | Muscles and the moving skeleton (Week 4). |
+| `food-svg.js` | Food groups, the balanced plate, and what animals eat (Weeks 5–6). |
+| `chain-svg.js` | Producers, consumers and food chains (Week 7). |
 | `build-anim.js` | The engine: scripts, teacher-controlled stepping, prediction panels, comparison rails. |
 | `demo.html` | Living reference — every asset, every primitive, copy-paste snippets. **Open this first.** |
-| `inject.py` | Inlines the three files into a single-file lesson so it still works offline from a USB stick. |
+| `tools/preview.mjs` | Renders assets in a real browser to a PNG, so you can look at them while you draw. |
+| `inject.py` | Inlines the libraries into a single-file lesson so it still works offline from a USB stick. |
 
 ---
 
@@ -44,9 +48,10 @@ taught it — as long as it stays consistent across the whole curriculum.
 | Shake | `shake` | Not that one — a common mistake |
 | Three dots | `think` | We are waiting for **your** answer |
 | ✓ / ✖ | `tick` / `cross` | The answer lands |
+| Whole-state change | `pose` | This has changed into something else |
 
 Also available: `show` `hide` `unglow` `unhi` `undim` `unpulse` `unspot` `unzoom`
-`label` `unlabel` `unthink` `note` `wait`.
+`label` `unlabel` `unthink` `unpose` `note` `wait`.
 
 ---
 
@@ -57,11 +62,13 @@ Also available: `show` `hide` `unglow` `unhi` `undim` `unpulse` `unspot` `unzoom
 ```html
 <link rel="stylesheet" href="/build-anim/build-anim.css">
 <script src="/build-anim/bio-svg.js"></script>
+<script src="/build-anim/food-svg.js"></script>   <!-- whichever subject libraries -->
 <script src="/build-anim/build-anim.js"></script>
 ```
 
-For a lesson that must run offline, use `inject.py` instead (see below) — the
-three files get inlined between markers and the lesson stays a single file.
+`bio-svg.js` always comes first — the subject libraries register into it. For a lesson
+that must run offline, use `inject.py` instead (see below): the files get inlined
+between markers and the lesson stays a single file.
 
 ### 2. Drop in a stage
 
@@ -106,7 +113,34 @@ the definition confirms the idea only once the animation has made it.
 Tap an animal → three dots → take the class vote → press Next → the answer builds
 itself. Pupils cannot read ahead, because there is nothing to read.
 
-### 5. Comparison rail — pupils discover the shared feature
+`data-ba-cards` is the general form. A third field picks which of the asset's scripts to
+run, so one asset can answer several different questions, and `|` separates entries when
+a label contains a comma:
+
+```html
+<div class="ba-predict" data-ba-cards="
+  arm:Arm bending up:revealBend|arm:Arm straightening:revealStraight|
+  pullpush:Can a muscle push?:revealPush"></div>
+```
+
+### 5. `pose` — assets that change state
+
+Some subjects are *about* the change, not the parts: a muscle pair swapping jobs, a
+lever moving. `pose bend` sets `data-pose="bend"` on the stage, and the asset's own CSS
+does the rest. The framework transitions `transform` over 0.85s and switches it off
+under `prefers-reduced-motion`.
+
+```js
+css: '.ba-stage[data-pose="bend"] [data-part="forearm"]{transform:rotate(-72deg)}' +
+     '.ba-stage[data-pose="bend"] [data-part="biceps"]{transform:scale(.78,1.3)}',
+```
+
+```
+pose bend  :: I pull the top band. The arm comes up.
+pose straight :: Now the bottom one. The jobs swap.
+```
+
+### 6. Comparison rail — pupils discover the shared feature
 
 ```html
 <div class="ba-stage" data-ba-rail="human:Human, fish:Fish, snake:Snake, bird:Bird" data-ba-script="
@@ -120,6 +154,23 @@ itself. Pupils cannot read ahead, because there is nothing to read.
 ```
 
 `part#2` addresses the second animal along; a bare `part` addresses all of them.
+Separate rail entries with `|` when a caption contains a comma.
+
+---
+
+## Looking at an asset while you draw it
+
+Source that looks right is not the same as a shape that reads on a projector. Render it
+and look:
+
+```bash
+node build-anim/tools/preview.mjs --assets fish,crab --cols 2 --out /tmp/a.png
+node build-anim/tools/preview.mjs --assets arm --script teachBend --step 3 --out /tmp/b.png
+node build-anim/tools/preview.mjs --json     # every asset, its parts and its scripts
+node build-anim/tools/preview.mjs --dark --out /tmp/c.png
+```
+
+It exits 1 on a page error, so a broken asset fails loudly rather than rendering blank.
 
 ---
 
@@ -204,7 +255,25 @@ A lesson with no markers is skipped with a warning, never damaged.
 
 ## Adding a new asset
 
-Assets live in `bio-svg.js`. Copy an existing one and change the shapes:
+Small additions go in `bio-svg.js`. A whole new subject gets its own file that
+**registers into the same library**, so `data-ba-asset="plate"` works exactly like
+`"fish"`:
+
+```js
+(function (global) {
+  'use strict';
+  var H = global.BioSVG.helpers;      // g n vert spine ribs path shape stroke
+  var g = H.g, shape = H.shape, label = H.label;   // ell dot label nobone curve poly
+  var BONE = H.BONE, SHELL = H.SHELL, SOFT = H.SOFT, INK = H.INK;
+
+  global.BioSVG.register({ plate: { title: 'Balanced plate', alt: '…', svg: …, teach: … } });
+})(typeof window !== 'undefined' ? window : this);
+```
+
+Add the file to `BLOCKS` in `inject.py` with its own marker name, and give the lesson
+that marker. Libraries must load after `bio-svg.js`.
+
+Either way the asset itself looks like this:
 
 ```js
 A.newt = {

@@ -246,6 +246,10 @@
       el.textContent = a.text || a.targets.join(' ');
       host.appendChild(el);
     },
+    /* POSE — a whole composite change of state (a muscle pair swapping jobs,
+       a lever moving). The asset ships CSS keyed on [data-pose="name"]. */
+    pose: function (stage, a) { stage.setAttribute('data-pose', a.targets[0] || a.text || ''); },
+    unpose: function (stage) { stage.removeAttribute('data-pose'); },
     wait: function () { /* a beat with narration only — nothing moves */ }
   };
 
@@ -348,6 +352,7 @@
     $$('[data-label]', stage).forEach(function (e) { e.classList.remove('reveal-label'); });
     $$('.focus-circle,.ba-verdict,.think-delay', stage).forEach(function (e) { e.remove(); });
     stage.classList.remove('ba-thinking');
+    stage.removeAttribute('data-pose');
     VERBS.unzoom(stage);
     var notes = $('.ba-notes', stage); if (notes) notes.innerHTML = '';
     var say = $('.ba-say', stage); if (say) { say.textContent = ''; say.classList.remove('ba-said'); }
@@ -378,6 +383,9 @@
   function next(stage) {
     var st = stage._ba; if (!st) return false;
     if (st.i >= st.steps.length) return false;
+    /* The class has had its say — clear the waiting state however we got here
+       (stage button, slide Next, or the arrow keys). */
+    if (st.i === 0) VERBS.unthink(stage);
     step(stage, st.i);
     st.i++;
     paint(stage);
@@ -387,6 +395,7 @@
 
   function all(stage) {
     var st = stage._ba; if (!st) return;
+    VERBS.unthink(stage);
     while (st.i < st.steps.length) { step(stage, st.i); st.i++; }
     paint(stage);
     if (typeof stage._baDone === 'function') stage._baDone(stage);
@@ -421,10 +430,21 @@
 
   /* ============================================ "is this a vertebrate?" panel */
 
+  /* data-ba-cards / data-ba-animals: "asset:Label" per card, separated by | (or
+     by , when no label contains one). A third field names which of the asset's
+     scripts to run, so one asset can answer several different questions. */
   function buildPredict(host) {
-    var spec = (host.getAttribute('data-ba-animals') || '').split(',')
+    var raw = host.getAttribute('data-ba-cards') || host.getAttribute('data-ba-animals') || '';
+    var spec = raw.split(raw.indexOf('|') >= 0 ? '|' : ',')
       .map(function (s) { return s.trim(); }).filter(Boolean)
-      .map(function (s) { var p = s.split(':'); return { asset: p[0].trim(), name: (p[1] || '').trim() || p[0].trim() }; });
+      .map(function (s) {
+        var p = s.split(':');
+        return {
+          asset: p[0].trim(),
+          name: (p[1] || '').trim() || p[0].trim(),
+          script: (p[2] || '').trim() || 'reveal'
+        };
+      });
 
     var voteA = host.getAttribute('data-ba-vote-a') || '● Backbone (vertebrate)';
     var voteB = host.getAttribute('data-ba-vote-b') || '■ No backbone (invertebrate)';
@@ -447,6 +467,7 @@
       if (i == null || seen[i]) return;
       seen[i] = true; count++;
       $('.ba-count', host).textContent = count;
+      try { if (typeof global.gainXP === 'function') global.gainXP(); } catch (e) {}
       var card = $('.ba-pc[data-i="' + i + '"]', host);
       if (card) card.classList.add('ba-done');
     };
@@ -457,16 +478,12 @@
         host._baCur = i;
         $$('.ba-pc', host).forEach(function (c) { c.classList.remove('ba-current'); });
         card.classList.add('ba-current');
-        load(stage, spec[i].asset, 'reveal');
+        load(stage, spec[i].asset, spec[i].script);
         VERBS.think(stage, {});
         var say = $('.ba-say', stage);
         if (say) { say.textContent = spec[i].name + ' — vertebrate or invertebrate? Everybody decide. Then I press Next.'; restart(say, 'ba-said'); }
       });
     });
-
-    /* first click of Next after a card is chosen clears the thinking dots */
-    var nb = $('.ba-next', stage);
-    if (nb) nb.addEventListener('click', function () { VERBS.unthink(stage); }, true);
 
     host._baStage = stage;
     return stage;
@@ -523,7 +540,7 @@
   /* ================================================================ init */
 
   function init(root) {
-    $$('.ba-predict[data-ba-animals]', root || doc).forEach(function (h) { if (!h._baBuilt) { h._baBuilt = true; buildPredict(h); } });
+    $$('.ba-predict[data-ba-animals],.ba-predict[data-ba-cards]', root || doc).forEach(function (h) { if (!h._baBuilt) { h._baBuilt = true; buildPredict(h); } });
     $$('.ba-stage', root || doc).forEach(function (s) { if (!s._ba) build(s); });
     hookNav();
   }

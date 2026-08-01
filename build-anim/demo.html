@@ -45,6 +45,7 @@
   <tr><td>Shake</td><td><code>shake</code></td><td>Not that one — common mistake</td></tr>
   <tr><td>Three dots</td><td><code>think</code></td><td>We are waiting for YOUR answer</td></tr>
   <tr><td>✓ / ✖</td><td><code>tick</code> / <code>cross</code></td><td>The answer lands</td></tr>
+  <tr><td>Whole-state change</td><td><code>pose</code></td><td>This has changed into something else</td></tr>
 </table>
 
 <h2>2 · A teaching stage — teacher-controlled, one click at a time</h2>
@@ -74,11 +75,23 @@
 <p>One line = one click. <code>verb targets</code>, joined with <code>+</code> when several things happen together,
    then <code>::</code> and the sentence you say out loud.</p>
 
-<h2>5 · Asset library — every part animates on its own</h2>
+<h2>5 · Poseable assets — when the change IS the concept</h2>
+<p>Some subjects are about the change of state, not the parts. <code>pose bend</code> sets
+   <code>data-pose</code> on the stage and the asset's own CSS does the rest — one click, everything
+   moves together.</p>
+<div class="grid" id="pose-grid"></div>
+<pre>css: '.ba-stage[data-pose="bend"] [data-part="forearm"]{transform:rotate(-72deg)}'
+
+&lt;div class="ba-stage" data-ba-asset="arm" data-ba-script="
+  pose bend     :: I pull the top one. The arm comes up.
+  pose straight :: Now the bottom one. The jobs swap.
+"&gt;&lt;/div&gt;</pre>
+
+<h2>6 · Asset library — every part animates on its own</h2>
 <p id="asset-count"></p>
 <div class="grid" id="asset-grid"></div>
 
-<h2>6 · JavaScript helpers</h2>
+<h2>7 · JavaScript helpers</h2>
 <pre>drawSkeleton('#demo-fish')          // skull + ribs + pelvis + limbs, then vertebrae pop
 highlightBone('#demo-fish','spine') // glow + colour change
 traceBackbone('#demo-fish')         // dashes travel along the spine
@@ -94,6 +107,8 @@ BuildAnim.advanceActive()                  // used to hook ▶ Next into slide n
 </main>
 
 <script src="bio-svg.js"></script>
+<script src="body-svg.js"></script>
+<script src="food-svg.js"></script>
 <script src="build-anim.js"></script>
 <script>
 (function(){
@@ -101,14 +116,22 @@ BuildAnim.advanceActive()                  // used to hook ▶ Next into slide n
   var names=BioSVG.list();
   document.getElementById('asset-count').textContent=
     names.length+' layered assets — '+BioSVG.vertebrates().length+' vertebrates, '+
-    BioSVG.invertebrates().length+' invertebrates.';
-  grid.innerHTML=names.map(function(n){
-    var k=BioSVG.kind(n);
-    return '<div class="card"><span class="kind '+(k==='vertebrate'?'v':'i')+'">'+k+'</span>'+
+    BioSVG.invertebrates().length+' invertebrates, and '+
+    (names.length-BioSVG.vertebrates().length-BioSVG.invertebrates().length)+
+    ' from the muscle and nutrition libraries.';
+  function card(n){
+    var a=BioSVG.asset(n),k=a.kind;
+    return '<div class="card">'+
+      (k?'<span class="kind '+(k==='vertebrate'?'v':'i')+'">'+k+'</span>':'')+
       '<h3>'+BioSVG.title(n)+' &middot; <code>'+n+'</code></h3>'+
       '<div class="ba-stage ba-plain" data-ba-asset="'+n+'" data-ba-script="@teach"></div></div>';
-  }).join('');
-  BuildAnim.init(grid);
+  }
+  var poseable=names.filter(function(n){return !!BioSVG.asset(n).css});
+  var pg=document.getElementById('pose-grid');
+  pg.innerHTML=poseable.length?poseable.map(card).join('')
+    :'<p style="color:#64748b">No poseable assets loaded — open this page from the build-anim folder.</p>';
+  grid.innerHTML=names.filter(function(n){return poseable.indexOf(n)<0}).map(card).join('');
+  BuildAnim.init(pg); BuildAnim.init(grid);
 })();
 </script>
 </body></html>

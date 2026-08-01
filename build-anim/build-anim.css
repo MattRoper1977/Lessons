@@ -45,7 +45,8 @@
 .ba-canvas { position: relative; }
 .ba-svg { display: block; width: 100%; height: auto; max-height: 46vh; }
 .ba-stage[data-ba-frame="wide"] .ba-svg { max-height: 34vh; }
-.ba-stage[data-ba-frame="mini"] .ba-svg { max-height: 20vh; }
+.ba-stage[data-ba-frame="mini"] .ba-svg { max-height: 24vh; }
+.ba-stage[data-ba-frame="tall"] .ba-svg { max-height: 44vh; }
 
 /* the multi-animal comparison rail */
 .ba-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }
@@ -82,7 +83,11 @@
 
 /* ------------------------------------------------------- part visibility */
 .ba-stage [data-part].ba-hidden { opacity: 0; visibility: hidden; }
-.ba-stage [data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease; }
+.ba-stage [data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease,
+  transform .85s cubic-bezier(.4, 0, .2, 1); }
+/* POSE — assets ship their own [data-pose] rules; the framework only
+   guarantees the transition and a sane transform box. */
+.ba-stage [data-part][data-pivot] { transform-box: view-box; }
 .ba-fadein { animation: baFadeIn .5s ease-out both; }
 @keyframes baFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -226,4 +231,5 @@
   }
   .ba-zoom { transition: none; }
   .ba-stage [data-part] { transition: none; }
+  .ba-stage [data-part][data-pivot] { transition: none; }
 }

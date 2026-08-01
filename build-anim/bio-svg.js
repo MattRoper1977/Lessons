@@ -576,12 +576,28 @@
     var a = A[name];
     if (!a) return '<svg viewBox="0 0 400 300"><text x="200" y="150" text-anchor="middle" font-size="16" fill="#dc2626">no asset: ' + name + '</text></svg>';
     opts = opts || {};
-    return '<svg class="ba-svg" viewBox="0 0 400 300" role="img" aria-label="' + a.alt +
+    return '<svg class="ba-svg" data-asset="' + name + '" viewBox="0 0 400 300" role="img" aria-label="' + a.alt +
       '" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif">' +
+      (a.css ? '<style>' + a.css + '</style>' : '') +
       '<g class="ba-zoom">' + a.svg() + '</g></svg>';
   }
 
+  /* Other asset files (body-svg.js, food-svg.js, chain-svg.js …) register into
+     this same library, so data-ba-asset="plate" works exactly like "fish".
+     They build their shapes with the helpers exposed below. */
+  function register(assets) {
+    Object.keys(assets).forEach(function (k) { A[k] = assets[k]; });
+    return Object.keys(assets);
+  }
+
   global.BioSVG = {
+    register: register,
+    helpers: {
+      g: g, n: n, vert: vert, spine: spine, ribs: ribs, path: path, shape: shape,
+      stroke: stroke, ell: ell, dot: dot, label: label, nobone: nobone,
+      curve: curve, poly: poly,
+      BONE: BONE, SHELL: SHELL, SOFT: SOFT, INK: INK
+    },
     render: render,
     asset: function (name) { return A[name]; },
     kind: function (name) { return A[name] && A[name].kind; },

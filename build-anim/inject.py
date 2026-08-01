@@ -21,11 +21,16 @@ import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-# marker name -> source file
+# marker name -> source file.  Order matters: the extra asset libraries call
+# BioSVG.register(), so they must land after bio-svg.js.  A lesson only needs
+# markers for the libraries it actually uses; the rest are skipped.
 BLOCKS = [
-    ("CSS", "build-anim.css"),
-    ("BIO", "bio-svg.js"),
-    ("JS",  "build-anim.js"),
+    ("CSS",   "build-anim.css"),
+    ("BIO",   "bio-svg.js"),
+    ("BODY",  "body-svg.js"),
+    ("FOOD",  "food-svg.js"),
+    ("CHAIN", "chain-svg.js"),
+    ("JS",    "build-anim.js"),
 ]
 
 
@@ -52,7 +57,10 @@ def process(path, check_only):
 
     html, found_any = original, False
     for name, src in BLOCKS:
-        with open(os.path.join(HERE, src), encoding="utf-8") as fh:
+        path_ = os.path.join(HERE, src)
+        if not os.path.exists(path_):
+            continue
+        with open(path_, encoding="utf-8") as fh:
             body = fh.read()
         html, found = splice(html, name, body)
         found_any = found_any or found
