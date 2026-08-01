@@ -275,3 +275,18 @@ predicted before you ran it. The step build and reveal work, for instance,
 changed exactly **124 of 310** signatures — the Title, both I Do and the Lundy
 slide of every deck, and nothing else — matching the four components it touched.
 A number you cannot account for in advance is a bug, not a baseline to re-record.
+
+### One trap when you assert on opacity
+
+Reading `getComputedStyle(el).opacity` to prove something is not stranded
+invisible **does not work in the task that revealed it, and does not work after
+two `requestAnimationFrame`s either.** A freshly created CSS animation sits at
+`currentTime: 0` with `playState: "running"` until a real frame ticks, so the
+element reports its from-state — opacity 0 — even under
+`prefers-reduced-motion`, where the duration is 0.01 ms and it will be fully
+opaque the instant it starts.
+
+This cost a round of false positives: 93 of 186 viewport sweeps "failed" on a
+step that was fine, and the animation involved was `fadeInUp`, which the decks
+have always had. Wait ~80 ms of real time, or check `el.getAnimations()[0]
+.currentTime` before believing an opacity.
