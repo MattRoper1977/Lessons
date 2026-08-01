@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUILD Animation Framework — asset &amp; motion reference</title>
+<link rel="stylesheet" href="build-anim.css">
+<style>
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;background:#f8fafc;color:#1f2937}
+  header{background:#4E7A9B;color:#fff;padding:18px 24px}
+  header h1{margin:0 0 4px;font-size:1.5rem}
+  header p{margin:0;font-size:.95rem;opacity:.92}
+  main{padding:18px 24px 60px;max-width:1180px;margin:0 auto}
+  h2{border-bottom:2px solid #cbd5e1;padding-bottom:6px;margin-top:34px;font-size:1.2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  .card{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:10px 12px}
+  .card h3{margin:2px 0 6px;font-size:1rem}
+  .card .kind{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:5px}
+  .kind.v{background:#e6eff5;color:#4E7A9B}.kind.i{background:#f7ecdf;color:#C9803B}
+  code{background:#eef2f7;padding:1px 5px;border-radius:4px;font-size:.86rem}
+  pre{background:#0f172a;color:#e2e8f0;padding:12px 14px;border-radius:10px;overflow:auto;font-size:.84rem;line-height:1.5}
+  table{border-collapse:collapse;width:100%;background:#fff;border-radius:10px;overflow:hidden}
+  th,td{border:1px solid #e2e8f0;padding:7px 10px;text-align:left;font-size:.93rem}
+  th{background:#eef4f8}
+  .slide{display:block}          /* the engine looks for .slide — one page = one slide here */
+</style></head><body>
+<header>
+  <h1>BUILD Animation Framework</h1>
+  <p>Every asset is layered. Every movement means one thing. Drop <code>build-anim.css</code>, <code>bio-svg.js</code>, whichever subject libraries you need and <code>build-anim.js</code> into a lesson — or run <code>inject.py</code> to inline them and keep it a single file.</p>
+</header>
+
+<main class="slide active">
+
+<h2>1 · Motion vocabulary — what each movement <em>means</em></h2>
+<p>Pupils learn these without being taught them. Keep them consistent across every lesson in the unit.</p>
+<table>
+  <tr><th>Movement</th><th>Verb</th><th>Meaning to the pupil</th></tr>
+  <tr><td>Draw</td><td><code>draw</code></td><td>A structure is forming</td></tr>
+  <tr><td>Pop, one by one</td><td><code>pop</code></td><td>Count these — they are separate parts</td></tr>
+  <tr><td>Glow</td><td><code>glow</code></td><td>This is the important feature</td></tr>
+  <tr><td>Colour change</td><td><code>hi</code></td><td>THIS is the one we are testing for</td></tr>
+  <tr><td>Pulse</td><td><code>pulse</code></td><td>Look here now</td></tr>
+  <tr><td>Fade</td><td><code>dim</code> / <code>only</code></td><td>This matters less right now</td></tr>
+  <tr><td>Spotlight</td><td><code>spot</code></td><td>Everything except this is switched off</td></tr>
+  <tr><td>Zoom</td><td><code>zoom</code></td><td>We are going in close</td></tr>
+  <tr><td>Trace</td><td><code>trace</code></td><td>Follow this pathway</td></tr>
+  <tr><td>Bounce</td><td><code>bounce</code></td><td>Correct</td></tr>
+  <tr><td>Shake</td><td><code>shake</code></td><td>Not that one — common mistake</td></tr>
+  <tr><td>Three dots</td><td><code>think</code></td><td>We are waiting for YOUR answer</td></tr>
+  <tr><td>✓ / ✖</td><td><code>tick</code> / <code>cross</code></td><td>The answer lands</td></tr>
+  <tr><td>Whole-state change</td><td><code>pose</code></td><td>This has changed into something else</td></tr>
+</table>
+
+<h2>2 · A teaching stage — teacher-controlled, one click at a time</h2>
+<p>Press <strong>▶ Next</strong>. Narrate the line the bar prints for you. Nothing appears until you choose.</p>
+<div class="ba-stage" id="demo-fish" data-ba-asset="fish" data-ba-script="@teach"
+     data-ba-title="Watch me find the backbone"></div>
+<p>The text that <em>confirms</em> the idea can live outside the picture and still follow the same clicks —
+   give it <code>data-ba-step="n"</code>:</p>
+<div class="card" data-ba-step="5" data-ba-for="demo-fish"><strong>backbone</strong> — a line of small bones down the middle of the back.</div>
+<div class="card" data-ba-step="7" data-ba-for="demo-fish"><strong>vertebrate</strong> — an animal that HAS a backbone.</div>
+<pre>&lt;div class="ba-stage" id="demo-fish" data-ba-asset="fish" data-ba-script="@teach"&gt;&lt;/div&gt;
+&lt;p data-ba-step="5" data-ba-for="demo-fish"&gt;backbone — a line of small bones…&lt;/p&gt;</pre>
+
+<h2>3 · A prediction panel — pupils commit before the reveal</h2>
+<p>Tap an animal. Three dots appear. Take the vote. <em>Then</em> press Next and the answer builds itself.</p>
+<div class="ba-predict" data-ba-animals="bird:Robin, worm:Earthworm, frog:Frog, snail:Snail, fish:Trout, spider:Spider, octopus:Octopus"></div>
+<pre>&lt;div class="ba-predict" data-ba-animals="bird:Robin, worm:Earthworm, frog:Frog"&gt;&lt;/div&gt;</pre>
+
+<h2>4 · Writing your own script</h2>
+<pre>&lt;div class="ba-stage" data-ba-asset="crab" data-ba-script="
+  show body,shell,legs           :: A crab.
+  glow shell + hi shell          :: The hard bit is on the OUTSIDE.
+  label shell                    :: Hard case outside.
+  show nobone + cross            :: Down the middle — nothing.
+  label kind                     :: No backbone → invertebrate.
+"&gt;&lt;/div&gt;</pre>
+<p>One line = one click. <code>verb targets</code>, joined with <code>+</code> when several things happen together,
+   then <code>::</code> and the sentence you say out loud.</p>
+
+<h2>5 · Poseable assets — when the change IS the concept</h2>
+<p>Some subjects are about the change of state, not the parts. <code>pose bend</code> sets
+   <code>data-pose</code> on the stage and the asset's own CSS does the rest — one click, everything
+   moves together.</p>
+<div class="grid" id="pose-grid"></div>
+<pre>css: '.ba-stage[data-pose="bend"] [data-part="forearm"]{transform:rotate(-72deg)}'
+
+&lt;div class="ba-stage" data-ba-asset="arm" data-ba-script="
+  pose bend     :: I pull the top one. The arm comes up.
+  pose straight :: Now the bottom one. The jobs swap.
+"&gt;&lt;/div&gt;</pre>
+
+<h2>6 · Asset library — every part animates on its own</h2>
+<p id="asset-count"></p>
+<div class="grid" id="asset-grid"></div>
+
+<h2>7 · JavaScript helpers</h2>
+<pre>drawSkeleton('#demo-fish')          // skull + ribs + pelvis + limbs, then vertebrae pop
+highlightBone('#demo-fish','spine') // glow + colour change
+traceBackbone('#demo-fish')         // dashes travel along the spine
+fadeOthers('#demo-fish','spine')    // everything else drops back
+zoomFeature('#demo-fish','spine')   // go in close
+revealLabels('#demo-fish')          // show every label at once
+pulseCorrect(el) / shakeWrong(el)   // feedback on any HTML element
+
+BuildAnim.next(stage) / .reset(stage) / .all(stage)
+BuildAnim.load(stage,'octopus','reveal')   // swap the animal at runtime
+BuildAnim.advanceActive()                  // used to hook ▶ Next into slide nav</pre>
+
+</main>
+
+<script src="bio-svg.js"></script>
+<script src="body-svg.js"></script>
+<script src="food-svg.js"></script>
+<script src="chain-svg.js"></script>
+<script src="build-anim.js"></script>
+<script>
+(function(){
+  var grid=document.getElementById('asset-grid');
+  var names=BioSVG.list();
+  document.getElementById('asset-count').textContent=
+    names.length+' layered assets — '+BioSVG.vertebrates().length+' vertebrates, '+
+    BioSVG.invertebrates().length+' invertebrates, and '+
+    (names.length-BioSVG.vertebrates().length-BioSVG.invertebrates().length)+
+    ' from the muscle, nutrition and food-chain libraries.';
+  function card(n){
+    var a=BioSVG.asset(n),k=a.kind;
+    return '<div class="card">'+
+      (k?'<span class="kind '+(k==='vertebrate'?'v':'i')+'">'+k+'</span>':'')+
+      '<h3>'+BioSVG.title(n)+' &middot; <code>'+n+'</code></h3>'+
+      '<div class="ba-stage ba-plain" data-ba-asset="'+n+'" data-ba-script="@teach"></div></div>';
+  }
+  var poseable=names.filter(function(n){return !!BioSVG.asset(n).css});
+  var pg=document.getElementById('pose-grid');
+  pg.innerHTML=poseable.length?poseable.map(card).join('')
+    :'<p style="color:#64748b">No poseable assets loaded — open this page from the build-anim folder.</p>';
+  grid.innerHTML=names.filter(function(n){return poseable.indexOf(n)<0}).map(card).join('');
+  BuildAnim.init(pg); BuildAnim.init(grid);
+})();
+</script>
+</body></html>
