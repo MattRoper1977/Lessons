@@ -1393,6 +1393,34 @@ with §H and the R-H## rules.*
   **no §5 learner line** — out of T2-4 scope (ASDAN-only), correctly untouched. Whether DT evidence needs the
   same additive §5 block is **Matt's decision, AWAITING-WORD** (`_close/OPEN_ITEMS.md` #7).
 
+### R-E22 · A visibility gate hides with `visibility`, never with `opacity` alone
+- **STATUS** CONVENTION — read before adding an animation layer
+- **SELECTOR** `node Science_Teesside/launch-engine/test/gate-shape.js`
+- An `animation` carrying `fill-mode: both` or `forwards` applies its final
+  keyframe in the **CSS animation origin**, which outranks every normal author
+  declaration *regardless of selector specificity*. A keyframe ending at
+  `opacity: 1` therefore defeats `opacity: 0` from any rule, however specific.
+  No keyframe in this estate sets `visibility`, so a gate pairing the two cannot
+  be defeated by adopting a shared class.
+- **Measured, not reasoned.** All 23 fill-mode classes were applied to all 9 gate
+  styles in a browser and the held value read. Every `grow-anim` and `build-anim`
+  gate held. The three opacity-only gates in `launch-engine` were defeated by 12
+  of the 23, and one was live — a spotlight painting over the specimen before any
+  pupil act.
+- **The estate was already right by convention and a newcomer missed it.**
+  `[data-part].g-hidden`, `[data-label]`, `[data-grow-step]`, `[data-overlay]`,
+  `.ba-hidden` and `.ba-label` have always paired the two. That is exactly the
+  kind of correctness that decays silently, so it is now enforced rather than
+  merely true.
+- **Not a blanket `opacity:0` scan.** Only 5 opacity-only rules exist tree-wide
+  and two are legitimate transients; flagging all of them would repeat R-E05's
+  false-positive pattern. `gate-shape.js` asserts a known inventory and flags
+  anything new, which is decidable.
+- **Two gates in other layers carry the old shape and are recorded, not fixed:**
+  `.at-reveal` (`BUILD_ASDAN/_framework/asdan-teach.css`) and `.lo-item`
+  (`build-engine/core/styles.css`). Neither is leaking today; both are one
+  adopted class away. Listed in `reports/INSTRUMENT_INDEX.md`.
+
 ### R-G06 · A count is meaningless without its universe (Pass SCI, 2026-07-29)
 - **The rule.** A number is not a measurement until its **universe** is named. Two axes have to be
   stated every time: *tracked (git) vs working tree vs raw filesystem*, and *`*.html` vs all files*.
