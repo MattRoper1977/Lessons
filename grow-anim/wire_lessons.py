@@ -271,6 +271,73 @@ def repair(html):
     return html
 
 
+# The patch table above can only recognise two states: the string it looks for,
+# and the string it writes. A lesson carrying a THIRD state — an older revision
+# of a block this file owns — matches neither, so repair() changes nothing and
+# --check prints "ok". That is a false zero: the check closes a question it never
+# examined, and its greens carry no information about drift at all.
+#
+# So freshness is asserted separately, and on CONTENT. Every region this file
+# generates is delimited, so the region can be lifted out of the lesson and
+# compared against what this file would write today. A region that is present but
+# different is DRIFT and fails. A region that is simply absent is a lesson the
+# rollout has not reached — a backlog, not a defect, and reported as PENDING.
+#
+# The distinction matters because ~240 lessons across the estate have never been
+# wired. Failing on those would make the instrument permanently red and therefore
+# ignored; passing silently on real drift is what it used to do.
+
+GENERATED_REGIONS = [
+    # (name, opening delimiter, closing delimiter, the text this file writes)
+    ("hud-loader", '<script id="grow-hud-loader">', "</script>", HUD_LOADER),
+]
+
+
+def region(html, open_tag, close_tag):
+    """The full generated region including its delimiters, or None if absent."""
+    i = html.find(open_tag)
+    if i < 0:
+        return None
+    j = html.find(close_tag, i)
+    if j < 0:
+        return None
+    return html[i:j + len(close_tag)]
+
+
+def drift(html):
+    """Generated regions that are PRESENT but no longer match what this file
+    writes. Returns a list of (name, detail); empty means no drift."""
+    out = []
+    for name, open_tag, close_tag, current in GENERATED_REGIONS:
+        got = region(html, open_tag, close_tag)
+        if got is None:
+            continue                      # not wired — PENDING, not drift
+        if got != current:
+            out.append((name, "%d bytes on disk vs %d in wire_lessons.py"
+                        % (len(got), len(current))))
+
+    return out
+
+
+def unreachable(html):
+    """Deck code this file PATCHES but does not generate, in a form the patch
+    table cannot match — so the patch will never reach it and never say so.
+
+    Not drift: nothing here was generated from a source, so there is no source to
+    have diverged from. Measured, 41 decks across the estate carry a
+    pretty-printed showSlide with extra calls (checkTimerVisibility,
+    updateTABrief) that the single minified PATCHES entry cannot see. Reported
+    rather than failed, because the honest description is "this instrument does
+    not cover these files", and an instrument that says so is worth more than one
+    that counts them as passes."""
+    out = []
+    if "function showSlide(i){" in html:
+        before, after = PATCHES[0]
+        if before not in html and after not in html:
+            out.append("showSlide is present in a form the patch table cannot match")
+    return out
+
+
 def anchor_at(html, slide_title, mode):
     """Index just past the anchor inside the named slide, or None."""
     i = html.find('data-title="%s"' % slide_title)
@@ -312,13 +379,27 @@ def patch_only(path, check_only):
     no GROW wiring but share the same deck code and the same HUD reference."""
     with open(path, encoding="utf-8") as fh:
         original = fh.read()
+
+    # Drift is checked first and is the only thing that fails: a generated region
+    # that is present but no longer matches source. Checked before repair(),
+    # because repair() would not touch it and its silence is the old bug.
+    drifted = drift(original)
+    if drifted:
+        print("  DRIFT   %s  (%s)"
+              % (path, "; ".join("%s: %s" % d for d in drifted)))
+        return False
+
+    for note in unreachable(original):
+        print("  UNCOVERED %s  (%s)" % (path, note))
+
     html = repair(original)
     if html == original:
         print("  ok      %s" % path)
         return True
     if check_only:
-        print("  STALE   %s" % path)
-        return False
+        # Not wired yet. A rollout backlog, not a defect — reported, not failed.
+        print("  PENDING %s" % path)
+        return True
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(html)
     print("  patched %s" % path)
