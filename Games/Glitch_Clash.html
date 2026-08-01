@@ -949,7 +949,12 @@ const rng = Math.random;
 let battle=null, pickSlot=null;
 
 loadSave(); applySettings();
-try{ FX.init(); }catch(_){}
+/* FX.init() used to be called here. `const FX` is declared ~1150 lines below,
+   so this ran inside its temporal dead zone, threw a ReferenceError, and the
+   surrounding catch swallowed it — the particle canvas was never sized, `cx`
+   stayed null, and every spawn() returned at its first line. The particle
+   layer has never drawn since it was written. It is now initialised directly
+   after the module that owns it. */
 
 /* ----- navigation ----- */
 function go(name){
@@ -2164,6 +2169,9 @@ const FX = (()=>{
     }
   };
 })();
+/* Immediately after the module, not 1150 lines before it. No try/catch: if this
+   ever fails again it should be a visible error, not a silently dead layer. */
+FX.init();
 
 /* ================= v2: FOIL SHEEN (one delegated listener, rAF-throttled) ============ */
 (function foil(){
