@@ -1,0 +1,229 @@
+/* ============================================================================
+   BUILD Animation Framework — motion primitives
+   ---------------------------------------------------------------------------
+   MOTION VOCABULARY — every movement means one thing, every time:
+     draw    a structure is forming            (stroke draws itself)
+     pop     parts arriving one-by-one         (staggered)
+     glow    this is the important feature     (soft halo, breathing)
+     hi      this feature has changed / is THE one   (colour change)
+     pulse   look here now                     (scale beat)
+     fade    this matters less right now       (drops to 15%)
+     spot    focus attention on one spot       (spotlight ring)
+     zoom    we are going in close             (scale up)
+     trace   follow this pathway               (dash travels along)
+     bounce  correct                           (spring)
+     shake   misconception / not that one      (side-to-side)
+     think   we are waiting for YOUR answer    (three dots)
+     tick    correct answer lands              (green ✓)
+     cross   ruled out                         (red ✖)
+
+   Colours come from the lesson's own :root — the framework never sets brand
+   colour, only motion. Overridable knobs:
+     --ba-hi     highlight colour (default brand amber)
+     --ba-ink    label / rule colour
+     --ba-speed  global speed multiplier for the draw + pop timings
+   ========================================================================== */
+
+:root {
+  --ba-hi: #D8A63B;
+  --ba-ink: #1f2937;
+  --ba-good: #16a34a;
+  --ba-bad: #dc2626;
+  --ba-speed: 1;
+}
+
+/* ---------------------------------------------------------------- stage */
+.ba-stage {
+  position: relative;
+  border: 2px solid #cbd5e1;
+  border-radius: 16px;
+  background: #fbfdff;
+  padding: 8px 10px 6px;
+  margin: 8px 0;
+}
+.ba-stage.ba-plain { border: 0; background: none; padding: 0; }
+.ba-canvas { position: relative; }
+.ba-svg { display: block; width: 100%; height: auto; max-height: 46vh; }
+.ba-stage[data-ba-frame="wide"] .ba-svg { max-height: 34vh; }
+.ba-stage[data-ba-frame="mini"] .ba-svg { max-height: 20vh; }
+
+/* the multi-animal comparison rail */
+.ba-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }
+.ba-rail .ba-cell { text-align: center; }
+.ba-rail .ba-cell > span { display: block; font-weight: 800; font-size: .85rem; color: var(--ba-ink); }
+.ba-rail .ba-svg { max-height: 30vh; }
+@media (max-width: 640px) { .ba-rail { grid-template-columns: repeat(2, 1fr); } }
+
+/* --------------------------------------------------------- teacher bar */
+.ba-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: #eef4f8; border: 2px solid #4E7A9B; border-radius: 12px;
+  padding: 7px 12px; margin-bottom: 8px;
+}
+.ba-bar button {
+  background: #4E7A9B; color: #fff; border: 0; border-radius: 9px;
+  padding: 8px 15px; font-weight: 900; font-size: .95rem; cursor: pointer;
+  box-shadow: 0 3px 8px rgba(78, 122, 155, .25); transition: transform .15s, background .15s;
+}
+.ba-bar button:hover { background: #3c6280; transform: translateY(-2px); }
+.ba-bar button.ba-mini { background: #e2e8f0; color: #0f172a; padding: 6px 11px; font-size: .85rem; box-shadow: none; }
+.ba-bar button.ba-mini:hover { background: #cbd5e1; }
+.ba-bar button:disabled { background: var(--ba-good); cursor: default; transform: none; opacity: .9; }
+.ba-dots { display: inline-flex; gap: 5px; }
+.ba-dots i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; display: block; transition: background .25s, transform .25s; }
+.ba-dots i.on { background: #4E7A9B; transform: scale(1.25); }
+.ba-say {
+  flex: 1 1 240px; min-height: 1.2em; font-weight: 700; color: #0f172a;
+  font-size: 1.02rem; line-height: 1.35;
+}
+.ba-say:empty::before { content: 'Press ▶ Next and narrate as it appears.'; color: #64748b; font-weight: 600; font-style: italic; }
+.ba-say.ba-said { animation: baSayIn .35s ease-out; }
+@keyframes baSayIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------- part visibility */
+.ba-stage [data-part].ba-hidden { opacity: 0; visibility: hidden; }
+.ba-stage [data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease; }
+.ba-fadein { animation: baFadeIn .5s ease-out both; }
+@keyframes baFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* text / definition boxes elsewhere on the slide that follow the stage */
+[data-ba-step] { opacity: 0; visibility: hidden; }
+[data-ba-step].ba-shown { opacity: 1; visibility: visible; animation: baSayIn .45s ease-out both; }
+.ba-label { opacity: 0; visibility: hidden; }
+.ba-label.reveal-label { opacity: 1; visibility: visible; animation: baLabelIn .5s cubic-bezier(.34, 1.56, .64, 1) both; }
+@keyframes baLabelIn { 0% { opacity: 0; transform: translateY(12px) scale(.85); } 100% { opacity: 1; transform: none; } }
+
+/* ============================ THE PRIMITIVES ============================ */
+
+/* DRAW — the structure forms itself */
+.draw-svg { animation: baDraw calc(1s / var(--ba-speed)) ease-out both; }
+.ba-stage [data-part].ba-drew { opacity: 1; visibility: visible; }
+@keyframes baDraw {
+  from { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; }
+  60%  { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  to   { stroke-dasharray: none; stroke-dashoffset: 0; }
+}
+
+/* POP — parts arriving one at a time (vertebrae lighting up in turn) */
+.ba-pop { animation: baPop calc(.42s / var(--ba-speed)) cubic-bezier(.34, 1.56, .64, 1) both; transform-box: fill-box; transform-origin: center; }
+@keyframes baPop { 0% { opacity: 0; transform: scale(.2); } 65% { transform: scale(1.35); } 100% { opacity: 1; transform: scale(1); } }
+
+/* GLOW — this is the important feature */
+.glow-path { animation: baGlow 1.7s ease-in-out infinite; }
+@keyframes baGlow {
+  0%, 100% { filter: drop-shadow(0 0 2px currentColor); }
+  50%      { filter: drop-shadow(0 0 11px currentColor) drop-shadow(0 0 22px currentColor); }
+}
+
+/* HI — highlight: the feature changes colour */
+.highlight-region { color: var(--ba-hi) !important; }
+
+/* FADE — everything else matters less now */
+.fade-rest { opacity: .15 !important; filter: grayscale(1); }
+
+/* PULSE — look here */
+.pulse-answer { animation: baPulse 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes baPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+
+/* SPOT — focus spotlight ring */
+.focus-circle {
+  position: absolute; border-radius: 50%; border: 4px solid var(--ba-hi);
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, .42), 0 0 22px var(--ba-hi);
+  pointer-events: none; animation: baSpot .5s ease-out both;
+}
+@keyframes baSpot { from { opacity: 0; transform: scale(1.6); } to { opacity: 1; transform: scale(1); } }
+
+/* ZOOM — go in close.  Transform is written inline by the engine from the
+   part's own bounding box; origin must be the viewBox corner for the maths. */
+.ba-zoom { transition: transform .7s cubic-bezier(.4, 0, .2, 1); transform-box: view-box; transform-origin: 0 0; }
+
+/* TRACE — follow the pathway */
+.trace-line { stroke-dasharray: .08 .06; animation: baTrace 2.4s linear infinite; }
+@keyframes baTrace { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -1; } }
+
+/* BOUNCE — correct */
+.ba-bounce { animation: baBounce .6s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes baBounce { 0% { transform: scale(1); } 35% { transform: scale(1.16) translateY(-6px); } 100% { transform: scale(1); } }
+
+/* SHAKE — misconception, not that one */
+.ba-shake { animation: baShake .42s ease; }
+@keyframes baShake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+/* THINK — we are waiting for YOUR answer */
+.think-delay {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  gap: 14px; pointer-events: none;
+}
+.think-delay b {
+  width: 20px; height: 20px; border-radius: 50%; background: #4E7A9B;
+  animation: baThink 1.25s ease-in-out infinite;
+}
+.think-delay b:nth-child(2) { animation-delay: .18s; }
+.think-delay b:nth-child(3) { animation-delay: .36s; }
+@keyframes baThink { 0%, 100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-16px); opacity: 1; } }
+.ba-thinking .ba-svg { filter: grayscale(.55) blur(.4px); opacity: .8; }
+
+/* TICK / CROSS — the verdict lands in the corner, never over the specimen */
+.ba-verdict {
+  position: absolute; top: 4px; right: 6px;
+  width: clamp(52px, 9vw, 82px); height: clamp(52px, 9vw, 82px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(32px, 5.6vw, 52px); font-weight: 900; line-height: 1;
+  border-radius: 50%; background: #fff; border: 4px solid currentColor;
+  pointer-events: none; animation: baVerdict .6s cubic-bezier(.34, 1.56, .64, 1) both;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
+}
+.ba-verdict.ba-tick { color: var(--ba-good); }
+.ba-verdict.ba-cross { color: var(--ba-bad); }
+@keyframes baVerdict { 0% { opacity: 0; transform: scale(.3) rotate(-18deg); } 60% { opacity: 1; transform: scale(1.2) rotate(6deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+
+/* NOTE — a short caption strip under the picture */
+.ba-note {
+  margin: 6px auto 2px; max-width: 720px; text-align: center;
+  font-weight: 800; font-size: 1.05rem; color: #0f172a;
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; padding: 7px 12px;
+  animation: baSayIn .4s ease-out both;
+}
+
+/* ------------------------------- prediction ("is this a vertebrate?") */
+.ba-predict-cards { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 6px 0 8px; }
+.ba-pc {
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 12px;
+  padding: 9px 15px; font-weight: 800; font-size: .98rem; color: #334155; cursor: pointer;
+  transition: all .15s; -webkit-tap-highlight-color: transparent;
+}
+.ba-pc:hover, .ba-pc:focus-visible { border-color: #4E7A9B; background: #f1f6fa; transform: translateY(-2px); outline: none; }
+.ba-pc.ba-current { border-color: #4E7A9B; background: #e6eff5; box-shadow: 0 0 0 3px rgba(78, 122, 155, .22); }
+.ba-pc.ba-done { opacity: .55; }
+.ba-pc.ba-done::after { content: ' ✓'; color: var(--ba-good); font-weight: 900; }
+.ba-vote {
+  display: flex; gap: 10px; justify-content: center; align-items: center;
+  flex-wrap: wrap; margin: 4px 0 6px; font-weight: 800; color: #0f172a;
+}
+.ba-vote .ba-chip {
+  border-radius: 999px; padding: 7px 16px; font-weight: 900; font-size: .95rem;
+  border: 2px solid #4E7A9B; background: #fff; color: #4E7A9B;
+}
+.ba-vote .ba-chip.ba-chip-b { border-color: #C9803B; color: #C9803B; }
+.ba-tally { display: flex; gap: 10px; align-items: center; }
+
+/* ------------------------------------------------------------ motion key */
+.ba-key { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+@media (max-width: 640px) { .ba-key { grid-template-columns: repeat(2, 1fr); } }
+.ba-key div {
+  background: #fff; border: 2px solid #cbd5e1; border-radius: 10px;
+  padding: 8px; text-align: center; font-size: .82rem; font-weight: 700; color: #334155;
+}
+.ba-key div b { display: block; font-size: 1.5rem; margin-bottom: 2px; }
+
+/* ------------------------------------------------------------------ misc */
+@media print { .ba-bar, .ba-predict-cards, .ba-vote, .think-delay, .ba-verdict { display: none !important; } .ba-stage [data-part] { opacity: 1 !important; visibility: visible !important; } .ba-label { opacity: 1 !important; visibility: visible !important; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .draw-svg, .ba-pop, .glow-path, .pulse-answer, .ba-bounce, .ba-shake,
+  .trace-line, .ba-verdict, .think-delay b, .ba-label.reveal-label {
+    animation: none !important;
+  }
+  .ba-zoom { transition: none; }
+  .ba-stage [data-part] { transition: none; }
+}
