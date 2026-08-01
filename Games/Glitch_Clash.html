@@ -462,6 +462,7 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
     <div class="spread">
       <span class="chip" id="stagechip">Stage</span>
       <span class="arena-chip" id="arenachip" hidden></span>
+      <span class="chip" id="clockchip" hidden aria-live="off">⏱ 1:30</span>
       <button class="btn small" id="quitbtn">Quit</button>
     </div>
     <!-- enemy -->
@@ -964,6 +965,10 @@ function go(name){
   if(name==="home") renderHome();
   if(name==="stages") renderStages();
   if(name==="team") renderTeam();
+  /* Menu music, so it stops at the door of a battle and picks up on the way
+     out. Both calls are no-ops when the setting is off or the pad is already
+     in that state, so this is safe to fire on every screen change. */
+  try{ name==="battle" ? GCX.musicStop() : GCX.musicStart(); }catch(e){}
   window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
@@ -1121,6 +1126,7 @@ function startWeekly(){
   endlessRun.mods = [plan.mod];
   endlessRun.weekly = { key, plan };
   SV.stats=SV.stats||{};
+  if(endlessRun.mods.includes("clock")) startRunClock(); else stopRunClock();
   toast("Weekly Gauntlet — three clashes, "+modById(plan.mod).name+".");
   nextEndlessRound();
 }
@@ -1156,13 +1162,102 @@ const MODIFIERS = [
   { id:"brittle",  name:"Brittle",    desc:"Your Keepers take 25% more damage.",
     mult:1.00 },
   { id:"swift",    name:"Sudden Death", desc:"Everyone hits 40% harder. Rounds end fast.",
-    mult:1.00 }
+    mult:1.00 },
+  { id:"clock",    name:"Time Attack", desc:"90 seconds on the clock. Every round cleared adds 30." }
 ];
 /* Reward multiplier is derived from how many are on, not hand-set per modifier,
    so adding one later cannot quietly unbalance the payout. */
 function modMultiplier(mods){ return 1 + 0.35*((mods||[]).length); }
 function modById(id){ return MODIFIERS.find(m=>m.id===id)||null; }
 let pendingMods=[];
+
+/* ---------- the run clock ----------
+   Time Attack is deliberately a RUN-level clock, not a turn-level one. It never
+   interrupts a turn, never shortens one, and never touches how damage resolves:
+   it watches a deadline on the wall clock and, when that passes, ends the run
+   the same way losing does. The turn in progress is allowed to finish.
+
+   It is paused whenever a sheet is open, so time is never lost to a menu. */
+const CLOCK_START = 90000, CLOCK_BONUS = 30000;
+let runClock = null;                 // {left, deadline, paused, tick, warned}
+function clockActive(){ return !!runClock; }
+function startRunClock(){
+  stopRunClock();
+  runClock = { left:CLOCK_START, deadline:0, paused:true, tick:0, warned:{} };
+  resumeRunClock();
+}
+function stopRunClock(){
+  if(runClock && runClock.tick) clearInterval(runClock.tick);
+  runClock = null;
+  const c=$("#clockchip"); if(c) c.hidden=true;
+}
+function pauseRunClock(){
+  if(!runClock || runClock.paused) return;
+  runClock.left = Math.max(0, runClock.deadline - Date.now());
+  runClock.paused = true;
+}
+function resumeRunClock(){
+  if(!runClock) return;
+  runClock.deadline = Date.now() + runClock.left;
+  runClock.paused = false;
+  if(!runClock.tick) runClock.tick = setInterval(clockTick, 250);
+  renderClock();
+}
+function addRunClock(ms){
+  if(!runClock) return;
+  const left = runClock.paused ? runClock.left : Math.max(0, runClock.deadline - Date.now());
+  runClock.left = left + ms;
+  if(!runClock.paused) runClock.deadline = Date.now() + runClock.left;
+  runClock.warned = {};                    // fresh time, so warn again on the way down
+  toast("+"+Math.round(ms/1000)+" seconds");
+  renderClock();
+}
+function clockLeft(){
+  if(!runClock) return 0;
+  return runClock.paused ? runClock.left : Math.max(0, runClock.deadline - Date.now());
+}
+function renderClock(){
+  const c=$("#clockchip"); if(!c) return;
+  if(!runClock){ c.hidden=true; return; }
+  const ms=clockLeft(), s=Math.ceil(ms/1000);
+  c.hidden=false;
+  c.textContent = "⏱ "+Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+  c.style.color = s<=10 ? "var(--soft)" : "";
+  c.setAttribute("aria-label", s+" seconds remaining");
+}
+function clockTick(){
+  if(!runClock) return;
+  /* A sheet on screen means the player is reading, not playing. */
+  const sheetOpen = !!document.querySelector(".overlay.show");
+  if(sheetOpen && !runClock.paused) pauseRunClock();
+  else if(!sheetOpen && runClock.paused) resumeRunClock();
+  renderClock();
+  if(runClock.paused) return;
+  const s=Math.ceil(clockLeft()/1000);
+  // spoken warnings, because a chip counting down is no use if you can't see it
+  [30,10].forEach(mark=>{
+    if(s<=mark && !runClock.warned[mark]){ runClock.warned[mark]=1;
+      announce(mark+" seconds remaining"); try{ GCX.sfx.click(); }catch(e){} }
+  });
+  if(clockLeft()<=0) timeUp();
+}
+function timeUp(){
+  if(!endlessRun) { stopRunClock(); return; }
+  const cleared = endlessRun.round-1;
+  const weekly  = !!endlessRun.weekly;
+  stopRunClock();
+  if(!weekly) SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, cleared);
+  endlessRun=null; boonPending=false; battle=null;
+  save();
+  try{ GCX.breakCombo(); GCX.sfx.lose(); }catch(e){}
+  announce("Time up.");
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<div class="center"><h2>Time up ⏱</h2>
+      <p class="muted">${cleared} ${cleared===1?"round":"rounds"} cleared before the clock ran out.</p></div>
+    <div class="panel"><div class="spread"><span>Total XP</span><b>${SV.xp}</b></div></div>
+    <button class="btn primary" data-close data-go="home">Continue</button>`;
+  showOv($("#ov-result"));
+}
 
 function showModPick(){
   const sheet=$("#resultsheet");
@@ -1203,6 +1298,7 @@ function startEndless(mods){
   endlessRun = GCX2.newRun();
   endlessRun.mods = mods || [];
   SV.stats=SV.stats||{};
+  if(endlessRun.mods.includes("clock")) startRunClock(); else stopRunClock();
   const names=endlessRun.mods.map(id=>modById(id).name);
   toast(names.length ? ("Endless run — "+names.join(" + ")) : "Endless run — survive as long as you can.");
   nextEndlessRound();
@@ -1236,17 +1332,18 @@ function endlessAdvance(won){
       toast("Run over at round "+r+". Best: "+(SV.stats.bestEndless||0));
     }
     save();
-    endlessRun=null;
+    endlessRun=null; stopRunClock();
     return false;
   }
   SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods));
+  if(clockActive()) addRunClock(CLOCK_BONUS);
   endlessRun.round++;
   if(!wk) SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
   save();
   /* The weekly has a finish line; endless does not. Falling through to the
      normal result sheet is how the reward gets shown, so this returns false. */
   if(wk && endlessRun.round > WEEKLY_LENGTH){
-    endlessRun=null;
+    endlessRun=null; stopRunClock();
     return false;                       // endBattle carries on and pays out
   }
   // Purist skips the picker outright rather than offering a choice it then ignores
@@ -1937,19 +2034,103 @@ const GCX = (()=>{
   }
   function crtOn(){ try{ return localStorage.getItem("gc_crt")==="1"; }catch(e){ return false; } }
 
+  /* ---------------- menu music ----------------
+     A slow four-chord pad, synthesised like everything else here — no files,
+     nothing to download. It hangs off the same master gain as the SFX, so the
+     existing mute switch covers it and there is only ever one volume to reason
+     about.
+
+     Off by default and deliberately so: autoplay is blocked without a gesture,
+     and a loop under a game played in two-minute bursts is muted more often
+     than it is enjoyed. It also stops the moment a battle starts — it is menu
+     music, not a soundtrack. Calm Mode silences it outright. */
+  const CHORDS = [            // A minor, i - VI - III - VII, one every 8 seconds
+    [220.00, 261.63, 329.63],
+    [174.61, 220.00, 261.63],
+    [261.63, 329.63, 392.00],
+    [196.00, 246.94, 293.66]
+  ];
+  const M = { on:false, nodes:[], gain:null, filt:null, lfo:null, timer:0, step:0 };
+  try{ M.on = localStorage.getItem("gc_music")==="1"; }catch(e){}
+  function musicWanted(){ return M.on && !calm(); }
+  function buildMusic(){
+    const c=ac(); if(!c || M.gain) return;
+    M.gain=c.createGain(); M.gain.gain.value=0;
+    M.filt=c.createBiquadFilter(); M.filt.type="lowpass";
+    M.filt.frequency.value=900; M.filt.Q.value=0.6;
+    M.filt.connect(M.gain); M.gain.connect(A.master);
+    // a slow sweep on the filter so the pad breathes instead of sitting still
+    M.lfo=c.createOscillator(); M.lfo.type="sine"; M.lfo.frequency.value=0.05;
+    const lg=c.createGain(); lg.gain.value=320;
+    M.lfo.connect(lg); lg.connect(M.filt.frequency); M.lfo.start();
+  }
+  function voiceChord(freqs){
+    const c=ac(); if(!c) return;
+    M.nodes.forEach(n=>{ try{ n.g.gain.cancelScheduledValues(c.currentTime);
+      n.g.gain.setValueAtTime(n.g.gain.value,c.currentTime);
+      n.g.gain.linearRampToValueAtTime(0.0001,c.currentTime+2.4);
+      n.o.stop(c.currentTime+2.6); }catch(e){} });
+    M.nodes=[];
+    freqs.forEach((f,i)=>{
+      [0,-4].forEach(det=>{                    // two slightly detuned voices per note
+        const o=c.createOscillator(), g=c.createGain();
+        o.type = i===0 ? "triangle" : "sine";
+        o.frequency.value=f; o.detune.value=det;
+        g.gain.setValueAtTime(0.0001,c.currentTime);
+        g.gain.linearRampToValueAtTime(0.055,c.currentTime+2.2);
+        o.connect(g); g.connect(M.filt); o.start();
+        M.nodes.push({o,g});
+      });
+    });
+  }
+  function musicStart(){
+    if(!musicWanted() || M.timer) return;
+    const c=ac(); if(!c) return;                 // no gesture yet: try again later
+    buildMusic();
+    M.gain.gain.cancelScheduledValues(c.currentTime);
+    M.gain.gain.setValueAtTime(M.gain.gain.value, c.currentTime);
+    M.gain.gain.linearRampToValueAtTime(0.5, c.currentTime+1.6);
+    voiceChord(CHORDS[M.step % CHORDS.length]); M.step++;
+    M.timer=setInterval(()=>{ voiceChord(CHORDS[M.step % CHORDS.length]); M.step++; }, 8000);
+  }
+  function musicStop(){
+    if(M.timer){ clearInterval(M.timer); M.timer=0; }
+    const c=A.ctx; if(!c || !M.gain) return;
+    M.gain.gain.cancelScheduledValues(c.currentTime);
+    M.gain.gain.setValueAtTime(M.gain.gain.value, c.currentTime);
+    M.gain.gain.linearRampToValueAtTime(0.0001, c.currentTime+1.2);   // fade, never a cut
+    setTimeout(()=>{ if(!M.timer) M.nodes.forEach(n=>{ try{ n.o.stop(); }catch(e){} }); M.nodes=[]; }, 1400);
+  }
+  function setMusic(on){
+    M.on=!!on; try{ localStorage.setItem("gc_music", on?"1":"0"); }catch(e){}
+    on ? musicStart() : musicStop();
+  }
+  function musicOn(){ return M.on; }
+  function musicPlaying(){ return !!M.timer; }
+  /* Diagnostics: the timer running is not proof of sound. These report the
+     live oscillator count and the pad's own gain, so a silent-but-ticking
+     pad is distinguishable from a working one. */
+  function musicVoices(){ return M.nodes.length; }
+  function musicGain(){ return M.gain ? M.gain.gain.value : 0; }
+
   function init(){
     ensureCanvas();
     if(crtOn()) document.body.classList.add("gcx-crt");
   try{ if(window.GCX2) GCX2.applyTheme(GCX2.currentTheme()); }catch(e){}
-    // the audio context may only be created inside a gesture
-    const unlock=()=>{ ac(); document.removeEventListener("pointerdown",unlock); };
+    /* The audio context may only be created inside a gesture, so the pad cannot
+       start on load however much the setting wants it to. The first tap builds
+       the context and then starts it — which is also why this listener is not
+       {once:true}: a tap that lands while the pad is off still needs to arm it
+       if the player turns it on later. */
+    const unlock=()=>{ ac(); if(musicWanted()) musicStart(); };
     document.addEventListener("pointerdown",unlock,{once:false});
   }
 
   return { init, sfx:SFX, setMuted, isMuted:()=>A.muted, unlockAudio:ac,
            spark:sparkAt, glitch:realityGlitch, GLITCH_FX,
            combo:bump, breakCombo, comboNow:()=>combo, bestCombo:()=>best,
-           freeze, ACH, checkAch, setCRT, crtOn, calm };
+           freeze, ACH, checkAch, setCRT, crtOn, calm,
+           setMusic, musicOn, musicPlaying, musicStart, musicStop, musicVoices, musicGain };
 })();
 /* GCX:END */
 
@@ -2092,6 +2273,13 @@ try{
   const snd = mk("gcxsound","Sound: "+(GCX.isMuted()?"Off":"On"));
   snd.onclick=()=>{ GCX.unlockAudio(); GCX.setMuted(!GCX.isMuted());
     snd.textContent="Sound: "+(GCX.isMuted()?"Off":"On"); if(!GCX.isMuted()) GCX.sfx.click(); };
+  const mus = mk("gcxmusic","Menu Music: "+(GCX.musicOn()?"On":"Off"));
+  mus.onclick=()=>{ GCX.unlockAudio(); const on=!GCX.musicOn(); GCX.setMusic(on);
+    mus.textContent="Menu Music: "+(on?"On":"Off"); GCX.sfx.click();
+    // switching it on from inside a battle arms it for when you come back out
+    if(on && $("#scr-battle.active")) toast("Menu music on — it plays outside battles.");
+    announce("Menu music "+(on?"on":"off")+".");
+    if(on && !$("#scr-battle.active")) GCX.musicStart(); };
   const crt = mk("gcxcrt","CRT Scanlines: "+(GCX.crtOn()?"On":"Off"));
   crt.onclick=()=>{ const on=!GCX.crtOn(); GCX.setCRT(on);
     crt.textContent="CRT Scanlines: "+(on?"On":"Off"); GCX.sfx.click(); };
@@ -2201,7 +2389,11 @@ FX.init();
 try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c);
      window.__GC = ()=>battle; window.__GCsave = ()=>SV;
      window.__GCplan = k=>weeklyPlan(k); window.__GCmod = id=>modById(id);
-     window.__GCglitches = ()=>GLITCHES.map(g=>({id:g.id,trait:g.trait})); }catch(e){}
+     window.__GCglitches = ()=>GLITCHES.map(g=>({id:g.id,trait:g.trait}));
+     window.__GCclock = ()=>runClock ? {left:clockLeft(), paused:runClock.paused} : null;
+     window.__GCclockSet = ms=>{ if(runClock){ runClock.left=ms; runClock.deadline=Date.now()+ms; } };
+     window.__GCrun = ()=>endlessRun; window.__GCov = n=>showOv($("#ov-"+n));
+     window.__GCclose = ()=>closeSheets(); }catch(e){}
 function renderBattle(){
   const p=P(), e=battle.glitch;
   // arena banner
@@ -2471,7 +2663,7 @@ $("#quitbtn").onclick=(()=>{ let arm=false; return ()=>{
   if(endlessRun){
     SV.stats=SV.stats||{};
     if(!endlessRun.weekly) SV.stats.bestEndless=Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
-    endlessRun=null; boonPending=false; save();
+    endlessRun=null; boonPending=false; stopRunClock(); save();
   }
   battle=null; $("#quitbtn").textContent="Quit"; go("home"); toast("No worries — the Glitch will wait.");
 };})();
