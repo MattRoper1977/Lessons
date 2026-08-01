@@ -307,6 +307,41 @@ html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 .sE{--auraA:.42;--auraT:3s}
 .sL{--auraA:.58;--auraSize:26px;--auraT:2.2s}
 .card.ascended{--auraA:.78;--auraSize:32px;--auraT:1.6s}
+
+/* ---- GCX: extras layer ---------------------------------------------- */
+.gcx-sys{position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:70;pointer-events:none;
+  text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;animation:gcxSys 1.4s ease-out forwards}
+.gcx-sys .gcx-err{display:block;font-size:clamp(15px,4.4vw,26px);font-weight:900;letter-spacing:.22em;
+  color:#ff4d6d;text-shadow:2px 0 #16f2ff,-2px 0 #ffcc00,0 0 14px rgba(255,77,109,.7)}
+.gcx-sys .gcx-msg{display:block;margin-top:5px;font-size:clamp(10px,2.6vw,13px);letter-spacing:.12em;color:#9fe9ff}
+@keyframes gcxSys{0%{opacity:0;transform:translateX(-50%) scale(.9)}12%{opacity:1;transform:translateX(-50%) scale(1)}
+  78%{opacity:1}100%{opacity:0}}
+.gcx-combo{position:fixed;left:50%;top:34%;transform:translateX(-50%);z-index:70;pointer-events:none;
+  font-weight:900;font-size:clamp(20px,6.5vw,40px);letter-spacing:.06em;color:#ffd54a;
+  text-shadow:0 0 12px rgba(255,213,74,.75),0 2px 0 #1a1030;animation:gcxCombo 1s cubic-bezier(.2,.9,.25,1) forwards}
+@keyframes gcxCombo{0%{opacity:0;transform:translateX(-50%) scale(.5)}18%{opacity:1;transform:translateX(-50%) scale(1.15)}
+  32%{transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(-34px) scale(.95)}}
+.gcx-freeze .arena,.gcx-freeze .card{filter:brightness(1.5) contrast(1.2)}
+body.gcx-invert{filter:invert(1) hue-rotate(180deg)}
+body.gcx-tear .arena{animation:gcxTear .18s steps(2) infinite}
+@keyframes gcxTear{0%{clip-path:inset(0 0 62% 0);transform:translateX(-7px)}
+  50%{clip-path:inset(48% 0 0 0);transform:translateX(7px)}100%{clip-path:none;transform:none}}
+body.gcx-corruptpx .arena{filter:saturate(2.4) contrast(1.5);image-rendering:pixelated}
+body.gcx-lag *{transition:none!important;animation-play-state:paused!important}
+body.gcx-hud .hud,body.gcx-hud .bar,body.gcx-hud .spread{filter:blur(1.4px) hue-rotate(90deg);letter-spacing:.3em}
+body.gcx-flip .arena{transform:rotate(180deg)}
+body.gcx-slowmo .arena{transition:all 1.1s cubic-bezier(.1,.7,.1,1)!important;filter:saturate(.6)}
+body.gcx-crt::after{content:"";position:fixed;inset:0;z-index:65;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.20) 0 1px,transparent 1px 3px);
+  box-shadow:inset 0 0 120px rgba(0,0,0,.55)}
+/* Calm Mode and reduced motion are the authority: no distortion, no flashing */
+body.calm .gcx-sys,body.reduce-motion .gcx-sys{animation:none;opacity:1}
+body.calm .gcx-combo,body.reduce-motion .gcx-combo{animation:none;opacity:1}
+body.calm.gcx-invert,body.reduce-motion.gcx-invert,
+body.calm.gcx-flip,body.reduce-motion.gcx-flip{filter:none}
+body.calm.gcx-flip .arena,body.reduce-motion.gcx-flip .arena{transform:none}
+body.calm.gcx-tear .arena,body.reduce-motion.gcx-tear .arena{animation:none;clip-path:none;transform:none}
+body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
 </style>
 </head>
 <body>
@@ -890,6 +925,7 @@ function applySettings(){
   $("#hctoggle").textContent = "High Contrast: "+(s.hc?"On":"Off");
 }
 $("#calmtoggle").onclick=()=>{SV.settings.calm=!SV.settings.calm;save();applySettings();};
+
 $("#hctoggle").onclick=()=>{SV.settings.hc=!SV.settings.hc;save();applySettings();};
 $("#motiontoggle").onclick=()=>{
   const order=["auto","on","off"];
@@ -1033,6 +1069,8 @@ const ACTS=[
   {k:"special",label:"Special",sub:"Costs 60 energy", cls:"special"}
 ];
 function startBattle(stageIdx, opts){
+  try{ GCX.unlockAudio(); GCX.breakCombo(); }catch(e){}
+  var __gcxStart = Date.now();
   const sceneKey = opts.__scened ? null : sceneForStage(stageIdx);
   if(sceneKey && !opts.daily && !(SV.seen&&SV.seen[sceneKey])){
     return playScene(sceneKey, ()=>startBattle(stageIdx, Object.assign({},opts,{__scened:true})));
@@ -1344,6 +1382,247 @@ function sceneForStage(idx){ return ({0:"s1",4:"s5",9:"s10",12:"s13",14:"s15"})[
 
 
 /* ================= v2: PARTICLE ENGINE (pooled, single rAF) ================= */
+/* =====================================================================
+   GLITCH CLASH — EXTRAS  (GCX:BEGIN)
+
+   Additive layer. It does not touch Engine, the card data, the damage
+   maths or the AI, so battle balance is exactly as it was. It adds the
+   things the game did not have: sound (there was none at all), a combo
+   chain, sparks, a lethal-blow freeze, reality glitches, achievements,
+   statistics, and a CRT look.
+
+   Everything obeys the existing Calm Mode and prefers-reduced-motion:
+   glitches stop distorting, sparks thin out, the freeze is skipped, and
+   the CRT overlay hides. Nothing that carries information is effect-only —
+   every glitch also announces itself in text.
+   ===================================================================== */
+const GCX = (()=>{
+  "use strict";
+  const calm = ()=> document.body.classList.contains("calm")
+                 || document.body.classList.contains("reduce-motion");
+
+  /* ---------------- audio: fully synthesised, no files ---------------- */
+  const A = { ctx:null, master:null, muted:false };
+  try{ A.muted = localStorage.getItem("gc_muted")==="1"; }catch(e){}
+  function ac(){
+    if(A.ctx){ if(A.ctx.state==="suspended") A.ctx.resume(); return A.ctx; }
+    const C = window.AudioContext||window.webkitAudioContext; if(!C) return null;
+    A.ctx = new C();
+    A.master = A.ctx.createGain();
+    A.master.gain.value = A.muted?0:0.75;
+    A.master.connect(A.ctx.destination);
+    return A.ctx;
+  }
+  function tone(f,dur,type,vol,sweep){
+    const c=ac(); if(!c) return;
+    const t=c.currentTime, o=c.createOscillator(), g=c.createGain();
+    o.type=type||"sine"; o.frequency.setValueAtTime(f,t);
+    if(sweep) o.frequency.exponentialRampToValueAtTime(Math.max(20,sweep),t+dur);
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||.3,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(A.master); o.start(t); o.stop(t+dur+.02);
+  }
+  function noise(dur,freq,q,vol){
+    const c=ac(); if(!c) return;
+    const t=c.currentTime, n=Math.floor(c.sampleRate*Math.max(.05,dur));
+    const b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+    const s=c.createBufferSource(); s.buffer=b;
+    const f=c.createBiquadFilter(); f.type="bandpass"; f.frequency.value=freq; f.Q.value=q||1;
+    const g=c.createGain(); g.gain.setValueAtTime(vol||.3,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    s.connect(f); f.connect(g); g.connect(A.master); s.start(t); s.stop(t+dur+.02);
+  }
+  const SFX = {
+    hit(d){ noise(.05,900+d*22,1.6,.16); tone(180+d*4,.10,"square",.20,70); },
+    crit(d){ noise(.07,1500,1.2,.24); tone(320,.16,"sawtooth",.24,90);
+             setTimeout(()=>tone(640,.12,"square",.16),60); },
+    taken(d){ noise(.09,320,.9,.22); tone(120,.14,"sine",.24,50); },
+    guard(){ tone(300,.14,"triangle",.16,420); },
+    heal(){ tone(520,.14,"sine",.18); setTimeout(()=>tone(780,.20,"sine",.16),90); },
+    corrupt(){ noise(.30,240,.5,.22); tone(90,.30,"sawtooth",.18,40); },
+    glitch(){ noise(.16,2600,.4,.14); tone(1200,.07,"square",.10,300); },
+    boss(){ tone(70,.9,"sawtooth",.28,45); noise(.7,320,.4,.16);
+            setTimeout(()=>tone(110,.7,"square",.18,60),160); },
+    combo(n){ tone(420+Math.min(n,10)*70,.11,"triangle",.18); },
+    win(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.24,"triangle",.20),i*110)); },
+    lose(){ [392,330,262,196].forEach((f,i)=>setTimeout(()=>tone(f,.30,"sine",.20),i*150)); },
+    click(){ tone(760,.035,"square",.07); },
+    unlock(){ [659,880,1175].forEach((f,i)=>setTimeout(()=>tone(f,.22,"triangle",.20),i*90)); }
+  };
+  function setMuted(m){
+    A.muted=m; try{ localStorage.setItem("gc_muted",m?"1":"0"); }catch(e){}
+    if(A.master){ const t=A.ctx.currentTime;
+      A.master.gain.cancelScheduledValues(t);
+      A.master.gain.setValueAtTime(A.master.gain.value,t);
+      A.master.gain.linearRampToValueAtTime(m?0:0.75,t+.08); }   // ramp, never a click
+  }
+
+  /* ---------------- sparks: one pooled canvas ---------------- */
+  let cv=null, cx=null, parts=[], raf=0;
+  function ensureCanvas(){
+    if(cv) return;
+    cv=document.createElement("canvas");
+    cv.id="gcx-spark";
+    cv.setAttribute("aria-hidden","true");
+    cv.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60";
+    document.body.appendChild(cv);
+    cx=cv.getContext("2d");
+    sizeCanvas(); addEventListener("resize",sizeCanvas);
+  }
+  function sizeCanvas(){
+    if(!cv) return;
+    const r=Math.min(devicePixelRatio||1,2);
+    cv.width=innerWidth*r; cv.height=innerHeight*r;
+    cx.setTransform(r,0,0,r,0,0);
+  }
+  function sparkAt(sel,n,hue){
+    ensureCanvas();
+    const host=document.querySelector(sel+" .card")||document.querySelector(sel);
+    if(!host) return;
+    const b=host.getBoundingClientRect();
+    const x=b.left+b.width/2, y=b.top+b.height/2;
+    const count = calm()? Math.min(n,4) : n;
+    for(let i=0;i<count;i++){
+      const a=Math.random()*Math.PI*2, s=1.5+Math.random()*5.5;
+      parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.2,l:1,hue:hue||190});
+    }
+    if(!raf) raf=requestAnimationFrame(step);
+  }
+  function step(){
+    raf=0;
+    if(!cx) return;
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    parts=parts.filter(p=>p.l>0);
+    parts.forEach(p=>{
+      p.l-=.035; p.vy+=.22; p.x+=p.vx; p.y+=p.vy;
+      cx.globalAlpha=Math.max(0,p.l);
+      cx.fillStyle="hsl("+p.hue+",90%,"+(55+p.l*25)+"%)";
+      cx.fillRect(p.x,p.y,2.6,2.6);
+    });
+    cx.globalAlpha=1;
+    if(parts.length) raf=requestAnimationFrame(step);
+    else cx.clearRect(0,0,innerWidth,innerHeight);
+  }
+
+  /* ---------------- reality glitches ----------------
+     Cosmetic only. They never alter damage, energy or AI — the game is
+     already hard enough without lying to the player about the board. */
+  const GLITCH_FX = [
+    {id:"invert",   name:"COLOUR INVERSION",  msg:"Palette desynchronised."},
+    {id:"tear",     name:"SCREEN TEARING",    msg:"Frame buffer torn."},
+    {id:"corruptpx",name:"PIXEL CORRUPTION",  msg:"Texture memory degraded."},
+    {id:"lag",      name:"FAKE LAG",          msg:"Latency spike detected."},
+    {id:"hud",      name:"HUD CORRUPTION",    msg:"Interface data unreadable."},
+    {id:"flip",     name:"GRAVITY SHIFT",     msg:"Orientation vector inverted."},
+    {id:"slowmo",   name:"TIME DILATION",     msg:"Clock drift. Reality unstable..."}
+  ];
+  let glitchTimer=0;
+  function realityGlitch(force){
+    if(calm()) return null;                       // calm mode never distorts
+    const g = force || GLITCH_FX[Math.floor(Math.random()*GLITCH_FX.length)];
+    SFX.glitch();
+    const b=document.createElement("div");
+    b.className="gcx-sys"; b.setAttribute("aria-hidden","true");
+    b.innerHTML='<span class="gcx-err">SYSTEM ERROR</span><span class="gcx-msg">'+g.msg+'</span>';
+    document.body.appendChild(b);
+    document.body.classList.add("gcx-"+g.id);
+    clearTimeout(glitchTimer);
+    const dur = g.id==="lag"?900:1500;
+    glitchTimer=setTimeout(()=>{
+      document.body.classList.remove("gcx-"+g.id);
+      b.remove();
+    },dur);
+    return g;                                     // caller announces it in text
+  }
+
+  /* ---------------- combo ---------------- */
+  let combo=0, best=0;
+  function bump(){
+    combo++; if(combo>best) best=combo;
+    if(combo>=2){
+      SFX.combo(combo);
+      const el=document.createElement("div");
+      el.className="gcx-combo"; el.setAttribute("aria-hidden","true");
+      el.textContent=combo+"× CHAIN";
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),1100);
+    }
+    return combo;
+  }
+  function breakCombo(){ combo=0; }
+
+  /* ---------------- lethal-blow freeze ---------------- */
+  function freeze(ms){
+    if(calm()) return;
+    document.body.classList.add("gcx-freeze");
+    setTimeout(()=>document.body.classList.remove("gcx-freeze"), ms||420);
+  }
+
+  /* ---------------- achievements + stats ---------------- */
+  const ACH = [
+    {id:"first",   name:"First Blood",     desc:"Win your first clash.",           test:s=>s.stats.wins>=1},
+    {id:"ten",     name:"Ten Down",        desc:"Win ten clashes.",                test:s=>s.stats.wins>=10},
+    {id:"combo5",  name:"Chain Reaction",  desc:"Land a 5× chain.",                test:s=>(s.stats.bestCombo||0)>=5},
+    {id:"combo10", name:"Combo Master",    desc:"Land a 10× chain.",               test:s=>(s.stats.bestCombo||0)>=10},
+    {id:"nohit",   name:"Untouchable",     desc:"Win a clash without taking damage.",test:s=>(s.stats.nohit||0)>=1},
+    {id:"boss1",   name:"Giant Killer",    desc:"Defeat a boss.",                  test:s=>(s.stats.bosses||0)>=1},
+    {id:"boss3",   name:"Corruption Purge",desc:"Defeat three bosses.",            test:s=>(s.stats.bosses||0)>=3},
+    {id:"glitched",name:"Reality Unstable",desc:"Survive twenty reality glitches.",test:s=>(s.stats.glitches||0)>=20},
+    {id:"collect", name:"Archivist",       desc:"Own twelve different cards.",     test:s=>(s.owned||[]).length>=12},
+    {id:"clear15", name:"The Deep Static", desc:"Clear every stage.",              test:s=>(s.cleared||[]).length>=15}
+  ];
+  function checkAch(SV,onUnlock){
+    SV.ach = SV.ach||{};
+    const got=[];
+    ACH.forEach(a=>{ if(!SV.ach[a.id]){ try{ if(a.test(SV)){ SV.ach[a.id]=1; got.push(a); } }catch(e){} } });
+    if(got.length){ SFX.unlock(); got.forEach(a=>onUnlock&&onUnlock(a)); }
+    return got;
+  }
+
+  /* ---------------- CRT + boot ---------------- */
+  function setCRT(on){
+    document.body.classList.toggle("gcx-crt",!!on);
+    try{ localStorage.setItem("gc_crt",on?"1":"0"); }catch(e){}
+  }
+  function crtOn(){ try{ return localStorage.getItem("gc_crt")==="1"; }catch(e){ return false; } }
+
+  function init(){
+    ensureCanvas();
+    if(crtOn()) document.body.classList.add("gcx-crt");
+    // the audio context may only be created inside a gesture
+    const unlock=()=>{ ac(); document.removeEventListener("pointerdown",unlock); };
+    document.addEventListener("pointerdown",unlock,{once:false});
+  }
+
+  return { init, sfx:SFX, setMuted, isMuted:()=>A.muted, unlockAudio:ac,
+           spark:sparkAt, glitch:realityGlitch, GLITCH_FX,
+           combo:bump, breakCombo, comboNow:()=>combo, bestCombo:()=>best,
+           freeze, ACH, checkAch, setCRT, crtOn, calm };
+})();
+/* GCX:END */
+try{
+  window.GCX = GCX;                       // debug + test handle
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",()=>GCX.init());
+  else GCX.init();
+}catch(e){}
+
+/* Sound and CRT are stored outside SV so they survive a save reset, and both
+   default to a state that respects Calm Mode. */
+(function(){
+  const host = $("#calmtoggle") && $("#calmtoggle").parentNode;
+  if(!host) return;
+  const mk=(id,label)=>{ const b=document.createElement("button");
+    b.className=$("#calmtoggle").className; b.id=id; b.textContent=label; host.appendChild(b); return b; };
+  const snd = mk("gcxsound","Sound: "+(GCX.isMuted()?"Off":"On"));
+  snd.onclick=()=>{ GCX.unlockAudio(); GCX.setMuted(!GCX.isMuted());
+    snd.textContent="Sound: "+(GCX.isMuted()?"Off":"On"); if(!GCX.isMuted()) GCX.sfx.click(); };
+  const crt = mk("gcxcrt","CRT Scanlines: "+(GCX.crtOn()?"On":"Off"));
+  crt.onclick=()=>{ const on=!GCX.crtOn(); GCX.setCRT(on);
+    crt.textContent="CRT Scanlines: "+(on?"On":"Off"); GCX.sfx.click(); };
+})();
+
 const FX = (()=>{
   const MAX=180; const pool=[]; let live=0, cv=null, cx=null, raf=0, dpr=1;
   for(let i=0;i<MAX;i++) pool.push({on:false,x:0,y:0,vx:0,vy:0,life:0,max:1,r:2,c:"#fff",g:0.06});
@@ -1440,6 +1719,9 @@ const FX = (()=>{
   },true);
 })();
 
+/* Test seam: lets the offline harness drive a real battle without clicking
+   through team selection. Read-only entry point; changes no game behaviour. */
+try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c); }catch(e){}
 function renderBattle(){
   const p=P(), e=battle.glitch;
   // arena banner
@@ -1600,30 +1882,51 @@ function doTurn(cmd){
     ev=evs;
     if(pAct!=="__swap") Engine.bankGlyph(battle, P().shape);
   battle.dmgTaken += Math.max(0,hpBefore-P().hp);
+  if(!battle.startedAt) battle.startedAt = Date.now();
   if(battle.tut && ["charge","strike","special"][battle.tut-1]===pAct){
     battle.tut++;
     if(battle.tut>3){ battle.tut=0; SV.tutorialDone=true; save(); toast("You've got it — the arena is yours. ✦"); }
   }
+  // Reality glitches: cosmetic only, never touching damage, energy or AI.
+  // They fire on a minority of turns and always announce themselves in the log.
+  if(!battle.over && Math.random() < 0.16){
+    const gg = GCX.glitch();
+    if(gg){
+      battle.glitchCount = (battle.glitchCount||0)+1;
+      ev.push({t:"reality", name:gg.name, msg:gg.msg});
+    }
+  }
+  try{ window.__GC = ()=>battle; }catch(e){}
   const clashEv=ev.find(x=>x.t==="clash");
   const narrate=()=>{
     let out=[];
     ev.forEach(x=>{
       if(x.t==="hit"&&x.who==="p"){ out.push(`${P().name} ${x.sp?`unleashes <b>${x.hybrid?"a hybrid move":P().special.name}</b>`:"strikes"} — <b>${x.d}</b> damage!`); popOn("#ef","-"+x.d,"");
-        FX.strike("#ef",x.d); FX.glitch("#ef"); if(x.sp) FX.shake(x.d); }
+        FX.strike("#ef",x.d); FX.glitch("#ef"); if(x.sp) FX.shake(x.d);
+        GCX.spark("#ef", x.sp?26:14, x.sp?48:190);
+        (x.sp||x.d>=18) ? GCX.sfx.crit(x.d) : GCX.sfx.hit(x.d);
+        const cmb=GCX.combo(); if(cmb>(battle.bestCombo||0)) battle.bestCombo=cmb;
+        battle.dmgDealt = (battle.dmgDealt||0) + x.d;
+        if(e.hp<=0){ GCX.freeze(460); GCX.spark("#ef",34,48); }   // lethal blow lands hard
+      }
       if(x.t==="hit"&&x.who==="e"){ out.push(`${e.name} ${x.sp?"fires a charged blast":"hits back"} — ${x.d} damage.`); popOn("#pf","-"+x.d,"");
-        FX.strike("#pf",x.d); FX.glitch("#pf"); FX.shake(x.d); Haptics.impact(x.d); }
+        FX.strike("#pf",x.d); FX.glitch("#pf"); FX.shake(x.d); Haptics.impact(x.d);
+        GCX.spark("#pf", 12, 350); GCX.sfx.taken(x.d); GCX.breakCombo(); }
       if(x.t==="miss") out.push(`${e.name} blinks aside — your strike misses!`);
-      if(x.t==="guard"&&x.who==="p"){ out.push(`You brace and steady your energy.`); FX.charge("#pf"); }
+      if(x.t==="guard"&&x.who==="p"){ out.push(`You brace and steady your energy.`); FX.charge("#pf"); GCX.sfx.guard(); }
       if(x.t==="guard"&&x.who==="e") out.push(`${e.name} hunkers down.`);
-      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); FX.heal("#pf"); }
+      if(x.t==="fx"&&x.fx==="heal"){ out.push(`Halo light restores <b>${x.v} HP</b>.`); popOn("#pf","+"+x.v,"heal"); FX.heal("#pf"); GCX.sfx.heal(); GCX.spark("#pf",10,140); }
       if(x.t==="fx"&&x.fx==="refund"){ out.push(`Momentum flows back — <b>+${x.v} energy</b>.`); popOn("#pf","+"+x.v+"⚡","en"); }
       if(x.t==="fx"&&x.fx==="shield") out.push(`A stone shield forms around you. 🛡`);
-      if(x.t==="corrupt"){ out.push(`⚠ <b>Corruption spreads into ${P().name}!</b>`); FX.corrupt("#pf"); FX.glitch("#pf"); Haptics.fail(); }
+      if(x.t==="corrupt"){ out.push(`⚠ <b>Corruption spreads into ${P().name}!</b>`); FX.corrupt("#pf"); FX.glitch("#pf"); Haptics.fail();
+        GCX.sfx.corrupt(); GCX.breakCombo(); }
+      if(x.t==="reality") out.push(`<b>⚠ ${x.name}</b> — ${x.msg} <i>The arena flickers, but the numbers hold.</i>`);
       if(x.t==="uncorrupt") out.push(`The corruption burns out. ${P().name} steadies.`);
       if(x.t==="purged") out.push(`${P().name} is busy purging — no action this turn.`);
       if(x.t==="decay"){ out.push(`Data Decay gnaws at the arena — ${x.v} HP each.`); }
       if(x.t==="eshield") out.push(`${e.name} raises a static shield.`);
       if(x.t==="revive") out.push(`⚠ ${e.name} flickers… and reforms at partial power!`);
+      if(x.t==="phase2"){ GCX.sfx.boss(); GCX.freeze(520); GCX.spark("#ef",40,300); }
       if(x.t==="phase2") out.push(x.reborn
         ? `⛈ <b>${e.name} shatters — but the fragments reform into its final phase!</b>`
         : `⚡ <b>${e.name} enters its second form!</b>`);
@@ -1680,9 +1983,48 @@ $("#quitbtn").onclick=(()=>{ let arm=false; return ()=>{
 };})();
 
 /* ----- results, packs, XP, stickers ----- */
+/* Extended statistics and the achievement wall. Both read only from SV, so an
+   older save simply shows zeroes rather than breaking. */
+function gcxStatsRows(){
+  const st=SV.stats||{};
+  const mins=Math.round((st.playMs||0)/60000);
+  return `
+    <div class="spread"><span>Longest chain</span><b>${st.bestCombo||0}\u00d7</b></div>
+    <div class="spread"><span>Damage dealt</span><b>${(st.dmgDealt||0).toLocaleString()}</b></div>
+    <div class="spread"><span>Bosses beaten</span><b>${st.bosses||0}</b></div>
+    <div class="spread"><span>Flawless wins</span><b>${st.nohit||0}</b></div>
+    <div class="spread"><span>Reality glitches survived</span><b>${st.glitches||0}</b></div>
+    <div class="spread"><span>Time in the arena</span><b>${mins} min</b></div>`;
+}
+function gcxAchPanel(){
+  const have=SV.ach||{};
+  const got=GCX.ACH.filter(a=>have[a.id]).length;
+  return `<div class="panel"><h3>Achievements ${got} / ${GCX.ACH.length}</h3>` +
+    GCX.ACH.map(a=>`<div class="spread" style="opacity:${have[a.id]?1:.45}">
+      <span>${have[a.id]?"\ud83c\udfc6":"\ud83d\udd12"} ${a.name}<br>
+      <small class="muted">${a.desc}</small></span></div>`).join("") + `</div>`;
+}
+
 function endBattle(won, timeout){
   battle.over=true;
   const g=GLITCHES[battle.stageIdx];
+  // extended statistics — additive, so an older save just starts from zero
+  SV.stats = SV.stats||{}; 
+  SV.stats.battles = (SV.stats.battles||0)+1;
+  SV.stats.bestCombo = Math.max(SV.stats.bestCombo||0, battle.bestCombo||0);
+  SV.stats.glitches = (SV.stats.glitches||0) + (battle.glitchCount||0);
+  SV.stats.dmgDealt = (SV.stats.dmgDealt||0) + (battle.dmgDealt||0);
+  SV.stats.playMs = (SV.stats.playMs||0) + (Date.now()-(battle.startedAt||Date.now()));
+  if(won){
+    if(battle.dmgTaken===0) SV.stats.nohit=(SV.stats.nohit||0)+1;
+    if(g && g.trait==="boss") SV.stats.bosses=(SV.stats.bosses||0)+1;
+  }
+  try{
+    GCX.breakCombo();
+    won ? GCX.sfx.win() : GCX.sfx.lose();
+    const got = GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc));
+    if(got.length) save();
+  }catch(e){}
   const sheet=$("#resultsheet");
   let html="";
   if(won){
@@ -1728,7 +2070,9 @@ function endBattle(won, timeout){
           <div class="spread"><span>Stickers earned</span><b>${Object.keys(SV.stickers).length}/${STICKERS.length}</b></div>
           <div class="spread"><span>Total victories</span><b>${SV.stats.wins}</b></div>
           <div class="spread"><span>Clash wins</span><b>${SV.stats.clashWins}</b></div>
+          ${gcxStatsRows()}
         </div>
+        ${gcxAchPanel()}
         ${xpRow}
         <p class="muted center">Static Storm will re-form one day. Until then — the collection won't complete itself. 🃏</p>
         <button class="btn primary" data-close data-go="home">Continue</button>`;
