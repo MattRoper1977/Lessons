@@ -456,20 +456,26 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
   font-size:2rem;line-height:1;margin-bottom:6px;
   filter:drop-shadow(0 2px 3px rgba(15,23,42,.15));
 }
+/* Dark, not the zone colour. None of the four zone tokens clears 4.5:1 against
+   white (they run 2.2–4.2:1), so tinting a 13px bold heading with one would
+   have made this card the least legible text in the suite. The card's zone
+   identity is carried by the 6px top border and the badge instead. */
 .product-card h4{
   margin:0 0 4px;font-size:.82rem;font-weight:900;
-  letter-spacing:.09em;text-transform:uppercase;color:var(--pc);
+  letter-spacing:.09em;text-transform:uppercase;color:#1f2937;
 }
 .product-card p{
   margin:0;font-size:1rem;line-height:1.4;color:#1f2937;font-weight:600;
 }
 /* The badge names the card's job in the lesson — anchored so all four align
-   however much text sits above them. */
+   however much text sits above them. White on the zone colour is the pattern
+   the decks already use for .slide-tag and .wedo-capture, so it is kept; it is
+   set a size up from a caption to make the most of the contrast available. */
 .product-card .country-badge{
   position:absolute;left:14px;bottom:12px;
   background:var(--pc);color:#fff;
-  font-size:.62rem;font-weight:900;letter-spacing:.12em;
-  padding:3px 9px;border-radius:6px;
+  font-size:.7rem;font-weight:900;letter-spacing:.1em;
+  padding:3px 10px;border-radius:6px;
 }
 /* Role colours, drawn only from the subject's approved palette. */
 .product-card:nth-child(1){--pc:var(--lo-border)}    /* SPARK    — the big idea  */
@@ -696,7 +702,41 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 }
 
 /* ==========================================================================
-   8 · REDUCED MOTION
+   8 · FINDING YOUR OWN WORK  (differentiated task cards)
+   ---------------------------------------------------------------------------
+   The Arrival, Independent and Exit slides each offer the same work at three
+   levels — With support / On your own / Take it further. Each level already has
+   a colour, on its toggle button and on its heading, but the cards themselves
+   were identical tan boxes, so a pupil had to read all three to find theirs.
+
+   Each card now carries its own level's colour down its leading edge. The
+   colour is read off the heading the lesson already coloured (see
+   accentLevelCards in the JS), so nothing is hardcoded here and no new colour
+   enters the suite. The heading text and icon still name the level, so the
+   colour is reinforcement, never the only signal.
+   ========================================================================== */
+.task-box.at-levelled{
+  border-left:8px solid var(--tb-accent);
+  padding-left:16px;
+}
+
+/* The arrival and exit grids hold exactly three questions in every deck — 186
+   of them across the suite — but were laid out in two columns, so the third
+   always dropped to a ragged second row and the slide read as longer than it
+   is. Three questions, three columns. */
+.arrival-grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1024px){
+  .arrival-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* The zone tag — I DO, WE DO, STARTER — is styled as a pill (inline-block,
+   rounded, padded) but sits as a direct child of the column-flex .slide, so
+   it stretched to the full width of every slide in the suite and read as a
+   banner with a stray word in it. Let it be the size of its own label. */
+.slide > .slide-tag{align-self:flex-start}
+
+/* ==========================================================================
+   9 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -1223,11 +1263,39 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   }
 
   /* Feedback lines are updated by script; announce them so a pupil using a
-     screen reader hears the same confirmation the room sees. */
+     screen reader hears the same confirmation the room sees. The progress
+     label already names the slide, so making it a status region is all that
+     is needed to announce that the deck has moved on. */
   function setupLiveRegions() {
     ['pres-msg', 'match-fb', 'pres-num', 'match-score'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el && !el.getAttribute('aria-live')) el.setAttribute('aria-live', 'polite');
+    });
+    var label = document.getElementById('progressLabel');
+    if (label && !label.getAttribute('aria-live')) {
+      label.setAttribute('role', 'status');
+      label.setAttribute('aria-live', 'polite');
+    }
+  }
+
+  /* ==================================================================
+     FEATURE · Give each differentiated task card its level's colour
+     ------------------------------------------------------------------
+     Arrival, Independent and Exit each offer the same work at three
+     levels, and each level's heading is already coloured by the lesson.
+     The cards were identical, so a pupil had to read all three to find
+     theirs. We lift the colour the lesson chose off its own heading and
+     run it down the card's leading edge — nothing hardcoded, no new
+     colour, and the heading still names the level in words and an icon.
+     ================================================================== */
+  function accentLevelCards(root) {
+    (root || document).querySelectorAll('.task-box').forEach(function (box) {
+      if (box.classList.contains('at-levelled')) return;
+      var heading = box.querySelector('h3[style*="color"]');
+      var colour = heading && heading.style.color;
+      if (!colour) return;
+      box.style.setProperty('--tb-accent', colour);
+      box.classList.add('at-levelled');
     });
   }
 
@@ -1298,6 +1366,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     setupLiveRegions();
     setupPresNumbering();
     fitMatchGrid();
+    accentLevelCards(document);
   });
 
   if (document.readyState === 'loading') {

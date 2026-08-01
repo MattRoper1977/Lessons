@@ -211,11 +211,39 @@
   }
 
   /* Feedback lines are updated by script; announce them so a pupil using a
-     screen reader hears the same confirmation the room sees. */
+     screen reader hears the same confirmation the room sees. The progress
+     label already names the slide, so making it a status region is all that
+     is needed to announce that the deck has moved on. */
   function setupLiveRegions() {
     ['pres-msg', 'match-fb', 'pres-num', 'match-score'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el && !el.getAttribute('aria-live')) el.setAttribute('aria-live', 'polite');
+    });
+    var label = document.getElementById('progressLabel');
+    if (label && !label.getAttribute('aria-live')) {
+      label.setAttribute('role', 'status');
+      label.setAttribute('aria-live', 'polite');
+    }
+  }
+
+  /* ==================================================================
+     FEATURE · Give each differentiated task card its level's colour
+     ------------------------------------------------------------------
+     Arrival, Independent and Exit each offer the same work at three
+     levels, and each level's heading is already coloured by the lesson.
+     The cards were identical, so a pupil had to read all three to find
+     theirs. We lift the colour the lesson chose off its own heading and
+     run it down the card's leading edge — nothing hardcoded, no new
+     colour, and the heading still names the level in words and an icon.
+     ================================================================== */
+  function accentLevelCards(root) {
+    (root || document).querySelectorAll('.task-box').forEach(function (box) {
+      if (box.classList.contains('at-levelled')) return;
+      var heading = box.querySelector('h3[style*="color"]');
+      var colour = heading && heading.style.color;
+      if (!colour) return;
+      box.style.setProperty('--tb-accent', colour);
+      box.classList.add('at-levelled');
     });
   }
 
@@ -286,6 +314,7 @@
     setupLiveRegions();
     setupPresNumbering();
     fitMatchGrid();
+    accentLevelCards(document);
   });
 
   if (document.readyState === 'loading') {
