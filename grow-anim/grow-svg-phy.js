@@ -84,11 +84,11 @@
           arrow(350, 214, 350, 162, C.field, 5) +
           txt(350, 252, 'FLOOR UP', 11, C.field)) +
         ov('energy', C.energy,
-          wave(96, 264, 168, 3, 3, 2.6, C.energy) +
-          txt(132, 282, 'heat', 11, C.energy)) +
+          wave(20, 104, 92, 3, 3, 2.6, C.energy) +
+          txt(56, 122, 'heat', 11, C.energy)) +
 
         label('push', 20, 62, 'A force is a push or a pull', C.force) +
-        label('pair', 14, 190, 'Two surfaces rubbing', '#7c3aed', 178, GROUND_Y - 2);
+        label('pair', 12, 268, 'Two surfaces rubbing', '#7c3aed', 176, GROUND_Y + 2);
     },
     teach:
       'observe: show ground, person, box               :: Watch. Somebody pushing a box. Nothing unusual.\n' +
@@ -481,6 +481,13 @@
       'show sun, earth, night + overlay light :: Lit side and shadow side.\n' +
       'label day, night                       :: Day and night.\n' +
       'show you + flow you + label spin       :: Because the Earth spins.',
+    process:
+      'observe: show sun, earth :: Midday. Your side is facing the Sun.\n' +
+      'notice: overlay light    :: Sunlight only ever travels outwards, in straight lines.\n' +
+      'notice: show night       :: The far side is in shadow the whole time.\n' +
+      'notice: show you + flow you :: Now watch yourself being carried round.\n' +
+      'explain: label day       :: Morning \u2192 midday \u2192 evening, as you turn towards and away.\n' +
+      'label: label night, spin :: One turn = one day and one night. Twenty-four hours.',
     wrong:
       'show sun, earth :: Most people say night happens because the Sun goes down.\n' +
       'shake sun       :: As if the Sun moved.',

@@ -146,21 +146,29 @@
 
   /* ================================================================= verbs */
 
-  /* Targets are part names. In a rail or a dual stage, "body#2" means "the
-     body of the SECOND panel"; everything else addresses every panel. */
+  /* In a rail or a dual stage, "body#2" means "the body of the SECOND panel";
+     a bare name addresses every panel. Parts, labels and overlays all resolve
+     the same way, so a script written for one stage reads the same on all of
+     them and "#2" never silently stops working on some verbs but not others. */
+  function byAttr(stage, attr, nm) {
+    var h = nm.indexOf('#'), sel;
+    if (h > 0) {
+      var i = parseInt(nm.slice(h + 1), 10), base = nm.slice(0, h);
+      sel = '.g-cell:nth-of-type(' + i + ') [' + attr + '="' + base + '"],' +
+            '.g-dual > figure:nth-of-type(' + i + ') [' + attr + '="' + base + '"]';
+    } else {
+      sel = '[' + attr + '="' + nm + '"]';
+    }
+    return $$(sel, stage);
+  }
+
   function parts(stage, names) {
     if (!names || !names.length || names[0] === '*') return $$('[data-part]', stage);
     var out = [];
     names.forEach(function (nm) {
-      nm = nm.split('>')[0].trim();
-      var h = nm.indexOf('#'), sel;
-      if (h > 0) {
-        sel = '.g-cell:nth-of-type(' + parseInt(nm.slice(h + 1), 10) + ') [data-part="' + nm.slice(0, h) + '"],' +
-              '.g-dual > figure:nth-of-type(' + parseInt(nm.slice(h + 1), 10) + ') [data-part="' + nm.slice(0, h) + '"]';
-      } else {
-        sel = '[data-part="' + nm + '"]';
-      }
-      $$(sel, stage).forEach(function (e) { if (out.indexOf(e) < 0) out.push(e); });
+      byAttr(stage, 'data-part', nm.split('>')[0].trim()).forEach(function (e) {
+        if (out.indexOf(e) < 0) out.push(e);
+      });
     });
     return out;
   }
@@ -383,7 +391,7 @@
     /* the words arrive only after the picture has made the point */
     label: function (stage, a) {
       a.targets.forEach(function (t) {
-        $$('[data-label="' + t + '"]', stage).forEach(function (e) {
+        byAttr(stage, 'data-label', t).forEach(function (e) {
           if (a.text) { var tx = $('text', e); if (tx) tx.textContent = a.text; }
           restart(e, 'g-labelled');
         });
@@ -450,7 +458,8 @@
   function labels(stage, names) {
     var out = [];
     (names && names.length ? names : ['*']).forEach(function (nm) {
-      $$(nm === '*' ? '[data-label]' : '[data-label="' + nm + '"]', stage).forEach(function (e) { out.push(e); });
+      (nm === '*' ? $$('[data-label]', stage) : byAttr(stage, 'data-label', nm))
+        .forEach(function (e) { if (out.indexOf(e) < 0) out.push(e); });
     });
     return out;
   }
@@ -463,7 +472,7 @@
   /* ==================================== Phase 6 · invisible-science overlays */
 
   function setOverlay(stage, name, on) {
-    $$('[data-overlay="' + name + '"]', stage).forEach(function (e) { e.classList.toggle('on', !!on); });
+    byAttr(stage, 'data-overlay', name).forEach(function (e) { e.classList.toggle('on', !!on); });
     syncXray(stage);
   }
 

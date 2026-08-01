@@ -32,7 +32,7 @@ as well as the science.
 | `grow-polish.css` / `.js` | 12 | Lighting, depth, parallax, particles, micro-interactions. Optional. |
 | `demo.html` | — | **Open this first.** Living reference — every asset, every phase, copy-paste snippets. |
 | `inject.py` | — | Inlines the library into single-file lessons so they still work offline. |
-| `wire_lessons.py` | — | Puts the teaching behaviours on the right slides of the GROW lessons. |
+| `wire_lessons.py` | — | Puts the teaching behaviours on the right slides of the GROW lessons, and applies small idempotent repairs to the lesson's own deck code. |
 
 ---
 
@@ -232,6 +232,11 @@ python3 grow-anim/inject.py --check Science_Teesside/Grow/*.html   # CI / pre-co
 Both scripts are idempotent and marker-based: they replace what is between their
 markers and never touch anything else. A fix made once here reaches every lesson.
 Existing lesson content is added to, never removed.
+
+`wire_lessons.py` fills eight slots per lesson — story spine, motion key, I Do
+stage, We-Do frame, misconception engine, dual representation, process animation
+and retrieval — and applies the repairs listed in its `PATCHES` table. Each patch
+is one line, explained where it is declared, and a no-op once applied.
 
 ---
 
