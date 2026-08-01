@@ -18,10 +18,12 @@ git ls-files '*.js' '*.mjs' '*.sh' '*.py' \
 
 Every instrument must assert a **count, a value, or a set invariance** — never
 merely the absence of a thrown exception. An instrument that exits 0 having
-matched nothing is the cheapest possible false green.
+matched nothing produces a **false zero**, which `preflight.py` names as *"the
+most expensive defect class: it CLOSES a question that was never examined."*
+That is the estate's own phrase and the one to use.
 
-Recorded as INSTRUMENTS.md standing rule 13 (timing) and REGISTER R-E22 (gate
-shape).
+Recorded as INSTRUMENTS.md standing rules 13 (timing), 14 (false zero),
+15 (fix at the gate), 16 (prove the input set) and REGISTER R-E22 (gate shape).
 
 ## Totals
 
@@ -132,14 +134,61 @@ if (dead.length) { console.error('stages that revealed nothing: ' + dead.join(',
 - `Science_Teesside/launch-engine/sci-engine.js`
 - `grow-anim/grow-anim.js`
 
-## Named backlog
+## Named backlog — four passes, not one sweep
 
-The 27 NOT-YET-AUDITED instruments are a pass of their own. The two
-largest clusters:
+The 27 NOT-YET-AUDITED instruments are **not** a general sweep. Each cluster
+belongs to a register that must be loaded first; auditing without the brief is
+how you measure the wrong thing confidently. Filed as discrete future passes.
 
-- **`tools/glitchclash/*.test.js` (10 files)** — a real suite with descriptive
-  headers, gated in CI on `Games/*.html` paths. Untouched here because nothing in
-  this pass changed the game.
-- **`Art_Teesside/tools/assert_*` and `_passsci1/` gates** — belong to passes with
-  their own registers. Auditing them without their briefs would repeat the mistake
-  this pass exists to correct: measuring something adjacent to the claim.
+### BL-1 · Glitch Clash suite — 10 scripts
+- **Load first:** the Glitch Clash brief, plus `tools/glitchclash/run.sh` for how
+  the suite is invoked in CI.
+- **Files:** `tools/glitchclash/gc*.test.js`.
+- **Why not folded in:** CI gates it on `Games/*.html` paths, and nothing in this
+  session changed the game. Running it here would prove only that an unchanged
+  thing is unchanged. It is also the one cluster with genuinely descriptive
+  per-file headers, so it is the cheapest to audit when its own pass comes.
+
+### BL-2 · Art Teesside assertions — 5 scripts
+- **Load first:** `Art_Teesside/` register (`AT-INST-01..04` are self-numbered, so
+  a register exists).
+- **Files:** `assert_estate.py`, `assert_cooccurrence.py`, `assert_kit.py`,
+  `assert_print.js`, `kit_text.py`.
+- **Why not folded in:** they assert co-occurrence and closed-kit invariants whose
+  *expected sets* live in that register. Without it, "0 violations" cannot be
+  distinguished from "0 items examined" — the false zero exactly.
+
+### BL-3 · `_passsci1` and `_passla` gates — ~8 scripts
+- **Load first:** the SCI-3 / Pass LA briefs; several carry hardcoded expected
+  constants (`gates.py`, `batch_gate.py`, `hub_chip_gate.js`).
+- **Why not folded in:** standing rule 3 in this index's terms — an assertion
+  against a hardcoded constant is only meaningful beside the brief that set it.
+  `verify_commit_set.py` already caught a stale constant of exactly this kind in
+  its own declaration.
+
+### BL-4 · BUILD_ASDAN and build-engine — 4 scripts
+- **Load first:** `BUILD_ASDAN/_framework/` conventions.
+- **Files:** `qa_check.py`, `smoke_test.js`, `style_check.js`,
+  `build-engine/tools/quality_check.js`.
+- **Why not folded in:** `style_check.js` claims a change is *visually inert*,
+  which is a claim about rendering, and its empty-set behaviour is unverified.
+  `.at-reveal` (recorded in R-E22) also lives in this cluster's stylesheet, so the
+  pass has a concrete first question to answer.
+
+## Known-incomplete: the fill-mode enumeration
+
+The gate census scanned **five stylesheets**. Tested afterwards, that was
+incomplete — fill modes also live in:
+
+- inline `style="…animation:…both"` (5 files, including `Science_Teesside/Grow/SCI_G_W3_Friction.html`)
+- longhand `animation-fill-mode` (the `2 Physics 10/` decks)
+- deck-level `<style>` blocks (`fadeInUp` and the framework animations, inlined)
+
+**Currently harmless, and the reason matters.** Every gate is hardened with
+`visibility:hidden` (R-E22), so it holds against *any* fill-mode class declared
+anywhere, enumerated or not — INSTRUMENTS.md standing rule 15.
+
+**It becomes load-bearing the first time anyone patches a call site instead of a
+gate.** At that moment the fix is only as complete as this enumeration, and this
+enumeration is known not to be. An incompleteness that states its own trigger is
+manageable; one that is quietly carried is not.
