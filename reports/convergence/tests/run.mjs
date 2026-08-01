@@ -122,7 +122,18 @@ for (const n of LESSONS) {
    Two adversarial fixtures are forced on top of the captions that happen to
    exist today: a caption long enough to wrap to two lines, and a heading long
    enough to push the whole stage down. Both must hold the same two conditions. */
-const VIEWPORTS = [[1280, 720], [1366, 768], [1920, 1080], [1024, 768], [390, 844]];
+/* Nominal viewports, plus the ones Windows display scaling actually produces —
+   scaling changes the CSS viewport, so a room running 1024x768 at 125% is a
+   819x614 page, which is not any of the nominal cells. 1024x768 at 150% is the
+   pessimal realistic classroom. */
+const VIEWPORTS = [
+  [1280, 720], [1366, 768], [1920, 1080], [1024, 768], [390, 844],
+  [819, 614],    /* 1024x768  @125% */
+  [1093, 614],   /* 1366x768  @125% */
+  [1536, 864],   /* 1920x1080 @125% */
+  [683, 512]     /* 1024x768  @150% — pessimal */
+];
+const SCALED = ['819x614', '1093x614', '1536x864', '683x512'];
 const MATRIX = [];
 let worst = { px: Infinity };
 
@@ -142,6 +153,9 @@ const PROBE = `(function (fixture) {
       $$('.g-cell > span, .ba-cell > span', stage).forEach(c => {
         c.textContent = c.textContent + ' — and this is the sort of caption a teacher writes when one word will not do';
       });
+    }
+    if (fixture === 'bigfont') {
+      document.documentElement.style.fontSize = '20px';   /* container default is 16px */
     }
     if (fixture === 'heading') {
       const h = slide.querySelector('h2');
@@ -174,7 +188,7 @@ const PROBE = `(function (fixture) {
   return { navTop: navRect ? Math.round(navRect.top) : null, vh, stages: out };
 })`;
 
-for (const fixture of [null, 'wrap', 'heading']) {
+for (const fixture of [null, 'wrap', 'heading', 'bigfont']) {
   for (const [w, h] of VIEWPORTS) {
     await viewportRun(w, h, async (p, n) => {
       const r = await p.evaluate(new Function('return ' + PROBE)(), fixture);
@@ -193,13 +207,19 @@ writeFileSync(resolve(ROOT, 'reports/convergence/_data/clearance-matrix.json'),
   /* A teacher at a projector does not scroll: on those viewports the whole
      stage has to be on screen. A phone scrolls as a matter of course, so the
      claim there is weaker and is asserted separately rather than folded in. */
-  const PROJECTOR = ['1280x720', '1366x768', '1920x1080', '1024x768'];
-  for (const fixture of ['as-authored', 'wrap', 'heading']) {
-    const set = measured.filter(m => m.fixture === fixture && PROJECTOR.includes(m.viewport));
-    const f = set.filter(m => m.clearance < 8);
-    t(`whole stage on screen without scrolling · projector · ${fixture}`, f.length === 0,
-      `${set.length - f.length}/${set.length} cells clear by >=8px, worst ${Math.min(...set.map(m => m.clearance))}px` +
-      (f.length ? '; offenders: ' + f.map(m => `${m.lesson}/${m.stage}@${m.viewport}=${m.clearance}px`).join(' ') : ''));
+  /* Nominal and scaled are two different claims and are asserted separately: a
+     room at 100% and the same room at 125% are not the same measurement, and
+     folding them together hides which one is failing. */
+  const NOMINAL = ['1280x720', '1366x768', '1920x1080', '1024x768'];
+  const GROUPS = { nominal: NOMINAL, scaled: SCALED };
+  for (const [group, vps] of Object.entries(GROUPS)) {
+    for (const fixture of ['as-authored', 'wrap', 'heading', 'bigfont']) {
+      const set = measured.filter(m => m.fixture === fixture && vps.includes(m.viewport));
+      const f = set.filter(m => m.clearance < 8);
+      t(`whole stage on screen without scrolling · ${group} · ${fixture}`, f.length === 0,
+        `${set.length - f.length}/${set.length} cells clear by >=8px, worst ${Math.min(...set.map(m => m.clearance))}px` +
+        (f.length ? '; offenders: ' + f.slice(0, 8).map(m => `${m.lesson}/${m.stage}@${m.viewport}=${m.clearance}px`).join(' ') : ''));
+    }
   }
   /* The claim that actually tests the fitting mechanism: when something DOES
      overflow, it must not be the picture. Every failing cell must have the
@@ -215,6 +235,14 @@ writeFileSync(resolve(ROOT, 'reports/convergence/_data/clearance-matrix.json'),
     (pictureAtFault.length ? '; picture still oversized in: ' +
       pictureAtFault.map(m => `${m.lesson}/${m.stage}@${m.viewport} fit=${m.fit}`).join(' ') : ''));
 
+  /* the scaled cells reported on their own, because they are the named risk */
+  for (const fixture of ['as-authored', 'wrap', 'heading', 'bigfont']) {
+    const sc = measured.filter(m => m.fixture === fixture && SCALED.includes(m.viewport));
+    const f = sc.filter(m => m.clearance < 8);
+    console.log(`      scaled viewports · ${fixture.padEnd(12)} ${sc.length - f.length}/${sc.length} clear` +
+      `, worst ${Math.min(...sc.map(m => m.clearance))}px` +
+      (f.length ? ' — ' + f.map(m => `${m.lesson}/${m.stage}@${m.viewport}=${m.clearance}px`).join(' ') : ''));
+  }
   const phone = measured.filter(m => m.viewport === '390x844');
   const phoneBad = phone.filter(m => m.clearance < 8);
   console.log(`      phone 390x844: ${phone.length - phoneBad.length}/${phone.length} clear; ` +
@@ -225,6 +253,52 @@ writeFileSync(resolve(ROOT, 'reports/convergence/_data/clearance-matrix.json'),
   console.log(`      cells measured: ${measured.length}  under 8px: ${failing.length}`);
   results.matrix = MATRIX;
   results.worst = worst;
+}
+
+/* ---------------------------------------------------------------- TEST 4b
+   The heading-length guardrail.
+
+   The projector + long-heading test is red on purpose: a heading long enough to
+   wrap pushes a We Do 2 stage off the foot of the slide, and the picture is
+   already at its floor so nothing in the layout can absorb it. That is a design
+   limit, not a bug, and the floor is not moving to hide it.
+
+   What can be prevented is authoring into it by accident. Bisecting the actual
+   threshold (reports/convergence/headingthreshold.mjs) puts it at 57 characters
+   on the tightest deck-and-viewport pair, W7 at 1024x768. This lints every slide
+   heading in all ten Autumn 1 decks against that, with the margin stated, so the
+   failing case cannot be written without the harness saying so. */
+{
+  const THRESHOLD = 57;                 /* measured, see headingthreshold.mjs */
+  const DECKS = LESSONS.map(L).concat([
+    'Science_Teesside/Grow/SCI_G_W3_Friction.html',
+    'Science_Teesside/Grow/SCI_G_W4_Mechanisms.html',
+    'Science_Teesside/Grow/SCI_G_W5_Fair_Test.html',
+    'Science_Teesside/Grow/SCI_G_W6_Earth_And_Planets.html',
+    'Science_Teesside/Grow/SCI_G_W7_The_Moon.html'
+  ]);
+  const over = [];
+  let longest = { len: 0 };
+  for (const rel of DECKS) {
+    const { p, ctx } = await page(rel);
+    const hs = await p.evaluate(() =>
+      [...document.querySelectorAll('.slide')].map(s => {
+        const h = s.querySelector('h2');
+        return { title: s.getAttribute('data-title') || '?',
+                 heading: h ? h.textContent.trim() : '',
+                 hasStage: !!s.querySelector('.g-stage, .ba-stage') };
+      }).filter(r => r.heading));
+    await ctx.close();
+    hs.forEach(r => {
+      if (r.heading.length > longest.len) longest = { len: r.heading.length, deck: rel, ...r };
+      if (r.heading.length >= THRESHOLD) over.push(`${rel.split('/').pop()} / ${r.title} (${r.heading.length})`);
+    });
+  }
+  t('no slide heading reaches the overflow threshold',
+    over.length === 0,
+    `threshold ${THRESHOLD} chars; longest real heading ${longest.len} ` +
+    `("${longest.heading}", ${longest.deck.split('/').pop()} / ${longest.title}) — ` +
+    `margin ${THRESHOLD - longest.len} chars` + (over.length ? '; over: ' + over.join(', ') : ''));
 }
 
 /* ---------------------------------------------------------------- TEST 5

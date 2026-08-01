@@ -2643,7 +2643,16 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
      GAP is the only number, and it is a breathing space rather than a
      prediction: 8px between the last thing a stage draws and the chrome. */
   var GAP = 8;
-  var FLOOR = 96;    /* below this a picture is decoration, not an explanation */
+  /* FLOOR does not move without Matt's say-so, and the reason is pedagogy rather
+     than layout. Both framework READMEs open with "the animation is the
+     explanation"; a picture small enough to stop being legible from the back of
+     a room has stopped explaining anything, so shrinking past this to make a
+     layout test go green would defeat the layer's own purpose. Where a slide
+     still overflows with the picture at this floor, the overflow is the TEXT and
+     the answer is the deck, not the constant. Measured at 96px: the
+     reports/convergence test suite asserts that every overflowing cell has
+     already reached it, so lowering this would hide real content pressure. */
+  var FLOOR = 96;
 
   function usableBottom(stage) {
     var vh = (global.innerHeight || doc.documentElement.clientHeight);
@@ -2877,7 +2886,18 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     if (typeof stage._gDone === 'function') stage._gDone(stage);
   }
 
+  /* Fitting must not depend on the stage having a control bar. A stage carrying
+     data-grow-nobar is driven by the slide's own Next button and paints no bar,
+     and the early return below used to take the fit with it — so every bar-less
+     stage was left relying on the ResizeObserver as its only backstop. The
+     observer does fire, but asynchronously, which is both a visible reflow in
+     the room and invisible to any synchronous check. Fit first-class here. */
   function paint(stage) {
+    paintBar(stage);
+    fit(stage);
+  }
+
+  function paintBar(stage) {
     var st = stage._g, bar = $('.g-bar', stage); if (!st || !bar) return;
     var dots = $('.g-dots', bar);
     if (dots) {
@@ -2897,16 +2917,10 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
         : st.i === 0 ? '▶ Start' : '▶ Next (' + (st.i + 1) + '/' + st.steps.length + ')';
       nb.classList.toggle('g-next-ready', !done && !st.paused);
     }
-    /* Measured LAST, because paint itself changes the bar — the dot count, the
-       button labels, the narration that has just been set — and every one of
+    /* The fit runs in paint(), AFTER this — because this is what changes the
+       bar (the dot count, the button labels, the narration just set) and any of
        those can wrap it to a second line and push the picture down. Measuring
-       first reads the layout that is about to be replaced. The room a picture
-       has is not fixed for the whole sequence either: a `note` fills the notes
-       strip mid-lesson. So it is re-measured on every repaint, which is what
-       makes the layout respond rather than predict. The picture can shrink a
-       little when a note first appears — visible, and the right trade against a
-       caption sliding under the buttons. */
-    fit(stage);
+       before it reads the layout that is about to be replaced. */
   }
 
   /* swap a stage onto a different asset / script at run time */

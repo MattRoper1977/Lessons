@@ -5,44 +5,67 @@
 
 ---
 
-# WALK SHEET — what to look hardest at, and why
+# WALK SHEET — for a room, not a browser
 
-110 renders in `reports/convergence/<lesson>/slide-NN.png` (60 BUILD across 12 slides,
-50 GROW across 10 — the GROW decks are ten slides, not twelve, so the target of
-120 was never reachable).
+**The one question no harness can answer: does a 256px plate read from the back row?**
+Everything below is measured in Chromium. None of it is a classroom.
 
-**1 · The three `wedo2-rule` stages that clear by 10px.** These are the tightest
-anywhere as authored, and 10px is not much of a margin on a real projector.
+## What to do
 
-| lesson | stage | viewport | clearance |
-|---|---|---|---:|
-| `W5_Right_Nutrition` | `wedo2-rule` | 1280×720 | **10px** |
-| `W6_Balanced_Plate` | `wedo2-rule` | 1280×720 | **10px** |
-| `W7_Where_Food_Comes_From` | `wedo2-rule` | 1280×720 | **10px** |
-| `W4_Muscle_Pairs` | `wedo2-rule` | 1024×768 | **10px** |
-| `W6_Balanced_Plate` | `wedo2-rule` | 1024×768 | **10px** |
-| `W7_Where_Food_Comes_From` | `wedo2-rule` | 1024×768 | **10px** |
+**Stand at the back of the room, on the actual projector, and look at slides 4 and 9.**
+Slide 4 is the first I Do — the biggest picture in the deck and the one that shrank
+most. Slide 9 is We Do 2 — the tightest layout in the unit. If the pictures read from
+the back on those two, they read everywhere.
 
-Slide 9 of W5, W6, W7 and slide 9 of W4. If the room's projector crops even
-slightly, these are where it shows first.
+## The six stages with the least room
 
-**2 · W6 `ido1-plate`, slide 4 — the picture that shrank most.** 326px → 256px at
-1280×720, a 21% reduction. It is also the clearest case *for* the change: on
-`main` that stage overflows the slide by 20px, so the bottom of the plate was
-being cut off. Compare `reports/convergence/_pictures/W6-plate--1280x720--main.png`
-with `…--after.png`.
+These clear the fixed navigation by **10px** — the tightest anywhere as authored.
+Any projector overscan or font difference shows up here first.
 
-**3 · W4, the slide the whole reserve was tuned on.** `wedo1b-rail`, slide 7 —
-this is the comparison rail whose caption started the entire frame-size argument.
-It now clears by 20px at 1280×720 and its picture is 295px against `main`'s 312px.
-`reports/convergence/SCI_B_W4_Muscle_Pairs/slide-07.png`.
+| deck | slide | stage | viewport |
+|---|---|---|---|
+| `SCI_B_W5_Right_Nutrition` | 9 · We Do 2 | `wedo2-rule` | 1280×720 |
+| `SCI_B_W6_Balanced_Plate` | 9 · We Do 2 | `wedo2-rule` | 1280×720 |
+| `SCI_B_W7_Where_Food_Comes_From` | 9 · We Do 2 | `wedo2-rule` | 1280×720 |
+| `SCI_B_W4_Muscle_Pairs` | 9 · We Do 2 | `wedo2-rule` | 1024×768 |
+| `SCI_B_W6_Balanced_Plate` | 9 · We Do 2 | `wedo2-rule` | 1024×768 |
+| `SCI_B_W7_Where_Food_Comes_From` | 9 · We Do 2 | `wedo2-rule` | 1024×768 |
 
-**4 · Slide 3 of every BUILD lesson.** The only slides that moved without carrying
-a stage — see Job 3. They carry the motion-key panel, which the engine builds.
-Worth thirty seconds to confirm the key still reads correctly.
+Also worth a look: **W6 slide 4** (`ido1-plate`), the picture that shrank most —
+326px → 256px — and **W4 slide 7** (`wedo1b-rail`), the comparison rail the whole
+frame argument started on.
 
-**5 · The GROW five, all fifty slides**, because they have just been re-injected
-against a changed engine for the first time and nobody has looked at them since.
+## What the measurements did NOT cover
+
+Stated plainly so the walk is not treated as a formality:
+
+- **Chromium**, not the projector's browser.
+- **Nominal viewports**, plus four Windows-scaling viewports (see below) — no other
+  scaling, and no browser zoom.
+- **No projector overscan.** A projector that crops 2–3% of the edges is not
+  simulated by any cell here, and 10px of clearance does not survive it.
+- **Container fonts.** `system-ui` resolves to whatever this container has. A room
+  resolving it to a wider or taller face is not this measurement — though see the
+  `bigfont` fixture, which tests whether the mechanism absorbs that.
+
+## If it fails in the room
+
+Every picture in the unit is capped by `min(intent, measured fit)`. The intent side
+is four numbers at the top of `grow-anim/grow-anim.css`:
+
+```css
+--g-frame-default: .46;   --g-frame-wide: .34;
+--g-frame-mini:    .20;   --g-frame-tall: .58;
+```
+
+**Lower the one that matches the frame on the offending stage.** Every picture using
+that frame across all ten lessons gets smaller — the change is deliberately global,
+because a per-slide exception is how a motion language stops being a language. Then
+re-run `node reports/convergence/tests/run.mjs` and re-inject.
+
+**Do not lower `FLOOR` in `grow-anim/grow-anim.js:620`** to fix a layout complaint —
+that is the point below which a picture stops being an explanation, and the reason
+is written next to it.
 
 ---
 
@@ -97,42 +120,160 @@ stage in all five BUILD lessons at five viewports, under three fixtures**: as
 authored, with every rail caption forced to wrap, and with every slide heading
 forced long enough to wrap.
 
-**450 cells. 375 carry a measurable stage.**
+**1,080 cells across nine viewports, four fixtures and every stage of the five BUILD
+lessons. 900 carry a measurable stage.**
 
-| fixture | projector viewports (1280×720, 1366×768, 1920×1080, 1024×768) | worst | phone 390×844 | worst |
-|---|---|---:|---|---:|
-| as-authored | **120/120 clear by ≥8px** | **+10px** | 24/25 | −14px |
-| caption wraps to two lines | **120/120 clear by ≥8px** | **+8px** | 20/25 | −58px |
-| heading wraps long | 117/120 | **−25px** | 19/25 | −127px |
+Nominal and scaled viewports are asserted separately, because a room at 100% and the
+same room at 125% are not the same measurement and folding them together hides which
+one is failing.
 
-**Worst clearance anywhere in the set: −127px**, on
-`W7_Where_Food_Comes_From / wedo2-rule` at 390×844 under the long-heading
-fixture, offending element `.g-canvas`.
+| fixture | nominal (1280×720, 1366×768, 1920×1080, 1024×768) | worst | scaled (see Job 1b) | worst | phone 390×844 | worst |
+|---|---|---:|---|---:|---|---:|
+| as authored | **100/100** | **+10px** | 70/100 | −241px | 24/25 | −14px |
+| caption wraps to two lines | **100/100** | **+8px** | 70/100 | −256px | 20/25 | −58px |
+| heading wraps long | 97/100 | −25px | 53/100 | −352px | 19/25 | −127px |
+| root font 16px → 20px | 95/100 | −63px | 59/100 | −366px | 20/25 | −181px |
 
-**One test fails and is reported as failing:** *whole stage on screen without
-scrolling · projector · heading* — 117/120, three cells, all of them
-`wedo2-rule`: W5 −19px and W6 −5px at 1280×720, W7 −25px at 1024×768.
+**Worst clearance anywhere in the set: −366px**, on `W7_Where_Food_Comes_From /
+wedo2-rule` at 683×512 (1024×768 at 150%) under the larger-font fixture, offending
+element `.g-canvas`.
 
-The reason it fails is the useful part. A second assertion tests the mechanism
-rather than the outcome:
+**Four assertions fail and are reported failing** — the three scaled fixtures and
+nominal + long heading. None is turned green.
+
+The assertion that tests the mechanism rather than the outcome passes:
 
 > **when a slide overflows, the picture is never the offender** — PASS.
-> 15 cells of 450 overflow; **15 of 15 have the picture already shrunk to its
+> 173 cells of 1,080 overflow; **173 of 173 have the picture already shrunk to its
 > 96px floor.**
 
 So in every failing cell the engine has already done everything it can and what
-overflows is the text above the picture. Dropping the floor to ~62px would make
-those three cells pass, and a 62px picture is decoration. The honest answer is
-that a three-line heading on a We Do 2 slide does not fit a 720px projector, and
-that is an authoring constraint, not a layout bug.
+overflows is the text above the picture. Dropping the floor to ~62px would make the
+nominal long-heading cells pass, and a 62px picture is decoration. The honest answer
+is that a three-line heading on a We Do 2 slide does not fit a 720px projector, and
+that is an authoring constraint, not a layout bug — now enforced by a lint, below.
 
-The phone column is asserted separately and deliberately weaker: a phone scrolls
-as a matter of course, and `.slide` is `overflow-y: auto`, so content below the
-fold is reachable. **One as-authored phone failure remains and is not dismissed:**
+The phone column is asserted separately and deliberately weaker: a phone scrolls as a
+matter of course and `.slide` is `overflow-y: auto`, so content below the fold is
+reachable. **One as-authored phone failure remains and is not dismissed:**
 `W7_Where_Food_Comes_From / wedo2-rule` at 390×844, −14px, picture at the floor.
 
+### The heading-length guardrail
+
+The red long-heading test documents a design limit, so the limit is now written down
+and linted rather than left to chance. Bisecting the actual threshold
+(`reports/convergence/headingthreshold.mjs`) on the three cells that go red:
+
+| deck | stage | viewport | heading length at which clearance drops below 8px |
+|---|---|---|---:|
+| `W5_Right_Nutrition` | `wedo2-rule` | 1280×720 | 146 chars |
+| `W6_Balanced_Plate` | `wedo2-rule` | 1280×720 | 74 chars |
+| `W7_Where_Food_Comes_From` | `wedo2-rule` | 1024×768 | **57 chars** |
+
+**Threshold: 57 characters.** The longest real heading in the ten Autumn 1 decks is
+**52** — *"Evidence loop — describe it without saying "healthy""*, `SCI_B_W6_Balanced_Plate`,
+slide 8. **Margin: 5 characters.**
+
+That margin is the conservative reading, and worth stating precisely: the 52-character
+heading is on a different slide of a different deck from the 57-character threshold.
+On the slides that actually fail — the We Do 2 slides themselves — the real headings
+are *"Match the animal to what it needs"* (33), *"Sort the statements"* (19) and
+*"Put it right"* (12), so the per-slide margins are 113, 55 and 45 characters. **No
+real heading is close to its own threshold.** The 5-character figure is what would
+remain if the longest heading in the estate were moved onto the tightest slide.
+
+`reports/convergence/tests/run.mjs` now lints every slide heading in all ten decks
+against 57 characters, so the failing case cannot be authored by accident:
+
+```
+PASS  no slide heading reaches the overflow threshold
+      threshold 57 chars; longest real heading 52 (…) — margin 5 chars
+```
+
+**The 96px floor does not move without Matt's say-so**, and the reason is annotated
+beside the constant at `grow-anim/grow-anim.js:620`.
+
 Raw matrix: `reports/convergence/_data/clearance-matrix.json`.
-Full run: `reports/convergence/_data/testrun-v3.txt`. **24 of 25 tests pass.**
+Full run: `reports/convergence/_data/testrun-final.txt`. **23 of 27 tests pass**; the four failures are the clearance assertions above, left red on purpose.
+
+---
+
+## JOB 1b — display scaling: a genuine finding, reported not patched
+
+**OS display scaling changes the CSS viewport, and none of the original 25 cells used
+a scaled one.** Windows at 125% turns a 1024×768 room into an 819×614 page; at 150%
+into 683×512. Those are ordinary classroom configurations and they were unmeasured.
+
+Measured, as authored, no adversarial fixture, all 30 stages of the five BUILD
+lessons — `main` against this branch, same probe on both trees:
+
+| viewport | scaling | `main` clear | **this branch** | `main` worst | **branch worst** | regressions |
+|---|---|---|---|---:|---:|---:|
+| 1024×768 | 100% | 20/25 | **25/25** | −159px | **+10px** | **0** |
+| 819×614 | 1024×768 @125% | 5/25 | **20/25** | −226px | **−123px** | **0** |
+| 1093×614 | 1366×768 @125% | 7/25 | **20/25** | −319px | **−71px** | **0** |
+| 683×512 | 1024×768 @150% | **0/25** | **5/25** | −319px | **−241px** | **0** |
+
+**Yes, a scaled cell puts content under the navigation.** At 125% every `wedo2-rule`
+stage in all five lessons fails; at 150% twenty of thirty stages do. Per the brief
+this outranks everything else in this pass, so it is **reported and not patched**.
+
+Three things qualify it, all measured rather than argued:
+
+1. **Zero regressions at any scaled viewport.** Not one cell that clears on `main`
+   fails on this branch.
+2. **`main` is far worse.** At 819×614 it clears 5 of 25 stages; this branch clears
+   20. At 683×512 `main` clears none at all.
+3. **The picture is never the offender** — in all 173 overflowing cells across the
+   whole extended matrix the picture is already at its 96px floor. At 512px of
+   viewport height a slide is ~460px tall and the heading and control bar alone
+   consume most of it. No picture size fixes that; the decks would need shorter
+   slides.
+
+### A bug in the fitting mechanism, found by cross-checking two probes
+
+Two probes disagreed by 37px on one cell — `W7 / wedo2-rule @1024×768` read +10px in
+the matrix and −27px in the scaled probe. The difference was that one called
+`GrowAnim.fit()` explicitly first. Investigating that showed `--g-fit` was **never
+set at all** on that stage:
+
+```
+preFit=false  clearance=-27px  --g-fit=(empty)
+preFit=true   clearance= 10px  --g-fit=116px
+```
+
+`wedo2-rule` carries `data-ba-nobar`, and `paint()` began
+`var st = stage._g, bar = $('.g-bar', stage); if (!st || !bar) return;` — so the
+`fit()` call at the end of `paint` was never reached on any bar-less stage. Those
+stages had only the `ResizeObserver` as a backstop, which does fire but
+asynchronously: a visible reflow in the room, and invisible to any synchronous
+check. `paint()` is now split so the fit runs regardless of whether a bar exists,
+and both probes agree.
+
+This was a defect in Job 0's own deliverable rather than a content limit, so it was
+fixed rather than reported — the alternative was shipping a mechanism that does not
+run on a whole class of stages while the evidence claims it does. Every number in
+this document is from after that fix.
+
+### Does the derived reserve absorb a larger default font?
+
+**Partly, and the honest answer is no, not fully.** A `bigfont` fixture raises the
+root font from 16px to 20px. Because the reserve is derived from measured chrome —
+the nav's real rect, the caption's real height, the picture's real top — a larger
+font pushes the picture down and the fit shrinks it to compensate, and on most
+stages that is exactly what happens. It does **not** hold on `wedo2-rule`, where the
+picture is already at the floor and there is nothing left to give: at 1280×720 the
+five `wedo2-rule` stages go from +10px to between −9px and −63px.
+
+So the mechanism converts a font change into a smaller picture rather than a
+clipped caption **until the floor is reached**, and after that it cannot.
+
+### What remains genuinely unmeasurable
+
+- **Projector overscan.** A projector cropping 2–3% of the edges is not simulated by
+  any cell here. The six stages clearing by 10px would not survive it.
+- **`system-ui` resolving to a different face.** The `bigfont` fixture tests size,
+  not shape; a face with different metrics is not the same test.
 
 ---
 
@@ -254,7 +395,11 @@ overflows the slide by 20px: on `main` that plate is bigger *and* cut off.
 |---|---|
 | 1 · nothing merged, nothing on `main`, `build-anim/` untouched | **pass** — `git diff main -- build-anim/` is 0 lines; `main` = `origin/main` = `cacaf16` |
 | 2 · `audit.mjs` / `stepstate.mjs` unchanged except additive coverage | **pass** — `stepstate.mjs` byte-identical; `audit.mjs` +6 −2, the diff is below |
-| 3 · Job 1 matrix complete, worst clearance quoted | **pass** — 450 cells, worst −127px |
+| · scaled matrix run in full, worst re-reported | **pass** — four scaled viewports added, −366px |
+| · the 117/120 test still failing, threshold documented | **pass** — four clearance assertions red; threshold 57 chars, linted |
+| · `.g-flow-orbit` recorded, not fixed here | **pass** — `reports/REDUCED_MOTION_REGISTER.md` RM-1; `grow-motion.css` unchanged |
+| · PR correction stated, attributed upstream | **pass** — `reports/SESSION_CLOSE.md`, first section |
+| 3 · Job 1 matrix complete, worst clearance quoted | **pass** — 1,080 cells across 9 viewports × 4 fixtures, worst −366px |
 | 4 · `inject.py --check` clean on all ten | **pass** — exit 0 both injectors |
 | 5 · renders captured, six assertions re-measured | **pass with a correction** — 110, not 120: GROW decks are 10 slides |
 | 6 · derived reserve, not a bare 150 | **pass** — derived; no reserve constant remains |
