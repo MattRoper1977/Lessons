@@ -305,30 +305,39 @@ top-right corner clear — that is where the ✓ / ✖ badge lands.
 
 ---
 
-## Read this before deleting `build-anim/`
+## Converging on `grow-anim`
 
-`grow-anim/compat-build-anim.js` says that once every BUILD lesson has been
-re-injected against `grow-anim`, this folder can be deleted. That is the right
-destination — one engine is better than two — but **the compatibility layer does
-not yet cover everything the five Autumn 1 science lessons use.** Deleting this
-folder today would silently break them.
+`main` runs two engines: this one and `grow-anim`, which is the destination —
+one engine is better than two. `grow-anim/compat-build-anim.js` translates BUILD
+markup so a BUILD lesson runs against GROW unchanged.
 
-Four things are missing from the shim, checked against `compat-build-anim.js`
-and `grow-anim.js` as merged:
+**The four capabilities these lessons depend on are now ported.** Verified in a
+real browser with `body-svg.js`, `food-svg.js` and `chain-svg.js` loaded against
+`grow-anim` + the shim:
 
-| Missing | What breaks |
+| Capability | Where it now lives |
 |---|---|
-| the `pose` verb | Week 4 entirely. The muscle pair swapping jobs *is* the lesson, and it is one `pose bend`. |
-| `data-ba-cards` (per-card scripts) | The prediction panels in Weeks 4 and 7, where one asset answers several different questions. |
-| `BioSVG.register()` + `BioSVG.helpers` | `body-svg.js`, `food-svg.js` and `chain-svg.js` all register through it. Without it, no muscles, no food, no food chains. |
-| the `pop` animation wrapper | Any icon positioned by a `transform` attribute collapses to the origin when it pops in, and rotated vertebrae snap upright. See the note in `build-anim.js`. |
+| `pose` verb | `grow-anim.js` VERBS, cleared on reset; transition in `grow-motion.css` |
+| per-card prediction scripts | `buildPredict` in `grow-anim.js` — `\|` separator plus a third `asset:Label:script` field |
+| `BioSVG.register()` + `helpers` | the shim, with the build-anim spellings of `g` `shape` `stroke` `label` `n` and the colour constants |
+| the `pop` animation wrapper | `popTargets()` in `grow-anim.js` |
 
-`data-ba-static`, `data-ba-rail` and `data-ba-for` *are* covered.
+Two supporting changes made it work: `GrowSVG.render()` now puts `data-asset` on
+the `<svg>` and emits an asset's own `css`, and the subject libraries' pose rules
+were rewritten as attribute-only selectors (`[data-pose="bend"] [data-asset="arm"]`)
+so the same asset file runs under either engine without edits.
 
-The lessons themselves are safe in the meantime: `inject.py` inlines the library
-into each one, so they are self-contained single files and do not load anything
-from this folder at runtime. The risk is only to future re-injection.
+### So can `build-anim/` be deleted?
 
-So: port those four capabilities into `grow-anim` first, re-inject the five
-lessons against it, run `build-anim/tools/preview.mjs --json` and a full slide
-walk to prove nothing regressed, and only then delete.
+Not yet, but the blocker is now mechanical rather than missing features. Before
+deleting:
+
+1. Re-inject the five Autumn 1 lessons against `grow-anim` rather than this
+   folder — `inject.py`'s `BLOCKS` table is where that switch happens.
+2. Walk all twelve slides of each in a browser and confirm no stage silently
+   fails: a step targeting a part name that does not exist does nothing at all,
+   quietly. `tools/preview.mjs --json` lists what each asset actually exposes.
+3. Check the print packs still generate and `prefers-reduced-motion` still
+   reveals content without animating.
+
+Only then delete this folder and retire the shim with it.
