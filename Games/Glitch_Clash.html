@@ -10,6 +10,7 @@
   --ring:#f27ea9; --emm:#5eead4; --star:#ffd166; --bastion:#7fb4ff;
   --energy:#a78bfa; --harmony:#f5b84a; --good:#7ee7b8; --soft:#ff9d8a;
   --rC:#8fa3c8; --rR:#5eead4; --rE:#a78bfa; --rL:#f5b84a;
+  --track:#0a0f1d; --trackline:#26335a;   /* bar chrome, repainted by Arena Themes */
   --radius:14px; --tap:48px;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
@@ -50,7 +51,7 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:.02em;}
 .muted{color:var(--dim);font-size:13px;line-height:1.45;}
 .center{text-align:center;}
 /* ---------- Bars ---------- */
-.bar{height:12px;background:#0a0f1d;border-radius:999px;overflow:hidden;border:1px solid #26335a;position:relative;}
+.bar{height:12px;background:var(--track);border-radius:999px;overflow:hidden;border:1px solid var(--trackline);position:relative;}
 .bar>i{display:block;height:100%;border-radius:999px;transition:width .35s ease;}
 .hp>i{background:linear-gradient(90deg,#3ddba6,#7ee7b8);}
 .hp.low>i{background:linear-gradient(90deg,#f0a35e,#ffd166);}
@@ -373,7 +374,9 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
   <button class="btn primary" data-go="stages">⚔ Campaign</button>
   <button class="btn" data-go="team">🃏 Team &amp; Collection</button>
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
+  <button class="btn" id="endlessbtn">♾ Endless Run</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
+  <button class="btn" data-open="themes">🎨 Arena Themes</button>
   <div class="footer">Made by Matt · v2.0</div>
 </section>
 
@@ -447,6 +450,13 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
 <div class="overlay" id="ov-stickers"><div class="sheet" role="dialog" aria-modal="true" aria-label="Sticker shelf">
   <div class="spread"><h3>Sticker Shelf</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
   <div id="stickerlist"></div>
+</div></div>
+
+<!-- ============ ARENA THEMES SHEET ============ -->
+<div class="overlay" id="ov-themes"><div class="sheet" role="dialog" aria-modal="true" aria-label="Arena themes">
+  <div class="spread"><h3>Arena Themes</h3><button class="btn small" data-close aria-label="Close">✕</button></div>
+  <p class="muted">Repaint the arena. Themes unlock as you win clashes — they change the colours only, never the odds.</p>
+  <div id="themelist" style="display:flex;flex-direction:column;gap:8px"></div>
 </div></div>
 
 <!-- ============ PACK / RESULT SHEET ============ -->
@@ -886,8 +896,13 @@ document.addEventListener("click",e=>{
 let lastFocus=null;
 function showOv(ov){ lastFocus=document.activeElement; ov.classList.add("show");
   const f=ov.querySelector("button,[href],input,select"); if(f) f.focus(); }
-function openSheet(n){ if(n==="stickers") renderStickers(); showOv($("#ov-"+n)); }
+function openSheet(n){ if(n==="stickers") renderStickers();
+  if(n==="themes") renderThemes();
+  showOv($("#ov-"+n)); }
 function closeSheets(){ $$(".overlay").forEach(o=>o.classList.remove("show"));
+  /* Escape or the backdrop must never strand an Endless run mid-pick — if the
+     boon sheet is dismissed without a choice, carry on with no boon taken. */
+  if(typeof boonPending!=="undefined" && boonPending){ boonPending=false; setTimeout(nextEndlessRound,320); }
   if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus(); lastFocus=null; }
 document.addEventListener("keydown",e=>{
   if(e.key!=="Tab") return;
@@ -923,6 +938,9 @@ function applySettings(){
   $("#calmtoggle").textContent = "Calm Mode: "+(s.calm?"On":"Off");
   $("#motiontoggle").textContent = "Reduced Motion: "+({auto:"Auto",on:"On",off:"Off"})[s.motion];
   $("#hctoggle").textContent = "High Contrast: "+(s.hc?"On":"Off");
+  /* Re-run the theme against the class we have just set: it stands down under
+     High Contrast and comes back when High Contrast is switched off again. */
+  try{ GCX2.applyTheme(GCX2.currentTheme()); }catch(e){}
 }
 $("#calmtoggle").onclick=()=>{SV.settings.calm=!SV.settings.calm;save();applySettings();};
 
@@ -981,13 +999,116 @@ function renderHome(){
   $("#xpfill").style.width = (SV.xp%RANK_XP)+"%";
   const today = localDateKey();
   $("#dailybtn").textContent = SV.dailyDone===today ? "📅 Daily Clash ✓ (done today)" : "📅 Daily Clash";
+  const bestE=(SV.stats&&SV.stats.bestEndless)||0;
+  $("#endlessbtn").textContent = bestE ? ("♾ Endless Run · best round "+bestE) : "♾ Endless Run";
 }
+/* ---------- Endless run ----------
+   A chain of escalating clashes. Every third round you pick one of three
+   boons, which are applied to your fighters at the start of each subsequent
+   battle. The run ends the first time you lose. */
+let endlessRun=null;
+/* `var`, not `let`: closeSheets() is defined above this point and probes it with
+   typeof. typeof does NOT protect against the temporal dead zone, so a let here
+   would throw if a sheet ever closed before this line evaluated. */
+var boonPending=false;
+/* Bosses are held back until round 5. Endless already escalates every enemy's
+   numbers, so drawing a boss on round 1 would end most runs before the player
+   had seen what a run is. */
+function endlessPool(round){
+  const all = GLITCHES.map((g,i)=>i);
+  if(round >= 5) return all;
+  const soft = all.filter(i=>GLITCHES[i].trait!=="boss");
+  return soft.length ? soft : all;
+}
+function startEndless(){
+  endlessRun = GCX2.newRun();
+  SV.stats=SV.stats||{};
+  toast("Endless run — survive as long as you can.");
+  nextEndlessRound();
+}
+function nextEndlessRound(){
+  if(!endlessRun) return;
+  const pool=endlessPool(endlessRun.round);
+  const idx=pool[Math.floor(Math.random()*pool.length)];
+  announce("Endless round "+endlessRun.round+".");
+  startBattle(idx, { __scened:true, endless:{ round:endlessRun.round, boons:endlessRun.boons } });
+}
+function endlessAdvance(won){
+  if(!endlessRun) return false;
+  if(!won){
+    const r=endlessRun.round;
+    SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, r-1);
+    save();
+    toast("Run over at round "+r+". Best: "+(SV.stats.bestEndless||0));
+    endlessRun=null;
+    return false;
+  }
+  SV.xp += GCX2.roundReward(endlessRun.round);
+  endlessRun.round++;
+  SV.stats.bestEndless = Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+  save();
+  if((endlessRun.round-1) % 3 === 0) showBoonPick();
+  else setTimeout(nextEndlessRound, 500);
+  return true;
+}
+function showBoonPick(){
+  const offer=GCX2.offerBoons(Math.random,3);
+  const sheet=$("#resultsheet");
+  sheet.innerHTML = `<h2>Round ${endlessRun.round-1} cleared</h2>
+    <p class="muted">Choose one upgrade. It stays with you for the rest of the run.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">` +
+    offer.map(b=>`<button class="btn" data-boon="${b.id}"><b>${b.name}</b><br>
+      <small class="muted">${b.desc}</small></button>`).join("") +
+    `<button class="btn small" data-close style="border-color:var(--soft);color:var(--soft)">Skip</button></div>`;
+  boonPending=true;
+  showOv($("#ov-result"));
+  announce("Round cleared. Choose an upgrade.");
+  sheet.querySelectorAll("[data-boon]").forEach(btn=>{
+    btn.onclick=()=>{ endlessRun.boons.push(btn.dataset.boon);
+      boonPending=false;
+      try{ GCX.sfx.unlock(); }catch(e){}
+      toast(btn.querySelector("b").textContent+" taken.");
+      closeSheets(); setTimeout(nextEndlessRound,320); };
+  });
+}
+
+/* ---------- unlockable themes ---------- */
+function renderThemes(){
+  const wins=(SV.stats&&SV.stats.wins)||0;
+  const cur=GCX2.currentTheme();
+  const host=$("#themelist"); if(!host) return;
+  host.innerHTML = GCX2.themesFor(wins).map(t=>{
+    // a swatch per palette, so a locked theme still shows what you are working towards
+    const sw = (t.vars ? ["--bg","--panel","--panel2"].map(k=>t.vars[k])
+                       : ["#0d1322","#151d33","#1c2742"])
+      .map(c=>`<i style="width:14px;height:14px;border-radius:4px;background:${c};
+                border:1px solid rgba(255,255,255,.18)"></i>`).join("");
+    const lock = t.unlocked ? "" : `<small class="muted">🔒 ${t.need} wins</small>`;
+    return `<button class="btn ${t.id===cur?"primary":""}" data-theme="${t.id}"
+      ${t.unlocked?"":"disabled"} ${t.id===cur?'aria-current="true"':""}
+      aria-label="${t.name}. ${t.desc} ${t.unlocked?(t.id===cur?"Selected.":"Unlocked."):("Locked, needs "+t.need+" wins.")}"
+      style="display:flex;align-items:center;gap:10px;text-align:left">
+      <span style="display:flex;gap:3px;flex:0 0 auto">${sw}</span>
+      <span style="flex:1 1 auto;min-width:0">
+        <b>${t.name}</b> ${lock}<br><small class="muted">${t.desc}</small>
+      </span>
+      ${t.id===cur?'<span aria-hidden="true">✓</span>':""}</button>`;
+  }).join("");
+  host.querySelectorAll("[data-theme]").forEach(b=>{
+    b.onclick=()=>{ const t=GCX2.applyTheme(b.dataset.theme);
+      try{GCX.sfx.click();}catch(e){}
+      announce(t.name+" theme applied.");
+      renderThemes(); };
+  });
+}
+
 $("#dailybtn").onclick=()=>{
   const today=localDateKey();
   const pool=GLITCHES.map((g,i)=>i).filter(i=>GLITCHES[i].trait!=="boss"); // never any boss
   const idx=pool[Engine.dailyIndex(today, pool.length)];
   startBattle(idx, {daily:true, dateStr:today});
 };
+$("#endlessbtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} startEndless(); };
 
 /* ----- stages ----- */
 function renderStages(){
@@ -1075,16 +1196,22 @@ function startBattle(stageIdx, opts){
   if(sceneKey && !opts.daily && !(SV.seen&&SV.seen[sceneKey])){
     return playScene(sceneKey, ()=>startBattle(stageIdx, Object.assign({},opts,{__scened:true})));
   }
-  const g=GLITCHES[stageIdx];
+  let g=GLITCHES[stageIdx];
+  // Endless scales the ENEMY template before mkGlitch, so Engine's rules and
+  // the player's cards are untouched — only the numbers going in change.
+  if(opts.endless && window.GCX2) g = GCX2.scaleGlitch(g, opts.endless.round);
   const bonus=Engine.harmonyBonus(SV.team.map(id=>CARD_BY_ID[id].shape));
   battle={
     stageIdx, glitch:Engine.mkGlitch(g), daily:!!opts.daily, dateStr:opts.dateStr||"",
+    endless: opts.endless||null,
     team:SV.team.map(id=>Engine.mkFighter(CARD_BY_ID[id], bonus, dupBoost(id))),
     active:0, turn:1, over:false, dmgTaken:0, usedClash:false, bonus,
     glyphs:{R:0,M:0,S:0,B:0}, arena:ARENAS[0], clashSkill:0.5,
     tut:(stageIdx===0 && !opts.daily && !SV.tutorialDone) ? 1 : 0
   };
-  $("#stagechip").textContent=(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · ")+g.name;
+  if(opts.endless && window.GCX2) GCX2.applyBoons(battle.team, opts.endless.boons);
+  $("#stagechip").textContent=(battle.endless?("Endless · Round "+battle.endless.round+" · ")
+    :(battle.daily?"Daily · ":"Stage "+(stageIdx+1)+" · "))+g.name;
   logSet(`<b>${g.name}</b> appears! ${g.line}`);
   announce(g.name+" appears.");
   go("battle"); renderBattle();
@@ -1591,6 +1718,7 @@ const GCX = (()=>{
   function init(){
     ensureCanvas();
     if(crtOn()) document.body.classList.add("gcx-crt");
+  try{ if(window.GCX2) GCX2.applyTheme(GCX2.currentTheme()); }catch(e){}
     // the audio context may only be created inside a gesture
     const unlock=()=>{ ac(); document.removeEventListener("pointerdown",unlock); };
     document.addEventListener("pointerdown",unlock,{once:false});
@@ -1602,10 +1730,106 @@ const GCX = (()=>{
            freeze, ACH, checkAch, setCRT, crtOn, calm };
 })();
 /* GCX:END */
+
+/* ---------------- GCX2: Endless run, boons, unlockable themes ----------------
+   Still additive. Boons are applied to the fighter objects that mkFighter has
+   already produced, so Engine's damage maths is untouched — a boon changes the
+   numbers going in, never the rules. */
+const GCX2 = (()=>{
+  "use strict";
+
+  /* ---- unlockable palettes ----
+     A theme repaints the ARENA CHROME only — background and panel fills. It
+     deliberately leaves --ring/--emm/--star/--bastion alone, because those four
+     are the Keepers' identity colours: recolouring them would make the shape
+     you are reading on a card disagree with the colour beside it.
+
+     Every palette below is a dark fill against the unchanged light --ink, so
+     text contrast survives whichever one is picked. */
+  const THEMES = [
+    {id:"default", name:"Signal",      need:0,  desc:"The arena as it shipped."},
+    {id:"amber",   name:"Amber CRT",   need:3,  desc:"Warm phosphor burn.",
+      vars:{"--bg":"#150f08","--panel":"#241a0e","--panel2":"#33260f","--track":"#0c0803","--trackline":"#5a4520"}},
+    {id:"viridian",name:"Viridian",    need:8,  desc:"Cold terminal green.",
+      vars:{"--bg":"#07150f","--panel":"#0d2419","--panel2":"#123324","--track":"#040d09","--trackline":"#1f5a3f"}},
+    {id:"magenta", name:"Null Magenta",need:15, desc:"Corrupted memory bank.",
+      vars:{"--bg":"#170a16","--panel":"#261027","--panel2":"#361538","--track":"#0d050d","--trackline":"#5a2555"}},
+    {id:"mono",    name:"Monochrome",  need:25, desc:"Colour channel offline.",
+      vars:{"--bg":"#101012","--panel":"#1a1a1e","--panel2":"#26262c","--track":"#08080a","--trackline":"#3d3d46"}}
+  ];
+  function themesFor(wins){
+    return THEMES.map(t=>Object.assign({},t,{unlocked: wins >= t.need}));
+  }
+  /* Written to <html>, not <body>: the page background is painted from :root,
+     so a body-scoped override leaves the strip below a short screen unthemed. */
+  const root = ()=>document.documentElement;
+  function clearThemeVars(){
+    THEMES.forEach(x=>{ if(x.vars) Object.keys(x.vars).forEach(k=>{
+      root().style.removeProperty(k); document.body.style.removeProperty(k); }); });
+  }
+  function applyTheme(id){
+    const t = THEMES.find(x=>x.id===id) || THEMES[0];
+    clearThemeVars();
+    /* High Contrast wins outright. Its rule sets the same variables on <body>,
+       which is nearer the content than <html>, but standing down entirely is
+       clearer than relying on that. The choice is still saved either way. */
+    const hc = document.body.classList.contains("hc");
+    if(t.vars && !hc) Object.keys(t.vars).forEach(k=>root().style.setProperty(k,t.vars[k]));
+    try{ localStorage.setItem("gc_theme", t.id); }catch(e){}
+    return t;
+  }
+  function currentTheme(){ try{ return localStorage.getItem("gc_theme")||"default"; }catch(e){ return "default"; } }
+
+  /* ---- boons. Chosen between Endless rounds, applied at battle start. ---- */
+  const BOONS = [
+    {id:"edge",    name:"Sharpened Edge", desc:"+15% attack.",          apply:f=>{ f.atk=Math.round(f.atk*1.15); }},
+    {id:"plate",   name:"Hardened Plate", desc:"+15% defence.",         apply:f=>{ f.def=Math.round(f.def*1.15)+1; }},
+    {id:"vital",   name:"Extra Vitals",   desc:"+20 maximum HP.",       apply:f=>{ f.maxhp+=20; f.hp+=20; }},
+    {id:"cell",    name:"Spare Cell",     desc:"Start each clash with +20 energy.", apply:f=>{ f.en=Math.min(100,(f.en||0)+20); }},
+    {id:"siphon",  name:"Siphon",         desc:"+8 HP at the start of every round.", apply:f=>{ f.siphon=(f.siphon||0)+8; }},
+    {id:"overclock",name:"Overclock",     desc:"+10% attack and +10 max HP.", apply:f=>{ f.atk=Math.round(f.atk*1.10); f.maxhp+=10; f.hp+=10; }}
+  ];
+  function offerBoons(rng, n){
+    const pool=BOONS.slice();
+    const out=[];
+    for(let i=0;i<(n||3) && pool.length;i++){
+      out.push(pool.splice(Math.floor((rng||Math.random)()*pool.length),1)[0]);
+    }
+    return out;
+  }
+  function applyBoons(team, held){
+    (held||[]).forEach(id=>{
+      const b=BOONS.find(x=>x.id===id);
+      if(b) team.forEach(f=>{ try{ b.apply(f); }catch(e){} });
+    });
+  }
+
+  /* ---- Endless run state ---- */
+  function newRun(){ return { round:1, boons:[], alive:true, score:0 }; }
+  /* Escalation is applied to the ENEMY template before mkGlitch, so the
+     player's cards and Engine's rules are untouched. */
+  function scaleGlitch(base, round){
+    const k = 1 + (round-1)*0.14;
+    return Object.assign({}, base, {
+      hp:  Math.round(base.hp  * k),
+      atk: Math.round(base.atk * (1 + (round-1)*0.09)),
+      def: Math.round(base.def * (1 + (round-1)*0.05))
+    });
+  }
+  function roundReward(round){ return 10 + round*5; }
+
+  return { THEMES, themesFor, applyTheme, currentTheme, clearThemeVars,
+           BOONS, offerBoons, applyBoons,
+           newRun, scaleGlitch, roundReward };
+})();
+/* GCX2:END */
+
 try{
   window.GCX = GCX;                       // debug + test handle
+  window.GCX2 = GCX2;
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",()=>GCX.init());
   else GCX.init();
+  GCX2.applyTheme(GCX2.currentTheme());   // repaint before first paint of Home
 }catch(e){}
 
 /* Sound and CRT are stored outside SV so they survive a save reset, and both
@@ -1721,7 +1945,8 @@ const FX = (()=>{
 
 /* Test seam: lets the offline harness drive a real battle without clicking
    through team selection. Read-only entry point; changes no game behaviour. */
-try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c); }catch(e){}
+try{ window.__GCstart = (i,o)=>startBattle(i,o); window.__GCturn = c=>doTurn(c);
+     window.__GC = ()=>battle; }catch(e){}
 function renderBattle(){
   const p=P(), e=battle.glitch;
   // arena banner
@@ -1847,6 +2072,14 @@ function doTurn(cmd){
       doTurn(cmd);
     });
   }
+  /* Siphon (an Endless boon) tops the active Keeper up at the top of the turn.
+     It is a heal on the fighter object, not a change to how Engine resolves the
+     turn — the damage maths below never sees it. */
+  if(p.siphon && !battle.over && p.hp>0 && p.hp<p.maxhp){
+    const before=p.hp;
+    p.hp=Math.min(p.maxhp, p.hp+p.siphon);
+    if(p.hp>before) popOn("#pf","+"+(p.hp-before),"heal");
+  }
   battle.arena = Engine.arenaFor(battle.stageIdx, battle.turn, rng);
   let pAct;
   if(cmd.swap!==undefined){
@@ -1896,7 +2129,6 @@ function doTurn(cmd){
       ev.push({t:"reality", name:gg.name, msg:gg.msg});
     }
   }
-  try{ window.__GC = ()=>battle; }catch(e){}
   const clashEv=ev.find(x=>x.t==="clash");
   const narrate=()=>{
     let out=[];
@@ -1979,6 +2211,13 @@ function showClash(ev, narrate){
 }
 $("#quitbtn").onclick=(()=>{ let arm=false; return ()=>{
   if(!arm){ arm=true; $("#quitbtn").textContent="Sure?"; setTimeout(()=>{arm=false;$("#quitbtn").textContent="Quit";},2500); return; }
+  /* Quitting ends an endless run — but it banks the rounds already cleared,
+     so walking away is not punished the way losing is. */
+  if(endlessRun){
+    SV.stats=SV.stats||{};
+    SV.stats.bestEndless=Math.max(SV.stats.bestEndless||0, endlessRun.round-1);
+    endlessRun=null; boonPending=false; save();
+  }
   battle=null; $("#quitbtn").textContent="Quit"; go("home"); toast("No worries — the Glitch will wait.");
 };})();
 
@@ -2018,6 +2257,20 @@ function endBattle(won, timeout){
   if(won){
     if(battle.dmgTaken===0) SV.stats.nohit=(SV.stats.nohit||0)+1;
     if(g && g.trait==="boss") SV.stats.bosses=(SV.stats.bosses||0)+1;
+  }
+  if(battle.endless){
+    /* An endless round resolves into the next round or ends the run. A cleared
+       round is a real win — it counts toward wins and achievements — but it
+       deliberately does NOT pull a card pack or mark a campaign stage cleared,
+       or the run would be an infinite card farm. XP comes from roundReward. */
+    if(won) SV.stats.wins++;
+    try{
+      GCX.breakCombo();
+      won ? GCX.sfx.win() : GCX.sfx.lose();
+      GCX.checkAch(SV, a=>toast("🏆 " + a.name + " — " + a.desc));
+    }catch(e){}
+    save();
+    if(endlessAdvance(won)) return;
   }
   try{
     GCX.breakCombo();
