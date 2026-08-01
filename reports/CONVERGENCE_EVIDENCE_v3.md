@@ -297,96 +297,123 @@ clipped caption **until the floor is reached**, and after that it cannot.
 
 ---
 
-## JOB 1c — the We Do 2 slide at 125%, quantified for a decision
+## JOB 1c — the We Do 2 slide: fixed by arrangement
 
-### This is pre-existing. It is not caused by the convergence.
+### It was pre-existing, and it was never only about scaling
 
-Stated before any number, because a reader coming to this cold must not conclude the
-branch broke the decks. The fault is **live on `main` today**, in decks that will be
-taught in September.
+Stated before any number. The single-column We Do 2 slide needs **932–1069px of
+viewport height** depending on width — measured by bisection, every width, every
+deck (`reports/convergence/_data/breakpoint-derivation.json`). Only 1920×1080
+provides it. So on `main`, today, the slide overflows its own scrollport at every
+other viewport:
 
-| viewport | scaling | `main` clears | **this branch clears** | regressions |
-|---|---|---|---|---:|
-| 819×614 | 1024×768 @125% | **5 of 25** | **20 of 25** | **0** |
-| 1093×614 | 1366×768 @125% | **7 of 25** | **20 of 25** | **0** |
-| 683×512 | 1024×768 @150% | **0 of 25** | **5 of 25** | **0** |
+| viewport | overflow on `main` |
+|---|---|
+| 1920×1080 | 0 |
+| 1280×720 | **106–120px** |
+| 1024×768 | **72–120px** |
+| 819×614 (1024×768 @125%) | **168–255px** |
 
-The convergence work improves every scaled viewport and regresses none. What it also
-did was *look* — no test in this estate had ever run at a scaled viewport before.
+The earlier clearance matrix never caught the two nominal rows because it asserted
+that *the stage* clears the navigation, not that *the slide* fits. Rule 1 again: a
+measurement adjacent to the claim is not the claim.
 
-### One template, not a spread
+### The threshold is derived
 
-At **125%** the only stage type that fails, on any of the five decks, is
-**`wedo2-rule`**. Confirmed against the matrix:
+`reports/convergence/breakpoint.mjs` bisects, for every width in the matrix and
+every deck, the viewport height at which the single column stops fitting:
 
-| viewport | clear | failing stage types |
+| width | worst deck needs |
+|---:|---:|
+| 1920 | 932px |
+| 1536 | 932px |
+| 1366 | 935px |
+| 1280 | 953px |
+| 1093 | 953px |
+| 1024 | 1005px |
+| 819 | 1029px |
+| 683 | 1069px |
+
+Against the real viewports that puts the single column's **failures at heights
+512–864 and its only success at 1080**, so a single `max-height` breakpoint must
+satisfy **864 < T ≤ 1079**. **T = 960**, the middle of the admissible band — the
+most robust point against a viewport not in the set.
+
+### The arrangement, and the two things measurement corrected
+
+Below the threshold the same eleven elements sit in two columns: the sort activity
+keeps the width, the picture takes the narrow column. **Nothing is removed,
+reworded, or hidden behind interaction.**
+
+Two wrong turns, both caught by measuring rather than reasoning:
+
+1. **An even split made it worse everywhere** — 819×614 overflow went from 168–255px
+   to 200–374px. The sort activity is width-hungry; narrowing its bins costs more
+   height than a second column saves. A picture is the one element that scales, so
+   it takes the narrow column. Three ratios were then measured; 55% is the only one
+   that clears every nominal viewport.
+2. **`.slide.wedo2-layout { display: grid }` outranks the deck's own
+   `.slide { display: none }`**, so the We Do 2 slide was never hidden and shared the
+   flex row with whichever slide was showing. Measured: every other slide's width
+   halved from 742px to 403px and every picture collapsed to its 96px floor. Scoping
+   to `.slide.wedo2-layout.active` fixed it. This was invisible in the overflow
+   numbers — they looked *better* — and only showed up as unrelated stages failing
+   the clearance matrix.
+
+### What it achieved
+
+Whole-slide fit — does the slide need scrolling at all:
+
+| viewport | `main` | **this branch** |
 |---|---|---|
-| 1280×720, 1366×768, 1920×1080, 1024×768, 1536×864 | 25/25 each | none |
-| 819×614 | 20/25 | **`wedo2-rule` only** |
-| 1093×614 | 20/25 | **`wedo2-rule` only** |
-| 683×512 | 5/25 | 15 types — every stage in the unit |
+| 1920×1080 | 0 | **0** |
+| 1280×720 | 106–120px | **0 on all five** |
+| 1024×768 | 72–120px | **0 on all five** |
+| 819×614 | 168–255px | **70–153px** |
 
-So at 125% this is **a single template across five decks**, which is a tractable
-deck-design fix. At 150% it is everything, which is not.
+Stage clearance — does anything the stage draws sit under the navigation, across
+the full nine-viewport matrix, every stage, five lessons:
 
-### What the We Do 2 slide actually renders, at 819×614
+| fixture | nominal | worst | scaled | worst | phone |
+|---|---|---:|---|---:|---|
+| as authored | **100/100** | **+20px** | **80/100** | −103px | **25/25** |
+| caption wraps | **100/100** | **+20px** | 78/100 | −176px | 24/25 |
+| heading wraps | **100/100** | **+20px** | 56/100 | −213px | 24/25 |
+| font 16→20px | **100/100** | **+20px** | 64/100 | −195px | 24/25 |
 
-Slide box 544px tall, usable to 539px (navigation top at 557px). W7, every element:
+As authored, by scaled viewport:
 
-| height | margin | element |
-|---:|---:|---|
-| 24 | 6 | `span.slide-tag` — "🤝 We Do 2 · sort, then write" |
-| 39 | 10 | `h2` — "Put it right" |
-| 41 | 22 | `div.li-box` — the instruction |
-| 33 | 4 | reset / check controls |
-| 97 | 8 | the sort activity's cards |
-| 147 | 0 | the CORRECT / WRONG WAY bins |
-| 19 | 12 | spacer |
-| 109 | 16 | **`div.ba-stage`** — the rule stage and its picture |
-| 33 | 0 | WAGOLL controls |
-| 38 | 8 | `div.scaffold-box` |
-| 28 | 14 | `div.period-break` — "End of Period 1" |
-| **708** | | **total content, against 543px of slide** |
+| viewport | scaling | stages clear |
+|---|---|---|
+| 819×614 | 1024×768 @125% | **25/25 — no failures** |
+| 1093×614 | 1366×768 @125% | **25/25 — no failures** |
+| 1536×864 | 1920×1080 @125% | **25/25 — no failures** |
+| 683×512 | 1024×768 @150% | 5/25 — all fifteen stage types |
 
-**Eleven elements. The picture is 109px of them, and it is already at its 96px
-floor** — `--g-fit: 96px` on all five decks. The overflow is 168–255px depending on
-deck. Nothing in the layout layer can absorb that.
+**At 125% display scaling every stage now clears, on every deck.** Only 150%
+still fails, and there the fault is not the stage: all 125 overflowing cells in the
+matrix have the picture already at its 96px floor.
 
-### Minimum viewport height at which it fits as authored
+### The five constraints
 
-Bisected at width 819:
+| constraint | held |
+|---|---|
+| 1 · no content removed, reworded or hidden behind interaction | **yes** — the eleven elements are the same eleven, all visible |
+| 2 · slide count 12/12, titles position-for-position | **yes** — re-measured, all five decks |
+| 3 · the 96px picture floor does not move | **yes** — `FLOOR = 96` unchanged, and at 819×614 the binding constraint is the sort bins, not the picture |
+| 4 · the heading-length threshold does not move | **yes** — 57 chars, lint still passing |
+| 5 · nominal viewports not disturbed unless improved | **improved** — 1280×720 and 1024×768 go from 106–120px of overflow to 0 |
 
-| deck | fits at | 614px is short by |
-|---|---:|---:|
-| `W3_Backbones` | 665px | **51px** |
-| `W4_Muscle_Pairs` | 703px | **89px** |
-| `W6_Balanced_Plate` | 703px | **89px** |
-| `W5_Right_Nutrition` | 708px | **94px** |
-| `W7_Where_Food_Comes_From` | 762px | **148px** |
+### What is left, and what would have to give
 
-### Four options, with their real costs. **None is chosen — this is Matt's call.**
+At **819×614 the slide still scrolls by 70–153px** even though every stage clears.
+The last grid row — the scaffold box and the end-of-period note — sits below the
+fold. Closing that needs one of: a thirteenth slide, the sort bins reflowed to two
+rows of two, or the end-of-period note moved to the following slide. **All three
+change what a pupil sees or where, so all three are Matt's.**
 
-1. **Split the stage across two slides.** Sorting on one, the rule and WAGOLL on the
-   next. Costs: a thirteenth slide in five decks, a renumbered print pack, and the
-   period-break note moves. Gains ~250px, which clears 125% comfortably and still
-   fails at 150%. The most durable of the four and the most work.
-2. **Make the sort activity sequential or collapsible.** Show the bins only after the
-   cards are placed. Costs: new interaction code in the shared engine, and the
-   teacher loses the at-a-glance view of both halves. Gains ~150–240px (the cards
-   and bins are 244px together), enough for 125% on four decks and marginal on W7.
-3. **Cut content from the stage.** Costs: it is the evidence-loop slide, and the
-   scaffold box and period-break note are both there for a reason. Gains 66–80px —
-   **not enough on its own** for any deck except W3.
-4. **Set the room's display scaling to 100%.** Costs: one setting per machine, no
-   code, no deck change, and it fixes every deck at every viewport in this table at
-   once — 1024×768 at 100% clears 25/25 with 10px to spare. Against that: it makes
-   every other application on that machine smaller, which is exactly why 125% is the
-   default, and it is a per-machine change that a new image or a new laptop undoes
-   silently. **Probably the cheapest thing on this list and the least durable.**
-
-Options 1 and 2 are the only two that also help at 150%; neither fixes it.
-
----
+At **683×512 (150% scaling) nothing in the layout layer helps.** The slide has
+~460px for content that needs 1069px.
 
 ## JOB 2 — the GROW five, re-injected and measured
 

@@ -106,6 +106,27 @@ Three evidence passes, each re-running the same harness:
 | [v2](CONVERGENCE_EVIDENCE_v2.md) | fix them | five fixed, plus a sixth v1 got wrong |
 | [v3](CONVERGENCE_EVIDENCE_v3.md) | close it | reserve derived, test widened, GROW re-injected |
 
+## Merge timing — a point that is Matt's to weigh
+
+**This branch is measurably better than `main` at every scaled viewport, and the
+gap is not small.** As authored, stages clearing the navigation:
+
+| viewport | `main` | this branch |
+|---|---|---|
+| 819×614 (1024×768 @125%) | 5/25 | **25/25** |
+| 1093×614 (1366×768 @125%) | 7/25 | **25/25** |
+| 683×512 (1024×768 @150%) | 0/25 | 5/25 |
+
+with **zero regressions anywhere**, plus the We Do 2 slide going from 106–120px of
+overflow to zero at 1280×720 and 1024×768.
+
+Holding it unmerged keeps the worse state live through September. That is not an
+argument for merging it unwalked — the walk answers a question no measurement can,
+and slides 4 and 9 from the back of a real room is still the gate. It is an
+argument for deciding *what the walk is for*: whether it gates the merge or
+verifies it. **Sunday 6 September is the slot, and the call is Matt's.** Nothing
+here merges either way.
+
 ## Open, and deliberately not closed here
 
 - **`build-anim/` is not deleted.** Gated on the slide walk.
@@ -113,15 +134,17 @@ Three evidence passes, each re-running the same harness:
   viewports. It documents a design limit: in every overflowing cell the picture is
   already at its 96px floor, so the overflow is the text. The floor does not move
   without Matt's say-so, and the reason is annotated at `grow-anim/grow-anim.js:620`.
-- **Display scaling — Matt's open decision, quantified.** At 125% the only stage type
-  that fails is `wedo2-rule`, on all five BUILD decks: **one template, which makes it
-  tractable**. It is **pre-existing** — `main` clears 5 of 25 at 819×614 where this
-  branch clears 20, with zero regressions anywhere. The cause is content volume, not
-  layout: the slide renders 11 elements totalling 708px into 543px of slide, and the
-  picture is already at its 96px floor. It needs 665–762px of viewport height to fit
-  as authored; 614px is 51–148px short. Four options with costs are laid out in v3
-  and **none is chosen**. At 150% every stage type fails and only a deck redesign
-  would help.
+- **Display scaling — fixed at 125%, open at 150%.** The We Do 2 slide is
+  rearranged below a derived 960px height breakpoint: the same eleven elements in
+  two columns, the sort activity keeping the width and the picture taking the
+  narrow column. Nothing removed, reworded or hidden. **At 125% every stage now
+  clears on every deck (25/25 at 819×614, 1093×614 and 1536×864, against 5/25,
+  7/25 and — on `main` — failures at all three).** 1280×720 and 1024×768 go from
+  106–120px of slide overflow to zero. What remains: at 819×614 the slide still
+  *scrolls* by 70–153px (the scaffold and end-of-period note sit below the fold),
+  and at 150% nothing in the layout layer helps — the slide has ~460px for content
+  needing 1069px. Closing either needs a thirteenth slide or content moved, which
+  changes what a pupil sees and is **Matt's**.
 - **`.g-flow-orbit`** is recorded in `reports/REDUCED_MOTION_REGISTER.md`, not fixed
   here — it predates this work and belongs to the reduced-motion programme.
 - **`build-anim/demo.html`** still loads the old files by `<script src>` and is the
@@ -130,17 +153,25 @@ Three evidence passes, each re-running the same harness:
   unresolved. PR #10 is where that argument lives.
 - **The circulation asset** is still unexercised by any lesson.
 
-## The four red assertions, and what each documents
+## The red assertions — two turned green, four remain
 
 Left red deliberately. A red test that documents a design limit is worth more than a
 green one that hides it.
 
 | assertion | result | what it documents |
 |---|---|---|
-| nominal · long heading | 97/100, worst −25px | a heading over 57 characters on a We Do 2 slide does not fit a 720px projector. Now linted so it cannot be authored by accident |
-| scaled · as authored | 70/100, worst −241px | the 125%/150% finding above — pre-existing, improved, unfixed |
-| scaled · caption wraps | 70/100, worst −256px | the same slide with a two-line caption |
-| scaled · font 16→20px | 59/100, worst −366px | the derived reserve absorbs a larger font on most stages and cannot once the picture is at its floor |
+| nominal · as authored | **green** | was already green |
+| nominal · caption wraps | **green** | was already green |
+| nominal · long heading | **turned green** | the two-column arrangement absorbed it — the mechanism improved, no threshold moved |
+| nominal · font 16→20px | **turned green** | same reason |
+| scaled · as authored | red, 80/100 | 150% scaling only; 125% now clears entirely |
+| scaled · caption wraps | red, 78/100 | as above, plus a wrapped caption |
+| scaled · long heading | red, 56/100 | a heading over 57 chars at 150% scaling |
+| scaled · font 16→20px | red, 64/100 | a larger font at 150% scaling |
+
+Two turned green and neither threshold moved: `FLOOR` is still 96px and the heading
+limit is still 57 characters. All four remaining reds are 150% display scaling,
+where the slide has ~460px for content that needs 1069px.
 
 The assertion that tests the *mechanism* rather than the outcome passes: of 173
 overflowing cells across 1,080, **173 have the picture already at its 96px floor**.
