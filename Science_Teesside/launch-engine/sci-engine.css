@@ -105,10 +105,18 @@
 .sci-label{
   position:absolute;background:#fff;border:2px solid var(--sci-lens);border-radius:8px;
   padding:3px 9px;font-size:.82rem;font-weight:800;color:#3b0764;white-space:nowrap;
-  opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease;
+  /* visibility, not opacity alone. An `animation: … both` holds its final
+     keyframe in the animation origin, which outranks EVERY plain declaration
+     regardless of selector specificity — so an opacity-only gate is defeated by
+     any shared class ending at opacity 1, and `.g-in` did exactly that here.
+     No keyframe in the shared language touches `visibility`, so pairing the two
+     makes the gate hold against all of them. This is how grow-anim's
+     [data-label] and build-anim's .ba-label have always been written. */
+  opacity:0;visibility:hidden;transform:translateY(6px);
+  transition:opacity .45s ease,transform .45s ease;
   pointer-events:none;z-index:3;box-shadow:0 3px 10px rgba(15,23,42,.14)
 }
-.sci-label[data-shown="1"]{opacity:1;transform:translateY(0)}
+.sci-label[data-shown="1"]{opacity:1;visibility:visible;transform:translateY(0)}
 
 /* PHASE 12 · spotlight.
    The APPEARANCE and MEANING come from `.g-spot` in grow-motion.css — "fade
@@ -121,16 +129,21 @@
    part to part across one specimen, and the movement is what tells the class
    the parts belong to the same organism rather than to a list. */
 .sci-spotmove{
+  /* This element also carries `.g-spot`, whose gSpot animation is `both` and
+     ends at opacity 1 — so an opacity-only gate here was defeated by the very
+     class that gives the spotlight its appearance, and the specimen arrived
+     dimmed with one region already ringed. */
   z-index:2;left:50%;top:50%;width:30%;aspect-ratio:1;
-  transform:translate(-50%,-50%);opacity:0;
+  transform:translate(-50%,-50%);opacity:0;visibility:hidden;
   transition:left .62s cubic-bezier(.45,.05,.25,1),top .62s cubic-bezier(.45,.05,.25,1),
              width .62s cubic-bezier(.45,.05,.25,1),opacity .4s ease
 }
-.sci-spotmove[data-on="1"]{opacity:1}
+.sci-spotmove[data-on="1"]{opacity:1;visibility:visible}
 
 /* ---- PHASE 2 · progressive discovery ------------------------------------- */
-.sci-part{opacity:0;transition:opacity .5s ease}
-.sci-part[data-built="1"]{opacity:1;animation:sciBuild .5s ease-out}
+/* same hardening as .sci-label — see the note there */
+.sci-part{opacity:0;visibility:hidden;transition:opacity .5s ease}
+.sci-part[data-built="1"]{opacity:1;visibility:visible;animation:sciBuild .5s ease-out}
 @keyframes sciBuild{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .sci-steps{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
 .sci-step{
