@@ -66,15 +66,24 @@
      two assets that need it: an unscoped [data-part^="food-"] rule would
      silently hide a similarly-named part in any other library that happened to
      be loaded on the same page. */
-  var HIDE_CSS =
-    '.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
-    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:0}' +
-    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-fadein,' +
-    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-drew,' +
-    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-fadein,' +
-    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-drew{opacity:1}' +
-    '@media print{.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
-    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:1}}';
+  /* Parts that must start invisible even before any script runs. Scoped to the
+     two assets that need it: an unscoped [data-part^="food-"] rule would
+     silently hide a similarly-named part in any other library loaded on the
+     same page.  Both engines' "switched on" classes are listed — .ba-fadein /
+     .ba-drew for build-anim, .g-in / .g-draw for grow-anim — so the asset works
+     unchanged under either. */
+  var ON = ['.ba-fadein', '.ba-drew', '.g-in', '.g-draw'];
+  var HIDDEN = [['plate', 'drop-'], ['jobs', 'food-']];
+  var HIDE_CSS = (function () {
+    var off = [], on = [];
+    HIDDEN.forEach(function (h) {
+      var base = '[data-asset="' + h[0] + '"] [data-part^="' + h[1] + '"]';
+      off.push(base);
+      ON.forEach(function (c) { on.push(base + c); });
+    });
+    return off.join(',') + '{opacity:0}' + on.join(',') + '{opacity:1}' +
+      '@media print{' + off.join(',') + '{opacity:1}}';
+  })();
 
   /* ---------- small builders -------------------------------------------- */
 

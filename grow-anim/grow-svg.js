@@ -180,12 +180,13 @@
   function render(name) {
     var a = A[name];
     if (!a) {
-      return '<svg class="g-svg" viewBox="0 0 400 300" role="img" aria-label="Missing asset">' +
+      return '<svg class="g-svg" data-asset="' + name + '" viewBox="0 0 400 300" role="img" aria-label="Missing asset">' +
         '<text x="200" y="150" text-anchor="middle" font-size="15" fill="#dc2626">' +
         'no GROW asset: ' + name + '</text></svg>';
     }
-    return '<svg class="g-svg" viewBox="0 0 400 300" role="img" aria-label="' + (a.alt || a.title || name) +
+    return '<svg class="g-svg" data-asset="' + name + '" viewBox="0 0 400 300" role="img" aria-label="' + (a.alt || a.title || name) +
       '" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,Segoe UI,sans-serif">' +
+      (a.css ? '<style>' + a.css + '</style>' : '') +
       '<g class="g-zoom-layer">' + a.svg() + '</g></svg>';
   }
 

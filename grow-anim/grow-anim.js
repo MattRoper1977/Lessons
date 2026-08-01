@@ -188,6 +188,27 @@
     return el;
   }
 
+  /* `pop` animates a transform, which would otherwise override the transform
+     ATTRIBUTE a child uses to position itself — a rotated vertebra would snap
+     upright, an icon placed with translate() would jump to the origin. Each
+     direct child gets a wrapper the first time it is popped: the wrapper
+     carries the animation, the child keeps its own placement. */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function popTargets(e) {
+    if (e._gPopKids) return e._gPopKids;
+    var out = [];
+    Array.prototype.slice.call(e.children).forEach(function (k) {
+      if (k.tagName === 'text' || k.tagName === 'tspan') { out.push(k); return; }
+      var w = doc.createElementNS(SVGNS, 'g');
+      w.setAttribute('class', 'g-popwrap');
+      e.insertBefore(w, k);
+      w.appendChild(k);
+      out.push(w);
+    });
+    e._gPopKids = out;
+    return out;
+  }
+
   function show(stage, a) {
     parts(stage, a.targets).forEach(function (e) {
       e.classList.remove('g-hidden');
@@ -210,11 +231,10 @@
     pop: function (stage, a) {
       parts(stage, a.targets).forEach(function (e) {
         e.classList.remove('g-hidden');
-        $$('*', e).filter(function (k) { return k.tagName !== 'text' && k.tagName !== 'tspan'; })
-          .forEach(function (k, i) {
-            k.style.animationDelay = (i * 0.085) + 's';
-            restart(k, 'g-draw-pop');
-          });
+        popTargets(e).forEach(function (k, i) {
+          k.style.animationDelay = (i * 0.085) + 's';
+          restart(k, 'g-draw-pop');
+        });
       });
       ding();
     },
@@ -412,6 +432,7 @@
     },
     unthink: function (stage) {
       stage.classList.remove('g-thinking');
+    stage.removeAttribute('data-pose');
       $$('.g-think', stage).forEach(function (e) { e.remove(); });
     },
 
@@ -452,6 +473,11 @@
     },
 
     beat: function () { /* declared as a prefix; nothing to do at run time */ },
+    /* POSE — a whole composite change of state: a muscle pair swapping jobs, a
+       lever moving, a circuit closing. The asset ships CSS keyed on the stage's
+       data-pose, so one click moves everything together. */
+    pose:   function (stage, a) { stage.setAttribute('data-pose', a.targets[0] || a.text || ''); },
+    unpose: function (stage) { stage.removeAttribute('data-pose'); },
     wait: function () { /* a beat with narration only — nothing moves */ }
   };
 
@@ -657,6 +683,9 @@
     var st = stage._g; if (!st) return false;
     if (st.paused) return true;                       /* a prediction is on screen */
     if (st.i >= st.steps.length) return false;
+    /* The class has had its say — clear the waiting state however we got here:
+       the stage's own button, the slide's Next, or the arrow keys. */
+    if (st.i === 0) VERBS.unthink(stage);
     step(stage, st.i);
     st.i++;
     paint(stage);
@@ -666,6 +695,7 @@
 
   function all(stage) {
     var st = stage._g; if (!st) return;
+    VERBS.unthink(stage);
     st.paused = false;
     $$('.g-pause', stage).forEach(function (e) { e.remove(); });
     while (st.i < st.steps.length) {
@@ -808,9 +838,20 @@
             data-grow-vote-a="● Yes" data-grow-vote-b="■ No"></div>          */
 
   function buildPredict(host) {
-    var spec = (host.getAttribute('data-grow-items') || host.getAttribute('data-grow-animals') || '')
-      .split(',').map(function (s) { return s.trim(); }).filter(Boolean)
-      .map(function (s) { var p = s.split(':'); return { asset: p[0].trim(), name: (p[1] || '').trim() || titleOf(p[0].trim()) }; });
+    /* "asset:Label:script" per card. Separate with | when a label contains a
+       comma. The third field is optional and picks which of the asset's scripts
+       to run, so one asset can answer several different questions. */
+    var raw = host.getAttribute('data-grow-items') || host.getAttribute('data-grow-animals') || '';
+    var spec = raw.split(raw.indexOf('|') >= 0 ? '|' : ',')
+      .map(function (s) { return s.trim(); }).filter(Boolean)
+      .map(function (s) {
+        var p = s.split(':');
+        return {
+          asset: p[0].trim(),
+          name: (p[1] || '').trim() || titleOf(p[0].trim()),
+          script: (p[2] || '').trim() || 'reveal'
+        };
+      });
 
     var voteA = host.getAttribute('data-grow-vote-a') || '● Yes';
     var voteB = host.getAttribute('data-grow-vote-b') || '■ No';
@@ -843,15 +884,12 @@
         host._gCur = i;
         $$('.g-pc', host).forEach(function (c) { c.classList.remove('g-current'); });
         card.classList.add('g-current');
-        load(stage, spec[i].asset, 'reveal');
+        load(stage, spec[i].asset, spec[i].script);
         VERBS.think(stage, {});
         var say = $('.g-say', stage);
         if (say) { say.textContent = spec[i].name + ' — everybody decide. Then I press Next.'; restart(say, 'g-said'); }
       });
     });
-
-    var nb = $('.g-next', stage);
-    if (nb) nb.addEventListener('click', function () { VERBS.unthink(stage); }, true);
 
     host._gStage = stage;
     return stage;

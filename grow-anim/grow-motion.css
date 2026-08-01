@@ -224,7 +224,11 @@
 /* Visibility. Parts a script will switch on start hidden, so pupils cannot
    read ahead — there is literally nothing on screen yet to read. */
 [data-part].g-hidden { opacity: 0; visibility: hidden; }
-[data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease; }
+[data-part] { transition: opacity .45s ease, color .5s ease, filter .4s ease,
+  transform .85s var(--g-ease-in-out); }
+/* POSE — a whole composite change of state. The asset ships its own
+   [data-pose] rules; the engine only guarantees the transition. */
+[data-part][data-pivot] { transform-box: view-box; }
 .g-in { animation: gIn .5s var(--g-ease-out) both; }
 @keyframes gIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -309,6 +313,7 @@
   }
   .g-zoom-layer { transition: none; }
   [data-part] { transition: none; }
+  [data-part][data-pivot] { transition: none; }
   .g-morph-out { opacity: 0; }
   .g-morph-in  { opacity: 1; }
 }
