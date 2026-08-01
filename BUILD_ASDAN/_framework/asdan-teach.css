@@ -535,6 +535,42 @@
    way through a scale-from-zero does not measure as a point. */
 .ilm.at-ilm-measuring *{animation:none!important}
 
+/* Diagram height — bound to the room available, not to the artwork.
+   ---------------------------------------------------------------------------
+   The illuminators are 560x190 viewBoxes stretched to the slide width, so their
+   height is decided by how wide the screen is. Measured natural heights:
+   1920x1080 → 554px, 1440x900 → 407px, 1280x720 → 357px, 1024x768 → 279px,
+   390x844 → 106px.
+
+   A fixed width cap is the wrong instrument: it takes the same 100-130px off a
+   projector, where vertical space is abundant, as off a laptop where it is not.
+   The cap here is the vertical room left over instead, so it engages only where
+   space is genuinely scarce and releases entirely at projector size.
+
+   The 500px constant is not a guess: it is the largest value that leaves
+   1920x1080 untouched (1080 - 500 = 580, against a natural 554), rounded to a
+   number someone can reason about. What that yields:
+
+     1920x1080  cap 580  natural 554  → does not engage, artwork unchanged
+     1440x900   cap 400  natural 407  →   7px back
+     1280x720   cap 220  natural 357  → 137px back
+     1024x768   cap 268  natural 279  →  11px back
+      390x844   cap 344  natural 106  → does not engage, phone artwork unchanged
+
+   The artwork scales inside its own viewBox and stays centred; nothing is
+   clipped. The floor stops a very short window collapsing it to nothing.
+
+   Worth knowing: this does not make the I Do slide fit. Measured at 1280x720,
+   everything on that slide *except* the diagram already totals 679px against
+   638px of visible height. Scrolling the revealed step into view is what solves
+   "the class can see what the teacher just revealed"; this is about the caption
+   and the step controls not being pushed under the fixed nav. */
+.ilm svg{
+  max-height:calc(100vh - 500px);       /* fallback where max() is unsupported */
+  max-height:max(190px,calc(100vh - 500px));
+}
+@media print{.ilm svg{max-height:none}}
+
 /* Draw-on against the path's own measured length. */
 @keyframes atIlmDraw{from{stroke-dashoffset:var(--at-len)}to{stroke-dashoffset:0}}
 .ilm .at-drawn{
