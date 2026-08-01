@@ -332,6 +332,207 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .lm-r{display:block;margin-top:9px;font-size:.9rem}
 @media print{.lm-opt{border-color:#000}.lm-own,.lm-note{color:#000}}
 </style>
+<!-- ASDAN-TEACH:CSS:START — generated from _framework/asdan-teach.css, do not edit here -->
+<style>
+/* ==========================================================================
+   ASDAN TEACH — shared visual teaching layer for the BUILD_ASDAN suite
+   --------------------------------------------------------------------------
+   Source of truth. Injected into every lesson deck by _framework/apply_framework.py
+   between the ASDAN-TEACH:CSS markers. Edit here, never in a lesson file.
+
+   RULES OBSERVED BY THIS LAYER
+   - No new colours. Every colour resolves from the per-subject :root tokens
+     each lesson already declares (--lo-border, --ido-border, --wedo-border,
+     --task-border, --success, --error, --muted ...). A new subject palette
+     therefore restyles this whole layer for free.
+   - No content, wording or structural changes. Selectors target markup the
+     lessons already emit.
+   - Loaded AFTER the lesson's own <style> blocks, so it can build on them.
+     !important is used only where an existing inline style must be overridden.
+   - Every animation is gated by the reduced-motion block at the foot of this
+     file, and each one earns its place by directing attention, revealing
+     structure, or showing change.
+   ========================================================================== */
+
+:root{
+  /* Motion tokens — one vocabulary for the whole suite */
+  --at-fast:.22s;
+  --at-base:.42s;
+  --at-slow:.75s;
+  --at-ease:cubic-bezier(.22,.68,.36,1);      /* settle — for reveals */
+  --at-pop:cubic-bezier(.34,1.56,.64,1);      /* overshoot — for confirmation */
+  --at-step:90ms;                              /* gap between staggered items */
+
+  /* Spacing rhythm — matches the padding already used by .slide/.task-box */
+  --at-gap-s:8px;
+  --at-gap-m:14px;
+  --at-gap-l:22px;
+}
+
+/* ==========================================================================
+   1 · ATTENTION UTILITIES
+   Reusable helpers the lesson decks and the framework JS both draw on.
+   Each does one job so a teacher-facing behaviour can be composed from them.
+   ========================================================================== */
+
+/* 1.1 Reveal — the base "appear with intent" state.
+   .at-reveal hides the element; .at-in plays it in. JS adds .at-in. */
+.at-reveal{opacity:0;transform:translateY(14px)}
+.at-reveal.at-in{animation:atReveal var(--at-base) var(--at-ease) forwards}
+@keyframes atReveal{to{opacity:1;transform:translateY(0)}}
+
+/* 1.2 Stagger — children arrive in reading order rather than all at once,
+   so the class's eye lands where the teacher is talking. Depth-capped at 12. */
+.at-stagger > *{animation-delay:calc(var(--at-step) * var(--at-i,0))}
+
+/* 1.3 Focus / dim — spotlight one thing by quietening its siblings.
+   Applied to a container; the chosen child carries .at-focused. */
+.at-dimmed{transition:opacity var(--at-base) var(--at-ease),filter var(--at-base) var(--at-ease)}
+.at-dim-siblings > *:not(.at-focused){opacity:.32;filter:saturate(.45)}
+.at-dim-siblings > .at-focused{opacity:1;filter:none}
+
+/* 1.4 Emphasis — a soft ring that says "look here" without moving anything.
+   Colour comes from the slide's own zone token, set by the framework JS. */
+@keyframes atPulseRing{
+  0%{box-shadow:0 0 0 0 var(--at-ring,rgba(100,116,139,.45))}
+  70%{box-shadow:0 0 0 12px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+.at-pulse{animation:atPulseRing 1.9s var(--at-ease) infinite}
+
+/* 1.5 Draw-on — for SVG strokes that should build rather than blink into view.
+   Set --at-len to the path length (framework JS measures it). */
+@keyframes atDraw{to{stroke-dashoffset:0}}
+.at-draw{stroke-dasharray:var(--at-len,600);stroke-dashoffset:var(--at-len,600);
+         animation:atDraw var(--at-slow) var(--at-ease) forwards}
+
+/* 1.6 Confirmation — a single, brief "yes, that's it" for correct answers. */
+@keyframes atConfirm{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.06)}
+  100%{transform:scale(1)}
+}
+.at-confirm{animation:atConfirm .45s var(--at-pop)}
+
+/* 1.7 Count-in — the numeric "n of m" that tells a class how far through
+   a reveal sequence they are. Purely presentational. */
+.at-count{font-variant-numeric:tabular-nums}
+
+/* ==========================================================================
+   2 · TODAY AT A GLANCE  (.product-grid)
+   ---------------------------------------------------------------------------
+   Every deck in the suite emits .product-grid > .product-card (.icon, h4, p,
+   .country-badge) on the Starter slide, but no lesson has ever defined styles
+   for them — the four cards render as an unstyled vertical text dump that
+   overflows the slide. This is the component that was missing.
+
+   Read as a left-to-right story: Big Idea -> Today We Play -> The Wall Grows
+   -> It Banks. Each card takes the zone colour that matches its role, so the
+   Starter slide previews the colour language used by the rest of the lesson.
+   ========================================================================== */
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:var(--at-gap-m);
+  margin-top:var(--at-gap-m);
+  align-items:stretch;
+}
+.product-card{
+  --pc:var(--muted);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  background:#fff;
+  border:2px solid #e2e8f0;
+  border-top:6px solid var(--pc);
+  border-radius:14px;
+  padding:16px 14px 42px;
+  box-shadow:0 4px 14px rgba(15,23,42,.06);
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,23,42,.12)}
+.product-card .icon{
+  font-size:2rem;line-height:1;margin-bottom:6px;
+  filter:drop-shadow(0 2px 3px rgba(15,23,42,.15));
+}
+.product-card h4{
+  margin:0 0 4px;font-size:.82rem;font-weight:900;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--pc);
+}
+.product-card p{
+  margin:0;font-size:1rem;line-height:1.4;color:#1f2937;font-weight:600;
+}
+/* The badge names the card's job in the lesson — anchored so all four align
+   however much text sits above them. */
+.product-card .country-badge{
+  position:absolute;left:14px;bottom:12px;
+  background:var(--pc);color:#fff;
+  font-size:.62rem;font-weight:900;letter-spacing:.12em;
+  padding:3px 9px;border-radius:6px;
+}
+/* Role colours, drawn only from the subject's approved palette. */
+.product-card:nth-child(1){--pc:var(--lo-border)}    /* SPARK    — the big idea  */
+.product-card:nth-child(2){--pc:var(--wedo-border)}  /* GAME     — we do together*/
+.product-card:nth-child(3){--pc:var(--ido-border)}   /* AUDIENCE — it goes public*/
+.product-card:nth-child(4){--pc:var(--task-border)}  /* EVIDENCE — it banks      */
+
+/* Cards arrive one at a time so the teacher can talk to each in turn. */
+.slide.active .product-card{animation:atReveal var(--at-base) var(--at-ease) backwards}
+.slide.active .product-card:nth-child(1){animation-delay:.10s}
+.slide.active .product-card:nth-child(2){animation-delay:.22s}
+.slide.active .product-card:nth-child(3){animation-delay:.34s}
+.slide.active .product-card:nth-child(4){animation-delay:.46s}
+
+@media (max-width:900px){
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .product-grid{grid-template-columns:1fr;gap:10px}
+  .product-card{padding:12px 12px 38px}
+  .product-card .icon{font-size:1.6rem}
+  .product-card p{font-size:.95rem}
+}
+@media print{
+  .product-grid{display:grid!important;grid-template-columns:repeat(2,1fr)}
+  .product-card{box-shadow:none;animation:none}
+}
+
+/* ==========================================================================
+   3 · TITLE SLIDE HIERARCHY
+   ---------------------------------------------------------------------------
+   h1 and the module tag are both inline-block inside a centred wrapper, so
+   they share a line and the lesson title reads as a run-on of the module
+   strip. Giving the tag its own line restores the title as the loudest thing
+   on the slide. Presentation only — no text is altered.
+   ========================================================================== */
+.title-stage .slide-tag.tag-lesson{
+  display:block;width:max-content;max-width:100%;
+  margin:0 auto 10px;
+}
+.title-stage h1{margin-top:0}
+
+/* ==========================================================================
+   4 · REDUCED MOTION
+   ---------------------------------------------------------------------------
+   Each deck already neutralises animation under prefers-reduced-motion. This
+   block extends that to the transitions and transforms introduced above, and
+   guarantees anything the framework animates in is left fully visible rather
+   than stuck at its start state.
+   ========================================================================== */
+@media (prefers-reduced-motion:reduce){
+  .at-reveal,.at-reveal.at-in,.at-draw,.at-pulse,.at-confirm,
+  .slide.active .product-card{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+    stroke-dashoffset:0!important;
+  }
+  .product-card,.at-dimmed{transition:none!important}
+  .product-card:hover{transform:none}
+}
+</style>
+<!-- ASDAN-TEACH:CSS:END -->
 </head><body>
 <div class="xp-wrap" id="xpWrap"><span class="xp-label">⭐ XP <span id="xpCount">0</span>/<span id="xpTotal">0</span></span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div><div id="auto-timer">
   <span id="auto-timer-icon">⏱</span>
@@ -615,4 +816,137 @@ function showTABrief(){
 let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;document.getElementById('pres-caps').appendChild(c);document.getElementById('pres-num').textContent=_presDone.length;if(_presDone.length===4){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});document.getElementById('pres-caps').innerHTML='';document.getElementById('pres-num').textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
 registerXP(document.querySelectorAll('.match-pill').length);
 var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
-<script defer src="/hud.js"></script></body></html>
+<script defer src="/hud.js"></script><!-- ASDAN-TEACH:JS:START — generated from _framework/asdan-teach.js, do not edit here -->
+<script>
+/* ==========================================================================
+   ASDAN TEACH — shared interaction layer for the BUILD_ASDAN suite
+   --------------------------------------------------------------------------
+   Source of truth. Injected into every lesson deck by _framework/apply_framework.py
+   between the ASDAN-TEACH:JS markers. Edit here, never in a lesson file.
+
+   RULES OBSERVED BY THIS LAYER
+   - Progressive enhancement only. Every lesson must still teach correctly with
+     this file removed; nothing here is load-bearing for content or navigation.
+   - It wraps existing lesson functions rather than replacing them, so timers,
+     print packs, cold call, the match game and the slide deck keep working.
+   - No text is written into the page that carries teaching meaning. Labels
+     added here are navigational chrome only ("Replay", "Step 2 of 3").
+   - Everything is namespaced under window.ASDANTeach.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var AT = (window.ASDANTeach = window.ASDANTeach || {});
+  var reduceMotion = window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+
+  /* ------------------------------------------------------------------
+     Slide-change hook
+     The decks call showSlide() from next/prev/keyboard. We wrap it once and
+     fan out to registered listeners, so later features never have to wrap it
+     again and we never double-fire.
+     ------------------------------------------------------------------ */
+  var slideListeners = [];
+
+  AT.onSlideChange = function (fn) {
+    if (typeof fn === 'function') slideListeners.push(fn);
+  };
+
+  function fireSlideChange() {
+    var slides = document.querySelectorAll('.slide');
+    var active = document.querySelector('.slide.active');
+    var index = Array.prototype.indexOf.call(slides, active);
+    slideListeners.forEach(function (fn) {
+      try {
+        fn(active, index);
+      } catch (e) {
+        /* one broken listener must never stop the lesson advancing */
+      }
+    });
+  }
+
+  function installSlideHook() {
+    if (typeof window.showSlide !== 'function') return false;
+    var original = window.showSlide;
+    window.showSlide = function (i) {
+      var out = original.apply(this, arguments);
+      try {
+        fireSlideChange();
+      } catch (e) {}
+      return out;
+    };
+    return true;
+  }
+
+  /* ------------------------------------------------------------------
+     Stagger indexing
+     .at-stagger children read their position from --at-i so the CSS can
+     space their arrival without a per-item rule.
+     ------------------------------------------------------------------ */
+  AT.indexStagger = function (root) {
+    (root || document).querySelectorAll('.at-stagger').forEach(function (group) {
+      Array.prototype.forEach.call(group.children, function (child, i) {
+        child.style.setProperty('--at-i', Math.min(i, 12));
+      });
+    });
+  };
+
+  /* ------------------------------------------------------------------
+     Zone colour
+     Returns the palette token for the slide's teaching zone, so highlights
+     always match the subject's approved colours instead of inventing one.
+     ------------------------------------------------------------------ */
+  AT.zoneVar = function (slide) {
+    var type = slide && slide.getAttribute('data-type');
+    var title = (slide && slide.getAttribute('data-title')) || '';
+    if (type === 'ido' || /I Do/i.test(title)) return '--ido-border';
+    if (type === 'wedo' || /We Do/i.test(title)) return '--wedo-border';
+    if (type === 'independent' || /Independent/i.test(title)) return '--task-border';
+    return '--lo-border';
+  };
+
+  AT.reduceMotion = function () {
+    return !!reduceMotion.matches;
+  };
+
+  /* ------------------------------------------------------------------
+     Boot
+     ------------------------------------------------------------------ */
+  var booted = false;
+
+  function boot() {
+    if (booted) return;
+    booted = true;
+    AT.indexStagger(document);
+    installSlideHook();
+    (AT._boot || []).forEach(function (fn) {
+      try {
+        fn();
+      } catch (e) {}
+    });
+    // Announce the slide the deck opened on, so listeners start in sync.
+    fireSlideChange();
+  }
+
+  /* Features registered before boot run once the DOM and the deck's own
+     scripts are in place; anything registered later runs immediately. */
+  AT.ready = function (fn) {
+    if (booted) {
+      try {
+        fn();
+      } catch (e) {}
+      return;
+    }
+    (AT._boot = AT._boot || []).push(fn);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+<!-- ASDAN-TEACH:JS:END -->
+</body></html>
