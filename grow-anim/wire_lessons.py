@@ -8,6 +8,7 @@ it belongs.
 
     python3 grow-anim/wire_lessons.py Science_Teesside/Grow/*.html
     python3 grow-anim/wire_lessons.py --check Science_Teesside/Grow/*.html
+    python3 grow-anim/wire_lessons.py --patch-only <any lesson>.html
 
 Everything inserted is wrapped in <!-- GROW-ANIM:WIRE:<slot>:BEGIN/END -->, so
 re-running replaces rather than duplicates, and a block can be edited here once
@@ -15,7 +16,9 @@ and pushed out to every lesson. Existing lesson content is never removed — the
 framework is added alongside it, so nothing a teacher already relies on moves.
 
 It also applies PATCHES — small idempotent repairs to the lesson's own deck
-code, listed and explained beside the patch table below.
+code, listed and explained beside the patch table below. --patch-only
+applies just those repairs, so they can be rolled across lessons that have
+no GROW wiring.
 
 Anchors are chosen to survive ordinary editing of the lessons:
   · after the slide's "Watch me think" li-box, where there is one
@@ -236,9 +239,26 @@ MARK_END = "<!-- GROW-ANIM:WIRE:%s:END -->"
 # nextSlide/prevSlide called it — they set currentSlide first — but the moment
 # any other code jumps straight to a slide, the deck silently desynchronises.
 # One assignment fixes it, and is a no-op on the existing callers.
+# The Live-Teach HUD (timer, name picker, noise meter) is site-level furniture
+# hosted at the root of the estate, so "/hud.js" is correct when a lesson is
+# served — and unreachable when one is opened straight off a USB stick, which is
+# exactly how these lessons are meant to survive a room with no network. This
+# loader keeps the served behaviour byte-for-byte identical and adds a relative
+# fallback, so copying hud.js next to the lessons makes the HUD work offline
+# too. It is strictly a superset of what was there: when /hud.js resolves,
+# nothing else runs.
+HUD_LOADER = (
+    '<script id="grow-hud-loader">/* GROW-ANIM: HUD, absolute when served, '
+    'relative when opened from a file */(function(){function add(src,onfail){'
+    'var s=document.createElement("script");s.src=src;if(onfail)s.onerror=onfail;'
+    'document.body.appendChild(s);}add("/hud.js",function(){add("hud.js");});'
+    '})();</script>'
+)
+
 PATCHES = [
     ("function showSlide(i){slides.forEach(",
      "function showSlide(i){currentSlide=i;slides.forEach("),
+    ('<script defer src="/hud.js"></script>', HUD_LOADER),
 ]
 
 
@@ -287,7 +307,27 @@ def wire(html, slot, body, slide_title, mode):
     return html[:at] + wrapped + html[at:], True
 
 
-def process(path, check_only):
+def patch_only(path, check_only):
+    """Apply just the PATCHES — for the ~240 lessons across the estate that have
+    no GROW wiring but share the same deck code and the same HUD reference."""
+    with open(path, encoding="utf-8") as fh:
+        original = fh.read()
+    html = repair(original)
+    if html == original:
+        print("  ok      %s" % path)
+        return True
+    if check_only:
+        print("  STALE   %s" % path)
+        return False
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(html)
+    print("  patched %s" % path)
+    return True
+
+
+def process(path, check_only, patches_only=False):
+    if patches_only:
+        return patch_only(path, check_only)
     stem = STEM.search(os.path.basename(path))
     if not stem or stem.group(1) not in LESSONS:
         print("  skip    %s  (no wiring defined)" % path)
@@ -319,10 +359,11 @@ def process(path, check_only):
 
 def main(argv):
     check_only = "--check" in argv
+    patches_only = "--patch-only" in argv
     targets = [a for a in argv if not a.startswith("--")]
     if not targets:
         raise SystemExit(__doc__)
-    results = [process(p, check_only) for p in targets]
+    results = [process(p, check_only, patches_only) for p in targets]
     if False in results:
         raise SystemExit(1)
 

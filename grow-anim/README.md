@@ -25,12 +25,14 @@ as well as the science.
 | `grow-motion.css` | 1 | The ten movements. The punctuation of the whole suite. |
 | `grow-svg.js` | 2 | Asset registry + the drawing kit assets are built from. |
 | `grow-svg-bio.js` | 2 | Biology: skeleton, cell, heart, circulation, lungs, digestion, food chain, plant, DNA. |
+| `grow-svg-bio-animals.js` | 2 | Biology: 13 animals for classification — fish, human, snake, bird, dog, frog, crab, spider, worm, snail, jellyfish, beetle, octopus. |
 | `grow-svg-phy.js` | 2 | Physics: forces, friction, lever, pulley, gears, fair test, Solar System, day/night, Moon phases, circuit, light, waves, particles, heating. |
 | `grow-svg-chem.js` | 2 | Chemistry: atom, ion, bonding, reaction, dissolving, burning, neutralisation, electrolysis. |
 | `grow-anim.js` | 3–11 | The engine: reveal, We-Do, prediction, overlays, dual, retrieval, misconception, story. |
 | `grow-anim.css` | 3–11 | The furniture those behaviours need. |
 | `grow-polish.css` / `.js` | 12 | Lighting, depth, parallax, particles, micro-interactions. Optional. |
 | `demo.html` | — | **Open this first.** Living reference — every asset, every phase, copy-paste snippets. |
+| `compat-build-anim.js` | — | Makes existing BUILD lesson markup run on this engine unchanged. |
 | `inject.py` | — | Inlines the library into single-file lessons so they still work offline. |
 | `wire_lessons.py` | — | Puts the teaching behaviours on the right slides of the GROW lessons, and applies small idempotent repairs to the lesson's own deck code. |
 
@@ -236,17 +238,47 @@ Existing lesson content is added to, never removed.
 `wire_lessons.py` fills eight slots per lesson — story spine, motion key, I Do
 stage, We-Do frame, misconception engine, dual representation, process animation
 and retrieval — and applies the repairs listed in its `PATCHES` table. Each patch
-is one line, explained where it is declared, and a no-op once applied.
+is explained where it is declared and is a no-op once applied. `--patch-only`
+applies just those repairs, so they can be rolled across the ~240 lessons in the
+estate that have no GROW wiring but share the same deck code:
+
+```bash
+python3 grow-anim/wire_lessons.py --patch-only <lesson>.html
+```
+
+One of those repairs is the **HUD loader**. The Live-Teach HUD is site-level
+furniture served from the root of the estate, so `/hud.js` is right when a lesson
+is served and unreachable when one is opened off a USB stick. The loader keeps
+the served behaviour byte-for-byte identical — one request to `/hud.js`, no
+fallback — and adds a relative fallback so copying `hud.js` next to the lessons
+makes the HUD work offline too. With neither present it fails silently and the
+lesson is unaffected.
 
 ---
 
 ## Relationship to `build-anim/`
 
-`build-anim/` is the BUILD-pathway framework and shares this authoring grammar
-deliberately, so the two suites feel like one system to a pupil who meets both.
-GROW is the superset: it adds the full ten-motion language, physics and chemistry
-asset libraries, invisible-science overlays, dual representation, retrieval, the
-misconception engine, the story spine and the polish layer.
+There is now **one engine**. `build-anim/` was a second codebase doing the same
+job for the BUILD pathway; its thirteen animal assets have been ported into
+`grow-svg-bio-animals.js`, and `compat-build-anim.js` makes every piece of
+existing BUILD lesson markup run against this engine unchanged:
+
+```html
+<script src="/grow-anim/grow-svg.js"></script>
+<script src="/grow-anim/grow-svg-bio-animals.js"></script>
+<script src="/grow-anim/grow-anim.js"></script>
+<script src="/grow-anim/compat-build-anim.js"></script>
+```
+
+The shim provides `window.BuildAnim` and `window.BioSVG`, translates `.ba-stage`,
+`.ba-predict`, `.ba-key` and every `data-ba-*` attribute to its GROW equivalent,
+and keeps `dim`/`undim` alive as aliases of `fade`/`unfade`. No BUILD lesson had
+to be rewritten. Once the BUILD lessons have been re-injected against
+`grow-anim/`, `build-anim/build-anim.js`, `build-anim.css` and `bio-svg.js` can
+be deleted and the shim retired with them.
+
+A fix to a motion, a verb or a shape is now made **once** and reaches both
+suites — which was the point of sharing the grammar in the first place.
 
 ---
 

@@ -32,6 +32,7 @@ CSS_BLOCKS = [
 JS_BLOCKS = [
     ("SVG",    "grow-svg.js"),       # Phase 2 — registry + drawing kit
     ("BIO",    "grow-svg-bio.js"),
+    ("ANIM",   "grow-svg-bio-animals.js"),
     ("PHY",    "grow-svg-phy.js"),
     ("CHEM",   "grow-svg-chem.js"),
     ("ENGINE", "grow-anim.js"),      # Phases 3-11 — the engine
