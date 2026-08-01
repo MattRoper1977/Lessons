@@ -21,7 +21,8 @@ not by good intentions (see *Content integrity*, below).
 | `qa_check.py` | Proves content is unchanged and the layer is current. |
 | `smoke_test.js` | Drives the interactions teachers rely on (needs Playwright). |
 | `style_check.js` | Proves a change is visually inert — computed styles + geometry. |
-| `contrast_check.js` | Measures text contrast on every slide. Reports; does not gate. |
+| `contrast_check.js` | Measures text contrast on every slide, writes `CONTRAST_MANIFEST.md`. |
+| `label_rest_check.js` | Proves every illuminator label is readable at rest. Gates. |
 | `prune_dead_css.py` | One-off cleanup: removes CSS no deck can ever match. |
 
 ## Making a change
@@ -35,7 +36,9 @@ python3 _framework/apply_framework.py
 
 # 3 · prove nothing broke
 python3 _framework/qa_check.py
-node    _framework/smoke_test.js */[A-Z]*.html
+node    _framework/smoke_test.js       */[A-Z]*.html
+node    _framework/label_rest_check.js */[A-Z]*.html
+node    _framework/contrast_check.js --manifest */[A-Z]*.html   # then diff the manifest
 ```
 
 `smoke_test.js` runs 26 checks per deck and skips anything that is not a deck,
@@ -185,66 +188,108 @@ left hidden — held labels are present, undrawn lines are drawn.
 
 ---
 
-## Contrast
+## Contrast — ruled from a manifest
 
-`contrast_check.js` measures every text element on every slide, with answers
-revealed and every I Do step out, compositing each translucent layer down to the
-page to get the real background. It **reports rather than gates**, because almost
-everything it finds is an approved brand colour used as text — a palette
-decision, and not one this layer gets to make.
+[`CONTRAST_MANIFEST.md`](../CONTRAST_MANIFEST.md) is the record. `contrast_check.js
+--manifest` regenerates it. **Run it after any change to this layer and compare:
+the layer must not add a row.**
 
 ```
-$ node _framework/contrast_check.js <strand>/[A-Z]*.html
+$ node _framework/contrast_check.js --manifest <strand>/[A-Z]*.html
 measured 5589 text elements across 31 decks
-652 below WCAG AA, in 58 distinct patterns
+607 below target, in 66 distinct patterns
+failures by role: teaching 205, UI 308, decorative 94
+failures by verdict: identity hue 205, UI chrome 308, decorative 94
 ```
 
-Run it after any change and compare the patterns. **The layer must not add a
-new one.** What it currently finds, all of it pre-existing lesson or brand
-styling:
+**THE RULING: manifest-led, and identity tokens are not contrast levers.** A
+pathway, tier or subject hue *is* the estate's colour language; a contrast fix
+that recolours the language is a bigger regression than the thing it fixes. So
+the only rows eligible for a fix are pupil-facing text that carries meaning, is
+below target, and can be corrected by moving the **ink** — never the hue. On the
+current measurement that set is empty: every remaining teaching failure is an
+identity hue, named and measured in the manifest. **Decorative failures are
+listed and accepted**, so nobody re-raises them in six weeks.
 
-| Pattern | Ratio | What it is |
-|---|---|---|
-| `🖨 Supported pack` / `Standard pack` | 2.28 / 2.80 | white on `--btn-bg`, the subject's own button colour, 93 each |
-| `🤝 With support` / `👤 On your own` | 2.00 / 2.46 | the three level colours, set inline by each lesson |
-| Lundy headings | 2.09–4.47 | each box's colour, set inline by each lesson |
-| `.slide-tag.tag-lesson`, `.country-badge` | 2.22–4.47 | white on a zone colour — established house style |
-| `.v5-step-label`, `✓ All revealed` | 2.58–4.07 | the deck's own `.v5-step-controls` styling |
-| `Success looks like` | 2.00–2.08 | `--sc-border` on `--sc-bg`, inline in every deck |
+One row qualified and was fixed: "SUCCESS LOOKS LIKE", set in `--sc-border`
+inline in all 31 decks, gold at 12.5px on the panel's own cream — 2.00–2.09:1
+against a 4.5 target, the worst teaching text in the suite, labelling the three
+things a class is asked to collect. The ink moved to the deck's body colour,
+13.22–13.32:1. The token is untouched and still carries the panel's identity on
+its 6px left border and on the checkboxes. Earlier, and on the same principle:
+the Replay control and the step number take body ink with the zone colour on the
+ring rather than on the text.
 
-Two the layer *did* own, and fixed inside the palette: the Replay control and
-the step number now take the deck's body ink with the zone colour on the ring
-instead of on the text — zone-on-white measured 2.9–4.0:1 across the five
-subject palettes, and both are chrome that has to read from the back of a room.
-Replay is also sized to a 36 px target.
+### Three ways this measurement was wrong before, all fixed
+
+Worth reading before trusting any number it prints.
+
+- **Role matched on `tag + ' ' + cls`**, so an element with no class produced a
+  trailing space that defeated the anchored tag pattern, and every bare `<h3>`
+  and `<p>` — most of what a pupil reads — fell into the UI bucket. Teaching
+  failures read as 25. They are 205.
+- **Grouping keyed on a rounded ratio**, so unrelated elements sharing a tag and
+  a number collapsed into one row that then reported the first member's text and
+  size for all of them. It produced "Success looks like ×32 in 25 decks" when 31
+  such headings exist in the whole suite. Grouping is by selector, ink,
+  background, size, weight and target — the things that define the pattern.
+- **The composited chain is not the painted background.** One representative of
+  each pattern now has its ink hidden, its box screenshotted and the modal pixel
+  taken, which catches gradients and overlays. It moves rows in *both*
+  directions; four the chain called failures are cleared by it and are listed at
+  the foot of the manifest so nobody re-raises them from a weaker tool.
 
 ---
 
-## Known, left alone deliberately
+## Known, and ruled — not open questions
 
-- **Zone token contrast.** None of the four zone colours clears 4.5:1 against
-  white (they run 2.2–4.2:1). The decks already use white-on-zone-colour for
-  `.slide-tag` and `.wedo-capture`, so it is established house style and the
-  layer follows it rather than overruling a branding decision. The layer does
-  not *add* new small text in a zone colour. Worth a look if the palette is ever
-  revisited — the table above is the evidence to look at.
+- **Identity-hue contrast.** None of the four zone colours clears 4.5:1 against
+  white (2.2–4.2:1), and the same holds for the subject strip, the Lundy four and
+  the three tier colours. **Ruled: these are not contrast levers.** The decks
+  already use white-on-zone-colour for `.slide-tag` and `.wedo-capture`, so it is
+  established house style, and the layer follows it rather than overruling a
+  branding decision. The layer does not *add* new small text in a zone colour.
+  The manifest is the evidence if the palette is ever revisited.
 - **`.pres-cap` text colour** is a hardcoded indigo inherited from the Art
   template the decks were cloned from, rather than a subject token, so it is the
   one element that does not follow its deck's palette. Left as-is: changing it is
   a palette decision, not a layout one.
 - **SVG geometry.** A few illuminator SVGs draw slightly outside their `viewBox`
   and crowd the caption. That is per-lesson artwork, not a layer concern.
-- **Diagram height.** The illuminators are 560×190 viewBoxes stretched to the
-  slide width, so on a 1440×900 screen each is 1199×407 — half the slide's usable
-  height. Capping the width would free 100–130 px but shrinks the artwork on a
-  projector, and it is the referent for everything below it. Scrolling the
-  revealed step into view solves the problem the height was causing without
-  touching the artwork; the size itself is a judgement call for whoever owns it.
-- **Illuminators that only loop.** Four decks (`CAREERS_W2`, `CAREERS_W3`,
-  `COMM_W3`, `COMM_W4`) animate entirely with infinite `glow`/`ride`/`spin`, so
-  there is no build for a label to wait for and nothing arrives in sequence.
-  Staging them would be a real gain, but the author chose a continuous animation
-  there and the layer does not second-guess that. Worth a decision, not a guess.
+- **Diagram height — ruled: viewport-conditional cap, projector size protected.**
+  A fixed width cap is a fixed answer to a variable problem: it takes the same
+  100–130px off a projector, where vertical space is abundant, as off a laptop
+  where it is not. The cap is the vertical room left over instead —
+  `max(190px, calc(100vh - 500px))` — so it engages only where space is scarce.
+  The 500px is the largest constant that leaves 1920×1080 untouched, measured.
+  Verified: 1920×1080 and 390×844 render **byte-identical** screenshots before and
+  after; 1280×720 gives back 140px, 1024×768 gives back 15px. It does not make the
+  slide fit and is not meant to — at 1280×720 everything except the diagram
+  already totals 679px against 638px visible. Scrolling the revealed step into
+  view is what solves that.
+- **The four loop decks — ruled: continuous motion is deliberate, staging
+  refused.** `CAREERS_W2`, `CAREERS_W3`, `COMM_W3` and `COMM_W4` animate entirely
+  with infinite `glow`/`ride`/`spin`. In a careers path and a communication loop
+  the cycle *is* the concept; a staged build would teach a sequence that ends,
+  which is the wrong idea. **The standard instead is legibility at rest**, gated
+  by `label_rest_check.js`: effective opacity down the whole ancestor chain,
+  sampled across a full cycle, then again under `prefers-reduced-motion` where the
+  scene must be complete, labelled and static. All four pass. COMM_W4's tick is
+  exempt and reported as such — it rides inside a `.ride` group and its own
+  aria-label calls it a reply in flight, so fading as it lands is the animation,
+  not a legibility failure.
+
+---
+
+## The one unverified axis
+
+**No real browser on a real school device.** Every measurement in this file and
+in the manifest comes from headless Chromium 1194 in a container. Nothing here
+has been opened on a school laptop, a classroom projector or a managed tablet,
+and the decks are taught from all three.
+
+This is named as **unverified**, not as untested-and-forgotten, and it does not
+block anything. It is the one axis a machine in this container cannot close.
 
 ---
 
