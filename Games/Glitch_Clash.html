@@ -1305,6 +1305,12 @@ function startEndless(mods){
 }
 function nextEndlessRound(){
   if(!endlessRun) return;
+  /* Guard against being called twice for the same round. go() strips .show
+     from every overlay directly rather than through closeSheets(), so the boon
+     sheet can be dismissed without clearing boonPending — and a later
+     closeSheets() would then fire a second advance on top of the first,
+     starting two battles for one cleared round. */
+  if(battle && !battle.over) return;
   const mods=endlessRun.mods||[];
   const wk=endlessRun.weekly;
   /* Hardcore stops holding the bosses back and starts the escalation curve at
