@@ -31,13 +31,17 @@ const OUT = arg('out', `reports/convergence/_data/${LABEL}.json`);
 const SHOTS = arg('shots', null);
 const ROOT = process.cwd();
 
-const LESSONS = [
+/* The BUILD five, which is what v1 and v2 measured and what the before/after
+   comparison depends on. --lessons points the same harness at another set (the
+   GROW five) without changing anything it measures; omitting it reproduces v1
+   and v2 exactly. */
+const LESSONS = (arg('lessons', null) || [
   'Science_Teesside/Build/SCI_B_W3_Backbones.html',
   'Science_Teesside/Build/SCI_B_W4_Muscle_Pairs.html',
   'Science_Teesside/Build/SCI_B_W5_Right_Nutrition.html',
   'Science_Teesside/Build/SCI_B_W6_Balanced_Plate.html',
   'Science_Teesside/Build/SCI_B_W7_Where_Food_Comes_From.html'
-];
+].join(',')).split(',').filter(Boolean);
 
 /* Verbs classified by what their targets name. Anything not listed takes no
    part/label target, so a "no match" for it would be meaningless. */

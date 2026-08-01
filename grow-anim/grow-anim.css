@@ -20,34 +20,36 @@
    over the slide rather than beside it, so anything a slide draws at its own
    foot — a comparison rail's captions — ends up underneath the buttons. Padding
    inside the slide does not help: the slide scrolls, so the caption stays where
-   it was and the space appears below it.
+   it was and the space appears below it. Shrinking the slide is worse: it steals
+   the same height from the content it was protecting and the caption goes from
+   "under the nav" to "clipped".
 
-   Shrinking the slide does not work either: it steals the same height from the
-   content it was meant to protect, and the caption goes from "under the nav" to
-   "clipped by the slide", which is worse.
+   So the picture is capped twice, and the two caps mean different things:
 
-   What works is capping the picture against the height that is actually usable
-   rather than against the whole viewport. A stage is never just its picture: it
-   also carries a control bar above and, in a rail, a caption below, and it sits
-   under a slide heading — and then the navigation covers the last strip of the
-   viewport. --g-chrome-reserve is all of that together, measured on the deck
-   (nav strip 57px + control bar 48px + caption 15px + gaps). A `tall` frame is
-   58% of what is left after it, not 58vh, so the caption lands above the
-   buttons on its own at every viewport, with no layout reserved and nothing
-   clipped. */
+     the FRAME FACTOR is intent — how big a picture of this kind should ever be,
+     as a fraction of the viewport. It is a design decision and it is a constant.
+
+     --g-fit is fact — how much room there actually is between the top of this
+     particular picture and whatever ends the usable area below it (the fixed
+     navigation, or the foot of the slide), minus whatever this stage draws
+     underneath the picture. grow-anim.js measures it per stage and re-measures
+     on resize and whenever the stage is rebuilt, so a caption that wraps to two
+     lines pushes the PICTURE down rather than pushing itself under the buttons.
+
+   min() of the two: never bigger than intended, never bigger than fits. Nothing
+   here is tuned to a slide, and there is no reserve constant to drift. */
 :root {
-  --g-chrome-reserve: 150px;   /* nav strip + the stage's own bar and caption + gaps */
   --g-frame-default: .46;
   --g-frame-wide: .34;
-  --g-frame-mini: .20;         /* BUILD's were default .46 · wide .34 · mini .24 · tall .44 — */
-  --g-frame-tall: .58;         /* change these four to revert, nothing else moves      */
+  --g-frame-mini: .20;         /* BUILD's were default .46 · wide .34 · mini .24 · */
+  --g-frame-tall: .58;         /* tall .44 — change these four to revert           */
 }
 
 .g-svg { display: block; width: 100%; height: auto;
-         max-height: calc(var(--g-frame-default) * (100vh - var(--g-chrome-reserve))); }
-.g-stage[data-grow-frame="wide"] .g-svg { max-height: calc(var(--g-frame-wide) * (100vh - var(--g-chrome-reserve))); }
-.g-stage[data-grow-frame="mini"] .g-svg { max-height: calc(var(--g-frame-mini) * (100vh - var(--g-chrome-reserve))); }
-.g-stage[data-grow-frame="tall"] .g-svg { max-height: calc(var(--g-frame-tall) * (100vh - var(--g-chrome-reserve))); }
+         max-height: min(calc(var(--g-frame-default) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="wide"] .g-svg { max-height: min(calc(var(--g-frame-wide) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="mini"] .g-svg { max-height: min(calc(var(--g-frame-mini) * 100vh), var(--g-fit, 100vh)); }
+.g-stage[data-grow-frame="tall"] .g-svg { max-height: min(calc(var(--g-frame-tall) * 100vh), var(--g-fit, 100vh)); }
 
 /* comparison rail — several specimens side by side, addressable as part#1.. */
 .g-rail { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); align-items: end; }

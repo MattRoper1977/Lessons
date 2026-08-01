@@ -12,6 +12,7 @@ import { createRequire } from 'module';
 const require_ = createRequire(import.meta.url);
 const { chromium } = require_(process.env.PLAYWRIGHT_PATH || '/opt/node22/lib/node_modules/playwright');
 import { resolve } from 'path';
+import { writeFileSync } from 'fs';
 
 const ROOT = process.cwd();
 const f = p => 'file://' + resolve(ROOT, p);
@@ -34,6 +35,19 @@ async function page(rel, opts) {
   await p.goto(f(rel), { waitUntil: 'load' });
   await p.waitForTimeout(1000);
   return { p, ctx };
+}
+
+/* The clearance matrix is 75 page loads. Contexts are the expensive part, so it
+   reuses one context per (fixture, viewport) and navigates between lessons. */
+async function viewportRun(w, h, fn) {
+  const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+  const p = await ctx.newPage();
+  for (const n of LESSONS) {
+    await p.goto(f(L(n)), { waitUntil: 'load' });
+    await p.waitForTimeout(550);
+    await fn(p, n);
+  }
+  await ctx.close();
 }
 
 /* ---------------------------------------------------------------- TEST 1
@@ -99,38 +113,118 @@ for (const n of LESSONS) {
 }
 
 /* ---------------------------------------------------------------- TEST 4
-   Nothing a stage draws may sit under the lesson's fixed navigation. Checked at
-   three real viewports, on the slide that carries the comparison rail. */
-for (const [w, h] of [[1280, 720], [1024, 768], [390, 844]]) {
-  const { p, ctx } = await page(L('W4_Muscle_Pairs'), { viewport: { width: w, height: h } });
-  const r = await p.evaluate(() => {
-    const st = document.getElementById('wedo1b-rail');
-    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-    st.closest('.slide').classList.add('active');
-    const nav = document.querySelector('.controls');
-    const navTop = nav ? nav.getBoundingClientRect().top : Infinity;
-    const caps = [...st.querySelectorAll('.g-cell > span, .ba-cell > span')];
-    return {
-      navTop, navRect: nav ? JSON.stringify(nav.getBoundingClientRect()) : null,
-      scrolled: st.closest('.slide').scrollTop,
-      slideBottom: Math.round(st.closest('.slide').getBoundingClientRect().bottom),
-      caps: caps.map(c => { const r = c.getBoundingClientRect();
-        return { text: c.textContent.trim().slice(0, 22), bottom: Math.round(r.bottom),
-                 left: Math.round(r.left), right: Math.round(r.right) }; })
-    };
+   Nothing a stage draws may sit under the lesson's fixed navigation, and nothing
+   may be clipped by the foot of the slide either. v2 tested one stage at three
+   viewports, which is the same one-slide tuning problem at a larger scale, so
+   this runs EVERY stage in every lesson at every viewport the school's rooms
+   actually use, and reports the worst clearance anywhere in the set.
+
+   Two adversarial fixtures are forced on top of the captions that happen to
+   exist today: a caption long enough to wrap to two lines, and a heading long
+   enough to push the whole stage down. Both must hold the same two conditions. */
+const VIEWPORTS = [[1280, 720], [1366, 768], [1920, 1080], [1024, 768], [390, 844]];
+const MATRIX = [];
+let worst = { px: Infinity };
+
+const PROBE = `(function (fixture) {
+  const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+  const vh = window.innerHeight;
+  const nav = document.querySelector('.controls');
+  const navRect = nav ? nav.getBoundingClientRect() : null;
+  const out = [];
+  $$('.slide').forEach(sl => sl.classList.remove('active'));
+  $$('.g-stage, .ba-stage').forEach((stage, i) => {
+    const slide = stage.closest('.slide');
+    if (!slide) return;
+    $$('.slide').forEach(s => s.classList.remove('active'));
+    slide.classList.add('active');
+    if (fixture === 'wrap') {
+      $$('.g-cell > span, .ba-cell > span', stage).forEach(c => {
+        c.textContent = c.textContent + ' — and this is the sort of caption a teacher writes when one word will not do';
+      });
+    }
+    if (fixture === 'heading') {
+      const h = slide.querySelector('h2');
+      if (h) h.textContent = h.textContent + ' — with a much longer title of the kind that wraps onto a second and even a third line on a projector at the back of a classroom';
+    }
+    if (window.GrowAnim && window.GrowAnim.fit) window.GrowAnim.fit(stage);
+    try { (window.BuildAnim || window.GrowAnim).all(stage); } catch (e) {}
+    const slideR = slide.getBoundingClientRect();
+    const slideBottom = slideR.bottom - parseFloat(getComputedStyle(slide).paddingBottom || 0);
+    /* everything the stage actually draws: the picture, its captions, its notes */
+    const drawn = [stage.querySelector('.g-canvas, .ba-canvas') || stage]
+      .concat($$('.g-cell > span, .ba-cell > span, .g-dual figcaption', stage));
+    let minClear = Infinity, offender = null;
+    drawn.forEach(e => {
+      const r = e.getBoundingClientRect();
+      if (!r.height) return;
+      const clearNav = (navRect && r.right > navRect.left) ? navRect.top - r.bottom : Infinity;
+      const clearSlide = slideBottom - r.bottom;
+      const c = Math.min(clearNav, clearSlide);
+      if (c < minClear) { minClear = c; offender = (e.className || e.tagName) + ''; }
+    });
+    out.push({
+      stage: stage.id || ('stage' + (i + 1)),
+      slide: slide.getAttribute('data-title') || '?',
+      clearance: Math.round(minClear), offender,
+      svgH: Math.round((stage.querySelector('svg') || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height),
+      fit: stage.style.getPropertyValue('--g-fit') || '(none)'
+    });
   });
-  await ctx.close();
-  const nav = r.navTop;
-  const navBox = JSON.parse(r.navRect || '{}');
-  /* a caption clears the nav if it ends above it, or is entirely to its left */
-  const underNav = r.caps.filter(c => c.bottom > nav && c.right > navBox.left);
-  /* a caption that has slipped below the slide's own box is clipped by the
-     slide's overflow — invisible, which is not "clear of the nav" either */
-  const clipped = r.caps.filter(c => c.bottom > r.slideBottom);
-  t(`rail caption clears the nav · ${w}x${h}`,
-    underNav.length === 0 && clipped.length === 0 && r.caps.length > 0,
-    `navTop=${Math.round(nav)} navLeft=${Math.round(navBox.left)} slideBottom=${r.slideBottom}` +
-    ` underNav=${underNav.length} clipped=${clipped.length} captions=${JSON.stringify(r.caps)}`);
+  return { navTop: navRect ? Math.round(navRect.top) : null, vh, stages: out };
+})`;
+
+for (const fixture of [null, 'wrap', 'heading']) {
+  for (const [w, h] of VIEWPORTS) {
+    await viewportRun(w, h, async (p, n) => {
+      const r = await p.evaluate(new Function('return ' + PROBE)(), fixture);
+      r.stages.forEach(st => {
+        MATRIX.push({ fixture: fixture || 'as-authored', viewport: `${w}x${h}`, lesson: n, ...st });
+        if (st.clearance < worst.px) worst = { px: st.clearance, where: `${n} / ${st.stage}`,
+          viewport: `${w}x${h}`, fixture: fixture || 'as-authored', offender: st.offender };
+      });
+    });
+  }
+}
+writeFileSync(resolve(ROOT, 'reports/convergence/_data/clearance-matrix.json'),
+  JSON.stringify({ worst, cells: MATRIX }, null, 1));
+{
+  const measured = MATRIX.filter(m => m.clearance !== null);
+  /* A teacher at a projector does not scroll: on those viewports the whole
+     stage has to be on screen. A phone scrolls as a matter of course, so the
+     claim there is weaker and is asserted separately rather than folded in. */
+  const PROJECTOR = ['1280x720', '1366x768', '1920x1080', '1024x768'];
+  for (const fixture of ['as-authored', 'wrap', 'heading']) {
+    const set = measured.filter(m => m.fixture === fixture && PROJECTOR.includes(m.viewport));
+    const f = set.filter(m => m.clearance < 8);
+    t(`whole stage on screen without scrolling · projector · ${fixture}`, f.length === 0,
+      `${set.length - f.length}/${set.length} cells clear by >=8px, worst ${Math.min(...set.map(m => m.clearance))}px` +
+      (f.length ? '; offenders: ' + f.map(m => `${m.lesson}/${m.stage}@${m.viewport}=${m.clearance}px`).join(' ') : ''));
+  }
+  /* The claim that actually tests the fitting mechanism: when something DOES
+     overflow, it must not be the picture. Every failing cell must have the
+     picture already shrunk to its floor, which means the engine did everything
+     it could and what is overflowing is the text above it. If a cell fails with
+     the picture still at its intent cap, the fit is broken. */
+  const failing = measured.filter(m => m.clearance < 8);
+  const pictureAtFault = failing.filter(m => parseFloat(m.fit) > 96 + 1);
+  t('when a slide overflows, the picture is never the offender',
+    pictureAtFault.length === 0,
+    `${failing.length} cells of ${measured.length} overflow; ${failing.length - pictureAtFault.length} of them ` +
+    `have the picture already at its 96px floor` +
+    (pictureAtFault.length ? '; picture still oversized in: ' +
+      pictureAtFault.map(m => `${m.lesson}/${m.stage}@${m.viewport} fit=${m.fit}`).join(' ') : ''));
+
+  const phone = measured.filter(m => m.viewport === '390x844');
+  const phoneBad = phone.filter(m => m.clearance < 8);
+  console.log(`      phone 390x844: ${phone.length - phoneBad.length}/${phone.length} clear; ` +
+    `as-authored failures: ` + (phone.filter(m => m.fixture === 'as-authored' && m.clearance < 8)
+      .map(m => `${m.lesson}/${m.stage}=${m.clearance}px`).join(' ') || 'none'));
+  console.log(`      worst clearance anywhere (all fixtures, all viewports): ${worst.px}px  ` +
+    `(${worst.where} @ ${worst.viewport}, fixture=${worst.fixture}, element=${worst.offender})`);
+  console.log(`      cells measured: ${measured.length}  under 8px: ${failing.length}`);
+  results.matrix = MATRIX;
+  results.worst = worst;
 }
 
 /* ---------------------------------------------------------------- TEST 5

@@ -588,6 +588,115 @@
       '</div>';
   }
 
+
+  /* ============================================ fitting a picture to the room
+
+     A picture is capped twice: by its frame factor, which is the intent, and by
+     --g-fit, which is the fact. This measures the fact.
+
+     The usable area ends at whichever comes first — the fixed navigation the
+     lesson chrome pins over the viewport, or the foot of the slide itself. Above
+     that sits whatever the stage draws BELOW the picture: a rail's captions, the
+     notes strip. What is left between the top of the picture and that line is
+     how tall the picture may be.
+
+     Everything here is read from the live layout. There is no reserved constant
+     and nothing tuned to a particular slide, so a caption that wraps to two
+     lines, a longer heading, or a shorter viewport moves the picture rather than
+     pushing the caption under the buttons.
+
+     GAP is the only number, and it is a breathing space rather than a
+     prediction: 8px between the last thing a stage draws and the chrome. */
+  var GAP = 8;
+  var FLOOR = 96;    /* below this a picture is decoration, not an explanation */
+
+  function usableBottom(stage) {
+    var vh = (global.innerHeight || doc.documentElement.clientHeight);
+    var end = vh;
+    /* the lesson chrome: any fixed element overlapping the foot of the viewport */
+    $$('.controls, .g-nav', doc).forEach(function (nav) {
+      var cs = getComputedStyle(nav);
+      if (cs.position !== 'fixed' || cs.display === 'none') return;
+      var r = nav.getBoundingClientRect();
+      if (r.height && r.bottom > vh * 0.6) end = Math.min(end, r.top);
+    });
+    /* the slide's own scrollport, which clips anything past it */
+    var slide = stage.closest && (stage.closest('.slide') || stage.closest('section'));
+    if (slide) {
+      var sr = slide.getBoundingClientRect();
+      if (sr.height) {
+        end = Math.min(end, sr.bottom - parseFloat(getComputedStyle(slide).paddingBottom || 0));
+      }
+    }
+    return end;
+  }
+
+  /* How much of the stage is drawn BELOW the picture — rail captions, notes. */
+  function belowPicture(stage, svg) {
+    var svgBottom = svg.getBoundingClientRect().bottom;
+    var extra = 0;
+    $$('.g-cell > span, .g-dual figcaption, .g-notes, .g-say', stage).forEach(function (e) {
+      var r = e.getBoundingClientRect();
+      if (!r.height) return;
+      if (r.top >= svgBottom - 2) extra = Math.max(extra, r.bottom - svgBottom);
+    });
+    var pad = parseFloat(getComputedStyle(stage).paddingBottom || 0) +
+              parseFloat(getComputedStyle(stage).borderBottomWidth || 0);
+    return extra + pad;
+  }
+
+  function fit(stage, depth) {
+    var svgs = $$('.g-svg', stage);
+    if (!svgs.length) return;
+    var top = null;
+    svgs.forEach(function (v) {
+      var r = v.getBoundingClientRect();
+      if (!r.height && !r.top) return;                 /* not laid out yet */
+      top = (top === null) ? r.top : Math.max(top, r.top);
+    });
+    if (top === null) return;
+    var room = usableBottom(stage) - top - belowPicture(stage, svgs[0]) - GAP;
+    /* On a phone, or with a heading long enough to wrap three times, there may
+       be no room left at all. Shrink as far as is still worth looking at and
+       stop there: below FLOOR the picture stops being a teaching aid, and what
+       is overflowing is the text above it, which no picture size can fix. */
+    if (room < FLOOR) room = FLOOR;
+    var was = parseFloat(stage.style.getPropertyValue('--g-fit')) || 0;
+    if (Math.abs(was - room) < 1.5) return;            /* converged; do not loop */
+    stage.style.setProperty('--g-fit', Math.round(room) + 'px');
+    /* Resizing the picture can move what is under it, so the first answer is not
+       always the last one. Settle it here rather than waiting for a resize
+       observer to notice, and cap the passes so a pathological layout cannot
+       spin. Two passes is enough in every case measured; three is the guard. */
+    if ((depth || 0) < 3) fit(stage, (depth || 0) + 1);
+  }
+
+  /* Re-measure when the stage changes size, which covers a slide becoming
+     visible, a caption wrapping, a window resize and a device rotation without
+     any of them having to tell us. */
+  function watchFit(stage) {
+    fit(stage);
+    if (typeof global.ResizeObserver === 'function' && !stage._gFitRO) {
+      stage._gFitRO = new global.ResizeObserver(function () { fit(stage); });
+      stage._gFitRO.observe(stage);
+      var slide = stage.closest && stage.closest('.slide');
+      if (slide) stage._gFitRO.observe(slide);
+    }
+  }
+
+  var refitAll;
+  (function () {
+    var t = null;
+    refitAll = function () {
+      if (t) clearTimeout(t);
+      t = setTimeout(function () { $$('.g-stage', doc).forEach(fit); }, 60);
+    };
+    if (global.addEventListener) {
+      global.addEventListener('resize', refitAll);
+      global.addEventListener('orientationchange', refitAll);
+    }
+  })();
+
   function build(stage) {
     if (stage._g) return stage._g;
     var asset = stage.getAttribute('data-grow-asset');
@@ -610,6 +719,7 @@
     wireXray(stage);
     if (global.GrowPolish) global.GrowPolish.decorate(stage);
     loadScript(stage, scriptFor(stage));
+    watchFit(stage);
     return st;
   }
 
@@ -625,6 +735,7 @@
     st.steps = parseScript(src);
     st.hidden = hiddenParts(st.steps);
     reset(stage);
+    fit(stage);                 /* a new script can change what sits below the picture */
   }
 
   /* Text elsewhere on the slide that follows this stage's step count. Tie it
@@ -751,6 +862,16 @@
         : st.i === 0 ? '▶ Start' : '▶ Next (' + (st.i + 1) + '/' + st.steps.length + ')';
       nb.classList.toggle('g-next-ready', !done && !st.paused);
     }
+    /* Measured LAST, because paint itself changes the bar — the dot count, the
+       button labels, the narration that has just been set — and every one of
+       those can wrap it to a second line and push the picture down. Measuring
+       first reads the layout that is about to be replaced. The room a picture
+       has is not fixed for the whole sequence either: a `note` fills the notes
+       strip mid-lesson. So it is re-measured on every repaint, which is what
+       makes the layout respond rather than predict. The picture can shrink a
+       little when a note first appears — visible, and the right trade against a
+       caption sliding under the buttons. */
+    fit(stage);
   }
 
   /* swap a stage onto a different asset / script at run time */
@@ -1145,6 +1266,7 @@
     $$('.g-misc', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildMisc(h); } });
     $$('.g-predict', root).forEach(function (h) { if (!h._gBuilt) { h._gBuilt = true; buildPredict(h); } });
     $$('.g-stage', root).forEach(function (s) { if (!s._g) build(s); });
+    $$('.g-stage', root).forEach(watchFit);   /* stages built earlier still need a fit */
     hookNav();
     syncStory(root);
   }
@@ -1157,6 +1279,7 @@
   GA.all = function (x) { return all(stageOf(x)); };
   GA.run = run;
   GA.script = function (x, src) { loadScript(stageOf(x), src); };
+  GA.fit = function (x) { return x ? fit(stageOf(x)) : refitAll(); };
   GA.advanceActive = advanceActive;
   GA.hookNav = hookNav;
   GA.parse = parseScript;
