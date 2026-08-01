@@ -186,32 +186,6 @@ argument for deciding *what the walk is for*: whether it gates the merge or
 verifies it. **Sunday 6 September is the slot, and the call is Matt's.** Nothing
 here merges either way.
 
-## Open, and deliberately not closed here
-
-- **`build-anim/` is not deleted.** Gated on the slide walk.
-- **One test is red on purpose** — projector + long heading, 117/120 at nominal
-  viewports. It documents a design limit: in every overflowing cell the picture is
-  already at its 96px floor, so the overflow is the text. The floor does not move
-  without Matt's say-so, and the reason is annotated at `grow-anim/grow-anim.js:620`.
-- **Display scaling — fixed at 125%, open at 150%.** The We Do 2 slide is
-  rearranged below a derived 960px height breakpoint: the same eleven elements in
-  two columns, the sort activity keeping the width and the picture taking the
-  narrow column. Nothing removed, reworded or hidden. **At 125% every stage now
-  clears on every deck (25/25 at 819×614, 1093×614 and 1536×864, against 5/25,
-  7/25 and — on `main` — failures at all three).** 1280×720 and 1024×768 go from
-  106–120px of slide overflow to zero. What remains: at 819×614 the slide still
-  *scrolls* by 70–153px (the scaffold and end-of-period note sit below the fold),
-  and at 150% nothing in the layout layer helps — the slide has ~460px for content
-  needing 1069px. Closing either needs a thirteenth slide or content moved, which
-  changes what a pupil sees and is **Matt's**.
-- **`.g-flow-orbit`** is recorded in `reports/REDUCED_MOTION_REGISTER.md`, not fixed
-  here — it predates this work and belongs to the reduced-motion programme.
-- **`build-anim/demo.html`** still loads the old files by `<script src>` and is the
-  one page that genuinely breaks on deletion.
-- **The BUILD/GROW philosophy divergence** — one engine, two stated intents — is
-  unresolved. PR #10 is where that argument lives.
-- **The circulation asset** is still unexercised by any lesson.
-
 ## The red assertions — two turned green, four remain
 
 Left red deliberately. A red test that documents a design limit is worth more than a
@@ -234,22 +208,6 @@ where the slide has ~460px for content that needs 1069px.
 
 The assertion that tests the *mechanism* rather than the outcome passes: of 173
 overflowing cells across 1,080, **173 have the picture already at its 96px floor**.
-
-## Named backlogs — filed, not opened
-
-`reports/INSTRUMENT_INDEX.md`:
-
-- **IDX-1 · early returns that skip trailing work** — the class `--g-fit` belonged
-  to, with its search pattern and what a pass would have to prove. This estate has
-  been bitten by it once, measurably.
-- **IDX-2 · 27 instruments by register** — carried from the brief, **not verified
-  here**. The count was not re-derived; recorded so it is not lost, marked so it is
-  not inherited as fact.
-- **IDX-3 · fill-mode enumeration, known incomplete** — carried from the brief, **not
-  verified here**. Neither the enumeration nor the sense in which it is incomplete
-  was checked.
-
-IDX-2 and IDX-3 are marked unverified under rule 3, which is the point of the rule.
 
 
 ---
