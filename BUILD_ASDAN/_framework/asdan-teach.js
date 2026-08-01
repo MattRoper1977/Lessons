@@ -121,6 +121,173 @@
     (AT._boot = AT._boot || []).push(fn);
   };
 
+  /* ==================================================================
+     FEATURE · Illuminator replay and caption timing
+     ------------------------------------------------------------------
+     The I Do diagram builds itself over a few seconds using per-element
+     animation delays written into each lesson's SVG. We read the longest
+     of those delays so the caption can wait for the build to finish, and
+     we add a Replay control so a teacher can run the build again while
+     talking over it.
+     ================================================================== */
+  function setupIlluminator(block) {
+    if (block.dataset.atIlm) return;
+    block.dataset.atIlm = '1';
+
+    // Longest delay + its animation duration = when the build settles.
+    var latest = 0;
+    block.querySelectorAll('svg *').forEach(function (el) {
+      var cs = getComputedStyle(el);
+      if (cs.animationName === 'none') return;
+      var delay = parseFloat(cs.animationDelay) || 0;
+      var dur = parseFloat(cs.animationDuration) || 0;
+      // Looping animations never "finish" — they must not hold the caption back.
+      if (cs.animationIterationCount === 'infinite') dur = 0;
+      if (delay + dur > latest) latest = delay + dur;
+    });
+    block.style.setProperty('--ilm-end', (latest || 2.4).toFixed(2) + 's');
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ilm-replay';
+    btn.innerHTML = '↻ Replay';
+    btn.setAttribute('aria-label', 'Play the diagram again');
+    btn.addEventListener('click', function () {
+      replayIlluminator(block);
+    });
+    block.appendChild(btn);
+  }
+
+  /* Restart every animation inside the block by detaching and reattaching
+     the SVG. Re-parenting is the one restart that works no matter which of
+     the deck's animation classes an element is using. */
+  function replayIlluminator(block) {
+    var svg = block.querySelector('svg');
+    if (!svg) return;
+    var next = svg.nextSibling;
+    var parent = svg.parentNode;
+    parent.removeChild(svg);
+    void parent.offsetWidth; // force reflow so the removal is observed
+    parent.insertBefore(svg, next);
+
+    var cap = block.querySelector('.ilm-cap');
+    if (cap) {
+      cap.style.animation = 'none';
+      void cap.offsetWidth;
+      cap.style.animation = '';
+    }
+  }
+
+  AT.replayIlluminator = replayIlluminator;
+
+  /* ==================================================================
+     FEATURE · Keyboard and screen-reader access for the card activities
+     ------------------------------------------------------------------
+     The We Do activities are built from <div onclick>, which no keyboard
+     or screen reader can reach. We promote them to real buttons in the
+     accessibility tree and add Enter/Space, without touching the markup
+     the lessons ship or the handlers they already bind.
+     ================================================================== */
+  function makeOperable(el, label) {
+    if (el.dataset.atKeys) return;
+    el.dataset.atKeys = '1';
+    if (!el.getAttribute('role')) el.setAttribute('role', 'button');
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    if (label && !el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+    el.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      e.preventDefault();
+      el.click();
+    });
+  }
+
+  function setupCardKeyboard(root) {
+    (root || document).querySelectorAll('.pres-card').forEach(function (el) {
+      makeOperable(el);
+    });
+    (root || document).querySelectorAll('.match-pill, .match-target').forEach(function (el) {
+      makeOperable(el);
+    });
+  }
+
+  /* Feedback lines are updated by script; announce them so a pupil using a
+     screen reader hears the same confirmation the room sees. */
+  function setupLiveRegions() {
+    ['pres-msg', 'match-fb', 'pres-num', 'match-score'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && !el.getAttribute('aria-live')) el.setAttribute('aria-live', 'polite');
+    });
+  }
+
+  /* ==================================================================
+     FEATURE · Tie each revealed answer to the card it came from
+     ------------------------------------------------------------------
+     presTap() appends the answer to a shared list, so with several cards
+     turned it stops being obvious which answer belongs to which card.
+     We number the cards and stamp the matching number on each answer.
+     Wrapping rather than replacing keeps the lesson's own scoring, sound
+     and XP behaviour exactly as it was.
+     ================================================================== */
+  function setupPresNumbering() {
+    var cards = document.querySelectorAll('.pres-card');
+    if (!cards.length) return;
+    var order = {};
+    cards.forEach(function (card, i) {
+      var id = card.getAttribute('data-id');
+      if (id) order[id] = i + 1;
+    });
+
+    if (typeof window.presTap === 'function' && !window.presTap._atWrapped) {
+      var originalTap = window.presTap;
+      var wrappedTap = function (el) {
+        var out = originalTap.apply(this, arguments);
+        try {
+          var caps = document.getElementById('pres-caps');
+          var last = caps && caps.lastElementChild;
+          if (last && !last.hasAttribute('data-at-n')) {
+            last.setAttribute('data-at-n', order[el.getAttribute('data-id')] || '');
+          }
+        } catch (e) {}
+        return out;
+      };
+      wrappedTap._atWrapped = true;
+      window.presTap = wrappedTap;
+    }
+  }
+
+  /* ==================================================================
+     FEATURE · Balance the match grid to the number of targets
+     ------------------------------------------------------------------
+     Every deck declares grid-template-columns:repeat(3,1fr) inline on the
+     target row, but decks carry four, five or six targets, so most left a
+     ragged last row. We pick the column count from the actual number of
+     targets. Done here rather than in CSS because the value has to beat an
+     inline style and because :has() is not safe to rely on across the
+     devices these decks are taught from.
+     ================================================================== */
+  var GRID_COLUMNS = { 4: 2, 5: 3, 6: 3 };
+
+  function fitMatchGrid() {
+    var targets = document.querySelectorAll('.match-target');
+    if (!targets.length) return;
+    var grid = targets[0].parentNode;
+    // Only touch a row that really is the grid holding the targets.
+    if (!grid || grid.querySelectorAll('.match-target').length !== targets.length) return;
+    var cols = GRID_COLUMNS[targets.length] || 3;
+    grid.style.setProperty('grid-template-columns', 'repeat(' + cols + ',1fr)', 'important');
+  }
+
+  /* ==================================================================
+     Registration
+     ================================================================== */
+  AT.ready(function () {
+    document.querySelectorAll('.ilm').forEach(setupIlluminator);
+    setupCardKeyboard(document);
+    setupLiveRegions();
+    setupPresNumbering();
+    fitMatchGrid();
+  });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {

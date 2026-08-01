@@ -513,7 +513,190 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .title-stage h1{margin-top:0}
 
 /* ==========================================================================
-   4 · REDUCED MOTION
+   4 · SLIDE BUILD  (attention and reveal)
+   ---------------------------------------------------------------------------
+   A slide used to arrive as one block: tag, heading, key idea, activity and
+   controls all at once, so a class had the whole slide to read before the
+   teacher had said anything. Now the slide builds in reading order — roughly
+   half a second end to end, fast enough never to slow a lesson down, ordered
+   enough that the room's attention lands where the teacher is speaking.
+
+   Pure CSS and keyed off .slide.active, so it replays when a teacher steps
+   back to a slide, and it cannot strand content if JavaScript fails.
+   ========================================================================== */
+@keyframes atSlideIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.slide.active > *{animation:atSlideIn var(--at-base) var(--at-ease) backwards}
+.slide.active > *:nth-child(1){animation-delay:.02s}
+.slide.active > *:nth-child(2){animation-delay:.09s}
+.slide.active > *:nth-child(3){animation-delay:.16s}
+.slide.active > *:nth-child(4){animation-delay:.23s}
+.slide.active > *:nth-child(5){animation-delay:.30s}
+.slide.active > *:nth-child(6){animation-delay:.37s}
+.slide.active > *:nth-child(7){animation-delay:.44s}
+.slide.active > *:nth-child(n+8){animation-delay:.50s}
+/* Decorative title-slide dots must not join the build queue. */
+.slide.active > .title-dots{animation:none}
+
+/* 4.1 The key idea is the anchor of every slide.
+   .li-box carries the Key Question / Key Idea / Instructions on all ten
+   slides. It read as a passive tinted strip; it now reads as the thing to
+   look at first, with one quiet sweep of light on arrival to place the eye. */
+.slide.active .li-box{position:relative;overflow:hidden}
+.slide.active .li-box::after{
+  content:'';position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:atSweep 1.15s var(--at-ease) .35s 1;
+  pointer-events:none;
+}
+@keyframes atSweep{to{left:115%}}
+
+/* ==========================================================================
+   5 · THE ILLUMINATOR  (.ilm — the I Do diagram)
+   ---------------------------------------------------------------------------
+   Each deck's I Do slide carries one SVG that builds itself in timed stages —
+   a plate filling by portion, a process assembling step by step. Two problems:
+   the caption naming what to notice appeared immediately, before the thing it
+   names existed; and the build could only ever be seen once, so a teacher
+   could not say "watch that again".
+
+   The caption now waits for the build to finish (--ilm-end is measured from
+   the SVG's own animation delays by the framework JS, so it is right for every
+   lesson), and a Replay control re-runs the sequence on demand.
+   ========================================================================== */
+.ilm{position:relative}
+.ilm .ilm-cap{
+  animation:atSlideIn var(--at-base) var(--at-ease) backwards;
+  animation-delay:calc(var(--ilm-end,2.4s) + .25s);
+}
+.ilm-replay{
+  position:absolute;top:8px;right:10px;
+  display:inline-flex;align-items:center;gap:5px;
+  background:#fff;color:var(--ido-border);
+  border:2px solid var(--ido-border);border-radius:999px;
+  padding:4px 12px;font-size:.78rem;font-weight:900;letter-spacing:.03em;
+  cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.10);
+  transition:background var(--at-fast),color var(--at-fast),transform var(--at-fast);
+}
+.ilm-replay:hover{background:var(--ido-border);color:#fff;transform:translateY(-1px)}
+.ilm-replay:focus-visible{outline:3px solid var(--ido-border);outline-offset:2px}
+@media (max-width:640px){.ilm-replay{top:6px;right:6px;padding:3px 9px;font-size:.7rem}}
+@media print{.ilm-replay{display:none!important}}
+
+/* ==========================================================================
+   6 · WE DO 1 — PREDICT, THEN REVEAL  (.pres-card)
+   ---------------------------------------------------------------------------
+   This is the deck's whole-class prediction activity: the class guesses what
+   is behind a card, then the teacher taps it. The cards were small pills lost
+   in a large empty slide, with nothing to say they were hiding anything and
+   nothing tying a revealed answer back to the card it came from.
+
+   They are now substantial cards that read as face-down until turned, each
+   numbered, with its revealed answer carrying the same number so the class can
+   see which card produced it.
+   ========================================================================== */
+#pres-pills{gap:12px!important;margin:14px 0!important}
+.pres-card{
+  position:relative;
+  flex:1 1 190px;max-width:280px;
+  padding:16px 14px 16px 42px;
+  border:2px dashed #cbd5e1;border-radius:14px;
+  font-size:1.02rem;line-height:1.35;
+  display:flex;align-items:center;
+  min-height:62px;
+  transition:transform var(--at-fast) var(--at-ease),
+             border-color var(--at-fast) var(--at-ease),
+             background var(--at-fast) var(--at-ease),
+             box-shadow var(--at-fast) var(--at-ease);
+}
+/* Face-down marker: a card still holding something. */
+.pres-card::before{
+  content:'?';
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:var(--wedo-border);color:#fff;
+  font-size:.8rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--at-fast) var(--at-ease);
+}
+.pres-card:hover{border-color:var(--wedo-border);background:#fff;transform:translateY(-3px);
+                 box-shadow:0 8px 20px rgba(15,23,42,.10)}
+.pres-card:focus-visible{outline:3px solid var(--wedo-border);outline-offset:3px}
+/* Turned over: solid edge, ticked, and it stops inviting a tap. */
+.pres-card.done{border-style:solid;animation:atConfirm .45s var(--at-pop)}
+.pres-card.done::before{content:'✓';background:var(--success)}
+
+/* The revealed answer, numbered to match the card that produced it. */
+#pres-caps .pres-cap{position:relative;padding-left:40px;margin-bottom:2px}
+#pres-caps .pres-cap[data-at-n]::before{
+  content:attr(data-at-n);
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:var(--ido-border);color:#fff;
+  font-size:.78rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+#pres-caps{margin-top:10px}
+
+/* ==========================================================================
+   7 · WE DO 2 — MATCH  (.match-pill / .match-target)
+   ---------------------------------------------------------------------------
+   The matching game already scored and shook on a wrong answer. What it did
+   not do was confirm a right one with anything the back of the room could
+   read, or mark correctness by more than colour.
+   ========================================================================== */
+/* The word cards are called pills but were block-level <div>s, so they rendered
+   as a stack of full-width bars — no sense of a set of movable pieces, and a
+   lot of vertical space gone before the targets appear. They read as a row of
+   pills now, which is also what the "tap a card, then its partner" instruction
+   already describes. */
+#kw-pills .match-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:5px;min-height:46px;
+}
+
+.match-target{position:relative;transition:transform var(--at-fast) var(--at-ease),
+                                           border-color var(--at-fast) var(--at-ease)}
+/* Targets sit in a grid hardcoded to three columns in every deck, but decks
+   carry four, five or six of them — so 21 of the 31 left a ragged final row.
+   The column count is set from the actual number of targets by the framework
+   JS (see fitMatchGrid), which needs no :has() support on school devices. */
+.match-target{min-height:64px;display:flex;align-items:center;justify-content:center}
+.match-target.correct{animation:atConfirm .45s var(--at-pop)}
+/* A tick as well as the colour, so correctness is never carried by hue alone. */
+.match-target.correct::after{
+  content:'✓';
+  position:absolute;top:6px;right:9px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--success);color:#fff;
+  font-size:.72rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  animation:atReveal var(--at-fast) var(--at-pop) backwards;
+}
+.match-target.wrong::after{
+  content:'↻';
+  position:absolute;top:6px;right:9px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--error);color:#fff;
+  font-size:.78rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.match-pill:focus-visible,.match-target:focus-visible{
+  outline:3px solid var(--wedo-border);outline-offset:3px
+}
+/* The pill currently held. A held card must read unambiguously from the back
+   of the room and must not blink — so this is a static lift and halo in the
+   zone's own tint, not a pulse. */
+.match-pill.selected{
+  border-color:var(--wedo-border);
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 0 0 4px var(--wedo-bg),0 6px 16px rgba(15,23,42,.14);
+}
+
+/* ==========================================================================
+   8 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
@@ -522,14 +705,23 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
    ========================================================================== */
 @media (prefers-reduced-motion:reduce){
   .at-reveal,.at-reveal.at-in,.at-draw,.at-pulse,.at-confirm,
-  .slide.active .product-card{
+  .slide.active .product-card,
+  .slide.active > *,
+  .ilm .ilm-cap,
+  .pres-card.done,
+  .match-target.correct,.match-target.correct::after,
+  .match-pill.selected{
     animation:none!important;
     opacity:1!important;
     transform:none!important;
     stroke-dashoffset:0!important;
   }
-  .product-card,.at-dimmed{transition:none!important}
-  .product-card:hover{transform:none}
+  /* The pres-card marker positions itself with a transform — keep that one. */
+  .pres-card::before,#pres-caps .pres-cap[data-at-n]::before{transform:translateY(-50%)!important}
+  /* The li-box sweep is decorative light; remove it rather than freeze it mid-pass. */
+  .slide.active .li-box::after{display:none!important}
+  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay{transition:none!important}
+  .product-card:hover,.pres-card:hover,.ilm-replay:hover{transform:none}
 }
 </style>
 <!-- ASDAN-TEACH:CSS:END -->
@@ -940,6 +1132,173 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     }
     (AT._boot = AT._boot || []).push(fn);
   };
+
+  /* ==================================================================
+     FEATURE · Illuminator replay and caption timing
+     ------------------------------------------------------------------
+     The I Do diagram builds itself over a few seconds using per-element
+     animation delays written into each lesson's SVG. We read the longest
+     of those delays so the caption can wait for the build to finish, and
+     we add a Replay control so a teacher can run the build again while
+     talking over it.
+     ================================================================== */
+  function setupIlluminator(block) {
+    if (block.dataset.atIlm) return;
+    block.dataset.atIlm = '1';
+
+    // Longest delay + its animation duration = when the build settles.
+    var latest = 0;
+    block.querySelectorAll('svg *').forEach(function (el) {
+      var cs = getComputedStyle(el);
+      if (cs.animationName === 'none') return;
+      var delay = parseFloat(cs.animationDelay) || 0;
+      var dur = parseFloat(cs.animationDuration) || 0;
+      // Looping animations never "finish" — they must not hold the caption back.
+      if (cs.animationIterationCount === 'infinite') dur = 0;
+      if (delay + dur > latest) latest = delay + dur;
+    });
+    block.style.setProperty('--ilm-end', (latest || 2.4).toFixed(2) + 's');
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ilm-replay';
+    btn.innerHTML = '↻ Replay';
+    btn.setAttribute('aria-label', 'Play the diagram again');
+    btn.addEventListener('click', function () {
+      replayIlluminator(block);
+    });
+    block.appendChild(btn);
+  }
+
+  /* Restart every animation inside the block by detaching and reattaching
+     the SVG. Re-parenting is the one restart that works no matter which of
+     the deck's animation classes an element is using. */
+  function replayIlluminator(block) {
+    var svg = block.querySelector('svg');
+    if (!svg) return;
+    var next = svg.nextSibling;
+    var parent = svg.parentNode;
+    parent.removeChild(svg);
+    void parent.offsetWidth; // force reflow so the removal is observed
+    parent.insertBefore(svg, next);
+
+    var cap = block.querySelector('.ilm-cap');
+    if (cap) {
+      cap.style.animation = 'none';
+      void cap.offsetWidth;
+      cap.style.animation = '';
+    }
+  }
+
+  AT.replayIlluminator = replayIlluminator;
+
+  /* ==================================================================
+     FEATURE · Keyboard and screen-reader access for the card activities
+     ------------------------------------------------------------------
+     The We Do activities are built from <div onclick>, which no keyboard
+     or screen reader can reach. We promote them to real buttons in the
+     accessibility tree and add Enter/Space, without touching the markup
+     the lessons ship or the handlers they already bind.
+     ================================================================== */
+  function makeOperable(el, label) {
+    if (el.dataset.atKeys) return;
+    el.dataset.atKeys = '1';
+    if (!el.getAttribute('role')) el.setAttribute('role', 'button');
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    if (label && !el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+    el.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      e.preventDefault();
+      el.click();
+    });
+  }
+
+  function setupCardKeyboard(root) {
+    (root || document).querySelectorAll('.pres-card').forEach(function (el) {
+      makeOperable(el);
+    });
+    (root || document).querySelectorAll('.match-pill, .match-target').forEach(function (el) {
+      makeOperable(el);
+    });
+  }
+
+  /* Feedback lines are updated by script; announce them so a pupil using a
+     screen reader hears the same confirmation the room sees. */
+  function setupLiveRegions() {
+    ['pres-msg', 'match-fb', 'pres-num', 'match-score'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && !el.getAttribute('aria-live')) el.setAttribute('aria-live', 'polite');
+    });
+  }
+
+  /* ==================================================================
+     FEATURE · Tie each revealed answer to the card it came from
+     ------------------------------------------------------------------
+     presTap() appends the answer to a shared list, so with several cards
+     turned it stops being obvious which answer belongs to which card.
+     We number the cards and stamp the matching number on each answer.
+     Wrapping rather than replacing keeps the lesson's own scoring, sound
+     and XP behaviour exactly as it was.
+     ================================================================== */
+  function setupPresNumbering() {
+    var cards = document.querySelectorAll('.pres-card');
+    if (!cards.length) return;
+    var order = {};
+    cards.forEach(function (card, i) {
+      var id = card.getAttribute('data-id');
+      if (id) order[id] = i + 1;
+    });
+
+    if (typeof window.presTap === 'function' && !window.presTap._atWrapped) {
+      var originalTap = window.presTap;
+      var wrappedTap = function (el) {
+        var out = originalTap.apply(this, arguments);
+        try {
+          var caps = document.getElementById('pres-caps');
+          var last = caps && caps.lastElementChild;
+          if (last && !last.hasAttribute('data-at-n')) {
+            last.setAttribute('data-at-n', order[el.getAttribute('data-id')] || '');
+          }
+        } catch (e) {}
+        return out;
+      };
+      wrappedTap._atWrapped = true;
+      window.presTap = wrappedTap;
+    }
+  }
+
+  /* ==================================================================
+     FEATURE · Balance the match grid to the number of targets
+     ------------------------------------------------------------------
+     Every deck declares grid-template-columns:repeat(3,1fr) inline on the
+     target row, but decks carry four, five or six targets, so most left a
+     ragged last row. We pick the column count from the actual number of
+     targets. Done here rather than in CSS because the value has to beat an
+     inline style and because :has() is not safe to rely on across the
+     devices these decks are taught from.
+     ================================================================== */
+  var GRID_COLUMNS = { 4: 2, 5: 3, 6: 3 };
+
+  function fitMatchGrid() {
+    var targets = document.querySelectorAll('.match-target');
+    if (!targets.length) return;
+    var grid = targets[0].parentNode;
+    // Only touch a row that really is the grid holding the targets.
+    if (!grid || grid.querySelectorAll('.match-target').length !== targets.length) return;
+    var cols = GRID_COLUMNS[targets.length] || 3;
+    grid.style.setProperty('grid-template-columns', 'repeat(' + cols + ',1fr)', 'important');
+  }
+
+  /* ==================================================================
+     Registration
+     ================================================================== */
+  AT.ready(function () {
+    document.querySelectorAll('.ilm').forEach(setupIlluminator);
+    setupCardKeyboard(document);
+    setupLiveRegions();
+    setupPresNumbering();
+    fitMatchGrid();
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
