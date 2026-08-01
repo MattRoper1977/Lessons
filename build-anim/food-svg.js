@@ -62,14 +62,19 @@
   function r2(v) { return (Math.round(v * 100) / 100).toString(); }
 
   /* parts that must start invisible — see AUTHOR NOTE above */
+  /* Parts that must start invisible even before any script runs. Scoped to the
+     two assets that need it: an unscoped [data-part^="food-"] rule would
+     silently hide a similarly-named part in any other library that happened to
+     be loaded on the same page. */
   var HIDE_CSS =
-    '.ba-stage [data-part^="drop-"],.ba-stage [data-part^="food-"],' +
-    '.ba-stage [data-part^="link-"]{opacity:0}' +
-    '.ba-stage [data-part^="drop-"].ba-fadein,.ba-stage [data-part^="drop-"].ba-drew,' +
-    '.ba-stage [data-part^="food-"].ba-fadein,.ba-stage [data-part^="food-"].ba-drew,' +
-    '.ba-stage [data-part^="link-"].ba-fadein,.ba-stage [data-part^="link-"].ba-drew{opacity:1}' +
-    '@media print{.ba-stage [data-part^="drop-"],.ba-stage [data-part^="food-"],' +
-    '.ba-stage [data-part^="link-"]{opacity:1}}';
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:0}' +
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-fadein,' +
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-drew,' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-fadein,' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-drew{opacity:1}' +
+    '@media print{.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:1}}';
 
   /* ---------- small builders -------------------------------------------- */
 

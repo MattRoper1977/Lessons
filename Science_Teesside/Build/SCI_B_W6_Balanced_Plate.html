@@ -1350,24 +1350,26 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 <script>
 /* BUILD-ANIM:FOOD:BEGIN — generated from build-anim/, do not edit here */
 /* ============================================================================
-   DRAFT — NOT YET IN USE BY ANY LESSON
+   BUILD Animation Framework — food, nutrition and the balanced plate
    ---------------------------------------------------------------------------
-   Food groups and nutrition assets, intended for Week 5 ("What a Body Needs")
-   and Week 6 ("Building a Balanced Plate").
+   Registers into the BioSVG library (see bio-svg.js), so data-ba-asset="plate"
+   works exactly like data-ba-asset="fish".
 
-   STATE OF PLAY, honestly:
-     plate   good. Five proportional sections, read by icon + word + size, with
-             a size key and per-food reveal scripts. Ready to use.
-     jobs    structurally right — three job columns with per-food reveals — but
-             the foods are still WORDS. For a BUILD lesson they need to be
-             drawn icons before this earns its place; the whole point is to cut
-             the reading, not relocate it.
-     The individual food icons (bread, apple, egg …) called for by the Week 5
-     and 6 plans were never written, and the animal-to-food asset was removed
-     because it was words joined by arrows, which fails the same test.
+   Week 5, "What a Body Needs", and Week 6, "Building a Balanced Plate".
 
-   Neither W5 nor W6 has been rebuilt yet, so nothing loads this file and
-   inject.py skips it. Finish the icons first, then wire it in.
+   Two rules govern everything in this file, because food is the one subject
+   where a careless graphic does harm:
+
+     1. Sorting is always by JOB or by GROUP — never by good food and bad food.
+        The tick means "right column". It never means "good choice". No food in
+        here ever gets a cross.
+     2. The only ✖ in this file lands on a false STATEMENT ("every animal eats
+        the same"), never on a food and never on an animal.
+
+   Foods are drawn, not written. A word under an icon is a label; a word on its
+   own is reading, and reading is the thing this framework exists to reduce.
+   Food colour is identity rather than meaning — a grey apple is not an apple —
+   so it sits outside the framework's motion palette by design.
    ========================================================================== */
 /* ============================================================================
    BUILD Animation Framework — FOOD & NUTRITION SVG asset library
@@ -1411,14 +1413,19 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
   function r2(v) { return (Math.round(v * 100) / 100).toString(); }
 
   /* parts that must start invisible — see AUTHOR NOTE above */
+  /* Parts that must start invisible even before any script runs. Scoped to the
+     two assets that need it: an unscoped [data-part^="food-"] rule would
+     silently hide a similarly-named part in any other library that happened to
+     be loaded on the same page. */
   var HIDE_CSS =
-    '.ba-stage [data-part^="drop-"],.ba-stage [data-part^="food-"],' +
-    '.ba-stage [data-part^="link-"]{opacity:0}' +
-    '.ba-stage [data-part^="drop-"].ba-fadein,.ba-stage [data-part^="drop-"].ba-drew,' +
-    '.ba-stage [data-part^="food-"].ba-fadein,.ba-stage [data-part^="food-"].ba-drew,' +
-    '.ba-stage [data-part^="link-"].ba-fadein,.ba-stage [data-part^="link-"].ba-drew{opacity:1}' +
-    '@media print{.ba-stage [data-part^="drop-"],.ba-stage [data-part^="food-"],' +
-    '.ba-stage [data-part^="link-"]{opacity:1}}';
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:0}' +
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-fadein,' +
+    '.ba-svg[data-asset="plate"] [data-part^="drop-"].ba-drew,' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-fadein,' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"].ba-drew{opacity:1}' +
+    '@media print{.ba-svg[data-asset="plate"] [data-part^="drop-"],' +
+    '.ba-svg[data-asset="jobs"] [data-part^="food-"]{opacity:1}}';
 
   /* ---------- small builders -------------------------------------------- */
 
