@@ -1,22 +1,24 @@
 /* ============================================================================
-   DRAFT — NOT YET IN USE BY ANY LESSON
+   BUILD Animation Framework — food, nutrition and the balanced plate
    ---------------------------------------------------------------------------
-   Food groups and nutrition assets, intended for Week 5 ("What a Body Needs")
-   and Week 6 ("Building a Balanced Plate").
+   Registers into the BioSVG library (see bio-svg.js), so data-ba-asset="plate"
+   works exactly like data-ba-asset="fish".
 
-   STATE OF PLAY, honestly:
-     plate   good. Five proportional sections, read by icon + word + size, with
-             a size key and per-food reveal scripts. Ready to use.
-     jobs    structurally right — three job columns with per-food reveals — but
-             the foods are still WORDS. For a BUILD lesson they need to be
-             drawn icons before this earns its place; the whole point is to cut
-             the reading, not relocate it.
-     The individual food icons (bread, apple, egg …) called for by the Week 5
-     and 6 plans were never written, and the animal-to-food asset was removed
-     because it was words joined by arrows, which fails the same test.
+   Week 5, "What a Body Needs", and Week 6, "Building a Balanced Plate".
 
-   Neither W5 nor W6 has been rebuilt yet, so nothing loads this file and
-   inject.py skips it. Finish the icons first, then wire it in.
+   Two rules govern everything in this file, because food is the one subject
+   where a careless graphic does harm:
+
+     1. Sorting is always by JOB or by GROUP — never by good food and bad food.
+        The tick means "right column". It never means "good choice". No food in
+        here ever gets a cross.
+     2. The only ✖ in this file lands on a false STATEMENT ("every animal eats
+        the same"), never on a food and never on an animal.
+
+   Foods are drawn, not written. A word under an icon is a label; a word on its
+   own is reading, and reading is the thing this framework exists to reduce.
+   Food colour is identity rather than meaning — a grey apple is not an apple —
+   so it sits outside the framework's motion palette by design.
    ========================================================================== */
 /* ============================================================================
    BUILD Animation Framework — FOOD & NUTRITION SVG asset library
@@ -581,6 +583,62 @@
     { key: 'caterpillar', y: 158, animal: 'caterpillar', aw: 'CATERPILLAR', food: 'leaves', fw: 'LEAVES',      ans: 'A CATERPILLAR EATS LEAVES' },
     { key: 'goldfish',    y: 216, animal: 'goldfish',    aw: 'GOLDFISH',    food: 'flakes', fw: 'FISH FLAKES', ans: 'A GOLDFISH EATS FLAKES' }
   ];
+
+
+  function arrowTo(x1, x2, y) {
+    return '<path d="M ' + n(x1) + ' ' + n(y) + ' L ' + n(x2 - 15) + ' ' + n(y) +
+      '" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" pathLength="1"/>' +
+      '<path d="M ' + n(x2 - 17) + ' ' + n(y - 10) + ' L ' + n(x2) + ' ' + n(y) + ' L ' +
+      n(x2 - 17) + ' ' + n(y + 10) + ' Z" fill="currentColor" stroke="currentColor" stroke-width="2"/>';
+  }
+
+  A.animalfood = {
+    title: 'Which animal eats what',
+    alt: 'Four rows. A cow with an arrow to grass, an owl to a mouse, a caterpillar to ' +
+         'leaves, and a goldfish to fish flakes. Every animal is joined to a different food.',
+    svg: function () {
+      var out = '';
+      PAIRS.forEach(function (p, i) {
+        var y = 62 + i * 60;
+        out += g('animal-' + p.key, BONE,
+          ic(p.animal, 52, y, 0.44, 2.6) + txt(88, y + 5, p.aw, 12, INK, true, 'start'));
+        out += g('arrow-' + p.key, SHELL, arrowTo(196, 252, y));
+        out += g('eat-' + p.key, SHELL,
+          ic(p.food, 272, y, 0.44, 2.6) + txt(304, y + 5, p.fw, 11, INK, true, 'start'));
+      });
+      return out +
+        label('same', 12, 8, 'NOT TRUE', '#dc2626') +
+        label('diff', 146, 8, 'NOT ALL THE SAME', BONE);
+    },
+    teach:
+      'show animal-cow,animal-owl,animal-caterpillar,animal-goldfish :: Four animals. Nothing alike about them.\n' +
+      'show arrow-cow + trace arrow-cow + show eat-cow               :: A cow eats grass. All day.\n' +
+      'show arrow-owl + trace arrow-owl + show eat-owl               :: An owl eats a mouse.\n' +
+      'show arrow-caterpillar + trace arrow-caterpillar + show eat-caterpillar :: A caterpillar eats leaves.\n' +
+      'show arrow-goldfish + trace arrow-goldfish + show eat-goldfish :: A goldfish eats flakes.\n' +
+      'think                                                        :: So could you swap them round? Could the goldfish manage the grass?\n' +
+      'unthink + label diff                                         :: No. Different bodies need different food.',
+    revealCow:
+      'show animal-cow + think        :: A cow. What does a cow eat?\n' +
+      'unthink + show arrow-cow + trace arrow-cow + show eat-cow + tick :: Grass.',
+    revealOwl:
+      'show animal-owl + think        :: An owl. What does an owl eat?\n' +
+      'unthink + show arrow-owl + trace arrow-owl + show eat-owl + tick :: A mouse. Owls are hunters.',
+    revealCaterpillar:
+      'show animal-caterpillar + think :: A caterpillar. What does it eat?\n' +
+      'unthink + show arrow-caterpillar + trace arrow-caterpillar + show eat-caterpillar + tick :: Leaves. Nothing else.',
+    revealGoldfish:
+      'show animal-goldfish + think   :: A goldfish. What does it eat?\n' +
+      'unthink + show arrow-goldfish + trace arrow-goldfish + show eat-goldfish + tick :: Flakes.',
+    revealSame:
+      'show animal-cow,animal-goldfish + think :: Every animal eats the same. True or not true?\n' +
+      'unthink + cross + label same            :: Not true. Put a goldfish in a field and it would starve.\n' +
+      'show arrow-cow,eat-cow,arrow-goldfish,eat-goldfish :: Different bodies. Different food.',
+    reveal:
+      'show animal-cow,animal-owl,animal-caterpillar,animal-goldfish :: Four animals.\n' +
+      'show arrow-cow,arrow-owl,arrow-caterpillar,arrow-goldfish + show eat-cow,eat-owl,eat-caterpillar,eat-goldfish :: Four different foods.\n' +
+      'label diff + tick :: Different bodies need different food.'
+  };
 
 
   global.BioSVG.register(A);

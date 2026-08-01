@@ -1749,6 +1749,27 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     el.classList.add(cls);
   }
 
+  /* `pop` animates a transform, which would otherwise override the transform
+     ATTRIBUTE a child uses to position itself — a rotated vertebra would snap
+     upright, a placed icon would jump to the origin. So each direct child gets
+     a wrapper the first time it is popped: the wrapper carries the animation,
+     the child keeps its own placement. Done once, then cached. */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function popTargets(e) {
+    if (e._baPopKids) return e._baPopKids;
+    var out = [];
+    Array.prototype.slice.call(e.children).forEach(function (k) {
+      if (k.tagName === 'text') { out.push(k); return; }
+      var w = doc.createElementNS(SVGNS, 'g');
+      w.setAttribute('class', 'ba-popwrap');
+      e.insertBefore(w, k);
+      w.appendChild(k);
+      out.push(w);
+    });
+    e._baPopKids = out;
+    return out;
+  }
+
   function overlay(stage, cls, html) {
     var canvas = $('.ba-canvas', stage);
     var el = doc.createElement('div');
@@ -1775,8 +1796,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
     pop: function (stage, a) {
       parts(stage, a.targets).forEach(function (e) {
         e.classList.remove('ba-hidden');
-        var kids = $$('*', e).filter(function (k) { return k.tagName !== 'text'; });
-        kids.forEach(function (k, i) {
+        popTargets(e).forEach(function (k, i) {
           k.style.animationDelay = (i * 0.085) + 's';
           restart(k, 'ba-pop');
         });

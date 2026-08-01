@@ -189,9 +189,13 @@ automatically when you return to a slide.
 
 ## Asset library
 
-| Vertebrates | Invertebrates |
+| Library | Assets |
 |---|---|
-| `fish` `human` `snake` `bird` `dog` `frog` | `crab` `spider` `worm` `snail` `jellyfish` `beetle` `octopus` |
+| `bio-svg.js` · vertebrates | `fish` `human` `snake` `bird` `dog` `frog` |
+| `bio-svg.js` · invertebrates | `crab` `spider` `worm` `snail` `jellyfish` `beetle` `octopus` |
+| `body-svg.js` · muscles | `arm` `armmodel` `pullpush` |
+| `food-svg.js` · nutrition | `plate` `jobs` `animalfood` |
+| `chain-svg.js` · food chains | `foodchain` `chainwrong` `oaktree` `grassplant` `squirrel` `foxanimal` `foxquestion` |
 
 Every asset is built from the same named layers, so scripts port between them:
 
