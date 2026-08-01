@@ -55,7 +55,9 @@ function fail(where, msg) { problems.push(`${where}: ${msg}`); }
 const SLIDES = new Set(['Title', 'Arrival Task', 'Today at a Glance', 'I Do 1', 'We Do 1',
   'I Do 2', 'We Do 2', 'Independent Work', 'Lundy Loop', 'Exit Ticket']);
 
-const idsIn = svg => new Set([...svg.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
+/* parts are addressed by data-part (see sci-engine.js) — ids belong to
+   generated gradient/clip references and must never be named by a payload */
+const partsIn = svg => new Set([...svg.matchAll(/data-part="([^"]+)"/g)].map(m => m[1]));
 
 let checked = 0;
 for (const [lesson, payload] of Object.entries(payloads)) {
@@ -89,7 +91,7 @@ for (const [lesson, payload] of Object.entries(payloads)) {
 
     /* every part id a step reveals must exist in that component's scene */
     if (c.scene && SCI.scenes[c.scene]) {
-      const ids = idsIn(SCI.scenes[c.scene](c.sceneOpts || {}));
+      const ids = partsIn(SCI.scenes[c.scene](c.sceneOpts || {}));
       (c.steps || []).forEach(st => {
         if (!st.parts || !st.parts.length) {
           fail(where, `step "${st.name || st.label}" reveals nothing — it will tick itself off and show no science`);
@@ -201,6 +203,30 @@ for (const [lesson, payload] of Object.entries(payloads)) {
       if (!sharedClasses.has(c)) fail('motion', `engine applies "${c}", which grow-motion.css does not define`);
     });
   }
+}
+
+/* ---------------------------------------------------------------------------
+   BUILD FRESHNESS
+   The decks carry minified code from dist/. Every dist file pins the SHA-256
+   of its source. Checking it here as well as in inject.js means the failure
+   surfaces when someone runs the checker, not only when they inject.
+   --------------------------------------------------------------------------- */
+{
+  const crypto = require('crypto');
+  const sha = t => crypto.createHash('sha256').update(t, 'utf8').digest('hex').slice(0, 16);
+  [
+    ['dist/sci-engine.min.js', 'sci-engine.js'],
+    ['dist/sci-engine.min.css', 'sci-engine.css'],
+    ['dist/grow-motion.min.css', path.join('..', '..', 'grow-anim', 'grow-motion.css')]
+  ].forEach(([built, src]) => {
+    const bp = path.join(HERE, built), sp = path.join(HERE, src);
+    if (!fs.existsSync(bp)) return fail('build', `${built} is missing — run: node build.js`);
+    const pinned = (fs.readFileSync(bp, 'utf8').match(/source-sha256:([a-f0-9]+)/) || [])[1];
+    const actual = sha(fs.readFileSync(sp, 'utf8'));
+    if (pinned !== actual) {
+      fail('build', `${built} is STALE — built from a different ${path.basename(src)} (pinned ${pinned}, actual ${actual}). Run: node build.js`);
+    }
+  });
 }
 
 /* every lesson file must have a payload, and vice versa */

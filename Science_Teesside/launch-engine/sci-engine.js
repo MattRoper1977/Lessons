@@ -423,7 +423,7 @@
     var steps = cfg.steps || [];
     steps.forEach(function (s) {
       (s.parts || []).forEach(function (id) {
-        var g = q(stage, '#' + id);
+        var g = q(stage, '[data-part="' + id + '"]');
         if (g) { g.setAttribute('class', ((g.getAttribute('class') || '') + ' sci-part').trim()); g.setAttribute('data-built', '0'); }
       });
     });
@@ -448,7 +448,7 @@
 
     function build(step) {
       (step.parts || []).forEach(function (id) {
-        var g = q(stage, '#' + id);
+        var g = q(stage, '[data-part="' + id + '"]');
         if (g) { g.setAttribute('data-built', '1'); g.classList.add('g-draw-pop'); }
       });
       ding(); xp();
@@ -664,7 +664,7 @@
     function hideParts() {
       (cfg.steps || []).forEach(function (st) {
         (st.parts || []).forEach(function (id) {
-          var g = q(stage, '#' + id);
+          var g = q(stage, '[data-part="' + id + '"]');
           if (g) { g.setAttribute('class', ((g.getAttribute('class') || '') + ' sci-part').trim()); g.setAttribute('data-built', '0'); }
         });
       });
@@ -692,7 +692,7 @@
          uses. `state` is also written to the root svg for any scene that wants
          to restyle wholesale, but parts are what make the method visible. */
       (step.parts || []).forEach(function (id) {
-        var g = q(stage, '#' + id);
+        var g = q(stage, '[data-part="' + id + '"]');
         if (g) { g.setAttribute('data-built', '1'); g.classList.add('g-draw-pop'); }
       });
       stage.firstElementChild && stage.firstElementChild.setAttribute('data-state', step.state || '');
@@ -1148,6 +1148,14 @@
   var UID = 0;
   function uid(p) { UID++; return p + UID; }
 
+  /* Scene PARTS are addressed by `data-part`, never by `id`. A part id has to
+     stay stable because the payload names it, but a deck can hold the same
+     scene several times — the gas-exchange lesson renders the alveolus once to
+     build it and twice more to compare it — and stable ids in three copies is
+     three duplicate ids. `data-part` can repeat legally, lookups are scoped to
+     the component's own stage, and it matches grow-anim's convention, which
+     already addresses parts this way. */
+
   /* --- shared optical furniture (PHASE 12) -------------------------------- */
   function defsOptics(id) {
     return '<defs>' +
@@ -1168,12 +1176,12 @@
   SCI.scenes.plantCell = function (o) {
     var n = o.chloroplasts == null ? 9 : o.chloroplasts;
     var s = SVGOPEN + '<rect width="400" height="260" fill="#f0fdf4"/>';
-    s += '<g id="pc-wall"><rect x="30" y="26" width="340" height="208" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="7"/></g>';
-    s += '<g id="pc-membrane"><rect x="41" y="37" width="318" height="186" rx="7" fill="none" stroke="#166534" stroke-width="2.5" stroke-dasharray="7 4"/></g>';
-    s += '<g id="pc-cytoplasm"><rect x="46" y="42" width="308" height="176" rx="6" fill="#bbf7d0" opacity=".55"/></g>';
-    s += '<g id="pc-vacuole"><ellipse cx="200" cy="130" rx="112" ry="62" fill="#a7f3d0" stroke="#0d9488" stroke-width="2.5" opacity=".85"/></g>';
-    s += '<g id="pc-nucleus"><circle cx="98" cy="86" r="27" fill="#c084fc" stroke="#7e22ce" stroke-width="3"/><circle cx="98" cy="86" r="10" fill="#7e22ce" opacity=".55"/></g>';
-    s += '<g id="pc-chloro">';
+    s += '<g data-part="pc-wall"><rect x="30" y="26" width="340" height="208" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="7"/></g>';
+    s += '<g data-part="pc-membrane"><rect x="41" y="37" width="318" height="186" rx="7" fill="none" stroke="#166534" stroke-width="2.5" stroke-dasharray="7 4"/></g>';
+    s += '<g data-part="pc-cytoplasm"><rect x="46" y="42" width="308" height="176" rx="6" fill="#bbf7d0" opacity=".55"/></g>';
+    s += '<g data-part="pc-vacuole"><ellipse cx="200" cy="130" rx="112" ry="62" fill="#a7f3d0" stroke="#0d9488" stroke-width="2.5" opacity=".85"/></g>';
+    s += '<g data-part="pc-nucleus"><circle cx="98" cy="86" r="27" fill="#c084fc" stroke="#7e22ce" stroke-width="3"/><circle cx="98" cy="86" r="10" fill="#7e22ce" opacity=".55"/></g>';
+    s += '<g data-part="pc-chloro">';
     for (var i = 0; i < n; i++) {
       var a = (i / n) * Math.PI * 2, cx = 200 + Math.cos(a) * 132, cy = 130 + Math.sin(a) * 78;
       s += '<ellipse class="g-flow-jiggle" style="animation-delay:' + (i * .5).toFixed(1) + 's" cx="' + cx.toFixed(0) + '" cy="' + cy.toFixed(0) + '" rx="15" ry="9" transform="rotate(' + (i * 37) + ' ' + cx.toFixed(0) + ' ' + cy.toFixed(0) + ')" fill="#22c55e" stroke="#15803d" stroke-width="2"/>';
@@ -1185,10 +1193,10 @@
   /* --- animal cell -------------------------------------------------------- */
   SCI.scenes.animalCell = function (o) {
     var s = SVGOPEN + '<rect width="400" height="260" fill="#fdf2f8"/>';
-    s += '<g id="ac-membrane"><ellipse cx="200" cy="130" rx="160" ry="102" fill="#fce7f3" stroke="#be185d" stroke-width="4"/></g>';
-    s += '<g id="ac-cytoplasm"><ellipse cx="200" cy="130" rx="152" ry="94" fill="#fbcfe8" opacity=".5"/></g>';
-    s += '<g id="ac-nucleus"><circle cx="200" cy="126" r="38" fill="#c084fc" stroke="#7e22ce" stroke-width="3.5"/><circle cx="200" cy="126" r="13" fill="#7e22ce" opacity=".5"/></g>';
-    s += '<g id="ac-mito">';
+    s += '<g data-part="ac-membrane"><ellipse cx="200" cy="130" rx="160" ry="102" fill="#fce7f3" stroke="#be185d" stroke-width="4"/></g>';
+    s += '<g data-part="ac-cytoplasm"><ellipse cx="200" cy="130" rx="152" ry="94" fill="#fbcfe8" opacity=".5"/></g>';
+    s += '<g data-part="ac-nucleus"><circle cx="200" cy="126" r="38" fill="#c084fc" stroke="#7e22ce" stroke-width="3.5"/><circle cx="200" cy="126" r="13" fill="#7e22ce" opacity=".5"/></g>';
+    s += '<g data-part="ac-mito">';
     [[104, 88], [292, 96], [120, 178], [286, 176], [200, 208]].forEach(function (p, i) {
       s += '<g class="g-flow-jiggle" style="animation-delay:' + (i * .7) + 's" transform="translate(' + p[0] + ',' + p[1] + ') rotate(' + (i * 41 - 20) + ')">' +
         '<ellipse rx="21" ry="11" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>' +
@@ -1205,23 +1213,23 @@
        url(#…) resolves across the whole document. */
     var OPT = uid('msopt');
     var s = SVGOPEN + '<rect width="400" height="260" fill="#f8fafc"/>' + defsOptics(OPT);
-    s += '<g id="ms-base"><rect x="96" y="214" width="180" height="18" rx="6" fill="#e2e8f0" stroke="#475569" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-base"><rect x="96" y="214" width="180" height="18" rx="6" fill="#e2e8f0" stroke="#475569" stroke-width="2.5"/>' +
          '<path d="M 150 214 Q 118 150 158 112" fill="none" stroke="#334155" stroke-width="9" stroke-linecap="round"/></g>';
-    s += '<g id="ms-light"><circle cx="126" cy="150" r="12" fill="#fde68a" stroke="#a16207" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-light"><circle cx="126" cy="150" r="12" fill="#fde68a" stroke="#a16207" stroke-width="2.5"/>' +
          '<circle class="sci-beam" data-on="1" cx="126" cy="150" r="26" fill="url(#' + OPT + '-beam)"/></g>';
-    s += '<g id="ms-stage"><rect x="112" y="160" width="108" height="11" rx="3" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-stage"><rect x="112" y="160" width="108" height="11" rx="3" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
          '<rect x="142" y="153" width="44" height="8" rx="1.5" fill="#bae6fd" stroke="#0369a1" stroke-width="1.8"/></g>';
-    s += '<g id="ms-focus"><circle cx="118" cy="188" r="13" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-focus"><circle cx="118" cy="188" r="13" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
          '<circle cx="118" cy="188" r="5" fill="#94a3b8"/>' +
          '<circle cx="140" cy="190" r="8" fill="#fff" stroke="#64748b" stroke-width="2"/></g>';
-    s += '<g id="ms-objectives"><rect x="136" y="108" width="66" height="15" rx="7" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-objectives"><rect x="136" y="108" width="66" height="15" rx="7" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
          '<rect x="142" y="123" width="11" height="22" rx="2" fill="#ede9fe" stroke="#7A5C9E" stroke-width="2"/>' +
          '<rect x="158" y="123" width="11" height="28" rx="2" fill="#ede9fe" stroke="#7A5C9E" stroke-width="2"/>' +
          '<rect x="174" y="123" width="11" height="34" rx="2" fill="#ede9fe" stroke="#7A5C9E" stroke-width="2"/></g>';
-    s += '<g id="ms-eyepiece"><rect x="152" y="52" width="26" height="46" rx="5" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="ms-eyepiece"><rect x="152" y="52" width="26" height="46" rx="5" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
          '<ellipse cx="165" cy="52" rx="16" ry="6.5" fill="#7A5C9E" fill-opacity=".45" stroke="#7A5C9E" stroke-width="2.5"/></g>';
     /* the live field of view, drawn beside the instrument */
-    s += '<g id="ms-field"><circle cx="308" cy="130" r="66" fill="#0b1220" stroke="#334155" stroke-width="3"/>' +
+    s += '<g data-part="ms-field"><circle cx="308" cy="130" r="66" fill="#0b1220" stroke="#334155" stroke-width="3"/>' +
          '<circle cx="308" cy="130" r="62" fill="url(#' + OPT + '-beam)" opacity=".5"/>' +
          '<circle cx="308" cy="130" r="66" fill="url(#' + OPT + '-glint)" opacity=".8"/>' +
          '<text class="sci-neutral" x="308" y="212" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">what you see</text></g>';
@@ -1374,12 +1382,12 @@
     /* Grouped under ids so `discover` can assemble the exchange surface one
        adaptation at a time. Ids are part of the payload contract — renaming
        one silently empties a build step, so change both together. */
-    s += '<g id="alv-sac"><circle cx="140" cy="128" r="86" fill="#fee2e2" stroke="#b91c1c" stroke-width="4"/>' +
+    s += '<g data-part="alv-sac"><circle cx="140" cy="128" r="86" fill="#fee2e2" stroke="#b91c1c" stroke-width="4"/>' +
          (o.bare ? '' : '<text x="140" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#7f1d1d">air sac</text>') + '</g>';
-    s += '<g id="alv-blood"><rect x="222" y="46" width="60" height="166" rx="26" fill="#fecaca" stroke="#b91c1c" stroke-width="4"/>' +
+    s += '<g data-part="alv-blood"><rect x="222" y="46" width="60" height="166" rx="26" fill="#fecaca" stroke="#b91c1c" stroke-width="4"/>' +
          (o.bare ? '' : '<text x="252" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#7f1d1d">blood</text>') + '</g>';
-    s += '<g id="alv-wall"><rect x="204" y="52" width="16" height="154" rx="6" fill="#fca5a5" stroke="#b91c1c" stroke-width="2"/></g>';
-    s += '<g id="alv-cross">';
+    s += '<g data-part="alv-wall"><rect x="204" y="52" width="16" height="154" rx="6" fill="#fca5a5" stroke="#b91c1c" stroke-width="2"/></g>';
+    s += '<g data-part="alv-cross">';
     var n = Math.round(4 + g * 8);
     for (var i = 0; i < n; i++) {
       var y = 60 + (i * 143 / Math.max(1, n - 1));
@@ -1485,16 +1493,16 @@
      method animation that shows the wrong apparatus teaches the wrong method. */
   SCI.scenes.osmosisPractical = function (o) {
     var s = SVGOPEN + '<rect width="400" height="260" fill="#f8fafc"/>';
-    s += '<g id="op-chips"><rect x="18" y="30" width="86" height="52" rx="6" fill="#fef9c3" stroke="#a16207" stroke-width="3"/>';
+    s += '<g data-part="op-chips"><rect x="18" y="30" width="86" height="52" rx="6" fill="#fef9c3" stroke="#a16207" stroke-width="3"/>';
     for (var i = 0; i < 3; i++) {
       s += '<rect x="26" y="' + (38 + i * 15) + '" width="70" height="9" rx="3" fill="#fde68a" stroke="#a16207" stroke-width="1.6"/>';
     }
     s += '<text x="61" y="96" text-anchor="middle" font-size="10" font-weight="800" fill="#78350f">equal chips</text></g>';
-    s += '<g id="op-balance"><rect x="130" y="56" width="86" height="26" rx="5" fill="#e2e8f0" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="op-balance"><rect x="130" y="56" width="86" height="26" rx="5" fill="#e2e8f0" stroke="#334155" stroke-width="2.5"/>' +
          '<rect x="146" y="42" width="54" height="14" rx="3" fill="#fff" stroke="#334155" stroke-width="2"/>' +
          '<text x="173" y="74" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">2.41 g</text>' +
          '<text x="173" y="96" text-anchor="middle" font-size="10" font-weight="800" fill="#334155">blot, then weigh</text></g>';
-    s += '<g id="op-tubes">';
+    s += '<g data-part="op-tubes">';
     var concs = ['0.0', '0.2', '0.4', '0.6', '0.8', '1.0'];
     for (var t = 0; t < 6; t++) {
       var x = 22 + t * 62;
@@ -1504,11 +1512,11 @@
       s += '<text x="' + (x + 20) + '" y="222" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">' + concs[t] + '</text>';
     }
     s += '<text x="200" y="240" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">sugar concentration (mol/dm³) — everything else kept the same</text></g>';
-    s += '<g id="op-reweigh"><rect x="248" y="30" width="130" height="70" rx="8" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
+    s += '<g data-part="op-reweigh"><rect x="248" y="30" width="130" height="70" rx="8" fill="#fff" stroke="#334155" stroke-width="2.5"/>' +
          '<text x="313" y="54" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">blot the same way</text>' +
          '<text x="313" y="72" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">reweigh: 2.64 g</text>' +
          '<text x="313" y="90" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">start 2.41 g</text></g>';
-    s += '<g id="op-calc"><rect x="112" y="102" width="180" height="24" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>' +
+    s += '<g data-part="op-calc"><rect x="112" y="102" width="180" height="24" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>' +
          '<text x="202" y="119" text-anchor="middle" font-size="11" font-weight="900" fill="#14532d">(0.23 ÷ 2.41) × 100 = +9.5%</text></g>';
     return s + '</svg>';
   };
@@ -1519,11 +1527,11 @@
     var s = SVGOPEN + '<rect width="400" height="260" fill="#f8fafc"/>' + defsOptics(OPT);
     s += '<rect x="70" y="150" width="260" height="16" rx="3" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5"/>';
     s += '<text x="200" y="188" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">glass slide</text>';
-    s += '<g id="sp-specimen" class="sci-part" data-built="0"><ellipse cx="200" cy="150" rx="34" ry="8" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/></g>';
-    s += '<g id="sp-stain" class="sci-part" data-built="0"><circle cx="200" cy="128" r="9" fill="#60a5fa" stroke="#1d4ed8" stroke-width="2"/>' +
+    s += '<g data-part="sp-specimen" class="sci-part" data-built="0"><ellipse cx="200" cy="150" rx="34" ry="8" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/></g>';
+    s += '<g data-part="sp-stain" class="sci-part" data-built="0"><circle cx="200" cy="128" r="9" fill="#60a5fa" stroke="#1d4ed8" stroke-width="2"/>' +
          '<path d="M 200 138 l 0 8" stroke="#1d4ed8" stroke-width="2.4"/></g>';
-    s += '<g id="sp-coverslip" class="sci-part" data-built="0"><rect x="146" y="120" width="108" height="6" rx="2" fill="#dbeafe" stroke="#0369a1" stroke-width="2" transform="rotate(-16 200 123)"/></g>';
-    s += '<g id="sp-eye" class="sci-part" data-built="0"><circle cx="200" cy="62" r="40" fill="#0b1220" stroke="#334155" stroke-width="3"/>' +
+    s += '<g data-part="sp-coverslip" class="sci-part" data-built="0"><rect x="146" y="120" width="108" height="6" rx="2" fill="#dbeafe" stroke="#0369a1" stroke-width="2" transform="rotate(-16 200 123)"/></g>';
+    s += '<g data-part="sp-eye" class="sci-part" data-built="0"><circle cx="200" cy="62" r="40" fill="#0b1220" stroke="#334155" stroke-width="3"/>' +
          '<g class="sci-optics-blur"><circle cx="188" cy="54" r="9" fill="#d9f0d9" stroke="#2f6b3a" stroke-width="1.6"/>' +
          '<circle cx="210" cy="66" r="9" fill="#d9f0d9" stroke="#2f6b3a" stroke-width="1.6"/>' +
          '<circle cx="196" cy="76" r="9" fill="#d9f0d9" stroke="#2f6b3a" stroke-width="1.6"/></g>' +

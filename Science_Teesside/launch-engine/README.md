@@ -61,21 +61,33 @@ jiggle's own knob — so a pupil's variable moves the language they already know
 | `sci-engine.js` | the engine: components, scenes, simulators, mounting |
 | `sci-engine.css` | the stylesheet |
 | `payloads.js` | per-lesson content — **pure JSON, no functions** |
-| `inject.js` | inlines engine + payload into the fifteen decks |
+| `build.js` | minifies the three sources into `dist/` |
+| `dist/` | **committed build output** — what actually goes into the decks |
+| `inject.js` | inlines `dist/` + payload into the fifteen decks |
 | `check.js` | contract checker — run it before you inject |
 
 ### Working on it
 
 ```sh
-node check.js       # contracts — must pass before injecting
-node inject.js      # inject / re-inject all fifteen lessons
+npm install --no-save terser clean-css   # once, only if you change source
+node build.js            # minify source into dist/
+node check.js            # contracts — must pass before injecting
+node inject.js           # inject / re-inject all fifteen lessons
 node inject.js --check   # report only
 node inject.js --strip   # remove the layer; restores the decks byte-for-byte
 ```
 
-The decks are **generated output** for this layer. Editing the injected block
-inside a lesson file is pointless — the next `inject.js` overwrites it. Edit
-the source here and re-run.
+The decks carry the **minified** build, which keeps the added weight to about
+75 KB per deck instead of 120 KB. Readable source — and the reasoning behind
+every gate — stays here.
+
+`dist/` is committed so that `inject.js` needs no dependencies: it is the tool
+anyone touching a lesson will reach for, and making it need `npm install` would
+eventually mean someone hand-edits an injected block instead. A committed
+artefact normally rots, so every `dist/` file pins the SHA-256 of its source and
+**both `inject.js` and `check.js` refuse to run against a stale build.** Editing
+the injected block inside a lesson is pointless either way — the next
+`inject.js` overwrites it.
 
 ---
 
@@ -142,7 +154,14 @@ them is **invisible in a screenshot of the finished state**.
    awarding XP per drag set off the end-of-lesson celebration during the first
    I Do. All awards now spend from a declared pool (`declareXP`/`xpCost`).
 
-7. **`margin-inline:auto` on a grid item.** It switches the item out of stretch
+7. **Part ids repeated across scene instances.** Part ids must stay stable
+   because payloads name them — but the gas-exchange deck renders the alveolus
+   three times (once to build, twice to compare), so stable ids meant four
+   duplicate ids in one document. Parts are now addressed by `data-part`, which
+   may legally repeat, is scoped to the component's own stage, and is what
+   grow-anim already uses. Only generated gradient/clip references use `id`.
+
+8. **`margin-inline:auto` on a grid item.** It switches the item out of stretch
    sizing into fit-content, which for an SVG is its 300px intrinsic default —
    the figure silently collapsed to half size inside `.sci-method`.
 

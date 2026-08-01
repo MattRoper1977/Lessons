@@ -70,19 +70,49 @@ motion the pupil has been reading since week one.
 
 ## Status
 
-- **LAUNCH** — built by this pass. `Science_Teesside/launch-engine/`, injected
-  into all fifteen `Science_Teesside/Launch/SCI_L_*.html` decks. 50 components.
-- **GROW** — built, and on `main` before this pass: `grow-anim/` (the ten-motion
-  language, layered SVG assets for biology, chemistry and physics, and the
-  behaviours engine), wired into the five GROW science decks. Its stated aim is
-  *"the animation is the explanation"* — which is exactly the GROW row of the
-  table above.
-- **BUILD** — `grow-anim/compat-build-anim.js` lets existing BUILD markup run on
-  the GROW engine, so BUILD has motion but not yet a philosophy of its own. The
-  brief is the BUILD row above: animation that carries meaning the text would
-  otherwise carry, so a pupil who finds reading hard still meets the whole idea.
-  It should reveal readily — the LAUNCH gates would be an obstacle there, not a
-  method.
+All three pathways now carry an animation layer. Measured by rendering all 25
+Science_Teesside decks headlessly and walking every slide:
+
+| pathway | decks | framework | animated nodes | speaks the shared `g-` language |
+|---|---|---|---|---|
+| BUILD | 5 | `build-anim/` (`ba-` prefix) | 109–160 per deck | **0 / 5** |
+| GROW | 5 | `grow-anim/` (`g-` prefix) | 49–95 parts per deck | 5 / 5 |
+| LAUNCH | 15 | `launch-engine/` (`sci-` prefix) | 50 components | 9 / 15 |
+
+Zero JS errors and zero horizontal overflow across all 25, at 1280 and 768.
+
+### There are three frameworks, and convergence is already planned
+
+`build-anim/README.md` states the destination plainly — *"one engine is better
+than two"* — and names the four capabilities `grow-anim`'s compat shim is still
+missing (`pose`, `data-ba-cards`, `BioSVG.register()`, the `pop` wrapper). The
+BUILD decks are safe meanwhile because `inject.py` inlines everything.
+
+**LAUNCH deliberately did not add a fourth motion vocabulary.** It inherits
+`grow-motion.css` rather than defining its own equivalents, which is one fewer
+thing to unpick when BUILD converges. `launch-engine/check.js` keeps it that way.
+
+The LAUNCH figure of 9/15 is expected, not a gap: the six decks that do not use
+a `g-` motion are the ones whose components are chains, pauses and graphs —
+reasoning furniture with nothing to animate. Every LAUNCH deck that draws a
+scene speaks the shared language.
+
+### Where each pathway sits against the table above
+
+- **LAUNCH** — built by this pass. `Science_Teesside/launch-engine/`, 50
+  components across the fifteen decks.
+- **GROW** — `grow-anim/`, the ten-motion language plus layered assets for
+  biology, chemistry and physics. Its stated aim, *"the animation is the
+  explanation"*, is the GROW row exactly.
+- **BUILD** — `build-anim/`, five decks rebuilt on it. Its README opens with the
+  same sentence GROW's does: *"the animation is the explanation."*
+
+That last point is worth sitting with. BUILD and GROW currently state the **same
+philosophy**, and the table above says they should not: BUILD's animation
+replaces text, GROW's explains a process. They are close cousins and the overlap
+may be entirely fine in practice — but if the three pathways are meant to differ
+in how pupils work and not only in what they read, the BUILD/GROW distinction is
+the one still to be drawn. LAUNCH's is now drawn in the markup.
 
 Do not reuse the LAUNCH engine wholesale for BUILD. Its whole design is
 withholding, and withholding is the wrong instrument for a pupil whose barrier
