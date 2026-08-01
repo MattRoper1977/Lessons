@@ -165,26 +165,97 @@ Three evidence passes, each re-running the same harness:
 | [v2](CONVERGENCE_EVIDENCE_v2.md) | fix them | five fixed, plus a sixth v1 got wrong |
 | [v3](CONVERGENCE_EVIDENCE_v3.md) | close it | reserve derived, test widened, GROW re-injected |
 
-## Merge timing — a point that is Matt's to weigh
+## What landed, and in what order
 
-**This branch is measurably better than `main` at every scaled viewport, and the
-gap is not small.** As authored, stages clearing the navigation:
+**Final `main` is `cf2971b11ff58cb396257c0b8f9631bd8c5b0c8d`.** Six merges, gated
+between each, no force push and no rebase of pushed work:
 
-| viewport | `main` | this branch |
+| # | what | merge SHA |
 |---|---|---|
-| 819×614 (1024×768 @125%) | 5/25 | **25/25** |
-| 1093×614 (1366×768 @125%) | 7/25 | **25/25** |
-| 683×512 (1024×768 @150%) | 0/25 | 5/25 |
+| 10 | LAUNCH: animation that supports reasoning | `0047e8a` |
+| 13 | gate & instrument census | `e68d1bc` |
+| 11 | unused SVG ids in grow-anim | `cce5030` |
+| 12 | BUILD/GROW convergence — prep, fixes, closing pass | `1158d96` |
+| 14 | BUILD_ASDAN visual teaching layer | `214669a` |
+| 15 | rebuild the pinned grow-motion dist | `cf2971b` |
 
-with **zero regressions anywhere**, plus the We Do 2 slide going from 106–120px of
-overflow to zero at 1280×720 and 1024×768.
+**#15 belonged to no PR, and a cold reader will otherwise take it for someone's
+mistake.** `launch-engine/check.js` reported `dist/grow-motion.min.css` stale —
+pinned `db3fd9602a69eb20`, actual `83bdca2c9898413e`. #10 pins each `dist/` source's
+SHA-256 so staleness is a hard failure; #12 changed `grow-anim/grow-motion.css` for
+the `draw` fix. **Neither PR was wrong and neither could have seen it**: the
+divergence existed only once both were on `main`. Post-merge verification found it,
+it took its own change to close, and it is now standing rule 21.
 
-Holding it unmerged keeps the worse state live through September. That is not an
-argument for merging it unwalked — the walk answers a question no measurement can,
-and slides 4 and 9 from the back of a real room is still the gate. It is an
-argument for deciding *what the walk is for*: whether it gates the merge or
-verifies it. **Sunday 6 September is the slot, and the call is Matt's.** Nothing
-here merges either way.
+**#13 needed re-pointing before it could merge.** Its base was still
+`claude/launch-animation-philosophy-79lohp` when #10 landed, so merging it then would
+have put it on a dead branch rather than on `main`. Changed with
+`update_pull_request` — **not** the rebase-and-force-push its own body suggested,
+because rebasing pushed work was forbidden. Diff re-confirmed after the change: **26
+files, 1,049 insertions**, against 35 files and 5,548 had it merged unstacked.
+
+## Post-merge staleness sweep — every pin instrument, once, on merged main
+
+#15 proved that a generated artefact can go stale in the *combination* of two
+correct PRs. Six landed together, so every other pinned or generated artefact was in
+the same position. All of them were run on merged `main`, and the greens are part of
+the deliverable:
+
+**27 instruments reported · 7 CLEAN · 3 reported STALE and all three refuted · 13 not
+staleness checks · 4 not run (write-only, no check mode).**
+
+| instrument | verdict |
+|---|---|
+| `Science_Teesside/launch-engine/check.js` | **CLEAN** — all three dist pins re-derived independently: `sci-engine.min.js` `7acd485f`, `sci-engine.min.css` `6abc48d5`, `grow-motion.min.css` `83bdca2c`, each matching its source |
+| `Science_Teesside/launch-engine/inject.js --check` | **CLEAN** — "0 file(s) would change" across all 15 LAUNCH decks; verifies both hops, dist-vs-source and deck-vs-dist |
+| `BUILD_ASDAN/_framework/apply_framework.py --check` | **CLEAN** — `asdan-teach.css`/`.js` inlined into 31 decks, all current |
+| `grow-anim/inject.py --check` | **CLEAN** — ok ×5 |
+| `reports/convergence/inject_convergence.py --check` | **CLEAN** — ok ×5 |
+| `build-anim/inject.py --check` | reported STALE → **refuted** |
+| `grow-anim/wire_lessons.py --check --patch-only` | reported STALE → **refuted** |
+| `LundyLoop/tools/ko_staleness.py` | reported STALE → **refuted** |
+| 13 others (`gate-leak.js`, `health.js`, `verify_commit_set.py`, `preflight.py`, `sitemap_audit.py`, `qa_check.py`, `style_check.js`, `_passla/build/gates.py`, `_passsci1/gates.py`, `batch_gate.py`, `hub_chip_gate.js`, `verify_axiomshift.sh`, `verify_charcoal.sh`) | **not staleness checks** — they assert behaviour, counts or accessibility, and were reported as such rather than forced into the frame |
+| 4 write-only (`build.js`, `prune_dead_css.py`, and two generators) | **not run** — no check mode; running them would repair the evidence |
+
+**Why each STALE claim fell, because a refuted claim is only useful with its reason:**
+
+- **`build-anim/inject.py`** exits 1 on the five BUILD lessons *by design*: #12
+  deliberately re-pointed them at `grow-anim/`, so the injector is measuring against
+  sources those files are no longer generated from. Probed per-block, the three
+  libraries `build-anim/` still owns are **byte-identical** — `BODY 16125 vs 16125`,
+  `FOOD 38016 vs 38016`, `CHAIN 16318 vs 16318` — the whole difference is a 48-byte
+  provenance header. Coverage is not lost: those three are read from `build-anim/` by
+  `inject_convergence.py`, which is green.
+- **`grow-anim/wire_lessons.py --patch-only`** reports 289 STALE, and **structurally
+  cannot detect drift** — proved, not argued: a lesson was given genuinely stale
+  inlined content in a scratch copy and the tool passed it, exit 0. Its "STALE" means
+  "has not yet received the patch". The same 289 files, byte-identical set, fail at
+  `cacaf16` before any of the six merges. It is a rollout backlog, merge-invariant.
+- **`ko_staleness.py`** produces 131 candidates and its own docstring forbids the
+  reading: *"The output is a CANDIDATE LIST for reading, never a defect count."* The
+  same output was adjudicated in Pass Q — `_passq/TRIAGE.md`: **"Result: 0 STALE. 0 KO
+  edits."** Its top-ranked flag is byte-frozen since that read. It also refuses to run
+  at all in this shallow clone rather than returning a false zero, which is standing
+  rule 16 doing its job.
+
+**Nothing on merged `main` is stale.** The one artefact that was is closed by #15.
+
+**One piece of tooling hygiene, recorded not fixed:** `build-anim/inject.py` will now
+always exit 1 on those five lessons, and `build-anim/README.md` still advertises it as
+a CI-style check. Nothing invokes it — no workflow file and no git hook — so nothing
+is broken today. Whether to retire it as a gate or teach it that those five lessons
+belong to `inject_convergence.py` is a decision, and it sits with the `build-anim/`
+deletion question rather than apart from it.
+
+
+## The walk now verifies live decks, not a branch
+
+That was Matt's call, and it is recorded as his. What it changes: **a problem found
+on 13 September is live while it is being fixed.** So the revert-not-forward-fix rule
+applies to anything the walk turns up, exactly as it applied during the merge — revert
+to a known-good `main`, confirm clean, document, and only then decide the fix. A
+hurried patch to a live deck in September is the failure mode this ordering exists to
+avoid.
 
 ## The red assertions — two turned green, four remain
 
@@ -219,13 +290,36 @@ overflowing cells across 1,080, **173 have the picture already at its 96px floor
 At 125% display scaling, on the We Do 2 slide:
 
 - **every stage now clears the navigation** — 25/25 at 819×614 and 25/25 at
-  1093×614, against 5/25 and 7/25 on `main` before this landed; **and**
+  1093×614, against 5/25 and 7/25 before; **and**
 - **the slide still scrolls**, by 70–153px, because the scaffold box and the
   end-of-period note sit below the fold.
 
 Both are true. They answer different questions — *is anything hidden under the
 buttons* and *does the whole slide fit* — and the second is the one a teacher meets
-in a room. **Do not let the 25/25 stand alone.**
+in a room. **Never let the 25/25 stand alone.**
+
+## What was verified, and what was not
+
+Five PRs were verified **structurally, not pedagogically.** On merged `main`:
+`inject.py --check` clean on all ten decks · 12/12 slides on the five BUILD decks and
+10/10 on the five GROW · 110 renders · print packs byte-for-byte identical across all
+three tiers · 670 script-step target resolutions with none matching zero elements ·
+one `/hud.js` 404 per BUILD deck and two per GROW, nothing new · the display gate and
+the fit gate both green · every pin consistent.
+
+**None of that says whether a LAUNCH gate reads right to a Year 10, or whether a
+256px plate reads from the back row.** Those are the questions the walk exists for,
+and no instrument in this estate can answer either.
+
+## Rule 19 was applied to this document, twice
+
+Left visible because it is the rule working rather than a tidy-up. The PR-stacking
+correction was **rewritten as a sequence** rather than appended to, once #13 became
+genuinely stacked and the original wording began contradicting the facts. And two
+sections duplicated by the handover — an earlier "Open" list and an earlier "Named
+backlogs" — were **removed**, not left beside their replacements. A reader cannot
+tell which of two contradictory claims is live, and will reasonably pick whichever
+suits them.
 
 ## Walk sheet
 
@@ -271,12 +365,39 @@ Nothing below is decided here.
 
 1. **Deleting `build-anim/`** — gated on the 13 September walk. It is present and
    byte-identical on `main`.
-2. **The four glow decks.** `label_rest_check.js` is red on CAREERS_W6, COMM_W1,
-   DUKE_W5 and LI_W2. **COMM_W1 reads as design and LI_W2 reads as a defect** — in
-   LI_W2 the glowing element is the £1 answer to 20+20+10+50=100p, which gives the
-   answer away. **CAREERS_W6 and DUKE_W5 need classifying design-vs-defect with
-   their aria-labels quoted.** Not done here; the instrument stays red with its
-   reason recorded rather than silenced.
+2. **The four glow decks — all four now classified against one standard.**
+   `label_rest_check.js` settles 5s past arrival, then samples a repeating 6s cycle
+   and fails any label whose effective opacity ever drops below 1. All four decks
+   fail on exactly one glyph, all at ~0.35, and **in every case every other text in
+   the diagram stays at opacity 1.** So the question is only ever: *is the dimmed
+   glyph something a pupil must read or produce?*
+
+   | deck | glyph | the deck's own `aria-label` | everything else at rest | verdict |
+   |---|---|---|---|---|
+   | `LI_W2_Notes_and_Coins` | `£1` @5550ms | — | `20p 20p 10p 50p` `=` `20 + 20 + 10 + 50 = 100p` `DIFFERENT COINS, SAME POUND` all at 1 | **defect** |
+   | `COMM_W1_Choose_Our_Asset` | `🌳 🏞️ 🏫` @450/1050/1650ms | *"three community spots glow"* | all other labels at 1 | **design** |
+   | `DUKE_W5_Our_Social_Enterprise` | `💡` @2850ms | *"An idea bulb lights, earns a coin, and the coin powers a heart"* | `OUR IDEA` `£` `WE SELL · WE EARN` `IT HELPS SOMEONE` `PROFIT WITH A PURPOSE` all at 1 | **design** |
+   | `CAREERS_W6_My_Career_Profile` | `✓` @3600ms | *"Pieces of a career profile fly in and assemble into one card"* | `👤` `ME` `MY STRENGTHS` `MY EVIDENCE` `🏁 MY NEXT STEP` `MY CAREER PROFILE — BUILT FROM PROOF` all at 1 | **design, weakly** |
+
+   **`LI_W2` is the defect and it is the clearest case in the set:** the single dimmed
+   glyph is `£1`, which is the answer to the sum printed beside it at full opacity.
+   The animation dims the one thing the pupil is there to work out.
+
+   **`DUKE_W5` is design by the deck's own account of itself.** Its `aria-label`
+   promises *"an idea bulb **lights**"* — the pulse is the first beat of the described
+   animation, and the word `OUR IDEA` that the bulb decorates never dims.
+
+   **`CAREERS_W6` is design but the weakest of the three**, and the reason is worth a
+   sentence rather than a tick. Nothing a pupil must read or produce dims: the `✓`
+   prefixes `MY CAREER PROFILE — BUILT FROM PROOF`, which stays at 1 and carries the
+   same meaning. But unlike `DUKE_W5` and `COMM_W1`, **the deck's `aria-label`
+   describes assembly and says nothing about a recurring pulse** — so the motion and
+   the deck's own description of it have drifted apart. That is a documentation gap,
+   not a legibility one.
+
+   **The ruling is Matt's.** The instrument stays red on all four with its reason
+   recorded, rather than silenced — a red test that documents a decision is worth more
+   than a green one that hides it.
 3. **The BUILD/GROW philosophy divergence.** Both READMEs open with *"the animation
    is the explanation"*, while the pathway table says BUILD replaces text and GROW
    explains a process. One engine now serves both. PR #10 drew LAUNCH's distinction
