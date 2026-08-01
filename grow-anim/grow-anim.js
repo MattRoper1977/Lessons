@@ -224,6 +224,13 @@
     draw: function (stage, a) {
       parts(stage, a.targets).forEach(function (e) {
         e.classList.remove('g-hidden');
+        /* The class goes on the PART as well as on its shapes. The shapes need
+           it to run the stroke animation; the part needs it because "this has
+           been drawn" is a fact about the part, and assets gate their own
+           visibility on it — food-svg.js hides every drop-/food- part until one
+           of .g-in / .g-draw arrives. Marking only the children left those
+           parts at opacity 0 with the script reporting success. */
+        e.classList.add('g-draw');
         $$('path,line,polyline,polygon,rect,circle,ellipse', e).forEach(function (s) { restart(s, 'g-draw'); });
       });
     },
@@ -636,7 +643,8 @@
     st.i = 0; st.paused = false;
     $$('[data-part]', stage).forEach(function (e) {
       e.classList.remove('g-glow', 'g-hi', 'g-fade', 'g-pulse', 'g-bounce', 'g-shake',
-        'g-in', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle', 'g-morph-in', 'g-morph-out');
+        'g-in', 'g-draw', 'g-trace', 'g-flow', 'g-flow-drift', 'g-flow-orbit', 'g-flow-jiggle',
+        'g-morph-in', 'g-morph-out');
       e.classList.toggle('g-hidden', !!st.hidden[e.getAttribute('data-part')]);
       e.style.animationDelay = '';
       $$('*', e).forEach(function (k) {
@@ -698,15 +706,27 @@
     VERBS.unthink(stage);
     st.paused = false;
     $$('.g-pause', stage).forEach(function (e) { e.remove(); });
+    var last = null;
     while (st.i < st.steps.length) {
       var s = st.steps[st.i];
       s.acts.forEach(function (a) { if (a.verb !== 'pause' && a.verb !== 'think' && VERBS[a.verb]) VERBS[a.verb](stage, a); });
       followers(stage).forEach(function (e) {
         if (parseInt(e.getAttribute('data-grow-step'), 10) === st.i + 1) e.classList.add('g-shown');
       });
+      last = s;
       st.i++;
     }
     st.paused = false;
+    /* Show all lands on the same state as pressing Next to the end, and that
+       includes the line the teacher is meant to say. Leaving the bar on its
+       "press Next" placeholder hands the teacher a finished picture and no
+       words for it. */
+    if (last) {
+      var say = $('.g-say', stage);
+      if (say) { say.textContent = last.say || ''; restart(say, 'g-said'); }
+      var badge = $('.g-beat', stage);
+      if (badge && last.beat) { badge.textContent = last.beat; badge.setAttribute('data-beat', last.beat); }
+    }
     paint(stage);
     if (typeof stage._gDone === 'function') stage._gDone(stage);
   }

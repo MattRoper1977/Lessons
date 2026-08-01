@@ -142,7 +142,12 @@
     asset:   function (name) { return GS.asset(name); },
     title:   function (name) { return GS.title(name); },
     kind:    function (name) { var a = GS.asset(name); return a && a.kind; },
-    list:    function () { return GS.list('animals'); },
+    /* The whole registry, not just the animals. build-anim's BioSVG.list()
+       returned Object.keys(A), which included everything body-svg, food-svg and
+       chain-svg registered; scoping it to the 'animals' tag made those assets
+       render correctly but count as absent, which is how demo.html came to
+       report 13 assets for a lesson carrying 20. */
+    list:    function () { return GS.list(); },
     register: function (assets) { GS.register(assets); return Object.keys(assets); },
     helpers: HELPERS,
     vertebrates:   function () { return GS.list('vertebrates'); },

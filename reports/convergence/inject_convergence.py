@@ -54,22 +54,17 @@ MAP = [
 ]
 
 
-# A source that is INLINED has to survive the HTML parser, which does not care
-# that a token sits inside a JS comment. compat-build-anim.js documents its own
-# usage with four literal <script src=...></script> lines; inlined raw, the
-# first of those closes the block, the rest become real <script> elements, the
-# engine never loads and nothing on the page moves — with no build-time error.
-# Neither existing injector escapes this, because until now no inlined source
-# contained the token. Found by rendering, not by reading.
-ESCAPES = [("</script", "<\\/script"), ("</style", "<\\/style")]
+# The escaping that makes an inlined source survive the HTML parser lives in the
+# shared injection path now, not here — see grow-anim/inject.py's
+# escape_for_inline(). This module imports it rather than keeping a second copy,
+# so a lesson injected by either route is protected the same way.
+sys.path.insert(0, os.path.join(ROOT, "grow-anim"))
+from inject import escape_for_inline  # noqa: E402
 
 
 def read(rel):
     with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
-        text = fh.read().rstrip("\n")
-    for token, safe in ESCAPES:
-        text = text.replace(token, safe)
-    return text
+        return escape_for_inline(fh.read().rstrip("\n"))
 
 
 def body_for(sources):
