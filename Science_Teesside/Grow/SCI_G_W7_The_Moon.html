@@ -1647,7 +1647,16 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
         g('vesselsred', C.acid,
           '<path id="fromLung" d="M 206 168 q 30 -12 26 -40" fill="none" stroke="' + C.acid + '" stroke-width="5"/>' +
           '<path id="toBody" d="M 204 186 q 34 30 30 74" fill="none" stroke="' + C.acid + '" stroke-width="5"/>') +
+        /* Four vessels, four travellers. The asset is titled "a DOUBLE loop"
+           and only the body loop used to move — #toLung and #fromLung were
+           drawn and then left still, so pupils saw the pulmonary circuit as
+           plumbing rather than as a journey.
+           Colour follows the blood, not the vessel: heart->lungs is BLUE
+           because it has not picked up its oxygen yet, and lungs->heart is RED
+           because it has. That is the one thing pupils get backwards. */
         g('bloodblue', C.field, dot(0, 0, 6, C.field), ' data-flow-along="#fromBody" class="g-hidden"') +
+        g('bloodtolung', C.field, dot(0, 0, 6, C.field), ' data-flow-along="#toLung" class="g-hidden"') +
+        g('bloodfromlung', C.acid, dot(0, 0, 6, C.acid), ' data-flow-along="#fromLung" class="g-hidden"') +
         g('bloodred', C.acid, dot(0, 0, 6, C.acid), ' data-flow-along="#toBody" class="g-hidden"') +
 
         ov('particle', C.field, txt(200, 292, 'red blood cells carry the oxygen', 11, C.field)) +
@@ -1663,18 +1672,21 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
       'notice: show vesselsblue + trace vesselsblue :: Blue tubes carry blood that has NO oxygen left.\n' +
       'notice: show bloodblue + flow bloodblue :: Back from the body — used up.\n' +
       'think: pause "Where must it go before it can be used again?" :: Talk to your partner.\n' +
-      'notice: show vesselsred, bloodred + flow bloodred + label lung :: To the lungs. It comes back RED.\n' +
+      'notice: show bloodtolung + flow bloodtolung :: Up to the lungs \u2014 still blue, still no oxygen on board.\n' +
+      'notice: show vesselsred, bloodfromlung + flow bloodfromlung + label lung :: It picks oxygen up, and comes back RED.\n' +
+      'notice: show bloodred + flow bloodred :: Then the heart sends it out to the rest of you.\n' +
       'explain: overlay energy + label bod     :: Then out to every part of you, dropping oxygen off.\n' +
       'label: label dbl + overlay particle     :: Two loops, not one. That is why it is called a double circulation.',
     reveal:
       'show body, heart, lungs, vesselsblue, vesselsred :: Heart, lungs, body.\n' +
-      'show bloodblue, bloodred + flow bloodblue, bloodred :: Blue back, red out.\n' +
+      'show bloodblue, bloodtolung, bloodfromlung, bloodred + flow bloodblue, bloodtolung, bloodfromlung, bloodred :: Blue in, up to the lungs, back red, out to the body.\n' +
       'label dbl, lung, bod :: A double loop.',
     process:
       'observe: show body, heart, lungs, vesselsblue, vesselsred :: The system at rest.\n' +
       'notice: show bloodblue + flow bloodblue :: Blood returns with no oxygen.\n' +
-      'notice: pulse heart                     :: The heart pushes it to the lungs.\n' +
-      'notice: show bloodred + flow bloodred + label lung :: Oxygen loaded on.\n' +
+      'notice: pulse heart + show bloodtolung + flow bloodtolung :: The heart pushes it to the lungs.\n' +
+      'notice: show bloodfromlung + flow bloodfromlung + label lung :: Oxygen loaded on.\n' +
+      'notice: show bloodred + flow bloodred :: And back out, carrying it.\n' +
       'explain: overlay energy + label bod     :: And out to every cell in your body.',
     retrieve:
       'observe: show body :: A body.\n' +
@@ -2174,7 +2186,11 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
       return g('beam', '#64748b', rect(40, 40, 320, 14, 4)) +
         g('wheel', '#C9803B', circ(200, 82, 26) + circ(200, 82, 6, 1.2)) +
         g('rope', C.ink,
-          '<path id="ropepath" d="M 174 82 L 174 200" fill="none" stroke="' + C.ink + '" stroke-width="3"/>' +
+          /* no id: this asset renders twice on one slide, so a fixed id is a
+             duplicate. If it ever needs to be a motion track, mint one per
+             instance. Hand-written rather than stroke() to keep the geometry
+             unchanged — stroke() would add round caps. */
+          '<path d="M 174 82 L 174 200" fill="none" stroke="' + C.ink + '" stroke-width="3"/>' +
           stroke('M 226 82 L 226 176', 3, C.ink) +
           stroke('M 200 56 A 26 26 0 0 1 226 82', 3, C.ink) +
           stroke('M 200 56 A 26 26 0 0 0 174 82', 3, C.ink)) +

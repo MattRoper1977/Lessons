@@ -236,7 +236,11 @@
       return g('beam', '#64748b', rect(40, 40, 320, 14, 4)) +
         g('wheel', '#C9803B', circ(200, 82, 26) + circ(200, 82, 6, 1.2)) +
         g('rope', C.ink,
-          '<path id="ropepath" d="M 174 82 L 174 200" fill="none" stroke="' + C.ink + '" stroke-width="3"/>' +
+          /* no id: this asset renders twice on one slide, so a fixed id is a
+             duplicate. If it ever needs to be a motion track, mint one per
+             instance. Hand-written rather than stroke() to keep the geometry
+             unchanged — stroke() would add round caps. */
+          '<path d="M 174 82 L 174 200" fill="none" stroke="' + C.ink + '" stroke-width="3"/>' +
           stroke('M 226 82 L 226 176', 3, C.ink) +
           stroke('M 200 56 A 26 26 0 0 1 226 82', 3, C.ink) +
           stroke('M 200 56 A 26 26 0 0 0 174 82', 3, C.ink)) +
