@@ -210,6 +210,12 @@
 /* Decorative title-slide dots must not join the build queue. */
 .slide.active > .title-dots{animation:none}
 
+/* 4.0 A slide is a column flex container that scrolls. Its children therefore
+   shrink below their own content once the slide is fuller than the screen —
+   on a phone the key-idea box was being squashed to a single clipped line.
+   Nothing on a slide should be compressed; the slide scrolls instead. */
+.slide > *{flex-shrink:0}
+
 /* 4.1 The key idea is the anchor of every slide.
    .li-box carries the Key Question / Key Idea / Instructions on all ten
    slides. It read as a passive tinted strip; it now reads as the thing to
@@ -398,6 +404,16 @@
    it stretched to the full width of every slide in the suite and read as a
    banner with a stray word in it. Let it be the size of its own label. */
 .slide > .slide-tag{align-self:flex-start}
+
+/* On a phone the four navigation buttons and the "Starter · 3/10" progress
+   label were both pinned to the bottom of the screen and overlapped, putting
+   the label on top of the Previous button. The controls are tightened so all
+   four still fit on one row, and the label sits clear above them. */
+@media (max-width:640px){
+  .controls{gap:6px;right:10px;flex-wrap:nowrap}
+  .controls button{padding:7px 9px;font-size:.8rem;white-space:nowrap}
+  .progress-label{bottom:54px;font-size:.8rem;padding:4px 10px}
+}
 
 /* ==========================================================================
    9 · REDUCED MOTION
