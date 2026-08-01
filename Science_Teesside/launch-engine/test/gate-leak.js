@@ -33,6 +33,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const { HOLD_MS } = require('./measure.js');   /* standing rule 13 */
 const DECKS = path.join(__dirname, '..', '..', 'Launch');
 const EXEC = process.env.SCI_CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const FILTER = process.argv[2] || '';
@@ -92,9 +93,8 @@ function legible(el) {
 
     for (let i = 0; i < n; i++) {
       await page.evaluate(j => window.showSlide && window.showSlide(j), i);
-      /* longer than the longest fill-mode animation in the shared language
-         (gMorph at .85s), so anything holding a final keyframe is holding it */
-      await page.waitForTimeout(1100);
+      /* the wait lives in measure.js so no instrument re-derives it */
+      await page.waitForTimeout(HOLD_MS);
       slidesWalked++;
       const found = await page.evaluate(({ GATES, legibleSrc }) => {
         const legible = eval('(' + legibleSrc + ')');
