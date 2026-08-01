@@ -1,0 +1,120 @@
+/* ============================================================================
+   GROW ANIMATION FRAMEWORK · Phase 12 — PREMIUM POLISH
+   ---------------------------------------------------------------------------
+   Optional. Load LAST, and only once the teaching is right.
+
+   Everything here exists for one reason: to keep thirty pairs of eyes exactly
+   where the teacher wants them. Nothing here carries meaning of its own — if a
+   pupil has to interpret it, it belongs in grow-motion.css instead.
+
+   The rule this file obeys: polish points AT the science, never at itself.
+   Anything that would compete with a glow or a pulse for attention has been
+   turned down until it doesn't.
+
+     .g-lit          soft top-light and a grounded shadow on the stage
+     .g-depth        layered depth — background recedes, subject sits forward
+     .g-parallax     background drifts a little slower than the subject
+     .g-blur-fast    motion blur on things genuinely travelling fast
+     .g-pan          slow camera pan across a wide scene
+     [data-g-particles] ambient particle field (dust, bubbles, sparks, snow)
+     .g-micro        micro-interaction feedback on anything tappable
+   ========================================================================== */
+
+/* ------------------------------------------------- soft lighting + shadow */
+.g-lit {
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #ffffff 0%, #f6fafc 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .9) inset,
+    0 10px 26px -12px rgba(15, 23, 42, .28),
+    0 2px 6px rgba(15, 23, 42, .06);
+}
+/* the specimen gets a real shadow so it sits ON something */
+.g-lit .g-svg [data-part]:not(.g-hidden) { filter: drop-shadow(0 2px 3px rgba(15, 23, 42, .16)); }
+/* …but glow must always win over the ambient shadow */
+.g-lit .g-svg [data-part].g-glow { filter: none; }
+
+/* ---------------------------------------------------------------- depth */
+.g-depth [data-depth="back"]  { filter: blur(1.1px) saturate(.75); opacity: .68; }
+.g-depth [data-depth="mid"]   { filter: saturate(.92); }
+.g-depth [data-depth="front"] { filter: drop-shadow(0 4px 7px rgba(15, 23, 42, .24)); }
+
+/* ------------------------------------------------------------- parallax
+   Driven by the engine on pointer move / slide entry. Background layers get a
+   smaller --g-par multiplier so they lag behind the subject.               */
+.g-parallax [data-depth] { transition: transform .45s var(--g-ease-out); will-change: transform; }
+.g-parallax [data-depth="back"]  { --g-par: .25; }
+.g-parallax [data-depth="mid"]   { --g-par: .55; }
+.g-parallax [data-depth="front"] { --g-par: 1; }
+
+/* -------------------------------------------------------- motion blur
+   Only for things that are actually moving fast — a struck ball, a spark.
+   On anything slow it just looks like a rendering fault.                    */
+.g-blur-fast { filter: blur(.8px); }
+@supports (filter: url(#g-mblur)) { .g-blur-fast { filter: url(#g-mblur); } }
+
+/* -------------------------------------------------------------- camera pan */
+.g-pan { animation: gPan calc(14s / var(--g-speed)) ease-in-out infinite alternate; }
+@keyframes gPan { from { transform: translateX(0); } to { transform: translateX(var(--g-pan-to, -8%)); } }
+
+/* ------------------------------------------------------------- particles
+   An ambient field behind the science. Deliberately low-contrast: it should
+   be noticed only if you go looking for it.                                */
+.g-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; z-index: 0; }
+.g-particles i {
+  position: absolute; display: block; border-radius: 50%;
+  background: currentColor; opacity: .22;
+  animation: gFloat linear infinite;
+  will-change: transform;
+}
+@keyframes gFloat {
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
+  12%  { opacity: .28; }
+  88%  { opacity: .28; }
+  100% { transform: translate3d(var(--gx, 18px), var(--gy, -120px), 0) scale(1.15); opacity: 0; }
+}
+.g-particles.g-p-dust   { color: #94a3b8; }
+.g-particles.g-p-bubble { color: #38bdf8; }
+.g-particles.g-p-spark  { color: #f59e0b; }
+.g-particles.g-p-heat   { color: #ef4444; }
+.g-stage > .g-canvas, .g-stage > .g-bar { position: relative; z-index: 1; }
+
+/* ------------------------------------------------------ micro-interactions
+   Small, fast, and consistent everywhere. A tap always feels the same.     */
+.g-micro, .g-pc, .g-bar button, .g-xray button, .g-vote .g-chip {
+  transition: transform .14s var(--g-ease-spring), box-shadow .14s, background .14s, border-color .14s;
+}
+.g-micro:active, .g-pc:active, .g-xray button:active, .g-vote .g-chip:active { transform: scale(.96); }
+
+/* a ripple from the point of contact — written by the engine */
+.g-ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .25; animation: gRipple .55s var(--g-ease-out) forwards; }
+@keyframes gRipple { from { transform: scale(0); opacity: .3; } to { transform: scale(2.6); opacity: 0; } }
+
+/* the teacher bar's Next button earns a shimmer when it is the only thing to do */
+.g-bar button.g-next-ready { position: relative; overflow: hidden; }
+.g-bar button.g-next-ready::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .42) 50%, transparent 65%);
+  transform: translateX(-120%); animation: gShimmer 2.6s ease-in-out infinite;
+}
+@keyframes gShimmer { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+
+/* -------------------------------------------------------- smooth easing
+   Anything not otherwise animated still moves like the rest of the suite. */
+.g-stage, .g-wedo, .g-retrieve, .g-misc, .g-story-beat, .g-dual > figure {
+  transition: box-shadow .35s var(--g-ease-in-out), border-color .35s var(--g-ease-in-out), transform .35s var(--g-ease-in-out);
+}
+
+/* --------------------------------------------------------------- restraint */
+@media print {
+  .g-particles { display: none !important; }
+  .g-lit { background: #fff !important; box-shadow: none !important; }
+  .g-blur-fast, .g-depth [data-depth] { filter: none !important; opacity: 1 !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .g-particles { display: none !important; }
+  .g-pan, .g-bar button.g-next-ready::after, .g-ripple { animation: none !important; }
+  .g-parallax [data-depth] { transition: none !important; transform: none !important; }
+  .g-blur-fast { filter: none !important; }
+}
