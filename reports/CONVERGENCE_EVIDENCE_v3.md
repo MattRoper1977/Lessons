@@ -7,8 +7,20 @@
 
 # WALK SHEET — for a room, not a browser
 
+**Walk the slides at the scaling the room is actually set to.** That is the whole
+instruction. Everything below is measured in Chromium at nominal scaling, and a
+classroom is usually not at nominal scaling.
+
+- **Check it in ten seconds:** right-click the desktop → Display settings → *Scale
+  and layout*. Windows-key + I → System → Display gets you to the same place.
+- **125% is a common default on school hardware.** Assume it is on until you have
+  looked, not off.
+- **At 125%, a We Do 2 stage sits under the navigation bar on all five BUILD decks
+  — today, on `main`, before any of this work.** It is worse on `main` than on this
+  branch. The walk is where that gets seen for the first time, because no test in
+  the estate has ever run at a scaled viewport until this pass.
+
 **The one question no harness can answer: does a 256px plate read from the back row?**
-Everything below is measured in Chromium. None of it is a classroom.
 
 ## What to do
 
@@ -34,6 +46,14 @@ Any projector overscan or font difference shows up here first.
 Also worth a look: **W6 slide 4** (`ido1-plate`), the picture that shrank most —
 326px → 256px — and **W4 slide 7** (`wedo1b-rail`), the comparison rail the whole
 frame argument started on.
+
+**On the heading margin, so "5 characters" is not read as an alarm.** The threshold
+at which a heading pushes a stage off the slide is 57 characters. The longest real
+heading in the ten decks is 52 — but it is on a *different slide of a different
+deck*. The headings on the slides that actually fail are **33, 19 and 12**
+characters, so their own margins are 113, 55 and 45. **The 5 is what would remain if
+the estate's longest heading were moved onto its tightest slide.** Nothing is
+currently close; the lint exists so nothing drifts there unnoticed.
 
 ## What the measurements did NOT cover
 
@@ -274,6 +294,97 @@ clipped caption **until the floor is reached**, and after that it cannot.
   any cell here. The six stages clearing by 10px would not survive it.
 - **`system-ui` resolving to a different face.** The `bigfont` fixture tests size,
   not shape; a face with different metrics is not the same test.
+
+---
+
+## JOB 1c — the We Do 2 slide at 125%, quantified for a decision
+
+### This is pre-existing. It is not caused by the convergence.
+
+Stated before any number, because a reader coming to this cold must not conclude the
+branch broke the decks. The fault is **live on `main` today**, in decks that will be
+taught in September.
+
+| viewport | scaling | `main` clears | **this branch clears** | regressions |
+|---|---|---|---|---:|
+| 819×614 | 1024×768 @125% | **5 of 25** | **20 of 25** | **0** |
+| 1093×614 | 1366×768 @125% | **7 of 25** | **20 of 25** | **0** |
+| 683×512 | 1024×768 @150% | **0 of 25** | **5 of 25** | **0** |
+
+The convergence work improves every scaled viewport and regresses none. What it also
+did was *look* — no test in this estate had ever run at a scaled viewport before.
+
+### One template, not a spread
+
+At **125%** the only stage type that fails, on any of the five decks, is
+**`wedo2-rule`**. Confirmed against the matrix:
+
+| viewport | clear | failing stage types |
+|---|---|---|
+| 1280×720, 1366×768, 1920×1080, 1024×768, 1536×864 | 25/25 each | none |
+| 819×614 | 20/25 | **`wedo2-rule` only** |
+| 1093×614 | 20/25 | **`wedo2-rule` only** |
+| 683×512 | 5/25 | 15 types — every stage in the unit |
+
+So at 125% this is **a single template across five decks**, which is a tractable
+deck-design fix. At 150% it is everything, which is not.
+
+### What the We Do 2 slide actually renders, at 819×614
+
+Slide box 544px tall, usable to 539px (navigation top at 557px). W7, every element:
+
+| height | margin | element |
+|---:|---:|---|
+| 24 | 6 | `span.slide-tag` — "🤝 We Do 2 · sort, then write" |
+| 39 | 10 | `h2` — "Put it right" |
+| 41 | 22 | `div.li-box` — the instruction |
+| 33 | 4 | reset / check controls |
+| 97 | 8 | the sort activity's cards |
+| 147 | 0 | the CORRECT / WRONG WAY bins |
+| 19 | 12 | spacer |
+| 109 | 16 | **`div.ba-stage`** — the rule stage and its picture |
+| 33 | 0 | WAGOLL controls |
+| 38 | 8 | `div.scaffold-box` |
+| 28 | 14 | `div.period-break` — "End of Period 1" |
+| **708** | | **total content, against 543px of slide** |
+
+**Eleven elements. The picture is 109px of them, and it is already at its 96px
+floor** — `--g-fit: 96px` on all five decks. The overflow is 168–255px depending on
+deck. Nothing in the layout layer can absorb that.
+
+### Minimum viewport height at which it fits as authored
+
+Bisected at width 819:
+
+| deck | fits at | 614px is short by |
+|---|---:|---:|
+| `W3_Backbones` | 665px | **51px** |
+| `W4_Muscle_Pairs` | 703px | **89px** |
+| `W6_Balanced_Plate` | 703px | **89px** |
+| `W5_Right_Nutrition` | 708px | **94px** |
+| `W7_Where_Food_Comes_From` | 762px | **148px** |
+
+### Four options, with their real costs. **None is chosen — this is Matt's call.**
+
+1. **Split the stage across two slides.** Sorting on one, the rule and WAGOLL on the
+   next. Costs: a thirteenth slide in five decks, a renumbered print pack, and the
+   period-break note moves. Gains ~250px, which clears 125% comfortably and still
+   fails at 150%. The most durable of the four and the most work.
+2. **Make the sort activity sequential or collapsible.** Show the bins only after the
+   cards are placed. Costs: new interaction code in the shared engine, and the
+   teacher loses the at-a-glance view of both halves. Gains ~150–240px (the cards
+   and bins are 244px together), enough for 125% on four decks and marginal on W7.
+3. **Cut content from the stage.** Costs: it is the evidence-loop slide, and the
+   scaffold box and period-break note are both there for a reason. Gains 66–80px —
+   **not enough on its own** for any deck except W3.
+4. **Set the room's display scaling to 100%.** Costs: one setting per machine, no
+   code, no deck change, and it fixes every deck at every viewport in this table at
+   once — 1024×768 at 100% clears 25/25 with 10px to spare. Against that: it makes
+   every other application on that machine smaller, which is exactly why 125% is the
+   default, and it is a per-machine change that a new image or a new laptop undoes
+   silently. **Probably the cheapest thing on this list and the least durable.**
+
+Options 1 and 2 are the only two that also help at 150%; neither fixes it.
 
 ---
 
