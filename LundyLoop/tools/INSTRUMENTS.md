@@ -294,6 +294,14 @@ of `.git/config`, which pushing to a token-bearing `origin` would not.
 
 24. **A promotional claim is a claim surface, and every number on it is derived, never typed.** Marketing copy leaves the repository and cannot be corrected in place; a wrong number in a video description outlives every fix. This estate has already shipped **"twenty-eight" beside "30 of 30"** in the same artefact. Every figure that reached the launch film — 15 lessons, 5 weeks, 48 cards, 7 leagues, 16 nations, 0 of 27 pages setting a cookie — was computed from the files being described, at build time, and the one fact taken from a grep instead of the rendered page was wrong: the LAUNCH biology decks were read as **AQA** because `AQA` appears in all fifteen, when the rendered badge says **Pearson Edexcel GCSE Biology 1BI0 Foundation** and every `AQA` hit was the phrase *"AQA UAS science units"* — the Unit Award Scheme link, not the exam board. Caught by reading a screenshot, one step before it went on screen.
 
+25. **A census returning a non-zero count must have every hit individually classified, not merely counted. A count is not an inventory.** R16 and R22 protect against a *false zero* — a question closed without examining its input set. Nothing protected against the mirror image: a **false non-zero**, where the search returns hits, the hits get counted, the count gets reported, and no one ever opens them. It is more dangerous than it looks, because a non-zero result *feels* like evidence of work done.
+
+    **Provenance, two sightings in one pass.** A census of FormSubmit endpoints across four repos reported **4 distinct endpoints**. There is **one**. The regex had captured trailing markdown punctuation — a backtick and a full stop — from documents *quoting* the URL, so `…gmail.com`, `` …gmail.com` `` and `…gmail.com`. counted as three separate endpoints. A four-endpoint estate and a one-endpoint estate call for completely different work.
+
+    The same pass then did it again while writing this rule. A `mailto:` census reported the file count rising from 20 to 23 while occurrences stayed flat — arithmetically impossible for three genuinely new files. `grep -rl` output had been split on **whitespace**, so the Lessons path `5_6 Local Choice/` became three phantom "files" with zero hits each. Re-run with `grep -rlZ` and NUL delimiters: **21 files**, and the real delta was a single line in a report quoting the string.
+
+    **The practical form:** print the hits, not the tally. If the list is too long to print, classify it into buckets and print the bucket counts *with one example each* — and make the buckets exhaustive, because summing two of three buckets is how the second sighting above got its wrong file count. Prefer `-Z`/NUL delimiters over whitespace splitting whenever paths are involved; this estate has directory names with spaces in them.
+
 ---
 
 ## Seed conventions carried forward
