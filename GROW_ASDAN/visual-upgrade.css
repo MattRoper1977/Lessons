@@ -1,0 +1,732 @@
+/* GROW ASDAN shared teaching-and-interaction layer.
+   Existing lesson wording, strand palettes and authored controls remain authoritative. */
+:root {
+  --grow-primary: var(--lo-border, #4C9A6F);
+  --grow-model: var(--ido-border, #C0784A);
+  --grow-together: var(--wedo-border, #2F8F6B);
+  --grow-focus: var(--task-border, #D3A03C);
+  --grow-success: var(--success, #16a34a);
+  --grow-error: var(--error, #dc2626);
+  --grow-ink: var(--text, #1f2937);
+  --grow-surface: rgba(255,255,255,.96);
+  --grow-shadow: 0 18px 42px rgba(15,23,42,.14);
+  --grow-shadow-raised: 0 24px 60px rgba(15,23,42,.2);
+  --grow-ease: cubic-bezier(.2,.7,.2,1);
+}
+
+html[data-grow-upgrade="ready"] {
+  scroll-behavior: smooth;
+}
+
+html[data-grow-upgrade="ready"] body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide-container {
+  background:
+    radial-gradient(circle at 10% 12%, color-mix(in srgb, var(--grow-primary) 9%, transparent), transparent 34%),
+    radial-gradient(circle at 90% 86%, color-mix(in srgb, var(--grow-together) 7%, transparent), transparent 32%),
+    var(--bg, #fff);
+}
+
+.slide {
+  isolation: isolate;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  box-shadow: var(--grow-shadow);
+  transition: box-shadow .28s var(--grow-ease), border-color .28s var(--grow-ease);
+}
+
+.slide.active {
+  box-shadow: var(--grow-shadow-raised);
+}
+
+.slide.active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--grow-primary) 4%, transparent), transparent 40%);
+}
+
+.slide h1,
+.slide h2 {
+  text-wrap: balance;
+}
+
+.slide p,
+.slide li,
+.note,
+.bank {
+  text-wrap: pretty;
+}
+
+.li-box,
+.ido-box,
+.task-box,
+.scaffold-box,
+.aspire-box,
+.sc-box,
+.wedo-capture,
+.compare-card,
+.react-q,
+.bio-block,
+.lundy-box,
+.card,
+.note,
+.bank {
+  box-shadow: 0 7px 18px rgba(15,23,42,.07);
+}
+
+.card {
+  transition: transform .18s var(--grow-ease), box-shadow .18s var(--grow-ease), border-color .18s var(--grow-ease);
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15,23,42,.12);
+}
+
+.controls,
+.fact-nav,
+.timer-btns,
+.level-toggle,
+.v5-step-controls {
+  align-items: center;
+}
+
+.controls {
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+  border: 1px solid rgba(148,163,184,.55);
+  border-radius: 14px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(15,23,42,.16);
+  flex-wrap: wrap;
+  touch-action: manipulation;
+}
+
+.controls button {
+  flex: 0 0 auto;
+}
+
+:where(button, a, [role="button"], [tabindex]):focus-visible {
+  outline: 4px solid var(--grow-focus) !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 7px rgba(255,255,255,.94) !important;
+}
+
+:where(button, [role="button"], .pres-card, .match-pill, .match-target, .hl-sentence) {
+  min-height: 44px;
+}
+
+:where(button, [role="button"], .pres-card, .match-pill, .match-target, .hl-sentence):active {
+  transform: translateY(1px) scale(.99) !important;
+}
+
+/* One-off slide entry. Content is hidden only while grow-entering is present,
+   so a failed enhancement script cannot leave teaching material invisible. */
+html[data-grow-upgrade="ready"] .slide.grow-entering .grow-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+html[data-grow-upgrade="ready"] .slide.active.grow-entering.grow-ready .grow-reveal {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity .38s var(--grow-ease),
+    transform .38s var(--grow-ease);
+  transition-delay: min(calc(var(--grow-order, 0) * 55ms), 440ms);
+}
+
+.slide:not(.active) *,
+.slide:not(.active) *::before,
+.slide:not(.active) *::after {
+  animation-play-state: paused !important;
+}
+
+.slide.grow-motion-settled :where(.glow, .spin, .hand, .ride, .rip, .sweep, .title-dot, .brain-icon, .tt-hero-icon) {
+  animation-play-state: paused !important;
+}
+
+/* Shared activity progress: compact enough for teacher display, structural only. */
+.grow-activity-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 0 0 auto;
+  margin: 2px 170px 12px 0;
+}
+
+.grow-activity-rail {
+  --grow-progress: 0%;
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 130px;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--grow-together) 55%, #cbd5e1);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--grow-together) 11%, #fff);
+  box-shadow: inset 0 1px 2px rgba(15,23,42,.1);
+}
+
+.grow-activity-fill {
+  display: block;
+  width: var(--grow-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--grow-together) 72%, #fff),
+    var(--grow-together));
+  transition: width .36s var(--grow-ease);
+}
+
+.grow-activity-count {
+  min-width: 42px;
+  padding: 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--grow-together) 42%, #cbd5e1);
+  border-radius: 999px;
+  background: #fff;
+  color: color-mix(in srgb, var(--grow-together) 74%, #1f2937);
+  font-size: .76rem;
+  line-height: 1;
+  font-weight: 900;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.grow-random-pick {
+  width: 38px;
+  min-height: 38px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--grow-together);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--grow-together);
+  box-shadow: 0 4px 10px rgba(15,23,42,.1);
+  font-size: 1.05rem;
+}
+
+.grow-random-pick:hover {
+  background: color-mix(in srgb, var(--grow-together) 10%, #fff);
+  color: var(--grow-together);
+  transform: translateY(-1px) rotate(-8deg);
+}
+
+.slide.grow-activity-complete .grow-activity-fill {
+  animation: growMeterComplete .58s var(--grow-ease) 1;
+}
+
+/* Pass 1A: teacher-led discussion and reveal cards. */
+.pres-card {
+  position: relative;
+  isolation: isolate;
+  padding-inline-end: 3rem !important;
+}
+
+.pres-card::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 50%;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  transform: translateY(-50%);
+  font-size: .95rem;
+  line-height: 1;
+  font-weight: 900;
+  opacity: .46;
+}
+
+.pres-card.done::after {
+  content: "✓";
+  opacity: 1;
+}
+
+.pres-card.grow-picked {
+  outline: 4px double var(--grow-focus);
+  outline-offset: 4px;
+  animation: growCardPick .72s var(--grow-ease) 1;
+}
+
+.pres-card[data-grow-order]::before {
+  content: attr(data-grow-order);
+  position: absolute;
+  inset-inline-start: -10px;
+  top: -10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--grow-together);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(15,23,42,.18);
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.pres-card.done {
+  border-style: double !important;
+  border-width: 4px !important;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.76), 0 8px 18px rgba(15,23,42,.08);
+}
+
+.grow-discussion-trail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: -2px 0 12px;
+}
+
+.grow-discussion-dot {
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--grow-together) 46%, #cbd5e1);
+  border-radius: 50%;
+  background: #fff;
+  color: color-mix(in srgb, var(--grow-together) 72%, #334155);
+  box-shadow: none;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.grow-discussion-dot.done {
+  border-style: double;
+  border-width: 4px;
+  background: color-mix(in srgb, var(--grow-together) 13%, #fff);
+}
+
+.grow-discussion-dot.done::after {
+  content: "✓";
+  margin-inline-start: 1px;
+  font-size: .68rem;
+}
+
+/* Pass 1B: matching as a visible connection-building activity. */
+.match-pill,
+.match-target {
+  position: relative;
+}
+
+.match-pill.selected {
+  outline: 4px double currentColor;
+  outline-offset: 3px;
+  animation: growSelectReady .34s var(--grow-ease) both;
+}
+
+.slide.grow-has-selection .match-pill:not(.selected):not(.placed) {
+  opacity: .55;
+}
+
+.slide.grow-has-selection .match-target:not(.correct) {
+  animation: growTargetReady .72s var(--grow-ease) 1;
+}
+
+.match-target[data-grow-state] {
+  padding-inline-end: 3.1rem;
+}
+
+.match-target[data-grow-state]::after {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: rgba(255,255,255,.94);
+  transform: translateY(-50%);
+  font-size: 1.15rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.match-target[data-grow-state="correct"]::after {
+  content: "✓";
+}
+
+.match-target[data-grow-state="incorrect"]::after {
+  content: "×";
+}
+
+.match-target.correct {
+  border-style: double !important;
+  border-width: 4px !important;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.78), 0 0 0 2px currentColor;
+}
+
+.match-target.wrong {
+  border-style: dashed !important;
+  border-width: 4px !important;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.78);
+}
+
+.grow-pair-trail {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.grow-pair-trail:empty {
+  display: none;
+}
+
+.grow-pair-chip {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1.45fr);
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border: 2px solid color-mix(in srgb, var(--grow-together) 42%, #cbd5e1);
+  border-left: 6px double var(--grow-together);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--grow-together) 6%, #fff);
+  color: #334155;
+  font-size: .85rem;
+  line-height: 1.35;
+  animation: growPairIn .32s var(--grow-ease) both;
+}
+
+.grow-pair-source,
+.grow-pair-destination {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.grow-pair-source {
+  font-weight: 900;
+  color: color-mix(in srgb, var(--grow-together) 76%, #1f2937);
+}
+
+.grow-pair-arrow {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--grow-together);
+  border-radius: 50%;
+  color: var(--grow-together);
+  background: #fff;
+  font-weight: 900;
+}
+
+/* Existing WAGOLL remains the model; the shared layer only strengthens reading focus. */
+.wagoll-panel.visible {
+  border-left-style: double;
+  border-left-width: 7px;
+  box-shadow: 0 14px 30px rgba(15,23,42,.12);
+}
+
+.wagoll-tag.show {
+  border-style: double;
+  animation: growTagLand .32s var(--grow-ease) both;
+}
+
+.fact-dot[aria-current="step"] {
+  outline: 3px double currentColor;
+  outline-offset: 3px;
+  transform: scale(1.25);
+}
+
+/* Pass 2: purposeful SVG replay and a short teaching spotlight. */
+.ilm {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+}
+
+.grow-diagram-replay-icon {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  z-index: 4;
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--grow-primary) 66%, #fff);
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  color: var(--grow-primary);
+  box-shadow: 0 5px 12px rgba(15,23,42,.12);
+  font-size: 1rem;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.grow-diagram-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-125%);
+  background: linear-gradient(105deg, transparent 34%, rgba(255,255,255,.68) 49%, transparent 64%);
+}
+
+.ilm.grow-diagram-replaying .grow-diagram-sweep {
+  animation: growDiagramSweep .95s var(--grow-ease) .08s 1 both;
+}
+
+.ilm.grow-diagram-replaying svg {
+  animation: growDiagramSettle .62s var(--grow-ease) 1 both;
+}
+
+.ilm svg :where(.draw) {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.ilm svg :where(.pop, .rise, .fill, .draw) {
+  will-change: transform, opacity, stroke-dashoffset;
+}
+
+.ilm svg :where(.glow, .rip) {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--grow-primary) 35%, transparent));
+}
+
+.grow-live-region {
+  position: fixed !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@keyframes growMeterComplete {
+  0%,100% { filter: none; }
+  50% { filter: brightness(1.22); }
+}
+
+@keyframes growCardPick {
+  0% { transform: scale(.98); box-shadow: 0 0 0 0 color-mix(in srgb, var(--grow-focus) 38%, transparent); }
+  55% { transform: scale(1.025); box-shadow: 0 0 0 8px color-mix(in srgb, var(--grow-focus) 0%, transparent); }
+  100% { transform: scale(1); }
+}
+
+@keyframes growSelectReady {
+  0% { transform: scale(.98); }
+  65% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+
+@keyframes growTargetReady {
+  0%,100% { box-shadow: none; }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--grow-together) 20%, transparent); }
+}
+
+@keyframes growPairIn {
+  from { opacity: 0; transform: translateX(-9px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes growTagLand {
+  from { opacity: 0; transform: translateY(5px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes growDiagramSweep {
+  0% { opacity: 0; transform: translateX(-125%); }
+  22% { opacity: .8; }
+  100% { opacity: 0; transform: translateX(125%); }
+}
+
+@keyframes growDiagramSettle {
+  0% { opacity: .72; transform: scale(.985); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 900px) {
+  .slide {
+    width: 96%;
+    height: 94%;
+    padding: 28px;
+    border-radius: 16px;
+  }
+
+  .controls {
+    right: 10px;
+    bottom: 14px;
+    gap: 6px;
+  }
+
+  .controls button {
+    padding: 9px 13px;
+  }
+
+  .content-grid,
+  .arrival-grid,
+  .compare-grid-3,
+  .react-panel,
+  .lundy-grid {
+    gap: 14px;
+  }
+
+  .grow-activity-bar {
+    margin-right: 130px;
+  }
+}
+
+@media (max-width: 640px) {
+  .slide {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border-top-width: 7px;
+    padding: 22px 18px 148px;
+  }
+
+  .slide h1 {
+    font-size: clamp(1.65rem, 8vw, 2.15rem);
+  }
+
+  .slide h2 {
+    margin-right: 0;
+    font-size: clamp(1.35rem, 6.5vw, 1.8rem);
+  }
+
+  .content-grid,
+  .arrival-grid,
+  .compare-grid-3,
+  .react-panel,
+  .lundy-grid,
+  .pres-wrap {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controls {
+    left: 8px;
+    right: 8px;
+    bottom: 12px;
+    max-width: none;
+    justify-content: center;
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+
+  .controls button {
+    flex: 1 1 92px;
+    min-width: 0;
+  }
+
+  .progress-label {
+    left: 12px;
+    right: 12px;
+    bottom: 108px;
+    max-width: calc(100vw - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .xp-wrap {
+    max-width: calc(100vw - 28px);
+  }
+
+  .grow-activity-bar {
+    margin: 2px 0 12px;
+  }
+
+  .grow-pair-chip {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .grow-pair-arrow {
+    width: 24px;
+    height: 24px;
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-grow-upgrade="ready"] {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html[data-grow-upgrade="ready"] .slide.grow-entering .grow-reveal,
+  html[data-grow-upgrade="ready"] .slide.active.grow-entering.grow-ready .grow-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .grow-diagram-sweep {
+    display: none !important;
+  }
+}
+
+@media print {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    filter: none !important;
+  }
+
+  .slide,
+  .card,
+  .note,
+  .bank,
+  .li-box,
+  .ido-box,
+  .task-box,
+  .scaffold-box,
+  .aspire-box,
+  .sc-box,
+  .wedo-capture {
+    box-shadow: none !important;
+  }
+
+  .grow-live-region,
+  .grow-activity-bar,
+  .grow-discussion-trail,
+  .grow-pair-trail,
+  .grow-diagram-replay-icon,
+  .grow-diagram-sweep,
+  .pres-card::after,
+  .pres-card[data-grow-order]::before,
+  .match-target[data-grow-state]::after {
+    display: none !important;
+  }
+
+  .pres-card,
+  .match-target[data-grow-state] {
+    padding-inline-end: revert !important;
+  }
+}
