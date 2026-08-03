@@ -1,0 +1,42 @@
+name: Agent Art Teesside bootstrap
+
+on:
+  push:
+    branches:
+      - agent/art-teesside-visual-teaching-upgrade-20260803
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the exact branch revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record immutable source state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p agent-art-bootstrap
+          git rev-parse HEAD | tee agent-art-bootstrap/HEAD.txt
+          git log -1 --format='%H%n%s%n%cI' | tee agent-art-bootstrap/commit.txt
+          find Art_Teesside -type f -print0 | sort -z | tr '\0' '\n' > agent-art-bootstrap/art-files.txt
+          find Art_Teesside -type f -name '*.html' -print0 | sort -z | tr '\0' '\n' > agent-art-bootstrap/art-html-files.txt
+          printf 'Art_Teesside HTML: ' > agent-art-bootstrap/counts.txt
+          wc -l < agent-art-bootstrap/art-html-files.txt >> agent-art-bootstrap/counts.txt
+          tar --exclude='.git' --exclude='lessons-source.tgz' -czf lessons-source.tgz .
+
+      - name: Upload reproducible checkout
+        uses: actions/upload-artifact@v4
+        with:
+          name: lessons-source-${{ github.sha }}
+          path: |
+            lessons-source.tgz
+            agent-art-bootstrap/
+          if-no-files-found: error
+          retention-days: 3
