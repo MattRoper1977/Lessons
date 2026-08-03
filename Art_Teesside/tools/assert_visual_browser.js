@@ -72,6 +72,57 @@ function check(condition, label, failures, detail = '') {
   if (!condition) failures.push(detail ? `${label}: ${detail}` : label);
 }
 
+async function slideState(page) {
+  return page.evaluate(() => {
+    const slides = [...document.querySelectorAll('.slide')];
+    const visible = slides.map((slide, index) => ({
+      index,
+      visible: getComputedStyle(slide).display !== 'none',
+      activeClass: slide.classList.contains('active'),
+    }));
+    const visibleSlides = visible.filter((entry) => entry.visible);
+    return {
+      total: slides.length,
+      visibleCount: visibleSlides.length,
+      activeClassCount: visible.filter((entry) => entry.activeClass).length,
+      activeIndex: visibleSlides.length === 1 ? visibleSlides[0].index : -1,
+    };
+  });
+}
+
+async function moveToSlide(page, targetIndex) {
+  const total = await page.locator('.slide').count();
+  if (!Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= total) {
+    throw new Error(`invalid target slide ${targetIndex} for population ${total}`);
+  }
+  for (let guard = 0; guard <= total; guard += 1) {
+    const state = await slideState(page);
+    if (state.visibleCount !== 1 || state.activeClassCount !== 1) {
+      throw new Error(`ambiguous active slide while moving: ${JSON.stringify(state)}`);
+    }
+    if (state.activeIndex === targetIndex) return state;
+    const label = state.activeIndex < targetIndex ? 'Next' : 'Previous';
+    await page.locator('.controls button').filter({ hasText: label }).first().click();
+    await page.waitForTimeout(18);
+  }
+  throw new Error(`failed to reach slide ${targetIndex}`);
+}
+
+async function hubState(page) {
+  return page.evaluate(() => {
+    const grid = document.querySelector('.grid');
+    const cards = grid ? [...grid.querySelectorAll(':scope > a')] : [];
+    const skip = document.querySelector('.art-skip-link');
+    return {
+      cards: cards.length,
+      animated: cards.filter((card) => card.classList.contains('art-card-enter')).length,
+      labelled: cards.filter((card) => !!card.getAttribute('aria-label')).length,
+      gridId: grid ? grid.id : '',
+      skipHref: skip ? skip.getAttribute('href') : '',
+    };
+  });
+}
+
 async function pageState(page) {
   return page.evaluate(() => {
     const controls = [...document.querySelectorAll('.controls button')].map((button) => {
@@ -90,6 +141,7 @@ async function pageState(page) {
     });
     const slides = [...document.querySelectorAll('.slide')];
     const active = slides.filter((slide) => getComputedStyle(slide).display !== 'none');
+    const activeIndex = active.length === 1 ? slides.indexOf(active[0]) : -1;
     return {
       ready: document.documentElement.getAttribute('data-art-teach-boot'),
       kind: document.documentElement.getAttribute('data-art-page'),
@@ -97,7 +149,8 @@ async function pageState(page) {
       innerWidth,
       slides: slides.length,
       active: active.length,
-      currentSlide: typeof window.currentSlide === 'number' ? window.currentSlide : null,
+      activeClass: slides.filter((slide) => slide.classList.contains('active')).length,
+      activeIndex,
       controls,
       visualCss: [...document.styleSheets].some((sheet) => (sheet.href || '').includes('art-teach.css')),
       visualJs: !!window.ArtTeach,
@@ -119,20 +172,16 @@ async function smoke(page, file, viewport, baseUrl, failures) {
   const lesson = LESSON_RE.test(path.basename(file));
   if (!lesson) {
     check(state.kind === 'hub', 'hub classified correctly', failures, String(state.kind));
-    const hub = await page.evaluate(() => ({
-      cards: document.querySelectorAll('.grid > a').length,
-      animated: document.querySelectorAll('.grid > a.art-card-enter').length,
-      skip: !!document.querySelector('.art-skip-link'),
-      labels: [...document.querySelectorAll('.grid > a')].every((card) => card.getAttribute('aria-label')),
-    }));
-    check(hub.cards > 0, 'hub exposes lesson/resource cards', failures);
-    check(hub.animated === hub.cards, 'hub cards receive ordered visual entry', failures, `${hub.animated}/${hub.cards}`);
-    check(hub.skip && hub.labels, 'hub keyboard/accessibility enhancements present', failures);
+    const hub = await hubState(page);
+    check(hub.cards > 0, 'hub exposes primary lesson/resource cards', failures);
+    check(hub.animated === hub.cards, 'primary hub cards receive ordered visual entry', failures, `${hub.animated}/${hub.cards}`);
+    check(hub.labelled === hub.cards, 'primary hub cards receive accessible names', failures, `${hub.labelled}/${hub.cards}`);
+    check(hub.gridId && hub.skipHref === `#${hub.gridId}`, 'hub skip link targets the primary card grid', failures, JSON.stringify(hub));
   } else {
     check(state.kind === 'lesson', 'lesson classified correctly', failures, String(state.kind));
     check(state.visualJs, 'ArtTeach lifecycle loaded', failures);
     check(state.slides === 10, 'ten authored slides present', failures, String(state.slides));
-    check(state.active === 1 && state.currentSlide === 0, 'intended initial slide is uniquely active', failures, JSON.stringify(state));
+    check(state.active === 1 && state.activeClass === 1 && state.activeIndex === 0, 'intended initial slide is uniquely active', failures, JSON.stringify(state));
     for (const control of state.controls) {
       check(control.visible, `control visible: ${control.text}`, failures);
       check(control.left >= -1 && control.right <= viewport.width + 1, `control horizontally reachable: ${control.text}`, failures, JSON.stringify(control));
@@ -152,13 +201,13 @@ async function smoke(page, file, viewport, baseUrl, failures) {
     const previous = page.locator('.controls button').filter({ hasText: 'Previous' }).first();
     await next.click();
     await page.waitForTimeout(70);
-    let nav = await page.evaluate(() => ({ current: window.currentSlide, active: document.querySelectorAll('.slide.active').length, mutations: window.__artSlideMutations }));
-    check(nav.current === 1 && nav.active === 1, 'pointer Next navigation works', failures, JSON.stringify(nav));
+    let nav = { ...(await slideState(page)), mutations: await page.evaluate(() => window.__artSlideMutations) };
+    check(nav.activeIndex === 1 && nav.visibleCount === 1 && nav.activeClassCount === 1, 'pointer Next navigation works', failures, JSON.stringify(nav));
     await previous.click();
     await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(70);
-    nav = await page.evaluate(() => ({ current: window.currentSlide, active: document.querySelectorAll('.slide.active').length, mutations: window.__artSlideMutations }));
-    check(nav.current === 1 && nav.active === 1, 'keyboard navigation works', failures, JSON.stringify(nav));
+    nav = { ...(await slideState(page)), mutations: await page.evaluate(() => window.__artSlideMutations) };
+    check(nav.activeIndex === 1 && nav.visibleCount === 1 && nav.activeClassCount === 1, 'keyboard navigation works', failures, JSON.stringify(nav));
     check(nav.mutations < 30, 'slide lifecycle does not recurse', failures, `${nav.mutations} mutations`);
     const beforeIdle = nav.mutations;
     await page.waitForTimeout(220);
@@ -181,24 +230,24 @@ async function deepLesson(page, file, baseUrl, failures) {
     await page.locator('.controls button').filter({ hasText: 'Next' }).first().click();
     await page.waitForTimeout(18);
   }
-  const atEnd = await page.evaluate(() => ({
-    current: window.currentSlide,
-    active: document.querySelectorAll('.slide.active').length,
-    progress: document.getElementById('progressBar') ? document.getElementById('progressBar').style.width : '',
-  }));
-  check(atEnd.current === total - 1 && atEnd.active === 1, 'full forward navigation reaches last slide', failures, JSON.stringify(atEnd));
+  const atEnd = {
+    ...(await slideState(page)),
+    progress: await page.evaluate(() => document.getElementById('progressBar') ? document.getElementById('progressBar').style.width : ''),
+  };
+  check(atEnd.activeIndex === total - 1 && atEnd.visibleCount === 1 && atEnd.activeClassCount === 1, 'full forward navigation reaches last slide', failures, JSON.stringify(atEnd));
   check(atEnd.progress === '100%', 'authored progress reaches 100%', failures, atEnd.progress);
   for (let index = total - 1; index > 0; index -= 1) {
     await page.locator('.controls button').filter({ hasText: 'Previous' }).first().click();
     await page.waitForTimeout(12);
   }
-  check((await page.evaluate(() => window.currentSlide)) === 0, 'full backward navigation returns to first slide', failures);
+  const backAtStart = await slideState(page);
+  check(backAtStart.activeIndex === 0 && backAtStart.visibleCount === 1 && backAtStart.activeClassCount === 1, 'full backward navigation returns to first slide', failures, JSON.stringify(backAtStart));
 
-  // Presentation-card activity: teacher pick must focus without revealing, then keyboard activation updates real progress.
   const presentationIndex = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.pres-card')));
   check(presentationIndex >= 0, 'presentation-card activity exists', failures);
   if (presentationIndex >= 0) {
-    await page.evaluate((index) => { window.currentSlide = index; window.showSlide(index); window.presReset(); }, presentationIndex);
+    await moveToSlide(page, presentationIndex);
+    await page.evaluate(() => window.presReset());
     await page.waitForTimeout(80);
     const pick = page.locator('.slide.active .at-random-pick');
     check((await pick.count()) === 1, 'teacher random card picker exists once', failures, String(await pick.count()));
@@ -220,11 +269,11 @@ async function deepLesson(page, file, baseUrl, failures) {
     await page.evaluate(() => window.presReset());
   }
 
-  // Matching activity: correct, reveal and reset must keep meter and connection trail synchronised.
   const matchingIndex = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.match-pill') && slide.querySelector('.match-target')));
   check(matchingIndex >= 0, 'matching activity exists', failures);
   if (matchingIndex >= 0) {
-    await page.evaluate((index) => { window.currentSlide = index; window.showSlide(index); window.resetMatch(); }, matchingIndex);
+    await moveToSlide(page, matchingIndex);
+    await page.evaluate(() => window.resetMatch());
     await page.waitForTimeout(60);
     const match = await page.evaluate(() => {
       const slide = document.querySelector('.slide.active');
@@ -265,7 +314,7 @@ async function deepLesson(page, file, baseUrl, failures) {
 
   const stepIndex = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.v5-step-controls button')));
   if (stepIndex >= 0) {
-    await page.evaluate((index) => { window.currentSlide = index; window.showSlide(index); }, stepIndex);
+    await moveToSlide(page, stepIndex);
     await page.locator('.slide.active .v5-step-controls button').click();
     const step = await page.evaluate(() => ({
       revealed: document.querySelectorAll('.slide.active .v5-step.revealed').length,
@@ -277,7 +326,7 @@ async function deepLesson(page, file, baseUrl, failures) {
 
   const illuminatorIndex = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.ilm')));
   if (illuminatorIndex >= 0) {
-    await page.evaluate((index) => { window.currentSlide = index; window.showSlide(index); }, illuminatorIndex);
+    await moveToSlide(page, illuminatorIndex);
     await page.waitForTimeout(80);
     const replay = page.locator('.slide.active .ilm-replay');
     check((await replay.count()) === 1, 'diagram replay control exists exactly once', failures, String(await replay.count()));
@@ -285,7 +334,7 @@ async function deepLesson(page, file, baseUrl, failures) {
       await replay.click();
       check(await page.locator('.slide.active .ilm.at-ilm-replaying').count() === 1, 'diagram replay restarts from controlled state', failures);
     }
-    await page.evaluate(() => window.nextSlide());
+    await page.locator('.controls button').filter({ hasText: 'Next' }).first().click();
     const paused = await page.evaluate(() => {
       const ilm = document.querySelector('.slide:not(.active) .ilm');
       if (!ilm) return true;
@@ -295,28 +344,40 @@ async function deepLesson(page, file, baseUrl, failures) {
     check(paused, 'inactive-slide motion is paused', failures);
   }
 
-  // Timers and teacher-facing modals remain authored and operational.
   const timer = await page.evaluate(async () => {
     if (typeof window.startTimer !== 'function') return null;
+    const initial = document.getElementById('timerDisplay')?.textContent || '';
     window.startTimer();
     await new Promise((resolve) => setTimeout(resolve, 1100));
-    const running = window.timerRunning === true;
     const display = document.getElementById('timerDisplay')?.textContent || '';
-    window.pauseTimer(); window.resetTimer();
-    return { running, display, reset: document.getElementById('timerDisplay')?.textContent || '' };
+    window.pauseTimer();
+    window.resetTimer();
+    const reset = document.getElementById('timerDisplay')?.textContent || '';
+    return { initial, display, reset };
   });
-  if (timer) check(timer.running && /^\d\d:\d\d$/.test(timer.display) && /^\d\d:\d\d$/.test(timer.reset), 'authored timer runs and resets', failures, JSON.stringify(timer));
+  if (timer) check(
+    /^\d\d:\d\d$/.test(timer.initial)
+      && /^\d\d:\d\d$/.test(timer.display)
+      && timer.display !== timer.initial
+      && timer.reset === timer.initial,
+    'authored timer runs and resets',
+    failures,
+    JSON.stringify(timer),
+  );
 
   const modals = await page.evaluate(() => {
+    localStorage.setItem('mbm_cc_v1', JSON.stringify([{ n: 'Regression Learner', g: '2' }]));
     window.showTABrief();
-    const ta = document.getElementById('ta-modal')?.classList.contains('visible');
+    const ta = document.getElementById('ta-modal')?.classList.contains('visible') === true;
     document.getElementById('ta-modal')?.classList.remove('visible');
     window.showColdCall();
-    const cold = document.getElementById('cc-modal')?.classList.contains('visible');
+    const cold = document.getElementById('cc-modal')?.classList.contains('visible') === true;
+    const name = document.getElementById('cc-name')?.textContent || '';
     document.getElementById('cc-modal')?.classList.remove('visible');
-    return { ta, cold };
+    localStorage.removeItem('mbm_cc_v1');
+    return { ta, cold, name };
   });
-  check(modals.ta && modals.cold, 'TA brief and random cold-call controls open', failures, JSON.stringify(modals));
+  check(modals.ta && modals.cold && modals.name === 'Regression Learner', 'TA brief and seeded random cold-call controls open', failures, JSON.stringify(modals));
 
   const printState = await page.evaluate(() => {
     const generated = [...document.querySelectorAll('.at-activity-bar,.at-pair-trail,.ilm-replay')];
@@ -337,9 +398,9 @@ async function reducedMotionCheck(browser, file, baseUrl, failures) {
   const events = recorder(page, origin);
   await page.goto(urlFor(file, baseUrl), { waitUntil: 'load', timeout: 30000 });
   await page.waitForTimeout(120);
+  const illuminatorIndex = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.ilm')));
+  if (illuminatorIndex >= 0) await moveToSlide(page, illuminatorIndex);
   const result = await page.evaluate(() => {
-    const index = [...document.querySelectorAll('.slide')].findIndex((slide) => slide.querySelector('.ilm'));
-    if (index >= 0) { window.currentSlide = index; window.showSlide(index); }
     const active = document.querySelector('.slide.active');
     const visibleText = active && active.getBoundingClientRect().height > 0 && getComputedStyle(active).visibility !== 'hidden';
     const sweep = active?.querySelector('.at-ilm-sweep');
@@ -361,10 +422,29 @@ async function selfTest(browser) {
   await page.setContent('<!doctype html><meta charset="utf-8"><script>console.error("deliberate control")<\/script><div id="wide" style="width:5000px">control</div>');
   await page.waitForTimeout(20);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 4);
-  const detected = overflow && events.consoleErrors.some((entry) => entry.includes('deliberate control'));
-  console.log(`CONTROL browser console + overflow: ${detected ? 'DETECTED' : 'MISSED'}`);
+  const browserSignals = overflow && events.consoleErrors.some((entry) => entry.includes('deliberate control'));
+  console.log(`CONTROL browser console + overflow: ${browserSignals ? 'DETECTED' : 'MISSED'}`);
+
+  await page.setContent(`<!doctype html><meta charset="utf-8">
+    <style>.slide{display:none}.slide.active{display:block}</style>
+    <section class="slide active">one</section><section class="slide">two</section>
+    <div class="controls"><button onclick="nextSlide()">Next</button><button onclick="prevSlide()">Previous</button></div>
+    <script>let currentSlide=0;const slides=document.querySelectorAll('.slide');function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i))}function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}<\/script>`);
+  await page.locator('.controls button').filter({ hasText: 'Next' }).click();
+  const lexical = await slideState(page);
+  const lexicalDetected = lexical.activeIndex === 1 && lexical.visibleCount === 1 && lexical.activeClassCount === 1
+    && await page.evaluate(() => typeof window.currentSlide === 'undefined');
+  console.log(`CONTROL lexical slide state via rendered DOM: ${lexicalDetected ? 'DETECTED' : 'MISSED'}`);
+
+  await page.setContent(`<!doctype html><meta charset="utf-8">
+    <a class="art-skip-link" href="#primary">Skip</a>
+    <div class="grid" id="primary"><a class="art-card-enter" aria-label="One"></a><a class="art-card-enter" aria-label="Two"></a></div>
+    <div class="grid"><a></a><a></a><a></a></div>`);
+  const hub = await hubState(page);
+  const hubScoped = hub.cards === 2 && hub.animated === 2 && hub.labelled === 2 && hub.skipHref === '#primary';
+  console.log(`CONTROL scoped primary hub-card census: ${hubScoped ? 'DETECTED' : 'MISSED'}`);
   await page.close();
-  return detected;
+  return browserSignals && lexicalDetected && hubScoped;
 }
 
 (async () => {
