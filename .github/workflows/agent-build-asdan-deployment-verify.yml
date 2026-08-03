@@ -1,0 +1,406 @@
+name: Verify merged BUILD ASDAN deployment
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-build-asdan-deployment-verify.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out merged main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24
+
+      - name: Verify live BUILD deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import time
+          import urllib.parse
+          import urllib.request
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          base = 'https://madebymatt.uk/Lessons/'
+          expected_commit = '10936b7f780f2fb18a8b3de9cd534b9e679cc305'
+          suite = Path('BUILD_ASDAN')
+          strands = ['Careers', 'FoodWise', 'Community_Project', 'Living_Independently', 'Duke_and_Enterprise']
+          all_html = sorted(suite.rglob('*.html'))
+          lessons = sorted(
+              path
+              for strand in strands
+              for path in (suite / strand).glob('*.html')
+              if path.name != 'START_HERE.html'
+          )
+          if len(lessons) != 31:
+              raise SystemExit(f'Expected 31 lesson decks, found {len(lessons)}')
+
+          deployed = [Path('build_asdan.html')] + all_html + [
+              suite / '_framework' / 'asdan-teach.css',
+              suite / '_framework' / 'asdan-teach.js',
+          ]
+          missing_local = [str(path) for path in deployed if not path.is_file()]
+          if missing_local:
+              raise SystemExit(f'Missing local deployment files: {missing_local}')
+
+          primary = [
+              Path('build_asdan.html'),
+              suite / '_framework' / 'asdan-teach.css',
+              suite / '_framework' / 'asdan-teach.js',
+          ] + [next(path for path in lessons if f'/{strand}/' in f'/{path.as_posix()}') for strand in strands]
+
+          def add_revision(url: str) -> str:
+              parts = urllib.parse.urlsplit(url)
+              query = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+              query.append(('revision', expected_commit))
+              return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, urllib.parse.urlencode(query), ''))
+
+          def url_for(path: Path, bust: bool = True) -> str:
+              relative = urllib.parse.quote(path.as_posix(), safe='/')
+              url = urllib.parse.urljoin(base, relative)
+              return add_revision(url) if bust else url
+
+          def fetch_url(url: str) -> tuple[int, bytes, str]:
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      'User-Agent': 'BUILD-ASDAN-postmerge-verifier/1.0',
+                      'Cache-Control': 'no-cache',
+                      'Pragma': 'no-cache',
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return response.status, response.read(), response.geturl()
+
+          failures: list[str] = []
+          for attempt in range(1, 25):
+              failures = []
+              for path in primary:
+                  try:
+                      status, body, final = fetch_url(url_for(path))
+                  except Exception as exc:
+                      failures.append(f'{path}: {type(exc).__name__}: {exc}')
+                      continue
+                  expected = path.read_bytes()
+                  if status != 200:
+                      failures.append(f'{path}: HTTP {status} via {final}')
+                  elif body != expected:
+                      failures.append(
+                          f'{path}: SHA deployed={hashlib.sha256(body).hexdigest()} '
+                          f'expected={hashlib.sha256(expected).hexdigest()}'
+                      )
+              if not failures:
+                  print(f'PASS deployment propagation on attempt {attempt}')
+                  break
+              print(f'Attempt {attempt}: ' + '; '.join(failures))
+              if attempt < 24:
+                  time.sleep(10)
+          else:
+              raise SystemExit('Primary deployment mismatch: ' + '; '.join(failures))
+
+          bodies: dict[Path, bytes] = {}
+          mismatches: list[str] = []
+          for path in deployed:
+              try:
+                  status, body, final = fetch_url(url_for(path))
+              except Exception as exc:
+                  mismatches.append(f'{path}: {type(exc).__name__}: {exc}')
+                  continue
+              expected = path.read_bytes()
+              if status != 200:
+                  mismatches.append(f'{path}: HTTP {status} via {final}')
+              elif body != expected:
+                  mismatches.append(
+                      f'{path}: byte mismatch deployed={hashlib.sha256(body).hexdigest()} '
+                      f'expected={hashlib.sha256(expected).hexdigest()}'
+                  )
+              else:
+                  bodies[path] = body
+          if mismatches:
+              raise SystemExit('Deployment mismatches: ' + '; '.join(mismatches))
+
+          class Refs(HTMLParser):
+              def __init__(self) -> None:
+                  super().__init__(convert_charrefs=True)
+                  self.refs: list[str] = []
+
+              def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+                  self.refs.extend(
+                      value.strip()
+                      for name, value in attrs
+                      if name.lower() in {'href', 'src'} and value
+                  )
+
+          same_origin: set[str] = set()
+          html_links: set[str] = set()
+          pages = [Path('build_asdan.html')] + all_html
+          for path in pages:
+              parser = Refs()
+              parser.feed(bodies[path].decode('utf-8'))
+              parser.close()
+              page_url = url_for(path, bust=False)
+              for raw in parser.refs:
+                  if not raw or raw.startswith(('#', 'data:', 'mailto:', 'tel:', 'javascript:', '//')):
+                      continue
+                  absolute = urllib.parse.urljoin(page_url, raw)
+                  parsed = urllib.parse.urlsplit(absolute)
+                  if parsed.scheme not in {'http', 'https'} or parsed.netloc.lower() != 'madebymatt.uk':
+                      continue
+                  clean_path = urllib.parse.quote(urllib.parse.unquote(parsed.path), safe='/')
+                  clean = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, clean_path, parsed.query, ''))
+                  same_origin.add(clean)
+                  if clean_path.lower().endswith('.html'):
+                      html_links.add(clean)
+
+          ref_failures: list[str] = []
+          for url in sorted(same_origin):
+              try:
+                  status, _, final = fetch_url(add_revision(url))
+              except Exception as exc:
+                  ref_failures.append(f'{url}: {type(exc).__name__}: {exc}')
+                  continue
+              if status != 200:
+                  ref_failures.append(f'{url}: HTTP {status} via {final}')
+          if ref_failures:
+              raise SystemExit('Missing deployment references: ' + '; '.join(ref_failures))
+
+          print(
+              f'PASS live landing, {len(all_html)} BUILD HTML surfaces, shared CSS and shared JS '
+              'match merged main byte for byte'
+          )
+          print(f'PASS lesson decks: {len(lessons)} deployed lesson files matched merged main')
+          print(f'PASS deployment references: {len(same_origin)} same-origin links/assets returned HTTP 200')
+          print(f'PASS linked HTML targets: {len(html_links)} returned HTTP 200')
+          print(f'DEPLOYED_COMMIT={expected_commit}')
+          print('VERIFIED_PUBLIC_URL=https://madebymatt.uk/Lessons/build_asdan.html')
+          PY
+
+          node <<'NODE'
+          const cp = require('child_process');
+          const puppeteer = require('puppeteer-core');
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          const chrome = ['google-chrome', 'chromium', 'chromium-browser']
+            .map((name) => {
+              try {
+                return cp.execFileSync('bash', ['-lc', `command -v ${name}`], {encoding: 'utf8'}).trim();
+              } catch {
+                return '';
+              }
+            })
+            .find(Boolean);
+          if (!chrome) throw new Error('No browser executable available');
+
+          const expectedCommit = '10936b7f780f2fb18a8b3de9cd534b9e679cc305';
+          const base = 'https://madebymatt.uk/Lessons/';
+          const representatives = [
+            'BUILD_ASDAN/Careers/CAREERS_W1_My_Strengths.html',
+            'BUILD_ASDAN/FoodWise/FW_W1_Food_Groups.html',
+            'BUILD_ASDAN/Community_Project/COMM_W1_Choose_Our_Asset.html',
+            'BUILD_ASDAN/Living_Independently/LI_W1_Where_Money_Comes_From.html',
+            'BUILD_ASDAN/Duke_and_Enterprise/DUKE_W1_Choose_My_Challenges.html',
+          ];
+          const urlFor = (file) => `${base}${file.split('/').map(encodeURIComponent).join('/')}?revision=${expectedCommit}`;
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              executablePath: chrome,
+              headless: true,
+              protocolTimeout: 120000,
+              args: ['--no-sandbox', '--disable-dev-shm-usage'],
+            });
+            const failures = [];
+            const summary = {representatives: 0, presentation: 0, matching: 0, motion: 0, mobile: 0, reducedMotion: 0};
+
+            for (const file of representatives) {
+              const page = await browser.newPage();
+              await page.setViewport({width: 1280, height: 800});
+              const errors = [];
+              page.on('pageerror', (error) => errors.push(String(error)));
+              await page.goto(urlFor(file), {waitUntil: 'load', timeout: 30000});
+              await page.waitForFunction(
+                () => document.documentElement.getAttribute('data-at-build-upgrade') === 'ready',
+                {timeout: 5000},
+              );
+              await delay(100);
+
+              const census = await page.evaluate(() => ({
+                active: document.querySelectorAll('.slide.active').length,
+                bars: document.querySelectorAll('.at-activity-bar').length,
+                random: document.querySelectorAll('.at-random-pick').length,
+                trails: document.querySelectorAll('.at-pair-trail').length,
+                ilms: document.querySelectorAll('.ilm').length,
+                sweeps: document.querySelectorAll('.at-ilm-sweep').length,
+              }));
+              summary.representatives += 1;
+              if (
+                census.active !== 1 || census.bars !== 2 || census.random !== 1 ||
+                census.trails !== 1 || census.ilms !== 1 || census.sweeps !== 1
+              ) {
+                failures.push(`${file}: census ${JSON.stringify(census)}`);
+              }
+
+              const presentation = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((item) => item.querySelector('.pres-card'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                const cards = [...slide.querySelectorAll('.pres-card')];
+                const before = cards.filter((card) => card.classList.contains('done')).length;
+                slide.querySelector('.at-random-pick').click();
+                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                const picked = cards.filter((card) => card.classList.contains('at-picked'));
+                const afterPick = cards.filter((card) => card.classList.contains('done')).length;
+                picked[0]?.click();
+                await new Promise((resolve) => setTimeout(resolve, 80));
+                const bar = slide.querySelector('.at-activity-bar[data-at-activity="presentation"]');
+                const now = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                window.presReset();
+                await new Promise((resolve) => setTimeout(resolve, 80));
+                const reset = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                return {before, picked: picked.length, afterPick, now, reset};
+              });
+              const presentationOK = presentation.before === 0 && presentation.picked === 1 && presentation.afterPick === 0 && presentation.now === 1 && presentation.reset === 0;
+              summary.presentation += Number(presentationOK);
+              if (!presentationOK) failures.push(`${file}: presentation ${JSON.stringify(presentation)}`);
+
+              const matching = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((item) => item.querySelector('.match-target'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                const pill = slide.querySelector('#kw-pills .match-pill');
+                const raw = pill?.getAttribute('onclick') || '';
+                const id = raw.match(/selectKW\s*\(\s*this\s*,\s*['"]([^'"]+)['"]/)?.[1] || '';
+                const target = id ? slide.querySelector(`.match-target[data-correct="${id}"]`) : null;
+                pill?.click();
+                target?.click();
+                await new Promise((resolve) => setTimeout(resolve, 90));
+                const bar = slide.querySelector('.at-activity-bar[data-at-activity="matching"]');
+                const now = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const pairs = slide.querySelectorAll('.at-pair-chip').length;
+                window.resetMatch();
+                await new Promise((resolve) => setTimeout(resolve, 90));
+                const reset = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const resetPairs = slide.querySelectorAll('.at-pair-chip').length;
+                return {id, now, pairs, reset, resetPairs};
+              });
+              const matchingOK = Boolean(matching.id) && matching.now === 1 && matching.pairs === 1 && matching.reset === 0 && matching.resetPairs === 0;
+              summary.matching += Number(matchingOK);
+              if (!matchingOK) failures.push(`${file}: matching ${JSON.stringify(matching)}`);
+
+              const motion = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((item) => item.querySelector('.ilm'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((resolve) => setTimeout(resolve, 120));
+                const block = slide.querySelector('.ilm');
+                return {
+                  replaying: block.classList.contains('at-ilm-replaying'),
+                  sweep: Boolean(block.querySelector('.at-ilm-sweep')),
+                  replayButton: Boolean(block.querySelector('.ilm-replay')),
+                  motionReady: block.getAttribute('data-at-motion-ready'),
+                };
+              });
+              const motionOK = motion.replaying && motion.sweep && motion.replayButton && motion.motionReady === '1';
+              summary.motion += Number(motionOK);
+              if (!motionOK) failures.push(`${file}: motion ${JSON.stringify(motion)}`);
+
+              await page.setViewport({width: 390, height: 844});
+              await delay(100);
+              const mobile = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const activitySlides = slides.filter((slide) => slide.querySelector('.at-activity-bar'));
+                const results = [];
+                for (const slide of activitySlides) {
+                  const index = slides.indexOf(slide);
+                  window.currentSlide = index;
+                  window.showSlide(index);
+                  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                  const bounds = slide.getBoundingClientRect();
+                  const ui = [...slide.querySelectorAll('.at-activity-bar, .at-pair-trail')].filter((element) => !element.hidden);
+                  const contained = ui.every((element) => {
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1;
+                  });
+                  results.push(contained && document.documentElement.scrollWidth <= innerWidth + 1);
+                }
+                const controls = [...document.querySelectorAll('.controls button')].filter((button) => {
+                  const rect = button.getBoundingClientRect();
+                  return rect.width > 0 && rect.height > 0;
+                });
+                const controlsHorizontal = controls.every((button) => {
+                  const rect = button.getBoundingClientRect();
+                  return rect.left >= -1 && rect.right <= innerWidth + 1;
+                });
+                return activitySlides.length === 2 && results.every(Boolean) && controlsHorizontal;
+              });
+              summary.mobile += Number(mobile);
+              if (!mobile) failures.push(`${file}: mobile containment`);
+              if (errors.length) failures.push(`${file}: ${errors.join(' | ')}`);
+              await page.close();
+
+              const reduced = await browser.newPage();
+              await reduced.emulateMediaFeatures([{name: 'prefers-reduced-motion', value: 'reduce'}]);
+              await reduced.goto(urlFor(file), {waitUntil: 'load', timeout: 30000});
+              await reduced.waitForFunction(
+                () => document.documentElement.getAttribute('data-at-build-upgrade') === 'ready',
+                {timeout: 5000},
+              );
+              const reducedResult = await reduced.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((item) => item.querySelector('.ilm'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((resolve) => setTimeout(resolve, 80));
+                const sweep = slide.querySelector('.at-ilm-sweep');
+                const hiddenLabels = [...slide.querySelectorAll('svg text')].filter((label) => parseFloat(getComputedStyle(label).opacity) < 0.99).length;
+                return {sweep: sweep ? getComputedStyle(sweep).display : 'none', hiddenLabels};
+              });
+              const reducedOK = reducedResult.sweep === 'none' && reducedResult.hiddenLabels === 0;
+              summary.reducedMotion += Number(reducedOK);
+              if (!reducedOK) failures.push(`${file}: reduced motion ${JSON.stringify(reducedResult)}`);
+              await reduced.close();
+            }
+
+            console.log('LIVE_BUILD_VALIDATION', JSON.stringify({summary, failures}));
+            await browser.close();
+            if (failures.length) throw new Error(failures.join('\n'));
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Delete temporary branches
+        if: success()
+        shell: bash
+        run: |
+          git push origin --delete agent/build-asdan-interactions-motion || true
+          git push origin --delete agent/build-asdan-deployment-verify || true
