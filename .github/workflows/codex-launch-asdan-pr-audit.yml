@@ -2,8 +2,7 @@ name: Validate LAUNCH ASDAN navigation and interactions
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'LAUNCH_ASDAN/**'
       - '.github/workflows/codex-launch-asdan-pr-audit.yml'
@@ -43,11 +42,11 @@ jobs:
           root=Path.cwd(); suite=root/'LAUNCH_ASDAN'
           pages=sorted(suite.rglob('*.html'))
           lessons=[p for p in pages if p.parent!=suite and p.name!='START_HERE.html']
-          assert len(pages)==38 and len(lessons)==30, (len(pages),len(lessons))
+          assert (len(pages),len(lessons))==(38,30), (len(pages),len(lessons))
 
           allowed={'LAUNCH_ASDAN/visual-upgrade.css','LAUNCH_ASDAN/visual-upgrade.js','LAUNCH_ASDAN/VISUAL_UPGRADE_GUIDE.md','.github/workflows/codex-launch-asdan-pr-audit.yml'}
           changed=set(subprocess.check_output(['git','diff','--name-only','origin/main'],text=True).splitlines())
-          if changed-allowed: raise SystemExit(f'Unexpected changed paths: {sorted(changed-allowed)}')
+          if changed-allowed: raise SystemExit(f'Unexpected paths: {sorted(changed-allowed)}')
 
           css=(suite/'visual-upgrade.css').read_text(encoding='utf-8')
           clean=re.sub(r'/\*.*?\*/','',css,flags=re.S)
@@ -59,8 +58,9 @@ jobs:
           if depth: raise SystemExit(f'Unbalanced CSS braces: {depth}')
 
           hygiene=re.compile(r'<<<<<<<|=======|>>>>>>>|\bTODO\b|\bFIXME\b|\bdebugger\b|console\.log\s*\(',re.I)
-          for p in [suite/'visual-upgrade.css',suite/'visual-upgrade.js',suite/'VISUAL_UPGRADE_GUIDE.md']:
-              if hygiene.search(p.read_text(encoding='utf-8')): raise SystemExit(f'Unfinished/debug artefact in {p}')
+          shared=[suite/'visual-upgrade.css',suite/'visual-upgrade.js',suite/'VISUAL_UPGRADE_GUIDE.md']
+          for path in shared:
+              if hygiene.search(path.read_text(encoding='utf-8')): raise SystemExit(f'Unfinished/debug artefact: {path}')
 
           js=(suite/'visual-upgrade.js').read_text(encoding='utf-8')
           for marker in ['attributeOldValue: true',"attributeFilter: ['class', 'hidden']",'wasActive !== isActive','queueSlideSync()','vu-we-do-meter','vu-checkpoint']:
@@ -68,8 +68,7 @@ jobs:
 
           class Parser(HTMLParser):
               def __init__(self): super().__init__(convert_charrefs=True); self.refs=[]
-              def handle_starttag(self,tag,attrs):
-                  self.refs += [v.strip() for n,v in attrs if n.lower() in {'href','src'} and v]
+              def handle_starttag(self,tag,attrs): self.refs += [v.strip() for n,v in attrs if n.lower() in {'href','src'} and v]
 
           scripts=re.compile(r'(?is)<script\b([^>]*)>(.*?)</script>')
           types=re.compile(r'\btype\s*=\s*([\'\"])(.*?)\1',re.I)
@@ -90,8 +89,8 @@ jobs:
                       if rel=='/hud.js': hud_refs+=1; continue
                       target=(root/rel.lstrip('/')) if rel.startswith('/') else (page.parent/rel)
                       if not target.resolve().exists(): raise SystemExit(f'Unresolved local reference {raw} in {page}')
-                  for i,m in enumerate(scripts.finditer(text),1):
-                      attrs,body=m.groups()
+                  for i,match in enumerate(scripts.finditer(text),1):
+                      attrs,body=match.groups()
                       if re.search(r'\bsrc\s*=',attrs,re.I): continue
                       tm=types.search(attrs); kind=tm.group(2).strip().lower() if tm else ''
                       if kind not in {'','text/javascript','application/javascript','module'}: continue
@@ -100,7 +99,7 @@ jobs:
                       if result.returncode: raise SystemExit(f'Inline JS error: {page} script {i}: {result.stderr}')
           if hud_refs!=30: raise SystemExit(f'Expected 30 existing /hud.js references, found {hud_refs}')
           print('PASS static: 38 HTML pages, 30 lessons, no curriculum-file diff')
-          print('PASS shared references, inline JS, CSS balance, scope and lifecycle markers')
+          print('PASS references, inline JS, CSS balance, scope and lifecycle markers')
           print('PRE-EXISTING: 30 root-relative /hud.js references retained unchanged')
           PY
 
@@ -118,6 +117,7 @@ jobs:
           node <<'NODE'
           const fs=require('fs'),path=require('path'),cp=require('child_process');
           const puppeteer=require('puppeteer-core');
+          const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
           const chrome=['google-chrome','chromium','chromium-browser'].map(n=>{try{return cp.execFileSync('bash',['-lc',`command -v ${n}`],{encoding:'utf8'}).trim()}catch{return''}}).find(Boolean);
           if(!chrome) throw new Error('No browser executable');
           const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
@@ -135,35 +135,35 @@ jobs:
               await page.goto(url(file),{waitUntil:'load',timeout:30000});
               await page.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready',{timeout:5000});
               await page.evaluate(()=>{window.__vuM=0;new MutationObserver(rs=>window.__vuM+=rs.filter(r=>r.type==='attributes'&&r.target.classList?.contains('slide')).length).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']})});
-              await page.waitForTimeout(1400);
+              await delay(1400);
               const before=await page.evaluate(()=>({idx:[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')),active:document.querySelectorAll('.slide.active').length,m:window.__vuM,hidden:[...document.querySelectorAll('.slide.active .vu-reveal')].some(e=>parseFloat(getComputedStyle(e).opacity)<.99)}));
               if(before.active!==1) failures.push(`${file}: active=${before.active}`);
               if(before.m>16) failures.push(`${file}: idle mutations=${before.m}`);
               if(before.hidden) failures.push(`${file}: active content hidden`);
               if(errors.length) failures.push(`${file}: ${errors.join(' | ')}`);
 
-              let buttons=await page.$$('.controls button');
-              let next=await page.$('button[onclick*="nextSlide"]') || buttons.at(-1);
+              const buttons=await page.$$('.controls button');
+              const next=await page.$('button[onclick*="nextSlide"]') || buttons.at(-1);
               if(!next){failures.push(`${file}: no next control`)}else{
-                await next.focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(350);
+                await next.focus(); await page.keyboard.press('Enter'); await delay(350);
                 const forward=await page.evaluate(()=>({idx:[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')),active:document.querySelectorAll('.slide.active').length,m:window.__vuM}));
                 if(forward.active!==1||forward.idx!==before.idx+1) failures.push(`${file}: next ${before.idx}->${forward.idx}, active=${forward.active}`);
                 if(forward.m-before.m>18) failures.push(`${file}: navigation mutations=${forward.m-before.m}`);
                 const previous=await page.$('button[onclick*="prevSlide"]') || buttons[0];
-                await previous.click(); await page.waitForTimeout(350);
+                await previous.click(); await delay(350);
                 const back=await page.evaluate(()=>[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')));
                 if(back!==before.idx) failures.push(`${file}: previous returned ${back}`);
                 console.log('NAV',JSON.stringify({file,before,forward,back}));
               }
 
-              await page.setViewport({width:390,height:844}); await page.waitForTimeout(200);
+              await page.setViewport({width:390,height:844}); await delay(200);
               const mobile=await page.evaluate(()=>{const bs=[...document.querySelectorAll('.controls button')].map(b=>{const r=b.getBoundingClientRect();return{text:b.textContent.trim(),left:r.left,right:r.right,top:r.top,bottom:r.bottom}});return{visible:bs.every(r=>r.right>0&&r.left<innerWidth&&r.bottom>0&&r.top<innerHeight),buttons:bs}});
               if(!mobile.visible) failures.push(`${file}: mobile controls off-screen`);
               await page.close();
             }
 
             const reduced=await browser.newPage(); await reduced.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
-            await reduced.goto(url(reps[0]),{waitUntil:'load'}); await reduced.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready'); await reduced.waitForTimeout(150);
+            await reduced.goto(url(reps[0]),{waitUntil:'load'}); await reduced.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready'); await delay(150);
             const rm=await reduced.evaluate(()=>({hidden:[...document.querySelectorAll('.slide.active .vu-reveal')].some(e=>parseFloat(getComputedStyle(e).opacity)<.99),sweep:document.querySelector('.slide.active .ilm')?getComputedStyle(document.querySelector('.slide.active .ilm'),'::after').display:'none'}));
             if(rm.hidden||rm.sweep!=='none') failures.push(`Reduced motion hidden=${rm.hidden} sweep=${rm.sweep}`);
             await reduced.close();
@@ -172,7 +172,7 @@ jobs:
             for(const file of lessons){
               const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
               await page.goto(url(file),{waitUntil:'domcontentloaded',timeout:30000}); await page.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready',{timeout:5000});
-              const inv=await page.evaluate(async()=>{const slides=[...document.querySelectorAll('.slide')].filter(s=>/\bwe do\b/i.test(`${s.dataset.title||''} ${s.querySelector('.slide-tag')?.textContent||''}`)||s.dataset.type==='wedo');const local={};slides.forEach(s=>{const src=s.querySelector('.vu-we-do-meter')?.dataset.vuSource;if(src)local[src]=(local[src]||0)+1});let responded=false;const meter=document.querySelector('.vu-we-do-meter');if(meter){const slide=meter.closest('.slide'),src=meter.dataset.vuSource;let target=src==='checkpoints'?slide.querySelector('.vu-checkpoint'):slide.querySelector(src);if(target){if(src==='checkpoints')target.click();else if(src==='.match-target')target.classList.add('correct');else if(src==='.pres-card')target.classList.add('done');else if(src==='.hl-sentence')target.classList.add('highlighted');else if(src==='.v5-step')target.classList.add('revealed')}await new Promise(r=>setTimeout(r,50));responded=Number(meter.getAttribute('aria-valuenow'))>0}return{total:slides.length,enhanced:slides.filter(s=>s.dataset.vuWeDo==='true').length,meters:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-we-do-meter').length,0),checkpoints:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-checkpoint').length,0),local,responded}});
+              const inv=await page.evaluate(async()=>{const slides=[...document.querySelectorAll('.slide')].filter(s=>/\bwe do\b/i.test(`${s.dataset.title||''} ${s.querySelector('.slide-tag')?.textContent||''}`)||s.dataset.type==='wedo');const local={};slides.forEach(s=>{const src=s.querySelector('.vu-we-do-meter')?.dataset.vuSource;if(src)local[src]=(local[src]||0)+1});let responded=false;const meter=document.querySelector('.vu-we-do-meter');if(meter){const slide=meter.closest('.slide'),src=meter.dataset.vuSource;const target=src==='checkpoints'?slide.querySelector('.vu-checkpoint'):slide.querySelector(src);if(target){if(src==='checkpoints')target.click();else if(src==='.match-target')target.classList.add('correct');else if(src==='.pres-card')target.classList.add('done');else if(src==='.hl-sentence')target.classList.add('highlighted');else if(src==='.v5-step')target.classList.add('revealed')}await new Promise(r=>setTimeout(r,50));responded=Number(meter.getAttribute('aria-valuenow'))>0}return{total:slides.length,enhanced:slides.filter(s=>s.dataset.vuWeDo==='true').length,meters:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-we-do-meter').length,0),checkpoints:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-checkpoint').length,0),local,responded}});
               total+=inv.total; enhanced+=inv.enhanced; meters+=inv.meters; checkpoints+=inv.checkpoints; responsive||=inv.responded; Object.entries(inv.local).forEach(([k,v])=>sources[k]=(sources[k]||0)+v);
               if(errors.length) failures.push(`${file}: ${errors.join(' | ')}`); await page.close();
             }
