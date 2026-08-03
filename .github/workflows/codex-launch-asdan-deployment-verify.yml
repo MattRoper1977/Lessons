@@ -1,0 +1,93 @@
+name: Verify merged LAUNCH ASDAN deployment
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/codex-launch-asdan-deployment-verify.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out merged main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify live project-site deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+          import hashlib, time, urllib.parse, urllib.request
+          from pathlib import Path
+
+          base='https://madebymatt.uk/Lessons/'
+          expected_commit='f49c2011d450c0c38dfb3996caee6d1b3f0981c0'
+          suite=Path('LAUNCH_ASDAN')
+          html=sorted(suite.rglob('*.html'))
+          if len(html)!=38: raise SystemExit(f'Expected 38 HTML files, found {len(html)}')
+          deployed=html+[suite/'visual-upgrade.css',suite/'visual-upgrade.js']
+          primary=[suite/'LAUNCH_ASDAN_Hub.html',suite/'visual-upgrade.css',suite/'visual-upgrade.js']
+
+          def url_for(path):
+              return urllib.parse.urljoin(base,urllib.parse.quote(path.as_posix(),safe='/'))+f'?revision={expected_commit}'
+
+          def fetch(path):
+              request=urllib.request.Request(url_for(path),headers={'User-Agent':'LAUNCH-ASDAN-postmerge-verifier/1.0','Cache-Control':'no-cache','Pragma':'no-cache'})
+              with urllib.request.urlopen(request,timeout=30) as response:
+                  return response.status,response.read(),response.geturl()
+
+          failures=[]
+          for attempt in range(1,19):
+              failures=[]
+              for path in primary:
+                  try:
+                      status,body,final=fetch(path)
+                  except Exception as exc:
+                      failures.append(f'{path}: {type(exc).__name__}: {exc}')
+                      continue
+                  expected=path.read_bytes()
+                  if status!=200: failures.append(f'{path}: HTTP {status} via {final}')
+                  elif body!=expected: failures.append(f'{path}: SHA deployed={hashlib.sha256(body).hexdigest()} expected={hashlib.sha256(expected).hexdigest()}')
+              if not failures:
+                  print(f'PASS deployment propagation on attempt {attempt}')
+                  break
+              print(f'Attempt {attempt}: '+ '; '.join(failures))
+              if attempt<18: time.sleep(10)
+          else:
+              raise SystemExit('Primary deployment mismatch: '+'; '.join(failures))
+
+          mismatches=[]
+          for path in deployed:
+              try:
+                  status,body,final=fetch(path)
+              except Exception as exc:
+                  mismatches.append(f'{path}: {type(exc).__name__}: {exc}')
+                  continue
+              expected=path.read_bytes()
+              if status!=200: mismatches.append(f'{path}: HTTP {status} via {final}')
+              elif body!=expected: mismatches.append(f'{path}: byte mismatch')
+          if mismatches: raise SystemExit('Deployment mismatches: '+'; '.join(mismatches))
+
+          hub=(suite/'LAUNCH_ASDAN_Hub.html').read_text(encoding='utf-8')
+          if 'visual-upgrade.css' not in hub or 'visual-upgrade.js' not in hub:
+              raise SystemExit('Hub shared-asset references missing')
+
+          print('PASS live hub, all 38 HTML entry points, shared CSS and shared JS match merged main byte for byte')
+          print(f'DEPLOYED_COMMIT={expected_commit}')
+          print('VERIFIED_PUBLIC_URL=https://madebymatt.uk/Lessons/LAUNCH_ASDAN/LAUNCH_ASDAN_Hub.html')
+          PY
+
+      - name: Delete temporary branches
+        shell: bash
+        run: |
+          git push origin --delete codex/launch-asdan-navigation-interactions || true
+          git push origin --delete codex/launch-asdan-deployment-verify || true
