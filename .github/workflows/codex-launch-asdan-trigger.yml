@@ -1,0 +1,60 @@
+name: Trigger LAUNCH ASDAN publisher
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/codex-launch-asdan-publish.yml
+      - .github/workflows/codex-launch-asdan-trigger.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/launch-asdan-visual-upgrade
+          fetch-depth: 0
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute the self-removing publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          source = Path('.github/workflows/codex-launch-asdan-publish.yml')
+          lines = source.read_text(encoding='utf-8').splitlines()
+          blocks = []
+          index = 0
+          while index < len(lines):
+              if lines[index] == '        run: |':
+                  index += 1
+                  block = []
+                  while index < len(lines) and (lines[index].startswith('          ') or not lines[index].strip()):
+                      line = lines[index]
+                      block.append(line[10:] if line.startswith('          ') else '')
+                      index += 1
+                  blocks.append('\n'.join(block) + '\n')
+                  continue
+              index += 1
+
+          if len(blocks) != 2:
+              raise SystemExit(f'Expected two publisher shell blocks, found {len(blocks)}')
+
+          Path('.github/workflows/codex-launch-asdan-trigger.yml').unlink()
+          for block in blocks:
+              subprocess.run(block, shell=True, executable='/bin/bash', check=True)
+          PY
