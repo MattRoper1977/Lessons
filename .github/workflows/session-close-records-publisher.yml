@@ -1,9 +1,6 @@
 name: Session close records publisher
 
 on:
-  push:
-    branches:
-      - agent/session-close-records-20260803
   pull_request:
     branches:
       - main
@@ -17,6 +14,7 @@ permissions:
 env:
   EXPECTED_MAIN: 10936b7f780f2fb18a8b3de9cd534b9e679cc305
   EXPECTED_BLOB: 367dc25194826eb1c00874b08da1826d9b42b033
+  EXPECTED_PATCH_SHA256: fa4c9842e801c2da014b8897b1392acde0742135933dcba5d05720d9d72c8510
 
 jobs:
   publish-record:
@@ -28,13 +26,15 @@ jobs:
           ref: agent/session-close-records-20260803
           fetch-depth: 0
 
-      - name: Copy the verified records patch before switching branches
+      - name: Decode and verify the exact one-file records patch
         shell: bash
         run: |
           set -euo pipefail
           cp .github/session-close-records.patch.b64 "$RUNNER_TEMP/session-close.patch.b64"
           base64 --decode "$RUNNER_TEMP/session-close.patch.b64" > "$RUNNER_TEMP/session-close.patch"
-          grep -Fx '+++ b/LundyLoop/tools/INSTRUMENTS.md' "$RUNNER_TEMP/session-close.patch"
+          printf '%s  %s\n' "$EXPECTED_PATCH_SHA256" "$RUNNER_TEMP/session-close.patch" | sha256sum --check --strict
+          grep -E '^\+\+\+ b/LundyLoop/tools/INSTRUMENTS\.md([[:space:]]|$)' "$RUNNER_TEMP/session-close.patch"
+          test "$(grep -Ec '^\+\+\+ b/' "$RUNNER_TEMP/session-close.patch")" -eq 1
 
       - name: Lock current main and apply the exact docs-only patch
         shell: bash
