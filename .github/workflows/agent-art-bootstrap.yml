@@ -27,15 +27,25 @@ jobs:
           ref: agent/art-teesside-visual-teaching-upgrade-20260803
           fetch-depth: 0
 
-      - name: Prove all six payload fragments are present
+      - name: Prove the exact nine transfer fragments are present
         shell: bash
         run: |
           set -euo pipefail
-          printf '%s\n' .github/agent-art-seed-{00..05}.b64 > "$RUNNER_TEMP/expected-payload-files.txt"
+          cat > "$RUNNER_TEMP/expected-payload-files.txt" <<'EOF'
+          .github/agent-art-seed-00.b64
+          .github/agent-art-seed-01.b64
+          .github/agent-art-seed-02.b64
+          .github/agent-art-seed-03.b64
+          .github/agent-art-seed-03a.b64
+          .github/agent-art-seed-03b.b64
+          .github/agent-art-seed-03c.b64
+          .github/agent-art-seed-04.b64
+          .github/agent-art-seed-05.b64
+          EOF
           find .github -maxdepth 1 -type f -name 'agent-art-seed-*.b64' -print | sort > "$RUNNER_TEMP/actual-payload-files.txt"
           diff -u "$RUNNER_TEMP/expected-payload-files.txt" "$RUNNER_TEMP/actual-payload-files.txt"
 
-      - name: Assemble the transferred source bundle
+      - name: Assemble the transferred source bundle from verified fragments
         shell: bash
         run: |
           set -euo pipefail
@@ -43,7 +53,9 @@ jobs:
             .github/agent-art-seed-00.b64 \
             .github/agent-art-seed-01.b64 \
             .github/agent-art-seed-02.b64 \
-            .github/agent-art-seed-03.b64 \
+            .github/agent-art-seed-03a.b64 \
+            .github/agent-art-seed-03b.b64 \
+            .github/agent-art-seed-03c.b64 \
             .github/agent-art-seed-04.b64 \
             .github/agent-art-seed-05.b64 \
             | base64 --decode > "$RUNNER_TEMP/art-seed.tgz"
@@ -123,32 +135,70 @@ jobs:
       - name: Check generated patch whitespace
         run: git diff --check
 
-      - name: Remove transfer-only material and stage only release files
+      - name: Remove transfer-only material and stage only release files plus cleanup
         shell: bash
         run: |
           set -euo pipefail
-          rm .github/agent-art-seed-{00..05}.b64
-          rm .github/workflows/agent-art-bootstrap.yml
-          git add --all -- Art_Teesside art_teesside.html .github/workflows/verify-art-teesside.yml .github/workflows/agent-art-bootstrap.yml .github/agent-art-seed-00.b64 .github/agent-art-seed-01.b64 .github/agent-art-seed-02.b64 .github/agent-art-seed-03.b64 .github/agent-art-seed-04.b64 .github/agent-art-seed-05.b64
+          rm \
+            .github/agent-art-seed-00.b64 \
+            .github/agent-art-seed-01.b64 \
+            .github/agent-art-seed-02.b64 \
+            .github/agent-art-seed-03.b64 \
+            .github/agent-art-seed-03a.b64 \
+            .github/agent-art-seed-03b.b64 \
+            .github/agent-art-seed-03c.b64 \
+            .github/agent-art-seed-04.b64 \
+            .github/agent-art-seed-05.b64 \
+            .github/workflows/agent-art-bootstrap.yml
+          git add --all -- \
+            Art_Teesside \
+            art_teesside.html \
+            .github/workflows/verify-art-teesside.yml \
+            .github/workflows/agent-art-bootstrap.yml \
+            .github/agent-art-seed-00.b64 \
+            .github/agent-art-seed-01.b64 \
+            .github/agent-art-seed-02.b64 \
+            .github/agent-art-seed-03.b64 \
+            .github/agent-art-seed-03a.b64 \
+            .github/agent-art-seed-03b.b64 \
+            .github/agent-art-seed-03c.b64 \
+            .github/agent-art-seed-04.b64 \
+            .github/agent-art-seed-05.b64
           git diff --cached --name-status
 
-      - name: Prove the staged scope is exactly 35 pages plus 11 shared or verification files
+      - name: Prove the staged release and cleanup scopes exactly
         shell: bash
         run: |
           set -euo pipefail
           git diff --cached --name-only > "$RUNNER_TEMP/staged-files.txt"
-          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 46
-          test "$(grep -Ec '^(art_teesside\.html|Art_Teesside/.+\.html)$' "$RUNNER_TEMP/staged-files.txt")" -eq 35
-          test "$(grep -Ec '^\.github/workflows/verify-art-teesside\.yml$' "$RUNNER_TEMP/staged-files.txt")" -eq 1
-          if grep -Ev '^(Art_Teesside/|art_teesside\.html$|\.github/workflows/verify-art-teesside\.yml$)' "$RUNNER_TEMP/staged-files.txt"; then
-            echo 'Unexpected staged path' >&2
+          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 56
+
+          git diff --cached --diff-filter=AM --name-only > "$RUNNER_TEMP/release-files.txt"
+          test "$(wc -l < "$RUNNER_TEMP/release-files.txt")" -eq 46
+          test "$(grep -Ec '^(art_teesside\.html|Art_Teesside/.+\.html)$' "$RUNNER_TEMP/release-files.txt")" -eq 35
+          test "$(grep -Ec '^\.github/workflows/verify-art-teesside\.yml$' "$RUNNER_TEMP/release-files.txt")" -eq 1
+          if grep -Ev '^(Art_Teesside/|art_teesside\.html$|\.github/workflows/verify-art-teesside\.yml$)' "$RUNNER_TEMP/release-files.txt"; then
+            echo 'Unexpected release path' >&2
             exit 1
           fi
-          if grep -E 'agent-art-seed|agent-art-bootstrap' "$RUNNER_TEMP/staged-files.txt"; then
-            echo 'Transfer-only file still differs from main' >&2
-            exit 1
-          fi
-          cat "$RUNNER_TEMP/staged-files.txt"
+
+          cat > "$RUNNER_TEMP/expected-cleanup-files.txt" <<'EOF'
+          .github/agent-art-seed-00.b64
+          .github/agent-art-seed-01.b64
+          .github/agent-art-seed-02.b64
+          .github/agent-art-seed-03.b64
+          .github/agent-art-seed-03a.b64
+          .github/agent-art-seed-03b.b64
+          .github/agent-art-seed-03c.b64
+          .github/agent-art-seed-04.b64
+          .github/agent-art-seed-05.b64
+          .github/workflows/agent-art-bootstrap.yml
+          EOF
+          git diff --cached --diff-filter=D --name-only | sort > "$RUNNER_TEMP/actual-cleanup-files.txt"
+          diff -u "$RUNNER_TEMP/expected-cleanup-files.txt" "$RUNNER_TEMP/actual-cleanup-files.txt"
+
+          cat "$RUNNER_TEMP/release-files.txt"
+          cat "$RUNNER_TEMP/actual-cleanup-files.txt"
 
       - name: Check staged whitespace independently
         run: git diff --cached --check
