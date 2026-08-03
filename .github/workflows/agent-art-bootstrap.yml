@@ -103,14 +103,13 @@ jobs:
             .github/agent-art-source-fix-01.b64 \
             | base64 --decode > "$RUNNER_TEMP/art-source-fix.patch"
           printf '%s  %s\n' "$SOURCE_FIX_SHA256" "$RUNNER_TEMP/art-source-fix.patch" | sha256sum --check --strict
+          grep -E '^\+\+\+ b/' "$RUNNER_TEMP/art-source-fix.patch" | sed 's#^+++ b/##' | tee "$RUNNER_TEMP/source-fix-files.txt"
+          test "$(wc -l < "$RUNNER_TEMP/source-fix-files.txt")" -eq 3
+          grep -Fx '.github/workflows/verify-art-teesside.yml' "$RUNNER_TEMP/source-fix-files.txt"
+          grep -Fx 'Art_Teesside/art-teach.css' "$RUNNER_TEMP/source-fix-files.txt"
+          grep -Fx 'Art_Teesside/tools/apply_visual_teaching.py' "$RUNNER_TEMP/source-fix-files.txt"
           git apply --check "$RUNNER_TEMP/art-source-fix.patch"
           git apply "$RUNNER_TEMP/art-source-fix.patch"
-          git diff --name-only -- \
-            .github/workflows/verify-art-teesside.yml \
-            Art_Teesside/art-teach.css \
-            Art_Teesside/tools/apply_visual_teaching.py \
-            | tee "$RUNNER_TEMP/source-fix-files.txt"
-          test "$(wc -l < "$RUNNER_TEMP/source-fix-files.txt")" -eq 3
 
       - name: Validate shared JavaScript syntax before generation
         run: node --check Art_Teesside/art-teach.js
