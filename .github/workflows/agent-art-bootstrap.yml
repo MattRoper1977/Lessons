@@ -19,6 +19,7 @@ jobs:
       - name: Check out the exact branch revision
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Record immutable source state
@@ -32,12 +33,12 @@ jobs:
           find Art_Teesside -type f -name '*.html' -print0 | sort -z | tr '\0' '\n' > agent-art-bootstrap/art-html-files.txt
           printf 'Art_Teesside HTML: ' > agent-art-bootstrap/counts.txt
           wc -l < agent-art-bootstrap/art-html-files.txt >> agent-art-bootstrap/counts.txt
-          tar --exclude='.git' --exclude='lessons-source.tgz' -czf lessons-source.tgz .
+          git archive --format=tar.gz --output=lessons-source.tgz HEAD
 
       - name: Upload reproducible checkout
         uses: actions/upload-artifact@v4
         with:
-          name: lessons-source-${{ github.sha }}
+          name: lessons-source-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             lessons-source.tgz
             agent-art-bootstrap/
