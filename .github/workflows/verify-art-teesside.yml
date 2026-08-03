@@ -120,7 +120,7 @@ jobs:
     needs: static-and-instruments
     runs-on: ubuntu-latest
     env:
-      NODE_PATH: ${{ runner.temp }}/art-node/node_modules
+      NODE_PATH: /tmp/art-node/node_modules
     steps:
       - name: Check out Lessons revision
         uses: actions/checkout@v4
@@ -143,8 +143,8 @@ jobs:
       - name: Install pinned Playwright and Chromium
         shell: bash
         run: |
-          mkdir -p "$RUNNER_TEMP/art-node"
-          cd "$RUNNER_TEMP/art-node"
+          mkdir -p /tmp/art-node
+          cd /tmp/art-node
           npm init -y
           npm install --no-save --no-package-lock playwright@1.62.0
           npx playwright install --with-deps chromium
