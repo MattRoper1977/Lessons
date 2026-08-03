@@ -160,12 +160,22 @@ jobs:
           test -f site/Lessons/art_teesside.html
           test -f site/Lessons/Art_Teesside/art-teach.js
 
-      - name: Start local HTTP origin
+      - name: Start local HTTP origin and wait until ready
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/art-browser-evidence"
           nohup python3 -m http.server 4173 --directory site > "$RUNNER_TEMP/art-browser-evidence/server.log" 2>&1 &
           echo $! > "$RUNNER_TEMP/art-browser-evidence/server.pid"
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent --show-error http://127.0.0.1:4173/Lessons/art_teesside.html --output /dev/null; then
+              printf 'HTTP origin ready after %s probe(s)\n' "$attempt"
+              exit 0
+            fi
+            sleep 0.1
+          done
+          cat "$RUNNER_TEMP/art-browser-evidence/server.log" >&2
+          exit 1
 
       - name: Confirm the intended site path is serving
         run: curl --fail --silent --show-error http://127.0.0.1:4173/Lessons/art_teesside.html --output /dev/null
