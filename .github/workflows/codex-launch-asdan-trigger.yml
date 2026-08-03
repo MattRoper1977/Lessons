@@ -56,23 +56,11 @@ jobs:
           if replacements != 1:
               raise SystemExit(f'Expected one content-integrity check replacement, made {replacements}')
 
-          stage_pattern = re.compile(
-              r'(?m)^(?P<indent>[ ]*)rm -f \.github/workflows/codex-launch-asdan-publish\.yml\n'
-              r'(?P=indent)\n'
-              r'(?P=indent)changed="\$\(git diff --name-only origin/main\)"'
-          )
-
-          def stage_complete_diff(match):
-              indent = match.group('indent')
-              return (
-                  f"{indent}rm -f .github/workflows/codex-launch-asdan-publish.yml\n"
-                  f"{indent}git add -A\n\n"
-                  f"{indent}changed=\"$(git diff --name-only origin/main)\""
-              )
-
-          payload, stage_replacements = stage_pattern.subn(stage_complete_diff, payload, count=1)
-          if stage_replacements != 1:
-              raise SystemExit(f'Expected one complete-diff staging replacement, made {stage_replacements}')
+          old_stage = '          rm -f .github/workflows/codex-launch-asdan-publish.yml\n\n          changed="$(git diff --name-only origin/main)"'
+          new_stage = '          rm -f .github/workflows/codex-launch-asdan-publish.yml\n          git add -A\n\n          changed="$(git diff --name-only origin/main)"'
+          if old_stage not in payload:
+              raise SystemExit('Complete-diff staging signature not found')
+          payload = payload.replace(old_stage, new_stage, 1)
 
           lines = payload.splitlines()
           blocks = []
