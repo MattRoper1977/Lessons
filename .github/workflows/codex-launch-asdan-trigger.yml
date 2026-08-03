@@ -36,7 +36,18 @@ jobs:
           import subprocess
 
           source = Path('.github/workflows/codex-launch-asdan-publish.yml')
-          lines = source.read_text(encoding='utf-8').splitlines()
+          payload = source.read_text(encoding='utf-8')
+          old = r'''              if visible_text(original) != visible_text(enhanced):
+                  raise SystemExit(f"Visible text changed in {path}")'''
+          new = r'''              restored = enhanced.replace(f'<link rel="stylesheet" href="{css_ref}">\n', '', 1)
+              restored = restored.replace(f'<script src="{js_ref}" defer></script>\n', '', 1)
+              if restored != original:
+                  raise SystemExit(f"Content round-trip changed in {path}")'''
+          if old not in payload:
+              raise SystemExit('Publisher content-integrity check signature not found')
+          payload = payload.replace(old, new, 1)
+
+          lines = payload.splitlines()
           blocks = []
           index = 0
           while index < len(lines):
