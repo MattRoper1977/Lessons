@@ -67,6 +67,20 @@ jobs:
               raise SystemExit('Hygiene signature not found')
           script = script.replace(old_hygiene, new_hygiene, 1)
 
+          old_apply = (
+              'python3 .github/scripts/agent_build_asdan_upgrade.py\n'
+              'python3 BUILD_ASDAN/_framework/apply_framework.py\n'
+          )
+          new_apply = (
+              'python3 .github/scripts/agent_build_asdan_upgrade.py\n'
+              'python3 .github/scripts/agent_build_asdan_loop_label_fix.py\n'
+              "grep -q 'function atProtectLoopLabels(block)' BUILD_ASDAN/_framework/asdan-teach.js\n"
+              'python3 BUILD_ASDAN/_framework/apply_framework.py\n'
+          )
+          if old_apply not in script:
+              raise SystemExit('Framework-application signature not found')
+          script = script.replace(old_apply, new_apply, 1)
+
           old_cleanup = (
               'rm -f .github/workflows/agent-build-asdan-publication.yml\n'
               'rm -f .github/scripts/agent_build_asdan_upgrade.py\n'
@@ -75,6 +89,7 @@ jobs:
               'rm -f .github/workflows/agent-build-asdan-publication.yml\n'
               'rm -f .github/workflows/agent-build-asdan-publication-runner.yml\n'
               'rm -f .github/scripts/agent_build_asdan_upgrade.py\n'
+              'rm -f .github/scripts/agent_build_asdan_loop_label_fix.py\n'
           )
           if old_cleanup not in script:
               raise SystemExit('Cleanup signature not found')
