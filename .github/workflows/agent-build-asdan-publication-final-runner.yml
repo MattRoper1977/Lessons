@@ -1,0 +1,153 @@
+name: Run final BUILD ASDAN publication gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-build-asdan-publication-final-runner.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/build-asdan-interactions-motion
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser drivers
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock puppeteer-core@24 playwright@1.55.0
+          chrome="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$chrome"
+          sudo mkdir -p /opt/pw-browsers/chromium-1194/chrome-linux
+          sudo ln -sf "$chrome" /opt/pw-browsers/chromium-1194/chrome-linux/chrome
+
+      - name: Extract and run corrected publication gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('.github/workflows/agent-build-asdan-publication.yml')
+          lines = source.read_text(encoding='utf-8').splitlines()
+          blocks = []
+          index = 0
+          while index < len(lines):
+              if lines[index] == '        run: |':
+                  index += 1
+                  block = []
+                  while index < len(lines) and (lines[index].startswith('          ') or not lines[index].strip()):
+                      line = lines[index]
+                      block.append(line[10:] if line.startswith('          ') else '')
+                      index += 1
+                  blocks.append('\n'.join(block) + '\n')
+                  continue
+              index += 1
+
+          if len(blocks) != 2:
+              raise SystemExit(f'Expected two shell blocks, found {len(blocks)}')
+
+          script = blocks[1]
+          old_hygiene = "<<<<<<<|=======|>>>>>>>|\\bTODO\\b|\\bFIXME\\b|\\bdebugger\\b|console\\.log\\s*\\("
+          new_hygiene = "<<<<<<<|>>>>>>>|\\bTODO\\b|\\bFIXME\\b|\\bdebugger\\b|console\\.log\\s*\\("
+          if old_hygiene not in script:
+              raise SystemExit('Hygiene signature not found')
+          script = script.replace(old_hygiene, new_hygiene, 1)
+
+          old_apply = (
+              'python3 .github/scripts/agent_build_asdan_upgrade.py\n'
+              'python3 BUILD_ASDAN/_framework/apply_framework.py\n'
+          )
+          new_apply = (
+              'python3 .github/scripts/agent_build_asdan_upgrade.py\n'
+              'python3 .github/scripts/agent_build_asdan_loop_label_fix.py\n'
+              "grep -q 'function atProtectLoopLabels(block)' BUILD_ASDAN/_framework/asdan-teach.js\n"
+              'python3 BUILD_ASDAN/_framework/apply_framework.py\n'
+          )
+          if old_apply not in script:
+              raise SystemExit('Framework-application signature not found')
+          script = script.replace(old_apply, new_apply, 1)
+
+          old_mobile = """              await page.setViewport({width:390,height:844});
+              await delay(100);
+              const mobile = await page.evaluate(() => {
+                const slide = document.querySelector('.slide.active');
+                const bar = slide && slide.querySelector('.at-activity-bar');
+                const barOK = !bar || (() => {
+                  const b = bar.getBoundingClientRect();
+                  const s = slide.getBoundingClientRect();
+                  return b.left >= s.left - 1 && b.right <= s.right + 1;
+                })();
+                const controlsOK = [...document.querySelectorAll('.controls button')].every((button) => {
+                  const r = button.getBoundingClientRect();
+                  return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= -1 && r.bottom <= innerHeight + 1;
+                });
+                return barOK && controlsOK;
+              });
+"""
+          new_mobile = """              await page.setViewport({width:390,height:844});
+              await delay(100);
+              const mobile = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const activitySlides = slides.filter((slide) => slide.querySelector('.at-activity-bar'));
+                const results = [];
+                for (const slide of activitySlides) {
+                  const index = slides.indexOf(slide);
+                  window.currentSlide = index;
+                  window.showSlide(index);
+                  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                  const s = slide.getBoundingClientRect();
+                  const ui = [...slide.querySelectorAll('.at-activity-bar, .at-pair-trail')]
+                    .filter((element) => !element.hidden);
+                  const contained = ui.every((element) => {
+                    const r = element.getBoundingClientRect();
+                    return r.width > 0 && r.left >= s.left - 1 && r.right <= s.right + 1;
+                  });
+                  results.push(contained && document.documentElement.scrollWidth <= innerWidth + 1);
+                }
+                const controls = [...document.querySelectorAll('.controls button')].filter((button) => {
+                  const r = button.getBoundingClientRect();
+                  return r.width > 0 && r.height > 0;
+                });
+                const controlsHorizontal = controls.every((button) => {
+                  const r = button.getBoundingClientRect();
+                  return r.left >= -1 && r.right <= innerWidth + 1;
+                });
+                return activitySlides.length === 2 && results.every(Boolean) && controlsHorizontal;
+              });
+"""
+          if old_mobile not in script:
+              raise SystemExit('Mobile-validation signature not found')
+          script = script.replace(old_mobile, new_mobile, 1)
+
+          old_cleanup = (
+              'rm -f .github/workflows/agent-build-asdan-publication.yml\n'
+              'rm -f .github/scripts/agent_build_asdan_upgrade.py\n'
+          )
+          new_cleanup = (
+              'rm -f .github/workflows/agent-build-asdan-publication.yml\n'
+              'rm -f .github/workflows/agent-build-asdan-publication-runner.yml\n'
+              'rm -f .github/workflows/agent-build-asdan-publication-final-runner.yml\n'
+              'rm -f .github/scripts/agent_build_asdan_upgrade.py\n'
+              'rm -f .github/scripts/agent_build_asdan_loop_label_fix.py\n'
+          )
+          if old_cleanup not in script:
+              raise SystemExit('Cleanup signature not found')
+          script = script.replace(old_cleanup, new_cleanup, 1)
+          Path('/tmp/build-asdan-publication.sh').write_text(script, encoding='utf-8')
+          PY
+
+          bash /tmp/build-asdan-publication.sh
