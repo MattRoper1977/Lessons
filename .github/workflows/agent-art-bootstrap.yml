@@ -6,7 +6,9 @@ on:
       - main
     paths:
       - '.github/agent-art-seed-*.b64'
+      - '.github/agent-art-source-fix-*.b64'
       - '.github/workflows/agent-art-bootstrap.yml'
+      - '.github/workflows/agent-art-export.yml'
   workflow_dispatch:
 
 permissions:
@@ -15,23 +17,38 @@ permissions:
 env:
   PYTHONDONTWRITEBYTECODE: '1'
   TASK_BRANCH: agent/art-teesside-visual-teaching-upgrade-20260803
+  PRISTINE_MAIN: 10936b7f780f2fb18a8b3de9cd534b9e679cc305
   PAYLOAD_SHA256: f3049d8ecd828f59a0027eb9bc8494dd25f87cdd4205bdcc224165fe63cf9a5e
+  SOURCE_FIX_SHA256: 0623bb2d724f0bf357794cf2ce905b270bfaf89a4adce1b63f819fb3d368b6ef
 
 jobs:
   generate-verify-and-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the exact task branch with history
+      - name: Check out the exact task branch with full history
         uses: actions/checkout@v4
         with:
           ref: agent/art-teesside-visual-teaching-upgrade-20260803
           fetch-depth: 0
 
-      - name: Prove the exact eleven transfer fragments are present
+      - name: Refresh main and prove the pristine Art source base is still current
         shell: bash
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/expected-payload-files.txt" <<'EOF'
+          git fetch origin main
+          actual_main=$(git rev-parse origin/main)
+          printf 'origin/main: %s\n' "$actual_main"
+          test "$actual_main" = "$PRISTINE_MAIN"
+          git merge-base --is-ancestor "$PRISTINE_MAIN" HEAD
+          git diff --quiet "$PRISTINE_MAIN" -- Art_Teesside art_teesside.html
+          find Art_Teesside -type f -name '*.html' -print0 | sort -z | tr '\0' '\n' | tee "$RUNNER_TEMP/pristine-art-html.txt"
+          test "$(wc -l < "$RUNNER_TEMP/pristine-art-html.txt")" -eq 53
+
+      - name: Prove the exact thirteen transfer fragments are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/expected-transfer-files.txt" <<'EOF'
           .github/agent-art-seed-00.b64
           .github/agent-art-seed-01.b64
           .github/agent-art-seed-02.b64
@@ -43,11 +60,13 @@ jobs:
           .github/agent-art-seed-05.b64
           .github/agent-art-seed-05a.b64
           .github/agent-art-seed-05b.b64
+          .github/agent-art-source-fix-00.b64
+          .github/agent-art-source-fix-01.b64
           EOF
-          find .github -maxdepth 1 -type f -name 'agent-art-seed-*.b64' -print | sort > "$RUNNER_TEMP/actual-payload-files.txt"
-          diff -u "$RUNNER_TEMP/expected-payload-files.txt" "$RUNNER_TEMP/actual-payload-files.txt"
+          find .github -maxdepth 1 -type f \( -name 'agent-art-seed-*.b64' -o -name 'agent-art-source-fix-*.b64' \) -print | sort > "$RUNNER_TEMP/actual-transfer-files.txt"
+          diff -u "$RUNNER_TEMP/expected-transfer-files.txt" "$RUNNER_TEMP/actual-transfer-files.txt"
 
-      - name: Assemble the transferred source bundle from verified fragments
+      - name: Assemble the original transferred source bundle
         shell: bash
         run: |
           set -euo pipefail
@@ -62,11 +81,6 @@ jobs:
             .github/agent-art-seed-05a.b64 \
             .github/agent-art-seed-05b.b64 \
             | base64 --decode > "$RUNNER_TEMP/art-seed.tgz"
-
-      - name: Verify the transferred bundle cryptographically
-        shell: bash
-        run: |
-          set -euo pipefail
           printf '%s  %s\n' "$PAYLOAD_SHA256" "$RUNNER_TEMP/art-seed.tgz" | sha256sum --check --strict
 
       - name: Print and validate the source-bundle inventory
@@ -80,6 +94,24 @@ jobs:
       - name: Extract the verified implementation source
         run: tar -xzf "$RUNNER_TEMP/art-seed.tgz"
 
+      - name: Assemble and verify the indentation-safe source patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .github/agent-art-source-fix-00.b64 \
+            .github/agent-art-source-fix-01.b64 \
+            | base64 --decode > "$RUNNER_TEMP/art-source-fix.patch"
+          printf '%s  %s\n' "$SOURCE_FIX_SHA256" "$RUNNER_TEMP/art-source-fix.patch" | sha256sum --check --strict
+          git apply --check "$RUNNER_TEMP/art-source-fix.patch"
+          git apply "$RUNNER_TEMP/art-source-fix.patch"
+          git diff --name-only -- \
+            .github/workflows/verify-art-teesside.yml \
+            Art_Teesside/art-teach.css \
+            Art_Teesside/tools/apply_visual_teaching.py \
+            | tee "$RUNNER_TEMP/source-fix-files.txt"
+          test "$(wc -l < "$RUNNER_TEMP/source-fix-files.txt")" -eq 3
+
       - name: Validate shared JavaScript syntax before generation
         run: node --check Art_Teesside/art-teach.js
 
@@ -89,8 +121,35 @@ jobs:
       - name: Validate print assertion syntax before generation
         run: node --check Art_Teesside/tools/assert_print.js
 
+      - name: Prove the indentation-safe injector and legacy positive control
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py --self-test
+
       - name: Apply the exact generated references to the 35 applicable pages
         run: python3 Art_Teesside/tools/apply_visual_teaching.py --apply
+
+      - name: Record the first deterministic generated patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --binary -- \
+            .github/workflows/verify-art-teesside.yml \
+            Art_Teesside \
+            art_teesside.html \
+            > "$RUNNER_TEMP/generated-first.patch"
+          sha256sum "$RUNNER_TEMP/generated-first.patch"
+
+      - name: Require a byte-identical second generator run
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Art_Teesside/tools/apply_visual_teaching.py --apply
+          git diff --binary -- \
+            .github/workflows/verify-art-teesside.yml \
+            Art_Teesside \
+            art_teesside.html \
+            > "$RUNNER_TEMP/generated-second.patch"
+          cmp "$RUNNER_TEMP/generated-first.patch" "$RUNNER_TEMP/generated-second.patch"
+          sha256sum "$RUNNER_TEMP/generated-second.patch"
 
       - name: Prove authored content round-trips byte for byte
         run: python3 Art_Teesside/tools/apply_visual_teaching.py
@@ -135,10 +194,10 @@ jobs:
       - name: Replay the documented historical co-occurrence positive control
         run: python3 Art_Teesside/tools/assert_instrument_contracts.py cooccurrence-control
 
-      - name: Check generated patch whitespace
+      - name: Check generated working-tree whitespace
         run: git diff --check
 
-      - name: Remove transfer-only material and stage only release files plus cleanup
+      - name: Remove all transfer-only files and stage the complete release
         shell: bash
         run: |
           set -euo pipefail
@@ -154,12 +213,16 @@ jobs:
             .github/agent-art-seed-05.b64 \
             .github/agent-art-seed-05a.b64 \
             .github/agent-art-seed-05b.b64 \
-            .github/workflows/agent-art-bootstrap.yml
+            .github/agent-art-source-fix-00.b64 \
+            .github/agent-art-source-fix-01.b64 \
+            .github/workflows/agent-art-bootstrap.yml \
+            .github/workflows/agent-art-export.yml
           git add --all -- \
             Art_Teesside \
             art_teesside.html \
             .github/workflows/verify-art-teesside.yml \
             .github/workflows/agent-art-bootstrap.yml \
+            .github/workflows/agent-art-export.yml \
             .github/agent-art-seed-00.b64 \
             .github/agent-art-seed-01.b64 \
             .github/agent-art-seed-02.b64 \
@@ -170,15 +233,17 @@ jobs:
             .github/agent-art-seed-04.b64 \
             .github/agent-art-seed-05.b64 \
             .github/agent-art-seed-05a.b64 \
-            .github/agent-art-seed-05b.b64
+            .github/agent-art-seed-05b.b64 \
+            .github/agent-art-source-fix-00.b64 \
+            .github/agent-art-source-fix-01.b64
           git diff --cached --name-status
 
-      - name: Prove the staged release and cleanup scopes exactly
+      - name: Prove the exact 46-file release and 15-file cleanup scopes
         shell: bash
         run: |
           set -euo pipefail
           git diff --cached --name-only > "$RUNNER_TEMP/staged-files.txt"
-          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 58
+          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 61
 
           git diff --cached --diff-filter=AM --name-only > "$RUNNER_TEMP/release-files.txt"
           test "$(wc -l < "$RUNNER_TEMP/release-files.txt")" -eq 46
@@ -201,24 +266,43 @@ jobs:
           .github/agent-art-seed-05.b64
           .github/agent-art-seed-05a.b64
           .github/agent-art-seed-05b.b64
+          .github/agent-art-source-fix-00.b64
+          .github/agent-art-source-fix-01.b64
           .github/workflows/agent-art-bootstrap.yml
+          .github/workflows/agent-art-export.yml
           EOF
           git diff --cached --diff-filter=D --name-only | sort > "$RUNNER_TEMP/actual-cleanup-files.txt"
           diff -u "$RUNNER_TEMP/expected-cleanup-files.txt" "$RUNNER_TEMP/actual-cleanup-files.txt"
 
+          printf '\n46 release files:\n'
           cat "$RUNNER_TEMP/release-files.txt"
+          printf '\n15 removed transfer-only files:\n'
           cat "$RUNNER_TEMP/actual-cleanup-files.txt"
 
-      - name: Check staged whitespace independently
+      - name: Require the staged whitespace gate to pass
         run: git diff --cached --check
 
-      - name: Create the coherent implementation commit
+      - name: Inspect staged patch shape and file modes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --cached --stat
+          git diff --cached --summary
+          if git diff --cached --numstat | grep -E '^-\s+-\s+'; then
+            echo 'Unexpected binary change' >&2
+            exit 1
+          fi
+
+      - name: Create the coherent regenerated Art publication commit
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'feat: upgrade Art Teesside visual teaching and verification'
+          git commit \
+            -m 'fix: regenerate Art Teesside upgrade with indentation-safe injection' \
+            -m 'Repairs the closing-tag injector so indented LF and CRLF source is preserved, and adds a permanent regression with a controlled reproduction of the former column-zero defect.' \
+            -m 'Regenerates all 35 applicable pages from pristine Lessons main 10936b7f780f2fb18a8b3de9cd534b9e679cc305. The resulting publication scope is exactly 46 files, passes byte-exact content round-trip and idempotency gates, and removes every transfer-only fragment and one-use workflow from the PR diff.'
 
       - name: Confirm the generated commit has a clean worktree
         run: test -z "$(git status --porcelain)"
