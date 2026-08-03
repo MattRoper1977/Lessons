@@ -1,9 +1,12 @@
 name: Agent Art Teesside source export
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/art-teesside-visual-teaching-upgrade-20260803
+      - main
+    paths:
+      - '.github/agent-art-seed-*.b64'
+      - '.github/workflows/agent-art-export.yml'
   workflow_dispatch:
 
 permissions:
@@ -41,7 +44,7 @@ jobs:
       - name: Upload verified source bundle
         uses: actions/upload-artifact@v4
         with:
-          name: art-seed-${{ github.sha }}
+          name: art-seed-${{ github.event.pull_request.head.sha || github.sha }}
           path: art-seed.tgz
           if-no-files-found: error
           retention-days: 2
