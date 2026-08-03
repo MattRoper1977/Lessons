@@ -27,7 +27,7 @@ jobs:
           ref: agent/art-teesside-visual-teaching-upgrade-20260803
           fetch-depth: 0
 
-      - name: Prove the exact nine transfer fragments are present
+      - name: Prove the exact eleven transfer fragments are present
         shell: bash
         run: |
           set -euo pipefail
@@ -41,6 +41,8 @@ jobs:
           .github/agent-art-seed-03c.b64
           .github/agent-art-seed-04.b64
           .github/agent-art-seed-05.b64
+          .github/agent-art-seed-05a.b64
+          .github/agent-art-seed-05b.b64
           EOF
           find .github -maxdepth 1 -type f -name 'agent-art-seed-*.b64' -print | sort > "$RUNNER_TEMP/actual-payload-files.txt"
           diff -u "$RUNNER_TEMP/expected-payload-files.txt" "$RUNNER_TEMP/actual-payload-files.txt"
@@ -57,7 +59,8 @@ jobs:
             .github/agent-art-seed-03b.b64 \
             .github/agent-art-seed-03c.b64 \
             .github/agent-art-seed-04.b64 \
-            .github/agent-art-seed-05.b64 \
+            .github/agent-art-seed-05a.b64 \
+            .github/agent-art-seed-05b.b64 \
             | base64 --decode > "$RUNNER_TEMP/art-seed.tgz"
 
       - name: Verify the transferred bundle cryptographically
@@ -149,6 +152,8 @@ jobs:
             .github/agent-art-seed-03c.b64 \
             .github/agent-art-seed-04.b64 \
             .github/agent-art-seed-05.b64 \
+            .github/agent-art-seed-05a.b64 \
+            .github/agent-art-seed-05b.b64 \
             .github/workflows/agent-art-bootstrap.yml
           git add --all -- \
             Art_Teesside \
@@ -163,7 +168,9 @@ jobs:
             .github/agent-art-seed-03b.b64 \
             .github/agent-art-seed-03c.b64 \
             .github/agent-art-seed-04.b64 \
-            .github/agent-art-seed-05.b64
+            .github/agent-art-seed-05.b64 \
+            .github/agent-art-seed-05a.b64 \
+            .github/agent-art-seed-05b.b64
           git diff --cached --name-status
 
       - name: Prove the staged release and cleanup scopes exactly
@@ -171,7 +178,7 @@ jobs:
         run: |
           set -euo pipefail
           git diff --cached --name-only > "$RUNNER_TEMP/staged-files.txt"
-          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 56
+          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 58
 
           git diff --cached --diff-filter=AM --name-only > "$RUNNER_TEMP/release-files.txt"
           test "$(wc -l < "$RUNNER_TEMP/release-files.txt")" -eq 46
@@ -192,6 +199,8 @@ jobs:
           .github/agent-art-seed-03c.b64
           .github/agent-art-seed-04.b64
           .github/agent-art-seed-05.b64
+          .github/agent-art-seed-05a.b64
+          .github/agent-art-seed-05b.b64
           .github/workflows/agent-art-bootstrap.yml
           EOF
           git diff --cached --diff-filter=D --name-only | sort > "$RUNNER_TEMP/actual-cleanup-files.txt"
