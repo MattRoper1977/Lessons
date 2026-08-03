@@ -33,19 +33,28 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import re
           import subprocess
 
           source = Path('.github/workflows/codex-launch-asdan-publish.yml')
           payload = source.read_text(encoding='utf-8')
-          old = r'''              if visible_text(original) != visible_text(enhanced):
-                  raise SystemExit(f"Visible text changed in {path}")'''
-          new = r'''              restored = enhanced.replace(f'<link rel="stylesheet" href="{css_ref}">\n', '', 1)
-              restored = restored.replace(f'<script src="{js_ref}" defer></script>\n', '', 1)
-              if restored != original:
-                  raise SystemExit(f"Content round-trip changed in {path}")'''
-          if old not in payload:
-              raise SystemExit('Publisher content-integrity check signature not found')
-          payload = payload.replace(old, new, 1)
+          pattern = re.compile(
+              r'(?m)^(?P<indent>[ ]*)if visible_text\(original\) != visible_text\(enhanced\):\n'
+              r'(?P=indent)    raise SystemExit\(f"Visible text changed in \{path\}"\)'
+          )
+
+          def replace_check(match):
+              indent = match.group('indent')
+              return (
+                  f"{indent}restored = enhanced.replace(f'<link rel=\"stylesheet\" href=\"{{css_ref}}\">\\n', '', 1)\n"
+                  f"{indent}restored = restored.replace(f'<script src=\"{{js_ref}}\" defer></script>\\n', '', 1)\n"
+                  f"{indent}if restored != original:\n"
+                  f"{indent}    raise SystemExit(f\"Content round-trip changed in {{path}}\")"
+              )
+
+          payload, replacements = pattern.subn(replace_check, payload, count=1)
+          if replacements != 1:
+              raise SystemExit(f'Expected one content-integrity check replacement, made {replacements}')
 
           lines = payload.splitlines()
           blocks = []
