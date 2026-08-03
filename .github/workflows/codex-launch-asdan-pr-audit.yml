@@ -35,100 +35,73 @@ jobs:
 
           python3 - <<'PY'
           from __future__ import annotations
-          import re
-          import subprocess
-          import tempfile
+          import re, subprocess, tempfile
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote, urlsplit
 
-          root = Path.cwd()
-          suite = root / 'LAUNCH_ASDAN'
-          html_files = sorted(suite.rglob('*.html'))
-          lesson_files = [p for p in html_files if p.parent != suite and p.name != 'START_HERE.html']
-          assert len(html_files) == 38, len(html_files)
-          assert len(lesson_files) == 30, len(lesson_files)
+          root=Path.cwd(); suite=root/'LAUNCH_ASDAN'
+          pages=sorted(suite.rglob('*.html'))
+          lessons=[p for p in pages if p.parent!=suite and p.name!='START_HERE.html']
+          assert len(pages)==38 and len(lessons)==30, (len(pages),len(lessons))
 
-          expected = {
-              'LAUNCH_ASDAN/visual-upgrade.css',
-              'LAUNCH_ASDAN/visual-upgrade.js',
-              'LAUNCH_ASDAN/VISUAL_UPGRADE_GUIDE.md',
-              '.github/workflows/codex-launch-asdan-pr-audit.yml',
-          }
-          changed = set(subprocess.check_output(['git','diff','--name-only','origin/main'], text=True).splitlines())
-          unexpected = changed - expected
-          if unexpected:
-              raise SystemExit(f'Unexpected changed paths: {sorted(unexpected)}')
+          allowed={'LAUNCH_ASDAN/visual-upgrade.css','LAUNCH_ASDAN/visual-upgrade.js','LAUNCH_ASDAN/VISUAL_UPGRADE_GUIDE.md','.github/workflows/codex-launch-asdan-pr-audit.yml'}
+          changed=set(subprocess.check_output(['git','diff','--name-only','origin/main'],text=True).splitlines())
+          if changed-allowed: raise SystemExit(f'Unexpected changed paths: {sorted(changed-allowed)}')
 
-          css = (suite / 'visual-upgrade.css').read_text(encoding='utf-8')
-          stripped = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
-          stripped = re.sub(r'(["\'])(?:\\.|(?!\1).)*\1', '', stripped)
-          depth = 0
-          for char in stripped:
-              if char == '{': depth += 1
-              elif char == '}': depth -= 1
-              if depth < 0: raise SystemExit('CSS closes before it opens')
+          css=(suite/'visual-upgrade.css').read_text(encoding='utf-8')
+          clean=re.sub(r'/\*.*?\*/','',css,flags=re.S)
+          clean=re.sub(r'(["\'])(?:\\.|(?!\1).)*\1','',clean)
+          depth=0
+          for char in clean:
+              depth += (char=='{')-(char=='}')
+              if depth<0: raise SystemExit('CSS closes before it opens')
           if depth: raise SystemExit(f'Unbalanced CSS braces: {depth}')
 
-          shared = [suite/'visual-upgrade.css', suite/'visual-upgrade.js', suite/'VISUAL_UPGRADE_GUIDE.md']
-          hygiene = re.compile(r'<<<<<<<|=======|>>>>>>>|\bTODO\b|\bFIXME\b|\bdebugger\b|console\.log\s*\(', re.I)
-          for path in shared:
-              if hygiene.search(path.read_text(encoding='utf-8')):
-                  raise SystemExit(f'Conflict, unfinished or debug artefact in {path}')
+          hygiene=re.compile(r'<<<<<<<|=======|>>>>>>>|\bTODO\b|\bFIXME\b|\bdebugger\b|console\.log\s*\(',re.I)
+          for p in [suite/'visual-upgrade.css',suite/'visual-upgrade.js',suite/'VISUAL_UPGRADE_GUIDE.md']:
+              if hygiene.search(p.read_text(encoding='utf-8')): raise SystemExit(f'Unfinished/debug artefact in {p}')
 
-          js = (suite / 'visual-upgrade.js').read_text(encoding='utf-8')
-          required = ['attributeOldValue: true', "attributeFilter: ['class', 'hidden']", 'wasActive !== isActive', 'queueSlideSync()', 'vu-we-do-meter', 'vu-checkpoint']
-          for marker in required:
-              if marker not in js: raise SystemExit(f'Missing lifecycle/interaction marker: {marker}')
+          js=(suite/'visual-upgrade.js').read_text(encoding='utf-8')
+          for marker in ['attributeOldValue: true',"attributeFilter: ['class', 'hidden']",'wasActive !== isActive','queueSlideSync()','vu-we-do-meter','vu-checkpoint']:
+              if marker not in js: raise SystemExit(f'Missing marker: {marker}')
 
-          class RefParser(HTMLParser):
-              def __init__(self):
-                  super().__init__(convert_charrefs=True)
-                  self.refs = []
-              def handle_starttag(self, tag, attrs):
-                  for name, value in attrs:
-                      if name.lower() in {'href','src'} and value:
-                          self.refs.append(value.strip())
+          class Parser(HTMLParser):
+              def __init__(self): super().__init__(convert_charrefs=True); self.refs=[]
+              def handle_starttag(self,tag,attrs):
+                  self.refs += [v.strip() for n,v in attrs if n.lower() in {'href','src'} and v]
 
-          script_pattern = re.compile(r'(?is)<script\b([^>]*)>(.*?)</script>')
-          type_pattern = re.compile(r'\btype\s*=\s*([\'\"])(.*?)\1', re.I)
+          scripts=re.compile(r'(?is)<script\b([^>]*)>(.*?)</script>')
+          types=re.compile(r'\btype\s*=\s*([\'\"])(.*?)\1',re.I)
+          hud_refs=0
           with tempfile.TemporaryDirectory() as td:
-              temp = Path(td)
-              for page in html_files:
-                  text = page.read_text(encoding='utf-8')
-                  depth = len(page.relative_to(suite).parts) - 1
-                  prefix = '../' * depth
-                  if text.count(prefix + 'visual-upgrade.css') != 1:
-                      raise SystemExit(f'Stylesheet coverage failed: {page}')
-                  if text.count(prefix + 'visual-upgrade.js') != 1:
-                      raise SystemExit(f'Script coverage failed: {page}')
-
-                  parser = RefParser(); parser.feed(text); parser.close()
+              temp=Path(td)
+              for page in pages:
+                  text=page.read_text(encoding='utf-8')
+                  prefix='../'*(len(page.relative_to(suite).parts)-1)
+                  if text.count(prefix+'visual-upgrade.css')!=1 or text.count(prefix+'visual-upgrade.js')!=1:
+                      raise SystemExit(f'Shared asset coverage failed: {page}')
+                  parser=Parser(); parser.feed(text); parser.close()
                   for raw in parser.refs:
-                      if not raw or raw.startswith(('#','data:','mailto:','tel:','javascript:','//')):
-                          continue
-                      split = urlsplit(raw)
+                      if not raw or raw.startswith(('#','data:','mailto:','tel:','javascript:','//')): continue
+                      split=urlsplit(raw)
                       if split.scheme or split.netloc: continue
-                      rel = unquote(split.path)
-                      if not rel: continue
-                      target = root / rel.lstrip('/') if rel.startswith('/') else page.parent / rel
-                      if not target.resolve().exists():
-                          raise SystemExit(f'Unresolved local reference {raw} in {page}')
-
-                  for index, match in enumerate(script_pattern.finditer(text), 1):
-                      attrs, body = match.groups()
-                      if re.search(r'\bsrc\s*=', attrs, re.I): continue
-                      type_match = type_pattern.search(attrs)
-                      script_type = type_match.group(2).strip().lower() if type_match else ''
-                      if script_type not in {'','text/javascript','application/javascript','module'}: continue
-                      target = temp / f'{page.stem}-{index}.js'
-                      target.write_text(body, encoding='utf-8')
-                      result = subprocess.run(['node','--check',str(target)], capture_output=True, text=True)
-                      if result.returncode:
-                          raise SystemExit(f'Inline JavaScript syntax error: {page} script {index}: {result.stderr}')
-
-          print('PASS static integrity: 38 HTML pages, 30 lessons, no curriculum-file diff')
-          print('PASS shared references, local assets, inline JavaScript, CSS balance and lifecycle markers')
+                      rel=unquote(split.path)
+                      if rel=='/hud.js': hud_refs+=1; continue
+                      target=(root/rel.lstrip('/')) if rel.startswith('/') else (page.parent/rel)
+                      if not target.resolve().exists(): raise SystemExit(f'Unresolved local reference {raw} in {page}')
+                  for i,m in enumerate(scripts.finditer(text),1):
+                      attrs,body=m.groups()
+                      if re.search(r'\bsrc\s*=',attrs,re.I): continue
+                      tm=types.search(attrs); kind=tm.group(2).strip().lower() if tm else ''
+                      if kind not in {'','text/javascript','application/javascript','module'}: continue
+                      target=temp/f'{page.stem}-{i}.js'; target.write_text(body,encoding='utf-8')
+                      result=subprocess.run(['node','--check',str(target)],capture_output=True,text=True)
+                      if result.returncode: raise SystemExit(f'Inline JS error: {page} script {i}: {result.stderr}')
+          if hud_refs!=30: raise SystemExit(f'Expected 30 existing /hud.js references, found {hud_refs}')
+          print('PASS static: 38 HTML pages, 30 lessons, no curriculum-file diff')
+          print('PASS shared references, inline JS, CSS balance, scope and lifecycle markers')
+          print('PRE-EXISTING: 30 root-relative /hud.js references retained unchanged')
           PY
 
       - name: Install browser driver
@@ -143,178 +116,73 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
 
           node <<'NODE'
-          const fs = require('fs');
-          const path = require('path');
-          const cp = require('child_process');
-          const puppeteer = require('puppeteer-core');
+          const fs=require('fs'),path=require('path'),cp=require('child_process');
+          const puppeteer=require('puppeteer-core');
+          const chrome=['google-chrome','chromium','chromium-browser'].map(n=>{try{return cp.execFileSync('bash',['-lc',`command -v ${n}`],{encoding:'utf8'}).trim()}catch{return''}}).find(Boolean);
+          if(!chrome) throw new Error('No browser executable');
+          const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
+          const html=walk('LAUNCH_ASDAN').filter(f=>f.endsWith('.html')).map(f=>f.replaceAll('\\','/'));
+          const lessons=html.filter(f=>!/(START_HERE|LAUNCH_ASDAN_Hub|Scheme_of_Work|Resources_and_Tools)\.html$/.test(f));
+          const reps=['PEQ','Careers','Living_Independently','Vocational','Community_Enterprise'].map(folder=>lessons.find(f=>f.includes(`/${folder}/`)));
+          const url=file=>`http://127.0.0.1:4173/${encodeURI(file)}`;
 
-          const chrome = ['google-chrome','chromium','chromium-browser']
-            .map(name => { try { return cp.execFileSync('bash',['-lc',`command -v ${name}`],{encoding:'utf8'}).trim(); } catch { return ''; } })
-            .find(Boolean);
-          if (!chrome) throw new Error('No Chrome/Chromium executable found');
-
-          const walk = dir => fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry => entry.isDirectory() ? walk(path.join(dir,entry.name)) : [path.join(dir,entry.name)]);
-          const html = walk('LAUNCH_ASDAN').filter(file => file.endsWith('.html')).map(file => file.replaceAll('\\','/'));
-          const lessons = html.filter(file => !/(START_HERE|LAUNCH_ASDAN_Hub|Scheme_of_Work|Resources_and_Tools)\.html$/.test(file));
-          const representatives = ['PEQ','Careers','Living_Independently','Vocational','Community_Enterprise'].map(folder => lessons.find(file => file.includes(`/${folder}/`)));
-          const urlFor = file => `http://127.0.0.1:4173/${encodeURI(file)}`;
-
-          (async () => {
-            const browser = await puppeteer.launch({
-              executablePath: chrome,
-              headless: true,
-              protocolTimeout: 120000,
-              args: ['--no-sandbox','--disable-dev-shm-usage']
-            });
-            const failures = [];
-
-            for (const file of representatives) {
-              const page = await browser.newPage();
-              await page.setViewport({width:1280,height:800});
-              const pageErrors = [];
-              page.on('pageerror', error => pageErrors.push(String(error)));
-              await page.goto(urlFor(file), {waitUntil:'load', timeout:30000});
-              await page.waitForFunction(() => document.documentElement.dataset.visualUpgrade === 'ready', {timeout:5000});
-              await page.evaluate(() => {
-                window.__vuMutations = 0;
-                new MutationObserver(records => {
-                  window.__vuMutations += records.filter(record => record.type === 'attributes' && record.target.classList?.contains('slide')).length;
-                }).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-              });
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,protocolTimeout:120000,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const failures=[];
+            for(const file of reps){
+              const page=await browser.newPage(); await page.setViewport({width:1280,height:800});
+              const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto(url(file),{waitUntil:'load',timeout:30000});
+              await page.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready',{timeout:5000});
+              await page.evaluate(()=>{window.__vuM=0;new MutationObserver(rs=>window.__vuM+=rs.filter(r=>r.type==='attributes'&&r.target.classList?.contains('slide')).length).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']})});
               await page.waitForTimeout(1400);
+              const before=await page.evaluate(()=>({idx:[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')),active:document.querySelectorAll('.slide.active').length,m:window.__vuM,hidden:[...document.querySelectorAll('.slide.active .vu-reveal')].some(e=>parseFloat(getComputedStyle(e).opacity)<.99)}));
+              if(before.active!==1) failures.push(`${file}: active=${before.active}`);
+              if(before.m>16) failures.push(`${file}: idle mutations=${before.m}`);
+              if(before.hidden) failures.push(`${file}: active content hidden`);
+              if(errors.length) failures.push(`${file}: ${errors.join(' | ')}`);
 
-              const before = await page.evaluate(() => ({
-                index: [...document.querySelectorAll('.slide')].findIndex(slide => slide.classList.contains('active')),
-                active: document.querySelectorAll('.slide.active').length,
-                mutations: window.__vuMutations,
-                hiddenReveal: [...document.querySelectorAll('.slide.active .vu-reveal')].some(element => Number.parseFloat(getComputedStyle(element).opacity) < .99),
-                buttons: [...document.querySelectorAll('.controls button')].map(button => ({text:button.textContent.trim(), onclick:button.getAttribute('onclick')}))
-              }));
-              if (before.active !== 1) failures.push(`${file}: expected one active slide, found ${before.active}`);
-              if (before.mutations > 16) failures.push(`${file}: idle slide-class mutations too high (${before.mutations})`);
-              if (before.hiddenReveal) failures.push(`${file}: active reveal content remained hidden`);
-              if (pageErrors.length) failures.push(`${file}: page errors ${pageErrors.join(' | ')}`);
+              let buttons=await page.$$('.controls button');
+              let next=await page.$('button[onclick*="nextSlide"]') || buttons.at(-1);
+              if(!next){failures.push(`${file}: no next control`)}else{
+                await next.focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(350);
+                const forward=await page.evaluate(()=>({idx:[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')),active:document.querySelectorAll('.slide.active').length,m:window.__vuM}));
+                if(forward.active!==1||forward.idx!==before.idx+1) failures.push(`${file}: next ${before.idx}->${forward.idx}, active=${forward.active}`);
+                if(forward.m-before.m>18) failures.push(`${file}: navigation mutations=${forward.m-before.m}`);
+                const previous=await page.$('button[onclick*="prevSlide"]') || buttons[0];
+                await previous.click(); await page.waitForTimeout(350);
+                const back=await page.evaluate(()=>[...document.querySelectorAll('.slide')].findIndex(s=>s.classList.contains('active')));
+                if(back!==before.idx) failures.push(`${file}: previous returned ${back}`);
+                console.log('NAV',JSON.stringify({file,before,forward,back}));
+              }
 
-              const next = page.locator('button[onclick*="nextSlide"]').first();
-              const nextButton = await next.count() ? next : page.locator('.controls button').last();
-              await nextButton.focus();
-              await page.keyboard.press('Enter');
-              await page.waitForTimeout(350);
-              const forward = await page.evaluate(() => ({
-                index: [...document.querySelectorAll('.slide')].findIndex(slide => slide.classList.contains('active')),
-                active: document.querySelectorAll('.slide.active').length,
-                mutations: window.__vuMutations
-              }));
-              if (forward.active !== 1 || forward.index !== before.index + 1) failures.push(`${file}: forward navigation ${before.index}->${forward.index}, active=${forward.active}`);
-              if (forward.mutations - before.mutations > 18) failures.push(`${file}: navigation caused excessive class mutations (${forward.mutations - before.mutations})`);
-
-              const previous = page.locator('button[onclick*="prevSlide"]').first();
-              const previousButton = await previous.count() ? previous : page.locator('.controls button').first();
-              await previousButton.click();
-              await page.waitForTimeout(350);
-              const back = await page.evaluate(() => [...document.querySelectorAll('.slide')].findIndex(slide => slide.classList.contains('active')));
-              if (back !== before.index) failures.push(`${file}: previous navigation returned to ${back}, expected ${before.index}`);
-
-              await page.setViewport({width:390,height:844});
-              await page.waitForTimeout(200);
-              const mobile = await page.evaluate(() => {
-                const buttons = [...document.querySelectorAll('.controls button')].map(button => {
-                  const rect = button.getBoundingClientRect();
-                  return {text:button.textContent.trim(), left:rect.left, right:rect.right, top:rect.top, bottom:rect.bottom};
-                });
-                return {
-                  buttons,
-                  visible: buttons.every(rect => rect.right > 0 && rect.left < innerWidth && rect.bottom > 0 && rect.top < innerHeight),
-                  controlRect: document.querySelector('.controls')?.getBoundingClientRect().toJSON()
-                };
-              });
-              if (!mobile.visible) failures.push(`${file}: navigation controls off-screen at 390px`);
-              console.log('NAVIGATION', JSON.stringify({file,before,forward,back,mobile}));
+              await page.setViewport({width:390,height:844}); await page.waitForTimeout(200);
+              const mobile=await page.evaluate(()=>{const bs=[...document.querySelectorAll('.controls button')].map(b=>{const r=b.getBoundingClientRect();return{text:b.textContent.trim(),left:r.left,right:r.right,top:r.top,bottom:r.bottom}});return{visible:bs.every(r=>r.right>0&&r.left<innerWidth&&r.bottom>0&&r.top<innerHeight),buttons:bs}});
+              if(!mobile.visible) failures.push(`${file}: mobile controls off-screen`);
               await page.close();
             }
 
-            const reduced = await browser.newPage();
-            await reduced.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
-            await reduced.goto(urlFor(representatives[0]), {waitUntil:'load'});
-            await reduced.waitForFunction(() => document.documentElement.dataset.visualUpgrade === 'ready');
-            await reduced.waitForTimeout(150);
-            const reducedState = await reduced.evaluate(() => ({
-              hiddenReveal: [...document.querySelectorAll('.slide.active .vu-reveal')].some(element => Number.parseFloat(getComputedStyle(element).opacity) < .99),
-              diagramSweepDisplay: document.querySelector('.slide.active .ilm') ? getComputedStyle(document.querySelector('.slide.active .ilm'),'::after').display : 'none'
-            }));
-            if (reducedState.hiddenReveal) failures.push('Reduced motion: active content hidden');
-            if (reducedState.diagramSweepDisplay !== 'none') failures.push(`Reduced motion: diagram sweep display=${reducedState.diagramSweepDisplay}`);
+            const reduced=await browser.newPage(); await reduced.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
+            await reduced.goto(url(reps[0]),{waitUntil:'load'}); await reduced.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready'); await reduced.waitForTimeout(150);
+            const rm=await reduced.evaluate(()=>({hidden:[...document.querySelectorAll('.slide.active .vu-reveal')].some(e=>parseFloat(getComputedStyle(e).opacity)<.99),sweep:document.querySelector('.slide.active .ilm')?getComputedStyle(document.querySelector('.slide.active .ilm'),'::after').display:'none'}));
+            if(rm.hidden||rm.sweep!=='none') failures.push(`Reduced motion hidden=${rm.hidden} sweep=${rm.sweep}`);
             await reduced.close();
 
-            let totalWeDo = 0;
-            let enhancedWeDo = 0;
-            let meters = 0;
-            let checkpoints = 0;
-            let responsiveMeter = false;
-            const sourceCounts = {};
-
-            for (const file of lessons) {
-              const page = await browser.newPage();
-              const pageErrors = [];
-              page.on('pageerror', error => pageErrors.push(String(error)));
-              await page.goto(urlFor(file), {waitUntil:'domcontentloaded', timeout:30000});
-              await page.waitForFunction(() => document.documentElement.dataset.visualUpgrade === 'ready', {timeout:5000});
-              const inventory = await page.evaluate(async () => {
-                const weDo = [...document.querySelectorAll('.slide')].filter(slide => /\bwe do\b/i.test(`${slide.dataset.title || ''} ${slide.querySelector('.slide-tag')?.textContent || ''}`) || slide.dataset.type === 'wedo');
-                const localSources = {};
-                weDo.forEach(slide => {
-                  const source = slide.querySelector('.vu-we-do-meter')?.dataset.vuSource;
-                  if (source) localSources[source] = (localSources[source] || 0) + 1;
-                });
-                let responded = false;
-                const meter = document.querySelector('.vu-we-do-meter');
-                if (meter) {
-                  const slide = meter.closest('.slide');
-                  const source = meter.dataset.vuSource;
-                  let target = null;
-                  if (source === 'checkpoints') {
-                    target = slide.querySelector('.vu-checkpoint');
-                    target?.click();
-                  } else {
-                    target = slide.querySelector(source);
-                    if (target) {
-                      if (source === '.match-target') target.classList.add('correct');
-                      else if (source === '.pres-card') target.classList.add('done');
-                      else if (source === '.hl-sentence') target.classList.add('highlighted');
-                      else if (source === '.v5-step') target.classList.add('revealed');
-                    }
-                  }
-                  await new Promise(resolve => setTimeout(resolve, 40));
-                  responded = Number(meter.getAttribute('aria-valuenow')) > 0;
-                }
-                return {
-                  total: weDo.length,
-                  enhanced: weDo.filter(slide => slide.dataset.vuWeDo === 'true').length,
-                  meters: weDo.reduce((sum,slide) => sum + slide.querySelectorAll('.vu-we-do-meter').length, 0),
-                  checkpoints: weDo.reduce((sum,slide) => sum + slide.querySelectorAll('.vu-checkpoint').length, 0),
-                  sources: localSources,
-                  responded
-                };
-              });
-              totalWeDo += inventory.total;
-              enhancedWeDo += inventory.enhanced;
-              meters += inventory.meters;
-              checkpoints += inventory.checkpoints;
-              responsiveMeter ||= inventory.responded;
-              Object.entries(inventory.sources).forEach(([source,count]) => sourceCounts[source] = (sourceCounts[source] || 0) + count);
-              if (pageErrors.length) failures.push(`${file}: page errors ${pageErrors.join(' | ')}`);
-              await page.close();
+            let total=0,enhanced=0,meters=0,checkpoints=0,responsive=false; const sources={};
+            for(const file of lessons){
+              const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto(url(file),{waitUntil:'domcontentloaded',timeout:30000}); await page.waitForFunction(()=>document.documentElement.dataset.visualUpgrade==='ready',{timeout:5000});
+              const inv=await page.evaluate(async()=>{const slides=[...document.querySelectorAll('.slide')].filter(s=>/\bwe do\b/i.test(`${s.dataset.title||''} ${s.querySelector('.slide-tag')?.textContent||''}`)||s.dataset.type==='wedo');const local={};slides.forEach(s=>{const src=s.querySelector('.vu-we-do-meter')?.dataset.vuSource;if(src)local[src]=(local[src]||0)+1});let responded=false;const meter=document.querySelector('.vu-we-do-meter');if(meter){const slide=meter.closest('.slide'),src=meter.dataset.vuSource;let target=src==='checkpoints'?slide.querySelector('.vu-checkpoint'):slide.querySelector(src);if(target){if(src==='checkpoints')target.click();else if(src==='.match-target')target.classList.add('correct');else if(src==='.pres-card')target.classList.add('done');else if(src==='.hl-sentence')target.classList.add('highlighted');else if(src==='.v5-step')target.classList.add('revealed')}await new Promise(r=>setTimeout(r,50));responded=Number(meter.getAttribute('aria-valuenow'))>0}return{total:slides.length,enhanced:slides.filter(s=>s.dataset.vuWeDo==='true').length,meters:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-we-do-meter').length,0),checkpoints:slides.reduce((n,s)=>n+s.querySelectorAll('.vu-checkpoint').length,0),local,responded}});
+              total+=inv.total; enhanced+=inv.enhanced; meters+=inv.meters; checkpoints+=inv.checkpoints; responsive||=inv.responded; Object.entries(inv.local).forEach(([k,v])=>sources[k]=(sources[k]||0)+v);
+              if(errors.length) failures.push(`${file}: ${errors.join(' | ')}`); await page.close();
             }
-
-            if (totalWeDo < 60) failures.push(`Expected at least 60 We Do slides, found ${totalWeDo}`);
-            if (enhancedWeDo !== totalWeDo) failures.push(`Enhanced We Do coverage ${enhancedWeDo}/${totalWeDo}`);
-            if (meters < 20) failures.push(`Too few We Do progress interactions (${meters})`);
-            if (!responsiveMeter) failures.push('No We Do progress meter responded to an interaction-state change');
-
-            console.log('WE_DO', JSON.stringify({totalWeDo,enhancedWeDo,meters,checkpoints,sourceCounts,responsiveMeter}));
-            console.log('REDUCED_MOTION', JSON.stringify(reducedState));
-            console.log('FAILURES', JSON.stringify(failures));
-            await browser.close();
-            if (failures.length) throw new Error(failures.join('\n'));
-          })().catch(error => { console.error(error); process.exit(1); });
+            if(total<60) failures.push(`We Do slides=${total}`);
+            if(enhanced!==total) failures.push(`We Do coverage=${enhanced}/${total}`);
+            if(meters<20) failures.push(`We Do meters=${meters}`);
+            if(!responsive) failures.push('No We Do meter responded');
+            console.log('WE_DO',JSON.stringify({total,enhanced,meters,checkpoints,sources,responsive}));
+            console.log('REDUCED',JSON.stringify(rm));
+            console.log('FAILURES',JSON.stringify(failures));
+            await browser.close(); if(failures.length)throw new Error(failures.join('\n'));
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
