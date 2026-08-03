@@ -24,10 +24,10 @@ Large text is the stricter reading: 3:1 only at ≥24px, or ≥19px bold.
 
 ## Headline
 
-- **5589** text elements measured across 31 decks
-- **607** below target, in **66** distinct patterns
-- by role — teaching **205**, UI **308**, decorative **94**
-- left — UI chrome — **308**
+- **5744** text elements measured across 36 decks
+- **609** below target, in **66** distinct patterns
+- by role — teaching **205**, UI **310**, decorative **94**
+- left — UI chrome — **310**
 - left — decorative — **94**
 - left — identity hue — **205**
 - **4** pattern(s) the composited chain called a failure and the painted pixel clears — listed at the foot
@@ -61,19 +61,18 @@ Large text is the stricter reading: 3:1 only at ≥24px, or ≥19px bold.
 | `span.v5-step-label` ×12 in 6 decks | I Do 1 | `#8b5fa0` | `#efe6f0` — painted pixel | **4.07** | 14.7 / 900 | UI | 4.5:1 | left — UI chrome |
 | `span.v5-step-label` ×12 in 6 decks | I Do 1 | `#c9803b` | `#f3e6da` — painted pixel | **2.58** | 14.7 / 900 | UI | 4.5:1 | left — UI chrome |
 | `span.v5-step-label` ×12 in 6 decks | I Do 1 | `#c4703f` | `#f3e6dd` — painted pixel | **2.99** | 14.7 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×10 in 6 decks | I Do 1 | `#ffffff` | `#3cac5e` — painted pixel | **2.89** _(chain said 3.6)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×9 in 6 decks | I Do 2 | `#ffffff` | `#3cab5e` — painted pixel | **2.93** _(chain said 3.67)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×9 in 5 decks | I Do 2 | `#ffffff` | `#39ab60` — painted pixel | **2.93** _(chain said 4.03)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×8 in 4 decks | I Do 1 | `#ffffff` | `#41a95d` — painted pixel | **2.98** _(chain said 3.89)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×8 in 5 decks | I Do 1 | `#ffffff` | `#3aac60` — painted pixel | **2.9** _(chain said 3.89)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 | `span.slide-tag.tag-lesson` ×7 in 7 decks | Title | `#ffffff` | `#2b9081` — painted pixel | **3.88** | 16 / 900 | teaching | 4.5:1 | left — identity hue |
 | `span.country-badge` ×7 in 7 decks | Starter | `#ffffff` | `#2b9081` — painted pixel | **3.88** | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
 | `span.country-badge` ×7 in 7 decks | Starter | `#ffffff` | `#2b9081` — painted pixel | **3.88** _(chain said 3.29)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
 | `span.country-badge` ×7 in 7 decks | Starter | `#ffffff` | `#2b9081` — painted pixel | **3.88** _(chain said 2.22)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
+| `button` ×7 in 5 decks | I Do 2 | `#ffffff` | `#3aac60` — painted pixel | **2.9** _(chain said 3.67)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 | `h3` ×7 in 7 decks | Independent Work | `#22c55e` | `#f8f0d9` — painted pixel | **2** | 18.7 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×7 in 7 decks | Independent Work | `#f97316` | `#f8f0d9` — painted pixel | **2.46** | 18.7 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×7 in 7 decks | Lundy Loop | `#c97b3d` | `#f1f5f7` — painted pixel | **3** _(chain said 3.03)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×7 in 7 decks | Lundy Loop | `#2b9081` | `#f1f5f7` — painted pixel | **3.54** | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×7 in 7 decks | Lundy Loop | `#d9a63a` | `#f1f5f7` — painted pixel | **2.02** _(chain said 2.09)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
+| `button` ×7 in 4 decks | I Do 1 | `#ffffff` | `#39ab60` — painted pixel | **2.93** _(chain said 3.83)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 | `span.slide-tag.tag-lesson` ×6 in 6 decks | Title | `#ffffff` | `#4e8093` — painted pixel | **4.35** | 16 / 900 | teaching | 4.5:1 | left — identity hue |
 | `span.country-badge` ×6 in 6 decks | Starter | `#ffffff` | `#4e8093` — painted pixel | **4.35** _(chain said 3.87)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
 | `span.country-badge` ×6 in 6 decks | Starter | `#ffffff` | `#4e8093` — painted pixel | **4.35** _(chain said 2.32)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
@@ -84,6 +83,7 @@ Large text is the stricter reading: 3:1 only at ≥24px, or ≥19px bold.
 | `span.country-badge` ×6 in 6 decks | Starter | `#ffffff` | `#c0684a` — painted pixel | **3.95** _(chain said 2.31)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
 | `h3` ×6 in 6 decks | Lundy Loop | `#358b90` | `#eff6f6` — painted pixel | **3.66** _(chain said 3.65)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#d6a23c` | `#eff6f6` — painted pixel | **2.11** _(chain said 2.17)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
+| `button` ×6 in 3 decks | I Do 1 | `#ffffff` | `#37ad63` — painted pixel | **2.87** _(chain said 3.98)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 | `span.slide-tag.tag-lesson` ×6 in 6 decks | Title | `#ffffff` | `#5b9e5b` — painted pixel | **3.24** | 16 / 900 | teaching | 4.5:1 | left — identity hue |
 | `span.country-badge` ×6 in 6 decks | Starter | `#ffffff` | `#5b9e5b` — painted pixel | **3.24** | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
 | `span.country-badge` ×6 in 6 decks | Starter | `#ffffff` | `#5b9e5b` — painted pixel | **3.24** _(chain said 4.19)_ | 11.2 / 900 | decorative | 4.5:1 | left — decorative |
@@ -95,23 +95,23 @@ Large text is the stricter reading: 3:1 only at ≥24px, or ≥19px bold.
 | `h3` ×6 in 6 decks | Lundy Loop | `#c9803b` | `#f1f5f8` — painted pixel | **2.89** _(chain said 2.92)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#5b9e5b` | `#f1f5f8` — painted pixel | **2.95** _(chain said 2.99)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#d8a63b` | `#f1f5f8` — painted pixel | **2.03** _(chain said 2.1)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
+| `button` ×6 in 3 decks | I Do 1 | `#ffffff` | `#38ad60` — painted pixel | **2.87** _(chain said 3.6)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 | `h3` ×6 in 6 decks | Independent Work | `#22c55e` | `#f8f0da` — painted pixel | **2** | 18.7 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Independent Work | `#f97316` | `#f8f0da` — painted pixel | **2.47** | 18.7 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#5b7fa6` | `#f2f5f8` — painted pixel | **3.81** | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#c4703f` | `#f2f5f8` — painted pixel | **3.35** | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#2e9384` | `#f2f5f8` — painted pixel | **3.41** | 16 / 700 | teaching | 4.5:1 | left — identity hue |
 | `h3` ×6 in 6 decks | Lundy Loop | `#7e6ba6` | `#f2f5f8` — painted pixel | **4.23** _(chain said 4.2)_ | 16 / 700 | teaching | 4.5:1 | left — identity hue |
-| `button` ×5 in 4 decks | I Do 1 | `#ffffff` | `#3ca866` — painted pixel | **3.01** _(chain said 4.28)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×4 in 4 decks | I Do 1 | `#ffffff` | `#3cab5e` — painted pixel | **2.93** _(chain said 3.61)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×4 in 4 decks | I Do 1 | `#ffffff` | `#37ad63` — painted pixel | **2.87** _(chain said 3.98)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×2 in 2 decks | I Do 1 | `#ffffff` | `#40a95e` — painted pixel | **2.98** _(chain said 3.83)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×2 in 2 decks | I Do 1 | `#ffffff` | `#41a95d` — painted pixel | **2.98** _(chain said 3.74)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×2 in 2 decks | I Do 2 | `#ffffff` | `#3cab5f` — painted pixel | **2.92** _(chain said 3.96)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#3cab5e` — painted pixel | **2.93** _(chain said 3.69)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#3baa5f` — painted pixel | **2.96** _(chain said 4.19)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#3aaa64` — painted pixel | **2.95** _(chain said 4.27)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#3cac5e` — painted pixel | **2.89** _(chain said 3.58)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
-| `button` ×1 in 1 decks | I Do 1 | `#ffffff` | `#41aa5d` — painted pixel | **2.94** _(chain said 3.53)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×5 in 3 decks | I Do 1 | `#ffffff` | `#3aac60` — painted pixel | **2.9** _(chain said 3.53)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×4 in 3 decks | I Do 1 | `#ffffff` | `#3aac60` — painted pixel | **2.9** _(chain said 3.61)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×4 in 2 decks | I Do 1 | `#ffffff` | `#38ad60` — painted pixel | **2.87** _(chain said 4.03)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×3 in 3 decks | I Do 2 | `#ffffff` | `#36ad5f` — painted pixel | **2.88** _(chain said 3.69)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×3 in 2 decks | I Do 1 | `#ffffff` | `#38ac63` — painted pixel | **2.9** _(chain said 4.28)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×3 in 2 decks | I Do 2 | `#ffffff` | `#38ac63` — painted pixel | **2.9** _(chain said 4.27)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×2 in 2 decks | I Do 2 | `#ffffff` | `#3aac60` — painted pixel | **2.9** _(chain said 3.96)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×2 in 1 decks | I Do 1 | `#ffffff` | `#38ad60` — painted pixel | **2.87** _(chain said 3.74)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#36ac5f` — painted pixel | **2.91** _(chain said 4.18)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
+| `button` ×1 in 1 decks | I Do 2 | `#ffffff` | `#38ad60` — painted pixel | **2.87** _(chain said 3.58)_ | 15.2 / 900 | UI | 4.5:1 | left — UI chrome |
 
 ## Cleared by the painted-pixel measurement
 

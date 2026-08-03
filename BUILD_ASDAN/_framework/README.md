@@ -335,3 +335,43 @@ This cost a round of false positives: 93 of 186 viewport sweeps "failed" on a
 step that was fine, and the animation involved was `fadeInUp`, which the decks
 have always had. Wait ~80 ms of real time, or check `el.getAnimations()[0]
 .currentTime` before believing an opacity.
+
+---
+
+## August 2026 classroom orchestration upgrade
+
+This pass deepens the existing presentation-only framework without changing any
+lesson wording, question, answer, outcome, assessment evidence or sequence.
+
+**We Do 1 — prediction cards**
+
+- A large class-progress rail mirrors the real `.done` state.
+- Every card carries the same visible number as the answer it produces.
+- **Pick a card** chooses an unrevealed card for talk-before-tap without opening
+  it, changing the score or bypassing the authored `presTap()` behaviour.
+- The picked state is visible, keyboard-focused and announced accessibly.
+
+**We Do 2 — matching**
+
+- A second progress rail mirrors the real `.correct` target state.
+- Holding a word card quietens the unused word cards while leaving every target
+  fully readable for comparison.
+- Each completed pair is copied into a connection trail using only the exact
+  existing word-card and target wording. Reset and Reveal remain the authored
+  controls and the trail follows them automatically.
+
+**Purposeful CSS and SVG motion**
+
+- Animations on inactive slides are paused.
+- An illuminator restarts whenever its I Do slide becomes active, as well as from
+  the existing Replay control.
+- One short light sweep places the eye on the diagram; it does not loop.
+- In diagrams that combine a staged build with decorative glow or ripple, those
+  decorative loops settle after the teaching window. The four loop-only concept
+  diagrams remain continuous because their cycle carries the meaning.
+- When a pulsing glow contains a written SVG label, only the visual shape pulses;
+  the exact authored label remains at full opacity throughout the cycle.
+- Reduced-motion and print modes remove the new motion and presentation chrome.
+
+The content-integrity gate still strips the generated framework blocks and
+compares all 31 decks to the recorded baseline byte for byte.

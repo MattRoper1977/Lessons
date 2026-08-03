@@ -176,6 +176,8 @@
       void cap.offsetWidth;
       cap.style.animation = '';
     }
+    startIlluminatorSpotlight(block);
+    scheduleIlluminatorSettle(block);
   }
 
   AT.replayIlluminator = replayIlluminator;
@@ -547,6 +549,468 @@
     }
   }
 
+
+  /* ==================================================================
+     FEATURE · Live We Do orchestration and purposeful motion lifecycle
+     ------------------------------------------------------------------
+     The authored activities remain authoritative. This layer only makes
+     their real state easier to teach from: a large class-progress rail,
+     a teacher-controlled random choice that never reveals an answer, and
+     a completed-connection trail that repeats the lesson's exact wording.
+
+     The motion lifecycle keeps authored SVG builds purposeful: animations
+     wait while their slide is off screen, replay when the I Do slide opens,
+     receive one short spotlight, and then settle only decorative glow/ripple
+     loops in mixed build diagrams. The four loop-only concept diagrams are
+     deliberately left continuous.
+     ================================================================== */
+  var atActivityFrame = 0;
+  var atMotionTimers = new WeakMap();
+
+  function atCleanText(el) {
+    return ((el && el.textContent) || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function atAnnounce(text) {
+    var live = document.getElementById('at-activity-live');
+    if (!live) {
+      live = document.createElement('div');
+      live.id = 'at-activity-live';
+      live.className = 'at-sr-only';
+      live.setAttribute('role', 'status');
+      live.setAttribute('aria-live', 'polite');
+      live.setAttribute('aria-atomic', 'true');
+      document.body.appendChild(live);
+    }
+    live.textContent = '';
+    window.setTimeout(function () {
+      live.textContent = text;
+    }, 20);
+  }
+
+  function atEnsureActivityBar(slide, kind, total) {
+    if (!slide) return null;
+    var bar = slide.querySelector('.at-activity-bar[data-at-activity="' + kind + '"]');
+    if (bar) {
+      var currentTrack = bar.querySelector('.at-activity-track');
+      if (currentTrack) currentTrack.setAttribute('aria-valuemax', String(total));
+      return bar;
+    }
+
+    bar = document.createElement('div');
+    bar.className = 'at-activity-bar';
+    bar.setAttribute('data-at-activity', kind);
+
+    var label = document.createElement('span');
+    label.className = 'at-activity-label';
+    label.textContent = 'Class progress';
+
+    var track = document.createElement('span');
+    track.className = 'at-activity-track';
+    track.setAttribute('role', 'progressbar');
+    track.setAttribute('aria-label', kind === 'presentation' ? 'Prediction-card progress' : 'Matching progress');
+    track.setAttribute('aria-valuemin', '0');
+    track.setAttribute('aria-valuemax', String(total));
+    track.setAttribute('aria-valuenow', '0');
+
+    var fill = document.createElement('span');
+    fill.className = 'at-activity-fill';
+    track.appendChild(fill);
+
+    var count = document.createElement('span');
+    count.className = 'at-activity-count';
+    count.setAttribute('aria-live', 'polite');
+    count.textContent = '0 / ' + total;
+
+    var actions = document.createElement('span');
+    actions.className = 'at-activity-actions';
+
+    if (kind === 'presentation') {
+      var pick = document.createElement('button');
+      pick.type = 'button';
+      pick.className = 'at-random-pick';
+      pick.textContent = 'Pick a card';
+      pick.setAttribute('aria-label', 'Choose an unrevealed card without revealing it');
+      pick.setAttribute('aria-controls', 'pres-pills');
+      pick.addEventListener('click', function () {
+        atPickPresentationCard(slide);
+      });
+      actions.appendChild(pick);
+    }
+
+    bar.appendChild(label);
+    bar.appendChild(track);
+    bar.appendChild(count);
+    bar.appendChild(actions);
+
+    var anchor = slide.querySelector('.li-box');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(bar, anchor.nextSibling);
+    } else {
+      slide.insertBefore(bar, slide.firstChild);
+    }
+    return bar;
+  }
+
+  function atSetActivityProgress(bar, done, total) {
+    if (!bar) return;
+    var safeTotal = Math.max(total, 1);
+    var track = bar.querySelector('.at-activity-track');
+    var fill = bar.querySelector('.at-activity-fill');
+    var count = bar.querySelector('.at-activity-count');
+    var previous = parseInt(bar.getAttribute('data-at-done') || '0', 10);
+    var complete = total > 0 && done >= total;
+
+    if (track) {
+      track.setAttribute('aria-valuemax', String(total));
+      track.setAttribute('aria-valuenow', String(done));
+      track.setAttribute('aria-valuetext', done + ' of ' + total + ' completed');
+    }
+    if (fill) fill.style.width = Math.round((done / safeTotal) * 100) + '%';
+    if (count) count.textContent = done + ' / ' + total;
+
+    bar.classList.toggle('at-complete', complete);
+    if (complete && previous !== done) {
+      bar.classList.remove('at-just-complete');
+      void bar.offsetWidth;
+      bar.classList.add('at-just-complete');
+      window.setTimeout(function () {
+        bar.classList.remove('at-just-complete');
+      }, 520);
+    }
+    bar.setAttribute('data-at-done', String(done));
+  }
+
+  function atPickPresentationCard(slide) {
+    var cards = Array.prototype.slice.call(slide.querySelectorAll('.pres-card'));
+    var unrevealed = cards.filter(function (card) {
+      return !card.classList.contains('done');
+    });
+    if (!unrevealed.length) return;
+
+    var last = slide.getAttribute('data-at-last-pick');
+    var pool = unrevealed.filter(function (card) {
+      return card.getAttribute('data-at-card') !== last;
+    });
+    if (!pool.length) pool = unrevealed;
+
+    cards.forEach(function (card) {
+      card.classList.remove('at-picked');
+    });
+    var choice = pool[Math.floor(Math.random() * pool.length)];
+    choice.classList.add('at-picked');
+    slide.setAttribute('data-at-last-pick', choice.getAttribute('data-at-card') || '');
+    try {
+      choice.focus({ preventScroll: true });
+    } catch (e) {
+      choice.focus();
+    }
+    if (typeof choice.scrollIntoView === 'function') {
+      try {
+        choice.scrollIntoView({ block: 'nearest', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      } catch (e) {}
+    }
+    atAnnounce('Card ' + (choice.getAttribute('data-at-card') || '') + ' selected.');
+    atQueueActivityRefresh();
+  }
+
+  function atRefreshPresentationActivity() {
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.pres-card'));
+    if (!cards.length) return;
+    var slide = cards[0].closest ? cards[0].closest('.slide') : null;
+    if (!slide) return;
+
+    cards.forEach(function (card, i) {
+      card.setAttribute('data-at-card', String(i + 1));
+      card.setAttribute('aria-pressed', card.classList.contains('done') ? 'true' : 'false');
+      if (card.classList.contains('done')) card.classList.remove('at-picked');
+    });
+
+    var done = cards.filter(function (card) {
+      return card.classList.contains('done');
+    }).length;
+    var bar = atEnsureActivityBar(slide, 'presentation', cards.length);
+    atSetActivityProgress(bar, done, cards.length);
+
+    var pick = bar && bar.querySelector('.at-random-pick');
+    if (pick) {
+      pick.disabled = done >= cards.length;
+      pick.setAttribute('aria-disabled', pick.disabled ? 'true' : 'false');
+    }
+  }
+
+  function atMatchId(pill) {
+    var raw = (pill && pill.getAttribute('onclick')) || '';
+    var match = raw.match(/selectKW\s*\(\s*this\s*,\s*['"]([^'"]+)['"]/i);
+    return match ? match[1] : '';
+  }
+
+  function atEnsurePairTrail(slide, grid) {
+    var trail = slide.querySelector('.at-pair-trail');
+    if (trail) return trail;
+
+    trail = document.createElement('div');
+    trail.className = 'at-pair-trail';
+    trail.hidden = true;
+    trail.setAttribute('aria-live', 'polite');
+    trail.setAttribute('aria-atomic', 'false');
+
+    var label = document.createElement('span');
+    label.className = 'at-pair-label';
+    label.textContent = 'Completed connections';
+
+    var list = document.createElement('div');
+    list.className = 'at-pair-list';
+
+    trail.appendChild(label);
+    trail.appendChild(list);
+    if (grid && grid.parentNode) {
+      grid.parentNode.insertBefore(trail, grid.nextSibling);
+    } else {
+      slide.appendChild(trail);
+    }
+    return trail;
+  }
+
+  function atRenderPairTrail(slide, pills, targets) {
+    var byId = {};
+    pills.forEach(function (pill) {
+      var id = atMatchId(pill);
+      if (id) byId[id] = pill;
+    });
+
+    var pairs = [];
+    targets.forEach(function (target) {
+      if (!target.classList.contains('correct')) return;
+      var id = target.getAttribute('data-correct') || '';
+      if (id && byId[id]) pairs.push({ id: id, pill: byId[id], target: target });
+    });
+
+    var grid = targets[0] && targets[0].parentNode;
+    var trail = atEnsurePairTrail(slide, grid);
+    var signature = pairs.map(function (pair) { return pair.id; }).join('|');
+    trail.hidden = pairs.length === 0;
+    if (trail.getAttribute('data-at-signature') === signature) return;
+    trail.setAttribute('data-at-signature', signature);
+
+    var list = trail.querySelector('.at-pair-list');
+    list.textContent = '';
+    pairs.forEach(function (pair, i) {
+      var chip = document.createElement('div');
+      chip.className = 'at-pair-chip';
+      chip.setAttribute('data-at-pair', pair.id);
+
+      var number = document.createElement('span');
+      number.className = 'at-pair-number';
+      number.setAttribute('aria-hidden', 'true');
+      number.textContent = String(i + 1);
+
+      var key = document.createElement('span');
+      key.className = 'at-pair-key';
+      key.textContent = atCleanText(pair.pill);
+
+      var arrow = document.createElement('span');
+      arrow.className = 'at-pair-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.textContent = '→';
+
+      var value = document.createElement('span');
+      value.className = 'at-pair-target';
+      value.textContent = atCleanText(pair.target);
+
+      chip.appendChild(number);
+      chip.appendChild(key);
+      chip.appendChild(arrow);
+      chip.appendChild(value);
+      list.appendChild(chip);
+    });
+  }
+
+  function atRefreshMatchingActivity() {
+    var targets = Array.prototype.slice.call(document.querySelectorAll('.match-target'));
+    var pills = Array.prototype.slice.call(document.querySelectorAll('#kw-pills .match-pill'));
+    if (!targets.length || !pills.length) return;
+    var slide = targets[0].closest ? targets[0].closest('.slide') : null;
+    if (!slide) return;
+
+    var done = targets.filter(function (target) {
+      return target.classList.contains('correct');
+    }).length;
+    var selected = slide.querySelector('.match-pill.selected');
+    slide.classList.toggle('at-match-holding', !!selected);
+
+    pills.forEach(function (pill) {
+      pill.setAttribute('aria-pressed', pill.classList.contains('selected') ? 'true' : 'false');
+      pill.setAttribute('aria-disabled', pill.classList.contains('placed') ? 'true' : 'false');
+    });
+    targets.forEach(function (target) {
+      target.setAttribute('aria-pressed', target.classList.contains('correct') ? 'true' : 'false');
+      target.setAttribute('aria-disabled', target.classList.contains('correct') ? 'true' : 'false');
+    });
+
+    var bar = atEnsureActivityBar(slide, 'matching', targets.length);
+    atSetActivityProgress(bar, done, targets.length);
+    atRenderPairTrail(slide, pills, targets);
+  }
+
+  function atQueueActivityRefresh() {
+    if (atActivityFrame) return;
+    atActivityFrame = window.requestAnimationFrame(function () {
+      atActivityFrame = 0;
+      atRefreshPresentationActivity();
+      atRefreshMatchingActivity();
+    });
+  }
+
+  function setupWeDoEnhancements() {
+    atRefreshPresentationActivity();
+    atRefreshMatchingActivity();
+
+    var slides = [];
+    document.querySelectorAll('.pres-card, .match-target').forEach(function (el) {
+      var slide = el.closest ? el.closest('.slide') : null;
+      if (slide && slides.indexOf(slide) === -1) slides.push(slide);
+    });
+
+    slides.forEach(function (slide) {
+      var observer = new MutationObserver(function () {
+        atQueueActivityRefresh();
+      });
+      observer.observe(slide, {
+        subtree: true,
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['class'],
+      });
+    });
+
+    AT.onSlideChange(function (slide) {
+      if (slide && slide.querySelector('.pres-card, .match-target')) atQueueActivityRefresh();
+    });
+    document.documentElement.setAttribute('data-at-build-upgrade', 'ready');
+  }
+
+  function atEnsureMotionSweep(block) {
+    var sweep = block.querySelector('.at-ilm-sweep');
+    if (sweep) return sweep;
+    sweep = document.createElement('span');
+    sweep.className = 'at-ilm-sweep';
+    sweep.setAttribute('aria-hidden', 'true');
+    var replay = block.querySelector('.ilm-replay');
+    if (replay) block.insertBefore(sweep, replay);
+    else block.appendChild(sweep);
+    return sweep;
+  }
+
+
+  /* Keep words readable when a diagram uses a pulsing glow on a group that
+     contains both a shape and its text label. The pulse moves to the visual
+     branches only; the exact authored label remains inside the finite build. */
+  function atProtectLoopLabels(block) {
+    if (!block || block.getAttribute('data-at-loop-labels') === 'ready') return;
+    block.setAttribute('data-at-loop-labels', 'ready');
+
+    block.querySelectorAll('.glow').forEach(function (loop) {
+      var labels = loop.querySelectorAll ? loop.querySelectorAll('text') : [];
+      if (!labels.length) return;
+
+      var delay = getComputedStyle(loop).animationDelay || '';
+      loop.classList.remove('glow');
+
+      Array.prototype.forEach.call(loop.children || [], function (child) {
+        var tag = (child.tagName || '').toLowerCase();
+        if (tag === 'text' || (child.querySelector && child.querySelector('text'))) return;
+        child.classList.add('glow', 'at-label-safe-glow');
+        if (delay && delay !== '0s') child.style.animationDelay = delay;
+      });
+    });
+  }
+
+  function atClassifyIlluminatorMotion(block) {
+    if (block.getAttribute('data-at-motion-ready')) return;
+    block.setAttribute('data-at-motion-ready', '1');
+    var hasFinite = false;
+    var loops = [];
+
+    block.querySelectorAll('svg *').forEach(function (el) {
+      var cs = getComputedStyle(el);
+      if (cs.animationName === 'none') return;
+      if (cs.animationIterationCount === 'infinite') loops.push(el);
+      else hasFinite = true;
+    });
+
+    var count = 0;
+    if (hasFinite) {
+      loops.forEach(function (el) {
+        if (el.classList.contains('glow')) {
+          el.classList.add('at-settle-glow');
+          count++;
+        } else if (el.classList.contains('rip')) {
+          el.classList.add('at-settle-rip');
+          count++;
+        }
+      });
+    }
+    block.setAttribute('data-at-settle-count', String(count));
+  }
+
+  function startIlluminatorSpotlight(block) {
+    if (!block || reduceMotion.matches) return;
+    atEnsureMotionSweep(block);
+    block.classList.remove('at-ilm-replaying');
+    void block.offsetWidth;
+    block.classList.add('at-ilm-replaying');
+
+    var state = atMotionTimers.get(block) || {};
+    if (state.spotlight) window.clearTimeout(state.spotlight);
+    state.spotlight = window.setTimeout(function () {
+      block.classList.remove('at-ilm-replaying');
+    }, 1350);
+    atMotionTimers.set(block, state);
+  }
+
+  function scheduleIlluminatorSettle(block) {
+    if (!block) return;
+    atClassifyIlluminatorMotion(block);
+    block.classList.remove('at-ilm-settled');
+
+    var state = atMotionTimers.get(block) || {};
+    if (state.settle) window.clearTimeout(state.settle);
+    var count = parseInt(block.getAttribute('data-at-settle-count') || '0', 10);
+    if (!count || reduceMotion.matches) {
+      atMotionTimers.set(block, state);
+      return;
+    }
+
+    var end = parseFloat(block.style.getPropertyValue('--ilm-end')) || 2.4;
+    var delay = Math.min(8000, Math.max(2800, (end + 1.35) * 1000));
+    state.settle = window.setTimeout(function () {
+      if (block.isConnected) block.classList.add('at-ilm-settled');
+    }, delay);
+    atMotionTimers.set(block, state);
+  }
+
+  function setupMotionLifecycle() {
+    document.querySelectorAll('.ilm').forEach(function (block) {
+      atEnsureMotionSweep(block);
+      atProtectLoopLabels(block);
+      atClassifyIlluminatorMotion(block);
+    });
+
+    AT.onSlideChange(function (slide) {
+      document.querySelectorAll('.ilm.at-ilm-replaying').forEach(function (block) {
+        if (!slide || !slide.contains(block)) block.classList.remove('at-ilm-replaying');
+      });
+      if (!slide) return;
+      slide.querySelectorAll('.ilm').forEach(function (block) {
+        window.requestAnimationFrame(function () {
+          var active = document.querySelector('.slide.active');
+          if (active && active.contains(block)) replayIlluminator(block);
+        });
+      });
+    });
+  }
+
   /* ==================================================================
      Registration
      ================================================================== */
@@ -567,6 +1031,8 @@
     fitMatchGrid();
     accentLevelCards(document);
     setupStepBuild();
+    setupWeDoEnhancements();
+    setupMotionLifecycle();
   });
 
   if (document.readyState === 'loading') {
