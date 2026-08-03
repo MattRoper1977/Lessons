@@ -653,8 +653,198 @@
 .slide.active .lundy-box:nth-child(4){animation-delay:.52s}
 @media print{.lundy-box{box-shadow:none;animation:none}}
 
+
 /* ==========================================================================
-   14 · REDUCED MOTION
+   14 · WE DO ORCHESTRATION AND PURPOSEFUL MOTION
+   ---------------------------------------------------------------------------
+   The lesson's own activity state drives everything here. The framework adds
+   no answers and changes no score: it makes progress, the next discussion
+   choice and completed matches readable from the back of the room.
+
+   Motion is similarly purposeful. Hidden slides are paused, an illuminator
+   replays when its teaching slide opens, one sweep places attention on the
+   diagram, and decorative glow/ripple loops settle only after a mixed build.
+   Loop-only concept diagrams keep moving because the cycle is the concept.
+   ========================================================================== */
+
+/* Nothing hidden should consume attention or processor time. When the slide
+   becomes active its authored animation resumes; illuminators are restarted by
+   the interaction layer so their explanatory sequence always begins at step 1. */
+.slide:not(.active),.slide:not(.active) *{animation-play-state:paused!important}
+
+.at-sr-only{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+
+.at-activity-bar{
+  display:grid;grid-template-columns:auto minmax(120px,1fr) auto auto;
+  align-items:center;gap:10px;
+  margin:10px 0 12px;padding:9px 10px;
+  background:linear-gradient(90deg,var(--wedo-bg),#fff 72%);
+  border:1px solid #e2e8f0;border-left:6px solid var(--wedo-border);
+  border-radius:12px;box-shadow:0 5px 14px rgba(15,23,42,.07);
+}
+.at-activity-label{
+  color:var(--text,#1f2937);font-size:.75rem;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+}
+.at-activity-track{
+  position:relative;display:block;height:12px;min-width:100px;
+  overflow:hidden;border:1px solid #cbd5e1;border-radius:999px;
+  background:rgba(255,255,255,.88);
+}
+.at-activity-fill{
+  display:block;width:0;height:100%;border-radius:inherit;
+  background:var(--wedo-border);
+  transition:width var(--at-base) var(--at-ease),background var(--at-fast) var(--at-ease);
+}
+.at-activity-count{
+  min-width:52px;text-align:center;color:var(--text,#1f2937);
+  font-size:.84rem;font-weight:900;font-variant-numeric:tabular-nums;
+}
+.at-activity-actions{display:flex;align-items:center;justify-content:flex-end}
+.at-random-pick{
+  min-height:38px;padding:7px 13px;
+  background:#fff;color:var(--text,#1f2937);
+  border:2px solid var(--wedo-border);border-radius:999px;
+  font-size:.8rem;font-weight:900;letter-spacing:.02em;
+  box-shadow:0 3px 8px rgba(15,23,42,.09);
+}
+.at-random-pick:hover,.at-random-pick:focus-visible{
+  background:var(--wedo-bg);color:var(--text,#1f2937);transform:translateY(-1px);
+  outline:3px solid var(--wedo-border);outline-offset:2px;
+}
+.at-random-pick:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+.at-activity-bar.at-complete{border-left-color:var(--success)}
+.at-activity-bar.at-complete .at-activity-fill{background:var(--success)}
+@keyframes atActivityComplete{
+  0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}
+}
+.at-activity-bar.at-just-complete{animation:atActivityComplete .5s var(--at-pop)}
+
+/* A number makes the teacher's random choice and the revealed-answer number
+   refer to the same object. The question mark remains as a separate cue that
+   the card is still face down. */
+.pres-card[data-at-card]::before{
+  content:attr(data-at-card);width:26px;height:26px;
+  background:#fff;color:var(--text,#1f2937);border:2px solid var(--wedo-border);
+}
+.pres-card:not(.done)[data-at-card]::after{
+  content:'?';position:absolute;right:10px;top:8px;
+  width:19px;height:19px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--wedo-bg);color:var(--text,#1f2937);
+  border:1px solid var(--wedo-border);font-size:.72rem;font-weight:900;
+}
+.pres-card.done[data-at-card]::before{
+  content:'✓';background:var(--success);color:#fff;border-color:var(--success);
+}
+.pres-card.at-picked:not(.done){
+  border-style:solid;border-color:var(--wedo-border);
+  transform:translateY(-4px) scale(1.025);
+  box-shadow:0 0 0 5px var(--wedo-bg),0 12px 26px rgba(15,23,42,.16);
+}
+.pres-card.at-picked:not(.done)::after{content:'→'}
+
+/* When a word card is held, the other word cards quieten. Targets remain fully
+   legible because the pupil still needs to compare every possible partner. */
+#wedo2.at-match-holding #kw-pills .match-pill:not(.selected):not(.placed){
+  opacity:.52;filter:saturate(.55);transform:scale(.97);
+}
+#kw-pills .match-pill{
+  transition:opacity var(--at-fast) var(--at-ease),filter var(--at-fast) var(--at-ease),
+             transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+
+.at-pair-trail{
+  margin:12px 0 4px;padding:10px 12px;
+  border:1px solid #e2e8f0;border-left:6px solid var(--wedo-border);
+  border-radius:12px;background:#fff;
+}
+.at-pair-trail[hidden]{display:none!important}
+.at-pair-label{
+  display:block;margin-bottom:7px;color:var(--text,#1f2937);
+  font-size:.73rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+}
+.at-pair-list{display:grid;gap:7px}
+@keyframes atPairIn{
+  from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}
+}
+.at-pair-chip{
+  display:grid;grid-template-columns:26px minmax(90px,.8fr) 24px minmax(160px,1.3fr);
+  align-items:center;gap:8px;
+  min-height:42px;padding:7px 10px;
+  border:1px solid #cbd5e1;border-left:4px solid var(--success);
+  border-radius:10px;background:linear-gradient(90deg,var(--wedo-bg),#fff 48%);
+  color:var(--text,#1f2937);font-size:.88rem;line-height:1.3;
+  animation:atPairIn var(--at-fast) var(--at-ease) backwards;
+}
+.at-pair-number{
+  width:23px;height:23px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;color:var(--text,#1f2937);border:2px solid var(--wedo-border);
+  font-size:.72rem;font-weight:900;font-variant-numeric:tabular-nums;
+}
+.at-pair-key{font-weight:900}
+.at-pair-arrow{text-align:center;color:var(--text,#1f2937);font-size:1rem;font-weight:900}
+.at-pair-target{font-weight:650}
+
+/* One replay sweep directs the eye without becoming permanent decoration. */
+.ilm-replay{z-index:4}
+.ilm.at-ilm-replaying{
+  box-shadow:0 0 0 3px var(--ido-bg),0 10px 26px rgba(15,23,42,.10);
+  border-radius:12px;
+}
+.at-ilm-sweep{
+  position:absolute;z-index:3;left:0;top:0;bottom:0;width:34%;
+  pointer-events:none;opacity:0;transform:translateX(-125%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+}
+@keyframes atIlmSpotlight{
+  0%{opacity:0;transform:translateX(-125%)}
+  18%{opacity:.68}
+  100%{opacity:0;transform:translateX(390%)}
+}
+.ilm.at-ilm-replaying .at-ilm-sweep{
+  animation:atIlmSpotlight 1.2s var(--at-ease) both;
+}
+/* In a mixed staged build, glow and ripple are emphasis, not the idea itself.
+   They settle after the explanatory window. Loop-only concept diagrams are not
+   marked by the JS and therefore remain continuous. */
+.ilm.at-ilm-settled .at-settle-glow{animation:none!important;opacity:1!important}
+.ilm.at-ilm-settled .at-settle-rip{animation:none!important;opacity:0!important}
+
+@media (max-width:760px){
+  .at-activity-bar{grid-template-columns:auto 1fr auto;gap:7px}
+  .at-activity-actions{grid-column:1/-1;justify-content:flex-start}
+  .at-random-pick{min-height:34px;padding:5px 11px}
+  .at-pair-chip{grid-template-columns:24px minmax(70px,.75fr) 18px minmax(110px,1.25fr);font-size:.8rem}
+}
+@media (max-width:480px){
+  .at-activity-bar{grid-template-columns:1fr auto}
+  .at-activity-label{grid-column:1/-1}
+  .at-activity-track{min-width:0}
+  .at-pair-chip{grid-template-columns:23px 1fr;gap:5px 8px}
+  .at-pair-arrow{display:none}
+  .at-pair-target{grid-column:2}
+}
+@media print{
+  .at-activity-bar,.at-pair-trail,.at-ilm-sweep{display:none!important}
+  .pres-card.at-picked{transform:none!important;box-shadow:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .at-activity-fill,.at-activity-bar.at-just-complete,.at-pair-chip,
+  .pres-card.at-picked,.ilm.at-ilm-replaying .at-ilm-sweep{
+    animation:none!important;transition:none!important;transform:none!important;
+  }
+  .at-ilm-sweep{display:none!important}
+  .ilm.at-ilm-replaying{box-shadow:none!important}
+}
+
+/* ==========================================================================
+   15 · REDUCED MOTION
    ---------------------------------------------------------------------------
    Each deck already neutralises animation under prefers-reduced-motion. This
    block extends that to the transitions and transforms introduced above, and
