@@ -31,6 +31,7 @@ html[data-visual-upgrade="ready"] body {
 .slide {
   isolation: isolate;
   scrollbar-gutter: stable;
+  overscroll-behavior: contain;
   box-shadow: var(--vu-shadow);
   transition: box-shadow .28s var(--vu-ease), border-color .28s var(--vu-ease);
 }
@@ -87,12 +88,19 @@ html[data-visual-upgrade="ready"] body {
 }
 
 .controls {
+  max-width: calc(100vw - 32px);
   padding: 8px;
   border: 1px solid rgba(148,163,184,.55);
   border-radius: 14px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.92);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 28px rgba(15,23,42,.16);
+  flex-wrap: wrap;
+  touch-action: manipulation;
+}
+
+.controls button {
+  flex: 0 0 auto;
 }
 
 :where(button, a, [role="button"], [tabindex]):focus-visible {
@@ -101,19 +109,54 @@ html[data-visual-upgrade="ready"] body {
   box-shadow: 0 0 0 7px rgba(255,255,255,.94) !important;
 }
 
-:where(button, [role="button"], .match-pill, .match-target, .pres-card, .hl-sentence) {
+:where(button, [role="button"], .match-pill, .match-target, .pres-card, .hl-sentence, .vu-checkpoint) {
   min-height: 44px;
 }
 
-:where(button, [role="button"], .match-pill, .match-target, .pres-card, .hl-sentence):active {
+:where(button, [role="button"], .match-pill, .match-target, .pres-card, .hl-sentence, .vu-checkpoint):active {
   transform: translateY(1px) scale(.99) !important;
 }
 
 .match-pill.selected,
 .pres-card[aria-pressed="true"],
+.hl-sentence[aria-pressed="true"],
+.vu-checkpoint[aria-pressed="true"],
 [aria-expanded="true"] {
   outline: 4px double currentColor;
   outline-offset: 3px;
+}
+
+.match-target {
+  position: relative;
+}
+
+.match-target[data-vu-state] {
+  padding-inline-end: 3.1rem;
+}
+
+.match-target[data-vu-state]::after {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  transform: translateY(-50%);
+  font-size: 1.15rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.match-target[data-vu-state="correct"]::after {
+  content: "✓";
+}
+
+.match-target[data-vu-state="incorrect"]::after {
+  content: "×";
 }
 
 .match-target.correct {
@@ -128,6 +171,46 @@ html[data-visual-upgrade="ready"] body {
   box-shadow: inset 0 0 0 3px rgba(255,255,255,.78);
 }
 
+.match-pill.selected {
+  animation: vuSelectReady .32s var(--vu-ease) both;
+}
+
+.slide:has(.match-pill.selected) .match-target:not(.correct) {
+  animation: vuTargetReady .7s var(--vu-ease) 1;
+}
+
+.pres-card,
+.hl-sentence {
+  position: relative;
+}
+
+.pres-card.done::after {
+  content: "✓";
+  position: absolute;
+  inset-inline-end: 9px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  font-weight: 900;
+}
+
+.hl-sentence[aria-pressed="true"] {
+  text-decoration: underline double;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.fact-dot[aria-current="step"] {
+  outline: 3px double currentColor;
+  outline-offset: 3px;
+  transform: scale(1.25);
+}
+
 .v5-step.revealed,
 .answer[aria-hidden="false"],
 .hint-box.show,
@@ -136,12 +219,14 @@ html[data-visual-upgrade="ready"] body {
   border-left-width: 7px;
 }
 
-.vu-reveal {
+/* Reveal movement is scoped to a one-off slide-entry state. If JavaScript fails,
+   lesson content remains visible rather than becoming trapped at opacity: 0. */
+html[data-visual-upgrade="ready"] .slide.vu-entering .vu-reveal {
   opacity: 0;
   transform: translateY(12px);
 }
 
-.slide.active.vu-ready .vu-reveal {
+html[data-visual-upgrade="ready"] .slide.active.vu-entering.vu-ready .vu-reveal {
   opacity: 1;
   transform: none;
   transition:
@@ -160,6 +245,123 @@ html[data-visual-upgrade="ready"] body {
   animation-play-state: paused !important;
 }
 
+/* Purposeful diagram entrance: the original authored SVG motion remains in charge,
+   while the shared layer gives it a short teaching spotlight and then settles it. */
+.ilm {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ilm::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-125%);
+  background: linear-gradient(105deg, transparent 34%, rgba(255,255,255,.68) 49%, transparent 64%);
+}
+
+html[data-visual-upgrade="ready"] .slide.active.vu-entering .ilm::after {
+  animation: vuDiagramSweep .95s var(--vu-ease) .18s 1 both;
+}
+
+html[data-visual-upgrade="ready"] .slide.active.vu-entering .ilm svg {
+  animation: vuDiagramSettle .62s var(--vu-ease) 1 both;
+}
+
+.ilm svg :where(.draw) {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.ilm svg :where(.pop, .rise, .fill, .draw) {
+  will-change: transform, opacity, stroke-dashoffset;
+}
+
+.ilm svg :where(.glow, .rip) {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--vu-primary) 35%, transparent));
+}
+
+/* We Do progress and teacher-controlled checkpoints. No lesson wording is added. */
+.slide[data-vu-we-do="true"] .vu-we-do-meter {
+  --vu-progress: 0%;
+  position: relative;
+  flex: 0 0 auto;
+  height: 9px;
+  margin: 2px 170px 12px 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--vu-together) 52%, #cbd5e1);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vu-together) 12%, #fff);
+  box-shadow: inset 0 1px 2px rgba(15,23,42,.1);
+}
+
+.vu-we-do-meter__fill {
+  display: block;
+  width: var(--vu-progress);
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--vu-together) 78%, #fff),
+      var(--vu-together));
+  transition: width .36s var(--vu-ease);
+}
+
+.slide.vu-activity-complete .vu-we-do-meter__fill {
+  animation: vuMeterComplete .58s var(--vu-ease) 1;
+}
+
+.vu-checkpoint {
+  position: relative;
+  cursor: pointer;
+  padding-inline-end: 3.25rem !important;
+  transition:
+    transform .2s var(--vu-ease),
+    box-shadow .2s var(--vu-ease),
+    border-style .2s var(--vu-ease);
+}
+
+.vu-checkpoint::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 10px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--vu-together);
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  color: var(--vu-together);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.vu-checkpoint[aria-pressed="true"] {
+  border-style: double !important;
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--vu-together) 25%, transparent),
+    0 10px 24px rgba(15,23,42,.1);
+}
+
+.vu-checkpoint[aria-pressed="true"]::after {
+  content: "✓";
+  background: color-mix(in srgb, var(--vu-together) 12%, #fff);
+}
+
+.vu-checkpoint:hover,
+.vu-checkpoint:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15,23,42,.12);
+}
+
 .vu-live-region {
   position: fixed !important;
   width: 1px !important;
@@ -168,8 +370,36 @@ html[data-visual-upgrade="ready"] body {
   margin: -1px !important;
   overflow: hidden !important;
   clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
   white-space: nowrap !important;
   border: 0 !important;
+}
+
+@keyframes vuSelectReady {
+  0% { transform: scale(.98); }
+  65% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+
+@keyframes vuTargetReady {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--vu-together) 20%, transparent); }
+}
+
+@keyframes vuDiagramSweep {
+  0% { opacity: 0; transform: translateX(-125%); }
+  22% { opacity: .8; }
+  100% { opacity: 0; transform: translateX(125%); }
+}
+
+@keyframes vuDiagramSettle {
+  0% { opacity: .72; transform: scale(.985); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vuMeterComplete {
+  0%, 100% { filter: none; }
+  50% { filter: brightness(1.22); }
 }
 
 @media (max-width: 900px) {
@@ -197,6 +427,10 @@ html[data-visual-upgrade="ready"] body {
   .lundy-grid {
     gap: 14px;
   }
+
+  .slide[data-vu-we-do="true"] .vu-we-do-meter {
+    margin-right: 130px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -205,7 +439,7 @@ html[data-visual-upgrade="ready"] body {
     height: 100%;
     border-radius: 0;
     border-top-width: 7px;
-    padding: 22px 18px 88px;
+    padding: 22px 18px 148px;
   }
 
   .slide h1 {
@@ -229,12 +463,34 @@ html[data-visual-upgrade="ready"] body {
   .controls {
     left: 8px;
     right: 8px;
-    justify-content: flex-end;
-    overflow-x: auto;
+    bottom: 12px;
+    max-width: none;
+    justify-content: center;
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+
+  .controls button {
+    flex: 1 1 92px;
+    min-width: 0;
+  }
+
+  .progress-label {
+    left: 12px;
+    right: 12px;
+    bottom: 108px;
+    max-width: calc(100vw - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .xp-wrap {
     max-width: calc(100vw - 28px);
+  }
+
+  .slide[data-vu-we-do="true"] .vu-we-do-meter {
+    margin: 2px 0 12px;
   }
 }
 
@@ -251,10 +507,14 @@ html[data-visual-upgrade="ready"] body {
     scroll-behavior: auto !important;
   }
 
-  .vu-reveal,
-  .slide.active.vu-ready .vu-reveal {
+  html[data-visual-upgrade="ready"] .slide.vu-entering .vu-reveal,
+  html[data-visual-upgrade="ready"] .slide.active.vu-entering.vu-ready .vu-reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .ilm::after {
+    display: none !important;
   }
 }
 
@@ -279,7 +539,17 @@ html[data-visual-upgrade="ready"] body {
     box-shadow: none !important;
   }
 
-  .vu-live-region {
+  .vu-live-region,
+  .vu-we-do-meter,
+  .vu-checkpoint::after,
+  .match-target[data-vu-state]::after,
+  .pres-card.done::after,
+  .ilm::after {
     display: none !important;
+  }
+
+  .vu-checkpoint,
+  .match-target[data-vu-state] {
+    padding-inline-end: revert !important;
   }
 }
