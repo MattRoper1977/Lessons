@@ -1,46 +1,165 @@
-name: Agent Art Teesside bootstrap
+name: Agent Art Teesside source commit
 
 on:
   push:
     branches:
       - agent/art-teesside-visual-teaching-upgrade-20260803
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  TASK_BRANCH: agent/art-teesside-visual-teaching-upgrade-20260803
+  PAYLOAD_SHA256: f3049d8ecd828f59a0027eb9bc8494dd25f87cdd4205bdcc224165fe63cf9a5e
 
 jobs:
-  snapshot:
+  generate-verify-and-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the exact branch revision
+      - name: Check out the exact task branch with history
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: agent/art-teesside-visual-teaching-upgrade-20260803
           fetch-depth: 0
 
-      - name: Record immutable source state
+      - name: Prove all six payload fragments are present
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p agent-art-bootstrap
-          git rev-parse HEAD | tee agent-art-bootstrap/HEAD.txt
-          git log -1 --format='%H%n%s%n%cI' | tee agent-art-bootstrap/commit.txt
-          find Art_Teesside -type f -print0 | sort -z | tr '\0' '\n' > agent-art-bootstrap/art-files.txt
-          find Art_Teesside -type f -name '*.html' -print0 | sort -z | tr '\0' '\n' > agent-art-bootstrap/art-html-files.txt
-          printf 'Art_Teesside HTML: ' > agent-art-bootstrap/counts.txt
-          wc -l < agent-art-bootstrap/art-html-files.txt >> agent-art-bootstrap/counts.txt
-          git archive --format=tar.gz --output=lessons-source.tgz HEAD
+          printf '%s\n' .github/agent-art-seed-{00..05}.b64 > "$RUNNER_TEMP/expected-payload-files.txt"
+          find .github -maxdepth 1 -type f -name 'agent-art-seed-*.b64' -print | sort > "$RUNNER_TEMP/actual-payload-files.txt"
+          diff -u "$RUNNER_TEMP/expected-payload-files.txt" "$RUNNER_TEMP/actual-payload-files.txt"
 
-      - name: Upload reproducible checkout
-        uses: actions/upload-artifact@v4
-        with:
-          name: lessons-source-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            lessons-source.tgz
-            agent-art-bootstrap/
-          if-no-files-found: error
-          retention-days: 3
+      - name: Assemble the transferred source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .github/agent-art-seed-00.b64 \
+            .github/agent-art-seed-01.b64 \
+            .github/agent-art-seed-02.b64 \
+            .github/agent-art-seed-03.b64 \
+            .github/agent-art-seed-04.b64 \
+            .github/agent-art-seed-05.b64 \
+            | base64 --decode > "$RUNNER_TEMP/art-seed.tgz"
+
+      - name: Verify the transferred bundle cryptographically
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' "$PAYLOAD_SHA256" "$RUNNER_TEMP/art-seed.tgz" | sha256sum --check --strict
+
+      - name: Print and validate the source-bundle inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -tzf "$RUNNER_TEMP/art-seed.tgz" | tee "$RUNNER_TEMP/art-seed-files.txt"
+          test "$(wc -l < "$RUNNER_TEMP/art-seed-files.txt")" -eq 11
+          test "$(grep -Ec '(^|/)\.\.?($|/)' "$RUNNER_TEMP/art-seed-files.txt")" -eq 0
+
+      - name: Extract the verified implementation source
+        run: tar -xzf "$RUNNER_TEMP/art-seed.tgz"
+
+      - name: Validate shared JavaScript syntax before generation
+        run: node --check Art_Teesside/art-teach.js
+
+      - name: Validate browser assertion syntax before generation
+        run: node --check Art_Teesside/tools/assert_visual_browser.js
+
+      - name: Validate print assertion syntax before generation
+        run: node --check Art_Teesside/tools/assert_print.js
+
+      - name: Apply the exact generated references to the 35 applicable pages
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py --apply
+
+      - name: Prove authored content round-trips byte for byte
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py
+
+      - name: Inventory every Art Teesside file and assert the 53-page estate
+        run: >-
+          python3 Art_Teesside/tools/inventory_estate.py --check
+          --json "$RUNNER_TEMP/art-estate-inventory.json"
+          --markdown "$RUNNER_TEMP/art-estate-inventory.md"
+
+      - name: Prove the static assertion detects deliberate defects
+        run: python3 Art_Teesside/tools/assert_visual_layer.py --self-test
+
+      - name: Validate visual scope, references and safeguards
+        run: python3 Art_Teesside/tools/assert_visual_layer.py
+
+      - name: Run the existing closed-kit instrument verbosely
+        run: python3 Art_Teesside/tools/assert_kit.py --verbose
+
+      - name: Assert the closed-kit population and non-empty totals
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py kit-current
+
+      - name: Run the existing estate assertions
+        run: python3 Art_Teesside/tools/assert_estate.py
+
+      - name: Prove the estate assertion detects a temporary AO1 defect
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py estate-control
+
+      - name: Require the raw co-occurrence instrument's exact known-finding exit
+        shell: bash
+        run: |
+          set +e
+          python3 Art_Teesside/tools/assert_cooccurrence.py
+          code=$?
+          set -e
+          printf 'raw co-occurrence exit: %s\n' "$code"
+          test "$code" -eq 1
+
+      - name: Require the exact current co-occurrence baseline
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py cooccurrence-current
+
+      - name: Replay the documented historical co-occurrence positive control
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py cooccurrence-control
+
+      - name: Check generated patch whitespace
+        run: git diff --check
+
+      - name: Remove transfer-only material and stage only release files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/agent-art-seed-{00..05}.b64
+          rm .github/workflows/agent-art-bootstrap.yml
+          git add --all -- Art_Teesside art_teesside.html .github/workflows/verify-art-teesside.yml .github/workflows/agent-art-bootstrap.yml .github/agent-art-seed-00.b64 .github/agent-art-seed-01.b64 .github/agent-art-seed-02.b64 .github/agent-art-seed-03.b64 .github/agent-art-seed-04.b64 .github/agent-art-seed-05.b64
+          git diff --cached --name-status
+
+      - name: Prove the staged scope is exactly 35 pages plus 11 shared or verification files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --cached --name-only > "$RUNNER_TEMP/staged-files.txt"
+          test "$(wc -l < "$RUNNER_TEMP/staged-files.txt")" -eq 46
+          test "$(grep -Ec '^(art_teesside\.html|Art_Teesside/.+\.html)$' "$RUNNER_TEMP/staged-files.txt")" -eq 35
+          test "$(grep -Ec '^\.github/workflows/verify-art-teesside\.yml$' "$RUNNER_TEMP/staged-files.txt")" -eq 1
+          if grep -Ev '^(Art_Teesside/|art_teesside\.html$|\.github/workflows/verify-art-teesside\.yml$)' "$RUNNER_TEMP/staged-files.txt"; then
+            echo 'Unexpected staged path' >&2
+            exit 1
+          fi
+          if grep -E 'agent-art-seed|agent-art-bootstrap' "$RUNNER_TEMP/staged-files.txt"; then
+            echo 'Transfer-only file still differs from main' >&2
+            exit 1
+          fi
+          cat "$RUNNER_TEMP/staged-files.txt"
+
+      - name: Check staged whitespace independently
+        run: git diff --cached --check
+
+      - name: Create the coherent implementation commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat: upgrade Art Teesside visual teaching and verification'
+
+      - name: Confirm the generated commit has a clean worktree
+        run: test -z "$(git status --porcelain)"
+
+      - name: Push the verified task-branch commit without rewriting history
+        run: git push origin "HEAD:$TASK_BRANCH"
