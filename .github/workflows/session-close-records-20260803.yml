@@ -1,0 +1,57 @@
+name: Session close records 2026-08-03
+
+on:
+  push:
+    branches:
+      - agent/session-close-records-20260803
+
+permissions:
+  contents: write
+
+jobs:
+  publish-record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Publish the verified documentation record once
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BASE: 10936b7f780f2fb18a8b3de9cd534b9e679cc305
+          FINAL_BLOB: a2a909b88e3a6af3fbcf91a41c43cdb668c99cc9
+        run: |
+          set -euo pipefail
+          target='LundyLoop/tools/INSTRUMENTS.md'
+          sentinel='Standing rule 26 — browser evidence requires a browser-capable environment'
+
+          if grep -Fq "$sentinel" "$target"; then
+            echo 'Session-close record is already present; no commit required.'
+            exit 0
+          fi
+
+          actual=$(git rev-parse HEAD)
+          printf 'main before record: %s\n' "$actual"
+          test "$actual" = "$EXPECTED_BASE"
+
+          gh api "repos/${GITHUB_REPOSITORY}/git/blobs/${FINAL_BLOB}" --jq .content \
+            | tr -d '\n' \
+            | base64 --decode \
+            > "$target"
+
+          grep -Fq "$sentinel" "$target"
+          grep -Fq 'HANDOVER — session close, 2026-08-03' "$target"
+          test "$(git diff --name-only | wc -l)" -eq 1
+          git diff --name-only | grep -Fx "$target"
+          git diff --check
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$target"
+          git diff --cached --check
+          git commit -m 'docs: record browser evidence and Art closeout'
+          git push origin HEAD:main
