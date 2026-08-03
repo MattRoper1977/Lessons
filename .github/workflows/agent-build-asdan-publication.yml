@@ -99,7 +99,7 @@ jobs:
                 });
                 return barOK && controlsOK;
               });
-"""
+          """
           new_mobile = """              await page.setViewport({width:390,height:844});
               await delay(100);
               const mobile = await page.evaluate(async () => {
@@ -130,7 +130,7 @@ jobs:
                 });
                 return activitySlides.length === 2 && results.every(Boolean) && controlsHorizontal;
               });
-"""
+          """
           if old_mobile not in script:
               raise SystemExit('Mobile-validation signature not found')
           script = script.replace(old_mobile, new_mobile, 1)
