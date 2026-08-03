@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+# Branch synchronisation marker: the publication gate removes this temporary script.
 from pathlib import Path
 
 JS_PATH = Path('BUILD_ASDAN/_framework/asdan-teach.js')
