@@ -1,0 +1,391 @@
+name: Publish BUILD ASDAN interaction and motion upgrade
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-build-asdan-publication.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/build-asdan-interactions-motion
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser drivers
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock puppeteer-core@24 playwright@1.55.0
+          chrome="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$chrome"
+          sudo mkdir -p /opt/pw-browsers/chromium-1194/chrome-linux
+          sudo ln -sf "$chrome" /opt/pw-browsers/chromium-1194/chrome-linux/chrome
+
+      - name: Integrate, validate and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+
+          python3 .github/scripts/agent_build_asdan_upgrade.py
+          python3 BUILD_ASDAN/_framework/apply_framework.py
+          python3 BUILD_ASDAN/_framework/qa_check.py
+          node --check BUILD_ASDAN/_framework/asdan-teach.js
+
+          python3 - <<'PY'
+          from __future__ import annotations
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          root = Path.cwd()
+          suite = root / 'BUILD_ASDAN'
+          framework = suite / '_framework'
+          sys.path.insert(0, str(framework))
+          from apply_framework import build_css_block, build_js_block, lesson_files, strip
+
+          lessons = lesson_files()
+          if len(lessons) != 31:
+              raise SystemExit(f'Expected 31 lesson decks, found {len(lessons)}')
+
+          css_block = build_css_block()
+          js_block = build_js_block()
+          for path in lessons:
+              rel = path.relative_to(root).as_posix()
+              current = path.read_text(encoding='utf-8')
+              original = subprocess.check_output(['git', 'show', f'origin/main:{rel}']).decode('utf-8')
+              if strip(current) != strip(original):
+                  raise SystemExit(f'Lesson content changed outside generated framework blocks: {rel}')
+              if current.count(css_block) != 1 or current.count(js_block) != 1:
+                  raise SystemExit(f'Framework coverage is not exactly once: {rel}')
+
+          js = (framework / 'asdan-teach.js').read_text(encoding='utf-8')
+          css = (framework / 'asdan-teach.css').read_text(encoding='utf-8')
+          readme = (framework / 'README.md').read_text(encoding='utf-8')
+          for marker in [
+              'Live We Do orchestration and purposeful motion lifecycle',
+              'at-activity-bar',
+              'at-random-pick',
+              'at-pair-trail',
+              'at-ilm-sweep',
+              'data-at-build-upgrade',
+              'attributeOldValue: true',
+          ]:
+              if marker not in js and marker not in css:
+                  raise SystemExit(f'Missing upgrade marker: {marker}')
+          if 'August 2026 classroom orchestration upgrade' not in readme:
+              raise SystemExit('Framework report section missing')
+
+          clean = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+          clean = re.sub(r'(["\'])(?:\\.|(?!\1).)*\1', '', clean)
+          depth = 0
+          for char in clean:
+              depth += (char == '{') - (char == '}')
+              if depth < 0:
+                  raise SystemExit('CSS closes before it opens')
+          if depth:
+              raise SystemExit(f'Unbalanced CSS braces: {depth}')
+
+          hygiene = re.compile(r'<<<<<<<|=======|>>>>>>>|\bTODO\b|\bFIXME\b|\bdebugger\b|console\.log\s*\(', re.I)
+          if hygiene.search(js + '\n' + css):
+              raise SystemExit('Conflict, unfinished or debug artefact in framework source')
+
+          print('PASS static: 31 decks, exact stripped-content parity and one current framework block per deck')
+          print('PASS source: JavaScript syntax, CSS structure, lifecycle and interaction markers')
+          PY
+
+          cp BUILD_ASDAN/CONTRAST_MANIFEST.md /tmp/build-contrast-before.md
+
+          pushd BUILD_ASDAN >/dev/null
+          node _framework/smoke_test.js */[A-Z]*.html
+          node _framework/label_rest_check.js */[A-Z]*.html
+          node _framework/contrast_check.js --manifest */[A-Z]*.html
+          popd >/dev/null
+
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          before = Path('/tmp/build-contrast-before.md').read_text(encoding='utf-8')
+          after = Path('BUILD_ASDAN/CONTRAST_MANIFEST.md').read_text(encoding='utf-8')
+          pattern = re.compile(r'below target, in \*\*(\d+)\*\* distinct patterns')
+          b = pattern.search(before)
+          a = pattern.search(after)
+          if not b or not a:
+              raise SystemExit('Could not read contrast pattern counts')
+          before_count, after_count = int(b.group(1)), int(a.group(1))
+          if after_count > before_count:
+              raise SystemExit(f'Contrast regression: distinct failure patterns {before_count} -> {after_count}')
+          print(f'PASS contrast manifest: distinct failure patterns {before_count} -> {after_count}')
+          PY
+
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/build-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const cp = require('child_process');
+          const puppeteer = require('puppeteer-core');
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          const chrome = ['google-chrome','chromium','chromium-browser']
+            .map((name) => {
+              try { return cp.execFileSync('bash',['-lc',`command -v ${name}`],{encoding:'utf8'}).trim(); }
+              catch { return ''; }
+            }).find(Boolean);
+          if (!chrome) throw new Error('No browser executable available');
+
+          const walk = (dir) => fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry) =>
+            entry.isDirectory() ? walk(path.join(dir,entry.name)) : [path.join(dir,entry.name)]
+          );
+          const lessons = walk('BUILD_ASDAN')
+            .filter((file) => file.endsWith('.html'))
+            .filter((file) => !file.endsWith('/START_HERE.html'))
+            .filter((file) => /BUILD_ASDAN\/(Careers|FoodWise|Community_Project|Living_Independently|Duke_and_Enterprise)\//.test(file))
+            .map((file) => file.replaceAll('\\','/'))
+            .sort();
+          if (lessons.length !== 31) throw new Error(`Expected 31 lessons, found ${lessons.length}`);
+          const url = (file) => `http://127.0.0.1:4173/${encodeURI(file)}`;
+          const norm = (text) => String(text || '').replace(/\s+/g,' ').trim();
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              executablePath: chrome,
+              headless: true,
+              protocolTimeout: 120000,
+              args: ['--no-sandbox','--disable-dev-shm-usage'],
+            });
+            const failures = [];
+            const summary = {lessons:0,bars:0,random:0,trails:0,ilms:0,sweeps:0,presOK:0,matchOK:0,mobileOK:0};
+
+            for (const file of lessons) {
+              const page = await browser.newPage();
+              await page.setViewport({width:1280,height:800});
+              const errors = [];
+              page.on('pageerror',(error) => errors.push(String(error)));
+              await page.goto(url(file),{waitUntil:'load',timeout:30000});
+              await page.waitForFunction(() => document.documentElement.getAttribute('data-at-build-upgrade') === 'ready',{timeout:5000});
+              await delay(80);
+
+              const census = await page.evaluate(() => ({
+                slides: document.querySelectorAll('.slide').length,
+                active: document.querySelectorAll('.slide.active').length,
+                bars: document.querySelectorAll('.at-activity-bar').length,
+                random: document.querySelectorAll('.at-random-pick').length,
+                trails: document.querySelectorAll('.at-pair-trail').length,
+                ilms: document.querySelectorAll('.ilm').length,
+                sweeps: document.querySelectorAll('.at-ilm-sweep').length,
+                presCards: document.querySelectorAll('.pres-card').length,
+                targets: document.querySelectorAll('.match-target').length,
+              }));
+              summary.lessons++;
+              summary.bars += census.bars;
+              summary.random += census.random;
+              summary.trails += census.trails;
+              summary.ilms += census.ilms;
+              summary.sweeps += census.sweeps;
+              if (census.slides !== 10 || census.active !== 1 || census.bars !== 2 || census.random !== 1 || census.trails !== 1 || census.ilms < 1 || census.sweeps !== census.ilms || census.presCards < 1 || census.targets < 1) {
+                failures.push(`${file}: census ${JSON.stringify(census)}`);
+              }
+
+              const pres = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((s) => s.querySelector('.pres-card'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                const cards = [...slide.querySelectorAll('.pres-card')];
+                const beforeDone = cards.filter((c) => c.classList.contains('done')).length;
+                const pick = slide.querySelector('.at-random-pick');
+                pick.click();
+                await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                const selected = cards.filter((c) => c.classList.contains('at-picked'));
+                const pickedDone = cards.filter((c) => c.classList.contains('done')).length;
+                const number = selected[0]?.getAttribute('data-at-card') || '';
+                selected[0]?.click();
+                await new Promise((r) => setTimeout(r,80));
+                const bar = slide.querySelector('.at-activity-bar[data-at-activity="presentation"]');
+                const now = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const cap = slide.querySelector('#pres-caps .pres-cap:last-child');
+                const capNumber = cap?.getAttribute('data-at-n') || '';
+                window.presReset();
+                await new Promise((r) => setTimeout(r,80));
+                const resetNow = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                return {beforeDone,picked:selected.length,pickedDone,number,now,capNumber,resetNow};
+              });
+              const presOK = pres.beforeDone === 0 && pres.picked === 1 && pres.pickedDone === 0 && !!pres.number && pres.now === 1 && pres.capNumber === pres.number && pres.resetNow === 0;
+              summary.presOK += Number(presOK);
+              if (!presOK) failures.push(`${file}: presentation ${JSON.stringify(pres)}`);
+
+              const match = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((s) => s.querySelector('.match-target'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                const pills = [...slide.querySelectorAll('#kw-pills .match-pill')];
+                const targets = [...slide.querySelectorAll('.match-target')];
+                const pill = pills[0];
+                const raw = pill.getAttribute('onclick') || '';
+                const id = raw.match(/selectKW\s*\(\s*this\s*,\s*['"]([^'"]+)['"]/)?.[1] || '';
+                const target = targets.find((t) => t.getAttribute('data-correct') === id);
+                const keyText = (pill.textContent || '').replace(/\s+/g,' ').trim();
+                const targetText = (target.textContent || '').replace(/\s+/g,' ').trim();
+                pill.click();
+                target.click();
+                await new Promise((r) => setTimeout(r,90));
+                const bar = slide.querySelector('.at-activity-bar[data-at-activity="matching"]');
+                const now = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const chip = slide.querySelector('.at-pair-chip');
+                const chipKey = (chip?.querySelector('.at-pair-key')?.textContent || '').replace(/\s+/g,' ').trim();
+                const chipTarget = (chip?.querySelector('.at-pair-target')?.textContent || '').replace(/\s+/g,' ').trim();
+                window.resetMatch();
+                await new Promise((r) => setTimeout(r,90));
+                const resetNow = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const resetPairs = slide.querySelectorAll('.at-pair-chip').length;
+                window.revealMatch();
+                await new Promise((r) => setTimeout(r,90));
+                const revealNow = Number(bar.querySelector('.at-activity-track').getAttribute('aria-valuenow'));
+                const revealPairs = slide.querySelectorAll('.at-pair-chip').length;
+                window.resetMatch();
+                return {id,now,keyText,targetText,chipKey,chipTarget,resetNow,resetPairs,revealNow,revealPairs,total:targets.length};
+              });
+              const matchOK = !!match.id && match.now === 1 && match.keyText === match.chipKey && match.targetText === match.chipTarget && match.resetNow === 0 && match.resetPairs === 0 && match.revealNow === match.total && match.revealPairs === match.total;
+              summary.matchOK += Number(matchOK);
+              if (!matchOK) failures.push(`${file}: matching ${JSON.stringify(match)}`);
+
+              const motion = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((s) => s.querySelector('.ilm'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((r) => setTimeout(r,120));
+                const block = slide.querySelector('.ilm');
+                const inactiveAnimated = [...document.querySelectorAll('.slide:not(.active) *')].find((el) => getComputedStyle(el).animationName !== 'none');
+                const paused = !inactiveAnimated || getComputedStyle(inactiveAnimated).animationPlayState.split(',').every((v) => v.trim() === 'paused');
+                return {
+                  replaying: block.classList.contains('at-ilm-replaying'),
+                  sweep: !!block.querySelector('.at-ilm-sweep'),
+                  replayButton: !!block.querySelector('.ilm-replay'),
+                  motionReady: block.getAttribute('data-at-motion-ready'),
+                  paused,
+                };
+              });
+              if (!motion.replaying || !motion.sweep || !motion.replayButton || motion.motionReady !== '1' || !motion.paused) {
+                failures.push(`${file}: motion ${JSON.stringify(motion)}`);
+              }
+
+              await page.setViewport({width:390,height:844});
+              await delay(100);
+              const mobile = await page.evaluate(() => {
+                const slide = document.querySelector('.slide.active');
+                const bar = slide && slide.querySelector('.at-activity-bar');
+                const barOK = !bar || (() => {
+                  const b = bar.getBoundingClientRect();
+                  const s = slide.getBoundingClientRect();
+                  return b.left >= s.left - 1 && b.right <= s.right + 1;
+                })();
+                const controlsOK = [...document.querySelectorAll('.controls button')].every((button) => {
+                  const r = button.getBoundingClientRect();
+                  return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= -1 && r.bottom <= innerHeight + 1;
+                });
+                return barOK && controlsOK;
+              });
+              summary.mobileOK += Number(mobile);
+              if (!mobile) failures.push(`${file}: mobile layout`);
+              if (errors.length) failures.push(`${file}: ${errors.join(' | ')}`);
+              await page.close();
+            }
+
+            const strands = ['Careers','FoodWise','Community_Project','Living_Independently','Duke_and_Enterprise'];
+            for (const strand of strands) {
+              const file = lessons.find((item) => item.includes(`/${strand}/`));
+              const page = await browser.newPage();
+              await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
+              await page.goto(url(file),{waitUntil:'load',timeout:30000});
+              await page.waitForFunction(() => document.documentElement.getAttribute('data-at-build-upgrade') === 'ready');
+              const reduced = await page.evaluate(async () => {
+                const slides = [...document.querySelectorAll('.slide')];
+                const slide = slides.find((s) => s.querySelector('.ilm'));
+                const index = slides.indexOf(slide);
+                window.currentSlide = index;
+                window.showSlide(index);
+                await new Promise((r) => setTimeout(r,80));
+                const sweep = slide.querySelector('.at-ilm-sweep');
+                const stranded = [...slide.querySelectorAll('.at-ilm-label')].filter((el) => parseFloat(getComputedStyle(el).opacity) < .99).length;
+                return {sweep: sweep ? getComputedStyle(sweep).display : 'none',stranded};
+              });
+              if (reduced.sweep !== 'none' || reduced.stranded !== 0) failures.push(`${file}: reduced motion ${JSON.stringify(reduced)}`);
+              await page.close();
+            }
+
+            const expected = summary.lessons === 31 && summary.bars === 62 && summary.random === 31 && summary.trails === 31 && summary.ilms >= 31 && summary.sweeps === summary.ilms && summary.presOK === 31 && summary.matchOK === 31 && summary.mobileOK === 31;
+            if (!expected) failures.push(`summary ${JSON.stringify(summary)}`);
+            console.log('BUILD_VALIDATION',JSON.stringify({summary,failures}));
+            await browser.close();
+            if (failures.length) throw new Error(failures.join('\n'));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+          rm -rf node_modules
+          rm -f package-lock.json npm-shrinkwrap.json
+          rm -f .github/workflows/agent-build-asdan-publication.yml
+          rm -f .github/scripts/agent_build_asdan_upgrade.py
+
+          git add BUILD_ASDAN
+          git add -u .github/workflows .github/scripts
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          root = Path.cwd()
+          sys.path.insert(0, str(root / 'BUILD_ASDAN' / '_framework'))
+          from apply_framework import lesson_files
+
+          changed = subprocess.check_output(['git','diff','--cached','--name-only','origin/main'],text=True).splitlines()
+          lessons = {p.relative_to(root).as_posix() for p in lesson_files()}
+          required = lessons | {
+              'BUILD_ASDAN/_framework/asdan-teach.css',
+              'BUILD_ASDAN/_framework/asdan-teach.js',
+              'BUILD_ASDAN/_framework/README.md',
+          }
+          optional = {'BUILD_ASDAN/CONTRAST_MANIFEST.md'}
+          actual = set(changed)
+          missing = required - actual
+          extra = actual - required - optional
+          if missing or extra:
+              raise SystemExit(f'Bad final scope; missing={sorted(missing)} extra={sorted(extra)} changed={changed}')
+          if len(actual) not in {34,35}:
+              raise SystemExit(f'Expected 34 or 35 final files, found {len(actual)}')
+          if sum(name.endswith('.html') for name in actual) != 31:
+              raise SystemExit('Expected all and only 31 lesson HTML decks')
+          if any(not name.startswith('BUILD_ASDAN/') for name in actual):
+              raise SystemExit(f'Out-of-scope final path: {changed}')
+          print(f'PASS final scope: {len(actual)} files, 31 lesson decks, BUILD_ASDAN only')
+          PY
+
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: deepen BUILD ASDAN interactions and teaching motion"
+          git push origin HEAD:agent/build-asdan-interactions-motion
