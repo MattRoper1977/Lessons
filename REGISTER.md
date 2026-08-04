@@ -1773,6 +1773,31 @@ it is recorded so a later pass reconciling "84 retained" against a distinct-arte
 report a mismatch and start an investigation.
 
 **Free provenance gate, worth reusing:** the pack shipped `32_FILE_MANIFEST.csv` carrying a SHA-256
-per file. All **15** manifest-listed files received in this session matched their recorded hash
-exactly (the manifest cannot list itself — the 82 + 2 = 84 reconciliation). *A supplier who ships
-hashes hands the receiver a provenance check for nothing; take it every time.*
+per file. **Every manifest-listed file received in this session matched its recorded hash exactly —
+zero mismatches**, re-derived on each arrival rather than counted once (17 of 17 at the last check;
+the manifest cannot list itself — the 82 + 2 = 84 reconciliation). *A supplier who ships hashes hands
+the receiver a provenance check for nothing; take it every time.*
+
+**Inputs arrived in three waves, and this entry's own count went stale twice.** It first recorded
+**15**. Two further pack files — `TA_PROMPT_OBSERVATION_CARD.html` and `TEACHER_DESK_CARD.html` —
+arrived *after* the records commit was written; both matched their manifest hash and byte length
+exactly. **A count of what you have received is stale the moment the next file arrives**, which is
+why the sentence above is now a derivation and a zero rather than a total. Runtime coverage of the
+pack's **18** proposed HTML resources moved **9 → 11**. `START_HERE.html` was never received and
+remains NOT-DETERMINED; it is not inferred from the ten that were.
+
+**The corroboration that matters more than the count.** `TA_PROMPT_OBSERVATION_CARD.html` sets out a
+least-intrusive support route — *wait · reference · general prompt · specific prompt · re-model ·
+direct step* — and separately insists that *"scribing is access, not a thinking prompt"* and that what
+fades is a content prompt and **never a reasonable adjustment**. That is `quality/DESIGN_prompt_record.md`'s
+prompt ladder (`WT · SP/VC · GV · SV · MO · DS`) plus its `SC` caveat — **the single most important
+thing to brief**, per that design's own words — reproduced by a third party with no access to it. The
+same card records *"what should be tried without next time"*, which is the one field that design
+identifies as the only one that fades anything.
+
+**Why this is worth an entry rather than a remark.** This register states at its head that everything
+here agreeing and everything here being wrong are indistinguishable from inside the file, and that the
+only external check is **re-deriving an entry by a method sharing no premise with the one that
+produced it**. This is that check arriving unbidden for an estate design that is approved in principle
+and **unbuilt**. It does not authorise building it — the triggers in `HANDOVER.md` queue 16 are
+unchanged and untouched by this — but it is evidence the ladder is not idiosyncratic.
