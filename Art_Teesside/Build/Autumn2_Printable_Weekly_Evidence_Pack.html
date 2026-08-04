@@ -66,13 +66,53 @@ th,td{border:1px solid #9ca3af;padding:5px 7px;text-align:left;vertical-align:to
 }
 @media(max-width:760px){.a4{padding:14px}.mounts{grid-template-columns:1fr}.diag .g{grid-template-columns:1fr}}
 
+
+/* --- Large print render option (Pass TK-1). Scales every pt size x1.5 with an 11.5pt floor,
+   and releases the fixed page height so content paginates instead of being clipped.
+   Content is identical in both renders; only type and spacing change. --- */
+body.lp .diag .fix{font-size:11.5pt}
+body.lp .diag .g b{font-size:11.5pt}
+body.lp .diag .g{font-size:11.5pt}
+body.lp .diag h4{font-size:12.3pt}
+body.lp .fld b{font-size:11.5pt}
+body.lp .fld{font-size:12.0pt}
+body.lp .ft{font-size:11.5pt}
+body.lp .hd .u{font-size:11.5pt}
+body.lp .hd h2{font-size:18.8pt}
+body.lp .lundy b{font-size:11.5pt}
+body.lp .lundy div{font-size:11.5pt}
+body.lp .mz b{font-size:12.0pt}
+body.lp .mz span{font-size:11.5pt}
+body.lp .pblk .req{font-size:11.7pt}
+body.lp .pblk h3{font-size:14.1pt}
+body.lp .pb{font-size:12.0pt}
+body.lp .rec .rule{font-size:11.5pt}
+body.lp .rec h4{font-size:12.3pt}
+body.lp .rec{font-size:11.7pt}
+body.lp .spine b{font-size:11.5pt}
+body.lp .spine{font-size:11.5pt}
+body.lp .stamp{font-size:11.5pt}
+body.lp .tk h4{font-size:12.9pt}
+body.lp .tk p{font-size:12.0pt}
+body.lp .wk{font-size:12.6pt}
+body.lp table{font-size:12.0pt}
+body.lp th{font-size:11.5pt}
+body.lp{font-size:14.4pt}
+body.lp{line-height:1.5}
+body.lp .a4{min-height:auto;padding:14mm}
+body.lp .mounts{min-height:190px}
+body.lp .fld{min-height:42px}
+body.lp .lundy{grid-template-columns:repeat(2,1fr)}
+body.lp .diag .g{grid-template-columns:1fr}
+@media print{body.lp .a4{min-height:auto;height:auto;page-break-after:always;break-after:page}
+ body.lp .mounts{min-height:170px}}
 </style></head><body>
 <h1 class="top">BUILD Art · Autumn 2 · Surface, Stencil, Repeat</h1>
 <p class="brand">Made by Matt &middot; madebymatt.uk · Trinity Arts Award <b>Bronze</b> route (supported) · Autumn 2 · 2026&ndash;27</p>
 <p class="note"><b>How to use:</b> one week, one A4 page. Print the week you are on. <b>This sheet is the portfolio of record</b> — the print-sections inside each lesson file are working documents. If a piece of working paper matters, mount or photograph it here and give it a sheet reference. No pupil names are stored in any file; a name or a code both work.</p>
 <div class="controls noprint">Show:
 <select id="wk" onchange="render()"><option value="all">All 7 weeks (pupil bundle)</option></select>
-<button onclick="window.print()">🖨️ Print</button></div>
+<button type="button" id="lpBtn" aria-pressed="false" onclick="toggleLP()">Large print: off</button><button onclick="window.print()">🖨️ Print</button></div><p class="note noprint" style="margin-top:8px"><b>Large print</b> scales the type and spacing of this pack. Nothing is removed &mdash; the sheets simply run onto more pages, which is the honest trade for legibility. <b>PRINT-UNVERIFIED:</b> print one week both ways on paper before issuing.</p>
 <div id="out"></div>
 <script>
 const UNIT="BUILD Art · Autumn 2 · Surface, Stencil, Repeat";
@@ -92,10 +132,10 @@ function sheet(x){return `<div class="a4">
 <div class="ft"><span>${UNIT} · Week ${x.w} · ${x.part}</span><span>Sheet ref ______</span></div>
 </div>`;}
 const LOCATOR=`<div class="a4"><div class="hd"><div><span class="u">${UNIT}</span><h2>Evidence Locator Form<span class="pb" style="background:var(--oxide)">Adviser copy</span></h2></div><span class="wk">Adviser</span></div>
-<p class="req" style="background:#fff7d6;border-radius:6px;padding:7px 10px;font-size:8.2pt"><b>Trinity requires evidence to be grouped and labelled</b> so it is clear which section of the award each piece relates to, ordered Part A, then B, then C, then D. Every row needs a real location — a sheet reference, a page, a photo reference. Never write &ldquo;in the arts log&rdquo;.</p>
+<p class="req" style="background:#fff7d6;border-radius:6px;padding:7px 10px;font-size:8.2pt"><b>Trinity requires evidence to be grouped and labelled</b> so it is clear which section of the award each piece relates to, ordered Part A, then B, then C, then D. Every row needs a real location — a sheet reference, a page, a photo reference. Never write &ldquo;in the arts log&rdquo;. <b>Any evidence form counts:</b> written work, audio, video, a photographed artefact, a dated observation note or a digital record. <b>No part of this award requires handwriting</b>, and a pupil who evidences by recording or demonstrating is evidencing in full.</p>
 <div class="row"><div class="fld"><b>Pupil name or code</b></div><div class="fld"><b>Award / level</b>Trinity Arts Award Bronze</div><div class="fld"><b>Date range</b></div></div>
 <div class="row"><div class="fld"><b>Adviser (trained at this level)</b></div><div class="fld"><b>Centre</b></div><div class="fld"><b>Adviser audit completed on</b></div></div>
-${LOCP.map(b=>`<div class="pblk"><h3>${b.p}</h3><p class="req">${b.req}</p><table><tr><th style="width:44%">What the evidence is</th><th style="width:34%">Where to find it (sheet ref / photo ref)</th><th style="width:22%">Verified by / date</th></tr>${b.rows.map(r=>`<tr><td>${r}</td><td></td><td></td></tr>`).join('')}</table></div>`).join('')}
+${LOCP.map(b=>`<div class="pblk"><h3>${b.p}</h3><p class="req">${b.req}</p><table><tr><th style="width:44%">What the evidence is</th><th style="width:34%">Where to find it &mdash; sheet ref, photo, <b>audio, video, artefact, observation note or digital record</b></th><th style="width:22%">Verified by / date</th></tr>${b.rows.map(r=>`<tr><td>${r}</td><td></td><td></td></tr>`).join('')}</table></div>`).join('')}
 <p class="req" style="background:#fff7d6;border-radius:6px;padding:7px 10px;font-size:8.2pt"><b>Before any claim:</b> the adviser audits the complete personal arts log against the current Bronze requirements. Recovery routes evidence the same Part as the live session. <b>There is no minimum-hours gate</b> — Trinity states time figures are guidance only, so attendance volume must never be used to withhold a claim.</p>
 <div class="ft"><span>${UNIT}</span><span>Adviser copy</span></div></div>`;
 const REPORTBACK=`<div class="a4"><div class="hd"><div><span class="u">${UNIT}</span><h2>Report-back contract log<span class="pb" style="background:var(--river)">Adult copy</span></h2></div><span class="wk">Adult</span></div>
@@ -114,4 +154,6 @@ const extra=[['locator','— Evidence Locator Form (adviser)'],['adult','— Rep
 if(typeof RULECARD!=='undefined')extra.push(['rule','— Hands Together bench card']);
 extra.forEach(p=>{const o=document.createElement('option');o.value=p[0];o.textContent=p[1];s.appendChild(o);});
 render();})();
+
+function toggleLP(){const on=document.body.classList.toggle('lp');const b=document.getElementById('lpBtn');b.textContent='Large print: '+(on?'on':'off');b.setAttribute('aria-pressed',on?'true':'false');}
 </script></body></html>
