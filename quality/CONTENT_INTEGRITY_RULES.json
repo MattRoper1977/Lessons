@@ -1,0 +1,132 @@
+{
+  "$comment": "Source: SEMH audit 2026-08-04, adapted. Machine-readable semantic checks consumed by LundyLoop/tools/semantic_integrity_check.py. Every rule is DERIVED from the file under test — this file never holds a parallel copy of any lesson fact, per the estate rule 'never keep two copies where one can be derived'.",
+  "schema_version": "1.0",
+  "principle": "Assert that a lesson's surfaces agree WITH EACH OTHER. Never compare a lesson against an external list of expected values; such a list is a second copy and will go stale.",
+  "measurement_rules": {
+    "strip_data_uris_before_text_measurement": true,
+    "data_uri_note": "200 tracked *.html files carry base64 data-URIs at 6aaffb7; every text count inflates unless they are stripped first.",
+    "word_boundary_matching": true,
+    "null_delimited_iteration": true,
+    "null_delimited_note": "Filenames in this estate contain apostrophes AND spaces (e.g. '5_6 Local Choice/'). Whitespace-splitting grep output has produced phantom files before.",
+    "no_truncation_in_claim_feeding_commands": true,
+    "truncation_note": "Piping a claim-feeding search through head has produced a false scope three times in this estate.",
+    "cardinality_assertion_required": true,
+    "zero_must_be_replayed": true,
+    "zero_replay_note": "A zero result is only believed after the same detector is replayed against an input where it MUST be non-zero.",
+    "counts_carry_unit_and_universe": true,
+    "print_measurement_viewport": "718x1047",
+    "browser_evidence_rule": "jsdom is a DOM stub, not a browser. Any result derived from it says so in the same sentence. Layout, print geometry and real navigation require a browser-capable environment or the result is UNVERIFIED, never inferred."
+  },
+  "checks": [
+    {
+      "id": "SI-01",
+      "name": "subject_consistency",
+      "description": "Every pupil-facing surface naming a subject names the SAME subject as the deck banner.",
+      "derived_from": "the lesson-tag banner element",
+      "severity": "high"
+    },
+    {
+      "id": "SI-02",
+      "name": "week_consistency",
+      "description": "Every surface naming a week number names the same week as the banner, EXCEPT surfaces that legitimately describe a multi-week artefact.",
+      "derived_from": "the lesson-tag banner element",
+      "known_legitimate_exception": "A cut list or similar multi-week sheet may name several weeks in a sentence describing its own lifespan, e.g. 'Week 1 you start it, Week 2 you fill it from your blueprint, Week 3 you cut from it'. This is not staleness.",
+      "severity": "high"
+    },
+    {
+      "id": "SI-03",
+      "name": "title_consistency",
+      "description": "The deck title, the knowledge-organiser title and any print-pack heading agree.",
+      "derived_from": "the first h1",
+      "severity": "high"
+    },
+    {
+      "id": "SI-04",
+      "name": "outcome_ownership",
+      "description": "Success criteria quoted in the midpoint peer-check must be drawn from THIS deck's own 'I can' outcomes, not another lesson's.",
+      "derived_from": "the set of 'I can ...' strings in the file",
+      "detects": "the clone-and-replace defect class",
+      "provenance": "Found 2026-08-04 in all six BUILD_DT decks: the midpoint modal quoted CAREERS_W1_My_Strengths criteria ('I can name two of my real strengths' / 'I can give an example of each strength in action') while each deck carried its own correct D&T outcomes elsewhere in the same file.",
+      "severity": "critical"
+    },
+    {
+      "id": "SI-05",
+      "name": "completion_summary_consistency",
+      "description": "Where a completion or summary surface exists, its named evidence product matches the deck's independent-work product.",
+      "note": "Absence of a completion surface is NOT a failure. The BUILD_DT decks have none by design.",
+      "severity": "medium"
+    },
+    {
+      "id": "SI-06",
+      "name": "next_lesson_pointer",
+      "description": "Any 'next lesson' pointer names week N+1 of the same subject, or is absent.",
+      "severity": "medium"
+    },
+    {
+      "id": "SI-07",
+      "name": "timer_contract",
+      "description": "The initial timer display, the Independent Work data-timer, the configured total and the reset value must agree.",
+      "assertion": "initial_display_seconds == configured_total == configured_left, and data-timer minutes == configured_total/60",
+      "repair_shape": "DERIVATION — render the display from the configured duration. Editing the display string separately in N files preserves the defect class.",
+      "severity": "critical",
+      "REPORT_ONLY": true,
+      "report_only_reason": "HANDOVER.md line 395-398 places estate data-timer values under 'The human's open calls (not the session's to decide)': 'No session edits timers in passing — candidate estate-wide question.' INSTRUMENTS.md line 323 lists 'Fix the timer contract — go' as an AWAITED authorisation. This check reports; it never licenses an edit."
+    },
+    {
+      "id": "SI-08",
+      "name": "screen_print_task_identity",
+      "description": "A task described on screen and mirrored in the print pack must describe the same task.",
+      "note": "Lesson text is frequently MIRRORED in the print pack. Count occurrences whole-file before any replacement and patch both surfaces.",
+      "severity": "high"
+    },
+    {
+      "id": "SI-09",
+      "name": "tier_vocabulary",
+      "description": "Tier names are Supported / Standard / Stretch.",
+      "severity": "medium"
+    },
+    {
+      "id": "SI-10",
+      "name": "colour_alone",
+      "description": "A status or route cue conveyed by colour must also carry an icon AND a word.",
+      "severity": "medium"
+    }
+  ],
+  "protected_paths": {
+    "byte_identical_or_stop": [
+      "Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html",
+      "Launch/Slideshows/LAUNCH_HUM_W7_Source_Assessment.html"
+    ],
+    "never_edited": [
+      "the 24 Art feedback sheets (D-NAMES-01)"
+    ],
+    "frozen_for_2025_26_delivery": [
+      "biology/", "chemistry/", "2 Physics 10/", "5 Intervention 10/"
+    ],
+    "must_stay_empty": [
+      "the 24-week GROW/LAUNCH Art gap (Autumn 2 + Spring 1) — not stubbed, not placeholdered"
+    ],
+    "dt_v5_restrictions": {
+      "paths": ["Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html", "Build/Slideshows/BUILD_DT_W2_Blueprint.html", "Build/Slideshows/BUILD_DT_W3_Core_Cut.html", "Build/Slideshows/BUILD_DT_W4_Assembly.html", "Build/Slideshows/BUILD_DT_W5_Finish.html", "Build/Slideshows/BUILD_DT_W6_Handover.html"],
+      "no_printpack_id_changes": "no adding or removing ids in printPack() lists in either direction",
+      "no_lundy_print_page_text_edits": true,
+      "open_items_7": "the 6 D&T witness files' missing section 5 learner line is OPEN_ITEMS #7, awaiting Matt's word — do not add it",
+      "everything_else": "normal territory"
+    },
+    "immutable": {
+      "slide_data_title_values": "keyed on by _ccQuestions and _taBriefs",
+      "register_md": "append-only; never renumber"
+    }
+  },
+  "sentinels": {
+    "ll_g_loop_mark": {
+      "derivation": "git grep -l \"ll-g:loop-mark v1\" -- '*.html'",
+      "expected": "DERIVE IT, DO NOT ASSUME. Recorded as 45 at the time of writing.",
+      "rule": "the same set before and after any change"
+    },
+    "written_closure_line": {
+      "marker": "What I said, and what it changed",
+      "recorded_population": 48
+    }
+  }
+}
