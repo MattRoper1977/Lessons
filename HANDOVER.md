@@ -302,7 +302,39 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     Full evaluation: `quality/LUNDY_SCIENCE_ACCEPTANCE_GATES.md`. Register: **R-LLS01**–**R-LLS04**.
     **R-A09 binds anything ever built here: no second copy, ever.**
 
-*Queue entry 17 added by Pass LL-S1.*
+18. **The WT–DS reconciliation — three accounts of adult support, one vocabulary needed.** The estate
+    now holds **three parts of one thing, authored by three passes that could not see each other**:
+    - **how the adult supports** — the prompt ladder `WT · SP · VC · GV · SV · MO · SC · DS` in
+      `quality/DESIGN_prompt_record.md` (SEMH-1 §8, **STATUS PROPOSED, unbuilt**), whose load-bearing
+      clause is that `SC` (scribe/access) is **not** on the ladder in the same sense as the others and
+      is ringed under *Keep (access)*, never *Most help*;
+    - **how the adult reads the response** — the five diagnostic branches, **built by this pass** at
+      `LundyLoop/5_staff_training/Reading_the_Response_Card.html` and summarised in
+      `LundyLoop/3_subject_guides/science.html`;
+    - **what gets recorded** — the adult-side line in `DESIGN_prompt_record.md` (queue 16).
+
+    **Why they must be reconciled before any of them reaches a TA:** the pack's
+    `TA_PROMPT_OBSERVATION_CARD.html` independently reproduces the same ladder in **different
+    vocabulary** — *wait · reference · general prompt · specific prompt · re-model · direct step*, plus
+    the same `SC` caveat (*"scribing is access, not a thinking prompt"*; what fades is a content prompt
+    and **never a reasonable adjustment**). Shipping two ladders with two vocabularies to staff who
+    work all three pathways is the **R-H08 mis-training hazard in a new domain**, and R-H08 cost a pass
+    to close. One account, one vocabulary, or the TA picks whichever they met first.
+
+    **Source artefacts, named so the next pass starts with the enumeration this one lacked:**
+    `quality/DESIGN_prompt_record.md` (in repo) · `LundyLoop/5_staff_training/Reading_the_Response_Card.html`
+    (in repo) · the pack's `TA_PROMPT_OBSERVATION_CARD.html` and `TEACHER_DESK_CARD.html` (**not in
+    repo** — received late in this session, hash-verified, evaluated, **not adopted**) · the pack's
+    `START_HERE.html` (**never received in this session; NOT-DETERMINED**). See `_close/OPEN_ITEMS.md`
+    #26 for their status and adoption conditions.
+
+    **TRIGGER: when Pass LL-J has delivered and the September TA briefing is being prepared** — the
+    same deadline the TA card already carries (queue 10), deliberately **not** a second one.
+    **The convergence is a two-route derivation, not a claim:** read independently in Matt's chat
+    workspace and again in the repo session from the artefact alone, with no shared premise. It is
+    evidence the ladder is sound; **it authorises no build.** Queue 16's three triggers are unchanged.
+
+*Queue entries 17 and 18 added by Pass LL-S1.*
 
 
 

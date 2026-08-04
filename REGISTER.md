@@ -1801,3 +1801,90 @@ only external check is **re-deriving an entry by a method sharing no premise wit
 produced it**. This is that check arriving unbidden for an estate design that is approved in principle
 and **unbuilt**. It does not authorise building it — the triggers in `HANDOVER.md` queue 16 are
 unchanged and untouched by this — but it is evidence the ladder is not idiosyncratic.
+
+**Now a two-route derivation.** The convergence was read independently twice: once in Matt's chat
+workspace, which held the card, and once in this repo session, which received it late and reached the
+same WT–DS reading from the artefact with no sight of the first analysis. **Two routes, no shared
+premise.** That is the standard this register sets for an entry it cannot otherwise check.
+
+## R-LLS05 — over-broad is safe for exclusion **only when it comes back clean**
+
+**Pass LL-S1, 2026-08-04. Earned by the branch-disjointness gate; sibling of R-SEMH04.**
+
+R-A01b establishes that an over-broad selector is safe for **exclusion** and dangerous for inclusion.
+This entry states the limit that clause does not carry:
+
+> **Over-broad is safe for exclusion only when it comes back clean. When it comes back dirty it must
+> be refined, never reported.** A dirty over-broad result is not a finding — it is an unfinished
+> measurement, and reporting it as a collision is a false positive with a gate's authority behind it.
+
+**The case.** LL-S1's gate 8 compared its change set against six held branches using a two-tree diff
+(`git diff --name-only HEAD FETCH_HEAD`) over depth-1 fetches. It returned an intersection on
+`quality/toolkits/PENDING_APPROVALS.md` **and all three root ledgers, for five of the six branches** —
+which, read literally, is a stop-and-report on every one of them.
+
+**All five were false.** The two-tree form cannot distinguish *"the branch changed this file"* from
+*"`main` changed it after the branch was cut"*, and `main` had moved substantially since. Re-derived
+from `git merge-base` after deepening the history, every branch's **own** change set was **disjoint**:
+`semh1-safeguarding` touches exactly one file (`Tutor_Time/WB_W7_Pressure_Points.html`, confirmed
+independently against the PR's own file list), `semh1-dt-semantic` eight, `semh1-art-runtime` 31,
+`tk1-access` eight, `pass-art-a2b` three — and `pass-art-a2b`'s apparent `HANDOVER.md` hit is
+`Art_Teesside/HANDOVER.md`, a **subject-level** file, not the root ledger.
+
+**Why it is the R-SEMH04 family.** There, a shallow clone made a branch enumeration return a
+structural false **zero**; here, a shallow two-tree diff made a disjointness test return structural
+false **positives**. Same cause — *a comparison whose anchor is missing answers confidently anyway* —
+in both directions. **Neither failure announces itself.** The general form: **an unanchored comparison
+is not a weaker measurement, it is a different one**, and it will produce a number that looks like the
+one you wanted.
+
+## R-LLS06 — append-only means never renumber, and a reverted error is disclosed
+
+**Pass LL-S1, 2026-08-04.**
+
+The estate's append-only-union rule is usually stated for merges: *keep every entry from both sides,
+never choose one side*. Two clauses it does not say out loud, both earned in this pass:
+
+- **Never renumber.** An edit to `_close/OPEN_ITEMS.md` in this pass turned item **23** into **23a**
+  while intending to append. Nothing was deleted and the row's text was untouched — and it would still
+  have been a silent corruption, because every reference to *"OPEN_ITEMS #23"* in `REGISTER.md`,
+  `HANDOVER.md` and two PR bodies would have resolved to nothing. **A ledger's numbers are its
+  addresses.** Renumbering is deletion of every inbound reference at once, and it does not look like
+  deletion in a diff.
+- **A reverted error is disclosed, not absorbed.** The renumbering was caught on the diff, reverted,
+  verified byte-identical to HEAD, and appended correctly — so it left **no trace in any commit**.
+  That is exactly why it had to be written down. **A clean diff is not evidence that nothing
+  happened**; it is evidence that nothing survived. A pass that silently fixes its own near-misses
+  reports the same clean history as a pass that never had any, and the estate cannot tell them apart —
+  which is the same indistinguishability this register names at its head.
+
+## R-LLS07 — enumerate the inputs against the manifest, and name what is absent
+
+**Pass LL-S1, 2026-08-04. Earned by two workspaces receiving two different subsets of one pack.**
+
+> **A provenance gate verifies what you received. It is silent about what you did not.**
+
+**The case.** One pack was delivered to two workspaces and **neither subset contained the other**.
+This session received 16 files (9 HTML, later 11); Matt's chat workspace received 22 (12 HTML). This
+session alone held `specimens/OBSERVATION_RECORD.html`; the chat workspace alone held
+`TEACHER_DESK_CARD.html`, `TA_PROMPT_OBSERVATION_CARD.html` and `START_HERE.html`. The first two
+arrived here late and were verified; **`START_HERE.html` never arrived and is NOT-DETERMINED, not
+inferred from the ten that did.**
+
+Every arriving file matched its `32_FILE_MANIFEST.csv` SHA-256 — **zero mismatches throughout** — and
+that perfect result said **nothing whatever** about the three that were missing. A gate that can only
+return "clean" for what it can see will report clean on a half-delivery.
+
+**The rule, cheap and belonging at the top of every pass:** *enumerate the inputs against the
+manifest before starting, and name what is absent.* **An input set is a claim about what was
+delivered, never about what exists.** The manifest makes the absence derivable for free; not deriving
+it is the choice.
+
+**Worked example — the collision that would have read as agreement.** After the late arrivals, this
+session's runtime coverage was **11** of 18 proposed HTML resources. Matt's independent figure was
+also **11**. *The sets differ*: his excluded `OBSERVATION_RECORD.html` and included `START_HERE.html`;
+this session's is the reverse. **Ten shared members, two different elevens.** Recorded prospectively
+because R-E03 had to record it retrospectively — *the shared 22 is a collision, not agreement.*
+
+> **A shared number between two derivations is a collision until the sets are compared, never
+> agreement.** Two counts that match are two counts; only the members are the finding.
