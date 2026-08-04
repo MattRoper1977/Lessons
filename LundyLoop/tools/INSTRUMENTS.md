@@ -15,8 +15,8 @@ correct. The only external check is re-deriving a finding by a method that share
 premise with the instrument that produced it — and where that has been done, the
 entry says so.
 
-**Last re-derived at the H-series H3 commit** — the list below matches `tools/` in both
-directions: **13 scripts / 13 full `LL-INST` entries, plus 1 QUARANTINED**
+**Last re-derived at Pass SEMH-1 (LL-INST-14 added)** — the list below matches `tools/` in both
+directions: **14 scripts / 14 full `LL-INST` entries, plus 1 QUARANTINED**
 (`LL-INST-03-v1`, an entry with no script by design). Re-check it rather than trust it:
 `git ls-files 'LundyLoop/tools/*.py' | wc -l` against
 `grep -cE '^## LL-INST-[0-9]+ ' INSTRUMENTS.md`. The prior stamp read *6 listed / 6 actual
@@ -176,6 +176,20 @@ its own replacement (standing rule 6).
 - **How to run:** `python3 LundyLoop/tools/bundle_facts.py` (no args).
 - **Independent of:** every judgement-based instrument; it emits counts, not verdicts. A number a script prints when it runs cannot go stale — the R-G03 / R-E08 lesson made runnable.
 - **Status:** current. Placed and run read-only at `51d14aa` (H2).
+
+## LL-INST-14 — `semantic_integrity_check.py`
+
+- **Derives:** whether a lesson's surfaces agree **with each other** — subject, week, deck title vs knowledge-organiser title, the success criteria quoted by the midpoint peer-check and the completion summary, the next-lesson pointer, the timer contract, and house tier vocabulary. Every expectation is read out of the file under test; the title index used by the pointer check is recomputed from the corpus each run.
+- **Method:** Literal, over source text. Strips data-URIs before any measurement (200 tracked `*.html` carry base64 blobs at `6aaffb7`).
+- **Why it exists:** every other instrument here proves a lesson *works*. None can see a lesson that works perfectly while teaching the wrong message. All six `BUILD_DT` decks passed every technical gate while their midpoint quoted `CAREERS_W1_My_Strengths`' success criteria, their completion summary ticked a Careers criterion, and their next-lesson pointer sent pupils to `CAREERS_W2`. A technical pass is not evidence the wording is correct.
+- **The tell it keys on:** a success criterion quoted in a *quoting* surface (`.mp-prompt`, `.lc-summary`) that does not appear in the deck's own outcome surfaces; and a next-lesson pointer naming a deck title that lives in another module folder.
+- **Exercised against the defect, not just written (standing rule 6) — and it failed twice before it passed.** Replayed against `BUILD_DT_W2_Blueprint.html` at `main`, where the defect was already proven: (1) it reported **clean**. The ground truth was derived from the whole file, so the pasted criterion was part of its own evidence — a self-referential false negative. Excluding the quoting regions fixed it. (2) It then reported the *repaired* files as defective. The criterion regex ran over tag-stripped text, where `<` no longer delimits, so adjacent criteria ran together and nothing ever matched. Extracting from raw HTML fixed it. **Neither bug was visible from the instrument's own output — only the replay found them.**
+- **Independent of:** LL-INST-01 (hashing), -03 (print-box membership) and -09 (render). Those reason over bytes, boxes and layout; this one reasons over whether two authored copies of one fact agree. A file can be byte-unique, print-complete, render-clean and still teach another lesson's outcomes.
+- **Known limits — must be quoted with the result:** it cannot judge whether a deck's own outcomes are pedagogically *right*, only that the surfaces quoting them agree; it cannot see a paraphrase; it does not measure print geometry (that needs 718×1047 in a browser-capable environment, rule 26); and when two surfaces disagree it reports the disagreement without deciding **which copy is stale** — that is a human read. In `BUILD_ART_A2` the correct copy turned out to be the midpoint and the stale pair the objectives slide and completion summary, the opposite polarity to `BUILD_DT`.
+- **SI-07 is REPORT-ONLY by construction.** Estate timer values are Matt's call (`HANDOVER.md`, "The human's open calls": *"No session edits timers in passing"*), and the authorisation `Fix the timer contract — go` is awaited. The check names the contradiction and never licenses an edit.
+- **How to run:** `python3 LundyLoop/tools/semantic_integrity_check.py` (estate-wide report) · `... <path>...` (named files) · `... --json`.
+- **First estate run, Pass SEMH-1 at `6aaffb7`:** 503 files scanned, 192 lesson decks recognised, **84 findings across 50 files** (unit: findings, not files) — SI-04 15 · SI-05 10 · SI-06 1 · SI-07 58 (24 critical). The 24 SI-07 criticals reproduce the recorded 24-file Art timer set **exactly**, by a method sharing no premise with the browser harness that first found it — a second independent signal.
+- **Status:** current. Added by Pass SEMH-1.
 
 ## LL-INST-13 — `patch_loopmark.py`
 
