@@ -278,6 +278,32 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 *Queue entry 16 added by Pass SEMH-1.*
 
+### Added by Pass LL-S1 — the Evidence Studio deferral, with its trigger
+
+17. **The 15-minute Science Evidence Studio and everything belonging to it — DEFERRED, not refused.**
+    A third-party pack (Lundy Loop × Science, 2026-08-04) arrived proposing a six-phase daily
+    tutor-time evidence routine, an upload queue with statuses, a moderation tool, a weekly
+    Monday–Friday rhythm, tutor handoff cards and a live assessment board. **None of it was built.**
+    The design work is genuinely good and the diagnosis behind it is correct — the estate had a strong
+    account of *closure* and none of *interpretation* — but the parts that fill that gap were taken
+    (queue entry: none; they landed in this pass) and the Studio itself was not.
+    **Why it stopped, and by whose decision:** the day card and the tutor-time slot were **shelved by
+    Matt's own decision** (queue entry 11), to run only if the lesson-level mark is observed working
+    in a real room. **A larger version of a shelved thing does not satisfy the condition that shelved
+    it.** Three further collisions are recorded as the *reasons the design is not ready*, not as
+    repairs to make: the Studio's phase 6 names a new next step where **B2 Amendment 2** requires the
+    return visit to the step already given; its weekly rhythm plus status queue is the scheduled
+    backlog **B2 Amendment 3** forbids; and its *"returned for one authentic addition"* end-state is
+    the failing answer **B2 Amendment 1** rules out. Its other three end-states are strong — **"No
+    upload today" matches "an empty day is data" exactly.**
+    **TRIGGER — BOTH required, neither sufficient alone:** (a) the **late-September three-week check**
+    has been run **and its outcome recorded**; **and** (b) **Pass LL-J has delivered and Matt has read
+    its specimens**. Then it becomes **its own pass with its own brief** — not a resumption of LL-S1.
+    Full evaluation: `quality/LUNDY_SCIENCE_ACCEPTANCE_GATES.md`. Register: **R-LLS01**–**R-LLS04**.
+    **R-A09 binds anything ever built here: no second copy, ever.**
+
+*Queue entry 17 added by Pass LL-S1.*
+
 
 
 ### September-cluster pass — what landed, what stopped

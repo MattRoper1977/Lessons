@@ -1697,3 +1697,82 @@ derive-don't-quote discipline caught both before any action depended on them; ne
 Both are the R-G01 shape arriving inside an order: a branch tip written into a brief is stale the moment
 the branch moves, and a merged branch listed as open is a cached claim about repository state. **Enumerate
 the matrix at open, every pass** — the brief's version is the hypothesis, the repo's is the fact.
+
+## R-LLS01 — `R-H16` does not exist; the cross-pass rule is `R-H02`
+
+**Pass LL-S1, 2026-08-04. Adjudicated by Matt on the Phase 0 report. Derived at `7cffd92`.**
+
+The LL-S1 brief cited **`R-H16`** twice as the rule governing cross-pass collision. **There is no
+R-H16 in this register.** The rule is **`R-H02` — "Cross-pass collision: the estate cannot see a
+pass's work in flight"** — whose own remedy-candidate is *a declared in-flight scope*, which is what
+`_lundysci/INFLIGHT.md` implemented. The substance the brief relied on was correct; only the
+identifier was wrong, and it was wrong in a way nothing could catch except reading it against this file.
+
+**The register line, which is not "the brief was wrong":**
+
+> **A register ID quoted across passes inherits the authority of an entry without ever having been
+> one.** The ID travelled through briefing documents across several passes, each inheriting it from
+> the last, and no pass read it against the register until one did.
+
+This is the **R-G01 / R-G03 / R-H07 cached-claim family applied to an identifier rather than a
+figure** — the exact shape of the retired 0-of-8 claim, which was also carried across passes as
+though it were measurement. **A citation is a claim. Resolve it before relying on it.** An ID is
+cheaper to check than a number and is checked less often, precisely because it looks like a reference
+rather than an assertion.
+
+## R-LLS02 — Pass TK-1's true shape: four merged PRs, not five branches
+
+**Pass LL-S1, 2026-08-04. Corrects a brief, not the record — `R-TK01` was already right.**
+
+The LL-S1 brief stated that TK-1 "merged five branches plus a records commit and a residuals branch".
+**R-TK01 records the true shape and is authoritative:** **four** PRs merged — #37 `f03dade`, #38
+`ce67121`, #39 `4aab666`, #40 `82c40ba` — plus a records commit, plus the `tk1-residuals`
+micro-branch, with **#41 (`tk1-access`) HELD** on Matt's physical print check.
+
+Operationally this changed nothing: the conclusion drawn from it — that the pack's reference commit
+`74e6fee` is stale and cannot be a base — is unaffected and stands. Recorded because a count that is
+wrong by one in a brief becomes a count that is wrong by one in the next brief that quotes it.
+
+## R-LLS03 — the site-repo mis-open tally reaches eight
+
+**Pass LL-S1, 2026-08-04.**
+
+LL-S1's session opened in the **site** repo `mattroper1977.github.io` — the **eighth** recorded
+instance of the R-SB01 / R-D05 default. R-TK01 recorded the seventh. The control worked exactly as
+R-SB02 specifies: the order named `MattRoper1977/Lessons` explicitly, the pass's first act was the
+remote check, it failed against the named target, and the Lessons repo was attached and cloned before
+any measurement was taken.
+
+**Eight instances is no longer a run of slips; it is the environment's steady-state behaviour.** The
+control that catches it is not vigilance — it is the order carrying an explicit repo line and the
+gate having a **substance clause** (R-SEMH05), so identity is proven from four independent
+identifiers rather than from a path map that may itself be wrong.
+
+A second harness claim was caught in the same act: the session designated a branch
+(`claude/ll-s1-lundy-science-vcrh80`) **in the decoy repo**, while the order designated
+`claude/ll-s1-lundy-science` in Lessons. Reported rather than resolved in the harness's favour, and
+ruled by Matt. **R-SB02 covers this and needs no new rule** — a session's checked-out branch is part
+of the harness configuration, and the harness configuration is a claim.
+
+## R-LLS04 — the pack's "84 retained files" is a file count, not a distinct-artefact count
+
+**Pass LL-S1, 2026-08-04. Container-bound fact supplied by Matt; corroborated here by derivation.**
+
+`15_MIN_EVIDENCE_STUDIO.html` and `Lundy_Loop_Science_15_Minute_Evidence_Studio_2026-08-04.html` in
+the Lundy-Science pack are **byte-identical**, md5 `399411b16efef770b5c9025a08640909`.
+
+**The derivation, attached so this is an observation and not a bare assertion:** only one of the two
+files reached this session, so the duplication itself could not be re-derived here and was correctly
+reported **NOT-DETERMINED** in Phase 0. Matt supplied the pairing from the container that held both.
+What *was* derived here: `md5sum` of the received `15_MIN_EVIDENCE_STUDIO.html` = the stated
+`399411b16efef770b5c9025a08640909`, so the received file is the one the md5 describes.
+
+**Consequence, which is the reason for the entry:** a retained-file count that includes both copies
+counts one artefact twice. **Ship one.** Nothing from this pack was shipped, so nothing acted on it;
+it is recorded so a later pass reconciling "84 retained" against a distinct-artefact list does not
+report a mismatch and start an investigation.
+
+**Free provenance gate, worth reusing:** the pack shipped `32_FILE_MANIFEST.csv` carrying a SHA-256
+per file. All **15** manifest-listed files received in this session matched their recorded hash
+exactly (the manifest cannot list itself — the 82 + 2 = 84 reconciliation). *A supplier who ships
+hashes hands the receiver a provenance check for nothing; take it every time.*
