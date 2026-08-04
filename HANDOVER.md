@@ -376,6 +376,14 @@ TA.**
 *Attachments added by Pass LL-AS1 at branch `claude/ll-as1-lundy-asdan` (base `efc6cb3`); the
 pass is a held PR — nothing above is live until Matt merges.*
 
+### Added by Pass SEMH-2 — sequencing confirmation (no new queue entries)
+
+**Estate Visuals is the next queued pass after SEMH-2**, per the standing sequencing ruling
+(R-MS01: SEMH-2 then Estate Visuals, Estate Visuals against a settled post-art main). SEMH-2
+closed its tail: RES-AS1-01 applied; the #18 diffs re-emitted (held); the SEMH-1 remainder
+emitted as PROPOSED DIFF sets on the held SEMH-2 branch for Matt's read. LL-J and the #24
+trigger are untouched.
+
 
 
 ### September-cluster pass — what landed, what stopped

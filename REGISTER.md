@@ -2157,3 +2157,39 @@ shipped bytes, and treat any divergence between the derived set and the enumerat
 finding. Family: R-A01b (a selector's safety depends on direction) · R-F02 ("the X file" is
 an unverified singleton) · standing rule 2 (emit, don't transcribe) · R-LLS07 (a gate is
 silent about what it cannot see).
+
+## R-SEMH07 — Pass SEMH-2 close: the claims-accuracy tail, executed under delegation
+
+**Rulings issued RESOLVED under Matt's delegation, 2026-08-05 — executed, not re-adjudicated.
+Base `84f4f31` (derived fresh at open; identity gate 5/5). Branch
+`claude/semh2-claims-accuracy`; one branch, merge authority per-item.**
+
+- **§3 APPLIED at `e03b2ed`:** RES-AS1-01 — the one authorised sentence in
+  `ASDAN_Lundy/EVIDENCE_STATUS_AND_CLAIMS.html`, matched span printed before replacement,
+  byte-diff confined, file gates re-run clean. OPEN_ITEMS #32 CLOSED. The one-edit
+  claim-accuracy precedent (tk1-residuals / OPEN_ITEMS #9) applied.
+- **§4 RE-EMITTED, applied nowhere:** the #18 D&T dust/HT diffs regenerated at HEAD from the
+  ruled wording (4 files, 7 hunks, `git apply --check` clean; no drift — every target string
+  present exactly once at `84f4f31`). PENDING-LOCAL-APPROVAL intact.
+- **§5 PROPOSED ONLY, Matt reads:** (a) the TBC unit-code hide — the population re-derived at
+  HEAD: tracked `unit code: TBC` = 30 files minus 5 documentation/tooling carriers = **25
+  Science_Teesside lesson files** (Build 5 · Grow 5 · Launch 15, one instance each), matching
+  SEMH-1's historical count by fresh derivation; the hide is a marked, byte-reversible HTML
+  comment (`semh2-hide`), no layout break. (b) the constructed-source labels — derived over
+  the seven non-assessed LAUNCH_HUM decks: **W1** (the seven-document teaching archive),
+  **W3** (the NOP specimen attributions), **W4** (the paired 1915/2015 photographs, a framing
+  device); **W2/W5/W8 none, and W6's "90,000 by 1901" judged REAL** (the census figure is a
+  fact citation, not a constructed document — enumerated so the judgement is visible). One
+  wording style, one label per presenting surface, assessed pair untouched. Both sets in
+  `_semh2/` on the branch, held PR.
+- **Rows updated append-only, originals preserved in place:** #30 CLEARED-BY-RULING (board
+  approved for display, headers as-is, the "no"-row usage rule recorded; PRINT-UNVERIFIED
+  until the physical check) · #31 READ-CLEARED / USE-DEFERRED (field labels accepted; use
+  behind #24) · #32 APPLIED-CLOSED · #18 re-emitted. **#24 and #33 untouched, and said so.**
+- **Merge scope:** the §3 edit + this records commit merge (`--no-ff`); the `_semh2/`
+  proposal docs stay on the held branch. Per R-LLS08 the merge SHA is not written inside the
+  branch that names it — derive:
+  `git log --merges --oneline --first-parent main | head`; rollback = the tip before it.
+- Sentinels at the records commit: loop-mark **50** / written-line **98** (universe: tracked
+  `*.html` containing the literal marker), derived, unmoved. Assessed pair and D&T decks
+  byte-identical to base. No storage or egress added anywhere.
