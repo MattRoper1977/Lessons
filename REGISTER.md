@@ -1922,3 +1922,82 @@ did:** PR **#41** (`tk1-access`) carries its own trigger, `print check passed �
 **not** merged by this pass — no instruction named it and its content was never gated here. The
 standing SEMH-1 list (#33's DSL sitting, #34's print check, `pass-art-a2b` then #35) is
 **unchanged**.
+
+## R-MS01 — the merge sitting, 2026-08-05: five merges, one blocked refresh, one new held PR
+
+**Pass MS-1. Matt's two physical checks (DSL sitting · print sitting) done and relayed; merges
+executed on his explicit instruction, `--no-ff`, never squash.**
+
+**Rollback SHAs were re-derived at each merge, never carried** — each is the tip immediately before
+that merge, so reverting one does not silently assume the others.
+
+| # | branch | merge SHA | rollback (tip before) |
+|---|---|---|---|
+| #42 | `claude/ll-s1-lundy-science` | `b080a7c` | `7cffd92` |
+| #41 | `tk1-access` | `cc0e689` | `b080a7c` |
+| #33 | `semh1-safeguarding` | `e5d6aed` | `cc0e689` |
+| #34 | `semh1-dt-semantic` | `6e7317f` | `e5d6aed` |
+| — | `pass-art-a2b` | `8f4f9b1` | `6e7317f` |
+
+**#42 and #41 merged earlier in the same session**, on Matt's direct word, before this sitting's
+brief arrived; the brief's trigger lines then confirmed both retrospectively. Recorded so the ledger
+does not read as though all five landed in one block.
+
+**Every merge re-proved at its own tip, and the whole run again from a fresh clone.** Sentinels
+**50 / 98** throughout — universe *tracked `*.html` containing the literal marker*; none of these
+branches touches a closure marker, so movement would have been a stop. Assessed `*_HUM_W7` pair and
+the four frozen legacy-science trees byte-identical at every tip. Zero conflicts in all five.
+
+**`pass-art-a2b` merged clean and was not reconciled by judgement.** It was 229 commits behind main;
+`git merge-tree --write-tree` was run against the tip *before* the merge and produced a tree with no
+conflicts, so no hunk of art content was chosen, dropped or rewritten by the session. Had it
+conflicted, the merge would not exist — the order made that a stop, not a merge-around.
+
+**#35 `semh1-art-runtime`: the refresh is BLOCKED, and the pre-specified method does not apply.**
+Its own PR anticipated a `GROW_ART_W6` / `GROW_ART_W7` conflict and ruled it resolvable by
+**append-only union**. Derived from the conflict hunks: **there is nothing to union.** The two sides
+are byte-identical except for one **scalar attribute**, `data-timer` — and an attribute has one
+value. *Append-only union is a rule about entries; it cannot dispose of a scalar.*
+
+What the sides actually hold, derived rather than assumed:
+
+| | W6 / W7 timers | whole | spine |
+|---|---|---:|---:|
+| `semh1-art-runtime` | `1 · 3 2 4 4 3 3 15 3 3` | 41 | **40** — the canonical v5 spine |
+| `main` after a2b | `1 · 4 4 5 6 4 6 20 4 4` | 58 | 57 — the stale pre-reconciliation spine |
+
+**`pass-art-a2b` never made a timing decision.** It branched before the reconciliation and carries
+the old spine, *including the 20-minute residue #35 exists to remove and which its print check is
+meant to confirm gone*. So this is not two rulings in contest; it is one ruling and one stale
+inheritance, wearing the shape of a conflict because both branches edited long adjacent lines.
+
+**The session did not resolve it.** The probe ran in a throwaway branch, was inspected, aborted and
+deleted; `semh1-art-runtime` is byte-untouched at `1ffe1c6` and its remote ref unchanged. Lesson
+timings are content a human ruled on, and **the ruled method turned out not to be mechanically
+applicable** — R-H03's clause applies (*a ruling's factual premises are claims too, even when the
+order is Matt's*), so it returns to Matt rather than being forced. Nothing is blocked by the wait:
+#35 is held on his print check regardless. Trigger written into the PR: `art print check passed — merge 35`.
+
+**`tk1-access-2` opened as PR #43, held.** The 8th evidence pack gains the large-print option the
+other seven got in #41, closing OPEN_ITEMS #19. Same recipe, **29 rules derived from that file's own
+CSS rather than hand-listed**, so a selector cannot be missed. One derivation artefact caught: the
+bare `body` selector would have produced `body.lp body`, which matches nothing. jsdom exercised the
+toggle in both directions **with an already-shipped pack as a control**, so the result is parity and
+not a fresh claim. **PRINT-UNVERIFIED**; trigger `print check passed — merge tk1-access-2`.
+
+**Matt's sequencing rulings, recorded as his word:** #35 stays held on its **post-a2b** print check —
+one deck per suite, no 20-minute residue, checked against the settled state, not the moving one. The
+next pass is **SEMH-2, then Estate Visuals**, in that order: SEMH-2 is small and closes SEMH-1's
+tail, and Estate Visuals must run against a settled post-art main rather than one still moving
+(**R-H02** — one pass per territory). **Estate Visuals does not start in this session.**
+
+**Two findings recorded but deliberately not acted on**, because §4 enumerated this commit and
+exceeding it is the failure mode this estate names repeatedly:
+
+- **A new storage key landed with no §B entry.** PR #33 introduces `mbm_tt_review` in
+  `Tutor_Time/WB_W7_Pressure_Points.html`, holding `{flag, date}` only — no pupil text, no names.
+  Every other storage key in this estate carries a register entry (**R-B01**–**R-B05**); this one
+  does not, so a later storage audit meets a key the register cannot explain. It is a safeguarding
+  surface, which is the argument for recording it rather than leaving it discovered.
+- **The 8th evidence pack's accessibility asymmetry**, above: seven packs tell an adviser that no
+  part of the award requires handwriting; the eighth does not.
