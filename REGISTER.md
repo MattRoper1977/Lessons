@@ -1522,3 +1522,60 @@ with §H and the R-H## rules.*
 - **Applied (claim-accuracy only, 2 files):** W4 — 3 surfaces (the "10-hour window" step header+para; the "the unit asks for … about ten hours" Q&A answer; the "used over about ten hours" recap `<li>`); W5 — the "used over ~10 hours" comprehension question (on-screen + print, 2 occurrences). Replaced with "planned/used across weeks, often **within another challenge**" — spec-accurate per §17 LO1.4/1.5 guidance.
 - **Task design UNCHANGED (the constraint).** The assessed activity is untouched: pupils still plan and deliver a **≥3-min talk OR ≥250-word text, group ≥3**. No timing, no deliverable, nothing a pupil does was altered — only the false requirement claim was removed. Nothing stopped-on.
 - **Gates:** byte-diff confinement (strip-tokens residue identical) · `node --check` · jsdom boot · tag balance · estate `gates.py` **PASS** (W4+W5) · reduced-motion byte-identical · sentinel `ll-g:loop-mark`=**50** SET-invariant · **estate-wide residual 10-hour ComSk1 claims = 0** (swept all ComSk1 lessons; only W4/W5 ever carried it; GROW W6 = 0).
+
+## R-SEMH01 — a brief's merge grant is subordinate to the repo's own register
+
+**Ruled by Matt, 2026-08-04. Derived at `6aaffb7a07b23833719dd633ed184631c80bc432`.**
+
+A pass brief arrived granting the session authority to squash-merge its own phases.
+`HANDOVER.md` says *"Nothing commits without asking Matt for a key. Every time, every
+pass, including one-file changes,"* and the in-flight-branch note requires an **explicit
+merge commit — no rebase, no squash** — because the ledgers are SHA-anchored and a rebase
+orphans every recorded reference. The session followed the register and merged nothing.
+
+**Standing rule: a brief's merge grant is subordinate to the repo's own register.**
+Where an incoming instruction conflicts with `REGISTER.md`, `HANDOVER.md` or
+`_close/OPEN_ITEMS.md`, the repository's own record wins and the conflict is reported
+rather than resolved in the brief's favour. Merges are Matt's, no-ff, never squash.
+
+## R-SEMH02 — legacy-science freeze: a narrow accuracy exception
+
+**Ruled by Matt, 2026-08-04.**
+
+The 2025-26 freeze on `biology/`, `chemistry/`, `2 Physics 10/` and `5 Intervention 10/`
+stops **redesign**. It does not require leaving a false, alarm-framed claim in front of
+SEMH pupils. One line in `chemistry/Lesson2_pH_Scale_v4.html` asserted that stomach acid
+is *"strong enough to dissolve metal"* and that a 0.5 shift in blood pH means *"you die"*.
+Both are inaccurate as stated and both use fear as the memory hook.
+
+**Exception granted for exactly one line, in its own commit, with accurate and
+proportionate replacement wording.** Everything else in legacy science remains frozen and
+travels as proposed diffs only. The exception is the correction of a false claim, not a
+licence to edit frozen material.
+
+
+## R-SEMH03 — the sentinel populations were stale in prose; derive them
+
+**Ruled by Matt, 2026-08-04. Derived at `6aaffb7a07b23833719dd633ed184631c80bc432`.**
+
+Both sentinel populations had grown past the numbers describing them. `HANDOVER.md`
+carried **45** strip-carrying BUILD files and **48** written-line GROW/LAUNCH files.
+Re-derived at this SHA:
+
+| sentinel | derivation | recorded | derived |
+|---|---|---|---|
+| LL-G loop-mark (BUILD) | `git grep -l 'll-g:loop-mark v1' -- '*.html'` | 45 | **50** |
+| written closure line (GROW/LAUNCH) | `git grep -l 'What I said, and what it changed' -- '*.html'` | 48 | **98** |
+
+The architecture is intact and correctly distributed — every loop-mark file is BUILD and
+every closure-line file is GROW/LAUNCH, 0 leakage either way. Only the prose was stale.
+`bundle_facts.py` (LL-INST-12) already emits both figures correctly in both R-E08 forms,
+so the instrument was right and the sentences were not.
+
+**The live claims in `HANDOVER.md` now carry the command that derives them plus a
+derived-at stamp, not a number.** Historical entries recording *"both sentinels unmoved
+(45 / 48)"* at earlier commits are left untouched: they were true when written, and
+rewriting a dated observation destroys the evidence that the drift happened.
+
+Fifth sighting of the class recorded at R-G03: *a number a script prints when it runs
+cannot be stale; a number in prose can.*

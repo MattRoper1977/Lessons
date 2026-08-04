@@ -203,7 +203,7 @@ gets forgotten, or gets restarted by someone who does not know why it stopped.
     **TRIGGER: before the first staff briefing of term — not the first week of
     lessons.** A TA who meets the printed strip before they meet the card will fill the
     box in on the pupil's behalf, which is the exact failure the pass exists to remove.
-    **Until this lands, the 45 files carry a printed strip and nothing else.** The strip
+    **Until this lands, the strip-carrying files carry a printed strip and nothing else** — population derived, never typed: `python3 LundyLoop/tools/bundle_facts.py` (*Sentinel · loop-mark (BUILD)*), or raw `git grep -l 'll-g:loop-mark v1' -- '*.html' | wc -l`. **50 at `6aaffb7`.** The strip
     is the mechanism; the card is the behaviour that makes it mean anything.
 
 11. **The day card and the tutor-time ninety seconds — SHELVED, not abandoned.**
@@ -249,7 +249,9 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     **R-H08 CLOSED** on Matt's stated second paper read of the rebuilt game (card at `a5092bb` ·
     legend, label and scenarios 15–16 at `eea4062`). The read itself is a human observation, not a
     derivation; no instrument witnessed it.
-14. **The LL-5 GROW/LAUNCH population rework.** The 48 written-line files (R-A02) inherit
+14. **The LL-5 GROW/LAUNCH population rework.** The written-line files (R-A02) — population
+    derived, never typed: `python3 LundyLoop/tools/bundle_facts.py` (*Sentinel · written line
+    (GROW/LAUNCH)*), **98 at `6aaffb7`** — inherit
     B2's pupil-reader and B3's evidence/warrant step-up. **TRIGGER: after the specimen is
     judged; L3/L4/L5 settled against the day-close capture route first (R-E02).**
 15. **The LAUNCH line wording.** The pupil-facing warrant clause on LAUNCH's closure line.
