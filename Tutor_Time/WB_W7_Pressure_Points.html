@@ -580,7 +580,8 @@ function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v
    Disposition lives on the in-memory _voices entry and is never persisted. No pupil
    text, and no disposition, reaches localStorage or sessionStorage. The lesson cannot
    be closed while a message is unreviewed; print stays available as the durable record. */
-var DISPOSITIONS=[['reviewed','Reviewed'],['referred','Referred to DSL'],['noconcern','No concern']];
+var DISPOSITIONS=[['referred','Referred to DSL'],['noconcern','No concern']];
+var REVIEW_KEY='mbm_tt_review';  /* {flag,date} only - never text, never names */
 function unreviewedCount(){ return _voices.filter(function(v){ return !v.d; }).length; }
 function refreshReviewBadge(){
   var b=document.getElementById('reviewBadge'); if(!b) return;
@@ -589,7 +590,18 @@ function refreshReviewBadge(){
   var btn=document.getElementById('reviewBtn');
   if(btn) btn.style.outline = n ? '3px solid #d97706' : '';
 }
-function setDisposition(i,d){ if(_voices[i]){ _voices[i].d=d; } renderReview(); refreshReviewBadge(); }
+function persistOutcome(flag){
+  /* {flag, date} - the shape the estate has already blessed. No message text, no names,
+     no index that could order or identify a pupil. Append-only within the lesson day. */
+  try{ var log=JSON.parse(localStorage.getItem(REVIEW_KEY)||'{}');
+       var k=(typeof LESSON_ID!=='undefined')?LESSON_ID:'WB_W7';
+       if(!log[k]) log[k]=[];
+       log[k].push({flag:flag, date:new Date().toISOString()});
+       localStorage.setItem(REVIEW_KEY, JSON.stringify(log));
+  }catch(e){}
+}
+function setDisposition(i,d){ if(_voices[i] && !_voices[i].d){ _voices[i].d=d; persistOutcome(d); }
+  renderReview(); refreshReviewBadge(); }
 function renderReview(){
   var box=document.getElementById('reviewList'); if(!box) return;
   if(!_voices.length){ box.innerHTML='<p><em>Nothing was put in the box this lesson. You can still close the lesson.</em></p>'; return; }
@@ -641,7 +653,7 @@ function printEvidence(){
   var earned=Object.keys(SEALS).filter(function(k){return SEALS[k];}).length;
   var d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   var rows=_voices.length ? '<table><tr><th>Time</th><th>Message</th><th>Staff review</th></tr>'+_voices.map(function(v){
-      return '<tr><td>'+v.t+'</td><td>'+v.txt.replace(/</g,'&lt;')+'</td><td>'+(v.d?({reviewed:'Reviewed',referred:'Referred to DSL',noconcern:'No concern'})[v.d]:'NOT REVIEWED')+'</td></tr>';}).join('')+'</table>'
+      return '<tr><td>'+v.t+'</td><td>'+v.txt.replace(/</g,'&lt;')+'</td><td>'+(v.d?({referred:'Referred to DSL',noconcern:'No concern'})[v.d]:'Not yet reviewed')+'</td></tr>';}).join('')+'</table>'
     : '<p>None added.</p>';
   document.getElementById('print-area').innerHTML =
     '<h1>Tutor Time Evidence \u00b7 Week 7 — Pressure Points</h1>'+
@@ -663,9 +675,7 @@ function printEvidence(){
     <div class="ta-modal-header"><h2 id="reviewTitle" style="margin:0;font-size:1.05rem">🛡️ Anonymous box — staff review</h2>
       <button class="tool-btn" onclick="closeReview()" aria-label="Close staff review">✕</button></div>
     <div style="padding:16px 24px 22px">
-      <p style="margin:.2rem 0 .8rem"><strong>Staff eyes only.</strong> Review every message before closing the lesson.
-      Nothing typed into the box is stored on this device — it exists only while this page is open.
-      <strong>Print the evidence sheet before you close the page</strong> if anything needs to travel.</p>
+      <p style="margin:.2rem 0 .8rem"><strong>Staff eyes only.</strong> Every message needs an outcome: <em>Referred to DSL</em> or <em>No concern</em>. Reviewing is the action; the outcome is what is recorded.<br><strong>Review before you leave the page. Print is the durable copy.</strong> What a pupil typed is never stored on this device and does not survive a reload — only the outcome and its date do.</p>
       <div id="reviewList"></div>
       <div style="margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff8e1;border:2px solid #d97706">
         <p style="margin:.1rem 0"><strong>Hand to the DSL the same day.</strong> Timestamps can identify a pupil in a small group — treat as confidential.</p>
