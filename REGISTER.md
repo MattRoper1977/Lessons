@@ -1579,3 +1579,66 @@ rewriting a dated observation destroys the evidence that the drift happened.
 
 Fifth sighting of the class recorded at R-G03: *a number a script prints when it runs
 cannot be stale; a number in prose can.*
+
+## R-SEMH04 — a shallow clone cannot enumerate branches; that zero is structural
+
+**Pass SEMH-1, 2026-08-04.**
+
+`git clone --depth 1` implies `--single-branch`. The resulting refspec is
+`+refs/heads/main:refs/remotes/origin/main`, so `git fetch --all` **can only ever return
+`main`** — a branch enumeration over a shallow clone is a **false zero by construction**,
+not a repository state. This pass first read **0 parked branches** and would have built
+its overlap matrix on that.
+
+**Enumerate from `git ls-remote --heads origin`, or repair the refspec first**
+(`git config --unset-all remote.origin.fetch` then
+`git config --add remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'` and re-fetch).
+After repair: **54 branches**, confirmed by two independent signals.
+
+Sibling of the `ko_staleness` shallow-clone false zero that produced LL-INST-11. Same
+class, different instrument: **a dependency the caller never declared stays invisible.**
+
+## R-SEMH05 — the canonical path map; a brief's path map is a claim like any other
+
+**Pass SEMH-1, 2026-08-04.**
+
+| canonical location | what it holds |
+|---|---|
+| `/REGISTER.md` | estate conventions, deliberate absences, deletion records, this register |
+| `/HANDOVER.md` | where we got to, open rulings, the queue with decisions attached |
+| `/LundyLoop/tools/INSTRUMENTS.md` | the instruments, what each cannot detect, standing rules |
+| `/_close/OPEN_ITEMS.md` | open items with status, blocker and source |
+
+The SEMH-1 brief placed **all four** somewhere else — `LundyLoop/REGISTER.md`,
+`LundyLoop/HANDOVER.md`, `LundyLoop/INSTRUMENTS.md`, and `OPEN_ITEMS` unlocated. Its
+identity gate therefore failed on its own first clause in the correct repository.
+
+**A brief's path map is a claim like any other and gets verified like one.** Four wrong
+in a single brief, caught only because the gate had a substance clause — four independent
+identifiers resolved (`b137a90`, `_passpq/`, `Art_Teesside/HANDOVER.md`, the three
+`Slideshows/` directories), so identity was proven despite the map. A gate whose clauses
+are all paths would have stopped the pass dead in the right repo.
+
+## R-SEMH06 — UAS-as-qualification: RETIRED as FALSE, do not re-raise
+
+**Pass SEMH-1, 2026-08-04. Adjudicated by Matt on the close report §1.1.**
+
+The 2026-08-04 SEMH audit claimed estate surfaces describe AQA UAS as a qualification or
+show a UAS level (backlog P0-04; scorecard "Humanities LAUNCH", "LAUNCH ASDAN"). **FALSE
+at `6aaffb7`.** 40 surfaces match `UAS` near `qualification|level|grade`; every one was
+read. None does so. They are of three benign kinds:
+
+1. Scheme-of-Work banners naming a unit *theme* (`AQA UAS 'History around us'`);
+2. ASDAN **PEQ** level statements that mention the *UAS coordinator* as the registering
+   person — the level belongs to PEQ, a genuinely levelled qualification, not to UAS;
+3. Pearson grade ranges (8939 E1–E3, 1BI0 F 1–5) printed *beside* a separate
+   "AQA UAS science units" line.
+
+`Humanities_Teesside/LAUNCH_Printable_Pack.html` already carries the corrective wording.
+**No edit is warranted and none was made.** Full evidence at
+`quality/QUALIFICATION_CLAIMS_REGISTRY.json` Q-002.
+
+**RETIRED. No later pass re-raises this.** What remains open is the separate and real
+item: 25 files carrying `AQA UAS unit code: TBC (Cheryl)` — `_close/OPEN_ITEMS.md` #8,
+and commissioned as SEMH-2.
+

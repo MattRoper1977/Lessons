@@ -259,6 +259,27 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 *Queue entries 12–15 added by Pass LL-I.*
 
+16. **The adult-side prompt record** — `quality/DESIGN_prompt_record.md`, PROPOSED,
+    approved in principle by Matt 2026-08-04. One adult-side line beside the existing
+    strip (BUILD) and closure line (GROW/LAUNCH), recording the highest prompt used, what
+    the learner decided, what the adult did not decide, what to remove next time, and the
+    access arrangement that stays. Paper only, no device storage, never aggregated.
+    **TRIGGER — all three required:** (a) the LL-I specimen judged (entry 12); (b) the TA
+    card briefing having actually *happened*, not merely landed at `9af1e63` — a TA who
+    meets the record before the behaviour fills it in on the pupil's behalf, which is the
+    exact failure the strip exists to remove; (c) one specimen per pathway, chosen to
+    **break** the design, gated before any batch.
+    **Pre-authorised fallback, no fresh ruling needed:** if the specimen shows *Most help*
+    filled and *Try without next time* blank, cut to the two fields — *Try without next
+    time* and *Keep (access)*.
+    **Sentinel populations are DERIVED at build time.** The 50 / 98 in the design were
+    true at `6aaffb7` only. See R-SEMH03.
+    **It waits on LL-I, not beside it.**
+
+*Queue entry 16 added by Pass SEMH-1.*
+
+
+
 ### September-cluster pass — what landed, what stopped
 
 - **LANDED (one commit):** queue entry 13, the calibration-game pathway section — see entry 13

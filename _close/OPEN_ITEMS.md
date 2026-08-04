@@ -41,3 +41,17 @@ Enumerated by `git rev-list --count origin/main..origin/<branch>` at `8540eee` (
 - `pass-sbx-art-a2` — **5** unique commits *(the SBX C1 Bronze→Explore work — NOT-LANDED, see S2)*
 - `pass-art-a2b` — **2** unique commits
 - `pass-u-audit` — **1** unique commit
+
+## Added by Pass SEMH-1 (2026-08-04), at main `73d6330` → `8040e6e`
+
+Each with owner and trigger, per Matt's close ruling §3.5.
+
+| # | open item | owner | trigger / status |
+|--:|---|---|---|
+| 12 | **CAREERS / v5 timing-spine census.** Derive the timing spine for **every v5 suite estate-wide, per deck**, against the 40-minute period, identifying drop-first / "if time" slides. The CAREERS donor chassis sums to **53 whole-deck / 52 spine** on a 40-minute period; the Art decks were reconciled to 41/40 under ruling 2, but no other suite was measured. **Whether an over-planned spine is a defect or a design is Matt's call when he sees the table.** | any session | **REPORT-ONLY, no edits.** Any session may run it. |
+| 13 | **`chemistry/Lesson2_pH_Scale_v4.html` throws at load.** `TypeError: Cannot read properties of undefined (reading 'trim')` under jsdom on boot. **Pre-existing — verified identical at `6aaffb7`, so it predates the pH correction merged at `8040e6e`.** Unscoped. Also a **clip-verification target file**. | developer | small fix pass |
+| 14 | **`BUILD_DT_W1` "spot" vs "match" divergence.** `.sc-v4` carries *"I can **spot** HT pallet wood…"* while `.lc-summary` carries *"I can **match** HT pallet wood…"*. Ruling 4 fixed the wording form; align `.sc-v4` to the ruled wording, **"match"**. One word. | D&T lead | **rides the next D&T-touching pass, not its own** |
+| 15 | **3 LAUNCH_ASDAN PEQ decks — SI-04/05 outcome-ownership findings.** `PEQ_W1_Intro_and_Choosing_My_Level`, `PEQ_W2_What_Makes_Communication_Effective`, `PEQ_W3_Active_Listening_and_Giving_Feedback`: midpoint and/or completion surfaces quote criteria the deck does not own. Found by `semantic_integrity_check.py` (LL-INST-14). | ASDAN lead | small pass |
+| 16 | **10 files in `6 Art/` — SI-07 timer-contract (high).** A different chassis from Art Teesside. **PARKED with the rest of the unruled legacy `6 Art/` material; NOT queued for action.** | — | parked, no trigger |
+| 17 | **SEMH-2 (Matt's commission, separate brief).** (a) Hide the TBC unit code across the **25** Science Teesside witness sheets using the reversible mechanism specified in the SEMH-1 brief — sheet content untouched, returns the moment Cheryl confirms; (b) constructed-source label wording for the Humanities decks delivered **as PROPOSED DIFFS for Matt's read**. **Pupil-facing authoring stays Matt's.** | Matt commissions | awaiting the SEMH-2 brief |
+
