@@ -6,19 +6,47 @@ Start here. This file is written so a fresh session needs nothing else.
 
 | | |
 |---|---|
-| Branch | `art-remediation` — **never push to `main`, never force-push, never merge** |
+| Branch | The remediation lineage is **merged into `main`** — Matt's 2026-07-29 ruling, no-ff. Continuation (A2b) is on **`pass-art-a2b`**; Matt merges it, you do not. The old "never push to `main`" rule stood until that ruling lifted it for the one authorised merge; it still binds for everything not explicitly authorised. |
 | Tip | **read it — `git log -1 --format='%h %s'`.** A handover cannot state its own tip: the commit that writes the SHA changes the SHA. Rule 12 applies to this row. |
-| `origin/main` when last verified | `8c384a7` (stale by design — a fixed reference point, not a claim about now) — moved eight times in one day by a live Lundy Loop workstream, never once touching `Art_Teesside/`. **Re-fetch and compare; it will have moved again.** |
+| `origin/main` | **now carries the remediation** — merge commit `12cb6d9`, parents `c034ffd` (pre-merge main, the rollback point) + `46d3906` (art-remediation). Re-fetch before trusting; a live Lundy Loop workstream also moves main. |
 | Estate | 53 HTML files |
-| Finished | **BUILD Autumn 2** — the only completed thing. `vocabulary-residue 0` **and** `C5 0`, two independent signals per rule 14 |
+| Finished | **BUILD Autumn 2** · **GROW W2** (A2a) · **GROW W6 + W7** (A2b, this session). Ladder `34 → 28`; each closed on two signals per rule 14. |
 
 **Open by printing** `origin/main`, its message and date, and the branch tip. Main moves under you. A workstream collision (`Pass LL-A2a` vs Art `A2a`) once cost an hour.
 
 **Never trust a base commit quoted in a prompt.** Resolve it first; if it does not resolve, stop. Eleven SHAs quoted to this programme did not exist — they lived in a session sandbox that could not push.
 
+## This session — 2026-07-29 · quarantine lifted, merge to main, SBX reconciled, A2b landed
+
+Order was set by Matt's ruling and run in it, nothing skipped. Each step verified at origin by a read separate from the write.
+
+**Quarantine review of `e3082d2` (the reduced-motion change) — LIFT, adopted.** 31 v5 decks, one identical CSS line each, zero content/JS/pedagogy. It brings the Art decks onto the estate's reduced-motion house pattern (the `.01ms / iteration-1 / fill-forwards` trio, already in 81 non-Art files) and adds SEMH protection — `shake`, `pulse-warn`, `rightFlash` suppressed, meaning retained in the decks' ❌/✅ text. Already an ancestor of both `main` and SBX; clean test-merge with the remediation lineage. Two signals: clean merge **and** already-in-both. Someday follow-up only: it omits the `transition-*` pair of the fullest house instances (these decks are animation-driven, so no live escape).
+
+**§1 award ruling — SBX C1 is a REGRESSION, confirmed on two signals.** SBX (`pass-sbx-art-a2`, base `4f5c6a4` off pre-remediation main) reverted the seven BUILD A2 decks Bronze→Explore. Verified against (a) Matt's design record — Autumn 2 is Bronze across two terms, arc W1 A · W2 C · W3 A · W4 B · W5 A+C · W6 A+C · W7 C+D — and (b) the deployed `Autumn2_Printable_Weekly_Evidence_Pack.html` at origin/main, whose `WEEKS` badges read that arc exactly, Part D marked OPENED-NOT-COMPLETE for Spring 1. Both say Bronze; SBX's Explore matches neither.
+
+**The merge — `art-remediation` (46d3906) → `main`, no-ff, `12cb6d9`.** Re-proved CLEAN at merge time. Resolved main's own within-file contradiction: main carried `BUILD · Explore` + `Trinity Arts Award Explore` beside `Bronze Part A` on every A2 header (the estate's signature co-present fault); the merge takes the remediation's consistent Bronze — C1 fell to 0. Verified at the merged tip and again from a fresh origin read: AT-INST-01/02/04 identical to art-remediation (faithful merge), ladder 34, LL sentinels **45/45 and 48/48 unmoved**, A6 pupil-names 24/24. **This changed the live site** — every landed fix now reaches pupils.
+
+**SBX reconciliation — nothing to re-land; C1 rejected.** The check the ruling mandated (compare against merged state) showed SBX's "good work" was already present on main and better: C2 (real weeks) and C3 (`Arts Aut 2`) were done identically by R1 — merged sow-strips are byte-identical to SBX's; C5's `resources.json` A2 W3/W4 entries are already there, Bronze-titled with richer descriptions, and merged main carries **every** SBX A2 catalogue id (none missing). Re-applying would be zero-change edits the zero-match guard forbids. SBX's decks additionally carry pre-remediation `pull` language (its base predates A2d's de-pressing) — a second reason none of its deck content reaches main. **C1 rejected as a regression.** The §4 proposed workbook (`_passsbx/proposed/…vC-PROPOSED.xlsx`) is untouched — Matt's to accept or reject. **`pass-sbx-art-a2` is superseded; its deletion is Matt's.**
+
+**A2b — GROW W6 + W7 re-physicsed, on `pass-art-a2b` (`5b1ea74`), not merged.** Ported off the relief-print skill onto the locked `cut → tape → load → dab → lift` chain and the fault-card names from `BUILD_ART_A2_W3`. The taught skill changes; the pedagogy is preserved verbatim in structure — chunking, the narrated sensory cue, the engineered first success, the fault-plan rescue lines, and the unassisted **print** as the Part D proof. Every substitution through `safe_edit` with `forbid=` (all three guards). **The floor was lowered by a human read, not the instrument:** `pull`, `PRESS+PULL`, `INK+PLACE`, the ink-hiss/"frying" sensory cue and `rolling the ink` were removed though the kit check flagged only 3 per file. Legitimate cases preserved and named: `press Escape` (keyboard), `.roll-again` (CSS class, rule 13), GROW W2's `rollers` refusal. Closure on two signals: `safe_edit`'s ladder passed **and** AT-INST-04 fell `34 → 28` exactly as predicted (A2b −6), C5 route-contradiction fell to **0** (GROW no longer teaches kit its scheme disavows), C1/C2 0, A6 24/24, and **AT-INST-03 print 55/55, 0 overflow at 718×1047** (the GROW-pack Week-7 9px clearance is the pre-existing warn, unchanged).
+
+**I Do 3 carry-forward — PASS.** GROW W2's variable-isolation spine survives on merged main and reads in the locked vocabulary: *"At LOAD: sponge wet or squeezed out. At DAB: pressure + count … Three prints changing NOTHING (my control set), then one print with a wetter sponge ONLY."* The structure (change nothing N times, then exactly one variable) is intact; a wetter sponge is one continuous variable, so the logic carries — the teaching, not just the strings, survived.
+
+**One correction to a mid-run assumption:** the inking-station pilot ("two crew", "don't grab the roller", "second inking slab", "Queue jams at inking") is in **LAUNCH W5/W6**, not GROW W7 — it is A2e's, and it stays untouched. GROW W7 is a skill-share *delivery* lesson and ported cleanly with no station restage.
+
+### What remains — all Matt's, none opened this session
+
+- **A2e** — LAUNCH re-physicsing (W5/W6/W7, 15 kit-dep + W1 offer 2 = 17) **and** its gated sixth option ("Master a three-layer registered stencil from zero", must say it spans sessions). The inking-station restage lives here — Matt's curriculum judgement.
+- **A2c** — parked on Matt's bench test.
+- **The D2 curriculum question** — and D1, the untouched 24-week GROW/LAUNCH gap it shares a root with.
+- **The SBX §4 workbook verdict** — `vC-PROPOSED.xlsx` accepted or rejected by Matt.
+- **`pass-sbx-art-a2` deletion** — superseded, Matt's to delete.
+- **Browser spot-checks after Pages rebuilds** — the merge changed the live site.
+- **The staff zip is now stale by rule** ("rebuild after every art commit") — its rebuild is **D6's** job, not done by hand. D6 promoted (see the defect-class section).
+
 ## Landed
 
-`R1` seven Autumn 2 headers · `R2` orphans linked + catalogued · `R3` GROW scheme states its Part mapping · `R4` Silver 1B observer block · `R5` 1B portfolio row · `R6` `.ladder` rule · `R7` the one overflowing sheet (56 pages → 55) · `A2d` + `A2d-2` BUILD press vocabulary · **`A2a` GROW W2 ported off the press** · `A2a-2` the three card faces · half-match guard · compiled bytecode untracked.
+`R1` seven Autumn 2 headers · `R2` orphans linked + catalogued · `R3` GROW scheme states its Part mapping · `R4` Silver 1B observer block · `R5` 1B portfolio row · `R6` `.ladder` rule · `R7` the one overflowing sheet (56 pages → 55) · `A2d` + `A2d-2` BUILD press vocabulary · **`A2a` GROW W2 ported off the press** · `A2a-2` the three card faces · half-match guard · compiled bytecode untracked · **the whole lineage merged into `main` (`12cb6d9`)** · **`A2b` GROW W6 + W7 ported off the press** (on `pass-art-a2b`, awaiting Matt's merge).
 
 Withdrawn, not deleted: `R8` `.a4.dense`; `min-height: 277mm`; "GROW Part B absent"; fault cards `lift` and `shift`; the cue "squeeze until it stops dripping".
 
@@ -28,17 +56,17 @@ Withdrawn, not deleted: `R8` `.a4.dense`; `min-height: 277mm`; "GROW Part B abse
 |---|---|---|---|---|---|---|
 | `Launch/LAUNCH_ART_W6` | 10 | | | | **10** | A2e |
 | `Build/Autumn2_Scheme_of_Work` | | 6 | | | **6** | terminal |
-| `Grow/GROW_ART_W6` | 3 | | | | **3** | A2b |
-| `Grow/GROW_ART_W7` | 2 | | 1 | | **3** | A2b |
+| ~~`Grow/GROW_ART_W6`~~ | ~~3~~ | | | | **0** | A2b ✓ done |
+| ~~`Grow/GROW_ART_W7`~~ | ~~2~~ | | ~~1~~ | | **0** | A2b ✓ done |
 | `Launch/LAUNCH_ART_W7` | 3 | | | | **3** | A2e |
 | `Build/START_HERE` | | 2 | | | **2** | terminal |
 | `Grow/GROW_ART_W2` | | 2 | | | **2** | terminal |
 | `Launch/LAUNCH_ART_W1` | | | | 2 | **2** | A2e |
 | `Launch/LAUNCH_ART_W5` | 2 | | | | **2** | A2e |
 | `Summer1_Scheme_of_Work` | | 1 | | | **1** | terminal |
-| **TOTAL** | **20** | **11** | **1** | **2** | **34** | |
+| **TOTAL (now)** | **15** | **11** | **0** | **2** | **28** | A2b closed −6 |
 
-`34 → A2b −6 → 28 → A2e −17 → 11`.
+`34 → A2b −6 → **28** (here now) → A2e −17 → 11`. The remaining kit-dep 15 is entirely LAUNCH (W6 10, W7 3, W5 2) — A2e's, not touched this session; the terminal 11 (refusal-context, named to be refused) is the floor.
 
 **The ladder did not move at A2a-2, and that is a finding, not a reassurance.** That
 pass changed seven strings across three fault-card faces — `Paper tore on the pull`,
@@ -224,14 +252,14 @@ Each in **its own step**, exit code checked between it and any push (rule 16).
 
 ## Open passes
 
-- **A2b — GROW W6 and W7, 6 hits.** Downstream of A2a's settled chain. W6's "cutting the plate myself so my learner starts at inking" needs re-physicsing, not rewording. W7's three are `Learner stuck at inking` — **and W7 is Bronze Part D, where the pupil teaches a real learner, so the assumption reaches a second person in a room that cannot do the thing. That is a worse instance of kit-dependence than W2's, not a milder one.** Worth testing any other Part D or skill-share content the same way. C5 now reports GROW W6 — it could not before A2a gave GROW a disavowal to anchor on.
+- ~~**A2b — GROW W6 and W7, 6 hits.**~~ **DONE this session** (`pass-art-a2b`, awaiting Matt's merge). Ported onto the locked chain; ladder `34 → 28`; C5 GROW → 0; print 55/55; I Do 3 carry-forward confirmed. W7 was Bronze Part D, where the pupil teaches a real learner — the kit-dependence reached a second person in a room that cannot do the thing, a worse instance than W2's, now closed. The point still stands for **any other Part D or skill-share content** not yet swept.
 - **A2e — LAUNCH, two kinds of work, scoped separately.** (a) 15 re-physicsing hits across W5/W6/W7 — the Silver leadership project is staged around an inking station. (b) **Authoring, signed off, gated:** replace LAUNCH W1's sixth challenge option with **"Master a three-layer registered stencil from zero"**. Two conditions: it cannot land before A2a (done, so it is now clear), and **the card must say it spans sessions** — three layers in register need each layer dry, and periods are forty minutes.
 - **A2c** — parked on Matt's bench test.
 - **D6 and the staff zip** — **promoted. This is a defect fix, not housekeeping** — see the defect-class section. The zip is a hand-made second copy of all 53 files with a branding swap, which makes it the largest instance of the estate's own fault class. Build the generator, dry-run it, then rebuild the zip once from it.
 
 ## Do not
 
-- No `main`. No force-push. No merges — the merge is Matt's.
+- No `main`, no force-push, no merges **except a merge Matt has explicitly authorised in writing** (as the 2026-07-29 ruling authorised the `art-remediation → main` merge, and only that one). Absent such a ruling, the merge is Matt's. `pass-art-a2b` is his to merge; do not merge it yourself.
 - **The 24-week GROW and LAUNCH gap is not touched, not stubbed, not placeholdered.** Autumn 2 and Spring 1 have no GROW content at all. That is D1, it shares a root with D2, it is two terms of authoring plus a scoping conversation, and it is opened deliberately or not at all. **A2b is GROW remediation and is bounded; it is not a doorway into D1.**
 
 ## Verify the teaching survived, not the strings — I Do 3
@@ -247,6 +275,12 @@ sponge is a continuous variable like ink load, so the logic should carry — but
 it against the sibling's physics rather than assuming. If a wetter sponge changes two
 things at once where heavier ink changed one, the lesson has quietly lost its point
 while passing every assertion in the repo.
+
+**Checked this session — PASS.** On merged main the sentence reads *"At LOAD: sponge
+wet or squeezed out. At DAB: pressure + count … Three prints changing NOTHING (my
+control set), then one print with a wetter sponge ONLY."* One variable changed, the
+control set intact, cause-and-effect not luck — the physics carries. The teaching
+survived, not merely the strings.
 
 ## The defect class — the most transferable thing learned here
 
