@@ -50,30 +50,46 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--pink);border-col
 <div class="eyebrow">Progress Schools Tees Valley · Lundy Loop</div>
 <h1>Loop Walk Logger</h1>
 <p class="sub">One noticed loop per visit, logged in under a minute. Everything stays on <b>this device</b> — nothing is uploaded anywhere. Pupil <b>initials only</b>; no staff names, ever: this is a coaching tool, not a tally.</p>
+<div class="note w" style="margin-top:10px">
+<b>Before you start — what this tool holds.</b>
+<ul style="margin:6px 0 0 0;padding-left:20px">
+<li><b>What is captured:</b> a date, a pathway, a subject/episode note with <b>pupil initials only</b>, four short observation notes, a strength, a coaching next step and a follow-up date.</li>
+<li><b>Why:</b> to coach practice. It is not a performance record, not a tally, and there are no staff names in it.</li>
+<li><b>Where it stays:</b> in this browser, on this device, in local storage. <b>Nothing is sent anywhere</b> — there is no server, no account and no sync. Another device shows an empty sheet.</li>
+<li><b>Who can see it:</b> anyone who can open this browser profile on this machine. Use an approved, school-owned device.</li>
+<li><b>Retention:</b> entries are useful for the <b>current term</b>. Clear them at the end of term; the termly pattern is what carries forward, not the rows. <b>Review: end of each term.</b></li>
+<li><b>Deletion:</b> <b>Clear all on this device</b>, below the list. It is immediate and cannot be undone.</li>
+<li><b>Export:</b> <b>Export CSV</b> creates an ordinary file in your Downloads folder. <b>Once exported it leaves this tool's protection</b> — store it where pupil information belongs, and delete it when it has served its purpose.</li>
+</ul>
+<p style="margin:8px 0 0"><b>PENDING-LOCAL-APPROVAL (DPO / SLT).</b> Retention and device rules are proposed; the centre confirms them. Standard: <code>quality/toolkits/DATA_GOVERNANCE.md</code>.</p>
+</div>
 </div>
 
 <div class="card">
 <h2>Log a loop</h2>
-<label>Date</label><input type="date" id="f-date">
-<label>Pathway</label>
+<div class="note w" role="note"><b>Not for disclosures.</b> These boxes record teaching practice. If a pupil tells you something that worries you, it goes to the <b>DSL by the school&rsquo;s safeguarding route</b> — never into a box on this page. Record the practice here; record the concern there.
+<p style="margin:8px 0 0"><label for="f-handoff" style="display:inline;font-weight:600"><input type="checkbox" id="f-handoff" style="width:auto;min-height:24px;min-width:24px;vertical-align:middle;margin-right:7px">Safeguarding handoff made</label>
+<span class="sub" style="display:block;margin-top:4px">A reminder for you only. <b>This tick is not saved, not stored and never exported</b> — it holds no detail about any pupil, and it clears when you reload. The safeguarding record lives in the school&rsquo;s own system.</span></p></div>
+<label for="f-date">Date</label><input type="date" id="f-date">
+<fieldset style="border:0;padding:0;margin:0"><legend style="padding:0;font:inherit;font-weight:600">Pathway</legend>
 <div class="chips" id="pathchips" role="group" aria-label="Pathway">
-<button class="chip" data-p="BUILD">BUILD</button><button class="chip" data-p="GROW">GROW</button><button class="chip" data-p="LAUNCH">LAUNCH</button>
-</div>
-<label>Subject / episode <span>e.g. "Science — practical re-attempt", pupil initials only</span></label>
+<button type="button" class="chip" data-p="BUILD" aria-pressed="false">BUILD</button><button type="button" class="chip" data-p="GROW" aria-pressed="false">GROW</button><button type="button" class="chip" data-p="LAUNCH" aria-pressed="false">LAUNCH</button>
+</div></fieldset>
+<label for="f-subj">Subject / episode <span>e.g. "Science — practical re-attempt", pupil initials only</span></label>
 <input type="text" id="f-subj" list="subjects" placeholder="Subject and what was happening">
 <datalist id="subjects"><option>Science</option><option>English</option><option>Mathematics</option><option>Humanities</option><option>PE &amp; Outdoor Education</option><option>D&amp;T &amp; Food</option><option>Art</option><option>Music &amp; Drama</option><option>PSHE &amp; RSHE</option><option>RE &amp; Citizenship</option></datalist>
-<label>Space <span>Was the student able to receive and respond? (regulation, routines, relationship, time, access)</span></label>
+<label for="f-space">Space <span>Was the student able to receive and respond? (regulation, routines, relationship, time, access)</span></label>
 <textarea id="f-space"></textarea>
-<label>Voice <span>Did they respond in an appropriate modality? (edit, re-attempt, symbol, explanation, demonstration, clip)</span></label>
+<label for="f-voice">Voice <span>Did they respond in an appropriate modality? (edit, re-attempt, symbol, explanation, demonstration, clip)</span></label>
 <textarea id="f-voice"></textarea>
-<label>Audience <span>Did an adult genuinely receive it? (follow-up, checked correction, watched performance)</span></label>
+<label for="f-aud">Audience <span>Did an adult genuinely receive it? (follow-up, checked correction, watched performance)</span></label>
 <textarea id="f-aud"></textarea>
-<label>Influence <span>What changed because of the response? (question, scaffold, task, plan, target)</span></label>
+<label for="f-inf">Influence <span>What changed because of the response? (question, scaffold, task, plan, target)</span></label>
 <textarea id="f-inf"></textarea>
-<label>Strength to preserve</label><textarea id="f-str"></textarea>
-<label>Coaching next step</label><textarea id="f-next"></textarea>
-<label>Follow-up date</label><input type="date" id="f-fup">
-<button class="btn" id="save">Save loop</button><span class="saved-flash" id="flash" hidden>Saved ✓</span>
+<label for="f-str">Strength to preserve</label><textarea id="f-str"></textarea>
+<label for="f-next">Coaching next step</label><textarea id="f-next"></textarea>
+<label for="f-fup">Follow-up date</label><input type="date" id="f-fup">
+<button class="btn" id="save">Save loop</button><span class="saved-flash" id="flash" role="status" aria-live="polite" hidden>Saved ✓</span>
 <div class="note w"><b>Anti-workload rule applies to leaders too:</b> one good loop per walk is plenty. If nothing natural occurred, log nothing — an empty day is data, not failure.</div>
 </div>
 
@@ -97,7 +113,9 @@ function todayISO(){return new Date().toISOString().slice(0,10);}
 function setPath(p){
  path=p;
  document.querySelectorAll('#pathchips .chip').forEach(c=>{
-  c.className='chip'+(c.dataset.p===p?' on-'+p:'');
+  const on=c.dataset.p===p;
+  c.className='chip'+(on?' on-'+p:'');
+  c.setAttribute('aria-pressed',on?'true':'false');
  });
 }
 function renderList(){
