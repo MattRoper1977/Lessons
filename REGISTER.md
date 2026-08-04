@@ -2092,3 +2092,68 @@ attached to `HANDOVER.md` queue 18 (the WT–DS reconciliation) — one account,
 before any of it reaches a TA. The pack's TA authorship questions are a third independent
 convergence on the support-honesty concern (the R-LLS04 shape); convergence is evidence the
 ladder is sound and authorises no build.
+
+## R-LLAS06 — Pass LL-AS1 MERGED on the close order; the deletion classified; the mis-open residue cleared
+
+**Close order of 2026-08-05, executed. Pre-merge commit `9d0364b` (rulings A/B, D1 scan,
+§0 disposition) · merge `a597123`, `--no-ff`, parents `efc6cb3` + `9d0364b` · rollback
+`efc6cb3` (`git revert -m 1 a597123`). Fetch-before-push run twice; the tip never moved.**
+
+- **The §0 deletion, named and classified.** The PR's single deletion was
+  `_close/OPEN_ITEMS.md` row **24** — the row rewritten in place by its commanded §3.1
+  extension. Character-level derivation: **zero original characters lost or altered** — three
+  pure insertions (the EXTENDED clause; "(unchanged)" after "TRIGGER — BOTH required"; the
+  shared-trigger sentence + "Verified UNMET at `efc6cb3`"). Item number preserved, no
+  downstream renumbering. **Legitimate under R-LLS06** — a rewrite-in-place that is provably
+  insertion-only, disclosed here rather than left to a clean-looking diff.
+- **Ruling A executed:** the influence report-back board stays (a blank frame, not authored
+  pupil content) and carries the ruled read-trigger line — *not for display or print until
+  Matt has read the column headers and the boundary line*. The property derivation over all
+  31 shipped files returned **two** members: the board (display artefact, pupil-addressed
+  panels) and the caption helper (**five pupil-voiced field labels — a finding the chat-side
+  scan did not return**); both carry read-trigger lines.
+- **Ruling B executed:** `ASDAN_Lundy/EVIDENCE_CAPTION_HELPER.html` entered **by correction,
+  not by ruling** (SHA-verified against the manifest; gates 3/4/5 clean; its one extra API is
+  a user-initiated `navigator.clipboard` copy-out — no storage, no egress). OPEN_ITEMS #31
+  supersedes #29(a)'s held-in-inputs status.
+- **D1 internal-process scan: ZERO hits over 31 files** (all raw matches were DSL *role*
+  language; no head office, no non-author names, no centre claims, no pupil detail). One
+  roster-adjacent phrase in the pass's own authored `TRIPLE_LOOP_MODEL.html` reworded
+  ("class list" → "class plan") before merge.
+- **Mis-open residue cleared (the §5 check):** the site repo's origin carries **no branch,
+  commit or designation from this session** (`ls-remote` derived); site main untouched at
+  `87741ae` both ends; the harness's **local** designation branch
+  `claude/ll-as1-lundy-asdan-r0lliw` (zero commits, tip == site main, never pushed) and its
+  local tracking ref **deleted**. The tally stands at **nine** (R-LLAS01): the remedy — an
+  explicit repo line in the order plus a substance-clause identity gate — is now proven nine
+  times, and the mis-open itself remains an **environment-level default nobody in this estate
+  can fix from inside a session.**
+- **Merge rationale, recorded:** the layer is inert — uncatalogued, unlinked, no catalogue
+  entry, no pupil-facing surface in use, zero lesson bytes moved — so nothing approaches a
+  pupil by merging, while a parked branch drifts against a moving main. The read-triggers and
+  the print check govern use and remain unmet and recorded. **PRINT-UNVERIFIED throughout;
+  the physical check stays Matt's.**
+
+## R-LLAS07 — exclusions are derived, not enumerated
+
+**Close order of 2026-08-05, Ruling A's register form. Two worked examples, both arriving
+through the same gap in one order.**
+
+> **An exclusion applied as a list of names cannot see a sibling that shares the property the
+> names were chosen for — exclusions are derived, not enumerated.**
+
+The §3.2 exclusion was written as a property (*nothing pupil-facing from a third-party pack
+before Matt has read it*) and executed as a list of two filenames. Two siblings shared the
+property or its neighbourhood and were invisible to the list: the **influence report-back
+board** (a display artefact whose four column headers are pupil-readable — shipped, because
+the ruled set said so, and caught only by an adversarial read) and the **caption helper**
+(five pupil-voiced field labels — excluded from the build set by a parallel enumeration gap
+in §4.2, held, and added back by correction). One order, one gap, two files, opposite
+failure directions: the list shipped what the property would have flagged, and withheld what
+the property would have admitted.
+
+**The remedy is the derivation:** state the property, emit the set it returns over the real
+shipped bytes, and treat any divergence between the derived set and the enumerated list as a
+finding. Family: R-A01b (a selector's safety depends on direction) · R-F02 ("the X file" is
+an unverified singleton) · standing rule 2 (emit, don't transcribe) · R-LLS07 (a gate is
+silent about what it cannot see).
