@@ -242,7 +242,7 @@ body.calm .pfeed{position:static;height:100%;overflow-y:auto}
 <div class="logo">MADE BY MATT<span>Tutor Time · KCSIE</span></div>
 <div class="tools">
   <button class="tool-btn" onclick="openTA()">👩‍🏫 TA Focus</button>
-  <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
+  <button class="tool-btn" onclick="openCC()">🎯 Cold Call</button><button class="tool-btn" id="calmBtn" onclick="toggleCalm()">🌙 Calm Mode</button><button class="tool-btn" id="reviewBtn" onclick="openReview()">🛡️ Staff review <span id="reviewBadge" aria-hidden="true"></span></button><button class="tool-btn" onclick="printEvidence()">🖨️ Evidence</button>
 </div>
 <div class="seal-hud" role="status" aria-label="Session progress seals"><div class="seal" id="seal-think" title="Think">🧠<span class="seal-lbl">Think</span></div><div class="seal" id="seal-spot" title="Spot">🔍<span class="seal-lbl">Spot</span></div><div class="seal" id="seal-exit" title="Exit">🚪<span class="seal-lbl">Exit</span></div><div class="seal" id="seal-quiz" title="Check">✅<span class="seal-lbl">Check</span></div><div class="seal" id="seal-pledge" title="Done">🤝<span class="seal-lbl">Done</span></div></div>
 <canvas id="confetti"></canvas>
@@ -521,6 +521,7 @@ document.querySelectorAll('.mcq').forEach(group=>{
   });
 });
 function finish(){
+  if(typeof unreviewedCount==='function' && unreviewedCount()>0){ openReview(); return; }
   try{
     const log=JSON.parse(localStorage.getItem('mbm_tt_evidence')||'{}');
     log[LESSON_ID]={completed:true,date:new Date().toISOString(),xp:xp};
@@ -572,7 +573,53 @@ document.querySelectorAll('.mcq .opt').forEach(function(o){ o.addEventListener('
 function addVoice(){ var t=document.getElementById('vText'); if(!t)return; var v=t.value.trim(); if(!v)return;
   _voices.push({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),txt:v});
   t.value=''; seal('exit');
-  document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.'; }
+  document.getElementById('vCount').textContent=_voices.length+' added \u2014 thank you. Staff will read these privately.';
+  refreshReviewBadge(); }
+
+/* ===== safeguarding review state =====
+   Disposition lives on the in-memory _voices entry and is never persisted. No pupil
+   text, and no disposition, reaches localStorage or sessionStorage. The lesson cannot
+   be closed while a message is unreviewed; print stays available as the durable record. */
+var DISPOSITIONS=[['referred','Referred to DSL'],['noconcern','No concern']];
+var REVIEW_KEY='mbm_tt_review';  /* {flag,date} only - never text, never names */
+function unreviewedCount(){ return _voices.filter(function(v){ return !v.d; }).length; }
+function refreshReviewBadge(){
+  var b=document.getElementById('reviewBadge'); if(!b) return;
+  var n=unreviewedCount();
+  b.textContent = n ? '('+n+' to review)' : (_voices.length ? '(all reviewed)' : '');
+  var btn=document.getElementById('reviewBtn');
+  if(btn) btn.style.outline = n ? '3px solid #d97706' : '';
+}
+function persistOutcome(flag){
+  /* {flag, date} - the shape the estate has already blessed. No message text, no names,
+     no index that could order or identify a pupil. Append-only within the lesson day. */
+  try{ var log=JSON.parse(localStorage.getItem(REVIEW_KEY)||'{}');
+       var k=(typeof LESSON_ID!=='undefined')?LESSON_ID:'WB_W7';
+       if(!log[k]) log[k]=[];
+       log[k].push({flag:flag, date:new Date().toISOString()});
+       localStorage.setItem(REVIEW_KEY, JSON.stringify(log));
+  }catch(e){}
+}
+function setDisposition(i,d){ if(_voices[i] && !_voices[i].d){ _voices[i].d=d; persistOutcome(d); }
+  renderReview(); refreshReviewBadge(); }
+function renderReview(){
+  var box=document.getElementById('reviewList'); if(!box) return;
+  if(!_voices.length){ box.innerHTML='<p><em>Nothing was put in the box this lesson. You can still close the lesson.</em></p>'; return; }
+  box.innerHTML=_voices.map(function(v,i){
+    var btns=DISPOSITIONS.map(function(d){
+      var on = v.d===d[0];
+      return '<button class="tool-btn" aria-pressed="'+(on?'true':'false')+'" onclick="setDisposition('+i+',\''+d[0]+'\')" '+
+             'style="'+(on?'outline:3px solid #177245;font-weight:800':'')+'">'+(on?'\u2713 ':'')+d[1]+'</button>';
+    }).join(' ');
+    var state = v.d ? DISPOSITIONS.filter(function(d){return d[0]===v.d;})[0][1] : 'Not yet reviewed';
+    return '<div style="border:2px solid #d8dee5;border-radius:12px;padding:10px 12px;margin:8px 0">'+
+      '<div style="font-size:.85rem;color:#5f6b76">'+v.t+' \u00b7 <strong>'+state+'</strong></div>'+
+      '<div style="margin:.35rem 0;white-space:pre-wrap">'+v.txt.replace(/</g,'&lt;')+'</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+btns+'</div></div>';
+  }).join('');
+}
+function openReview(){ var m=document.getElementById('reviewModal'); if(!m) return; renderReview(); m.style.display='flex'; }
+function closeReview(){ var m=document.getElementById('reviewModal'); if(m) m.style.display='none'; refreshReviewBadge(); }
 
 /* ===== roster: persists as before, but time-boxed ===== */
 var ROSTER_TTL_DAYS = 14;
@@ -605,8 +652,8 @@ function clearRoster(){ try{ var k=(typeof _CC_KEY!=='undefined')?_CC_KEY:'ps_co
 function printEvidence(){
   var earned=Object.keys(SEALS).filter(function(k){return SEALS[k];}).length;
   var d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  var rows=_voices.length ? '<table><tr><th>Time</th><th>Message</th></tr>'+_voices.map(function(v){
-      return '<tr><td>'+v.t+'</td><td>'+v.txt.replace(/</g,'&lt;')+'</td></tr>';}).join('')+'</table>'
+  var rows=_voices.length ? '<table><tr><th>Time</th><th>Message</th><th>Staff review</th></tr>'+_voices.map(function(v){
+      return '<tr><td>'+v.t+'</td><td>'+v.txt.replace(/</g,'&lt;')+'</td><td>'+(v.d?({referred:'Referred to DSL',noconcern:'No concern'})[v.d]:'Not yet reviewed')+'</td></tr>';}).join('')+'</table>'
     : '<p>None added.</p>';
   document.getElementById('print-area').innerHTML =
     '<h1>Tutor Time Evidence \u00b7 Week 7 — Pressure Points</h1>'+
@@ -622,5 +669,28 @@ function printEvidence(){
 }
 </script>
 <script defer src="/hud.js"></script>
+
+<div class="ta-modal" id="reviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle" style="display:none">
+  <div class="ta-modal-box">
+    <div class="ta-modal-header"><h2 id="reviewTitle" style="margin:0;font-size:1.05rem">🛡️ Anonymous box — staff review</h2>
+      <button class="tool-btn" onclick="closeReview()" aria-label="Close staff review">✕</button></div>
+    <div style="padding:16px 24px 22px">
+      <p style="margin:.2rem 0 .8rem"><strong>Staff eyes only.</strong> Every message needs an outcome: <em>Referred to DSL</em> or <em>No concern</em>. Reviewing is the action; the outcome is what is recorded.<br><strong>Review before you leave the page. Print is the durable copy.</strong> What a pupil typed is never stored on this device and does not survive a reload — only the outcome and its date do.</p>
+      <div id="reviewList"></div>
+      <div style="margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff8e1;border:2px solid #d97706">
+        <p style="margin:.1rem 0"><strong>Hand to the DSL the same day.</strong> Timestamps can identify a pupil in a small group — treat as confidential.</p>
+        <p style="margin:.4rem 0 .1rem;font-size:.93rem">Immediate danger → <strong>999</strong> ·
+        Childline <strong>0800 1111</strong>, 24 hours, every day ·
+        <strong>CEOP</strong> is for online sexual abuse and grooming only — as a professional, follow local safeguarding procedure rather than the public CEOP form ·
+        <strong>Report Remove</strong> supports eligible under-18s to report sexual images of themselves.</p>
+        <p style="margin:.4rem 0 .1rem;font-size:.86rem;color:#5f6b76">Safeguarding practice follows KCSIE 2025 (statutory to 31 August 2026; KCSIE 2026 in force from 1 September 2026). Checked 4 August 2026 — confirm against your setting's current policy.</p>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="tool-btn" onclick="printEvidence()">🖨️ Print evidence sheet</button>
+        <button class="tool-btn" onclick="closeReview()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
