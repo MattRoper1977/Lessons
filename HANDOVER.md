@@ -336,6 +336,46 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 *Queue entries 17 and 18 added by Pass LL-S1.*
 
+### Added by Pass LL-AS1 — attachments to existing queue entries (no new entries; each attachment carries its trigger)
+
+**To entry 12 (the LL-J specimen pass) — three attachments, recorded here so LL-J opens with
+them in hand (rulings issued under Matt's delegation, 2026-08-05):**
+
+- **The ASDAN day-close lane is INPUT to LL-J, not run by LL-AS1.** The lane restates ratified
+  B2 — its question *"What do these show together?"* is a ratified Amendment 1 variant;
+  Amendment 3 is honoured (optional slot, no catch-up, "no upload today" an equal outcome).
+  Material: `ASDAN_Lundy/15_MIN_PORTFOLIO_STUDIO.html` (the 2–4 minute OPTIONAL READ lane) ·
+  `ASDAN_Lundy/PORTFOLIO_STUDIO_RUN_SHEET.html` (the 2–4 minute script) ·
+  `LundyLoop/6_designs/PROPOSED_asdan_portfolio_studio.md` §2. LL-J owns the day-close half.
+  **TRIGGER: entry 12's own trigger, unchanged — a new session with Matt's go.**
+- **One B3 warrant candidate, handed to LL-J §2 and not trialled by LL-AS1:** the oral prompt
+  *"What tells you that your communication had the effect you describe?"*
+  (`ASDAN_Lundy/specimens/LAUNCH_PEQ_W5_overlay.html`, which now carries a banner reserving it
+  to LL-J and Matt's authoring). It is ONE candidate among any Matt authors — B3 ratified the
+  dimension; the wording stays Matt's (OPEN_ITEMS #25 unchanged).
+  **TRIGGER: the specimen pass and Matt's read; ship gate applies.**
+- **The ASDAN specimen phase is chained BEHIND LL-J's delivery** — three overlays under
+  `ASDAN_Lundy/specimens/` (BUILD FW_W5 · GROW GCOMM_W2 · LAUNCH PEQ_W5, all PROPOSED, with
+  OBSERVATION_RECORD, SPECIMEN_ACCEPTANCE and the specimens START_HERE), so the day-close and
+  in-lesson halves are read together, per the standing LL-J-owns-day-close split.
+  **TRIGGER: LL-J delivered and its specimens read by Matt; then the ASDAN specimen phase is
+  its own gated step, never a batch.**
+
+**To entry 18 (the WT–DS reconciliation) — one attachment:** the ASDAN pack's SIX interpretive
+branches (secure · mixed · misconception-or-skill-gap · access barrier · **authorship
+uncertainty** · **insufficient criterion evidence**) are mapped against the live five-branch
+`Reading_the_Response_Card.html` in `LundyLoop/6_designs/PROPOSED_asdan_triple_loop.md` §2 —
+the six read as the five plus two ASDAN-specific evidence-state additions, and the live card's
+"Method or data problem" has no pack twin (different object; do not merge). **No competing card
+shipped.** The pack's TA authorship questions are a third vocabulary for the same
+support-honesty concern the ladder and the science card already describe — the R-LLS04
+convergence shape again. **TRIGGER: entry 18's own trigger, unchanged — LL-J delivered and the
+September TA briefing in preparation; one account, one vocabulary, before any of it reaches a
+TA.**
+
+*Attachments added by Pass LL-AS1 at branch `claude/ll-as1-lundy-asdan` (base `efc6cb3`); the
+pass is a held PR — nothing above is live until Matt merges.*
+
 
 
 ### September-cluster pass — what landed, what stopped
