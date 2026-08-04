@@ -2001,3 +2001,94 @@ exceeding it is the failure mode this estate names repeatedly:
   surface, which is the argument for recording it rather than leaving it discovered.
 - **The 8th evidence pack's accessibility asymmetry**, above: seven packs tell an adviser that no
   part of the award requires handwriting; the eighth does not.
+
+## R-LLAS01 — Pass LL-AS1 close: the ASDAN pack executed under Matt's delegated rulings
+
+**Pass LL-AS1. Rulings issued under delegation, 2026-08-05 — executed, not re-adjudicated.
+Base `efc6cb3` (post-MS-1 main); branch `claude/ll-as1-lundy-asdan`; one held PR; nothing
+merged; nothing pupil-facing shipped.**
+
+The third-party "Lundy Loop × ASDAN implementation pack" (its own observation point
+`7cffd92`) was verified at HEAD and its ruled subset built: the `ASDAN_Lundy/` staff toolkit
+(24 files incl. 6 specimens, deliberately uncatalogued — for the Lesson Hub the catalogue IS
+the link graph; intended state, not oversight) · the subject-guide companion
+(`LundyLoop/3_subject_guides/asdan_pfa_assessment_companion.html`, carrying the 74c33ae
+closure sentence verbatim and linking the live five-branch card rather than restating a rival
+set) · two PROPOSED design docs in `6_designs/` (renamed out of the pack's `LL-ASDAN_*`
+namespace — the pack mints no estate identifiers) · the `quality/` pair extending the LL-S1
+pair by deference · a review-only claim-accuracy residuals doc (one PROPOSED DIFF emitted,
+applied nowhere).
+
+**Excluded by ruling and recorded, not silently dropped:** the pupil-facing pair
+(OPEN_ITEMS #27) · the live assessment board (OPEN_ITEMS #28) · the `5_staff_training/`
+calibration twin (one-account rule — one calibration copy ships, and its closure scenario
+teaches the correct account: *"Do not initial. The close stays on the pupil's pen"*) · both
+dated exports (base-tag-only diff CONFIRMED by SHA reconstruction) · the received-but-unruled
+caption helper (OPEN_ITEMS #29). The Studio RUN stays deferred under the item-24 trigger,
+extended to name the ASDAN Studio — the pack's superior design does not lift a deferral whose
+operative reason is real-room observation.
+
+**Premise check (the §0.3 discipline):** the item-24 two-part trigger verified UNMET at
+`efc6cb3` — no record of the three-week check; no `claude/ll-j-specimen` branch at origin.
+Ninth recorded site-repo mis-open (R-SB01/R-D05/R-LLS03 family): the harness opened in the
+decoy repo and designated `claude/ll-as1-lundy-asdan-r0lliw` there; the order's explicit repo
+line caught it; Lessons attached, the order's branch name used. Inputs were enumerated against
+the pack's 77-row manifest per R-LLS07: situation (b), 30 of 77 SHA-matched, every absence
+named (OPEN_ITEMS #29).
+
+## R-LLAS02 — the pack's pin was its observation point; every figure re-derived at HEAD
+
+**Pass LL-AS1, 2026-08-05.**
+
+The pack pinned `7cffd92c613f0e017f4f810447783a4b84345ca2` (2026-08-04). By build time main
+stood at `efc6cb3` — the MS-1 sitting had landed five merges (R-MS01) on top of the LL-S1 and
+tk1-access merges the pack never saw. Every pack claim relied on was re-verified at `efc6cb3`:
+all 79 matrix paths exist (31/18/30 re-derived from the matrix's own rows) · sentinels
+**loop-mark 50 / written-line 98** (universe: tracked `*.html` containing the literal marker,
+`git grep -l <marker> -- '*.html'`; 0 files carry both) · runtime cleanliness re-derived
+per shipped file, never inherited from the pack's validation table (25/25 HTML: 0 storage ·
+0 egress · 0 external URLs · 0 form actions; reduced-motion + print present). The pack's
+footers keep their `7cffd92` stamp — a historical observation stamp in R-G04's safe form,
+true forever, and the PR states the verified-at commit beside it.
+
+## R-LLAS03 — the six-state evidence chain: the pack's citation was TRUE at HEAD
+
+**Pass LL-AS1, 2026-08-05. The R-LLS01 check run in the other direction.**
+
+The pack asserted the six-state evidence chain (draft → curriculum-aligned → candidate
+evidence → centre-verified → submitted → certified) as a repository fact. LOCATED:
+`quality/toolkits/CLAIMS_REGISTER.md` §"The six evidence states" (Pass TK-1, census at
+`74e6fee`), including the no-skip rule and the states-4–6-are-not-repository-actions rule.
+**Verdict: TRUE-AT-HEAD — no downgrade required.** Every shipped doc cites that file
+precisely. Recorded because the check must run every time precisely so that the one time the
+quoted authority does not exist (R-LLS01's shape) it is caught: a citation is a claim, and
+this one, checked, held.
+
+## R-LLAS04 — the two "return for one authentic addition" readings, reconciled on paper
+
+**Pass LL-AS1, 2026-08-05. Ruling §3.7 executed; the same-day science ruling unchanged.**
+
+LL-S1 refused *"returned for one authentic addition"* as an end-state of the reflective READ
+(a verdict handed to a pupil — the B2 Amendment 1 failing answer). LL-AS1 KEEPS *"Return to
+subject — needs a real later performance, audience, revision or criterion element"* in the
+Studio's CURATION lane. Both rulings stand because they judge different objects: the science
+case was a day-close read outcome (about the pupil's reflection); the ASDAN case is an
+**evidence-state verdict about the ITEM**, one of four outcomes presented as equally
+legitimate, matching the estate's claims-accuracy position — create a later authentic
+opportunity rather than manufacture evidence. **Verified in the shipped Studio: the read lane
+presents no outcomes at all** ("Nothing recorded"), so the separation the reconciliation
+depends on holds in the artefact, not only in prose. Divergence by silence refused; recorded
+here so neither ruling is later quoted against the other.
+
+## R-LLAS05 — the six-vs-five interpretive mapping, filed to the WT–DS reconciliation
+
+**Pass LL-AS1, 2026-08-05. Report, never repair; no competing card ships.**
+
+The pack's six interpretive branches read as the live card's five plus two ASDAN-specific
+evidence-state additions (authorship uncertainty · insufficient criterion evidence), and the
+live card's "Method or data problem" has no pack twin — different object, do not merge. The
+mapping table lives once, in `LundyLoop/6_designs/PROPOSED_asdan_triple_loop.md` §2, and is
+attached to `HANDOVER.md` queue 18 (the WT–DS reconciliation) — one account, one vocabulary,
+before any of it reaches a TA. The pack's TA authorship questions are a third independent
+convergence on the support-honesty concern (the R-LLS04 shape); convergence is evidence the
+ladder is sound and authorises no build.
