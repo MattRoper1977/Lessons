@@ -1,0 +1,100 @@
+{
+  "$comment": "Source: SEMH audit 2026-08-04, adapted. Machine-readable record of one lesson review. Ratings are professional judgement, NOT inspection grades, and a strong average never overrides a red gate.",
+  "schema_version": "1.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["path", "reviewed_at_sha", "reviewed_on", "reviewer", "gate", "confidence", "dimensions", "readiness_state"],
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "Repository-relative path. Humanities lessons live at {Build,Grow,Launch}/Slideshows/, not Humanities_Teesside/."
+    },
+    "reviewed_at_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Full SHA the review was measured at. A review without one is undated evidence."
+    },
+    "reviewed_on": { "type": "string", "format": "date" },
+    "reviewer": { "type": "string" },
+    "pathway": { "enum": ["BUILD", "GROW", "LAUNCH", "Primary", "Legacy", "Whole-school", "Local choice", "Mixed"] },
+    "gate": {
+      "enum": ["GREEN", "AMBER", "RED"],
+      "description": "RED is a blocker on delivery, not a summary of quality. A strong average does not override it."
+    },
+    "confidence": { "enum": ["High", "Medium", "Low"] },
+    "dimensions": {
+      "type": "object",
+      "description": "0.0-5.0 professional judgement per dimension.",
+      "required": [
+        "curriculum_and_sequencing", "information_accuracy_and_provenance",
+        "semh_safety_and_regulation", "modelling_and_scaffolding",
+        "engagement_and_cognitive_participation", "independent_work_quality",
+        "challenge_and_progression", "assessment_and_evidence",
+        "accessibility_and_cognitive_load", "delivery_readiness"
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z_]+$": { "type": "number", "minimum": 0, "maximum": 5 }
+      }
+    },
+    "readiness_state": {
+      "enum": ["drafted", "source-verified", "locally-adapted", "delivery-ready", "registration-verified", "assessment-ready", "print-offline-verified"],
+      "description": "See DELIVERY_READINESS_CHECKLIST.md. States 5-6 are centre actions no repository change can close. State 7 requires a browser-capable environment."
+    },
+    "independence": {
+      "type": "object",
+      "properties": {
+        "highest_prompt_observed": { "enum": ["WT", "SP", "VC", "GV", "SV", "MO", "SC", "DS"] },
+        "independence_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "learner_decisions": { "type": "array", "items": { "type": "string" } },
+        "support_to_remove_next": { "type": "string" },
+        "access_arrangement_that_remains": { "type": "string" }
+      },
+      "$comment": "Paper/TA-side observation only. Never persisted to a pupil device, never aggregated, never a register or a score."
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["summary", "severity", "verdict"],
+        "properties": {
+          "summary": { "type": "string" },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "verdict": {
+            "enum": ["TRUE", "STALE", "PARTIAL", "FALSE", "UNVERIFIABLE-HERE"],
+            "description": "Every claim carries a verdict measured at reviewed_at_sha before any fix is built on it."
+          },
+          "basis": { "enum": ["fresh", "recorded"], "description": "Whether the reviewer measured it, or inherited it from an earlier record. A recorded figure names the commit and the branch it was measured on." },
+          "evidence": { "type": "string", "description": "file:line and the quoted string. Not a paraphrase." },
+          "count": { "type": "integer" },
+          "count_unit": { "type": "string", "description": "e.g. 'files', 'occurrences', 'findings'" },
+          "count_universe": { "type": "string", "description": "e.g. \"tracked *.html at <sha>\". A count without a universe is not a measurement." },
+          "zero_replayed_against": { "type": "string", "description": "Required when count is 0: the input where the same detector MUST fire." },
+          "action": { "enum": ["fix", "report-only", "held-for-matt", "held-for-dsl", "no-action-warranted"] },
+          "held_reason": { "type": "string" }
+        }
+      }
+    },
+    "protected_status": {
+      "type": "object",
+      "properties": {
+        "assessed": { "type": "boolean", "description": "If true: byte-identical or STOP. Report only." },
+        "frozen": { "type": "boolean", "description": "Legacy science, frozen for 2025-26 delivery. Proposed diffs only, zero edits." },
+        "overlapping_branch": { "type": "string", "description": "A live or parked branch also touching this path. Any overlap makes the item HELD." }
+      }
+    },
+    "gates_run": {
+      "type": "object",
+      "properties": {
+        "node_check": { "enum": ["pass", "fail", "not-run"] },
+        "jsdom_boot": { "enum": ["pass", "fail", "not-run"] },
+        "print_pack_718x1047": { "enum": ["pass", "fail", "UNVERIFIED"], "description": "UNVERIFIED where no browser-capable environment was available. Skipped is never 'pass'." },
+        "screen_print_parity": { "enum": ["pass", "fail", "not-run"] },
+        "sentinel_derivation_unchanged": { "type": "boolean", "description": "ll-g:loop-mark v1 set identical before and after. DERIVE the count; do not assume it." },
+        "tag_balance_delta": { "type": "integer" },
+        "cardinality_intended": { "type": "integer" },
+        "cardinality_touched": { "type": "integer" }
+      }
+    }
+  }
+}
