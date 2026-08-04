@@ -1888,3 +1888,37 @@ because R-E03 had to record it retrospectively — *the shared 22 is a collision
 
 > **A shared number between two derivations is a collision until the sets are compared, never
 > agreement.** Two counts that match are two counts; only the members are the finding.
+
+## R-LLS08 — LL-S1's print and render checks passed; the merge record
+
+**Pass LL-S1 close, 2026-08-04. Matt's observation, not a derivation — no instrument witnessed it.**
+
+The hold on PR #42 was a single print sitting. **Matt reports the print check passed and the render is
+fine.** Recorded in the same form as R-H08's close: *a human read the artefact, and nothing in
+`tools/` saw it.* This is what an agent container structurally cannot produce — outbound HTTP is
+proxied and no browser is available — so it is the one class of gate result that must arrive from
+outside and must never be inferred from markup.
+
+**What it retires.** The `PRINT-UNVERIFIED` and `RENDER-UNVERIFIED` tags carried on
+`LundyLoop/5_staff_training/Reading_the_Response_Card.html` and
+`LundyLoop/3_subject_guides/science.html` — the A4 card fitting one page with five legible branches
+identifiable with colour ignored, and the folded subject guide paginating without orphaning the
+closure sentence from its heading. **Neither tag was ever written into the files themselves** (0
+occurrences in all four authored artefacts); they lived in the PR body and the pass report, which is
+where a claim about an artefact belongs when it cannot be derived from the artefact.
+
+**The merge.** Branch `claude/ll-s1-lundy-science`, base and **rollback `7cffd92`**, merged `--no-ff`
+into `main` on Matt's word, the trigger being his print-check confirmation. Five commits: build ·
+records · the R-LLS04 correction · the framing line · the close.
+
+**The merge SHA is deliberately not written here.** It cannot exist inside the branch that names it,
+and a number written after the fact is the cached claim this pass minted three entries about. Derive
+it: `git log --merges --oneline --first-parent main | head` , or
+`git log --oneline 7cffd92..main`. Rollback remains `git revert -m 1 <that SHA>`, and `7cffd92` is the
+state to return to.
+
+**What did NOT merge with it, stated so a later pass does not assume the sitting cleared more than it
+did:** PR **#41** (`tk1-access`) carries its own trigger, `print check passed — merge 41`, and was
+**not** merged by this pass — no instruction named it and its content was never gated here. The
+standing SEMH-1 list (#33's DSL sitting, #34's print check, `pass-art-a2b` then #35) is
+**unchanged**.

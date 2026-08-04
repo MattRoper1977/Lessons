@@ -1,6 +1,10 @@
 # Lundy × Science — the data firewall
 
-**PENDING-LOCAL-APPROVAL (DSL) — reviewed at the same DSL sitting as held PR #33.**
+**LOCAL-APPROVAL — wording confirmed by Matt, 2026-08-04.** Ledger row:
+`quality/toolkits/PENDING_APPROVALS.md`. **PR #33's DSL sitting still governs anything it settles** —
+where this file and #33's outcome differ, **#33 wins and this file is corrected.** The confirmation
+is a human read of the wording in this file, not of a summary of it, and **no instrument witnessed
+it.**
 
 **STATUS: draft · OWNER: Matt · Pass LL-S1, 2026-08-04 · review-by 1 September 2026**
 **Intended users: staff-facing. No pupil-facing surface. Ledger row: `quality/toolkits/PENDING_APPROVALS.md`.**
