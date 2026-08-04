@@ -1697,3 +1697,228 @@ derive-don't-quote discipline caught both before any action depended on them; ne
 Both are the R-G01 shape arriving inside an order: a branch tip written into a brief is stale the moment
 the branch moves, and a merged branch listed as open is a cached claim about repository state. **Enumerate
 the matrix at open, every pass** — the brief's version is the hypothesis, the repo's is the fact.
+
+## R-LLS01 — `R-H16` does not exist; the cross-pass rule is `R-H02`
+
+**Pass LL-S1, 2026-08-04. Adjudicated by Matt on the Phase 0 report. Derived at `7cffd92`.**
+
+The LL-S1 brief cited **`R-H16`** twice as the rule governing cross-pass collision. **There is no
+R-H16 in this register.** The rule is **`R-H02` — "Cross-pass collision: the estate cannot see a
+pass's work in flight"** — whose own remedy-candidate is *a declared in-flight scope*, which is what
+`_lundysci/INFLIGHT.md` implemented. The substance the brief relied on was correct; only the
+identifier was wrong, and it was wrong in a way nothing could catch except reading it against this file.
+
+**The register line, which is not "the brief was wrong":**
+
+> **A register ID quoted across passes inherits the authority of an entry without ever having been
+> one.** The ID travelled through briefing documents across several passes, each inheriting it from
+> the last, and no pass read it against the register until one did.
+
+This is the **R-G01 / R-G03 / R-H07 cached-claim family applied to an identifier rather than a
+figure** — the exact shape of the retired 0-of-8 claim, which was also carried across passes as
+though it were measurement. **A citation is a claim. Resolve it before relying on it.** An ID is
+cheaper to check than a number and is checked less often, precisely because it looks like a reference
+rather than an assertion.
+
+## R-LLS02 — Pass TK-1's true shape: four merged PRs, not five branches
+
+**Pass LL-S1, 2026-08-04. Corrects a brief, not the record — `R-TK01` was already right.**
+
+The LL-S1 brief stated that TK-1 "merged five branches plus a records commit and a residuals branch".
+**R-TK01 records the true shape and is authoritative:** **four** PRs merged — #37 `f03dade`, #38
+`ce67121`, #39 `4aab666`, #40 `82c40ba` — plus a records commit, plus the `tk1-residuals`
+micro-branch, with **#41 (`tk1-access`) HELD** on Matt's physical print check.
+
+Operationally this changed nothing: the conclusion drawn from it — that the pack's reference commit
+`74e6fee` is stale and cannot be a base — is unaffected and stands. Recorded because a count that is
+wrong by one in a brief becomes a count that is wrong by one in the next brief that quotes it.
+
+## R-LLS03 — the site-repo mis-open tally reaches eight
+
+**Pass LL-S1, 2026-08-04.**
+
+LL-S1's session opened in the **site** repo `mattroper1977.github.io` — the **eighth** recorded
+instance of the R-SB01 / R-D05 default. R-TK01 recorded the seventh. The control worked exactly as
+R-SB02 specifies: the order named `MattRoper1977/Lessons` explicitly, the pass's first act was the
+remote check, it failed against the named target, and the Lessons repo was attached and cloned before
+any measurement was taken.
+
+**Eight instances is no longer a run of slips; it is the environment's steady-state behaviour.** The
+control that catches it is not vigilance — it is the order carrying an explicit repo line and the
+gate having a **substance clause** (R-SEMH05), so identity is proven from four independent
+identifiers rather than from a path map that may itself be wrong.
+
+A second harness claim was caught in the same act: the session designated a branch
+(`claude/ll-s1-lundy-science-vcrh80`) **in the decoy repo**, while the order designated
+`claude/ll-s1-lundy-science` in Lessons. Reported rather than resolved in the harness's favour, and
+ruled by Matt. **R-SB02 covers this and needs no new rule** — a session's checked-out branch is part
+of the harness configuration, and the harness configuration is a claim.
+
+## R-LLS04 — the pack's "84 retained files" is a file count, not a distinct-artefact count
+
+**Pass LL-S1, 2026-08-04. Container-bound fact supplied by Matt; corroborated here by derivation.**
+
+`15_MIN_EVIDENCE_STUDIO.html` and `Lundy_Loop_Science_15_Minute_Evidence_Studio_2026-08-04.html` in
+the Lundy-Science pack are **byte-identical**, md5 `399411b16efef770b5c9025a08640909`.
+
+**The derivation, attached so this is an observation and not a bare assertion:** only one of the two
+files reached this session, so the duplication itself could not be re-derived here and was correctly
+reported **NOT-DETERMINED** in Phase 0. Matt supplied the pairing from the container that held both.
+What *was* derived here: `md5sum` of the received `15_MIN_EVIDENCE_STUDIO.html` = the stated
+`399411b16efef770b5c9025a08640909`, so the received file is the one the md5 describes.
+
+**Consequence, which is the reason for the entry:** a retained-file count that includes both copies
+counts one artefact twice. **Ship one.** Nothing from this pack was shipped, so nothing acted on it;
+it is recorded so a later pass reconciling "84 retained" against a distinct-artefact list does not
+report a mismatch and start an investigation.
+
+**Free provenance gate, worth reusing:** the pack shipped `32_FILE_MANIFEST.csv` carrying a SHA-256
+per file. **Every manifest-listed file received in this session matched its recorded hash exactly —
+zero mismatches**, re-derived on each arrival rather than counted once (17 of 17 at the last check;
+the manifest cannot list itself — the 82 + 2 = 84 reconciliation). *A supplier who ships hashes hands
+the receiver a provenance check for nothing; take it every time.*
+
+**Inputs arrived in three waves, and this entry's own count went stale twice.** It first recorded
+**15**. Two further pack files — `TA_PROMPT_OBSERVATION_CARD.html` and `TEACHER_DESK_CARD.html` —
+arrived *after* the records commit was written; both matched their manifest hash and byte length
+exactly. **A count of what you have received is stale the moment the next file arrives**, which is
+why the sentence above is now a derivation and a zero rather than a total. Runtime coverage of the
+pack's **18** proposed HTML resources moved **9 → 11**. `START_HERE.html` was never received and
+remains NOT-DETERMINED; it is not inferred from the ten that were.
+
+**The corroboration that matters more than the count.** `TA_PROMPT_OBSERVATION_CARD.html` sets out a
+least-intrusive support route — *wait · reference · general prompt · specific prompt · re-model ·
+direct step* — and separately insists that *"scribing is access, not a thinking prompt"* and that what
+fades is a content prompt and **never a reasonable adjustment**. That is `quality/DESIGN_prompt_record.md`'s
+prompt ladder (`WT · SP/VC · GV · SV · MO · DS`) plus its `SC` caveat — **the single most important
+thing to brief**, per that design's own words — reproduced by a third party with no access to it. The
+same card records *"what should be tried without next time"*, which is the one field that design
+identifies as the only one that fades anything.
+
+**Why this is worth an entry rather than a remark.** This register states at its head that everything
+here agreeing and everything here being wrong are indistinguishable from inside the file, and that the
+only external check is **re-deriving an entry by a method sharing no premise with the one that
+produced it**. This is that check arriving unbidden for an estate design that is approved in principle
+and **unbuilt**. It does not authorise building it — the triggers in `HANDOVER.md` queue 16 are
+unchanged and untouched by this — but it is evidence the ladder is not idiosyncratic.
+
+**Now a two-route derivation.** The convergence was read independently twice: once in Matt's chat
+workspace, which held the card, and once in this repo session, which received it late and reached the
+same WT–DS reading from the artefact with no sight of the first analysis. **Two routes, no shared
+premise.** That is the standard this register sets for an entry it cannot otherwise check.
+
+## R-LLS05 — over-broad is safe for exclusion **only when it comes back clean**
+
+**Pass LL-S1, 2026-08-04. Earned by the branch-disjointness gate; sibling of R-SEMH04.**
+
+R-A01b establishes that an over-broad selector is safe for **exclusion** and dangerous for inclusion.
+This entry states the limit that clause does not carry:
+
+> **Over-broad is safe for exclusion only when it comes back clean. When it comes back dirty it must
+> be refined, never reported.** A dirty over-broad result is not a finding — it is an unfinished
+> measurement, and reporting it as a collision is a false positive with a gate's authority behind it.
+
+**The case.** LL-S1's gate 8 compared its change set against six held branches using a two-tree diff
+(`git diff --name-only HEAD FETCH_HEAD`) over depth-1 fetches. It returned an intersection on
+`quality/toolkits/PENDING_APPROVALS.md` **and all three root ledgers, for five of the six branches** —
+which, read literally, is a stop-and-report on every one of them.
+
+**All five were false.** The two-tree form cannot distinguish *"the branch changed this file"* from
+*"`main` changed it after the branch was cut"*, and `main` had moved substantially since. Re-derived
+from `git merge-base` after deepening the history, every branch's **own** change set was **disjoint**:
+`semh1-safeguarding` touches exactly one file (`Tutor_Time/WB_W7_Pressure_Points.html`, confirmed
+independently against the PR's own file list), `semh1-dt-semantic` eight, `semh1-art-runtime` 31,
+`tk1-access` eight, `pass-art-a2b` three — and `pass-art-a2b`'s apparent `HANDOVER.md` hit is
+`Art_Teesside/HANDOVER.md`, a **subject-level** file, not the root ledger.
+
+**Why it is the R-SEMH04 family.** There, a shallow clone made a branch enumeration return a
+structural false **zero**; here, a shallow two-tree diff made a disjointness test return structural
+false **positives**. Same cause — *a comparison whose anchor is missing answers confidently anyway* —
+in both directions. **Neither failure announces itself.** The general form: **an unanchored comparison
+is not a weaker measurement, it is a different one**, and it will produce a number that looks like the
+one you wanted.
+
+## R-LLS06 — append-only means never renumber, and a reverted error is disclosed
+
+**Pass LL-S1, 2026-08-04.**
+
+The estate's append-only-union rule is usually stated for merges: *keep every entry from both sides,
+never choose one side*. Two clauses it does not say out loud, both earned in this pass:
+
+- **Never renumber.** An edit to `_close/OPEN_ITEMS.md` in this pass turned item **23** into **23a**
+  while intending to append. Nothing was deleted and the row's text was untouched — and it would still
+  have been a silent corruption, because every reference to *"OPEN_ITEMS #23"* in `REGISTER.md`,
+  `HANDOVER.md` and two PR bodies would have resolved to nothing. **A ledger's numbers are its
+  addresses.** Renumbering is deletion of every inbound reference at once, and it does not look like
+  deletion in a diff.
+- **A reverted error is disclosed, not absorbed.** The renumbering was caught on the diff, reverted,
+  verified byte-identical to HEAD, and appended correctly — so it left **no trace in any commit**.
+  That is exactly why it had to be written down. **A clean diff is not evidence that nothing
+  happened**; it is evidence that nothing survived. A pass that silently fixes its own near-misses
+  reports the same clean history as a pass that never had any, and the estate cannot tell them apart —
+  which is the same indistinguishability this register names at its head.
+
+## R-LLS07 — enumerate the inputs against the manifest, and name what is absent
+
+**Pass LL-S1, 2026-08-04. Earned by two workspaces receiving two different subsets of one pack.**
+
+> **A provenance gate verifies what you received. It is silent about what you did not.**
+
+**The case.** One pack was delivered to two workspaces and **neither subset contained the other**.
+This session received 16 files (9 HTML, later 11); Matt's chat workspace received 22 (12 HTML). This
+session alone held `specimens/OBSERVATION_RECORD.html`; the chat workspace alone held
+`TEACHER_DESK_CARD.html`, `TA_PROMPT_OBSERVATION_CARD.html` and `START_HERE.html`. The first two
+arrived here late and were verified; **`START_HERE.html` never arrived and is NOT-DETERMINED, not
+inferred from the ten that did.**
+
+Every arriving file matched its `32_FILE_MANIFEST.csv` SHA-256 — **zero mismatches throughout** — and
+that perfect result said **nothing whatever** about the three that were missing. A gate that can only
+return "clean" for what it can see will report clean on a half-delivery.
+
+**The rule, cheap and belonging at the top of every pass:** *enumerate the inputs against the
+manifest before starting, and name what is absent.* **An input set is a claim about what was
+delivered, never about what exists.** The manifest makes the absence derivable for free; not deriving
+it is the choice.
+
+**Worked example — the collision that would have read as agreement.** After the late arrivals, this
+session's runtime coverage was **11** of 18 proposed HTML resources. Matt's independent figure was
+also **11**. *The sets differ*: his excluded `OBSERVATION_RECORD.html` and included `START_HERE.html`;
+this session's is the reverse. **Ten shared members, two different elevens.** Recorded prospectively
+because R-E03 had to record it retrospectively — *the shared 22 is a collision, not agreement.*
+
+> **A shared number between two derivations is a collision until the sets are compared, never
+> agreement.** Two counts that match are two counts; only the members are the finding.
+
+## R-LLS08 — LL-S1's print and render checks passed; the merge record
+
+**Pass LL-S1 close, 2026-08-04. Matt's observation, not a derivation — no instrument witnessed it.**
+
+The hold on PR #42 was a single print sitting. **Matt reports the print check passed and the render is
+fine.** Recorded in the same form as R-H08's close: *a human read the artefact, and nothing in
+`tools/` saw it.* This is what an agent container structurally cannot produce — outbound HTTP is
+proxied and no browser is available — so it is the one class of gate result that must arrive from
+outside and must never be inferred from markup.
+
+**What it retires.** The `PRINT-UNVERIFIED` and `RENDER-UNVERIFIED` tags carried on
+`LundyLoop/5_staff_training/Reading_the_Response_Card.html` and
+`LundyLoop/3_subject_guides/science.html` — the A4 card fitting one page with five legible branches
+identifiable with colour ignored, and the folded subject guide paginating without orphaning the
+closure sentence from its heading. **Neither tag was ever written into the files themselves** (0
+occurrences in all four authored artefacts); they lived in the PR body and the pass report, which is
+where a claim about an artefact belongs when it cannot be derived from the artefact.
+
+**The merge.** Branch `claude/ll-s1-lundy-science`, base and **rollback `7cffd92`**, merged `--no-ff`
+into `main` on Matt's word, the trigger being his print-check confirmation. Five commits: build ·
+records · the R-LLS04 correction · the framing line · the close.
+
+**The merge SHA is deliberately not written here.** It cannot exist inside the branch that names it,
+and a number written after the fact is the cached claim this pass minted three entries about. Derive
+it: `git log --merges --oneline --first-parent main | head` , or
+`git log --oneline 7cffd92..main`. Rollback remains `git revert -m 1 <that SHA>`, and `7cffd92` is the
+state to return to.
+
+**What did NOT merge with it, stated so a later pass does not assume the sitting cleared more than it
+did:** PR **#41** (`tk1-access`) carries its own trigger, `print check passed — merge 41`, and was
+**not** merged by this pass — no instruction named it and its content was never gated here. The
+standing SEMH-1 list (#33's DSL sitting, #34's print check, `pass-art-a2b` then #35) is
+**unchanged**.

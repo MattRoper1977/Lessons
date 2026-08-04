@@ -278,6 +278,64 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 *Queue entry 16 added by Pass SEMH-1.*
 
+### Added by Pass LL-S1 — the Evidence Studio deferral, with its trigger
+
+17. **The 15-minute Science Evidence Studio and everything belonging to it — DEFERRED, not refused.**
+    A third-party pack (Lundy Loop × Science, 2026-08-04) arrived proposing a six-phase daily
+    tutor-time evidence routine, an upload queue with statuses, a moderation tool, a weekly
+    Monday–Friday rhythm, tutor handoff cards and a live assessment board. **None of it was built.**
+    The design work is genuinely good and the diagnosis behind it is correct — the estate had a strong
+    account of *closure* and none of *interpretation* — but the parts that fill that gap were taken
+    (queue entry: none; they landed in this pass) and the Studio itself was not.
+    **Why it stopped, and by whose decision:** the day card and the tutor-time slot were **shelved by
+    Matt's own decision** (queue entry 11), to run only if the lesson-level mark is observed working
+    in a real room. **A larger version of a shelved thing does not satisfy the condition that shelved
+    it.** Three further collisions are recorded as the *reasons the design is not ready*, not as
+    repairs to make: the Studio's phase 6 names a new next step where **B2 Amendment 2** requires the
+    return visit to the step already given; its weekly rhythm plus status queue is the scheduled
+    backlog **B2 Amendment 3** forbids; and its *"returned for one authentic addition"* end-state is
+    the failing answer **B2 Amendment 1** rules out. Its other three end-states are strong — **"No
+    upload today" matches "an empty day is data" exactly.**
+    **TRIGGER — BOTH required, neither sufficient alone:** (a) the **late-September three-week check**
+    has been run **and its outcome recorded**; **and** (b) **Pass LL-J has delivered and Matt has read
+    its specimens**. Then it becomes **its own pass with its own brief** — not a resumption of LL-S1.
+    Full evaluation: `quality/LUNDY_SCIENCE_ACCEPTANCE_GATES.md`. Register: **R-LLS01**–**R-LLS04**.
+    **R-A09 binds anything ever built here: no second copy, ever.**
+
+18. **The WT–DS reconciliation — three accounts of adult support, one vocabulary needed.** The estate
+    now holds **three parts of one thing, authored by three passes that could not see each other**:
+    - **how the adult supports** — the prompt ladder `WT · SP · VC · GV · SV · MO · SC · DS` in
+      `quality/DESIGN_prompt_record.md` (SEMH-1 §8, **STATUS PROPOSED, unbuilt**), whose load-bearing
+      clause is that `SC` (scribe/access) is **not** on the ladder in the same sense as the others and
+      is ringed under *Keep (access)*, never *Most help*;
+    - **how the adult reads the response** — the five diagnostic branches, **built by this pass** at
+      `LundyLoop/5_staff_training/Reading_the_Response_Card.html` and summarised in
+      `LundyLoop/3_subject_guides/science.html`;
+    - **what gets recorded** — the adult-side line in `DESIGN_prompt_record.md` (queue 16).
+
+    **Why they must be reconciled before any of them reaches a TA:** the pack's
+    `TA_PROMPT_OBSERVATION_CARD.html` independently reproduces the same ladder in **different
+    vocabulary** — *wait · reference · general prompt · specific prompt · re-model · direct step*, plus
+    the same `SC` caveat (*"scribing is access, not a thinking prompt"*; what fades is a content prompt
+    and **never a reasonable adjustment**). Shipping two ladders with two vocabularies to staff who
+    work all three pathways is the **R-H08 mis-training hazard in a new domain**, and R-H08 cost a pass
+    to close. One account, one vocabulary, or the TA picks whichever they met first.
+
+    **Source artefacts, named so the next pass starts with the enumeration this one lacked:**
+    `quality/DESIGN_prompt_record.md` (in repo) · `LundyLoop/5_staff_training/Reading_the_Response_Card.html`
+    (in repo) · the pack's `TA_PROMPT_OBSERVATION_CARD.html` and `TEACHER_DESK_CARD.html` (**not in
+    repo** — received late in this session, hash-verified, evaluated, **not adopted**) · the pack's
+    `START_HERE.html` (**never received in this session; NOT-DETERMINED**). See `_close/OPEN_ITEMS.md`
+    #26 for their status and adoption conditions.
+
+    **TRIGGER: when Pass LL-J has delivered and the September TA briefing is being prepared** — the
+    same deadline the TA card already carries (queue 10), deliberately **not** a second one.
+    **The convergence is a two-route derivation, not a claim:** read independently in Matt's chat
+    workspace and again in the repo session from the artefact alone, with no shared premise. It is
+    evidence the ladder is sound; **it authorises no build.** Queue 16's three triggers are unchanged.
+
+*Queue entries 17 and 18 added by Pass LL-S1.*
+
 
 
 ### September-cluster pass — what landed, what stopped
