@@ -55,3 +55,14 @@ Each with owner and trigger, per Matt's close ruling §3.5.
 | 16 | **10 files in `6 Art/` — SI-07 timer-contract (high).** A different chassis from Art Teesside. **PARKED with the rest of the unruled legacy `6 Art/` material; NOT queued for action.** | — | parked, no trigger |
 | 17 | **SEMH-2 (Matt's commission, separate brief).** (a) Hide the TBC unit code across the **25** Science Teesside witness sheets using the reversible mechanism specified in the SEMH-1 brief — sheet content untouched, returns the moment Cheryl confirms; (b) constructed-source label wording for the Humanities decks delivered **as PROPOSED DIFFS for Matt's read**. **Pupil-facing authoring stays Matt's.** | Matt commissions | awaiting the SEMH-2 brief |
 
+
+## Added by Pass TK-1 close (2026-08-04), at main `82c40ba`
+
+| # | open item | owner | trigger / status |
+|--:|---|---|---|
+| 18 | **D&T dust/HT proposed diffs** (`Build/Slideshows/BUILD_DT_W1–W6`: window/mask dust lines, HT-as-the-wood-decision framing). Wording ready in `quality/toolkits/SAFETY_CONTENT_GATE.md` §"Where a P0 string sits inside a protected file". | D&T lead + H&S | **HELD — chained to PR #34's resolution.** Apply only after #34 merges or closes; never touching printPack id lists or the Lundy print-page text (R-A07 BOUNDARY / OPEN_ITEMS #7). |
+| 19 | **`Printable_LAUNCH_Evidence_and_Lundy_Pack.html` large-print option** — the 8th pack; the other seven gained it on `tk1-access`. | developer | **chained to PR #41** — built as `tk1-access-2` under the close order's §5 once the print-check trigger lands. |
+| 20 | **Primary lesson + Tutor_Time Google-Fonts debt.** ~40 primary lesson/unit-index files + 2 Tutor_Time decks import Google Fonts; templates locked (TK-1 §3). Hub fixed on #41. | developer | **REPORT-ONLY** until the primary template unlocks. |
+| 21 | **Humanities pack print units.** The 3 `Humanities_Teesside` `WEEKS[]` packs express sizes in non-`pt` units — a separate measurement model; unmeasured by TK-1's print census. | developer | next accessibility pass |
+| 22 | **Metadata-strip rollout beyond the ≤10-page pilot** (`quality/toolkits/METADATA_SCHEMA.md`). A strip's `reviewed` date means a person read the file — never stamped in bulk. | Matt commissions | its own pass |
+| 23 | **Progress staff-pack zips are stale after the TK-1 merges** (safety wording, JCQ wording, hub text all moved). **Hard precondition of the next full rebuild: the `MARK_SVG`/`gen_entry` aria-less "M"-mark reconciliation** (12 entry docs; R-J01/R-K01/R-K02, detail in HANDOVER's PACK-LA/PACK-LN ledgers). | Matt commissions | before the next pack rebuild |

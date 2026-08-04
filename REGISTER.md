@@ -1642,3 +1642,58 @@ read. None does so. They are of three benign kinds:
 item: 25 files carrying `AQA UAS unit code: TBC (Cheryl)` — `_close/OPEN_ITEMS.md` #8,
 and commissioned as SEMH-2.
 
+
+## R-TK01 — Pass TK-1 closed: four merges landed, one held on the print check
+
+**Matt's close order, 2026-08-04. Base `74e6fee`.**
+
+| PR | branch | merge SHA (= rollback, `git revert -m 1`) | parents |
+|---|---|---|---|
+| #37 | tk1-governance | `f03dade` | `74e6fee` + `d4e6607` |
+| #38 | tk1-safety | `ce67121` | `f03dade` + `4055c26` |
+| #39 | tk1-claims | `4aab666` | `ce67121` + `7fdab61` |
+| #40 | tk1-data | `82c40ba` | `4aab666` + `d5fa5de` |
+
+Zero conflicts anywhere — the pairwise-disjointness gate held. Diff-union 24 files, exact. Sentinel
+populations derived at the final tip via the R-E08 pathspecs: unchanged (50 / 98 — an observation at
+`82c40ba`, not a constant; derive with `bundle_facts.py`). Assessed pair byte-identical. Loop Walk
+Logger zero-egress re-derived post-merge. Branding net-unchanged (584 = 584).
+
+**#38's safety merge carries Matt's asymmetry ruling on record:** the replaced burns/missing-tool/offcut
+wording was factually wrong, the corrected text is strictly safer, and the in-file PENDING-LOCAL-APPROVAL
+tags keep the approval state honest — withholding a correct safety instruction pending sign-off would have
+left the wrong one live. The sign-off ledger is `quality/toolkits/PENDING_APPROVALS.md`.
+
+**PR #41 (tk1-access, `f2222d9`) stays HELD** on exactly one precondition: Matt's physical print check of
+one evidence-pack week in normal and large-print modes (trigger phrase recorded in the close order and the
+PR). The residual micro-branch `tk1-residuals` (two claim-accuracy edits) follows this close — see its own
+merge record.
+
+**Mis-open tally:** TK-1's open was the **seventh** recorded site-repo default (R-SB01/R-D05 family). The
+close ran inside the same session — no eighth instance, the attach-check having already run.
+
+## R-TK02 — a committed derived-facts file outranks a brief's baked facts
+
+**Earned by Pass TK-1; precedent `_passpq/SPEC_FACTS.md`.**
+
+TK-1's brief carried an ASDAN PEQ facts section (§2) written before the specification was in hand. The
+repository already held `_passpq/SPEC_FACTS.md` — derived line-by-line from the PEQ spec v1.2 (Oct 2025)
+with total two-source agreement (R-K03). The pass cited the committed file over the brief and was right to.
+
+**The rule:** where a brief bakes in facts and the repository holds a committed derivation of the same
+facts from a primary source, **the committed derivation wins**, and the brief's version is treated as a
+summary that may have aged. A brief is written once; a derived-facts file names its source, its version and
+its verification method, and can be re-checked. Sibling of R-SEMH05 (a brief's path map is a claim) and the
+R-G01 family: a fact restated in a brief is a cached claim with nothing keeping it true.
+
+## R-TK03 — TK-1's brief carried two stale branch-facts; the existing form covers it
+
+**Recorded per R-H03's clause — "a ruling's factual premises are claims too — verify upward, even when the
+order is Matt's" — rather than minting a rival rule.**
+
+TK-1's brief (§1.8) stated `pass-art-a2b @5b1ea74` (actual tip at open: `952d260`) and listed the
+LAUNCH-ASDAN build branch `@5ce60e0` as in-flight (it had merged on 2026-07-30, R-J01). Phase 0's
+derive-don't-quote discipline caught both before any action depended on them; neither changed an action.
+Both are the R-G01 shape arriving inside an order: a branch tip written into a brief is stale the moment
+the branch moves, and a merged branch listed as open is a cached claim about repository state. **Enumerate
+the matrix at open, every pass** — the brief's version is the hypothesis, the repo's is the fact.
