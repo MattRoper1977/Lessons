@@ -1,0 +1,46 @@
+diff --git a/biology/Digestion_and_Absorption (1).html b/biology/Digestion_and_Absorption (1).html
+--- a/biology/Digestion_and_Absorption (1).html
++++ b/biology/Digestion_and_Absorption (1).html
+@@ -344,6 +344,7 @@
+       margin-top: 16px;
+       text-align: center;
+     }
++    .indep-timer-display { font-weight: 800; }
+     .indep-controls button { margin: 0 6px; }
+     .print-only { display: none; }
+     @media print {
+@@ -998,3 +999,3 @@
+       <div class="indep-controls">
+-        <span id="indep-timer-display">15:00</span>
++        <span class="indep-timer-display">15:00</span>
+         <button type="button" onclick="startIndepTimer()">Start</button>
+@@ -1322,3 +1323,4 @@
+       <div class="indep-controls">
+-        <span id="indep-timer-display">15:00</span>
++        <span class="indep-timer-display">15:00</span>
+         <button type="button" onclick="startIndepTimer()">Start</button>
++        <button type="button" onclick="resetIndepTimer()">Reset</button>
+@@ -1332,14 +1334,13 @@
+       <p><strong>Success looks like:</strong> Answers use the correct key words and explain how each process helps digestion.</p>
+     </div>
++    <div class="memory-trick">Amylase Makes Maltose · Protease Produces Peptides · Lipase Liberates Lipids</div>
+   </section>
+ 
+   <script>
+     let indepRemaining = 15 * 60;
+     let indepTimer = null;
+     function renderIndepTimer(){
+-      const el = document.getElementById('indep-timer-display');
+-      if(!el) return;
+       const minutes = Math.floor(indepRemaining / 60);
+       const seconds = indepRemaining % 60;
+-      el.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
++      document.querySelectorAll('.indep-timer-display').forEach(el => {
++        el.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
++      });
+@@ -1408,6 +1409,4 @@
+   <script defer src="/theme.js"></script>
+ </body>
+ </html>
+-    <div class="memory-trick">Amylase Makes Maltose · Protease Produces Peptides · Lipase Liberates Lipids</div>
+-
