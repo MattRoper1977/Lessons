@@ -635,4 +635,1043 @@ function showTABrief(){
 let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;document.getElementById('pres-caps').appendChild(c);document.getElementById('pres-num').textContent=_presDone.length;if(_presDone.length===8){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});document.getElementById('pres-caps').innerHTML='';document.getElementById('pres-num').textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
 registerXP(document.querySelectorAll('.match-pill').length);
 var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
-<script defer src="/hud.js"></script></body></html>
+<script defer src="/hud.js"></script><!-- ASDAN-VISUAL-LEARNING:HTML:BEGIN v1 -->
+<style>
+/* ASDAN Visual Learning — progressive enhancement. Rehearsal only. */
+.asvl-panel{
+  --asvl-accent:var(--wedo-border,var(--btn-bg,var(--accent,#356f83)));
+  /* Text-safe variant of whatever accent the host deck supplies. Mixing toward
+     black scales every channel by the same factor, so the HUE ANGLE is preserved
+     exactly and only lightness moves. 91% is the MINIMUM darkening that clears
+     4.6:1 on white for all three pathway accents (BUILD #4E8093 -> 5.08,
+     GROW #2E8F7B -> 4.63, LAUNCH #A76A9B -> 4.76); GROW is the binding case.
+     This is a TOOLKIT token: the estate's strand colours are untouched, and
+     --asvl-accent itself still drives borders, rings and fills unchanged. */
+  /* The eyebrow is a CHIP: it brings its own solid background, so the contrast
+     pair is KNOWN rather than inherited. Text darkening could never hold a floor
+     here -- the header gradient's --wedo-bg tint moves per deck, so the pair
+     itself was unstable. 74% is the minimum darkening that satisfies BOTH limbs
+     across all nine measured (tint, accent) pairs in the estate: white-on-chip
+     >= 4.6:1 (worst 4.68, the olive #8AA662) and chip-vs-header >= 3:1 (worst
+     3.94). It supersedes the earlier 91%, which was fitted to three sampled
+     accents and fails on the olive. SOLID, never translucent: translucency would
+     re-import the moving background and walk the whole defect back in. */
+  --asvl-accent-chip:color-mix(in srgb,var(--asvl-accent) 74%,#000);
+  /* Same treatment for muted TEXT. Changing the --asvl-muted fallback was inert:
+     the host decks define --muted themselves (#64748b), so the fallback never
+     fired -- measured on a rendered specimen, not read off the token file. 96%
+     is the minimum darkening that clears 4.6:1 on the panel's lightest and
+     darkest tints (white 5.09, mint 4.86, cream 4.64). Host theming survives:
+     whatever --muted the deck supplies is darkened, not replaced. */
+  --asvl-muted-text:color-mix(in srgb,var(--asvl-muted) 96%,#000);
+  --asvl-accent-soft:var(--wedo-bg,var(--scaffold-bg,#eef4f7));
+  --asvl-ink:var(--text,var(--ink,#17212a));
+  --asvl-muted:var(--muted,#64748b);
+  --asvl-surface:var(--slide-bg,#fff);
+  --asvl-line:color-mix(in srgb,var(--asvl-accent) 34%,transparent);
+  --asvl-success:var(--success,#16784a);
+  --asvl-error:var(--error,#b42318);
+  --asvl-warning:var(--task-border,#a15c00);
+  container-type:inline-size;
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  margin:18px 0 88px;
+  border:3px solid var(--asvl-accent);
+  border-radius:18px;
+  background:var(--asvl-surface);
+  color:var(--asvl-ink);
+  box-shadow:0 12px 28px rgb(15 23 42 / .12);
+  overflow:hidden;
+  font-family:inherit;
+  line-height:1.45;
+}
+.asvl-panel *{box-sizing:border-box}
+.asvl-panel h3,.asvl-panel h4,.asvl-panel h5,.asvl-panel p,.asvl-panel ul,.asvl-panel ol{max-width:none}
+.asvl-panel h3,.asvl-panel h4,.asvl-panel h5{color:var(--asvl-ink);border:0;margin:0}
+.asvl-panel h3{font-size:clamp(1.25rem,3cqi,1.8rem);line-height:1.15}
+.asvl-panel h4{font-size:1.08rem;margin-bottom:6px}
+.asvl-panel h5{font-size:.96rem;margin-bottom:6px}
+.asvl-panel p,.asvl-panel li,.asvl-panel label{color:var(--asvl-ink);font-size:clamp(.92rem,2cqi,1.04rem);line-height:1.48}
+.asvl-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(135deg,var(--asvl-accent-soft),var(--asvl-surface))}
+.asvl-header-text{min-width:0}
+.asvl-eyebrow{display:inline-block;margin:0 0 6px!important;background:var(--asvl-accent-chip)!important;color:#fff!important;padding:3px 10px!important;border-radius:999px;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted-text)!important}
+.asvl-tools{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.asvl-button,.asvl-choice,.asvl-sort-item,.asvl-target-button,.asvl-evidence-card,.asvl-hotspot-button,.asvl-mini-button{
+  min-height:44px;
+  border:2px solid var(--asvl-accent-chip);
+  border-radius:10px;
+  background:var(--asvl-accent-chip);
+  color:#fff;
+  padding:9px 13px;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:none;
+  text-align:left;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background-color .16s ease,opacity .16s ease;
+}
+.asvl-button:hover,.asvl-choice:hover,.asvl-sort-item:hover,.asvl-target-button:hover,.asvl-evidence-card:hover,.asvl-hotspot-button:hover,.asvl-mini-button:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgb(15 23 42 / .16)}
+.asvl-button:focus-visible,.asvl-choice:focus-visible,.asvl-sort-item:focus-visible,.asvl-target-button:focus-visible,.asvl-evidence-card:focus-visible,.asvl-hotspot-button:focus-visible,.asvl-mini-button:focus-visible,.asvl-panel select:focus-visible,.asvl-radio-card input:focus-visible+span,.asvl-help-ladder summary:focus-visible{
+  outline:4px solid color-mix(in srgb,var(--asvl-warning) 75%,white);
+  outline-offset:3px;
+}
+.asvl-button[disabled],.asvl-choice[disabled],.asvl-sort-item[disabled],.asvl-target-button[disabled],.asvl-evidence-card[disabled],.asvl-hotspot-button[disabled],.asvl-mini-button[disabled],.asvl-panel select[disabled]{cursor:not-allowed;opacity:.52;transform:none;box-shadow:none}
+.asvl-button-secondary{background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line)}
+.asvl-notice{margin:0!important;padding:10px 20px;background:color-mix(in srgb,var(--asvl-warning) 12%,var(--asvl-surface));border-block:1px solid color-mix(in srgb,var(--asvl-warning) 35%,transparent);font-size:.86rem!important;font-weight:700}
+.asvl-cycle{list-style:none;margin:0!important;padding:12px 20px!important;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:color-mix(in srgb,var(--asvl-ink) 4%,var(--asvl-surface))}
+.asvl-cycle li{position:relative;margin:0!important;padding:8px 10px 8px 32px;border:2px solid var(--asvl-line);border-radius:999px;background:var(--asvl-surface);font-size:.76rem!important;font-weight:900;text-align:center}
+.asvl-cycle li::before{content:attr(data-stage);position:absolute;left:7px;top:50%;translate:0 -50%;width:20px;height:20px;display:grid;place-items:center;border:2px solid var(--asvl-line);border-radius:50%;font-size:.7rem}
+.asvl-cycle li.is-current{border-color:var(--asvl-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--asvl-accent) 16%,transparent)}
+.asvl-cycle li.is-current::before{content:"▶";border-color:var(--asvl-accent);color:var(--asvl-accent)}
+.asvl-cycle li.is-complete::before{content:"✓";background:var(--asvl-success);border-color:var(--asvl-success);color:#fff}
+.asvl-prediction,.asvl-activity,.asvl-locator,.asvl-explanation,.asvl-transfer,.asvl-route{padding:16px 20px;border-top:1px solid var(--asvl-line)}
+.asvl-prediction{background:color-mix(in srgb,var(--asvl-accent) 5%,var(--asvl-surface))}
+.asvl-choice-row{display:flex;gap:9px;flex-wrap:wrap}
+.asvl-choice{flex:1 1 190px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line)}
+.asvl-choice[aria-pressed="true"]{border-color:var(--asvl-accent);background:var(--asvl-accent-soft);box-shadow:inset 0 0 0 2px var(--asvl-accent)}
+.asvl-small{margin:3px 0 10px!important;color:var(--asvl-muted-text)!important;font-size:.86rem!important}
+.asvl-prompt{margin:4px 0 13px!important;font-weight:700}
+.asvl-activity{position:relative}
+.asvl-activity-lock{margin:0 0 12px!important;padding:10px 12px;border:2px dashed var(--asvl-warning);border-radius:10px;background:color-mix(in srgb,var(--asvl-warning) 9%,var(--asvl-surface));font-weight:800}
+.asvl-canvas{min-height:120px}
+.asvl-feedback{margin-top:13px;padding:11px 13px;border-left:6px solid var(--asvl-accent);border-radius:8px;background:color-mix(in srgb,var(--asvl-accent) 8%,var(--asvl-surface));font-weight:800}
+.asvl-feedback.is-success{border-color:var(--asvl-success);background:color-mix(in srgb,var(--asvl-success) 10%,var(--asvl-surface))}
+.asvl-feedback.is-retry{border-color:var(--asvl-error);background:color-mix(in srgb,var(--asvl-error) 8%,var(--asvl-surface))}
+.asvl-feedback.is-prompt{border-color:var(--asvl-warning);background:color-mix(in srgb,var(--asvl-warning) 9%,var(--asvl-surface))}
+.asvl-sort-layout{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(360px,1.4fr);gap:14px}
+.asvl-bank,.asvl-sort-target,.asvl-run-card,.asvl-hotspot-note,.asvl-locator-group,.asvl-success-checks{
+  border:2px solid var(--asvl-line);border-radius:12px;background:color-mix(in srgb,var(--asvl-ink) 2%,var(--asvl-surface));padding:12px
+}
+.asvl-item-grid{display:grid;gap:8px}
+.asvl-sort-item{width:100%;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line)}
+.asvl-sort-item.is-selected{border-color:var(--asvl-accent);background:var(--asvl-accent-soft);box-shadow:inset 0 0 0 2px var(--asvl-accent)}
+.asvl-target-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.asvl-sort-target{min-height:150px}
+.asvl-target-button{width:100%;justify-content:center;text-align:center}
+.asvl-placed-list{display:grid;gap:6px;margin-top:8px}
+.asvl-placed-card{padding:7px 8px;border-left:4px solid var(--asvl-success);border-radius:6px;background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface));font-size:.84rem;font-weight:700}
+.asvl-sequence-list{list-style:none;margin:0 0 12px!important;padding:0!important;display:grid;gap:8px}
+.asvl-sequence-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
+.asvl-sequence-row.is-correct{border-color:var(--asvl-success);background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
+.asvl-sequence-number{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
+.asvl-sequence-text{font-weight:750}
+.asvl-sequence-controls{display:flex;gap:5px}
+.asvl-mini-button{min-height:36px;padding:6px 8px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line);font-size:.76rem}
+.asvl-evidence-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin-bottom:12px}
+.asvl-evidence-card{position:relative;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line);padding-left:40px}
+.asvl-evidence-card::before{content:"□";position:absolute;left:12px;top:50%;translate:0 -50%;font-size:1.2rem}
+.asvl-evidence-card[aria-pressed="true"]{border-color:var(--asvl-accent);background:var(--asvl-accent-soft)}
+.asvl-evidence-card[aria-pressed="true"]::before{content:"☑"}
+.asvl-evidence-card.is-correct-choice{border-color:var(--asvl-success)}
+.asvl-evidence-card.is-wrong-choice{border-color:var(--asvl-error);text-decoration:line-through 2px color-mix(in srgb,var(--asvl-error) 65%,transparent)}
+.asvl-evidence-card.is-missed-choice{border-style:dashed;border-color:var(--asvl-warning)}
+.asvl-hotspot-scene{position:relative;aspect-ratio:16/8.7;max-height:390px;border:2px solid var(--asvl-line);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,color-mix(in srgb,var(--asvl-accent) 10%,var(--asvl-surface)),var(--asvl-surface))}
+.asvl-hotspot-svg{width:100%;height:100%;display:block}
+.asvl-scene-line{fill:none;stroke:var(--asvl-accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.asvl-scene-shape{fill:var(--asvl-accent-soft);stroke:var(--asvl-accent);stroke-width:1.4}
+.asvl-hotspot-button{position:absolute;translate:-50% -50%;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;padding:0;text-align:center;animation:asvl-attention 1.8s ease 2}
+.asvl-hotspot-button.is-open{background:var(--asvl-success);border-color:var(--asvl-success)}
+.asvl-hotspot-notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px}
+.asvl-hotspot-note p{margin:4px 0 0!important;font-size:.86rem!important}
+.asvl-model-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:12px}
+.asvl-model-control{display:grid;gap:5px;font-weight:800}
+.asvl-panel select{width:100%;min-height:44px;border:2px solid var(--asvl-line);border-radius:9px;background:var(--asvl-surface);color:var(--asvl-ink);padding:8px;font:inherit}
+.asvl-run-history{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:9px;margin-top:12px}
+.asvl-run-card{border-left:7px solid var(--asvl-accent)}
+.asvl-run-card p{margin:4px 0!important}
+.asvl-run-card ul{margin:7px 0 0 18px!important;padding:0!important}
+.asvl-run-card li{font-size:.84rem!important}
+.asvl-locator{background:color-mix(in srgb,var(--asvl-accent) 5%,var(--asvl-surface))}
+.asvl-locator.is-locked{opacity:.68}
+.asvl-locator-group{margin:10px 0}
+.asvl-locator-group legend{padding:0 5px;font-weight:900}
+.asvl-radio-card{display:block;position:relative;margin:6px 0;cursor:pointer}
+.asvl-radio-card input{position:absolute;opacity:0;pointer-events:none}
+.asvl-radio-card span{display:block;padding:9px 10px 9px 38px;border:2px solid var(--asvl-line);border-radius:9px;background:var(--asvl-surface);font-weight:700}
+.asvl-radio-card span::before{content:"○";position:absolute;left:12px;top:50%;translate:0 -50%;font-size:1.15rem}
+.asvl-radio-card input:checked+span{border-color:var(--asvl-accent);background:var(--asvl-accent-soft);box-shadow:inset 0 0 0 1px var(--asvl-accent)}
+.asvl-radio-card input:checked+span::before{content:"◉";color:var(--asvl-accent)}
+.asvl-radio-card input:disabled+span{cursor:not-allowed;opacity:.6}
+.asvl-caution{margin:10px 0 0!important;padding:9px 11px;border-left:5px solid var(--asvl-warning);background:color-mix(in srgb,var(--asvl-warning) 8%,var(--asvl-surface));font-size:.82rem!important;font-weight:750}
+.asvl-explanation{background:color-mix(in srgb,var(--asvl-success) 4%,var(--asvl-surface))}
+.asvl-explanation-body{margin-top:12px;padding:13px;border:2px solid var(--asvl-success);border-radius:12px;background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
+.asvl-completion{font-size:1.05rem!important;font-weight:900}
+.asvl-prediction-review{font-size:.86rem!important;color:var(--asvl-muted-text)!important}
+.asvl-transfer{background:var(--asvl-surface)}
+.asvl-independent-task{padding:13px;border-left:7px solid var(--asvl-accent);background:var(--asvl-accent-soft);font-weight:900}
+.asvl-independence-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0!important;padding:0!important;counter-reset:step;list-style:none}
+.asvl-independence-steps li{position:relative;min-height:110px;margin:0!important;padding:39px 10px 10px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface);font-size:.86rem!important;font-weight:750}
+.asvl-independence-steps li::before{counter-increment:step;content:counter(step);position:absolute;top:8px;left:9px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
+.asvl-success-checks{margin:10px 0}
+.asvl-success-checks ul{margin:6px 0 0 18px!important;padding:0!important}
+.asvl-help-ladder{margin:10px 0;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
+.asvl-help-ladder summary{padding:10px 12px;cursor:pointer;font-weight:900}
+.asvl-help-ladder ol{margin:0 0 12px 28px!important;padding-right:12px}
+.asvl-route{background:color-mix(in srgb,var(--asvl-ink) 4%,var(--asvl-surface))}
+.asvl-route p{margin:5px 0 0!important;font-size:.82rem!important;color:var(--asvl-muted-text)!important}
+.asvl-live{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.asvl-panel.is-transfer-mode>.asvl-prediction,.asvl-panel.is-transfer-mode>.asvl-activity,.asvl-panel.is-transfer-mode>.asvl-locator,.asvl-panel.is-transfer-mode>.asvl-explanation{display:none}
+.asvl-static *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@keyframes asvl-attention{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--asvl-accent) 30%,transparent)}50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--asvl-accent) 0%,transparent)}}
+@media (max-width:760px){
+  .asvl-header{display:grid}
+  .asvl-tools{justify-content:flex-start}
+  .asvl-cycle{grid-template-columns:1fr 1fr}
+  .asvl-sort-layout{grid-template-columns:1fr}
+  .asvl-sequence-row{grid-template-columns:34px 1fr}
+  .asvl-sequence-controls{grid-column:2;justify-content:flex-start}
+  .asvl-independence-steps{grid-template-columns:1fr 1fr}
+}
+@media (max-width:460px){
+  .asvl-panel{border-radius:12px;margin-bottom:72px}
+  .asvl-header,.asvl-prediction,.asvl-activity,.asvl-locator,.asvl-explanation,.asvl-transfer,.asvl-route{padding:14px}
+  .asvl-notice,.asvl-cycle{padding-inline:14px!important}
+  .asvl-cycle{grid-template-columns:1fr}
+  .asvl-choice,.asvl-button{width:100%;text-align:center}
+  .asvl-independence-steps{grid-template-columns:1fr}
+  .asvl-independence-steps li{min-height:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .asvl-panel *,.asvl-panel *::before,.asvl-panel *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media print{
+  .asvl-panel{display:none!important}
+}
+</style>
+<script>
+window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"BUILD_DT_W4_Assembly":{"path":"Build/Slideshows/BUILD_DT_W4_Assembly.html","pathway":"BUILD","subsection":"D&T Community Upcycling","lessonTitle":"Week 4 · The Assembly","targetTitle":"We Do 1","title":"Assembly joint control model","purpose":"Make three interacting quality decisions visible before pupils perform a supervised assembly.","activity":{"type":"model","prompt":"Choose joint alignment, pilot preparation and screw finish. Predict whether the assembly will be strong, square and safe to handle.","controls":[{"id":"c1","label":"Alignment","default":"free","options":[{"value":"free","label":"Parts held by eye only","quality":0,"feedback":"The joint may move or finish out of square."},{"value":"jig","label":"Clamped or supported to the demonstrated square reference","quality":2,"feedback":"Position is controlled during assembly."}]},{"id":"c2","label":"Pilot preparation","default":"none","options":[{"value":"none","label":"No pilot where the plan requires one","quality":0,"feedback":"The timber may split or the fixing may wander."},{"value":"pilot","label":"Pilot prepared to the teacher-approved method","quality":2,"feedback":"The fixing route is controlled."}]},{"id":"c3","label":"Finish","default":"proud","options":[{"value":"proud","label":"Fixing left proud","quality":0,"feedback":"It may catch and the joint may not seat correctly."},{"value":"flush","label":"Correctly seated or countersunk to the plan","quality":2,"feedback":"The surface and joint meet the quality check."}]}],"outcomes":[{"min":0,"max":2,"label":"weak or unsafe assembly risk","message":"Several controls are absent."},{"min":3,"max":4,"label":"assembly needs one correction","message":"One joint condition remains unreliable."},{"min":5,"max":6,"label":"ready for physical quality check","message":"Alignment, preparation and finish connect; the real joint still needs inspection."}],"completion":"A reliable assembly controls position before fixing, follows the specified pilot method and finishes the fixing safely.","predictionOptions":["The joint will be weak or out of square","The joint will need one correction","The joint will be ready for quality checking"],"requiredRuns":1},"independent":"Assemble the practice joint using the teacher-approved method. Check square, stability and fixing finish against the physical sample.","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original exploded joint diagram with clamp, pilot path, fixing and square/flush checks.","mediaKey":"workshop","slug":"BUILD_DT_W4_Assembly","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["SEE","CHOOSE","SAY","DO"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"payloadSha256":"74ec9a4dc17490b6797de91bfbad5cc9edb06f206d1e93469717ae81ef3087ad"}});
+/* ============================================================================
+ * STATUS: mounted across all 85 taught ASDAN decks. The BLOCKED banner that
+ * headed this file has been REMOVED, not softened -- it had become untrue.
+ * All four original blocking items are closed; the only parked item is
+ * docs/MEDIA_REGISTER.md, a candidate register that gates nothing (0 external
+ * URLs in the payloads, so no mounted surface depends on it).
+ *
+ * Accessibility: eyebrow, sequence badges and buttons render on a SOLID chip
+ * (--asvl-accent-chip, the pathway hue at a 74% mix toward black). The pair is
+ * known rather than inherited, because the header tint moves per deck.
+ * ========================================================================== */
+
+/* ASDAN Visual Learning — progressive enhancement, rehearsal only. */
+(() => {
+  'use strict';
+
+  const API_NAME = 'ASDANVisualLearning';
+  if (window[API_NAME]?.version) return;
+
+  const qs = (selector, root = document) => root.querySelector(selector);
+  const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const el = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  };
+  const button = (label, className = 'asvl-button') => {
+    const node = el('button', className, label);
+    node.type = 'button';
+    return node;
+  };
+  const setText = (node, text) => { if (node) node.textContent = String(text ?? ''); };
+
+  /* Reduced motion, watched rather than sampled once.
+     The blanket CSS rule already suppressed animation when the OS asked for it,
+     but nothing in JS read the preference, so .asvl-static -- and the button that
+     reports it -- stayed false while motion was actually off. Pattern taken from
+     art-visual-learning.js, which fixed the same defect in the same shape. */
+  const motionQuery = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : null;
+  const prefersReducedMotion = () => !!(motionQuery && motionQuery.matches);
+  const motionSubscribers = new Set();
+  if (motionQuery) {
+    const onMotionChange = () => { motionSubscribers.forEach(fn => { try { fn(); } catch (e) {} }); };
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+    else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+  }
+  const slugFromLocation = () => {
+    const declared = document.documentElement.dataset.asdanLesson || document.body?.dataset.asdanLesson;
+    if (declared) return declared;
+    const path = decodeURIComponent(location.pathname || '');
+    const name = path.split('/').pop() || '';
+    return name.replace(/\.html?$/i, '');
+  };
+  const seededShuffle = (values, seedText) => {
+    const out = values.slice();
+    let seed = 2166136261;
+    for (const char of String(seedText)) {
+      seed ^= char.charCodeAt(0);
+      seed = Math.imul(seed, 16777619) >>> 0;
+    }
+    const next = () => {
+      seed += 0x6D2B79F5;
+      let t = seed;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    for (let i = out.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(next() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    if (out.length > 2 && out.every((item, index) => item === values[index])) {
+      [out[0], out[1]] = [out[1], out[0]];
+    }
+    return out;
+  };
+  const announce = (panel, message) => {
+    const live = qs('.asvl-live', panel);
+    if (!live) return;
+    live.textContent = '';
+    window.setTimeout(() => { live.textContent = String(message); }, 20);
+  };
+  const safeFocus = node => { try { node?.focus({ preventScroll: false }); } catch (_) { node?.focus?.(); } };
+
+  const pathwayCopy = {
+    BUILD: {
+      eyebrow: 'BUILD · SEE → CHOOSE → SAY → DO',
+      predictionTitle: 'Look first',
+      completionLead: 'You have rehearsed the decision.',
+      colourLabel: 'BUILD visual rehearsal'
+    },
+    GROW: {
+      eyebrow: 'GROW · PREDICT → TEST → COMPARE → JUSTIFY',
+      predictionTitle: 'Commit a prediction',
+      completionLead: 'You have compared evidence rather than guessed.',
+      colourLabel: 'GROW visual investigation'
+    },
+    LAUNCH: {
+      eyebrow: 'LAUNCH · INVESTIGATE → LOCATE EVIDENCE → REASON → ACT',
+      predictionTitle: 'Commit a prediction',
+      completionLead: 'The investigation is complete; now locate authentic evidence.',
+      colourLabel: 'LAUNCH evidence-led investigation'
+    }
+  };
+
+  function createState(payload) {
+    const activity = payload.activity;
+    const state = {
+      prediction: null,
+      completed: false,
+      explanationOpen: false,
+      transferOpen: false,
+      staticMode: false,
+      selectedItem: null,
+      placed: new Map(),
+      selectedEvidence: new Set(),
+      openedHotspots: new Set(),
+      sequence: activity.type === 'sequence'
+        ? seededShuffle(activity.steps.map(step => step.id), payload.slug)
+        : [],
+      runs: [],
+      locator: { evidenceForm: null, location: null, route: null },
+      feedback: '',
+      feedbackKind: 'neutral'
+    };
+    return state;
+  }
+
+  function targetForPayload(payload) {
+    const exact = qsa('.slide').find(slide => (slide.getAttribute('data-title') || '').trim() === payload.targetTitle);
+    if (exact) return exact;
+    const wedo = qs('.slide[data-type="wedo"]') || qsa('.slide').find(slide => /we do/i.test(slide.getAttribute('data-title') || ''));
+    return wedo || qs('.slide.active') || qs('main') || document.body;
+  }
+
+  function createPanel(payload) {
+    const panel = el('section', `asvl-panel asvl-${payload.pathway.toLowerCase()}`);
+    panel.dataset.asdanVisualLearning = payload.slug;
+    panel.dataset.pathway = payload.pathway;
+    panel.setAttribute('aria-label', `${payload.title}. ${pathwayCopy[payload.pathway].colourLabel}`);
+    panel.tabIndex = -1;
+
+    const header = el('header', 'asvl-header');
+    const headText = el('div', 'asvl-header-text');
+    headText.append(
+      el('p', 'asvl-eyebrow', pathwayCopy[payload.pathway].eyebrow),
+      el('h3', 'asvl-title', payload.title),
+      el('p', 'asvl-purpose', payload.purpose)
+    );
+    const tools = el('div', 'asvl-tools');
+    const staticBtn = button('▣ Static diagrams', 'asvl-button asvl-button-secondary asvl-static-toggle');
+    staticBtn.setAttribute('aria-pressed', 'false');
+    const resetBtn = button('↺ Reset rehearsal', 'asvl-button asvl-button-secondary asvl-reset');
+    tools.append(staticBtn, resetBtn);
+    header.append(headText, tools);
+
+    const notice = el('p', 'asvl-notice', payload.panelNotice);
+    const cycle = el('ol', 'asvl-cycle');
+    payload.pathwayCycle.forEach((label, index) => {
+      const item = el('li', index === 0 ? 'is-current' : '', label);
+      item.dataset.stage = String(index);
+      cycle.append(item);
+    });
+
+    const prediction = el('section', 'asvl-prediction');
+    const activity = el('section', 'asvl-activity');
+    const locator = el('section', 'asvl-locator');
+    const explanation = el('section', 'asvl-explanation');
+    const transfer = el('section', 'asvl-transfer');
+    const route = el('aside', 'asvl-route');
+    route.append(
+      el('h4', '', 'Teacher, assessor and access route'),
+      el('p', '', 'Use the lesson’s existing teacher, TA, assessor, responsible-adult, safety and reasonable-adjustment routes. This rehearsal cannot approve a risk, permission, criterion, level, evidence state or qualification outcome.')
+    );
+    const live = el('div', 'asvl-live');
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('aria-atomic', 'true');
+
+    panel.append(header, notice, cycle, prediction, activity, locator, explanation, transfer, route, live);
+    return panel;
+  }
+
+  function setCycle(panel, stage) {
+    qsa('.asvl-cycle li', panel).forEach((item, index) => {
+      item.classList.toggle('is-current', index === stage);
+      item.classList.toggle('is-complete', index < stage);
+      if (index === stage) item.setAttribute('aria-current', 'step');
+      else item.removeAttribute('aria-current');
+    });
+  }
+
+  function setFeedback(panel, message, kind = 'neutral') {
+    const box = qs('.asvl-feedback', panel);
+    if (!box) return;
+    box.className = `asvl-feedback is-${kind}`;
+    setText(box, message);
+    box.hidden = !message;
+    if (message) announce(panel, message);
+  }
+
+  function renderPrediction(panel, payload, state) {
+    const wrap = qs('.asvl-prediction', panel);
+    wrap.replaceChildren();
+    const options = payload.activity.predictionOptions || [];
+    if (payload.pathway === 'BUILD' || !options.length) {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    const heading = el('h4', '', pathwayCopy[payload.pathway].predictionTitle);
+    const prompt = el('p', 'asvl-small', 'Choose the result or factor you expect before manipulating the information. You may revise your thinking after the evidence freezes.');
+    const group = el('div', 'asvl-choice-row');
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-label', 'Prediction choices');
+    options.forEach((option, index) => {
+      const choice = button(option, 'asvl-choice');
+      choice.dataset.prediction = String(index);
+      choice.setAttribute('aria-pressed', state.prediction === index ? 'true' : 'false');
+      choice.addEventListener('click', () => {
+        state.prediction = index;
+        qsa('.asvl-choice', group).forEach((node, nodeIndex) => {
+          node.setAttribute('aria-pressed', nodeIndex === index ? 'true' : 'false');
+        });
+        panel.classList.add('has-prediction');
+        setCycle(panel, 1);
+        setActivityLocked(panel, false);
+        announce(panel, `Prediction recorded: ${option}. The activity is now available.`);
+        const firstControl = qs('.asvl-activity button:not([disabled]), .asvl-activity select:not([disabled])', panel);
+        safeFocus(firstControl);
+      });
+      group.append(choice);
+    });
+    wrap.append(heading, prompt, group);
+  }
+
+  function setActivityLocked(panel, locked) {
+    const activity = qs('.asvl-activity', panel);
+    activity.classList.toggle('is-locked', locked);
+    qsa('button, select', activity).forEach(control => {
+      if (control.dataset.keepEnabled === 'true') return;
+      control.disabled = locked;
+    });
+    const lock = qs('.asvl-activity-lock', activity);
+    if (lock) lock.hidden = !locked;
+  }
+
+  function commonActivityShell(panel, payload, state) {
+    const wrap = qs('.asvl-activity', panel);
+    wrap.replaceChildren();
+    const heading = el('h4', '', 'Manipulate the information');
+    const prompt = el('p', 'asvl-prompt', payload.activity.prompt);
+    const lock = el('p', 'asvl-activity-lock', 'Choose a prediction first. This prevents hindsight from replacing thinking.');
+    const canvas = el('div', 'asvl-canvas');
+    const feedback = el('div', 'asvl-feedback');
+    feedback.hidden = true;
+    feedback.setAttribute('role', 'status');
+    wrap.append(heading, prompt, lock, canvas, feedback);
+    const locked = payload.pathway !== 'BUILD' && state.prediction === null;
+    setActivityLocked(panel, locked);
+    return canvas;
+  }
+
+  function completeActivity(panel, payload, state) {
+    if (state.completed) return;
+    state.completed = true;
+    panel.classList.add('is-activity-complete');
+    setCycle(panel, payload.pathway === 'LAUNCH' ? 1 : 2);
+    qsa('.asvl-activity button, .asvl-activity select', panel).forEach(control => {
+      if (!control.classList.contains('asvl-reset')) control.disabled = true;
+    });
+    setFeedback(panel, `${pathwayCopy[payload.pathway].completionLead} ${payload.activity.completion}`, 'success');
+    renderLocator(panel, payload, state);
+    renderExplanation(panel, payload, state);
+  }
+
+  function renderSort(panel, payload, state) {
+    const canvas = commonActivityShell(panel, payload, state);
+    const activity = payload.activity;
+    const layout = el('div', 'asvl-sort-layout');
+    const bank = el('div', 'asvl-bank');
+    bank.append(el('h5', '', 'Choose one card'));
+    const items = el('div', 'asvl-item-grid');
+    const targets = el('div', 'asvl-target-grid');
+
+    const chooseItem = itemId => {
+      if (state.placed.has(itemId)) return;
+      state.selectedItem = itemId;
+      qsa('.asvl-sort-item', panel).forEach(node => {
+        const selected = node.dataset.itemId === itemId;
+        node.classList.toggle('is-selected', selected);
+        node.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+      const item = activity.items.find(entry => entry.id === itemId);
+      setFeedback(panel, `Selected: ${item.label}. Now choose a destination.`, 'neutral');
+    };
+
+    activity.items.forEach(item => {
+      const card = button(`${item.icon || '◆'} ${item.label}`, 'asvl-sort-item');
+      card.dataset.itemId = item.id;
+      card.setAttribute('aria-pressed', 'false');
+      card.draggable = true;
+      card.addEventListener('click', () => chooseItem(item.id));
+      card.addEventListener('dragstart', event => {
+        event.dataTransfer?.setData('text/plain', item.id);
+        chooseItem(item.id);
+      });
+      if (state.placed.has(item.id)) card.hidden = true;
+      items.append(card);
+    });
+
+    activity.categories.forEach(category => {
+      const target = el('div', 'asvl-sort-target');
+      target.dataset.categoryId = category.id;
+      const targetButton = button(`${category.icon || '◇'} ${category.label}`, 'asvl-target-button');
+      targetButton.addEventListener('click', () => place(state.selectedItem, category.id));
+      const placed = el('div', 'asvl-placed-list');
+      placed.setAttribute('aria-label', `Cards placed under ${category.label}`);
+      for (const [itemId, categoryId] of state.placed.entries()) {
+        if (categoryId !== category.id) continue;
+        const item = activity.items.find(entry => entry.id === itemId);
+        placed.append(el('div', 'asvl-placed-card', `✓ ${item.label}`));
+      }
+      target.addEventListener('dragover', event => event.preventDefault());
+      target.addEventListener('drop', event => {
+        event.preventDefault();
+        const itemId = event.dataTransfer?.getData('text/plain') || state.selectedItem;
+        place(itemId, category.id);
+      });
+      target.append(targetButton, placed);
+      targets.append(target);
+    });
+
+    function place(itemId, categoryId) {
+      if (!itemId) {
+        setFeedback(panel, 'Choose a card before choosing a destination.', 'prompt');
+        return;
+      }
+      const item = activity.items.find(entry => entry.id === itemId);
+      if (!item || state.placed.has(itemId)) return;
+      if (item.answer !== categoryId) {
+        setFeedback(panel, `Not there yet. ${item.reason}`, 'retry');
+        return;
+      }
+      state.placed.set(itemId, categoryId);
+      state.selectedItem = null;
+      setFeedback(panel, `Placed correctly. ${item.reason}`, 'success');
+      renderSort(panel, payload, state);
+      if (state.placed.size === activity.items.length) completeActivity(panel, payload, state);
+      else {
+        setCycle(panel, 1);
+        const next = qs('.asvl-sort-item:not([hidden])', panel);
+        safeFocus(next);
+      }
+    }
+
+    bank.append(items);
+    layout.append(bank, targets);
+    canvas.append(layout);
+  }
+
+  function renderSequence(panel, payload, state) {
+    const canvas = commonActivityShell(panel, payload, state);
+    const activity = payload.activity;
+    const list = el('ol', 'asvl-sequence-list');
+    state.sequence.forEach((stepId, index) => {
+      const step = activity.steps.find(entry => entry.id === stepId);
+      const row = el('li', 'asvl-sequence-row');
+      const number = el('span', 'asvl-sequence-number', String(index + 1));
+      const text = el('span', 'asvl-sequence-text', step.label);
+      const controls = el('span', 'asvl-sequence-controls');
+      const up = button('↑ Move up', 'asvl-mini-button');
+      const down = button('↓ Move down', 'asvl-mini-button');
+      up.setAttribute('aria-label', `Move ${step.label} up`);
+      down.setAttribute('aria-label', `Move ${step.label} down`);
+      up.disabled = index === 0 || (payload.pathway !== 'BUILD' && state.prediction === null);
+      down.disabled = index === state.sequence.length - 1 || (payload.pathway !== 'BUILD' && state.prediction === null);
+      up.addEventListener('click', () => {
+        [state.sequence[index - 1], state.sequence[index]] = [state.sequence[index], state.sequence[index - 1]];
+        renderSequence(panel, payload, state);
+        safeFocus(qsa('.asvl-sequence-row', panel)[index - 1]?.querySelector('button'));
+      });
+      down.addEventListener('click', () => {
+        [state.sequence[index + 1], state.sequence[index]] = [state.sequence[index], state.sequence[index + 1]];
+        renderSequence(panel, payload, state);
+        safeFocus(qsa('.asvl-sequence-row', panel)[index + 1]?.querySelector('button'));
+      });
+      controls.append(up, down);
+      row.append(number, text, controls);
+      list.append(row);
+    });
+    const check = button('Check the sequence', 'asvl-button asvl-check');
+    check.addEventListener('click', () => {
+      const expected = activity.steps.map(step => step.id);
+      const correct = state.sequence.every((id, index) => id === expected[index]);
+      if (correct) {
+        qsa('.asvl-sequence-row', panel).forEach(row => row.classList.add('is-correct'));
+        completeActivity(panel, payload, state);
+      } else {
+        const firstWrong = state.sequence.findIndex((id, index) => id !== expected[index]);
+        const expectedStep = activity.steps[firstWrong];
+        setFeedback(panel, `Recheck position ${firstWrong + 1}. Ask what must already be true before “${expectedStep.label}”.`, 'retry');
+      }
+    });
+    canvas.append(list, check);
+  }
+
+  function renderEvidence(panel, payload, state) {
+    const canvas = commonActivityShell(panel, payload, state);
+    const activity = payload.activity;
+    const grid = el('div', 'asvl-evidence-grid');
+    activity.statements.forEach(statement => {
+      const card = button(statement.label, 'asvl-evidence-card');
+      card.dataset.statementId = statement.id;
+      const selected = state.selectedEvidence.has(statement.id);
+      card.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      card.classList.toggle('is-selected', selected);
+      card.addEventListener('click', () => {
+        if (state.selectedEvidence.has(statement.id)) state.selectedEvidence.delete(statement.id);
+        else state.selectedEvidence.add(statement.id);
+        renderEvidence(panel, payload, state);
+        setFeedback(panel, `${state.selectedEvidence.size} item${state.selectedEvidence.size === 1 ? '' : 's'} selected. Check when the set is complete.`, 'neutral');
+      });
+      grid.append(card);
+    });
+    const check = button('Check the evidence set', 'asvl-button asvl-check');
+    check.addEventListener('click', () => {
+      const correctIds = new Set(activity.statements.filter(item => item.correct).map(item => item.id));
+      const exact = correctIds.size === state.selectedEvidence.size &&
+        Array.from(correctIds).every(id => state.selectedEvidence.has(id));
+      qsa('.asvl-evidence-card', panel).forEach(card => {
+        const statement = activity.statements.find(item => item.id === card.dataset.statementId);
+        const selected = state.selectedEvidence.has(statement.id);
+        card.classList.toggle('is-correct-choice', selected && statement.correct);
+        card.classList.toggle('is-wrong-choice', selected && !statement.correct);
+        card.classList.toggle('is-missed-choice', !selected && statement.correct);
+      });
+      if (exact) {
+        completeActivity(panel, payload, state);
+      } else {
+        const selectedWrong = activity.statements.find(item => state.selectedEvidence.has(item.id) && !item.correct);
+        const missed = activity.statements.find(item => !state.selectedEvidence.has(item.id) && item.correct);
+        const focus = selectedWrong || missed;
+        setFeedback(panel, focus ? focus.reason : 'Recheck the complete set.', 'retry');
+      }
+    });
+    canvas.append(grid, check);
+  }
+
+  function sceneSvg(scene, label) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 100 70');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', `${label}. Simplified original teaching model.`);
+    svg.classList.add('asvl-hotspot-svg');
+    const ns = 'http://www.w3.org/2000/svg';
+    const rect = (x, y, w, h, cls) => {
+      const node = document.createElementNS(ns, 'rect');
+      node.setAttribute('x', x); node.setAttribute('y', y); node.setAttribute('width', w); node.setAttribute('height', h);
+      node.setAttribute('rx', '3'); node.setAttribute('class', cls);
+      return node;
+    };
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', scene === 'room'
+      ? 'M8 58 H92 M12 58 V18 H88 V58 M35 18 V58 M64 18 V58'
+      : scene === 'workplace'
+        ? 'M6 58 H94 M12 58 V26 L28 14 L44 26 V58 M55 58 V20 H86 V58'
+        : 'M5 60 C24 44 34 62 50 49 C64 38 76 46 95 28');
+    path.setAttribute('class', 'asvl-scene-line');
+    svg.append(path);
+    svg.append(rect(10, 10, 22, 14, 'asvl-scene-shape'));
+    svg.append(rect(39, 23, 22, 14, 'asvl-scene-shape'));
+    svg.append(rect(68, 10, 22, 14, 'asvl-scene-shape'));
+    svg.append(rect(17, 45, 22, 14, 'asvl-scene-shape'));
+    svg.append(rect(62, 43, 22, 14, 'asvl-scene-shape'));
+    return svg;
+  }
+
+  function renderHotspot(panel, payload, state) {
+    const canvas = commonActivityShell(panel, payload, state);
+    const activity = payload.activity;
+    const scene = el('div', 'asvl-hotspot-scene');
+    scene.append(sceneSvg(activity.scene || 'map', payload.title));
+    activity.hotspots.forEach((spot, index) => {
+      const spotButton = button(String(index + 1), 'asvl-hotspot-button');
+      spotButton.style.left = `${spot.x}%`;
+      spotButton.style.top = `${spot.y}%`;
+      spotButton.setAttribute('aria-label', `Open hotspot ${index + 1}: ${spot.label}`);
+      const opened = state.openedHotspots.has(spot.id);
+      spotButton.classList.toggle('is-open', opened);
+      spotButton.setAttribute('aria-pressed', opened ? 'true' : 'false');
+      spotButton.addEventListener('click', () => {
+        state.openedHotspots.add(spot.id);
+        renderHotspot(panel, payload, state);
+        setFeedback(panel, `${spot.label}. ${spot.note}`, 'success');
+        if (state.openedHotspots.size === activity.hotspots.length) completeActivity(panel, payload, state);
+      });
+      scene.append(spotButton);
+    });
+    const notes = el('div', 'asvl-hotspot-notes');
+    activity.hotspots.forEach((spot, index) => {
+      if (!state.openedHotspots.has(spot.id)) return;
+      const note = el('article', 'asvl-hotspot-note');
+      note.append(el('strong', '', `${index + 1}. ${spot.label}`), el('p', '', spot.note));
+      notes.append(note);
+    });
+    canvas.append(scene, notes);
+  }
+
+  function findOutcome(activity, score) {
+    return activity.outcomes.find(outcome => score >= outcome.min && score <= outcome.max)
+      || activity.outcomes[activity.outcomes.length - 1];
+  }
+
+  function renderModel(panel, payload, state) {
+    const canvas = commonActivityShell(panel, payload, state);
+    const activity = payload.activity;
+    const form = el('div', 'asvl-model');
+    const controlsWrap = el('div', 'asvl-model-controls');
+    activity.controls.forEach(control => {
+      const label = el('label', 'asvl-model-control');
+      label.append(el('span', '', control.label));
+      const select = el('select', '');
+      select.dataset.controlId = control.id;
+      control.options.forEach(option => {
+        const optionNode = el('option', '', option.label);
+        optionNode.value = option.value;
+        select.append(optionNode);
+      });
+      const last = state.runs[state.runs.length - 1];
+      select.value = last?.values?.[control.id] ?? control.default ?? control.options[0].value;
+      label.append(select);
+      controlsWrap.append(label);
+    });
+
+    const run = button(state.runs.length ? 'Run one controlled change' : 'Run and freeze the result', 'asvl-button asvl-run');
+    run.addEventListener('click', () => {
+      const values = {};
+      let score = 0;
+      const feedback = [];
+      activity.controls.forEach(control => {
+        const value = qs(`select[data-control-id="${CSS.escape(control.id)}"]`, panel)?.value;
+        values[control.id] = value;
+        const option = control.options.find(item => item.value === value) || control.options[0];
+        score += Number(option.quality || 0);
+        feedback.push(`${control.label}: ${option.feedback}`);
+      });
+      if (state.runs.length && activity.requiredRuns > 1) {
+        const previous = state.runs[state.runs.length - 1].values;
+        const changed = Object.keys(values).filter(key => values[key] !== previous[key]);
+        if (changed.length !== 1) {
+          setFeedback(panel, `Change exactly one variable between frozen runs. You changed ${changed.length}.`, 'retry');
+          return;
+        }
+      }
+      const outcome = findOutcome(activity, score);
+      state.runs.push({ values, score, outcome, feedback });
+      setCycle(panel, 2);
+      setFeedback(panel, `Frozen result ${state.runs.length}: ${outcome.label}. ${outcome.message}`, 'success');
+      renderModel(panel, payload, state);
+      if (state.runs.length >= activity.requiredRuns) completeActivity(panel, payload, state);
+    });
+
+    const history = el('div', 'asvl-run-history');
+    state.runs.forEach((record, index) => {
+      const card = el('article', 'asvl-run-card');
+      card.append(
+        el('h5', '', `Frozen run ${index + 1} · ${record.outcome.label}`),
+        el('p', '', record.outcome.message)
+      );
+      const list = el('ul', '');
+      record.feedback.forEach(line => list.append(el('li', '', line)));
+      card.append(list);
+      history.append(card);
+    });
+
+    const runRule = el('p', 'asvl-small', activity.requiredRuns > 1
+      ? `Complete ${activity.requiredRuns} frozen runs. After the first, change exactly one variable so the comparison is fair.`
+      : 'Complete one frozen run, then transfer the structure to the real task.');
+    form.append(runRule, controlsWrap, run, history);
+    canvas.append(form);
+  }
+
+  function renderActivity(panel, payload, state) {
+    const renderers = {
+      sort: renderSort,
+      sequence: renderSequence,
+      evidence: renderEvidence,
+      hotspot: renderHotspot,
+      model: renderModel
+    };
+    const renderer = renderers[payload.activity.type];
+    if (!renderer) {
+      const canvas = commonActivityShell(panel, payload, state);
+      canvas.append(el('p', 'asvl-error', `Unsupported activity type: ${payload.activity.type}`));
+      return;
+    }
+    renderer(panel, payload, state);
+  }
+
+  function locatorComplete(state) {
+    return Boolean(state.locator.evidenceForm && state.locator.location && state.locator.route);
+  }
+
+  function renderLocator(panel, payload, state) {
+    const wrap = qs('.asvl-locator', panel);
+    wrap.replaceChildren();
+    if (payload.pathway !== 'LAUNCH') {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    wrap.classList.toggle('is-locked', !state.completed);
+    wrap.append(
+      el('h4', '', 'Structured evidence locator · not an evidence judgement'),
+      el('p', 'asvl-small', 'After the real task, select where authentic evidence could be found and the authorised next route. Do not upload anything here. “Not yet” is an honest option.')
+    );
+    const groups = [
+      ['evidenceForm', 'What exists?', payload.locator.evidenceForms],
+      ['location', 'Where is it?', payload.locator.locations],
+      ['route', 'What is the next authorised route?', payload.locator.routes]
+    ];
+    groups.forEach(([key, legendText, options]) => {
+      const fieldset = el('fieldset', 'asvl-locator-group');
+      const legend = el('legend', '', legendText);
+      fieldset.append(legend);
+      options.forEach(option => {
+        const label = el('label', 'asvl-radio-card');
+        const input = el('input', '');
+        input.type = 'radio';
+        input.name = `${payload.slug}-${key}`;
+        input.value = option.id;
+        input.checked = state.locator[key] === option.id;
+        input.disabled = !state.completed;
+        input.addEventListener('change', () => {
+          state.locator[key] = option.id;
+          renderLocator(panel, payload, state);
+          renderExplanation(panel, payload, state);
+          if (locatorComplete(state)) {
+            announce(panel, 'The structured evidence locator is complete. The explanation is now available.');
+            safeFocus(qs('.asvl-open-explanation:not([disabled])', panel));
+          }
+        });
+        label.append(input, el('span', '', option.label));
+        fieldset.append(label);
+      });
+      wrap.append(fieldset);
+    });
+    const caution = el('p', 'asvl-caution', 'This locator records no evidence state. It cannot mark work achieved, verified, moderated, certified or returned. Those are authorised human and awarding-body processes.');
+    wrap.append(caution);
+  }
+
+  function canOpenExplanation(payload, state) {
+    return state.completed && (payload.pathway !== 'LAUNCH' || locatorComplete(state));
+  }
+
+  function renderExplanation(panel, payload, state) {
+    const wrap = qs('.asvl-explanation', panel);
+    wrap.replaceChildren();
+    const allowed = canOpenExplanation(payload, state);
+    const heading = el('h4', '', payload.pathway === 'LAUNCH' ? 'Reason from the evidence' : 'Name the learning');
+    const status = el('p', 'asvl-small', allowed
+      ? 'The rehearsal conditions are complete. Open the explanation, then transfer it to the real task.'
+      : payload.pathway === 'LAUNCH'
+        ? 'Complete the investigation and all three structured locator choices. Activity completion alone does not unlock the explanation.'
+        : 'Complete the manipulation before opening the explanation.');
+    const open = button(state.explanationOpen ? '✓ Explanation opened' : 'Open explanation', 'asvl-button asvl-open-explanation');
+    open.disabled = !allowed || state.explanationOpen;
+    open.addEventListener('click', () => {
+      state.explanationOpen = true;
+      const openedBy = payload.pathway === 'LAUNCH'
+        ? 'completed activity and selected structured evidence-locator route'
+        : 'completed classroom rehearsal';
+      panel.dataset.asdanOpenedBy = openedBy;
+      setCycle(panel, 2);
+      renderExplanation(panel, payload, state);
+      announce(panel, payload.activity.completion);
+      safeFocus(qs('.asvl-explanation-body', panel));
+    });
+    wrap.append(heading, status, open);
+    if (state.explanationOpen) {
+      const body = el('div', 'asvl-explanation-body');
+      body.tabIndex = -1;
+      body.append(
+        el('p', 'asvl-completion', payload.activity.completion),
+        el('p', 'asvl-prediction-review', state.prediction !== null && payload.activity.predictionOptions
+          ? `Your prediction was: ${payload.activity.predictionOptions[state.prediction]}. Compare it with the frozen evidence; changing your mind is evidence of thinking, not failure.`
+          : 'Point to the part of the frozen visual that supports the explanation.')
+      );
+      const transferBtn = button('Begin the independent task', 'asvl-button asvl-transfer-button');
+      transferBtn.addEventListener('click', () => {
+        state.transferOpen = true;
+        setCycle(panel, 3);
+        renderTransfer(panel, payload, state);
+        panel.classList.add('is-transfer-mode');
+        safeFocus(qs('.asvl-transfer', panel));
+      });
+      body.append(transferBtn);
+      wrap.append(body);
+    }
+  }
+
+  function renderTransfer(panel, payload, state) {
+    const wrap = qs('.asvl-transfer', panel);
+    wrap.replaceChildren();
+    wrap.hidden = !state.transferOpen;
+    if (!state.transferOpen) return;
+    wrap.tabIndex = -1;
+    wrap.append(
+      el('p', 'asvl-eyebrow', 'INDEPENDENT HANDOVER'),
+      el('h4', '', 'Use the rehearsal, then close the distance yourself'),
+      el('p', 'asvl-independent-task', payload.independent)
+    );
+    const steps = el('ol', 'asvl-independence-steps');
+    payload.independenceSteps.forEach(step => steps.append(el('li', '', step)));
+    const checks = el('div', 'asvl-success-checks');
+    checks.append(el('h5', '', 'Stop-and-check conditions'));
+    const checkList = el('ul', '');
+    payload.successChecks.forEach(check => checkList.append(el('li', '', check)));
+    checks.append(checkList);
+    const help = el('details', 'asvl-help-ladder');
+    const summary = el('summary', '', 'Help ladder · use the least help that works');
+    const helpList = el('ol', '');
+    payload.helpLadder.forEach(step => helpList.append(el('li', '', step)));
+    help.append(summary, helpList);
+    const back = button('Return to the frozen rehearsal', 'asvl-button asvl-button-secondary');
+    back.addEventListener('click', () => {
+      state.transferOpen = false;
+      panel.classList.remove('is-transfer-mode');
+      setCycle(panel, 2);
+      renderTransfer(panel, payload, state);
+      safeFocus(qs('.asvl-transfer-button', panel));
+    });
+    wrap.append(steps, checks, help, back);
+  }
+
+  function resetPanel(panel, payload, stateRef) {
+    const replacement = createState(payload);
+    Object.keys(stateRef).forEach(key => delete stateRef[key]);
+    Object.assign(stateRef, replacement);
+    panel.classList.remove('has-prediction', 'is-activity-complete', 'is-transfer-mode', 'asvl-static');
+    /* Reset clears the user's override, never the machine's preference. */
+    panel.classList.toggle('asvl-static', prefersReducedMotion());
+    delete panel.dataset.asdanOpenedBy;
+    setCycle(panel, 0);
+    renderPrediction(panel, payload, stateRef);
+    renderActivity(panel, payload, stateRef);
+    renderLocator(panel, payload, stateRef);
+    renderExplanation(panel, payload, stateRef);
+    renderTransfer(panel, payload, stateRef);
+    announce(panel, 'Rehearsal reset. No data was stored.');
+  }
+
+  function mountPayload(payload, target) {
+    if (!payload || !payload.slug) throw new Error('A valid ASDAN visual-learning payload is required.');
+    const host = target || targetForPayload(payload);
+    if (!host) throw new Error(`No mount target found for ${payload.slug}.`);
+    const previous = qs(`[data-asdan-visual-learning="${CSS.escape(payload.slug)}"]`, host);
+    if (previous) return previous;
+
+    const panel = createPanel(payload);
+    const state = createState(payload);
+    host.append(panel);
+    if (!host.classList.contains('slide')) panel.classList.add('asvl-standalone');
+
+    const staticBtn = qs('.asvl-static-toggle', panel);
+    /* Effective state is the user's choice OR the OS preference. The OS is a floor,
+       not a default: if the machine asks for reduced motion, the button cannot turn
+       movement back on, because the CSS rule would suppress it anyway and the
+       control would then be lying about what the pupil sees. */
+    const staticIsOn = () => state.staticMode || prefersReducedMotion();
+    const paintStatic = () => {
+      const on = staticIsOn();
+      panel.classList.toggle('asvl-static', on);
+      staticBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      staticBtn.textContent = on ? '✓ Static diagrams' : '▣ Static diagrams';
+      staticBtn.disabled = prefersReducedMotion();
+    };
+    paintStatic();
+    motionSubscribers.add(paintStatic);
+    staticBtn.addEventListener('click', () => {
+      if (prefersReducedMotion()) return;
+      state.staticMode = !state.staticMode;
+      paintStatic();
+      announce(panel, state.staticMode ? 'Static diagrams enabled.' : 'Finite teaching movement enabled.');
+    });
+    qs('.asvl-reset', panel).addEventListener('click', () => resetPanel(panel, payload, state));
+
+    renderPrediction(panel, payload, state);
+    renderActivity(panel, payload, state);
+    renderLocator(panel, payload, state);
+    renderExplanation(panel, payload, state);
+    renderTransfer(panel, payload, state);
+    setCycle(panel, 0);
+
+    panel.__asdanVisualState = state;
+    panel.__asdanVisualPayload = payload;
+    panel.dataset.asdanVisualReady = 'true';
+    return panel;
+  }
+
+  function autoMount() {
+    const registry = window.ASDANVisualPayloads || {};
+    const slug = slugFromLocation();
+    const payload = registry[slug];
+    if (!payload) return null;
+    return mountPayload(payload, targetForPayload(payload));
+  }
+
+  const api = {
+    version: '1.0.0',
+    mountPayload,
+    autoMount,
+    slugFromLocation,
+    targetForPayload,
+    getState(panel) { return panel?.__asdanVisualState || null; }
+  };
+  window[API_NAME] = api;
+
+  const start = () => {
+    try { autoMount(); }
+    catch (error) {
+      console.error('ASDAN Visual Learning did not mount:', error);
+      document.documentElement.dataset.asdanVisualError = 'true';
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
+})();
+</script>
+<!-- ASDAN-VISUAL-LEARNING:HTML:END v1 --></body></html>
