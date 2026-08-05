@@ -747,3 +747,110 @@ repairing a broken path, and removal needs its own word.
 **(c) listed, untouched.** `/hud.js`, `/theme.js`, `/Lessons/` and `/Lessons/hub-health.html`
 all return 200 live and are deliberately absent from this repo — site-root assets that work on
 the deployed site and nowhere else. Correct as written.
+
+---
+
+# SESSION L3 — FINAL LESSONS CLOSE: the chip ruling, 85/85 mounted, the re-score
+
+Sentinel `session-l3-2026-08-05`, revision 1. Base `de30f6f`, opened with 21 of 85 live —
+derived, not assumed. Browser probed per session: Chromium **141.0.7390.37**.
+
+## §1 · The eyebrow becomes a chip
+
+The pair was unstable, so the pair was made stable. `--asvl-accent-chip` =
+`color-mix(in srgb, var(--asvl-accent) 74%, #000)`; the eyebrow renders on it in white.
+**Solid, never translucent** — translucency would re-import the moving background.
+
+**74% supersedes 91%, and the reason is a sampling lesson.** 91% was fitted to three sampled
+accents. Sampling properly — 30 decks across every pathway — returns **nine** distinct
+(tint, accent) pairs including an olive `#8AA662` far lighter than anything measured before. At
+91% the olive chip scores 3.4:1. At 74% both limbs hold for every pair: white-on-chip **4.68 –
+7.19**, chip-vs-header **3.94 – 6.06**.
+
+**One truth.** The chip ships in the shared toolkit CSS and applies to all 85. And the eyebrow
+was not the only white-on-**raw**-accent surface — it was merely the one whose verdict happened
+to be FIX rather than "left — UI chrome". The whole family was searched for and moved:
+`.asvl-sequence-number`, `.asvl-independence-steps li::before`, and the button family
+(`.asvl-button`, `.asvl-choice`, `.asvl-sort-item`, `.asvl-target-button`,
+`.asvl-evidence-card`, `.asvl-hotspot-button`, `.asvl-mini-button`). The buttons would never
+have failed the gate — but on the olive deck white on the raw accent is **2.72:1 on a
+pupil-facing control label**, and a policy that tolerates it is not a reason to ship it when the
+fix is the token already in hand.
+
+**THREE DEFECTS IN THE CHIP GATE ITSELF, found and fixed before it was trusted.** (1) L2
+compared an *authored* token string against a *computed* colour and read false on every deck.
+(2) L3 walked up for a `backgroundColor`, but the header tint is a `linear-gradient`, so
+`backgroundColor` is transparent and the walk sailed past it to a white ancestor — L3 was
+measuring chip-vs-white. It now measures the gradient's **darker end**, the worst case.
+(3) The transparent-chip stub computed to `rgba(0,0,0,0)`, which the luminance function read as
+**black**, scoring white-on-black 21.00 — **the control looked like a pass.** Same family as the
+`color(srgb)` parser defect: a notation the instrument did not understand, silently scored as
+near-black.
+
+**Print limb, answered rather than assumed:** the panel is `display:none` in print, so the
+eyebrow has **no print surface**. Nothing to keep legible. Reduced motion untouched, its gate
+re-run green with its control.
+
+## §2 · Band C complete — 85 of 85 mounted
+
+| batch | decks | result |
+|---|--:|---|
+| GROW (earlier session) | 18 | green, 0 introduced |
+| LAUNCH | 30 | **green** — mounted verdicts EQUAL the unmounted baseline exactly (UI chrome 26, FIX 3, identity hue 14), so 0 introduced of any class |
+| BUILD | 31 | green; `#print-witness` **31/31 byte-identical** with its fired control |
+| D&T | 6 | green; all six carry the staff organ, verified per file. None parked, no organ improvised |
+
+**The vendor's own `integrate.py --check` PASSES for the first time**: *"exact source integration
+present · 6 shared sources · 6 direct D&T lessons"*. It had reported partial-integration errors
+at every previous tip because every previous state was deliberately partial.
+
+37 HTML files changed vs the session base, **0** with text changed outside a marker-owned block.
+Sentinels **50 / 98 over 548** unmoved throughout.
+
+**The BLOCKED — DO NOT MOUNT wording is REMOVED, not softened**, in the same commit as the last
+mount. It had become untrue.
+
+## §3 · The 43-file re-score — read-only, and the result is reassuring
+
+The queued member set derives at the session base to **exactly 43 files** (36 HTML). *The set at
+HEAD is 48 — the extra 5 are this session's own mount inlining `color-mix()` into more decks, so
+the honest re-score population is the pre-mount 43.*
+
+Re-scored with the corrected parser: **6,854 text elements across 36 decks · 648 below target in
+74 patterns · FIX verdict = 1.** Everything else is policy-accepted (`left — UI chrome` 317,
+`identity hue` 218, `decorative` 112).
+
+**The single FIX row is `h3 "Success looks like"` at 2:1 — and it was already visible under the
+OLD parser**, appearing as pre-existing in every baseline this workstream took. So it is not a
+false green the defect had been hiding.
+
+**Verdict on the follow-up: the parser defect was real and dangerous in principle — it cuts both
+ways and could have hidden light-on-light text — but its practical effect on this estate's prior
+certifications is nil.** No repair band was needed. The one row is lesson content, not toolkit,
+and is **left for a decision rather than fixed here**.
+
+## §4 · Two records
+
+**(a) `/assets/video/poster-art.jpg` stays.** Dead in both contexts, and that is **intentional**:
+it is an owned-pending reference to the art-suite clip that has never been ruled onto a surface.
+Recorded here with that pointer **so no future sweep "fixes" it into deletion.**
+
+**(b) The park rule stands, and it guards the brief's author too.** *A park is only honest when
+its blocking condition has been derived.* The clause it caught — "if Actions is unavailable" —
+was written into the close order itself, and taken on trust rather than tested. Actions was
+available. A rule that only ever points outward is not a rule.
+
+## §R · Invariants at close
+
+★ assessed pair `a5545585…` / `eb14d610…` · frozen legacy `2fdbd43a…` / `c60a1707…` /
+`57be7374…` · sentinels **50 / 98 over 548** · the 25 hidden science sheets byte-pristine ·
+`claude/semh2-claims-accuracy` at `0c0f0487` verified via `ls-remote` · `pass-sl-sow-launch`
+`2a1cfda` and `pass-sbx-art-a2` `462cfa6` unmerged · no branch deleted · no printer hold
+released · open item 39 untouched · zero pupil data · no clip or media URL wired · no
+third-party artwork · no closure marker moved · no force-push.
+
+## Inherited by the 29 Aug pack slot
+
+Both scope items are **already in the builder** and need no further action: the mounted ASDAN
+runtime assets, and PACK-3's four `grow-anim` scripts. Restated so the slot does not re-derive
+them.

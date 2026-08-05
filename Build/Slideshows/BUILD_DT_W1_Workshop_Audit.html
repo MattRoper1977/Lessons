@@ -643,7 +643,16 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
      GROW #2E8F7B -> 4.63, LAUNCH #A76A9B -> 4.76); GROW is the binding case.
      This is a TOOLKIT token: the estate's strand colours are untouched, and
      --asvl-accent itself still drives borders, rings and fills unchanged. */
-  --asvl-accent-text:color-mix(in srgb,var(--asvl-accent) 91%,#000);
+  /* The eyebrow is a CHIP: it brings its own solid background, so the contrast
+     pair is KNOWN rather than inherited. Text darkening could never hold a floor
+     here -- the header gradient's --wedo-bg tint moves per deck, so the pair
+     itself was unstable. 74% is the minimum darkening that satisfies BOTH limbs
+     across all nine measured (tint, accent) pairs in the estate: white-on-chip
+     >= 4.6:1 (worst 4.68, the olive #8AA662) and chip-vs-header >= 3:1 (worst
+     3.94). It supersedes the earlier 91%, which was fitted to three sampled
+     accents and fails on the olive. SOLID, never translucent: translucency would
+     re-import the moving background and walk the whole defect back in. */
+  --asvl-accent-chip:color-mix(in srgb,var(--asvl-accent) 74%,#000);
   /* Same treatment for muted TEXT. Changing the --asvl-muted fallback was inert:
      the host decks define --muted themselves (#64748b), so the fallback never
      fired -- measured on a rendered specimen, not read off the token file. 96%
@@ -682,14 +691,14 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 .asvl-panel p,.asvl-panel li,.asvl-panel label{color:var(--asvl-ink);font-size:clamp(.92rem,2cqi,1.04rem);line-height:1.48}
 .asvl-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(135deg,var(--asvl-accent-soft),var(--asvl-surface))}
 .asvl-header-text{min-width:0}
-.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent-text)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.asvl-eyebrow{display:inline-block;margin:0 0 6px!important;background:var(--asvl-accent-chip)!important;color:#fff!important;padding:3px 10px!important;border-radius:999px;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted-text)!important}
 .asvl-tools{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .asvl-button,.asvl-choice,.asvl-sort-item,.asvl-target-button,.asvl-evidence-card,.asvl-hotspot-button,.asvl-mini-button{
   min-height:44px;
-  border:2px solid var(--asvl-accent);
+  border:2px solid var(--asvl-accent-chip);
   border-radius:10px;
-  background:var(--asvl-accent);
+  background:var(--asvl-accent-chip);
   color:#fff;
   padding:9px 13px;
   font:inherit;
@@ -742,7 +751,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 .asvl-sequence-list{list-style:none;margin:0 0 12px!important;padding:0!important;display:grid;gap:8px}
 .asvl-sequence-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
 .asvl-sequence-row.is-correct{border-color:var(--asvl-success);background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
-.asvl-sequence-number{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent);color:#fff;font-weight:900}
+.asvl-sequence-number{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
 .asvl-sequence-text{font-weight:750}
 .asvl-sequence-controls{display:flex;gap:5px}
 .asvl-mini-button{min-height:36px;padding:6px 8px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line);font-size:.76rem}
@@ -790,7 +799,7 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 .asvl-independent-task{padding:13px;border-left:7px solid var(--asvl-accent);background:var(--asvl-accent-soft);font-weight:900}
 .asvl-independence-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0!important;padding:0!important;counter-reset:step;list-style:none}
 .asvl-independence-steps li{position:relative;min-height:110px;margin:0!important;padding:39px 10px 10px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface);font-size:.86rem!important;font-weight:750}
-.asvl-independence-steps li::before{counter-increment:step;content:counter(step);position:absolute;top:8px;left:9px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent);color:#fff;font-weight:900}
+.asvl-independence-steps li::before{counter-increment:step;content:counter(step);position:absolute;top:8px;left:9px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
 .asvl-success-checks{margin:10px 0}
 .asvl-success-checks ul{margin:6px 0 0 18px!important;padding:0!important}
 .asvl-help-ladder{margin:10px 0;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
@@ -830,24 +839,15 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 <script>
 window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"BUILD_DT_W1_Workshop_Audit":{"path":"Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html","pathway":"BUILD","subsection":"D&T Community Upcycling","lessonTitle":"Week 1 · The Workshop Audit","targetTitle":"We Do 1","title":"Workshop safety hotspot audit","purpose":"Turn safety from a poster into a visual scan-and-report routine while keeping teacher instruction and local controls load-bearing.","activity":{"type":"hotspot","scene":"workshop","prompt":"Open each workshop hotspot. Name the hazard or control, then point to the physical feature that made you notice it. The local risk assessment remains authoritative.","hotspots":[{"id":"h1","x":18,"y":24,"label":"CLEAR WALKWAY","note":"Offcuts and bags create trip hazards and block movement routes."},{"id":"h2","x":50,"y":18,"label":"CLAMPING ZONE","note":"Work must be secured using the demonstrated method before cutting or drilling."},{"id":"h3","x":82,"y":27,"label":"TOOL HOME","note":"Tools need a visible safe storage position so missing or damaged items are noticed."},{"id":"h4","x":23,"y":66,"label":"DUST CONTROL","note":"Extraction, suitable cleaning and local protective measures control wood dust; never improvise."},{"id":"h5","x":52,"y":72,"label":"PPE / ACCESS CHECK","note":"Required protection and reasonable adjustments are confirmed for the actual task."},{"id":"h6","x":82,"y":65,"label":"STOP / REPORT ROUTE","note":"A pupil stops and tells the responsible adult when a guard, tool, material or condition is wrong."}],"completion":"A workshop audit links a visible condition to a control and a named reporting route; spotting is not permission to fix unfamiliar equipment."},"independent":"Complete the real workshop audit with the teacher. Record one safe condition, one issue reported and the agreed action owner.","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original classroom workshop plan with walkway, bench, tool storage, dust control and stop/report hotspots.","mediaKey":"workshop","slug":"BUILD_DT_W1_Workshop_Audit","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["SEE","CHOOSE","SAY","DO"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"payloadSha256":"321c063244ac710ded8b4d02a7e617cde31d211d288d6ad96e0e438713c321fa"}});
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT (band C outstanding)
+ * STATUS: mounted across all 85 taught ASDAN decks. The BLOCKED banner that
+ * headed this file has been REMOVED, not softened -- it had become untrue.
+ * All four original blocking items are closed; the only parked item is
+ * docs/MEDIA_REGISTER.md, a candidate register that gates nothing (0 external
+ * URLs in the payloads, so no mounted surface depends on it).
  *
- * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
- * No other deck may be mounted outside a gated band-C batch. This banner comes
- * off entirely when band C completes.
- *
- *   1. CLEARED -- the vendor's decisive post-integration regression has now been
- *      RUN in a real browser and is green for band B. Re-run it per batch.
- *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
- *      watched with a change listener; .asvl-static follows the OS preference.
- *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
- *      does carry the staff answers organ; they mount per-file.
- *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
- *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
- *
- * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
- * inherited colours for TEXT only, hue angle preserved. The estate palette and
- * every non-text use of --asvl-accent are untouched.
+ * Accessibility: eyebrow, sequence badges and buttons render on a SOLID chip
+ * (--asvl-accent-chip, the pathway hue at a 74% mix toward black). The pair is
+ * known rather than inherited, because the header tint moves per deck.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

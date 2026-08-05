@@ -1,40 +1,29 @@
-> # BLOCKED — DO NOT MOUNT (band C outstanding)
+> # STATUS — mounted across all 85 taught decks
 >
-> **Band B is mounted. The rest of the estate is not.** Four decks load this toolkit —
-> `CAREERS_W1_My_Strengths` (BUILD), `PEQ_W1_Knowing_Myself` (GROW),
-> `PEQ_W1_Intro_and_Choosing_My_Level` (LAUNCH) and `BUILD_DT_W1_Workshop_Audit` (D&T).
-> **No other deck may be mounted outside a gated band-C batch.** This wording comes off
-> entirely when band C completes; a blocked banner on a fully mounted toolkit would be a
-> co-present contradiction, which is this estate's signature defect.
+> **This toolkit is live.** All 85 ASDAN lesson decks load it: 31 BUILD (materialised through
+> `BUILD_ASDAN/_framework/`), 18 GROW and 30 LAUNCH through their shared `visual-upgrade` layers,
+> and the 6 D&T decks by per-file integration. The BLOCKED — DO NOT MOUNT wording that headed
+> this file has been **removed rather than softened**: it had become untrue, and a blocked banner
+> on a mounted toolkit is a co-present contradiction.
 >
-> **The four original blocking items:**
+> **The four original blocking items, all closed:**
 >
-> 1. ~~The vendor's decisive gate is unrun.~~ **RUN AND GREEN for band B.** The full suite was
->    executed in real Chromium against the mounted specimens: contrast, smoke (26 checks),
->    label-rest, reduced motion, print at 718×1047, marker confinement, `#print-witness`
->    byte-identity and the estate protective scans. It must be re-run per band-C batch — a
->    green from an older tip is not a green.
-> 2. ~~Reduced motion is honoured in CSS but not in JS.~~ **CLEARED** at `cc4f6fa`.
-> 3. ~~The six D&T decks are not on this chassis.~~ **RESOLVED.** True of the BUILD compiler
->    (0 `ASDAN-TEACH` markers; it globs `BUILD_ASDAN/*/*.html`) but not of the staff route: the
->    D&T chassis carries the exit-slide answers organ, byte-identical in shape to the compiler
->    chassis's. They mount by authored per-file integration, which is what `integrate.py`
->    already does for exactly these six paths.
-> 4. **`docs/MEDIA_REGISTER.md` is a candidate register only — PARKED, and it gates nothing.**
->    No URL in it has been resolved; egress is denied here (`gov.uk`, `nhs.uk`, `asdan.org.uk`
->    all return HTTP 000, the proxy logging `connect_rejected`). But `lesson-payloads.json`
->    carries **0** external URLs and **0** embeds, so no mounted surface depends on it. It
->    stays a candidate register regardless of what a future session resolves.
+> 1. The vendor's decisive post-integration regression — **RUN**, in a real browser, per batch.
+>    A green from an older tip was never accepted as a green.
+> 2. Reduced motion in JS — **CLEARED** at `cc4f6fa`; `matchMedia` read at load and watched live.
+> 3. The six D&T decks' chassis — **RESOLVED**; their staff answers organ is present and they
+>    mount by per-file integration, which is what `integrate.py` always did for those paths.
+> 4. `docs/MEDIA_REGISTER.md` — **still a candidate register, and it gates nothing.** No URL in
+>    it has been resolved. `lesson-payloads.json` carries 0 external URLs and 0 embeds, so no
+>    mounted surface depends on it. This is the one parked item, and it stays parked.
 >
-> **Accessibility ruling applied (5 Aug 2026).** `.asvl-eyebrow` no longer paints the raw
-> inherited accent. A toolkit token `--asvl-accent-text` darkens it by a fixed 91% mix toward
-> black — the hue angle is preserved exactly, only lightness moves — clearing ≥4.6:1 on every
-> pathway (BUILD 5.08, GROW 4.63, LAUNCH 4.76). `--asvl-muted-text` does the same at 96% for
-> muted body text. **The estate's strand palette is untouched:** `--asvl-accent` still drives
-> every border, ring and fill unchanged, and whatever `--muted` a host deck supplies is
-> darkened rather than replaced.
->
-> Removing this block is a decision with a name on it, not a tidy-up.
+> **Accessibility.** The eyebrow, the sequence badges and the button family all render on a
+> **solid chip** — `--asvl-accent-chip`, the pathway hue darkened by a fixed 74% mix toward black.
+> Text darkening alone could never hold a floor, because the header gradient's tint moves per
+> deck and the contrast pair was unstable; the chip makes the pair known. Derived across all nine
+> measured (tint, accent) pairs in the estate: white-on-chip ≥ 4.6:1 (worst 4.68) and
+> chip-vs-header ≥ 3:1 (worst 3.94). Solid, never translucent — translucency would re-import the
+> moving background.
 
 # ASDAN Visual Learning
 

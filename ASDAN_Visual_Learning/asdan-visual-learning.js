@@ -1,22 +1,13 @@
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT (band C outstanding)
+ * STATUS: mounted across all 85 taught ASDAN decks. The BLOCKED banner that
+ * headed this file has been REMOVED, not softened -- it had become untrue.
+ * All four original blocking items are closed; the only parked item is
+ * docs/MEDIA_REGISTER.md, a candidate register that gates nothing (0 external
+ * URLs in the payloads, so no mounted surface depends on it).
  *
- * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
- * No other deck may be mounted outside a gated band-C batch. This banner comes
- * off entirely when band C completes.
- *
- *   1. CLEARED -- the vendor's decisive post-integration regression has now been
- *      RUN in a real browser and is green for band B. Re-run it per batch.
- *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
- *      watched with a change listener; .asvl-static follows the OS preference.
- *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
- *      does carry the staff answers organ; they mount per-file.
- *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
- *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
- *
- * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
- * inherited colours for TEXT only, hue angle preserved. The estate palette and
- * every non-text use of --asvl-accent are untouched.
+ * Accessibility: eyebrow, sequence badges and buttons render on a SOLID chip
+ * (--asvl-accent-chip, the pathway hue at a 74% mix toward black). The pair is
+ * known rather than inherited, because the header tint moves per deck.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

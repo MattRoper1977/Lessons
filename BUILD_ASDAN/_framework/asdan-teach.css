@@ -901,7 +901,16 @@
      GROW #2E8F7B -> 4.63, LAUNCH #A76A9B -> 4.76); GROW is the binding case.
      This is a TOOLKIT token: the estate's strand colours are untouched, and
      --asvl-accent itself still drives borders, rings and fills unchanged. */
-  --asvl-accent-text:color-mix(in srgb,var(--asvl-accent) 91%,#000);
+  /* The eyebrow is a CHIP: it brings its own solid background, so the contrast
+     pair is KNOWN rather than inherited. Text darkening could never hold a floor
+     here -- the header gradient's --wedo-bg tint moves per deck, so the pair
+     itself was unstable. 74% is the minimum darkening that satisfies BOTH limbs
+     across all nine measured (tint, accent) pairs in the estate: white-on-chip
+     >= 4.6:1 (worst 4.68, the olive #8AA662) and chip-vs-header >= 3:1 (worst
+     3.94). It supersedes the earlier 91%, which was fitted to three sampled
+     accents and fails on the olive. SOLID, never translucent: translucency would
+     re-import the moving background and walk the whole defect back in. */
+  --asvl-accent-chip:color-mix(in srgb,var(--asvl-accent) 74%,#000);
   /* Same treatment for muted TEXT. Changing the --asvl-muted fallback was inert:
      the host decks define --muted themselves (#64748b), so the fallback never
      fired -- measured on a rendered specimen, not read off the token file. 96%
@@ -940,14 +949,14 @@
 .asvl-panel p,.asvl-panel li,.asvl-panel label{color:var(--asvl-ink);font-size:clamp(.92rem,2cqi,1.04rem);line-height:1.48}
 .asvl-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(135deg,var(--asvl-accent-soft),var(--asvl-surface))}
 .asvl-header-text{min-width:0}
-.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent-text)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.asvl-eyebrow{display:inline-block;margin:0 0 6px!important;background:var(--asvl-accent-chip)!important;color:#fff!important;padding:3px 10px!important;border-radius:999px;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted-text)!important}
 .asvl-tools{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .asvl-button,.asvl-choice,.asvl-sort-item,.asvl-target-button,.asvl-evidence-card,.asvl-hotspot-button,.asvl-mini-button{
   min-height:44px;
-  border:2px solid var(--asvl-accent);
+  border:2px solid var(--asvl-accent-chip);
   border-radius:10px;
-  background:var(--asvl-accent);
+  background:var(--asvl-accent-chip);
   color:#fff;
   padding:9px 13px;
   font:inherit;
@@ -1000,7 +1009,7 @@
 .asvl-sequence-list{list-style:none;margin:0 0 12px!important;padding:0!important;display:grid;gap:8px}
 .asvl-sequence-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
 .asvl-sequence-row.is-correct{border-color:var(--asvl-success);background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
-.asvl-sequence-number{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent);color:#fff;font-weight:900}
+.asvl-sequence-number{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
 .asvl-sequence-text{font-weight:750}
 .asvl-sequence-controls{display:flex;gap:5px}
 .asvl-mini-button{min-height:36px;padding:6px 8px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line);font-size:.76rem}
@@ -1048,7 +1057,7 @@
 .asvl-independent-task{padding:13px;border-left:7px solid var(--asvl-accent);background:var(--asvl-accent-soft);font-weight:900}
 .asvl-independence-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0!important;padding:0!important;counter-reset:step;list-style:none}
 .asvl-independence-steps li{position:relative;min-height:110px;margin:0!important;padding:39px 10px 10px;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface);font-size:.86rem!important;font-weight:750}
-.asvl-independence-steps li::before{counter-increment:step;content:counter(step);position:absolute;top:8px;left:9px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent);color:#fff;font-weight:900}
+.asvl-independence-steps li::before{counter-increment:step;content:counter(step);position:absolute;top:8px;left:9px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--asvl-accent-chip);color:#fff;font-weight:900}
 .asvl-success-checks{margin:10px 0}
 .asvl-success-checks ul{margin:6px 0 0 18px!important;padding:0!important}
 .asvl-help-ladder{margin:10px 0;border:2px solid var(--asvl-line);border-radius:10px;background:var(--asvl-surface)}
