@@ -206,3 +206,40 @@ that lesson ever reveals, and they are identically hidden with animation on. Che
 for BUILD W5 and W6 by re-running the same measurement with animation enabled and a
 three-second settle — same names, same counts, 10 and 14. The GROW hidden counts have
 **not** been checked that way and are recorded here as unverified.
+
+
+## RM-3 · `asvl-attention` — the ASDAN toolkit's one family, classified on wiring
+
+The ASDAN Visual-Learning engine landed at band A (`0bb4af4`) mounted by nothing, so its
+motion had never been classified. It is wired to the OS preference in this commit, so the
+classification is owed now.
+
+**The family, as measured — one, not several.** The shipped
+`ASDAN_Visual_Learning/asdan-visual-learning.css` declares exactly **one** `@keyframes`
+family across its whole 15.5 KB:
+
+| family | applied to | iterations | fill | final frame persists |
+|---|---|---:|---|---|
+| `asvl-attention` | `.asvl-hotspot-button` | **2** (finite) | none | **yes — box-shadow returns to the 0% frame, which is the resting state** |
+
+It is a **finite attention cue, not a carrier of meaning**: a twice-pulsing ring drawing the
+eye to a hotspot button that is fully operable, labelled and reachable with the animation
+never running. Nothing is taught by the movement, so suppressing it costs no content — which
+is why the blanket rule is safe here and why no "final frame" exception is needed.
+
+**Two suppression routes, both now proven in a real browser:**
+
+1. `@media (prefers-reduced-motion:reduce)` over `.asvl-panel *` — CSS, already present.
+2. `.asvl-static *{animation:none!important}` — the class the engine now drives from
+   `matchMedia`, so the JS state and the visible state agree.
+
+Measured in Chromium with `emulateMedia`: with reduce off the hotspot button's computed
+`animation-name` is **`asvl-attention`**; with reduce on it is **`none`**. Both directions,
+not one.
+
+**An instrument correction, recorded.** The first can-fail control for this stubbed only the
+`addEventListener` registration. The engine's `else if (motionQuery.addListener)` fallback
+then registered via the legacy API, the listener stayed live, and **the control passed when
+it should have failed** — it would have certified the gate on no evidence. Both registration
+paths have to be removed for the stub to be a real negative. Recorded because a vacuous
+control is worse than no control: this one was about to sign off a reduced-motion claim.

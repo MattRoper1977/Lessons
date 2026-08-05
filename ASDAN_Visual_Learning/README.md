@@ -10,11 +10,14 @@
 > 1. **The vendor's own decisive gate is unrun.** Full post-integration regression in a real,
 >    current checkout was declared withheld by the vendor and has not been run here. Nothing
 >    pupil-facing merges until it is.
-> 2. **Reduced motion is honoured in CSS but not in JS.** `asdan-visual-learning.css` carries the
->    blanket `@media (prefers-reduced-motion:reduce)` rule over `.asvl-panel *`, and the shipped
->    CSS declares exactly one `@keyframes` family, `asvl-attention`. But the engine contains **no**
->    `matchMedia('(prefers-reduced-motion: reduce)')` and no change listener. The standing
->    requirement is both. Derived, not quoted.
+> 2. ~~**Reduced motion is honoured in CSS but not in JS.**~~ **CLEARED 5 Aug 2026.** The engine
+>    now reads `matchMedia('(prefers-reduced-motion: reduce)')` at load and registers a change
+>    listener that takes effect live; `.asvl-static` — previously driven only by the manual
+>    "Static diagrams" button — follows the OS preference, so the control can no longer report
+>    `aria-pressed="false"` while CSS is suppressing motion. Proven in real Chromium in **both**
+>    directions (reduce-off → `animation-name: asvl-attention`; reduce-on → `none`), plus a live
+>    mid-session change, against a stub that fails when the listener is removed. The one
+>    `@keyframes` family is classified in `reports/REDUCED_MOTION_REGISTER.md` **RM-3**.
 > 3. **The six D&T decks are not on this chassis.** `Build/Slideshows/BUILD_DT_W1..W6.html` carry
 >    **0** `ASDAN-TEACH:` marker blocks and **0** `visual-upgrade` references, and the BUILD
 >    compiler's scope is `BUILD_ASDAN/*/*.html`, which does not reach them. Any D&T integration is
