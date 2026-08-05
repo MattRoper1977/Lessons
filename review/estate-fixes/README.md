@@ -28,12 +28,18 @@ HTML/CSS/SVG, checks the defect-specific invariants, and opens every affected pa
 in Chrome in desktop and mobile/touch modes. It uploads a 90-day validation bundle
 before enforcing the result.
 
+The patches are intentionally reviewed against one immutable base. The validator
+uses `--recount --ignore-space-change` while still requiring the exact base commit,
+all patch preimages, the 15-path allowlist, `git diff --check`, structural parsers
+and defect-specific post-application invariants.
+
 ## Apply in a disposable branch
 
 ```bash
 git checkout -b review/lessons-estate-fixes 4aced082cc8f51868a99a8c6ab9d8147e380f6ec
 for patch in review/estate-fixes/000*.patch; do
-  git apply --check "$patch" && git apply "$patch"
+  git apply --check --recount --ignore-space-change "$patch" && \
+  git apply --recount --ignore-space-change "$patch"
 done
 ```
 
