@@ -71,6 +71,101 @@ must not also carry an unrelated CSS change, or the claim stops being checkable.
 
 ---
 
+---
+
+## RM-2 · the 12 `avl*` animation families, classified on arrival
+
+**Verdict: finite-teaching. No content lost. Blanket coverage confirmed.**
+
+The Art Visual Learning Layer (`Art_Teesside/visual-learning/art-visual-learning.css`,
+landed at `85953b1`) introduces **12 `@keyframes` families**. The house rule says new
+families are classified in the commit that lands them. **That was owed in Stage A's
+commit and was not paid** — this entry pays it one commit late, on the branch that
+mounts the layer. Recording the miss rather than back-dating it.
+
+### The families, as measured — not as described
+
+| family | applied to | iterations | fill | final frame persists |
+|---|---|---:|---|---|
+| `avlDrawMark` | `.avl-mark-stroke.is-running`, `.avl-rub.is-running` | 1 | `both` | yes |
+| `avlRouteTrace` | `.avl-route.is-running` | 1 | `both` | yes |
+| `avlDabLift` | `.avl-dab.is-running` | 1 | `both` | yes |
+| `avlLayerBuild` | `.avl-layer.is-running`, `.avl-version.is-running` | 1 | `both` | yes |
+| `avlEditionReveal` | `.avl-edition.is-running` | 1 | `both` | yes |
+| `avlBarGrow` | `.avl-bars.is-running` | 1 | `both` | yes |
+| `avlFlowStep` | `.avl-flow.is-running` | 1 | `both` | yes |
+| `avlSlideBlock` | `.avl-block.is-running` | 1 | `forwards` | yes |
+| `avlReveal` | `.avl-reveal` | 1 | `both` | yes |
+| `avlFlowRight` | `.avl-particle.is-running-right` | 1 | **none** | **no** |
+| `avlFlowLeft` | `.avl-particle.is-running-left` | 1 | **none** | **no** |
+| `avlContract` | **never applied** | — | — | — |
+
+**All 12 are finite.** Every shorthand carries an explicit `1`, and the string
+`infinite` does not occur anywhere in the file. Nothing loops, nothing needs
+stopping, and no family is decorative — in each case the moving element *is* the
+artistic cause being taught (a mark being drawn, layers registering, an edition
+revealing).
+
+**Two corrections to the description this entry was commissioned under.** It was
+issued as "single iteration, `both`/`forwards`/`alternate`, final frame persists" for
+all twelve. Measured, that is true of ten:
+
+- `avlFlowRight` and `avlFlowLeft` carry **no fill mode**. `alternate` is their
+  *direction*, not a fill. With one iteration and no fill they revert to their
+  unanimated position rather than persisting a final frame. Harmless here — the
+  particles are a flow-direction cue, and their resting position is the diagram's
+  base state — but "final frame persists" is not true of them and should not be
+  repeated.
+- `avlContract` is **defined and never applied.** No rule anywhere references it. It
+  is a dead family, not a live one. Left in place because the toolkit was recovered
+  by byte-for-byte extraction and is not prose-edited; flagged here so the next
+  reader does not go looking for its effect.
+
+### Coverage
+
+One blanket rule, at the foot of the same file:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .avl-panel *, .avl-panel *::before, .avl-panel *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .001ms !important;
+  }
+}
+```
+
+It is scoped to `.avl-panel *`, so it reaches every one of the 12 by descent rather
+than by enumeration. **This family cannot inherit the RM-1 omission** — there is no
+list to be left out of. A `forced-colors: active` block is also present.
+
+**Measured** — Chromium, `reducedMotion: 'reduce'`, `We Do 1` slide activated so the
+panel is visible and the assertion can fail:
+
+| lesson | running animations | labels/explanations retained |
+|---|---:|---:|
+| `BUILD_ART_W3_Industrial_Surface_Skills_Lab` | 0 | 12 |
+| `GROW_ART_W3_Independent_Studio_Challenge` | 0 | 15 |
+| `LAUNCH_ART_W3_Implement_and_Critically_Develop` | 0 | 13 |
+
+**Scope of that measurement, stated honestly:** all three specimens carry a `model`
+activity, so the run exercises the model-family animations and `avlReveal`. It does
+**not** exercise every one of the 12 — `avlFlowRight`/`avlFlowLeft`
+(`.avl-particle`) and the sort/sequence/evidence/hotspot paths are reached by other
+payloads. The blanket selector makes per-family enumeration unnecessary for the
+verdict, but the empirical figure above covers three lessons, not thirty-one.
+
+**Static parity independent of the OS setting.** Each panel carries an
+`avl-static` control which `isStatic()` reads alongside `reducedMotion`, so a pupil
+who needs stillness gets it without changing a system preference. The static path
+retains every label, comparison and explanation.
+
+**One defect found and fixed while classifying.** `reducedMotion` was computed once
+at module load with no `change` listener, so an OS preference changed mid-session was
+never honoured in JS. The CSS rule still applied, so it degraded rather than failed.
+The media query is now watched and `isStatic()` reads the live value.
+
 ## Standing measurement
 
 `reports/convergence/audit.mjs` records `reduced.hiddenParts` and
