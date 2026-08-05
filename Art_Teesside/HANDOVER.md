@@ -533,3 +533,64 @@ batch. **D6's build script, with dry-run and a zero-pupil-data assertion — nev
 hand-rebuilt.** Browser spot-checks after the Pages rebuild are Matt's. Live state
 could not be proven from inside the sandbox: the proxy 403s `madebymatt.uk` and the
 Pages API.
+
+---
+
+## Tail — 2026-08-05 · the Art Visual-Learning programme is CLOSED
+
+Sentinel `avl-tail-2026-08-05`. Two loose ends, both closed.
+
+**31/31 mounted and live · threshold ruled · register current · pack scope ready for 29 Aug.**
+
+### Job 1 — the two flow families now keep their final frame
+
+`avlFlowRight` and `avlFlowLeft` carried `1 alternate` and no fill mode. `alternate`
+is direction, not fill, so they reverted the moment the animation ended — the only two
+of the twelve families that broke the pack's own rule that **the final frame stays
+visible for pointing, questioning and annotation.** One word per family (`both`).
+Measured both sides: `none` before, `matrix(1, 0, 0, 1, ±150, 0)` after — each
+family's `to` frame exactly. RM-2 moved in the same commit, because an expected value
+changes only in the commit that moved it.
+
+`avlContract` (defined, never applied) **stays**, now recorded as *deliberately
+retained*: removing it would be prose-editing a byte-for-byte recovered toolkit, which
+is a larger risk than an unused `@keyframes` block.
+
+### Job 2 — the 29 Aug rebuild would have shipped 31 dead loaders
+
+`in_scope()` globs `*.html`, so `Art_Teesside` being an include directory never carried
+its non-HTML assets. The three runtime files are now named individually in `REBRAND.md`
+and the builder, the same way `LundyLoop/assets/style.css` always was. Without them,
+every staff copy would carry a loader pointing at nothing and the *We Do* panel would
+**silently never mount** — offline and on OneDrive, with no error a teacher would see.
+
+Two gates, both proven fail-capable before being trusted: **AVL-1**, the rebrand
+transform must leave the marker pair byte-identical (it exists because the hud.js strip
+runs directly against that pair); **AVL-2**, every loader reference must resolve inside
+the assembled pack. Dry run only — **no pack was built**, and the rebuild keeps its
+29 Aug slot.
+
+### Doctrine banked this programme
+
+- **A green from an older tip is not a green.** The full Stage B gate set was re-run at
+  `6316346` because D4 moved the engine after those gates last ran. Re-run gates against
+  the tip you intend to merge, not the tip they were written on.
+- **A control separates "gate" from "broken page."** The D4 triple's fifth line —
+  pre-change engine with *eight* characters → revealed — is what made its first line
+  (one character → hidden) mean anything. Without it, a dead page and a working gate
+  look identical.
+- **D8's premise was the close order's, and it was wrong.** The §11 handover had landed
+  at `262c65b` inside Stage A and was verified at origin. The session was right to flag
+  it rather than silently re-pay a debt that did not exist. **A brief is evidence about
+  what its author believed, not about the repo** — check the repo.
+- **A register that contradicts its own commission is working.** RM-2 was commissioned
+  describing all twelve families as persisting their final frame. Two did not, and one
+  was dead. Both findings became Job 1 and the recorded exception above. An inventory
+  that only ever confirms the brief is not an inventory.
+
+### What remains — human, not promptable
+
+- **Matt's four browser URLs** after the Pages rebuild.
+- **Pass A2e**, reserved, carrying its two AVL requirements: the marker blocks survive
+  its LAUNCH W5–W7 restage byte-for-byte, and it re-runs the LAUNCH mount gates after.
+- **The 29 Aug rebuild itself**, which now inherits the corrected scope.

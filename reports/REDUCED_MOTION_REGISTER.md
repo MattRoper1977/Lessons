@@ -96,8 +96,8 @@ mounts the layer. Recording the miss rather than back-dating it.
 | `avlFlowStep` | `.avl-flow.is-running` | 1 | `both` | yes |
 | `avlSlideBlock` | `.avl-block.is-running` | 1 | `forwards` | yes |
 | `avlReveal` | `.avl-reveal` | 1 | `both` | yes |
-| `avlFlowRight` | `.avl-particle.is-running-right` | 1 | **none** | **no** |
-| `avlFlowLeft` | `.avl-particle.is-running-left` | 1 | **none** | **no** |
+| `avlFlowRight` | `.avl-particle.is-running-right` | 1 | `both` | yes |
+| `avlFlowLeft` | `.avl-particle.is-running-left` | 1 | `both` | yes |
 | `avlContract` | **never applied** | — | — | — |
 
 **All 12 are finite.** Every shorthand carries an explicit `1`, and the string
@@ -110,16 +110,32 @@ revealing).
 issued as "single iteration, `both`/`forwards`/`alternate`, final frame persists" for
 all twelve. Measured, that is true of ten:
 
-- `avlFlowRight` and `avlFlowLeft` carry **no fill mode**. `alternate` is their
-  *direction*, not a fill. With one iteration and no fill they revert to their
-  unanimated position rather than persisting a final frame. Harmless here — the
-  particles are a flow-direction cue, and their resting position is the diagram's
-  base state — but "final frame persists" is not true of them and should not be
-  repeated.
+- `avlFlowRight` and `avlFlowLeft` carried **no fill mode** when this entry was
+  first written. `alternate` is their *direction*, not a fill, so with one iteration
+  they reverted to their unanimated position instead of persisting a final frame.
+  **Fixed 2026-08-05** (sentinel `avl-tail-2026-08-05`): `both` added to both
+  shorthands, nothing else in those two declarations changed. This was a real
+  divergence from the pack's own rule — *finite movement; the final frame stays
+  visible for pointing, questioning and annotation* — and the two flow families were
+  the only members of the twelve that broke it.
+
+  **Measured, both sides**, `--avl-duration: .12s`, computed `transform` read 700ms
+  after the class is applied:
+
+  | | `avlFlowRight` | `avlFlowLeft` |
+  |---|---|---|
+  | before the fix | `none` | `none` |
+  | after the fix | `matrix(1, 0, 0, 1, 150, 0)` | `matrix(1, 0, 0, 1, -150, 0)` |
+
+  The after values are the `to` frames of each family exactly. The before values are
+  why this needed fixing, and why the test is trustworthy: it returns a different
+  answer on the two CSS files, so it can fail.
 - `avlContract` is **defined and never applied.** No rule anywhere references it. It
-  is a dead family, not a live one. Left in place because the toolkit was recovered
-  by byte-for-byte extraction and is not prose-edited; flagged here so the next
-  reader does not go looking for its effect.
+  is a dead family, not a live one. **Deliberately retained** — removing it would be
+  prose-editing a toolkit that was recovered by byte-for-byte extraction, which is a
+  larger risk than an unused `@keyframes` block. Recorded here as a known dead family
+  so the next reader does not go looking for its effect, and so a future audit does
+  not read it as an accident.
 
 ### Coverage
 
