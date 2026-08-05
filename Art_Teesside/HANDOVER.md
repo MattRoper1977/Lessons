@@ -714,3 +714,17 @@ Asserted, not assumed: every other file's per-class counts are byte-identical ac
 and two controls were run — a mis-scoped fragment returns `cand` to 4, and the old basename
 matcher cannot see the new entries at all. The second is why the fix was required rather than
 tidy.
+
+### Squeegees, dyes and bare screens — declared scope, not a violation (5 Aug 2026)
+
+Closing the Pass 7 finding. The ratified LAUNCH disavowal names *"no screens, squeegees or dyes
+either"*, but **AT-INST-04's declared kit-dependence vocabulary does not reach those words** —
+re-derived here from the instrument's own pattern list, not quoted: `squeegee`, `dye` and bare
+`screen`/`screens` match **no** pattern at all, and `screen` is reached only by
+`\bscreen ?print\w*`, which the bare plural does not satisfy. Bare **`press`** is outside scope
+too — only `\bpress corner\b` is in the vocabulary — which the original finding did not name.
+The four ratified LAUNCH hits are therefore exactly **`inks` ×2 + `rollers` ×2**, matching the
+reported figure. **The observation is true and no action is needed:** this is the instrument's
+declared scope working as written, so it is recorded here and **not** in the adjudicated
+violation list. Recorded so the next reader who greps that sentence does not re-derive it from
+scratch.

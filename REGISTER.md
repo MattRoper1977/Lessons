@@ -2411,3 +2411,13 @@ the pass brief withheld.**
   reason the universe string is stated rather than the bare number.
 - Assessed pair byte-identical throughout; frozen legacy science tree hashes unchanged; no lesson
   file in any merged diff.
+
+- **A `--name-only` zero on a merge commit is a free zero — diff the first parent.**
+  Fired-fixture family. `git show --name-only` on a **merge** commit prints no files, so any
+  content-lock control pointed at one reads **0** whether or not the lock holds: the control
+  cannot fail, and a control that cannot fail measures nothing. Proven rather than asserted, on
+  three real merges in this repo: `067c76a4`, `a597123d` and `8f4f9b17` each print **0** files
+  under `--name-only`, while `git diff --name-only <sha>^1 <sha>` returns **4**, **35** and **3**
+  respectively — the same assertion, now able to go non-zero. The rule: **a zero-control read on
+  a merge commit is not evidence until it has been re-read against the first parent and shown it
+  can fire.** This is the shape that made the first Pass 7 ancestry control vacuous.
