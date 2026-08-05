@@ -64,9 +64,10 @@ Withdrawn, not deleted: `R8` `.a4.dense`; `min-height: 277mm`; "GROW Part B abse
 | `Launch/LAUNCH_ART_W1` | | | | 2 | **2** | A2e |
 | `Launch/LAUNCH_ART_W5` | 2 | | | | **2** | A2e |
 | `Summer1_Scheme_of_Work` | | 1 | | | **1** | terminal |
-| **TOTAL (now)** | **15** | **11** | **0** | **2** | **28** | A2b closed −6 |
+| **TOTAL (was)** | **15** | **11** | **0** | **2** | **28** | A2b closed −6 |
+| **TOTAL (now, post-A2e)** | **0** | **11** | **4** | **0** | **15** | A2e closed −17, +4 new cand |
 
-`34 → A2b −6 → **28** (here now) → A2e −17 → 11`. The remaining kit-dep 15 is entirely LAUNCH (W6 10, W7 3, W5 2) — A2e's, not touched this session; the terminal 11 (refusal-context, named to be refused) is the floor.
+`34 → A2b −6 → 28 → A2e −17 → 11 → +4 → **15**`. **A2e closed all 17 it owned** — kit-dep 15 (LAUNCH W6 10, W7 3, W5 2) and offer-scope 2 (LAUNCH W1) are now zero. The projected landing was 11. **It is 15, and the extra 4 are this pass's own doing:** the new LAUNCH kit disavowal names press, rollers, inks, screens, squeegees and dyes in order to refuse them, and the classifier reads those as `refusal-candidate` — *proposed, not decided*. They are **not self-ratified**: `assert_kit.py` says intent is ratified by a human once, so they sit in `cand` until Matt rules, exactly as BUILD's six and GROW W2's two did before him. On ratification they move `cand → refusal` and the total stays 15 with the floor rising from 11 to 15. That rise is correct: LAUNCH now carries its own refusal, which is what made C5 able to see anything at all.
 
 **The ladder did not move at A2a-2, and that is a finding, not a reassurance.** That
 pass changed seven strings across three fault-card faces — `Paper tore on the pull`,
@@ -594,3 +595,88 @@ the assembled pack. Dry run only — **no pack was built**, and the rebuild keep
 - **Pass A2e**, reserved, carrying its two AVL requirements: the marker blocks survive
   its LAUNCH W5–W7 restage byte-for-byte, and it re-runs the LAUNCH mount gates after.
 - **The 29 Aug rebuild itself**, which now inherits the corrected scope.
+
+---
+
+## A2e — 2026-08-05 · the Silver leadership project is off the inking station · CLOSED
+
+Sentinel `pass-a2e-2026-08-05`. The last un-remediated pocket of press-era physics in the
+Art suite is closed. **A2e is no longer reserved.**
+
+### The disavowal came first, and that is the whole method
+
+C5 asks whether a route's scheme of work disavows kit its own lessons teach. It is
+folder-scoped, and **no file under `Launch/` carried a disavowal at all**, so C5 could
+only ever return zero for LAUNCH. That zero was blindness. Landing the disavowal as
+commit one turned C5 from a check that could not fail into the gate that ran the rest
+of the pass — and it immediately reported LAUNCH W6.
+
+Replayed both ways, which is the point: **with** the disavowal C5 = 1 finding; **without**
+it C5 = 0 and the contradiction is still sitting there. The wording is lifted from
+`Build/Autumn2_Scheme_of_Work.html` so it matches strings the instrument already knows,
+rather than inventing a variant it would miss.
+
+### The station mapping — the sibling at HEAD settled every name
+
+GROW W2 already says *"the cutting tables, taping bench and dabbing station run on your
+routing — queues negotiated, not policed."* Nothing was invented; the queue beat was
+already owned.
+
+| old (press-era) | new | settled by |
+|---|---|---|
+| inking station | **dabbing station** | GROW W2, verbatim |
+| the roller | **the sponge** | GROW W2 / BUILD A2 W3 |
+| ink (material) | **acrylic** | the room's kit list |
+| second slab | **second dabbing station** | capacity at the choke; nouns from GROW W2 |
+| pulled / pulls / re-pull | **lifted / lifts / re-lift** | the chain ends at `lift` |
+| ghost pull | **ghost lift** | BUILD A2 W3's "Ghost outline" fault card |
+| two-colour pull | **two-colour lift** | registration = layers |
+| `print` (noun) | **unchanged** | GROW W2 "a stencil print"; GROW W7 "make your own print" |
+
+### Two traps that a clean readable-text sweep would have shipped
+
+- **Runtime text is not source text.** The WAGOLL prose and every tap-card caption live
+  in JavaScript string literals (`_wagollText`, `_pres`). A rule-13 "readable text only"
+  extractor drops them, so the visible text read clean while **eleven** press-era strings
+  sat in the scripts. C5 reads raw HTML and kept reporting W6 until they were fixed.
+  **A negative from a search over source is evidence about the source, never about the
+  runtime** — and the corollary: a readable-text sweep must be paired with a raw sweep.
+- **`slabs` is plural.** `\bslab\b` returns zero on it. This is the exact failure the
+  instrument register already records against `\broller\b` having once been unpluralised,
+  and it fired again, in W6's Lundy INFLUENCE zone, screen and print. **Every kit sweep
+  here is now plural-aware by construction.**
+
+`slab` also appears twice as a substring inside `progres**sLab**el` — an identifier, rule
+13, not readable text. Both numbers were reported side by side throughout.
+
+### The sixth option
+
+**"Master a three-layer registered stencil from zero"** replaces the withdrawn screen-print
+option, word-for-word as ratified, in the pill and its print mirror. Its caption keeps the
+pedagogic point — *'Master' is the failing verb* — and gains the required clause: **each
+layer must dry before the next is registered, so the work spans sessions.** The menu is
+still six; offer-scope was asserted **option by option and caption by caption**, and none
+now needs absent kit.
+
+### W8 was outside the July record
+
+W8 reviews the project W5–W7 stages, and still had *"I can pull a print"* and *"two
+re-pulls kept"*. Reported and held rather than swept; **Matt authorised it in-pass**. The
+edit is verb-only. It **did not move the ladder** — neither phrase is in AT-INST-04's
+adjudicated list, so both were invisible to the instrument, the same shape as the A2a-2
+finding above. The ladder stays a floor a human read can lower.
+
+### D2
+
+**A2e removes the inking-station finding from D2's set.** D2's remaining core — one LAUNCH
+period a week against Silver's two units, and the 24-week gap — is untouched by this pass
+and stays Matt's, on its **17 Aug** decision slot.
+
+### Unchanged, deliberately
+
+The LAUNCH W6/W7 duplicate 2C-2D tag stays — adviser's agenda, not this pass's. The 24-week
+gap, the 24 feedback sheets, hubs, schemes and printable pack structure are untouched. The
+restaged delivery stays an internal, audience-managed event; a public showing belongs to
+Gold. **The AVL marker blocks in W5/W6/W7 are byte-identical to main**, and the full LAUNCH
+mount gate set was re-run green after the restage — the standing requirement A2e carried
+from the AVL close is discharged.
