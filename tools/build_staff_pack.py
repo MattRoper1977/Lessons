@@ -44,6 +44,15 @@ INCLUDE_GLOBS = [
 INCLUDE_FILES = [
     "art_teesside.html", "build_asdan.html", "build_dt_upcycling.html",
     "humanities_teesside.html", "LundyLoop/assets/style.css",
+    # Art visual-learning runtime. in_scope() globs *.html, so a directory being in
+    # INCLUDE_DIRS does NOT carry its non-HTML assets — same reason style.css above is
+    # named individually. All 31 Art_Teesside decks load these three by relative path
+    # from inside an AVL-MOUNT marker pair. Without them the loader points at nothing
+    # and the We Do panel silently never mounts. README.md in that directory is repo
+    # documentation and stays out: only what a deck actually loads ships.
+    "Art_Teesside/visual-learning/art-visual-learning.css",
+    "Art_Teesside/visual-learning/art-visual-payloads.js",
+    "Art_Teesside/visual-learning/art-visual-learning.js",
 ]
 # Deliberate exclusions (dual-branding rule + superseded sets)
 EXCLUDE_RE = re.compile(
@@ -159,6 +168,54 @@ def crawl(root):
                 missing.setdefault(str(p.relative_to(root)), set()).add(target)
     return missing
 
+# ---------------------------------------------------------------- AVL gates
+# Two gates for the Art visual-learning layer. Both exist because the rebrand
+# transform strips the hud.js loader (rebrand step 5), and the AVL marker pair sits
+# directly after that loader in all 31 decks. A regex that reached one character too
+# far would silently remove the panel from every staff copy.
+AVL_BLOCK = re.compile(r"<!-- AVL-MOUNT:BEGIN.*?AVL-MOUNT:END -->", re.S)
+
+def avl_blocks(text):
+    return AVL_BLOCK.findall(text)
+
+def check_avl_preserved(src_text, new_text, rel):
+    """AVL-1: the rebrand transform must leave the marker pair byte-identical.
+
+    Compares the extracted blocks, not the whole file — the rest of the file is
+    supposed to change. Returns a failure string, or None."""
+    before, after = avl_blocks(src_text), avl_blocks(new_text)
+    if before != after:
+        return (f"AVL-1 VIOLATION: {rel}: rebrand altered the AVL marker pair "
+                f"({len(before)} block(s) in, {len(after)} out)")
+    return None
+
+def check_avl_refs(pack: Path):
+    """AVL-2: every reference inside a marker pair resolves to a file in the pack.
+
+    The general crawl only reports; this one fails the build. A loader that points at
+    nothing produces no error a teacher would ever see — the panel just never mounts."""
+    fails = []
+    for p in sorted(pack.rglob("*.html")):
+        try:
+            t = p.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        for blk in avl_blocks(t):
+            for dq, sq in HREF.findall(blk):
+                raw = html.unescape(dq or sq)
+                # A root-relative "/x" resolves against the public origin, not the pack,
+                # so it is just as broken offline as a missing file — and it must be
+                # named as the absolute path it is, not reported as "missing".
+                if raw.startswith(("http://", "https://", "//", "/", "#", "data:")):
+                    fails.append(f"AVL-2: {p.relative_to(pack)} -> {raw} is not a relative path")
+                    continue
+                target = unquote(urlparse(raw).path)
+                if not target:
+                    continue
+                if not (p.parent / target).resolve().exists():
+                    fails.append(f"AVL-2: {p.relative_to(pack)} -> {raw} missing from pack")
+    return fails
+
 # ---------------------------------------------------------------- verify
 def verify(pack: Path, branded: bool):
     fails, notes = [], {}
@@ -203,6 +260,8 @@ def main():
     print(f"assessed files locked: {len(assessed)}")
 
     totals = {}
+    avl_fails = []
+    avl_seen = 0
     for rel in keep:
         src = REPO / rel
         raw = src.read_text(encoding="utf-8", errors="ignore")
@@ -210,6 +269,11 @@ def main():
             new, log = rebrand(raw, rel)
             for k, v in log.items():
                 if k != "delta": totals[k] = totals.get(k, 0) + v
+            # AVL-1, checked BEFORE the write, on every file that carries a marker pair
+            if avl_blocks(raw):
+                avl_seen += 1
+                f = check_avl_preserved(raw, new, rel)
+                if f: avl_fails.append(f)
             write_guarded(raw, new, ps / rel)
             # unbranded offline copy: hud.js stripped only
             plain = re.sub(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", raw, flags=re.I)
@@ -239,7 +303,18 @@ def main():
     else:
         print("\nCRAWL: clean, no missing internal targets")
 
+    # AVL-1 result, and AVL-2 against the assembled pack
+    print(f"\nAVL-1: {avl_seen} decks carry a marker pair; "
+          f"{'all preserved byte-for-byte' if not avl_fails else str(len(avl_fails)) + ' ALTERED'}")
+    for f in avl_fails[:10]: print("  FAIL:", f)
+    ref_fails = check_avl_refs(ps)
+    print(f"AVL-2: loader references inside marker pairs "
+          f"{'all resolve inside the pack' if not ref_fails else 'BROKEN'}")
+    for f in ref_fails[:10]: print("  FAIL:", f)
+    avl_fails = avl_fails + ref_fails
+
     fails, notes = verify(ps, branded=True)
+    fails = fails + avl_fails
     print("\nVERIFY (Progress pack):", notes)
     for f in fails[:20]: print("  FAIL:", f)
     if not fails: print("  all REBRAND.md checks pass")

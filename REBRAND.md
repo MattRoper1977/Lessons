@@ -117,13 +117,27 @@ section records it in prose. Scope is **complete-current**, never a git-diff.
 `Launch` · `Tutor_Time` · `DT_Community_Upcycling` · **`Science_Teesside`** (the current
 Teesside science suite, added PACK-1 v2) · root unit hubs (`art_teesside.html`,
 `build_asdan.html`, `build_dt_upcycling.html`, `humanities_teesside.html`) ·
-`LundyLoop/assets/style.css`.
+`LundyLoop/assets/style.css` · **the three Art visual-learning runtime assets**
+(`Art_Teesside/visual-learning/art-visual-learning.css`,
+`art-visual-payloads.js`, `art-visual-learning.js`).
+
+**Why those three, and only those three.** Scope globs `*.html`, so a directory being IN
+does not carry its non-HTML assets — `LundyLoop/assets/style.css` is named individually for
+the same reason. All 31 Art_Teesside lesson decks now load these three files from inside an
+`AVL-MOUNT` marker pair, by **relative** path (`../visual-learning/…`). Derived at
+`66428e3`: 31 decks, 3 distinct references, 31 uses each, **zero absolute or protocol-relative
+references**. If they do not ship, every staff copy carries a loader pointing at nothing and
+the *We Do* panel silently never mounts — offline and on OneDrive, with no error a teacher
+would see.
 
 **OUT:** `Games` and personal apps (dual-branding rule — Made-by-Matt only) · **frozen legacy
 science: `biology/`, `chemistry/`, `2 Physics 10/`** (these stay OUT even though
 `Science_Teesside/` is IN) · superseded legacy art tasters (`Build/Slideshows/BUILD_ART_W\d_`) ·
 old `BUILD_L1_` / `FW_L1_` · site furniture (`404.html`, root `index.html`, `hub-health`) ·
-any pupil/student sheets or pupil data (never enter any zip).
+any pupil/student sheets or pupil data (never enter any zip) · **the visual-learning
+directory's non-runtime contents** — `README.md` and anything else there is recovery
+documentation for this repo, not something staff need in a pack. Only the three files a deck
+actually loads go in. `reports/REDUCED_MOTION_REGISTER.md` and `tools/` stay OUT as before.
 
 ---
 
