@@ -317,3 +317,114 @@ generated zip is derivation; a hand-made one is a second copy. Build it before t
 estate grows further.
 
 Assume any zero is blindness until a second, independent signal agrees with it.
+
+---
+
+## This session — 2026-08-05 · Art visual-learning pack recovered, Stage A landed, mounted nowhere
+
+Sentinel `art-visual-learning-2026-08-05`. Branch `art-visual-learning`, commit `91cc0cc`,
+based on `main` at `a4b19e2`.
+
+The vendor's Art Visual-Learning pack survived only as a 12-file re-compressed subset plus a
+self-contained demo. Stage A recovers the toolkit from the demo **by byte-for-byte extraction**
+into `Art_Teesside/visual-learning/` — CSS 16,977 b, payloads 45,445 b, engine 75,820 b — and
+lands it **mounted nowhere.** No lesson file loads it. Demo chrome and the demo bootstrap were
+discarded. No line was prose-reconstructed; every file was verified by `cmp` read-back after
+writing, and by a size read at origin separate from the push.
+
+**No provenance gate was possible and none is claimed.** The vendor's quoted ZIP checksum and
+the archive Matt holds differ because the archive is a re-compression, and there is no manifest.
+The mismatch proves nothing either way. Absence of a mismatch is not evidence of integrity.
+
+### The target set is now derived, not inherited
+
+"Pupil-facing lesson deck" now has a derivable definition: **an `Art_Teesside` HTML file that
+requests `/hud.js`.** That is 31 of the 53 Art HTML files, and it is **identical, one for one,
+to the 31 lesson IDs in the vendor payloads** — the two sets were compared and the difference is
+empty in both directions, against a control that returns 22.
+
+The 22 files it excludes are exactly the hubs, schemes of work, printable evidence packs, House
+Standard & Safety and the Arts Partnership Log — every artefact that must receive no panels. The
+definition excludes the untouchables without being told to. Use it; do not re-count by hand.
+
+### Three inherited facts were wrong at HEAD
+
+- **`pass-art-a2b` is not unmerged.** It is merged, via `8f4f9b1`, 0 commits ahead of `main`,
+  tip an ancestor of `main`. The "mount GROW W6/W7 last" sequencing constraint is **discharged**
+  — verified against a control branch that is genuinely unmerged and returns 11 changed files.
+- **The pinned baseline `067c76a4` is stale but alive** — still an ancestor of `main`, 7 commits
+  behind. Nothing depends on it; the pinned patches were never applied and are absent.
+- **`aria-` is 30, not 27.** Minor, and in the safe direction.
+
+### The blocker, and why nothing mounted
+
+The engine hides the teaching explanation on LAUNCH until the pupil types eight characters, on
+top of completing the activity. There is **no adult override on screen** — the engine contains
+zero occurrences of `staff`, `teacher`, `Answers`, `override` or `revealAll`, and `avl-static`
+toggles animation only. All 8 `evidencePrompt` fields sit on all 8 LAUNCH lessons.
+
+This is **the science sibling's open-item 37**, the defect that closed that pack mounted-nowhere.
+Print is unaffected — `@media print` force-shows the explanation. The defect is on screen only.
+
+The fix is wirable: the chassis staff-answer organ is present in **31 of 31** target decks. It
+was not built this session, so **Stage B did not start and nothing was mounted.** A lesson whose
+staff route is not wired does not mount, and no LAUNCH lesson mounts before that fix exists.
+
+**If Art solves this first, the fix pattern is the science session's answer too.**
+
+### The word-boundary trap fired three more times, in one session
+
+Standing rule 15 earned its place again. A search for `Answers (staff)` returned **zero** in all
+three Stage B target decks — the organ is there, labelled `👁️ Answers`, toggling `.show-ans` on
+`#exit-slide`, and the emoji carries a variation selector. Had that zero been believed, the
+conclusion would have been "the staff organ does not exist, LAUNCH can never mount" — false, and
+expensive. The same trap had already fired on `openedBy` vs `artOpenedBy` and on `<title>`.
+
+The absent-kit check is recorded with **both numbers** so the next reader cannot repeat it:
+`press` 49 substring / **0** boundary, all `pressure`. `etch` 14 / **0**, all `sketch` or
+`stretch`. Two non-zeros survived and were adjudicated: `print` **1**, which is `@media print`,
+and `ink` **3**, which is `--avl-ink`, a CSS colour token. Neither is printmaking vocabulary.
+**The pack is clean on kit.**
+
+Note for the next kit audit: `--avl-ink` will make a crude `grep -ow ink` over the estate return
+a false positive from now on. It is a CSS custom property and is never pupil-visible.
+
+`registration` (12) and `edition` (9) were adjudicated **native, and land.** `registration`
+already appears at HEAD across the Autumn 2 decks in exactly the layer-alignment sense — *"Lining
+a stencil up the same way each time"*, *"registration jig"*, taught as a defined keyword with
+WAGOLL tags. It is not new technique vocabulary, so it did not stop.
+
+### The estate's two largest locks held without being asked
+
+`AO1`–`AO4`, `GCSE`, `grade band`, `guided learning`, `GLH`, `TQT` and `hours` are **all 0**
+across payloads and engine, as are `Explore`, `Bronze`, `Silver`, `Part A`–`Part D`, `Unit`,
+`adviser`, `moderator` and `Artsmark`. An external artefact respected both compliance locks
+unbidden. That raises confidence in the pack's discipline; it transfers no authority to the
+vendor's own validation table, which remains **not inheritable**.
+
+Every absence assertion this session was replayed against a case that must return non-zero, and
+did. A zero that cannot be non-zero is still an unasked question.
+
+### Estate Visuals run — VERIFY-ONLY
+
+The Estate Visuals run, sentinel `estate-visuals-2026-08-04`, claims Art_Teesside with a
+minimal-diff brief. **This pass takes ownership of Art_Teesside; that run's Art half is now
+VERIFY-ONLY.** No branch for it exists on the remote.
+
+### Open, and Matt's
+
+Four rulings block Stage B, and they are recorded in full in
+`Art_Teesside/visual-learning/README.md`: the **clipboard capability** (ships disabled unless
+ruled otherwise), the **award-blind transfer task** (route into the weekly sheet, or declare it
+not-evidence — it must not become a third portfolio by drift), the unfed **`innerHTML`** branch,
+and the **reduced-motion listener**, which is computed once at load with no `change` listener.
+
+The **8-character threshold is not ruled** and was not changed. It is flagged as a design
+question for pupils with writing difficulty: a pupil-facing gate must have no failing answer.
+
+**Pass A2e stays reserved** and owns LAUNCH W5/W6/W7. The pack's LAUNCH payloads score 0 for
+`ink`, `inking`, `crew`, `station`, `slab` and `pull`, so the collision is file-level sequencing
+only, not content. It was not resolved unilaterally.
+
+Live state was **not** verified: the sandbox proxy 403s `madebymatt.uk` and the Pages API. Stage
+A is unmerged, so there is nothing deployed to check.
