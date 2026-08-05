@@ -75,13 +75,6 @@ def transform_digestion(root: pathlib.Path) -> None:
     text = read(root, DIGESTION)
     text = replace_exact(
         text,
-        ".indep-controls button { margin: 0 6px; }",
-        ".indep-timer-display { font-weight: 800; }\n    .indep-controls button { margin: 0 6px; }",
-        expected=1,
-        label="Digestion timer class style",
-    )
-    text = replace_exact(
-        text,
         'id="indep-timer-display"',
         'class="indep-timer-display"',
         expected=2,
