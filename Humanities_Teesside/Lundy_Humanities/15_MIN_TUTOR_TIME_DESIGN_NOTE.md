@@ -2,7 +2,7 @@
 
 **STATUS:** staff design review only. No live workflow is authorised.
 
-## Repository trigger
+## When this reopens
 
 Reopen only when both are true:
 

@@ -63,4 +63,4 @@ The GROW and LAUNCH Week 7 lessons are protected. Lundy participation after pens
 
 ## Tutor time
 
-The current repository defers a larger studio. See `15_MIN_TUTOR_TIME_DESIGN_NOTE.md` for staff review options only.
+The larger studio is deferred. See `15_MIN_TUTOR_TIME_DESIGN_NOTE.md` for staff review options only.
