@@ -65,7 +65,7 @@ Withdrawn, not deleted: `R8` `.a4.dense`; `min-height: 277mm`; "GROW Part B abse
 | `Launch/LAUNCH_ART_W5` | 2 | | | | **2** | A2e |
 | `Summer1_Scheme_of_Work` | | 1 | | | **1** | terminal |
 | **TOTAL (was)** | **15** | **11** | **0** | **2** | **28** | A2b closed −6 |
-| **TOTAL (now, post-A2e)** | **0** | **11** | **4** | **0** | **15** | A2e closed −17, +4 new cand |
+| **TOTAL (now, post-ratify)** | **0** | **15** | **0** | **0** | **15** | A2e closed −17; 4 cand ratified refusal |
 
 `34 → A2b −6 → 28 → A2e −17 → 11 → +4 → **15**`. **A2e closed all 17 it owned** — kit-dep 15 (LAUNCH W6 10, W7 3, W5 2) and offer-scope 2 (LAUNCH W1) are now zero. The projected landing was 11. **It is 15, and the extra 4 are this pass's own doing:** the new LAUNCH kit disavowal names press, rollers, inks, screens, squeegees and dyes in order to refuse them, and the classifier reads those as `refusal-candidate` — *proposed, not decided*. They are **not self-ratified**: `assert_kit.py` says intent is ratified by a human once, so they sit in `cand` until Matt rules, exactly as BUILD's six and GROW W2's two did before him. On ratification they move `cand → refusal` and the total stays 15 with the floor rising from 11 to 15. That rise is correct: LAUNCH now carries its own refusal, which is what made C5 able to see anything at all.
 
@@ -680,3 +680,37 @@ restaged delivery stays an internal, audience-managed event; a public showing be
 Gold. **The AVL marker blocks in W5/W6/W7 are byte-identical to main**, and the full LAUNCH
 mount gate set was re-run green after the restage — the standing requirement A2e carried
 from the AVL close is discharged.
+
+
+---
+
+## A2e ratify — 2026-08-05 · the four candidates are refusal-context · the register has no undecided entries
+
+Sentinel `a2e-ratify-2026-08-05`. **Matt's ruling, delegated.** The four strings A2e surfaced —
+kit named inside the LAUNCH disavowal *in order to refuse it* — are ratified **cand → refusal**.
+
+`34 → A2b −6 → 28 → A2e −17 → 11 → +4 ratified refusal → **15, floor = 15**`. The total does
+not move; the floor rises 11 → 15, because LAUNCH now carries its own refusal and a refusal is
+counted where it is made.
+
+All four were read in full before ratification, and both sentences sit squarely inside the
+refusal frame — *"It is off the table: there is no press, no rollers and no printing inks in the
+room, and no screens, squeegees or dyes either"* and *"No press, no rollers, no inks — stencils,
+sponged acrylic and registered layers only."* **No §2 outlier.**
+
+**`refusal-candidate` is now 0 across the estate.** Nothing in the Art Teesside register is
+undecided.
+
+### One enabling change, reported rather than buried
+
+The ratified set matched files by **basename**, and three files are called `Scheme_of_Work.html`
+(Build, Grow, Launch). A basename can neither express nor confine a ruling made about one of
+them: ratifying LAUNCH's disavowal by basename would have silently pre-ratified an identical
+sentence dropped into `Build/Scheme_of_Work.html` later, with no human in the loop — and the two
+sentences here were lifted from `Build/Autumn2_Scheme_of_Work.html`, so that collision was not
+hypothetical. The classifier now receives the relative path.
+
+Asserted, not assumed: every other file's per-class counts are byte-identical across the change,
+and two controls were run — a mis-scoped fragment returns `cand` to 4, and the old basename
+matcher cannot see the new entries at all. The second is why the fix was required rather than
+tidy.

@@ -108,6 +108,17 @@ RATIFIED = [
   "A2a's disavowal in the TA brief; the sentence exists to refuse the kit the lesson used to require"),
  ("Summer1_Scheme_of_Work", "No screens, squeegees or fabric inks needed",
   "Summer 1's own refusal of the screen route; its spine gets this right"),
+ # Ratified by Matt, 2026-08-05, ruled via delegation (sentinel a2e-ratify-2026-08-05).
+ # A2e landed a kit disavowal in the LAUNCH scheme of work so that C5 — which is
+ # folder-scoped and had no disavowal to read under Launch/ — could see that route at
+ # all. A disavowal must name what it refuses, so its kit-namings are refusal-context
+ # by construction. This is the same mechanism that admitted A2a's two strings for
+ # GROW W2; the set grows the way it grew before. Both sentences were read in full
+ # before ratification and both sit inside the refusal frame.
+ ("Launch/Scheme_of_Work", "no press, no rollers and no printing inks",
+  "LAUNCH's own refusal; the sentence rules out the print run it has just named"),
+ ("Launch/Scheme_of_Work", "No press, no rollers, no inks",
+  "the unit kit line, stated as what the room does NOT hold, before naming what it does"),
 ]
 
 
@@ -171,7 +182,14 @@ def main():
                 hi = text.find('.', m.end());  hi = len(text) if hi < 0 else hi
                 sentence = text[lo:m.start()] + ' ' + text[m.end():hi + 60]
                 full = text[lo:hi + 60]      # intact, for ratified-string matching
-                cls = classify(os.path.basename(rel), pat, default, sentence, full)
+                # rel, not basename. Three files are called Scheme_of_Work.html
+                # (Build, Grow, Launch), so a basename can neither express nor
+                # confine a ruling made about one of them: ratifying LAUNCH's
+                # disavowal by basename would silently pre-ratify an identical
+                # sentence dropped into Build's later, with no human in the loop.
+                # Every existing RATIFIED fragment still matches — asserted, not
+                # assumed, by comparing per-file counts across this change.
+                cls = classify(rel, pat, default, sentence, full)
                 per_file[rel][cls] += 1
                 per_class[cls] += 1
                 detail[rel].append((cls, m.group(0), seg.strip()))
