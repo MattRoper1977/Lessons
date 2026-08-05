@@ -62,10 +62,18 @@ jobs:
             git cat-file -e "$BASE^{commit}"
             git worktree add --detach "$WORKTREE" "$BASE"
 
+            printf '%s\n' 'Grid Chase repository-blob lines 57-63:'
+            git -C "$WORKTREE" show "$BASE:Games/Grid_Chase.html" | sed -n '57,63l'
+            printf 'Grid blob SHA-1: '
+            git -C "$WORKTREE" rev-parse "$BASE:Games/Grid_Chase.html"
+            printf 'Grid worktree SHA-1: '
+            git -C "$WORKTREE" hash-object 'Games/Grid_Chase.html'
+
             for patch in "$PATCH_ROOT"/000*.patch; do
-              printf 'Checking %s\n' "$(basename "$patch")"
-              git -C "$WORKTREE" apply --check --verbose --recount --ignore-space-change "$patch"
-              git -C "$WORKTREE" apply --verbose --recount --ignore-space-change "$patch"
+              printf 'Checking %s against the exact commit index\n' "$(basename "$patch")"
+              git -C "$WORKTREE" apply --cached --check --verbose --recount --ignore-space-change "$patch"
+              git -C "$WORKTREE" apply --cached --verbose --recount --ignore-space-change "$patch"
+              git -C "$WORKTREE" checkout-index -a -f
             done
 
             cmp "$PATCH_ROOT/new-files/assets/video/poster-art.svg" "$WORKTREE/assets/video/poster-art.svg"
