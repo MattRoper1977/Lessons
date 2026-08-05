@@ -4,6 +4,10 @@ This directory contains a **read-only, whole-repository verification pass** for 
 `MattRoper1977/Lessons` GitHub Pages estate. It does not rewrite lessons, repair
 content, alter assessment wording, or modify the website repository.
 
+The implementation is held in ordered plain-text segments under `source/`. The
+`estate_audit.py` bootstrap verifies the assembled SHA-256 before compiling it, so
+missing, reordered or altered source fails before any repository claim is made.
+
 The audit has four evidence layers:
 
 1. **Repository integrity and syntax** — inventories every tracked file; checks
