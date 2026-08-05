@@ -98,7 +98,18 @@ function roleOf(tag, cls) {
           await new Promise((r) => setTimeout(r, 90));
 
           const parse = (c) => {
-            const m = (c || '').match(/[\d.]+/g) || [0, 0, 0, 1];
+            const s = c || '';
+            const m = s.match(/[\d.]+/g) || [0, 0, 0, 1];
+            /* CSS Color 4 -- color(srgb r g b) carries 0..1 channels, not 0..255.
+               Chromium serialises every color-mix() result this way, and the ASDAN
+               visual-learning layer uses color-mix() throughout, so scraping the
+               numbers and assuming 0..255 read a near-white mint as near-black and
+               scored real, legible text at 1.42:1. Detected by the prefix, not by
+               guessing from magnitude: an rgb() colour may legitimately be 0 0 1. */
+            if (/^color\(\s*srgb/i.test(s)) {
+              return { r: +m[0] * 255, g: +m[1] * 255, b: +m[2] * 255,
+                       a: m[3] === undefined ? 1 : +m[3] };
+            }
             return { r: +m[0], g: +m[1], b: +m[2], a: m[3] === undefined ? 1 : +m[3] };
           };
           const lum = (c) => {
