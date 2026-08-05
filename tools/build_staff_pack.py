@@ -53,7 +53,27 @@ INCLUDE_FILES = [
     "Art_Teesside/visual-learning/art-visual-learning.css",
     "Art_Teesside/visual-learning/art-visual-payloads.js",
     "Art_Teesside/visual-learning/art-visual-learning.js",
+    # PACK-2: the GROW/LAUNCH ASDAN visual-upgrade runtime, added for exactly the
+    # reason the Art three above were. The crawl over the assembled pack found 124
+    # references to these four files from 62 decks that ship, resolving to nothing --
+    # by far the largest broken-link family in the pack. GROW_ASDAN and LAUNCH_ASDAN
+    # are in INCLUDE_DIRS, but in_scope() globs *.html, so their non-HTML assets were
+    # never carried. Same silent failure: the loader points at nothing, offline and on
+    # OneDrive, with no error a teacher would see.
+    "GROW_ASDAN/visual-upgrade.css",
+    "GROW_ASDAN/visual-upgrade.js",
+    "LAUNCH_ASDAN/visual-upgrade.css",
+    "LAUNCH_ASDAN/visual-upgrade.js",
+    # PACK-2: two non-HTML siblings linked from Humanities pages that DO ship. Same
+    # class as the runtime assets above -- a directory being IN does not carry them.
+    "Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv",
+    "Humanities_Teesside/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md",
 ]
+# The dynamic hud.js injector. Self-contained script element, byte-identical across
+# the five decks that carry it, and its entire body exists to load hud.js.
+HUD_DYNAMIC = re.compile(
+    r'\s*<script[^>]*id=["\']grow-hud-loader["\'][^>]*>.*?</script>', re.S | re.I)
+
 # Deliberate exclusions (dual-branding rule + superseded sets)
 EXCLUDE_RE = re.compile(
     r"(^Games/)"                                   # games are Made by Matt only
@@ -125,7 +145,14 @@ def rebrand(text, path):
 
     # 5 · strip the hud.js loader — only ever loads from the public origin
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
-    log["hud_stripped"] = k
+    # 5b · and the DYNAMIC loader, which the tag regex above cannot see. Five
+    # Science_Teesside/Grow decks carry <script id="grow-hud-loader"> whose whole body
+    # is document.createElement("script") + s.src="/hud.js" with a relative-path
+    # onerror retry. It survived every previous pack build: the staff copies shipped
+    # fetching hud.js at runtime, twice, from a machine that has neither. Found by
+    # grepping the ASSEMBLED pack for hud.js rather than trusting the strip count.
+    text, k2 = re.subn(HUD_DYNAMIC, "", text)
+    log["hud_stripped"] = k + k2
 
     # 6 · x-brand marker, added last and only if the rebrand actually completed here
     if 'name="x-brand"' not in text:
@@ -277,6 +304,7 @@ def main():
             write_guarded(raw, new, ps / rel)
             # unbranded offline copy: hud.js stripped only
             plain = re.sub(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", raw, flags=re.I)
+            plain = HUD_DYNAMIC.sub("", plain)
             write_guarded(raw, plain, mbm / rel)
         else:
             for dest in (ps / rel, mbm / rel):
