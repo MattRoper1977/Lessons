@@ -1087,3 +1087,71 @@ it by id, and `g-mblur` → `g-mblur**X**`, which still contains `g-mblur`. **Ea
 tamper, not a vacuous check, and each was fixed and re-proved rather than asserted away.**
 
 **The estate is not declared clean.**
+
+---
+
+# §R-close · CLOSE ORDER executed — place, merge, close (6 Aug 2026)
+
+Sentinel `pr7071-close-2026-08-06`. Base ancestry re-proved before any write (`4aced082`
+ancestor of `origin/main`); identity gate ran first, as precedent from the mis-open catch
+requires. This is the close of the post-review work, not a reopening: **the programme stays
+CLOSED.**
+
+## The three rulings, verbatim (Matt, delegated to Claude, defaults baked)
+
+> **R1 — Memory-trick placement: the L1 Carbohydrases I-Do slide.** Move the paragraph there —
+> the point of first encoding, teacher-modelled. The L1 exit slide gains a one-line RETRIEVAL
+> PROMPT that tells pupils to use the trick ("What was our amylase trick?") — a reference, NOT a
+> second copy of the paragraph (one truth: the trick's text exists exactly once in the file).
+> Preserve the paragraph's wording as committed; placement only.
+
+> **R2 — After #72 merges: close #70 AND #71 unmerged as superseded.** Branches retained, one
+> comment each: #71 — every valid finding re-authored natively in #72; the rejections (poster
+> 0004, g-mblur 0005) are recorded in the LEDGER with reasons; merging it would change no lesson
+> file. #70 — held on competence, not safety: adoptable as standing tooling only when it resolves
+> JS-string identifiers, proves counts by enumeration, and runs green (13 runs, 0 green as of this
+> close). Its process discipline is acknowledged in the comment.
+
+> **R3 — The four parks stay parked exactly as recorded.** Poster: owned-pending per the LEDGER,
+> must be RELATIVE when real art lands, no action. Band E pre-init hardening: folds into the next
+> Lessons maintenance pass, not its own session. No sweep may "fix" either.
+
+## As executed
+
+- **R1 landed** in commit `f70cacb` on the #72 branch: the "Amylase Makes Maltose, Maltase Makes
+  Glucose" paragraph moved from the end of `<body>` to sit directly under the Carbohydrases enzyme
+  box on the **L1 – I Do: Enzymes** slide. The L1 exit slide gained a retrieval **reference** —
+  *"Before Q1 — what was our amylase trick?"* — which does **not** repeat the paragraph text.
+  Proven: trick wording appears **exactly once** in the file; nothing after `</html>`. Validator at
+  tip: **15/15 live, 15/15 tampers caught** — no expectation orphaned.
+- **#72 merged** into `main` as **`e77ab687`**. Main's head is that merge SHA and nothing else
+  moved it. Merge authority was for #72 only.
+- **R2 executed:** #71 and #70 both **closed unmerged**, one comment each (posted before close),
+  **both branches retained** at `3f246dd6` / `10a4195c` — confirmed via `ls-remote`. Nothing
+  deleted.
+
+## For the register — two instrument lines
+
+- **(a) Rendered measurement beats static structure analysis.** The Surrealism `#print-area`
+  `<div>` was misdiagnosed by static reads on **both sides** of the review — the fix pack filed it
+  as print-only; the first execution pass first read it the same way — and its true effect (three
+  teacher-facing modals rendering 0×0 on screen, print unaffected) was settled only in a real
+  browser. When a structural defect can change what renders, measure the DOM; do not rule from the
+  source text alone.
+- **(b) Source-level duplicate IDs are not DOM duplicates.** Template-rendered screens hold one
+  instance at a time; six of the seven flagged game files had peak simultaneous count ≤ 1 in the
+  live DOM. Enumerate in the DOM before counting a duplicate-id defect — a grep of the source
+  counts template branches, not co-existing elements.
+
+## The parks — still parked, and the honest open ledger
+
+| park | state at this close |
+|---|---|
+| `/assets/video/poster-art.jpg` | owned-pending; **must be a RELATIVE path when real art lands** (site serves under `/Lessons/`). No action this session. |
+| Band E pre-init hardening (`filter:url(#missing)` blank-flash) | folds into the **next Lessons maintenance pass**, not its own session. Proposed-held. |
+| Band C placement | **CLOSED by R1** — the one park this order resolved. |
+| PR #70 adoption as standing tooling | held on competence; three capabilities named in the #70 comment. |
+
+**Expected residue, stated honestly:** the poster (awaiting real art) and Band E (next maintenance
+pass). Neither is a defect left unfixed; each is a decision deliberately deferred, with its
+condition recorded. **The estate is not declared clean.**
