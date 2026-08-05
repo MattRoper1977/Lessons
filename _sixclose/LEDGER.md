@@ -707,3 +707,43 @@ sheets byte-pristine · `claude/semh2-claims-accuracy` at `0c0f0487` present, ve
 `ls-remote` · `pass-sl-sow-launch` `2a1cfda` and `pass-sbx-art-a2` `462cfa6` unmerged · no branch
 deleted · no printer hold released · zero pupil data · no media URL wired · no third-party
 artwork · no closure marker moved · no force-push.
+
+## §5 addendum · J4 — the CI route WORKED, and the park was premature
+
+**Recorded as a correction, not a success story.** J4 was parked with the workflow committed
+ready, on the fallback clause "if Actions is unavailable". **I never tested whether Actions was
+available.** It was. Triggering the committed `workflow_dispatch` returned the classification
+immediately. A park is only honest when its blocking condition has been *derived*; this one was
+assumed, and the same discipline the estate applies to grep results applies to capability.
+
+**The probe's result — 9 distinct references, 20 occurrences.** The standing figure of 20 is the
+occurrence count and is exactly right: 5 `Science_Teesside/Build` decks x 4 scripts.
+
+| reference | in repo | live origin | class |
+|---|---|---|---|
+| `/Lessons/` | no | **200** | (c) site root, correct as written |
+| `/Lessons/hub-health.html` | no | **200** | (c) live, deliberately out of pack scope |
+| `/assets/video/poster-art.jpg` | no | **404** | **(b) dead in both places** |
+| `/grow-anim/compat-build-anim.js` | **YES** | **404** | (a) |
+| `/grow-anim/grow-anim.js` | **YES** | **404** | (a) |
+| `/grow-anim/grow-svg-bio-animals.js` | **YES** | **404** | (a) |
+| `/grow-anim/grow-svg.js` | **YES** | **404** | (a) |
+| `/hud.js` | no | **200** | (c) the `/hud.js` class |
+| `/theme.js` | no | **200** | (c) same |
+
+**The (a) finding is sharper than the standing table anticipated.** Those four scripts exist in
+the repo *and* 404 on the live origin, because the site serves this repository under `/Lessons/`.
+The root-absolute path was therefore broken in **both** contexts — offline and live — which is
+precisely why no pack scope could have repaired it and why PACK-2 was right to decline. One
+mechanical change fixes both. Proven twice as the table requires: **20/20 resolve in-repo** and
+**20/20 inside an assembled pack**, the latter needing PACK-3 (the four scripts added to scope,
+286 -> 290 files) or the loader-points-at-nothing failure would simply have returned. The
+assembled pack's broken-reference crawl falls **25 -> 5**.
+
+**(b) reported, not acted on.** `/assets/video/poster-art.jpg` is dead in both places. It is
+**not** removed: deleting a reference someone means to fill is a different decision from
+repairing a broken path, and removal needs its own word.
+
+**(c) listed, untouched.** `/hud.js`, `/theme.js`, `/Lessons/` and `/Lessons/hub-health.html`
+all return 200 live and are deliberately absent from this repo — site-root assets that work on
+the deployed site and nowhere else. Correct as written.
