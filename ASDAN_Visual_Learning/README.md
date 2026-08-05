@@ -1,31 +1,30 @@
-> # STATUS — mounted across all 85 taught decks
+> # ADOPTED — a standing part of the BUILD/GROW/LAUNCH ASDAN provision
 >
-> **This toolkit is live.** All 85 ASDAN lesson decks load it: 31 BUILD (materialised through
-> `BUILD_ASDAN/_framework/`), 18 GROW and 30 LAUNCH through their shared `visual-upgrade` layers,
-> and the 6 D&T decks by per-file integration. The standing do-not-mount banner that headed this
-> file has been **removed rather than softened**: it had become untrue, and such a banner on a
-> mounted toolkit is a co-present contradiction. (Its literal wording is deliberately not
-> reproduced here — a past-tense mention would still answer a future grep for it, and this file
-> should never return a hit for a banner it no longer carries.)
+> **ADOPTED.** A standing part of the BUILD/GROW/LAUNCH ASDAN provision, mounted on all 85 taught
+> decks, maintained in this repository. **Ruled by Matt, 5 Aug 2026.** This supersedes the earlier
+> "vendor pack under review" framing: it is no longer a trial, and no longer supplementary.
 >
-> **The four original blocking items, all closed:**
+> **Alignment, with the boundary intact.** It supports the teaching of the PEQ six skills and
+> aligns with the estate's audited accreditation claims. **It performs no assessment, moderation,
+> evidence-state or quality-assurance function. No awarding-body endorsement is implied. The
+> data/evidence firewall document remains authoritative and unchanged.**
 >
-> 1. The vendor's decisive post-integration regression — **RUN**, in a real browser, per batch.
->    A green from an older tip was never accepted as a green.
-> 2. Reduced motion in JS — **CLEARED** at `cc4f6fa`; `matchMedia` read at load and watched live.
-> 3. The six D&T decks' chassis — **RESOLVED**; their staff answers organ is present and they
->    mount by per-file integration, which is what `integrate.py` always did for those paths.
-> 4. `docs/MEDIA_REGISTER.md` — **still a candidate register, and it gates nothing.** No URL in
->    it has been resolved. `lesson-payloads.json` carries 0 external URLs and 0 embeds, so no
->    mounted surface depends on it. This is the one parked item, and it stays parked.
+> **What adoption deliberately did NOT change.** No public-surface accreditation claim moved — the
+> ComSk1-only registration and the provisional-wording rules stand untouched. No catalogue entry
+> was minted: this is runtime loaded by lessons, not a standalone resource. No prior banner was
+> resurrected.
 >
-> **Accessibility.** The eyebrow, the sequence badges and the button family all render on a
-> **solid chip** — `--asvl-accent-chip`, the pathway hue darkened by a fixed 74% mix toward black.
-> Text darkening alone could never hold a floor, because the header gradient's tint moves per
-> deck and the contrast pair was unstable; the chip makes the pair known. Derived across all nine
-> measured (tint, accent) pairs in the estate: white-on-chip ≥ 4.6:1 (worst 4.68) and
-> chip-vs-header ≥ 3:1 (worst 3.94). Solid, never translucent — translucency would re-import the
-> moving background.
+> **Mount state:** 31 BUILD (materialised via `BUILD_ASDAN/_framework/`), 18 GROW and 30 LAUNCH
+> through their shared `visual-upgrade` layers, 6 D&T by per-file integration. The vendor's own
+> `integrate.py --check` passes.
+>
+> **The one parked item:** `docs/MEDIA_REGISTER.md` remains a **candidate register and gates
+> nothing** — no URL in it has been resolved, and `lesson-payloads.json` carries 0 external URLs
+> and 0 embeds, so no mounted surface depends on it.
+>
+> **Accessibility:** eyebrow, sequence badges and buttons render on a solid chip
+> (`--asvl-accent-chip`, the pathway hue at a 74% mix toward black), derived across all nine
+> measured (tint, accent) pairs: white-on-chip ≥ 4.6:1, chip-vs-header ≥ 3:1.
 
 # ASDAN Visual Learning
 

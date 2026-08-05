@@ -854,3 +854,66 @@ third-party artwork · no closure marker moved · no force-push.
 Both scope items are **already in the builder** and need no further action: the mounted ASDAN
 runtime assets, and PACK-3's four `grow-anim` scripts. Restated so the slot does not re-derive
 them.
+
+---
+
+# SESSION L4 MICRO — adoption made official, and the last contrast row
+
+Base `2e127cc`. Sentinels 50/98 over 548, unmoved. Browser probed: Chromium 141.
+
+## §1 · The adoption ruling, verbatim
+
+**ADOPTED — a standing part of the BUILD/GROW/LAUNCH ASDAN provision, mounted on all 85 taught
+decks, maintained in this repository. Ruled by Matt, 5 Aug 2026.**
+
+Alignment recorded with the boundary intact: *it supports the teaching of the PEQ six skills and
+aligns with the estate's audited accreditation claims; it performs no assessment, moderation,
+evidence-state or quality-assurance function; no awarding-body endorsement is implied; the
+data/evidence firewall document remains authoritative and unchanged.*
+
+Explicitly not done: no public-surface accreditation claim changed (ComSk1-only and the
+provisional wording stand), no catalogue entry minted (runtime loaded by lessons, not a
+standalone resource), no banner resurrected. The wording carries no literal do-not-mount string,
+per the #67 grep-shape lesson.
+
+## §2 · The "Success looks like" heading — and it was NOT one row
+
+**The order expected a single row. Measuring the estate returned 109 failing files.** The
+re-score that produced the original figure covered only the 36 `color-mix()` surfaces; the
+heading exists in **141** files. Rendered measurement across all of them:
+
+| group | files | before | after |
+|---|--:|---|---|
+| styled, `color:var(--sc-border)` — nine distinct rendered hues | **85** | **1.86 – 3.02** | **4.72 – 6.33** |
+| bare `<h3>`, inherits | 24 | 4.52 | **untouched** |
+| already dark (`#1f2937`) | 31 | 13.22 | untouched |
+
+**Bar applied:** rendered 12.48–12.8px at weight 700 — **not large text**, so the ≥4.6 target,
+not 3.2. Derived, not assumed.
+
+**The fix:** one constant, `color-mix(in srgb, var(--sc-border) 60%, #000)`, applied to the 85
+styled failures. `--sc-border` could not be fixed "once" as a shared token — it is **declared per
+deck with nine different values**, and 175 of its 607 uses are `color:` rather than a border, so
+moving the token would have moved far more than this heading.
+
+**An error of mine, caught by measuring rather than by arithmetic.** The constant was first
+derived at 64% **against white**, and 20 of the 85 still failed at 4.25. These headings sit on a
+tinted scaffold background, not white. Re-derived against the **real measured backgrounds** (nine
+(bg, accent) pairs), 60% is the binding value; worst case 4.72. **A contrast constant derived
+against an assumed background is not derived.**
+
+**The 24 bare files are NOT touched, and that is a RED-line decision, not an oversight.** They
+render at **4.52** — above the WCAG AA floor of 4.5, below this order's 4.6 margin — and **the ★
+assessed pair is among them**. Touching them would breach the 0-bytes lock. Left for Matt: either
+they stay (they pass AA), or the assessed pair needs its own ruling before its 23 siblings can
+move. **They cannot be fixed as a group while the lock stands.**
+
+Assessed pair verified byte-identical after the edit: `a5545585…` / `eb14d610…`.
+
+## §3 · Close
+
+This is the last planned commit of the Lessons programme.
+
+**Parked by design:** `docs/MEDIA_REGISTER.md`, a candidate register gating nothing, awaiting
+Matt's own checks · `/assets/video/poster-art.jpg`, intentionally pending as the unruled
+art-suite clip reference · the 24 bare headings at 4.52, held behind the assessed-pair lock.
