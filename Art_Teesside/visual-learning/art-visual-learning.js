@@ -8,7 +8,17 @@
   if (!document || global.ArtVisualLearning) return;
 
   var PAYLOADS = global.ArtVisualPayloads || {};
-  var reducedMotion = !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /* As recovered, reducedMotion was computed once at load with no change
+     listener, so an OS preference changed mid-session was never honoured in
+     JS. The blanket CSS rule still applied, so it degraded rather than failed.
+     The query is now watched, and isStatic() reads the live value. */
+  var motionQuery = global.matchMedia ? global.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var reducedMotion = !!(motionQuery && motionQuery.matches);
+  if (motionQuery) {
+    var onMotionChange = function (event) { reducedMotion = !!event.matches; };
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+    else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+  }
 
   function el(tag, attrs) {
     var node = document.createElement(tag);
@@ -138,10 +148,33 @@
     return gate;
   }
 
+  /* The staff route to the explanation.
+
+     The chassis exit slide already carries the adult answer organ: a button
+     toggling .show-ans on #exit-slide. The explanation follows that same
+     organ. No second toggle concept, and no new adult control invented.
+
+     Without this, a LAUNCH pupil must complete the activity AND type eight
+     characters before the teaching appears, with no adult override on screen.
+     A pupil-facing gate must have no failing answer: a pupil with writing
+     difficulty must not be the one person who cannot reach the teaching. */
+  function staffAnswersShown() {
+    var exit = document.getElementById('exit-slide');
+    return !!(exit && exit.classList.contains('show-ans'));
+  }
+
   function refreshExplanation(ctx) {
-    if (!ctx.completed) return;
-    var evidenceReady = !ctx.evidenceInput || ctx.evidenceInput.value.trim().length >= 8;
-    if (ctx.pathway === 'LAUNCH' && !evidenceReady) {
+    var staff = staffAnswersShown();
+    if (!ctx.completed && !staff) { ctx.explanation.hidden = true; return; }
+    /* Threshold ruled 2026-08-05: one non-whitespace character, not eight.
+       The gate's pedagogic job is the moment of committing evidence before the
+       explanation, not enforcement of prose length. Length-policing selects
+       against exactly the writing-difficulty cohort this estate protects, the
+       staff route already covers a pupil who cannot write at all, and the
+       quality of the note is the teacher's business, not the gate's.
+       .trim() means whitespace alone still does not open it. */
+    var evidenceReady = !ctx.evidenceInput || ctx.evidenceInput.value.trim().length >= 1;
+    if (ctx.pathway === 'LAUNCH' && !evidenceReady && !staff) {
       ctx.explanation.hidden = true;
       announce(ctx, 'Activity complete. Record a specific observation, value or pattern to unlock the explanation.', 'notice');
       return;
@@ -149,10 +182,29 @@
     ctx.explanation.hidden = false;
     if (!ctx.explanation.dataset.opened) {
       ctx.explanation.dataset.opened = '1';
-      ctx.explanation.dataset.artOpenedBy = ctx.pathway === 'LAUNCH' ? 'completed activity and recorded evidence' : 'completed teaching interaction';
+      ctx.explanation.dataset.artOpenedBy = staff && !ctx.completed
+        ? 'staff answer reveal'
+        : (ctx.pathway === 'LAUNCH' ? 'completed activity and recorded evidence' : 'completed teaching interaction');
       ctx.explanation.classList.add('avl-reveal');
       announce(ctx, 'Explanation unlocked. Read it against the evidence you produced.', 'good');
     }
+  }
+
+  /* Panels re-check the staff organ whenever it is toggled, so the reveal is
+     live rather than only correct at mount time. Contexts whose panel has been
+     replaced (Reset lab) are pruned rather than left to accumulate. */
+  var MOUNTED = [];
+  var staffObserver = null;
+
+  function watchStaffToggle() {
+    if (staffObserver || !global.MutationObserver) return;
+    var exit = document.getElementById('exit-slide');
+    if (!exit) return;
+    staffObserver = new global.MutationObserver(function () {
+      MOUNTED = MOUNTED.filter(function (c) { return c.explanation && c.explanation.isConnected; });
+      MOUNTED.forEach(function (c) { refreshExplanation(c); });
+    });
+    staffObserver.observe(exit, { attributes: true, attributeFilter: ['class'] });
   }
 
   function complete(ctx, message) {
@@ -678,13 +730,26 @@
     }
   }
 
-  function copyText(text) {
-    if (global.navigator && global.navigator.clipboard && global.isSecureContext) return global.navigator.clipboard.writeText(text);
-    return new Promise(function (resolve, reject) {
-      var area = el('textarea', { value: text, style: { position: 'fixed', left: '-9999px', top: '0' } });
-      document.body.appendChild(area); area.select();
-      try { document.execCommand('copy'); area.remove(); resolve(); } catch (err) { area.remove(); reject(err); }
+  /* Clipboard capability: SHIPS DISABLED (ruled 2026-08-05).
+
+     As recovered, this called navigator.clipboard.writeText, and fell back to
+     document.execCommand('copy'). Both write to the pupil's clipboard — a
+     device capability this estate has not previously taken, and one the
+     science sibling did not have.
+
+     Nothing here writes to any clipboard. The note is shown selected, and the
+     pupil copies it themselves with their own keystroke if they want it. Do
+     not reintroduce a programmatic clipboard write without a fresh ruling. */
+  function showNoteForManualCopy(ctx, text) {
+    var existing = ctx.panel.querySelector('.avl-copy-area');
+    if (existing) existing.remove();
+    var area = el('textarea', {
+      class: 'avl-copy-area avl-evidence-input', value: text, readOnly: true, rows: 4,
+      'aria-label': 'Evidence note, ready to select and copy'
     });
+    ctx.panel.querySelector('.avl-toolbar').before(area);
+    area.focus();
+    area.setSelectionRange(0, text.length);
   }
 
   function buildPanel(slug, payload) {
@@ -707,8 +772,16 @@
     renderActivity(ctx, activityHost);
     var evidence = evidenceGate(ctx); if (evidence) body.appendChild(evidence);
     body.appendChild(explanationNode(ctx));
+    MOUNTED.push(ctx);
+    watchStaffToggle();
+    /* The transfer task is a teaching activity, not Arts Award evidence, and
+       says so in plain words. The portfolio of record is the weekly evidence
+       pack; the in-lesson print sections are working documents. This panel is
+       not a third portfolio and must not become one by drift. */
     var independent = el('details', { class: 'avl-independent', style: { marginTop: '10px' } },
-      el('summary', { text: 'Independent transfer task' }), el('p', { class: 'avl-small', text: payload.independent || 'Use the completed visual to produce an independent explanation.' })
+      el('summary', { text: 'Independent transfer task' }),
+      el('p', { class: 'avl-small', text: payload.independent || 'Use the completed visual to produce an independent explanation.' }),
+      el('p', { class: 'avl-small avl-not-evidence', text: 'This is a teaching activity, not Arts Award evidence. Nothing here goes in the portfolio — record evidence on the weekly evidence pack as usual.' })
     );
     body.appendChild(independent);
     body.appendChild(live);
@@ -721,10 +794,11 @@
     var resetButton = el('button', { type: 'button', class: 'avl-neutral', text: 'Reset lab', onclick: function () {
       var fresh = buildPanel(slug, payload); panel.replaceWith(fresh); fresh.scrollIntoView({ block: 'nearest' });
     } });
-    var copyButton = el('button', { type: 'button', class: 'avl-ghost', text: 'Copy evidence note', onclick: function () {
+    var copyButton = el('button', { type: 'button', class: 'avl-ghost', text: 'Show evidence note to copy', onclick: function () {
       var note = ctx.evidenceInput && ctx.evidenceInput.value.trim();
       var text = payload.title + '\n' + (note || 'No evidence note recorded yet.') + '\nIndependent transfer: ' + (payload.independent || '');
-      copyText(text).then(function () { announce(ctx, 'Evidence note copied.', 'good'); }).catch(function () { announce(ctx, 'Copy was blocked by this browser. Select the note manually.', 'bad'); });
+      showNoteForManualCopy(ctx, text);
+      announce(ctx, 'The note is selected below. Copy it yourself if you want it — nothing has been copied for you.', 'notice');
     } });
     body.appendChild(el('div', { class: 'avl-toolbar' }, el('div', { class: 'avl-actions' }, resetButton, staticButton), copyButton));
     panel.append(head, body);

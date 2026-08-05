@@ -1,9 +1,64 @@
 # Art Visual Learning Layer v1.0 — recovered toolkit
 
-**Status: LANDED, MOUNTED NOWHERE.** No lesson file loads any of this. Nothing in this
-directory executes anywhere in the estate. This is a safe resting point, not a feature.
+**Status: MOUNTED ON THREE SPECIMEN LESSONS** (Stage B), one per pathway:
+`BUILD_ART_W3_Industrial_Surface_Skills_Lab` · `GROW_ART_W3_Independent_Studio_Challenge` ·
+`LAUNCH_ART_W3_Implement_and_Critically_Develop`. The remaining 28 decks are untouched.
 
 Sentinel: `art-visual-learning-2026-08-05`
+
+## Stage B — what changed in the engine, and why
+
+Four changes, all in `art-visual-learning.js`. Everything else remains as recovered.
+
+1. **The LAUNCH explanation lock is fixed (§5.1).** `refreshExplanation` now consults
+   `staffAnswersShown()`, which reads the chassis organ already in every deck: `.show-ans` on
+   `#exit-slide`. A `MutationObserver` re-checks it whenever staff toggle it, so the reveal is
+   live rather than only correct at mount time. **No second toggle concept was invented and no
+   new adult control was added** — the explanation simply follows the `👁️ Answers` button the
+   decks already have. When the staff route opens it, `artOpenedBy` records `'staff answer
+   reveal'` rather than claiming the pupil produced evidence.
+
+   Verified in a real browser on all three specimens, and — critically — **verified against the
+   pre-fix engine, where the same test leaves the explanation hidden.** The test can fail, so the
+   pass means something.
+
+   **The 8-character threshold was not changed.** It remains a design question for pupils with
+   writing difficulty.
+
+2. **The clipboard capability ships disabled (ruled 2026-08-05).** As recovered, the panel called
+   `navigator.clipboard.writeText` and fell back to `document.execCommand('copy')`. Both write to
+   the pupil's clipboard. **Neither remains.** The button now shows the note in a read-only
+   textarea with the text pre-selected, and the pupil copies it themselves with their own
+   keystroke. Code-only search (comments stripped) reports `navigator.clipboard` 0, `execCommand`
+   0, `writeText` 0. Do not reintroduce a programmatic clipboard write without a fresh ruling.
+
+3. **The transfer task is declared not-evidence (ruled 2026-08-05).** The panel now states in
+   plain words: *"This is a teaching activity, not Arts Award evidence. Nothing here goes in the
+   portfolio — record evidence on the weekly evidence pack as usual."* The portfolio of record
+   remains the weekly evidence pack. This panel is not a third portfolio.
+
+4. **The reduced-motion listener is fixed.** `reducedMotion` was computed once at load with no
+   `change` listener, so an OS preference changed mid-session was never honoured in JS. The media
+   query is now watched and `isStatic()` reads the live value.
+
+### How mounting works
+
+Each lesson carries an authored loader inside an owned `AVL-MOUNT:BEGIN`/`AVL-MOUNT:END` comment
+pair, immediately before `</body>`. **Authored per file and gated per file — no bulk injector.**
+Everything outside the marker pair is byte-for-byte identical to HEAD, checked per file against a
+control that detects a single-character tamper.
+
+The engine finds its lesson by filename and mounts into the `We Do 1` slide.
+
+### Two pre-existing conditions, neither caused by the mount
+
+Both were isolated by loading the deck at HEAD, unmounted, and observing identical behaviour:
+
+- Toggling the staff answers organ on the exit slide also triggers the chassis lesson-complete
+  overlay and confetti. Staff revealing answers will see the celebration. **Pre-existing.**
+- The CSS ids `#cold-call-btn` and `#ta-focus-btn` are styled but never applied to any element.
+  The Cold Call and TA Brief organs are real and present — they are plain `<button>` elements —
+  so these are vestigial selectors, not missing organs. **Pre-existing, cosmetic.**
 
 ---
 
