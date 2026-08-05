@@ -345,7 +345,7 @@
   <div class="li-box"><strong>Instructions:</strong> Complete your printed worksheet at your level. You may use your enzyme table and knowledge organiser.</div>
     <div class="indep-timer">
       <div class="timer-label">Independent Work Timer</div>
-      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div class="timer-display indep-timer-display">08:00</div>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
         <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
         <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
@@ -995,7 +995,7 @@
   <div class="li-box"><strong>Instructions:</strong> Complete your Lesson 2 worksheet. Use your labelled villus diagram and knowledge organiser.</div>
     <div class="indep-timer">
       <div class="timer-label">Independent Work Timer</div>
-      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div class="timer-display indep-timer-display">08:00</div>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
         <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
         <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
@@ -1324,6 +1324,7 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
 
   // --- Independent Work Timer ---
   let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function indepDisplays(){return document.querySelectorAll('.indep-timer-display');}
   function startIndepTimer(secs){
     if(indepPaused&&!secs){indepPaused=false;}
     else{clearInterval(indepInterval);indepSeconds=secs||480;}
@@ -1332,15 +1333,15 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
     indepInterval=setInterval(function(){
       if(!indepPaused){indepSeconds--;updateIndepDisplay();
       if(indepSeconds<=0){clearInterval(indepInterval);
-        const d=document.getElementById('indep-timer-display');if(d){d.textContent='TIME UP!';d.classList.add('timer-warning');}
+        indepDisplays().forEach(function(d){d.textContent='TIME UP!';d.classList.add('timer-warning');});
       }}
     },1000);
   }
-  function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d&&indepPaused)d.style.opacity='.5';else if(d)d.style.opacity='1';}
-  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1';}}
-  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const d=document.getElementById('indep-timer-display');if(d){d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);}}
+  function pauseIndepTimer(){indepPaused=!indepPaused;indepDisplays().forEach(function(d){d.style.opacity=indepPaused?'.5':'1';});}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();indepDisplays().forEach(function(d){d.classList.remove('timer-warning');d.style.opacity='1';});}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const t=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');indepDisplays().forEach(function(d){d.textContent=t;d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);});}
 
 </script>
+<div class="scaffold-box animate-enter" style="margin-top:8px"><strong>🧠 Memory Trick:</strong> "Amylase Makes Maltose, Maltase Makes Glucose" – the enzyme name sounds like the product it creates! And remember: <strong>starch needs TWO steps</strong>, not one.</div>
 </body>
-</html><div class="scaffold-box animate-enter" style="margin-top:8px"><strong>🧠 Memory Trick:</strong> "Amylase Makes Maltose, Maltase Makes Glucose" – the enzyme name sounds like the product it creates! And remember: <strong>starch needs TWO steps</strong>, not one.</div>
-      
+</html>
