@@ -1,3 +1,64 @@
+            if method == "HEAD" and exc.code in {403, 405}:
+                get_req = urllib.request.Request(url, method="GET", headers={**headers, "Range": "bytes=0-0"})
+                try:
+                    with urllib.request.urlopen(get_req, timeout=25) as response:
+                        response.read(1)
+                        return {
+                            "ok": 200 <= response.status < 400,
+                            "status": response.status,
+                            "final_url": response.geturl(),
+                            "content_type": response.headers.get("Content-Type", ""),
+                            "elapsed_ms": round((time.monotonic() - started) * 1000),
+                        }
+                except Exception as fallback_exc:
+                    return {"ok": False, "status": getattr(fallback_exc, "code", None), "error": str(fallback_exc), "elapsed_ms": round((time.monotonic() - started) * 1000)}
+            return {"ok": False, "status": exc.code, "error": str(exc), "elapsed_ms": round((time.monotonic() - started) * 1000)}
+        except Exception as exc:
+            return {"ok": False, "status": None, "error": f"{type(exc).__name__}: {exc}", "elapsed_ms": round((time.monotonic() - started) * 1000)}
+
+    def _write_outputs(self) -> None:
+        self.metrics["generated_at_utc"] = dt.datetime.now(dt.timezone.utc).isoformat()
+        self.metrics["issue_counts"] = dict(Counter(issue.severity for issue in self.issues))
+        self.metrics["blocking_issue_count"] = self.blocking_count
+        self.metrics["reference_count"] = len(self.references)
+        self.metrics["public_reference_target_count"] = len(self.resolved_public_targets)
+        self._write_json("metadata.json", self.metrics)
+        self._write_json("issues.json", [issue.as_dict() for issue in self.issues])
+        self._write_json("browser-results.json", self.browser_results)
+        self._write_json("live-results.json", self.live_results)
+        self._write_json("site-checks.json", self.site_checks)
+        self._write_inventory_csv()
+        self._write_issues_csv()
+        report = self._render_report()
+        (self.output / "ESTATE_AUDIT_REPORT.md").write_text(report, encoding="utf-8")
+        patch_plan = self._render_patch_plan()
+        (self.output / "PATCH_PLAN.md").write_text(patch_plan, encoding="utf-8")
+        manifest = {
+            "lessons_commit": self.metrics.get("lessons_commit"),
+            "site_commit": self.metrics.get("site_commit"),
+            "generated_at_utc": self.metrics.get("generated_at_utc"),
+            "blocking_issue_count": self.blocking_count,
+            "files": [],
+        }
+        for path in sorted(self.output.iterdir()):
+            if path.is_file() and path.name not in {"checksums.sha256", "download-manifest.json"}:
+                manifest["files"].append({"name": path.name, "bytes": path.stat().st_size, "sha256": self._sha256_path(path)})
+        (self.output / "download-manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        checksum_lines = []
+        for path in sorted(self.output.iterdir()):
+            if path.is_file() and path.name != "checksums.sha256":
+                checksum_lines.append(f"{self._sha256_path(path)}  {path.name}")
+        (self.output / "checksums.sha256").write_text("\n".join(checksum_lines) + "\n", encoding="utf-8")
+
+    def _write_json(self, name: str, value: Any) -> None:
+        (self.output / name).write_text(json.dumps(self._json_safe(value), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def _write_inventory_csv(self) -> None:
+        with (self.output / "inventory.csv").open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["path", "size", "extension", "public_candidate", "sha256", "symlink"])
+            writer.writeheader()
+            writer.writerows(sorted(self.inventory, key=lambda row: row["path"]))
+
     def _write_issues_csv(self) -> None:
         with (self.output / "issues.csv").open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=["severity", "blocking", "category", "path", "line", "message", "details"])
@@ -211,70 +272,9 @@ ERROR_HOOK_JS = r"""
       window.__estateAuditErrors.push(`${kind}: ${text}`.slice(0, 2000));
     } catch (_) {}
   };
-  window.addEventListener('error', event => push('error', event.error || event.message), true);
-  window.addEventListener('unhandledrejection', event => push('unhandledrejection', event.reason), true);
-})();
-"""
-
-BROWSER_SURFACE_JS = r"""
-return (() => {
-  const visible = el => {
-    const s = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity || 1) > 0 && r.width > 0 && r.height > 0;
-  };
-  const name = el => (el.getAttribute('aria-label') || el.getAttribute('title') || el.innerText || el.value || '').trim();
-  const controls = [...document.querySelectorAll('button, a[href], input:not([type=hidden]), select, textarea, [role=button]')].filter(visible);
-  const unnamed = controls.filter(el => !name(el) && !el.getAttribute('aria-labelledby')).length;
-  const text = document.body ? (document.body.innerText || '').trim() : '';
-  const renderable = !!document.querySelector('canvas, svg, img, video, iframe, model-viewer');
-  return {
-    has_surface: !!document.body && (text.length > 0 || renderable),
-    body_text_length: text.length,
-    visible_controls: controls.length,
-    unnamed_controls: unnamed,
-    document_width: document.documentElement ? document.documentElement.scrollWidth : 0,
-    viewport_width: window.innerWidth,
-    horizontal_overflow_px: document.documentElement ? Math.max(0, document.documentElement.scrollWidth - window.innerWidth) : 0,
-  };
-})();
-"""
-
-SAFE_INTERACTION_JS = r"""
-return (() => {
-  const visible = el => {
-    const s = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return !el.disabled && s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;
-  };
-  const safe = /\b(next|continue|start|play|begin|enter|open|launch|ready|go)\b/i;
-  const bad = /\b(delete|remove|reset|clear|erase|wipe|submit|send|buy|purchase|logout|sign out)\b/i;
-  const preferred = [
-    '[data-action="next"]', '#nextBtn', '#next', '.next-btn', '.btn-next',
-    '[data-action="start"]', '#startBtn', '#start', '.start-btn',
-  ];
-  let target = null;
-  for (const selector of preferred) {
-    const candidate = document.querySelector(selector);
-    if (candidate && visible(candidate)) { target = candidate; break; }
-  }
-  if (!target) {
-    target = [...document.querySelectorAll('button, [role=button]')].find(el => {
-      if (!visible(el)) return false;
-      const text = (el.innerText || el.getAttribute('aria-label') || el.title || '').trim();
-      return safe.test(text) && !bad.test(text);
-    }) || null;
-  }
-  if (!target) return {clicked:false, reason:'no safe generic control'};
-  const label = (target.innerText || target.getAttribute('aria-label') || target.id || target.className || target.tagName).toString().trim().slice(0, 200);
-  try {
-    target.click();
-    return {clicked:true, label};
-  } catch (error) {
-    return {clicked:false, label, reason:String(error)};
-  }
-})();
-"""
-
-
-def parse_args(argv: Sequence[str]) -> argparse.Namespace:
+  window.addEventListener('error', event => {
+    const target = event.target;
+    if (target && target !== window && target !== document) {
+      const url = target.currentSrc || target.src || target.href ||
+        (target.getAttribute && (target.getAttribute('src') || target.getAttribute('href'))) || '(unknown URL)';
+      push('resource', `${target.tagName || 'RESOURCE'} ${url}`);
