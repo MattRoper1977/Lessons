@@ -2,9 +2,11 @@
 >
 > **This toolkit is live.** All 85 ASDAN lesson decks load it: 31 BUILD (materialised through
 > `BUILD_ASDAN/_framework/`), 18 GROW and 30 LAUNCH through their shared `visual-upgrade` layers,
-> and the 6 D&T decks by per-file integration. The BLOCKED — DO NOT MOUNT wording that headed
-> this file has been **removed rather than softened**: it had become untrue, and a blocked banner
-> on a mounted toolkit is a co-present contradiction.
+> and the 6 D&T decks by per-file integration. The standing do-not-mount banner that headed this
+> file has been **removed rather than softened**: it had become untrue, and such a banner on a
+> mounted toolkit is a co-present contradiction. (Its literal wording is deliberately not
+> reproduced here — a past-tense mention would still answer a future grep for it, and this file
+> should never return a hit for a banner it no longer carries.)
 >
 > **The four original blocking items, all closed:**
 >
