@@ -166,7 +166,14 @@
   function refreshExplanation(ctx) {
     var staff = staffAnswersShown();
     if (!ctx.completed && !staff) { ctx.explanation.hidden = true; return; }
-    var evidenceReady = !ctx.evidenceInput || ctx.evidenceInput.value.trim().length >= 8;
+    /* Threshold ruled 2026-08-05: one non-whitespace character, not eight.
+       The gate's pedagogic job is the moment of committing evidence before the
+       explanation, not enforcement of prose length. Length-policing selects
+       against exactly the writing-difficulty cohort this estate protects, the
+       staff route already covers a pupil who cannot write at all, and the
+       quality of the note is the teacher's business, not the gate's.
+       .trim() means whitespace alone still does not open it. */
+    var evidenceReady = !ctx.evidenceInput || ctx.evidenceInput.value.trim().length >= 1;
     if (ctx.pathway === 'LAUNCH' && !evidenceReady && !staff) {
       ctx.explanation.hidden = true;
       announce(ctx, 'Activity complete. Record a specific observation, value or pattern to unlock the explanation.', 'notice');
