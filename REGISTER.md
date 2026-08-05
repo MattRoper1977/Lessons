@@ -2421,3 +2421,17 @@ the pass brief withheld.**
   respectively — the same assertion, now able to go non-zero. The rule: **a zero-control read on
   a merge commit is not evidence until it has been re-read against the first parent and shown it
   can fire.** This is the shape that made the first Pass 7 ancestry control vacuous.
+
+- **A 0-255 colour parser silently mis-scores `color(srgb …)`, and it fails BOTH ways.**
+  CSS Color 4 carries 0-1 channels and Chromium serialises every `color-mix()` result that way.
+  Read as 0-255 they collapse to near-black, which manufactures **false reds** on dark-on-light
+  text *and* **false greens on light-on-light text** — the second is the dangerous one, because
+  it certifies unreadable text as passing. Any contrast certification over a `color-mix()` or
+  `color(srgb …)` surface is unsafe in both directions until re-run with a parser that detects
+  the notation by prefix rather than guessing from magnitude — an `rgb()` colour may
+  legitimately be `0 0 1`. Fixed in `contrast_check.js` at `d335e4f`; the affected member set is
+  derived and queued in `_sixclose/LEDGER.md`.
+- **Browser capability is PROBED PER SESSION, never inherited.** Three consecutive containers on
+  this workstream disagreed — no browser, then Chromium, then Chromium again — and all three
+  reports were honest at the time. A prior session's "no browser in this container" is not
+  evidence about the current one, and neither is the reverse. Probe, then claim.

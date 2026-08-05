@@ -590,3 +590,120 @@ it.
 build** — on the same loader-resolves-inside-the-pack gate that PACK-2 applied to the GROW and
 LAUNCH `visual-upgrade` files. It is stated here and deliberately **not** acted on: no pack was
 built this session. The 29 Aug rebuild slot inherits it.
+
+---
+
+# SESSION L2 CLOSE — ruling applied, band B merged, band C stopped at batch 1
+
+Sentinel `session-l2-close-2026-08-05`, revision 1. Base `d421b38`.
+
+**Capability probed, not inherited.** Chromium **141.0.7390.37** launches here and `emulateMedia`
+works; the live origin does **not** (`madebymatt.uk` returns HTTP 000). Session L had no browser,
+L2 did, this one does — **three consecutive containers, and the honest report differed each
+time.** The rule is now explicit: **browser capability is probed per session, never inherited.**
+
+## §1-2 · The darkening ruling — applied, band B MERGED at `068252d` (PR #63)
+
+`--asvl-accent` is **not** a toolkit pathway token: it inherits from each host deck's strand
+palette. Darkening it directly would have moved the estate's strand colours, which the ruling
+forbids, so toolkit-owned derived tokens were added instead:
+
+    --asvl-accent-text: color-mix(in srgb, var(--asvl-accent) 91%, #000)
+    --asvl-muted-text : color-mix(in srgb, var(--asvl-muted)  96%, #000)
+
+Mixing toward black scales every channel equally, so the **hue angle is preserved exactly**.
+Those are the **minimum** shifts clearing 4.6:1 for the sampled accents and tints. Rendered on
+the mounted specimens: BUILD **5.08** · GROW **4.63** · LAUNCH **4.76** · D&T **5.08**. Both
+directions: the old values still fail (3.94 and 4.34), the new pass.
+
+**Propagation was proven on rendered specimens, and the first attempt was inert.** Changing the
+`--asvl-muted` *fallback* did nothing — the host decks define `--muted` themselves, so it never
+fired. Reading the token file would have certified a change that had not happened. **Second
+time this exact trap has been caught in this workstream.**
+
+Band B gates at the merged tip: contrast FIX **12 to 3** with the 3 remaining **pre-existing**
+(**0 introduced**) · smoke 26 checks · label-rest 4/4 · reduced motion all green incl. the live
+mid-session change and its can-fail · print 718x1047 4/4 · `#print-witness` **31/31**
+byte-identical with a fired control · **0** files with text changed outside a marker-owned block
+· sentinels 50/98/548 unmoved before and after the merge.
+
+## §3 · Band C — batch 1 MERGED, batch 2 STOPPED, batches 3-4 not attempted
+
+**GROW (18 decks) — green, merged.** GROW decks load `visual-upgrade.js` externally, so the
+batch changed **two files and zero lesson files**. Baseline-differenced: contrast FIX 5 to 5,
+smoke FAIL 3/3 both sides, label-rest PASS 1 / FAIL 2 both sides — **0 introduced anywhere**.
+The smoke failures are structural: GROW decks are not on the BUILD `ASDAN-TEACH` framework, so
+that gate does not apply to their chassis.
+
+**LAUNCH (30 decks) — RED, batch stopped and reverted.** Two introduced classes:
+`p.asvl-eyebrow` at **3.25**/4.5 on decks where band B's LAUNCH specimen read **4.76**, and
+`span.asvl-sequence-number` at **4.06** x7, a class no band-B specimen exercised.
+
+**The cause, derived rather than guessed.** The accent is *identical* across these decks
+(`#A76A9B`), so the variance is not in the accent. It is in the **header gradient's
+`--asvl-accent-soft` tint**, which inherits `var(--wedo-bg, ...)` and **differs per deck**. The
+eyebrow sits on a different background per deck, and **a fixed-percentage darkening of the text
+cannot guarantee a floor against a background that moves.** That is a design decision beyond a
+minimum-shift ruling, so the batch was stopped and reverted rather than forced. **Nothing from
+it is on main.**
+
+**BUILD (31) and D&T (6) — not attempted.** They inherit the same unresolved question, and
+attempting them would multiply an undecided finding. Parked by name.
+
+## §4 · Notice hygiene
+
+The standing notice was rewritten **in the same commit** as the band B state change: items 1-3
+cleared/resolved with SHAs, item 4 parked and gating nothing, band B named deck by deck. The
+**BLOCKED wording remains and says explicitly why** — band C is outstanding. It comes off only
+when C completes; a blocked banner on a fully mounted toolkit would be the co-present
+contradiction this estate treats as a signature defect.
+
+## §5 · J4 — parked, with the probe committed ready to run
+
+The proxy denies the live origin, so the (a)/(b)/(c) classification cannot be completed here.
+`.github/workflows/j4-absolute-ref-probe.yml` is committed **unrun**: a read-only
+`workflow_dispatch` job that derives the root-absolute references from the decks themselves,
+reports in-repo existence and live HTTP status for each, and changes nothing. **No reference was
+touched this session.**
+
+## §6.1 · HOUSE RULE — the contrast parser cuts BOTH ways
+
+`color(srgb ...)` channels are **0-1**, and Chromium serialises **every** `color-mix()` result
+that way. A 0-255 parser reads those numbers as near-black. That manufactures **false REDS** on
+dark-on-light text — which held a correct mount for a whole session — **and false GREENS on
+light-on-light text**, because a light colour misread as near-black scores *high* against white.
+**The second is the dangerous direction: it certifies unreadable text as passing.**
+
+**Every prior contrast certification over a `color-mix()` or `color(srgb ...)` surface is
+therefore unsafe in both directions.** Fixed at `d335e4f`, in its own commit with no content
+beside it, proven in both directions, and a **no-op on the unmounted tree** (69 below target,
+FIX:3, identical) so it is not tuned to the content that exposed it.
+
+**Follow-up, scoped and NOT run here.** Estate member set, derived by grep over tracked files:
+**`color-mix(` appears in 43 files and `color(srgb` in 1.** That is the exact set
+whose contrast certifications must be re-run with the corrected instrument. Queued, deliberately
+not boiled this session.
+
+## §6.2 · Fired-fixture — the RM control that passed via a legacy fallback
+
+The reduced-motion can-fail control first stubbed only `addEventListener`. The engine's
+`else if (motionQuery.addListener)` fallback then registered via the legacy API, the listener
+stayed live, and **the control passed when it should have failed** — it would have certified the
+reduced-motion fix on no evidence. Both registration paths must go for the stub to be a real
+negative. Fired-fixture family, alongside the merge-commit `--name-only` entry.
+
+## §6.4 · The 29 Aug inheritance, restated
+
+**`REBRAND.md` pack scope must gain the mounted ASDAN runtime assets before the next pack
+build** — `GROW_ASDAN/visual-upgrade.js` and `BUILD_ASDAN/_framework/asdan-teach.css` and `.js`
+now carry the toolkit, and `LAUNCH_ASDAN/visual-upgrade.js` will when batch 2 lands — on the
+same loader-resolves-inside-the-pack gate PACK-2 applied. Stated; **no pack was built here.**
+
+## §R · Invariants at close
+
+Assessed pair `a5545585…` / `eb14d610…` · frozen legacy `2fdbd43a…` / `c60a1707…` /
+`57be7374…` · sentinels **50 / 98 over 548** unmoved across both merges · the 25 hidden science
+sheets byte-pristine · `claude/semh2-claims-accuracy` at `0c0f0487` present, verified via
+`ls-remote` · `pass-sl-sow-launch` `2a1cfda` and `pass-sbx-art-a2` `462cfa6` unmerged · no branch
+deleted · no printer hold released · zero pupil data · no media URL wired · no third-party
+artwork · no closure marker moved · no force-push.
