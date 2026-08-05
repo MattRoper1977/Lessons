@@ -2309,6 +2309,41 @@ shape the property describes, they are in the 24 byte-frozen lessons, and **the 
 been run over them**. Not this pass's to touch and not repaired here. Whoever next has authority
 over the live decks should run it there, because the pack was only ever the smaller surface.
 
+### Run against the live decks — the loose end closed, and a limit of the property found
+
+**Pass HU-DA1, 2026-08-05, at `df18729`.** The paragraph above left the property un-run against the
+24 live decks. It has now been run, read-only, and the decks changed by zero bytes.
+
+**Result: 19 of 24 are members by shape, 5 are not**, and the reconciliation against the matrix
+returned **zero documented-not-found** — nothing the matrix documented escaped the sweep, so no
+second derivation route was owed. Full observation record: `_huda1/DISPLAY_ARTEFACT_AUDIT.md`.
+
+**Two things the run established about the instrument itself, which is why it belongs here.**
+
+**The widening trade runs the other way at scale.** Clause b5 — no terminal punctuation — bought the
+missing member in the pack and produces **361 of 404 matches** in the decks, essentially all of them
+success criteria (*"I can place local events on a timeline"*) and slide headings (*"I Do: …"*). A
+clause that is decisive on a 27-file staff toolkit is noise on 24 teaching decks. **A rule widened
+to fix a false negative must have its false-positive rate re-measured on every new corpus**, not
+carried across as settled.
+
+**The property over-reaches on this corpus, and the honest verdict is that it needs a third
+revision rather than a forced answer.** It cannot presently draw two distinctions the decks make:
+
+1. **a refusal aimed at a person** versus **a pupil stating the limits of evidence.** The
+   because-rule's home case is an adult telling a child what could not be done with their idea.
+   *"It cannot tell us who took this photograph"* is not that — it is correct historical reasoning,
+   and demanding a because could teach a pupil to invent a reason for a limit that is intrinsic.
+2. **filled and displayed** versus **filled and kept.** The property says *intended for display*,
+   and exactly **one** of the 19 members states that its output goes anywhere: BUILD W2's *"Your
+   best 'suggests… because…' lines get read to the other class as our detective standard."* On a
+   strict reading the other 18 are private scaffolds; on a loose reading every fill-in template
+   qualifies and the term stops discriminating.
+
+**Recorded as a limit of the instrument, not resolved by this pass** — consistent with the standing
+rule that an instrument reports what it looked for. Where the findings went is in the audit record
+§7; the repairs belong to the sessions that own the files.
+
 ## R-HUC03 — a supplier's observation SHA on a staff-facing page is plumbing and a false claim
 
 **Pass HU-CLOSE, 2026-08-05.**
