@@ -74,6 +74,78 @@ class EstateAuditInstrumentTests(unittest.TestCase):
             self.assertEqual(audit.blocking_count, 1)
             self.assertIn("[Content_Types].xml", audit.issues[0].message)
 
+    def test_style_markup_inside_javascript_is_not_parsed_as_page_css(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            audit = self.make_audit(root)
+            audit._validate_inline_blocks(
+                "page.html",
+                "<script>const markup = '<style>a{color:red;]</style>';</script>",
+            )
+            self.assertFalse(any(issue.category == "css" for issue in audit.issues))
+
+            audit._validate_inline_blocks("real-style.html", "<style>a{color:red;]</style>")
+            self.assertTrue(any(issue.category == "css" for issue in audit.issues))
+
+    def test_optional_classroom_sync_failure_is_visible_but_nonblocking(self) -> None:
+        def performance_log(method: str, params: dict[str, object]) -> dict[str, str]:
+            return {"message": json.dumps({"message": {"method": method, "params": params}})}
+
+        origin = "http://127.0.0.1:4321"
+        result = {
+            "errors": [],
+            "warnings": [],
+            "local_http_errors": [],
+            "optional_http_failures": [],
+        }
+        performance = [
+            performance_log(
+                "Network.requestWillBeSent",
+                {"requestId": "sync", "request": {"method": "POST", "url": origin + "/Lessons/app/sync.php"}},
+            ),
+            performance_log(
+                "Network.responseReceived",
+                {"requestId": "sync", "response": {"status": 501, "url": origin + "/Lessons/app/sync.php"}},
+            ),
+            performance_log(
+                "Network.requestWillBeSent",
+                {"requestId": "asset", "request": {"method": "GET", "url": origin + "/missing.png"}},
+            ),
+            performance_log(
+                "Network.responseReceived",
+                {"requestId": "asset", "response": {"status": 404, "url": origin + "/missing.png"}},
+            ),
+        ]
+        estate_audit.Audit._classify_browser_logs(result, [], performance, origin)
+        self.assertEqual(len(result["optional_http_failures"]), 1)
+        self.assertEqual(result["optional_http_failures"][0]["method"], "POST")
+        self.assertEqual(len(result["local_http_errors"]), 1)
+        self.assertEqual(result["local_http_errors"][0]["status"], 404)
+        self.assertTrue(any(warning["kind"] == "optional-http" for warning in result["warnings"]))
+
+    def test_mobile_mode_enables_touch_emulation(self) -> None:
+        class FakeDriver:
+            def __init__(self) -> None:
+                self.commands: list[tuple[str, dict[str, object]]] = []
+                self.windows: list[tuple[int, int]] = []
+
+            def execute_cdp_cmd(self, name: str, payload: dict[str, object]) -> None:
+                self.commands.append((name, payload))
+
+            def set_window_size(self, width: int, height: int) -> None:
+                self.windows.append((width, height))
+
+        driver = FakeDriver()
+        estate_audit.Audit._configure_browser_mode(driver, "mobile-reduced")
+        command_map = {name: payload for name, payload in driver.commands}
+        self.assertTrue(command_map["Emulation.setDeviceMetricsOverride"]["mobile"])
+        self.assertEqual(command_map["Emulation.setTouchEmulationEnabled"]["maxTouchPoints"], 5)
+        self.assertEqual(driver.windows[-1], (390, 844))
+
+    def test_safe_interaction_is_delegated_to_webdriver(self) -> None:
+        self.assertNotIn("target.click()", estate_audit.SAFE_INTERACTION_JS)
+        self.assertIn("element:target", estate_audit.SAFE_INTERACTION_JS)
+
     def test_download_manifest_payload_remains_json_serialisable(self) -> None:
         payload = {
             "published_ref": "origin/main",
