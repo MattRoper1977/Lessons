@@ -2435,3 +2435,10 @@ the pass brief withheld.**
   this workstream disagreed — no browser, then Chromium, then Chromium again — and all three
   reports were honest at the time. A prior session's "no browser in this container" is not
   evidence about the current one, and neither is the reverse. Probe, then claim.
+
+- **A park is only honest when its blocking condition has been DERIVED.** J4 was parked across a
+  session on the clause "if Actions is unavailable" — and Actions was never tested. It was
+  available, and one `workflow_dispatch` returned the whole classification. Capability gets the
+  same treatment as a grep result: **probe, then claim.** The sibling rule already on this
+  register — browser capability is probed per session, never inherited — is the same rule; this
+  is its CI half. An untested blocker is an assumption wearing a blocker's clothes.
