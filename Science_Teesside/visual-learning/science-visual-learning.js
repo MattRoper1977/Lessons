@@ -1,3 +1,22 @@
+/* =====================================================================
+   BLOCKED - DO NOT MOUNT
+
+   This file is loaded by zero lessons. That is deliberate, not an
+   oversight, and it must stay that way for now.
+
+   Mounting is blocked until the LAUNCH explanation has an adult route
+   on screen. Today the explanation stays hidden for LAUNCH until the
+   pupil types into the evidence box, and there is no way for a teacher
+   to open it for them. The lesson chassis already has the right control
+   - the exit slide's staff answers toggle - and this engine does not
+   use it. The static-diagram button is not that control; it only turns
+   animation off.
+
+   Printing is already safe: the print stylesheet shows the explanation
+   as a static teacher copy.
+
+   Read item 37 in the open-items record before wiring this anywhere.
+   ===================================================================== */
 
 /* Science Visual Learning Layer v1.0
    Add-only, dependency-free, no network requests, no persistent pupil data. */

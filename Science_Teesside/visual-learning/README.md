@@ -1,3 +1,18 @@
+> # ⛔ BLOCKED — DO NOT MOUNT
+>
+> **This toolkit is loaded by zero lessons, and that is deliberate.**
+>
+> **Do not add it to any lesson yet.** Mounting is blocked until the LAUNCH explanation has an
+> adult route on screen — a teacher must be able to open the explanation for a pupil who has not
+> filled the evidence box, using the toggle the lesson chassis already has for staff answers.
+> Until that exists, a pupil who cannot type gets no explanation and no adult can give them one.
+>
+> BUILD and GROW have no such lock, but nothing mounts until all three pathways are safe.
+>
+> **Read item 37 in the open-items record before touching this.** If you have arrived here from a
+> later job that says "mount the science visual layer", that job is blocked and this notice is the
+> reason.
+
 # Science visual-learning toolkit — recovered, mounted nowhere
 
 **STATUS: recovered · not mounted · not in use.** These three files exist in the repository and
