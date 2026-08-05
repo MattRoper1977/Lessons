@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import pathlib
 import shutil
-from typing import Iterable
 
 GRID = pathlib.PurePosixPath("Games/Grid_Chase.html")
 DIGESTION = pathlib.PurePosixPath("biology/Digestion_and_Absorption (1).html")
@@ -76,8 +75,8 @@ def transform_digestion(root: pathlib.Path) -> None:
     text = read(root, DIGESTION)
     text = replace_exact(
         text,
-        "    .indep-controls button { margin: 0 6px; }\n",
-        "    .indep-timer-display { font-weight: 800; }\n    .indep-controls button { margin: 0 6px; }\n",
+        ".indep-controls button { margin: 0 6px; }",
+        ".indep-timer-display { font-weight: 800; }\n    .indep-controls button { margin: 0 6px; }",
         expected=1,
         label="Digestion timer class style",
     )
@@ -141,7 +140,7 @@ def transform_index(root: pathlib.Path, poster_source: pathlib.Path) -> None:
 
 
 def transform_motion_filters(root: pathlib.Path) -> None:
-    old = "@supports (filter: url(#g-mblur)) { .g-blur-fast { filter: url(#g-mblur); } }\n"
+    old = "@supports (filter: url(#g-mblur)) { .g-blur-fast { filter: url(#g-mblur); } }"
     for rel in MOTION:
         text = read(root, rel)
         text = replace_exact(text, old, "", expected=1, label=f"Undefined g-mblur filter in {rel}")
