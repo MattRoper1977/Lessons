@@ -8,30 +8,57 @@ diff --git a/Games/Grid_Chase.html b/Games/Grid_Chase.html
 -<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
 +<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;display=swap" rel="stylesheet">
  <style>
-@@ -59,3 +59,3 @@
+@@ -57,7 +57,7 @@
+ 
+ .panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;background:rgba(3,5,12,.72);backdrop-filter:blur(4px)}
  .panel.hidden{display:none}
  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 28px;width:min(440px,92vw);max-height:92vh;overflow-y:auto;box-shadow:0 0 60px rgba(30,80,200,.25)}
 -#title{font-size:32px;font-weight:900;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 22px var(--cyan);text-align:center}
 +.panel-title{font-size:32px;font-weight:900;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 22px var(--cyan);text-align:center}
-@@ -112,3 +112,3 @@
+ #tagline{font-size:12px;line-height:1.6;opacity:.85;margin:12px 0 16px;text-align:center;letter-spacing:.5px}
+ .rules{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px}
+@@ -112,14 +112,14 @@
  
  <div id="menu" class="panel hidden"><div class="card">
 -  <div id="title">GRID CHASE</div>
 +  <div class="panel-title">GRID CHASE</div>
-@@ -122,1 +122,1 @@
+   <p id="tagline">Harvest the neon grid while four hunters — each with its own AI — close in. Clear every pip and <b style="color:var(--red)">THE WARDEN</b> awakens: dodge its shockwaves, then strike when its core opens.</p>
+   <div class="rules">
+     <div class="row"><span>Swipe / arrows / WASD</span><span style="color:var(--cyan)">move — up is up</span></div>
+     <div class="row"><span>Grab a ⬢ power core</span><span style="color:var(--green)">eat the hunters</span></div>
+     <div class="row"><span>Clear the pips</span><span style="color:var(--amber)">boss fight begins</span></div>
+     <div class="row"><span>Warden core glows cyan</span><span style="color:var(--magenta)">RAM IT ×3 to win</span></div>
+   </div>
 -  <input type="number" id="seed-input" placeholder="seed">
 +  <input type="number" id="seed-input" placeholder="seed" aria-label="Maze seed">
-@@ -138,2 +138,2 @@
+   <div class="note" id="seed-note">Today's grid — same for everyone.</div>
+   <div class="note" id="best-note"></div>
+   <button class="btn primary" id="start-btn">START</button>
+@@ -136,23 +136,23 @@
+ </div></div>
+ 
  <div id="pause" class="panel hidden"><div class="card">
 -  <div id="title" style="font-size:24px">PAUSED</div>
 +  <div class="panel-title" style="font-size:24px">PAUSED</div>
-@@ -145,2 +145,2 @@
+   <button class="btn primary" id="resume-btn">RESUME</button>
+   <button class="btn" id="restart-btn">RESTART</button>
+   <button class="btn" id="quit-btn">QUIT TO MENU</button>
+ </div></div>
+ 
  <div id="results" class="panel hidden"><div class="card">
 -  <div id="title" style="font-size:24px">GRID DOWN</div>
 +  <div class="panel-title" style="font-size:24px">GRID DOWN</div>
-@@ -151,1 +151,1 @@
+   <div id="res-score">0</div>
+   <div id="res-lines"></div>
+   <div id="initials-panel">
+     <div class="pill">You made the top 5 — add your initials</div>
 -    <div id="initials-row"><input type="text" id="initials-input" maxlength="3" placeholder="AAA"><button class="btn small" id="add-board-btn" style="width:auto;margin-top:0;padding:9px 16px">ADD</button></div>
 +    <div id="initials-row"><input type="text" id="initials-input" maxlength="3" placeholder="AAA" aria-label="Leaderboard initials"><button class="btn small" id="add-board-btn" style="width:auto;margin-top:0;padding:9px 16px">ADD</button></div>
-@@ -153,1 +153,1 @@
+   </div>
 -  <div id="share-row"><input type="text" id="share-str" readonly><button class="btn small" id="copy-btn" style="width:auto;margin-top:0;padding:9px 16px">COPY</button></div>
 +  <div id="share-row"><input type="text" id="share-str" readonly aria-label="Share result code"><button class="btn small" id="copy-btn" style="width:auto;margin-top:0;padding:9px 16px">COPY</button></div>
+   <button class="btn primary" id="retry-btn">RETRY SEED</button>
+   <div class="btnrow">
+     <button class="btn small" id="next-seed-btn">NEW SEED</button>
+     <button class="btn small" id="res-board-btn">SCORES</button>
+     <button class="btn small" id="res-menu-btn">MENU</button>
