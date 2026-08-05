@@ -451,3 +451,142 @@ README stamps "rebuilds after merge day (29 Aug)".
 - **No closure marker moved**; no new pupil-facing warrant; no second next-step, backlog or
   failing-reflection state created.
 - **No rollback recipe run. No force-push. No deployed history rewritten.**
+
+---
+
+# SESSION L2 — ASDAN visual learning: clear the blocker, then mount, 2026-08-05
+
+Sentinel `session-l2-2026-08-05`, revision 1. **Nothing merged this session, and that is the
+finding, not a shortfall.** Every figure derived at the SHA named beside it.
+
+## §0 · Gates
+
+Identity **10/10** (the seven markers plus the toolkit, its README blocker and the engine).
+This session ALSO opened in the site working directory; the Lessons repo was attached and the
+gate run against it before anything else. **The twelfth mis-open did not happen.**
+Base expected at/beyond `d421b38`; derived `d421b38`, equal to `origin/main`.
+Sentinels **50 / 98 over 548**, raw and R-E08 identical, unmoved at close.
+
+**A capability that changed the session.** Session L recorded no browser. This container has
+Chromium at `/opt/pw-browsers/chromium-1194` and Playwright installs against it without a
+download. **The vendor's withheld post-integration regression was therefore runnable for the
+first time** — in a real browser, including `emulateMedia` for reduced motion and print at
+718x1047. Every claim below is a real browser run or git truth. No live page load of the
+public site is claimed; the proxy denies egress (verified, see item 4).
+
+## §J1 · The four blocker items, derived from the README and engine, not from the order
+
+| # | Item | Outcome |
+|---|---|---|
+| 1 | The vendor's decisive gate is unrun | **RUN — and it is RED.** See §J2. Does not clear |
+| 2 | Reduced motion in CSS but not JS | **CLEARED** at `cc4f6fa` |
+| 3 | The six D&T decks are not on this chassis | **RESOLVED BY EVIDENCE** — true of the compiler, not of the staff route |
+| 4 | `docs/MEDIA_REGISTER.md` is a candidate register only | **PARKED.** Holds back **zero decks** |
+
+**Item 2, cleared.** The notice said "no matchMedia and no change listener". True — the
+engine's only `matchMedia` occurrence was inside the blocker comment. The defect was more
+specific than the notice: `.asvl-static` was driven **solely by a manual "Static diagrams"
+button**, so with the OS preference on, CSS suppressed motion while the control still reported
+`aria-pressed="false"`. Fixed on the pattern of `art-visual-learning.js`, which carries the
+identical repair. The OS is a **floor, not a default**: while the machine asks for reduced
+motion the button cannot turn movement back on. Proven in real Chromium, 9 checks, both
+directions plus a live mid-session change. `asvl-attention` classified as **RM-3** in the same
+commit — the toolkit's only `@keyframes` family.
+
+*Instrument correction.* The first can-fail control stubbed only `addEventListener`. The
+engine's `else if (motionQuery.addListener)` fallback then registered via the legacy API, the
+listener stayed live, and **the control passed when it should have failed.** Both paths must be
+removed. A vacuous control is worse than none; this one was about to sign off a reduced-motion
+claim.
+
+**Item 3, resolved by evidence.** `Build/Slideshows/BUILD_DT_W1..W6` carry **0** `ASDAN-TEACH`
+markers and the compiler globs `BUILD_ASDAN/*/*.html`, so the claim is true **of the compiler**.
+But the staff organ is present and byte-identical in shape to the compiler chassis's:
+`onclick="document.getElementById('exit-slide').classList.toggle('show-ans')"` with the eye
+glyph. So a D&T deck is eligible to mount by authored per-file integration, which is what the
+vendor's own `integrate.py` does for exactly these six paths. **No organ was improvised.**
+
+**Item 4, parked — and it holds back nothing.** The stated reason is network, and the stated
+reason **holds**: `www.gov.uk`, `www.nhs.uk` and `www.asdan.org.uk` all return HTTP 000 and the
+agent proxy logs `connect_rejected` / 403 to CONNECT. No URL can be resolved here. But
+`lesson-payloads.json` contains **0 external URLs** and **0** iframe/embed/YouTube references,
+so no mounted surface depends on the register. It gates **no deck**. Under RED 13 it stays a
+candidate register whatever a future session resolves.
+
+## §J2 · Band B — mounted, fully gated, and HELD at `ce0a654`
+
+Four specimens: BUILD `CAREERS_W1_My_Strengths` (compiler chassis, materialised), GROW
+`PEQ_W1_Knowing_Myself`, LAUNCH `PEQ_W1_Intro_and_Choosing_My_Level`, D&T
+`BUILD_DT_W1_Workshop_Audit`. The vendor's block builders were imported and called with the
+registry restricted to the four; every other deck on the shared layer loads the engine, finds
+no payload for its slug and `autoMount()` returns null.
+
+**Green:** smoke 26 checks PASS · label-rest PASS x4 · reduced motion all green with its
+can-fail · print at 718x1047 clean on all four, panel `display:none` in print so it creates no
+print obligation and no failing state · **`#print-witness` byte-identical in 31/31 BUILD decks
+through materialisation**, with a tampered-copy control proving that check can fire · marker
+confinement asserted per file before and after write · sentinels unmoved, per-file
+closure-marker counts unchanged in 38/38 · protective scans all zero-introduced (`moderation`
+34 in base, 34 mounted, **0 introduced**).
+
+**Red, and it holds the mount:** the corrected contrast gate reports FIX-verdict rows **3 → 12**
+across the four specimens — **9 introduced**, all marginal at **3.94 to 4.49 against 4.5**. They
+split in two: **4 rows are `p.asvl-eyebrow`, the pathway identity hue** (the same gate verdicts
+identity hue as "left" on base decks; changing a pathway's identity colour is Matt's call), and
+**5 rows are one token, `--asvl-muted` `#64748b`** — a one-line legibility fix, not an identity
+change. The three `"Success looks like"` rows at 2.0 / 2.14 / 2.58 are **pre-existing**, present
+unmounted, and are not this mount's doing.
+
+A `--asvl-muted` darkening was attempted and **reverted rather than left half-applied**: the
+re-integration aborted on a first-mount-only assertion so it never propagated, and the measured
+numbers were unchanged. The toolkit is committed exactly as the vendor shipped it.
+
+## The gate defect this session found — `d335e4f`
+
+Running the decisive regression for the first time found a defect **in the estate's own
+contrast gate**. `contrast_check.js`'s `parse()` regex-scraped numbers out of a computed colour
+and assumed 0..255 channels. CSS Color 4's `color(srgb r g b)` carries **0..1** channels, and
+Chromium serialises every `color-mix()` result that way. The ASDAN layer uses `color-mix()`
+throughout, so a near-white mint `color(srgb 0.963451 0.985569 0.971608)` was read as
+effectively **black**, and legible dark-slate text on it scored **1.42:1**. The true ratio is
+**14.05:1**.
+
+Uncorrected it would have held a correct mount on a false red — **and it has been silently
+mis-scoring every `color-mix()` surface in the estate all along.** Fixed in its **own commit**
+with no content beside it, because a content-integrity gate is never touched in the same commit
+as content it judges. Proven in both directions: the false red clears to 14.05, an `rgb()`
+control is unchanged at 14.68, and white-on-white (1.00) and `#aaa` on `color(srgb .95…)`
+(2.08) **still fail** — a correction, not a mute. Measured on the **unmounted** tree it changes
+**nothing** (69 below target, FIX:3, identical), so it is not tuned to the content that exposed
+it.
+
+## §J3, §J4 · Not reached — parked with their blocking condition
+
+- **J3 band C.** Not started. Blocked by the same contrast ruling as band B: batching the
+  remaining 81 decks would multiply a finding that is still awaiting a decision. Nothing was
+  materialised beyond the four specimens.
+- **J4, the 20 root-absolute references.** **Not reached.** No file was touched, nothing was
+  derived beyond Session L's existing classification. It needs the live-origin evidence step
+  (does the target resolve on the deployed site) that this container cannot supply directly —
+  the proxy denies egress — so it wants either CI or a session with different network policy.
+
+## §R · Invariants, re-emitted at close
+
+- ★ assessed pair `a5545585ca28bbba01b55476abb73a9b0819bcc7` /
+  `eb14d6104b94503d0e7ec0a99565ef116a333a57` — 0 bytes of diff
+- Frozen legacy `2fdbd43a` / `c60a1707` / `57be7374` — unchanged
+- The 25 hidden science sheets byte-pristine; no restore, no un-hide
+- `claude/semh2-claims-accuracy` present at `0c0f0487`, not merged, deleted, rebased or swept —
+  **verified against `git ls-remote`, never against this single-branch clone**
+- `pass-sl-sow-launch` at `2a1cfda` and `pass-sbx-art-a2` at `462cfa6`, neither merged; no
+  branch deleted
+- No printer hold released · `Science_Teesside/visual-learning/` still BLOCKED · open item 39
+  untouched · zero pupil data · no © ASDAN PDF in git · no media URL wired · no third-party
+  artwork · no closure marker moved · no force-push, no rollback recipe, no rewritten history
+
+## For the next session, and for the 29 Aug pack slot
+
+**`REBRAND.md` pack scope must gain the newly-mounted ASDAN runtime assets before the next pack
+build** — on the same loader-resolves-inside-the-pack gate that PACK-2 applied to the GROW and
+LAUNCH `visual-upgrade` files. It is stated here and deliberately **not** acted on: no pack was
+built this session. The 29 Aug rebuild slot inherits it.
