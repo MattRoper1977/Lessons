@@ -1,3 +1,19 @@
+                        performance_logs = driver.get_log("performance")
+                        self._classify_browser_logs(result, browser_logs, performance_logs, server.origin)
+                        interaction = driver.execute_script(SAFE_INTERACTION_JS) or {}
+                        target = interaction.pop("element", None) if isinstance(interaction, dict) else None
+                        if target is not None:
+                            try:
+                                target.click()
+                                interaction["clicked"] = True
+                            except Exception as exc:
+                                interaction["clicked"] = False
+                                interaction["reason"] = f"{type(exc).__name__}: {exc}"
+                        if interaction and interaction.get("clicked"):
+                            time.sleep(min(settle, 0.35))
+                            interaction["post_errors"] = driver.execute_script("return window.__estateAuditErrors || []") or []
+                            post_logs = driver.get_log("browser")
+                            post_perf = driver.get_log("performance")
                             self._classify_browser_logs(result, post_logs, post_perf, server.origin)
                         result["interaction"] = interaction
                         if not surface or not surface.get("has_surface"):
@@ -48,8 +64,26 @@
             "features": [{"name": "prefers-reduced-motion", "value": "reduce" if reduced else "no-preference"}],
         })
         if mobile:
+            driver.execute_cdp_cmd("Emulation.setDeviceMetricsOverride", {
+                "width": 390,
+                "height": 844,
+                "deviceScaleFactor": 3,
+                "mobile": True,
+                "screenWidth": 390,
+                "screenHeight": 844,
+            })
+            driver.execute_cdp_cmd("Emulation.setTouchEmulationEnabled", {
+                "enabled": True,
+                "maxTouchPoints": 5,
+            })
             driver.set_window_size(390, 844)
         else:
+            with contextlib.suppress(Exception):
+                driver.execute_cdp_cmd("Emulation.clearDeviceMetricsOverride", {})
+            driver.execute_cdp_cmd("Emulation.setTouchEmulationEnabled", {
+                "enabled": False,
+                "maxTouchPoints": 0,
+            })
             driver.set_window_size(1440, 1000)
 
     @staticmethod
@@ -66,18 +100,45 @@
                 # Exact local HTTP failures are derived from Network.responseReceived below.
                 continue
             result["errors"].append({"kind": "console", "message": message[:2000]})
+        parsed_logs: list[dict[str, Any]] = []
+        request_methods: dict[str, str] = {}
         for entry in performance_logs:
             try:
                 payload = json.loads(entry["message"])["message"]
+                parsed_logs.append(payload)
+                if payload.get("method") == "Network.requestWillBeSent":
+                    params = payload.get("params", {})
+                    request_id = str(params.get("requestId", ""))
+                    request = params.get("request", {})
+                    if request_id:
+                        request_methods[request_id] = str(request.get("method", "GET")).upper()
+            except Exception:
+                continue
+        for payload in parsed_logs:
+            try:
                 if payload.get("method") != "Network.responseReceived":
                     continue
-                response = payload["params"]["response"]
+                params = payload.get("params", {})
+                response = params["response"]
                 status = int(response.get("status", 0))
                 url = str(response.get("url", ""))
-                if status >= 400 and url.startswith(origin):
-                    if url.endswith("/favicon.ico"):
-                        continue
-                    result["local_http_errors"].append({"status": status, "url": url})
+                if status < 400 or not url.startswith(origin):
+                    continue
+                if url.endswith("/favicon.ico"):
+                    continue
+                request_id = str(params.get("requestId", ""))
+                method = request_methods.get(request_id, "GET")
+                path = urllib.parse.urlsplit(url).path.rstrip("/")
+                optional_static_probe = path.endswith("/sync.php") or path.endswith("/sync")
+                record = {"status": status, "url": url, "method": method}
+                if optional_static_probe:
+                    result.setdefault("optional_http_failures", []).append(record)
+                    result["warnings"].append({
+                        "kind": "optional-http",
+                        "message": f"Optional classroom endpoint returned HTTP {status}: {method} {url}",
+                    })
+                else:
+                    result["local_http_errors"].append(record)
             except Exception:
                 continue
 
@@ -217,64 +278,3 @@
                     "body": body,
                 }
         except urllib.error.HTTPError as exc:
-            if method == "HEAD" and exc.code in {403, 405}:
-                get_req = urllib.request.Request(url, method="GET", headers={**headers, "Range": "bytes=0-0"})
-                try:
-                    with urllib.request.urlopen(get_req, timeout=25) as response:
-                        response.read(1)
-                        return {
-                            "ok": 200 <= response.status < 400,
-                            "status": response.status,
-                            "final_url": response.geturl(),
-                            "content_type": response.headers.get("Content-Type", ""),
-                            "elapsed_ms": round((time.monotonic() - started) * 1000),
-                        }
-                except Exception as fallback_exc:
-                    return {"ok": False, "status": getattr(fallback_exc, "code", None), "error": str(fallback_exc), "elapsed_ms": round((time.monotonic() - started) * 1000)}
-            return {"ok": False, "status": exc.code, "error": str(exc), "elapsed_ms": round((time.monotonic() - started) * 1000)}
-        except Exception as exc:
-            return {"ok": False, "status": None, "error": f"{type(exc).__name__}: {exc}", "elapsed_ms": round((time.monotonic() - started) * 1000)}
-
-    def _write_outputs(self) -> None:
-        self.metrics["generated_at_utc"] = dt.datetime.now(dt.timezone.utc).isoformat()
-        self.metrics["issue_counts"] = dict(Counter(issue.severity for issue in self.issues))
-        self.metrics["blocking_issue_count"] = self.blocking_count
-        self.metrics["reference_count"] = len(self.references)
-        self.metrics["public_reference_target_count"] = len(self.resolved_public_targets)
-        self._write_json("metadata.json", self.metrics)
-        self._write_json("issues.json", [issue.as_dict() for issue in self.issues])
-        self._write_json("browser-results.json", self.browser_results)
-        self._write_json("live-results.json", self.live_results)
-        self._write_json("site-checks.json", self.site_checks)
-        self._write_inventory_csv()
-        self._write_issues_csv()
-        report = self._render_report()
-        (self.output / "ESTATE_AUDIT_REPORT.md").write_text(report, encoding="utf-8")
-        patch_plan = self._render_patch_plan()
-        (self.output / "PATCH_PLAN.md").write_text(patch_plan, encoding="utf-8")
-        manifest = {
-            "lessons_commit": self.metrics.get("lessons_commit"),
-            "site_commit": self.metrics.get("site_commit"),
-            "generated_at_utc": self.metrics.get("generated_at_utc"),
-            "blocking_issue_count": self.blocking_count,
-            "files": [],
-        }
-        for path in sorted(self.output.iterdir()):
-            if path.is_file() and path.name not in {"checksums.sha256", "download-manifest.json"}:
-                manifest["files"].append({"name": path.name, "bytes": path.stat().st_size, "sha256": self._sha256_path(path)})
-        (self.output / "download-manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        checksum_lines = []
-        for path in sorted(self.output.iterdir()):
-            if path.is_file() and path.name != "checksums.sha256":
-                checksum_lines.append(f"{self._sha256_path(path)}  {path.name}")
-        (self.output / "checksums.sha256").write_text("\n".join(checksum_lines) + "\n", encoding="utf-8")
-
-    def _write_json(self, name: str, value: Any) -> None:
-        (self.output / name).write_text(json.dumps(self._json_safe(value), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-    def _write_inventory_csv(self) -> None:
-        with (self.output / "inventory.csv").open("w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=["path", "size", "extension", "public_candidate", "sha256", "symlink"])
-            writer.writeheader()
-            writer.writerows(sorted(self.inventory, key=lambda row: row["path"]))
-
