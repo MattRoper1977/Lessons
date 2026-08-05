@@ -2193,3 +2193,118 @@ Base `84f4f31` (derived fresh at open; identity gate 5/5). Branch
 - Sentinels at the records commit: loop-mark **50** / written-line **98** (universe: tracked
   `*.html` containing the literal marker), derived, unmoved. Assessed pair and D&T decks
   byte-identical to base. No storage or egress added anywhere.
+
+## R-HUC01 — a text search over source is evidence about the text, never about the runtime
+
+**Pass HU-CLOSE, 2026-08-05. The general form of a failure this estate has now hit twice.**
+
+The commissioning order carried `data-sci-opened-by` as NOT-DETERMINED, on the ground that it
+"appears nowhere in the demo's engine or payloads." A literal search agrees: the string is absent
+from the engine, the payloads and the CSS. **The attribute exists anyway.** The engine sets it as
+`ctx.explanation.dataset.sciOpenedBy` — the DOM `dataset` form, which the browser writes out as
+`data-sci-opened-by`. The value it assigns for LAUNCH is `'completed activity and recorded
+evidence'`, **verbatim** what the supplying pack's validation results claimed.
+
+So the pack's assertion was accurate and the NOT-DETERMINED verdict was an **instrument failure,
+not a pack failure**. Nothing was removed from documentation, and no attribute was authored to
+make someone else's claim true.
+
+**This is the same family as the checker that grepped for an array literal and could not see a
+hardcoded id list built inside a function.** Twice is a pattern, so the entry is the general form:
+
+> **A negative result from a text search over source code is evidence about the text. It is never
+> evidence about the runtime.** Anything a program can compute — an attribute name assembled from
+> a camelCase property, an id list built at call time, a class applied by a branch, a string
+> concatenated from parts — is invisible to `grep` by construction. Where the claim is about
+> behaviour, the derivation must execute, parse, or read the code as code. Where that is not
+> possible, the honest verdict is NOT-DETERMINED **about the instrument**, not FALSE about the
+> subject.
+
+**Corollary, and the reason this cost nothing here:** the second reading was done because R4 said
+*derive at extraction*. A verdict that would have deleted a true claim from someone else's
+documentation was caught by re-deriving rather than by trusting the first search.
+
+## R-HUC02 — a property worded for one hazard misses the same hazard in another voice
+
+**Pass HU-CLOSE, 2026-08-05. Widens R-LLAS07's derivation discipline; does not replace it.**
+
+The display-artefact property was issued as *pupil-voiced first-person text that an adult would
+display or read aloud as the pupil's own*. Derived honestly against that wording, the predicted
+member — the influence report-back guide — returns **CLEAN**: its frames are the **adult's** voice
+(*"You recommended \_\_ … We changed \_\_"*), which the wording's own rubric excludes.
+
+The real hazard the guide carries is **adult-voiced report-back text that ends up on a wall**. The
+wording did not reach it. **The property is therefore widened:**
+
+> **Any first-person fill-in template intended for display, regardless of whose voice it is.**
+
+**Two consequences, both observed rather than predicted.**
+
+1. **A narrow property hides a second member.** Under the original wording the derivation returned
+   one candidate. Under the widened one it returns two — the map and fieldwork evidence card
+   carries *"My solution/recommendation is…"* above a ruled writing line, and had landed with none
+   of the ruled conditions. **The gate was reported green when it was not.**
+2. **The scan that missed it failed on punctuation, not on judgement.** Its stems terminate in an
+   ellipsis (`…`). One sweep required sentence-ending `.!?`; the other required a blank marker
+   (`__`, `___`, `...`). A stem ending `…` matched neither. **A character-class assumption is a
+   silent exclusion**, and it excluded the only file in the set shaped that way.
+
+**Standing consequence:** when a derivation returns exactly the predicted answer, that is the
+moment to re-derive by a second route. Agreement with the prediction is not corroboration — here
+it concealed both a mis-worded property and a broken sweep, and the two errors pointed the same
+way.
+
+## R-HUC03 — a supplier's observation SHA on a staff-facing page is plumbing and a false claim
+
+**Pass HU-CLOSE, 2026-08-05.**
+
+The incoming pack's front-door page carried, in its rendered footer:
+
+> `Reference commit b080a7c16f0c71230d640f764ca34a245c302dcd · Review pack 2026-08-04 · No
+> repository change.`
+
+Two defects in one line. It is **estate plumbing on the first page a teacher opens** — a
+40-character hex string means nothing to its reader. And it is **misleading**: `b080a7c` was the
+*supplier's* observation point, never this repository's base, which was `067c76a` at landing. The
+line asserted a provenance this repo never had.
+
+**Rule:** a third party's pinned SHA is a fact about their workspace. It does not travel with
+their files into ours. Strip it at landing — and note that the internal-language sweep must
+include **bare hex strings of 7–40 characters**, which a register-ID and pass-name pattern does
+not catch. Beware the inverse: CSS hex colours with alpha (`#18233f0d`) match a naive SHA pattern
+and are **not** findings.
+
+## R-HUC04 — Pass HU-CLOSE close: three merges, the tenth mis-open, and the residue
+
+**Pass HU-CLOSE, 2026-08-05. Merged under Matt's close order, which supplied the merge authority
+the pass brief withheld.**
+
+- **Merge scope, in order:** the humanities landing (#46) · the gate-5 correction (#48) · the
+  science toolkit, blocked in-artefact (#47). Per R-LLS08 the merge SHAs are not written inside
+  the branches that name them — derive: `git log --oneline --first-parent main | head`.
+- **Merged unprinted, deliberately.** The ruling: *hold what is worthless if wrong when printed;
+  merge what has screen value independent of print.* A staff toolkit read on a screen fails that
+  test for holding; the #42 A4-card precedent does not reach it. The print check narrowed
+  post-merge to **three** cards, not twenty-seven, and is a verification item, **not a trigger**.
+- **An inert artefact on main gets its block written into itself.** The science toolkit is loaded
+  by zero lessons and must stay that way until the LAUNCH explanation has an adult route. The
+  block therefore sits at the head of the folder README **and** at the head of the engine file,
+  in plain words, naming the trap directly — a branch would have rotted against a moving base,
+  and a record alone is not read by whoever is about to mount.
+- **Mis-open tally reaches TEN, and the order's expectation of nine is the disagreement.** The
+  ninth is recorded above as Pass LL-AS1's. This session is a **separate, later occurrence**: the
+  harness opened in the site repo and pre-seeded `claude/ll-hu1-lundy-humanities-chb40l` there.
+  **Residue cleared:** that branch reached the site repo's origin **never** — `git ls-remote`
+  empty, zero unique commits, working tree clean, nothing written. It existed only in an ephemeral
+  container and evaporates with it. **The gate caught it on the first action, twice in one
+  session** (once per commissioning prompt), which is the control working, not failing.
+- **Recorded without their own entries:** the `LundyLoop/5_staff_training/` sentinel guard is
+  confirmed a **no-op again** — raw equals excluded at every derivation this pass, so it remains
+  prospective, not load-bearing. And **PR #45 touches no lesson file**: it is three proposal diffs
+  and a note, which is worth knowing before the sitting reads it.
+- **Sentinels at close:** loop-mark **50** / written-line **98**, derived at each tip, unmoved
+  across all three merges. Universe moved **528 → 547** tracked `*.html` — the landing added HTML
+  and moved the denominator without moving the counts, which is the correct behaviour and the
+  reason the universe string is stated rather than the bare number.
+- Assessed pair byte-identical throughout; frozen legacy science tree hashes unchanged; no lesson
+  file in any merged diff.

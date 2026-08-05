@@ -356,10 +356,16 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
     discovered.** Estate Visuals is the next queued pass and its prompt predates five merges, so it
     derives at HEAD rather than trusting its own base notes — and it will expect to own both of
     these:
-    - **Humanities half — still OPEN, not taken.** Pass HU-CLOSE did **not** run the humanities
-      visuals slice. No `claude/hu-close-visuals` branch and no visuals PR exists; the 22
-      non-assessed humanities decks are untouched and the queued year-tag correction in
-      `resources.json` was **not** made. Estate Visuals owns this in full.
+    - **Humanities half — an UNRUN BUILD, inherited in full. Explicitly NOT verify-only.** Pass
+      HU-CLOSE did **not** run the humanities visuals slice, and the close order returned it
+      rather than splitting it out — the estate-wide run is the very next session, so carving this
+      half off buys nothing and costs a branch. **No `claude/hu-close-visuals` branch was cut and
+      none should be.** Precondition already checked, so it need not be re-derived from nothing:
+      no visuals-humanities branch and no visuals PR exists anywhere at origin. The work is 22
+      files at `{Build,Grow,Launch}/Slideshows/*_HUM_*` — the assessed pair excluded and
+      byte-frozen — and **the queued `resources.json` year-tag correction travels with it**.
+      Scope and detail: `_close/OPEN_ITEMS.md` #39.
+      **One entry, one answer: this half is a build to run, not a state to verify.**
     - **Science half — VERIFY-ONLY.** The science visual-learning toolkit was recovered to
       `Science_Teesside/visual-learning/` on the held branch `claude/hu-close-science-visuals` and
       is **mounted in no lesson**, so the 25 science decks are byte-untouched. Estate Visuals must
