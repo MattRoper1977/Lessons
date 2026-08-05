@@ -246,6 +246,7 @@
       <div class="ido-box animate-enter"><h3 style="margin-top:0;color:var(--ido-border)">1. Carbohydrases</h3><p><strong>Amylase</strong> breaks <strong>starch</strong> (polysaccharide) into <strong>maltose</strong> (disaccharide).</p><p><strong>Maltase</strong> then breaks <strong>maltose</strong> into <strong>glucose</strong> (monosaccharide).</p>
         <div style="text-align:center;margin:8px 0"><svg width="360" height="50" viewBox="0 0 360 50"><rect x="5" y="10" width="80" height="30" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="45" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#1e40af">STARCH</text><text x="118" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">amylase</text><line x1="88" y1="25" x2="148" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="145,20 155,25 145,30" fill="#7c3aed"/><rect x="158" y="10" width="80" height="30" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2"/><text x="198" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#92400e">MALTOSE</text><text x="268" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">maltase</text><line x1="240" y1="25" x2="298" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="295,20 305,25 295,30" fill="#7c3aed"/><rect x="308" y="10" width="48" height="30" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="332" y="30" text-anchor="middle" font-weight="bold" font-size="12" fill="#166534">GLUCOSE</text></svg></div>
         <p style="font-size:.95rem;color:var(--muted)">Made in: salivary glands (mouth) and pancreas.</p></div>
+      <div class="scaffold-box animate-enter" style="margin-top:8px"><strong>🧠 Memory Trick:</strong> "Amylase Makes Maltose, Maltase Makes Glucose" – the enzyme name sounds like the product it creates! And remember: <strong>starch needs TWO steps</strong>, not one.</div>
       <div class="ido-box animate-enter anim-delay-1"><h3 style="margin-top:0;color:var(--ido-border)">2. Proteases</h3><p><strong>Proteases</strong> break <strong>proteins</strong> into <strong>amino acids</strong>.</p><p>Stomach makes <strong>pepsin</strong>. Pancreas makes <strong>trypsin</strong>.</p>
         <div style="text-align:center;margin:8px 0"><svg width="280" height="50" viewBox="0 0 280 50"><rect x="5" y="10" width="80" height="30" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="2"/><text x="45" y="30" text-anchor="middle" font-weight="bold" font-size="13" fill="#9d174d">PROTEINS</text><text x="118" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">protease</text><line x1="88" y1="25" x2="148" y2="25" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4"/><polygon points="145,20 155,25 145,30" fill="#7c3aed"/><rect x="158" y="10" width="118" height="30" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/><text x="217" y="30" text-anchor="middle" font-weight="bold" font-size="12" fill="#166534">AMINO ACIDS</text></svg></div></div>
     </div>
@@ -345,7 +346,7 @@
   <div class="li-box"><strong>Instructions:</strong> Complete your printed worksheet at your level. You may use your enzyme table and knowledge organiser.</div>
     <div class="indep-timer">
       <div class="timer-label">Independent Work Timer</div>
-      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div class="timer-display indep-timer-display">08:00</div>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
         <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
         <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
@@ -377,6 +378,7 @@
   <span class="slide-tag tag-exit">Exit Ticket</span>
   <h2>Exit Ticket – L1</h2>
   <div class="li-box"><strong>Instructions:</strong> Answer independently. No notes.</div>
+  <div class="li-box" style="background:var(--sc-bg);border-color:var(--sc-border)"><strong>🧠 Retrieval:</strong> Before Q1 — what was our amylase trick? Recall it in your head, then answer from memory.</div>
   <div class="level-toggle">
     <button onclick="switchLevel('l1-exit','foundation')" style="background:#22c55e">Foundation (U–1)</button>
     <button onclick="switchLevel('l1-exit','middle')" style="background:#f97316">Middle (2–3)</button>
@@ -995,7 +997,7 @@
   <div class="li-box"><strong>Instructions:</strong> Complete your Lesson 2 worksheet. Use your labelled villus diagram and knowledge organiser.</div>
     <div class="indep-timer">
       <div class="timer-label">Independent Work Timer</div>
-      <div class="timer-display" id="indep-timer-display">08:00</div>
+      <div class="timer-display indep-timer-display">08:00</div>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
         <button onclick="startIndepTimer(480)" style="background:var(--lo-border)" class="small">▶ 8 min</button>
         <button onclick="startIndepTimer(600)" class="small">▶ 10 min</button>
@@ -1324,6 +1326,7 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
 
   // --- Independent Work Timer ---
   let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function indepDisplays(){return document.querySelectorAll('.indep-timer-display');}
   function startIndepTimer(secs){
     if(indepPaused&&!secs){indepPaused=false;}
     else{clearInterval(indepInterval);indepSeconds=secs||480;}
@@ -1332,15 +1335,14 @@ function printWeDoEvidence(id){const c=document.getElementById(id);if(!c)return;
     indepInterval=setInterval(function(){
       if(!indepPaused){indepSeconds--;updateIndepDisplay();
       if(indepSeconds<=0){clearInterval(indepInterval);
-        const d=document.getElementById('indep-timer-display');if(d){d.textContent='TIME UP!';d.classList.add('timer-warning');}
+        indepDisplays().forEach(function(d){d.textContent='TIME UP!';d.classList.add('timer-warning');});
       }}
     },1000);
   }
-  function pauseIndepTimer(){indepPaused=!indepPaused;const d=document.getElementById('indep-timer-display');if(d&&indepPaused)d.style.opacity='.5';else if(d)d.style.opacity='1';}
-  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();const d=document.getElementById('indep-timer-display');if(d){d.classList.remove('timer-warning');d.style.opacity='1';}}
-  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const d=document.getElementById('indep-timer-display');if(d){d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);}}
+  function pauseIndepTimer(){indepPaused=!indepPaused;indepDisplays().forEach(function(d){d.style.opacity=indepPaused?'.5':'1';});}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();indepDisplays().forEach(function(d){d.classList.remove('timer-warning');d.style.opacity='1';});}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;const t=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');indepDisplays().forEach(function(d){d.textContent=t;d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);});}
 
 </script>
 </body>
-</html><div class="scaffold-box animate-enter" style="margin-top:8px"><strong>🧠 Memory Trick:</strong> "Amylase Makes Maltose, Maltase Makes Glucose" – the enzyme name sounds like the product it creates! And remember: <strong>starch needs TWO steps</strong>, not one.</div>
-      
+</html>

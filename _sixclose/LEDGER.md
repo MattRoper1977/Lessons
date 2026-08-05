@@ -942,3 +942,148 @@ rider applies only if that file is opened for a separate, necessary reason.
 | the 24 headings at 4.52 | standing ruling above — AA-compliant, behind the assessed-pair lock |
 
 **THE LESSONS PROGRAMME IS CLOSED.**
+
+---
+
+# §R · POST-CLOSE — acting on the four-pass review (PR #70 / PR #71), 5 Aug 2026
+
+Sentinel `estate-review-pr7071-2026-08-05`, revision 1. Base `4aced082`, derived by
+`git merge-base --is-ancestor`, not asserted equal. **The programme stays CLOSED**; this is a
+repair-and-record entry against an outside review, not a reopening.
+
+**Identity gate 6/6.** The session opened in the wrong repository — `/home/user/Games`, not
+Lessons — and the gate caught it before any write. That is mis-open **#13**, and the first one
+caught by the gate rather than by a person. Corrected by attaching the Lessons repo. Branch
+presence was read with `git ls-remote`, never `git branch -r`: this is a `--depth 1` clone whose
+refspec tracks only `main`, so `git branch -r` is blind. Sentinels re-derived by an independent
+byte-level walk over `git ls-files -z '*.html'` using the literal markers `ll-g:loop-mark v1` and
+`What I said, and what it changed` — **50 / 98 / 548, overlap 0**, unmoved before and after.
+Remote heads **85** (baseline 83; +2 fully attributed to the two review branches).
+
+## §R1 · Evidence verdict on the review
+
+The handover shipped five files and no evidence: its own logs read `GH_AUTH=false` and
+`Could not resolve host: github.com`, and its summary says the pass-1/2/3 JSON was "not found"
+three times. Checksums verify — of nothing. Against the Actions API, both branches tell the same
+story: **13 runs each, 0 green.** Audit branch 11 failure / 2 cancelled; fix-pack branch
+11 failure / 2 cancelled.
+
+| pass | state | derivation |
+|---|---|---|
+| 1 · file audit | **RAN-BUT-UNRETRIEVABLE** | run `31046502663`, artefact `8947410011` (201,297 B) exists and is unexpired to 2026-11-03 — but the blob host is denied by this environment's network policy (`connect_rejected`, 403 to CONNECT). Blocked here, not gone. |
+| 2 · browser execution | **UNEVIDENCED** | the fix-pack `runner.log` terminates immediately after "Materialised …"; `validate_applied.py --browser` never emitted a line. Execution never reached the browser stage. |
+| 3 · publication wiring | **UNEVIDENCED** | no live-results JSON in any retrievable artefact or log; the review's own summary concedes it. |
+| 4 · preserved proposals | **EVIDENCED** | the five patch files, README, MANUAL_REVIEW.md and `validate_applied.py` are all retrievable and were read in full. |
+
+**The blocking condition for pass 1 was tested, not guessed** (R9): the artefact was requested,
+the proxy refused the host, and the refusal is recorded above.
+
+## §R2 · The fix pack cannot pass its own harness — for the register
+
+`validate_applied.py` asserts **both** `'id="title"' not in grid` **and**
+`count('class="panel-title"') == 3`. Those are mutually unsatisfiable while the patch leaves a
+fourth `id="title"` in place — and it does. It also searches for
+`<div class="memory-trick">Amylase…`, which patch 0003 never emits; 0003 produces
+`class="scaffold-box animate-enter"`.
+
+So the workflow ran **RED by construction** — its last step is a literal `exit "1"` — and the
+write-up framed that red as principled evidence-retention. **Same family as the contrast-parser
+defect, the vacuous `--name-only` control and the hyphen-truncated link regex already on the
+register. Added in the same words.**
+
+## §R3 · What landed
+
+Fifteen lesson/resource files, every change re-authored by hand against HEAD. **The review's
+patch files were not used**: three of five (0002, 0003, 0004) fail plain `git apply --check` with
+malformed hunk headers needing `--unidiff-zero`, while the shipped README tells the reader to run
+plain `git apply` in an `&&` chain — so three would have silently skipped.
+
+| band | file(s) | change |
+|---|---|---|
+| A | `L4a_Wave_Anatomy.html` | one unmatched `</div>` at 532 removed (markup-only delta −1 → 0). **Cosmetic** — browsers discard it. Hygiene, not a bug fixed. |
+| A | `Games/Grid_Chase.html` | Google Fonts query `&` escaped; accessible names on the three unnamed inputs |
+| B | `Games/Grid_Chase.html` | `id="title"` appears **4×**, not 3 — menu, pause, results **and the `#board` "TOP RUNS" panel**. All four converted to `class="panel-title"`, plus the single CSS rule. Re-derived before editing: **1 CSS reference, 0 JS references.** The review's patch converted only three and would have left TOP RUNS unstyled. |
+| B | `biology/Digestion_and_Absorption (1).html` | `id="indep-timer-display"` ×2 → shared class + a `querySelectorAll` helper; four `getElementById` calls rewritten. One global `indepSeconds` drives both displays in lockstep. Both slides already carried ▶/⏸/🔄, so no control was added. |
+| C | same file | the 266-character "memory trick" block moved from after `</html>` to inside `<body>`. **Structural half only.** |
+| J2 | 4 catalogued Physics files | the byte-identical 671-character "📋 Exam Technique" box (sha `f626d604…` in all five) moved inside `<body>`, **not rewritten** |
+| J3 | `6 Art/Surrealism_Eye_Study_v5.html` | `<div id="print-area">` closed |
+| J4 | `BUILD_HUM_W2_History_Detectives.html` | two raw `<` escaped (line 152, "Shows < suggests < proves") |
+| J5 | 6 print/poster pages | `viewport` meta added. Nothing pupil-facing was touched to clear a warning. |
+
+## §R4 · Three corrections to the brief, each derived
+
+**J1 is materially wrong, and wrong in the review's own blind spot.** The brief lists seven files
+with "duplicates JavaScript actually reads, meaning every instance after the first is dead", naming
+`Wrecking_Crew` (`util-close` ×11), `KidsVsStaff_Showdown (3)` (`goBtn` ×9), `Static`, `Lumins`,
+`Off_Brand`, `Kids_vs_Staff_v8`. Derived: in every one of those files the hits are **inside
+`<script>` bodies — 0 in static markup**. `Wrecking_Crew`'s `utility(html)` is
+`…innerHTML=html` — a full replacement, so exactly one `util-close` exists at a time across eleven
+mutually exclusive panels. `Lumins`' five `id="again"` are **branches of a single if/else-if
+chain** building one `btns` string. A live-DOM probe in Chromium — load, then exercise every panel
+function, recording the **peak simultaneous count per id** — returns **peak ≤ 1 for every game id**.
+`Kids_vs_Staff_v8` is not in the estate at all.
+
+> **Exactly one file in 548 carries a duplicate id that JavaScript reads: the digestion file
+> (peak = 2 at load).** The other counts came from grepping inside JavaScript template literals —
+> the same blind spot that produced the `g-mblur` false finding, reached by the same instrument.
+
+**J3 is real but filed backwards.** The unclosed element is `<div id="print-area">` at line 585,
+not `#print-ko` at 587 — 587 closes cleanly at 609. Whole-file markup delta was **+1**. The brief
+says "Invisible on screen, breaks only the printed pack." Measured, using the file's own `.open`
+mechanism: **print output is identical before and after** — same five visible print sections, same
+3506px document height, zero modals rendering. The damage was on **screen**: all four modals and
+the confetti canvas were nested inside `#print-area`, which is `display:none`, so
+`ta-modal` / `cc-modal` / `board-modal` computed `display:flex` and rendered **0×0**. Three
+teacher-facing modals — TA Focus, Cold Call, Board — were **dead in class** in a catalogued art
+lesson. After the fix all three render. That is a bigger finding than the one filed, on the
+other surface.
+
+**J2's live exposure is 4, not 5** — `L2_Voltage_Current_Resistance-1.html` is not catalogued
+(`resources.json` points at the clean non-suffixed sibling), verified 0 hits. It is deliberately
+left carrying its tail, and the validator asserts that it still does.
+
+J4 (**exactly 2, one file**) and J5 (**exactly 6, all print/poster**) matched the brief exactly.
+
+## §R5 · Rejected and held
+
+- **0004 poster — REJECTED.** `/assets/video/poster-art.jpg` is untouched. This entry recorded it
+  as intentionally pending *"so no future sweep 'fixes' it into deletion"* — **this review is that
+  sweep.** No placeholder SVG stands in for a real YouTube clip (`data-yt="vhuk-K_wWas"`) on a
+  public marketing surface. The principle is kept and nothing else: `index.html:351` references it
+  **absolutely** as `/assets/video/poster-art.jpg`, and the site serves this repo under
+  `/Lessons/` — so **if a real poster ever lands, that reference must become relative.** Parked,
+  Matt's call, no edit made.
+- **0005 `g-mblur` — FALSE FINDING.** Derived: **10 of 10** Science Teesside files both reference
+  `g-mblur` and define `ensureBlurFilter()`, which builds `<filter id="g-mblur">…` as a JavaScript
+  string, appends it to `<body>` and is called from `GP.init()`. The reduced-motion path already
+  forces `.g-blur-fast{filter:none!important}`. Applying 0005 would delete a working feature.
+  **A static grep cannot see an identifier defined inside a JS string** — the exact blind spot
+  PR #70's description claims to have corrected.
+- **PR #71 — never merged, and unmergeable as it stands.** Enumerated: it changes **no lesson
+  file**, only `review/estate-fixes/**` and a workflow.
+- **PR #70 — held on competence, not safety.** Left alive and unmerged.
+
+## §R6 · Parks, each with its blocking condition derived
+
+| park | blocking condition (tested) | owner |
+|---|---|---|
+| Band C placement of the 266-char memory trick | `body{overflow:hidden}` is present, so the block is **not visible today** — confirmed. The loss is teaching content, not a rendering glitch, so placement is a teaching call. Three candidates: **L1 Enzymes & Bile** (defensible), **L1 Carbohydrases I-Do** (sharpest — the content is Amylase→Maltose→Glucose), **L1 exit**. Structural half done; nothing else changed. | Matt |
+| `/assets/video/poster-art.jpg` | file absent on disk; reference live at `index.html:351` and **absolute** under a `/Lessons/` base path | Matt |
+| Band E pre-init hardening | before `ensureBlurFilter()` runs, `filter:url(#missing)` makes elements **not render** in Chrome and Firefox, so a blank flash is possible. Optional: gate the `@supports` block behind a class added *after* injection. One specimen file. **Proposed, held, not merged.** | Matt |
+| PR #70 adoption | held until it can resolve identifiers defined inside JS strings, prove counts by enumeration, and run its own validation green | Matt |
+
+## §R7 · The instrument
+
+`review/estate-exec/validate_estate_exec.py` — 15 checks, every count proved by enumeration, all
+markup counts taken after `<script>`/`<style>`/comment bodies are blanked. **Because a census that
+did not returned 379 files / 6,438 hits for raw `<` — all of it correct `i<n` loop code — and
+invented an estate-wide crisis.**
+
+`--self-test` copies the estate to a scratch tree and tampers it to break each check in turn,
+asserting the check goes red. **Live 15/15 pass · tamper 15/15 caught.** The self-test earned its
+keep immediately: it exposed three of its own tampers as too weak — a first-occurrence-only
+replacement that left the file still matching, a reverted markup change with nothing left reading
+it by id, and `g-mblur` → `g-mblur**X**`, which still contains `g-mblur`. **Each was a defective
+tamper, not a vacuous check, and each was fixed and re-proved rather than asserted away.**
+
+**The estate is not declared clean.**

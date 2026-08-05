@@ -7,7 +7,7 @@
 <title>Grid Chase</title>
 <meta name="description" content="Grid Chase — a neon 2.5D maze chase. Harvest the grid, outsmart four hunter AIs, then face the Warden boss at the end of every level.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   --cyan:#27e0ff; --magenta:#ff3df0; --amber:#ffb020; --green:#33e08a; --red:#ff3a52;
@@ -58,7 +58,7 @@ body.calm #banner.show{animation:banCalm 1.9s ease forwards}
 .panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;background:rgba(3,5,12,.72);backdrop-filter:blur(4px)}
 .panel.hidden{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 28px;width:min(440px,92vw);max-height:92vh;overflow-y:auto;box-shadow:0 0 60px rgba(30,80,200,.25)}
-#title{font-size:32px;font-weight:900;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 22px var(--cyan);text-align:center}
+.panel-title{font-size:32px;font-weight:900;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 22px var(--cyan);text-align:center}
 #tagline{font-size:12px;line-height:1.6;opacity:.85;margin:12px 0 16px;text-align:center;letter-spacing:.5px}
 .rules{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px}
 .rules .row{display:flex;justify-content:space-between;padding:4px 0;letter-spacing:.5px}
@@ -111,7 +111,7 @@ body.touch #dpad{display:block}
 </div>
 
 <div id="menu" class="panel hidden"><div class="card">
-  <div id="title">GRID CHASE</div>
+  <div class="panel-title">GRID CHASE</div>
   <p id="tagline">Harvest the neon grid while four hunters — each with its own AI — close in. Clear every pip and <b style="color:var(--red)">THE WARDEN</b> awakens: dodge its shockwaves, then strike when its core opens.</p>
   <div class="rules">
     <div class="row"><span>Swipe / arrows / WASD</span><span style="color:var(--cyan)">move — up is up</span></div>
@@ -119,7 +119,7 @@ body.touch #dpad{display:block}
     <div class="row"><span>Clear the pips</span><span style="color:var(--amber)">boss fight begins</span></div>
     <div class="row"><span>Warden core glows cyan</span><span style="color:var(--magenta)">RAM IT ×3 to win</span></div>
   </div>
-  <input type="number" id="seed-input" placeholder="seed">
+  <input type="number" id="seed-input" placeholder="seed" aria-label="Seed number">
   <div class="note" id="seed-note">Today's grid — same for everyone.</div>
   <div class="note" id="best-note"></div>
   <button class="btn primary" id="start-btn">START</button>
@@ -136,21 +136,21 @@ body.touch #dpad{display:block}
 </div></div>
 
 <div id="pause" class="panel hidden"><div class="card">
-  <div id="title" style="font-size:24px">PAUSED</div>
+  <div class="panel-title" style="font-size:24px">PAUSED</div>
   <button class="btn primary" id="resume-btn">RESUME</button>
   <button class="btn" id="restart-btn">RESTART</button>
   <button class="btn" id="quit-btn">QUIT TO MENU</button>
 </div></div>
 
 <div id="results" class="panel hidden"><div class="card">
-  <div id="title" style="font-size:24px">GRID DOWN</div>
+  <div class="panel-title" style="font-size:24px">GRID DOWN</div>
   <div id="res-score">0</div>
   <div id="res-lines"></div>
   <div id="initials-panel">
     <div class="pill">You made the top 5 — add your initials</div>
-    <div id="initials-row"><input type="text" id="initials-input" maxlength="3" placeholder="AAA"><button class="btn small" id="add-board-btn" style="width:auto;margin-top:0;padding:9px 16px">ADD</button></div>
+    <div id="initials-row"><input type="text" id="initials-input" maxlength="3" placeholder="AAA" aria-label="Your initials"><button class="btn small" id="add-board-btn" style="width:auto;margin-top:0;padding:9px 16px">ADD</button></div>
   </div>
-  <div id="share-row"><input type="text" id="share-str" readonly><button class="btn small" id="copy-btn" style="width:auto;margin-top:0;padding:9px 16px">COPY</button></div>
+  <div id="share-row"><input type="text" id="share-str" readonly aria-label="Shareable run code"><button class="btn small" id="copy-btn" style="width:auto;margin-top:0;padding:9px 16px">COPY</button></div>
   <button class="btn primary" id="retry-btn">RETRY SEED</button>
   <div class="btnrow">
     <button class="btn small" id="next-seed-btn">NEW SEED</button>
@@ -160,7 +160,7 @@ body.touch #dpad{display:block}
 </div></div>
 
 <div id="board" class="panel hidden"><div class="card">
-  <div id="title" style="font-size:22px">TOP RUNS</div>
+  <div class="panel-title" style="font-size:22px">TOP RUNS</div>
   <div class="pill" id="board-seed"></div>
   <ul id="board-list"></ul>
   <button class="btn" id="board-close-btn">CLOSE</button>
