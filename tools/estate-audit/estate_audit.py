@@ -6,7 +6,7 @@ from __future__ import annotations
 import hashlib
 import pathlib
 
-_EXPECTED_SHA256 = "91d8505540abec44964478248da62291b6d254d4b1b3620247aef98fd16fb197"
+_EXPECTED_SHA256 = "175a1329af9adacb81583b0fc97b85ece4cdf39f454b6403c66bb48606b4f7c0"
 _SOURCE_DIR = pathlib.Path(__file__).with_name("source")
 _PARTS = sorted(_SOURCE_DIR.glob("*.inc"))
 if not _PARTS:
