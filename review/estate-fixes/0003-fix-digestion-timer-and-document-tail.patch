@@ -1,7 +1,10 @@
 diff --git a/biology/Digestion_and_Absorption (1).html b/biology/Digestion_and_Absorption (1).html
 --- a/biology/Digestion_and_Absorption (1).html
 +++ b/biology/Digestion_and_Absorption (1).html
-@@ -344,6 +344,7 @@
+@@ -339,10 +339,11 @@
+     .formative-zone { background: #0e1230; border: 1px dashed #3c5a92; border-radius: 12px; padding: 16px; }
+     .indep-zone { background: #0a0d25; border: 1px solid #26326f; border-radius: 12px; padding: 16px; }
+     .indep-controls {
        margin-top: 16px;
        text-align: center;
      }
@@ -9,24 +12,35 @@ diff --git a/biology/Digestion_and_Absorption (1).html b/biology/Digestion_and_A
      .indep-controls button { margin: 0 6px; }
      .print-only { display: none; }
      @media print {
-@@ -998,3 +999,3 @@
+       .print-only { display: block; }
+@@ -994,11 +995,11 @@
+     <div class="indep-zone">
+       <p><strong>Time:</strong> 15 minutes</p>
+       <p><strong>Prompt:</strong> Explain how villi help digested food molecules move into the blood.</p>
        <div class="indep-controls">
 -        <span id="indep-timer-display">15:00</span>
 +        <span class="indep-timer-display">15:00</span>
          <button type="button" onclick="startIndepTimer()">Start</button>
-@@ -1322,3 +1323,4 @@
+         <button type="button" onclick="resetIndepTimer()">Reset</button>
+       </div>
+       <p><strong>Success looks like:</strong> A clear explanation that uses surface area, thin walls, capillaries, diffusion and concentration gradient.</p>
+     </div>
+   </section>
+@@ -1318,11 +1319,12 @@
+     <div class="indep-zone">
+       <p><strong>Time:</strong> 15 minutes</p>
+       <p><strong>Prompt:</strong> Explain how amylase, protease, lipase and bile work during digestion.</p>
        <div class="indep-controls">
 -        <span id="indep-timer-display">15:00</span>
 +        <span class="indep-timer-display">15:00</span>
          <button type="button" onclick="startIndepTimer()">Start</button>
-+        <button type="button" onclick="resetIndepTimer()">Reset</button>
-@@ -1332,14 +1334,13 @@
+         <button type="button" onclick="resetIndepTimer()">Reset</button>
+       </div>
        <p><strong>Success looks like:</strong> Answers use the correct key words and explain how each process helps digestion.</p>
      </div>
 +    <div class="memory-trick">Amylase Makes Maltose · Protease Produces Peptides · Lipase Liberates Lipids</div>
    </section>
- 
-   <script>
+@@ -1329,10 +1331,10 @@
      let indepRemaining = 15 * 60;
      let indepTimer = null;
      function renderIndepTimer(){
@@ -38,7 +52,9 @@ diff --git a/biology/Digestion_and_Absorption (1).html b/biology/Digestion_and_A
 +      document.querySelectorAll('.indep-timer-display').forEach(el => {
 +        el.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
 +      });
-@@ -1408,6 +1409,4 @@
+     }
+     function startIndepTimer(){
+@@ -1404,5 +1406,3 @@
    <script defer src="/theme.js"></script>
  </body>
  </html>
