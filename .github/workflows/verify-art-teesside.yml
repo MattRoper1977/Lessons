@@ -1,0 +1,201 @@
+name: Verify Art Teesside
+run-name: Verify Art Teesside — ${{ github.event_name }} — ${{ github.sha }}
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'Art_Teesside/**'
+      - 'art_teesside.html'
+      - '.github/workflows/verify-art-teesside.yml'
+  push:
+    paths:
+      - 'Art_Teesside/**'
+      - 'art_teesside.html'
+      - '.github/workflows/verify-art-teesside.yml'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  static-and-instruments:
+    name: Static, content and instrument gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the exact revision with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Inventory every Art Teesside file
+        run: >-
+          python3 Art_Teesside/tools/inventory_estate.py --check
+          --json "$RUNNER_TEMP/art-estate-inventory.json"
+          --markdown "$RUNNER_TEMP/art-estate-inventory.md"
+
+      - name: Prove the indentation-safe injector regression and legacy failure control
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py --self-test
+
+      - name: Prove the static visual assertion detects defects
+        run: python3 Art_Teesside/tools/assert_visual_layer.py --self-test
+
+      - name: Validate visual layer scope, references and safeguards
+        run: python3 Art_Teesside/tools/assert_visual_layer.py
+
+      - name: Prove authored content round-trips byte for byte
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py
+
+      - name: Prove the generated reference injector is idempotent
+        run: python3 Art_Teesside/tools/apply_visual_teaching.py --apply
+
+      - name: Confirm the idempotence run changed no tracked file
+        run: git diff --exit-code -- Art_Teesside art_teesside.html
+
+      - name: Run closed-kit instrument verbosely
+        run: python3 Art_Teesside/tools/assert_kit.py --verbose
+
+      - name: Assert the closed-kit population and non-empty totals
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py kit-current
+
+      - name: Run estate assertions
+        run: python3 Art_Teesside/tools/assert_estate.py
+
+      - name: Prove estate assertions detect a temporary defect
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py estate-control
+
+      - name: Run raw co-occurrence instrument and record its known-finding exit
+        id: raw-cooccurrence
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          python3 Art_Teesside/tools/assert_cooccurrence.py > "$RUNNER_TEMP/art-cooccurrence-raw.txt" 2>&1
+          code=$?
+          cat "$RUNNER_TEMP/art-cooccurrence-raw.txt"
+          printf 'raw_exit=%s\n' "$code" >> "$RUNNER_TEMP/art-cooccurrence-raw.txt"
+          exit "$code"
+
+      - name: Require the exact current co-occurrence baseline
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py cooccurrence-current
+
+      - name: Replay the documented historical co-occurrence positive control
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py cooccurrence-control
+
+      - name: Validate shared JavaScript syntax
+        run: node --check Art_Teesside/art-teach.js
+
+      - name: Validate browser assertion syntax
+        run: node --check Art_Teesside/tools/assert_visual_browser.js
+
+      - name: Validate print assertion syntax
+        run: node --check Art_Teesside/tools/assert_print.js
+
+      - name: Check patch whitespace
+        run: git diff --check origin/main...HEAD
+
+      - name: Upload static and instrument evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: art-static-instrument-evidence-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/art-estate-inventory.json
+            ${{ runner.temp }}/art-estate-inventory.md
+            ${{ runner.temp }}/art-cooccurrence-raw.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+  browser-and-print:
+    name: Chromium interaction and print gates
+    needs: static-and-instruments
+    runs-on: ubuntu-latest
+    env:
+      NODE_PATH: /tmp/art-node/node_modules
+    steps:
+      - name: Check out Lessons revision
+        uses: actions/checkout@v4
+        with:
+          path: Lessons
+          fetch-depth: 0
+
+      - name: Check out custom-domain website for root assets
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: main
+          path: website
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pinned Playwright and Chromium
+        shell: bash
+        run: |
+          mkdir -p /tmp/art-node
+          cd /tmp/art-node
+          npm init -y
+          npm install --no-save --no-package-lock playwright@1.62.0
+          npx playwright install --with-deps chromium
+
+      - name: Assemble the real custom-domain path layout
+        shell: bash
+        run: |
+          mkdir -p site
+          rsync -a --exclude='.git' website/ site/
+          mkdir -p site/Lessons
+          rsync -a --exclude='.git' Lessons/ site/Lessons/
+          test -f site/hud.js
+          test -f site/Lessons/art_teesside.html
+          test -f site/Lessons/Art_Teesside/art-teach.js
+
+      - name: Start local HTTP origin
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/art-browser-evidence"
+          nohup python3 -m http.server 4173 --directory site > "$RUNNER_TEMP/art-browser-evidence/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/art-browser-evidence/server.pid"
+
+      - name: Confirm the intended site path is serving
+        run: curl --fail --silent --show-error http://127.0.0.1:4173/Lessons/art_teesside.html --output /dev/null
+
+      - name: Prove the browser harness detects console errors and overflow
+        working-directory: Lessons
+        run: node Art_Teesside/tools/assert_visual_browser.js --self-test
+
+      - name: Test all 35 entry points at four viewports and all 31 lessons deeply
+        working-directory: Lessons
+        env:
+          ART_BROWSER_REPORT: ${{ runner.temp }}/art-browser-evidence/art-browser-report.json
+          ART_SCREENSHOT_DIR: ${{ runner.temp }}/art-browser-evidence/failures
+        run: >-
+          node Art_Teesside/tools/assert_visual_browser.js
+          --base-url http://127.0.0.1:4173/Lessons/
+
+      - name: Run the established 718 by 1047 print assertion
+        working-directory: Lessons
+        run: node Art_Teesside/tools/assert_print.js --verbose
+
+      - name: Prove the print harness detects a temporary overflow
+        working-directory: Lessons
+        run: python3 Art_Teesside/tools/assert_instrument_contracts.py print-control
+
+      - name: Upload browser and print evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: art-browser-print-evidence-${{ github.sha }}
+          path: ${{ runner.temp }}/art-browser-evidence/
+          if-no-files-found: warn
+          retention-days: 30

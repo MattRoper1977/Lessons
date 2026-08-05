@@ -30,11 +30,11 @@
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = process.env.ART_PRINT_ROOT ? path.resolve(process.env.ART_PRINT_ROOT) : path.resolve(__dirname, '..');
 const LIMIT_PX = 1047;                 // 297mm - 20mm margins, at 96dpi
 const VIEW = { width: 718, height: 1047 };
-const EXPECT_SHEETS = 55;              // 8 packs; also the expected page total
-const EXPECT_PAGES = 55;
+const EXPECT_SHEETS = Number(process.env.ART_PRINT_EXPECT_SHEETS || 55); // 8 packs; also expected page total
+const EXPECT_PAGES = Number(process.env.ART_PRINT_EXPECT_PAGES || 55);
 const WARN_PX = 50;   // clearance below which a sheet is one edit from failing
 
 function packs(dir) {
@@ -47,7 +47,9 @@ function packs(dir) {
 (async () => {
   const verbose = process.argv.includes('--verbose');
   const files = packs(ROOT).sort();
-  const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+  const legacyChromium = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+  const executablePath = process.env.ART_CHROMIUM_EXECUTABLE || (fs.existsSync(legacyChromium) ? legacyChromium : null);
+  const b = await chromium.launch(executablePath ? { executablePath } : {});
   const pg = await b.newPage({ viewport: VIEW });
   let sheets = 0, pages = 0, over = [], warn = [];
 

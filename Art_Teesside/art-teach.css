@@ -1,0 +1,1026 @@
+/* ==========================================================================
+   ART TEACH — shared visual teaching layer for the Art Teesside suite
+   --------------------------------------------------------------------------
+   Source of truth. Linked by every applicable Art Teesside lesson and hub.
+   Keep curriculum content in the authored HTML; maintain presentation behaviour here.
+
+   RULES OBSERVED BY THIS LAYER
+   - No new colours. Every colour resolves from the per-subject :root tokens
+     each lesson already declares (--lo-border, --ido-border, --wedo-border,
+     --task-border, --success, --error, --muted ...). A new subject palette
+     therefore restyles this whole layer for free.
+   - No content, wording or structural changes. Selectors target markup the
+     lessons already emit.
+   - Loaded AFTER the lesson's own <style> blocks, so it can build on them.
+     !important is used only where an existing inline style must be overridden.
+   - Every animation is gated by the reduced-motion block at the foot of this
+     file, and each one earns its place by directing attention, revealing
+     structure, or showing change.
+   ========================================================================== */
+
+:root{
+  /* Motion tokens — one vocabulary for the whole suite */
+  --at-fast:.22s;
+  --at-base:.42s;
+  --at-slow:.75s;
+  --at-ease:cubic-bezier(.22,.68,.36,1);      /* settle — for reveals */
+  --at-pop:cubic-bezier(.34,1.56,.64,1);      /* overshoot — for confirmation */
+  --at-step:90ms;                              /* gap between staggered items */
+
+  /* Spacing rhythm — matches the padding already used by .slide/.task-box */
+  --at-gap-s:8px;
+  --at-gap-m:14px;
+  --at-gap-l:22px;
+}
+
+/* ==========================================================================
+   1 · ATTENTION UTILITIES
+   Reusable helpers the lesson decks and the framework JS both draw on.
+   Each does one job so a teacher-facing behaviour can be composed from them.
+   ========================================================================== */
+
+/* 1.1 Reveal — the base "appear with intent" state.
+   .at-reveal hides the element; .at-in plays it in. JS adds .at-in. */
+.at-reveal{opacity:0;transform:translateY(14px)}
+.at-reveal.at-in{animation:atReveal var(--at-base) var(--at-ease) forwards}
+@keyframes atReveal{to{opacity:1;transform:translateY(0)}}
+
+/* 1.2 Stagger — children arrive in reading order rather than all at once,
+   so the class's eye lands where the teacher is talking. Depth-capped at 12. */
+.at-stagger > *{animation-delay:calc(var(--at-step) * var(--at-i,0))}
+
+/* 1.3 Focus / dim — spotlight one thing by quietening its siblings.
+   Applied to a container; the chosen child carries .at-focused. */
+.at-dimmed{transition:opacity var(--at-base) var(--at-ease),filter var(--at-base) var(--at-ease)}
+.at-dim-siblings > *:not(.at-focused){opacity:.32;filter:saturate(.45)}
+.at-dim-siblings > .at-focused{opacity:1;filter:none}
+
+/* 1.4 Emphasis — a soft ring that says "look here" without moving anything.
+   Colour comes from the slide's own zone token, set by the framework JS. */
+@keyframes atPulseRing{
+  0%{box-shadow:0 0 0 0 var(--at-ring,rgba(100,116,139,.45))}
+  70%{box-shadow:0 0 0 12px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+.at-pulse{animation:atPulseRing 1.9s var(--at-ease) infinite}
+
+/* 1.5 Draw-on — for SVG strokes that should build rather than blink into view.
+   Set --at-len to the path length (framework JS measures it). */
+@keyframes atDraw{to{stroke-dashoffset:0}}
+.at-draw{stroke-dasharray:var(--at-len,600);stroke-dashoffset:var(--at-len,600);
+         animation:atDraw var(--at-slow) var(--at-ease) forwards}
+
+/* 1.6 Confirmation — a single, brief "yes, that's it" for correct answers. */
+@keyframes atConfirm{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.06)}
+  100%{transform:scale(1)}
+}
+.at-confirm{animation:atConfirm .45s var(--at-pop)}
+
+/* 1.7 Count-in — the numeric "n of m" that tells a class how far through
+   a reveal sequence they are. Purely presentational. */
+.at-count{font-variant-numeric:tabular-nums}
+
+/* ==========================================================================
+   2 · TODAY AT A GLANCE  (.product-grid)
+   ---------------------------------------------------------------------------
+   Every deck in the suite emits .product-grid > .product-card (.icon, h4, p,
+   .country-badge) on the Starter slide, but no lesson has ever defined styles
+   for them — the four cards render as an unstyled vertical text dump that
+   overflows the slide. This is the component that was missing.
+
+   Read as a left-to-right story: Big Idea -> Today We Play -> The Wall Grows
+   -> It Banks. Each card takes the zone colour that matches its role, so the
+   Starter slide previews the colour language used by the rest of the lesson.
+   ========================================================================== */
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:var(--at-gap-m);
+  margin-top:var(--at-gap-m);
+  align-items:stretch;
+}
+.product-card{
+  --pc:var(--muted);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  background:#fff;
+  border:2px solid #e2e8f0;
+  border-top:6px solid var(--pc);
+  border-radius:14px;
+  padding:16px 14px 42px;
+  box-shadow:0 4px 14px rgba(15,23,42,.06);
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,23,42,.12)}
+.product-card .icon{
+  font-size:2rem;line-height:1;margin-bottom:6px;
+  filter:drop-shadow(0 2px 3px rgba(15,23,42,.15));
+}
+/* Dark, not the zone colour. None of the four zone tokens clears 4.5:1 against
+   white (they run 2.2–4.2:1), so tinting a 13px bold heading with one would
+   have made this card the least legible text in the suite. The card's zone
+   identity is carried by the 6px top border and the badge instead. */
+.product-card h4{
+  margin:0 0 4px;font-size:.82rem;font-weight:900;
+  letter-spacing:.09em;text-transform:uppercase;color:#1f2937;
+}
+.product-card p{
+  margin:0;font-size:1rem;line-height:1.4;color:#1f2937;font-weight:600;
+}
+/* The badge names the card's job in the lesson — anchored so all four align
+   however much text sits above them. White on the zone colour is the pattern
+   the decks already use for .slide-tag and .wedo-capture, so it is kept; it is
+   set a size up from a caption to make the most of the contrast available. */
+.product-card .country-badge{
+  position:absolute;left:14px;bottom:12px;
+  background:var(--pc);color:#fff;
+  font-size:.7rem;font-weight:900;letter-spacing:.1em;
+  padding:3px 10px;border-radius:6px;
+}
+/* Role colours, drawn only from the subject's approved palette. */
+.product-card:nth-child(1){--pc:var(--lo-border)}    /* SPARK    — the big idea  */
+.product-card:nth-child(2){--pc:var(--wedo-border)}  /* GAME     — we do together*/
+.product-card:nth-child(3){--pc:var(--ido-border)}   /* AUDIENCE — it goes public*/
+.product-card:nth-child(4){--pc:var(--task-border)}  /* EVIDENCE — it banks      */
+
+/* Cards arrive one at a time so the teacher can talk to each in turn. */
+.slide.active .product-card{animation:atReveal var(--at-base) var(--at-ease) backwards}
+.slide.active .product-card:nth-child(1){animation-delay:.10s}
+.slide.active .product-card:nth-child(2){animation-delay:.22s}
+.slide.active .product-card:nth-child(3){animation-delay:.34s}
+.slide.active .product-card:nth-child(4){animation-delay:.46s}
+
+@media (max-width:900px){
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .product-grid{grid-template-columns:1fr;gap:10px}
+  .product-card{padding:12px 12px 38px}
+  .product-card .icon{font-size:1.6rem}
+  .product-card p{font-size:.95rem}
+}
+@media print{
+  .product-grid{display:grid!important;grid-template-columns:repeat(2,1fr)}
+  .product-card{box-shadow:none;animation:none}
+}
+
+/* ==========================================================================
+   3 · TITLE SLIDE HIERARCHY
+   ---------------------------------------------------------------------------
+   h1 and the module tag are both inline-block inside a centred wrapper, so
+   they share a line and the lesson title reads as a run-on of the module
+   strip. Giving the tag its own line restores the title as the loudest thing
+   on the slide. Presentation only — no text is altered.
+   ========================================================================== */
+.title-stage .slide-tag.tag-lesson{
+  display:block;width:max-content;max-width:100%;
+  margin:0 auto 10px;
+}
+.title-stage h1{margin-top:0}
+
+/* ==========================================================================
+   4 · SLIDE BUILD  (attention and reveal)
+   ---------------------------------------------------------------------------
+   A slide used to arrive as one block: tag, heading, key idea, activity and
+   controls all at once, so a class had the whole slide to read before the
+   teacher had said anything. Now the slide builds in reading order — roughly
+   half a second end to end, fast enough never to slow a lesson down, ordered
+   enough that the room's attention lands where the teacher is speaking.
+
+   Pure CSS and keyed off .slide.active, so it replays when a teacher steps
+   back to a slide, and it cannot strand content if JavaScript fails.
+   ========================================================================== */
+@keyframes atSlideIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.slide.active > *{animation:atSlideIn var(--at-base) var(--at-ease) backwards}
+.slide.active > *:nth-child(1){animation-delay:.02s}
+.slide.active > *:nth-child(2){animation-delay:.09s}
+.slide.active > *:nth-child(3){animation-delay:.16s}
+.slide.active > *:nth-child(4){animation-delay:.23s}
+.slide.active > *:nth-child(5){animation-delay:.30s}
+.slide.active > *:nth-child(6){animation-delay:.37s}
+.slide.active > *:nth-child(7){animation-delay:.44s}
+.slide.active > *:nth-child(n+8){animation-delay:.50s}
+/* Decorative title-slide dots must not join the build queue. */
+.slide.active > .title-dots{animation:none}
+
+/* 4.0 A slide is a column flex container that scrolls. Its children therefore
+   shrink below their own content once the slide is fuller than the screen —
+   on a phone the key-idea box was being squashed to a single clipped line.
+   Nothing on a slide should be compressed; the slide scrolls instead. */
+.slide > *{flex-shrink:0}
+
+/* 4.1 The key idea is the anchor of every slide.
+   .li-box carries the Key Question / Key Idea / Instructions on all ten
+   slides. It read as a passive tinted strip; it now reads as the thing to
+   look at first, with one quiet sweep of light on arrival to place the eye. */
+.slide.active .li-box{position:relative;overflow:hidden}
+.slide.active .li-box::after{
+  content:'';position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:atSweep 1.15s var(--at-ease) .35s 1;
+  pointer-events:none;
+}
+@keyframes atSweep{to{left:115%}}
+
+/* ==========================================================================
+   5 · THE ILLUMINATOR  (.ilm — the I Do diagram)
+   ---------------------------------------------------------------------------
+   Each deck's I Do slide carries one SVG that builds itself in timed stages —
+   a plate filling by portion, a process assembling step by step. Two problems:
+   the caption naming what to notice appeared immediately, before the thing it
+   names existed; and the build could only ever be seen once, so a teacher
+   could not say "watch that again".
+
+   The caption now waits for the build to finish (--ilm-end is measured from
+   the SVG's own animation delays by the framework JS, so it is right for every
+   lesson), and a Replay control re-runs the sequence on demand.
+   ========================================================================== */
+.ilm{position:relative}
+.ilm .ilm-cap{
+  animation:atSlideIn var(--at-base) var(--at-ease) backwards;
+  animation-delay:calc(var(--ilm-end,2.4s) + .25s);
+}
+/* The label is the deck's body ink, not the zone colour: measured across the
+   five subject palettes, zone-on-white runs 3.17-3.95:1 and this is 12.5px
+   chrome. The zone identity is carried by the ring and by the hover fill,
+   which is white-on-zone — the pattern the decks already use everywhere.
+   Sized to a 36px target, since a teacher taps this mid-sentence. */
+.ilm-replay{
+  position:absolute;top:8px;right:10px;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  background:#fff;color:var(--text,#1f2937);
+  border:2px solid var(--ido-border);border-radius:999px;
+  padding:6px 14px;min-height:36px;font-size:.8rem;font-weight:900;letter-spacing:.03em;
+  cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.10);
+  transition:background var(--at-fast),color var(--at-fast),transform var(--at-fast);
+}
+.ilm-replay:hover{background:var(--ido-border);color:#fff;transform:translateY(-1px)}
+.ilm-replay:focus-visible{outline:3px solid var(--ido-border);outline-offset:2px}
+@media (max-width:640px){.ilm-replay{top:6px;right:6px;padding:3px 9px;font-size:.7rem}}
+@media print{.ilm-replay{display:none!important}}
+
+/* ==========================================================================
+   6 · WE DO 1 — PREDICT, THEN REVEAL  (.pres-card)
+   ---------------------------------------------------------------------------
+   This is the deck's whole-class prediction activity: the class guesses what
+   is behind a card, then the teacher taps it. The cards were small pills lost
+   in a large empty slide, with nothing to say they were hiding anything and
+   nothing tying a revealed answer back to the card it came from.
+
+   They are now substantial cards that read as face-down until turned, each
+   numbered, with its revealed answer carrying the same number so the class can
+   see which card produced it.
+   ========================================================================== */
+#pres-pills{gap:12px!important;margin:14px 0!important}
+.pres-card{
+  position:relative;
+  flex:1 1 190px;max-width:280px;
+  padding:16px 14px 16px 42px;
+  border:2px dashed #cbd5e1;border-radius:14px;
+  font-size:1.02rem;line-height:1.35;
+  display:flex;align-items:center;
+  min-height:62px;
+  transition:transform var(--at-fast) var(--at-ease),
+             border-color var(--at-fast) var(--at-ease),
+             background var(--at-fast) var(--at-ease),
+             box-shadow var(--at-fast) var(--at-ease);
+}
+/* Face-down marker: a card still holding something. */
+.pres-card::before{
+  content:'?';
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:var(--wedo-border);color:#fff;
+  font-size:.8rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--at-fast) var(--at-ease);
+}
+.pres-card:hover{border-color:var(--wedo-border);background:#fff;transform:translateY(-3px);
+                 box-shadow:0 8px 20px rgba(15,23,42,.10)}
+.pres-card:focus-visible{outline:3px solid var(--wedo-border);outline-offset:3px}
+/* Turned over: solid edge, ticked, and it stops inviting a tap. */
+.pres-card.done{border-style:solid;animation:atConfirm .45s var(--at-pop)}
+.pres-card.done::before{content:'✓';background:var(--success)}
+
+/* The revealed answer, numbered to match the card that produced it. */
+#pres-caps .pres-cap{position:relative;padding-left:40px;margin-bottom:2px}
+#pres-caps .pres-cap[data-at-n]::before{
+  content:attr(data-at-n);
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:var(--ido-border);color:#fff;
+  font-size:.78rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+#pres-caps{margin-top:10px}
+
+/* ==========================================================================
+   7 · WE DO 2 — MATCH  (.match-pill / .match-target)
+   ---------------------------------------------------------------------------
+   The matching game already scored and shook on a wrong answer. What it did
+   not do was confirm a right one with anything the back of the room could
+   read, or mark correctness by more than colour.
+   ========================================================================== */
+/* The word cards are called pills but were block-level <div>s, so they rendered
+   as a stack of full-width bars — no sense of a set of movable pieces, and a
+   lot of vertical space gone before the targets appear. They read as a row of
+   pills now, which is also what the "tap a card, then its partner" instruction
+   already describes. */
+#kw-pills .match-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:5px;min-height:46px;
+}
+
+.match-target{position:relative;transition:transform var(--at-fast) var(--at-ease),
+                                           border-color var(--at-fast) var(--at-ease)}
+/* Targets sit in a grid hardcoded to three columns in every deck, but decks
+   carry four, five or six of them — so 21 of the 31 left a ragged final row.
+   The column count is set from the actual number of targets by the framework
+   JS (see fitMatchGrid), which needs no :has() support on school devices. */
+.match-target{min-height:64px;display:flex;align-items:center;justify-content:center}
+.match-target.correct{animation:atConfirm .45s var(--at-pop)}
+/* A tick as well as the colour, so correctness is never carried by hue alone. */
+.match-target.correct::after{
+  content:'✓';
+  position:absolute;top:6px;right:9px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--success);color:#fff;
+  font-size:.72rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  animation:atReveal var(--at-fast) var(--at-pop) backwards;
+}
+.match-target.wrong::after{
+  content:'↻';
+  position:absolute;top:6px;right:9px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--error);color:#fff;
+  font-size:.78rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.match-pill:focus-visible,.match-target:focus-visible{
+  outline:3px solid var(--wedo-border);outline-offset:3px
+}
+/* The pill currently held. A held card must read unambiguously from the back
+   of the room and must not blink — so this is a static lift and halo in the
+   zone's own tint, not a pulse. */
+.match-pill.selected{
+  border-color:var(--wedo-border);
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 0 0 4px var(--wedo-bg),0 6px 16px rgba(15,23,42,.14);
+}
+
+/* ==========================================================================
+   8 · FINDING YOUR OWN WORK  (differentiated task cards)
+   ---------------------------------------------------------------------------
+   The Arrival, Independent and Exit slides each offer the same work at three
+   levels — With support / On your own / Take it further. Each level already has
+   a colour, on its toggle button and on its heading, but the cards themselves
+   were identical tan boxes, so a pupil had to read all three to find theirs.
+
+   Each card now carries its own level's colour down its leading edge. The
+   colour is read off the heading the lesson already coloured (see
+   accentLevelCards in the JS), so nothing is hardcoded here and no new colour
+   enters the suite. The heading text and icon still name the level, so the
+   colour is reinforcement, never the only signal.
+   ========================================================================== */
+.task-box.at-levelled{
+  border-left:8px solid var(--tb-accent);
+  padding-left:16px;
+}
+
+/* The arrival and exit grids hold exactly three questions in every deck — 186
+   of them across the suite — but were laid out in two columns, so the third
+   always dropped to a ragged second row and the slide read as longer than it
+   is. Three questions, three columns. */
+.arrival-grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1024px){
+  .arrival-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* The zone tag — I DO, WE DO, STARTER — is styled as a pill (inline-block,
+   rounded, padded) but sits as a direct child of the column-flex .slide, so
+   it stretched to the full width of every slide in the suite and read as a
+   banner with a stray word in it. Let it be the size of its own label. */
+.slide > .slide-tag{align-self:flex-start}
+
+/* On a phone the four navigation buttons and the "Starter · 3/10" progress
+   label were both pinned to the bottom of the screen and overlapped, putting
+   the label on top of the Previous button. The controls are tightened so all
+   four still fit on one row, and the label sits clear above them. */
+@media (max-width:640px){
+  .controls{gap:6px;right:10px;flex-wrap:nowrap}
+  .controls button{padding:7px 9px;font-size:.8rem;white-space:nowrap}
+  .progress-label{bottom:54px;font-size:.8rem;padding:4px 10px}
+}
+
+/* ==========================================================================
+   9 · THE I DO STEP BUILD  (.v5-steps / .v5-step)
+   ---------------------------------------------------------------------------
+   Both I Do slides in every deck hold the same control: a "Reveal next step"
+   button, a "Step 2 of 3" label, and three steps that a teacher uncovers one
+   at a time. 186 steps across the suite, and it is the single place where the
+   decks already teach in sequence rather than all at once.
+
+   Three things were missing from it. A revealed step looked identical to the
+   ones before it, so from the back of the room there was nothing to say which
+   one the teacher had just uncovered. Nothing on the step itself said where it
+   sat in the sequence — only the control strip did, in words. And the heading
+   and its explanation arrived together, so the class was reading the paragraph
+   while the teacher was still saying the heading.
+
+   Now: every step carries its number, the current one takes the zone colour
+   and a solid marker while earlier ones keep an outlined marker and a pale
+   edge, and the explanation follows its heading by a quarter of a second.
+   Earlier steps are never dimmed — a class refers back to them constantly.
+   ========================================================================== */
+.v5-steps{counter-reset:at-step}
+.v5-step{counter-increment:at-step}
+
+/* The revealed step. The leading edge is the pale zone tint until this is the
+   step being talked about, when it takes the full zone colour. */
+.v5-step.revealed{
+  position:relative;
+  padding-left:46px;
+  border-left:4px solid var(--ido-bg);
+  margin-bottom:6px;
+  transition:border-color var(--at-base) var(--at-ease),
+             background var(--at-base) var(--at-ease);
+}
+/* The step's number. Outlined for a step already covered, solid for the one
+   in hand — so which step is current is carried by fill as well as by colour.
+   The numeral on the outlined marker is the deck's body ink rather than the
+   zone colour: zone-on-white measures 2.9-4.0:1 across the five subject
+   palettes, and a step number has to be readable from the back of the room.
+   The ring carries the zone colour instead. */
+.v5-step.revealed::before{
+  content:counter(at-step);
+  position:absolute;left:0;top:1px;
+  width:32px;height:32px;border-radius:50%;
+  background:#fff;color:var(--text,#1f2937);
+  border:2px solid var(--ido-border);
+  font-size:.95rem;font-weight:900;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--at-fast) var(--at-ease),color var(--at-fast) var(--at-ease);
+}
+.v5-step.at-step-current{
+  border-left-color:var(--ido-border);
+  background:linear-gradient(90deg,var(--ido-bg),transparent 62%);
+  border-radius:0 10px 10px 0;
+}
+.v5-step.at-step-current::before{background:var(--ido-border);color:#fff}
+
+/* Heading first, explanation a beat later — the class hears the point being
+   made before the paragraph about it arrives to be read. */
+.v5-step.revealed > h3{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.v5-step.revealed > p{animation:atSlideIn var(--at-base) var(--at-ease) .26s backwards}
+
+/* How many steps there are, and how many are out, without reading the label.
+   Built by the framework JS and hidden from assistive tech — the label beside
+   it already says "Step 2 of 3" in words. */
+.v5-step-pips{display:inline-flex;align-items:center;gap:7px}
+.v5-step-pips i{
+  width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--ido-border);background:transparent;opacity:.4;
+  transition:background var(--at-fast) var(--at-ease),opacity var(--at-fast) var(--at-ease),
+             transform var(--at-fast) var(--at-pop);
+}
+.v5-step-pips i.on{background:var(--ido-border);opacity:1}
+.v5-step-pips i.at-just-on{transform:scale(1.35)}
+
+@media (max-width:640px){
+  .v5-step.revealed{padding-left:38px}
+  .v5-step.revealed::before{width:26px;height:26px;font-size:.82rem}
+}
+@media print{
+  .v5-step-pips{display:none!important}
+  .v5-step.at-step-current{background:none!important}
+}
+
+/* ==========================================================================
+   10 · THE ILLUMINATOR DIAGRAM ITSELF
+   ---------------------------------------------------------------------------
+   Two things inside the I Do SVGs were working against the build they sit in.
+
+   LABELS BEFORE THE THING THEY LABEL. 94 of the 225 <text> elements across the
+   31 illuminators carry no animation, so they were painted at t=0 — "¼ CARBS"
+   sitting on empty white for two seconds while the class waited for the wedge
+   it names. The framework JS pairs each such label with the shape it sits
+   inside and holds it until that shape has arrived; the delay is measured per
+   label, so it is right for every deck without anything being written down
+   here. A label whose shape never settles, or that pairs with nothing, keeps
+   its current timing.
+
+   DRAW-ON THAT NEVER DREW. Each deck declares .ilm .draw with a hardcoded
+   stroke-dasharray of 260 against a keyframe that animates the offset from
+   260 to 0. Measured, the 13 paths using it in the suite run 20 to 119 units
+   long — every one of them shorter than the dash. A path of 20 units sits
+   entirely inside the first dash and slides rather than draws; a path of 119
+   is invisible for the first half of its animation and then appears from the
+   wrong end. The JS measures each path and the animation below runs against
+   its real length, so these lines now draw themselves for the first time.
+   ========================================================================== */
+/* Labels wait for their shape. --at-lab-delay is measured per label. */
+@keyframes atIlmLabel{from{opacity:0}to{opacity:1}}
+.ilm .at-ilm-label{
+  animation:atIlmLabel var(--at-fast) var(--at-ease) var(--at-lab-delay,0s) both;
+}
+/* Geometry is measured with the build frozen for one frame, so a shape part
+   way through a scale-from-zero does not measure as a point. */
+.ilm.at-ilm-measuring *{animation:none!important}
+
+/* Diagram height — bound to the room available, not to the artwork.
+   ---------------------------------------------------------------------------
+   The illuminators are 560x190 viewBoxes stretched to the slide width, so their
+   height is decided by how wide the screen is. Measured natural heights:
+   1920x1080 → 554px, 1440x900 → 407px, 1280x720 → 357px, 1024x768 → 279px,
+   390x844 → 106px.
+
+   A fixed width cap is the wrong instrument: it takes the same 100-130px off a
+   projector, where vertical space is abundant, as off a laptop where it is not.
+   The cap here is the vertical room left over instead, so it engages only where
+   space is genuinely scarce and releases entirely at projector size.
+
+   The 500px constant is not a guess: it is the largest value that leaves
+   1920x1080 untouched (1080 - 500 = 580, against a natural 554), rounded to a
+   number someone can reason about. What that yields:
+
+     1920x1080  cap 580  natural 554  → does not engage, artwork unchanged
+     1440x900   cap 400  natural 407  →   7px back
+     1280x720   cap 220  natural 357  → 137px back
+     1024x768   cap 268  natural 279  →  11px back
+      390x844   cap 344  natural 106  → does not engage, phone artwork unchanged
+
+   The artwork scales inside its own viewBox and stays centred; nothing is
+   clipped. The floor stops a very short window collapsing it to nothing.
+
+   Worth knowing: this does not make the I Do slide fit. Measured at 1280x720,
+   everything on that slide *except* the diagram already totals 679px against
+   638px of visible height. Scrolling the revealed step into view is what solves
+   "the class can see what the teacher just revealed"; this is about the caption
+   and the step controls not being pushed under the fixed nav. */
+.ilm svg{
+  max-height:calc(100vh - 500px);       /* fallback where max() is unsupported */
+  max-height:max(190px,calc(100vh - 500px));
+}
+@media print{.ilm svg{max-height:none}}
+
+/* Draw-on against the path's own measured length. */
+@keyframes atIlmDraw{from{stroke-dashoffset:var(--at-len)}to{stroke-dashoffset:0}}
+.ilm .at-drawn{
+  stroke-dasharray:var(--at-len)!important;
+  animation-name:atIlmDraw!important;
+}
+
+/* ==========================================================================
+   11 · REVEALED ANSWERS  (Arrival and Exit)
+   ---------------------------------------------------------------------------
+   "Reveal Answers" flips all three answers up at once, which is three things
+   to read the moment the teacher wants the class listening to the first one.
+   They now land in reading order over a third of a second, which is a beat per
+   question — long enough to take them one at a time, short enough that a
+   teacher who has already moved on never waits for it.
+   ========================================================================== */
+.show-ans .arrival-grid .answer{animation-fill-mode:backwards}
+.show-ans .arrival-grid > *:nth-child(2) .answer{animation-delay:.16s}
+.show-ans .arrival-grid > *:nth-child(3) .answer{animation-delay:.32s}
+.show-ans .arrival-grid > *:nth-child(n+4) .answer{animation-delay:.48s}
+
+/* ==========================================================================
+   12 · SUCCESS LOOKS LIKE  (.sc-v4)
+   ---------------------------------------------------------------------------
+   Every title slide states what success looks like as three "I can ..." lines
+   in a plain bulleted list — 93 of them across the suite, and the first thing
+   a class is asked to take in. As a list of dots it reads as prose to be got
+   through. As a checklist it reads as three things to collect, which is what
+   it is, and it can be scanned rather than read.
+
+   The boxes are deliberately empty: this is what success will look like by the
+   end, not what has been achieved. They arrive one at a time behind the title,
+   so the teacher can name each one.
+   ========================================================================== */
+/* "SUCCESS LOOKS LIKE" is set in --sc-border, inline, in all 31 decks: gold
+   ink at 12.5px on the panel's own cream, measured 2.00-2.09:1 against a 4.5
+   target — the worst teaching text in the suite, and it labels the three
+   things a class is asked to collect. The ink moves to the deck's body colour;
+   the token is untouched and still carries the panel's identity on its 6px
+   left border and on the checkboxes below. Nothing here is a colour-alone
+   signal: the heading is words, and its gold was emphasis, not meaning.
+   !important because the colour is an inline style in the lesson markup. */
+.sc-v4 h3{color:var(--text,#1f2937)!important}
+
+.sc-v4 ul{list-style:none;padding-left:0;margin:0}
+.sc-v4 li{position:relative;padding-left:28px}
+.sc-v4 li::before{
+  content:'';position:absolute;left:2px;top:.42em;
+  width:14px;height:14px;border-radius:4px;
+  border:2px solid var(--sc-border);background:#fff;
+}
+.slide.active .sc-v4 li{animation:atSlideIn var(--at-fast) var(--at-ease) backwards}
+.slide.active .sc-v4 li:nth-child(1){animation-delay:.40s}
+.slide.active .sc-v4 li:nth-child(2){animation-delay:.52s}
+.slide.active .sc-v4 li:nth-child(3){animation-delay:.64s}
+.slide.active .sc-v4 li:nth-child(n+4){animation-delay:.76s}
+@media print{.sc-v4 li::before{border-color:#000}}
+
+/* ==========================================================================
+   13 · THE LUNDY FOUR  (.lundy-grid / .lundy-box)
+   ---------------------------------------------------------------------------
+   Space, Voice, Audience, Influence — the model's own order, and the same four
+   boxes on every deck. They arrived as a block of four paragraphs, so the
+   order that is the whole point of the model was not visible in it.
+
+   They now arrive in that order, and the two rows line up whatever length the
+   text runs to, so the grid reads as a four-part structure rather than four
+   unrelated notes. Each box keeps the colour the lesson gave it.
+   ========================================================================== */
+.lundy-grid{align-items:stretch}
+.lundy-box{
+  display:flex;flex-direction:column;
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+.lundy-box:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.08)}
+.slide.active .lundy-box{animation:atSlideIn var(--at-base) var(--at-ease) backwards}
+.slide.active .lundy-box:nth-child(1){animation-delay:.16s}
+.slide.active .lundy-box:nth-child(2){animation-delay:.28s}
+.slide.active .lundy-box:nth-child(3){animation-delay:.40s}
+.slide.active .lundy-box:nth-child(4){animation-delay:.52s}
+@media print{.lundy-box{box-shadow:none;animation:none}}
+
+
+/* ==========================================================================
+   14 · WE DO ORCHESTRATION AND PURPOSEFUL MOTION
+   ---------------------------------------------------------------------------
+   The lesson's own activity state drives everything here. The framework adds
+   no answers and changes no score: it makes progress, the next discussion
+   choice and completed matches readable from the back of the room.
+
+   Motion is similarly purposeful. Hidden slides are paused, an illuminator
+   replays when its teaching slide opens, one sweep places attention on the
+   diagram, and decorative glow/ripple loops settle only after a mixed build.
+   Loop-only concept diagrams keep moving because the cycle is the concept.
+   ========================================================================== */
+
+/* Nothing hidden should consume attention or processor time. When the slide
+   becomes active its authored animation resumes; illuminators are restarted by
+   the interaction layer so their explanatory sequence always begins at step 1. */
+.slide:not(.active),.slide:not(.active) *{animation-play-state:paused!important}
+
+.at-sr-only{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+
+.at-activity-bar{
+  display:grid;grid-template-columns:auto minmax(120px,1fr) auto auto;
+  align-items:center;gap:10px;
+  margin:10px 0 12px;padding:9px 10px;
+  background:linear-gradient(90deg,var(--wedo-bg),#fff 72%);
+  border:1px solid #e2e8f0;border-left:6px solid var(--wedo-border);
+  border-radius:12px;box-shadow:0 5px 14px rgba(15,23,42,.07);
+}
+.at-activity-label{
+  color:var(--text,#1f2937);font-size:.75rem;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+}
+.at-activity-track{
+  position:relative;display:block;height:12px;min-width:100px;
+  overflow:hidden;border:1px solid #cbd5e1;border-radius:999px;
+  background:rgba(255,255,255,.88);
+}
+.at-activity-fill{
+  display:block;width:0;height:100%;border-radius:inherit;
+  background:var(--wedo-border);
+  transition:width var(--at-base) var(--at-ease),background var(--at-fast) var(--at-ease);
+}
+.at-activity-count{
+  min-width:52px;text-align:center;color:var(--text,#1f2937);
+  font-size:.84rem;font-weight:900;font-variant-numeric:tabular-nums;
+}
+.at-activity-actions{display:flex;align-items:center;justify-content:flex-end}
+.at-random-pick{
+  min-height:38px;padding:7px 13px;
+  background:#fff;color:var(--text,#1f2937);
+  border:2px solid var(--wedo-border);border-radius:999px;
+  font-size:.8rem;font-weight:900;letter-spacing:.02em;
+  box-shadow:0 3px 8px rgba(15,23,42,.09);
+}
+.at-random-pick:hover,.at-random-pick:focus-visible{
+  background:var(--wedo-bg);color:var(--text,#1f2937);transform:translateY(-1px);
+  outline:3px solid var(--wedo-border);outline-offset:2px;
+}
+.at-random-pick:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+.at-activity-bar.at-complete{border-left-color:var(--success)}
+.at-activity-bar.at-complete .at-activity-fill{background:var(--success)}
+@keyframes atActivityComplete{
+  0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}
+}
+.at-activity-bar.at-just-complete{animation:atActivityComplete .5s var(--at-pop)}
+
+/* A number makes the teacher's random choice and the revealed-answer number
+   refer to the same object. The question mark remains as a separate cue that
+   the card is still face down. */
+.pres-card[data-at-card]::before{
+  content:attr(data-at-card);width:26px;height:26px;
+  background:#fff;color:var(--text,#1f2937);border:2px solid var(--wedo-border);
+}
+.pres-card:not(.done)[data-at-card]::after{
+  content:'?';position:absolute;right:10px;top:8px;
+  width:19px;height:19px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--wedo-bg);color:var(--text,#1f2937);
+  border:1px solid var(--wedo-border);font-size:.72rem;font-weight:900;
+}
+.pres-card.done[data-at-card]::before{
+  content:'✓';background:var(--success);color:#fff;border-color:var(--success);
+}
+.pres-card.at-picked:not(.done){
+  border-style:solid;border-color:var(--wedo-border);
+  transform:translateY(-4px) scale(1.025);
+  box-shadow:0 0 0 5px var(--wedo-bg),0 12px 26px rgba(15,23,42,.16);
+}
+.pres-card.at-picked:not(.done)::after{content:'→'}
+
+/* When a word card is held, the other word cards quieten. Targets remain fully
+   legible because the pupil still needs to compare every possible partner. */
+#wedo2.at-match-holding #kw-pills .match-pill:not(.selected):not(.placed){
+  opacity:.52;filter:saturate(.55);transform:scale(.97);
+}
+#kw-pills .match-pill{
+  transition:opacity var(--at-fast) var(--at-ease),filter var(--at-fast) var(--at-ease),
+             transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease);
+}
+
+.at-pair-trail{
+  margin:12px 0 4px;padding:10px 12px;
+  border:1px solid #e2e8f0;border-left:6px solid var(--wedo-border);
+  border-radius:12px;background:#fff;
+}
+.at-pair-trail[hidden]{display:none!important}
+.at-pair-label{
+  display:block;margin-bottom:7px;color:var(--text,#1f2937);
+  font-size:.73rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+}
+.at-pair-list{display:grid;gap:7px}
+@keyframes atPairIn{
+  from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}
+}
+.at-pair-chip{
+  display:grid;grid-template-columns:26px minmax(90px,.8fr) 24px minmax(160px,1.3fr);
+  align-items:center;gap:8px;
+  min-height:42px;padding:7px 10px;
+  border:1px solid #cbd5e1;border-left:4px solid var(--success);
+  border-radius:10px;background:linear-gradient(90deg,var(--wedo-bg),#fff 48%);
+  color:var(--text,#1f2937);font-size:.88rem;line-height:1.3;
+  animation:atPairIn var(--at-fast) var(--at-ease) backwards;
+}
+.at-pair-number{
+  width:23px;height:23px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;color:var(--text,#1f2937);border:2px solid var(--wedo-border);
+  font-size:.72rem;font-weight:900;font-variant-numeric:tabular-nums;
+}
+.at-pair-key{font-weight:900}
+.at-pair-arrow{text-align:center;color:var(--text,#1f2937);font-size:1rem;font-weight:900}
+.at-pair-target{font-weight:650}
+
+/* One replay sweep directs the eye without becoming permanent decoration. */
+.ilm-replay{z-index:4}
+.ilm.at-ilm-replaying{
+  box-shadow:0 0 0 3px var(--ido-bg),0 10px 26px rgba(15,23,42,.10);
+  border-radius:12px;
+}
+.at-ilm-sweep{
+  position:absolute;z-index:3;left:0;top:0;bottom:0;width:34%;
+  pointer-events:none;opacity:0;transform:translateX(-125%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+}
+@keyframes atIlmSpotlight{
+  0%{opacity:0;transform:translateX(-125%)}
+  18%{opacity:.68}
+  100%{opacity:0;transform:translateX(390%)}
+}
+.ilm.at-ilm-replaying .at-ilm-sweep{
+  animation:atIlmSpotlight 1.2s var(--at-ease) both;
+}
+/* In a mixed staged build, glow and ripple are emphasis, not the idea itself.
+   They settle after the explanatory window. Loop-only concept diagrams are not
+   marked by the JS and therefore remain continuous. */
+.ilm.at-ilm-settled .at-settle-glow{animation:none!important;opacity:1!important}
+.ilm.at-ilm-settled .at-settle-rip{animation:none!important;opacity:0!important}
+
+@media (max-width:760px){
+  .at-activity-bar{grid-template-columns:auto 1fr auto;gap:7px}
+  .at-activity-actions{grid-column:1/-1;justify-content:flex-start}
+  .at-random-pick{min-height:34px;padding:5px 11px}
+  .at-pair-chip{grid-template-columns:24px minmax(70px,.75fr) 18px minmax(110px,1.25fr);font-size:.8rem}
+}
+@media (max-width:480px){
+  .at-activity-bar{grid-template-columns:1fr auto}
+  .at-activity-label{grid-column:1/-1}
+  .at-activity-track{min-width:0}
+  .at-pair-chip{grid-template-columns:23px 1fr;gap:5px 8px}
+  .at-pair-arrow{display:none}
+  .at-pair-target{grid-column:2}
+}
+@media print{
+  .at-activity-bar,.at-pair-trail,.at-ilm-sweep{display:none!important}
+  .pres-card.at-picked{transform:none!important;box-shadow:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .at-activity-fill,.at-activity-bar.at-just-complete,.at-pair-chip,
+  .pres-card.at-picked,.ilm.at-ilm-replaying .at-ilm-sweep{
+    animation:none!important;transition:none!important;transform:none!important;
+  }
+  .at-ilm-sweep{display:none!important}
+  .ilm.at-ilm-replaying{box-shadow:none!important}
+}
+
+/* ==========================================================================
+   15 · REDUCED MOTION
+   ---------------------------------------------------------------------------
+   Each deck already neutralises animation under prefers-reduced-motion. This
+   block extends that to the transitions and transforms introduced above, and
+   guarantees anything the framework animates in is left fully visible rather
+   than stuck at its start state.
+   ========================================================================== */
+@media (prefers-reduced-motion:reduce){
+  .at-reveal,.at-reveal.at-in,.at-draw,.at-pulse,.at-confirm,
+  .slide.active .product-card,
+  .slide.active > *,
+  .ilm .ilm-cap,
+  .pres-card.done,
+  .v5-step.revealed > h3,.v5-step.revealed > p,
+  .show-ans .arrival-grid .answer,
+  .slide.active .sc-v4 li,
+  .slide.active .lundy-box,
+  .match-target.correct,.match-target.correct::after,
+  .match-pill.selected{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+    stroke-dashoffset:0!important;
+  }
+  /* The pres-card marker positions itself with a transform — keep that one. */
+  .pres-card::before,#pres-caps .pres-cap[data-at-n]::before{transform:translateY(-50%)!important}
+  /* The li-box sweep is decorative light; remove it rather than freeze it mid-pass. */
+  .slide.active .li-box::after{display:none!important}
+  .product-card,.at-dimmed,.pres-card,.match-target,.ilm-replay,.lundy-box,
+  .v5-step.revealed,.v5-step.revealed::before,.v5-step-pips i{transition:none!important}
+  .product-card:hover,.pres-card:hover,.ilm-replay:hover,.lundy-box:hover{transform:none}
+  /* The current-step marker stays — it is a static state, not motion — but the
+     scale-up on a pip that has just filled is motion, so it goes. */
+  .v5-step-pips i.at-just-on{transform:none!important}
+  /* Answers reveal together rather than in sequence, since the sequence is
+     carried entirely by animation delays that no longer run. */
+  .show-ans .arrival-grid .answer{animation-delay:0s!important}
+  /* A held-back label and an undrawn line are both content waiting on motion.
+     With motion off they are simply present, drawn, from the start. */
+  .ilm .at-ilm-label{animation:none!important;opacity:1!important}
+  .ilm .at-drawn{
+    animation:none!important;
+    stroke-dasharray:none!important;
+    stroke-dashoffset:0!important;
+  }
+}
+
+
+/* ==========================================================================
+   ART TEESSIDE HUBS AND SHARED ACCESSIBILITY
+   ========================================================================== */
+[data-art-page="hub"] body{
+  scroll-padding-top:1rem;
+}
+[data-art-page="hub"] h1,
+[data-art-page="hub"] h2{
+  text-wrap:balance;
+}
+[data-art-page="hub"] .grid > a{
+  position:relative;
+  min-height:96px;
+  transition:transform var(--at-fast) var(--at-ease),box-shadow var(--at-fast) var(--at-ease),border-color var(--at-fast) var(--at-ease);
+}
+[data-art-page="hub"] .grid > a::after{
+  content:'→';
+  position:absolute;
+  right:14px;
+  bottom:11px;
+  font-weight:900;
+  opacity:.68;
+  transform:translateX(0);
+  transition:transform var(--at-fast) var(--at-ease),opacity var(--at-fast) var(--at-ease);
+}
+[data-art-page="hub"] .grid > a:hover::after,
+[data-art-page="hub"] .grid > a:focus-visible::after{
+  opacity:1;
+  transform:translateX(4px);
+}
+[data-art-page="hub"] .grid > a:focus-visible,
+[data-art-page="hub"] a:focus-visible,
+[data-art-page="lesson"] :where(button,a[href],input,select,textarea,[tabindex]):focus-visible{
+  outline:4px solid var(--gold,var(--task-border,var(--btn-bg,currentColor)));
+  outline-offset:4px;
+}
+[data-art-page="hub"] .thread,
+[data-art-page="hub"] .note{
+  text-wrap:pretty;
+}
+[data-art-page="hub"] .grid > a.art-card-enter{
+  animation:artHubCardIn .42s var(--at-ease) backwards;
+  animation-delay:calc(var(--art-card-index,0) * 52ms);
+}
+@keyframes artHubCardIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.art-skip-link{
+  position:fixed;
+  left:12px;
+  top:12px;
+  z-index:99999;
+  transform:translateY(-180%);
+  background:var(--panel,var(--deep,#111827));
+  color:var(--text,#fff);
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:800;
+  text-decoration:none;
+}
+.art-skip-link:focus{transform:translateY(0)}
+.art-sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+/* The fixed teacher controls must remain reachable on narrow classroom screens. */
+[data-art-page="lesson"] .controls{
+  max-width:calc(100vw - 28px);
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+[data-art-page="lesson"] .controls button{
+  min-height:44px;
+}
+[data-art-page="lesson"] .match-pill,
+[data-art-page="lesson"] .match-target,
+[data-art-page="lesson"] .pres-card,
+[data-art-page="lesson"] .level-toggle button,
+[data-art-page="lesson"] .ilm-replay{
+  min-height:44px;
+}
+[data-art-page="lesson"] .slide[aria-hidden="true"]{
+  pointer-events:none;
+}
+
+@media (max-width:640px){
+  [data-art-page="hub"] body{padding:20px 14px}
+  [data-art-page="hub"] .grid{grid-template-columns:1fr}
+  [data-art-page="hub"] .grid > a{min-height:88px;padding-right:42px}
+  [data-art-page="lesson"] .controls{
+    left:8px;
+    right:8px;
+    bottom:16px;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:6px;
+  }
+  [data-art-page="lesson"] .controls button{
+    min-width:0;
+    padding:9px 5px;
+    font-size:.72rem;
+    line-height:1.1;
+    white-space:normal;
+  }
+  [data-art-page="lesson"] .progress-label{
+    bottom:68px;
+  }
+}
+
+@media print{
+  .art-skip-link,.art-sr-only{display:none!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  [data-art-page="hub"] .grid > a.art-card-enter,
+  [data-art-page="hub"] .grid > a,
+  [data-art-page="hub"] .grid > a::after{
+    animation:none!important;
+    transition:none!important;
+    transform:none!important;
+  }
+  [data-art-page="hub"] html{scroll-behavior:auto}
+}

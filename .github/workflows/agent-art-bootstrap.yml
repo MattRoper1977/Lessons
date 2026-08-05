@@ -1,0 +1,73 @@
+name: Agent publish Art timer assertion repair
+
+on:
+  push:
+    branches:
+      - agent/art-teesside-validation-final-20260803
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  TASK_BRANCH: agent/art-teesside-visual-teaching-upgrade-20260803
+  EXPECTED_HEAD: 4eb3e5ec2e2467ada785e391dfc04891d0f40cc8
+  PATCH_SHA256: 4d8ed95d8dec887a5d9fc246482b6c8b9e73e03e47025156540d7d054c548206
+
+jobs:
+  publish-source-repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation transfer branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/art-teesside-validation-final-20260803
+          fetch-depth: 0
+
+      - name: Decode and verify the exact timer assertion patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode .github/agent-art-timer-fix.b64 > "$RUNNER_TEMP/art-timer-fix.patch"
+          printf '%s  %s\n' "$PATCH_SHA256" "$RUNNER_TEMP/art-timer-fix.patch" | sha256sum --check --strict
+          grep -E '^\+\+\+ b/' "$RUNNER_TEMP/art-timer-fix.patch" | sed 's#^+++ b/##' > "$RUNNER_TEMP/patch-paths.txt"
+          test "$(wc -l < "$RUNNER_TEMP/patch-paths.txt")" -eq 1
+          grep -Fx 'Art_Teesside/tools/assert_visual_browser.js' "$RUNNER_TEMP/patch-paths.txt"
+
+      - name: Refresh and lock the publication branch head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$TASK_BRANCH"
+          actual=$(git rev-parse "origin/$TASK_BRANCH")
+          printf 'publication head: %s\n' "$actual"
+          test "$actual" = "$EXPECTED_HEAD"
+          git checkout --force -B "$TASK_BRANCH" "origin/$TASK_BRANCH"
+          test -z "$(git status --porcelain)"
+
+      - name: Apply the focused assertion repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply --check "$RUNNER_TEMP/art-timer-fix.patch"
+          git apply "$RUNNER_TEMP/art-timer-fix.patch"
+          node --check Art_Teesside/tools/assert_visual_browser.js
+          git diff --check
+          test "$(git diff --name-only | wc -l)" -eq 1
+          git diff --name-only | grep -Fx 'Art_Teesside/tools/assert_visual_browser.js'
+          git diff -- Art_Teesside/tools/assert_visual_browser.js
+
+      - name: Commit and push without rewriting history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Art_Teesside/tools/assert_visual_browser.js
+          git diff --cached --check
+          git commit -m 'test: respect authored Art timer configuration'
+          test -z "$(git status --porcelain)"
+          git push origin "HEAD:$TASK_BRANCH"
