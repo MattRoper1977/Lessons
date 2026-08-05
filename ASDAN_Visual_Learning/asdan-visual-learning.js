@@ -1,19 +1,22 @@
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT
+ * BLOCKED — DO NOT MOUNT (band C outstanding)
  *
- * This engine is committed but loaded by nothing. No lesson in this repository
- * references it, and none may until the blockers in README.md are cleared.
+ * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
+ * No other deck may be mounted outside a gated band-C batch. This banner comes
+ * off entirely when band C completes.
  *
- * Named blocking items (see README.md for the derivations):
- *   1. The vendor's decisive gate -- full post-integration regression in a real,
- *      current checkout -- is UNRUN. Nothing pupil-facing merges until it is.
- *   2. Reduced motion is honoured in CSS only. There is no matchMedia
- *      reduced-motion query and no change listener in this file. Both are
- *      required before this engine may drive motion on a pupil-facing surface.
- *   3. The six D&T decks are on a different chassis and outside the BUILD
- *      compiler's scope. They do not mount by mounting this.
+ *   1. CLEARED -- the vendor's decisive post-integration regression has now been
+ *      RUN in a real browser and is green for band B. Re-run it per batch.
+ *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
+ *      watched with a change listener; .asvl-static follows the OS preference.
+ *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
+ *      does carry the staff answers organ; they mount per-file.
+ *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
+ *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
  *
- * Landed 5 Aug 2026, band A of the ASDAN Visual-Learning review.
+ * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
+ * inherited colours for TEXT only, hue angle preserved. The estate palette and
+ * every non-text use of --asvl-accent are untouched.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */
@@ -37,6 +40,22 @@
     return node;
   };
   const setText = (node, text) => { if (node) node.textContent = String(text ?? ''); };
+
+  /* Reduced motion, watched rather than sampled once.
+     The blanket CSS rule already suppressed animation when the OS asked for it,
+     but nothing in JS read the preference, so .asvl-static -- and the button that
+     reports it -- stayed false while motion was actually off. Pattern taken from
+     art-visual-learning.js, which fixed the same defect in the same shape. */
+  const motionQuery = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : null;
+  const prefersReducedMotion = () => !!(motionQuery && motionQuery.matches);
+  const motionSubscribers = new Set();
+  if (motionQuery) {
+    const onMotionChange = () => { motionSubscribers.forEach(fn => { try { fn(); } catch (e) {} }); };
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+    else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+  }
   const slugFromLocation = () => {
     const declared = document.documentElement.dataset.asdanLesson || document.body?.dataset.asdanLesson;
     if (declared) return declared;
@@ -731,6 +750,8 @@
     Object.keys(stateRef).forEach(key => delete stateRef[key]);
     Object.assign(stateRef, replacement);
     panel.classList.remove('has-prediction', 'is-activity-complete', 'is-transfer-mode', 'asvl-static');
+    /* Reset clears the user's override, never the machine's preference. */
+    panel.classList.toggle('asvl-static', prefersReducedMotion());
     delete panel.dataset.asdanOpenedBy;
     setCycle(panel, 0);
     renderPrediction(panel, payload, stateRef);
@@ -754,11 +775,24 @@
     if (!host.classList.contains('slide')) panel.classList.add('asvl-standalone');
 
     const staticBtn = qs('.asvl-static-toggle', panel);
+    /* Effective state is the user's choice OR the OS preference. The OS is a floor,
+       not a default: if the machine asks for reduced motion, the button cannot turn
+       movement back on, because the CSS rule would suppress it anyway and the
+       control would then be lying about what the pupil sees. */
+    const staticIsOn = () => state.staticMode || prefersReducedMotion();
+    const paintStatic = () => {
+      const on = staticIsOn();
+      panel.classList.toggle('asvl-static', on);
+      staticBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      staticBtn.textContent = on ? '✓ Static diagrams' : '▣ Static diagrams';
+      staticBtn.disabled = prefersReducedMotion();
+    };
+    paintStatic();
+    motionSubscribers.add(paintStatic);
     staticBtn.addEventListener('click', () => {
+      if (prefersReducedMotion()) return;
       state.staticMode = !state.staticMode;
-      panel.classList.toggle('asvl-static', state.staticMode);
-      staticBtn.setAttribute('aria-pressed', state.staticMode ? 'true' : 'false');
-      staticBtn.textContent = state.staticMode ? '✓ Static diagrams' : '▣ Static diagrams';
+      paintStatic();
       announce(panel, state.staticMode ? 'Static diagrams enabled.' : 'Finite teaching movement enabled.');
     });
     qs('.asvl-reset', panel).addEventListener('click', () => resetPanel(panel, payload, state));

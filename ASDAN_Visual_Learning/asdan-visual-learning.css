@@ -1,6 +1,21 @@
 /* ASDAN Visual Learning — progressive enhancement. Rehearsal only. */
 .asvl-panel{
   --asvl-accent:var(--wedo-border,var(--btn-bg,var(--accent,#356f83)));
+  /* Text-safe variant of whatever accent the host deck supplies. Mixing toward
+     black scales every channel by the same factor, so the HUE ANGLE is preserved
+     exactly and only lightness moves. 91% is the MINIMUM darkening that clears
+     4.6:1 on white for all three pathway accents (BUILD #4E8093 -> 5.08,
+     GROW #2E8F7B -> 4.63, LAUNCH #A76A9B -> 4.76); GROW is the binding case.
+     This is a TOOLKIT token: the estate's strand colours are untouched, and
+     --asvl-accent itself still drives borders, rings and fills unchanged. */
+  --asvl-accent-text:color-mix(in srgb,var(--asvl-accent) 91%,#000);
+  /* Same treatment for muted TEXT. Changing the --asvl-muted fallback was inert:
+     the host decks define --muted themselves (#64748b), so the fallback never
+     fired -- measured on a rendered specimen, not read off the token file. 96%
+     is the minimum darkening that clears 4.6:1 on the panel's lightest and
+     darkest tints (white 5.09, mint 4.86, cream 4.64). Host theming survives:
+     whatever --muted the deck supplies is darkened, not replaced. */
+  --asvl-muted-text:color-mix(in srgb,var(--asvl-muted) 96%,#000);
   --asvl-accent-soft:var(--wedo-bg,var(--scaffold-bg,#eef4f7));
   --asvl-ink:var(--text,var(--ink,#17212a));
   --asvl-muted:var(--muted,#64748b);
@@ -32,8 +47,8 @@
 .asvl-panel p,.asvl-panel li,.asvl-panel label{color:var(--asvl-ink);font-size:clamp(.92rem,2cqi,1.04rem);line-height:1.48}
 .asvl-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(135deg,var(--asvl-accent-soft),var(--asvl-surface))}
 .asvl-header-text{min-width:0}
-.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-.asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted)!important}
+.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent-text)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted-text)!important}
 .asvl-tools{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .asvl-button,.asvl-choice,.asvl-sort-item,.asvl-target-button,.asvl-evidence-card,.asvl-hotspot-button,.asvl-mini-button{
   min-height:44px;
@@ -68,7 +83,7 @@
 .asvl-choice-row{display:flex;gap:9px;flex-wrap:wrap}
 .asvl-choice{flex:1 1 190px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line)}
 .asvl-choice[aria-pressed="true"]{border-color:var(--asvl-accent);background:var(--asvl-accent-soft);box-shadow:inset 0 0 0 2px var(--asvl-accent)}
-.asvl-small{margin:3px 0 10px!important;color:var(--asvl-muted)!important;font-size:.86rem!important}
+.asvl-small{margin:3px 0 10px!important;color:var(--asvl-muted-text)!important;font-size:.86rem!important}
 .asvl-prompt{margin:4px 0 13px!important;font-weight:700}
 .asvl-activity{position:relative}
 .asvl-activity-lock{margin:0 0 12px!important;padding:10px 12px;border:2px dashed var(--asvl-warning);border-radius:10px;background:color-mix(in srgb,var(--asvl-warning) 9%,var(--asvl-surface));font-weight:800}
@@ -135,7 +150,7 @@
 .asvl-explanation{background:color-mix(in srgb,var(--asvl-success) 4%,var(--asvl-surface))}
 .asvl-explanation-body{margin-top:12px;padding:13px;border:2px solid var(--asvl-success);border-radius:12px;background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
 .asvl-completion{font-size:1.05rem!important;font-weight:900}
-.asvl-prediction-review{font-size:.86rem!important;color:var(--asvl-muted)!important}
+.asvl-prediction-review{font-size:.86rem!important;color:var(--asvl-muted-text)!important}
 .asvl-transfer{background:var(--asvl-surface)}
 .asvl-independent-task{padding:13px;border-left:7px solid var(--asvl-accent);background:var(--asvl-accent-soft);font-weight:900}
 .asvl-independence-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0!important;padding:0!important;counter-reset:step;list-style:none}
@@ -147,7 +162,7 @@
 .asvl-help-ladder summary{padding:10px 12px;cursor:pointer;font-weight:900}
 .asvl-help-ladder ol{margin:0 0 12px 28px!important;padding-right:12px}
 .asvl-route{background:color-mix(in srgb,var(--asvl-ink) 4%,var(--asvl-surface))}
-.asvl-route p{margin:5px 0 0!important;font-size:.82rem!important;color:var(--asvl-muted)!important}
+.asvl-route p{margin:5px 0 0!important;font-size:.82rem!important;color:var(--asvl-muted-text)!important}
 .asvl-live{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .asvl-panel.is-transfer-mode>.asvl-prediction,.asvl-panel.is-transfer-mode>.asvl-activity,.asvl-panel.is-transfer-mode>.asvl-locator,.asvl-panel.is-transfer-mode>.asvl-explanation{display:none}
 .asvl-static *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
