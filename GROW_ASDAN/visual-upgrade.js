@@ -576,21 +576,24 @@
 /* ASDAN-VISUAL-LEARNING:JS:BEGIN v1 */
 window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"PEQ_W1_Knowing_Myself":{"path":"GROW_ASDAN/PEQ/PEQ_W1_Knowing_Myself.html","pathway":"GROW","subsection":"PEQ","lessonTitle":"Week 1 · Knowing Myself","targetTitle":"We Do 1","title":"Self-knowledge evidence map","purpose":"Move the lesson from adjective collection to testable self-knowledge that can guide independent decisions.","activity":{"type":"hotspot","scene":"profile","prompt":"Commit a prediction about which evidence type will be easiest to use. Open every part of the self-knowledge map and compare the strength of the evidence.","hotspots":[{"id":"h1","x":18,"y":24,"label":"STRENGTH","note":"Name the action that supports the strength, not only the label."},{"id":"h2","x":50,"y":18,"label":"INTEREST","note":"Specify the activity or topic and what keeps attention."},{"id":"h3","x":82,"y":27,"label":"VALUE","note":"Show the choice or behaviour that reveals what matters."},{"id":"h4","x":23,"y":66,"label":"WORKING CONDITION","note":"Notice when focus is stronger: pace, space, group size or task type."},{"id":"h5","x":52,"y":72,"label":"STARTING POINT","note":"Record what can already be done and what is still developing."},{"id":"h6","x":82,"y":65,"label":"NEXT TEST","note":"Choose a small real task that can test the self-view."}],"completion":"Self-awareness grows when a pupil compares a self-description with actions, conditions and a new test.","predictionOptions":["A strength example will be easiest","A working-condition example will be easiest","The next test will reveal something unexpected"]},"independent":"Complete your profile using one strength, interest, value and working condition. Add the evidence and one next test for each.","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original six-lens self-knowledge map with evidence tags and a next-test arrow.","mediaKey":"peq","slug":"PEQ_W1_Knowing_Myself","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["PREDICT","TEST","COMPARE","JUSTIFY"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"payloadSha256":"6219dd18bed377655f598c063152f6c6030332bfea996873619b50f65e9e612d"}});
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT
+ * BLOCKED — DO NOT MOUNT (band C outstanding)
  *
- * This engine is committed but loaded by nothing. No lesson in this repository
- * references it, and none may until the blockers in README.md are cleared.
+ * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
+ * No other deck may be mounted outside a gated band-C batch. This banner comes
+ * off entirely when band C completes.
  *
- * Named blocking items (see README.md for the derivations):
- *   1. The vendor's decisive gate -- full post-integration regression in a real,
- *      current checkout -- is UNRUN. Nothing pupil-facing merges until it is.
- *   2. CLEARED 5 Aug 2026 -- reduced motion is now read from matchMedia at load
- *      and watched with a change listener; .asvl-static follows the OS preference.
- *      Proven in both directions in a real browser; family classified as RM-3.
- *   3. The six D&T decks are on a different chassis and outside the BUILD
- *      compiler's scope. They do not mount by mounting this.
+ *   1. CLEARED -- the vendor's decisive post-integration regression has now been
+ *      RUN in a real browser and is green for band B. Re-run it per batch.
+ *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
+ *      watched with a change listener; .asvl-static follows the OS preference.
+ *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
+ *      does carry the staff answers organ; they mount per-file.
+ *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
+ *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
  *
- * Landed 5 Aug 2026, band A of the ASDAN Visual-Learning review.
+ * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
+ * inherited colours for TEXT only, hue angle preserved. The estate palette and
+ * every non-text use of --asvl-accent are untouched.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

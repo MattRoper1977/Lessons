@@ -1131,6 +1131,21 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 /* ASDAN Visual Learning — progressive enhancement. Rehearsal only. */
 .asvl-panel{
   --asvl-accent:var(--wedo-border,var(--btn-bg,var(--accent,#356f83)));
+  /* Text-safe variant of whatever accent the host deck supplies. Mixing toward
+     black scales every channel by the same factor, so the HUE ANGLE is preserved
+     exactly and only lightness moves. 91% is the MINIMUM darkening that clears
+     4.6:1 on white for all three pathway accents (BUILD #4E8093 -> 5.08,
+     GROW #2E8F7B -> 4.63, LAUNCH #A76A9B -> 4.76); GROW is the binding case.
+     This is a TOOLKIT token: the estate's strand colours are untouched, and
+     --asvl-accent itself still drives borders, rings and fills unchanged. */
+  --asvl-accent-text:color-mix(in srgb,var(--asvl-accent) 91%,#000);
+  /* Same treatment for muted TEXT. Changing the --asvl-muted fallback was inert:
+     the host decks define --muted themselves (#64748b), so the fallback never
+     fired -- measured on a rendered specimen, not read off the token file. 96%
+     is the minimum darkening that clears 4.6:1 on the panel's lightest and
+     darkest tints (white 5.09, mint 4.86, cream 4.64). Host theming survives:
+     whatever --muted the deck supplies is darkened, not replaced. */
+  --asvl-muted-text:color-mix(in srgb,var(--asvl-muted) 96%,#000);
   --asvl-accent-soft:var(--wedo-bg,var(--scaffold-bg,#eef4f7));
   --asvl-ink:var(--text,var(--ink,#17212a));
   --asvl-muted:var(--muted,#64748b);
@@ -1162,8 +1177,8 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .asvl-panel p,.asvl-panel li,.asvl-panel label{color:var(--asvl-ink);font-size:clamp(.92rem,2cqi,1.04rem);line-height:1.48}
 .asvl-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(135deg,var(--asvl-accent-soft),var(--asvl-surface))}
 .asvl-header-text{min-width:0}
-.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-.asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted)!important}
+.asvl-eyebrow{margin:0 0 5px!important;color:var(--asvl-accent-text)!important;font-size:.76rem!important;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.asvl-purpose{margin:7px 0 0!important;color:var(--asvl-muted-text)!important}
 .asvl-tools{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .asvl-button,.asvl-choice,.asvl-sort-item,.asvl-target-button,.asvl-evidence-card,.asvl-hotspot-button,.asvl-mini-button{
   min-height:44px;
@@ -1198,7 +1213,7 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .asvl-choice-row{display:flex;gap:9px;flex-wrap:wrap}
 .asvl-choice{flex:1 1 190px;background:var(--asvl-surface);color:var(--asvl-ink);border-color:var(--asvl-line)}
 .asvl-choice[aria-pressed="true"]{border-color:var(--asvl-accent);background:var(--asvl-accent-soft);box-shadow:inset 0 0 0 2px var(--asvl-accent)}
-.asvl-small{margin:3px 0 10px!important;color:var(--asvl-muted)!important;font-size:.86rem!important}
+.asvl-small{margin:3px 0 10px!important;color:var(--asvl-muted-text)!important;font-size:.86rem!important}
 .asvl-prompt{margin:4px 0 13px!important;font-weight:700}
 .asvl-activity{position:relative}
 .asvl-activity-lock{margin:0 0 12px!important;padding:10px 12px;border:2px dashed var(--asvl-warning);border-radius:10px;background:color-mix(in srgb,var(--asvl-warning) 9%,var(--asvl-surface));font-weight:800}
@@ -1265,7 +1280,7 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .asvl-explanation{background:color-mix(in srgb,var(--asvl-success) 4%,var(--asvl-surface))}
 .asvl-explanation-body{margin-top:12px;padding:13px;border:2px solid var(--asvl-success);border-radius:12px;background:color-mix(in srgb,var(--asvl-success) 8%,var(--asvl-surface))}
 .asvl-completion{font-size:1.05rem!important;font-weight:900}
-.asvl-prediction-review{font-size:.86rem!important;color:var(--asvl-muted)!important}
+.asvl-prediction-review{font-size:.86rem!important;color:var(--asvl-muted-text)!important}
 .asvl-transfer{background:var(--asvl-surface)}
 .asvl-independent-task{padding:13px;border-left:7px solid var(--asvl-accent);background:var(--asvl-accent-soft);font-weight:900}
 .asvl-independence-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0!important;padding:0!important;counter-reset:step;list-style:none}
@@ -1277,7 +1292,7 @@ button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:
 .asvl-help-ladder summary{padding:10px 12px;cursor:pointer;font-weight:900}
 .asvl-help-ladder ol{margin:0 0 12px 28px!important;padding-right:12px}
 .asvl-route{background:color-mix(in srgb,var(--asvl-ink) 4%,var(--asvl-surface))}
-.asvl-route p{margin:5px 0 0!important;font-size:.82rem!important;color:var(--asvl-muted)!important}
+.asvl-route p{margin:5px 0 0!important;font-size:.82rem!important;color:var(--asvl-muted-text)!important}
 .asvl-live{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .asvl-panel.is-transfer-mode>.asvl-prediction,.asvl-panel.is-transfer-mode>.asvl-activity,.asvl-panel.is-transfer-mode>.asvl-locator,.asvl-panel.is-transfer-mode>.asvl-explanation{display:none}
 .asvl-static *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -2640,21 +2655,24 @@ var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().
 /* ASDAN-VISUAL-LEARNING:JS:BEGIN v1 */
 window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"CAREERS_W1_My_Strengths":{"path":"BUILD_ASDAN/Careers/CAREERS_W1_My_Strengths.html","pathway":"BUILD","subsection":"Careers","lessonTitle":"Week 1 · My Strengths","targetTitle":"We Do 1","title":"Strengths → actions → work evidence","purpose":"Make strengths concrete before pupils build a profile, reducing empty claims such as ‘I am good at teamwork’.","activity":{"type":"sort","prompt":"Place each example under the strength it actually proves. Say the observable action, not just the positive word.","categories":[{"id":"team","icon":"👥","label":"TEAMWORK"},{"id":"reliable","icon":"⏱","label":"RELIABILITY"},{"id":"solve","icon":"🧩","label":"PROBLEM SOLVING"}],"items":[{"id":"i1","icon":"👥","label":"I shared the materials and checked my partner understood.","answer":"team","reason":"The action supports another person and the shared task."},{"id":"i2","icon":"⏱","label":"I arrived with the right equipment before the start.","answer":"reliable","reason":"It shows preparation and keeping a commitment."},{"id":"i3","icon":"🧩","label":"When the first method failed, I tried a second safe method.","answer":"solve","reason":"It shows a problem, a change and a result."},{"id":"i4","icon":"👥","label":"I listened, then used one idea from someone else.","answer":"team","reason":"Listening affects the group decision."},{"id":"i5","icon":"⏱","label":"I completed the agreed step by the deadline.","answer":"reliable","reason":"The evidence is a kept time commitment."},{"id":"i6","icon":"🧩","label":"I broke a large task into three smaller steps.","answer":"solve","reason":"The strategy makes the task manageable."}],"completion":"A strength becomes useful for careers when it is attached to something a person actually did."},"independent":"Choose two strengths. For each, add one real example using: I did… / This shows… / It could help in…","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original three-lane strength evidence map with action cards moving from pupil experience to workplace use.","mediaKey":"careers","slug":"CAREERS_W1_My_Strengths","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["SEE","CHOOSE","SAY","DO"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"payloadSha256":"f1d0562fcce182b9f258fc0a83e70563777318aa0fd9983309ece6cb2bea3d42"},"BUILD_DT_W1_Workshop_Audit":{"path":"Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html","pathway":"BUILD","subsection":"D&T Community Upcycling","lessonTitle":"Week 1 · The Workshop Audit","targetTitle":"We Do 1","title":"Workshop safety hotspot audit","purpose":"Turn safety from a poster into a visual scan-and-report routine while keeping teacher instruction and local controls load-bearing.","activity":{"type":"hotspot","scene":"workshop","prompt":"Open each workshop hotspot. Name the hazard or control, then point to the physical feature that made you notice it. The local risk assessment remains authoritative.","hotspots":[{"id":"h1","x":18,"y":24,"label":"CLEAR WALKWAY","note":"Offcuts and bags create trip hazards and block movement routes."},{"id":"h2","x":50,"y":18,"label":"CLAMPING ZONE","note":"Work must be secured using the demonstrated method before cutting or drilling."},{"id":"h3","x":82,"y":27,"label":"TOOL HOME","note":"Tools need a visible safe storage position so missing or damaged items are noticed."},{"id":"h4","x":23,"y":66,"label":"DUST CONTROL","note":"Extraction, suitable cleaning and local protective measures control wood dust; never improvise."},{"id":"h5","x":52,"y":72,"label":"PPE / ACCESS CHECK","note":"Required protection and reasonable adjustments are confirmed for the actual task."},{"id":"h6","x":82,"y":65,"label":"STOP / REPORT ROUTE","note":"A pupil stops and tells the responsible adult when a guard, tool, material or condition is wrong."}],"completion":"A workshop audit links a visible condition to a control and a named reporting route; spotting is not permission to fix unfamiliar equipment."},"independent":"Complete the real workshop audit with the teacher. Record one safe condition, one issue reported and the agreed action owner.","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original classroom workshop plan with walkway, bench, tool storage, dust control and stop/report hotspots.","mediaKey":"workshop","slug":"BUILD_DT_W1_Workshop_Audit","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["SEE","CHOOSE","SAY","DO"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"payloadSha256":"321c063244ac710ded8b4d02a7e617cde31d211d288d6ad96e0e438713c321fa"}});
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT
+ * BLOCKED — DO NOT MOUNT (band C outstanding)
  *
- * This engine is committed but loaded by nothing. No lesson in this repository
- * references it, and none may until the blockers in README.md are cleared.
+ * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
+ * No other deck may be mounted outside a gated band-C batch. This banner comes
+ * off entirely when band C completes.
  *
- * Named blocking items (see README.md for the derivations):
- *   1. The vendor's decisive gate -- full post-integration regression in a real,
- *      current checkout -- is UNRUN. Nothing pupil-facing merges until it is.
- *   2. CLEARED 5 Aug 2026 -- reduced motion is now read from matchMedia at load
- *      and watched with a change listener; .asvl-static follows the OS preference.
- *      Proven in both directions in a real browser; family classified as RM-3.
- *   3. The six D&T decks are on a different chassis and outside the BUILD
- *      compiler's scope. They do not mount by mounting this.
+ *   1. CLEARED -- the vendor's decisive post-integration regression has now been
+ *      RUN in a real browser and is green for band B. Re-run it per batch.
+ *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
+ *      watched with a change listener; .asvl-static follows the OS preference.
+ *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
+ *      does carry the staff answers organ; they mount per-file.
+ *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
+ *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
  *
- * Landed 5 Aug 2026, band A of the ASDAN Visual-Learning review.
+ * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
+ * inherited colours for TEXT only, hue angle preserved. The estate palette and
+ * every non-text use of --asvl-accent are untouched.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

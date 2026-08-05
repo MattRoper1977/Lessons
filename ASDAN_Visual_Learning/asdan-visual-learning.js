@@ -1,19 +1,22 @@
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT
+ * BLOCKED — DO NOT MOUNT (band C outstanding)
  *
- * This engine is committed but loaded by nothing. No lesson in this repository
- * references it, and none may until the blockers in README.md are cleared.
+ * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
+ * No other deck may be mounted outside a gated band-C batch. This banner comes
+ * off entirely when band C completes.
  *
- * Named blocking items (see README.md for the derivations):
- *   1. The vendor's decisive gate -- full post-integration regression in a real,
- *      current checkout -- is UNRUN. Nothing pupil-facing merges until it is.
- *   2. CLEARED 5 Aug 2026 -- reduced motion is now read from matchMedia at load
- *      and watched with a change listener; .asvl-static follows the OS preference.
- *      Proven in both directions in a real browser; family classified as RM-3.
- *   3. The six D&T decks are on a different chassis and outside the BUILD
- *      compiler's scope. They do not mount by mounting this.
+ *   1. CLEARED -- the vendor's decisive post-integration regression has now been
+ *      RUN in a real browser and is green for band B. Re-run it per batch.
+ *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
+ *      watched with a change listener; .asvl-static follows the OS preference.
+ *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
+ *      does carry the staff answers organ; they mount per-file.
+ *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
+ *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
  *
- * Landed 5 Aug 2026, band A of the ASDAN Visual-Learning review.
+ * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
+ * inherited colours for TEXT only, hue angle preserved. The estate palette and
+ * every non-text use of --asvl-accent are untouched.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

@@ -461,21 +461,24 @@
 /* ASDAN-VISUAL-LEARNING:JS:BEGIN v1 */
 window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"PEQ_W1_Intro_and_Choosing_My_Level":{"path":"LAUNCH_ASDAN/PEQ/PEQ_W1_Intro_and_Choosing_My_Level.html","pathway":"LAUNCH","subsection":"PEQ","lessonTitle":"Week 1 · Introduction & Choosing My Level","targetTitle":"We Do 1","title":"Starting-point evidence · no self-grading","purpose":"Protect the integrity of level choice while helping pupils understand what evidence makes the conversation fair and transparent.","activity":{"type":"evidence","prompt":"Predict which evidence will be most useful in a starting-point conversation. Select information that supports an honest centre decision; reject self-grading and guessed levels.","statements":[{"id":"e1","label":"A recent authentic task showing how independently the learner planned and completed it.","correct":true,"reason":"It provides observable starting-point evidence."},{"id":"e2","label":"The level the learner would most like printed on a certificate.","correct":false,"reason":"Preference does not determine assessment level."},{"id":"e3","label":"A comparable communication or teamwork task with the support used recorded honestly.","correct":true,"reason":"The action and access route can be discussed."},{"id":"e4","label":"A score created by this rehearsal activity.","correct":false,"reason":"The visual tool does not assess or select a qualification level."},{"id":"e5","label":"The current PEQ specification and centre assessment process.","correct":true,"reason":"Official criteria and authorised professional judgement govern the decision."},{"id":"e6","label":"A guessed criterion code because it looks plausible.","correct":false,"reason":"Unknown mappings remain not yet mapped."},{"id":"e7","label":"The learner’s goals and suitable challenge, considered alongside evidence.","correct":true,"reason":"The route should be meaningful as well as valid."},{"id":"e8","label":"A single good day treated as proof of all future performance.","correct":false,"reason":"A broader evidence picture is needed."}],"completion":"Choosing a working level is an authorised centre decision informed by current specification, authentic evidence, honest support records and suitable challenge; this screen never assigns it.","predictionOptions":["A recent task will matter most","Support and independence information will matter most","The current specification will matter most"]},"independent":"Prepare for the real level discussion by locating two recent tasks, the support used and one goal. The tutor or assessor follows the centre’s authorised process.","independenceSteps":["Use the frozen visual to decide your first step.","Complete the real lesson task without copying the screen.","Check your work against the visible success conditions.","Ask for one specific prompt only if the check shows a gap."],"imageBrief":"Original evidence table with authentic task, support record, goal and official-criteria gate; no rank ladder.","mediaKey":"peq","slug":"PEQ_W1_Intro_and_Choosing_My_Level","version":"2026.08.05","rehearsalOnly":true,"panelNotice":"Rehearsal only. Nothing is saved, uploaded, graded, certified or added to a portfolio. Evidence comes from the real task and the lesson’s authorised process.","pathwayCycle":["INVESTIGATE","LOCATE EVIDENCE","REASON","ACT"],"helpLadder":["Look again at the frozen example or process.","Use one visible cue or sentence stem.","Ask for one specific prompt.","Use the teacher, assessor or responsible-adult route where safety, permission or evidence status is involved."],"successChecks":["The real task is completed, not only the screen rehearsal.","The choice, process or explanation is supported by visible evidence.","Any help, access route or adult decision is recorded honestly through the lesson’s authorised process."],"locator":{"evidenceForms":[{"id":"real","label":"Real task, product or action exists"},{"id":"observe","label":"Authentic observation, calculation or decision exists"},{"id":"witness","label":"Authentic feedback or witness evidence exists"},{"id":"none","label":"Evidence is not yet available"}],"locations":[{"id":"sheet","label":"Lesson sheet or physical work"},{"id":"record","label":"Authorised photo or record"},{"id":"witness","label":"Witness or feedback record"},{"id":"unlocated","label":"Not yet located"}],"routes":[{"id":"review","label":"Teacher or assessor review"},{"id":"safety","label":"Responsible-adult safety or permission check"},{"id":"addition","label":"Complete one authentic addition"},{"id":"access","label":"Use the approved access or reasonable-adjustment route"}]},"payloadSha256":"5c2c9110f009657ff5f0a55fafe457e0a68f8de24e24a05034ac873defd1b20c"}});
 /* ============================================================================
- * BLOCKED — DO NOT MOUNT
+ * BLOCKED — DO NOT MOUNT (band C outstanding)
  *
- * This engine is committed but loaded by nothing. No lesson in this repository
- * references it, and none may until the blockers in README.md are cleared.
+ * Band B is mounted: four decks load this engine, one per pathway plus one D&T.
+ * No other deck may be mounted outside a gated band-C batch. This banner comes
+ * off entirely when band C completes.
  *
- * Named blocking items (see README.md for the derivations):
- *   1. The vendor's decisive gate -- full post-integration regression in a real,
- *      current checkout -- is UNRUN. Nothing pupil-facing merges until it is.
- *   2. CLEARED 5 Aug 2026 -- reduced motion is now read from matchMedia at load
- *      and watched with a change listener; .asvl-static follows the OS preference.
- *      Proven in both directions in a real browser; family classified as RM-3.
- *   3. The six D&T decks are on a different chassis and outside the BUILD
- *      compiler's scope. They do not mount by mounting this.
+ *   1. CLEARED -- the vendor's decisive post-integration regression has now been
+ *      RUN in a real browser and is green for band B. Re-run it per batch.
+ *   2. CLEARED at cc4f6fa -- reduced motion is read from matchMedia at load and
+ *      watched with a change listener; .asvl-static follows the OS preference.
+ *   3. RESOLVED -- the D&T decks are off the BUILD compiler but their chassis
+ *      does carry the staff answers organ; they mount per-file.
+ *   4. PARKED, gating nothing -- docs/MEDIA_REGISTER.md is a candidate register;
+ *      lesson-payloads.json has 0 external URLs, so no mounted surface needs it.
  *
- * Landed 5 Aug 2026, band A of the ASDAN Visual-Learning review.
+ * Accessibility ruling 5 Aug 2026: --asvl-accent-text / --asvl-muted-text darken
+ * inherited colours for TEXT only, hue angle preserved. The estate palette and
+ * every non-text use of --asvl-accent are untouched.
  * ========================================================================== */
 
 /* ASDAN Visual Learning — progressive enhancement, rehearsal only. */

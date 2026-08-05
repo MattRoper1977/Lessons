@@ -1,29 +1,38 @@
-> # BLOCKED — DO NOT MOUNT
+> # BLOCKED — DO NOT MOUNT (band C outstanding)
 >
-> **This toolkit is committed but mounted by nothing. No lesson loads it, and none may until
-> the blockers below are cleared.** Landed 5 Aug 2026 as band A of the ASDAN Visual-Learning
-> review (vendor sentinel `asdan-visual-learning-2026-08-05`, pack SHA-256 `9740ae0c…`,
-> 139/139 manifest entries re-hashed OK).
+> **Band B is mounted. The rest of the estate is not.** Four decks load this toolkit —
+> `CAREERS_W1_My_Strengths` (BUILD), `PEQ_W1_Knowing_Myself` (GROW),
+> `PEQ_W1_Intro_and_Choosing_My_Level` (LAUNCH) and `BUILD_DT_W1_Workshop_Audit` (D&T).
+> **No other deck may be mounted outside a gated band-C batch.** This wording comes off
+> entirely when band C completes; a blocked banner on a fully mounted toolkit would be a
+> co-present contradiction, which is this estate's signature defect.
 >
-> **The named blocking items:**
+> **The four original blocking items:**
 >
-> 1. **The vendor's own decisive gate is unrun.** Full post-integration regression in a real,
->    current checkout was declared withheld by the vendor and has not been run here. Nothing
->    pupil-facing merges until it is.
-> 2. ~~**Reduced motion is honoured in CSS but not in JS.**~~ **CLEARED 5 Aug 2026.** The engine
->    now reads `matchMedia('(prefers-reduced-motion: reduce)')` at load and registers a change
->    listener that takes effect live; `.asvl-static` — previously driven only by the manual
->    "Static diagrams" button — follows the OS preference, so the control can no longer report
->    `aria-pressed="false"` while CSS is suppressing motion. Proven in real Chromium in **both**
->    directions (reduce-off → `animation-name: asvl-attention`; reduce-on → `none`), plus a live
->    mid-session change, against a stub that fails when the listener is removed. The one
->    `@keyframes` family is classified in `reports/REDUCED_MOTION_REGISTER.md` **RM-3**.
-> 3. **The six D&T decks are not on this chassis.** `Build/Slideshows/BUILD_DT_W1..W6.html` carry
->    **0** `ASDAN-TEACH:` marker blocks and **0** `visual-upgrade` references, and the BUILD
->    compiler's scope is `BUILD_ASDAN/*/*.html`, which does not reach them. Any D&T integration is
->    a separate, authored decision — it does not follow from mounting this toolkit.
-> 4. **`docs/MEDIA_REGISTER.md` is a candidate register only** — see its own header. No URL in it
->    has been resolved; this container has no network.
+> 1. ~~The vendor's decisive gate is unrun.~~ **RUN AND GREEN for band B.** The full suite was
+>    executed in real Chromium against the mounted specimens: contrast, smoke (26 checks),
+>    label-rest, reduced motion, print at 718×1047, marker confinement, `#print-witness`
+>    byte-identity and the estate protective scans. It must be re-run per band-C batch — a
+>    green from an older tip is not a green.
+> 2. ~~Reduced motion is honoured in CSS but not in JS.~~ **CLEARED** at `cc4f6fa`.
+> 3. ~~The six D&T decks are not on this chassis.~~ **RESOLVED.** True of the BUILD compiler
+>    (0 `ASDAN-TEACH` markers; it globs `BUILD_ASDAN/*/*.html`) but not of the staff route: the
+>    D&T chassis carries the exit-slide answers organ, byte-identical in shape to the compiler
+>    chassis's. They mount by authored per-file integration, which is what `integrate.py`
+>    already does for exactly these six paths.
+> 4. **`docs/MEDIA_REGISTER.md` is a candidate register only — PARKED, and it gates nothing.**
+>    No URL in it has been resolved; egress is denied here (`gov.uk`, `nhs.uk`, `asdan.org.uk`
+>    all return HTTP 000, the proxy logging `connect_rejected`). But `lesson-payloads.json`
+>    carries **0** external URLs and **0** embeds, so no mounted surface depends on it. It
+>    stays a candidate register regardless of what a future session resolves.
+>
+> **Accessibility ruling applied (5 Aug 2026).** `.asvl-eyebrow` no longer paints the raw
+> inherited accent. A toolkit token `--asvl-accent-text` darkens it by a fixed 91% mix toward
+> black — the hue angle is preserved exactly, only lightness moves — clearing ≥4.6:1 on every
+> pathway (BUILD 5.08, GROW 4.63, LAUNCH 4.76). `--asvl-muted-text` does the same at 96% for
+> muted body text. **The estate's strand palette is untouched:** `--asvl-accent` still drives
+> every border, ring and fill unchanged, and whatever `--muted` a host deck supplies is
+> darkened rather than replaced.
 >
 > Removing this block is a decision with a name on it, not a tidy-up.
 
