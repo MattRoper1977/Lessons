@@ -2224,35 +2224,90 @@ hardcoded id list built inside a function.** Twice is a pattern, so the entry is
 *derive at extraction*. A verdict that would have deleted a true claim from someone else's
 documentation was caught by re-deriving rather than by trusting the first search.
 
-## R-HUC02 — a property worded for one hazard misses the same hazard in another voice
+## R-HUC02 — agreement with a prediction is not corroboration
 
-**Pass HU-CLOSE, 2026-08-05. Widens R-LLAS07's derivation discipline; does not replace it.**
+**Pass HU-CLOSE, 2026-08-05. Promoted from a note about two mistakes to a rule about method.
+Widens R-LLAS07's derivation discipline; does not replace it.**
 
-The display-artefact property was issued as *pupil-voiced first-person text that an adult would
-display or read aloud as the pupil's own*. Derived honestly against that wording, the predicted
-member — the influence report-back guide — returns **CLEAN**: its frames are the **adult's** voice
-(*"You recommended \_\_ … We changed \_\_"*), which the wording's own rubric excludes.
+> **When a derivation returns exactly the predicted answer, re-derive by a different route before
+> accepting it. Agreement with a prediction is not corroboration.** Two independent errors — a
+> property worded too narrowly, and a sweep whose character class silently excluded the only file
+> shaped that way — both pointed at the same expected answer and **cancelled into a green gate**.
 
-The real hazard the guide carries is **adult-voiced report-back text that ends up on a wall**. The
-wording did not reach it. **The property is therefore widened:**
+The gate was reported green and the work was merged on it. It was not green.
+
+### Worked example 1 — the character class that excluded its own target
+
+The display-artefact sweep ran twice and returned one member both times, matching the prediction.
+The map and fieldwork evidence card carries *"My solution/recommendation is…"* above a ruled
+writing line and was missed by both. Its stems terminate in an **ellipsis**: one sweep required
+sentence-ending `.!?`, the other required a blank marker (`__`, `___`, `...`). A stem ending `…`
+matched neither. It was the only file in the set shaped that way, so the exclusion was total and
+invisible.
+
+### Worked example 2 — the statement that was never checked
+
+PR #46's body asserted that *both* "could not" templates already carried a because-clause, so the
+file could not produce a bare refusal. Only "Not adopted" did. The "Adapted" template read *"We
+could not do \_\_, but your evidence led us to \_\_"* — it names what was done instead and never
+why the thing was refused. The claim was written from having read one template and generalised to
+the pair.
+
+### The property, widened
+
+Issued as *pupil-voiced first-person text an adult would display as the pupil's own*. Derived
+honestly against that wording, the predicted member returns **CLEAN** — the influence guide's
+frames are the **adult's** voice. The real hazard it carries is adult-voiced report-back text that
+ends up on a wall, which the wording did not reach. Widened to:
 
 > **Any first-person fill-in template intended for display, regardless of whose voice it is.**
 
-**Two consequences, both observed rather than predicted.**
+### The second-order lesson — an instrument must report what it looked for
 
-1. **A narrow property hides a second member.** Under the original wording the derivation returned
-   one candidate. Under the widened one it returns two — the map and fieldwork evidence card
-   carries *"My solution/recommendation is…"* above a ruled writing line, and had landed with none
-   of the ruled conditions. **The gate was reported green when it was not.**
-2. **The scan that missed it failed on punctuation, not on judgement.** Its stems terminate in an
-   ellipsis (`…`). One sweep required sentence-ending `.!?`; the other required a blank marker
-   (`__`, `___`, `...`). A stem ending `…` matched neither. **A character-class assumption is a
-   silent exclusion**, and it excluded the only file in the set shaped that way.
+**A sweep's character class is a claim about the shape of the thing you are looking for, and it
+fails silently when the shape is wrong.** A scan that finds nothing has not shown that nothing is
+there; it has shown that nothing matching its assumption is there, and its assumption is usually
+the part nobody wrote down.
 
-**Standing consequence:** when a derivation returns exactly the predicted answer, that is the
-moment to re-derive by a second route. Agreement with the prediction is not corroboration — here
-it concealed both a mis-worded property and a broken sweep, and the two errors pointed the same
-way.
+> **A scan that returns no hits must state its inclusion rule alongside the result**, so the next
+> reader can see what it could not have found.
+
+**This is the third instance in this estate of one failure mode: the instrument's assumption
+became invisible in its output.** Cross-referenced:
+
+| entry | the invisible assumption |
+|---|---|
+| the array-literal check | that an id list is a literal, so one built inside a function is unseen |
+| **R-HUC01** | that an attribute appears as text, so one set through the DOM API is unseen |
+| **R-HUC02** (this) | that a template ends in punctuation or a blank, so one ending in `…` is unseen |
+
+Three occurrences is a pattern, not a coincidence, and the remedy is uniform: **an instrument
+reports what it looked for, not only what it found.**
+
+### Third sweep — the property verified, with its inclusion rule stated
+
+Re-run at the closing tip over all 27 landed files under the widened property, with an inclusion
+rule that admits ellipsis, three-dots, blank markers, ruled writing lines, empty table cells **and
+runs with no terminal punctuation at all** — the three affordances the earlier sweeps silently
+excluded. CSS and script stripped, so class names cannot create hits.
+
+**Result: the member set holds at two** — the influence report-back guide and the map and
+fieldwork evidence card, both carrying their status line and usage rule.
+
+A **third file surfaced and is named rather than repaired**, per the close order:
+`data/lesson_implementation_matrix.csv`. It is **not a member**, and the reason is worth recording
+because it is the inverse error to worked example 1: the "no terminal punctuation" clause fires on
+**every row of any CSV**, because data rows do not end in full stops. A rule widened to catch a
+real omission generated structural noise in a non-prose format. **Widening an inclusion rule
+trades false negatives for false positives, and the trade must be inspected, not assumed.**
+
+**But it surfaced something real, and this is the finding to carry forward.** The matrix's
+`current_ticket` column documents that first-person pupil fill-in templates **already exist in the
+live lesson decks** — *"My clue; my claim about when it belongs; a limitation; what I want to
+investigate next"* and *"The source shows; I infer; I still cannot know"*. Those are the exact
+shape the property describes, they are in the 24 byte-frozen lessons, and **the property has never
+been run over them**. Not this pass's to touch and not repaired here. Whoever next has authority
+over the live decks should run it there, because the pack was only ever the smaller surface.
 
 ## R-HUC03 — a supplier's observation SHA on a staff-facing page is plumbing and a false claim
 
@@ -2298,6 +2353,19 @@ the pass brief withheld.**
   empty, zero unique commits, working tree clean, nothing written. It existed only in an ephemeral
   container and evaporates with it. **The gate caught it on the first action, twice in one
   session** (once per commissioning prompt), which is the control working, not failing.
+- **Why the tally reads TEN and not nine, recorded so the increment is auditable.** A later
+  session was **told to confirm nine**, checked, found nine already occupied by a distinct earlier
+  occurrence (Pass LL-AS1's), and **recorded the disagreement rather than reconciling it**. Matt
+  accepted the correction. **A tally is only useful if its increments are auditable** — an
+  increment that was asserted rather than checked is a number, not a count, and the way this one
+  went to ten is the thing that makes ten trustworthy.
+- **The pre-seeded branch outcome, as its own fact — it did not escape.**
+  `claude/ll-hu1-lundy-humanities-chb40l` reached the site repo's origin **never**:
+  `git ls-remote --heads` empty, **zero** unique commits vs `origin/main`, working tree clean,
+  nothing ever written to it. It existed only in an ephemeral container and evaporated with it.
+  **It cost nothing and there was nothing to delete.** Recorded because the next time a harness
+  pre-seeds a branch into the wrong repo, **the first question will be whether it escaped**, and
+  the answer wants to be a derivation someone already ran rather than one they must invent.
 - **Recorded without their own entries:** the `LundyLoop/5_staff_training/` sentinel guard is
   confirmed a **no-op again** — raw equals excluded at every derivation this pass, so it remains
   prospective, not load-bearing. And **PR #45 touches no lesson file**: it is three proposal diffs
