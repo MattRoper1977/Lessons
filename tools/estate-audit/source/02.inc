@@ -219,7 +219,8 @@
 
     def _validate_inline_blocks(self, rel: str, text: str) -> None:
         script_pattern = re.compile(r"<script\b(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
-        for match in script_pattern.finditer(text):
+        script_matches = list(script_pattern.finditer(text))
+        for match in script_matches:
             attrs = self._parse_attrs(match.group("attrs"))
             if attrs.get("src"):
                 continue
@@ -239,10 +240,17 @@
                 continue
             line_offset = text.count("\n", 0, match.start("body"))
             self._node_check_text(rel, body, module=script_type == "module", line_offset=line_offset, label="inline <script>")
+        # Do not treat literal <style> strings inside JavaScript (for example,
+        # print-window HTML assembled in a script) as document stylesheets. Keep
+        # newlines and character positions stable so reported line numbers remain exact.
+        def mask_script(match: re.Match[str]) -> str:
+            return "".join("\n" if char == "\n" else " " for char in match.group(0))
+
+        style_scan = script_pattern.sub(mask_script, text)
         style_pattern = re.compile(r"<style\b[^>]*>(?P<body>.*?)</style\s*>", re.I | re.S)
-        for match in style_pattern.finditer(text):
+        for match in style_pattern.finditer(style_scan):
             body = match.group("body")
-            line_offset = text.count("\n", 0, match.start("body"))
+            line_offset = style_scan.count("\n", 0, match.start("body"))
             self._validate_css(rel, body, line_offset=line_offset, label="inline <style>")
 
     def _validate_inline_style(self, rel: str, value: str, line: int | None) -> None:
@@ -270,11 +278,3 @@
     def _element_accessible_name(element: Any, tag: str, attrs: dict[str, str]) -> str:
         for key in ("aria-label", "title", "alt", "value"):
             if attrs.get(key, "").strip():
-                return attrs[key].strip()
-        text = " ".join(part.strip() for part in element.itertext() if part.strip())
-        if text:
-            return text
-        if attrs.get("aria-labelledby"):
-            return attrs["aria-labelledby"]
-        if tag == "select":
-            return "select-options" if list(element) else ""
