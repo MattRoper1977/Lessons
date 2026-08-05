@@ -80,9 +80,10 @@
         else:
             with contextlib.suppress(Exception):
                 driver.execute_cdp_cmd("Emulation.clearDeviceMetricsOverride", {})
+            # Chrome 150 rejects maxTouchPoints=0 even when touch is disabled.
+            # Omitting the optional field is the standards-compliant reset.
             driver.execute_cdp_cmd("Emulation.setTouchEmulationEnabled", {
                 "enabled": False,
-                "maxTouchPoints": 0,
             })
             driver.set_window_size(1440, 1000)
 
@@ -261,6 +262,25 @@
 
     @staticmethod
     def _fetch_url(url: str, full: bool = False) -> dict[str, Any]:
+        transient_statuses = {429, 500, 502, 503, 504}
+        started = time.monotonic()
+        last: dict[str, Any] = {}
+        for attempt in range(1, 4):
+            result = Audit._fetch_url_once(url, full)
+            result["attempts"] = attempt
+            status = result.get("status")
+            if result.get("ok") or (status is not None and status not in transient_statuses):
+                result["elapsed_total_ms"] = round((time.monotonic() - started) * 1000)
+                return result
+            last = result
+            if attempt < 3:
+                time.sleep(0.35 * attempt)
+        last["attempts"] = 3
+        last["elapsed_total_ms"] = round((time.monotonic() - started) * 1000)
+        return last
+
+    @staticmethod
+    def _fetch_url_once(url: str, full: bool = False) -> dict[str, Any]:
         headers = {"User-Agent": "LessonsEstateAudit/1.0", "Accept": "*/*"}
         method = "GET" if full else "HEAD"
         req = urllib.request.Request(url, method=method, headers=headers)
