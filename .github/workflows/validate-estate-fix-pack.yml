@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Apply proposed patches to exact main and test
+    name: Materialise proposals on exact main and test
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -46,7 +46,7 @@ jobs:
       - name: Install validation dependencies
         run: python -m pip install --disable-pip-version-check html5lib==1.1 'tinycss2>=1.2' 'selenium>=4.18'
 
-      - name: Apply and validate the complete proposal
+      - name: Materialise and validate the complete proposal
         id: validation
         shell: bash
         run: |
@@ -58,23 +58,18 @@ jobs:
             PATCH_ROOT="$GITHUB_WORKSPACE/review/estate-fixes"
             WORKTREE="$RUNNER_TEMP/lessons-estate-fixed"
 
-            python -m py_compile "$PATCH_ROOT/validate_applied.py"
+            python -m py_compile "$PATCH_ROOT/validate_applied.py" "$PATCH_ROOT/materialise_fixes.py"
             git cat-file -e "$BASE^{commit}"
             git worktree add --detach "$WORKTREE" "$BASE"
 
-            printf '%s\n' 'Grid Chase repository-blob lines 57-63:'
-            git -C "$WORKTREE" show "$BASE:Games/Grid_Chase.html" | sed -n '57,63l'
-            printf 'Grid blob SHA-1: '
-            git -C "$WORKTREE" rev-parse "$BASE:Games/Grid_Chase.html"
-            printf 'Grid worktree SHA-1: '
-            git -C "$WORKTREE" hash-object 'Games/Grid_Chase.html'
+            git -C "$WORKTREE" apply --check --verbose --recount --ignore-space-change \
+              "$PATCH_ROOT/0001-fix-wave-html-structure.patch"
+            git -C "$WORKTREE" apply --verbose --recount --ignore-space-change \
+              "$PATCH_ROOT/0001-fix-wave-html-structure.patch"
 
-            for patch in "$PATCH_ROOT"/000*.patch; do
-              printf 'Checking %s against the exact commit index\n' "$(basename "$patch")"
-              git -C "$WORKTREE" apply --cached --check --verbose --recount --ignore-space-change "$patch"
-              git -C "$WORKTREE" apply --cached --verbose --recount --ignore-space-change "$patch"
-              git -C "$WORKTREE" checkout-index -a -f
-            done
+            python "$PATCH_ROOT/materialise_fixes.py" \
+              --repo "$WORKTREE" \
+              --poster "$PATCH_ROOT/new-files/assets/video/poster-art.svg"
 
             cmp "$PATCH_ROOT/new-files/assets/video/poster-art.svg" "$WORKTREE/assets/video/poster-art.svg"
             git -C "$WORKTREE" diff --check "$BASE" --
