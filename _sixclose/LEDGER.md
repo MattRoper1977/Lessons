@@ -917,3 +917,28 @@ This is the last planned commit of the Lessons programme.
 **Parked by design:** `docs/MEDIA_REGISTER.md`, a candidate register gating nothing, awaiting
 Matt's own checks · `/assets/video/poster-art.jpg`, intentionally pending as the unruled
 art-suite clip reference · the 24 bare headings at 4.52, held behind the assessed-pair lock.
+
+## §4 · CLOSING RULING — the 4.52 group stands (Matt, 5 Aug 2026)
+
+Recorded verbatim, and it closes the parked row rather than deferring it:
+
+> **The 24 bare `<h3>` files STAND at 4.52: AA-compliant at the governing 4.5 floor. The 4.6
+> margin governs values this programme SET, not values it merely measured; the ★ assessed-pair
+> 0-bytes lock outranks a 0.08 aspiration, and no sibling split is made. If the pair is ever
+> opened on Matt's word for a necessary edit, the 23 siblings may align in that same sitting —
+> recorded as a rider-if-ever, nothing queued.**
+
+**The parked row is CLOSED, not carried.** The distinction the ruling draws is the reusable part:
+a margin a programme adopts for its own new values does not retroactively bind values it only
+measured, and a byte-lock on assessed work outranks a 0.08 improvement. Nothing is queued; the
+rider applies only if that file is opened for a separate, necessary reason.
+
+**Programme parks at close — three, all by design:**
+
+| park | why it stands |
+|---|---|
+| `docs/MEDIA_REGISTER.md` | candidate register, gates nothing (0 external URLs in the payloads); awaiting Matt's own checks |
+| `/assets/video/poster-art.jpg` | intentionally pending the art-clip surface decision; recorded so no sweep deletes it |
+| the 24 headings at 4.52 | standing ruling above — AA-compliant, behind the assessed-pair lock |
+
+**THE LESSONS PROGRAMME IS CLOSED.**
