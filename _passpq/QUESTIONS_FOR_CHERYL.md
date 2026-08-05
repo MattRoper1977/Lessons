@@ -96,3 +96,22 @@ or leave it out of the registered target (which caps GROW at Extended Award).
 §2 requires learners be **told in advance** that naming real situations / disclosing
 wellbeing issues routes through safeguarding. **Confirm** this notice is given.
 **UNDETERMINED — needs the unit booklets** to confirm the exact wording required.
+
+---
+
+## Added by the eight-pass close, 2026-08-05 (Pass 4 · sentinel `six-close-2026-08-05`)
+
+### Q11 · Which surfaces count as "public" for unit-code printing?
+The standing rule is that **ComSk1 is the only unit code printable on a public surface**. A
+census at `bc38dfa` finds, across 548 tracked pages: `ComSk1` **86**, `TmWkSk1` **28**,
+`ThSk1` **10**, `LSk1` **1**, `DecMkSk1` **1** (plus 428 bare `PEQ`). Those counts are
+*occurrences*, not public pages — the audit deliberately did **not** infer which surfaces are
+public. **Decide:** does the rule bind pupil-facing lesson slides and printable packs, or only
+the outward-facing toolkit/register pages? Until that is settled the non-ComSk1 codes stay
+where they are; nothing was moved or removed on a guess.
+
+### Q12 · The two descriptive-week codes still have no home.
+The single `LSk1` and single `DecMkSk1` occurrences remain inside open item 8's
+STILL-UNDETERMINED mapping (W2/W4 both lean LSk1, which would double-bank and leave DecMkSk1
+unhomed). **Not guessed.** Still needs the member-gated unit assessment booklets plus your
+per-pupil registration intent.

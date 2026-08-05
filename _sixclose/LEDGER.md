@@ -1,0 +1,290 @@
+# LEDGER — eight-pass close, 2026-08-05
+
+Sentinel `six-close-2026-08-05`, revision 2. One session. Execution order as briefed:
+P1 → P7 → P2 → P3 → P4 → P8 → P5 → P6 → close. **Nothing here is quoted from the brief as
+fact; every figure below was derived in this session at the SHA named beside it.**
+
+## §0 · Gates, capability, base
+
+**Identity gate — Lessons, 5/5.** `Humanities_Teesside/Lundy_Humanities/START_HERE.html` ·
+`_approved0805/DT_SAFETY_PROPOSAL_FOR_REVIEW.html` · `_passpq/FINDINGS.md` · `REGISTER.md`
+with `_close/OPEN_ITEMS.md` carrying open item 17's 5-Aug BUILD/GROW-only scoping ruling ·
+`tools/build_staff_pack.py` + `REBRAND.md` at root. This session opened in the **site**
+working directory; the Lessons and Games repositories were attached and cloned rather than
+assumed. The eleventh site-repo mis-open did not happen.
+
+**Capability census.** Lessons read ✔ write ✔ (proven by the Pass 1 push, not by scope alone)
+· site read ✔ write ✔ scope · Games read ✔ write ✔ scope. No browser, no direct network:
+every claim below is git truth or a local instrument run. **No live page load is claimed
+anywhere in this ledger.**
+
+**Base derivation** (expectation stated, then derived):
+
+| repo | expected | derived at open | verdict |
+|---|---|---|---|
+| Lessons | at/beyond `bd4d5ef` | `bd4d5ef` | exact — re-derived by a second route |
+| site | at/beyond `87741ae` | `0524533` | **3 commits ahead**; the estate wins, delta recorded |
+| Games | at/beyond `900fae5` | `900fae5` | exact |
+
+The site's three-commit delta is the Neon Sync **Stage 1 gate fix, PR #56** — see Pass 2.
+
+**Sentinels, expectation-then-derived, universe stated.** Expected loop-mark 50 / written-line
+98 over 548 bare tracked `*.html`. Derived at open via `LundyLoop/tools/bundle_facts.py`:
+**50 / 98 / 548**, identical on the raw and R-E08 forms — the `5_staff_training` exclusion
+contributes **0**, a proven no-op today and a prospective guard only. Because that hit the
+prediction exactly, it was **re-derived by an independent route** (byte-level walk over
+`git ls-files -z '*.html'`, not `git grep`): **50 / 98 / 548**, overlap 0. Derived again at
+close — unmoved. **No count delta to attribute.**
+
+**Input manifest** (listed and hashed before use, classified by content not filename):
+
+| file | bytes | sha256 (head) | content verdict |
+|---|--:|---|---|
+| `Compress_05_08_2026_014910.zip` | 687,623 | `973cd9d8…` | **25 xlsx planners** — 8 BUILD + 8 GROW + 8 unprefixed + the ASDAN year-plan update. Matches the Pass 6 expectation. **Real pupil names inside — sensitive from the moment it opens.** |
+| `Compress_05_08_2026_015643.zip` | 150,492 | `4a2ecbec…` | **ASDAN 19-file review set** → Pass 8 is on **Route B**. Absent: both patches, the whole `repo-overlay/` toolkit, `build_payloads.py`/`check.py`/`integrate.py`, all 85 SVGs, the manifest, the checksum |
+| `Compress_05_08_2026_125732.zip` | 39,181 | `ddfb5d4c…` | **not the ASDAN pack and not a new game** — Neon Sync v1.1 prepared content + its evidence logs. Drives Pass 2 |
+
+The full 139-file ASDAN pack (`9740ae0c…`) **did not arrive**, so Route A's provenance gate
+was never available.
+
+## §1 · Pass 1 — item-17 restore-sitting append · **MERGED**
+
+Base `bd4d5ef` → closing **`bc38dfa`**, direct to Lessons `main` (authorised by the embedded
+order for this append alone). Docs-only; nothing else rode in the commit.
+
+Gates: diff = exactly **one** file (`_close/OPEN_ITEMS.md`) · row 17 **restores byte-for-byte
+minus the append**, proven by reconstruction (1,615 B → 1,615 B, equal) · row count **41**
+unchanged, nothing renumbered · every other line byte-identical (only line 56 differs) ·
+sentinels 50/98/548 unmoved, universe unmoved (the file is `.md`) · assessed pair and frozen
+legacy hashes re-emitted below. The append is 803 B.
+
+The line-level diff reads `1 insertion(+), 1 deletion(-)` because a markdown table row **is**
+one line; the additions-only property is proven at character level by the byte-exact prefix,
+not by the line count.
+
+Landed text preserves every required element: one sitting · both halves, neither without the
+other · the BUILD/GROW **ten** by reverse-diff · the LAUNCH **fifteen** re-commented
+permanently to "stays hidden — GCSE route", at that sitting and not before · all 25
+**byte-pristine** until then · **trigger unchanged: Cheryl's confirmed codes.**
+
+**No sheet was edited. Nothing was restored.**
+
+## §7 · Pass 7 — A2e ratify verification · **VERIFIED, one finding**
+
+Verify-and-record. **Nothing was repaired.** All four checks run at HEAD:
+
+1. **Ancestry + content lock — PASS.** `bd4d5ef` is an ancestor of `main`. Its diff touches
+   `Art_Teesside/HANDOVER.md` (register) and `Art_Teesside/tools/assert_kit.py` (instrument)
+   and nothing else — **0 files under `Build/`, `Grow/`, `Launch/`**.
+   *The first control I wrote for this was vacuous* — it read a **merge** commit, and
+   `git show --name-only` on a merge prints nothing, so the "0" would have been free. Repaired
+   with a non-merge commit, where it returns 1. `bd4d5ef` is single-parent with exactly 2
+   files, so its zero is a real zero. **Recorded because a control that cannot fire measures
+   nothing, and this one silently could not.**
+2. **Ladder at HEAD — PASS.** refusal **15** / refusal-candidate **0** / total **15**.
+   Instrument source read directly: `classify()` receives `rel` (line 192), and `OVERRIDES`
+   is `[]` (line 75), so `RATIFIED` is the only consumer of the changed argument.
+3. **Can-fail controls, re-run independently — PASS.** Mis-scoping the ratified Launch
+   fragment returns cand to **4**; reverting to basename matching returns cand to **4**;
+   the untampered baseline is **15/0/15**. Both were run on copies of the tree — the
+   repository working file was never modified (verified clean afterwards).
+4. **Disclosure — PARTIAL. One finding.** The enabling classifier change **is** flagged as an
+   enabling change separate from the ratification, in both the commit message ("ONE ENABLING
+   CHANGE, which is not tidying") and the register ("### One enabling change, reported rather
+   than buried"). But the **squeegee / dye / bare-screens observation is not recorded
+   anywhere** in the ratify commit or the register section.
+
+**The finding, stated so it can be closed cheaply.** The ratified sentence names "no screens,
+squeegees or dyes either", but the instrument's declared scope does not reach those words. The
+four LAUNCH hits are, derived exactly: `inks` ×2 and `rollers` ×2 — matching the reported
+"rollers ×2, inks ×2". Of the other kit named, **`squeegee` and `dye` appear in no pattern at
+all** (outside declared scope), and `screen` is covered only by `\bscreen ?print\w*`, which
+the bare word does not match. So the observation is **true and no action is needed** — but it
+is undocumented, and the next reader who greps the sentence will re-derive it from scratch.
+**A one-line note in `Art_Teesside/HANDOVER.md` closes this. Not done here: Pass 7 repairs
+nothing.**
+
+Ledger position, on the three green checks: **A2e ratified · the Art register has no undecided
+entries · refusal-candidate 0 estate-wide · art has no reserved passes left.** Remaining art
+items are human: D2 on 17 Aug, the 2C-2D tag with the adviser, the A2c bench test, browser
+spot-checks, the 29 Aug pack rebuild.
+
+## §2 · Pass 2 — the game · **PARKED, with the block named**
+
+**The premise did not survive contact, and the difference matters.** The brief expects a *new*
+game needing a slug, a shelf entry, a hue and a sitemap line. What arrived is **Neon Sync
+v1.1** — a prepared content upgrade to a game **already published** at `madebymatt.uk/neonsync/`
+and already in the sitemap. No new slug, no placement, no homepage question. Matt attached no
+placement master prompt, so §2.2's untrusted-input reconciliation had nothing to reconcile.
+
+**§2.1 existence gate — PASS, on real bytes.** `index-2.html` hashes
+**`6f10b2989f73db70d63ed036853af0b3508e2166ff892c13118e18cf9bcc22a5`, 84,546 B** — exactly the
+prepared identity claimed. 2 inline script blocks, **0** syntax errors under `node --check`,
+ends `</html>`. This is not a phantom tree; the Apex Golf stop does not apply.
+
+**Base anchors, all re-derived against the live site repo:**
+
+| path | claimed base blob | derived | state |
+|---|---|---|---|
+| `neonsync/index.html` | `17bfe08c` | `17bfe08c` | **matches** — Stage 2 not landed |
+| `tools/verify_neonsync.js` | `43e3d4d4` | `43e3d4d4` | **matches** — Stage 2 not landed |
+| `sitemap.xml` | `2ab33053` | `2ab33053` | **matches** — Stage 2 not landed |
+| `.github/workflows/neonsync-verify.yml` | `a6dfc5db` | `7a5dcc2c` | **moved** — Stage 1 landed |
+| `tools/verify_neonsync_browser.js` | `884b7642` | `43a49ee2` | **moved** — Stage 1 landed |
+
+So the world is exactly: **Stage 1 (gate-fix PR #56) has merged; Stage 2 is outstanding and
+its three paths are untouched at their recorded base.**
+
+**Why it parked.** Stage 2 is three paths. Two are in hand — the game bytes, and a one-line
+`sitemap.xml` `lastmod` change. **The third is not: the prepared harness
+`tools/verify_neonsync.js` (37,755 B, sha256 `8c699b9d…`) is absent from the inputs.** That is
+decisive, and it was measured rather than assumed:
+
+- committed harness vs **committed** game → **83/83 pass, exit 0**
+- committed harness vs **prepared v1.1** game → **81 pass, 3 FAIL, exit 1**
+- harness self-test → **6/6 tampered copies rejected, positive control passes** — the gate is
+  non-vacuous and genuinely can fail
+
+All three failures classified: `three-heroes` (v1.1 adds a fourth hero, Volt) ·
+`hard-cap-six-minutes` → `undefined` (v1.1 restructures the cap; the vendor names a new
+`uncapped-cc` tamper family) · `delivered-sha-unchanged` (the harness hardcodes the **base**
+game hash — the A-6 pin shape). Every one is a **v1.0-era assumption in the old harness**, not
+a defect in v1.1 — and the prepared 37,755 B harness, with its 162 checks and 8 tamper
+families, is precisely what replaces them.
+
+**Landing the game without it would take the site's own gate from exit 0 to exit 1.** The only
+alternative — authoring a replacement harness that passes the new content — is writing the
+gate to fit the content it judges, which this estate forbids in as many words. **So it holds.**
+
+House rules verified on the prepared bytes anyway, so nothing is unknown when it does land:
+storage keys namespaced **`mbm_neonsync_*`** only · no remote resources beyond the w3.org SVG
+namespace and its own canonical URL · sitemap carries **exactly one** `/neonsync/` loc, and
+**445 locs, 445 unique, 0 duplicates** estate-wide.
+
+**To unpark, one artefact:** `tools/verify_neonsync.js`, 37,755 B, sha256 `8c699b9d…`. With it
+the whole of Stage 2 lands in one gated commit.
+
+**Separate finding — Neon Sync is not on the shelf at all.** `Games/games.json` contains **zero**
+occurrences of `neonsync`, while the game is live and in the sitemap. The vendor's census
+records "zero prepared delta" for `games.json`, so this is deliberate on their side, but it
+leaves a published game with no shelf entry. **Matt's call, not fixed here.**
+
+## §3 · Pass 3 — estate sweep · **SWEPT; the headline is that the estate is clean**
+
+Measure-first across all three repos. **Every inclusion rule is stated with its result, and
+every non-zero count is classified — including the ones that turned out to be my own
+instrument's fault.**
+
+**Inline JavaScript — 0 errors.** First run reported **21 syntax errors**. All 21 were
+**instrument artefacts**: the rule excluded `src=` but not non-JS `type=`, so it fed
+`type="importmap"` and `type="application/json"` payload blocks to `node --check`, which
+correctly rejects JSON. Corrected rule — *type absent, or in {text/javascript, module,
+application/javascript, text/ecmascript}* — checks **987 genuine blocks across all three
+repos: 0 syntax errors.** Recorded because 21 errors reads as a crisis and would have sent a
+fix band after nothing.
+
+**File integrity — 0 truncations, 0 zero-byte files.** The naive rule (*rstrip does not end
+`</html>`*) returned 9. All 9 classified, none a defect:
+
+- `apexgolf/index.html`, `apextennis/index.html` — end `</html>` then a deliberate trailing
+  build sentinel comment
+- `hub-highlight-card.html` — an include **fragment**, by design has no `</html>`
+- 5 × `2 Physics 10/…` + `biology/Digestion_and_Absorption (1).html` — inside the **frozen
+  legacy science trees**, a Band-3 deliberate state, verified and left
+
+**Shelf schema** (`Games/games.json`, 34 entries): `art` present on **every** entry ✔ · titles
+and hrefs unique ✔ · the "duplicate ids" my first run reported was an artefact — **the schema
+has no `id` field**, identity is `title`/`href`. `hue` is real and **is** widely shared (7
+values reused across up to 5 entries each) — an existing, long-standing state, not something
+this pass may quietly restyle. Reported, not touched.
+
+**Sitemap:** 445 locs, 445 unique, **0 duplicates**.
+
+**Workflow pin census** — rule: any 40/64-hex literal or `=== N` / `-eq N` count assertion in
+any CI file, all three repos. Eight hits, all classified:
+
+| location | pin | verdict |
+|---|---|---|
+| `games` `apexpool-sports-verify.yml:39` | `games.length!==33` against **current `origin/main`** | **STALE — genuinely broken.** main's shelf now has **34** entries, so this step exits 1 at its baseline. The A-6 shape, live |
+| `site` `apexpool-home-verify.yml:45` | apextennis `sha256 8e109ab5…` | **live pin, currently TRUE** (re-derived: matches). Not stale — but it breaks silently the day tennis legitimately changes. **The named open member of the derive-or-die register** |
+| `site` `apexpool-home-verify.yml:164` | PR #25 head `7c202790…` | **deliberate** — it guards the held PR #25 (§R.8) and says so in the next line |
+| `site` `apexgolf-verify.yml:59`, `apextennis-verify.yml:38` | donor harness `checks -eq 25` | pins an external harness's check count — drift detector, arguably intentional |
+| `site` `neonsync-verify.yml:83` | `DELIVERED=6b5cbb9d…` | the never-supplied original harness hash; see Pass 2 |
+| `site` `biopunkhive-verify.yml:95`, `neonsync-verify.yml:153-154` | `-eq 1` / `-eq 0` on **grep counts** | **derived assertions, not pins** — correct as written |
+| `site` `arcade-sports-verify.yml:39` | comment naming `900fae5e` / `length !== 34` | already derived; comment only |
+
+**Band 1 (fix, gate, merge): nothing was merged.** The one genuinely stale pin lives in the
+**Games** repo, in a workflow scoped to a held branch (`codex/apextennis-arcade-sports`);
+rewriting its baseline step changes what that gate asserts, which §3.2 puts in Band 2, not
+Band 1. **Held as a proposal rather than merged on my own authority.**
+
+**Band 2 (propose, hold):** the Games `!==33` baseline · the apextennis hash pin → derivation ·
+`games.json` hue reuse · Neon Sync's missing shelf entry · Pass 4's two pupil-facing hours
+hunks · the "GOLD reach" tier wording.
+
+**Band 3 (deliberate states, verified and left — with authority):** the BLOCKED unmounted
+science toolkit at `Science_Teesside/visual-learning/` (open item 37) · the 25 hide comments'
+unscoped wording (**open item 17 is the authority, the in-file comment is not**) · TBC
+placeholders · held branches and PRs — `claude/semh2-claims-accuracy`, `pass-sl-sow-launch`
+@ `2a1cfda`, `pass-sbx-art-a2`, site **#25**, `codex/apex-golf` retained · the Careers W6/W7
+label-vs-filename swap · frozen legacy science · folded-away legacy sets · open item 39's
+pending build, which belongs to the Estate Visuals session and was **not taken here**.
+
+## §4 · Pass 4 — accreditation audit · **DELIVERED**, one fix, three proposals
+
+Full verdicts in `_sixclose/ACCREDITATION_MATRIX.md`. Counts: **VALID 4 families ·
+WRONG 3 surfaces (one fixed, two held) · VAGUE 1 family · UNDETERMINED 1 (the largest)**.
+
+Headline: **`Delivering a Project` = 0 estate-wide**, and the 10-hour window sits on **critical
+thinking 3.5.1, not Communication** — open item 9's close re-derived, not quoted, with
+**0** residual ComSk1 10-hour claims. The violation found is an **Arts Award hours threshold**
+on three LAUNCH Art surfaces; the staff-facing one is fixed, the two pupil-facing ones are held
+because rewording a task item changes what a pupil does. Extensions to
+`_passpq/QUESTIONS_FOR_CHERYL.md` are append-only: **Q11** (which surfaces count as public for
+unit-code printing) and **Q12** (the two unhomed descriptive-week codes).
+
+## §8, §5, §6 · Not reached — **PARKED, with what each needs**
+
+These three were not started. That is a real shortfall against the brief and is stated plainly
+rather than dressed up; each is parked with its blocking condition so the next session opens
+where this one stopped.
+
+- **Pass 8 — ASDAN visual-learning pack.** Route determined: **Route B**, the 19-file review
+  set. Both patches, the entire `repo-overlay/` toolkit, all 85 SVGs, the manifest and the
+  checksum are **absent**, so the generator route is unavailable by definition and integration
+  would have to be authored per surface after recovering the toolkit from
+  `ASDAN_Visual_Learning_Demo.html` (378 KB, present). **Nothing was recovered, mounted or
+  committed.** The architecture existence gate (§8.2) was **not run**, so the pack's central
+  claims about this repo remain unverified — and the vendor's own decisive gate, full
+  post-integration regression in a current checkout, remains **unrun**. Nothing pupil-facing
+  may merge until it is.
+- **Pass 5 — Progress pack rebuild.** Depends on Passes 1–4 and 7–8 landing so one pack
+  captures every merge. Inputs are present (`tools/build_staff_pack.py`, `REBRAND.md`), so this
+  is blocked only on session budget, not on missing artefacts. **No zip was built.**
+- **Pass 6 — weekly planners.** The gate **passes**: 25 xlsx present and identified by content.
+  Not run. **No planner was opened, so no pupil data entered this session's working set beyond
+  the archive sitting unread on disk.** Matt should still delete the uploads.
+
+## §R · Invariants, re-emitted at close
+
+- **★ ASSESSED PAIR — 0 bytes of diff, by name and hash:**
+  `Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html` → `a5545585ca28bbba01b55476abb73a9b0819bcc7`
+  `Launch/Slideshows/LAUNCH_HUM_W7_Source_Assessment.html` → `eb14d6104b94503d0e7ec0a99565ef116a333a57`
+- **Frozen legacy trees, unchanged by hash:** `biology` `2fdbd43a3bb20bf2fc76c82260029594fad2834b` ·
+  `chemistry` `c60a17078bc6b222beb0e6abd6487e2b44381257` ·
+  `2 Physics 10` `57be7374873444ed93b2a65042c0a5f5339cb810` — all three match the recorded values.
+- **The 25 hidden science witness sheets: byte-pristine.** No restore, no un-hide, no edit to
+  any in-file hide comment. The only movement near them this session was Pass 1's append to
+  open item 17 — a docs row, not a sheet.
+- `claude/semh2-claims-accuracy` **not merged, not deleted, not rebased, not swept.**
+- **No printer hold released** (#35 art print check · influence-board banner · tk1-access-2).
+- `Science_Teesside/visual-learning/` **still BLOCKED — DO NOT MOUNT**; zero lessons load it.
+- **Open item 39 not taken.** No branch deleted. Nothing from §R.8's never-merge list merged.
+- **Zero pupil data** in any commit, PR body or committed file. No © ASDAN PDF entered git.
+- **No clip, embed or media URL was wired into any lesson.** No media register was created.
+- **No third-party image or artwork committed.** No closure-marker moved; no new pupil-facing
+  warrant; no second next-step, backlog or failing-reflection state created anywhere.
+- **No rollback recipe was run. No force-push. No deployed history rewritten.**
+- **Zero-lesson-diff assertion:** Passes 7, 3 and 2 promised it and each holds — Pass 7 wrote
+  nothing, Pass 3 merged nothing, Pass 2 landed nothing. Pass 4's single edit is a lesson-
+  adjacent scheme-of-work file and is declared, not silent.
