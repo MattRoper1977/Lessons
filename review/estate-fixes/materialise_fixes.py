@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """Materialise the proposed estate fixes on an exact Lessons base worktree.
 
-This script is deliberately narrow: every replacement asserts its expected count,
-and every writable path is listed explicitly. It is used to let Git generate the
-canonical unified diff from the immutable base rather than trusting hand-written
-hunk offsets.
+Every transformation asserts its unique preimage and every writable path is listed
+explicitly. Git then generates the canonical diff from the immutable base.
 """
 
 from __future__ import annotations
 
 import argparse
 import pathlib
+import re
 import shutil
 
 GRID = pathlib.PurePosixPath("Games/Grid_Chase.html")
@@ -75,45 +74,66 @@ def transform_digestion(root: pathlib.Path) -> None:
     text = read(root, DIGESTION)
     text = replace_exact(
         text,
-        'id="indep-timer-display"',
-        'class="indep-timer-display"',
+        'class="timer-display" id="indep-timer-display"',
+        'class="timer-display indep-timer-display"',
         expected=2,
         label="Digestion duplicate timer IDs",
     )
-    old_render = """      const el = document.getElementById('indep-timer-display');
-      if(!el) return;
-      const minutes = Math.floor(indepRemaining / 60);
-      const seconds = indepRemaining % 60;
-      el.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-"""
-    new_render = """      const minutes = Math.floor(indepRemaining / 60);
-      const seconds = indepRemaining % 60;
-      document.querySelectorAll('.indep-timer-display').forEach(el => {
-        el.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-      });
-"""
-    text = replace_exact(text, old_render, new_render, expected=1, label="Digestion timer renderer")
-    old_section = """      <p><strong>Success looks like:</strong> Answers use the correct key words and explain how each process helps digestion.</p>
-    </div>
-  </section>
 
-  <script>
-"""
-    new_section = """      <p><strong>Success looks like:</strong> Answers use the correct key words and explain how each process helps digestion.</p>
-    </div>
-    <div class="memory-trick">Amylase Makes Maltose · Protease Produces Peptides · Lipase Liberates Lipids</div>
-  </section>
-
-  <script>
-"""
-    text = replace_exact(text, old_section, new_section, expected=1, label="Digestion memory-trick placement")
-    text = replace_exact(
+    timer_match = re.search(
+        r"  // --- Independent Work Timer ---\n.*?(?=\n\n</script>)",
         text,
-        "</html>\n    <div class=\"memory-trick\">Amylase Makes Maltose · Protease Produces Peptides · Lipase Liberates Lipids</div>\n",
-        "</html>\n",
-        expected=1,
-        label="Digestion orphan document tail",
+        flags=re.S,
     )
+    if timer_match is None:
+        raise RuntimeError("Digestion timer block: expected one measured block, found 0")
+    new_timer_block = """  // --- Independent Work Timer ---
+  let indepInterval=null;let indepSeconds=480;let indepPaused=false;
+  function eachIndepDisplay(fn){document.querySelectorAll('.indep-timer-display').forEach(fn);}
+  function startIndepTimer(secs){
+    if(indepPaused&&!secs){indepPaused=false;}
+    else{clearInterval(indepInterval);indepSeconds=secs||480;}
+    indepPaused=false;
+    updateIndepDisplay();
+    indepInterval=setInterval(function(){
+      if(!indepPaused){indepSeconds--;updateIndepDisplay();
+      if(indepSeconds<=0){clearInterval(indepInterval);
+        eachIndepDisplay(d=>{d.textContent='TIME UP!';d.classList.add('timer-warning');});
+      }}
+    },1000);
+  }
+  function pauseIndepTimer(){indepPaused=!indepPaused;eachIndepDisplay(d=>{d.style.opacity=indepPaused?'.5':'1';});}
+  function resetIndepTimer(){clearInterval(indepInterval);indepSeconds=480;indepPaused=false;updateIndepDisplay();eachIndepDisplay(d=>{d.classList.remove('timer-warning');d.style.opacity='1';});}
+  function updateIndepDisplay(){const m=Math.floor(indepSeconds/60);const s=indepSeconds%60;eachIndepDisplay(d=>{d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.classList.toggle('timer-warning',indepSeconds<=60&&indepSeconds>0);});}"""
+    text = text[: timer_match.start()] + new_timer_block + text[timer_match.end() :]
+
+    tail_match = re.search(
+        r"(?P<html_close></html>)(?P<box><div class=\"scaffold-box animate-enter\".*?</div>)\s*$",
+        text,
+        flags=re.S,
+    )
+    if tail_match is None:
+        raise RuntimeError("Digestion orphan memory box: expected one document-tail block, found 0")
+    memory_box = tail_match.group("box").replace(
+        'class="scaffold-box animate-enter"',
+        'class="scaffold-box animate-enter memory-trick"',
+        1,
+    )
+    text = text[: tail_match.start("html_close")] + "</html>\n"
+
+    slide_marker = '<div class="slide" data-title="L1 – Independent Work" data-type="independent">'
+    slide_start = text.find(slide_marker)
+    if slide_start < 0:
+        raise RuntimeError("Digestion L1 independent-work slide marker is missing")
+    next_slide = text.find('\n<div class="slide"', slide_start + len(slide_marker))
+    if next_slide < 0:
+        raise RuntimeError("Digestion L1 independent-work slide has no following slide marker")
+    block = text[slide_start:next_slide]
+    close_at = block.rfind("\n</div>")
+    if close_at < 0:
+        raise RuntimeError("Digestion L1 independent-work slide has no closing div")
+    block = block[:close_at] + "\n  " + memory_box + block[close_at:]
+    text = text[:slide_start] + block + text[next_slide:]
     write(root, DIGESTION, text)
 
 
