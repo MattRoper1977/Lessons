@@ -119,7 +119,9 @@ Teesside science suite, added PACK-1 v2) · root unit hubs (`art_teesside.html`,
 `build_asdan.html`, `build_dt_upcycling.html`, `humanities_teesside.html`) ·
 `LundyLoop/assets/style.css` · **the three Art visual-learning runtime assets**
 (`Art_Teesside/visual-learning/art-visual-learning.css`,
-`art-visual-payloads.js`, `art-visual-learning.js`).
+`art-visual-payloads.js`, `art-visual-learning.js`) · **the four GROW/LAUNCH ASDAN
+visual-upgrade runtime assets** (`GROW_ASDAN/visual-upgrade.css`, `GROW_ASDAN/visual-upgrade.js`,
+`LAUNCH_ASDAN/visual-upgrade.css`, `LAUNCH_ASDAN/visual-upgrade.js`), added PACK-2.
 
 **Why those three, and only those three.** Scope globs `*.html`, so a directory being IN
 does not carry its non-HTML assets — `LundyLoop/assets/style.css` is named individually for
@@ -129,6 +131,14 @@ the same reason. All 31 Art_Teesside lesson decks now load these three files fro
 references**. If they do not ship, every staff copy carries a loader pointing at nothing and
 the *We Do* panel silently never mounts — offline and on OneDrive, with no error a teacher
 would see.
+
+**And the same for the GROW/LAUNCH four, found by the crawl rather than by reasoning (PACK-2).**
+`GROW_ASDAN` and `LAUNCH_ASDAN` are both in the IN list, but scope globs `*.html`, so neither
+carried its runtime assets. The crawl over the assembled pack returned **124 references to
+`visual-upgrade.css` / `visual-upgrade.js` from 62 shipping decks, resolving to nothing** — the
+largest broken-link family in the pack, and the same silent failure the Art three were added to
+prevent. Naming a directory IN is not the same as shipping what its decks load; **the crawl is
+what catches the difference, which is why it is run over the assembled pack and not the repo.**
 
 **OUT:** `Games` and personal apps (dual-branding rule — Made-by-Matt only) · **frozen legacy
 science: `biology/`, `chemistry/`, `2 Physics 10/`** (these stay OUT even though

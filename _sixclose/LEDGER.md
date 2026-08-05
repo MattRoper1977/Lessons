@@ -288,3 +288,166 @@ where this one stopped.
 - **Zero-lesson-diff assertion:** Passes 7, 3 and 2 promised it and each holds — Pass 7 wrote
   nothing, Pass 3 merged nothing, Pass 2 landed nothing. Pass 4's single edit is a lesson-
   adjacent scheme-of-work file and is declared, not silent.
+
+---
+
+# SESSION L — lessons continuation, 2026-08-05
+
+Sentinel `session-l-2026-08-05`, revision 1. Four jobs L1 → L2 → L3 → L4, all four reached.
+**Nothing below is quoted from the brief as fact; every figure was derived in this session at
+the SHA named beside it.**
+
+## §0 · Gates
+
+**Identity, 7/7.** This session also opened in the **site** working directory. The Lessons repo
+was attached and cloned rather than assumed, and the identity gate was run against it before
+anything else: all seven markers present, including `_sixclose/LEDGER.md`, read first.
+**The eleventh site-repo mis-open did not happen.**
+
+**Base.** Expected at/beyond `127aa80`; derived `127aa80`, equal to `origin/main` at open.
+Neither stale nor ahead.
+
+**Sentinels, expectation-then-derived.** 50 / 98 over **548** bare tracked `*.html`, by the
+committed instrument and again by an independent byte-level walk over `git ls-files -z` using
+the literal marker strings — identical, overlap 0. The `5_staff_training` guard contributes
+**0 / 0** over 7 files: a proven no-op again. Unmoved at close.
+
+*An instrument correction, recorded.* The first independent walk returned written-line **0**,
+not 98 — my regex guessed at the marker instead of reading it. The real literals are
+`ll-g:loop-mark v1` and `What I said, and what it changed`, taken from
+`LundyLoop/tools/bundle_facts.py`. A guessed pattern that returns 0 is evidence about the
+pattern, never about the estate.
+
+**Inputs, classified by content.** The planner zip matched the recorded `973cd9d8…` (25 xlsx).
+The second upload was **neither** previously-seen artefact: nested inside it was
+`ASDAN_Visual_Learning_Upgrade_Pack_2026-08-05.zip`, sha256 **`9740ae0c…`**, matching the brief
+and its own checksum file. **139 of 139 MANIFEST entries re-hashed OK.** The 140th file on disk
+is `MANIFEST.sha256`, which cannot hash itself — that reconciles 140 to the stated 139.
+**Route A was available for the first time.**
+
+## §L1 · LAUNCH_ART_W8 hours + P7 records — **MERGED, PR #60**
+
+Base `127aa80` → closing **`f36ddd0`**. Ruling D1 applied by rewording, never deletion: the file
+**grew** 101,136 → 101,342 B and the threshold figure went **4 → 0**. Five spans, each with a
+declared expected count, applied through the estate's own `safe_edit.py`.
+
+Two things the eight-pass record did not have. **A third pupil-facing occurrence** — the
+product-card badge — was found by this session's census and is not in Pass 4's two-surface list.
+And the KO-table row was **checked and needed no move**: it already carried the honesty frame.
+
+D2 records. The Pass 7 finding closed in `Art_Teesside/HANDOVER.md`, re-derived from the
+instrument's pattern list: `squeegee`, `dye` and bare `screen`/`screens` match **no** declared
+kit-dependence pattern — and **bare `press` is outside scope too**, which the original finding
+did not name. The four ratified LAUNCH hits are exactly `inks` ×2 + `rollers` ×2.
+`REGISTER.md` records the fired-fixture entry, **proven not asserted**: `067c76a4`, `a597123d`
+and `8f4f9b17` each print **0** files under `--name-only` and **4**, **35** and **3** against
+their first parent.
+
+Gates: A2e **15 / 0 / 15** unmoved · all HTML comments byte-identical · sentinels unmoved.
+
+## §L2 · Weekly planners — **DELIVERED, zero commits**
+
+25 xlsx, gate passed by content. **No planner row required a content update**, and the 25 files
+were returned byte-identical with only the download suffixes stripped. A byte copy rather than an
+openpyxl re-save: with no content delta, re-saving risks the merged ranges, widths and 96
+formulas for no gain.
+
+The claim is evidenced, not assumed. **131 lesson references, 131 resolve at HEAD.** 99 referenced
+lessons changed since 30 Jul, but **85 have their planner-mirrored content unchanged** — the large
+diffs are marker-owned toolkit blocks. Of the 14 that moved something, none reaches a planner:
+`Delivering a Project` is **0** in all 25 planners, and the word-boundary count for inking-station
+kit is **0** (raw 19, every one `thinking` or `linking`). 96 formulas, **0 errors**.
+
+*Two instrument corrections.* A first sweep reported one broken lesson link; the pattern had
+stopped at the hyphen in `Self-Care`. And the inking raw count of 19 was entirely false positives.
+**Both counts are recorded, not just the flattering one.**
+
+Flagged and deliberately not fixed: the 33 `WellbLeE3` PEQ cells, and the two cells claiming
+"3 credits / 30 GLH" — worth a look given ComSk1-only registration. The LAUNCH `A25`
+accreditation line already reads correctly and was left alone.
+
+**No pupil name, diagnosis or reading age entered any report, commit or PR.**
+
+## §L3 · ASDAN Visual-Learning — **BAND A MERGED, PR #61**
+
+Closing **`0bb4af4`**. 104 files, all additions, 0 outside `ASDAN_Visual_Learning/`.
+
+**Architecture existence gate, run first.** `BUILD_ASDAN/_framework/` exists; the mechanism is
+real and is marker-owned block injection; **31 of 39** BUILD_ASDAN decks carry `asdan-teach.css`,
+so the claimed 31 genuinely materialise. GROW/LAUNCH `visual-upgrade.css/.js` all exist and 62
+decks load them. **All 85 declared SVG targets resolve to a real repo lesson (85/85), and 0 of 85
+changed `a4b19e2` → HEAD** — the vendor's delta claim independently confirmed.
+
+**The six D&T decks are NOT on this chassis:** `Build/Slideshows/BUILD_DT_W1..W6` carry 0
+`ASDAN-TEACH` markers and 0 `visual-upgrade` references, and the compiler's scope is
+`BUILD_ASDAN/*/*.html`, which does not reach them.
+
+**Independent verification, every non-zero classified.** Payload/runtime: 0 storage, cookies,
+network, forms, camera/mic, file inputs, clipboard — the raw scan's 4 / 6 / 2 all live in the
+pack's own `check.py`, which names them in order to forbid them. 0 closure markers. The 3
+"criterion codes" are version strings. **"receipt" ×7 are shop and handover receipts** — the
+payload itself says *"not proof of long-term impact"*. **"calorie" ×1 is a disclaimer**:
+*"checks food-group variety, not calories or a pupil's body."* 85 SVGs: 0 external URLs, 0
+missing title/desc, 0 raster.
+
+**Why it stopped at A.** Band B would mount a pupil-facing surface while the vendor's decisive
+post-integration regression gate is **unrun** — which the brief forbids outright. Also unresolved:
+the engine has the blanket reduced-motion CSS rule and one `@keyframes` family (`asvl-attention`)
+but **no `matchMedia` reduced-motion query and no change listener**, and both are required.
+Both are named in the standing BLOCKED — DO NOT MOUNT block at the head of README and engine.
+`docs/MEDIA_REGISTER.md` landed under a candidate-register header: ~250 URLs, **none resolved**,
+because this container has no network. 0 iframes. **Mounted by nothing: 0 of 548 tracked
+`*.html`, on a control proven able to fire.**
+
+## §L4 · Progress pack rebuild — **DELIVERED, + PACK-2 fixes**
+
+Scope was **not** extended for the L3 assets: REBRAND.md's own rule is that only what a deck
+actually loads ships, and L3 landed mounted by nothing. The brief's conditional was false.
+
+But crawling the **assembled** pack found two defects that every previous pack shipped:
+
+1. **124 loaders pointing at nothing.** 62 GROW/LAUNCH decks load `visual-upgrade.css/.js`;
+   scope globs `*.html`, so naming a directory IN never carried its runtime assets. The same
+   silent failure the Art three were added to prevent — reasoned about there, **missed here, and
+   only the crawl found it.**
+2. **The `hud.js` strip was half-blind.** Five Science GROW decks load the HUD through a dynamic
+   injector, not a `<script src>` tag. The branded copies shipped fetching `hud.js` at runtime.
+
+Broken references **151 → 25**; scope **280 → 286**; `hud_stripped` 170 → 175; hud.js in both
+assembled trees **0**. The residual 25 are classified: **20 are root-absolute `/grow-anim/*.js`
+that no pack scope can fix** (the fix is a lesson-file edit, not taken), 5 are deliberate
+out-of-scope links.
+
+Validation: 0 attr / domain / UPPERCASE / `contactmadebymatt@` / decoded-base64 residue · 276/276
+x-brand · 0 truncated · **586 inline JS blocks, 0 syntax errors** · 0 iframes · 2/2 assessed
+blocks intact · 31/31 AVL marker pairs byte-preserved · 276/276 Network Library index entries
+resolve inside the zip · 0 Planning/ and 0 pupil sheets in any zip · `unzip -t` clean ×3.
+
+**SL and SBX are unmerged** — verified against the remote, both at their recorded tips — so the
+README stamps "rebuilds after merge day (29 Aug)".
+
+## §R · Invariants, re-emitted at close
+
+- **★ ASSESSED PAIR — 0 bytes of diff:** `GROW_HUM_W7` `a5545585ca28bbba01b55476abb73a9b0819bcc7` ·
+  `LAUNCH_HUM_W7` `eb14d6104b94503d0e7ec0a99565ef116a333a57`
+- **Frozen legacy unchanged:** `biology` `2fdbd43a3bb20bf2fc76c82260029594fad2834b` ·
+  `chemistry` `c60a17078bc6b222beb0e6abd6487e2b44381257` ·
+  `2 Physics 10` `57be7374873444ed93b2a65042c0a5f5339cb810`
+- **The 25 hidden science witness sheets: byte-pristine.** No restore, no un-hide, no edit to any
+  hide comment. Row 17 remains the authority; the restore still waits on Cheryl.
+- **`claude/semh2-claims-accuracy` present at `0c0f0487`, not merged, deleted, rebased or swept.**
+  *Recorded because a first check said ABSENT and was wrong:* the `--depth 1` clone's refspec is
+  `+refs/heads/main:refs/remotes/origin/main`, so `git branch -r` is blind to every other branch.
+  **A RED-line branch is verified against `git ls-remote`, never against a single-branch clone.**
+- **Never-merge list intact:** `pass-sl-sow-launch` at **`2a1cfda`** — exactly the recorded SHA —
+  and `pass-sbx-art-a2` at `462cfa6`. Neither merged. **No branch deleted** (83 remote heads).
+- **No printer hold released** (#35 art print · influence-board banner · tk1-access-2).
+- `Science_Teesside/visual-learning/` **still BLOCKED — DO NOT MOUNT**; zero lessons load it.
+- **Open item 39 not taken** — it belongs to the Estate Visuals session.
+- **Zero pupil data** in any commit, PR body, report or committed file. **No © ASDAN PDF entered
+  git** — 0 PDFs in the band-A diff.
+- **No clip, embed or media URL wired into any lesson.** The media register landed as a candidate
+  register only. **No third-party image or artwork committed** — the 85 SVGs were verified original.
+- **No closure marker moved**; no new pupil-facing warrant; no second next-step, backlog or
+  failing-reflection state created.
+- **No rollback recipe run. No force-push. No deployed history rewritten.**
