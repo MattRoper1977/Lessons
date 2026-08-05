@@ -336,6 +336,39 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 
 *Queue entries 17 and 18 added by Pass LL-S1.*
 
+### Added by Pass HU-CLOSE — one queue entry, with its trigger
+
+19. **The Humanities Lundy toolkit is landed and held; the day-close half is still not ours.**
+    27 of the 28 held pack files landed at `Humanities_Teesside/Lundy_Humanities/` on the held
+    branch `claude/hu-close-lundy`, plus four `quality/LUNDY_HUMANITIES_*` files **authored fresh**
+    (the pack's own four were never received). One file — `PUPIL_HISTORIAN_CARDS.html` — was
+    evaluated and **not shipped** (`_close/OPEN_ITEMS.md` #35). The 24 humanities lessons changed
+    by **zero bytes**; the assessed pair is hash-proved untouched; sentinels re-derived unmoved at
+    **50 / 98** (universe: 528 tracked `*.html`, excluding `LundyLoop/5_staff_training/`).
+    **All print surfaces are PRINT-UNVERIFIED** until Matt's physical check.
+    **The day-close half remains Pass LL-J's** — the specimens that landed cover the in-lesson half
+    only and were banner-scoped to say so. The fifteen-minute humanities tutor-time routine is
+    **deferred under the existing #24 trigger, extended, not duplicated**: three deferred evidence
+    routines now share one real-room condition.
+    **TRIGGER: Matt's read, then his merge. Nothing here is live until he merges.**
+
+    **Two collision notes for the Estate Visuals session, written down rather than left to be
+    discovered.** Estate Visuals is the next queued pass and its prompt predates five merges, so it
+    derives at HEAD rather than trusting its own base notes — and it will expect to own both of
+    these:
+    - **Humanities half — still OPEN, not taken.** Pass HU-CLOSE did **not** run the humanities
+      visuals slice. No `claude/hu-close-visuals` branch and no visuals PR exists; the 22
+      non-assessed humanities decks are untouched and the queued year-tag correction in
+      `resources.json` was **not** made. Estate Visuals owns this in full.
+    - **Science half — VERIFY-ONLY.** The science visual-learning toolkit was recovered to
+      `Science_Teesside/visual-learning/` on the held branch `claude/hu-close-science-visuals` and
+      is **mounted in no lesson**, so the 25 science decks are byte-untouched. Estate Visuals must
+      **derive that at HEAD** rather than assume, and must read `_close/OPEN_ITEMS.md` #37 first:
+      the LAUNCH explanation lock has no adult route on screen, and no LAUNCH lesson mounts until
+      it does.
+
+*Queue entry 19 added by Pass HU-CLOSE.*
+
 ### Added by Pass LL-AS1 — attachments to existing queue entries (no new entries; each attachment carries its trigger)
 
 **To entry 12 (the LL-J specimen pass) — three attachments, recorded here so LL-J opens with
