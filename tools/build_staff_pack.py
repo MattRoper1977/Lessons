@@ -68,6 +68,16 @@ INCLUDE_FILES = [
     # class as the runtime assets above -- a directory being IN does not carry them.
     "Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv",
     "Humanities_Teesside/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md",
+    # PACK-3: the four grow-anim runtime scripts. Five Science_Teesside/Build decks
+    # load them. They were written ROOT-ABSOLUTE, so PACK-2 could not fix them by
+    # scope alone and said so. The CI probe has since resolved them against the live
+    # origin: in-repo YES, live 404 -- the path was broken in BOTH contexts, because
+    # the site serves this repo under /Lessons/. The references are now relative, so
+    # the assets must ship or the same loader-points-at-nothing failure returns.
+    "grow-anim/grow-svg.js",
+    "grow-anim/grow-svg-bio-animals.js",
+    "grow-anim/grow-anim.js",
+    "grow-anim/compat-build-anim.js",
 ]
 # The dynamic hud.js injector. Self-contained script element, byte-identical across
 # the five decks that carry it, and its entire body exists to load hud.js.
