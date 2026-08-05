@@ -1,0 +1,48 @@
+name: j4-absolute-ref-probe
+
+# READ-ONLY probe. Resolves the root-absolute asset references that this repo's
+# decks carry against the live origin, and writes the results to the run log.
+# It changes nothing, commits nothing and publishes nothing. It exists because
+# the development container's proxy denies egress to the live origin, so the
+# (a)/(b)/(c) classification in the standing J4 table cannot be completed there.
+#
+# Run it manually, read the log, then classify. Never merge a PR opened solely
+# to trigger it.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Derive the root-absolute references from the decks themselves
+        run: |
+          grep -rhoE '(src|href)="/[A-Za-z0-9_./-]+"' --include=*.html . \
+            | sed -E 's/^(src|href)="//; s/"$//' \
+            | sort -u > refs.txt
+          echo "distinct root-absolute references: $(wc -l < refs.txt)"
+          cat refs.txt
+
+      - name: Does the target exist in the repository?
+        run: |
+          while read -r r; do
+            if [ -f ".${r}" ]; then echo "IN-REPO   YES  $r"; else echo "IN-REPO   no   $r"; fi
+          done < refs.txt
+
+      - name: Does the target resolve on the live origin?
+        run: |
+          while read -r r; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://madebymatt.uk${r}" || echo "ERR")
+            echo "LIVE      ${code}  ${r}"
+          done < refs.txt
+
+      - name: Classification reminder
+        run: |
+          echo "(a) in-repo YES + live 200 -> relative-ize, prove resolving in-repo AND in an assembled pack"
+          echo "(b) in-repo no  + live 404 -> the /hud.js class: report, remove only with the evidence stated"
+          echo "(c) anything else          -> ambiguous, list untouched"
