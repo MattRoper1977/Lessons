@@ -1,0 +1,113 @@
+name: Validate Lessons estate fix pack
+
+'on':
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'review/estate-fixes/**'
+      - '.github/workflows/validate-estate-fix-pack.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lessons-estate-fix-pack-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Apply proposed patches to exact main and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out review branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out website repository read-only
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: main
+          path: .validation-site
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check html5lib==1.1 'tinycss2>=1.2' 'selenium>=4.18'
+
+      - name: Apply and validate the complete proposal
+        id: validation
+        shell: bash
+        run: |
+          set +e
+          mkdir -p validation-output
+          (
+            set -euo pipefail
+            BASE='4aced082cc8f51868a99a8c6ab9d8147e380f6ec'
+            PATCH_ROOT="$GITHUB_WORKSPACE/review/estate-fixes"
+            WORKTREE="$RUNNER_TEMP/lessons-estate-fixed"
+
+            python -m py_compile "$PATCH_ROOT/validate_applied.py"
+            git cat-file -e "$BASE^{commit}"
+            git worktree add --detach "$WORKTREE" "$BASE"
+
+            for patch in "$PATCH_ROOT"/000*.patch; do
+              printf 'Checking %s\n' "$(basename "$patch")"
+              git -C "$WORKTREE" apply --check "$patch"
+              git -C "$WORKTREE" apply "$patch"
+            done
+
+            cmp "$PATCH_ROOT/new-files/assets/video/poster-art.svg" "$WORKTREE/assets/video/poster-art.svg"
+            git -C "$WORKTREE" diff --check "$BASE" --
+            git -C "$WORKTREE" diff --name-status "$BASE" -- > validation-output/changed-files.txt
+            git -C "$WORKTREE" diff --binary "$BASE" -- > validation-output/applied-fixes.patch
+
+            {
+              printf 'review_head=%s\n' "$(git rev-parse HEAD)"
+              printf 'lessons_base=%s\n' "$BASE"
+              printf 'site_main=%s\n' "$(git -C .validation-site rev-parse HEAD)"
+              printf 'chrome=%s\n' "$(google-chrome --version || google-chrome-stable --version || chromium --version || true)"
+            } > validation-output/repository-state.txt
+
+            python "$PATCH_ROOT/validate_applied.py" \
+              --repo "$WORKTREE" \
+              --site-root "$GITHUB_WORKSPACE/.validation-site" \
+              --output "$GITHUB_WORKSPACE/validation-output" \
+              --browser
+
+            cp -R "$PATCH_ROOT" validation-output/fix-pack
+            (
+              cd validation-output
+              zip -qr Lessons_Estate_Proposed_Fixes_2026-08-05.zip fix-pack
+              sha256sum Lessons_Estate_Proposed_Fixes_2026-08-05.zip > fix-pack-zip.sha256
+            )
+          ) > validation-output/runner.log 2>&1
+          status=$?
+          printf 'exit_code=%s\n' "$status" >> "$GITHUB_OUTPUT"
+          cat validation-output/runner.log
+          exit 0
+
+      - name: Upload review and validation bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lessons-estate-fix-pack-${{ github.sha }}
+          path: validation-output/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce exact validation after upload
+        if: always()
+        shell: bash
+        run: exit "${{ steps.validation.outputs.exit_code || '2' }}"
