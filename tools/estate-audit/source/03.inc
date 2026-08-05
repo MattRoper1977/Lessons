@@ -1,3 +1,11 @@
+                return attrs[key].strip()
+        text = " ".join(part.strip() for part in element.itertext() if part.strip())
+        if text:
+            return text
+        if attrs.get("aria-labelledby"):
+            return attrs["aria-labelledby"]
+        if tag == "select":
+            return "select-options" if list(element) else ""
         return ""
 
     @staticmethod
@@ -251,7 +259,7 @@
                     public = self.html[rel].public
                     result: dict[str, Any] = {
                         "path": rel, "mode": mode, "public": public, "status": "unknown",
-                        "errors": [], "warnings": [], "local_http_errors": [], "interaction": None,
+                        "errors": [], "warnings": [], "local_http_errors": [], "optional_http_failures": [], "interaction": None,
                     }
                     try:
                         with contextlib.suppress(Exception):
@@ -270,11 +278,3 @@
                         for error in hook_errors:
                             result["errors"].append({"kind": "window", "message": str(error)[:2000]})
                         browser_logs = driver.get_log("browser")
-                        performance_logs = driver.get_log("performance")
-                        self._classify_browser_logs(result, browser_logs, performance_logs, server.origin)
-                        interaction = driver.execute_script(SAFE_INTERACTION_JS)
-                        if interaction and interaction.get("clicked"):
-                            time.sleep(min(settle, 0.35))
-                            interaction["post_errors"] = driver.execute_script("return window.__estateAuditErrors || []") or []
-                            post_logs = driver.get_log("browser")
-                            post_perf = driver.get_log("performance")
