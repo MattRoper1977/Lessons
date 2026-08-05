@@ -428,3 +428,108 @@ only, not content. It was not resolved unilaterally.
 
 Live state was **not** verified: the sandbox proxy 403s `madebymatt.uk` and the Pages API. Stage
 A is unmerged, so there is nothing deployed to check.
+
+---
+
+## Close — 2026-08-05 · Art visual-learning mounted 31 of 31
+
+Sentinel `art-visual-learning-close-2026-08-05`. Stage B merged at `cdb2781`,
+Stage C on `art-visual-learning-c`. **31 of 31 pupil-facing decks now carry the layer.
+Nothing was skipped.**
+
+**A note on the §11 debt.** The close order recorded the handover write as never
+confirmed and owed. It had in fact landed — commit `262c65b`, merged to main in
+`85953b1`, verified at origin by a read separate from the write. This section is the
+close record, not a re-payment. Flagging it because a debt believed outstanding and a
+debt actually outstanding are different things, and the difference is checkable.
+
+### The derived target set is a derivation, not a constant
+
+**"An `Art_Teesside` HTML file that requests `/hud.js`"** — 31 files, identical to the
+31 payload lesson IDs, excluding exactly the 22 hubs, schemes, printable packs, House
+Standard and Partnership Log.
+
+**Re-run it; never quote the number.** It was 31 on 2026-08-05. It is 31 because
+31 files currently request a script that has never existed in this repo. Any pass that
+adds a deck, or that ever resolves the `/hud.js` situation, changes the set. The
+census after this pass: 31 requested, 31 mounted, 0 of the 22 untouchables mounted —
+that last figure checked as its own assertion, not inferred from the first two.
+
+### Pass A2e — what it must preserve
+
+A2e retains **full authority over LAUNCH W5–W7 content.** Mounting those three was
+safe because the loader is add-only inside an owned marker pair at the file tail, and
+A2e restages content, not the tail. Two requirements on A2e's brief:
+
+- **The `AVL-MOUNT` marker blocks must survive A2e byte-for-byte.**
+- **A2e re-runs the LAUNCH mount gates after its restage.**
+
+### Known chassis quirk — not ours, not fixed
+
+Toggling the staff answers organ on the exit slide **also fires the chassis
+lesson-complete overlay and confetti.** Staff revealing answers will see the
+celebration. Verified identical at HEAD with no panel mounted, so it is pre-existing
+and chassis-owned. Fixing it would mean editing outside the marker pair, which is a
+hard fail in this pass. Recorded, not touched.
+
+### Two grep traps, against rules 13 and 15
+
+Both cost real time this session and both are the same family: **a text search over
+source is evidence about the text, never about the runtime.**
+
+- **Rule 13 — identifiers are not readable text.** `--avl-ink` is a CSS custom
+  property for a text colour. A kit check for printmaking ink hits it three times and
+  learns nothing. `@media print` is the same shape. **Kit checks run on readable text**
+  — pupil-visible strings — not on identifiers, selectors or at-rules.
+- **Rule 15 — word boundaries, always.** `press` returns **49** substring hits and
+  **0** on `-ow`; every one is `pressure`. `etch` returns 14 and 0; every one is
+  `sketch` or `stretch`. Both numbers get recorded, every time, so the next reader
+  cannot repeat the crude version.
+
+### Four instrument instances worth keeping
+
+1. **The identity gate fired for the first time and was right.** The session opened on
+   `mattroper1977.github.io` — 0 of 5 signals, no `Art_Teesside/`, `12cb6d9` not a
+   valid object. Re-attached to Lessons: 5 of 5. **A `*.github.io` remote is the decoy
+   the gate was written for, and it caught it before any write.**
+2. **A zero that could not be non-zero.** The first viewport gate reported "no
+   horizontal overflow" while the panel measured **0px** — it sits in an inactive
+   slide, so the assertion could never have failed. Rewritten to activate the slide
+   and assert visibility *before* measuring. **Every gate in this pass now proves it
+   can fail before its pass is believed.**
+3. **A false red from the same family.** A probe for `#cold-call-btn` reported the
+   cold-call organ missing on all three specimens. The organ is a plain `<button>`;
+   the id is vestigial. Isolated by loading the deck at HEAD unmounted and observing
+   the identical result. **A regression claim needs a HEAD comparison, not a selector
+   that seemed reasonable.**
+4. **`👁️ Answers` and the variation selector.** A search for `Answers (staff)`
+   returned zero in every deck. The organ is there in all 31, labelled differently,
+   with U+FE0F in the emoji. Believing that zero would have concluded LAUNCH can never
+   mount — the opposite of the truth. **Search for the mechanism (`show-ans`), not the
+   label.**
+
+### Rulings executed this pass
+
+The **8-character threshold is closed**: lowered to **one non-whitespace character**.
+The gate's job is the moment of committing evidence, not prose-length enforcement, and
+length-policing selects against the writing-difficulty cohort the estate protects.
+`.trim()` still means whitespace alone does not open it. Tested in both directions
+against the pre-change engine, including a control proving the pre-change deck opens
+at eight characters — so its refusal at one character is a gate, not a broken page.
+
+**Clipboard stays disabled.** **The transfer task is declared not-evidence**, in plain
+words, in every panel. The **12 `avl*` animation families are classified** in
+`reports/REDUCED_MOTION_REGISTER.md` as RM-2, one commit later than the house rule
+wanted, and the entry says so rather than back-dating.
+
+Two corrections went into RM-2 against the description it was commissioned under:
+`avlFlowRight`/`avlFlowLeft` carry **no fill mode** so their final frame does not
+persist, and **`avlContract` is defined and never applied.**
+
+### Debts, restated not performed
+
+`Progress_Art_Teesside_2026-27.zip` is **stale by rule** and got staler with every
+batch. **D6's build script, with dry-run and a zero-pupil-data assertion — never
+hand-rebuilt.** Browser spot-checks after the Pages rebuild are Matt's. Live state
+could not be proven from inside the sandbox: the proxy 403s `madebymatt.uk` and the
+Pages API.
