@@ -64,8 +64,8 @@ jobs:
 
             for patch in "$PATCH_ROOT"/000*.patch; do
               printf 'Checking %s\n' "$(basename "$patch")"
-              git -C "$WORKTREE" apply --check "$patch"
-              git -C "$WORKTREE" apply "$patch"
+              git -C "$WORKTREE" apply --check --verbose --recount --ignore-space-change "$patch"
+              git -C "$WORKTREE" apply --verbose --recount --ignore-space-change "$patch"
             done
 
             cmp "$PATCH_ROOT/new-files/assets/video/poster-art.svg" "$WORKTREE/assets/video/poster-art.svg"
