@@ -6,6 +6,7 @@ import pathlib
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 
@@ -141,6 +142,32 @@ class EstateAuditInstrumentTests(unittest.TestCase):
         self.assertTrue(command_map["Emulation.setDeviceMetricsOverride"]["mobile"])
         self.assertEqual(command_map["Emulation.setTouchEmulationEnabled"]["maxTouchPoints"], 5)
         self.assertEqual(driver.windows[-1], (390, 844))
+
+    def test_desktop_mode_disables_touch_without_zero_touch_points(self) -> None:
+        class FakeDriver:
+            def __init__(self) -> None:
+                self.commands: list[tuple[str, dict[str, object]]] = []
+
+            def execute_cdp_cmd(self, name: str, payload: dict[str, object]) -> None:
+                self.commands.append((name, payload))
+
+            def set_window_size(self, width: int, height: int) -> None:
+                return None
+
+        driver = FakeDriver()
+        estate_audit.Audit._configure_browser_mode(driver, "desktop")
+        touch_payloads = [payload for name, payload in driver.commands if name == "Emulation.setTouchEmulationEnabled"]
+        self.assertEqual(touch_payloads[-1], {"enabled": False})
+
+    def test_live_fetch_retries_transient_status(self) -> None:
+        transient = {"ok": False, "status": 503, "error": "temporary"}
+        recovered = {"ok": True, "status": 200, "body": b"ok"}
+        with mock.patch.object(estate_audit.Audit, "_fetch_url_once", side_effect=[transient, recovered]) as probe, \
+             mock.patch.object(estate_audit.time, "sleep"):
+            result = estate_audit.Audit._fetch_url("https://example.invalid/test", full=True)
+        self.assertEqual(probe.call_count, 2)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["attempts"], 2)
 
     def test_safe_interaction_is_delegated_to_webdriver(self) -> None:
         self.assertNotIn("target.click()", estate_audit.SAFE_INTERACTION_JS)
