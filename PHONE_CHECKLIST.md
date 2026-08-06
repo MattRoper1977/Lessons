@@ -288,7 +288,11 @@ checks a container cannot make.
       `#C4F52A`, 16.62 from its nearest neighbour. On a real screen in daylight,
       does it read as its own game next to Biopunk Hive?
 
-- [ ] **The Sports rail question, for you to settle.** Aurora Links 3D is off it
-      on the grounds that the rail is the Apex Sports *series*, not a genre. It
-      is the only golf game on the shelf that is not an Apex title. If you would
-      rather that rail meant "sports games", say so and it moves.
+- [x] **The Sports rail question — SETTLED 2026-08-06.** Ruling: *"the rail
+      means sports."* Aurora Links 3D is on it, as the rail's sixth member and
+      its first non-Apex one. What is left for a real screen is the thing the
+      ruling made possible rather than the ruling itself: **on the rail, at a
+      glance, do Apex Golf and Aurora Links 3D read as two different games?**
+      The icon collision is fixed (⛳ against 🌌) and the hues are the furthest
+      apart on the rail (ΔE00 92.0), but two golf games sitting side by side is
+      exactly the case a gate cannot judge for you.
