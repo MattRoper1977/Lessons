@@ -48,9 +48,17 @@ function check(html, name) {
   ok(fonts.length === 0, `H1 ${name}: no remote font references${fonts.length ? ` (found ${fonts.length})` : ''}`);
   const amps = markupAmpersands(html);
   ok(amps.length === 0, `H2 ${name}: no raw markup ampersands${amps.length ? ` (${amps.length}: ${amps[0]}…)` : ''}`);
-  /* H3 (no CDN runtime imports) lands with the Band-2 vendoring PR — enabling
-   * it before the vendored copies exist would make this gate red on defects
-   * that PR owns, not this one. */
+  let cdnRuntime = html.match(/https?:\/\/[^"'\s]*(cdn\.jsdelivr|cdnjs\.cloudflare|unpkg\.com)[^"'\s]*(three|cannon|aframe)[^"'\s]*/gi) || [];
+  /* voxelcraft's A-Frame loader is LOCAL-FIRST: 'vendor/aframe-…' heads its
+   * fallback list, so the CDN URLs after it are unreachable redundancy for a
+   * broken local serve, not a dependency (same defence-in-depth ruling as the
+   * shelf's inert desc-strip line). The exemption requires the local entry to
+   * actually precede the CDN ones — remove the local copy and H3 goes red. */
+  if (cdnRuntime.length && /vendor\/aframe-[^'"\s]+/.test(html)) {
+    const localAt = html.search(/vendor\/aframe-[^'"\s]+/);
+    cdnRuntime = cdnRuntime.filter(u => html.indexOf(u) < localAt);
+  }
+  ok(cdnRuntime.length === 0, `H3 ${name}: no CDN runtime imports without a preceding local-first entry${cdnRuntime.length ? ` (${cdnRuntime[0].slice(0, 60)}…)` : ''}`);
 }
 
 if (process.argv.includes('--self-test')) {
@@ -62,11 +70,11 @@ if (process.argv.includes('--self-test')) {
   const before = fail;
   check(bad, 'self-test-doc');
   const tripped = fail - before;
-  if (tripped !== 2) { console.error(`SELF-TEST FAILED: expected both gates to trip, got ${tripped}`); process.exit(1); }
+  if (tripped !== 3) { console.error(`SELF-TEST FAILED: expected all 3 gates to trip, got ${tripped}`); process.exit(1); }
   // and the script-exemption must hold: a raw & inside <script> alone is clean
   const amps = markupAmpersands('<html><body><script>if(a & b){}</script></body></html>');
   if (amps.length !== 0) { console.error('SELF-TEST FAILED: script-context & wrongly flagged'); process.exit(1); }
-  console.log('self-test: both gates trip on bad input; script-context & exempt. CAN-FAIL PROVEN');
+  console.log('self-test: all 3 gates trip on bad input; script-context & exempt. CAN-FAIL PROVEN');
   process.exit(0);
 }
 
