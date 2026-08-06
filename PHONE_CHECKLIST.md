@@ -161,3 +161,50 @@ in a container can do. **Nothing here is ticked for you.**
 - [ ] **The question no gate answers: is it fun?** Three realms, three classes.
       Does the hit-stop make combat feel weightier, or just sticky? Is the
       end-of-realm report a satisfying beat or an interruption?
+
+---
+
+## Neon Turf: Overdrive — madebymatt.uk/neonturf/
+
+New game, launched 6 August 2026. No `NEW ·` marker and no homepage box —
+Fracture Engine holds both this release.
+
+- [ ] **Touch controls, both orientations.** Joystick, boost and pulse. Every
+      rendered control measures over 44px — but can you steer and boost at the
+      same time without your thumb covering the ball?
+
+- [ ] **Local Duel on one screen.** Two players, one phone or tablet. Does
+      sharing a screen actually work in the hand, or do the two control
+      clusters fight for space?
+
+- [ ] **The splash by touch.** Tap while the Made by Matt splash is up. It
+      should go immediately and land you on the menu — with nothing started by
+      that tap. (Verified here with synthetic pointer and key events, zero
+      leak, but a thumb is the real test.)
+
+- [ ] **Reduced motion at the OS.** Turn reduced motion on in accessibility
+      settings, then score a goal. There should be **no full-screen flash**, no
+      camera shake and no replay — but the shockwave ring should still tell you
+      where the goal happened. Then open Settings: the reduced-motion **Off
+      button should be disabled with a reason**, because the OS holds the floor.
+
+- [ ] **The goal flash, without reduced motion.** Score a few goals in a row
+      and watch for anything that feels like it strobes. The flash is capped
+      and short, but this is the check a gate cannot make for you.
+
+- [ ] **Frame rate.** Does it hold up during a goal explosion with particles
+      everywhere, on your actual phone? No fps claim was made from the
+      container.
+
+- [ ] **THE ONLINE LAB — the test only you can do.** Peer-to-peer play needs
+      **two real devices over HTTPS**, copying the offer and answer codes
+      between them by hand. It has **not** been tested end to end and cannot be
+      from here. If it does not connect, that is a finding, not a surprise —
+      and the shelf copy deliberately promises no online play.
+
+- [ ] **Card copy and art.** On the arcade, does the Neon Turf card read as
+      clearly *not* the same game as **Neon Snake Overdrive**? They share a
+      word; the copy and the icon were chosen to keep them apart.
+
+- [ ] **Is it fun?** Does the turf layer actually change how you drive, or do
+      you just chase the ball and ignore the grid?
