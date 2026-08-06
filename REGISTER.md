@@ -2442,3 +2442,46 @@ the pass brief withheld.**
   same treatment as a grep result: **probe, then claim.** The sibling rule already on this
   register — browser capability is probed per session, never inherited — is the same rule; this
   is its CI half. An untested blocker is an assumption wearing a blocker's clothes.
+
+- **A vacuous green is worse than a red — it claims a property nobody tested.** A red says the
+  measurement ran and disagreed. A green from a comparison where NEITHER SIDE MOVED says nothing
+  at all, while occupying the space where evidence should be. Three of these have now been caught
+  on this workstream and they share a shape: the instrument was checked for *correctness* and
+  never for *sensitivity*. (1) A frame-rate comparison overrode `requestAnimationFrame` and then
+  ran 90 synchronous ticks without yielding, so the pending real callback never re-registered;
+  neither run advanced and "0s vs 0s" reported PASS. (2) A reduced-motion probe sampled the
+  top-left corner of a room — which is a wall — and reported *1 distinct frame* for both the
+  reduced and the full-motion run, calling that a pass. (3) A Backspace-destroys-your-object gate
+  pressed the key with nothing selected, so it passed identically on the fixed and the broken
+  file. **The rule: every comparison must carry a NON-VACUITY ASSERTION as a gate in its own
+  right — the control side must be shown to have moved before the test side is read.** Not a
+  comment saying it should have; a named gate that goes red when it did not. Where a harness has
+  designated control gates that are expected to be green on both files, it must say which ones
+  they are, because otherwise "some gates were green on the broken file" cannot be told apart
+  from "the harness is blind".
+
+- **Measure the file, don't trust the brief.** A brief describing a game's behaviour is a
+  hypothesis about the file, not a reading of it. Stage 2B's F3 brief said reduced motion
+  suppressed the shockwave ring; the file kept it and suppressed the goal flash, the camera shake
+  and the replay instead. The brief was corrected from the measurement, not the other way round.
+  This has a stronger form that Stage 2C produced: **an audit's suggested FIX is a hypothesis
+  too.** A Lumina Haven finding proposed reusing the file-import path "which does validate" as the
+  template for the boot path. Measured, the import path validated exactly ONE field, accepted a
+  poisoned layout with the toast "Layout imported", froze the render loop and persisted the
+  poison — and killed the game through a route the boot path happened to survive. The weaker of
+  the two paths was one commit away from becoming the canonical one. Verify the remedy against
+  the file with the same suspicion as the defect.
+
+- **A gate that cannot go red on the defective file is not a gate, and the harness should say so
+  by name.** The strongest negative control available is the PRE-REPAIR ORIGINAL, kept rather
+  than discarded: it proves each gate detects the actual defect it was written for, in the code
+  that had it, which a synthetic wrong expectation cannot. Stage 2C's harness runs `--control`
+  against the retained originals, lists every gate that stayed green on them, and EXITS NON-ZERO.
+  It caught three of its own author's gates that way. The most instructive: a reduced-motion gate
+  asserting "per-frame canvas motion drops 5x" **passed on the defective file at 6.9x while that
+  file gated precisely zero canvas effects** — its "reduced motion" was a `dt` clamp that lowers
+  per-frame change by running the whole world slower. Raw motion cannot distinguish *reducing
+  motion* from *slowing the game*, which was the defect. Normalising by world progress separated
+  them by two orders of magnitude (repaired 189.5x, pristine 0.9x). **When a gate and the defect
+  it targets can both be satisfied by the same wrong mechanism, the gate is measuring the wrong
+  quantity.**
