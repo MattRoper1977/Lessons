@@ -84,6 +84,22 @@
    "hue_separation_on_the_rail": "Golf/Aurora dE00 92.0 — the widest gap on the rail. Pre-existing and unrelated: Golf/Tennis 14.01, reported by the gate as drift not caused by this change.",
    "verified": "Sports rail 7/7 · 2C shelf 15/15 with 10/10 tampers · Fracture 22/22 · Neon Turf 15/15 · Relicforge 20/20 · Echo Vault 20/20 · validate_games_json PASS at 45 · splash gate 360/360 · site surfaces 19/19. Rendered at 1366 and 390: rail 6 with Aurora present, general grid 45 unique entries, 0 broken art, 0px overflow.",
    "merge": "Games 7090b6b"
+  },
+  "_hearth_feel_finding_2026_08_07": {
+   "ruling": "Matt, 2026-08-07: the hearth \"isn't quite a fireplace\". A FEEL finding, not a strobe complaint — the ~2.7Hz measurement was inside the 3Hz rule and stayed inside it.",
+   "what_it_actually_was": "The brief expected the Hearth palette's ambient/glow to be modulated alongside the flames. IT WAS NOT — there was no ambient modulation anywhere, and nothing in the room was driven by `time`. The entire hearth was one line: flick = .8 + sin(time*8)*.12 + sin(time*17)*.08, a uniform scale on two flame beziers. 8 and 17 are coprime integers, so the pattern repeated EXACTLY every 2pi seconds. That is why it read as a lamp on a timer, and the fire lit nothing but itself.",
+   "change": "feel finding: regular pulse -> layered irregular flicker. Value noise over three incommensurate octaves, asymmetric one-pole (quick catch, slow fall), slow envelope allowing near-still lulls. Flames, embers, ceiling glow and window warmth all read the SAME source; the room's share runs through a slower follower.",
+   "numbers_before_after": {
+    "flame peaks/sec": "2.500 -> 1.333 (ceiling 3Hz)",
+    "flame worst frame swing": "23.279 -> 16.271",
+    "whole-canvas worst frame swing": "0.022 -> 0.021",
+    "reduced motion": "0 moving pixels both builds — genuinely static warm glow, OS-as-floor and the live listener untouched"
+   },
+   "tuning_error_worth_keeping": "The first re-authoring measured 0.32 peaks/sec with peak-to-peak 0.55 over NINETY seconds, which looked healthy. Plotted over the four seconds a person actually watches it was almost a flat line. A summary statistic over a long window hid that nothing moved in any window anyone would see. The gain is now set so the WORST four-second stretch travels 0.23 of the flame's scale, against 0.38 for the old build.",
+   "instrument": "tools/measure_hearth_flicker.mjs, one instrument run on both builds, with --self-test proving it recovers 2.706Hz, 1.273Hz and 0 from known inputs at two scales. It took four wrong versions — absolute peak tolerance, no settle, a locus that spanned the wrong object, and no guard against the game's 10s forage respawn desynchronising the two comparison passes.",
+   "noted_not_fixed": "The 2C harness's L4b measures world progress per unit of WALL time, so it is sensitive to render cost. Observed 0.902, 0.947, 1.008 and 1.143 across runs against a +/-10% band. It passes but will flake; the defect it targets sits at 0.400, so the band could be one-sided without losing anything.",
+   "merge": "site eeca5df",
+   "frames": "six before/after pairs across 4s plus the flame-scale trace — /tmp/hearth-frames/hearth-before-after.png"
   }
  },
  {
