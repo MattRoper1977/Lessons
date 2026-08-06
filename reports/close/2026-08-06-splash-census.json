@@ -35,6 +35,24 @@
    "not_separately_gated": "S4 idempotency and S6 running-animation count were not run as named gates for this game; the close is flag-guarded in source (splashDone) and the auto-close is a single timer",
    "shelf_count_after": 43,
    "marker": "does NOT hold NEW — Fracture Engine remains the sole holder"
+  },
+  "_stage2c_launch": {
+   "added": [
+    "Lumina Haven (/luminahaven/, site repo)",
+    "Aurora Links 3D (/auroralinks/, site repo)"
+   ],
+   "classification": "bespoke-accessible — each game's own shipped splash was preserved, not replaced. Both sit outside the derived set that verify_games_splash.mjs walks, for the same reason Fracture Engine and Neon Turf do: that tool derives its targets from Lessons/Games/*.html carrying the canonical inlined-splash marker, and these live in the site repo with bespoke splashes.",
+   "splash_repairs": "BOTH splashes were repaired rather than merely preserved. Neither could be dismissed by Escape; Lumina's closed TWICE on Enter or Space (a keydown handler calling .click() on top of native activation, measured as 2 clicks and two 'Welcome home' toasts); neither returned focus into the app, leaving it on <body>; and in both games the world keydown handler was live BEHIND the splash, so r/w/p/Backspace mutated and persisted state before the player had started. All now route through one splashClosed truth with a capture-phase handler that removes itself.",
+   "gate": "site tools/verify_2c_games.mjs — 31/31 green. The negative control is the PRE-REPAIR ORIGINAL, retained at site tools/2c-pristine/, and it goes 27/29 red; the 2 greens are both declared non-vacuity controls. The harness exits non-zero if any non-designated gate stays green on the defective file.",
+   "audit_and_verification": "18 findings for Lumina Haven and 13 for Aurora Links 3D, every one re-tested against the running game by an adversarial verifier instructed to refute. ALL 31 CONFIRMED, NONE REFUTED. The verifier also corrected three findings and added six the audit had missed.",
+   "shelf_count_after": 45,
+   "marker": "NEITHER holds NEW — Fracture Engine remains the sole holder",
+   "sports_rail": "Aurora Links 3D is a golf game and is deliberately OFF the Sports rail: that rail is the Apex Sports franchise (Apex Kick, Apex Pool, Apex Golf, Apex Tennis, Apex Rally), not a genre. RECORDED AS AN OPEN QUESTION, because it is a judgement: if the rail is ever meant to read as 'sports games' rather than 'the Apex series', Aurora belongs on it.",
+   "hues": {
+    "Lumina Haven": "#A83FBF (from its own --accent #d7a7ff, deepened) — nearest 13.85 Relicforge — Strip the Machine #d05cff, 2nd 14.02 Apex Golf #7C5CFC",
+    "Aurora Links 3D": "#C4F52A (from its own --lime #8dff80, brightened) — nearest 16.62 Biopunk Hive #00FF66, 2nd 20.94 Neon Breach #FFD000",
+    "between the two": 92.45
+   }
   }
  },
  {

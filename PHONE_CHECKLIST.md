@@ -208,3 +208,87 @@ Fracture Engine holds both this release.
 
 - [ ] **Is it fun?** Does the turf layer actually change how you drive, or do
       you just chase the ball and ignore the grid?
+
+---
+
+## Stage 2C — Lumina Haven and Aurora Links 3D
+
+Thirty-one gates pass and the control proves they can fail. None of that makes
+either game *good*, and none of it is a thumb on a real screen. These are the
+checks a container cannot make.
+
+### Lumina Haven — /luminahaven/
+
+- [ ] **Reduced motion, and whether it went too far.** Turn reduced motion on
+      at the OS. The room should go still — no fireplace flicker, no prism
+      spin, no leaf sway, no drifting mist — while plants keep growing and
+      forage keeps appearing. The gate proves motion drops 190x per unit of
+      world progress and that the world does *not* slow down. What it cannot
+      tell you is whether the still room still feels alive or just feels dead.
+
+- [ ] **The Motion button in the settings panel.** With reduced motion set at
+      the OS, that button should be **disabled and say so** — the OS holds the
+      floor. With the OS setting off, it should toggle and persist.
+
+- [ ] **The 44px sweep was done with the panel and mixer OPEN.** That is where
+      the thirteen undersized controls were; the base view had reported zero and
+      that is exactly why they survived. Open the settings panel and the
+      Soundscape Mixer on your phone and try the swatches, the three toggles and
+      the three volume sliders with a thumb. Measured is not the same as usable.
+
+- [ ] **The Soundscape Mixer, with sound on.** Every layer is generated live by
+      Web Audio and no sound files are used, so it is worth hearing on a phone
+      speaker rather than trusting that it exists.
+
+- [ ] **Photo Mode export.** The exported PNG should contain the room only, no
+      interface. Check what actually lands in your camera roll.
+
+- [ ] **Import a layout you exported.** Export, edit nothing, import it back.
+      Then try importing something that is not a layout. The failure path was a
+      real defect — the game used to say "That layout file is not valid" while
+      having already replaced your haven with it — and it now says
+      *"your haven is unchanged"* and means it. Worth confirming with a real
+      file from a real Files app.
+
+- [ ] **The fireplace flicker.** PARKED, NOT FIXED, and recorded rather than
+      quietly passed: it carries a component at about **2.7Hz**, which is under
+      the 3Hz line and therefore inside the rule. It is the closest thing in
+      either game to that line. If it reads as a flicker to you, say so and it
+      comes out — a measurement under a threshold is not the same as comfortable.
+
+- [ ] **Is it actually calm?** It is tagged Calm and sold as having no timers
+      and no fail state. Does it feel that way after ten minutes, or does the
+      forage timer start to nag?
+
+### Aurora Links 3D — /auroralinks/
+
+- [ ] **Reduced motion.** Play the rain hole (hole 3) and the storm hole
+      (hole 5) with reduced motion on. The rain should be thinner *and still* —
+      270 streaks become 81, and they stop scrolling. Thinning alone was not
+      enough, because 30% of a rainstorm still moving is still motion.
+
+- [ ] **WebGL on your actual phone.** The container has software rendering
+      only. Whether nine holes of 3D hold a frame rate on your device is not
+      something that was measured, and no fps claim is made from here.
+
+- [ ] **A real context loss.** Hard to trigger deliberately, but if you ever see
+      the course go black, you should now get the "does not currently provide
+      WebGL" panel rather than a black void behind a live HUD. That was a real
+      defect.
+
+- [ ] **The Course Lab, on a touch screen.** Building a hole with a thumb is a
+      different thing from building one with a mouse. Place a tee, a pin, a
+      bunker and water, then test it.
+
+- [ ] **Call your score.** The whole hook is that the prediction is scored
+      separately from your strokes. Does calling a number before you play change
+      how you play the hole, or do you just call your par and forget it?
+
+- [ ] **Card copy and art on the arcade.** Aurora Links 3D sits at a lime
+      `#C4F52A`, 16.62 from its nearest neighbour. On a real screen in daylight,
+      does it read as its own game next to Biopunk Hive?
+
+- [ ] **The Sports rail question, for you to settle.** Aurora Links 3D is off it
+      on the grounds that the rail is the Apex Sports *series*, not a genre. It
+      is the only golf game on the shelf that is not an Apex title. If you would
+      rather that rail meant "sports games", say so and it moves.
