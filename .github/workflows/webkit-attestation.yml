@@ -1,0 +1,155 @@
+# webkit-attestation.yml — TEMPORARY, verification only. Removed before merge.
+#
+# The container running the game-estate sittings cannot install Playwright
+# WebKit: the download 403s through the agent proxy, so every WebKit half of
+# every matrix has been honestly recorded as NOT RUN. Runners can install it.
+#
+# This runs the phone-portrait WebKit slice over every shelf game plus the two
+# secondary Games/ files, in both reduced-motion states, and uploads the raw
+# results. Chromium runs the same slice alongside so any WebKit-only failure is
+# attributable to the engine rather than to the slice.
+
+on:
+  push:
+    branches: [claude/webkit-attestation]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
+
+      - name: Clone the other two estate repos (public, anonymous)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git site
+          git clone --depth 1 -q https://github.com/MattRoper1977/Games.git gamesrepo
+          echo "site  $(git -C site rev-parse HEAD)"
+          echo "games $(git -C gamesrepo rev-parse HEAD)"
+
+      - name: Build the merged web root (real URL prefixes)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p webroot
+          for f in site/*; do ln -s "$PWD/$f" "webroot/$(basename "$f")"; done
+          mkdir -p webroot/Games && ln -s "$PWD/gamesrepo/games.json" webroot/Games/games.json
+          ln -s "$PWD" webroot/Lessons
+          test -f webroot/games/index.html && test -f webroot/Games/games.json
+          test -f "webroot/Lessons/Games/Trail_Runner.html"
+
+      - name: Install Playwright with WebKit and Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm i -D playwright@1.56.1
+          npx playwright install --with-deps webkit chromium
+          node -e "const p=require('playwright');console.log('webkit exec:',p.webkit.executablePath())"
+
+      - name: Serve
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd webroot && nohup python3 -m http.server 4173 --bind 127.0.0.1 >/dev/null 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/Games/games.json >/dev/null && exit 0; sleep 1; done
+          exit 1
+
+      - name: WebKit + Chromium phone-portrait slice, both RM states
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p wk-evidence
+          cat > wk.js <<'EOF'
+          const { webkit, chromium } = require('playwright');
+          const fs = require('fs');
+          const games = JSON.parse(fs.readFileSync('gamesrepo/games.json', 'utf8')).games;
+          const targets = games.map(g => ({ title: g.title, url: g.href }));
+          targets.push({ title: '[secondary] Voxel_Frontier', url: '/Lessons/Games/Voxel_Frontier.html' });
+          targets.push({ title: '[secondary] Orbital_source', url: '/Lessons/Games/Orbital_source.html' });
+          const BASE = 'http://127.0.0.1:4173';
+          (async () => {
+            const out = [];
+            for (const [name, type] of [['webkit', webkit], ['chromium', chromium]]) {
+              const b = await type.launch();
+              for (const rm of ['no-preference', 'reduce']) {
+                const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true,
+                  isMobile: name === 'chromium', reducedMotion: rm, serviceWorkers: 'block' });
+                for (const t of targets) {
+                  const pg = await ctx.newPage();
+                  const errs = [];
+                  pg.on('pageerror', e => errs.push(String(e.message).slice(0, 160)));
+                  let row = { engine: name, rm, game: t.title, url: t.url };
+                  try {
+                    await pg.goto(BASE + t.url, { waitUntil: 'load', timeout: 30000 });
+                    await pg.waitForTimeout(2600);
+                    Object.assign(row, await pg.evaluate(() => {
+                      const doc = document.documentElement;
+                      let worst = null, max = doc.clientWidth;
+                      if (doc.scrollWidth > doc.clientWidth) {
+                        for (const el of document.querySelectorAll('body *')) {
+                          if (getComputedStyle(el).position === 'fixed') continue;
+                          const r = el.getBoundingClientRect();
+                          if (r.right > max && r.width > 2) { max = r.right; worst = el.tagName.toLowerCase() + (el.id ? '#' + el.id : ''); }
+                        }
+                      }
+                      return { loadOK: true, overflow: doc.scrollWidth - doc.clientWidth, worst,
+                               title: document.title.slice(0, 50), canvases: document.querySelectorAll('canvas').length };
+                    }));
+                  } catch (e) { row.loadOK = false; row.gotoError = String(e.message).slice(0, 140); }
+                  row.pageErrors = errs.slice(0, 3);
+                  out.push(row);
+                  await pg.close();
+                }
+                await ctx.close();
+                console.log(`${name}/${rm}: ${targets.length} targets done`);
+              }
+              await b.close();
+            }
+            fs.writeFileSync('wk-evidence/results.json', JSON.stringify(out, null, 1));
+            // compare engines on the same (game, rm)
+            const key = r => r.game + '|' + r.rm;
+            const wk = new Map(out.filter(r => r.engine === 'webkit').map(r => [key(r), r]));
+            const ch = new Map(out.filter(r => r.engine === 'chromium').map(r => [key(r), r]));
+            const findings = [];
+            for (const [k, w] of wk) {
+              const c = ch.get(k); if (!c) continue;
+              if (!w.loadOK && c.loadOK) findings.push(`WEBKIT-ONLY LOAD FAILURE  ${k}  ${w.gotoError}`);
+              else if ((w.pageErrors || []).length && !(c.pageErrors || []).length) findings.push(`WEBKIT-ONLY PAGE ERROR    ${k}  ${w.pageErrors[0]}`);
+              if ((w.overflow || 0) > 0 && (c.overflow || 0) <= 0) findings.push(`WEBKIT-ONLY OVERFLOW      ${k}  ${w.overflow}px -> ${w.worst}`);
+            }
+            const summary = {
+              targets: targets.length,
+              cells: out.length,
+              webkitLoadFail: out.filter(r => r.engine === 'webkit' && !r.loadOK).length,
+              chromiumLoadFail: out.filter(r => r.engine === 'chromium' && !r.loadOK).length,
+              webkitPageErrors: out.filter(r => r.engine === 'webkit' && (r.pageErrors || []).length).length,
+              webkitOverflow: out.filter(r => r.engine === 'webkit' && (r.overflow || 0) > 0).length,
+              findings,
+            };
+            fs.writeFileSync('wk-evidence/summary.json', JSON.stringify(summary, null, 1));
+            console.log('\n=== SUMMARY ===');
+            console.log(JSON.stringify(summary, null, 1));
+            console.log(findings.length ? `\n${findings.length} WEBKIT-ONLY FINDING(S)` : '\nNO WEBKIT-ONLY FINDINGS');
+            /* exit non-zero on findings: a job that always exits 0 cannot fail,
+               so its green would prove nothing about WebKit. */
+            process.exit(findings.length ? 1 : 0);
+          })();
+          EOF
+          node wk.js | tee wk-evidence/run.log
+
+      - name: Summary to job page
+        if: always()
+        shell: bash
+        run: |
+          { echo '### WebKit attestation'; echo '```'; tail -40 wk-evidence/run.log || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: webkit-attestation, path: wk-evidence, retention-days: 90 }
