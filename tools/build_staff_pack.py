@@ -50,6 +50,14 @@ INCLUDE_FILES = [
     # from inside an AVL-MOUNT marker pair. Without them the loader points at nothing
     # and the We Do panel silently never mounts. README.md in that directory is repo
     # documentation and stays out: only what a deck actually loads ships.
+    # PACK-3: the two LundyLoop staff-training pages. The crawl over the
+    # assembled pack found 4 Humanities lessons linking to Reading_the_Response_Card
+    # by relative path, and that card links on to R_Gate_Calibration_Game. Both
+    # exist in the repo; neither was in scope, so the shipped pack had four dead
+    # links. Same shape as the Art and ASDAN runtime assets above: a directory in
+    # INCLUDE_DIRS does not carry files outside it, so they are named here.
+    "LundyLoop/5_staff_training/Reading_the_Response_Card.html",
+    "LundyLoop/5_staff_training/R_Gate_Calibration_Game.html",
     "Art_Teesside/visual-learning/art-visual-learning.css",
     "Art_Teesside/visual-learning/art-visual-payloads.js",
     "Art_Teesside/visual-learning/art-visual-learning.js",
