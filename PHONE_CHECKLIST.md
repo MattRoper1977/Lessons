@@ -250,11 +250,25 @@ checks a container cannot make.
       *"your haven is unchanged"* and means it. Worth confirming with a real
       file from a real Files app.
 
-- [ ] **The fireplace flicker.** PARKED, NOT FIXED, and recorded rather than
-      quietly passed: it carries a component at about **2.7Hz**, which is under
-      the 3Hz line and therefore inside the rule. It is the closest thing in
-      either game to that line. If it reads as a flicker to you, say so and it
-      comes out — a measurement under a threshold is not the same as comfortable.
+- [x] **The fireplace flicker — RULED ON and RE-AUTHORED 2026-08-07.** Matt's
+      verdict was that it "isn't quite a fireplace" — a feel finding, not a
+      strobe one. Measuring found the whole hearth was one line: two sine waves
+      at 1.273Hz and 2.706Hz on a coprime ratio, so the pattern repeated exactly
+      every 2pi seconds, and the fire lit nothing but itself. It is now layered
+      irregular noise with a quick-catch, slow-fall response, driving the flames,
+      the embers, the ceiling glow and the window warmth from one source.
+
+      | | before | after |
+      |---|---|---|
+      | flame peaks/sec | 2.500 | 1.333 |
+      | flame worst frame swing | 23.279 | 16.271 |
+      | whole-canvas worst swing | 0.022 | 0.021 |
+      | reduced motion | 0 moving px | 0 moving px |
+
+      **Still yours, and it is the only gate that counts here: sofa, lights
+      down.** Does it read as fire now, or just as a quieter ornament? The
+      numbers say the rhythm changed and the ceiling answers the flame; they
+      cannot say it feels warm.
 
 - [ ] **Is it actually calm?** It is tagged Calm and sold as having no timers
       and no fail state. Does it feel that way after ten minutes, or does the
