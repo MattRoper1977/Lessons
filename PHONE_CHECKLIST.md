@@ -71,3 +71,34 @@ With TalkBack/VoiceOver on, focus the seed box in any of Globe Snake / Orbital
 Splash coverage patches and the three expansions (Glitch Clash league, Axiom
 Shift Proofline, Lumins workshop) were parked with their census and constraints
 recorded — they arrive as their own sittings with their own checklists.
+
+---
+
+## 7 · The ten new splashes (added 6 August, second sitting)
+
+Each of these games now opens with the canonical Made by Matt splash. Open any
+of them and check the splash itself, then **tap the "Skip intro" button**:
+
+- [ ] Globe Snake — skip by touch, game underneath does nothing on that tap
+- [ ] Neon Snake Overdrive — same
+- [ ] Neon Siege — same
+- [ ] Neon Garden — same
+- [ ] Orbital — same
+- [ ] Grid Chase — same
+- [ ] Prism — same
+- [ ] Slipstream — same
+- [ ] Kids vs Staff: Showdown — same
+- [ ] Trekkers Trail Runner (Tees Coast) — same
+
+**The thing to watch for:** after the splash disappears you should land on the
+game's normal start screen — one start screen, not two, and nothing should
+already be moving. If a tap on "Skip intro" also does something in the game
+(fires a shot, starts a run), that is the leak the gate is meant to prevent —
+tell Claude which game.
+
+- [ ] With **reduced motion on** in your phone's accessibility settings, open
+      any two of them: the splash should appear fully-formed and hold still,
+      then go. No fade-in, no drawing animation.
+
+Unchanged and deliberately left alone: Trail Runner, Marble and Apex Golf keep
+their own bespoke Made by Matt intros.
