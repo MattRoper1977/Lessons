@@ -102,3 +102,62 @@ tell Claude which game.
 
 Unchanged and deliberately left alone: Trail Runner, Marble and Apex Golf keep
 their own bespoke Made by Matt intros.
+
+---
+
+## Relicforge: Fracture Engine — madebymatt.uk/fracture/
+
+New game, launched 6 August 2026. Everything below is a physical check no gate
+in a container can do. **Nothing here is ticked for you.**
+
+- [ ] **The splash, by touch.** Open `/fracture/` and **tap the screen while the
+      MadeByMatt loading screen is still up.** It should go immediately, and
+      you should land on the main menu — not in the game, and nothing should
+      have been fired, started or selected by that tap. (The gate proves this
+      with synthetic events; your thumb is the real test.)
+
+- [ ] **Frame rate — the one number no gate here could measure.** The build
+      container renders this game through software at about 3 fps, which says
+      nothing about your phone. So: does it actually feel smooth in Ironwood
+      Verge, and does it hold up in the Glitchworks with several enemies
+      active? If it stutters, say which realm and which phone.
+
+- [ ] **Touch controls under the thumb.** Joystick, attack, heavy, dodge, jump,
+      interact and potion. Every one measures over 44px rendered — but are
+      they where your thumb actually is, and can you dodge and attack at the
+      same time without stretching?
+
+- [ ] **The forge under the thumb.** Open the forge panel mid-run and temper
+      something. Are the controls reachable one-handed?
+
+- [ ] **Reduced motion, on the device.** Turn reduced motion on in your phone's
+      accessibility settings, then open the game. Hit-stop should be gone
+      entirely, the camera should not shake, and the splash should not fade.
+      Then check the Settings panel: the reduced-motion switch should show as
+      **disabled with a reason**, because your OS is holding the floor and the
+      switch is not allowed to override it.
+
+- [ ] **Both orientations.** Portrait and landscape, no horizontal scroll, no
+      control pushed off-screen or under the notch.
+
+- [ ] **Save and come back.** Play a few minutes, switch apps (the game should
+      pause itself), come back, then close the tab entirely and reopen
+      `/fracture/`. Continue Adventure should put you back in the same realm
+      with the same level and the same relics.
+
+- [ ] **The Chronicle on a phone.** Press Export Chronicle and open the file it
+      downloads. It should be a readable standalone page on a phone screen —
+      no blank fields, no "undefined", no "NaN".
+
+- [ ] **Card art and the shelf.** On the arcade, does the Fracture Engine card
+      read clearly at phone size, and is the new **Action RPG rail** (two
+      cards: Fracture Engine and Strip the Machine) obviously a pair rather
+      than one game listed twice?
+
+- [ ] **The homepage box.** Fracture Engine now sits at the top of New
+      Releases, above Neon Sync and Neon Breach. Neither of those was
+      displaced — check all three are still there and the poster image loads.
+
+- [ ] **The question no gate answers: is it fun?** Three realms, three classes.
+      Does the hit-stop make combat feel weightier, or just sticky? Is the
+      end-of-realm report a satisfying beat or an interruption?
