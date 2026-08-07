@@ -1,22 +1,19 @@
-name: Repair Orbital pause-resume state
+name: Apply verified Lessons runtime repairs
 
 on:
   push:
     branches: [codex/full-repair-upgrade-2026-08-07]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: repair-orbital-pause-${{ github.event.pull_request.number || github.ref }}
+  group: apply-verified-lessons-repairs
   cancel-in-progress: true
 
 jobs:
   repair:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -25,198 +22,69 @@ jobs:
           ref: codex/full-repair-upgrade-2026-08-07
           fetch-depth: 0
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Preserve the reproducing controls and patch both copies
+      - name: Preserve positive controls
         run: |
           cp Games/Orbital_source.html /tmp/Orbital_source_before.html
           cp Games/Orbital.html /tmp/Orbital_before.html
-          python - <<'PY'
-          from pathlib import Path
+          cp index.html /tmp/Lessons_index_before.html
 
-          def replace_once(text, old, new, label):
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f'{label}: expected one match, found {count}')
-              return text.replace(old, new)
+      - name: Apply and syntax-check the verified payload
+        run: |
+          python .github/repair-payload/apply_repairs.py | tee /tmp/lessons-repair-report.json
+          python -m py_compile .github/repair-payload/apply_repairs.py
+          node --check .github/repair-payload/verify_orbital_pause.cjs
 
-          source_path = Path('Games/Orbital_source.html')
-          source = source_path.read_text(encoding='utf-8')
-          source = replace_once(
-              source,
-              "let seed=1, gameState='MENU';",
-              "let seed=1, gameState='MENU', pauseReturnState='AIM';",
-              'readable state declaration',
-          )
-          source = replace_once(
-              source,
-              "function togglePause(){ if(gameState==='AIM'||gameState==='FLY'){ gameState='PAUSE'; show('pause'); } else if(gameState==='PAUSE'){ document.getElementById('pause').classList.add('hidden'); gameState='AIM'; } }",
-              "function togglePause(){ if(gameState==='AIM'||gameState==='FLY'){ pauseReturnState=gameState; gameState='PAUSE'; show('pause'); } else if(gameState==='PAUSE'){ document.getElementById('pause').classList.add('hidden'); gameState=(pauseReturnState==='FLY'&&probe.flying)?'FLY':'AIM'; } }",
-              'readable pause function',
-          )
-          source_path.write_text(source, encoding='utf-8')
+      - name: Prove the old Orbital defect and repaired state machine
+        run: |
+          node .github/repair-payload/verify_orbital_pause.cjs \
+            /tmp/Orbital_source_before.html \
+            /tmp/Orbital_before.html \
+            Games/Orbital_source.html \
+            Games/Orbital.html
 
-          release_path = Path('Games/Orbital.html')
-          release = release_path.read_text(encoding='utf-8')
-          release = replace_once(
-              release,
-              'Qe=1,Ve="MENU",ia=null',
-              'Qe=1,Ve="MENU",pauseReturnState="AIM",ia=null',
-              'bundled state declaration',
-          )
-          release = replace_once(
-              release,
-              'function ca(){Ve==="AIM"||Ve==="FLY"?(Ve="PAUSE",Qi("pause")):Ve==="PAUSE"&&(document.getElementById("pause").classList.add("hidden"),Ve="AIM")}',
-              'function ca(){Ve==="AIM"||Ve==="FLY"?(pauseReturnState=Ve,Ve="PAUSE",Qi("pause")):Ve==="PAUSE"&&(document.getElementById("pause").classList.add("hidden"),Ve=pauseReturnState==="FLY"&&We.flying?"FLY":"AIM")}',
-              'bundled pause function',
-          )
-          release_path.write_text(release, encoding='utf-8')
-          PY
-
-      - name: Syntax-check every inline script in both game files
+      - name: Prove the poster route and bytes
         run: |
           python - <<'PY'
-          import re
-          import subprocess
-          import tempfile
+          import hashlib
           from pathlib import Path
 
-          for target in ('Games/Orbital_source.html', 'Games/Orbital.html'):
-              html = Path(target).read_text(encoding='utf-8')
-              scripts = [
-                  (attrs, body)
-                  for attrs, body in re.findall(r'<script([^>]*)>(.*?)</script>', html, re.S | re.I)
-                  if 'src=' not in attrs.lower() and body.strip()
-              ]
-              if not scripts:
-                  raise SystemExit(f'{target}: no inline scripts found')
-              for attrs, body in scripts:
-                  suffix = '.mjs' if 'type="module"' in attrs.lower() or "type='module'" in attrs.lower() else '.js'
-                  with tempfile.NamedTemporaryFile('w', suffix=suffix, encoding='utf-8') as handle:
-                      handle.write(body)
-                      handle.flush()
-                      subprocess.run(['node', '--check', handle.name], check=True)
-              print(f'{target}: {len(scripts)} inline script block(s) pass node --check')
+          before = Path('/tmp/Lessons_index_before.html').read_text(encoding='utf-8')
+          after = Path('index.html').read_text(encoding='utf-8')
+          poster = Path('assets/video/poster-art.jpg').read_bytes()
+          assert before.count('src="/assets/video/poster-art.jpg"') == 1
+          assert after.count('src="assets/video/poster-art.jpg"') == 1
+          assert 'src="/assets/video/poster-art.jpg"' not in after
+          assert len(poster) == 9114
+          assert hashlib.sha256(poster).hexdigest() == '7a2caf724d81f6ff85c52eb640baf145513f704aa54dd4fd9e2cc30581493122'
+          print('POSTER SOURCE PASS — absolute 404 route removed; verified JPEG installed')
           PY
-
-      - name: Build the pause-state verifier
-        run: |
-          cat > /tmp/verify-orbital-pause.cjs <<'JS'
-          const fs = require('fs');
-
-          function extractFunction(text, name, useLast = false) {
-            const marker = `function ${name}(){`;
-            const start = useLast ? text.lastIndexOf(marker) : text.indexOf(marker);
-            if (start < 0) throw new Error(`${name}: function marker missing`);
-            const braceStart = text.indexOf('{', start);
-            let depth = 0;
-            let quote = '';
-            let escaped = false;
-            for (let i = braceStart; i < text.length; i++) {
-              const ch = text[i];
-              if (quote) {
-                if (escaped) escaped = false;
-                else if (ch === '\\') escaped = true;
-                else if (ch === quote) quote = '';
-                continue;
-              }
-              if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
-              if (ch === '{') depth++;
-              else if (ch === '}' && --depth === 0) return text.slice(start, i + 1);
-            }
-            throw new Error(`${name}: unterminated function`);
-          }
-
-          function exerciseReadable(html) {
-            const fn = extractFunction(html, 'togglePause');
-            const build = new Function(`
-              let gameState='MENU', pauseReturnState='AIM';
-              let probe={flying:false};
-              let shown=0, hidden=0;
-              const document={getElementById(){return {classList:{add(){hidden++;}}}}};
-              function show(id){if(id==='pause')shown++;}
-              ${fn}
-              return {
-                set(state, flying){gameState=state; probe.flying=flying;},
-                toggle:togglePause,
-                read(){return {gameState,pauseReturnState,shown,hidden};}
-              };
-            `);
-            return exercise(build());
-          }
-
-          function exerciseBundled(html) {
-            const fn = extractFunction(html, 'ca', true);
-            const build = new Function(`
-              let Ve='MENU', pauseReturnState='AIM';
-              let We={flying:false};
-              let shown=0, hidden=0;
-              const document={getElementById(){return {classList:{add(){hidden++;}}}}};
-              function Qi(id){if(id==='pause')shown++;}
-              ${fn}
-              return {
-                set(state, flying){Ve=state; We.flying=flying;},
-                toggle:ca,
-                read(){return {gameState:Ve,pauseReturnState,shown,hidden};}
-              };
-            `);
-            return exercise(build());
-          }
-
-          function exercise(game) {
-            const cases = [];
-            game.set('AIM', false); game.toggle(); const aimPaused = game.read(); game.toggle(); const aimResumed = game.read();
-            cases.push({name:'aim', paused:aimPaused.gameState, resumed:aimResumed.gameState});
-            game.set('FLY', true); game.toggle(); const flyPaused = game.read(); game.toggle(); const flyResumed = game.read();
-            cases.push({name:'fly', paused:flyPaused.gameState, resumed:flyResumed.gameState});
-            game.set('FLY', false); game.toggle(); game.toggle(); const staleResumed = game.read();
-            cases.push({name:'stale-flight', resumed:staleResumed.gameState});
-            return {cases, state:game.read()};
-          }
-
-          const expectGap = process.argv.includes('--expect-gap');
-          const paths = process.argv.filter(arg => !arg.startsWith('--')).slice(2);
-          if (paths.length !== 2) throw new Error('usage: [--expect-gap] readable.html bundled.html');
-          const readable = exerciseReadable(fs.readFileSync(paths[0], 'utf8'));
-          const bundled = exerciseBundled(fs.readFileSync(paths[1], 'utf8'));
-
-          function hasGap(result) {
-            return result.cases.find(x => x.name === 'fly').resumed !== 'FLY';
-          }
-          function assertFixed(result, label) {
-            const aim = result.cases.find(x => x.name === 'aim');
-            const fly = result.cases.find(x => x.name === 'fly');
-            const stale = result.cases.find(x => x.name === 'stale-flight');
-            if (aim.paused !== 'PAUSE' || aim.resumed !== 'AIM') throw new Error(`${label}: AIM pause/resume failed ${JSON.stringify(aim)}`);
-            if (fly.paused !== 'PAUSE' || fly.resumed !== 'FLY') throw new Error(`${label}: FLY pause/resume failed ${JSON.stringify(fly)}`);
-            if (stale.resumed !== 'AIM') throw new Error(`${label}: stale flight did not fall back to AIM ${JSON.stringify(stale)}`);
-          }
-
-          if (expectGap) {
-            if (!hasGap(readable) || !hasGap(bundled)) throw new Error(`negative control did not reproduce: ${JSON.stringify({readable,bundled})}`);
-            console.log('POSITIVE CONTROL PASS — both pre-fix copies resume a paused flight as AIM');
-          } else {
-            assertFixed(readable, 'readable');
-            assertFixed(bundled, 'bundled');
-            console.log('ORBITAL PAUSE PASS — AIM resumes AIM, live flight resumes FLY, stale flight safely resumes AIM');
-          }
-          console.log(JSON.stringify({expectGap,readable,bundled}, null, 2));
-          JS
-
-      - name: Prove the original defect and the repaired behaviour
-        run: |
-          node /tmp/verify-orbital-pause.cjs --expect-gap /tmp/Orbital_source_before.html /tmp/Orbital_before.html
-          node /tmp/verify-orbital-pause.cjs Games/Orbital_source.html Games/Orbital.html
+          python -m http.server 4175 --bind 127.0.0.1 > /tmp/lessons-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            curl -fsS http://127.0.0.1:4175/ >/dev/null && break
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:4175/assets/video/poster-art.jpg -o /tmp/served-poster.jpg
+          cmp assets/video/poster-art.jpg /tmp/served-poster.jpg
           git diff --check
 
-      - name: Commit the two repairs and remove this one-shot workflow
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+      - name: Commit only the repaired product files and remove the packet
         run: |
+          rm -rf .github/repair-payload
           rm -f .github/workflows/repair-orbital-pause.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Games/Orbital_source.html Games/Orbital.html .github/workflows/repair-orbital-pause.yml
-          git commit -m 'fix: resume Orbital flights after pause'
+          git add Games/Orbital_source.html Games/Orbital.html index.html assets/video/poster-art.jpg \
+            .github/repair-payload .github/workflows/repair-orbital-pause.yml
+          git diff --cached --check
+          git commit -m 'fix: repair Orbital pause and Lessons poster route'
           git push origin HEAD:codex/full-repair-upgrade-2026-08-07
