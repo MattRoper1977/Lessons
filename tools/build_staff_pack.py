@@ -407,6 +407,7 @@ LAUNCH_SUBS = {
     "Living_Independently": "Living_Independently", "PEQ": "PEQ",
     "Vocational": "Vocational",
 }
+HONESTY_LINE = ""
 LOGO_URI = [None, None]   # filled by build_mirror, read by the index writer
 LOGO_HTML = [None]        # the rendered lockup, reused by generated pages
 LOGO_SHA = "b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04"
@@ -743,6 +744,43 @@ earlier pack, replace this file.)
 """
 
 
+OFL_SLUG = {"Bebas Neue": "bebasneue", "Barlow Condensed": "barlowcondensed",
+            "DM Sans": "dmsans", "JetBrains Mono": "jetbrainsmono",
+            "DM Serif Display": "dmserifdisplay", "Inter": "inter"}
+
+
+def write_font_licences(pack, families):
+    """Every vendored family's OFL text, fetched from google/fonts and shipped.
+
+    All six live under `ofl/` in that repo, which is what makes them SIL OFL 1.1
+    rather than Apache-2.0 (a handful of Google families are the latter -- the
+    directory is the authority, not an assumption)."""
+    import urllib.request
+    out = ["FONT LICENCES", "=" * 74, "",
+           "This pack embeds web fonts directly in the pages that use them, so it makes",
+           "no network request. Embedding is redistribution, so the licences travel with",
+           "them.", "",
+           "All families below are licensed under the SIL Open Font License, Version 1.1,",
+           "which permits redistribution and embedding. Verified per family against the",
+           "`ofl/` directory of github.com/google/fonts.", ""]
+    for fam in sorted(families):
+        slug = OFL_SLUG.get(fam)
+        out += ["-" * 74, f"{fam} — SIL Open Font License 1.1", "-" * 74, ""]
+        if not slug:
+            out += [f"  (licence text not bundled: no known slug for {fam};",
+                    "   see https://fonts.google.com/specimen/" + fam.replace(" ", "+"), ""]
+            continue
+        try:
+            txt = urllib.request.urlopen(
+                f"https://raw.githubusercontent.com/google/fonts/main/ofl/{slug}/OFL.txt",
+                timeout=45).read().decode("utf-8", "replace")
+            out += [txt.rstrip(), ""]
+        except Exception as e:
+            out += [f"  (could not fetch: {e})",
+                    f"  https://raw.githubusercontent.com/google/fonts/main/ofl/{slug}/OFL.txt", ""]
+    (pack / "FONT_LICENCES.txt").write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
 def build_mirror(logo_path, out_root):
     keep, dropped = in_scope()
     print(f"scope: {len(keep)} files in, {len(dropped)} deliberately excluded")
@@ -783,7 +821,7 @@ def build_mirror(logo_path, out_root):
                 new, _b = brand_header(new, mark_html)    # or the two copies disagree
             new, fam, fb = vendor_fonts(new, FONT_CACHE)
             if fam:
-                font_pages += 1; font_families |= {fam}; font_bytes += fb
+                font_pages += 1; font_families |= set(fam); font_bytes += fb
             new, n = rewrite_links(new, rel, fwd)
             rewrites += n
             if log.get("logo_swapped"): logo_pages += 1
@@ -810,6 +848,11 @@ def build_mirror(logo_path, out_root):
         core = re.sub(r'\s+', " ", core).strip()[:400]
         assert core in re.sub(r'\s+', " ", got), f"R-A01 VIOLATION: conditions block altered in {relstr}"
     print(f"R-A01: {len(assessed)} assessed conditions blocks intact")
+
+    # E4 -- the licence ships with the fonts. Redistributing an OFL font without
+    # its licence is a licence breach, and a pack that embeds fonts IS redistribution.
+    if font_families:
+        write_font_licences(pack, font_families)
 
     # the Careers week-order note travels INTO the folder it warns about
     (pack / "ASDAN PEQ/Build/Careers/0_WEEK_ORDER.txt").write_text(WEEK_ORDER_NOTE, encoding="utf-8")
@@ -923,6 +966,14 @@ def inline_js_check(pack):
 
 def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
                hub_results, orphans, manifest_total):
+    global HONESTY_LINE
+    HONESTY_LINE = (
+        f"The Progress Schools logo is on {logo_pages} of "
+        f"{len(list(pack.rglob('*.html')))} pages. Those are every page that previously\n"
+        "  carried a visible mark, plus the pages this build authors or re-emits (the strand\n"
+        "  chooser, the changes page, and the four hubs at both their root and in-folder\n"
+        "  paths). The rest never carried a visible mark and were not given one: they get the\n"
+        "  x-brand meta tag and the credit line only.")
     """PLACEMENT_GUIDE + TAXONOMY_MAP + README_FIRST.
 
     C5: TAXONOMY_MAP and PLACEMENT_GUIDE are build artefacts for Matt, not staff
@@ -1012,7 +1063,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
             g.append(f"    DROPPED {dest}")
             g.append(f"            could not be made to resolve in place ({', '.join(sorted(miss))[:60]}).")
             g.append(f"            RECOMMENDATION: delete this duplicate and use the root hub.")
-    g += ["", "=" * 74, ""]
+    g += ["", "-" * 74, "", "LOGO COVERAGE", "", "  " + HONESTY_LINE, "", "=" * 74, ""]
     (notes / "PLACEMENT_GUIDE.txt").write_text("\n".join(g) + "\n", encoding="utf-8")
 
     # ---- TAXONOMY_MAP.md
@@ -1115,8 +1166,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "    the plain START_HERE is now a chooser page linking to all five.",
          "  * The four in-folder hub copies are rebuilt at their own depth rather than being",
          "    hand-copied from the root (which would have produced dead links).",
-         f"  * The logo is on {logo_pages} pages - every page that previously carried a visible",
-         "    mark. Pages that never had one get the meta tag and credit only.", "",
+         "  * " + HONESTY_LINE, "",
          "-" * 74, "WHAT THIS PACK DOES NOT CLAIM",
          "  The estate is not clean. This covers the in-scope areas only and leaves the legacy",
          "  trees, the _Legacy_2025-26 archives, Planning, Students material and the personal",
@@ -1233,7 +1283,12 @@ def mirror_main(logo, out):
     # CHANGES_SINCE.html and the chooser page ungated.
     c1 = c1_collision_report(pack, fwd)
     write_changes_since(pack, {"pages": len(list(pack.rglob("*.html")))}, LOGO_HTML[0])
-    write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, miss,
+    # Count logos on disk BEFORE writing the docs. logo_pages is only the number of
+    # Made-by-Matt marks replaced; the pages this build authors carry one too, and a
+    # guide that quotes the subtotal understates its own pack.
+    disk_logos = sum(1 for f in pack.rglob("*.html")
+                     if 'alt="Progress Schools"' in f.read_text(encoding="utf-8", errors="ignore"))
+    write_docs(pack, keep, fwd, back, clashes, disk_logos, rewrites, miss,
                hub_results, orphans, 0)
     total, by_ext, by_top = write_manifest(pack)
     print(f"\nC4 MANIFEST: {total} entries  |  by extension: {dict(by_ext)}")
@@ -1242,9 +1297,6 @@ def mirror_main(logo, out):
     js = inline_js_check(pack)
     print(f"INLINE JS: {'0 syntax errors' if not js else str(len(js)) + ' BROKEN'}")
     for f in js[:10]: print("  FAIL:", f)
-    # count logos on disk, not from the loop counter -- generated pages carry one too
-    disk_logos = sum(1 for f in pack.rglob("*.html")
-                     if 'alt="Progress Schools"' in f.read_text(encoding="utf-8", errors="ignore"))
     print(f"LOGO: {disk_logos} of {notes['html_files']} pages carry the lockup "
           f"({logo_pages} replaced a Made-by-Matt mark, {disk_logos - logo_pages} on generated pages)")
     print("\nVERIFY:", notes)
@@ -1625,13 +1677,15 @@ def vendor_fonts(text, cache):
             blocks.append(blk.replace(
                 m.group(1), "data:font/woff2;base64," + base64.b64encode(woff).decode()))
     assert blocks, f"font vendoring produced nothing for {hrefs[:1]}"
-    style = ("\n<style data-vendored-fonts=\"progress-schools\">\n/* Vendored from Google Fonts "
-             "(SIL Open Font License). Inlined so this pack makes no network request. */\n"
+    style = ("\n<style data-vendored-fonts=\"progress-schools\">\n/* "
+             + ", ".join(sorted(families)) + " -- vendored from Google Fonts under the\n"
+             "   SIL Open Font License 1.1. Full licence text: FONT_LICENCES.txt at the pack root.\n"
+             "   Inlined so this pack makes no network request. */\n"
              + "\n".join(blocks) + "\n</style>")
     n0 = len(text)
     text = FONT_LINK.sub("", text)               # remove every link AND the preconnects
     text = re.sub(r'</head>', style + "\n</head>", text, count=1, flags=re.I)
-    return text, len(families), len(text) - n0
+    return text, sorted(families), len(text) - n0
 
 
 
