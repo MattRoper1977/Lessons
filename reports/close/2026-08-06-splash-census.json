@@ -100,6 +100,28 @@
    "noted_not_fixed": "The 2C harness's L4b measures world progress per unit of WALL time, so it is sensitive to render cost. Observed 0.902, 0.947, 1.008 and 1.143 across runs against a +/-10% band. It passes but will flake; the defect it targets sits at 0.400, so the band could be one-sided without losing anything.",
    "merge": "site eeca5df",
    "frames": "six before/after pairs across 4s plus the flame-scale trace — /tmp/hearth-frames/hearth-before-after.png"
+  },
+  "_live_legs_closed_2026_08_07": {
+   "outcome": "2B AND 2C LIVE LEGS CLOSED TOGETHER. 30/30 live gates green, 0 red, run 31158141868 on claude/fracture-live-verify. The negative control job passed first, as required, so the green carries information.",
+   "served_hashes": {
+    "/Games/games.json": "fc9c4cff65d69692… (22711 bytes) — byte-equal to Games main 7090b6b",
+    "/fracture/": "6587ee4be80923f6… (236523 bytes)",
+    "/neonturf/": "4d96dd749452e499… (120457 bytes)",
+    "/luminahaven/": "07f74e8c4bdd68c9… (84730 bytes) — the hearth build",
+    "/auroralinks/": "48a9a60008c9bd17… (71229 bytes)"
+   },
+   "rendered": "45 entries served · 45 distinct grid entries rendered · 64/64 card images decoded at 1366 and 390 · Sports rail 6 with Aurora Links 3D present and 6/6 distinct card art and titles · sole NEW holder Relicforge: Fracture Engine · 0px overflow both widths · no 4xx/5xx · zero off-origin requests from Fracture and Neon Turf",
+   "why_it_took_three_attempts": "Not content. GitHub's 2026-08-06 incident left Pages build jobs unable to acquire runners: they sat with runner_id 0 and were cancelled at exactly 15 minutes, on both repos, while other Actions jobs got runners in seconds. The site recovered on its own at 22:38 that evening; the Games deploy for 7090b6b had failed at 20:57 during the outage and was simply never retried. One re-run this morning built in 22 seconds and deployed. The content had been correct and merged throughout — publication was the debt.",
+   "signature_for_next_time": "pages-build-deployment build job with runner_id 0, cancelled at 15:00 elapsed, while non-Pages jobs on the same repo acquire runners = Pages degraded, not a content defect. Do not burn retries against it."
+  },
+  "_l4b_band_ruling_2026_08_07": {
+   "ruling": "One-sided floor, 0.75. The +/-10% band flaked because the measurement is world progress per unit of WALL time and therefore render-cost sensitive.",
+   "why_the_upper_side_was_wrong": "With a fixed timestep the simulation cannot run fast. A ratio above 1 only means the reduced-motion path had less to draw and fitted more frames into the two seconds. There is no defect on that side to catch.",
+   "how_the_floor_was_derived": "The defect is a dt clamp and its ratio is set by the clamp against the frame interval: 0.02/0.0333 = 0.60 at 30fps, 0.02/0.05 = 0.40 at 20fps. The retained pre-repair original measures 0.400, so the defect family reaches about 0.60. The lowest healthy reading ever seen at a green tip is 0.902. 0.75 sits 25% above the worst-case defect and 17% below the lowest healthy reading.",
+   "still_bites": "red at 0.471 against the retained pre-repair original; control run 27/29 red, unchanged",
+   "flake_free": "six consecutive runs at tip — 1.008, 0.932, 0.977, 1.083, 0.946, 1.148 — all pass. The 1.148 WOULD HAVE FAILED the old band: the flake caught in the act on the run meant to demonstrate stability.",
+   "noted_not_fixed": "One of the five runs showed 3 OTHER gates red while L4b passed at 0.932; that run had heavy concurrent CPU load and the isolated clean run afterwards was 31/31. Which three was not captured, so they are not named. The harness has timing-sensitive gates beyond L4b that can flake under contention — a finding, not a claim.",
+   "merge": "site 7266aa9"
   }
  },
  {
