@@ -2510,3 +2510,18 @@ the pass brief withheld.**
   failed at 20:57 was still failed the next morning, and one re-run then built in 22 seconds. Sweep
   for stale in-outage failures once the signature clears, rather than assuming recovery republished
   anything.
+
+- **A null grep result is not evidence of absence — match both quote styles, and trace write wrappers
+  before declaring a key absent.** A phase-0 derivation of Glitch Clash reported two things that were
+  simply untrue, and both were the same mistake wearing different clothes. *"There is no progress save
+  key"* — there is: `glitchclash_save`, holding the whole save object. It was missed because the game
+  writes through `store().setItem(...)`, a wrapper that falls back to an in-memory object when
+  localStorage throws, so a grep for `localStorage\.\w+Item\(` found only the four settings keys.
+  *"GAME_VERSION is absent"* — it is `"2.0.0"`; the grep was `GAME_VERSION\s*=\s*'` and the file uses
+  double quotes. Neither error was caught by re-reading the ledger, because the ledger agreed with
+  itself. **Before writing "absent" about any identifier: search both quote styles (and backticks),
+  and follow every persistence call through its wrapper to the real API.** The stakes are not
+  cosmetic — the first error would have sent the next sitting to build a "first-write proof" for a
+  save that already existed, and the second would have had it hunting a version anchor to widen that
+  was never missing. An absence is a claim like any other and needs a method behind it, not a quiet
+  grep that returned nothing.
