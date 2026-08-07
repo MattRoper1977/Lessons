@@ -2485,3 +2485,18 @@ the pass brief withheld.**
   them by two orders of magnitude (repaired 189.5x, pristine 0.9x). **When a gate and the defect
   it targets can both be satisfied by the same wrong mechanism, the gate is measuring the wrong
   quantity.**
+
+- **A null grep result is not evidence of absence — match both quote styles, and trace write wrappers
+  before declaring a key absent.** A phase-0 derivation of Glitch Clash reported two things that were
+  simply untrue, and both were the same mistake wearing different clothes. *"There is no progress save
+  key"* — there is: `glitchclash_save`, holding the whole save object. It was missed because the game
+  writes through `store().setItem(...)`, a wrapper that falls back to an in-memory object when
+  localStorage throws, so a grep for `localStorage\.\w+Item\(` found only the four settings keys.
+  *"GAME_VERSION is absent"* — it is `"2.0.0"`; the grep was `GAME_VERSION\s*=\s*'` and the file uses
+  double quotes. Neither error was caught by re-reading the ledger, because the ledger agreed with
+  itself. **Before writing "absent" about any identifier: search both quote styles (and backticks),
+  and follow every persistence call through its wrapper to the real API.** The stakes are not
+  cosmetic — the first error would have sent the next sitting to build a "first-write proof" for a
+  save that already existed, and the second would have had it hunting a version anchor to widen that
+  was never missing. An absence is a claim like any other and needs a method behind it, not a quiet
+  grep that returned nothing.

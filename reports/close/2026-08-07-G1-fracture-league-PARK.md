@@ -1,7 +1,76 @@
-# G1 — Glitch Clash: Fracture League — PARKED at the phase-0 boundary
+# G1 — Glitch Clash: Fracture League
 
-**Status: PARKED at phase 0, second pass.** Branch `claude/g1-fracture-league`
-carries this ledger and nothing else. No game file has been touched.
+**P1 SHIPPED. Parked at the P1/P2 boundary.** The phase-0 derivation below is
+retained, corrections and all, because it is the evidence P1 was built on.
+
+## Status
+
+| phase | state |
+|---|---|
+| P0 derivation | complete (below, with its two self-corrections shown) |
+| **P1 league core** | **SHIPPED** — seeded route, own key, migration proven, playable |
+| P2 rivals + Fracture Cards | **NOT STARTED — this is the park boundary** |
+| P3 recap + polish | not started |
+
+G2 is not started, per AM9.
+
+## The triple key convention — deliberate, and recorded so no audit "fixes" it
+
+| key | holds | status |
+|---|---|---|
+| `glitchclash_save` | all campaign progress, `SAVE_VERSION 3` | **live, never renamed** (R6) |
+| `gc_muted` `gc_crt` `gc_music` `gc_theme` | settings | **live, never renamed** (R6) |
+| `mbm_glitchclash_league_v1` | league state only | new, house convention |
+
+Three shapes on purpose. The first two hold real players' progress and settings,
+so renaming them is forbidden; the third is new and follows the house rule. A
+future audit that "tidies" any of the first two breaks live saves.
+
+**League state is NOT nested in SV.** `Engine.sanitizeSave` rebuilds SV from
+`DEFAULT_SAVE()` and then stamps `sv.v = SAVE_VERSION`. An unrecognised field
+would survive the `Object.assign` with nothing validating it, and a v3 save would
+start meaning two different things depending on whether a league had been played.
+Its own key means a v3 save with no league block is not a case the SV path can
+even observe — permanently valid by construction.
+
+## Mode composition — what the league does with each existing mode's hook
+
+| existing mode | hook | what the league does |
+|---|---|---|
+| Endless Run | `nextEndlessRound()` / `endlessAdvance()` driver | **REUSES.** The league is a third plan on the same loop, exactly as the Weekly Gauntlet is a second one. No new battle loop. |
+| Weekly Gauntlet | `endlessRun.weekly` fixed plan | **MIRRORS, does not touch.** The league sets `endlessRun.league`; a weekly run is proven (L8) not to be mistaken for one. |
+| Run Modifiers | `endlessRun.mods` | **IGNORES for P1.** The league runs with `mods = []`. Composing league + modifiers is a P2/P3 question, deliberately not answered yet. |
+| Time Attack | `startRunClock()` / `clockActive()` | **EXPLICITLY OFF.** `startLeague()` calls `stopRunClock()`. A season is not a race, and a clock-driven league would edge toward the wall-clock rule the arena rotation exists to avoid. |
+| Daily Clash | `opts.daily` + `Engine.dailyIndex` | **UNTOUCHED.** Its deterministic date seed is the family the league's seed extends, not a thing the league consumes. |
+
+## What P1 shipped
+
+- A seeded five-leg route that is a pure function of the seed and never enters
+  campaign stages 1–3 (the locked teaching space).
+- The run seed owning the clash ring's target arc — *where you must tap* is what
+  the run asks of you, so it is run state, not decoration. Free-random outside a
+  league run, so the other four modes are unchanged.
+- `mbm_glitchclash_league_v1` with its own sanitiser; seven hostile blobs
+  sanitise rather than throw.
+- A migration proof on a **real captured** pre-expansion save, written by the
+  game's own `save()` rather than hand-typed.
+- Playable from the real home screen.
+- Eleven suites green; 21 new gates, tamper-proven both ways.
+
+**Zero of P1's 212 added lines touch reduced motion, Calm Mode, flash or
+animation.** The Calm/`reduce-motion` shared wiring is intact. Glitch Clash does
+not carry the `mbm-splash-inline` marker, so it is outside
+`verify_games_splash.mjs`'s derived set by design — same classification as
+Fracture Engine and Neon Turf; its a11y/contrast cover is `gc-a11y` + `gc-hc`,
+both green.
+
+## Why the park is here
+
+P2 is rivals and Fracture Cards — *truthful visible rival intent* and *cards
+that alter decisions, not just damage*, with the soft-loss branch measurably
+intact under every card. That is a design phase, not a plumbing one, and it
+wants a fresh budget rather than the tail of this one. P1 is complete, green and
+playable, so it merges; P2 starts clean.
 
 **This is the corrected ledger.** The first version got two derivations wrong and
 they are recorded below rather than quietly fixed, because this document is the
