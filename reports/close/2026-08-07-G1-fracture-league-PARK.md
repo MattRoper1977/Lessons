@@ -39,9 +39,31 @@ even observe — permanently valid by construction.
 |---|---|---|
 | Endless Run | `nextEndlessRound()` / `endlessAdvance()` driver | **REUSES.** The league is a third plan on the same loop, exactly as the Weekly Gauntlet is a second one. No new battle loop. |
 | Weekly Gauntlet | `endlessRun.weekly` fixed plan | **MIRRORS, does not touch.** The league sets `endlessRun.league`; a weekly run is proven (L8) not to be mistaken for one. |
-| Run Modifiers | `endlessRun.mods` | **IGNORES for P1.** The league runs with `mods = []`. Composing league + modifiers is a P2/P3 question, deliberately not answered yet. |
+| Run Modifiers | `endlessRun.mods` | **ANSWERED IN P2 — see the decision table below.** Four of the five are legal in a league; Time Attack is excluded. |
 | Time Attack | `startRunClock()` / `clockActive()` | **EXPLICITLY OFF.** `startLeague()` calls `stopRunClock()`. A season is not a race, and a clock-driven league would edge toward the wall-clock rule the arena rotation exists to avoid. |
 | Daily Clash | `opts.daily` + `Engine.dailyIndex` | **UNTOUCHED.** Its deterministic date seed is the family the league's seed extends, not a thing the league consumes. |
+
+## §1 — The Run Modifiers decision (P2, and it is not deferred again)
+
+**The load-bearing fact, derived not assumed:** `runRing` reads exactly three
+things — `GCX3.ringStart`, `SV.settings.calm`, and the `reduce-motion` class.
+**It references no modifier at all.** So "same seed = same taps required"
+survives every modifier automatically, and the only question left per modifier
+is whether its own effect is deterministic.
+
+| modifier | what it actually does | acts on | verdict |
+|---|---|---|---|
+| **Hardcore** `hardcore` | `drawRound = round + 4` — enemies at round-5 strength, bosses immediately | `endlessPool()` draw **and** `GCX2.scaleGlitch` | **LEGAL.** In a league the stage comes from the seeded route, never from `endlessPool`, so the random-draw half is inert; only the number-scaling half applies and that is a pure function of the round. |
+| **Purist** `noboons` | suppresses the between-round boon pick | pure gating | **LEGAL.** No randomness, no ring, no clash maths. |
+| **Brittle** `brittle` | player `maxhp / 1.25` | fighter numbers, before Engine | **LEGAL.** Scales inputs; Engine still resolves by the same rules. |
+| **Sudden Death** `swift` | both sides `atk × 1.40` | fighter numbers, before Engine | **LEGAL.** Scales the inputs to `dmg()`, so payoffs get bigger — but the soft-loss FACTOR `1.3 - skill*0.5` is a multiplier applied after, so the *ratio* between a missed and a perfect lost clash is untouched. Verified by gate, not by argument. |
+| **Time Attack** `clock` | 90s wall-clock deadline, +30s a round | `runClock` | **EXCLUDED.** Two independent reasons, either sufficient. Matt-ratified: *a season is not a race*. And it is the one modifier that is genuinely non-deterministic — it reads `Date.now()`, so a seeded season could end differently on a slower phone. Excluding it keeps the league's promise honest. |
+
+**Why exclusion is the honest answer for Time Attack rather than a fix.** The
+league's whole claim is that a seed reproduces a season. A wall clock cannot be
+folded into a seeded contract without either freezing it (which stops being Time
+Attack) or letting device speed decide outcomes (which stops being reproducible).
+There is no third option worth shipping.
 
 ## What P1 shipped
 
