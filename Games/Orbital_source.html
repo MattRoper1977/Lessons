@@ -191,7 +191,7 @@ const SFX={ ctx:null,on:true,
 let scene,camera,renderer,composer,bloomPass, raycaster,groundPlane,pointerNDC, bgStars,starLight,fillLight;
 const SETTINGS={ audio:true, calm:false, preview:true };
 let reduceMotion=false;
-let seed=1, gameState='MENU';
+let seed=1, gameState='MENU', pauseReturnState='AIM';
 let course=null, holeIdx=0, hole=null, strokes=0, total=0, holeStrokes=0;
 let starsTotalCourse=0, starsHole=0, starsAllCourse=0;
 let probe={x:0,y:0,vx:0,vy:0,flying:false};
@@ -528,7 +528,7 @@ function applySettingsUI(){ SFX.on=SETTINGS.audio; document.getElementById('audi
  document.getElementById('preview-btn').textContent='PREVIEW: '+(SETTINGS.preview?'ON':'OFF');
  document.getElementById('calm-btn').textContent='CALM FX: '+(SETTINGS.calm?'ON':'OFF');
  if(bloomPass)bloomPass.strength=SETTINGS.calm?0.65:1.0; }
-function togglePause(){ if(gameState==='AIM'||gameState==='FLY'){ gameState='PAUSE'; show('pause'); } else if(gameState==='PAUSE'){ document.getElementById('pause').classList.add('hidden'); gameState='AIM'; } }
+function togglePause(){ if(gameState==='AIM'||gameState==='FLY'){ pauseReturnState=gameState; gameState='PAUSE'; show('pause'); } else if(gameState==='PAUSE'){ document.getElementById('pause').classList.add('hidden'); gameState=(pauseReturnState==='FLY'&&probe.flying)?'FLY':'AIM'; } }
 function toMenu(){ gameState='MENU'; probeMesh.visible=false; goalMesh.visible=false; startMesh.visible=false; clearHoleMeshes(); hidePreview(); clearTrail(); hideAllScreens(); show('menu'); refreshBestNote(); }
 function onKey(e){ if(e.code==='KeyP')togglePause(); else if(e.code==='Space'&&gameState==='FLY'){ e.preventDefault(); doBoost(); } else if(e.code==='KeyR'&&(gameState==='AIM'||gameState==='FLY'))document.getElementById('resethole').onclick(); }
 function onResize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight); }

@@ -2557,10 +2557,14 @@ function shuffleMCQs(){
 shuffleMCQs();
 
 /* ---------- CONTENT EDITABLE PLACEHOLDERS ---------- */
+function editableText(el){
+  return String(el.innerText ?? el.textContent ?? '');
+}
 document.querySelectorAll('[data-placeholder]').forEach(el=>{
-  if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
-  el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
-  el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+  const placeholder=el.getAttribute('data-placeholder')||'';
+  if(!editableText(el).trim())el.textContent=placeholder;
+  el.addEventListener('focus',function(){if(editableText(this)===placeholder)this.textContent=''});
+  el.addEventListener('blur',function(){if(!editableText(this).trim())this.textContent=placeholder});
 });
 
 /* ---------- PRINTING ---------- */
@@ -2588,7 +2592,8 @@ function printWeDoEvidence(wedoId){
   let cells=[];
   area.querySelectorAll('[contenteditable]').forEach((c,i)=>{
     const ph=c.getAttribute('data-placeholder')||'';
-    if(c.innerText.trim()&&c.innerText.trim()!==ph)cells.push(`Note ${i+1}: ${c.innerText.trim()}`);
+    const note=editableText(c).trim();
+    if(note&&note!==ph)cells.push(`Note ${i+1}: ${note}`);
   });
   // Capture STM state
   let stmStatus='';

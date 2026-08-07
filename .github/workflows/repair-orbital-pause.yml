@@ -1,0 +1,95 @@
+name: Apply verified Lessons runtime repairs
+
+on:
+  pull_request:
+    branches:
+      - codex/full-repair-upgrade-2026-08-07
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-verified-lessons-repairs
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.ref == 'codex/lessons-repair-trigger-2026-08-07'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the authorised repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/full-repair-upgrade-2026-08-07
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Preserve positive controls
+        run: |
+          cp Games/Orbital_source.html /tmp/Orbital_source_before.html
+          cp Games/Orbital.html /tmp/Orbital_before.html
+          cp index.html /tmp/Lessons_index_before.html
+
+      - name: Apply and syntax-check the verified payload
+        run: |
+          python .github/repair-payload/apply_repairs.py | tee /tmp/lessons-repair-report.json
+          python -m py_compile .github/repair-payload/apply_repairs.py
+          node --check .github/repair-payload/verify_orbital_pause.cjs
+
+      - name: Prove the old Orbital defect and repaired state machine
+        run: |
+          node .github/repair-payload/verify_orbital_pause.cjs \
+            /tmp/Orbital_source_before.html \
+            /tmp/Orbital_before.html \
+            Games/Orbital_source.html \
+            Games/Orbital.html
+
+      - name: Prove the poster route and bytes
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          before = Path('/tmp/Lessons_index_before.html').read_text(encoding='utf-8')
+          after = Path('index.html').read_text(encoding='utf-8')
+          poster = Path('assets/video/poster-art.jpg').read_bytes()
+          assert before.count('src="/assets/video/poster-art.jpg"') == 1
+          assert after.count('src="assets/video/poster-art.jpg"') == 1
+          assert 'src="/assets/video/poster-art.jpg"' not in after
+          assert len(poster) == 9114
+          assert hashlib.sha256(poster).hexdigest() == '7a2caf724d81f6ff85c52eb640baf145513f704aa54dd4fd9e2cc30581493122'
+          print('POSTER SOURCE PASS — absolute 404 route removed; verified JPEG installed')
+          PY
+          python -m http.server 4175 --bind 127.0.0.1 > /tmp/lessons-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            curl -fsS http://127.0.0.1:4175/ >/dev/null && break
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:4175/assets/video/poster-art.jpg -o /tmp/served-poster.jpg
+          cmp assets/video/poster-art.jpg /tmp/served-poster.jpg
+          git diff --check
+
+      - name: Commit only product repairs and remove all transport files
+        run: |
+          rm -rf .github/repair-payload
+          rm -f .github/workflows/repair-orbital-pause.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Games/Orbital_source.html Games/Orbital.html index.html assets/video/poster-art.jpg \
+            .github/repair-payload .github/workflows/repair-orbital-pause.yml
+          git diff --cached --check
+          git commit -m 'fix: repair Orbital pause and Lessons poster route'
+          git push origin HEAD:codex/full-repair-upgrade-2026-08-07
+          git push origin --delete codex/lessons-repair-trigger-2026-08-07 || true
