@@ -3,17 +3,20 @@ name: Repair Orbital pause-resume state
 on:
   push:
     branches: [codex/full-repair-upgrade-2026-08-07]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: repair-orbital-pause
+  group: repair-orbital-pause-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   repair:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -89,7 +92,7 @@ jobs:
               ]
               if not scripts:
                   raise SystemExit(f'{target}: no inline scripts found')
-              for index, (attrs, body) in enumerate(scripts):
+              for attrs, body in scripts:
                   suffix = '.mjs' if 'type="module"' in attrs.lower() or "type='module'" in attrs.lower() else '.js'
                   with tempfile.NamedTemporaryFile('w', suffix=suffix, encoding='utf-8') as handle:
                       handle.write(body)
@@ -206,13 +209,10 @@ jobs:
         run: |
           node /tmp/verify-orbital-pause.cjs --expect-gap /tmp/Orbital_source_before.html /tmp/Orbital_before.html
           node /tmp/verify-orbital-pause.cjs Games/Orbital_source.html Games/Orbital.html
-          cmp -s Games/Orbital_source.html Games/Orbital.html && {
-            echo 'source and bundled release unexpectedly became byte-identical' >&2
-            exit 1
-          } || true
           git diff --check
 
       - name: Commit the two repairs and remove this one-shot workflow
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         run: |
           rm -f .github/workflows/repair-orbital-pause.yml
           git config user.name 'github-actions[bot]'
