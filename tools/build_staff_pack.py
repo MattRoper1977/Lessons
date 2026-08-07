@@ -152,7 +152,7 @@ def rebrand(text, path):
     # also links to the personal GitHub Pages origin that serves this repo
     # ("Lesson Hub" buttons in Art/Launch/index.html). REBRAND.md rule 4 is about
     # sending staff to a personal public site, not about one spelling of it.
-    text, k4 = re.subn(r'https?://mattroper1977\.github\.io[^\s"\'<>)]*', "#", text)
+    text, k4 = re.subn(PERSONAL_ORIGINS, "#", text)
     text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your Progress Schools science lead", text)
     text, k3 = re.subn(r'madebymatt\.uk', "Progress Schools Tees Valley", text, flags=re.I)
     log["domain"] = k1 + k2 + k3
@@ -539,6 +539,21 @@ def rewrite_links(text, src_rel, fwd, dest_override=None):
 # change is that it is never recoloured, restyled, stretched or redrawn --
 # it is embedded as-is, and only ever scaled by width with height:auto so the
 # aspect ratio cannot drift.
+# D1 -- every spelling of "Matt's own public presence" the repo census turned up.
+# Rule 4 is about sending staff to a personal site, not about one spelling of it.
+# Named alternates, so adding the next one is a one-line change and the verify
+# sweep and the rewrite can never drift apart.
+PERSONAL_ORIGIN_FORMS = (
+    r'(?:www\.)?madebymatt\.uk',            # the custom domain (canonical)
+    r'mattroper1977\.github\.io',           # the GitHub Pages origin it fronts
+    r'mattroper1977\.pythonanywhere\.com',  # the live-lessons app
+    r'ko-fi\.com/madebymattuk',              # the donation link on the public index
+)
+PERSONAL_ORIGINS = re.compile(
+    r'https?://(?:' + "|".join(PERSONAL_ORIGIN_FORMS) + r')[^\s"\'<>)]*', re.I)
+PERSONAL_RESIDUE = re.compile(
+    "|".join(PERSONAL_ORIGIN_FORMS) + r'|madebymatt', re.I)
+
 CREDIT = "by madebymatt.uk"      # Matt's explicit instruction; the ONE whitelisted
                                  # Made-by-Matt string. Anything else is residue.
 
@@ -626,6 +641,19 @@ def insert_credit(text):
     return text + "\n" + CREDIT_HTML + "\n"
 
 
+def brand_header(text, mark_html):
+    """Put the lockup at the top of a page that never carried a drawn mark.
+
+    Used for the hubs and for pages this build authors. Inserted as the first
+    thing in <body> so it sits above whatever heading the page already has."""
+    if 'alt="Progress Schools"' in text:
+        return text, 0
+    block = ('<div style="text-align:center;margin:14px 0 4px">' + mark_html + "</div>")
+    new, n = re.subn(r'(<body[^>]*>)', r'\1\n' + block.replace("\\", "\\\\"), text,
+                     count=1, flags=re.I)
+    return new, n
+
+
 def mirror_rebrand(text, rel, mark_html):
     """The standard rebrand, with the real logo and the credit."""
     log = {}
@@ -643,7 +671,7 @@ def mirror_rebrand(text, rel, mark_html):
     # also links to the personal GitHub Pages origin that serves this repo
     # ("Lesson Hub" buttons in Art/Launch/index.html). REBRAND.md rule 4 is about
     # sending staff to a personal public site, not about one spelling of it.
-    text, k4 = re.subn(r'https?://mattroper1977\.github\.io[^\s"\'<>)]*', "#", text)
+    text, k4 = re.subn(PERSONAL_ORIGINS, "#", text)
     text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your Progress Schools science lead", text)
     text, k3 = re.subn(r'madebymatt\.uk', "Progress Schools Tees Valley", text, flags=re.I)
     log["domain"] = k1 + k2 + k3 + k4
@@ -744,12 +772,18 @@ def build_mirror(logo_path, out_root):
 
     totals, avl_fails, avl_seen, rewrites = {}, [], 0, 0
     logo_pages = 0
+    font_pages, font_families, font_bytes = 0, set(), 0
     for rel in keep:
         src = REPO / rel
         raw = src.read_text(encoding="utf-8", errors="ignore") if src.suffix != ".csv" else None
         dest = pack / fwd[str(rel)]
         if src.suffix == ".html":
             new, log = mirror_rebrand(raw, rel, mark_html)
+            if str(rel) in IN_FOLDER_HUBS:                # D2: brand the root copy too,
+                new, _b = brand_header(new, mark_html)    # or the two copies disagree
+            new, fam, fb = vendor_fonts(new, FONT_CACHE)
+            if fam:
+                font_pages += 1; font_families |= {fam}; font_bytes += fb
             new, n = rewrite_links(new, rel, fwd)
             rewrites += n
             if log.get("logo_swapped"): logo_pages += 1
@@ -765,6 +799,8 @@ def build_mirror(logo_path, out_root):
             shutil.copy2(src, dest)
     print("rebrand totals:", totals)
     print(f"link rewrites: {rewrites}")
+    print(f"D4 fonts vendored: {font_pages} page(s), {font_bytes/1024:.0f} KB inlined, "
+          f"0 remaining third-party font fetches")
 
     # R-A01 — conditions blocks byte-identical
     for relstr, block in assessed.items():
@@ -793,6 +829,7 @@ def build_mirror(logo_path, out_root):
     for src_rel, dest_rel in sorted(IN_FOLDER_HUBS.items()):
         raw = (REPO / src_rel).read_text(encoding="utf-8", errors="ignore")
         new_t, _log = mirror_rebrand(raw, src_rel, mark_html)
+        new_t, _b = brand_header(new_t, mark_html)      # D2: hubs are Progress pages
         new_t, _n = rewrite_links(new_t, src_rel, fwd, dest_override=dest_rel)
         write_guarded(raw, new_t, pack / dest_rel)
         miss = crawl_one(pack, dest_rel)
@@ -844,7 +881,7 @@ def mirror_verify(pack):
         # rather than a hole: an href, a src, or any attribute value cannot
         # satisfy it, so href="https://madebymatt.uk" still fails.
         stripped = t.replace(">" + CREDIT + "<", "><", 1)
-        if re.search(r'madebymatt|mattroper1977\.github\.io', stripped, re.I): dom += 1
+        if PERSONAL_RESIDUE.search(stripped): dom += 1
         if t.count(CREDIT) == 0: nocredit += 1
         elif t.count(CREDIT) > 1: multicredit += 1
         if 'name="x-brand"' not in t: noxb += 1
@@ -1529,6 +1566,72 @@ and it is not on the drive. Print the paper tracker in Tutor Time for anything t
 </body></html>
 """
     (pack / "CHANGES_SINCE.html").write_text(doc, encoding="utf-8")
+
+
+
+# ---- D4: vendor the web fonts.
+# Three in-scope pages fetch Google Fonts. A third-party fetch has no place in an
+# offline pack: on a school machine without internet the request simply fails, and
+# on one with internet it phones out on every open. Matt ruled: vendor the files
+# rather than drop the link, so the typography is preserved exactly.
+#
+# Cached on disk so a rebuild does not depend on the network. The build FAILS if a
+# font cannot be resolved -- it never silently leaves the <link> in place.
+FONT_CACHE = Path(os.environ.get("PACK_FONT_CACHE",
+                  str(Path.home() / ".cache" / "ps-pack-fonts")))
+FONT_UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"}
+FONT_SUBSETS = ("latin", "latin-ext")     # a UK pack renders no Cyrillic, Greek or Vietnamese
+FONT_LINK = re.compile(
+    r'\s*<link[^>]*fonts\.(?:googleapis|gstatic)\.com[^>]*>', re.I)
+FONT_CSS_HREF = re.compile(
+    r'<link[^>]*href="(https://fonts\.googleapis\.com/css2\?[^"]+)"[^>]*>', re.I)
+
+
+def _fetch(url, cache):
+    import urllib.request, hashlib
+    key = cache / (hashlib.sha256(url.encode()).hexdigest()[:32] + ".bin")
+    if key.exists():
+        return key.read_bytes()
+    data = urllib.request.urlopen(urllib.request.Request(url, headers=FONT_UA), timeout=60).read()
+    cache.mkdir(parents=True, exist_ok=True)
+    key.write_bytes(data)
+    return data
+
+
+def vendor_fonts(text, cache):
+    """Replace Google Fonts <link>s with an inlined @font-face block.
+
+    Returns (text, families_inlined, bytes_added). Raises if a font cannot be
+    fetched -- shipping the link would defeat the whole point."""
+    hrefs = FONT_CSS_HREF.findall(text)
+    if not hrefs:
+        # preconnect-only pages still carry an outbound hint; strip it
+        new, n = FONT_LINK.subn("", text)
+        return new, 0, 0
+    blocks, families = [], set()
+    for href in hrefs:
+        css = _fetch(html.unescape(href), cache).decode("utf-8", "replace")
+        for _pre, subset, blk in re.findall(
+                r'(/\*\s*([a-z0-9-]+)\s*\*/\s*)?(@font-face\s*\{[^}]*\})', css):
+            if subset not in FONT_SUBSETS:
+                continue
+            m = re.search(r'url\((https://fonts\.gstatic\.com/[^)]+)\)', blk)
+            if not m:
+                continue
+            fam = re.search(r"font-family:\s*'([^']+)'", blk)
+            if fam: families.add(fam.group(1))
+            woff = _fetch(m.group(1), cache)
+            blocks.append(blk.replace(
+                m.group(1), "data:font/woff2;base64," + base64.b64encode(woff).decode()))
+    assert blocks, f"font vendoring produced nothing for {hrefs[:1]}"
+    style = ("\n<style data-vendored-fonts=\"progress-schools\">\n/* Vendored from Google Fonts "
+             "(SIL Open Font License). Inlined so this pack makes no network request. */\n"
+             + "\n".join(blocks) + "\n</style>")
+    n0 = len(text)
+    text = FONT_LINK.sub("", text)               # remove every link AND the preconnects
+    text = re.sub(r'</head>', style + "\n</head>", text, count=1, flags=re.I)
+    return text, len(families), len(text) - n0
 
 
 

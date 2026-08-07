@@ -122,10 +122,19 @@ occurrence of `>by madebymatt.uk<` and then requires **zero** matches in what re
 href, a `src`, any attribute value, and a second credit all still fail. Verified with a
 negative control on each of those four shapes.
 
-**Rule 4 is about the personal public site, not one spelling of it.** The sweep also covers
-`mattroper1977.github.io`, the GitHub Pages origin that serves this repo. Two "Lesson Hub"
-buttons in `Art/Launch/index.html` pointed there and passed every previous sweep, because the
-regex only ever knew `madebymatt.uk`.
+**Rule 4 is about the personal public site, not one spelling of it.** A repo-wide census found
+four spellings, only one of which the sweep had ever known. They are now **named alternates** in
+`PERSONAL_ORIGIN_FORMS`, used by both the rewrite and the verify pass so the two cannot drift:
+
+| spelling | what it is | occurrences (repo) | ever in pack scope |
+|---|---|---|---|
+| `madebymatt.uk` | the custom domain, canonical | 77 | yes — swept since the first pack |
+| `mattroper1977.github.io` | the Pages origin the custom domain fronts | 26 | **yes, 2 — unswept until 2026-08-07** |
+| `mattroper1977.pythonanywhere.com` | the live-lessons app | 2 | no |
+| `ko-fi.com/madebymattuk` | donation link on the public index | 1 | no |
+
+Content pages now point at the **custom domain**, which collapses the Pages origin into the
+spelling the sweep has always caught. Adding the next form is a one-line change.
 
 ### 5 · The `x-brand` meta tag
 
@@ -255,6 +264,20 @@ the page.
 
 ---
 
+## Third-party fetches (rule 8)
+
+**An offline pack makes no network request.** A `<link>` to a font CDN fails on a school
+machine without internet and phones out on one with it — the same defect shape as the `hud.js`
+loader, differing only in that it degrades quietly instead of breaking a panel.
+
+Vendor rather than drop, unless Matt rules otherwise: fetch the CSS, keep the `latin` and
+`latin-ext` subsets only (a UK pack renders no Cyrillic, Greek or Vietnamese), inline each
+`woff2` as a data URI, and remove the `<link>` **and** its `preconnect` hints. Cache the files
+on disk so a rebuild is not a network dependency, and **fail the build** if a font cannot be
+resolved — silently leaving the link defeats the point.
+
+A labelled link to a teaching resource (Oak National Academy) is not a fetch and stays.
+
 ## Mirror-shape packs (PACK-4)
 
 The default build preserves the repo tree because its links assume the repo tree. A mirror
@@ -272,7 +295,11 @@ Three rules learned building the first one:
    and crawl it **from its own location**.
 2. **Flattening collides filenames.** Census every basename repeated across the folders being
    flattened *before* assembling. Renaming is reversible; overwriting is not.
-3. **A merge replaces same-named files.** Where the destination holds artefacts that cannot be
+3. **A page the pack authors or re-emits is a Progress Schools page.** "Only pages that
+   previously carried a mark" is a rule against inventing branding on someone else's page. It
+   does not cover a page this build writes, nor a hub re-emitted at a new path — those carry
+   the lockup. Brand the root original too, or the two copies of a hub disagree.
+4. **A merge replaces same-named files.** Where the destination holds artefacts that cannot be
    regenerated, print the collision list explicitly — **empty or not**. A silent pass is
    indistinguishable from a check that never ran.
 
