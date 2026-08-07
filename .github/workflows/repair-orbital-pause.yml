@@ -1,9 +1,9 @@
 name: Apply verified Lessons runtime repairs
 
 on:
-  push:
+  pull_request:
     branches:
-      - codex/lessons-repair-trigger-2026-08-07
+      - codex/full-repair-upgrade-2026-08-07
   workflow_dispatch:
 
 permissions:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   repair:
+    if: github.event.pull_request.head.ref == 'codex/lessons-repair-trigger-2026-08-07'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
