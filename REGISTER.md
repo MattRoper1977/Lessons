@@ -2525,3 +2525,41 @@ the pass brief withheld.**
   save that already existed, and the second would have had it hunting a version anchor to widen that
   was never missing. An absence is a claim like any other and needs a method behind it, not a quiet
   grep that returned nothing.
+
+- **A global that resolves is not necessarily the global you meant — and the DOM will happily supply
+  a stand-in.** A shipped Glitch Clash gate read `typeof battle !== 'undefined' && battle !== null`
+  and looked like it inspected the game's battle object. It never did. `battle` is a script-scope
+  `let` inside the UI IIFE, invisible to `page.evaluate`; the page also contains `<div id="battle">`,
+  and named-element access puts that element on `window`. So the name resolved — to a DIV — and the
+  gate returned true on the home screen with no battle ever started. It could not fail, and it had
+  shipped green. Two rules follow. **A gate that reads a page global by name must first prove the
+  global is the one it thinks it is** (`Object.prototype.toString.call(x)`, a field only the real
+  object has — anything that would throw or go red on a stand-in). And **when a name is unreachable,
+  the failure mode is silent substitution rather than a ReferenceError**, precisely because HTML ids
+  populate `window`; the more DOM-ish the name (`battle`, `log`, `status`, `history`), the more likely
+  the stand-in exists. The general form: `typeof x !== 'undefined'` is not evidence about `x`, it is
+  evidence that *something* answers to that name. When you retire a gate like this, keep the proof —
+  run the old check where it should fail and gate on it passing, so the vacuity is documented by an
+  instrument rather than by a comment.
+
+- **Announced is not heard: a polite live region is last-write-wins.** Glitch Clash drew a Fracture
+  Card and announced its text, then — in the same tick, before the browser ever reached a rendering
+  opportunity — announced the leg line and "<rival> appears." The card text existed in the DOM for
+  microseconds and no screen reader would ever have reached it. A gate asserting "the card was
+  announced" passed the whole time, because it was. **Separate drawing from speaking: state changes
+  when the game decides, presentation happens once, at the last announce before the player is handed
+  control.** The gate that catches this is not "did it announce" but **"is it in the announcement
+  that survives"** — assert on the region's final content, not on the fact that a write occurred.
+  The general shape: any single-slot output channel (one live region, one status line, one toast)
+  turns N writes per tick into 1 message, so counting writes measures nothing about what a user
+  receives.
+
+- **A batched observer sees the end state, not the sequence.** The instrument that found the clobber
+  above nearly missed it. Its first version read `live.textContent` inside the `MutationObserver`
+  callback — but those callbacks are microtasks that *batch*, so three announces in one tick produced
+  one callback holding three records and one element already showing only the last value. The
+  observer could not distinguish "announced" from "announced and overwritten", which was the single
+  distinction it existed to draw. **Read the records, not the element**: `addedNodes[].nodeValue` for
+  childList, `target.nodeValue` for characterData. Same family as the vacuous-green lesson — an
+  instrument that samples the subject after the fact cannot see anything the subject overwrote, and
+  will report a confident green about a sequence it never observed.

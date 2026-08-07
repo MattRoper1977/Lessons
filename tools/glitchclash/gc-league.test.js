@@ -1,14 +1,25 @@
-/* gc-league.test.js — Fracture League, phase 1: seed, key and migration.
+/* gc-league.test.js — Fracture League.
+ *   L1-L8   phase 1: seed, key, migration, playability
+ *   L9-L13  phase 2: rivals, Fracture Cards, the soft-loss envelope
  *
  * Every gate here is TAMPER-PROVEN BOTH WAYS: after asserting the property, the
  * test breaks the thing the property depends on and requires the same check to
  * go red. A gate that has only ever been green is an opinion.
+ *
+ * Phase 2 adds the first FILE tampers in this suite family. The phase-1 gates
+ * could all be broken from inside the page, but two of the phase-2 claims are
+ * about code that runs where no in-page handle reaches — the local `d` inside
+ * the clash branch of Engine.resolveTurn, and the max() inside GCX3.ringDeg.
+ * Monkey-patching the result from outside would only prove that the comparison
+ * notices different numbers. Rewriting the source and re-running the SAME
+ * measurement proves the measurement is looking at the real path.
  *
  *   node gc-league.test.js [path/to/copy.html]
  */
 'use strict';
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const { chromium } = require('playwright');
 
 const TARGET = process.argv[2] || path.join(__dirname, '..', '..', 'Games', 'Glitch_Clash.html');
@@ -255,24 +266,46 @@ async function withPage(browser, file, seedFn) {
     page.on('pageerror', e => errs.push(String(e.message).slice(0, 90)));
     await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(700);
+    /* THIS GATE WAS VACUOUS AND SHIPPED THAT WAY. It read
+         typeof battle !== 'undefined' && battle !== null
+       which looks like it inspects the game's battle object. It does not.
+       `battle` is a script-scope `let` inside the UI IIFE, invisible to
+       page.evaluate — and the page contains <div id="battle">, so the name
+       resolves to that element via named-element access instead of throwing.
+       The check therefore returned true on the home screen with no battle ever
+       started. Measured, not assumed: the control below runs it BEFORE the
+       click and requires it to pass, which is what proves it could never fail.
+
+       The replacement uses observable evidence only, the same discipline L8
+       already used for endlessRun: the battle screen is live, the action bar is
+       populated and enabled, and the stage chip names a LEAGUE leg. */
     const out = await page.evaluate(async () => {
       const btn = document.getElementById('leaguebtn');
       if (!btn) return { entered: false, why: 'no #leaguebtn on the home screen' };
+      const vacuousBefore = (typeof battle !== 'undefined' && battle !== null);
       btn.click();
       await new Promise(r => setTimeout(r, 900));
       const st = GCX3.read();
-      const inBattle = !!(document.getElementById('scr-battle') || document.querySelector('.screen.show'));
+      const acts = [...document.querySelectorAll('#actions button')];
       return {
         entered: true,
-        battleStarted: typeof battle !== 'undefined' && battle !== null,
-        seed: st.seed, routeLen: st.route.length,
-        label: btn.textContent,
-        inBattle
+        vacuousBefore,
+        screenActive: !!document.querySelector('#scr-battle.active'),
+        actionsLive: acts.length >= 4 && acts.some(b => !b.disabled),
+        chip: (document.getElementById('stagechip') || {}).textContent || '',
+        seed: st.seed, routeLen: st.route.length, at: st.at,
+        label: btn.textContent
       };
     });
     t('L7 the league can be entered from the real home screen', out.entered, out.why || '#leaguebtn clicked');
-    t('L7 entering starts a real battle on the shared driver', out.battleStarted === true,
-      `seed ${out.seed} · route ${out.routeLen} legs`);
+    t('L7 CONTROL: the retired `battle !== null` check was incapable of failing',
+      out.vacuousBefore === true,
+      'it passed on the home screen before any click — it was reading <div id="battle">');
+    t('L7 entering starts a real battle on the shared driver',
+      out.screenActive && out.actionsLive,
+      `battle screen active=${out.screenActive} · action bar live=${out.actionsLive} · seed ${out.seed} · route ${out.routeLen} legs`);
+    t('L7 the stage chip names the league leg, not another mode',
+      /League · Leg 1 of 5/.test(out.chip), `chip reads "${out.chip.slice(0, 52)}"`);
     t('L7 no page errors on entry', errs.length === 0, errs[0] || 'none');
     await ctx.close();
   }
@@ -321,7 +354,468 @@ async function withPage(browser, file, seedFn) {
     await ctx.close();
   }
 
+  /* ======================================================================
+     PHASE 2 — rivals and Fracture Cards
+     ====================================================================== */
+  console.log('Fracture League — phase 2');
+
+  /* The clash-ring arcs are READ OUT OF THE FILE, not pinned here. If someone
+     retunes Calm, the floor gate follows them; a literal 96 in this test would
+     quietly stop meaning "the calm arc" the moment the game changed. */
+  const src = fs.readFileSync(file, 'utf8');
+  const degM = src.match(/let\s+zoneDeg\s*=\s*calm\s*\?\s*(\d+)\s*:\s*(\d+)/);
+  const CALM_DEG = degM ? Number(degM[1]) : null;
+  const NORM_DEG = degM ? Number(degM[2]) : null;
+  t('L9 the clash arcs could be derived from the shipped file',
+    CALM_DEG != null && NORM_DEG != null && CALM_DEG > NORM_DEG,
+    degM ? `calm ${CALM_DEG}° · normal ${NORM_DEG}°` : 'zoneDeg line not found — the floor gate below would be measuring nothing');
+
+  /* Writes a copy of the game with ONE deliberate defect in it, and refuses to
+     hand back a file that is byte-identical to the original — a tamper that did
+     not apply is a tamper that proves nothing. */
+  function tamperFile(label, edits) {
+    let out = src;
+    for (const [from, to] of edits) {
+      if (out.indexOf(from) < 0) return { path: null, why: `anchor not found: ${from.slice(0, 48)}…` };
+      out = out.replace(from, to);
+    }
+    if (out === src) return { path: null, why: 'edits produced an identical file' };
+    const p = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'gc-tamper-')), `${label}.html`);
+    fs.writeFileSync(p, out);
+    return { path: p, why: null };
+  }
+
+  /* ---- L9: rivals are seeded, and the TWO-RUN METHOD proves it ----------
+     Two separate page loads, not two calls in one page: a memoised answer or a
+     value cached in module scope would satisfy the second call trivially. Two
+     browser contexts share nothing but the file. */
+  async function intentRun(seed, turns) {
+    const c = await browser.newContext();
+    const pg = await c.newPage();
+    await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
+    await pg.waitForTimeout(500);
+    const seq = await pg.evaluate(({ s, n }) => {
+      GCX3.clear(); GCX3.begin(s);
+      const out = [];
+      for (let turn = 1; turn <= n; turn++) out.push(GCX3.rivalIntent(turn, true));
+      return out;
+    }, { s: seed, n: turns });
+    await c.close();
+    return seq;
+  }
+  {
+    const a1 = await intentRun('rival-alpha', 12);
+    const a2 = await intentRun('rival-alpha', 12);
+    const b1 = await intentRun('rival-beta', 12);
+    const distinct = new Set(a1).size;
+    t('L9 the same seed gives the same rival intents across two independent runs',
+      JSON.stringify(a1) === JSON.stringify(a2), a1.join(','));
+    t('L9 a different seed gives different rival intents',
+      JSON.stringify(a1) !== JSON.stringify(b1), `alpha ${a1.slice(0, 5).join(',')} vs beta ${b1.slice(0, 5).join(',')}`);
+    /* NON-VACUITY. If every turn returned "strike", "the same both runs" would
+       be true of a constant and would prove nothing about seeding. */
+    t('L9 the intent sequence is not a constant',
+      distinct >= 3, `${distinct} distinct intents in 12 turns: ${[...new Set(a1)].join(',')}`);
+    /* TAMPER: prove the sequence comparison can actually go red. */
+    const mangled = a1.slice(); mangled[4] = mangled[4] === 'guard' ? 'strike' : 'guard';
+    t('L9 TAMPER: the sequence comparison can tell two sequences apart',
+      JSON.stringify(a1) !== JSON.stringify(mangled), `one element changed at index 4`);
+  }
+
+  /* ---- L10: THE TELEGRAPH CANNOT LIE ------------------------------------
+     Read what the chip SAYS, take the turn, then read what the rival ACTUALLY
+     did (GCX3.lastAct is written by the resolver with the resolved action, not
+     with the prediction). Run twice: once card-free, and once under Mirror
+     Field, which is the regression gate for a defect this phase had — the
+     mirror repeat was written into the turn resolver and left out of the chip,
+     so the one card that promises predictability was the one card that lied. */
+  async function telegraphRun(targetFile, cardId, patchFn) {
+    const c = await browser.newContext();
+    const pg = await c.newPage();
+    const errs = [];
+    pg.on('pageerror', e => errs.push(String(e.message).slice(0, 90)));
+    await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
+    await pg.waitForTimeout(700);
+    const rows = await pg.evaluate(async ({ cid, patch }) => {
+      if (patch) eval(patch);
+      /* startLeague() keeps an already-active league rather than minting a new
+         random seed, so beginning one here is how the test chooses the season
+         without reaching inside the IIFE. */
+      GCX3.clear(); GCX3.begin('telegraph-seed');
+      GCX3.takeCard(cid);
+      const legAtStart = GCX3.read().at;
+      document.getElementById('leaguebtn').click();
+      await new Promise(r => setTimeout(r, 900));
+      const guard = () => [...document.querySelectorAll('#actions button')]
+        .find(b => b.textContent.indexOf('Guard') === 0 && !b.disabled);
+      /* One throwaway turn so the NEXT render is the first one drawn under the
+         card we fixed above — offerLeagueCard() draws its own on entry. */
+      GCX3.takeCard(cid);
+      if (guard()) { guard().click(); await new Promise(r => setTimeout(r, 300)); }
+      const said = [];
+      for (let i = 0; i < 6; i++) {
+        /* GUARD, not Strike, every turn: guarding deals no damage, so the rival
+           cannot be knocked out and the leg stays open long enough to mean
+           something. If the leg ends anyway the loop stops and the pair count
+           gate below catches the short evidence. */
+        if (GCX3.read().at !== legAtStart) break;
+        const b = guard();
+        if (!b) break;
+        const chip = [...document.querySelectorAll('#ef .chip')].map(n => n.textContent)
+          .find(x => x.indexOf('◎') === 0);
+        if (!chip) break;
+        const shown = Object.keys(GCX3.INTENT_TEXT)
+          .find(k => chip.indexOf(' will ' + GCX3.INTENT_TEXT[k] + '.') >= 0) || null;
+        b.click();
+        await new Promise(r => setTimeout(r, 300));
+        said.push({ shown, actual: GCX3.read().lastAct, chip: chip.slice(0, 60) });
+        GCX3.takeCard(cid);
+      }
+      return said;
+    }, { cid: cardId, patch: patchFn || null });
+    await c.close();
+    return { rows, errs };
+  }
+  {
+    for (const [label, cardId] of [['no card', null], ['under Mirror Field', 'mirror']]) {
+      const { rows, errs } = await telegraphRun(file, cardId);
+      const paired = rows.filter(r => r.shown && r.actual);
+      const agree = paired.filter(r => r.shown === r.actual).length;
+      t(`L10 ${label}: enough paired observations to mean anything`,
+        paired.length >= 3, `${paired.length} turns telegraphed and resolved`);
+      t(`L10 ${label}: what the chip says is what the rival does`,
+        paired.length >= 3 && agree === paired.length,
+        paired.map(r => `${r.shown}→${r.actual}`).join(' · ') || 'no pairs');
+      t(`L10 ${label}: no page errors`, errs.length === 0, errs[0] || 'none');
+    }
+    /* TAMPER 1: make the DISPLAY lie while the resolver stays honest. The chip
+       renders its verb through GCX3.INTENT_TEXT, so rewriting that map makes
+       every chip read "guard" whatever the rival actually intends. */
+    {
+      const { rows } = await telegraphRun(file, null,
+        'GCX3.INTENT_TEXT.strike="guard";GCX3.INTENT_TEXT.charge="guard";GCX3.INTENT_TEXT.special="guard";');
+      const paired = rows.filter(r => r.shown && r.actual);
+      const agree = paired.filter(r => r.shown === r.actual).length;
+      t('L10 TAMPER: a lying chip is caught',
+        paired.length >= 3 && agree < paired.length,
+        `${agree}/${paired.length} agreed with a chip rewritten to always read "guard"`);
+    }
+    /* TAMPER 2: THE REGRESSION THIS PHASE EARNED. Put Mirror Field back where
+       it was first written — honoured in the turn resolver, absent from the
+       intent chip — and require the mirror pass to go red. This is the defect
+       that shipped in the first draft of P2: the one card promising
+       predictability was the one card whose telegraph lied. */
+    {
+      const tam = tamperFile('mirror-at-callsite', [
+        [`    const c = activeCard(s0);
+    if(c && c.id === "mirror" && s0.lastAct){
+      return (s0.lastAct === "special" && !canSpecial) ? "strike" : s0.lastAct;
+    }
+`, ''],
+        ['        seeded = GCX3.rivalIntent(battle.turn, e.en >= Engine.specialCost(battle.arena));',
+         `        const cost0 = Engine.specialCost(battle.arena);
+        const st0 = GCX3.read(); const card0 = GCX3.activeCard(st0);
+        seeded = (card0 && card0.id==="mirror" && st0.lastAct)
+          ? ((st0.lastAct==="special" && e.en < cost0) ? "strike" : st0.lastAct)
+          : GCX3.rivalIntent(battle.turn, e.en >= cost0, st0);`]
+      ]);
+      t('L10 TAMPER: the pre-fix Mirror Field was actually restored in the copy',
+        tam.path !== null, tam.why || tam.path);
+      if (tam.path) {
+        /* Control: the tampered copy must still agree with NO card, so the red
+           below is attributable to the mirror and not to a broken file. */
+        const ctrl = await telegraphRun(tam.path, null);
+        const cp = ctrl.rows.filter(r => r.shown && r.actual);
+        t('L10 TAMPER: the tampered copy is otherwise honest (card-free still agrees)',
+          cp.length >= 3 && cp.every(r => r.shown === r.actual),
+          cp.map(r => `${r.shown}→${r.actual}`).join(' · ') || 'no pairs');
+        const { rows } = await telegraphRun(tam.path, 'mirror');
+        const paired = rows.filter(r => r.shown && r.actual);
+        const agree = paired.filter(r => r.shown === r.actual).length;
+        t('L10 TAMPER: mirror handled at the call site instead of in rivalIntent is CAUGHT',
+          paired.length >= 3 && agree < paired.length,
+          `${agree}/${paired.length} agreed: ${paired.map(r => `${r.shown}→${r.actual}`).join(' · ')}`);
+      }
+    }
+  }
+
+  /* ---- L11: THE P2-OWED PROOF -------------------------------------------
+     A card may change what you know, what a leg is worth, or how wide the arc
+     is. It may never change the damage maths. The claim that carries the most
+     weight is the SOFT LOSS — losing a clash with good timing hurts less, and
+     that gradient is what makes the ring worth playing. So: script a lost clash
+     under every card, at three skill values, and require the payoff to land on
+     the envelope the shipped dmg() implies, with the gradient intact. */
+  async function softLoss(targetFile, cardId) {
+    const c = await browser.newContext();
+    const pg = await c.newPage();
+    await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
+    await pg.waitForTimeout(500);
+    const out = await pg.evaluate((cid) => {
+      /* NOTE: page-scope `CARDS` is the FIGHTER roster. The Fracture Cards are
+         GCX3.CARDS. Same word, two pools — worth saying out loud once. */
+      GCX3.clear(); GCX3.begin('softloss-seed');
+      GCX3.takeCard(cid);
+      const res = { asked: cid, taken: (GCX3.activeCard() || {}).id || null, rows: [] };
+      for (const skill of [0, 0.5, 1]) {
+        const p = Engine.mkFighter(CARDS[0], 0, 0);
+        const e = Engine.mkGlitch(GLITCHES[6]);
+        /* Rigged so the player LOSES: the losing branch is the one under test. */
+        p.atk = 10; p.def = 20; p.hp = p.maxhp = 9999; p.en = 100; p.shield = 0;
+        e.atk = 90; e.hp = e.maxhp = 9999; e.en = 100; e.shield = 0;
+        /* The envelope is DERIVED from the shipped dmg(), never pinned. */
+        const base = Engine.dmg(e.atk, e.spMult * 0.9, p.def, false, false);
+        const expect = Math.max(2, Math.round(base * (1.3 - skill * 0.5)));
+        const ev = Engine.resolveTurn(p, e, 'special', 'special', () => 0.5, { clashSkill: skill });
+        const clash = ev.find(x => x.t === 'clash');
+        res.rows.push({ skill, winner: clash ? clash.winner : null, d: clash ? clash.d : null, expect });
+      }
+      return res;
+    }, cardId);
+    await c.close();
+    return out;
+  }
+  /* One measurement, three questions, so a card and its tamper are judged by
+     exactly the same instrument. */
+  function judgeSoftLoss(m, baseline) {
+    const lost = m.rows.every(r => r.winner === 'e');
+    const onEnvelope = m.rows.every(r => r.d === r.expect);
+    const d0 = m.rows[0].d, d1 = m.rows[2].d;
+    const gradient = d0 != null && d1 != null && d0 > d1 && (d0 / d1) >= 1.5;
+    const matchesBaseline = !baseline || JSON.stringify(m.rows.map(r => r.d)) === JSON.stringify(baseline.rows.map(r => r.d));
+    return { lost, onEnvelope, gradient, matchesBaseline, d0, d1,
+             detail: m.rows.map(r => `skill ${r.skill}: took ${r.d} (envelope ${r.expect})`).join(' · ') };
+  }
+  {
+    const baseline = await softLoss(file, null);
+    const bj = judgeSoftLoss(baseline, null);
+    t('L11 the scripted clash is genuinely LOST — otherwise this measures nothing',
+      bj.lost, baseline.rows.map(r => `skill ${r.skill}: winner ${r.winner}`).join(' · '));
+    t('L11 with no card the soft loss sits on the envelope the shipped dmg() implies',
+      bj.onEnvelope, bj.detail);
+    t('L11 with no card the soft-loss gradient is real (good timing hurts less)',
+      bj.gradient, `${bj.d0} at skill 0 vs ${bj.d1} at skill 1 — ratio ${(bj.d0 / bj.d1).toFixed(3)}`);
+
+    const cards = await browser.newContext().then(async c => {
+      const pg = await c.newPage();
+      await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
+      await pg.waitForTimeout(400);
+      const ids = await pg.evaluate(() => GCX3.CARDS.map(x => x.id));
+      await c.close();
+      return ids;
+    });
+    t('L11 every shipped Fracture Card is covered by this proof',
+      cards.length >= 5, `${cards.length} cards: ${cards.join(', ')}`);
+    for (const id of cards) {
+      const m = await softLoss(file, id);
+      const j = judgeSoftLoss(m, baseline);
+      t(`L11 the losing branch is intact under "${id}"`,
+        m.taken === id && j.lost && j.onEnvelope && j.gradient && j.matchesBaseline,
+        `card active=${m.taken} · ${j.detail}`);
+    }
+
+    /* TAMPER: a card that flattens the soft loss. Written into the file, not
+       patched over the result, so the gate has to notice through the whole
+       real path — CARDS, activeCard(), and the clash branch itself. */
+    const tam = tamperFile('flatten', [
+      ['    { id:"mirror", name:"Mirror Field",',
+       '    { id:"flatten", name:"Tamper Flatten", text:"A card that reaches into the damage maths.",\n      alters:"damage", ring:false },\n    { id:"mirror", name:"Mirror Field",'],
+      ['        d=Math.max(2,Math.round(d*(1.3-skill*0.5)));   // good timing softens a lost clash',
+       '        d=Math.max(2,Math.round(d*(1.3-skill*0.5)));try{if(window.GCX3&&GCX3.activeCard()&&GCX3.activeCard().id==="flatten")d=40;}catch(_e){}']
+    ]);
+    t('L11 TAMPER: the flattening card was actually written into the copy',
+      tam.path !== null, tam.why || tam.path);
+    if (tam.path) {
+      /* The tampered copy must still pass card-free, or a red under the card
+         would be attributable to a broken file rather than to the card. */
+      const tamBase = judgeSoftLoss(await softLoss(tam.path, null), null);
+      t('L11 TAMPER: the tampered copy is otherwise healthy (card-free still on the envelope)',
+        tamBase.lost && tamBase.onEnvelope && tamBase.gradient, tamBase.detail);
+      const tj = judgeSoftLoss(await softLoss(tam.path, 'flatten'), baseline);
+      t('L11 TAMPER: the flattening card is CAUGHT by the same gate',
+        !(tj.onEnvelope && tj.gradient && tj.matchesBaseline),
+        `envelope=${tj.onEnvelope} gradient=${tj.gradient} baseline=${tj.matchesBaseline} · ${tj.detail}`);
+    }
+  }
+
+  /* ---- L12: the Calm floor — a card may only ever WIDEN the arc ---------- */
+  {
+    const c = await browser.newContext();
+    const pg = await c.newPage();
+    await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
+    await pg.waitForTimeout(500);
+    const rows = await pg.evaluate(({ calm, norm }) => {
+      GCX3.clear(); GCX3.begin('calm-floor');
+      return GCX3.CARDS.concat([{ id: null }]).map(card => {
+        GCX3.takeCard(card.id);
+        return { id: card.id, ring: !!card.ring, calm: GCX3.ringDeg(calm), norm: GCX3.ringDeg(norm) };
+      });
+    }, { calm: CALM_DEG, norm: NORM_DEG });
+    await c.close();
+    const narrows = rows.filter(r => r.calm < CALM_DEG || r.norm < NORM_DEG);
+    t('L12 no card narrows the clash arc, at either arc width',
+      narrows.length === 0,
+      narrows.length ? narrows.map(r => `${r.id} → ${r.norm}/${r.calm}`).join(', ')
+                     : rows.map(r => `${r.id || 'none'} ${r.norm}/${r.calm}`).join(' · '));
+    /* NON-VACUITY: if no card moved the arc at all, ">= base" would be an
+       identity check dressed up as a floor. */
+    const widens = rows.filter(r => r.calm > CALM_DEG);
+    t('L12 at least one card really does widen it — the floor is not an identity check',
+      widens.length >= 1, widens.map(r => `${r.id} ${CALM_DEG}→${r.calm}`).join(', ') || 'nothing widened');
+
+    /* Calm auto-enable, still wired, with a card active. */
+    const rc = await browser.newContext({ reducedMotion: 'reduce' });
+    const rp = await rc.newPage();
+    await rp.goto('file://' + file, { waitUntil: 'domcontentloaded' });
+    await rp.waitForTimeout(700);
+    const rm = await rp.evaluate(({ calm }) => {
+      GCX3.clear(); GCX3.begin('calm-live');
+      const wideCard = GCX3.CARDS.find(x => x.ring);
+      GCX3.takeCard(wideCard ? wideCard.id : null);
+      return {
+        osReduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        bodyClass: document.body.classList.contains('reduce-motion'),
+        calmSetting: !!(SV.settings && SV.settings.calm),
+        degUnderCard: GCX3.ringDeg(calm)
+      };
+    }, { calm: CALM_DEG });
+    await rc.close();
+    t('L12 OS reduced motion still reaches the game (calm auto-enable wired)',
+      rm.osReduced && (rm.bodyClass || rm.calmSetting),
+      `media=${rm.osReduced} · body.reduce-motion=${rm.bodyClass} · settings.calm=${rm.calmSetting}`);
+    t('L12 under reduced motion, the widest ring card still cannot go below the calm arc',
+      rm.degUnderCard >= CALM_DEG, `${rm.degUnderCard}° vs calm floor ${CALM_DEG}°`);
+
+    /* TAMPER: make ringDeg narrow instead of widen, in the file. */
+    const tam = tamperFile('narrow', [
+      ['    return Math.max(base, base + 26);', '    return base - 26;']
+    ]);
+    t('L12 TAMPER: the narrowing edit was actually written into the copy',
+      tam.path !== null, tam.why || tam.path);
+    if (tam.path) {
+      const tc = await browser.newContext();
+      const tp = await tc.newPage();
+      await tp.goto('file://' + tam.path, { waitUntil: 'domcontentloaded' });
+      await tp.waitForTimeout(500);
+      const trows = await tp.evaluate(({ calm, norm }) => {
+        GCX3.clear(); GCX3.begin('calm-floor');
+        return GCX3.CARDS.map(card => {
+          GCX3.takeCard(card.id);
+          return { id: card.id, calm: GCX3.ringDeg(calm), norm: GCX3.ringDeg(norm) };
+        });
+      }, { calm: CALM_DEG, norm: NORM_DEG });
+      await tc.close();
+      const tnarrows = trows.filter(r => r.calm < CALM_DEG || r.norm < NORM_DEG);
+      t('L12 TAMPER: a narrowing card is CAUGHT by the same gate',
+        tnarrows.length > 0, tnarrows.map(r => `${r.id} → ${r.norm}/${r.calm}`).join(', ') || 'nothing caught');
+    }
+  }
+
+  /* ---- L13: every card's text is ANNOUNCED, not just drawn --------------
+     This game speaks to a screen reader through announce(). A new mechanic does
+     not get to opt out of that contract, and "some cards announce" is not the
+     contract — so the gate walks seeds until it has seen every card offered
+     through the real offerLeagueCard() path. */
+  {
+    /* offerLeagueCard() lives inside the UI IIFE and is not reachable from
+       here, so this drives the REAL path instead: pick a seed whose leg-1 card
+       is the one we want, start the league from the home screen, and read what
+       the live region actually said. */
+    const seeder = await browser.newContext();
+    const sp = await seeder.newPage();
+    await sp.goto('file://' + file, { waitUntil: 'domcontentloaded' });
+    await sp.waitForTimeout(500);
+    const seedFor = await sp.evaluate(() => {
+      const want = {};
+      for (let i = 0; i < 8000 && Object.keys(want).length < GCX3.CARDS.length; i++) {
+        const seed = 'announce-' + i;
+        GCX3.clear();
+        const card = GCX3.cardFor(0, GCX3.begin(seed));
+        if (card && !want[card.id]) want[card.id] = seed;
+      }
+      GCX3.clear();
+      return { want, cards: GCX3.CARDS.map(c => ({ id: c.id, name: c.name, text: c.text })) };
+    });
+    await seeder.close();
+    t('L13 a seed could be found for every shipped card',
+      Object.keys(seedFor.want).length === seedFor.cards.length,
+      `${Object.keys(seedFor.want).length}/${seedFor.cards.length} covered`);
+
+    /* announce()'s target is closure-scoped and has no id — the other two
+       polite regions on the page do (#ringverdict, #cuttext), so "the aria-live
+       region without an id" identifies it unambiguously. */
+    async function saidOnEntry(targetFile, seed) {
+      const c = await browser.newContext();
+      const pg = await c.newPage();
+      await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
+      await pg.waitForTimeout(600);
+      const said = await pg.evaluate(async (s) => {
+        GCX3.clear(); GCX3.begin(s);
+        const live = [...document.querySelectorAll('[aria-live="polite"]')].find(n => !n.id);
+        const heard = [];
+        /* READ THE RECORDS, NOT THE ELEMENT. The first version of this observer
+           read live.textContent inside the callback — but MutationObserver
+           callbacks are microtasks that batch, so three announce() calls in one
+           tick produced one callback that saw only the final value. Reading the
+           added text nodes recovers every message in order, which is exactly
+           what is needed to tell "announced" from "announced and clobbered". */
+        const mo = new MutationObserver(recs => {
+          for (const r of recs) {
+            for (const n of r.addedNodes) if (n.nodeValue) heard.push(n.nodeValue);
+            if (r.type === 'characterData' && r.target.nodeValue) heard.push(r.target.nodeValue);
+          }
+        });
+        if (live) mo.observe(live, { childList: true, characterData: true, subtree: true });
+        document.getElementById('leaguebtn').click();
+        await new Promise(r => setTimeout(r, 1000));
+        mo.disconnect();
+        return { heard, final: live ? live.textContent : '' };
+      }, seed);
+      await c.close();
+      return said;
+    }
+    const heardFor = {};
+    for (const card of seedFor.cards) {
+      const seed = seedFor.want[card.id];
+      heardFor[card.id] = seed ? await saidOnEntry(file, seed) : { heard: [], final: '' };
+    }
+    const spoke = seedFor.cards.filter(c => heardFor[c.id].heard.some(m => m.includes(c.text)));
+    t('L13 every card announces its own text verbatim on the real entry path',
+      spoke.length === seedFor.cards.length,
+      spoke.length === seedFor.cards.length
+        ? seedFor.cards.map(c => `${c.id} ✓`).join(' · ')
+        : `silent: ${seedFor.cards.filter(c => !spoke.includes(c)).map(c => c.id).join(', ')}`);
+    /* SPEAKING IS NOT BEING HEARD. This region is last-write-wins, so a message
+       announced and then overwritten in the same tick reaches nobody. The gate
+       that matters is whether the card is in the announcement that SURVIVES —
+       the first draft of this phase passed "announced" and failed this. */
+    const clobbered = seedFor.cards.filter(c => !heardFor[c.id].final.includes(c.text));
+    t('L13 the card is in the announcement that SURVIVES, not one overwritten in the same tick',
+      clobbered.length === 0,
+      clobbered.length ? `clobbered: ${clobbered.map(c => c.id).join(', ')} · last said "${heardFor[clobbered[0].id].final.slice(0, 60)}"`
+                       : `final line e.g. "${heardFor[seedFor.cards[0].id].final.slice(0, 76)}"`);
+    const noName = seedFor.cards.filter(c => !heardFor[c.id].final.includes(c.name));
+    t('L13 every card announces its own name', noName.length === 0,
+      noName.map(c => c.id).join(', ') || 'all named');
+
+    /* TAMPER: strip the card clause out of the surviving announcement. The
+       toast stays, so a sighted player would notice nothing and only this gate
+       can — which is the whole reason the gate exists. */
+    const tam = tamperFile('mute-cards', [
+      ['    if(lgCard) intro += " Fracture Card: "+lgCard.name+". "+lgCard.text;', '']
+    ]);
+    t('L13 TAMPER: the card clause was actually removed from the copy',
+      tam.path !== null, tam.why || tam.path);
+    if (tam.path) {
+      const one = seedFor.cards[0];
+      const heardTam = await saidOnEntry(tam.path, seedFor.want[one.id]);
+      t('L13 TAMPER: a card that draws silently is CAUGHT by the same check',
+        !heardTam.final.includes(one.text) && !heardTam.heard.some(m => m.includes(one.text)),
+        `card "${one.id}" · live region ended on "${heardTam.final.slice(0, 60)}"`);
+    }
+  }
+
   await browser.close();
-  console.log(red === 0 ? 'FRACTURE LEAGUE PHASE 1 VERIFIED' : `${red} FAILED`);
+  console.log(red === 0 ? 'FRACTURE LEAGUE PHASE 2 VERIFIED' : `${red} FAILED`);
   process.exit(red === 0 ? 0 : 1);
 })().catch(e => { console.error('threw:', e); process.exit(1); });

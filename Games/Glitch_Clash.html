@@ -1132,6 +1132,26 @@ function weeklyPlan(weekKey){
    A seeded season of five legs. It reuses the Endless driver for the same
    reason the Weekly Gauntlet does — one battle loop, three plans — so anything
    fixed in that loop is fixed for every mode at once. */
+/* Every card's text is announced, not just drawn — the announce contract is
+   how this game speaks to a screen reader and a new mechanic does not get to
+   opt out of it.
+
+   THE ANNOUNCE USED TO LIVE HERE AND WAS NEVER HEARD. This runs before the
+   round starts, so within the same tick two more announce() calls followed it —
+   the leg line and "<glitch> appears." A polite live region is last-write-wins:
+   the card text was in the DOM for microseconds and no screen reader ever
+   reached it. Drawing is state, speaking is presentation, and the speaking now
+   happens once, in startBattle(), as part of the sentence that opens the leg. */
+function offerLeagueCard(){
+  try{
+    if(!(window.GCX3 && GCX3.active())) return;
+    const st = GCX3.read();
+    const card = GCX3.cardFor(st.at, st);
+    if(!card) return;
+    GCX3.takeCard(card.id);
+    toast("Fracture Card — " + card.name + ": " + card.text);
+  }catch(e){}
+}
 function startLeague(){
   let st = GCX3.read();
   if(!GCX3.active(st)) st = GCX3.begin("season-" + Math.floor(Math.random()*1e9).toString(36));
@@ -1141,6 +1161,7 @@ function startLeague(){
   endlessRun.round = st.at + 1;
   stopRunClock();
   toast("Fracture League — seed "+st.seed+", leg "+(st.at+1)+" of "+st.route.length+".");
+  offerLeagueCard();
   nextEndlessRound();
 }
 function startWeekly(){
@@ -1347,13 +1368,25 @@ function nextEndlessRound(){
   const idx = lg ? (lg.route[endlessRun.round-1] || lg.route[lg.route.length-1]).stage
                  : wk ? wk.plan.stages[endlessRun.round-1]
                  : (p=>p[Math.floor(Math.random()*p.length)])(endlessPool(drawRound));
+  if(lg){
+    try{
+      const cardN = GCX3.activeCard();
+      if(cardN && cardN.id === "scout"){
+        const nxt = lg.route[endlessRun.round] ;
+        const msg = nxt ? ("Scout Ahead — next on the route: " + nxt.rival + ".")
+                        : "Scout Ahead — this is the final leg.";
+        toast(msg); announce(msg);
+      }
+    }catch(e){}
+  }
   announce(lg ? ("Fracture League, leg "+endlessRun.round+" of "+lg.route.length+
                  " against "+((lg.route[endlessRun.round-1]||{}).rival||"a rival")+".")
        : wk ? ("Weekly Gauntlet, clash "+endlessRun.round+" of "+WEEKLY_LENGTH+".")
               : ("Endless round "+endlessRun.round+"."));
   startBattle(idx, { __scened:true, endless:{
     round:endlessRun.round, scaleRound:drawRound, boons:endlessRun.boons, mods:mods,
-    weekly: wk ? wk.key : null, league: lg ? lg.seed : null } });
+    weekly: wk ? wk.key : null, league: lg ? lg.seed : null,
+    leagueLen: lg ? lg.route.length : 0 } });
 }
 function endlessAdvance(won){
   if(!endlessRun) return false;
@@ -1374,6 +1407,7 @@ function endlessAdvance(won){
     SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods) * (won?1:0.35));
     endlessRun.round++;
     save();
+    offerLeagueCard();
     setTimeout(nextEndlessRound, 30);
     return true;
   }
@@ -1580,14 +1614,28 @@ function startBattle(stageIdx, opts){
   }
   const modTag = (battle.endless && (battle.endless.mods||[]).length)
     ? " · "+battle.endless.mods.map(id=>modById(id).name).join(" + ") : "";
+  /* THREE PLANS SHARE THIS DRIVER, SO THE CHIP HAS TO NAME THREE THINGS.
+     It named two: a league leg inherited the endless branch and announced
+     itself as "Endless · Round 3", which is the one line on screen telling the
+     player where they are. The league knows its own length, so it says so. */
+  const lgTag = battle.endless && battle.endless.leagueLen
+    ? "League · Leg "+battle.endless.round+" of "+battle.endless.leagueLen+modTag+" · " : null;
   const where = battle.endless
     ? (battle.endless.weekly
         ? "Weekly · Clash "+battle.endless.round+" of "+WEEKLY_LENGTH+modTag+" · "
-        : "Endless · Round "+battle.endless.round+modTag+" · ")
+        : lgTag || "Endless · Round "+battle.endless.round+modTag+" · ")
     : (battle.daily ? "Daily · " : "Stage "+(stageIdx+1)+" · ");
   $("#stagechip").textContent = where+g.name;
   logSet(`<b>${g.name}</b> appears! ${g.line}`);
-  announce(g.name+" appears.");
+  /* The last announce() before the player is handed control, so it is the one
+     that survives — which is why the Fracture Card rides along here instead of
+     being spoken earlier and overwritten. */
+  let intro = g.name+" appears.";
+  try{
+    const lgCard = (window.GCX3 && GCX3.active()) ? GCX3.activeCard() : null;
+    if(lgCard) intro += " Fracture Card: "+lgCard.name+". "+lgCard.text;
+  }catch(e){}
+  announce(intro);
   go("battle"); renderBattle();
 }
 function P(){ return battle.team[battle.active]; }
@@ -1717,7 +1765,11 @@ function runRing(done){
   const calm = SV.settings.calm || document.body.classList.contains("reduce-motion");
   // Calm Mode: half speed, much wider window — slower, not automatic
   const period = calm ? 2600 : 1300;
-  const zoneDeg = calm ? 96 : 44;
+  /* A card may only ever WIDEN the arc. Written as a max() inside GCX3.ringDeg
+     rather than as a rule someone has to remember, so no Fracture Card can
+     narrow the ring and none can undo Calm Mode's 96deg floor. */
+  let zoneDeg = calm ? 96 : 44;
+  try{ if(window.GCX3) zoneDeg = GCX3.ringDeg(zoneDeg); }catch(e){}
   /* C4 — THE TARGET ARC BELONGS TO THE RUN SEED, NOT TO DECORATION.
      Where the arc sits decides where the player must tap, so it changes what
      the run asks of them. Inside a league run it comes from the seed, which is
@@ -2383,7 +2435,7 @@ const GCX3 = (()=>{
   }
 
   function defaults(){
-    return { v: LEAGUE_VERSION, seed: "", route: [], at: 0, wins: 0, losses: 0, log: [], done: false };
+    return { v: LEAGUE_VERSION, seed: "", route: [], at: 0, wins: 0, losses: 0, log: [], done: false, card: null, lastAct: null };
   }
 
   /* Same shape of care as Engine.sanitizeSave: every field coerced, nothing
@@ -2403,6 +2455,8 @@ const GCX3 = (()=>{
     out.wins   = Math.max(0, Math.floor(Number(d.wins) || 0));
     out.losses = Math.max(0, Math.floor(Number(d.losses) || 0));
     out.done   = d.done === true;
+    out.card    = (typeof d.card === "string" && CARDS.some(c=>c.id===d.card)) ? d.card : null;
+    out.lastAct = (typeof d.lastAct === "string" && INTENTS.indexOf(d.lastAct) >= 0) ? d.lastAct : null;
     out.log    = Array.isArray(d.log)
       ? d.log.filter(e => e && typeof e === "object").slice(-40)
              .map(e => ({ t: String(e.t || "").slice(0, 24), leg: Math.max(0, Math.floor(Number(e.leg) || 0)), rival: String(e.rival || "").slice(0, 60) }))
@@ -2428,6 +2482,7 @@ const GCX3 = (()=>{
     const st = defaults();
     st.seed = s;
     st.route = makeRoute(s);
+    st.card = null; st.lastAct = null;
     write(st);
     return st;
   }
@@ -2445,20 +2500,121 @@ const GCX3 = (()=>{
     return 40 + rng() * 240;
   }
 
+  /* ---- RIVALS: intent that is TRUE BY CONSTRUCTION -----------------------
+     The telegraph is not stored and then honoured — it is a PURE FUNCTION of
+     (seed, leg, turn), read by the display and by the turn resolver alike. A
+     stored intent can drift from what actually happens; a shared function
+     cannot, so "truthful" is a property of the shape rather than a promise.
+
+     canSpecial is passed in because Engine.resolveTurn downgrades a special to
+     a strike when the rival cannot afford it. If the display ignored that, the
+     chip would sometimes promise a special the game then refuses — a gotcha in
+     the other direction. Both callers pass the same pre-turn energy, so both
+     see the same downgrade. */
+  const INTENTS = ["strike", "charge", "guard", "special"];
+  function rivalIntent(turn, canSpecial, st){
+    const s0 = st || read();
+    if(!active(s0)) return null;
+    /* MIRROR FIELD BELONGS HERE, AND THE FIRST VERSION PUT IT SOMEWHERE ELSE.
+       It went into the turn resolver and was left out of the intent chip, so
+       under the one card that promises predictability the chip announced a
+       seeded action while the rival played its previous one. The card was
+       lying — the exact gotcha this design is shaped to make impossible. One
+       source or none: a card's effect on intent is part of the function both
+       callers read, never a branch bolted onto one of them.
+       Turn 1 has no previous action, so it falls through to the seeded roll. */
+    const c = activeCard(s0);
+    if(c && c.id === "mirror" && s0.lastAct){
+      return (s0.lastAct === "special" && !canSpecial) ? "strike" : s0.lastAct;
+    }
+    const rng = mulberry32(hash32("rival:" + s0.seed + ":" + s0.at + ":" + turn));
+    const r = rng();
+    /* Weighted the same way the shipped AI leans: mostly strike, then charge,
+       then guard, with specials the rarest. */
+    let act = r < 0.42 ? "strike" : r < 0.68 ? "charge" : r < 0.86 ? "guard" : "special";
+    if(act === "special" && !canSpecial) act = "strike";
+    return act;
+  }
+  const INTENT_TEXT = { strike:"strike", charge:"gather charge", guard:"guard", special:"unleash a special" };
+
+  /* ---- FRACTURE CARDS: they change DECISIONS, never damage ---------------
+     Every card here alters information, stakes or a ring CONDITION. None of
+     them touches Engine's damage maths, and the suite proves that by driving a
+     lost clash under each card and requiring the soft-loss payoff to land in
+     the same envelope as with no card at all.
+
+     calm: what the card does to the ring, stated per card. Only one touches it,
+     and it can only ever WIDEN — see ringDeg(). */
+  const CARDS = [
+    { id:"blind",  name:"Blind Spot",  text:"You cannot read this rival's intent.",
+      alters:"information", ring:false },
+    { id:"scout",  name:"Scout Ahead", text:"The next rival on the route is revealed now.",
+      alters:"information", ring:false },
+    { id:"steady", name:"Steady Hand", text:"The clash arc is wider for this leg.",
+      alters:"ring condition", ring:true },
+    { id:"stakes", name:"High Stakes", text:"This leg counts double, won or lost.",
+      alters:"stakes", ring:false },
+    { id:"mirror", name:"Mirror Field", text:"This rival repeats whatever it did last turn.",
+      alters:"predictability", ring:false }
+  ];
+  function cardById(id){ return CARDS.find(c=>c.id===id) || null; }
+  /* Which card is offered on a leg is part of the seeded season. */
+  function cardFor(at, st){
+    const s0 = st || read();
+    if(!active(s0)) return null;
+    const rng = mulberry32(hash32("card:" + s0.seed + ":" + (at == null ? s0.at : at)));
+    return CARDS[Math.floor(rng() * CARDS.length)] || null;
+  }
+  function activeCard(st){
+    const s0 = st || read();
+    if(!active(s0)) return null;
+    return s0.card === null || s0.card === undefined ? null : cardById(s0.card);
+  }
+
+  /* THE CALM FLOOR. A card may only ever widen the arc, never narrow it, so no
+     card can undo Calm Mode. Stated as a max() rather than a rule someone has
+     to remember. */
+  function ringDeg(base, st){
+    const c = activeCard(st);
+    if(!c || !c.ring) return base;
+    return Math.max(base, base + 26);
+  }
+
   function record(won, st){
     const s = st || read();
     if(!active(s)) return s;
     const l = leg(s);
     s.log.push({ t: won ? "win" : "loss", leg: s.at, rival: (l && l.rival) || "" });
-    if(won) s.wins++; else s.losses++;
+    /* High Stakes changes what a result is WORTH, not what damage was dealt. */
+    const card = activeCard(s);
+    const weight = (card && card.id === "stakes") ? 2 : 1;
+    if(won) s.wins += weight; else s.losses += weight;
     s.at++;
+    s.card = null; s.lastAct = null;
     if(s.at >= s.route.length) s.done = true;
     write(s);
     return s;
   }
 
+  /* Taking the offered card is a decision, so it is recorded like one. */
+  function takeCard(id, st){
+    const s0 = st || read();
+    if(!active(s0)) return s0;
+    s0.card = cardById(id) ? id : null;
+    write(s0);
+    return s0;
+  }
+  function noteAct(act, st){
+    const s0 = st || read();
+    if(!active(s0)) return s0;
+    if(INTENTS.indexOf(act) >= 0){ s0.lastAct = act; write(s0); }
+    return s0;
+  }
+
   return { KEY, LEAGUE_VERSION, ROUTE_LEN, hash32, mulberry32, makeRoute,
-           defaults, sanitize, read, write, clear, begin, active, leg, ringStart, record };
+           defaults, sanitize, read, write, clear, begin, active, leg, ringStart, record,
+           CARDS, cardById, cardFor, activeCard, takeCard, ringDeg,
+           rivalIntent, noteAct, INTENT_TEXT };
 })();
 /* GCX3:END */
 
@@ -2618,7 +2774,24 @@ function renderBattle(){
            ac.setAttribute("aria-label",`Arena: ${a.name}. ${a.desc}`); }
   }
   renderGlyphs();
-  $("#ef").innerHTML=fighterCard(e,true)+((e.en>=60&&!battle.over)?`<div class="chip" style="margin-top:6px;border-color:var(--energy);color:var(--energy)">⚡ Static gathers around ${e.name}…</div>`:"");
+  /* The league's intent chip sits beside the game's existing telegraph rather
+     than replacing it — same place, same shape, one more truth. Blind Spot is
+     the one card that withholds it, and it SAYS so rather than going quiet,
+     because a blank space reads as a bug. */
+  let intentChip = "";
+  try{
+    if(window.GCX3 && GCX3.active() && !battle.over){
+      const st1 = GCX3.read();
+      const card1 = GCX3.activeCard(st1);
+      if(card1 && card1.id === "blind"){
+        intentChip = `<div class="chip" style="margin-top:6px">🚫 Blind Spot — this rival's intent is hidden.</div>`;
+      } else {
+        const want = GCX3.rivalIntent(battle.turn, e.en >= Engine.specialCost(battle.arena), st1);
+        if(want) intentChip = `<div class="chip" style="margin-top:6px;border-color:var(--star);color:var(--star)">◎ ${e.name} will ${GCX3.INTENT_TEXT[want]||want}.</div>`;
+      }
+    }
+  }catch(err){}
+  $("#ef").innerHTML=fighterCard(e,true)+((e.en>=60&&!battle.over)?`<div class="chip" style="margin-top:6px;border-color:var(--energy);color:var(--energy)">⚡ Static gathers around ${e.name}…</div>`:"")+intentChip;
   $("#pf").innerHTML=fighterCard(p,false);
   $("#pf").classList.toggle("corrupt-card", p.corrupt>0);
   const pcard=$("#pf .card");
@@ -2748,7 +2921,23 @@ function doTurn(cmd){
   } else if(cmd.hybrid){
     pAct="special";
   } else pAct=cmd.act;
-  const eAct=Engine.aiChoose(e,rng);
+  /* RIVALS. In a league leg the rival's action comes from the same pure
+     function the intent chip reads, so what was shown is what happens — the
+     telegraph cannot lie because there is only one source. Mirror Field's
+     repeat lives inside that function too, not here: this call site knows
+     nothing about cards, which is what keeps the two readings identical.
+     Outside a league the shipped AI is untouched. */
+  let eAct;
+  {
+    let seeded = null;
+    try{
+      if(window.GCX3 && GCX3.active()){
+        seeded = GCX3.rivalIntent(battle.turn, e.en >= Engine.specialCost(battle.arena));
+      }
+    }catch(err){}
+    eAct = seeded || Engine.aiChoose(e,rng);
+    try{ if(window.GCX3 && GCX3.active()) GCX3.noteAct(eAct); }catch(err){}
+  }
   const hpBefore=P().hp;
   let ev=[], prefix="";
   const ctx=()=>({arena:battle.arena, clashSkill:battle.clashSkill, hybrid:cmd.hybrid||null});
