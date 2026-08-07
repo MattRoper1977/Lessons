@@ -2485,3 +2485,28 @@ the pass brief withheld.**
   them by two orders of magnitude (repaired 189.5x, pristine 0.9x). **When a gate and the defect
   it targets can both be satisfied by the same wrong mechanism, the gate is measuring the wrong
   quantity.**
+
+- **A one-sided gate is not a weakened gate when the defect only lives on one side.** L4b asserted
+  a ±10% band on world progress per unit of WALL time, and it flaked at a green tip — 0.902, 0.947,
+  1.008, 1.050, 1.143 — because the measurement is render-cost sensitive. The upper excursions were
+  benign BY CONSTRUCTION: with a fixed timestep the simulation cannot run fast, so a ratio above 1
+  only means the reduced-motion path had less to draw and fitted more frames into the window. The
+  rule that matters is not "keep both sides" but **derive the floor from the defect and from the
+  noise, and prove the gate still bites**: the defect is a dt clamp whose ratio is set by the clamp
+  against the frame interval (0.60 at 30fps, 0.40 at 20fps — the retained pre-repair original reads
+  0.400), and the lowest healthy reading ever observed was 0.902; 0.75 sits between them with margin
+  at both ends. It still goes red at 0.471 on the original, and six consecutive runs at tip pass —
+  one of them at 1.148, which the old band would have failed. **When a gate flakes, ask which side
+  the defect is actually on before widening anything; a band that fails on benign readings trains
+  people to re-run until green, which is worse than no gate.**
+
+- **An outage's debt is paid in publication, not in retries.** GitHub's 2026-08-06 incident left
+  Pages build jobs unable to acquire runners — `runner_id: 0`, cancelled at exactly 15 minutes, on
+  both repos, while other Actions jobs on the same repos got runners in seconds. Merged content was
+  correct throughout; only publication was stuck. Two things follow. **The signature is diagnostic**
+  and should be read before any retry is spent: Pages build with runner_id 0 timing out at 15:00
+  while non-Pages jobs succeed = degraded infrastructure, not a content defect. And **a failure that
+  happened during an outage does not retry itself when the outage ends** — the Games deploy that
+  failed at 20:57 was still failed the next morning, and one re-run then built in 22 seconds. Sweep
+  for stale in-outage failures once the signature clears, rather than assuming recovery republished
+  anything.
