@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import base64
 import hashlib
 import json
 import re
 import struct
 import subprocess
 import tempfile
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PAYLOAD = Path(__file__).resolve().parent
 EXPECTED_POSTER_SHA256 = "7a2caf724d81f6ff85c52eb640baf145513f704aa54dd4fd9e2cc30581493122"
+POSTER_URL = "https://i.ytimg.com/vi/vhuk-K_wWas/hqdefault.jpg"
 JSON_TYPES = {"application/json", "application/ld+json", "importmap", "application/importmap+json"}
 JS_TYPES = {"", "text/javascript", "application/javascript", "module", "text/ecmascript", "application/ecmascript"}
 
@@ -70,8 +70,12 @@ def patch_index(path: Path) -> None:
 
 
 def install_poster(path: Path) -> dict[str, int | str]:
-    encoded = (PAYLOAD / "poster-art.jpg.b64").read_text(encoding="ascii").strip()
-    data = base64.b64decode(encoded, validate=True)
+    request = urllib.request.Request(
+        POSTER_URL,
+        headers={"User-Agent": "MadeByMatt-estate-repair/2026-08-07"},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        data = response.read()
     digest = hashlib.sha256(data).hexdigest()
     if digest != EXPECTED_POSTER_SHA256:
         raise SystemExit(f"poster digest mismatch: {digest}")
@@ -93,7 +97,11 @@ def install_poster(path: Path) -> dict[str, int | str]:
         index += 1
         if marker in {0xD8, 0xD9} or 0xD0 <= marker <= 0xD7:
             continue
+        if index + 2 > len(data):
+            break
         length = struct.unpack(">H", data[index:index + 2])[0]
+        if length < 2 or index + length > len(data):
+            raise SystemExit("poster JPEG contains a malformed segment length")
         if marker in sof:
             height, width = struct.unpack(">HH", data[index + 3:index + 7])
             break
