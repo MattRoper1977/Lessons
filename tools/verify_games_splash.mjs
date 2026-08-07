@@ -33,12 +33,49 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4173/Lessons';
 const MARKER = 'mbm-splash-inline';
 
+/* SCOPES — where this gate looks, and nothing about WHAT it accepts.
+ *
+ * The estate's splash-carrying games used to live in exactly one place, so this
+ * tool read one directory. They no longer do: site-published games (fracture,
+ * neonturf, luminahaven, auroralinks, olympics) sit in the other repo, and the
+ * first of them to be built to this standard would otherwise have had to be
+ * judged by a second, parallel checker. A parallel checker is the thing this
+ * estate does not do — two standards drift, and the newer one is always the one
+ * nobody re-reads. So the SCOPE became configurable and the STANDARD did not.
+ *
+ * Derivation is untouched: within every scope, whichever files carry the marker
+ * are the ones judged. Adding a game still puts it under this gate
+ * automatically; adding a scope just tells the gate where else to look.
+ *
+ *   SPLASH_SCOPES="/abs/dir|http://host/url-prefix,/another|http://host/other"
+ *
+ * The default scope is exactly the historical behaviour, so a bare invocation
+ * of this tool judges precisely what it judged before. */
+function scopes() {
+  const list = [{ dir: join(ROOT, 'Games'), url: `${BASE}/Games` }];
+  for (const spec of (process.env.SPLASH_SCOPES || '').split(',').map(s => s.trim()).filter(Boolean)) {
+    const [dir, url] = spec.split('|');
+    if (!dir || !url) { console.error(`bad SPLASH_SCOPES entry (want dir|url): ${spec}`); process.exit(2); }
+    list.push({ dir, url: url.replace(/\/$/, '') });
+  }
+  return list;
+}
+
 /* DERIVED, never pinned: whichever games carry the inlined splash are the ones
- * judged. Adding an eleventh game puts it under this gate automatically. */
+ * judged. Returns {file, dir, url} so a target carries its own location and no
+ * caller has to reconstruct one. */
 function targets() {
-  return readdirSync(join(ROOT, 'Games'))
-    .filter(f => f.endsWith('.html'))
-    .filter(f => readFileSync(join(ROOT, 'Games', f), 'utf8').includes(MARKER));
+  const out = [];
+  for (const sc of scopes()) {
+    let names = [];
+    try { names = readdirSync(sc.dir); }
+    catch (e) { console.error(`scope unreadable: ${sc.dir}`); process.exit(2); }
+    for (const f of names.filter(f => f.endsWith('.html'))) {
+      if (readFileSync(join(sc.dir, f), 'utf8').includes(MARKER))
+        out.push({ file: f, dir: sc.dir, url: `${sc.url}/${encodeURIComponent(f)}`, label: `${sc.dir.split('/').slice(-2).join('/')}/${f}` });
+    }
+  }
+  return out;
 }
 
 let pass = 0, fail = 0;
@@ -60,10 +97,10 @@ async function newPage(browser, rm) {
   return { ctx, page, remote };
 }
 
-async function judge(browser, file, rm) {
+async function judge(browser, target, rm) {
   const { ctx, page, remote } = await newPage(browser, rm);
-  const url = `${BASE}/Games/${encodeURIComponent(file)}`;
-  const tag = `${file} [rm=${rm}]`;
+  const url = target.url;
+  const tag = `${target.label} [rm=${rm}]`;
   await page.goto(url, { waitUntil: 'commit' });
 
   /* Every up-state assertion is taken IN ONE in-page evaluate that waits for
@@ -123,10 +160,10 @@ async function judge(browser, file, rm) {
   await ctx.close();
 }
 
-async function judgeSkip(browser, file, rm, how, attempt = 0) {
+async function judgeSkip(browser, target, rm, how, attempt = 0) {
   const { ctx, page } = await newPage(browser, rm);
-  const tag = `${file} [rm=${rm}] ${how === ' ' ? 'Space' : how}`;
-  await page.goto(`${BASE}/Games/${encodeURIComponent(file)}`, { waitUntil: 'commit' });
+  const tag = `${target.label} [rm=${rm}] ${how === ' ' ? 'Space' : how}`;
+  await page.goto(target.url, { waitUntil: 'commit' });
   /* Wait for the splash IN-PAGE and read the counters in the same round trip.
    * Reduced motion gives roughly a 1.1s window that opens ~0.9s after commit on
    * the slowest-booting game here, so each extra Playwright round trip eats a
@@ -157,7 +194,7 @@ async function judgeSkip(browser, file, rm, how, attempt = 0) {
    * skipping. Retry once on a fresh page rather than scoring it either way. */
   if (leaked && !after.present && attempt === 0) {
     await ctx.close();
-    return judgeSkip(browser, file, rm, how, 1);
+    return judgeSkip(browser, target, rm, how, 1);
   }
   ok(!after.present, `S2/S3 ${tag} skips the splash`);
   ok(!leaked, `S2/S3 ${tag} does not leak to the game (${counter} ${armed.leak[counter]}->${after.leak[counter]})`);
@@ -170,17 +207,26 @@ if (process.argv.includes('--self-test')) {
    * preventDefault-only form, and prove the leak assertion goes RED. If it
    * cannot fail there, its green over the real files means nothing. */
   const { writeFileSync } = await import('node:fs');
-  const victim = targets()[0];
-  const src = readFileSync(join(ROOT, 'Games', victim), 'utf8');
+  /* The victim is picked with SELF_TEST_TARGET when given, so a newly added
+     game can prove ITS hardening rather than inheriting a green earned by a
+     neighbour. Every target still has to satisfy the same gates either way —
+     this only chooses which one the non-vacuity proof is run against. */
+  const all = targets();
+  const want = process.env.SELF_TEST_TARGET;
+  const victim = (want && all.find(t => t.file === want || t.label.endsWith(want))) || all[0];
+  if (want && victim.file !== want && !victim.label.endsWith(want)) {
+    console.error(`SELF-TEST FAILED: no target matches SELF_TEST_TARGET=${want}`); process.exit(1);
+  }
+  const src = readFileSync(join(victim.dir, victim.file), 'utf8');
   const weakened = src
     .replace(/e\.stopPropagation\(\);\s*\n?\s*if \(e\.stopImmediatePropagation\) e\.stopImmediatePropagation\(\);/g, '')
     .replace(/window\.addEventListener\("keydown", onKey, true\);/g, '');
-  if (weakened === src) { console.error('SELF-TEST FAILED: could not weaken the hardening'); process.exit(1); }
+  if (weakened === src) { console.error(`SELF-TEST FAILED: could not weaken the hardening in ${victim.label}`); process.exit(1); }
   const tmp = '__selftest_weakened.html';
-  writeFileSync(join(ROOT, 'Games', tmp), weakened);
+  writeFileSync(join(victim.dir, tmp), weakened);
   const browser = await chromium.launch();
   const { ctx, page } = await newPage(browser, 'no-preference');
-  await page.goto(`${BASE}/Games/${tmp}`, { waitUntil: 'commit' });
+  await page.goto(`${victim.url.replace(/[^/]+$/, '')}${tmp}`, { waitUntil: 'commit' });
   const up = await page.waitForSelector('.mbm-splash', { timeout: 8000, state: 'attached' }).then(() => true).catch(() => false);
   let leaked = false, before = {}, after = {};
   if (up) {
@@ -192,7 +238,8 @@ if (process.argv.includes('--self-test')) {
   }
   await ctx.close(); await browser.close();
   const { unlinkSync } = await import('node:fs');
-  unlinkSync(join(ROOT, 'Games', tmp));
+  unlinkSync(join(victim.dir, tmp));
+  console.log(`  self-test victim: ${victim.label}`);
   console.log(up
     ? (leaked
         ? `SELF-TEST PASSED — weakened to the donor's preventDefault-only form, the skip key DOES leak (keydown ${before.keydown}->${after.keydown}). The leak assertion can fail, so its green means something.`
@@ -203,14 +250,14 @@ if (process.argv.includes('--self-test')) {
 
 const files = targets();
 if (!files.length) { console.error('no games carry the splash marker'); process.exit(1); }
-console.log(`splash gate over ${files.length} derived target(s)\n`);
+console.log(`splash gate over ${files.length} derived target(s) in ${scopes().length} scope(s)\n`);
 const browser = await chromium.launch();
 for (const f of files) {
   for (const rm of ['no-preference', 'reduce']) {
     await judge(browser, f, rm);
     for (const how of ['pointer', 'Escape', 'Enter', ' ']) await judgeSkip(browser, f, rm, how);
   }
-  console.log(`  done ${f}`);
+  console.log(`  done ${f.label}`);
 }
 await browser.close();
 console.log(`\n${fail === 0 ? `ALL ${pass} SPLASH GATES PASSED (${files.length} games x 2 RM states)` : `${pass} passed, ${fail} FAILED`}`);

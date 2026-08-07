@@ -2563,3 +2563,33 @@ the pass brief withheld.**
   childList, `target.nodeValue` for characterData. Same family as the vacuous-green lesson — an
   instrument that samples the subject after the fact cannot see anything the subject overwrote, and
   will report a confident green about a sequence it never observed.
+
+- **A vacuous RED is more dangerous than a vacuous green, and a rate is not a verdict without an
+  amplitude floor.** Global Games' first flash census reported five of ten scenes OVER a 3 Hz
+  photosensitivity ceiling, at up to 17.4 Hz. Every one was noise. The peak counter uses a
+  prominence threshold proportional to the signal's OWN range — correct for measuring a waveform,
+  and exactly wrong for judging one that has no waveform: at a peak-to-peak of 0.086 luminance units
+  out of 255 the threshold falls to 0.004, and 8-bit quantisation jitter counts as peaks. The
+  instrument's own non-vacuity check flagged those same scenes as "did not move" **in the same
+  breath as failing them**, which is the tell: a row cannot simultaneously prove nothing and prove a
+  hazard. **A green that proves nothing wastes a gate; a red that proves nothing gets a real safety
+  instrument switched off for crying wolf** — and the instrument that gets switched off is the one
+  that would have caught the real thing. Two rules. **Derive the floor from the measurements rather
+  than picking one**: the scenes separated into "did not move" (0 to 0.305) and "genuinely moved"
+  (3.95 to 38.4), an order of magnitude of empty space, so a 2.0-unit floor sits inside the gap with
+  margin at both ends and an order of magnitude below any modulation a flash guideline concerns
+  itself with. And **never soften a safety threshold without adding a positive control in the same
+  change**: an injected full-screen strobe at a known rate must still be caught, or the softening is
+  indistinguishable from switching the gate off.
+
+- **An inherited finding is a claim like any other.** A brief arrived asserting that Global Games
+  reached storage "through a wrapper — a literal setItem/getItem grep returns EMPTY". One grep
+  disproved it: `localStorage.getItem` and `localStorage.setItem` sit unwrapped and single-quoted on
+  lines 207 and 210, and `localStorage` appears exactly twice in the file. This is the null-grep
+  register entry running the other way — that one warns against reading a null result as an absence,
+  and this is an absence *asserted* by someone else and inherited unexamined. Acting on it would
+  have meant hunting a wrapper that does not exist, and the same brief's conditional rename would
+  then have been applied to a key that was already correct. **Re-derive a handed-down finding before
+  building on it, exactly as you would re-derive your own.** The same brief was also wrong that the
+  aria surface was "15" (measured: 18) and implied two rails shared one mechanism when the code uses
+  two different ones — none of which was malice, all of which was load-bearing.
