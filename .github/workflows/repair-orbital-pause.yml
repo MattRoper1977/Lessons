@@ -2,7 +2,8 @@ name: Apply verified Lessons runtime repairs
 
 on:
   push:
-    branches: [codex/full-repair-upgrade-2026-08-07]
+    branches:
+      - codex/lessons-repair-trigger-2026-08-07
   workflow_dispatch:
 
 permissions:
@@ -10,17 +11,19 @@ permissions:
 
 concurrency:
   group: apply-verified-lessons-repairs
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   repair:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the authorised repair branch
+        uses: actions/checkout@v4
         with:
           ref: codex/full-repair-upgrade-2026-08-07
           fetch-depth: 0
+          persist-credentials: true
 
       - uses: actions/setup-python@v5
         with:
@@ -77,7 +80,7 @@ jobs:
           cmp assets/video/poster-art.jpg /tmp/served-poster.jpg
           git diff --check
 
-      - name: Commit only the repaired product files and remove the packet
+      - name: Commit only product repairs and remove all transport files
         run: |
           rm -rf .github/repair-payload
           rm -f .github/workflows/repair-orbital-pause.yml
@@ -88,3 +91,4 @@ jobs:
           git diff --cached --check
           git commit -m 'fix: repair Orbital pause and Lessons poster route'
           git push origin HEAD:codex/full-repair-upgrade-2026-08-07
+          git push origin --delete codex/lessons-repair-trigger-2026-08-07 || true
