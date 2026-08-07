@@ -434,6 +434,7 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
   <button class="btn" id="dailybtn">📅 Daily Clash</button>
   <button class="btn" id="weeklybtn">🏆 Weekly Gauntlet</button>
   <button class="btn" id="endlessbtn">♾ Endless Run</button>
+  <button class="btn" id="leaguebtn">🏁 Fracture League</button>
   <button class="btn" data-open="stickers">⭐ Sticker Shelf</button>
   <button class="btn" data-open="themes">🎨 Arena Themes</button>
   <div class="footer">Made by Matt · v2.0</div>
@@ -1099,6 +1100,13 @@ function renderHome(){
   $("#endlessbtn").textContent = bestE ? ("♾ Endless Run · best round "+bestE) : "♾ Endless Run";
   $("#weeklybtn").textContent = SV.weeklyDone===localWeekKey()
     ? "🏆 Weekly Gauntlet ✓ (done this week)" : "🏆 Weekly Gauntlet";
+  try{
+    const lg = GCX3.read();
+    const btn = $("#leaguebtn");
+    if(btn) btn.textContent = GCX3.active(lg)
+      ? ("🏁 Fracture League · leg "+(lg.at+1)+" of "+lg.route.length)
+      : (lg.done ? "🏁 Fracture League · new season" : "🏁 Fracture League");
+  }catch(e){}
 }
 
 /* ---------- weekly gauntlet ----------
@@ -1119,6 +1127,21 @@ function weeklyPlan(weekKey){
   }
   const mod = MODIFIERS[Engine.dailyIndex(weekKey+":m", MODIFIERS.length)].id;
   return { stages, mod };
+}
+/* ---------- Fracture League ----------
+   A seeded season of five legs. It reuses the Endless driver for the same
+   reason the Weekly Gauntlet does — one battle loop, three plans — so anything
+   fixed in that loop is fixed for every mode at once. */
+function startLeague(){
+  let st = GCX3.read();
+  if(!GCX3.active(st)) st = GCX3.begin("season-" + Math.floor(Math.random()*1e9).toString(36));
+  endlessRun = GCX2.newRun();
+  endlessRun.mods = [];
+  endlessRun.league = { seed: st.seed, route: st.route, at: st.at };
+  endlessRun.round = st.at + 1;
+  stopRunClock();
+  toast("Fracture League — seed "+st.seed+", leg "+(st.at+1)+" of "+st.route.length+".");
+  nextEndlessRound();
 }
 function startWeekly(){
   const key=localWeekKey(), plan=weeklyPlan(key);
@@ -1313,22 +1336,47 @@ function nextEndlessRound(){
   if(battle && !battle.over) return;
   const mods=endlessRun.mods||[];
   const wk=endlessRun.weekly;
+  const lg=endlessRun.league;
   /* Hardcore stops holding the bosses back and starts the escalation curve at
      round 5, so the very first clash is already what round 5 would have been. */
   const hard = mods.includes("hardcore");
   const drawRound = hard ? endlessRun.round+4 : endlessRun.round;
   // the weekly draws from its fixed plan; endless draws at random
-  const idx = wk ? wk.plan.stages[endlessRun.round-1]
+  /* Three plans now share this draw: the league walks its seeded route, the
+     weekly walks its fixed plan, and endless draws at random. */
+  const idx = lg ? (lg.route[endlessRun.round-1] || lg.route[lg.route.length-1]).stage
+                 : wk ? wk.plan.stages[endlessRun.round-1]
                  : (p=>p[Math.floor(Math.random()*p.length)])(endlessPool(drawRound));
-  announce(wk ? ("Weekly Gauntlet, clash "+endlessRun.round+" of "+WEEKLY_LENGTH+".")
+  announce(lg ? ("Fracture League, leg "+endlessRun.round+" of "+lg.route.length+
+                 " against "+((lg.route[endlessRun.round-1]||{}).rival||"a rival")+".")
+       : wk ? ("Weekly Gauntlet, clash "+endlessRun.round+" of "+WEEKLY_LENGTH+".")
               : ("Endless round "+endlessRun.round+"."));
   startBattle(idx, { __scened:true, endless:{
     round:endlessRun.round, scaleRound:drawRound, boons:endlessRun.boons, mods:mods,
-    weekly: wk ? wk.key : null } });
+    weekly: wk ? wk.key : null, league: lg ? lg.seed : null } });
 }
 function endlessAdvance(won){
   if(!endlessRun) return false;
   const wk=endlessRun.weekly;
+  const lg=endlessRun.league;
+  /* The league keeps its own record, in its own key. A loss does not end a
+     league run the way it ends an Endless run — a season is played out. */
+  if(lg){
+    const st = GCX3.record(won);
+    endlessRun.league = st.done ? null : Object.assign({}, lg, { at: st.at });
+    if(st.done){
+      toast("League complete — "+st.wins+" won, "+st.losses+" lost.");
+      announce("Fracture League complete. "+st.wins+" won, "+st.losses+" lost.");
+      if(won) SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods));
+      save(); endlessRun=null; stopRunClock(); renderHome(); go("home");
+      return false;
+    }
+    SV.xp += Math.round(GCX2.roundReward(endlessRun.round) * modMultiplier(endlessRun.mods) * (won?1:0.35));
+    endlessRun.round++;
+    save();
+    setTimeout(nextEndlessRound, 30);
+    return true;
+  }
   if(!won){
     const r=endlessRun.round;
     if(wk){
@@ -1416,6 +1464,7 @@ $("#dailybtn").onclick=()=>{
 };
 $("#endlessbtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} showModPick(); };
 $("#weeklybtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} startWeekly(); };
+$("#leaguebtn").onclick=()=>{ try{ GCX.sfx.click(); }catch(e){} startLeague(); };
 
 /* ----- stages ----- */
 function renderStages(){
@@ -1669,7 +1718,14 @@ function runRing(done){
   // Calm Mode: half speed, much wider window — slower, not automatic
   const period = calm ? 2600 : 1300;
   const zoneDeg = calm ? 96 : 44;
-  const zoneStart = 40 + Math.random()*240;
+  /* C4 — THE TARGET ARC BELONGS TO THE RUN SEED, NOT TO DECORATION.
+     Where the arc sits decides where the player must tap, so it changes what
+     the run asks of them. Inside a league run it comes from the seed, which is
+     what makes "same seed = same taps required" true. Outside one it stays
+     free-random, so Endless, Run Modifiers, Time Attack and the Weekly Gauntlet
+     behave exactly as they did. */
+  let zoneStart = 40 + Math.random()*240;
+  try{ const seeded = (window.GCX3 && GCX3.ringStart()); if(seeded != null) zoneStart = seeded; }catch(e){}
   const R=42, C=2*Math.PI*R;
   const zone=$("#ringzone"), hand=$("#ringhand"), verdict=$("#ringverdict"), btn=$("#ringtap");
   zone.setAttribute("stroke-dasharray", `${(zoneDeg/360*C).toFixed(1)} ${C.toFixed(1)}`);
@@ -2257,9 +2313,159 @@ const GCX2 = (()=>{
 })();
 /* GCX2:END */
 
+/* ---------- GCX3: Fracture League (additive, DOM-free core) ----------------
+   A fifth mode, composed alongside Endless / Run Modifiers / Time Attack /
+   Weekly Gauntlet rather than replacing any of them. See the mode-composition
+   table in reports/close/2026-08-07-G1-fracture-league-PARK.md for what this
+   does with each existing mode's hooks.
+
+   WHY ITS OWN KEY, AND NOT INSIDE SV.
+   `Engine.sanitizeSave` rebuilds SV from DEFAULT_SAVE() and then stamps
+   `sv.v = SAVE_VERSION`. An unrecognised field would survive the Object.assign
+   but nothing would validate it, and a v3 save would quietly start meaning two
+   different things depending on whether a league had ever been played. Keeping
+   league state in `mbm_glitchclash_league_v1` means `glitchclash_save` is
+   untouched by this expansion (R6), and "a v3 save with no league block" is not
+   a case the SV path can even observe — the absence is permanently valid by
+   construction rather than by a code path that has to remember to allow it.
+
+   THE SEED. Extends the hashing family already in the file — Engine.dailyIndex
+   builds a deterministic index from a date string the same way. The run seed
+   owns everything that changes what the player must DO: the route, the rivals,
+   and the clash ring's target arc. Cosmetic randomness keeps Math.random.
+   -------------------------------------------------------------------------- */
+const GCX3 = (()=>{
+  "use strict";
+  const KEY = "mbm_glitchclash_league_v1";
+  const LEAGUE_VERSION = 1;
+  const ROUTE_LEN = 5;
+
+  /* FNV-1a, then mulberry32. Same idea as Engine.dailyIndex's h*31 walk, with a
+     better avalanche so neighbouring seeds ("run-1", "run-2") do not produce
+     neighbouring routes. */
+  function hash32(str){
+    let h = 2166136261 >>> 0;
+    const s = String(str);
+    for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return h >>> 0;
+  }
+  function mulberry32(a){
+    let t0 = a >>> 0;
+    return function(){
+      t0 = (t0 + 0x6D2B79F5) >>> 0;
+      let t = Math.imul(t0 ^ (t0 >>> 15), 1 | t0);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* The route is a pure function of the seed. Nothing about it reads the clock,
+     the save, or Math.random — two players on the same seed face the same
+     rivals in the same order, which is the whole point of a league. */
+  function makeRoute(seed, glitches){
+    const pool = glitches || (typeof GLITCHES !== "undefined" ? GLITCHES : []);
+    const rng = mulberry32(hash32("route:" + seed));
+    const legs = [];
+    const used = [];
+    for(let i=0;i<ROUTE_LEN;i++){
+      /* Difficulty climbs across the route; within a band the rival is drawn
+         deterministically. Stages 1-3 of the campaign are the locked teaching
+         space, so the league never routes through them. */
+      const lo = 3 + Math.floor(i * Math.max(0, pool.length - 4) / ROUTE_LEN);
+      const hi = Math.min(pool.length - 1, lo + 2);
+      let pick = lo + Math.floor(rng() * (hi - lo + 1));
+      let guard = 0;
+      while(used.indexOf(pick) >= 0 && guard++ < 8) pick = lo + ((pick - lo + 1) % (hi - lo + 1));
+      used.push(pick);
+      legs.push({ stage: pick, rival: (pool[pick] && pool[pick].name) || ("Glitch " + pick) });
+    }
+    return legs;
+  }
+
+  function defaults(){
+    return { v: LEAGUE_VERSION, seed: "", route: [], at: 0, wins: 0, losses: 0, log: [], done: false };
+  }
+
+  /* Same shape of care as Engine.sanitizeSave: every field coerced, nothing
+     trusted, and an unreadable blob degrades to a fresh league rather than
+     throwing. */
+  function sanitize(d){
+    const def = defaults();
+    if(!d || typeof d !== "object" || Array.isArray(d)) return def;
+    const out = defaults();
+    out.seed = typeof d.seed === "string" ? d.seed.slice(0, 64) : "";
+    out.route = Array.isArray(d.route)
+      ? d.route.filter(l => l && typeof l === "object" && Number.isFinite(Number(l.stage)))
+               .slice(0, ROUTE_LEN)
+               .map(l => ({ stage: Math.max(0, Math.floor(Number(l.stage))), rival: String(l.rival || "").slice(0, 60) }))
+      : [];
+    out.at     = Math.max(0, Math.min(ROUTE_LEN, Math.floor(Number(d.at) || 0)));
+    out.wins   = Math.max(0, Math.floor(Number(d.wins) || 0));
+    out.losses = Math.max(0, Math.floor(Number(d.losses) || 0));
+    out.done   = d.done === true;
+    out.log    = Array.isArray(d.log)
+      ? d.log.filter(e => e && typeof e === "object").slice(-40)
+             .map(e => ({ t: String(e.t || "").slice(0, 24), leg: Math.max(0, Math.floor(Number(e.leg) || 0)), rival: String(e.rival || "").slice(0, 60) }))
+      : [];
+    /* A seed with no route is incoherent; rebuild it rather than ship a league
+       that cannot be played. */
+    if(out.seed && !out.route.length) out.route = makeRoute(out.seed);
+    return out;
+  }
+
+  function read(){
+    try{ return sanitize(JSON.parse(store().getItem(KEY) || "null")); }
+    catch(e){ return defaults(); }
+  }
+  function write(st){
+    try{ store().setItem(KEY, JSON.stringify(sanitize(st))); }catch(e){}
+    return st;
+  }
+  function clear(){ try{ store().removeItem(KEY); }catch(e){} }
+
+  function begin(seed){
+    const s = String(seed == null ? "" : seed).slice(0, 64) || ("run-" + Date.now());
+    const st = defaults();
+    st.seed = s;
+    st.route = makeRoute(s);
+    write(st);
+    return st;
+  }
+  function active(st){ const s = st || read(); return !!(s.seed && s.route.length && !s.done); }
+  function leg(st){ const s = st || read(); return s.route[s.at] || null; }
+
+  /* THE CLASH RING'S TARGET ARC BELONGS TO THE SEED.
+     zoneStart decides where the player must tap, so it changes what the run
+     asks of them — that is run state, not decoration. Outside a league run it
+     stays free-random, so nothing about the existing four modes moves. */
+  function ringStart(st){
+    const s = st || read();
+    if(!active(s)) return null;
+    const rng = mulberry32(hash32("ring:" + s.seed + ":" + s.at + ":" + s.wins + ":" + s.losses));
+    return 40 + rng() * 240;
+  }
+
+  function record(won, st){
+    const s = st || read();
+    if(!active(s)) return s;
+    const l = leg(s);
+    s.log.push({ t: won ? "win" : "loss", leg: s.at, rival: (l && l.rival) || "" });
+    if(won) s.wins++; else s.losses++;
+    s.at++;
+    if(s.at >= s.route.length) s.done = true;
+    write(s);
+    return s;
+  }
+
+  return { KEY, LEAGUE_VERSION, ROUTE_LEN, hash32, mulberry32, makeRoute,
+           defaults, sanitize, read, write, clear, begin, active, leg, ringStart, record };
+})();
+/* GCX3:END */
+
 try{
   window.GCX = GCX;                       // debug + test handle
   window.GCX2 = GCX2;
+  window.GCX3 = GCX3;                     // Fracture League
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",()=>GCX.init());
   else GCX.init();
   /* applySettings() runs during boot, before this const initialises, so its
@@ -2908,7 +3114,7 @@ function renderStickers(){
 })();
 /* ---------- node export for sim harness ---------- */
 if (typeof module!=="undefined" && module.exports){
-  module.exports={Engine,CARDS,GLITCHES,SPECIALS,RARITY,SHAPES,STARTERS};
+  module.exports={Engine,CARDS,GLITCHES,SPECIALS,RARITY,SHAPES,STARTERS,GCX3};
 }
 </script>
 <script defer src="/hud.js"></script><div class="drag-ghost" id="dragghost" aria-hidden="true"></div>

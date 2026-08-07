@@ -26,7 +26,7 @@ if ! node -e "require.resolve('playwright')" 2>/dev/null; then
 fi
 
 fail=0
-for t in gc gc-endless gc-mods gc-clock gc-weekly gc-fx gc-music gc-cb gc-hc gc-a11y; do
+for t in gc gc-endless gc-mods gc-clock gc-weekly gc-fx gc-music gc-cb gc-hc gc-a11y gc-league; do
   printf '%-22s ' "$t"
   out=$(node "$t.test.js" $TARGET 2>&1)
   last=$(printf '%s\n' "$out" | tail -1)
