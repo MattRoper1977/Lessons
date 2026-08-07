@@ -1,6 +1,8 @@
 name: Apply verified Lessons repair payload
 
 on:
+  push:
+    branches: [codex/full-repair-upgrade-2026-08-07]
   pull_request:
     branches: [main]
 
@@ -13,7 +15,7 @@ concurrency:
 
 jobs:
   apply-and-prove:
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'codex/full-repair-upgrade-2026-08-07'
+    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'codex/full-repair-upgrade-2026-08-07')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
