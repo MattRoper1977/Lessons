@@ -1,0 +1,177 @@
+name: Repair pH lesson boot runtime
+
+on:
+  push:
+    branches: [codex/full-repair-upgrade-2026-08-07]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: full-repair-ph-runtime
+  cancel-in-progress: true
+
+jobs:
+  repair-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/full-repair-upgrade-2026-08-07
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply the root-cause repair
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('chemistry/Lesson2_pH_Scale_v4.html')
+          text = path.read_text(encoding='utf-8')
+          old = """document.querySelectorAll('[data-placeholder]').forEach(el=>{
+            if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+            el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+            el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+          });"""
+          new = """function editableText(el){
+            return String(el.innerText ?? el.textContent ?? '');
+          }
+          document.querySelectorAll('[data-placeholder]').forEach(el=>{
+            const placeholder=el.getAttribute('data-placeholder')||'';
+            if(!editableText(el).trim())el.textContent=placeholder;
+            el.addEventListener('focus',function(){if(editableText(this)===placeholder)this.textContent=''});
+            el.addEventListener('blur',function(){if(!editableText(this).trim())this.textContent=placeholder});
+          });"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one unsafe placeholder block, found {text.count(old)}')
+          text = text.replace(old, new)
+
+          old_note = "if(c.innerText.trim()&&c.innerText.trim()!==ph)cells.push(`Note ${i+1}: ${c.innerText.trim()}`);"
+          new_note = "const note=editableText(c).trim();\n    if(note&&note!==ph)cells.push(`Note ${i+1}: ${note}`);"
+          if text.count(old_note) != 1:
+              raise SystemExit(f'expected exactly one unsafe printable-note read, found {text.count(old_note)}')
+          text = text.replace(old_note, new_note)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Syntax-check every inline script
+        run: |
+          python - <<'PY'
+          import re, subprocess, tempfile
+          from pathlib import Path
+
+          html = Path('chemistry/Lesson2_pH_Scale_v4.html').read_text(encoding='utf-8')
+          scripts = [body for attrs, body in re.findall(r'<script([^>]*)>(.*?)</script>', html, re.S) if 'src=' not in attrs and body.strip()]
+          if not scripts:
+              raise SystemExit('no inline scripts found')
+          for index, script in enumerate(scripts):
+              with tempfile.NamedTemporaryFile('w', suffix='.js', encoding='utf-8') as handle:
+                  handle.write(script)
+                  handle.flush()
+                  subprocess.run(['node', '--check', handle.name], check=True)
+          print(f'{len(scripts)} inline script block(s) pass node --check')
+          PY
+
+      - name: Install isolated jsdom test dependency
+        run: npm install --no-save --no-package-lock jsdom@26.1.0
+
+      - name: Create deterministic boot probe
+        run: |
+          cat > /tmp/verify-ph-boot.cjs <<'JS'
+          const { JSDOM, VirtualConsole } = require(process.cwd() + '/node_modules/jsdom');
+          const fs = require('fs');
+          const target = process.argv[2];
+          const html = fs.readFileSync(target, 'utf8');
+          const errors = [];
+          const vc = new VirtualConsole();
+          vc.on('jsdomError', error => errors.push('jsdomError: ' + error.message));
+          vc.on('error', (...args) => errors.push('console.error: ' + args.map(String).join(' ')));
+          const dom = new JSDOM(html, {
+            runScripts: 'dangerously',
+            pretendToBeVisual: true,
+            resources: undefined,
+            virtualConsole: vc,
+            beforeParse(window) {
+              window.AudioContext = window.webkitAudioContext = function () {
+                return {
+                  createOscillator: () => ({ connect() {}, start() {}, stop() {}, frequency: {}, type: '' }),
+                  createGain: () => ({ connect() {}, gain: { setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} } }),
+                  destination: {}, currentTime: 0,
+                };
+              };
+              window.print = () => {};
+              window.addEventListener('error', event => errors.push('window.error: ' + (event.message || event.error)));
+            },
+          });
+          setTimeout(() => {
+            try { dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded')); }
+            catch (error) { errors.push('DOMContentLoaded: ' + error.message); }
+            const meaningful = errors.filter(message => !/Could not parse CSS|Not implemented: window\.scroll|Not implemented: HTMLCanvas|Not implemented: navigation/i.test(message));
+            const placeholders = [...dom.window.document.querySelectorAll('[data-placeholder]')];
+            const state = placeholders.map(node => ({ placeholder: node.getAttribute('data-placeholder'), text: node.textContent }));
+            console.log(JSON.stringify({ target, errors: meaningful, placeholders: state }));
+            process.exit(meaningful.length ? 1 : 0);
+          }, 150);
+          JS
+
+      - name: Prove the probe catches the original defect
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('chemistry/Lesson2_pH_Scale_v4.html').read_text(encoding='utf-8')
+          safe = """function editableText(el){
+            return String(el.innerText ?? el.textContent ?? '');
+          }
+          document.querySelectorAll('[data-placeholder]').forEach(el=>{
+            const placeholder=el.getAttribute('data-placeholder')||'';
+            if(!editableText(el).trim())el.textContent=placeholder;
+            el.addEventListener('focus',function(){if(editableText(this)===placeholder)this.textContent=''});
+            el.addEventListener('blur',function(){if(!editableText(this).trim())this.textContent=placeholder});
+          });"""
+          unsafe = """document.querySelectorAll('[data-placeholder]').forEach(el=>{
+            if(!el.innerText.trim())el.innerText=el.getAttribute('data-placeholder');
+            el.addEventListener('focus',function(){if(this.innerText===this.getAttribute('data-placeholder'))this.innerText=''});
+            el.addEventListener('blur',function(){if(!this.innerText.trim())this.innerText=this.getAttribute('data-placeholder')});
+          });"""
+          if source.count(safe) != 1:
+              raise SystemExit('cannot construct positive control: safe block missing')
+          Path('/tmp/ph-weakened.html').write_text(source.replace(safe, unsafe), encoding='utf-8')
+          PY
+          if node /tmp/verify-ph-boot.cjs /tmp/ph-weakened.html; then
+            echo 'SELF-TEST FAILED: weakened copy unexpectedly booted cleanly' >&2
+            exit 1
+          fi
+          echo 'SELF-TEST PASSED: the original undefined.innerText.trim fault is detected'
+
+      - name: Prove the repaired lesson boots and initialises placeholders
+        run: |
+          node /tmp/verify-ph-boot.cjs chemistry/Lesson2_pH_Scale_v4.html | tee /tmp/ph-boot.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('/tmp/ph-boot.json').read_text(encoding='utf-8').splitlines()[-1])
+          if data['errors']:
+              raise SystemExit(data['errors'])
+          if len(data['placeholders']) != 3:
+              raise SystemExit(f"expected 3 placeholder surfaces, saw {len(data['placeholders'])}")
+          bad = [item for item in data['placeholders'] if item['text'] != item['placeholder']]
+          if bad:
+              raise SystemExit(f'placeholder initialisation mismatch: {bad}')
+          print('3/3 placeholder surfaces initialised and zero meaningful boot errors recorded')
+          PY
+
+      - name: Commit the repair to the authorised branch
+        run: |
+          if git diff --quiet -- chemistry/Lesson2_pH_Scale_v4.html; then
+            echo 'No repair diff produced' >&2
+            exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add chemistry/Lesson2_pH_Scale_v4.html
+          git commit -m 'fix: make pH lesson placeholder boot robust'
+          git push origin HEAD:codex/full-repair-upgrade-2026-08-07
