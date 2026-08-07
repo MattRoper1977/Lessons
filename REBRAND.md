@@ -66,7 +66,19 @@ is unchanged and now binds harder:
 The strip (rule 2) is still required alongside the logo. The lockup shows the
 wordmark, but the strip is a separate estate convention with occurrences to match.
 
-`tools/build_staff_pack.py --logo PATH` implements all of this.
+**The binary stays out of git. Its SHA is recorded here instead**, because a pack that
+cannot be rebuilt from the repo plus a recorded hash is not reproducible:
+
+```
+logo  SHA-256  b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04
+      225x225 PNG, the P mark + "Progress Schools" wordmark lockup
+```
+
+The builder asserts this hash before it uses the file. **Absent `--logo` is a hard stop** —
+there is no fallback to the typographic mark. A pack built without the real lockup is not a
+Progress Schools pack, and silently producing one is how a placeholder ends up in a school.
+
+`tools/build_staff_pack.py --mirror --logo PATH` implements all of this.
 
 ### 2 · The strip
 
@@ -102,6 +114,18 @@ This is the *only* permitted Made-by-Matt string. The residue sweep whitelists i
 by **exact match** and still fails on every other spelling, so the exception
 cannot quietly widen into "the sweep is off". Add the credit **after** the domain
 rewrite has run, or the rewrite eats it like any other mention of the domain.
+
+**The exemption is anchored on the credit as element text**, not on the substring. Matching
+the token `madebymatt.uk` on its own would pass `href="https://madebymatt.uk"` — a live link
+to the public site, which is precisely what this rule exists to catch. The check deletes one
+occurrence of `>by madebymatt.uk<` and then requires **zero** matches in what remains, so an
+href, a `src`, any attribute value, and a second credit all still fail. Verified with a
+negative control on each of those four shapes.
+
+**Rule 4 is about the personal public site, not one spelling of it.** The sweep also covers
+`mattroper1977.github.io`, the GitHub Pages origin that serves this repo. Two "Lesson Hub"
+buttons in `Art/Launch/index.html` pointed there and passed every previous sweep, because the
+regex only ever knew `madebymatt.uk`.
 
 ### 5 · The `x-brand` meta tag
 
@@ -200,6 +224,57 @@ grep -rc 'PROGRESS SCHOOLS · TEES VALLEY' <pack>
 All four must be run. Rule 3's trap is that checks 1 and 2 pass a visual inspection
 and fail a grep, while check 3 fails silently — a missing `x-brand` tag has no
 symptom, exactly like a missing sitemap entry.
+
+### Counts that can reach zero are not gates
+
+The strip count silently fell to **zero** in the first mirror build: the real logo replaced the
+typographic mark, and the mark had been carrying the strip. Check 4 above only asserted "at
+least one file", so a run with the strip on *no* page would have passed had the assertion been
+written a shade differently. Three counts are now permanently gated and the build refuses to
+package if any fails:
+
+| count | gate |
+|---|---|
+| strip | `> 0` |
+| credit | **exactly one per page** — not "at least one", so a duplicate fails too |
+| logo | equals the number of pages that carried a visible mark; and the on-disk count may not be lower |
+
+Also gated: 0 broken internal links over the **assembled** tree, 0 inline-JS syntax errors,
+0 truncated files, the ★assessed conditions blocks byte-identical, and — for a mirror-shape
+pack — 0 collisions with unregenerable OneDrive-only artefacts.
+
+### The inline-JS gate, and why `</body>` is not a safe anchor
+
+Several decks build a printable view with `w.document.write('<html>…</body></html>')`. The
+**first** `</body>` in those files is inside a JavaScript string literal. Appending anything
+at it produces an unterminated string and kills the whole script block — and because the code
+only runs when a teacher presses Print, opening the page from `file://` never reveals it.
+Insert at the last closing tag followed by nothing but whitespace, and gate every inline
+`<script>` body with `node --check`. Testing the print path means *executing* it, not loading
+the page.
+
+---
+
+## Mirror-shape packs (PACK-4)
+
+The default build preserves the repo tree because its links assume the repo tree. A mirror
+pack assembles into the school's OneDrive geometry instead — and is only safe because it does
+**both halves**: assemble to the drive's shape *and* rewrite every internal link against the
+same map. Zip geometry then equals drive geometry, so a link between two co-shipped folders
+still resolves after a drag-and-merge. Do one half without the other and every cross-folder
+link dies silently.
+
+Three rules learned building the first one:
+
+1. **A hub is position-dependent after a rewrite.** Never tell anyone to hand-copy a rebranded
+   root hub into a subfolder: its hrefs are written for depth 0, so the copy is a branded page
+   with dead links — worse than an unbranded page that works. Emit each copy at its own depth
+   and crawl it **from its own location**.
+2. **Flattening collides filenames.** Census every basename repeated across the folders being
+   flattened *before* assembling. Renaming is reversible; overwriting is not.
+3. **A merge replaces same-named files.** Where the destination holds artefacts that cannot be
+   regenerated, print the collision list explicitly — **empty or not**. A silent pass is
+   indistinguishable from a check that never ran.
 
 ---
 
