@@ -40,12 +40,33 @@ reader still announces the wrong organisation.
 
 ## The rules
 
-### 1 · The Progress Schools mark is typographic. Never drawn, never invented.
+### 1 · The mark ~~is typographic~~ — SUPERSEDED 2026-08-07, the real logo now exists
 
-Set it as **text**. Do not draw a logo, do not generate an SVG mark, do not
-approximate one from memory, and do not carry over the Made by Matt logo geometry
-with the letters changed. If a visual mark is genuinely required, it comes from
-Progress Schools — it is not produced here.
+**Original rule, kept because it explains the one below:** set the mark as
+**text**. Do not draw a logo, do not generate an SVG mark, do not approximate one
+from memory, and do not carry over the Made by Matt logo geometry with the letters
+changed. If a visual mark is genuinely required, it comes from Progress
+Schools — it is not produced here.
+
+**What changed:** the last clause finally happened. Matt supplied the real
+Progress Schools lockup (the P mark + wordmark), so the placeholder is retired
+and the trademark replaces the Made-by-Matt mark directly. The rule's *purpose*
+is unchanged and now binds harder:
+
+- **Never recolour, restyle, stretch or redraw it.** It is embedded as supplied
+  and only ever scaled by `width` with `height:auto`, so the aspect ratio cannot
+  drift. A dark header gets a white chip behind the logo; the artwork itself is
+  never touched.
+- Optimise **one** master asset (trim, ≤10 KB, 2× display size) and embed it as a
+  base64 data URI per page. No external asset file — a pack that ships an
+  `images/` folder breaks the moment a page is moved, and these pages get moved.
+- Where only the 64×64 mark footprint exists, crop to the P mark alone with
+  `alt="Progress Schools"` and the wordmark as adjacent text.
+
+The strip (rule 2) is still required alongside the logo. The lockup shows the
+wordmark, but the strip is a separate estate convention with occurrences to match.
+
+`tools/build_staff_pack.py --logo PATH` implements all of this.
 
 ### 2 · The strip
 
@@ -74,6 +95,13 @@ that survive a careless pass:
 `madebymatt.uk` appears in 44 files. In a staff-facing pack, replace or remove it.
 **Check `href` values as well as link text** — a link reading *"the pack"* pointing at
 `madebymatt.uk` is still the public site.
+
+**One exception, added 2026-08-07 on Matt's instruction:** every rebranded page
+carries the credit **`by madebymatt.uk`**, small and unobtrusive, in the footer.
+This is the *only* permitted Made-by-Matt string. The residue sweep whitelists it
+by **exact match** and still fails on every other spelling, so the exception
+cannot quietly widen into "the sweep is off". Add the credit **after** the domain
+rewrite has run, or the rewrite eats it like any other mention of the domain.
 
 ### 5 · The `x-brand` meta tag
 
