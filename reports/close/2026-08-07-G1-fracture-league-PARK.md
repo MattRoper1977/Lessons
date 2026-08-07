@@ -1,7 +1,8 @@
 # G1 — Glitch Clash: Fracture League
 
-**P1 SHIPPED. Parked at the P1/P2 boundary.** The phase-0 derivation below is
-retained, corrections and all, because it is the evidence P1 was built on.
+**P1 AND P2 SHIPPED. Parked at the P2/P3 boundary.** The phase-0 derivation
+below is retained, corrections and all, because it is the evidence P1 was built
+on, and P2's own four self-corrections are recorded the same way.
 
 ## Status
 
@@ -9,8 +10,8 @@ retained, corrections and all, because it is the evidence P1 was built on.
 |---|---|
 | P0 derivation | complete (below, with its two self-corrections shown) |
 | **P1 league core** | **SHIPPED** — seeded route, own key, migration proven, playable |
-| P2 rivals + Fracture Cards | **NOT STARTED — this is the park boundary** |
-| P3 recap + polish | not started |
+| **P2 rivals + Fracture Cards** | **SHIPPED** — truthful intent, five cards, soft loss proven intact |
+| P3 recap + polish | **NOT STARTED — this is the park boundary** |
 
 G2 is not started, per AM9.
 
@@ -86,13 +87,121 @@ not carry the `mbm-splash-inline` marker, so it is outside
 Fracture Engine and Neon Turf; its a11y/contrast cover is `gc-a11y` + `gc-hc`,
 both green.
 
+## What P2 shipped
+
+**Rivals with intent that is true by construction.** The telegraph is not stored
+and then honoured — it is a pure function of `(seed, leg, turn)` that the intent
+chip and the turn resolver both read. A stored intent can drift from what
+happens; a shared function cannot, so *truthful* is a property of the shape
+rather than a promise anyone has to keep. `canSpecial` is passed in by both
+callers because `Engine.resolveTurn` downgrades an unaffordable special to a
+strike; without that the chip would sometimes promise a special the game then
+refuses — the same gotcha pointing the other way.
+
+**The rival-seed proof, by the two-run method.** Two independent page loads,
+never two calls in one page: a memoised answer or a value cached in module scope
+would satisfy a second call trivially, and two browser contexts share nothing but
+the file.
+
+| run | seed | first twelve intents |
+|---|---|---|
+| 1 | `rival-alpha` | charge, special, charge, guard, guard, guard, special, special, strike, special, strike, charge |
+| 2 | `rival-alpha` | *identical* |
+| 3 | `rival-beta` | charge, charge, guard, strike, strike, … — **differs** |
+
+Non-vacuity is its own gate: 4 distinct intents across those 12 turns, so
+"identical across runs" is not a statement about a constant.
+
+**Five Fracture Cards, none of which touch damage.**
+
+| card | promises | alters | Calm interaction |
+|---|---|---|---|
+| Blind Spot | you cannot read this rival's intent | information | none — the ring is untouched |
+| Scout Ahead | the next rival on the route is revealed now | information | none |
+| Steady Hand | the clash arc is wider for this leg | ring **condition** | **widens only** — 96° → 122° under Calm |
+| High Stakes | this leg counts double, won or lost | stakes | none |
+| Mirror Field | this rival repeats whatever it did last turn | predictability | none |
+
+**The P2-owed proof — the losing branch measurably intact under every card.**
+A scripted lost clash, at three skill values, with the payoff compared against
+the envelope the shipped `dmg()` implies (derived, never pinned, per R9):
+
+| card | skill 0 | skill 0.5 | skill 1 | envelope | gradient |
+|---|---|---|---|---|---|
+| *no card* | 216 | 174 | 133 | 216 / 174 / 133 | 1.624 |
+| blind | 216 | 174 | 133 | matches | 1.624 |
+| scout | 216 | 174 | 133 | matches | 1.624 |
+| steady | 216 | 174 | 133 | matches | 1.624 |
+| stakes | 216 | 174 | 133 | matches | 1.624 |
+| mirror | 216 | 174 | 133 | matches | 1.624 |
+
+Three non-vacuity guards sit under that table: the scripted clash must actually
+be **lost** (`winner === 'e'` at every skill, else the measurement is of nothing),
+the card must actually be **active**, and the card-free gradient must be real —
+good timing has to visibly soften the loss before "unchanged" means anything.
+
+**The tamper it is proven against is a real card.** A sixth card, `flatten`, is
+written *into a copy of the file* along with a hook in the clash branch that
+pins `d = 40`. The same gate then reports 40 / 40 / 40 against an envelope of
+216 / 174 / 133 — red on all three counts. A control runs first: the tampered
+copy must still pass card-free, so the red is attributable to the card and not
+to a broken file.
+
+**The Calm floor is structural, not remembered.** `GCX3.ringDeg` returns
+`Math.max(base, base + 26)`, so a card can only ever *widen* the arc. The gate
+reads both arc widths **out of the shipped file** rather than pinning 44 and 96,
+so retuning Calm moves the floor with it. Its tamper flips the max() to a
+subtraction in a file copy: caught, 44 → 18 and 96 → 70.
+
+**Announce coverage, on the real entry path.** Every card's name and text reach
+the live region as the leg opens, driven by starting a real league from the home
+screen with a seed chosen to yield that card — not by calling the offer function,
+which is not reachable from a test anyway.
+
+## P2 — four defects, all mine, all caught by deriving rather than by assuming
+
+1. **Mirror Field lied.** The repeat was written into the turn resolver and left
+   out of the intent chip, so the one card promising predictability was the one
+   card whose telegraph was wrong. The fix is not a second branch at the chip —
+   it moves the mirror *into `rivalIntent`*, which is the design's own rule:
+   one source or none. The regression gate restores the pre-fix shape in a file
+   copy and requires the mirror pass to go red; it does, 2/6 agreeing.
+2. **A P1 gate was vacuous and had shipped that way.** L7 read
+   `typeof battle !== 'undefined' && battle !== null` and looked like it
+   inspected the battle object. It did not: `battle` is a script-scope `let`
+   inside the UI IIFE and is invisible to `page.evaluate`, and the page contains
+   `<div id="battle">`, so the name resolved to *that element* via named-element
+   access instead of throwing. The check returned true on the home screen with
+   no battle ever started. It is replaced with observable evidence, and the
+   proof of the defect is now a **named control gate** that runs the old check
+   *before* the click and requires it to pass.
+3. **A league leg announced itself as Endless.** Three plans share the battle
+   driver but the stage chip named two, so a league leg inherited the endless
+   branch and read `Endless · Round 3` — the one line on screen telling the
+   player where they are. It now reads `League · Leg 3 of 5`, and L7 gates it.
+4. **The card announcement was spoken and never heard.** `offerLeagueCard()`
+   runs before the round starts, so two further `announce()` calls followed it
+   in the same tick. A polite live region is last-write-wins: the card text was
+   in the DOM for microseconds. Drawing is state, speaking is presentation — the
+   speaking moved into `startBattle()`, the last announcement before the player
+   is handed control. The gate that caught it is now permanent and separate from
+   "did it announce": **is the card in the announcement that survives**.
+
+There is a fifth, smaller one worth recording because it was in the *instrument*
+rather than the game: the first `MutationObserver` read `live.textContent` inside
+its callback. Callbacks are microtasks that batch, so three announces in one tick
+produced one callback that saw only the final value — the observer could not
+distinguish "announced" from "announced and clobbered", which is exactly the
+distinction it existed to make. It reads the added text nodes now.
+
 ## Why the park is here
 
-P2 is rivals and Fracture Cards — *truthful visible rival intent* and *cards
-that alter decisions, not just damage*, with the soft-loss branch measurably
-intact under every card. That is a design phase, not a plumbing one, and it
-wants a fresh budget rather than the tail of this one. P1 is complete, green and
-playable, so it merges; P2 starts clean.
+P3 is the recap screen, the re-certifications and the census rows. P2 is
+complete, green and playable, so it merges; P3 starts clean. The four defects
+above are the reason this boundary is a real one rather than a formality — each
+was found by measuring the file instead of trusting the previous sitting's
+description of it, and three of the four were invisible to every green gate that
+existed before this phase.
 
 **This is the corrected ledger.** The first version got two derivations wrong and
 they are recorded below rather than quietly fixed, because this document is the
