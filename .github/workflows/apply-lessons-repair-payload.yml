@@ -1,0 +1,123 @@
+name: Apply verified Lessons repair payload
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-lessons-repair-payload
+  cancel-in-progress: true
+
+jobs:
+  apply-and-prove:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'codex/full-repair-upgrade-2026-08-07'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the authorised repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/full-repair-upgrade-2026-08-07
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Preserve the measured negative controls
+        run: |
+          cp Games/Orbital_source.html /tmp/Orbital_source_before.html
+          cp Games/Orbital.html /tmp/Orbital_before.html
+          cp index.html /tmp/Lessons_index_before.html
+
+      - name: Apply the verified byte and source repairs
+        run: |
+          python .github/repair-payload/apply_repairs.py | tee /tmp/lessons-repair-report.json
+          python -m py_compile .github/repair-payload/apply_repairs.py
+          node --check .github/repair-payload/verify_orbital_pause.cjs
+
+      - name: Prove the Orbital pause defect and repaired state machine
+        run: |
+          node .github/repair-payload/verify_orbital_pause.cjs \
+            /tmp/Orbital_source_before.html \
+            /tmp/Orbital_before.html \
+            Games/Orbital_source.html \
+            Games/Orbital.html \
+            | tee /tmp/orbital-pause-proof.txt
+
+      - name: Prove the poster route and served bytes
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          before = Path('/tmp/Lessons_index_before.html').read_text(encoding='utf-8')
+          after = Path('index.html').read_text(encoding='utf-8')
+          poster = Path('assets/video/poster-art.jpg').read_bytes()
+          expected = '7a2caf724d81f6ff85c52eb640baf145513f704aa54dd4fd9e2cc30581493122'
+
+          if before.count('src="/assets/video/poster-art.jpg"') != 1:
+              raise SystemExit('negative control does not contain the measured broken absolute route')
+          if after.count('src="assets/video/poster-art.jpg"') != 1:
+              raise SystemExit('repaired page does not contain exactly one repository-relative route')
+          if 'src="/assets/video/poster-art.jpg"' in after:
+              raise SystemExit('broken absolute poster route survived')
+          if len(poster) != 9114 or hashlib.sha256(poster).hexdigest() != expected:
+              raise SystemExit('installed poster bytes differ from the verified payload')
+          print('POSTER SOURCE PASS — broken route reproduced; repaired route and JPEG digest match')
+          PY
+
+          python -m http.server 4175 --bind 127.0.0.1 --directory . >/tmp/lessons-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl -fsS http://127.0.0.1:4175/ >/dev/null && break
+            sleep 0.25
+          done
+          curl --fail --silent --show-error --max-time 10 \
+            http://127.0.0.1:4175/assets/video/poster-art.jpg \
+            --output /tmp/served-poster.jpg
+          cmp assets/video/poster-art.jpg /tmp/served-poster.jpg
+          echo 'POSTER HTTP PASS — local route serves the byte-identical verified JPEG'
+
+      - name: Remove the one-shot transport and constrain the final commit
+        run: |
+          rm -rf .github/repair-payload
+          rm -f .github/workflows/apply-lessons-repair-payload.yml
+          git add -A
+          python - <<'PY'
+          import subprocess
+
+          actual = subprocess.check_output(
+              ['git', 'diff', '--cached', '--name-only'], text=True
+          ).splitlines()
+          expected = sorted([
+              '.github/repair-payload/apply_repairs.py',
+              '.github/repair-payload/poster-art.jpg.b64',
+              '.github/repair-payload/verify_orbital_pause.cjs',
+              '.github/workflows/apply-lessons-repair-payload.yml',
+              'Games/Orbital.html',
+              'Games/Orbital_source.html',
+              'assets/video/poster-art.jpg',
+              'index.html',
+          ])
+          if sorted(actual) != expected:
+              raise SystemExit(f'unexpected staged paths: {actual}')
+          print('FINAL DIFF SCOPE PASS — exactly four repairs and four transport deletions')
+          PY
+          git diff --cached --check
+
+      - name: Commit the proven repairs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: repair Orbital pause state and lesson poster'
+          git push origin HEAD:codex/full-repair-upgrade-2026-08-07
