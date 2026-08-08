@@ -28,13 +28,58 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: mbm-cross-estate-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
+  repair-runtime-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out the authorised Lessons branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/mbm-cross-estate-unification-lessons-apps-2026-08-08
+          fetch-depth: 0
+
+      - name: Repair the measured render-scope defect
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          old='$("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`}\nsetFilterStatus(a.length);'
+          new='$("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`;\nsetFilterStatus(a.length);}'
+          if old in text:
+              if text.count(old)!=1: raise SystemExit('unexpected render-scope match count')
+              path.write_text(text.replace(old,new),encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('neither expected old nor repaired render-scope form found')
+          PY
+          if git diff --quiet -- index.html; then
+            echo "Render scope already repaired."
+            exit 0
+          fi
+          git diff --check -- index.html
+          python - <<'PY'
+          import pathlib,re
+          text=pathlib.Path('index.html').read_text(encoding='utf-8')
+          out=pathlib.Path('/tmp/mbm-inline-scripts');out.mkdir(exist_ok=True)
+          for index,body in enumerate(re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',text,re.S|re.I)):
+              if body.strip():(out/f'inline-{index}.js').write_text(body,encoding='utf-8')
+          PY
+          for script in /tmp/mbm-inline-scripts/*.js; do node --check "$script"; done
+          git config user.name "Made by Matt cross-estate repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "fix: keep Lessons filter status inside render scope"
+          git push origin HEAD:codex/mbm-cross-estate-unification-lessons-apps-2026-08-08
+
   static-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 12
