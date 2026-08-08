@@ -133,3 +133,65 @@ jobs:
           path: audit-output/
           if-no-files-found: error
           retention-days: 14
+
+  live-proof:
+    if: github.event_name != 'pull_request'
+    needs: [static-contract, browser-matrix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out the merged source
+        uses: actions/checkout@v4
+
+      - name: Install the production browser harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Wait for the exact project deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f resources.json ]; then prefix=Lessons; manifest=resources.json; else prefix=Matt-s-Apps-; manifest=apps.json; fi
+          base="https://madebymatt.uk/$prefix/"
+          ready=0
+          for _ in $(seq 1 60); do
+            if curl -fsS --retry 2 "$base" | grep -q 'mbm-cross-estate-unification-lessons-apps-2026-08-08'; then
+              ready=1
+              break
+            fi
+            sleep 10
+          done
+          test "$ready" -eq 1
+          for route in / /games/ /Lessons/ /Matt-s-Apps-/ /tools/ /resources/; do
+            curl -fsS --retry 3 "https://madebymatt.uk$route" >/dev/null
+          done
+          curl -fsS --retry 3 "$base$manifest" | python -m json.tool >/dev/null
+          for asset in mbm-platform.css mbm-platform.js mbm-theme.js mbm-hub.css; do
+            curl -fsS --retry 3 "$base/assets/$asset" -o "/tmp/$asset"
+            cmp "assets/$asset" "/tmp/$asset"
+          done
+          echo "$base" > /tmp/mbm-live-base
+
+      - name: Prove the served responsive and standalone estate
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBM_BASE_URL="$(cat /tmp/mbm-live-base)" node tools/verify_cross_estate_browser.mjs
+
+      - name: Print live evidence
+        if: always()
+        shell: bash
+        run: |
+          test ! -f audit-output/browser-results.json || cat audit-output/browser-results.json
+
+      - name: Upload production evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mbm-cross-estate-live-${{ github.repository_id }}-${{ github.run_id }}
+          path: audit-output/
+          if-no-files-found: error
+          retention-days: 30
