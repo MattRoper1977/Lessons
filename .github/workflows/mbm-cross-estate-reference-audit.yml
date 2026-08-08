@@ -1,0 +1,95 @@
+name: MBM cross-estate reference audit
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out Lessons branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check out canonical Made by Matt site
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: main
+          path: reference/site
+          fetch-depth: 1
+
+      - name: Check out supporting Games catalogue
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Games
+          ref: main
+          path: reference/games
+          fetch-depth: 1
+
+      - name: Capture exact reference files and served topology
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reference-output/site reference-output/live
+          cp reference/site/assets/mbm-platform.css reference-output/site/
+          cp reference/site/assets/mbm-platform.js reference-output/site/
+          cp reference/site/theme.js reference-output/site/
+          cp reference/site/index.html reference-output/site/home-index.html
+          cp reference/site/games/index.html reference-output/site/games-index.html
+          cp reference/site/tools/index.html reference-output/site/tools-index.html
+          cp reference/site/resources/index.html reference-output/site/resources-index.html
+          cp reference/site/site.json reference-output/site/
+          cp reference/games/games.json reference-output/games.json
+          {
+            echo "sentinel=mbm-cross-estate-unification-lessons-apps-2026-08-08"
+            echo "lessons_head=$(git rev-parse HEAD)"
+            echo "site_head=$(git -C reference/site rev-parse HEAD)"
+            echo "games_head=$(git -C reference/games rev-parse HEAD)"
+            sha256sum reference-output/site/mbm-platform.css reference-output/site/mbm-platform.js reference-output/site/theme.js
+          } | tee reference-output/reference-state.txt
+          python - <<'PY'
+          import json, pathlib, urllib.error, urllib.request
+          urls = [
+              'https://madebymatt.uk/',
+              'https://madebymatt.uk/games/',
+              'https://madebymatt.uk/Lessons/',
+              'https://madebymatt.uk/Matt-s-Apps-/',
+              'https://madebymatt.uk/tools/',
+              'https://madebymatt.uk/resources/',
+              'https://madebymatt.uk/Lessons/resources.json',
+              'https://madebymatt.uk/Matt-s-Apps-/apps.json',
+          ]
+          opener = urllib.request.build_opener()
+          opener.addheaders = [('User-Agent', 'Made-by-Matt-cross-estate-audit/1')]
+          out=[]
+          for idx,url in enumerate(urls):
+              try:
+                  with opener.open(url, timeout=30) as r:
+                      body=r.read()
+                      headers=dict(r.headers.items())
+                      status=r.status
+                      final=r.geturl()
+              except urllib.error.HTTPError as e:
+                  body=e.read(); headers=dict(e.headers.items()); status=e.code; final=e.geturl()
+              path=pathlib.Path('reference-output/live')/f'{idx:02d}.body'
+              path.write_bytes(body)
+              out.append({'url':url,'final_url':final,'status':status,'bytes':len(body),'headers':headers,'body_file':path.name})
+          pathlib.Path('reference-output/live/topology.json').write_text(json.dumps(out, indent=2)+'\n', encoding='utf-8')
+          print(json.dumps(out, indent=2))
+          PY
+
+      - name: Upload reference and served evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mbm-cross-estate-reference-${{ github.run_id }}
+          path: reference-output/
+          if-no-files-found: error
+          retention-days: 7
