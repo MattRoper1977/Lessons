@@ -409,8 +409,8 @@ if(browsing){ // organised view: one section per subject, A→Z
   $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:empty);
 }
 const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
-$("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`}
-setFilterStatus(a.length);
+$("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`;
+setFilterStatus(a.length);}
 function buildQuicknav(){
   const inCol={},total={};
   ALL.forEach(r=>{total[r.subject]=(total[r.subject]||0)+1;if(!YEAR||r.year===YEAR)inCol[r.subject]=(inCol[r.subject]||0)+1});
