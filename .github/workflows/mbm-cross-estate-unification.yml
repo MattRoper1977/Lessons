@@ -119,7 +119,14 @@ jobs:
           for _ in $(seq 1 30); do curl -fsS "http://127.0.0.1:4173/$prefix/" >/dev/null && break; sleep 1; done
           MBM_BASE_URL="http://127.0.0.1:4173/$prefix/" node tools/verify_cross_estate_browser.mjs
 
+      - name: Print browser evidence
+        if: always()
+        shell: bash
+        run: |
+          test ! -f audit-output/browser-results.json || cat audit-output/browser-results.json
+
       - name: Upload responsive evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: mbm-cross-estate-${{ github.event.pull_request.number || github.run_id }}-${{ github.run_id }}
