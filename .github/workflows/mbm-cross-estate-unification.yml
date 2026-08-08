@@ -29,6 +29,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: write
 
 concurrency:
   group: mbm-cross-estate-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
@@ -180,6 +182,13 @@ jobs:
         run: |
           set -euo pipefail
           MBM_BASE_URL="$(cat /tmp/mbm-live-base)" node tools/verify_cross_estate_browser.mjs
+
+      - name: Record production proof on the release PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh pr comment 95 --repo "$GITHUB_REPOSITORY" --body "Production cross-estate proof passed on merged source \`$GITHUB_SHA\`. Run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
       - name: Print live evidence
         if: always()
