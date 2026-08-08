@@ -1,0 +1,86 @@
+name: MBM cross-estate final evidence
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: mbm-cross-estate-final-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prove-and-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the evidence builder
+        uses: actions/checkout@v4
+
+      - name: Check out final Lessons main
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Lessons
+          ref: main
+          path: sources/lessons
+          fetch-depth: 1
+
+      - name: Check out final Apps main
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Matt-s-Apps-
+          ref: main
+          path: sources/apps
+          fetch-depth: 1
+
+      - name: Check out canonical and supporting read-only references
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: main
+          path: sources/site
+          fetch-depth: 1
+
+      - name: Check out Games read-only reference
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Games
+          ref: main
+          path: sources/games
+          fetch-depth: 1
+
+      - name: Check out Games- read-only reference
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Games-
+          ref: main
+          path: sources/games-extra
+          fetch-depth: 1
+
+      - name: Require final source and production evidence, then build the bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/mbm_cross_estate_final_evidence.py
+          test -f final-evidence/FINAL_CLOSEOUT.md
+          test -f final-evidence/release-identifiers.json
+          test -f final-evidence/final-status.json
+          test -f final-evidence/MANIFEST.sha256
+          cat final-evidence/FINAL_CLOSEOUT.md
+          cat final-evidence/release-identifiers.json
+
+      - name: Upload the authoritative final bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: mbm-cross-estate-final-evidence-${{ github.run_id }}
+          path: final-evidence/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
