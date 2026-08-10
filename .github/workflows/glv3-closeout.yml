@@ -1,13 +1,127 @@
-name: GROW LAUNCH v3 exact-source restaging
+name: GROW LAUNCH v3 source-integrity diagnostic
 
 on:
+  push:
+    branches:
+      - claude/gl-estate-v3
+    paths:
+      - .github/workflows/glv3-closeout.yml
+      - _glv3/input/**
+      - _glv3/tools/closeout_prep.py
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: glv3-source-integrity-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  restaging:
+  source-integrity:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Exact source bytes are being restaged as smaller independently hashed chunks."
+      - name: Check out recovery branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and inspect staged transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat _glv3/input/pack.part*.b64 | tr -d '[:space:]' | base64 --decode > /tmp/glv3-packs.tar.xz
+          sha256sum /tmp/glv3-packs.tar.xz
+          stat -c '%s bytes' /tmp/glv3-packs.tar.xz
+          xz --test /tmp/glv3-packs.tar.xz
+          python - <<'PY'
+          from __future__ import annotations
+          import hashlib, json, os, stat, tarfile
+          from pathlib import Path, PurePosixPath
+
+          archive = Path('/tmp/glv3-packs.tar.xz')
+          expected_actual = '777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd'
+          reported = 'efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918'
+          actual = hashlib.sha256(archive.read_bytes()).hexdigest()
+          if actual != expected_actual:
+              raise SystemExit(f'unexpected staged transport bytes: {actual}')
+
+          root = Path('/tmp/glv3-packs')
+          root.mkdir(parents=True, exist_ok=True)
+          seen = set()
+          seen_ci = set()
+          with tarfile.open(archive, 'r:xz') as tf:
+              members = tf.getmembers()
+              for item in members:
+                  p = PurePosixPath(item.name)
+                  key = item.name.rstrip('/')
+                  if p.is_absolute() or '..' in p.parts:
+                      raise SystemExit(f'unsafe transport path: {item.name}')
+                  if key in seen or key.casefold() in seen_ci:
+                      raise SystemExit(f'duplicate/case-colliding transport path: {item.name}')
+                  seen.add(key); seen_ci.add(key.casefold())
+                  if item.issym() or item.islnk() or item.isdev() or item.isfifo():
+                      raise SystemExit(f'unsupported transport member: {item.name}')
+                  if item.isfile() and item.mode & 0o111:
+                      raise SystemExit(f'unexpected executable transport member: {item.name}')
+              tf.extractall(root, filter='data')
+
+          def sha(path: Path) -> str:
+              h = hashlib.sha256()
+              with path.open('rb') as f:
+                  for block in iter(lambda: f.read(1024 * 1024), b''):
+                      h.update(block)
+              return h.hexdigest()
+
+          def inventory(name: str):
+              base = root / name
+              if not base.is_dir():
+                  raise SystemExit(f'missing extracted root: {base}')
+              rows=[]
+              for p in sorted(x for x in base.rglob('*') if x.is_file()):
+                  rel=p.relative_to(base).as_posix()
+                  if p.suffix.lower() in {'.zip','.7z','.rar','.tar','.gz','.bz2','.xz'}:
+                      raise SystemExit(f'undocumented nested archive: {name}/{rel}')
+                  rows.append({'path':rel,'size':p.stat().st_size,'sha256':sha(p),'html':p.suffix.lower()=='.html'})
+              material='\n'.join(f"{r['path']}\0{r['size']}\0{r['sha256']}" for r in rows).encode()
+              return {
+                  'files':len(rows),
+                  'html':sum(r['html'] for r in rows),
+                  'manifest_sha256':hashlib.sha256(material).hexdigest(),
+                  'science_folder_present':(base/'Science').exists(),
+                  'rows':rows,
+              }
+
+          grow=inventory('grow'); launch=inventory('launch')
+          expected={
+              'grow':{'files':51,'html':41,'manifest_sha256':'0e83488ecad487c0da697c083f79fb99b783660fed193f1efe0f1fce1aeddd30'},
+              'launch':{'files':63,'html':53,'manifest_sha256':'0946be2600bc9794a2d71a74191ed9e01aa8c6d9cfa6a61c7bd32f4c6754170a'},
+          }
+          for name, rec in [('grow',grow),('launch',launch)]:
+              for key,value in expected[name].items():
+                  if rec[key] != value:
+                      raise SystemExit(f'{name} {key}: {rec[key]} != {value}')
+              if rec['science_folder_present']:
+                  raise SystemExit(f'{name}: Science folder unexpectedly present')
+
+          report={
+              'reported_transport_sha256':reported,
+              'actual_transport_sha256':actual,
+              'reported_hash_match':actual==reported,
+              'transport_status':'HASH_CONTRADICTION_BUT_VALID_XZ_AND_EXACT_EXTRACTED_MANIFESTS',
+              'members':len(members),
+              'grow':grow,
+              'launch':launch,
+          }
+          Path('/tmp/glv3-source-integrity.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps({k:v for k,v in report.items() if k not in ('grow','launch')},indent=2))
+          print(json.dumps({'grow':{k:v for k,v in grow.items() if k!='rows'},'launch':{k:v for k,v in launch.items() if k!='rows'}},indent=2))
+          PY
+
+      - name: Upload source-integrity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-source-integrity-${{ github.sha }}
+          path: /tmp/glv3-source-integrity.json
+          if-no-files-found: error
+          retention-days: 30
