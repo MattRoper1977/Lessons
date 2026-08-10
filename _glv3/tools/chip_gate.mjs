@@ -7,6 +7,15 @@ const resources = JSON.parse(fs.readFileSync('resources.json','utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) throw new Error(`expected 88 GLV3 resources, got ${newResources.length}`);
 const chips = [...new Set(newResources.map(x => x.subject))].sort();
+const expectedChips = [
+  'Art · Teesside Studio Suite',
+  'GROW Vocational & PfA',
+  'Humanities',
+  'LAUNCH Vocational & PfA',
+].sort();
+if (JSON.stringify(chips) !== JSON.stringify(expectedChips)) {
+  throw new Error(`GLV3 subject-chip set changed: ${JSON.stringify(chips)} != ${JSON.stringify(expectedChips)}`);
+}
 
 const browser = await chromium.launch({headless:true});
 const page = await browser.newPage({viewport:{width:1440,height:900}});
