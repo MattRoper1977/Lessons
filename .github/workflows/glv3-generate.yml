@@ -1,0 +1,203 @@
+name: GROW LAUNCH v3 autonomous candidate generation
+
+on:
+  push:
+    branches:
+      - claude/gl-estate-v3
+    paths:
+      - _glv3/input/valid.part09.b64
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: glv3-candidate-generation
+  cancel-in-progress: false
+
+jobs:
+  generate-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out recovery branch with full history
+        uses: actions/checkout@v4
+        with:
+          ref: claude/gl-estate-v3
+          fetch-depth: 0
+
+      - name: Record authoritative integration base
+        id: base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --prune
+          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
+          test "$(git merge-base origin/main HEAD)" = "$(git rev-parse origin/main)"
+          test ! -e GROW_Estate_v3
+          test ! -e LAUNCH_Estate_v3
+          for f in _glv3/input/valid.part{00..09}.b64; do test -s "$f"; done
+
+      - name: Reconstruct and safely install verified closeout tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat _glv3/tooling/part{00..05}.b64 > /tmp/glv3-tooling.tar.gz.b64
+          test "$(wc -c < /tmp/glv3-tooling.tar.gz.b64)" -eq 27384
+          echo '309569e1503c5c374f39c3cd61ebed41a927f3602d1b5220fa04064101b9a4f6  /tmp/glv3-tooling.tar.gz.b64' | sha256sum -c -
+          base64 --decode /tmp/glv3-tooling.tar.gz.b64 > /tmp/glv3-tooling.tar.gz
+          test "$(wc -c < /tmp/glv3-tooling.tar.gz)" -eq 20538
+          echo 'b97181dca4b35826025eac1fec041f30dc1c4ff583bbb6a4e74ef4f7dcab31c7  /tmp/glv3-tooling.tar.gz' | sha256sum -c -
+          python - <<'PYSAFE'
+          import tarfile
+          from pathlib import PurePosixPath
+          with tarfile.open('/tmp/glv3-tooling.tar.gz', 'r:gz') as archive:
+              seen = set()
+              for member in archive.getmembers():
+                  path = PurePosixPath(member.name)
+                  key = member.name.rstrip('/').casefold()
+                  if path.is_absolute() or '..' in path.parts or '\\' in member.name:
+                      raise SystemExit(f'unsafe tooling path: {member.name}')
+                  if key and key in seen:
+                      raise SystemExit(f'duplicate tooling path: {member.name}')
+                  seen.add(key)
+                  if member.issym() or member.islnk() or member.isdev() or member.isfifo():
+                      raise SystemExit(f'unsafe tooling member: {member.name}')
+          PYSAFE
+          tar -xzf /tmp/glv3-tooling.tar.gz -C .
+          sed -i \
+            -e 's/777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd/782ff5865e1406c159c78081bcc218bdaa46678e5c42448a6f298f696ca73f5e/' \
+            -e 's/discovered_transport_size = 106760/discovered_transport_size = 102160/' \
+            _glv3/tools/transport_input_prep.py
+          python -m py_compile _glv3/tools/transport_input_prep.py _glv3/tools/candidate_verify.py _glv3/tools/finalize_candidate.py
+          node --check _glv3/tools/extended_browser_verify.mjs
+          test -f .github/workflows/glv3-verify.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install static verifier dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
+
+      - name: Reconstruct deterministic transport, prove uploaded-ZIP manifest equivalence and reconcile counts
+        run: |
+          python _glv3/tools/transport_input_prep.py \
+            --parts-glob '_glv3/input/valid.part*.b64' \
+            --transport /tmp/glv3-packs.tar.xz \
+            --extract-root /tmp/glv3-packs
+
+      - name: Generate estates, route map, catalogue and static evidence
+        env:
+          GLV3_GROW_SRC: /tmp/glv3-packs/grow
+          GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
+        run: python _glv3/tools/deploy.py
+
+      - name: Install browser and visual-evidence dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends imagemagick poppler-utils
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local repository server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8123 --bind 127.0.0.1 > /tmp/glv3-http.log 2>&1 &
+          echo $! > /tmp/glv3-http.pid
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8123/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/glv3-http.log
+          exit 1
+
+      - name: Run 94-page boot, print, catalogue and contact-sheet gate
+        env:
+          GLV3_BASE_URL: http://127.0.0.1:8123
+        run: node _glv3/tools/browser_verify.mjs
+
+      - name: Run lesson interaction, responsive, keyboard and network smoke
+        env:
+          GLV3_BASE_URL: http://127.0.0.1:8123
+        run: node _glv3/tools/extended_browser_verify.mjs
+
+      - name: Run exact chip-count browser gate
+        env:
+          GLV3_BASE_URL: http://127.0.0.1:8123
+        run: node _glv3/tools/chip_gate.mjs
+
+      - name: Run candidate static replay and tamper controls
+        run: python _glv3/tools/candidate_verify.py
+
+      - name: Build truthful pre-merge dossier and evidence ZIP
+        run: python _glv3/tools/finalize_candidate.py
+
+      - name: Remove one-shot transport and obsolete staging machinery
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _glv3/input _glv3/tooling node_modules /tmp/glv3-packs /tmp/glv3-packs.tar.xz /tmp/glv3-tooling.tar.gz /tmp/glv3-tooling.tar.gz.b64
+          rm -f package-lock.json package.json
+          rm -f .github/workflows/glv3-closeout.yml
+          rm -f .github/workflows/glv3-deploy.yml
+          rm -f .github/workflows/glv3-generate.yml
+          rm -f _glv3/tools/closeout_prep.py
+          rm -f _glv3/tools/transport_input_prep.py
+          test ! -e _glv3/input
+
+      - name: Recheck integration base and candidate hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --prune
+          test "$(git rev-parse origin/main)" = "${{ steps.base.outputs.sha }}"
+          test -z "$(git diff --name-only origin/main -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
+          git diff --check
+          test -f GROW_Estate_v3/index.html
+          test -f LAUNCH_Estate_v3/index.html
+          test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" -eq 83
+          git status --short
+
+      - name: Commit and push exact generated candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: install verified GROW and LAUNCH alternative v3 estates'
+          candidate_sha=$(git rev-parse HEAD)
+          echo "CANDIDATE_SHA=$candidate_sha" >> "$GITHUB_ENV"
+          git push origin HEAD:claude/gl-estate-v3
+          echo "Generated candidate: $candidate_sha"
+
+      - name: Upload pre-merge evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-premerge-evidence-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            _glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip
+            _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
+            _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
+            _glv3/GATES_*.json
+            _glv3/CANDIDATE_VERIFY.json
+            _glv3/POSITIVE_CONTROLS.json
+            _glv3/INPUT_INTEGRITY.json
+            _glv3/COUNT_RECONCILIATION.json
+            _glv3/PROTECTED_TREES.json
+            _glv3/AUTONOMOUS_SENTINEL.json
+            _glv3/contact_sheet/INVENTORY.json
