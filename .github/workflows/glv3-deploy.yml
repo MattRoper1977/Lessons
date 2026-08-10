@@ -1,43 +1,58 @@
-name: GROW LAUNCH v3 one-shot deploy
+name: GROW LAUNCH v3 autonomous closeout generation
 
 on:
-  push:
+  pull_request:
     branches:
-      - claude/gl-estate-v3
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
 
 permissions:
   contents: write
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: glv3-closeout-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-verify-commit:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
-      - name: Checkout deployment branch
+      - name: Checkout recovery branch
         uses: actions/checkout@v4
         with:
           ref: claude/gl-estate-v3
           fetch-depth: 0
 
-      - name: Identity and branch gate
+      - name: Identity, ancestry and protected-base gate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = "claude/gl-estate-v3"
-          git merge-base --is-ancestor 1e8a428b523d1b970a8a3a2ab2a99f48a8271d09 HEAD
+          git fetch origin main
+          main_sha="$(git rev-parse origin/main)"
+          test "$main_sha" = "1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
+          git merge-base --is-ancestor "$main_sha" HEAD
           test -f BUILD_Estate_v3/index.html
           test -f _finish/ROUTES.md
           test -f resources.json
           test ! -e GROW_Estate_v3
           test ! -e LAUNCH_Estate_v3
-          git fetch origin main
-          echo "ROLLBACK_SHA=1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
-          echo "MAIN_AT_RUN=$(git rev-parse origin/main)"
+          echo "HISTORIC_ROLLBACK_SHA=1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
+          echo "INTEGRATION_BASE_SHA=$main_sha"
+          echo "STARTING_BRANCH_SHA=$(git rev-parse HEAD)"
 
-      - name: Reconstruct checksum-pinned repaired packs
+      - name: Reconstruct checksum-pinned repaired packs safely
         shell: bash
         run: |
           set -euo pipefail
+          rm -rf /tmp/glv3-packs /tmp/glv3-packs.tar.xz
           mkdir -p /tmp/glv3-packs
           : > /tmp/glv3-packs.tar.xz
           for f in _glv3/input/pack.part{00..09}.b64; do
@@ -45,11 +60,35 @@ jobs:
             base64 -d "$f" >> /tmp/glv3-packs.tar.xz
           done
           echo "efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918  /tmp/glv3-packs.tar.xz" | sha256sum -c -
-          tar -xJf /tmp/glv3-packs.tar.xz -C /tmp/glv3-packs
+          python3 - <<'PY'
+          import pathlib, tarfile
+          archive = pathlib.Path('/tmp/glv3-packs.tar.xz')
+          root = pathlib.Path('/tmp/glv3-packs').resolve()
+          with tarfile.open(archive, 'r:xz') as tf:
+              seen = set()
+              seen_ci = set()
+              for member in tf.getmembers():
+                  p = pathlib.PurePosixPath(member.name)
+                  if p.is_absolute() or '..' in p.parts:
+                      raise SystemExit(f'unsafe tar path: {member.name}')
+                  key = member.name.rstrip('/')
+                  if key in seen or key.casefold() in seen_ci:
+                      raise SystemExit(f'duplicate/case-colliding tar path: {member.name}')
+                  seen.add(key); seen_ci.add(key.casefold())
+                  if member.issym() or member.islnk():
+                      raise SystemExit(f'link member rejected: {member.name}')
+              tf.extractall(root)
+          PY
           test -d /tmp/glv3-packs/grow
           test -d /tmp/glv3-packs/launch
           test ! -d /tmp/glv3-packs/grow/Science
           test ! -d /tmp/glv3-packs/launch/Science
+
+      - name: Reconcile input integrity and 28-versus-34 count
+        env:
+          GLV3_GROW_SRC: /tmp/glv3-packs/grow
+          GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
+        run: python3 _glv3/tools/closeout_prep.py
 
       - name: Install verifier dependencies
         shell: bash
@@ -86,7 +125,7 @@ jobs:
           cat /tmp/glv3-http.log
           exit 1
 
-      - name: Browser boot print reachability and contact sheets
+      - name: Browser boot, print, reachability and contact sheets
         env:
           GLV3_BASE_URL: http://127.0.0.1:8123
         run: node _glv3/tools/browser_verify.mjs
@@ -110,27 +149,18 @@ jobs:
           if [ "$latest" != "$rollback" ]; then
             {
               echo
-              echo "- Pre-push main moved from \`$rollback\` to \`$latest\`; gates 4 and 8 were rerun against the refreshed main."
+              echo "- Pre-push main moved from \`$rollback\` to \`$latest\`; live-tree and privacy gates were rerun against refreshed main."
             } >> _glv3/AMBERS.md
-            {
-              echo
-              echo "## Pre-push main refresh"
-              echo
-              echo "- origin/main moved to \`$latest\` after ROLLBACK_SHA; protected live-tree and privacy gates were rerun before push."
-            } >> _glv3/DECISIONS.md
             if ! git diff --quiet "$latest" -- \
               Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
               Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/; then
-              echo "RED: protected live tree differs from refreshed origin/main; stale branch would overwrite live content."
-              git diff --name-status "$latest" -- \
-                Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
-                Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/
+              echo "RED: protected live tree differs from refreshed origin/main"
               exit 20
             fi
             python3 _glv3/tools/deploy.py --rerun-live-privacy
           fi
 
-      - name: Remove one-shot transport and stage final tree
+      - name: Remove one-shot transport and stage final generated tree
         shell: bash
         run: |
           set -euo pipefail
@@ -145,29 +175,53 @@ jobs:
           test -f GROW_Estate_v3/index.html
           test -f LAUNCH_Estate_v3/index.html
           test -f _glv3/REPORT.md
+          test -f _glv3/INPUT_INTEGRITY.json
+          test -f _glv3/COUNT_RECONCILIATION.json
+          test -f _glv3/AUTONOMOUS_SENTINEL.json
           test -f _glv3/contact_sheet/art/combined-art.png
           test -f _glv3/contact_sheet/asdan/combined-asdan.png
           test -f _glv3/contact_sheet/humanities/combined-humanities.png
           git diff --cached --check
           git status --short
 
-      - name: Commit verified deployment and push branch
+      - name: Commit verified deployment and push recovery branch
+        id: candidate
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "Made by Matt deployment verifier"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat: install GROW and LAUNCH alternative v3 estates"
+          git commit -m "feat: install verified GROW and LAUNCH alternative v3 estates"
           git fetch origin main
           latest="$(git rev-parse origin/main)"
-          rollback="1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
-          if [ "$latest" != "$rollback" ]; then
-            if ! git diff --quiet "$latest" -- \
-              Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
-              Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/; then
-              echo "RED: main changed a protected live tree between final gate and push"
-              exit 22
-            fi
+          if ! git diff --quiet "$latest" -- \
+            Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
+            Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/; then
+            echo "RED: protected live tree differs from current main before push"
+            exit 22
           fi
           git push origin HEAD:claude/gl-estate-v3
-          echo "VERIFIED_BRANCH_SHA=$(git rev-parse HEAD)"
+          candidate="$(git rev-parse HEAD)"
+          printf '{"candidate_head_sha":"%s","run_id":"%s","run_attempt":"%s"}\n' "$candidate" "${GITHUB_RUN_ID}" "${GITHUB_RUN_ATTEMPT}" > /tmp/glv3-candidate.json
+          echo "candidate_sha=$candidate" >> "$GITHUB_OUTPUT"
+          echo "VERIFIED_BRANCH_SHA=$candidate"
+
+      - name: Upload generated evidence dossier
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-generated-evidence-${{ steps.candidate.outputs.candidate_sha }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            /tmp/glv3-candidate.json
+            _glv3/REPORT.md
+            _glv3/AMBERS.md
+            _glv3/DECISIONS.md
+            _glv3/run_manifest.json
+            _glv3/GATES_STATIC.json
+            _glv3/GATES_BROWSER.json
+            _glv3/GATES_CHIPS.json
+            _glv3/INPUT_INTEGRITY.json
+            _glv3/COUNT_RECONCILIATION.json
+            _glv3/AUTONOMOUS_SENTINEL.json
+            _glv3/contact_sheet/
