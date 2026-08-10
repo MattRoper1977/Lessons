@@ -182,3 +182,68 @@ editing them would undo an improvement). Per-file before/after in `A6_READING.md
 ## D10 · Deferred, recorded, not built
 
 Phase E items 1, 2, 2b, and deferred items 3–8 from §8 were **not** started. No trigger was given.
+
+---
+
+## D11 · Findings where the measurement contradicted the brief (§1 AMBER)
+
+Recorded in the order they were found. In every case the measurement was re-checked against a
+known positive before it was believed.
+
+1. **§0.6's checksum arithmetic.** The three tables hold **53** rows, not 52. 52 is the count of
+   *HTML* files across all four packs. Both numbers reported separately throughout. (D1a)
+2. **BUILD's manifest does not declare `media: []`** — it has **no `media` key at all**. §0.7
+   describes the symptom correctly and the cause incorrectly. Same audit consequence.
+3. **GROW has two more "from last lesson" prompts than the A9 table lists**, plus a said-aloud
+   staff opener and a Lundy thread that both assume a previous lesson. Found by reading, not by
+   grepping the two strings the table names. All corrected. (`A9_PROMPTS.md`)
+4. **A4's GROW input list is right; the raw count is misleading.** 17 `<input>` elements exist,
+   but only the 9 W5B table cells and the 2 lever sliders lack an accessible name — the rest are
+   wrapped in `<label>`. LAUNCH's 11 inputs are all wrapped and needed nothing.
+5. **A6's premise does not reproduce.** On the universe that reproduces the 8.24 house standard
+   (GROW live Supported measures 8.47), the new GROW Supported route already sits **below** the
+   target before any edit. A6 was therefore applied to the fragments that are genuinely hard in
+   their own right rather than to files that already pass. (`A6_READING.md`)
+6. **LAUNCH's slide word count is the other way round.** §5 gate 10 and §8 item 2b both rest on
+   LAUNCH's new slides carrying 30% *fewer* words than live. Measured: **39% more**
+   (1,169 vs 840 per lesson). This weakens 2b's "harder but shorter" defence. Not acted on —
+   Phase E is not authorised — but it changes the evidence 2b would be decided from.
+   (`READING_LEVELS.md`)
+7. **A second false-deficit case in the Baseline pack**, not named in A10.2, firing on every
+   sitting rather than only on an all-uncertain one. Fixed and flagged. (`BASELINE_WEEKS.md`)
+
+## D12 · Two instrument failures of my own, and what they cost
+
+Recorded because the brief is right that a negative from a text search is evidence about the text,
+never about the runtime — and because both would have produced confident wrong numbers.
+
+1. `\bslide\b` matches `slide-container`. The first reading-level run swallowed every live slide
+   into its own container and inflated live word counts by ~60%, which would have inverted the
+   live-vs-new comparison. Fixed by matching whole class tokens.
+2. The first food-language census scanned raw HTML and returned **296 hits**, of which ~280 were
+   the CSS property `font-weight`. A count over markup is not evidence about language. Fixed by
+   scanning visible text only; the honest count is 26, and the binary prohibition/use
+   classification needed a third class (an animal's *natural diet* is biology, not personal-diet
+   language).
+
+Neither reached a commit. Both are the reason every scanner in `_sciv3/tools/` is validated
+against a known positive first.
+
+## D13 · Sitemap
+
+**Not maintained in this repository.** There is no `sitemap.xml` and no `robots.txt` here, and the
+repo's own instrument documentation (`LundyLoop/tools/sitemap_audit.py`, LL-INST-07) states that
+the sitemap lives in the SITE repo and asserts things about this one. Per §4, nothing was done.
+
+## D14 · AMBER — a prior run's gate now fails by design
+
+`_passsci1/hub_chip_gate.js` hard-asserts `Science · Teesside` at 25/25 and exits non-zero
+otherwise. The chip legitimately moved to 63, so that instrument now fails. It is a prior run's
+sealed record and was **not** edited. The current equivalent is `_sciv3/tools/chip_gate.mjs`,
+which drives the real `index.html` in a browser rather than replicating its filter chains.
+
+## D15 · Phase E and §8 — not started
+
+No trigger was given for any of: BUILD slide reading load, GROW slide reading load, LAUNCH slide
+reading load, Progress Schools-branded variants, the evidence-window promotion, the prompt-ladder
+reconciliation, the 5-vs-10 ruling, or the pathway entry bands. Nothing was built for any of them.
