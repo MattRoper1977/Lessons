@@ -2,8 +2,8 @@
 
 Sentinel: `grow-launch-estate-v3-autonomous-closeout-2026-08-10`
 
-Mapping-repair rerun registration: the prior synchronize event did not register an Actions run, so this content change is the explicit retry for the evidence-backed case-only live-counterpart resolver.
+Branch-push trigger enabled because two connector-authored PR synchronize events were not registered by Actions. The generator remains fail-closed and SHA-bound to the checked-out recovery head.
 
-Case-only path drift is accepted only where the rollback Git tree produces exactly one case-insensitive match; semantic or ambiguous mismatches remain RED. The validated `valid.part00`–`valid.part09` source transport remains the sole generation input.
+The verified deterministic source transport remains `valid.part00`–`valid.part09`; exact case-only live-counterpart drift resolves only on a unique rollback-tree casefold match. All static/browser/print/chip/tamper gates remain mandatory.
 
 This trigger is deleted from the generated candidate before commit.
