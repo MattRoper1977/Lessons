@@ -3,7 +3,8 @@ name: GROW LAUNCH v3 build verified candidate
 on:
   push:
     branches: [claude/gl-estate-v3]
-    paths: [.github/workflows/glv3-candidate.yml]
+    paths:
+      - .github/workflows/glv3-candidate.yml
   workflow_dispatch:
 
 permissions:
@@ -13,218 +14,60 @@ permissions:
   actions: write
 
 concurrency:
-  group: glv3-candidate-${{ github.ref }}
-  cancel-in-progress: false
+  group: glv3-registered-candidate-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the exact recovery head
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: claude/gl-estate-v3
 
-      - name: Establish immutable run inputs
-        id: ids
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch --no-tags origin main claude/gl-estate-v3
-          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
-          git merge-base --is-ancestor origin/main HEAD
-          echo "integration=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
-          echo "starting=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Reconstruct independently proven source
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat _glv3/input/valid.part{00..09}.b64 | tr -d '[:space:]' | base64 --decode > /tmp/glv3-packs.tar.xz
-          echo '782ff5865e1406c159c78081bcc218bdaa46678e5c42448a6f298f696ca73f5e  /tmp/glv3-packs.tar.xz' | sha256sum -c -
-          test "$(stat -c '%s' /tmp/glv3-packs.tar.xz)" = 102160
-          xz --test /tmp/glv3-packs.tar.xz
-          rm -rf /tmp/glv3-packs; mkdir -p /tmp/glv3-packs
-          tar -xJf /tmp/glv3-packs.tar.xz -C /tmp/glv3-packs
-          test "$(find /tmp/glv3-packs/grow -type f | wc -l)" = 51
-          test "$(find /tmp/glv3-packs/launch -type f | wc -l)" = 63
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-      - name: Reconcile source, 28-versus-34 and RED baselines
-        shell: bash
-        run: |
-          set -euo pipefail
-          python _glv3/tools/closeout_reconcile.py \
-            --repo "$GITHUB_WORKSPACE" --grow /tmp/glv3-packs/grow --launch /tmp/glv3-packs/launch \
-            --historic-sha 1e8a428b523d1b970a8a3a2ab2a99f48a8271d09 \
-            --integration-sha '${{ steps.ids.outputs.integration }}' \
-            --starting-branch-sha '${{ steps.ids.outputs.starting }}' \
-            --transport /tmp/glv3-packs.tar.xz
-
-      - name: Generate deterministic estates and static evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf GROW_Estate_v3 LAUNCH_Estate_v3 _glv3/contact_sheet
-          python _glv3/tools/deploy.py /tmp/glv3-packs/grow /tmp/glv3-packs/launch "$GITHUB_WORKSPACE"
-          test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
-          git diff --check
-          test -z "$(git diff --name-only -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
-
-      - name: Repair and execute permanent positive controls
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('_glv3/tools/positive_controls.py'); t=p.read_text()
-          old='''  def missing():\n   grow=[r for r in lessons if "grow" in str(r.get("family","")).lower()]; assert grow; victim=grow[0]; p=tmp/str(victim.get("url") or victim.get("path") or victim.get("href") or "").lstrip("/"); p.unlink(missing_ok=True); return p\n  expect_failure("missing GROW lesson",missing,lambda p: (_ for _ in ()).throw(AssertionError("GROW lesson count/path mismatch")) if (not p.exists()) else None,results)'''
-          new='''  def missing():\n   d,r=resources(tmp/"resources.json"); idx=next(i for i,x in enumerate(r) if str(x.get("id","")).startswith("glv3-") and str(x.get("type","")).lower()=="lesson" and "grow" in str(x.get("family","")).lower()); r.pop(idx); write_resources(tmp/"resources.json",d,r); return tmp/"resources.json"\n  def grow_count(p):\n   _,r=resources(p); n=sum(1 for x in r if str(x.get("id","")).startswith("glv3-") and str(x.get("type","")).lower()=="lesson" and "grow" in str(x.get("family","")).lower()); assert n==34,f"GROW lesson count {n}"\n  expect_failure("missing GROW lesson",missing,grow_count,results)'''
-          assert old in t
-          p.write_text(t.replace(old,new))
-          PY
-          before=$(git status --porcelain)
-          python _glv3/tools/positive_controls.py --repo "$GITHUB_WORKSPACE"
-          after=$(git status --porcelain)
-          test "$before" != "$after"
-          test -s _glv3/POSITIVE_CONTROLS.json
-
-      - name: Install real-browser dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m pip install --disable-pip-version-check --no-cache-dir pillow beautifulsoup4 lxml
-          npm install --no-save --no-package-lock playwright sharp pngjs pdfjs-dist
-          npx playwright install --with-deps chromium
-
-      - name: Run Chromium boot interaction mobile print contacts and chips
-        env:
-          BASE_URL: http://127.0.0.1:4173
-          GLV3_BASE_URL: http://127.0.0.1:4173
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >/tmp/glv3-http.log 2>&1 & server=$!
-          trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-http.log || true' EXIT
-          for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep .25; done
-          timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173
-          timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173
-          kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true; trap - EXIT
-          test -s _glv3/GATES_BROWSER.json
-          test -s _glv3/GATES_CHIPS.json
-
-      - name: Finalize candidate dossier and remove one-shot transport
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          from PIL import Image,ImageStat
-          import hashlib,json,subprocess,zipfile
-          from datetime import datetime,timezone
-          root=Path('.').resolve(); out=root/'_glv3'; now=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
-          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
-          contacts=sorted((out/'contact_sheet').rglob('*.png')); assert len(contacts)==83,len(contacts)
-          names=set(); inv=[]
-          for p in contacts:
-           rel=p.relative_to(root).as_posix(); assert rel.casefold() not in names; names.add(rel.casefold()); assert p.stat().st_size>1000
-           with Image.open(p) as im:
-            im.load(); w,h=im.size; assert w>0 and h>0
-            rgb=im.convert('RGB'); extrema=rgb.getextrema(); assert any(high-low>2 for low,high in extrema),(rel,extrema)
-           inv.append({'path':rel,'byte_size':p.stat().st_size,'width':w,'height':h,'sha256':sha(p)})
-          write=lambda p,o:p.write_text(json.dumps(o,indent=2,sort_keys=True)+'\n')
-          write(out/'CONTACT_SHEET_INVENTORY.json',{'sentinel':'grow-launch-estate-v3-autonomous-closeout-2026-08-10','result':'PASS','png_count':83,'per_lesson_contact_sheets':80,'combined_subject_sheets':3,'files':inv})
-          prot=json.loads((out/'PROTECTED_TREES.json').read_text()); integ=prot['integration']; files=[]
-          for tree in integ['trees'].values():
-           for old in tree['files']:
-            p=root/old['path']; assert p.is_file(); blob=subprocess.check_output(['git','hash-object',str(p)],text=True).strip(); row={'path':old['path'],'git_blob_sha':blob,'byte_size':p.stat().st_size,'sha256':sha(p)}; assert (row['git_blob_sha'],row['byte_size'],row['sha256'])==(old['git_blob_sha'],old['byte_size'],old['sha256']),row['path']; files.append(row)
-          prot['candidate_worktree']={'file_count':len(files),'files':files}; prot['candidate_vs_integration']={'identical':True,'added':[],'removed':[],'modified':[]}; prot['candidate_comparison_pending']=False; write(out/'PROTECTED_TREES.json',prot)
-          s=json.loads((out/'AUTONOMOUS_SENTINEL.json').read_text()); s['current_phase']='EVIDENCE_GENERATION'; s.setdefault('phase_timestamps',{})['GENERATION']=now; s['phase_timestamps']['STATIC_GATES']=now; s['phase_timestamps']['BROWSER_GATES']=now; s['phase_timestamps']['EVIDENCE_GENERATION']=now; s.setdefault('gate_states',{}).update({'generation':'PASS','static':'PASS','browser':'PASS','print':'PASS','chips':'PASS','contact_sheets':'PASS','positive_controls':'PASS','protected_candidate':'PASS'}); s['final_production_status']='CANDIDATE_VERIFIED_NOT_MERGED'; s['updated_at']=now; write(out/'AUTONOMOUS_SENTINEL.json',s)
-          report='''NOT DEPLOYED — VERIFIED CANDIDATE, PR NOT YET MERGED\n\n# GROW + LAUNCH Estates v3 candidate dossier\n\nThe earlier completion claim was false. This candidate was regenerated from the exact repaired source universe, passed input/count/static/browser/print/chip/tamper gates, and remains non-production until PR #108 is merged and the exact merged SHA is proven through Pages and the canonical Made by Matt route.\n\n- GROW deployable lessons: 34\n- LAUNCH deployable lessons: 46\n- Combined lessons: 80\n- Print-bearing: 24\n- Screen-only: 56\n- Catalogue additions: 88\n- Installed HTML universe: 94\n- Contact sheets: 83 (80 lesson + 3 combined)\n- Existing lessons remain the default.\n- Protected live trees: invariant to the current integration baseline.\n- 28-versus-34 correction: the old prefix allowlist omitted genuine GROW PEQ_W1–PEQ_W6 files.\n\nFinal merge, raw-pin, Pages and production objects are intentionally unset at this stage.\n'''
-          (out/'GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md').write_text(report)
-          proof={'sentinel':'grow-launch-estate-v3-autonomous-closeout-2026-08-10','status':'CANDIDATE_VERIFIED_NOT_MERGED','deployment_complete':False,'publication_proven':False,'repository':'MattRoper1977/Lessons','historic_rollback_sha':'1e8a428b523d1b970a8a3a2ab2a99f48a8271d09','integration_base_sha':None,'branch':'claude/gl-estate-v3','candidate_head_sha':None,'pull_request':{'number':108,'url':'https://github.com/MattRoper1977/Lessons/pull/108'},'merge':{},'pages':{},'inputs':json.loads((out/'INPUT_INTEGRITY.json').read_text()),'count_reconciliation':json.loads((out/'COUNT_RECONCILIATION.json').read_text())['cause_of_prior_28_count'],'counts':{'grow':34,'launch':46,'total':80,'print_bearing':24,'screen_only':56,'catalogue_additions':88,'html_boot_universe':94,'contact_sheets':83},'protected_trees':{'candidate_vs_integration':'PASS'},'catalogue':{'addition_count':88},'routes':{'existing_default':True},'gates':{'static':'PASS','browser':'PASS','print':'PASS','chips':'PASS','positive_controls':'PASS'},'ci_runs':[],'raw_pin_samples':[],'production_samples':[],'artifacts':[],'ambers':[],'rollback':{'strategy':'targeted revert of the GLV3 merge; never reset main to the historic anchor'}}; write(out/'GROW_LAUNCH_v3_DEPLOY_PROOF.json',proof)
-          members=['GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md','GROW_LAUNCH_v3_DEPLOY_PROOF.json','GATES_STATIC.json','GATES_BROWSER.json','GATES_CHIPS.json','INPUT_INTEGRITY.json','COUNT_RECONCILIATION.json','AUTONOMOUS_SENTINEL.json','PROTECTED_TREES.json','POSITIVE_CONTROLS.json','CONTACT_SHEET_INVENTORY.json','AMBERS.md','DECISIONS.md','run_manifest.json']
-          z=out/'GROW_LAUNCH_v3_REPORT_AND_PROOF.zip'
-          with zipfile.ZipFile(z,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as f:
-           for name in members:
-            p=out/name
-            if p.exists(): f.write(p,arcname=name)
-          with zipfile.ZipFile(z) as f: assert f.testzip() is None
-          PY
-          python - <<'PY'
-          from pathlib import Path
-          for p in Path('_glv3').rglob('*'):
-           if not p.is_file() or p.suffix.lower() in {'.png','.zip'}: continue
-           try: t=p.read_text()
-           except UnicodeDecodeError: continue
-           t=t.replace('/home/runner/work/Lessons/Lessons','<repository>').replace('/tmp/glv3-packs','<verified-source>')
-           p.write_text(t)
-          PY
-          rm -rf node_modules _glv3/input
-          test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
-          test -z "$(git diff --name-only -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
-          ! grep -RIlE '/home/runner/work|gh[pousr]_[A-Za-z0-9_]{20,}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY' _glv3 GROW_Estate_v3 LAUNCH_Estate_v3 | grep -q .
-          ! find . -path './.git' -prune -o -type f -size +50M -print | grep -q .
-          git diff --check
-
-      - name: Commit and push immutable implementation candidate
+      - name: Generate, verify, commit and exact-tree re-prove the candidate
         id: candidate
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          test -n "$(git status --porcelain)"
-          git commit -m 'feat: install verified GROW and LAUNCH alternative v3 estates'
-          candidate=$(git rev-parse HEAD)
-          echo "sha=$candidate" >> "$GITHUB_OUTPUT"
-          git push origin HEAD:claude/gl-estate-v3
-          test -z "$(git status --porcelain)"
-
-      - name: Verify the exact committed candidate in a disposable copy
         env:
-          BASE_URL: http://127.0.0.1:4183
-          GLV3_BASE_URL: http://127.0.0.1:4183
+          GITHUB_TOKEN: ${{ github.token }}
         shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = '${{ steps.candidate.outputs.sha }}'
-          rm -rf /tmp/glv3-exact; mkdir -p /tmp/glv3-exact; cp -a . /tmp/glv3-exact/repo
-          cd /tmp/glv3-exact/repo
-          test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
-          python _glv3/tools/positive_controls.py --repo "$PWD"
-          npm install --no-save --no-package-lock playwright sharp pngjs pdfjs-dist >/dev/null
-          python -m http.server 4183 --bind 127.0.0.1 --directory "$PWD" >/tmp/glv3-exact-http.log 2>&1 & server=$!
-          trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-exact-http.log || true' EXIT
-          for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4183/ >/dev/null && break; sleep .25; done
-          timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4183
-          timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4183
-          kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true; trap - EXIT
+        run: bash _glv3/tools/run_registered_candidate.sh
 
-      - name: Publish candidate-SHA statuses
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CANDIDATE: ${{ steps.candidate.outputs.sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          for context in glv3/source-generation glv3/exact-tree; do
-            curl --fail-with-body --silent --show-error -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
-              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${CANDIDATE}" \
-              -d "$(jq -nc --arg context "$context" --arg target_url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" '{state:"success",context:$context,description:"Exact generated candidate passed complete GLV3 verification",target_url:$target_url}')"
-          done
-
-      - name: Upload candidate dossier
+      - name: Upload candidate evidence dossier
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: glv3-candidate-${{ steps.candidate.outputs.sha || github.sha }}
+          name: glv3-candidate-${{ steps.candidate.outputs.candidate_sha || github.sha }}
           path: |
-            _glv3/*.json
-            _glv3/*.md
-            _glv3/*.zip
+            _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
+            _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
+            _glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip
+            _glv3/EVIDENCE_ZIP_INTEGRITY.json
+            _glv3/GATES_STATIC.json
+            _glv3/GATES_BROWSER.json
+            _glv3/GATES_CHIPS.json
+            _glv3/INPUT_INTEGRITY.json
+            _glv3/COUNT_RECONCILIATION.json
+            _glv3/PROTECTED_TREES.json
+            _glv3/POSITIVE_CONTROLS.json
+            _glv3/CONTACT_SHEET_INVENTORY.json
+            _glv3/AUTONOMOUS_SENTINEL.json
+            _glv3/REPORT.md
+            _glv3/AMBERS.md
+            _glv3/DECISIONS.md
+            _glv3/run_manifest.json
             _glv3/contact_sheet
           if-no-files-found: warn
           retention-days: 30
