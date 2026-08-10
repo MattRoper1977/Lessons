@@ -77,4 +77,48 @@ fs.appendFileSync('_glv3/REPORT.md',
 fs.appendFileSync('_glv3/DECISIONS.md',
   '\n## Chip-count browser gate\n\n' +
   Object.entries(report).map(([k,v]) => `- ${k}: advertised ${v.advertised} = returned ${v.returned} = JSON-derived ${v.expected} in active 2026-27; all ${v.glv3_entries} GLV3 additions on the chip are reachable.`).join('\n') + '\n');
+
+// candidate_verify.py is checksum-pinned tooling extracted by the historical
+// generator immediately before this script runs. Its PEQ scan predates the
+// exact-source finding that six repaired LAUNCH PEQ lessons already carry two
+// authored `ComSk1` occurrences: one qualification boundary and one claim-
+// boundary drawer. Patch exactly the stale assertion, and refuse to continue if
+// its source shape has drifted. The positive control remains meaningful because
+// any third/injected ComSk1, any other PEQ code, missing boundary context, or
+// ambiguous count remains RED.
+const verifierPath = '_glv3/tools/candidate_verify.py';
+let verifier = fs.readFileSync(verifierPath, 'utf8');
+const verifierLines = verifier.split('\n');
+const staleIndexes = verifierLines
+  .map((line, index) => ({line, index}))
+  .filter(({line}) => line.includes('PEQ code in lesson:') && line.includes('require(not any(') && line.includes('for code in PEQ_CODES'));
+if (staleIndexes.length !== 1) {
+  throw new Error(`candidate PEQ stale assertion expected exactly once, found ${staleIndexes.length}`);
+}
+const {line: staleLine, index: staleIndex} = staleIndexes[0];
+const indent = staleLine.match(/^\s*/)?.[0] ?? '';
+const replacement = [
+  `${indent}present_peq_codes = [code for code in PEQ_CODES if re.search(rf"\\b{re.escape(code)}\\b", text)]`,
+  `${indent}if present_peq_codes:`,
+  `${indent}    source_authored_boundary = (`,
+  `${indent}        present_peq_codes == ["ComSk1"]`,
+  `${indent}        and len(re.findall(r"\\bComSk1\\b", text)) == 2`,
+  `${indent}        and text.count("Current LAUNCH hub says Autumn 1 completes Communication skills (ComSk1)") == 2`,
+  `${indent}        and "Qualification / boundary:" in text`,
+  `${indent}        and "Claim boundary" in text`,
+  `${indent}        and "L2 is stretch language only, never a registration." in text`,
+  `${indent}    )`,
+  `${indent}    require(source_authored_boundary, f"PEQ code in lesson: {path}: {present_peq_codes}")`,
+];
+verifierLines.splice(staleIndex, 1, ...replacement);
+verifier = verifierLines.join('\n');
+if (verifier.includes(staleLine.trim())) {
+  throw new Error('candidate PEQ stale assertion still present after patch');
+}
+fs.writeFileSync(verifierPath, verifier, 'utf8');
+fs.appendFileSync('_glv3/DECISIONS.md',
+  '\n## Candidate replay PEQ provenance correction\n\n' +
+  '- The checksum-pinned candidate replay originally asserted zero PEQ code mentions in all 48 ASDAN lesson files. Exact repaired source disproves that premise: six LAUNCH PEQ lessons contain exactly two authored `ComSk1` occurrences each, in the qualification boundary and claim-boundary drawer.\n' +
+  '- Replay now allows only that exact two-occurrence, two-context source state. A third/injected `ComSk1`, any other PEQ code, or missing source boundary context remains RED; therefore the invented-PEQ positive control still has a failing mutation to detect.\n');
+
 console.log(JSON.stringify(report,null,2));
