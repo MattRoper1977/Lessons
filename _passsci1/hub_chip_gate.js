@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// SUPERSEDED 2026-08-10 — this gate hard-asserts Science · Teesside at 25/25 and now fails
+// by design: the chip legitimately moved to 63 in the sci-v3 install. Logic left untouched
+// as a sealed record of that run. Current equivalent: _sciv3/tools/chip_gate.mjs, which
+// drives the real index.html in a browser rather than replicating its filter chains.
 // Hub chip-count gate (SCI-3F §3.5). Replicates index.html buildQuicknav()/render()
 // filter chains against the MERGED resources.json and asserts, per subject, that the
 // chip's advertised in-collection count equals the number of cards render() returns

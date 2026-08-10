@@ -9,7 +9,7 @@
 import { chromium } from 'playwright';
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8765';
-const WANT = { 'Science · Teesside': 63, 'Baseline': 8 };
+const WANT = JSON.parse(process.argv[3] || '{"Science · Teesside":63,"Baseline":8}');
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
