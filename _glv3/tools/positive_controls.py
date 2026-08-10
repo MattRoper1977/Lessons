@@ -55,7 +55,9 @@ def main():
   tmp=Path(td); shutil.copytree(repo/"GROW_Estate_v3",tmp/"GROW_Estate_v3"); shutil.copytree(repo/"LAUNCH_Estate_v3",tmp/"LAUNCH_Estate_v3"); shutil.copy2(repo/"resources.json",tmp/"resources.json")
   data,rows=resources(tmp/"resources.json"); gl=[r for r in rows if str(r.get("id","")).startswith("glv3-")]; lessons=[r for r in gl if str(r.get("type","")).lower()=="lesson"]
   def missing():
-   grow=[r for r in lessons if "grow" in str(r.get("family","")).lower()]; assert grow; victim=grow[0]; p=tmp/str(victim.get("url") or victim.get("path") or victim.get("href") or "").lstrip("/"); p.unlink(missing_ok=True); return p
+   grow=[r for r in lessons if "grow" in str(r.get("family","")).lower()]; assert grow; victim=grow[0]
+   rel=victim.get("file") or victim.get("url") or victim.get("path") or victim.get("href"); assert rel,"GROW catalogue lesson has no file route"
+   p=tmp/str(rel).lstrip("/"); assert p.is_file(),f"GROW lesson route missing before mutation: {rel}"; p.unlink(); return p
   expect_failure("missing GROW lesson",missing,lambda p: (_ for _ in ()).throw(AssertionError("GROW lesson count/path mismatch")) if (not p.exists()) else None,results)
   def dup():
    d,r=resources(tmp/"resources.json"); r.append(dict(r[0])); write_resources(tmp/"resources.json",d,r); return tmp/"resources.json"
