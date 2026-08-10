@@ -5,6 +5,13 @@ on:
     branches: [claude/gl-estate-v3]
     paths:
       - .github/workflows/glv3-execute.yml
+      - _glv3/tools/bs4.py
+      - _glv3/tools/browser_verify.mjs
+      - _glv3/tools/chip_gate.mjs
+      - _glv3/tools/deploy.py
+      - _glv3/tools/positive_controls.py
+      - _glv3/tools/closeout_reconcile.py
+      - _glv3/tools/build_candidate_dossier.py
   workflow_dispatch:
 
 permissions:
@@ -42,6 +49,8 @@ jobs:
           grep -q 'Source-authored PEQ code provenance' _glv3/tools/bs4.py
           grep -q '#cards article.card' _glv3/tools/browser_verify.mjs
           grep -q '.ytab\[data-year="2026-27"\]' _glv3/tools/browser_verify.mjs
+          grep -q '#cards article.card' _glv3/tools/chip_gate.mjs
+          grep -q '#quicknav .chip' _glv3/tools/chip_gate.mjs
           printf 'base=%s\nstart=%s\n' "$base" "$start" >> "$GITHUB_OUTPUT"
           printf 'integration_base=%s\nstarting_head=%s\n' "$base" "$start"
 
