@@ -48,6 +48,11 @@ jobs:
               raise SystemExit('event-head binding source did not match')
           text=text.replace(old,new,1)
           text=text.replace('set -euo pipefail','set -euxo pipefail',1)
+          old_generate='log "Generate parallel estates and static evidence"\nrm -rf GROW_Estate_v3 LAUNCH_Estate_v3 _glv3/contact_sheet'
+          new_generate='log "Generate parallel estates and static evidence"\nrm -f _glv3/tools/hashlib.py\nrm -rf GROW_Estate_v3 LAUNCH_Estate_v3 _glv3/contact_sheet'
+          if old_generate not in text:
+              raise SystemExit('generation boundary source did not match')
+          text=text.replace(old_generate,new_generate,1)
           old_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
           new_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/hashlib.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
           if old_cleanup not in text:
