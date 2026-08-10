@@ -1,0 +1,24 @@
+{
+  "_why": "Which Lessons games can carry /hud.js is not derivable from the games. Twenty-six of the thirty-nine in the canonical search index already load it, Games/Glitch_Clash.html among them, so the estate's practice is that the HUD is the one permitted external script. Three games are stricter: their own verifiers forbid any <script src> at all, or extract their JavaScript by slicing to the file's last </script> and break when another one appears after it. Adding the tag to one of those is not a mechanical edit that happens to trip a check - it retracts a promise that game makes, or silently changes what its verifier reads. So the exclusions are declared here rather than left as a quiet gap.",
+  "_measured": "2026-08-10. Each entry was measured, not assumed: the verifier was run on the unmodified file (green), the script line was inserted, and the verifier was run again. Only checks that turned from green to red are recorded.",
+  "_consequence": "A pupil playing one of these three has the browser Back button and the game's own navigation, and no HUD back control or chosen-homepage control. That is the status quo for all three, not a regression introduced here.",
+  "scriptLine": "<script defer src=\"/hud.js\"></script>",
+  "excluded": [
+    {
+      "route": "/Lessons/Games/Axiom_Shift.html",
+      "verifier": "tools/verify_axiomshift.sh",
+      "gates": ["extracted-script syntax check"],
+      "note": "verify_axiomshift.js slices the shell source with html.lastIndexOf('</script>'). A later script element moves that index, so the extracted slice ends up containing a closing tag and fails node --check with SyntaxError: Unexpected token '<'. The game is not at fault and neither is the tag; the extraction is anchored on a position the tag moves."
+    },
+    {
+      "route": "/Lessons/Games/Charcoal.html",
+      "verifier": "tools/verify_charcoal.sh",
+      "gates": ["house: external <script src> present"]
+    },
+    {
+      "route": "/Lessons/Games/Off_Brand.html",
+      "verifier": "tools/verify_offbrand.sh",
+      "gates": ["house: external <script src> present"]
+    }
+  ]
+}

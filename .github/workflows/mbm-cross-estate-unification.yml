@@ -132,6 +132,26 @@ jobs:
           for _ in $(seq 1 30); do curl -fsS "http://127.0.0.1:4173/$prefix/" >/dev/null && break; sleep 1; done
           MBM_BASE_URL="http://127.0.0.1:4173/$prefix/" node tools/verify_cross_estate_browser.mjs
 
+      # The estate HUD is the only shared chrome these pages carry, and it is
+      # served from the site origin - so this is the one job that can prove it,
+      # because it is the one job that assembles both repositories onto a single
+      # origin. A tool nobody runs is a doc asserting coverage that does not
+      # exist. !cancelled() because this step owns coverage nothing else has.
+      - name: HUD back and chosen-homepage controls on every Lessons game
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          prefix=$(cat /tmp/mbm-prefix)
+          if [ "$prefix" != "Lessons" ]; then echo "not the Lessons estate; nothing to check"; exit 0; fi
+          python -m http.server 4176 --bind 127.0.0.1 --directory _served >/tmp/mbm-hud-http.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          for _ in $(seq 1 30); do curl -fsS "http://127.0.0.1:4176/" >/dev/null && break; sleep 1; done
+          export MBM_SEARCH_INDEX="$PWD/_reference/site/data/mbm-search-index.json"
+          node tools/verify_hud_on_lessons_games.mjs --self-test
+          MBM_BASE_URL="http://127.0.0.1:4176/" node tools/verify_hud_on_lessons_games.mjs
+
       - name: Print browser evidence
         if: always()
         shell: bash
