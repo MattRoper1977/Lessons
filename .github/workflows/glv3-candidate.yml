@@ -47,6 +47,7 @@ jobs:
           if old not in text:
               raise SystemExit('event-head binding source did not match')
           text=text.replace(old,new,1)
+          text=text.replace('set -euo pipefail','set -euxo pipefail',1)
           old_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
           new_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/hashlib.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
           if old_cleanup not in text:
