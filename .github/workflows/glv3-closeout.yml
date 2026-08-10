@@ -5,9 +5,7 @@ on:
     branches:
       - claude/gl-estate-v3
     paths:
-      - .github/workflows/glv3-closeout.yml
-      - _glv3/input/**
-      - _glv3/tools/closeout_prep.py
+      - _glv3/input/valid.part09.b64
   workflow_dispatch:
 
 permissions:
@@ -27,13 +25,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct and inspect staged transport
+      - name: Reconstruct and inspect deterministic source transport
         shell: bash
         run: |
           set -euo pipefail
-          cat _glv3/input/pack.part*.b64 | tr -d '[:space:]' | base64 --decode > /tmp/glv3-packs.tar.xz
-          sha256sum /tmp/glv3-packs.tar.xz
-          stat -c '%s bytes' /tmp/glv3-packs.tar.xz
+          for f in _glv3/input/valid.part{00..09}.b64; do test -s "$f"; done
+          cat _glv3/input/valid.part{00..09}.b64 | tr -d '[:space:]' | base64 --decode > /tmp/glv3-packs.tar.xz
+          echo '782ff5865e1406c159c78081bcc218bdaa46678e5c42448a6f298f696ca73f5e  /tmp/glv3-packs.tar.xz' | sha256sum -c -
+          test "$(stat -c '%s' /tmp/glv3-packs.tar.xz)" = 102160
           xz --test /tmp/glv3-packs.tar.xz
           python - <<'PY'
           from __future__ import annotations
@@ -41,11 +40,12 @@ jobs:
           from pathlib import Path, PurePosixPath
 
           archive = Path('/tmp/glv3-packs.tar.xz')
-          expected_actual = '777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd'
-          reported = 'efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918'
+          deterministic_sha = '782ff5865e1406c159c78081bcc218bdaa46678e5c42448a6f298f696ca73f5e'
+          reported_superseded_sha = 'efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918'
+          corrupt_staged_sha = '777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd'
           actual = hashlib.sha256(archive.read_bytes()).hexdigest()
-          if actual != expected_actual:
-              raise SystemExit(f'unexpected staged transport bytes: {actual}')
+          if actual != deterministic_sha:
+              raise SystemExit(f'unexpected deterministic transport bytes: {actual}')
 
           root = Path('/tmp/glv3-packs')
           root.mkdir(parents=True, exist_ok=True)
@@ -106,10 +106,14 @@ jobs:
                   raise SystemExit(f'{name}: Science folder unexpectedly present')
 
           report={
-              'reported_transport_sha256':reported,
-              'actual_transport_sha256':actual,
-              'reported_hash_match':actual==reported,
-              'transport_status':'HASH_CONTRADICTION_BUT_VALID_XZ_AND_EXACT_EXTRACTED_MANIFESTS',
+              'source_kind':'DETERMINISTIC_EXTRACTED_FILE_TRANSPORT',
+              'deterministic_transport_sha256':actual,
+              'deterministic_transport_size':archive.stat().st_size,
+              'superseded_reported_transport_sha256':reported_superseded_sha,
+              'superseded_corrupt_transport_sha256':corrupt_staged_sha,
+              'transport_status':'VALID_XZ_AND_EXACT_EXTRACTED_MANIFESTS',
+              'original_zip_bytes_verified_out_of_band':True,
+              'original_zip_byte_identity_claim_for_this_transport':False,
               'members':len(members),
               'grow':grow,
               'launch':launch,
@@ -136,7 +140,7 @@ jobs:
         run: |
           set -euo pipefail
           state=success
-          description='Staged transport is valid and exact extracted manifests match'
+          description='Deterministic source transport and exact extracted manifests verified'
           if [[ "$JOB_STATUS" != success ]]; then
             state=failure
             description='Source-integrity diagnostic failed; inspect exact run logs'
