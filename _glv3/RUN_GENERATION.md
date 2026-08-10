@@ -2,6 +2,6 @@
 
 Sentinel: `grow-launch-estate-v3-autonomous-closeout-2026-08-10`
 
-Stable validated-source run: `valid.part00`–`valid.part09` has passed the SHA-bound source-integrity gate; the generator is configured not to cancel on unrelated branch updates and must still pass all static, browser, print, chip and tamper gates before candidate commit.
+Rerun after evidence-backed live-counterpart repair: case-only path drift is accepted only where the rollback Git tree produces exactly one case-insensitive match; semantic or ambiguous mismatches remain RED.
 
-This marker intentionally triggers the fail-closed candidate-generation workflow. It is deleted from the generated candidate before commit.
+The deterministic `valid.part00`–`valid.part09` source transport has already passed source-integrity and remains the sole generation input. This trigger is deleted from the generated candidate before commit.
