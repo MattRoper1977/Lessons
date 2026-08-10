@@ -162,3 +162,67 @@ about the runtime.**
 - **A1: the witness statement is not ported.** Recorded under Phase A with the consequence named.
 - **A10.3 (science): both escape wordings stay** — "Not sure yet" (standard) and "Not ready yet"
   (SEMH). Ruled **deliberate**, not accidental, so no later pass harmonises it by reflex.
+
+---
+
+## D7 · Revision B — the three findings resolved
+
+**A-i · UPHELD AND HARDENED.** The ten `Science/` files are **superseded, not duplicates**. Skipping
+them is a **correctness requirement**, not tidiness: installing them would reintroduce six removed
+food links and the baseline-week error onto a live site. Deleted from the working copy before
+Phase B so no glob can sweep them in.
+
+Re-derived on the revision-B zip, per file rather than in aggregate:
+
+| leftover | zip `Science/` | installed `v3_40min/` |
+|---|---|---|
+| `healthy-eating` link | **6 of 10** — W5A, W5B, W6A, W6B, W7A, W7B | 0 |
+| `Aut1·W2` | **1 of 10** — W3A, twice | 0 |
+
+Note against the brief's own numbers, which are otherwise exact: A-i says "the zip copy still
+carries **1** `healthy-eating` link" of `SCI_B_W3A`. W3A carries **zero** — it links
+`animals-without-bones`, not a food page. The six food links sit in the other six files. The
+conclusion is unaffected and the byte figures are exactly right.
+
+**A-i's byte figures also corrected an error of mine.** The brief says installed **48,659 B** vs
+zip **45,626 B**; I had reported 48,024 and 45,014. Both of mine were **character counts, not
+bytes** — `·`, `—` and `×` are multibyte in UTF-8. That is instrument failure #5 in D5, *characters
+counted as bytes*, committed by me in the very report that listed it. Measured both ways here.
+
+**A-ii · UPHELD, edit withdrawn.** The revision-B zip carries the withdrawal record — item 2 under
+"Post-verification edits applied 2026-08-10", headed **"BUILD_ART_W3 Arts Award tag — EDIT MADE,
+THEN WITHDRAWN 2026-08-10"** — and `BUILD_ART_W3` again reads `Explore Parts A + C · Take Part +
+Create`, mirroring live.
+
+*(Small nuance: §A-ii asks for "the section headed" that phrase. It is a bold numbered item inside
+the existing section, not its own `##` heading. Unambiguous, so accepted.)*
+
+**A-iii · DISSOLVED, verified closed.** The page now reads `Explore Parts A + C · Take Part +
+Create` and `Art_Teesside/manifest-v3.json` reads `Explore Parts A + C · Take Part + Create`.
+**Page and manifest agree. There is no page-vs-manifest split.** Closed.
+
+The open question is not a code question and is not this run's to settle: **Trinity requires Part C
+to be a distinct activity from Part A.** Whether W3's test strips evidence both depends on what the
+pupil produces, and it applies identically to live `Art_Teesside/Build/BUILD_ART_W3_Industrial_
+Surface_Skills_Lab.html` and to the v3 file. Changing one would leave two conflicting tags for the
+same week. **Adviser question, one decision, both files.** No Part tag is changed anywhere.
+
+## D8 · AMBER — the lesson count in §C is a double-subtraction
+
+§C says "**53 lessons → 43** once the `Science/` folder is deleted". The standing document's 53
+already excluded science ("53 lessons, not 63"), so subtracting the ten again lands on 43.
+
+Derived from the artefact, defining a route-bearing lesson as *a file carrying the print-tier
+repair* rather than by filename convention:
+
+| subject | route-bearing lessons |
+|---|---|
+| `Art_Teesside` | 8 |
+| `BUILD_ASDAN` | 31 |
+| `DT_Community_Upcycling` | 6 |
+| `Humanities_Teesside` | 8 |
+| ~~`Science`~~ | ~~10~~ — deleted |
+| **total to install** | **53** |
+
+63 in the zip, minus the 10 skipped, is **53**. The working copy after deletion holds 79 files,
+63 HTML, of which 53 are route-bearing lessons. **Proceeding on 53.**
