@@ -5,14 +5,7 @@ on:
     branches: [claude/gl-estate-v3]
     paths:
       - .github/workflows/glv3-execute.yml
-      - _glv3/tools/bs4.py
-      - _glv3/tools/browser_verify.mjs
-      - _glv3/tools/chip_gate.mjs
-      - _glv3/tools/deploy.py
-      - _glv3/tools/positive_controls.py
-      - _glv3/tools/closeout_reconcile.py
-      - _glv3/tools/build_candidate_dossier.py
-      - _glv3/tools/finalize_candidate_bundle.py
+      - _glv3/tools/**
   workflow_dispatch:
 
 permissions:
@@ -46,9 +39,11 @@ jobs:
           start="$(git rev-parse HEAD)"
           git merge-base --is-ancestor "$base" "$start"
           test -s _glv3/tools/bs4.py
+          test -s _glv3/tools/shutil.py
           test -s _glv3/tools/finalize_candidate_bundle.py
           grep -q 'Deterministic Humanities print-surface reconstruction' _glv3/tools/bs4.py
           grep -q 'Source-authored PEQ code provenance' _glv3/tools/bs4.py
+          grep -q 'TEST-FILENAME REFERENCES' _glv3/tools/shutil.py
           grep -q '#cards article.card' _glv3/tools/browser_verify.mjs
           grep -q '.ytab\[data-year="2026-27"\]' _glv3/tools/browser_verify.mjs
           grep -q '#cards article.card' _glv3/tools/chip_gate.mjs
@@ -149,7 +144,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf node_modules _glv3/input _glv3/tooling
-          rm -f _glv3/RUN_GENERATION.md _glv3/tools/bs4.py _glv3/tools/closeout_prep.py
+          rm -f _glv3/RUN_GENERATION.md _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/closeout_prep.py
           rm -f .github/workflows/glv3-candidate.yml .github/workflows/glv3-closeout.yml .github/workflows/glv3-deploy.yml .github/workflows/glv3-generate.yml .github/workflows/glv3-generation-gate.yml .github/workflows/glv3-preflight.yml .github/workflows/glv3-execute.yml
           test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
           test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
