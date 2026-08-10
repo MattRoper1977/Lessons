@@ -5,6 +5,7 @@ on:
     branches: [claude/gl-estate-v3]
     paths:
       - .github/workflows/glv3-candidate.yml
+      - _glv3/tools/run_registered_candidate.sh
   pull_request:
     branches: [main]
     types: [reopened]
@@ -114,3 +115,27 @@ jobs:
             _glv3/contact_sheet
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Publish inspectable orchestration status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          START_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state=success
+          description='Registered GLV3 candidate orchestration passed'
+          if [[ "$JOB_STATUS" != success ]]; then
+            state=failure
+            description='Registered GLV3 candidate orchestration failed; inspect run'
+          fi
+          target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          payload="$(jq -nc --arg state "$state" --arg context 'glv3/candidate-orchestration' --arg description "$description" --arg target_url "$target_url" '{state:$state,context:$context,description:$description,target_url:$target_url}')"
+          curl --fail-with-body --silent --show-error -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${START_SHA}" \
+            -d "$payload" >/dev/null
