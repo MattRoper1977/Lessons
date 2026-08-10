@@ -15,6 +15,16 @@ const vm = require('vm');
 
 const FILE = process.argv[2] || path.join(__dirname, '..', 'Games', 'Axiom_Shift.html');
 const html = fs.readFileSync(FILE, 'utf8');
+/* The game, without the platform's stamped inline exit region. Gates below judge
+   Axiom Shift's own contract - its ids, its script, its save key - and the region
+   is not Axiom Shift: it is one control, byte-identical in eleven declared
+   single-file games, that builds its elements at run time so a child on a
+   locked-down school device has a way out of the page. Scanned unscoped, its
+   getElementById calls read as ids the game references and never defines. That
+   it actually renders is proven in a browser by the site repository's
+   tools/verify_inline_exit.mjs, not inferred here. */
+const { stripExitRegion } = require('./mbm_exit_region.js');
+const game = stripExitRegion(html);
 
 let pass = 0, fail = 0;
 const fails = [];
@@ -72,7 +82,12 @@ function buildEnv(preSave) {
   const sb = { window: win, document: doc, requestAnimationFrame: win.requestAnimationFrame, localStorage: win.localStorage, performance: win.performance, setTimeout: win.setTimeout, Math, Date, JSON, console: { log() {} }, encodeURIComponent };
   sb.globalThis = sb; win.AXIOM = A; sb.AXIOM = A; vm.createContext(sb);
   vm.runInContext(coreSrc, sb, { filename: 'core-shell' });
-  const shellSrc = html.slice(html.indexOf('/* ===== SHELL + RENDER'), html.lastIndexOf('</script>'));
+  /* Sliced from the GAME, not the file. lastIndexOf('</script>') over the whole
+     file now lands on the stamped exit region's closing tag, dragging that
+     region's markup into the shell source and throwing SyntaxError. Same
+     anchored-on-a-moving-position defect the extraction in verify_axiomshift.sh
+     had, in a second place. */
+  const shellSrc = game.slice(game.indexOf('/* ===== SHELL + RENDER'), game.lastIndexOf('</script>'));
   vm.runInContext(shellSrc, sb, { filename: 'shell' });
   return {
     els, win, doc, arcs, clock,
@@ -224,12 +239,12 @@ ok('no-debug-cruft', !/console\.log|(^|[^.\w])debugger\b|\bTODO\b/.test(html.rep
 const idSet = new Set();
 let dupId = null;
 const idRe = /\sid="([^"]+)"/g; let mm;
-while ((mm = idRe.exec(html))) { if (idSet.has(mm[1])) dupId = mm[1]; idSet.add(mm[1]); }
+while ((mm = idRe.exec(game))) { if (idSet.has(mm[1])) dupId = mm[1]; idSet.add(mm[1]); }
 ok('no-duplicate-ids', dupId === null, dupId ? 'dup: ' + dupId : '(' + idSet.size + ' unique ids)');
 
 const refIds = new Set();
 const refRe = /(?:\$\(|getElementById\(\s*)['"]([A-Za-z][\w-]*)['"]/g; let rr;
-while ((rr = refRe.exec(html))) refIds.add(rr[1]);
+while ((rr = refRe.exec(game))) refIds.add(rr[1]);
 const unresolved = [...refIds].filter(id => !idSet.has(id));
 ok('all-id-refs-resolve', unresolved.length === 0, unresolved.length ? 'missing: ' + unresolved.join(',') : '(' + refIds.size + ' refs, all resolve)');
 
