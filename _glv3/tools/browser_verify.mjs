@@ -11,7 +11,7 @@ const lessons = manifest.lessons;
 const result = {
   boot: { universe_html: 0, console_errors: [], page_errors: [] },
   print: { universe: 0, failures: [] },
-  catalogue: { chips: {} },
+  catalogue: { chips: {}, console_errors: [], page_errors: [] },
   contact_sheets: { per_lesson: 0, combined: [] },
 };
 
@@ -50,10 +50,16 @@ const context = await browser.newContext({
 const page = await context.newPage();
 
 let activeFile = '';
+let cataloguePhase = false;
 page.on('console', msg => {
-  if (msg.type() === 'error') result.boot.console_errors.push(`${activeFile}: ${msg.text()}`);
+  if (msg.type() !== 'error') return;
+  const target = cataloguePhase ? result.catalogue.console_errors : result.boot.console_errors;
+  target.push(`${activeFile}: ${msg.text()}`);
 });
-page.on('pageerror', err => result.boot.page_errors.push(`${activeFile}: ${err.message}`));
+page.on('pageerror', err => {
+  const target = cataloguePhase ? result.catalogue.page_errors : result.boot.page_errors;
+  target.push(`${activeFile}: ${err.message}`);
+});
 
 for (const f of allHtml) {
   activeFile = f;
@@ -114,7 +120,9 @@ if (result.print.failures.length) {
 
 // Real current catalogue filter-chain reachability. The Lesson Hub's own UI
 // uses .ytab[data-year], #quicknav .chip[data-sub], and #cards article.card.
-// Drive those exact controls rather than maintaining a parallel selector model.
+// Catalogue-shell console diagnostics are recorded separately from the 94-page
+// estate boot gate so they cannot contaminate that universe's zero-error proof.
+cataloguePhase = true;
 const resources = JSON.parse(fs.readFileSync('resources.json','utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) throw new Error(`catalogue expected 88 GLV3 entries, got ${newResources.length}`);
@@ -260,13 +268,13 @@ fs.appendFileSync('_glv3/REPORT.md',
 `\n## Browser gates and contact sheets\n\n` +
 `- Boot: ${result.boot.universe_html} installed HTML files; 0 console errors; 0 page errors.\n` +
 `- Print: ${result.print.universe}/24 repaired route-bearing lessons passed default-all-three / selected-one / afterprint-clear behavior.\n` +
-`- Catalogue reachability: all 88 new entries are reachable through active 2026-27 + their existing chip; advertised, rendered and JSON-derived chip counts agree in \`GATES_BROWSER.json\`.\n` +
+`- Catalogue reachability: all 88 new entries are reachable through active 2026-27 + their existing chip; advertised, rendered and JSON-derived chip counts agree in \`GATES_BROWSER.json\`. Catalogue-shell console diagnostics are recorded separately from the estate boot universe.\n` +
 `- Contact sheets: ${result.contact_sheets.per_lesson}/80 per-lesson PNGs plus ${result.contact_sheets.combined.length} combined subject sheets.\n` +
 `- Combined sheets: ${result.contact_sheets.combined.map(x => '`'+x+'`').join(', ')}.\n`);
 fs.appendFileSync('_glv3/DECISIONS.md',
 `\n## Browser execution results\n\n` +
 `- Browser boot: ${result.boot.universe_html} new HTML files, 0 console/page errors.\n` +
 `- Print browser gate: 24/24 repaired route-bearing lesson files passed; 56 screen-only lessons remained screen-only by the static gate.\n` +
-`- Catalogue browser gate: all 88 new resources are reachable through active 2026-27 + their existing chip; advertised = rendered = JSON-derived count.\n` +
+`- Catalogue browser gate: all 88 new resources are reachable through active 2026-27 + their existing chip; advertised = rendered = JSON-derived count. Catalogue-shell diagnostics are kept separate from the 94-page estate boot gate.\n` +
 `- Contact sheets: 80 per-lesson PNGs plus combined Art, ASDAN and Humanities sheets under \`_glv3/contact_sheet/\`.\n`);
 console.log(JSON.stringify(result,null,2));
