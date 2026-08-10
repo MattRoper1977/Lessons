@@ -24,14 +24,66 @@
  */
 import { createRequire } from 'node:module';
 import { readdirSync, readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { createServer } from 'node:http';
+import { join, dirname, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const BASE = process.env.BASE_URL || 'http://127.0.0.1:4173/Lessons';
 const MARKER = 'mbm-splash-inline';
+
+/* THIS TOOL SERVES ITS OWN TREE, and that is the whole of its determinism.
+ *
+ * It used to default to http://127.0.0.1:4173/Lessons and start nothing. It
+ * derives its targets from the FILESYSTEM - whichever files carry the marker -
+ * and then fetches them over HTTP from a base URL it neither started nor
+ * checked. So the gate was really measuring whatever happened to be listening
+ * on port 4173.
+ *
+ * That is not a metaphor. Three runs during one session reported 49, 61 and 69
+ * failures on trees that differed by ten one-line insertions in files this gate
+ * does not judge. The variance was a server on that port serving a DIFFERENT
+ * root: every target 404s, no .mbm-splash ever appears, S1 fails, and the
+ * `if (!up.found) return` below skips the rest of that file's gates - so one
+ * wrong server turns into dozens of failures that all read as game defects.
+ *
+ * With no BASE_URL it now starts an ephemeral server over this repository and
+ * uses it. With one, preflight() proves the server is serving the same bytes
+ * the filesystem scan found before a single gate is judged. */
+const MIME = {
+  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml',
+  '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
+  '.mp4': 'video/mp4', '.webm': 'video/webm', '.mp3': 'audio/mpeg', '.wav': 'audio/wav',
+};
+const MOUNT = '/Lessons';
+
+function serveRepo() {
+  const srv = createServer((req, res) => {
+    let pathname;
+    try { pathname = decodeURIComponent(new URL(req.url, 'http://127.0.0.1').pathname); }
+    catch { res.writeHead(400); return res.end('bad path'); }
+    if (!pathname.startsWith(MOUNT + '/')) { res.writeHead(404); return res.end('outside the mount'); }
+    const file = resolve(ROOT, '.' + pathname.slice(MOUNT.length));
+    // Never serve outside the repository, whatever the request asks for.
+    if (file !== ROOT && !file.startsWith(ROOT + sep)) { res.writeHead(403); return res.end('outside the tree'); }
+    let body;
+    try { body = readFileSync(file); } catch { res.writeHead(404); return res.end('not found'); }
+    res.writeHead(200, { 'content-type': MIME[extname(file).toLowerCase()] || 'application/octet-stream' });
+    res.end(body);
+  });
+  return new Promise((done) => srv.listen(0, '127.0.0.1', () => done(srv)));
+}
+
+let ownServer = null;
+let BASE = process.env.BASE_URL;
+if (!BASE) {
+  ownServer = await serveRepo();
+  BASE = `http://127.0.0.1:${ownServer.address().port}${MOUNT}`;
+}
 
 /* SCOPES — where this gate looks, and nothing about WHAT it accepts.
  *
@@ -237,6 +289,7 @@ if (process.argv.includes('--self-test')) {
     leaked = after.keydown > before.keydown;
   }
   await ctx.close(); await browser.close();
+  if (ownServer) ownServer.close();
   const { unlinkSync } = await import('node:fs');
   unlinkSync(join(victim.dir, tmp));
   console.log(`  self-test victim: ${victim.label}`);
@@ -248,9 +301,34 @@ if (process.argv.includes('--self-test')) {
   process.exit(up && leaked ? 0 : 1);
 }
 
+/* A control must assert it reached the gate it tests. Every target this gate
+ * judges was found on disk by its marker; if the server does not return that
+ * same marker for the same file, the gate is about the server and not about the
+ * game, and it must say so instead of reporting failures against the games. */
+async function preflight(list) {
+  const unreachable = [];
+  for (const t of list) {
+    let res = null, body = '';
+    try { res = await fetch(t.url); body = res.ok ? await res.text() : ''; }
+    catch (e) { unreachable.push(`${t.label}: ${String(e.message || e).slice(0, 60)}`); continue; }
+    if (!res.ok) { unreachable.push(`${t.label}: HTTP ${res.status} at ${t.url}`); continue; }
+    if (!body.includes(MARKER)) unreachable.push(`${t.label}: served body carries no ${MARKER} - the server is not serving this tree`);
+  }
+  if (unreachable.length) {
+    console.error(`ERROR: ${unreachable.length} of ${list.length} target(s) are not being served at ${BASE}.`);
+    console.error('This gate derives its targets from the filesystem and fetches them over HTTP, so a');
+    console.error('server rooted elsewhere makes every gate fail for a reason that is not about any game.');
+    for (const u of unreachable.slice(0, 5)) console.error(`  - ${u}`);
+    if (ownServer) ownServer.close();
+    process.exit(2);
+  }
+}
+
 const files = targets();
 if (!files.length) { console.error('no games carry the splash marker'); process.exit(1); }
-console.log(`splash gate over ${files.length} derived target(s) in ${scopes().length} scope(s)\n`);
+console.log(`splash gate over ${files.length} derived target(s) in ${scopes().length} scope(s)`);
+console.log(`  serving ${ownServer ? `this repository on an ephemeral port (${BASE})` : `an external base URL (${BASE})`}\n`);
+await preflight(files);
 const browser = await chromium.launch();
 for (const f of files) {
   for (const rm of ['no-preference', 'reduce']) {
@@ -260,5 +338,6 @@ for (const f of files) {
   console.log(`  done ${f.label}`);
 }
 await browser.close();
+if (ownServer) ownServer.close();
 console.log(`\n${fail === 0 ? `ALL ${pass} SPLASH GATES PASSED (${files.length} games x 2 RM states)` : `${pass} passed, ${fail} FAILED`}`);
 process.exit(fail ? 1 : 0);
