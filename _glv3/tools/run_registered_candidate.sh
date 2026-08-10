@@ -67,9 +67,15 @@ log "Run all disposable tamper controls"
 python _glv3/tools/positive_controls.py --repo "$ROOT"
 test -s _glv3/POSITIVE_CONTROLS.json
 
-log "Install and run real Chromium gates"
+log "Install print/contact-sheet and real Chromium dependencies"
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends poppler-utils imagemagick
+command -v pdftoppm >/dev/null
+command -v montage >/dev/null
 npm install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist
 npx playwright install --with-deps chromium
+
+log "Run real Chromium gates"
 python -m http.server 4173 --bind 127.0.0.1 --directory "$ROOT" >/tmp/glv3-http.log 2>&1 &
 SERVER_PID=$!
 cleanup_server() { kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; }
