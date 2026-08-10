@@ -270,6 +270,11 @@ if (!base) {
 }
 await run(base);
 const red = results.filter(r => !r.ok).length;
-console.log(`\nHUD on Lessons games against ${base}: ${results.length - red} passed · ${red} failed`);
-console.log(`  ${lessonsGameRoutes().length} game(s) x ${VIEWPORTS.length} viewport(s), from the canonical search index`);
+// Every count carries its unit. "39 games" reads as 39 files only because it
+// happens to be true here; and "10 wired" was read as eleven files once,
+// because one of the names contains a bracketed 2.
+const inv = lessonsGameRoutes(), exc = excludedRoutes();
+console.log(`\nHUD on Lessons games against ${base}: ${results.length - red} assertion(s) passed · ${red} failed`);
+console.log(`  ${inv.length} game route(s), one file each, x ${VIEWPORTS.length} viewport(s), from the canonical search index`);
+console.log(`  ${inv.length - exc.size} route(s) wired · ${exc.size} declared in data/hud-coverage.json`);
 process.exit(red ? 1 : 0);
