@@ -24,7 +24,10 @@ for (const f of files) {
   await page.goto(pathToFileURL(resolve(f)).href, { waitUntil: 'load' });
   await page.waitForTimeout(120);
 
-  const isLesson = /\/SCI_/.test(f);
+  // Detect a route-bearing lesson by CONTENT, not by filename. Keying on /SCI_/
+  // silently probed 0 of 53 BUILD estate files and still reported PASS.
+  const isLesson = await page.evaluate(() =>
+    !!document.querySelector('.print-route.supported, .proute.supported'));
   let row = { file: f.split('/').slice(-2).join('/'), errs: errs.length };
 
   if (isLesson) {
