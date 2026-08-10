@@ -1,9 +1,11 @@
 name: GROW LAUNCH v3 autonomous candidate generation
 
 on:
-  push:
+  pull_request:
     branches:
-      - claude/gl-estate-v3
+      - main
+    types:
+      - synchronize
     paths:
       - _glv3/RUN_GENERATION.md
   workflow_dispatch:
@@ -14,7 +16,7 @@ permissions:
 
 concurrency:
   group: glv3-candidate-generation
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   generate-candidate:
