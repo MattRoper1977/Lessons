@@ -5,6 +5,9 @@ on:
     branches: [claude/gl-estate-v3]
     paths:
       - .github/workflows/glv3-candidate.yml
+  pull_request:
+    branches: [main]
+    types: [reopened]
   workflow_dispatch:
 
 permissions:
@@ -14,11 +17,12 @@ permissions:
   actions: write
 
 concurrency:
-  group: glv3-registered-candidate-${{ github.ref }}
+  group: glv3-registered-candidate-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   build-candidate:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'claude/gl-estate-v3'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -27,6 +31,29 @@ jobs:
         with:
           fetch-depth: 0
           ref: claude/gl-estate-v3
+
+      - name: Bind the real event head and one-run replay cleanup
+        env:
+          GLV3_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('_glv3/tools/run_registered_candidate.sh')
+          text=path.read_text()
+          old='if [[ -n "${GITHUB_SHA:-}" ]]; then test "$STARTING_SHA" = "$GITHUB_SHA"; fi'
+          new='EXPECTED_EVENT_HEAD="${GLV3_EXPECTED_HEAD:-${GITHUB_SHA:-}}"\nif [[ -n "$EXPECTED_EVENT_HEAD" ]]; then test "$STARTING_SHA" = "$EXPECTED_EVENT_HEAD"; fi'
+          if old not in text:
+              raise SystemExit('event-head binding source did not match')
+          text=text.replace(old,new,1)
+          old_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
+          new_cleanup='rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/hashlib.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh'
+          if old_cleanup not in text:
+              raise SystemExit('one-run cleanup source did not match')
+          path.write_text(text.replace(old_cleanup,new_cleanup,1))
+          PY
+          test "$(git rev-parse HEAD)" = "$GLV3_EXPECTED_HEAD"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -42,6 +69,7 @@ jobs:
         id: candidate
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GLV3_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: bash _glv3/tools/run_registered_candidate.sh
 
@@ -49,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: glv3-candidate-${{ steps.candidate.outputs.candidate_sha || github.sha }}
+          name: glv3-candidate-${{ steps.candidate.outputs.candidate_sha || github.event.pull_request.head.sha || github.sha }}
           path: |
             _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
             _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
