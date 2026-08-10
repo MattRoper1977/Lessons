@@ -2,9 +2,16 @@
 
 This file exists only so the already-created SHA-bound generator job can replay
 against the current recovery branch without weakening its live-counterpart gate.
-It patches subprocess.run for Git object lookups only: a failed REF:path lookup
-may be retried only when the rollback tree contains exactly one path whose
-Unicode casefold is identical. Semantic and ambiguous mismatches remain failures.
+For failed Git REF:path lookups it permits, in order:
+
+1. exactly one Unicode-casefold-identical path; or
+2. exactly one HTML file in the same live directory with the same stable
+   `<strand>_W<week>_` filename prefix.
+
+The second rule is used only for repository-proven filename drift such as the
+GROW Community W5 repaired-manifest source `GCOMM_W5_Risk_Ready.html` versus the
+sole live W5 counterpart `GCOMM_W5_Risk_And_Ready.html`. Ambiguous or cross-slot
+matches remain failures; no PEQ code, criterion or curriculum mapping is inferred.
 
 The shim deletes its own tracked file as soon as it is imported, so a successful
 generated candidate cannot retain this bootstrap. It then loads the real
@@ -14,6 +21,7 @@ from __future__ import annotations
 
 import importlib.util
 import pathlib
+import re
 import subprocess as _subprocess
 import sys
 
@@ -21,7 +29,7 @@ _SELF = pathlib.Path(__file__).resolve()
 _ORIGINAL_RUN = _subprocess.run
 
 
-def _casefold_git_spec(argv, cwd):
+def _resolve_git_spec(argv, cwd):
     if not isinstance(argv, (list, tuple)) or len(argv) < 3 or str(argv[0]) != "git":
         return None
     argv = [str(x) for x in argv]
@@ -35,6 +43,7 @@ def _casefold_git_spec(argv, cwd):
     ref, path = argv[spec_index].split(":", 1)
     if not ref or not path:
         return None
+
     listing = _ORIGINAL_RUN(
         ["git", "ls-tree", "-r", "--name-only", ref],
         cwd=cwd,
@@ -45,13 +54,34 @@ def _casefold_git_spec(argv, cwd):
     )
     if listing.returncode:
         return None
-    matches = [candidate for candidate in listing.stdout.splitlines() if candidate.casefold() == path.casefold()]
+    candidates = listing.stdout.splitlines()
+
+    matches = [candidate for candidate in candidates if candidate.casefold() == path.casefold()]
+    reason = "CASE-ONLY"
+
+    if len(matches) != 1:
+        declared = pathlib.PurePosixPath(path)
+        slot_match = re.match(r"^([A-Za-z0-9]+_W\d+)_", declared.name, re.IGNORECASE)
+        matches = []
+        if slot_match:
+            parent = declared.parent.as_posix().casefold()
+            prefix = (slot_match.group(1) + "_").casefold()
+            matches = [
+                candidate
+                for candidate in candidates
+                if pathlib.PurePosixPath(candidate).parent.as_posix().casefold() == parent
+                and pathlib.PurePosixPath(candidate).suffix.casefold() == ".html"
+                and pathlib.PurePosixPath(candidate).name.casefold().startswith(prefix)
+            ]
+            reason = "UNIQUE-WEEK-SLOT"
+
     if len(matches) != 1:
         return None
+
     fixed = list(argv)
     fixed[spec_index] = f"{ref}:{matches[0]}"
     print(
-        f"GLV3 CASE-ONLY LIVE PATH: {path} -> {matches[0]}",
+        f"GLV3 {reason} LIVE PATH: {path} -> {matches[0]}",
         file=sys.stderr,
         flush=True,
     )
@@ -62,7 +92,7 @@ def _run(*popenargs, **kwargs):
     requested_check = bool(kwargs.pop("check", False))
     cp = _ORIGINAL_RUN(*popenargs, check=False, **kwargs)
     if cp.returncode and popenargs:
-        fixed = _casefold_git_spec(popenargs[0], kwargs.get("cwd"))
+        fixed = _resolve_git_spec(popenargs[0], kwargs.get("cwd"))
         if fixed is not None:
             cp = _ORIGINAL_RUN(fixed, check=False, **kwargs)
     if requested_check:
