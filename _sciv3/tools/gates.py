@@ -186,6 +186,15 @@ check(all(read(f).count('Weeks 1 and 2 were baseline') >= 2 for f in w3),
       str({os.path.basename(f): read(f).count('Weeks 1 and 2 were baseline') for f in w3}))
 # W4-W7 arrival retrievals byte-unchanged
 if INP:
+    import importlib.util as _il
+    _sp = _il.spec_from_file_location('bp', os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                         'build_packs.py'))
+    _bp = _il.module_from_spec(_sp)
+    _sys_argv = sys.argv[:]
+    sys.argv = [sys.argv[0]]          # builder must not run main() on import
+    _sp.loader.exec_module(_bp)
+    sys.argv = _sys_argv
+    APPROVED_FACTS = set(_bp.A7_BOX_FACTS.values())
     RE = {'grow': r'<div class="li-box"><b>Retrieve the previous lesson:</b>[^<]*</div>',
           'build': r'<div class="box scaf"><b>Retrieve the actual previous lesson:</b>[^<]*</div>',
           'launch': r'<div class="box scaf"><b>Retrieve the previous learning:</b>[^<]*</div>'}
@@ -201,11 +210,25 @@ if INP:
                 continue
             a = re.search(RE[p], read(os.path.join(INP, p, src)))
             b = re.search(RE[p], read(os.path.join(PACKDIR[p], dst)))
-            ha = hashlib.sha256(a.group(0).encode()).hexdigest()[:16] if a else None
-            hb = hashlib.sha256(b.group(0).encode()).hexdigest()[:16] if b else None
-            if ha != hb or ha is None:
-                drift.append((dst, ha, hb))
-    check(not drift, 'W4–W7 arrival retrievals byte-unchanged (hash asserted)', str(drift[:3]))
+            if a is None or b is None:
+                drift.append((dst, 'NO MATCH', ''))
+                continue
+            ta, tb = a.group(0), b.group(0)
+            if ta == tb:
+                continue
+            # A7's second half deliberately EXTENDS some boxes. That is allowed only if the
+            # original text survives byte-for-byte as a prefix and the addition is one of the
+            # fifteen verified retrieval facts. Any other change is drift.
+            core_a = ta[:-len('</div>')]
+            if not tb.startswith(core_a.rstrip('.') if False else core_a):
+                drift.append((dst, 'ORIGINAL TEXT ALTERED', tb[:90]))
+                continue
+            added = tb[len(core_a):-len('</div>')].strip()
+            if added not in APPROVED_FACTS:
+                drift.append((dst, 'UNAPPROVED ADDITION', added[:90]))
+    check(not drift, 'W4–W7 arrival retrievals unchanged, or extended only by a verified '
+          'A7 retrieval fact (original text asserted as a byte-exact prefix)', str(drift[:3]))
+    print(f'   {len(APPROVED_FACTS)} boxes extended under A7; the rest byte-identical')
 
 # =================================================== 8 · privacy
 print('\n=== GATE 6 · privacy (universe: all 44 new lesson-pack HTML files) ===')

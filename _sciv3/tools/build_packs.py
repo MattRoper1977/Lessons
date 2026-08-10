@@ -11,7 +11,8 @@ import sys, os, re, json, shutil, hashlib
 IN = sys.argv[1] if len(sys.argv) > 1 else None
 OUT = sys.argv[2] if len(sys.argv) > 2 else None
 # Cumulative repair stages, so Phase A lands as a bisectable sequence of commits.
-ALL_STAGES = ['s1_mech', 's2_pack', 's3_food', 's4_closure', 's5_baseline', 's6_reading']
+ALL_STAGES = ['s1_mech', 's2_pack', 's3_food', 's4_closure', 's5_baseline', 's6_reading',
+              's7_retrieval']
 STAGES = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else set(ALL_STAGES)
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 LOG = []
@@ -183,6 +184,43 @@ A6_EDITS = {
           "◆ Use the four-position wheel. The sunlight arrow is already printed. Match what the observer sees.")],
 }
 
+
+# A7 gate, second half: "The retrieval box must answer that lesson's Supported arrival prompt
+# by reading alone. Where a box falls short, add the missing fact to the box (retrieval
+# content, not new teaching); never soften the prompt."
+#
+# Each clause below was proposed by an agent that read the lesson AND its predecessor, then
+# adversarially verified by a second agent against two failure modes: not-actually-taught-in
+# -the-predecessor, and would-pre-teach-today's-concept. All fifteen were confirmed as genuine
+# retrieval; five were tightened by the verifier and the tightened wording is what appears here.
+#
+# Seventeen other boxes were judged CORRECT AS THEY STAND and are untouched — either the prompt
+# points at something physically present today, or the only fact that would answer it is this
+# lesson's own new concept, which arrival must not pre-teach.
+A7_BOX_FACTS = {
+ ('grow', 'W3B'): 'Rough, grippy surfaces make more friction than smooth ones.',
+ ('grow', 'W6B'): 'Order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, '
+                  'Neptune.',
+ ('grow', 'W7A'): 'Earth and the other planets orbit the Sun.',
+ ('build', 'W4B'): 'When the arm bends, the biceps (the top band) contracts and the triceps '
+                   'relaxes.',
+ ('build', 'W5A'): 'In the model the bands stood for the muscles: pulling a band bent or '
+                   'straightened the arm, and neither band ever pushed.',
+ ('build', 'W6A'): 'The jobs were energy, growth and repair, and keeping the body working.',
+ ('launch', 'W3L2'): 'Total magnification = eyepiece × objective.',
+ ('launch', 'W3L3'): 'Magnification = image size ÷ actual size.',
+ ('launch', 'W4L2'): 'Diffusion is the net movement of particles from higher to lower '
+                     'concentration.',
+ ('launch', 'W5L1'): 'Diffusion is the net movement of particles from higher to lower '
+                     'concentration, down a gradient, with no cell energy.',
+ ('launch', 'W5L2'): 'Water moves from a dilute to a more concentrated solution.',
+ ('launch', 'W5L3'): 'A positive % change means mass was gained.',
+ ('launch', 'W6L1'): 'Osmosis moves water only, through a partially permeable membrane.',
+ ('launch', 'W6L3'): 'Osmosis: net movement of water only, from a dilute to a more '
+                     'concentrated solution, through a partially permeable membrane.',
+ ('launch', 'W7L3'): 'Osmosis: water moves through a partially permeable membrane.',
+}
+
 # §0.7 — the six healthy-eating links to remove
 FOOD_UNIT = '/units/healthy-eating/'
 FOOD_CARD_TEXT = ("No external food media in this lesson — see the BUILD protection rule.")
@@ -328,6 +366,30 @@ def transform_lesson(pack, src_name, t):
         for tier, (old, new) in A9_PROMPTS[pack].items():
             t = sub1(t, '<p>' + old + '</p>', '<p>' + new + '</p>', f, f'A9 prompt {tier}')
             note('A9', f, f'{tier} prompt rewritten as elicitation')
+
+    # ---------------- A7 · make the retrieval box answer its own Supported prompt
+    fact = A7_BOX_FACTS.get((pack, key))
+    if fact and 's7_retrieval' in STAGES:
+        cls = 'li-box' if pack == 'grow' else 'box scaf'
+        m = re.search(r'<div class="%s">((?:(?!</div>).)*)</div>' % re.escape(cls), t, re.S)
+        if not m:
+            raise NoAnchor(f'{f}: A7 box — no arrival retrieval box')
+        body = m.group(1)
+        if body.rstrip().endswith('.'):
+            newbody = body.rstrip() + ' ' + fact
+        else:
+            newbody = body.rstrip() + '. ' + fact
+        t = t[:m.start(1)] + newbody + t[m.end(1):]
+        # the same retrieval line at the head of print page 1
+        lead = {'grow': 'Arrival retrieval:', 'build': 'Previous lesson retrieval:',
+                'launch': 'Retrieval:'}[pack]
+        pm = re.search(r'(<p><b>%s</b>)([^<]*)(</p>)' % re.escape(lead), t)
+        if not pm:
+            raise NoAnchor(f'{f}: A7 box — no print retrieval line')
+        ptxt = pm.group(2).rstrip()
+        ptxt = ptxt + (' ' if ptxt.endswith('.') else '. ') + fact
+        t = t[:pm.start(2)] + ptxt + t[pm.end(2):]
+        note('A7box', f, 'retrieval fact added, screen + print')
 
     # ---------------- A7 · the arrival entry route
     # The W3 variant belongs with A9: until the baseline correction lands, those three

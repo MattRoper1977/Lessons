@@ -247,3 +247,34 @@ which drives the real `index.html` in a browser rather than replicating its filt
 No trigger was given for any of: BUILD slide reading load, GROW slide reading load, LAUNCH slide
 reading load, Progress Schools-branded variants, the evidence-window promotion, the prompt-ladder
 reconciliation, the 5-vs-10 ruling, or the pathway entry bands. Nothing was built for any of them.
+
+---
+
+## D16 · A7, second half — the retrieval boxes
+
+A7's gate has two halves. The first (line present on 35 arrival slides and 35 print page 1s)
+passed on the first run. The second — *"the retrieval box must answer that lesson's Supported
+arrival prompt by reading alone… where a box falls short, add the missing fact to the box"* —
+was audited per lesson and **fifteen boxes were extended**. Seventeen were left alone.
+
+Full table, including why each of the seventeen is correct as it stands: `A7_RETRIEVAL_BOXES.md`.
+
+**Three would have been actively wrong to "fix".** BUILD W3B, BUILD W7A and LAUNCH W4L1 are
+elicitations into the lesson's own new concept; putting the answer in the retrieval box would
+pre-teach, which every one of these lessons forbids on the same slide. A cruder instrument would
+have "repaired" all three.
+
+**A first audit was discarded.** Its per-lesson briefs carried hand-transcribed prompts and 25 of
+32 were wrong — BUILD W3B is about a robin, not "fish or crab"; BUILD W4A was reversed. Findings
+built on wrong inputs are worthless even where they happen to look right, so the run was stopped
+and rebuilt to carry no lesson text at all: every agent extracts the box and the prompt from the
+file itself, and reports both back so the extraction can be checked.
+
+Each addition was then adversarially verified against two failure modes — not actually taught in
+the predecessor, and would pre-teach today's concept. All fifteen confirmed as genuine retrieval;
+five tightened by the verifier, and the tightened wording is what shipped.
+
+The gate for W4–W7 arrival retrievals changed shape accordingly: it no longer asserts
+byte-identity, because A7 deliberately extends some boxes. It now asserts the original text
+survives **byte-for-byte as a prefix** and that the only addition is one of the fifteen verified
+facts. Anything else is still drift and still fails.
