@@ -329,11 +329,31 @@ if (!files.length) { console.error('no games carry the splash marker'); process.
 console.log(`splash gate over ${files.length} derived target(s) in ${scopes().length} scope(s)`);
 console.log(`  serving ${ownServer ? `this repository on an ephemeral port (${BASE})` : `an external base URL (${BASE})`}\n`);
 await preflight(files);
+/* A DEADLINE PER TARGET, because a gate that can hang is not deterministic
+ * either. One run of five stalled for seventeen minutes on the ninth of ten
+ * targets and produced nothing at all - in CI that is a job timeout with no
+ * information, which is strictly worse than a failure, because a failure names
+ * the file. The bound is generous: a complete healthy run takes about five
+ * minutes for all ten targets together. */
+const PER_TARGET_MS = Number(process.env.SPLASH_TARGET_TIMEOUT_MS || 120000);
+async function withDeadline(fn) {
+  let timer;
+  const bail = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`no verdict within ${PER_TARGET_MS}ms`)), PER_TARGET_MS);
+  });
+  try { return await Promise.race([fn(), bail]); }
+  finally { clearTimeout(timer); }
+}
+
 const browser = await chromium.launch();
 for (const f of files) {
   for (const rm of ['no-preference', 'reduce']) {
-    await judge(browser, f, rm);
-    for (const how of ['pointer', 'Escape', 'Enter', ' ']) await judgeSkip(browser, f, rm, how);
+    try { await withDeadline(() => judge(browser, f, rm)); }
+    catch (e) { ok(false, `S0 ${f.label} [rm=${rm}] the gate reached a verdict`, String(e.message || e)); }
+    for (const how of ['pointer', 'Escape', 'Enter', ' ']) {
+      try { await withDeadline(() => judgeSkip(browser, f, rm, how)); }
+      catch (e) { ok(false, `S0 ${f.label} [rm=${rm}] the ${how} skip reached a verdict`, String(e.message || e)); }
+    }
   }
   console.log(`  done ${f.label}`);
 }
