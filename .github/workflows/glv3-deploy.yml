@@ -2,12 +2,8 @@ name: GROW LAUNCH v3 autonomous closeout generation
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
+    branches: [main]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -52,14 +48,45 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf /tmp/glv3-packs /tmp/glv3-packs.tar.xz
+          expected="efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918"
+          rm -rf /tmp/glv3-packs /tmp/glv3-packs.tar.xz /tmp/glv3-*.candidate /tmp/glv3-stream.b64
           mkdir -p /tmp/glv3-packs
-          : > /tmp/glv3-packs.tar.xz
+
+          # Diagnose the two legitimate interpretations of the staged transport:
+          # (A) each part is an independently encoded binary chunk;
+          # (B) the files are textual pieces of one Base64 stream.
+          : > /tmp/glv3-chunks.candidate
           for f in _glv3/input/pack.part{00..09}.b64; do
             test -s "$f"
-            base64 -d "$f" >> /tmp/glv3-packs.tar.xz
+            base64 -d "$f" >> /tmp/glv3-chunks.candidate
           done
-          echo "efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918  /tmp/glv3-packs.tar.xz" | sha256sum -c -
+
+          cat _glv3/input/pack.part{00..09}.b64 | tr -d '\r\n\t ' > /tmp/glv3-stream.b64
+          if ! base64 -d /tmp/glv3-stream.b64 > /tmp/glv3-stream.candidate 2>/tmp/glv3-stream.error; then
+            echo "single-stream Base64 decode returned non-zero; retaining its diagnostic output"
+            cat /tmp/glv3-stream.error
+          fi
+
+          chunk_hash="$(sha256sum /tmp/glv3-chunks.candidate | awk '{print $1}')"
+          stream_hash="$(sha256sum /tmp/glv3-stream.candidate | awk '{print $1}')"
+          chunk_size="$(stat -c %s /tmp/glv3-chunks.candidate)"
+          stream_size="$(stat -c %s /tmp/glv3-stream.candidate)"
+          echo "expected_transport_sha256=$expected"
+          echo "decoded_per_part_sha256=$chunk_hash size=$chunk_size"
+          echo "decoded_single_stream_sha256=$stream_hash size=$stream_size"
+
+          if [ "$chunk_hash" = "$expected" ]; then
+            cp /tmp/glv3-chunks.candidate /tmp/glv3-packs.tar.xz
+            echo "TRANSPORT_ASSEMBLY=decode_each_part_then_concatenate"
+          elif [ "$stream_hash" = "$expected" ]; then
+            cp /tmp/glv3-stream.candidate /tmp/glv3-packs.tar.xz
+            echo "TRANSPORT_ASSEMBLY=concatenate_base64_then_decode_once"
+          else
+            echo "RED: neither deterministic transport reconstruction matches the pinned SHA-256"
+            exit 31
+          fi
+          echo "$expected  /tmp/glv3-packs.tar.xz" | sha256sum -c -
+
           python3 - <<'PY'
           import pathlib, tarfile
           archive = pathlib.Path('/tmp/glv3-packs.tar.xz')
@@ -74,7 +101,8 @@ jobs:
                   key = member.name.rstrip('/')
                   if key in seen or key.casefold() in seen_ci:
                       raise SystemExit(f'duplicate/case-colliding tar path: {member.name}')
-                  seen.add(key); seen_ci.add(key.casefold())
+                  seen.add(key)
+                  seen_ci.add(key.casefold())
                   if member.issym() or member.islnk():
                       raise SystemExit(f'link member rejected: {member.name}')
               tf.extractall(root)
