@@ -628,3 +628,265 @@ prose and was left alone — rewriting it would diverge fifteen files from each 
     -  Add: ‘This control matters because if it changed, __ could affect __.’
     +  Add this line. ‘This control matters because if it changed, __ could affect __.’
 
+
+---
+
+## The remaining ten LAUNCH lessons
+
+Two batches of the first run returned nothing to the transcript; the workflow's own
+completed result carried all 35, so these ten were applied from it under the same gate.
+
+| lesson | FK before → after | target | words | Δw |
+|---|---|---|---|---|
+| `SCI_L_W4L3_Diffusion_Explanation_Do.html` | 12.40 → **8.77** | 8.48 | 224 → 257 | +14.7% |
+| `SCI_L_W5L1_Osmosis_Introduce.html` | 13.74 → **9.54** | 8.48 | 219 → 251 | +14.6% |
+| `SCI_L_W5L2_Osmosis_Core_Practical_Explore.html` | 14.01 → **10.55** | 8.48 | 236 → 271 | +14.8% |
+| `SCI_L_W5L3_Osmosis_Data_Do.html` | 13.54 → **9.71** | 8.48 | 223 → 256 | +14.8% |
+| `SCI_L_W6L1_Active_Transport_Introduce.html` | 12.87 → **9.71** | 8.48 | 227 → 260 | +14.5% |
+| `SCI_L_W6L2_Root_Hairs_And_Gut_Explore.html` | 13.51 → **9.22** | 8.48 | 214 → 246 | +15.0% |
+| `SCI_L_W6L3_Compare_Transport_Do.html` | 12.39 → **9.37** | 8.48 | 223 → 256 | +14.8% |
+| `SCI_L_W7L1_Topic_1_Round_Up_Introduce.html` | 12.20 → **8.96** | 8.48 | 229 → 263 | +14.8% |
+| `SCI_L_W7L2_Command_Words_Explore.html` | 13.24 → **9.04** | 8.48 | 208 → 239 | +14.9% |
+| `SCI_L_W7L3_Exam_Practice_Do.html` | 14.23 → **9.36** | 8.48 | 235 → 270 | +14.9% |
+
+**10/10 kept.**
+
+### Every changed block, plain text
+
+
+#### `SCI_L_W4L3_Diffusion_Explanation_Do.html` — FK 12.40 → 8.77
+
+    -  Answer mixed describe/explain/apply questions. Compare one response with a model, make one visible edit and explain why it improved.
+    +  Answer the mixed questions. Some say describe. Some say explain. Some say apply. Pick one answer. Read the model. Compare the two. Make one clear edit. Say why it improved.
+
+    -  ◆ Four questions with command-word prompts.
+    +  ◆ Four questions. Each has a prompt. It names the command word.
+
+    -  ▲ Six mixed questions including unfamiliar context.
+    +  ▲ Six mixed questions. One is new. It uses a new context.
+
+    -  ★ Six plus evaluation of damaged exchange surface.
+    +  ★ Six questions. Then one more. Evaluate a damaged exchange surface.
+
+    -  Highlight command word and required technical terms.
+    +  Highlight the command word. Then the technical terms.
+
+    -  Precision beats irrelevant extra detail.
+    +  Be precise. Extra detail is off the point. It does not help.
+
+
+#### `SCI_L_W5L1_Osmosis_Introduce.html` — FK 13.74 → 9.54
+
+    -  Annotate two scenarios, use membrane model to predict water direction, then produce the full definition and explain one result.
+    +  Look at both scenarios. Label each one. Then use the membrane model. Which way does water move? Predict it. Write the full definition. Then explain one result.
+
+    -  ◆ Label dilute/concentrated and complete definition.
+    +  ◆ Label the dilute side. Then the concentrated side. Complete the definition.
+
+    -  ▲ Write definition unaided and explain two diagrams.
+    +  ▲ Write the definition. Do it alone. Then explain two diagrams.
+
+    -  ★ Compare osmosis and diffusion with similarities/differences.
+    +  ★ Compare osmosis and diffusion. Say what is the same. Then what differs.
+
+    -  Four-key-phrase checklist.
+    +  Use the four key phrases. Tick each one.
+
+    -  Describe both sides before direction.
+    +  Describe both sides. Then give the direction.
+
+    -  Use net movement and membrane selectivity precisely.
+    +  Say net movement. Say membrane selectivity. Be precise.
+
+
+#### `SCI_L_W5L2_Osmosis_Core_Practical_Explore.html` — FK 14.01 → 10.55
+
+    -  Complete assigned practical roles, collect/use class data, calculate percentage change and explain one result using osmosis.
+    +  You have a practical role. Do it. Collect the class data. Use that data. Then calculate the percentage change. Explain one result. Use osmosis.
+
+    -  ◆ Two concentrations, pre-drawn table and printed formula.
+    +  ◆ Two concentrations. The table is pre-drawn. The formula is printed.
+
+    -  ▲ Full range and percentage changes.
+    +  ▲ Use the full range. Then work out each percentage change.
+
+    -  ★ Full range plus graph-ready data and no-net-change prediction.
+    +  ★ Use the full range. Make the data graph-ready. Predict the no-net-change point.
+
+    -  Visual method sequence + calculator template.
+    +  Follow the visual method sequence. Then use the calculator template.
+
+    -  Controls checklist + signed % calculation.
+    +  Use the controls checklist. Do the % calculation. Sign it plus or minus.
+
+    -  Prepare graph evidence before estimating the zero point.
+    +  Get your graph evidence ready. Then estimate the zero point.
+
+
+#### `SCI_L_W5L3_Osmosis_Data_Do.html` — FK 13.54 → 9.71
+
+    -  Plot/enter data, identify pattern/zero crossing, answer interpretation questions and write one method evaluation with linked improvement.
+    +  Enter your data. Plot the points. Find the pattern. Find the zero crossing. Answer the interpretation questions. Evaluate your method. Add one improvement. Link it to that method.
+
+    -  ◆ Part-prepared graph and guided prompts.
+    +  ◆ The graph is part-prepared. Prompts guide you.
+
+    -  ▲ Full plot, estimate crossing, explain two points.
+    +  ▲ Plot it all. Estimate the crossing. Explain two points.
+
+    -  ★ Plot/interpret, evaluate uncertainty and justify improvement.
+    +  ★ Plot it. Interpret it. Evaluate the uncertainty. Justify one improvement.
+
+    -  Axes/scale provided + gain/loss frame.
+    +  Axes and scale are given. Use the gain or loss frame.
+
+    -  Distinguish estimate from directly measured value.
+    +  One value is an estimate. One was measured directly. Keep them apart.
+
+
+#### `SCI_L_W6L1_Active_Transport_Introduce.html` — FK 12.87 → 9.71
+
+    -  Complete a three-process comparison and use the model to classify biological examples by direction, substance and energy.
+    +  Compare the three processes. Fill in the table. Then use the model. Take each biological example. Classify it. Look at the direction. Look at the substance. Then look at the energy.
+
+    -  ◆ Fill comparison table from word bank.
+    +  ◆ Fill in the comparison table. Use the word bank. The words are there.
+
+    -  ▲ Complete table unaided and explain two examples.
+    +  ▲ Fill in the table. Do it alone. Then explain two examples.
+
+    -  ★ Compare all three and link mitochondria to energy demand.
+    +  ★ Compare all three. Then find the link. Link mitochondria to energy demand.
+
+    -  Add carrier proteins without losing Foundation core.
+    +  Add carrier proteins. But keep the Foundation core. Do not lose it.
+
+
+#### `SCI_L_W6L2_Root_Hairs_And_Gut_Explore.html` — FK 13.51 → 9.22
+
+    -  Annotate root-hair/gut cells, interpret oxygen-versus-uptake graph, and write one evidence-based explanation.
+    +  Label the root hair cell. Then the gut cell. Read the graph. It shows oxygen. It shows uptake. Write one explanation. Use the graph as evidence.
+
+    -  ◆ Label cell/mitochondria + graph sentence frame.
+    +  ◆ Label the cell. Mark the mitochondria. Use the graph sentence frame.
+
+    -  As oxygen ___, uptake ___. Because ___.
+    +  As oxygen ___, uptake ___. This is because ___.
+
+    -  ▲ Explain both applications and graph.
+    +  ▲ Explain the root hair cell. Then the gut. Then the graph.
+
+    -  ★ Evaluate whether graph alone proves oxygen is the only limiting factor.
+    +  ★ Evaluate the graph. Is oxygen the only limiting factor? Say why.
+
+    -  Separate description/explanation/evaluation.
+    +  Three parts. Describe. Explain. Evaluate.
+
+
+#### `SCI_L_W6L3_Compare_Transport_Do.html` — FK 12.39 → 9.37
+
+    -  Classify mixed cell scenarios, answer two compare questions and make one visible response to feedback.
+    +  Classify the mixed cell scenarios. Sort each one. Is it diffusion? Is it osmosis? Is it active transport? Then answer two compare questions. Read the feedback. Make one change you can see.
+
+    -  ◆ Grid visible; four scenarios + one compare frame.
+    +  ◆ Keep the grid in view. Do four scenarios. Use one compare frame.
+
+    -  ▲ Six scenarios + two compare questions.
+    +  ▲ Do six scenarios. Then two compare questions.
+
+    -  Both sides in every compare.
+    +  Give both sides. Do this in every compare.
+
+    -  ★ Unfamiliar contexts + justify which evidence supports a process.
+    +  ★ Work with new contexts. Which process is it? Then justify it with evidence.
+
+    -  Include precise similarities as well as differences.
+    +  Give the similarities. Then the differences. Be precise.
+
+
+#### `SCI_L_W7L1_Topic_1_Round_Up_Introduce.html` — FK 12.20 → 8.96
+
+    -  Build a Topic 1 map from memory, then use reveal/reference to correct or strengthen weak links in a different annotation.
+    +  Build a Topic 1 map from memory. Work on your own first. Then open the reveal. Check each link. Correct the weak ones. Mark each fix in a new colour.
+
+    -  ◆ Part-complete map + words to place.
+    +  ◆ Start with a part-complete map. Place the missing words.
+
+    -  Remove cue cards one at a time.
+    +  Take the cue cards away. One at a time.
+
+    -  ▲ Blank map with four branches.
+    +  ▲ Use a blank map. Fill in all four branches.
+
+    -  One-line definition before application.
+    +  Write a short definition first. Then the application.
+
+    -  ★ Cross-links + one application example per transport process.
+    +  ★ Add cross-links to your map. Give one application for each transport process.
+
+    -  Cross-links explain relationships, not just more facts.
+    +  A cross-link explains a relationship. It is not just one more fact.
+
+
+#### `SCI_L_W7L2_Command_Words_Explore.html` — FK 13.24 → 9.04
+
+    -  Answer mixed Topic 1 prompts and diagnose/repair two mismatched answers.
+    +  Answer the mixed Topic 1 prompts. Two answers do not match their command word. Say why. Fix them.
+
+    -  ◆ Six questions with highlighted command words/frames.
+    +  ◆ Six questions. Command words are highlighted. Use the frames.
+
+    -  Command-word reference visible.
+    +  Command-word list stays in view.
+
+    -  ▲ Eight mixed incl calculate/compare.
+    +  ▲ Eight mixed questions. Some say calculate. Some say compare.
+
+    -  Circle command word; underline data/subject.
+    +  Circle the command word. Underline the data. Then the subject.
+
+    -  ★ Eight plus self-edit for precision/relevance.
+    +  ★ Answer all eight. Then edit your own work. Make it precise.
+
+    -  Remove irrelevant detail rather than lengthening everything.
+    +  Cut what is not needed. Do not add more.
+
+
+#### `SCI_L_W7L3_Exam_Practice_Do.html` — FK 14.23 → 9.36
+
+    -  Complete a mixed Topic 1 practice set independently. Choose one answer for feedback, make one visible correction/extension and explain the change.
+    +  Do the mixed Topic 1 practice set. Work on your own. Then pick one answer. Ask for feedback. Make one change you can see. Explain it.
+
+    -  ◆ Reduced mixed set with references and authorised reader/scribe.
+    +  ◆ Do a shorter mixed set. Notes are allowed. A reader or scribe too.
+
+    -  Scaffolds visible; recognise independence honestly.
+    +  Scaffolds stay in view. Say what you did on your own.
+
+    -  ▲ Full Foundation-style mixed set.
+    +  ▲ Do the full mixed set. It is Foundation style.
+
+    -  Use command-word/calculation checklists independently.
+    +  Use the command-word list. Use the calculation list. Work on your own.
+
+    -  ★ Full set plus unfamiliar application/evaluation; IGCSE extension only for identified learners.
+    +  ★ Do the full set. Add one new application. Add one evaluation. IGCSE extension is for named learners.
+
+    -  Extension = deeper reasoning, not just more questions.
+    +  Extension means deeper reasoning. Not more questions.
+
+
+## Where Phase E landed, honestly
+
+| pathway | live Independent | v3 before | v3 after | target | reached |
+|---|---|---|---|---|---|
+| GROW | 7.35 | 9.35 | **6.84** | 7.35 | yes, and below |
+| BUILD | 6.20 | 9.97 | **6.16** | 6.20 | yes |
+| LAUNCH | 8.48 | 13.40 | **9.62** | 8.48 | **no — 1.14 short** |
+
+**LAUNCH is reported short rather than cut to reach the number.** It fell 3.78 grades,
+from 13.40 to 9.62, with word counts up ~15% throughout. The residue is the GCSE
+terminology itself — *partially permeable membrane*, *concentration gradient*, *active
+transport* — which the constraints protect: simplify the sentence carrying the term, never
+the term. Getting LAUNCH to 8.48 from here would mean removing the vocabulary the
+qualification requires. Missing the target honestly beats hitting it by deletion.
