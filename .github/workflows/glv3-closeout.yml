@@ -51,7 +51,7 @@ jobs:
           rm -rf /tmp/glv3-packs /tmp/glv3-packs.tar.xz /tmp/glv3-exact-packs.tar.xz /tmp/glv3-exact-stream.b64
           mkdir -p /tmp/glv3-packs
 
-          # Preserve the old staged transport only as contradiction evidence.
+          # Preserve the original staged transport only as contradiction evidence.
           : > /tmp/glv3-packs.tar.xz
           for f in _glv3/input/pack.part{00..09}.b64; do
             test -s "$f"
@@ -60,11 +60,24 @@ jobs:
           echo "777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd  /tmp/glv3-packs.tar.xz" | sha256sum -c -
           test "$(stat -c %s /tmp/glv3-packs.tar.xz)" = "106760"
 
-          # Decode the deterministic exact transport created from the two
-          # independently verified uploaded repaired ZIPs.
-          cat _glv3/input/exact.part{00..03}.b64 | tr -d '\r\n\t ' > /tmp/glv3-exact-stream.b64
+          # Prove each textual part before assembling the exact stream.
+          echo "98e9da7e6083bcad9da34f5319f952547205dbefda73ef9b390e59e7b4c1583f  _glv3/input/exact.prefix.b64" | sha256sum -c -
+          echo "865336712bbc7c2f5ff4c1554e71b05ff88dec3e750f4e431369a0cbc26d1623  _glv3/input/exact.part00.b64" | sha256sum -c -
+          echo "9df09b7d9c1e330b6a2fef2fb9b854351b1239ee417bb9cf81e8de3b88df0dec  _glv3/input/exact.part01.b64" | sha256sum -c -
+          echo "5e444c6dc23e763c81791802c496a16385fbe567f18b36e7030457d0d7481348  _glv3/input/exact.part02.b64" | sha256sum -c -
+          echo "11410b280734b211dc1df8c1aa8e6f724614f8b7a0919204e24abea1ece6674f  _glv3/input/exact.part03.b64" | sha256sum -c -
+
+          cat \
+            _glv3/input/exact.prefix.b64 \
+            _glv3/input/exact.part00.b64 \
+            _glv3/input/exact.part01.b64 \
+            _glv3/input/exact.part02.b64 \
+            _glv3/input/exact.part03.b64 \
+            | tr -d '\r\n\t ' > /tmp/glv3-exact-stream.b64
+          test "$(stat -c %s /tmp/glv3-exact-stream.b64)" = "140732"
+          echo "f815a810510963e6bf5d226624c88c3734720f65aa927dc5c50abec52e986452  /tmp/glv3-exact-stream.b64" | sha256sum -c -
           base64 -d /tmp/glv3-exact-stream.b64 > /tmp/glv3-exact-packs.tar.xz
-          echo "1c290d7ebf2a67c549cf288f0a2bf79a8bd75fe9615777d13ad8058236c8ca40  /tmp/glv3-exact-packs.tar.xz" | sha256sum -c -
+          echo "1c29cf11d36867327afd9388da4b11db3dfbaea5a3779b6acf74ea8b845e6223  /tmp/glv3-exact-packs.tar.xz" | sha256sum -c -
           test "$(stat -c %s /tmp/glv3-exact-packs.tar.xz)" = "105548"
           xz -t /tmp/glv3-exact-packs.tar.xz
 
@@ -134,7 +147,7 @@ jobs:
         shell: bash
         run: |
           cat >> _glv3/AMBERS.md <<'EOF'
-          - Input transport — the original ten staged Base64 parts reconstruct to SHA-256 `777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd`, not the reported `efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918`, and that original XZ is corrupt. It was not used for generation. A replacement deterministic transport, SHA-256 `1c290d7ebf2a67c549cf288f0a2bf79a8bd75fe9615777d13ad8058236c8ca40`, was made from the two exact uploaded repaired ZIP extractions and accepted only after all 114 files matched the pinned GROW and LAUNCH source-manifest digests.
+          - Input transport — the original ten staged Base64 parts reconstruct to SHA-256 `777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd`, not the reported `efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918`, and that original XZ is corrupt. It was not used for generation. A replacement deterministic transport, SHA-256 `1c29cf11d36867327afd9388da4b11db3dfbaea5a3779b6acf74ea8b845e6223`, was made from the two exact uploaded repaired ZIP extractions and accepted only after all 114 files matched the pinned GROW and LAUNCH source-manifest digests.
           EOF
 
       - name: Start local lesson server
