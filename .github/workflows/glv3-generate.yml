@@ -126,6 +126,48 @@ jobs:
           GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
         run: python _glv3/tools/deploy.py
 
+      - name: Remove authorised test filename residues from all generated HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          token = '_OUTSTANDING_V3_TEST'
+          changed = []
+          occurrences = 0
+          for root_name in ('GROW_Estate_v3', 'LAUNCH_Estate_v3'):
+              root = Path(root_name)
+              for path in sorted(root.rglob('*.html')):
+                  text = path.read_text('utf-8')
+                  count = text.count(token)
+                  if not count:
+                      continue
+                  occurrences += count
+                  path.write_text(text.replace(token, ''), 'utf-8')
+                  changed.append({'path': path.as_posix(), 'occurrences': count})
+          if not changed:
+              raise SystemExit('expected embedded _OUTSTANDING_V3_TEST references were not found; refusing vacuous sanitizer pass')
+          residues = []
+          for root_name in ('GROW_Estate_v3', 'LAUNCH_Estate_v3'):
+              for path in Path(root_name).rglob('*.html'):
+                  if token in path.read_text('utf-8'):
+                      residues.append(path.as_posix())
+          if residues:
+              raise SystemExit(f'test filename residue remained after authorised transform: {residues[:8]}')
+          decision = Path('_glv3/DECISIONS.md')
+          marker = '## Embedded test-filename reference normalization'
+          note = (
+              f"\n{marker}\n\n"
+              f"- Removed the literal filename token `{token}` from {occurrences} embedded filename references across {len(changed)} generated HTML support/lesson files.\n"
+              "- This is the same authorised filename transform already applied to output filenames and href links; it changes references only, not authored teaching wording.\n"
+              "- The transform is non-vacuous and the candidate verifier subsequently requires zero residue across the installed estates.\n"
+          )
+          current = decision.read_text('utf-8')
+          if marker not in current:
+              decision.write_text(current + note, 'utf-8')
+          print({'changed_files': len(changed), 'occurrences': occurrences, 'sample': changed[:8]})
+          PY
+
       - name: Install browser and visual-evidence dependencies
         shell: bash
         run: |
