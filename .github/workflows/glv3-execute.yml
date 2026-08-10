@@ -12,6 +12,7 @@ on:
       - _glv3/tools/positive_controls.py
       - _glv3/tools/closeout_reconcile.py
       - _glv3/tools/build_candidate_dossier.py
+      - _glv3/tools/finalize_candidate_bundle.py
   workflow_dispatch:
 
 permissions:
@@ -45,6 +46,7 @@ jobs:
           start="$(git rev-parse HEAD)"
           git merge-base --is-ancestor "$base" "$start"
           test -s _glv3/tools/bs4.py
+          test -s _glv3/tools/finalize_candidate_bundle.py
           grep -q 'Deterministic Humanities print-surface reconstruction' _glv3/tools/bs4.py
           grep -q 'Source-authored PEQ code provenance' _glv3/tools/bs4.py
           grep -q '#cards article.card' _glv3/tools/browser_verify.mjs
@@ -136,9 +138,11 @@ jobs:
         run: |
           set -euo pipefail
           python _glv3/tools/build_candidate_dossier.py --repo "$GITHUB_WORKSPACE" --integration-sha '${{ steps.identity.outputs.base }}' --starting-branch-sha '${{ steps.identity.outputs.start }}'
+          python _glv3/tools/finalize_candidate_bundle.py --repo "$GITHUB_WORKSPACE"
           test -s _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
           test -s _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
           test -s _glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip
+          test -s _glv3/EVIDENCE_ZIP_INTEGRITY.json
 
       - name: Remove one-shot staging and obsolete invalid workflows
         shell: bash
@@ -182,6 +186,14 @@ jobs:
           cd /tmp/glv3-exact
           test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
           test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
+          python - <<'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          p=Path('_glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip')
+          m=json.loads(Path('_glv3/EVIDENCE_ZIP_INTEGRITY.json').read_text())
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==m['sha256']
+          with zipfile.ZipFile(p) as z: assert z.testzip() is None
+          PY
           python _glv3/tools/deploy.py --rerun-live-privacy
           before="$(git status --porcelain)"
           python _glv3/tools/positive_controls.py --repo "$PWD"
@@ -222,6 +234,7 @@ jobs:
             _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
             _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
             _glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip
+            _glv3/EVIDENCE_ZIP_INTEGRITY.json
             _glv3/GATES_STATIC.json
             _glv3/GATES_BROWSER.json
             _glv3/GATES_CHIPS.json
