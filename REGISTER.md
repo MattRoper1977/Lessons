@@ -2593,3 +2593,46 @@ the pass brief withheld.**
   building on it, exactly as you would re-derive your own.** The same brief was also wrong that the
   aria surface was "15" (measured: 18) and implied two rails shared one mechanism when the code uses
   two different ones — none of which was malice, all of which was load-bearing.
+
+---
+
+## R-HUD01 — an unstarted server makes a browser gate report the machine, not the tree
+
+**Pass INSTRUMENT-HEALTH, 2026-08-10. Work-pending against two games; already closed against two instruments.**
+
+`verify_games_splash.mjs` and `verify_games_offline_runtime.mjs` both derive their targets from the
+**filesystem** — whichever files carry the marker, or a named list — and then fetch those targets
+over **HTTP from `http://127.0.0.1:4173`, which neither of them started**. `verify_games_offline_runtime`
+said `# serve + judge` in its own usage block while containing no server at all.
+
+So each gate was really measuring whatever happened to be listening on that port:
+
+| what was on 4173 | what the gate reported |
+|---|---|
+| nothing | `canvas=goto-failed`, `ERR_CONNECTION_REFUSED`, every target |
+| a server rooted elsewhere | 404 → `canvas=none`, which reads exactly like a game that never starts |
+| the right tree | the truth |
+
+Three runs of the splash gate in one session gave **49, 61 and 69 failures** on trees differing by
+ten one-line insertions in files that gate does not judge. The variance was the port, not the games.
+It amplifies because `S1` failing makes the run `return` before the rest of that file's gates, so one
+wrong mount becomes dozens of failures that all read as game defects.
+
+> **A browser gate that derives targets from disk and fetches them over HTTP must own the server, or
+> prove it reached the right one before judging anything.** A reachability failure is an ERROR about
+> the harness. It must never be counted as a FAIL about the subject, because the two are
+> indistinguishable in the output and only one of them is somebody's fault.
+
+Both now serve this repository on an ephemeral port when `BASE_URL` is unset, and preflight the
+served bytes against the marker when it is set. `verify_games_offline_runtime` additionally mounts the
+site repository at `/` — these games load `/hud.js` from the other repo, and serving half the estate
+made all seven fail on a 404 that is not a game defect either.
+
+**What the repaired gate then found, which is the genuine work-pending item:** five of the seven
+vendored games reach running gameplay fully offline. **`Games/Trail_Runner.html` and
+`Games/Trekkers_Trail_Runner_Tees_Coast.html` do not** — `canvas=webgl-stalled(4raf)`, no page errors,
+no failed local requests. Both files are **byte-identical to `origin/main`** (`a8f659fc15eed9b4`,
+`8e253cf47268feb7`), so this is pre-existing and was not introduced by the HUD work.
+
+**work-pending, not ruling-pending:** nothing needs deciding. Two games do not advance their WebGL
+canvas within the sample window and somebody has to find out why.

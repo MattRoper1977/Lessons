@@ -9,9 +9,6 @@
     <title>Trekkers Trail Runner — Tees Coast Edition</title>
 
     <!-- Display typeface: Orbitron for headings/HUD, Rajdhani for UI text. Falls back to system sans if offline. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
            TREKKERS TRAIL RUNNER — TEES COAST EDITION
@@ -127,7 +124,11 @@
             background: rgba(0, 10, 20, 0.9); border: 1px solid #00d4ff; padding: 20px;
             border-radius: 4px; margin-bottom: 20px; text-align: left;
             color: #ccc; box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-            width: 450px; max-width: 90%; position: relative;
+            /* border-box, or the 20px padding and 1px border are ADDED to
+               max-width:90% and the box lands 3px wider than the viewport at
+               390px: 351 + 40 + 2 = 393. Fixing the cause, not hiding it under
+               overflow-x:hidden. */
+            width: 450px; max-width: 90%; position: relative; box-sizing: border-box;
         }
         #instructions-box::before {
             content:''; position: absolute; top:0; left:0; width: 100%; height: 2px;
@@ -380,8 +381,8 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+                "three": "../Games/vendor/three-0.160.0/three.module.js",
+                "three/addons/": "../Games/vendor/three-0.160.0/jsm/"
             }
         }
     </script>
@@ -1915,5 +1916,6 @@
         function onResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight); }
         init();
     </script>
+<script defer src="/hud.js"></script>
 </body>
 </html>
