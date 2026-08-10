@@ -72,7 +72,23 @@ jobs:
             -e 's/777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd/782ff5865e1406c159c78081bcc218bdaa46678e5c42448a6f298f696ca73f5e/' \
             -e 's/discovered_transport_size = 106760/discovered_transport_size = 102160/' \
             _glv3/tools/transport_input_prep.py
-          python -m py_compile _glv3/tools/transport_input_prep.py _glv3/tools/candidate_verify.py _glv3/tools/finalize_candidate.py
+          python - <<'PYPATCH'
+          from pathlib import Path
+          p = Path('_glv3/tools/deploy.py')
+          text = p.read_text('utf-8')
+          old = '        require(source and git_exists(source), f"{pathway}: live counterpart missing/unknown for {pack_rel}: {source}")'
+          new = '''        require(source, f"{pathway}: live counterpart missing/unknown for {pack_rel}: {source}")
+        if not git_exists(source):
+            tree_paths = sh("git", "ls-tree", "-r", "--name-only", ROLLBACK).stdout.splitlines()
+            matches = [candidate for candidate in tree_paths if candidate.casefold() == source.casefold()]
+            require(len(matches) == 1,
+                    f"{pathway}: live counterpart missing/ambiguous after exact casefold lookup for {pack_rel}: {source}; matches={matches[:5]}")
+            source = matches[0]'''
+          if old not in text:
+              raise SystemExit('deploy.py live-counterpart guard did not match expected source; refusing blind patch')
+          p.write_text(text.replace(old, new, 1), 'utf-8')
+          PYPATCH
+          python -m py_compile _glv3/tools/deploy.py _glv3/tools/transport_input_prep.py _glv3/tools/candidate_verify.py _glv3/tools/finalize_candidate.py
           node --check _glv3/tools/extended_browser_verify.mjs
           test -f .github/workflows/glv3-verify.yml
 
