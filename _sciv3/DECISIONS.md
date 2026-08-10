@@ -1,0 +1,184 @@
+# Science v3 install — decision record
+
+Branch `claude/sci-v3-install-37iodu`. Started 2026-08-10.
+Appended as work proceeded; nothing here was written retrospectively.
+
+---
+
+## D0 · Identity and rollback
+
+- Repo confirmed `MattRoper1977/Lessons` (`origin` → https://github.com/MattRoper1977/Lessons).
+- Identity gate **5/5**:
+  1. `SCI_G_W3_Friction.html` 332,462 B · `SCI_B_W3_Backbones.html` 261,653 B · `SCI_L_W3_L1_Microscopy.html` 184,942 B — all present.
+  2. `Science_Teesside/` holds `Build/`, `Grow/`, `Launch/`, 25 lesson HTML files.
+  3. Root `resources.json` parses; 448 entries; 25 with `subject = "Science · Teesside"`.
+  4. `biology/`, `chemistry/`, `2 Physics 10/` all present.
+  5. `origin/main` resolves; `93d5700` confirmed ancestor.
+- **ROLLBACK_SHA = `7a846cba9ee8c2cc128006d6be9b0244c3b7d893`**
+- §0.5 prior-run detection: **nothing found**. No `v3_40min/` under Grow/Build/Launch, no `_sciv3/`,
+  no `Baseline_Weeks/`, no branch `claude/sci-v3-install` or `claude/grow-sci-v3-install`
+  (local or remote).
+
+### D0a · AMBER — branch name differs from §0
+
+§0 specifies branch `claude/sci-v3-install`. The session was provisioned on
+`claude/sci-v3-install-37iodu` with an explicit instruction never to push elsewhere.
+Work proceeds on the harness-assigned branch. Same base (`origin/main` @ ROLLBACK_SHA),
+same content; only the suffix differs.
+
+---
+
+## D1 · Input gate (§0.6)
+
+First run of this session had **three** zips: BUILD, LAUNCH, Baseline Weeks. GROW was absent.
+Per §0.6 the run stopped and reported rather than proceeding on a subset. GROW was then supplied
+and the gate re-run from scratch on all four.
+
+**53/53 checksummed files verified byte-exact** — every sha256 first-16 matches §0.6.
+GROW 16/16 · BUILD 16/16 · LAUNCH 21/21.
+Baseline Weeks: **9 files** (8 HTML + `README.md`), no published checksums, enumerated by name and size.
+
+**No filename aliases were received.** All four listed aliases were absent; every file arrived under
+its canonical name.
+
+### D1a · AMBER — §0.6's own arithmetic
+
+§0.6 asks for `52/52 verified`. Its three checksum tables contain **53** rows
+(16 + 16 + 21), not 52. 52 is the count of *HTML* files across all four packs
+(GROW 13 + BUILD 13 + LAUNCH 18 + Baseline 8). Both numbers are reported explicitly
+throughout so neither is mistaken for the other. Per §1, the measurement wins and the
+disagreement is recorded as a finding.
+
+---
+
+## D2 · §0.7 — BUILD food links: DEFAULT TAKEN
+
+No veto line was given. The default was applied.
+
+**Removed (6):** the healthy-eating links in W5A, W5B, W6A, W6B, W7A, W7B.
+
+| Lesson | URL removed |
+|---|---|
+| W5A `What a Body Needs` | `…/units/healthy-eating/lessons/types-of-food` |
+| W5B `Nutrition Mission` | `…/units/healthy-eating/lessons/types-of-food` |
+| W6A `Building a Balanced Plate` | `…/units/healthy-eating/lessons/nutrient-rich-meal-planning-non-statutory` |
+| W6B `Balanced Plate Design Challenge` | `…/units/healthy-eating/lessons/nutrient-rich-meal-planning-non-statutory` |
+| W7A `Animals Cannot Make Their Own Food` | `…/units/healthy-eating/lessons/making-or-finding-food` |
+| W7B `Build a Food Source Chain` | `…/units/healthy-eating/lessons/making-or-finding-food` |
+
+The "Optional current Oak resource" card is **kept** in all six, its text replaced by
+*"No external food media in this lesson — see the BUILD protection rule."*
+The protection rule is kept verbatim.
+
+**Kept (4):** W3A/W3B `animals-without-bones`, W4A/W4B `muscles-for-movement` — skeleton/muscle unit,
+not food, both confirmed at their exact URL by prior verification.
+
+**Manifest corrected** either way: BUILD's `manifest-v3.json` declared `media: []` for all ten
+lessons while ten Oak links existed in the pages. After this run the manifest states the four links
+that remain and records the six as removed, so a manifest audit and a page audit agree.
+
+---
+
+## D3 · Placement (§3) — parallel routes
+
+All three packs install as clearly-labelled parallel 40-minute routes under
+`Science_Teesside/{Grow,Build,Launch}/v3_40min/`. The **twenty-five live lessons are untouched**
+and remain the default. No veto line was given for any pathway.
+
+---
+
+## D4 · A2 — print-pack scope
+
+Each new lesson prints 2 pages. The three live suites each carry the full 17 print-section ids.
+Only the three additions specified in A2 were made: a date + name line at the head of print page 1,
+an Assessor Witness Statement on print page 2, and (LAUNCH only, A8.1) the written closure line.
+
+**The remaining twelve v5 print sections are deliberately absent, not overlooked.** Porting the v5
+pack onto a different chassis would be a half-port, and A2 rules that out explicitly.
+
+GROW's page-2 closure ("Adult is audience, not signatory. No initials or signature.") and BUILD's
+adult-Audience wording differ by design and were **not** harmonised.
+
+### D4a · Witness-statement wording provenance
+
+A2 says copy the wording, do not invent it. The chassis — heading, awarding-body line,
+"Records what was observed, and at which level of independence.", the Pupil/Lesson/Date table,
+"Observed in this lesson", "Assessor comment", "Ring the tier the pupil actually worked at",
+and the assessor name/role/signature line — is copied byte-for-byte from the matching live lesson.
+
+The three lesson-specific "Observed in this lesson" statements are copied from the **live lesson for
+the same SoW week in the same pathway**, not written fresh:
+
+- LAUNCH is 1:1 — new `W3L1` takes live `SCI_L_W3_L1_Microscopy.html`, and so on for all fifteen.
+- GROW and BUILD split one live week across an A and a B period, so both A and B take the same
+  three observed statements from that week's live lesson. They describe the week's science, which
+  is what the two periods jointly cover.
+
+The `Lesson` row names the new route explicitly, e.g.
+`Friction: Friend and Enemy — GROW Science · Week 3 (40-min route · Explore)`.
+
+---
+
+## D5 · A3 — links
+
+**GROW, two unconfirmed slugs kept and flagged**, marked `data-link-unverified="true"`:
+
+- `…/units/forces-including-simple-machines/lessons/how-gears-can-help-us` — W4A
+- `…/units/earth-sun-and-moon/lessons/the-planets-in-our-solar-system-non-statutory` — W6A
+
+Both lessons appear in Oak's unit listings; only the slugs are unproven, and Oak commonly 403s
+agent fetch tools. Neither was deleted and no replacement was guessed. **30-second check for Matt.**
+
+**LAUNCH carries zero external URLs** across all 20 files. Verified on arrival and re-asserted after
+every edit.
+
+---
+
+## D6 · A8.2 — the verified osmosis clip, recorded as a named consequence
+
+Live `Science_Teesside/Launch/SCI_L_W5_L2_OsmosisCP.html` carries the Oak osmosis core-practical
+link that **Matt personally cleared**. It is the only externally-verified clip in the science estate.
+
+The new LAUNCH pack has zero external links. Under the parallel-route ruling nothing is lost,
+because the live file stays.
+
+> **Named consequence.** A future `Retire the live lessons in LAUNCH — v3 route is the only route
+> there` discards that clip. It is not carried into the new pack, because it was cleared against
+> that lesson, not this one. Anyone acting on the LAUNCH retirement veto should be told this first.
+
+---
+
+## D7 · A9 — the baseline weeks
+
+Autumn 1 W1 and W2 are **baseline weeks; no science was taught in them**. All three packs assumed
+otherwise. Derived count of the literal string `Aut1·W2`: **10 occurrences across 7 files**, plus one
+differently-worded curriculum block in `launch/SOW_AND_POLICY_ALIGNMENT.md` — an eighth file.
+That matches §0.7's "ten occurrences across eight files" exactly.
+
+**The hard constraint was honoured: no claim about what the baseline covered appears anywhere.**
+The baseline runs on PythonAnywhere and is not in this repo. Nothing was created, linked or implied
+inside Lessons that would stand in for it.
+
+Presupposition classification and the full before/after prompt table are in `A9_PROMPTS.md`
+in this directory.
+
+---
+
+## D8 · A10 — Baseline Weeks pack
+
+Four repairs and no others, per A10.1–A10.4. See `BASELINE_WEEKS.md` in this directory for the
+detail, the naming-divergence question and the AMBER list.
+
+---
+
+## D9 · A6 — reading load, GROW Supported route only
+
+Not applied to BUILD (its routes already work; its slides are the problem — Phase E).
+Not applied to LAUNCH (its routes already read 1.4–2.6 grades **easier** than live at every tier;
+editing them would undo an improvement). Per-file before/after in `A6_READING.md`.
+
+---
+
+## D10 · Deferred, recorded, not built
+
+Phase E items 1, 2, 2b, and deferred items 3–8 from §8 were **not** started. No trigger was given.
