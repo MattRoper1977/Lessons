@@ -112,6 +112,23 @@ function classify(route, hasTag, excluded) {
   return hasTag ? null : `${route} carries no HUD script and is not declared in data/hud-coverage.json`;
 }
 
+/** Every game route in the canonical inventory, both estates. Used only to say
+ *  what fraction of it this repository governs - this tool cannot judge the
+ *  other estate's files and does not pretend to. */
+function allGameRoutes() {
+  const candidates = [
+    process.env.MBM_SEARCH_INDEX,
+    path.join(ROOT, '..', 'mattroper1977.github.io', 'data', 'mbm-search-index.json'),
+    '/workspace/mattroper1977.github.io/data/mbm-search-index.json',
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (!fs.existsSync(candidate)) continue;
+    const index = JSON.parse(fs.readFileSync(candidate, 'utf8'));
+    return [...new Set(index.entries.filter(e => e.category === 'game').map(e => e.route))];
+  }
+  return [];
+}
+
 function overlap(a, b) {
   if (!a || !b) return 0;
   const wide = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x);
@@ -277,4 +294,7 @@ const inv = lessonsGameRoutes(), exc = excludedRoutes();
 console.log(`\nHUD on Lessons games against ${base}: ${results.length - red} assertion(s) passed · ${red} failed`);
 console.log(`  ${inv.length} game route(s), one file each, x ${VIEWPORTS.length} viewport(s), from the canonical search index`);
 console.log(`  ${inv.length - exc.size} route(s) wired · ${exc.size} declared in data/hud-coverage.json`);
+// Scope, printed rather than implied. "every inventory game is wired or
+// declared" reads estate-wide and is true of this repository's share only.
+console.log(`  scope: ${inv.length} of ${allGameRoutes().length} game route(s) in the canonical inventory. The other ${allGameRoutes().length - inv.length} are governed by the site repository's own ledger, which nothing here can read.`);
 process.exit(red ? 1 : 0);
