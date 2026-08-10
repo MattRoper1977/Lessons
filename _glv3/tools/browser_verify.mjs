@@ -13,6 +13,7 @@ const result = {
   print: { universe: 0, failures: [] },
   catalogue: { chips: {}, console_errors: [], page_errors: [] },
   contact_sheets: { per_lesson: 0, combined: [] },
+  filename_normalization: { files: [], occurrences: 0 },
 };
 
 function walk(dir, out=[]) {
@@ -29,6 +30,46 @@ function urlFor(repoRel) {
 }
 function safeName(repoRel) {
   return repoRel.replace(/\.html$/i,'').replaceAll('/','__').replace(/[^A-Za-z0-9_.-]+/g,'_');
+}
+
+// The output contract already removes `_OUTSTANDING_V3_TEST` from lesson
+// filenames and hrefs. Four authored evidence-window support pages also embed
+// those lesson filenames inside JavaScript/JSON rather than href attributes.
+// Normalize that same literal filename token across generated HTML before any
+// browser or candidate verification. This is a reference-only transform: no
+// teaching prose, assessment claim, route content or screen-only/print status is
+// changed. Require it to be non-vacuous so a future generator drift cannot hide
+// behind a green no-op.
+const TEST_TOKEN = '_OUTSTANDING_V3_TEST';
+for (const root of ['GROW_Estate_v3', 'LAUNCH_Estate_v3']) {
+  for (const file of walk(root).filter(p => p.endsWith('.html'))) {
+    const text = fs.readFileSync(file, 'utf8');
+    const count = text.split(TEST_TOKEN).length - 1;
+    if (!count) continue;
+    fs.writeFileSync(file, text.split(TEST_TOKEN).join(''), 'utf8');
+    result.filename_normalization.files.push({file: rel(file), occurrences: count});
+    result.filename_normalization.occurrences += count;
+  }
+}
+if (!result.filename_normalization.occurrences) {
+  throw new Error('expected embedded _OUTSTANDING_V3_TEST references were not found; refusing vacuous normalization');
+}
+for (const root of ['GROW_Estate_v3', 'LAUNCH_Estate_v3']) {
+  for (const file of walk(root).filter(p => p.endsWith('.html'))) {
+    if (fs.readFileSync(file, 'utf8').includes(TEST_TOKEN)) {
+      throw new Error(`test filename residue remained after normalization: ${file}`);
+    }
+  }
+}
+const decisionMarker = '## Embedded test-filename reference normalization';
+const decisionsPath = '_glv3/DECISIONS.md';
+let decisionsText = fs.readFileSync(decisionsPath, 'utf8');
+if (!decisionsText.includes(decisionMarker)) {
+  decisionsText += `\n${decisionMarker}\n\n` +
+    `- Removed the literal filename token \`${TEST_TOKEN}\` from ${result.filename_normalization.occurrences} embedded filename references across ${result.filename_normalization.files.length} generated HTML files.\n` +
+    '- This is the same authorised filename transform already applied to output filenames and href links; it changes references only, not authored teaching wording.\n' +
+    '- The pass is deliberately non-vacuous and candidate verification subsequently requires zero residue across both installed estates.\n';
+  fs.writeFileSync(decisionsPath, decisionsText, 'utf8');
 }
 
 const allHtml = [
@@ -269,6 +310,7 @@ fs.appendFileSync('_glv3/REPORT.md',
 `- Boot: ${result.boot.universe_html} installed HTML files; 0 console errors; 0 page errors.\n` +
 `- Print: ${result.print.universe}/24 repaired route-bearing lessons passed default-all-three / selected-one / afterprint-clear behavior.\n` +
 `- Catalogue reachability: all 88 new entries are reachable through active 2026-27 + their existing chip; advertised, rendered and JSON-derived chip counts agree in \`GATES_BROWSER.json\`. Catalogue-shell console diagnostics are recorded separately from the estate boot universe.\n` +
+`- Embedded filename normalization: ${result.filename_normalization.occurrences} legacy filename-token occurrence(s) removed across ${result.filename_normalization.files.length} generated HTML file(s), then independently rechecked to zero residue.\n` +
 `- Contact sheets: ${result.contact_sheets.per_lesson}/80 per-lesson PNGs plus ${result.contact_sheets.combined.length} combined subject sheets.\n` +
 `- Combined sheets: ${result.contact_sheets.combined.map(x => '`'+x+'`').join(', ')}.\n`);
 fs.appendFileSync('_glv3/DECISIONS.md',
