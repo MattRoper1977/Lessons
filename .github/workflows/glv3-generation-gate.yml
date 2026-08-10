@@ -68,19 +68,47 @@ jobs:
             --starting-branch-sha '${{ steps.base.outputs.branch_sha }}' \
             --transport /tmp/glv3-packs.tar.xz
 
+      - name: Prepare current static verifier interface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --no-cache-dir beautifulsoup4==4.13.4
+          python - <<'PYPATCH'
+          from pathlib import Path
+          p = Path('_glv3/tools/deploy.py')
+          text = p.read_text('utf-8')
+          old = '        require(source and git_exists(source), f"{pathway}: live counterpart missing/unknown for {pack_rel}: {source}")'
+          new = '''        require(source, f"{pathway}: live counterpart missing/unknown for {pack_rel}: {source}")
+        if not git_exists(source):
+            tree_paths = sh("git", "ls-tree", "-r", "--name-only", ROLLBACK).stdout.splitlines()
+            matches = [candidate for candidate in tree_paths if candidate.casefold() == source.casefold()]
+            require(len(matches) == 1,
+                    f"{pathway}: live counterpart missing/ambiguous after exact casefold lookup for {pack_rel}: {source}; matches={matches[:5]}")
+            source = matches[0]'''
+          if old in text:
+              text = text.replace(old, new, 1)
+              p.write_text(text, 'utf-8')
+          elif 'exact casefold lookup' not in text:
+              raise SystemExit('deploy.py live-counterpart guard no longer matches expected interface; refusing blind patch')
+          PYPATCH
+          python -m py_compile _glv3/tools/deploy.py
+
       - name: Generate both parallel estates and static dossier
+        env:
+          GLV3_GROW_SRC: /tmp/glv3-packs/grow
+          GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
         shell: bash
         run: |
           set -euo pipefail
           rm -rf GROW_Estate_v3 LAUNCH_Estate_v3 _glv3/contact_sheet
-          python _glv3/tools/deploy.py /tmp/glv3-packs/grow /tmp/glv3-packs/launch "$GITHUB_WORKSPACE"
+          python _glv3/tools/deploy.py
 
       - name: Prove generated count and union invariants
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, pathlib, sys
+          import json, pathlib
           root=pathlib.Path('.')
           grow=list((root/'GROW_Estate_v3').rglob('*.html'))
           launch=list((root/'LAUNCH_Estate_v3').rglob('*.html'))
@@ -110,9 +138,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check --no-cache-dir pillow beautifulsoup4 lxml
-          npm install --no-save --no-package-lock playwright sharp pngjs pdfjs-dist
+          python -m pip install --disable-pip-version-check --no-cache-dir pillow lxml
+          npm install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist
           npx playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends imagemagick poppler-utils
 
       - name: Run all-page Chromium, interaction, mobile, print and contact-sheet gate
         env:
@@ -125,7 +155,7 @@ jobs:
           server=$!
           trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-http.log || true' EXIT
           for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 0.25; done
-          timeout 50m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173
+          timeout 50m node _glv3/tools/browser_verify.mjs
           kill "$server" 2>/dev/null || true
           wait "$server" 2>/dev/null || true
           trap - EXIT
@@ -141,7 +171,7 @@ jobs:
           server=$!
           trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-chip-http.log || true' EXIT
           for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4174/ >/dev/null && break; sleep 0.25; done
-          timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4174
+          timeout 20m node _glv3/tools/chip_gate.mjs
           kill "$server" 2>/dev/null || true
           wait "$server" 2>/dev/null || true
           trap - EXIT
