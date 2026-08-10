@@ -7,6 +7,7 @@ bridge proxies stdlib shutil unchanged and, after copying an HTML file into one
 of the two generated estate roots, removes only that exact test-filename token
 from the copied HTML text. Source packs and protected live trees are untouched.
 
+TEST-FILENAME REFERENCES are transformed only in newly generated estate HTML.
 The tracked bridge deletes itself at interpreter exit so it cannot survive into
 a successful candidate commit.
 """
