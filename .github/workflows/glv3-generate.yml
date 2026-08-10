@@ -5,7 +5,7 @@ on:
     branches:
       - claude/gl-estate-v3
     paths:
-      - _glv3/input/final.part09.b64
+      - _glv3/RUN_GENERATION.md
   workflow_dispatch:
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
           test "$(git merge-base origin/main HEAD)" = "$(git rev-parse origin/main)"
           test ! -e GROW_Estate_v3
           test ! -e LAUNCH_Estate_v3
-          for f in _glv3/input/final.part{00..09}.b64; do test -s "$f"; done
+          for f in _glv3/input/pack.part{00..09}.b64; do test -s "$f"; done
 
       - name: Reconstruct and safely install verified closeout tooling
         shell: bash
@@ -66,10 +66,6 @@ jobs:
                       raise SystemExit(f'unsafe tooling member: {member.name}')
           PYSAFE
           tar -xzf /tmp/glv3-tooling.tar.gz -C .
-          sed -i \
-            -e 's/777fcdafefc246c5c6b68a559886dc27b641471b7638ea79e51640c3e62791fd/1a0c8ad9cc07e8efd1746ac1d8ce6506c8cc49e7e4af65c44d5e979cd7121039/' \
-            -e 's/discovered_transport_size = 106760/discovered_transport_size = 102104/' \
-            _glv3/tools/transport_input_prep.py
           python -m py_compile _glv3/tools/transport_input_prep.py _glv3/tools/candidate_verify.py _glv3/tools/finalize_candidate.py
           node --check _glv3/tools/extended_browser_verify.mjs
           test -f .github/workflows/glv3-verify.yml
@@ -87,10 +83,10 @@ jobs:
       - name: Install static verifier dependency
         run: python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
 
-      - name: Reconstruct deterministic transport, prove uploaded-ZIP manifest equivalence and reconcile counts
+      - name: Reconstruct compact transport, prove uploaded-ZIP manifest equivalence and reconcile counts
         run: |
           python _glv3/tools/transport_input_prep.py \
-            --parts-glob '_glv3/input/final.part*.b64' \
+            --parts-glob '_glv3/input/pack.part*.b64' \
             --transport /tmp/glv3-packs.tar.xz \
             --extract-root /tmp/glv3-packs
 
@@ -149,6 +145,7 @@ jobs:
           set -euo pipefail
           rm -rf _glv3/input _glv3/tooling node_modules /tmp/glv3-packs /tmp/glv3-packs.tar.xz /tmp/glv3-tooling.tar.gz /tmp/glv3-tooling.tar.gz.b64
           rm -f package-lock.json package.json
+          rm -f _glv3/RUN_GENERATION.md
           rm -f .github/workflows/glv3-closeout.yml
           rm -f .github/workflows/glv3-deploy.yml
           rm -f .github/workflows/glv3-generate.yml
