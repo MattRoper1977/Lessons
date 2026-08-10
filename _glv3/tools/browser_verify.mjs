@@ -112,8 +112,9 @@ if (result.print.failures.length) {
   throw new Error(`print browser gate failed: ${result.print.failures.slice(0,8).join('\n')}`);
 }
 
-// Real catalogue filter-chain reachability: every new GLV3 entry must be visible
-// under active 2026-27 collection + its existing subject chip.
+// Real current catalogue filter-chain reachability. The Lesson Hub's own UI
+// uses .ytab[data-year], #quicknav .chip[data-sub], and #cards article.card.
+// Drive those exact controls rather than maintaining a parallel selector model.
 const resources = JSON.parse(fs.readFileSync('resources.json','utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) throw new Error(`catalogue expected 88 GLV3 entries, got ${newResources.length}`);
@@ -121,21 +122,38 @@ const chipNames = [...new Set(newResources.map(x => x.subject))].sort();
 for (const chip of chipNames) {
   activeFile = `catalogue:${chip}`;
   await page.goto(BASE + '/index.html', {waitUntil:'networkidle', timeout:30000});
-  const col = page.locator('button.collection', {hasText:'2026-27'});
-  if (await col.count() !== 1) throw new Error(`collection button 2026-27 not uniquely found for ${chip}`);
-  await col.click();
-  const cb = page.locator('button.chip', {hasText:chip});
-  if (await cb.count() !== 1) throw new Error(`chip not uniquely found: ${chip}`);
+  await page.waitForSelector('.ytab[data-year="2026-27"]');
+
+  const yearButton = page.locator('.ytab[data-year="2026-27"]');
+  if (await yearButton.count() !== 1) throw new Error(`year tab 2026-27 not uniquely found for ${chip}`);
+  await yearButton.click();
+  await page.waitForTimeout(80);
+  const activeYear = await page.locator('.ytab[aria-pressed="true"]').getAttribute('data-year');
+  if (activeYear !== '2026-27') throw new Error(`year tab did not activate 2026-27 for ${chip}: active=${activeYear}`);
+
+  await page.waitForSelector('#quicknav .chip');
+  const cb = page.locator('#quicknav .chip').filter({hasText:chip});
+  if (await cb.count() !== 1) throw new Error(`current catalogue chip not uniquely found: ${chip}`);
+  const chipClass = await cb.getAttribute('class') || '';
+  if (chipClass.split(/\s+/).includes('lib')) throw new Error(`${chip}: current chip is marked lib/outside active collection`);
+  const label = (await cb.textContent()) || '';
+  const advertised = Number((label.match(/\((\d+)\)\s*$/) || [])[1]);
   await cb.click();
-  await page.waitForTimeout(60);
-  const state = await page.evaluate(() => {
-    const visible = [...document.querySelectorAll('.resource-item')].filter(el => getComputedStyle(el).display !== 'none');
-    return visible.map(el => {
-      const a = el.matches('a[href]') ? el : el.querySelector('a[href]');
-      const href = a?.getAttribute('href') || el.getAttribute('data-file') || el.dataset?.file || '';
-      return {href, text:(el.textContent || '').replace(/\s+/g,' ').trim()};
-    });
-  });
+  await page.waitForTimeout(120);
+
+  const state = await page.evaluate(() => [...document.querySelectorAll('#cards article.card')].map(el => {
+    const a = el.querySelector('a[href]');
+    return {
+      href: a?.getAttribute('href') || '',
+      text:(el.textContent || '').replace(/\s+/g,' ').trim(),
+    };
+  }));
+
+  const expectedTotal = resources.filter(x => x.subject === chip && x.year === '2026-27').length;
+  if (!Number.isFinite(advertised) || advertised !== expectedTotal || state.length !== expectedTotal) {
+    throw new Error(`${chip}: advertised=${advertised} rendered=${state.length} JSON=${expectedTotal}`);
+  }
+
   const got = new Set();
   for (const x of state) {
     if (!x.href) continue;
@@ -144,13 +162,19 @@ for (const chip of chipNames) {
     got.add(h);
   }
   const want = newResources.filter(x => x.subject === chip && x.year === '2026-27').map(x => x.file);
-  const missing = want.filter(x => !got.has(x));
+  const missing = want.filter(x => ![...got].some(h => h === x || h.endsWith('/' + x)));
   if (missing.length) {
     const textJoined = state.map(x => x.text).join('\n');
     const stillMissing = newResources.filter(x => missing.includes(x.file) && !textJoined.includes(x.title)).map(x => x.file);
     if (stillMissing.length) throw new Error(`${chip}: ${stillMissing.length} new entries not reachable through real filter chain: ${stillMissing.slice(0,8).join(', ')}`);
   }
-  result.catalogue.chips[chip] = {new_entries: want.length, visible_items: state.length, reachable_new_entries: want.length};
+  result.catalogue.chips[chip] = {
+    new_entries: want.length,
+    advertised,
+    visible_items: state.length,
+    json_expected: expectedTotal,
+    reachable_new_entries: want.length,
+  };
 }
 
 // Contact sheets. Per lesson: title + one interactive; print-bearing lessons add print page 1 with no tier selected.
@@ -236,13 +260,13 @@ fs.appendFileSync('_glv3/REPORT.md',
 `\n## Browser gates and contact sheets\n\n` +
 `- Boot: ${result.boot.universe_html} installed HTML files; 0 console errors; 0 page errors.\n` +
 `- Print: ${result.print.universe}/24 repaired route-bearing lessons passed default-all-three / selected-one / afterprint-clear behavior.\n` +
-`- Catalogue reachability: all 88 new entries are reachable through active 2026-27 + their existing chip; per-chip browser counts are in \`GATES_BROWSER.json\`.\n` +
+`- Catalogue reachability: all 88 new entries are reachable through active 2026-27 + their existing chip; advertised, rendered and JSON-derived chip counts agree in \`GATES_BROWSER.json\`.\n` +
 `- Contact sheets: ${result.contact_sheets.per_lesson}/80 per-lesson PNGs plus ${result.contact_sheets.combined.length} combined subject sheets.\n` +
 `- Combined sheets: ${result.contact_sheets.combined.map(x => '`'+x+'`').join(', ')}.\n`);
 fs.appendFileSync('_glv3/DECISIONS.md',
 `\n## Browser execution results\n\n` +
 `- Browser boot: ${result.boot.universe_html} new HTML files, 0 console/page errors.\n` +
 `- Print browser gate: 24/24 repaired route-bearing lesson files passed; 56 screen-only lessons remained screen-only by the static gate.\n` +
-`- Catalogue browser gate: all 88 new resources are reachable through active 2026-27 + their existing chip.\n` +
+`- Catalogue browser gate: all 88 new resources are reachable through active 2026-27 + their existing chip; advertised = rendered = JSON-derived count.\n` +
 `- Contact sheets: 80 per-lesson PNGs plus combined Art, ASDAN and Humanities sheets under \`_glv3/contact_sheet/\`.\n`);
 console.log(JSON.stringify(result,null,2));
