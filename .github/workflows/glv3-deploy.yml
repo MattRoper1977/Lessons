@@ -1,0 +1,173 @@
+name: GROW LAUNCH v3 one-shot deploy
+
+on:
+  push:
+    branches:
+      - claude/gl-estate-v3
+
+permissions:
+  contents: write
+
+jobs:
+  build-verify-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout deployment branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/gl-estate-v3
+          fetch-depth: 0
+
+      - name: Identity and branch gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "claude/gl-estate-v3"
+          git merge-base --is-ancestor 1e8a428b523d1b970a8a3a2ab2a99f48a8271d09 HEAD
+          test -f BUILD_Estate_v3/index.html
+          test -f _finish/ROUTES.md
+          test -f resources.json
+          test ! -e GROW_Estate_v3
+          test ! -e LAUNCH_Estate_v3
+          git fetch origin main
+          echo "ROLLBACK_SHA=1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
+          echo "MAIN_AT_RUN=$(git rev-parse origin/main)"
+
+      - name: Reconstruct checksum-pinned repaired packs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/glv3-packs
+          : > /tmp/glv3-packs.tar.xz
+          for f in _glv3/input/pack.part{00..09}.b64; do
+            test -s "$f"
+            base64 -d "$f" >> /tmp/glv3-packs.tar.xz
+          done
+          echo "efef35d7c8504f603646663da603a2f3690ed8204b2af7d0730b52560a9db918  /tmp/glv3-packs.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/glv3-packs.tar.xz -C /tmp/glv3-packs
+          test -d /tmp/glv3-packs/grow
+          test -d /tmp/glv3-packs/launch
+          test ! -d /tmp/glv3-packs/grow/Science
+          test ! -d /tmp/glv3-packs/launch/Science
+
+      - name: Install verifier dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check beautifulsoup4
+          mkdir -p /tmp/glv3-node
+          npm install --prefix /tmp/glv3-node --no-save --no-package-lock playwright@1.54.2
+          ln -s /tmp/glv3-node/node_modules node_modules
+          /tmp/glv3-node/node_modules/.bin/playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils imagemagick
+
+      - name: Generate estates and run static gates
+        env:
+          GLV3_GROW_SRC: /tmp/glv3-packs/grow
+          GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
+        run: python3 _glv3/tools/deploy.py
+
+      - name: Start local lesson server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8123 --bind 127.0.0.1 >/tmp/glv3-http.log 2>&1 &
+          echo $! >/tmp/glv3-http.pid
+          for i in {1..30}; do
+            if python3 - <<'PY'
+          import urllib.request
+          urllib.request.urlopen('http://127.0.0.1:8123/index.html', timeout=1).read(32)
+          PY
+            then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/glv3-http.log
+          exit 1
+
+      - name: Browser boot print reachability and contact sheets
+        env:
+          GLV3_BASE_URL: http://127.0.0.1:8123
+        run: node _glv3/tools/browser_verify.mjs
+
+      - name: Browser chip count gate
+        env:
+          GLV3_BASE_URL: http://127.0.0.1:8123
+        run: node _glv3/tools/chip_gate.mjs
+
+      - name: Pre-push main refresh and final RED gates
+        shell: bash
+        env:
+          GLV3_GROW_SRC: /tmp/glv3-packs/grow
+          GLV3_LAUNCH_SRC: /tmp/glv3-packs/launch
+        run: |
+          set -euo pipefail
+          git diff --check
+          git fetch origin main
+          latest="$(git rev-parse origin/main)"
+          rollback="1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
+          if [ "$latest" != "$rollback" ]; then
+            {
+              echo
+              echo "- Pre-push main moved from \`$rollback\` to \`$latest\`; gates 4 and 8 were rerun against the refreshed main."
+            } >> _glv3/AMBERS.md
+            {
+              echo
+              echo "## Pre-push main refresh"
+              echo
+              echo "- origin/main moved to \`$latest\` after ROLLBACK_SHA; protected live-tree and privacy gates were rerun before push."
+            } >> _glv3/DECISIONS.md
+            if ! git diff --quiet "$latest" -- \
+              Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
+              Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/; then
+              echo "RED: protected live tree differs from refreshed origin/main; stale branch would overwrite live content."
+              git diff --name-status "$latest" -- \
+                Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
+                Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/
+              exit 20
+            fi
+            python3 _glv3/tools/deploy.py --rerun-live-privacy
+          fi
+
+      - name: Remove one-shot transport and stage final tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _glv3/input _glv3/tools node_modules
+          rm -f .github/workflows/glv3-deploy.yml
+          git add -A
+          if git diff --cached --name-only | grep -Eq '^(Art_Teesside/|GROW_ASDAN/|LAUNCH_ASDAN/|Grow/Slideshows/|Launch/Slideshows/|Science_Teesside/|Humanities_Teesside/|Baseline_Weeks/|BUILD_Estate_v3/)'; then
+            echo "RED: protected live path is staged"
+            git diff --cached --name-status
+            exit 21
+          fi
+          test -f GROW_Estate_v3/index.html
+          test -f LAUNCH_Estate_v3/index.html
+          test -f _glv3/REPORT.md
+          test -f _glv3/contact_sheet/art/combined-art.png
+          test -f _glv3/contact_sheet/asdan/combined-asdan.png
+          test -f _glv3/contact_sheet/humanities/combined-humanities.png
+          git diff --cached --check
+          git status --short
+
+      - name: Commit verified deployment and push branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Made by Matt deployment verifier"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: install GROW and LAUNCH alternative v3 estates"
+          git fetch origin main
+          latest="$(git rev-parse origin/main)"
+          rollback="1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
+          if [ "$latest" != "$rollback" ]; then
+            if ! git diff --quiet "$latest" -- \
+              Art_Teesside/ GROW_ASDAN/ LAUNCH_ASDAN/ Grow/Slideshows/ Launch/Slideshows/ \
+              Science_Teesside/ Humanities_Teesside/ Baseline_Weeks/ BUILD_Estate_v3/; then
+              echo "RED: main changed a protected live tree between final gate and push"
+              exit 22
+            fi
+          fi
+          git push origin HEAD:claude/gl-estate-v3
+          echo "VERIFIED_BRANCH_SHA=$(git rev-parse HEAD)"
