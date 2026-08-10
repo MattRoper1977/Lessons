@@ -11,6 +11,7 @@ on:
       - main
     types:
       - synchronize
+      - reopened
     paths:
       - _glv3/RUN_GENERATION.md
   workflow_dispatch:
@@ -90,8 +91,10 @@ jobs:
                     f"{pathway}: live counterpart missing/ambiguous after exact casefold lookup for {pack_rel}: {source}; matches={matches[:5]}")
             source = matches[0]'''
           if old not in text:
-              raise SystemExit('deploy.py live-counterpart guard did not match expected source; refusing blind patch')
-          p.write_text(text.replace(old, new, 1), 'utf-8')
+              if 'exact casefold lookup' not in text:
+                  raise SystemExit('deploy.py live-counterpart guard did not match expected source; refusing blind patch')
+          else:
+              p.write_text(text.replace(old, new, 1), 'utf-8')
           PYPATCH
           python -m py_compile _glv3/tools/deploy.py _glv3/tools/transport_input_prep.py _glv3/tools/candidate_verify.py _glv3/tools/finalize_candidate.py
           node --check _glv3/tools/extended_browser_verify.mjs
@@ -137,7 +140,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m http.server 8123 --bind 127.0.0.1 > /tmp/glv3-http.log 2>&1 &
-          echo $! > /tmp/glv3-http.pid
+          echo $! >/tmp/glv3-http.pid
           for i in {1..30}; do
             if curl --fail --silent http://127.0.0.1:8123/index.html >/dev/null; then exit 0; fi
             sleep 1
@@ -177,6 +180,7 @@ jobs:
           rm -f .github/workflows/glv3-deploy.yml
           rm -f .github/workflows/glv3-generate.yml
           rm -f .github/workflows/glv3-preflight.yml
+          rm -f .github/workflows/glv3-generation-gate.yml
           rm -f _glv3/tools/closeout_prep.py
           rm -f _glv3/tools/transport_input_prep.py
           test ! -e _glv3/input
