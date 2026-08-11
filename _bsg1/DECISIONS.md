@@ -188,3 +188,31 @@ every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
 - Functional boot 10/10: commit device judgement-free (exact feedback string
   asserted), bridges hidden→shown on toggle, model pair present, 3 labelled
   speak buttons, speakTerm safe without the API. Zero page errors.
+
+### §3.6 + §3.8 — exit-side grafts and the evidence sheet (GREEN, logged)
+
+- **Influence rule**: checked `Reading_the_Response_Card.html` first — it
+  explains what Influence means but states "it makes no claim about closure",
+  so no equivalent completeness line exists there. The line "A lesson counts
+  as complete only when Influence names an observable change. 'The adult
+  listened' is not Influence." added to the reflection window's INFLUENCE
+  stage as guidance text only. One account of the rule, in the one place that
+  owns closure guidance for this route.
+- **A5**: "Support level records access. It does not define ability." appended
+  to the TA overlay's least-prompt card note, once per lesson file — the
+  surface where support levels are actually discussed.
+- **Declined (§3.6/queue-16): the pack's 8-step prompt dropdown.** It would be
+  a seventh WT-DS/least-prompt wording and a recorded field. The live seven-
+  rung ladder stands; queue-16 owns any change to it.
+- **A8 (instructions)**: "🔊 Read task" on Arrival, Independent and Exit
+  (3 per lesson), reading the visible tier's task text; pupil-triggered only,
+  feature-detected, buttons hidden when the API is absent, never automatic.
+- **§3.8**: the pack's one-page sheet added as a **third** `.pp` print section
+  per lesson — retitled "Evidence capture sheet", PUPIL/EVIDENCE ID blank
+  kept, boxes: decision / observed / evidence / meaning / changed / Audience /
+  "what changed because of my voice" / TA comment, plus "point, say, draw or
+  scribe — writing is never required" (BUILD: no written-closure surface).
+  The tiered pack and the witness statement stay untouched beside it.
+  (First insertion nested it inside the second print section — caught by the
+  browser assert `.printpack > .pp == 3`, relocated; evidence, not proxies.)
+- Boot: ten lessons + window + index + guide + both matrices, zero errors.
