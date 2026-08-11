@@ -1,6 +1,7 @@
 name: GROW LAUNCH v3 generated-tree verification
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - claude/gl-estate-v3
@@ -20,6 +21,7 @@ on:
       - resources.json
       - _finish/ROUTES.md
       - _glv3/**
+      - .github/workflows/glv3-verify.yml
 
 permissions:
   contents: read
@@ -31,13 +33,19 @@ concurrency:
 
 jobs:
   verify-generated-tree:
-    if: ${{ hashFiles('GROW_Estate_v3/**/*.html') != '' && hashFiles('LAUNCH_Estate_v3/**/*.html') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Confirm generated estate inputs exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$(find GROW_Estate_v3 -type f -name '*.html' -print -quit)"
+          test -n "$(find LAUNCH_Estate_v3 -type f -name '*.html' -print -quit)"
 
       - name: Deterministic generated-tree static verification
         shell: bash
@@ -107,6 +115,15 @@ jobs:
           python _glv3/tools/positive_controls.py --repo "$GITHUB_WORKSPACE"
           after=$(git status --porcelain)
           test "$before" = "$after" || { git status --short; exit 1; }
+
+      - name: Install print and contact-sheet system dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils imagemagick
+          command -v pdftoppm
+          command -v montage
 
       - name: Install Chromium verifier dependencies
         shell: bash
