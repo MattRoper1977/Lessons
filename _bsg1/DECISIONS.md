@@ -216,3 +216,47 @@ every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
   (First insertion nested it inside the second print section — caught by the
   browser assert `.printpack > .pp == 3`, relocated; evidence, not proxies.)
 - Boot: ten lessons + window + index + guide + both matrices, zero errors.
+
+### §5 — reading-band pass (stages logged; one commit per stage)
+
+Instrument (stated once, used throughout): FK on visible text of `p`+`li`;
+screen = outside print containers; print = `.printpack` subtree **including**
+the assessor witness; style/script excluded; headings and telegraphic
+equipment lists excluded from rewriting because FK on fragments is
+meaningless (failure #13). Plain-text before/after prose diffs per file in
+`_bsg1/reading/`.
+
+- **Stage 1 (print)**: evidence targets rewritten as direct address; audience
+  box simplified; model-pair carriers shortened; arrival label compacted.
+  Print FK mean 6.24 → 5.39; C1 word deltas −3.5%…+2.1%.
+- **Stage 2 (independent)**: screen evidence targets aligned to the print
+  rewrites. The live independent task prose was already in band; the pack-era
+  "worst offender" figure (9.97/254w) described the pack's EVIDENCE stage,
+  not the live slide.
+- **Stage 3 (arrival)**: no separate commit — §3.1 wrote it in band from
+  birth (FK 1.9–3.7; W3B 5.0 AMBER already logged).
+- **Stage 4 (rest of body)**: participation note ("A different communication
+  route changes access…") → "You can change how you answer. The Science goal
+  stays the same." ×6 per file.
+- **Whole-pass table vs origin/main (574035bf)**: screen mean 7.10 → 6.10;
+  print mean 6.30 → 5.39. Word counts vs origin/main grew +41–69% — that is
+  Phase A's mandated additions (3+1 arrival, model pairs, evidence sheet,
+  bridges), not C1 edits; the ±15% honesty guard was applied to each C1 prose
+  edit against its own pre-edit surface, all within bounds. No lesson element
+  removed.
+- **AMBER, by name — every file, both surfaces, remains above FK 4.0**: the
+  floor is set by SoW LO statements (verbatim, e.g. "classify unfamiliar
+  animals using evidence about their body structure" ≈ FK 14 on 11 words),
+  protected vocabulary (vertebrate/invertebrate/classification/nutrient…),
+  the assessor witness (assessor-facing, deliberately untouched), and Stretch
+  routes serving the top of the band. Chasing FK ≤ 4.0 on these surfaces
+  would strip the science; per §5.5 they are left honest and named: W3A–W7B
+  screen 5.5–7.0, print 4.7–7.0 (W3B highest at 6.97 print / 6.95 screen).
+- **C2 is the arm serving RA 6–8** and is now mechanical, not aspirational:
+  every pupil-facing instruction on every changed surface has tier routes,
+  the point/say/demonstrate participation block, pupil-triggered read-aloud
+  (arrival/independent/exit), WORD HELP bridges, and adult-scribe wording on
+  the evidence sheet.
+- Decision — the assessor witness statement was excluded from prose editing:
+  it is the ASDAN/AQA-facing record surface; changing its wording risks the
+  banking route for zero pupil-facing gain.
