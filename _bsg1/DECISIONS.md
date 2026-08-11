@@ -151,3 +151,40 @@ every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
   Gate 7 is measured per file against each file's own pre-pass counts; after
   the rebuild every count is ≥ its own baseline (18→19/20, 21→22).
 - Headless Chromium boot: 10/10, zero page errors, tier toggle live.
+
+### §3.2 + §3.3 + A4 — starter commit, model limits, WORD HELP (GREEN, logged)
+
+- **Starter commit device** grafted into all ten starters after the puzzle box,
+  additive to the frame sequence. Deliberately **judgement-free** — the pack's
+  version marks a correct answer; a school starter assumes no prior knowledge
+  and receives predictions without judgement (the slide's own TA note), so the
+  graft commits and echoes, never marks. Hypotheses authored per live puzzle
+  (the pack's commit options fit the pack's QUESTION stage, not always the
+  live puzzle); W4A and W7B reuse pack option shapes directly.
+- **Model help/limit pair** added to every I Do 2 and to every print pack.
+  Wording from the pack's own `model_help`/`model_limit` fields, with these
+  adjustments: (a) **W6A limit rewritten** — the pack text contains "dietary"
+  (food-census hit); replaced with judgement-free wording, zero census delta
+  verified old-vs-new with one instrument; (b) carrier sentences lightly
+  shortened for band on W4B/W5A/W5B/W7A/W7B; science content unchanged.
+- **A7 WORD HELP**: vocab row (3 terms + hidden bridges) in every I Do 1;
+  global "Word help" toggle in the controls nav (`aria-pressed` stated);
+  formal term always dominant; TA fade route stated on the slide. Terms and
+  bridges from VOCAB_BRIDGE_MATRIX. Adjustments, AMBER by name: **W6A
+  "BALANCED DIET" declined** (food rule) — replaced by BALANCE with bridge "a
+  range across groups" (authored); "a simplified representation" bridge (W4B/
+  W6B MODEL) replaced by "a simple version of the real thing" — a plain-
+  language bridge must itself be plain; "substance in food used by the body"
+  → "a part of food the body uses"; "obtains" → "gets"; "organisms" →
+  "living things".
+- **A8 (partial, vocab)**: pupil-triggered 🔊 per term, `speechSynthesis`
+  feature-detected, silent degradation, never automatic. Instruction-level
+  read-aloud lands with §3.6.
+- **A4**: W7B Stretch independent + exit (screen and print, ×2 each) no longer
+  ask pupils to *predict* population outcomes; they now say what the chain
+  evidence *suggests*, with "A model suggests — it cannot prove."
+- No new animation (gate 18 n/a); no colour-only cue (held-state = border +
+  background + text change); all new controls labelled.
+- Functional boot 10/10: commit device judgement-free (exact feedback string
+  asserted), bridges hidden→shown on toggle, model pair present, 3 labelled
+  speak buttons, speakTerm safe without the API. Zero page errors.
