@@ -99,6 +99,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git switch --detach origin/main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
           timeout 85m node .glv3-audit-runtime/production_verify.mjs
           jq -e '.status == "DEPLOYED_VERIFIED" and (.failures | length) == 0' _glv3/production_evidence/PRODUCTION_GATES.json >/dev/null
           cat _glv3/production_evidence/PRODUCTION_GATES.md >> "$GITHUB_STEP_SUMMARY"
