@@ -346,3 +346,37 @@ the recorded logo asset) runs the builder against this branch after merge.
   delegation is **conditional: every gate green at the final tip, sentinels
   unmoved (50/113), otherwise no merge.** Rollback SHA to be re-recorded
   immediately before the merge.
+
+## Close order §2 — the remaining nine labs (all shipped, none AMBER-unbuilt)
+
+One commit per lesson, each gated before commit (functional drive in real
+Chromium, food census delta = 0 vs 574035bf, tier counts ≥ baseline, school
+grammar ordered, print parity, `matchMedia` = 0, printpack region asserted
+**byte-identical** by the generator before writing):
+
+| Lesson | Lab | Mechanism | Notes |
+|---|---|---|---|
+| W3A | Creature Evidence Lab | sort | fish/crab/frog/worm → VERTEBRATE / INVERTEBRATE |
+| W3B | Creature Evidence Lab | sort | harder cases: snake/snail/mouse/beetle |
+| W4B | Muscle Pair Lab | muscle | the approved W4A port, ids re-pointed |
+| W5A | Nutrition Evidence Lab | sort | nutrient evidence → ENERGY / GROWTH & REPAIR / BODY FUNCTIONS |
+| W5B | Nutrition Evidence Lab | sort | claim-evidence card set |
+| W6A | Food Pattern Lab | sort | supplied classifications → four groups; criterion language, zero judgement |
+| W6B | Food Pattern Lab | sort | design-brief card set |
+| W7A | Habitat Link Lab | chain | LEAF and GRASS chains, worded-arrow rule ported |
+| W7B | Habitat Link Lab | chain | starts on GRASS chain per pack data |
+
+- All content from the loose inlined v2 build's own `lessonData` (items,
+  targets, scenarios) — mechanical copies, nothing invented; pack stage names
+  ship nowhere.
+- The pack's pointer-drag route was **not ported** (close order: button-only;
+  the approved W4A pattern had no drag) — the pack's own line "the Science is
+  the decision, not dragging accuracy" is honoured by having no dragging.
+- Divergence log: sort/chain "predict-commit → test" maps to "choose evidence
+  → commit a group → check"; the freeze prompts are authored per lesson from
+  each lesson's rule (W6 prompts use criterion/classification language, never
+  food judgement).
+- Generator defect caught by its own anchor assert: W6/W7 widgets end with a
+  trailing ↺ Reset button after the status div; anchor widened, W6A/W6B/W7A/
+  W7B then transplanted clean. No file was touched by the failed casts (the
+  generator writes only after all asserts pass).
