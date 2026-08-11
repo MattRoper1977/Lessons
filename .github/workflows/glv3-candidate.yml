@@ -7,6 +7,7 @@ on:
       - .github/workflows/glv3-candidate.yml
       - _glv3/tools/run_registered_candidate.sh
       - _glv3/tools/prepare_registered_candidate.py
+      - _glv3/tools/browser_verify.mjs
       - _glv3/tools/finalize_filename_references.py
   pull_request:
     branches: [main]
@@ -35,27 +36,99 @@ jobs:
           fetch-depth: 0
           ref: claude/gl-estate-v3
 
-      - name: Bind the real event head and prepare one-run replay
+      - name: Converge and register the immutable candidate runner
+        id: converge
         env:
-          GLV3_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          GLV3_EVENT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: |
           set -euo pipefail
-          python _glv3/tools/prepare_registered_candidate.py
+          test "$(git rev-parse HEAD)" = "$GLV3_EVENT_HEAD"
+
+          # One-time convergence only. The committed runner and verifier become
+          # the execution authority; the workflow verifies them thereafter.
+          if [[ -f _glv3/tools/prepare_registered_candidate.py ]]; then
+            python _glv3/tools/prepare_registered_candidate.py
+            python - <<'PY'
+          from pathlib import Path
+
+          runner_path = Path('_glv3/tools/run_registered_candidate.sh')
+          text = runner_path.read_text('utf-8')
+
+          start_marker = "python - <<'PYNORM'\n"
+          end_marker = "\nPYNORM\n"
+          start = text.find(start_marker)
+          end = text.find(end_marker, start)
+          if start < 0 or end < 0:
+              raise SystemExit('prepared runner filename-normalisation block was not found')
+          end += len(end_marker)
+          text = (
+              text[:start]
+              + 'python _glv3/tools/finalize_filename_references.py --repo "$ROOT"\n'
+              + text[end:]
+          )
+          text = text.replace('set -euxo pipefail', 'set -euo pipefail', 1)
+          runner_path.write_text(text, 'utf-8')
+          PY
+            rm -f _glv3/tools/prepare_registered_candidate.py
+
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add _glv3/tools/run_registered_candidate.sh \
+              _glv3/tools/browser_verify.mjs \
+              _glv3/tools/prepare_registered_candidate.py
+            git diff --cached --quiet && {
+              echo 'Expected one-time runner convergence changes were not produced.' >&2
+              exit 1
+            }
+            git commit -m 'ci: converge GLV3 candidate runner'
+            git push origin HEAD:claude/gl-estate-v3
+          fi
+
+          START_SHA="$(git rev-parse HEAD)"
           python - <<'PY'
           from pathlib import Path
-          path=Path('_glv3/tools/run_registered_candidate.sh')
-          text=path.read_text()
-          old='python _glv3/tools/deploy.py'
-          new='python _glv3/tools/deploy.py\npython _glv3/tools/finalize_filename_references.py --repo "$ROOT"'
-          if text.count(old) != 1:
-              raise SystemExit(f'candidate runner deploy command count={text.count(old)}')
-          path.write_text(text.replace(old,new,1))
+
+          runner = Path('_glv3/tools/run_registered_candidate.sh').read_text('utf-8')
+          primary = (
+              'GLV3_GROW_SRC=/tmp/glv3-packs/grow \\\n'
+              'GLV3_LAUNCH_SRC=/tmp/glv3-packs/launch \\\n'
+              'python _glv3/tools/deploy.py\n'
+              'python _glv3/tools/finalize_filename_references.py --repo "$ROOT"\n'
+          )
+          if primary not in runner:
+              raise SystemExit('registered runner does not contain the direct primary generation/finalisation flow')
+          if runner.count('python _glv3/tools/deploy.py') != 2:
+              raise SystemExit(f"registered runner deploy command count={runner.count('python _glv3/tools/deploy.py')}")
+          if runner.count('python _glv3/tools/deploy.py --rerun-live-privacy') != 1:
+              raise SystemExit('exact-tree privacy replay is missing or duplicated')
+          if runner.count('python _glv3/tools/finalize_filename_references.py --repo "$ROOT"') != 1:
+              raise SystemExit('filename finaliser placement is missing or duplicated')
+          if 'PYNORM' in runner:
+              raise SystemExit('obsolete embedded normaliser remains in registered runner')
+          if 'set -euxo pipefail' in runner:
+              raise SystemExit('shell xtrace unexpectedly remains enabled')
+
+          browser = Path('_glv3/tools/browser_verify.mjs').read_text('utf-8')
+          start = browser.find("const TEST_TOKEN = '_OUTSTANDING_V3_TEST';")
+          end = browser.find('const allHtml = [', start)
+          if start < 0 or end < 0:
+              raise SystemExit('browser filename verification block was not found')
+          block = browser[start:end]
+          if 'source_lesson_paths_with_token' not in block:
+              raise SystemExit('browser verifier lacks the non-vacuous 80-source-path proof')
+          if 'fs.writeFileSync(file' in block:
+              raise SystemExit('browser verifier still mutates generated pages')
           PY
-          test "$(git rev-parse HEAD)" = "$GLV3_EXPECTED_HEAD"
-          grep -q 'source_lesson_paths_with_token' _glv3/tools/browser_verify.mjs
-          grep -q '/tmp/glv3-diagnostics/browser-primary.log' _glv3/tools/run_registered_candidate.sh
-          grep -q 'finalize_filename_references.py' _glv3/tools/run_registered_candidate.sh
+          bash -n _glv3/tools/run_registered_candidate.sh
+          python -m py_compile _glv3/tools/finalize_filename_references.py
+          test ! -e _glv3/tools/prepare_registered_candidate.py
+          test "$(git rev-parse refs/remotes/origin/claude/gl-estate-v3)" = "$START_SHA" || {
+            git fetch --no-tags origin refs/heads/claude/gl-estate-v3:refs/remotes/origin/claude/gl-estate-v3
+            test "$(git rev-parse refs/remotes/origin/claude/gl-estate-v3)" = "$START_SHA"
+          }
+          printf 'candidate_start_sha=%s\n' "$START_SHA" >> "$GITHUB_OUTPUT"
+          printf 'registered_candidate_start=%s\n' "$START_SHA"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -80,7 +153,7 @@ jobs:
         id: candidate
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          GLV3_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          GLV3_EXPECTED_HEAD: ${{ steps.converge.outputs.candidate_start_sha }}
         shell: bash
         run: bash _glv3/tools/run_registered_candidate.sh
 
@@ -88,7 +161,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: glv3-candidate-${{ steps.candidate.outputs.candidate_sha || github.event.pull_request.head.sha || github.sha }}
+          name: glv3-candidate-${{ steps.candidate.outputs.candidate_sha || steps.converge.outputs.candidate_start_sha || github.event.pull_request.head.sha || github.sha }}
           path: |
             _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
             _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
@@ -117,7 +190,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           JOB_STATUS: ${{ job.status }}
-          START_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          START_SHA: ${{ steps.converge.outputs.candidate_start_sha || github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: |
           set -euo pipefail
