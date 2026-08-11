@@ -117,9 +117,10 @@ with the tips above. Residual for Matt: delete each in the GitHub UI or run
 
 ## Expected invariance change set
 
-P1 53 + P2 11 + P3 1 + this file = **66 files**. P4 contributes 0 (not-a-defect),
-P5 contributes 0 (world 1). Sentinels expected unmoved: closure line 113,
-`ll-g:loop-mark` 50, delta 0.
+P1 53 + P2 11 + P3 1 + this file, **minus the P1∩P3 overlap** (the D&T W2 file is
+one of the 53) = **65 distinct files**. Measured at gate time: 65 exactly. P4
+contributes 0 (not-a-defect), P5 contributes 0 (world 1). Sentinels expected
+unmoved: closure line 113, `ll-g:loop-mark` 50, delta 0.
 
 ## The one thing wrong in the completion brief
 
