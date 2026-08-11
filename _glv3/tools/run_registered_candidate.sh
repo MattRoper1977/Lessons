@@ -11,6 +11,45 @@ export PYTHONDONTWRITEBYTECODE=1
 log() { printf '\n== %s ==\n' "$*"; }
 fail() { printf 'GLV3 candidate failure: %s\n' "$*" >&2; exit 1; }
 
+assert_exact_non_evidence_clean() {
+  local phase="$1"
+  local report="/tmp/glv3-diagnostics/exact-${phase}.log"
+  local unexpected
+  {
+    printf 'phase=%s\nhead=%s\n' "$phase" "$(git rev-parse HEAD)"
+    printf '%s\n' '--- git status --short ---'
+    git status --short
+    for tracked in resources.json routes.json; do
+      printf '%s\n' "--- ${tracked} ---"
+      if [[ -f "$tracked" ]]; then
+        printf 'head_blob=%s\n' "$(git rev-parse "HEAD:${tracked}")"
+        printf 'worktree_blob=%s\n' "$(git hash-object "$tracked")"
+        python - "$tracked" <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+b = p.read_bytes()
+print(f"bytes={len(b)} lf={b.count(chr(10).encode())} crlf={b.count(chr(13).encode()+chr(10).encode())} trailing_newline={b.endswith(chr(10).encode())}")
+PY
+        if git diff --ignore-space-at-eol --quiet HEAD -- "$tracked"; then
+          printf 'ignore_space_at_eol=identical\n'
+        else
+          printf 'ignore_space_at_eol=different\n'
+        fi
+        git diff --numstat HEAD -- "$tracked" || true
+        git diff --no-ext-diff --unified=3 HEAD -- "$tracked" | sed -n '1,260p' || true
+      else
+        printf 'missing=true\n'
+      fi
+    done
+  } >"$report" 2>&1
+  cat "$report"
+  unexpected="$(git diff --name-only HEAD | grep -v '^_glv3/' || true)"
+  if [[ -n "$unexpected" ]]; then
+    fail "exact-tree phase ${phase} changed non-evidence paths: ${unexpected}"
+  fi
+}
+
 log "Bind current branch and integration base"
 git fetch --no-tags origin "refs/heads/main:refs/remotes/origin/main" "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
 BASE_SHA="$(git rev-parse refs/remotes/origin/main)"
@@ -147,6 +186,7 @@ log "Re-prove exact committed candidate tree"
 rm -rf /tmp/glv3-exact
 git worktree add --detach /tmp/glv3-exact "$CANDIDATE_SHA"
 cd /tmp/glv3-exact
+assert_exact_non_evidence_clean "after-checkout"
 test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
 test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
 python - <<'PY'
@@ -159,10 +199,12 @@ with zipfile.ZipFile(archive) as bundle:
     assert bundle.testzip() is None
 PY
 python _glv3/tools/deploy.py --rerun-live-privacy
+assert_exact_non_evidence_clean "after-privacy"
 BEFORE_POSITIVE="$(git status --porcelain)"
 python _glv3/tools/positive_controls.py --repo "$PWD"
 AFTER_POSITIVE="$(git status --porcelain)"
 test "$BEFORE_POSITIVE" = "$AFTER_POSITIVE"
+assert_exact_non_evidence_clean "after-positive-controls"
 ln -s "$ROOT/node_modules" node_modules
 python -m http.server 4174 --bind 127.0.0.1 --directory "$PWD" >/tmp/glv3-diagnostics/http-exact.log 2>&1 &
 EXACT_SERVER=$!
@@ -175,14 +217,14 @@ for attempt in $(seq 1 60); do
 done
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
   timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/browser-exact.log
+assert_exact_non_evidence_clean "after-browser"
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
   timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/chips-exact.log
 cleanup_exact
 trap - EXIT
 rm node_modules
+assert_exact_non_evidence_clean "after-chip-gate"
 test -z "$(git diff --name-only HEAD -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
-UNEXPECTED="$(git diff --name-only HEAD | grep -v '^_glv3/' || true)"
-test -z "$UNEXPECTED" || fail "exact-tree checks changed non-evidence paths: $UNEXPECTED"
 git diff --check
 
 log "Publish SHA-bound success statuses"
