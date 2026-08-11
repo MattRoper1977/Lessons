@@ -303,6 +303,26 @@ Three rules learned building the first one:
    regenerated, print the collision list explicitly — **empty or not**. A silent pass is
    indistinguishable from a check that never ran.
 
+
+### The geometry gate (2026-08-11) — the root must be the DRIVE's root
+
+A repo-shaped pack has now been rejected twice (30 Jul, 11 Aug). The mirror builder
+therefore carries a **blocking assertion, before anything is zipped**: every root
+folder of the assembled tree must be one of the drive's root folders, byte for byte
+(spaces and parentheses included), plus the three `(Alternative Route)` estates and
+`_New_This_Rebuild`/`_Pack_Notes`; root files are limited to the four hub pages,
+`README_FIRST.txt`, `CHANGES_SINCE.html` and `PLACEMENT_GUIDE.txt`. Any repo-tree
+name at root — `Art_Teesside`, `BUILD_ASDAN`, `GROW_ASDAN`, `LAUNCH_ASDAN`,
+`Humanities_Teesside`, `Tutor_Time`, `Build`, `Grow`, `Launch`, `*_Estate_v3` — is an
+instant FAIL, and folders that hold the pack's content are asserted **present** so a
+silently dropped subject also fails. The gate prints its comparison table on every
+build. `geometry_gate()` in `tools/build_staff_pack.py` is the implementation; the
+allowed list lives beside it as `DRIVE_ROOT_FOLDERS`.
+
+One consequence worth recording: `FONT_LICENCES.txt` moved from the pack root into
+`Tutor Time BF_BV_KCSIE/`, the folder holding both font-embedding pages — the root
+list does not admit it, and the licence belongs beside the redistribution it covers.
+
 ---
 
 ## What this recipe cannot tell you

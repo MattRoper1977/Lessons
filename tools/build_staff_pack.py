@@ -128,6 +128,75 @@ SCI_V3_DOCS = {
 # PACK-5 (R2): root folder for in-scope content TAXONOMY_MAP has no home for.
 QUARANTINE = "_New_This_Rebuild/"
 
+# GEOMETRY GATE (2026-08-11): the assembled root must be the DRIVE's root, byte for
+# byte. This exists because a repo-shaped pack has now been rejected twice (30 Jul,
+# 11 Aug); a builder that can zip Art_Teesside/ or BUILD_ASDAN/ at root must fail
+# loudly instead. Folders may be ABSENT (the pack ships nothing into Computing/ etc.);
+# nothing outside this list may be PRESENT.
+DRIVE_ROOT_FOLDERS = {
+    "Art", "ASDAN PEQ", "Computing", "Curriculum Intent and Rationale", "English",
+    "Feedback and Marking", "grow-anim",
+    "Humanities Lessons (Whiteboards and resources)", "Lesson Slideshows_Resources",
+    "LundyLoop", "Science_Teesside", "SMSC and BV Calendar Evidence",
+    "Tutor Time BF_BV_KCSIE", "Weekly Plans",
+    "GROW Estate v3 (Alternative Route)", "LAUNCH Estate v3 (Alternative Route)",
+    # Ruled in by Matt 11 Aug (extension of R1): the third, structurally identical
+    # estate, installed 10 Aug. Peer of the two the corrective list names.
+    "BUILD Estate v3 (Alternative Route)",
+    "_New_This_Rebuild", "_Pack_Notes",
+}
+# The repo-tree names whose appearance at root IS the failure being gated against.
+REPO_ROOT_NAMES = {
+    "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN",
+    "Humanities_Teesside", "Tutor_Time", "Build", "Grow", "Launch",
+    "DT_Community_Upcycling", "GROW_Estate_v3", "LAUNCH_Estate_v3", "BUILD_Estate_v3",
+}
+DRIVE_ROOT_FILES = {
+    "art_teesside.html", "build_asdan.html", "build_dt_upcycling.html",
+    "humanities_teesside.html", "README_FIRST.txt", "CHANGES_SINCE.html",
+    "PLACEMENT_GUIDE.txt",
+}
+# These drive folders hold this pack's content, so their absence means assembly
+# silently dropped a subject — required present.
+DRIVE_ROOT_REQUIRED = {
+    "ASDAN PEQ", "Art", "Science_Teesside",
+    "Humanities Lessons (Whiteboards and resources)", "Tutor Time BF_BV_KCSIE",
+    "grow-anim", "LundyLoop",
+    "GROW Estate v3 (Alternative Route)", "LAUNCH Estate v3 (Alternative Route)",
+    "BUILD Estate v3 (Alternative Route)",
+}
+
+
+def geometry_gate(pack):
+    """Assert the assembled root is the drive root. Returns (fails, table_lines)."""
+    fails, table = [], []
+    entries = sorted(pack.iterdir(), key=lambda p: (p.is_file(), p.name.lower()))
+    table.append(f"{'root entry':<52} {'kind':<7} verdict")
+    table.append("-" * 78)
+    for e in entries:
+        if e.is_dir():
+            if e.name in DRIVE_ROOT_FOLDERS:
+                v = "OK - drive folder"
+            elif e.name in REPO_ROOT_NAMES:
+                v = "FAIL - REPO-TREE NAME AT ROOT"
+                fails.append(f"geometry: repo-tree folder at root: {e.name}")
+            else:
+                v = "FAIL - not a drive root folder"
+                fails.append(f"geometry: unknown root folder: {e.name}")
+            table.append(f"{e.name + '/':<52} {'folder':<7} {v}")
+        else:
+            v = "OK - allowed root file" if e.name in DRIVE_ROOT_FILES \
+                else "FAIL - not an allowed root file"
+            if e.name not in DRIVE_ROOT_FILES:
+                fails.append(f"geometry: unexpected root file: {e.name}")
+            table.append(f"{e.name:<52} {'file':<7} {v}")
+    present = {e.name for e in entries if e.is_dir()}
+    for req in sorted(DRIVE_ROOT_REQUIRED):
+        if req not in present:
+            fails.append(f"geometry: required drive folder ABSENT: {req}")
+            table.append(f"{req + '/':<52} {'folder':<7} FAIL - REQUIRED, ABSENT")
+    return fails, table
+
 # PACK-5: repo prefix -> drive folder for the three alternative-route estates.
 ESTATE_V3 = {
     "GROW_Estate_v3/":   "GROW Estate v3 (Alternative Route)/",
@@ -851,7 +920,13 @@ def write_font_licences(pack, families):
         except Exception as e:
             out += [f"  (could not fetch: {e})",
                     f"  https://raw.githubusercontent.com/google/fonts/main/ofl/{slug}/OFL.txt", ""]
-    (pack / "FONT_LICENCES.txt").write_text("\n".join(out) + "\n", encoding="utf-8")
+    # GEOMETRY GATE: the drive root admits a fixed set of files, and this is not one
+    # of them. Both font-embedding pages live in Tutor Time BF_BV_KCSIE/, so the
+    # licence ships THERE — redistribution and licence stay in the same folder, and
+    # the root stays byte-identical to the drive's.
+    dest = pack / "Tutor Time BF_BV_KCSIE" / "FONT_LICENCES.txt"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
 # PACK-5 --------------------------------------------------------------------
@@ -1388,7 +1463,8 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
            "R4 — VENDORED GOOGLE FONTS. KEPT.", "",
            "  Two pages fetched webfonts. An offline pack makes no network request, so the",
            "  fonts are embedded, latin/latin-ext only. Embedding is redistribution, so",
-           "  FONT_LICENCES.txt ships at the pack root with the full text. All six families",
+           "  FONT_LICENCES.txt ships beside the two embedding pages (Tutor Time folder)",
+           "  with the full text. All six families",
            "  verified SIL OFL 1.1 against the ofl/ directory of google/fonts, per family —",
            "  a handful of Google families are Apache-2.0 and the directory is the authority.",
            "  Not reopened as vendor-vs-drop.",
@@ -1675,6 +1751,14 @@ def mirror_main(logo, out):
         all_fails.append(f"GATE C9: logo replaced {logo_pages} marks, expected 140")
     if disk_logos < logo_pages:
         all_fails.append(f"GATE C9: only {disk_logos} pages carry the logo on disk")
+    # ---- GEOMETRY GATE: blocks zipping. A repo-shaped root has been rejected
+    # twice; this is the assertion that a third one cannot ship.
+    geo_fails, geo_table = geometry_gate(pack)
+    print("\nGEOMETRY GATE - assembled root vs the drive root")
+    for line in geo_table: print("  " + line)
+    print(f"  GEOMETRY: {'PASS - root is the drive root' if not geo_fails else str(len(geo_fails)) + ' FAILURES'}")
+    all_fails += geo_fails
+
     for f in all_fails[:20]: print("  FAIL:", f)
     if not all_fails: print("  all checks pass")
 
@@ -2091,7 +2175,7 @@ def vendor_fonts(text, cache):
     assert blocks, f"font vendoring produced nothing for {hrefs[:1]}"
     style = ("\n<style data-vendored-fonts=\"progress-schools\">\n/* "
              + ", ".join(sorted(families)) + " -- vendored from Google Fonts under the\n"
-             "   SIL Open Font License 1.1. Full licence text: FONT_LICENCES.txt at the pack root.\n"
+             "   SIL Open Font License 1.1. Full licence text: FONT_LICENCES.txt in this folder.\n"
              "   Inlined so this pack makes no network request. */\n"
              + "\n".join(blocks) + "\n</style>")
     n0 = len(text)
