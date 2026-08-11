@@ -1,0 +1,275 @@
+name: GLV3 final evidence publication trace
+
+on:
+  push:
+    branches:
+      - audit/glv3-final-evidence-publication-2026-08-11
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  deployments: read
+  pages: read
+  pull-requests: read
+  statuses: write
+
+jobs:
+  trace-final-publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      FINAL_MAIN_SHA: 58be4babca1577d13c5b211d9b2d98847002d438
+      EVIDENCE_CLOSEOUT_SHA: 25e606d5ec92a9de8b7d2b594325a1288f00a648
+      FEATURE_MERGE_SHA: a9dc6fc8214ff16a5f9effe183ca7329f4f7f615
+      PRODUCTION_URL: https://madebymatt.uk/Lessons/
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Trace final main to successful Pages deployment
+        id: trace
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p trace/deployment-statuses trace/live
+
+          api() {
+            curl --fail-with-body --silent --show-error --location \
+              --retry 5 --retry-delay 2 --retry-all-errors \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/$1"
+          }
+
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main)" = "$FINAL_MAIN_SHA"
+          git merge-base --is-ancestor "$FEATURE_MERGE_SHA" "$FINAL_MAIN_SHA"
+          git merge-base --is-ancestor "$EVIDENCE_CLOSEOUT_SHA" "$FINAL_MAIN_SHA"
+          api "git/ref/heads/main" > trace/main-ref.json
+          api "pulls/110" > trace/evidence-pr.json
+          api "pages" > trace/pages.json
+
+          found=false
+          for _ in $(seq 1 180); do
+            api "actions/runs?head_sha=${FINAL_MAIN_SHA}&per_page=100" > trace/actions-runs.json
+            api "deployments?sha=${FINAL_MAIN_SHA}&per_page=100" > trace/deployments.json
+            rm -f trace/deployment-statuses/*.json
+            while IFS= read -r deployment_id; do
+              [[ -n "$deployment_id" ]] || continue
+              api "deployments/${deployment_id}/statuses?per_page=100" \
+                > "trace/deployment-statuses/${deployment_id}.json"
+            done < <(jq -r '.[].id' trace/deployments.json)
+
+            if jq -e --arg sha "$FINAL_MAIN_SHA" '
+              [.workflow_runs[]
+               | select(.head_sha == $sha)
+               | select(.conclusion == "success")
+               | select((.path // "" | ascii_downcase | contains("pages-build-deployment"))
+                     or ((.name // "" | ascii_downcase | contains("pages"))
+                     and (.name // "" | ascii_downcase | contains("deployment"))))]
+              | length > 0
+            ' trace/actions-runs.json >/dev/null; then
+              for status_file in trace/deployment-statuses/*.json; do
+                [[ -f "$status_file" ]] || continue
+                if jq -e '.[0].state == "success"' "$status_file" >/dev/null; then
+                  found=true
+                  break
+                fi
+              done
+            fi
+            [[ "$found" = true ]] && break
+            sleep 5
+          done
+          [[ "$found" = true ]]
+
+          curl --fail-with-body --silent --show-error --location \
+            --retry 6 --retry-delay 2 --retry-all-errors \
+            -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+            "${PRODUCTION_URL}?__glv3_sha=${FINAL_MAIN_SHA}" > trace/live/index.html
+          curl --fail-with-body --silent --show-error --location \
+            --retry 6 --retry-delay 2 --retry-all-errors \
+            -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+            "${PRODUCTION_URL}GROW_Estate_v3/index.html?__glv3_sha=${FINAL_MAIN_SHA}" \
+            > trace/live/grow.html
+          curl --fail-with-body --silent --show-error --location \
+            --retry 6 --retry-delay 2 --retry-all-errors \
+            -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+            "${PRODUCTION_URL}LAUNCH_Estate_v3/index.html?__glv3_sha=${FINAL_MAIN_SHA}" \
+            > trace/live/launch.html
+          curl --fail-with-body --silent --show-error --location \
+            --retry 6 --retry-delay 2 --retry-all-errors \
+            -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+            "${PRODUCTION_URL}resources.json?__glv3_sha=${FINAL_MAIN_SHA}" \
+            > trace/live/resources.json
+
+          grep -Fq '34 alternative lesson HTML files' trace/live/grow.html
+          grep -Fq '46 alternative lesson HTML files' trace/live/launch.html
+          test "$(jq '[.[] | select((.id // "") | startswith("glv3-"))] | length' trace/live/resources.json)" -eq 88
+          test "$(jq '[.[] | select((.id // "") | startswith("glv3-")) | select((.type // "" | ascii_downcase) == "lesson")] | length' trace/live/resources.json)" -eq 80
+
+          python - <<'PY'
+          from __future__ import annotations
+          import json, os, re
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          t = Path('trace')
+          main_sha = os.environ['FINAL_MAIN_SHA']
+          evidence_sha = os.environ['EVIDENCE_CLOSEOUT_SHA']
+          feature_sha = os.environ['FEATURE_MERGE_SHA']
+          production_url = os.environ['PRODUCTION_URL']
+
+          def load(path):
+              return json.loads(Path(path).read_text('utf-8'))
+
+          main_ref = load(t / 'main-ref.json')
+          pr = load(t / 'evidence-pr.json')
+          pages = load(t / 'pages.json')
+          runs = load(t / 'actions-runs.json').get('workflow_runs', [])
+          deployments = load(t / 'deployments.json')
+
+          assert main_ref['object']['sha'] == main_sha
+          assert pr.get('merged') is True
+          assert pr.get('head', {}).get('sha') == evidence_sha
+          assert pr.get('merge_commit_sha') == main_sha
+
+          pages_runs = [r for r in runs if r.get('head_sha') == main_sha and r.get('conclusion') == 'success' and (
+              'pages-build-deployment' in str(r.get('path', '')).lower()
+              or ('pages' in str(r.get('name', '')).lower() and 'deployment' in str(r.get('name', '')).lower())
+          )]
+          assert pages_runs
+          pages_run = max(pages_runs, key=lambda r: (r.get('updated_at') or '', int(r.get('id') or 0)))
+
+          successful = []
+          all_deployments = []
+          for dep in deployments:
+              statuses_path = t / 'deployment-statuses' / f"{dep['id']}.json"
+              statuses = load(statuses_path) if statuses_path.exists() else []
+              latest = statuses[0] if statuses else None
+              row = {
+                  'id': dep.get('id'), 'sha': dep.get('sha'), 'ref': dep.get('ref'),
+                  'task': dep.get('task'), 'environment': dep.get('environment'),
+                  'created_at': dep.get('created_at'), 'updated_at': dep.get('updated_at'),
+                  'latest_status': latest,
+              }
+              all_deployments.append(row)
+              if dep.get('sha') == main_sha and latest and latest.get('state') == 'success':
+                  successful.append((dep, latest))
+          assert successful
+          preferred = [x for x in successful if 'pages' in str(x[0].get('environment', '')).lower()
+                       or production_url.rstrip('/') in str(x[1].get('environment_url', ''))]
+          dep, status = max(preferred or successful,
+                            key=lambda x: (x[1].get('updated_at') or x[1].get('created_at') or '', int(x[0].get('id') or 0)))
+          assert dep.get('sha') == main_sha
+
+          links = ' '.join(str(status.get(k) or '') for k in ('log_url', 'target_url'))
+          match = re.search(r'/actions/runs/(\d+)', links)
+          linked_run_id = int(match.group(1)) if match else None
+          if linked_run_id is not None:
+              assert linked_run_id == int(pages_run['id'])
+
+          resources = load(t / 'live/resources.json')
+          glv3 = [r for r in resources if str(r.get('id', '')).startswith('glv3-')]
+          lessons = [r for r in glv3 if str(r.get('type', '')).lower() == 'lesson']
+          assert len(glv3) == 88 and len(lessons) == 80
+
+          proof = {
+              'sentinel': 'grow-launch-v3-prompt-c-final-evidence-publication-2026-08-11',
+              'generated_at_utc': datetime.now(timezone.utc).isoformat(),
+              'status': 'PASS',
+              'feature_merge_sha': feature_sha,
+              'evidence_closeout_sha': evidence_sha,
+              'final_main_sha': main_sha,
+              'published_sha': dep['sha'],
+              'deployment_run': {
+                  'id': pages_run['id'], 'name': pages_run.get('name'),
+                  'path': pages_run.get('path'), 'head_sha': pages_run.get('head_sha'),
+                  'status': pages_run.get('status'), 'conclusion': pages_run.get('conclusion'),
+                  'created_at': pages_run.get('created_at'),
+                  'run_started_at': pages_run.get('run_started_at'),
+                  'updated_at': pages_run.get('updated_at'),
+                  'html_url': pages_run.get('html_url'),
+              },
+              'deployment': {
+                  'id': dep.get('id'), 'environment': dep.get('environment'),
+                  'ref': dep.get('ref'), 'sha': dep.get('sha'), 'task': dep.get('task'),
+                  'created_at': dep.get('created_at'), 'updated_at': dep.get('updated_at'),
+                  'status_id': status.get('id'), 'status': status.get('state'),
+                  'status_created_at': status.get('created_at'),
+                  'status_updated_at': status.get('updated_at'),
+                  'environment_url': status.get('environment_url'),
+                  'log_url': status.get('log_url'),
+                  'linked_run_id': linked_run_id,
+              },
+              'pages': pages,
+              'live_continuity': {
+                  'root_observable': True,
+                  'grow_marker': True,
+                  'launch_marker': True,
+                  'glv3_catalogue_entries': len(glv3),
+                  'glv3_lessons': len(lessons),
+              },
+              'all_final_sha_runs': [
+                  {k: r.get(k) for k in ('id','name','path','event','status','conclusion','head_sha','html_url','created_at','updated_at')}
+                  for r in runs if r.get('head_sha') == main_sha
+              ],
+              'deployment_evidence': all_deployments,
+          }
+          assert proof['published_sha'] == main_sha
+          (t / 'GLV3_FINAL_EVIDENCE_PUBLICATION.json').write_text(json.dumps(proof, indent=2, sort_keys=True) + '\n', 'utf-8')
+          (t / 'GLV3_FINAL_EVIDENCE_PUBLICATION.md').write_text('\n'.join([
+              '# GLV3 final evidence publication proof', '',
+              f"- Evidence closeout SHA: `{evidence_sha}`",
+              f"- Final main SHA: `{main_sha}`",
+              f"- Published SHA: `{dep['sha']}`",
+              f"- Pages run: `{pages_run['id']}`",
+              f"- Deployment: `{dep['id']}`",
+              f"- Environment: `{dep.get('environment')}`",
+              f"- Completed: `{status.get('updated_at') or status.get('created_at')}`",
+              f"- Production URL: `{production_url}`",
+              '- GROW and LAUNCH live continuity: PASS',
+              '- Live GLV3 catalogue: 88 entries / 80 lessons', '',
+          ]), 'utf-8')
+          print(json.dumps(proof, indent=2, sort_keys=True))
+          PY
+
+          cat trace/GLV3_FINAL_EVIDENCE_PUBLICATION.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload final publication trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-final-evidence-publication-${{ github.run_id }}
+          path: trace/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Bind final publication result to final main SHA
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRACE_OUTCOME: ${{ steps.trace.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state=failure
+          description='Final GLV3 evidence publication trace failed'
+          if [[ "$TRACE_OUTCOME" = success ]]; then
+            state=success
+            description='Final evidence merge Pages SHA and live GLV3 continuity proven'
+          fi
+          target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          payload="$(jq -nc --arg state "$state" --arg context 'glv3/final-evidence-publication' \
+            --arg description "$description" --arg target_url "$target_url" \
+            '{state:$state,context:$context,description:$description,target_url:$target_url}')"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${FINAL_MAIN_SHA}" \
+            --data "$payload" >/dev/null
