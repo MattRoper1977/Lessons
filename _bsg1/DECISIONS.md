@@ -96,3 +96,25 @@ Instrument notes first, because two scanners failed validation on first cast:
 
 Baseline for gate 7 (tier integrity), unit = case-insensitive substring per file:
 every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
+
+### A1 — Practicals & Equipment Matrix (GREEN, logged)
+
+- Created `Science_Teesside/Build/v3_40min/BUILD_SCIENCE_PRACTICALS_MATRIX.html`
+  (Made by Matt) and `..._PROGRESS_SCHOOLS.html` (rebranded per REBRAND.md:
+  strip, `x-brand` meta, exact `>by madebymatt.uk<` credit, residue sweep run
+  with zero remaining MBM forms) in the same commit. Linked from `index.html`
+  beside the Teacher Guide.
+- **Source defect corrected**: the pack's EQUIPMENT_MATRIX Preparation column
+  repeats "W4 pre-punch/secure joint" in all ten rows — a template fault.
+  Preparation re-derived per lesson from each row's own equipment. AMBER by
+  name: preparation text for W3A/W3B/W5A/W5B/W6A/W6B/W7A/W7B is authored, not
+  pack-sourced.
+- **Digital alternative column**: the pack names its own labs; the estate's
+  real digital alternatives are the live We Do 2 widgets, so the column names
+  those instead. (If the A6 specimen ships, W4A's row stays true either way.)
+- **AMBER — Progress Schools lockup**: the real logo binary is deliberately
+  out of git (SHA in REBRAND.md). The PS variant ships with the strip and text
+  branding only; the lockup must be added from Matt's recorded asset before
+  the file leaves the estate. No placeholder logo was drawn (REBRAND rule 1).
+- No CLEAPSS approval claimed; local proportionate RA stated; adult does all
+  cutting/piercing; W5–W7 printed fictional resources only.
