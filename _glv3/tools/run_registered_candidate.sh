@@ -5,6 +5,7 @@ ROOT="$(pwd)"
 BRANCH="claude/gl-estate-v3"
 HISTORIC="1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
 STARTING_SHA="$(git rev-parse HEAD)"
+RUNNER_BLOB_SHA="$(git hash-object _glv3/tools/run_registered_candidate.sh)"
 export PYTHONDONTWRITEBYTECODE=1
 
 log() { printf '\n== %s ==\n' "$*"; }
@@ -25,6 +26,7 @@ test -s _glv3/tools/finalize_candidate_bundle.py
 grep -q 'Deterministic Humanities print-surface reconstruction' _glv3/tools/bs4.py
 grep -q 'Source-authored PEQ code provenance' _glv3/tools/bs4.py
 grep -q 'TEST-FILENAME REFERENCES' _glv3/tools/shutil.py
+grep -q 'SCRUB_EXCLUDED_TOP_LEVEL' _glv3/tools/build_candidate_dossier.py
 grep -q '#cards article.card' _glv3/tools/browser_verify.mjs
 grep -q '.ytab\[data-year="2026-27"\]' _glv3/tools/browser_verify.mjs
 grep -q '#quicknav .chip' _glv3/tools/chip_gate.mjs
@@ -104,6 +106,7 @@ python _glv3/tools/build_candidate_dossier.py \
   --repo "$ROOT" \
   --integration-sha "$BASE_SHA" \
   --starting-branch-sha "$STARTING_SHA"
+test "$(git hash-object _glv3/tools/run_registered_candidate.sh)" = "$RUNNER_BLOB_SHA" || fail "evidence scrubber rewrote the active candidate runner"
 python _glv3/tools/finalize_candidate_bundle.py --repo "$ROOT"
 python -c 'import json; p=json.load(open("_glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json", encoding="utf-8")); assert p["candidate_verified"] is True and p["deployment_complete"] is False and p["publication_proven"] is False'
 test -s _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
