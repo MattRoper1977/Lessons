@@ -15,6 +15,7 @@ from PIL import Image
 SENTINEL = "grow-launch-estate-v3-autonomous-closeout-2026-08-10"
 HISTORIC = "1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
 PR_URL = "https://github.com/MattRoper1977/Lessons/pull/108"
+SCRUB_EXCLUDED_TOP_LEVEL = {"tools", "input", "tooling", "contact_sheet"}
 
 
 def now() -> str:
@@ -38,6 +39,14 @@ def write_json(path: Path, value) -> None:
 
 
 def scrub_text_tree(root: Path) -> None:
+    """Scrub evidence outputs only; never rewrite executable/source inputs.
+
+    The candidate runner is still executing while this function runs. Rewriting
+    `_glv3/tools` in place can move Bash's live file offset even when the final
+    bytes are unchanged. Limit scrubbing to root evidence outputs and any future
+    evidence-only subdirectories, explicitly excluding tools, transports and
+    generated PNGs.
+    """
     replacements = {
         "/home/runner/work/Lessons/Lessons": "<repository>",
         "/tmp/glv3-packs": "<verified-source>",
@@ -45,13 +54,18 @@ def scrub_text_tree(root: Path) -> None:
     for path in root.rglob("*"):
         if not path.is_file() or path.suffix.casefold() in {".png", ".zip"}:
             continue
+        relative = path.relative_to(root)
+        if relative.parts and relative.parts[0] in SCRUB_EXCLUDED_TOP_LEVEL:
+            continue
         try:
             text = path.read_text("utf-8")
         except UnicodeDecodeError:
             continue
+        scrubbed = text
         for source, replacement in replacements.items():
-            text = text.replace(source, replacement)
-        path.write_text(text, "utf-8")
+            scrubbed = scrubbed.replace(source, replacement)
+        if scrubbed != text:
+            path.write_text(scrubbed, "utf-8")
 
 
 def deterministic_zip(path: Path, root: Path, names: list[str]) -> None:
