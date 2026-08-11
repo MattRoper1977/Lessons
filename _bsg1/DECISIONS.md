@@ -118,3 +118,36 @@ every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
   the file leaves the estate. No placeholder logo was drawn (REBRAND rule 1).
 - No CLEAPSS approval claimed; local proportionate RA stated; adult does all
   cutting/piercing; W5–W7 printed fictional resources only.
+
+### §3.1 — Arrival rebuild (GREEN, logged) + two AMBERs
+
+- All ten arrivals rebuilt to **3 retrieval + 1 lead-in**, delivered inside the
+  existing Supported/Standard/Stretch tier machinery — all four questions
+  appear in each panel at that tier's demand, so every question has a tier
+  route AND the participation block's point/say/demonstrate modalities.
+- R1 keeps each lesson's existing previous-lesson question as its basis; R2/R3
+  derive from the taught lessons' own LO/KO text; nothing invented.
+- **W3A**: all four are prior-knowledge elicitation (baseline weeks taught no
+  science); no baseline topic named, no baseline resource linked.
+- **W3B**: R1 retrieves W3A (real); questions 2–3 are elicitation, declared in
+  the slide note.
+- **W4A/W4B**: no clean R3 exists (one prior taught week) — question 3
+  retrieves week 3 a second time, declared in the slide note.
+- Print packs gain a compact "three retrievals and a lead-in (Supported
+  forms)" line under the existing retrieval line; nothing removed.
+- New arrival text FK (selector: question text in arrival panels): W3A 2.3,
+  W3B 5.0, W4A 3.1, W4B 3.5, W5A 3.3, W5B 3.7, W6A 3.0, W6B 2.3, W7A 1.9,
+  W7B 2.1. Nine of ten inside FK 1.0–4.0. **AMBER — W3B arrival at FK 5.0**:
+  the Stretch route carries "vertebrates"/"invertebrates" (protected terms,
+  4–5 syllables each); the sentence frames are minimal, so this is the honest
+  floor for that content. Left as written rather than stripping the science.
+- **AMBER — entry-line wording**: §3.1/gate 6 say the "New to this class, or
+  not sure?" line exists on every arrival; at HEAD the exact wording existed
+  only in W3A (1/10) — the other nine said "Not here last lesson?". All ten
+  standardised to the gate's wording (superset meaning: covers newness,
+  absence and uncertainty). The doc's premise was wrong; logged, not hidden.
+- **Correction to the V8 note above**: "all ten files identical at 21/17/17"
+  was wrong — that was W3A alone; the other nine baselined at ci 18/17/17.
+  Gate 7 is measured per file against each file's own pre-pass counts; after
+  the rebuild every count is ≥ its own baseline (18→19/20, 21→22).
+- Headless Chromium boot: 10/10, zero page errors, tier toggle live.
