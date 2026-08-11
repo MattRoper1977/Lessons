@@ -380,3 +380,20 @@ grammar ordered, print parity, `matchMedia` = 0, printpack region asserted
   trailing ↺ Reset button after the status div; anchor widened, W6A/W6B/W7A/
   W7B then transplanted clean. No file was touched by the failed casts (the
   generator writes only after all asserts pass).
+
+## Session-close stamp · bsg-1-close-2026-08-11
+
+- All 19 gates green at branch tip (battery output in the session record);
+  boot 15/15 zero errors; sentinels **50 / 113** re-derived (git-tracked
+  `*.html`), both unmoved — merge condition satisfied.
+- Final reading table (same instrument as Phase 0): screen mean 7.10 → 6.02,
+  print mean 6.30 → 5.39.
+- **Pre-merge rollback SHA (origin/main immediately before merge):**
+  `574035bf6c3ee640cf8b5b3f9b10de341497831e`
+  To roll back the merge: `git revert -m 1 <merge-commit>` or reset main to
+  this SHA.
+- Nine labs shipped (W3A W3B W4B W5A W5B W6A W6B W7A W7B), zero AMBER-unbuilt.
+- Standing AMBERs carried per close order §3: W3B arrival FK 5.0 · honest FK
+  floor (nothing ≤ 4.0) · staff-pack rebuild + PS lockup (Matt's morning
+  item: run `tools/build_staff_pack.py` with the recorded logo after merge).
+- Merge executed under the conditional delegation recorded above.
