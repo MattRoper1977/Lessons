@@ -6,6 +6,7 @@ BRANCH="claude/gl-estate-v3"
 HISTORIC="1e8a428b523d1b970a8a3a2ab2a99f48a8271d09"
 STARTING_SHA="$(git rev-parse HEAD)"
 RUNNER_BLOB_SHA="$(git hash-object _glv3/tools/run_registered_candidate.sh)"
+NODE_RUNTIME="/tmp/glv3-node-runtime"
 export PYTHONDONTWRITEBYTECODE=1
 
 log() { printf '\n== %s ==\n' "$*"; }
@@ -44,7 +45,7 @@ PY
     done
   } >"$report" 2>&1
   cat "$report"
-  unexpected="$(git diff --name-only HEAD | grep -v '^_glv3/' || true)"
+  unexpected="$({ git diff --name-only HEAD; git ls-files --others --exclude-standard; } | sed '/^$/d' | sort -u | grep -v '^_glv3/' || true)"
   if [[ -n "$unexpected" ]]; then
     fail "exact-tree phase ${phase} changed non-evidence paths: ${unexpected}"
   fi
@@ -111,14 +112,20 @@ log "Run all disposable tamper controls"
 python _glv3/tools/positive_controls.py --repo "$ROOT"
 test -s _glv3/POSITIVE_CONTROLS.json
 
-log "Install print/contact-sheet and real Chromium dependencies"
+log "Install browser dependencies outside the repository"
 mkdir -p /tmp/glv3-diagnostics
 command -v pdftoppm | tee /tmp/glv3-diagnostics/pdftoppm-path.log
 command -v montage | tee /tmp/glv3-diagnostics/montage-path.log
 node --version | tee /tmp/glv3-diagnostics/node-version.log
 npm --version | tee /tmp/glv3-diagnostics/npm-version.log
-npm install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist 2>&1 | tee /tmp/glv3-diagnostics/npm-install.log
-npx playwright install chromium 2>&1 | tee /tmp/glv3-diagnostics/playwright-install.log
+rm -rf "$NODE_RUNTIME"
+mkdir -p "$NODE_RUNTIME"
+npm --prefix "$NODE_RUNTIME" init -y >/tmp/glv3-diagnostics/npm-init.log 2>&1
+npm --prefix "$NODE_RUNTIME" install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist 2>&1 | tee /tmp/glv3-diagnostics/npm-install.log
+"$NODE_RUNTIME/node_modules/.bin/playwright" install chromium 2>&1 | tee /tmp/glv3-diagnostics/playwright-install.log
+cp _glv3/tools/browser_verify.mjs "$NODE_RUNTIME/browser-primary.mjs"
+cp _glv3/tools/chip_gate.mjs "$NODE_RUNTIME/chips-primary.mjs"
+test -z "$(git status --porcelain -- node_modules)" || fail "browser dependency installation changed repository node_modules"
 
 log "Run real Chromium gates"
 python -m http.server 4173 --bind 127.0.0.1 --directory "$ROOT" >/tmp/glv3-diagnostics/http-primary.log 2>&1 &
@@ -131,14 +138,15 @@ for attempt in $(seq 1 60); do
   [[ "$attempt" != 60 ]] || fail "local HTTP server did not start"
 done
 BASE_URL=http://127.0.0.1:4173 GLV3_BASE_URL=http://127.0.0.1:4173 \
-  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/browser-primary.log
+  timeout 55m node "$NODE_RUNTIME/browser-primary.mjs" http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/browser-primary.log
 BASE_URL=http://127.0.0.1:4173 GLV3_BASE_URL=http://127.0.0.1:4173 \
-  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/chips-primary.log
+  timeout 20m node "$NODE_RUNTIME/chips-primary.mjs" http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/chips-primary.log
 cleanup_server
 trap - EXIT
 test -s _glv3/GATES_BROWSER.json
 test -s _glv3/GATES_CHIPS.json
 test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
+test -z "$(git status --porcelain -- node_modules)" || fail "browser gates changed repository node_modules"
 
 log "Build truthful pre-merge evidence dossier"
 python _glv3/tools/build_candidate_dossier.py \
@@ -162,6 +170,7 @@ rm -f .github/workflows/glv3-generate.yml .github/workflows/glv3-generation-gate
 test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
 test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
 test -z "$(git diff --name-only -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
+test -z "$(git status --porcelain -- node_modules)" || fail "candidate would include runtime node_modules changes"
 ! grep -RIlE '/home/runner/work|gh[pousr]_[A-Za-z0-9_]{20,}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY' _glv3 GROW_Estate_v3 LAUNCH_Estate_v3 | grep -q .
 ! find . -path './.git' -prune -o -path './node_modules' -prune -o -type f -size +50M -print | grep -q .
 git diff --check
@@ -176,6 +185,7 @@ git config user.name 'github-actions[bot]'
 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 git add -A
 git diff --cached --quiet && fail "candidate generation produced no tracked changes"
+test -z "$(git diff --cached --name-only -- node_modules)" || fail "candidate index contains runtime node_modules changes"
 git commit -m 'feat: install verified GROW and LAUNCH alternative v3 estates'
 CANDIDATE_SHA="$(git rev-parse HEAD)"
 git push origin HEAD:"$BRANCH"
@@ -205,7 +215,10 @@ python _glv3/tools/positive_controls.py --repo "$PWD"
 AFTER_POSITIVE="$(git status --porcelain)"
 test "$BEFORE_POSITIVE" = "$AFTER_POSITIVE"
 assert_exact_non_evidence_clean "after-positive-controls"
-ln -s "$ROOT/node_modules" node_modules
+test "$(git hash-object _glv3/tools/browser_verify.mjs)" = "$(git rev-parse HEAD:_glv3/tools/browser_verify.mjs)"
+test "$(git hash-object _glv3/tools/chip_gate.mjs)" = "$(git rev-parse HEAD:_glv3/tools/chip_gate.mjs)"
+cp _glv3/tools/browser_verify.mjs "$NODE_RUNTIME/browser-exact.mjs"
+cp _glv3/tools/chip_gate.mjs "$NODE_RUNTIME/chips-exact.mjs"
 python -m http.server 4174 --bind 127.0.0.1 --directory "$PWD" >/tmp/glv3-diagnostics/http-exact.log 2>&1 &
 EXACT_SERVER=$!
 cleanup_exact() { kill "$EXACT_SERVER" 2>/dev/null || true; wait "$EXACT_SERVER" 2>/dev/null || true; }
@@ -216,13 +229,12 @@ for attempt in $(seq 1 60); do
   [[ "$attempt" != 60 ]] || fail "exact-tree HTTP server did not start"
 done
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
-  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/browser-exact.log
+  timeout 55m node "$NODE_RUNTIME/browser-exact.mjs" http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/browser-exact.log
 assert_exact_non_evidence_clean "after-browser"
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
-  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/chips-exact.log
+  timeout 20m node "$NODE_RUNTIME/chips-exact.mjs" http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/chips-exact.log
 cleanup_exact
 trap - EXIT
-rm node_modules
 assert_exact_non_evidence_clean "after-chip-gate"
 test -z "$(git diff --name-only HEAD -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
 git diff --check
@@ -242,5 +254,5 @@ if [[ -n "${GITHUB_TOKEN:-}" ]]; then
 fi
 
 cd "$ROOT"
-rm -rf node_modules
+rm -rf "$NODE_RUNTIME"
 printf 'GLV3 candidate complete: %s\n' "$CANDIDATE_SHA"
