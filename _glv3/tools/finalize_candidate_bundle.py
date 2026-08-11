@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import zipfile
 from pathlib import Path
 
@@ -50,6 +51,16 @@ def build_zip(path: Path, root: Path) -> None:
             bundle.writestr(info, source.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
 
 
+def current_run() -> tuple[int | None, str | None]:
+    raw_run_id = os.environ.get("GITHUB_RUN_ID")
+    run_id = int(raw_run_id) if raw_run_id else None
+    if run_id is None:
+        return None, None
+    server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
+    repository = os.environ.get("GITHUB_REPOSITORY", "MattRoper1977/Lessons").strip("/")
+    return run_id, f"{server}/{repository}/actions/runs/{run_id}"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", type=Path, default=Path("."))
@@ -58,8 +69,21 @@ def main() -> int:
     proof_path = root / "GROW_LAUNCH_v3_DEPLOY_PROOF.json"
     zip_path = root / "GROW_LAUNCH_v3_REPORT_AND_PROOF.zip"
     integrity_path = root / "EVIDENCE_ZIP_INTEGRITY.json"
+    sentinel_path = root / "AUTONOMOUS_SENTINEL.json"
+
+    run_id, run_url = current_run()
 
     proof = json.loads(proof_path.read_text("utf-8"))
+    proof["candidate_verified"] = True
+    proof["deployment_complete"] = False
+    proof["publication_proven"] = False
+    proof["ci_runs"] = ([{
+        "run_id": run_id,
+        "url": run_url,
+        "workflow": "GROW LAUNCH v3 build verified candidate",
+        "phase": "candidate generation and exact-tree verification",
+        "conclusion_at_commit": "IN_PROGRESS",
+    }] if run_id is not None else [])
     proof["artifacts"] = [
         {
             "path": f"_glv3/{name}",
@@ -75,6 +99,11 @@ def main() -> int:
         "self_referential_hash_omitted_from_embedded_proof": True,
     }
     write_json(proof_path, proof)
+
+    sentinel = json.loads(sentinel_path.read_text("utf-8"))
+    sentinel["discovered_actions_identifiers"] = [run_id] if run_id is not None else []
+    sentinel["candidate_run_url"] = run_url
+    write_json(sentinel_path, sentinel)
 
     build_zip(zip_path, root)
     with zipfile.ZipFile(zip_path) as bundle:
@@ -101,6 +130,8 @@ def main() -> int:
     })
     print(json.dumps({
         "result": "PASS",
+        "candidate_verified": True,
+        "run_id": run_id,
         "zip_sha256": sha256(zip_path),
         "members": len(MEMBERS),
     }))
