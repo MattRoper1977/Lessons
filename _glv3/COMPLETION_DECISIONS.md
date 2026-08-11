@@ -122,6 +122,26 @@ one of the 53) = **65 distinct files**. Measured at gate time: 65 exactly. P4
 contributes 0 (not-a-defect), P5 contributes 0 (world 1). Sentinels expected
 unmoved: closure line 113, `ll-g:loop-mark` 50, delta 0.
 
+## Merge, publish and the production leg (recorded post-merge)
+
+Merged and pushed: ROLLBACK_SHA `58be4bab` → merge `c5562fbcfd2595f18d5894967a4c943c72a8bd91`,
+then `8f1788dcd63bbc3e0fa1ec4ee818b260e648b4b9` (dispatch-only probe workflow, .github only).
+Raw-pin verify at `c5562fb`: 5/5 IDENTICAL with exact byte lengths (P1 sample 50,182 B ·
+P2 manifest 17,858 B · P3 W2 42,230 B · untouched LAUNCH_ASDAN_Hub 4,071 B · live control
+60,522 B). Permanent verifier `glv3-verify` **success** at `c5562fb` (run 31501013077).
+Pages built and deployed the pushed content.
+
+**Production leg: rung b.** Rung a is unavailable — the permanent verifier is
+tree-only (its curl targets a local preview server; no production identity suite
+exists on main). Following the repo's own j4-absolute-ref-probe precedent, a
+dispatch-only, log-only workflow `glv3-production-byte-check.yml` was added and
+run from a GitHub Actions runner (real egress): run 31501253747, job 93811520558,
+2026-08-11T14:23Z, checkout `8f1788d` — **10/10 PASS, ALL IDENTICAL**, including
+the three touched-file samples (BUILD_HUM_W1 `20675dfbe0e590c2` 50,182 B ·
+LAUNCH_ASDAN manifest `bdb05de0c96341fc` 17,858 B · BUILD_DT_W2
+`980e074e4c446c0f` 42,230 B) and the untouched live control
+(`d34395b2737f2486` 60,522 B). Production serves the completed bytes.
+
 ## The one thing wrong in the completion brief
 
 P4's premise. The brief specifies a "same chassis, nearest week" sibling
