@@ -1,0 +1,438 @@
+name: GLV3 Prompt B publication trace
+
+on:
+  push:
+    branches:
+      - audit/glv3-prompt-b-publication-2026-08-11
+
+permissions:
+  actions: read
+  contents: read
+  deployments: read
+  pages: read
+  statuses: write
+
+jobs:
+  trace-publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CANDIDATE_SHA: 62a92d7d0216c00ae3ab9929528ab705c3ad2a30
+      FEATURE_MERGE_SHA: a9dc6fc8214ff16a5f9effe183ca7329f4f7f615
+      PRODUCTION_URL: https://madebymatt.uk/Lessons/
+      PR_NUMBER: '108'
+    steps:
+      - name: Check out the exact feature merge
+        uses: actions/checkout@v4
+        with:
+          ref: a9dc6fc8214ff16a5f9effe183ca7329f4f7f615
+          fetch-depth: 0
+
+      - name: Query Pages, deployment and workflow identity; compare live bytes
+        id: trace
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p trace/deployment-statuses trace/live
+
+          api() {
+            local endpoint="$1"
+            curl --fail-with-body --silent --show-error --location \
+              --retry 5 --retry-delay 2 --retry-all-errors \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/${endpoint}"
+          }
+
+          test "$(git rev-parse HEAD)" = "$FEATURE_MERGE_SHA"
+          git merge-base --is-ancestor "$CANDIDATE_SHA" "$FEATURE_MERGE_SHA"
+
+          api "git/ref/heads/main" > trace/main-ref.json
+          api "pulls/${PR_NUMBER}" > trace/pr.json
+          api "compare/${CANDIDATE_SHA}...${FEATURE_MERGE_SHA}" > trace/candidate-to-merge.json
+          api "pages" > trace/pages.json
+          api "actions/runs?head_sha=${FEATURE_MERGE_SHA}&per_page=100" > trace/actions-runs.json
+          api "deployments?sha=${FEATURE_MERGE_SHA}&per_page=100" > trace/deployments.json
+
+          while IFS= read -r deployment_id; do
+            [[ -n "$deployment_id" ]] || continue
+            api "deployments/${deployment_id}/statuses?per_page=100" \
+              > "trace/deployment-statuses/${deployment_id}.json"
+          done < <(jq -r '.[].id' trace/deployments.json)
+
+          cat > trace/live-paths.txt <<'PATHS'
+          index.html
+          resources.json
+          GROW_Estate_v3/index.html
+          LAUNCH_Estate_v3/index.html
+          GROW_Estate_v3/Art_Teesside/GROW_ART_W1_The_Local_Canvas.html
+          GROW_Estate_v3/Humanities_Teesside/GROW_HUM_W1_Time_Detectives.html
+          GROW_Estate_v3/GROW_ASDAN/COMM_W1_Our_Patch_Our_Say.html
+          LAUNCH_Estate_v3/Art_Teesside/LAUNCH_ART_W1_Frame_the_Local_Challenge.html
+          LAUNCH_Estate_v3/Humanities_Teesside/LAUNCH_HUM_W1_Source_Investigation.html
+          LAUNCH_Estate_v3/LAUNCH_ASDAN/CAREERS_W1_Know_Myself_for_Work.html
+          PATHS
+          sed -i 's/^          //' trace/live-paths.txt
+
+          : > trace/live-fetch.tsv
+          while IFS= read -r rel; do
+            [[ -n "$rel" ]] || continue
+            test -f "$rel"
+            dest="trace/live/${rel}"
+            mkdir -p "$(dirname "$dest")"
+            url="${PRODUCTION_URL}${rel}?sha=${FEATURE_MERGE_SHA}"
+            code="$(curl --silent --show-error --location --output "$dest" \
+              --write-out '%{http_code}' --retry 6 --retry-delay 2 --retry-all-errors \
+              -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$url")"
+            printf '%s\t%s\t%s\n' "$code" "$rel" "$url" >> trace/live-fetch.tsv
+            test "$code" = 200
+          done < trace/live-paths.txt
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import os
+          import re
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path.cwd()
+          trace = root / "trace"
+          merge_sha = os.environ["FEATURE_MERGE_SHA"]
+          candidate_sha = os.environ["CANDIDATE_SHA"]
+          production_url = os.environ["PRODUCTION_URL"]
+          repo = os.environ["GITHUB_REPOSITORY"]
+          run_id = int(os.environ["GITHUB_RUN_ID"])
+
+          def load(path: Path):
+              return json.loads(path.read_text("utf-8"))
+
+          def sha256(path: Path) -> str:
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+
+          main_ref = load(trace / "main-ref.json")
+          pr = load(trace / "pr.json")
+          pages = load(trace / "pages.json")
+          actions = load(trace / "actions-runs.json")
+          deployments = load(trace / "deployments.json")
+
+          assert main_ref["object"]["sha"] == merge_sha, main_ref
+          assert pr.get("merged") is True, pr.get("state")
+          assert pr.get("merge_commit_sha") == merge_sha, pr.get("merge_commit_sha")
+          assert pr["head"]["sha"] == candidate_sha, pr["head"]["sha"]
+
+          runs = [
+              run for run in actions.get("workflow_runs", [])
+              if run.get("head_sha") == merge_sha
+          ]
+          pages_runs = [
+              run for run in runs
+              if (
+                  "pages-build-deployment" in str(run.get("path", "")).lower()
+                  or "pages build and deployment" in str(run.get("name", "")).lower()
+                  or (
+                      "pages" in str(run.get("name", "")).lower()
+                      and "deploy" in str(run.get("name", "")).lower()
+                  )
+              )
+          ]
+          successful_pages_runs = [
+              run for run in pages_runs if run.get("conclusion") == "success"
+          ]
+          assert successful_pages_runs, {
+              "message": "No successful Pages workflow run was returned for the feature merge SHA",
+              "runs": [
+                  {
+                      "id": r.get("id"),
+                      "name": r.get("name"),
+                      "path": r.get("path"),
+                      "status": r.get("status"),
+                      "conclusion": r.get("conclusion"),
+                  }
+                  for r in runs
+              ],
+          }
+          pages_run = sorted(
+              successful_pages_runs,
+              key=lambda r: (r.get("updated_at") or "", int(r.get("run_attempt") or 0)),
+          )[-1]
+
+          successful_deployments: list[tuple[dict, dict]] = []
+          deployment_evidence: list[dict] = []
+          for deployment in deployments:
+              statuses_path = trace / "deployment-statuses" / f"{deployment['id']}.json"
+              statuses = load(statuses_path) if statuses_path.exists() else []
+              latest = statuses[0] if statuses else None
+              deployment_evidence.append(
+                  {
+                      "id": deployment.get("id"),
+                      "sha": deployment.get("sha"),
+                      "ref": deployment.get("ref"),
+                      "task": deployment.get("task"),
+                      "environment": deployment.get("environment"),
+                      "created_at": deployment.get("created_at"),
+                      "updated_at": deployment.get("updated_at"),
+                      "latest_status": latest,
+                  }
+              )
+              if (
+                  deployment.get("sha") == merge_sha
+                  and latest
+                  and latest.get("state") == "success"
+              ):
+                  successful_deployments.append((deployment, latest))
+
+          assert successful_deployments, {
+              "message": "No successful deployment was returned for the feature merge SHA",
+              "deployments": deployment_evidence,
+          }
+          github_pages = [
+              item for item in successful_deployments
+              if "pages" in str(item[0].get("environment", "")).lower()
+              or "pages" in str(item[1].get("environment_url", "")).lower()
+              or "madebymatt.uk/Lessons" in str(item[1].get("environment_url", ""))
+          ]
+          chosen_deployment, deployment_status = max(
+              github_pages or successful_deployments,
+              key=lambda item: (
+                  item[1].get("updated_at") or item[1].get("created_at") or "",
+                  int(item[0].get("id") or 0),
+              ),
+          )
+
+          log_urls = " ".join(
+              str(value or "")
+              for value in (
+                  deployment_status.get("log_url"),
+                  deployment_status.get("target_url"),
+              )
+          )
+          linked_run_match = re.search(r"/actions/runs/(\d+)", log_urls)
+          deployment_linked_run_id = (
+              int(linked_run_match.group(1)) if linked_run_match else None
+          )
+          if deployment_linked_run_id is not None:
+              assert deployment_linked_run_id == int(pages_run["id"]), {
+                  "deployment_status_run": deployment_linked_run_id,
+                  "pages_run": pages_run["id"],
+              }
+
+          paths = [
+              line.strip()
+              for line in (trace / "live-paths.txt").read_text("utf-8").splitlines()
+              if line.strip()
+          ]
+          live_files = []
+          for rel in paths:
+              local = root / rel
+              live = trace / "live" / rel
+              assert local.is_file(), rel
+              assert live.is_file(), rel
+              local_hash = sha256(local)
+              live_hash = sha256(live)
+              equal = local_hash == live_hash and local.stat().st_size == live.stat().st_size
+              live_files.append(
+                  {
+                      "path": rel,
+                      "url": f"{production_url}{rel}?sha={merge_sha}",
+                      "local_sha256": local_hash,
+                      "live_sha256": live_hash,
+                      "local_bytes": local.stat().st_size,
+                      "live_bytes": live.stat().st_size,
+                      "byte_equal": equal,
+                  }
+              )
+              assert equal, live_files[-1]
+
+          grow_live = (trace / "live/GROW_Estate_v3/index.html").read_text(
+              "utf-8", errors="replace"
+          )
+          launch_live = (trace / "live/LAUNCH_Estate_v3/index.html").read_text(
+              "utf-8", errors="replace"
+          )
+          assert "34 alternative lesson HTML files" in grow_live
+          assert "46 alternative lesson HTML files" in launch_live
+          assert "_OUTSTANDING_V3_TEST" not in grow_live + launch_live
+
+          resources = load(trace / "live/resources.json")
+          rows = (
+              resources
+              if isinstance(resources, list)
+              else resources.get("resources")
+              or resources.get("items")
+              or resources.get("records")
+          )
+          assert isinstance(rows, list)
+          glv3 = [row for row in rows if str(row.get("id", "")).startswith("glv3-")]
+          glv3_lessons = [
+              row for row in glv3 if str(row.get("type", "")).lower() == "lesson"
+          ]
+          assert len(glv3) == 88, len(glv3)
+          assert len(glv3_lessons) == 80, len(glv3_lessons)
+
+          source = pages.get("source") or {}
+          mechanism = {
+              "provider": "GitHub Pages",
+              "build_type": pages.get("build_type"),
+              "source_branch": source.get("branch"),
+              "source_path": source.get("path"),
+              "pages_html_url": pages.get("html_url"),
+              "cname": pages.get("cname"),
+              "workflow_name": pages_run.get("name"),
+              "workflow_path": pages_run.get("path"),
+          }
+
+          proof = {
+              "sentinel": "grow-launch-v3-prompt-b-merge-publication-proof-2026-08-11",
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "repository": repo,
+              "pr": 108,
+              "candidate_sha": candidate_sha,
+              "feature_merge_sha": merge_sha,
+              "current_main_sha": main_ref["object"]["sha"],
+              "published_sha": chosen_deployment["sha"],
+              "publication_sha_proven": True,
+              "merge_complete": True,
+              "full_production_verification_complete": False,
+              "diagnostic_run_id": run_id,
+              "deployment_run": {
+                  "id": int(pages_run["id"]),
+                  "run_number": pages_run.get("run_number"),
+                  "run_attempt": pages_run.get("run_attempt"),
+                  "name": pages_run.get("name"),
+                  "path": pages_run.get("path"),
+                  "event": pages_run.get("event"),
+                  "status": pages_run.get("status"),
+                  "conclusion": pages_run.get("conclusion"),
+                  "head_sha": pages_run.get("head_sha"),
+                  "html_url": pages_run.get("html_url"),
+                  "created_at": pages_run.get("created_at"),
+                  "run_started_at": pages_run.get("run_started_at"),
+                  "updated_at": pages_run.get("updated_at"),
+              },
+              "deployment": {
+                  "id": chosen_deployment.get("id"),
+                  "environment": chosen_deployment.get("environment"),
+                  "ref": chosen_deployment.get("ref"),
+                  "sha": chosen_deployment.get("sha"),
+                  "task": chosen_deployment.get("task"),
+                  "created_at": chosen_deployment.get("created_at"),
+                  "updated_at": chosen_deployment.get("updated_at"),
+                  "status_id": deployment_status.get("id"),
+                  "status": deployment_status.get("state"),
+                  "status_created_at": deployment_status.get("created_at"),
+                  "status_updated_at": deployment_status.get("updated_at"),
+                  "environment_url": deployment_status.get("environment_url"),
+                  "log_url": deployment_status.get("log_url"),
+                  "deployment_linked_run_id": deployment_linked_run_id,
+              },
+              "mechanism": mechanism,
+              "production_url": production_url,
+              "live_files": live_files,
+              "live_identity": {
+                  "all_representatives_byte_equal": all(
+                      item["byte_equal"] for item in live_files
+                  ),
+                  "grow_marker": True,
+                  "launch_marker": True,
+                  "glv3_catalogue_entries": len(glv3),
+                  "glv3_lessons": len(glv3_lessons),
+              },
+              "all_feature_sha_runs": [
+                  {
+                      "id": run.get("id"),
+                      "name": run.get("name"),
+                      "path": run.get("path"),
+                      "event": run.get("event"),
+                      "status": run.get("status"),
+                      "conclusion": run.get("conclusion"),
+                      "html_url": run.get("html_url"),
+                      "created_at": run.get("created_at"),
+                      "updated_at": run.get("updated_at"),
+                  }
+                  for run in runs
+              ],
+              "deployment_evidence": deployment_evidence,
+          }
+          assert proof["published_sha"] == merge_sha
+          assert proof["current_main_sha"] == merge_sha
+          assert proof["deployment_run"]["head_sha"] == merge_sha
+          assert proof["live_identity"]["all_representatives_byte_equal"] is True
+
+          (trace / "GLV3_PROMPT_B_PUBLICATION_TRACE.json").write_text(
+              json.dumps(proof, indent=2, sort_keys=True) + "\n", "utf-8"
+          )
+          (trace / "GLV3_PROMPT_B_PUBLICATION_TRACE.md").write_text(
+              "\n".join(
+                  [
+                      "# GLV3 Prompt B publication trace",
+                      "",
+                      f"- Candidate SHA: `{candidate_sha}`",
+                      f"- Feature merge SHA: `{merge_sha}`",
+                      f"- Current main SHA: `{proof['current_main_sha']}`",
+                      f"- Published SHA: `{proof['published_sha']}`",
+                      f"- Pages run ID: `{proof['deployment_run']['id']}`",
+                      f"- Pages environment: `{proof['deployment']['environment']}`",
+                      f"- Pages status: `{proof['deployment']['status']}`",
+                      f"- Deployment completed: `{proof['deployment']['status_created_at']}`",
+                      f"- Production URL: `{production_url}`",
+                      f"- Representative live files byte-equal: `{len(live_files)}/{len(live_files)}`",
+                      f"- Live GLV3 catalogue entries: `{len(glv3)}`",
+                      f"- Live GLV3 lessons: `{len(glv3_lessons)}`",
+                      "",
+                      "This is publication-SHA proof only. Prompt C retains full production application verification.",
+                      "",
+                  ]
+              ),
+              "utf-8",
+          )
+          print(json.dumps(proof, indent=2, sort_keys=True))
+          PY
+
+          cat trace/GLV3_PROMPT_B_PUBLICATION_TRACE.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Prompt B publication trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-prompt-b-publication-trace-${{ github.run_id }}
+          path: trace/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Bind audit result to the feature merge SHA
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRACE_OUTCOME: ${{ steps.trace.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state=failure
+          description='Prompt B publication trace failed; inspect audit run'
+          if [[ "$TRACE_OUTCOME" = success ]]; then
+            state=success
+            description='Pages deployment SHA and representative live bytes proven'
+          fi
+          target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          payload="$(jq -nc \
+            --arg state "$state" \
+            --arg context 'glv3/prompt-b-publication-trace' \
+            --arg description "$description" \
+            --arg target_url "$target_url" \
+            '{state:$state,context:$context,description:$description,target_url:$target_url}')"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${FEATURE_MERGE_SHA}" \
+            --data "$payload" >/dev/null
