@@ -1,6 +1,7 @@
 name: GROW LAUNCH v3 generated-tree verification
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - claude/gl-estate-v3
@@ -20,6 +21,7 @@ on:
       - resources.json
       - _finish/ROUTES.md
       - _glv3/**
+      - .github/workflows/glv3-verify.yml
 
 permissions:
   contents: read
@@ -31,13 +33,19 @@ concurrency:
 
 jobs:
   verify-generated-tree:
-    if: ${{ hashFiles('GROW_Estate_v3/**/*.html') != '' && hashFiles('LAUNCH_Estate_v3/**/*.html') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Confirm generated estate inputs exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$(find GROW_Estate_v3 -type f -name '*.html' -print -quit)"
+          test -n "$(find LAUNCH_Estate_v3 -type f -name '*.html' -print -quit)"
 
       - name: Deterministic generated-tree static verification
         shell: bash
