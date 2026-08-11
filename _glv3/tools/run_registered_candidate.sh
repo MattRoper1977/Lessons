@@ -14,7 +14,8 @@ log "Bind current branch and integration base"
 git fetch --no-tags origin "refs/heads/main:refs/remotes/origin/main" "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
 BASE_SHA="$(git rev-parse refs/remotes/origin/main)"
 test "$(git rev-parse HEAD)" = "$STARTING_SHA"
-if [[ -n "${GITHUB_SHA:-}" ]]; then test "$STARTING_SHA" = "$GITHUB_SHA"; fi
+EXPECTED_EVENT_HEAD="${GLV3_EXPECTED_HEAD:-${GITHUB_SHA:-}}"
+if [[ -n "$EXPECTED_EVENT_HEAD" ]]; then test "$STARTING_SHA" = "$EXPECTED_EVENT_HEAD"; fi
 git merge-base --is-ancestor "$BASE_SHA" "$STARTING_SHA"
 test -s _glv3/tools/bs4.py
 test -s _glv3/tools/shutil.py
@@ -51,10 +52,12 @@ python _glv3/tools/closeout_reconcile.py \
 python -m pip install --disable-pip-version-check --no-cache-dir beautifulsoup4==4.13.4 pillow lxml
 
 log "Generate parallel estates and static evidence"
+rm -f _glv3/tools/hashlib.py
 rm -rf GROW_Estate_v3 LAUNCH_Estate_v3 _glv3/contact_sheet
 GLV3_GROW_SRC=/tmp/glv3-packs/grow \
 GLV3_LAUNCH_SRC=/tmp/glv3-packs/launch \
 python _glv3/tools/deploy.py
+python _glv3/tools/finalize_filename_references.py --repo "$ROOT"
 test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
 test -s _glv3/GATES_STATIC.json
 test -s _glv3/REPORT.md
@@ -68,27 +71,28 @@ python _glv3/tools/positive_controls.py --repo "$ROOT"
 test -s _glv3/POSITIVE_CONTROLS.json
 
 log "Install print/contact-sheet and real Chromium dependencies"
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends poppler-utils imagemagick
-command -v pdftoppm >/dev/null
-command -v montage >/dev/null
-npm install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist
-npx playwright install --with-deps chromium
+mkdir -p /tmp/glv3-diagnostics
+command -v pdftoppm | tee /tmp/glv3-diagnostics/pdftoppm-path.log
+command -v montage | tee /tmp/glv3-diagnostics/montage-path.log
+node --version | tee /tmp/glv3-diagnostics/node-version.log
+npm --version | tee /tmp/glv3-diagnostics/npm-version.log
+npm install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist 2>&1 | tee /tmp/glv3-diagnostics/npm-install.log
+npx playwright install chromium 2>&1 | tee /tmp/glv3-diagnostics/playwright-install.log
 
 log "Run real Chromium gates"
-python -m http.server 4173 --bind 127.0.0.1 --directory "$ROOT" >/tmp/glv3-http.log 2>&1 &
+python -m http.server 4173 --bind 127.0.0.1 --directory "$ROOT" >/tmp/glv3-diagnostics/http-primary.log 2>&1 &
 SERVER_PID=$!
 cleanup_server() { kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; }
-trap 'cleanup_server; cat /tmp/glv3-http.log 2>/dev/null || true' EXIT
+trap 'cleanup_server; cat /tmp/glv3-diagnostics/http-primary.log 2>/dev/null || true' EXIT
 for attempt in $(seq 1 60); do
   curl -fsS http://127.0.0.1:4173/ >/dev/null && break
   sleep 0.25
   [[ "$attempt" != 60 ]] || fail "local HTTP server did not start"
 done
 BASE_URL=http://127.0.0.1:4173 GLV3_BASE_URL=http://127.0.0.1:4173 \
-  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173
+  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/browser-primary.log
 BASE_URL=http://127.0.0.1:4173 GLV3_BASE_URL=http://127.0.0.1:4173 \
-  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173
+  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173 2>&1 | tee /tmp/glv3-diagnostics/chips-primary.log
 cleanup_server
 trap - EXIT
 test -s _glv3/GATES_BROWSER.json
@@ -126,7 +130,7 @@ test -s _glv3/EVIDENCE_ZIP_INTEGRITY.json
 log "Remove one-shot transport and obsolete orchestration"
 rm -rf _glv3/input _glv3/tooling
 rm -f _glv3/RUN_GENERATION.md
-rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/closeout_prep.py _glv3/tools/run_registered_candidate.sh
+rm -f _glv3/tools/bs4.py _glv3/tools/shutil.py _glv3/tools/hashlib.py _glv3/tools/closeout_prep.py _glv3/tools/prepare_registered_candidate.py _glv3/tools/run_registered_candidate.sh
 rm -f .github/workflows/glv3-candidate.yml .github/workflows/glv3-closeout.yml .github/workflows/glv3-deploy.yml
 rm -f .github/workflows/glv3-generate.yml .github/workflows/glv3-generation-gate.yml .github/workflows/glv3-preflight.yml .github/workflows/glv3-execute.yml
 test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
@@ -173,19 +177,19 @@ python _glv3/tools/positive_controls.py --repo "$PWD"
 AFTER_POSITIVE="$(git status --porcelain)"
 test "$BEFORE_POSITIVE" = "$AFTER_POSITIVE"
 ln -s "$ROOT/node_modules" node_modules
-python -m http.server 4174 --bind 127.0.0.1 --directory "$PWD" >/tmp/glv3-exact-http.log 2>&1 &
+python -m http.server 4174 --bind 127.0.0.1 --directory "$PWD" >/tmp/glv3-diagnostics/http-exact.log 2>&1 &
 EXACT_SERVER=$!
 cleanup_exact() { kill "$EXACT_SERVER" 2>/dev/null || true; wait "$EXACT_SERVER" 2>/dev/null || true; }
-trap 'cleanup_exact; cat /tmp/glv3-exact-http.log 2>/dev/null || true' EXIT
+trap 'cleanup_exact; cat /tmp/glv3-diagnostics/http-exact.log 2>/dev/null || true' EXIT
 for attempt in $(seq 1 60); do
   curl -fsS http://127.0.0.1:4174/ >/dev/null && break
   sleep 0.25
   [[ "$attempt" != 60 ]] || fail "exact-tree HTTP server did not start"
 done
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
-  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4174
+  timeout 55m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/browser-exact.log
 BASE_URL=http://127.0.0.1:4174 GLV3_BASE_URL=http://127.0.0.1:4174 \
-  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4174
+  timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4174 2>&1 | tee /tmp/glv3-diagnostics/chips-exact.log
 cleanup_exact
 trap - EXIT
 rm node_modules
