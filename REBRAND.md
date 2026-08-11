@@ -40,12 +40,45 @@ reader still announces the wrong organisation.
 
 ## The rules
 
-### 1 · The Progress Schools mark is typographic. Never drawn, never invented.
+### 1 · The mark ~~is typographic~~ — SUPERSEDED 2026-08-07, the real logo now exists
 
-Set it as **text**. Do not draw a logo, do not generate an SVG mark, do not
-approximate one from memory, and do not carry over the Made by Matt logo geometry
-with the letters changed. If a visual mark is genuinely required, it comes from
-Progress Schools — it is not produced here.
+**Original rule, kept because it explains the one below:** set the mark as
+**text**. Do not draw a logo, do not generate an SVG mark, do not approximate one
+from memory, and do not carry over the Made by Matt logo geometry with the letters
+changed. If a visual mark is genuinely required, it comes from Progress
+Schools — it is not produced here.
+
+**What changed:** the last clause finally happened. Matt supplied the real
+Progress Schools lockup (the P mark + wordmark), so the placeholder is retired
+and the trademark replaces the Made-by-Matt mark directly. The rule's *purpose*
+is unchanged and now binds harder:
+
+- **Never recolour, restyle, stretch or redraw it.** It is embedded as supplied
+  and only ever scaled by `width` with `height:auto`, so the aspect ratio cannot
+  drift. A dark header gets a white chip behind the logo; the artwork itself is
+  never touched.
+- Optimise **one** master asset (trim, ≤10 KB, 2× display size) and embed it as a
+  base64 data URI per page. No external asset file — a pack that ships an
+  `images/` folder breaks the moment a page is moved, and these pages get moved.
+- Where only the 64×64 mark footprint exists, crop to the P mark alone with
+  `alt="Progress Schools"` and the wordmark as adjacent text.
+
+The strip (rule 2) is still required alongside the logo. The lockup shows the
+wordmark, but the strip is a separate estate convention with occurrences to match.
+
+**The binary stays out of git. Its SHA is recorded here instead**, because a pack that
+cannot be rebuilt from the repo plus a recorded hash is not reproducible:
+
+```
+logo  SHA-256  b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04
+      225x225 PNG, the P mark + "Progress Schools" wordmark lockup
+```
+
+The builder asserts this hash before it uses the file. **Absent `--logo` is a hard stop** —
+there is no fallback to the typographic mark. A pack built without the real lockup is not a
+Progress Schools pack, and silently producing one is how a placeholder ends up in a school.
+
+`tools/build_staff_pack.py --mirror --logo PATH` implements all of this.
 
 ### 2 · The strip
 
@@ -74,6 +107,34 @@ that survive a careless pass:
 `madebymatt.uk` appears in 44 files. In a staff-facing pack, replace or remove it.
 **Check `href` values as well as link text** — a link reading *"the pack"* pointing at
 `madebymatt.uk` is still the public site.
+
+**One exception, added 2026-08-07 on Matt's instruction:** every rebranded page
+carries the credit **`by madebymatt.uk`**, small and unobtrusive, in the footer.
+This is the *only* permitted Made-by-Matt string. The residue sweep whitelists it
+by **exact match** and still fails on every other spelling, so the exception
+cannot quietly widen into "the sweep is off". Add the credit **after** the domain
+rewrite has run, or the rewrite eats it like any other mention of the domain.
+
+**The exemption is anchored on the credit as element text**, not on the substring. Matching
+the token `madebymatt.uk` on its own would pass `href="https://madebymatt.uk"` — a live link
+to the public site, which is precisely what this rule exists to catch. The check deletes one
+occurrence of `>by madebymatt.uk<` and then requires **zero** matches in what remains, so an
+href, a `src`, any attribute value, and a second credit all still fail. Verified with a
+negative control on each of those four shapes.
+
+**Rule 4 is about the personal public site, not one spelling of it.** A repo-wide census found
+four spellings, only one of which the sweep had ever known. They are now **named alternates** in
+`PERSONAL_ORIGIN_FORMS`, used by both the rewrite and the verify pass so the two cannot drift:
+
+| spelling | what it is | occurrences (repo) | ever in pack scope |
+|---|---|---|---|
+| `madebymatt.uk` | the custom domain, canonical | 77 | yes — swept since the first pack |
+| `mattroper1977.github.io` | the Pages origin the custom domain fronts | 26 | **yes, 2 — unswept until 2026-08-07** |
+| `mattroper1977.pythonanywhere.com` | the live-lessons app | 2 | no |
+| `ko-fi.com/madebymattuk` | donation link on the public index | 1 | no |
+
+Content pages now point at the **custom domain**, which collapses the Pages origin into the
+spelling the sweep has always caught. Adding the next form is a one-line change.
 
 ### 5 · The `x-brand` meta tag
 
@@ -172,6 +233,75 @@ grep -rc 'PROGRESS SCHOOLS · TEES VALLEY' <pack>
 All four must be run. Rule 3's trap is that checks 1 and 2 pass a visual inspection
 and fail a grep, while check 3 fails silently — a missing `x-brand` tag has no
 symptom, exactly like a missing sitemap entry.
+
+### Counts that can reach zero are not gates
+
+The strip count silently fell to **zero** in the first mirror build: the real logo replaced the
+typographic mark, and the mark had been carrying the strip. Check 4 above only asserted "at
+least one file", so a run with the strip on *no* page would have passed had the assertion been
+written a shade differently. Three counts are now permanently gated and the build refuses to
+package if any fails:
+
+| count | gate |
+|---|---|
+| strip | `> 0` |
+| credit | **exactly one per page** — not "at least one", so a duplicate fails too |
+| logo | equals the number of pages that carried a visible mark; and the on-disk count may not be lower |
+
+Also gated: 0 broken internal links over the **assembled** tree, 0 inline-JS syntax errors,
+0 truncated files, the ★assessed conditions blocks byte-identical, and — for a mirror-shape
+pack — 0 collisions with unregenerable OneDrive-only artefacts.
+
+### The inline-JS gate, and why `</body>` is not a safe anchor
+
+Several decks build a printable view with `w.document.write('<html>…</body></html>')`. The
+**first** `</body>` in those files is inside a JavaScript string literal. Appending anything
+at it produces an unterminated string and kills the whole script block — and because the code
+only runs when a teacher presses Print, opening the page from `file://` never reveals it.
+Insert at the last closing tag followed by nothing but whitespace, and gate every inline
+`<script>` body with `node --check`. Testing the print path means *executing* it, not loading
+the page.
+
+---
+
+## Third-party fetches (rule 8)
+
+**An offline pack makes no network request.** A `<link>` to a font CDN fails on a school
+machine without internet and phones out on one with it — the same defect shape as the `hud.js`
+loader, differing only in that it degrades quietly instead of breaking a panel.
+
+Vendor rather than drop, unless Matt rules otherwise: fetch the CSS, keep the `latin` and
+`latin-ext` subsets only (a UK pack renders no Cyrillic, Greek or Vietnamese), inline each
+`woff2` as a data URI, and remove the `<link>` **and** its `preconnect` hints. Cache the files
+on disk so a rebuild is not a network dependency, and **fail the build** if a font cannot be
+resolved — silently leaving the link defeats the point.
+
+A labelled link to a teaching resource (Oak National Academy) is not a fetch and stays.
+
+## Mirror-shape packs (PACK-4)
+
+The default build preserves the repo tree because its links assume the repo tree. A mirror
+pack assembles into the school's OneDrive geometry instead — and is only safe because it does
+**both halves**: assemble to the drive's shape *and* rewrite every internal link against the
+same map. Zip geometry then equals drive geometry, so a link between two co-shipped folders
+still resolves after a drag-and-merge. Do one half without the other and every cross-folder
+link dies silently.
+
+Three rules learned building the first one:
+
+1. **A hub is position-dependent after a rewrite.** Never tell anyone to hand-copy a rebranded
+   root hub into a subfolder: its hrefs are written for depth 0, so the copy is a branded page
+   with dead links — worse than an unbranded page that works. Emit each copy at its own depth
+   and crawl it **from its own location**.
+2. **Flattening collides filenames.** Census every basename repeated across the folders being
+   flattened *before* assembling. Renaming is reversible; overwriting is not.
+3. **A page the pack authors or re-emits is a Progress Schools page.** "Only pages that
+   previously carried a mark" is a rule against inventing branding on someone else's page. It
+   does not cover a page this build writes, nor a hub re-emitted at a new path — those carry
+   the lockup. Brand the root original too, or the two copies of a hub disagree.
+4. **A merge replaces same-named files.** Where the destination holds artefacts that cannot be
+   regenerated, print the collision list explicitly — **empty or not**. A silent pass is
+   indistinguishable from a check that never ran.
 
 ---
 
