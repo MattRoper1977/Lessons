@@ -260,3 +260,27 @@ meaningless (failure #13). Plain-text before/after prose diffs per file in
 - Decision — the assessor witness statement was excluded from prose editing:
   it is the ASDAN/AQA-facing record surface; changing its wording risks the
   banking route for zero pupil-facing gain.
+
+### §3.4 / A6 — the We Do specimen (built, gated, STOPPED at one)
+
+- Determination: yes — the pack's state-based muscle lab transplants cleanly
+  into W4A's We Do 2 as an upgrade of the existing model-arm widget, within
+  chassis conventions (inline SVG, single script, button-only controls) and
+  without touching the print pack (3 pp sections + witness verified after).
+- Ported: prediction-commit before reveal, three discrete positions with a
+  direct keyboard/tap position route, TEST disabled until a prediction is
+  committed, FREEZE & LOOK, reset, contract/relax state readout. Muscle
+  identity is pattern + dash style + text label — never colour alone. No
+  drag anywhere. The forearm transition is suppressed globally under
+  `prefers-reduced-motion`; every state is carried by the text readout, so
+  meaning never rides on the motion (gate 18 classification).
+- **The pack's unguarded `matchMedia` call is not guarded — it is absent**:
+  it lived in the pack's stage-navigation smooth scroll, which was not
+  ported. `matchMedia` occurrences in shipped W4A: 0 (strongest guard).
+- Old `arm()` chassis function left in place (shared function set across the
+  ten; W4A no longer calls it — harmless, consistent with siblings).
+- Gate run on the specimen: zero page errors; predict→test, both directions,
+  freeze, reset, rotation and pattern overlay all asserted in-browser;
+  rendered screenshot delivered for sign-off.
+- **STOP honoured: one specimen only. The other nine We Do labs are not
+  built and will not be until Matt signs off in writing.**
