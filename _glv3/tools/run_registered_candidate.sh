@@ -120,12 +120,12 @@ node --version | tee /tmp/glv3-diagnostics/node-version.log
 npm --version | tee /tmp/glv3-diagnostics/npm-version.log
 rm -rf "$NODE_RUNTIME"
 mkdir -p "$NODE_RUNTIME"
-npm --prefix "$NODE_RUNTIME" init -y >/tmp/glv3-diagnostics/npm-init.log 2>&1
+printf '%s\n' '{"private":true,"type":"module"}' > "$NODE_RUNTIME/package.json"
 npm --prefix "$NODE_RUNTIME" install --no-save --no-package-lock playwright@1.55.0 sharp pngjs pdfjs-dist 2>&1 | tee /tmp/glv3-diagnostics/npm-install.log
 "$NODE_RUNTIME/node_modules/.bin/playwright" install chromium 2>&1 | tee /tmp/glv3-diagnostics/playwright-install.log
 cp _glv3/tools/browser_verify.mjs "$NODE_RUNTIME/browser-primary.mjs"
 cp _glv3/tools/chip_gate.mjs "$NODE_RUNTIME/chips-primary.mjs"
-test -z "$(git status --porcelain -- node_modules)" || fail "browser dependency installation changed repository node_modules"
+test -z "$(git status --porcelain -- node_modules package.json package-lock.json)" || fail "browser dependency installation changed repository package files"
 
 log "Run real Chromium gates"
 python -m http.server 4173 --bind 127.0.0.1 --directory "$ROOT" >/tmp/glv3-diagnostics/http-primary.log 2>&1 &
@@ -146,7 +146,7 @@ trap - EXIT
 test -s _glv3/GATES_BROWSER.json
 test -s _glv3/GATES_CHIPS.json
 test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
-test -z "$(git status --porcelain -- node_modules)" || fail "browser gates changed repository node_modules"
+test -z "$(git status --porcelain -- node_modules package.json package-lock.json)" || fail "browser gates changed repository package files"
 
 log "Build truthful pre-merge evidence dossier"
 python _glv3/tools/build_candidate_dossier.py \
@@ -170,7 +170,7 @@ rm -f .github/workflows/glv3-generate.yml .github/workflows/glv3-generation-gate
 test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name '*.html' | wc -l)" = 94
 test "$(find _glv3/contact_sheet -type f -name '*.png' | wc -l)" = 83
 test -z "$(git diff --name-only -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
-test -z "$(git status --porcelain -- node_modules)" || fail "candidate would include runtime node_modules changes"
+test -z "$(git status --porcelain -- node_modules package.json package-lock.json)" || fail "candidate would include runtime package files"
 ! grep -RIlE '/home/runner/work|gh[pousr]_[A-Za-z0-9_]{20,}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY' _glv3 GROW_Estate_v3 LAUNCH_Estate_v3 | grep -q .
 ! find . -path './.git' -prune -o -path './node_modules' -prune -o -type f -size +50M -print | grep -q .
 git diff --check
@@ -185,7 +185,7 @@ git config user.name 'github-actions[bot]'
 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 git add -A
 git diff --cached --quiet && fail "candidate generation produced no tracked changes"
-test -z "$(git diff --cached --name-only -- node_modules)" || fail "candidate index contains runtime node_modules changes"
+test -z "$(git diff --cached --name-only -- node_modules package.json package-lock.json)" || fail "candidate index contains runtime package files"
 git commit -m 'feat: install verified GROW and LAUNCH alternative v3 estates'
 CANDIDATE_SHA="$(git rev-parse HEAD)"
 git push origin HEAD:"$BRANCH"
