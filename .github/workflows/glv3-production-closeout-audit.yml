@@ -1,0 +1,211 @@
+name: GLV3 Prompt C full production closeout audit
+
+on:
+  push:
+    branches:
+      - audit/glv3-production-closeout-2026-08-11
+    paths:
+      - .github/workflows/glv3-production-closeout-audit.yml
+      - _glv3/tools/production_verify.mjs.gz.b64.part*
+      - _glv3/tools/build_production_closeout.py.gz.b64
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+  deployments: read
+  pages: read
+  pull-requests: read
+  statuses: write
+
+concurrency:
+  group: glv3-production-closeout-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-closeout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    env:
+      CANDIDATE_SHA: 62a92d7d0216c00ae3ab9929528ab705c3ad2a30
+      FEATURE_MERGE_SHA: a9dc6fc8214ff16a5f9effe183ca7329f4f7f615
+      HISTORIC_BASE_SHA: 1e8a428b523d1b970a8a3a2ab2a99f48a8271d09
+      PROMPT_A_RUN_ID: '31479359464'
+      FEATURE_DEPLOYMENT_RUN_ID: '31481229802'
+      PRODUCTION_URL: https://madebymatt.uk/Lessons/
+      EVIDENCE_BRANCH: closeout/glv3-production-evidence-2026-08-11
+    steps:
+      - name: Check out isolated Prompt C audit tooling
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: audit/glv3-production-closeout-2026-08-11
+
+      - name: Prove audit isolation from current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD)
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 7
+          for file in "${changed[@]}"; do
+            case "$file" in
+              .github/workflows/glv3-production-closeout-audit.yml|_glv3/tools/build_production_closeout.py.gz.b64|_glv3/tools/production_verify.mjs.gz.b64.part0[0-4]) ;;
+              *) echo "Unexpected audit-branch path: $file" >&2; exit 1 ;;
+            esac
+          done
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Decode and verify isolated audit tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            _glv3/tools/production_verify.mjs.gz.b64.part00 \
+            _glv3/tools/production_verify.mjs.gz.b64.part01 \
+            _glv3/tools/production_verify.mjs.gz.b64.part02 \
+            _glv3/tools/production_verify.mjs.gz.b64.part03 \
+            _glv3/tools/production_verify.mjs.gz.b64.part04 \
+            | base64 --decode | gzip --decompress > /tmp/production_verify.mjs
+          base64 --decode _glv3/tools/build_production_closeout.py.gz.b64 \
+            | gzip --decompress > /tmp/build_production_closeout.py
+          printf '%s  %s\n' \
+            'f664675e6aa076fb6c1869208a0016c56df7499b5163c39ff313d7b4543496b1' \
+            /tmp/production_verify.mjs \
+            'e8ecef0a5a2fe1a9c2e2599aff511741acd2881ac51b57d29ba35ec28738882e' \
+            /tmp/build_production_closeout.py \
+            | sha256sum --check --strict -
+          node --check /tmp/production_verify.mjs
+          python -m py_compile /tmp/build_production_closeout.py
+
+      - name: Install real Chromium production verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run the full live 94-page production acceptance suite
+        id: verify
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OUTPUT_DIR: _glv3/production_evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 85m node /tmp/production_verify.mjs
+          jq -e '.status == "DEPLOYED_VERIFIED" and (.failures | length) == 0' _glv3/production_evidence/PRODUCTION_GATES.json >/dev/null
+          cat _glv3/production_evidence/PRODUCTION_GATES.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build final permanent production evidence and deterministic ZIP
+        id: build_evidence
+        if: steps.verify.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/glv3-final-evidence
+          python /tmp/build_production_closeout.py \
+            --repo "$GITHUB_WORKSPACE" \
+            --production-evidence "$GITHUB_WORKSPACE/_glv3/production_evidence" \
+            --out /tmp/glv3-final-evidence
+          jq -e '.status == "DEPLOYED_VERIFIED"' /tmp/glv3-final-evidence/EVIDENCE_OUTPUT_MANIFEST.json >/dev/null
+          rm -rf /tmp/glv3-production-evidence
+          cp -a _glv3/production_evidence /tmp/glv3-production-evidence
+          printf 'final_zip_sha256=%s\n' "$(jq -r .final_zip_sha256 /tmp/glv3-final-evidence/EVIDENCE_OUTPUT_MANIFEST.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish one evidence-only closeout branch
+        id: evidence_branch
+        if: steps.build_evidence.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf node_modules _glv3/production_evidence
+          git reset --hard
+          git clean -fdx
+          git fetch --no-tags origin main
+          git switch -C "$EVIDENCE_BRANCH" origin/main
+          cp -a /tmp/glv3-final-evidence/_glv3/. _glv3/
+
+          mapfile -t allowed < <(jq -r '.allowed_evidence_paths[]' /tmp/glv3-final-evidence/EVIDENCE_OUTPUT_MANIFEST.json)
+          test "${#allowed[@]}" -ge 7
+          git add -- "${allowed[@]}"
+          mapfile -t changed < <(git diff --cached --name-only)
+          test "${#changed[@]}" -eq "${#allowed[@]}"
+          for file in "${changed[@]}"; do
+            printf '%s\n' "${allowed[@]}" | grep -Fxq "$file" || {
+              echo "Unauthorised evidence diff: $file" >&2
+              exit 1
+            }
+          done
+          test -z "$(git diff --cached --name-only -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3 GROW_Estate_v3 LAUNCH_Estate_v3 resources.json _finish/ROUTES.md)"
+          git diff --cached --check
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: close GROW LAUNCH v3 production evidence'
+          evidence_sha="$(git rev-parse HEAD)"
+
+          if old_sha="$(git ls-remote --heads origin "refs/heads/${EVIDENCE_BRANCH}" | awk '{print $1}')" && [[ -n "$old_sha" ]]; then
+            git fetch --no-tags origin "refs/heads/${EVIDENCE_BRANCH}:refs/remotes/origin/${EVIDENCE_BRANCH}"
+            git push --force-with-lease="refs/heads/${EVIDENCE_BRANCH}:${old_sha}" origin "HEAD:refs/heads/${EVIDENCE_BRANCH}"
+          else
+            git push origin "HEAD:refs/heads/${EVIDENCE_BRANCH}"
+          fi
+          printf 'evidence_sha=%s\n' "$evidence_sha" >> "$GITHUB_OUTPUT"
+          printf 'evidence_branch=%s\n' "$EVIDENCE_BRANCH" >> "$GITHUB_OUTPUT"
+          {
+            echo ''
+            echo '## Evidence-only closeout branch'
+            echo ''
+            echo "- Branch: \`$EVIDENCE_BRANCH\`"
+            echo "- Commit: \`$evidence_sha\`"
+            echo "- Final ZIP SHA-256: \`${{ steps.build_evidence.outputs.final_zip_sha256 }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload complete Prompt C audit and evidence build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glv3-prompt-c-production-closeout-${{ github.run_id }}
+          path: |
+            /tmp/glv3-production-evidence
+            /tmp/glv3-final-evidence
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Bind Prompt C audit result to the production-verification main SHA
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          BUILD_OUTCOME: ${{ steps.build_evidence.outcome }}
+          EVIDENCE_OUTCOME: ${{ steps.evidence_branch.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(jq -r '.identities.current_main_sha // empty' _glv3/production_evidence/PRODUCTION_GATES.json 2>/dev/null || true)"
+          [[ -n "$main_sha" ]] || main_sha="$(git rev-parse origin/main)"
+          state=failure
+          description='Prompt C production closeout failed; inspect audit evidence'
+          if [[ "$VERIFY_OUTCOME" = success && "$BUILD_OUTCOME" = success && "$EVIDENCE_OUTCOME" = success ]]; then
+            state=success
+            description='Full 94-page GLV3 production suite passed; evidence branch published'
+          fi
+          target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          payload="$(jq -nc \
+            --arg state "$state" \
+            --arg context 'glv3/production-closeout' \
+            --arg description "$description" \
+            --arg target_url "$target_url" \
+            '{state:$state,context:$context,description:$description,target_url:$target_url}')"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${main_sha}" \
+            --data "$payload" >/dev/null
