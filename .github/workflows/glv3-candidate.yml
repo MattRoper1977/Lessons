@@ -46,10 +46,10 @@ jobs:
           from pathlib import Path
           path=Path('_glv3/tools/run_registered_candidate.sh')
           text=path.read_text()
-          old='python _glv3/tools/deploy.py\ntest "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94'
-          new='python _glv3/tools/deploy.py\npython _glv3/tools/finalize_filename_references.py --repo "$ROOT"\ntest "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94'
+          old='python _glv3/tools/deploy.py'
+          new='python _glv3/tools/deploy.py\npython _glv3/tools/finalize_filename_references.py --repo "$ROOT"'
           if text.count(old) != 1:
-              raise SystemExit(f'candidate runner generation boundary count={text.count(old)}')
+              raise SystemExit(f'candidate runner deploy command count={text.count(old)}')
           path.write_text(text.replace(old,new,1))
           PY
           test "$(git rev-parse HEAD)" = "$GLV3_EXPECTED_HEAD"
