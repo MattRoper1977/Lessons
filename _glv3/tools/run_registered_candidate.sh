@@ -104,24 +104,8 @@ python _glv3/tools/build_candidate_dossier.py \
   --repo "$ROOT" \
   --integration-sha "$BASE_SHA" \
   --starting-branch-sha "$STARTING_SHA"
-python - <<'PY'
-import json, os
-from pathlib import Path
-out=Path('_glv3')
-run_id=int(os.environ['GITHUB_RUN_ID']) if os.environ.get('GITHUB_RUN_ID') else None
-run_url=(f"{os.environ.get('GITHUB_SERVER_URL','https://github.com')}/"
-         f"{os.environ.get('GITHUB_REPOSITORY','MattRoper1977/Lessons')}/actions/runs/{run_id}") if run_id else None
-proof_path=out/'GROW_LAUNCH_v3_DEPLOY_PROOF.json'
-proof=json.loads(proof_path.read_text())
-proof['ci_runs']=[{'run_id':run_id,'url':run_url,'workflow':'GROW LAUNCH v3 build verified candidate','phase':'candidate generation and exact-tree verification','conclusion_at_commit':'IN_PROGRESS'}]
-proof_path.write_text(json.dumps(proof,indent=2,sort_keys=True)+'\n')
-sentinel_path=out/'AUTONOMOUS_SENTINEL.json'
-sentinel=json.loads(sentinel_path.read_text())
-sentinel['discovered_actions_identifiers']=[run_id] if run_id else []
-sentinel['candidate_run_url']=run_url
-sentinel_path.write_text(json.dumps(sentinel,indent=2,sort_keys=True)+'\n')
-PY
 python _glv3/tools/finalize_candidate_bundle.py --repo "$ROOT"
+python -c 'import json; p=json.load(open("_glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json", encoding="utf-8")); assert p["candidate_verified"] is True and p["deployment_complete"] is False and p["publication_proven"] is False'
 test -s _glv3/GROW_LAUNCH_v3_DEPLOY_FINAL_REPORT.md
 test -s _glv3/GROW_LAUNCH_v3_DEPLOY_PROOF.json
 test -s _glv3/GROW_LAUNCH_v3_REPORT_AND_PROOF.zip
