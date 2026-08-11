@@ -7,6 +7,7 @@ on:
       - .github/workflows/glv3-candidate.yml
       - _glv3/tools/run_registered_candidate.sh
       - _glv3/tools/prepare_registered_candidate.py
+      - _glv3/tools/finalize_filename_references.py
   pull_request:
     branches: [main]
     types: [reopened]
@@ -41,9 +42,20 @@ jobs:
         run: |
           set -euo pipefail
           python _glv3/tools/prepare_registered_candidate.py
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('_glv3/tools/run_registered_candidate.sh')
+          text=path.read_text()
+          old='python _glv3/tools/deploy.py\ntest "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94'
+          new='python _glv3/tools/deploy.py\npython _glv3/tools/finalize_filename_references.py --repo "$ROOT"\ntest "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94'
+          if text.count(old) != 1:
+              raise SystemExit(f'candidate runner generation boundary count={text.count(old)}')
+          path.write_text(text.replace(old,new,1))
+          PY
           test "$(git rev-parse HEAD)" = "$GLV3_EXPECTED_HEAD"
           grep -q 'source_lesson_paths_with_token' _glv3/tools/browser_verify.mjs
           grep -q '/tmp/glv3-diagnostics/browser-primary.log' _glv3/tools/run_registered_candidate.sh
+          grep -q 'finalize_filename_references.py' _glv3/tools/run_registered_candidate.sh
 
       - name: Set up Python
         uses: actions/setup-python@v5
