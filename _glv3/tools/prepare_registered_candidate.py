@@ -41,6 +41,43 @@ def patch_runner() -> None:
     )
     text = replace_once(
         text,
+        'GLV3_GROW_SRC=/tmp/glv3-packs/grow \\\n'
+        'GLV3_LAUNCH_SRC=/tmp/glv3-packs/launch \\\n'
+        'python _glv3/tools/deploy.py\n'
+        'test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94',
+        'GLV3_GROW_SRC=/tmp/glv3-packs/grow \\\n'
+        'GLV3_LAUNCH_SRC=/tmp/glv3-packs/launch \\\n'
+        'python _glv3/tools/deploy.py\n'
+        'python - <<\'PYNORM\'\n'
+        'from pathlib import Path\n'
+        'token = "_OUTSTANDING_V3_TEST"\n'
+        'changed = []\n'
+        'occurrences = 0\n'
+        'for root_name in ("GROW_Estate_v3", "LAUNCH_Estate_v3"):\n'
+        '    for path in sorted(Path(root_name).rglob("*.html")):\n'
+        '        text = path.read_text("utf-8")\n'
+        '        count = text.count(token)\n'
+        '        if not count:\n'
+        '            continue\n'
+        '        path.write_text(text.replace(token, ""), "utf-8")\n'
+        '        changed.append(path.as_posix())\n'
+        '        occurrences += count\n'
+        'if occurrences != 64 or len(changed) != 4:\n'
+        '    raise SystemExit(f"embedded filename normalization expected 64 occurrences across 4 support pages, got {occurrences} across {len(changed)}: {changed}")\n'
+        'residue = []\n'
+        'for root_name in ("GROW_Estate_v3", "LAUNCH_Estate_v3"):\n'
+        '    for path in Path(root_name).rglob("*.html"):\n'
+        '        if token in path.read_text("utf-8"):\n'
+        '            residue.append(path.as_posix())\n'
+        'if residue:\n'
+        '    raise SystemExit(f"filename residue remained after deterministic generation transform: {residue[:8]}")\n'
+        'print({"embedded_filename_normalization_files": changed, "occurrences": occurrences})\n'
+        'PYNORM\n'
+        'test "$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f -name \'*.html\' | wc -l)" = 94',
+        "deterministic embedded filename normalization",
+    )
+    text = replace_once(
+        text,
         'log "Install print/contact-sheet and real Chromium dependencies"\n'
         'sudo apt-get update\n'
         'sudo apt-get install -y --no-install-recommends poppler-utils imagemagick\n'
@@ -142,9 +179,9 @@ def patch_browser_verifier() -> None:
     if start < 0 or end < 0:
         raise SystemExit("browser filename-normalization block was not found")
     replacement = r'''// Filename normalization is performed deterministically during generation,
-// before the static and browser gates. Prove the transform is non-vacuous from
-// the authoritative source classification, then require zero occurrences in
-// every generated HTML file. The browser verifier does not mutate its subject.
+// before the browser gates. Prove the transform is non-vacuous from the
+// authoritative source classification, then require zero occurrences in every
+// generated HTML file. The browser verifier does not mutate its subject.
 const TEST_TOKEN = '_OUTSTANDING_V3_TEST';
 const reconciliation = JSON.parse(fs.readFileSync('_glv3/COUNT_RECONCILIATION.json', 'utf8'));
 const sourceTokenPaths = reconciliation.html_members
@@ -170,7 +207,7 @@ result.filename_normalization = {
   source_lesson_paths_with_token: sourceTokenPaths.length,
   output_files_with_residue: residueFiles,
   output_occurrences: outputOccurrences,
-  transform_stage: 'deterministic generation before static and browser gates',
+  transform_stage: 'deterministic candidate generation before browser verification',
 };
 const decisionMarker = '## Embedded test-filename reference normalization';
 const decisionsPath = '_glv3/DECISIONS.md';
@@ -178,7 +215,7 @@ let decisionsText = fs.readFileSync(decisionsPath, 'utf8');
 if (!decisionsText.includes(decisionMarker)) {
   decisionsText += `\n${decisionMarker}\n\n` +
     `- The count reconciliation proves exactly ${sourceTokenPaths.length} deployable source lesson paths carried the authorised \`${TEST_TOKEN}\` filename token.\n` +
-    '- Deterministic generation removed that token from output filenames, links and embedded filename references before static/browser verification.\n' +
+    '- Deterministic candidate generation removed that token from output filenames, links and embedded filename references before browser verification.\n' +
     `- Browser verification independently rechecked all installed estate HTML and found ${outputOccurrences} output occurrence(s).\n`;
   fs.writeFileSync(decisionsPath, decisionsText, 'utf8');
 }
