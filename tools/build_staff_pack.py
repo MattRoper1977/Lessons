@@ -36,6 +36,23 @@ INCLUDE_DIRS = [
     "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Humanities_Teesside",
     "Grow/Slideshows", "Launch", "Tutor_Time", "DT_Community_Upcycling",
     "Science_Teesside",   # PACK-1 v2: current science suite IN; frozen biology/chemistry/"2 Physics 10" stay OUT
+    # PACK-5 (R1, extended): the three v3 alternative-route estates. Each is a
+    # self-contained tree with its own hub and subject subfolders, installed as a
+    # PARALLEL route -- not a replacement for the existing lessons. They ship as three
+    # root-level drive folders and are NOT interleaved into the subject/ASDAN folders:
+    # the 30 Jul legacy-art interleaving is the precedent against mixing routes in one
+    # folder. R1 as written named only GROW and LAUNCH (installed 11 Aug, 62a92d7);
+    # BUILD_Estate_v3 landed a day earlier (10 Aug, cc9f36e) as a structural twin and
+    # was ruled in as a third peer rather than quarantined.
+    "GROW_Estate_v3", "LAUNCH_Estate_v3", "BUILD_Estate_v3",
+    # PACK-5 (R2 quarantine): an 8-page self-contained baseline-assessment pack added
+    # 10 Aug (24369a3) and linked from all three Science v3_40min hubs. It is in scope
+    # -- real teaching material, and leaving it out breaks three shipping links -- but
+    # TAXONOMY_MAP has no folder for it, so it is NOT placed in a subject folder on a
+    # guess. It ships under _New_This_Rebuild/ and the link rewrite follows it there.
+    # Its own README.md is a "Made by Matt" dev note naming PythonAnywhere: excluded on
+    # the dual-branding rule and on the existing "README.md is repo documentation" rule.
+    "Baseline_Weeks",
 ]
 INCLUDE_GLOBS = [
     "Build/Slideshows/BUILD_DT_W*.html",
@@ -86,7 +103,45 @@ INCLUDE_FILES = [
     "grow-anim/grow-svg-bio-animals.js",
     "grow-anim/grow-anim.js",
     "grow-anim/compat-build-anim.js",
+    # PACK-5: five staff reference docs the v3 estate hubs link to by relative path,
+    # out of the working directories (_finish/, _glv3/) the estates were built in.
+    # Exactly the class of miss PACK-2 and PACK-3 paid for twice: a directory being in
+    # INCLUDE_DIRS does not carry a sibling outside it, so a link from a shipping hub
+    # to a non-shipping file dies silently on the drive. Each is referenced from
+    # exactly one estate and is filed into that estate's _Route_Docs/ folder.
+    "_finish/build_estate/Art_Teesside__ARTIST_IMAGE_PROVENANCE_GUIDE.md",
+    "_finish/build_estate/Art_Teesside__SOW_POLICY_AND_AWARD_ALIGNMENT.md",
+    "_finish/build_estate/BUILD_ASDAN__CLAIMS_AND_SAFETY_READBACK.md",
+    "_glv3/grow/GROW_ASDAN/GROW_ASDAN_CLAIMS_READBACK.md",
+    "_glv3/launch/LAUNCH_ASDAN/LAUNCH_ASDAN_CLAIMS_READBACK.md",
+    # PACK-5: same class again, for the Science v3_40min hubs that came into scope with
+    # the rest of Science_Teesside. Each is linked from exactly one v3_40min hub.
+    "_sciv3/build/POLICY_ALIGNMENT.md",
+    "_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md",
 ]
+
+# PACK-5: Science v3_40min reference docs -> the v3_40min folder that links them.
+SCI_V3_DOCS = {
+    "_sciv3/build/POLICY_ALIGNMENT.md":         "Science_Teesside/Build/v3_40min/",
+    "_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md": "Science_Teesside/Launch/v3_40min/",
+}
+# PACK-5 (R2): root folder for in-scope content TAXONOMY_MAP has no home for.
+QUARANTINE = "_New_This_Rebuild/"
+
+# PACK-5: repo prefix -> drive folder for the three alternative-route estates.
+ESTATE_V3 = {
+    "GROW_Estate_v3/":   "GROW Estate v3 (Alternative Route)/",
+    "LAUNCH_Estate_v3/": "LAUNCH Estate v3 (Alternative Route)/",
+    "BUILD_Estate_v3/":  "BUILD Estate v3 (Alternative Route)/",
+}
+# Which estate each carried-in reference doc belongs to (the estate that links it).
+ROUTE_DOCS = {
+    "_finish/build_estate/Art_Teesside__ARTIST_IMAGE_PROVENANCE_GUIDE.md": "BUILD_Estate_v3/",
+    "_finish/build_estate/Art_Teesside__SOW_POLICY_AND_AWARD_ALIGNMENT.md": "BUILD_Estate_v3/",
+    "_finish/build_estate/BUILD_ASDAN__CLAIMS_AND_SAFETY_READBACK.md": "BUILD_Estate_v3/",
+    "_glv3/grow/GROW_ASDAN/GROW_ASDAN_CLAIMS_READBACK.md": "GROW_Estate_v3/",
+    "_glv3/launch/LAUNCH_ASDAN/LAUNCH_ASDAN_CLAIMS_READBACK.md": "LAUNCH_Estate_v3/",
+}
 # The dynamic hud.js injector. Self-contained script element, byte-identical across
 # the five decks that carry it, and its entire body exists to load hud.js.
 HUD_DYNAMIC = re.compile(
@@ -423,6 +478,24 @@ def dest_for(rel):
     # --- root unit hubs: canonical single placement at the drive root
     if "/" not in r:
         return r
+
+    # --- PACK-5: the three v3 alternative-route estates ---------------------
+    # Self-contained trees. Structure is preserved verbatim under a renamed root, so
+    # every link inside an estate keeps the same relative shape and survives the move.
+    # Checked before the subject rules below: an estate path looks like
+    # "GROW_Estate_v3/Art_Teesside/..." and must NOT be caught by the Art rule and
+    # interleaved into the shared Art folder.
+    for pre, dst in ESTATE_V3.items():
+        if r.startswith(pre):
+            return dst + r[len(pre):]
+    if r in ROUTE_DOCS:
+        return ESTATE_V3[ROUTE_DOCS[r]] + "_Route_Docs/" + name
+    if r in SCI_V3_DOCS:
+        return SCI_V3_DOCS[r] + "_Route_Docs/" + name
+
+    # --- PACK-5 (R2): quarantine, repo-relative structure preserved ---------
+    if r.startswith("Baseline_Weeks/"):
+        return QUARANTINE + r
 
     # --- Art -------------------------------------------------------------
     if r.startswith("Art_Teesside/"):
@@ -781,6 +854,103 @@ def write_font_licences(pack, families):
     (pack / "FONT_LICENCES.txt").write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
+# PACK-5 --------------------------------------------------------------------
+# A "lesson" is a teaching page: not a hub, not one of the named support pages.
+# This rule is not invented here -- it is the one that reproduces the brief's own
+# figures for the pair it described (GROW 34, LAUNCH 46, 80 total, 56 screen-only).
+# "Screen-only" means the page carries no print stylesheet.
+ROUTE_SUPPORT = re.compile(
+    r"EVIDENCE_WINDOW|IMPLEMENTATION_GUIDE|CONSOLIDATION|TRANSITION_SUPPORT", re.I)
+
+def route_note_stats():
+    """Measure lessons / screen-only per v3 estate, from the repo files."""
+    stats = {}
+    for pre in ESTATE_V3:
+        root = REPO / pre.rstrip("/")
+        pages = sorted(root.rglob("*.html"))
+        lessons = [f for f in pages
+                   if f.name != "index.html" and not ROUTE_SUPPORT.search(f.name)]
+        screen = [f for f in lessons
+                  if "@media print" not in f.read_text(encoding="utf-8", errors="ignore")]
+        stats[pre] = {"pages": len(pages), "lessons": len(lessons),
+                      "screen": len(screen), "print": len(lessons) - len(screen),
+                      "hubs": len([f for f in pages if f.name == "index.html"])}
+    return stats
+
+def quarantine_readme(quarantined, back):
+    lines = [
+        "NEW IN THIS REBUILD — NOT YET FILED ON THE DRIVE",
+        "=" * 68, "",
+        "WHY THIS FOLDER EXISTS",
+        "    These files are current, in-scope teaching material, but the drive",
+        "    taxonomy this pack mirrors has no folder for them. Rather than guess a",
+        "    home and bury them somewhere wrong, the build put them here and told you.",
+        "",
+        "WHAT TO DO",
+        "    Drag them wherever you want them — or leave them here. Nothing else in",
+        "    the pack depends on their final location EXCEPT the links noted below.",
+        "",
+        "IF YOU MOVE Baseline_Weeks",
+        "    The three Science v3_40min hub pages (Build, Grow, Launch) link into it.",
+        "    Those links were rewritten to point at THIS location. Move the folder and",
+        "    those three links stop resolving — the pages still work, the one link out",
+        "    of each does not.",
+        "",
+        f"FILES ({len(quarantined)})",
+        "-" * 68,
+    ]
+    for d in quarantined:
+        origin = back.get(d, "?")
+        lines.append(f"  {d}")
+        lines.append(f"      from repo: {origin}")
+    lines += [
+        "-" * 68, "",
+        "NOT INCLUDED",
+        "    Baseline_Weeks/README.md — a developer note headed 'Made by Matt' that",
+        "    names the PythonAnywhere original. Held out of a Progress-branded pack",
+        "    on the dual-branding rule. It is still in the repo if you want it.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def route_note(pre, dst, s):
+    unit = pre.split("_")[0]
+    if s["screen"] > s["print"]:
+        printing = (f"{s['screen']} of the {s['lessons']} lessons are SCREEN-ONLY by design.\n"
+                    f"    Print packs for those follow later; {s['print']} already print.")
+    elif s["screen"] == 0:
+        printing = f"All {s['lessons']} lessons print. No screen-only lessons in this route."
+    else:
+        printing = (f"{s['print']} of the {s['lessons']} lessons print; "
+                    f"{s['screen']} is screen-only.\n    Print packs for the remainder follow later.")
+    return f"""ABOUT THIS FOLDER — {dst.rstrip('/')}
+{'=' * 68}
+
+WHAT THIS IS
+    An ALTERNATIVE Autumn 1 route for {unit}. It is a complete parallel set of
+    lessons, not an update to the ones you already have.
+
+THE EXISTING LESSONS REMAIN THE DEFAULT
+    Nothing in your current {unit} folders has been changed, moved or replaced by
+    this folder. If you do nothing, you teach exactly what you taught before.
+
+WHICH ROUTE TO TEACH IS A STAFF DECISION
+    Matt's or the teaching team's call — not a decision this pack makes for you.
+
+PRINTING
+    {printing}
+
+WHAT IS IN HERE
+    {s['lessons']} lessons, {s['hubs']} hub pages, {s['pages']} pages in total.
+    Start at index.html in this folder.
+    Self-contained: every link inside this folder points inside this folder,
+    so it works from OneDrive and offline with nothing else installed.
+
+Counts above were measured from the files in this folder at build time.
+"""
+
+
 def build_mirror(logo_path, out_root):
     keep, dropped = in_scope()
     print(f"scope: {len(keep)} files in, {len(dropped)} deliberately excluded")
@@ -856,6 +1026,24 @@ def build_mirror(logo_path, out_root):
 
     # the Careers week-order note travels INTO the folder it warns about
     (pack / "ASDAN PEQ/Build/Careers/0_WEEK_ORDER.txt").write_text(WEEK_ORDER_NOTE, encoding="utf-8")
+
+    # PACK-5: a route note in each v3 estate, so a folder found on the drive explains
+    # itself without the README. Counts are MEASURED per estate, never carried from the
+    # brief -- BUILD is 53/54 print-ready and repeating GROW's "screen-only" line there
+    # would have shipped a false statement into the folder it describes.
+    # PACK-5 (R2): the quarantine folder explains itself and names every file.
+    quarantined = sorted(v for v in fwd.values() if v.startswith(QUARANTINE))
+    if quarantined:
+        (pack / QUARANTINE / "0_README.txt").write_text(
+            quarantine_readme(quarantined, back), encoding="utf-8")
+    print(f"R2 quarantine: {len(quarantined)} file(s) under {QUARANTINE}")
+
+    estate_stats = route_note_stats()
+    for pre, dst in sorted(ESTATE_V3.items()):
+        (pack / dst / "0_ABOUT_THIS_ROUTE.txt").write_text(
+            route_note(pre, dst, estate_stats[pre]), encoding="utf-8")
+    print("PACK-5 route notes: " + ", ".join(
+        f"{p.rstrip('/')} {s['lessons']}L/{s['screen']}so" for p, s in sorted(estate_stats.items())))
 
     # ---- C2: a Progress-branded page at every bare name the flattening orphaned
     orphans = bare_name_census(fwd)
@@ -990,13 +1178,24 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "=" * 74, "",
          "Drag each item below onto its twin in OneDrive and choose MERGE.",
          "Do not rename anything. Do not delete anything first.", ""]
+    # PACK-5: a folder this rebuild introduces has NO twin on the drive. Telling staff
+    # to "merge into the existing X" when X does not exist is a false instruction, and
+    # it is the one line in this guide they act on without checking.
+    new_tops = sorted({v.rstrip("/") for v in ESTATE_V3.values()} | {QUARANTINE.rstrip("/")})
     for tname in sorted(tops):
         d = pack / tname
         n = sum(1 for f in d.rglob("*") if f.is_file()) if d.is_dir() else len(tops[tname])
         if tname == "(root files)":
             g.append(f"  {'the loose .html files at the zip root':<46} -> drop at the ROOT of the lessons area (merge)")
+        elif tname in new_tops:
+            g.append(f"  {tname + '/':<46} -> NEW - nothing to merge onto. Just drop it at the root.  ({n} files)")
         else:
             g.append(f"  {tname + '/':<46} -> merge into the existing '{tname}' folder  ({n} files)")
+    g += ["",
+          "  The four NEW folders above do not exist on the drive yet. There is no twin to",
+          "  merge onto and nothing of yours they can overwrite — dropping them at the root",
+          "  is the whole job. Each carries a note explaining itself:",
+          "  0_ABOUT_THIS_ROUTE.txt in the three estates, 0_README.txt in _New_This_Rebuild."]
     g += ["",
           "  DO NOT DRAG:  _Pack_Notes/   - build notes for Matt, not staff content.",
           "                                 TAXONOMY_MAP.md, MANIFEST.txt, the collision",
@@ -1108,6 +1307,32 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
           "| destination | result |", "|---|---|"]
     for src, dest, ok, miss in hub_results:
         m.append(f"| `{dest}` | {'rebuilt at this depth, crawls clean in place' if ok else 'DROPPED - ' + ', '.join(sorted(miss))[:50]} |")
+    # PACK-5 (R1/R2): folders this rebuild introduces. They have no twin on the drive,
+    # so they are recorded here as additions to the taxonomy rather than mappings into it.
+    _st = route_note_stats()
+    m += ["", "## NEW FOLDERS — added by this rebuild, not present on the drive", "",
+          "Four root-level folders the drive does not have. Nothing merges onto them;",
+          "they are dropped at the root as-is.", "",
+          "| folder | what it is | pages |", "|---|---|---|"]
+    for pre, dst in sorted(ESTATE_V3.items()):
+        s = _st[pre]
+        m.append(f"| `{dst.rstrip('/')}` | alternative Autumn 1 route for "
+                 f"{pre.split('_')[0]}; {s['lessons']} lessons "
+                 f"({s['print']} print, {s['screen']} screen-only), self-contained | {s['pages']} |")
+    _q = sorted(v for v in fwd.values() if v.startswith(QUARANTINE))
+    m.append(f"| `{QUARANTINE.rstrip('/')}` | R2 quarantine: in-scope content with no "
+             f"home in this map, filed rather than guessed at | {len(_q)} |")
+    m += ["",
+          "The three estates are NOT interleaved into the existing subject or ASDAN",
+          "folders. Mixing two routes in one folder is the failure the 30 Jul legacy-art",
+          "interleaving demonstrated; each route stays a self-contained tree so staff can",
+          "teach one or the other without picking lessons apart.", "",
+          "`BUILD Estate v3` was ruled in as a third peer to the two the brief named. It",
+          "landed 10 Aug (cc9f36e), a day before the pair (62a92d7), and is the same shape:",
+          "own hub, own subject subfolders, no links out. Unlike the other two it is almost",
+          "entirely print-ready (53 of 54 lessons), so its route note says so instead of",
+          "repeating the screen-only line.", ""]
+
     m += ["", "## Taxonomy folders with NO current repo content", "",
           "Recorded, not invented. The pack ships nothing into these:", "",
           "- `Computing/`, `Curriculum Intent and Rationale/`, `English/`,",
@@ -1123,6 +1348,76 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
           "- the four root hubs — shipped at the root AND at their in-folder paths, each built",
           "  for its own depth (see above). No hand-copying is required or advised.", ""]
     (notes / "TAXONOMY_MAP.md").write_text("\n".join(m) + "\n", encoding="utf-8")
+
+    # ---- RULINGS.txt (R3): decisions already taken, recorded so a later pass does
+    # not "find" them again and undo them.
+    # Case-INSENSITIVE: the files spell it "PythonAnywhere". A case-sensitive probe
+    # returns 0 here and would have printed a ruling about pages it could not see.
+    py_hits, py_links = [], 0
+    for p in sorted(pack.rglob("*")):
+        if not p.is_file() or p.suffix not in (".html", ".md"):
+            continue
+        if p.relative_to(pack).parts[0] in ("_Pack_Notes",):
+            continue                      # this file and its siblings are the record
+        t = p.read_text(encoding="utf-8", errors="ignore")
+        if "pythonanywhere" in t.lower():
+            py_hits.append(str(p.relative_to(pack)))
+            py_links += len(re.findall(r'(?:href|src)="[^"]*pythonanywhere', t, re.I))
+    ru = ["RULINGS — settled decisions for this pack", "=" * 74, "",
+          "Each of these looks like a defect to a fresh eye. Each was examined and ruled",
+          "on deliberately. If a later audit flags one, read this before acting.", "",
+          "-" * 74,
+          "R3 — 'PythonAnywhere' NAMED IN PROSE. KEPT DELIBERATELY.", "",
+          f"  Measured in this build: {len(py_hits)} surface(s) name it; {py_links} are links.",
+          ]
+    ru += [f"    {s}" for s in py_hits]
+    ru += ["",
+           "  It is the bare product name in a sentence telling teachers where the Topic 1",
+           "  assessment lives. There is no URL, no link and no fetch — the personal",
+           "  subdomain itself is absent from the pack, and the residue sweep confirms that",
+           "  separately. (This note deliberately does NOT spell that domain out: writing it",
+           "  here to say it is absent would put it in the pack and fail the sweep.)",
+           "  Removing a factual sentence would make the pages less useful, not cleaner.",
+           "",
+           "  The brief named four Science decks. Two more surfaces have since joined the",
+           "  pack and say the same kind of thing: the Launch v3_40min policy-alignment doc,",
+           "  and the quarantined Baseline_Weeks hub, which contrasts itself with the",
+           "  PythonAnywhere baseline app. Same ruling, same reason.",
+           "",
+           "-" * 74,
+           "R4 — VENDORED GOOGLE FONTS. KEPT.", "",
+           "  Two pages fetched webfonts. An offline pack makes no network request, so the",
+           "  fonts are embedded, latin/latin-ext only. Embedding is redistribution, so",
+           "  FONT_LICENCES.txt ships at the pack root with the full text. All six families",
+           "  verified SIL OFL 1.1 against the ofl/ directory of google/fonts, per family —",
+           "  a handful of Google families are Apache-2.0 and the directory is the authority.",
+           "  Not reopened as vendor-vs-drop.",
+           "",
+           "-" * 74,
+           "R1 (extended) — THREE v3 ESTATES SHIP AS ROOT FOLDERS, NOT INTERLEAVED.", "",
+           "  The brief named two. BUILD Estate v3 landed a day earlier and is the same",
+           "  shape, so it was ruled in as a third peer rather than quarantined. None of",
+           "  the three is merged into the existing subject or ASDAN folders: mixing routes",
+           "  in one folder is the failure the 30 Jul legacy-art interleaving demonstrated.",
+           "",
+           "-" * 74,
+           "R2 — UNMAPPED IN-SCOPE CONTENT IS FILED, NOT GUESSED AT OR DROPPED.", "",
+           "  Baseline_Weeks (8 pages) is real teaching material linked from three shipping",
+           "  Science hubs, but the drive taxonomy has no folder for it. It ships under",
+           "  _New_This_Rebuild/ with its links rewritten to follow it. Its own README.md",
+           "  is held out: a developer note headed 'Made by Matt' naming the PythonAnywhere",
+           "  original, which the dual-branding rule keeps out of a Progress pack.",
+           "",
+           "-" * 74,
+           "R5 — HOW_TO_USE_THESE_LESSONS LEFT AT ITS CURRENT STATE.", "",
+           "  The v3 route explanation lives in README_FIRST and in the three",
+           "  0_ABOUT_THIS_ROUTE.txt notes instead.",
+           "",
+           "-" * 74,
+           "R-A01 — THE TWO ★ ASSESSED LESSONS.", "",
+           "  Their conditions blocks are asserted byte-identical to the repo on every",
+           "  build. A conditions change needs Matt's word, every time.", ""]
+    (notes / "RULINGS.txt").write_text("\n".join(ru) + "\n", encoding="utf-8")
 
     # ---- README_FIRST.txt (staff-facing, merges to the drive root)
     r = ["README_FIRST - Progress Schools lessons", "=" * 74, "",
@@ -1140,6 +1435,34 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "  regenerable. This pack ships nothing with those names and the build asserts it",
          f"  ({'0 collisions' if not clashes else str(len(clashes)) + ' COLLISIONS - DO NOT UNZIP'}).",
          "  If a merge ever offers to replace one of them, say no.", "",
+         "-" * 74, "NEW - THE v3 ALTERNATIVE ROUTES (three folders)",
+         "  Three folders in this pack are new. Your drive does not have them, nothing",
+         "  merges onto them, and nothing you already have is changed by them:", "",
+         "    BUILD Estate v3 (Alternative Route)/",
+         "    GROW Estate v3 (Alternative Route)/",
+         "    LAUNCH Estate v3 (Alternative Route)/", "",
+         "  WHAT THEY ARE",
+         "    A complete ALTERNATIVE Autumn 1 route for each unit — a parallel set of",
+         "    lessons, not an update to the ones you have.", "",
+         "  THE EXISTING LESSONS REMAIN THE DEFAULT",
+         "    If you do nothing, you teach exactly what you taught before. Which route to",
+         "    teach is a staff decision, not one this pack makes.", "",
+         "  PRINTING - THE THREE DIFFER, SO CHECK BEFORE YOU PLAN",
+         f"    BUILD  : {_st['BUILD_Estate_v3/']['print']} of "
+         f"{_st['BUILD_Estate_v3/']['lessons']} lessons print. Effectively print-ready.",
+         f"    GROW   : {_st['GROW_Estate_v3/']['print']} of "
+         f"{_st['GROW_Estate_v3/']['lessons']} lessons print; "
+         f"{_st['GROW_Estate_v3/']['screen']} are screen-only.",
+         f"    LAUNCH : {_st['LAUNCH_Estate_v3/']['print']} of "
+         f"{_st['LAUNCH_Estate_v3/']['lessons']} lessons print; "
+         f"{_st['LAUNCH_Estate_v3/']['screen']} are screen-only.",
+         "    Print packs for the screen-only lessons follow later.", "",
+         "  Each folder has 0_ABOUT_THIS_ROUTE.txt inside it saying the same thing.", "",
+         "-" * 74, "NEW - _New_This_Rebuild/",
+         "  Current teaching material with no folder on the drive to file it under. Rather",
+         "  than guess a home, the build put it here and said so. Drag it wherever you want",
+         "  it, or leave it. Read _New_This_Rebuild/0_README.txt first — it names every",
+         "  file, where it came from, and the three links that point into it.", "",
          "-" * 74, "SYNC OR DOWNLOAD - DO NOT TEACH FROM THE WEB PREVIEW",
          "  OneDrive's browser preview may not apply linked CSS, so a scheme of work can",
          "  render completely unstyled. Sync the folder or download the file.", "",
@@ -1282,12 +1605,51 @@ def mirror_main(logo, out):
     # the x-brand/credit gates cover them too. Verifying first would have left
     # CHANGES_SINCE.html and the chooser page ungated.
     c1 = c1_collision_report(pack, fwd)
-    write_changes_since(pack, {"pages": len(list(pack.rglob("*.html")))}, LOGO_HTML[0])
+    _st = route_note_stats()
+    _groups, _dtot = delta_by_taxonomy(fwd)
+    if _dtot:
+        _rows = "\n".join(
+            f"<li><code>{html.escape(t)}</code> — {len(v)} file(s)</li>"
+            for t, v in sorted(_groups.items(), key=lambda kv: -len(kv[1])))
+        _delta_html = (
+            '<h2>Everything else that changed, by folder</h2>\n'
+            f'<div class="card">{_dtot} shipped file(s) changed since the last pack '
+            f'({CHANGES_BASE}). Grouped by the folder they land in:<ul>{_rows}</ul>'
+            'Merging replaces the drive copy of each of these with the version in this pack.'
+            '</div>')
+    else:
+        _delta_html = ""
+    write_changes_since(pack, {
+        "pages": len(list(pack.rglob("*.html"))),
+        # CHANGES_SINCE carries a lockup itself, so it must be written before the
+        # on-disk count is taken but must quote the FINAL number. Sentinel now,
+        # substituted once disk_logos is known.
+        "logo_pages": "__LOGO_PAGES__",
+        "delta_html": _delta_html,
+        "build_lessons": _st["BUILD_Estate_v3/"]["lessons"],
+        "build_print":   _st["BUILD_Estate_v3/"]["print"],
+        "grow_lessons":  _st["GROW_Estate_v3/"]["lessons"],
+        "grow_print":    _st["GROW_Estate_v3/"]["print"],
+        "launch_lessons": _st["LAUNCH_Estate_v3/"]["lessons"],
+        "launch_print":   _st["LAUNCH_Estate_v3/"]["print"],
+    }, LOGO_HTML[0])
     # Count logos on disk BEFORE writing the docs. logo_pages is only the number of
     # Made-by-Matt marks replaced; the pages this build authors carry one too, and a
     # guide that quotes the subtotal understates its own pack.
     disk_logos = sum(1 for f in pack.rglob("*.html")
                      if 'alt="Progress Schools"' in f.read_text(encoding="utf-8", errors="ignore"))
+    # CHANGES_SINCE quotes two totals that are only final once it exists on disk:
+    # the logo count (it carries one) and the page count (it IS one of the pages).
+    # Both go in as sentinels and are substituted here, from a fresh count.
+    _cs = pack / "CHANGES_SINCE.html"
+    _t = _cs.read_text(encoding="utf-8")
+    for _s in ("__LOGO_PAGES__", "__PAGE_COUNT__"):
+        assert _s in _t, f"CHANGES_SINCE sentinel {_s} missing - it would ship a wrong total"
+    _new = (_t.replace("__LOGO_PAGES__", str(disk_logos))
+              .replace("__PAGE_COUNT__", str(len(list(pack.rglob("*.html"))))))
+    assert _new.rstrip().endswith("</html>") and len(_new) > len(_t) // 2
+    _cs.write_text(_new, encoding="utf-8")
+
     write_docs(pack, keep, fwd, back, clashes, disk_logos, rewrites, miss,
                hub_results, orphans, 0)
     total, by_ext, by_top = write_manifest(pack)
@@ -1555,6 +1917,30 @@ def write_manifest(pack):
     return len(files), by_ext, by_top
 
 
+CHANGES_BASE = "d421b38"     # the pack this one replaces
+
+def delta_by_taxonomy(fwd):
+    """Group the repo delta since CHANGES_BASE by the DRIVE folder it lands in.
+
+    Staff read this against the folders they actually have, not against repo paths."""
+    import subprocess
+    try:
+        out = subprocess.check_output(
+            ["git", "-C", str(REPO), "diff", "--name-only", f"{CHANGES_BASE}..HEAD"],
+            text=True, stderr=subprocess.DEVNULL)
+    except Exception:
+        return {}, 0
+    groups, total = {}, 0
+    for rel in out.split("\n"):
+        rel = rel.strip()
+        if not rel or rel not in fwd:
+            continue                     # changed but not shipped -> not staff's concern
+        top = fwd[rel].split("/")[0] if "/" in fwd[rel] else "(root files)"
+        groups.setdefault(top, []).append(fwd[rel])
+        total += 1
+    return groups, total
+
+
 def write_changes_since(pack, counts, mark_html):
     """C5 -- CHANGES_SINCE is staff-facing and already exists on the drive at
     the root. Merging a stale one is worse than merging none, so it is
@@ -1563,7 +1949,7 @@ def write_changes_since(pack, counts, mark_html):
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="x-brand" content="progress-schools">
-<title>What changed \\u00b7 Progress Schools lessons</title>
+<title>What changed &middot; Progress Schools lessons</title>
 <style>
 body{{margin:0;background:#fbfbfc;color:#1a1a1e;font:16px/1.65 system-ui,-apple-system,sans-serif}}
 .wrap{{max-width:720px;margin:0 auto;padding:32px 20px}}
@@ -1581,7 +1967,30 @@ footer{{text-align:center;font:400 10px/1.4 system-ui,sans-serif;opacity:.55;mar
 <div class="wrap">
 <header>{mark_html}</header>
 <h1>What changed in this update</h1>
-<p class="sub">7 August 2026 &middot; {counts['pages']} pages &middot; replaces the 5 August set</p>
+<p class="sub">11 August 2026 &middot; __PAGE_COUNT__ pages &middot; replaces the 7 August set</p>
+
+<h2>The headline: three alternative routes</h2>
+<div class="card"><strong>Three new folders carry a complete alternative Autumn 1 route.</strong>
+<ul>
+<li><code>BUILD Estate v3 (Alternative Route)</code></li>
+<li><code>GROW Estate v3 (Alternative Route)</code></li>
+<li><code>LAUNCH Estate v3 (Alternative Route)</code></li>
+</ul>
+These are <em>parallel</em> sets of lessons, not updates to the ones you have. Nothing in your
+current folders was changed, moved or replaced by them. <strong>If you do nothing, you teach
+exactly what you taught before.</strong> Which route to teach is a staff decision.
+<br><br>
+They differ on printing, so check before you plan: {counts['build_print']} of
+{counts['build_lessons']} BUILD lessons print, {counts['grow_print']} of {counts['grow_lessons']}
+GROW, {counts['launch_print']} of {counts['launch_lessons']} LAUNCH. Print packs for the
+screen-only lessons follow later. Each folder has <code>0_ABOUT_THIS_ROUTE.txt</code> inside it.</div>
+
+<div class="card"><strong>A fourth new folder, <code>_New_This_Rebuild</code>,</strong> holds
+current teaching material that has no folder on this drive yet — an 8-page baseline assessment
+pack. Rather than guess where it belongs, the build filed it there and said so. Drag it wherever
+you want it, or leave it. <code>0_README.txt</code> inside names every file.</div>
+
+{counts['delta_html']}
 
 <h2>Read this first</h2>
 <div class="card warn"><strong>Careers weeks 6 and 7 — go by the slide, never the filename.</strong>
@@ -1598,8 +2007,11 @@ organisers, receipt packs, role cards, consent logs and moderation guides were m
 cannot be regenerated. This update ships nothing with those names and does not touch them.</div>
 
 <h2>Branding</h2>
-<div class="card">Every page now carries the real Progress Schools logo instead of the placeholder
-mark, embedded in the page itself so it still shows when a file is moved or opened offline.</div>
+<div class="card">The real Progress Schools logo replaces the placeholder mark, embedded in the
+page itself so it still shows when a file is moved or opened offline. It is on
+{counts['logo_pages']} of the {counts['pages']} pages here — every page that carried a visible
+mark, plus the pages this build writes. The rest never carried one and were not given one; they
+carry the Progress Schools tag and credit line only.</div>
 
 <h2>Structure</h2>
 <div class="card">The ASDAN LAUNCH folder is flat, so each strand's start page is now named after
