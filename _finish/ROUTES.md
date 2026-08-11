@@ -15,6 +15,19 @@ retired. Both appear in the catalogue; the v3 titles all end `(v3 route)` or `(4
 | D&T · BUILD | `Build/Slideshows/BUILD_DT_W1..W6` — 6 lessons | `BUILD_Estate_v3/DT_Community_Upcycling/` — 6 lessons |
 | Humanities · BUILD | `Build/Slideshows/BUILD_HUM_W1..W8` — 8 lessons | `BUILD_Estate_v3/Humanities_Teesside/` — 8 lessons |
 | Baseline (W1–W2) | PythonAnywhere app (not in this repo) | `Baseline_Weeks/` — 8 public HTML, a DIFFERENT instrument |
+| Art · GROW | `Art_Teesside/Grow/` — 8 lessons, W1–W8 | `GROW_Estate_v3/Art_Teesside/` — 8 lessons, alternative Autumn 1 route |
+| Art · LAUNCH | `Art_Teesside/Launch/` — 8 lessons, W1–W8 | `LAUNCH_Estate_v3/Art_Teesside/` — 8 lessons, alternative Autumn 1 route; screen-only — live remains the printable Silver portfolio route |
+| ASDAN · GROW | `GROW_ASDAN/` — 18 taught lessons across PEQ / Community / Enterprise | `GROW_Estate_v3/GROW_ASDAN/` — 18 lessons, alternative Autumn 1 route; screen-only — live supplies printable PEQ records |
+| ASDAN · LAUNCH | `LAUNCH_ASDAN/` — 30 taught lessons across 5 slots | `LAUNCH_Estate_v3/LAUNCH_ASDAN/` — 30 lessons, alternative Autumn 1 route; screen-only — live supplies printable PEQ records |
+| Humanities · GROW | `Grow/Slideshows/` — 8 lessons, W1–W8 | `GROW_Estate_v3/Humanities_Teesside/` — 8 lessons, alternative Autumn 1 route |
+| Humanities · LAUNCH | `Launch/Slideshows/` — 8 lessons, W1–W8 | `LAUNCH_Estate_v3/Humanities_Teesside/` — 8 lessons, alternative Autumn 1 route |
+
+## GROW + LAUNCH v3 additions
+
+The six rows above extend this file rather than creating a rival map. GROW/LAUNCH live suites stay
+the default. The alternative ASDAN routes are screen-only; printable pupil work and PEQ assessment
+records remain in the live suites. LAUNCH alternative Art is also screen-only; the live Silver Art
+suite remains the printable portfolio route.
 
 ## How to tell them apart in the catalogue
 
