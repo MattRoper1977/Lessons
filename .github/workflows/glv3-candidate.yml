@@ -8,6 +8,7 @@ on:
       - _glv3/tools/run_registered_candidate.sh
       - _glv3/tools/prepare_registered_candidate.py
       - _glv3/tools/browser_verify.mjs
+      - _glv3/tools/chip_gate.mjs
       - _glv3/tools/finalize_filename_references.py
   pull_request:
     branches: [main]
@@ -119,8 +120,17 @@ jobs:
               raise SystemExit('browser verifier lacks the non-vacuous 80-source-path proof')
           if 'fs.writeFileSync(file' in block:
               raise SystemExit('browser verifier still mutates generated pages')
+
+          chip = Path('_glv3/tools/chip_gate.mjs').read_text('utf-8')
+          if 'candidate_verify.py' in chip:
+              raise SystemExit('chip gate still contains obsolete verifier mutation')
+          if "fs.writeFileSync('_glv3/GATES_CHIPS.json'" not in chip:
+              raise SystemExit('chip gate no longer emits its evidence file')
+          if '#cards article.card' not in chip or '.ytab[data-year=' not in chip or '#quicknav .chip' not in chip:
+              raise SystemExit('chip gate does not use the current Lesson Hub controls')
           PY
           bash -n _glv3/tools/run_registered_candidate.sh
+          node --check _glv3/tools/chip_gate.mjs
           python -m py_compile _glv3/tools/finalize_filename_references.py
           test ! -e _glv3/tools/prepare_registered_candidate.py
           test "$(git rev-parse refs/remotes/origin/claude/gl-estate-v3)" = "$START_SHA" || {
