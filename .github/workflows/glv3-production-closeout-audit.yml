@@ -65,22 +65,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p .glv3-audit-runtime
           cat \
             _glv3/tools/production_verify.mjs.gz.b64.part00 \
             _glv3/tools/production_verify.mjs.gz.b64.part01 \
             _glv3/tools/production_verify.mjs.gz.b64.part02 \
             _glv3/tools/production_verify.mjs.gz.b64.part03 \
             _glv3/tools/production_verify.mjs.gz.b64.part04 \
-            | base64 --decode | gzip --decompress > /tmp/production_verify.mjs
+            | base64 --decode | gzip --decompress > .glv3-audit-runtime/production_verify.mjs
           base64 --decode _glv3/tools/build_production_closeout.py.gz.b64 \
             | gzip --decompress > /tmp/build_production_closeout.py
           printf '%s  %s\n' \
             'f664675e6aa076fb6c1869208a0016c56df7499b5163c39ff313d7b4543496b1' \
-            /tmp/production_verify.mjs \
+            .glv3-audit-runtime/production_verify.mjs \
             'e8ecef0a5a2fe1a9c2e2599aff511741acd2881ac51b57d29ba35ec28738882e' \
             /tmp/build_production_closeout.py \
             | sha256sum --check --strict -
-          node --check /tmp/production_verify.mjs
+          node --check .glv3-audit-runtime/production_verify.mjs
           python -m py_compile /tmp/build_production_closeout.py
 
       - name: Install real Chromium production verifier
@@ -98,7 +99,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout 85m node /tmp/production_verify.mjs
+          timeout 85m node .glv3-audit-runtime/production_verify.mjs
           jq -e '.status == "DEPLOYED_VERIFIED" and (.failures | length) == 0' _glv3/production_evidence/PRODUCTION_GATES.json >/dev/null
           cat _glv3/production_evidence/PRODUCTION_GATES.md >> "$GITHUB_STEP_SUMMARY"
 
