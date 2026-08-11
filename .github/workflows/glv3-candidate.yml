@@ -1,4 +1,4 @@
-# Exact-tree diagnostic trigger: identify the first non-evidence mutation.
+# Final candidate trigger: keep browser dependencies outside every Git worktree.
 name: GROW LAUNCH v3 build verified candidate
 
 on:
@@ -112,6 +112,12 @@ jobs:
               raise SystemExit('obsolete embedded normaliser remains in registered runner')
           if 'set -euxo pipefail' in runner:
               raise SystemExit('shell xtrace unexpectedly remains enabled')
+          if 'ln -s "$ROOT/node_modules" node_modules' in runner:
+              raise SystemExit('runner still nests browser dependencies inside the candidate tree')
+          if 'npm --prefix "$NODE_RUNTIME" install' not in runner:
+              raise SystemExit('runner does not install browser dependencies in its external runtime')
+          if 'candidate index contains runtime node_modules changes' not in runner:
+              raise SystemExit('runner lacks the staged node_modules exclusion gate')
 
           browser = Path('_glv3/tools/browser_verify.mjs').read_text('utf-8')
           start = browser.find("const TEST_TOKEN = '_OUTSTANDING_V3_TEST';")
