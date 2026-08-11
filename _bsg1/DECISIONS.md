@@ -333,3 +333,16 @@ the recorded logo asset) runs the builder against this branch after merge.
 | 17 | PASS | Both new staff artefacts branded; PS variant strip + `x-brand` + exact credit; residue sweep 0 |
 | 18 | PASS | No new animation carries meaning; specimen forearm transition suppressed by the global `prefers-reduced-motion` rule; state readouts textual; icon+word throughout |
 | 19 | PASS | Working tree clean after commit; branch pushed; **nothing merged, nothing to `main`** |
+
+## Close order — sign-off and delegated completion (2026-08-11)
+
+- **A6 sign-off, Matt's words, recorded verbatim as his: "I like the lab
+  specimen."** Dated 2026-08-11. The A6 stop is released; the remaining nine
+  labs build on exactly the approved W4A pattern.
+- **Merge authority**: Matt's instruction **"complete the job for me"**,
+  relayed with the sign-off in the close order `bsg-1-close-2026-08-11`,
+  delegates the merge that §9 of the master prompt reserved to him — recorded
+  as his, received through his authenticated session while he is away. The
+  delegation is **conditional: every gate green at the final tip, sentinels
+  unmoved (50/113), otherwise no merge.** Rollback SHA to be re-recorded
+  immediately before the merge.
