@@ -284,3 +284,52 @@ meaningless (failure #13). Plain-text before/after prose diffs per file in
   rendered screenshot delivered for sign-off.
 - **STOP honoured: one specimen only. The other nine We Do labs are not
   built and will not be until Matt signs off in writing.**
+
+## §4 — The refusal set (considered and declined, with reasons)
+
+| Declined | Reason |
+|---|---|
+| The pack's stage grammar (ARRIVE/QUESTION/MODEL/INVESTIGATE/EVIDENCE/INFLUENCE) as shipped structure, headings or navigation | The school's six-stage grammar is required; §3.0 is law. The pack grammar served only as a quarry; its names appear in no shipped file. |
+| The external-asset build (the checksummed zips) | Single-file rule; the offline OneDrive/network staff packs depend on it. Only the loose inlined v2 build sourced content. |
+| Replacement of `BUILD_DAILY_REFLECTION_EVIDENCE_WINDOW.html` | Five diagnostic branches (PR #42 lineage), the "not a second closure…" line and the disclosure safeguard live there. It received one guidance line and nothing else. |
+| Replacement of `index.html` | Route banner, Baseline link, policy link. It received one added link (practicals matrix) and nothing else. |
+| The 8-step prompt dropdown | Would be a seventh WT-DS/least-prompt wording and a recorded field; queue-16 owns it. |
+| Deletion or thinning of print pack / tier routes / witness / Oak links | Protected; the tiers ARE the school's "scaffolded, adapted/TA-supported". All verified intact-or-richer at the gate. |
+| v1's `before_reconstruction_html/` images and v2's `*_source_audit.png` | 4.8 KB mock-ups vs 48.5 KB real files (v1); v2's relabelled versions are honest but still stay out of the repo. Neither entered the repo or any staff-facing document. |
+| v1 lesson files in their entirety | Superseded by v2; installing any would resurrect `<form>`, `data-testid`, unlabelled controls and external assets. Used as documentation only. |
+| The pack's `#printSheet` as a replacement print pack | Ported as one additional section only (§3.8); the tiered pack and witness stand. |
+| "BALANCED DIET" as a WORD HELP term (W6A) | Food rule: diet language is prohibited on pupil surfaces; BALANCE with an authored bridge replaced it. |
+| The nine remaining We Do lab transplants | A6 is specimen-only; stopped at one, awaiting Matt's written sign-off. |
+
+### Staff-pack rebuild (AMBER)
+
+Content changed, so the OneDrive staff-pack rebuild is automatic policy — but
+`tools/build_staff_pack.py` hard-stops without the real Progress Schools
+lockup (`--logo`), whose binary is deliberately kept out of git (REBRAND.md;
+SHA recorded there). The rebuild therefore **cannot run in this session** and
+is flagged AMBER by name rather than skipped silently: Matt (or any holder of
+the recorded logo asset) runs the builder against this branch after merge.
+
+## §6 — Gate battery at branch tip
+
+| # | Verdict | Evidence (unit · universe) |
+|---|---|---|
+| 1 | PASS | Identity 5/5; base = origin/main `574035bf` (stated); rollback recorded above |
+| 2 | PASS | 11 inline scripts `node --check` clean; 0 JSON blocks (live chassis carries none — parsed-as-JSON rule had nothing to parse) · 14 changed files |
+| 3 | PASS | Headless boot 15/15 (ten lessons + window + guide + index + both matrices), zero page errors · real Chromium via Playwright, so the jsdom `scrollTo`/`matchMedia` shims were **not needed — declared, not silently skipped** |
+| 4 | PASS | 0 storage / 0 network / 0 form / 0 external CSS-JS · regex census, 14 changed files |
+| 5 | PASS | Six school stages in order (slide `data-type` sequence) 10/10; pack stage names as structure: 0 (`data-label`/element-text scan for ARRIVE/QUESTION/INVESTIGATE) · 14 files |
+| 6 | PASS | 3 retrieval + 1 lead-in in each of three tier panels; "New to this class, or not sure?" 10/10 |
+| 7 | PASS | supported/standard/stretch/scaffold ci counts ≥ per-file baseline at `574035bf` · 10/10 |
+| 8 | PASS | Print pack **richer**: 3 `pp` sections (was 2), 3 `proute` divs, `printTier` + `afterprint` 10/10; evidence sheet is an addition |
+| 9 | PASS | `print-witness` 10/10; exactly 2 distinct Oak URLs, byte-identical to baseline |
+| 10 | PASS | Banner + `Baseline_Weeks` + `POLICY_ALIGNMENT.md` intact; no `README_LOCAL_PREVIEW` link |
+| 11 | PASS | Five branches ≥2 hits each; both safeguard lines; counters/tallies/n-of-5: 0; every `score` occurrence in changed files is a prohibition (classifier corrected once — the window's own "Do not turn this into a pupil label or score" first flagged itself) |
+| 12 | PASS | `ll-g:loop-mark v1` = 50, closure line = 113 · git-tracked `*.html`, both unchanged |
+| 13 | PASS | Food-language counts byte-identical to per-file baseline (validated on W5A `calorie` ≥ 1); mark scheme / band descriptor / grade boundary: 0 · 14 files |
+| 14 | PASS | Reading table recorded (§5 entry): screen 7.10→6.10, print 6.30→5.39, selector stated, protected vocabulary verbatim, C1 deltas within ±15%; per-file AMBERs named |
+| 15 | PASS | C2: every pupil-facing instruction on changed surfaces has tier routes + point/say/demonstrate + read-aloud (arrival/independent/exit) + WORD HELP; evidence sheet states scribe route |
+| 16 | PASS | Speech: onclick-only, feature-detected, hidden/silent degradation, zero autoplay · 10/10 |
+| 17 | PASS | Both new staff artefacts branded; PS variant strip + `x-brand` + exact credit; residue sweep 0 |
+| 18 | PASS | No new animation carries meaning; specimen forearm transition suppressed by the global `prefers-reduced-motion` rule; state readouts textual; icon+word throughout |
+| 19 | PASS | Working tree clean after commit; branch pushed; **nothing merged, nothing to `main`** |
