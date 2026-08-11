@@ -1,4 +1,4 @@
-# Final candidate trigger: keep browser dependencies outside every Git worktree.
+# Final clean candidate trigger: no repository package files.
 name: GROW LAUNCH v3 build verified candidate
 
 on:
@@ -114,10 +114,14 @@ jobs:
               raise SystemExit('shell xtrace unexpectedly remains enabled')
           if 'ln -s "$ROOT/node_modules" node_modules' in runner:
               raise SystemExit('runner still nests browser dependencies inside the candidate tree')
+          if 'npm --prefix "$NODE_RUNTIME" init' in runner:
+              raise SystemExit('runner still invokes npm init against repository context')
           if 'npm --prefix "$NODE_RUNTIME" install' not in runner:
               raise SystemExit('runner does not install browser dependencies in its external runtime')
-          if 'candidate index contains runtime node_modules changes' not in runner:
-              raise SystemExit('runner lacks the staged node_modules exclusion gate')
+          if 'candidate index contains runtime package files' not in runner:
+              raise SystemExit('runner lacks the staged package-file exclusion gate')
+          if 'package.json package-lock.json' not in runner:
+              raise SystemExit('runner does not guard transient package metadata')
 
           browser = Path('_glv3/tools/browser_verify.mjs').read_text('utf-8')
           start = browser.find("const TEST_TOKEN = '_OUTSTANDING_V3_TEST';")
