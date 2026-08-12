@@ -297,3 +297,190 @@ day**. The first time cost the Lessons and Creator hubs their sixth swatch until
 a rendered contrast audit caught it. The second time it was comment text alone,
 caught by the cross-estate gate. Neither was a coding error; both were the
 inevitable consequence of four edit sites for one file.
+
+
+---
+
+# Pass TG-78 — the GLV3 gate learns the mount, and the 78 land · 2026-08-12
+
+Closes the one part of the Teach-Green go that did not land. Bases re-derived
+and all three unmoved at their floors: Lessons `7123d351`, site `c65aeb5c`,
+Apps `1f0a803d`.
+
+## Preconditions
+
+- **Overlap:** 105 unmerged Lessons branches scanned against `glv3-verify.yml`,
+  the two GLV3 estates and `_teachgreen/`. **Zero overlaps.** The three
+  `audit/glv3-*` branches and the pre-programme PRs were left alone.
+- **The 78 derived, not guessed:** by the recorded scope rule with the GLV3
+  exclusion lifted — GROW 33 + LAUNCH 45 = **78**, matching this ledger exactly.
+- **Failure reproduced first:** grafting `/hud.js` into one of the 78 and running
+  the gate's own model gave **1 broken link, `/hud.js`** — the `a108c4e3` class.
+
+## The mount map
+
+`_glv3/tools/mount_map.py`, with its own `--self-test`:
+
+```
+/Lessons/**   ->  this repository's tree      (unchanged)
+/**           ->  the site repo at a PINNED SHA, over raw.githubusercontent
+```
+
+Order: this repo's mount → the historic repo-relative reading (kept; much of the
+estate is written that way and those links are real) → the site mount → broken.
+A 404 from the site mount is BROKEN. Anything else non-200 — timeout, DNS, 5xx,
+proxy refusal — is **UNVERIFIED and RED**, never green. The SHA is pinned once
+per run and printed every run.
+
+### Both directions proven (§1.3)
+
+```
+clean tree              GREEN   mount map · site repo pinned at c65aeb5c…
+graft /hud.js           GREEN   <- the a108c4e3 failure class, now resolved
+graft /no-such-file.js  RED     'not in …github.io@c65aeb5c'
+tree after both         0 estate files modified
+```
+
+The first run of those probes reported GREEN for both. The graft had silently
+not happened — a bash function that did not forward its arguments — so both runs
+measured a clean tree. Recorded, because a probe that passes for the wrong
+reason is the exact failure mode this pass exists to remove.
+
+## The workflow diff, in full (§1.4)
+
+```diff
+diff --git a/.github/workflows/glv3-verify.yml b/.github/workflows/glv3-verify.yml
+index c55d9f7a..e9977b63 100644
+--- a/.github/workflows/glv3-verify.yml
++++ b/.github/workflows/glv3-verify.yml
+@@ -83,18 +83,29 @@ jobs:
+               def handle_starttag(self,tag,attrs):
+                   for k,v in attrs:
+                       if k.lower() in {'href','src'} and v: self.links.append(v)
+-          broken=[]
++          # Link resolution knows about the deployed mounts: this repository is
++          # served at /Lessons/, the site repo at the domain root. A "/"-absolute
++          # href is therefore not always repo-relative. See _glv3/tools/mount_map.py.
++          sys.path.insert(0, str(root/'_glv3'/'tools'))
++          from mount_map import SiteMount, pin_site_sha, resolve, BROKEN, UNVERIFIED
++          site_sha = pin_site_sha()
++          print('mount map · site repo pinned at ' + site_sha)
++          site = SiteMount(site_sha)
++          broken=[]; unverified=[]
+           for p in html:
+               q=P(); q.feed(p.read_text(encoding='utf-8',errors='replace'))
+               for raw in q.links:
+                   u=urlsplit(raw.strip())
+                   if u.scheme or u.netloc or raw.startswith(('mailto:','tel:','data:','javascript:','#')): continue
+-                  path=unquote(u.path)
+-                  if not path: continue
+-                  target=(root/path.lstrip('/')) if path.startswith('/') else (p.parent/path)
+-                  if target.is_dir(): target=target/'index.html'
+-                  if not target.exists(): broken.append({'from':p.relative_to(root).as_posix(),'link':raw,'target':str(target.relative_to(root) if target.is_relative_to(root) else target)})
++                  status, detail = resolve(raw, p, root, site)
++                  if status == BROKEN:
++                      broken.append({'from':p.relative_to(root).as_posix(),'link':raw,'detail':detail})
++                  elif status == UNVERIFIED:
++                      unverified.append({'from':p.relative_to(root).as_posix(),'link':raw,'detail':detail})
+           assert not broken, broken[:20]
++          # Fail-safe: a mount we could not reach is red on its own message, never
++          # a silent pass. A gate that goes quiet on a network hiccup looks green.
++          assert not unverified, ['UNVERIFIED — site mount unreachable, not a pass'] + unverified[:20]
+           required=['_glv3/GATES_STATIC.json','_glv3/GATES_BROWSER.json','_glv3/GATES_CHIPS.json','_glv3/INPUT_INTEGRITY.json','_glv3/COUNT_RECONCILIATION.json','_glv3/AUTONOMOUS_SENTINEL.json','_glv3/POSITIVE_CONTROLS.json']
+           for rel in required: assert (root/rel).is_file() and (root/rel).stat().st_size>0, rel
+           contacts=list((root/'_glv3/contact_sheet').rglob('*.png'))
+@@ -140,13 +151,34 @@ jobs:
+         shell: bash
+         run: |
+           set -euo pipefail
++          # The local server roots this repository at /, but the deployed domain
++          # roots the SITE repo there and mounts this one at /Lessons/. Without
++          # the mount, /hud.js 404s and the boot gate fails on the console error
++          # — the same disagreement the static link check had, one layer down.
++          # Materialise the mount from the pinned site SHA. This is a test
++          # fixture: it is untracked, it is removed immediately afterwards, and
++          # nothing is vendored into the repository.
++          SITE_SHA="$(git ls-remote https://github.com/MattRoper1977/mattroper1977.github.io main | cut -f1)"
++          test -n "$SITE_SHA"
++          echo "runtime mount · site repo pinned at ${SITE_SHA}"
++          curl --fail --silent --show-error --retry 3 --max-time 60 \
++            -o "$GITHUB_WORKSPACE/hud.js" \
++            "https://raw.githubusercontent.com/MattRoper1977/mattroper1977.github.io/${SITE_SHA}/hud.js"
++          trap 'rm -f "$GITHUB_WORKSPACE/hud.js"' EXIT
+           python -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >/tmp/glv3-http.log 2>&1 & server=$!
+-          trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-http.log || true' EXIT
++          trap 'kill "$server" 2>/dev/null || true; rm -f "$GITHUB_WORKSPACE/hud.js"; cat /tmp/glv3-http.log || true' EXIT
+           for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 0.25; done
+           timeout 50m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173
+           timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173
+           kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true; trap - EXIT
++          rm -f "$GITHUB_WORKSPACE/hud.js"
+           rm -rf node_modules
++          # Narrowly the fixture, and nothing else. An earlier version asserted a
++          # clean porcelain over the WHOLE tree and turned a passing job red: the
++          # browser and chip gates legitimately regenerate _glv3/contact_sheet,
++          # and node_modules is tracked, so `rm -rf node_modules` shows as
++          # deletions. The mount had worked; the check was wrong.
++          test ! -e "$GITHUB_WORKSPACE/hud.js" || { echo 'runtime mount left residue: hud.js'; exit 1; }
+           git diff --check
+ 
+       - name: Upload exact-SHA evidence
+```
+
+## Three reds before green, all mine, all the same shape
+
+| SHA | result | cause |
+|---|---|---|
+| `a108c4e3` | RED | the original stop: 78 broken links, all `/hud.js` |
+| `4b1029e2` | RED | static check passed; **`browser_verify.mjs` boot gate** 404ed on `/hud.js` — its local server roots this repo at `/` |
+| `9f55c850` | RED | mount worked; **my own residue check** asserted a clean porcelain over the whole tree and fired on the gates' regenerated contact sheets and on `rm -rf node_modules` |
+| `99167470` | **GREEN** | with all 78 includes in place |
+
+The pattern in all three is one thing: I proved the piece I had just written and
+not the job around it. First the static block alone. Then the mount, without its
+own cleanup assertion. A narrow proof reads exactly like a broad one until CI
+disagrees.
+
+## Attestation for the 78 (§2)
+
+```
+exact diff, base 000f3c48   236 files differ by exactly the include, nothing else
+regions per file            closure · witness · tiers · print · Oak · loop-mark identical
+sentinels                   ll-g:loop-mark 50/50 · written-closure 123/123, set-identical
+assessed pair               a5545585ca28bbba… / eb14d6104b94503d…  unchanged
+frozen legacy science       biology, chemistry, 2 Physics 10, 5 Intervention 10 — 0 changed
+Games / LundyLoop / Baseline                                       — 0 changed
+assets/mbm-theme.js         6934f92739429496…                      unchanged
+hud.js                      not modified
+deck test                   78/78 carry >1 real slide; the announcer arms on all
+print                       78/78 rendered print text identical to base
+runtime                     14 decks x 2 viewports, both populations, all green
+```
+
+The runtime sampler was corrected to reach 14: it hardcoded four indices and
+ignored `MAX_PER_POP`, so a request for 7 per population returned 4.
+
+## Production (§3.2)
+
+The environment cannot reach `madebymatt.uk` (HTTP 000 at the proxy), so the
+dispatch-only `glv3-production-byte-check.yml` was used unchanged — it already
+samples one GROW and one LAUNCH file, **both of which are in the 78**:
+
+```
+checkout SHA: 9f55c85026c0736bb2111cca24d7ffc4bf45ebd5
+PASS  identical  d442d3343e38cbc3  50504 B  GROW_Estate_v3/…/GROW_HUM_W1_Time_Detectives.html
+PASS  identical  26be4377daf50216  47675 B  LAUNCH_Estate_v3/…/LAUNCH_HUM_W1_Source_Investigation.html
+RESULT: ALL IDENTICAL — production serves this checkout byte-exact for the sample.
+```
+
+Production therefore serves the include. `pages build and deployment` success at
+`99167470`.
+
+## Final
+
+| | |
+|---|---|
+| Lessons main | `99167470` |
+| pinned site SHA (gate output) | `c65aeb5c9a8fd186d4139e5de306a32b29ee17b2` |
+| Stage B total | **236 decks** — 158 + the 78 |
+| decks with slides still uncovered | 0 |
