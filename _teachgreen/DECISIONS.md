@@ -896,3 +896,90 @@ and measured yesterday's rules. Re-cut from the committed branch:
         RED: boundary violated — the blanket rule still bites
 scratch left: 0 worktrees, 0 branches, both repos
 ```
+
+---
+
+# Part B — WAVE & OHM v2.3: two studios, the bridge, the deck · 2026-08-12
+
+Stage 2 of the publish programme, landed after the Ruling 3 guardrail and on
+top of Part A's live estate. Merge SHAs: Apps `0af6c61` (builds + bridged hub)
+→ `2b3db3f` (installs + re-pin) → `17b6896` (B4 matrix instrument) →
+`0c6feef` (origin-drive instruments), fast-forward; Lessons `0fa3263d` (deck +
+tool + browser instrument) → `81657313` (catalogue entry + re-pin + chip gate)
+→ merge `38261774` → `7ad89a4a` (live-leg dispatch). Both mains' gate copies
+byte-identical at the remote (blob `26c9bf17`).
+
+**The standalones.** Built from the pristine archive (`a1f99c83…`/`74b96fc0…`,
+hash-checked every build) by `tools/wave_ohm_publish.py`, which imports
+`stealth_publish.py` as a library. Donor byte-identical; invocation, frame
+guard and 44px skip target all outside the donor block; titles rearranged.
+Published: wave `9844c221`, ohm `2e406074`.
+
+**The bridge (Ruling 4).** Hub carries `mbm-master-hub-bridge-v2-3.js`
+byte-pinned `c3fb4dea` unmodified, plus ONE additive rebind ahead of the
+decode wiring: `MBM.WAVE.` / `MBM.OHM.` prefixes divert through the bridge's
+decoder and come back wearing the `appId` and label-keyed `profile` the hub's
+own `addRecord` demands (measured: `identifyPayload` never reads `tool`; a
+profile-less payload is refused). Artwork pre-gate widened to exactly the two
+new prefixes. No existing route removed, reordered or short-circuited —
+MBM2/MBM1 fixtures still fail INSIDE the original decoder, and the B4 matrix
+asserts that routing. ORBIT/ENZYME embeds re-encoded afterwards, decode-equal.
+
+**The installs.** apps.json 35 → 36 studios under Play & explore (pin
+`0e539ff6` → `94fb05b8`, same commit); lead count follows by derivation — the
+Ruling 5 gate needed no edit, which was the point of Ruling 5. resources.json
+640 → 641 (pin `e35d6324` → `dd8955ba`, same commit), the deck the only
+Physics resource in the 2026-27 collection: its chip honestly moved from
+library "(15)" to in-collection "(1)".
+
+**The deck.** `Physics_WaveOhm/…-v2-3.html`, rebuilt by
+`tools/wave_ohm_deck_publish.py` from the archive pristine (`69c3af80…`):
+both `htmlB64` literals re-encoded from the FINAL published standalones —
+embeds decode to `9844c221` / `2e406074`, the very digests Apps serves. Donor
+inline, one invocation at deck level, NO guard (never framed), hud loader.
+Published deck `48030793`.
+
+Gates, with numbers:
+
+```
+wave_ohm_publish --prove      donor identical ×3 · bridge pin c3fb4dea ·
+                              1 rebind · gate 8 accepts / 6 rejects · PASS
+wave_ohm_publish --self-test  flipped bridge byte CAUGHT · un-widened gate CAUGHT
+B4 import matrix (local)      19/19 — paste + artwork per app (fresh context;
+                              the hub flushes state on unload), MBM3 right/wrong
+                              PIN, MBM2/MBM1 in the original decoder, garbage
+                              dies, scanKnownStorage over HTTP, dedupe-as-policy
+deck gates + self-test        donor identical · 1 invocation · 0 guards ·
+                              embeds MATCH ×2 · flipped embed byte CAUGHT
+deck browser leg              17/17 over the origin-shaped mount; served graft
+                              renaming Wheatstone reddened exactly its limb
+chip-count gate               BEFORE 28/28 (Physics library 15) · AFTER 28/28
+                              (Physics 1; totals 640→641, 503→504); +3 graft
+                              reddened every chip row
+wave/ohm origin drive (local) 12/12
+static contract (both copies) exactly the two pre-existing mbm-platform reds
+browser matrix                PASS; leadCount derived Thirty-six == 36
+theme parity + sync --check   PASS all scopes; canonical theme.js 6934f927
+pin_manifests --self-test     drift in either manifest reddens; restores proven
+```
+
+Live, from the runners (the container cannot reach the origin):
+
+```
+stealth-live-verify 31649267875     served == committed for wave/ohm/hub/apps.json/
+                              index.html + 404 control, then Part A's drive
+                              23/23 as the regression tap
+wave-ohm-origin-drive 31649269855   12/12 page drive + 19/19 import matrix on
+                              https://madebymatt.uk/Matt-s-Apps-/
+wave-ohm-deck-live 31649271559      deck 48030793 + resources dd8955ba served ==
+                              committed + 404 control; deck 17/17 and chips
+                              28/28 on https://madebymatt.uk/
+```
+
+Standing absences, recorded not reconstructed: `mbm-legacy-adapter.js` (link
+dropped under Ruling 2 — never supply the file), `CHECKSUMS.sha256`,
+`README-V2-3.md`, `STATIC-QA-V2-3.json`. Security labels stay honest: WAVE/OHM
+envelopes are encoded, not encrypted, and the hub stores no security field.
+
+Owed follow-up, recorded not built: a Progress-branded copy of the deck.
+CALM NOISE and OPTICS LAB untouched.
