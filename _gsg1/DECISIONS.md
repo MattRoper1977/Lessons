@@ -421,3 +421,72 @@ pass.
 
 Merge executed under the conditional delegation recorded at §13, every gate
 green at the branch tip.
+
+---
+
+## 17 · MERGE RESULT
+
+| Item | Value |
+|---|---|
+| Pre-merge `origin/main` (rollback SHA) | `dcc23dc2485516eb5d50409494c7d70f56c62f78` |
+| Branch tip merged | `4ced992` on `claude/gsg-1-grow-science-graft-wp8p48` |
+| **New `main`** | **`e76c65401e0f0d9a204c9fe2b06c841272f660e6`** |
+| Merge style | `--no-ff`, pushed to `origin/main` |
+| Pages build | `pages build and deployment` @ `e76c654` — **completed / success**, 2026-08-12T09:39:16Z. Built SHA **equals** new main SHA: **merged AND published.** |
+
+**Raw-pin verify** (raw.githubusercontent.com at the new main SHA, never
+madebymatt.uk): `SCI_G_W4A_Mechanisms_Explore.html` HTTP 200, 94,250 bytes,
+closure line present, "No adult initial is required" present, Mechanism Hunt lab
+present, witness statement present, `matchMedia` **0**.
+
+### Post-merge assertions
+
+| Assertion | Result |
+|---|---|
+| Sentinels at merged tip | `ll-g:loop-mark` **50**, written-closure **123** — and **both bearing sets are file-for-file identical to `79e17c4`'s**, not merely equal in size |
+| BUILD `v3_40min` vs `dcc23dc` | **0 files changed** — byte-identical |
+| All LAUNCH files vs `dcc23dc` | **0 files changed** — byte-identical |
+| v5 GROW originals in `Science_Teesside/Grow/` (non-`v3_40min`) | **0 files changed** |
+| Legacy science trees (`2 Physics 10`) | **0 files changed** |
+| Science·Teesside hub | chip **63**, returned entries **63** — **equal**. Breakdown Grow 16 + Build 16 + Launch 31. Hub source (`index.html`, `resources.json`) **0 files changed**, so the count is unchanged from pre-merge. Measured in a real browser over HTTP: under `file://` the hub's `resources.json` fetch is CORS-blocked and the count cannot be read at all — an instrument limit, not a defect. |
+| Total files changed by the pass | 49, in exactly three top-level trees: `Science_Teesside`, `_gsg1`, `_bsg1` |
+
+---
+
+## 18 · SESSION CLOSE · GSG-1
+
+**Closed 2026-08-12.** Pass GSG-1 complete: the GROW Science v3+ pack's gains
+grafted onto the live chassis, the replacement refused, merged to `main` at
+`e76c654` under Matt's recorded delegation with every gate green, and published
+by Pages.
+
+**Shipped:** the ratified GROW written closure on 10/10 lessons (screen + print,
+"no adult initial", added beside the existing line, never replacing it) ·
+arrivals rebuilt to 3 retrieval + 1 lead-in at three tiers, 10/10 · **nine We Do
+labs** on the signed-off W4A pattern · model-limitation pairs · WORD HELP ·
+pupil-activated speech · judgement-free starter commit · practicals matrix in
+both brandings · one line into the live reflection window.
+
+**Refused:** the pack's files as lessons, the external-asset build, every
+deletion it carried, its invented reading gate, its replacement window, its
+marked-correct device, its `#printSheet`-as-print-story, its seventh WT-DS
+prompt ladder, and any copy-pasted markup.
+
+**Open for Matt** — three items, in order:
+
+1. **Run `tools/build_staff_pack.py --mirror --logo <recorded Progress lockup>`
+   and upload the rebuilt packs to OneDrive.** This one rebuild now covers
+   **both** science grafts, BUILD and GROW. The lockup is human-only; the build
+   hard-stops without it and was not worked around.
+2. **Phone-check one GROW lesson**: the closure line on its Exit *and* in its
+   print pack, and one lab driven end to end.
+3. **Review the AMBERs in this file, starting with AMBER-W7A-UNBUILT** — the one
+   lab deliberately not built, and the only place where a lesson's We Do was
+   judged already sufficient.
+
+**Standing and unresolved:** the **GROW reading band is still with the SENCo.**
+Until it arrives GROW reading is reported as deltas only, with the selector
+stated and no verdict attached. When it arrives it becomes the standing target
+and §8's final column becomes its baseline.
+
+Nothing further is in flight. LAUNCH untouched.
