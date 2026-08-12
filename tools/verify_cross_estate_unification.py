@@ -87,7 +87,17 @@ def normalized_visible_body(text: str, kind: str) -> str:
     value = re.sub(r"\s+", " ", value).strip()
     if kind == "apps":
         value = re.sub(
-            r"(Your offline creative workshop\.\s+)(?:Twenty-eight|Thirty-one|\d+)(\s+single-file studios)",
+            # The count is normalised OUT of the wording comparison because it is
+            # derived from apps.json and asserted exactly, a few lines below, against
+            # number_word(total). What must not happen is this alternation going stale:
+            # it enumerated "Twenty-eight|Thirty-one", so the next legitimate count —
+            # Thirty-four, when the Stealth Science trio landed — stopped matching, and
+            # the gate reported Matt's authored wording as changed when only the number
+            # had. Matching any number word keeps the exact-count assertion intact and
+            # removes the hand-maintained list that caused the false red.
+            r"(Your offline creative workshop\.\s+)"
+            r"(?:[A-Z][a-z]+(?:-[a-z]+)?|\d+)"
+            r"(\s+single-file studios)",
             r"\1{DERIVED_COUNT}\2",
             value,
             flags=re.I,
