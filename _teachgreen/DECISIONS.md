@@ -651,3 +651,55 @@ engines and on all seven ported pages, `[PASS] theme parity (all)`.
 - The `mbm-platform.css` / `mbm-platform.js` drifts, per the red lines.
 - `main/index.html` has no pre-paint snippet and can flash on load.
 - `verify_highlumen*.py/.mjs` are run by hand — no workflow invokes them.
+
+## Merge and served proof (§4)
+
+Dependency order, site first, each gate green at the SHA it gated:
+
+| # | repo | SHA | gate | result |
+|---|---|---|---|---|
+| 1 | site | `8096487c` | Professional site design audit (incl. `--scope site` parity) | success |
+| 2 | Lessons | `261fced2` | Reading-theme parity with the canonical engine | success, 6/6 steps |
+| 3 | Apps | `de75b4cc` | Reading-theme parity with the canonical engine | success |
+| 4 | site | `cca6a3b2` | Professional site live verification | success |
+
+The container cannot reach the origin — `CONNECT tunnel failed, response 403` on
+both `madebymatt.uk` and `mattroper1977.github.io` — so the served check was done
+from an Actions runner, by **extending the existing live gate rather than adding
+an instrument**:
+
+- `/theme.js` joined `ASSETS`, compared byte-for-byte with source
+- the five non-cream `[data-theme]` rules joined the markers for every ported
+  page, **including `/Lessons/` and `/Matt-s-Apps-/`** — the two themed surfaces
+  in other repositories that this gate can reach, and the two that shipped with
+  five swatches
+
+Every marker was verified present in source before being asserted. The result at
+`cca6a3b2`:
+
+```
+[PASS] 2 GitHub API: deployed commit is cca6a3b (via deployments?environment=github-pages)
+[PASS] the origin is serving cca6a3b
+Made by Matt live verification: PASS on attempt 1;
+    10 pages, 3 exact assets, 3 JSON surfaces, positive control detected.
+Positive control: PASS — broken marker was rejected.
+```
+
+10 pages and 3 exact assets, up from 8 and 2. The engine serves, byte-identical
+to source, and both companion hubs serve carrying all six values.
+
+## Final
+
+| | |
+|---|---|
+| site main | `cca6a3b287e7bb6e29c64c2f63279d268fd8de21` |
+| Lessons main | `261fced2d503ecd915d68d2cfa9ed32969a5ec4c` |
+| Apps main | `de75b4cc3507631d836116ab29ee7592a6e081de` |
+| canonical `theme.js` | `6934f92739429496a0bed6404652eb0da1568c29926d43a8e709a53aa0dba60e` — unchanged by this pass |
+| generated copy (both) | `5d711139ee95f2a9814917c516ffe674fbd52fd0b42c8fd6e22a1efbc19f002b` |
+| engines | 3 files + 1 inline implementation, all six values, all in the fence |
+| ported pages | 7, all five non-cream rules, all proved from source and from the origin |
+| stale pin sites closed | 3 (Apps gate, Lessons doc, Apps doc) |
+| scratch branches / worktrees left | 0 |
+
+The teach-green programme's last open item is closed.
