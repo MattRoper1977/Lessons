@@ -111,6 +111,20 @@ without hud.js      277
 
 `277 − 37 frozen legacy science − 2 assessed rebuild copies = 238 in scope.`
 
+Two further deductions were made during the rollout, both from gates rather than
+from reading:
+
+- **−2 animation reference pages.** `build-anim/demo.html` and
+  `grow-anim/demo.html` are "Animation Framework" reference pages carrying one
+  `class="slide"` container each and no deck. The census matched them because
+  its deck test accepted the bare string `.slide`, which also matches a CSS
+  rule. The runtime gate found 0 slides, 0 announcements and no live region —
+  hud.js requires `slides.length > 1` before it arms at all. Reverted; the deck
+  test now requires more than one real slide element.
+- **−78 GLV3 decks.** See the STOP below.
+
+**Landed: 158 decks across 10 populations.**
+
 ---
 
 ## Stage B — the rollout
@@ -159,6 +173,45 @@ green.
   where hud.js never mounts.
 - The new runtime gate renders **over HTTP with the HUD actually mounted** —
   the dialect nprint.js cannot reach, and the one that matters in a classroom.
+
+---
+
+## The STOP — two estates backed out, on a gate that was right
+
+`.github/workflows/glv3-verify.yml` governs `GROW_Estate_v3` and
+`LAUNCH_Estate_v3`. Its broken-link check parses every `href` and `src` and
+resolves any `/`-absolute path **against the repository root**. `/hud.js` is not
+in this repository — it is served from the domain root by the site repo. So the
+include reads to that gate as broken links. Reproduced locally against the
+gate's exact resolution model:
+
+```
+before revert   html 94   broken links 78   all of them '/hud.js'  (33 GROW + 45 LAUNCH)
+after revert    html 94   broken links  0
+```
+
+That gate was green before this pass and went red because of it, so §4.1's STOP
+applies and was taken. Both estates are restored to `000f3c48` byte-for-byte and
+are excluded in the scope rule so no later run re-adds them silently.
+
+**The workflow was not touched.** Editing the guardrail that is blocking you, in
+the pass where it blocks you, is how a gate stops meaning anything — and this
+one is right about what it can see. Within this repository the path genuinely
+does not exist; it only resolves once the site repo is serving the root, which
+is exactly the cross-repo mount §1.4 establishes and this gate has no model of.
+
+**Three ways out, none of them mine to choose:**
+
+1. teach `glv3-verify.yml` that `/hud.js` is a domain-root mount rather than a
+   repo path — one allowance, made in a pass that is not also adding the include;
+2. give those two estates the loader form the other 5 already-covered decks use,
+   which tries `/hud.js` and falls back to a relative path — but that is the
+   `file://` fix §1.4 explicitly rules out, so it would need Matt to reopen that
+   ruling;
+3. leave them uncovered, and accept 78 decks without the announcer.
+
+**Stage B therefore stands at 158 decks across 10 populations.** The 78 GLV3
+decks are the only part of the go that did not land.
 
 ---
 
