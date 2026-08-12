@@ -232,3 +232,182 @@ and this pass's "after" column becomes its baseline.
 
 This pass touches **no** BUILD file and **no** GROW file, moves no closure
 surface in any direction, and infers no band across pathways.
+
+---
+
+## 5 · Phase B · the refusal set — considered and DECLINED
+
+| Declined | Reason |
+|---|---|
+| **The pack's fifteen files as installed lessons** | Graft, don't replace. Installing them would delete the written closure (30 → 0), the assessor witness statement (30 → 0), the entire tiered print pack (645 family markers → 0) and W6L1's word bank, and would import 30 bare `matchMedia`. |
+| **The closure deletion — the pack's worst defect, named as such** | The ratified LAUNCH closure is the pupil-written line, adult as audience, no signature. The pack replaces it with a generic "My edit, re-attempt or explanation" textarea while keeping the no-signature framing. Live is correct at 15/15 and is untouched. |
+| The external-asset (zip) build | Single-file rule; offline staff packs. Loose inlined build only, as a quarry for wording and mechanism. |
+| Witness / tier / print-depth deletions | Assessment record (UAS route); the tiers ARE the school's scaffolded, TA-supported provision; the tiered print pack is what staff teach from. All verified intact or richer. |
+| The invented 9.0–14.0 reading gate | No LAUNCH band exists **and none has been requested**. Deltas only. See §3. |
+| Any replacement window or index | Not installed. The live reflection window and index are kept; the index gains one link. |
+| The marked-correct commit device | The pack's `lessonConfig` carries `"correct": 0` **and** `"guided_correct": 0` in all fifteen files — checked and recorded before deciding. Ported judgement-free. |
+| `#printSheet` as the print story | Not installed. The pack replaces a 43-marker tiered print pack with one sheet; at most it could ever land as one additional section beside the full pack. |
+| Any pack markup bytes | 30 bare `matchMedia` against an estate standard of zero. Everything is hand-written. |
+| Phantom-lab advertising | Audited for, and **not found** — see AMBER-A7-CREDIT. The one imprecision was corrected. |
+| The pack's seven-rung prompt ladder | Present in the pack's TA blocks. A seventh WT-DS wording is RED; queue-16 owns reconciliation. Left behind. |
+| Sourcing the Progress lockup | Human-only. The `--mirror` build hard-stops without it; reported, not worked around. |
+| Any cross-pathway closure move | BUILD closes through adult Audience with no written line; GROW and LAUNCH close through the pupil-written line. No BUILD or GROW file was touched. |
+
+---
+
+## 6 · What was grafted, by school stage
+
+| Stage | What landed | Where |
+|---|---|---|
+| **Arrival** | Rebuilt to **3 retrieval + 1 lead-in** at all three tiers (12 questions/file). R1 last lesson · R2 previous week · R3 older · L lead-in. Every question carries a non-reading route **and** a named tier step. Thin-history substitutions declared on the slide. | A2 · 15/15 screen + print |
+| **Starter** | Judgement-free predict-commit. Nothing marked, scored or stored. | A5 · 15/15 |
+| **I Do** | "What this model helps us see / does not show" pair. | A5 · 15/15 screen + print |
+| **I Do (W5L2)** | The restored Oak osmosis clip, beside the teaching. | A4 · 1/15 |
+| **We Do** | **One specimen only** — W5L2 Osmosis prediction lab, beside the live calculator. | A6 · 1/15, then STOP |
+| **Independent** | WORD HELP bridges: Biology term dominant, bridge hidden until requested, TA fade route. | A5 · 15/15 screen + print |
+| **Exit** | Speech route added **outside** the close block; the closure line itself untouched. | A5 · 15/15 |
+
+**A2 summary.** The retrieval spine follows LAUNCH's three-lesson weekly arc:
+L2 retrieves L1; L3 retrieves L2 then L1; each week's L1 retrieves the prior
+week's arc. W3L1 is elicitation-only and says so, because W1–W2 are baseline.
+W3L2 and W3L3 declare their substitutions too — Week 3 has no taught week behind
+it. **`Aut1·W2` remains 0 and `Baseline_Weeks` remains 0**: no baseline topic is
+named and the baseline pack is never linked. The entry surface was **verified
+before being assumed** and is 15/15 on screen (`entry-route`) and 15/15 in print
+(`pentry`), with W3L1's wording correctly differing because it follows baseline.
+
+**A4 result: RESTORED.** The v5 original carries exactly one external clip in
+the whole fifteen-file suite, in the named file. URL read from that file at run
+time, asserted **byte-equal**, one occurrence in live W5L2, zero in the other
+fourteen, new tab with `noopener noreferrer`, Oak named as the source,
+needs-internet and captions noted, "this lesson teaches fully without it"
+stated, and **hidden from the print pack**. The item did not collapse.
+
+---
+
+## 7 · Reading — deltas, no verdict, and a band nobody has asked for
+
+Selector A (pupil-facing stage prose), stated in `_lsg1/reading/fk.py`, applied
+identically to baseline, working tree and pack.
+
+| file | base | after | delta | pack |
+|---|---|---|---|---|
+| W3L1_Microscopy_Introduce | 6.09 | 3.87 | **−2.22** | 5.54 |
+| W3L2_Calculating_Magnification | 5.17 | 4.30 | **−0.87** | 4.22 |
+| W3L3_Magnification_Lab_Do | 5.02 | 4.45 | **−0.57** | 4.95 |
+| W4L1_Diffusion_Introduce | 5.72 | 4.15 | **−1.57** | 4.79 |
+| W4L2_Diffusion_Lungs_Explore | 5.71 | 4.14 | **−1.57** | 4.74 |
+| W4L3_Diffusion_Explanation_Do | 5.88 | 4.55 | **−1.33** | 4.88 |
+| W5L1_Osmosis_Introduce | 5.08 | 3.88 | **−1.20** | 5.34 |
+| W5L2_Osmosis_Core_Practical | 6.80 | 4.60 | **−2.20** | 5.68 |
+| W5L3_Osmosis_Data_Do | 6.15 | 4.53 | **−1.62** | 5.36 |
+| W6L1_Active_Transport_Introduce | 6.54 | 4.12 | **−2.42** | 5.98 |
+| W6L2_Root_Hairs_And_Gut | 5.77 | 4.01 | **−1.76** | 5.36 |
+| W6L3_Compare_Transport_Do | 7.11 | 4.49 | **−2.62** | 5.40 |
+| W7L1_Topic_1_Round_Up | 6.73 | 4.37 | **−2.36** | 5.05 |
+| W7L2_Command_Words_Explore | 5.67 | 4.03 | **−1.64** | 4.77 |
+| W7L3_Exam_Practice_Do | 6.40 | 4.56 | **−1.84** | 5.18 |
+| **mean** | **5.99** | **4.27** | **−1.72** | **5.15** |
+
+Lower in **15/15**, and now **below the pack's own pupil-facing figure** while
+keeping the closure, witness, print pack and tier depth the pack deletes.
+
+**No verdict is attached to any number here.** No reading age is estimated and
+no level is attached to any pupil.
+
+**Recorded, and it needs Matt's action: no LAUNCH band exists, and unlike
+GROW's it has never even been requested.** GROW's is with the SENCo and pending;
+LAUNCH's has not been asked for at all. **The SENCo conversation already open
+for GROW should collect the LAUNCH band in the same sitting.** When either
+arrives it becomes that pathway's standing target and this table's "after"
+column becomes its baseline.
+
+---
+
+## 8 · AMBERs, every one by name
+
+| # | AMBER | Where |
+|---|---|---|
+| AMBER-INPUT-1 | The pack carries **30 bare `matchMedia`** (2/file × 15) against an estate standard of zero. Consequence: nothing copy-pasted; every graft hand-written. | §1 |
+| AMBER-CLOSURE | **The pack deletes the ratified closure line from all fifteen files** and substitutes a generic response slot in the same numbered position, keeping the no-signature framing. Characterised in full at §2. | §2 |
+| AMBER-V3 | **LAUNCH is a THIRD print dialect** — BUILD's `pp`/`proute` plus its own `printpack`/`pline`/`pidline`/`pentry`. Full family = 43/file, not ~31. Counting it with GROW's dialect returned a plausible **19** that would have been silently wrong. | §2 |
+| AMBER-V4 | **Word banks are not 0 estate-wide**: W6L1 carries one on screen and in print. Protected accordingly; the pack carries none. | §2 |
+| AMBER-V10 | **The reading claim splits by selector.** "0/15 higher" holds whole-file (−2.42) and fails on pupil-facing prose (−0.84, W5L1 up +0.26). About two-thirds of the advertised win is in text pupils never read. | §2 |
+| AMBER-INSTR-1 | **Instrument failure #19, mine**: a persisted cwd made the live closure check read **0/15** on the most protected surface in the pass. Re-derived from the repo root: 15/15. It recurred once more during the reading step and was caught the same way. | §2 |
+| AMBER-INSTR-2 | **Instrument failure #20, mine**: my own JS comment contained the literal token `matchMedia` while asserting the layer had none — my scanner hit my own sentence and the transform failed closed. **The context-read rule applies to my own text.** Reworded so the emitted file genuinely contains zero. | A5 |
+| AMBER-INSTR-3 | **Instrument failure #21, mine**: gate 5b counted `class="lq` , which prefix-matches `lq-head`/`lq-ask`/`lq-route`/`lq-badge`/`lq-declare`, inflating 12 questions to 24–25. Corrected to an exact match. | §6 gates |
+| AMBER-INSTR-4 | **Instrument failure #22, mine**: the close-block guard captured as far as the *next sibling*, so an insertion that never touched the block still tripped it. Tightened to the block's own closing tag. Caught because the transform fails closed rather than warning. | A2 |
+| AMBER-A3-SCOPE | **A3 is deliberately small on LAUNCH.** The suite's heaviest pupil-facing sentence sits inside the protected close block and is RED to alter — the single biggest available reading win is one this pass may not take. Named, not worked around. | A3 |
+| AMBER-A3-VOCAB | The A2 rebuild displaced **seven** protected terms across four files. The gate caught every one; the questions now carry them rather than the gate being relaxed. | A3 |
+| AMBER-PACK-BLEED | **The pack ships GROW content in all fifteen LAUNCH files.** The printed Exit sentence frame reads *"Friction helped when ___. It caused a problem when ___."* on every LAUNCH GCSE Biology lesson. Context-read confirmed `lever`/`Moon`/`planet` are dead CSS class names (build bloat), but the friction frame is **pupil-visible print content**. | A3 |
+| AMBER-A7-CREDIT | **The pack's equipment matrix is accurate.** Audited for the GROW defects and found neither: no degenerate columns, and all fifteen named labs verified present. I had expected phantom labs and was wrong. Recorded as a finding in the pack's favour; only its digital column's imprecision was corrected. | A7 |
+| AMBER-LOCKUP | `--mirror` hard-stops for want of the real Progress lockup. Expected, reported, **not worked around**. The non-mirror pack builds clean at 328 files. | A7 |
+| AMBER-CRAWL | The staff-pack crawl reports missing `Baseline_Weeks` and `_sciv3` targets from the three v3 indexes. **Pre-existing** — baseline lives on PythonAnywhere by design. Not introduced here. | A7 |
+
+---
+
+## 9 · Register entries
+
+**1 · The same-builder-opposite-defect finding.** One builder produced all three
+sibling packs. In **GROW** it *fixed* the missing closure line, supplying the
+ratified wording in a slot headed "4 · GROW written close". In **LAUNCH** it
+*deleted* the same line from all fifteen files, in a slot headed "4 · LAUNCH
+response on the existing work" — same builder, same slot number, opposite
+outcome, and a repeat of the regression its own earlier LAUNCH pack made.
+
+*A pack family's quality is per-pack and is never inherited.* Sibling of the
+standing rule that **a register ID quoted across passes inherits authority it
+never had**: provenance is not quality, and neither is a good sibling.
+
+The corollary, proved twice in this pass: **the reverse is equally true.** The
+LAUNCH equipment matrix was audited expecting GROW's degenerate columns and
+phantom labs and had neither. A pack that is worse in one place is not worse
+everywhere, and a finding in a pack's favour must be recorded as carefully as a
+fault.
+
+**2 · The context-read rule for scanner hits.** *A regex hit is not a finding
+until its context is read.* Established by the W7L2 precedent — the pack's only
+mark-scheme hits are a **caution card** saying real mark schemes accept more
+than one answer form. Applied four times in this pass, and it changed the verdict
+every time: 3 mark-scheme hits → 0 findings; `lever`/`Moon`/`planet` in the pack
+→ dead CSS, not content; two mark-scheme hits on my own matrix → inside my own
+prohibition; and **one hit inside my own JS comment**, which is the sharpest form
+of the rule — *it applies to your own text, not only to other people's.*
+
+**3 · The third two-build delivery.** Checksummed zips carried the ~32 KB
+external-asset build plus `assets/`; the loose files carried the ~101 KB inlined
+build. Third confirmed instance — the discriminator (`assets/` count and file
+size) should now be run on every delivery before anything is quarried. Note also
+that the checksums covered only the four zips/diff: **every file this pass could
+legitimately quarry carried no checksum at all.** And the fourteen byte-identical
+`-1` twins are **one artefact each, not two** — 29 files, 15 distinct.
+
+**4 · The LAUNCH band has never been requested.** GROW's reading band is with
+the SENCo and pending. LAUNCH's has not been asked for. Both are recorded here as
+unsupplied, with the action chained to the one conversation already open: collect
+both bands in the same sitting.
+
+---
+
+## 10 · Sentinels — the "unchanged" green shape
+
+GSG-1's green shape was *moved exactly as declared*. **LSG-1's is *unchanged*.**
+
+| sentinel | main | branch tip | required |
+|---|---|---|---|
+| `ll-g:loop-mark` | 50 | **50** | unchanged **and set-identical** |
+| written-closure line | 123 | **123** | unchanged **and set-identical** |
+
+Unit: bearing files. Universe: git-tracked `*.html`. Both bearing sets are
+**file-for-file identical to main's** at every gate run and at the final tip —
+not merely equal in size. The 123-set contains all 15 LAUNCH v3_40min files, all
+10 GROW v3_40min files, and 0 BUILD v3_40min files.
+
+There is **no declared movement in this pass**. Any change in either number, at
+any commit, would be a defect and a stop.
+
+## 11 · Rollback
+
+`git reset --hard 470be572baf4f71d5656afe3aa9bd3bf97129daa` restores the
+pre-pass estate exactly. Nothing outside `Science_Teesside/Launch/v3_40min/` and
+`_lsg1/` was modified — asserted as gate 15.
