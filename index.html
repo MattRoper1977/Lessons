@@ -179,6 +179,24 @@ display:flex;gap:.8rem;align-items:flex-start;color:var(--mut);font-size:.9rem;l
 .footer small{color:#E8E2D4b3}
 .footer a{color:inherit}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+/* ===== NAV-1: Latest additions + the Science 2026-27 front door ===== */
+.mbml{max-width:var(--max);margin:1.1rem auto 0;padding:0 1rem}
+.mbml h2{text-transform:uppercase;letter-spacing:.04em;color:var(--navy);font-size:1.05rem;font-weight:800;margin:0 0 .55rem}
+.mbml-sci{background:var(--card);border:2px solid var(--b-launch);border-radius:16px;padding:.9rem 1rem;margin-bottom:.9rem;display:flex;flex-direction:column;gap:.45rem}
+.mbml-sci .kind{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--t-launch)}
+.mbml-sci h3{font-size:1.05rem;color:var(--navy)}
+.mbml-sci p{color:var(--mut);font-size:.85rem;line-height:1.5}
+.mbml-sci .acts{display:flex;gap:.5rem;flex-wrap:wrap}
+.mbml-sci .acts a{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-decoration:none;color:#FFF6E8;background:var(--navy);border-radius:999px;min-height:44px;display:inline-flex;align-items:center;padding:.42rem .95rem}
+.mbml-sci .acts a:hover{background:var(--navy-lt)}
+.mbml-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.55rem;list-style:none;margin:0;padding:0}
+.mbml-list li{background:var(--card);border:1.5px solid #161D3D2b;border-radius:12px;padding:.55rem .7rem;display:flex;flex-direction:column;gap:.2rem}
+.mbml-list a{color:var(--navy);text-decoration:none;font-weight:700;font-size:.88rem;line-height:1.3}
+.mbml-list a:hover{text-decoration:underline}
+.mbml-meta{color:var(--mut);font-size:.72rem}
+.mbml-meta b{color:var(--mint-deep);font-weight:800}
+[data-theme="dark"] .mbml-meta b{color:var(--mint)}
+@media print{.mbml{display:none}}
 
 .hero26{background:linear-gradient(135deg,#0E4F4A,#186B5F);color:#EDF7F3;border-radius:14px;margin:0 0 1rem;padding:.85rem 1.1rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
 .hero26 .pin{font-size:1.3rem}
@@ -261,6 +279,14 @@ details.acc>:last-child{margin-bottom:1rem}
 <span class="count" id="count" aria-live="polite" aria-atomic="true">Loading…</span>
 </div></section>
 
+<section class="mbml" aria-label="Science 2026-27 and latest additions">
+<div class="mbml-sci"><span class="kind">Science · Teesside · 2026–27</span>
+<h3>Science 2026–27 · 40-minute routes</h3>
+<p>The three new science suites in one place — BUILD, GROW and LAUNCH, each a set of single-file 40-minute lessons with tiers, print packs and hands-on labs. Every suite index carries its own governance banner.</p>
+<div class="acts"><a href="Science_Teesside/Build/v3_40min/index.html">BUILD · Explore</a><a href="Science_Teesside/Grow/v3_40min/index.html">GROW · Physics</a><a href="Science_Teesside/Launch/v3_40min/index.html">LAUNCH · GCSE Biology</a></div></div>
+<h2>Latest additions</h2>
+<ul class="mbml-list" id="mbml-latest"><li><span class="mbml-meta">Loading…</span></li></ul>
+</section>
 <p class="jkey" id="jkey">Pathways — <b>BUILD</b> laying the groundwork · <b>GROW</b> developing independence · <b>LAUNCH</b> mastery in action</p>
 <section class="journey" id="journey" aria-label="The learning journey — Build, Grow, Launch">
 <div class="j-grid rail">
@@ -459,9 +485,36 @@ document.querySelectorAll(".j-tier").forEach(x=>x.setAttribute("aria-pressed",x.
 render();if(TIER)$("#cards").scrollIntoView({behavior:scrollBehavior,block:"start"})}));
 })();
 $("#status").addEventListener("click",e=>{if(e.target.closest("[data-clear-filters]"))clearFilters();});
+/* NAV-1: Latest additions — rendered from the `added` field the catalogue
+   already carries. The DATE is the label, so it never goes stale. Sorted
+   added desc; ties broken by the existing subject order, then title. Reads
+   ALL and writes its own list only — the filter chain is untouched. */
+function renderLatest(){
+  const el=document.getElementById("mbml-latest");if(!el)return;
+  let dated=ALL.filter(r=>r.added&&(r.file||r.url));
+  dated.sort((a,b)=>b.added.localeCompare(a.added)||subjOrder(a.subject,b.subject)||String(a.title).localeCompare(String(b.title)));
+  /* many entries share one added date, so within each date the pick is
+     spread round-robin across subjects — the strip shows what arrived,
+     not twelve slices of the first subject */
+  const grouped={};dated.forEach(r=>{(grouped[r.added+"|"+r.subject]=grouped[r.added+"|"+r.subject]||[]).push(r)});
+  const dates=[...new Set(dated.map(r=>r.added))].sort().reverse();
+  const spread=[];
+  for(const dt of dates){
+    const subs=[...new Set(dated.filter(r=>r.added===dt).map(r=>r.subject))].sort(subjOrder);
+    for(let round=0;spread.length<24;round++){
+      let took=false;
+      for(const su of subs){const q=grouped[dt+"|"+su];if(q&&q[round]){spread.push(q[round]);took=true;if(spread.length>=24)break}}
+      if(!took)break;
+    }
+    if(spread.length>=24)break;
+  }
+  dated=spread;
+  const fmt=iso=>{const [y,m,d]=iso.split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(m)-1]||m;return `${Number(d)} ${M} ${y}`};
+  el.innerHTML=dated.slice(0,12).map(r=>`<li><a href="${esc(safeHref(r.file||r.url))}">${esc(r.title)}</a><span class="mbml-meta"><b>Added ${esc(fmt(r.added))}</b> · ${esc(r.subject)}</span></li>`).join("")||'<li><span class="mbml-meta">Nothing dated yet.</span></li>';
+}
 fetch("resources.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(`resources.json ${r.status}`);return r.json()}).then(d=>{if(!Array.isArray(d))throw new Error("Invalid resources.json");ALL=d;
 ALL.forEach(r=>{r._tier=tierOf(r)});
-fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();fillTabCounts();render()})
+fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();fillTabCounts();render();renderLatest()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
 ["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
 $("#subject").value=SUITE;TIER=b.getAttribute("data-suite")||"";$("#search").value="";render();
