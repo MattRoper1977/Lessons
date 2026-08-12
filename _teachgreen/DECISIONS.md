@@ -484,3 +484,170 @@ Production therefore serves the include. `pages build and deployment` success at
 | pinned site SHA (gate output) | `c65aeb5c9a8fd186d4139e5de306a32b29ee17b2` |
 | Stage B total | **236 decks** — 158 + the 78 |
 | decks with slides still uncovered | 0 |
+
+---
+
+# Pass TH-U — one theme engine, three outputs · 2026-08-12
+
+Closes the teach-green programme's last open item, the one recorded as
+"Recorded, not built — theme-engine unification" above.
+
+## Preconditions (§0)
+
+All three mains sat exactly on their floors, trees clean, nothing moved:
+site `c65aeb5c`, Lessons `4062e2c2`, Apps `1f0a803d`.
+
+**Overlap.** Site and Apps have only `main` — no branches to overlap. Lessons
+has 132; nine `codex/mbm-cross-estate-*` branches touch the theme surfaces, all
+forked from `aad7b501` on 2026-08-08, **none with an open pull request**, and
+`main` already carries both the workflow and `assets/mbm-theme.js` past them
+(branch tip `af946d77…` vs main `6934f927…`). Superseded, not live. The ten open
+PRs were checked against that list: no head branch appears in it.
+
+**Baseline bytes.** All three copies identical at
+`6934f92739429496a0bed6404652eb0da1568c29926d43a8e709a53aa0dba60e`.
+
+## The loader table (§0.3) — measured, and it decided the outcome
+
+| engine | loaded by | count |
+|---|---|---|
+| site `theme.js` | `index`, `for/×7`, `games`, `resources`, `tools`, **and `Lessons/primary/index.html`** | 12 |
+| Lessons `assets/mbm-theme.js` | `Lessons/index.html` | 1 |
+| Apps `assets/mbm-theme.js` | `Matt-s-Apps-/index.html` | 1 |
+| homepage inline block | site `main/index.html` | 1 |
+
+`primary/index.html` was the surprise: a **Lessons** page loading the **site's**
+`/theme.js` by absolute path over the network, not the copy in its own repo. It
+works because the site is mounted at the domain root. Twelve loaders, not eleven.
+Recorded, not changed — and it is why `--scope lessons` measures the canonical.
+
+Every distribution-pack recipe in the estate was searched — `_passsci1/build_pack.py`,
+`tools/build_staff_pack.py`, and the four `_glv3` bundle tools — and **none
+references the theme engine**. No `file://` pack carries it. The `file://`
+concern in this estate is `hud.js`, which is separate and already documented.
+
+**Both copies are loaded by something, so neither was deleted.** Both became
+generated output. That was the census's job and it did it.
+
+## Two reds that were already there, one of them mine
+
+Running the existing cross-estate gate against origin/main, before any edit:
+
+```
+Lessons  [FAIL] local copy no longer equals canonical source: assets/mbm-platform.css
+         [FAIL] local copy no longer equals canonical source: assets/mbm-platform.js
+Apps     [FAIL] shared asset hash drift: assets/mbm-theme.js        <- fixed by this pass
+         [FAIL] local copy no longer equals canonical source: assets/mbm-platform.css
+         [FAIL] local copy no longer equals canonical source: assets/mbm-platform.js
+```
+
+The two `mbm-platform.*` reds are **pre-existing and out of scope** by the pass's
+own red lines. They are unchanged and still red. Recorded, not touched.
+
+The Apps theme red was real and had been there a long time: the pin read
+`af946d77…`, the value from the day the file was created. The file moved twice
+afterwards and the pin never did, so that gate had been failing on a stale
+constant rather than on drift. The same stale digest sat in **both**
+repositories' `MBM_CROSS_ESTATE_UNIFICATION.md`. Three stale pin sites.
+
+That is the same failure as the High-Lumen five-swatch bug: N places to update
+by hand, fewer than N updated. It is what §1 exists to end.
+
+## What shipped
+
+**§1 — canonical and generated.** Site `theme.js` is the source. `tools/sync_theme.py`
+writes both copies as `HEADER + theme.js` verbatim and rewrites every pinned
+digest in the same run. Generated copy digest `5d711139ee95f2a9…`; the header is
+the only difference from the canonical `6934f927…`.
+
+The cross-estate gate keeps its teeth: it now asserts that exact concatenation
+rather than plain byte-identity — a byte either side of the header still fails —
+plus the header's presence, and its failure message names the sync command.
+
+**§2 — the homepage inside the fence.** `tools/verify_theme_parity.py` asserts
+the value SET from every place it is written: `ORDER`/`NAME`/`DOT` in all three
+engines, the homepage's inline `names` map extracted between new
+`mbm-theme-engine:begin/end` sentinels, its hand-written `data-t` swatch markup,
+and the `[data-theme="X"]` CSS on all seven ported pages. Cream is excluded from
+the CSS assertion because cream **removes** the attribute; a cream rule would be
+dead, and one appearing is itself a failure.
+
+The homepage edit is comments only. Proof: strip block comments from both sides
+and the file is byte-identical; +482 bytes; the extracted block parses as JS.
+
+Two structures the gate had been walking past were added: six of seven ported
+pages keep their rules in `<style id="mbmTheme">` (page CSS is now read from that
+block, so a stray `[data-theme]` rule elsewhere cannot stand in for the real
+ones), and six of seven carry a pre-paint snippet — the other place the DEFAULT's
+name is written. `main` is the exception to both and is **named** as one rather
+than silently tolerated; it can flash, which is pre-existing and out of scope.
+
+**§3** — `docs/THEME_ENGINE.md` in the site repo: loader table, the five CSS
+dialects and why they are per-page by design, the pre-paint snippet, the gates
+and why they are scoped, the one hole a path filter cannot close, and the
+standing rule (edit canonical → sync → per-page CSS → the gate says when you are
+finished).
+
+## Both red→green proofs (§1.4, §2.2)
+
+Every graft verified to have **landed** before its result was believed — the
+TG-78 lesson — and every graft undone in a `finally`, with the undo proved by
+digest.
+
+**§1, on scratch branches in both companion repos:**
+
+```
+Lessons/Apps: baseline theme finding(s) 0
+  hand edit inside the engine   graft 5d711139ee95 -> 84dbdffb5ea4
+     [FAIL] shared asset hash drift: assets/mbm-theme.js — run: python3 tools/sync_theme.py …
+     [FAIL] assets/mbm-theme.js is not the generated copy of the canonical theme.js. Do not
+            edit it here — edit theme.js in the site repository, then run: …
+  the header stripped off       graft 5d711139ee95 -> 6934f9273942   (= the canonical exactly)
+     + [FAIL] assets/mbm-theme.js has lost its generated-file header …
+  after `python3 tools/sync_theme.py`: theme finding(s) 0
+  scratch branch removed: yes · tree clean: True
+```
+
+**§2, five directions, in CI at the merge SHA:**
+
+```
+direction 1 — terracotta in the canonical engine only     3 finding(s)
+direction 2 — terracotta on the homepage only             4 finding(s)
+sentinels removed                                         1 finding(s)
+direction 3 — a page's highlumen rules deleted            1 finding(s)
+direction 4 — a page loses its named theme block          1 finding(s)
+direction 5 — a page loses its pre-paint snippet          1 finding(s)
+[PASS] parity self-test
+```
+
+## The gate output Matt asked to see
+
+From the site run at `8096487c`, `--scope site`:
+
+```
+scope site; expected, in order: ['cream', 'pink', 'blue', 'light', 'dark', 'highlumen']
+pages carry the same minus 'cream', which removes the attribute
+
+canonical  theme.js                ['cream', 'pink', 'blue', 'light', 'dark', 'highlumen']
+homepage   inline (sentinels)      names  ['blue','cream','dark','highlumen','light','pink']
+homepage   swatch buttons          data-t ['blue','cream','dark','highlumen','light','pink']
+page       homepage                CSS    ['blue','dark','highlumen','light','pink']
+page       tools                   CSS    ['blue','dark','highlumen','light','pink']
+page       resources               CSS    ['blue','dark','highlumen','light','pink']
+page       games                   CSS    ['blue','dark','highlumen','light','pink']
+
+[PASS] theme parity (site)
+```
+
+Whole-estate run, locally, with all three checked out: the same six in all three
+engines and on all seven ported pages, `[PASS] theme parity (all)`.
+
+## Reported, not fixed
+
+- `tools/verify_highlumen_behaviour.mjs` reports **`tools (site /theme.js): the
+  cream swatch is 0x0, under 44px`**. Identical at site `origin/main` before any
+  TH-U change, so pre-existing. It is a touch-target finding on one page, not a
+  parity one. Left alone.
+- The `mbm-platform.css` / `mbm-platform.js` drifts, per the red lines.
+- `main/index.html` has no pre-paint snippet and can flash on load.
+- `verify_highlumen*.py/.mjs` are run by hand — no workflow invokes them.
