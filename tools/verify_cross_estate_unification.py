@@ -24,7 +24,7 @@ SENTINEL = "mbm-cross-estate-unification-lessons-apps-2026-08-08"
 CANONICAL_HASHES = {
     "assets/mbm-platform.css": "e3eb9b83d3c791eca059386999c306711678877bba27248cc78a1ef584e1031d",
     "assets/mbm-platform.js": "0958a73a78a9f6d428d6cbe6c77a8a1cd5f015022ce9a6acbba92e6bee901fd2",
-    "assets/mbm-theme.js": "af946d77c39aece10c3b6f4d7e119033c7c3ce419d79f0c97286e27bab512da7",
+    "assets/mbm-theme.js": "6934f92739429496a0bed6404652eb0da1568c29926d43a8e709a53aa0dba60e",
     "assets/mbm-hub.css": "1643f51bcfe7f89923e908cf4f79b36a80d8bfa767779ab1c9cebe2e1a8b513c",
 }
 PRIMARY_ROUTES = ["/games/", "/Lessons/", "/Matt-s-Apps-/", "/tools/", "/resources/"]
