@@ -61,12 +61,16 @@ if (argv[0] === '--files') {
     const changed = new Set(execSync(`git -C ${LESSONS} diff --name-only ${BASE_REF} -- '*.html'`,
       { encoding: 'utf8' }).split('\n').filter(Boolean));
     const all = walk(abs).map((f) => path.relative(LESSONS, f)).filter((f) => changed.has(f));
-    // first, middle and last of the population, plus one more — a sample that
-    // straddles the ends rather than four neighbours from the same folder
+    // An even spread across the whole population, always including the first and
+    // last, so the sample straddles the ends rather than taking N neighbours out
+    // of one folder. An earlier version hardcoded four indices and silently
+    // ignored MAX_PER_POP, which capped a "sample 7" request at 4.
     const pick = [];
     if (all.length) {
-      const idx = [0, Math.floor(all.length / 3), Math.floor((2 * all.length) / 3), all.length - 1];
-      for (const i of [...new Set(idx)].slice(0, MAX)) pick.push(all[i]);
+      const want = Math.min(MAX, all.length);
+      const idx = want === 1 ? [0]
+        : Array.from({ length: want }, (_, k) => Math.round((k * (all.length - 1)) / (want - 1)));
+      for (const i of [...new Set(idx)]) pick.push(all[i]);
     }
     FILES.push(...pick);
   }
