@@ -245,6 +245,40 @@ from my own previous report and was wrong; it is corrected here.**
 
 ---
 
+## My own regression, found by a gate and fixed
+
+`Made by Matt cross-estate unification` requires the Lessons and Apps copies of
+`assets/mbm-theme.js` to be **byte-identical** to the site's `theme.js`. The High
+Lumen pass broke that, and the reason is worth recording precisely: I edited the
+three copies separately and wrote **slightly different comment wording** into
+each. The executable code was identical. Only the prose differed — and the gate
+is right not to care which bytes differ.
+
+```
+before High Lumen   site af946d77c39a   lessons af946d77c39a   identical
+after               site 2e463f7d2583   lessons ed08eb375da5   drifted
+now                 all three 6934f92739429496…                identical
+```
+
+`CANONICAL_HASHES` moved to the new digest, which is that manifest's job when a
+shared asset legitimately changes.
+
+**Two pre-existing drifts were left alone**, measured at the pre-pass SHAs
+(Lessons `e0ca832` vs site `5f979e7a`):
+
+```
+assets/mbm-platform.css   site 0a172aa3e218   lessons e3eb9b83d3c7
+assets/mbm-platform.js    site 0841046b6e2d   lessons 0958a73a78a9
+```
+
+Both were already unequal to canonical before either pass, so this gate was
+failing before I arrived. I briefly synced them and then reverted that: they are
+shared runtime files in two repositories, the drift is not mine, and overwriting
+a hub's platform shell to clear a red line is not a fix. Reported for a pass that
+owns them.
+
+---
+
 ## Recorded, not built — theme-engine unification
 
 The reading-theme engine exists in **four** edit sites: `theme.js` in the site
@@ -257,3 +291,9 @@ theme should have painted white. A single shared engine with the three copies
 reduced to imports would make that class of drift impossible. It is a bigger
 change than any of these passes and touches every themed page, so it is
 **recorded as a proposed future pass and no code was written for it here.**
+
+The case strengthened during this close: the four copies drifted **twice in one
+day**. The first time cost the Lessons and Creator hubs their sixth swatch until
+a rendered contrast audit caught it. The second time it was comment text alone,
+caught by the cross-estate gate. Neither was a coding error; both were the
+inevitable consequence of four edit sites for one file.
