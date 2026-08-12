@@ -796,3 +796,67 @@ changing apps.json, both still red — proven above.
 
 `apps.json` is not retired from drift-guarding. It is guarded by digest instead
 of by prohibition.
+
+---
+
+# Guardrail pair two — the count derives, the ledger is legal · 2026-08-12
+
+## Ruling 5 — the browser gate derives its count; the constant dies
+
+Third instance of the stale-enumeration class, one per gate layer:
+
+1. the Python normaliser enumerated `Twenty-eight|Thirty-one` (fixed under Ruling 1's branch);
+2. the Apps manifest **pin** sat at its birth value `af946d77` for the theme copy
+   (buried by TH-U) — a pin nobody moved is the same disease in digest form;
+3. `verify_cross_estate_browser.mjs:132` froze the word outright:
+   `metrics.leadCount==='Thirty-one'`, labelled "manifest-derived" while deriving
+   nothing. browser-matrix succeeded at `de75b4cc` and went red at `ef87bef7`,
+   the first legitimate count change.
+
+The constant was also **blind in the one direction that matters**: a page stuck
+on 'Thirty-one' over a changed manifest satisfied it. Proof leg (c) below
+demonstrates that blindness against the old logic and the derivation catching it.
+
+The gate now fetches `apps.json` from the served base — the same origin every
+other limb measures — and computes the expected word through a `numberWord`
+mirroring the page's own and the Python gate's `number_word`. All three layers
+derive from the same file. **No hand-maintained count now exists anywhere in the
+gate family**; the greps that still find 'Thirty-one' land inside the comments
+explaining its removal, verified against comment-stripped code.
+
+Sweep note (one ruling, one fix): no other frozen enumeration surfaced in the
+two gate files while in there.
+
+### Proof, three legs, sabotage committed and proven landed
+
+```
+(a) guardrail tree, manifest 34, page derives      exit=0  errors=0
+(b) committed graft: page pinned 'Thirty-five'     index.html e06e3f7205bc -> a8c905f6735e
+      gate: was 'Thirty-five', apps.json derives 'Thirty-four'      RED, as it must
+(c) committed graft: page pinned 'Thirty-one'      index.html e06e3f7205bc -> 1133ca6acf43
+      gate: was 'Thirty-one',  apps.json derives 'Thirty-four'      RED
+      old constant on the same page: 'Thirty-one'==='Thirty-one' -> the retired
+      gate would have PASSED this mismatch — the blindness, demonstrated
+scratch worktrees/branches left: 0/0
+```
+
+One thrown-away round of its own: the first proof run hung for fifteen minutes
+producing nothing — the serve() helper launched its background server inside a
+command substitution, which waited on the server's inherited stdout forever. A
+harness that produces no output has proven nothing; fixed (stdout detached) and
+re-run from zero.
+
+## Ruling 6 — the ledger joins ALLOWED_DIFF
+
+`_teachgreen/DECISIONS.md` exists to change on every pass; a boundary that reds
+on the ledger manufactures false failures on exactly the passes that record
+their work. It joins `ALLOWED_DIFF` in both gate copies (harmless in Apps,
+where the file does not exist). Nothing else joins under this ruling.
+
+**Named known-hole — the PR-span/push asymmetry.** The boundary check only sees
+what its trigger shows it: a pull-request run diffs the whole span and would
+have seen the ledger; a push-to-main run compares `origin/main...HEAD`, which
+is empty the moment main has moved, and sees nothing. Ruled a measurement
+limitation of the CI trigger, not this pass's to rebuild. It stands alongside
+TH-U's named hole (a site-only theme change fires no Lessons/Apps path filter;
+the daily schedule catches it within a day).
