@@ -642,3 +642,29 @@ legacy trees **0 files changed** · working tree clean.
 `origin/main` = **`470be572baf4f71d5656afe3aa9bd3bf97129daa`** — re-fetched
 and confirmed unmoved immediately before the merge.
 `git reset --hard 470be572…` on main restores the pre-LSG-1 estate exactly.
+
+## C7 · Merge result and post-merge assertions — PART A CLOSED
+
+- Branch tip merged: `d726dfb` (`claude/lsg-1-launch-science-graft`, pushed).
+- **Merge commit `eb422a739f756fc3f97ffbfb0247d8d06ed905cd`, main pushed**
+  (`470be57..eb422a7`) — branch push alone was not treated as completion.
+- **Raw-pin at `eb422a7`** (raw.githubusercontent.com, never madebymatt.uk):
+  W6L1 closure ×2 + lab present; W5L2 closure ×2 + specimen + Oak clip ×1. ✔
+- **Pages build polled via the API until built SHA == new main:**
+  `pages build and deployment` at head `eb422a7` → **completed / success**
+  (run created 2026-08-12T11:11:02Z). Merged AND published. ✔
+- **Post-merge:** sentinels at `eb422a7` = **50 / 123, both sets file-for-file
+  identical** to pre-merge main `470be57` ✔ · BUILD/GROW v3_40min, v5
+  originals, legacy science trees, Games/: **0 files changed** `470be57..eb422a7` ✔
+  · hub chip counts **advertised == returned on all 23 chips**, through the real
+  filter chain in real Chromium over HTTP (resources.json is CORS-blocked under
+  file:// — instrument limit, not defect) ✔. Two resource-load failures
+  context-read and discarded: `/assets/video/poster-art.webp` is a domain-root
+  asset outside this repo (resolves live), and the favicon fetch is blocked by
+  this container's egress proxy. Both pre-existing properties of the serving
+  context.
+
+**PART A CLOSE STAMP · `lsg1c-nav1-2026-08-12` · Part A closed
+2026-08-12T11:15Z at main `eb422a7`. Fourteen labs shipped, zero unbuilt,
+every gate green, merge live and Pages-verified. Part B (NAV-1) follows in
+the same session per the superseding master prompt.**
