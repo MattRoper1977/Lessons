@@ -162,3 +162,23 @@ ASDAN, ASDAN_Lundy, the Estate_v3 trees) carry nothing.
 | AMBER-RH02-PARKED | The serialization scan's one hit, `origin/claude/approved-0805`: week-stale parked proposal, frozen-tree files only, **0-file intersection** with Part B's write set. Context-read ruling at §0; on Matt's morning list. |
 | AMBER-LATEST-TIE | "Sorted by `added` desc, top 12" is under-determined when 192 entries share one date; resolved with the deterministic subject round-robin above. |
 | AMBER-SCROLL-UNDER | Any fixed corner control over an internally-scrolling slide can have content pass beneath it mid-scroll; empty overlap set at natural scroll on every checked slide. Recorded as the cost of "on screen on every slide". |
+
+## 5 · Part B merge — authority, rollback, gates
+
+**Authority:** Matt's delegation ("so everything can easily be completed"),
+recorded as his, extending the conditional-merge pattern to Stage A + A2 —
+**never Stage B**, which stops at the plan.
+
+**§6 battery at the tip — ALL GREEN:** 38/38 files boot in real Chromium at
+3 viewports, zero errors, button on first/middle/last slide, zero
+interactive-element overlaps, targets resolve · contrast by computed style ·
+rendered print text identical to base 38/38 · byte-region guards held per
+file · sentinels **50 / 123, set-identical to main's** · runtime census 0 ·
+hub chips **23/23 advertised == returned** over HTTP · `resources.json`
+untouched (640 entries, 0 flags) · every changed-lesson diff is exactly the
+control + its CSS (+ two blank lines) · frozen/assessed/Games/legacy **0
+changed** · tree clean, branch pushed.
+
+**PART B PRE-MERGE ROLLBACK SHA (recorded before merging):**
+`origin/main` = **`3e485033fafa2ff7d6c37eb3dcb831a05b011f22`** — re-fetched
+and confirmed unmoved immediately before the merge.
