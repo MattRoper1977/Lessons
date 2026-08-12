@@ -59,3 +59,106 @@ The 15 LAUNCH lessons now carry Part A's fourteen `.sclab` labs, the W5L2
 `.oslab` specimen and the A4 clip. Every Part B byte-region assertion
 compares against **post-Part-A main (`3e48503`)**, and the button's
 geometry/contrast checks run on lab-bearing slides too.
+
+---
+
+## 1 · §2 derivations — measured, not assumed
+
+### 2.1 Chassis geometry, and where the button could NOT go
+
+All three v3_40min suites share one chassis: a fixed bottom `.controls` bar
+(z-1200: TA Brief · Live Loop · Media · Day review | status | Previous/Next)
+plus a bottom progress bar (z-1300); the deck reserves 76–84px of bottom
+padding so slides never extend under it. Overlays sit at z-4000, the media
+drawer at z-5000. **Nothing is fixed at the top.**
+
+The decisive phone finding: at ≤780px the chassis sets **`.left{display:none}`**
+— the whole left control group vanishes, which is exactly why Matt's phone
+check found no route out. So the controls bar cannot seat the button. The
+slide's stage `.tag` owns the card's top-LEFT; the derived seat is **fixed
+top-right** (`top:6px;right:10px;z-index:2500` — above slides and the bottom
+bar, below the chassis's own overlay and media layers). Verified empirically
+per file: zero bounding-box intersection with any visible interactive element
+on first/middle/last slides at 1280×800, 390×844 and 844×390
+(`_nav1/tools/nboot.js`). Property recorded honestly: like any fixed corner
+control over an internally-scrolling card, slide content can pass beneath it
+*while scrolling*; at natural scroll positions the overlap set is empty on
+every slide of every file.
+
+### 2.2 Relative paths
+
+Every touched file sits at depth 3 (`Science_Teesside/<P>/v3_40min/`) →
+`../../../index.html`, derived per file from its real path and **asserted to
+resolve to the repo-root hub in the tree** before the write (`nbutton.py`).
+Relative, never absolute — the same file works on madebymatt.uk, the network
+share and inside the offline staff-pack zips.
+
+### 2.3 Hub render chain
+
+`index.html` fetches `resources.json` (no-cache), derives `_tier` from the
+file path, and renders year tabs (default 2026-27) → toolbar → subject chips
+(`buildQuicknav()`, each chip advertising its in-collection count) → sections.
+**`added` is used NOWHERE in the UI today; `featured` nowhere; `new: true`
+renders as nothing** (the "2026–27" pill keys off `year`). The catalogue data
+is ahead of the UI, exactly as briefed.
+
+### 2.4 The `new:` dilution finding — recorded, proposal only
+
+`new: true` sits on **240 of 640 entries (38%)** — a flag on over a third of
+the catalogue marks nothing. **No flag was changed in this pass.** Proposed
+criterion for Matt: drop stored `new:` from the render path entirely and
+derive freshness at render time from `added` (e.g. `added` within the current
+half-term), so the label expires honestly — a dated label stays true forever;
+a NEW badge is a stamp that goes stale. The Latest-additions section shipped
+in Stage A2 already works this way (date shown as the label).
+
+### 2.5 Way-home census
+
+Full population table, mechanisms and verdicts: **`_nav1/STAGE_B_PLAN.md`**.
+Headline: outside the three new suites, the estate's only mechanisms are
+hud.js (~250 files; lives at the domain root — resolves live, 404s under
+`file://` and in offline packs: recorded as a property of the mechanism) and
+explicit links in `primary/`. Whole populations (Humanities_Teesside, 6 Art,
+ASDAN, ASDAN_Lundy, the Estate_v3 trees) carry nothing.
+
+## 2 · Stage A — what shipped
+
+- **35 lessons** (15 LAUNCH · 10 GROW · 10 BUILD): one real
+  `<a class="mbmhome" href="../../../index.html">← Lessons</a>` each, first
+  element in `<body>` (outside the deck), fixed top-right, ≥44×44px, focus
+  ring, `aria-label`, RM STATIC (no animation/transition), hidden by its own
+  `@media print` rule. One commit per suite.
+- **3 suite indexes**: the same link in flow at the top; governance banner,
+  Baseline and policy links byte-untouched (asserted).
+- Per file: byte-region guards (closure, close block, witness, print pack,
+  tiers, word bank, Oak count) captured before and asserted after the write;
+  **rendered print text identical to base** in print-media emulation
+  (`nprint.js`, 38/38); Chromium boot zero errors, 3 viewports,
+  first/middle/last slides, zero interactive-element overlaps (38/38).
+- Sentinels after Stage A: **50 / 123, set-identical to main's** — hold pass.
+
+## 3 · Stage A2 — the hub
+
+- **Latest additions**: `#mbml-latest`, rendered at load from `resources.json`
+  sorted by `added` descending, top 12, **each item showing its dated `added`
+  value** — the date is the label. 192 entries share the top date, so within
+  a date the picks spread round-robin across subjects (deterministic:
+  existing `subjOrder`, then title) — the strip shows *what arrived*, not
+  twelve slices of the first subject. Reads the same `ALL` array; the filter
+  chain is untouched.
+- **The front door**: one grouped card "Science 2026–27 · 40-minute routes"
+  linking the three suite indexes (all three verified 200 over HTTP). Suite
+  banners stay where they are; the card is a door, not a replacement.
+- **Chip-count gate: 23/23 chips advertised == returned** through the real
+  filter chain in real Chromium over HTTP, zero page errors, after the change.
+- `resources.json`: **0 bytes changed** — 640 entries, zero `new:`/`featured`
+  flags altered. Branding untouched.
+
+## 4 · AMBERs, every one by name
+
+| AMBER | What |
+|---|---|
+| AMBER-PAGES-FLAKE | Pages build for `3e48503` failed attempt 1 with a runner-side TLS error inside `jekyll-github-metadata`; API re-run (not a push) succeeded on attempt 2. |
+| AMBER-RH02-PARKED | The serialization scan's one hit, `origin/claude/approved-0805`: week-stale parked proposal, frozen-tree files only, **0-file intersection** with Part B's write set. Context-read ruling at §0; on Matt's morning list. |
+| AMBER-LATEST-TIE | "Sorted by `added` desc, top 12" is under-determined when 192 entries share one date; resolved with the deterministic subject round-robin above. |
+| AMBER-SCROLL-UNDER | Any fixed corner control over an internally-scrolling slide can have content pass beneath it mid-scroll; empty overlap set at natural scroll on every checked slide. Recorded as the cost of "on screen on every slide". |
