@@ -123,10 +123,17 @@ def apply_to(rels: list[str]) -> tuple[int, list[str]]:
         if "</body>" not in text:
             skipped.append(f"{rel}: no </body> to anchor the include")
             continue
-        if text.count("</body>") != 1:
-            skipped.append(f"{rel}: {text.count('</body>')} </body> tags, ambiguous anchor")
+        # Five decks carry a second </body> inside a JavaScript string: the
+        # print-window template they hand to document.write. Inserting at the
+        # FIRST match would corrupt that template. The document's own closing
+        # tag is the LAST one, and it is only provably the last if nothing but
+        # </html> and whitespace follows it — which is asserted, not assumed.
+        cut = text.rfind("</body>")
+        tail = text[cut + len("</body>"):]
+        if not re.fullmatch(r"\s*(?:</html>)?\s*", tail, re.I):
+            skipped.append(f"{rel}: content after the last </body> ({tail[:40]!r}), anchor unsafe")
             continue
-        p.write_text(text.replace("</body>", TAG + "</body>"), encoding="utf-8")
+        p.write_text(text[:cut] + TAG + text[cut:], encoding="utf-8")
         done += 1
     return done, skipped
 
@@ -143,7 +150,8 @@ def prove(base: str, rels: list[str] | None = None) -> list[str]:
         after = (ROOT / rel).read_text(encoding="utf-8")
         if before == after:
             continue
-        expected = before.replace("</body>", TAG + "</body>", 1)
+        cut = before.rfind("</body>")
+        expected = before[:cut] + TAG + before[cut:]
         if after != expected:
             problems.append(f"{rel}: differs from base by more than the single include")
             continue
@@ -202,16 +210,19 @@ def main() -> int:
     a = ap.parse_args()
 
     if a.self_test:
-        # The proof must reject a change that is not the bare include.
-        import tempfile
-        scope = in_scope()
-        if not scope:
-            print("[FAIL] self-test: nothing in scope to test against")
+        # The proof must reject a file carrying anything beyond the include.
+        # Prefer a file this pass already changed; fall back to one still in
+        # scope. Either way the tree is restored before returning.
+        changed = [x for x in sh(f"git diff --name-only {a.base} -- '*.html'").split("\n") if x]
+        victim_rel = changed[0] if changed else (in_scope() or [None])[0]
+        if not victim_rel:
+            print("[FAIL] self-test: no file available to test against")
             return 1
-        victim = ROOT / scope[0]
+        victim = ROOT / victim_rel
         original = victim.read_text(encoding="utf-8")
-        victim.write_text(original.replace("</body>", TAG + "<!--x-->" + "</body>", 1), encoding="utf-8")
-        probs, _ = prove(a.base, [scope[0]])
+        c = original.rfind("</body>")
+        victim.write_text(original[:c] + "<!--stage-b-self-test-->" + original[c:], encoding="utf-8")
+        probs, _ = prove(a.base, [victim_rel])
         victim.write_text(original, encoding="utf-8")
         if not probs:
             print("[FAIL] self-test: the proof accepted a file carrying more than the include")
