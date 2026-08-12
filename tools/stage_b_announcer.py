@@ -43,7 +43,16 @@ TAG = '<script defer src="/hud.js"></script>'
 # four trees. Path-scoped, not a subject heuristic.
 FROZEN_LEGACY_SCIENCE = ("biology/", "chemistry/", "2 Physics 10/", "5 Intervention 10/")
 # Excluded regardless of anything else.
-HARD_EXCLUDE_DIRS = ("Games/", "LundyLoop/", "Baseline_Weeks/", ".git/")
+HARD_EXCLUDE_DIRS = ("Games/", "LundyLoop/", "Baseline_Weeks/", ".git/",
+                     # GROW_Estate_v3 and LAUNCH_Estate_v3 are governed by
+                     # .github/workflows/glv3-verify.yml, whose broken-link gate
+                     # resolves every "/"-absolute href against the REPO root.
+                     # /hud.js lives in the site repo and is only root-absolute
+                     # on the deployed domain, so the include reads as 78 broken
+                     # links there and turned that gate red. Correct in
+                     # production, unacceptable to the gate as written. Excluded
+                     # until Matt rules; see _teachgreen/DECISIONS.md.
+                     "GROW_Estate_v3/", "LAUNCH_Estate_v3/")
 
 # The named byte-regions the close order requires held. Each is (label, regex).
 # They are asserted per file, before and after, on top of the exact-diff proof.
