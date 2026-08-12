@@ -529,3 +529,97 @@ map. Both packs share one filename and are different artefacts:
 | W7L3 | `biology_evidence_paper` | |
 
 Earn-the-place still decides per LO; an honest AMBER-unbuilt stays valid.
+
+## C4 · The fourteen labs — every decision, at the time
+
+Pattern = the signed-off W5L2 specimen: predict-commit → test → freeze →
+explain · button-only · identity by border-pattern + glyph + word, never
+colour alone · RM STATIC · zero media-API queries · zero pack markup bytes ·
+one commit per lesson · protections asserted **before** each write (closure,
+close block, witness, print pack, tiers, word bank, Oak count) · GROW-bleed
+and food censuses per changed file, scanners validated on known positives
+(GROW W3A friction; "chocolate"; and the scanner proven NOT to hit "surface
+area"). Class family `.sclab`/`.sc-*`, one lab per file. Builder:
+`_lsg1/tools/lc_labs.py`; driver: `_lsg1/tools/lcboot.js` (real Chromium,
+predict → all three tests → frozen 3/3 → repair, contrast by computed style).
+
+**Fourteen built, zero unbuilt.** Each earned its place against its own LO,
+derived from the live widget's markup — nine widgets are the one-button
+"Reveal model meaning" card; the six specialised widgets left exactly the gap
+the LO named (recorded per lab in the builder and the commit messages).
+The W3L2/W3L3 pair is the GSG-1 W7A/W7B precedent in reverse: near-identical
+calculators, distinct LOs, two DIFFERENT labs (unit bridge vs error diagnosis).
+
+| Lesson | Lab | Fixtures in-lab | Notes |
+|---|---|---|---|
+| W3L1 | Microscope lens lab | — | magnification vs resolution across ×4/×10/×40 |
+| W3L2 | Unit bridge lab | **3/3** | ported convertLength + magnification |
+| W3L3 | Working check lab | **3/3** | ported error diagnosis (correct/unit/power-of-ten) |
+| W4L1 | Diffusion rate lab | **3/3** | ported rate index, one factor at a time |
+| W4L2 | Alveolus evidence lab | **2/2** | ported exchange index |
+| W4L3 | Explanation chain lab | — | WHAT → BECAUSE → SO explain shape |
+| W5L1 | Membrane gate lab | — | the closed W5L1 gap; membrane selectivity + net movement; fixed example counts, no potato/mass overlap with the specimen |
+| W5L2 | (specimen, already live) | — | untouched this session |
+| W5L3 | Anomaly and zero lab | **6/6** | ported seeded data set (seed 20260812 — **deterministic on purpose**), percentage change, mean, zero interpolation; zero estimate ≈0.51 mol dm⁻³, anomaly at 0.6 visible (+4.2% vs −2.6/−2.3) |
+| W6L1 | Against the gradient lab | — | word bank asserted byte-identical |
+| W6L2 | Uptake evidence lab | — | gradient / oxygen-link / shape evidence |
+| W6L3 | Transport decision lab | **3/3** | ported decision rule |
+| W7L1 | Connection lab | — | the LINKS the retrieval map does not hold |
+| W7L2 | Answer shape lab | — | one result through three command words |
+| W7L3 | Evidence paper lab | — | three shape checks → repair your own answer; teaching answer shapes, nothing official claimed |
+
+**In-lab fixture assertions: 20 total, covering 19 of the rebuilt suite's 20
+distinct checks.** The one not ported is `linearRegression`: no lab regresses,
+and `interpolateZero` is ported WITHOUT its regression fallback because the
+practice data always crosses zero — an honest simplification, commented in the
+emitted code. A fixture failure is VISIBLE: the lab replaces itself with a
+notice and throws (`scFixGate`), never a bare catch — the TDZ history in
+CLAUDE.md is why. Boot result: **14/14 labs driven end to end in real
+Chromium, zero console/page errors, frozen 3/3, fixtures green, contrast
+probed by computed style.**
+
+### Reading, refreshed after the transplants
+
+Pupil-facing selector A, same instrument: base **5.99** → pre-lab 4.27 →
+**post-lab 4.31** — still lower than base in **15/15** and still below the
+pack's pupil-facing 5.15. Deltas only; no band exists (§3 above stands).
+`fk_table.json` and the 15 prose diffs refreshed in the same session.
+
+### T4 closed exactly
+
+Gate 7's family (`lgates.py` PRINT_FAMILY, which adds `printTier`,
+`afterprint`, `data-print-tier`, `data-tier` to the dialect tokens) measures
+the baseline at **exactly 43/file** — the report's figure reproduces once the
+family is read from the instrument that produced it. T4 upgrades from
+"CONFIRMED in substance" to **CONFIRMED**, with both scanner baselines now on
+record: 36/file (ten structural tokens) and 43/file (lgates family), uniform
+15/15, and 47/file after the LSG-1 grafts ("intact or richer" is the gate).
+
+## C5 · Findings carried forward + instrument-failure bookkeeping
+
+- **AMBER-PACK-BLEED stands** (§8 above): the superseded pack shipped the
+  GROW friction Exit frame in all fifteen LAUNCH files. This session's
+  transplants therefore asserted, per changed file: **0** friction / lever /
+  pulley / gear / Moon / planet / surface-test content — 14/14 clean, scanner
+  validated both ways (hits friction/Moon; does not hit "surface area").
+- **AMBER-A7-CREDIT stands**: the pack's equipment matrix is accurate — all
+  15 named labs exist. *A pack that is worse in one place is not worse
+  everywhere.*
+- **Instrument-failure renumbering.** The programme tally is **23** (18 after
+  GSG-1, +5 from LSG-1). The LSG-1 report numbered its five #19–#23, but
+  **#19 was already assigned in the GSG-1 report** — a live instance of the
+  register's own finding that *an ID quoted across passes inherits authority
+  it never had*. The LSG-1 five are therefore **#19b–#23b** (mapping:
+  AMBER-INSTR-1→#19b, -2→#20b, -3→#21b, -4→#22b, -5→#23b). The collision is
+  recorded here, and **failure IDs are unique programme-wide from now on.**
+- **AMBER-FIXTURE-COUNT** (this session): the INPUT-2 replacement notice said
+  19 fixtures; the rebuilt suite carries and passes **20**. Measurement beats
+  document.
+- **AMBER-TEMPLATE-LEAK** (this session): two rebuilt designs
+  (`W3L2_cell_scale_lab.html`, `W5L1_membrane_reasoning_lab.html`, and the
+  earlier pack's W6L1 twin) ship a literal `{common_evidence_panel(cfg)}`
+  Python placeholder — the designs are generator skeletons. Consequence
+  already in force: reference-only, no pack markup bytes.
+- **RAR5-via-libarchive provenance note** (§1 above) carries forward
+  unchanged; this session's inputs arrived as two plain zips sharing one
+  filename (see C3).
