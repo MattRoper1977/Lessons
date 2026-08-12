@@ -134,6 +134,28 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;b
  .speak-btn,.wh-btn,.commit-opt{display:none!important}
  .wh-bridge[hidden]{display:inline!important}
 }
+
+/* ===== GSG-1 We Do lab (approved W4A pattern) ===== */
+.gsglab{border:2px solid var(--grow);border-radius:14px;padding:12px 14px;background:#f7fcfa;margin:10px 0}
+.gsglab h3{margin:0 0 4px;color:#215e53}
+.gl-step{font-weight:900;color:#10233f;margin:9px 0 4px;font-size:.95rem}
+.gl-row{display:flex;gap:8px;flex-wrap:wrap}
+.gl-btn{background:#fff;color:#10233f;border:3px solid #94a3b8;border-radius:10px;padding:9px 13px;font-weight:900;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:none}
+.gl-btn .gl-glyph{font-size:1.15rem}
+.gl-btn.i0{border-style:solid}.gl-btn.i1{border-style:dashed}
+.gl-btn.i2{border-style:dotted}.gl-btn.i3{border-style:double}
+.gl-btn.picked{border-color:var(--grow);background:#dff2ea;color:#10233f}
+.gl-btn.tested{border-color:#10233f;background:#eef2f7;color:#10233f}
+.gl-say{margin:7px 0 0;font-size:.92rem;color:#334155;font-weight:700}
+.gl-stage{border:2px solid #cbd5e1;border-radius:12px;background:#fff;padding:11px;margin:8px 0;min-height:62px}
+.gl-stage .gl-name{font-weight:900;font-size:1.05rem;color:#10233f}
+.gl-frozen{border-left:6px solid #10233f;background:#f8fafc;border-radius:10px;padding:9px 11px;margin:8px 0;font-size:.9rem}
+.gl-frozen ol{margin:5px 0 0 18px;padding:0}
+.gl-frozen li{margin:3px 0}
+.gl-glitch{border:2px solid #b55f25;background:#fff4e6;border-radius:12px;padding:10px 12px;margin:9px 0}
+.gl-glitch b{color:#9a3412}
+.gl-foot{font-size:.84rem;color:#64748b;margin:8px 0 0}
+@media print{.gsglab{display:none}}
 </style></head><body>
 <!-- TEST PROTOTYPE. Original repo unchanged. 40-minute teaching route = 40 minutes. -->
 <main class="slide-container"><section class="slide" data-min="0" data-ta-move="Use Practical Ready in the staff panel; do not introduce new teaching on the title slide." data-ta-priority="Read the lesson architecture and equipment before pupils arrive." data-title="Lesson overview" data-type="title">
@@ -178,7 +200,25 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;b
 <div class="time-chip">⏱ 4 min</div><span class="slide-tag tag-wedo">We Do</span>
 <div class="wedo-box"><b>Explore together:</b> Results lab</div><div class="widget"><h3>📊 Repeat-and-mean lab</h3><p>Enter three distances per surface. The tool calculates means only after raw data is visible. Values are not saved.</p>
 <table class="data-table"><tr><th>Surface</th><th>1 (cm)</th><th>2 (cm)</th><th>3 (cm)</th><th>Mean</th></tr><tr><th>Rough</th><td><input id="W5B-r1" min="0" step="0.1" type="number" aria-label="Rough surface, run 1, distance in cm"/></td><td><input id="W5B-r2" min="0" step="0.1" type="number" aria-label="Rough surface, run 2, distance in cm"/></td><td><input id="W5B-r3" min="0" step="0.1" type="number" aria-label="Rough surface, run 3, distance in cm"/></td><td id="W5B-rmean">—</td></tr><tr><th>Medium</th><td><input id="W5B-m1" min="0" step="0.1" type="number" aria-label="Medium surface, run 1, distance in cm"/></td><td><input id="W5B-m2" min="0" step="0.1" type="number" aria-label="Medium surface, run 2, distance in cm"/></td><td><input id="W5B-m3" min="0" step="0.1" type="number" aria-label="Medium surface, run 3, distance in cm"/></td><td id="W5B-mmean">—</td></tr><tr><th>Smooth</th><td><input id="W5B-s1" min="0" step="0.1" type="number" aria-label="Smooth surface, run 1, distance in cm"/></td><td><input id="W5B-s2" min="0" step="0.1" type="number" aria-label="Smooth surface, run 2, distance in cm"/></td><td><input id="W5B-s3" min="0" step="0.1" type="number" aria-label="Smooth surface, run 3, distance in cm"/></td><td id="W5B-smean">—</td></tr></table>
-<button onclick="fairData('W5B')" style="margin-top:9px">Calculate and interpret</button><div class="widget-feedback" aria-live="polite" id="wf-W5B">Before calculating, look for any repeat that is very different from the others.</div></div><div class="chart-panel" id="v3-chart-W5B"><div class="visual-caption">Enter results in the interactive lab above to build a visual comparison.</div></div>
+<button onclick="fairData('W5B')" style="margin-top:9px">Calculate and interpret</button><div class="widget-feedback" aria-live="polite" id="wf-W5B">Before calculating, look for any repeat that is very different from the others.</div></div><div class="gsglab" id="gsglab-W5B">
+<h3>🧭 Trust the Repeat Lab</h3>
+<p style="margin:0">A button-only route into the judgement the mean cannot make for you. The tool above still calculates from your own nine readings.</p>
+<div class="gl-step">Step 1 · Predict, before you test</div>
+<p style="margin:0 0 5px">Which set of three repeats would you <b>trust most</b>?</p>
+<div class="gl-row gl-predict"><button class="gl-btn i0" data-label="Set A" type="button" aria-pressed="false" onclick="gsgLabPredict_W5B(this)"><span class="gl-glyph">▲</span>Set A</button><button class="gl-btn i1" data-label="Set B" type="button" aria-pressed="false" onclick="gsgLabPredict_W5B(this)"><span class="gl-glyph">◎</span>Set B</button><button class="gl-btn i2" data-label="Set C" type="button" aria-pressed="false" onclick="gsgLabPredict_W5B(this)"><span class="gl-glyph">✳</span>Set C</button></div>
+<p class="gl-say" id="gl-say-W5B" aria-live="polite">Choose one. Say it, point to it, or press it. Nothing here is right or wrong yet.</p>
+<div class="gl-step">Step 2 · Test each one</div>
+<div class="gl-row"><button class="gl-btn i0" data-i="0" type="button" onclick="gsgLabTest_W5B(this)"><span class="gl-glyph">▲</span>Test Set A</button><button class="gl-btn i1" data-i="1" type="button" onclick="gsgLabTest_W5B(this)"><span class="gl-glyph">◎</span>Test Set B</button><button class="gl-btn i2" data-i="2" type="button" onclick="gsgLabTest_W5B(this)"><span class="gl-glyph">✳</span>Test Set C</button></div>
+<div class="gl-stage" id="gl-stage-W5B" aria-live="polite">Press one to see what it does.</div>
+<div class="gl-frozen"><b>Frozen results — these stay on the page</b>
+<ol id="gl-list-W5B"></ol>
+<p style="margin:6px 0 0" id="gl-note-W5B" aria-live="polite">Nothing tested yet.</p></div>
+<div class="gl-step">Step 3 · Explain</div>
+<div class="gl-glitch"><b>SCIENCE GLITCH:</b> “Always delete a reading that does not fit.”
+<div class="gl-row" style="margin-top:7px"><button class="gl-btn i0" data-fix="0" type="button" onclick="gsgLabGlitch_W5B(this)">Keep the claim</button><button class="gl-btn i1" data-fix="1" type="button" onclick="gsgLabGlitch_W5B(this)">Repair it</button></div>
+<p class="gl-say" id="gl-glitch-W5B" aria-live="polite">Use your frozen list as the evidence. Decide, then say why.</p></div>
+<p class="gl-foot">Every step is a button, and each option carries a shape and a word as well as its colour. Say it, point to it or have an adult press it — the route does not change the Science.</p>
+</div><div class="chart-panel" id="v3-chart-W5B"><div class="visual-caption">Enter results in the interactive lab above to build a visual comparison.</div></div>
 <div class="scaffold-box"><b>Talk move:</b> “What changed? What stayed the same? What does that make you think?”</div><div class="participation"><b>Ways to show the Science</b><div class="part-row">
 <span class="part-chip">🗣 Say it</span><span class="part-chip">☝ Point / select</span>
 <span class="part-chip">✍ Write / draw</span><span class="part-chip">🧪 Practical / model</span>
@@ -321,5 +361,38 @@ function gsgCommit(btn){
  btn.classList.add('chosen');btn.setAttribute('aria-pressed','true');
  var st=box.querySelector('.commit-state');
  if(st)st.textContent='Prediction received: "'+(btn.textContent||'').trim()+'". Hold onto it — we find out by testing, not by being told.';
+}
+
+/* ===== GSG-1 We Do lab: W5B =====
+   predict-commit -> test -> freeze -> explain. Nothing is marked, scored or
+   stored. The prediction is received, never graded: the reveal comes from
+   testing, which is the whole reason for predicting first. */
+var gsgLab_W5B={tested:[],data:[{g:'▲',n:'Set A',t:'62, 63, 62 cm. The repeats agree closely. The mean of 62.3 cm describes all three readings well.'},{g:'◎',n:'Set B',t:'58, 91, 60 cm. Two agree and one does not. The mean of 69.7 cm describes none of the three readings. Investigate the odd one - do not delete it.'},{g:'✳',n:'Set C',t:'40, 66, 88 cm. The repeats spread widely. A mean of 64.7 cm hides how little the readings agree. Something in the method is not controlled.'}]};
+function gsgLabPredict_W5B(btn){
+ var box=document.getElementById('gsglab-W5B');
+ var all=box.querySelectorAll('.gl-predict .gl-btn');
+ for(var i=0;i<all.length;i++){all[i].classList.remove('picked');all[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('picked');btn.setAttribute('aria-pressed','true');
+ document.getElementById('gl-say-W5B').textContent=
+  'Prediction received: '+btn.dataset.label+'. Nothing is marked. Test them and find out.';
+}
+function gsgLabTest_W5B(btn){
+ var k=Number(btn.dataset.i),d=gsgLab_W5B.data[k];
+ btn.classList.add('tested');
+ document.getElementById('gl-stage-W5B').innerHTML=
+  '<div class="gl-name">'+d.g+' '+d.n+'</div><p style="margin:5px 0 0">'+d.t+'</p>';
+ if(gsgLab_W5B.tested.indexOf(k)<0){
+  gsgLab_W5B.tested.push(k);
+  var li=document.createElement('li');li.textContent=d.n+' \u2014 '+d.t;
+  document.getElementById('gl-list-W5B').appendChild(li);
+ }
+ var done=gsgLab_W5B.tested.length,total=gsgLab_W5B.data.length;
+ document.getElementById('gl-note-W5B').textContent= done<total
+  ? 'Tested '+done+' of '+total+'. Each result stays on the list so you can compare them.'
+  : 'All three are frozen on the list. Now decide what your own data shows: does your mean describe your repeats, or hide them?';
+}
+function gsgLabGlitch_W5B(btn){
+ document.getElementById('gl-glitch-W5B').textContent=
+  btn.dataset.fix==='1' ? 'Repaired. An odd reading is information. Investigate it - was the release different, the surface rucked, the measurement misread? You may repeat it, and you say what you did. You never silently delete it.' : 'Kept as it stands. Ask yourself what Set B\'s odd reading might have been telling you about the method before you throw it away.';
 }
 </script><aside aria-label="Optional media and practical ready" class="media-drawer" id="v3MediaDrawer"><button class="ghost" onclick="v3CloseMedia()">✕ Close</button><h2>🎬 Media &amp; Practical Ready</h2><div class="mission-banner"><span class="mission-icon">🧪</span><div><b>W5B mission</b><br/>Evidence Lab: can another scientist trust our results?</div></div><div class="practical-ready"><b>Equipment</b><p>Trolley/block, ramp, three surfaces, metre rules/tapes, prepared repeat table, calculators optional.</p><b>Safety / sensory</b><p>Clear travel lane; no pushing; same release point; director/recorder/analyst roles are valid.</p><b>Evidence</b><p>Plan + raw repeat data + conclusion + evaluation kept together.</p></div><h3>Optional official media</h3><div class="media-card"><b>Oak · Friction: do and review</b><p class="media-note">Optional teacher-controlled external video/resources. Core lesson does not depend on it.</p><a href="https://www.thenational.academy/teachers/programmes/science-primary-ks2/units/forces-including-simple-machines/lessons/friction-do-and-review" rel="noopener noreferrer" target="_blank">Open official Oak resource ↗</a></div><p class="media-note">External links are optional, click-to-open and never required for the learning outcome. Use the local visual hook when internet access is unavailable or media would reduce participation.</p></aside><div class="overlay" id="v3LoopOverlay" onclick="if(event.target.id==='v3LoopOverlay')document.getElementById('v3LoopOverlay').classList.remove('visible')"><div class="modal"><div class="modal-head"><div><span class="slide-tag tag-title">🔁 Lundy live feedback–response loop</span><h2>Response changes what happens next</h2></div><button class="ghost" onclick="document.getElementById('v3LoopOverlay').classList.remove('visible')">✕ Close</button></div><div class="policy-strip"><div class="policy-stage"><b>SPACE</b>Regulation, trusted adult, time, no public comparison, safe modality.</div><div class="policy-stage"><b>VOICE</b>Edit, re-attempt, verbal reply, point/sign, demonstration or short voice clip.</div><div class="policy-stage"><b>AUDIENCE</b>Adult genuinely reads, listens or watches and names back what was heard.</div><div class="policy-stage"><b>INFLUENCE</b>Adapt the next instruction, question, task, scaffold or explanation.</div></div><h3>Choose the learning move</h3><div class="branch-buttons"><button onclick="v3LoopAction('secure')">Secure</button><button onclick="v3LoopAction('mixed')">Mixed</button><button onclick="v3LoopAction('miscon')">Misconception</button><button onclick="v3LoopAction('access')">Access barrier</button><button onclick="v3LoopAction('method')">Method/data</button></div><div class="loop-next" id="v3LoopResult">Listen first. The response decides the next teaching move.</div><h3>Policy code reference · staff-side only</h3><div class="code-palette"><span class="code-chip">VF · verbal feedback</span><span class="code-chip">WS · worked with support</span><span class="code-chip">I · independent</span><span class="code-chip">NS+ · one next step</span><span class="code-chip">E · evidence on Earwig</span><span class="code-chip">R · responded / Audience happened</span><span class="code-chip">// · self-edit</span><span class="code-chip">? · read this back</span></div><p class="media-note"><b>Important:</b> this lesson does not write codes, store pupil responses or upload evidence. The code palette reflects the uploaded May 2026 Feedback &amp; Marking Policy; staff must follow the school’s current operational implementation. R is only meaningful after genuine Audience.</p></div></div></body></html>
