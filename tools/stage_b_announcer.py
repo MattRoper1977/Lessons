@@ -67,7 +67,17 @@ def title_of(text: str) -> str:
 
 
 def is_deck(text: str) -> bool:
-    return 'class="slide' in text or "class='slide" in text or ".slide" in text
+    """A deck has slides to move between, which means more than one of them.
+
+    Matching the bare string ".slide" also matches a CSS rule, and matching a
+    single class="slide" also matches a page with one such container. Both
+    false-positives were real: build-anim/demo.html and grow-anim/demo.html are
+    "Animation Framework" reference pages carrying exactly one class="slide"
+    element and no deck at all. They took the include, and the runtime gate
+    caught them — 0 announcements, and the announcer correctly declining to arm
+    because hud.js itself requires slides.length > 1. The include was reverted
+    and the scope rule corrected here, so no later run re-adds them."""
+    return len(re.findall(r'class="[^"]*\bslide\b[^"]*"', text)) > 1
 
 
 def in_scope() -> list[str]:

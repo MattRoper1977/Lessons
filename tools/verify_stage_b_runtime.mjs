@@ -142,8 +142,20 @@ for (const rel of FILES) {
 }
 const baseServer = http.createServer((req, res) => {
   let rel = decodeURIComponent(req.url.split('?')[0]);
-  const file = rel === '/hud.js' ? path.join(SITE, 'hud.js')
-             : path.join(baseDir, rel.replace(/^\/Lessons\//, '/'));
+  /* Only the file under test is pinned at the base ref. Everything else — the
+     sibling *-svg.js an animation demo loads, images, shared CSS — is identical
+     on both sides and is served from the live tree.
+     Not doing this is a real trap, and it caught the reused nprint.js: that
+     instrument copies the base file alone into /tmp, where its siblings do not
+     exist, so the base never initialises and prints SHORTER text. It reported
+     build-anim/demo.html and grow-anim/demo.html as print regressions when
+     rendering the same base copy in its own directory gives byte-identical
+     output (5751 = 5751, 9136 = 9136, zero page errors on both sides). */
+  let file = rel === '/hud.js' ? path.join(SITE, 'hud.js')
+           : path.join(baseDir, rel.replace(/^\/Lessons\//, '/'));
+  if (!fs.existsSync(file)) {
+    file = rel === '/hud.js' ? file : path.join(LESSONS, rel.replace(/^\/Lessons\//, '/'));
+  }
   if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
