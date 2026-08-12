@@ -151,13 +151,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # The local server roots this repository at /, but the deployed domain
+          # roots the SITE repo there and mounts this one at /Lessons/. Without
+          # the mount, /hud.js 404s and the boot gate fails on the console error
+          # — the same disagreement the static link check had, one layer down.
+          # Materialise the mount from the pinned site SHA. This is a test
+          # fixture: it is untracked, it is removed immediately afterwards, and
+          # nothing is vendored into the repository.
+          SITE_SHA="$(git ls-remote https://github.com/MattRoper1977/mattroper1977.github.io main | cut -f1)"
+          test -n "$SITE_SHA"
+          echo "runtime mount · site repo pinned at ${SITE_SHA}"
+          curl --fail --silent --show-error --retry 3 --max-time 60 \
+            -o "$GITHUB_WORKSPACE/hud.js" \
+            "https://raw.githubusercontent.com/MattRoper1977/mattroper1977.github.io/${SITE_SHA}/hud.js"
+          trap 'rm -f "$GITHUB_WORKSPACE/hud.js"' EXIT
           python -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >/tmp/glv3-http.log 2>&1 & server=$!
-          trap 'kill "$server" 2>/dev/null || true; cat /tmp/glv3-http.log || true' EXIT
+          trap 'kill "$server" 2>/dev/null || true; rm -f "$GITHUB_WORKSPACE/hud.js"; cat /tmp/glv3-http.log || true' EXIT
           for _ in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 0.25; done
           timeout 50m node _glv3/tools/browser_verify.mjs http://127.0.0.1:4173
           timeout 20m node _glv3/tools/chip_gate.mjs http://127.0.0.1:4173
           kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true; trap - EXIT
+          rm -f "$GITHUB_WORKSPACE/hud.js"
           rm -rf node_modules
+          git status --porcelain --untracked-files=all | grep -q . && { git status --short; echo 'runtime mount left residue'; exit 1; } || true
           git diff --check
 
       - name: Upload exact-SHA evidence
