@@ -182,3 +182,34 @@ changed** · tree clean, branch pushed.
 **PART B PRE-MERGE ROLLBACK SHA (recorded before merging):**
 `origin/main` = **`3e485033fafa2ff7d6c37eb3dcb831a05b011f22`** — re-fetched
 and confirmed unmoved immediately before the merge.
+
+## 6 · Merge result and post-merge assertions — PART B CLOSED
+
+- Branch tip merged: `2e52233` (`claude/nav-1-way-home`, pushed).
+- **Merge commit `fe8b2c7a1dc581d02f29e1194656db77869d9770`, main pushed**
+  (`3e48503..fe8b2c7`).
+- **Raw-pin at `fe8b2c7`:** W5L2 shows the button markup (`mbmhome` ×1) with
+  closure ×2 and witness ×2 unchanged. ✔
+- **Pages build at head `fe8b2c7`: completed / success.** Merged AND
+  published. ✔
+- **Post-merge:** sentinels **50 / 123, both sets file-for-file identical**
+  to pre-merge main ✔ · chip counts **23/23 advertised == returned** in real
+  Chromium over HTTP, Latest strip renders, zero page errors ✔ ·
+  frozen / ★assessed / Games / legacy / v5 originals: **0 files changed**
+  `3e48503..fe8b2c7` ✔.
+
+### AMBER-XESTATE-PREEXISTING — found at merge, not caused by it
+
+My hub edit woke the `Made by Matt cross-estate unification` CI workflow via
+its `index.html` path filter. It fails:
+`assets/mbm-platform.css` and `assets/mbm-platform.js` no longer equal the
+canonical `_reference/site` source. **Pre-existing:** the same workflow
+failed identically on main at `482c561` (2026-08-10) and on unrelated
+branches that day; last green 2026-08-08. The canonical platform moved and
+the Lessons copies are stale — this pass changed neither file. Estate-level
+sync for Matt's review; the Pages build itself is green and the site is live.
+
+**PART B / SESSION CLOSE STAMP · `lsg1c-nav1-2026-08-12` · Part B closed
+2026-08-12T11:50Z at main `fe8b2c7`. Stage A (35 lessons + 3 indexes) and
+Stage A2 (hub) merged, live and Pages-verified. Stage B is a census and a
+plan only — `_nav1/STAGE_B_PLAN.md` — waiting on Matt's one-word go.**

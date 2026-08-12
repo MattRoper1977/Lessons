@@ -668,3 +668,8 @@ and confirmed unmoved immediately before the merge.
 2026-08-12T11:15Z at main `eb422a7`. Fourteen labs shipped, zero unbuilt,
 every gate green, merge live and Pages-verified. Part B (NAV-1) follows in
 the same session per the superseding master prompt.**
+
+**SESSION CLOSE STAMP · `lsg1c-nav1-2026-08-12` · both parts closed
+2026-08-12T11:50Z. Part A merged at `eb422a7`, Part B (NAV-1) merged at
+`fe8b2c7`, both Pages-verified. Part B's records: `_nav1/DECISIONS.md`;
+Stage B stops at `_nav1/STAGE_B_PLAN.md` for Matt's one-word go.**
