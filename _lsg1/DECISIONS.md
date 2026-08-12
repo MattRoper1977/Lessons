@@ -623,3 +623,22 @@ record: 36/file (ten structural tokens) and 43/file (lgates family), uniform
 - **RAR5-via-libarchive provenance note** (§1 above) carries forward
   unchanged; this session's inputs arrived as two plain zips sharing one
   filename (see C3).
+
+## C6 · Merge — authority, rollback, gates
+
+**Authority:** Matt's 2026-08-12 delegation ("…to finish what's outstanding
+here"), recorded as his at C0. Conditional on every gate green.
+
+**Final battery at the final tip — ALL GREEN:** 13/13 static gates · 4/4
+anti-gaming · sentinels **50 / 123, set-identical to main's** · **20/20**
+surfaces booted in real Chromium with zero console/page errors · **14/14**
+labs driven end to end (predict → 3 tests → frozen 3/3 → repair), fixtures
+20/20 in-lab · runtime census **0** storage/network/form/external-asset/
+media-API across all 20 surfaces · print family 47/file ≥ 43 baseline ·
+closure/witness/close-block byte-identical 15/15 · BUILD/GROW/v5 originals/
+legacy trees **0 files changed** · working tree clean.
+
+**PRE-MERGE ROLLBACK SHA (recorded before merging):**
+`origin/main` = **`470be572baf4f71d5656afe3aa9bd3bf97129daa`** — re-fetched
+and confirmed unmoved immediately before the merge.
+`git reset --hard 470be572…` on main restores the pre-LSG-1 estate exactly.
