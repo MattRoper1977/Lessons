@@ -431,3 +431,101 @@ It is the third distinct way a universe has gone wrong here — a persisted cwd
 own boundary (#22), and now a pathspec whose wildcard is broader than it looks.
 **Recorded because the number was alarming and false, and the reflex to believe
 an alarming number is exactly what the register exists to interrupt.**
+
+---
+
+# LSG-1C · VERIFY & CLOSE — continuation session, 2026-08-12T10:49Z
+
+Pass `lsg1c-nav1-2026-08-12`. A fresh session picks up the branch at `a8d7090`
+under the superseding master prompt (`lsg1c-nav1-2026-08-12-TOP`). Everything
+below is written **at the time**, same rule as above.
+
+## C0 · Sign-off — recorded verbatim, both readings
+
+**Matt, 2026-08-12:** *"please triangulate everything within lsg 1 input 2,
+the addendum and to finish what's outstanding here."*
+
+1. **Reading one — the W5L2 specimen is signed off.** The stop at A6 ("one
+   specimen, then STOP") is cleared; the specimen pattern is the approved
+   pattern for the remaining labs.
+2. **Reading two — delegation to complete the pass**, including the conditional
+   merge authority at §5 of the master prompt: merge only if every gate is
+   green, with the rollback SHA recorded first.
+
+## C1 · Identity at session start — 5/5
+
+1. `origin` = `MattRoper1977/Lessons` ✔
+2. `claude/lsg-1-launch-science-graft` at tip `a8d7090`, **unmerged** ✔
+3. `origin/main` = `470be572…` **exactly** — no movement since the pass began ✔
+4. 15 LAUNCH lessons on main; GROW W3A closure ×2 ✔
+5. `_lsg1/DECISIONS.md` on the branch ✔
+
+## C2 · Triangulation of the previous session's report — T1–T10
+
+| # | Claim | Verdict | Evidence, re-derived at `a8d7090` |
+|---|---|---|---|
+| T1 | Sentinels 50 / 123, set-identical | **CONFIRMED** | `ll-g:loop-mark` bearing files = **50**; closure line = **123**; unit bearing files, universe git-tracked `*.html`; both sets **file-for-file identical to main's** (diff of sorted lists empty). Derived fresh because the report's block arrived empty in transit. |
+| T2 | Closure ×2, 15/15, untouched | **CONFIRMED** | 2/file exactly, 15/15. |
+| T3 | Witness 15/15, 30 occurrences | **CONFIRMED** | 2 occurrences/file × 15 = 30. |
+| T4 | Third print dialect, family ≈43/file | **CONFIRMED in substance; figure scanner-dependent** | The dialect is real: GROW's hyphenated tokens = **0** in LAUNCH; BUILD-shared `pp`/`proute`/`printpack`/`pline` present; LAUNCH-only `prgrid`/`prcell`/`print-section`/`print-witness` present. My validated ten-token structural scanner returns a **uniform 36/file, 15/15** — recorded as this session's per-file baseline; the report's 43 included `scaf`/`box`-family tokens whose exact scope its scanner owned. Gates assert **≥36 uniform**, set-stable. |
+| T5 | W6L1 word bank, screen+print, the only one | **CONFIRMED** | Screen "Use the word bank." + print "Fill comparison table from word bank." — W6L1 only, 1/15. |
+| T6 | A4 Oak clip | **CONFIRMED** | Exactly one external URL in the whole suite, in W5L2; byte-equal to the v5 original's (`SCI_L_W5_L2_OsmosisCP.html`); `target="_blank" rel="noopener noreferrer"`; Oak named; "teaches fully without it" stated; single occurrence sits before `printpack` and the specimen CSS carries `@media print{.oslab{display:none}}` — absent from every print surface; 0 external URLs in window/guide/index. |
+| T7 | W5L2 specimen | **CONFIRMED** | `.oslab` predict-commit → three-solution test with frozen results list → keep/repair glitch, beside the live percentage-change widget; identity solid/dashed/dotted + ▲◎✳ + words; 0 `matchMedia`; own class family, no pack markup. |
+| T8 | Reading artefacts + figures | **CONFIRMED** | `_lsg1/reading/` present, selectors stated in `fk.py`. Recomputed from `fk_table.json`: pupil 5.99 → 4.27, **−1.72, 15/15 lower**. Honesty note decodes exactly: pack whole-file −2.41, pack pupil-facing −0.84, W5L1 pack +0.26 above base. No LAUNCH band exists; deltas only. |
+| T9 | Footprint | **CONFIRMED** | 52 files changed main→`a8d7090`, all inside `Science_Teesside/Launch/v3_40min/` (18) and `_lsg1/` (34). BUILD / GROW / v5 originals / legacy trees: **0 changed**. |
+| T10 | Mark-scheme census 0 | **CONFIRMED** | All pattern hits are prohibitions/cautions (matrix "No mark schemes… appear anywhere in this suite"; W7L2/W7L3 "not grades", "No public marks"). Context-read: 0 findings. |
+
+**No claim REFUTED. The pass proceeds.**
+
+## C3 · INPUT-2 — REPLACED MID-RUN, and the guard rises to six builds
+
+The replacement notice (`lsg1c-nav1-input2r-2026-08-12`) arrived at
+2026-08-12T10:45Z, **before §3 started** — so all fifteen labs use the rebuilt
+map. Both packs share one filename and are different artefacts:
+
+| Pack | Files | Sums | Lessons under | Verdict |
+|---|---|---|---|---|
+| EARLIER (66 files, `launch_v3plus/`, unprefixed labs) | 66 | none | `launch_v3plus/` | **Discarded as a quarry** — superseded |
+| REBUILT (86 files, `PACKAGE_SHA256SUMS.txt`) | 86 | **85/85 OK** (`sha256sum -c`) | `Science_Teesside/Launch/v3plus_local_preview/` | **Authoritative INPUT-2, design quarry only** |
+
+- **Fingerprint guard (now SIX builds):** authorized content source remains
+  solely the build whose W3L1 = `db757a23…`. The earlier preview's W3L1 =
+  `3ea778d6…` (refused); the rebuilt pack's W3L1 = `351907aa…` (refused — a
+  sixth build). Neither was needed: the branch already carries the grafts.
+- **Refused as bytes:** both packs' 15 lesson files, `assets/`, reflection
+  windows, `serve_preview.py`/`start_preview.*`/`run_preview.py`, `verify_*.py`,
+  `tests/*.py`, reports, and the earlier pack's `.pyc`.
+- **Accepted as reference:** rebuilt `science-labs/` (15 lesson-prefixed
+  designs), `lab-logic.mjs` + `tests/lab_logic_fixtures.mjs`, screenshots.
+- **`Science_Teesside/Launch/v3plus_local_preview/` IS NOT A DESTINATION** —
+  repo-path-shaped preview workspace; nothing is committed to that path and no
+  parallel route is created from it.
+- **Fixtures: `node tests/lab_logic_fixtures.mjs` → suite passes with 20/20
+  checks.** AMBER-FIXTURE-COUNT: the notice said 19; the suite carries **20**
+  (measurement beats document; everything passes).
+- Census on the 15 rebuilt designs + engine: 0 storage / network / forms /
+  external URLs. The pack's own `matchMedia` (1, in `lab-engine.mjs`, which
+  never ships) and two "mark scheme" strings (both disclaimers) are
+  **caveats, not violations** — context-read, as the notice directs.
+
+### The lesson→lab map, READ FROM THE PACK (supersedes the prompt's map)
+
+| Lesson | Design | Note |
+|---|---|---|
+| W3L1 | `microscope_observation_lab` | |
+| W3L2 | `cell_scale_lab` | prompt said magnification_lab — pack wins |
+| W3L3 | `magnification_evidence_lab` | |
+| W4L1 | `particle_evidence_chamber` | |
+| W4L2 | `gas_exchange_evidence_lab` | |
+| W4L3 | `diffusion_explanation_studio` | prompt said particle/gas as LO directs — pack wins |
+| W5L1 | `membrane_reasoning_lab` | **closes the W5L1 gap** — prompt had none |
+| W5L2 | `potato_osmosis_investigation` | already live — the A6 specimen |
+| W5L3 | `osmosis_data_studio` | |
+| W6L1 | `against_gradient_lab` | prompt said active_transport_gradient_lab |
+| W6L2 | `uptake_evidence_lab` | |
+| W6L3 | `transport_decision_lab` | prompt said + membrane_reasoning_lab; pack assigns membrane reasoning to W5L1 |
+| W7L1 | `knowledge_map_lab` | |
+| W7L2 | `question_decoder_lab` | |
+| W7L3 | `biology_evidence_paper` | |
+
+Earn-the-place still decides per LO; an honest AMBER-unbuilt stays valid.
