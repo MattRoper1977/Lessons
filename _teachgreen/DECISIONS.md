@@ -703,3 +703,96 @@ to source, and both companion hubs serve carrying all six values.
 | scratch branches / worktrees left | 0 |
 
 The teach-green programme's last open item is closed.
+
+---
+
+# Guardrail — apps.json becomes pinned, not forbidden · 2026-08-12
+
+A separate, deliberate act with its own commit, taken BEFORE the pass it
+unblocks, because the rule that parked that pass also says how to proceed: you
+do not widen the guardrail that is blocking you inside the pass it blocks.
+
+## What was blocking, exactly
+
+`tools/verify_cross_estate_unification.py` carried two rules that, together,
+made adding a studio impossible:
+
+```
+[FAIL] standalone/offline boundary violated by changed files:
+       ['apps.json', 'orbit-vector-diagnostic.html', 'enzyme-reactor-overdrive.html',
+        'mbm-master-hub.html', 'tools/…', '.gitignore']
+[FAIL] source manifest unexpectedly changed: apps.json
+```
+
+Adding a studio IS an apps.json edit, and it also touches `index.html` (AUDMAP
+and the no-JS lead count) — which is in the workflow's path filter, so the job
+fires and refuses. The gate forbade the ordinary business of the repository it
+guards.
+
+## What changed, and what deliberately did not
+
+**1. Additions are not changes.** The invariant written at the top of the file is
+*"no standalone lesson or studio is CHANGED by this release"*. The diff filter
+was `ACMRD`, so an ADDED file counted as a violation — meaning every new studio,
+tool and dotfile had to be hand-added to `ALLOWED_DIFF` forever. Now `MRD`. An
+added file cannot modify an existing studio.
+
+**2. apps.json is pinned, not allowed.** Retiring the protection was the easy
+route and was rejected: the manifest would have become silently unguarded.
+Instead it follows the pattern the shared assets in this same file already use,
+and that `tools/sync_theme.py` established — a pinned digest moved by a tool in
+the same run as the deliberate change:
+
+```
+MANIFEST_PINS = {"apps.json": "db823b256261fa75a20cc67a0fe0948125460d281c09255e5e629226b2801deb"}
+```
+
+`tools/pin_apps_manifest.py` moves it, in **both** copies of the gate or neither
+— checked before the first write, because the first version wrote one copy and
+then failed on the second, leaving them disagreeing. The pin is asserted on
+every run, not only when git reports the file changed: a gate that looks only
+when told something moved cannot catch the case where nobody told it.
+
+**3. resources.json keeps the blanket rule.** Only apps.json was ruled on. Part B
+adds a `resources.json` entry in Lessons and will hit the same wall; that needs
+its own ruling and is not pre-empted here.
+
+**4. Both copies, byte-identical.** The gate and the new tool are byte-identical
+across Lessons and Apps, verified by `cmp`. The divergence closed earlier today
+is not reopened by the fix for it.
+
+## Proof, both directions
+
+Every sabotage below was verified to have LANDED — and one round was thrown away
+because it had not. The first attempt at the "existing studio modified" probe
+only staged the edit; the gate compares commits (`origin/main...HEAD`), so it
+measured a clean tree and passed. Re-run with the edit committed:
+
+```
+AUTHORISED — the studio add
+  apps.json 31 -> 34 studios, no re-pin      [FAIL] apps.json does not match its pinned
+                                                    digest — re-pin it in the same commit
+  after `python3 tools/pin_apps_manifest.py` [PASS] apps cross-estate static contract
+                                             pin db823b256261 -> 0e539ff6a085, both copies
+
+UNAUTHORISED — still red
+  existing studio MODIFIED and committed     [FAIL] boundary violated: ['Quiz_Studio.html']
+  existing studio DELETED and committed      [FAIL] boundary violated: ['Quiz_Studio.html']
+  apps.json edited without re-pinning        [FAIL] does not match its pinned digest
+                                             [FAIL] no-JS lead count does not match apps.json
+```
+
+The two `mbm-platform.*` reds are pre-existing and out of scope; they are
+unchanged and still red.
+
+## Honest statement of what is now weaker
+
+`ALLOWED_DIFF` gained `apps.json` and `tools/pin_apps_manifest.py`, and the diff
+filter no longer treats additions as violations. So: **a file added to this
+repository is no longer checked by this gate at all.** That was already true of
+any file the list did not name; it is now true by design rather than by
+omission. What is NOT weaker: modifying or deleting an existing studio, and
+changing apps.json, both still red — proven above.
+
+`apps.json` is not retired from drift-guarding. It is guarded by digest instead
+of by prohibition.
