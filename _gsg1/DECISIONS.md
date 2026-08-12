@@ -401,3 +401,23 @@ unchanged, and `matchMedia` is absent. Every transplant then re-verified by
 **contrast probed by computed style at render time** — the A6-CONTRAST lesson,
 where a white-on-white button passed every static gate and was caught only by
 looking at the page.
+
+---
+
+## 16 · PRE-MERGE ROLLBACK SHA
+
+Recorded **before** the merge, per close order §4.1.
+
+| Item | Value |
+|---|---|
+| **PRE-MERGE ROLLBACK SHA** | **`dcc23dc2485516eb5d50409494c7d70f56c62f78`** |
+| Verified immediately before merging | `git fetch origin main` → `origin/main` == `dcc23dc…`, **unmoved** |
+| Branch tip merged | `claude/gsg-1-grow-science-graft-wp8p48` |
+
+`git reset --hard dcc23dc2485516eb5d50409494c7d70f56c62f78` restores `main` to
+its pre-GSG-1 state exactly. Nothing outside `Science_Teesside/Grow/v3_40min/`,
+`_gsg1/` and one addendum paragraph in `_bsg1/DECISIONS.md` was modified by this
+pass.
+
+Merge executed under the conditional delegation recorded at §13, every gate
+green at the branch tip.
