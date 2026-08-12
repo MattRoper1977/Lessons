@@ -397,3 +397,38 @@ grammar ordered, print parity, `matchMedia` = 0, printpack region asserted
   floor (nothing ≤ 4.0) · staff-pack rebuild + PS lockup (Matt's morning
   item: run `tools/build_staff_pack.py` with the recorded logo after merge).
 - Merge executed under the conditional delegation recorded above.
+
+---
+
+## Addendum · 2026-08-12 · BSG-1 verification sweep classified **VOID**
+
+*Added on branch `claude/gsg-1-grow-science-graft-wp8p48` during pass GSG-1, at
+Matt's instruction. This paragraph is owed to BSG-1, not to GSG-1, and is
+recorded here so a later reader meets it beside the evidence it explains.*
+
+The BSG-1 **verification sweep** returned **eleven "FAIL" verdicts**. Those
+eleven are **VOID — could-not-verify, not defect.**
+
+The sweep ran in a sandbox that stripped the inputs from every tool call, so
+each check reported failure because it received nothing to check, not because
+anything in the estate was wrong. A verdict from an instrument that never saw
+its input is not evidence about the artefact; it is evidence about the
+instrument. Under this programme's standing rule — *every count carries a unit
+and a universe, and a scanner is validated against a known positive before it is
+trusted* — those eleven verdicts fail the rule at its first clause and cannot
+stand as findings.
+
+**They were superseded by the deterministic battery run against `dcc23dc`,
+which was green throughout.** That battery, not the sweep, is the record of
+BSG-1's state.
+
+**Why this is written down:** the raw "FAIL" strings survive in the transcripts.
+Without this classification beside them, a later reader meeting eleven failures
+in a verification sweep could reasonably conclude the BUILD graft was broken and
+roll `main` back off them. That rollback would be wrong, and it would discard a
+merged, gate-green pass. **The eleven FAILs are not to be treated as defects and
+are not grounds for a rollback.**
+
+If any of the eleven is ever to be revisited, it must be **re-run under an
+instrument whose inputs are demonstrably present**, and judged on that result
+alone.

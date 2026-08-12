@@ -310,3 +310,40 @@ Lower in **10/10** files and on **every** measured surface (arrival, starter, I 
 ## 12 · Rollback
 
 `git reset --hard dcc23dc2485516eb5d50409494c7d70f56c62f78` restores the pre-pass estate exactly. Nothing outside `Science_Teesside/Grow/v3_40min/` and `_gsg1/` was modified.
+
+---
+
+## 13 · SIGN-OFF · A6 specimen approved
+
+**Matt, 2026-08-12, verbatim: "This is great."**
+
+His written sign-off on the W4A Mechanism Hunt specimen, and with it the
+delegated authority to complete the job: build the remaining labs, run the full
+battery, and merge if and only if every gate is green.
+
+Recorded as his words. The A6 stop is lifted.
+
+---
+
+## 14 · Sentinel readback, committed to the repo
+
+Delivered in chat at tip `79e17c4` and accepted as the missing report section.
+Committed here so it exists in the repository, not only in a transcript.
+
+**Unit: bearing files. Universe: git-tracked `*.html`.**
+
+| sentinel | 574035bf | dcc23dc | 79e17c4 | movement |
+|---|---|---|---|---|
+| `ll-g:loop-mark` | 50 | 50 | **50** | none — **file-for-file identical** across all three |
+| written-closure line | 113 | 113 | **123** | **+10, purely additive** |
+
+The +10 is exactly the ten `Science_Teesside/Grow/v3_40min/SCI_G_*.html` lessons.
+The 113 bearing files at `dcc23dc` are all still bearing at `79e17c4`: the set
+grew, nothing left it. **0 BUILD files appear in the 123-set** — correct, because
+BUILD closes through adult Audience and carries no pupil-written line.
+
+This is the declared-sentinel-movement form closing green: the movement was
+declared in advance, and what moved is exactly what was declared.
+
+**From this point the declared movement has happened. Both sentinels now hold
+still at 50 / 123, and any further change to either is a defect, not a delta.**
