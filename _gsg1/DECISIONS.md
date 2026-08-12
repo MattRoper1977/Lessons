@@ -347,3 +347,57 @@ declared in advance, and what moved is exactly what was declared.
 
 **From this point the declared movement has happened. Both sentinels now hold
 still at 50 / 123, and any further change to either is a defect, not a delta.**
+
+---
+
+## 15 · We Do labs · eight built, one deliberately not
+
+Close order §2. Each lesson was asked the W4A question — *does the live We Do
+interaction already cover this lesson's own LO, and if so does an added lab give
+something it lacks?* — and the answer was derived from the live widget's markup
+against the lesson's stated LO, not assumed.
+
+| # | lesson | lab | the gap it fills |
+|---|---|---|---|
+| 1 | W3A | Grip Decision Lab | Surface explorer shows one surface at a time and holds nothing; no prediction; never touches the helpful/unhelpful judgement that is half the LO |
+| 2 | W3B | Surface Evidence Lab | Results interpreter is reachable **only by typing three numbers** — no button route exists — and asks for no prediction before the data |
+| 3 | W4A | Mechanism Hunt *(the signed-off specimen)* | Lever pivot explorer covers levers only; the lesson covers levers, pulleys **and** gears |
+| 4 | W4B | Pivot Evidence Lab | Slider shows one pivot position at a time and holds nothing; the LO is about using **evidence** from several positions |
+| 5 | W5A | Measure and Unit Lab | Repair the method covers only the CHANGE arm; the LO names change, measure **and** keep the same, and the unit is never asked for |
+| 6 | W5B | Trust the Repeat Lab | Repeat-and-mean lab is reachable **only by typing nine numbers**, and computes means without ever asking pupils to judge which repeats to trust |
+| 7 | W6A | Gravity and Motion Lab | Planet order challenge covers order thoroughly; the LO also says "explain gravity's role" and gravity is absent from the widget |
+| 8 | W6B | Honest Model Lab | Orbit viewer shows positions; the LO is a model "accurate for its purpose", and the scale trade-off is not in the widget |
+| 9 | W7B | Phase or Eclipse Lab | Phase explorer is byte-identical to W7A's and covers phases only; the LO adds "distinguish phases from eclipses" and the word never appears |
+
+### AMBER-W7A-UNBUILT — the one lab deliberately not built
+
+**W7A ships no added lab, and this is the finding, not an omission.**
+
+W7A's LO is *"I can explain why the Moon appears to change shape as it orbits
+Earth."* Its live Phase explorer offers four phase buttons, connects Moon
+position, sunlight direction and the view from Earth, and states in its own text
+that the effect is viewing geometry and **not** Earth's shadow. It is already
+button-only, already carries no score, and already answers the LO directly and
+completely. A second lab there would be a duplicate wearing a new border.
+
+The evidence that made this decision non-obvious is worth recording: **W7A's and
+W7B's widgets are byte-identical apart from the id suffix** (920 bytes each,
+verified). Identical widgets, different verdicts — because the two lessons have
+different LOs. W7B's demands the phase/eclipse distinction that neither copy of
+the widget mentions; W7A's does not. *The same widget can be sufficient in one
+lesson and insufficient in the next, and only the LO decides which.*
+
+**Nine minus one honest labs beat nine duplicates.** If W7A's LO is ever widened
+— to eclipses, to the orbital tilt, to anything the phase explorer does not
+carry — this decision should be revisited, and the W7B lab is the pattern to
+follow.
+
+### Lab invariants, asserted in the installer before any file is written
+
+`_gsg1/tools/lab.py` refuses to write a file unless the print pack is
+byte-identical, the witness block is byte-identical, the three tier counts are
+unchanged, and `matchMedia` is absent. Every transplant then re-verified by
+`_gsg1/tools/verify_lab.py` and driven end-to-end in real Chromium, with
+**contrast probed by computed style at render time** — the A6-CONTRAST lesson,
+where a white-on-white button passed every static gate and was caught only by
+looking at the page.
