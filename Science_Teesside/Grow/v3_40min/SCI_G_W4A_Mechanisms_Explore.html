@@ -134,6 +134,28 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;b
  .speak-btn,.wh-btn,.commit-opt{display:none!important}
  .wh-bridge[hidden]{display:inline!important}
 }
+
+/* ===== GSG-1 A6 specimen: W4A Mechanism Hunt ===== */
+.mhunt{border:2px solid var(--grow);border-radius:14px;padding:12px 14px;background:#f7fcfa;margin:10px 0}
+.mhunt h3{margin:0 0 4px;color:#215e53}
+.mh-step{font-weight:900;color:#10233f;margin:9px 0 4px;font-size:.95rem}
+.mh-row{display:flex;gap:8px;flex-wrap:wrap}
+.mh-btn{background:#fff;color:#10233f;border:3px solid #94a3b8;border-radius:10px;padding:9px 13px;font-weight:900;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:none}
+.mh-btn .mh-glyph{font-size:1.15rem}
+.mh-btn[data-m="lever"]{border-style:solid}
+.mh-btn[data-m="pulley"]{border-style:dashed}
+.mh-btn[data-m="gears"]{border-style:dotted}
+.mh-btn.picked{border-color:var(--grow);background:#dff2ea;color:#10233f}
+.mh-btn.tested{border-color:#10233f;background:#eef2f7;color:#10233f}
+.mh-say{margin:7px 0 0;font-size:.92rem;color:#334155;font-weight:700}
+.mh-stage{border:2px solid #cbd5e1;border-radius:12px;background:#fff;padding:11px;margin:8px 0;min-height:64px}
+.mh-stage .mh-name{font-weight:900;font-size:1.05rem;color:#10233f}
+.mh-frozen{border-left:6px solid #10233f;background:#f8fafc;border-radius:10px;padding:9px 11px;margin:8px 0;font-size:.9rem}
+.mh-frozen ol{margin:5px 0 0 18px;padding:0}
+.mh-frozen li{margin:3px 0}
+.mh-glitch{border:2px solid #b55f25;background:#fff4e6;border-radius:12px;padding:10px 12px;margin:9px 0}
+.mh-glitch b{color:#9a3412}
+@media print{.mhunt{display:none}}
 </style></head><body>
 <!-- TEST PROTOTYPE. Original repo unchanged. 40-minute teaching route = 40 minutes. -->
 <main class="slide-container"><section class="slide" data-min="0" data-ta-move="Use Practical Ready in the staff panel; do not introduce new teaching on the title slide." data-ta-priority="Read the lesson architecture and equipment before pupils arrive." data-title="Lesson overview" data-type="title">
@@ -180,7 +202,36 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;b
 <input id="lev-W4A" max="70" min="25" oninput="leverDemo('W4A')" style="width:100%" type="range" value="48" aria-label="Lever pivot position slider, 25 to 70"/>
 <div class="lever-stage"><div class="lever-bar"></div><div class="pivot" id="pivot-W4A"></div><div class="load">LOAD</div></div>
 <div>Relative effort</div><div class="effort-meter"><div class="effort-fill" id="eff-W4A"></div></div>
-<div class="widget-feedback" aria-live="polite" id="wf-W4A">Move the pivot and describe the gain <b>and</b> the trade-off.</div></div>
+<div class="widget-feedback" aria-live="polite" id="wf-W4A">Move the pivot and describe the gain <b>and</b> the trade-off.</div></div><div class="mhunt" id="mhunt-W4A">
+<h3>🔎 Mechanism Hunt</h3>
+<p style="margin:0">Three mechanisms. Each one changes something about a force. Find out which does what.</p>
+<div class="mh-step">Step 1 · Predict, before you test</div>
+<p style="margin:0 0 5px">Which one changes the <b>direction</b> of a pull?</p>
+<div class="mh-row mh-predict">
+<button class="mh-btn" data-m="lever" type="button" aria-pressed="false" onclick="gsgMhPredict(this)"><span class="mh-glyph">▲</span>LEVER</button>
+<button class="mh-btn" data-m="pulley" type="button" aria-pressed="false" onclick="gsgMhPredict(this)"><span class="mh-glyph">◎</span>PULLEY</button>
+<button class="mh-btn" data-m="gears" type="button" aria-pressed="false" onclick="gsgMhPredict(this)"><span class="mh-glyph">✳</span>GEARS</button>
+</div>
+<p class="mh-say" id="mh-say" aria-live="polite">Choose one. Say it, point to it, or press it. Nothing here is right or wrong yet.</p>
+<div class="mh-step">Step 2 · Test each one</div>
+<div class="mh-row">
+<button class="mh-btn" data-m="lever" type="button" onclick="gsgMhTest(this)"><span class="mh-glyph">▲</span>Test LEVER</button>
+<button class="mh-btn" data-m="pulley" type="button" onclick="gsgMhTest(this)"><span class="mh-glyph">◎</span>Test PULLEY</button>
+<button class="mh-btn" data-m="gears" type="button" onclick="gsgMhTest(this)"><span class="mh-glyph">✳</span>Test GEARS</button>
+</div>
+<div class="mh-stage" id="mh-stage" aria-live="polite">Press a mechanism to see what it changes.</div>
+<div class="mh-frozen"><b>Frozen results — these stay on the page</b>
+<ol id="mh-list"></ol>
+<p style="margin:6px 0 0" id="mh-frozen-note" aria-live="polite">Nothing tested yet.</p></div>
+<div class="mh-step">Step 3 · Explain</div>
+<div class="mh-glitch"><b>SCIENCE GLITCH:</b> “A lever creates extra energy.”
+<div class="mh-row" style="margin-top:7px">
+<button class="mh-btn" data-fix="0" type="button" onclick="gsgMhGlitch(this)">Keep the claim</button>
+<button class="mh-btn" data-fix="1" type="button" onclick="gsgMhGlitch(this)">Repair it</button>
+</div>
+<p class="mh-say" id="mh-glitch-result" aria-live="polite">Use your frozen list as the evidence. Decide, then say why.</p></div>
+<p style="font-size:.84rem;color:#64748b;margin:8px 0 0">Every step is a button, and each mechanism carries a shape and its name as well as its colour. Say it, point to it or have an adult press it — the route does not change the Science.</p>
+</div>
 <div class="scaffold-box"><b>Talk move:</b> “What changed? What stayed the same? What does that make you think?”</div><div class="participation"><b>Ways to show the Science</b><div class="part-row">
 <span class="part-chip">🗣 Say it</span><span class="part-chip">☝ Point / select</span>
 <span class="part-chip">✍ Write / draw</span><span class="part-chip">🧪 Practical / model</span>
@@ -323,5 +374,50 @@ function gsgCommit(btn){
  btn.classList.add('chosen');btn.setAttribute('aria-pressed','true');
  var st=box.querySelector('.commit-state');
  if(st)st.textContent='Prediction received: "'+(btn.textContent||'').trim()+'". Hold onto it — we find out by testing, not by being told.';
+}
+
+/* ===== GSG-1 A6 specimen: W4A Mechanism Hunt =====
+   predict-commit -> test -> freeze -> explain. Nothing is marked, scored or
+   stored. The prediction is received, never graded: the pupil finds out by
+   testing, which is the whole point of predicting first. */
+var gsgMh={pred:null,tested:[]};
+var gsgMhData={
+ lever :{glyph:'\u25B2',name:'LEVER',
+   change:'Turns around a pivot. It can cut the effort you need, but the effort end has to move further.'},
+ pulley:{glyph:'\u25CE',name:'PULLEY',
+   change:'A fixed pulley changes the direction of your pull. You can pull down to lift something up.'},
+ gears :{glyph:'\u2733',name:'GEARS',
+   change:'Meshed gears pass turning from one wheel to another. They can change speed, direction or turning force.'}
+};
+function gsgMhPredict(btn){
+ var box=document.getElementById('mhunt-W4A'),m=btn.dataset.m;
+ var all=box.querySelectorAll('.mh-predict .mh-btn');
+ for(var i=0;i<all.length;i++){all[i].classList.remove('picked');all[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('picked');btn.setAttribute('aria-pressed','true');
+ gsgMh.pred=m;
+ document.getElementById('mh-say').textContent=
+  'Prediction received: '+gsgMhData[m].name+'. Nothing is marked. Test all three and find out.';
+}
+function gsgMhTest(btn){
+ var m=btn.dataset.m,d=gsgMhData[m];
+ btn.classList.add('tested');
+ document.getElementById('mh-stage').innerHTML=
+  '<div class="mh-name">'+d.glyph+' '+d.name+'</div><p style="margin:5px 0 0">'+d.change+'</p>';
+ if(gsgMh.tested.indexOf(m)<0){
+  gsgMh.tested.push(m);
+  var li=document.createElement('li');
+  li.textContent=d.name+' \u2014 '+d.change;
+  document.getElementById('mh-list').appendChild(li);
+ }
+ var done=gsgMh.tested.length;
+ document.getElementById('mh-frozen-note').textContent= done<3
+  ? 'Tested '+done+' of the three. Each result stays on the list so you can compare them.'
+  : 'All three are on the list and they stay there. Now compare them: which one changed the DIRECTION of a force, and which one changed how BIG it needed to be?';
+}
+function gsgMhGlitch(btn){
+ document.getElementById('mh-glitch-result').textContent=
+  btn.dataset.fix==='1'
+   ? 'Repaired. A lever does not make new energy. It trades a smaller effort for a longer distance moved \u2014 you get the force you need, and you pay for it in movement.'
+   : 'Kept as it stands. Check it against your frozen list before you settle on that: if a lever made extra energy, what would you expect the effort end to do?';
 }
 </script><aside aria-label="Optional media and practical ready" class="media-drawer" id="v3MediaDrawer"><button class="ghost" onclick="v3CloseMedia()">✕ Close</button><h2>🎬 Media &amp; Practical Ready</h2><div class="mission-banner"><span class="mission-icon">🧪</span><div><b>W4A mission</b><br/>Mechanism Hunt: find the hidden force advantage in everyday objects.</div></div><div class="practical-ready"><b>Equipment</b><p>Ruler and pivot, scissors (adult-controlled as needed), bottle opener, spanner, bicycle/gear images, rope/pulley image or simple pulley.</p><b>Safety / sensory</b><p>Avoid pinch points and heavy loads. Pupils can inspect photographs or direct the adult instead of handling.</p><b>Evidence</b><p>Mechanism classification plus pivot/turning annotation and gain/trade-off explanation.</p></div><h3>Optional official media</h3><div class="media-card"><b>Oak · How levers can help us</b><p class="media-note">Optional teacher-controlled external video/resources. Core lesson does not depend on it.</p><a href="https://www.thenational.academy/teachers/programmes/science-primary-ks2/units/forces-including-simple-machines/lessons/how-levers-can-help-us" rel="noopener noreferrer" target="_blank">Open official Oak resource ↗</a></div><div class="media-card"><b>Oak · How pulleys can help us</b><p class="media-note">Optional teacher-controlled external video/resources. Core lesson does not depend on it.</p><a href="https://www.thenational.academy/teachers/programmes/science-primary-ks2/units/forces-including-simple-machines/lessons/how-pulleys-can-help-us" rel="noopener noreferrer" target="_blank">Open official Oak resource ↗</a></div><div class="media-card"><b>Oak · How gears can help us</b><p class="media-note">Optional teacher-controlled external video/resources. Core lesson does not depend on it.</p><a href="https://www.thenational.academy/teachers/programmes/science-primary-ks2/units/forces-including-simple-machines/lessons/how-gears-can-help-us" rel="noopener noreferrer" target="_blank" data-link-unverified="true">Open official Oak resource ↗</a></div><p class="media-note">External links are optional, click-to-open and never required for the learning outcome. Use the local visual hook when internet access is unavailable or media would reduce participation.</p></aside><div class="overlay" id="v3LoopOverlay" onclick="if(event.target.id==='v3LoopOverlay')document.getElementById('v3LoopOverlay').classList.remove('visible')"><div class="modal"><div class="modal-head"><div><span class="slide-tag tag-title">🔁 Lundy live feedback–response loop</span><h2>Response changes what happens next</h2></div><button class="ghost" onclick="document.getElementById('v3LoopOverlay').classList.remove('visible')">✕ Close</button></div><div class="policy-strip"><div class="policy-stage"><b>SPACE</b>Regulation, trusted adult, time, no public comparison, safe modality.</div><div class="policy-stage"><b>VOICE</b>Edit, re-attempt, verbal reply, point/sign, demonstration or short voice clip.</div><div class="policy-stage"><b>AUDIENCE</b>Adult genuinely reads, listens or watches and names back what was heard.</div><div class="policy-stage"><b>INFLUENCE</b>Adapt the next instruction, question, task, scaffold or explanation.</div></div><h3>Choose the learning move</h3><div class="branch-buttons"><button onclick="v3LoopAction('secure')">Secure</button><button onclick="v3LoopAction('mixed')">Mixed</button><button onclick="v3LoopAction('miscon')">Misconception</button><button onclick="v3LoopAction('access')">Access barrier</button><button onclick="v3LoopAction('method')">Method/data</button></div><div class="loop-next" id="v3LoopResult">Listen first. The response decides the next teaching move.</div><h3>Policy code reference · staff-side only</h3><div class="code-palette"><span class="code-chip">VF · verbal feedback</span><span class="code-chip">WS · worked with support</span><span class="code-chip">I · independent</span><span class="code-chip">NS+ · one next step</span><span class="code-chip">E · evidence on Earwig</span><span class="code-chip">R · responded / Audience happened</span><span class="code-chip">// · self-edit</span><span class="code-chip">? · read this back</span></div><p class="media-note"><b>Important:</b> this lesson does not write codes, store pupil responses or upload evidence. The code palette reflects the uploaded May 2026 Feedback &amp; Marking Policy; staff must follow the school’s current operational implementation. R is only meaningful after genuine Audience.</p></div></div></body></html>
