@@ -411,3 +411,23 @@ any commit, would be a defect and a stop.
 `git reset --hard 470be572baf4f71d5656afe3aa9bd3bf97129daa` restores the
 pre-pass estate exactly. Nothing outside `Science_Teesside/Launch/v3_40min/` and
 `_lsg1/` was modified — asserted as gate 15.
+
+---
+
+## 12 · AMBER-INSTR-5 — instrument failure #23, mine, at the last gate
+
+The scope check `git diff --name-only <base>..HEAD -- 'Science_Teesside/Launch/*.html'`
+reported **18 changed v5 original files** — which would have meant this pass had
+edited the frozen v5 suite that A4 quarries from, a serious breach.
+
+It had not. **Git pathspecs are not shell globs: `*` crosses directory
+boundaries**, so the pattern matched everything under `v3_40min/` as well.
+Re-derived with `:(glob)Science_Teesside/Launch/*.html`, which does not cross
+`/`: **0 v5 originals changed.**
+
+Same family as the other four in this pass: *a count whose universe was wrong.*
+It is the third distinct way a universe has gone wrong here — a persisted cwd
+(#19), a prefix-matching class selector (#21), a guard that captured past its
+own boundary (#22), and now a pathspec whose wildcard is broader than it looks.
+**Recorded because the number was alarming and false, and the reflex to believe
+an alarming number is exactly what the register exists to interrupt.**
