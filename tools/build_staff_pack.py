@@ -36,10 +36,23 @@ INCLUDE_DIRS = [
     "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Humanities_Teesside",
     "Grow/Slideshows", "Launch", "Tutor_Time", "DT_Community_Upcycling",
     "Science_Teesside",   # PACK-1 v2: current science suite IN; frozen biology/chemistry/"2 Physics 10" stay OUT
+    # PACK-5 (mirror v3): the three complete-estate alternative routes, landed on main
+    # 2026-08-11/12 after the last pack's base. Ruling R1 ships GROW and LAUNCH as two
+    # self-contained ROOT folders; BUILD_Estate_v3 is outside R1 and outside the
+    # committed map, so per ruling R2 it ships QUARANTINED under _New_This_Rebuild/
+    # rather than being guessed into a root placement or silently dropped.
+    "GROW_Estate_v3", "LAUNCH_Estate_v3", "BUILD_Estate_v3",
 ]
 INCLUDE_GLOBS = [
     "Build/Slideshows/BUILD_DT_W*.html",
     "Build/Slideshows/BUILD_HUM_W*.html",
+    # PACK-5: the v3 route manifests. Scope globs *.html, so a directory being IN does
+    # not carry its non-HTML assets (the style.css/visual-upgrade lesson, again). Every
+    # estate subfolder and every Science v3_40min suite carries a manifest-v3.json.
+    "GROW_Estate_v3/*/manifest-v3.json",
+    "LAUNCH_Estate_v3/*/manifest-v3.json",
+    "BUILD_Estate_v3/*/manifest-v3.json",
+    "Science_Teesside/*/v3_40min/manifest-v3.json",
 ]
 INCLUDE_FILES = [
     "art_teesside.html", "build_asdan.html", "build_dt_upcycling.html",
@@ -91,6 +104,28 @@ INCLUDE_FILES = [
 # the five decks that carry it, and its entire body exists to load hud.js.
 HUD_DYNAMIC = re.compile(
     r'\s*<script[^>]*id=["\']grow-hud-loader["\'][^>]*>.*?</script>', re.S | re.I)
+
+# PACK-5 / NAV-1: the "way home" back control, merged to main 2026-08-12 (fe8b2c7).
+# Markup derived from that merge's diff, NOT from memory: one anchor (identical on
+# lessons and suite indexes) plus one CSS block opened by the NAV-1 banner comment.
+# In an offline Progress copy ../../../index.html points at the public catalogue
+# hub, which does not ship -- dead weight of the same class as the hud.js loader.
+# Census at HEAD: 38 files, all Science_Teesside v3_40min (35 lessons + 3 indexes).
+NAV1_ANCHOR = re.compile(
+    r'\s*<a class="mbmhome" href="[^"]*" aria-label="Back to the Lessons catalogue">'
+    r'← Lessons</a>')
+NAV1_CSS = re.compile(
+    r'\s*/\* ===== NAV-1: way home[^*]*?\*/'
+    r'\s*\.mbmhome\{[^}]*\}'
+    r'\s*\.mbmhome:hover\{[^}]*\}'
+    r'\s*\.mbmhome:focus-visible\{[^}]*\}'
+    r'\s*@media print\{\.mbmhome\{[^}]*\}\}')
+
+# PACK-5: anchors into the working-record trees and the Baseline planning area,
+# none of which ship. Unwrapped to their text in pack copies (see mirror_rebrand).
+RECORDS_LINK = re.compile(
+    r'<a\b[^>]*href="[^"]*(?:_glv3|_finish|_sciv3|_nav1|Baseline_Weeks)/[^"]*"[^>]*>'
+    r'(.*?)</a>', re.S | re.I)
 
 # Deliberate exclusions (dual-branding rule + superseded sets)
 EXCLUDE_RE = re.compile(
@@ -478,6 +513,20 @@ def dest_for(rel):
             return "ASDAN PEQ/Launch/" + leaf
         return "ASDAN PEQ/Launch/" + tail
 
+    # --- the v3 estates (PACK-5) -----------------------------------------
+    # R1: GROW and LAUNCH ship as two self-contained ROOT folders, never
+    # interleaved with the live subject folders. Inner structure is preserved
+    # verbatim -- these folders have no drive twin, so the drive cannot win a
+    # naming argument it is not party to.
+    if r.startswith("GROW_Estate_v3/"):
+        return "GROW Estate v3 (Alternative Route)/" + r[len("GROW_Estate_v3/"):]
+    if r.startswith("LAUNCH_Estate_v3/"):
+        return "LAUNCH Estate v3 (Alternative Route)/" + r[len("LAUNCH_Estate_v3/"):]
+    # R2: BUILD_Estate_v3 is current staff-facing lesson content with no ruling
+    # and no mapped destination. Quarantined, visibly, for Matt to place.
+    if r.startswith("BUILD_Estate_v3/"):
+        return "_New_This_Rebuild/BUILD_Estate_v3/" + r[len("BUILD_Estate_v3/"):]
+
     # --- unchanged names --------------------------------------------------
     if r.startswith("Tutor_Time/"):
         return "Tutor Time BF_BV_KCSIE/" + r[len("Tutor_Time/"):]
@@ -685,6 +734,18 @@ def mirror_rebrand(text, rel, mark_html):
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
     text, k2 = re.subn(HUD_DYNAMIC, "", text)
     log["hud_stripped"] = k + k2
+    # PACK-5 / NAV-1: the way-home control points at the public hub, which does
+    # not ship. Stripped like the hud loader; gated both ways in mirror_main.
+    text, k5 = NAV1_ANCHOR.subn("", text)
+    text, k6 = NAV1_CSS.subn("", text)
+    log["nav_stripped"] = k5 + k6
+    # PACK-5: governance/record links out (the PACK-4 stage-3 ruling, applied to
+    # the v3 suites). The suite and estate indexes link their claims-readback,
+    # policy-alignment and Baseline planning pages, which live in working-record
+    # trees that never ship. The anchor is unwrapped to its text: the reference
+    # stays legible, nothing dead ships. Everything else is left for the crawl.
+    text, k7 = RECORDS_LINK.subn(lambda m: m.group(1), text)
+    log["records_links_unwrapped"] = k7
     if 'name="x-brand"' not in text:
         text, k = re.subn(r'(<head[^>]*>)', r'\1\n<meta name="x-brand" content="progress-schools">',
                           text, count=1, flags=re.I)
@@ -743,6 +804,48 @@ advice — "the filename is right". That was wrong. If you kept a copy of the
 earlier pack, replace this file.)
 """
 
+
+ABOUT_ROUTE_NOTE = """0_ABOUT_THIS_ROUTE — {EST} Estate v3 (Alternative Route)
+=====================================================================
+
+WHAT THIS FOLDER IS
+  A complete, self-contained ALTERNATIVE route for the {EST} pathway:
+  every subject folder inside carries its own decks, its own index and its
+  own manifest. Nothing in here replaces the live subject folders on this
+  drive — the existing {EST} lessons in Art, ASDAN PEQ, Humanities and
+  Science stay exactly where they are and stay current.
+
+HOW TO USE IT
+  Open index.html in this folder for the route overview. Teach from this
+  folder only if your scheme says the v3 route is in use for your group.
+  Links inside this folder stay inside this folder (plus the Science
+  40-minute suites, which sit in Science_Teesside as a parallel route).
+
+WHAT NOT TO DO
+  Do not move the subject subfolders out of this folder and do not merge
+  them into the live subject folders. The two routes are deliberately kept
+  apart; interleaving them would make it impossible to tell which route a
+  deck belongs to.
+"""
+
+QUARANTINE_NOTE = """_New_This_Rebuild — READ BEFORE MOVING ANYTHING
+=====================================================================
+
+The content in this folder is NEW since the last pack and is current,
+staff-facing lesson material — but no placement ruling exists for it yet,
+and it appears in none of the drive screenshots this pack's geometry was
+derived from. Rather than guess a home for it (or silently drop it), the
+build quarantines it here.
+
+  BUILD_Estate_v3/ — a complete self-contained BUILD alternative route
+  (Art, ASDAN, D&T, Humanities + its own index), same shape as the two
+  "Estate v3 (Alternative Route)" folders at the root of this pack. It was
+  produced by a different pass and no ruling names its destination.
+
+DO NOT drag this folder onto the drive until Matt has ruled where it goes.
+Everything inside is fully rebranded and its links work from this folder,
+so once a home is chosen the folder can simply be moved there whole.
+"""
 
 OFL_SLUG = {"Bebas Neue": "bebasneue", "Barlow Condensed": "barlowcondensed",
             "DM Sans": "dmsans", "JetBrains Mono": "jetbrainsmono",
@@ -810,12 +913,20 @@ def build_mirror(logo_path, out_root):
 
     totals, avl_fails, avl_seen, rewrites = {}, [], 0, 0
     logo_pages = 0
+    # PACK-5 gates, measured not typed: how many source pages carry a visible
+    # Made-by-Matt mark (the logo count the build must hit -- the hand-typed 140
+    # went stale the moment new content landed), and how many carry the NAV-1
+    # control (the strip's before-count; zero-after is asserted in mirror_main).
+    mark_expected = 0
+    nav_pages_before = 0
     font_pages, font_families, font_bytes = 0, set(), 0
     for rel in keep:
         src = REPO / rel
         raw = src.read_text(encoding="utf-8", errors="ignore") if src.suffix != ".csv" else None
         dest = pack / fwd[str(rel)]
         if src.suffix == ".html":
+            if MARK_SVG.search(raw): mark_expected += 1
+            if 'class="mbmhome"' in raw: nav_pages_before += 1
             new, log = mirror_rebrand(raw, rel, mark_html)
             if str(rel) in IN_FOLDER_HUBS:                # D2: brand the root copy too,
                 new, _b = brand_header(new, mark_html)    # or the two copies disagree
@@ -857,6 +968,17 @@ def build_mirror(logo_path, out_root):
     # the Careers week-order note travels INTO the folder it warns about
     (pack / "ASDAN PEQ/Build/Careers/0_WEEK_ORDER.txt").write_text(WEEK_ORDER_NOTE, encoding="utf-8")
 
+    # PACK-5 / R1: each Alternative Route estate carries its own explainer, so a
+    # teacher who opens the folder cold learns what it is and what it is not.
+    for est in ("GROW", "LAUNCH"):
+        d = pack / f"{est} Estate v3 (Alternative Route)"
+        if d.exists():
+            (d / "0_ABOUT_THIS_ROUTE.txt").write_text(ABOUT_ROUTE_NOTE.format(EST=est), encoding="utf-8")
+    # PACK-5 / R2: the quarantine explains itself, loudly.
+    q = pack / "_New_This_Rebuild"
+    if q.exists():
+        (q / "0_README_QUARANTINE.txt").write_text(QUARANTINE_NOTE, encoding="utf-8")
+
     # ---- C2: a Progress-branded page at every bare name the flattening orphaned
     orphans = bare_name_census(fwd)
     for bare_path, strands in sorted(orphans.items()):
@@ -897,7 +1019,7 @@ def build_mirror(logo_path, out_root):
     print(f"KEEP-21-Jul: {'clean, no shipped file collides' if not clashes else str(len(clashes)) + ' COLLISIONS'}")
     for c in clashes: print("  FAIL:", c)
     return (pack, keep, fwd, back, avl_fails, avl_seen, clashes, logo_pages,
-            rewrites, orphans, hub_results)
+            rewrites, orphans, hub_results, mark_expected, nav_pages_before)
 
 
 def mirror_verify(pack):
@@ -995,6 +1117,10 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
         n = sum(1 for f in d.rglob("*") if f.is_file()) if d.is_dir() else len(tops[tname])
         if tname == "(root files)":
             g.append(f"  {'the loose .html files at the zip root':<46} -> drop at the ROOT of the lessons area (merge)")
+        elif tname.endswith("(Alternative Route)"):
+            g.append(f"  {tname + '/':<46} -> NEW folder - drop at the ROOT, it has no twin  ({n} files)")
+        elif tname == "_New_This_Rebuild":
+            g.append(f"  {tname + '/':<46} -> DO NOT DRAG - awaiting your ruling, see the note inside  ({n} files)")
         else:
             g.append(f"  {tname + '/':<46} -> merge into the existing '{tname}' folder  ({n} files)")
     g += ["",
@@ -1157,9 +1283,24 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "    Made-by-Matt string; the sweep whitelists it by exact match and fails on any",
          "    other spelling.",
          "  * Wordmarks replaced in attributes as well as visible text.",
-         "  * hud.js loaders stripped, including the dynamic injector form.",
+         "  * The online status-bar loader is stripped from every copy (both its static",
+         "    and dynamic injector forms) - it only resolves on the public site and is",
+         "    dead weight offline. The 'back to the catalogue' control added to the new",
+         "    science suites on 12 Aug is stripped for the same reason: its target is",
+         "    the public hub, which does not ship.",
          "  * x-brand meta tag on every page.", "",
          "-" * 74, "WHAT CHANGED THIS BUILD",
+         "  * EVERY Science deck is superseded: all 25 decks on the drive are the 6 Aug",
+         "    generation and predate the lab upgrades. Each pathway also gains a new",
+         "    v3_40min folder - the 40-minute alternative science route.",
+         "  * TWO NEW ROOT FOLDERS: 'GROW Estate v3 (Alternative Route)' and 'LAUNCH",
+         "    Estate v3 (Alternative Route)' - complete self-contained alternative routes.",
+         "    They sit BESIDE the live folders and replace nothing; each explains itself",
+         "    in 0_ABOUT_THIS_ROUTE.txt. HOW_TO_USE_THESE_LESSONS on the drive predates",
+         "    these routes; this README and those notes are the current word on them.",
+         "  * ONE FOLDER IS QUARANTINED: _New_This_Rebuild holds a complete BUILD",
+         "    alternative route with no placement ruling yet. Do not drag it to the",
+         "    drive until its home is agreed - the note inside explains.",
          "  * The tree is the SCHOOL's, not the repo's; every internal link was rewritten to",
          f"    match ({rewrites} rewrites).",
          "  * ASDAN LAUNCH is flat, so each strand's start page is named after its strand and",
@@ -1262,10 +1403,162 @@ def zip_tree(src_dir, zip_path, arc_root):
     return n, zip_path.stat().st_size
 
 
-def mirror_main(logo, out):
+# ==================================================== PACK-5 GATES (G1..G4)
+
+# G1 -- the geometry gate. Permanent, runs before zipping. The failed run that
+# forced this gate reached the zip step with the REPO tree: every root entry
+# below is matched byte-for-byte (case and parentheses included), any repo-tree
+# name at the root is an instant fail, and both LundyLoop placements plus five
+# deep pages crawled from their own locations are asserted present and clean.
+GEOMETRY_ROOT_DIRS = {
+    "Art", "ASDAN PEQ", "GROW Estate v3 (Alternative Route)",
+    "Humanities Lessons (Whiteboards and resources)",
+    "LAUNCH Estate v3 (Alternative Route)", "LundyLoop", "Science_Teesside",
+    "Tutor Time BF_BV_KCSIE", "grow-anim", "_New_This_Rebuild", "_Pack_Notes",
+}
+GEOMETRY_ROOT_FILES = {
+    "art_teesside.html", "build_asdan.html", "build_dt_upcycling.html",
+    "humanities_teesside.html", "CHANGES_SINCE.html", "README_FIRST.txt",
+    "FONT_LICENCES.txt",
+}
+GEOMETRY_FORBIDDEN = {
+    "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN",
+    "Humanities_Teesside", "Tutor_Time", "DT_Community_Upcycling",
+    "Build", "Grow", "Launch", "Slideshows",
+    "GROW_Estate_v3", "LAUNCH_Estate_v3", "BUILD_Estate_v3",
+}
+GEOMETRY_REQUIRED_PATHS = [
+    "LundyLoop/5_staff_training/Reading_the_Response_Card.html",
+    HUM + "/LundyLoop/START_HERE.html",
+    "ASDAN PEQ/Launch/START_HERE_Careers.html",
+    "Science_Teesside/Launch/v3_40min/index.html",
+]
+GEOMETRY_DEEP_CRAWL = [
+    HUM + "/humanities_teesside.html",                       # an in-folder hub
+    "Science_Teesside/Launch/v3_40min/SCI_L_W5L2_Osmosis_Core_Practical_Explore.html",
+    "GROW Estate v3 (Alternative Route)/Art_Teesside/GROW_ART_W1_The_Local_Canvas.html",
+    "LAUNCH Estate v3 (Alternative Route)/index.html",
+    "Tutor Time BF_BV_KCSIE/WB_W1_Democracy.html",
+]
+
+def geometry_gate(pack):
+    fails = []
+    dirs = {p.name for p in pack.iterdir() if p.is_dir()}
+    files = {p.name for p in pack.iterdir() if p.is_file()}
+    for extra in sorted(dirs - GEOMETRY_ROOT_DIRS):
+        fails.append(f"GEOMETRY: unexpected root folder {extra!r}"
+                     + (" -- REPO-TREE NAME" if extra in GEOMETRY_FORBIDDEN else ""))
+    for missing in sorted(GEOMETRY_ROOT_DIRS - dirs):
+        fails.append(f"GEOMETRY: required root folder {missing!r} is absent")
+    for extra in sorted(files - GEOMETRY_ROOT_FILES):
+        fails.append(f"GEOMETRY: unexpected root file {extra!r}")
+    for missing in sorted(GEOMETRY_ROOT_FILES - files):
+        fails.append(f"GEOMETRY: required root file {missing!r} is absent")
+    for req in GEOMETRY_REQUIRED_PATHS:
+        if not (pack / req).exists():
+            fails.append(f"GEOMETRY: required path missing: {req}")
+    for rel in GEOMETRY_DEEP_CRAWL:
+        if not (pack / rel).exists():
+            fails.append(f"GEOMETRY: deep-crawl sample missing: {rel}")
+            continue
+        miss = crawl_one(pack, rel)
+        if miss:
+            fails.append(f"GEOMETRY: {rel} does not crawl clean in place: {sorted(miss)[:5]}")
+    return fails
+
+
+# G2 -- zero hud.js and zero NAV-1 references over the ASSEMBLED tree. The strip
+# count alone proved insufficient once (the injector form the strip couldn't
+# see), so the gate greps the built tree for the substrings themselves.
+def residue_scan(pack, needle):
+    hits = []
+    for p in sorted(pack.rglob("*")):
+        if p.is_file() and p.suffix.lower() in (".html", ".css", ".js", ".json", ".txt", ".md"):
+            if needle in p.read_text(encoding="utf-8", errors="ignore"):
+                hits.append(str(p.relative_to(pack)))
+    return hits
+
+
+# G3 -- the completeness gate: every .html at HEAD sits in exactly one of
+# {manifest, named exclusion, quarantine}; zero unclassified. Reasons are named
+# because "not in scope" is a shrug, not a classification.
+NAMED_EXCLUSIONS = [
+    (re.compile(r"^Games/"),                       "Made-by-Matt only (dual-branding rule)"),
+    (re.compile(r"^Physics_WaveOhm/"),             "embeds published Made-by-Matt studio apps byte-equal (dual-branding rule)"),
+    (re.compile(r"^(biology|chemistry)/|^2 Physics 10/"), "frozen legacy science (REBRAND.md OUT)"),
+    (re.compile(r"^primary/"),                     "primary-phase estate, separate audience, never in pack scope"),
+    (re.compile(r"^Build/Slideshows/BUILD_ART_W\d_"), "superseded legacy art tasters (REBRAND.md OUT)"),
+    (re.compile(r"BUILD_L1_|FW_L1_"),              "superseded by BUILD_ASDAN (REBRAND.md OUT)"),
+    (re.compile(r"^Build/Resources/"),             "legacy BUILD kit, superseded by BUILD_ASDAN; never in pack scope"),
+    (re.compile(r"^ASDAN/"),                       "consent forms, not lessons (REBRAND.md OUT)"),
+    (re.compile(r"^ASDAN_Lundy/"),                 "Lundy overlay working set, not staff-facing lessons"),
+    (re.compile(r"^ASDAN_Visual_Learning/"),       "visual-learning working set, not staff-facing lessons"),
+    (re.compile(r"^LundyLoop/"),                   "LundyLoop system beyond the two decks shipped lessons link to (committed map)"),
+    (re.compile(r"^(6 Art|5_6 Local Choice|5 Intervention 10)/"), "class-tailored teaching sets, never in pack scope"),
+    (re.compile(r"^(Baseline_Weeks|Assembly|Summer Term Fun|YearPlan|Planning)/"), "planning/assembly material, never in pack scope"),
+    (re.compile(r"^(build-engine|build-anim)/"),   "engine/demo working sets, not lesson content"),
+    (re.compile(r"^grow-anim/demo\.html$"),        "runtime demo page, not lesson content (the four runtime scripts DO ship)"),
+    (re.compile(r"^_[^/]+/"),                      "working records and pass ledgers (underscore trees)"),
+    (re.compile(r"^(404\.html|index\.html|hub-health)"), "site furniture (REBRAND.md OUT)"),
+]
+
+def completeness_census(keep):
+    keep_set = {str(r) for r in keep}
+    shipped, excluded, unclassified = [], [], []
+    quarantined = [k for k in keep_set if k.startswith("BUILD_Estate_v3/")]
+    for p in sorted(REPO.rglob("*.html")):
+        rel = str(p.relative_to(REPO))
+        if rel.startswith(".git/"): continue
+        if rel in keep_set:
+            shipped.append(rel); continue
+        for pat, why in NAMED_EXCLUSIONS:
+            if pat.search(rel):
+                excluded.append((rel, why)); break
+        else:
+            unclassified.append(rel)
+    return shipped, excluded, quarantined, unclassified
+
+
+# G4 -- the Careers W6/W7 semantic census. The live BUILD_ASDAN filenames are
+# deliberately swapped relative to the taught order (0_WEEK_ORDER.txt travels
+# with them); the four surfaces PR #92 fixed must still agree, and the estate
+# copies (which corrected the filenames at source) must be self-consistent.
+def careers_census(pack):
+    fails = []
+    checks = [
+        ("ASDAN PEQ/Build/Careers/START_HERE.html",
+         [("Week 6", "post-16 routes taught in week 6")],
+         [("Week 7 is now taught", "stale W7 line back from the dead")]),
+        ("ASDAN PEQ/Build/BUILD_ASDAN_Hub.html",
+         [("W6", "post-16 routes labelled W6")],
+         [("taught W7 (post-16", "stale W7 label back from the dead")]),
+        ("_New_This_Rebuild/BUILD_Estate_v3/BUILD_ASDAN/CAREERS_W6_What_Happens_After_Year_11.html",
+         [("After Year 11", "estate W6 file teaches post-16 routes")], []),
+        ("_New_This_Rebuild/BUILD_Estate_v3/BUILD_ASDAN/CAREERS_W7_My_Career_Profile.html",
+         [("Career Profile", "estate W7 file teaches the profile")], []),
+    ]
+    for rel, must, must_not in checks:
+        f = pack / rel
+        if not f.exists():
+            fails.append(f"CAREERS: {rel} missing from pack"); continue
+        t = f.read_text(encoding="utf-8", errors="ignore")
+        for needle, why in must:
+            if needle not in t:
+                fails.append(f"CAREERS: {rel}: expected {needle!r} ({why})")
+        for needle, why in must_not:
+            if needle in t:
+                fails.append(f"CAREERS: {rel}: found {needle!r} ({why})")
+    return fails
+
+
+def mirror_main(logo, out, changes_json=None):
+    import json
+    delta = None
+    if changes_json:
+        delta = json.loads(Path(changes_json).read_text(encoding="utf-8"))
     out = Path(out)
     (pack, keep, fwd, back, avl_fails, avl_seen, clashes, logo_pages,
-     rewrites, orphans, hub_results) = build_mirror(logo, out)
+     rewrites, orphans, hub_results, mark_expected, nav_pages_before) = build_mirror(logo, out)
 
     miss = crawl(pack)
     print(f"\nCRAWL: {'clean, 0 broken internal links' if not miss else str(sum(len(v) for v in miss.values())) + ' UNRESOLVED'}")
@@ -1282,7 +1575,7 @@ def mirror_main(logo, out):
     # the x-brand/credit gates cover them too. Verifying first would have left
     # CHANGES_SINCE.html and the chooser page ungated.
     c1 = c1_collision_report(pack, fwd)
-    write_changes_since(pack, {"pages": len(list(pack.rglob("*.html")))}, LOGO_HTML[0])
+    write_changes_since(pack, {"pages": len(list(pack.rglob("*.html")))}, LOGO_HTML[0], delta)
     # Count logos on disk BEFORE writing the docs. logo_pages is only the number of
     # Made-by-Matt marks replaced; the pages this build authors carry one too, and a
     # guide that quotes the subtotal understates its own pack.
@@ -1292,6 +1585,10 @@ def mirror_main(logo, out):
                hub_results, orphans, 0)
     total, by_ext, by_top = write_manifest(pack)
     print(f"\nC4 MANIFEST: {total} entries  |  by extension: {dict(by_ext)}")
+    # the taxonomy header's shipped count is the walked total, not a hand-typed 0
+    tm = pack / "_Pack_Notes" / "TAXONOMY_MAP.md"
+    tm.write_text(tm.read_text(encoding="utf-8").replace("0 entries shipped", f"{total} entries shipped"),
+                  encoding="utf-8")
 
     fails, notes = mirror_verify(pack)
     js = inline_js_check(pack)
@@ -1309,28 +1606,79 @@ def mirror_main(logo, out):
             all_fails.append(f"GATE C9: {label} count is {got} - must be > 0")
     if notes["missing_credit"] or notes["duplicate_credit"]:
         all_fails.append("GATE C9: credit count != one per page")
-    if logo_pages != 140:
-        all_fails.append(f"GATE C9: logo replaced {logo_pages} marks, expected 140")
+    # PACK-5: the expected logo count is MEASURED from the sources this run read
+    # (pages carrying a visible Made-by-Matt mark), never hand-typed. The old
+    # literal 140 was correct for exactly one repo state.
+    if mark_expected <= 0:
+        all_fails.append("GATE C9: measured mark census is 0 - scope is wrong")
+    if logo_pages != mark_expected:
+        all_fails.append(f"GATE C9: logo replaced {logo_pages} marks, measured census expected {mark_expected}")
     if disk_logos < logo_pages:
         all_fails.append(f"GATE C9: only {disk_logos} pages carry the logo on disk")
+
+    # PACK-5 / G-CRAWL: broken internal links are a gate, not a report.
+    if miss:
+        all_fails.append(f"GATE CRAWL: {sum(len(v) for v in miss.values())} unresolved internal links")
+
+    # PACK-5 / G1: the geometry gate. Runs before zipping, always.
+    geo = geometry_gate(pack)
+    geo_ok = ("root entries match the drive/v3 whitelist byte-for-byte, "
+              "required paths present, 5 deep pages crawl clean in place")
+    print("\nG1 GEOMETRY: " + (geo_ok if not geo else f"{len(geo)} FAILURES"))
+    for f in geo[:15]: print("  FAIL:", f)
+    all_fails += geo
+
+    # PACK-5 / G2: zero hud.js and zero NAV-1 references in the assembled tree.
+    hud_hits = residue_scan(pack, "hud.js")
+    nav_hits = residue_scan(pack, "mbmhome")
+    print(f"G2 HUD/NAV: NAV-1 on {nav_pages_before} source pages before; "
+          f"{len(hud_hits)} hud.js / {len(nav_hits)} mbmhome refs in the built tree")
+    if hud_hits:
+        all_fails.append(f"GATE G2: {len(hud_hits)} files still reference hud.js: {hud_hits[:5]}")
+    if nav_hits:
+        all_fails.append(f"GATE G2: {len(nav_hits)} files still carry the NAV-1 control: {nav_hits[:5]}")
+    if nav_pages_before == 0:
+        all_fails.append("GATE G2: NAV-1 before-census is 0 - the census or the scope is wrong "
+                         "(38 pages carried it at 2026-08-12 HEAD)")
+
+    # PACK-5 / G3: completeness - every HTML at HEAD classified, zero unclassified.
+    shipped, excluded, quarantined, unclassified = completeness_census(keep)
+    print(f"G3 COMPLETENESS: {len(shipped)} shipped ({len(quarantined)} quarantined) + "
+          f"{len(excluded)} named-excluded = {len(shipped)+len(excluded)} of "
+          f"{len(shipped)+len(excluded)+len(unclassified)} HTML at HEAD; "
+          f"{len(unclassified)} unclassified")
+    for u in unclassified[:15]: print("  UNCLASSIFIED:", u)
+    if unclassified:
+        all_fails.append(f"GATE G3: {len(unclassified)} HTML files at HEAD are unclassified")
+
+    # PACK-5 / G4: the Careers W6/W7 semantic census, live surfaces + estate copies.
+    car = careers_census(pack)
+    print(f"G4 CAREERS: {'0 live mismatches' if not car else str(len(car)) + ' MISMATCHES'}")
+    for f in car[:10]: print("  FAIL:", f)
+    all_fails += car
+
     for f in all_fails[:20]: print("  FAIL:", f)
     if not all_fails: print("  all checks pass")
 
     # ---- package. Nothing ships if anything above failed.
     assert not all_fails, f"{len(all_fails)} checks failed - refusing to package"
     zips = []
-    n, sz = zip_tree(pack, out / "Progress_Schools_OneDrive_Mirror.zip",
-                     "Progress_Schools_OneDrive_Mirror")
-    zips.append(("Progress_Schools_OneDrive_Mirror.zip", n, sz))
+    n, sz = zip_tree(pack, out / "Progress_Schools_OneDrive_Mirror_v3.zip",
+                     "Progress_Schools_OneDrive_Mirror_v3")
+    zips.append(("Progress_Schools_OneDrive_Mirror_v3.zip", n, sz))
 
-    # optional: same tree + a generated offline index, for the network share
+    # the Network Library variant: same tree (two-packs-in-sync) + generated index
     lib = out / "Progress_Schools_Network_Library"
     shutil.copytree(pack, lib)
     shutil.rmtree(lib / "_Pack_Notes")   # placement + build notes are a OneDrive concern only
     pages = write_offline_index(lib, fwd, LOGO_URI[0], LOGO_URI[1])
-    n, sz = zip_tree(lib, out / "Progress_Schools_Network_Library.zip",
-                     "Progress_Schools_Network_Library")
-    zips.append(("Progress_Schools_Network_Library.zip", n, sz))
+    # G2 again, on the second tree: "both trees, asserted" means both trees.
+    lib_hud = residue_scan(lib, "hud.js"); lib_nav = residue_scan(lib, "mbmhome")
+    assert not lib_hud and not lib_nav, (
+        f"GATE G2 (library tree): hud.js={lib_hud[:3]} mbmhome={lib_nav[:3]}")
+    n, sz = zip_tree(lib, out / "Progress_Schools_Network_Library_v3.zip",
+                     "Progress_Schools_Network_Library_v3")
+    zips.append(("Progress_Schools_Network_Library_v3.zip", n, sz))
     print(f"\nofflineibrary index: {pages} pages listed".replace("ibrary","  library"))
     for nm, c, s in zips:
         print(f"PACKAGED {nm}: {c} entries, {s/1024/1024:.1f} MB")
@@ -1555,10 +1903,28 @@ def write_manifest(pack):
     return len(files), by_ext, by_top
 
 
-def write_changes_since(pack, counts, mark_html):
+def write_changes_since(pack, counts, mark_html, delta=None):
     """C5 -- CHANGES_SINCE is staff-facing and already exists on the drive at
     the root. Merging a stale one is worse than merging none, so it is
-    regenerated for THIS pack."""
+    regenerated for THIS pack.
+
+    PACK-5: the delta is MEASURED (git, base..HEAD, grouped by drive folder)
+    and handed in via --changes-json; this function renders, it does not
+    remember. This document is Matt's answer to "what is remaining"."""
+    delta = delta or {}
+    groups = delta.get("groups", [])
+    rows = "\n".join(
+        f'<tr><td><code>{html.escape(g["folder"])}</code></td>'
+        f'<td>{g["new"]}</td><td>{g["updated"]}</td>'
+        f'<td>{html.escape(g.get("note", ""))}</td></tr>'
+        for g in groups)
+    delta_table = (
+        '<h2>What is in this update, folder by folder</h2>\n'
+        '<div class="card"><table style="width:100%;border-collapse:collapse;font-size:.88rem">'
+        '<tr><th style="text-align:left">drive folder</th><th>new</th><th>updated</th>'
+        '<th style="text-align:left">what changed</th></tr>' + rows +
+        "</table></div>") if groups else ""
+    basestamp = html.escape(delta.get("stamp", ""))
     doc = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -1566,7 +1932,7 @@ def write_changes_since(pack, counts, mark_html):
 <title>What changed \\u00b7 Progress Schools lessons</title>
 <style>
 body{{margin:0;background:#fbfbfc;color:#1a1a1e;font:16px/1.65 system-ui,-apple-system,sans-serif}}
-.wrap{{max-width:720px;margin:0 auto;padding:32px 20px}}
+.wrap{{max-width:760px;margin:0 auto;padding:32px 20px}}
 header{{text-align:center;margin-bottom:1.2rem}}
 .strip{{margin-top:.5rem;font:600 11px/1 system-ui,sans-serif;letter-spacing:.08em}}
 h1{{font-size:1.35rem;margin:1.2rem 0 .2rem;text-align:center}}
@@ -1575,13 +1941,31 @@ h2{{font-size:1rem;margin:1.6rem 0 .4rem;padding-bottom:.3rem;border-bottom:1px 
 .card{{background:#fff;border:1px solid #e3e3e8;border-radius:10px;padding:14px 18px;margin:0 0 10px}}
 .warn{{border-left:4px solid #E5007D}}
 code{{background:#f2f2f5;padding:1px 5px;border-radius:4px;font-size:.86em}}
+td,th{{padding:4px 8px;border-bottom:1px solid #eee;vertical-align:top}}
 ul{{margin:.4rem 0;padding-left:1.2rem}}
 footer{{text-align:center;font:400 10px/1.4 system-ui,sans-serif;opacity:.55;margin-top:2rem}}
 </style></head><body>
 <div class="wrap">
 <header>{mark_html}</header>
 <h1>What changed in this update</h1>
-<p class="sub">7 August 2026 &middot; {counts['pages']} pages &middot; replaces the 5 August set</p>
+<p class="sub">{html.escape(delta.get("date", ""))} &middot; {counts['pages']} pages &middot; replaces the 6 August set{(" &middot; " + basestamp) if basestamp else ""}</p>
+
+<h2>The headline</h2>
+<div class="card"><strong>Every Science deck is superseded.</strong> All 25 decks in
+<code>Science_Teesside</code> on the drive are the 6&nbsp;August generation and predate the
+lab upgrades — every one is replaced by this pack. Alongside them, each pathway gains a new
+<code>v3_40min</code> folder: the 40-minute alternative science route (35 lessons plus a suite
+index and teacher guide per pathway). The existing route stays available.</div>
+<div class="card"><strong>Two new folders arrive at the drive root:</strong>
+<code>GROW Estate v3 (Alternative Route)</code> and <code>LAUNCH Estate v3 (Alternative
+Route)</code> — complete, self-contained alternative routes with their own subject folders and
+indexes. They sit beside the live folders and replace nothing. Each contains a
+<code>0_ABOUT_THIS_ROUTE.txt</code>.</div>
+<div class="card warn"><strong>One folder needs a decision before it goes on the drive:</strong>
+<code>_New_This_Rebuild</code> holds a complete BUILD alternative route that no ruling has
+placed yet. Do not drag it to the drive until its home is agreed — the note inside explains.</div>
+
+{delta_table}
 
 <h2>Read this first</h2>
 <div class="card warn"><strong>Careers weeks 6 and 7 — go by the slide, never the filename.</strong>
@@ -1591,20 +1975,18 @@ footer{{text-align:center;font:400 10px/1.4 system-ui,sans-serif;opacity:.55;mar
 </ul>
 An earlier pack said the opposite ("the filename is right"). That was wrong. The full note is in
 the Careers folder as <code>0_WEEK_ORDER.txt</code>. Do not rename the files — the hub and the
-scheme of work link to them by name.</div>
+scheme of work link to them by name. (The new BUILD alternative route corrects the filenames at
+source, so inside <code>_New_This_Rebuild</code> the filename and the slide agree.)</div>
 
 <div class="card warn"><strong>Nothing dated 21 July may be deleted.</strong> The Humanities
 organisers, receipt packs, role cards, consent logs and moderation guides were made by hand and
 cannot be regenerated. This update ships nothing with those names and does not touch them.</div>
 
 <h2>Branding</h2>
-<div class="card">Every page now carries the real Progress Schools logo instead of the placeholder
-mark, embedded in the page itself so it still shows when a file is moved or opened offline.</div>
-
-<h2>Structure</h2>
-<div class="card">The ASDAN LAUNCH folder is flat, so each strand's start page is now named after
-its strand (<code>START_HERE_Careers</code>, <code>START_HERE_PEQ</code>, and so on). The plain
-<code>START_HERE</code> in that folder is now a chooser page linking to all five.</div>
+<div class="card">Every page carries the real Progress Schools logo, embedded in the page itself
+so it still shows when a file is moved or opened offline. The online-only status loader and the
+new "back to the catalogue" control are stripped from every copy — both point at the public
+site, which does not ship.</div>
 
 <h2>Practical</h2>
 <div class="card"><strong>Sync or download — do not teach from the OneDrive web preview.</strong>
@@ -1694,12 +2076,13 @@ if __name__ == "__main__":
     ap.add_argument("--logo", help="Progress Schools logo PNG; enables mirror-pack mode")
     ap.add_argument("--mirror", action="store_true", help="assemble in the OneDrive taxonomy")
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--changes-json", help="measured base..HEAD delta (git), rendered into CHANGES_SINCE.html")
     a = ap.parse_args()
     if a.mirror:
         if not a.logo:
             sys.exit("HARD STOP: --mirror requires --logo. There is no fallback to the "
                      "typographic mark - REBRAND.md rule 1 is superseded and a pack built "
                      "without the real lockup is not a Progress Schools pack.")
-        mirror_main(a.logo, a.out)
+        mirror_main(a.logo, a.out, a.changes_json)
     else:
         main()
