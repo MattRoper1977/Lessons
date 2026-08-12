@@ -860,3 +860,39 @@ is empty the moment main has moved, and sees nothing. Ruled a measurement
 limitation of the CI trigger, not this pass's to rebuild. It stands alongside
 TH-U's named hole (a site-only theme change fires no Lessons/Apps path filter;
 the daily schedule catches it within a day).
+
+---
+
+# Guardrail — resources.json joins the pin; the tool stops lying · 2026-08-12
+
+Ruling 3, executed before the Part B work it unblocks. **Pinned now:**
+`apps.json` (Ruling 1) and `resources.json` (this ruling) — each guarded by a
+SHA-256 digest in both copies of the cross-estate gate, moved only by
+`tools/pin_manifests.py`, which writes both copies or neither. **Still under
+the blanket rule:** everything else the boundary enumerates; no other file
+left it under this ruling. The manifest also joins `ALLOWED_DIFF`, the same
+mechanical half the apps.json ruling needed: the pin is what makes an edit
+deliberate-or-red; the allowance only stops the boundary forbidding the edit
+outright.
+
+`pin_apps_manifest.py` was true for as long as it pinned one manifest; it is
+now `pin_manifests.py`, owning both pins, deriving both repo roots from
+wherever its copy runs. The old ALLOWED_DIFF entry stays so the rename's
+deletion remains legal in historical spans.
+
+Proof, three legs, sabotage committed and proven landed — after one
+thrown-away round: the first scratch worktrees were cut from this branch
+BEFORE the ruling's commit existed, so they carried the old gate and no tool,
+and measured yesterday's rules. Re-cut from the committed branch:
+
+```
+(i)   unauthorised resources.json edit, committed (cb0df9f2 vs pin e35d6324)
+        RED: "resources.json does not match its pinned digest — re-pin it
+              in the same commit: python3 tools/pin_manifests.py"
+(ii)  deliberate entry + re-pin, one commit
+        both gate copies REPINNED e35d6324 -> 779b3bc0, byte-identical
+        GREEN beyond the two pre-existing platform reds
+(iii) chemistry/Lesson1_Indicators-1.html edited and committed
+        RED: boundary violated — the blanket rule still bites
+scratch left: 0 worktrees, 0 branches, both repos
+```
