@@ -83,18 +83,29 @@ jobs:
               def handle_starttag(self,tag,attrs):
                   for k,v in attrs:
                       if k.lower() in {'href','src'} and v: self.links.append(v)
-          broken=[]
+          # Link resolution knows about the deployed mounts: this repository is
+          # served at /Lessons/, the site repo at the domain root. A "/"-absolute
+          # href is therefore not always repo-relative. See _glv3/tools/mount_map.py.
+          sys.path.insert(0, str(root/'_glv3'/'tools'))
+          from mount_map import SiteMount, pin_site_sha, resolve, BROKEN, UNVERIFIED
+          site_sha = pin_site_sha()
+          print('mount map · site repo pinned at ' + site_sha)
+          site = SiteMount(site_sha)
+          broken=[]; unverified=[]
           for p in html:
               q=P(); q.feed(p.read_text(encoding='utf-8',errors='replace'))
               for raw in q.links:
                   u=urlsplit(raw.strip())
                   if u.scheme or u.netloc or raw.startswith(('mailto:','tel:','data:','javascript:','#')): continue
-                  path=unquote(u.path)
-                  if not path: continue
-                  target=(root/path.lstrip('/')) if path.startswith('/') else (p.parent/path)
-                  if target.is_dir(): target=target/'index.html'
-                  if not target.exists(): broken.append({'from':p.relative_to(root).as_posix(),'link':raw,'target':str(target.relative_to(root) if target.is_relative_to(root) else target)})
+                  status, detail = resolve(raw, p, root, site)
+                  if status == BROKEN:
+                      broken.append({'from':p.relative_to(root).as_posix(),'link':raw,'detail':detail})
+                  elif status == UNVERIFIED:
+                      unverified.append({'from':p.relative_to(root).as_posix(),'link':raw,'detail':detail})
           assert not broken, broken[:20]
+          # Fail-safe: a mount we could not reach is red on its own message, never
+          # a silent pass. A gate that goes quiet on a network hiccup looks green.
+          assert not unverified, ['UNVERIFIED — site mount unreachable, not a pass'] + unverified[:20]
           required=['_glv3/GATES_STATIC.json','_glv3/GATES_BROWSER.json','_glv3/GATES_CHIPS.json','_glv3/INPUT_INTEGRITY.json','_glv3/COUNT_RECONCILIATION.json','_glv3/AUTONOMOUS_SENTINEL.json','_glv3/POSITIVE_CONTROLS.json']
           for rel in required: assert (root/rel).is_file() and (root/rel).stat().st_size>0, rel
           contacts=list((root/'_glv3/contact_sheet').rglob('*.png'))
