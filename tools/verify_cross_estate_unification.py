@@ -22,8 +22,8 @@ from pathlib import Path
 
 SENTINEL = "mbm-cross-estate-unification-lessons-apps-2026-08-08"
 CANONICAL_HASHES = {
-    "assets/mbm-platform.css": "e3eb9b83d3c791eca059386999c306711678877bba27248cc78a1ef584e1031d",
-    "assets/mbm-platform.js": "0958a73a78a9f6d428d6cbe6c77a8a1cd5f015022ce9a6acbba92e6bee901fd2",
+    "assets/mbm-platform.css": "ccfb0fd9f428ceb64248369baba8cda8000241af002eb5a40bc0d562eeb1d564",
+    "assets/mbm-platform.js": "0841046b6e2d9e0a13ee15829e40d6468a4a0982e9570cd3fbeb53e4e2813bf4",
     "assets/mbm-theme.js": "5d711139ee95f2a9814917c516ffe674fbd52fd0b42c8fd6e22a1efbc19f002b",
     "assets/mbm-hub.css": "1643f51bcfe7f89923e908cf4f79b36a80d8bfa767779ab1c9cebe2e1a8b513c",
 }
