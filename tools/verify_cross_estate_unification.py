@@ -24,25 +24,39 @@ SENTINEL = "mbm-cross-estate-unification-lessons-apps-2026-08-08"
 # These pin the bytes THIS repository serves. They are not the cross-estate
 # check — that is the --canonical comparison below, which holds these same two
 # files against the site repository byte for byte. The distinction is the whole
-# reason this table has now moved twice in three days: the pins cannot detect
-# divergence, because each repository's copy of this gate pins its own local
-# bytes and is green about them.
+# reason this table moved in both repositories within one day: the pins cannot
+# detect divergence, because each copy of this gate pins its own local bytes and
+# is green about them. Three versions coexisted, every pin green — Lessons
+# ccfb0fd9/0841046b, Apps e3eb9b83/0958a73a, site b520cf36/095a29e6.
 #
-# 2026-08-13 (91a16b8) brought this repository to the canonical copy and pinned
-# ccfb0fd9 / 0841046b. The site then moved twice — 6bdeafa on 08-14 and bc67b82
-# on 08-15 — and nothing here changed at either moment, so no path filter fired
-# and this gate stayed green two commits behind. The schedule that would have
-# noticed is what theme-parity.yml already has and this workflow does not.
+# This file is byte-identical in Lessons and Apps, which tools/pin_manifests.py
+# documents and asserts after any re-pin. It had stopped being so: the two
+# copies pinned different platform digests, and that assertion would have fired
+# on the next deliberate manifest change with a message about the wrong thing.
+# Both repositories now serve the same canonical bytes, so the table is the same
+# in both and this comment can be too. Keep it that way — if the copies ever
+# need to disagree, pin_manifests.py needs to learn that first.
 #
-# What the second of those two commits was matters. 6bdeafa inverted
-# adultFeaturesAllowed() to fail closed. Until this re-pin, this repository was
-# still running the fail-OPEN copy, and index.html — the only page here that
-# loads mbm-platform.js — declares no data-mbm-adult-features marker, so it
-# rendered the account, register and mailing affordances anyway. Measured in
-# Chromium before this sync: 1440x900 acct=1 mail=2 register=1, mbm-account.js
-# requested twice; 390x844 mail=1, mbm-account.js twice. After it: 0/0/0/0 at
-# both viewports, with details 12/14, cards 504, aria-live 2, pageerrors 0 and
-# 404s 0 unchanged.
+# How the drift survived, with dates. 2026-08-13 (91a16b8) brought Lessons to
+# the canonical copy and pinned ccfb0fd9 / 0841046b. The site then moved twice —
+# 6bdeafa on 08-14 and bc67b82 on 08-15 — and nothing in either repository
+# changed at either moment, so no path filter fired and both gates stayed green
+# behind. The schedule that would have noticed is what theme-parity.yml already
+# has, and what this workflow gained in the same pass as this comment.
+#
+# What 6bdeafa was matters. It inverted adultFeaturesAllowed() to fail closed:
+# the account link, the create-account link, the mailing link and the footer
+# mailing CTA now need a page to say data-mbm-adult-features="on", where before
+# they appeared unless a page said "off". In both repositories index.html is the
+# only page that loads mbm-platform.js, and neither declares the marker, so the
+# two copies were affected differently and both were measured in Chromium:
+#
+#   Lessons  before  1440x900 acct=1 mail=2 register=1, mbm-account.js x2
+#                     390x844 acct=0 mail=1 register=0, mbm-account.js x2
+#            after   0/0/0/0 at both, details 12/14, cards 504, aria-live 2,
+#                    pageerrors 0, 404s 0 unchanged
+#   Apps     before  0/0/0/0 at both viewports already — the fail-closed reader
+#            after   had reached that copy, so the sync changed no metric there
 CANONICAL_HASHES = {
     "assets/mbm-platform.css": "b520cf36a9c87af618e03ea534b66c261e8fd05e70d8eb5634f323aee9310698",
     "assets/mbm-platform.js": "095a29e61f8d7d549a5b58dd1aa1dd74b885416ebb09291ddb218d90ea740c28",
