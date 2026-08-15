@@ -21,9 +21,31 @@ from collections import Counter
 from pathlib import Path
 
 SENTINEL = "mbm-cross-estate-unification-lessons-apps-2026-08-08"
+# These pin the bytes THIS repository serves. They are not the cross-estate
+# check — that is the `if canonical:` block below, which compares these same two
+# files against the site repository byte for byte. The distinction is the whole
+# reason this table has now moved twice in three days: the pins cannot detect
+# divergence, because each repository's copy of this gate pins its own local
+# bytes and is green about them.
+#
+# 2026-08-13 (91a16b8) brought this repository to the canonical copy and pinned
+# ccfb0fd9 / 0841046b. The site then moved twice — 6bdeafa on 08-14 and bc67b82
+# on 08-15 — and nothing here changed at either moment, so no path filter fired
+# and this gate stayed green two commits behind. The schedule that would have
+# noticed is what theme-parity.yml already has and this workflow does not.
+#
+# What the second of those two commits was matters. 6bdeafa inverted
+# adultFeaturesAllowed() to fail closed. Until this re-pin, this repository was
+# still running the fail-OPEN copy, and index.html — the only page here that
+# loads mbm-platform.js — declares no data-mbm-adult-features marker, so it
+# rendered the account, register and mailing affordances anyway. Measured in
+# Chromium before this sync: 1440x900 acct=1 mail=2 register=1, mbm-account.js
+# requested twice; 390x844 mail=1, mbm-account.js twice. After it: 0/0/0/0 at
+# both viewports, with details 12/14, cards 504, aria-live 2, pageerrors 0 and
+# 404s 0 unchanged.
 CANONICAL_HASHES = {
-    "assets/mbm-platform.css": "ccfb0fd9f428ceb64248369baba8cda8000241af002eb5a40bc0d562eeb1d564",
-    "assets/mbm-platform.js": "0841046b6e2d9e0a13ee15829e40d6468a4a0982e9570cd3fbeb53e4e2813bf4",
+    "assets/mbm-platform.css": "b520cf36a9c87af618e03ea534b66c261e8fd05e70d8eb5634f323aee9310698",
+    "assets/mbm-platform.js": "095a29e61f8d7d549a5b58dd1aa1dd74b885416ebb09291ddb218d90ea740c28",
     "assets/mbm-theme.js": "5d711139ee95f2a9814917c516ffe674fbd52fd0b42c8fd6e22a1efbc19f002b",
     "assets/mbm-hub.css": "1643f51bcfe7f89923e908cf4f79b36a80d8bfa767779ab1c9cebe2e1a8b513c",
 }
