@@ -25,6 +25,24 @@ on:
       - tools/verify_cross_estate_browser.mjs
       - docs/MBM_CROSS_ESTATE_UNIFICATION.md
       - .github/workflows/mbm-cross-estate-unification.yml
+  # Every trigger above is a path filter over files THIS repository owns. The
+  # thing this workflow exists to catch is divergence from the canonical site
+  # platform, and the canonical lives in another repository — so the change that
+  # matters most is precisely the one that moves no file here and fires nothing.
+  #
+  # That is not hypothetical. 91a16b8 synced this repository to the canonical on
+  # 2026-08-13. The site moved on 08-14 (6bdeafa, which inverted the adult
+  # affordance boundary to fail closed) and again on 08-15 (bc67b82). Nothing
+  # here changed on either date, so this workflow did not run, and the gate was
+  # green for two days while this repository served the fail-OPEN platform copy.
+  #
+  # theme-parity.yml already carries a daily schedule for exactly this reason and
+  # says so in its own comment: nothing here changes at that moment, so the
+  # scheduled run is what notices that the canonical moved and this copy did not.
+  # Daily rather than weekly because the canonical moved twice in two days.
+  # Offset off :17 (theme-parity) so the two do not queue together.
+  schedule:
+    - cron: '53 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -38,7 +56,12 @@ concurrency:
 
 jobs:
   announce-live-run:
-    if: github.event_name != 'pull_request'
+    # Was `!= 'pull_request'`, which was exact while push, workflow_dispatch and
+    # pull_request were the only triggers. Adding the schedule made it wrong:
+    # this job posts to PR 95, so a daily cron would have left two comments a
+    # day there forever. Named positively now, so a future trigger has to opt in
+    # rather than be swept in.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Index this production run on the release PR
@@ -168,7 +191,12 @@ jobs:
           retention-days: 14
 
   live-proof:
-    if: github.event_name != 'pull_request'
+    # Was `!= 'pull_request'`, which was exact while push, workflow_dispatch and
+    # pull_request were the only triggers. Adding the schedule made it wrong:
+    # this job posts to PR 95, so a daily cron would have left two comments a
+    # day there forever. Named positively now, so a future trigger has to opt in
+    # rather than be swept in.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: [static-contract, browser-matrix]
     runs-on: ubuntu-latest
     timeout-minutes: 35

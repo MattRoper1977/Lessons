@@ -22,7 +22,7 @@ from pathlib import Path
 
 SENTINEL = "mbm-cross-estate-unification-lessons-apps-2026-08-08"
 # These pin the bytes THIS repository serves. They are not the cross-estate
-# check — that is the `if canonical:` block below, which compares these same two
+# check — that is the --canonical comparison below, which holds these same two
 # files against the site repository byte for byte. The distinction is the whole
 # reason this table has now moved twice in three days: the pins cannot detect
 # divergence, because each repository's copy of this gate pins its own local
@@ -219,8 +219,8 @@ def run_checks(
     root: Path,
     *,
     kind: str,
+    canonical: Path,
     base_html: str | None = None,
-    canonical: Path | None = None,
     check_git: bool = False,
     base_ref: str | None = None,
 ) -> list[str]:
@@ -288,28 +288,36 @@ def run_checks(
         errors.append(
             f"{THEME_COPY} has lost its generated-file header, so the next person to open "
             f"it has nothing telling them it is output — run: {SYNC_COMMAND}")
-    if canonical:
-        pairs = {
-            "assets/mbm-platform.css": canonical / "assets/mbm-platform.css",
-            "assets/mbm-platform.js": canonical / "assets/mbm-platform.js",
-            THEME_COPY: canonical / "theme.js",
-        }
-        for local_rel, reference in pairs.items():
-            if not reference.is_file():
-                errors.append(f"canonical reference missing: {reference}")
-                continue
-            expected_bytes = reference.read_bytes()
-            if local_rel == THEME_COPY:
-                expected_bytes = GENERATED_HEADER + expected_bytes
-            if (root / local_rel).read_bytes() == expected_bytes:
-                continue
-            if local_rel == THEME_COPY:
-                errors.append(
-                    f"{local_rel} is not the generated copy of the canonical theme.js. "
-                    f"Do not edit it here — edit theme.js in the site repository, then run: "
-                    f"{SYNC_COMMAND}")
-            else:
-                errors.append(f"local copy no longer equals canonical source: {local_rel}")
+    # Unconditional, and that is the point. This block used to sit behind
+    # `if canonical:`, with --canonical an optional argument. Run without it the
+    # gate skipped every cross-estate comparison and still printed
+    # "[PASS] <kind> cross-estate static contract" and exited 0 — a green naming
+    # the one thing it had not done. That is how three different versions of
+    # mbm-platform.css/js coexisted across the estate with every pin green:
+    # Lessons ccfb0fd9/0841046b, Apps e3eb9b83/0958a73a, site b520cf36/095a29e6.
+    # `canonical` is now a required parameter with no default, so omitting it is
+    # a TypeError here and an argparse error at the boundary, not a quiet pass.
+    pairs = {
+        "assets/mbm-platform.css": canonical / "assets/mbm-platform.css",
+        "assets/mbm-platform.js": canonical / "assets/mbm-platform.js",
+        THEME_COPY: canonical / "theme.js",
+    }
+    for local_rel, reference in pairs.items():
+        if not reference.is_file():
+            errors.append(f"canonical reference missing: {reference}")
+            continue
+        expected_bytes = reference.read_bytes()
+        if local_rel == THEME_COPY:
+            expected_bytes = GENERATED_HEADER + expected_bytes
+        if (root / local_rel).read_bytes() == expected_bytes:
+            continue
+        if local_rel == THEME_COPY:
+            errors.append(
+                f"{local_rel} is not the generated copy of the canonical theme.js. "
+                f"Do not edit it here — edit theme.js in the site repository, then run: "
+                f"{SYNC_COMMAND}")
+        else:
+            errors.append(f"local copy no longer equals canonical source: {local_rel}")
 
     if 'href="assets/mbm-platform.css"' not in text or 'href="assets/mbm-hub.css"' not in text:
         errors.append("hub must use repo-local CSS assets")
@@ -404,7 +412,13 @@ def run_checks(
     return errors
 
 
-def self_test(root: Path, kind: str) -> None:
+def self_test(root: Path, kind: str, canonical: Path) -> None:
+    # The fixture copies this repository's own CANONICAL_HASHES assets, so with
+    # the tree in a good state they already equal the canonical ones and the
+    # comparison passes. Threading `canonical` through is not bookkeeping for the
+    # new required argument: it means the positive control now exercises the
+    # cross-estate leg as well, and "fixture was not initially valid" below would
+    # catch that leg being broken, not only the local ones.
     with tempfile.TemporaryDirectory(prefix="mbm-cross-estate-positive-control-") as temp:
         fixture = Path(temp)
         for rel in ["index.html", "resources.json" if kind == "lessons" else "apps.json", *CANONICAL_HASHES]:
@@ -412,13 +426,13 @@ def self_test(root: Path, kind: str) -> None:
             dst = fixture / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
-        good = run_checks(fixture, kind=kind)
+        good = run_checks(fixture, kind=kind, canonical=canonical)
         if good:
             raise RuntimeError(f"positive-control fixture was not initially valid: {good}")
         index = fixture / "index.html"
         text = index.read_text("utf-8")
         index.write_text(text.replace('<a href="/Lessons/"', '<a href="/lessons/"', 1), "utf-8")
-        bad = run_checks(fixture, kind=kind)
+        bad = run_checks(fixture, kind=kind, canonical=canonical)
         if not bad:
             raise RuntimeError("positive-control mutation was not detected")
         print(f"positive-control: PASS ({len(bad)} detected error(s))")
@@ -428,14 +442,32 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
     parser.add_argument("--base", help="Git ref used to prove wording/logo and diff boundaries")
-    parser.add_argument("--canonical", help="Checked-out canonical site repository")
+    parser.add_argument(
+        "--canonical",
+        required=True,
+        help="Checked-out canonical site repository. Required, and deliberately so: "
+             "without it the cross-estate comparison does not run at all, and this "
+             "gate would print [PASS] cross-estate static contract having compared "
+             "nothing across estates.")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     kind = detect_kind(root)
     base_html = git_text(root, args.base, "index.html") if args.base else None
-    canonical = Path(args.canonical).resolve() if args.canonical else None
+    # required=True stops a missing flag. It does not stop --canonical "" — an
+    # empty string satisfies argparse and used to be falsy at the `if canonical:`
+    # that no longer exists, so it would have skipped the comparison silently.
+    # Nor does it stop a path that is not the site repository, which would fail
+    # later as three "canonical reference missing" lines rather than as the one
+    # thing that is actually wrong. Both are named here instead.
+    if not args.canonical.strip():
+        parser.error("--canonical was given an empty path; pass the checked-out site repository")
+    canonical = Path(args.canonical).resolve()
+    if not (canonical / "assets/mbm-platform.css").is_file():
+        parser.error(
+            f"--canonical does not look like the site repository: {canonical} "
+            f"(no assets/mbm-platform.css under it)")
     errors = run_checks(
         root,
         kind=kind,
@@ -450,7 +482,7 @@ def main() -> int:
         return 1
     print(f"[PASS] {kind} cross-estate static contract")
     if args.self_test:
-        self_test(root, kind)
+        self_test(root, kind, canonical)
     return 0
 
 
