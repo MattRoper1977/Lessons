@@ -1,0 +1,239 @@
+
+== build  release/ -> staging/
+built /home/user/Lessons/tools/fieldops/staging
+  T1 01_Newport_Bridge_Lift_Permit_Lab.html
+  T2 01_Newport_Bridge_Lift_Permit_Lab.html
+  T3 01_Newport_Bridge_Lift_Permit_Lab.html
+  T1 02_Tees_Estuary_Field_Investigation_Lab.html
+  T2 02_Tees_Estuary_Field_Investigation_Lab.html
+  T3 02_Tees_Estuary_Field_Investigation_Lab.html
+  T1 03_Wilton_Carbon_Process_Control_Lab.html
+  T2 03_Wilton_Carbon_Process_Control_Lab.html
+  T3 03_Wilton_Carbon_Process_Control_Lab.html
+  T1 04_Tees_Bay_Wind_Operations_Lab.html
+  T2 04_Tees_Bay_Wind_Operations_Lab.html
+  T3 04_Tees_Bay_Wind_Operations_Lab.html
+  T4 00_BUILD_FieldOps_Teacher_Studio.html
+  T4 01_Newport_Bridge_Lift_Permit_Lab.html
+  T4 02_Tees_Estuary_Field_Investigation_Lab.html
+  T4 03_Wilton_Carbon_Process_Control_Lab.html
+  T4 04_Tees_Bay_Wind_Operations_Lab.html
+  T5a 00_BUILD_FieldOps_Teacher_Studio.html
+  T5b 00_BUILD_FieldOps_Teacher_Studio.html
+  T6a 00_BUILD_FieldOps_Teacher_Studio.html
+  T6b 00_BUILD_FieldOps_Teacher_Studio.html
+  T7 03_Wilton_Carbon_Process_Control_Lab.html
+  T8a 03_Wilton_Carbon_Process_Control_Lab.html
+  T8b 03_Wilton_Carbon_Process_Control_Lab.html
+  T8c 00_BUILD_FieldOps_Teacher_Studio.html
+  T9 03_Wilton_Carbon_Process_Control_Lab.html
+
+== controls  every fix red on release, green on staging
+id        release      patched      verdict
+------------------------------------------------------------------------------
+W-R-C6    true         true         ALREADY CORRECT ON RELEASE
+          C6 is taught as petrol through the real buttons
+          release: told "petrol range"  ->  patched: told "petrol range"
+W-R-C10   false        true         MATCHED PAIR
+          C10 is taught as petrol through the real buttons
+          release: told "kerosene range"  ->  patched: told "petrol range"
+W-R-C14   false        true         MATCHED PAIR
+          C14 is taught as kerosene through the real buttons
+          release: told "diesel range"  ->  patched: told "kerosene range"
+W-R-C18   false        true         MATCHED PAIR
+          C18 is taught as diesel through the real buttons
+          release: told "fuel-oil range"  ->  patched: told "diesel range"
+W-R-C20   false        true         MATCHED PAIR
+          C20 is taught as diesel through the real buttons
+          release: told "residue / too heavy"  ->  patched: told "diesel range"
+W-R-C24   UNREACHABLE  UNREACHABLE  UNREACHABLE
+          C24 is taught as fuel-oil through the real buttons
+          release: no button  ->  patched: NOT DISTILLED at 390°C max
+W-SCORE   null         null         MEASURED
+          selectable feeds taught in the chemically correct band
+          release 1 of 5 selectable  ->  patched 5 of 6 selectable
+W-U-C11   true         true         ALREADY CORRECT ON RELEASE
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(11) is kerosene
+          bp 170°C · release "kerosene range" -> patched "kerosene range"
+W-U-C15   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(15) is kerosene
+          bp 250°C · release "diesel range" -> patched "kerosene range"
+W-U-C16   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(16) is kerosene
+          bp 270°C · release "fuel-oil range" -> patched "kerosene range"
+W-STRICT  null         null         ASSERTED
+          every band comparison in wTray is strict <, never <=
+          patched wTray contains "<=" : false (the earlier <= build is reverted)
+W-BOIL    null         null         ASSERTED UNCHANGED
+          wBoil is untouched
+          function wBoil(n){return -50+20*n}
+W-GAP     null         null         ASSERTED
+          no boundary sits on a wBoil value — every one is in a gap
+          boundaries [25,160,280,360,960] · collisions [] · 25 lies in (C3=10, C4=30) · 160 lies in (C10=150, C11=170) · 280 lies in (C16=270, C17=290) · 360 lies in (C20=350, C21=370) · 960 lies in (C50=950, C51=970)
+W-RES     null         null         ASSERTED
+          the residue band still exists, as the else, relabelled as chemistry
+          release "label:'residue / too heavy'" -> patched "label:'residue — what stays in the column'"
+W-RES-UI  false        true         MATCHED PAIR
+          the column's residue label reads as chemistry, not as a missing button
+          release [25°C · gases | 80°C · petrol range | 150°C · kerosene range | 230°C · diesel range | 300°C · fuel oils | residue] -> patched [25°C · gases | 80°C · petrol range | 150°C · kerosene range | 230°C · diesel range | 300°C · fuel oils | residue — what stays | in the column]
+W-DIAG    true         false        REGRESSION
+          the patch does not increase the number of printed temperatures that contradict the code
+          release 4/5 agree · patched 1/5 agree — the band fix moves three labels out of their own band
+W-DIAG-rel null         null         MEASURED
+          the printed temperatures against the RELEASE bands
+          25°C says "gases", code says "petrol range"  <-- disagree · 80°C says "petrol range", code says "petrol range" · 150°C says "kerosene range", code says "kerosene range" · 230°C says "diesel range", code says "diesel range" · 300°C says "fuel oils", code says "fuel-oil range"
+W-DIAG-pat null         null         MEASURED
+          the printed temperatures against the PATCHED bands
+          25°C says "gases", code says "petrol range"  <-- disagree · 80°C says "petrol range", code says "petrol range" · 150°C says "kerosene range", code says "petrol range"  <-- disagree · 230°C says "diesel range", code says "kerosene range"  <-- disagree · 300°C says "fuel oils", code says "diesel range"  <-- disagree
+W-ID24    false        true         MATCHED PAIR
+          C24 is present in all three feed lists
+          release buttons[6,10,14,18,20] random[6,10,14,18,20] studio[6,10,14,18,20] -> patched buttons[6,10,14,18,20,24] random[6,10,14,18,20,24] studio[6,10,14,18,20,24]
+W-ID3     null         null         ASSERTED
+          the three feed lists are the same set (identity re-asserted)
+          patched buttons[6,10,14,18,20,24] == random[6,10,14,18,20,24] == studio[6,10,14,18,20,24] · release was also identical
+P2.2a     false        true         MATCHED PAIR
+          pupil text does NOT survive a reload (memory-only ruling)
+          release returned=true -> patched returned=false (field claimText)
+P2.2b     null         null         MEASURED
+          localStorage keys after a session
+          release [stbuild.session.newport-lift-permit] -> patched []
+P2.2c-get false        true         MATCHED PAIR
+          no localStorage.getItem under this lab's own key, across a full session (T1)
+          release [get:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-set false        true         MATCHED PAIR
+          no localStorage.setItem under this lab's own key, across a full session (T2)
+          release [set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-remove false        true         MATCHED PAIR
+          no localStorage.removeItem under this lab's own key, across a full session (T3)
+          release [remove:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-all null         null         MEASURED
+          every localStorage call recorded, both trees
+          release [get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,remove:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.3      false        true         MATCHED PAIR
+          the exported .csv carries no cell that Excel would evaluate
+          release live["\"=1+1\"","\"@SUM(A1)\""] inert[] -> patched live[] inert["\"'=1+1\"","\"'@SUM(A1)\""]
+P2.4      false        true         MATCHED PAIR
+          body.calm is seeded from prefers-reduced-motion at boot
+          manual toggle still present: release true / patched true
+P2.5a     false        true         MATCHED PAIR
+          zero inline handlers in the Studio source
+          release 1 -> patched 0
+P2.5b     null         null         BEHAVIOUR PRESERVED
+          View still opens the capsule detail after rebinding
+          release opened=true rows=4 -> patched opened=true rows=4
+
+1 failure(s); 1 unreachable (inconclusive, never substituted)
+
+== assert-unchanged  nothing moved outside the declared transforms
+id        verdict   what
+------------------------------------------------------------------------------
+U1        UNCHANGED with all 13 transforms dropped the builder reproduces release byte for byte
+          all 5 files identical
+U2        UNCHANGED each transform changes exactly the files it is declared against
+          T1:4 T2:4 T3:4 T4:5 T5a:1 T5b:1 T6a:1 T6b:1 T7:1 T8a:1 T8b:1 T8c:1 T9:1
+U3        UNCHANGED all five files boot with no page error
+          clean
+U4 00     UNCHANGED visible text in 00_BUILD_FieldOps_Teacher_Studio.html changes only where authorised
+          added [] removed []
+U4 01     UNCHANGED visible text in 01_Newport_Bridge_Lift_Permit_Lab.html changes only where authorised
+          added [] removed []
+U4 02     UNCHANGED visible text in 02_Tees_Estuary_Field_Investigation_Lab.html changes only where authorised
+          added [] removed []
+U4 03     UNCHANGED visible text in 03_Wilton_Carbon_Process_Control_Lab.html changes only where authorised
+          added ["residue — what stays","in the column","C24"] removed ["residue"]
+U4 04     UNCHANGED visible text in 04_Tees_Bay_Wind_Operations_Lab.html changes only where authorised
+          added [] removed []
+U5        UNCHANGED mission ids for the default template of each engine are unchanged
+          newport-lift-permit=NEWPORT-LIFT-PERMIT-1C107E37 tees-estuary-fieldops=TEES-ESTUARY-FIELDOPS-BB8F2AF0 wilton-carbon-control=WILTON-CARBON-CONTROL-2B1E87AE tees-bay-wind-ops=TEES-BAY-WIND-OPS-29848190
+U6        UNCHANGED demonstration capsules still verify identically
+          release ["verified","verified","verified","verified"] -> patched ["verified","verified","verified","verified"]
+U7        UNCHANGED the three non-Wilton labs differ from release only in the four storage/calm transforms
+          Newport, Estuary and Wind all identical once T1-T4 are normalised
+
+0 unexpected change(s)
+
+== P2.6  the 38 inputs
+file                                           controls   unnamed   rendered 
+--------------------------------------------------------------------------------
+00_BUILD_FieldOps_Teacher_Studio.html          33 -> 33   4         22       
+01_Newport_Bridge_Lift_Permit_Lab.html         57 -> 57   11        53       
+02_Tees_Estuary_Field_Investigation_Lab.html   61 -> 61   10        57       
+03_Wilton_Carbon_Process_Control_Lab.html      60 -> 61   13        57       
+04_Tees_Bay_Wind_Operations_Lab.html           53 -> 53   14        49       
+--------------------------------------------------------------------------------
+TOTAL controls: release 264  ->  patched 265
+accessible-name sources in the patched tree: ["button text","wrapping label"]
+
+A0  predicate: <input> elements in the four pupil-facing labs, Studio excluded
+    release 38  ->  patched 38   (the figure the order calls "the 38 inputs")
+    other predicates on the same tree, so the figure cannot be quoted loose:
+      input+select+textarea, four labs: 72
+      input, all five files:            49
+      every control incl. buttons:      265
+A0 PASS  the stated predicate yields 38, unchanged by the patch
+A1 PASS  exactly one control added (C24, named via button text, rendered); no name lost
+
+A2 RED (PRE-EXISTING, NOT FIXED IN P2)
+    22 of the 38 inputs have no accessible name; 52 controls overall.
+    Identical on release — A1 proves the patch neither caused nor worsened it.
+    01 #alias [text]
+    01 #confidenceBefore [range]
+    01 #nCw [range]
+    01 #nDrag [range]
+    01 #confidenceAfter [range]
+    02 #alias [text]
+    02 #confidenceBefore [range]
+    02 #confidenceAfter [range]
+    03 #alias [text]
+    03 #confidenceBefore [range]
+    03 #wFurnace [range]
+    03 #wCracker [range]
+    03 #wSplit [range]
+    03 #confidenceAfter [range]
+    04 #alias [text]
+    04 #confidenceBefore [range]
+    04 #tWind [range]
+    04 #tRadius [range]
+    04 #tPitch [range]
+    04 #tYaw [range]
+    04 #tGrid [range]
+    04 #confidenceAfter [range]
+
+0 patch-scoped failure(s); 1 pre-existing red recorded
+
+== transport  Studio <-> lab, all four splits, both directions
+/opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/elementHandle.js:207
+  return payloads.reduce((size, item) => size + (item.buffer ? item.buffer.byteLength : 0), 0) >= import_fileUtils.fileUploadSizeLimit;
+                                                      ^
+
+TypeError: Cannot read properties of undefined (reading 'buffer')
+    at /opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/elementHandle.js:207:55
+    at Array.reduce (<anonymous>)
+    at filePayloadExceedsSizeLimit (/opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/elementHandle.js:207:19)
+    at convertInputFiles (/opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/elementHandle.js:260:7)
+    at Frame.setInputFiles (/opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/frame.js:348:72)
+    at Page.setInputFiles (/opt/node22/lib/node_modules/playwright/node_modules/playwright-core/lib/client/page.js:615:34)
+    at file:///home/user/Lessons/tools/fieldops/transport.mjs:98:12
+
+Node.js v22.22.2
+
+== removal matrix  drop each transform, the gates must notice
+baseline: 1 failure(s); 1 unreachable (inconclusive, never substituted)
+
+  T1    watched      P2.2c-get->CONTROL 2->substituted) 
+  T2    watched      P2.2c-set->CONTROL 2->substituted) 
+  T3    watched      P2.2c-remove->CONTROL 2->substituted) 
+  T4    watched      P2.4->CONTROL 2->substituted) 
+  T5a   watched      P2.5a->CONTROL 2->substituted) 
+  T5b   watched      P2.5b->BROKEN 2->substituted) 
+  T6a   watched      P2.3->CONTROL 2->substituted) 
+  T6b   watched      P2.3->CONTROL 2->substituted) 
+  T7    watched      W-R-C10->CONTROL W-R-C14->CONTROL W-R-C18->CONTROL W-R-C20->CONTROL W-U-C15->CONTROL W-U-C16->CONTROL W-GAP->COLLISION W-RES->FAILED 8->substituted) 
+  T8a   watched      W-ID24->CONTROL W-ID3->DIVERGED 3->substituted) 
+  T8b   watched      W-ID24->CONTROL W-ID3->DIVERGED 3->substituted) 
+  T8c   watched      W-ID24->CONTROL W-ID3->DIVERGED 3->substituted) 
+  T9    watched      W-RES-UI->CONTROL 2->substituted) 
+
+every transform has a gate that changes verdict without it
+
+== worst exit: 1
