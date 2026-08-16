@@ -43,6 +43,23 @@ The last two are worth reading twice: in both cases the *fix* was fine and the
 that goes green on a reverted fix is not evidence about the fix — it is evidence
 about the gate.
 
+**Final matrix state: every transform on every target is watched.**
+D 16/16 · C 18/18 · B 10/10.
+
+The matrices also now distinguish two kinds of red that had been reading the
+same. A transform whose *sole* removal leaves a build that does not run is
+**LOAD-BEARING** — a real dependency, worth knowing, but the red measures the
+crash rather than the behaviour. Three exist: C's `X1c` (the `acidFirst`
+predicate both sequencing fixes call), C's `X5a` (the table `X5b`'s template
+references), and B's `Y4d` (the helper `Y4c` calls). They are labelled rather
+than counted as behavioural controls.
+
+On Target D the same situation was resolved by *merging* the two transforms,
+because they were one change split in two. On B and C it is a label instead,
+because halide and sulfate sequencing — and the two halves of the subtitle fix —
+are genuinely separate changes, and folding them together to satisfy the matrix
+would lose the ability to test them apart.
+
 Two claims in the incoming reports were checked and are **true but unproven by
 their own artefacts** — the Class of Ashes touch-fire response (`shots: 0` in
 their summary) and the briefing-map pixel proof (two near-black pixels compared).
