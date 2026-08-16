@@ -31,15 +31,24 @@ for T in $TRANSFORMS; do
   fi
   verdicts "/tmp/vcl_drop_$T.out" > "/tmp/vcl_drop_$T.verdicts"
   changed=$(diff /tmp/vcl_baseline.verdicts "/tmp/vcl_drop_$T.verdicts" | grep '^>' | awk '{print $2"->"$3}' | tr '\n' ' ')
+  # A transform whose sole removal leaves a page that THROWS is load-bearing,
+  # but the red says the build did not run — it is not a measurement of the
+  # behaviour the transform changes. Say which kind it is rather than letting a
+  # crash read as a behavioural control.
+  if grep -q 'ERR->ERROR' "/tmp/vcl_drop_$T.verdicts"; then kind='LOAD-BEARING'; else kind='watched     '; fi
   if [ -z "$changed" ]; then
     printf '  %-6s UNWATCHED    verdict set identical to baseline\n' "$T"; BAD=1
   else
-    printf '  %-6s watched      %s\n' "$T" "$changed"
+    printf '  %-6s %s %s\n' "$T" "$kind" "$changed"
   fi
   rm -rf "drop_$T"
 done
 
 rm -rf staging && node build.mjs >/dev/null 2>&1
+echo
+echo "LOAD-BEARING = its sole removal leaves a build that does not run. A real red,"
+echo "but it measures the crash, not the behaviour, so it is labelled rather than counted"
+echo "as a behavioural control. Every other transform's removal was measured."
 echo
 [ "$BAD" = 0 ] && echo "every transform has a gate that changes verdict without it" \
               || echo "AT LEAST ONE TRANSFORM IS UNWATCHED"
