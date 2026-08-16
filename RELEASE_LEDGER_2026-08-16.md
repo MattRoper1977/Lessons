@@ -32,6 +32,16 @@ call), C's `X5a` (the table `X5b`'s template references), and B's `Y4d` (the
 helper `Y4c` calls). All three are labelled **LOAD-BEARING** in their matrix
 output rather than counted among the behavioural controls.
 
+**The label's first implementation could never fire**, and it took a re-read of
+the artefact to notice: it grepped the verdicts file for `ERR->ERROR`, but that
+file stores `ERR ERROR` — the arrow exists only in the diff string built
+separately for display. So every load-bearing transform printed as an ordinary
+`watched`, and an earlier version of PR #118's description asserted a label the
+tool had never applied. Corrected there and here. It is the tenth check caught
+unable to fire this pass, and the first I introduced *while writing the rule
+about them* — which is the argument for re-reading the artefact rather than the
+summary, made against myself.
+
 The alternative — folding transforms together until every red looks like a
 behaviour red — is how a matrix gets gamed into looking complete. Target D
 *did* merge two transforms, and that was right there because they were one
@@ -71,6 +81,7 @@ authored the same afternoon:
 | a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
 | **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
 | *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here so the tally is nine, not eight |
+| **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **Tenth this pass, and the first introduced while writing the rule about them** |
 
 The last two are worth reading twice: in both cases the *fix* was fine and the
 *check* was wrong, and only the removal matrix could tell the difference. A gate
@@ -79,6 +90,10 @@ about the gate.
 
 **Final matrix state: every transform on every target is watched.**
 D 16/16 · C 18/18 · B 10/10.
+
+The matrices also now hold a lock on their evidence file. Two runs wrote into one
+file concurrently and left an interleaved artefact with a half-line in it —
+readable enough to skim past, which is exactly the problem.
 
 The matrices also now distinguish two kinds of red that had been reading the
 same. A transform whose *sole* removal leaves a build that does not run is
