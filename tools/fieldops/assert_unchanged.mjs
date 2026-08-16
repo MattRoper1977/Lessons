@@ -233,6 +233,7 @@ const mint = async tree => (await boot(tree, STUDIO, () => {
                       .replace(/function save\(\)\{try\{(?:void 0&&)?localStorage\.setItem\(storageKey,JSON\.stringify\(state\)\)\}catch\(e\)\{\}\}/, 'SAVEFN')
                       .replace(/return;(?:void 0|localStorage\.removeItem\(storageKey\));location\.reload\(\)/, 'RESETFN')
                       .replace(/<a class="mbmhome"[^>]*>← Lessons<\/a>/, '')
+                      .replace(/\/\* ===== NAV-1:[\s\S]*?@media print\{\.mbmhome\{display:none!important\}\}\n/, '')
                       .replace(/<div class="kicker">(?:Made by Matt · )?/, '<div class="kicker">KICKER');
   const bad = [];
   for (const f of ['01_Newport_Bridge_Lift_Permit_Lab.html', '02_Tees_Estuary_Field_Investigation_Lab.html',

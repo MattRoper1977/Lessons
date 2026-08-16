@@ -168,10 +168,29 @@ swap('T9', '03_Wilton_Carbon_Process_Control_Lab.html',
  * so a link to the Lessons catalogue would be wrong from there.
  * ===================================================================== */
 const NAV1 = `<a class="mbmhome" href="../../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>`;
+/* The MARKUP alone is not the convention. The neighbours ship this rule with it,
+   and it is what makes the control a 44px target, gives it a focus ring, and
+   removes it from print. Lifted verbatim from
+   Science_Teesside/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html — except
+   position, which is `fixed; top:6px; right:10px` there because those pages have
+   no toolbar. These labs do, so the link sits inside it and keeps every other
+   declaration byte-identical. That deviation is deliberate and declared. */
+const NAV1CSS = `/* ===== NAV-1: way home — chrome only, teaching surfaces untouched ===== */
+.mbmhome{position:static;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px 14px;background:#161D3D;color:#FFF6E8;border-radius:999px;font-weight:800;font-size:.85rem;letter-spacing:.03em;text-decoration:none;box-shadow:0 2px 10px rgba(15,23,42,.3)}
+.mbmhome:hover{background:#232C55}
+.mbmhome:focus-visible{outline:3px solid #E08A2E;outline-offset:2px}
+@media print{.mbmhome{display:none!important}}
+`;
 for (const f of LABS) {
   swap('T13', f,
     `<div class="tools"><span class="timer" id="timerDisplay">40:00</span>`,
     `<div class="tools">${NAV1}<span class="timer" id="timerDisplay">40:00</span>`);
+  /* The page's OWN stylesheet, not the first </style> in the file: each lab
+     builds a printable document as a string and that carries a second <style>
+     block. The generated one opens `<style>body{`; the page's own opens with a
+     newline, which makes it the unique anchor. Same trap as the Studio's five
+     </body></html>, caught the same way — by the exactly-once guard. */
+  swap('T13', f, `<style>\n`, `<style>\n${NAV1CSS}`);
 }
 
 /* =====================================================================

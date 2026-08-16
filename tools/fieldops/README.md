@@ -220,7 +220,15 @@ reflection window — not lessons); splash overlays **0 of 15**;
 `mbm_reading_theme` **0 of 15**, and only **2 files in the whole Lessons repo**
 carry it, both catalogue indexes.
 
-So NAV-1 landed byte-identically. A splash overlay and a reading theme did not:
+So NAV-1 landed byte-identically — **markup and rule**. The first cut shipped the
+`<a class="mbmhome">` and none of the `.mbmhome` CSS the neighbours carry with it,
+and the control passed anyway because it only asked whether the link had a
+non-zero box. An unstyled inline link has one of those. `T13` now asserts a 44 px
+target, a `:focus-visible` ring and `@media print{display:none}` — measured from
+the live stylesheet, not from the source text. The one deviation from the
+neighbours' rule is `position`, which is `fixed; top:6px; right:10px` on pages
+that have no toolbar; these labs have one, so the link sits inside it and every
+other declaration is byte-identical. Declared, not silent. A splash overlay and a reading theme did not:
 adding them would make these the only lesson files in the estate with either,
 which is divergence dressed as conformance. **The regress trap is still
 re-expressed** — `T14` asserts both limbs, release baseline **0** per page and
@@ -234,3 +242,16 @@ actually choose, `<=` and R-Wilton-3 agree completely. R-Wilton-3 is still the
 better rule — no chain can land on a boundary, so `<` versus `<=` stops being a
 question anyone has to get right — but it buys correctness a user cannot see, and
 saying otherwise would be overstating it.
+
+
+## dcc23dc, stated precisely
+
+**This work touches zero files under `Science_Teesside/Build/v3_40min`** — the
+hard stop is honoured, and `git show --stat --name-only HEAD` is where to check it.
+
+The tree there is **not** byte-identical to `dcc23dc`, and it was not before this
+order either. Three earlier commits changed it: `4dfcfd3` and `ea4e14e`, which
+added the NAV-1 control to the ten BUILD lessons and the three suite indexes, and
+`9deab25`, Stage B's slide-change work. Those commits are where the NAV-1
+convention this pass matched was established, which is a pleasant symmetry and
+also the reason the claim needs stating precisely rather than as "untouched".

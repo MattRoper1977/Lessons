@@ -573,6 +573,29 @@ for (const tree of TREES) {
       navHref: nav ? nav.getAttribute('href') : null,
       navLabel: nav ? nav.getAttribute('aria-label') : null,
       navText: nav ? nav.textContent.trim() : null,
+      /* NOT "has a non-zero box". An unstyled inline link has one of those, which
+         is how the first cut of this control passed on a NAV-1 that had the
+         markup and none of the rule that makes it usable. */
+      navBox: r ? { w: Math.round(r.width), h: Math.round(r.height) } : null,
+      navTarget44: !!(r && r.width >= 44 && r.height >= 44),
+      navPrintHidden: (() => {
+        if (!nav) return null;
+        for (const sheet of document.styleSheets) {
+          let rules; try { rules = sheet.cssRules; } catch (e) { continue; }
+          for (const rule of rules)
+            if (rule.media && /print/.test(rule.conditionText || rule.media.mediaText || '') &&
+                [...(rule.cssRules || [])].some(r2 => /\.mbmhome/.test(r2.selectorText || '') && /none/.test(r2.style.display)))
+              return true;
+        }
+        return false;
+      })(),
+      navFocusRing: (() => {
+        for (const sheet of document.styleSheets) {
+          let rules; try { rules = sheet.cssRules; } catch (e) { continue; }
+          for (const rule of rules) if (/\.mbmhome:focus-visible/.test(rule.selectorText || '')) return true;
+        }
+        return false;
+      })(),
       navRendered: !!(r && r.width > 0 && r.height > 0),
       modelNote: note ? note.textContent.replace(/\s+/g, ' ').trim() : null,
       modelRendered: !!(note && note.getBoundingClientRect().height > 0),
@@ -588,10 +611,12 @@ for (const tree of TREES) {
   const R = globalThis['est_' + T_REL], P = globalThis['est_' + T_PAT];
   /* byte-identical to the eleven lessons it co-locates with, not merely present */
   const HREF = '../../../index.html', LABEL = 'Back to the Lessons catalogue';
-  const navOk = x => x.navHref === HREF && x.navLabel === LABEL && x.navRendered;
-  pair('T13', 'NAV-1 back link matches the eleven lessons in the co-location target, and renders',
+  const navOk = x => x.navHref === HREF && x.navLabel === LABEL && x.navRendered
+                  && x.navTarget44 && x.navPrintHidden === true && x.navFocusRing === true;
+  pair('T13', 'NAV-1 matches the eleven neighbours: same href and label, a 44px target, a focus ring, and gone from print',
     navOk(R), navOk(P),
-    `release ${JSON.stringify({ href: R.navHref, label: R.navLabel })} -> staging ${JSON.stringify({ href: P.navHref, label: P.navLabel, text: P.navText, rendered: P.navRendered })}`);
+    `release ${JSON.stringify({ href: R.navHref })} -> staging href "${P.navHref}" label "${P.navLabel}" ` +
+    `box ${JSON.stringify(P.navBox)} 44px=${P.navTarget44} focus-ring=${P.navFocusRing} print-hidden=${P.navPrintHidden}`);
   note('T13-scope', 'the Studio is deliberately excluded from NAV-1', 'ASSERTED',
     `it deploys to Matt-s-Apps-, not Lessons, so a link to the Lessons catalogue would be wrong from it. ` +
     `labs carrying NAV-1: release [${globalThis['nav_' + T_REL]}] -> staging [${globalThis['nav_' + T_PAT]}]`);
