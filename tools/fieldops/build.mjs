@@ -155,6 +155,85 @@ swap('T9', '03_Wilton_Carbon_Process_Control_Lab.html',
   `<text x="220" y="535">residue</text>`,
   `<text x="220" y="528" font-size="12">residue — what stays</text><text x="220" y="544" font-size="12">in the column</text>`);
 
+/* =====================================================================
+ * T13 — NAV-1, the way back to the Lessons catalogue.
+ *
+ * DERIVED, not invented. The eleven lesson files in the co-location target
+ * (Science_Teesside/Build/v3_40min, merged at dcc23dc) carry this line
+ * byte-identically; the four that do not are the matrix, the guide and the
+ * reflection window, which are not lessons. Same directory depth, so the same
+ * relative href resolves.
+ *
+ * The Studio is excluded on purpose: it goes to Matt-s-Apps-, not to Lessons,
+ * so a link to the Lessons catalogue would be wrong from there.
+ * ===================================================================== */
+const NAV1 = `<a class="mbmhome" href="../../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>`;
+/* The MARKUP alone is not the convention. The neighbours ship this rule with it,
+   and it is what makes the control a 44px target, gives it a focus ring, and
+   removes it from print. Lifted verbatim from
+   Science_Teesside/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html — except
+   position, which is `fixed; top:6px; right:10px` there because those pages have
+   no toolbar. These labs do, so the link sits inside it and keeps every other
+   declaration byte-identical. That deviation is deliberate and declared. */
+const NAV1CSS = `/* ===== NAV-1: way home — chrome only, teaching surfaces untouched ===== */
+.mbmhome{position:static;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px 14px;background:#161D3D;color:#FFF6E8;border-radius:999px;font-weight:800;font-size:.85rem;letter-spacing:.03em;text-decoration:none;box-shadow:0 2px 10px rgba(15,23,42,.3)}
+.mbmhome:hover{background:#232C55}
+.mbmhome:focus-visible{outline:3px solid #E08A2E;outline-offset:2px}
+@media print{.mbmhome{display:none!important}}
+`;
+for (const f of LABS) {
+  swap('T13', f,
+    `<div class="tools"><span class="timer" id="timerDisplay">40:00</span>`,
+    `<div class="tools">${NAV1}<span class="timer" id="timerDisplay">40:00</span>`);
+  /* The page's OWN stylesheet, not the first </style> in the file: each lab
+     builds a printable document as a string and that carries a second <style>
+     block. The generated one opens `<style>body{`; the page's own opens with a
+     newline, which makes it the unique anchor. Same trap as the Studio's five
+     </body></html>, caught the same way — by the exactly-once guard. */
+  swap('T13', f, `<style>\n`, `<style>\n${NAV1CSS}`);
+}
+
+/* =====================================================================
+ * T14 — the branding line, in the form the target family actually uses.
+ *
+ * MEASURED: the co-location target carries ZERO splash overlays and ZERO
+ * mbm_reading_theme. "Made by Matt" appears there as a header, footer or
+ * comment line — eleven of fifteen files, exactly once each. Landing a
+ * games-style splash overlay here would make these the only lesson files in
+ * the estate with one, which is divergence dressed as conformance.
+ *
+ * So: one line, in the family's own shape. The regress trap is re-expressed
+ * with it — baseline 0 on the release build, exactly 1 once deployed.
+ * ===================================================================== */
+for (const f of ALL) {
+  swap('T14', f,
+    `<div class="kicker">Science Teesside · BUILD v4 FieldOps`,
+    `<div class="kicker">Made by Matt · Science Teesside · BUILD v4 FieldOps`);
+}
+
+/* =====================================================================
+ * T15 — the disclosure copy.  §4, and it is not optional.
+ *
+ * The app gives a crisp answer. It may not imply the chemistry is crisp.
+ * Three things have to be said and none of them is said anywhere today: the
+ * temperature scale is a MODEL, the real ranges are wider and overlapping, and
+ * C14–C16 genuinely sit in both kerosene and diesel in real refining.
+ *
+ * Placed with the tray-temperature caption, because that is where a pupil is
+ * already being asked to hold two kinds of number apart.
+ * ===================================================================== */
+swap('T15', '03_Wilton_Carbon_Process_Control_Lab.html',
+  `Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.</div>`,
+  `Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.` +
+  `<div id="wModelNote" style="margin-top:7px;padding-top:7px;border-top:1px solid #35536d;color:#8fa6b8">` +
+  `<b style="color:#fbbf24">These temperatures are model values, not measurements.</b> ` +
+  `This column uses a straight-line rule so the pattern is visible; a real one is not straight. ` +
+  `Real fractions are roughly: gases below 25&nbsp;°C, petrol 25–175&nbsp;°C, kerosene 150–260&nbsp;°C, ` +
+  `diesel 250–350&nbsp;°C, fuel oils 300–500&nbsp;°C, bitumen above that. ` +
+  `Those ranges <b>overlap</b> — C14 to C16 sit in both kerosene and diesel in real refining, ` +
+  `and which one you call them depends on what the refinery is cutting for that day.` +
+  `</div></div>`);
+
 fs.mkdirSync(DST, { recursive: true });
 for (const f of ALL) fs.writeFileSync(path.join(DST, f), files[f]);
 console.log(`built ${DST}`);

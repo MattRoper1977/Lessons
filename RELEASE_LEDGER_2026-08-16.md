@@ -32,6 +32,16 @@ call), C's `X5a` (the table `X5b`'s template references), and B's `Y4d` (the
 helper `Y4c` calls). All three are labelled **LOAD-BEARING** in their matrix
 output rather than counted among the behavioural controls.
 
+**The label's first implementation could never fire**, and it took a re-read of
+the artefact to notice: it grepped the verdicts file for `ERR->ERROR`, but that
+file stores `ERR ERROR` — the arrow exists only in the diff string built
+separately for display. So every load-bearing transform printed as an ordinary
+`watched`, and an earlier version of PR #118's description asserted a label the
+tool had never applied. Corrected there and here. It is the tenth check caught
+unable to fire this pass, and the first I introduced *while writing the rule
+about them* — which is the argument for re-reading the artefact rather than the
+summary, made against myself.
+
 The alternative — folding transforms together until every red looks like a
 behaviour red — is how a matrix gets gamed into looking complete. Target D
 *did* merge two transforms, and that was right there because they were one
@@ -52,13 +62,82 @@ This is the **second** target where the same predicate error hid a real failure,
 so it is a rule rather than a one-off. Both instances came from a gate that was
 honest about what it measured and wrong about what that meant.
 
+## R0.13 — evidence outlives its subject, and looks identical to evidence that has not
+
+Two tracked files recorded per-transform verdicts for **T10b — a transform merged
+into T10 several commits earlier and non-existent since**. They were correctly
+formatted, internally consistent, and describing nothing.
+
+**An artefact recording a verdict must be checkable against the existence of its
+subject, or it is decoration with a filename.**
+
+### `evidence/` versus `work/`, and the near-miss that let it happen
+
+- **`evidence/`** is written once per run and reviewed before it is committed.
+- **`work/`** is rewritten mid-run by the removal matrix and is never evidence.
+
+The `.gitignore` covered `drop_*/` and `work_*/` and **missed `work/`** — the
+directory the matrix actually uses. Thirty-six files were tracked; two of them
+were T10b's. A near-miss of exactly the shape this estate keeps producing: two
+patterns that look like they cover the third and do not.
+
+Fixed in Lessons and `Matt-s-Apps-`. The site repo had the same shape with
+`audit-output/` — seven tracked screenshots — and now has the same fix.
+
+### The sweep, and the false positives it produced first
+
+`tools/stale_evidence_sweep.mjs` runs both directions across all three repos and
+**removes nothing**, because a removal you cannot show the subject is absent for
+is worse than keeping stale evidence.
+
+Its first run flagged **four rows as stale — `T10a`, `T10b`, `X0`, `X1c` — and
+every one was a false positive.** `T10a`/`T10b` are *control* ids in the controls
+table; `X0`/`X1c` are *row* ids in the split-transport report. All four describe
+subjects that exist. **A sweep built to catch stale evidence was one step from
+deleting live evidence, because it matched an identifier's shape rather than the
+claim being made about it.**
+
+That is a different failure from the twelve below and is counted separately: those
+are checks that could not fire, this is a check that fired wrongly. The second
+kind destroys rather than merely fails to protect.
+
+With the predicate corrected — only a removal-matrix row asserts "this transform
+is watched", and those lines carry the verdict word — **forward: 0 stale.**
+
+### The inverse direction, which is the more dangerous one
+
+**`hud-coverage.json`'s `scriptLine` had no consumer.** A repo-wide grep over
+every `.py`, `.mjs`, `.js`, `.sh` and `.yml` returns nothing. Twelve root game
+routes carry that literal, inserted by hand in one August commit and maintained
+by hand since.
+
+The assertion that ought to have existed **would pass today** — all twelve
+byte-identical. That is the argument for adding it, not against: today it is
+free, and what it buys is the difference between *true* and *guaranteed*.
+Landed on `claude/hud-coverage-scriptline-load-bearing` with a `--self-test`
+that drops `defer` from one tag and requires a red.
+
+## The finding worth more than the count
+
+**Two of the last four unfireable checks were introduced in the same commits as
+the rules about them.** The LOAD-BEARING label could not fire, and it was written
+to record R0.11. The overlap predicate accepted touching boxes, in the pass that
+established "assert a positive margin".
+
+Writing a rule does not inoculate the author against the defect it names. That is
+not a confession; it is a finding about how these defects propagate, and it is
+the reason the removal matrix and the artefact-not-summary rule earn their cost —
+neither depends on the author having understood their own rule.
+
 ## §S2 — the evidence rule, applied to this pass
 
 Every claim below names the artefact that proves it, and every artefact
 discriminates. Where a check would have passed on a broken build, it was
-rewritten or deleted. **Nine were caught this pass** — eight in these gates, and
-a ninth of Matt's, since the button-label finding landed on VSL's gate 5,
-authored the same afternoon:
+rewritten or deleted. **Twelve were caught this pass** — ten in these gates, a
+Matt-side one (the button-label finding landed on VSL's gate 5, authored the same
+afternoon), and one found by re-reading an artefact rather than its summary line.
+The last four share a shape: **the fix was fine and the check was wrong, and only
+removing the fix could tell the difference.**
 
 | what was wrong with the check | how it was caught |
 |---|---|
@@ -70,29 +149,45 @@ authored the same afternoon:
 | a control that only went red because the page threw | removal matrix showed a crash, not a change; the two transforms were merged into one |
 | a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
 | **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
-| *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here so the tally is nine, not eight |
+| *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here because it is the same defect class, not because it is mine |
+| **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **The first introduced while writing the rule about them** |
+| **NAV-1 shipped with its markup and none of its CSS**, and the control passed — it asked only whether the link had a non-zero box, which an unstyled inline link has | the lab had a way home with no 44 px target, no focus ring and no print suppression, and a green gate said it matched the convention. `T13` now reads the **live stylesheet** for all three |
+| **`assert_unchanged` crashed instead of reporting** when `T15` could not be built in isolation, its anchor being text `T12` introduces | it declares the dependency now — R0.11 applied to a build rather than to a red |
+| *(the same commit)* its text-delta report printed the **whole** delta, burying the one unauthorised string among the expected ones | printing the difference instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
 
-The last two are worth reading twice: in both cases the *fix* was fine and the
-*check* was wrong, and only the removal matrix could tell the difference. A gate
-that goes green on a reverted fix is not evidence about the fix — it is evidence
-about the gate.
+**The button label and the overlap predicate are worth reading twice.** In both
+the *fix* was fine and the *check* was wrong, and only the removal matrix could
+tell the difference. A gate that goes green on a reverted fix is not evidence
+about the fix — it is evidence about the gate.
 
 **Final matrix state: every transform on every target is watched.**
-D 16/16 · C 18/18 · B 10/10.
+D 16/16 · C 18/18 · B 10/10 — and now measured with a label that fires, rather
+than one that could not. Class of Ashes, verbatim:
 
-The matrices also now distinguish two kinds of red that had been reading the
-same. A transform whose *sole* removal leaves a build that does not run is
-**LOAD-BEARING** — a real dependency, worth knowing, but the red measures the
-crash rather than the behaviour. Three exist: C's `X1c` (the `acidFirst`
-predicate both sequencing fixes call), C's `X5a` (the table `X5b`'s template
-references), and B's `Y4d` (the helper `Y4c` calls). They are labelled rather
-than counted as behavioural controls.
+```
+B — Class of Ashes                     C — Chemistry Lab
+Y1a  watched                           X1a  watched        X3d  watched
+Y1b  watched                           X1b  watched        X3e  watched
+Y2   watched                           X1c  LOAD-BEARING   X4   watched
+Y3   watched                           X2a  watched        X5a  LOAD-BEARING
+Y4a  watched                           X2b  watched        X5b  watched
+Y4b  watched                           X2c  watched        X6c  watched
+Y4c  watched                           X2d  watched        X6d1 watched
+Y4d  LOAD-BEARING                      X3a  watched        X6d2 watched
+Y5d  watched                           X3c  watched        X6d3 watched
+Y5e1 watched
+```
 
-On Target D the same situation was resolved by *merging* the two transforms,
-because they were one change split in two. On B and C it is a label instead,
-because halide and sulfate sequencing — and the two halves of the subtitle fix —
-are genuinely separate changes, and folding them together to satisfy the matrix
-would lose the ability to test them apart.
+Three LOAD-BEARING, exactly the three R0.11 names, and each one now carries the
+label because the check tests the diff string rather than the verdicts file.
+`X2a`'s row is the one worth reading in full: dropping it reddens `V2a`, `V2c`,
+`V2g` and `V3-roundtrip-work` together, because the privacy ruling widened what
+that single transform removes from the URL and every part of it has its own
+assertion behind it.
+
+The matrices also now hold a lock on their evidence file. Two runs wrote into one
+file concurrently and left an interleaved artefact with a half-line in it —
+readable enough to skim past, which is exactly the problem.
 
 Two claims in the incoming reports were checked and are **true but unproven by
 their own artefacts** — the Class of Ashes touch-fire response (`shots: 0` in
@@ -257,17 +352,182 @@ blocked:
 1. **v0.4.1** as its own order, with the removal matrix written in from the
    start rather than retrofitted, and #116's diff as the re-application
    reference.
-2. **The FieldOps placement**, which produces the path VCL co-locates with.
+2. ~~The FieldOps placement~~ — **done.** The co-location path VCL cites is
+   **`Science_Teesside/Build/v4_fieldops/`**, quoted here so the VSL order does
+   not re-derive it.
 3. **Scrap Core P1–P5**, if placement is wanted.
 4. **Play them on the phone.** Scrap Core: one descent to a titan. Chemistry
    Lab: the microscale bench in landscape, and Share on a real link.
 5. **Eyes on the Scrap Core card copy and hue** — not written, not drafted.
 6. **The fun question**, for all of them.
 
-### Out of scope, and unchanged
+### ~~Out of scope, and unchanged~~ — closed, see the addendum
 
-`data/hud-coverage.json`'s `scriptLine` is a canonical string with **no
-consumer**, against ten hand-maintained copies of that literal. It will drift.
-The fix is one assertion comparing each declared route's literal against the
-canonical string, or deleting the field. **It is R0.1 inverted — a declaration
-nothing exercises, rather than a gate nothing runs.**
+`data/hud-coverage.json`'s `scriptLine` was a canonical string with **no
+consumer**. **It is R0.1 inverted — a declaration nothing exercises, rather than
+a gate nothing runs.** ~~against ten hand-maintained copies~~ — **twelve**, and
+the ten was the exclusion count; the addendum settles that by name. Closed by
+`tools/verify_hud_script_line.py`, which derives the route set from the coverage
+record at run time and is proven red on each route individually.
+
+
+---
+
+## The P2 split, and which branch carried which half
+
+| half | repo · branch | path |
+|---|---|---|
+| labs 01–04 | Lessons · **`claude/close-order-seven-items-wdfhdf`** | `Science_Teesside/Build/v4_fieldops/` |
+| 00 Teacher Studio | `Matt-s-Apps-` · `claude/fieldops-teacher-studio` | `FieldOps_Teacher_Studio.html` |
+
+**Stated plainly because it was not planned: the labs went onto the ledger
+branch.** There is no separate labs branch, and creating one retroactively would
+split a proven build across two histories for tidiness. The consequence is that
+the ledger's merge condition and the labs' merge condition apply to the *same*
+merge, and both have to be met — which is stricter than either alone, not looser.
+
+Transport across the split is proven **both directions**, 10 of 10, in
+`tools/fieldops/evidence/split_transport.out`. Every fixture is authored by that
+harness and **says so in its own filename** — the pack's twelve
+`.buildmission.json` samples were never shipped.
+
+---
+
+# ADDENDUM — the close-order fixes
+
+Written after the §3 readback, because that readback landed two fixes that were
+correct in substance and unproven in coverage, and one fix that did not do what
+its name said. Nothing below disputes a verdict already recorded. All of it is
+about whether the evidence for those verdicts can go red.
+
+## R0.14 — a destructive check must match the claim, not the shape
+
+*A check whose action is destructive must (a) match on the **claim**, never on an
+identifier's shape, (b) be **dry-run by default**, with deletion behind an
+explicit flag, and (c) **report candidates for ruling** rather than act on them.*
+
+The cause: the stale-evidence sweep's first run reported four stale subjects —
+**`T10a`**, **`T10b`**, **`X0`** and **`X1c`**. All four exist. `T10a` and `T10b`
+are control ids in a controls table. `X0` and `X1c` are row labels in the
+split-transport report, where the subject of the row is named in the row text and
+the id is only a label. The sweep had matched an identifier's shape.
+
+This is a **different species from the twelve**. The twelve were checks that
+could not fire. This was a check that fired wrongly, and had `--apply` existed at
+that moment it would have deleted live evidence. A check that fails to protect
+costs you the protection. A check that fires wrongly costs you the thing it was
+protecting.
+
+The same defect then reappeared **inside the fix for it**, one layer down: the
+rewritten sweep's transform resolver tested for `swap('T4'` and reported `T4`
+stale, because `T4` is declared with `inject(`, not `swap(`. Matching the shape
+of a declaration rather than the fact of one. It is caught by a fixture now.
+
+## R0.15 — the fix for a false positive must ship a positive control
+
+*Narrowing a predicate until the false reds disappear is indistinguishable, from
+the outside, from breaking the check.*
+
+This is not hypothetical, and it is the rule this addendum exists to record. The
+sweep's **second** version narrowed to removal-matrix rows only. The four false
+positives went away. So did every true positive: the tracked corpus contains no
+matrix row at all, so both evidence files returned NOT APPLICABLE and the
+headline read `FORWARD 0 stale`. **Version 2 was reported as a fix and was a
+check that could no longer fire.** It was caught by asking the question R0.15
+demands — what would this find if something were stale? — and the answer was
+nothing.
+
+Version 3 matches the claim: a (form, subject, resolver) triple read from the
+row's own grammar, with six forms, each grounded in a shape that actually occurs
+in tracked evidence. `--self-test` authors **three** genuinely-stale fixtures, of
+three different shapes, and requires all three to be caught by name:
+
+| fixture | shape | caught |
+|---|---|---|
+| `T7b` | subject **deleted** | STALE — SUBJECT ABSENT |
+| `T9` | subject **renamed** (`build.mjs` now declares `T9renamed`, so a substring test would call it live) | STALE — SUBJECT ABSENT |
+| `P2.9gone` | subject exists, **claim** does not — the row asserts `T1` moves a control that is no longer in `controls.mjs` | STALE — SUBJECT ABSENT |
+
+…and on the same rows, `T1` and `T4` must come back **not** stale, and the four
+regression subjects must come back not stale with their reasons named. All
+seven hold. Over the real corpus: **0 stale · 24 live · 13 row labels correctly
+not judged · 0 files matching no form**, and that zero now means something.
+
+Default run reports and exits 0. `--apply` deletes only a file in which *every*
+claim names an absent subject, and refuses anything outside `evidence/` or `qa/`.
+
+## The twelve versus ten, settled by name
+
+The census split 23 routes as 12 wired + 1 region-only + 10 declared, and an
+earlier note described the canonical literal as hand-inserted into **ten** game
+pages. Those two numbers were never in conflict; the note had read the wrong
+list. **The ten is the exclusion count.** The wired set is twelve and always was.
+
+- **ALL (23)** — root-level game routes in `data/mbm-search-index.json`
+- **EXCLUDED (10)** — `hud-coverage.json .excluded[].route`: `/apexpool/`,
+  `/apexrally/`, `/biopunkhive/`, `/echovault/`, `/neonmeridian/`, `/neonsync/`,
+  `/novasiege/`, `/ouroboros/`, `/rallyvector3d/`, `/relicforge/`
+- **REGION-ONLY (1)** — `/emberwild/`
+- **A = W = D − region-only (12)** — `/apexgolf/`, `/apexkick/`, `/apextennis/`,
+  `/auroralinks/`, `/fracture/`, `/hyperdraft/`, `/luminahaven/`, `/medevac/`,
+  `/neonbreach/`, `/neonturf/`, `/olympics/`, `/voxel/`
+
+`D \ A` = `{/emberwild/}` · `A \ D` = `{}` · `W \ A` = `{}` · `A \ W` = `{}`.
+The single delta is the region-only route, and it was the finding: `/emberwild/`
+is neither excluded nor wired, its status lived only in prose, and the first cut
+of the assertion **skipped** it — indistinguishable from a route whose HUD had
+gone missing. `inlineExitRegion.regionOnly` now declares it, and the exemption is
+audited rather than free.
+
+**Per-route mutation matrix:** 36 rows, two mutation kinds on each wired route
+(`drop-defer` for attribute-level comparison, `corrupt-src` for comparison
+against the canonical string rather than against "a script tag exists"), plus
+`strip-region` / `wire-a-hud` on the region-only route and `wire-a-hud` on each
+excluded route. **36 named reds, 0 silent passes, 0 partial assertions, all
+restored, final full run green.** Three derivation controls fire first: declaring
+a route raises `|A|`, excluding one lowers it, and an empty or malformed
+`hud-coverage.json` exits 2 rather than iterating zero routes and reporting
+success.
+
+## The corrected `.gitignore` position: ignoring is not untracking
+
+`.gitignore` has no effect on files git already tracks. The site repository was
+tracking **seven** files under `audit-output/audience-discovery/` — six PNGs and
+one `results.json`, added in `c1bfa98`. The rule alone changed nothing about
+them. `git ls-files audit-output/`: **7 before, 0 after**, all seven now covered
+by `.gitignore:14`, with a probe file under the directory absent from
+`git status --porcelain`. Lessons: **0**. `Matt-s-Apps-`: **0**.
+
+**What §3.2 found.** All seven were inspected before anything was committed —
+rendered, not judged by filename. Six are above-the-fold screenshots of public
+marketing surfaces (the root discovery page desktop and phone, `/for/pupils/`
+desktop and phone, the no-JS organisation homepage, `/education-hub/` at 320px)
+and the seventh is a `results.json` of assertion names and route paths. **No
+pupil name, no roster, no class list, no initials against performance, no
+`mbm_hud_names` content on screen, in any of the seven.** No history rewrite is
+called for, and none was done.
+
+**And the part that mattered more than the cleanup.** Untracking those files
+would have silently killed a live gate. `mbm-audience-discovery-closeout.yml`
+asserted `git diff --quiet audit-output/` after its deliberate-failure control
+run — a step that exists because such a run once wrote into the committed
+artefact and had to be reverted by hand. `git diff` says nothing whatever about
+an untracked path. **The tidying commit would have left that assertion passing
+for ever, on a hazard it had stopped watching** — the thirteenth instance of the
+species, introduced by the fix for another instance of it. The claim is
+re-expressed rather than deleted, per the BD4 rule: hash the directory before and
+after. Same claim, no dependence on what git tracks, and strictly wider — it
+catches a created file and a deleted one, which the diff never could.
+`tools/verify_audit_output_guard.sh` is the control for that control and proves
+both halves, including that the retired predicate passes over a clobbered file on
+an untracked tree.
+
+## Why the audit output was committed at all
+
+`c1bfa98` added it alongside a Supabase pinning change; the generator's default
+output path **is** `audit-output/audience-discovery` (`ARTIFACTS` in
+`tools/verify_audience_discovery_browser.py`), and the workflow uploads that same
+path as an artefact — so the tool was never writing somewhere it should not have
+been. This was output committed once and then depended upon by a gate, not a
+papered-over path bug: which is exactly why untracking it needed the gate
+re-expressed in the same commit rather than after.

@@ -18,42 +18,61 @@ const ALL = ['00_BUILD_FieldOps_Teacher_Studio.html', '01_Newport_Bridge_Lift_Pe
              '04_Tees_Bay_Wind_Operations_Lab.html'];
 const WILTON = '03_Wilton_Carbon_Process_Control_Lab.html';
 const STUDIO = '00_BUILD_FieldOps_Teacher_Studio.html';
-const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9','T10','T11','T12'];
+const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9','T10','T11','T12','T13','T14','T15'];
 const rows = [];
 const row = (id, what, ok, detail) => rows.push({ id, what, ok, detail });
 const sha = s => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 
-/* -- U1  the build is release plus exactly the thirteen named transforms ---
-   Drop all thirteen and the builder must hand back release, byte for byte.
+/* -- U1  the build is release plus exactly the named transforms ------------
+   Drop them all and the builder must hand back release, byte for byte.
    Nothing else the builder does can then be hiding in the shipped tree. */
 execFileSync('node', ['build.mjs', `--drop=${TRANSFORMS.join(',')}`, '--out=work/nulltree'],
   { cwd: ROOT, stdio: 'pipe' });
 {
   const bad = ALL.filter(f =>
     fs.readFileSync(path.join(ROOT,'release',f), 'utf8') !== fs.readFileSync(path.join(ROOT,'work','nulltree',f), 'utf8'));
-  row('U1', 'with all 13 transforms dropped the builder reproduces release byte for byte',
-    bad.length === 0, bad.length ? `differs: ${bad}` : `all ${ALL.length} files identical`);
+  row('U1', `with all ${TRANSFORMS.length} transforms dropped the builder reproduces release byte for byte`,
+    bad.length === 0, bad.length ? `differs: ${bad}` : `all ${ALL.length} files identical, ${TRANSFORMS.length} transforms dropped`);
 }
 
 /* -- U2  no transform touched a file it was not declared against ----------- */
 {
-  const touched = {};
+  const touched = {}, dependent = {};
   for (const T of TRANSFORMS) {
-    execFileSync('node', ['build.mjs', `--drop=${TRANSFORMS.filter(x => x !== T).join(',')}`, `--out=work/only_${T}`],
-      { cwd: ROOT, stdio: 'pipe' });
+    try {
+      execFileSync('node', ['build.mjs', `--drop=${TRANSFORMS.filter(x => x !== T).join(',')}`, `--out=work/only_${T}`],
+        { cwd: ROOT, stdio: 'pipe' });
+    } catch (e) {
+      /* A transform whose anchor is text ANOTHER transform introduces cannot be
+         built alone. That is a real dependency, not a defect, and it is the same
+         distinction R0.11 draws about reds: report it, do not crash on it, and do
+         not fold the two transforms together merely to make this loop succeed. */
+      dependent[T] = 'cannot build in isolation';
+      fs.rmSync(path.join(ROOT, 'work', 'only_' + T), { recursive: true, force: true });
+      continue;
+    }
     touched[T] = ALL.filter(f =>
       fs.readFileSync(path.join(ROOT,'release',f), 'utf8') !== fs.readFileSync(path.join(ROOT,'work','only_'+T,f), 'utf8'));
     fs.rmSync(path.join(ROOT,'work','only_'+T), { recursive: true, force: true });
   }
   const DECLARED = {
     T1: 4, T2: 4, T3: 4, T4: 5, T5a: 1, T5b: 1, T6a: 1, T6b: 1, T7: 1, T8a: 1, T8b: 1, T8c: 1, T9: 1,
-    T10: 1, T11: 1, T12: 1,
+    T10: 1, T11: 1, T12: 1, T13: 4, T14: 5, T15: 1,
   };
-  const wrong = TRANSFORMS.filter(T => touched[T].length !== DECLARED[T]);
-  row('U2', 'each transform changes exactly the files it is declared against',
+  const buildable = TRANSFORMS.filter(T => !(T in dependent));
+  const wrong = buildable.filter(T => touched[T].length !== DECLARED[T]);
+  row('U2', 'each independently-buildable transform changes exactly the files it is declared against',
     wrong.length === 0,
-    wrong.length ? wrong.map(T => `${T} touched ${touched[T].length}, declared ${DECLARED[T]}`).join(' · ')
-                 : TRANSFORMS.map(T => `${T}:${touched[T].length}`).join(' '));
+    (wrong.length ? wrong.map(T => `${T} touched ${touched[T].length}, declared ${DECLARED[T]}`).join(' · ')
+                  : buildable.map(T => `${T}:${touched[T].length}`).join(' ')) +
+    (Object.keys(dependent).length
+      ? ` · DEPENDENT, not measured alone: ${Object.keys(dependent).join(', ')}`
+      : ''));
+  row('U2b', 'every dependent transform is one whose anchor another transform introduces',
+    Object.keys(dependent).every(T => T === 'T15'),
+    Object.keys(dependent).length
+      ? `${Object.keys(dependent).join(', ')} — T15's anchor is the caption T12 adds, so it cannot be built alone. Declared, not folded into T12: they are separate rulings and folding them would cost the ability to test them apart.`
+      : 'none');
 }
 
 /* -- U3  every file still parses and boots without a page error ------------ */
@@ -118,6 +137,15 @@ for (const f of ALL) {
         'below 25°C · gases', '110°C · petrol range', '220°C · kerosene range',
         '320°C · diesel range', '400°C · fuel oils',
         /* Ruling B — the caption that makes those numbers understood, not just consistent */
+        /* T15 — the model-scale disclosure. T13 and T14 are added below, for
+           every file, because they are not Wilton-specific. */
+        'These temperatures are model values, not measurements.',
+                /* Plain spaces, not \u00a0. The source writes &nbsp; so the numbers do not
+           wrap away from their units, but visible() collapses runs of \s — which
+           in JS includes U+00A0 — to a single ordinary space. Declaring the
+           source form made this row fail on a character nobody can see. */
+        "This column uses a straight-line rule so the pattern is visible; a real one is not straight. Real fractions are roughly: gases below 25 °C, petrol 25–175 °C, kerosene 150–260 °C, diesel 250–350 °C, fuel oils 300–500 °C, bitumen above that. Those ranges",
+        'overlap', "— C14 to C16 sit in both kerosene and diesel in real refining, and which one you call them depends on what the refinery is cutting for that day.",
         'Tray temperature', 'is where a fraction condenses in this column.',
         'Boiling range',
         "is a property of the molecules themselves. Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.",
@@ -128,13 +156,38 @@ for (const f of ALL) {
         '230°C · diesel range', '300°C · fuel oils',
       ],
     },
-    [STUDIO]: { added: [], removed: [] },
   };
+  /* T13 (NAV-1) and T14 (the branding line) apply across the family, so every
+     file gets its own entry rather than a wildcard: the kicker text differs per
+     lab and the Studio takes no NAV-1 at all. Measured from the delta, then
+     declared — the gate caught these before they were declared, which is the
+     order it should happen in. */
+  const KICKER = {
+    '00_BUILD_FieldOps_Teacher_Studio.html': 'Science Teesside · BUILD v4 FieldOps · Professional Offline Suite',
+    '01_Newport_Bridge_Lift_Permit_Lab.html': 'Science Teesside · BUILD v4 FieldOps · Physics',
+    '02_Tees_Estuary_Field_Investigation_Lab.html': 'Science Teesside · BUILD v4 FieldOps · Biology',
+    '03_Wilton_Carbon_Process_Control_Lab.html': 'Science Teesside · BUILD v4 FieldOps · Chemistry',
+    '04_Tees_Bay_Wind_Operations_Lab.html': 'Science Teesside · BUILD v4 FieldOps · Physics',
+  };
+  for (const [file, kicker] of Object.entries(KICKER)) {
+    const e = AUTHORISED[file] || (AUTHORISED[file] = { added: [], removed: [] });
+    e.added.push('Made by Matt · ' + kicker);
+    e.removed.push(kicker);
+    if (file !== STUDIO) e.added.push('← Lessons');
+  }
   const exp = AUTHORISED[f] || { added: [], removed: [] };
-  const eqSet = (x, y) => x.length === y.length && x.every(v => y.includes(v));
-  row(`U4 ${f.slice(0, 2)}`, `visible text in ${f} changes only where authorised`,
-    eqSet(added, exp.added) && eqSet(removed, exp.removed),
-    `added ${JSON.stringify(added)} removed ${JSON.stringify(removed)}`);
+  /* Report the DIFFERENCE, not the whole delta. The first version printed every
+     authorised string alongside the one unauthorised one, so the offender was
+     buried in a screenful of expected text — a true report you cannot act on. */
+  const unauthorisedAdd = added.filter(v => !exp.added.includes(v));
+  const unauthorisedRem = removed.filter(v => !exp.removed.includes(v));
+  const missingAdd = exp.added.filter(v => !added.includes(v));
+  const missingRem = exp.removed.filter(v => !removed.includes(v));
+  const ok = !unauthorisedAdd.length && !unauthorisedRem.length && !missingAdd.length && !missingRem.length;
+  row(`U4 ${f.slice(0, 2)}`, `visible text in ${f} changes only where authorised`, ok,
+    ok ? `${added.length} added / ${removed.length} removed, every one declared`
+       : `UNAUTHORISED added ${JSON.stringify(unauthorisedAdd)} · UNAUTHORISED removed ${JSON.stringify(unauthorisedRem)}` +
+         ` · DECLARED BUT ABSENT added ${JSON.stringify(missingAdd)} removed ${JSON.stringify(missingRem)}`);
 }
 
 /* -- U5  mission transport digests are unchanged for identical inputs ------
@@ -178,7 +231,10 @@ const mint = async tree => (await boot(tree, STUDIO, () => {
   const strip = s => s.replace(/<script>try\{if\(window\.matchMedia[\s\S]*?<\/script>/, '')
                       .replace(/const saved=JSON\.parse\((?:null|localStorage\.getItem\(storageKey\))\|\|'null'\)/, 'SAVEDREAD')
                       .replace(/function save\(\)\{try\{(?:void 0&&)?localStorage\.setItem\(storageKey,JSON\.stringify\(state\)\)\}catch\(e\)\{\}\}/, 'SAVEFN')
-                      .replace(/return;(?:void 0|localStorage\.removeItem\(storageKey\));location\.reload\(\)/, 'RESETFN');
+                      .replace(/return;(?:void 0|localStorage\.removeItem\(storageKey\));location\.reload\(\)/, 'RESETFN')
+                      .replace(/<a class="mbmhome"[^>]*>← Lessons<\/a>/, '')
+                      .replace(/\/\* ===== NAV-1:[\s\S]*?@media print\{\.mbmhome\{display:none!important\}\}\n/, '')
+                      .replace(/<div class="kicker">(?:Made by Matt · )?/, '<div class="kicker">KICKER');
   const bad = [];
   for (const f of ['01_Newport_Bridge_Lift_Permit_Lab.html', '02_Tees_Estuary_Field_Investigation_Lab.html',
                    '04_Tees_Bay_Wind_Operations_Lab.html']) {
@@ -186,8 +242,8 @@ const mint = async tree => (await boot(tree, STUDIO, () => {
     const b = strip(fs.readFileSync(path.join(ROOT,PATCHED,f), 'utf8'));
     if (a !== b) bad.push(`${f} ${sha(a)} != ${sha(b)}`);
   }
-  row('U7', 'the three non-Wilton labs differ from release only in the four storage/calm transforms',
-    bad.length === 0, bad.length ? bad.join(' · ') : 'Newport, Estuary and Wind all identical once T1-T4 are normalised');
+  row('U7', 'the three non-Wilton labs differ from release only in the storage, calm, NAV-1 and branding transforms',
+    bad.length === 0, bad.length ? bad.join(' · ') : 'Newport, Estuary and Wind all identical once T1-T4, T13 and T14 are normalised');
 }
 
 await browser.close();

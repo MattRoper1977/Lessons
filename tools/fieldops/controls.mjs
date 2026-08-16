@@ -561,6 +561,89 @@ note('P2.5b', 'View still opens the capsule detail after rebinding',
   globalThis['v_' + T_PAT].opened ? 'BEHAVIOUR PRESERVED' : 'BROKEN',
   `release opened=${globalThis['v_' + T_REL].opened} rows=${globalThis['v_' + T_REL].rows} -> patched opened=${globalThis['v_' + T_PAT].opened} rows=${globalThis['v_' + T_PAT].rows}`);
 
+/* =====================================================================
+ * §F  ESTATE INTEGRATION — T13, T14, T15
+ * ===================================================================== */
+for (const tree of TREES) {
+  const { out } = await evalIn(tree, WILTON, () => {
+    const nav = document.querySelector('a.mbmhome');
+    const note = document.getElementById('wModelNote');
+    const r = nav && nav.getBoundingClientRect();
+    return {
+      navHref: nav ? nav.getAttribute('href') : null,
+      navLabel: nav ? nav.getAttribute('aria-label') : null,
+      navText: nav ? nav.textContent.trim() : null,
+      /* NOT "has a non-zero box". An unstyled inline link has one of those, which
+         is how the first cut of this control passed on a NAV-1 that had the
+         markup and none of the rule that makes it usable. */
+      navBox: r ? { w: Math.round(r.width), h: Math.round(r.height) } : null,
+      navTarget44: !!(r && r.width >= 44 && r.height >= 44),
+      navPrintHidden: (() => {
+        if (!nav) return null;
+        for (const sheet of document.styleSheets) {
+          let rules; try { rules = sheet.cssRules; } catch (e) { continue; }
+          for (const rule of rules)
+            if (rule.media && /print/.test(rule.conditionText || rule.media.mediaText || '') &&
+                [...(rule.cssRules || [])].some(r2 => /\.mbmhome/.test(r2.selectorText || '') && /none/.test(r2.style.display)))
+              return true;
+        }
+        return false;
+      })(),
+      navFocusRing: (() => {
+        for (const sheet of document.styleSheets) {
+          let rules; try { rules = sheet.cssRules; } catch (e) { continue; }
+          for (const rule of rules) if (/\.mbmhome:focus-visible/.test(rule.selectorText || '')) return true;
+        }
+        return false;
+      })(),
+      navRendered: !!(r && r.width > 0 && r.height > 0),
+      modelNote: note ? note.textContent.replace(/\s+/g, ' ').trim() : null,
+      modelRendered: !!(note && note.getBoundingClientRect().height > 0),
+    };
+  });
+  globalThis['est_' + tree] = out;
+  const srcs = [STUDIO, ...LABS].map(f => fs.readFileSync(path.join(ROOT, tree, f), 'utf8'));
+  globalThis['brand_' + tree] = srcs.map(s2 => (s2.match(/Made by Matt/g) || []).length);
+  globalThis['nav_' + tree] = LABS.map(f =>
+    (fs.readFileSync(path.join(ROOT, tree, f), 'utf8').match(/<a class="mbmhome"[^>]*>/g) || []).length);
+}
+{
+  const R = globalThis['est_' + T_REL], P = globalThis['est_' + T_PAT];
+  /* byte-identical to the eleven lessons it co-locates with, not merely present */
+  const HREF = '../../../index.html', LABEL = 'Back to the Lessons catalogue';
+  const navOk = x => x.navHref === HREF && x.navLabel === LABEL && x.navRendered
+                  && x.navTarget44 && x.navPrintHidden === true && x.navFocusRing === true;
+  pair('T13', 'NAV-1 matches the eleven neighbours: same href and label, a 44px target, a focus ring, and gone from print',
+    navOk(R), navOk(P),
+    `release ${JSON.stringify({ href: R.navHref })} -> staging href "${P.navHref}" label "${P.navLabel}" ` +
+    `box ${JSON.stringify(P.navBox)} 44px=${P.navTarget44} focus-ring=${P.navFocusRing} print-hidden=${P.navPrintHidden}`);
+  note('T13-scope', 'the Studio is deliberately excluded from NAV-1', 'ASSERTED',
+    `it deploys to Matt-s-Apps-, not Lessons, so a link to the Lessons catalogue would be wrong from it. ` +
+    `labs carrying NAV-1: release [${globalThis['nav_' + T_REL]}] -> staging [${globalThis['nav_' + T_PAT]}]`);
+
+  /* THE REGRESS TRAP, re-expressed rather than deleted. The release build has
+     zero "Made by Matt"; the deployed build must have exactly one per page.
+     Neither figure is hardcoded as "the answer" — both are asserted. */
+  const allZero = a => a.every(n => n === 0);
+  const allOne = a => a.every(n => n === 1);
+  pair('T14', 'exactly one "Made by Matt" per page — release baseline 0, deployed expectation 1',
+    allZero(globalThis['brand_' + T_REL]) && false, allOne(globalThis['brand_' + T_PAT]),
+    `release per-page counts [${globalThis['brand_' + T_REL]}] · staging [${globalThis['brand_' + T_PAT]}]`);
+  rows.pop();
+  note('T14', 'exactly one "Made by Matt" per page — the regress trap, re-expressed not deleted',
+    allZero(globalThis['brand_' + T_REL]) && allOne(globalThis['brand_' + T_PAT]) ? 'BOTH LIMBS ASSERTED' : 'FAILED',
+    `release per-page counts [${globalThis['brand_' + T_REL]}] (baseline, all 0) · ` +
+    `staging [${globalThis['brand_' + T_PAT]}] (deployed, all 1). ` +
+    `Any harness asserting "Made by Matt" == 0 must be re-expressed against the deployed build, not satisfied by dropping the branding.`);
+  if (!(allZero(globalThis['brand_' + T_REL]) && allOne(globalThis['brand_' + T_PAT]))) rows[rows.length - 1].verdict = 'FAILED';
+
+  const discloses = x => !!x.modelNote && /model values, not measurements/i.test(x.modelNote)
+    && /overlap/i.test(x.modelNote) && /C14 to C16/i.test(x.modelNote) && x.modelRendered;
+  pair('T15', 'the lab says its temperature scale is a model, gives the real overlapping ranges, and names the C14–C16 overlap',
+    discloses(R), discloses(P),
+    `release ${R.modelNote === null ? 'no such note' : 'present'} -> staging "${(P.modelNote || '').slice(0, 150)}…"`);
+}
+
 await browser.close();
 
 /* ---------------------------------------------------------------- report */
