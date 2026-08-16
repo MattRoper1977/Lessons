@@ -13,9 +13,15 @@ for T in $TRANSFORMS; do
   COA_STAGING="drop_$T" node controls.mjs > "/tmp/coa_drop_$T.out" 2>&1
   verdicts "/tmp/coa_drop_$T.out" > "/tmp/coa_drop_$T.v"
   changed=$(diff /tmp/coa_base.v "/tmp/coa_drop_$T.v" | grep '^>' | awk '{print $2"->"$3}' | tr '\n' ' ')
-  if [ -z "$changed" ]; then printf '  %-6s UNWATCHED\n' "$T"; BAD=1; else printf '  %-6s watched      %s\n' "$T" "$changed"; fi
+  # A transform whose sole removal leaves a build that does not run is
+  # load-bearing, but the red measures the crash rather than the behaviour.
+  # Label it rather than let a crash read as a behavioural control.
+  if grep -qE 'ERR->ERROR|C3c->REGRESSION' "/tmp/coa_drop_$T.v"; then kind='LOAD-BEARING'; else kind='watched     '; fi
+  if [ -z "$changed" ]; then printf '  %-6s UNWATCHED\n' "$T"; BAD=1; else printf '  %-6s %s %s\n' "$T" "$kind" "$changed"; fi
   rm -rf "drop_$T"
 done
 rm -rf staging && node build.mjs >/dev/null 2>&1
+echo "LOAD-BEARING = its sole removal leaves a build that does not run. A real red,"
+echo "but it measures the crash, not the behaviour."
 echo; [ "$BAD" = 0 ] && echo "every transform has a gate that changes verdict without it" || echo "AT LEAST ONE TRANSFORM IS UNWATCHED"
 exit "$BAD"
