@@ -65,20 +65,44 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import os from 'node:os';
+import { fileURLToPath } from 'node:url';
 
 const ARGS = new Set(process.argv.slice(2));
 const APPLY = ARGS.has('--apply');
 const SELFTEST = ARGS.has('--self-test');
 
+/* THE ROOTS ARE DERIVED, AND AN ABSENT ONE IS SAID SO.
+ *
+ * The first CI run of this sweep printed "FORWARD 0 stale" over THREE
+ * repositories it could not see: the roots were absolute paths from the
+ * container this was written in, none of which exist on a runner. The
+ * self-test still bit - it builds its own fixture - but the sweep's own line
+ * read clean while asserting nothing, which is the failure this whole tool
+ * exists to find, shipped inside it.
+ *
+ * So: this repository is located from the script's own path, the siblings are
+ * looked for and MAY BE OVERRIDDEN, and a root that is not a git repository is
+ * reported as NOT ASSESSED - a verdict of its own, never folded into "no
+ * evidence files found". */
+const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const isRepo = r => { try { return fs.statSync(path.join(r, '.git')) && true; } catch { return false; } };
+const sibling = (env, ...guesses) =>
+  process.env[env] || guesses.find(g => isRepo(g)) || guesses[0];
 const REPOS = [
-  { name: 'Lessons', root: '/home/user/Lessons' },
-  { name: 'mattroper1977.github.io', root: '/workspace/mattroper1977.github.io' },
-  { name: 'Matt-s-Apps-', root: '/workspace/matt-s-apps-' },
-];
+  { name: 'Lessons', root: HERE },
+  { name: 'mattroper1977.github.io',
+    root: sibling('MBM_SITE_REPO', '/workspace/mattroper1977.github.io',
+                  path.join(HERE, '..', 'mattroper1977.github.io')) },
+  { name: 'Matt-s-Apps-',
+    root: sibling('MBM_APPS_REPO', '/workspace/matt-s-apps-',
+                  path.join(HERE, '..', 'matt-s-apps-')) },
+].map(r => ({ ...r, present: isRepo(r.root) }));
 
 const tracked = root => {
-  try { return execFileSync('git', ['-C', root, 'ls-files'], { encoding: 'utf8' }).split('\n').filter(Boolean); }
-  catch { return []; }
+  try {
+    return execFileSync('git', ['-C', root, 'ls-files'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split('\n').filter(Boolean);
+  } catch { return []; }
 };
 const strip = s => s.replace(/\x1b\[[0-9;]*m/g, '');
 const readIf = p => { try { return fs.readFileSync(p, 'utf8'); } catch { return null; } };
@@ -166,8 +190,15 @@ function resolvers(root, evidenceFile) {
 }
 
 /* ------------------------------------------------------------------ sweep */
-function forward(root, repoName) {
+function forward(root, repoName, present = true) {
   const rows = [];
+  if (!present) {
+    rows.push({ dir: 'forward', repo: repoName, file: '—', subject: root, form: '—',
+                verdict: 'NOT ASSESSED — REPO ABSENT',
+                detail: 'not a git repository at this path, so this sweep saw none of it. ' +
+                        'This is NOT the same as finding nothing stale, and is counted separately.' });
+    return rows;
+  }
   const files = tracked(root).filter(f => /(^|\/)(evidence|qa)\//.test(f) && /\.(out|json|txt|md|log)$/.test(f));
   if (!files.length) {
     rows.push({ dir: 'forward', repo: repoName, file: '—', subject: '—', form: '—',
@@ -209,11 +240,13 @@ function forward(root, repoName) {
 
 function inverse() {
   const rows = [];
-  const root = '/workspace/mattroper1977.github.io';
+  const root = REPOS.find(r => r.name === 'mattroper1977.github.io').root;
   const covPath = path.join(root, 'data', 'hud-coverage.json');
   if (!fs.existsSync(covPath)) {
     rows.push({ dir: 'inverse', repo: 'mattroper1977.github.io', file: '—', subject: 'data/hud-coverage.json',
-                form: 'declaration', verdict: 'SUBJECT ABSENT', detail: 'cannot assess' });
+                form: 'declaration', verdict: 'NOT ASSESSED — SUBJECT NOT CHECKED OUT',
+                detail: `no ${path.join(root, 'data', 'hud-coverage.json')} here. The inverse direction ` +
+                        'needs the site repository present; set MBM_SITE_REPO to point at it.' });
     return rows;
   }
   const cov = JSON.parse(fs.readFileSync(covPath, 'utf8'));
@@ -233,7 +266,7 @@ function inverse() {
 }
 
 function gitignoreShape() {
-  return REPOS.map(({ name, root }) => {
+  return REPOS.filter(r => r.present).map(({ name, root }) => {
     const transientTracked = tracked(root).filter(f => /^(audit-output|.*\/work)\//.test(f));
     const ig = readIf(path.join(root, '.gitignore')) || '';
     return {
@@ -261,11 +294,18 @@ function report(rows) {
   const decor = rows.filter(r => r.verdict === 'NO CONSUMER — DECORATION');
   const dirty = rows.filter(r => r.verdict === 'TRANSIENT STILL TRACKED');
   const mute = rows.filter(r => r.verdict === 'NO CLAIM FOUND');
+  const unseen = rows.filter(r => /^NOT ASSESSED/.test(r.verdict));
   console.log(`\nFORWARD   ${stale.length} stale claim(s) · ${rows.filter(r => r.verdict === 'SUBJECT EXISTS').length} live · ` +
               `${rows.filter(r => r.verdict === 'NOT A CLAIM').length} row label(s) correctly not judged · ${mute.length} file(s) matching no form`);
   console.log(`INVERSE   ${decor.length} declaration(s) with no consumer`);
   console.log(`IGNORE    ${dirty.length} repo(s) tracking output under an ignored path`);
-  return { stale, decor, dirty, mute };
+  if (unseen.length) {
+    console.log(`\nNOT ASSESSED  ${unseen.length} subject(s) this run could not see at all:`);
+    for (const r of unseen) console.log(`  ${r.repo} — ${r.detail.split('.')[0]}`);
+    console.log(`A run that cannot see a repository has not cleared it. The zero above is a`);
+    console.log(`statement about what was read, not about what exists.`);
+  }
+  return { stale, decor, dirty, mute, unseen };
 }
 
 /* ------------------------------------------------------------------ apply */
@@ -346,7 +386,7 @@ function selfTest() {
   execFileSync('git', ['-C', root, 'add', '-A']);
   execFileSync('git', ['-C', root, 'commit', '-qm', 'authored fixtures']);
 
-  const rows = forward(root, 'FIXTURE');
+  const rows = forward(root, 'FIXTURE', true);
   const verdictOf = (file, subject) =>
     rows.find(r => r.file.endsWith(file) && r.subject === subject);
 
@@ -401,8 +441,8 @@ function selfTest() {
 if (SELFTEST) {
   process.exit(selfTest());
 } else {
-  const rows = [...REPOS.flatMap(r => forward(r.root, r.name)), ...inverse(), ...gitignoreShape()];
-  const { stale, decor, dirty, mute } = report(rows);
+  const rows = [...REPOS.flatMap(r => forward(r.root, r.name, r.present)), ...inverse(), ...gitignoreShape()];
+  const { stale, decor, dirty, mute, unseen } = report(rows);
   if (APPLY) {
     console.log('\n--apply: deleting only files in which EVERY claim names an absent subject.\n');
     apply(rows);
