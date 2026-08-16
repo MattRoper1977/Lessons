@@ -81,34 +81,29 @@ summary line:
 | a control that only went red because the page threw | removal matrix showed a crash, not a change; the two transforms were merged into one |
 | a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
 | **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
-| *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here so the tally is nine, not eight |
+| *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here because it is the same defect class, not because it is mine |
 | **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **Tenth this pass, and the first introduced while writing the rule about them** |
 
-The last two are worth reading twice: in both cases the *fix* was fine and the
-*check* was wrong, and only the removal matrix could tell the difference. A gate
-that goes green on a reverted fix is not evidence about the fix — it is evidence
-about the gate.
+**The button label and the overlap predicate are worth reading twice.** In both
+the *fix* was fine and the *check* was wrong, and only the removal matrix could
+tell the difference. A gate that goes green on a reverted fix is not evidence
+about the fix — it is evidence about the gate.
 
 **Final matrix state: every transform on every target is watched.**
-D 16/16 · C 18/18 · B 10/10.
+D 16/16 · C 18/18 · B 10/10 — and now measured with a label that fires, rather
+than one that could not. Class of Ashes, verbatim:
+
+```
+Y1a  watched      C1->CONTROL          Y4b  watched      C4->CONTROL
+Y1b  watched      C1->CONTROL          Y4c  watched      C4->CONTROL
+Y2   watched      C2->CONTROL C3b->…   Y4d  LOAD-BEARING C3c->REGRESSION C4->…
+Y3   watched      C3a->CONTROL         Y5d  watched      C5.4->CONTROL
+Y4a  watched      C4->CONTROL          Y5e1 watched      C5.5a->CONTROL
+```
 
 The matrices also now hold a lock on their evidence file. Two runs wrote into one
 file concurrently and left an interleaved artefact with a half-line in it —
 readable enough to skim past, which is exactly the problem.
-
-The matrices also now distinguish two kinds of red that had been reading the
-same. A transform whose *sole* removal leaves a build that does not run is
-**LOAD-BEARING** — a real dependency, worth knowing, but the red measures the
-crash rather than the behaviour. Three exist: C's `X1c` (the `acidFirst`
-predicate both sequencing fixes call), C's `X5a` (the table `X5b`'s template
-references), and B's `Y4d` (the helper `Y4c` calls). They are labelled rather
-than counted as behavioural controls.
-
-On Target D the same situation was resolved by *merging* the two transforms,
-because they were one change split in two. On B and C it is a label instead,
-because halide and sulfate sequencing — and the two halves of the subtitle fix —
-are genuinely separate changes, and folding them together to satisfy the matrix
-would lose the ability to test them apart.
 
 Two claims in the incoming reports were checked and are **true but unproven by
 their own artefacts** — the Class of Ashes touch-fire response (`shots: 0` in
