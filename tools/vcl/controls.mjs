@@ -120,6 +120,11 @@ for (const tree of TREES) {
       e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
     set('pupilName', 'AVA-CANARY-NAME');
     set('reflectionNotes', 'NOTE-CANARY-TEXT');
+    const ans = document.getElementById('phase-spatial-0');
+    if (ans) { ans.value = 'ANSWER-CANARY-TEXT'; ans.dispatchEvent(new Event('input', { bubbles: true }));
+      const b = ans.closest('.answer-row') && ans.closest('.answer-row').querySelector('[data-action="phase-check"]');
+      if (b) b.click(); }
+    await sleep(250);
     document.getElementById('shareBtn').click();
     await sleep(500);
     const decode = h => { try {
@@ -138,6 +143,9 @@ for (const tree of TREES) {
     return {
       nameInHash: /AVA-CANARY-NAME/.test(hashPlain),
       noteInHash: /NOTE-CANARY-TEXT/.test(hashPlain),
+      answerInHash: /ANSWER-CANARY-TEXT/.test(hashPlain),
+      answerInExport: /ANSWER-CANARY-TEXT/.test(exported),
+      noteInExport: /NOTE-CANARY-TEXT/.test(exported),
       nameInExport: /AVA-CANARY-NAME/.test(exported),
       nameInPrint: /AVA-CANARY-NAME/.test(printed),
       caption: (document.getElementById('pupilName') || {}).placeholder || '',
@@ -157,10 +165,20 @@ for (const tree of TREES) {
     R.nameInExport && R.nameInPrint, P.nameInExport && P.nameInPrint,
     `release export=${R.nameInExport} print=${R.nameInPrint} -> staging export=${P.nameInExport} print=${P.nameInPrint}`,
     'ALREADY CORRECT ON RELEASE — asserted so the V2 fix cannot quietly take it away');
-  note('V2c', 'the evidence note is deliberately KEPT in the hash', 'MEASURED',
-    `release note-in-hash=${R.noteInHash} -> staging note-in-hash=${P.noteInHash}. ` +
-    `This app has zero localStorage, so the hash is its only persistence: dropping the note would destroy pupil writing on reload. ` +
-    `The Share help card and the note's own label are corrected instead (X2b, X2c).`);
+  /* RULED: the URL carries the setup and never the pupil's work. An earlier cut
+     of this kept the note in the hash on the grounds that with no localStorage
+     the URL is the only persistence — which is true, and is not the deciding
+     fact. Share hands the URL out, so a teacher sharing a bench setup would be
+     shipping whichever pupil's note was last typed. The cost is real and is
+     carried by the caption instead (X2c). */
+  pair('V2c', 'the evidence note is absent from the state URL',
+    !R.noteInHash, !P.noteInHash,
+    `release note-in-hash=${R.noteInHash} -> staging note-in-hash=${P.noteInHash}`);
+  pair('V2g', "the note and the written answers leave the URL and stay in Export JSON — which is where the caption sends a pupil",
+    !R.answerInHash && R.answerInExport && R.noteInExport,
+    !P.answerInHash && P.answerInExport && P.noteInExport,
+    `release answer in-hash=${R.answerInHash} in-export=${R.answerInExport}, note in-export=${R.noteInExport} -> ` +
+    `staging answer in-hash=${P.answerInHash} in-export=${P.answerInExport}, note in-export=${P.noteInExport}`);
 }
 
 /* V2 continued — the captions. The one thing V2 says must not survive this
@@ -180,12 +198,13 @@ for (const tree of TREES) {
 }
 {
   const R = globalThis['cap_' + T_REL], P = globalThis['cap_' + T_PAT];
-  const shareHonest = x => !!x.share && /not/i.test(x.share) && /name/i.test(x.share) && /note/i.test(x.share);
-  pair('V2d', 'the Share help card says the link carries the note and NOT the name',
+  const shareHonest = x => !!x.share && /not/i.test(x.share)
+    && /name/i.test(x.share) && /note/i.test(x.share) && /answer/i.test(x.share);
+  pair('V2d', 'the Share help card says the link carries the setup and none of the pupil\'s work',
     shareHonest(R), shareHonest(P),
-    `release "${(R.share || '').slice(0, 110)}" -> staging "${(P.share || '').slice(0, 150)}"`);
-  const notesHonest = x => !!x.notesLabel && /shared link|address bar/i.test(x.notesLabel);
-  pair('V2e', 'the evidence-note label says the note travels in the URL and in a shared link',
+    `release "${(R.share || '').slice(0, 110)}" -> staging "${(P.share || '').slice(0, 170)}"`);
+  const notesHonest = x => !!x.notesLabel && /not saved/i.test(x.notesLabel) && /(print|export)/i.test(x.notesLabel);
+  pair('V2e', 'the evidence-note label says the note is not saved, and what to do about it',
     notesHonest(R), notesHonest(P),
     `release "${R.notesLabel}" -> staging "${P.notesLabel}"`);
   note('V2f', 'the name caption is unchanged — the patch makes it true rather than rewriting it', 'MEASURED',
@@ -286,15 +305,21 @@ for (const tree of TREES) {
   globalThis['rt_' + tree] = { back, errs, urlLen: url.length };
 }
 {
+  /* the setup must survive; the work must NOT. Both halves asserted, because
+     "the link still works" and "the link stopped carrying pupil writing" are
+     two different claims and only checking the first would miss the ruling. */
   const ok = x => /silver chloride/i.test(x.back.wellC1) && /red-brown/i.test(x.back.wellB2)
-              && x.back.note === 'ROUNDTRIP-NOTE' && x.back.answer === 'ROUNDTRIP-ANSWER'
               && x.back.bench === 'microscale' && x.back.eventRows >= 5 && x.back.eventsHaveObservation && x.back.perMoment
               && x.errs.length === 0;
   const R = globalThis['rt_' + T_REL], P = globalThis['rt_' + T_PAT];
-  pair('V3-roundtrip', 'a shared link restores wells, observations, the event log, the note and the written answer',
+  pair('V3-roundtrip', 'a shared link restores the setup: wells, observations and the event log',
     ok(R), ok(P),
     `release url ${R.urlLen} chars ${JSON.stringify(R.back)} -> staging url ${P.urlLen} chars ${JSON.stringify(P.back)}`,
     'ALREADY CORRECT ON RELEASE — asserted so the V3 shrink cannot silently break resume');
+  const workGone = x => x.back.note === '' && x.back.answer === '';
+  pair('V3-roundtrip-work', 'and the pupil\'s note and written answer do NOT come back through the link',
+    workGone(R), workGone(P),
+    `release note="${R.back.note}" answer="${R.back.answer}" -> staging note="${P.back.note}" answer="${P.back.answer}"`);
 }
 
 /* an old whole-tree link, minted by the release build, must still open in the

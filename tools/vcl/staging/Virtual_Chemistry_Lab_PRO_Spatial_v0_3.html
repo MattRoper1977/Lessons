@@ -359,7 +359,7 @@ td.anomaly-cell{outline:2px solid var(--amber);outline-offset:-3px;background:rg
       <input id="pupilName" type="text" maxlength="70" autocomplete="off" placeholder="Name for print/export only">
     </div>
     <div class="field">
-      <label for="reflectionNotes">Evidence note / conclusion <span style="font-weight:600;opacity:.75">— saved in this page's address bar, and included in a shared link</span></label>
+      <label for="reflectionNotes">Evidence note / conclusion <span style="font-weight:600;opacity:.75">— not saved and not shared. Use Print or Export JSON before you close this tab.</span></label>
       <textarea id="reflectionNotes" placeholder="What changed? What did you observe? Why did it happen?"></textarea>
     </div>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
@@ -385,7 +385,7 @@ td.anomaly-cell{outline:2px solid var(--amber);outline-offset:-3px;background:rg
         <div class="help-card"><h3>Explore · 10–25 min</h3><p>Change one factor, run repeats, use authentic-noise mode if appropriate, and record observations/data.</p></div>
         <div class="help-card"><h3>Do · 25–40 min</h3><p>Calculate, interpret graphs, identify concordance/anomalies, and write a scientific explanation or exam-style response.</p></div>
         <div class="help-card"><h3>Calm Mode</h3><p>Removes rapid visual movement and uses a light, lower-stimulation interface. Core results stay the same.</p></div>
-        <div class="help-card"><h3>Share</h3><p>Encodes the current bench, settings, logged evidence and your evidence note into the URL fragment. Your name is <strong>not</strong> included — it stays on this device, in print and in Export JSON only. No account or server is required.</p></div>
+        <div class="help-card"><h3>Share</h3><p>Encodes the current bench, apparatus, settings and logged evidence into the URL fragment. Your name, your evidence note and your written answers are <strong>not</strong> included — a shared link carries the setup, never your work. Keep those with Print or Export JSON. No account or server is required.</p></div>
         <div class="help-card"><h3>Evidence</h3><p>Print a practical record, copy data as TSV, generate an exam schematic or export local JSON. Nothing is uploaded automatically.</p></div>
         <div class="help-card"><h3>Spatial Sandbox</h3><p>Drag, snap, rotate, pour, heat, connect flexible tubing and allow mistakes to produce diagnostic virtual consequences.</p></div>
         <div class="help-card"><h3>Microscale Analysis</h3><p>Use separate wells and correct acidification sequences to avoid false positives in qualitative ion tests.</p></div>
@@ -1557,9 +1557,14 @@ function checkPhase(i){
 
 function serialisableState(){
   const copy=JSON.parse(JSON.stringify(state));copy.version="0.3";
-  /* The name never enters the URL. It stays in print and in Export JSON,
-     which is exactly what its caption promises. */
-  delete copy.pupil;copy.rates.running=false;copy.rates.simTime=round(copy.rates.simTime,1);copy.rates.currentVol=round(copy.rates.currentVol,1);copy.rates.activeRun=null;
+  /* THE URL CARRIES THE SETUP. IT NEVER CARRIES THE PUPIL'S WORK.
+     Out: the name, the evidence note, the written answers. (v0.4's drawing
+     strokes belong in this list too when this diff is re-applied there.)
+     Retained: bench, apparatus, sample codes, teacher fault injection —
+     everything Share exists to hand over.
+     Share hands the URL out. A teacher sharing a bench setup would otherwise be
+     shipping whichever pupil's answers were last typed. */
+  delete copy.pupil; delete copy.notes; delete copy.phaseAnswers;copy.rates.running=false;copy.rates.simTime=round(copy.rates.simTime,1);copy.rates.currentVol=round(copy.rates.currentVol,1);copy.rates.activeRun=null;
   copy.spatial.snapHint=null;copy.spatial.pouring=null;copy.spatial.examSVG="";
   /* wells become bare ordered drop lists: id and name are positional constants,
      and everything else microResolve computes. Events lose their timestamp
@@ -1668,7 +1673,7 @@ function preparePrint(){
   if(state.bench==="microscale")setup=`Mystery ${state.micro.mysteryCode} · wells used ${state.micro.wells.filter(w=>w.drops.length).length}/12 · active analytical evidence ${state.micro.events.length} additions`;
   dom.printSheet.innerHTML=`<h1>Virtual Chemistry Practical Record</h1><div class="print-meta"><div><strong>Learner:</strong> ${escapeHTML(state.pupil||"________________")}</div><div><strong>Date:</strong> ${new Date().toLocaleDateString("en-GB")}</div><div><strong>Bench:</strong> ${escapeHTML(b.title)}</div></div><div class="print-box"><strong>Setup / variables:</strong> ${escapeHTML(setup)}<br><strong>Mode:</strong> ${state.noise?"Authentic measurement noise":"Ideal theory"} · ${state.calm?"Calm display":"Standard display"} · ${state.audio?"Audio enabled":"Audio muted"}</div><h2>Primary evidence</h2>${printDataTableHTML()}${graph?`<h2>Graph / measurement curve</h2><img class="print-graph" src="${graph}" alt="">`:""}${extra}<h2>Introduce → Explore → Do responses</h2><div class="print-box"><strong>1.</strong> ${escapeHTML(answers[0]||"")}<br><br><strong>2.</strong> ${escapeHTML(answers[1]||"")}<br><br><strong>3.</strong> ${escapeHTML(answers[2]||"")}</div><h2>Conclusion / evidence note</h2><div class="print-box">${escapeHTML(state.notes||"")||'<div class="print-lines"></div>'}</div><div style="margin-top:3mm;font-size:7.5pt">Simulation evidence supports scientific reasoning and data analysis; it is not evidence of hands-on laboratory competency.</div>`;
 }
-function exportEvidence(){state.pupil=dom.pupil.value.trim();state.notes=dom.notes.value.trim();const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:{...serialisableState(),pupil:state.pupil}};const safe=(state.pupil||"learner").replace(/[^a-z0-9_-]+/gi,"_").slice(0,30);download(`Chemistry_Lab_${state.bench}_${safe}.json`,JSON.stringify(payload,null,2));toast("Evidence JSON exported locally.");}
+function exportEvidence(){state.pupil=dom.pupil.value.trim();state.notes=dom.notes.value.trim();const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:{...serialisableState(),pupil:state.pupil,notes:state.notes,phaseAnswers:state.phaseAnswers}};const safe=(state.pupil||"learner").replace(/[^a-z0-9_-]+/gi,"_").slice(0,30);download(`Chemistry_Lab_${state.bench}_${safe}.json`,JSON.stringify(payload,null,2));toast("Evidence JSON exported locally.");}
 function resetCurrentBench(){if(state.bench==="rates")clearRateRuns();else if(state.bench==="titration")resetTitration();else if(state.bench==="gastest")resetGasTests();else if(state.bench==="spatial"){spatialReset();return;}else{state.micro=makeMicroState();renderBench();syncHash();}state.phaseAnswers[state.bench]=["","",""];state.notes="";dom.notes.value="";renderBench();syncHash();toast("Current bench reset.");}
 function currentTSV(){
   if(state.bench==="rates"){const group=currentRateGroup(),times=Array.from({length:13},(_,i)=>i*10);return["Time_s\tTrial_1_cm3\tTrial_2_cm3\tTrial_3_cm3\tMean_cm3",...times.map(t=>{const vals=group.map(r=>r.points.find(p=>Math.abs(p.t-t)<.15)?.v),p=vals.filter(Number.isFinite);return[t,...vals.map(v=>Number.isFinite(v)?v.toFixed(1):""),p.length?mean(p).toFixed(1):""].join("\t");})].join("\n");}

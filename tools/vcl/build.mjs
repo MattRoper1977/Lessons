@@ -89,15 +89,23 @@ swap('X1c',
 swap('X2a',
   `  const copy=JSON.parse(JSON.stringify(state));copy.version="0.3";`,
   `  const copy=JSON.parse(JSON.stringify(state));copy.version="0.3";
-  /* The name never enters the URL. It stays in print and in Export JSON,
-     which is exactly what its caption promises. */
-  delete copy.pupil;`);
-/* Export JSON must still carry the name — the caption offers exactly print and
-   export, so removing it from the serialiser must not remove it from there.
-   Caught by a control that asserted the name is still present after the fix. */
+  /* THE URL CARRIES THE SETUP. IT NEVER CARRIES THE PUPIL'S WORK.
+     Out: the name, the evidence note, the written answers. (v0.4's drawing
+     strokes belong in this list too when this diff is re-applied there.)
+     Retained: bench, apparatus, sample codes, teacher fault injection —
+     everything Share exists to hand over.
+     Share hands the URL out. A teacher sharing a bench setup would otherwise be
+     shipping whichever pupil's answers were last typed. */
+  delete copy.pupil; delete copy.notes; delete copy.phaseAnswers;`);
+/* Export JSON must carry everything the URL now refuses to: the name, the
+   evidence note and the written answers. The caption tells a pupil to use Print
+   or Export JSON before closing the tab, so those two paths are the only place
+   the work survives — a serialiser fix that quietly emptied them would turn that
+   instruction into a lie. Caught twice by the same control: once for the name,
+   and again for the answers when the ruling widened what leaves the URL. */
 swap('X2d',
   `const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:serialisableState()};`,
-  `const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:{...serialisableState(),pupil:state.pupil}};`);
+  `const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:{...serialisableState(),pupil:state.pupil,notes:state.notes,phaseAnswers:state.phaseAnswers}};`);
 
 /* V3, second lever: a well's colour, ppt, pH, observation, warnings, pool and
    counts are ALL derived from its drops by microResolve. Encoding them costs
@@ -164,10 +172,13 @@ swap('X3d',
 
 swap('X2b',
   `<div class="help-card"><h3>Share</h3><p>Encodes the current bench, settings and logged evidence into the URL fragment. No account or server is required.</p></div>`,
-  `<div class="help-card"><h3>Share</h3><p>Encodes the current bench, settings, logged evidence and your evidence note into the URL fragment. Your name is <strong>not</strong> included — it stays on this device, in print and in Export JSON only. No account or server is required.</p></div>`);
+  `<div class="help-card"><h3>Share</h3><p>Encodes the current bench, apparatus, settings and logged evidence into the URL fragment. Your name, your evidence note and your written answers are <strong>not</strong> included — a shared link carries the setup, never your work. Keep those with Print or Export JSON. No account or server is required.</p></div>`);
+/* The honest version of the cost this ruling accepts: with no localStorage
+   anywhere in this app, work that is not in the URL is not saved at all. The
+   caption says so rather than letting a pupil discover it by reloading. */
 swap('X2c',
   `      <label for="reflectionNotes">Evidence note / conclusion</label>`,
-  `      <label for="reflectionNotes">Evidence note / conclusion <span style="font-weight:600;opacity:.75">— saved in this page's address bar, and included in a shared link</span></label>`);
+  `      <label for="reflectionNotes">Evidence note / conclusion <span style="font-weight:600;opacity:.75">— not saved and not shared. Use Print or Export JSON before you close this tab.</span></label>`);
 
 /* =====================================================================
  * V3 — the state URL is already over the common ceiling.

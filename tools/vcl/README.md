@@ -63,17 +63,28 @@ The field is captioned **"Name for print/export only"**. `syncHash()` base64url-
 encoded the whole of `state`, `state.pupil` included, into `location.hash` on
 every action, and **Share** copied `location.href`.
 
-`pupil` is excluded from the serialiser, which makes the existing caption true —
-the caption was not rewritten, the code was made to match it. `V2b` asserts the
-name is *still* in print and in Export JSON, because the first cut of this fix
-took it out of the export too.
+**RULED: the URL carries the setup. It never carries the pupil's work.**
 
-**`notes` is kept, deliberately.** This app has zero `localStorage`, so the hash
-is its only persistence: dropping the note would destroy a pupil's written
-conclusion on reload. The captions are corrected instead — the Share help card
-now says the link carries the note and **not** the name, and the note's own label
-says it travels in the address bar and in a shared link. Both are asserted;
-the removal matrix caught that nothing had been watching them.
+Out of `serialisableState()`: the **name**, the **evidence note**, the **written
+answers**. (v0.4's drawing strokes belong in this list when this diff is
+re-applied there.) Retained: bench, apparatus configuration, sample codes,
+teacher fault injection — everything Share exists to hand over.
+
+An earlier cut of this kept the note in the hash, on the grounds that with no
+`localStorage` anywhere the URL is the only persistence. That is true, and it is
+not the deciding fact: **Share hands the URL out**, so a teacher sharing a bench
+setup would be shipping whichever pupil's note and answers were last typed.
+
+The cost is real and is carried by the captions rather than hidden. The note's
+label now reads *"not saved and not shared. Use Print or Export JSON before you
+close this tab."* The name's caption — *"Name for print/export only"* — was not
+rewritten; the code was made to match it.
+
+Which makes **Print and Export JSON the only place the work survives**, so
+`V2b` and `V2g` assert that the name, the note and the answers are all still
+there. That control has now caught the same defect twice: once when the first
+cut of the fix emptied the name out of the export, and again when the ruling
+widened what leaves the URL and took the answers with it.
 
 ## V3 — the state URL was over the common ceiling
 
@@ -94,7 +105,11 @@ The state model is unchanged. Only what gets encoded:
 |---|---|---|
 | fresh load | 3,814 | **26** |
 | each bench, untouched | 3,834–3,841 | 81–107 |
-| realistic 40-minute session | 8,093 | **1,485** |
+| realistic 40-minute session | 8,094 | **769** |
+
+Most of that last figure is the ruling rather than the encoding: the written
+answers were the bulkiest growing payload, and taking the pupil's work out of the
+URL delivers a large part of V3 for free.
 
 Shrinking an encoding is where links die, so two controls exist for that alone:
 **V3-roundtrip** asserts a shared link restores the wells, the observations, the
@@ -145,8 +160,24 @@ way home and the `<noscript>` both depend on **V7**, the deployment route, which
 is Matt's ruling. Landing a hand-written approximation of a generated control is
 exactly what the estate's inline-exit ledger exists to prevent.
 
-## V7 — awaiting a route
+## V7 — route ruled; this branch is a REFERENCE DIFF, not a shipping artefact
 
-This does **not** go on the Games shelf. V1 and V2 are green, so the
-merge-blockers are cleared, but the route and the surface that links to it are
-Matt's call and nothing here creates either.
+**Route: the Lessons repo, as a science practical instrument, co-located with the
+FieldOps labs.** Not the Games shelf, and not Apps/Teacher tools. The precedent
+was already set — FieldOps split labs 01–04 into Lessons beside the science and
+sent only the Teacher Studio to Apps, because a lab is a lesson instrument and a
+studio is a teacher tool. **VCL is a lab**: pupils do the practical, it carries a
+40-minute Introduce→Explore→Do arc, and it is not teacher-directed.
+
+**This branch does not land, and the route is not why.** Two things sequence it:
+
+1. The FieldOps labs placement has not merged, so the path this co-locates with
+   does not exist yet. It gets derived when that lands, not invented now.
+2. **The route attaches to v0.4.1, not to this branch.** v0.4 forks the
+   *unpatched* v0.3 baseline with all six defects surviving verbatim, so merging
+   this would put a fixed 5-bench file and an unfixed 13-bench file in the estate
+   at once — with the unfixed one superseding.
+
+So this is the **reference diff** for re-applying these six fixes to v0.4, and
+that is the only thing it is for. v0.4.1 is its own order, with the removal
+matrix written in from the start rather than retrofitted.
