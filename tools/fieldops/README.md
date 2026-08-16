@@ -171,3 +171,66 @@ normal case. All eight pass. Every mission fixture is minted by a real Studio
 through its real export button; none is hand-written. The release Studio cannot
 mint a C24 mission at all, which is recorded as a declared asymmetry rather than
 filled in with an authored stand-in.
+
+---
+
+## The split — where the labs and the Studio went
+
+| half | repo | path |
+|---|---|---|
+| labs 01–04 | Lessons | **`Science_Teesside/Build/v4_fieldops/`** |
+| 00 Teacher Studio | `Matt-s-Apps-` | **`FieldOps_Teacher_Studio.html`** (repo root, matching the 36 flat `*_Studio.html`) |
+
+**The merged Lessons path, quoted so the VSL order can cite it rather than
+re-derive it: `Science_Teesside/Build/v4_fieldops/`.** It is a sibling of
+`v3_40min`, at the same depth, which is why the NAV-1 href resolves identically.
+
+`tools/fieldops/split_transport.mjs` proves transport across it **both
+directions**: three missions minted in `Matt-s-Apps-` load into the lab in
+Lessons (C14, C21, C24), and a capsule exported from the lab verifies in the
+Studio. NAV-1 is checked to resolve to a file that exists *and* to be the
+byte-identical href its eleven neighbours use.
+
+**Every fixture is authored by that harness and says so in its own filename** —
+`AUTHORED-BY-HARNESS_not-a-pack-sample_*`. The pack's twelve `.buildmission.json`
+samples were never shipped, so none was available; presenting an authored fixture
+as the pack's own would be the worst thing this pass could do.
+
+## Three places the order's stated premises did not survive measurement
+
+**1. "Add exactly one feed, C24" does not make fuel oil reachable.** C24 boils at
+430 °C and `runDistil` needs `effectiveFurnace ≥ 450 °C`; the furnace slider stops
+at 390 °C. Adding C24 alone leaves the fuel-oil band exactly as unreachable as
+before, just with a button in front of it. **C21** — 370 °C, needs 390 °C — is the
+only carbon number that distils at the existing ceiling and lands in fuel oil.
+Both are present: C21 teaches the band, C24 stays and is told why it cannot
+vaporise. Seven feeds, not five.
+
+**2. "release 12" mis-assignments is 13 under a strict predicate, 12 under an
+overlapping one — and the difference is the disclosure copy's own subject.**
+Counting C5–C21 where each carbon number has exactly one correct fraction gives
+**13**. Allowing C10 to be either petrol or kerosene — which is what real
+refining does — gives **12**. Both are defensible; neither is quotable without
+its predicate. The old `<=` build scores **2** and R-Wilton-3 **0** under both.
+
+**3. "splash, NAV-1, `mbm_reading_theme` — all currently 0" is true of the labs
+and also true of the family they join.** Measured in the co-location target:
+NAV-1 on **11 of 15** files (the 4 without are the matrix, the guide and the
+reflection window — not lessons); splash overlays **0 of 15**;
+`mbm_reading_theme` **0 of 15**, and only **2 files in the whole Lessons repo**
+carry it, both catalogue indexes.
+
+So NAV-1 landed byte-identically. A splash overlay and a reading theme did not:
+adding them would make these the only lesson files in the estate with either,
+which is divergence dressed as conformance. **The regress trap is still
+re-expressed** — `T14` asserts both limbs, release baseline **0** per page and
+deployed expectation **exactly 1**, in the header form the eleven neighbours use.
+
+## R-Wilton-3's advantage over the `<=` build is invisible to every user
+
+Said plainly because it should be. The two chains the `<=` build gets wrong are
+**C11 and C16 — neither is selectable**. Across the seven feeds a pupil can
+actually choose, `<=` and R-Wilton-3 agree completely. R-Wilton-3 is still the
+better rule — no chain can land on a boundary, so `<` versus `<=` stops being a
+question anyone has to get right — but it buys correctness a user cannot see, and
+saying otherwise would be overstating it.

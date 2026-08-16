@@ -31,6 +31,16 @@ built /home/user/Lessons/tools/fieldops/staging
   T11 03_Wilton_Carbon_Process_Control_Lab.html
   T12 03_Wilton_Carbon_Process_Control_Lab.html
   T9 03_Wilton_Carbon_Process_Control_Lab.html
+  T13 01_Newport_Bridge_Lift_Permit_Lab.html
+  T13 02_Tees_Estuary_Field_Investigation_Lab.html
+  T13 03_Wilton_Carbon_Process_Control_Lab.html
+  T13 04_Tees_Bay_Wind_Operations_Lab.html
+  T14 00_BUILD_FieldOps_Teacher_Studio.html
+  T14 01_Newport_Bridge_Lift_Permit_Lab.html
+  T14 02_Tees_Estuary_Field_Investigation_Lab.html
+  T14 03_Wilton_Carbon_Process_Control_Lab.html
+  T14 04_Tees_Bay_Wind_Operations_Lab.html
+  T15 03_Wilton_Carbon_Process_Control_Lab.html
 
 [1m== controls  every fix red on release, green on staging[0m
 id        release      patched      verdict
@@ -149,34 +159,48 @@ P2.5a     false        true         MATCHED PAIR
 P2.5b     null         null         BEHAVIOUR PRESERVED
           View still opens the capsule detail after rebinding
           release opened=true rows=4 -> patched opened=true rows=4
+T13       false        true         MATCHED PAIR
+          NAV-1 back link matches the eleven lessons in the co-location target, and renders
+          release {"href":null,"label":null} -> staging {"href":"../../../index.html","label":"Back to the Lessons catalogue","text":"← Lessons","rendered":true}
+T13-scope null         null         ASSERTED
+          the Studio is deliberately excluded from NAV-1
+          it deploys to Matt-s-Apps-, not Lessons, so a link to the Lessons catalogue would be wrong from it. labs carrying NAV-1: release [0,0,0,0] -> staging [1,1,1,1]
+T14       null         null         BOTH LIMBS ASSERTED
+          exactly one "Made by Matt" per page — the regress trap, re-expressed not deleted
+          release per-page counts [0,0,0,0,0] (baseline, all 0) · staging [1,1,1,1,1] (deployed, all 1). Any harness asserting "Made by Matt" == 0 must be re-expressed against the deployed build, not satisfied by dropping the branding.
+T15       false        true         MATCHED PAIR
+          the lab says its temperature scale is a model, gives the real overlapping ranges, and names the C14–C16 overlap
+          release no such note -> staging "These temperatures are model values, not measurements. This column uses a straight-line rule so the pattern is visible; a real one is not straight. Re…"
 
 0 failure(s); 0 undeclared unreachable; 1 declared unreachable by design [W-R-C24]
 
 [1m== assert-unchanged  nothing moved outside the declared transforms[0m
 id        verdict   what
 ------------------------------------------------------------------------------
-U1        UNCHANGED with all 13 transforms dropped the builder reproduces release byte for byte
-          all 5 files identical
-U2        UNCHANGED each transform changes exactly the files it is declared against
-          T1:4 T2:4 T3:4 T4:5 T5a:1 T5b:1 T6a:1 T6b:1 T7:1 T8a:1 T8b:1 T8c:1 T9:1 T10:1 T11:1 T12:1
+U1        UNCHANGED with all 19 transforms dropped the builder reproduces release byte for byte
+          all 5 files identical, 19 transforms dropped
+U2        UNCHANGED each independently-buildable transform changes exactly the files it is declared against
+          T1:4 T2:4 T3:4 T4:5 T5a:1 T5b:1 T6a:1 T6b:1 T7:1 T8a:1 T8b:1 T8c:1 T9:1 T10:1 T11:1 T12:1 T13:4 T14:5 · DEPENDENT, not measured alone: T15
+U2b       UNCHANGED every dependent transform is one whose anchor another transform introduces
+          T15 — T15's anchor is the caption T12 adds, so it cannot be built alone. Declared, not folded into T12: they are separate rulings and folding them would cost the ability to test them apart.
 U3        UNCHANGED all five files boot with no page error
           clean
 U4 00     UNCHANGED visible text in 00_BUILD_FieldOps_Teacher_Studio.html changes only where authorised
-          added [] removed []
+          1 added / 1 removed, every one declared
 U4 01     UNCHANGED visible text in 01_Newport_Bridge_Lift_Permit_Lab.html changes only where authorised
-          added [] removed []
+          2 added / 1 removed, every one declared
 U4 02     UNCHANGED visible text in 02_Tees_Estuary_Field_Investigation_Lab.html changes only where authorised
-          added [] removed []
+          2 added / 1 removed, every one declared
 U4 03     UNCHANGED visible text in 03_Wilton_Carbon_Process_Control_Lab.html changes only where authorised
-          added ["below 25°C · gases","110°C · petrol range","220°C · kerosene range","320°C · diesel range","400°C · fuel oils","residue — what stays","in the column","is where a fraction condenses in this column.","is a property of the molecules themselves. Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.","Tray temperature","Boiling range","C21","C24"] removed ["25°C · gases","80°C · petrol range","150°C · kerosene range","230°C · diesel range","300°C · fuel oils","residue"]
+          19 added / 7 removed, every one declared
 U4 04     UNCHANGED visible text in 04_Tees_Bay_Wind_Operations_Lab.html changes only where authorised
-          added [] removed []
+          2 added / 1 removed, every one declared
 U5        UNCHANGED mission ids for the default template of each engine are unchanged
           newport-lift-permit=NEWPORT-LIFT-PERMIT-1C107E37 tees-estuary-fieldops=TEES-ESTUARY-FIELDOPS-BB8F2AF0 wilton-carbon-control=WILTON-CARBON-CONTROL-2B1E87AE tees-bay-wind-ops=TEES-BAY-WIND-OPS-29848190
 U6        UNCHANGED demonstration capsules still verify identically
           release ["verified","verified","verified","verified"] -> patched ["verified","verified","verified","verified"]
-U7        UNCHANGED the three non-Wilton labs differ from release only in the four storage/calm transforms
-          Newport, Estuary and Wind all identical once T1-T4 are normalised
+U7        UNCHANGED the three non-Wilton labs differ from release only in the storage, calm, NAV-1 and branding transforms
+          Newport, Estuary and Wind all identical once T1-T4, T13 and T14 are normalised
 
 0 unexpected change(s)
 
@@ -261,26 +285,6 @@ X2 sL->rS     PASS     a capsule from the staging lab verifies in the release St
 X2 sL->sS     PASS     a capsule from the staging lab verifies in the staging Studio
               ViewTRANSPORT PROBEWilton Process Chemistryguided1—1verified
 
-0 transport failure(s) · fixtures in /tmp/p2xport-1OeNmH
+0 transport failure(s) · fixtures in /tmp/p2xport-y8sdNM
 
 [1m== worst exit: 3[0m
-baseline: 0 failure(s); 0 undeclared unreachable; 1 declared unreachable by design [W-R-C24]
-
-  T1    watched      P2.2c-get->CONTROL 1->[W-R-C24] 
-  T2    watched      P2.2c-set->CONTROL 1->[W-R-C24] 
-  T3    watched      P2.2c-remove->CONTROL 1->[W-R-C24] 
-  T4    watched      P2.4->CONTROL 1->[W-R-C24] 
-  T5a   watched      P2.5a->CONTROL 1->[W-R-C24] 
-  T5b   watched      P2.5b->BROKEN 1->[W-R-C24] 
-  T6a   watched      P2.3->CONTROL 1->[W-R-C24] 
-  T6b   watched      P2.3->CONTROL 1->[W-R-C24] 
-  T7    watched      W-R-C10->CONTROL W-R-C14->CONTROL W-R-C18->CONTROL W-R-C20->CONTROL W-R-C21->CONTROL W-U-C15->CONTROL W-U-C16->CONTROL W-GAP->COLLISION W-RES->FAILED W-DIAG->CONTROL 10->[W-R-C24] 
-  T8a   watched      W-R-C21->CONTROL W-R-C24->CONTROL W-DESIGN->FEED T10a->CONTROL W-ID24->CONTROL W-ID3->DIVERGED 5->[none] 
-  T8b   watched      W-ID24->CONTROL W-ID3->DIVERGED 2->[W-R-C24] 
-  T8c   watched      W-ID24->CONTROL W-ID3->DIVERGED 2->[W-R-C24] 
-  T9    watched      W-RES-UI->CONTROL 1->[W-R-C24] 
-  T10   watched      T10a->CONTROL T10b->CONTROL 2->[W-R-C24] 
-  T11   watched      W-DIAG->CONTROL 1->[W-R-C24] 
-  T12   watched      T12->CONTROL 1->[W-R-C24] 
-
-every transform has a gate that changes verdict without it

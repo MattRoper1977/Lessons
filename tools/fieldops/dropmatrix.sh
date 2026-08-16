@@ -17,7 +17,7 @@ verdicts work/baseline.out > work/baseline.verdicts
 echo
 
 BAD=0
-for T in T1 T2 T3 T4 T5a T5b T6a T6b T7 T8a T8b T8c T9 T10 T11 T12; do
+for T in T1 T2 T3 T4 T5a T5b T6a T6b T7 T8a T8b T8c T9 T10 T11 T12 T13 T14 T15; do
   rm -rf "drop_$T"
   node build.mjs "--drop=$T" "--out=drop_$T" >/dev/null 2>&1 || { printf '  %-5s BUILD FAILED\n' "$T"; BAD=1; continue; }
   P2_PATCHED="drop_$T" node controls.mjs > "work/drop_$T.out" 2>&1
