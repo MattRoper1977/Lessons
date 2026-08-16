@@ -62,14 +62,82 @@ This is the **second** target where the same predicate error hid a real failure,
 so it is a rule rather than a one-off. Both instances came from a gate that was
 honest about what it measured and wrong about what that meant.
 
+## R0.13 — evidence outlives its subject, and looks identical to evidence that has not
+
+Two tracked files recorded per-transform verdicts for **T10b — a transform merged
+into T10 several commits earlier and non-existent since**. They were correctly
+formatted, internally consistent, and describing nothing.
+
+**An artefact recording a verdict must be checkable against the existence of its
+subject, or it is decoration with a filename.**
+
+### `evidence/` versus `work/`, and the near-miss that let it happen
+
+- **`evidence/`** is written once per run and reviewed before it is committed.
+- **`work/`** is rewritten mid-run by the removal matrix and is never evidence.
+
+The `.gitignore` covered `drop_*/` and `work_*/` and **missed `work/`** — the
+directory the matrix actually uses. Thirty-six files were tracked; two of them
+were T10b's. A near-miss of exactly the shape this estate keeps producing: two
+patterns that look like they cover the third and do not.
+
+Fixed in Lessons and `Matt-s-Apps-`. The site repo had the same shape with
+`audit-output/` — seven tracked screenshots — and now has the same fix.
+
+### The sweep, and the false positives it produced first
+
+`tools/stale_evidence_sweep.mjs` runs both directions across all three repos and
+**removes nothing**, because a removal you cannot show the subject is absent for
+is worse than keeping stale evidence.
+
+Its first run flagged **four rows as stale — `T10a`, `T10b`, `X0`, `X1c` — and
+every one was a false positive.** `T10a`/`T10b` are *control* ids in the controls
+table; `X0`/`X1c` are *row* ids in the split-transport report. All four describe
+subjects that exist. **A sweep built to catch stale evidence was one step from
+deleting live evidence, because it matched an identifier's shape rather than the
+claim being made about it.**
+
+That is a different failure from the twelve below and is counted separately: those
+are checks that could not fire, this is a check that fired wrongly. The second
+kind destroys rather than merely fails to protect.
+
+With the predicate corrected — only a removal-matrix row asserts "this transform
+is watched", and those lines carry the verdict word — **forward: 0 stale.**
+
+### The inverse direction, which is the more dangerous one
+
+**`hud-coverage.json`'s `scriptLine` had no consumer.** A repo-wide grep over
+every `.py`, `.mjs`, `.js`, `.sh` and `.yml` returns nothing. Twelve root game
+routes carry that literal, inserted by hand in one August commit and maintained
+by hand since.
+
+The assertion that ought to have existed **would pass today** — all twelve
+byte-identical. That is the argument for adding it, not against: today it is
+free, and what it buys is the difference between *true* and *guaranteed*.
+Landed on `claude/hud-coverage-scriptline-load-bearing` with a `--self-test`
+that drops `defer` from one tag and requires a red.
+
+## The finding worth more than the count
+
+**Two of the last four unfireable checks were introduced in the same commits as
+the rules about them.** The LOAD-BEARING label could not fire, and it was written
+to record R0.11. The overlap predicate accepted touching boxes, in the pass that
+established "assert a positive margin".
+
+Writing a rule does not inoculate the author against the defect it names. That is
+not a confession; it is a finding about how these defects propagate, and it is
+the reason the removal matrix and the artefact-not-summary rule earn their cost —
+neither depends on the author having understood their own rule.
+
 ## §S2 — the evidence rule, applied to this pass
 
 Every claim below names the artefact that proves it, and every artefact
 discriminates. Where a check would have passed on a broken build, it was
-rewritten or deleted. **Ten were caught this pass** — eight in these gates, a
-ninth of Matt's (the button-label finding landed on VSL's gate 5, authored the
-same afternoon), and a tenth found by re-reading an artefact rather than its
-summary line:
+rewritten or deleted. **Twelve were caught this pass** — ten in these gates, a
+Matt-side one (the button-label finding landed on VSL's gate 5, authored the same
+afternoon), and one found by re-reading an artefact rather than its summary line.
+The last four share a shape: **the fix was fine and the check was wrong, and only
+removing the fix could tell the difference.**
 
 | what was wrong with the check | how it was caught |
 |---|---|
@@ -82,7 +150,10 @@ summary line:
 | a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
 | **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
 | *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here because it is the same defect class, not because it is mine |
-| **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **Tenth this pass, and the first introduced while writing the rule about them** |
+| **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **The first introduced while writing the rule about them** |
+| **NAV-1 shipped with its markup and none of its CSS**, and the control passed — it asked only whether the link had a non-zero box, which an unstyled inline link has | the lab had a way home with no 44 px target, no focus ring and no print suppression, and a green gate said it matched the convention. `T13` now reads the **live stylesheet** for all three |
+| **`assert_unchanged` crashed instead of reporting** when `T15` could not be built in isolation, its anchor being text `T12` introduces | it declares the dependency now — R0.11 applied to a build rather than to a red |
+| *(the same commit)* its text-delta report printed the **whole** delta, burying the one unauthorised string among the expected ones | printing the difference instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
 
 **The button label and the overlap predicate are worth reading twice.** In both
 the *fix* was fine and the *check* was wrong, and only the removal matrix could
@@ -281,7 +352,9 @@ blocked:
 1. **v0.4.1** as its own order, with the removal matrix written in from the
    start rather than retrofitted, and #116's diff as the re-application
    reference.
-2. **The FieldOps placement**, which produces the path VCL co-locates with.
+2. ~~The FieldOps placement~~ — **done.** The co-location path VCL cites is
+   **`Science_Teesside/Build/v4_fieldops/`**, quoted here so the VSL order does
+   not re-derive it.
 3. **Scrap Core P1–P5**, if placement is wanted.
 4. **Play them on the phone.** Scrap Core: one descent to a titan. Chemistry
    Lab: the microscale bench in landscape, and Share on a real link.
@@ -295,3 +368,24 @@ consumer**, against ten hand-maintained copies of that literal. It will drift.
 The fix is one assertion comparing each declared route's literal against the
 canonical string, or deleting the field. **It is R0.1 inverted — a declaration
 nothing exercises, rather than a gate nothing runs.**
+
+
+---
+
+## The P2 split, and which branch carried which half
+
+| half | repo · branch | path |
+|---|---|---|
+| labs 01–04 | Lessons · **`claude/close-order-seven-items-wdfhdf`** | `Science_Teesside/Build/v4_fieldops/` |
+| 00 Teacher Studio | `Matt-s-Apps-` · `claude/fieldops-teacher-studio` | `FieldOps_Teacher_Studio.html` |
+
+**Stated plainly because it was not planned: the labs went onto the ledger
+branch.** There is no separate labs branch, and creating one retroactively would
+split a proven build across two histories for tidiness. The consequence is that
+the ledger's merge condition and the labs' merge condition apply to the *same*
+merge, and both have to be met — which is stricter than either alone, not looser.
+
+Transport across the split is proven **both directions**, 10 of 10, in
+`tools/fieldops/evidence/split_transport.out`. Every fixture is authored by that
+harness and **says so in its own filename** — the pack's twelve
+`.buildmission.json` samples were never shipped.
