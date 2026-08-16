@@ -35,6 +35,13 @@ rewritten or deleted. Six such were caught **in this pass's own gates**:
 | a frozen-region assertion whose pattern no longer matched, reporting MOVED with nothing moved | the assertion said REGION NOT FOUND rather than passing |
 | a rehydrate step that protected nothing `loadHash` already did | removal matrix reported it UNWATCHED; the step was deleted, not given a control |
 | a control that only went red because the page threw | removal matrix showed a crash, not a change; the two transforms were merged into one |
+| a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
+| **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
+
+The last two are worth reading twice: in both cases the *fix* was fine and the
+*check* was wrong, and only the removal matrix could tell the difference. A gate
+that goes green on a reverted fix is not evidence about the fix — it is evidence
+about the gate.
 
 Two claims in the incoming reports were checked and are **true but unproven by
 their own artefacts** — the Class of Ashes touch-fire response (`shots: 0` in
@@ -80,7 +87,7 @@ Identical on release. `staging/` is wired to no route; merging did not deploy it
 | **V3** | 3,814 → **26** fresh; 8,093 → **1,485** on a realistic session | `V3`, `V3-detail` | red→green | yes (drop X3a/X3c) |
 | **V3** | round-trip and legacy links still work | `V3-roundtrip`, `V3-legacy` | asserted | yes (drop X3d/X3e) |
 | **V4** | `.drop-pill` rule; gap 0 px → **6 px** at 390 and 1440 | `V4 @390px`, `V4 @1440px` | red→green | yes (drop X4) |
-| **V5** | 6 of 8 negated near-misses marked correct → **0** | `V5`, `V5b` | red→green | yes (drop X5a/X5b) |
+| **V5** | 6 of 8 negated near-misses marked correct → **0** | `V5`, `V5b`, `V5c` | red→green | yes (drop X5a/X5b) |
 | **V6.4** | reduced motion seeded from the OS | `V6.4a`, `V6.4b` | red→green | yes (drop X6c) |
 | **V6.5** | **17** unnamed controls across five benches → **0** | `V6.5` | red→green | yes (drop X6d*) |
 | **V0** | the frozen engine, pH model, mystery hash, 14 observation strings | `U2`, `U2s ×14` | unchanged | — |
@@ -98,7 +105,7 @@ the **V7 route**, which is Matt's ruling.
 | **C2** | autostart block removed | `C2` — 5 parameter sets, release fails 5 | red→green | yes (drop Y2) |
 | **C3** | `window.__COA_QA` removed in full | `C3a`, `C3b` | red→green | yes (drop Y3) |
 | **C3** | the game still deploys, driven through the real UI | `C3c` | asserted | — |
-| **C4** | clearance derived from the drawn HUD | `C4` — 6 of 8 overlap → **0 of 8** | red→green | yes (drop Y4a–d) |
+| **C4** | clearance derived from the drawn HUD | `C4` — release fails **8 of 8**, patched **0 of 8**, 12 px gap everywhere | red→green | yes (drop Y4a–d) |
 | **C5.4** | viewport no longer blocks pinch zoom | `C5.4` | red→green | yes (drop Y5d) |
 | **C5.5** | reduced motion from the OS, user choice still wins | `C5.5a`, `C5.5b` | red→green | yes (drop Y5e1) |
 | **C0** | the fence | `C0` — shelf, both audience pages, curation renderer | ASSERTED | it exists to go red if anyone adds the route |
@@ -114,6 +121,7 @@ item that needs the shelf conventions. **Mode names and in-game copy untouched.*
 | item | what changed | artefact | result |
 |---|---|---|---|
 | **P0.1** | 23 routes measured in a browser; every same-origin request recorded | `qa/P0_estate_injection_census.json` | 12/23 request `/hud.js`, **0** request `/theme.js`, **11 request nothing**, **no game ships a CSP** |
+| **P0.1** | corroborated independently by a second sweep reading the estate's own tooling | `verify_hud_on_games.py --self-test` and one full run | **334 assertions passed, 0 failed**; 23 routes = 12 wired + 1 region-only + 10 declared. Same numbers, reached the other way round |
 | **P0.2** | **the CSP is unchanged — no `'self'` on any directive** | `P0.2` | PASS |
 | **P0.3** | the inline exit region stamped by the estate's own generator | `P0.3a` | PASS — 11 targets, 0 divergent |
 | **P0.3** | zero CSP violations at boot and through one live descent | `P0.3b`, `P0.3e` | PASS |
@@ -124,6 +132,12 @@ item that needs the shelf conventions. **Mode names and in-game copy untouched.*
 
 **P1–P5 not attempted.** Placement is the larger half and half-proving it would
 be worse than not starting.
+
+**One estate finding, recorded not fixed:** `data/hud-coverage.json` records the
+canonical `scriptLine` — `<script defer src="/hud.js"></script>` — and a repo-wide
+grep shows **nothing reads it**. The tag is a per-file literal, committed into ten
+game pages by one commit in August and maintained by hand since. A canonical
+string that no code consumes is a convention with nothing holding it in place.
 
 ---
 
