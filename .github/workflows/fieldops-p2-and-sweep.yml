@@ -209,6 +209,19 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node tools/pr_check_census.mjs --gate --baseline tools/zero_check_baseline.json | tee "$RUNNER_TEMP/pr-census.txt"
 
+      # R0.15. A ratchet with a baseline in it passes by declaring rather than by
+      # checking, unless it is shown able to red on something undeclared. Empty
+      # the baseline and the nine real zero-check PRs must fail the gate; if they
+      # do not, the ratchet is a permanent green with extra steps.
+      - name: CONTROL - with the baseline emptied, the gate must go red
+        run: |
+          echo '{"known":[]}' > "$RUNNER_TEMP/empty-baseline.json"
+          if node tools/pr_check_census.mjs --gate --baseline "$RUNNER_TEMP/empty-baseline.json" > /dev/null; then
+            echo "the gate passed with an EMPTY baseline while zero-check PRs exist - it cannot fire"
+            exit 1
+          fi
+          echo "control fired: an undeclared zero-check PR reds the gate"
+
       - name: Result block
         if: always()
         run: |
