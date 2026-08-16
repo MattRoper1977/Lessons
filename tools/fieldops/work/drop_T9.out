@@ -1,0 +1,118 @@
+id        release      patched      verdict
+------------------------------------------------------------------------------
+W-R-C6    true         true         ALREADY CORRECT ON RELEASE
+          C6 is taught as petrol through the real buttons
+          release: told "petrol range"  ->  patched: told "petrol range"
+W-R-C10   false        true         MATCHED PAIR
+          C10 is taught as petrol through the real buttons
+          release: told "kerosene range"  ->  patched: told "petrol range"
+W-R-C14   false        true         MATCHED PAIR
+          C14 is taught as kerosene through the real buttons
+          release: told "diesel range"  ->  patched: told "kerosene range"
+W-R-C18   false        true         MATCHED PAIR
+          C18 is taught as diesel through the real buttons
+          release: told "fuel-oil range"  ->  patched: told "diesel range"
+W-R-C20   false        true         MATCHED PAIR
+          C20 is taught as diesel through the real buttons
+          release: told "residue / too heavy"  ->  patched: told "diesel range"
+W-R-C21   false        true         MATCHED PAIR
+          C21 is taught as fuel-oil through the real buttons
+          release: no button  ->  patched: told "fuel-oil range"
+W-R-C24   false        UNREACHABLE  UNREACHABLE
+          C24 is taught as fuel-oil through the real buttons
+          release: no button  ->  patched: NOT DISTILLED at 390°C max
+W-SCORE   null         null         MEASURED
+          selectable feeds taught in the chemically correct band
+          release 1 of 5 selectable  ->  patched 6 of 7 selectable (C24 selectable but cannot be distilled at the ceiling)
+W-DESIGN  null         null         ASSERTED
+          every feed that cannot be distilled is one declared unreachable by design
+          undistillable at the ceiling: [C24] · declared: [C24] · headline: 6 of 7 reachable, C24 declared unreachable by design
+W-U-C11   true         true         ALREADY CORRECT ON RELEASE
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(11) is kerosene
+          bp 170°C · release "kerosene range" -> patched "kerosene range"
+W-U-C15   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(15) is kerosene
+          bp 250°C · release "diesel range" -> patched "kerosene range"
+W-U-C16   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(16) is kerosene
+          bp 270°C · release "fuel-oil range" -> patched "kerosene range"
+W-STRICT  null         null         ASSERTED
+          every band comparison in wTray is strict <, never <=
+          patched wTray contains "<=" : false (the earlier <= build is reverted)
+W-BOIL    null         null         ASSERTED UNCHANGED
+          wBoil is untouched
+          function wBoil(n){return -50+20*n}
+W-GAP     null         null         ASSERTED
+          no boundary sits on a wBoil value — every one is in a gap
+          boundaries [25,160,280,360,960] · collisions [] · 25 lies in (C3=10, C4=30) · 160 lies in (C10=150, C11=170) · 280 lies in (C16=270, C17=290) · 360 lies in (C20=350, C21=370) · 960 lies in (C50=950, C51=970)
+W-RES     null         null         ASSERTED
+          the residue band still exists, as the else, relabelled as chemistry
+          release "label:'residue / too heavy'" -> patched "label:'residue — what stays in the column'"
+W-RES-UI  false        false        NOT A CONTROL
+          the column's residue label reads as chemistry, not as a missing button
+          release [25°C · gases | 80°C · petrol range | 150°C · kerosene range | 230°C · diesel range | 300°C · fuel oils | residue] -> patched [below 25°C · gases | 110°C · petrol range | 220°C · kerosene range | 320°C · diesel range | 400°C · fuel oils | residue]
+W-DIAG    false        true         MATCHED PAIR
+          every temperature printed on the column falls in the band its own label names
+          release 4/5 agree · patched 5/5 agree
+W-DIAG-rel null         null         MEASURED
+          the printed temperatures against the RELEASE bands
+          25°C says "gases", code says "petrol range"  <-- disagree · 80°C says "petrol range", code says "petrol range" · 150°C says "kerosene range", code says "kerosene range" · 230°C says "diesel range", code says "diesel range" · 300°C says "fuel oils", code says "fuel-oil range"
+W-DIAG-pat null         null         MEASURED
+          the printed temperatures against the PATCHED bands
+          below 25°C says "gases", code says "top gases" (and 25 itself is "petrol range") · 110°C says "petrol range", code says "petrol range" · 220°C says "kerosene range", code says "kerosene range" · 320°C says "diesel range", code says "diesel range" · 400°C says "fuel oils", code says "fuel-oil range"
+W-DIAG-MARK true         true         ALREADY CONSISTENT ON RELEASE
+          for every distillable feed, the tray the marker lands on and the readout name the same fraction
+          release 5/5 agree · patched 6/6 agree
+W-DIAG-MARK-rel null         null         MEASURED
+          marker vs readout, per feed, on RELEASE
+          C6: marker on "80°C · petrol range" / readout "petrol range" · C10: marker on "150°C · kerosene range" / readout "kerosene range" · C14: marker on "230°C · diesel range" / readout "diesel range" · C18: marker on "300°C · fuel oils" / readout "fuel-oil range" · C20: marker on "residue" / readout "residue / too heavy" · C21: no button · C24: no button
+W-DIAG-MARK-pat null         null         MEASURED
+          marker vs readout, per feed, on the fixed build
+          C6: marker on "110°C · petrol range" / readout "petrol range" · C10: marker on "110°C · petrol range" / readout "petrol range" · C14: marker on "220°C · kerosene range" / readout "kerosene range" · C18: marker on "320°C · diesel range" / readout "diesel range" · C20: marker on "320°C · diesel range" / readout "diesel range" · C21: marker on "400°C · fuel oils" / readout "fuel-oil range" · C24: not distilled
+T10a      false        true         MATCHED PAIR
+          a feed this column can never boil is told why, and where it goes instead
+          release null -> patched "C24H50 boils at 430°C. This column's furnace only reaches 390°C, so C24H50 never enters the vapour stream — it leaves at the bottom as residue."
+T10b      false        true         MATCHED PAIR
+          a furnace merely turned down is told to turn it up, NOT that the column can never do it
+          at furnace 160°C on C14 — release "Effective furnace 160°C is too low for this teaching feed to enter the vapour stream." -> patched "C14H30 boils at 230°C, so it needs about 250°C to enter the vapour stream. The furnace is at 160°C — raise it."
+T12       false        true         MATCHED PAIR
+          the column carries a rendered caption separating tray temperature from boiling range
+          release {"present":false} -> patched present=true rendered=true
+W-ID24    false        true         MATCHED PAIR
+          both new feeds, C21 and C24, are present in all three feed lists
+          release buttons[6,10,14,18,20] random[6,10,14,18,20] studio[6,10,14,18,20] -> patched buttons[6,10,14,18,20,21,24] random[6,10,14,18,20,21,24] studio[6,10,14,18,20,21,24]
+W-ID3     null         null         ASSERTED
+          the three feed lists are the same set (identity re-asserted)
+          patched buttons[6,10,14,18,20,21,24] == random[6,10,14,18,20,21,24] == studio[6,10,14,18,20,21,24] · release was also identical
+P2.2a     false        true         MATCHED PAIR
+          pupil text does NOT survive a reload (memory-only ruling)
+          release returned=true -> patched returned=false (field claimText)
+P2.2b     null         null         MEASURED
+          localStorage keys after a session
+          release [stbuild.session.newport-lift-permit] -> patched []
+P2.2c-get false        true         MATCHED PAIR
+          no localStorage.getItem under this lab's own key, across a full session (T1)
+          release [get:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-set false        true         MATCHED PAIR
+          no localStorage.setItem under this lab's own key, across a full session (T2)
+          release [set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-remove false        true         MATCHED PAIR
+          no localStorage.removeItem under this lab's own key, across a full session (T3)
+          release [remove:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-all null         null         MEASURED
+          every localStorage call recorded, both trees
+          release [get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,remove:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.3      false        true         MATCHED PAIR
+          the exported .csv carries no cell that Excel would evaluate
+          release live["\"=1+1\"","\"@SUM(A1)\""] inert[] -> patched live[] inert["\"'=1+1\"","\"'@SUM(A1)\""]
+P2.4      false        true         MATCHED PAIR
+          body.calm is seeded from prefers-reduced-motion at boot
+          manual toggle still present: release true / patched true
+P2.5a     false        true         MATCHED PAIR
+          zero inline handlers in the Studio source
+          release 1 -> patched 0
+P2.5b     null         null         BEHAVIOUR PRESERVED
+          View still opens the capsule detail after rebinding
+          release opened=true rows=4 -> patched opened=true rows=4
+
+1 failure(s); 0 undeclared unreachable; 1 declared unreachable by design [W-R-C24]
