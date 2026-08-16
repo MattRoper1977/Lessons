@@ -8,6 +8,12 @@ cd "$(cd "$(dirname "$0")" && pwd)"
 
 TRANSFORMS="X1a X1b X1c X2a X2b X2c X2d X3a X3c X3d X3e X4 X5a X5b X6c X6d1 X6d2 X6d3"
 
+LOCK="/tmp/$(basename "$PWD")-dropmatrix.lock"
+if ! mkdir "$LOCK" 2>/dev/null; then
+  echo "another dropmatrix run holds $LOCK — refusing to interleave into the same evidence file"; exit 1
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+
 verdicts() { grep -E '^[A-Z0-9][A-Za-z0-9 .@-]*[[:space:]]{2,}' "$1" | awk '{print $1, $NF}'; }
 
 rm -rf staging && node build.mjs >/dev/null 2>&1 || { echo "baseline build failed"; exit 1; }
@@ -35,7 +41,11 @@ for T in $TRANSFORMS; do
   # but the red says the build did not run — it is not a measurement of the
   # behaviour the transform changes. Say which kind it is rather than letting a
   # crash read as a behavioural control.
-  if grep -q 'ERR->ERROR' "/tmp/vcl_drop_$T.verdicts"; then kind='LOAD-BEARING'; else kind='watched     '; fi
+  # Test $changed, not the verdicts file. The verdicts file stores "ERR ERROR";
+  # the arrow only exists in the diff string. Grepping the wrong one meant this
+  # label could never fire — a gate that silently never runs, in the very code
+  # written to record R0.11.
+  case "$changed" in *'ERR->ERROR'*) kind='LOAD-BEARING' ;; *) kind='watched     ' ;; esac
   if [ -z "$changed" ]; then
     printf '  %-6s UNWATCHED    verdict set identical to baseline\n' "$T"; BAD=1
   else
