@@ -21,11 +21,44 @@ All three payload baselines reproduced **exactly** before any work started:
 
 ---
 
+## R0.11 — a red that proves a dependency is not a red that proves a behaviour
+
+Where a transform's sole removal crashes the build **because another transform
+calls what it defines**, the red is measuring the crash. Label it; do not count
+it as a control.
+
+Three exist here: C's `X1c` (the `acidFirst` predicate both sequencing fixes
+call), C's `X5a` (the table `X5b`'s template references), and B's `Y4d` (the
+helper `Y4c` calls). All three are labelled **LOAD-BEARING** in their matrix
+output rather than counted among the behavioural controls.
+
+The alternative — folding transforms together until every red looks like a
+behaviour red — is how a matrix gets gamed into looking complete. Target D
+*did* merge two transforms, and that was right there because they were one
+change split in two. B and C label instead, because halide and sulfate
+sequencing, and the two halves of the subtitle fix, are genuinely separate
+changes: folding them would buy a tidier table at the cost of being able to test
+them apart. **Both treatments are recorded, which is what makes them consistent
+rather than inconsistent.**
+
+## Assert a positive margin, never the absence of a violation
+
+`overlap === 0` passes when two boxes **touch**. That is not clearance, and it
+was not a cosmetic error: under a real 8 px margin the Class of Ashes release
+build fails **8 of 8** viewport/largeHud combinations rather than 6 — the two
+wide ones had been scoring zero overlap on a zero gap and reading as passes.
+
+This is the **second** target where the same predicate error hid a real failure,
+so it is a rule rather than a one-off. Both instances came from a gate that was
+honest about what it measured and wrong about what that meant.
+
 ## §S2 — the evidence rule, applied to this pass
 
 Every claim below names the artefact that proves it, and every artefact
 discriminates. Where a check would have passed on a broken build, it was
-rewritten or deleted. Six such were caught **in this pass's own gates**:
+rewritten or deleted. **Nine were caught this pass** — eight in these gates, and
+a ninth of Matt's, since the button-label finding landed on VSL's gate 5,
+authored the same afternoon:
 
 | what was wrong with the check | how it was caught |
 |---|---|
@@ -37,6 +70,7 @@ rewritten or deleted. Six such were caught **in this pass's own gates**:
 | a control that only went red because the page threw | removal matrix showed a crash, not a change; the two transforms were merged into one |
 | a button label recorded as a note, so the transform that changes it could be reverted with every gate green | removal matrix reported the transform UNWATCHED; the label is an assertion now |
 | **an overlap predicate that passed when two boxes TOUCHED** — "zero intersection" is not clearance | removal matrix reported the derived-clearance transform UNWATCHED, because a fixed value abutted the HUD exactly. Tightened to a measured 8 px gap, under which release fails **8 of 8**, not 6 |
+| *(Matt's)* VSL gate 5 — the same defect as the button label, on a gate authored the same afternoon | recorded here so the tally is nine, not eight |
 
 The last two are worth reading twice: in both cases the *fix* was fine and the
 *check* was wrong, and only the removal matrix could tell the difference. A gate
@@ -171,19 +205,69 @@ exit code (3) so it cannot be mistaken for a failure this work caused.
 
 ---
 
+## The three rulings that closed the human items
+
+**Class of Ashes — parked, and C0's fence is the position rather than a holding
+pattern.** Not because the content is too violent — by the standard of what
+fifteen-year-olds already play it plainly is not, and the enemies are an
+insectoid Brood and a construct boss rather than people. The question is whether
+a teacher should publish, under his own name, on the site his SEMH pupils reach
+through lesson links, a game set in a school under attack with a mode called
+PROTOCOL LOCKDOWN. Lockdown is not a neutral word in a school building. The cost
+of parking is nothing; unpublishing is much harder than not publishing. **The
+technical work proceeds regardless** — a parked artefact with a known boot-kill
+is still a liability, and these fixes are the reference material for the next
+pack that repeats them. If it is ever wanted on the shelf the route is a
+**re-skin**, not a debate about content: strip the school framing and it
+publishes on ordinary merits. That is a content commission with its own budget.
+
+**Chemistry Lab — the Lessons repo, as a science practical instrument,
+co-located with the FieldOps labs.** Not the Games shelf, and not Apps/Teacher
+tools. The precedent is already ruled: FieldOps split labs 01–04 into Lessons
+beside the science and sent only the Teacher Studio to Apps, because a lab is a
+lesson instrument and a studio is a teacher tool. **VCL is a lab** — pupils do
+the practical, it carries a 40-minute Introduce→Explore→Do arc, it is not
+teacher-directed. The landing is sequenced, not blocked: the co-location path
+does not exist until the FieldOps placement merges, and the route attaches to
+**v0.4.1**, not to #116. #116 is the **reference diff** for re-applying these
+fixes to v0.4 — which forks the unpatched v0.3 baseline with all six defects
+surviving verbatim — not a shipping artefact.
+
+**The URL carries the setup. It never carries the pupil's work.** Out of
+`serialisableState()`: the name, the notes, the phase answers, the drawing
+strokes. Retained: bench, apparatus configuration, sample codes, teacher fault
+injection — everything Share exists to hand over. Share hands the URL out, so a
+teacher sharing a bench setup would otherwise be shipping whichever pupil's
+answers were last typed.
+
+**No persistent graded record attached to a pupil's name**, in any of the three.
+The estate already settled this in its own governance copy — *"not grades,
+diagnoses"*, *"do not turn action counts into ability labels"* — and holding that
+line in the science instruments while dropping it the moment the same pupils
+meet a game would be incoherent. For an SEMH cohort a stored DISTINCTION /
+MERIT / PASS beside their name is a shame trigger they cannot escape by playing
+better. **Record what was done and observed, not what it was worth** — which is
+the same move the marking fix already makes.
+
 ## Owed to a human
 
-1. **The Class of Ashes content decision.** A school under attack; PROTOCOL
-   LOCKDOWN; an SEMH room. Nothing proceeds to placement without it.
-2. **The Chemistry Lab route (V7)** — which estate it belongs to and what links
-   to it. Both merge-blockers are green and waiting on this alone.
-3. **Scrap Core P1–P5**, if placement is still wanted this week.
-4. **Play all three on the phone.** Scrap Core: one descent to a titan. Class of
-   Ashes: one Operation period plus the landscape subtitle band. Chemistry Lab:
-   the microscale bench in landscape, and Share on a real link.
+Items 1, 2 and 6 are **ruled** — see above. What is left is sequenced, not
+blocked:
+
+1. **v0.4.1** as its own order, with the removal matrix written in from the
+   start rather than retrofitted, and #116's diff as the re-application
+   reference.
+2. **The FieldOps placement**, which produces the path VCL co-locates with.
+3. **Scrap Core P1–P5**, if placement is wanted.
+4. **Play them on the phone.** Scrap Core: one descent to a titan. Chemistry
+   Lab: the microscale bench in landscape, and Share on a real link.
 5. **Eyes on the Scrap Core card copy and hue** — not written, not drafted.
-6. **Grades and records, decided once across the batch.** Scrap Core's Field
-   Report, Class of Ashes' Academic Transcript and the Chemistry Lab's named
-   practical record now put three graded, named artefacts in front of the same
-   pupils. One decision, not three.
-7. **The fun question**, for all of them.
+6. **The fun question**, for all of them.
+
+### Out of scope, and unchanged
+
+`data/hud-coverage.json`'s `scriptLine` is a canonical string with **no
+consumer**, against ten hand-maintained copies of that literal. It will drift.
+The fix is one assertion comparing each declared route's literal against the
+canonical string, or deleting the field. **It is R0.1 inverted — a declaration
+nothing exercises, rather than a gate nothing runs.**
