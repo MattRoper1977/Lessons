@@ -208,7 +208,9 @@ for (const tree of TREES) {
       const compact = CW < 980, vh = compact ? 106 : 118;
       const hud = { top: CH - vh - 16, bottom: CH - 16 };
       const overlap = Math.max(0, Math.min(sr.bottom, hud.bottom) - Math.max(sr.top, hud.top));
-      return { overlap: Math.round(overlap), sub: { top: Math.round(sr.top), bottom: Math.round(sr.bottom) },
+      const gap = hud.top - sr.bottom;   // positive = clear air between them
+      return { overlap: Math.round(overlap), gap: Math.round(gap),
+               sub: { top: Math.round(sr.top), bottom: Math.round(sr.bottom) },
                hud: { top: Math.round(hud.top), bottom: Math.round(hud.bottom) }, compact,
                cssVar: getComputedStyle(document.documentElement).getPropertyValue('--hud-bottom').trim() };
     });
@@ -218,13 +220,17 @@ for (const tree of TREES) {
   globalThis['c4_' + tree] = out;
 }
 {
-  const bad = t => Object.entries(globalThis['c4_' + t]).filter(([, v]) => v.noSubtitles || !(v.overlap === 0))
-    .map(([k, v]) => `${k} overlap ${v.overlap}px (sub ${v.sub && v.sub.top}-${v.sub && v.sub.bottom}, hud ${v.hud && v.hud.top}-${v.hud && v.hud.bottom})`);
-  pair('C4', `the subtitle panel never intersects the drawn HUD band (${VIEWS.length} viewports x largeHud off/on)`,
+  /* MIN_GAP, not "overlap === 0". Touching is not clearing, and the weaker
+     predicate let a fixed 134px pass at wide viewports where the HUD band is
+     exactly 134px tall — which is how Y4a came out UNWATCHED. */
+  const MIN_GAP = 8;
+  const bad = t => Object.entries(globalThis['c4_' + t]).filter(([, v]) => v.noSubtitles || !(v.gap >= MIN_GAP))
+    .map(([k, v]) => `${k} gap ${v.gap}px overlap ${v.overlap}px (sub ${v.sub && v.sub.top}-${v.sub && v.sub.bottom}, hud ${v.hud && v.hud.top}-${v.hud && v.hud.bottom})`);
+  pair('C4', `the subtitle panel clears the drawn HUD band by at least ${MIN_GAP}px (${VIEWS.length} viewports x largeHud off/on)`,
     bad(T_REL).length === 0, bad(T_PAT).length === 0,
     `release ${bad(T_REL).length}/${VIEWS.length * 2} overlap: [${bad(T_REL).join(' · ')}] -> staging ${bad(T_PAT).length}/${VIEWS.length * 2}: [${bad(T_PAT).join(' · ')}]`);
   note('C4-derivation', 'the clearance is derived, not guessed', 'MEASURED',
-    Object.entries(globalThis['c4_' + T_PAT]).map(([k, v]) => `${k}: --hud-bottom=${v.cssVar || 'unset'}`).join(' · '));
+    Object.entries(globalThis['c4_' + T_PAT]).map(([k, v]) => `${k}: --hud-bottom=${v.cssVar || 'unset'} gap=${v.gap}px`).join(' · '));
 }
 
 /* =====================================================================
