@@ -434,8 +434,18 @@ for (const tree of TREES) {
   note('V5-detail', 'one item, both variants, both trees', 'MEASURED',
     `release negated gastest-0: [${R['gastest-0-negated'].cls}] "${R['gastest-0-negated'].text}" || ` +
     `staging negated gastest-0: [${P['gastest-0-negated'].cls}] "${P['gastest-0-negated'].text}"`);
-  note('V5-button', 'the button label', 'MEASURED',
-    `release "${R['gastest-0-right'].button}" -> staging "${P['gastest-0-right'].button}"`);
+  /* The button label was a note, and the removal matrix duly reported X5b
+     UNWATCHED: nothing went red when the word went back to "Check". A button
+     that says Check above feedback that deliberately checks nothing is the same
+     false promise V5 exists to remove, so it is an assertion now. */
+  const labelled = t => V5.every(it => {
+    const c = globalThis['v5_' + t][`${it.bench}-${it.i}-right`];
+    return !!c && !c.missing && c.button === 'Compare';
+  });
+  pair('V5c', 'the keyword items say Compare, not Check — the button matches what it does',
+    labelled(T_REL), labelled(T_PAT),
+    `release "${R['gastest-0-right'].button}" -> staging "${P['gastest-0-right'].button}" ` +
+    `(all ${V5.length} keyword items: staging ${labelled(T_PAT)})`);
 }
 
 /* =====================================================================
