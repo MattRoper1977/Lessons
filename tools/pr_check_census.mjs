@@ -27,6 +27,16 @@
 const REPOS = (process.env.CENSUS_REPOS ||
   'MattRoper1977/Lessons,MattRoper1977/mattroper1977.github.io,MattRoper1977/Matt-s-Apps-').split(',');
 const GATE = process.argv.includes('--gate');
+/* A gate that is red on every run is not a gate - it is deleted within the week.
+   The twelve PRs measured on 2026-08-16 are DECLARED in a baseline file, each an
+   open finding in the ledger rather than an exemption, and the gate's job is to
+   stop the thirteenth. The baseline is held to being current in both directions:
+   an entry that has since acquired checks reds the run too, because a baseline
+   nobody prunes is stale evidence with a filename. */
+const BASELINE = (() => {
+  const i = process.argv.indexOf('--baseline');
+  return i >= 0 ? process.argv[i + 1] : null;
+})();
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
 
 const api = async p => {
@@ -93,12 +103,35 @@ for (const r of rows.sort((a, b) => a.repo.localeCompare(b.repo) || a.number - b
 }
 
 const zeroes = rows.filter(r => r.zero);
-const gated = zeroes.filter(r => !r.draft);
+let gated = zeroes.filter(r => !r.draft);
+let stale = [];
+if (BASELINE) {
+  const fs = await import('node:fs');
+  let known;
+  try { known = JSON.parse(fs.readFileSync(BASELINE, 'utf8')).known || []; }
+  catch (e) {
+    console.log(`[INCONCLUSIVE] the baseline at ${BASELINE} could not be read: ${e.message}`);
+    console.log('Running without one would silently widen the gate to "anything goes".');
+    process.exit(2);
+  }
+  const key = r => `${r.repo}#${r.number}`;
+  const declared = new Set(known.map(k => `${k.repo.split('/').pop()}#${k.pr}`));
+  stale = known.filter(k => {
+    const row = rows.find(r => key(r) === `${k.repo.split('/').pop()}#${k.pr}`);
+    return row && !row.zero;   // listed as zero-check, now has checks
+  });
+  gated = gated.filter(r => !declared.has(key(r)));
+}
 console.log(`\n${rows.length} open PR(s) · ${zeroes.length} with zero check runs ` +
             `(${zeroes.length - gated.length} draft, ${gated.length} not)`);
 if (gated.length) {
   console.log('\nEvery line below is a PR whose green tick means nothing was asked:');
   for (const r of gated) console.log(`  ${r.repo} #${r.number} — ${r.cause}`);
 }
-if (GATE && gated.length) process.exit(1);
+if (BASELINE) {
+  console.log(`\nBASELINE  ${gated.length} zero-check PR(s) NOT declared in ${BASELINE} · ` +
+              `${stale.length} declared entr(ies) that now have checks and should be pruned`);
+  for (const s of stale) console.log(`  prune: ${s.repo} #${s.pr} — it has check runs now`);
+}
+if (GATE && (gated.length || stale.length)) process.exit(1);
 process.exit(0);

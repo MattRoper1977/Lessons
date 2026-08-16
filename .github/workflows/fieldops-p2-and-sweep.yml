@@ -27,6 +27,16 @@ on:
 permissions:
   contents: read
 
+# EVERY GATE HERE PIPES ITS OUTPUT THROUGH `tee`, AND THE DEFAULT SHELL IS
+# `bash -e`, WHICH TAKES THE EXIT CODE OF THE LAST COMMAND IN A PIPELINE.
+# The first run of this workflow proved it: the census printed nine findings and
+# the job went green, because tee succeeded. A gate defeated by a pipe, inside
+# the gate written to catch gates that cannot fire. pipefail is set for every
+# run step rather than per step, so the next one added inherits it.
+defaults:
+  run:
+    shell: bash -Eeo pipefail {0}
+
 concurrency:
   group: fieldops-p2-sweep-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -197,7 +207,7 @@ jobs:
       - name: Census across the three estates
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node tools/pr_check_census.mjs --gate | tee "$RUNNER_TEMP/pr-census.txt"
+        run: node tools/pr_check_census.mjs --gate --baseline tools/zero_check_baseline.json | tee "$RUNNER_TEMP/pr-census.txt"
 
       - name: Result block
         if: always()
