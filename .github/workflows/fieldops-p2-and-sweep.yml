@@ -1,14 +1,13 @@
-name: FieldOps P2 and the stale-evidence sweep
+name: FieldOps P2, the sweep, and the serve proof
 
 # NO `paths:` FILTER, DELIBERATELY.
 #
 # PR #114 in this repository ran ZERO checks, because a new tool matched no path
-# filter on any workflow. PR #120 - the one this file was added to - was about to
-# do the same: it carries the four patched FieldOps labs, the Teacher Studio
-# transforms, tools/stale_evidence_sweep.mjs and the release ledger, and not one
-# of those paths appears in any filter in .github/workflows. A gate nobody runs
-# is not evidence, and a filter that has to be remembered is a filter that will
-# be forgotten.
+# filter on any workflow. PR #120 was about to do the same: it carried the four
+# patched FieldOps labs, the Teacher Studio transforms, the sweep and the
+# release ledger, and not one of those paths appeared in a filter anywhere in
+# .github/workflows. A gate nobody runs is not evidence, and a filter that has
+# to be remembered is a filter that will be forgotten.
 #
 # If this job becomes slow enough to be worth filtering, filter it by naming the
 # paths AND adding a control that the filter matches the files the branch adds -
@@ -19,6 +18,10 @@ on:
     branches: [main]
   push:
     branches: [main]
+  schedule:
+    # Serving drifts without anyone pushing. Weekly, off the hour other estate
+    # jobs use.
+    - cron: '41 5 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -36,20 +39,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # R0.15. The sweep's headline number is 0 stale. That is only worth
-      # printing if the sweep can be shown to catch a stale subject - version 2
-      # of this tool reported 0 stale because it could no longer fire at all.
-      # --self-test authors three genuinely-stale fixtures of three shapes and
-      # requires all three caught, then replays the four subjects version 1
-      # wrongly destroyed and requires them not stale.
-      - name: The three authored positive controls, and the four regressions
-        run: node tools/stale_evidence_sweep.mjs --self-test
+      # THREE ROOTS, NOT ONE. The sweep's first CI run reported "0 stale" over
+      # three repositories it could not see. Roots are derived now and an absent
+      # one reports NOT ASSESSED - honest, and not yet sufficient, because an
+      # INCONCLUSIVE nothing ever resolves is a check that cannot fire dressed
+      # politely. Here the count is knowable, so it is asserted.
+      #
+      # Anonymous clones: these are public repositories and the job's token is
+      # scoped to this one. A private sibling would fail to clone and the
+      # --require-roots assertion below would report it by name rather than
+      # quietly sweeping two out of three.
+      - name: Check out the two sibling estates
+        run: |
+          set -uo pipefail
+          git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site" \
+            || echo "site clone failed - --require-roots will name it"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Matt-s-Apps-.git "$RUNNER_TEMP/apps" \
+            || echo "apps clone failed - --require-roots will name it"
 
-      # The sweep itself reads three repositories and only one of them is
-      # checked out here, so it reports what it can see and exits 0 either way.
-      # It is run for its output, not as a gate; the gate is the line above.
-      - name: The sweep over what this checkout can see
-        run: node tools/stale_evidence_sweep.mjs
+      # R0.15. The sweep's headline is "0 stale", and that is worth printing
+      # only if the sweep can be shown to catch a stale subject - version 2 of
+      # this tool reported 0 stale because it could no longer fire at all.
+      - name: The authored positive controls, the regressions, and the seventh form
+        run: node tools/stale_evidence_sweep.mjs --self-test | tee "$RUNNER_TEMP/sweep-selftest.txt"
+
+      - name: The sweep over all three estates, and all three must be assessed
+        env:
+          MBM_SITE_REPO: ${{ runner.temp }}/site
+          MBM_APPS_REPO: ${{ runner.temp }}/apps
+        run: node tools/stale_evidence_sweep.mjs --require-roots=3 | tee "$RUNNER_TEMP/sweep.txt"
 
       - name: A default run is a dry run
         run: |
@@ -64,6 +82,31 @@ jobs:
           fi
           echo "default run changed nothing, as R0.14 requires"
 
+      # §9. Job-level success was accepted once because only the tail of an
+      # 861-line log could be fetched. Fix the cause, not the retrieval: the
+      # numbers go where they can be read without scraping.
+      - name: Result block
+        if: always()
+        run: |
+          {
+            echo '## Stale-evidence sweep'
+            echo '```'
+            tail -20 "$RUNNER_TEMP/sweep.txt" 2>/dev/null || echo '(the sweep did not run)'
+            echo '```'
+            echo '### Controls'
+            echo '```'
+            cat "$RUNNER_TEMP/sweep-selftest.txt" 2>/dev/null || echo '(the self-test did not run)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the sweep evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sweep-evidence
+          path: ${{ runner.temp }}/sweep*.txt
+          if-no-files-found: error
+
   fieldops:
     name: FieldOps P2 - the build is reproducible and the labs still boot
     runs-on: ubuntu-latest
@@ -76,11 +119,97 @@ jobs:
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
-      # U1 is the one that matters most and needs no browser: dropping every
-      # transform must reproduce release/ byte for byte. A builder whose
-      # drop-all output differs from release is editing something it has not
-      # declared.
+      # U1 is the load-bearing one: drop every transform and the builder must
+      # reproduce release/ byte for byte. A builder whose drop-all output differs
+      # from release is editing something it has not declared.
       - name: Every transform applies exactly once, and drop-all reproduces release
         env:
           P2_PLAYWRIGHT: playwright
-        run: node tools/fieldops/assert_unchanged.mjs
+        run: node tools/fieldops/assert_unchanged.mjs | tee "$RUNNER_TEMP/assert-unchanged.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## assert_unchanged'; echo '```';
+            cat "$RUNNER_TEMP/assert-unchanged.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: assert-unchanged
+          path: ${{ runner.temp }}/assert-unchanged.txt
+          if-no-files-found: error
+
+  served:
+    name: Merged is not served - the placed labs and the Studio
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # The offline controls run on EVERY event, including a PR. The instrument
+      # has to be provable somewhere its network legs cannot run, or the only
+      # thing standing behind it is a job that skipped.
+      - name: The instrument's offline controls
+        run: node tools/verify_fieldops_served.mjs --self-test | tee "$RUNNER_TEMP/served-selftest.txt"
+
+      # The live legs only where the answer can be true. A PR branch is not
+      # deployed, so fetching production from one compares the live estate
+      # against a tree that is not live - it would go red for being a PR.
+      #
+      # A push-time run can race the Pages deploy. The comparison names both
+      # hashes and both sizes, so a lag read is recognisable rather than
+      # mysterious; re-dispatch settles it.
+      - name: Every subject serves, unredirected, byte-identical
+        if: github.event_name != 'pull_request'
+        run: |
+          sleep 60
+          node tools/verify_fieldops_served.mjs | tee "$RUNNER_TEMP/served.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Serve proof'; echo '```';
+            cat "$RUNNER_TEMP/served.txt" 2>/dev/null || echo '(the live legs do not run on a pull request - a PR branch is not deployed)';
+            echo '```'; echo '### Offline controls'; echo '```';
+            cat "$RUNNER_TEMP/served-selftest.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serve-proof
+          path: ${{ runner.temp }}/served*.txt
+          if-no-files-found: error
+
+  pr-census:
+    name: No open PR runs zero checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # The generalisation of the #120 finding. A green tick on a PR nobody
+      # checked is indistinguishable from a green tick on a PR that passed.
+      - name: Census across the three estates
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/pr_check_census.mjs --gate | tee "$RUNNER_TEMP/pr-census.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Open-PR check census'; echo '```';
+            cat "$RUNNER_TEMP/pr-census.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-census
+          path: ${{ runner.temp }}/pr-census.txt
+          if-no-files-found: error
