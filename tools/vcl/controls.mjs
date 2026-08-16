@@ -148,6 +148,11 @@ for (const tree of TREES) {
       noteInExport: /NOTE-CANARY-TEXT/.test(exported),
       nameInExport: /AVA-CANARY-NAME/.test(exported),
       nameInPrint: /AVA-CANARY-NAME/.test(printed),
+      noteInPrint: /NOTE-CANARY-TEXT/.test(printed),
+      answerInPrint: /ANSWER-CANARY-TEXT/.test(printed),
+      /* the ruling: record what was done and observed, not what it was worth.
+         The printed practical record must carry no verdict or grade. */
+      verdictInPrint: /\b(Correct|DISTINCTION|MERIT|PASS|Grade)\b/.test(printed) || /✓/.test(printed),
       caption: (document.getElementById('pupilName') || {}).placeholder || '',
       hashLen: location.hash.length,
       decodeOk: !/^DECODE FAILED/.test(hashPlain),
@@ -161,10 +166,20 @@ for (const tree of TREES) {
   pair('V2a', 'the pupil name is absent from the state URL, as its caption promises',
     R.decodeOk && !R.nameInHash, P.decodeOk && !P.nameInHash,
     `caption "${P.caption}" · release name-in-hash=${R.nameInHash} -> staging name-in-hash=${P.nameInHash}`);
-  pair('V2b', 'the name is still in print and in Export JSON, which is what the caption offers',
-    R.nameInExport && R.nameInPrint, P.nameInExport && P.nameInPrint,
-    `release export=${R.nameInExport} print=${R.nameInPrint} -> staging export=${P.nameInExport} print=${P.nameInPrint}`,
+  pair('V2b', 'the name, the note and the answers are ALL still in print and in Export JSON — the two places the caption sends a pupil',
+    R.nameInExport && R.nameInPrint && R.noteInPrint && R.answerInPrint,
+    P.nameInExport && P.nameInPrint && P.noteInPrint && P.answerInPrint,
+    `release name print=${R.nameInPrint} note print=${R.noteInPrint} answer print=${R.answerInPrint} -> ` +
+    `staging name print=${P.nameInPrint} note print=${P.noteInPrint} answer print=${P.answerInPrint}`,
     'ALREADY CORRECT ON RELEASE — asserted so the V2 fix cannot quietly take it away');
+  /* RULED: no persistent graded record attached to a pupil's name. The printed
+     practical record is the named artefact in this app, so it is the one that
+     must carry observations and procedure but no verdict. */
+  note('V2h', 'the printed practical record carries no grade or verdict beside the name',
+    (!R.verdictInPrint && !P.verdictInPrint) ? 'ASSERTED — true on both, and now watched'
+      : `VERDICT PRESENT (release ${R.verdictInPrint}, staging ${P.verdictInPrint})`,
+    `predicate: /\\b(Correct|DISTINCTION|MERIT|PASS|Grade)\\b/ or a tick, anywhere in #printSheet`);
+  if (R.verdictInPrint || P.verdictInPrint) rows[rows.length - 1].verdict = 'VERDICT PRESENT';
   /* RULED: the URL carries the setup and never the pupil's work. An earlier cut
      of this kept the note in the hash on the grounds that with no localStorage
      the URL is the only persistence — which is true, and is not the deciding
@@ -562,7 +577,7 @@ for (const r of rows) {
   console.log(`    ${r.what}`);
   if (r.detail) console.log(`    ${r.detail}`);
 }
-const bad = rows.filter(r => ['NOT A CONTROL', 'REGRESSION', 'PAGE ERROR', 'MOVED — HARD STOP', 'BROKEN'].includes(r.verdict));
+const bad = rows.filter(r => ['NOT A CONTROL', 'REGRESSION', 'PAGE ERROR', 'MOVED — HARD STOP', 'BROKEN', 'VERDICT PRESENT'].includes(r.verdict));
 const un = rows.filter(r => r.verdict === 'UNREACHABLE');
 console.log(`\n${bad.length} failure(s); ${un.length} unreachable`);
 process.exit(bad.length ? 1 : un.length ? 2 : 0);

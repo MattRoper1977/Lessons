@@ -117,6 +117,17 @@ event log, the note and the written answer — including **per-moment** event
 observations, which a first cut quietly flattened to the well's final state —
 and **V3-legacy** asserts a link minted by the *release* build still opens here.
 
+## The printed practical record — ruled
+
+**No persistent graded record attached to a pupil's name.** VCL's named artefact
+is the printed practical record, so it is the one the ruling lands on: it keeps
+the observations, the procedure and the evidence note, and carries **no verdict**.
+
+Measured rather than assumed — `V2h` searches the whole print sheet for a grade
+word or a tick and finds none, on **both** trees. It was already true; it is
+watched now, which is the difference between a property and a guarantee. The
+verdict this app *did* pronounce was in the marking, and V5 removed it.
+
 ## V4 — `.drop-pill` had no CSS rule at all
 
 The class appeared exactly once in the file, in the template, with the pills
