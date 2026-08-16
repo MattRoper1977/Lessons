@@ -1,12 +1,31 @@
 # Class of Ashes: Zero Period — PATCHED AND PARKED
 
 **This game is not being placed, and nothing in this branch places it.**
+**C0's scope fence is the position, not a holding pattern.**
 
-There is an unresolved content decision only Matt can make: the game is set in a
-school under attack, one of its three modes is called **PROTOCOL LOCKDOWN**, and
-the shelf it would sit on is used by SEMH pupils. The enemies are an insectoid
-Brood and a construct boss, which is a genuine mitigator — but the decision is
-his and it is not a technical question.
+The deciding question was never whether the content is too violent. By the
+standard of what fifteen-year-olds already play it plainly is not, and the
+enemies are an insectoid Brood and a construct boss rather than people — a
+genuine mitigator, not pretended away.
+
+The question is: should a teacher publish, under his own name, on the site his
+SEMH pupils reach through lesson links, a game set in a school under attack with
+a mode called **PROTOCOL LOCKDOWN**? Lockdown is not a neutral word in a school
+building. It names a drill those pupils have stood through, and for some of them
+it will name more than a drill. The cost of parking is nothing; the cost of
+publishing and being asked to explain it is disproportionate to any benefit, and
+unpublishing is much harder than not publishing.
+
+**The technical work proceeds regardless.** A parked artefact with a known
+boot-kill is still a liability, and these fixes are the reference material for
+the next pack that repeats them.
+
+**If it is ever wanted on the shelf, the route is a re-skin, not a debate about
+content.** Strip the school framing — PROTOCOL LOCKDOWN, the Academy, the Dean's
+Exam, the Arch-Provost, the Academic Transcript — and it becomes an ordinary
+tactical combat game that publishes on ordinary merits. That is a content
+commission with its own budget, not a patch, and it does not belong in this
+close. Swap line: `COA RESKIN`.
 
 So: no route, no manifest entry, no card, hue, genre, feel tag, take, `TOP` or
 `hero`, and no link from anywhere. The `C0` gate asserts that, by looking for any
@@ -98,6 +117,21 @@ override is gone. Measured at 915×412, 844×390, 740×360 and 1280×600, with
 The doubled "MUNITIONS SIPHON" text in their own capture was deliberately not
 chased — it is a compositing artefact of their DOM-plus-framebuffer method, not
 a game defect.
+
+## The Academic Transcript — ruled
+
+**No persistent graded record attached to a pupil's name.** The Transcript grades
+DISTINCTION / MERIT / PASS and keeps a persistent record; the estate has already
+settled this in its own governance copy — *"not grades, diagnoses"*, *"do not
+turn action counts into ability labels"* — and holding that line in the science
+instruments while dropping it the moment the same pupils meet a game would be
+incoherent. For an SEMH cohort a stored grade beside their name is a shame
+trigger, and a stored one they cannot escape by playing better.
+
+**Record what was done and observed, not what it was worth.** Not implemented
+here: the game is parked, so the ruling is recorded against it rather than
+enacted, and it lands with the re-skin if that is ever commissioned. Swap line:
+`GRADED ARTEFACTS = KEEP`.
 
 ## Not done, and why
 
