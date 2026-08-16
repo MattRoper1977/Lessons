@@ -66,9 +66,10 @@ honest about what it measured and wrong about what that meant.
 
 Every claim below names the artefact that proves it, and every artefact
 discriminates. Where a check would have passed on a broken build, it was
-rewritten or deleted. **Nine were caught this pass** — eight in these gates, and
-a ninth of Matt's, since the button-label finding landed on VSL's gate 5,
-authored the same afternoon:
+rewritten or deleted. **Ten were caught this pass** — eight in these gates, a
+ninth of Matt's (the button-label finding landed on VSL's gate 5, authored the
+same afternoon), and a tenth found by re-reading an artefact rather than its
+summary line:
 
 | what was wrong with the check | how it was caught |
 |---|---|
