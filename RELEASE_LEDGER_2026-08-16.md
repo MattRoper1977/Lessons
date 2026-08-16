@@ -94,12 +94,25 @@ D 16/16 · C 18/18 · B 10/10 — and now measured with a label that fires, rath
 than one that could not. Class of Ashes, verbatim:
 
 ```
-Y1a  watched      C1->CONTROL          Y4b  watched      C4->CONTROL
-Y1b  watched      C1->CONTROL          Y4c  watched      C4->CONTROL
-Y2   watched      C2->CONTROL C3b->…   Y4d  LOAD-BEARING C3c->REGRESSION C4->…
-Y3   watched      C3a->CONTROL         Y5d  watched      C5.4->CONTROL
-Y4a  watched      C4->CONTROL          Y5e1 watched      C5.5a->CONTROL
+B — Class of Ashes                     C — Chemistry Lab
+Y1a  watched                           X1a  watched        X3d  watched
+Y1b  watched                           X1b  watched        X3e  watched
+Y2   watched                           X1c  LOAD-BEARING   X4   watched
+Y3   watched                           X2a  watched        X5a  LOAD-BEARING
+Y4a  watched                           X2b  watched        X5b  watched
+Y4b  watched                           X2c  watched        X6c  watched
+Y4c  watched                           X2d  watched        X6d1 watched
+Y4d  LOAD-BEARING                      X3a  watched        X6d2 watched
+Y5d  watched                           X3c  watched        X6d3 watched
+Y5e1 watched
 ```
+
+Three LOAD-BEARING, exactly the three R0.11 names, and each one now carries the
+label because the check tests the diff string rather than the verdicts file.
+`X2a`'s row is the one worth reading in full: dropping it reddens `V2a`, `V2c`,
+`V2g` and `V3-roundtrip-work` together, because the privacy ruling widened what
+that single transform removes from the URL and every part of it has its own
+assertion behind it.
 
 The matrices also now hold a lock on their evidence file. Two runs wrote into one
 file concurrently and left an interleaved artefact with a half-line in it —
