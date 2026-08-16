@@ -28,8 +28,8 @@ const rows = [];
    that is the measurement, not a broken control, and calling it NOT A CONTROL
    would misreport a correct result. Every row where release is ALSO wrong must
    still come out as a matched pair. */
-const pair = (id, what, relOk, patOk, detail = '', bothTrue = 'NOT A CONTROL') =>
-  rows.push({ id, what, release: relOk, patched: patOk,
+const pair = (id, what, relOk, patOk, detail = '', bothTrue = 'NOT A CONTROL', declared = false) =>
+  rows.push({ id, what, release: relOk, patched: patOk, declared,
               verdict: (relOk === 'UNREACHABLE' || patOk === 'UNREACHABLE') ? 'UNREACHABLE'
                      : (!relOk && patOk) ? 'MATCHED PAIR'
                      : (relOk && patOk) ? bothTrue
@@ -55,8 +55,13 @@ async function evalIn(tree, file, fn, arg, opts = {}) {
  * real "Run distillation" button, then read from what the lab TELLS the
  * pupil (#wTrayRead), not from wTray().
  * ===================================================================== */
-const CORRECT = { 6: 'petrol', 10: 'petrol', 14: 'kerosene', 18: 'diesel', 20: 'diesel', 24: 'fuel-oil' };
-const REACHABLE = [6, 10, 14, 18, 20, 24];
+const CORRECT = { 6: 'petrol', 10: 'petrol', 14: 'kerosene', 18: 'diesel', 20: 'diesel', 21: 'fuel-oil', 24: 'fuel-oil' };
+const REACHABLE = [6, 10, 14, 18, 20, 21, 24];
+/* C24 is UNREACHABLE BY DESIGN, not by oversight: it boils at 430C and this
+   column's furnace stops at 390C. Ruling A keeps it selectable and keeps this
+   line reporting UNREACHABLE. C21's arrival must not quietly convert it to a
+   pass — the declaration is the teaching point. */
+const UNREACHABLE_BY_DESIGN = new Set([24]);
 
 for (const tree of TREES) {
   const { out, errs } = await evalIn(tree, WILTON, async (feeds) => {
@@ -93,24 +98,40 @@ const RR = globalThis['reach_' + T_REL], RP = globalThis['reach_' + T_PAT];
 for (const n of REACHABLE) {
   const want = CORRECT[n];
   const r = RR[n], p = RP[n];
+  /* Two different things, and collapsing them cost the C21 row its verdict:
+     NO BUTTON is a plain fail — the fraction cannot be taught because nothing
+     selects it, and a patch that adds the button is a matched pair against it.
+     BUTTON BUT WILL NOT DISTIL is genuinely unreachable — the subject is there
+     and cannot be reached, which is C24 and is never scored as a pass. */
   const scoreOf = x => {
-    if (!x || !x.button) return 'UNREACHABLE';           // no button at all
-    if (!x.distilled) return 'UNREACHABLE';              // button exists, lab refuses to separate it
+    if (!x || !x.button) return false;                   // no way to select it at all
+    if (!x.distilled) return 'UNREACHABLE';              // selectable, lab refuses to separate it
     return new RegExp(want).test(x.told);
   };
   const sr = scoreOf(r), sp = scoreOf(p);
   const dr = r && r.button ? (r.distilled ? `told "${r.told}"` : `NOT DISTILLED at ${r.furnaceMax}°C max`) : 'no button';
   const dp = p && p.button ? (p.distilled ? `told "${p.told}"` : `NOT DISTILLED at ${p.furnaceMax}°C max`) : 'no button';
   pair(`W-R-C${n}`, `C${n} is taught as ${want} through the real buttons`, sr, sp,
-    `release: ${dr}  ->  patched: ${dp}`, 'ALREADY CORRECT ON RELEASE');
+    `release: ${dr}  ->  patched: ${dp}`, 'ALREADY CORRECT ON RELEASE', UNREACHABLE_BY_DESIGN.has(n));
 }
 
 /* the headline figure, computed rather than asserted */
 const scoreTree = R => REACHABLE.filter(n => R[n] && R[n].button && R[n].distilled && new RegExp(CORRECT[n]).test(R[n].told)).length;
 const selectable = R => REACHABLE.filter(n => R[n] && R[n].button).length;
+const undistillable = R => REACHABLE.filter(n => R[n] && R[n].button && !R[n].distilled);
 note('W-SCORE', 'selectable feeds taught in the chemically correct band',
   'MEASURED',
-  `release ${scoreTree(RR)} of ${selectable(RR)} selectable  ->  patched ${scoreTree(RP)} of ${selectable(RP)} selectable`);
+  `release ${scoreTree(RR)} of ${selectable(RR)} selectable  ->  patched ${scoreTree(RP)} of ${selectable(RP)} selectable ` +
+  `(${undistillable(RP).map(n => 'C' + n).join(', ') || 'none'} selectable but cannot be distilled at the ceiling)`);
+/* Ruling A's headline, stated so it cannot be quoted loose */
+{
+  const declared = undistillable(RP).every(n => UNREACHABLE_BY_DESIGN.has(n))
+                && [...UNREACHABLE_BY_DESIGN].every(n => undistillable(RP).includes(n));
+  note('W-DESIGN', 'every feed that cannot be distilled is one declared unreachable by design',
+    declared ? 'ASSERTED' : 'UNDECLARED FEED',
+    `undistillable at the ceiling: [${undistillable(RP).map(n => 'C' + n)}] · declared: [${[...UNREACHABLE_BY_DESIGN].map(n => 'C' + n)}] · ` +
+    `headline: ${scoreTree(RP)} of ${selectable(RP)} reachable, C24 declared unreachable by design`);
+}
 
 /* =====================================================================
  * §B  WILTON — UNIT-LEVEL SET.  NOT USER-REACHABLE.
@@ -200,14 +221,22 @@ pair('W-RES-UI', 'the column\'s residue label reads as chemistry, not as a missi
 for (const tree of TREES) {
   const { out } = await evalIn(tree, WILTON, () => {
     if (typeof wTray !== 'function') return { unreachable: true };
-    /* recover the band for a raw boiling point by inverting wBoil: bp = -50+20n */
+    /* recover the band for a raw boiling point by inverting wBoil: bp = -50+20n.
+       wTray takes a carbon number, so a fractional n reaches any bp we like. */
     const bandOf = bp => wTray((bp + 50) / 20).label;
     return [...document.querySelectorAll('#towerW text')]
       .map(t => t.textContent.trim())
       .filter(s => /°C/.test(s))
       .map(s => { const bp = +s.match(/(-?\d+)°C/)[1];
+                  const below = /^below/i.test(s);
                   const named = s.replace(/^[^·]*·\s*/, '').trim();
-                  return { label: s, bp, named, codeBand: bandOf(bp) }; });
+                  /* "below 25°C · gases" is a boundary marker, not a tray
+                     temperature: the claim is that everything under 25 is gases
+                     AND that 25 itself is not. Both limbs are checked, so the
+                     word "below" cannot be used to dodge the assertion. */
+                  return { label: s, bp, named, below,
+                           codeBand: bandOf(below ? bp - 1 : bp),
+                           bandAtMark: bandOf(bp) }; });
   });
   globalThis['diag_' + tree] = out;
 }
@@ -220,20 +249,130 @@ for (const tree of TREES) {
   const KEY = [[/gas/i, 'gases'], [/petrol/i, 'petrol'], [/kerosene/i, 'kerosene'],
                [/diesel/i, 'diesel'], [/fuel.?oil/i, 'fuel-oil'], [/residue/i, 'residue']];
   const key = s => (KEY.find(([re]) => re.test(s)) || [null, '?' + s])[1];
-  const agree = r => key(r.named) === key(r.codeBand);
-  const summarise = t => (globalThis['diag_' + t] || []).map(r => `${r.bp}°C says "${r.named}", code says "${r.codeBand}"${agree(r) ? '' : '  <-- disagree'}`);
+  /* A "below N" label makes two claims and both are checked: N-1 IS the named
+     fraction, and N itself is NOT. A plain "N°C" label makes one. */
+  const agree = r => r.below ? (key(r.named) === key(r.codeBand) && key(r.named) !== key(r.bandAtMark))
+                             : (key(r.named) === key(r.codeBand));
+  const summarise = t => (globalThis['diag_' + t] || []).map(r =>
+    `${r.below ? 'below ' : ''}${r.bp}°C says "${r.named}", code says "${r.codeBand}"${r.below ? ` (and ${r.bp} itself is "${r.bandAtMark}")` : ''}${agree(r) ? '' : '  <-- disagree'}`);
   const okCount = t => (globalThis['diag_' + t] || []).filter(agree).length;
   const n = (globalThis['diag_' + T_PAT] || []).length;
-  /* Neither tree passes outright — the 25°C label disagrees on both, because
-     bp<25 is strict and 25 itself falls into petrol. So the pass/fail is taken
-     on "did the patch make it worse", which is the question that decides
-     whether this can merge. */
-  pair('W-DIAG', 'the patch does not increase the number of printed temperatures that contradict the code',
-    true, okCount(T_PAT) >= okCount(T_REL),
-    `release ${okCount(T_REL)}/${n} agree · patched ${okCount(T_PAT)}/${n} agree — the band fix moves three labels out of their own band`,
-    'NO REGRESSION');
+  /* RULING B. This is no longer "did the patch make it worse" — the five tray
+     temperatures were corrected, so the check is now absolute: every printed
+     temperature must fall in the band its own label names. Release fails it,
+     the fixed build must pass it, and it is the same comparator that caught the
+     regression in the first place. */
+  pair('W-DIAG', 'every temperature printed on the column falls in the band its own label names',
+    okCount(T_REL) === n, okCount(T_PAT) === n,
+    `release ${okCount(T_REL)}/${n} agree · patched ${okCount(T_PAT)}/${n} agree`);
   note('W-DIAG-rel', 'the printed temperatures against the RELEASE bands', 'MEASURED', summarise(T_REL).join(' · '));
   note('W-DIAG-pat', 'the printed temperatures against the PATCHED bands', 'MEASURED', summarise(T_PAT).join(' · '));
+}
+
+/* Ruling B asks for this limb by name: run the comparison across all
+   SELECTABLE FEEDS, not just the five trays. This is the agreement a pupil
+   actually sees — the marker lands on a tray, that tray carries a printed
+   label, and the readout names a fraction. All three must say one thing. */
+for (const tree of TREES) {
+  const { out } = await evalIn(tree, WILTON, async (feeds) => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const furn = document.getElementById('wFurnace');
+    const labels = [...document.querySelectorAll('#towerW text')]
+      .map(t => ({ y: +t.getAttribute('y'), text: t.textContent.trim() }));
+    const res = {};
+    for (const n of feeds) {
+      const btn = document.querySelector(`.feedW[data-feed="${n}"]`);
+      if (!btn) { res[n] = { button: false }; continue; }
+      btn.click();
+      furn.value = furn.max; furn.dispatchEvent(new Event('input', { bubbles: true }));
+      await sleep(50);
+      document.getElementById('runDistil').click();
+      await sleep(80);
+      const cy = +document.getElementById('condenseW').getAttribute('cy');
+      /* the printed label for the tray the marker is standing on: the nearest
+         label at or below the marker, within one tray's spacing */
+      const near = labels.filter(l => l.y >= cy - 6 && l.y - cy < 40).sort((a, b) => a.y - b.y)[0];
+      res[n] = { button: true, cy, markerLabel: near ? near.text : null,
+                 readout: (document.getElementById('wTrayRead').textContent || '').trim(),
+                 distilled: /condensed in the/.test(document.getElementById('wDistilResult').textContent || '') };
+    }
+    return res;
+  }, REACHABLE);
+  globalThis['mk_' + tree] = out;
+}
+{
+  const KEY = [[/gas/i, 'gases'], [/petrol/i, 'petrol'], [/kerosene/i, 'kerosene'],
+               [/diesel/i, 'diesel'], [/fuel.?oil/i, 'fuel-oil'], [/residue/i, 'residue']];
+  const key = s => (KEY.find(([re]) => re.test(s || '')) || [null, '?'])[1];
+  const judged = t => REACHABLE.map(n => {
+    const r = (globalThis['mk_' + t] || {})[n];
+    if (!r || !r.button) return { n, verdict: 'no button' };
+    if (!r.distilled) return { n, verdict: 'not distilled' };
+    const ok = key(r.markerLabel) === key(r.readout);
+    return { n, ok, verdict: `marker on "${r.markerLabel}" / readout "${r.readout}"${ok ? '' : '  <-- disagree'}` };
+  });
+  const scored = t => judged(t).filter(j => j.ok !== undefined);
+  const okOf = t => scored(t).filter(j => j.ok).length;
+  pair('W-DIAG-MARK', 'for every distillable feed, the tray the marker lands on and the readout name the same fraction',
+    scored(T_REL).length > 0 && okOf(T_REL) === scored(T_REL).length,
+    scored(T_PAT).length > 0 && okOf(T_PAT) === scored(T_PAT).length,
+    `release ${okOf(T_REL)}/${scored(T_REL).length} agree · patched ${okOf(T_PAT)}/${scored(T_PAT).length} agree`,
+    'ALREADY CONSISTENT ON RELEASE');
+  note('W-DIAG-MARK-rel', 'marker vs readout, per feed, on RELEASE', 'MEASURED',
+    judged(T_REL).map(j => `C${j.n}: ${j.verdict}`).join(' · '));
+  note('W-DIAG-MARK-pat', 'marker vs readout, per feed, on the fixed build', 'MEASURED',
+    judged(T_PAT).map(j => `C${j.n}: ${j.verdict}`).join(' · '));
+}
+
+/* T10 — the refusal message. Two situations, two sentences, and the wrong
+   sentence in the wrong place would be a false statement to a pupil. */
+for (const tree of TREES) {
+  const { out } = await evalIn(tree, WILTON, async () => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const furn = document.getElementById('wFurnace');
+    const run = async (feed, furnace) => {
+      const b = document.querySelector(`.feedW[data-feed="${feed}"]`);
+      if (!b) return null;
+      b.click();
+      furn.value = String(furnace); furn.dispatchEvent(new Event('input', { bubbles: true }));
+      await sleep(50);
+      document.getElementById('runDistil').click();
+      await sleep(80);
+      return (document.getElementById('wDistilResult').textContent || '').trim();
+    };
+    return { ceiling: await run(24, +furn.max), lowFurnace: await run(14, +furn.min), furnMax: +furn.max, furnMin: +furn.min };
+  });
+  globalThis['msg_' + tree] = out;
+}
+{
+  const R = globalThis['msg_' + T_REL], P = globalThis['msg_' + T_PAT];
+  const teaches = m => !!m && /never enters the vapour stream/.test(m) && /residue/.test(m) && /430/.test(m) && /390/.test(m);
+  pair('T10a', 'a feed this column can never boil is told why, and where it goes instead',
+    R.ceiling === null ? false : teaches(R.ceiling), teaches(P.ceiling),
+    `release ${JSON.stringify(R.ceiling)} -> patched ${JSON.stringify(P.ceiling)}`);
+  /* the guard against over-applying the new sentence */
+  const honest = m => !!m && !/never enters the vapour stream/.test(m) && /raise it/i.test(m);
+  pair('T10b', 'a furnace merely turned down is told to turn it up, NOT that the column can never do it',
+    honest(R.lowFurnace), honest(P.lowFurnace),
+    `at furnace ${P.furnMin}°C on C14 — release ${JSON.stringify(R.lowFurnace)} -> patched ${JSON.stringify(P.lowFurnace)}`);
+}
+
+/* T12 — the caption Ruling B calls not optional */
+for (const tree of TREES) {
+  const { out } = await evalIn(tree, WILTON, () => {
+    const c = document.getElementById('wTrayCaption');
+    if (!c) return { present: false };
+    const r = c.getBoundingClientRect();
+    return { present: true, rendered: r.width > 0 && r.height > 0,
+             text: c.textContent.replace(/\s+/g, ' ').trim() };
+  });
+  globalThis['cap_' + tree] = out;
+}
+{
+  const ok = c => !!c.present && c.rendered && /Tray temperature/.test(c.text) && /Boiling range/.test(c.text);
+  pair('T12', 'the column carries a rendered caption separating tray temperature from boiling range',
+    ok(globalThis['cap_' + T_REL]), ok(globalThis['cap_' + T_PAT]),
+    `release ${JSON.stringify(globalThis['cap_' + T_REL])} -> patched present=${globalThis['cap_' + T_PAT].present} rendered=${globalThis['cap_' + T_PAT].rendered}`);
 }
 
 /* =====================================================================
@@ -260,9 +399,10 @@ for (const tree of TREES) {
 const eq = (a, b) => a && b && a.length === b.length && a.every((x, i) => x === b[i]);
 const IR = globalThis['id_' + T_REL], IP = globalThis['id_' + T_PAT];
 const three = I => eq(I.lab, I.random) && eq(I.lab, I.studio);
-pair('W-ID24', 'C24 is present in all three feed lists',
-  IR.lab.includes(24) && IR.random.includes(24) && (IR.studio || []).includes(24),
-  IP.lab.includes(24) && IP.random.includes(24) && (IP.studio || []).includes(24),
+const inAllThree = (I, n) => I.lab.includes(n) && I.random.includes(n) && (I.studio || []).includes(n);
+pair('W-ID24', 'both new feeds, C21 and C24, are present in all three feed lists',
+  inAllThree(IR, 21) && inAllThree(IR, 24),
+  inAllThree(IP, 21) && inAllThree(IP, 24),
   `release buttons[${IR.lab}] random[${IR.random}] studio[${IR.studio}] -> patched buttons[${IP.lab}] random[${IP.random}] studio[${IP.studio}]`);
 note('W-ID3', 'the three feed lists are the same set (identity re-asserted)',
   three(IP) ? 'ASSERTED' : 'DIVERGED',
@@ -435,5 +575,13 @@ for (const r of rows) {
 const bad = rows.filter(r => ['NOT A CONTROL', 'BROKEN', 'FAILED', 'CHANGED — HARD STOP', 'COLLISION',
                               'DIVERGED', 'PAGE ERROR', 'REGRESSION'].includes(r.verdict));
 const unreachable = rows.filter(r => r.verdict === 'UNREACHABLE');
-console.log(`\n${bad.length} failure(s); ${unreachable.length} unreachable (inconclusive, never substituted)`);
-process.exit(bad.length ? 1 : unreachable.length ? 2 : 0);
+/* An unreachable subject is inconclusive ONLY when nobody accounted for it.
+   C24 is unreachable BY DESIGN and W-DESIGN asserts the declared set is exactly
+   the undistillable set, so it stays reported as UNREACHABLE without holding
+   the suite at exit 2 forever — a gate that can never go green stops being a
+   signal. An unreachable row nobody declared still exits 2. */
+const declaredU = unreachable.filter(r => r.declared);
+const undeclaredU = unreachable.filter(r => !r.declared);
+console.log(`\n${bad.length} failure(s); ${undeclaredU.length} undeclared unreachable; ` +
+  `${declaredU.length} declared unreachable by design [${declaredU.map(r => r.id).join(', ') || 'none'}]`);
+process.exit(bad.length ? 1 : undeclaredU.length ? 2 : 0);

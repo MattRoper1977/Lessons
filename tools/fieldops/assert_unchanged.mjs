@@ -18,7 +18,7 @@ const ALL = ['00_BUILD_FieldOps_Teacher_Studio.html', '01_Newport_Bridge_Lift_Pe
              '04_Tees_Bay_Wind_Operations_Lab.html'];
 const WILTON = '03_Wilton_Carbon_Process_Control_Lab.html';
 const STUDIO = '00_BUILD_FieldOps_Teacher_Studio.html';
-const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9'];
+const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9','T10','T11','T12'];
 const rows = [];
 const row = (id, what, ok, detail) => rows.push({ id, what, ok, detail });
 const sha = s => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
@@ -47,6 +47,7 @@ execFileSync('node', ['build.mjs', `--drop=${TRANSFORMS.join(',')}`, '--out=work
   }
   const DECLARED = {
     T1: 4, T2: 4, T3: 4, T4: 5, T5a: 1, T5b: 1, T6a: 1, T6b: 1, T7: 1, T8a: 1, T8b: 1, T8c: 1, T9: 1,
+    T10: 1, T11: 1, T12: 1,
   };
   const wrong = TRANSFORMS.filter(T => touched[T].length !== DECLARED[T]);
   row('U2', 'each transform changes exactly the files it is declared against',
@@ -103,8 +104,30 @@ for (const f of ALL) {
   for (const s of b) cb.set(s, (cb.get(s) || 0) + 1);
   const added = [...cb].filter(([s, n]) => (ca.get(s) || 0) !== n).map(([s]) => s);
   const removed = [...ca].filter(([s, n]) => (cb.get(s) || 0) !== n).map(([s]) => s);
+  /* Everything a pupil can read that the patch is allowed to change, itemised
+     against the ruling that authorised it. Anything else in this delta is an
+     unauthorised content change and this gate says so. */
   const AUTHORISED = {
-    [WILTON]: { added: ['C24', 'residue — what stays', 'in the column'], removed: ['residue'] },
+    [WILTON]: {
+      added: [
+        /* R-Wilton-4 §1 — residue relabelled so its non-selectability reads as chemistry */
+        'residue — what stays', 'in the column',
+        /* Ruling A — C21 is the taught fuel-oil feed; C24 stays, unable to vaporise */
+        'C21', 'C24',
+        /* Ruling B — the five corrected tray temperatures */
+        'below 25°C · gases', '110°C · petrol range', '220°C · kerosene range',
+        '320°C · diesel range', '400°C · fuel oils',
+        /* Ruling B — the caption that makes those numbers understood, not just consistent */
+        'Tray temperature', 'is where a fraction condenses in this column.',
+        'Boiling range',
+        "is a property of the molecules themselves. Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.",
+      ],
+      removed: [
+        'residue',
+        '25°C · gases', '80°C · petrol range', '150°C · kerosene range',
+        '230°C · diesel range', '300°C · fuel oils',
+      ],
+    },
     [STUDIO]: { added: [], removed: [] },
   };
   const exp = AUTHORISED[f] || { added: [], removed: [] };

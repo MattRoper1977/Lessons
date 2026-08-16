@@ -43,9 +43,10 @@ const lastBlobText = pg => pg.evaluate(async () => window.__blobs.length ? await
 
 /* ---------- mint the missions, from the real Studio export button --------- */
 const missions = {};
+const ROLE = { [TREES[0]]: 'rel', [TREES[1]]: 'pat' };
 for (const tree of TREES) {
   const { ctx, pg } = await open(tree, STUDIO);
-  for (const feed of [14, 24]) {
+  for (const feed of [14, 21, 24]) {
     const got = await pg.evaluate(async (f) => {
       const e = document.getElementById('engine');
       e.value = 'wilton-carbon-control'; e.dispatchEvent(new Event('change', { bubbles: true }));
@@ -60,21 +61,21 @@ for (const tree of TREES) {
       await new Promise(r => setTimeout(r, 300));
       return { ok: true };
     }, feed);
-    if (got.unavailable) { missions[`${tree}_C${feed}`] = null; continue; }
+    if (got.unavailable) { missions[`${ROLE[tree]}_C${feed}`] = null; continue; }
     const text = await lastBlobText(pg);
-    const p = path.join(TMP, `${tree}_C${feed}.json`);
+    const p = path.join(TMP, `${ROLE[tree]}_C${feed}.json`);
     fs.writeFileSync(p, text);
-    missions[`${tree}_C${feed}`] = p;
+    missions[`${ROLE[tree]}_C${feed}`] = p;
   }
   await ctx.close();
 }
 row('X0', 'every mission fixture was minted by a real Studio, none hand-written',
-  Object.keys(missions).length === 4,
+  Object.keys(missions).length === 6,
   Object.entries(missions).map(([k, v]) => `${k}=${v ? 'minted' : 'UNAVAILABLE on that Studio'}`).join(' · '));
 
 /* ---------- direction 1: Studio -> lab, all four combinations ------------- */
 for (const st of TREES) for (const lab of TREES) {
-  const file = missions[`${st}_C14`];
+  const file = missions[`${ROLE[st]}_C14`];
   const { ctx, pg, errs } = await open(lab, WILTON);
   await pg.setInputFiles('#missionFile', file);
   await pg.waitForTimeout(900);
@@ -89,13 +90,12 @@ for (const st of TREES) for (const lab of TREES) {
 }
 
 /* ---------- the C24 mission, which only one Studio can mint --------------- */
-row('X1c', 'the release Studio cannot mint a C24 mission (declared asymmetry, not a defect)',
-  missions.release_C24 === null,
-  missions.release_C24 === null ? 'release Studio offers [6,10,14,18,20]; C24 is a patched-only option'
-                                : 'unexpectedly minted — the release Studio should not offer C24');
-for (const lab of TREES) {
+row('X1c', 'the release Studio cannot mint a C21 or C24 mission (declared asymmetry, not a defect)',
+  missions.rel_C21 === null && missions.rel_C24 === null,
+  `release Studio offers [6,10,14,18,20]; C21 and C24 are new options — minted rel_C21=${missions.rel_C21} rel_C24=${missions.rel_C24}`);
+for (const lab of TREES) for (const feed of [21, 24]) {
   const { ctx, pg, errs } = await open(lab, WILTON);
-  await pg.setInputFiles('#missionFile', missions.patched_C24);
+  await pg.setInputFiles('#missionFile', missions[`pat_C${feed}`]);
   await pg.waitForTimeout(900);
   const got = await pg.evaluate(async () => {
     const furn = document.getElementById('wFurnace');
@@ -106,7 +106,7 @@ for (const lab of TREES) {
     return {
       feed: (document.getElementById('wFeedRead').textContent || '').trim(),
       selected: [...document.querySelectorAll('.feedW.selected')].map(b => b.dataset.feed),
-      hasButton: !!document.querySelector('.feedW[data-feed="24"]'),
+      hasButton: !!document.querySelector(`.feedW[data-feed="${document.getElementById('wFeedRead').textContent.match(/^C(\d+)/)[1]}"]`),
       told: (document.getElementById('wTrayRead').textContent || '').trim(),
       notice: (document.getElementById('wDistilResult').textContent || '').trim(),
     };
@@ -114,8 +114,9 @@ for (const lab of TREES) {
   await ctx.close();
   /* the transport must not BREAK either way. What it teaches on a release lab
      is a separate finding, reported rather than asserted away. */
-  row(`X1d ->${lab[0]}L`, `a C24 mission from the patched Studio does not break the ${lab} lab`,
-    got.feed === 'C24H50' && errs.length === 0,
+  const wantFormula = feed === 21 ? 'C21H44' : 'C24H50';
+  row(`X1d C${feed}->${lab[0]}L`, `a C${feed} mission from the fixed Studio does not break the ${lab} lab`,
+    got.feed === wantFormula && errs.length === 0,
     `feed "${got.feed}" · button present ${got.hasButton} · selected [${got.selected}] · zone "${got.told}" · ${got.notice}`);
 }
 

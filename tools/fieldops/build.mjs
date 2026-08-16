@@ -99,16 +99,56 @@ swap('T7', '03_Wilton_Carbon_Process_Control_Lab.html',
   `function wTray(n){const bp=wBoil(n);if(bp<25)return{y:120,label:'top gases'};if(bp<100)return{y:190,label:'petrol range'};if(bp<180)return{y:270,label:'kerosene range'};if(bp<260)return{y:350,label:'diesel range'};if(bp<330)return{y:430,label:'fuel-oil range'};return{y:525,label:'residue / too heavy'}}`,
   `function wTray(n){const bp=wBoil(n);if(bp<25)return{y:120,label:'top gases'};if(bp<160)return{y:190,label:'petrol range'};if(bp<280)return{y:270,label:'kerosene range'};if(bp<360)return{y:350,label:'diesel range'};if(bp<960)return{y:430,label:'fuel-oil range'};return{y:525,label:'residue — what stays in the column'}}`);
 
-/* ---------------- T8  the C24 feed, in all three places ------------------ */
+/* ---------------- T8  the C21 and C24 feeds, in all three places ---------
+   RULING A. C21 is the taught fuel-oil feed: it boils at 370C, needs 390C, and
+   the furnace ceiling IS 390C, so it distils without anyone inventing a
+   temperature. It is also the ONLY carbon number that does — C22 needs 410C
+   and every heavier one needs more, measured, not assumed.
+   C24 stays selectable and stays unable to vaporise. That is the teaching
+   point, handled by T10, not a gap to be closed. */
 swap('T8a', '03_Wilton_Carbon_Process_Control_Lab.html',
   `<button class="btn feedW" data-feed="20">C20</button>`,
-  `<button class="btn feedW" data-feed="20">C20</button><button class="btn feedW" data-feed="24">C24</button>`);
+  `<button class="btn feedW" data-feed="20">C20</button><button class="btn feedW" data-feed="21">C21</button><button class="btn feedW" data-feed="24">C24</button>`);
 swap('T8b', '03_Wilton_Carbon_Process_Control_Lab.html',
   `W.feed=[6,10,14,18,20][Math.floor(Math.random()*5)]`,
-  `W.feed=[6,10,14,18,20,24][Math.floor(Math.random()*6)]`);
+  `W.feed=[6,10,14,18,20,21,24][Math.floor(Math.random()*7)]`);
 swap('T8c', STUDIO,
   `{k:'feed',l:'Feed chain',type:'select',options:[6,10,14,18,20]}`,
-  `{k:'feed',l:'Feed chain',type:'select',options:[6,10,14,18,20,24]}`);
+  `{k:'feed',l:'Feed chain',type:'select',options:[6,10,14,18,20,21,24]}`);
+
+/* ---------------- T10  the refusal teaches instead of dead-ending --------
+   RULING A, second content addition. The old line said only "too low". It has
+   to distinguish two different situations, because one sentence cannot be true
+   of both: a furnace the pupil has not turned up yet, and a fraction this
+   column can never boil. Saying "the furnace reaches 390C so it never
+   vaporises" to someone sitting at 200C on a C14 feed would be false. */
+swap('T10', '03_Wilton_Carbon_Process_Control_Lab.html',
+  `function runDistil(){const eff=wEffectiveFurnace(),need=Math.max(120,wBoil(W.feed)+20);if(eff<need){W.distilled=false;W.tray=null;wEl('wDistilResult').className='notice warn';wEl('wDistilResult').textContent=\`Effective furnace \${eff}°C is too low for this teaching feed to enter the vapour stream.\`;ST.log('distillation_failed',{effective:eff,needed:need})}`,
+  `function runDistil(){const eff=wEffectiveFurnace(),need=Math.max(120,wBoil(W.feed)+20);const ceiling=wEffectiveCeiling();if(eff<need){W.distilled=false;W.tray=null;const reachable=ceiling>=need;wEl('wDistilResult').className='notice warn';wEl('wDistilResult').textContent=reachable?\`\${wFormula(W.feed)} boils at \${wBoil(W.feed)}°C, so it needs about \${need}°C to enter the vapour stream. The furnace is at \${eff}°C — raise it.\`:\`\${wFormula(W.feed)} boils at \${wBoil(W.feed)}°C. This column's furnace only reaches \${ceiling}°C, so \${wFormula(W.feed)} never enters the vapour stream — it leaves at the bottom as residue.\`;ST.log('distillation_failed',{effective:eff,needed:need,reachable})}`);
+/* Same transform, second anchor: the helper and its only caller land or fall
+   together. Splitting them made a configuration where the page simply threw,
+   and a control that goes red because nothing loads is not really watching the
+   change — it is watching the crash. */
+swap('T10', '03_Wilton_Carbon_Process_Control_Lab.html',
+  `function wEffectiveFurnace(){return W.furnace-(W.fault==='sensor'?35:0)}`,
+  `function wEffectiveFurnace(){return W.furnace-(W.fault==='sensor'?35:0)}\nfunction wEffectiveCeiling(){const s=document.getElementById('wFurnace');return (s?+s.max:390)-(W.fault==='sensor'?35:0)}`);
+
+/* ---------------- T11  the column's printed tray temperatures ------------
+   RULING B. These five numbers were consistent with the OLD bands and are the
+   fourth set of numbers in this lab about the same chemistry. Corrected to
+   <25 / 110 / 220 / 320 / 400, each of which falls inside the band its own
+   label names under 25/160/280/360/960. "below 25" rather than "<25" so the
+   marker does not need an HTML entity inside SVG text. */
+swap('T11', '03_Wilton_Carbon_Process_Control_Lab.html',
+  `<text x="220" y="120">25°C · gases</text><text x="220" y="200">80°C · petrol range</text><text x="220" y="280">150°C · kerosene range</text><text x="220" y="360">230°C · diesel range</text><text x="220" y="440">300°C · fuel oils</text>`,
+  `<text x="220" y="120">below 25°C · gases</text><text x="220" y="200">110°C · petrol range</text><text x="220" y="280">220°C · kerosene range</text><text x="220" y="360">320°C · diesel range</text><text x="220" y="440">400°C · fuel oils</text>`);
+
+/* ---------------- T12  the caption that makes T11 understood -------------
+   RULING B says this is not optional: corrected numbers that nobody can
+   place are merely consistent. A tray temperature and a boiling range are
+   different quantities, and the column now prints one of each. */
+swap('T12', '03_Wilton_Carbon_Process_Control_Lab.html', `\n</svg>\n`,
+  `\n</svg>\n<div id="wTrayCaption" style="position:absolute;left:10px;bottom:10px;width:min(400px,46%);background:#05101bdd;border:1px solid #35536d;border-radius:12px;padding:9px;font-size:.72rem;line-height:1.4;color:#9ab3c7"><b style="color:#38bdf8">Tray temperature</b> is where a fraction condenses in this column. <b style="color:#38bdf8">Boiling range</b> is a property of the molecules themselves. Related, but not the same number — which is why a tray label and a feed's boiling point do not have to match.</div>\n`);
 
 /* ---------------- T9  residue reads as chemistry on the column ----------- */
 swap('T9', '03_Wilton_Carbon_Process_Control_Lab.html',

@@ -100,16 +100,21 @@ else console.log(`A0 PASS  the stated predicate yields 38, unchanged by the patc
 /* A1 — PATCH-SCOPED. Must pass: the patch adds exactly the C24 button, that
    button is named, and nothing lost a name it had on release. */
 {
+  /* The two feed buttons Ruling A authorises, named individually: a delta of 2
+     is only acceptable if it is EXACTLY these two, each named and each rendered.
+     Asserting the number alone would let any other pair of controls through. */
+  const ADDED = ['C21', 'C24'];
   const delta = totalP - totalR;
-  const c24 = out[PAT]['03_Wilton_Carbon_Process_Control_Lab.html'].find(c => c.text === 'C24');
+  const found = ADDED.map(t => out[PAT]['03_Wilton_Carbon_Process_Control_Lab.html'].find(c => c.text === t));
   const lost = [];
   for (const f of ALL) {
     const byId = new Map(out[REL][f].filter(c => c.id).map(c => [c.id, c]));
     for (const c of out[PAT][f]) if (c.id && byId.has(c.id) && byId.get(c.id).named && !c.named) lost.push(`${f} #${c.id}`);
   }
-  const ok = delta === 1 && c24 && c24.named && c24.rendered && lost.length === 0;
-  if (!ok) { fails++; console.log(`A1 FAIL  delta ${delta}; C24 ${JSON.stringify(c24)}; names lost ${lost.join(', ')}`); }
-  else console.log(`A1 PASS  exactly one control added (C24, named via ${c24.from}, rendered); no name lost`);
+  const allNamed = found.every(c => c && c.named && c.rendered);
+  const ok = delta === ADDED.length && allNamed && lost.length === 0;
+  if (!ok) { fails++; console.log(`A1 FAIL  delta ${delta} (expected ${ADDED.length}); ${JSON.stringify(found)}; names lost ${lost.join(', ')}`); }
+  else console.log(`A1 PASS  exactly ${ADDED.length} controls added (${ADDED.join(', ')}, each named via ${found[0].from}, each rendered); no name lost`);
 }
 
 /* A2 — ESTATE-SCOPED, and RED. This is not weakened to match the outcome: the

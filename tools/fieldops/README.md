@@ -3,7 +3,7 @@
 Five single-file offline apps: a Teacher Studio that mints missions and reads
 evidence capsules, and four pupil-facing labs. `release/` is what was handed
 over. `staging/` is built from it, and is **not deployed anywhere** — see
-"Why this is not merged" below.
+"The two rulings" below — it merges, and merging does not deploy it.
 
 ```sh
 tools/fieldops/run.sh            # build staging/, run every gate
@@ -19,20 +19,21 @@ Exit codes are not interchangeable:
 | 2 | a subject was **unreachable** — INCONCLUSIVE, never counted as a pass |
 | 3 | patch-scoped gates green, a pre-existing red recorded and left alone |
 
-**Today it exits 1.** That is deliberate and it is the point of the ledger below.
+**It exits 3**: every patch-scoped gate is green, and one pre-existing red is
+recorded and left (see "Recorded and left alone").
 
 ---
 
 ## How the build works
 
-`build.mjs` turns `release/` into `staging/` by applying thirteen named
+`build.mjs` turns `release/` into `staging/` by applying seventeen named
 transforms, each an exact-string swap that must match **exactly once**. A miss
 throws. There is no hand-editing anywhere in the pipeline, so:
 
-- `assert_unchanged.mjs` **U1** drops all thirteen and gets `release/` back byte
+- `assert_unchanged.mjs` **U1** drops all seventeen and gets `release/` back byte
   for byte. Nothing else the builder does can be hiding in the shipped tree.
 - `dropmatrix.sh` drops each one in turn and requires the verdict set to change.
-  All thirteen are watched.
+  All seventeen are watched.
 
 | id | what |
 |---|---|
@@ -41,8 +42,11 @@ throws. There is no hand-editing anywhere in the pipeline, so:
 | T5a/b | the Studio's one inline `onclick`, replaced with a delegated listener |
 | T6a/b | `csvCell` — a leading `= + - @` is neutralised on CSV write |
 | T7 | the Wilton band boundaries (R-Wilton-3) |
-| T8a/b/c | the C24 feed, in all three places it has to exist |
+| T8a/b/c | the C21 and C24 feeds, in all three places they have to exist |
 | T9 | the residue label on the column |
+| T10 | the refusal message teaches instead of dead-ending (Ruling A) |
+| T11 | the five printed tray temperatures (Ruling B) |
+| T12 | the caption separating tray temperature from boiling range (Ruling B) |
 
 ## The Wilton band fix (T7)
 
@@ -68,9 +72,13 @@ the pupil:
 | C14 | diesel | **kerosene** | kerosene |
 | C18 | fuel-oil | **diesel** | diesel |
 | C20 | residue | **diesel** | diesel |
+| C21 | *no button* | **fuel-oil** | fuel-oil |
 | C24 | *no button* | *cannot be distilled* | fuel-oil |
 
-**Release scores 1 of 5. Staging scores 5 of 6.** Not 6 of 6 — see ruling A.
+**Release scores 1 of 5 selectable. Staging scores 6 of 7** — C24 declared
+unreachable by design, and `W-DESIGN` asserts that the undistillable set is
+*exactly* the declared set, so a future feed that quietly stops working cannot
+hide inside the declaration.
 
 `C11`, `C15` and `C16` are also checked, and are labelled in the output as
 **UNIT-LEVEL — NOT USER-REACHABLE**, because the feed set is a closed list and
@@ -79,64 +87,69 @@ report says so on every line.
 
 ---
 
-## Why this is not merged: two rulings needed
+## The two rulings, as issued and as landed
 
-### Ruling A — C24 is selectable but cannot be distilled
+### Ruling A — C21 lands as the taught fuel-oil feed; C24 stays
 
-Adding the button was not enough. `runDistil` requires
-`effectiveFurnace ≥ wBoil(feed) + 20`. C24 boils at 430 °C, so it needs 450 °C;
-the furnace slider stops at **390 °C**. Selecting C24 and running distillation
-gives *"Effective furnace 390°C is too low for this teaching feed to enter the
-vapour stream."* — on staging **and** on release, confirmed independently by the
-transport probe. The fuel-oil band is still never taught.
+Adding C24 was not enough on its own. `runDistil` needs
+`effectiveFurnace ≥ wBoil(feed) + 20`. C24 boils at 430 °C so it wants 450 °C;
+the furnace slider stops at **390 °C**, and it stops there because that is what
+the plant this lesson models actually runs at.
 
-`W-R-C24` reports **UNREACHABLE**, not a pass and not a fail. The measurement is
-in hand; the choice is not mine:
+**C21 is the answer, and it is the only one.** It boils at 370 °C, needs 390 °C,
+and distils at the existing ceiling — measured across C18–C24, where C22 already
+needs 410 °C and every heavier feed needs more. C21 sits in the fuel-oil range
+(C20–C50) on real chemistry, so nothing was invented to make it reachable.
 
-- **C21** boils at 370 °C, needs 390 °C, and distils at the existing ceiling —
-  landing in fuel-oil under the new bands. C21 sits in the fuel-oil range
-  (C20–C50) chemically, so this needs no invented number.
-- **Raise the furnace ceiling to 450 °C** and keep C24. Real atmospheric
-  columns run 350–400 °C, so this buys reachability with a temperature that
-  does not exist in the plant it is modelling.
-- **Leave it.** C24 stays as a feed that visibly refuses to vaporise, which is
-  honest about heavy fractions but leaves the fuel-oil label untaught.
+**C24 stays selectable and stays unable to vaporise**, and `W-R-C24` still
+reports UNREACHABLE rather than being quietly converted to a pass by C21's
+arrival. The suite distinguishes *declared* from *undeclared* unreachable, so
+that line stays visible without pinning the gate at exit 2 forever.
 
-The order named C24, so C24 is what landed, in all three places, with
-three-way identity re-asserted. This ruling is about the furnace, not the feed.
+The refusal message now teaches (T10). It had to become two sentences, not one,
+because one cannot be true of both situations:
 
-### Ruling B — the column prints a fourth set of numbers, and the fix contradicts them
+- furnace merely turned down →
+  *"C14H30 boils at 230 °C, so it needs about 250 °C to enter the vapour stream.
+  The furnace is at 160 °C — raise it."*
+- this column can never boil it →
+  *"C24H50 boils at 430 °C. This column's furnace only reaches 390 °C, so C24H50
+  never enters the vapour stream — it leaves at the bottom as residue."*
 
-The column diagram carries five tray temperatures as static SVG text. Nothing
-had ever checked them against the code. `W-DIAG` now does:
+Telling a pupil sitting at 160 °C on a C14 feed that the column can never do it
+would be false, which is why `T10b` exists as its own control.
 
-| printed on the column | release puts it in | staging puts it in |
-|---|---|---|
-| 25 °C · gases | petrol ✗ | petrol ✗ |
-| 80 °C · petrol range | petrol ✓ | petrol ✓ |
-| 150 °C · kerosene range | kerosene ✓ | **petrol ✗** |
-| 230 °C · diesel range | diesel ✓ | **kerosene ✗** |
-| 300 °C · fuel oils | fuel-oil ✓ | **diesel ✗** |
+### Ruling B — the five printed tray temperatures are corrected
 
-Release agrees 4 of 5. Staging agrees 1 of 5. The 25 °C disagreement is
-pre-existing (`bp<25` is strict, so 25 itself falls into petrol).
+The column printed five tray temperatures that were consistent with the *old*
+bands. Under the corrected bands they contradicted the code on four of five
+labels, so a pupil picking C10 saw the marker land on the tray reading
+*150 °C · kerosene range* while the readout said *petrol range*.
 
-So the band fix, which is right about carbon numbers, makes the lab argue with
-its own diagram: pick C10 and the marker lands on the tray labelled *150 °C ·
-kerosene range* while the readout says *petrol range*. That is a new
-contradiction on screen, and it is why `W-DIAG` is a **REGRESSION** and the
-suite exits 1.
+Adopted: **below 25 · 110 · 220 · 320 · 400**. Each falls inside the band its own
+label names under `25/160/280/360/960`, and `W-DIAG` — the same comparator that
+caught the regression — now reads **5 of 5** against release's 4 of 5. Ruling B's
+second limb is `W-DIAG-MARK`, which runs the comparison across every selectable
+feed rather than only the five trays: for each feed that distils, the tray the
+marker lands on and the readout must name the same fraction. 6 of 6 on the fixed
+build.
 
-Correcting it means changing five printed temperatures — taught content beyond
-the one content addition authorised in P2, so it is not done here. Column tray
-temperatures consistent with the new bands would be roughly
-`<25 · 110 · 220 · 320 · 400`.
+`below 25°C` rather than `<25°C`, so the marker needs no HTML entity inside SVG
+text. The control handles it as two claims, not one: everything under 25 is
+gases **and** 25 itself is not, so the word "below" cannot be used to dodge the
+assertion.
 
-**Neither ruling is a reason to un-fix the bands.** Release teaches four of five
-selectable feeds into the wrong fraction. This is about which of the two changes
-lands with it.
+**The named cost, restated so nobody meets it as a surprise:** the corrected tray
+temperatures no longer match the numbers printed in most textbook column
+diagrams. That is the trade Ruling B makes — a pupil comparing app and textbook
+sees a difference, where a pupil using the app alone previously saw a
+contradiction. The caption (T12) is what makes that trade survivable, which is
+why it is not optional:
 
----
+> **Tray temperature** is where a fraction condenses in this column.
+> **Boiling range** is a property of the molecules themselves. Related, but not
+> the same number — which is why a tray label and a feed's boiling point do not
+> have to match.
 
 ## Recorded and left alone
 
@@ -147,7 +160,7 @@ tree give 72, 49 and 265.
 
 **22 of those 38 inputs have no accessible name** — the alias field and every
 range slider. Identical on release; the patch neither caused it nor worsened it
-(`A1` proves no name was lost and the one added control is named). Out of P2's
+(`A1` proves no name was lost and that exactly the two authorised buttons were added, each named). Out of P2's
 scope, so: recorded, left, exit 3 from that gate alone.
 
 ## Transport
