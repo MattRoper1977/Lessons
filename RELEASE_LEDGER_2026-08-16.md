@@ -2453,3 +2453,164 @@ output here — the gates will be rewritten, the rules renumbered, the files mov
 5. Account → Notifications → Actions → failed workflows only, Watching on the repo.
 6. PLANS-3 close-out.
 7. The 29 August Planning/ reconvergence.
+
+---
+
+# 2026-08-17 · Merged, served, closed — the last entry of this arc
+
+Superseding nothing. Written last.
+
+## 1 · The arc's outcome — merged **and served**, proven
+
+`Fetch the live estate and compare to raw-at-SHA` went **red → success**, and
+that transition is the arc's actual result rather than a line in a CI table.
+
+| run | ref | verdict |
+|---|---|---|
+| `32044614151` | PR head `f5848f5` | **RED** — `line 10: /index.html: No such file or directory` |
+| `32044965854` | PR head `8e1db2f` | **SUCCESS** after the consumer fix |
+| **`32047546251`** | **main `8af7bbc2`, post-merge** | **SUCCESS — and this is the one that counts** |
+
+The post-merge run asserts, on production bytes: **HTTP status for every
+surface**, **live bytes equal the committed tree byte for byte**, and **the shelf
+mirror equals the served canonical**. Reachability separately on main
+(`32047301105`): **all 13 routes 200, both removed paths 404** — a negative
+control in the same run.
+
+**That is R0.4 satisfied.** *Merged is not served* has been the estate's
+recurring lesson; this is the first time the whole chain — derived, merged,
+fetched, compared — closes on main with the bytes matching.
+
+## 2 · Kept verbatim
+
+> **Same 301, same destination, opposite verdict. The deployment never changed;
+> the judgement did.**
+
+> **The patch stops new links carrying a child's name and reaches none of the
+> ones already pasted, bookmarked or screenshotted.**
+
+## 3 · The honest tally — both halves, neither netted against the other
+
+**Checks found unable to fire** — green while asserting nothing:
+
+| # | the check | its predicate |
+|---|---|---|
+| 1 | `FX.init()` in a bare catch above its own `const` | the particle layer never drew, from the day it was written |
+| 2 | `wire_lessons.py` | a scratch copy given genuinely stale content passed it, exit 0 |
+| 3 | the nine zero-check PRs | *"filter miss or no applicable workflow"* — a guess with an "or" in it standing in for a cause |
+| 4 | the five infrastructure routes | named in a residue line and fetched by nothing; the gate called `--emit routes`, the residue had its own mode |
+| 5 | the census gate | exit 2 twice — permanently inconclusive, occupying a working check's slot |
+| 6 | `verify_fixture_names.mjs` | its own token pattern could not match a token starting with the marker. **Caught before it landed, by its own control** |
+
+**Checks that fired wrongly** — red where nothing was wrong:
+
+| # | the check | its predicate |
+|---|---|---|
+| 1 | the watch's first false positive | a control block that only ever demonstrated reds |
+| 2 | the watch's second | dormancy read as failure |
+| 3 | the watch's third | pending read as no-verdict |
+| 4 | the FieldOps serve check | any `3xx` treated as FAIL, reddening a Studio whose `301` was the Pages site redirecting to the custom domain with identical bytes at the far end |
+| 5 | the census's own reporting | *"12 draft, 0 not"* printed over rows showing three drafts |
+| 6 | my VSL bench count | **6 of 13**, manifest prose read against runtime labels. It looked exactly like a stop. **The count was wrong, not the file** |
+
+**Six and six, and they are not netted.** They fail in opposite directions and
+cost differently: **a check that cannot fire costs you the thing it was
+watching; a check that fires wrongly costs you the credibility of every other
+green.** The first kind is found by reading the artefact. The second by
+disbelieving the summary.
+
+## 4 · The canary, its rule, its control
+
+**R0.31 — a test fixture in a public repository is published data.** Provenance:
+`CANARY_PUPIL_Jamie_Roper`, a plausible first name carrying the owner's surname,
+in a **public** repo, **inside the file about not leaving pupil names where they
+don't belong.** Self-found, replaced, gates re-run at 6 red / 7 green.
+
+**Enforced by `tools/verify_fixture_names.mjs`**, which ran on `main` for the
+first time in run `32046308943`, both directions, over 1,939 files with no path
+or type filter. Its stated limit is in its own header: it catches person-shaped
+**names**, not plausible pupil **prose**.
+
+## 5 · Enforcement — a dated snapshot, derivation stated
+
+**Three of eleven fully enforced (R0.21, R0.25, R0.26); eight `unenforced` or
+partly, 2026-08-17.** R0.21 gained a mechanism this pass; R0.24 moved to partly.
+The derivation is stated **in words** because the first attempt published a
+one-line grep that was wrong twice — the register appears twice in this ledger,
+and the word appears *descriptively* inside R0.26's own verdict cell. **The two
+errors cancelled to the same total, which is how a wrong method survives.**
+
+## 6 · The merges, the window, the skip
+
+| | |
+|---|---|
+| Lessons **#132** | squashed to `ae1d3c7a`. Ref table: main `c630fa81 → ae1d3c7a`, branches 147 → 147, tags 0 → 0. **Loss proven by diff: 0 files deleted**, 5 modified, 22 added |
+| push-to-main | run `32046308943` — **all five jobs SUCCESS** |
+| site **#167** | squashed to `8af7bbc2`. Ref table: main `c3562478 → 8af7bbc2`, branches 156 → 156, tags 0 → 0. **0 deleted**, 2 modified, 0 added |
+
+**The window, predicted then measured.** Predicted **zero reds**: the Lessons
+half only activates for routes ending in a file extension, and site `main`
+emitted none until #167 landed, so the new branch was **inert**. Measured: merge
+`16:35:35` → run green `16:37:20`, **nothing red, for zero seconds.** Prediction
+matched. The reverse order is what would have red-ed.
+
+**Counts re-derived, not carried forward:** routes **26** from site `main`;
+serve-gate subjects **32** — site 26, lessons 5, apps 1 — with *every subject has
+a committed blob* still passing.
+
+**The skip, closed on main and not inherited.** The job was gated
+`if: github.event_name != 'pull_request'`, so it skipped on the PR **by design
+and produced no verdict**. On push to main it ran: **13 routes 200, both removed
+paths 404.**
+
+## 7 · One last finding, and it is the shape the matcher was built for
+
+**`agx1-live-verify.yml` — the workflow carrying the byte-identity proof — has a
+`push:` filter of `branches: ['claude/apexgolf-build-2026-08-04-b1hbwj']`**, a
+long-dead feature branch. So the arc's headline assertion fires on **pull
+requests and by hand, and never on a push to `main`.**
+
+It is **correctly dormant** by branch filter, which is precisely why no gate ever
+complained — and precisely the case the path-filter matcher exists to name. The
+post-merge proof above exists because it was **dispatched by hand**, not because
+anything would have run it.
+
+**Owner: next session. Action: repoint that `push:` filter at `main`, or rule it
+dispatch-only with a reason.** Not done here — this order adds no gates.
+
+## 8 · The board, handed over
+
+| item | owner | the single action that closes it |
+|---|---|---|
+| VSL's eight findings + P2's remainder | next order | the two order documents reaching a session |
+| **the two VSL order documents** | **Matt** | attach them from the chat that produced them. **Never reconstructed** |
+| VSL placement | **Matt** | the paper read — that is what unlinks it |
+| `agx1-live-verify` never runs on main | next session | repoint the `push:` filter, or rule it dispatch-only |
+| the matcher | next session | soak 10 of 10, then a true-negative **at the wiring point**; wiring and PyYAML land together, after it |
+| the five held PRs | **Matt** | each hold lifting; checks come free on rebase |
+| the stuck branch | **Matt** | the auto-delete setting |
+| the watch's human leg | **Matt** | the account notification setting |
+| `londonmatt1977@hotmail.co.uk` in `reports/agx1/CHANGESET.md` | **Matt** | his address in his repo — his call |
+
+**Retired, because neither owner nor action could be given:** **B2 conformance**
+(nobody can state its scope; the governing order is not on disk) and **the site
+tag** (it exists nowhere; the annotation died with its container, and `614f4d8`
+never depended on it).
+
+**Nothing is left as a line with no owner.**
+
+## 9 · Matt's list
+
+1. **Revoke the GitHub token** — two pasted into a chat in July. **Security, and the oldest item here.**
+2. **Attach the two VSL order documents** — unblocks the eight findings.
+3. **The VSL paper read** — unlinks placement.
+4. Repo → Settings → automatically delete head branches.
+5. Account → Notifications → Actions → failed workflows only, Watching on the repo.
+6. PLANS-3 close-out.
+7. The 29 August Planning/ reconvergence.
+
+---
+
+**No order is armed. No trigger is live.** The watch's write leg stays dry, the
+matcher stays unwired at soak 0 of 10, and nothing in this estate is waiting on
+a timer.
