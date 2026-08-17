@@ -71,7 +71,8 @@ def replace_exact_outside_id(
             f"{path}: {old!r} expected outside/inside {expected_outside}/{expected_inside}; measured {outside}/{inside}"
         )
     updated = prefix.replace(old, new) + protected + suffix.replace(old, new)
-    if updated[start:start + len(protected)] != protected:
+    updated_start, updated_end = element_span_by_id(updated, target_id)
+    if updated[updated_start:updated_end] != protected:
         raise RuntimeError(f"{path}: protected witness block changed")
     write(path, updated)
     return outside
