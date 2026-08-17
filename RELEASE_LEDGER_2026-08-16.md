@@ -1286,3 +1286,143 @@ different sets that happen to be the same size. Nothing connects them.
   pronounce on it — a stated limitation instead of a confident wrong answer.
   **Control (g)** pins the regression, and red is now reserved for FAIL, NO
   VERDICT, or a head tested by nothing.
+
+---
+
+# THE ARC IS CLOSED — 2026-08-17
+
+Written last, from measured artefacts. Superseded by dated pointer only.
+
+## 1 · The closing measurement
+
+Both red runs on `main` had **one cause, not two** — identical failure line,
+identical subject, identical `7 pass · 1 fail · 0 inconclusive`.
+
+- **Before** — run `32018424063` @ `b6f92ca`, job `95352744737`: the Studio failing
+  *served without a redirect chain*.
+- **After** — run `32027709223` @ `036b545`, job `95380509725`: `SERVED · 200 ·
+  6678059f11fc · 55394 B · chain → 301 → madebymatt.uk`.
+
+> **Same 301, same destination, opposite verdict. The deployment never changed;
+> the judgement did.**
+
+**The estate was never broken — the gate was.**
+
+## 2 · Two counts, separate, neither netted against the other
+
+**Checks that COULD NOT FIRE — twelve.** Predicate and derivation are unchanged
+and still machine-checked above: one row per check that could not fire, where it
+was found, two such defects in one commit counting twice; 10 in these gates + 1
+Matt-side + 1 found by re-reading an artefact.
+
+**Checks that FIRED WRONGLY — three instruments.** A different species, so it
+gets its own count and its own predicate: **one row per instrument that returned
+a verdict which was false at the moment it returned it, counted per instrument
+and not per wrong verdict** — otherwise one bad regex outvotes a whole gate.
+
+| instrument | wrong verdicts | found on |
+|---|---|---|
+| the stale-evidence sweep, v1 | **4** — `T10a`, `T10b`, `X0`, `X1c` called stale; all four existed | its own corpus run, which is what produced R0.14 |
+| `verify_fieldops_served.mjs` — any `3xx` treated as FAIL | **2** — the Teacher Studio, twice | runs `32017557268` @ `7efbf22` and `32018424063` @ `b6f92ca` |
+| `watch_main_runs.mjs`, run 1 | **1** — red on a green estate | run `32029976055` @ `9b875b6` |
+
+Twelve could not fire; three fired wrongly. **Both numbers are the arc's result.
+Neither cancels the other, and a gate that fires wrongly is the more dangerous of
+the two, because it produces evidence.**
+
+## 3 · R0.20 – R0.27, with what enforces each
+
+**R0.24 is deliberately unallocated.** The closing order introduced its new rules
+as R0.26 and R0.27 and referred to a write-leg rule as R0.25, skipping 24. Under
+**R0.17** ids are allocated here, not in an order — but renumbering would leave a
+dangling reference in a document already issued. The order's ids are kept and the
+hole is recorded, so a later reader does not hunt for a lost rule.
+
+| rule | what it says | provenance | enforced by |
+|---|---|---|---|
+| **R0.20** | evidence has a locality; CI green and local green are different claims | the D1 control proven only on a branch whose push triggered nothing | **unenforced** — convention only |
+| **R0.21** | a retry loop classifies before it repeats | four non-fast-forward retries; then **four retries of a legible `HTTP 403` inside the run that ratified this rule** | **unenforced** — and demonstrably so |
+| **R0.22** | a failure on the default branch reaches a person by a mechanism, not by inspection | runs `32017557268`, `32018424063`, both found by looking | `watch-main.yml` — in mechanism; **the human leg does not exist** |
+| **R0.23** | a pattern states its scope and prints its match set before acting | a filtered grep; `git tag -l` in the wrong repo; `pkill -f` killing its own wrapper | partly — `watch_main_runs.mjs` and `--verify-trigger-list` print scope and match set; elsewhere **unenforced** |
+| **R0.24** | *unallocated — see above* | — | — |
+| **R0.25** | the write leg is split from the judge, and every appended line carries run id, verdict and predicate | run `32029976055` wrote a false finding into this document and pushed it | **enforced by withdrawal**: both conditions are false, so the write leg is dry-run and the job is `contents: read` |
+| **R0.26** | a rule lands as a mechanism or it does not land | R0.16's amendment violated 20 minutes after being recorded; R0.21 violated inside its own ratifying run | this table — every rule now carries its enforcement or the word `unenforced` |
+| **R0.27** | a document must not contain a control token in an executable position | #125's squash message described the skip-ci guard and included the literal token; `210e6cc` got **no CI run at all** | partly — the token no longer appears anywhere in `.github/workflows/`; in commit messages **unenforced** |
+
+**Four of eight are `unenforced` or partly so, and that is the honest state.**
+R0.26 exists because writing a rule down was repeatedly mistaken for putting it
+in force.
+
+## 4 · Four merges, and why there were four
+
+`#124` carried the payload. **`#125`, `#126` and `#127` exist to repair defects
+introduced while building the watch in `#125`.** Stated plainly: *three of the
+four merges this session repaired defects introduced by the second.*
+
+| PR | merged as | what it was |
+|---|---|---|
+| **#124** | `036b545` | the payload: control (e), the D1 control, the census split, the inline-exit wiring |
+| **#125** | `210e6cc` | the watch — and its squash message stopped CI on its own landing commit |
+| **#126** | `9b875b6` | the untested-head blind spot, and a withdrawn rule |
+| **#127** | `758304f` | the false positive: dormancy is not failure |
+
+## 5 · The watch's two live verdicts — one false, one true
+
+| run | head | verdict | truth |
+|---|---|---|---|
+| `32029976055` | `9b875b6` | FAILED | **false.** 6 PASS · 0 FAIL · 0 NO VERDICT; red on dormant workflows; `main` was green |
+| `32030762018` | `758304f` | SUCCESS | true |
+
+Control **(f)** exists because of the first; control **(g)** exists because of the
+second. **A sample of two is not a track record**, and the soak countdown is
+printed in every run so nobody has to remember that.
+
+## 6 · The human leg — qualified, not claimed
+
+The watch converts *nobody knew* into *it is written where someone will see it*.
+**Better, and not the same as being told.** GitHub's Actions-failure mail goes to
+the account that triggered the run; these are automation-triggered, so they reach
+nobody. **R0.22 is satisfied in mechanism and not in effect, and this ledger keeps
+saying so until the account setting is on.**
+
+## 7 · The watch's standing conditions, each as currently true or false
+
+| condition | state |
+|---|---|
+| the writer is split from the judge | **FALSE** — one job, `watch` |
+| every appended line carries run id, verdict and predicate | **FALSE** — the one line it wrote carried only the run id |
+| **therefore the write leg is DRY-RUN** | **TRUE, now** — it prints exactly what it would append, appends nothing, and the job is `contents: read` |
+| soak target | **10** consecutive green; **1** accrued; countdown printed in every run |
+| dormancy is reported, never judged, and the limitation is in the tool's own output | **TRUE** — the tool prints that a workflow which has silently stopped running is not distinguishable there from one correctly dormant, and that `UNDETERMINED` is the honest word |
+| `9a5b424` — the false line and the untested head it created | **recorded**, annotated in place as the watch's own error, not deleted |
+
+**STANDING RULE, in force from now: if the watch reds again on a green estate,
+the write leg is disabled outright and the reporting leg is kept.** Two false
+reds with a write leg attached is worse than no watch. The write leg is already
+dry; this rule governs whether it is ever re-armed.
+
+## 8 · What remains open, by name
+
+| item | state | what closes it |
+|---|---|---|
+| branch `claude/close-order-seven-items-wdfhdf` | delete refused `HTTP 403`; content proven identical to main — **clutter, not risk** | a session with ref-delete permission, or repo → Settings → **Automatically delete head branches** |
+| tag `close-fixes/combined-614f4d8` | exists in the site repo, unpushed, annotated | a push from a site-scoped session |
+| **the watch's human leg** | **does not exist** | an account-level notification setting — Account → Notifications → Actions → *failed workflows only*, with Watching set on the repo |
+| nine declared zero-check PRs | recorded, ratcheted, not repaired | its own pass |
+| B2 conformance | a gap; abandoned, no result survives | re-running the conformance order |
+| VSL v0.4.1 | nothing created, correctly | its own order — v0.4 still carries **V2: pupil name and notes in the Share URL, at an SEMH provision** |
+| five declared-not-derived routes | inherited unchecked, named | extending the deriver, or a ruling |
+| whether a path-filtered workflow should have run | reported, deliberately **not** judged | matching filters against each commit's changed files — its own pass |
+
+**Next work opens as new orders, not extensions of this one.** Ranked: the
+path-filter matcher (turns UNDETERMINED into an assertion, and makes *silently
+stopped running* detectable) · the nine zero-check PRs · B2 conformance · **VSL
+v0.4.1, which is the only one carrying a pupil-data finding and should be ranked
+accordingly.**
+
+*The arc's goal is met: `main` is green, the Studio failure is gone and named, and
+something now watches. It is also true that three of four merges this session
+repaired defects introduced while building the watch, and that the watch's first
+live verdict was false. Both sentences belong in the record, next to each other,
+unhedged. The mechanism works; the judgement of what deserves a red is the thing
+still being learned.*

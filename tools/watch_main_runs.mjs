@@ -196,6 +196,24 @@ function latestPerWorkflow(runs) {
   return [...byPath.values()];
 }
 
+/* ------------------------------------------------------------------ soak */
+/* A SAMPLE OF TWO IS NOT A TRACK RECORD.
+   This watch has produced exactly two live verdicts: one false red and one true
+   green. Until it has run clean for a declared number of consecutive executions
+   it is on probation, and the countdown is printed in every run rather than kept
+   in someone's head. Derived from the watch's own run history, not stored. */
+const SOAK_TARGET = Number(process.env.WATCH_SOAK || 10);
+
+async function soak() {
+  try {
+    const d = await api(`/repos/${REPO}/actions/workflows/${encodeURIComponent(path.basename(SELF))}/runs?per_page=40`);
+    const runs = (d.workflow_runs || []).filter(r => r.status === 'completed');
+    let greens = 0;
+    for (const r of runs) { if (r.conclusion === 'success') greens++; else break; }
+    return { greens, target: SOAK_TARGET, total: runs.length };
+  } catch (e) { return { greens: null, target: SOAK_TARGET, why: e.message }; }
+}
+
 /* --------------------------------------------------------------- self-test */
 function selfTest() {
   let bad = 0;
@@ -383,14 +401,26 @@ async function main() {
   const manual = missing.filter(w => !w.auto), dormant = missing.filter(w => w.auto);
   console.log(`\n${cls.pass.length} PASS · ${cls.fail.length} FAIL · ${cls.noVerdict.length} NO VERDICT · ` +
               `${dormant.length} dormant · ${manual.length} dispatch-only, of ${workflows.length} derived`);
-  console.log('Dormant and dispatch-only do NOT colour the verdict: whether a path-filtered');
-  console.log('workflow should have run on this commit means matching its filters against the');
-  console.log('commit, which this tool does not do. Reported, not pronounced on.');
+  console.log('LIMITATION, STATED HERE AND NOT ONLY IN THE LEDGER: dormant and dispatch-only');
+  console.log('workflows do NOT colour the verdict. Deciding whether a path-filtered workflow');
+  console.log('SHOULD have run on this commit means matching its filters against the commit\'s');
+  console.log('changed files. This tool does not do that, so a workflow that has silently');
+  console.log('STOPPED running is NOT distinguishable here from one correctly dormant.');
+  console.log('Reported, never pronounced on. UNDETERMINED is the honest word.');
   console.log(head ? (head.tested
     ? `head ${head.headSha}: tested by ${head.runs} run(s)`
     : `head ${head.headSha}: TESTED BY NOTHING — every gate above passed on an EARLIER commit`)
     : 'head coverage: unknown');
   console.log('NO VERDICT is not coverage. A cancelled or skipped run says nothing about the commit it was asked to judge.');
+
+  const sk = await soak();
+  if (sk.greens === null) console.log(`\nsoak: UNKNOWN (${sk.why})`);
+  else if (sk.greens >= sk.target)
+    console.log(`\nsoak: ${sk.greens}/${sk.target} consecutive green — probation served.`);
+  else
+    console.log(`\nsoak: ${sk.greens}/${sk.target} consecutive green — ${sk.target - sk.greens} to go. ` +
+                `This watch has produced ${sk.total} live verdict(s) in total, one of which was a FALSE RED ` +
+                `(run 32029976055). A sample this small is not a track record, and the write leg stays dry until it is.`);
 
   const code = verdictFor(runs, workflows, cls, missing, head);
   if (code === 0) console.log(`\nEvery derived workflow has a completed, successful latest run on ${BRANCH}.`);
