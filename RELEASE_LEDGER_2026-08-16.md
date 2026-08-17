@@ -1723,9 +1723,26 @@ than an empty census, which is the tool working.
 
 **It then ran in CI on PR #132 and its seven self-test controls all passed**,
 including *"a thirteenth, undeclared zero-check PR is still caught — Lessons#124"*.
-The gate step itself first exited **2** on a **504 Gateway Timeout** listing Apps
-PRs — a different class from the 401 (transient upstream, and the job died before
-the census body ran), so it was re-run once rather than retried in a loop.
+
+**But the gate step itself did not complete, twice, and that is a finding rather
+than a flake.** It exited **2** on both attempts — first naming a **504 Gateway
+Timeout** listing Apps PRs. A 504 is a different class from the 401 (transient
+upstream; the job died before the census body ran), so it was re-run **once**.
+It recurred on a fresh head. Classified as a **condition, not a blip**, and not
+retried again (R0.21).
+
+**Exit 2 is INCONCLUSIVE, not red.** The tool's contract is `--gate` exits **1**
+when an open non-draft PR runs zero checks and **2** when the API is unreachable.
+So the gate **never judged anything** — it declined to, which is the behaviour
+this tool was deliberately built to have. **Reds are not growing.** But an
+INCONCLUSIVE is not a pass, and the honest statement is that
+**`No open PR runs zero checks` cannot currently produce a verdict in CI.**
+
+The in-session MCP derivation is therefore the only complete census this pass
+has, and it agreed with the baseline exactly. **Two independent derivations
+agreeing is the reason to believe it; one of them declining to run is the reason
+not to call it confirmed.** The self-test controls are green either way — the
+instrument works; its input does not currently arrive.
 
 ## 5 · The five declared-not-derived routes — one verdict each
 
@@ -1798,6 +1815,7 @@ not shortened to make it look otherwise.
 | B2 | **cost reported; it is a new specification, not a re-run** | Matt's choice: commission with a stated scope, or formally retire with a reason |
 | the matcher | landed, report-only, PR **#132** | soak 0 of 10, then a true-negative **at the wiring point** |
 | the five held PRs | dispositions written into each body | each one's own hold lifting |
+| **the census gate in CI** | **cannot produce a verdict** — exit 2 (INCONCLUSIVE) on two consecutive attempts, first naming a 504 listing Apps PRs. Self-test controls green; the instrument works, its input does not arrive | whatever is timing out upstream, or a retry/backoff inside `pr_check_census.mjs` for the list call specifically — **not** a looser gate |
 | branch `claude/close-order-seven-items-wdfhdf` | present; delete refused `HTTP 403` | the repo setting in Matt's list |
 | the watch's human leg | mechanism live, no notification reaches a person | the account setting in Matt's list |
 
