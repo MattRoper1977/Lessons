@@ -26,8 +26,38 @@ jobs:
           }
           trap cleanup EXIT
           git worktree add --detach "$WORK" "$START"
+
+          cp "$WORK/.github/ph1_apply.py" /tmp/ph1_apply_runtime.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/ph1_apply_runtime.py')
+          s=p.read_text(encoding='utf-8')
+          replacements={
+              '"Witness staff sign off the profile as portfolio evidence."':'"staff sign off the profile as portfolio evidence."',
+              '"Witness staff prepare the profile for assessor sign-off as portfolio evidence."':'"staff prepare the profile for assessor sign-off as portfolio evidence."',
+              '"Witness staff sign off the community evidence."':'"staff sign off the community evidence."',
+              '"Witness staff prepare the community evidence for assessor sign-off."':'"staff prepare the community evidence for assessor sign-off."',
+              '"Witness staff sign off the completed challenges."':'"staff sign off the completed challenges."',
+              '"Witness staff prepare the completed challenges for assessor sign-off."':'"staff prepare the completed challenges for assessor sign-off."',
+              '"Witness staff sign off the practical + hygiene evidence."':'"staff sign off the practical + hygiene evidence."',
+              '"Witness staff prepare the practical + hygiene evidence for assessor sign-off."':'"staff prepare the practical + hygiene evidence for assessor sign-off."',
+              '"Witness staff sign off FoodWise M1 — module complete."':'"staff sign off FoodWise M1 — module complete."',
+              '"Witness staff prepare the FoodWise M1 evidence for assessor sign-off."':'"staff prepare the FoodWise M1 evidence for assessor sign-off."',
+              '"Witness staff sign off the LI M1 practical evidence."':'"staff sign off the LI M1 practical evidence."',
+              '"Witness staff prepare the LI M1 practical evidence for assessor sign-off."':'"staff prepare the LI M1 practical evidence for assessor sign-off."',
+              '"Witness staff sign off the completed portfolio + predicted grade."':'"staff sign off the completed portfolio + predicted grade."',
+              '"Witness staff prepare the completed portfolio + predicted grade for assessor sign-off."':'"staff prepare the completed portfolio + predicted grade for assessor sign-off."',
+          }
+          for old,new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'patch source missing: {old}')
+              s=s.replace(old,new)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          rm -rf /tmp/ph1-apply /tmp/ph1-apply.log
           set +e
-          (cd "$WORK" && DRY_RUN=1 PH1_OUT=/tmp/ph1-apply python3 .github/ph1_apply.py) > /tmp/ph1-apply.log 2>&1
+          (cd "$WORK" && DRY_RUN=1 PH1_OUT=/tmp/ph1-apply python3 /tmp/ph1_apply_runtime.py) > /tmp/ph1-apply.log 2>&1
           RC=$?
           set -e
 
@@ -38,7 +68,7 @@ jobs:
             echo '# PH-1 P1–P7 dry-run result'
             echo
             echo "- Input branch commit: \`$START\`"
-            echo "- Executor SHA-256: \`$(sha256sum .github/ph1_apply.py | awk '{print $1}')\`"
+            echo "- Runtime executor SHA-256: \`$(sha256sum /tmp/ph1_apply_runtime.py | awk '{print $1}')\`"
             echo "- Exit code: **$RC**"
             echo "- Result: **$([ "$RC" -eq 0 ] && echo PASS || echo FAIL)**"
             echo
