@@ -42,8 +42,11 @@ on:
     - cron: '17 6 * * *'
   workflow_dispatch:
 
+# READ ONLY. The write leg is DRY-RUN (see the step at the bottom), so the job
+# no longer needs write access — and a job that cannot write cannot write a false
+# finding, which is the failure it already committed once.
 permissions:
-  contents: write        # only for the ledger line; see the guarded step below
+  contents: read
 
 defaults:
   run:
@@ -89,30 +92,40 @@ jobs:
             cat "$RUNNER_TEMP/watch-controls.txt" "$RUNNER_TEMP/watch-trigger.txt" 2>/dev/null || echo '(did not run)';
             echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
-      # §4.5, leg 3 - the finding outlives the run that found it. Runs and their
-      # logs are retention-limited; the ledger is in the repository.
+      # THE WRITE LEG IS DRY-RUN, AND STAYS DRY UNTIL TWO THINGS ARE TRUE.
       #
-      # Guarded three ways, because a job that commits to main is a loop waiting
-      # to happen: only on failure, only if this run id is not already recorded,
-      # and with [skip ci] so the push cannot trigger the workflows this job is
-      # watching. R0.14 - it prints what it is about to append before appending.
-      - name: Record the red in the release ledger
-        if: failure() && steps.watch.outcome == 'failure'
+      # It wrote once, and what it wrote was false: run 32029976055 reported
+      # 6 PASS / 0 FAIL / 0 NO VERDICT, went red on dormant workflows, and pushed
+      # a "main was red" line to main as 9a5b424 on a green estate.
+      #
+      # Two conditions, both currently FALSE, and both must hold before this
+      # commits anything again:
+      #   1. the writer is split from the judge - they are one job here, so a
+      #      misjudgement writes itself with no second opinion in between;
+      #   2. every appended line carries its run id AND its verdict AND the
+      #      predicate that produced it - the line it wrote carried only the id,
+      #      so a reader could not tell a real red from this one.
+      #
+      # Until then it prints, in full, exactly what it WOULD have appended. That
+      # is the reporting leg, which is kept; the writing leg is what is withdrawn.
+      # A watch that reports is useful. A watch that writes a false finding into
+      # the record it is meant to protect is worse than no watch.
+      - name: Write leg — DRY RUN, prints what it would append and appends nothing
+        if: always()
         run: |
-          LEDGER=RELEASE_LEDGER_2026-08-16.md
-          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          if [ ! -f "$LEDGER" ]; then echo "no ledger at $LEDGER - nothing appended"; exit 0; fi
-          if grep -qF "watch:${GITHUB_RUN_ID}" "$LEDGER"; then
-            echo "run ${GITHUB_RUN_ID} is already recorded - not appending a second time"; exit 0
+          if [ "${{ steps.watch.outcome }}" != "failure" ]; then
+            echo "verdict is not a failure - nothing to append, dry-run or otherwise"; exit 0
           fi
-          LINE="- **$(date -u +%Y-%m-%d) — main was red.** Detected by the watch, not by inspection. Run [\`${GITHUB_RUN_ID}\`](${RUN_URL}) <!-- watch:${GITHUB_RUN_ID} -->"
-          echo "about to append, verbatim:"; echo "  $LINE"
-          printf '\n%s\n' "$LINE" >> "$LEDGER"
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$LEDGER"
-          git commit -m "Watch: main was red at run ${GITHUB_RUN_ID} [skip ci]"
-          git push origin HEAD:main
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "WOULD APPEND (dry-run; nothing is written and nothing is pushed):"
+          echo "  - **$(date -u +%Y-%m-%d) - main was red.** Detected by the watch."
+          echo "    run ${GITHUB_RUN_ID} (${RUN_URL})"
+          echo "    verdict: see the measurement above - FAIL / NO VERDICT / untested head"
+          echo "    predicate: red is FAIL, NO VERDICT, or a head no run carries. Dormant"
+          echo "               and dispatch-only workflows do not colour the verdict."
+          echo
+          echo "Not written. The write leg is dry until the writer is split from the judge"
+          echo "and every line carries id, verdict and predicate. See the ledger."
 
       - name: Upload
         if: always()
