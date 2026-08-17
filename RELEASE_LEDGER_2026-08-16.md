@@ -795,8 +795,10 @@ a log scrape for every future run.
 
 ## Still open, and named so it cannot be inferred
 
-- The serve proof has **not yet run against production**. It runs on push to
-  `main`, weekly, and on dispatch; from this container every origin answers 403.
+- ~~The serve proof has **not yet run against production**.~~ **SUPERSEDED
+  2026-08-17** — it ran on push to `main` and passed; the result and its run id
+  are at the end of this ledger. Left standing rather than rewritten: it was true
+  when written, and the container's 403 that prompted it is still true.
 - **Twelve PRs with no checks.** The gate exists; the twelve are not fixed.
 - B2, above.
 - `close-fixes/combined-614f4d8` — see the branch table.
