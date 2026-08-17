@@ -1,0 +1,29 @@
+name: PH-1 P1-P7 dry run
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-p1-p7-dry-run.yml'
+permissions:
+  contents: read
+jobs:
+  simulate:
+    if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: P1-P7 dry run' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Simulate seven independently committed items
+        env:
+          DRY_RUN: '1'
+          PH1_OUT: /tmp/ph1-apply
+        run: |
+          set -euo pipefail
+          python3 .github/ph1_apply.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ph1-p1-p7-dry-run
+          path: /tmp/ph1-apply
+          retention-days: 2
