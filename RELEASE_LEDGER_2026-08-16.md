@@ -1831,3 +1831,146 @@ not shortened to make it look otherwise.
 **An arc that closes with an empty remaining-list has stopped looking.** This one
 closes with the pupil-data finding still at the top of it — proven this time, and
 still unfixed.
+
+---
+
+# 2026-08-17 · V2 privacy patch — applied, gated, branched
+
+**Supersedes nothing above; the earlier entries were true when written.** The
+2026-08-17 close-everything entry recorded V2 as *"proven byte-level, fix not
+made."* **The fix is now made.** That row is superseded here, not rewritten.
+
+## 1 · The severity, widened — and this is why it outranked the whole board
+
+The finding as first stated was *"pupil name and notes travel in the URL that
+Share hands out."* **Derived from the file, it is worse than that.**
+
+`syncHash()` has **119 call sites**. Both fields update `state` on **every
+keystroke**:
+
+```js
+1826: dom.pupil.addEventListener("input", e => { state.pupil = e.target.value; });
+1827: dom.notes.addEventListener("input", e => { state.notes = e.target.value; });
+```
+
+So the moment a pupil typed a name, the **next** bench interaction — any of 119
+— rewrote `location.hash` with it. It then sat in the address bar for the whole
+session: browser history, bookmarks, screen shares, **a projector at the front
+of a room with other pupils in it**, and any URL anyone copied. **Share was the
+loudest exit, not the only one.** A teacher who never touched Share still had a
+named child's reflection on display.
+
+## 2 · Measurements — a dated set BESIDE the pinned intake set, not replacing it
+
+| | v0.4 (pinned input, unchanged) | v0.4-privacy1 (2026-08-17) |
+|---|---|---|
+| bytes | **287,161** | **290,034** |
+| lines | **1,978** | **2,031** |
+| sha256 | `137bbfac3ea98255fad55b44c3073810d2a0876cc833e555b61f6989114daf7f` | `2004d374b8215227ade8596261ac76f420b92c726d86ff3230a9b66f25f3a701` |
+| benches | 13 | 13 |
+| 13-bench boot | 0 page errors · 0 console errors · 0 console warnings | **identical: 0 · 0 · 0** |
+
+The input set stays pinned. It is the subject this was derived from, and
+replacing it would destroy the ability to check the derivation.
+
+## 3 · P2 IS HALF-IMPLEMENTED — recorded so nobody reads this as closing it
+
+**Out of the URL:** the pupil name and the reflection notes.
+**Still in the URL:** `phaseAnswers` and the drawing strokes.
+
+They are the same principle at lower severity — **they do not identify a
+child** — and stripping strokes makes the reload cost far worse: a lost drawing
+is lost work, a lost name is one retype. **Their own change, not this one.**
+Anyone reading this entry as *"the URL principle is closed"* is reading it
+wrong.
+
+## 4 · The reload cost — accepted, and storage was refused
+
+The file has **zero storage APIs** and the URL was the only persistence, so
+**a reload now loses the typed name and notes.**
+
+**Storage was deliberately not added.** On a shared classroom machine
+`localStorage` would leave a pupil's name for whoever sits down next —
+arguably worse than the address bar — and it breaks a declared property of the
+file that other checks rely on (`accounts: false`, `serverRequired: false`,
+`networkRequired: false`). **The answer to a lost note is Print or Export before
+reloading; both still carry the fields**, which is exactly why the export was
+left untouched.
+
+## 5 · Residue that cannot be fixed — named, not tidied
+
+**Links already minted, bookmarks already saved and screenshots already taken
+are unrecoverable.** Nothing in this patch reaches them. `loadHash()` now strips
+both fields from an incoming payload, so an old link no longer *repopulates* a
+name in the app — but the name is still sitting in that URL wherever it was
+pasted, and in whatever history holds it. **The patch stops new ones. It does
+not reach the old ones.**
+
+## 6 · The version — and it matters more than it looks
+
+**This is `v0.4-privacy1`. It is NOT `v0.4.1`.**
+
+In every order and ledger entry in this estate, *v0.4.1* means **the patch order
+ran**: P1 through P9, all six V-findings and three N-findings. **Only P2 has
+run, and only half of it.** Labelling this v0.4.1 would guarantee a future
+reader concludes V1, V3, V4, V5, V6 and N1–N3 are fixed when they are not. The
+reason is stated in the file's own header comment, not only here, because the
+file will outlive this ledger entry's readership.
+
+**The URL payload version tag is bumped to `0.4p1`** — on the URL alone, not on
+the export, which keeps `0.4`. That bump is what lets a future reader tell a
+pre-fix link from a post-fix one. **Change 2 is the mechanism; the bump is the
+record.**
+
+## 7 · Gates — 6 reds fired, 7 greens returned, every one both directions
+
+Read from `location.hash`, **never the clipboard**: a headless clipboard
+permission must not be able to fake a pass. Each red is a **named mutant** —
+`M0` the original file · `M1` strip inside `serialisableState()` · `M2` print
+handler clears notes · `M3` patched without change 2 · `M4` a corrupted token.
+
+**Gate A is the one that matters**, and it never touches Share: type both
+canaries, perform an **ordinary bench interaction**, read the hash. Green on the
+patch, red on the original. It is the gate shaped like the actual finding, and
+every other gate would have passed a fix that only cleaned up the Share path.
+
+**One correction to the order, made rather than worked around.** §3 proposed
+*"strip from `serialisableState()` instead"* as the red for **both** the export
+and print gates. **It does not fire for print:** `preparePrint()` reads
+`state.notes` directly and never goes through `serialisableState()`, so that
+mutant leaves the print gate green. A control that cannot fire is not a control
+(R0.24), so print was given `M2` of its own.
+
+## 8 · Where it lives — preservation, not placement
+
+Branch **`claude/vsl-v0.4-privacy1`** at `ed6dfca`, directory `_vsl_privacy1/`
+(leading underscore, this repo's convention for what is not served). It carries
+the patched file, the gate harness and the patch script, so the result is
+reproducible rather than asserted.
+
+**Ref table (R0.19).** Before: 146 remote branches, 0 tags, 0 matching
+`claude/vsl*`. After: **147 remote branches, 0 tags, 1** matching. **Loss
+statement: a branch push adds a ref and removes nothing** — no existing ref
+moved, no tag was created or deleted, `main` is untouched at `c630fa8`, and
+nothing was merged.
+
+**No PR was opened**, and that is deliberate: a PR is a request to merge, and
+nothing here asks to merge. The branch is the whole of the landing.
+
+**Nothing is placed, linked, catalogued, or added to `resources.json`.** The
+unlinked-until-paper-read ruling stands for whenever placement does happen — no
+instrument can witness a paper read.
+
+## 9 · Still not deployable, and the reasons are named
+
+This makes the file **safer, not shippable.** Eight findings are untouched:
+
+- **V1** still rewards the procedure it teaches against
+- **V5** still marks *"the glowing splint does not relight"* as correct
+- **N1** still deletes a pupil's oldest drawing stroke without a word
+- **V3, V4, V6, N2, N3** unexamined in this pass
+
+Everything else about this file — the chemistry that is right, the biology
+maths that is exact, the seventeen checksums that verify — was always true and
+never made it safe to use in a room. **This does, for one thing, and names the
+eight that are still waiting.**
