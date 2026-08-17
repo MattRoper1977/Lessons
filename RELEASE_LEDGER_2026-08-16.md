@@ -1030,9 +1030,18 @@ taken on trust is the same species as every unfired check in the table above.
 - **Twelve zero-check pull requests**, declared in `tools/zero_check_baseline.json`
   and ratcheted so the thirteenth reds. Recorded, not repaired.
 - **B2 conformance** — abandoned, no result survives, and the ledger says so.
-- **`verify_inline_exit.mjs`** — the gate that proves a child's way out of eleven
-  games is keyboard-reachable. It runs in two named site workflows; what it does
-  not have is a Lessons-side trigger for the three Lessons games it judges.
+- ~~**`verify_inline_exit.mjs`**~~ **WIRED 2026-08-17.** The gate that proves a
+  child's way out of a game is keyboard-reachable judges **14 routes across both
+  estates, three of which live here** — `Off_Brand`, `Charcoal`, `Axiom_Shift`.
+  It ran in two site workflows only, and site workflows fire on site paths: a
+  change to one of those three games in *this* repository could have broken the
+  way out and no gate would have noticed. Nothing blocked it — the tool already
+  accepted `--lessons`; what it lacked was a caller on this side. Added as its
+  own job in `fieldops-p2-and-sweep.yml`, which carries no `paths:` filter, so
+  every change here matches it. Measured before wiring, across both estates:
+  **529 passed · 0 failed**, so this adds a gate rather than a red. `/emberwild/`
+  is **judged, not excluded** — issue **#149** is RESOLVED, and resolved in the
+  game (Tab is no longer a game key) rather than by declaring an exemption.
 - **VSL v0.4.1** — its own order. v0.4 still carries all six V-findings verbatim,
   including **V2: pupil name and notes in the URL that Share hands out, at an
   SEMH provision.**

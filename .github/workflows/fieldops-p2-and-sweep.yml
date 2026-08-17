@@ -303,3 +303,54 @@ jobs:
           name: pr-census
           path: ${{ runner.temp }}/pr-census*.txt
           if-no-files-found: error
+
+  inline-exit:
+    name: The way out of a game is keyboard-reachable - both estates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # THE GATE LIVES IN THE SITE REPO AND JUDGES THREE GAMES THAT LIVE HERE.
+      # It was hand-run only: the site's workflows fire on site paths, so a change
+      # to Games/Off_Brand.html, Games/Charcoal.html or Games/Axiom_Shift.html in
+      # THIS repository could break a child's way out of a game and no gate would
+      # notice. The tool already accepts --lessons; what it never had was a caller
+      # on this side. This is that caller.
+      #
+      # It is a separate job so a red here is attributable to this gate rather
+      # than folded into the FieldOps build.
+      #
+      # /emberwild/ is judged, not excluded: issue #149 is RESOLVED and was fixed
+      # in the game (Tab is no longer a game key), not by declaring an exemption.
+      # The region-only routes are held to carrying the region markers AND to
+      # carrying no hud.js tag, so the exemption is audited rather than free.
+      - name: Check out the site estate, which holds the instrument
+        run: git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site"
+
+      - name: Install the browser the tab walk needs
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Every exit is reachable, named, and 44x44 - across both estates
+        run: |
+          cd "$RUNNER_TEMP/site"
+          npm install --no-save playwright
+          node tools/verify_inline_exit.mjs --lessons "$GITHUB_WORKSPACE" \
+            | tee "$RUNNER_TEMP/inline-exit.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Inline exit, both estates'; echo '```';
+            tail -25 "$RUNNER_TEMP/inline-exit.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inline-exit
+          path: ${{ runner.temp }}/inline-exit.txt
+          if-no-files-found: error
