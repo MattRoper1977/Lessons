@@ -6,21 +6,11 @@ import html
 import re
 import subprocess
 
-WITNESS_RE = re.compile(r'(?i)id=["\']print-witness["\']|Assessor Witness Statement')
+PRINT_WITNESS_ID_RE = re.compile(r'(?i)id=["\']print-witness["\']')
+WITNESS_HEADING_RE = re.compile(r'(?i)Assessor Witness Statement')
 
 
-def extract_element_by_id(text: str, target_id: str = 'print-witness') -> str:
-    opening = re.search(
-        rf'(?is)<(?P<tag>[a-z][a-z0-9]*)\b[^>]*\bid=["\']{re.escape(target_id)}["\'][^>]*>',
-        text,
-    )
-    if not opening:
-        anchor = text.lower().find('assessor witness statement')
-        if anchor < 0:
-            return ''
-        next_print = text.lower().find('class="print-section', anchor + 30)
-        end = next_print if next_print > anchor else min(len(text), anchor + 18000)
-        return text[max(0, text.rfind('<div', 0, anchor)):end]
+def extract_balanced_element(text: str, opening: re.Match[str]) -> str:
     tag = opening.group('tag')
     depth = 1
     token_re = re.compile(rf'(?is)</?{re.escape(tag)}\b[^>]*>')
@@ -32,7 +22,40 @@ def extract_element_by_id(text: str, target_id: str = 'print-witness') -> str:
                 return text[opening.start():token.end()]
         elif not raw.rstrip().endswith('/>'):
             depth += 1
-    return text[opening.start():min(len(text), opening.start() + 22000)]
+    return ''
+
+
+def extract_element_by_id(text: str, target_id: str = 'print-witness') -> str:
+    opening = re.search(
+        rf'(?is)<(?P<tag>[a-z][a-z0-9]*)\b[^>]*\bid=["\']{re.escape(target_id)}["\'][^>]*>',
+        text,
+    )
+    return extract_balanced_element(text, opening) if opening else ''
+
+
+def extract_print_section_witness(text: str) -> str:
+    # Some real witness sheets may lack the conventional ID. Accept a fallback
+    # only when the heading is actually inside an element whose class contains
+    # print-section. Mere prose saying a suite has a witness sheet is excluded.
+    heading = WITNESS_HEADING_RE.search(text)
+    if not heading:
+        return ''
+    candidates = []
+    for opening in re.finditer(
+        r'(?is)<(?P<tag>[a-z][a-z0-9]*)\b(?=[^>]*\bclass=["\'][^"\']*\bprint-section\b[^"\']*["\'])[^>]*>',
+        text[:heading.start()],
+    ):
+        candidates.append(opening)
+    for opening in reversed(candidates):
+        block = extract_balanced_element(text, opening)
+        if block and WITNESS_HEADING_RE.search(block):
+            return block
+    return ''
+
+
+def witness_block(text: str) -> str:
+    block = extract_element_by_id(text)
+    return block if block else extract_print_section_witness(text)
 
 
 def canonical(block: str) -> str:
@@ -43,7 +66,7 @@ def canonical(block: str) -> str:
 
 
 def fingerprint_text(text: str) -> str | None:
-    block = extract_element_by_id(text)
+    block = witness_block(text)
     if not block:
         return None
     return hashlib.sha256(canonical(block).encode('utf-8')).hexdigest()
@@ -62,7 +85,7 @@ def snapshot(root: Path) -> dict[str, str]:
     result = {}
     for path in tracked_html(root):
         text = path.read_text(encoding='utf-8', errors='replace')
-        if not WITNESS_RE.search(text):
+        if not PRINT_WITNESS_ID_RE.search(text) and not WITNESS_HEADING_RE.search(text):
             continue
         fingerprint = fingerprint_text(text)
         if fingerprint is not None:
