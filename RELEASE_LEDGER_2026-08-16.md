@@ -691,6 +691,14 @@ four instances of it, each found by the thing built to find the last one:
 
 ## Merged is not served — and it is still not proven
 
+> **SUPERSEDED 2026-08-17, and left standing (R0.13).** This entry was true when
+> written and is the record of why the instrument exists. Two things below have
+> since changed and are corrected at the end of this ledger, not here: serving
+> **is** now proven on `main` (run `32022110081`), and the network legs described
+> below have been removed from `verify_fieldops_served.mjs` — they treated the
+> Studio's `301` as a failure. `tools/verify_served.mjs` holds R0.4 for these
+> routes now; what remains in the older file is the declaration check, D1.
+
 `a46d9b9` and `2e2de98` merged. **Nothing has yet confirmed the Pages build
 serves them.** `tools/verify_fieldops_served.mjs` is the instrument, and it is
 written because a human tapping a URL is not a gate and does not run again next
@@ -911,12 +919,48 @@ go red there — re-run against main's tool and main's ledger, not quoted from t
 branch: prose number changed → red, row added → red, row removed → red, restored
 → green. Prose N=12, table 12 rows, sub-counts 10+1+1.
 
+## Addendum, 2026-08-17 — one tool re-expressed, and a census that under-reported
+
+Post-close cleanup of the one item this arc left in a wrong state rather than
+merely unfinished.
+
+**`verify_fieldops_served.mjs` was giving a wrong verdict, not just a redundant
+one.** It treated any `3xx` as a FAIL, which is what reddened the Teacher Studio
+at `b6f92ca` — the `301` there is the user Pages site redirecting `github.io` to
+the custom domain, and the bytes at the far end are identical. Two tools fetching
+the same routes with different opinions about redirects is how an estate acquires
+a verdict that depends on which gate you ask. **The census under R0.16 came back
+non-empty** (this ledger, the file, and `.github/workflows/fieldops-p2-and-sweep.yml`
+line 194), so it is re-expressed and not deleted: the network legs are gone, the
+declared base URLs went with them, and what is kept is **D1** — the builder's
+`LABS[]` and the placed directory naming the same files — because that is the one
+check here that nothing else in the estate makes.
+
+**D1 had never been shown able to fail.** The self-test asserted that D1 said
+PASS, which is not the same thing, and D1 is now the file's only reason to exist.
+A control is added: declare a lab that was never placed, and D1 must go red *and
+name it*. It fires. The mutation is applied to the **builder**, restored in a
+`finally` — deleting a placed lab to prove a point would be a destructive check
+on a shipped file (R0.14), and the builder reaches the same verdict without
+touching one.
+
+**And the census itself was wrong first.** My initial reader census used a
+filtered grep and missed the workflow reference under `.github/` — it found two
+readers where there are three. An unfiltered grep found it. For a census whose
+whole job is to gate removals, **under-reporting is the dangerous direction**: it
+is the error that reads as permission. R0.16 censuses are run unfiltered.
+
 ## What remains open, by name
 
-- **The serve result itself.** The gate exists, its four controls fire, and it
-  has never reached a live origin. It closes on the next push to `main` or one
-  dispatch — and if CI egress also fails, it stays UNVERIFIED with the mechanism
-  named rather than becoming green.
+- ~~**The serve result itself.**~~ **CLOSED 2026-08-17.** Run
+  [`32022110081`](https://github.com/MattRoper1977/Lessons/actions/runs/32022110081)
+  on `main` at `0352995`: **29 served byte-identical · 0 red · 0 inconclusive, of
+  29 derived · content-type 29 as expected, 0 not**, and all four controls FIRED
+  in the same run. Read from the job log, not from a green tick. The Studio
+  answers through a named chain —
+  `github.io/Matt-s-Apps-/FieldOps_Teacher_Studio.html -> 301 -> madebymatt.uk/…`
+  — and the bytes at the destination match, which is the case the older tool got
+  wrong.
 - **Twelve zero-check pull requests**, declared in `tools/zero_check_baseline.json`
   and ratcheted so the thirteenth reds. Recorded, not repaired.
 - **B2 conformance** — abandoned, no result survives, and the ledger says so.

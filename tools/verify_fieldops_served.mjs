@@ -1,19 +1,32 @@
-/* MERGED IS NOT SERVED.  R0.4, applied to the FieldOps P2 placement.
+/* THE FIELDOPS DECLARATION CHECK.  Offline only, and deliberately so.
  *
- * Two merges landed and nothing had confirmed the Pages build serves them. The
- * development container's proxy answers 403 on CONNECT to madebymatt.uk and to
- * github.io, so serving cannot be proven from there — and asking a human to tap
- * a URL is not a gate, because it does not run again next month. This runs in
- * CI, where egress works.
+ * SUPERSEDED IN PART, 2026-08-17. This began as the FieldOps serve proof. The
+ * estate-wide tools/verify_served.mjs now covers all 29 routes — the 23 the
+ * site's own P0 deriver emits, these four labs, their hub and the Studio — and
+ * it does the network legs correctly, which THIS FILE DID NOT:
  *
- * WHY THIS TOOL AND NOT derive_live_routes.mjs
- * That instrument derives the route set from the canonical shelf and is correct
- * for what it covers: games the SITE serves. It classifies anything under
- * /Lessons/ as another estate and does not fetch it — deliberately, because
- * neither repository contains the other's files. The four labs are Lessons
- * files and the Studio is an Apps file, so they are invisible to it, and always
- * were. Extending it would mean teaching a site-repo tool to reach into two
- * other estates. The derivation belongs on this side instead.
+ *   it treated any 3xx as a FAIL. On the first live run that called the Teacher
+ *   Studio a failure for answering 301, when the 301 is simply the user Pages
+ *   site redirecting github.io to the custom domain and the bytes at the far end
+ *   are identical. A redirect is not a failure; it is a thing that must never be
+ *   silent (the order's words). verify_served.mjs follows it, NAMES the chain,
+ *   and compares bytes at the destination — which it did, and the Studio passed.
+ *
+ * Its network legs are removed rather than fixed, because two tools fetching the
+ * same routes with different opinions about redirects is how an estate ends up
+ * with a verdict that depends on which gate you ask. The file is kept, not
+ * deleted, because its reader census is not empty (R0.16) and because ONE THING
+ * HERE IS NOT DUPLICATED ANYWHERE:
+ *
+ *   D1 — the builder's LABS[] and the placed directory name the same files. A
+ *   lab declared and not placed, or placed and not declared, is red before a
+ *   single byte is fetched, and that is a check the serve proof cannot make
+ *   against itself.
+ *
+ * R0.4 for these routes now lives in tools/verify_served.mjs. So do the base
+ * URLs: they were declared here as overridable constants, and they are gone
+ * with the fetches, because a URL sitting in a file that never requests it is
+ * the next reader's false lead.
  *
  * THE SOURCE OF TRUTH, AND WHY IT IS CANONICAL
  * tools/fieldops/build.mjs declares LABS and STUDIO. That is canonical in the
@@ -30,19 +43,25 @@
  * declared, is red before a single byte is fetched. That is the check a hand-list
  * cannot make against itself.
  *
- * WHAT IS ASSERTED PER SUBJECT
- *   HTTP 200 · no redirect chain · sha256 of the served body identical to the
- *   blob in this checkout. 200 alone is not the assertion; a stale deploy
- *   answers 200 all day.
+ * WHAT IS ASSERTED, NOW THAT NOTHING IS FETCHED
+ *   the subject set derives from build.mjs rather than a hand-list · every
+ *   declared subject has a blob in this checkout · D1, the builder and the
+ *   placed directory naming the same files · an empty LABS array is
+ *   INCONCLUSIVE and not an empty green pass · the byte comparison can tell one
+ *   appended byte apart. That last one is the control on the comparison itself,
+ *   kept even though the comparison's only remaining caller is the control.
  *
  * EXITS
- *   0  every subject served, unredirected and byte-identical, both controls fired
- *   1  a subject is missing, redirected, or stale
- *   2  INCONCLUSIVE — egress blocked, or a record that could not be read. Never
- *      green: a derivation that yields nothing must not read as nothing wrong.
+ *   0  the declarations agree and the controls fired
+ *   1  a subject is declared and not placed, placed and not declared, or has no
+ *      blob here to compare against
+ *   2  INCONCLUSIVE — a record that could not be read, or a subject set that
+ *      derived to nothing. Never green: a derivation that yields nothing must
+ *      not read as nothing wrong.
  *
  *   node tools/verify_fieldops_served.mjs
- *   node tools/verify_fieldops_served.mjs --self-test   (controls only, no network)
+ *   node tools/verify_fieldops_served.mjs --self-test   (an alias; identical, and
+ *                                                        kept so callers survive)
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -51,12 +70,6 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ARGS = new Set(process.argv.slice(2));
-
-/* Bases are declared, with the reason, because they are not derivable from any
-   file in this tree. Overridable so a fork or a staging origin can be pointed
-   at without editing the tool. */
-const LESSONS_BASE = process.env.LESSONS_BASE || 'https://madebymatt.uk/Lessons';
-const APPS_BASE = process.env.APPS_BASE || 'https://mattroper1977.github.io/Matt-s-Apps-';
 
 const PLACED = 'Science_Teesside/Build/v4_fieldops';
 const STUDIO_REF = 'tools/fieldops/staging/00_BUILD_FieldOps_Teacher_Studio.html';
@@ -116,68 +129,14 @@ function subjects() {
       (extra.length ? ` · placed but not declared: ${extra.join(', ')}` : ''));
 
   const list = LABS.map(name => ({
-    name, kind: 'lab',
-    url: `${LESSONS_BASE}/${PLACED}/${encodeURIComponent(name)}`,
-    local: path.join(HERE, PLACED, name),
+    name, kind: 'lab', local: path.join(HERE, PLACED, name),
   }));
-  list.push({
-    name: STUDIO, kind: 'studio',
-    /* The Studio's bytes live in the Apps repository, which this checkout does
-       not contain. The reference is the staging build here, which the merge
-       proved byte-identical to the placed file — so this leg is still a byte
-       assertion, made against a blob this repository actually holds. */
-    url: `${APPS_BASE}/FieldOps_Teacher_Studio.html`,
-    local: path.join(HERE, STUDIO_REF),
-  });
+  /* The Studio's bytes live in the Apps repository, which this checkout does
+     not contain. The blob named here is the staging build, which the merge
+     proved byte-identical to the placed file — so the Studio is still a
+     declared subject with something local to stand behind it. */
+  list.push({ name: STUDIO, kind: 'studio', local: path.join(HERE, STUDIO_REF) });
   return list;
-}
-
-/* ------------------------------------------------------------- fetching */
-async function get(url) {
-  const res = await fetch(url, { redirect: 'manual', headers: { 'Cache-Control': 'no-cache' } });
-  const body = Buffer.from(await res.arrayBuffer());
-  return { status: res.status, location: res.headers.get('location'), body };
-}
-
-async function reachable(base) {
-  try { const r = await get(base + '/'); return r.status; } catch (e) { return `ERR ${e.message}`; }
-}
-
-/* ------------------------------------------------------------- controls */
-/* R0.15: the tool that proves serving must be shown able to say NOT SERVED and
-   able to say SERVED BUT STALE, and those are different failures. */
-async function controls(list) {
-  const anchor = list.find(s => s.kind === 'lab');
-
-  /* C1 — a route known absent must red on status. */
-  const absent = `${LESSONS_BASE}/${PLACED}/AUTHORED-CONTROL_this-file-is-not-published.html`;
-  try {
-    const r = await get(absent);
-    /* 404 EXACTLY, not merely "not 200". "Not 200" passes in any environment
-       that blanket-refuses, which is how this control first went green against
-       a proxy 403 while proving nothing at all. */
-    row('C1', r.status === 404 ? 'PASS' : r.status === 200 ? 'FAIL' : 'INCONCLUSIVE',
-        'a route known absent answers 404',
-        `${absent} -> HTTP ${r.status}` +
-        (r.status === 200 ? ' — a 200 here means the base URL resolves to something that answers for everything'
-         : r.status === 404 ? '' : ' — neither 404 nor 200, so this control did not judge the origin'));
-  } catch (e) { row('C1', 'INCONCLUSIVE', 'a route known absent is not reported served', e.message); }
-
-  /* C2 — served but STALE. The local reference is mutated by one byte and the
-     comparison must go red on the HASH while the status stays 200. A tool that
-     only ever checks status passes this and should not. */
-  try {
-    const r = await get(anchor.url);
-    const local = fs.readFileSync(anchor.local);
-    const mutated = Buffer.concat([local, Buffer.from('\n<!-- authored control -->')]);
-    const statusOk = r.status === 200;
-    const hashDiffers = sha(r.body) !== sha(mutated);
-    row('C2', statusOk && hashDiffers ? 'PASS' : 'FAIL',
-        'a served-but-stale subject reds on the hash, not on the status',
-        `${anchor.name}: HTTP ${r.status}${statusOk ? ' (200, so status alone would pass)' : ''}, ` +
-        `served ${sha(r.body).slice(0, 16)} vs mutated reference ${sha(mutated).slice(0, 16)} — ` +
-        `${hashDiffers ? 'difference detected' : 'NOT detected, the hash comparison is inert'}`);
-  } catch (e) { row('C2', 'INCONCLUSIVE', 'a served-but-stale subject reds on the hash', e.message); }
 }
 
 /* --------------------------------------------------------------- offline */
@@ -202,16 +161,39 @@ function selfTest() {
         rows.find(r => r.id === 'D1')?.verdict === 'PASS',
         rows.find(r => r.id === 'D1')?.detail);
 
+  /* Two mutations, both against build.mjs, both restored in a finally.
+     R0.15: D1 is now the only thing this file checks that nothing else checks,
+     and until August 2026 the only evidence for it was that it said PASS. A
+     check observed passing has not been shown able to fail. */
+  const BUILD = path.join(HERE, 'tools/fieldops/build.mjs');
+  const saved = fs.readFileSync(BUILD, 'utf8');
+  const withBuild = (src, fn) => {
+    try { fs.writeFileSync(BUILD, src); return fn(); }
+    finally { fs.writeFileSync(BUILD, saved); }
+  };
+
   /* A derivation that yields nothing must be INCONCLUSIVE, not green. */
-  const saved = fs.readFileSync(path.join(HERE, 'tools/fieldops/build.mjs'), 'utf8');
-  try {
-    fs.writeFileSync(path.join(HERE, 'tools/fieldops/build.mjs'), "const LABS = [];\nconst STUDIO = 'x';\nswap('T1');\n");
+  withBuild("const LABS = [];\nconst STUDIO = 'x';\nswap('T1');\n", () => {
     let fired = false;
     try { subjects(); } catch (e) { fired = e instanceof Inconclusive; }
     check('an empty LABS array is INCONCLUSIVE, never an empty green pass', fired);
-  } finally {
-    fs.writeFileSync(path.join(HERE, 'tools/fieldops/build.mjs'), saved);
-  }
+  });
+
+  /* CONTROL — declare a lab that was never placed. D1 must name it. Mutating
+     the builder rather than the directory is deliberate: deleting a placed lab
+     to prove a point is a destructive check on a shipped file (R0.14), and this
+     reaches the same verdict without touching one. */
+  withBuild(saved.replace(/(const LABS\s*=\s*\[)/,
+                          "$1\n  'ZZ_declared_and_never_placed.html',"), () => {
+    const before = rows.length;
+    let d1;
+    try { subjects(); d1 = rows.slice(before).find(r => r.id === 'D1'); }
+    catch (_) { /* leave d1 undefined: an exception is not the verdict D1 owes */ }
+    check('CONTROL: a lab declared and not placed reds D1, by name',
+          d1?.verdict === 'FAIL' && /ZZ_declared_and_never_placed\.html/.test(d1.detail),
+          d1 ? d1.detail : 'D1 produced no row at all — the mutation was inert');
+    rows.length = before;                 // the control's rows are not findings
+  });
 
   /* And the hash comparison itself, exercised without a server. */
   const a = fs.readFileSync(list[0].local);
@@ -223,75 +205,15 @@ function selfTest() {
 }
 
 /* ------------------------------------------------------------------ main */
-async function main() {
-  if (ARGS.has('--self-test')) return selfTest();
-
-  let list;
-  try { list = subjects(); }
-  catch (e) {
-    if (e instanceof Inconclusive) { console.log(`[INCONCLUSIVE] ${e.message}`); return 2; }
-    throw e;
-  }
-
-  /* Reachability first, so a blocked proxy or a wrong base is reported as
-     INCONCLUSIVE rather than dressed up as a fleet of 404s. R0.9. */
-  const lessonsRoot = await reachable(LESSONS_BASE);
-  const appsRoot = await reachable(APPS_BASE);
-  /* A NUMBER IS NOT REACHABILITY. The first cut accepted any numeric status and
-     then reported five FAILs and a passing 404-control against a proxy that
-     answers 403 on CONNECT to every host — six verdicts about a deployment it
-     had never spoken to. The root must answer 200; anything else is a fact
-     about the runner and is INCONCLUSIVE. R0.9. */
-  if (lessonsRoot !== 200) {
-    console.log(`[INCONCLUSIVE] ${LESSONS_BASE}/ answered ${lessonsRoot}, not 200.`);
-    console.log('Nothing below could be judged: a run that cannot reach the origin has not');
-    console.log('measured the deployment, and a 403 from a blocking proxy looks identical to');
-    console.log('an outage from here. Run this in CI, where egress works.');
-    return 2;
-  }
-
-  for (const s of list) {
-    if (s.kind === 'studio' && typeof appsRoot !== 'number') {
-      row(s.name, 'INCONCLUSIVE', 'served and byte-identical',
-          `${APPS_BASE}/ is unreachable (${appsRoot}) — the Studio leg cannot be judged`);
-      continue;
-    }
-    let r;
-    try { r = await get(s.url); }
-    catch (e) { row(s.name, 'INCONCLUSIVE', 'served and byte-identical', `${s.url}: ${e.message}`); continue; }
-
-    if (r.status >= 300 && r.status < 400) {
-      row(s.name, 'FAIL', 'served without a redirect chain',
-          `${s.url} -> HTTP ${r.status} -> ${r.location}. A redirect is not a serve; the visitor's URL is not the file's.`);
-      continue;
-    }
-    if (r.status !== 200) {
-      /* If the estate root itself does not serve, this is not the file's fault. */
-      row(s.name, appsRoot === 404 && s.kind === 'studio' ? 'INCONCLUSIVE' : 'FAIL',
-          'served', `${s.url} -> HTTP ${r.status}`);
-      continue;
-    }
-    const local = fs.readFileSync(s.local);
-    const ls = sha(local), rs = sha(r.body);
-    row(s.name, ls === rs ? 'PASS' : 'FAIL', 'byte-identical to the merged blob',
-        ls === rs ? `HTTP 200 · ${ls.slice(0, 16)} · ${local.length} B`
-                  : `HTTP 200 but STALE — repo ${ls.slice(0, 16)} (${local.length} B) vs served ${rs.slice(0, 16)} (${r.body.length} B)`);
-  }
-
-  await controls(list);
-
-  console.log(`FieldOps serve proof — ${LESSONS_BASE} · ${APPS_BASE}\n`);
-  console.log(`${'subject'.padEnd(46)} ${'verdict'.padEnd(13)} what`);
-  console.log('-'.repeat(110));
-  for (const r of rows) {
-    console.log(`${String(r.id).slice(0, 46).padEnd(46)} ${r.verdict.padEnd(13)} ${r.what}`);
-    console.log(`${' '.repeat(47)}${r.detail}`);
-  }
-  const fail = rows.filter(r => r.verdict === 'FAIL');
-  const inc = rows.filter(r => r.verdict === 'INCONCLUSIVE');
-  console.log(`\n${rows.filter(r => r.verdict === 'PASS').length} pass · ${fail.length} fail · ${inc.length} inconclusive`);
-  if (inc.length) console.log('An INCONCLUSIVE leg is not a pass. It names its blocker above.');
-  return fail.length ? 1 : inc.length ? 2 : 0;
+/* There is no network path any more. Running this bare runs the declaration
+   checks; --self-test is kept as an alias so existing callers do not break. */
+try {
+  const code = selfTest();
+  console.log('\nThe live serve proof for these routes is tools/verify_served.mjs,');
+  console.log('which follows redirects, names the chain and compares bytes at the');
+  console.log('destination. This file no longer fetches anything.');
+  process.exit(code);
+} catch (e) {
+  if (e instanceof Inconclusive) { console.log(`[INCONCLUSIVE] ${e.message}`); process.exit(2); }
+  throw e;
 }
-
-main().then(c => process.exit(c), e => { console.error(e); process.exit(1); });
