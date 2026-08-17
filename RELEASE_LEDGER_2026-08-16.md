@@ -1262,3 +1262,5 @@ what actually happened rather than by a gate reporting it.
 the 29 routes the serve proof checks (23 site + 5 Lessons + 1 Apps) and the 29
 shelf entries the site deriver leaves to the Lessons estate (52 − 23) are
 different sets that happen to be the same size. Nothing connects them.
+
+- **2026-08-17 — main was red.** Detected by the watch, not by inspection. Run [`32029976055`](https://github.com/MattRoper1977/Lessons/actions/runs/32029976055) <!-- watch:32029976055 -->
