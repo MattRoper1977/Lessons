@@ -1,0 +1,116 @@
+name: PH-1 Amendment 2 resume
+on:
+  push:
+    branches: [pass-ph1-peq-hardening]
+permissions:
+  contents: write
+jobs:
+  resume:
+    if: contains(github.event.head_commit.message, '[PH1-A2-RUN]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned jsdom
+        run: |
+          mkdir -p /tmp/ph1-jsdom
+          npm install --prefix /tmp/ph1-jsdom --no-save --ignore-scripts --no-audit --no-fund jsdom@26.1.0
+          echo "NODE_PATH=/tmp/ph1-jsdom/node_modules" >> "$GITHUB_ENV"
+      - name: Reconstruct and patch verified Amendment 2 executor
+        run: |
+          cat .github/ph1_a2_payload_*.b64 | base64 -d | gzip -d > /tmp/ph1_amendment2_execute.py
+          echo '547692ed4f5a6d85c883f7f8ab13504eef5bbac1ae47d9558e62869a84c0c141  /tmp/ph1_amendment2_execute.py' | sha256sum -c -
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/ph1_amendment2_execute.py')
+          text = path.read_text()
+          old = '''def affirmative_l2(texts: dict[str, str]) -> list[dict[str, str]]:
+              """Detect affirmative Level 2 registration claims, not L2 evidence language."""
+              hits: list[dict[str, str]] = []
+              pattern = re.compile(
+                  r"(?i)(?:level\\s*2|L2).{0,140}register(?:ed|ing|ation)?|"
+                  r"register(?:ed|ing|ation)?.{0,140}(?:level\\s*2|L2)"
+              )
+              for path, text in texts.items():
+                  plain = strip_tags(text)
+                  for match in pattern.finditer(plain):
+                      window = plain[max(0, match.start()-180):match.end()+180]
+                      if re.search(
+                          r"(?i)\\b(?:no|not|never|without|zero|none)\\s+(?:an?\\s+)?(?:L2|level\\s*2)?\\s*registration\\b|"
+                          r"(?i)\\b(?:L2|level\\s*2)\\s+(?:is\\s+)?(?:stretch\\s+)?(?:language\\s+)?only\\b|"
+                          r"(?i)\\bnever\\s+a\\s+registration\\b",
+                          window,
+                      ):
+                          continue
+                      hits.append({"path": path, "window": window[:700]})
+              return hits'''
+          new = '''def affirmative_l2(texts: dict[str, str]) -> list[dict[str, str]]:
+              """Detect affirmative Level 2 registration claims, not L2 evidence language."""
+              hits: list[dict[str, str]] = []
+              pattern = re.compile(
+                  r"(?:\\b(?:level\\s*2|L2)\\b.{0,140}\\b(?:registration|registrations|registered|registering|register\\s+(?:for|at|on))\\b|"
+                  r"\\b(?:registration|registrations|registered|registering|register\\s+(?:for|at|on))\\b.{0,140}\\b(?:level\\s*2|L2)\\b)",
+                  re.I,
+              )
+              for path, text in texts.items():
+                  plain = strip_tags(text)
+                  for match in pattern.finditer(plain):
+                      window = plain[max(0, match.start()-180):match.end()+180]
+                      if re.search(
+                          r"\\b(?:no|not|never|without|zero|none)\\s+(?:an?\\s+)?(?:L2|level\\s*2)?\\s*registration\\b|"
+                          r"\\b(?:L2|level\\s*2)\\s+(?:is\\s+)?(?:stretch\\s+)?language\\s+only\\b|"
+                          r"\\bnever\\s+a\\s+registration\\b",
+                          window,
+                          flags=re.I,
+                      ):
+                          continue
+                      hits.append({"path": path, "window": window[:700]})
+              return hits'''
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one affirmative_l2 function, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+          echo 'c0c6e3e879c2683d1b37912bb254e0576c2226607f3adec9c995887be70281b8  /tmp/ph1_amendment2_execute.py' | sha256sum -c -
+          python3 -m py_compile /tmp/ph1_amendment2_execute.py
+      - name: Execute PH-1 Amendment 2
+        id: execute
+        continue-on-error: true
+        env:
+          BASE: ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          CENSUS_TIP: daf746f5d8894d1b56e203ed34b641b74b0e9522
+          BRANCH: pass-ph1-peq-hardening
+          JSDOM_PIN: 26.1.0
+        run: |
+          set -o pipefail
+          python3 /tmp/ph1_amendment2_execute.py 2>&1 | tee /tmp/ph1-amendment2-executor.log
+      - name: Retire transport after an early executor failure
+        if: steps.execute.outcome == 'failure'
+        env:
+          BRANCH: pass-ph1-peq-hardening
+        run: |
+          if [ ! -e .github/workflows/ph1-amendment2-resume.yml ]; then
+            echo "Executor already retired its transport and committed its durable stop evidence."
+            exit 0
+          fi
+          git config user.name "PH-1 Executor"
+          git config user.email "ph1@madebymatt.invalid"
+          mkdir -p _passph1
+          {
+            echo '# PH-1 Amendment 2 — unexpected executor failure before transport retirement'
+            echo
+            echo '- The temporary workflow still existed, so the executor failed before its Phase 0d transport-retirement commit.'
+            echo '- No force-push, reset, merge or PR was performed.'
+            echo '- The tail of the executor output follows.'
+            echo
+            echo '```text'
+            tail -n 600 /tmp/ph1-amendment2-executor.log || true
+            echo '```'
+          } > _passph1/EXECUTOR_FAILURE.md
+          rm -f .github/workflows/ph1-amendment2-resume.yml .github/ph1_a2_payload_*.b64
+          git add -A
+          git commit -m "PH-1 STOP: executor failed before transport retirement; evidence held"
+          git push origin HEAD:"$BRANCH"
+      - name: Preserve failure status
+        if: steps.execute.outcome == 'failure'
+        run: exit 1
