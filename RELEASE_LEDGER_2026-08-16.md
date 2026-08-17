@@ -1264,3 +1264,25 @@ shelf entries the site deriver leaves to the Lessons estate (52 − 23) are
 different sets that happen to be the same size. Nothing connects them.
 
 - **2026-08-17 — main was red.** Detected by the watch, not by inspection. Run [`32029976055`](https://github.com/MattRoper1977/Lessons/actions/runs/32029976055) <!-- watch:32029976055 -->
+
+  **FALSE POSITIVE, and left standing because the watch wrote it (R0.13).** That
+  line is the watch's own first live execution, and it was wrong. The run
+  reported **6 PASS · 0 FAIL · 0 NO VERDICT**, and went red only because six
+  workflows had no run in the recent window — **three are `workflow_dispatch`-only
+  and cannot have an automatic run at all, and three are path-filtered on game
+  files this commit never touched.** Dormancy is not failure. `main` was green.
+
+  It is the failure mode named three paragraphs above it in this same ledger —
+  *"a gate that is always red is deleted within the week"* — reached on execution
+  number one, by the file that warns about it. Worse, the red drove the
+  ledger-append leg, so **a false finding wrote itself into this document and
+  pushed to `main`** as `9a5b424`. A destructive-ish consequence of a false
+  positive is exactly what R0.14 and R0.15 exist to stop.
+
+  Fixed: dormant and dispatch-only workflows are reported with their triggers
+  named and **do not colour the verdict**. Deciding whether a path-filtered
+  workflow *should* have run on a given commit means matching its filters against
+  that commit's changed files; this tool does not do that, so it does not
+  pronounce on it — a stated limitation instead of a confident wrong answer.
+  **Control (g)** pins the regression, and red is now reserved for FAIL, NO
+  VERDICT, or a head tested by nothing.

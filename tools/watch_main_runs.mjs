@@ -71,7 +71,16 @@ function discoverWorkflows(dir = WORKFLOW_DIR) {
   const all = files.map(f => {
     const src = fs.readFileSync(path.join(dir, f), 'utf8');
     const m = src.match(/^name:\s*(.+?)\s*$/m);
-    return { file: f, path: `.github/workflows/${f}`, name: m ? m[1].replace(/^['"]|['"]$/g, '') : f };
+    /* Which triggers it has, and whether any of them fires without a person.
+       A workflow_dispatch-only file CANNOT have an automatic run, so reporting
+       it as "never started" is wrong by construction rather than a finding. */
+    const on = (src.match(/^on:[\s\S]*?(?=^\w|^$)/m) || [''])[0];
+    const auto = /^\s*(push|pull_request|schedule|workflow_run):/m.test(on);
+    const triggers = ['push', 'pull_request', 'schedule', 'workflow_run', 'workflow_dispatch']
+      .filter(t => new RegExp(`^\\s*${t}:`, 'm').test(on));
+    const pathFiltered = /^\s*paths:/m.test(on);
+    return { file: f, path: `.github/workflows/${f}`, auto, triggers, pathFiltered,
+             name: m ? m[1].replace(/^['"]|['"]$/g, '') : f };
   });
   return { all, judged: all.filter(w => w.path !== SELF), excluded: all.filter(w => w.path === SELF) };
 }
@@ -155,7 +164,18 @@ function verdictFor(runs, workflows, cls, missing, head) {
   if (!workflows.length)
     throw new Inconclusive('no workflows derived — nothing could be judged missing');
   const headUntested = head && !head.tested;
-  return (cls.fail.length || cls.noVerdict.length || missing.length || headUntested) ? 1 : 0;
+  /* DORMANCY IS NOT A FAILURE, and treating it as one made this gate red on its
+     very first execution with nothing wrong: 6 PASS, 0 FAIL, 0 NO VERDICT, and
+     six workflows reported "never started" that were three workflow_dispatch-only
+     files and three path-filtered ones the commit did not touch. It then wrote a
+     false "main was red" line into the ledger and pushed it.
+
+     Deciding whether a path-filtered workflow SHOULD have run on a given commit
+     means matching its filters against that commit's changed files. This tool
+     does not do that, so it does not pronounce on it — the absence is reported,
+     with each workflow's triggers named, and it does not colour the verdict.
+     A stated limitation beats a confident wrong answer. */
+  return (cls.fail.length || cls.noVerdict.length || headUntested) ? 1 : 0;
 }
 
 /* ------------------------------------------------------------------- the API */
@@ -234,7 +254,7 @@ function selfTest() {
   {
     const c = classify(runs);
     const code = verdictFor(runs, wf, c, neverStarted(wf, runs));
-    say(code === 1, 'a run set carrying a failure and a never-started workflow exits 1', `exit ${code}`);
+    say(code === 1, 'a run set carrying a failure exits 1', `exit ${code}`);
     const clean = [{ id: 9, name: 'A', path: '.github/workflows/a.yml', status: 'completed', conclusion: 'success' }];
     const okCode = verdictFor(clean, [wf[0]], classify(clean), neverStarted([wf[0]], clean));
     say(okCode === 0, 'and an all-green run set exits 0 — the gate is not stuck red', `exit ${okCode}`);
@@ -250,6 +270,28 @@ function selfTest() {
         '(e) the watch excludes itself from what it judges',
         selfSeen ? `excluded ${d.excluded.map(w => w.file).join(', ')}, judging ${d.judged.length}`
                  : `${SELF} is not present yet — nothing to exclude, ${d.judged.length} judged`);
+  }
+
+  /* (g) DORMANCY ALONE MUST NOT RED. This is the regression guard for the
+         watch's first live execution, which went red with 6 PASS, 0 FAIL and
+         0 NO VERDICT because six workflows had no run in the window — three
+         dispatch-only, three path-filtered on files the commit never touched —
+         and then wrote a false "main was red" line into the ledger and pushed it. */
+  {
+    const wfd = [
+      { file: 'a.yml', path: '.github/workflows/a.yml', name: 'A', auto: true, triggers: ['push'], pathFiltered: false },
+      { file: 'manual.yml', path: '.github/workflows/manual.yml', name: 'M', auto: false, triggers: ['workflow_dispatch'], pathFiltered: false },
+      { file: 'paths.yml', path: '.github/workflows/paths.yml', name: 'P', auto: true, triggers: ['pull_request'], pathFiltered: true },
+    ];
+    const only = [{ id: 1, name: 'A', path: '.github/workflows/a.yml', status: 'completed', conclusion: 'success', sha: 'ccccccc' }];
+    const c = classify(only);
+    const miss = neverStarted(wfd, only);
+    const head = headCoverage('cccccccdeadbeef', only);
+    const code = verdictFor(only, wfd, c, miss, head);
+    say(miss.length === 2, 'precondition: two workflows have no run in the window', miss.map(w => w.file).join(', '));
+    say(code === 0, '(g) dormant and dispatch-only workflows alone do NOT red the verdict', `exit ${code}`);
+    say(miss.filter(w => !w.auto).length === 1,
+        '...and a dispatch-only workflow is distinguished from a dormant one', 'manual.yml is dispatch-only');
   }
 
   /* (f) a head with no runs of its own must be reported UNTESTED and must red
@@ -333,9 +375,17 @@ async function main() {
   for (const r of cls.pass) console.log(`${'PASS'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id}`);
   for (const r of cls.fail) console.log(`${'FAIL'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id} · ${r.url}`);
   for (const r of cls.noVerdict) console.log(`${'NO VERDICT'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id} · ${r.why}`);
-  for (const w of missing) console.log(`${'NEVER RAN'.padEnd(12)} ${String(w.name).slice(0, 46).padEnd(46)} ${w.path} — no run in the window`);
+  for (const w of missing) console.log(`${(w.auto ? 'DORMANT' : 'MANUAL').padEnd(12)} ${String(w.name).slice(0, 46).padEnd(46)} ` +
+    `no run in the window · triggers: ${w.triggers.join(', ') || 'none parsed'}` +
+    (w.pathFiltered ? ' · path-filtered' : '') +
+    (w.auto ? '' : ' — dispatch-only, so it CANNOT have an automatic run'));
 
-  console.log(`\n${cls.pass.length} PASS · ${cls.fail.length} FAIL · ${cls.noVerdict.length} NO VERDICT · ${missing.length} never started, of ${workflows.length} derived`);
+  const manual = missing.filter(w => !w.auto), dormant = missing.filter(w => w.auto);
+  console.log(`\n${cls.pass.length} PASS · ${cls.fail.length} FAIL · ${cls.noVerdict.length} NO VERDICT · ` +
+              `${dormant.length} dormant · ${manual.length} dispatch-only, of ${workflows.length} derived`);
+  console.log('Dormant and dispatch-only do NOT colour the verdict: whether a path-filtered');
+  console.log('workflow should have run on this commit means matching its filters against the');
+  console.log('commit, which this tool does not do. Reported, not pronounced on.');
   console.log(head ? (head.tested
     ? `head ${head.headSha}: tested by ${head.runs} run(s)`
     : `head ${head.headSha}: TESTED BY NOTHING — every gate above passed on an EARLIER commit`)
@@ -345,7 +395,8 @@ async function main() {
   const code = verdictFor(runs, workflows, cls, missing, head);
   if (code === 0) console.log(`\nEvery derived workflow has a completed, successful latest run on ${BRANCH}.`);
   else {
-    console.log(`\n[RED] ${cls.fail.length} failing · ${cls.noVerdict.length} without a verdict · ${missing.length} never started.`);
+    console.log(`\n[RED] ${cls.fail.length} failing · ${cls.noVerdict.length} without a verdict` +
+      `${head && !head.tested ? ' · the head was tested by nothing' : ''}.`);
     console.log('This check fails so the failure is visible on the default branch rather than');
     console.log('waiting to be discovered by someone going and looking.');
   }
