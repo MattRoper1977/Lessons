@@ -70,6 +70,15 @@ import { fileURLToPath } from 'node:url';
 const ARGS = new Set(process.argv.slice(2));
 const APPLY = ARGS.has('--apply');
 const SELFTEST = ARGS.has('--self-test');
+/* R0.17 in practice, and §5 of the residue order: an honest INCONCLUSIVE that
+   nothing ever resolves is a check that cannot fire, dressed politely. It fails
+   in the friendliest possible way, because every run looks green and every
+   verdict is true. In CI the number of roots is knowable, so it is asserted:
+   --require-roots=3 exits 2 unless three roots were actually assessed. */
+const REQUIRE_ROOTS = (() => {
+  const a = [...ARGS].find(x => x.startsWith('--require-roots='));
+  return a ? Number(a.split('=')[1]) : null;
+})();
 
 /* THE ROOTS ARE DERIVED, AND AN ABSENT ONE IS SAID SO.
  *
@@ -105,6 +114,19 @@ const tracked = root => {
   } catch { return []; }
 };
 const strip = s => s.replace(/\x1b\[[0-9;]*m/g, '');
+
+/* Every declaration site in a builder, and the callee that made it. Enumerated
+   from the source rather than matched against a list of verbs this tool happens
+   to know, so a seventh declaration form is DISCOVERED, not missed. */
+const DECL_SITE = /\b([A-Za-z_$][\w$]*)\s*\(\s*'([A-Z][0-9]+[a-z]?)'/g;
+const _declCache = new Map();
+function declaredIds(src) {
+  if (_declCache.has(src)) return _declCache.get(src);
+  const m = new Map();
+  for (const [, callee, id] of src.matchAll(DECL_SITE)) if (!m.has(id)) m.set(id, callee);
+  _declCache.set(src, m);
+  return m;
+}
 const readIf = p => { try { return fs.readFileSync(p, 'utf8'); } catch { return null; } };
 
 /* ------------------------------------------------------------------ forms */
@@ -115,10 +137,23 @@ const readIf = p => { try { return fs.readFileSync(p, 'utf8'); } catch { return 
 const ID = String.raw`[A-Z][0-9]+[a-z]?`;
 const BUILD_ROW    = new RegExp(String.raw`^ {2}(${ID}) (\S+\.html)\s*$`);
 const MATRIX_ROW   = new RegExp(String.raw`^\s{2,}(${ID})\s+(watched|LOAD-BEARING|UNWATCHED|DROPPED)\b\s*(\S+?)?(?:->|\s|$)`);
-const REPORT_ROW   = new RegExp(String.raw`^(${ID})(?:\s+\S+)?\s{2,}(PASS|FAIL|SKIP|ERROR)\s`);
+/* Two widenings, both made because the NO FORM MATCHED control below reported
+   the rows this missed rather than skipping them, which is the whole argument
+   for having that control. It required TWO spaces before the verdict, so
+   "A0 PASS ..." with one space fell through; and it knew only PASS/FAIL/SKIP/
+   ERROR, so assert_unchanged's whole vocabulary - "U3  UNCHANGED ..." - was
+   invisible. Twelve real rows in the tracked corpus, silently unjudged. */
+/* A report LABEL is not a transform id and does not have to look like one:
+   run_all.out labels rows W-BOIL, W-STRICT, W-GAP. Third widening, and the
+   third one the NO FORM MATCHED control reported rather than swallowed. */
+const ROW_LABEL    = String.raw`[A-Z][A-Za-z0-9-]*`;
+const REPORT_ROW   = new RegExp(String.raw`^(${ROW_LABEL})(?:\s+\S+)*?\s+(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED)\b`);
 const PATH_NAMED   = /(?:tools|release|staging|Games)\/[A-Za-z0-9_./-]+\.(?:mjs|py|sh|js|html)/g;
 const ROUTE_NAMED  = /"\/([a-z0-9-]{3,})\/"/g;
 const SECTION      = /^==\s+(.+?)\s*$/;
+/* A row that states a verdict about something. Used only to decide whether a
+   line that matched no claim form was a row this sweep should have understood. */
+const ASSERTING_ROW = /\b(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED|watched|UNWATCHED|DROPPED|LOAD-BEARING|STALE)\b/;
 
 function claimsFrom(text, ctx) {
   const claims = [];
@@ -149,6 +184,14 @@ function claimsFrom(text, ctx) {
                     why: 'row label in a report; the subject is named in the row text and resolved separately' });
       /* fall through — the row text still carries paths worth resolving */
     }
+    /* A row that plainly asserts something and matched no form is a RESULT, not
+       a silence. The corpus figure "0 files matching no form" was good evidence
+       and was never proof that a seventh row shape would be caught — a row in a
+       file with other claims was skipped without a word. */
+    if (!m && ASSERTING_ROW.test(line) && !PATH_NAMED.test(line) && !line.trimStart().startsWith('#'))
+      claims.push({ form: 'no-form-matched', subject: line.trim().slice(0, 40), resolver: 'unmatched',
+                    line: i + 1, ctx, why: 'this row states a verdict and matched none of the claim forms' });
+    PATH_NAMED.lastIndex = 0;
     for (const p of line.match(PATH_NAMED) || [])
       claims.push({ form: 'path-named', subject: p, resolver: 'path', line: i + 1, ctx });
     for (const r of [...line.matchAll(ROUTE_NAMED)].map(x => x[1]))
@@ -173,10 +216,32 @@ function resolvers(root, evidenceFile) {
        declared with inject(). That is R0.14 again, one layer down: it matched
        the SHAPE of a declaration rather than the claim that the id is declared.
        Match the id in a call position and let the helper be whatever it is. */
-    transform: id => build === null
-      ? [null, 'no sibling build.mjs — cannot judge whether this transform is declared']
-      : [new RegExp(String.raw`\b[A-Za-z_$][\w$]*\('${id}'`).test(build),
-         `a declaration of '${id}' in ${path.relative(root, buildPath)}`],
+    /* THE T4 CLASS, CLOSED AT THE CLASS RATHER THAN THE INSTANCE.
+       v3 tested for `swap('T4'` and called T4 stale, because T4 is declared with
+       inject(). Widening to "any call position" fixed that instance and left the
+       class open: the resolver still held a vocabulary, and a transform declared
+       in a form nobody had thought of would still come back STALE — the worst
+       possible verdict, because it is indistinguishable from a real one and it
+       is what --apply acts on.
+       So the declaration forms are ENUMERATED from build.mjs rather than known:
+       every `<callee>('<ID>'` in the file is a declaration site, whatever the
+       callee is called, and declaredIds() below is the set. An id that is not in
+       that set and not resolvable is UNRESOLVED — FORM NOT RECOGNISED, never
+       STALE. "I cannot see it" and "it is not there" are different answers and
+       only one of them justifies a removal. */
+    transform: id => {
+      if (build === null) return [null, 'no sibling build.mjs — cannot judge whether this transform is declared'];
+      const declared = declaredIds(build);
+      if (declared.has(id)) return [true, `declared in ${path.relative(root, buildPath)} via ${declared.get(id)}(`];
+      /* Not found by any recognised declaration syntax. Two very different
+         reasons, and only one of them justifies a removal. */
+      if (new RegExp(String.raw`\b${id}\b`).test(build))
+        return ['unresolved', `'${id}' occurs in ${path.relative(root, buildPath)} but not in any ` +
+          `declaration shape this sweep recognises (found: ${[...new Set(declared.values())].sort().join(', ') || 'none'}). ` +
+          `That is a gap in THIS TOOL, not evidence about the transform.`];
+      return [false, `no declaration of '${id}' in ${path.relative(root, buildPath)}, and the id ` +
+                     `does not occur in that file at all`];
+    },
     control: id => ctl === null
       ? [null, 'no sibling controls.mjs — cannot judge whether this control is declared']
       : [ctl.includes(id), `'${id}' in ${path.relative(root, ctlPath)}`],
@@ -186,6 +251,7 @@ function resolvers(root, evidenceFile) {
     path: p => [fs.existsSync(path.join(root, p)), p],
     route: r => [fs.existsSync(path.join(root, r.replace(/^\/|\/$/g, ''), 'index.html')), `${r}index.html`],
     none: () => [null, null],
+    unmatched: () => ['unmatched', null],
   };
 }
 
@@ -227,9 +293,13 @@ function forward(root, repoName, present = true) {
       const [ok, where] = R[c.resolver](c.subject);
       rows.push({
         dir: 'forward', repo: repoName, file: f, subject: c.subject, form: c.form, line: c.line,
-        verdict: ok === null ? (c.resolver === 'none' ? 'NOT A CLAIM' : 'INCONCLUSIVE')
+        verdict: ok === 'unmatched' ? 'NO FORM MATCHED'
+               : ok === 'unresolved' ? 'UNRESOLVED — FORM NOT RECOGNISED'
+               : ok === null ? (c.resolver === 'none' ? 'NOT A CLAIM' : 'INCONCLUSIVE')
                : ok ? 'SUBJECT EXISTS' : 'STALE — SUBJECT ABSENT',
-        detail: ok === null ? (c.why || where || 'no resolver could judge this')
+        detail: ok === 'unmatched' ? c.why
+              : ok === 'unresolved' ? where
+              : ok === null ? (c.why || where || 'no resolver could judge this')
               : ok ? `found: ${where}`
                    : `this row asserts ${c.form.replace(/-/g, ' ')} for ${c.subject}, and ${where} does not exist`,
       });
@@ -290,6 +360,17 @@ function report(rows) {
     console.log(`${r.dir.padEnd(W[0])} ${r.repo.padEnd(W[1])} ${String(r.form).padEnd(W[2])} ${String(r.subject).slice(0, 34).padEnd(W[3])} ${r.verdict}`);
     console.log(`${' '.repeat(W[0] + 1)}${r.file}${r.line ? `:${r.line}` : ''} — ${r.detail}`);
   }
+  /* Per repo, what was read. A total is not three numbers: a corpus of 24 claims
+     is a different thing when one repository contributed all of them. */
+  console.log(`\n${'repo'.padEnd(24)} ${'assessed'.padEnd(10)} ${'evidence files'.padEnd(15)} claims judged`);
+  for (const { name } of REPOS) {
+    const mine = rows.filter(r => r.repo === name && r.dir === 'forward');
+    const seen = !mine.some(r => /^NOT ASSESSED/.test(r.verdict));
+    const files = new Set(mine.filter(r => r.file && r.file !== '—').map(r => r.file));
+    const judged = mine.filter(r => r.verdict === 'SUBJECT EXISTS' || /^STALE/.test(r.verdict)).length;
+    console.log(`${name.padEnd(24)} ${(seen ? 'yes' : 'NO').padEnd(10)} ${String(files.size).padEnd(15)} ${judged}`);
+  }
+
   const stale = rows.filter(r => /^STALE/.test(r.verdict));
   const decor = rows.filter(r => r.verdict === 'NO CONSUMER — DECORATION');
   const dirty = rows.filter(r => r.verdict === 'TRANSIENT STILL TRACKED');
@@ -428,6 +509,33 @@ function selfTest() {
   const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain'], { encoding: 'utf8' }).trim();
   check('git status clean after a default run', dirty === '', dirty || 'clean');
 
+  console.log('\n§4.5 THE SEVENTH FORM — an unrecognised declaration must not read as stale');
+  /* T20 is declared with DOUBLE quotes. Every declaration in the real builder
+     uses single quotes, so this is a shape nobody wrote a rule for - which is
+     exactly the point. The wrong answer here is STALE, because that is what
+     --apply acts on. */
+  const buildPath = path.join(kit, 'build.mjs');
+  const pristineBuild = fs.readFileSync(buildPath, 'utf8');
+  fs.writeFileSync(buildPath, pristineBuild + '\nswap("T20", "a.html", "x", "y");\n');
+  fs.writeFileSync(ev('AUTHORED-FIXTURE_seventh-form.out'),
+    '== build  release/ -> staging/\n  T20 a.html\n');
+  execFileSync('git', ['-C', root, 'add', '-A']);
+  execFileSync('git', ['-C', root, 'commit', '-qm', 'seventh form']);
+  const seventh = forward(root, 'FIXTURE', true);
+  const t20 = seventh.find(r => r.subject === 'T20');
+  check('T20 is UNRESOLVED, not STALE', t20 && t20.verdict === 'UNRESOLVED — FORM NOT RECOGNISED',
+        t20 ? t20.verdict : 'no row at all');
+  check('the unresolved count is non-zero and reported',
+        seventh.filter(r => /^UNRESOLVED/.test(r.verdict)).length === 1);
+  check('T20 is NOT among the removal candidates',
+        !seventh.some(r => r.subject === 'T20' && /^STALE/.test(r.verdict)));
+  fs.rmSync(ev('AUTHORED-FIXTURE_seventh-form.out'));
+  fs.writeFileSync(buildPath, pristineBuild);
+  execFileSync('git', ['-C', root, 'add', '-A']);
+  execFileSync('git', ['-C', root, 'commit', '-qm', 'restore']);
+  check('restored: unresolved back to 0',
+        forward(root, 'FIXTURE', true).filter(r => /^UNRESOLVED/.test(r.verdict)).length === 0);
+
   console.log('\n§4.4 the inverse direction still runs');
   const inv = inverse();
   check('inverse produced a row', inv.length > 0, inv.map(r => `${r.subject}: ${r.verdict}`).join(' · '));
@@ -443,6 +551,26 @@ if (SELFTEST) {
 } else {
   const rows = [...REPOS.flatMap(r => forward(r.root, r.name, r.present)), ...inverse(), ...gitignoreShape()];
   const { stale, decor, dirty, mute, unseen } = report(rows);
+  const unresolved = rows.filter(r => /^UNRESOLVED/.test(r.verdict));
+  const noform = rows.filter(r => r.verdict === 'NO FORM MATCHED');
+  if (unresolved.length || noform.length) {
+    console.log(`\n[INCONCLUSIVE] ${unresolved.length} subject(s) this sweep could not resolve and ` +
+                `${noform.length} row(s) it could not parse.`);
+    for (const r of [...unresolved, ...noform]) console.log(`  ${r.file}:${r.line} ${r.subject} — ${r.detail}`);
+    console.log('A subject the tool cannot see is not a subject that is gone. The run does not');
+    console.log('pass with one outstanding, because the alternative is calling it stale.');
+    process.exit(2);
+  }
+  if (REQUIRE_ROOTS !== null) {
+    const assessed = REPOS.filter(r => r.present).length;
+    console.log(`\nROOTS  ${assessed} assessed, ${REQUIRE_ROOTS} required.`);
+    if (assessed < REQUIRE_ROOTS) {
+      console.log(`[INCONCLUSIVE] ${REQUIRE_ROOTS - assessed} root(s) were not assessed:`);
+      for (const r of REPOS.filter(x => !x.present)) console.log(`  ${r.name} — nothing at ${r.root}`);
+      console.log('NOT ASSESSED is a diagnostic, never a passing state where the count is knowable.');
+      process.exit(2);
+    }
+  }
   if (APPLY) {
     console.log('\n--apply: deleting only files in which EVERY claim names an absent subject.\n');
     apply(rows);

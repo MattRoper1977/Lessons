@@ -531,3 +531,203 @@ path as an artefact — so the tool was never writing somewhere it should not ha
 been. This was output committed once and then depended upon by a gate, not a
 papered-over path bug: which is exactly why untracking it needed the gate
 re-expressed in the same commit rather than after.
+
+---
+
+# ADDENDUM 2 — the residue
+
+Follows the close-order addendum above, which is merged at `a46d9b9`. R0.14 and
+R0.15 are already there in full and are not repeated. This carries what the
+close order left, and one thing it left is an admission.
+
+## R0.16 — no removal without a reader census
+
+*Before anything is deleted, untracked, ignored, renamed or excluded, enumerate
+what reads it — code, gates, workflows, manifests, and documents that are
+themselves asserted — and report the census with the removal. **A removal with an
+empty census is safe; a removal with a non-empty census is a re-expression,
+never a delete.***
+
+Its own rule rather than a fourth limb of R0.14, because R0.14 governs checks
+whose *action* is destructive and this governs **any** removal, by anyone,
+including one a human orders.
+
+**The evidence is `audit-output/`.** `git rm --cached -r audit-output/` was
+ordered for tidiness. Nothing asked what read those files, and one thing did:
+`mbm-audience-discovery-closeout.yml` asserted `git diff --quiet audit-output/`
+after its deliberate-failure control run, a step that exists because such a run
+once wrote into the committed artefact and had to be reverted by hand. `git diff`
+says nothing whatever about an untracked path. The removal would have converted a
+live gate into a permanent green — **the fix for one instance of the species
+creating the next.**
+
+The second piece of evidence is older and is mine: the ruling on `scriptLine`
+read *"make the field load-bearing with one assertion, or delete it; either is
+acceptable"*. Under R0.16 the delete branch of that ruling was **unsafe as
+stated**, because it offered a removal without requiring the census first. It
+happened to be harmless there. It was not harmless in `audit-output/`.
+
+## The fix is where the next defect is — four in one pass
+
+Not three. R0.14, R0.15 and R0.16 all have the same shape, and this pass produced
+four instances of it, each found by the thing built to find the last one:
+
+1. The sweep's own resolver called **`T4`** stale, testing for `swap('T4'` when
+   `T4` is declared with `inject(` — R0.14 recurring inside the fix for R0.14.
+2. The `audit-output/` gate, above — R0.16's founding case.
+3. The sweep's first CI run reported **`FORWARD 0 stale` over three repositories
+   it could not see**, because the roots were absolute container paths. Its
+   self-test still bit, so the job was green and the sweep's line was vacuous.
+4. The `NO FORM MATCHED` control, added so a row shape nobody anticipated would
+   be *reported* rather than skipped, immediately found **twelve real rows in the
+   tracked corpus that the sweep had been passing over in silence** — the whole
+   `U1`–`U7` vocabulary of `assert_unchanged`, and every `A0 PASS` row, because
+   the row pattern demanded two spaces before the verdict and knew only four
+   verdict words. Three widenings followed, each reported by the control rather
+   than discovered by luck.
+
+## What "0 stale" now means, and what it costs to say it
+
+- **Declaration forms are enumerated, not known.** Every `<callee>('<ID>'` site in
+  the builder is a declaration, whatever the callee is called. A transform found
+  in no recognised form is `UNRESOLVED — FORM NOT RECOGNISED`, **never** `STALE`,
+  because STALE is what `--apply` acts on. *"I cannot see it"* and *"it is not
+  there"* are different answers and only one of them justifies a removal.
+- **Control:** a transform declared with double quotes — a seventh form nobody
+  wrote a rule for — comes back `UNRESOLVED`, the unresolved count is non-zero,
+  it is **not** among the removal candidates, and the run exits 2 rather than
+  passing with one outstanding. Restored, unresolved returns to 0.
+- **Assessed roots are asserted.** `--require-roots=3` exits 2 unless three were
+  read. Control: point one root at nothing → exit 2 naming it; restore → 3/3.
+  Per repo, what was read: **Lessons 2 evidence files / 24 claims judged · site 0
+  / 0 · `Matt-s-Apps-` 0 / 0.** A total is not three numbers, and two of those
+  three estates keep no tracked evidence at all — which is a fact about them, not
+  a clean bill.
+- Corpus today: **0 stale · 24 live · 31 row labels correctly not judged · 0
+  unresolved · 0 rows matching no form.**
+
+## Merged is not served — and it is still not proven
+
+`a46d9b9` and `2e2de98` merged. **Nothing has yet confirmed the Pages build
+serves them.** `tools/verify_fieldops_served.mjs` is the instrument, and it is
+written because a human tapping a URL is not a gate and does not run again next
+month.
+
+- **The route set is derived** from `tools/fieldops/build.mjs`'s `LABS` and
+  `STUDIO`, evaluated rather than grepped. That is canonical in the strong sense:
+  the builder cannot emit a lab it does not name, `assert_unchanged`'s U1 pins
+  that dropping every transform reproduces release byte for byte, and **no
+  manifest in the estate lists these files** — `resources.json` does not, and the
+  site's shelf holds games. It is then cross-checked against the placed directory,
+  so a lab declared and not placed, or placed and not declared, is red before a
+  byte is fetched.
+- **`derive_live_routes.mjs` cannot cover them and should not be made to.** It
+  derives games the *site* serves and classifies anything under `/Lessons/` as
+  another estate, deliberately, because neither repository holds the other's
+  files. The four labs are Lessons files and the Studio is an Apps file. They
+  were invisible to it and always were; the derivation belongs on this side.
+- Asserted per subject: **HTTP 200 · no redirect chain · sha256 identical to the
+  merged blob.** 200 alone is not the assertion — a stale deploy answers 200 all
+  day.
+- **This instrument's own first run was wrong in the estate's favourite way.** It
+  accepted the container proxy's `403` as a reachable origin and printed five
+  FAILs and a passing 404-control about a deployment it had never spoken to. The
+  root must answer **200**; anything else is a fact about the runner and is
+  INCONCLUSIVE. The absent-route control now requires **404 exactly**, not merely
+  "not 200", because "not 200" passes in any environment that blanket-refuses.
+
+## The zero-check census — 12 of 21
+
+PR #120 ran zero checks from two stacked causes. The generalisation, measured
+across all three estates:
+
+| repo | open PRs | zero check runs |
+|---|---|---|
+| Lessons | 13 | **9** — #9, #17, #35, #43, #45, #93, #116, #117, #118 |
+| `mattroper1977.github.io` | 6 | **1** — #25 |
+| `Matt-s-Apps-` | 2 | **2** — #2, #4 |
+
+**Twelve open pull requests carry a green tick that means nothing was asked.**
+Including all three of the close order's own dispositions — #116, #117 and #118 —
+which were reported as verified and have never had a check run against them.
+Their evidence is real and local; what is absent is the trigger limb.
+
+`tools/pr_check_census.mjs --gate` is the standing assertion, and it names the
+cause per PR: conflicted (no merge ref, so no filter could have saved it), filter
+miss, draft, or no applicable workflow.
+
+## `/emberwild/` — the order's premise, corrected
+
+The residue order records the region-only exemption as resting on *"an unfixed
+accessibility defect"*. **Issue #149 is closed as completed**, by #155
+(`bc67b82a`), and it was not closed by declaring anything: the defect was
+repaired in the game. `bindKeyboard` had bound Tab to the menu and
+`preventDefault`ed it, and swallowed Enter with the same handler, so a keyboard
+player reached **0 focusable elements in 60 presses** past 14 visible controls.
+Tab is no longer a game key and the handler stands down on a control. The exit is
+reached in **13** presses and navigates to `/games/`, against `/relicforge/`'s 8.
+Adding `/hud.js` was tried in a scratch copy and reached **0 of 60** — it would
+have turned the gate green and left the player exactly as stuck.
+
+`verify_inline_exit.mjs` is run by two named workflows, so it is not hand-run.
+**But it was not judging `/emberwild/` at all**: its targets derived from
+`.excluded` alone, 13 routes, and the region-only route is in neither list. Not
+unwatched — `verify_hud_on_games.py`'s three-way classify holds that region to
+*reaching and navigating* — but the gate that measures 44×44 as rendered, on-top
+where a finger lands and reachable-by-Tab was not measuring the one route whose
+numbers #149 turned on. Derived from both keys now: **13 routes → 14, 492
+assertions → 529, 0 failed.**
+
+## B2 — stated plainly
+
+**Abandoned, and no result survives.** The conformance workflow was last observed
+with 5 of 8 agent results returned; its journal and transcripts are not on disk,
+and no conformance matrix or per-app verdict exists anywhere in the working tree
+or the scratch. **The ledger merged at `a46d9b9` is therefore incomplete against
+its own order: §5 of the close order required the B2 conformance matrix and three
+per-app verdicts, and neither was produced.** That is recorded here rather than
+left to be inferred, because an incomplete ledger that does not admit it is worse
+than an open item.
+
+The 19-transform result **is** in the ledger and holds, re-run in CI on the merge:
+`assert_unchanged` reports **0 unexpected changes across U1–U7**, all 19
+transforms dropped, release reproduced byte for byte.
+
+## Evidence that survives the tooling
+
+Job-level success was accepted once for PR #165 because only the tail of an
+861-line log could be fetched. Every gate in `fieldops-p2-and-sweep.yml` now
+writes its counts, predicates and per-control results to `$GITHUB_STEP_SUMMARY`
+**and** uploads them as an artifact, so step-level evidence is a fetch rather than
+a log scrape for every future run.
+
+## Still open, and named so it cannot be inferred
+
+- The serve proof has **not yet run against production**. It runs on push to
+  `main`, weekly, and on dispatch; from this container every origin answers 403.
+- **Twelve PRs with no checks.** The gate exists; the twelve are not fixed.
+- B2, above.
+- `close-fixes/combined-614f4d8` — see the branch table.
+
+## Branch dispositions, and one SHA recorded because a tag would not push
+
+| ref | SHA | disposition |
+|---|---|---|
+| `claude/hud-coverage-scriptline-load-bearing` | **`614f4d8`** | **Superseded, kept, never force-pushed.** Carried both §2 and §3 payloads on one branch. **It never had a pull request** — nothing to close. |
+| `claude/hud-coverage-scriptline-derived` | `afa7c7d` | the assertion, rebuilt over a derived route set — PR #165, open, CI green |
+| `claude/untrack-audit-output` | `7befc56` | **merged** — `8a90d18` |
+| `claude/close-order-seven-items-wdfhdf` | — | **merged** — `a46d9b9`; restarted from `main` for this residue |
+| `Matt-s-Apps- · claude/fieldops-teacher-studio` | `0adb400` | **merged** — `2e2de98` |
+| `claude/vcl-spatial-v03-patch` · `claude/coa-zero-period-patch-parked` · `claude/scrapcore-v10-placement` | — | unchanged: reference, parked, P0 only |
+
+**The tag would not push.** `close-fixes/combined-614f4d8` was annotated locally
+and `git push origin close-fixes/…` returned **HTTP 403**: this session's
+credentials carry branch push and not tag push. A local tag in a disposable
+container is a countdown, not preservation, so it is not relied on.
+
+The order offered deletion as the alternative. **Refused, under R0.16 applied to
+itself:** the reader census for that branch is not empty — the §READBACK
+describes it, this ledger now points at it, and it is the only remote copy of the
+combined state. A removal with a non-empty census is a re-expression, never a
+delete. The branch stays and the SHA is written here, which is what the record
+needed the tag for.
