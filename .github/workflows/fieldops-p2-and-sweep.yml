@@ -262,6 +262,15 @@ jobs:
 
       # The generalisation of the #120 finding. A green tick on a PR nobody
       # checked is indistinguishable from a green tick on a PR that passed.
+      # R0.15 for the REPORT, not just the gate. The census printed "12 draft,
+      # 0 not" over rows showing three drafts: the baseline subtraction had been
+      # folded into the label, so nine declared non-draft findings were counted
+      # as an expected state. The gate was right the whole time; the sentence
+      # describing it was not. This control needs no token and no network, so it
+      # fires on every event including a pull request.
+      - name: CONTROL - the draft/non-draft split is read from the rows
+        run: node tools/pr_check_census.mjs --self-test | tee "$RUNNER_TEMP/pr-census-selftest.txt"
+
       - name: Census across the three estates
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -292,5 +301,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pr-census
-          path: ${{ runner.temp }}/pr-census.txt
+          path: ${{ runner.temp }}/pr-census*.txt
           if-no-files-found: error

@@ -186,7 +186,7 @@ only removing the fix could tell the difference.**
 | **NAV-1 shipped with its markup and none of its CSS**, and the control passed — it asked only whether the link had a non-zero box, which an unstyled inline link has | the lab had a way home with no 44 px target, no focus ring and no print suppression, and a green gate said it matched the convention. `T13` now reads the **live stylesheet** for all three |
 | **`assert_unchanged` crashed instead of reporting** when `T15` could not be built in isolation, its anchor being text `T12` introduces | it declares the dependency now — R0.11 applied to a build rather than to a red |
 
-### And **1 reporting defect of the same family (R0.12)**, counted separately
+### And **2 reporting defects of the same family (R0.12)**, counted separately
 
 Held to a different predicate, because it is a different thing: *a report that
 ran, was true, and buried the finding inside itself.* The **checks that could not
@@ -199,6 +199,7 @@ which is how the prose came to say twelve above thirteen rows.
 | the report that was true and buried it | how it was caught |
 |---|---|
 | `assert_unchanged`'s text-delta report printed the **whole** delta — every authorised string alongside the one that was not — in the same commit as the row above | printing the *difference* instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
+| the zero-check census reported **"12 draft, 0 not"** over rows showing three drafts. The baseline subtraction had been folded into the label — the draft count was derived as `zeroes − gated` *after* `gated` lost its declared entries — so **nine PRs recorded as open findings were reported as an expected state**. The gate never misbehaved; only the sentence describing it did | found by reading the job log of the run that produced it, on PR #124, rather than its green tick — the split is now read from the rows by one function shared with its control, and the control reproduces the retired arithmetic and requires it to disagree |
 
 **The button label and the overlap predicate are worth reading twice.** In both
 the *fix* was fine and the *check* was wrong, and only the removal matrix could
