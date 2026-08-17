@@ -1,0 +1,35 @@
+name: PH-1 final executor live run
+on:
+  push:
+    branches: [pass-ph1-peq-hardening]
+    paths:
+      - '.github/workflows/ph1-final-execute.yml'
+permissions:
+  contents: write
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install isolated jsdom gate dependency
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/ph1-node
+          mkdir -p /tmp/ph1-node
+          cd /tmp/ph1-node
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund jsdom@26 >/dev/null
+      - name: Execute PH-1 and hold the branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('ph1','.github/ph1_final_executor.py')
+          module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+          module.TRANSPORTS.append(Path('.github/workflows/ph1-final-dryrun.yml'))
+          module.main()
+          PY
