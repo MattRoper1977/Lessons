@@ -1209,11 +1209,20 @@ down where someone will see it next time they look" — which is better, and is
 | `ec7931e` | the head at which **#125 was opened** via the API | **none** |
 | `8ac3c79`, `0ca2dd9`, `f62c113`, `2f1fa87`, and 7 earlier | pushed to an open PR | run each |
 
-The cause is GitHub's own recursion guard: an event raised with an integration
-token does not start a workflow run. Both pull requests in this arc were opened
-through the API, so **both were zero-check pull requests at the moment they were
-opened**, and #124 only acquired checks because more commits were pushed to it
-afterwards. #125 sat at zero checks until a commit was pushed to it.
+**Both pull requests in this arc were zero-check pull requests at the moment they
+were opened.** #124 only acquired checks because more commits were pushed to it
+afterwards; #125 sat at zero until a commit was pushed to it.
+
+**The mechanism is NOT established, and the explanation first written here was
+wrong — corrected rather than left standing (R-D-1).** It said the cause was
+GitHub's recursion guard, that an event raised with an integration token does not
+start a workflow run. That cannot be the whole account: **both merges were
+performed through the same API with the same credentials, and both produced
+push-to-`main` runs** (`32027709223` at `036b545`, and the run at `210e6cc`). A
+guard that suppressed the `opened` event but not the merge push is not the simple
+rule I stated. What is measured is the table above; the cause is **UNRESOLVED**,
+and it is written down as unresolved rather than given a plausible mechanism that
+the evidence in this same ledger contradicts.
 
 **This is the #114 class with a different mechanism, and it is worse in one
 respect:** a `paths:` filter that matches nothing is at least visible in the
@@ -1227,6 +1236,35 @@ re-examined here, because repairing them is out of scope.
 **The census already catches it.** An API-opened PR with no subsequent push is an
 undeclared zero-check PR, and `pr_check_census.mjs --gate` reds on it. The gate
 worked; what was missing was the explanation, which is now written down.
+
+### The watch's own landing commit stopped CI, by describing the thing that stops CI
+
+The squash message that merged the watch explained its ledger-append guard, and
+in doing so wrote the literal CI-skip token — `[skip ci]` — into the commit message.
+GitHub honoured it. **The push to `main` at `210e6cc` produced no workflow run at
+all**, including the watch's own. A sentence describing a mechanism invoked the
+mechanism.
+
+Two things follow, and both are now in the tooling rather than in a reader's
+memory:
+
+- **A skip token silences every event-driven trigger, including any watch.** No
+  in-repo, event-driven mechanism can catch this, because it is silenced by the
+  same token. **Only the scheduled sweep can**, which is the first concrete
+  justification for the cron leg beyond "a workflow that never starts emits
+  nothing".
+- **The watch had a blind spot of exactly this shape.** It judged the latest run
+  *per workflow* — which answers *"is each gate passing"*, not *"was this commit
+  checked"*. Those come apart completely here: `main` moved, nothing ran, the
+  newest runs still belonged to the previous commit, and **every gate would have
+  reported PASS while the actual head had been tested by nothing.** The watch now
+  reads the head commit, reports `TESTED BY NOTHING` when no run carries its sha,
+  names the skip token when that is the cause, and **reds the verdict even when
+  every workflow is green**. Control (f) covers it in both directions.
+
+This is the R0.23 family again — a pattern matching somewhere it was never meant
+to act — and the third instance of a defect in this arc being found by reading
+what actually happened rather than by a gate reporting it.
 
 **The 29/29 collision, kept permanently so it does not become a phantom finding:**
 the 29 routes the serve proof checks (23 site + 5 Lessons + 1 Apps) and the 29
