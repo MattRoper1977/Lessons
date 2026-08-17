@@ -1197,36 +1197,66 @@ down where someone will see it next time they look" — which is better, and is
 | five declared-not-derived routes (`/`, `__FULL_HOME__`, `/games/`, `/site.json`, `/Games/games.json`) | inherited unchecked by the serve proof, named as such | extending the deriver, or a ruling that they stay out |
 | the watch's **human leg** | the in-repo legs are live; no notification reaches a person | enabling Actions-failure notifications on the account, which cannot be done from inside the repository |
 
-### Found while landing the watch: opening a PR does not start its checks
+### Opening a PR sometimes starts no checks — observed twice, then contradicted
 
-**Measured, not inferred.** Every workflow run on the close-order branch — all
-**11** — was triggered by a **push** to an already-open pull request
-(`synchronize`). Not one was triggered by the pull request being **opened**:
+**This was written up as a rule and the rule was wrong. It is withdrawn here, in
+the same ledger, rather than left to be discovered later.**
 
-| head | how it became the head | run? |
+What is measured, and stands:
+
+| PR | head at which it was OPENED | run for that head? |
 |---|---|---|
-| `8dc1160` | the head at which **#124 was opened** via the API | **none** |
-| `ec7931e` | the head at which **#125 was opened** via the API | **none** |
-| `8ac3c79`, `0ca2dd9`, `f62c113`, `2f1fa87`, and 7 earlier | pushed to an open PR | run each |
+| **#124** | `8dc1160` | **none, ever** |
+| **#125** | `ec7931e` | **none** — still none 2.5 minutes later; the first run on that PR came only after a further commit was pushed |
+| **#126** | `6176076` | **yes** — run `32029420526`, `event: pull_request`, started ~25 s after opening |
 
-The cause is GitHub's own recursion guard: an event raised with an integration
-token does not start a workflow run. Both pull requests in this arc were opened
-through the API, so **both were zero-check pull requests at the moment they were
-opened**, and #124 only acquired checks because more commits were pushed to it
-afterwards. #125 sat at zero checks until a commit was pushed to it.
+All three were opened through the same API with the same credentials, against the
+same branch and the same workflow. **Two started nothing; the third started
+everything.** The first cut of this entry generalised from the two and named a
+cause — GitHub's recursion guard for integration-token events. That was wrong
+twice over: it is contradicted by #126, and it was already contradicted by both
+merges, which used the same API and did produce push-to-`main` runs.
 
-**This is the #114 class with a different mechanism, and it is worse in one
-respect:** a `paths:` filter that matches nothing is at least visible in the
-workflow file, whereas this leaves no trace anywhere — the workflow is correct,
-the trigger is correct, and the run simply never exists. It plausibly accounts
-for some of the nine declared zero-check pull requests, which were recorded as
-"filter miss or no applicable workflow" when the merge ref existed and nothing
-ran. That attribution should be re-examined when those are repaired; it is not
-re-examined here, because repairing them is out of scope.
+**The honest state: a pull request can open with zero checks, this has happened
+twice in one day, and the condition that decides it is UNKNOWN.** Not "probably
+timing", not "probably the token" — unknown, and recorded as unknown.
 
-**The census already catches it.** An API-opened PR with no subsequent push is an
-undeclared zero-check PR, and `pr_check_census.mjs --gate` reds on it. The gate
-worked; what was missing was the explanation, which is now written down.
+**What survives, and is the part that matters:** a PR carrying no checks is not
+visibly different from one that passed, and it can arise without any defect in
+any workflow file. That is the standing argument for
+`tools/pr_check_census.mjs --gate`, which reds on an undeclared zero-check PR
+whatever produced it. The gate does not need the cause. **The lesson is not the
+mechanism; it is that the count must be measured on every run rather than
+reasoned about.**
+
+### The watch's own landing commit stopped CI, by describing the thing that stops CI
+
+The squash message that merged the watch explained its ledger-append guard, and
+in doing so wrote the literal CI-skip token — `[skip ci]` — into the commit message.
+GitHub honoured it. **The push to `main` at `210e6cc` produced no workflow run at
+all**, including the watch's own. A sentence describing a mechanism invoked the
+mechanism.
+
+Two things follow, and both are now in the tooling rather than in a reader's
+memory:
+
+- **A skip token silences every event-driven trigger, including any watch.** No
+  in-repo, event-driven mechanism can catch this, because it is silenced by the
+  same token. **Only the scheduled sweep can**, which is the first concrete
+  justification for the cron leg beyond "a workflow that never starts emits
+  nothing".
+- **The watch had a blind spot of exactly this shape.** It judged the latest run
+  *per workflow* — which answers *"is each gate passing"*, not *"was this commit
+  checked"*. Those come apart completely here: `main` moved, nothing ran, the
+  newest runs still belonged to the previous commit, and **every gate would have
+  reported PASS while the actual head had been tested by nothing.** The watch now
+  reads the head commit, reports `TESTED BY NOTHING` when no run carries its sha,
+  names the skip token when that is the cause, and **reds the verdict even when
+  every workflow is green**. Control (f) covers it in both directions.
+
+This is the R0.23 family again — a pattern matching somewhere it was never meant
+to act — and the third instance of a defect in this arc being found by reading
+what actually happened rather than by a gate reporting it.
 
 **The 29/29 collision, kept permanently so it does not become a phantom finding:**
 the 29 routes the serve proof checks (23 site + 5 Lessons + 1 Apps) and the 29

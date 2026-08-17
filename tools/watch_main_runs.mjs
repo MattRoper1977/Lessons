@@ -129,14 +129,33 @@ function neverStarted(workflows, runs) {
   return workflows.filter(w => !seen.has(w.path));
 }
 
+/* IS THE CURRENT HEAD TESTED AT ALL?
+   The watch judges the latest run PER WORKFLOW, which answers "is each gate
+   passing" and NOT "was this commit checked". Those come apart completely when a
+   push produces no runs: the newest runs still belong to the previous commit,
+   every workflow reports PASS, and main's actual head was never tested.
+
+   That is not hypothetical. It happened to the commit that landed this file:
+   the squash message DESCRIBED the ledger-append guard and included the literal
+   CI-skip token while doing so, GitHub honoured it, and the push to main ran
+   nothing at all — including this watch, which is why the schedule leg exists.
+   A skip token silences every event-driven trigger, so only the cron can catch
+   it. A description of a mechanism invoked the mechanism. */
+function headCoverage(headSha, runs) {
+  if (!headSha) return null;
+  const on = runs.filter(r => r.sha && headSha.startsWith(r.sha));
+  return { headSha: headSha.slice(0, 7), tested: on.length > 0, runs: on.length };
+}
+
 /* The verdict. An empty run list is INCONCLUSIVE and never green — this whole
    file exists because silence read as health. */
-function verdictFor(runs, workflows, cls, missing) {
+function verdictFor(runs, workflows, cls, missing, head) {
   if (!runs.length)
     throw new Inconclusive(`no runs returned for ${REPO}@${BRANCH} — a watch that sees nothing must not report nothing wrong`);
   if (!workflows.length)
     throw new Inconclusive('no workflows derived — nothing could be judged missing');
-  return (cls.fail.length || cls.noVerdict.length || missing.length) ? 1 : 0;
+  const headUntested = head && !head.tested;
+  return (cls.fail.length || cls.noVerdict.length || missing.length || headUntested) ? 1 : 0;
 }
 
 /* ------------------------------------------------------------------- the API */
@@ -233,6 +252,33 @@ function selfTest() {
                  : `${SELF} is not present yet — nothing to exclude, ${d.judged.length} judged`);
   }
 
+  /* (f) a head with no runs of its own must be reported UNTESTED and must red
+         the verdict, even when every workflow's latest run is green. This is the
+         case that actually occurred: the commit landing this file carried a
+         CI-skip token in its squash message, nothing ran, and every gate would
+         still have reported PASS on the previous commit. */
+  {
+    const green = [
+      { id: 1, name: 'A', path: '.github/workflows/a.yml', status: 'completed', conclusion: 'success', sha: 'aaaaaaa' },
+      { id: 2, name: 'B', path: '.github/workflows/b.yml', status: 'completed', conclusion: 'success', sha: 'aaaaaaa' },
+    ];
+    const wf2 = [wf[0], wf[1]];
+    const c = classify(green);
+    say(c.fail.length === 0 && c.noVerdict.length === 0 && neverStarted(wf2, green).length === 0,
+        'precondition: every workflow is green on the previous commit');
+
+    const untested = headCoverage('bbbbbbbdeadbeef', green);
+    say(untested && untested.tested === false,
+        '(f) a head with no runs of its own is reported UNTESTED', `head ${untested.headSha}, ${untested.runs} run(s)`);
+    const code = verdictFor(green, wf2, c, neverStarted(wf2, green), untested);
+    say(code === 1, '...and it reds the verdict despite every gate passing', `exit ${code}`);
+
+    const tested = headCoverage('aaaaaaadeadbeef', green);
+    const okCode = verdictFor(green, wf2, c, neverStarted(wf2, green), tested);
+    say(tested.tested === true && okCode === 0,
+        '...while a head that WAS tested stays green — not stuck red', `head ${tested.headSha}, ${tested.runs} run(s), exit ${okCode}`);
+  }
+
   console.log(`\n[SELF-TEST] ${bad === 0 ? 'PASS' : 'FAIL'} — ${bad} control(s) failed`);
   return bad === 0 ? 0 : 1;
 }
@@ -266,6 +312,22 @@ async function main() {
   const cls = classify(runs);
   const missing = neverStarted(workflows, runs);
 
+  /* The head, and whether anything tested it. */
+  let head = null;
+  try {
+    const ref = await api(`/repos/${REPO}/commits/${BRANCH}`);
+    head = headCoverage(ref.sha, all);
+    const msg = (ref.commit && ref.commit.message || '').split('\n')[0];
+    if (head && !head.tested) {
+      const skip = /\[(skip ci|ci skip|no ci|skip actions|actions skip)\]/i.exec(ref.commit && ref.commit.message || '');
+      console.log(`  HEAD ${head.headSha} HAS NO RUNS AT ALL — this commit was never tested by anything.`);
+      console.log(`    subject: ${msg.slice(0, 90)}`);
+      if (skip) console.log(`    cause: its message carries ${skip[0]}, which silences every event-driven trigger. Only the schedule can catch this.`);
+      else console.log(`    cause: not a CI-skip token — the push produced no run for another reason.`);
+      console.log();
+    }
+  } catch (e) { console.log(`  head coverage UNKNOWN (${e.message})\n`); }
+
   console.log(`${'category'.padEnd(12)} ${'workflow'.padEnd(46)} detail`);
   console.log('-'.repeat(104));
   for (const r of cls.pass) console.log(`${'PASS'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id}`);
@@ -274,9 +336,13 @@ async function main() {
   for (const w of missing) console.log(`${'NEVER RAN'.padEnd(12)} ${String(w.name).slice(0, 46).padEnd(46)} ${w.path} — no run in the window`);
 
   console.log(`\n${cls.pass.length} PASS · ${cls.fail.length} FAIL · ${cls.noVerdict.length} NO VERDICT · ${missing.length} never started, of ${workflows.length} derived`);
+  console.log(head ? (head.tested
+    ? `head ${head.headSha}: tested by ${head.runs} run(s)`
+    : `head ${head.headSha}: TESTED BY NOTHING — every gate above passed on an EARLIER commit`)
+    : 'head coverage: unknown');
   console.log('NO VERDICT is not coverage. A cancelled or skipped run says nothing about the commit it was asked to judge.');
 
-  const code = verdictFor(runs, workflows, cls, missing);
+  const code = verdictFor(runs, workflows, cls, missing, head);
   if (code === 0) console.log(`\nEvery derived workflow has a completed, successful latest run on ${BRANCH}.`);
   else {
     console.log(`\n[RED] ${cls.fail.length} failing · ${cls.noVerdict.length} without a verdict · ${missing.length} never started.`);
