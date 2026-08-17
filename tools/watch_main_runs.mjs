@@ -119,15 +119,26 @@ function verifyTriggerList() {
 }
 
 /* ------------------------------------------------------- the classification */
+/* PENDING IS NOT NO VERDICT. "Not finished yet" and "finished without a result"
+   are different states, and collapsing them made this watch red on a green
+   estate for the second time: it triggers on workflow_run COMPLETED, which fires
+   when the FIRST workflow finishes, while its siblings are still running. Run
+   32032047401 reported 0 failing and 1 without a verdict, and that one was a run
+   still in progress.
+
+   This is the third time in one arc that an ABSENCE has been treated as a BAD
+   RESULT — dormant read as failure, then pending read as no-verdict. Absence and
+   failure are different, and this file now says so structurally rather than in a
+   comment. */
 function classify(runs) {
-  const pass = [], fail = [], noVerdict = [];
+  const pass = [], fail = [], noVerdict = [], pending = [];
   for (const r of runs) {
-    if (r.status !== 'completed') { noVerdict.push({ ...r, why: `status=${r.status}, never completed` }); continue; }
+    if (r.status !== 'completed') { pending.push({ ...r, why: `status=${r.status} — not finished, ask again` }); continue; }
     if (r.conclusion === 'success') pass.push(r);
     else if (r.conclusion === 'failure') fail.push(r);
     else noVerdict.push({ ...r, why: `conclusion=${r.conclusion === null ? 'null' : r.conclusion}` });
   }
-  return { pass, fail, noVerdict };
+  return { pass, fail, noVerdict, pending };
 }
 
 /* A workflow present in the tree with no run in the window. Keyed on the
@@ -290,6 +301,28 @@ function selfTest() {
                  : `${SELF} is not present yet — nothing to exclude, ${d.judged.length} judged`);
   }
 
+  /* (h) PENDING ALONE MUST NOT RED, and pending must not be filed as NO VERDICT.
+         The regression guard for run 32032047401: 0 failing, 1 "without a
+         verdict", and that one was a sibling workflow still in progress. */
+  {
+    const mixed = [
+      { id: 1, name: 'A', path: '.github/workflows/a.yml', status: 'completed', conclusion: 'success', sha: 'ddddddd' },
+      { id: 2, name: 'B', path: '.github/workflows/b.yml', status: 'in_progress', conclusion: null, sha: 'ddddddd' },
+    ];
+    const c = classify(mixed);
+    say(c.pending.length === 1 && c.noVerdict.length === 0,
+        '(h) an in-progress run is PENDING, not NO VERDICT', `pending ${c.pending.length}, noVerdict ${c.noVerdict.length}`);
+    const wf2 = [
+      { file: 'a.yml', path: '.github/workflows/a.yml', name: 'A', auto: true, triggers: ['push'], pathFiltered: false },
+      { file: 'b.yml', path: '.github/workflows/b.yml', name: 'B', auto: true, triggers: ['push'], pathFiltered: false },
+    ];
+    const code = verdictFor(mixed, wf2, c, neverStarted(wf2, mixed), headCoverage('ddddddddeadbeef', mixed));
+    say(code === 0, '...and a still-running sibling does not red a green estate', `exit ${code}`);
+    const reallyBad = classify([{ id: 3, name: 'C', path: '.github/workflows/c.yml', status: 'completed', conclusion: 'cancelled', sha: 'ddddddd' }]);
+    say(reallyBad.noVerdict.length === 1 && reallyBad.pending.length === 0,
+        '...while a COMPLETED run with no result is still NO VERDICT and still reds', 'cancelled stays a finding');
+  }
+
   /* (g) DORMANCY ALONE MUST NOT RED. This is the regression guard for the
          watch's first live execution, which went red with 6 PASS, 0 FAIL and
          0 NO VERDICT because six workflows had no run in the window — three
@@ -393,6 +426,7 @@ async function main() {
   for (const r of cls.pass) console.log(`${'PASS'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id}`);
   for (const r of cls.fail) console.log(`${'FAIL'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id} · ${r.url}`);
   for (const r of cls.noVerdict) console.log(`${'NO VERDICT'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id} · ${r.why}`);
+  for (const r of (cls.pending || [])) console.log(`${'PENDING'.padEnd(12)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.sha} · run ${r.id} · ${r.why}`);
   for (const w of missing) console.log(`${(w.auto ? 'DORMANT' : 'MANUAL').padEnd(12)} ${String(w.name).slice(0, 46).padEnd(46)} ` +
     `no run in the window · triggers: ${w.triggers.join(', ') || 'none parsed'}` +
     (w.pathFiltered ? ' · path-filtered' : '') +
@@ -400,7 +434,11 @@ async function main() {
 
   const manual = missing.filter(w => !w.auto), dormant = missing.filter(w => w.auto);
   console.log(`\n${cls.pass.length} PASS · ${cls.fail.length} FAIL · ${cls.noVerdict.length} NO VERDICT · ` +
-              `${dormant.length} dormant · ${manual.length} dispatch-only, of ${workflows.length} derived`);
+              `${(cls.pending || []).length} pending · ${dormant.length} dormant · ${manual.length} dispatch-only, ` +
+              `of ${workflows.length} derived`);
+  console.log('PENDING is not NO VERDICT. This watch fires when the FIRST workflow completes,');
+  console.log('so siblings are often still running; "not finished yet" is not a result and does');
+  console.log('not colour the verdict. The next run judges them.');
   console.log('LIMITATION, STATED HERE AND NOT ONLY IN THE LEDGER: dormant and dispatch-only');
   console.log('workflows do NOT colour the verdict. Deciding whether a path-filtered workflow');
   console.log('SHOULD have run on this commit means matching its filters against the commit\'s');
