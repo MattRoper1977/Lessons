@@ -1,0 +1,95 @@
+name: PH-1 P1-P7 final dry-run reporter
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-p1-p7-dry-run-final.yml'
+permissions:
+  contents: write
+jobs:
+  simulate-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Simulate from current held branch
+        shell: bash
+        run: |
+          set -uo pipefail
+          START="$(git rev-parse HEAD)"
+          WORK="$(mktemp -d)"
+          cleanup() { git worktree remove --force "$WORK" >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          git worktree add --detach "$WORK" "$START"
+          cp "$WORK/.github/ph1_apply.py" /tmp/ph1_apply_runtime.py
+          python3 "$WORK/.github/ph1_runtime_patch.py" /tmp/ph1_apply_runtime.py
+          rm -rf /tmp/ph1-apply /tmp/ph1-apply.log
+          set +e
+          (cd "$WORK" && DRY_RUN=1 PH1_OUT=/tmp/ph1-apply python3 /tmp/ph1_apply_runtime.py) > /tmp/ph1-apply.log 2>&1
+          RC=$?
+          set -e
+
+          REPORT=_passph1/P1_P7_DRY_RUN_RESULT.md
+          {
+            echo '# PH-1 P1–P7 dry-run result'
+            echo
+            echo "- Input branch commit: \`$START\`"
+            echo "- Runtime executor SHA-256: \`$(sha256sum /tmp/ph1_apply_runtime.py | awk '{print $1}')\`"
+            echo "- Exit code: **$RC**"
+            echo "- Result: **$([ "$RC" -eq 0 ] && echo PASS || echo FAIL)**"
+            echo
+            if [ "$RC" -eq 0 ]; then
+              python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('/tmp/ph1-apply/P1_P7_DRY_RUN.json').read_text())
+          print('## Simulated commits')
+          print()
+          for key,value in data['commits'].items(): print(f'- **{key}:** `{value}`')
+          print()
+          print(f"- Simulated tip: `{data['tip']}`")
+          print(f"- Changed files: **{data['changed_file_count']}**")
+          print(f"- Witness comparator: **{'PASS' if data['witness_result']['pass'] else 'FAIL'}** — BASE {data['witness_result']['base_count']} / simulated tip {data['witness_result']['tip_count']}")
+          print(f"- Print-section and reduced-motion invariants: **{'PASS' if data['print_and_motion_unchanged'] else 'FAIL'}**")
+          print(f"- Tracked ASDAN PDFs: **{len(data['asdan_pdfs'])}**")
+          print(f"- Runtime localStorage additions: **{data['localStorage_added']}**")
+          print(f"- P8 authorised: **{data['p8_authorised']}**")
+          print()
+          print('## Changed files')
+          print()
+          for item in data['changed_files']: print(f'- `{item}`')
+          PY
+              echo
+              echo '## Diff stat'
+              echo
+              echo '```text'
+              cat /tmp/ph1-apply/P1_P7_STAT.txt
+              echo '```'
+              echo
+              echo "- Patch SHA-256: \`$(sha256sum /tmp/ph1-apply/P1_P7_DIFF.patch | awk '{print $1}')\`"
+            else
+              echo '## Failure log'
+              echo
+              echo '```text'
+              tail -n 260 /tmp/ph1-apply.log
+              echo '```'
+            fi
+          } > "$REPORT"
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+          git add "$REPORT"
+          git commit -m "PH-1 P1-P7 dry run: $([ "$RC" -eq 0 ] && echo PASS || echo FAIL)"
+          git push origin HEAD:pass-ph1-peq-hardening
+          cleanup
+          trap - EXIT
+          exit "$RC"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ph1-p1-p7-final-dry-run
+          path: |
+            /tmp/ph1-apply
+            /tmp/ph1-apply.log
+          retention-days: 2
