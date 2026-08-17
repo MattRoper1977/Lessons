@@ -39,17 +39,60 @@ const BASELINE = (() => {
 })();
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
 
-const api = async p => {
-  const r = await fetch(`https://api.github.com${p}`, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-      ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
-      'User-Agent': 'mbm-pr-check-census',
-    },
-  });
-  if (!r.ok) throw new Error(`GET ${p} -> ${r.status}`);
-  return r.json();
-};
+/* WHY THIS RETRIES, AND WHY IT RETRIES ALMOST NOTHING.
+ *
+ * This census ran twice in CI on 2026-08-17 and exited 2 both times:
+ *   run 32040512689  MattRoper1977/Matt-s-Apps-           pulls?state=open -> 504
+ *   run 32041026589  MattRoper1977/mattroper1977.github.io pulls?state=open -> 504
+ * A DIFFERENT repo each time, which is what rules out a broken repo or a token
+ * scope and leaves a transient upstream 504. The old helper made exactly one
+ * attempt and threw on any !ok, so a single transient failure anywhere across
+ * three repos and ~25 calls aborted the whole census. Exiting 2 rather than
+ * passing falsely was correct; being PERMANENTLY inconclusive was not, because
+ * a gate that can never produce a verdict occupies the slot of a working check
+ * while asserting nothing.
+ *
+ * THE DISTINCTION IS THE WHOLE POINT (R0.21). A permission or classification
+ * error is read on its FIRST occurrence and never retried — retrying a 401
+ * converts a credential fact into a slow inconclusive and loses the diagnosis.
+ * Only genuinely transient statuses are retried, and the retry is bounded: when
+ * it is exhausted this still throws, so INCONCLUSIVE remains reachable and the
+ * gate cannot be talked into a false green by waiting.
+ */
+const TRANSIENT = new Set([429, 500, 502, 503, 504]);
+const RETRIES = Number(process.env.CENSUS_RETRIES || 3);
+const RETRY_MS = Number(process.env.CENSUS_RETRY_MS || 1000);
+
+async function request(fetchImpl, p, sleep = ms => new Promise(r => setTimeout(r, ms))) {
+  let attempts = 0;
+  for (;;) {
+    attempts++;
+    let r, netErr = null;
+    try {
+      r = await fetchImpl(`https://api.github.com${p}`, {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
+          'User-Agent': 'mbm-pr-check-census',
+        },
+      });
+    } catch (e) { netErr = e; }
+
+    if (!netErr && r.ok) return { body: await r.json(), attempts };
+
+    const status = netErr ? 0 : r.status;
+    const retryable = netErr !== null || TRANSIENT.has(status);
+    if (!retryable || attempts >= RETRIES) {
+      const err = new Error(`GET ${p} -> ${netErr ? netErr.message : status}`
+        + (retryable ? ` after ${attempts} attempt(s)` : ''));
+      err.status = status; err.attempts = attempts;
+      throw err;
+    }
+    await sleep(RETRY_MS * 2 ** (attempts - 1));
+  }
+}
+
+const api = async p => (await request(fetch, p)).body;
 
 /* The split, as one function, so the report and the control cannot drift apart.
    Returns the three populations by NAME rather than by subtraction — the defect
@@ -100,6 +143,46 @@ if (process.argv.includes('--self-test')) {
   const withNew = splitZeroes([...fixture, mk('Lessons', 124, false)], declared);
   say(withNew.undeclared.length === 1, 'a thirteenth, undeclared zero-check PR is still caught',
       withNew.undeclared.map(r => `${r.repo}#${r.number}`).join(', '));
+
+  /* THE RETRY, BOTH DIRECTIONS (R0.24). A retry that only ever makes the tool
+     succeed is not a control — it has to be shown still failing when it should,
+     and shown NOT firing on the class it must never fire on. No network and no
+     token: the fetch is injected and the sleep is a no-op. */
+  const nofetch = seq => { let i = 0; return async () => {
+    const s = seq[Math.min(i++, seq.length - 1)];
+    if (s === 'net') throw new Error('socket hang up');
+    return { ok: s === 200, status: s, json: async () => ({ ok: true }) };
+  }; };
+  const nosleep = async () => {};
+  const attempt = async seq => {
+    try { return { ...(await request(nofetch(seq), '/x', nosleep)), threw: false }; }
+    catch (e) { return { attempts: e.attempts, status: e.status, threw: true }; }
+  };
+
+  const a = await attempt([504, 200]);
+  say(!a.threw && a.attempts === 2,
+      'a transient 504 is retried and the census completes — the CI failure this fixes',
+      `threw=${a.threw}, attempts=${a.attempts}`);
+
+  const b = await attempt([504]);
+  say(b.threw && b.attempts === RETRIES,
+      'a 504 every time is still INCONCLUSIVE — bounded, so waiting cannot buy a false green',
+      `threw=${b.threw}, attempts=${b.attempts} of ${RETRIES}`);
+
+  const c = await attempt([401]);
+  say(c.threw && c.attempts === 1,
+      'a 401 is NOT retried — a permission error is read on its first occurrence (R0.21)',
+      `threw=${c.threw}, attempts=${c.attempts}`);
+
+  const d = await attempt([404]);
+  say(d.threw && d.attempts === 1,
+      'a 404 is NOT retried either — classification, not weather',
+      `threw=${d.threw}, attempts=${d.attempts}`);
+
+  const e = await attempt(['net', 200]);
+  say(!e.threw && e.attempts === 2,
+      'a dropped socket is transient and is retried',
+      `threw=${e.threw}, attempts=${e.attempts}`);
 
   console.log(`\n[SELF-TEST] ${bad === 0 ? 'PASS' : 'FAIL'} — ${bad} check(s) failed`);
   process.exit(bad === 0 ? 0 : 1);

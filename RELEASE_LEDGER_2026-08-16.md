@@ -1974,3 +1974,226 @@ Everything else about this file — the chemistry that is right, the biology
 maths that is exact, the seventeen checksums that verify — was always true and
 never made it safe to use in a room. **This does, for one thing, and names the
 eight that are still waiting.**
+
+---
+
+# 2026-08-17 · Board close — orders landed, census fixed, routes covered, B2 retired
+
+Dated supersession. Nothing above is rewritten.
+
+## 1 · Three strikes on the export path — a pattern, named
+
+Three separate rulings have now reached VSL's **export path** by accident, and
+this is the third:
+
+| # | the ruling | what it would have done |
+|---|---|---|
+| 1 | P2 as originally worded — strip pupil/notes from `serialisableState()` | stripped them from the **evidence JSON export** too |
+| 2 | §0.5 "bump the hash state-version tag" | moved the **export's** version tag, since `serialisableState()` shares it |
+| 3 | §3's shared mutant — "strip from `serialisableState()`" as the red for **both** export and print | never reached print at all; `preparePrint()` reads `state.notes` directly |
+
+**The rule that comes out of it, ratified rather than newly numbered (R0.17 — the
+ledger allocates):** *a shared mutant must be proven to reach every gate that
+cites it. One mutation is not N assertions.* And the standing consequence:
+**treat any future VSL ruling that names a serialiser as touching the export
+until proven otherwise.** The export is the thing these rulings keep walking
+into, because it is the one consumer that legitimately wants what the URL must
+not have.
+
+## 2 · The order documents — landed, and what is still absent
+
+`_orders/`, chosen from the estate's own convention rather than invented: **an
+underscore prefix marks a directory of records rather than served routes.** There
+are twenty-four of them and none carries an `index.html`. Orders are records and
+they span passes, so they get one durable directory under the same rule.
+
+**Landed, byte-identical to the originals, unedited (§2.3):**
+`MASTER_PROMPT_Three_Tidy_Jobs_20260817.md` ·
+`MASTER_PROMPT_Close_Everything_20260817.md` ·
+`MASTER_PROMPT_V2_Privacy_Patch_Close_20260817.md` ·
+`MASTER_PROMPT_Board_Close_20260817.md`. An index in `_orders/README.md` gives
+each one's subject and outcome, so the next session need not know a filename.
+
+**Absent, enumerated (R0.8 — the enumeration is the measurement).** The estate
+references exactly **two** order documents by name that no repository contains:
+
+| document | status |
+|---|---|
+| `MASTER_PROMPT_VSL_Intake_and_Ledger_2026-08-17.md` | **ABSENT** |
+| `MASTER_PROMPT_VSL_v0.4.1_RUN_2026-08-17.md` | **ABSENT** |
+
+**They could not be landed, and the reason is not the one the ruling assumed.**
+§0.2 reads *"they exist only as chat outputs"* and directs that they be
+committed. **The session directed to commit them does not hold them either** —
+they were never uploaded to it. A document cannot be committed by a session that
+does not possess it, and writing a replacement from the fragments quoted in
+other orders would be a reconstruction wearing a dated filename, which is worse
+than an absence (R0.28). **They remain the blocker to the next VSL order**;
+dropping them into `_orders/` is all that is needed.
+
+One further order is referenced without a filename — **"the close order"**, whose
+§5 required B2's matrix. Not on disk, filename recorded nowhere.
+
+## 3 · The census gate — diagnosed and fixed
+
+**Diagnosed from the runs, not the summary line (R0.12):**
+
+| run | repo that failed | status |
+|---|---|---|
+| `32040512689` attempt 2 | `MattRoper1977/Matt-s-Apps-` | **504** |
+| `32041026589` | `MattRoper1977/mattroper1977.github.io` | **504** |
+
+**A different repo each time**, which rules out a broken repo and a token scope
+and leaves a transient upstream 504. **The mechanism:** `api()` made exactly one
+attempt and threw on any `!ok`. Across three repos and roughly twenty-five calls,
+a single transient failure anywhere aborted the whole census. Exiting 2 rather
+than passing falsely was right; being **permanently** inconclusive was not — a
+gate that can never produce a verdict occupies the slot of a working check while
+asserting nothing.
+
+**Fixed, not disabled.** A bounded retry on genuinely transient statuses only —
+`429, 500, 502, 503, 504` and dropped sockets — three attempts, exponential
+backoff. **A 401, 403 or 404 is never retried:** a permission or classification
+error is read on its first occurrence (R0.21), and retrying one converts a
+credential fact into a slow inconclusive and loses the diagnosis. That
+distinction is in the code, not only in this entry.
+
+**Proven both ways — the self-test went from 7 controls to 12, all passing:**
+
+| new control | direction |
+|---|---|
+| a transient 504 is retried and the census completes | green — this is the CI failure it fixes |
+| a 504 every time is **still INCONCLUSIVE**, bounded at 3 | red — waiting cannot buy a false green |
+| a 401 is **not** retried, exactly one attempt | red — R0.21 held in code |
+| a 404 is **not** retried — classification, not weather | red |
+| a dropped socket is transient and is retried | green |
+
+The pre-existing reds still fire: *a thirteenth, undeclared zero-check PR is
+still caught*, and *an all-declared census still gates green*.
+
+**§3.3 — the filter and the matched path.** The gate lives in
+`.github/workflows/fieldops-p2-and-sweep.yml`, whose `pull_request` filter is
+`{branches: [main]}` with **`paths:` ABSENT — it matches every changed file**.
+Matched path: `tools/pr_check_census.mjs`, matching because there is no `paths:`
+filter to miss. That absence is the same property that made five zero-check PRs
+base-out-of-date rather than filter-missed.
+
+## 4 · The five routes — implemented, and one verdict corrected by evidence
+
+**Their unchecked status was structural, not accidental:** `--emit routes` emits
+the derived set, the residue has a **separate** `--emit residue` mode, and the
+serve gate calls exactly the first. **Being named in a residue line is not being
+checked.**
+
+| route | verdict | as implemented |
+|---|---|---|
+| `/` | **COVERED** | emitted; blob `index.html` |
+| `/games/` | **COVERED** | emitted; blob `games/index.html` |
+| `/site.json` | **COVERED** | emitted; blob `site.json`, `application/json`. Data, not a page — same byte assertion, different blob |
+| `/Games/games.json` | **EXEMPT — verdict corrected** | see below |
+| `__FULL_HOME__` | **EXEMPT** | not a route: a build-time token with no URL to fetch. The only one of the five that can never be covered |
+
+**The correction, and it was mine.** The previous entry ruled
+`/Games/games.json` **EXTEND, with the strongest assertion of the five** —
+served-equals-the-canonical-shelf. Derived from the repositories, that was
+wrong twice over: **there is no `Games/` directory in the site repo at all**, so
+there is no committed blob to compare against; and `data/source-manifests/games.json`
+is a **mirror** of a canonical that lives in the **Games** repository. The
+assertion I proposed **already exists** — `shelf-mirror-guard.yml`, a deliberate
+**pair** across both repos plus a weekly run, comparing mirror to canonical using
+the generator's own `--check`. That workflow's own comment says a second
+implementation of *"are these the same"* is **"a second thing to drift."**
+**Exempt because it is already checked by the right instrument**, not because it
+is unchecked.
+
+**Counts with their predicates.** Before: **23** — *entries in the canonical
+shelf whose slug has `<slug>/index.html` in this tree*. After: **26** — *the same
+derived set, plus infrastructure routes declared COVERED and proven to have a
+file behind them*. The serve gate's subject set moved **6 → 32** (site 26,
+lessons 5, apps 1) with *every subject has a committed blob* still passing.
+
+**Controls both directions:** a COVERED route losing its file **exits 1 and names
+it** (`COVERED route has no file behind it: / -> index.html`) · a route dropped
+from the shelf drops the count by **exactly one** · the known-good set returns 26
+and exits 0.
+
+Landed as `claude/cover-infrastructure-routes` (site) and in
+`tools/verify_served.mjs` here. **Not merged.**
+
+## 5 · B2 — RETIRED
+
+**Retired 2026-08-17.** It has been *"recorded as a gap"* through four readbacks,
+has never produced a surviving result, and **nobody can state its scope from the
+record.** An item nobody can scope is not a task; it is a line that survives by
+being re-copied.
+
+**What it was intended to cover, as far as the record shows:** §5 of "the close
+order" required a **B2 conformance matrix** and **three per-app verdicts**,
+measuring apps against the B2 closure definitions and Amendments 1–3.
+
+**What survives:** the **standard**, in full — `LL-I_B2_0_closure_definitions.md`
+(47 lines), `LL-I_B2_day_close_reader.md` (99 lines), and Amendments 1, 2 and 3
+stated in `quality/LUNDY_SCIENCE_ACCEPTANCE_GATES.md`. Also the 19-transform
+result, which holds: `assert_unchanged`, U1–U7, 0 unexpected changes, release
+reproduced byte for byte.
+
+**What is being given up, stated so this is a decision and not a disappearance:**
+
+1. **Any verdict on whether those apps conform to B2.** There is none today and
+   there will be none. Nothing asserts it and nothing will notice if they drift.
+2. **The scope itself.** Nothing names the three apps. Retiring loses the last
+   chance to recover what "three" meant, because the governing order is not on
+   disk and its filename is recorded nowhere.
+3. **F2 and the counter-case, permanently.** The standard's own header says so:
+   F2 is a **negative finding across a search space** — re-deriving a negative
+   costs a full re-search with no guarantee of the same scope — and the
+   counter-case is **argument, not measurement**. Re-running greps returns
+   numbers, not the reasoning that keeps 0-of-8 from being re-opened as a defect.
+
+**What would justify raising it again:** a **specific, named app** whose closure
+behaviour is in doubt, with the doubt stated. That is a fresh, scoped order
+against a standard that still exists — **not a resurrection of this line.** The
+standard is intact; only the unscoped task is retired.
+
+**Nothing is deleted from the record.** The gap becomes a decision.
+
+## 6 · Report only — confirmed, untouched
+
+- **The matcher / PR #132** — soak **0 of 10** as printed by the tool; controls
+  7 red / 8 green. No wiring, no PyYAML. `unenforced` remains honest.
+- **The five held PRs** — #17, #35, #43, Apps #2, site #25 each carry a dated
+  `Census disposition` section appended below their original text. Nothing else
+  touched; none rebased, merged or closed.
+- **`claude/vsl-v0.4-privacy1`** — still a branch, still no PR, still no
+  placement. One correction landed on it: the name canary was
+  `CANARY_PUPIL_Jamie_Roper`, which reads as a real child, shares Matt's surname,
+  and was sitting in a **public** repository in a file whose subject is not
+  leaving pupil names where they do not belong. **That was my choice and it was a
+  poor one.** Replaced with `CANARY_NAMEFIELD_NOT_A_REAL_PERSON`; gates re-run in
+  full and still **6 reds fired, 7 greens returned**.
+
+## 7 · What remains open, by name
+
+**The estate's:**
+
+| item | state | what closes it |
+|---|---|---|
+| the two VSL order documents | **ABSENT from every repository and from the session told to commit them** | whoever holds them dropping them into `_orders/` |
+| VSL — eight findings | V1, V3, V4, V5, V6, N1, N2, N3 untouched | the next VSL order, which `_orders/` now makes runnable |
+| VSL — P2's remainder | `phaseAnswers` and drawing strokes still in the URL | its own change, with the reload cost weighed |
+| VSL placement | branch only, unplaced, unlinked | Matt's paper read |
+| the five routes | 3 covered, 2 exempt, on two unmerged branches | merging them, and a live serve run — **the offline legs pass; the network legs have never run from here (403/no egress)** |
+| the matcher | report-only, soak 0 of 10 | the soak, then a true-negative at the wiring point |
+| the five held PRs | exempt-while-held, dispositions written | each hold lifting |
+| branch `claude/close-order-seven-items-wdfhdf` | present; delete refused 403 | the repo setting in Matt's list |
+| the watch's human leg | mechanism live, reaches no person | the account setting in Matt's list |
+
+**Matt's, and none of it attempted:**
+
+1. **Revoke the GitHub token** — two were pasted into a chat session in July.
+   **Security, and the oldest item on the board.**
+2. Repo → Settings → General → **automatically delete head branches**
+3. Account → Notifications → Actions → **failed workflows only**, Watching on the repo
+4. **PLANS-3 close-out** — the four deliverables, the sensitive uploads, the GROW W4A correction in both copies
+5. The **29 August Planning/ reconvergence**
+6. **The VSL paper read**, which is what unlinks placement

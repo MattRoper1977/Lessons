@@ -143,8 +143,18 @@ function subjects() {
 
   const site = siteRoutes();
   for (const r of site.routes) {
-    const blob = path.join(SITE, r.replace(/^\/|\/$/g, ''), 'index.html');
-    list.push({ group: 'site', name: r, url: SITE_ORIGIN + r, blob, type: 'text/html' });
+    /* A ROUTE ENDING IN A FILE EXTENSION IS A FILE, NOT A DIRECTORY.
+       The deriver now emits the infrastructure routes it used to leave as
+       unchecked residue, and one of them — /site.json — is data rather than a
+       page. The byte assertion is the same and stays the same; what changes is
+       WHERE the blob is. Expecting <r>/index.html behind /site.json would
+       compare the served record against a path that does not exist, which is
+       not a weaker check, it is a wrong one. */
+    const rel = r.replace(/^\/|\/$/g, '');
+    const isFile = /\.[a-z0-9]+$/i.test(rel);
+    const blob = isFile ? path.join(SITE, rel) : path.join(SITE, rel, 'index.html');
+    const type = isFile && /\.json$/i.test(rel) ? 'application/json' : 'text/html';
+    list.push({ group: 'site', name: r, url: SITE_ORIGIN + r, blob, type });
   }
   if (site.why) residue.push({ group: 'site', why: site.why });
 
