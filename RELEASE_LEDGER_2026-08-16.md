@@ -1324,7 +1324,7 @@ and not per wrong verdict** — otherwise one bad regex outvotes a whole gate.
 |---|---|---|
 | the stale-evidence sweep, v1 | **4** — `T10a`, `T10b`, `X0`, `X1c` called stale; all four existed | its own corpus run, which is what produced R0.14 |
 | `verify_fieldops_served.mjs` — any `3xx` treated as FAIL | **2** — the Teacher Studio, twice | runs `32017557268` @ `7efbf22` and `32018424063` @ `b6f92ca` |
-| `watch_main_runs.mjs`, run 1 | **1** — red on a green estate | run `32029976055` @ `9b875b6` |
+| `watch_main_runs.mjs` | **2** — red on a green estate, twice | run `32029976055` @ `9b875b6` (dormancy read as failure) and run `32032047401` @ `0933118` (a still-running sibling read as *no verdict*) |
 
 Twelve could not fire; three fired wrongly. **Both numbers are the arc's result.
 Neither cancels the other, and a gate that fires wrongly is the more dangerous of
@@ -1384,6 +1384,30 @@ The watch converts *nobody knew* into *it is written where someone will see it*.
 the account that triggered the run; these are automation-triggered, so they reach
 nobody. **R0.22 is satisfied in mechanism and not in effect, and this ledger keeps
 saying so until the account setting is on.**
+
+### Addendum — a third false red, and the pattern behind all three
+
+Run `32032047401` @ `0933118` reported **`0 failing · 1 without a verdict`**, head
+tested by 2 runs. **The estate was green.** The single "no verdict" was a sibling
+workflow still *in progress*: the watch triggers on `workflow_run: completed`,
+which fires when the **first** workflow finishes, while the others are still
+running.
+
+**PENDING is not NO VERDICT.** *Not finished yet* and *finished without a result*
+are different states, and collapsing them is the same mistake as reading dormancy
+as failure — **three times in one arc, an ABSENCE has been treated as a BAD
+RESULT.** That is the honest summary of this watch's defect record, and it is a
+judgement error, not a plumbing one: every mechanism worked each time.
+
+Fixed structurally rather than by comment: `classify()` returns a fourth bucket,
+`PENDING` is printed separately and does not colour the verdict, and a **completed**
+run with no result is still NO VERDICT and still reds. **Control (h)** pins all
+three directions.
+
+**The standing rule below was already in force and needed no action:** the write
+leg was dry before this run, so the second false red **wrote nothing** — `main`
+did not move. That is the withdrawal working exactly as intended, and it is the
+only reason this red cost nothing.
 
 ## 7 · The watch's standing conditions, each as currently true or false
 
