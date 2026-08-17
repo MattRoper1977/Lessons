@@ -3,51 +3,62 @@
   "_why_not_simply_red": "A gate that is red on every run is not a gate; G5 of the audit-output guard is the same argument. Each entry below is an open finding in the ledger, not an exemption.",
   "_how_it_fails": "A non-draft open PR with zero check runs that is NOT listed here reds the gate. An entry listed here that HAS acquired checks also reds it, because a baseline nobody prunes is stale evidence (R0.13) and this file would otherwise rot into a permanent excuse.",
   "_measured": "2026-08-16, by tools/pr_check_census.mjs in CI: 22 open PRs, 12 with zero check runs, 3 of them drafts.",
+  "_rederived": "2026-08-17: 20 open PRs, 12 zero-check, 3 draft, 9 non-draft. The nine below still match exactly — 0 undeclared, 0 to prune. The open total moved 21 -> 20; the zero-check split did not move.",
+  "_causes_derived": "Until 2026-08-17 six of these rows read 'filter miss or no applicable workflow', which is a guess with an 'or' in it, not a cause (R0.8). Each is now derived by tools/workflow_dormancy_matcher.py against that PR's own changed files, and they do NOT share one cause: three are conflicted, five are base-out-of-date, one is correctly dormant and is not a defect at all.",
   "known": [
     {
       "repo": "Lessons",
       "pr": 9,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "CORRECTLY DORMANT, not a defect. Base is review-base/build-anim-autumn1; every branch-filtered workflow carries branches:[main], which excludes it. Retrospective diff of work already merged at 297af43 - it will never merge, and rebasing it would destroy the thing it exists to show.",
+      "verdict": "declared exempt"
     },
     {
       "repo": "Lessons",
       "pr": 17,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "BASE OUT OF DATE. fieldops-p2-and-sweep.yml carries pull_request/branches:[main] with NO paths filter, so it matches everything - but it was first created 2026-08-17 at a46d9b9 (#120, 'the CI that was never running'), after this PR was last updated 2026-08-01. Any push to the branch acquires a check.",
+      "verdict": "gets a check on rebase"
     },
     {
       "repo": "Lessons",
       "pr": 35,
-      "cause": "conflicted - no merge ref"
+      "cause": "CONFLICTED - mergeable_state 'dirty', so GitHub can build no merge ref and nothing fires however the filters are written. Held on Matt's print check regardless.",
+      "verdict": "gets a check on rebase"
     },
     {
       "repo": "Lessons",
       "pr": 43,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "BASE OUT OF DATE - same mechanism as 17; last updated 2026-08-04.",
+      "verdict": "gets a check on rebase"
     },
     {
       "repo": "Lessons",
       "pr": 116,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "BASE OUT OF DATE - same mechanism as 17; opened 2026-08-16, one day before the catch-all workflow existed.",
+      "verdict": "declared exempt"
     },
     {
       "repo": "Lessons",
       "pr": 117,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "BASE OUT OF DATE - same mechanism as 17; opened 2026-08-16.",
+      "verdict": "declared exempt"
     },
     {
       "repo": "Lessons",
       "pr": 118,
-      "cause": "filter miss or no applicable workflow"
+      "cause": "BASE OUT OF DATE - same mechanism as 17; opened 2026-08-16.",
+      "verdict": "declared exempt"
     },
     {
       "repo": "Matt-s-Apps-",
       "pr": 2,
-      "cause": "conflicted - no merge ref"
+      "cause": "CONFLICTED - mergeable_state 'dirty', no merge ref. Underneath that, neither Apps workflow's paths would match a one-file change to the Creator Hub lead paragraph.",
+      "verdict": "gets a check on rebase"
     },
     {
       "repo": "mattroper1977.github.io",
       "pr": 25,
-      "cause": "conflicted - no merge ref"
+      "cause": "CONFLICTED - mergeable_state 'dirty', no merge ref. Held by disposition anyway: it must not merge until FormSubmit activation is settled.",
+      "verdict": "gets a check on rebase"
     }
   ]
 }

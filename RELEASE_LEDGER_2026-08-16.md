@@ -1189,7 +1189,7 @@ down where someone will see it next time they look" — which is better, and is
 
 | item | state | what closes it |
 |---|---|---|
-| tag `close-fixes/combined-614f4d8` | exists, site repo, unpushed, annotated on `614f4d8` | a push from a session scoped to the site repo — one command |
+| tag `close-fixes/combined-614f4d8` | ~~exists, site repo, unpushed, annotated on `614f4d8`~~ **SUPERSEDED 2026-08-17 — the tag no longer exists anywhere, and the row above was already wrong when written.** It was annotated inside a disposable container that has since been reclaimed. `git ls-remote --tags` returns **zero tags** on all three repos, and no site clone survives; the annotation went with the container and cannot be reprinted, so §1.2's "print the annotation" is unanswerable rather than skipped. **Nothing was lost by that:** `614f4d8` is the live head of remote branch `claude/hud-coverage-scriptline-load-bearing`, so the commit never depended on the tag to stay reachable — this ledger's own branch table says so two sections up | **nothing — closed.** Not "a push from a site-scoped session": that session now has push scope to the site repo and still cannot do it, because the object is gone rather than unreachable. Recreating the tag would fabricate an annotation nobody can check against the original |
 | branch `claude/close-order-seven-items-wdfhdf` | **still present at `2f1fa87`. Delete refused: `HTTP 403`** — this session's credentials can push commits but not delete a ref. Content proven identical to main, so it is clutter and not risk | a delete from a session or account with ref-delete permission, or the repo's own auto-delete-on-merge setting |
 | nine declared zero-check PRs (of 21 open, 12 zero-check, 3 draft) | recorded and ratcheted, **not repaired** | its own pass: rebase the conflicted ones, give the rest a matching workflow |
 | B2 conformance | abandoned, no result survives, recorded as a gap in those words | re-running the conformance order |
@@ -1448,13 +1448,13 @@ dry; this rule governs whether it is ever re-armed.
 | item | state | what closes it |
 |---|---|---|
 | branch `claude/close-order-seven-items-wdfhdf` | delete refused `HTTP 403`; content proven identical to main — **clutter, not risk** | a session with ref-delete permission, or repo → Settings → **Automatically delete head branches** |
-| tag `close-fixes/combined-614f4d8` | exists in the site repo, unpushed, annotated | a push from a site-scoped session |
+| tag `close-fixes/combined-614f4d8` | ~~exists in the site repo, unpushed, annotated~~ **SUPERSEDED 2026-08-17 — gone with the container that annotated it.** Zero tags on all three remotes; `614f4d8` stays alive as the head of `claude/hud-coverage-scriptline-load-bearing`. See the fuller entry in §"What remains open, by name" above | **nothing — closed.** The push was never the blocker; the object is |
 | **the watch's human leg** | **does not exist** | an account-level notification setting — Account → Notifications → Actions → *failed workflows only*, with Watching set on the repo |
 | nine declared zero-check PRs | recorded, ratcheted, not repaired | its own pass |
 | B2 conformance | a gap; abandoned, no result survives | re-running the conformance order |
 | VSL v0.4.1 | nothing created, correctly | its own order — v0.4 still carries **V2: pupil name and notes in the Share URL, at an SEMH provision** |
 | five declared-not-derived routes | inherited unchecked, named | extending the deriver, or a ruling |
-| whether a path-filtered workflow should have run | reported, deliberately **not** judged | matching filters against each commit's changed files — its own pass |
+| whether a path-filtered workflow should have run | ~~reported, deliberately **not** judged~~ **ANSWERED 2026-08-17** by `tools/workflow_dormancy_matcher.py` — report-only, seven controls fired both ways on every run, and it reproduces PR #124's hand-verified 1-of-11 trigger table exactly from that commit's changed files | wiring it into the watch's UNDETERMINED bucket — a separate decision needing its own true-negative **there**, which this tool's soak counter does not authorise |
 
 **Next work opens as new orders, not extensions of this one.** Ranked: the
 path-filter matcher (turns UNDETERMINED into an assertion, and makes *silently
