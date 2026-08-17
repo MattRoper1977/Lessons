@@ -4,13 +4,15 @@
 - Immutable BASE examined: `ae1d3c7af2526781aad6fb82e7cbbf6b87ded380`
 - Canonical source: the committed C3 list at `daf746f5d8894d1b56e203ed34b641b74b0e9522`; the census was not rerun.
 - C3 rows classified: **101**.
-- B1 — change to `Prepare for assessor sign-off`: **20**.
+- B1 — change to `Prepare for assessor sign-off`: **18**.
 - B2 — leave/AWAITING-WORD: **80**.
-- B3 — attribute/selector occurrence held: **1**.
+- B3 — structural or gate-protected occurrence held: **3**.
 - B4 — TEST COPY out of scope: **0**.
 - Sum check: **101**.
 
 **Count gate: PASS — B1+B2+B3+B4 = 101.**
+
+> **Measured gate conflict:** rows 96 and 97 are B1 by ordinary staff/print semantics but sit inside the actual W6 witness section. Amendment 2 requires any witness-content alteration to make G4 red. Repository markup therefore overrides the earlier expectation: both rows are held in B3 and require Matt’s one-line ruling.
 
 ## Filename/path ruling
 
@@ -23,7 +25,7 @@ The committed C3 table enumerates 101 line-level text occurrences. The W6 filena
 
 - **B1:** qualification/evidence closure only; staff, heading, print or generated wording that can accurately become `Prepare for assessor sign-off` without altering the learner task.
 - **B2:** pupil action, real-world approval, project, partner or safety use; replacement would alter meaning or activity.
-- **B3:** attribute or selector-sensitive text; held to protect behaviour. The W6 filename is separately held above.
+- **B3:** attribute/selector-sensitive text, plus source text inside a G4-protected witness section; held to protect behaviour and the mutation-proven witness regression gate. The W6 filename is separately held above.
 - **B4:** `*_Estate_v3`; outside production and outside the live C3 table.
 
 ## All 101 canonical occurrences
@@ -125,8 +127,8 @@ The committed C3 table enumerates 101 line-level text occurrences. The W6 filena
 | 93 | B1 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Qualification/evidence closure wording on a staff, heading, print or generated surface. | mes outcome, use of listening, an area to develop, and future use. An honest area to develop is a strength at moderation. The unit completes when plan, delivery and review are all evidenced. Banks: ASDAN PEQ L1 — Communication (ComSk1) — unit complete. Review Progress and Sign Off the Unit Name: ____________________ Class: __________ Date: This week’s spark Looking back on purpose is how the unit closes. ASDAN evidence Documentarian photo + annotation + witness tick — ASDAN PEQ Level 1 — Communication skills (ComSk |
 | 94 | B2 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `SIGN-OFF` | heading | Pupil action or matching/scaffolding instruction: changing the term would alter what the pupil does. | nt-wedo" class="print-section prevent-break"> We Do 1: Wordsearch — reviewing words REVIEW, OUTCOME, LISTENING, DEVELOP, FUTURE, PORTFOLIO, COMPLETE, HONEST We Do 2: Match the Review Part to What It Shows Draw lines to match: POSITIVE OUTCOME · USE OF LISTENING · AREA TO DEVELOP · FUTURE USE · EVIDENCE · SIGN-OFF A specific success you can point to · Where paying attention helped you communicate · One honest thing you will grow next · Where the skill matters after this unit · The proof behind each claim you make ·  |
 | 95 | B2 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `sign off` | heading | Pupil action or matching/scaffolding instruction: changing the term would alter what the pupil does. | stening · develop · future · portfolio · complete · honest Scaffolding – Standard Frame 1) Name a positive outcome with evidence. 2) Name your listening and one area to develop. 3) Name future use, then sign off. Scaffolding – Stretch Stretch prompts Evaluate your communication against one ComSk1 criterion with evidence. Why is an honest review stronger? Independent Work – Supported Task: Complete a review card by choo |
-| 96 | B1 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Qualification/evidence closure wording on a staff, heading, print or generated surface. | p>3) Outline where communication will matter in your next steps. Assessor Witness Statement LAUNCH ASDAN W6 · Review Progress and Sign Off the Unit LAUNCH · ASDAN Studio · Personal Effectiveness · Banks: ASDAN PEQ L1 — Communication (ComSk1) — unit complete Candidate name Date of activity</s |
-| 97 | B1 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Qualification/evidence closure wording on a staff, heading, print or generated surface. | order:1px solid #999"> Date of activity Activity witnessed Review Progress and Sign Off the Unit 1 · What I actually saw this candidate do Name the observable action, not the worksheet. Write what a stranger would have seen from the doorway. <div style="border:1p |
+| 96 | B3 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Source text is inside the mutation-proven witness section; changing it would make G4 red, so it is held for Matt. | p>3) Outline where communication will matter in your next steps. Assessor Witness Statement LAUNCH ASDAN W6 · Review Progress and Sign Off the Unit LAUNCH · ASDAN Studio · Personal Effectiveness · Banks: ASDAN PEQ L1 — Communication (ComSk1) — unit complete Candidate name Date of activity</s |
+| 97 | B3 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Source text is inside the mutation-proven witness section; changing it would make G4 red, so it is held for Matt. | order:1px solid #999"> Date of activity Activity witnessed Review Progress and Sign Off the Unit 1 · What I actually saw this candidate do Name the observable action, not the worksheet. Write what a stranger would have seen from the doorway. <div style="border:1p |
 | 98 | B1 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 345 | `Sign Off the Unit` | heading | Qualification/evidence closure wording on a staff, heading, print or generated surface. | e ends on paper — your own hand, or your words scribed by an adult. Pass is always allowed. What I said, and what it changed: Review Progress and Sign Off the Unit — Feedback Sheet Keep with your ASDAN portfolio. Pupil name: Date: WWW (What Went Well): EBI (Even Better If): </div |
 | 99 | B1 | `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` | 422 | `sign-off` | script/data | Staff TA-brief wording about the qualification closure sequence; safe claim-accuracy target. | const _taBriefs={"Title": "Kit out, roster ready, calm entry.", "Arrival Task": "Gentle settle; pass allowed.", "Starter": "Model an honest review of your own; name a real area to develop.", "I Do 1": "Narrate the four review parts and sign-off slowly.", "We Do 1": "Everyone plays; pace it so nobody is tapping alone.", "I Do 2": "Walk the evidence loop: photo, annotate, witness completion.", "We Do 2": "Pairs game; pupils drive the matching, you referee.", "Independent Work": "Welcome honest gaps warmly; a named ar |
 | 100 | B1 | `LAUNCH_ASDAN/PEQ/START_HERE.html` | 15 | `Sign Off the Unit` | heading | Qualification/evidence closure wording on a staff, heading, print or generated surface. | Week 5 · Deliver the Activity and Gather Evidence deliver my communication activity to my audience Week 6 · Review Progress and Sign Off the Unit review my own success in communicating 🏅 Personal Effectiveness · works toward PEQ Level 1 Award / Extended Award / Certificate across the year (E3–L1 only in 2026/27). This Autumn 1 module completes Communication skills (ComSk1) . Every lesson ends with Documentarian photo + annotation + witness tick; the Stretch tier is written to an L2 evidence standard (stretch la |
@@ -135,6 +137,6 @@ The committed C3 table enumerates 101 line-level text occurrences. The W6 filena
 ## W6 page
 
 - The filename `LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html` is held.
-- B1 visible headings, browser title and staff/print titles may change without changing the URL.
+- B1 visible headings, browser title and non-witness staff/print titles may change without changing the URL.
 - Pupil instructions and matching activity labels remain B2.
 - A later rename requires Matt’s explicit decision and a redirect plan.
