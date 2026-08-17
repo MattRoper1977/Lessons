@@ -1197,6 +1197,37 @@ down where someone will see it next time they look" — which is better, and is
 | five declared-not-derived routes (`/`, `__FULL_HOME__`, `/games/`, `/site.json`, `/Games/games.json`) | inherited unchecked by the serve proof, named as such | extending the deriver, or a ruling that they stay out |
 | the watch's **human leg** | the in-repo legs are live; no notification reaches a person | enabling Actions-failure notifications on the account, which cannot be done from inside the repository |
 
+### Found while landing the watch: opening a PR does not start its checks
+
+**Measured, not inferred.** Every workflow run on the close-order branch — all
+**11** — was triggered by a **push** to an already-open pull request
+(`synchronize`). Not one was triggered by the pull request being **opened**:
+
+| head | how it became the head | run? |
+|---|---|---|
+| `8dc1160` | the head at which **#124 was opened** via the API | **none** |
+| `ec7931e` | the head at which **#125 was opened** via the API | **none** |
+| `8ac3c79`, `0ca2dd9`, `f62c113`, `2f1fa87`, and 7 earlier | pushed to an open PR | run each |
+
+The cause is GitHub's own recursion guard: an event raised with an integration
+token does not start a workflow run. Both pull requests in this arc were opened
+through the API, so **both were zero-check pull requests at the moment they were
+opened**, and #124 only acquired checks because more commits were pushed to it
+afterwards. #125 sat at zero checks until a commit was pushed to it.
+
+**This is the #114 class with a different mechanism, and it is worse in one
+respect:** a `paths:` filter that matches nothing is at least visible in the
+workflow file, whereas this leaves no trace anywhere — the workflow is correct,
+the trigger is correct, and the run simply never exists. It plausibly accounts
+for some of the nine declared zero-check pull requests, which were recorded as
+"filter miss or no applicable workflow" when the merge ref existed and nothing
+ran. That attribution should be re-examined when those are repaired; it is not
+re-examined here, because repairing them is out of scope.
+
+**The census already catches it.** An API-opened PR with no subsequent push is an
+undeclared zero-check PR, and `pr_check_census.mjs --gate` reds on it. The gate
+worked; what was missing was the explanation, which is now written down.
+
 **The 29/29 collision, kept permanently so it does not become a phantom finding:**
 the 29 routes the serve proof checks (23 site + 5 Lessons + 1 Apps) and the 29
 shelf entries the site deriver leaves to the Lessons estate (52 − 23) are
