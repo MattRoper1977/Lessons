@@ -62,6 +62,27 @@ This is the **second** target where the same predicate error hid a real failure,
 so it is a rule rather than a one-off. Both instances came from a gate that was
 honest about what it measured and wrong about what that meant.
 
+## R0.12 — read the artefact, not its summary
+
+**A true summary is not evidence that the thing it summarises is complete.**
+The last line of a report is the one place a defect can hide behind an accurate
+statement.
+
+*Provenance:* raised by the run of 2026-08-16 during the removal-matrix pass.
+Four of the unfireable checks that pass found were found by reading an artefact
+instead of its summary line, and the summary was true every time — "every
+transform watched" was true while two labels were missing; "0 unexpected changes"
+was true while a pattern had stopped matching. R0.12 is the generalisation of the
+R0.1 family: the summary line is where an unexercised gate looks identical to an
+exercised one.
+
+*Landed 2026-08-17, and late.* It had been cited by **four** separate orders —
+the P2 finish, the B2 conformance order, the closing order and the #120 merge
+order — while being defined in no ledger — a rule everything was audited against, missing from
+the record that governs. That absence is now its own rule, R0.17, and the one
+reporting defect counted under **§S2** is R0.12's own failure mode: a
+report that ran, was true, and buried the finding inside itself.
+
 ## R0.13 — evidence outlives its subject, and looks identical to evidence that has not
 
 Two tracked files recorded per-transform verdicts for **T10b — a transform merged
@@ -97,9 +118,12 @@ subjects that exist. **A sweep built to catch stale evidence was one step from
 deleting live evidence, because it matched an identifier's shape rather than the
 claim being made about it.**
 
-That is a different failure from the twelve below and is counted separately: those
-are checks that could not fire, this is a check that fired wrongly. The second
-kind destroys rather than merely fails to protect.
+That is a different failure from the ones tabled under **§S2 — the evidence rule,
+applied to this pass**, and is counted separately: those are checks that could not
+fire, this is a check that fired wrongly. The second kind destroys rather than
+merely fails to protect. The number is not repeated here — it is derived from the
+table by `tools/verify_ledger_tally.mjs`, and a number repeated in prose is a
+second place for it to be wrong.
 
 With the predicate corrected — only a removal-matrix row asserts "this transform
 is watched", and those lines carry the verdict word — **forward: 0 stale.**
@@ -133,11 +157,19 @@ neither depends on the author having understood their own rule.
 
 Every claim below names the artefact that proves it, and every artefact
 discriminates. Where a check would have passed on a broken build, it was
-rewritten or deleted. **Twelve were caught this pass** — ten in these gates, a
-Matt-side one (the button-label finding landed on VSL's gate 5, authored the same
-afternoon), and one found by re-reading an artefact rather than its summary line.
-The last four share a shape: **the fix was fine and the check was wrong, and only
-removing the fix could tell the difference.**
+rewritten or deleted.
+
+**Counted as one row per check that could not fire, where it was found; two such
+defects in one commit count twice.** A commit is an authoring artefact, not a
+unit of defect, and collapsing two unfireable checks because they shared one
+would measure working habits rather than exposure. **The table below has 12 rows:
+10 in these gates, 1 Matt-side, 1 found by re-reading an artefact (10 + 1 + 1 =
+12).** `tools/verify_ledger_tally.mjs` derives that from the table on every run,
+because this file has now stated a wrong count twice — nine above a table of ten,
+then twelve above a table of thirteen.
+
+Four of the twelve share a shape: **the fix was fine and the check was wrong, and
+only removing the fix could tell the difference.**
 
 | what was wrong with the check | how it was caught |
 |---|---|
@@ -153,7 +185,20 @@ removing the fix could tell the difference.**
 | **the LOAD-BEARING label itself could never fire** — it grepped the verdicts file for `ERR->ERROR`, but that file stores `ERR ERROR`; the arrow only exists in the separately-built diff string | noticed because two transforms with a visible `ERR->ERROR` in their diff printed as ordinary `watched`. **The first introduced while writing the rule about them** |
 | **NAV-1 shipped with its markup and none of its CSS**, and the control passed — it asked only whether the link had a non-zero box, which an unstyled inline link has | the lab had a way home with no 44 px target, no focus ring and no print suppression, and a green gate said it matched the convention. `T13` now reads the **live stylesheet** for all three |
 | **`assert_unchanged` crashed instead of reporting** when `T15` could not be built in isolation, its anchor being text `T12` introduces | it declares the dependency now — R0.11 applied to a build rather than to a red |
-| *(the same commit)* its text-delta report printed the **whole** delta, burying the one unauthorised string among the expected ones | printing the difference instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
+
+### And **1 reporting defect of the same family (R0.12)**, counted separately
+
+Held to a different predicate, because it is a different thing: *a report that
+ran, was true, and buried the finding inside itself.* The **checks that could not
+fire** table is checks
+that **could not fire**. This one fired, and told the truth, and that was the
+problem — so counting it there would have made the headline number describe two
+species at once. It sat in that table as a thirteenth row for two revisions,
+which is how the prose came to say twelve above thirteen rows.
+
+| the report that was true and buried it | how it was caught |
+|---|---|
+| `assert_unchanged`'s text-delta report printed the **whole** delta — every authorised string alongside the one that was not — in the same commit as the row above | printing the *difference* instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
 
 **The button label and the overlap predicate are worth reading twice.** In both
 the *fix* was fine and the *check* was wrong, and only the removal matrix could
@@ -161,7 +206,18 @@ tell the difference. A gate that goes green on a reverted fix is not evidence
 about the fix — it is evidence about the gate.
 
 **Final matrix state: every transform on every target is watched.**
-D 16/16 · C 18/18 · B 10/10 — and now measured with a label that fires, rather
+**C 18/18 and B 10/10 are countable from the tables quoted below — 18 ids and 10
+rows, counted, not asserted.** **D reported 16/16 by the Target D removal-matrix
+run recorded in [#115](https://github.com/MattRoper1977/Lessons/pull/115); the
+matrix is not quoted in this ledger and the figure is not countable from this
+artefact.** Searched for it at `tools/fieldops/evidence/*.out`, in the tracked
+tree, and in the surviving run output at `/tmp/p2matrix.out` — which holds **6**
+rows, T1 to T5b, being the truncated output of a 19-transform run that died
+before finishing. The claim is kept and downgraded rather than deleted: a number
+no reader can reproduce from the page it sits on is not evidence, and deleting it
+would lose a result that was genuinely reported.
+
+Measured with a label that fires, rather
 than one that could not. Class of Ashes, verbatim:
 
 ```
@@ -346,8 +402,9 @@ the same move the marking fix already makes.
 
 ## Owed to a human
 
-Items 1, 2 and 6 are **ruled** — see above. What is left is sequenced, not
-blocked:
+The Class of Ashes park, the Chemistry Lab route and the graded-artefact question
+are **ruled** — see **R0.11**, **§S2** and the target sections that carry each
+ruling. What is left is sequenced, not blocked:
 
 1. **v0.4.1** as its own order, with the removal matrix written in from the
    start rather than retrofitted, and #116's diff as the re-application
@@ -566,6 +623,32 @@ read *"make the field load-bearing with one assertion, or delete it; either is
 acceptable"*. Under R0.16 the delete branch of that ruling was **unsafe as
 stated**, because it offered a removal without requiring the census first. It
 happened to be harmless there. It was not harmless in `audit-output/`.
+
+## R0.17 — rule identifiers are allocated in the ledger, never in an order
+
+An order may cite only ids that exist in the ledger **at the time it is written**.
+Citing an unlanded id is a broken reference, not a forward declaration.
+
+*Evidence:* **R0.12 was cited by four separate orders and defined in no ledger.**
+Counted by grepping the four order documents, not carried over: the order that
+wrote this rule said three.
+Not a renumbering — an absence, and the rule everything in the seven-items close
+was governed by was missing from the record it governs. It is landed above, with
+its text and its provenance unchanged, and this rule exists so the next one is
+not written the same way.
+
+## R0.18 — preconditions are measurements, not quotations
+
+An order states how to **derive** a precondition; it never states the value the
+precondition had on the day the order was written.
+
+*Evidence, and it is Matt's to own:* the merge order of 2026-08-17 pinned PR #120
+at head `09f04e0` and asserted docs-only scope. By run time `09f04e0` was five
+commits stale, the PR was closed and merged at `a46d9b9`, and the scope was **57
+changed paths of which 56 were not documentation** — a workflow file, four placed
+labs, the whole tools tree, staging and evidence files, 36 scratch deletions. The
+run stopped on the precondition rather than adapting to it, which was correct.
+A quoted precondition is a measurement with a timestamp nobody checks.
 
 ## The fix is where the next defect is — four in one pass
 
