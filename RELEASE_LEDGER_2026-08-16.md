@@ -2071,6 +2071,28 @@ distinction is in the code, not only in this entry.
 The pre-existing reds still fire: *a thirteenth, undeclared zero-check PR is
 still caught*, and *an all-declared census still gates green*.
 
+### The fix confirmed in CI, and the census reconciled
+
+**Run `32043716235`, job `95427382493` — `No open PR runs zero checks`: SUCCESS.**
+The first verdict this gate has produced. All five jobs green.
+
+```
+21 open PR(s) · 12 with zero check runs (3 draft, 9 not)
+  of the 9 non-draft: 9 declared in the baseline as open findings, 0 undeclared.
+BASELINE  0 zero-check PR(s) NOT declared · 0 declared entr(ies) that now have checks
+control fired: an undeclared zero-check PR reds the gate
+```
+
+**Both directions on real data, in CI:** the gate produced a verdict, **and** the
+empty-baseline control proved it can still go red while doing so.
+
+**The two independent derivations reconcile exactly.** In-session via MCP:
+**20 open**, 12 zero-check, 3 draft, 9 non-draft. CI now: **21 open** — the same
+twenty plus **PR #132 itself**, which is open and has checks, so it joins the
+population without touching the zero-check split. **12 / 3 / 9 in both, and the
+same nine declared.** That is what the previous entry could only record as
+INCONCLUSIVE; it is now measured twice by different paths and agrees.
+
 **§3.3 — the filter and the matched path.** The gate lives in
 `.github/workflows/fieldops-p2-and-sweep.yml`, whose `pull_request` filter is
 `{branches: [main]}` with **`paths:` ABSENT — it matches every changed file**.
