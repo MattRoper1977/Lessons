@@ -35,8 +35,17 @@
  *   INCONCLUSIVE       the bytes did not, and the deployment SHA is unknown, so
  *                      "stale deploy" and "wrong bytes" cannot be told apart
  *
- *   node tools/verify_served.mjs                 assert
- *   node tools/verify_served.mjs --self-test     the four controls, no network
+ * A REDIRECT IS FOLLOWED, AND ITS DESTINATION IS ASSERTED
+ * Permitting a chain is not the same as saying where it may end. The permitted
+ * terminus is derived from the site repo's CNAME and its own remote, and a
+ * chain ending anywhere else is RED naming both origins — checked BEFORE the
+ * bytes, because a mirror is precisely where the bytes would match.
+ *
+ *   node tools/verify_served.mjs                    assert
+ *   node tools/verify_served.mjs --self-test        controls (c)(d)(e), no network
+ *   node tools/verify_served.mjs --controls-only    all five controls, no verdict —
+ *                                                   safe on a PR, whose branch is
+ *                                                   not deployed
  *
  * Exit 0 every route served and byte-identical · 1 a route is missing,
  * redirected to something else, or stale · 2 INCONCLUSIVE (no egress, an empty
@@ -58,8 +67,14 @@ const SITE = arg('--site', process.env.MBM_SITE_REPO || '/workspace/mattroper197
 const APPS = arg('--apps', process.env.MBM_APPS_REPO || '/workspace/matt-s-apps-');
 const SHELF = arg('--shelf', process.env.MBM_SHELF_REPO || '');
 
-/* Origins are declared with the reason: they are not derivable from any file in
-   these trees. Overridable so a staging origin can be pointed at. */
+/* The origins a request STARTS at are declared, and overridable so a staging
+   origin can be pointed at.
+
+   An earlier version of this comment said they "are not derivable from any file
+   in these trees". That was false, and the falsehood mattered: the site repo's
+   CNAME holds the canonical domain, and the site repo's own name is the Pages
+   host. Where a request is allowed to END is therefore derived, not declared —
+   see expectedHosts(). */
 const SITE_ORIGIN = process.env.SITE_ORIGIN || 'https://madebymatt.uk';
 const LESSONS_ORIGIN = process.env.LESSONS_ORIGIN || 'https://madebymatt.uk/Lessons';
 const APPS_ORIGIN = process.env.APPS_ORIGIN || 'https://mattroper1977.github.io/Matt-s-Apps-';
@@ -176,6 +191,52 @@ async function get(url) {
   return { status: 508, chain, type: '', body: Buffer.alloc(0), final: cur };
 }
 
+/* ------------------------------------------------- where a chain may END */
+/* PERMITTING A REDIRECT IS NOT ASSERTING WHERE IT GOES.
+   The predecessor to this tool failed the Teacher Studio for answering 301 at
+   all. Fixing that — following the chain and comparing bytes at the far end —
+   opened a gap in the other direction: a chain that terminated on an origin
+   nobody asserted would have had its bytes compared at that origin, and a match
+   there would have read as SERVED. A mirror, a parked domain or a hijacked
+   CNAME is exactly the case where the bytes plausibly DO match.
+
+   The permitted set is DERIVED, never hand-listed:
+     the canonical domain   the site repo's CNAME file, which is the record
+                            GitHub Pages itself acts on
+     the Pages host         <owner>.github.io, from the site repo's own remote
+
+   Undeliverable derivation is INCONCLUSIVE, not an empty set: an empty
+   permitted set would reject every route, and a check that fails everything is
+   as useless as one that passes everything. */
+function expectedHosts() {
+  const cname = path.join(SITE, 'CNAME');
+  if (!fs.existsSync(cname))
+    throw new Inconclusive(`no CNAME at ${cname} — the canonical domain cannot be derived, and hand-listing it is what this avoids`);
+  const domain = fs.readFileSync(cname, 'utf8').split('\n')[0].trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+  if (!domain) throw new Inconclusive('the site repo CNAME is empty');
+
+  let owner = null;
+  try {
+    const remote = execFileSync('git', ['-C', SITE, 'remote', 'get-url', 'origin'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    const m = remote.match(/github\.com[:/]+([^/]+)\//i);
+    if (m) owner = m[1].toLowerCase();
+  } catch (_) { /* fall through to the throw below */ }
+  if (!owner)
+    throw new Inconclusive(`could not read the site repo's origin remote at ${SITE} — the Pages host cannot be derived`);
+
+  return { hosts: [domain, `${owner}.github.io`], from: `CNAME=${domain}, remote owner=${owner}` };
+}
+
+/* The verdict on one terminus. Returns what was reached and what was permitted,
+   so a red can name both rather than saying "unexpected". */
+function destinationVerdict(finalUrl, hosts) {
+  let got;
+  try { got = new URL(finalUrl).host.toLowerCase(); }
+  catch (e) { return { ok: false, got: `(unparseable: ${finalUrl})`, want: hosts }; }
+  return { ok: hosts.includes(got), got, want: hosts };
+}
+
 async function reachable(origin) {
   try { const r = await get(origin + '/'); return r.status; }
   catch (e) { return `ERR ${e.message}`; }
@@ -224,15 +285,39 @@ async function controls(list) {
   return out;
 }
 
-/* Controls (c) and (d) need no network and are proven in --self-test too. */
+/* Controls (c), (d) and (e) need no network and are proven in --self-test too. */
 function structuralControls() {
   const out = [];
+
+  /* (e) a chain terminating on an origin nobody asserted must go red, and must
+         name BOTH origins — the one reached and the ones permitted.
+
+         Matched pair inside one control, deliberately. Asserting only that the
+         rogue terminus is rejected would be satisfied by a predicate that
+         rejects everything, which is the mirror of the empty-set defect this
+         file already guards in (c). So the genuine terminus must be accepted in
+         the same breath. */
+  let eFired = false, eDetail;
+  try {
+    const { hosts, from } = expectedHosts();
+    const rogue = destinationVerdict('https://mirror.example.invalid/Matt-s-Apps-/FieldOps_Teacher_Studio.html', hosts);
+    const real = destinationVerdict(`https://${hosts[0]}/Matt-s-Apps-/FieldOps_Teacher_Studio.html`, hosts);
+    const pages = destinationVerdict(`https://${hosts[1]}/Matt-s-Apps-/FieldOps_Teacher_Studio.html`, hosts);
+    eFired = !rogue.ok && real.ok && pages.ok &&
+             rogue.got.includes('mirror.example.invalid') && rogue.want.length === 2;
+    eDetail = `rejected ${rogue.got}, permitted ${hosts.join(' + ')} (derived: ${from})`;
+  } catch (err) {
+    eDetail = err instanceof Inconclusive
+      ? `the permitted set could not be derived: ${err.message}` : String(err && err.message);
+  }
+
   out.push({ id: 'c', what: 'an empty derived route set exits 2, never green',
     fired: (() => { try { verdictFor([], 0); return false; } catch (e) { return e instanceof Inconclusive; } })(),
     detail: 'verdictFor([]) raises Inconclusive' });
   out.push({ id: 'd', what: 'assessed must equal derived, or exit 2',
     fired: (() => { try { verdictFor([1, 2, 3], 2); return false; } catch (e) { return e instanceof Inconclusive; } })(),
     detail: '3 derived, 2 assessed -> Inconclusive' });
+  out.push({ id: 'e', what: 'a chain ending on an unexpected origin goes red, naming both', fired: eFired, detail: eDetail });
   return out;
 }
 
@@ -265,9 +350,52 @@ function selfTest() {
   return bad === 0 ? 0 : 1;
 }
 
+/* -------------------------------------------------------- controls only */
+/* THE CONTROLS DO NOT NEED THE BRANCH TO BE DEPLOYED.
+   The live route verdict does: a PR branch is not published, so comparing the
+   estate against it would go red for being a PR, which is why the verdict leg
+   is skipped there. But (a) and (b) use production as a FIXTURE, not as the
+   subject — (a) asks a known-absent route for a 404, (b) asks a real route for
+   bytes and asserts they differ from a deliberately mutated hash. Neither claim
+   changes with the branch.
+
+   That distinction is worth the mode. Without it the only controls a pull
+   request could fire were the offline ones, and this arc exists because of
+   gates that never ran where they were needed. */
+async function controlsOnly() {
+  let s;
+  try { s = subjects(); }
+  catch (e) { if (e instanceof Inconclusive) { console.log(`[INCONCLUSIVE] ${e.message}`); return 2; } throw e; }
+
+  console.log('CONTROLS ONLY — the instrument, not the deployment.\n');
+  const root = await reachable(LESSONS_ORIGIN);
+  if (root !== 200) {
+    console.log(`[INCONCLUSIVE] the lessons origin answered ${root} from this runner, not 200.`);
+    console.log('The network controls need a reachable fixture. This is a fact about the');
+    console.log('runner, and it is INCONCLUSIVE rather than a failed control.');
+    for (const c of structuralControls())
+      console.log(`  (${c.id}) ${c.fired ? 'FIRED' : 'DID NOT FIRE'}  ${c.what} — ${c.detail}`);
+    return 2;
+  }
+
+  const all = [...await controls(s.list), ...structuralControls()];
+  for (const c of all)
+    console.log(`  (${c.id}) ${c.fired ? 'FIRED' : 'DID NOT FIRE'}  ${c.what} — ${c.detail}`);
+  const dead = all.filter(c => !c.fired);
+  console.log(`\n${all.length - dead.length} of ${all.length} controls fired.`);
+  if (dead.length) {
+    console.log(`[FAIL] did not fire: ${dead.map(c => `(${c.id})`).join(', ')} — the gate cannot be trusted to catch what it claims.`);
+    return 1;
+  }
+  console.log('Every control fired. This says the instrument works; it says NOTHING about');
+  console.log('what is served from this branch, which is not deployed.');
+  return 0;
+}
+
 /* ------------------------------------------------------------------ main */
 async function main() {
   if (SELFTEST) return selfTest();
+  if (ARGS.includes('--controls-only')) return controlsOnly();
 
   let s;
   try { s = subjects(); }
@@ -307,6 +435,23 @@ async function main() {
     console.log(`  pages(${k}): ${v.sha ? `${v.sha.slice(0, 7)} status=${v.status}` : `UNKNOWN (${v.why})`}`);
   console.log();
 
+  /* Derived once, and named in the output — a permitted set nobody can read is
+     not much better than a hand-list. */
+  let hosts;
+  try {
+    const e = expectedHosts();
+    hosts = e.hosts;
+    console.log(`  permitted terminus: ${hosts.join(' or ')}  (derived — ${e.from})\n`);
+  } catch (e) {
+    if (e instanceof Inconclusive) {
+      console.log(`[INCONCLUSIVE] ${e.message}`);
+      console.log('Without a permitted destination set, a redirect could land anywhere and');
+      console.log('still be compared byte-for-byte. No serve verdict is reported.');
+      return 2;
+    }
+    throw e;
+  }
+
   const rows = [];
   for (const subj of s.list) {
     const expect = sha(fs.readFileSync(subj.blob));
@@ -324,6 +469,17 @@ async function main() {
       catch (e) { verdict = 'INCONCLUSIVE'; detail = `fetch failed: ${e.message}`; break; }
       if (r.status !== 200) {
         verdict = 'RED'; detail = `HTTP ${r.status}${r.chain.length ? ` · chain: ${r.chain.join(' | ')}` : ' · no redirect chain'}`;
+        break;
+      }
+      /* BEFORE the bytes, not after. If the chain ended somewhere nobody
+         asserted, a byte match there is the worst possible outcome to report as
+         SERVED — a mirror is exactly the case where the bytes DO match. */
+      const dest = destinationVerdict(r.final, hosts);
+      if (!dest.ok) {
+        verdict = 'RED';
+        detail = `HTTP 200, but the chain ended on an origin nobody asserted — reached ${dest.got}, ` +
+                 `permitted ${dest.want.join(' or ')}` +
+                 (r.chain.length ? ` · chain: ${r.chain.join(' | ')}` : ' · no redirect chain');
         break;
       }
       const got = sha(r.body);
@@ -357,7 +513,7 @@ async function main() {
     if (r.ctype) console.log(`${' '.repeat(9)}content-type: ${r.ctype.got} ` +
       `${r.ctype.ok ? 'as expected' : `— EXPECTED ${r.ctype.want}, and this is reported as its own result rather than buried in the line above`}`);
   }
-  console.log('\nCONTROLS (all four must fire)');
+  console.log(`\nCONTROLS (all five must fire)`);
   for (const c of ctl) console.log(`  (${c.id}) ${c.fired ? 'FIRED' : 'DID NOT FIRE'}  ${c.what} — ${c.detail}`);
 
   const ctypeBad = rows.filter(r => r.ctype && !r.ctype.ok);

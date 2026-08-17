@@ -950,10 +950,50 @@ readers where there are three. An unfiltered grep found it. For a census whose
 whole job is to gate removals, **under-reporting is the dangerous direction**: it
 is the error that reads as permission. R0.16 censuses are run unfiltered.
 
+## Addendum, 2026-08-17 (second) — the gap the 3xx fix opened, and where controls may run
+
+**Permitting a redirect is not asserting where it ends.** The old tool failed the
+Studio for answering `301` at all; removing that made the chain legal and compared
+bytes at the far end. Correct, and it opened the other side: **a chain terminating
+on an origin nobody asserted would have had its bytes compared there, and a match
+would have read as SERVED.** A mirror or a re-pointed CNAME is precisely the case
+where the bytes plausibly *do* match, so this was a hole shaped like a pass.
+
+- **Control (e)** — a terminus outside the permitted set is **RED, naming both**
+  the origin reached and the ones permitted. Checked **before** the byte
+  comparison, because after it the mirror has already been called SERVED.
+- **The permitted set is derived, never hand-listed:** the canonical domain from
+  the site repo's `CNAME`, and `<owner>.github.io` from that repo's own remote.
+  A set that cannot be derived is **INCONCLUSIVE** — an empty permitted set would
+  reject every route, which is as useless as passing every route.
+- **The control is a matched pair in one check**, deliberately: the rogue
+  terminus must be rejected *and* both genuine origins accepted. Asserting only
+  the rejection would be satisfied by a predicate that rejects everything.
+- **A stale claim removed on the way past:** the comment above the origin
+  constants said they "are not derivable from any file in these trees". The
+  site's `CNAME` had always falsified that, and the false claim is what made a
+  hand-listed destination set look like the only option.
+
+**Where controls may run, which turned out to be the more useful finding.** The
+live verdict needs the branch deployed, and a PR branch is not — that is why the
+verdict leg skips there. **The controls never needed it.** (a) asks a
+known-absent route for a `404`; (b) asks a real route for bytes and asserts they
+differ from a deliberately mutated hash. Both use production as a *fixture*, not
+as the subject, and neither claim changes with the branch. `--controls-only` now
+runs **all five on every event, pull requests included**. Until this, the only
+controls a PR could fire were the offline three — in the workflow written because
+gates were not running where they were needed.
+
+**D1's `finally`, measured rather than believed.** Both destructive controls in
+`verify_fieldops_served.mjs` rewrite a shipped file and restore it in a `finally`.
+The builder is now hashed before and after and the equality asserted — a `finally`
+taken on trust is the same species as every unfired check in the table above.
+
 ## What remains open, by name
 
-- ~~**The serve result itself.**~~ **CLOSED 2026-08-17.** Run
-  [`32022110081`](https://github.com/MattRoper1977/Lessons/actions/runs/32022110081)
+- ~~**The serve result itself.**~~ **CLOSED 2026-08-17 — CI-derived, on `main`.**
+  Run [`32022110081`](https://github.com/MattRoper1977/Lessons/actions/runs/32022110081),
+  job **`Merged is not served - the placed labs and the Studio`** (id `95363779146`),
   on `main` at `0352995`: **29 served byte-identical · 0 red · 0 inconclusive, of
   29 derived · content-type 29 as expected, 0 not**, and all four controls FIRED
   in the same run. Read from the job log, not from a green tick. The Studio
@@ -961,6 +1001,31 @@ is the error that reads as permission. R0.16 censuses are run unfiltered.
   `github.io/Matt-s-Apps-/FieldOps_Teacher_Studio.html -> 301 -> madebymatt.uk/…`
   — and the bytes at the destination match, which is the case the older tool got
   wrong.
+
+  **The locality, stated (R0.20), because this entry and "verified locally only"
+  were both true at once and a reader could fairly call that a contradiction.**
+  They have different subjects. This entry is about **what `main` serves**, and
+  its every figure came from CI. The "locally only" caveat was about **a branch's
+  diff** — the re-expression and its controls — which had never run anywhere but
+  a container. Neither claim covers the other's subject, and the entry is
+  qualified rather than downgraded because nothing in it was locally derived.
+
+  **The predicate for 29 (R0.8), which this number has never carried:** 23 site +
+  5 lessons + 1 apps.
+  - **site 23** — every href in the canonical shelf (`MattRoper1977/Games`
+    `games.json`, **52 entries**) that the site's own P0 deriver buckets as a
+    site-served game route with a directory behind it. The other **29** shelf
+    entries are handed to the Lessons estate and are not site routes.
+  - **lessons 5** — the **4** labs `tools/fieldops/build.mjs` names in `LABS[]`,
+    plus **1** hub, read off those labs' own NAV-1 link rather than assumed.
+  - **apps 1** — the same builder's `STUDIO`.
+  - **Residue, named and not checked by this gate:** the deriver's five
+    declared-not-derived site routes — `/`, `__FULL_HOME__`, `/games/`,
+    `/site.json`, `/Games/games.json`. The serve proof inherits that exclusion.
+  - **A collision worth naming before it costs someone an afternoon: the 29
+    served routes and the 29 shelf entries left to Lessons are different sets
+    that happen to be the same size.** 23 + 5 + 1 = 29 and 52 − 23 = 29. Nothing
+    connects them.
 - **Twelve zero-check pull requests**, declared in `tools/zero_check_baseline.json`
   and ratcheted so the thirteenth reds. Recorded, not repaired.
 - **B2 conformance** — abandoned, no result survives, and the ledger says so.

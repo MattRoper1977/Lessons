@@ -167,6 +167,12 @@ function selfTest() {
      check observed passing has not been shown able to fail. */
   const BUILD = path.join(HERE, 'tools/fieldops/build.mjs');
   const saved = fs.readFileSync(BUILD, 'utf8');
+  /* R0.14 applied to this harness. Both mutations below rewrite a shipped file
+     and restore it in a `finally` — and a `finally` that is believed rather
+     than measured is the same species as every other unfired check in this
+     ledger. The builder is hashed before and after, and the equality is
+     asserted, not assumed. */
+  const buildShaBefore = sha(Buffer.from(saved));
   const withBuild = (src, fn) => {
     try { fs.writeFileSync(BUILD, src); return fn(); }
     finally { fs.writeFileSync(BUILD, saved); }
@@ -199,6 +205,14 @@ function selfTest() {
   const a = fs.readFileSync(list[0].local);
   check('the byte comparison distinguishes one appended byte',
         sha(a) !== sha(Buffer.concat([a, Buffer.from('x')])));
+
+  /* The restore, measured. This runs LAST, after every mutation above, and it
+     is the check that makes the two destructive controls safe to ship. */
+  const buildShaAfter = sha(fs.readFileSync(BUILD));
+  check('the builder is byte-identical after the mutations that rewrote it',
+        buildShaAfter === buildShaBefore,
+        `before ${buildShaBefore.slice(0, 12)} · after ${buildShaAfter.slice(0, 12)}` +
+        (buildShaAfter === buildShaBefore ? '' : ' — A SHIPPED FILE WAS LEFT MUTATED'));
 
   console.log(`\n[OFFLINE] ${fails === 0 ? 'PASS' : 'FAIL'} — ${fails} check(s) failed`);
   return fails === 0 ? 0 : 1;
