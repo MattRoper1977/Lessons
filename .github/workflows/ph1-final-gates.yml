@@ -1,0 +1,96 @@
+name: PH-1 final gates and held report
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-final-gates.yml'
+permissions:
+  contents: write
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned jsdom
+        run: |
+          set -euo pipefail
+          NPM_DIR="$(mktemp -d)"
+          npm install --prefix "$NPM_DIR" --no-package-lock --no-save jsdom@26.1.0
+          echo "PH1_NODE_PATH=$NPM_DIR/node_modules" >> "$GITHUB_ENV"
+          RESOLVED="$(NODE_PATH="$NPM_DIR/node_modules" node -p "require('jsdom/package.json').version")"
+          echo "PH1_JSDOM_VERSION=$RESOLVED" >> "$GITHUB_ENV"
+      - name: Run all gates against immutable BASE and deployed tip
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          TARGET=55c35cd68cdd423c7c9c16c68a34348a1150e9f9
+          BASE_WORKTREE="$(mktemp -d)"
+          TIP_WORKTREE="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" >/dev/null 2>&1 || true
+            git worktree remove --force "$TIP_WORKTREE" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          git worktree add --detach "$TIP_WORKTREE" "$TARGET"
+
+          set +e
+          NODE_PATH="$PH1_NODE_PATH" \
+          PH1_JSDOM_VERSION="$PH1_JSDOM_VERSION" \
+          PH1_BASE="$BASE" \
+          PH1_TARGET="$TARGET" \
+          PH1_BASE_DIR="$BASE_WORKTREE" \
+          PH1_TIP_DIR="$TIP_WORKTREE" \
+          PH1_REPO="$GITHUB_WORKSPACE" \
+          PH1_GATE_OUT=/tmp/ph1-final-gates \
+          python3 .github/ph1_final_gates.py > /tmp/ph1-final-gates.log 2>&1
+          RC=$?
+          set -e
+          cleanup
+          trap - EXIT
+
+          mkdir -p _passph1
+          if [ -f /tmp/ph1-final-gates/GATE_RESULTS.md ] && [ -f /tmp/ph1-final-gates/PH1_STOP_REPORT.md ] && [ -f /tmp/ph1-final-gates/GATE_RESULTS.json ]; then
+            cp /tmp/ph1-final-gates/GATE_RESULTS.md _passph1/GATE_RESULTS.md
+            cp /tmp/ph1-final-gates/GATE_RESULTS.json _passph1/GATE_RESULTS.json
+            cp /tmp/ph1-final-gates/PH1_STOP_REPORT.md _passph1/PH1_STOP_REPORT.md
+            OVERALL="$(python3 -c "import json;print(json.load(open('/tmp/ph1-final-gates/GATE_RESULTS.json'))['overall'])")"
+            RED="$(python3 -c "import json;print(','.join(json.load(open('/tmp/ph1-final-gates/GATE_RESULTS.json'))['red_gates']) or 'none')")"
+          else
+            OVERALL=RED
+            RED=HARNESS
+            {
+              echo '# PH-1 Phase 3 — gate runner failed'
+              echo
+              echo "- Exit code: **$RC**"
+              echo '- Result: **HARNESS-FAILED**'
+              echo
+              echo '```text'
+              tail -n 300 /tmp/ph1-final-gates.log
+              echo '```'
+            } > _passph1/GATE_RESULTS.md
+            cp _passph1/GATE_RESULTS.md _passph1/PH1_STOP_REPORT.md
+            printf '{"overall":"RED","red_gates":["HARNESS"],"exit_code":%s}\n' "$RC" > _passph1/GATE_RESULTS.json
+          fi
+
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+          git rm .github/ph1_final_gates.py .github/workflows/ph1-final-gates.yml
+          git add _passph1/GATE_RESULTS.md _passph1/GATE_RESULTS.json _passph1/PH1_STOP_REPORT.md
+          git commit -m "PH-1 gates: ${OVERALL} (${RED}); Phase 4 held"
+          git push origin HEAD:pass-ph1-peq-hardening
+
+          echo "Gate runner exit: $RC"
+          cat /tmp/ph1-final-gates.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ph1-final-gate-evidence
+          path: |
+            /tmp/ph1-final-gates
+            /tmp/ph1-final-gates.log
+          retention-days: 2
