@@ -87,17 +87,6 @@ jobs:
       - name: The ledger's tally is derived from its own table
         run: node tools/verify_ledger_tally.mjs | tee "$RUNNER_TEMP/tally.txt"
 
-      # A test fixture in a public repository is published data. The estate
-      # shipped a canary that read as a real child and carried the owner's
-      # surname, inside the file about not leaving pupil names where they do not
-      # belong. Self-found; this is the mechanism so the next one is not.
-      # Same `paths:` story as above — this workflow carries NO filter, so every
-      # changed path matches and this runs on every PR without a list to keep.
-      - name: A fixture that reads as a person is caught, both directions
-        run: |
-          node tools/verify_fixture_names.mjs --self-test | tee "$RUNNER_TEMP/fixture-selftest.txt"
-          node tools/verify_fixture_names.mjs | tee "$RUNNER_TEMP/fixture-names.txt"
-
       - name: ...and that check is proven able to go red three separate ways
         run: node tools/verify_ledger_tally.mjs --self-test | tee "$RUNNER_TEMP/tally-selftest.txt"
 

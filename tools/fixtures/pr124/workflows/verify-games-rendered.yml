@@ -1,0 +1,78 @@
+name: Games rendered regression
+
+# The gate this workflow runs replaces one that never executed. The previous
+# tools/verify_games_rendered.mjs called require() inside an ES module, so it
+# threw at line 3 every time it was invoked - and nothing invoked it, because no
+# workflow referenced it. A gate no job runs is a file, not a gate. This is the
+# reference that makes it exist.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Games/**'
+      - '5_6 Local Choice/**'
+      - 'data/hud-coverage.json'
+      - tools/verify_games_rendered.mjs
+      - .github/workflows/verify-games-rendered.yml
+  push:
+    branches: [main]
+    paths:
+      - 'Games/**'
+      - '5_6 Local Choice/**'
+      - 'data/hud-coverage.json'
+      - tools/verify_games_rendered.mjs
+      - .github/workflows/verify-games-rendered.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: games-rendered-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rendered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out this estate
+        uses: actions/checkout@v4
+
+      # The gate needs the canonical search index, which lives in the site
+      # repository, and it assembles both estates onto one origin because these
+      # games' exit controls resolve to routes served from there.
+      - name: Check out the site estate beside it
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          path: .site
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm i -D playwright@1.49.1
+          npx playwright install --with-deps chromium
+
+      # A gate that cannot go red cannot be trusted when it goes green. The run
+      # below carries its own controls; this step proves the exit codes the
+      # workflow reads are the ones the gate emits.
+      - name: Prove the gate reports INCONCLUSIVE rather than passing blind
+        run: |
+          set +e
+          MBM_SEARCH_INDEX=/nonexistent/index.json \
+            node tools/verify_games_rendered.mjs --site /nonexistent
+          code=$?
+          set -e
+          echo "exit=$code"
+          if [ "$code" -ne 3 ]; then
+            echo "::error::with no inventory the gate must exit 3 (INCONCLUSIVE), got $code"
+            exit 1
+          fi
+
+      - name: Rendered regression across every game in the inventory
+        run: node tools/verify_games_rendered.mjs --site "$GITHUB_WORKSPACE/.site"
