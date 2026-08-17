@@ -179,8 +179,22 @@ jobs:
       # The offline controls run on EVERY event, including a PR. The instrument
       # has to be provable somewhere its network legs cannot run, or the only
       # thing standing behind it is a job that skipped.
+      # Three estates and the canonical shelf. The shelf is its own repository:
+      # the site's P0 deriver reads it, so this gate must supply it rather than
+      # reimplement what it produces.
+      - name: Check out the other estates and the canonical shelf
+        run: |
+          set -uo pipefail
+          git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site" || echo "site clone failed"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Matt-s-Apps-.git "$RUNNER_TEMP/apps" || echo "apps clone failed"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Games.git "$RUNNER_TEMP/shelf" || echo "shelf clone failed"
+
       - name: The instrument's offline controls
-        run: node tools/verify_fieldops_served.mjs --self-test | tee "$RUNNER_TEMP/served-selftest.txt"
+        run: |
+          node tools/verify_fieldops_served.mjs --self-test | tee "$RUNNER_TEMP/served-selftest.txt"
+          node tools/verify_served.mjs --self-test \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            | tee -a "$RUNNER_TEMP/served-selftest.txt"
 
       # The live legs only where the answer can be true. A PR branch is not
       # deployed, so fetching production from one compares the live estate
@@ -189,11 +203,19 @@ jobs:
       # A push-time run can race the Pages deploy. The comparison names both
       # hashes and both sizes, so a lag read is recognisable rather than
       # mysterious; re-dispatch settles it.
+      # R0.4. 200 is a precondition; byte-identity to the committed blob is the
+      # verdict. The retry bound is stated in the tool (4 attempts, 20s apart)
+      # and a mismatch that cannot be told apart from a live deploy is
+      # INCONCLUSIVE, never a red.
       - name: Every subject serves, unredirected, byte-identical
         if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           sleep 60
-          node tools/verify_fieldops_served.mjs | tee "$RUNNER_TEMP/served.txt"
+          node tools/verify_served.mjs \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            | tee "$RUNNER_TEMP/served.txt"
 
       - name: Result block
         if: always()

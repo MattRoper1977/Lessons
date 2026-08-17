@@ -814,3 +814,115 @@ describes it, this ledger now points at it, and it is the only remote copy of th
 combined state. A removal with a non-empty census is a re-expression, never a
 delete. The branch stays and the SHA is written here, which is what the record
 needed the tag for.
+
+---
+
+# CLOSING ENTRY — 2026-08-17
+
+Written last, and containing only what was measured in this run.
+
+## R0.17, R0.18 and R0.19, each with its provenance
+
+R0.17 and R0.18 are landed above in id order. **R0.19 joins them**, and all
+three came from the same place: an order was wrong, the run stopped, and the
+stop was right.
+
+- **R0.17** — from R0.12's absence. Cited by four orders, defined in no ledger.
+- **R0.18** — from the stale-precondition stop. A merge order pinned a head five
+  commits behind and asserted docs-only over 57 paths of which 56 were not.
+- **R0.19** — from the post-squash force-update.
+
+## R0.19 — any operation that moves a ref reports the ref table, before and after
+
+*And states what would have been lost.* A force-update reported as "pushed" is
+indistinguishable from one that ate work.
+
+*Provenance:* after #122 was squash-merged, the branch label still pointed at its
+own pre-merge history and had to be fast-forwarded onto the merge commit. The
+report gave remote `4259c15` → `b6f92ca`, tree byte-identical, nothing discarded
+that was not already in main, unpushed commits 0. **That is the standard, not a
+courtesy.**
+
+## Serve — the route set, and the verdict
+
+**29 routes derived**, composed from three canonical records with no hand list
+anywhere:
+
+| group | count | derived from |
+|---|---|---|
+| site | **23** | the site repo's own `tools/derive_live_routes.mjs`, **invoked**, reading the canonical shelf in the `MattRoper1977/Games` repository |
+| lessons | **5** | `tools/fieldops/build.mjs` `LABS[]` (4), plus the hub read off the labs' own NAV-1 `href` rather than assumed (1) |
+| apps | **1** | the same builder's `STUDIO` |
+
+Predicate, stated so the 29 can be re-derived: *every game the site's P0 deriver
+emits from the canonical shelf, plus every lab the FieldOps builder names and the
+hub their NAV-1 link resolves to, plus that builder's Studio.*
+
+**The assertion is byte-identity of the served response to the committed blob.**
+200 is a precondition and never the verdict — every serve failure this estate has
+actually had would have passed a 200-only check.
+
+**Verdict from this container: UNVERIFIED.** All three origins answered **403**
+to the runner's proxy, not 200. That is a fact about the runner and is reported
+as one; nothing is claimed about the deployment. The gate runs in CI on push to
+`main`, weekly, and on dispatch.
+
+### Two defects found inside this gate, before it landed
+
+The order predicted the serve check would be where this pass hid its defect. It
+was, twice:
+
+1. **A partial proxy block would have reported a whole estate as RED.** The first
+   cut only bailed when *every* origin was dead; with one blocked and two
+   reachable it would have marched on and called an unreachable estate's routes
+   failures. A runner fact wearing a deployment verdict. Unreachable groups are
+   INCONCLUSIVE now, per group, naming the status they actually got.
+2. **The content-type result was buried in a detail string** rather than reported
+   as its own outcome — a true line that hides a finding inside itself, which is
+   R0.12 in the gate written to satisfy R0.4. It is its own reported field now,
+   and a mismatch is a red.
+
+## The VSL route ruling — approved, and not created
+
+**`Science_Teesside/Build/virtual_science_lab/`**, against the landed FieldOps
+path `Science_Teesside/Build/v4_fieldops/`. Four tests, run against the tree on
+main, all **PASS**:
+
+| test | result |
+|---|---|
+| **sibling, not tenant** | both under `Science_Teesside/Build/`; the candidate is not inside `v4_fieldops/` |
+| **named for the instrument, not the version** | no `v0_4`, no `PRO`, no date — versions live in the file and here |
+| **no collision** | 0 tracked files under the candidate; no root-level `virtual*`/`vsl*`/`vcl*` directory to shadow |
+| **no empty route** | v0.4.1 does not exist in the tree, so **the directory was not created** |
+
+**The condition, which is the point of the fourth test: it is created only when
+v0.4.1 exists.** No placeholder, no index stub, no "coming soon" — an empty route
+is a 404 waiting for somebody to link it.
+
+*Adjacent but distinct, so a later reader does not conflate them:* a root-level
+`chemistry/` directory holds 9 teaching lesson files including
+`L3c_VirtualLab_AcidsAlkalis (2).html`. Those are lessons; the VSL is an
+instrument. The candidate does not shadow them and is not a home for them.
+
+## The tally control, on main
+
+`tools/verify_ledger_tally.mjs` runs on main and its three mutation controls each
+go red there — re-run against main's tool and main's ledger, not quoted from the
+branch: prose number changed → red, row added → red, row removed → red, restored
+→ green. Prose N=12, table 12 rows, sub-counts 10+1+1.
+
+## What remains open, by name
+
+- **The serve result itself.** The gate exists, its four controls fire, and it
+  has never reached a live origin. It closes on the next push to `main` or one
+  dispatch — and if CI egress also fails, it stays UNVERIFIED with the mechanism
+  named rather than becoming green.
+- **Twelve zero-check pull requests**, declared in `tools/zero_check_baseline.json`
+  and ratcheted so the thirteenth reds. Recorded, not repaired.
+- **B2 conformance** — abandoned, no result survives, and the ledger says so.
+- **`verify_inline_exit.mjs`** — the gate that proves a child's way out of eleven
+  games is keyboard-reachable. It runs in two named site workflows; what it does
+  not have is a Lessons-side trigger for the three Lessons games it judges.
+- **VSL v0.4.1** — its own order. v0.4 still carries all six V-findings verbatim,
+  including **V2: pupil name and notes in the URL that Share hands out, at an
+  SEMH provision.**
