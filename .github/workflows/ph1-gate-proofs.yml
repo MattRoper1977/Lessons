@@ -1,0 +1,45 @@
+name: PH-1 G2 and G4 detector proofs
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-gate-proofs.yml'
+permissions:
+  contents: read
+jobs:
+  prove:
+    if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: gate proofs' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned jsdom in an isolated temporary prefix
+        run: |
+          set -euo pipefail
+          NPM_DIR="$(mktemp -d)"
+          npm install --prefix "$NPM_DIR" --no-package-lock --no-save jsdom@26.1.0
+          echo "PH1_NODE_PATH=$NPM_DIR/node_modules" >> "$GITHUB_ENV"
+          RESOLVED="$(NODE_PATH="$NPM_DIR/node_modules" node -p "require('jsdom/package.json').version")"
+          echo "PH1_JSDOM_VERSION=$RESOLVED" >> "$GITHUB_ENV"
+      - name: Run control and mutation proofs against immutable BASE
+        run: |
+          set -euo pipefail
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          BASE_WORKTREE="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          SCRIPT="$GITHUB_WORKSPACE/.github/ph1_gate_proofs.py"
+          (cd "$BASE_WORKTREE" && NODE_PATH="$PH1_NODE_PATH" JSDOM_VERSION="$PH1_JSDOM_VERSION" python3 "$SCRIPT")
+          cleanup
+          trap - EXIT
+          test -z "$(git status --porcelain=v1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ph1-gate-proofs
+          path: /tmp/ph1-gate-proofs
+          retention-days: 2
