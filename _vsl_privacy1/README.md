@@ -94,3 +94,17 @@ derived from.
 glowing splint does not relight"* as correct. **N1** still deletes a pupil's
 oldest drawing stroke without a word. Placement, when it happens, is still
 **unlinked until Matt's paper read** — no instrument can witness a paper read.
+
+## Correction, 2026-08-17 — the canary itself
+
+The first gate run used `CANARY_PUPIL_Jamie_Roper` as the name canary. **That was
+my choice and it was a poor one:** it reads as a real child, it shares Matt's
+surname, and it was about to sit in a public repository in a file whose whole
+subject is not leaving pupil names where they do not belong. A synthetic value
+that a reader could mistake for a real pupil at an SEMH provision is the same
+error one layer out.
+
+Replaced with `CANARY_NAMEFIELD_NOT_A_REAL_PERSON` /
+`CANARY_NOTESFIELD_NOT_REAL_PUPIL_TEXT`, which cannot be read as anyone. **The
+gates were re-run in full afterwards and still return 6 reds fired, 7 greens
+returned** — the correction changes the string, not the assertion.

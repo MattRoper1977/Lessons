@@ -23,8 +23,8 @@ const ORIG = process.argv[2];
 const PATCHED = process.argv[3];
 const TMP = process.argv[4];
 
-const PUPIL = 'CANARY_PUPIL_Jamie_Roper';
-const NOTES = 'CANARY_NOTES_felt_anxious_during_the_practical';
+const PUPIL = 'CANARY_NAMEFIELD_NOT_A_REAL_PERSON';
+const NOTES = 'CANARY_NOTESFIELD_NOT_REAL_PUPIL_TEXT';
 
 let reds = 0, greens = 0;
 const failures = [];
