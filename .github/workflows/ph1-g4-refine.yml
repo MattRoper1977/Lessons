@@ -1,0 +1,40 @@
+name: PH-1 refine G4 comparator
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-g4-refine.yml'
+permissions:
+  contents: write
+jobs:
+  refine-and-commit:
+    if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: refined G4' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Re-prove against immutable BASE and commit corrected detector
+        run: |
+          set -euo pipefail
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          BASE_WORKTREE="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          SCRIPT="$GITHUB_WORKSPACE/.github/ph1_g4_refine.py"
+          (cd "$BASE_WORKTREE" && python3 "$SCRIPT")
+          cleanup
+          trap - EXIT
+
+          COUNT="$(python3 -c "import json;print(json.load(open('/tmp/ph1-g4-refine/g4-refine-data.json'))['base_surface_count'])")"
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+          cp /tmp/ph1-g4-refine/G4_WITNESS_COMPARATOR.py _passph1/G4_WITNESS_COMPARATOR.py
+          cp /tmp/ph1-g4-refine/G4_MUTATION_PROOF.md _passph1/G4_MUTATION_PROOF.md
+          git add _passph1/G4_WITNESS_COMPARATOR.py _passph1/G4_MUTATION_PROOF.md
+          git commit -m "PH-1 G4 comparator refined: ${COUNT} real surfaces; hub false-positive removed; mutations proven"
+          git push origin HEAD:pass-ph1-peq-hardening
