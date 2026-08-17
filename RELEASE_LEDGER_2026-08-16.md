@@ -1409,6 +1409,24 @@ leg was dry before this run, so the second false red **wrote nothing** — `main
 did not move. That is the withdrawal working exactly as intended, and it is the
 only reason this red cost nothing.
 
+### The confirming measurement — run 4
+
+| run | head | verdict | truth |
+|---|---|---|---|
+| `32029976055` | `9b875b6` | FAILED | **false** — dormancy read as failure |
+| `32030762018` | `758304f` | SUCCESS | true |
+| `32032047401` | `0933118` | FAILED | **false** — a still-running sibling read as *no verdict* |
+| **`32032881091`** | **`3202144`** | **SUCCESS** | **true** — `main` green, the watch agrees, nothing written |
+
+**Four live verdicts: two false reds, two greens.** Both false reds were the same
+error in different clothes, and both were caught by reading the run rather than
+by the run announcing itself. **Consecutive greens from the newest: 1.** The soak
+counter therefore stands at **1 of 10**, unchanged by run 4 — a green after a red
+restarts the count, which is the point of counting consecutively.
+
+**Neither false red is netted away by the greens.** The watch's entry in the
+fired-wrongly table stays at **2 wrong verdicts**, permanently.
+
 ## 7 · The watch's standing conditions, each as currently true or false
 
 | condition | state |
