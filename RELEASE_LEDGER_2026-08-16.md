@@ -1047,3 +1047,188 @@ taken on trust is the same species as every unfired check in the table above.
 - **VSL v0.4.1** — its own order. v0.4 still carries all six V-findings verbatim,
   including **V2: pupil name and notes in the URL that Share hands out, at an
   SEMH provision.**
+
+---
+
+# Closing entry — 2026-08-17. The arc ends with main green and something watching it.
+
+Only what this run measured.
+
+## Rules landed, in id order, with provenance
+
+**R0.20 — evidence has a locality, and it is stated or the claim is not made.**
+A gate that has not run in CI on *this change* is UNVERIFIED, whatever it did
+locally. *Provenance:* `verify_served.mjs` and the D1 control were proven on a
+branch whose workflow fires only on `pull_request` and `push: main`, so its push
+triggered nothing at all.
+
+**R0.21 — a retry loop classifies before it repeats.**
+Backoff is for a declared class of transient failure; any other failure is read
+on its first occurrence. *Provenance:* four non-fast-forward push rejections
+retried four times before being read; the cause was the remote branch still
+holding the pre-squash head. **And it recurred in this run, which is recorded
+rather than quietly fixed:** the branch delete below failed four times, and from
+the first attempt of the retry loop the error already read `HTTP 403` — an
+authorization refusal, not a transport blip. Three of those four attempts were
+made with the answer already on the screen.
+
+**R0.22 — a failure on the default branch reaches a person by a mechanism, not
+by inspection.** *Provenance:* runs `32017557268` and `32018424063`, both red on
+`main`, both found only because someone went and looked. **Sub-rule: cancelled is
+not green and not red — it is NO VERDICT**, and it never counts as coverage.
+*Provenance:* the `inline-exit` job killed by `cancel-in-progress`, whose
+neighbouring greens looked exactly like coverage.
+
+**R0.23 — a pattern states its scope and prints its match set before it acts.**
+*Provenance, all three instances, all self-found:* a filtered `grep` that
+under-reported a removal census by one; `git tag -l` run in the wrong repository
+and reported absent, twenty minutes after that exact error was recorded here; and
+`pkill -f "sleep 180"` matching its own wrapper and killing the shell. Same
+defect, three blast radii — the census one gated a deletion, which is R0.10.
+
+**Beside R0.15 — a control that reads a stable external artefact to prove the
+harness can go red is not a live-deployment check, and must not be gated behind
+one.** Recognising that controls (a) and (b) use production as a *fixture* rather
+than as the subject converted three PR-firable controls into five.
+
+## The merge
+
+`#124` squash-merged as **`036b545`**, base `0352995`, single parent, matching
+this repository's convention.
+
+| ref | before | after |
+|---|---|---|
+| Lessons `main` | `0352995` | **`036b545`** |
+| branch `claude/close-order-seven-items-wdfhdf` | `2f1fa87` | unchanged — **delete refused, HTTP 403** |
+| site | `c3562478` | `c3562478` |
+| Apps | `2e2de98` | `2e2de98` |
+
+**Loss statement, proven and not assumed:** `2f1fa87` is not an ancestor of
+`036b545` because the merge was a squash, so ancestry proves nothing. `git diff
+2f1fa87 origin/main` is **empty** — every byte of the branch survives in main.
+
+## The closing measurement — the failure is gone, and it is the same 301
+
+Both red runs on `main` had **one cause, not two**: identical failure line,
+identical subject, identical `7 pass · 1 fail · 0 inconclusive`.
+
+**Before** — run `32018424063` at `b6f92ca`, job `95352744737`:
+
+```
+00_BUILD_FieldOps_Teacher_Studio.html   FAIL   served without a redirect chain
+  https://mattroper1977.github.io/Matt-s-Apps-/FieldOps_Teacher_Studio.html -> HTTP 301
+  -> https://madebymatt.uk/Matt-s-Apps-/FieldOps_Teacher_Studio.html.
+  A redirect is not a serve; the visitor's URL is not the file's.
+7 pass · 1 fail · 0 inconclusive          ##[error]Process completed with exit code 1
+```
+
+**After** — run `32027709223` at `036b545`, job `95380509725`:
+
+```
+apps  00_BUILD_FieldOps_Teacher_Studio.html   SERVED
+  200 · 6678059f11fc · 55394 B · chain: https://mattroper1977.github.io/Matt-s-Apps-/
+  FieldOps_Teacher_Studio.html -> 301 -> https://madebymatt.uk/Matt-s-Apps-/...
+  content-type: text/html as expected
+29 served byte-identical · 0 red · 0 inconclusive, of 29 derived
+```
+
+**The deployment did not change. The 301 is the same 301, to the same place. The
+judgement changed.** That is the whole claim, and it is why the before/after had
+to name one subject rather than report a general green.
+
+## The watch
+
+`tools/watch_main_runs.mjs` + `.github/workflows/watch-main.yml`.
+
+- **Subject set derived**, never hand-listed: every file matching `/\.ya?ml$/`
+  directly in `.github/workflows/` — **12 matched, 1 excluded as self, 11 judged.**
+- **A watch cannot be its own witness.** Its own run is necessarily in progress
+  while it asks, so it would report NO VERDICT on itself and be red forever. The
+  exclusion is by path and is **printed**, because an exclusion nobody can see is
+  a blind spot.
+- **Three categories: PASS · FAIL · NO VERDICT.** Cancelled, skipped, timed out,
+  stale, `action_required`, `neutral` and null are listed by name rather than
+  swept up by an `else`, so a conclusion GitHub adds later surfaces as unknown.
+- **A missing run and a failed run are different findings**, because the repairs
+  differ: a failing gate needs a fix, a silent one needs a trigger.
+- **Controls, each named in the output and all firing:** (a) a failed run is
+  detected *and named*; (b) an empty run list exits 2, never green; (c) a
+  cancelled run reports NO VERDICT, not PASS; (d) a workflow in the tree but
+  absent from the run set is NEVER STARTED; (e) the watch excludes itself. Plus
+  the pair proving it is neither stuck red nor stuck green.
+- **`workflow_run` has no wildcard**, so its `workflows:` list must be written by
+  hand — which is exactly how PR #114 came to run zero checks. It is therefore
+  named **and** guarded: `--verify-trigger-list` compares the list to the derived
+  set and goes red both ways, proven by dropping an entry (named `Verify
+  Charcoal`) and by adding one no workflow provides.
+
+### The surfacing mechanism, and what it does not do
+
+Three legs in the repository: the result goes to `$GITHUB_STEP_SUMMARY`; the
+check **fails visibly** on the default branch; and a red appends a dated line
+here, guarded three ways — only on failure, only if that run id is not already
+recorded, and with `[skip ci]` so the push cannot trigger the workflows the job
+is watching.
+
+**The human leg, stated plainly because the in-repo legs do not reach a person.**
+GitHub's Actions-failure emails go to the account that *triggered* the run. These
+runs are triggered by automation, so **they do not arrive in Matt's inbox**. To
+make a red actually reach him, one of these has to be enabled by hand, and none
+of them can be enabled from inside the repository:
+
+- GitHub → Settings → Notifications → **Actions** → "Send notifications for
+  failed workflows only", with **Watching** set on this repository; or
+- a `CODEOWNERS`-independent subscription: Watch → Custom → **Actions**; or
+- a webhook or an email step in the job itself, which needs a secret.
+
+Until one of those is on, the watch converts "nobody knew" into "it is written
+down where someone will see it next time they look" — which is better, and is
+**not** the same as being told.
+
+## What remains open, by name
+
+| item | state | what closes it |
+|---|---|---|
+| tag `close-fixes/combined-614f4d8` | exists, site repo, unpushed, annotated on `614f4d8` | a push from a session scoped to the site repo — one command |
+| branch `claude/close-order-seven-items-wdfhdf` | **still present at `2f1fa87`. Delete refused: `HTTP 403`** — this session's credentials can push commits but not delete a ref. Content proven identical to main, so it is clutter and not risk | a delete from a session or account with ref-delete permission, or the repo's own auto-delete-on-merge setting |
+| nine declared zero-check PRs (of 21 open, 12 zero-check, 3 draft) | recorded and ratcheted, **not repaired** | its own pass: rebase the conflicted ones, give the rest a matching workflow |
+| B2 conformance | abandoned, no result survives, recorded as a gap in those words | re-running the conformance order |
+| VSL v0.4.1 | four tests recorded above; `Science_Teesside/Build/virtual_science_lab` does not exist, 0 tracked files — correct | its own order. v0.4 still carries **V2: pupil name and notes in the Share URL, at an SEMH provision** |
+| five declared-not-derived routes (`/`, `__FULL_HOME__`, `/games/`, `/site.json`, `/Games/games.json`) | inherited unchecked by the serve proof, named as such | extending the deriver, or a ruling that they stay out |
+| the watch's **human leg** | the in-repo legs are live; no notification reaches a person | enabling Actions-failure notifications on the account, which cannot be done from inside the repository |
+
+### Found while landing the watch: opening a PR does not start its checks
+
+**Measured, not inferred.** Every workflow run on the close-order branch — all
+**11** — was triggered by a **push** to an already-open pull request
+(`synchronize`). Not one was triggered by the pull request being **opened**:
+
+| head | how it became the head | run? |
+|---|---|---|
+| `8dc1160` | the head at which **#124 was opened** via the API | **none** |
+| `ec7931e` | the head at which **#125 was opened** via the API | **none** |
+| `8ac3c79`, `0ca2dd9`, `f62c113`, `2f1fa87`, and 7 earlier | pushed to an open PR | run each |
+
+The cause is GitHub's own recursion guard: an event raised with an integration
+token does not start a workflow run. Both pull requests in this arc were opened
+through the API, so **both were zero-check pull requests at the moment they were
+opened**, and #124 only acquired checks because more commits were pushed to it
+afterwards. #125 sat at zero checks until a commit was pushed to it.
+
+**This is the #114 class with a different mechanism, and it is worse in one
+respect:** a `paths:` filter that matches nothing is at least visible in the
+workflow file, whereas this leaves no trace anywhere — the workflow is correct,
+the trigger is correct, and the run simply never exists. It plausibly accounts
+for some of the nine declared zero-check pull requests, which were recorded as
+"filter miss or no applicable workflow" when the merge ref existed and nothing
+ran. That attribution should be re-examined when those are repaired; it is not
+re-examined here, because repairing them is out of scope.
+
+**The census already catches it.** An API-opened PR with no subsequent push is an
+undeclared zero-check PR, and `pr_check_census.mjs --gate` reds on it. The gate
+worked; what was missing was the explanation, which is now written down.
+
+**The 29/29 collision, kept permanently so it does not become a phantom finding:**
+the 29 routes the serve proof checks (23 site + 5 Lessons + 1 Apps) and the 29
+shelf entries the site deriver leaves to the Lessons estate (52 − 23) are
+different sets that happen to be the same size. Nothing connects them.
