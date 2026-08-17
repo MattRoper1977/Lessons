@@ -15,9 +15,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Generate Phase 0d reports without changing the worktree
+      - name: Generate Phase 0d reports from immutable BASE
         run: |
-          python3 .github/ph1_phase0d_measure.py
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          BASE_WORKTREE="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          SCRIPT="$GITHUB_WORKSPACE/.github/ph1_phase0d_measure.py"
+          (cd "$BASE_WORKTREE" && python3 "$SCRIPT")
+          cleanup
+          trap - EXIT
           test -z "$(git status --porcelain=v1)"
       - uses: actions/upload-artifact@v4
         with:
