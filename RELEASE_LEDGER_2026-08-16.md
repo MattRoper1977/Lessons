@@ -2353,10 +2353,40 @@ emitting `/site.json` while the Lessons serve gate still expects
 `<route>/index.html` behind it, and *every subject has a committed blob* goes red
 for a reason that is not a real defect. **Lessons first, then site.**
 
-**Network legs: UNVERIFIED, with the mechanism named.** `curl` to
-`madebymatt.uk` returns **000 — no egress from this container**. The offline
-legs pass (subject set 6 → 32, every subject has a committed blob, controls both
-ways) and **offline passing is not passing** (R0.20). Nothing is claimed green.
+**Network legs — SUPERSEDED WITHIN THE HOUR, and the correction matters.**
+
+First written as **UNVERIFIED**: `curl` to `madebymatt.uk` returns **000** from
+this container, and offline passing is not passing (R0.20). That was true of
+*this container* and **false of the estate** — the site's own CI has egress, and
+opening PR #167 ran the legs I could not.
+
+**They ran, and they found something.** Run `32044614151` went **red**:
+
+```
+line 10: /index.html: No such file or directory
+```
+
+**That was my breakage.** `agx1-live-verify.yml` resolves every derived route as
+`<slug>/index.html`; route `/` yields an empty slug and then reads the *absolute*
+path `/index.html`. **I changed what `--emit routes` emits without censusing its
+readers** — an R0.16 miss on the exact rule this estate wrote for itself. The
+census, run afterwards and unfiltered, gives **two** consumers: that workflow,
+and `verify_served.mjs` here. **I had enumerated one.**
+
+Fixed at `8e1db2f`: routes resolve properly (`/` → `index.html`, an extension →
+itself, otherwise `<slug>/index.html`), the reachability loop no longer names the
+three now-derived routes by hand — it was checking them twice and printing a
+count that no longer described what ran — and a caption that said *"game
+route(s)"* for a list that is no longer only games.
+
+**The verdict, now measured rather than assumed:** run `32044965854` is
+**SUCCESS**. Reachability returned **200** for `/`, `/games/`, `/site.json` and
+`/Games/games.json`, and the byte comparison is **IDENTICAL for every derived
+route**, the three newly covered ones included. **Live, on production bytes.**
+
+The lesson is not that the fix worked. It is that **the branch looked finished
+when it was red, and looked green when it was unrun** — the site branch had
+*zero* workflow runs until a PR existed to fire them.
 
 ## 7 · The honest tally of this arc — both halves, neither netted against the other
 
