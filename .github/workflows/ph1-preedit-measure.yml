@@ -1,0 +1,67 @@
+name: PH-1 commit pre-edit measurement reports
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-preedit-measure.yml'
+permissions:
+  contents: write
+jobs:
+  commit-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Regenerate immutable-BASE reports, commit as produced, retire transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          BRANCH=pass-ph1-peq-hardening
+          BASE_WORKTREE=/tmp/ph1-base-preedit
+          rm -rf "$BASE_WORKTREE" /tmp/ph1-preedit-v2 /tmp/ph1-preedit-final
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" 2>/dev/null || true
+            rm -rf "$BASE_WORKTREE"
+          }
+          trap cleanup EXIT
+          test "$(git remote get-url origin | sed -E 's#https://github.com/##;s#\.git$##')" = "MattRoper1977/Lessons"
+          git fetch origin main "$BRANCH"
+          test "$(git rev-parse origin/main)" = "$BASE"
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          V2="$GITHUB_WORKSPACE/.github/ph1_preedit_measure_v2.py"
+          FINAL="$GITHUB_WORKSPACE/.github/ph1_preedit_finalize.py"
+          (cd "$BASE_WORKTREE" && python3 "$V2" && python3 "$FINAL")
+          test -s /tmp/ph1-preedit-final/G4_DETECTOR_FINDING.md
+          test -s /tmp/ph1-preedit-final/SIGNOFF_CLASSIFICATION.md
+          grep -q '101' /tmp/ph1-preedit-final/SIGNOFF_CLASSIFICATION.md
+          mkdir -p _passph1
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+
+          cp /tmp/ph1-preedit-final/G4_DETECTOR_FINDING.md _passph1/G4_DETECTOR_FINDING.md
+          git add _passph1/G4_DETECTOR_FINDING.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'PH-1 G4 detector finding: 147 surfaces re-read; 0 lesson edits'
+          fi
+
+          cp /tmp/ph1-preedit-final/SIGNOFF_CLASSIFICATION.md _passph1/SIGNOFF_CLASSIFICATION.md
+          git add _passph1/SIGNOFF_CLASSIFICATION.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'PH-1 P2 analysis: 101 sign-off occurrences bucketed; 0 edits'
+          fi
+
+          git rm -f --ignore-unmatch \
+            .github/ph1_preedit_measure.py \
+            .github/ph1_preedit_measure_v2.py \
+            .github/ph1_preedit_finalize.py \
+            .github/workflows/ph1-preedit-measure.yml
+          if ! git diff --cached --quiet; then
+            git commit -m 'PH-1 transport cleanup: pre-edit measurements committed'
+          fi
+          cleanup
+          trap - EXIT
+          test -z "$(git status --porcelain=v1)"
+          git push origin HEAD:"$BRANCH"
