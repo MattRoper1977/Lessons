@@ -1,0 +1,37 @@
+name: PH-1 G4 and sign-off read-only measurement
+on:
+  push:
+    branches:
+      - pass-ph1-peq-hardening
+    paths:
+      - '.github/workflows/ph1-preedit-measure.yml'
+permissions:
+  contents: read
+jobs:
+  measure:
+    if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: pre-edit measurements' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate reports from immutable BASE
+        run: |
+          set -euo pipefail
+          BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
+          BASE_WORKTREE="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$BASE_WORKTREE" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$BASE_WORKTREE" "$BASE"
+          SCRIPT="$GITHUB_WORKSPACE/.github/ph1_preedit_measure.py"
+          (cd "$BASE_WORKTREE" && python3 "$SCRIPT")
+          cleanup
+          trap - EXIT
+          test -z "$(git status --porcelain=v1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ph1-preedit-measurements
+          path: /tmp/ph1-preedit
+          retention-days: 2
