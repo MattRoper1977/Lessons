@@ -186,7 +186,7 @@ only removing the fix could tell the difference.**
 | **NAV-1 shipped with its markup and none of its CSS**, and the control passed — it asked only whether the link had a non-zero box, which an unstyled inline link has | the lab had a way home with no 44 px target, no focus ring and no print suppression, and a green gate said it matched the convention. `T13` now reads the **live stylesheet** for all three |
 | **`assert_unchanged` crashed instead of reporting** when `T15` could not be built in isolation, its anchor being text `T12` introduces | it declares the dependency now — R0.11 applied to a build rather than to a red |
 
-### And **1 reporting defect of the same family (R0.12)**, counted separately
+### And **2 reporting defects of the same family (R0.12)**, counted separately
 
 Held to a different predicate, because it is a different thing: *a report that
 ran, was true, and buried the finding inside itself.* The **checks that could not
@@ -199,6 +199,7 @@ which is how the prose came to say twelve above thirteen rows.
 | the report that was true and buried it | how it was caught |
 |---|---|
 | `assert_unchanged`'s text-delta report printed the **whole** delta — every authorised string alongside the one that was not — in the same commit as the row above | printing the *difference* instead immediately exposed a mismatch on a **non-breaking space** nobody could see |
+| the zero-check census reported **"12 draft, 0 not"** over rows showing three drafts. The baseline subtraction had been folded into the label — the draft count was derived as `zeroes − gated` *after* `gated` lost its declared entries — so **nine PRs recorded as open findings were reported as an expected state**. The gate never misbehaved; only the sentence describing it did | found by reading the job log of the run that produced it, on PR #124, rather than its green tick — the split is now read from the rows by one function shared with its control, and the control reproduces the retired arithmetic and requires it to disagree |
 
 **The button label and the overlap predicate are worth reading twice.** In both
 the *fix* was fine and the *check* was wrong, and only the removal matrix could
@@ -691,6 +692,14 @@ four instances of it, each found by the thing built to find the last one:
 
 ## Merged is not served — and it is still not proven
 
+> **SUPERSEDED 2026-08-17, and left standing (R0.13).** This entry was true when
+> written and is the record of why the instrument exists. Two things below have
+> since changed and are corrected at the end of this ledger, not here: serving
+> **is** now proven on `main` (run `32022110081`), and the network legs described
+> below have been removed from `verify_fieldops_served.mjs` — they treated the
+> Studio's `301` as a failure. `tools/verify_served.mjs` holds R0.4 for these
+> routes now; what remains in the older file is the declaration check, D1.
+
 `a46d9b9` and `2e2de98` merged. **Nothing has yet confirmed the Pages build
 serves them.** `tools/verify_fieldops_served.mjs` is the instrument, and it is
 written because a human tapping a URL is not a gate and does not run again next
@@ -786,8 +795,10 @@ a log scrape for every future run.
 
 ## Still open, and named so it cannot be inferred
 
-- The serve proof has **not yet run against production**. It runs on push to
-  `main`, weekly, and on dispatch; from this container every origin answers 403.
+- ~~The serve proof has **not yet run against production**.~~ **SUPERSEDED
+  2026-08-17** — it ran on push to `main` and passed; the result and its run id
+  are at the end of this ledger. Left standing rather than rewritten: it was true
+  when written, and the container's 403 that prompted it is still true.
 - **Twelve PRs with no checks.** The gate exists; the twelve are not fixed.
 - B2, above.
 - `close-fixes/combined-614f4d8` — see the branch table.
@@ -911,18 +922,128 @@ go red there — re-run against main's tool and main's ledger, not quoted from t
 branch: prose number changed → red, row added → red, row removed → red, restored
 → green. Prose N=12, table 12 rows, sub-counts 10+1+1.
 
+## Addendum, 2026-08-17 — one tool re-expressed, and a census that under-reported
+
+Post-close cleanup of the one item this arc left in a wrong state rather than
+merely unfinished.
+
+**`verify_fieldops_served.mjs` was giving a wrong verdict, not just a redundant
+one.** It treated any `3xx` as a FAIL, which is what reddened the Teacher Studio
+at `b6f92ca` — the `301` there is the user Pages site redirecting `github.io` to
+the custom domain, and the bytes at the far end are identical. Two tools fetching
+the same routes with different opinions about redirects is how an estate acquires
+a verdict that depends on which gate you ask. **The census under R0.16 came back
+non-empty** (this ledger, the file, and `.github/workflows/fieldops-p2-and-sweep.yml`
+line 194), so it is re-expressed and not deleted: the network legs are gone, the
+declared base URLs went with them, and what is kept is **D1** — the builder's
+`LABS[]` and the placed directory naming the same files — because that is the one
+check here that nothing else in the estate makes.
+
+**D1 had never been shown able to fail.** The self-test asserted that D1 said
+PASS, which is not the same thing, and D1 is now the file's only reason to exist.
+A control is added: declare a lab that was never placed, and D1 must go red *and
+name it*. It fires. The mutation is applied to the **builder**, restored in a
+`finally` — deleting a placed lab to prove a point would be a destructive check
+on a shipped file (R0.14), and the builder reaches the same verdict without
+touching one.
+
+**And the census itself was wrong first.** My initial reader census used a
+filtered grep and missed the workflow reference under `.github/` — it found two
+readers where there are three. An unfiltered grep found it. For a census whose
+whole job is to gate removals, **under-reporting is the dangerous direction**: it
+is the error that reads as permission. R0.16 censuses are run unfiltered.
+
+## Addendum, 2026-08-17 (second) — the gap the 3xx fix opened, and where controls may run
+
+**Permitting a redirect is not asserting where it ends.** The old tool failed the
+Studio for answering `301` at all; removing that made the chain legal and compared
+bytes at the far end. Correct, and it opened the other side: **a chain terminating
+on an origin nobody asserted would have had its bytes compared there, and a match
+would have read as SERVED.** A mirror or a re-pointed CNAME is precisely the case
+where the bytes plausibly *do* match, so this was a hole shaped like a pass.
+
+- **Control (e)** — a terminus outside the permitted set is **RED, naming both**
+  the origin reached and the ones permitted. Checked **before** the byte
+  comparison, because after it the mirror has already been called SERVED.
+- **The permitted set is derived, never hand-listed:** the canonical domain from
+  the site repo's `CNAME`, and `<owner>.github.io` from that repo's own remote.
+  A set that cannot be derived is **INCONCLUSIVE** — an empty permitted set would
+  reject every route, which is as useless as passing every route.
+- **The control is a matched pair in one check**, deliberately: the rogue
+  terminus must be rejected *and* both genuine origins accepted. Asserting only
+  the rejection would be satisfied by a predicate that rejects everything.
+- **A stale claim removed on the way past:** the comment above the origin
+  constants said they "are not derivable from any file in these trees". The
+  site's `CNAME` had always falsified that, and the false claim is what made a
+  hand-listed destination set look like the only option.
+
+**Where controls may run, which turned out to be the more useful finding.** The
+live verdict needs the branch deployed, and a PR branch is not — that is why the
+verdict leg skips there. **The controls never needed it.** (a) asks a
+known-absent route for a `404`; (b) asks a real route for bytes and asserts they
+differ from a deliberately mutated hash. Both use production as a *fixture*, not
+as the subject, and neither claim changes with the branch. `--controls-only` now
+runs **all five on every event, pull requests included**. Until this, the only
+controls a PR could fire were the offline three — in the workflow written because
+gates were not running where they were needed.
+
+**D1's `finally`, measured rather than believed.** Both destructive controls in
+`verify_fieldops_served.mjs` rewrite a shipped file and restore it in a `finally`.
+The builder is now hashed before and after and the equality asserted — a `finally`
+taken on trust is the same species as every unfired check in the table above.
+
 ## What remains open, by name
 
-- **The serve result itself.** The gate exists, its four controls fire, and it
-  has never reached a live origin. It closes on the next push to `main` or one
-  dispatch — and if CI egress also fails, it stays UNVERIFIED with the mechanism
-  named rather than becoming green.
+- ~~**The serve result itself.**~~ **CLOSED 2026-08-17 — CI-derived, on `main`.**
+  Run [`32022110081`](https://github.com/MattRoper1977/Lessons/actions/runs/32022110081),
+  job **`Merged is not served - the placed labs and the Studio`** (id `95363779146`),
+  on `main` at `0352995`: **29 served byte-identical · 0 red · 0 inconclusive, of
+  29 derived · content-type 29 as expected, 0 not**, and all four controls FIRED
+  in the same run. Read from the job log, not from a green tick. The Studio
+  answers through a named chain —
+  `github.io/Matt-s-Apps-/FieldOps_Teacher_Studio.html -> 301 -> madebymatt.uk/…`
+  — and the bytes at the destination match, which is the case the older tool got
+  wrong.
+
+  **The locality, stated (R0.20), because this entry and "verified locally only"
+  were both true at once and a reader could fairly call that a contradiction.**
+  They have different subjects. This entry is about **what `main` serves**, and
+  its every figure came from CI. The "locally only" caveat was about **a branch's
+  diff** — the re-expression and its controls — which had never run anywhere but
+  a container. Neither claim covers the other's subject, and the entry is
+  qualified rather than downgraded because nothing in it was locally derived.
+
+  **The predicate for 29 (R0.8), which this number has never carried:** 23 site +
+  5 lessons + 1 apps.
+  - **site 23** — every href in the canonical shelf (`MattRoper1977/Games`
+    `games.json`, **52 entries**) that the site's own P0 deriver buckets as a
+    site-served game route with a directory behind it. The other **29** shelf
+    entries are handed to the Lessons estate and are not site routes.
+  - **lessons 5** — the **4** labs `tools/fieldops/build.mjs` names in `LABS[]`,
+    plus **1** hub, read off those labs' own NAV-1 link rather than assumed.
+  - **apps 1** — the same builder's `STUDIO`.
+  - **Residue, named and not checked by this gate:** the deriver's five
+    declared-not-derived site routes — `/`, `__FULL_HOME__`, `/games/`,
+    `/site.json`, `/Games/games.json`. The serve proof inherits that exclusion.
+  - **A collision worth naming before it costs someone an afternoon: the 29
+    served routes and the 29 shelf entries left to Lessons are different sets
+    that happen to be the same size.** 23 + 5 + 1 = 29 and 52 − 23 = 29. Nothing
+    connects them.
 - **Twelve zero-check pull requests**, declared in `tools/zero_check_baseline.json`
   and ratcheted so the thirteenth reds. Recorded, not repaired.
 - **B2 conformance** — abandoned, no result survives, and the ledger says so.
-- **`verify_inline_exit.mjs`** — the gate that proves a child's way out of eleven
-  games is keyboard-reachable. It runs in two named site workflows; what it does
-  not have is a Lessons-side trigger for the three Lessons games it judges.
+- ~~**`verify_inline_exit.mjs`**~~ **WIRED 2026-08-17.** The gate that proves a
+  child's way out of a game is keyboard-reachable judges **14 routes across both
+  estates, three of which live here** — `Off_Brand`, `Charcoal`, `Axiom_Shift`.
+  It ran in two site workflows only, and site workflows fire on site paths: a
+  change to one of those three games in *this* repository could have broken the
+  way out and no gate would have noticed. Nothing blocked it — the tool already
+  accepted `--lessons`; what it lacked was a caller on this side. Added as its
+  own job in `fieldops-p2-and-sweep.yml`, which carries no `paths:` filter, so
+  every change here matches it. Measured before wiring, across both estates:
+  **529 passed · 0 failed**, so this adds a gate rather than a red. `/emberwild/`
+  is **judged, not excluded** — issue **#149** is RESOLVED, and resolved in the
+  game (Tab is no longer a game key) rather than by declaring an exemption.
 - **VSL v0.4.1** — its own order. v0.4 still carries all six V-findings verbatim,
   including **V2: pupil name and notes in the URL that Share hands out, at an
   SEMH provision.**

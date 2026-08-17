@@ -196,6 +196,23 @@ jobs:
             --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
             | tee -a "$RUNNER_TEMP/served-selftest.txt"
 
+      # ALL FIVE CONTROLS, ON EVERY EVENT INCLUDING A PULL REQUEST.
+      # The live VERDICT needs the branch deployed, and a PR branch is not - that
+      # is why the leg below is skipped there. The CONTROLS do not: (a) asks a
+      # known-absent route for a 404 and (b) asks a real route for bytes and
+      # asserts they differ from a deliberately mutated hash. Both use production
+      # as a fixture, and neither claim changes with the branch.
+      #
+      # Without this step the only controls a pull request could fire were the
+      # offline three, and this workflow exists because of gates that never ran
+      # where they were needed. An unreachable origin here is INCONCLUSIVE (exit
+      # 2), never a failed control - a runner fact must not wear a gate's verdict.
+      - name: All five controls fire — including on a pull request
+        run: |
+          node tools/verify_served.mjs --controls-only \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            | tee "$RUNNER_TEMP/served-controls.txt"
+
       # The live legs only where the answer can be true. A PR branch is not
       # deployed, so fetching production from one compares the live estate
       # against a tree that is not live - it would go red for being a PR.
@@ -224,6 +241,8 @@ jobs:
             cat "$RUNNER_TEMP/served.txt" 2>/dev/null || echo '(the live legs do not run on a pull request - a PR branch is not deployed)';
             echo '```'; echo '### Offline controls'; echo '```';
             cat "$RUNNER_TEMP/served-selftest.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### All five controls'; echo '```';
+            cat "$RUNNER_TEMP/served-controls.txt" 2>/dev/null || echo '(did not run)';
             echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload
@@ -243,6 +262,15 @@ jobs:
 
       # The generalisation of the #120 finding. A green tick on a PR nobody
       # checked is indistinguishable from a green tick on a PR that passed.
+      # R0.15 for the REPORT, not just the gate. The census printed "12 draft,
+      # 0 not" over rows showing three drafts: the baseline subtraction had been
+      # folded into the label, so nine declared non-draft findings were counted
+      # as an expected state. The gate was right the whole time; the sentence
+      # describing it was not. This control needs no token and no network, so it
+      # fires on every event including a pull request.
+      - name: CONTROL - the draft/non-draft split is read from the rows
+        run: node tools/pr_check_census.mjs --self-test | tee "$RUNNER_TEMP/pr-census-selftest.txt"
+
       - name: Census across the three estates
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -273,5 +301,56 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pr-census
-          path: ${{ runner.temp }}/pr-census.txt
+          path: ${{ runner.temp }}/pr-census*.txt
+          if-no-files-found: error
+
+  inline-exit:
+    name: The way out of a game is keyboard-reachable - both estates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # THE GATE LIVES IN THE SITE REPO AND JUDGES THREE GAMES THAT LIVE HERE.
+      # It was hand-run only: the site's workflows fire on site paths, so a change
+      # to Games/Off_Brand.html, Games/Charcoal.html or Games/Axiom_Shift.html in
+      # THIS repository could break a child's way out of a game and no gate would
+      # notice. The tool already accepts --lessons; what it never had was a caller
+      # on this side. This is that caller.
+      #
+      # It is a separate job so a red here is attributable to this gate rather
+      # than folded into the FieldOps build.
+      #
+      # /emberwild/ is judged, not excluded: issue #149 is RESOLVED and was fixed
+      # in the game (Tab is no longer a game key), not by declaring an exemption.
+      # The region-only routes are held to carrying the region markers AND to
+      # carrying no hud.js tag, so the exemption is audited rather than free.
+      - name: Check out the site estate, which holds the instrument
+        run: git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site"
+
+      - name: Install the browser the tab walk needs
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Every exit is reachable, named, and 44x44 - across both estates
+        run: |
+          cd "$RUNNER_TEMP/site"
+          npm install --no-save playwright
+          node tools/verify_inline_exit.mjs --lessons "$GITHUB_WORKSPACE" \
+            | tee "$RUNNER_TEMP/inline-exit.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Inline exit, both estates'; echo '```';
+            tail -25 "$RUNNER_TEMP/inline-exit.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inline-exit
+          path: ${{ runner.temp }}/inline-exit.txt
           if-no-files-found: error
