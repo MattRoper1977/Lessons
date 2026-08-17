@@ -1506,10 +1506,10 @@ The line above that reads `| **R0.24** | *unallocated — see above* | — | —
 | id | rule | provenance | enforced by |
 |---|---|---|---|
 | **R0.20** | evidence has a locality; CI green and local green are different claims | the D1 control proven only on a branch whose push triggered nothing | **unenforced** — convention |
-| **R0.21** | a retry loop classifies before it repeats | four non-fast-forward retries; then four retries of a legible `HTTP 403` inside the run that ratified the rule | **unenforced** — and demonstrably so |
+| **R0.21** | a retry loop classifies before it repeats | four non-fast-forward retries; then four retries of a legible `HTTP 403` inside the run that ratified the rule | ~~**unenforced** — and demonstrably so~~ **ENFORCED 2026-08-17** — `pr_check_census.mjs`'s `api()` retries `429/5xx` and dropped sockets only, and **never** `401/403/404`; the self-test asserts the 401 stops at exactly one attempt |
 | **R0.22** | a failure on the default branch reaches a person by a mechanism, not by inspection | runs `32017557268`, `32018424063`, both found by looking | `watch-main.yml` in mechanism; **the human leg does not exist** |
 | **R0.23** | a pattern states its scope and prints its match set before acting | a filtered grep; `git tag -l` in the wrong repo; `pkill -f` killing its own wrapper | partly — the watch and `--verify-trigger-list` print scope and match set; **elsewhere unenforced**. *It is also what made the VSL stop a measurement rather than a hunch* |
-| **R0.24** | **every gate ships a true-negative control — a known-good subject that must come back green** | a control block that only demonstrated reds produced the watch's first false positive | **unenforced** — no mechanism yet asserts it across the estate; its first enforcement is the VSL gate suite, which is blocked |
+| **R0.24** | **every gate ships a true-negative control — a known-good subject that must come back green** | a control block that only demonstrated reds produced the watch's first false positive | ~~**unenforced** … its first enforcement is the VSL gate suite, which is blocked~~ **PARTLY ENFORCED 2026-08-17** — that suite is no longer blocked: it ran at **6 reds fired, 7 greens returned**, and the matcher and the fixture check each refuse to report unless every control fires both ways. Across the estate as a whole, still **unenforced** |
 | **R0.25** | the write leg is split from the judge, and every appended line carries run id, verdict and predicate | run `32029976055` wrote a false finding into this document and pushed it | **enforced by withdrawal** — both conditions false, so the write leg is dry-run and the job is `contents: read` |
 | **R0.26** | a rule lands as a mechanism or it does not land | R0.16's amendment violated 20 minutes after being recorded; R0.21 violated inside its own ratifying run | **this table** — every rule carries its enforcement or the word `unenforced` |
 | **R0.27** | a document must not contain a control token in an executable position | a squash message described the skip-ci guard and included the literal token; `210e6cc` got no CI run at all | partly — the token appears nowhere in `.github/workflows/`; in commit messages **unenforced** |
@@ -1517,8 +1517,41 @@ The line above that reads `| **R0.24** | *unallocated — see above* | — | —
 | **R0.29** | **no live-derived value is copied into a static document** | the soak counter: written as *1 of 10*, and every commit correcting it moves the count again | **unenforced** — the tool derives and prints it on every run, and the ledger's figure is a dated snapshot by construction |
 | **R0.30** | **an order names where its subject lives, and proving reachability is its first act — before scope, before gates, before anything** | the VSL run order specified its subject by bytes, lines, sha256 and bench count, and never said where it was; it has only ever existed as a chat upload | **unenforced** — its mechanism would be an order template that cannot omit a location |
 
-**Seven of eleven are `unenforced` or only partly enforced.** That is the measured
-state, and under R0.26 it means seven of these rules have not yet landed.
+~~**Seven of eleven are `unenforced` or only partly enforced.**~~ **SUPERSEDED
+2026-08-17 — and the way it was written was the defect, not the number.**
+
+A count of enforcement is a **live value**, and this one was asserted as a static
+claim in a document (R0.29 applied to the register itself). It went wrong the
+moment R0.21 landed as a mechanism, and it will go wrong again on every future
+rule that gains one.
+
+**Dated snapshot, 2026-08-17 — three of eleven fully enforced (R0.21, R0.25,
+R0.26); eight `unenforced` or only partly so.** R0.21 moved to enforced today;
+R0.24 moved from unenforced to partly.
+
+**How to re-derive it, and why it is not a one-line grep.** The first attempt at
+this replacement published exactly that — `grep -c … unenforced` — and it was
+wrong twice over, which is worth keeping rather than quietly fixing:
+
+- the register appears **twice** in this ledger, an earlier partial snapshot and
+  the canonical id-ordered table below, so an unscoped grep counts 20 rows where
+  there are 11;
+- the word `unenforced` also appears **descriptively** — R0.26's own verdict cell
+  reads *"every rule carries its enforcement or the word `unenforced`"* — so a
+  naive match calls an enforced rule unenforced. R0.22 fails the other way: it is
+  only partly enforced (the human leg does not exist) and never uses the word.
+  The two errors happened to cancel to the same total, which is exactly how a
+  wrong method survives.
+
+**So the derivation is stated in words, because the rows are prose and prose does
+not grep:** read the **"enforced by"** cell of each row in *R0.20 – R0.30, in id
+order* below, ignore any text inside `~~strikethrough~~` because that is
+superseded, and count the cells whose live verdict is `unenforced` or `partly`.
+Eleven rows, one pass, no tooling.
+
+**Any figure in prose is a snapshot with a date on it, and a snapshot without a
+date is a claim that decays.** That is the whole of R0.29, applied to the
+register that records R0.29.
 
 ## The R0.17 violation, recorded
 
@@ -2219,3 +2252,174 @@ standard is intact; only the unscoped task is retired.
 4. **PLANS-3 close-out** — the four deliverables, the sensitive uploads, the GROW W4A correction in both copies
 5. The **29 August Planning/ reconvergence**
 6. **The VSL paper read**, which is what unlinks placement
+
+---
+
+# 2026-08-17 · Finalise — the closing record of this arc
+
+Dated supersession. Nothing above is rewritten.
+
+## 1 · The arc in one line, kept verbatim
+
+> **same 301, same destination, opposite verdict — the deployment never changed,
+> the judgement did.**
+
+## 2 · The patch's residue, kept verbatim
+
+> **It stops new links carrying a child's name and reaches none of those already
+> pasted, bookmarked or screenshotted.** Those are gone, and no code change
+> retrieves them.
+
+## 3 · R0.31 — a test fixture in a public repository is published data
+
+| | |
+|---|---|
+| **R0.31** | **a test fixture in a public repository is published data.** Canaries, samples and placeholder names are real content to every reader who finds them — name them so nobody can mistake one for a person |
+| provenance | `CANARY_PUPIL_Jamie_Roper` — a plausible first name carrying **Matt's own surname**, in a **public** repo, **inside the file about not leaving pupil names where they don't belong.** Self-found, replaced, gates re-run at 6 red / 7 green |
+| enforced by | **`tools/verify_fixture_names.mjs`**, wired into `fieldops-p2-and-sweep.yml` and running on every PR. Both directions on every run |
+
+**The predicate, stated so it can be argued with:** strip the fixture marker,
+count Titlecase words — two or more is person-shaped — plus a short surname list.
+Vendored directories are skipped, because a library's author metadata is its
+provenance rather than our fixture and rewriting it would be false attribution.
+
+**Its stated limit, recorded rather than left to be discovered:** it catches
+person-shaped **names**, not plausible pupil **prose**. The sibling canary
+`CANARY_NOTES_felt_anxious…` is all lower case, passes this check, and still
+reads as something a real child wrote about themselves. It was replaced by hand
+for that reason. A check claiming to cover it would be claiming to judge whether
+a sentence sounds like a child, which this does not do.
+
+**The check caught a defect in itself before it landed.** Its token pattern
+required a character **before** the marker, so a token *starting* with `CANARY`
+never matched — it would have reported the tree clean while the exact string it
+was written for sat in it. Found by the seeded-file control, which is why that
+control seeds a real file instead of only testing the predicate: **judging a
+string correctly proves the predicate, not the check.**
+
+## 4 · The sweep — scopes printed, three-way judgement
+
+| scope | files | fixture-marker hits | person-shaped |
+|---|---|---|---|
+| Lessons `e6813de` | 2,112 | 46 files | **1 token — the canary, already replaced** |
+| site `f5848f5` | 521 | 13 files | **0** |
+| Apps `2e2de98` | 84 | 4 files | **0** |
+
+No path filter, no type filter, `.git` excluded as not-content. Everything else
+judged **clearly synthetic**: `SAMPLE_ALPHA_TO_COVERAGE`, `HALF_SAMPLE_RATE`,
+`FIXTURE_deleted`, `PLACEHOLDER`. `pupilName` / `learnerName` are **field
+identifiers, not values** — no seeded roster exists in any of the three.
+
+**Two things found that are not fixtures, reported rather than acted on:**
+
+- Vendored libraries carry their authors' real names and emails —
+  `uas/vendor/jspdf/`, `Games/vendor/three-0.160.0/`. **That is their provenance,
+  and rewriting it would be false attribution.** Skipped by the check, by design.
+- **`londonmatt1977@hotmail.co.uk` appears once**, in
+  `reports/agx1/CHANGESET.md` in the site repo, as a git commit-author line. It
+  is Matt's own address in Matt's own public repo, and it is distinct from the
+  published contact address. **Named because a privacy sweep that finds it and
+  says nothing is a filtered sweep.** Matt's to judge; not touched.
+
+**The strings are already in past commits and this sweep does not reach them** —
+exactly as the patch's own residue was recorded. It stops new ones.
+
+## 5 · The enforcement count is now a dated snapshot
+
+`R0.21` landed as a **mechanism** today, so *"seven of eleven unenforced"* became
+false the moment it did. Superseded: **three of eleven fully enforced, eight
+unenforced or partly, 2026-08-17**, with the derivation **stated in words**
+because the first attempt published a one-line grep that was wrong twice — the
+register appears twice in this ledger, and the word `unenforced` also appears
+descriptively inside R0.26's own verdict. **The two errors cancelled to the same
+total, which is how a wrong method survives.**
+
+## 6 · The route branches — NOT merged, and why
+
+**Neither was merged, and one of them could not be.**
+
+| branch | state |
+|---|---|
+| site `claude/cover-infrastructure-routes` | **had zero workflow runs.** Pushed as a branch with no PR, so nothing fired. **Not green — unrun**, which §9 forbids merging |
+| the Lessons half (`verify_served.mjs`) | green inside PR #132, but that PR is the whole working branch, not a route branch |
+
+**Action taken instead of merging:** site **PR #167** opened, so the required
+green can exist. The matcher predicts **3 of 31** workflows fire on it — the
+three with no `paths:` filter.
+
+**The sequencing constraint, which merging blind would have broken.** The halves
+are a **pair and the order matters**: if the site half lands first, `main` starts
+emitting `/site.json` while the Lessons serve gate still expects
+`<route>/index.html` behind it, and *every subject has a committed blob* goes red
+for a reason that is not a real defect. **Lessons first, then site.**
+
+**Network legs: UNVERIFIED, with the mechanism named.** `curl` to
+`madebymatt.uk` returns **000 — no egress from this container**. The offline
+legs pass (subject set 6 → 32, every subject has a committed blob, controls both
+ways) and **offline passing is not passing** (R0.20). Nothing is claimed green.
+
+## 7 · The honest tally of this arc — both halves, neither netted against the other
+
+**Checks found unable to fire — they reported success while asserting nothing:**
+
+1. `FX.init()` inside a bare catch, above its own `const` — the particle layer never drew, from the day it was written.
+2. `wire_lessons.py` — a scratch copy given genuinely stale content passed it, exit 0.
+3. The nine zero-check PRs — recorded as *"filter miss or no applicable workflow"*, a guess with an "or" in it standing in for a cause.
+4. The five infrastructure routes — named in a residue line and fetched by nothing, because the gate called `--emit routes` and the residue had its own mode.
+5. The census gate — exit 2 twice, permanently inconclusive, occupying a working check's slot.
+6. `verify_fixture_names.mjs` — its own token pattern could not match a token starting with the marker. **Caught before it landed, by its own control.**
+
+**Checks that fired wrongly — they reported failure that was not there:**
+
+1. The watch's first false positive — a control block that only ever demonstrated reds.
+2. The watch's second — dormancy read as failure.
+3. The watch's third — pending read as no-verdict.
+4. The FieldOps serve check — any `3xx` treated as FAIL, reddening a Teacher Studio whose `301` was the user Pages site redirecting to the custom domain with identical bytes at the far end.
+5. The census's own reporting — *"12 draft, 0 not"* printed over rows showing three drafts.
+6. My bench count in the VSL intake — **6 of 13**, read from manifest prose against runtime labels. It looked exactly like a stop. **The count was wrong, not the file.**
+
+**Six and six.** They are not netted, because they fail in opposite directions and
+cost differently: a check that cannot fire costs you the thing it was watching; a
+check that fires wrongly costs you the credibility of every other green. **The
+first kind is discovered by reading the artefact. The second is discovered by
+disbelieving the summary.** This arc did both, and that habit is the only durable
+output here — the gates will be rewritten, the rules renumbered, the files moved.
+
+## 8 · The final board — every item, its owner, its unblocking action
+
+**The estate's:**
+
+| item | owner | unblocking action |
+|---|---|---|
+| VSL's eight findings + P2's remainder | next order | **the two VSL order documents reaching a session** |
+| the two VSL order documents | **Matt** | attach them to a session; they go in `_orders/` unedited |
+| site PR #167 (routes) | next session | its CI going green, then merge **after** the Lessons half |
+| the Lessons half (PR #132) | next session | merge decision on a green PR |
+| the serve gate's network legs | next session | a run **with egress**; UNVERIFIED until then |
+| VSL placement | **Matt** | the paper read |
+| the matcher | next session | soak 10 of 10, then a true-negative **at the wiring point** |
+| PyYAML in CI | next session | a setup step, only when the matcher is wired |
+| the five held PRs | **Matt** | each hold lifting |
+| branch `claude/close-order-seven-items-wdfhdf` | **Matt** | the repo setting |
+| the watch's human leg | **Matt** | the account notification setting |
+| `londonmatt1977@hotmail.co.uk` in `reports/agx1/CHANGESET.md` | **Matt** | his call — it is his address in his repo |
+
+**Retired here, because neither an owner nor an action could be given:**
+
+- **B2 conformance** — retired in the previous entry. Nobody can state its scope;
+  the governing order is not on disk and nothing names the three apps.
+- **The site tag `close-fixes/combined-614f4d8`** — retired by proof: it exists
+  nowhere, the annotation died with its container, and `614f4d8` was never
+  depending on it.
+
+**Nothing else is left as a line with no owner.** Every row above has both.
+
+**Matt's list, none of it attempted:**
+
+1. **Revoke the GitHub token** — two were pasted into a chat session in July. **Security, and the oldest item on this board.**
+2. **Attach the two VSL order documents** — what unblocks the eight findings.
+3. **The VSL paper read** — what unlinks placement.
+4. Repo → Settings → General → automatically delete head branches.
+5. Account → Notifications → Actions → failed workflows only, Watching on the repo.
+6. PLANS-3 close-out.
+7. The 29 August Planning/ reconvergence.
