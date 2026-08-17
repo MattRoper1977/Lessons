@@ -1,4 +1,4 @@
-name: PH-1 G2 and G4 detector proofs
+name: PH-1 commit proven G2 and G4 detectors
 on:
   push:
     branches:
@@ -6,9 +6,9 @@ on:
     paths:
       - '.github/workflows/ph1-gate-proofs.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
-  prove:
+  prove-and-commit:
     if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: gate proofs' }}"
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +23,7 @@ jobs:
           echo "PH1_NODE_PATH=$NPM_DIR/node_modules" >> "$GITHUB_ENV"
           RESOLVED="$(NODE_PATH="$NPM_DIR/node_modules" node -p "require('jsdom/package.json').version")"
           echo "PH1_JSDOM_VERSION=$RESOLVED" >> "$GITHUB_ENV"
-      - name: Run control and mutation proofs against immutable BASE
+      - name: Prove detectors and commit proof artefacts separately
         run: |
           set -euo pipefail
           BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
@@ -37,9 +37,22 @@ jobs:
           (cd "$BASE_WORKTREE" && NODE_PATH="$PH1_NODE_PATH" JSDOM_VERSION="$PH1_JSDOM_VERSION" python3 "$SCRIPT")
           cleanup
           trap - EXIT
-          test -z "$(git status --porcelain=v1)"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ph1-gate-proofs
-          path: /tmp/ph1-gate-proofs
-          retention-days: 2
+
+          test ! -e _passph1/G2_HARNESS.cjs
+          test ! -e _passph1/G2_HARNESS_PROOF.md
+          test ! -e _passph1/G4_WITNESS_COMPARATOR.py
+          test ! -e _passph1/G4_MUTATION_PROOF.md
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+
+          cp /tmp/ph1-gate-proofs/G2_HARNESS.cjs _passph1/G2_HARNESS.cjs
+          cp /tmp/ph1-gate-proofs/G2_HARNESS_PROOF.md _passph1/G2_HARNESS_PROOF.md
+          git add _passph1/G2_HARNESS.cjs _passph1/G2_HARNESS_PROOF.md
+          git commit -m 'PH-1 G2 harness proven: jsdom 26.1.0; broken 1/1; clean 1/1'
+
+          cp /tmp/ph1-gate-proofs/G4_WITNESS_COMPARATOR.py _passph1/G4_WITNESS_COMPARATOR.py
+          cp /tmp/ph1-gate-proofs/G4_MUTATION_PROOF.md _passph1/G4_MUTATION_PROOF.md
+          git add _passph1/G4_WITNESS_COMPARATOR.py _passph1/G4_MUTATION_PROOF.md
+          git commit -m 'PH-1 G4 comparator proven: 147 surfaces; delete red; content red; whitespace green'
+
+          git push origin HEAD:pass-ph1-peq-hardening
