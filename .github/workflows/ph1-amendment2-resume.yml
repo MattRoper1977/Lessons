@@ -17,9 +17,31 @@ jobs:
           mkdir -p /tmp/ph1-jsdom
           npm install --prefix /tmp/ph1-jsdom --no-save --ignore-scripts --no-audit --no-fund jsdom@26.1.0
           echo "NODE_PATH=/tmp/ph1-jsdom/node_modules" >> "$GITHUB_ENV"
-      - name: Reconstruct verified Amendment 2 executor
+      - name: Reconstruct and patch verified Amendment 2 executor
         run: |
           cat .github/ph1_a2_payload_*.b64 | base64 -d | gzip -d > /tmp/ph1_amendment2_execute.py
+          echo '547692ed4f5a6d85c883f7f8ab13504eef5bbac1ae47d9558e62869a84c0c141  /tmp/ph1_amendment2_execute.py' | sha256sum -c -
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/ph1_amendment2_execute.py')
+          text = path.read_text()
+          old = '''            if re.search(
+                          r"(?i)\\b(?:no|not|never|without|zero|none)\\s+(?:an?\\s+)?(?:L2|level\\s*2)?\\s*registration\\b|"
+                          r"(?i)\\b(?:L2|level\\s*2)\\s+(?:is\\s+)?(?:stretch\\s+)?(?:language\\s+)?only\\b|"
+                          r"(?i)\\bnever\\s+a\\s+registration\\b",
+                          window,
+                      ):'''
+          new = '''            if re.search(
+                          r"\\b(?:no|not|never|without|zero|none)\\s+(?:an?\\s+)?(?:L2|level\\s*2)?\\s*registration\\b|"
+                          r"\\b(?:L2|level\\s*2)\\s+(?:is\\s+)?(?:stretch\\s+)?(?:language\\s+)?only\\b|"
+                          r"\\bnever\\s+a\\s+registration\\b",
+                          window,
+                          flags=re.I,
+                      ):'''
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one affirmative_l2 patch target, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
           echo '2031385dcd241a8dc3a8415c615266498299b403f7d70197642b20eb2b08d7fd  /tmp/ph1_amendment2_execute.py' | sha256sum -c -
           python3 -m py_compile /tmp/ph1_amendment2_execute.py
       - name: Execute PH-1 Amendment 2
