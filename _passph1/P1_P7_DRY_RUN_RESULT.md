@@ -1,21 +1,21 @@
 # PH-1 P1–P7 dry-run result
 
-- Input branch commit: `7a9bb09fd517f80014f2688622ae034303698225`
+- Input branch commit: `f060fb9cbab8c1dd16796aaae73bc4828fd90b94`
 - Runtime executor SHA-256: `20973939a9527769ba02c19bf1e2e7d529c809f4317b4e493b7ca5912dac823a`
 - Exit code: **0**
 - Result: **PASS**
 
 ## Simulated commits
 
-- **P1:** `39b7172addd52a0f112f2f9ebec42bdd95767b76`
-- **P2:** `a8b97bc21df5752ff7ac98a3d48953bcb292435e`
-- **P3:** `907aa47db7e235fd08acdcaebc995e7535e3723c`
-- **P4:** `043bb848ce800c16ba3b050d3f3a56445dc08577`
-- **P5:** `4fb7a135c8dd196875f416886c2aa0e1cbca69c0`
-- **P6:** `6f0169c430f62e4be596f105aababb5cc1f11466`
-- **P7:** `7798e9b02dbc97023f7e28584f141485432f7681`
+- **P1:** `c19ce4a52cdfc30606e7957a4895733a495ef86d`
+- **P2:** `49242e26cc025fe5b8a550f472d610022813b013`
+- **P3:** `b38f7a5fb075815c9554ba91ce4b212266278005`
+- **P4:** `6eeb213b27e7eb107f48b3438b5f5bd961108770`
+- **P5:** `32f1c78df816966d0c2c5ac8407dba1b100e8c4d`
+- **P6:** `9cdc09b0d280cdcdd9c7ab3703722b5c3aae6271`
+- **P7:** `579af857c5ec5d6a1365818ff98aae9f5a7a9969`
 
-- Simulated tip: `7798e9b02dbc97023f7e28584f141485432f7681`
+- Simulated tip: `579af857c5ec5d6a1365818ff98aae9f5a7a9969`
 - Changed files: **27**
 - Witness comparator: **PASS** — BASE 145 / simulated tip 145
 - Print-section and reduced-motion invariants: **PASS**
