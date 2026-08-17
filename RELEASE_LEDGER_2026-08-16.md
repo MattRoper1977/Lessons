@@ -1580,3 +1580,236 @@ out; the field's own caption says *"Name for print/export only."* At an SEMH
 provision.** It is the highest item on the board, it is the only one on the board
 that is not a quality issue, and **it is still unfixed.**
 
+
+---
+
+# 2026-08-17 · Close-everything pass
+
+Only what this run measured. Every figure below is dated and derived here; none
+is copied forward from a previous section.
+
+## 1 · VSL v0.4.1 — **STOPPED, and the reason is not the artefact**
+
+**The intake passed in full. The run order does not exist.**
+
+`MASTER_PROMPT_VSL_Intake_and_Ledger_2026-08-17.md` and
+`MASTER_PROMPT_VSL_v0.4.1_RUN_2026-08-17.md` are **not in this session's
+uploads, not in any of the three repositories, and not on disk anywhere
+reachable.** The only mention of either name in the estate is this ledger. §2 of
+the close-everything order says to execute them *"without restating or amending
+them"*, from §1.2 onward — so the phases they name (P0, P2, P3, P8.0, the four
+path tests, the 2,048 predicate, the removal matrix) cannot be run, and the stop
+conditions written against those phases cannot be honoured either. **Inventing
+substitutes would be precisely the amendment the order forbids**, and a gate I
+invented could not be shown red on a revert I also invented.
+
+Stopped, named, and nothing was placed. **R0.28: an absence is not a result.**
+
+### What the intake did establish — §2.1 complete, no delta
+
+| measurement | asserted | measured | |
+|---|---|---|---|
+| bytes | 287,161 | **287,161** | MATCH |
+| lines | 1,978 | **1,978** | MATCH |
+| sha256 | `137bbfac…` | `137bbfac3ea98255fad55b44c3073810d2a0876cc833e555b61f6989114daf7f` | MATCH |
+| benches | 13 | **13** — 5 chemistry + 8 biology | MATCH |
+
+**All 17 pack checksums verified by content**, `sha256sum -c CHECKSUMS.sha256`:
+**17 OK, 0 FAILED**. The separately-uploaded standalone HTML is **byte-identical**
+to the copy inside the archive — one subject, not two.
+
+**One predicate correction, recorded because it nearly became a false stop.** The
+first bench count read the manifest's prose labels against the HTML and returned
+**6 of 13**, which looks exactly like a delta and a stop. It was not: the runtime
+registry is `disciplineBenches`, whose labels differ from the manifest's prose
+(*"Amylase Kinetics"* is shipped as *"Enzymes · Amylase Achromic Point"*). **The
+count was wrong, not the file.** R0.8 — a count without the right predicate is
+not a measurement, and the first predicate here was a guess.
+
+### V2 — the pupil-data finding, now proven byte-level rather than by inspection
+
+**CONFIRMED.** Driven in headless Chromium against the delivered file:
+
+- planted `CANARY_PUPIL_Jamie_Roper` in the pupil-name field and
+  `CANARY_NOTES_felt_anxious_during_the_practical` in the reflection notes
+- clicked the real `#shareBtn`
+- read `location.hash` — **not the clipboard**, so a headless clipboard
+  permission cannot make the result look clean when it is not
+- decoded the token with **no key, no secret and no account**
+
+Both canaries decode out of a **10,089-character URL**, from a 7,438-byte
+payload. The mechanism, stated exactly: `#shareBtn`'s handler writes
+`state.pupil` and `state.notes`, calls `syncHash()`, then copies
+`location.href`; `serialisableState()` is a whole-object deep copy
+(`JSON.parse(JSON.stringify(state))`) which nulls running timers and clears
+`examSVG` but **never deletes `pupil` or `notes`**.
+
+The one page error observed was `NotAllowedError: Failed to execute 'writeText'
+on 'Clipboard'` — **the harness's headless clipboard permission, not a defect in
+the file**, and it cannot affect the finding because `syncHash()` writes the URL
+before `copyText()` is ever reached. **The file's own page-error count stands at
+0 for normal use.**
+
+**The fix is still not made, and this pass did not make it.** What changed is
+that it is no longer an assertion: it is a decoded string with a canary in it.
+
+## 2 · The tag — corrected by supersession, three references
+
+`close-fixes/combined-614f4d8`. **Zero tags on all three remotes**, derived by
+`git ls-remote --tags` against each. The tag was annotated inside a disposable
+container which has since been reclaimed, so **the annotation cannot be
+reprinted** and §1.2's *"print the annotation"* is unanswerable rather than
+skipped. Nothing was fabricated to fill the gap.
+
+**The third case, stated plainly:** `614f4d8` is **not** an ancestor of site
+`main` (merge-base `5395971`, one commit ahead) — but it **is the live head of
+remote branch `claude/hud-coverage-scriptline-load-bearing`**. So the tag was
+neither a bookmark nor preservation. It was a **redundant alias for a branch head
+the remote was already keeping alive.**
+
+**The finding is kept, and it is worth more than the clean record:** *a local tag
+in a disposable container is a countdown, not preservation.* This ledger wrote
+that sentence and was then overtaken by it.
+
+Three references superseded, originals intact, **no rewrite**: the two
+*"What remains open"* rows, and the path-filter row now answered.
+
+**Ref table (R0.19).** Before: 0 tags, all three remotes. After: 0 tags, all
+three remotes. **Loss statement: nothing was pushed and nothing was removed. No
+ref changed in any repository.** The only change is to the record.
+
+## 3 · The five held PRs — disposition written into each body
+
+Lessons **#17**, **#35**, **#43**, Apps **#2**, site **#25**. Each body now
+carries a dated `Census disposition` section, appended below the original with
+*"Nothing above this line was altered."* **None was rebased, merged or closed.**
+
+Six baseline rows previously read *"filter miss or no applicable workflow"* — a
+guess with an "or" in it, and not a cause (R0.8). Derived per PR against that
+PR's own changed files, they are **three different causes**:
+
+| PR | cause, derived | can CI reach it today? |
+|---|---|---|
+| #35 · Apps #2 · site #25 | **CONFLICTED** — `mergeable_state: dirty`, no merge ref | **No.** With no merge ref nothing fires however the filters are written |
+| #17 · #43 | **BASE OUT OF DATE** | Yes, on rebase — no workflow needs changing |
+| #9 | **CORRECTLY DORMANT — not a defect at all** | N/A |
+
+The five share no single repair. **#9 is the one that was never a defect:** its
+base is `review-base/build-anim-autumn1`, and every branch-filtered workflow
+carries `branches:[main]`, which excludes it. It is a retrospective diff of work
+already merged at `297af43` — rebasing it would destroy the thing it exists to
+show.
+
+The mechanism behind the two base-out-of-date rows:
+`fieldops-p2-and-sweep.yml` carries `pull_request`/`branches:[main]` with **no
+`paths:` filter**, so it matches every diff — and it was **first created
+2026-08-17 at `a46d9b9`** (#120, *"the CI that was never running"*), after both
+were last updated. Apps #2 carries a **second, independent** cause underneath its
+conflict: neither Apps workflow's `paths:` would match its diff even unconflicted.
+
+## 4 · The census, reconfirmed in CI
+
+Re-derived through the MCP path in-session: **20 open · 12 zero-check · 3 draft ·
+9 non-draft**, and the nine match `tools/zero_check_baseline.json` **exactly — 0
+undeclared, 0 to prune**. The open total moved **21 → 20**; the zero-check split
+did not move. **The MCP-derived figures matched the baseline exactly, and that is
+worth stating** — two independent derivations agreeing is the only reason to
+believe either.
+
+`tools/pr_check_census.mjs` **cannot run from this session**: the environment's
+`GITHUB_TOKEN` returns **401** against `api.github.com` directly. Classified on
+first occurrence, not retried (R0.21). The tool printed `[INCONCLUSIVE]` rather
+than an empty census, which is the tool working.
+
+**It then ran in CI on PR #132 and its seven self-test controls all passed**,
+including *"a thirteenth, undeclared zero-check PR is still caught — Lessons#124"*.
+The gate step itself first exited **2** on a **504 Gateway Timeout** listing Apps
+PRs — a different class from the 401 (transient upstream, and the job died before
+the census body ran), so it was re-run once rather than retried in a loop.
+
+## 5 · The five declared-not-derived routes — one verdict each
+
+**Their unchecked status is now proven, not assumed.** `verify_served.mjs`
+invokes the site deriver with `--emit routes`, which emits derived routes only;
+the residue has a **separate** `--emit residue` mode that the serve gate never
+calls. So the five are genuinely never fetched.
+
+| route | verdict | predicate |
+|---|---|---|
+| `/` | **EXTEND** | A real HTML page. The gate's existing rule already fits it: blob `SITE/index.html`. No new kind of assertion needed |
+| `__FULL_HOME__` | **EXEMPT — and it is not a route** | A build-time token the workflow resolves at run time. **There is no URL to fetch**, so no serve assertion can exist. It should be renamed in the deriver so it stops reading as an unchecked route — it is the only one of the five that can never be covered |
+| `/games/` | **EXTEND** | A real HTML page, blob `SITE/games/index.html`. Same rule as `/` |
+| `/site.json` | **EXTEND, with a different assertion** | Data, not a page. Byte-identity to the committed blob still holds and is still meaningful — what must change is the blob rule (`SITE/site.json`, not `<r>/index.html`) and the content-type (`application/json`, not `text/html`) |
+| `/Games/games.json` | **EXTEND, with the strongest assertion of the five** | It is **the input to the derivation**. The assertion is not merely served-equals-committed but **served-equals-the-canonical-shelf the derivation consumed**. Without it, the route list can be derived from a record nobody actually serves — and nothing today would notice |
+
+Four extend, one exempt. **The implementation is a follow-up in the site repo**
+(`tools/derive_live_routes.mjs` plus the blob/content-type rule in
+`tools/verify_served.mjs`); this pass disposes of them, it does not land them.
+
+## 6 · B2 — the cost of re-running it, and why it is not a re-run
+
+| question | answer |
+|---|---|
+| governing order | **§5 of the close order** — required the conformance matrix and three per-app verdicts |
+| does that order survive? | **NO.** `_close/` holds only `OPEN_ITEMS.md`. The order itself is not on disk |
+| do the results survive? | **NO.** No matrix, no per-app verdict anywhere in the working tree or scratch; journal and transcripts gone. Last observed at 5 of 8 agent results |
+| does the **standard** survive? | **YES** — and this is the finding. `LundyLoop/6_designs/LL-I_B2_0_closure_definitions.md` (47 lines) and `LL-I_B2_day_close_reader.md` (99 lines), plus **Amendments 1, 2 and 3 stated in full** in `quality/LUNDY_SCIENCE_ACCEPTANCE_GATES.md` and referenced across `REGISTER.md`, `HANDOVER.md`, `_close/OPEN_ITEMS.md` and two PROPOSED design docs |
+| which three apps? | **Named nowhere.** The only occurrences of *"three per-app verdicts"* in the estate are this ledger describing the gap |
+
+**So it cannot be re-run, because "re-run" is the wrong word.** The yardstick is
+intact; the *scope* is gone. Deciding which three apps to judge is a **new
+specification, not a repetition** — and once someone is choosing the scope, they
+are commissioning a fresh order.
+
+**Two things would not come back even then**, and the standard says so itself in
+its own header: **F2 is a negative finding across a search space** — re-deriving a
+negative costs a full re-search with no guarantee of the same scope — and **the
+counter-case is argument, not measurement**; re-running greps returns numbers, not
+the reasoning that keeps 0-of-8 from being re-opened as a defect.
+
+**The decision this now needs, and it is not a fourth "still a gap":**
+**commission a new B2 order with a stated scope**, accepting that F2 and the
+counter-case will not return identically — **or formally retire B2 with a reason**,
+which the surviving 19-transform result (`assert_unchanged`, U1–U7, 0 unexpected
+changes, release reproduced byte for byte) makes a defensible position rather
+than a surrender.
+
+## 7 · Soak counts — dated snapshots, each citing its tool
+
+**R0.29: these are snapshots by construction, never live values.**
+
+| counter | snapshot | tool that derives it |
+|---|---|---|
+| the watch's probation | **1 of 10** consecutive green, as last recorded in this ledger. **Not re-derived this pass** — the watch computes it live from main's run history and the 401 above prevents that from here | `tools/watch_main_runs.mjs` (`WATCH_SOAK`, default 10) |
+| the matcher's soak | **0 of 10** | `tools/workflow_dormancy_matcher.py`, `tools/dormancy_matcher_soak.json` |
+
+The matcher stays **report-only and unenforced**: no PyYAML in CI, no wiring into
+the watch's UNDETERMINED bucket. `unenforced` is an honest state and the soak was
+not shortened to make it look otherwise.
+
+## 8 · What remains open, by name
+
+**The estate's:**
+
+| item | state | what closes it |
+|---|---|---|
+| **VSL v0.4.1 — V2, pupil name and notes in the Share URL** | **The finding is proven byte-level. The fix is not made.** Artefact verified, 17/17 checksums, four measurements matched | **The two VSL order documents, which do not exist in any reachable location** — or an explicit instruction to proceed without them under a stated method |
+| the five routes | four **EXTEND**, one **EXEMPT** — disposed, not implemented | a follow-up in the site repo: the deriver's emit set, plus a blob/content-type rule for the two JSON files |
+| B2 | **cost reported; it is a new specification, not a re-run** | Matt's choice: commission with a stated scope, or formally retire with a reason |
+| the matcher | landed, report-only, PR **#132** | soak 0 of 10, then a true-negative **at the wiring point** |
+| the five held PRs | dispositions written into each body | each one's own hold lifting |
+| branch `claude/close-order-seven-items-wdfhdf` | present; delete refused `HTTP 403` | the repo setting in Matt's list |
+| the watch's human leg | mechanism live, no notification reaches a person | the account setting in Matt's list |
+
+**Matt's, and no part of it was attempted here:**
+
+1. Repo → Settings → General → **automatically delete head branches**
+2. Account → Notifications → Actions → **failed workflows only**, Watching on the repo
+3. **Revoke the GitHub token** — two were pasted into a chat session in July. **Security, not tidiness, and the oldest item on this list**
+4. **PLANS-3 close-out** — download the four deliverables, delete the sensitive uploads, confirm the GROW W4A correction landed in both the school copy and the export
+5. The **29 August Planning/ reconvergence** — its own order when the date comes
+6. **The VSL paper read**, which is what would unlink the lab if it ever lands
+
+**An arc that closes with an empty remaining-list has stopped looking.** This one
+closes with the pupil-data finding still at the top of it — proven this time, and
+still unfixed.
