@@ -79,6 +79,17 @@ jobs:
           MBM_APPS_REPO: ${{ runner.temp }}/apps
         run: node tools/stale_evidence_sweep.mjs --require-roots=3 | tee "$RUNNER_TEMP/sweep.txt"
 
+      # R0.1 limb 3 for the tally check. This workflow carries NO `paths:` filter,
+      # which is stated at the top and is why the ledger path matches without
+      # anyone maintaining a list: every path matches when there is no filter.
+      # The ledger has now stated a wrong count twice, so the count is derived
+      # from its own table on every run rather than written down.
+      - name: The ledger's tally is derived from its own table
+        run: node tools/verify_ledger_tally.mjs | tee "$RUNNER_TEMP/tally.txt"
+
+      - name: ...and that check is proven able to go red three separate ways
+        run: node tools/verify_ledger_tally.mjs --self-test | tee "$RUNNER_TEMP/tally-selftest.txt"
+
       - name: A default run is a dry run
         run: |
           set -euo pipefail
@@ -103,6 +114,10 @@ jobs:
             echo '```'
             tail -20 "$RUNNER_TEMP/sweep.txt" 2>/dev/null || echo '(the sweep did not run)'
             echo '```'
+            echo '### Ledger tally'
+            echo '```'
+            cat "$RUNNER_TEMP/tally.txt" "$RUNNER_TEMP/tally-selftest.txt" 2>/dev/null || echo '(the tally check did not run)'
+            echo '```'
             echo '### Controls'
             echo '```'
             cat "$RUNNER_TEMP/sweep-selftest.txt" 2>/dev/null || echo '(the self-test did not run)'
@@ -114,7 +129,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sweep-evidence
-          path: ${{ runner.temp }}/sweep*.txt
+          path: |
+            ${{ runner.temp }}/sweep*.txt
+            ${{ runner.temp }}/tally*.txt
           if-no-files-found: error
 
   fieldops:
