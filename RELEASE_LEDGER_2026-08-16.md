@@ -1468,3 +1468,115 @@ repaired defects introduced while building the watch, and that the watch's first
 live verdict was false. Both sentences belong in the record, next to each other,
 unhedged. The mechanism works; the judgement of what deserves a red is the thing
 still being learned.*
+
+---
+
+# THE RULE REGISTER, AND THE VSL INTAKE STOP — 2026-08-17 (Phase A)
+
+**This section supersedes, by dated pointer and not by edit, the rule table in
+*THE ARC IS CLOSED*.** That table stays readable and stays true as at its date;
+this one is the allocator of record from here.
+
+## Collision check, run before anything was written
+
+Scope: `RELEASE_LEDGER_2026-08-16.md`. For each of R0.20–R0.30, every site that
+*binds* the id was printed and read.
+
+| id | prior ledger binding | verdict |
+|---|---|---|
+| R0.20 – R0.23 | bound, and to the same rule the orders propose | **no collision** |
+| **R0.24** | bound to the literal word ***unallocated*** | **no collision** — a placeholder is not a rival claimant, so the pointer below gives it content without contest |
+| R0.25 – R0.27 | bound, and to the same rule the orders propose | **no collision** |
+| R0.28 – R0.30 | not allocated | **free** |
+
+**Zero collisions. Nothing was renumbered on either side.**
+
+## R0.24 — dated superseding pointer, not an edit
+
+The line above that reads `| **R0.24** | *unallocated — see above* | — | — |`
+**stands and is not edited.** It was accurate on the date it was written.
+
+> **SUPERSEDED 2026-08-17 by `MASTER_PROMPT_VSL_Intake_and_Ledger_2026-08-17`.
+> R0.24 now has content: *every gate ships a true-negative control — a known-good
+> subject that must come back green.* A control block that only demonstrates reds
+> is what produced this watch's first false positive.**
+
+## R0.20 – R0.30, in id order, each with its enforcement or the word `unenforced`
+
+| id | rule | provenance | enforced by |
+|---|---|---|---|
+| **R0.20** | evidence has a locality; CI green and local green are different claims | the D1 control proven only on a branch whose push triggered nothing | **unenforced** — convention |
+| **R0.21** | a retry loop classifies before it repeats | four non-fast-forward retries; then four retries of a legible `HTTP 403` inside the run that ratified the rule | **unenforced** — and demonstrably so |
+| **R0.22** | a failure on the default branch reaches a person by a mechanism, not by inspection | runs `32017557268`, `32018424063`, both found by looking | `watch-main.yml` in mechanism; **the human leg does not exist** |
+| **R0.23** | a pattern states its scope and prints its match set before acting | a filtered grep; `git tag -l` in the wrong repo; `pkill -f` killing its own wrapper | partly — the watch and `--verify-trigger-list` print scope and match set; **elsewhere unenforced**. *It is also what made the VSL stop a measurement rather than a hunch* |
+| **R0.24** | **every gate ships a true-negative control — a known-good subject that must come back green** | a control block that only demonstrated reds produced the watch's first false positive | **unenforced** — no mechanism yet asserts it across the estate; its first enforcement is the VSL gate suite, which is blocked |
+| **R0.25** | the write leg is split from the judge, and every appended line carries run id, verdict and predicate | run `32029976055` wrote a false finding into this document and pushed it | **enforced by withdrawal** — both conditions false, so the write leg is dry-run and the job is `contents: read` |
+| **R0.26** | a rule lands as a mechanism or it does not land | R0.16's amendment violated 20 minutes after being recorded; R0.21 violated inside its own ratifying run | **this table** — every rule carries its enforcement or the word `unenforced` |
+| **R0.27** | a document must not contain a control token in an executable position | a squash message described the skip-ci guard and included the literal token; `210e6cc` got no CI run at all | partly — the token appears nowhere in `.github/workflows/`; in commit messages **unenforced** |
+| **R0.28** | **an absence is not a result** | dormancy read as failure, then pending read as no-verdict; and the VSL stop, where reporting P0 green from a file containing none of the biology would have been the same error | partly — `classify()` carries PASS · FAIL · NO VERDICT · PENDING as separate buckets, and dormancy does not colour the verdict; **outside the watch, unenforced** |
+| **R0.29** | **no live-derived value is copied into a static document** | the soak counter: written as *1 of 10*, and every commit correcting it moves the count again | **unenforced** — the tool derives and prints it on every run, and the ledger's figure is a dated snapshot by construction |
+| **R0.30** | **an order names where its subject lives, and proving reachability is its first act — before scope, before gates, before anything** | the VSL run order specified its subject by bytes, lines, sha256 and bench count, and never said where it was; it has only ever existed as a chat upload | **unenforced** — its mechanism would be an order template that cannot omit a location |
+
+**Seven of eleven are `unenforced` or only partly enforced.** That is the measured
+state, and under R0.26 it means seven of these rules have not yet landed.
+
+## The R0.17 violation, recorded
+
+**R0.24 through R0.30 were allocated inside chat orders rather than in this
+ledger, which is what R0.17 forbids: rule identifiers are allocated in the ledger,
+never in an order.** Matt has recorded the violation as his own and ruled the
+resolution: **the ledger is the allocator; an order's id is a proposal until
+landed here; if a proposal ever collides, the ledger wins and the order is
+corrected.** This section is the landing. The violation is recorded beside the
+rules because a register that hides how its own ids arrived is worth less than one
+that does not.
+
+## The VSL intake stop, recorded as a finding
+
+**Not an absence of work — a measurement.** The v0.4.1 run order was executed and
+stopped at its own §1.1: *the baseline artefact is not reachable from any ref,
+tree, history or upload.*
+
+**Scopes searched, with their match sets (R0.23):**
+
+| scope | match |
+|---|---|
+| `/home/user/Lessons`, `/workspace/vcl`, site, `coa`, `scrapcore` trees | none |
+| filesystem sweep, `*Laborator*html` and `*PRO_v0*` | none |
+| **every ref** — Lessons 288, site 322, Apps 37, Games 70 | **no `Virtual_Science*` file on any ref** |
+| Lessons history, all branches, `v0_4` / `v0.4` | none |
+| this session's uploads (6 HTML files) | not among them |
+
+**Required against present:**
+
+| | required | the only VSL-family artefact reachable |
+|---|---|---|
+| file | `Virtual_Science_Laboratory_PRO_v0_4.html` | `Virtual_Chemistry_Lab_PRO_Spatial_v0_3.html`, on `#116`'s branch |
+| bytes | 287,161 | **173,102** · Δ −114,059 |
+| lines | 1,978 | **1,646** · Δ −332 |
+| sha256 | `137bbfac…` | **`bd0e7596…`** |
+| benches | 13 — 5 chemistry + 8 biology | **5 chemistry, 0 biology** |
+
+**Why v0.3 was refused, and the hash is the weaker reason.** Eight biology
+benches are absent, and the P0 re-measurement list is mostly biology — the ×10
+calibration, ψ = −1.02 MPa, the enzyme endpoints, inverse-square, the ecology
+labelling, the 25 °C gate. **Reporting P0 green from a file containing none of it
+would be an absence read as a result — R0.28, inside the order that put R0.28 in
+force.** And `#116`'s own body forbids it independently: it exists so that a fixed
+5-bench file and an unfixed 13-bench file never sit in the estate together.
+
+**R0.30 is the rule this produced**, and its provenance is above: an order that
+named its subject by four measurements and never named where it lived.
+
+**One line closes it: the artefact itself, attached to a session or pushed to a
+branch on Lessons.** Nothing downstream is unresolved — the rulings, swap lines,
+nine gates with their true-negatives, and the four placement tests are all
+specified and waiting.
+
+## V2's rank is unchanged, and a blocked item is not a de-ranked item
+
+**Pupil name and notes are serialised into `location.hash`; Share hands that URL
+out; the field's own caption says *"Name for print/export only."* At an SEMH
+provision.** It is the highest item on the board, it is the only one on the board
+that is not a quality issue, and **it is still unfixed.**
+
