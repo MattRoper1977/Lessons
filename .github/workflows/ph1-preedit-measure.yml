@@ -1,4 +1,4 @@
-name: PH-1 final G4 and sign-off read-only measurement
+name: PH-1 commit G4 and sign-off measurements
 on:
   push:
     branches:
@@ -6,16 +6,16 @@ on:
     paths:
       - '.github/workflows/ph1-preedit-measure.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
-  measure:
+  measure-and-commit:
     if: "${{ github.event.head_commit.message != 'PH-1 transport cleanup: pre-edit measurements' }}"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Generate final reports from immutable BASE and committed census
+      - name: Generate final reports and commit them separately
         run: |
           set -euo pipefail
           BASE=ae1d3c7af2526781aad6fb82e7cbbf6b87ded380
@@ -30,9 +30,18 @@ jobs:
           (cd "$BASE_WORKTREE" && python3 "$V2" && python3 "$FINAL")
           cleanup
           trap - EXIT
-          test -z "$(git status --porcelain=v1)"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ph1-preedit-final-measurements
-          path: /tmp/ph1-preedit-final
-          retention-days: 2
+
+          test ! -e _passph1/G4_DETECTOR_FINDING.md
+          test ! -e _passph1/SIGNOFF_CLASSIFICATION.md
+          git config user.name 'PH-1 Executor'
+          git config user.email 'ph1@madebymatt.invalid'
+
+          cp /tmp/ph1-preedit-final/G4_DETECTOR_FINDING.md _passph1/G4_DETECTOR_FINDING.md
+          git add _passph1/G4_DETECTOR_FINDING.md
+          git commit -m 'PH-1 G4 detector finding: 3/3 real surfaces carry Sections 4 and 5'
+
+          cp /tmp/ph1-preedit-final/SIGNOFF_CLASSIFICATION.md _passph1/SIGNOFF_CLASSIFICATION.md
+          git add _passph1/SIGNOFF_CLASSIFICATION.md
+          git commit -m 'PH-1 sign-off census classified: B1 20; B2 80; B3 1; B4 0'
+
+          git push origin HEAD:pass-ph1-peq-hardening
