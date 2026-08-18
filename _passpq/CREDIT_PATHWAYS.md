@@ -113,3 +113,13 @@ already enforces ("Each pupil works at one level… Entry 3 and Level 1 evidence
    a PEQ tier and the §2 "PEQ at E3 in BUILD" scope statement is retired as inaccurate.
 
 All four depend on registration and first-year EQA booking (QUESTIONS_FOR_CHERYL).
+
+
+## PH-3 addendum (2026-08-18) — two rules the tables above assume but never state
+
+- **Partial achievement still certificates at unit level** (spec §5.1): if a learner does not
+  reach a qualification size, ASDAN certificates the units achieved — no pathway below ever
+  "loses" banked units.
+- **Only ONE adjacent-level unit can ever contribute** to an Extended Award or Certificate:
+  the smallest unit is 2 credits and the adjacent cap is 3, so two adjacent units (2 + 2 = 4)
+  always break the cap. Route B above is already the maximal adjacent case (one 3-credit unit).
