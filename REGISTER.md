@@ -2653,3 +2653,36 @@ Job C gates PASS · C5 STOPPED by rule · live-deployment rendering UNPROVEN (pr
 Matt phone-checks).** Numbers: `_passph3/GATES.md`. New storage key: `mbm_guide_v1` (boolean,
 guidance visibility, no pupil data — registered in `_passph3/JOB_B_REPORT.md`; the repo keeps
 no general key register). **STATUS: HELD FOR MATT — PRs open, no `GO-MERGE` this session.**
+
+
+## R-PH302 — Pass PH-3 MERGED on the close order; P8 authorised and applied; the workbook corrected
+
+**Close order executed 2026-08-18.** Step 1 independent verify was re-derived from
+`git diff BASE..tip` and came back clean in both repos: **OTHER bucket empty**, and the combined
+reversal (strip the Job-B patch **and** reverse the authorised A-edits) is **byte-identical to
+BASE on 101/101** touched pages. Protected GROW strings verbatim · §5 Learner-confirmation 79/79 ·
+ASDAN html 101 / lessons 79 · sentinel bearing set 50 = BASE · workflows 12 = BASE (none added) ·
+PDFs tracked 5 = BASE · quarantined `pass-ph1-peq-hardening` tip `ab7730c…` unchanged ·
+`_asdan_private/` never entered git.
+
+**P8: GO — APPLIED.** The C7 sentence on `GROW_ASDAN/Scheme_and_Resources.html` line 21 now reads
+*"…a pupil working at that standard may be assessed on adjacent-level units, a centre decision
+after initial assessment; at most 3 adjacent-level credits count toward an L1 qualification."*
+One sentence only; the food-safety paragraph and the before-teaching checklist are byte-untouched.
+OPEN_ITEMS 47 → **CLOSED**.
+
+**A6b — the LAUNCH year-plan workbook corrected.** `Planning/LAUNCH/LAUNCH_Autumn_Year_Plan_ASDAN.xlsx`,
+**10 cells**, values only, no formulas, no structural change. Eight were the cells listed in
+`_passph3/JOB_A_REPORT.md`; **two more (Autumn Overview D10, D12) were found during the fix** —
+the same false 10-hour-on-ComSk1 claim in the PEQ column, missed by the original report because
+those cells never name Communication in their own text. After: 10-hour-on-Communication
+assertions **0**, pupil names **0**, non-target drift **NONE**. New OPEN_ITEMS **51** records the
+two public PDFs' stale "BUILD — an Award" sentence (no generator exists; regenerate with the
+C1/C2/C3 wording).
+
+**MERGE (`--no-ff`):** rollback SHA (pre-merge main) **`ae1d3c7af2526781aad6fb82e7cbbf6b87ded380`**
+→ merged main **`b0379c75020e79bb4e380441a7f7d985f1b86c09`**. Re-proved at the merged tip: G1 · G6 (banned strings 0, no
+10-hour-near-Communication without its negation) · G9 · B-G1 (85/85 reversibility) · B-G3.
+**Live deployment rendering stays UNPROVEN by design** — the Pages API and madebymatt.uk are
+proxy-blocked from the pass environment; Matt phone-checks (list in HANDOVER queue entry 20).
+**Neither branch deleted — that is Matt's UI job.**
