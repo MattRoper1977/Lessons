@@ -638,3 +638,37 @@ Network zip returned as a download (never committed); the name-free LAUNCH Autum
 - **Root `/HANDOVER.md` wholesale supersession** still owed at merge day.
 - **PEQ facts UNVERIFIED-AGAINST-SPEC** (ASDAN PDFs absent): ComSk1 criterion codes/credits provisional; reconcile at the spec check before assessment. Carried into the pack README + workbook provenance banner.
 - **Spring/Summer + Aut-2 LAUNCH modules** teed up on the same generator (`_passla/build/`); building them lets the Autumn-only workbook grow into the full-year plan and makes the L1 Certificate a built reality.
+
+
+### Added by Pass PH-3 (2026-08-18) — one queue entry, with its trigger
+
+20. **PH-3 ASDAN finish + guidance toggle — landed on two branches, HELD at PR.**
+    Lessons `pass-ph3-asdan-finish` off BASE `ae1d3c7…` · site `pass-ph3-asdan-tool` off
+    `8af7bbc…`. What landed: A1 ComSk1-minima staff blocks (W4/W5, screen + print); A2 eight
+    registered pupil-claim fixes (two→four planned questions; labelled minima completed with the
+    ≥8-min discussion route; "two-way minimum" reframed as the lesson's target) —
+    `_passph3/PUPIL_TEXT_REGISTER.md`; A3 seventeen `peq-facts-panel` staff panels (L1 sizes /
+    partial certification / 10-hour-except-Communication / RPL / IQA-EQA / attribution; BUILD
+    short-course variant; Hospitality-VT clock on the LAUNCH hub + Vocational START_HERE);
+    A5 the seven PH-1R-verified sign-off one-liners, recovered read-only from `ab7730c` and
+    byte-checked; A6 paperwork addenda (SPEC_FACTS §19, compliance dated actions, Q13–Q17,
+    pathway/primer additions) + the LAUNCH year-plan xlsx **read-only** scan, which found the
+    workbook asserting a false 10-hour rule on ComSk1 (proposed cell fixes in
+    `_passph3/JOB_A_REPORT.md`; file not edited); Job B guidance hidden by default on the 85
+    decks behind the remembered `ⓘ Guidance` toggle (`mbm_guide_v1`), reversible by
+    construction, gates B-G1–B-G7 all PASS (runtime 85/85, asvl 48/48); Job C register-tool
+    C1–C4 (BUILD ceiling honesty, credit-equivalent wording, VT clock, "Your centre"
+    fallbacks, toolVersion 2.7) with C5 STOPPED — no PDF generator; stale sentences reported.
+    **HELD:** A4/C7 sentence (no `P8: GO` — proposed text in OPEN_ITEMS 47); the merge itself
+    (no `GO-MERGE`). All gate numbers: `_passph3/GATES.md`. Records: OPEN_ITEMS 42–50,
+    REGISTER R-PH301, `_passph3/` reports, site `asdan/_ph3/JOB_C_REPORT.md`.
+    **The two paste-lines Matt can use in a future session:** `P8: GO` (authorises the C7
+    rewording) · `GO-MERGE` (authorises both merges).
+    **Phone-check list after merge:** (1) one BUILD deck, one GROW deck with the We Do 1
+    visual panel, one LAUNCH PEQ deck — guidance hidden on load, `ⓘ Guidance` shows it and
+    survives a reload, counters (`Found:`/`Score:`) visible throughout; (2) W4 I Do 1 says
+    **four** questions; (3) the LAUNCH hub staff panel reads correctly; (4) the register
+    tool's BUILD row says "Short Course certificates + AQA UAS — no PEQ qualification".
+    **TRIGGER: Matt's read of both PRs, then his merge (or `GO-MERGE` in a session). Nothing
+    here is live until merged; live rendering is UNPROVEN from the pass environment
+    (proxy-blocked) by design.**
