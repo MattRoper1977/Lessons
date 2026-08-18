@@ -161,16 +161,14 @@ Reading demand of the studios' panel copy is FK 15.5–18.9 on prose (17–22 wh
 above BUILD and GROW. A plain-language pass is a content decision for Matt. It appears in no
 catalogue or PR copy as if handled. **OPEN.**
 
-## Site-main verification at the time of writing
+## Site-main verification — GREEN
 
-The site's own post-merge workflows at `b912ad05` were still running when this record was
-committed: `pages build and deployment` and `Deployment provenance` had already passed, with
-`Professional site live verification`, `Verify audience discovery, Teach and Education hubs`,
-`Adult-affordance boundary is fail-closed` and `MBM audience discovery closeout` in flight and
-no failures. Those checks cover the discovery surface, not the runtime — the runtime was
-already proven byte-for-byte on production before the discovery PR was opened, which is the
-order the recovery doc requires. A watch is armed on them; any failure is a discovery-surface
-fix, and the rollback order (Site first, then Apps, then Lessons) is recorded above.
+All nine site workflows at `b912ad05` completed with no failures: `Professional site live
+verification` (32184872514), `Verify audience discovery, Teach and Education hubs`
+(32184872526), `MBM audience discovery closeout` (32184872554), `Adult-affordance boundary
+is fail-closed` (32184872556), `Deployment provenance` (32184952180) and `pages build and
+deployment` (32184872155). Live search and Teach-Hub navigation therefore reach the already
+byte-proven Apps runtime, which is Phase 7's closing requirement.
 
 ## Token
 
