@@ -2686,3 +2686,52 @@ C1/C2/C3 wording).
 **Live deployment rendering stays UNPROVEN by design** — the Pages API and madebymatt.uk are
 proxy-blocked from the pass environment; Matt phone-checks (list in HANDOVER queue entry 20).
 **Neither branch deleted — that is Matt's UI job.**
+
+
+## R-TL201 — Pass TL-2 Part A: the Washworks rename, 1.0.1 -> 1.0.2; Parts B and C held
+
+**Pass TL-2 / PR-1 (2026-08-18)** · sentinel `townlife-tl2-2026-08-18-TOP`. Part A only; Parts B and C
+stopped at their own decision gates and **nothing was published**.
+
+**Phase 0:** all Town Life pins (P0-1..P0-6) and all PROTOCOL pins (C0-1..C0-5) pass. Superseded
+candidate `a7e49cf8...` identified and not used. Two prompt figures corrected by measurement: the
+runtime carries **171** non-ASCII characters, not 151 (the quoted 280-byte delta is exact); and a naive
+`id="` grep double-counts `data-*-id="` tails, which would have produced a false C0-3 failure -- with a
+proper attribute boundary PROTOCOL is 250/0 and Town Life 164/0.
+
+**Part A:** 22 `Washworks` occurrences across 17 lines = **17 Class-1 player-visible strings renamed to
+`Northstar Exchange`** (full name for the two `name:` fields and the "Northstar Garage" parallel;
+`Exchange`/`the Exchange` as in-sentence shorthand, grammar re-read per string -- one `A`->`An`, two
+articles added) + **5 Class-2 `garageWashworks` identifiers left unchanged**. `state.laundering`,
+`LaunderingManager`, `state.dirtyBonds` and the `laundry` business id (a live save-schema key) untouched.
+
+**A3 persistence gate PROVEN:** with Garage + Exchange owned, the payload under `mbm_town_life_v10`
+contains neither the `garageWashworks` key nor the string `Washworks` at all -- computed, not persisted.
+Corollary: the rename cannot invalidate any existing save.
+
+**Version:** both literals bumped; considered alone the edit is length-neutral with
+**differing_positions == 2** (bytes 39248, 40032). `1.0.1` was not banned globally -- changelog,
+release-note and verification-report history stays.
+
+**Identity:** v1.0.2 runtime **304,744 B / 304,464 chars**, sha256
+`3605124fda9387c71fc1a7c02091d1110f5d82363ec7788de4ea90757d6e38da` (was 304,742 / `7d318509...`).
+Package 203 files, 202 checksum entries, **202 OK / 0 FAILED**, zip sha256
+`10cac0b135dda6661d0a68ccb94cd338d61a4539ce79857c740ef77135c44f3c`. **The 196-file evidence tree is
+inherited, not re-proven** -- the packaged 99/99 describes the v1.0.1 binary and is not re-quoted for
+v1.0.2.
+
+**Gates: 30/30 passed** on real **Chromium over a loopback HTTP origin** (not `page.set_content`).
+A4-1 payout **GBP 740 identical** across v1.0.1 live, v1.0.1 seeded and v1.0.2 seeded; A4-2, A4-3
+(legacy path executes -- code path only, per TL-1 D5), A4-4 `Resident`; 390px overflow **0**; 12
+rendered controls all >=44px; zero console errors. Four first-run failures were harness seed-clobbering
+(first boot's `setTimeout(saveNow,2400)`), fixed with `addInitScript` plus a v1.0.1 control run.
+
+**D3 partially closed:** storage resolves to **`local`** on a real origin, not volatile. TL-1's blocker
+(managed Chromium `URLBlocklist: ["*"]`) does not apply here. The deployed-origin half still awaits
+Part B and Matt's phone tap.
+
+**HELD:** Part B stopped at B4 (**D2** unanswered); Part C stopped at C2 (**P1** unanswered). Shelf
+count unchanged at **52** (derived: 23 site-served + 29 Lessons; both manifests byte-identical as JSON).
+`_shelf/games.json` named in the prompt **does not exist** -- the manifest is `games.json` at the Games
+repo root. **OPEN_ITEMS 52 remains open**: the self-heal §A0-2 anticipated did not occur, because no
+site push happened. Records: `_passtl2/`.
