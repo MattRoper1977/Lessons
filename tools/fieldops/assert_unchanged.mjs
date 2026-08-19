@@ -18,7 +18,7 @@ const ALL = ['00_BUILD_FieldOps_Teacher_Studio.html', '01_Newport_Bridge_Lift_Pe
              '04_Tees_Bay_Wind_Operations_Lab.html'];
 const WILTON = '03_Wilton_Carbon_Process_Control_Lab.html';
 const STUDIO = '00_BUILD_FieldOps_Teacher_Studio.html';
-const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9','T10','T11','T12','T13','T14','T15'];
+const TRANSFORMS = ['T1','T2','T3','T4','T5a','T5b','T6a','T6b','T7','T8a','T8b','T8c','T9','T10','T11','T12','T13','T14','T15','T16'];
 const rows = [];
 const row = (id, what, ok, detail) => rows.push({ id, what, ok, detail });
 const sha = s => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
@@ -58,6 +58,10 @@ execFileSync('node', ['build.mjs', `--drop=${TRANSFORMS.join(',')}`, '--out=work
   const DECLARED = {
     T1: 4, T2: 4, T3: 4, T4: 5, T5a: 1, T5b: 1, T6a: 1, T6b: 1, T7: 1, T8a: 1, T8b: 1, T8c: 1, T9: 1,
     T10: 1, T11: 1, T12: 1, T13: 4, T14: 5, T15: 1,
+    /* T16 rewrites the four engine entries in the Studio, so it applies four
+       times against ONE file — the same shape as T13, which swaps twice per lab
+       under a single id. Declared by files touched, not by applications. */
+    T16: 1,
   };
   const buildable = TRANSFORMS.filter(T => !(T in dependent));
   const wrong = buildable.filter(T => touched[T].length !== DECLARED[T]);
