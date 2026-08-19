@@ -45,3 +45,12 @@ scribe offer) — no ring+R strip; GROW/LAUNCH HUM W7 lack the written line. Add
 either would move the sentinels (50→58, 123→125), which **hold set-identical at every
 commit** by order. Both therefore go to `PROPOSED_A.md`, not to a fix. LL-INST-09 is
 the render gate for decks that carry the strip, not a mandate to add one.
+
+## SCA-1 landed mid-pass (2026-08-19)
+
+SCA-1 (science v3_40min) merged to main (e907653, record a810d44) while ECA-1's
+audits ran — after this pass's baseline was pinned. Zero file overlap with PART A's
+diff; merged into the PART A branch before the conditional merge; sentinels held
+50/123 set-identical and the PROTECTED manifest was byte-identical across the
+merge. **PART B's conditional therefore resolves to INCLUDE the 35 science
+v3_40min decks** (CHASSIS.md's "deferred" note is superseded by this entry).
