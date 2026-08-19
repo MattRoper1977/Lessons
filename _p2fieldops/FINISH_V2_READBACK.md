@@ -97,3 +97,70 @@ returns 200 from the same shell). Phone-check URLs:
 
 Owner-held: staff-pack rebuild (unblocked); ranked PROPOSED table at
 `_sca1close/PROPOSED_RANKED.md`.
+
+---
+
+## Addendum — three regressions I caused, and the gates that caught them
+
+Recorded because the useful part of this pass is not that it landed, but that
+three separate estate gates each caught something I had missed. Each is a case of
+one edit having a second surface I had not looked for.
+
+**1. The no-JS studio count.** Adding the Studio to `apps.json` moved the derived
+total 38 → 39, but `index.html` carries a **second** surface for the same number:
+`<span id="leadCount">Thirty-eight</span>`, the fallback a reader without
+JavaScript sees. At runtime the script overwrites it with `numberWord(total)`, so
+the page looked right in a browser and was wrong for exactly the people the
+fallback exists for. `verify_lundyloop_static.py` asserts the parity
+("no-JS Apps count does not match apps.json") and went red on `a50376a`, green on
+the commit before. Fixed to "Thirty-nine".
+
+**2. AUDMAP, and the pins.** `index.html`'s `AUDMAP` classifies each studio by
+audience and **defaults to `"p"` (pupil)** for anything unlisted — so the teacher
+tool would have been filed under the pupil filter. A correctness bug, not just a
+gate. Separately, `apps.json` **and `resources.json`** are guarded by SHA-256 pins
+inside `verify_cross_estate_unification.py`, which is **byte-identical in both
+repos and holds both pins**. I first hand-edited the Apps copy only — precisely
+the divergence `tools/pin_manifests.py` exists to prevent ("writes both copies or
+neither"). Reverted, and re-pinned with the sanctioned tool: apps.json
+`758489c54bd2 → a4a06b999b5f`, resources.json `dd8955ba6e0e → da6600349e68`, both
+copies, still byte-identical. **The Lessons catalogue add in `92f1c16` had already
+put the resources.json pin out of date** — I had not known that file was pinned.
+
+**3. An undeclared transform contaminates every measurement.**
+`assert_unchanged.mjs` carries a hardcoded `TRANSFORMS` list that ended at T15, so
+T16 was invisible to it: **U1** drop-all no longer reproduced release byte for
+byte (the Studio differed, because T16 was never dropped), and **U2** every
+single-transform build silently carried T16 too, so each reported "touched 5,
+declared 4". One cause, two symptoms — a transform that is never dropped
+contaminates every measurement made by dropping. T16 is now declared
+(`TRANSFORMS` + `DECLARED: 1` — it applies four times against one file, the same
+shape as T13). After: U1 UNCHANGED with all **20** transforms dropped, U2
+UNCHANGED, **0 unexpected changes**.
+
+**Process lesson, stated plainly:** I ran the Lessons gate stack before merging
+and did **not** run the Apps repo's own verifiers first. Both Apps regressions
+would have been caught locally in under a minute by
+`verify_lundyloop_static.py` and `pin_manifests.py --check`. A cross-repo change
+needs both repos' gates run before either merge.
+
+## Final CI state — measured on the heads that carry the work
+
+| repo · head | workflow | conclusion |
+|---|---|---|
+| Lessons `8f3925d` | FieldOps P2, the sweep, and the serve proof | **success** |
+| Lessons `8f3925d` | Watch main (every workflow has a PASS verdict) | **success** |
+| Lessons `8f3925d` | pages build and deployment | **success** |
+| Lessons `cee63e8` | Made by Matt cross-estate unification | **success** |
+| Apps `234a405` | Verify LundyLoop Professional OS | **success** |
+| Apps `234a405` | Made by Matt cross-estate unification | **success** |
+| Apps `234a405` | Reading-theme parity with the canonical engine | **success** |
+| Apps `234a405` | pages build and deployment | **success** |
+
+One thing worth knowing for next time: the FieldOps and cross-estate runs on
+`cee63e8` came back **cancelled** — no push of mine followed them, so this was not
+the `cancel-in-progress` mechanism I documented earlier. **Cancelled is not a
+verdict**, and `Watch main` correctly went red saying so; re-running both by API
+produced real verdicts (FieldOps failure → the T16 declaration bug above;
+cross-estate success). A cancelled run should always be re-run, never read as
+either colour.
