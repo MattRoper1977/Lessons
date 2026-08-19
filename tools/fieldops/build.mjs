@@ -234,6 +234,39 @@ swap('T15', '03_Wilton_Carbon_Process_Control_Lab.html',
   `and which one you call them depends on what the refinery is cutting for that day.` +
   `</div></div>`);
 
+/* =====================================================================
+ * T16 — the Studio's launch links, rewritten for the split.
+ *
+ * THE DEFECT. The engine table shipped `file:'01_Newport_Bridge_Lift_Permit_Lab.html'`
+ * — a bare filename, correct only while the Studio and the labs sat in one
+ * folder. After the split they are in different repositories on different
+ * origins, so "Launch mission" on the Apps origin resolves to a path that
+ * exists only in Lessons and 404s. The governing prompt called the cross-links
+ * "the likeliest thing to break the pack's best feature", and this was it.
+ *
+ * WHY split_transport.mjs did not catch it: that harness proves the FILE-IMPORT
+ * route (setInputFiles on #missionFile) and constructs the lab URL itself. It
+ * never reads #launchMission's href, so the one transport that depends on this
+ * string was the one transport nothing exercised. S4 there now does.
+ *
+ * THE PREFIX IS DERIVED, NOT ASSUMED. Two facts already in this repository:
+ *   - tools/verify_served.mjs:79  LESSONS_ORIGIN = 'https://madebymatt.uk/Lessons'
+ *     (so Lessons is /Lessons-prefixed on the live origin, NOT root-mounted —
+ *     corroborated by the recorded live pin of madebymatt.uk/Lessons/resources.json)
+ *   - tools/verify_fieldops_served.mjs:74  PLACED = 'Science_Teesside/Build/v4_fieldops'
+ * and verify_served.mjs builds exactly `${LESSONS_ORIGIN}/${PLACED}/${lab}`.
+ * LAB_ORIGIN below is that concatenation. controls.mjs asserts the two files
+ * still agree, so if the origin ever moves in one and not the other, that goes
+ * red rather than shipping a second 404.
+ *
+ * The mission payload is untouched: buildMission() does `info.file + '#mission='
+ * + b64url(m)`, and a hash appends to an absolute URL exactly as it does to a
+ * bare filename. `.file` has no other reader — grep says one use.
+ * ===================================================================== */
+const LAB_ORIGIN = 'https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops';
+for (const lab of LABS)
+  swap('T16', STUDIO, `{file:'${lab}'`, `{file:'${LAB_ORIGIN}/${lab}'`);
+
 fs.mkdirSync(DST, { recursive: true });
 for (const f of ALL) fs.writeFileSync(path.join(DST, f), files[f]);
 console.log(`built ${DST}`);
