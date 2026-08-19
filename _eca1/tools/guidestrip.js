@@ -7,7 +7,9 @@ const fs = require('fs');
 for (const f of process.argv.slice(2)) {
   let s = fs.readFileSync(f, 'utf8');
   // 1. Unwrap ECA-1 counter-wraps (role-valued, never "1"): <span data-mbm-guide="staff">X</span>
-  s = s.replace(/<span data-mbm-guide="(?:staff|route|lundy)">((?:(?!<\/?span)[\s\S])*?)<\/span>/g, '$1');
+  // Loop until stable — repairs any accidental nesting too.
+  let prev;
+  do { prev = s; s = s.replace(/<span data-mbm-guide="(?:staff|route|lundy)">((?:(?!<\/?span)[\s\S])*?)<\/span>/g, '$1'); } while (s !== prev);
   // 2. Remove ECA-1 role attributes (PH-3's ="1" stays).
   s = s.replace(/ data-mbm-guide="(?:staff|route|lundy)"/g, '');
   // 3. Remove injected blocks ONLY where PH-3's install is absent (no ="1" tags = ECA-1 installed it).
