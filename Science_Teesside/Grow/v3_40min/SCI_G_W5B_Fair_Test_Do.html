@@ -175,7 +175,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;b
 <div class="story"><span>Arrival</span><span>Starter</span><span>I Do</span><span>We Do</span><span>I Do 2</span><span>We Do 2</span><span>Independent evidence</span><span>Exit + one Lundy close</span></div>
 <div class="title-actions"><button onclick="printTier('Supported')">🖨 ◆ Supported pack</button><button onclick="printTier('Standard')">🖨 ▲ Standard pack</button><button onclick="printTier('Stretch')">🖨 ★ Stretch pack</button>
 <a class="btn" href="LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html#W5B">🔁 End-of-day reflection window</a></div>
-<p data-mbm-guide="route" class="source-note">TEST prototype · derived from current GROW lesson Science_Teesside/Grow/SCI_G_W5_Fair_Test.html at main SHA 93d570041f4c · repository originals untouched.</p></div><div data-mbm-guide="lundy" class="lundy-mini"><div class="lundy-row"><div class="lundy-stage active">🛡 SPACE</div><div class="lundy-stage active">🗣 VOICE</div><div class="lundy-stage active">👂 AUDIENCE</div><div class="lundy-stage active">⚙ INFLUENCE</div></div><div class="lundy-thread">Space → Voice → Audience → Influence runs through the lesson; it is not an extra activity at the end.</div></div></section><section class="slide" data-min="3" data-ta-move="If secure, step back. If recall is inaccessible, offer picture/pointing or one cue; keep the new lesson untouched." data-ta-priority="Settle and retrieve — do not pre-teach today’s idea." data-title="🚪 Arrival · prior lesson retrieval" data-type="arrival">
+<p data-mbm-guide="route" class="source-note">v3 40-minute route · derived from current GROW lesson Science_Teesside/Grow/SCI_G_W5_Fair_Test.html at main SHA 93d570041f4c · repository originals untouched.</p></div><div data-mbm-guide="lundy" class="lundy-mini"><div class="lundy-row"><div class="lundy-stage active">🛡 SPACE</div><div class="lundy-stage active">🗣 VOICE</div><div class="lundy-stage active">👂 AUDIENCE</div><div class="lundy-stage active">⚙ INFLUENCE</div></div><div class="lundy-thread">Space → Voice → Audience → Influence runs through the lesson; it is not an extra activity at the end.</div></div></section><section class="slide" data-min="3" data-ta-move="If secure, step back. If recall is inaccessible, offer picture/pointing or one cue; keep the new lesson untouched." data-ta-priority="Settle and retrieve — do not pre-teach today’s idea." data-title="🚪 Arrival · prior lesson retrieval" data-type="arrival">
 <div class="time-chip">⏱ 3 min</div><span class="slide-tag tag-arrival">Arrival</span>
 <div data-mbm-guide="staff" class="teacher-say"><b>Staff influence opener — SAY, don’t record:</b> “Last lesson your evidence showed ___. Today we are starting by remembering ___.”</div>
 <div class="li-box"><b>Retrieve the previous lesson:</b> W5A — independent, dependent and control variables; units; repeats; a written or modelled fair-test plan.</div><div class="entry-route" style="background:#fff7ed;border-left:5px solid #f97316;padding:9px 12px;border-radius:10px;margin:6px 0"><b>Not here last lesson?</b> Everything you need is in the box above — read it, then answer.</div>
@@ -424,6 +424,40 @@ function gsgLabGlitch_W5B(btn){
     window.mbmGuideToggle();
   });
   apply(stored());
+})();
+</script>
+<!--sci-hinge-shuffle:v1--><script id="sci-hinge-shuffle">
+(function(){
+  /* SCA-1 CLOSE v2 P1. Hinge options are authored correct-first; shuffle at render,
+     screen only. Verdicts are by authored option identity (data-i / data-index), never
+     position. Wrappers marked data-shuffle="off" are order-dependent and stay authored. */
+  function rint(n){
+    try{
+      if(window.crypto&&window.crypto.getRandomValues&&n>0){
+        var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;
+        do{window.crypto.getRandomValues(a)}while(a[0]>=lim);
+        return a[0]%n;
+      }
+    }catch(e){}
+    return Math.floor(Math.random()*n);
+  }
+  function shuffle(box){
+    var k=[],i;
+    for(i=0;i<box.children.length;i++){if(box.children[i].tagName==='BUTTON')k.push(box.children[i]);}
+    if(k.length<2)return;
+    for(i=k.length-1;i>0;i--){var j=rint(i+1),t=k[i];k[i]=k[j];k[j]=t;}
+    for(i=0;i<k.length;i++)box.appendChild(k[i]);
+  }
+  function run(){
+    var w=document.querySelectorAll('.soft,.soft-check'),i,box;
+    for(i=0;i<w.length;i++){
+      if(w[i].getAttribute('data-shuffle')==='off')continue;
+      box=w[i].querySelector('.options');
+      if(box)shuffle(box);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
 })();
 </script>
 </body></html>
