@@ -73,6 +73,14 @@ jobs:
       - name: The authored positive controls, the regressions, and the seventh form
         run: node tools/stale_evidence_sweep.mjs --self-test | tee "$RUNNER_TEMP/sweep-selftest.txt"
 
+      # R0.1 limb (b) for the qa-record form. The widening below closed a red
+      # (20 unparsed QA rows in Matt-s-Apps-), so it is exactly the change that
+      # has to be able to go red itself: this plants a QA record naming a file
+      # that is not there and requires STALE back. Proven by mutation - stubbing
+      # the resolver to a rubber-stamp fails two of its four checks.
+      - name: The qa-record form can still call a planted subject stale
+        run: node tools/fieldops/qa_record_control.mjs | tee "$RUNNER_TEMP/sweep-qarecord.txt"
+
       - name: The sweep over all three estates, and all three must be assessed
         env:
           MBM_SITE_REPO: ${{ runner.temp }}/site

@@ -155,7 +155,57 @@ const SECTION      = /^==\s+(.+?)\s*$/;
    line that matched no claim form was a row this sweep should have understood. */
 const ASSERTING_ROW = /\b(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED|watched|UNWATCHED|DROPPED|LOAD-BEARING|STALE)\b/;
 
+/* ------------------------------------------------- form: qa-record (JSON)
+   WHY THIS EXISTS. forward() already selects .json under evidence/ and qa/ —
+   the sweep intends to judge those files — but every claim form above is
+   line-oriented text. REPORT_ROW needs a line to BEGIN with a bare label, so
+   `  "boot": "PASS",` can never match it; the row fell to ASSERTING_ROW and was
+   booked NO FORM MATCHED. Twenty such rows in Matt-s-Apps- held the sweep at
+   exit 2 while naming nothing stale.
+   The proof that this is a gap in the GRAMMAR and not evidence about the data:
+   MOBILE_QA_RESULTS.json carries twelve records of the identical shape and
+   produced zero unparsed rows — only because its records say "ok": true instead
+   of the word PASS. Visible or invisible by vocabulary, not by validity.
+   This form READS MORE, it does not judge less: a QA record naming a file that
+   has since been deleted now returns STALE, which the text grammar could not
+   see at all. Files that do not parse as JSON, or that yield no record naming a
+   subject, fall through to the text forms untouched — NO FORM MATCHED still
+   fires for every shape nobody has taught this tool yet. */
+const QA_VERDICT = /^(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED)$/;
+
+function qaClaimsFrom(text, ctx) {
+  let doc;
+  try { doc = JSON.parse(text); } catch { return []; }
+  if (doc === null || typeof doc !== 'object') return [];
+  const claims = [];
+  const walk = (node, trail) => {
+    if (Array.isArray(node)) { node.forEach((v, i) => walk(v, `${trail}[${i}]`)); return; }
+    if (node === null || typeof node !== 'object') return;
+    if (typeof node.file === 'string' && node.file)
+      claims.push({ form: 'qa-record', subject: node.file, resolver: 'qa-subject', line: 0, ctx,
+                    why: 'a QA record naming the file it reports on' });
+    for (const [k, v] of Object.entries(node)) {
+      if (typeof v === 'string' && QA_VERDICT.test(v) && k !== 'file')
+        /* A verdict whose subject is the record it sits in, or the document as a
+           whole. Recorded rather than dropped, and marked NOT A CLAIM with the
+           reason — the same treatment report-row labels already get, because a
+           row this tool chooses not to judge must still be visible. */
+        claims.push({ form: 'qa-verdict', subject: `${trail}.${k}`, resolver: 'none', line: 0, ctx,
+                      why: `verdict "${v}" on ${trail}.${k}; its subject is the file named by the ` +
+                           `enclosing record, which is judged separately` });
+      else walk(v, `${trail}.${k}`);
+    }
+  };
+  walk(doc, path.basename(ctx));
+  /* Only take the structural route if it actually recognised a subject. A JSON
+     file with no record naming anything is not "understood" — it goes back to
+     the text forms so it can still be reported. */
+  return claims.some(c => c.form === 'qa-record') ? claims : [];
+}
+
 function claimsFrom(text, ctx) {
+  const structural = qaClaimsFrom(text, ctx);
+  if (structural.length) return structural;
   const claims = [];
   let section = '';
   for (const [i, raw] of strip(text).split('\n').entries()) {
@@ -248,6 +298,20 @@ function resolvers(root, evidenceFile) {
     'release-file': f => releaseDir === null
       ? [null, 'no sibling release/ — cannot judge']
       : [fs.existsSync(path.join(releaseDir, f)), `${path.relative(root, releaseDir)}/${f}`],
+    /* A QA record says "index.html" and means the file beside the qa/ folder
+       that reports on it, not <repo root>/index.html. Resolving against the root
+       would return STALE — SUBJECT ABSENT for a file that plainly exists, and
+       STALE is the verdict --apply acts on. Try the project that owns the qa/
+       directory, then the directory itself, then the root, and say which one
+       answered. */
+    'qa-subject': f => {
+      const tries = [[path.join(dir, '..', f), 'project dir'], [path.join(dir, f), 'qa dir'],
+                     [path.join(root, f), 'repo root']];
+      const hit = tries.find(([p]) => fs.existsSync(p));
+      return hit ? [true, `${path.relative(root, hit[0])} (${hit[1]})`]
+                 : [false, `no ${f} beside ${path.relative(root, path.join(dir, '..'))}, in ` +
+                           `${path.relative(root, dir)}, or at the repository root`];
+    },
     path: p => [fs.existsSync(path.join(root, p)), p],
     route: r => [fs.existsSync(path.join(root, r.replace(/^\/|\/$/g, ''), 'index.html')), `${r}index.html`],
     none: () => [null, null],
