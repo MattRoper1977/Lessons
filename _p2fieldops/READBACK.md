@@ -93,3 +93,42 @@ attempts; `api.github.com` returns 200 from the same shell), so per §8:
 **raw-pin NOT RUN — network blocked**
 
 No GitHub raw read was substituted for it.
+
+---
+
+## 8. Confirmed on main — measured, not predicted (check-in, 2026-08-19)
+
+The FieldOps run on the merge commit `cb83ea9` was **cancelled**, not failed: pushing
+the readback commit `9919a74` tripped this workflow's own
+`concurrency: cancel-in-progress: true` — the identical mechanism that cancelled
+`0b407e0` and that §2 above documents. Worth noting as a live reproduction of it
+rather than a new problem.
+
+The measurement that counts is on main head **`9919a74`** (run 32288345978):
+
+| job | conclusion |
+|---|---|
+| FieldOps P2 — the build is reproducible and the labs still boot | success |
+| **The stale-evidence sweep can still find something** | **success** |
+| No open PR runs zero checks | success |
+| Merged is not served — the placed labs and the Studio | success |
+| The way out of a game is keyboard-reachable — both estates | success |
+
+and at step level inside the sweep job:
+
+| step | conclusion |
+|---|---|
+| The authored positive controls, the regressions, and the seventh form | success |
+| **The qa-record form can still call a planted subject stale** | **success** |
+| **The sweep over all three estates, and all three must be assessed** | **success** |
+
+`pages build and deployment` — success.
+
+**`Watch main` is green as well** (runs 32288393865 and 32288726959, both success).
+That closes the loop the SCA-1 CLOSE v2 classification opened: the reporter was
+never defective, it was correctly naming the failing FieldOps run, and it greens
+when FieldOps does. It now has.
+
+The red first observed at `a810d44` is closed on main, with its repair guarded by a
+control proven able to fail. Later documentation-only commits re-run the same
+workflow over the same code; this entry records the run that first proved it green.
