@@ -1,0 +1,2004 @@
+<style>
+:root{
+ --bg:#fff;--slide-bg:#fff;--text:#1f2937;--muted:#64748b;
+ --grow:#3F7D6E;--lo-bg:#e6d4e8;--lo-border:#9c27b0;
+ --task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+ --aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;
+ --sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;
+ --wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;
+ --good:#15803d;--good-bg:#ecfdf3;--retry:#9a6700;--retry-bg:#fff7d6;--line:#dbe2ea;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#f8fafc,#f5faf7);color:var(--text);overflow:hidden}
+button,a.btn{font:inherit;min-height:44px;border:0;border-radius:10px;padding:9px 15px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button{background:var(--btn-bg);color:#fff;box-shadow:0 4px 8px rgba(0,0,0,.11)}
+button:hover{background:var(--btn-hover)}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:4px solid #facc15;outline-offset:3px}
+button.ghost,a.btn.ghost{background:#eef2f6;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}
+button.staff{background:var(--grow)}
+.slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;padding:14px 14px 74px}
+.slide{display:none;width:94%;height:91%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:30px 34px;overflow-y:auto;position:relative;flex-direction:column}
+.slide.active{display:flex}
+.slide[data-type="arrival"]{border-top-color:#d8a63b}.slide[data-type="starter"]{border-top-color:#4d82a0}
+.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}
+.slide[data-type="independent"]{border-top-color:var(--task-border)}.slide[data-type="exit"]{border-top-color:var(--sc-border)}
+h1{font-size:clamp(2rem,4.3vw,3.5rem);margin:7px 0 12px;color:#111827;border-bottom:3px solid var(--lo-border);display:inline-block}
+h2{font-size:clamp(1.5rem,2.7vw,2.25rem);margin:4px 0 12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+h3{margin:.25rem 0 .55rem}p,li{font-size:clamp(1rem,1.35vw,1.14rem);line-height:1.52}
+.slide-tag{display:inline-block;padding:5px 13px;border-radius:8px;font-size:.8rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.tag-title{background:var(--grow);color:#fff}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-exit{background:var(--sc-bg);color:#9a3412}
+.li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 12px}
+.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:15px;margin:8px 0}
+.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:11px 13px;border-radius:12px}
+.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:11px 13px;border-radius:12px;color:var(--aspire-text)}
+.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:13px;border-radius:12px}
+.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px}
+.wedo-box{background:var(--wedo-bg);border-left:6px solid var(--wedo-border);padding:14px;border-radius:12px}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.time-chip{position:absolute;right:26px;top:22px;background:#0f172a;color:#fff;padding:6px 11px;border-radius:999px;font-size:.82rem;font-weight:900}
+.story{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}.story span{background:#f1f5f9;border:1px solid #d6dee7;padding:6px 10px;border-radius:999px;font-size:.83rem;font-weight:800}
+.tier-toggle{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}.tier{display:none}.tier.on{display:block}.tier-btn[data-tier="Supported"]{background:#22c55e}.tier-btn[data-tier="Standard"]{background:#f97316}.tier-btn[data-tier="Stretch"]{background:#1e3a8a}
+.route-card{border:2px solid #d7dee7;border-radius:13px;padding:13px;background:#fff}.route-card.supported{border-left:7px solid #22c55e}.route-card.standard{border-left:7px solid #f97316}.route-card.stretch{border-left:7px solid #1e3a8a}
+.route-card b{display:block;margin-bottom:5px}.route-actions{margin-top:8px}
+.scaffold-pop{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:#eef8ff;border:1px solid #bae6fd}.scaffold-pop.open{display:block}
+.participation{border:2px solid #cbd5e1;border-radius:12px;padding:10px 12px;background:#f8fafc;margin-top:10px}.part-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}.part-chip{padding:5px 9px;background:#fff;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-weight:800}
+.lundy-mini{margin-top:auto;padding-top:10px}.lundy-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.lundy-stage{border:1px solid #d8e0e8;border-radius:9px;padding:6px 7px;background:#f8fafc;font-size:.76rem;color:#64748b;font-weight:850;text-align:center}.lundy-stage.active{background:#e7f5ef;border-color:var(--grow);color:#215e53}.lundy-thread{font-size:.82rem;color:#475569;margin-top:5px}
+.model-steps{counter-reset:step;display:grid;gap:8px}.model-step{display:none;background:#fff;border:2px solid #d8d1ec;border-left:6px solid var(--ido-border);border-radius:11px;padding:10px 12px}.model-step.revealed{display:block}.model-step::before{counter-increment:step;content:"STEP " counter(step);font-weight:900;font-size:.72rem;color:#6d28d9;letter-spacing:.08em;display:block;margin-bottom:3px}
+.soft-check .options{display:grid;gap:8px;margin-top:8px}.soft-option{text-align:left;background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}.soft-option.good{border-color:#4e9b6a;background:var(--good-bg)}.soft-option.retry{border-color:#d6a84c;background:var(--retry-bg)}
+.feedback{min-height:48px;padding:10px 12px;border-radius:10px;background:#f1f5f9;margin-top:8px;font-weight:750}.feedback.good{background:var(--good-bg);color:#166534}.feedback.retry{background:var(--retry-bg);color:#7c5a00}
+.widget{border:2px solid #cbd5e1;border-radius:14px;padding:14px;background:#fbfdff;margin:8px 0}.widget h3{color:#0f172a}.widget-feedback{margin-top:9px;padding:9px 11px;background:#f1f5f9;border-radius:9px;min-height:42px;font-weight:750}
+.surface-buttons,.phase-buttons,.planet-buttons{display:flex;flex-wrap:wrap;gap:7px}.surface-buttons button,.phase-buttons button,.planet-buttons button{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}
+.demo-track{height:90px;background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;position:relative;margin:12px 0;overflow:hidden}.demo-block{position:absolute;left:8%;top:28px;width:44px;height:32px;background:var(--grow);border-radius:6px;transition:left .35s ease}.friction-arrow{position:absolute;left:20%;top:68px;height:5px;background:#b91c1c;border-radius:4px;width:35%}
+.lever-stage{height:150px;position:relative;background:#f8fafc;border-radius:12px;border:2px solid #cbd5e1;margin:10px 0}.lever-bar{position:absolute;left:8%;right:8%;top:72px;height:10px;background:#475569;border-radius:6px}.pivot{position:absolute;top:82px;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:30px solid var(--grow);transform:translateX(-50%)}.load{position:absolute;right:12%;top:38px;width:42px;height:34px;background:#f97316;border-radius:5px}.effort-meter{height:12px;background:#e2e8f0;border-radius:8px;overflow:hidden}.effort-fill{height:100%;background:var(--wedo-border);width:50%}
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.method-choice{padding:10px;border-radius:10px;border:2px solid #cbd5e1;background:#fff}.method-choice label{font-weight:800}.method-choice input{width:20px;height:20px;vertical-align:middle}
+.data-table{border-collapse:collapse;width:100%;font-size:.9rem}.data-table th,.data-table td{border:1px solid #cbd5e1;padding:5px;text-align:center}.data-table input{width:74px;padding:6px}
+.planet-tray{min-height:58px;border:2px dashed #94a3b8;border-radius:10px;padding:8px;margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}.planet-chip{padding:6px 9px;border-radius:999px;background:#e7f5ef;color:#215e53;font-weight:850}
+.orbit-stage,.moon-stage{height:250px;border:2px solid #cbd5e1;border-radius:13px;position:relative;background:#081526;overflow:hidden;margin:10px 0;color:#fff}.sun{position:absolute;width:66px;height:66px;border-radius:50%;background:#fbbf24;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 28px rgba(251,191,36,.75)}.earth{position:absolute;width:34px;height:34px;border-radius:50%;background:#3b82f6;left:77%;top:46%;transition:.35s}.orbit-line{position:absolute;width:58%;height:72%;left:21%;top:14%;border:2px dashed rgba(255,255,255,.35);border-radius:50%}.arrow-label{position:absolute;font-size:.78rem;font-weight:850;background:rgba(255,255,255,.12);padding:4px 7px;border-radius:7px}.moon-earth{position:absolute;width:58px;height:58px;border-radius:50%;background:#3b82f6;left:50%;top:50%;transform:translate(-50%,-50%)}.moon-orbit{position:absolute;width:70%;height:80%;left:15%;top:10%;border:2px dashed rgba(255,255,255,.35);border-radius:50%}.moon-body{position:absolute;width:34px;height:34px;border-radius:50%;background:linear-gradient(90deg,#f8fafc 50%,#1f2937 50%);transition:.35s}.seen-disc{width:82px;height:82px;border-radius:50%;background:#f8fafc;border:4px solid #94a3b8;margin:8px auto;position:relative;overflow:hidden}.seen-shadow{position:absolute;inset:0;background:#111827}
+.controls{position:fixed;bottom:16px;right:16px;left:16px;z-index:1200;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}.control-left,.control-right{display:flex;gap:7px;align-items:center}.control-right{justify-content:flex-end}.progress-label{background:rgba(255,255,255,.97);border:1px solid #d8e0e8;border-radius:999px;padding:7px 11px;font-size:.86rem;font-weight:900;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.08)}.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:8px;background:#dfe5eb;z-index:1300}.progress-bar{height:100%;background:var(--grow);width:0;transition:width .25s}
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.58);z-index:3000;align-items:center;justify-content:center;padding:14px}.overlay.visible{display:flex}.modal{background:#fff;border-radius:18px;width:min(760px,96vw);max-height:92vh;overflow:auto;padding:20px;box-shadow:0 25px 70px rgba(0,0,0,.28)}.modal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ta-card{border:1px solid #d9e1e8;border-left:6px solid var(--grow);padding:10px;border-radius:10px;background:#f8fafc}.prompt-ladder{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}.prompt-ladder span{font-size:.75rem;background:#fff;border:1px solid #cbd5e1;padding:5px 7px;border-radius:999px;font-weight:800}.branch-buttons{display:flex;gap:6px;flex-wrap:wrap}.branch-buttons button{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none;font-size:.82rem}.branch-result{margin-top:8px;border-radius:10px;padding:10px;background:#eef6ff;min-height:44px}
+.title-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:9px}.title-actions a.btn{background:var(--grow);color:#fff}.source-note{font-size:.75rem;color:#64748b;margin-top:7px}.teacher-say{background:#eef8f4;border-left:6px solid var(--grow);padding:9px 11px;border-radius:10px;font-size:.9rem}
+.evidence-choices{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}.evidence-choices span{padding:6px 9px;background:#fff;border:1px solid #cbd5e1;border-radius:8px;font-size:.83rem;font-weight:800}
+.close-line{border:2px solid var(--grow);border-radius:12px;padding:11px;background:#f0faf6;margin-top:10px}.close-line b{color:#215e53}
+.print-pack{display:none}
+@media(max-width:780px){
+ .slide-container{padding:6px 6px 82px}.slide{width:98%;height:93%;padding:22px 17px}.content-grid,.three-grid,.ta-grid,.method-grid{grid-template-columns:1fr}.lundy-row{grid-template-columns:1fr 1fr}
+ .controls{grid-template-columns:1fr auto}.control-left{display:none}.progress-label{text-align:left}.data-table input{width:58px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{
+ body{overflow:visible;background:#fff} .slide-container,.controls,.progress-wrap,.overlay{display:none!important}
+ .print-pack{display:block;padding:0;font-family:'Segoe UI',Arial,sans-serif;color:#111827}.print-page{page-break-after:always;padding:10mm}.print-page:last-child{page-break-after:auto}
+ .print-line{height:13mm;border-bottom:1px solid #999}.print-box{border:1px solid #aaa;border-left:5px solid var(--grow);padding:8px;margin:7px 0}.print-route{display:block}body[data-print-tier] .print-route{display:none}
+ body[data-print-tier="Supported"] .print-route.supported,body[data-print-tier="Standard"] .print-route.standard,body[data-print-tier="Stretch"] .print-route.stretch{display:block}
+ @page{size:A4 portrait;margin:10mm}
+}
+
+/* ===== GROW Science Outstanding v3 layer ===== */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;background-image:radial-gradient(circle at 12% 16%,rgba(63,125,110,.09) 0 2px,transparent 3px),radial-gradient(circle at 88% 82%,rgba(234,179,8,.08) 0 2px,transparent 3px);background-size:44px 44px,62px 62px;z-index:-1}
+.slide{background:linear-gradient(180deg,rgba(255,255,255,.985),rgba(255,255,255,.97));}
+.mission-banner{background:linear-gradient(135deg,#10233f,#3F7D6E);color:#fff;border-radius:14px;padding:10px 14px;margin:8px 0 12px;display:flex;align-items:center;gap:10px;box-shadow:0 9px 24px rgba(16,35,63,.18)}
+.mission-banner b{font-size:1.02rem}.mission-icon{font-size:1.6rem}.hero-visual{border:2px solid #d6dee7;border-radius:18px;background:linear-gradient(135deg,#f8fbfb,#eef7f3);padding:8px;margin:10px auto;max-width:880px;box-shadow:0 10px 28px rgba(16,35,63,.10)}
+.hero-visual svg{display:block;width:100%;max-height:235px}.visual-caption{font-size:.86rem;color:#475569;text-align:center;margin:5px 8px 0;font-weight:700}
+.microfilm{border:3px solid #10233f;border-radius:16px;background:#071426;color:#fff;padding:12px;margin:10px 0;position:relative;overflow:hidden}.microfilm::before{content:'LOCAL VISUAL HOOK · no network';position:absolute;right:10px;top:8px;font-size:.67rem;letter-spacing:.08em;font-weight:900;color:#9fd8c7}.film-screen{min-height:126px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px 12px 10px}.film-frame{display:none}.film-frame.on{display:block}.film-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:#8ed5bf;font-weight:900}.film-title{font-size:clamp(1.35rem,3vw,2.3rem);font-weight:950;margin:5px 0}.film-line{font-size:1rem;color:#dbeafe}.film-controls{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.film-controls button{background:#fff;color:#10233f;box-shadow:none}.media-drawer{position:fixed;right:0;top:0;bottom:0;width:min(470px,95vw);background:#fff;z-index:5000;box-shadow:-18px 0 55px rgba(16,35,63,.28);transform:translateX(105%);transition:transform .22s ease;padding:20px;overflow:auto}.media-drawer.open{transform:translateX(0)}.media-card{border:1px solid #d7e0e8;border-left:6px solid #3F7D6E;border-radius:12px;padding:12px;margin:9px 0;background:#f8fbfa}.media-card a{font-weight:900;color:#215e53}.media-note{font-size:.82rem;color:#64748b}.practical-ready{background:linear-gradient(135deg,#fff7d6,#f0faf6);border:2px solid #d9c36b;border-radius:14px;padding:12px;margin:10px 0}.practical-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.practical-cell{background:#fff;border:1px solid #d7dee7;border-radius:10px;padding:9px;font-size:.86rem}.practical-cell b{display:block;color:#10233f;margin-bottom:3px}.evidence-gate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.ev-step{border-radius:11px;padding:10px;border:2px solid #d6dee7;background:#fff}.ev-step b{display:block;color:#215e53}.ev-arrow{text-align:center;color:#3F7D6E;font-weight:950}.live-loop-btn{background:#9c27b0!important}.policy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.policy-stage{border-radius:11px;padding:10px;background:#f8fafc;border:2px solid #d7dee7}.policy-stage b{display:block;color:#10233f}.code-palette{display:flex;flex-wrap:wrap;gap:6px}.code-chip{padding:6px 9px;border-radius:999px;background:#10233f;color:#fff;font-size:.78rem;font-weight:900}.loop-next{background:#eef8f4;border-left:6px solid #3F7D6E;border-radius:10px;padding:10px;margin-top:9px}.engage-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#e7f5ef;color:#215e53;padding:5px 9px;font-size:.78rem;font-weight:900;margin:4px}.hands-on-ribbon{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.hands-on-ribbon span{background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:6px 9px;font-size:.82rem;font-weight:850}
+.chart-panel{margin:10px 0;border:2px solid #cbd5e1;border-radius:12px;background:#fff;padding:10px}.chart-bars{display:flex;align-items:flex-end;gap:12px;height:130px;padding:8px 12px 22px;border-bottom:2px solid #cbd5e1}.chart-bar-wrap{flex:1;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:flex-end}.chart-bar{min-height:4px;background:linear-gradient(#3F7D6E,#79b19f);border-radius:8px 8px 0 0;position:relative}.chart-bar span{position:absolute;top:-20px;left:0;right:0;font-size:.76rem;font-weight:900}.chart-label{font-size:.72rem;font-weight:850;margin-top:4px}
+@media(max-width:760px){.practical-grid,.evidence-gate,.policy-strip{grid-template-columns:1fr}.hero-visual svg{max-height:180px}.media-drawer{width:96vw}}
+@media(prefers-reduced-motion:reduce){.media-drawer{transition:none}.microfilm *{animation:none!important}}
+
+/* ===== GSG-1 graft layer (arrival 3+1, model limits, WORD HELP, GROW close) ===== */
+.retr-grid{display:grid;gap:8px;margin:8px 0}
+.retr-q{border:2px solid #cbd5e1;border-left:6px solid var(--grow);border-radius:12px;padding:10px 12px;background:#fbfdfc}
+.retr-q.lead{border-left-color:#f97316;background:#fff8f1}
+.retr-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:900;color:#215e53;font-size:.92rem;margin-bottom:4px}
+.retr-q.lead .retr-head{color:#9a3412}
+.retr-badge{background:#10233f;color:#fff;border-radius:999px;padding:3px 9px;font-size:.76rem;font-weight:900}
+.retr-q.lead .retr-badge{background:#9a3412}
+.retr-ask{font-size:1.06rem;font-weight:800;margin:2px 0 6px}
+.retr-route{font-size:.86rem;color:#334155;margin:0;line-height:1.5}
+.retr-route b{color:#215e53}
+.retr-declare{background:#fff7ed;border-left:5px solid #f97316;padding:9px 12px;border-radius:10px;margin:6px 0;font-size:.92rem}
+.model-limit{border:2px solid #cbd5e1;border-radius:12px;margin:9px 0;overflow:hidden}
+.model-limit .ml-row{padding:9px 12px;font-size:.95rem}
+.model-limit .ml-yes{background:#eef8f4;border-bottom:2px solid #cbd5e1}
+.model-limit .ml-no{background:#fff4e6}
+.model-limit b{display:block;margin-bottom:2px}
+.model-limit .ml-yes b{color:#215e53}
+.model-limit .ml-no b{color:#9a3412}
+.wordhelp{border:2px solid #cbd5e1;border-radius:12px;padding:10px 12px;background:#f8fafc;margin:9px 0}
+.wordhelp h4{margin:0 0 6px;font-size:.95rem;color:#215e53}
+.wh-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:5px 0}
+.wh-term{font-weight:900;font-size:1.02rem}
+.wh-btn{background:#10233f;color:#fff;border:0;border-radius:999px;padding:4px 10px;font-size:.78rem;font-weight:800;cursor:pointer}
+.wh-bridge{font-size:.9rem;color:#334155;margin:0 0 0 2px}
+.wh-bridge[hidden]{display:none}
+.wh-fade{font-size:.82rem;color:#64748b;margin:7px 0 0}
+.speak-btn{background:#215e53;color:#fff;border:0;border-radius:999px;padding:5px 11px;font-size:.8rem;font-weight:800;cursor:pointer;margin:6px 0 0}
+.speak-btn[hidden]{display:none}
+.commit-box{border:2px solid var(--grow);border-radius:12px;padding:11px 13px;background:#f0faf6;margin:9px 0}
+.commit-box h4{margin:0 0 7px;font-size:1rem;color:#215e53}
+.commit-opts{display:flex;gap:7px;flex-wrap:wrap}
+.commit-opt{background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:8px 12px;font-weight:800;font-size:.93rem;cursor:pointer}
+.commit-opt.chosen{border-color:var(--grow);background:#dff2ea}
+.commit-state{margin:8px 0 0;font-size:.9rem;color:#334155;font-weight:700}
+.commit-note{margin:5px 0 0;font-size:.82rem;color:#64748b}
+.grow-close{border:2px solid var(--grow);border-radius:12px;padding:11px 13px;background:#f0faf6;margin:9px 0}
+.grow-close h4{margin:0 0 5px;font-size:1rem;color:#215e53}
+.grow-close textarea{width:100%;min-height:64px;border:2px solid #cbd5e1;border-radius:10px;padding:8px;font:inherit;font-size:.98rem;box-sizing:border-box}
+.grow-close .gc-note{font-size:.84rem;color:#64748b;margin:6px 0 0}
+.gc-routes{font-size:.86rem;color:#334155;margin:6px 0 0}
+@media print{
+ .retr-q{border:1px solid #aaa;border-left:4px solid #333;background:#fff;padding:6px 8px}
+ .speak-btn,.wh-btn,.commit-opt{display:none!important}
+ .wh-bridge[hidden]{display:inline!important}
+}
+
+/* ===== GSG-1 We Do lab (approved W4A pattern) ===== */
+.gsglab{border:2px solid var(--grow);border-radius:14px;padding:12px 14px;background:#f7fcfa;margin:10px 0}
+.gsglab h3{margin:0 0 4px;color:#215e53}
+.gl-step{font-weight:900;color:#10233f;margin:9px 0 4px;font-size:.95rem}
+.gl-row{display:flex;gap:8px;flex-wrap:wrap}
+.gl-btn{background:#fff;color:#10233f;border:3px solid #94a3b8;border-radius:10px;padding:9px 13px;font-weight:900;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:none}
+.gl-btn .gl-glyph{font-size:1.15rem}
+.gl-btn.i0{border-style:solid}.gl-btn.i1{border-style:dashed}
+.gl-btn.i2{border-style:dotted}.gl-btn.i3{border-style:double}
+.gl-btn.picked{border-color:var(--grow);background:#dff2ea;color:#10233f}
+.gl-btn.tested{border-color:#10233f;background:#eef2f7;color:#10233f}
+.gl-say{margin:7px 0 0;font-size:.92rem;color:#334155;font-weight:700}
+.gl-stage{border:2px solid #cbd5e1;border-radius:12px;background:#fff;padding:11px;margin:8px 0;min-height:62px}
+.gl-stage .gl-name{font-weight:900;font-size:1.05rem;color:#10233f}
+.gl-frozen{border-left:6px solid #10233f;background:#f8fafc;border-radius:10px;padding:9px 11px;margin:8px 0;font-size:.9rem}
+.gl-frozen ol{margin:5px 0 0 18px;padding:0}
+.gl-frozen li{margin:3px 0}
+.gl-glitch{border:2px solid #b55f25;background:#fff4e6;border-radius:12px;padding:10px 12px;margin:9px 0}
+.gl-glitch b{color:#9a3412}
+.gl-foot{font-size:.84rem;color:#64748b;margin:8px 0 0}
+@media print{.gsglab{display:none}}
+
+/* ===== NAV-1: way home — chrome only, teaching surfaces untouched ===== */
+.mbmhome{position:fixed;top:6px;right:10px;z-index:2500;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px 14px;background:#161D3D;color:#FFF6E8;border-radius:999px;font-weight:800;font-size:.85rem;letter-spacing:.03em;text-decoration:none;box-shadow:0 2px 10px rgba(15,23,42,.3)}
+.mbmhome:hover{background:#232C55}
+.mbmhome:focus-visible{outline:3px solid #E08A2E;outline-offset:2px}
+@media print{.mbmhome{display:none!important}}
+</style>
+<style id="mbm-guide-css">html:not(.mbm-guide-on) [data-mbm-guide],html:not(.mbm-guide-on) .asvl-purpose,html:not(.mbm-guide-on) .asvl-route{display:none!important}.mbm-guide-btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}</style>
+<script>
+    const topicBranches=JSON.parse(document.getElementById('taOverlay').dataset.topicBranches);
+    
+let current=0;const slides=[...document.querySelectorAll('.slide')];
+function show(n){current=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===current));const s=slides[current];const mins=Number(s.dataset.min||0);document.getElementById('progressLabel').textContent=(s.dataset.title||'Slide')+' · '+(current+1)+'/'+slides.length+(mins?' · '+mins+' min':'');document.getElementById('progressBar').style.width=((current+1)/slides.length*100)+'%';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===slides.length-1;location.hash='slide-'+(current+1)}
+function nextSlide(){show(current+1)}function prevSlide(){show(current-1)}
+document.addEventListener('keydown',e=>{if(document.querySelector('.overlay.visible')){if(e.key==='Escape')closeOverlay();return}const tag=(e.target&&e.target.tagName)||'';if(['INPUT','TEXTAREA','SELECT'].includes(tag))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevSlide()}});
+function switchTier(prefix,tier){document.querySelectorAll('[data-tier-panel="'+prefix+'"]').forEach(x=>x.classList.toggle('on',x.dataset.tier===tier))}
+function revealStep(id,btn){const box=document.getElementById(id);const steps=[...box.querySelectorAll('.model-step')];const next=steps.find(x=>!x.classList.contains('revealed'));if(next)next.classList.add('revealed');if(!steps.find(x=>!x.classList.contains('revealed'))){btn.textContent='✓ Model complete';btn.disabled=true}}
+function softAnswer(btn){const wrap=btn.closest('.soft-check'),correct=Number(wrap.dataset.correct),idx=Number(btn.dataset.index),fb=wrap.querySelector('.feedback');wrap.querySelectorAll('.soft-option').forEach(x=>x.classList.remove('good','retry'));if(idx===correct){btn.classList.add('good');fb.className='feedback good';fb.textContent='Yes — '+wrap.dataset.explain}else{btn.classList.add('retry');fb.className='feedback retry';fb.textContent='Not yet — '+wrap.dataset.hint+' Try again or use another response route.'}}
+function toggleScaffold(id){document.getElementById(id).classList.toggle('open')}
+function frictionDemo(id,type){const b=document.getElementById('block-'+id),a=document.getElementById('arrow-'+id),f=document.getElementById('wf-'+id);const d={smooth:[76,18,'Smooth: less resistance in this model, so the block travels further.'],medium:[55,35,'Medium: more resistance than smooth, less than rough.'],rough:[34,58,'Rough: stronger friction in this model, so the block travels a shorter distance.']}[type];b.style.left=d[0]+'%';a.style.width=d[1]+'%';f.textContent=d[2]+' Now explain what the surfaces are doing.'}
+function frictionResults(id){const vals=['r','m','s'].map(k=>Number(document.getElementById(id+'-'+k).value));const f=document.getElementById('wf-'+id);if(vals.some(v=>!Number.isFinite(v)||v<=0)){f.textContent='Add all three positive distances first.';return}const names=['rough/carpet','medium','smooth'];const min=Math.min(...vals),ix=vals.indexOf(min);f.textContent='The shortest distance is '+min+' cm on '+names[ix]+'. In this comparison that suggests the greatest friction. Use the actual result in your conclusion.'}
+function leverDemo(id){const v=Number(document.getElementById('lev-'+id).value),p=document.getElementById('pivot-'+id),eff=document.getElementById('eff-'+id),f=document.getElementById('wf-'+id);p.style.left=v+'%';const effort=Math.max(18,90-v);eff.style.width=effort+'%';f.textContent=v>52?'Pivot nearer the load: lower effort, but the effort end must move further.':v<40?'Pivot further from the load: greater effort, but the effort end moves less.':'Middle position: compare both effort and distance before deciding.'}
+function fairMethod(id){const s=document.getElementById(id+'-surface').checked,r=document.getElementById(id+'-ramp').checked,p=document.getElementById(id+'-push').checked,f=document.getElementById('wf-'+id);if(s&&!r&&!p)f.textContent='Method repaired: surface changes; ramp height and release stay controlled. Now name what you will measure and its unit.';else if(!s)f.textContent='Not yet — the question is about surface, so surface must be the deliberate change.';else f.textContent='Not yet — more than one deliberate thing is changing. Turn off the extra change(s) and check again.'}
+function fairData(id){const keys=['r','m','s'],names=['Rough','Medium','Smooth'],means=[];for(let x=0;x<3;x++){const arr=[1,2,3].map(n=>Number(document.getElementById(id+'-'+keys[x]+n).value));if(arr.some(v=>!Number.isFinite(v)||v<=0)){document.getElementById('wf-'+id).textContent='Enter all nine positive readings first.';return}const mean=arr.reduce((a,b)=>a+b,0)/3;means.push(mean);document.getElementById(id+'-'+keys[x]+'mean').textContent=mean.toFixed(1)}const min=Math.min(...means),ix=means.indexOf(min);document.getElementById('wf-'+id).textContent=names[ix]+' has the lowest mean distance ('+min.toFixed(1)+' cm), suggesting the most friction here. Now inspect the individual repeats before trusting the summary.'}
+const planetOrder=['Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune'];const planetState={};
+function planetPick(btn,id){if(!planetState[id])planetState[id]=[];const arr=planetState[id],want=planetOrder[arr.length],f=document.getElementById('wf-'+id);if(btn.dataset.name===want){arr.push(want);btn.disabled=true;const c=document.createElement('span');c.className='planet-chip';c.textContent=(arr.length)+'. '+want;document.getElementById('tray-'+id).appendChild(c);f.textContent=arr.length===8?'Complete — now classify rocky / gas giant / ice giant and explain one orbit.':'Good. Which planet comes next?'}else{f.textContent='Not yet — you need '+want+' next. Use the mnemonic or order strip, then continue.'}}
+function planetReset(id){planetState[id]=[];document.getElementById('tray-'+id).innerHTML='';document.querySelectorAll('#pb-'+id+' button').forEach(b=>b.disabled=false);document.getElementById('wf-'+id).textContent='Start again with the planet closest to the Sun.'}
+function orbitPos(id,n){const pts=[[77,46],[48,18],[20,46],[48,74]],el=document.getElementById('earth-'+id);el.style.left=pts[n][0]+'%';el.style.top=pts[n][1]+'%';document.getElementById('wf-'+id).textContent='Position '+(n+1)+': point an imaginary gravity arrow toward the Sun and a motion arrow along the path. Both are needed for the explanation.'}
+function moonPhase(id,phase){const pos={new:[20,46],first:[48,16],full:[78,46],last:[48,76]}[phase],m=document.getElementById('moon-'+id),sh=document.getElementById('shadow-'+id),f=document.getElementById('wf-'+id);m.style.left=pos[0]+'%';m.style.top=pos[1]+'%';const styles={new:['100%','New Moon: the illuminated half mostly faces away from the observer.'],first:['50%','First quarter: about half of the visible disc is illuminated.'],full:['0%','Full Moon: the illuminated half faces the observer.'],last:['50%','Last quarter: about half of the visible disc is illuminated from the opposite side.']}[phase];sh.style.width=styles[0];sh.style.left=phase==='last'?'0':'auto';sh.style.right=phase==='last'?'auto':'0';f.textContent=styles[1]+' This is viewing geometry, not Earth’s shadow.'}
+function openTA(){const s=slides[current],modal=document.getElementById('taOverlay');document.getElementById('taSlide').textContent=s.dataset.title;document.getElementById('taPriority').textContent=s.dataset.taPriority;document.getElementById('taMove').textContent=s.dataset.taMove;modal.classList.add('visible');document.getElementById('closeTA').focus()}
+function closeOverlay(){document.querySelectorAll('.overlay').forEach(x=>x.classList.remove('visible'))}
+const branches={
+ secure:'Secure → transfer to an unfamiliar example, raise precision, or reduce the prompt. The risk is needless repetition.',
+ mixed:'Mixed pattern → contrast two examples or use peer reasoning, then recheck every pupil rather than reading the class average.',
+ misconception:'Shared misconception → stop, use a counterexample or re-model, then ask a new hinge question. Do not proceed and hope.',
+ access:'Access barrier → keep the Science goal exactly where it is; change modality, environment or presentation.',
+ method:'Method/data problem → repair the procedure or evidence quality, then repeat. The thinking may be sound even when the method is not.'
+};
+function branchRead(k){document.getElementById('branchResult').textContent=branches[k]+' Nothing here is stored or coded.'}
+function printTier(tier){document.body.dataset.printTier=tier;window.print()}
+window.addEventListener('afterprint',()=>{delete document.body.dataset.printTier});
+const h=location.hash.match(/slide-(\d+)/);show(h?Number(h[1])-1:0);
+
+    function branchReadTopic(k){document.getElementById('branchResult').textContent=branches[k]+' '+topicBranches[k]+' Nothing here is stored, scored or coded.'}
+    
+/* ===== GROW Science Outstanding v3 layer ===== */
+let v3FilmTimers={};
+function v3FilmShow(id,n){const box=document.getElementById(id);if(!box)return;const frames=[...box.querySelectorAll('.film-frame')];frames.forEach((f,i)=>f.classList.toggle('on',i===n));box.dataset.frame=n;}
+function v3FilmNext(id){const box=document.getElementById(id),frames=[...box.querySelectorAll('.film-frame')];let n=(Number(box.dataset.frame||0)+1)%frames.length;v3FilmShow(id,n)}
+function v3FilmPlay(id){v3FilmStop(id);v3FilmTimers[id]=setInterval(()=>v3FilmNext(id),1800)}
+function v3FilmStop(id){if(v3FilmTimers[id]){clearInterval(v3FilmTimers[id]);delete v3FilmTimers[id]}}
+function v3OpenMedia(){document.getElementById('v3MediaDrawer')?.classList.add('open');}
+function v3CloseMedia(){document.getElementById('v3MediaDrawer')?.classList.remove('open');}
+function v3OpenLoop(){document.getElementById('v3LoopOverlay')?.classList.add('visible');}
+function v3LoopAction(k){const map={space:'SPACE → create regulation, time and a safe response route before asking for more.',voice:'VOICE → pupil edits, re-attempts, says, points or demonstrates. The modality follows the learner.',audience:'AUDIENCE → adult actually reads/listens/watches and names back what was heard.',influence:'INFLUENCE → change the next question, explanation, scaffold or task because of the response.',secure:'Secure → transfer/deepen or remove a scaffold.',mixed:'Mixed → contrast two examples, then recheck every pupil.',miscon:'Misconception → stop, counterexample/re-model, then a fresh hinge question.',access:'Access barrier → same Science goal, different modality/environment/presentation.',method:'Method/data → repair procedure/evidence quality, then repeat.'};document.getElementById('v3LoopResult').textContent=map[k]||''}
+function v3Chart(target,labels,values){const el=document.getElementById(target);if(!el)return;const nums=values.map(Number);if(nums.some(v=>!isFinite(v)||v<=0))return;const max=Math.max(...nums);el.innerHTML='<div class="chart-bars">'+nums.map((v,i)=>'<div class="chart-bar-wrap"><div class="chart-bar" style="height:'+Math.max(8,(v/max)*100)+'%"><span>'+v.toFixed(1)+'</span></div><div class="chart-label">'+labels[i]+'</div></div>').join('')+'</div><div class="visual-caption">Longer bars = greater measured distance, not automatically “better”. Use the investigation question to interpret.</div>'}
+if(typeof frictionResults==='function'){const old=frictionResults;frictionResults=function(id){old(id);const vals=['r','m','s'].map(k=>Number(document.getElementById(id+'-'+k)?.value));v3Chart('v3-chart-'+id,['Rough','Medium','Smooth'],vals)}}
+if(typeof fairData==='function'){const old=fairData;fairData=function(id){old(id);const means=['r','m','s'].map(k=>{const a=[1,2,3].map(n=>Number(document.getElementById(id+'-'+k+n)?.value));return a.every(v=>isFinite(v)&&v>0)?a.reduce((x,y)=>x+y,0)/3:NaN});v3Chart('v3-chart-'+id,['Rough mean','Medium mean','Smooth mean'],means)}}
+if(typeof softAnswer==='function'){const oldSoft=softAnswer;softAnswer=function(btn){oldSoft(btn);const wrap=btn.closest('.soft-check'),correct=Number(wrap.dataset.correct),idx=Number(btn.dataset.index),fb=wrap.querySelector('.feedback');if(idx===correct){fb.textContent += ' · Adult: ask for the reason, then transfer or reduce support if secure.'}else{fb.textContent += ' · Adult: listen to the reasoning before choosing re-model, access change or another attempt.'}}}
+
+/* ===== GSG-1 graft layer ===== */
+/* Speech: pupil-activated only, never automatic. Silently removes itself
+   where the browser has no speech synthesis. */
+function gsgSpeak(btn){
+ var host=btn.closest('[data-speak-host]');if(!host)return;
+ var t=host.getAttribute('data-speak-text')||host.textContent||'';
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')return;
+ try{
+  if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();btn.textContent=btn.dataset.idle||'🔊 Read this aloud';return}
+  var u=new SpeechSynthesisUtterance(t.replace(/\s+/g,' ').trim());
+  u.lang='en-GB';u.rate=.9;
+  u.onend=function(){btn.textContent=btn.dataset.idle||'🔊 Read this aloud'};
+  btn.dataset.idle=btn.dataset.idle||btn.textContent;
+  btn.textContent='⏹ Stop reading';
+  window.speechSynthesis.speak(u);
+ }catch(e){}
+}
+(function(){
+ var ok=('speechSynthesis' in window)&&(typeof SpeechSynthesisUtterance!=='undefined');
+ if(ok)return;
+ var b=document.querySelectorAll('.speak-btn');
+ for(var i=0;i<b.length;i++){b[i].hidden=true}
+})();
+/* WORD HELP: the formal term is always the dominant text. The bridge stays
+   hidden until a pupil asks for it, so the scaffold fades by request. */
+function gsgWord(btn){
+ var row=btn.closest('.wh-row');if(!row)return;
+ var br=row.querySelector('.wh-bridge');if(!br)return;
+ var open=!br.hidden;
+ br.hidden=open;
+ btn.setAttribute('aria-expanded',String(!open));
+ btn.textContent=open?'word help':'hide help';
+}
+/* Starter commit: receives a prediction. It does NOT mark it. There is no
+   correct answer here and nothing is counted, stored or scored — the reveal
+   happens through the teaching that follows. */
+function gsgCommit(btn){
+ var box=btn.closest('.commit-box');if(!box)return;
+ var opts=box.querySelectorAll('.commit-opt');
+ for(var i=0;i<opts.length;i++){opts[i].classList.remove('chosen');opts[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('chosen');btn.setAttribute('aria-pressed','true');
+ var st=box.querySelector('.commit-state');
+ if(st)st.textContent='Prediction received: "'+(btn.textContent||'').trim()+'". Hold onto it — we find out by testing, not by being told.';
+}
+
+/* ===== GSG-1 We Do lab: W3B =====
+   predict-commit -> test -> freeze -> explain. Nothing is marked, scored or
+   stored. The prediction is received, never graded: the reveal comes from
+   testing, which is the whole reason for predicting first. */
+var gsgLab_W3B={tested:[],data:[{g:'▲',n:'Carpet',t:'Three repeats: 21, 23, 22 cm. Short distances, close together. High friction, and the repeats agree.'},{g:'◎',n:'Wood',t:'Three repeats: 44, 45, 43 cm. Middling distances, close together. Less friction than carpet.'},{g:'✳',n:'Smooth plastic',t:'Three repeats: 68, 91, 70 cm. Long distances, but one reading does not fit the other two.'}]};
+function gsgLabPredict_W3B(btn){
+ var box=document.getElementById('gsglab-W3B');
+ var all=box.querySelectorAll('.gl-predict .gl-btn');
+ for(var i=0;i<all.length;i++){all[i].classList.remove('picked');all[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('picked');btn.setAttribute('aria-pressed','true');
+ document.getElementById('gl-say-W3B').textContent=
+  'Prediction received: '+btn.dataset.label+'. Nothing is marked. Test them and find out.';
+}
+function gsgLabTest_W3B(btn){
+ var k=Number(btn.dataset.i),d=gsgLab_W3B.data[k];
+ btn.classList.add('tested');
+ document.getElementById('gl-stage-W3B').innerHTML=
+  '<div class="gl-name">'+d.g+' '+d.n+'</div><p style="margin:5px 0 0">'+d.t+'</p>';
+ if(gsgLab_W3B.tested.indexOf(k)<0){
+  gsgLab_W3B.tested.push(k);
+  var li=document.createElement('li');li.textContent=d.n+' \u2014 '+d.t;
+  document.getElementById('gl-list-W3B').appendChild(li);
+ }
+ var done=gsgLab_W3B.tested.length,total=gsgLab_W3B.data.length;
+ document.getElementById('gl-note-W3B').textContent= done<total
+  ? 'Tested '+done+' of '+total+'. Each result stays on the list so you can compare them.'
+  : 'All three are frozen on the list. Compare them: which surface gripped most, and which set of repeats would you want to run again before you trusted it?';
+}
+function gsgLabGlitch_W3B(btn){
+ document.getElementById('gl-glitch-W3B').textContent=
+  btn.dataset.fix==='1' ? 'Repaired. One reading can be a fluke. Repeats show whether a result holds, and the odd plastic reading is exactly the kind of thing a single measurement hides.' : 'Kept as it stands. Look at the plastic repeats on your frozen list before you settle on that: which single reading would you have taken?';
+}
+</script>
+<script defer src="/hud.js"></script>
+<script id="mbm-guide-js">
+(function(){
+  var KEY='mbm_guide_v1';
+  function stored(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+  function store(on){try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}}
+  function apply(on){
+    document.documentElement.classList.toggle('mbm-guide-on',on);
+    var b=document.querySelector('.mbm-guide-btn');
+    if(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'ⓘ Guidance ✓':'ⓘ Guidance';}
+    var live=document.getElementById('vu-live-region');
+    if(live)live.textContent=on?'Guidance shown':'Guidance hidden';
+  }
+  window.mbmGuideToggle=function(){var on=!document.documentElement.classList.contains('mbm-guide-on');store(on);apply(on);};
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='g'&&e.key!=='G')return;
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible,.mbm-modal.open,.overlay.visible,.overlay.open'))return;
+    window.mbmGuideToggle();
+  });
+  apply(stored());
+})();
+</script>
+<script id="sci-hinge-shuffle">
+(function(){
+  /* SCA-1 CLOSE v2 P1. Hinge options are authored correct-first; shuffle at render,
+     screen only. Verdicts are by authored option identity (data-i / data-index), never
+     position. Wrappers marked data-shuffle="off" are order-dependent and stay authored. */
+  function rint(n){
+    try{
+      if(window.crypto&&window.crypto.getRandomValues&&n>0){
+        var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;
+        do{window.crypto.getRandomValues(a)}while(a[0]>=lim);
+        return a[0]%n;
+      }
+    }catch(e){}
+    return Math.floor(Math.random()*n);
+  }
+  function shuffle(box){
+    var k=[],i;
+    for(i=0;i<box.children.length;i++){if(box.children[i].tagName==='BUTTON')k.push(box.children[i]);}
+    if(k.length<2)return;
+    for(i=k.length-1;i>0;i--){var j=rint(i+1),t=k[i];k[i]=k[j];k[j]=t;}
+    for(i=0;i<k.length;i++)box.appendChild(k[i]);
+  }
+  function run(){
+    var w=document.querySelectorAll('.soft,.soft-check'),i,box;
+    for(i=0;i<w.length;i++){
+      if(w[i].getAttribute('data-shuffle')==='off')continue;
+      box=w[i].querySelector('.options');
+      if(box)shuffle(box);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
+})();
+</script>
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>
+</title>
+<style>
+</style>
+<style id="mbm-guide-css">
+</style>
+</head>
+<body>
+<a class="mbmhome" href="../../../index.html" aria-label="Back to the Lessons catalogue">
+</a>
+<!-- TEST PROTOTYPE. Original repo unchanged. 40-minute teaching route = 40 minutes. -->
+<main class="slide-container">
+<section class="slide" data-min="0" data-ta-move="Use Practical Ready in the staff panel; do not introduce new teaching on the title slide." data-ta-priority="Read the lesson architecture and equipment before pupils arrive." data-title="Lesson overview" data-type="title">
+<span class="slide-tag tag-title">
+</span>
+<div style="text-align:center">
+<span class="slide-tag tag-title">
+</span>
+<h1>
+</h1>
+<div class="mission-banner">
+<span class="mission-icon">
+</span>
+<div>
+<b>
+</b>
+<br/>
+</div>
+</div>
+<div class="hero-visual">
+<svg aria-label="Friction visual showing shoe grip, sliding block and braking tyre" role="img" viewbox="0 0 900 230">
+<defs>
+<lineargradient id="road" x1="0" x2="1">
+<stop stop-color="#d9e1e7">
+</stop>
+<stop offset="1" stop-color="#aab6c1">
+</stop>
+</lineargradient>
+</defs>
+<rect fill="url(#road)" height="45" rx="18" width="860" x="20" y="150">
+</rect>
+<g transform="translate(70 65)">
+<path d="M0 65 Q55 45 115 58 L145 80 L138 104 L20 104 Q-5 100 0 65" fill="#3F7D6E">
+</path>
+<path d="M18 105 l18 14 18-14 18 14 18-14 18 14 18-14" fill="none" stroke="#10233f" stroke-width="8">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="60" y="25">
+</text>
+</g>
+<g transform="translate(330 55)">
+<rect fill="#7c3aed" height="65" rx="10" width="95" x="0" y="45">
+</rect>
+<line stroke="#3F7D6E" stroke-width="7" x1="115" x2="205" y1="77" y2="77">
+</line>
+<path d="M205 77l-18-10v20z" fill="#3F7D6E">
+</path>
+<line stroke="#b91c1c" stroke-width="7" x1="-20" x2="-90" y1="77" y2="77">
+</line>
+<path d="M-90 77l18-10v20z" fill="#b91c1c">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="50" y="25">
+</text>
+<text fill="#b91c1c" font-weight="900" text-anchor="middle" x="-55" y="110">
+</text>
+</g>
+<g transform="translate(690 62)">
+<circle cx="70" cy="70" fill="#111827" r="62">
+</circle>
+<circle cx="70" cy="70" fill="#d1d5db" r="30">
+</circle>
+<path d="M10 140 C55 115 105 115 140 140" fill="none" stroke="#f97316" stroke-width="8">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="70" y="10">
+</text>
+</g>
+</svg>
+<div class="visual-caption">
+</div>
+</div>
+<p style="font-size:1.02rem;color:#64748b">
+</p>
+<div class="li-box" style="max-width:760px;margin:10px auto;text-align:left">
+<b>
+</b>
+</div>
+<div class="sc-box" style="max-width:760px;margin:auto;text-align:left">
+<b>
+</b>
+<ul>
+<li>
+</li>
+<li>
+</li>
+<li>
+</li>
+</ul>
+</div>
+<div class="story">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="title-actions">
+<button onclick="printTier('Supported')">
+</button>
+<button onclick="printTier('Standard')">
+</button>
+<button onclick="printTier('Stretch')">
+</button>
+<a class="btn" href="LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html#W3B">
+</a>
+</div>
+<p data-mbm-guide="route" class="source-note">
+</p>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="3" data-ta-move="If secure, step back. If recall is inaccessible, offer picture/pointing or one cue; keep the new lesson untouched." data-ta-priority="Settle and retrieve — do not pre-teach today’s idea." data-title="🚪 Arrival · prior lesson retrieval" data-type="arrival">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-arrival">
+</span>
+<div data-mbm-guide="staff" class="teacher-say">
+<b>
+</b>
+</div>
+<div class="li-box">
+<b>
+</b>
+</div>
+<div data-mbm-guide="route" class="retr-declare">
+<b>
+</b>
+</div>
+<div class="entry-route" style="background:#fff7ed;border-left:5px solid #f97316;padding:9px 12px;border-radius:10px;margin:6px 0">
+<b>
+</b>
+</div>
+<div class="tier-toggle">
+<button class="tier-btn" data-tier="Supported" onclick="switchTier('arrival','Supported')">
+</button>
+<button class="tier-btn" data-tier="Standard" onclick="switchTier('arrival','Standard')">
+</button>
+<button class="tier-btn" data-tier="Stretch" onclick="switchTier('arrival','Stretch')">
+</button>
+</div>
+<div class="tier on" data-tier="Supported" data-tier-panel="arrival">
+<div class="task-box" data-speak-host data-speak-text="Point to a surface here where friction is high. Point or say: which slides further on a smooth floor, a sock or a rubber shoe? Show how you would make a toy car go further along the floor. We test surfaces today. Point to the one you think will grip most.">
+<b>
+</b>
+<div class="retr-grid">
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q lead">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+</div>
+<button class="speak-btn" type="button" onclick="gsgSpeak(this)" aria-label="Read these instructions aloud">
+</button>
+</div>
+</div>
+<div class="tier" data-tier="Standard" data-tier-panel="arrival">
+<div class="task-box" data-speak-host data-speak-text="Last lesson you decided when friction helps. Give one place it helps. Which would slide further on a smooth floor, a sock or a rubber shoe? Say why. How would you make a toy car travel further along the floor? Today we test surfaces. Which surface will grip most, and how will we know?">
+<b>
+</b>
+<div class="retr-grid">
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q lead">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+</div>
+<button class="speak-btn" type="button" onclick="gsgSpeak(this)" aria-label="Read these instructions aloud">
+</button>
+</div>
+</div>
+<div class="tier" data-tier="Stretch" data-tier-panel="arrival">
+<div class="task-box" data-speak-host data-speak-text="Last lesson you found friction can be a problem too. Give one place a designer would want less of it. Predict which slides further, then say what you would keep the same to be sure. A toy car stops sooner than you expected. Name two things that could explain it. Today we test surfaces. What would make our answer trustworthy to someone who was not here?">
+<b>
+</b>
+<div class="retr-grid">
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+<div class="retr-q lead">
+<div class="retr-head">
+<span class="retr-badge">
+</span>
+</div>
+<p class="retr-ask">
+</p>
+<p class="retr-route">
+<b>
+</b>
+<b>
+</b>
+</p>
+</div>
+</div>
+<button class="speak-btn" type="button" onclick="gsgSpeak(this)" aria-label="Read these instructions aloud">
+</button>
+</div>
+</div>
+<div class="scaffold-box">
+<b>
+</b>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage active">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="3" data-ta-move="If pupils already know the concept, ask for a reason; if not, preserve the question for the I Do." data-ta-priority="Protect curiosity. Accept noticing and prediction without requiring today’s vocabulary." data-title="🌱 Starter · make the new idea worth knowing" data-type="starter">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-starter">
+</span>
+<div class="hands-on-ribbon">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="task-box">
+<h3>
+</h3>
+<p style="font-size:1.25rem;font-weight:800">
+</p>
+</div>
+<div class="commit-box">
+<h4>
+</h4>
+<p style="margin:0 0 7px">
+</p>
+<div class="commit-opts">
+<button class="commit-opt" type="button" aria-pressed="false" onclick="gsgCommit(this)">
+</button>
+<button class="commit-opt" type="button" aria-pressed="false" onclick="gsgCommit(this)">
+</button>
+<button class="commit-opt" type="button" aria-pressed="false" onclick="gsgCommit(this)">
+</button>
+</div>
+<p class="commit-state">
+</p>
+<p class="commit-note">
+</p>
+</div>
+<div class="microfilm" data-frame="0" id="film-W3B">
+<div class="film-screen">
+<div class="film-frame on">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="film-frame">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="film-frame">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="film-frame">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+</div>
+<div class="film-controls">
+<button onclick="v3FilmShow('film-W3B',0)">
+</button>
+<button onclick="v3FilmNext('film-W3B')">
+</button>
+<button onclick="v3FilmPlay('film-W3B')">
+</button>
+<button onclick="v3FilmStop('film-W3B')">
+</button>
+</div>
+</div>
+<div class="scaffold-box">
+<b>
+</b>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="4" data-ta-move="Do not run a second explanation over the teacher. If secure, reduce proximity; if access is the barrier, quietly change modality." data-ta-priority="Pupils watch the teacher model; you watch access, regulation and the point where understanding changes." data-title="👩‍🏫 I Do · model the first concept" data-type="ido">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-ido">
+</span>
+<div class="ido-box">
+<b>
+</b>
+</div>
+<div class="hero-visual">
+<svg aria-label="Friction visual showing shoe grip, sliding block and braking tyre" role="img" viewbox="0 0 900 230">
+<defs>
+<lineargradient id="road" x1="0" x2="1">
+<stop stop-color="#d9e1e7">
+</stop>
+<stop offset="1" stop-color="#aab6c1">
+</stop>
+</lineargradient>
+</defs>
+<rect fill="url(#road)" height="45" rx="18" width="860" x="20" y="150">
+</rect>
+<g transform="translate(70 65)">
+<path d="M0 65 Q55 45 115 58 L145 80 L138 104 L20 104 Q-5 100 0 65" fill="#3F7D6E">
+</path>
+<path d="M18 105 l18 14 18-14 18 14 18-14 18 14 18-14" fill="none" stroke="#10233f" stroke-width="8">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="60" y="25">
+</text>
+</g>
+<g transform="translate(330 55)">
+<rect fill="#7c3aed" height="65" rx="10" width="95" x="0" y="45">
+</rect>
+<line stroke="#3F7D6E" stroke-width="7" x1="115" x2="205" y1="77" y2="77">
+</line>
+<path d="M205 77l-18-10v20z" fill="#3F7D6E">
+</path>
+<line stroke="#b91c1c" stroke-width="7" x1="-20" x2="-90" y1="77" y2="77">
+</line>
+<path d="M-90 77l18-10v20z" fill="#b91c1c">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="50" y="25">
+</text>
+<text fill="#b91c1c" font-weight="900" text-anchor="middle" x="-55" y="110">
+</text>
+</g>
+<g transform="translate(690 62)">
+<circle cx="70" cy="70" fill="#111827" r="62">
+</circle>
+<circle cx="70" cy="70" fill="#d1d5db" r="30">
+</circle>
+<path d="M10 140 C55 115 105 115 140 140" fill="none" stroke="#f97316" stroke-width="8">
+</path>
+<text fill="#10233f" font-weight="900" text-anchor="middle" x="70" y="10">
+</text>
+</g>
+</svg>
+<div class="visual-caption">
+</div>
+</div>
+<div class="model-limit">
+<div class="ml-row ml-yes">
+<b>
+</b>
+</div>
+<div class="ml-row ml-no">
+<b>
+</b>
+</div>
+</div>
+<div class="model-steps" id="steps-W3B-1">
+<div class="model-step">
+</div>
+<div class="model-step">
+</div>
+<div class="model-step">
+</div>
+</div>
+<div style="margin-top:9px">
+<button onclick="revealStep('steps-W3B-1',this)">
+</button>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="4" data-ta-move="Secure → unfamiliar example/reduce prompt. Mixed → contrast then recheck. Misconception → ask teacher to re-model. Access → change mode, same goal." data-ta-priority="Wait time is the first intervention. Every pupil should think/commit before a reveal." data-title="🤝 We Do · hinge question" data-type="wedo">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-wedo">
+</span>
+<div class="soft-check" data-correct="0" data-explain="Change the surface and keep the object and release method the same." data-hint="If two things change, you cannot tell which caused the difference.">
+<div class="wedo-box">
+<b>
+</b>
+</div>
+<div class="options">
+<button class="soft-option" data-index="0" onclick="softAnswer(this)">
+</button>
+<button class="soft-option" data-index="1" onclick="softAnswer(this)">
+</button>
+<button class="soft-option" data-index="2" onclick="softAnswer(this)">
+</button>
+</div>
+<div aria-live="polite" class="feedback">
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="3" data-ta-move="Do not run a second explanation over the teacher. If secure, reduce proximity; if access is the barrier, quietly change modality." data-ta-priority="Pupils watch the teacher model; you watch access, regulation and the point where understanding changes." data-title="👩‍🏫 I Do 2 · expand or connect" data-type="ido">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-ido">
+</span>
+<div class="ido-box">
+<b>
+</b>
+</div>
+<div class="model-steps" id="steps-W3B-2">
+<div class="model-step">
+</div>
+<div class="model-step">
+</div>
+<div class="model-step">
+</div>
+</div>
+<div style="margin-top:9px">
+<button onclick="revealStep('steps-W3B-2',this)">
+</button>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="4" data-ta-move="Secure → unfamiliar example/reduce prompt. Mixed → contrast then recheck. Misconception → ask teacher to re-model. Access → change mode, same goal." data-ta-priority="Wait time is the first intervention. Every pupil should think/commit before a reveal." data-title="🤝 We Do 2 · interactive exploration" data-type="wedo">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-wedo">
+</span>
+<div class="wedo-box">
+<b>
+</b>
+</div>
+<div class="widget">
+<h3>
+</h3>
+<p>
+</p>
+<div class="three-grid">
+<label class="route-card supported">
+<input id="W3B-r" min="0" step="0.1" type="number"/>
+</label>
+<label class="route-card standard">
+<input id="W3B-m" min="0" step="0.1" type="number"/>
+</label>
+<label class="route-card stretch">
+<input id="W3B-s" min="0" step="0.1" type="number"/>
+</label>
+</div>
+<button onclick="frictionResults('W3B')" style="margin-top:9px">
+</button>
+<div class="widget-feedback" aria-live="polite" id="wf-W3B">
+</div>
+</div>
+<div class="gsglab" id="gsglab-W3B">
+<h3>
+</h3>
+<p style="margin:0">
+</p>
+<div class="gl-step">
+</div>
+<p style="margin:0 0 5px">
+</p>
+<div class="gl-row gl-predict">
+<button class="gl-btn i0" data-label="Carpet" type="button" aria-pressed="false" onclick="gsgLabPredict_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+<button class="gl-btn i1" data-label="Wood" type="button" aria-pressed="false" onclick="gsgLabPredict_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+<button class="gl-btn i2" data-label="Smooth plastic" type="button" aria-pressed="false" onclick="gsgLabPredict_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+</div>
+<p class="gl-say" id="gl-say-W3B" aria-live="polite">
+</p>
+<div class="gl-step">
+</div>
+<div class="gl-row">
+<button class="gl-btn i0" data-i="0" type="button" onclick="gsgLabTest_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+<button class="gl-btn i1" data-i="1" type="button" onclick="gsgLabTest_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+<button class="gl-btn i2" data-i="2" type="button" onclick="gsgLabTest_W3B(this)">
+<span class="gl-glyph">
+</span>
+</button>
+</div>
+<div class="gl-stage" id="gl-stage-W3B" aria-live="polite">
+</div>
+<div class="gl-frozen">
+<b>
+</b>
+<ol id="gl-list-W3B">
+</ol>
+<p style="margin:6px 0 0" id="gl-note-W3B" aria-live="polite">
+</p>
+</div>
+<div class="gl-step">
+</div>
+<div class="gl-glitch">
+<b>
+</b>
+<div class="gl-row" style="margin-top:7px">
+<button class="gl-btn i0" data-fix="0" type="button" onclick="gsgLabGlitch_W3B(this)">
+</button>
+<button class="gl-btn i1" data-fix="1" type="button" onclick="gsgLabGlitch_W3B(this)">
+</button>
+</div>
+<p class="gl-say" id="gl-glitch-W3B" aria-live="polite">
+</p>
+</div>
+<p class="gl-foot">
+</p>
+</div>
+<div class="chart-panel" id="v3-chart-W3B">
+<div class="visual-caption">
+</div>
+</div>
+<div class="scaffold-box">
+<b>
+</b>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+<section class="slide" data-min="15" data-ta-move="Move support away as soon as the pupil can continue. Stretch means deeper reasoning or transfer, never just more writing." data-ta-priority="Use least prompt first and protect pupil authorship. Help the process, not the answer." data-title="✏️ Independent task · evidence of thinking" data-type="independent">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-independent">
+</span>
+<div class="task-box">
+<h3>
+</h3>
+<p style="font-size:1.16rem;font-weight:750">
+</p>
+</div>
+<div class="practical-ready">
+<b>
+</b>
+<div class="practical-grid">
+<div class="practical-cell">
+<b>
+</b>
+</div>
+<div class="practical-cell">
+<b>
+</b>
+</div>
+<div class="practical-cell">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="li-box">
+<b>
+</b>
+</div>
+<div class="three-grid">
+<div class="route-card supported">
+<b>
+</b>
+<div class="route-actions">
+<button class="ghost" onclick="toggleScaffold('W3B-Supported')">
+</button>
+</div>
+<div class="scaffold-pop" id="W3B-Supported">
+<div style="font-size:.79rem;color:#64748b;margin-top:6px">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="route-card standard">
+<b>
+</b>
+<div class="route-actions">
+<button class="ghost" onclick="toggleScaffold('W3B-Standard')">
+</button>
+</div>
+<div class="scaffold-pop" id="W3B-Standard">
+<div style="font-size:.79rem;color:#64748b;margin-top:6px">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="route-card stretch">
+<b>
+</b>
+<div class="route-actions">
+<button class="ghost" onclick="toggleScaffold('W3B-Stretch')">
+</button>
+</div>
+<div class="scaffold-pop" id="W3B-Stretch">
+<div style="font-size:.79rem;color:#64748b;margin-top:6px">
+<b>
+</b>
+</div>
+</div>
+</div>
+</div>
+<div class="aspire-box">
+<b>
+</b>
+<div class="evidence-choices">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p style="font-size:.85rem;margin-bottom:0">
+</p>
+</div>
+<div class="evidence-gate">
+<div class="ev-step">
+<b>
+</b>
+</div>
+<div class="ev-step">
+<b>
+</b>
+</div>
+<div class="ev-step">
+<b>
+</b>
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+<div class="wordhelp">
+<h4>
+</h4>
+<div class="wh-row">
+<span class="wh-term">
+</span>
+<button class="wh-btn" type="button" aria-expanded="false" onclick="gsgWord(this)">
+</button>
+<span class="wh-bridge" hidden>
+</span>
+</div>
+<div class="wh-row">
+<span class="wh-term">
+</span>
+<button class="wh-btn" type="button" aria-expanded="false" onclick="gsgWord(this)">
+</button>
+<span class="wh-bridge" hidden>
+</span>
+</div>
+<div class="wh-row">
+<span class="wh-term">
+</span>
+<button class="wh-btn" type="button" aria-expanded="false" onclick="gsgWord(this)">
+</button>
+<span class="wh-bridge" hidden>
+</span>
+</div>
+<p class="wh-fade">
+<span data-mbm-guide="staff">
+<b>
+</b>
+</span>
+</p>
+</div>
+</section>
+<section class="slide" data-min="4" data-ta-move="No initial/signature. If the response reveals a misconception or access barrier, the next lesson changes because of it." data-ta-priority="Do not give the answer. Receive the response, help the adult choose one next step, then let the pupil write the single closure line." data-title="🎫 Exit ticket · response becomes the next step" data-type="exit">
+<div class="time-chip">
+</div>
+<span class="slide-tag tag-exit">
+</span>
+<div class="tier-toggle">
+<button class="tier-btn" data-tier="Supported" onclick="switchTier('exit','Supported')">
+</button>
+<button class="tier-btn" data-tier="Standard" onclick="switchTier('exit','Standard')">
+</button>
+<button class="tier-btn" data-tier="Stretch" onclick="switchTier('exit','Stretch')">
+</button>
+</div>
+<div class="tier on" data-tier="Supported" data-tier-panel="exit">
+<div class="task-box">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="tier" data-tier="Standard" data-tier-panel="exit">
+<div class="task-box">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="tier" data-tier="Stretch" data-tier-panel="exit">
+<div class="task-box">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="close-line">
+<b>
+</b>
+<p>
+<b>
+</b>
+<b>
+</b>
+</p>
+<p style="font-size:.86rem;margin-bottom:0">
+</p>
+</div>
+<div class="grow-close" data-speak-host data-speak-text="What I said, and what it changed. Write one line about what you said today and what changed because of it.">
+<h4>
+</h4>
+<p style="margin:0 0 6px;font-size:1.08rem">
+<b>
+</b>
+</p>
+<textarea aria-label="What I said, and what it changed" rows="3" placeholder="Write your own line here, or an adult writes down your exact words.">
+</textarea>
+<p class="gc-note">
+<b>
+</b>
+</p>
+<p class="gc-routes">
+<b>
+</b>
+</p>
+<button class="speak-btn" type="button" onclick="gsgSpeak(this)" aria-label="Read these instructions aloud">
+</button>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part-row">
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+<span class="part-chip">
+</span>
+</div>
+<div style="font-size:.8rem;color:#64748b;margin-top:5px">
+</div>
+</div>
+<div class="lundy-mini">
+<div class="lundy-row">
+<div class="lundy-stage">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+<div class="lundy-stage active">
+</div>
+</div>
+<div class="lundy-thread">
+</div>
+</div>
+</section>
+</main>
+<div class="overlay" data-topic-branches='{"secure": "Topic-specific next move: W4A retrieves what pupils changed and kept the same before moving into mechanisms. Reduce prompting or transfer to a less familiar example.", "mixed": "Contrast two examples, let pupils reason together, then recheck every pupil \u2014 do not treat the class pattern as an individual diagnosis.", "misconception": "Use a counterexample linked to: The longest distance means the most friction. Re-model, then ask a new hinge question before moving on.", "access": "Keep this goal: I can compare friction on different surfaces and use observations as evidence. Change response mode, sensory load, task presentation or adult role instead of lowering the Science.", "method": "Repair the method/evidence quality, then repeat. Preserve the original prediction/result rather than rewriting history."}' id="taOverlay" onclick="if(event.target.id==='taOverlay')closeOverlay()">
+<div class="modal">
+<div class="modal-head">
+<div>
+<span class="slide-tag tag-title">
+</span>
+<h2 id="taSlide">
+</h2>
+</div>
+<button class="ghost" id="closeTA" onclick="closeOverlay()">
+</button>
+</div>
+<div class="ta-grid">
+<div class="ta-card">
+<b>
+</b>
+<p>
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<p id="taPriority">
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<p id="taMove">
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<div class="prompt-ladder">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p style="font-size:.82rem">
+</p>
+</div>
+</div>
+<h3>
+</h3>
+<div class="branch-buttons">
+<button onclick="branchReadTopic('secure')">
+</button>
+<button onclick="branchReadTopic('mixed')">
+</button>
+<button onclick="branchReadTopic('misconception')">
+</button>
+<button onclick="branchReadTopic('access')">
+</button>
+<button onclick="branchReadTopic('method')">
+</button>
+</div>
+<div class="branch-result" id="branchResult">
+</div>
+<div class="sc-box" style="margin-top:10px">
+<b>
+</b>
+</div>
+</div>
+</div>
+<nav class="controls">
+<div class="control-left">
+<button class="staff" onclick="openTA()">
+</button>
+<button class="mbm-guide-btn" aria-pressed="false" onclick="mbmGuideToggle()">
+</button>
+<a class="btn ghost" href="LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html#W3B">
+</a>
+<button class="live-loop-btn" onclick="v3OpenLoop()">
+</button>
+<button class="ghost" onclick="v3OpenMedia()">
+</button>
+</div>
+<div class="progress-label" id="progressLabel">
+</div>
+<div class="control-right">
+<button class="ghost" id="prev" onclick="prevSlide()">
+</button>
+<button id="next" onclick="nextSlide()">
+</button>
+</div>
+</nav>
+<div class="progress-wrap">
+<div class="progress-bar" id="progressBar">
+</div>
+</div>
+<div class="print-pack">
+<div class="print-page">
+<h1>
+</h1>
+<h2>
+</h2>
+<p class="pidline" style="margin:2px 0 8px;font-size:.92rem">
+<b>
+</b>
+<b>
+</b>
+</p>
+<p class="pentry" style="margin:0 0 8px;font-size:.92rem">
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p style="margin:3px 0">
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<p style="margin:3px 0">
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<p style="margin:3px 0">
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<p style="margin:3px 0">
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<div class="print-route supported">
+<h2>
+</h2>
+<div class="print-box">
+</div>
+<h3>
+</h3>
+<div class="print-box">
+</div>
+</div>
+<div class="print-route standard">
+<h2>
+</h2>
+<div class="print-box">
+</div>
+<h3>
+</h3>
+<div class="print-box">
+</div>
+</div>
+<div class="print-route stretch">
+<h2>
+</h2>
+<div class="print-box">
+</div>
+<h3>
+</h3>
+<div class="print-box">
+</div>
+</div>
+<div class="print-box">
+<b>
+</b>
+<br/>
+<b>
+</b>
+</div>
+<div class="print-box">
+<b>
+</b>
+<br/>
+<b>
+</b>
+<br/>
+<b>
+</b>
+<br/>
+<b>
+</b>
+</div>
+<h3>
+</h3>
+<p>
+</p>
+</div>
+<div class="print-page">
+<h2>
+</h2>
+<p>
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<p>
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<p>
+<b>
+</b>
+</p>
+<div class="print-line">
+</div>
+<div class="print-box">
+<b>
+</b>
+<br/>
+</div>
+<div class="print-box">
+<b>
+</b>
+<br/>
+<br/>
+<br/>
+</div>
+<p style="font-size:.85rem">
+<b>
+</b>
+</p>
+<p style="font-size:.85rem">
+</p>
+<div id="print-witness" class="print-section">
+<h1 style="text-align:center;font-size:1.5rem;margin-bottom:2px">
+</h1>
+<p style="text-align:center;margin:0 0 10px;font-size:.88rem">
+<strong>
+</strong>
+<br>
+<!-- semh2-hide (reversible; restore on Cheryl's confirmation): AQA UAS unit code: TBC (Cheryl). -->
+</p>
+<table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:10px">
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+</table>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<div style="border:1px solid #999;height:26px;margin-bottom:5px">
+</div>
+<div style="border:1px solid #999;height:26px;margin-bottom:5px">
+</div>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<table style="width:100%;border-collapse:collapse;font-size:.88rem">
+<tr>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+</tr>
+</table>
+<p style="margin:8px 0 0;font-size:.82rem">
+</p>
+</div>
+</div>
+</div>
+<script>
+<=0)){f.textContent='Add all three positive distances first.';return}const names=['rough/carpet','medium','smooth'];const min=Math.min(...vals),ix=vals.indexOf(min);f.textContent='The shortest distance is '+min+' cm on '+names[ix]+'. In this comparison that suggests the greatest friction. Use the actual result in your conclusion.'}
+function leverDemo(id){const v=Number(document.getElementById('lev-'+id).value),p=document.getElementById('pivot-'+id),eff=document.getElementById('eff-'+id),f=document.getElementById('wf-'+id);p.style.left=v+'%';const effort=Math.max(18,90-v);eff.style.width=effort+'%';f.textContent=v>
+<40?'Pivot further from the load: greater effort, but the effort end moves less.':'Middle position: compare both effort and distance before deciding.'}
+function fairMethod(id){const s=document.getElementById(id+'-surface').checked,r=document.getElementById(id+'-ramp').checked,p=document.getElementById(id+'-push').checked,f=document.getElementById('wf-'+id);if(s&&!r&&!p)f.textContent='Method repaired: surface changes; ramp height and release stay controlled. Now name what you will measure and its unit.';else if(!s)f.textContent='Not yet — the question is about surface, so surface must be the deliberate change.';else f.textContent='Not yet — more than one deliberate thing is changing. Turn off the extra change(s) and check again.'}
+function fairData(id){const keys=['r','m','s'],names=['Rough','Medium','Smooth'],means=[];for(let x=0;x<3;x++){const arr=[1,2,3].map(n=>
+<=0)){document.getElementById('wf-'+id).textContent='Enter all nine positive readings first.';return}const mean=arr.reduce((a,b)=>
+<=0))return;const max=Math.max(...nums);el.innerHTML='<div class="chart-bars">
+<div class="chart-bar-wrap">
+<div class="chart-bar" style="height:'+Math.max(8,(v/max)*100)+'%">
+<span>
+</span>
+</div>
+<div class="chart-label">
+</div>
+</div>
+</div>
+<div class="visual-caption">
+</div>
+<b.length;i++){b[i].hidden=true}
+})();
+/* WORD HELP: the formal term is always the dominant text. The bridge stays
+   hidden until a pupil asks for it, so the scaffold fades by request. */
+function gsgWord(btn){
+ var row=btn.closest('.wh-row');if(!row)return;
+ var br=row.querySelector('.wh-bridge');if(!br)return;
+ var open=!br.hidden;
+ br.hidden=open;
+ btn.setAttribute('aria-expanded',String(!open));
+ btn.textContent=open?'word help':'hide help';
+}
+/* Starter commit: receives a prediction. It does NOT mark it. There is no
+   correct answer here and nothing is counted, stored or scored — the reveal
+   happens through the teaching that follows. */
+function gsgCommit(btn){
+ var box=btn.closest('.commit-box');if(!box)return;
+ var opts=box.querySelectorAll('.commit-opt');
+ for(var i=0;i<opts.length;i++){opts[i].classList.remove('chosen');opts[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('chosen');btn.setAttribute('aria-pressed','true');
+ var st=box.querySelector('.commit-state');
+ if(st)st.textContent='Prediction received: "'+(btn.textContent||'').trim()+'". Hold onto it — we find out by testing, not by being told.';
+}
+
+/* ===== GSG-1 We Do lab: W3B =====
+   predict-commit ->
+<all.length;i++){all[i].classList.remove('picked');all[i].setAttribute('aria-pressed','false')}
+ btn.classList.add('picked');btn.setAttribute('aria-pressed','true');
+ document.getElementById('gl-say-W3B').textContent=
+  'Prediction received: '+btn.dataset.label+'. Nothing is marked. Test them and find out.';
+}
+function gsgLabTest_W3B(btn){
+ var k=Number(btn.dataset.i),d=gsgLab_W3B.data[k];
+ btn.classList.add('tested');
+ document.getElementById('gl-stage-W3B').innerHTML=
+  '<div class="gl-name">
+</div>
+<p style="margin:5px 0 0">
+</p>
+<0){
+  gsgLab_W3B.tested.push(k);
+  var li=document.createElement('li');li.textContent=d.n+' \u2014 '+d.t;
+  document.getElementById('gl-list-W3B').appendChild(li);
+ }
+ var done=gsgLab_W3B.tested.length,total=gsgLab_W3B.data.length;
+ document.getElementById('gl-note-W3B').textContent= done<total
+  ? 'Tested '+done+' of '+total+'. Each result stays on the list so you can compare them.'
+  : 'All three are frozen on the list. Compare them: which surface gripped most, and which set of repeats would you want to run again before you trusted it?';
+}
+function gsgLabGlitch_W3B(btn){
+ document.getElementById('gl-glitch-W3B').textContent=
+  btn.dataset.fix==='1' ? 'Repaired. One reading can be a fluke. Repeats show whether a result holds, and the odd plastic reading is exactly the kind of thing a single measurement hides.' : 'Kept as it stands. Look at the plastic repeats on your frozen list before you settle on that: which single reading would you have taken?';
+}
+</script>
+<aside aria-label="Optional media and practical ready" class="media-drawer" id="v3MediaDrawer">
+<button class="ghost" onclick="v3CloseMedia()">
+</button>
+<h2>
+</h2>
+<div class="mission-banner">
+<span class="mission-icon">
+</span>
+<div>
+<b>
+</b>
+<br/>
+</div>
+</div>
+<div class="practical-ready">
+<b>
+</b>
+<p>
+</p>
+<b>
+</b>
+<p>
+</p>
+<b>
+</b>
+<p>
+</p>
+</div>
+<h3>
+</h3>
+<div class="media-card">
+<b>
+</b>
+<p class="media-note">
+</p>
+<a href="https://www.thenational.academy/teachers/programmes/science-primary-ks2/units/forces-including-simple-machines/lessons/friction-do-and-review" rel="noopener noreferrer" target="_blank">
+</a>
+</div>
+<p class="media-note">
+</p>
+</aside>
+<div class="overlay" id="v3LoopOverlay" onclick="if(event.target.id==='v3LoopOverlay')document.getElementById('v3LoopOverlay').classList.remove('visible')">
+<div class="modal">
+<div class="modal-head">
+<div>
+<span class="slide-tag tag-title">
+</span>
+<h2>
+</h2>
+</div>
+<button class="ghost" onclick="document.getElementById('v3LoopOverlay').classList.remove('visible')">
+</button>
+</div>
+<div class="policy-strip">
+<div class="policy-stage">
+<b>
+</b>
+</div>
+<div class="policy-stage">
+<b>
+</b>
+</div>
+<div class="policy-stage">
+<b>
+</b>
+</div>
+<div class="policy-stage">
+<b>
+</b>
+</div>
+</div>
+<h3>
+</h3>
+<div class="branch-buttons">
+<button onclick="v3LoopAction('secure')">
+</button>
+<button onclick="v3LoopAction('mixed')">
+</button>
+<button onclick="v3LoopAction('miscon')">
+</button>
+<button onclick="v3LoopAction('access')">
+</button>
+<button onclick="v3LoopAction('method')">
+</button>
+</div>
+<div class="loop-next" id="v3LoopResult">
+</div>
+<h3>
+</h3>
+<div class="code-palette">
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+<span class="code-chip">
+</span>
+</div>
+<p class="media-note">
+<b>
+</b>
+</p>
+</div>
+</div>
+<script defer src="/hud.js">
+</script>
+<!--mbm-guide:v1-->
+<script id="mbm-guide-js">
+</script>
+<!--sci-hinge-shuffle:v1-->
+<script id="sci-hinge-shuffle">
+<box.children.length;i++){if(box.children[i].tagName==='BUTTON')k.push(box.children[i]);}
+    if(k.length<2)return;
+    for(i=k.length-1;i>
+<k.length;i++)box.appendChild(k[i]);
+  }
+  function run(){
+    var w=document.querySelectorAll('.soft,.soft-check'),i,box;
+    for(i=0;i<w.length;i++){
+      if(w[i].getAttribute('data-shuffle')==='off')continue;
+      box=w[i].querySelector('.options');
+      if(box)shuffle(box);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
+})();
+</script>
+</body>
+</html>

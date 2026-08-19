@@ -54,3 +54,11 @@ diff; merged into the PART A branch before the conditional merge; sentinels held
 50/123 set-identical and the PROTECTED manifest was byte-identical across the
 merge. **PART B's conditional therefore resolves to INCLUDE the 35 science
 v3_40min decks** (CHASSIS.md's "deferred" note is superseded by this entry).
+
+## Slideshows/*_ART_* (24 decks) — OWNER RULING, 2026-08-19 (SCA-1 CLOSE v2, 3e)
+
+`{Build,Grow,Launch}/Slideshows/*_ART_*` is the **superseded 2025-26 legacy art set**:
+Art_Teesside replaced it and it is excluded from every staff pack. **Do not patch it** —
+not for visibility tagging, not for correctness. ECA-1 left it untouched (recorded then
+as "outside the ordered universe"); this ruling closes the question permanently, and any
+PROPOSED item raised against those 24 decks is withdrawn rather than held.

@@ -1,0 +1,1388 @@
+<style>
+:root{--build:#4E7A9B;--navy:#10233f;--text:#1f2937;--muted:#64748b;--bg:#f5f8fa;
+--lo:#e7d8e9;--purple:#7c3aed;--pink:#db2777;--amber:#eab308;--blue:#3b82f6;
+--green:#16a34a;--softblue:#e9f4fb;--softamber:#fff7d6;--softgreen:#eaf8ef;--line:#d8e0e8}
+*{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#eef5f8);color:var(--text);overflow:hidden}
+button,a.btn{font:inherit;min-height:44px;border:0;border-radius:10px;padding:9px 14px;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button{background:var(--blue);color:#fff;box-shadow:0 4px 9px rgba(0,0,0,.12)}button:hover{filter:brightness(.94)}
+button.ghost,a.btn.ghost{background:#eef2f6;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}.staff{background:var(--build)}.loopbtn{background:#9c27b0!important}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:4px solid #facc15;outline-offset:3px}
+.deck{height:100%;display:flex;align-items:center;justify-content:center;padding:14px 14px 75px}.slide{display:none;width:94%;height:91%;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);border-top:10px solid var(--build);padding:28px 32px;overflow:auto;position:relative;flex-direction:column}.slide.active{display:flex}
+.slide[data-type="arrival"]{border-top-color:#d8a63b}.slide[data-type="starter"]{border-top-color:#4d82a0}.slide[data-type="ido"]{border-top-color:var(--purple)}.slide[data-type="wedo"]{border-top-color:var(--pink)}.slide[data-type="independent"]{border-top-color:var(--amber)}.slide[data-type="exit"]{border-top-color:#f97316}
+h1{font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.03;margin:6px 0 10px;border-bottom:3px solid #9c27b0;display:inline-block}h2{font-size:clamp(1.5rem,2.7vw,2.2rem);margin:4px 0 12px;border-bottom:2px solid #e2e8f0;padding-bottom:8px}p,li{font-size:clamp(1rem,1.35vw,1.14rem);line-height:1.5}.tag{display:inline-block;border-radius:8px;padding:5px 12px;font-size:.78rem;font-weight:950;letter-spacing:.09em;text-transform:uppercase}.tag.title{background:var(--build);color:#fff}.tag.arrival{background:#fef3c7;color:#92400e}.tag.starter{background:#dbeafe;color:#1e40af}.tag.ido{background:#ede9fe;color:#5b21b6}.tag.wedo{background:#fce7f3;color:#9d174d}.tag.ind{background:#fef9c3;color:#92400e}.tag.exit{background:#ffedd5;color:#9a3412}
+.time{position:absolute;right:25px;top:20px;background:#0f172a;color:#fff;border-radius:999px;padding:6px 10px;font-size:.82rem;font-weight:900}
+.box{border-radius:12px;padding:12px 14px;margin:8px 0}.lo{background:#eadbec;border-left:6px solid #9c27b0}.task{background:#fef9c3;border:2px solid #eab308}.ido{background:#ede9fe;border-left:6px solid #7c3aed}.wedo{background:#fce7f3;border-left:6px solid #db2777}.scaf{background:#e0f2fe;border-left:6px solid #38bdf8}.good{background:#eaf8ef;border-left:6px solid #16a34a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.story,.chips,.part,.media-buttons{display:flex;gap:7px;flex-wrap:wrap}.story{justify-content:center}.story span,.chip{background:#f1f5f9;border:1px solid #d8e0e8;border-radius:999px;padding:6px 9px;font-size:.8rem;font-weight:850}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}.hero-visual{background:linear-gradient(145deg,#071426,#18344f);border-radius:18px;min-height:230px;padding:12px;color:#fff;display:flex;align-items:center;justify-content:center}.hero-visual svg{width:100%;max-height:230px}
+.microfilm{border:3px solid #10233f;border-radius:16px;background:#071426;color:#fff;padding:12px;margin:10px 0;position:relative;overflow:hidden}.microfilm::before{content:'LOCAL VISUAL HOOK · NO NETWORK';position:absolute;right:10px;top:8px;font-size:.65rem;letter-spacing:.08em;font-weight:900;color:#a9cfe3}.film-screen{min-height:125px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px 12px 9px}.frame{display:none}.frame.on{display:block}.film-kicker{font-size:.7rem;letter-spacing:.14em;color:#9ec9df;font-weight:950}.film-title{font-size:clamp(1.35rem,3vw,2.3rem);font-weight:950;margin:5px 0}.film-line{color:#dbeafe}.film-controls{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.film-controls button{background:#fff;color:#10233f;box-shadow:none}
+.tiers{display:flex;gap:8px;flex-wrap:wrap}.tier{display:none}.tier.on{display:block}.tierbtn.s{background:#22c55e}.tierbtn.m{background:#f97316}.tierbtn.h{background:#1e3a8a}
+.route{border:2px solid #d7dee7;border-radius:13px;padding:12px;background:#fff}.route.s{border-left:7px solid #22c55e}.route.m{border-left:7px solid #f97316}.route.h{border-left:7px solid #1e3a8a}.scaffold{display:none;margin-top:8px;background:#eef8ff;border:1px solid #bae6fd;border-radius:9px;padding:9px}.scaffold.open{display:block}
+.participation{border:2px solid #cbd5e1;border-radius:12px;padding:9px 11px;background:#f8fafc;margin-top:9px}.part span{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:5px 8px;font-size:.83rem;font-weight:850}
+.model-step{display:none;border:2px solid #d8d1ec;border-left:6px solid var(--purple);border-radius:11px;padding:9px 11px;margin:7px 0;background:#fff}.model-step.show{display:block}.model-step b{color:#6d28d9}
+.options{display:grid;gap:8px;margin-top:8px}.option{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none;text-align:left}.option.correct{border-color:#4e9b6a;background:#ecfdf3}.option.retry{border-color:#d6a84c;background:#fff7d6}.feedback{min-height:46px;padding:9px 11px;border-radius:10px;background:#f1f5f9;margin-top:8px;font-weight:800}.feedback.correct{background:#ecfdf3;color:#166534}.feedback.retry{background:#fff7d6;color:#7c5a00}
+.lundy{margin-top:auto;padding-top:8px}.lundy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.ls{border:1px solid #d8e0e8;border-radius:9px;padding:6px;background:#f8fafc;font-size:.75rem;font-weight:900;text-align:center;color:#64748b}.ls.on{background:#eaf4f8;border-color:var(--build);color:#355e7b}.lundy-note{font-size:.81rem;color:#475569;margin-top:5px}
+.practical{background:linear-gradient(135deg,#fff7d6,#eef7fb);border:2px solid #d9c36b;border-radius:14px;padding:11px;margin:9px 0}.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pr-cell{background:#fff;border:1px solid #d7dee7;border-radius:10px;padding:8px;font-size:.85rem}.pr-cell b{display:block;color:#10233f;margin-bottom:3px}.evgate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:9px 0}.ev{border:2px solid #d6dee7;background:#fff;border-radius:10px;padding:9px}.ev b{display:block;color:#355e7b}
+.widget{border:2px solid #cbd5e1;border-radius:14px;padding:12px;background:#fbfdff;margin:8px 0}.wf{margin-top:8px;background:#f1f5f9;border-radius:9px;padding:9px;min-height:42px;font-weight:780}
+.animal-buttons,.job-buttons,.plate-buttons,.chain-buttons{display:flex;gap:6px;flex-wrap:wrap}.animal-buttons button,.job-buttons button,.plate-buttons button,.chain-buttons button{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}
+.scan-stage{min-height:180px;background:#071426;border-radius:14px;color:#fff;padding:13px;position:relative}.scan-animal{font-size:4rem;text-align:center}.spine-line{width:9px;height:80px;background:repeating-linear-gradient(#dbeafe 0 7px,#4E7A9B 7px 12px);margin:4px auto;border-radius:8px;display:none}.outer-shell{width:120px;height:80px;border:9px solid #C9803B;border-radius:45%;margin:5px auto;display:none}.class-output{text-align:center;font-weight:900;margin-top:6px}
+.arm-stage{height:190px;background:#f8fafc;border:2px solid #cbd5e1;border-radius:12px;position:relative;margin:8px 0;overflow:hidden}.upper{position:absolute;width:115px;height:14px;background:#cbd5e1;left:30%;top:55px;transform:rotate(80deg);transform-origin:right center}.fore{position:absolute;width:120px;height:14px;background:#cbd5e1;left:42%;top:120px;transform-origin:left center;transition:transform .4s}.muscle{position:absolute;height:18px;border-radius:12px;transition:.4s}.biceps{background:#db2777;width:90px;left:31%;top:80px}.triceps{background:#4E7A9B;width:100px;left:29%;top:105px}.arm-labels{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.jobboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.jobcol{border:2px solid #cbd5e1;border-radius:11px;padding:10px;text-align:center;min-height:100px}.jobcol b{display:block}.jobcard{display:inline-block;background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:6px;margin:4px;font-weight:850}
+.plate{width:min(360px,80vw);aspect-ratio:1;border:10px solid #e5e7eb;border-radius:50%;margin:8px auto;position:relative;overflow:hidden;background:conic-gradient(#d9f99d 0 35%,#fde68a 35% 65%,#fecaca 65% 82%,#bfdbfe 82% 95%,#e5e7eb 95% 100%)}.plate-label{position:absolute;background:rgba(255,255,255,.92);padding:4px 6px;border-radius:7px;font-size:.72rem;font-weight:900}.plate-basket{min-height:62px;border:2px dashed #94a3b8;border-radius:10px;padding:8px;margin-top:8px}
+.chain-stage{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:#eef7fb;border:2px solid #cbd5e1;border-radius:12px;padding:14px;min-height:110px}.organism{background:#fff;border:2px solid #4E7A9B;border-radius:12px;padding:9px;font-size:1.05rem;font-weight:900}.arrow{font-weight:950;color:#355e7b}
+.controls{position:fixed;left:15px;right:15px;bottom:15px;z-index:1200;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}.left,.right{display:flex;gap:7px;align-items:center}.right{justify-content:flex-end}.status{background:rgba(255,255,255,.97);border:1px solid #d8e0e8;border-radius:999px;padding:7px 11px;font-size:.85rem;font-weight:900;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.08)}.prog{position:fixed;left:0;right:0;bottom:0;height:8px;background:#dfe5eb;z-index:1300}.prog div{height:100%;background:var(--build);width:0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:4000;align-items:center;justify-content:center;padding:13px}.overlay.on{display:flex}.modal{background:#fff;border-radius:18px;width:min(780px,96vw);max-height:92vh;overflow:auto;padding:19px}.modal-head{display:flex;justify-content:space-between;gap:10px}.ta-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ta-card{background:#f8fafc;border:1px solid #d8e0e8;border-left:6px solid var(--build);border-radius:10px;padding:9px}.ladder,.branch,.codes{display:flex;gap:6px;flex-wrap:wrap}.ladder span,.codes span{background:#fff;border:1px solid #cbd5e1;border-radius:999px;padding:5px 7px;font-size:.75rem;font-weight:850}.codes span{background:#10233f;color:#fff}.branch button{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none}.branch-result{background:#eef6ff;border-radius:10px;padding:10px;min-height:44px;margin-top:8px}
+.media{position:fixed;right:0;top:0;bottom:0;width:min(470px,95vw);background:#fff;z-index:5000;box-shadow:-18px 0 55px rgba(16,35,63,.28);transform:translateX(105%);transition:.22s;padding:18px;overflow:auto}.media.open{transform:translateX(0)}.media-card{border:1px solid #d7e0e8;border-left:6px solid var(--build);border-radius:12px;padding:11px;background:#f8fbfd;margin:9px 0}.media-card a{font-weight:900;color:#355e7b}.note{font-size:.82rem;color:#64748b}
+.policy{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.ps{border:2px solid #d7dee7;border-radius:10px;padding:9px;background:#f8fafc}.ps b{display:block;color:#10233f}.close{background:#eef7fb;border:2px solid var(--build);border-radius:12px;padding:10px;margin-top:9px}
+.starter-commit{margin-top:8px}.option.held{border-color:#7c3aed;background:#f5f3ff}.feedback.held{background:#f5f3ff;color:#5b21b6}.vocabrow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;border:2px solid #d8d1ec;border-radius:12px;padding:9px 11px;margin:8px 0;background:#fbfaff}.vterm{background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:6px 8px;font-weight:900;color:#10233f}.vterm .bridge{display:none;font-weight:700;color:#5b21b6;background:#f5f3ff;border-radius:7px;padding:3px 6px;margin-top:4px;font-size:.85rem}body.wordhelp .vterm .bridge{display:block}.speakbtn{background:#fff;color:#10233f;border:1px solid #cbd5e1;box-shadow:none;padding:2px 8px;margin-left:5px}
+.mflow{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}.mflow span{font-size:.72rem;font-weight:900;padding:5px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #cbd5e1}.slab-cards{display:grid;gap:8px;grid-template-columns:1fr 1fr}.slab-card{background:#fff;color:#0f172a;border:2px solid #cbd5e1;box-shadow:none;text-align:left;display:block}.slab-card small{display:block;font-weight:700;color:#475569;margin-top:3px}.slab-card.sel{outline:3px solid #7c3aed;outline-offset:2px;background:#f5f3ff}.slab-card.placed{border-style:dashed;border-color:#16a34a;background:#eaf8ef;color:#14532d}.slab-card.lockd{display:none}.slab-targets{display:grid;gap:8px;margin-top:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.slab-t{background:#fff;color:#10233f;border:3px dashed #94a3b8;border-radius:12px;font-weight:900;min-height:64px;box-shadow:none;flex-direction:column}.slab-t.filled{border-style:solid;border-color:#16a34a;background:#eaf8ef}.slab-t small{display:block;font-weight:800;color:#166534}
+.printpack{display:none}
+@media(max-width:780px){.deck{padding:6px 6px 84px}.slide{width:98%;height:93%;padding:21px 16px}.hero,.grid2,.grid3,.pr-grid,.evgate,.policy,.ta-grid,.jobboard{grid-template-columns:1fr}.controls{grid-template-columns:1fr auto}.left{display:none}.lundy-grid{grid-template-columns:1fr 1fr}.media{width:96vw}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{body{overflow:visible;background:#fff}.deck,.controls,.prog,.overlay,.media{display:none!important}.printpack{display:block}.pp{page-break-after:always;padding:9mm}.pline{height:12mm;border-bottom:1px solid #999}.proute{display:block}body[data-tier] .proute{display:none}body[data-tier="Supported"] .proute.supported,body[data-tier="Standard"] .proute.standard,body[data-tier="Stretch"] .proute.stretch{display:block}.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pbox{border:1px solid #444;padding:3mm;break-inside:avoid;min-height:22mm}.pbox h3{margin:0 0 2mm;font-size:11pt}@page{size:A4;margin:10mm}}
+
+/* ===== NAV-1: way home — chrome only, teaching surfaces untouched ===== */
+.mbmhome{position:fixed;top:6px;right:10px;z-index:2500;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px 14px;background:#161D3D;color:#FFF6E8;border-radius:999px;font-weight:800;font-size:.85rem;letter-spacing:.03em;text-decoration:none;box-shadow:0 2px 10px rgba(15,23,42,.3)}
+.mbmhome:hover{background:#232C55}
+.mbmhome:focus-visible{outline:3px solid #E08A2E;outline-offset:2px}
+@media print{.mbmhome{display:none!important}}
+</style>
+<style id="mbm-guide-css">html:not(.mbm-guide-on) [data-mbm-guide],html:not(.mbm-guide-on) .asvl-purpose,html:not(.mbm-guide-on) .asvl-route{display:none!important}.mbm-guide-btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}</style>
+<script>
+let cur=0,timer=null;const slides=[...document.querySelectorAll('.slide')];
+function show(n){cur=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===cur));const s=slides[cur],m=Number(s.dataset.min||0);status.textContent=(s.dataset.title||'')+' · '+(cur+1)+'/'+slides.length+(m?' · '+m+' min':'');bar.style.width=((cur+1)/slides.length*100)+'%';prev.disabled=cur===0;next.disabled=cur===slides.length-1;location.hash='slide-'+(cur+1)}
+function reveal(id,b){const a=[...document.querySelectorAll('#'+id+' .model-step')],x=a.find(q=>!q.classList.contains('show'));if(x)x.classList.add('show');if(!a.find(q=>!q.classList.contains('show'))){b.disabled=true;b.textContent='✓ Model complete'}}
+function answer(b){const w=b.closest('.soft'),c=Number(w.dataset.c),i=Number(b.dataset.i),f=w.querySelector('.feedback');w.querySelectorAll('.option').forEach(x=>x.classList.remove('correct','retry'));if(i===c){b.classList.add('correct');f.className='feedback correct';f.textContent='Yes — '+w.dataset.e}else{b.classList.add('retry');f.className='feedback retry';f.textContent='Not yet — '+w.dataset.h+' Try again, point, demonstrate or ask for a cue.'}}
+function toggle(id){document.getElementById(id).classList.toggle('open')}
+function tier(p,t){document.querySelectorAll('[data-tier-panel="'+p+'"]').forEach(x=>x.classList.toggle('on',x.dataset.tier===t))}
+function filmShow(id,i){const d=document.getElementById(id),a=[...d.querySelectorAll('.frame')];i=(i+a.length)%a.length;d.dataset.i=i;a.forEach((x,j)=>x.classList.toggle('on',j===i))}
+function filmNext(id){const d=document.getElementById(id);filmShow(id,Number(d.dataset.i||0)+1)}
+function filmReset(id){filmStop(id);filmShow(id,0)}
+function filmPlay(id){filmStop(id);filmNext(id);timer=setInterval(()=>filmNext(id),1900)}
+function filmStop(id){if(timer){clearInterval(timer);timer=null}}
+function scan(id,k){const a=document.getElementById('animal-'+id),sp=document.getElementById('spine-'+id),sh=document.getElementById('shell-'+id),o=document.getElementById('class-'+id),f=document.getElementById('wf-'+id);const d={fish:['🐟',1,0,'VERTEBRATE — backbone inside'],snake:['🐍',1,0,'VERTEBRATE — backbone inside'],crab:['🦀',0,1,'INVERTEBRATE — no backbone; hard outer support'],worm:['🪱',0,0,'INVERTEBRATE — no backbone; soft/fluid-supported body']}[k];a.textContent=d[0];sp.style.display=d[1]?'block':'none';sh.style.display=d[2]?'block':'none';o.textContent=d[3];f.textContent='Now say what evidence you used. Size and legs are not the classification test.'}
+function arm(id,p){const fo=document.getElementById('fore-'+id),bi=document.getElementById('bi-'+id),tr=document.getElementById('tri-'+id),bil=document.getElementById('bil-'+id),trl=document.getElementById('tril-'+id),f=document.getElementById('wf-'+id);if(p==='bend'){fo.style.transform='rotate(-55deg)';bi.style.width='72px';bi.style.height='24px';tr.style.width='110px';tr.style.height='11px';bil.textContent='Biceps: CONTRACTS / pulls';trl.textContent='Triceps: RELAXES';f.textContent='Bend: biceps pulls. The triceps does not push — it relaxes.'}else{fo.style.transform='rotate(5deg)';bi.style.width='105px';bi.style.height='11px';tr.style.width='74px';tr.style.height='24px';bil.textContent='Biceps: RELAXES';trl.textContent='Triceps: CONTRACTS / pulls';f.textContent='Straighten: triceps pulls. The jobs swap.'}}
+function food(id,k){const names={bread:['energy','🍞 bread/rice'],beans:['growth','🫘 beans/eggs/fish'],fruit:['working','🍎 fruit/veg'],water:['working','💧 water']}[k];const col=document.getElementById(names[0]+'-'+id),s=document.createElement('span');s.className='jobcard';s.textContent=names[1];col.appendChild(s);document.getElementById('wf-'+id).textContent='Good — now explain the body job. More than one food can support more than one need in real life; this board is a simple teaching model.'}
+function plateAdd(id,t){const s=document.createElement('span');s.className='chip';s.textContent=t;document.getElementById('basket-'+id).appendChild(s);document.getElementById('wf-'+id).textContent='Look at the growing set as a whole. Which groups are represented? What would make the model easier to read?'}
+function plateReset(id){document.getElementById('basket-'+id).innerHTML='';document.getElementById('wf-'+id).textContent='Build a range, then explain the whole pattern. Nothing is scored.'}
+function chain(id,k){const d={plant:'🌿 Plant',caterpillar:'🐛 Caterpillar',bird:'🐦 Bird',rabbit:'🐇 Rabbit',fox:'🦊 Fox'},st=document.getElementById('chain-'+id);if(st.children.length){const ar=document.createElement('span');ar.className='arrow';ar.textContent='→';st.appendChild(ar)}const el=document.createElement('span');el.className='organism';el.textContent=d[k];st.appendChild(el);document.getElementById('wf-'+id).textContent='Now explain the link in words. If the relationship is wrong, adult feedback should lead to a re-attempt, not a score.'}
+function chainReset(id){document.getElementById('chain-'+id).innerHTML='';document.getElementById('wf-'+id).textContent='Build the order, then explain each food relationship in words.'}
+function openTA(){const s=slides[cur];taTitle.textContent=s.dataset.title;ta1.textContent=s.dataset.ta1;ta2.textContent=s.dataset.ta2;taOverlay.classList.add('on')}
+function openLoop(){loopOverlay.classList.add('on')}function closeOv(){document.querySelectorAll('.overlay').forEach(x=>x.classList.remove('on'))}
+const moves={secure:'Secure → reduce prompting or transfer to a less familiar example. Do not demand the same proof again.',mixed:'Mixed → contrast two examples, use peer/visual reasoning, then recheck each learner.',miscon:'Misconception → stop, use a counterexample or re-model, then ask a new hinge question.',access:'Access barrier → keep the learning goal; change regulation, modality, environment or presentation.',method:'Method/evidence problem → repair the procedure or evidence quality, then re-attempt.'};
+function loopMove(k){loopResult.textContent=moves[k]+' This is a teaching decision, not a stored pupil label.'}
+function openMedia(){media.classList.add('open')}function closeMedia(){media.classList.remove('open')}
+function printTier(t){document.body.dataset.tier=t;window.print()}
+window.addEventListener('afterprint',()=>{delete document.body.dataset.tier});
+function commitHyp(b){const w=b.closest('.starter-commit');w.querySelectorAll('.option').forEach(x=>x.classList.remove('held'));b.classList.add('held');const f=document.getElementById('hypfb');f.className='feedback held';f.textContent='Committed: '+b.textContent+' — hold that idea. This lesson tests it.'}
+function wordHelp(){const on=document.body.classList.toggle('wordhelp');const b=document.getElementById('whbtn');b.setAttribute('aria-pressed',on);b.textContent=on?'🔤 Word help on':'🔤 Word help'}
+function speakTerm(t){if('speechSynthesis'in window&&'SpeechSynthesisUtterance'in window){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.82;speechSynthesis.speak(u)}catch(_){}}}
+function readSlide(b){if(!('speechSynthesis'in window&&'SpeechSynthesisUtterance'in window))return;const s=b.closest('.slide');let els=[...s.querySelectorAll('.tier.on .box.task p')];if(!els.length)els=[...s.querySelectorAll('.box.task h3, .box.task p')];const t=els.map(e=>e.textContent).join('. ');try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.82;speechSynthesis.speak(u)}catch(_){}}
+if(!('speechSynthesis'in window))document.querySelectorAll('.readbtn').forEach(x=>x.style.display='none');
+var sLab={sel:null,placed:0,frozen:false};
+function slabSel(b){if(b.classList.contains('placed'))return;document.querySelectorAll('.slab-card').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');sLab.sel=b.dataset.card;document.getElementById('wf-W5A').textContent='Chosen: '+b.querySelector('strong').textContent+'. Now press the group the card evidence supports.'}
+function slabPlace(t){if(!sLab.sel){document.getElementById('wf-W5A').textContent='Choose one evidence card first. Then choose a group.';return}var c=document.querySelector('.slab-card[data-card="'+sLab.sel+'"]');if(c.dataset.correct===t.dataset.target){c.classList.remove('sel');c.classList.add('placed');c.setAttribute('aria-disabled','true');t.classList.add('filled');var l=t.querySelector('small');l.textContent=(l.textContent?l.textContent+' · ':'')+c.querySelector('strong').textContent+' PLACED';sLab.sel=null;sLab.placed++;var k=document.querySelector('.slab-card.lockd');if(k)k.classList.remove('lockd');document.getElementById('wf-W5A').textContent='Placed using the evidence. Say which card words support it.'+(sLab.placed>=4?' All cards placed — explain the rule you used.':'')}else{document.getElementById('wf-W5A').textContent='Look again at the card evidence. Which group do the card words support? Try again — a first try is information.'}}
+function slabFreeze(b){sLab.frozen=!sLab.frozen;document.getElementById('slabfz').style.display=sLab.frozen?'block':'none';b.textContent=sLab.frozen?'CONTINUE':'FREEZE & LOOK'}
+function slabReset(){document.querySelectorAll('.slab-card').forEach(function(c,i){c.classList.remove('sel','placed');c.removeAttribute('aria-disabled');c.classList.toggle('lockd',i>1)});document.querySelectorAll('.slab-t').forEach(function(t){t.classList.remove('filled');t.querySelector('small').textContent=''});sLab.sel=null;sLab.placed=0;document.getElementById('wf-W5A').textContent='Reset. Choose one evidence card. More cards unlock as you place them.'}
+prev.onclick=()=>show(cur-1);next.onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{if(document.querySelector('.overlay.on')){if(e.key==='Escape')closeOv();return}if(['INPUT','TEXTAREA','SELECT'].includes((e.target&&e.target.tagName)||''))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(cur+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1)}});
+const hm=location.hash.match(/slide-(\d+)/);show(hm?Number(hm[1])-1:0);
+</script>
+<script defer src="/hud.js"></script>
+<script id="mbm-guide-js">
+(function(){
+  var KEY='mbm_guide_v1';
+  function stored(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+  function store(on){try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}}
+  function apply(on){
+    document.documentElement.classList.toggle('mbm-guide-on',on);
+    var b=document.querySelector('.mbm-guide-btn');
+    if(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'ⓘ Guidance ✓':'ⓘ Guidance';}
+    var live=document.getElementById('vu-live-region');
+    if(live)live.textContent=on?'Guidance shown':'Guidance hidden';
+  }
+  window.mbmGuideToggle=function(){var on=!document.documentElement.classList.contains('mbm-guide-on');store(on);apply(on);};
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='g'&&e.key!=='G')return;
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible,.mbm-modal.open,.overlay.visible,.overlay.open'))return;
+    window.mbmGuideToggle();
+  });
+  apply(stored());
+})();
+</script>
+<script id="sci-hinge-shuffle">
+(function(){
+  /* SCA-1 CLOSE v2 P1. Hinge options are authored correct-first; shuffle at render,
+     screen only. Verdicts are by authored option identity (data-i / data-index), never
+     position. Wrappers marked data-shuffle="off" are order-dependent and stay authored. */
+  function rint(n){
+    try{
+      if(window.crypto&&window.crypto.getRandomValues&&n>0){
+        var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;
+        do{window.crypto.getRandomValues(a)}while(a[0]>=lim);
+        return a[0]%n;
+      }
+    }catch(e){}
+    return Math.floor(Math.random()*n);
+  }
+  function shuffle(box){
+    var k=[],i;
+    for(i=0;i<box.children.length;i++){if(box.children[i].tagName==='BUTTON')k.push(box.children[i]);}
+    if(k.length<2)return;
+    for(i=k.length-1;i>0;i--){var j=rint(i+1),t=k[i];k[i]=k[j];k[j]=t;}
+    for(i=0;i<k.length;i++)box.appendChild(k[i]);
+  }
+  function run(){
+    var w=document.querySelectorAll('.soft,.soft-check'),i,box;
+    for(i=0;i<w.length;i++){
+      if(w[i].getAttribute('data-shuffle')==='off')continue;
+      box=w[i].querySelector('.options');
+      if(box)shuffle(box);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
+})();
+</script>
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>
+</title>
+<style>
+</style>
+<style id="mbm-guide-css">
+</style>
+</head>
+<body>
+<a class="mbmhome" href="../../../index.html" aria-label="Back to the Lessons catalogue">
+</a>
+<!-- Made by Matt · Science v3 40-minute route. SOW authority: BUILD 2026/27 Aut1 W5. Repo source: Science_Teesside/Build/SCI_B_W5_Right_Nutrition.html @ 93d570041f4c7214a0c41e3b58ce9ca280f446cb. Installed as a parallel route; the live lesson is unchanged. -->
+<main class="deck">
+<section class="slide" data-type="title" data-title="Lesson overview" data-min="0" data-ta1="Read equipment/sensory notes before pupils enter." data-ta2="Set predictable Space. Do not pre-teach on the title.">
+<span class="tag title">
+</span>
+<div class="hero">
+<div>
+<span class="tag title">
+</span>
+<h1>
+</h1>
+<div class="box lo">
+<b>
+</b>
+</div>
+<div class="box good">
+<b>
+</b>
+<ul>
+<li>
+</li>
+<li>
+</li>
+<li>
+</li>
+</ul>
+</div>
+<div class="story">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="chips">
+<span class="chip">
+</span>
+<span class="chip">
+</span>
+<span class="chip">
+</span>
+</div>
+</div>
+<div class="hero-visual">
+<svg viewBox="0 0 520 250" role="img" aria-label="Three labelled body-job stations: energy, growth and repair, and keeping the body working.">
+<rect width="520" height="250" rx="18" fill="#0b1d30"/>
+<g font-family="Segoe UI" font-weight="800" text-anchor="middle">
+<rect x="25" y="55" width="145" height="130" rx="18" fill="#eab308"/>
+<text x="98" y="95" font-size="42">
+</text>
+<text x="98" y="132" font-size="21" fill="#10233f">
+</text>
+<text x="98" y="160" font-size="14" fill="#10233f">
+</text>
+<rect x="188" y="55" width="145" height="130" rx="18" fill="#f3b7cf"/>
+<text x="260" y="95" font-size="42">
+</text>
+<text x="260" y="130" font-size="19" fill="#10233f">
+</text>
+<text x="260" y="153" font-size="19" fill="#10233f">
+</text>
+<rect x="350" y="55" width="145" height="130" rx="18" fill="#bde0ef"/>
+<text x="423" y="95" font-size="42">
+</text>
+<text x="423" y="128" font-size="18" fill="#10233f">
+</text>
+<text x="423" y="151" font-size="18" fill="#10233f">
+</text>
+</g>
+</svg>
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="arrival" data-title="🚪 Arrival · retrieve last lesson" data-min="4" data-ta1="Settle, regulate and retrieve with the lightest workable response mode." data-ta2="If recall is inaccessible, offer one visual cue or point/select route; do not teach today’s answer.">
+<div class="time">
+</div>
+<span class="tag arrival">
+</span>
+<div class="box scaf">
+<b>
+</b>
+</div>
+<div class="entry-route" style="background:#fff7ed;border-left:5px solid #f97316;padding:9px 12px;border-radius:10px;margin:6px 0">
+<b>
+</b>
+</div>
+<div class="tiers">
+<button class="tierbtn s" onclick="tier('arrival','Supported')">
+</button>
+<button class="tierbtn m" onclick="tier('arrival','Standard')">
+</button>
+<button class="tierbtn h" onclick="tier('arrival','Stretch')">
+</button>
+</div>
+<button class="ghost readbtn" onclick="readSlide(this)" aria-label="Hear this task read aloud">
+</button>
+<div class="tier on" data-tier-panel="arrival" data-tier="Supported">
+<div class="box task">
+<b>
+</b>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+</div>
+</div>
+<div class="tier " data-tier-panel="arrival" data-tier="Standard">
+<div class="box task">
+<b>
+</b>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+</div>
+</div>
+<div class="tier " data-tier-panel="arrival" data-tier="Stretch">
+<div class="box task">
+<b>
+</b>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+</div>
+</div>
+<div class="note" data-mbm-guide="staff">
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="starter" data-title="🌱 Starter · create the need to know" data-min="4" data-ta1="Protect curiosity; new vocabulary is not required yet." data-ta2="Receive predictions without judgement. The I Do supplies the new Science.">
+<div class="time">
+</div>
+<span class="tag starter">
+</span>
+<div class="box task">
+<h3>
+</h3>
+<p style="font-size:1.22rem;font-weight:850">
+</p>
+</div>
+<div class="options starter-commit">
+<button class="option" onclick="commitHyp(this)">
+</button>
+<button class="option" onclick="commitHyp(this)">
+</button>
+<button class="option" onclick="commitHyp(this)">
+</button>
+</div>
+<div class="feedback" aria-live="polite" id="hypfb">
+</div>
+<div class="microfilm" id="film-W5A" data-i="0">
+<div class="film-screen">
+<div class="frame on">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="frame ">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="frame ">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+<div class="frame ">
+<div class="film-kicker">
+</div>
+<div class="film-title">
+</div>
+<div class="film-line">
+</div>
+</div>
+</div>
+<div class="film-controls">
+<button onclick="filmReset('film-W5A')">
+</button>
+<button onclick="filmNext('film-W5A')">
+</button>
+<button onclick="filmPlay('film-W5A')">
+</button>
+<button onclick="filmStop('film-W5A')">
+</button>
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="ido" data-title="👩‍🏫 I Do · picture first" data-min="5" data-ta1="Pupils watch the model; you watch access and regulation." data-ta2="Do not run a second explanation over the teacher. Quietly change modality if access is the barrier.">
+<div class="time">
+</div>
+<span class="tag ido">
+</span>
+<div class="box ido">
+<b>
+</b>
+</div>
+<div class="vocabrow">
+<b>
+</b>
+<span class="vterm">
+<button class="speakbtn" onclick="speakTerm('nutrition')" aria-label="Hear the word nutrition">
+</button>
+<span class="bridge">
+</span>
+</span>
+<span class="vterm">
+<button class="speakbtn" onclick="speakTerm('nutrient')" aria-label="Hear the word nutrient">
+</button>
+<span class="bridge">
+</span>
+</span>
+<span class="vterm">
+<button class="speakbtn" onclick="speakTerm('function')" aria-label="Hear the word function">
+</button>
+<span class="bridge">
+</span>
+</span>
+</div>
+<div class="note">
+</div>
+<div id="W5A-1">
+<div class="model-step">
+<b>
+</b>
+</div>
+<div class="model-step">
+<b>
+</b>
+</div>
+<div class="model-step">
+<b>
+</b>
+</div>
+</div>
+<button onclick="reveal('W5A-1',this)">
+</button>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="wedo" data-title="🤝 We Do · everyone commits" data-min="5" data-ta1="Wait time is the first intervention; every pupil needs a genuine route to respond." data-ta2="Secure → reduce prompt. Misconception → re-model. Access → change mode. Then recheck.">
+<div class="time">
+</div>
+<span class="tag wedo">
+</span>
+<div class="soft" data-c="0" data-h="Compare the three job cards." data-e="Different foods can provide different nutrients and support different body jobs.">
+<div class="box wedo">
+<b>
+</b>
+</div>
+<div class="options">
+<button class="option" data-i="0" onclick="answer(this)">
+</button>
+<button class="option" data-i="1" onclick="answer(this)">
+</button>
+<button class="option" data-i="2" onclick="answer(this)">
+</button>
+</div>
+<div class="feedback" aria-live="polite">
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls ">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="ido" data-title="👩‍🏫 I Do 2 · connect the second idea" data-min="4" data-ta1="Watch whether pupils can connect the first model to the second concept." data-ta2="If secure, step back. If the idea has not landed, ask the teacher to replay the visual rather than supplying a private answer.">
+<div class="time">
+</div>
+<span class="tag ido">
+</span>
+<div class="box ido">
+<b>
+</b>
+</div>
+<div id="W5A-2">
+<div class="model-step">
+<b>
+</b>
+</div>
+<div class="model-step">
+<b>
+</b>
+</div>
+<div class="model-step">
+<b>
+</b>
+</div>
+</div>
+<button onclick="reveal('W5A-2',this)">
+</button>
+<div class="grid2">
+<div class="box good">
+<b>
+</b>
+<p>
+</p>
+</div>
+<div class="box scaf">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+<div class="ls ">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="wedo" data-title="🤝 We Do 2 · interactive lab" data-min="4" data-ta1="Let the pupil operate/point/direct wherever possible." data-ta2="Treat the response as data: adapt the next question or scaffold, not the learning entitlement.">
+<div class="time">
+</div>
+<span class="tag wedo">
+</span>
+<div class="box wedo">
+<b>
+</b>
+</div>
+<div class="widget">
+<h3>
+</h3>
+<div class="mflow">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p style="font-weight:800;margin:4px 0 2px">
+</p>
+<div class="slab-cards">
+<button class="slab-card" data-card="carbohydrate" data-correct="energy" onclick="slabSel(this)">
+<strong>
+</strong>
+<small>
+</small>
+</button>
+<button class="slab-card" data-card="protein" data-correct="repair" onclick="slabSel(this)">
+<strong>
+</strong>
+<small>
+</small>
+</button>
+<button class="slab-card lockd" data-card="vitamins" data-correct="working" onclick="slabSel(this)">
+<strong>
+</strong>
+<small>
+</small>
+</button>
+<button class="slab-card lockd" data-card="water" data-correct="working" onclick="slabSel(this)">
+<strong>
+</strong>
+<small>
+</small>
+</button>
+</div>
+<div class="slab-targets">
+<button class="slab-t" data-target="energy" onclick="slabPlace(this)" aria-label="Place the chosen card in the group ENERGY">
+<small>
+</small>
+</button>
+<button class="slab-t" data-target="repair" onclick="slabPlace(this)" aria-label="Place the chosen card in the group GROWTH &amp; REPAIR">
+<small>
+</small>
+</button>
+<button class="slab-t" data-target="working" onclick="slabPlace(this)" aria-label="Place the chosen card in the group BODY FUNCTIONS">
+<small>
+</small>
+</button>
+</div>
+<div class="media-buttons" style="margin-top:8px">
+<button class="ghost" onclick="slabFreeze(this)">
+</button>
+<button class="ghost" onclick="slabReset()" aria-label="Reset the lab">
+</button>
+</div>
+<div class="wf" id="slabfz" style="display:none">
+<b>
+</b>
+</div>
+<div class="wf" aria-live="polite" id="wf-W5A">
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls ">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="independent" data-title="✏️ Independent · evidence of learning" data-min="10" data-ta1="Least prompt first. Protect pupil authorship; help the process, not the answer." data-ta2="As soon as the pupil can continue, fade support or deepen the question.">
+<div class="time">
+</div>
+<span class="tag ind">
+</span>
+<div class="box task">
+<h3>
+</h3>
+<p style="font-size:1.15rem;font-weight:800">
+</p>
+</div>
+<button class="ghost readbtn" onclick="readSlide(this)" aria-label="Hear this task read aloud">
+</button>
+<div class="practical">
+<b>
+</b>
+<div class="pr-grid">
+<div class="pr-cell">
+<b>
+</b>
+</div>
+<div class="pr-cell">
+<b>
+</b>
+</div>
+<div class="pr-cell">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="box scaf">
+<b>
+</b>
+</div>
+<div class="grid3">
+<div class="route s">
+<b>
+</b>
+<button class="ghost" onclick="toggle('W5ASupported')">
+</button>
+<div class="scaffold" id="W5ASupported">
+<div class="note" data-mbm-guide="staff">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="route m">
+<b>
+</b>
+<button class="ghost" onclick="toggle('W5AStandard')">
+</button>
+<div class="scaffold" id="W5AStandard">
+<div class="note" data-mbm-guide="staff">
+<b>
+</b>
+</div>
+</div>
+</div>
+<div class="route h">
+<b>
+</b>
+<button class="ghost" onclick="toggle('W5AStretch')">
+</button>
+<div class="scaffold" id="W5AStretch">
+<div class="note" data-mbm-guide="staff">
+<b>
+</b>
+</div>
+</div>
+</div>
+</div>
+<div class="evgate">
+<div class="ev">
+<b>
+</b>
+</div>
+<div class="ev">
+<b>
+</b>
+</div>
+<div class="ev">
+<b>
+</b>
+</div>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div data-mbm-guide="lundy" class="lundy">
+<div class="lundy-grid">
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+<section class="slide" data-type="exit" data-title="🎫 Exit · adult Audience closes BUILD" data-min="4" data-ta1="Do not reveal the answer. Receive the pupil response in their workable modality." data-ta2="Name back what you heard, then calibrate one next move. No signature theatre.">
+<div class="time">
+</div>
+<span class="tag exit">
+</span>
+<div class="tiers">
+<button class="tierbtn s" onclick="tier('exit','Supported')">
+</button>
+<button class="tierbtn m" onclick="tier('exit','Standard')">
+</button>
+<button class="tierbtn h" onclick="tier('exit','Stretch')">
+</button>
+</div>
+<button class="ghost readbtn" onclick="readSlide(this)" aria-label="Hear this task read aloud">
+</button>
+<div class="tier on" data-tier-panel="exit" data-tier="Supported">
+<div class="box task">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="tier " data-tier-panel="exit" data-tier="Standard">
+<div class="box task">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="tier " data-tier-panel="exit" data-tier="Stretch">
+<div class="box task">
+<b>
+</b>
+<p>
+</p>
+</div>
+</div>
+<div class="close">
+<b>
+</b>
+<p>
+<b>
+</b>
+</p>
+<p class="note">
+<b>
+</b>
+</p>
+</div>
+<div class="participation">
+<b>
+</b>
+<div class="part">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<div class="note">
+</div>
+</div>
+<div class="lundy">
+<div class="lundy-grid">
+<div class="ls ">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+<div class="ls on">
+</div>
+</div>
+<div class="lundy-note">
+</div>
+</div>
+</section>
+</main>
+<div class="overlay" id="taOverlay" onclick="if(event.target.id==='taOverlay')closeOv()">
+<div class="modal">
+<div class="modal-head">
+<div>
+<span class="tag title">
+</span>
+<h2 id="taTitle">
+</h2>
+</div>
+<button class="ghost" onclick="closeOv()">
+</button>
+</div>
+<div class="ta-grid">
+<div class="ta-card">
+<b>
+</b>
+<p>
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<p id="ta1">
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<p id="ta2">
+</p>
+</div>
+<div class="ta-card">
+<b>
+</b>
+<div class="ladder">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p class="note">
+</p>
+</div>
+</div>
+</div>
+</div>
+<div class="overlay" id="loopOverlay" onclick="if(event.target.id==='loopOverlay')closeOv()">
+<div class="modal">
+<div class="modal-head">
+<div>
+<span class="tag title">
+</span>
+<h2>
+</h2>
+</div>
+<button class="ghost" onclick="closeOv()">
+</button>
+</div>
+<div class="policy">
+<div class="ps">
+<b>
+</b>
+</div>
+<div class="ps">
+<b>
+</b>
+</div>
+<div class="ps">
+<b>
+</b>
+</div>
+<div class="ps">
+<b>
+</b>
+</div>
+</div>
+<h3>
+</h3>
+<div class="branch">
+<button onclick="loopMove('secure')">
+</button>
+<button onclick="loopMove('mixed')">
+</button>
+<button onclick="loopMove('miscon')">
+</button>
+<button onclick="loopMove('access')">
+</button>
+<button onclick="loopMove('method')">
+</button>
+</div>
+<div class="branch-result" id="loopResult">
+</div>
+<h3>
+</h3>
+<div class="codes">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p class="note">
+</p>
+</div>
+</div>
+<aside class="media" id="media">
+<button class="ghost" onclick="closeMedia()">
+</button>
+<h2>
+</h2>
+<div class="box good">
+<b>
+</b>
+<p>
+</p>
+</div>
+<div class="media-card">
+<b>
+</b>
+<p class="note">
+</p>
+</div>
+<div class="box scaf">
+<b>
+</b>
+<p>
+</p>
+</div>
+<p class="note">
+</p>
+</aside>
+<nav class="controls">
+<div class="left">
+<button class="staff" onclick="openTA()">
+</button>
+<button class="mbm-guide-btn" aria-pressed="false" onclick="mbmGuideToggle()">
+</button>
+<button class="loopbtn" onclick="openLoop()">
+</button>
+<button class="ghost" onclick="openMedia()">
+</button>
+<button class="ghost" id="whbtn" onclick="wordHelp()" aria-pressed="false">
+</button>
+<a class="btn ghost" href="BUILD_DAILY_REFLECTION_EVIDENCE_WINDOW.html#W5A">
+</a>
+</div>
+<div class="status" id="status">
+</div>
+<div class="right">
+<button class="ghost" id="prev">
+</button>
+<button id="next">
+</button>
+</div>
+</nav>
+<div class="prog">
+<div id="bar">
+</div>
+</div>
+<div class="printpack">
+<div class="pp">
+<h1>
+</h1>
+<p class="pidline" style="margin:2px 0 8px;font-size:.92rem">
+<b>
+</b>
+<b>
+</b>
+</p>
+<p class="pentry" style="margin:0 0 8px;font-size:.92rem">
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p style="font-size:.9rem">
+<b>
+</b>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p style="font-size:.9rem">
+<b>
+</b>
+</p>
+<div class="proute supported">
+<h2>
+</h2>
+<p>
+</p>
+<div class="box scaf">
+</div>
+</div>
+<div class="proute standard">
+<h2>
+</h2>
+<p>
+</p>
+<div class="box scaf">
+</div>
+</div>
+<div class="proute stretch">
+<h2>
+</h2>
+<p>
+</p>
+<div class="box scaf">
+</div>
+</div>
+<h3>
+</h3>
+<p>
+</p>
+</div>
+<div class="pp">
+<h2>
+</h2>
+<p>
+<b>
+</b>
+</p>
+<div class="pline">
+</div>
+<p>
+<b>
+</b>
+</p>
+<div class="pline">
+</div>
+<p>
+<b>
+</b>
+</p>
+<div class="pline">
+</div>
+<div class="box good">
+<b>
+</b>
+</div>
+<div id="print-witness" class="print-section">
+<h1 style="text-align:center;font-size:1.5rem;margin-bottom:2px">
+</h1>
+<p style="text-align:center;margin:0 0 10px;font-size:.88rem">
+<strong>
+</strong>
+<br>
+<!-- semh2-hide (reversible; restore on Cheryl's confirmation): AQA UAS unit code: TBC (Cheryl). -->
+</p>
+<table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:10px">
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+<tr>
+<td style="padding:7px 8px;border:1px solid #999;width:34%">
+<strong>
+</strong>
+</td>
+<td style="padding:7px 8px;border:1px solid #999">
+</td>
+</tr>
+</table>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:0 0 5px">
+</p>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<div style="border:1px solid #999;height:26px;margin-bottom:5px">
+</div>
+<div style="border:1px solid #999;height:26px;margin-bottom:5px">
+</div>
+<p style="margin:12px 0 4px;font-weight:800;font-size:.95rem">
+</p>
+<table style="width:100%;border-collapse:collapse;font-size:.88rem">
+<tr>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+<td style="padding:9px;border:2px solid #333;width:33.3%;text-align:center">
+<strong>
+</strong>
+</td>
+</tr>
+</table>
+<p style="margin:8px 0 0;font-size:.82rem">
+</p>
+</div>
+</div>
+<div class="pp">
+<h1>
+</h1>
+<p style="margin:2px 0 8px;font-size:.92rem">
+<b>
+</b>
+<b>
+</b>
+</p>
+<p>
+<b>
+</b>
+</p>
+<p style="font-size:.85rem">
+</p>
+<div class="pgrid">
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+<div class="pbox">
+<h3>
+</h3>
+</div>
+</div>
+</div>
+</div>
+<script>
+</script>
+<script defer src="/hud.js">
+</script>
+<!--mbm-guide:v1-->
+<script id="mbm-guide-js">
+</script>
+<!--sci-hinge-shuffle:v1-->
+<script id="sci-hinge-shuffle">
+<box.children.length;i++){if(box.children[i].tagName==='BUTTON')k.push(box.children[i]);}
+    if(k.length<2)return;
+    for(i=k.length-1;i>
+<k.length;i++)box.appendChild(k[i]);
+  }
+  function run(){
+    var w=document.querySelectorAll('.soft,.soft-check'),i,box;
+    for(i=0;i<w.length;i++){
+      if(w[i].getAttribute('data-shuffle')==='off')continue;
+      box=w[i].querySelector('.options');
+      if(box)shuffle(box);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
+})();
+</script>
+</body>
+</html>
