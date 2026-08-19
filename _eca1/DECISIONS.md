@@ -62,3 +62,26 @@ Art_Teesside replaced it and it is excluded from every staff pack. **Do not patc
 not for visibility tagging, not for correctness. ECA-1 left it untouched (recorded then
 as "outside the ordered universe"); this ruling closes the question permanently, and any
 PROPOSED item raised against those 24 decks is withdrawn rather than held.
+
+## The two pre-existing CI reds — classified, SCA-1 CLOSE v2 §4 (2026-08-19)
+
+**They are one red, not two.** Full evidence: `_sca1close/CI_REDS.md`.
+
+- **Root**: `fieldops-p2-and-sweep.yml` (no `paths:` filter, so it runs on every push to
+  main) → job "The stale-evidence sweep can still find something" → step "The sweep over
+  all three estates, and all three must be assessed" →
+  `node tools/stale_evidence_sweep.mjs --require-roots=3` exits **2**.
+  The three-root requirement PASSED (all three estates assessed; 0 stale claims, 24 live
+  in Lessons). What reds it is `[INCONCLUSIVE] … 20 row(s) it could not parse` — 20 flat
+  `"key": "PASS"` verdict rows in the **sibling repo `Matt-s-Apps-`**
+  (`Teesside_Maker_Lab_PRO/qa/PROFESSIONAL_QA_RESULTS.json` ×18, `STATIC_CHECK_RESULTS.json` ×2)
+  matching none of the sweep's claim forms.
+  **Classification: real defect, outside this repo's content** — a claim-grammar gap, not
+  an environment failure and not a stale fixture in Lessons.
+- **Reporter**: `watch-main.yml` is red *only* because it correctly names that FieldOps
+  run (`FAIL … run 32249330300`, `[RED] 1 failing`). Its own controls pass.
+  **No defect; nothing to fix.** It greens when FieldOps does.
+- **Not fixed here, per the ≤10-line rule**: the remedy is a cross-estate semantic choice,
+  and the red-on-target→green-after proof is unobtainable in a session whose GitHub scope
+  excludes `Matt-s-Apps-`. No workflow was disabled or weakened.
+- **The FieldOps own-session inherits this.**
