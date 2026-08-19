@@ -429,7 +429,7 @@ function showTABrief(){
     const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
     const pick=_ccPick();
     if(!pick){alert('Add pupil names first via the \u270f\ufe0f Edit list button.');return}
-    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Standard',H:'Stretch'}[tier];const q=pool[tier]||pool.M;
+    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Standard',H:'Stretch'}[tier];const q=pool[tier]||pool.S||pool.M;
     let modal=document.getElementById('cc-modal');
     if(!modal){modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83c\udfb2 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">\u2014</div><span class="cc-tier" id="cc-tier">\u2014</span><div class="cc-question" id="cc-q">\u2014</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">\u270f\ufe0f Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">\ud83c\udfb2 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';document.body.appendChild(modal);}
     document.getElementById('cc-modal-tag').textContent=t;
