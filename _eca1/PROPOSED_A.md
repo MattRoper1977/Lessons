@@ -1429,3 +1429,458 @@ Humanities / DT / Art-estate-docs findings appended when their audits complete.
 - Proposed: standardise on 'Tools, Equipment and Safe Use' across Scheme_of_Work.html, START_HERE.html and this deck (or make the comma-less registry name uniform).
 - Source: LAUNCH_ASDAN/Scheme_of_Work.html W5 row and START_HERE.html Week-5 card (both comma-less) vs this deck's print-ko heading 'Knowledge Organiser (LAUNCH ASDAN W5): Tools, Equipment and Safe Use'
 
+
+---
+
+# Appendix — Humanities, DT and Art-estate-docs batches (audits completed later)
+
+## Serious findings needing a ruling (appendix)
+
+**XP1 · Art_Teesside/Spring2_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “"t": "Proposal, Pitch &amp; Review", "part": "Explore D · Bronze D · Silver 2A&ndash;B"”
+- Issue: Week 6 (proposal/pitch) is chipped as Bronze Part D (arts skills share) and the chip prints in the sheet header, footer and recovery-route box as the week's banked part, but nothing in Spring 2 shares a skill with a learner — no learner, nothing a learner made — breaking 'a plan is not a teach' and the estate's own precedent of chipping non-delivery weeks as 'Part D scope' (A2 pack W7).
+- Proposed: remap the Bronze chip for W6 (e.g. "Bronze A" or "Bronze D scope") and keep Explore D / Silver 2A–B; owner to confirm the intended Bronze mapping since it also feeds the week-select dropdown and Locator.
+- Source: House_Standard_and_Safety.html §2 ('A plan is not a teach. Sharing skills needs a real learner and something the learner made'); Build/Autumn2_Printable_Weekly_Evidence_Pack.html W7 chip 'Bronze Part C close &middot; Par
+
+**XP2 · Art_Teesside/Spring2_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “Explore Part D: you actively chose what to share and can say why. Bronze Part D: you shared a skill with others. Silver Unit 2: you led a project involving other people.”
+- Issue: The Evidence Locator block 'Presenting, sharing or leading' maps Bronze Part D ('you shared a skill with others') onto rows that are all Week 6 proposal evidence ('Week 6 · your proposal and the channel you chose', 'the response you received'), but presenting a proposal is not a skills share, so an adviser filing from this form would bank Bronze D on non-qualifying evidence.
+- Proposed: drop the Bronze Part D sentence from this block (Bronze D is delivered in Spring 1 'Pass It On' and via the Summer 2 feeder workshop) or add a genuine skill-share row; also soften 'Silver Unit 2: you led a project' since Spring 2 W6 only evidences the 2A–B planning side.
+- Source: House_Standard_and_Safety.html §2 'A plan is not a teach'; Build/Spring1_Scheme_of_Work.html (Spring 1 'exists to finish Part D properly')
+
+**XP3 · Art_Teesside/Summer1_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “"t": "Text, Edition &amp; Assembly", "part": "Explore C · Bronze A/D · Silver 1B"”
+- Issue: Week 5's Bronze chip includes '/D' (arts skills share), but the week's 'sharing' is giving away edition spares — sharing artwork with an audience, not passing on a skill to a learner; no learner or learner-made piece exists in the week or anywhere in Summer 1.
+- Proposed: change the Bronze chip to "Bronze A" (participation) unless a real skill-share step is added to the week.
+- Source: House_Standard_and_Safety.html §2 (skills share needs a real learner and something the learner made); Trinity Bronze Part D = arts skills share — verified knowledge
+
+**XP4 · Art_Teesside/Summer1_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “"t": "Pop-Up Installation &amp; Voice", "part": "Explore D · Bronze D · Silver 2C&ndash;D"”
+- Issue: Week 6 (pop-up installation, visitor response) is chipped Bronze Part D, but installing a banner and capturing a visitor's words is audience/presenting evidence, not a skills share — Summer 1 contains no teach anywhere, so the chip claims a part the whole unit never evidences.
+- Proposed: remap the Bronze chip (e.g. "Bronze A") and keep Explore D / Silver 2C–D; owner to confirm.
+- Source: House_Standard_and_Safety.html §2; estate precedent: Build/Autumn2_Printable_Weekly_Evidence_Pack.html uses 'Part D scope' where Part D is not delivered
+
+**XP5 · Art_Teesside/Summer2_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “"t": "Portfolio Review &amp; Selection", "part": "Explore D · Bronze D · Silver 2E"”
+- Issue: Week 1 (portfolio audit/selection) is chipped Bronze Part D though selecting work is not a skills share, and the sheet's own recovery rule ('Recovery evidences the SAME award part') is unsatisfiable — the W1 recovery route ('Audit from photographs') cannot evidence Bronze D either.
+- Proposed: chip W1's Bronze slot as a review/audit contribution (e.g. "Bronze audit" or "Bronze D scope") — the term's real Bronze D vehicle is the Week 6 feeder-school workshop, which the Locator correctly guards as 'if run (Bronze Part D)'.
+- Source: House_Standard_and_Safety.html §2 'A plan is not a teach'; Summer2 pack Locator block 'The claim' ('Feeder-school workshop, if run (Bronze Part D)')
+
+**XP6 · Art_Teesside/Summer2_Printable_Weekly_Evidence_Pack.html** (D-alignment, print; MISALIGNED)
+- Current: “"t": "Labels, Statements &amp; Your North-East Anchor", "part": "Explore B/D · Bronze C/D · Silver 1D"”
+- Issue: Week 4's Bronze chip 'C/D' half-claims Part D: writing wall labels and an artist-anchor line evidences Bronze C (arts inspiration/research) but contains no skills share, so the '/D' is unearned on this week's sheet.
+- Proposed: change the Bronze chip to "Bronze C" only.
+- Source: House_Standard_and_Safety.html §2; Trinity Bronze Part C = arts inspiration research, Part D = skills share — verified knowledge
+
+**XP7 · Art_Teesside/Summer2_Scheme_of_Work.html** (A-fact, doc; WRONG)
+- Current: “a North-East artist &mdash; Tabner, Shaw, Barlow, Deller or their own choice”
+- Issue: Week 4's exemplar list of North-East artists is faulty: Jeremy Deller is London-born and London-based (not a North-East artist), and 'Shaw' resolves to no artist anchored anywhere in this estate and no notable North-East artist — almost certainly a slip for 'Thorpe' (Mackenzie Thorpe, b. Middlesbrough, anchored with Len Tabner in A2 W2); only Tabner (South Bank/Boulby) and Barlow (b. Newcastle 194
+- Proposed: "a North-East artist &mdash; Tabner, Thorpe, Barlow or their own choice" (or reframe as "an artist met this year" if Deller is to stay).
+- Source: Jeremy Deller b. London 1966, London-based; Mackenzie Thorpe b. Middlesbrough 1956; Len Tabner b. South Bank, Middlesbrough 1946; Phyllida Barlow b. Newcastle 1944 — verified knowledge; estate grep: 'Shaw' appears only i
+
+**XP8 · Art_Teesside/Summer2_Printable_Weekly_Evidence_Pack.html** (A-fact, print; WRONG)
+- Current: “a North-East artist — Tabner, Shaw, Barlow, Deller or your own choice”
+- Issue: Week 4's printed fix line repeats the Summer 2 SoW's faulty North-East artist list: Deller is not a North-East artist and 'Shaw' is a dangling name taught nowhere in the estate (likely 'Thorpe', the Middlesbrough-born A2 W2 anchor).
+- Proposed: "a North-East artist — Tabner, Thorpe, Barlow or your own choice" (mirror whatever wording the owner settles on for the SoW).
+- Source: Same as the Summer2 SoW finding: Deller b. London 1966; Thorpe b. Middlesbrough; estate grep shows 'Shaw' only in Summer 2 files
+
+**XP9 · Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html** (A-fact, screen; WRONG)
+- Current: “Still carrying people across the Tees”
+- Issue: Starter product card presents the Transporter Bridge as still carrying people, but the bridge has been closed to all users since December 2019 and remains closed for the 2026-27 teaching year.
+- Proposed: 'Spanning the Tees since 1911 (closed for repairs since 2019)'.
+- Source: Tees Transporter Bridge closed December 2019 on safety grounds; still closed as of Jan 2026 (restoration unfunded/incomplete) — verified knowledge; fixer should confirm no 2026 reopening.
+
+**XP10 · Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html** (D-alignment, both; MISALIGNED)
+- Current: “How can clues and centuries help us place local events in a defensible order, from 1000 CE to today?”
+- Issue: On-deck W1 enquiry adds 'and centuries' and 'from 1000 CE to today' versus the SoW's named enquiry 'How can clues help us place local events in a defensible chronological order?'; the deck matches the Pathway Tracker, so the drift is deck+Tracker vs SoW.
+- Proposed: reconcile — either update SoW W1 enquiry to the deck wording (likely, since Tracker is generated from decks) or trim the deck.
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 1 vs deck title slide and print KO; Pathway_Tracker.html agrees with deck.
+
+**XP11 · Build/Slideshows/BUILD_HUM_W2_History_Detectives.html** (D-alignment, both; MISALIGNED)
+- Current: “How can we distinguish what a source shows from what we infer or still need to ask?”
+- Issue: On-deck W2 enquiry ends 'or still need to ask?' where the SoW's named enquiry ends 'or still cannot know?'; deck matches the Tracker.
+- Proposed: reconcile deck/Tracker wording with SoW Week 2.
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 2 vs deck title slide and print KO.
+
+**XP12 · Build/Slideshows/BUILD_HUM_W4_People_Who_Shaped_Britain.html** (D-alignment, both; MISALIGNED)
+- Current: “How can evidence show why a person or community matters without reducing them to a single story?”
+- Issue: On-deck W4 enquiry says 'a single story' where the SoW's named enquiry says 'one story' — trivial wording drift; deck matches the Tracker.
+- Proposed: reconcile with SoW Week 4 (or accept deck wording and update SoW).
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 4 vs deck title slide and print KO.
+
+**XP13 · Build/Slideshows/BUILD_HUM_W5_Big_Deal.html** (D-alignment, both; MISALIGNED)
+- Current: “How can we judge significance using criteria rather than fame or personal taste?”
+- Issue: On-deck W5 enquiry ends 'personal taste' where the SoW's named enquiry ends 'personal liking' — trivial wording drift; deck matches the Tracker.
+- Proposed: reconcile with SoW Week 5.
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 5 vs deck title slide and print KO.
+
+**XP14 · Build/Slideshows/BUILD_HUM_W6_Plan_The_Story.html** (D-alignment, both; MISALIGNED)
+- Current: “How can sequence, evidence and explanation turn facts into a coherent historical story?”
+- Issue: On-deck W6 enquiry says 'coherent historical story' where the SoW's named enquiry says 'coherent account' — wording drift; deck matches the Tracker.
+- Proposed: reconcile with SoW Week 6.
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 6 vs deck title slide and print KO.
+
+**XP15 · Build/Slideshows/BUILD_HUM_W6_Plan_The_Story.html** (D-alignment, both; MISALIGNED)
+- Current: “That bridge is where the marks live, and where the thinking lives.”
+- Issue: 'Where the marks live' is exam-mark-scheme framing in a BUILD deck: the SoW names no board and BUILD is judged Secure/Developing/Not yet, not marked; the phrase recurs in the print reference zone ('That bridge is where the marks live.').
+- Proposed: 'That bridge is where the thinking lives.' (both instances).
+- Source: Brief rule: no mark-scheme/exam-board framing; Pathway_Tracker.html BUILD judgement scale has no marks.
+
+**XP16 · Build/Slideshows/BUILD_HUM_W7_Tell_The_Story.html** (C-construction, print; WRONG)
+- Current: “What does the E-for-evidence do?”
+- Issue: Print Arrival (Supported) Q2 asks about E-for-evidence while the on-screen Arrival (Supported) Q2 asks 'What does the L-for-link do?' (with its answer key) — the printed sheet no longer matches the delivered retrieval question.
+- Proposed: change print Q2 to 'What does the L-for-link do?' to match the screen.
+- Source: Deck-internal: #arrival-supported vs #print-arrival supported-content.
+
+**XP17 · Build/Slideshows/BUILD_HUM_W7_Tell_The_Story.html** (A-qa, print; WRONG)
+- Current: “👪 Family at showcase</td><td>Conversational &mdash; invite questions”
+- Issue: The print Reference Zone audience table contradicts the We Do 2 match key: on screen 'Conversational — invite questions' is the correct answer for 'One partner' and Family pairs with 'Warmth + the local details they'll know' (absent from the reference), so a pupil using the printed reference during the match gets marked wrong.
+- Proposed: align the reference rows to the match key — Family: 'Warmth + the local details they'll know'; One partner: 'Conversational — invite questions' (or vice versa in the match; pick one canonical pairing).
+- Source: Deck-internal: #wedo2 data-correct keys vs #print-reference table rows.
+
+**XP18 · Build/Slideshows/BUILD_HUM_W7_Tell_The_Story.html** (D-alignment, both; MISALIGNED)
+- Current: “How can I communicate a historical account so an audience understands what happened and why?”
+- Issue: On-deck W7 enquiry ends 'understands what happened and why' where the SoW's named enquiry ends 'understands claim, evidence and uncertainty' — substantive drift (uncertainty dropped); deck matches the Tracker.
+- Proposed: reconcile with SoW Week 7 (SoW wording carries the uncertainty strand that the deck's Aspire line partially covers).
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 7 vs deck title slide and print KO.
+
+**XP19 · Build/Slideshows/BUILD_HUM_W8_Where_In_The_World.html** (A-qa, print; WRONG)
+- Current: “🏴 Merthyr &rarr; the Tees</td><td>Coastal steamer, or the east-coast line”
+- Issue: The print Reference Zone journeys table swaps the Merthyr and Clydeside routes relative to the We Do 2 match key: on screen (geographically correct) Clydeside → 'Coastal steamer or the east-coast line' and Merthyr → 'Rail up the spine of England'; the printed table reverses them, so it contradicts the activity and the geography (an east-coast line from South Wales makes no sense).
+- Proposed: swap the two route cells in the reference table to match the on-screen key.
+- Source: Deck-internal: #wedo2 data-correct keys vs #print-reference table; east-coast main line serves Scotland→Teesside, not South Wales — verified knowledge.
+
+**XP20 · Build/Slideshows/BUILD_HUM_W8_Where_In_The_World.html** (C-construction, print; WRONG)
+- Current: “🏴&#xF3;&#xF3; Clydeside &rarr; Teesside”
+- Issue: Corrupted entity sequence in the print Reference Zone journeys table: the Scotland flag renders as a black flag followed by 'óó' (mangled tag-sequence escape).
+- Proposed: replace with the proper Scotland flag sequence 🏴󠁧󠁢󠁳󠁣󠁴󠁿 as used elsewhere in the same deck.
+- Source: Raw file text; the same deck's match pill uses the correct 🏴󠁧󠁢󠁳󠁣󠁴󠁿 sequence.
+
+**XP21 · Build/Slideshows/BUILD_HUM_W8_Where_In_The_World.html** (D-alignment, both; MISALIGNED)
+- Current: “How does mapping movement change our understanding of migration, connection and place?”
+- Issue: On-deck W8 enquiry ends 'connection and place' where the SoW's named enquiry ends 'connection and identity' — notable because the unit itself is 'Migration & Identity'; deck matches the Tracker.
+- Proposed: reconcile with SoW Week 8 (SoW's 'identity' ties the closing week back to the unit enquiry).
+- Source: Humanities_Teesside/BUILD_Scheme_of_Work.html Week 8 vs deck title slide and print KO.
+
+**XP22 · Launch/Slideshows/LAUNCH_HUM_W5_People_Modern_Britain.html** (A-qa, screen; WRONG)
+- Current: “W4 agency/context + W5 significance + W2 causation ranks.”
+- Issue: Arrival stretch Q4 answer key ('Which weeks does this enquiry braid together?') uses the GROW/BUILD week map, not LAUNCH's: in LAUNCH, W4 is Century of Change (change/continuity, not agency/context) and W5 is this very lesson, so it cannot be a braided prior week — the deck's own W7 tool map labels W4 'Change dials' and W5 'Person + pattern'.
+- Proposed: 'W4 change/continuity + W2 causation ranks + W1 source weighing.'
+- Source: LAUNCH_Scheme_of_Work.html and Pathway_Tracker.html week map; LAUNCH_HUM_W7 We Do 2 pills ('🧭 W4 Change dials', '🔗 W5 Person + pattern'); GROW/BUILD W4 = People Who Shaped Britain, W5 = significance
+
+**XP23 · Launch/Slideshows/LAUNCH_HUM_W5_People_Modern_Britain.html** (A-qa, screen; WRONG)
+- Current: “W4 balance + W5 frames + W2 ranks”
+- Issue: Exit stretch Q3 answer key ('Which earlier weeks did today braid, and how?') cites W5 — the current week — as an earlier week and mislabels W4 ('balance' is this lesson's agency/structure content; LAUNCH W4 was turning-point/change), again matching the sibling-tier week map rather than LAUNCH's.
+- Proposed: 'W4 turning-point judgement + W2 ranks + W1 weighing — named braid.'
+- Source: LAUNCH week map (SoW + Tracker); same-deck evidence: W4 retrieval questions in this deck are all about hinge/endpoint, not agency
+
+**XP24 · Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html** (A-fact, print; WRONG)
+- Current: “the bridge (1911) is Georgian by days, Edwardian by habit.”
+- Issue: Knowledge Organiser Key Fact: the Transporter Bridge opened 17 Oct 1911, about 17 months after George V acceded (6 May 1910), so 'Georgian by days' is false under any reading.
+- Proposed: "the bridge (1911) is Georgian by a year and a half, Edwardian by habit."
+- Source: Edward VII died / George V acceded 6 May 1910; Transporter Bridge opened 17 Oct 1911 — verified knowledge
+
+**XP25 · Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html** (A-fact, print; WRONG)
+- Current: “<em>Edwardian by a whisker, not Victorian</em>”
+- Issue: Reference Zone says the 1911 bridge is 'Edwardian by a whisker' while the same Reference Zone table defines Edwardian as 1901–1910 and the KO says 'Georgian by days' — the deck contradicts itself on its own signature teaching point (period-label precision).
+- Proposed: e.g. "just past Edwardian — opened under George V in 1911, though habit still calls it Edwardian" so table, Reference Zone and KO agree.
+- Source: Deck's own period table 'Edwardian 1901–1910' + Edwardian era ended with Edward VII's death May 1910 — verified knowledge
+
+**XP26 · Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html** (C-construction, print; WRONG)
+- Current: “<div class="print-section" id="print-lundy">”
+- Issue: In W1–W6 and W8, #print-lundy (carrying 'What I said, and what it changed') and #print-feedback are nested inside #print-exit > .supported-content and are never added to printPack's visible list, so the written Lundy close and the feedback sheet never print in any pack and additionally sit in the supported-only branch (tier parity broken); W7 has #print-feedback nested the same way.
+- Proposed: move #print-lundy and #print-feedback out to be direct children of #print-area and add 'lundy','feedback' to the printPack() visible list in all eight decks (W7: 'feedback' only — its Lundy absence is sentinel-held).
+- Source: Deck CSS .print-section{display:none}/.print-section.visible and printPack() list ['ko','arrival','starter','wedo','reference','exit'] in all 8 files; HUM brief says GROW packs carry the written line
+
+**XP27 · Grow/Slideshows/GROW_HUM_W6_Plan_The_Account.html** (C-construction, screen; WRONG)
+- Current: “Four pillars beneath it are ordered PEEL units holding it up.”
+- Issue: I Do 1 illuminator (SVG + aria-label) shows FOUR PEEL pillars while the entire lesson teaches a THREE-unit blueprint ('PEEL units — Three…', 'Opening, 3 units, counter, close', reference 'six slots' with UNIT 1–3) — the diagram contradicts the taught structure.
+- Proposed: redraw with three PEEL pillars (or relabel the fourth as COUNTER) and update the aria-label to match.
+- Source: Same deck: blueprint text, Reference Zone 'six slots', W7 checklist (Unit 1–3); internal consistency check
+
+**XP28 · Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html** (A-fact, screen; WRONG)
+- Current: “The ore waited in the hills for eighty years”
+- Issue: I Do 2 model close asserts an eighty-year wait that fits no interval in the suite's taught chronology (railway 1825 → ironstone 1850 is the taught 25-year wait; the ore then did not wait at all) — an unanchored figure pupils are invited to reproduce in the assessed account of an interval-precision suite.
+- Proposed: e.g. "The ore waited in the hills while the railway ran for a quarter of a century" or drop the number.
+- Source: Suite chronology: S&D Railway 1825, Eston ironstone find June 1850, town founded 1830 — verified knowledge; W1 worked model ('25 years')
+
+**XP29 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (C-construction, doc; WRONG)
+- Current: “the *same zone hues as the Teesside art suites*”
+- Issue: Unconverted markdown emphasis renders literal asterisks in prose — 3 occurrences (line 22, and line 34 'what a source *shows* from what we *infer*').
+- Proposed: replace each *…* pair with <i>…</i> (or drop the markers) at lines 22 and 34.
+- Source: Raw file; HTML does not interpret markdown — asterisks display verbatim.
+
+**XP30 · Humanities_Teesside/GROW_Scheme_of_Work.html** (C-construction, doc; WRONG)
+- Current: “into *defensible history*”
+- Issue: Unconverted markdown emphasis renders literal asterisks — 6 occurrences (lines 11, 22, 27, 34 twice, and inside the Week 1 enquiry at line 48).
+- Proposed: replace each *…* pair with <i>…</i> throughout (6 places).
+- Source: Raw file; HTML does not interpret markdown.
+
+**XP31 · Humanities_Teesside/LAUNCH_Scheme_of_Work.html** (C-construction, doc; WRONG)
+- Current: “the *same zone family as the whole Teesside programme*”
+- Issue: Unconverted markdown emphasis renders literal asterisks — 2 occurrences (line 22, and line 34 'weigh *how far* a source').
+- Proposed: replace each *…* pair with <i>…</i> (2 places).
+- Source: Raw file; HTML does not interpret markdown.
+
+**XP32 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (D-alignment, doc; MISALIGNED)
+- Current: “<h2>Week 1: The Big Timeline</h2>”
+- Issue: SoW Week 1 title 'The Big Timeline' does not match the deployed deck and Pathway Tracker title 'The Local History Timeline' (the deck itself is split — its <title>/h1/KO say 'The Local History Timeline' while its feedback sheet and TA modal say 'The Big Timeline').
+- Proposed: retitle to 'Week 1: The Local History Timeline' to match the deck <title> and tracker, or unify the name suite-wide (deck internals are the hum batch's remit).
+- Source: Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html <title> and KO; Pathway_Tracker.html W1 BUILD row ('taken from the deployed lesson files').
+
+**XP33 · Humanities_Teesside/BUILD_Printable_Pack.html** (D-alignment, both; MISALIGNED)
+- Current: “{w:1,t:"The Big Timeline",tk:"THE TIMELINE TICKET"”
+- Issue: Printable pack Week 1 sheet/dropdown title 'The Big Timeline' does not match the deployed deck and tracker title 'The Local History Timeline'.
+- Proposed: t:"The Local History Timeline" (keep consistent with whichever name the fixer unifies on).
+- Source: Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html <title>; Pathway_Tracker.html W1 BUILD row.
+
+**XP34 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (D-alignment, doc; MISALIGNED)
+- Current: “so an audience understands claim, evidence and uncertainty?”
+- Issue: SoW Week 7 enquiry promises 'claim, evidence and uncertainty' but the deployed deck and tracker teach 'so an audience understands what happened and why' — the most substantive of the BUILD drifts.
+- Proposed: replace with "so an audience understands what happened and why?" to match the deck, or escalate if the SoW framing was the intended upgrade (deck edit belongs to the hum batch).
+- Source: BUILD_HUM_W7 deck enquiry; Pathway_Tracker.html W7 BUILD row.
+
+**XP35 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (D-alignment, doc; MISALIGNED)
+- Current: “The engine is deliberately light — no sorts or retrieval quizzes — which is the right pitch for Explore/BUILD, so none were added.”
+- Issue: Stale claim: all 8 deployed BUILD_HUM decks now contain a level-toggled retrieval grid, a 'Tap-tap sort' and a match round (house chassis inheritance), so 'no sorts or retrieval quizzes… so none were added' is false of the shipped suite.
+- Proposed: rewrite to reflect the current decks, e.g. note that the house retrieval grid, tap-tap sort and match round were later inherited from the shared chassis.
+- Source: grep: 'Retrieval grid' and 'Tap-tap' present in all 8 Build/Slideshows/BUILD_HUM_W*.html decks.
+
+**XP36 · Humanities_Teesside/GROW_Scheme_of_Work.html** (D-alignment, doc; MISALIGNED)
+- Current: “The engine is deliberately light — right for GROW — so no extra quiz engine was added.”
+- Issue: Stale claim: all 8 deployed GROW_HUM decks now carry the house retrieval grid and tap-tap sort engine, contradicting 'no extra quiz engine was added'.
+- Proposed: rewrite to acknowledge the chassis-inherited retrieval/sort engine (same fix pattern as the BUILD SoW).
+- Source: grep: 'Retrieval grid'/'Tap-tap' present in all 8 Grow/Slideshows/GROW_HUM_W*.html decks (and all 8 LAUNCH decks; LAUNCH SoW makes no equivalent claim).
+
+**XP37 · Humanities_Teesside/Pathway_Tracker.html** (D-alignment, doc; MISALIGNED)
+- Current: “Teesside &middot; Migration &amp; the Making of Modern Teesside &middot; Autumn 1, 2026&ndash;27”
+- Issue: The visible subtitle names the unit 'Migration & the Making of Modern Teesside' while this file's own <title>, all three SoWs, all three packs and the hub call it 'Teesside Migration & Identity'.
+- Proposed: "Teesside &middot; Migration &amp; Identity &middot; Autumn 1, 2026&ndash;27 &middot; Progress Schools Tees Valley"
+- Source: Pathway_Tracker.html line 3 <title> vs line 33; BUILD/GROW/LAUNCH SoW and pack titles.
+
+**XP38 · Build/Slideshows/BUILD_DT_W6_Handover.html** (D-alignment, screen; WRONG)
+- Current: “<strong>Key Question:</strong> When is a thing finished — and how do you know to stop?”
+- Issue: W6's on-screen Starter slide is a leftover copy of W5's — key question, Big Idea 'The finish is the difference.', game card 'Sort it' (W6's actual We Do 1 is 'Team quiz — talk, then reveal') and footer 'Finishing is slow on purpose…' — while W6's own print-starter already carries the correct handover key question.
+- Proposed: mirror print-starter — key question 'What does the community get that was not there in September?', Big Idea 'Handed over, not just finished.', game card 'Team quiz', footer 'Speak, carry, or photograph — all three count as taking part.'
+- Source: Same file's print-starter section ('Key question: What does the community get that was not there in September?') and We Do 1 header ('Team quiz — talk, then reveal'); DT_Community_Upcycling/Weekly_Plan.html W6 row.
+
+**XP39 · Build/Slideshows/BUILD_DT_W2_Blueprint.html** (D-alignment, screen; WRONG)
+- Current: “Onto the Build Board: vote for what we build, and today’s stage photo goes up.”
+- Issue: W2's lesson-complete modal tells pupils to vote for what to build, but the vote was W1's Lundy VOICE activity and W2's own VOICE is 'Your measurements go on the blueprint' — an un-updated copy of W1's modal line.
+- Proposed: 'Onto the Build Board: your measurements went on the blueprint, and today’s stage photo goes up.'
+- Source: W1 Lundy VOICE ('Vote for the community asset we'll build'), W2 Lundy VOICE in the same file; SoW: the vote is W1's Lundy VOICE.
+
+**XP40 · Build/Slideshows/BUILD_DT_W3_Core_Cut.html** (D-alignment, screen; WRONG)
+- Current: “Onto the Build Board: vote for what we build, and today’s stage photo goes up.”
+- Issue: W3's lesson-complete modal repeats W1's 'vote for what we build' line although the build was decided in W1 and W3's VOICE is 'You say when you are ready for the tool'.
+- Proposed: 'Onto the Build Board: you said when you were ready for the tool, and today’s stage photo goes up.'
+- Source: W3 Lundy VOICE in the same file; W1 Lundy VOICE (the vote); SoW W1 line 'Lundy VOICE: vote the community asset'.
+
+**XP41 · Build/Slideshows/BUILD_DT_W4_Assembly.html** (D-alignment, screen; WRONG)
+- Current: “Onto the Build Board: vote for what we build, and today’s stage photo goes up.”
+- Issue: W4's lesson-complete modal repeats W1's 'vote for what we build' line although W4's VOICE is 'Each builder explains one joining choice they made'.
+- Proposed: 'Onto the Build Board: you explained a joining choice, and today’s stage photo goes up.'
+- Source: W4 Lundy VOICE in the same file; W1 Lundy VOICE (the vote).
+
+**XP42 · Build/Slideshows/BUILD_DT_W5_Finish.html** (D-alignment, screen; WRONG)
+- Current: “Onto the Build Board: vote for what we build, and today’s stage photo goes up.”
+- Issue: W5's lesson-complete modal repeats W1's 'vote for what we build' line although W5's VOICE is 'You say when yours is finished'.
+- Proposed: 'Onto the Build Board: you said when yours was finished, and today’s stage photo goes up.'
+- Source: W5 Lundy VOICE in the same file; W1 Lundy VOICE (the vote).
+
+**XP43 · Build/Slideshows/BUILD_DT_W6_Handover.html** (D-alignment, screen; WRONG)
+- Current: “Onto the Build Board: vote for what we build, and today’s stage photo goes up.”
+- Issue: W6's lesson-complete modal — the final week — still tells pupils to vote for what to build; W6's VOICE is explaining the finished build to the partner.
+- Proposed: 'Onto the Build Board: you explained the build to the partner — the last link in the chain.'
+- Source: W6 Lundy VOICE in the same file; W1 Lundy VOICE (the vote).
+
+**XP44 · Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html** (D-alignment, screen; MISALIGNED)
+- Current: “<h2>Wordsearch — settle in</h2>”
+- Issue: W1's We Do 1 (and its Starter game card) is titled 'Wordsearch' but is a tap-to-reveal vocabulary card game — no wordsearch grid exists in any DT deck or print pack, though the suite SoW promises 'a subject-specific wordsearch' every week.
+- Proposed: rename to 'Word cards — settle in' on the We Do 1 header and Starter game card, or add a real wordsearch grid to the print pack; align the SoW either way.
+- Source: DT_Community_Upcycling/Scheme_of_Work.html standard-blueprint bullet and Weekly_Plan.html per-week wordsearch names; grep across all six decks finds no wordsearch grid — the only 'wordsearch' strings are W1's two titles.
+
+## AMBIGUOUS / pitch / UNVERIFIED flags (appendix)
+
+**XA1 · Art_Teesside/Build/Spring1_Scheme_of_Work.html** (A-fact, doc; UNVERIFIED)
+- Current: “The <b>Skill Deck</b> (eight printed tiles of skills taught this year) is the recovery route for Week 1”
+- Issue: The count 'eight' cannot be verified: no eight-tile Skill Deck exists anywhere in the estate — A2 W7 (the built source of the deck) defines it only as 'The printed set of skills taught this year, to choose from' with no count, and the same unverifiable 'eight' is echoed in the Spring 1 pack W1 recovery route ('eight things taught across this year, one per tile').
+- Proposed: soften both mentions to "the printed tiles of skills taught this year", or pin the deck at eight tiles when Spring 1 is unpaused (do not build it now — Spring 1 is deliberately paused).
+- Source: Estate-wide grep for 'Skill Deck': defined only in Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html with no tile count; no tile set printed in any A2 material
+
+**XA2 · Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html** (A-fact, both; AMBIGUOUS)
+- Current: “1911 · Edwardian era”
+- Issue: We Do 2 match target (correct answer for 'Transporter Bridge opens', repeated in the print-wedo section) labels 1911 as the Edwardian era; Edward VII died in May 1910, so October 1911 is strictly George V's reign (the loose 'long Edwardian' usage to 1914 exists but conflicts with the standard 1901-1910 period label).
+- Proposed: 1911 · Early 20th century
+- Source: Edwardian era 1901–1910; Transporter Bridge opened 17 Oct 1911 — verified knowledge; brief anchor list gives the same dates.
+
+**XA3 · Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html** (A-fact, print; AMBIGUOUS)
+- Current: “Ironstone found in the Eston Hills, 1850 — Middlesbrough boomed from ~40 farmers to an iron town.”
+- Issue: KO Key Fact compresses two decades: the ~40 figure is 1829; by 1850 Middlesbrough was already a coal-port town of roughly 7,000 (founded 1830, Port Darlington/St Hilda's), so it did not boom 'from ~40 farmers' when ironstone was found.
+- Proposed: 'Ironstone found in the Eston Hills, 1850 — the young coal port of Middlesbrough (begun 1830) boomed into an iron town.'
+- Source: Middlesbrough pop. ~40 in 1829, ~5,400 in 1841, ~7,600 in 1851; coal port established 1830 — verified knowledge; brief anchor 'Middlesbrough's founding/growth from 1830 (Port Darlington; St Hilda's)'.
+
+**XA4 · Build/Slideshows/BUILD_HUM_W2_History_Detectives.html** (A-qa, both; AMBIGUOUS)
+- Current: “The port was busy that year”
+- Issue: We Do 1 sort keys this statement as SUGGESTS, but a single-day photo cannot support a claim about a whole year, and the deck's own I Do 2 teaches that purpose/selection weakens 'the port was always this busy' — 'CAN'T TELL US' is equally defensible, breaking exactly-one-correct-target.
+- Proposed: change the pill to 'The port was busy that day'.
+- Source: Deck-internal: I Do 2 postcard caveat and the taught SHOWS/SUGGESTS/CANNOT definitions in the print reference zone.
+
+**XA5 · Build/Slideshows/BUILD_HUM_W3_Why_People_Came.html** (A-qa, both; AMBIGUOUS)
+- Current: “⛪ A Welsh chapel already here”
+- Issue: We Do 1 keys this as NETWORK, but the deck's own taught decision rule (print reference 'HOME TEST': something AT THE NEW PLACE inviting them over → PULL; a PERSON who showed the way → NETWORK) classifies a chapel at the destination as PULL, so Supported pupils applying the taught test get marked wrong — two defensible targets.
+- Proposed: change pill to '✉️ Friends from chapel wrote: join us' (clearly a person/network), or extend the taught test to include 'a community you already belong to → NETWORK'.
+- Source: Deck-internal contradiction between the sort key and the print reference zone's PUSH/PULL/NETWORK test.
+
+**XA6 · Build/Slideshows/BUILD_HUM_W5_Big_Deal.html** (A-qa, both; AMBIGUOUS)
+- Current: “Which event made Middlesbrough grow from 40 people?”
+- Issue: Exit (Supported) keys 'Ironstone found, 1850' as the event that made Middlesbrough grow from 40 people, but the growth from ~40 (1829) began with the 1830 railway extension/coal port — by 1850 the town already held thousands; ironstone drove the later boom to 90,000.
+- Proposed: reword stem to 'Which 1850 discovery turned Middlesbrough into a booming iron town?' (answer key unchanged).
+- Source: Middlesbrough founded as coal port 1830; pop. ~5,400 by 1841 before the 1850 Eston ironstone find — verified knowledge; brief anchor 'founding/growth from 1830'.
+
+**XA7 · Build/Slideshows/BUILD_HUM_W5_Big_Deal.html** (A-fact, both; AMBIGUOUS)
+- Current: “NUMBERS · a town of thousands from 40”
+- Issue: We Do 2 match target keyed to 'Ironstone found, 1850' repeats the conflation that the town went from 40 people because of the 1850 find (the 40→thousands step happened 1830-1850 as a coal port; 1850 took it from thousands to 90,000).
+- Proposed: 'NUMBERS · 90,000 people by 1901' (still uniquely matchable to the ironstone pill).
+- Source: Same population evidence as previous finding — verified knowledge.
+
+**XA8 · Build/Slideshows/BUILD_HUM_W6_Plan_The_Story.html** (A-fact, screen; AMBIGUOUS)
+- Current: “the railway arrives, 1825, and gives the place a reason to exist”
+- Issue: I Do 1 worked plan: the 1825 S&DR ran Stockton-Darlington; the railway 'arrived' at Middlesbrough via the 1830 Port Darlington extension, which is what actually gave the place its reason to exist — and in a lesson about sequencing, this Set-up (1825) is narrated after an Opening dated 1829.
+- Proposed: 'the railway reaches the Tees in 1825, and its 1830 extension gives this spot a reason to exist'.
+- Source: S&DR opened 27 Sep 1825 (Stockton-Darlington); Middlesbrough branch/Port Darlington opened Dec 1830 — verified knowledge.
+
+**XA9 · Launch/Slideshows/LAUNCH_HUM_W2_Cause_Consequence_Courtroom.html** (A-qa, both; AMBIGUOUS)
+- Current: “⚓ The navigable Tees itself”
+- Issue: We Do 1 sorter locks this pill to CONTRIBUTING (data-cat="con") and marks DECISIVE as wrong, but by the deck's own remove-the-cause test a decisive reading is defensible — Middlesbrough was sited in 1830 precisely for navigable deep water (Port Darlington), so without the navigable Tees the port town and its boom arguably never happen there at all.
+- Proposed: reword the pill so the contributing reading is unambiguous, e.g. '⚓ River shipping up the Tees (coastal sea routes already existed)' — mirroring how the I Do argues the rail down to contributing.
+- Source: Deck's own I Do 2 counterfactual method; Middlesbrough founded 1830 as Port Darlington for deeper-water access than Stockton — verified knowledge
+
+**XA10 · Launch/Slideshows/LAUNCH_HUM_W6_Structured_Account.html** (A-qa, both; AMBIGUOUS)
+- Current: “Name the four blueprint zones.”
+- Issue: Arrival supported Q2 is tagged (Recall) but 'blueprint zones' is GROW-pathway vocabulary (GROW W6 Plan the Account / GROW W7) that appears nowhere in LAUNCH W1–W5, so a supported LAUNCH pupil has never met the term being recalled; the question also prints in the supported arrival pack.
+- Proposed: replace with a LAUNCH-native recall, e.g. 'An essay's claim that every sentence serves is called the…?' (answer: thesis) or reword to 'An account runs opening → body → counter → close: name the four parts' without the 'blueprint' label.
+- Source: grep: 'blueprint' occurs in LAUNCH suite only in this deck (lines 98/168) but 39 times across GROW_HUM_W6_Plan_The_Account.html and GROW_HUM_W7_Write_The_Account.html
+
+**XA11 · Launch/Slideshows/LAUNCH_HUM_W6_Structured_Account.html** (A-fact, screen; AMBIGUOUS)
+- Current: “yet ore made nothing for eighty years until hands arrived”
+- Issue: I Do 2 model turn: the 'eighty years' figure has no anchor (main-seam ironstone was found in 1850 and worked almost immediately) and contradicts the same argument as modelled in W2 ('ore sat unmined for centuries').
+- Proposed: 'yet ore made nothing for centuries until hands arrived' — aligning with W2's phrasing.
+- Source: LAUNCH_HUM_W2 I Do 2: 'ore sat unmined for centuries; only PEOPLE changed that'; Eston main seam discovered June 1850 and mined from that year — verified knowledge
+
+**XA12 · Launch/Slideshows/LAUNCH_HUM_W7_Source_Assessment.html** (A-qa, both; AMBIGUOUS)
+- Current: “Equal time on a source you rate lightly”
+- Issue: We Do 1 sorter classes this as a WEAK assessed move, but the deck's own trained route prescribes exactly equal time per source ('~5 read · 15 + 15 per source · 8 verdict · 2 check' in arrival standard A4, the I Do route diagram, and the Standard task steps) — a pupil who follows the route as taught is told their move is weak.
+- Proposed: reword the pill to target coverage rather than the timetable, e.g. 'Writing as much ABOUT a source you rate lightly as about your key source', or reconcile with the clock rule explicitly.
+- Source: Same deck: arrival standard Q4 answer, I Do 1 route SVG (15 min per source), print-scaffold-standard Route Card '5 read · 15 Source A … 15 Source B'
+
+**XA13 · Launch/Slideshows/LAUNCH_HUM_W7_Source_Assessment.html** (A-fact, screen; UNVERIFIED)
+- Current: “Last term's ballot changed this one.”
+- Issue: Lundy INFLUENCE box asserts as fact that a previous term's post-assessment ballot altered this assessed-week design; the suite is dated Autumn 1 2026–27 and the repo holds no record of an earlier run, so if this is the scheme's first term the promise is fabricated history — a real problem for a framework whose stated principle is that pupil influence is real.
+- Proposed: if no prior ballot happened, soften to a forward promise only, e.g. 'Post-assessment ballot: the ONE change to assessed-week design for next term — your vote is logged and honoured.'
+- Source: Could not verify: Tracker/SoW date the programme Autumn 1 2026–27 with no earlier-run record in the repo; settled by Matt confirming whether a 2025–26 LAUNCH assessed-week ballot occurred
+
+**XA14 · Launch/Slideshows/LAUNCH_HUM_W8_OS_Map_Skills.html** (A-fact, both; UNVERIFIED)
+- Current: “Last year's cohort put THIS map week here.”
+- Issue: Lundy INFLUENCE box (slide and print-lundy table) asserts a 2025–26 cohort's term review placed the map week in this SoW; the scheme is dated 2026–27 and the repo contains no earlier-run evidence — if untrue, this manufactures the very 'real influence' the Lundy loop promises. (Contrast: the decks' reconstructed sources are properly caveated as illustrative.)
+- Proposed: if no prior cohort review occurred, drop the sentence or recast as 'your review can move weeks like this one — it goes to the SoW meeting with your name on it.'
+- Source: Could not verify: Pathway_Tracker.html and SoW date the programme Autumn 1 2026–27; no prior-year LAUNCH humanities artefacts in repo; settled by author confirmation
+
+**XA15 · Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html** (A-qa, screen; AMBIGUOUS)
+- Current: “data-correct="victorian" onclick="pickTarget(this)">1911 — Edwardian, not”
+- Issue: We Do 2 match target teaches '1911 — Edwardian, not Victorian', which the deck's own period table (Edwardian 1901–1910) contradicts; defensible only under the loose extended-Edwardian usage the deck never introduces.
+- Proposed: reword target to "1911 — not Victorian (Victoria died 1901)" so the tested error is provable without the shaky Edwardian claim.
+- Source: Deck-internal consistency vs Edwardian era 1901–1910; extended usage to 1914 exists but is untaught — verified knowledge
+
+**XA16 · Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html** (A-qa, screen; AMBIGUOUS)
+- Current: “1911 is Edwardian; the period label fails.”
+- Issue: Exit ticket Standard Q3 answer key asserts '1911 is Edwardian' — a pupil applying the deck's own Edwardian 1901–1910 table would rightly answer '1911 is after the Edwardian era' and be contradicted by the key.
+- Proposed: key e.g. "Victoria died in 1901 — 1911 cannot be Victorian (strictly it is even after Edward VII, d. 1910)."
+- Source: Deck's own Reference Zone period table + reign dates — verified knowledge
+
+**XA17 · Grow/Slideshows/GROW_HUM_W3_Cause_And_Consequence.html** (A-qa, screen; AMBIGUOUS)
+- Current: “<div class="sort-pill" data-cat="cond" onclick="selectSort(this)">🥔 Failed harvests in Ireland</div>”
+- Issue: We Do 1 sorter keys 'Failed harvests in Ireland' as CONDITION only, but the same deck teaches the famine is 'Mostly trigger (crisis) on top of conditions' (arrival Standard key) and 'Crisis — condition and trigger at once' (We Do 2 target), so a pupil following the deck's own teaching who taps TRIGGER is marked wrong — two deck-endorsed targets.
+- Proposed: replace the pill with an unambiguous condition (e.g. "Years of rural poverty in Ireland") or key the pill to accept both categories.
+- Source: Same deck: arrival Standard Q3 answer and We Do 2 famine target; exit Standard Q1 'Why can the famine be condition AND trigger?'
+
+**XA18 · Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html** (C-construction, print; AMBIGUOUS)
+- Current: “Paragraph 2 (row 2):”
+- Issue: Supported assessed worksheet provides slots only for Paragraph 1 (row 1) and Paragraph 2 (row 2) plus frames, while its own on-screen steps say 'one paragraph per plan row' and the W6 Supported blueprint records three unit strips — sheet and steps disagree (may be a deliberate Supported reduction, but then the steps line is wrong).
+- Proposed: add "Paragraph 3 (row 3):" with print-lines, or amend the Supported steps to "one paragraph for each of your two strongest plan rows".
+- Source: Same deck Supported task steps; W6 print-worksheet-supported 'Unit strips (3) + evidence partners'
+
+**XA19 · Grow/Slideshows/GROW_HUM_W8_Where_In_The_World.html** (A-qa, screen; AMBIGUOUS)
+- Current: “Does 800 ≠ 60 change 'why they”
+- Issue: Starter card contrasts 800 miles with 60 miles, but no 60-mile journey exists anywhere in the deck (the taught journeys are Mayo ~330, Merthyr ~260, Gdańsk ~800) — the comparison figure is unanchored for pupils.
+- Proposed: "Does 800 ≠ 260 change 'why they came'?" or first add a ~60-mile local journey (e.g. from the Durham coalfield) to the cards.
+- Source: Same slide's three distance cards and the KO Key Fact 'Mayo ~330 miles; Merthyr ~260; Gdańsk ~800'
+
+**XA20 · Grow/Slideshows/GROW_HUM_W8_Where_In_The_World.html** (A-qa, both; AMBIGUOUS)
+- Current: “What did Week 8 BUILD call the map's limit?”
+- Issue: Arrival Standard Q4 asks GROW pupils to recall content from the parallel BUILD pathway's same-week lesson (a different class, delivered the same week), and the key 'It shows the road, not the reason.' is a paraphrase — BUILD W8's actual line is 'the map shows the road; the letter shows the reason.'
+- Proposed: reword to "Finish the line: 'the map shows the road; the ___ shows the reason'" (answer: letter) and drop the cross-pathway attribution.
+- Source: Build/Slideshows/BUILD_HUM_W8_Where_In_The_World.html (phrase grep: 'the map shows the road; the letter shows the reason.'); Lundy AUDIENCE lines show BUILD is a separate class
+
+**XA21 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (A-fact, doc; UNVERIFIED)
+- Current: “AQA UAS &#x27;History around us&#x27;”
+- Issue: Could not verify that AQA's Unit Award Scheme has a unit titled 'History around us' — that name is best known as the OCR SHP GCSE B site-study component — and the same label appears in the GROW and LAUNCH SoW subtitles.
+- Proposed: confirm the exact registered UAS unit title/code with the centre (each SoW's assessor note already requires matching the exact unit code/version); no text change until confirmed.
+- Source: Verified knowledge: 'History Around Us' is the OCR B (SHP) GCSE component name; AQA UAS units are code-numbered and centre-selected — offline, cannot enumerate UAS unit titles.
+
+**XA22 · Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html** (D-alignment, both; UNVERIFIED)
+- Current: “🏅 Banks: ASDAN Vocational / D&amp;T module evidence”
+- Issue: All six decks claim banking into an 'ASDAN Vocational / D&T module' but no such named ASDAN product exists anywhere in the estate — the suite SoW says the exact module codes are still to confirm locally, W6's own staff facts panel names only FoodWise/Living Independently/Careers Short Courses + AQA UAS, and if the intended target is an ASDAN Vocational Taster that product line is being withdrawn (
+- Proposed: once the coordinator confirms the target, name it (e.g. a specific AQA UAS unit or named ASDAN Short Course) in the award strip, KO headers and witness sheets of all six decks; until then soften to 'Banks: vocational portfolio evidence (ASDAN/AQA UAS — module TBC)'.
+- Source: SPEC_FACTS.md §19 (all Vocational Taster titles being withdrawn; dates); DT_Community_Upcycling/Scheme_of_Work.html 'Before you teach' ('the exact ASDAN Vocational/D&T module codes these map to'); BUILD_DT_W6 title staff
+
+**XA23 · Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html** (C-construction, print; AMBIGUOUS)
+- Current: “An adult checks and signs that your station is safe”
+- Issue: The W1 Knowledge Organiser defines SIGN OFF as adult-only, but the same deck's Stretch task and witness-sheet Stretch descriptor have the pupil running the safety check on a peer's station and signing it off.
+- Proposed: KO row → 'A check you put your name to — an adult signs your station; at Stretch you may check and sign a classmate's.'
+- Source: Same file: Stretch task 'run the safety check on someone ELSE's station and sign it off' and witness STRETCH descriptor. Classroom-station sign-off, not ASDAN unit sign-off, so no spec breach — but the KO contradicts the
+
+## SOW-SIDE (appendix)
+
+**XO1 · Humanities_Teesside/BUILD_Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “no sorts or retrieval quizzes”
+- Issue: The SoW's 'How these lessons were upgraded' section describes a deck architecture that does not exist in the deployed BUILD_HUM decks: it claims the engine has 'no sorts or retrieval quizzes ... so none were added', yet every week has a We Do sort, a match round and a three-tier retrieval Arrival grid; the described Reading toggle, stamped ticket, Lundy loop ring, Inherited/Feeds spine band, 'Not 
+- Proposed: rewrite the SoW's enhancement-layer section to describe the deployed 10-slide Made-by-Matt chassis (or flag for the hum-docs fixer) — the error lives in the SoW, not the lessons.
+- Source: Grep of all 8 decks for 'specialist', 'Reading', 'ticket', 'Inherited', 'Feeds', 'Calm Mode' returned zero; every deck contains sort-pills, match-pills and Arrival retrieval grids.
+
+**XO2 · Humanities_Teesside/LAUNCH_Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “AQA UAS &#x27;History around us&#x27; + GCSE AO bridge”
+- Issue: The suite brief states 'the SoW names no board', but the LAUNCH SoW subtitle (and BUILD/GROW SoWs and printable packs) names AQA UAS; AQA UAS is the Unit Award Scheme (accreditation, not GCSE grading), and 'History Around Us' is also the name of an OCR GCSE B component, so the UAS unit title could not be verified. The 8 LAUNCH decks themselves contain zero board names or grade language (grep-confi
+- Proposed: no deck change; brief/SoW discrepancy recorded for the fixer — verify 'History around us' against the registered AQA UAS unit list before teaching (the SoW itself already instructs matching to the exact registered unit).
+- Source: BRIEF_HUM ('the SoW names no board'); LAUNCH_Scheme_of_Work.html line 8; grep AQA|Edexcel|OCR across LAUNCH_HUM decks = 0 hits; 'History Around Us' is an OCR SHP GCSE B component name — verified knowledge
+
+**XO3 · Humanities_Teesside/GROW_Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “How can dates, periods and intervals help us build *and challenge* chronology?”
+- Issue: SoW weekly enquiry wording lags the deployed decks in 7 of 8 weeks (W1 'chronology' vs decks' 'chronological claims'; W2 'or' vs 'and'; W3 no 'shape…and its consequences'; W5 'how big a deal' vs 'it depends…about significance'; W6 no 'coherent, qualified'; W7 'qualified uncertainty' vs 'a qualified judgement'; W8 no 'of migration') — decks and Pathway_Tracker agree with each other throughout, so t
+- Proposed: regenerate the SoW week enquiries from the deployed decks (the Tracker already states it is generated from them); W4 needs no change.
+- Source: Compared GROW_Scheme_of_Work.html weeks 1–8 vs on-deck enquiries and Pathway_Tracker.html rows (all three read in full)
+
+**XO4 · Humanities_Teesside/GROW_Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “GROW Humanities — Teesside Migration &amp;amp; Identity (The History Studio)”
+- Issue: SoW file double-escapes ampersands in its h1 and 'Connected studio journey' line (renders literally as '…Migration &amp; Identity') and uses literal markdown asterisks for emphasis (*defensible history*, *and challenge*, *the same zone hues…*) that render as asterisks in HTML — display defects in the staff-facing SoW, not the lessons.
+- Proposed: replace '&amp;amp;' with '&amp;' (2 places) and swap *…* emphasis for <em>…</em> in the SoW file.
+- Source: Raw file inspection of GROW_Scheme_of_Work.html lines 7, 11, 14, 22
+
+**XO5 · DT_Community_Upcycling/Weekly_Plan.html** (D-alignment, doc; SOW-SIDE)
+- Current: “MODEL: Fatal Four + safe handling”
+- Issue: The Weekly Plan's W1 flow names 'Fatal Four' — an industry term for the four fatal construction risks (falls, struck-by, electrocution, caught-between) — but the shipped W1 deck teaches four bench-scale hazard families (sharp, trip, dust, lift) and never mentions 'Fatal Four'.
+- Proposed: 'MODEL: four hazard families (sharp, trip, dust, lift) + safe handling'
+- Source: BUILD_DT_W1 'I Do 1 — The Model — Sharp, Trip, Dust, Lift'; 'Fatal Four' is HSE/OSHA construction-fatality terminology — verified knowledge. Error lives in the plan, not the lesson.
+
+**XO6 · DT_Community_Upcycling/Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “a 2×2 retrieval grid + a subject-specific <b>wordsearch</b> (no crosswords) to settle the room”
+- Issue: The SoW's standard lesson blueprint promises a 2×2 retrieval grid plus a weekly wordsearch, but every shipped deck opens with a three-question tiered retrieval quiz and a different tap-card game each week — no grid, no wordsearch.
+- Proposed: 'a three-question tiered retrieval quiz + a subject-specific word game to settle the room and build vocational vocabulary.'
+- Source: All six BUILD_DT decks: Arrival Task = 3 task-boxes per tier; We Do 1 games are Wordsearch(cards)/Match it up/Odd one out/Put it in order/Sort it/Team quiz. Error lives in the SoW.
+
+**XO7 · DT_Community_Upcycling/Scheme_of_Work.html** (D-alignment, doc; SOW-SIDE)
+- Current: “differentiated <b>Standard</b> and <b>Supported</b> tasks (toggle in the pack)”
+- Issue: The SoW describes two differentiation tiers, but every shipped deck (and its print packs, witness sheets and toggles) runs three: Supported / Standard / Stretch.
+- Proposed: 'differentiated <b>Supported</b>, <b>Standard</b> and <b>Stretch</b> tasks (toggle in the pack)' — Weekly_Plan.html's footer 'Standard + Supported in every pack' needs the same update.
+- Source: All six BUILD_DT decks: level-toggle buttons, print-scaffold/worksheet sections and witness 'ring ONE' tables carry three tiers. Error lives in the SoW/plan.
+
