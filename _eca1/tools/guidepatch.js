@@ -25,7 +25,7 @@ const SCRIPT = `<!--mbm-guide:v1--><script id="mbm-guide-js">
     if(e.key!=='g'&&e.key!=='G')return;
     var t=e.target;
     if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
-    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible,.mbm-modal.open'))return;
+    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible,.mbm-modal.open,.overlay.visible,.overlay.open'))return;
     window.mbmGuideToggle();
   });
   apply(stored());
@@ -39,6 +39,7 @@ const STAFF_LABELS = {
 const ROUTE_LABELS = ['🧭 Coming next:', '🧭 And that&rsquo;s the unit:', "🧭 And that's the unit:"];
 
 function chassisOf(f, s) {
+  if (/\/v3_40min\/SCI_/.test(f)) return 'sci-v3';
   if (s.includes('mbmTAopen')) return 'hum-v4';
   if (s.includes('showTABrief')) return /_DT_/.test(f) ? 'v5-dt' : (/Art_Teesside/.test(f) ? 'v5-art' : 'v5-asdan');
   return 'doc';
@@ -79,11 +80,53 @@ function patch(f, dry) {
   if (chassis === 'doc') return { f, chassis, skip: true };
   const stats = { f, chassis, staff: 0, route: 0, lundy: 0, wraps: 0, injected: false, ambers: [] };
 
-  // 1. Tag lundy boxes (all chassis) — screen only; must sit on the Lundy Loop slide.
-  {
+  if (chassis === 'sci-v3') {
+    // lundy: .lundy-mini (GROW) / .lundy (BUILD, LAUNCH) blocks on every slide EXCEPT the
+    // exit slide (data-type="exit") — those stay visible (the Lundy close lives there).
+    const masks = maskedRanges(s);
+    const em = /<section class="slide[^>]*data-type="exit"/.exec(s);
+    const exitAt = em ? em.index : Infinity;
+    const acts = [];
+    const re = /<div class="(?:lundy-mini|lundy)">/g;
+    let m;
+    while ((m = re.exec(s)) !== null) {
+      if (inMask(masks, m.index)) continue;
+      if (m.index > exitAt) continue; // on/after the exit slide: keep visible
+      acts.push([m.index, m[0]]);
+    }
+    for (const [i, tag] of acts.reverse()) {
+      const nt = tag.replace('<div ', '<div data-mbm-guide="lundy" ');
+      s = s.slice(0, i) + nt + s.slice(i + tag.length); stats.lundy++;
+    }
+    // staff: teacher-note .note divs (voice-keyed, never class-wide — pupil access notes stay)
+    const staffNoteRe = /<div class="note">(?=(?:\s*)(?:Arrival retrieves|<b>Fade it:<\/b>|<b>Fade:<\/b>))/g;
+    const masks2 = maskedRanges(s);
+    const acts2 = [];
+    while ((m = staffNoteRe.exec(s)) !== null) { if (!inMask(masks2, m.index)) acts2.push(m.index); }
+    for (const i of acts2.reverse()) {
+      s = s.slice(0, i) + '<div class="note" data-mbm-guide="staff">' + s.slice(i + '<div class="note">'.length);
+      stats.staff++;
+    }
+    // staff wrap: the "TA fade route:" tail inside the WORD HELP footer
+    const fadeRe = /<b>TA fade route:<\/b>[^<]*/;
+    const fm = fadeRe.exec(s);
+    if (fm && !inMask(maskedRanges(s), fm.index)
+        && !s.slice(Math.max(0, fm.index - 40), fm.index).includes('data-mbm-guide')) {
+      s = s.slice(0, fm.index) + '<span data-mbm-guide="staff">' + fm[0] + '</span>' + s.slice(fm.index + fm[0].length);
+      stats.wraps++;
+    }
+    // staff: the teacher's spoken influence-opener script line (GROW)
+    s = tagAll(s, /<div class="teacher-say">/g, null, stats, 'staff', 0,
+      t => t.replace('<div ', '<div data-mbm-guide="staff" '));
+    // route: source-note provenance + the "Weeks 1 and 2 were baseline" entry lines (GROW)
+    s = tagAll(s, /<p class="source-note">/g, null, stats, 'route', 0,
+      t => t.replace('<p ', '<p data-mbm-guide="route" '));
+    s = tagAll(s, /<div class="retr-declare">/g, null, stats, 'route', 0,
+      t => t.replace('<div ', '<div data-mbm-guide="route" '));
+  } else {
+    // 1. Tag lundy boxes (v5/hum chassis) — screen only; must sit on the Lundy Loop slide.
     const masks = maskedRanges(s);
     const out = [];
-    let last = 0;
     const re = /<div\b[^>]*class="lundy-box"[^>]*>/g;
     let m;
     while ((m = re.exec(s)) !== null) {
@@ -154,20 +197,20 @@ function patch(f, dry) {
     }
   }
 
-  // 3. Injections — only where the toggle is not already installed (v5-art, hum-v4).
+  // 3. Injections — only where the toggle is not already installed (v5-art, hum-v4, sci-v3).
   if (!s.includes('id="mbm-guide-css"')) {
     if (!s.includes('</head>')) { stats.ambers.push('no </head>'); }
     else {
       s = s.replace('</head>', STYLE + '</head>');
-      const cre = /(<div class="controls">[\s\S]*?<\/div>)/;
+      const cre = /(<(?:div|nav) class="controls">[\s\S]*?<\/(?:div|nav)>)/;
       const cm = s.match(cre);
       if (!cm) stats.ambers.push('no .controls');
       else {
         let controls = cm[1];
-        const anchor = controls.match(/<button[^>]*onclick="(?:showTABrief|mbmTAopen)\(\)"[^>]*>[^<]*<\/button>/);
+        const anchor = controls.match(/<button[^>]*onclick="(?:showTABrief|mbmTAopen|openTA)\(\)"[^>]*>[^<]*<\/button>/);
         controls = anchor
           ? controls.replace(anchor[0], anchor[0] + BUTTON)
-          : controls.replace('</div>', BUTTON + '</div>');
+          : controls.replace(/<\/(div|nav)>$/, BUTTON + '</$1>');
         s = s.replace(cm[1], controls);
       }
       const tail = s.lastIndexOf('</body>');
