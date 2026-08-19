@@ -139,6 +139,121 @@ if (capsule && fs.existsSync(capsule)) {
     got.length ? got[0].slice(0, 130) : 'no row imported');
 }
 
+/* ---- S2c: the tamper negative control -----------------------------------
+ * S2b proves a good capsule verifies. On its own that is satisfied just as well
+ * by a verifier that says "verified" to everything, which is the failure mode
+ * an integrity receipt exists to rule out. So: mutate one field of the capsule
+ * the lab actually exported and require the Studio to REFUSE it. */
+if (capsule && fs.existsSync(capsule)) {
+  const doc = JSON.parse(fs.readFileSync(capsule, 'utf8'));
+  doc.evidence.claim = 'TAMPERED — this sentence was never written by the pupil';
+  const bad = path.join(TMP, 'AUTHORED-BY-HARNESS_not-a-pack-sample_capsule_TAMPERED.json');
+  fs.writeFileSync(bad, JSON.stringify(doc, null, 2));
+  const { ctx, pg } = await open(STUDIO);
+  await pg.setInputFiles('#capsuleFiles', bad);
+  await pg.waitForTimeout(1200);
+  const got = await pg.evaluate(() => [...document.querySelectorAll('#capsuleRows tr')]
+    .map(tr => tr.textContent.replace(/\s+/g, ' ').trim()).filter(t => /SPLIT PROBE/.test(t)));
+  await ctx.close();
+  row('S2c', 'CONTROL — a tampered capsule is REFUSED by the same import path',
+    got.length === 1 && /changed \/ invalid/.test(got[0]),
+    got.length ? got[0].slice(0, 130) : 'no row imported');
+}
+
+/* ---- S4: THE LAUNCH LINK ITSELF, ACROSS TWO REAL ORIGINS ----------------
+ *
+ * WHY THIS EXISTS, and why its absence let a 404 ship. Everything above proves
+ * the FILE-IMPORT transport: it hands the lab a .buildmission.json through
+ * #missionFile and builds the lab's URL itself. So the OTHER transport — the
+ * one the Studio's own "Launch mission" anchor uses — was never exercised, and
+ * the bare filename in the engine table sat there through a green harness.
+ *
+ * The two origins are real and different: the Apps tree is served on one port,
+ * the Lessons tree on another. The Studio under test is the SHIPPED build,
+ * carrying its production absolute URL; requests to that production origin are
+ * intercepted and fulfilled from the Lessons server, which is what a browser on
+ * madebymatt.uk would get. So this proves the string as shipped, not a rewrite
+ * of it invented for the test. */
+{
+  const http = await import('node:http');
+  const serve = root => new Promise(res => {
+    const srv = http.createServer((rq, rs) => {
+      const rel = decodeURIComponent(rq.url.split('?')[0].split('#')[0]).replace(/^\/+/, '');
+      const f = path.join(root, rel);
+      if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rs.writeHead(404); return rs.end('no'); }
+      rs.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); rs.end(fs.readFileSync(f));
+    }).listen(0, '127.0.0.1', () => res(srv));
+  });
+  const [sApps, sLessons] = [await serve(APPS), await serve(LESSONS)];
+  const [pApps, pLessons] = [sApps.address().port, sLessons.address().port];
+  const PROD = 'https://madebymatt.uk/Lessons/';
+
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  /* fulfil the production origin from the Lessons server — same bytes, same
+     paths, and still a different origin from the Studio's. */
+  await ctx.route(u => u.href.startsWith(PROD), async route => {
+    const rel = route.request().url().slice(PROD.length).split('#')[0];
+    const r = await fetch(`http://127.0.0.1:${pLessons}/${rel}`).catch(() => null);
+    if (!r || !r.ok) return route.fulfill({ status: 404, body: 'absent' });
+    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: Buffer.from(await r.arrayBuffer()) });
+  });
+  const pg = await ctx.newPage();
+  const errs = []; pg.on('pageerror', e => errs.push(String(e).slice(0, 140)));
+  await pg.goto(`http://127.0.0.1:${pApps}/FieldOps_Teacher_Studio.html`, { waitUntil: 'domcontentloaded' });
+  await pg.waitForTimeout(400);
+
+  /* mint an authored mission on the Wilton engine, then read the anchor the
+     teacher would actually click */
+  await pg.evaluate(() => {
+    const set = (id, v) => { const e = document.getElementById(id); e.value = v;
+      e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
+    set('engine', 'wilton-carbon-control');
+    document.getElementById('engine').dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await pg.waitForTimeout(300);
+  await pg.evaluate(() => {
+    const set = (id, v) => { const e = document.getElementById(id); e.value = v;
+      e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
+    set('missionTitleInput', 'AUTHORED LAUNCH-LINK FIXTURE');
+    set('missionQuestionInput', 'Does the launch link survive the split?');
+  });
+  await pg.waitForTimeout(400);
+  const href = await pg.getAttribute('#launchMission', 'href');
+  const sameOrigin = href && href.startsWith(PROD);
+  row('S4a', 'the Studio\'s Launch anchor points at the labs\' live Lessons origin, not a bare filename',
+    !!sameOrigin && /#mission=/.test(href),
+    href ? href.slice(0, 118) + '…' : 'no href');
+
+  /* follow it exactly as a click would, and read what the lab received */
+  const lab = await ctx.newPage();
+  const labErrs = []; lab.on('pageerror', e => labErrs.push(String(e).slice(0, 140)));
+  let status = 'no navigation';
+  if (href) {
+    const resp = await lab.goto(href, { waitUntil: 'domcontentloaded' }).catch(e => { status = String(e).slice(0, 90); return null; });
+    if (resp) status = `HTTP ${resp.status()}`;
+    await lab.waitForTimeout(900);
+  }
+  const got = await lab.evaluate(() => ({
+    title: (document.getElementById('missionTitle') || {}).textContent || '',
+    q: (document.getElementById('missionQuestion') || {}).textContent || '',
+  })).catch(() => ({ title: '', q: '' }));
+  row('S4b', 'following that link opens the right lab on the other origin with the mission populated',
+    status === 'HTTP 200' && got.title === 'AUTHORED LAUNCH-LINK FIXTURE' && labErrs.length === 0,
+    `${status} · title "${got.title}" · question "${(got.q || '').slice(0, 40)}"`);
+
+  /* NEGATIVE CONTROL: the same journey with the pre-T16 bare filename must fail
+     on the Apps origin. Without this the row above proves only that some URL
+     works, not that the OLD one was broken. */
+  const bare = await ctx.newPage();
+  const bareResp = await bare.goto(`http://127.0.0.1:${pApps}/03_Wilton_Carbon_Process_Control_Lab.html`,
+    { waitUntil: 'domcontentloaded' }).catch(() => null);
+  row('S4c', 'CONTROL — the pre-T16 bare filename still 404s on the Apps origin',
+    !!bareResp && bareResp.status() === 404, bareResp ? `HTTP ${bareResp.status()}` : 'no response');
+
+  await ctx.close();
+  sApps.close(); sLessons.close();
+}
+
 /* ---- the NAV-1 link, resolved against the real Lessons tree -------------- */
 {
   const src = fs.readFileSync(WILTON, 'utf8');

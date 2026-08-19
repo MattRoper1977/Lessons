@@ -644,6 +644,40 @@ for (const tree of TREES) {
     `release ${R.modelNote === null ? 'no such note' : 'present'} -> staging "${(P.modelNote || '').slice(0, 150)}…"`);
 }
 
+/* =====================================================================
+ * T16 — the Studio's launch links after the split.
+ *
+ * The release table holds bare filenames; on the Apps origin every one of them
+ * 404s. The pair below is measured on the SOURCE of both trees rather than
+ * through the browser, because the string is inert data in an object literal —
+ * clicking it is what S4 in split_transport.mjs does, on two real origins.
+ * ===================================================================== */
+{
+  const LABS4 = ['01_Newport_Bridge_Lift_Permit_Lab.html', '02_Tees_Estuary_Field_Investigation_Lab.html',
+                 '03_Wilton_Carbon_Process_Control_Lab.html', '04_Tees_Bay_Wind_Operations_Lab.html'];
+  const src = t => fs.readFileSync(path.resolve(ROOT, t, '00_BUILD_FieldOps_Teacher_Studio.html'), 'utf8');
+  const [rel, pat] = [src('release'), src('staging')];
+  const absCount = s => LABS4.filter(l => s.includes(`{file:'https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/${l}'`)).length;
+  const bareCount = s => LABS4.filter(l => s.includes(`{file:'${l}'`)).length;
+  pair('T16', 'every engine in the Studio names its lab by an absolute URL on the live Lessons origin',
+    absCount(rel) === 4, absCount(pat) === 4,
+    `release ${absCount(rel)}/4 absolute (${bareCount(rel)}/4 bare) -> staging ${absCount(pat)}/4 absolute (${bareCount(pat)}/4 bare)`);
+
+  /* R0.1: the prefix is derived from two other files. If either moves and this
+     does not, the launch links 404 again in a way no test would notice — so the
+     agreement is itself asserted. */
+  const vs = fs.readFileSync(path.resolve(ROOT, '..', '..', 'tools/verify_served.mjs'), 'utf8');
+  const vfs = fs.readFileSync(path.resolve(ROOT, '..', '..', 'tools/verify_fieldops_served.mjs'), 'utf8');
+  const origin = (vs.match(/LESSONS_ORIGIN = process\.env\.LESSONS_ORIGIN \|\| '([^']+)'/) || [])[1];
+  const placed = (vfs.match(/^const PLACED = '([^']+)'/m) || [])[1];
+  const expect = `${origin}/${placed}`;
+  const used = (fs.readFileSync(path.resolve(ROOT, 'build.mjs'), 'utf8')
+                  .match(/^const LAB_ORIGIN = '([^']+)'/m) || [])[1];
+  pair('T16-derive', 'the prefix T16 writes still equals LESSONS_ORIGIN + PLACED, derived from the two serve tools',
+    false, expect === used && !!used,
+    `verify_served "${origin}" + verify_fieldops_served "${placed}" = "${expect}" · build.mjs uses "${used}"`);
+}
+
 await browser.close();
 
 /* ---------------------------------------------------------------- report */

@@ -59,3 +59,30 @@ Two of the six rows resolved themselves the moment the patch landed, which is
 the argument for measuring rather than inheriting, and it is a reason to expect
 the remaining two to be arguable as well. Anything Matt rules on goes back into
 this file rather than into a commit message.
+
+## Addendum, 2026-08-19 (FINISH v2) — two rulings and one repair
+
+**The labs carry no back-link to the Studio. RATIFIED, not an omission.** A pupil
+running a lab has no use for the teacher's mission-minting tool, and a link into
+it from a pupil surface would be the only such link in the estate. NAV-1 ("←
+Lessons", transform T13) remains the labs' one way out and is asserted by S3/S3b
+in `tools/fieldops/evidence/split_transport.out`. Do not add a Studio link; if a
+future conformance sweep counts one missing, this line is the answer.
+
+**The Studio's launch links are absolute, and the prefix is derived.** Transform
+**T16** rewrites the four engine entries from bare filenames to
+`https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/<lab>`. Before
+it, "Launch mission" on the Apps origin resolved to a path that exists only in
+Lessons and 404'd — the split's predicted failure, shipped. The prefix is not a
+constant anyone typed: it is `LESSONS_ORIGIN` (`tools/verify_served.mjs`) joined
+to `PLACED` (`tools/verify_fieldops_served.mjs`), and control **T16-derive** in
+`controls.mjs` re-derives that join on every run, so if the origin moves in one
+file and not the other the harness goes red instead of shipping a second 404.
+
+**Why it survived a green harness, worth recording.** `split_transport.mjs`
+proved the *file-import* transport (`setInputFiles` on `#missionFile`) and built
+the lab URL itself, so the one string the launch route depends on was never read.
+**S4a/S4b/S4c** now serve the two trees on two local origins, click through the
+real `#launchMission` href, and require the pre-T16 bare filename to still 404 on
+the Apps origin. **S2c** adds the tamper limb the capsule round-trip lacked: a
+mutated capsule must be refused by the same import path that accepts a good one.
