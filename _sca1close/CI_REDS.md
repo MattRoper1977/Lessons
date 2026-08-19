@@ -94,3 +94,35 @@ on `7277859` (this estate's base before ECA-1) and on `a810d44`.
 **One red.** Fix the sweep's claim grammar (or the sibling's QA file shape) and both
 workflows go green together. Owned by the FieldOps own-session, which inherits this
 classification; nothing in this pass should be read as having addressed it.
+
+---
+
+## Addendum — the red re-measured at every SHA in the lineage (2026-08-19)
+
+Recorded to answer one question directly: did the FieldOps red **reproduce
+identically** across ECA-1's two merges, or did it change?
+
+| head | FieldOps | Watch main | Pages |
+|---|---|---|---|
+| `a810d44` (SCA-1 merge record, pre-ECA-1) | **failure** — run 32249330300 | **failure** — run 32249444863 | success |
+| `51e8124` (ECA-1 PART A merge) | **failure** — run 32268165038 | **failure** — run 32269060153 | success |
+| `d6280de` (ECA-1 PART B merge) | **failure** — run 32271065470 | **failure** — run 32273055289 | success |
+| `0b407e0` (SCA-1 CLOSE v2 merge) | still running at time of writing | — | success |
+
+**Verdict: reproduced identically — an inherited red, unchanged by ECA-1 PART A or
+PART B.** The `d6280de` run is the same failure in every respect that can be compared:
+
+- same job — "The stale-evidence sweep can still find something";
+- same closing assertion — *"pass with one outstanding, because the alternative is
+  calling it stale."*;
+- same `##[error]Process completed with exit code 2.`;
+- same log length (410 lines) and the same **3,225-byte** `sweep-evidence` artifact as
+  the `a810d44` run. (The artifact *zip* SHA-256 differs — `06abade4…` vs `6068faa5…` —
+  because a zip embeds mtimes; the byte-identical uncompressed size is the meaningful
+  comparison.)
+
+Nothing in ECA-1 or in SCA-1 CLOSE v2 touched it, and nothing was expected to: the
+failing input is 20 verdict rows in the sibling repository `Matt-s-Apps-`, as classified
+above. The `0b407e0` run was still in progress when this was written; it is expected to
+fail the same way for the same reason, and the FieldOps own-session should confirm
+rather than assume.
