@@ -21,7 +21,10 @@
  *   D1 — the builder's LABS[] and the placed directory name the same files. A
  *   lab declared and not placed, or placed and not declared, is red before a
  *   single byte is fetched, and that is a check the serve proof cannot make
- *   against itself.
+ *   against itself. Since FieldOps FIX-1 the placed directory also carries an
+ *   authored hub the builder does not emit; it is named in PLACED_NON_LAB and
+ *   REQUIRED there, so D1 reds if it goes missing as well as if a file the
+ *   allowance does not name appears.
  *
  * R0.4 for these routes now lives in tools/verify_served.mjs. So do the base
  * URLs: they were declared here as overridable constants, and they are gone
@@ -51,10 +54,17 @@
  *   appended byte apart. That last one is the control on the comparison itself,
  *   kept even though the comparison's only remaining caller is the control.
  *
+ *   Three of those are proven by mutation rather than observed passing: a lab
+ *   declared and never placed, a file placed and declared nowhere, and the hub
+ *   removed — each must red D1 BY NAME. The first rewrites build.mjs, the other
+ *   two write and delete inside the placed directory; both records are hashed
+ *   before and after and the equality is asserted, never assumed (R0.14).
+ *
  * EXITS
  *   0  the declarations agree and the controls fired
  *   1  a subject is declared and not placed, placed and not declared, or has no
- *      blob here to compare against
+ *      blob here to compare against; or the authored hub PLACED_NON_LAB names is
+ *      gone from the placed directory
  *   2  INCONCLUSIVE — a record that could not be read, or a subject set that
  *      derived to nothing. Never green: a derivation that yields nothing must
  *      not read as nothing wrong.
@@ -73,6 +83,15 @@ const ARGS = new Set(process.argv.slice(2));
 
 const PLACED = 'Science_Teesside/Build/v4_fieldops';
 const STUDIO_REF = 'tools/fieldops/staging/00_BUILD_FieldOps_Teacher_Studio.html';
+
+/* The placed directory also carries one authored file the builder does not emit.
+   GitHub Pages serves no directory listing, so until FieldOps FIX-1 (2026-08-19)
+   the bare directory URL was a 404 by construction while every lab beneath it
+   served — which is how the owner came to have four labs he could not reach.
+   index.html is the hub that closes that, and it is REQUIRED rather than merely
+   tolerated: delete it and the directory URL 404s again, so D1 names it missing.
+   Everything else in this directory is still red, which C4 below proves. */
+const PLACED_NON_LAB = ['index.html'];
 
 const sha = b => crypto.createHash('sha256').update(b).digest('hex');
 const rows = [];
@@ -120,12 +139,14 @@ function subjects() {
   if (!fs.existsSync(dir)) throw new Inconclusive(`${PLACED} does not exist in this checkout`);
   const placed = fs.readdirSync(dir).filter(f => f.endsWith('.html')).sort();
 
-  const missing = LABS.filter(l => !placed.includes(l));
-  const extra = placed.filter(p => !LABS.includes(p));
+  const required = [...LABS, ...PLACED_NON_LAB];
+  const missing = required.filter(l => !placed.includes(l));
+  const extra = placed.filter(p => !required.includes(p));
   row('D1', missing.length || extra.length ? 'FAIL' : 'PASS',
       'the builder\'s LABS and the placed directory name the same files',
-      `declared ${LABS.length}, placed ${placed.length}` +
-      (missing.length ? ` · declared but not placed: ${missing.join(', ')}` : '') +
+      `declared ${LABS.length} lab(s) + ${PLACED_NON_LAB.length} authored ` +
+      `(${PLACED_NON_LAB.join(', ')}), placed ${placed.length}` +
+      (missing.length ? ` · required but not placed: ${missing.join(', ')}` : '') +
       (extra.length ? ` · placed but not declared: ${extra.join(', ')}` : ''));
 
   const list = LABS.map(name => ({
@@ -200,6 +221,61 @@ function selfTest() {
           d1 ? d1.detail : 'D1 produced no row at all — the mutation was inert');
     rows.length = before;                 // the control's rows are not findings
   });
+
+  /* R0.1 for the widening FieldOps FIX-1 made. D1 stopped being "LABS equals the
+     directory" the moment an authored hub was placed beside the labs, and a
+     tolerance that has only ever been observed passing is the exact species of
+     unfired check this ledger exists to catch. Both limbs of the new rule are
+     mutated here — a stray file the allowance does not name, and the allowance's
+     own file removed — against the placed directory rather than the builder,
+     because that is the record each limb is about. R0.14: the directory is
+     hashed by name and bytes before and after, and the equality is asserted. */
+  const PDIR = path.join(HERE, PLACED);
+  const dirState = () => fs.readdirSync(PDIR).sort()
+    .map(f => `${f}:${sha(fs.readFileSync(path.join(PDIR, f)))}`).join('\n');
+  const dirBefore = dirState();
+  const withPlaced = (mutate, restore, fn) => {
+    try { mutate(); return fn(); } finally { restore(); }
+  };
+  const d1After = () => {
+    const before = rows.length;
+    let d1;
+    try { subjects(); d1 = rows.slice(before).find(r => r.id === 'D1'); } catch (_) {}
+    rows.length = before;                   // the control's rows are not findings
+    return d1;
+  };
+
+  /* CONTROL C4 — a file placed and named by neither record. The allowance names
+     index.html and nothing else, so this must still be red, by name. */
+  const STRAY = path.join(PDIR, 'ZZ_placed_and_never_declared.html');
+  withPlaced(() => fs.writeFileSync(STRAY, '<!doctype html><title>stray</title>'),
+             () => { if (fs.existsSync(STRAY)) fs.unlinkSync(STRAY); }, () => {
+    const d1 = d1After();
+    check('CONTROL: a file placed and declared nowhere still reds D1, by name',
+          d1?.verdict === 'FAIL' && /ZZ_placed_and_never_declared\.html/.test(d1.detail),
+          d1 ? d1.detail : 'D1 produced no row at all — the mutation was inert');
+  });
+
+  /* CONTROL C5 — the hub removed. PLACED_NON_LAB is a requirement, not a
+     tolerance: without index.html the directory URL 404s again, which is the
+     defect FIX-1 closed, so D1 owes a red naming it. */
+  const HUB = path.join(PDIR, PLACED_NON_LAB[0]);
+  const hubBytes = fs.existsSync(HUB) ? fs.readFileSync(HUB) : null;
+  withPlaced(() => { if (hubBytes) fs.unlinkSync(HUB); },
+             () => { if (hubBytes) fs.writeFileSync(HUB, hubBytes); }, () => {
+    const d1 = d1After();
+    check('CONTROL: the hub removed reds D1 — it is required, not tolerated',
+          hubBytes !== null && d1?.verdict === 'FAIL' &&
+          new RegExp(`required but not placed: .*${PLACED_NON_LAB[0].replace('.', '\\.')}`).test(d1.detail),
+          hubBytes === null ? `${PLACED_NON_LAB[0]} is not placed at all — nothing to remove`
+                            : (d1 ? d1.detail : 'D1 produced no row at all — the mutation was inert'));
+  });
+
+  const dirAfter = dirState();
+  check('the placed directory is byte-identical after the mutations that wrote it',
+        dirAfter === dirBefore,
+        dirAfter === dirBefore ? `${fs.readdirSync(PDIR).length} file(s), unchanged`
+                               : 'THE PLACED DIRECTORY WAS LEFT MUTATED');
 
   /* And the hash comparison itself, exercised without a server. */
   const a = fs.readFileSync(list[0].local);

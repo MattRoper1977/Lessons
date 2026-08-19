@@ -86,3 +86,33 @@ the lab URL itself, so the one string the launch route depends on was never read
 real `#launchMission` href, and require the pre-T16 bare filename to still 404 on
 the Apps origin. **S2c** adds the tamper limb the capsule round-trip lacked: a
 mutated capsule must be refused by the same import path that accepts a good one.
+
+## Addendum, 2026-08-19 (FIX-1) — the directory hub, and the third path this pass places
+
+**A fifth file is placed in `v4_fieldops/`, and it is not a lab.**
+`Science_Teesside/Build/v4_fieldops/index.html` is an authored hub: title, one line
+saying these are instruments and not lessons, and four links to the labs by relative
+filename. It carries the NAV-1 back-link and, per the ruling above, **no link to the
+Teacher Studio**.
+
+**Why it exists.** GitHub Pages serves no directory listing. A directory holding an
+`index.html` is served as that file; a directory without one is a 404. Until this
+addendum `v4_fieldops/` held only the four labs, so
+`https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/` was a **404 by
+construction** while every lab beneath it served — which is how the estate came to
+hold four instruments the owner could not open from the folder they live in. The
+exemption doc's subject list therefore now reads: the four labs, this hub, and the
+Studio in `Matt-s-Apps-`.
+
+**It is required, not tolerated.** `verify_fieldops_served.mjs` names it in
+`PLACED_NON_LAB`, and check **D1** reads *required* = the builder's `LABS` plus that
+list. Delete the hub and D1 reds naming it; add any other file to the directory and D1
+reds naming that. Both limbs are proven by mutation — controls **C4** and **C5** —
+rather than observed passing, and the placed directory is hashed by name and bytes
+before and after with the equality asserted, since those controls write inside it.
+
+**What did not change, and why.** The builder does not emit this file and is not asked
+to: `build.mjs` transforms release labs, and the hub is authored, with no release
+counterpart to transform. All four `resources.json` entries already target lab **files**,
+not the directory, so the catalogue needed no retarget; all four of the Studio's T16
+engine URLs already target lab **files**, so nothing in `Matt-s-Apps-` moved.
