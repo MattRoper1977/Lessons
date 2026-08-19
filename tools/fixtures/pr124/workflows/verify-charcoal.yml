@@ -1,0 +1,27 @@
+name: Verify Charcoal
+
+# Runs the deploy gates + safeguarding contract whenever the game file changes.
+on:
+  push:
+    paths:
+      - 'Games/Charcoal.html'
+      - 'tools/verify_charcoal.sh'
+      - '.github/workflows/verify-charcoal.yml'
+  pull_request:
+    paths:
+      - 'Games/Charcoal.html'
+      - 'tools/verify_charcoal.sh'
+      - '.github/workflows/verify-charcoal.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Run Charcoal verification
+        run: |
+          chmod +x tools/verify_charcoal.sh
+          tools/verify_charcoal.sh

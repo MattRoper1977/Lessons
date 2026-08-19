@@ -1,0 +1,79 @@
+name: WAVE & OHM deck served-bytes + origin drive
+
+# The deck's live leg, run from a GitHub runner because the development
+# container cannot reach madebymatt.uk (egress proxy answers 403 on CONNECT —
+# measured, not assumed). glv3-production-byte-check carries a fixed file list
+# that predates the deck, so the deck gets its own dispatch rather than a
+# modification there.
+#
+# Order matters, bytes before behaviour:
+#
+#   1. served bytes == committed bytes for the deck and resources.json, with
+#      a nonexistent-path control that must 404 — a 200 proves a response,
+#      not the right response, so the hashes are the assertion;
+#   2. tools/verify_wave_ohm_deck.mjs on the origin: splash once at deck
+#      level, the framed apps' guard verified as the exact no-op, four task
+#      cards including Wheatstone, evidence collection round-tripping BOTH
+#      tools, zero console errors;
+#   3. tools/verify_lessons_chips.mjs on the origin: every count the hub
+#      advertises equals what the real filter chain returns.
+#
+# READ-ONLY against production. "Merged" and "served" are different claims;
+# the word "live" is earned by this workflow's green, never by a local pass.
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out main (the deployed tree)
+        uses: actions/checkout@v4
+        with: { ref: main, fetch-depth: 1 }
+
+      - name: Served bytes match the committed bytes, control must 404
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "deployed tree: $(git rev-parse HEAD)"
+          fail=0
+          for f in "Physics_WaveOhm/made-by-matt-wave-ohm-complete-offline-lesson-v2-3.html" "resources.json"; do
+            want=$(sha256sum "$f" | cut -d' ' -f1)
+            got=$(curl -fsS --retry 3 -H 'Cache-Control: no-cache' "https://madebymatt.uk/Lessons/$f?mbm=$GITHUB_RUN_ID" | sha256sum | cut -d' ' -f1) || got=FETCH_FAILED
+            if [ "$want" = "$got" ]; then
+              printf '  PASS  identical  %s  %s\n' "${want:0:16}" "$f"
+            else
+              printf '  FAIL  %s: committed %s served %s\n' "$f" "${want:0:16}" "${got:0:16}"
+              fail=1
+            fi
+          done
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://madebymatt.uk/Lessons/this-file-does-not-exist-$GITHUB_RUN_ID.html" || echo 000)
+          if [ "$code" = "404" ]; then
+            echo "  PASS  control: nonexistent path answers 404 — the comparison can fail"
+          else
+            echo "  FAIL  control answered $code; the hashes above prove nothing"
+            fail=1
+          fi
+          exit $fail
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          npm i -D playwright@1.49.1
+          npx playwright install --with-deps chromium
+
+      - name: Drive the deck on the real origin
+        shell: bash
+        run: node tools/verify_wave_ohm_deck.mjs --base https://madebymatt.uk/
+
+      - name: Chip-count gate on the real origin
+        shell: bash
+        run: node tools/verify_lessons_chips.mjs --base https://madebymatt.uk/

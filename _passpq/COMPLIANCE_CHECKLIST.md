@@ -12,7 +12,7 @@ the ASDAN account can do it) · **UNKNOWN** (needs an ASDAN-account or member-ga
 
 | # | Requirement | Spec | Who / how | Status |
 |---|---|---|---|---|
-| 1 | **Centre approval for the Personal Effectiveness suite** — ASDAN Qualifications membership approval, plus (where appropriate) request approval for the PEQ suite, **before delivering**. | §8 p16 (`SPEC_FACTS §6`) | Coordinator via ASDAN centre account. Note: the "CoPE/AoPE approval auto-transfers to PEQ" idea is **not in the spec** — verify against the PEQ transition guidance. | **CENTRE-ACTION / UNKNOWN** (Q5) |
+| 1 | **Centre approval for the Personal Effectiveness suite** — ASDAN Qualifications membership approval, plus (where appropriate) request approval for the PEQ suite, **before delivering**. | §8 p16 (`SPEC_FACTS §6`) | Coordinator via ASDAN centre account. Note: the "CoPE/AoPE approval auto-transfers to PEQ" idea is **not in the spec** — verify against the PEQ transition guidance. | **DONE — Matt, 30 Jul 2026** (school registration/approval complete; never frame as pending. Closes Q5.) |
 | 2 | **Learner registration** — create a cohort, **assign a course coordinator**, and register learners **before any assessment takes place**. | §14 p20 (`SPEC_FACTS §11`) | Coordinator, on the ASDAN account. Registration is with **ASDAN** (not the AQA UAS route — see Q4). | **CENTRE-ACTION** (Q2, Q4) |
 | 3 | **Assessor training engaged** — assessors must engage in appropriate ASDAN training incl. **"Assessment for ASDAN Qualifications"** + relevant qualification training (no formal assessing qualification required). | §15.1 p20 (`SPEC_FACTS §12`) | Named assessor(s) book ASDAN training. This is Matt's substitute-for-training primer's real-world counterpart. | **CENTRE-ACTION** |
 | 4 | **IQA arrangements** — a named IQA who has engaged in qualification training + "Assessment for ASDAN Qualifications" + **"IQA for ASDAN qualifications"** training **before** any IQA activity; IQA of a sample **before** EQA (ASDAN cannot award without IQA). | §11 p18; §15.2 p20 (`SPEC_FACTS §9/§12`) | Name an IQA, book their training, plan the IQA sample. | **CENTRE-ACTION** (Q6, Q8) |
@@ -47,3 +47,20 @@ The **unit assessment booklets**, **PEQ delivery guide**, **Assessment Planning 
 were **not** among the three files provided. The per-criterion record design, the exact
 safeguarding wording, and per-pupil achieved-minimum confirmation all wait on these
 (`RECONCILIATION.md` STILL-UNDETERMINED 1–3). See `inputs/README.md` for the list.
+
+
+## PH-3 addendum (2026-08-18) — status refresh + two dated actions
+
+- **Item 1 is DONE:** the school's ASDAN registration/approval was completed by **Matt on
+  30 Jul 2026**. Registration is never to be framed as pending, and no "Cheryl decision
+  meeting" is awaited for it.
+- **Item 6 stays open as written** — confirm the first-year EQA sampling activity is booked
+  (mandatory in the first delivery year; names to ASDAN ≈4 weeks pre-sampling).
+- **NEW dated action — e-portfolio export before 31 AUGUST 2026:** the ASDAN e-portfolio is
+  closed to new registrations and access for existing registrations ends 31/08/2026. Any
+  BUILD/LAUNCH short-course evidence living in it must be exported first. **CENTRE-ACTION.**
+- **NEW dated action — Hospitality Vocational Taster clock:** ASDAN is withdrawing all
+  Vocational Taster titles (and RoadWise). Register learners / buy student books by
+  **31 December 2026**; final certification **31 August 2027**. LAUNCH Vocational's
+  "Hospitality" is this product; Gardening is an ordinary Short Course and unaffected.
+  **CENTRE-ACTION.**

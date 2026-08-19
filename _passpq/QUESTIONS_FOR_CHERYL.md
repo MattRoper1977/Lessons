@@ -115,3 +115,41 @@ The single `LSk1` and single `DecMkSk1` occurrences remain inside open item 8's
 STILL-UNDETERMINED mapping (W2/W4 both lean LSk1, which would double-bank and leave DecMkSk1
 unhomed). **Not guessed.** Still needs the member-gated unit assessment booklets plus your
 per-pupil registration intent.
+
+
+---
+
+## Added by PH-3, 2026-08-18
+
+*(Q5 above is now answered: the school's ASDAN registration/approval is **DONE** — Matt,
+30 Jul 2026. It is not pending.)*
+
+### Q13 · BUILD's SharePoint year plan carries a WellbLeE3 column — which story is true?
+The BUILD lessons bank **zero PEQ** and the public register tool's BUILD preset says
+"…no PEQ registration.", yet the SharePoint year plan carries a **WellbLeE3** column.
+**Decide:** is BUILD meant to bank WellbLeE3 (then the lessons/tool understate it), or is
+the plan column stale (then it should be corrected)? (Ties into Q1.)
+
+### Q14 · The Hospitality Vocational Taster clock.
+"Hospitality" as banked by LAUNCH Vocational is the **Hospitality Vocational Taster**, which
+ASDAN is withdrawing: registrations/student books until **31 Dec 2026**, final certification
+**31 Aug 2027**. **Decide:** register/purchase inside the window, switch the context to an
+unaffected Short Course (Gardening is unaffected), or accept no accreditation for that half
+of the strand after 2027.
+
+### Q15 · The ASDAN e-portfolio closes 31 Aug 2026 — what lives in it?
+Access for existing registrations ends **31/08/2026**. **Confirm** whether any BUILD/LAUNCH
+short-course evidence sits in the e-portfolio and who exports it before the cutoff.
+
+### Q16 · Should the GROW L2 stretch ever become a registration?
+GROW's Stretch tier is written to an L2 evidence standard (design). Current public wording
+(and the held C7 rewording proposal) keep L2 as **stretch language only — no L2
+registration**. **Decide:** does any pupil ever get registered for adjacent L2 units (max 3
+adjacent credits can count toward an L1 qualification), or is L2 permanently stretch-only?
+
+### Q17 · The ComSk1 four-questions wording now on W4/W5.
+PH-3 corrected the pupil-facing claim from "at least two questions" to **"at least four
+questions… written into the plan"** (spec v1.2 ComSk1 1.4.1f) and completed the labelled
+"ComSk1 minimum" statements (adding the ≥8-minute discussion route). **Confirm** the planning
+templates and any live pupil plans are updated to hold four prepared questions before
+delivery is assessed.

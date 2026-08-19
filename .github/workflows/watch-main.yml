@@ -1,0 +1,136 @@
+name: Watch main — a red nobody is told about is a red nobody has
+
+# R0.22. Two push-to-main runs went red in this arc (32017557268 at 7efbf22 and
+# 32018424063 at b6f92ca, both the same defect) and the only reason either is
+# known is that a person went and looked. This is the mechanism that replaces
+# looking.
+#
+# WHY THE `workflows:` LIST BELOW IS SAFE TO HAND-WRITE
+# `workflow_run` has no wildcard: GitHub requires the workflows to be named. A
+# hand-maintained list is exactly the defect this estate has already been bitten
+# by - PR #114 ran zero checks because a new tool matched no filter anyone
+# remembered to update. So this follows the rule the sibling workflow states in
+# its own header: name them AND add a control that the list matches what is
+# derived from .github/workflows/. `--verify-trigger-list` below goes RED when a
+# workflow is added here and not added to this list. The list cannot drift
+# silently; that is the only condition on which naming it is acceptable.
+#
+# The schedule is not decoration either. `workflow_run` fires when a workflow
+# COMPLETES, so a workflow that never starts at all emits nothing to react to -
+# and a missing run and a failed run are different findings. The daily sweep is
+# what catches silence.
+
+on:
+  workflow_run:
+    workflows:
+      - "FieldOps P2, the sweep, and the serve proof"
+      - "glv3-production-byte-check"
+      - "GROW LAUNCH v3 generated-tree verification"
+      - "j4-absolute-ref-probe"
+      - "Made by Matt cross-estate unification"
+      - "Reading-theme parity with the canonical engine"
+      - "verify-axiomshift"
+      - "Verify Charcoal"
+      - "Games rendered regression"
+      - "Verify Off-Brand"
+      - "WAVE & OHM deck served-bytes + origin drive"
+    types: [completed]
+    branches: [main]
+  schedule:
+    # Daily. A workflow that stops being triggered emits no completion event, so
+    # nothing above would ever fire for it.
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+# READ ONLY. The write leg is DRY-RUN (see the step at the bottom), so the job
+# no longer needs write access — and a job that cannot write cannot write a false
+# finding, which is the failure it already committed once.
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -Eeo pipefail {0}
+
+# NOT cancel-in-progress. The inline-exit job this arc was cancelled by exactly
+# that setting, its neighbours were green, and the greens looked like coverage.
+# A cancelled watch is a watch with no verdict, which is the state it exists to
+# report. Overlapping runs are cheap here; a silent one is not.
+concurrency:
+  group: watch-main
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Every workflow on main has a verdict, and it is PASS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # R0.15 - the controls run first and need no token, so a credential problem
+      # cannot be mistaken for a healthy watch.
+      - name: CONTROLS — the watch is provably able to report each finding
+        run: node tools/watch_main_runs.mjs --self-test | tee "$RUNNER_TEMP/watch-controls.txt"
+
+      - name: CONTROL — the workflow_run trigger list matches the derived set
+        run: node tools/watch_main_runs.mjs --verify-trigger-list | tee "$RUNNER_TEMP/watch-trigger.txt"
+
+      - name: The measurement
+        id: watch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/watch_main_runs.mjs | tee "$RUNNER_TEMP/watch.txt"
+
+      # §4.5, leg 1 - it is readable without scraping a log.
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Watch — main'; echo '```';
+            cat "$RUNNER_TEMP/watch.txt" 2>/dev/null || echo '(the measurement did not run)';
+            echo '```'; echo '### Controls'; echo '```';
+            cat "$RUNNER_TEMP/watch-controls.txt" "$RUNNER_TEMP/watch-trigger.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      # THE WRITE LEG IS DRY-RUN, AND STAYS DRY UNTIL TWO THINGS ARE TRUE.
+      #
+      # It wrote once, and what it wrote was false: run 32029976055 reported
+      # 6 PASS / 0 FAIL / 0 NO VERDICT, went red on dormant workflows, and pushed
+      # a "main was red" line to main as 9a5b424 on a green estate.
+      #
+      # Two conditions, both currently FALSE, and both must hold before this
+      # commits anything again:
+      #   1. the writer is split from the judge - they are one job here, so a
+      #      misjudgement writes itself with no second opinion in between;
+      #   2. every appended line carries its run id AND its verdict AND the
+      #      predicate that produced it - the line it wrote carried only the id,
+      #      so a reader could not tell a real red from this one.
+      #
+      # Until then it prints, in full, exactly what it WOULD have appended. That
+      # is the reporting leg, which is kept; the writing leg is what is withdrawn.
+      # A watch that reports is useful. A watch that writes a false finding into
+      # the record it is meant to protect is worse than no watch.
+      - name: Write leg — DRY RUN, prints what it would append and appends nothing
+        if: always()
+        run: |
+          if [ "${{ steps.watch.outcome }}" != "failure" ]; then
+            echo "verdict is not a failure - nothing to append, dry-run or otherwise"; exit 0
+          fi
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "WOULD APPEND (dry-run; nothing is written and nothing is pushed):"
+          echo "  - **$(date -u +%Y-%m-%d) - main was red.** Detected by the watch."
+          echo "    run ${GITHUB_RUN_ID} (${RUN_URL})"
+          echo "    verdict: see the measurement above - FAIL / NO VERDICT / untested head"
+          echo "    predicate: red is FAIL, NO VERDICT, or a head no run carries. Dormant"
+          echo "               and dispatch-only workflows do not colour the verdict."
+          echo
+          echo "Not written. The write leg is dry until the writer is split from the judge"
+          echo "and every line carries id, verdict and predicate. See the ledger."
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-main
+          path: ${{ runner.temp }}/watch*.txt
+          if-no-files-found: error

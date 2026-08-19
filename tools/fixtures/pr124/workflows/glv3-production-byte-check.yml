@@ -1,0 +1,64 @@
+name: glv3-production-byte-check
+
+# READ-ONLY probe, in the j4-absolute-ref-probe mould. Fetches a fixed sample
+# of files from the live origin and compares their SHA-256 against the same
+# paths in this checkout. It changes nothing, commits nothing and publishes
+# nothing; results go to the run log only. It exists because the development
+# container's proxy denies egress to https://madebymatt.uk, so served-byte
+# identity cannot be proven from there. Run it manually and read the log.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  byte-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare served bytes against this checkout
+        shell: bash
+        run: |
+          set -uo pipefail
+          base="https://madebymatt.uk/Lessons"
+          files=(
+            "BUILD_Estate_v3/Humanities_Teesside/BUILD_HUM_W1_The_Big_Timeline.html"
+            "LAUNCH_Estate_v3/LAUNCH_ASDAN/manifest-v3.json"
+            "BUILD_Estate_v3/DT_Community_Upcycling/BUILD_DT_W2_The_Blueprint.html"
+            "GROW_Estate_v3/Humanities_Teesside/GROW_HUM_W1_Time_Detectives.html"
+            "LAUNCH_Estate_v3/Humanities_Teesside/LAUNCH_HUM_W1_Source_Investigation.html"
+            "Science_Teesside/Grow/v3_40min/SCI_G_W3A_Friction_Explore.html"
+            "GROW_Estate_v3/index.html"
+            "LAUNCH_Estate_v3/index.html"
+            "resources.json"
+            "Grow/Slideshows/GROW_HUM_W1_Time_Detectives.html"
+          )
+          echo "checkout SHA: ${GITHUB_SHA}"
+          fail=0
+          for f in "${files[@]}"; do
+            enc=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$f")
+            tmp=$(mktemp)
+            code=$(curl -s -o "$tmp" -w '%{http_code}' --retry 3 --max-time 30 \
+              -H 'Cache-Control: no-cache' "${base}/${enc}" || echo ERR)
+            if [ "$code" != "200" ]; then
+              echo "FAIL  http=$code  $f"; fail=1; rm -f "$tmp"; continue
+            fi
+            lh=$(sha256sum "$f" | cut -d' ' -f1)
+            sh=$(sha256sum "$tmp" | cut -d' ' -f1)
+            lb=$(stat -c%s "$f"); sb=$(stat -c%s "$tmp")
+            if [ "$lh" = "$sh" ]; then
+              echo "PASS  identical  ${lh:0:16}  ${lb} B  $f"
+            else
+              echo "FAIL  repo=${lh:0:16} (${lb} B)  served=${sh:0:16} (${sb} B)  $f"
+              fail=1
+            fi
+            rm -f "$tmp"
+          done
+          if [ "$fail" = "1" ]; then
+            echo "RESULT: MISMATCH — production is not serving this checkout byte-exact (cache lag is possible; re-run once after ~5 minutes before treating as a finding)."
+            exit 1
+          fi
+          echo "RESULT: ALL IDENTICAL — production serves this checkout byte-exact for the sample."

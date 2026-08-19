@@ -154,3 +154,15 @@ booklets and one ASDAN-account membership fact.)*
 
 *(All estate observations above are from this pass; the qualification facts are §2/Binder
 and remain UNVERIFIED-AGAINST-SPEC until the PDF lands.)*
+
+
+## 10 · PH-3 addendum (2026-08-18)
+
+- **Partial achievement certificates at unit level** [SPEC §5.1]: a learner who misses the
+  qualification size is still certificated for each unit achieved.
+- **Only one adjacent-level unit can ever count** toward an Extended Award or Certificate —
+  the adjacent cap is 3 credits and the smallest unit is 2, so a second adjacent unit always
+  busts the cap. (This is why "one level above or below" needs no further resolving.)
+- **Sept-2025 booklet direction:** L1 command verbs got *easier* (ThSk1 1.1.3/1.1.4 →
+  "Give examples of", 1.2.1 → "Identify"; only 1.7.1 rose to Describe); L2/L3 got harder.
+  Never "top up" L1 demand.
