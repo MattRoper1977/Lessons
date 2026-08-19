@@ -149,3 +149,54 @@ merge is needed.
 
 Lab bytes · the Studio card · any count · `resources.json` · `apps.json` ·
 `Science_Teesside/Build/FieldOps/` (the phantom — still 0 files, still not created).
+
+---
+
+## Close-out, measured after the merge
+
+| | |
+|---|---|
+| PR | **#140**, five checks green on `3868f8a` (the PR merge ref) |
+| Merge | **`3b9273e`**, `--no-ff` via the GitHub API (the PR #136 precedent) |
+| `main` before → after | `3ca150a` → `3b9273e` |
+| `v4_fieldops/` at `main` | **5 files**: the four labs and `index.html` |
+| Pages | **run #683 on `3b9273e` — success** (`pages-build-deployment`, 23:02:58Z) |
+| FieldOps workflow on `main` | **run #72 on `3b9273e` — success**, all five jobs |
+
+**The live serve proof, which only runs on a push.** Step "Every subject serves,
+unredirected, byte-identical" on the merge commit:
+**32 served byte-identical · 0 red · 0 inconclusive, of 32 derived**, content-type
+32 as expected. The four labs answered 200 unredirected at their own shas
+(`b06553809fef`, `ef1a2588ae4b`, `f37709131892`, `e0dfcd53fc3d`) and all five
+production controls fired, including (a) a known-absent route answering 404 and
+(b) a one-byte hash mutation going red against real bytes. That is the evidence
+this container could not produce — from here the origin answers **403**, which
+`verify_served.mjs` correctly calls INCONCLUSIVE rather than a failed control.
+
+Note what those 32 routes do **not** include: the new hub. `verify_served.mjs`'s
+`hubFrom()` reads the labs' NAV-1 link, which resolves to the **root catalogue**
+`index.html` (50,807 B, `a9cf8fba2cd1`) — a different file that happens to share a
+name. The directory-URL claim is pinned by D1 offline, not by a live route; see
+"Deliberately not done" above.
+
+### The pin
+
+**Raw-pin RUN, and green** — but on the repository blob, not the custom domain:
+
+```
+GET https://raw.githubusercontent.com/MattRoper1977/Lessons/3b9273e/Science_Teesside/Build/v4_fieldops/index.html
+  200 · 3272 B · sha256 d88eee1280bcbe75…  ==  the local file, byte-identical
+```
+
+**Live-origin pin NOT RUN — network blocked.** Both `https://madebymatt.uk/…` and
+`https://mattroper1977.github.io/…` return HTTP 000 from this container: not a 403,
+no connection at all. Stated as a runner fact, not a verdict about the estate — the
+CI runner reached the same origin on the same commit and got 32/32 byte-identical.
+
+### Phone-check URLs
+
+- **The one that was broken** — `https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/`
+  should now open the hub, titled *BUILD FieldOps — Science Instruments*, with four
+  links and a **← Lessons** back button, and no Teacher Studio link.
+- **One lab direct, as a control** — `https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/01_Newport_Bridge_Lift_Permit_Lab.html`
+  (this one already worked; if the hub loads and this does not, the cause is not FIX-1).
