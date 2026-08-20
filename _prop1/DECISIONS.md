@@ -70,3 +70,50 @@ The table names **7** (`A-17`, `A-51`, `A-52`, `A-53`, `A-55`, `A-56`, `A-57`); 
 scope, so it was **left unedited and reported** rather than swept silently. It is the one
 place in the estate still asserting a booking the committed compliance record keeps open.
 One line closes it, on the owner's word.
+
+### J4 · SCA-P7 edits a §5-protected answer-key attribute, by name
+`SCA-P7`'s exact change is literally `data-h="..." -> data-h="..."`, and its own row says it
+"sits on a §5-protected surface". §1 of the ruling allows this where a row names the
+protected string and cites the ruling, which this one does. Only the *hint* value moved:
+the scored key `data-c="0"` and the explanation `data-e` are byte-identical, so no scored
+control was re-keyed. The SCA instrument still measures **468 protected strings across 12
+families** with `answer-key-data` at 166 — the count did not move, only that one hash.
+
+The replacement wording is a judgement call the owner should sanity-check. The ranked
+table truncates the new string at `data-h="Balance is a`, and the estate holds two
+candidates: `_sca1/PROPOSED.md` P7 proposes "not **equal-sized** sections", while the
+earlier raw artifact `_sca1/tables/findings_raw.csv` proposes "not **four** identical
+sections". The curated form was applied, because the id chain is
+`findings_raw.csv → PROPOSED.md → PROPOSED_RANKED.md` and the ranked id `SCA-P7` is
+literally PROPOSED.md's section number. It is also the better fix on the merits: dropping
+the count entirely stops the hint contradicting the four-group plate the pupil is looking at,
+which is the whole defect.
+
+### J5 · SCA-P2 was reshaped, and its insertion text had to be reconstructed
+The ranked table truncates SCA-P2 at "insert immediately before `<div class="print-route
+supported">` a line mirroring the sc". The anchor exists exactly once, so the target is not
+in doubt; the mirrored text is what the truncation removed.
+
+Reading the reshaped row against the bytes settles it. The row says the original rationale
+was wrong — and it is: "record the force in newtons (N)" is **not** confined to the
+teacher-facing PRACTICAL READY block, it is in the pupil-facing Independent task box on
+screen. What is genuinely missing is the **print** mirror: all three printed route boxes
+give the task with no unit guidance at all. So the residual defect is print parity, and the
+fix is to mirror the screen's own sentence into the pack.
+
+The inserted line therefore quotes the screen verbatim and invents nothing:
+"**Measuring:** Use an agreed scale for this. Use a spring balance if you have one and
+record the force in newtons (N)." The earlier P2 proposal also wanted "centimetres (cm)" on
+the distance; that phrase appears on no surface in the file, so it was **not** added — it
+would be authoring, not mirroring.
+
+### J6 · XO2's ruling lands on a document this repo does not hold
+§0.2 rules XO2 "fix the brief, SoW stands". The row itself proposes the opposite (edit
+`Humanities_Teesside/LAUNCH_Scheme_of_Work.html` line 8); the owner has inverted it, so the
+SoW subtitle naming AQA UAS is **correct and untouched**.
+
+The "brief" is `BRIEF_HUM`, an input to the ECA-1 audit rather than a committed file — it
+does not exist anywhere in this repository (measured: the phrase "the SoW names no board"
+appears only inside `_eca1/PROPOSED_A.md` and `_sca1close/PROPOSED_RANKED.md`, quoting it).
+There is therefore no brief here to edit. XO2 is closed by this record: **the SoW stands,
+and the brief's "names no board" premise is superseded.** No file changed.
