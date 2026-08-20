@@ -7,8 +7,11 @@ inside it, plus alternatives Matt may prefer. Veto from the contact sheets in
 ## 1. Per-role reveal split — PROPOSED, not built
 One switch reveals staff + route + lundy together (kept simple per the order). If a
 per-role split is wanted (e.g. reveal Lundy to the class without staff notes), the
-tags already carry roles (`data-mbm-guide="staff|route|lundy"`), so it is a CSS +
-three-button change — no re-tagging.
+lundy/staff/route tags carry roles (`data-mbm-guide="staff|route|lundy"`) on only 90
+of the 175 decks. The other 85 carry PH-3's roleless `data-mbm-guide="1"`, so a
+per-role split is a CSS + three-button change **plus a re-tagging pass over those 85**
+— not the no-re-tagging change this section originally claimed. (Measured 2026-08-20:
+85 roleless + 90 role-valued = 175.)
 
 ## 2. The dedicated Lundy Loop slide now opens empty-ish (v5 + hum chassis)
 In ASDAN/D&T/Art/Humanities decks all four SPACE/VOICE/AUDIENCE/INFLUENCE boxes sit
@@ -41,9 +44,11 @@ stay visible; if Matt reads them as staff guidance, they are one label each in t
 patcher's STAFF_LABELS list.
 
 ## 6. Science source-note provenance lines
-Tagged `route` (they carry "TEST prototype · derived from … at main SHA … " text).
-Note for a future pass: that sentence itself looks stale now that SCA-1 treats
-v3_40min as the audited production suite — a wording refresh needs its own ruling.
+Tagged `route` (they carry "v3 40-minute route · derived from current GROW lesson …"
+text). The "future pass" this section asked for has already happened: SCA-1 CLOSE v2
+landed the wording refresh (the suite no longer describes itself as a TEST prototype —
+measured 2026-08-20: 0 occurrences estate-wide), so that half of this item is closed.
+The residual is only that the provenance line still points at the pre-v3 source lesson.
 
 ## 7. Slideshows ART suite (24 decks) — not in PART B
 `{Build,Grow,Launch}/Slideshows/*_ART_*` remain untagged (outside the ordered

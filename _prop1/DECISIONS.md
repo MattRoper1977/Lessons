@@ -117,3 +117,83 @@ does not exist anywhere in this repository (measured: the phrase "the SoW names 
 appears only inside `_eca1/PROPOSED_A.md` and `_sca1close/PROPOSED_RANKED.md`, quoting it).
 There is therefore no brief here to edit. XO2 is closed by this record: **the SoW stands,
 and the brief's "names no board" premise is superseded.** No file changed.
+
+---
+
+## SCA-P3 · BRANCH A — BUILD's command-word set, published
+
+§0.2 rules SCA-P3 **Branch A: publish the command-word set, 0 deck edits.** No stem is
+reworded; what changes is that the set stops being an unwritten assumption. Before this
+record the set existed in exactly one place in the estate — a single sentence inside
+`_sca1/PROPOSED.md` (line 89), a *not-applied* proposals file. That is why stems could drift
+above it without anything going red.
+
+**The published BUILD command-word set, as delivered:**
+
+| tier | command words |
+|---|---|
+| Supported | name · say · point · sort · match · **complete** |
+| Standard | name · say · point · sort · match · describe · **explain** |
+| Stretch | name · say · point · sort · match · describe · **explain** · **compare** |
+
+The three bolded entries are the widening Branch A ratifies. They are what the suite already
+teaches, measured from `_sca1/tables/cmd_offpitch.csv` (86 rows) at this SHA:
+
+- `explain` — 4 Standard stems, 9 Stretch stems
+- `complete` — 1 Supported stem
+- `compare` — 2 Stretch stems (plus 4 rows the table leaves tier-blank)
+
+SCA-P3's own text notes the 11 BUILD Stretch uses are "defensible differentiation and **not**
+proposed for change"; ratifying Standard and Supported alongside them is what makes the
+documented set match the taught one. **Zero deck edits**, exactly as Branch A requires.
+
+---
+
+## Residuals measured during this pass and deliberately NOT applied
+
+Each was found by the adversarial verifiers, is real, and is left alone because **no row in
+the table names it** and §3 puts anything not in the table out of scope. They are recorded
+here so the next pass starts from measurement rather than rediscovery.
+
+| what | where | why it is left |
+|---|---|---|
+| `the first-year EQA sampling visit is booked` — the 8th file | `LAUNCH_ASDAN/PEQ/START_HERE.html` | 7 files named by rows, this one by none. See J3. |
+| lc-summary still truncated mid-word | `BUILD_ASDAN/FoodWise/FW_W2_A_Balanced_Plate.html` | A-9's TARGET names FW_W1 only; its scope line is truncated in the table. |
+| leaked build token `BALANCE` on the celebration screen | `BUILD_ASDAN/FoodWise/FW_W1_Food_Groups.html` | Same defect class as A-P1/A-P30/A-P31/A-P32, but no row names this one. |
+| lc-summary still truncated mid-word | `DUKE_W2_A_Kindness_Challenge.html`, `DUKE_W6_Pitch_and_Reflect.html` | A-P33's parenthetical names W2 and W6, but neither file is a target of any row. Four Duke weeks now read cleanly and two do not. |
+| old comma-less Vocational titles | `resources.json`, `LAUNCH_ASDAN/Vocational/START_HERE.html`, `LAUNCH_ASDAN/Scheme_of_Work.html` | O-4/O-5 scope the six in-deck occurrences. `resources.json` is pinned by `tools/pin_manifests.py`; neither gate compares a registry title to a deck `<title>`, so nothing goes red — but deck and registry now disagree. |
+| `Connected:` preamble understates the Careers list | `BUILD_ASDAN/Scheme_of_Work.html` | A-49 corrected this phrasing on the hub; the SoW copy is the last survivor and no row names it. |
+| week-grid card still asserts W2 *is* World Kindness Day | `BUILD_ASDAN/Duke_and_Enterprise/START_HERE.html` | O-3 ruled the module strip only; A-P102 marks the deck itself "other batch". |
+| `Relaxed — a rehearsal, not a performance` now 0 estate-wide | `Build/Slideshows/BUILD_HUM_W7_Tell_The_Story.html` | XP17's ordered swap removes it. Exactly what the row directs. |
+| separator style split (`:` vs `—`) across one chassis string | `LAUNCH_ASDAN/**` | A-P87's row and its six VOC siblings specify different separators; both were applied as written. 22 further decks still carry the fused form. |
+
+### A-P87 needs an owner word
+`A-P87`'s **unabridged** Proposed clause says *drop* the fused heading — `"1) Name one thing
+you are good at."` The ranked table's EXACT CHANGE instead gives a reproducible regex that
+*keeps* it, and the six sibling VOC rows all keep it. The keeping form was applied, for
+consistency across all eight decks. The cost is a tautology on supported-tier print text:
+**"3) Point to it: Point to safety gear you have seen."** That reads badly for exactly the
+pupils the row exists to protect. Both readings are defensible; the owner should pick one
+before the pattern is propagated to the remaining decks.
+
+### A-P149 kept the third delivery route
+§0.2 rules "align pack to decks: carousel/paired". The pack's Channel A/B/C vocabulary is
+now the decks' vocabulary — **paired session · carousel station · hands-only video station**
+(22 strings across the pack and the GROW hub; 0 occurrences of "channel" remain). The third
+route was **renamed, not deleted**: Channel C is the access route for a pupil who cannot
+present live ("you never have to speak to the group", "no face"), and deleting it would
+remove provision the House Standard protects. If the owner wants only two formats, that is
+one further edit and should be ruled explicitly rather than absorbed into a vocabulary
+alignment.
+
+### XA14 now repeats itself
+`XA14`'s recast branch was applied verbatim as ruled, but it lands in a sentence that already
+carried the same clause, so both surfaces now say "SoW meeting" twice in adjacent sentences.
+Its sibling `A-64` — same defect class — took the *drop* branch, which avoids this. Worth one
+owner word on whether XA14 should drop rather than recast.
+
+### A-40 swaps one unverified forward pointer for another
+"Next term:" was ruled and applied. But LI_W6 is the last week of an Autumn-1-only scheme, so
+"next term" now asserts Budgeting sits in Autumn 2, while the row's own Issue text places it
+in Spring. The ruled string was applied as written; the sequencing claim behind it is still
+unverified.
