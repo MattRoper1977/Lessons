@@ -14,8 +14,14 @@ import re, sys, glob, collections
 
 DECKS = sorted(glob.glob('GROW_Estate_v3/GROW_ASDAN/PEQ_*.html')) + \
         sorted(glob.glob('LAUNCH_Estate_v3/LAUNCH_ASDAN/PEQ_*.html'))
+# Every LIVE PEQ-bearing surface, not just the v3 trees. The first pass of E1 missed
+# `Personal Effectiveness (PEQ L1)` in the GROW hub and START_HERE and two claims wrapped
+# in <b> tags in LAUNCH — all of them live surfaces naming Level 1 as the level. Widened
+# so that miss goes red rather than passing.
 LIVE  = [p for p in glob.glob('GROW_Estate_v3/**/*.*', recursive=True) +
-                    glob.glob('LAUNCH_Estate_v3/**/*.*', recursive=True)
+                    glob.glob('LAUNCH_Estate_v3/**/*.*', recursive=True) +
+                    glob.glob('GROW_ASDAN/**/*.*', recursive=True) +
+                    glob.glob('LAUNCH_ASDAN/**/*.*', recursive=True)
          if p.endswith(('.html', '.json'))]
 
 # ComSk minima, either level — if one appears at a tier the split must be stated
@@ -58,7 +64,7 @@ l1 = [p for p in LIVE if re.search(r'PEQ L1|PEQ Level 1(?! stretch)',
                                    open(p, encoding='utf-8', errors='replace').read())]
 for p in l1: fails.append('%s still names Level 1 as the level' % p)
 
-print('v3 tier gate: %d decks · %d live files' % (len(DECKS), len(LIVE)))
+print('v3 tier gate: %d decks · %d live files (v3 trees + GROW_ASDAN + LAUNCH_ASDAN)' % (len(DECKS), len(LIVE)))
 print('  ComSk minima stated at a tier: %d %s' % (sum(minima_hits.values()), dict(minima_hits) or ''))
 print('  tier stems: %s' % dict(stems))
 print('  live files naming Level 1 as the level: %d' % len(l1))

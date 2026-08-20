@@ -210,3 +210,41 @@ for the same reason.
 
     # apply the 35 substitutions above to resources.json, then:
     python3 tools/pin_manifests.py     # writes both gate copies
+
+
+---
+
+## P7 · A miss in E1's first pass, found by widening the check after the merge — closed
+
+**Recorded because the gate that should have caught it did not exist yet, and because it is
+the same shape as the defect the pass exists to close.**
+
+After the merge, a final estate-wide sweep found **7 occurrences across 6 live files** still
+naming Level 1 as the level — surfaces E1 should have taken in its first pass:
+
+| file | what survived |
+|---|---|
+| `GROW_ASDAN/GROW_ASDAN_Hub.html` | `Personal Effectiveness (PEQ L1)` — the PEQ strand card |
+| `GROW_ASDAN/PEQ/START_HERE.html` | the same string in the `<title>` and the `<h1>` |
+| `GROW_ASDAN/Resources_and_Tools.html` | `Personal Effectiveness (PEQ Level 1)` |
+| `GROW_ASDAN/Scheme_and_Resources.html` | the same |
+| `LAUNCH_ASDAN/LAUNCH_ASDAN_Hub.html` | `works toward PEQ L1 Award / Extended Award / Certificate` |
+| `LAUNCH_ASDAN/PEQ/START_HERE.html` | `<b>PEQ Level 1 Award / …</b>` and `<b>Communication skills (ComSk1)</b>` |
+
+**Why E1 missed them.** Its substitution table was built from measured strings —
+`PEQ Level 1 (E3 floor · L2 stretch)`, `ASDAN PEQ L1`, `ASDAN PEQ Level 1 —` — and these are
+none of those. Two forms escaped: the bare strand name `Personal Effectiveness (PEQ L1)`,
+which E1 only handled inside the v3 trees during P1, and two claims split across `<b>` tags
+so that no flat string matched them. The E1 residual check then asked only whether the
+*targeted* strings were gone, which they were. **A check that only re-greps what you set out
+to change cannot find what you failed to aim at.**
+
+**Closed:** 8 substitutions across the 6 files, to the same forms used everywhere else.
+Residual `PEQ L1` / `PEQ Level 1` across `GROW_ASDAN`, `LAUNCH_ASDAN`, `GROW_Estate_v3` and
+`LAUNCH_Estate_v3`: **0**.
+
+**And the gate is widened so it cannot recur.** `_passpq/tools/v3_tier_gate.py` checked only
+the two v3 trees; it now checks **every live PEQ-bearing surface** — the v3 trees plus
+`GROW_ASDAN/**` and `LAUNCH_ASDAN/**` — and fails on any file naming Level 1 as the level.
+Control fired: restoring `Personal Effectiveness (PEQ L1)` on the GROW hub gives **1 FAILURE,
+exit 1**; reverted, exit 0.
