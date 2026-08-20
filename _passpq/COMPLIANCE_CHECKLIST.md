@@ -64,3 +64,26 @@ safeguarding wording, and per-pupil achieved-minimum confirmation all wait on th
   **31 December 2026**; final certification **31 August 2027**. LAUNCH Vocational's
   "Hospitality" is this product; Gardening is an ordinary Short Course and unaffected.
   **CENTRE-ACTION.**
+
+
+---
+
+## PEQ-E3 addendum (2026-08-20) — the cohort anchor, and one requirement the decks cannot close
+
+**Cohort fact, stated by the owner 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3).
+Only 2–4 are at Level 1. Nobody is at Level 2.** Supported and Standard tiers evidence
+**Entry 3**; the Stretch tier evidences **Level 1**. No Level 2 is registered, taught or
+claimed. The per-level minima the decks are now written to are in `PEQ_PRIMER.md`
+§"PEQ-E3 addendum" and were checked against `SPEC_FACTS.md` §15 before anything moved.
+
+| # | Requirement | Spec | Who / how | Status |
+|---|---|---|---|---|
+| 14 | **One level per skill per learner (barred combinations)** — a learner's evidence for a skill counts toward one level only; the credit from the highest-level unit counts. Registration must target one level per skill per pupil. | §6.5 p15 (`SPEC_FACTS §4`) | Assessor rings the level on the witness statement; coordinator registers accordingly. | **REPO-DONE for the record-keeping half** — every PEQ witness sheet now carries a `Level this evidence banks at — tick ONE: ☐ Entry 3 ☐ Level 1` row beside the assessor signature (PEQ-E3 E4). The registration decision itself stays **CENTRE-ACTION**. |
+| 15 | **Safeguarding routing on Decision making and Wellbeing in learning** — the spec's own "Please note" on **DecMkSkE3/DecMkSk1 (pp27/41)** and **WellbLeE3/WellbLe1 (pp35/50)**: the learner's choice of situation must not negatively impact their wellbeing, any disclosure must be managed through the centre's safeguarding processes, and **this must be communicated to learners as part of the session**. | §17 (`SPEC_FACTS §17`) | Staff brief on any deck that runs the DecMk situation choice or the WellbLe improvement discussion, `data-mbm-guide="staff"` so it is route-hidden from pupils. | **NOT YET DUE — measured, not skipped.** Across all 14 PEQ files: **0** decks run either activity. Autumn 1 delivers Communication (LAUNCH) and a GROW mix on team working, thinking and learning. GROW W1 runs a strengths audit and W4 a personal routine strip; neither is the spec's box. **This line becomes REQUIRED the moment a DecMk or WellbLe deck is authored** — it is recorded here so it is not rediscovered then. |
+
+**Why item 15 is on this list rather than in a deck.** PEQ-E3 §3 E5 asked for the
+safeguarding staff line on "DecMk/WellbLe-touching decks only". The condition its own §2c
+sets is that a deck **runs** those choices. None does yet, so writing the line into a deck
+that does not run the activity would have been applying something the pass does not
+authorise, and would have put a safeguarding instruction next to an activity it does not
+describe. It is carried here instead, where it is due.
