@@ -223,3 +223,28 @@ Measured across **all 131 HTML files this branch changes**, exactly one
 `data-correct|c|e|h|m|fix` attribute differs from the rollback anchor: SCA-P7's `data-h` hint
 in `SCI_B_W6A_Balanced_Plate_Explore.html`, which its row orders verbatim (see J4). Every
 other scored control in the estate is byte-identical.
+
+### Scored controls: proven in a browser, not read off the markup
+§1 requires that a re-keyed scored control be proven end to end. Reading `data-correct`
+only shows the file says the right thing; it does not show the counter agrees. So
+`_prop1/tools/scorecheck.js` drives each control in headless Chromium — select pill, tap
+target, read `#match-score` — twice per deck: once tapping every target correctly, once
+with target 0 deliberately mis-tapped.
+
+**Result: all 118 scored controls across every file this branch changes report full marks
+on the all-correct run and exactly n-1 on the one-wrong run**, with zero page errors. That
+includes all four rows the ruling names: A-3 and A-P22 (4/4 then 3/4) and A-P109/A-P110
+(6/6 then 5/6).
+
+This also settles a claim the F08 report made and the verifier challenged: that collapsing
+the A2 pill ids would let a pupil "score all six by tapping one METHOD pill repeatedly".
+It would not. `pickTarget()` adds `.placed` to each used pill and the deck's own CSS sets
+`.placed{opacity:.35;pointer-events:none}`, so a pill is spent once used; `pickTarget` also
+returns early on an already-`correct` target, so the counter cannot exceed n. The verifier
+was right, the report was wrong, and the browser run is the evidence.
+
+### Answer keys moved in exactly three files, all three ordered and all three proven
+Measured across the 154 HTML files this branch changes: `A-P109` (m1/m2/m3 -> m, b1/b2/b3
+-> b), `A-P110` (u1/u2/u3 -> u, n1/n2/n3 -> n) and `SCA-P7` (the `data-h` hint). Each is
+its row's literal instruction; the first two are the deliberate collapse that fixes a
+control where two thirds of correct taps were rejected, and both now prove 6/6 and 5/6.
