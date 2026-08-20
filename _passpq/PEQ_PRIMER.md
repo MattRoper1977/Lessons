@@ -166,3 +166,61 @@ and remain UNVERIFIED-AGAINST-SPEC until the PDF lands.)*
 - **Sept-2025 booklet direction:** L1 command verbs got *easier* (ThSk1 1.1.3/1.1.4 →
   "Give examples of", 1.2.1 → "Identify"; only 1.7.1 rose to Describe); L2/L3 got harder.
   Never "top up" L1 demand.
+
+
+---
+
+## PEQ-E3 addendum (2026-08-20) — the cohort anchor
+
+**Everything above is level-neutral and stays true. This section says which level the
+estate is actually delivering, because that decides which minima and which command verbs
+every deck should be stating.**
+
+**Cohort fact, stated by the owner 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3).
+Only 2–4 pupils are at Level 1. Nobody is at Level 2.**
+
+So the estate delivers:
+
+| tier | level it evidences | example unit citation |
+|---|---|---|
+| **Supported** | **Entry 3** | ComSkE3 |
+| **Standard** | **Entry 3** | ComSkE3 |
+| **Stretch** | **Level 1** (the 2–4 pupils above E3) | ComSk1 |
+
+**Level 2 is out.** Nobody is at level, nothing is registered at L2, and "L2 standard" is
+no longer used as stretch language anywhere in the estate.
+
+### The ComSk tier split — the table every Communication deck is written to
+
+Transcribed from the official unit sheets and cross-checked line-for-line against
+`SPEC_FACTS.md` §15 (ComSkE3 pp24–25 · ComSk1 pp38–39). The two agree; nothing here is
+inferred.
+
+| requirement | **Supported / Standard = E3** | **Stretch = L1** |
+|---|---|---|
+| command verbs | State / List / Identify | Outline / Describe / Give examples |
+| ways of communicating | ≥3 | ≥3 |
+| components of effective communication | **≥3** | **≥4** |
+| difficulties | **≥2** | **≥3** |
+| plan: audience questions | **≥2** | **≥4** |
+| activity (ONE of) | presentation ≥2 min · discussion ≥5 min · text ≥100 words | presentation ≥3 min · discussion ≥8 min · text ≥250 words |
+| review: positive outcomes | **a positive outcome (one)** | **≥2** |
+| review: areas of further development | **an area (one)** | **≥2** |
+| group size | ≥3 | ≥3 |
+| 10-hour plan-use window | **NOT on Communication** (either level) | same |
+| no-difficulties rule | a learner may state they had none | same |
+
+### Two rules that are easy to get backwards
+
+- **Never top Level 1 demand up.** The Sept-2025 booklets moved L1 command verbs *down*
+  (ThSk1 1.1.3/1.1.4 Outline → "Give examples of"; 1.2.1 Outline → "Identify"). A Stretch
+  stem may sit easier than Outline; it must never sit above Describe. [SPEC §19]
+- **SMART is introduced but NOT assessed at E3 team working.** The SMART minimum sits only
+  at TmWkSk1 (1.3.1a). No task may gate the E3 unit on producing SMART targets. [SPEC §15]
+
+### Barred combinations decide where a pupil's credit lands
+
+A learner's evidence for a skill banks at **one level only** — Entry 3 *or* Level 1, never
+both; the higher counts (spec §6.5). Every PEQ witness statement now carries a
+`Level this evidence banks at — tick ONE: ☐ Entry 3 ☐ Level 1` row beside the assessor
+signature, so the decision is recorded per pupil, per session, on the paper that banks it.
