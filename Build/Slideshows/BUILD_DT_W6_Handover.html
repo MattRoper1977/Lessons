@@ -642,7 +642,29 @@ function showTABrief(){
 let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;document.getElementById('pres-caps').appendChild(c);document.getElementById('pres-num').textContent=_presDone.length;if(_presDone.length===8){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});document.getElementById('pres-caps').innerHTML='';document.getElementById('pres-num').textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
 registerXP(document.querySelectorAll('.match-pill').length);
 var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
-<script defer src="/hud.js"></script><!-- ASDAN-VISUAL-LEARNING:HTML:BEGIN v1 -->
+<script defer src="/hud.js"></script><!--mbm-guide:v1--><script id="mbm-guide-js">
+(function(){
+  var KEY='mbm_guide_v1';
+  function stored(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+  function store(on){try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}}
+  function apply(on){
+    document.documentElement.classList.toggle('mbm-guide-on',on);
+    var b=document.querySelector('.mbm-guide-btn');
+    if(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'ⓘ Guidance ✓':'ⓘ Guidance';}
+    var live=document.getElementById('vu-live-region');
+    if(live)live.textContent=on?'Guidance shown':'Guidance hidden';
+  }
+  window.mbmGuideToggle=function(){var on=!document.documentElement.classList.contains('mbm-guide-on');store(on);apply(on);};
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='g'&&e.key!=='G')return;
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible'))return;
+    window.mbmGuideToggle();
+  });
+  apply(stored());
+})();
+</script><!-- ASDAN-VISUAL-LEARNING:HTML:BEGIN v1 -->
 <style>
 /* ASDAN Visual Learning — progressive enhancement. Rehearsal only. */
 .asvl-panel{
@@ -1681,26 +1703,4 @@ window.ASDANVisualPayloads = Object.assign(window.ASDANVisualPayloads || {}, {"B
   else start();
 })();
 </script>
-<!-- ASDAN-VISUAL-LEARNING:HTML:END v1 --><!--mbm-guide:v1--><script id="mbm-guide-js">
-(function(){
-  var KEY='mbm_guide_v1';
-  function stored(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
-  function store(on){try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}}
-  function apply(on){
-    document.documentElement.classList.toggle('mbm-guide-on',on);
-    var b=document.querySelector('.mbm-guide-btn');
-    if(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'ⓘ Guidance ✓':'ⓘ Guidance';}
-    var live=document.getElementById('vu-live-region');
-    if(live)live.textContent=on?'Guidance shown':'Guidance hidden';
-  }
-  window.mbmGuideToggle=function(){var on=!document.documentElement.classList.contains('mbm-guide-on');store(on);apply(on);};
-  document.addEventListener('keydown',function(e){
-    if(e.key!=='g'&&e.key!=='G')return;
-    var t=e.target;
-    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
-    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible'))return;
-    window.mbmGuideToggle();
-  });
-  apply(stored());
-})();
-</script></body></html>
+<!-- ASDAN-VISUAL-LEARNING:HTML:END v1 --></body></html>
