@@ -197,3 +197,29 @@ owner word on whether XA14 should drop rather than recast.
 "next term" now asserts Budgeting sits in Autumn 2, while the row's own Issue text places it
 in Spring. The ruled string was applied as written; the sequencing claim behind it is still
 unverified.
+
+### J7 · A-15 was swept across all 8 surfaces, one of which is protected
+`A-15`'s text names the award strip. The claim it rules wrong — banking "ASDAN PEQ
+**presentation**" where the deck's own WAGOLL evidences **communication** — actually stands
+on **8 surfaces** in `ENT_W6_Pitch_Day.html`: award strip, product card, Independent li-box,
+an arrival answer, the print pack header (twice) and the print Key Facts, one of which sits
+inside the witness block's 700-char window.
+
+All 8 were swept, which extends A-15's literal scope. Two reasons, both from the ruling
+itself. §1 requires that "every screen edit sweeps its print mirror … in the same commit";
+and sweeping 7 of 8 would leave one deck banking **two different PEQ units at once** — a new
+internal contradiction, created by this pass, in exactly the class of defect it exists to
+close. A witness surface certifying against a unit this ruling declares wrong is the worst
+of the eight to leave.
+
+The witness marker count holds at 2 → 2 and the statement's own fields (learner name, date,
+signature) are byte-identical; only the banking line moved, and it moved to the correct unit.
+Named in `_prop1/PROTECTED_DELTAS.tsv` rather than absorbed. If the owner wants A-15 held to
+its literal award-strip scope, reverting the other seven is one command — but it re-opens the
+contradiction.
+
+### Answer keys: one moved, and it was ordered
+Measured across **all 131 HTML files this branch changes**, exactly one
+`data-correct|c|e|h|m|fix` attribute differs from the rollback anchor: SCA-P7's `data-h` hint
+in `SCI_B_W6A_Balanced_Plate_Explore.html`, which its row orders verbatim (see J4). Every
+other scored control in the estate is byte-identical.
