@@ -62,12 +62,16 @@ for PEQ banking claims only — see DECISIONS §3 J5.
 - **Audit and pass records** (`_passla`, `_passpq`, `_eca1`, `_sca1`, `_sca1close`,
   `_glv3`, `_passph3`, `_prop1`, `quality/`, `reports/`, `_finish`, …) — history that
   quotes the old strings as evidence. Editing them would rewrite the record.
-- **`GROW_Estate_v3/`, `LAUNCH_Estate_v3/`, `ASDAN_Visual_Learning/`, `_glv3/`** —
-  registry-referenced but not in `TAXONOMY_MAP.md`, and **not in §1's edit ground**. These
-  DO carry PEQ level claims — measured **44 occurrences of `Personal Effectiveness (PEQ L1)`
-  across 20 files**, plus `PEQ Level 1` in 14. They include **12 parallel PEQ decks** of the
-  same six GROW and six LAUNCH weeks. **Reported, not edited** — see `PROPOSED_E3.md` P1,
-  which is the headline item this pass leaves for a ruling.
+- **`GROW_Estate_v3/` and `LAUNCH_Estate_v3/`** — **RULED INTO THE GROUND 2026-08-20** and
+  swept. Registry-referenced but not in `TAXONOMY_MAP.md`; they carried **44 occurrences of
+  `Personal Effectiveness (PEQ L1)`** plus `PEQ Level 1`/`PEQ L1` elsewhere, across **12
+  parallel PEQ decks** of the same six GROW and six LAUNCH weeks. E1 applied: 88
+  substitutions over 18 live files, **0** now naming Level 1 as the level. E2/E3 measured as
+  having no target there (0 ComSk minima at a tier; no tier stem above its level). See
+  `PROPOSED_E3.md` P1.
+- **`ASDAN_Visual_Learning/`, `_glv3/`** — records and a README. `_glv3/` is the deploy
+  audit trail for the v3 trees and quotes their old titles as evidence; editing it would
+  rewrite the record. `ASDAN_Visual_Learning/README.md` names a unit code, no level.
 - **`Humanities_Teesside/Pathway_Tracker.html`** — 0 PEQ mentions.
 - **BUILD** — §5 keeps it out; Pass PQ proved it banks short courses and zero PEQ.
 - **Short-course decks** (LI / FoodWise / Careers / Community / Vocational / Enterprise)

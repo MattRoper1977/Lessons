@@ -131,3 +131,71 @@ either group.
 | `node --check` | 0 FAIL across every touched block |
 | boot multiset | changed files × 3 viewports, identical to baseline at every family |
 | BUILD untouched | 0 BUILD files changed |
+
+---
+
+## 5 · The readback ruling of 2026-08-20, and the P1 family
+
+Three rulings came back on the PEQ-E3 readback. All three are executed.
+
+### 5.1 · P1 RULED IN — the twelve `*_Estate_v3` PEQ decks joined the ground
+
+> "extend the sweep — the twelve `*_Estate_v3` PEQ decks come INTO the ground. The estate
+> must not name two levels for the same weeks. … If any of the twelve is generated from a
+> shared payload, fix the generator and re-materialise, never the copies."
+
+**The generator condition was checked before any edit, and no generator exists.** 0 of the
+twelve carry the owned-payload marker (`materialise.py` is `BUILD_ASDAN`-scoped); there are
+0 HTML files under `_glv3/`; and `_glv3/tools/deploy.py` installs from
+`/tmp/glv3-packs/{grow,launch}` — uncommitted, external, and absent here — with
+`shutil.copy2`. The deployed files are the only copy of that content in the repository, so
+editing them is the only available route rather than a shortcut past a generator.
+
+**E1 applied: 88 substitutions across 18 live v3 files.** The GROW half reconciles to the
+ruled 44 (31 bare identity strings + 13 inside the guardrail sentence). After: **0** live v3
+files name Level 1 as the level, and the paired decks now agree week for week.
+
+**E2 and E3 had no target, measured rather than assumed.** 0 ComSk minima are stated at a
+tier in the twelve (the only `N minutes` strings are the 16-minute timing chip), and the
+tier stems — `Standard: add` ×12, `Stretch: add` ×6, `Stretch: state` ×6 — contain no verb
+above Level 1 and no L1 verb at an Entry 3 tier. `Stretch: state` is deliberately left: an
+L1 stem may sit easier but must never be topped up (`SPEC_FACTS` §19).
+
+**One sub-item is blocked**: the `resources.json` descriptions. Prepared, verified, reverted,
+and recorded in full as `PROPOSED_E3.md` **P6** — the file is pinned by SHA-256 inside a gate
+that is byte-identical in Lessons and Apps, and `pin_manifests.py` writes both copies or
+neither. The Apps checkout is absent and out of this session's scope. `resources.json` is
+byte-identical to its pin.
+
+### 5.2 · A-P68 RULED KEPT
+
+> "A-P68 correction KEPT — naming only ComSk1's floor would have had assessors holding E3
+> pupils to 4 components and a 3-minute talk. Your correction is right; record it as ruled,
+> do not revert."
+
+`DECISIONS.md` §3 J2 recorded this as a correction to the ruling's premise and flagged that
+reverting was one command. **It is now ruled: the both-floors staff brief stands.** No revert
+is owed and none should be made. J2 stands as written, with this ratification appended.
+
+### 5.3 · E5-to-checklist RATIFIED
+
+> "E5-to-checklist ratified as the correct outcome."
+
+§3 J3's outcome — 0 decks run the DecMk situation choice or the WellbLe improvement
+discussion, so the spec's safeguarding requirement went to `COMPLIANCE_CHECKLIST.md` item 15
+rather than into a deck that does not run the activity — is ratified as correct.
+
+### 5.4 · Gate record for the P1 family
+
+| gate | result |
+|---|---|
+| generator check | 0 payload markers · 0 `_glv3` HTML · deploy source uncommitted and absent — **no generator to fix** |
+| E1 before/after | `Personal Effectiveness (PEQ L1)` 44 → **0** · `PEQ Level 1` (live v3) 31 → **0** · `PEQ L1` 13 → **0** |
+| v3 tier gate control | PASS → above-L1 verb on a Stretch stem = **1 FAILURE exit 1** → revert PASS; old level restored on one file = **1 FAILURE exit 1** → revert PASS |
+| manifests still valid JSON | both `manifest-v3.json` parse |
+| `node --check` | 14 blocks OK / 0 FAIL over 16 files |
+| protected manifest | 75 window shifts, all authorised — the v3 trees sit outside its universe, so it is unmoved |
+| sentinels | 50 / 123 |
+| boot multiset | 16 files × 3 viewports, **identical to baseline**, 72 rows |
+| `resources.json` | **untouched**, byte-identical to its pin `da6600…` |
+| earlier PEQ-E3 gates | minima gate PASS · verb gate exit 0 — both still green |
