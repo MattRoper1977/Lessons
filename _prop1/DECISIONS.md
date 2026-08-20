@@ -1,6 +1,8 @@
 # PROP-1 — the owner's ruling on the PROPOSED set, recorded verbatim
 
 **Sentinel:** `prop-1-2026-08-20-TOP` / `prop-1-2026-08-20-BOTTOM`
+**Follow-up:** the seven items this record left open were ruled on 2026-08-20 and are all
+discharged — see `_prop1/RULINGS_2026-08-20.md`.
 **Ruled:** 2026-08-20. **Source of truth for items:** `_sca1close/PROPOSED_RANKED.md` at
 `e63f047` — 323 rows, 284 `apply` / 28 `hold` / 11 `withdraw`. This pass does not restate
 the exact changes; the table carries them. What is recorded here is the ruling and the law.
@@ -64,6 +66,11 @@ category header agrees (F 0 · C 8 · D 0 · J 3 = 11). All 11 closing actions w
 No twelfth withdrawal row exists in the table to execute. Reported, not invented.
 
 ### J3 · An 8th file carries the EQA claim and no row names it
+
+> **RULED 2026-08-20 — discharged.** `LAUNCH_ASDAN/PEQ/START_HERE.html` now carries the
+> same approvals-pending wording as the seven. The octet is 8/8 identical and 0 live
+> surfaces assert the booking.
+
 Measured estate-wide, `the first-year EQA sampling visit is booked` appeared in **8** files.
 The table names **7** (`A-17`, `A-51`, `A-52`, `A-53`, `A-55`, `A-56`, `A-57`); the eighth,
 `LAUNCH_ASDAN/PEQ/START_HERE.html`, has no row. §3 puts "anything not in the table" out of
@@ -157,7 +164,7 @@ here so the next pass starts from measurement rather than rediscovery.
 
 | what | where | why it is left |
 |---|---|---|
-| `the first-year EQA sampling visit is booked` — the 8th file | `LAUNCH_ASDAN/PEQ/START_HERE.html` | 7 files named by rows, this one by none. See J3. |
+| ~~`the first-year EQA sampling visit is booked` — the 8th file~~ | `LAUNCH_ASDAN/PEQ/START_HERE.html` | **CLOSED 2026-08-20** — ruled in and reworded. See J3. |
 | lc-summary still truncated mid-word | `BUILD_ASDAN/FoodWise/FW_W2_A_Balanced_Plate.html` | A-9's TARGET names FW_W1 only; its scope line is truncated in the table. |
 | leaked build token `BALANCE` on the celebration screen | `BUILD_ASDAN/FoodWise/FW_W1_Food_Groups.html` | Same defect class as A-P1/A-P30/A-P31/A-P32, but no row names this one. |
 | lc-summary still truncated mid-word | `DUKE_W2_A_Kindness_Challenge.html`, `DUKE_W6_Pitch_and_Reflect.html` | A-P33's parenthetical names W2 and W6, but neither file is a target of any row. Four Duke weeks now read cleanly and two do not. |
@@ -165,9 +172,14 @@ here so the next pass starts from measurement rather than rediscovery.
 | `Connected:` preamble understates the Careers list | `BUILD_ASDAN/Scheme_of_Work.html` | A-49 corrected this phrasing on the hub; the SoW copy is the last survivor and no row names it. |
 | week-grid card still asserts W2 *is* World Kindness Day | `BUILD_ASDAN/Duke_and_Enterprise/START_HERE.html` | O-3 ruled the module strip only; A-P102 marks the deck itself "other batch". |
 | `Relaxed — a rehearsal, not a performance` now 0 estate-wide | `Build/Slideshows/BUILD_HUM_W7_Tell_The_Story.html` | XP17's ordered swap removes it. Exactly what the row directs. |
-| separator style split (`:` vs `—`) across one chassis string | `LAUNCH_ASDAN/**` | A-P87's row and its six VOC siblings specify different separators; both were applied as written. 22 further decks still carry the fused form. |
+| ~~separator style split (`:` vs `—`) across one chassis string~~ | `LAUNCH_ASDAN/**` | **CLOSED 2026-08-20** — the A-P87 ruling drops the heading, so both separators and the 22 fused decks collapse into one form. |
 
 ### A-P87 needs an owner word
+
+> **RULED 2026-08-20 — the unabridged clause wins; the fused heading is dropped.**
+> Applied to all 30 LAUNCH decks, 90 items. The `:` vs `—` separator split below is closed
+> with it. See `_prop1/RULINGS_2026-08-20.md`.
+
 `A-P87`'s **unabridged** Proposed clause says *drop* the fused heading — `"1) Name one thing
 you are good at."` The ranked table's EXACT CHANGE instead gives a reproducible regex that
 *keeps* it, and the six sibling VOC rows all keep it. The keeping form was applied, for
@@ -177,6 +189,11 @@ pupils the row exists to protect. Both readings are defensible; the owner should
 before the pattern is propagated to the remaining decks.
 
 ### A-P149 kept the third delivery route
+
+> **RATIFIED 2026-08-20 — keeping the access affordance was the right call.**
+> The owner wants three formats. No further edit is owed.
+> See `_prop1/RULINGS_2026-08-20.md`.
+
 §0.2 rules "align pack to decks: carousel/paired". The pack's Channel A/B/C vocabulary is
 now the decks' vocabulary — **paired session · carousel station · hands-only video station**
 (22 strings across the pack and the GROW hub; 0 occurrences of "channel" remain). The third
@@ -269,6 +286,11 @@ That is the defect and the fix, measured rather than asserted. **103 of the 110 
 at all three tiers.**
 
 ### The seven that do not — and why it is not this pass's doing
+
+> **RULED 2026-08-20 — repaired.** `#print-area` is now a direct child of `<body>` in all
+> seven. Rendered print height 0 → ~2500 at every tier; zero-height sections 10 → 0.
+> A-48's sections are visible on paper. See `_prop1/RULINGS_2026-08-20.md`.
+
 `Art_Teesside/Build/BUILD_ART_A2_W1..W7` fail, and they fail **identically at the rollback
 anchor**, verified by running the same instrument against a pristine `e63f047` worktree.
 
