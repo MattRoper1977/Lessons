@@ -22,7 +22,7 @@ odd in the room, the alternative is: keep the dedicated Lundy slide's boxes visi
 and treat only the science-style per-slide strips as clutter. One-line patcher
 change; say the word.
 
-## 3. Science access lines KEPT (deviation-from-letter, recorded as ruled)
+## 3. Science access lines KEPT (deviation-from-letter, recorded as ruled) — RATIFIED
 `retr-route` ("Non-reading route: point to it, say it… Next step up:") and the
 access-reassurance notes ("You can change how you answer. The Science goal stays
 the same." / "Access changes the response route, not the GCSE Biology entitlement."
@@ -31,11 +31,22 @@ visible: despite staff-ish phrasing they are the pupil's access offer, and hidin
 them would cut against the accessibility invariants. The class NAME `retr-route` is
 routing-of-response, not lesson-route commentary.
 
+**Ratified under PROP-1 (2026-08-20), and this section understated its own evidence.**
+It reads as three strings; there are **four**, and they are not occasional. Measured at
+`e63f047`: `Non-reading route` **300** occurrences across 25 decks · `You can change how
+you answer` **60** across 10 · `Access changes the response route` **90** across 15 ·
+`A pause or different route changes access` **60** across 10 — **510 occurrences, and
+every one of the 35 v3_40min lesson decks carries at least one.** Hiding them by default
+would have removed the pupil's access offer from the entire science suite, not from a
+handful of slides. The ruling to keep them visible stands, on stronger evidence than the
+section claimed.
+
 ## 4. What was classified staff on science (hidden by default)
 `teacher-say` ("Staff influence opener — SAY, don't record…"), `retr-declare`
 ("Weeks 1 and 2 were baseline…" — the order's own example, route role), the
-voice-keyed `.note` blocks ("Arrival retrieves…", "Fade it:/Fade:"), the GROW
-"TA fade route:" tail inside WORD HELP (wrapped, counter-safe). Pupil-voiced notes
+voice-keyed `.note` blocks ("Arrival retrieves…", "Fade it:/Fade:"), the
+"TA fade route:" tail inside WORD HELP on 25 decks (GROW 10 + LAUNCH 15;
+wrapped, counter-safe). Pupil-voiced notes
 were left alone. If any of these reads pupil-facing to Matt, it is one tag.
 
 ## 5. Unclassified organs left visible (v5-art)
