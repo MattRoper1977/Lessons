@@ -283,3 +283,31 @@ A-48 itself — a dead print path — an order of magnitude larger, and **no row
 names it**. §3 keeps it out of scope, so it is reported, not fixed. A-48's benefit reaches
 103 decks; on those seven it is correct in the markup and still invisible on paper until
 the container nesting is fixed, which is a structural change no row authorises.
+
+---
+
+## XP26 · the structural move, and what it actually restored
+
+Two defects in one, both proven with `printcheck.js` against a pristine `e63f047`
+worktree and then against the branch:
+
+| `GROW_HUM_W1_Time_Detectives.html` | lundy | feedback | sections printed |
+|---|---|---|---|
+| at `e63f047`, all three tiers | HIDDEN h=0 | HIDDEN h=0 | 8 |
+| after XP26, all three tiers | visible h=363 | visible h=544 | 10 |
+
+1. **Neither section reached print at all** — `printPack`'s id array named neither.
+2. **They also sat in the supported-only branch.** Measured at the anchor: the nearest
+   preceding tier wrapper before `#print-lundy` is `supported-content`. So even had they
+   printed, Standard and Stretch would never have received them. Both are now direct
+   children of `#print-area`, so all three tiers print identically — the tier-parity half
+   of the defect, which the id array alone would not have fixed.
+
+**All 24 HUM decks pass at all three tiers.** The two W7 decks correctly print feedback and
+no Lundy: their Lundy absence is sentinel-held by design and this pass does **not** add one,
+exactly as the row directs.
+
+**Sentinels held through a structural move.** XP26 relocates blocks containing both
+sentinel strings (`ll-g:loop-mark` and `What I said, and what it changed`). Moving a block
+inside a file changes neither which files contain a string nor how many — measured after:
+**50 / 123, set-identical to base.**
