@@ -199,3 +199,76 @@ rather than into a deck that does not run the activity — is ratified as correc
 | boot multiset | 16 files × 3 viewports, **identical to baseline**, 72 rows |
 | `resources.json` | **untouched**, byte-identical to its pin `da6600…` |
 | earlier PEQ-E3 gates | minima gate PASS · verb gate exit 0 — both still green |
+
+---
+
+## 6 · Merge, Pages and raw-pin evidence
+
+**Merge SHA: `5e2d3806e33e5b4eec9b2932d84fb1179fba864a`** — `--no-ff`, branch
+`claude/prop-1-rulings-peq-e3-o7vhv0` → `main`, fetched before pushing (14 commits ahead,
+0 behind, no divergence). 93 files changed, 1479 insertions, 285 deletions.
+
+### CI on the merge SHA — all five runs green
+
+| workflow | conclusion |
+|---|---|
+| pages build and deployment (run #686, `32426669859`) | **success** |
+| GROW LAUNCH v3 generated-tree verification (run #82) | **success** |
+| FieldOps P2, the sweep, and the serve proof | **success** |
+| Watch main — a red nobody is told about (×2) | **success** |
+
+Two of these matter more than the rest.
+
+**`glv3-verify` had not run since the v3 trees were installed** — it triggers only on
+`GROW_Estate_v3/**`, `LAUNCH_Estate_v3/**`, `resources.json`, `_finish/ROUTES.md` or
+`_glv3/**`, and no pass since had touched any of them. The P1 family is the first thing to
+put those trees back through their own gate, and it passes: 94 HTML, 88 catalogue rows, 80
+lessons, the forbidden-token and no-mark-scheme assertions, full link resolution against the
+site mount, the disposable tamper controls, and the browser/print/contact-sheet stages.
+
+**`Watch main` was RED on the two commits before this one** (`c80b78e`, `e63f047`) and is
+**green here**. This pass did not set out to fix it and no change was aimed at it; recorded
+as observed, not claimed.
+
+### Raw-pin — 12 of 12 identical at the merge SHA
+
+Fetched from `raw.githubusercontent.com` at `5e2d380` and SHA-256-compared to the working
+tree. Sample spans every family: live PEQ decks, the repaired Art A2 decks, both v3 estates,
+a v3 manifest, a humanities SoW, and the pass records.
+
+```
+PASS f4d4b9a0c4b0a477  107769 B  GROW_ASDAN/PEQ/PEQ_W1_Knowing_Myself.html
+PASS 7e42ba166d00e2ee  107121 B  LAUNCH_ASDAN/PEQ/PEQ_W6_Review_Progress_and_Sign_Off_the_Unit.html
+PASS ac685b315dce4993  108718 B  LAUNCH_ASDAN/PEQ/PEQ_W4_Plan_a_Communication_Activity.html
+PASS 1d6548f374954c5b   95615 B  Art_Teesside/Build/BUILD_ART_A2_W1_Surface_Hunt.html
+PASS 508eed5f79795c5e   95578 B  Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html
+PASS 3fa23e9038de446e   34793 B  GROW_Estate_v3/GROW_ASDAN/PEQ_W1_Knowing_Myself.html
+PASS 327e7e479fafb62f   36052 B  LAUNCH_Estate_v3/LAUNCH_ASDAN/PEQ_W2_What_Makes_Communication_Effective.html
+PASS eafa0048baa634d1   17966 B  LAUNCH_Estate_v3/LAUNCH_ASDAN/manifest-v3.json
+PASS 5a8ff13eda0f8afa    7858 B  Humanities_Teesside/BUILD_Scheme_of_Work.html
+PASS 3ec22bf09d066c7b    5138 B  LAUNCH_ASDAN/PEQ/START_HERE.html
+PASS da6600349e68b91d  348585 B  resources.json
+PASS fe5844b485b69bfd   10861 B  _passpq/PROPOSED_E3.md
+```
+
+`resources.json` pins at `da6600349e68b91d…`, which is exactly the digest
+`tools/verify_cross_estate_unification.py` carries — proof on the merged SHA that it is
+untouched (see `PROPOSED_E3.md` P6).
+
+### Served-origin byte identity — BLOCKED, exact line
+
+Pages reports success, but neither serving origin is reachable from this container, so
+**served bytes were not proven from here**:
+
+    $ curl -sS https://mattroper1977.github.io/Lessons/GROW_ASDAN/PEQ/PEQ_W1_Knowing_Myself.html
+    curl: (56) CONNECT tunnel failed, response 403
+
+    $ curl -sS https://madebymatt.uk/Lessons/GROW_ASDAN/PEQ/PEQ_W1_Knowing_Myself.html
+    curl: (56) CONNECT tunnel failed, response 403
+
+This is the documented condition, not a new failure — `.github/workflows/glv3-production-byte-check.yml`
+says so in its own header: *"the development container's proxy denies egress to
+https://madebymatt.uk, so served-byte identity cannot be proven from there. Run it manually
+and read the log."* That workflow is `workflow_dispatch` only. **To close this limb, dispatch
+`glv3-production-byte-check` from the Actions tab** — it compares a fixed sample of served
+files against the checkout and prints PASS/FAIL per file.
