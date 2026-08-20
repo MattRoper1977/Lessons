@@ -7,8 +7,11 @@ inside it, plus alternatives Matt may prefer. Veto from the contact sheets in
 ## 1. Per-role reveal split — PROPOSED, not built
 One switch reveals staff + route + lundy together (kept simple per the order). If a
 per-role split is wanted (e.g. reveal Lundy to the class without staff notes), the
-tags already carry roles (`data-mbm-guide="staff|route|lundy"`), so it is a CSS +
-three-button change — no re-tagging.
+lundy/staff/route tags carry roles (`data-mbm-guide="staff|route|lundy"`) on only 90
+of the 175 decks. The other 85 carry PH-3's roleless `data-mbm-guide="1"`, so a
+per-role split is a CSS + three-button change **plus a re-tagging pass over those 85**
+— not the no-re-tagging change this section originally claimed. (Measured 2026-08-20:
+85 roleless + 90 role-valued = 175.)
 
 ## 2. The dedicated Lundy Loop slide now opens empty-ish (v5 + hum chassis)
 In ASDAN/D&T/Art/Humanities decks all four SPACE/VOICE/AUDIENCE/INFLUENCE boxes sit
@@ -19,7 +22,7 @@ odd in the room, the alternative is: keep the dedicated Lundy slide's boxes visi
 and treat only the science-style per-slide strips as clutter. One-line patcher
 change; say the word.
 
-## 3. Science access lines KEPT (deviation-from-letter, recorded as ruled)
+## 3. Science access lines KEPT (deviation-from-letter, recorded as ruled) — RATIFIED
 `retr-route` ("Non-reading route: point to it, say it… Next step up:") and the
 access-reassurance notes ("You can change how you answer. The Science goal stays
 the same." / "Access changes the response route, not the GCSE Biology entitlement."
@@ -28,11 +31,22 @@ visible: despite staff-ish phrasing they are the pupil's access offer, and hidin
 them would cut against the accessibility invariants. The class NAME `retr-route` is
 routing-of-response, not lesson-route commentary.
 
+**Ratified under PROP-1 (2026-08-20), and this section understated its own evidence.**
+It reads as three strings; there are **four**, and they are not occasional. Measured at
+`e63f047`: `Non-reading route` **300** occurrences across 25 decks · `You can change how
+you answer` **60** across 10 · `Access changes the response route` **90** across 15 ·
+`A pause or different route changes access` **60** across 10 — **510 occurrences, and
+every one of the 35 v3_40min lesson decks carries at least one.** Hiding them by default
+would have removed the pupil's access offer from the entire science suite, not from a
+handful of slides. The ruling to keep them visible stands, on stronger evidence than the
+section claimed.
+
 ## 4. What was classified staff on science (hidden by default)
 `teacher-say` ("Staff influence opener — SAY, don't record…"), `retr-declare`
 ("Weeks 1 and 2 were baseline…" — the order's own example, route role), the
-voice-keyed `.note` blocks ("Arrival retrieves…", "Fade it:/Fade:"), the GROW
-"TA fade route:" tail inside WORD HELP (wrapped, counter-safe). Pupil-voiced notes
+voice-keyed `.note` blocks ("Arrival retrieves…", "Fade it:/Fade:"), the
+"TA fade route:" tail inside WORD HELP on 25 decks (GROW 10 + LAUNCH 15;
+wrapped, counter-safe). Pupil-voiced notes
 were left alone. If any of these reads pupil-facing to Matt, it is one tag.
 
 ## 5. Unclassified organs left visible (v5-art)
@@ -41,11 +55,11 @@ stay visible; if Matt reads them as staff guidance, they are one label each in t
 patcher's STAFF_LABELS list.
 
 ## 6. Science source-note provenance lines
-Tagged `route` (they carry "TEST prototype · derived from … at main SHA … " text).
-Note for a future pass: that sentence itself looks stale now that SCA-1 treats
-v3_40min as the audited production suite — a wording refresh needs its own ruling.
+Tagged `route` (they carry "v3 40-minute route · derived from current GROW lesson …"
+text). The "future pass" this section asked for has already happened: SCA-1 CLOSE v2
+landed the wording refresh (the suite no longer describes itself as a TEST prototype —
+measured 2026-08-20: 0 occurrences estate-wide), so that half of this item is closed.
+The residual is only that the provenance line still points at the pre-v3 source lesson.
 
 ## 7. Slideshows ART suite (24 decks) — not in PART B
-`{Build,Grow,Launch}/Slideshows/*_ART_*` remain untagged (outside the ordered
-universe, which names Art = Art_Teesside). If they are still teaching surfaces,
-the v5 patcher covers them unchanged — one command in a follow-up.
+`Slideshows/*_ART_*` (24 decks) — CLOSED by owner ruling 2026-08-19 (SCA-1 CLOSE v2, 3e; recorded in `_eca1/DECISIONS.md`): the superseded 2025-26 legacy art set is not to be patched, and no follow-up is offered.

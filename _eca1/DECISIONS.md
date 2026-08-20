@@ -85,3 +85,28 @@ PROPOSED item raised against those 24 decks is withdrawn rather than held.
   and the red-on-target→green-after proof is unobtainable in a session whose GitHub scope
   excludes `Matt-s-Apps-`. No workflow was disabled or weakened.
 - **The FieldOps own-session inherits this.**
+
+---
+
+## §3 science access lines — RATIFIED under PROP-1 (2026-08-20)
+
+`PROPOSED_B.md` §3 recorded a deliberate deviation from the letter of the PART B order:
+the science access lines stay **visible** rather than being hidden behind the guidance
+toggle. Row `B-3` of `_sca1close/PROPOSED_RANKED.md` rules that deviation **ratified**, and
+records that §3 understated its own evidence.
+
+Measured at `e63f047`, the strings §3 protects are four, not three, and they are
+estate-wide across the science suite:
+
+| string | occurrences | decks |
+|---|---:|---:|
+| `Non-reading route: point to it, say it… Next step up:` | 300 | 25 |
+| `You can change how you answer. The Science goal stays the same.` | 60 | 10 |
+| `Access changes the response route, not the GCSE Biology entitlement.` | 90 | 15 |
+| `A pause or different route changes access, not the learning goal.` (GROW) | 60 | 10 |
+| **total** | **510** | **all 35 v3_40min lesson decks** |
+
+Every one of the 35 lesson decks carries at least one. Hiding them by default would have
+removed the pupil's access offer from the whole suite, which is why the deviation was right:
+the accessibility invariants outrank the visibility default. **No file was changed to ratify
+this** — the ruling confirms what already ships.
