@@ -123,3 +123,55 @@ All four depend on registration and first-year EQA booking (QUESTIONS_FOR_CHERYL
 - **Only ONE adjacent-level unit can ever contribute** to an Extended Award or Certificate:
   the smallest unit is 2 credits and the adjacent cap is 3, so two adjacent units (2 + 2 = 4)
   always break the cap. Route B above is already the maximal adjacent case (one 3-credit unit).
+
+
+## PEQ-E3 addendum (2026-08-20) — the cohort re-anchor, and what it does to these tables
+
+**Cohort fact, stated by the owner 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3).
+Only 2–4 are at Level 1. Nobody is at Level 2.**
+
+Everything above models the estate as a Level 1 programme. None of its arithmetic is
+withdrawn — it was verified against spec §5.1 p10 and still holds. What changes is which
+route is **primary**. The L1 analysis becomes the *stretch* case for a handful of pupils;
+the E3 route below is the one most of the room is on.
+
+### The E3-primary route
+
+| target | Ofqual no. | credits | min at level | reachable from the six E3 units |
+|---|---|---:|---:|---|
+| **Award (E3)** | 610/5901/8 | 4 | 4, all at level | Yes — e.g. ComSkE3 3 + DecMkSkE3 2 = 5 |
+| **Extended Award (E3)** | 610/5903/1 | 9 | 6 | Yes — e.g. ComSkE3 3 + WellbLeE3 3 + DecMkSkE3 2 + LSkE3 2 = 10 |
+| **Certificate (E3)** | 610/5902/X | 14 | 11 | Yes — **all six E3 units = exactly 14** |
+
+**The E3 Certificate is the cleanest fit in the whole suite**, and it is worth saying why
+rather than just asserting it. All six E3 units total **exactly 14** credits — exactly the
+Certificate size — and every one of those credits sits **at level**, so the 11-at-level
+minimum clears with 3 to spare and **no adjacent-credit accounting is needed at all**. The
+L1 route cannot say that: six L1 units total 15 against a 14-credit Certificate, so an L1
+Certificate always involves deciding which credit is surplus, and the GROW route needs
+either new Wellbeing teaching (Route A) or the adjacent allowance (Route B).
+
+### The L1 route, re-labelled
+
+The **GROW (Level 1)** and **LAUNCH (Level 1)** sections above are **re-labelled, not
+withdrawn**: they are the route for the **2–4 pupils working above Entry 3**, not the year
+target for the cohort. Route A and Route B remain the two ways those pupils reach an L1
+Certificate, and the barred-combination reasoning is unchanged.
+
+**Which route a pupil is on is a per-pupil decision, and it is now recorded on paper.** The
+witness statement in every PEQ deck carries a `Level this evidence banks at — tick ONE:
+☐ Entry 3 ☐ Level 1` row beside the assessor signature (PEQ-E3 E4), because barred
+combinations mean a learner's evidence for a skill counts at one level only.
+
+### TmWk — SMART is introduced but NOT assessed at Entry 3
+
+`TmWkSkE3` introduces SMART targets but does **not** assess them: the SMART minimum (≥2
+SMART goals) appears only at **TmWkSk1** (1.3.1a). **No task may gate completion of the E3
+team-working unit on producing SMART targets.** (Master prompt §2c; `SPEC_FACTS.md` §15,
+which lists ≥2 advantages, ≥2 challenges and ≥3 features for TmWkSkE3 and no SMART line.)
+
+### Level 2 is out of the model
+
+Nobody is at Level 2, so the L2 rows in the tables above are **reference only**. No L2
+registration is claimed anywhere in the estate, and the PEQ decks no longer use L2 as
+stretch language (PEQ-E3 E1).
