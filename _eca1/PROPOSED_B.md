@@ -51,6 +51,4 @@ measured 2026-08-20: 0 occurrences estate-wide), so that half of this item is cl
 The residual is only that the provenance line still points at the pre-v3 source lesson.
 
 ## 7. Slideshows ART suite (24 decks) — not in PART B
-`{Build,Grow,Launch}/Slideshows/*_ART_*` remain untagged (outside the ordered
-universe, which names Art = Art_Teesside). If they are still teaching surfaces,
-the v5 patcher covers them unchanged — one command in a follow-up.
+`Slideshows/*_ART_*` (24 decks) — CLOSED by owner ruling 2026-08-19 (SCA-1 CLOSE v2, 3e; recorded in `_eca1/DECISIONS.md`): the superseded 2025-26 legacy art set is not to be patched, and no follow-up is offered.
