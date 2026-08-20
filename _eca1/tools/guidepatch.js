@@ -68,6 +68,12 @@ function balancedEnd(s, start) {
 }
 const inMask = (ranges, i) => ranges.some(([a, b]) => i >= a && i < b);
 
+// Is offset i on the deck's dedicated Lundy Loop slide? (nearest preceding data-title)
+function onLundySlide(s, i) {
+  const t = (s.slice(0, i).match(/data-title="([^"]*)"(?![\s\S]*data-title=)/) || [])[1] || '';
+  return /Lundy/i.test(t);
+}
+
 function addAttr(openTag, role) {
   if (openTag.includes('data-mbm-guide')) return openTag;
   return openTag.replace(/^(<\w+)/, `$1 data-mbm-guide="${role}"`);
@@ -124,19 +130,14 @@ function patch(f, dry) {
     s = tagAll(s, /<div class="retr-declare">/g, null, stats, 'route', 0,
       t => t.replace('<div ', '<div data-mbm-guide="route" '));
   } else {
-    // 1. Tag lundy boxes (v5/hum chassis) — screen only; must sit on the Lundy Loop slide.
-    const masks = maskedRanges(s);
-    const out = [];
-    const re = /<div\b[^>]*class="lundy-box"[^>]*>/g;
-    let m;
-    while ((m = re.exec(s)) !== null) {
-      if (inMask(masks, m.index)) continue;
-      const before = s.slice(0, m.index);
-      const slideTitle = (before.match(/data-title="([^"]*)"(?![\s\S]*data-title=)/) || [])[1] || '';
-      if (!/Lundy/i.test(slideTitle)) { stats.ambers.push(`lundy-box outside Lundy slide (${slideTitle})`); continue; }
-      out.push([m.index, m[0], addAttr(m[0], 'lundy')]);
-    }
-    for (const [i, oldT, newT] of out.reverse()) { if (oldT !== newT) { s = s.slice(0, i) + newT + s.slice(i + oldT.length); stats.lundy++; } }
+    // 1. Lundy boxes on v5-asdan / v5-dt / v5-art / hum-v4: NOT TAGGED.
+    //    Row B-2 (PROP-1, ruled 2026-08-20). On these four chassis all four
+    //    SPACE/VOICE/AUDIENCE/INFLUENCE boxes sit on ONE dedicated Lundy Loop slide, so
+    //    hiding them by default left that slide rendering as a heading and nothing else
+    //    on 140 of 175 decks — a quiet slide in front of a class, not decluttered guidance.
+    //    The science chassis is different and is left alone: its .lundy-mini strips are
+    //    per-slide clutter beside other content, and the sci-v3 branch above still tags them.
+    stats.ambers.push('lundy-box tagging skipped on this chassis (B-2)');
   }
 
   // 2. Chassis-specific staff/route tagging (v5-art and hum-v4 get the full set;
@@ -161,6 +162,9 @@ function patch(f, dry) {
       const inner = s.slice(innerStart, end);
       const label = (inner.match(/^\s*<(?:strong|b)>([^<]{0,45})/) || [])[1];
       if (!label || !labels.some(L => label.startsWith(L))) continue;
+      // B-2: the "Why:" li-box on the Lundy Loop slide is that slide's rationale, not
+      // staff guidance. Tagging it hid the only remaining text once the boxes were hidden.
+      if (label.startsWith('Why:') && onLundySlide(s, start)) continue;
       const counter = inner.match(/<span[^>]*>[^<]*<span[^>]*id="(?:pres-num|match-score)"[^>]*>/)
         || inner.match(/<span[^>]*id="(?:pres-num|match-score)"[^>]*>/);
       if (counter) {

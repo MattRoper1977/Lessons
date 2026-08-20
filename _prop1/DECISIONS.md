@@ -311,3 +311,39 @@ exactly as the row directs.
 sentinel strings (`ll-g:loop-mark` and `What I said, and what it changed`). Moving a block
 inside a file changes neither which files contain a string nor how many — measured after:
 **50 / 123, set-identical to base.**
+
+---
+
+## B-2 · the dedicated Lundy slide, measured before and after
+
+Row B-2's own text calls §2's "one-line patcher change" an understatement, and it is:
+guidepatch is idempotent and will not remove a tag already present, so the patcher edit
+alone changes nothing on a deck already patched. The operation is **edit → strip →
+re-patch**, and it re-opens the whole PART B gate set.
+
+**Before (pristine `e63f047`), one deck per chassis:** `0/4` Lundy boxes visible by
+default, and the co-located "Why: Article 12" box hidden as well — so the dedicated Lundy
+Loop slide rendered as its heading and nothing else, in front of a class.
+
+**After, all 140 decks:** `4/4` boxes visible, Why-box visible, on every one.
+
+The science chassis is deliberately untouched: its `.lundy-mini` strips are per-slide
+clutter beside other content, not a whole slide, and the `sci-v3` branch still tags them
+(280 `data-mbm-guide="lundy"` occurrences in `Science_Teesside/`, unchanged from the anchor).
+
+### The 85 decks the patcher could not reach
+The "Why: Article 12" box carries **PH-3's roleless `data-mbm-guide="1"`** on 85 of the 140
+and **ECA-1's `="staff"`** on the other 55. `guidestrip.js` deliberately preserves PH-3's
+install, and `guidepatch.js` will not re-add what it did not add — so strip-and-re-patch
+fixes the 55 and cannot touch the 85. B-2 names those 85 explicitly, so the attribute was
+removed directly on exactly that box in exactly those decks. Guard asserted per file:
+one tag removed, and **never a deck reduced to zero** PH-3 tags (fewest remaining: 8), so
+`guidestrip`'s `="1"` test still behaves. Estate-wide 923 → 838.
+
+### The full PART B gate set, re-proven over 140 decks
+- **default-hidden + G-toggle + persistence + print-identical**: `guideassert` all pass,
+  compared against a print snapshot recorded *before* the strip.
+- **idempotence**: re-running `guidepatch` reports `changed:true` on 0 of 140 and moves 0 bytes.
+- **reversibility**: `strip` → 0 ECA-1 role attributes remain; `re-patch` → **0 of 140
+  decks differ from the pre-strip snapshot**, byte for byte.
+- **sentinels**: 50 / 123, set-identical.
