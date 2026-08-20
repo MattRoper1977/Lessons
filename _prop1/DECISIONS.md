@@ -248,3 +248,38 @@ Measured across the 154 HTML files this branch changes: `A-P109` (m1/m2/m3 -> m,
 -> b), `A-P110` (u1/u2/u3 -> u, n1/n2/n3 -> n) and `SCA-P7` (the `data-h` hint). Each is
 its row's literal instruction; the first two are the deliberate collapse that fixes a
 control where two thirds of correct taps were rejected, and both now prove 6/6 and 5/6.
+
+---
+
+## A-48 · proven by rendered height, and one pre-existing defect it cannot reach
+
+`_prop1/tools/printcheck.js` stubs `window.print`, calls `printPack(level)` for each tier
+under `emulateMedia('print')`, and reads both the `.visible` class **and the rendered
+height** of `#print-lundy` / `#print-feedback`. Height matters: a section listed in the id
+array but hidden by CSS passes a grep and fails here.
+
+**Before/after on the same deck** (`BUILD_ART_W1_The_Local_Canvas.html`):
+
+| | lundy | feedback |
+|---|---|---|
+| at `e63f047` | **HIDDEN, h=0** | visible, h=694 |
+| after A-48 | **visible, h=270** | visible, h=694 |
+
+That is the defect and the fix, measured rather than asserted. **103 of the 110 decks pass
+at all three tiers.**
+
+### The seven that do not — and why it is not this pass's doing
+`Art_Teesside/Build/BUILD_ART_A2_W1..W7` fail, and they fail **identically at the rollback
+anchor**, verified by running the same instrument against a pristine `e63f047` worktree.
+
+The cause is not Lundy. In those seven decks the **entire** `#print-area` renders at height
+0 — every section, `print-ko` through `print-feedback`. The ancestor chain shows why:
+`#print-area` sits inside a `<div class="slide-container">` whose computed `display` under
+print media is `none`. In every working deck `#print-area`'s parent is `<body>`.
+
+**So the whole printed pack for those seven Autumn 2 Art decks produces nothing, and has
+not produced anything for as long as the anchor reaches.** It is the same defect class as
+A-48 itself — a dead print path — an order of magnitude larger, and **no row in the table
+names it**. §3 keeps it out of scope, so it is reported, not fixed. A-48's benefit reaches
+103 decks; on those seven it is correct in the markup and still invisible on paper until
+the container nesting is fixed, which is a structural change no row authorises.
