@@ -169,6 +169,14 @@ def build_sow():
 <table><tr><th>Lane</th><th>Qualification</th><th>Credits required</th><th>Credits banked</th><th>Qual GLH</th><th>Constituent unit GLH banked</th><th>By week</th></tr>
 {''.join(mrows)}</table>
 <p class="bank"><b>The L1 14-of-15 choice, named.</b> {esc(LED["l1_cert_choice"])}</p>
+<h2>Centre orchestration &mdash; decided, not deferred</h2>
+<div class="note"><b>Entry is settled.</b> {esc(LED["orchestration"]["entry_settled"])} Recorded {esc(LED["orchestration"]["decided"])}.
+<ul>
+<li><b>Level&nbsp;1 lane:</b> {esc(LED["orchestration"]["l1_lane"])}.</li>
+<li><b>Barred combinations:</b> {esc(LED["orchestration"]["barred_combinations"])}</li>
+<li><b>The LAUNCH room:</b> {esc(LED["orchestration"]["launch_room"])}</li>
+<li><b>Lane targets:</b> {esc(LED["orchestration"]["lane_targets"])}</li>
+</ul></div>
 <p class="bank"><b>Thinking vs Critical thinking — the lane split.</b> The E3 and L1 lanes plan <b>ThSkE3 / ThSk1</b> (Thinking skills); only the L2 lane plans <b>CrThSk2</b> (Critical thinking skills) — the unit changes name, code and demand at Level 2 (spec pp11&ndash;13). The shared summer investigation runs at three demands: E3/L1 pupils work their Thinking plan; the L2 pupil assesses sources for credibility, accuracy and bias across &ge;2 sources, primary vs secondary (the blind taste test is the primary source).</p>""")
 
     # block spine

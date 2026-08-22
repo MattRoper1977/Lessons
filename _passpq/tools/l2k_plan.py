@@ -282,14 +282,36 @@ def main():
         "com_activity": COM_ACTIVITY,
         "lanes": lanes, "sensitivity": sens,
         "l1_cert_choice": (
-            "L1 Certificate = 14 credits while the six L1 units sum to 15. DEFAULT: teach and "
-            "evidence all six L1 units (15 credits - spec s5.1 permits exceeding the 14 minimum; "
-            "all credits at level). Where a claim of exactly 14 is preferred, or a pupil is "
-            "stretched by L1 Thinking (the largest E3-to-L1 step: assumptions + primary/secondary "
-            "sources), the NAMED default combination is the five other L1 units (12 cr at L1) + "
-            "ThSkE3 (2 cr adjacent) = 14 cr, min-11-at-level and max-3-below both satisfied - the "
-            "only exact-14 arithmetic. Confirm the preferred claim shape with ASDAN at "
-            "names-confirmation (QUESTIONS_FOR_CHERYL)."),
+            "DECIDED (centre orchestration, PEQ-YEAR-1 s3). The L1 Certificate is 14 credits "
+            "while the six L1 units sum to 15. THE CENTRE TEACHES AND EVIDENCES ALL SIX L1 "
+            "UNITS - 15 credits, every one at level; spec s5.1 permits exceeding the 14 "
+            "minimum. This is a choice already made, not an open question. The fallback, if a "
+            "pupil is stretched by L1 Thinking (the largest E3-to-L1 step: assumptions + "
+            "primary/secondary sources) or an exact-14 claim is later preferred, is the five "
+            "other L1 units (12 cr at L1) + ThSkE3 (2 cr adjacent) = 14 - the only exact-14 "
+            "arithmetic, with min-11-at-level and max-3-below both satisfied. Which shape is "
+            "CLAIMED is stated to ASDAN at names-confirmation, ~4 weeks before EQA sampling; "
+            "that is a normal step in the EQA cycle, not a decision still to be taken."),
+        "orchestration": {
+            "decided": "2026-08-21 (owner), recorded PEQ-YEAR-1 s3",
+            "entry_settled": ("Learners are registered and units are entered. The centre "
+                              "orchestrates units, levels and order freely; no third-party "
+                              "sign-off is outstanding for entry."),
+            "l1_lane": "all six L1 units, 15 credits, all at level (s5.1 permits exceeding 14)",
+            "barred_combinations": ("Each pupil banks each of the six skills at ONE level only "
+                                    "(spec s6.5); the credit from the highest-level unit counts. "
+                                    "The witness sheet's Level tick is the record."),
+            "launch_room": ("The LAUNCH room runs the Entry 3, Level 1 and Level 2 routes "
+                            "CONCURRENTLY - one mixed session, three demands, three levels of "
+                            "evidence. The L2 route is staff-directed and appears in-deck behind "
+                            "the Guidance toggle."),
+            "lane_targets": ("NOT set in this pass. The target qualification per lane follows "
+                             "from the weekly period count, which s1 could not derive from repo "
+                             "evidence (see DERIVATION_YEAR1.md). At five 40-minute periods a "
+                             "week the E3 and L1 lanes land the Extended Award; at six, all "
+                             "three lanes land the Certificate. Both are honest; the timetable "
+                             "decides which."),
+        },
     }
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
     with open(OUT_JSON, "w") as f:

@@ -221,3 +221,37 @@ twin `_passpq/inputs/PEQ_L2K_YearPlan_2026-27.xlsx`), proven by
 `_passpq/tools/l2k_plan.py`, with the 2/3/3.5/4 h-per-week sensitivity table. At the
 default 3.5 h/wk × 38 weeks = 133 physical GLH, the E3 Certificate (unit sum 140) closes
 only via 7 declared co-delivered hours — stated plainly on the SoW page.
+
+## PEQ-YEAR-1 addendum (2026-08-21) — the centre's orchestration, recorded as decided fact
+
+**Owner fact, 2026-08-21: learners are registered and their units are entered.** No
+third-party sign-off is outstanding for entry, and the centre orchestrates units, levels and
+order freely. Everything in this section is therefore written as a **decision already taken**,
+not a question still open. Where an earlier section of this file frames any of it as pending,
+this addendum supersedes it.
+
+| Ruling | Decided |
+|---|---|
+| **Level 1 lane** | **All six L1 units — 15 credits, every one at level.** The L1 Certificate threshold is 14; spec §5.1 permits exceeding it. The exact-14 fallback (five L1 units, 12 cr at level, + `ThSkE3` 2 cr adjacent) stays named as the only arithmetic that lands exactly 14, for a pupil stretched by L1 Thinking — it is a fallback, not an open alternative. |
+| **Barred combinations** | Each pupil banks each of the six skills at **one level only** (§6.5); the credit from the highest-level unit counts. The witness sheet's `☐ Entry 3 ☐ Level 1 ☐ Level 2` tick is the record. |
+| **The LAUNCH room** | Runs the **Entry 3, Level 1 and Level 2 routes concurrently** — one mixed session, three demands, three levels of evidence. The L2 route is staff-directed and sits in-deck behind the **ⓘ Guidance** toggle. |
+| **What is still genuinely open** | Achievement, and only achievement. A pupil has not achieved a unit until it is assessed, IQA'd and EQA-sampled (§§10–12). The first-year EQA sampling activity must still be booked, and names confirmed ≈4 weeks before it. Which L1 claim shape is *claimed* is stated at that names-confirmation — a normal step in the EQA cycle, not a decision still to be taken. |
+
+### Lane targets — deliberately not set here
+
+The target qualification for each lane follows from **how many periods a week the class is
+timetabled**, and pass PEQ-YEAR-1 §1 could not derive that from repo evidence — it stopped
+rather than guess. See [`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
+
+The choice, stated honestly, is:
+
+| Weekly periods | h/wk | Entry 3 | Level 1 | Level 2 |
+|---|---|---|---|---|
+| **5** × 40 min | 3.33 | Extended Award | Extended Award | **Certificate** |
+| **6** × 40 min | 4.00 | **Certificate** | **Certificate** | **Certificate** |
+
+Both rows are honest. Six periods also makes the **7 hours of declared co-delivery on the E3
+lane unnecessary**, and it should be withdrawn if that is what the timetable gives — the
+honest number, not the convenient one. The 3.5 h/wk the plan is currently worked at is
+**5.25 periods**, which is not a whole number of the school's real periods and should not be
+treated as a target.
