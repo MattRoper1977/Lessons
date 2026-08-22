@@ -272,3 +272,5 @@ https://madebymatt.uk, so served-byte identity cannot be proven from there. Run 
 and read the log."* That workflow is `workflow_dispatch` only. **To close this limb, dispatch
 `glv3-production-byte-check` from the Actions tab** — it compares a fixed sample of served
 files against the checkout and prints PASS/FAIL per file.
+
+**CLOSED 2026-08-22 (PEQ-CLOSE):** `glv3-production-byte-check` run `32564676318`, dispatched on merged `971b0935`, verdict verbatim "RESULT: ALL IDENTICAL — production serves this checkout byte-exact for the sample" — 10/10 PASS including `resources.json` at `2bb276fe2a3f`, the P6 wording, served live.
