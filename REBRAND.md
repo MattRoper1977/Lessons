@@ -70,11 +70,50 @@ wordmark, but the strip is a separate estate convention with occurrences to matc
 cannot be rebuilt from the repo plus a recorded hash is not reproducible:
 
 ```
-logo  SHA-256  b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04
-      225x225 PNG, the P mark + "Progress Schools" wordmark lockup
+master 1  SHA-256  b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04
+          225x225 PNG, the P mark + "Progress Schools" wordmark lockup
+          canonical - prefer this one if it is the file to hand
+
+master 2  SHA-256  b4d75c74b428600715bdbc91f210984f9b4b9c35685d3a207372b41fa426cb92
+          447x447 JPEG, 9,099 B, owner-supplied 2026-08-22
+          OPAQUE WHITE BACKGROUND, NO ALPHA - every placement must therefore sit
+          on a white chip, including inside dark headers
 ```
 
-The builder asserts this hash before it uses the file. **Absent `--logo` is a hard stop** —
+**The derived masters** (`tools/logo_master.py`, resize-only, recorded so the pack is
+reproducible from the repo plus a hash). These are from master 2:
+
+```
+lockup  367x129  palette 32   9,446 B
+        SHA-256  0af2830acd0357277b855fab299553cbbd9c0504245ee715b37ebbd24aaa97b8
+mark    113x129  palette 256  6,576 B
+        SHA-256  24c155f2852ac0f4c5a7f237add4d9ea1c011da934bc0a1fb534c5e1cf8d2e77
+```
+
+**Two things about master 2 that are not cosmetic, and each one failed silently.**
+`load_logo()` was written for the PNG:
+
+1. It trimmed and split on *exact* white `(255,255,255)`. JPEG ringing fills the gap
+   between the P mark and the wordmark with 254s and 253s, so the splitter found no
+   blank run, returned `split == full width`, and every mark-only placement silently
+   received the **entire lockup**. It now trims and splits on a tolerance and **hard
+   stops** if no run is found, rather than shipping the lockup as a mark.
+2. It palettised the noisy JPEG straight to 16 colours - the only palette that fitted
+   the 10 KB budget at full size - which moved mean per-channel colour by **4.24 /
+   3.26 / 4.87**. On a brand mark. It now resizes first and snaps the near-white
+   *field* to pure white (a JPEG-artefact removal, asserted not to move any ink
+   pixel), which fits the budget at palette 32 and 256.
+
+**The colour-shift gate is on the ink, not the mean.** A whole-image mean is dominated
+by the white field - about 35% of the lockup - so "mean is about zero" survives a brand
+colour being moved a long way. The gate is on the two measured brand inks, navy
+`(41,43,91)` and magenta `(229,3,128)`, tolerance 6 per channel. Measured: both
+reproduce to within **1/255** on the lockup and **0** on the mark.
+`tools/logo_master.py --plant-recolour` rotates the ink hues and the gate goes red at
+deltas of 41 and 135; an unrecognised binary hard stops on its hash.
+
+The builder asserts the supplied file is one of the two recorded masters before it
+uses it. **Absent `--logo` is a hard stop** —
 there is no fallback to the typographic mark. A pack built without the real lockup is not a
 Progress Schools pack, and silently producing one is how a placeholder ends up in a school.
 

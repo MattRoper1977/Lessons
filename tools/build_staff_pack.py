@@ -27,7 +27,11 @@ import re, os, shutil, zipfile, html, sys
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 
-REPO = Path(os.environ.get("PACK_REPO", "/home/claude/repo"))
+# The repository this tool lives in, unless PACK_REPO says otherwise. It used to
+# default to an absolute path from the machine it was written on, so on any other
+# checkout in_scope() matched nothing and the build reported "scope: 0 files in"
+# before failing much later, on a mkdir, with a traceback that named neither cause.
+REPO = Path(os.environ.get("PACK_REPO") or Path(__file__).resolve().parent.parent)
 OUT  = Path(os.environ.get("PACK_OUT", "/home/claude/pack"))
 STRIP = "PROGRESS SCHOOLS · TEES VALLEY"
 
@@ -68,6 +72,11 @@ INCLUDE_FILES = [
     # are in INCLUDE_DIRS, but in_scope() globs *.html, so their non-HTML assets were
     # never carried. Same silent failure: the loader points at nothing, offline and on
     # OneDrive, with no error a teacher would see.
+    # PEQ-YEAR-3 §9.3: the cooking handover ships as BOTH the markdown and the
+    # HTML - the .md is the copy the colleague reads in an editor, the .html is the
+    # one that prints. in_scope() globs *.html only, so the markdown half of a pair
+    # the brief names explicitly was silently absent from the pack.
+    "GROW_ASDAN/PEQ_L2_Kitchen/COOKING_HANDOVER.md",
     "GROW_ASDAN/visual-upgrade.css",
     "GROW_ASDAN/visual-upgrade.js",
     "LAUNCH_ASDAN/visual-upgrade.css",
@@ -102,6 +111,12 @@ EXCLUDE_RE = re.compile(
 )
 
 def in_scope():
+    """In-scope repo-relative paths, and the ones deliberately excluded.
+
+    An empty result is always a misconfiguration - a wrong REPO, a renamed
+    directory - and never a legitimate build, so it stops here rather than
+    surfacing thousands of lines later as a missing-directory traceback.
+    """
     seen = []
     for d in INCLUDE_DIRS:
         for p in sorted((REPO / d).rglob("*.html")):
@@ -116,6 +131,10 @@ def in_scope():
     out, drop = [], []
     for r in seen:
         (drop if EXCLUDE_RE.search(str(r)) else out).append(r)
+    assert out, (
+        f"HARD STOP: nothing is in scope under REPO={REPO}.\n"
+        "  Either PACK_REPO points at the wrong tree or the include lists are stale.\n"
+        "  A pack assembled from an empty scope is an empty pack.")
     return sorted(set(out)), sorted(set(drop))
 
 # ---------------------------------------------------------------- rebrand
@@ -410,6 +429,17 @@ LAUNCH_SUBS = {
 HONESTY_LINE = ""
 LOGO_URI = [None, None]   # filled by build_mirror, read by the index writer
 LOGO_HTML = [None]        # the rendered lockup, reused by generated pages
+# Two recorded masters. The second was supplied by the owner on 2026-08-22 and is
+# a 447x447 JPEG with an OPAQUE WHITE background and no alpha, where the first is a
+# 225x225 PNG. That difference is not cosmetic: see logo_master.py for the two ways
+# the PNG-era code silently mishandled it. Every placement of the JPEG-derived mark
+# must therefore sit on a white chip, including inside dark headers.
+LOGO_MASTERS = {
+    "b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04":
+        "225x225 PNG - canonical",
+    "b4d75c74b428600715bdbc91f210984f9b4b9c35685d3a207372b41fa426cb92":
+        "447x447 JPEG, 9,099 B - owner-supplied 2026-08-22, opaque white, no alpha",
+}
 LOGO_SHA = "b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04"
 RENAMES = []          # (repo path, dest path, why) — reported, never silent
 
@@ -559,50 +589,33 @@ CREDIT = "by madebymatt.uk"      # Matt's explicit instruction; the ONE whitelis
                                  # Made-by-Matt string. Anything else is residue.
 
 def load_logo(path):
-    """Trim the supplied PNG, split the lockup from the P mark, return data URIs.
+    """Return ((lockup_uri, size), (mark_uri, size)) from a recorded master.
 
-    The binary stays out of git, so its SHA is recorded here and in REBRAND.md:
-    without it the pack is not reproducible from the repo alone."""
-    import hashlib
-    from PIL import Image, ImageChops
-    got = hashlib.sha256(Path(path).read_bytes()).hexdigest()
-    assert got == LOGO_SHA, (
-        f"logo SHA mismatch\n  expected {LOGO_SHA}\n  got      {got}\n"
-        "Refusing to build: this is not the supplied Progress Schools lockup.")
-    im = Image.open(path).convert("RGBA")
-    flat = Image.new("RGB", im.size, (255, 255, 255))
-    flat.paste(im, mask=im.split()[3])
-    bbox = ImageChops.difference(flat, Image.new("RGB", im.size, (255, 255, 255))).getbbox()
-    lock = flat.crop(bbox)
-    # the P mark is everything left of the first wide blank column run
-    w, h = lock.size
-    px = lock.load()
-    ink = [any(px[x, y][:3] != (255, 255, 255) for y in range(h)) for x in range(w)]
-    split = w
-    run = None
-    for x, v in enumerate(ink):
-        if not v:
-            run = x if run is None else run
-        else:
-            if run is not None and x - run >= 4:
-                split = run
-                break
-            run = None
-    mark = lock.crop((0, 0, split, h))
-    mb = ImageChops.difference(mark, Image.new("RGB", mark.size, (255, 255, 255))).getbbox()
-    mark = mark.crop(mb)
+    The derivation and its colour-shift gate live in tools/logo_master.py, which
+    this delegates to rather than duplicating. That tool exists because the
+    owner-supplied JPEG master broke two assumptions this function used to make
+    about the canonical PNG - it trimmed and split on exact white, and it
+    palettised the JPEG's ringing down to 16 colours, moving brand colour by more
+    than 4 per channel. Neither failed loudly. Read its docstring before changing
+    anything here.
 
-    def uri(img):
-        best = None
-        for colors in (16, 32, 64, 128):
-            p = img.convert("P", palette=Image.ADAPTIVE, colors=colors)
-            buf = io.BytesIO(); p.save(buf, format="PNG", optimize=True)
-            d = buf.getvalue()
-            if best is None or len(d) <= 10240:
-                best = d
-        assert len(best) <= 10240, f"logo asset {len(best)}b exceeds the 10 KB budget"
-        return "data:image/png;base64," + base64.b64encode(best).decode(), img.size
-    return uri(lock), uri(mark)
+    The binary stays out of git. Both master SHAs and the derived SHAs are
+    recorded in REBRAND.md, because a pack that cannot be rebuilt from the repo
+    plus a recorded hash is not reproducible.
+    """
+    import base64 as _b64
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import logo_master
+
+    res = logo_master.derive(path)
+    out = []
+    for name in ("lockup", "mark"):
+        data, sha, size, nbytes, colors, ok = res[name]
+        assert ok, f"HARD STOP: {name} failed the colour-shift gate - see logo_master.py"
+        assert nbytes <= logo_master.BUDGET, (
+            f"logo asset {name} is {nbytes}b, over the {logo_master.BUDGET}b budget")
+        out.append(("data:image/png;base64," + _b64.b64encode(data).decode(), size))
+    return tuple(out)
 
 
 def logo_html(lock_uri, lock_size):
