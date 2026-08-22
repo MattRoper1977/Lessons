@@ -111,6 +111,23 @@ checks = {
  "QA headroom declared, not claimed": "never claimed against a unit",
 }
 missing = [k for k, v in checks.items() if v not in sow]
+# PEQ-YEAR-2 §4: G5 read only the year map, so the handover and the ledger could
+# drift from it unwatched -- and did (the handover's hours section carried no
+# measured-vs-ruled split at all, and the generated HTML had no hours section
+# while the markdown promised "same content"). Gate all three.
+hand_md = open(os.path.join(KIT, "COOKING_HANDOVER.md"), encoding="utf-8").read()
+hand_html = open(os.path.join(KIT, "Cooking_Handover.html"), encoding="utf-8").read()
+for label, text in (("handover .md", hand_md), ("handover .html", hand_html)):
+    for k, v in {"measured/ruled split": "measured band + owner ruling",
+                 "the ruling dated": "22 August 2026",
+                 "GROW/LAUNCH not establishable": "could not be established"}.items():
+        if v not in text:
+            missing.append(f"{label}: {k}")
+for k, v in {"lane provenance on the year map": "GROW and LAUNCH are NOT establishable",
+             "one-rate assumption named": "assumption, not a measurement",
+             "calendar evidence split": "Spring and summer have NO term dates"}.items():
+    if v not in sow:
+        missing.append(k)
 mtx = open(os.path.join(KIT, "Criteria_Coverage_Matrix.html"), encoding="utf-8").read()
 if "174 criteria mapped, 0 gaps" not in mtx: missing.append("matrix zero-gap line")
 staff = open(os.path.join(KIT, "Staff_Kitchen_Guide.html"), encoding="utf-8").read()
