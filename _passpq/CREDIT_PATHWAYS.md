@@ -246,13 +246,21 @@ periods = 4.667 supervised hours a week = 177.3 GLH a year per lane** — the to
 1–7 period band pass PEQ-YEAR-1 §1 measured. See
 [`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
 
-**Measured in BUILD only.** The seven-period week was established on BUILD's planners.
-**GROW and LAUNCH are not establishable** — GROW's ASDAN row is empty in all eight built weeks;
-LAUNCH's eight planners disagree on their own row structure (a populated PEQ row in three of
-eight, absent from four). The map runs all three *level* lanes at one rate, which is correct for
-one mixed class in one kitchen, but is an **assumption** if read as a statement about the GROW or
-LAUNCH *rooms*. **Outstanding for Matt: GROW/LAUNCH PEQ slots — confirm from the September
-timetable.**
+**MEASURED FROM THE REAL TIMETABLE (PEQ-YEAR-3).** The owner supplied the 2026-27 timetable,
+which supersedes the planner-derived band, the owner slot-ruling that picked seven within it, and
+the "GROW/LAUNCH not establishable" verdict — **all three are retired**, and the YEAR-2 question
+*"GROW/LAUNCH PEQ slots — confirm from the September timetable"* is **CLOSED BY EVIDENCE**.
+
+| room | (a) ASDAN-labelled | (a) h/wk | (a)+(b) slots | (a)+(b) h/wk | GLH/yr |
+|---|---:|---:|---:|---:|---:|
+| **Build** | 0 | 0.0 | 8 | **5.3333** | 202.67 |
+| **Grow** | 2 | 1.3333 | 8 | **5.3333** | 202.67 |
+| **Launch** | 4 | 2.6667 | 8 | **5.3333** | 202.67 |
+
+No lane inherits another's rate: the three are equal on (a)+(b) because each independently has
+eight carryable slots, not because one figure was copied across. They differ on the floor, and
+that is the number that matters — **Build has no explicitly ASDAN-labelled slot at all**. Source
+cell for every row: [`TIMETABLE_2026-27.md`](TIMETABLE_2026-27.md).
 
 **All three lanes target the full Certificate**, every milestone proven in the ledger rather
 than asserted:

@@ -5,15 +5,27 @@
 #   L2K_PLANT_XLEVEL=1  plants a cross-level minimum in a lane block   -> G4 RED
 #   (the matrix planted-gap control lives in l2k_build.py: L2K_PLANT_GAP=1)
 #
-# G1 ledger re-proven          — l2k_plan.build() asserts every sum, milestone, window
+# G1 ledger re-proven          — l2k_plan._assert_calendar() proves the block scheme covers
+#                                 the year; build() then asserts every sum, milestone, window
 # G2 pages match the ledger    — rebuild to temp, byte-diff against committed pages
 # G3 xlsx twin value-identical — rebuilt workbook's cell values == committed workbook's
 # G4 no cross-level minimum    — every lane-tagged sheet carries ONLY its lane's unit
 #                                codes and its lane's Communication activity minima
+# G6 handover pair          — every substantive .md block's content words appear in the .html
 # G5 required statements       — sensitivity table · measured deck-GLH method ·
 #                                L1 14-of-15 named · ThSk/CrTh lane split · working towards
 
-import importlib.util, json, os, re, sys, tempfile, subprocess
+import bisect as _bisect
+import importlib.util, json, os, re, shutil, sys, tempfile, subprocess
+import html as _html_mod
+
+# A gate that reads yesterday's bytecode is worse than no gate. Restoring a
+# planted l2k_plan.py within the same second as the .pyc was written left the
+# cache valid by mtime, and G1 reported the planted calendar against a clean
+# tree. Read the source, every run.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), '__pycache__'),
+              ignore_errors=True)
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 KIT = os.path.join(ROOT, "GROW_ASDAN", "PEQ_L2_Kitchen")
@@ -30,8 +42,17 @@ def load(modname, path):
     return m
 try:
     plan = load("l2k_plan", os.path.join(ROOT, "_passpq", "tools", "l2k_plan.py"))
+    # _assert_calendar() BEFORE build(). It lived only inside l2k_plan.main(), so it
+    # fired when the ledger was regenerated and nowhere else: a falsified block scheme
+    # reddened the generator but sailed through the whole gate suite, because build()
+    # asserts sums *within* whatever BLOCKS it is handed and never questions the blocks
+    # themselves. PEQ-YEAR-3 caught it by planting a 14-week autumn and watching
+    # l2k_plan.py exit 1 while l2k_gates.py stayed ALL GREEN. The pass brief requires
+    # the spring/summer assumptions to travel with an intact assertion, and "intact"
+    # has to mean load-bearing at the gate, not merely present in the file.
+    plan._assert_calendar()
     plan.build()
-    gate("G1 ledger re-proven (sums, milestones, windows)", True)
+    gate("G1 ledger re-proven (calendar, sums, milestones, windows)", True)
 except AssertionError as e:
     gate("G1 ledger re-proven", False, str(e))
 
@@ -99,18 +120,34 @@ checks = {
  "L1 14-of-15 named": "14-of-15",
  "ThSk vs CrTh split": "only the L2 lane plans <b>CrThSk2</b>",
  "working towards": "working towards",
- # PEQ-YEAR-1 §2: the "zero slack" statement was TRUE at the 3.5 h/wk owner input, where
- # the E3 six-unit ledger closed only via 7 co-delivered hours. At the derived 4.667 h/wk
- # it is FALSE - the hours are real and there are 37.3 h of declared QA headroom. Asserting
- # it now would be asserting a falsehood, so it is replaced by the three statements that
- # ARE load-bearing at the derived rate: the rate itself, the provenance split between what
- # was measured and what was ruled, and the withdrawal of the co-delivery claim.
- "derived rate stated": "seven timetabled 40-minute periods",
- "measured-vs-ruled provenance split": "may bank a guided hour to PEQ alongside their own ASDAN short course",
- "co-delivery withdrawn": "co-delivery claim is withdrawn",
+ # PEQ-YEAR-3 §2/§3: the timetable is now EVIDENCE. Every string this gate used to
+ # assert - "seven timetabled 40-minute periods", the measured-band-plus-ruling
+ # provenance, "GROW and LAUNCH are NOT establishable" - names something this pass
+ # retired. Asserting them now would assert a falsehood, which is the same failure
+ # that once left a self-contradicting sentence on this page. Replaced by what is
+ # load-bearing at the MEASURED rates.
+ "measured from the timetable": "MEASURED from the school's own 2026-27 timetable",
+ "classification rule printed": "The classification rule, printed so it can be argued with",
+ "per-room table present": "Measured, per room",
+ "no lane inherits another's rate": "not because one figure was copied onto the others",
+ "Build's zero floor stated": "Build has no explicitly ASDAN-labelled slot at all",
+ "reachability at floor and ceiling": "What each room's real hours can reach",
+ "the unreachable stated, not implied": "Build reaches nothing at all",
+ "cooking capacity stated": "cooking-labelled slot",
+ "kitchen slots named per lane": "the kitchen is a context, not a room booking",
+ "teacher attribution not assumed": "confirm who teaches the cooking slot",
+ "GROW/LAUNCH question closed by evidence": "the open question is closed by evidence",
+ "co-delivery still withdrawn": "co-delivery claim stays withdrawn",
  "QA headroom declared, not claimed": "never claimed against a unit",
 }
-missing = [k for k, v in checks.items() if v not in sow]
+# Whitespace in HTML is insignificant, and the generated prose wraps where the
+# source wraps - so a required sentence can be present and correct on the page
+# while a raw substring test misses it because a newline fell mid-phrase. Compare
+# on collapsed whitespace instead of reflowing authored prose to suit the gate.
+import re as _re
+_flat = lambda t: _re.sub(r"\s+", " ", t)
+sow_f = _flat(sow)
+missing = [k for k, v in checks.items() if _flat(v) not in sow_f]
 # PEQ-YEAR-2 §4: G5 read only the year map, so the handover and the ledger could
 # drift from it unwatched -- and did (the handover's hours section carried no
 # measured-vs-ruled split at all, and the generated HTML had no hours section
@@ -118,15 +155,16 @@ missing = [k for k, v in checks.items() if v not in sow]
 hand_md = open(os.path.join(KIT, "COOKING_HANDOVER.md"), encoding="utf-8").read()
 hand_html = open(os.path.join(KIT, "Cooking_Handover.html"), encoding="utf-8").read()
 for label, text in (("handover .md", hand_md), ("handover .html", hand_html)):
-    for k, v in {"measured/ruled split": "measured band + owner ruling",
-                 "the ruling dated": "22 August 2026",
-                 "GROW/LAUNCH not establishable": "could not be established"}.items():
-        if v not in text:
+    for k, v in {"measured from the timetable": "measured from the school's own timetable",
+                 "slot table present": "Your slots, named",
+                 "cooking slot teacher lodged": "confirm who teaches the cooking slot",
+                 "the cooking slot named": "PfA / cooking"}.items():
+        if _flat(v) not in _flat(text):
             missing.append(f"{label}: {k}")
-for k, v in {"lane provenance on the year map": "GROW and LAUNCH are NOT establishable",
-             "one-rate assumption named": "assumption, not a measurement",
+for k, v in {"source cell cited on kitchen slots": "[Build Timetable]!D11",
+             "owner-decision slots not absorbed": "owner-decision",
              "calendar evidence split": "Spring and summer have NO term dates"}.items():
-    if v not in sow:
+    if _flat(v) not in sow_f:
         missing.append(k)
 mtx = open(os.path.join(KIT, "Criteria_Coverage_Matrix.html"), encoding="utf-8").read()
 if "174 criteria mapped, 0 gaps" not in mtx: missing.append("matrix zero-gap line")
@@ -137,6 +175,138 @@ for k, v in {"safeguarding DecMk box": "Safeguarding — Decision making",
              "no-diet-framing rule": "no diet, calorie, weight or body framing"}.items():
     if v not in staff: missing.append(k)
 gate("G5 required statements present on the surfaces", not missing, "; ".join(missing))
+
+# ---------------------------------------------------------------------------
+# G6 — the handover .md and .html actually carry the same content
+#
+# COOKING_HANDOVER.md tells the colleague the HTML is the "printable copy — same
+# content". G5 checked that claim with a hand-listed set of strings, which is only
+# as good as whoever wrote the list. PEQ-YEAR-3 found a whole safeguarding
+# paragraph — the two boxes read aloud to pupils at W9 and W27, "verbatim; they
+# are not optional" — present in the .md and absent from the .html, because nobody
+# had thought to list it. A colleague printing the HTML never met it.
+#
+# So this gate is structural instead. Every substantive block of the .md must find
+# its content words in the .html. It cannot be defeated by adding prose that
+# neither file was checked for, which is exactly how the last gap happened.
+#
+# The threshold is 60% of content words, not 100%, because the two are worded for
+# different media and always will be. That is enough to catch a missing block
+# (the read-aloud paragraph scored 0%) without firing on a reworded sentence.
+#
+# The allowlist is deliberately tiny and each entry says why. A block belongs
+# there only if it is ABOUT the pairing — a pointer to the other copy — rather
+# than content the colleague needs.
+G6_STOP = set("""a an and are as at be been but by can do does for from had has have he her his
+if in into is it its may me my no not of on one or our so than that the their them then there
+these they this those to two up us was we were what when where which who will with without you
+your each every any all also only just still even own same other more most much many""".split())
+
+def _md_blocks(md):
+    """Substantive blocks: paragraphs and list items; headings, rules, fences dropped."""
+    out, buf = [], []
+    fence = False
+    for line in md.splitlines():
+        s = line.strip()
+        if s.startswith("```"):
+            fence = not fence
+            continue
+        if fence:
+            continue
+        if not s or s.startswith("#") or (len(s) > 2 and set(s) <= set("-*_ ")):
+            if buf:
+                out.append(" ".join(buf))
+                buf = []
+            continue
+        if re.match(r"^([-*+]|\d+\.)\s", s) and buf:
+            out.append(" ".join(buf))
+            buf = []
+        buf.append(s)
+    if buf:
+        out.append(" ".join(buf))
+    return out
+
+def _content_words(s):
+    s = re.sub(r"`[^`]*`", " ", s)                        # code spans: file names, cells
+    s = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", s)        # links -> their visible text
+    s = re.sub(r"&[a-z]+;|&#\d+;", " ", s)
+    s = re.sub(r"[^A-Za-z0-9]+", " ", s).lower()
+    return [w for w in s.split() if len(w) > 2 and w not in G6_STOP]
+
+def _html_tokens(h):
+    h = re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)
+    h = re.sub(r"<[^>]+>", " ", h)
+    h = _html_mod.unescape(h)
+    h = re.sub(r"[^A-Za-z0-9]+", " ", h).lower()
+    return [w for w in h.split() if len(w) > 2]
+
+def _alias(w, index):
+    """The html positions of this word, allowing for inflection.
+
+    Not a stemmer. Stemming both sides made things worse: "state" stems to itself
+    while "states" stems to "stat", so the .md's infinitive verb table read as
+    missing from an .html that says every verb. Prefix matching in both directions
+    handles state/states, assess/assesses, declare/declared and tag/tagged without
+    inventing tokens that exist on neither side. Four characters is the floor, so
+    "the" cannot cover "theme".
+    """
+    hit = list(index.get(w, ()))
+    if len(w) >= 4:
+        i = _bisect.bisect_left(index.keys_sorted, w)
+        j = i
+        while j < len(index.keys_sorted) and index.keys_sorted[j].startswith(w):
+            hit += index[index.keys_sorted[j]]
+            j += 1
+        if i > 0:
+            k = index.keys_sorted[i - 1]
+            if len(k) >= 4 and w.startswith(k):
+                hit += index[k]
+    return hit
+
+class _Index(dict):
+    def __init__(self, toks):
+        super().__init__()
+        for pos, w in enumerate(toks):
+            self.setdefault(w, []).append(pos)
+        self.keys_sorted = sorted(self)
+
+G6_ALLOW = [
+    ("Printable copy", "the .md points at the HTML; the HTML does not point at itself"),
+]
+
+# THE THRESHOLD IS MEASURED, NOT CHOSEN.
+#
+# Two candidate metrics were scored against the two real deletions this pass
+# found, plus every other block of the .md as the false-positive control:
+#
+#                                    intact   read-aloud   calendar   worst
+#                                             para gone    note gone  intact
+#   global  (word appears anywhere)   1.00       0.62         0.48      0.77
+#   window  (words appear together)   1.00       0.24         0.21      0.38
+#
+# The window metric separates too, but by a thinner margin, and it punishes an
+# .html that says the same things in a different order -- which is exactly what
+# an estate-styled printable copy is entitled to do. Global coverage separates
+# 0.62/0.48 from 0.77 with room on both sides, so 0.70 is the line, and both
+# real deletions sit well below it. Re-measure if either file is restructured;
+# do not nudge this number to make a red go away.
+G6_FLOOR = 0.70
+
+_index = _Index(_html_tokens(hand_html))
+_thin = []
+for _blk in _md_blocks(hand_md):
+    _cw = sorted(set(_content_words(_blk)))
+    if len(_cw) < 10:
+        continue
+    if any(a in _blk for a, _ in G6_ALLOW):
+        continue
+    _hit = sum(1 for w in _cw if _alias(w, _index)) / len(_cw)
+    if _hit < G6_FLOOR:
+        _gone = [w for w in _cw if not _alias(w, _index)]
+        _thin.append(f"{int(_hit * 100)}% in .html (absent: {', '.join(_gone[:6])}): "
+                     f"\u201c{_blk[:80]}\u2026\u201d")
+gate("G6 handover .md and .html carry the same content", not _thin,
+     f"{len(_thin)} .md block(s) missing from the .html — " + " | ".join(_thin[:3]))
 
 print()
 if fails:

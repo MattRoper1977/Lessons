@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # year1_derive.py — pass PEQ-YEAR-1 §1: derive the real PEQ timetable, or refuse.
 #
+# ⚠ SUPERSEDED BY PEQ-YEAR-3. The owner supplied the real 2026-27 timetable, so the
+# hours are no longer derived from planners at all: see _passpq/tools/timetable_extract.py
+# and _passpq/TIMETABLE_2026-27.md, which cite a workbook cell per row. This tool is
+# kept because it is the record of how the year was measured before that evidence
+# existed, and because its GROW/LAUNCH findings are what made the timetable worth
+# asking for. It is no longer the authority on the rate.
+#
 # The year map was built on an OWNER INPUT of 3.5 supervised hours per week
 # (l2k_plan.py WEEKLY_MIN = 210). §1 of the pass instrument requires that constant
 # to be replaced by a figure MEASURED from the estate's own timetable evidence.
@@ -215,7 +222,7 @@ def main():
     with open(OUT, "w") as f:
         json.dump(report, f, indent=1)
 
-    print("PEQ-YEAR-1 §1 — timetable derivation")
+    print("PEQ-YEAR-1 §1 — timetable derivation  [SUPERSEDED by PEQ-YEAR-3: the real\n        timetable is now evidence; see _passpq/TIMETABLE_2026-27.md]")
     print(f"  period length: {pl} min  (established={report['period_length']['established']}, "
           f"{len(all_pe)} statements, all agree)")
     sc = report["slot_count_evidence"]

@@ -1,5 +1,16 @@
 # DERIVATION_YEAR1.md — §1: the timetable, measured
 
+> ## ⚠ SUPERSEDED BY PEQ-YEAR-3 (2026-08-22)
+>
+> **The owner has since supplied the real 2026-27 timetable, and it supersedes this whole
+> document's central finding.** What follows is the record of how the year was measured *before*
+> that evidence existed — the planner-derived 1–7 period band, the owner ruling that selected
+> seven within it, and the verdict that GROW and LAUNCH were not establishable. **All three are
+> retired.** The rates are now measured per room, with a workbook cell cited per row, in
+> [`TIMETABLE_2026-27.md`](TIMETABLE_2026-27.md). This file is kept because the reasoning that
+> refused to guess is worth keeping; it is no longer the authority on the hours.
+
+
 **Pass:** PEQ-YEAR-1 · **base** `2a8f9f5` · **branch** `claude/new-session-yed8ua`
 **Instrument:** `MASTER_PROMPT_Pass_PEQYEAR1_20260821.md` (sentinels `peq-year-1-2026-08-21-TOP/BOTTOM`)
 **Reproduce:** `python3 _passpq/tools/year1_derive.py` → `_passpq/inputs/year1_timetable_evidence.json`
