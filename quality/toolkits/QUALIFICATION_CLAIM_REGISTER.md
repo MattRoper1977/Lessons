@@ -80,7 +80,7 @@ Being withdrawn: purchases and registrations to 31 December 2026, final certific
 | **May NOT claim** | "predicted UAS grade" · a UAS **level** · that UAS is a qualification |
 | Approved wording | *"Evidence status reviewed; remaining unit outcomes identified."* |
 | Status at HEAD | **Q-002, `verified`. R-SEMH06: the claim that estate surfaces misdescribe UAS is FALSE and RETIRED.** Re-measured by TK-1 at `74e6fee` and confirmed. **Not re-raised.** |
-| Open | **25 files carry `AQA UAS unit code: TBC (Cheryl)`** — `_close/OPEN_ITEMS.md` #8, Q-003 `awaiting-centre-confirmation`, commissioned as SEMH-2. Not TK-1's. |
+| Open | **60 tracked `*.html` carry `AQA UAS unit code: TBC (Cheryl)`** (re-measured PEQ-YEAR-2; 25 held byte-pristine by OPEN_ITEMS item 17, 35 `v3_40min` variants outside that set) — `_close/OPEN_ITEMS.md` #8, Q-003 `awaiting-centre-confirmation`, commissioned as SEMH-2. Not TK-1's. |
 
 ### 6 · Trinity Arts Award — Explore, Bronze, Silver
 

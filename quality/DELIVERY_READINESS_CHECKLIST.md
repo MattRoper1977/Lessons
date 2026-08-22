@@ -49,7 +49,7 @@ adding this checklist.
 
 | signal | measurement | unit / universe |
 |---|---|---|
-| Files carrying an unconfirmed UAS unit code (`TBC`) | **25** | files / tracked `*.html` |
+| Files carrying an unconfirmed UAS unit code (`TBC`) | **60** | files / tracked `*.html` — re-measured PEQ-YEAR-2. **25** are the sheets held byte-pristine by OPEN_ITEMS item 17; the other **35** are `v3_40min` variants carrying the identical hidden comment, outside that ruling's set and unrecorded until now. |
 | Art lesson files with a self-contradictory timer contract | **24** | files / `Art_Teesside/**/*.html` |
 | Art lesson files with a consistent timer contract | **7** | files / `Art_Teesside/**/*.html` (the A2 cohort) |
 | Print execution evidence at 718×1047 for Art | **0** | executions / PRs #26 and #30 — **UNVERIFIED**, not passed |
