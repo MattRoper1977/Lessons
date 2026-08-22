@@ -50,7 +50,7 @@ and **names to ASDAN roughly four weeks before sampling**. Those are centre acti
 | field | value |
 |---|---|
 | Regulated? | **Yes — regulated qualifications.** Operational 1 January 2026. E3 / L1 / L2 / L3. |
-| Registration | centre registered, suite approved — DONE. **Learner registration must precede assessment.** |
+| Registration | centre registered, suite approved, learners registered and units entered — DONE. |
 | Signatures | assessor **and** learner — live estate-wide since `bc215d1` (**R-E20/R-E21**), present on all 79 ASDAN witness surfaces |
 | QA | **IQA before EQA.** First-year centres **must book an EQA sampling activity in year one** — open, `_close/OPEN_ITEMS.md` #11 |
 | Units delivered | **ComSk1** (Communication skills, L1) — Ofqual `T/651/6412`, **3 credits**, **27 GLH** |

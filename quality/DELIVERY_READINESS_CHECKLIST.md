@@ -35,8 +35,8 @@ another browser-capable environment.
 
 **Honesty already present must not be removed.** Examples at `6aaffb7`:
 `LAUNCH_ASDAN/Scheme_of_Work.html` — *"(no registration is claimed here)"*;
-`GROW_ASDAN/GROW_ASDAN_Hub.html` — *"registration and level confirmation … sit with the
-UAS/ASDAN coordinator"*. These are the model, not the problem.
+`BUILD_ASDAN/BUILD_ASDAN_Hub.html` — *"nothing is certified until the awarding
+organisation says so"*. These are the model, not the problem.
 
 ## Known integration risk — read before implementing a badge
 

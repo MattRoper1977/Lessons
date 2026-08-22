@@ -43,7 +43,7 @@ SCIENCE - Aut 1
   W7 balanced diet (dairy -> bones links back to W2-W3) | W8 sugar investigation + consolidation
 
 THE ASDAN SPINE - WellbLeE3 Wellbeing in Learning (3 credits / 30 GLH, Entry 3)
-  W1-W2   baseline - NO assessment (cohort not yet registered)
+  W1-W2   baseline - no ASDAN criteria banked (baseline week, by design)
   W3      E3.1 unit launch      W6  E3.4 who and what supports me
   W4      E3.2 helps/barriers   W7  consolidation & gap-fill (no new criteria)
   W5      E3.3 strategies       W8  AUDIT before half term
@@ -66,8 +66,8 @@ THE ASDAN SPINE - WellbLeE3 Wellbeing in Learning (3 credits / 30 GLH, Entry 3)
   CHECK AGAINST ASDAN PEQ SPEC v1.2 (Oct 2025) BEFORE IT GOES NEAR A PORTFOLIO.
 
 DO IN SEPTEMBER
-  REGISTER THE COHORT WITH ASDAN before any assessment. No evidence counts until then.
-  Registration must be confirmed before W3 (w/c 14 Sep) - that is when E3.1 is first banked.
+  COHORT REGISTERED WITH ASDAN AND UNITS ENTERED - done. Evidence banks from W3.
+  E3.1 is first banked in W3 (w/c 14 Sep).
   BOOK FIRST-YEAR EQA SAMPLING for Jan/Feb 2027 - required even with no completers.
 
 TERRY IS COLOUR-BLIND. Any RAG or colour-coded evidence must also carry tick/cross or text.

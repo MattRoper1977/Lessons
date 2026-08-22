@@ -8,7 +8,8 @@ options. Each item names the document that would unlock it, where one is needed.
 **The dates that now matter (full detail in `DATES_2026-27.md`):** PEQ suite is current
 (review date **31/08/2027**, no registration/certification end date set). **CoPE/AoPE close
 to new registration on 31/12/2025** — so a Sept-2026 cohort must be on **PEQ**. Operational
-sequence: register learners (coordinator, **before any assessment**) → teach/assess → **IQA
+sequence: register learners (coordinator, **before any assessment**) — **DONE 2026-08-21** →
+teach/assess → **IQA
 before EQA** → **book the first-year EQA activity** (once ≥1 unit is completed, assessed,
 IQA'd) → **confirm names to ASDAN ≈4 weeks before the EQA sampling date** → EQA feedback +
 certificates within 20 working days each.
@@ -50,11 +51,11 @@ notes "Level 2 units (UAS coordinator decision)". **Decide:** register any pupil
 (CrThSk2 etc.), or keep L2 as stretch-only with no L2 registration? (§2 estate scope: "no
 L2 registration without Cheryl's decision.")
 
-### Q4 · "Registration via UAS coordinator" — is PEQ registration actually happening?
+### Q4 · "Registration via UAS coordinator" — is PEQ registration actually happening? — **ANSWERED**
+**ANSWERED 2026-08-21 — yes: learners are registered and their units are entered.**
 Every PEQ surface says "registration via UAS coordinator". **AQA UAS is a different awarding
-body from ASDAN.** PEQ registration is with **ASDAN**; AQA UAS is separate admin. **Confirm:**
-who registers PEQ candidates with ASDAN, and that it is not being conflated with the AQA UAS
-route. Learners must be **registered before assessment counts** (§2).
+body from ASDAN**, and PEQ registration is with **ASDAN**; AQA UAS stays separate admin, so
+keep the two named separately on surfaces. Registration preceded assessment, as §2 requires.
 
 ### Q5 · Does the school's ASDAN membership already carry PEQ approval?
 The spec confirms centres must hold **ASDAN Qualifications membership approval** and, **where
@@ -113,8 +114,9 @@ where they are; nothing was moved or removed on a guess.
 ### Q12 · The two descriptive-week codes still have no home.
 The single `LSk1` and single `DecMkSk1` occurrences remain inside open item 8's
 STILL-UNDETERMINED mapping (W2/W4 both lean LSk1, which would double-bank and leave DecMkSk1
-unhomed). **Not guessed.** Still needs the member-gated unit assessment booklets plus your
-per-pupil registration intent.
+unhomed). **Not guessed.** Your per-pupil registration intent is now settled (learners
+registered and units entered, 2026-08-21); this still needs the member-gated unit
+assessment booklets.
 
 
 ---

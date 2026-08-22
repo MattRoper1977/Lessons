@@ -47,7 +47,7 @@ def strand_note(key):
                 "Certificate</b> across the year (E3–L1 only in 2026/27). This Autumn 1 module completes "
                 "<b>Communication skills (ComSk1)</b>. Every lesson ends with Documentarian photo + annotation "
                 "+ witness tick; the Stretch tier is written to an L2 evidence standard (stretch language only, "
-                "no L2 registration). PEQ candidates are registered with ASDAN before assessment counts.")
+                "no L2 registration). PEQ candidates are registered with ASDAN and their units are entered.")
     return ("\U0001f3c5 Banks the named ASDAN short course + AQA UAS. Every lesson ends with Documentarian photo "
             "+ annotation + witness tick; Supported / Standard / Stretch tiers throughout.")
 
@@ -112,7 +112,7 @@ def scheme(mods):
         if k=="PEQ":
             out.append('<p class="bank">Works toward PEQ Level 1 (Award / Extended Award / Certificate; E3–L1 only in '
                        '2026/27). Autumn 1 completes Communication skills (ComSk1). Stretch tier written to an L2 evidence '
-                       'standard — stretch language only, never an L2 registration. Registered with ASDAN before assessment counts.</p>')
+                       'standard — stretch language only, never an L2 registration. Registered with ASDAN; units entered.</p>')
         else:
             out.append('<p class="bank">Banks the ASDAN short course named per week + AQA UAS. Off-site / practical work runs '
                        'under the school’s Trips &amp; Visits and health-and-safety policies.</p>')
@@ -121,9 +121,9 @@ def scheme(mods):
             rows += (f'<tr><td><b>W{L["week"]}</b></td><td><b>{E(L["title_short"])}</b></td>'
                      f'<td>{E(L["success"][0])}</td><td>{E(L["banks"])}</td></tr>')
         out.append('<table><tr><th>Wk</th><th>Lesson</th><th>Core outcome</th><th>Banks</th></tr>'+rows+'</table>')
-    out.append('<div class="note"><b>Before-teaching checklist:</b> PEQ cohort registration with ASDAN (evidence counts only '
-      'after registration; IQA before any EQA sampling) · Trips &amp; Visits booking for any off-site community or '
-      'vocational work · display space claimed for the strand boards. <b>No L2 registration in 2026/27.</b></div>')
+    out.append('<div class="note"><b>Before-teaching checklist:</b> Trips &amp; Visits booking for any off-site community or '
+      'vocational work · display space claimed for the strand boards. PEQ cohort registered with ASDAN and units entered; '
+      'IQA before any EQA sampling. <b>No L2 registration in 2026/27.</b></div>')
     out.append('<p style="text-align:center"><a href="LAUNCH_ASDAN_Hub.html" '
       f'style="color:{col};font-weight:800">&larr; Back to the LAUNCH ASDAN hub</a></p>')
     out.append('</div></body></html>')

@@ -221,3 +221,47 @@ twin `_passpq/inputs/PEQ_L2K_YearPlan_2026-27.xlsx`), proven by
 `_passpq/tools/l2k_plan.py`, with the 2/3/3.5/4 h-per-week sensitivity table. At the
 default 3.5 h/wk × 38 weeks = 133 physical GLH, the E3 Certificate (unit sum 140) closes
 only via 7 declared co-delivered hours — stated plainly on the SoW page.
+
+## PEQ-YEAR-1 addendum (2026-08-21) — the centre's orchestration, recorded as decided fact
+
+**Owner fact, 2026-08-21: learners are registered and their units are entered.** No
+third-party sign-off is outstanding for entry, and the centre orchestrates units, levels and
+order freely. Everything in this section is therefore written as a **decision already taken**,
+not a question still open. Where an earlier section of this file frames any of it as pending,
+this addendum supersedes it.
+
+| Ruling | Decided |
+|---|---|
+| **Level 1 lane** | **All six L1 units — 15 credits, every one at level.** The L1 Certificate threshold is 14; spec §5.1 permits exceeding it. The exact-14 fallback (five L1 units, 12 cr at level, + `ThSkE3` 2 cr adjacent) stays named as the only arithmetic that lands exactly 14, for a pupil stretched by L1 Thinking — it is a fallback, not an open alternative. |
+| **Barred combinations** | Each pupil banks each of the six skills at **one level only** (§6.5); the credit from the highest-level unit counts. The witness sheet's `☐ Entry 3 ☐ Level 1 ☐ Level 2` tick is the record. |
+| **The LAUNCH room** | Runs the **Entry 3, Level 1 and Level 2 routes concurrently** — one mixed session, three demands, three levels of evidence. The L2 route is staff-directed and sits in-deck behind the **ⓘ Guidance** toggle. |
+| **What is still genuinely open** | Achievement, and only achievement. A pupil has not achieved a unit until it is assessed, IQA'd and EQA-sampled (§§10–12). The first-year EQA sampling activity must still be booked, and names confirmed ≈4 weeks before it. Which L1 claim shape is *claimed* is stated at that names-confirmation — a normal step in the EQA cycle, not a decision still to be taken. |
+
+### Lane targets — set, on the derived rate
+
+**Owner ruling, 2026-08-22:** all six of BUILD's carryable slots (Careers · Vocational/D&T ·
+Living Independently · FoodWise · Community A · Community B) may bank a guided hour to PEQ
+alongside their own ASDAN short course. With the PEQ row that is **7 timetabled 40-minute
+periods = 4.667 supervised hours a week = 177.3 GLH a year per lane** — the top of the
+1–7 period band pass PEQ-YEAR-1 §1 measured. See
+[`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
+
+**All three lanes target the full Certificate**, every milestone proven in the ledger rather
+than asserted:
+
+| Lane | Award | Extended Award | Certificate | Credits |
+|---|---|---|---|---|
+| **Entry 3** | W14 | W26 | **W38** | 14 (all six E3 units, all at level) |
+| **Level 1** | W14 | W26 | **W38** | 14 claimed from the six-unit 15 |
+| **Level 2** | W14 | W26 | **W38** | 15 (all six L2 units, all at level) |
+
+**The co-delivery claim is withdrawn on all three lanes.** At the previous 3.5 h/wk owner input
+the E3 six-unit ledger (140 unit-GLH) closed only via **7 co-delivered hours**, and L1 needed 2.
+At 4.667 h/wk those hours are real supervised time and the ledgers close without the claim, so
+it drops to **zero**. What is left is **declared QA and consolidation** — 37.3 h (E3), 42.3 h
+(L1), 57.3 h (L2) — never claimed against a unit. The honest number, not the convenient one.
+
+**If the timetable changes**, the sensitivity table on the year map carries every threshold: at
+**five** periods Entry 3 and Level 1 land the **Extended Award** rather than the Certificate; at
+**six** all three Certificates hold; below **four**, the Extended Award goes too. One constant
+(`WEEKLY_MIN` in `_passpq/tools/l2k_plan.py`) regenerates the whole map.
