@@ -127,12 +127,29 @@ def build_sow():
     S = []
     S.append("""<div class="note"><b>The design in one paragraph.</b> The Kitchen Programme is a full 38-week year in which one mixed class cooks, plans, decides, investigates and evaluates its way through the ASDAN Personal Effectiveness Qualifications at three levels at once — the cohort at <b>Entry 3</b>, a small group at <b>Level 1</b>, and a directed few at <b>Level 2</b>. The kitchen is the shared vehicle (spec &sect;9 p16 explicitly permits mixed-level groups with differentiated demand): an E3 pupil, an L1 pupil and an L2 pupil cook in the same session and bank TmWkSkE3, TmWkSk1 and TmWkSk2 respectively — one level per skill per qualification (barred combinations, &sect;6.5), carried by the witness sheet's Level tick and the per-level minima on the evidence sheets. Every surface says <b>working towards</b>: registration and unit/level attribution are centre-coordinator decisions, and nothing on these pages promises a certificate. Food content is cooking skill, budget, teamwork and enjoyment — no diet, calorie, weight or body framing anywhere in this programme.</div>""")
 
+    # PEQ-YEAR-3 §2/§3: measured per-room figures, straight from the ledger
+    RM = LED["room_measured"]; RR = LED["room_reachability"]; KIT = LED["kitchen"]
+    ROOMROWS = "".join(
+        f"<tr><td><b>{r}</b></td><td class=\"num\">{RM[r]['a_slots']}</td>"
+        f"<td class=\"num\">{RR[r]['a_h_per_week']}</td>"
+        f"<td class=\"num\">{RM[r]['ab_slots']}</td>"
+        f"<td class=\"num\"><b>{RR[r]['ab_h_per_week']}</b></td>"
+        f"<td class=\"num\">{RM[r]['owner_decision']}</td></tr>"
+        for r in ("Build", "Grow", "Launch"))
+    HPW = f"{LED['weekly_min_default']/60:.3f}"
+    QA = " &middot; ".join(f"{LANE_NAME[l]} {LED['lanes'][l]['qa_min']//60}&nbsp;h" for l in LANES)
+
     # the honest GLH statement + method
     S.append(f"""<h2>The hours, stated honestly</h2>
 <p class="bank"><b>The live 12-week deck suite is the knowledge-and-assessment spine, not the hours.</b> Measured, it contributes <b>8.0 GLH</b>: {esc(LED["deck_method"])} Against that: ComSkE3 alone is <b>30 GLH</b>, and the smallest qualification (the E3 Award) is <b>40 GLH</b>. The guided hours therefore come from the planned year — the kitchen practicals, the challenge blocks, supervised tutor-time application — because GLH counts <em>any</em> taught or supervised time toward the unit, including assessment by the centre assessor (spec &sect;9 p16, &sect;5.1 p9).</p>
-<p><b>Weekly PEQ hours, derived.</b> This map is worked at <b>seven timetabled 40-minute periods a week &mdash; 4.667 supervised hours</b>, i.e. 4.667 &times; 38 = <b>177.3 physical GLH</b> per lane. That figure is two measurements plus one ruling, and it is worth knowing which is which. <b>Measured:</b> the estate's period unit is <b>40 minutes</b> (fifteen agreeing statements across all three lanes' weekly planners), and BUILD runs <b>six discrete weekly slots at one period each</b> beside its PEQ row &mdash; <em>&ldquo;&hellip;which is how LI reaches certification on a one-slot week&rdquo;</em>, the only cell in the estate that fixes a slot count. Together those bound the lane at <b>1&ndash;7 periods</b> and no further. <b>Ruled</b> (owner, 22 Aug 2026): all six carryable slots &mdash; Careers, Vocational/D&amp;T, Living Independently, FoodWise, Community&nbsp;A and Community&nbsp;B &mdash; may bank a guided hour to PEQ alongside their own ASDAN short course. That puts the lane at the top of the measured band: 6&nbsp;+&nbsp;1&nbsp;=&nbsp;<b>7 periods</b>. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>
-<div class="note"><b>What the derived rate changes.</b> <b>The co-delivery claim is withdrawn.</b> At the previous 3.5&nbsp;h/wk owner input the Entry&nbsp;3 six-unit ledger (140 unit-GLH) closed only because <b>7 hours were co-delivered</b> &mdash; one supervised session banked to two units &mdash; and Level&nbsp;1 needed 2 hours the same way. At 4.667&nbsp;h/wk those hours are <b>real supervised time</b> and the ledgers close without the claim, so it is dropped to <b>zero on all three lanes</b>. What is left over is <b>declared QA and consolidation</b> &mdash; 37.3&nbsp;h at Entry&nbsp;3, 42.3&nbsp;h at Level&nbsp;1, 57.3&nbsp;h at Level&nbsp;2 &mdash; and it is never claimed against a unit. The honest number, not the convenient one.</div>
-<div class="note"><b>Every lane now targets the full Certificate</b>, and every milestone is proven in the ledger below rather than asserted: <b>Award by W14 &rarr; Extended Award by W26 &rarr; Certificate by W38</b> on all three lanes, with headroom. Had the timetable given <b>five</b> periods instead of seven, the honest answer for Entry&nbsp;3 and Level&nbsp;1 would have been the <b>Extended Award</b>, not the Certificate &mdash; the table below shows exactly where each threshold falls, so a later change to the timetable can be read off it rather than re-argued.</div>""")
+<p><b>Weekly PEQ hours &mdash; MEASURED from the school's own 2026-27 timetable.</b> This is no longer derived from planners and no longer chosen by ruling: the owner supplied the real timetable, and it supersedes both. Every figure below cites a workbook cell in <code>_passpq/TIMETABLE_2026-27.md</code>. The period unit is <b>40 minutes</b>, read off the timetable's own time column; check-in, daily reading, break, lunch and check-out are not guided slots, which is what the workbooks' own note says too.</p>
+<p><b>The classification rule, printed so it can be argued with.</b> <b>(a)</b> a slot whose label literally says <b>ASDAN</b> or <b>PEQ</b> &mdash; the floor. <b>(b)</b> <b>carryable</b>: PfA, Community/enterprise, Careers, Vocational/practical, Enrichment/outdoor, Catch-up &mdash; the ceiling. <b>(c)</b> English, Maths, Science, PE, Behaviour Intervention, RE/Humanities/Citizenship/Creative arts/ICT/PSHE/RSHE, which bank their own subjects. A slot that reads plausibly as both, or on which the two workbooks disagree, is <b>owner-decision</b> and is counted in <em>neither</em> figure.</p>
+<div class="note"><b>Measured, per room.</b> The three rooms are equal on (a)+(b) <em>because the timetable makes them equal</em> &mdash; each independently has eight carryable slots &mdash; not because one figure was copied onto the others. They differ sharply on the floor, and that is the number that matters if the carryable slots are ever disallowed.
+<table style="margin-top:8px"><tr><th>room</th><th>(a) ASDAN-labelled</th><th>(a) h/wk</th><th>(a)+(b) slots</th><th>(a)+(b) h/wk</th><th>owner-decision</th></tr>
+{ROOMROWS}</table>
+<p style="font-size:.88rem;margin-bottom:0"><b>Build has no explicitly ASDAN-labelled slot at all.</b> Its PEQ evidence rests entirely on carryable slots, so if a carryable slot is ever disallowed, Build is the lane that loses first.</p></div>
+<div class="note"><b>The co-delivery claim stays withdrawn.</b> At the old 3.5&nbsp;h/wk owner input the Entry&nbsp;3 six-unit ledger closed only by borrowing 7 co-delivered hours. At the measured {HPW}&nbsp;h/wk the hours are real supervised time and every ledger closes without it, leaving <b>{QA}</b> of declared QA and consolidation that is never claimed against a unit.</div>
+""")
 
     # sensitivity table
     rows = []
@@ -147,15 +164,15 @@ def build_sow():
             mark = " class=\"milestone\"" if cell.get("live") else ""
             first = (f"<td rowspan=\"3\"{mark}><b>{'%g' % cell['hpw']} h/wk</b><br>"
                      f"<span style=\"font-size:.82rem;color:#475569\">{slot_txt}</span>"
-                     + ("<br><b style=\"font-size:.82rem\">&#9432; THE DERIVED RATE &mdash; this is the live plan</b>" if cell.get("live") else "")
+                     + ("<br><b style=\"font-size:.82rem\">&#9432; MEASURED &mdash; this is the live plan</b>" if cell.get("live") else "")
                      + f"</td><td rowspan=\"3\" class=\"num\"{mark}>{'%g' % cell['year_glh']}</td>"
                      if i == 0 else "")
             rows.append(f"<tr class=\"lane-{lane}\">{first}<td><b>{LANE_NAME[lane]}</b></td>{cells}</tr>")
     S.append(f"""<h3>Sensitivity: what each weekly commitment can honestly deliver (38 weeks)</h3>
-<p style="font-size:.9rem">Re-based on the <b>measured 40-minute period</b> rather than round numbers: every row but one is a whole count of the school's real timetabled periods, across the band the timetable evidence actually supports (1&ndash;7 periods). The shaded row is the plan's declared owner input.</p>
+<p style="font-size:.9rem">Every row is a whole count of the school's <b>real 40-minute timetabled slots</b>, across the band the timetable actually supports (<b>1&ndash;8 slots</b>). The shaded row is the <b>measured</b> rate &mdash; the eight carryable slots each room independently has. This table is what a change to the timetable is read off: lose two slots and the row two above is the honest answer.</p>
 <table><tr><th>Supervised h/wk</th><th>Year GLH</th><th>Lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
 {''.join(rows)}</table>
-<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours, before any co-delivery. <b>The shaded seven-period row is the live plan.</b> Its provenance, which travels with the figure wherever it appears: the <b>40-minute period</b> and BUILD's <b>six weekly slots at one period each</b> were <b>MEASURED</b> from the planners, which bounded the lane at 1&ndash;7 periods; the choice of <b>seven</b> within that band is an <b>OWNER RULING</b> (22 Aug 2026) that all six carryable slots may bank a guided hour to PEQ. Measured band + ruling &mdash; not a pure repo measurement. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>""")
+<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours, before any co-delivery. <b>The shaded eight-slot row is the live plan, and it is measured</b> &mdash; from the school's own 2026-27 timetable, with a workbook cell cited for every slot in <code>_passpq/TIMETABLE_2026-27.md</code>. Nothing on this page rests on a derived band or an owner ruling any more; both are retired.</p>""")
 
     # staged milestones
     mrows = []
@@ -188,7 +205,7 @@ def build_sow():
                if t["evidenced"] else
                '<br><span style="font-size:.78rem;color:#92400e"><b>assumption</b></span>')
         return f"<td><b>{b}</b></td><td>W{a}&ndash;{z}<br><span style=\"font-size:.78rem;color:#475569\">{z-a+1} wks</span>{tag}</td>"
-    S.append(f"""<div class="safebox"><b>Which rooms this rate was measured in &mdash; and which it was not.</b> The seven-period week was established on <b>BUILD</b>, whose eight weekly planners carry a stable row layout with the PEQ row and six slots populated in every one. <b>GROW and LAUNCH are NOT establishable from the planners</b> and no rate was measured in either: GROW's ASDAN row exists but is <b>empty in all eight built weeks</b>, and LAUNCH's eight planners <b>disagree with one another on their own row structure</b>, carrying a populated PEQ row in three weeks and none at all in four. This year map runs <b>all three level lanes (Entry&nbsp;3 &middot; Level&nbsp;1 &middot; Level&nbsp;2) at the same 4.667 h/wk</b>. For the Kitchen Programme that is one mixed class in one kitchen, so a single rate is the right shape &mdash; but applied to the GROW and LAUNCH <em>rooms</em> it would be an <b>assumption, not a measurement</b>, and nothing here should be read as evidence about their timetables. <b>OUTSTANDING FOR MATT: GROW/LAUNCH PEQ slots &mdash; confirm from the September timetable.</b> Reproduce either finding with <code>python3 _passpq/tools/year1_derive.py</code>.</div>
+    S.append(f"""<div class="note"><b>GROW and LAUNCH are now measured &mdash; the open question is closed by evidence.</b> Pass PEQ-YEAR-2 recorded that GROW and LAUNCH could not be established from the weekly planners, and lodged &ldquo;confirm from the September timetable&rdquo;. The owner has supplied it, so that question is <b>CLOSED</b>: all three rooms are measured above, from the timetable itself, with a source cell per row. The earlier &ldquo;measured band + owner ruling&rdquo; provenance is retired with it &mdash; nothing on this page now rests on a band or a ruling. Reproduce with <code>python3 _passpq/tools/timetable_extract.py &lt;Timetables.xlsx&gt; &lt;Colour_coded&hellip;.xlsx&gt;</code>.</div>
 
 <h2>The six blocks &mdash; one spine, three demands</h2>
 <div class="note"><b>Which of these weeks are real, and which are assumed.</b> {esc(LED["calendar_note"])}</div>
@@ -201,6 +218,69 @@ def build_sow():
 <tr>{brow("Sum1")}<td>The food-claim investigation (Thinking at E3/L1 · Critical thinking at L2: &ge;2 sources, credibility/accuracy/bias, primary = own blind taste test) · wellbeing plans open and run through the learning weeks</td><td>Thinking plan opens W27 (review point W30), window W27&rarr;W32 · Wellbeing plan opens W27 (review point W32), window W27&rarr;W36</td></tr>
 <tr>{brow("Sum2")}<td>Evaluations at the exact minima, portfolio assembly, IQA sample, EQA-window preparation, summer service · <b>Certificate milestone W38</b></td><td>Wellbeing evaluations W36&ndash;37; portfolio sign-off W38</td></tr></table>
 <p style="font-size:.88rem">Every plan opens early enough that its 10-hour window closes with headroom before its evaluation week (the ledger below carries the minutes); every review point has a named week; every assessment criterion lands on a week in the <a href="Criteria_Coverage_Matrix.html">coverage matrix</a>.</p>""")
+
+    # PEQ-YEAR-3 §2: reachability per room, at BOTH the floor and the ceiling
+    rrows = []
+    for room in ("Build", "Grow", "Launch"):
+        c = RR[room]
+        for i, lane in enumerate(LANES):
+            cells = ""
+            for q in c["levels"][lane]:
+                f = "&#9745;" if q["reachable_at_floor"] else "&#9746;"
+                g = "&#9745;" if q["reachable_at_ceiling"] else "&#9746;"
+                cells += f"<td>{f}&nbsp;/&nbsp;{g}</td>"
+            first = (f"<td rowspan=\"3\"><b>{room}</b><br><span style=\"font-size:.8rem;color:#475569\">"
+                     f"floor {c['a_h_per_week']} h/wk = {c['a_year_glh']} GLH<br>"
+                     f"ceiling {c['ab_h_per_week']} h/wk = {c['ab_year_glh']} GLH</span></td>"
+                     if i == 0 else "")
+            rrows.append(f"<tr class=\"lane-{lane}\">{first}<td><b>{LANE_NAME[lane]}</b></td>{cells}</tr>")
+    LANE_OF_ROOM = {"Build": "E3", "Grow": "L1", "Launch": "L2"}
+    krows = []
+    for room in ("Build", "Grow", "Launch"):
+        k = KIT[room]
+        named = "<br>".join(
+            f"<b>{sl['day']} {sl['period']}</b> {sl['time']} &middot; {esc(sl['label'])} "
+            f"&middot; <i>{esc(sl['role'])}</i> &middot; "
+            f"<code style=\"font-size:.78rem\">{esc(sl['source'])}</code>" for sl in k["slots"])
+        krows.append(
+            f"<tr class=\"lane-{LANE_OF_ROOM[room]}\"><td><b>{room}</b></td>"
+            f"<td class=\"num\">{k['n_slots']}</td><td class=\"num\">{k['h_per_week']}</td>"
+            f"<td class=\"num\">{k['year_glh']}</td><td>{named}</td></tr>")
+    KITROWS = "".join(krows)
+    S.append(f"""<h2>What each room's real hours can reach</h2>
+<p>Read each cell as <b>floor&nbsp;/&nbsp;ceiling</b>: the first mark is the room's
+<b>explicitly ASDAN-labelled</b> slots alone, the second adds the <b>carryable</b> ones. The test
+is the stricter of the two the spec carries &mdash; the sum of the constituent <em>units'</em>
+GLH, which is what the ledger must actually bank, not the qualification's own published figure.</p>
+<table><tr><th>room</th><th>lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
+{''.join(rrows)}</table>
+<div class="safebox"><b>What this says, plainly.</b> On <b>carryable slots included</b>, every room
+reaches every qualification at every level, with headroom. On <b>ASDAN-labelled slots alone</b>:
+<b>Build reaches nothing at all</b> (it has no ASDAN-labelled slot); <b>Grow reaches the Award
+only</b>; <b>Launch reaches the Award and the Extended Award but not the Certificate</b> &mdash;
+its {RR['Launch']['a_year_glh']} GLH sits under the Level&nbsp;2 Certificate's 120 unit-GLH (and
+under its 106 published qual-GLH too). <b>The Certificate therefore turns on the carryable
+slots.</b> The candidate that closes Launch's gap is named rather than quietly borrowed: its
+<b>Friday P4 Careers: work experience prep</b> or <b>Monday P5 Community project</b> &mdash; one
+more slot banked to PEQ takes Launch's floor to 3.33&nbsp;h/wk and 126.7 GLH, clearing the
+Certificate at every level.</div>
+
+<h2>The kitchen &mdash; what the timetable actually gives</h2>
+<div class="safebox"><b>{esc(KIT['_cooking_labelled_whole_school']['statement'])}</b></div>
+<p><b>The ruling: the kitchen is a context, not a room booking.</b> It runs across each lane's
+carryable practical cluster, and those sessions are named here slot by slot so nobody has to
+guess which lesson is a kitchen lesson.</p>
+<table><tr><th>lane</th><th>kitchen sessions</th><th>h/wk</th><th>GLH/yr</th><th>the slots, named</th></tr>
+{KITROWS}
+</table>
+<p style="font-size:.88rem"><b>No unit depends on hours that do not exist.</b> The kitchen cluster
+carries the Award at every level in every lane, and at Launch the Extended Award too. Units the
+kitchen hours cannot reach are banked in the lane's other carryable slots &mdash; Careers,
+Community/enterprise, Enrichment and Catch-up &mdash; which is what the week-by-week ledger below
+allocates. <b>Teacher attribution is printed above because it is not settled:</b> the cooking slot
+is the <b>Science Teacher's</b> on the timetable, while the owner has said a colleague will teach
+and resource cooking. That is not assumed to be a swap. <b>OUTSTANDING FOR MATT: confirm who
+teaches the cooking slot(s) in September.</b></p>""")
 
     # per-lane weekly ledgers
     S.append("""<h2>The GLH ledger — every week &times; lane, minutes per unit</h2>
@@ -550,6 +630,17 @@ a certificate.</li>
 </ol></div>"""
 
 def build_cooking_handover():
+    KIT = LED["kitchen"]; RM = LED["room_measured"]; RR = LED["room_reachability"]
+    ROOMSIMPLE = "".join(
+        f"<tr><td><b>{r}</b></td><td class=\"num\">{RM[r]['a_slots']}</td>"
+        f"<td class=\"num\">{RM[r]['ab_slots']}</td>"
+        f"<td class=\"num\"><b>{RR[r]['ab_h_per_week']}</b></td>"
+        f"<td class=\"num\">{RR[r]['ab_year_glh']}</td></tr>" for r in ("Build","Grow","Launch"))
+    SLOTTABLE = "".join(
+        f"<tr><td><b>{r}</b></td><td>{sl['day']}</td><td>{sl['period']}</td><td>{sl['time']}</td>"
+        f"<td>{esc(sl['label'])}</td><td>{esc(sl['role'])}</td>"
+        f"<td><code style=\"font-size:.78rem\">{esc(sl['source'])}</code></td></tr>"
+        for r in ("Build","Grow","Launch") for sl in KIT[r]["slots"])
     S = [f"""<div class="note"><b>Who this is for.</b> This is the teacher frame for the kitchen
 year &mdash; what it is for, which units each block evidences, what paperwork exists, and what is
 yours to build. It deliberately contains <b>no recipes, no menus, no dishes and no ingredient
@@ -618,28 +709,28 @@ that is how you think &mdash; then open that week's shell and check the criteria
 carry. If a criterion has no natural home in what you have chosen, change the task slightly
 rather than the criterion. The criteria are fixed by the awarding body; the food is not.</p>
 
-<h2>The hours &mdash; settled, and where the number came from</h2>
-<p>The programme is timetabled at <b>seven 40-minute periods a week</b> (4.667 supervised hours):
-the PEQ session plus the six slots &mdash; Careers, Vocational/D&amp;T, Living Independently,
-FoodWise, Community&nbsp;A and Community&nbsp;B &mdash; which all count, because PEQ evidence is
-generated <em>through</em> those activities rather than alongside them.</p>
-<table><tr><th style="width:16%">&nbsp;</th><th>where the figure comes from</th></tr>
-<tr><td><b>Measured</b></td><td>The 40-minute period unit, and the <b>six weekly slots at one period each</b>, read off the BUILD planners and the Slot Planner. That bounded the week at <b>1&ndash;7 periods</b> and no further.</td></tr>
-<tr><td><b>Ruled</b></td><td>That <b>all six</b> of those slots may bank a guided hour to PEQ alongside their own ASDAN short course &mdash; an <b>owner ruling of 22 August 2026</b>, not something the repository could show.</td></tr></table>
-<p>Seven periods is therefore <b>measured band + owner ruling</b>: the top of what was measured,
-chosen by a decision. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>
-<div class="safebox"><b>If you also teach in the other rooms.</b> That measurement was taken in
-<b>BUILD</b>. <b>GROW and LAUNCH could not be established</b> &mdash; GROW's ASDAN planner row is
-empty in all eight built weeks, and LAUNCH's eight planners disagree with each other about their
-own row structure. The year map runs all three <em>level</em> lanes at the same rate, which is
-right for one mixed class in one kitchen; it is <b>not</b> a measurement of the GROW or LAUNCH
-timetables. Outstanding for Matt: confirm the GROW/LAUNCH PEQ slots from the September timetable.</div>
-<p><b>What it means in practice:</b> all three lanes can finish the full Certificate this year
-&mdash; Award by W14, Extended Award by W26, Certificate by W38 &mdash; with 37 to 57 hours a lane
-of consolidation time that is deliberately <em>not</em> claimed against any unit. A week that
-overruns will not cost anyone their qualification. <b>Autumn is evidenced at 15 teaching weeks;
-spring and summer term dates are not in the repository at all</b>, so those block lengths are
-declared assumptions and the year map says which is which.</p>
+<h2>The hours &mdash; measured from the school's own timetable</h2>
+<p>The owner supplied the real 2026-27 timetable, so nothing here is inferred any more. Every
+figure below cites a workbook cell in <code>_passpq/TIMETABLE_2026-27.md</code>. The period unit
+is <b>40 minutes</b>.</p>
+<table><tr><th>room</th><th>ASDAN-labelled slots</th><th>+ carryable</th><th>h/wk</th><th>GLH/yr</th></tr>
+{ROOMSIMPLE}</table>
+<div class="safebox"><b>{esc(KIT['_cooking_labelled_whole_school']['statement'])}</b></div>
+<h2>Your slots, named</h2>
+<p>These are the sessions the kitchen year runs in. The kitchen is a <b>context</b>, not a room
+booking &mdash; it runs across each lane's carryable practical cluster, which is why more than one
+session per lane carries it.</p>
+<table><tr><th>lane</th><th>day</th><th>period</th><th>time</th><th>as timetabled</th><th>teacher role</th><th>source cell</th></tr>
+{SLOTTABLE}</table>
+<div class="note"><b>Who teaches the cooking slot is not settled, and is not assumed here.</b> The
+timetable assigns Build Wednesday P5 to the <b>Science Teacher</b>. The owner has said a colleague
+will teach and resource cooking. Those may be the same decision or two different ones &mdash; this
+pack does not guess. <b>Outstanding: confirm who teaches the cooking slot(s) in September.</b>
+Every sheet in this pack is slot-explicit so whoever picks it up can, without needing the history.</div>
+<p><b>What the hours reach.</b> With carryable slots counted, every room reaches every
+qualification at every level with headroom. On ASDAN-labelled slots alone, Build reaches nothing
+(it has none), Grow reaches the Award, and Launch reaches the Award and Extended Award but not the
+Certificate. The year map carries the full table.</p>
 
 <h2>Where to ask</h2>
 <p>Anything about <b>criteria wording, levels, minima, plans or evidence</b> &mdash; the
@@ -655,6 +746,14 @@ allergens or the risk assessment</b> &mdash; the school's own policy and the Hea
 
 def build_week_shell():
     idx = criteria_by_week()
+    # PEQ-YEAR-3 §4: every shell page names the slots it is taught in, so whoever
+    # picks the pack up knows which timetabled session each page belongs to. The
+    # pattern repeats weekly, so it is the same line on every page - which is the
+    # point: it is the answer to "when is this?" without leaving the sheet.
+    KIT = LED["kitchen"]
+    SHELL_SLOTS = "<b>Taught in:</b> " + " &nbsp;|&nbsp; ".join(
+        f"<b>{room}</b> " + ", ".join(f"{sl['day']} {sl['period']} {sl['time']}" for sl in KIT[room]["slots"])
+        for room in ("Build", "Grow", "Launch"))
     S = ["""<div class="note no-print"><b>How to use.</b> One page per week. The left column is
 fixed by the qualification &mdash; block, units, criteria, events, artefacts. The
 <b>&ldquo;What we are cooking&rdquo;</b> box is deliberately empty: it is yours. Print the weeks
@@ -685,6 +784,7 @@ you need; the pages break one per sheet.</div>"""]
 <h2 style="margin-top:0">Week {w} &middot; {BLOCK_OF[w]}</h2>
 <p class="sub" style="text-align:left;font-weight:400">
 {('Live PEQ deck this week: <b>' + esc(deck) + '</b>') if deck else 'No PEQ deck this week &mdash; kitchen session and plan hours.'}</p>
+<p style="font-size:.85rem;color:#475569;margin-top:-6px">{SHELL_SLOTS}</p>
 <table><tr><th>Lane</th><th>Units &amp; the exact criteria due this week</th><th>Evidence to collect</th></tr>
 {body}</table>
 <h3>Plan &amp; review-point events due</h3>

@@ -99,18 +99,34 @@ checks = {
  "L1 14-of-15 named": "14-of-15",
  "ThSk vs CrTh split": "only the L2 lane plans <b>CrThSk2</b>",
  "working towards": "working towards",
- # PEQ-YEAR-1 §2: the "zero slack" statement was TRUE at the 3.5 h/wk owner input, where
- # the E3 six-unit ledger closed only via 7 co-delivered hours. At the derived 4.667 h/wk
- # it is FALSE - the hours are real and there are 37.3 h of declared QA headroom. Asserting
- # it now would be asserting a falsehood, so it is replaced by the three statements that
- # ARE load-bearing at the derived rate: the rate itself, the provenance split between what
- # was measured and what was ruled, and the withdrawal of the co-delivery claim.
- "derived rate stated": "seven timetabled 40-minute periods",
- "measured-vs-ruled provenance split": "may bank a guided hour to PEQ alongside their own ASDAN short course",
- "co-delivery withdrawn": "co-delivery claim is withdrawn",
+ # PEQ-YEAR-3 §2/§3: the timetable is now EVIDENCE. Every string this gate used to
+ # assert - "seven timetabled 40-minute periods", the measured-band-plus-ruling
+ # provenance, "GROW and LAUNCH are NOT establishable" - names something this pass
+ # retired. Asserting them now would assert a falsehood, which is the same failure
+ # that once left a self-contradicting sentence on this page. Replaced by what is
+ # load-bearing at the MEASURED rates.
+ "measured from the timetable": "MEASURED from the school's own 2026-27 timetable",
+ "classification rule printed": "The classification rule, printed so it can be argued with",
+ "per-room table present": "Measured, per room",
+ "no lane inherits another's rate": "not because one figure was copied onto the others",
+ "Build's zero floor stated": "Build has no explicitly ASDAN-labelled slot at all",
+ "reachability at floor and ceiling": "What each room's real hours can reach",
+ "the unreachable stated, not implied": "Build reaches nothing at all",
+ "cooking capacity stated": "cooking-labelled slot",
+ "kitchen slots named per lane": "the kitchen is a context, not a room booking",
+ "teacher attribution not assumed": "confirm who teaches the cooking slot",
+ "GROW/LAUNCH question closed by evidence": "the open question is closed by evidence",
+ "co-delivery still withdrawn": "co-delivery claim stays withdrawn",
  "QA headroom declared, not claimed": "never claimed against a unit",
 }
-missing = [k for k, v in checks.items() if v not in sow]
+# Whitespace in HTML is insignificant, and the generated prose wraps where the
+# source wraps - so a required sentence can be present and correct on the page
+# while a raw substring test misses it because a newline fell mid-phrase. Compare
+# on collapsed whitespace instead of reflowing authored prose to suit the gate.
+import re as _re
+_flat = lambda t: _re.sub(r"\s+", " ", t)
+sow_f = _flat(sow)
+missing = [k for k, v in checks.items() if _flat(v) not in sow_f]
 # PEQ-YEAR-2 §4: G5 read only the year map, so the handover and the ledger could
 # drift from it unwatched -- and did (the handover's hours section carried no
 # measured-vs-ruled split at all, and the generated HTML had no hours section
@@ -118,15 +134,16 @@ missing = [k for k, v in checks.items() if v not in sow]
 hand_md = open(os.path.join(KIT, "COOKING_HANDOVER.md"), encoding="utf-8").read()
 hand_html = open(os.path.join(KIT, "Cooking_Handover.html"), encoding="utf-8").read()
 for label, text in (("handover .md", hand_md), ("handover .html", hand_html)):
-    for k, v in {"measured/ruled split": "measured band + owner ruling",
-                 "the ruling dated": "22 August 2026",
-                 "GROW/LAUNCH not establishable": "could not be established"}.items():
-        if v not in text:
+    for k, v in {"measured from the timetable": "measured from the school's own timetable",
+                 "slot table present": "Your slots, named",
+                 "cooking slot teacher lodged": "confirm who teaches the cooking slot",
+                 "the cooking slot named": "PfA / cooking"}.items():
+        if _flat(v) not in _flat(text):
             missing.append(f"{label}: {k}")
-for k, v in {"lane provenance on the year map": "GROW and LAUNCH are NOT establishable",
-             "one-rate assumption named": "assumption, not a measurement",
+for k, v in {"source cell cited on kitchen slots": "[Build Timetable]!D11",
+             "owner-decision slots not absorbed": "owner-decision",
              "calendar evidence split": "Spring and summer have NO term dates"}.items():
-    if v not in sow:
+    if _flat(v) not in sow_f:
         missing.append(k)
 mtx = open(os.path.join(KIT, "Criteria_Coverage_Matrix.html"), encoding="utf-8").read()
 if "174 criteria mapped, 0 gaps" not in mtx: missing.append("matrix zero-gap line")

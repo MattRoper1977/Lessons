@@ -123,41 +123,51 @@ one when the wellbeing plans open (W27). They are on the page verbatim; they are
 
 ---
 
-## 7 · The hours — settled, and where the number came from
+## 7 · The hours — measured from the school's own timetable
 
-The programme is timetabled at **seven 40-minute periods a week** (4.667 supervised hours): the
-PEQ session plus the six slots — Careers, Vocational/D&T, Living Independently, FoodWise,
-Community A and Community B — which all count, because PEQ evidence is generated *through* those
-activities rather than alongside them.
+The owner supplied the real 2026-27 timetable, so nothing here is inferred any more. Every figure
+below cites a workbook cell in [`_passpq/TIMETABLE_2026-27.md`](../../_passpq/TIMETABLE_2026-27.md).
+The period unit is **40 minutes**.
 
-**Where that figure comes from, in two halves, because they are not the same kind of fact:**
+| room | ASDAN-labelled slots | + carryable | h/wk | GLH/yr |
+|---|---:|---:|---:|---:|
+| **Build** | 0 | 8 | **5.3333** | 202.67 |
+| **Grow** | 2 | 8 | **5.3333** | 202.67 |
+| **Launch** | 4 | 8 | **5.3333** | 202.67 |
 
-| | |
-|---|---|
-| **Measured** | The 40-minute period unit, and the **six weekly slots at one period each** — read off the BUILD planners and the Slot Planner. That bounded the week at **1–7 periods** and no further. |
-| **Ruled** | That **all six** of those slots may bank a guided hour to PEQ alongside their own ASDAN short course — an **owner ruling of 22 August 2026**, not something the repository could show. |
+> **The whole school timetables 1 cooking-labelled slot: Build Wednesday P5, 12:50-13:30, 'PfA / cooking', Science Teacher. At 38 weeks that is 25.33 GLH. On its own it carries NO qualification at any level - the smallest, the Level 2 Award, needs 32 unit-GLH and would take it most of the year, and no Certificate is within reach of it at all. That is why the kitchen is run as a context across the carryable practical cluster rather than as a single booked room.**
 
-So seven periods is **measured band + owner ruling**. It is the top of what was measured, chosen
-by a decision. Full record: [`_passpq/DERIVATION_YEAR1.md`](../../_passpq/DERIVATION_YEAR1.md).
+## 8 · Your slots, named
 
-**One thing to be clear about if you also teach in the other rooms:** that measurement was taken
-in **BUILD**. **GROW and LAUNCH could not be established** — GROW's ASDAN planner row is empty in
-all eight built weeks, and LAUNCH's eight planners disagree with each other about their own row
-structure. The year map runs all three *level* lanes at the same rate, which is right for one
-mixed class in one kitchen; it is **not** a measurement of the GROW or LAUNCH timetables.
-Outstanding for Matt: confirm the GROW/LAUNCH PEQ slots from the September timetable.
+These are the sessions the kitchen year runs in. The kitchen is a **context**, not a room booking —
+it runs across each lane's carryable practical cluster, which is why more than one session per lane
+carries it.
 
-**What it means in practice: all three lanes can finish the full Certificate this year**, with the
-Award banked by W14, the Extended Award by W26 and the Certificate by W38. There is real headroom
-— between 37 and 57 hours a lane of consolidation time that is deliberately *not* claimed against
-any unit. So a week that overruns, a trip, or a practical that needs a second go will not cost
-anyone their qualification.
+| lane | day | period | time | as timetabled | teacher role | source cell |
+|---|---|---|---|---|---|---|
+| **Build** | Wed | P5 | 12:50-13:30 | PfA / cooking | Science Teacher | `[Build Timetable]!D11` |
+| **Build** | Fri | P3 | 11:00-11:40 | Vocational / practical | Science Teacher | `[Build Timetable]!F8` |
+| **Grow** | Tue | P5 | 12:50-13:30 | Vocational / practical | Maths Teacher | `[Grow Timetable]!C11` |
+| **Grow** | Thu | P5 | 12:50-13:30 | Vocational / practical | Maths Teacher | `[Grow Timetable]!E11` |
+| **Launch** | Mon | P4 | 11:40-12:20 | Vocational / ASDAN option | Science Teacher | `[Launch Timetable]!B9` |
+| **Launch** | Tue | P5 | 12:50-13:30 | PfA / ASDAN | Science Teacher | `[Launch Timetable]!C11` |
+| **Launch** | Thu | P4 | 11:40-12:20 | PfA / ASDAN | English Teacher | `[Launch Timetable]!E9` |
+| **Launch** | Wed | P6 | 13:30-14:10 | Vocational / ASDAN option | English Teacher | `[Launch Timetable]!D12` |
 
-You do not need to track any of this. It is why the week shells look unhurried: the hours are
-there. The one thing worth knowing is that **the criteria on each week's shell are the floor, not
-the ceiling** — if a session produces better evidence than the shell asks for, bank it.
+**Who teaches the cooking slot is not settled, and is not assumed here.** The timetable assigns
+Build Wednesday P5 to the **Science Teacher**. The owner has said a colleague will teach and
+resource cooking. Those may be the same decision or two different ones — this pack does not guess.
+**Outstanding: confirm who teaches the cooking slot(s) in September.** Every sheet in this pack is
+slot-explicit so whoever picks it up can, without needing the history.
+
+**What the hours reach.** With carryable slots counted, every room reaches every qualification at
+every level with headroom. On ASDAN-labelled slots alone, **Build reaches nothing** (it has none),
+**Grow reaches the Award**, and **Launch reaches the Award and Extended Award but not the
+Certificate** — its 101.33 GLH sits under the Level 2 Certificate's 120
+unit-GLH. The Certificate turns on the carryable slots; the year map names the candidate slot that
+would close Launch's gap rather than quietly borrowing the hours.
 
 **A note on the weeks themselves.** Autumn is evidenced at 15 teaching weeks and the block labels
-now match it. Spring and summer term dates are **not in the repository at all**, so those block
-lengths are declared assumptions — the year map says which is which. It changes nothing you
-teach; it is flagged so nobody reads an assumed week as a fixed one.
+match it. Spring and summer term dates are **not in the repository at all** — the timetable
+workbooks are weekly, not annual — so those block lengths remain declared assumptions, tagged as
+such on the year map. It changes nothing you teach.
