@@ -585,6 +585,23 @@ PERSONAL_ORIGINS = re.compile(
 PERSONAL_RESIDUE = re.compile(
     "|".join(PERSONAL_ORIGIN_FORMS) + r'|madebymatt', re.I)
 
+# The UAS Register ships pointer-first (§9.3b): the pack's whole instruction to
+# staff is "use the live register, this copy is not the record". That instruction
+# is impossible to give without naming where the live register is, so these two
+# files - and only these two - may carry the live URL, once each.
+#
+# It is a NAMED, COUNTED exception rather than a relaxed pattern. The rule it bends
+# exists to catch a live link to the public site leaking into a Progress pack, and
+# that rule is right; this is the one case where the link IS the deliverable. Any
+# third file, or a second reference in either of these, still fails.
+LIVE_REGISTER_URL = "madebymatt.uk/uas/app.html"
+LIVE_REGISTER_PAGES = {
+    "ASDAN PEQ/UAS Register/index.html":
+        "the launcher - its one job is to open the live register",
+    "ASDAN PEQ/UAS Register/app_REFERENCE_ONLY.html":
+        "the reference banner names the record of truth so staff do not use this copy",
+}
+
 CREDIT = "by madebymatt.uk"      # Matt's explicit instruction; the ONE whitelisted
                                  # Made-by-Matt string. Anything else is residue.
 
@@ -923,6 +940,7 @@ def mirror_verify(pack):
     files = sorted(pack.rglob("*.html"))
     notes["html_files"] = len(files)
     attr = dom = noxb = strip = nocredit = multicredit = tiny = 0
+    live_exempt = 0
     for p in files:
         t = p.read_text(encoding="utf-8", errors="ignore")
         if re.search(r'(aria-label|alt|content|title)="[^"]*made by matt', t, re.I): attr += 1
@@ -937,6 +955,14 @@ def mirror_verify(pack):
         # rather than a hole: an href, a src, or any attribute value cannot
         # satisfy it, so href="https://madebymatt.uk" still fails.
         stripped = t.replace(">" + CREDIT + "<", "><", 1)
+        rel = str(p.relative_to(pack)).replace("\\", "/")
+        if rel in LIVE_REGISTER_PAGES:
+            n_live = stripped.count(LIVE_REGISTER_URL)
+            if n_live != 1:
+                fails.append(f"{rel}: names the live register {n_live} time(s), "
+                             "the exception permits exactly 1")
+            stripped = stripped.replace(LIVE_REGISTER_URL, "", 1)
+            live_exempt += 1
         if PERSONAL_RESIDUE.search(stripped): dom += 1
         if t.count(CREDIT) == 0: nocredit += 1
         elif t.count(CREDIT) > 1: multicredit += 1
@@ -945,7 +971,8 @@ def mirror_verify(pack):
         if not t.rstrip().lower().endswith("</html>"):
             fails.append(f"{p.name}: no closing </html>")
         if len(t) < 200: tiny += 1
-    notes.update(attr_residue=attr, domain_residue=dom, missing_xbrand=noxb,
+    notes.update(live_register_exemptions=live_exempt,
+                 attr_residue=attr, domain_residue=dom, missing_xbrand=noxb,
                  carry_strip=strip, missing_credit=nocredit,
                  duplicate_credit=multicredit, truncated_or_empty=tiny)
     if attr:        fails.append(f"REBRAND check 1 FAILED: {attr} files with wordmark in an attribute")
@@ -1275,15 +1302,77 @@ def zip_tree(src_dir, zip_path, arc_root):
     return n, zip_path.stat().st_size
 
 
-def mirror_main(logo, out):
+def mirror_main(logo, out, site=None):
     out = Path(out)
     (pack, keep, fwd, back, avl_fails, avl_seen, clashes, logo_pages,
      rewrites, orphans, hub_results) = build_mirror(logo, out)
 
+    # ---- Stage 2 post-assembly, BEFORE the manifest, the verify and the zip.
+    # The order is enforced here rather than in whoever's shell history: the
+    # manifest must count these files, mirror_verify must gate them like every
+    # other page, and §9.2c requires the geometry gate to run before any zip is
+    # written, because a run that can reach the zip step in repo shape will.
+    if site:
+        import subprocess as _sp
+        here = Path(__file__).resolve().parent
+        for label, cmd in (
+            ("UAS Register (§9.3b)",
+             [sys.executable, str(here / "uas_pack.py"), str(pack),
+              "--site", str(site), "--logo", str(logo)]),
+            ("data gate (§9.7)",
+             [sys.executable, str(here / "data_gate.py"), str(pack), "--fix"]),
+            ("planner ledger (§9.9b)",
+             [sys.executable, str(here / "planner_ledger.py"), str(pack)]),
+        ):
+            r = _sp.run(cmd, capture_output=True, text=True)
+            tail = "\n".join(r.stdout.strip().splitlines()[-3:])
+            print(f"\n[{label}] exit {r.returncode}\n{tail}")
+            assert r.returncode == 0, (
+                f"{label} failed - refusing to continue to the manifest or the zip.\n"
+                + r.stdout[-2500:] + r.stderr[-800:])
+
     miss = crawl(pack)
-    print(f"\nCRAWL: {'clean, 0 broken internal links' if not miss else str(sum(len(v) for v in miss.values())) + ' UNRESOLVED'}")
+    n_miss = sum(len(v) for v in miss.values())
+    print(f"\nCRAWL: {'clean, 0 broken internal links' if not miss else str(n_miss) + ' UNRESOLVED'}")
     for f, ts in list(miss.items())[:15]:
         print(f"  {f} -> {', '.join(sorted(ts))[:110]}")
+
+    # §9.8 wants 0 broken internal links. The pack does not have 0, and the build
+    # used to PRINT that without failing on it - which is how 49 stayed unnoticed.
+    #
+    # All of them are one family: Science_Teesside sub-suite pages linking
+    # ../../../index.html, i.e. a hub at the pack root. The Mirror deliberately has
+    # no root index (§9.4 gives one only to the Network Library), and the drive root
+    # has no index.html either, so these are dead in the zip AND on the drive. They
+    # are inherited, not introduced here - Science_Teesside is under the OPEN_ITEMS
+    # item 17 byte-pristine hold in the repo, so the fix belongs to the sitting that
+    # lifts it, not to a branding pass rewriting links in files it may not touch.
+    #
+    # So it is a CEILING, not a pass: the known family is recorded by shape and by
+    # count, and anything beyond it - a new dead link, or one of these spreading -
+    # fails the build. A number that can grow without going red is not a gate.
+    KNOWN_DEAD = {"../../../index.html", "../../../Baseline_Weeks/index.html",
+                  # two Science index pages link the repo's own working docs under
+                  # _sciv3/, which §9.3 excludes by name: "the derived staff
+                  # documents ship; the working directory does not".
+                  "../../../_sciv3/build/POLICY_ALIGNMENT.md",
+                  "../../../_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md"}
+    KNOWN_DEAD_MAX = 51
+    unknown = {f: sorted(set(ts) - KNOWN_DEAD) for f, ts in miss.items()
+               if set(ts) - KNOWN_DEAD}
+    if unknown:
+        all_fails_early = [f"NEW broken internal link in {f}: {ts}"
+                           for f, ts in list(unknown.items())[:10]]
+        for line in all_fails_early:
+            print("  FAIL:", line)
+        raise AssertionError(f"{len(unknown)} file(s) carry a broken internal link "
+                             "outside the recorded Science_Teesside root-hub family")
+    if n_miss > KNOWN_DEAD_MAX:
+        raise AssertionError(f"the recorded broken-link family grew: {n_miss} > "
+                             f"{KNOWN_DEAD_MAX}")
+    if miss:
+        print(f"  ^ all {n_miss} are the recorded Science_Teesside root-hub family "
+              f"(ceiling {KNOWN_DEAD_MAX}); see the note in mirror_main")
 
     print(f"\nAVL-1: {avl_seen} decks carry a marker pair; "
           f"{'all preserved byte-for-byte' if not avl_fails else str(len(avl_fails)) + ' ALTERED'}")
@@ -1328,6 +1417,19 @@ def mirror_main(logo, out):
         all_fails.append(f"GATE C9: only {disk_logos} pages carry the logo on disk")
     for f in all_fails[:20]: print("  FAIL:", f)
     if not all_fails: print("  all checks pass")
+
+    # ---- §9.2c: the geometry gate, immediately before the first zip is written.
+    # Later than the other two on purpose. It has to see the FINAL tree, including
+    # README_FIRST and CHANGES_SINCE, which write_docs() authors above - running it
+    # earlier reported the pack's own README as a missing required entry.
+    if site:
+        import subprocess as _sp
+        r = _sp.run([sys.executable, str(Path(__file__).resolve().parent / "geometry_gate.py"),
+                     str(pack)], capture_output=True, text=True)
+        print("\n".join(r.stdout.strip().splitlines()[-2:]))
+        if r.returncode:
+            print(r.stdout[-2000:])
+            all_fails.append("GEOMETRY GATE FAILED - the assembled tree is not in drive shape")
 
     # ---- package. Nothing ships if anything above failed.
     assert not all_fails, f"{len(all_fails)} checks failed - refusing to package"
@@ -1706,6 +1808,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--logo", help="Progress Schools logo PNG; enables mirror-pack mode")
     ap.add_argument("--mirror", action="store_true", help="assemble in the OneDrive taxonomy")
+    ap.add_argument("--site", help="read-only checkout of the site repo, for the UAS "
+                                   "Register (§9.3b). Omit and the Register is not packed.")
     ap.add_argument("--out", default=str(OUT))
     a = ap.parse_args()
     if a.mirror:
@@ -1713,6 +1817,6 @@ if __name__ == "__main__":
             sys.exit("HARD STOP: --mirror requires --logo. There is no fallback to the "
                      "typographic mark - REBRAND.md rule 1 is superseded and a pack built "
                      "without the real lockup is not a Progress Schools pack.")
-        mirror_main(a.logo, a.out)
+        mirror_main(a.logo, a.out, a.site)
     else:
         main()

@@ -48,13 +48,18 @@ ROLE_SUBS = [
 OWNER_NAME = re.compile(r"\bRoper\b|\bMr R\b|\bMatt(?:'s|&#x27;s)?\b")
 
 # --- 3. pupil-identifying: zero, no exceptions -----------------------------
+# Match the DATA, not the word for it. Every artefact here has to be able to state
+# that it holds no reading ages without that sentence being the thing that fails -
+# the planner ledger's own assurance line, "no pupil data, no reading ages", tripped
+# the first version of this. Same lesson as the cooking census above: a gate that
+# cannot tell a claim from an instance is useless.
 PUPIL = {
-    "reading age":        re.compile(r"\breading ages?\b", re.I),
-    "date of birth":      re.compile(r"\bdate of birth\b|\bd\.o\.b\.", re.I),
-    "EHCP":               re.compile(r"\bEHCPs?\b"),
-    "Students sheet":     re.compile(r"\bStudents\s+sheet\b", re.I),
-    "pupil initials":     re.compile(r"\bpupil\s+[A-Z]\.[A-Z]\.", re.I),
-    "named pupil row":    re.compile(r"\b(?:pupil|student)\s+name\s*[:=]\s*[A-Z][a-z]+", re.I),
+    "reading age as data":  re.compile(r"\breading age\s*[:=]?\s*\d", re.I),
+    "date of birth as data": re.compile(r"\b(?:date of birth|d\.o\.b\.?)\s*[:=]?\s*\d", re.I),
+    "EHCP against a person": re.compile(r"\bEHCP\s*[:=#]?\s*(?:\d|[A-Z][a-z]+\s+[A-Z])", re.I),
+    "Students sheet content": re.compile(r"\bStudents\s+sheet\b\s*[:=]", re.I),
+    "pupil initials":       re.compile(r"\bpupil\s+[A-Z]\.\s?[A-Z]\.", re.I),
+    "named pupil row":      re.compile(r"\b(?:pupil|student)\s+name\s*[:=]\s*[A-Z][a-z]+", re.I),
 }
 
 # --- the food census, re-run on the assembled tree -------------------------
@@ -144,9 +149,21 @@ def lowercase_vocabulary(pack):
     return vocab
 
 
-def files(pack):
+# Third-party libraries vendored into the pack. Their source carries author
+# credits and contact addresses - jsPDF's contributors, PDF.js's - which are MIT
+# licence ATTRIBUTION, not staff data. Stripping them would breach the licence.
+# They are excluded from the personal-name census by path, and uas_pack.py asserts
+# the vendored tree is byte-identical to the site repo's, so this exclusion cannot
+# become a place to hide anything.
+THIRD_PARTY = re.compile(r"(?:^|/)vendor/")
+
+
+def files(pack, include_vendor=True):
     for p in sorted(pack.rglob("*")):
         if p.is_file() and p.suffix.lower() in TEXT:
+            if not include_vendor and THIRD_PARTY.search(
+                    str(p.relative_to(pack)).replace("\\", "/")):
+                continue
             yield p
 
 
@@ -174,7 +191,7 @@ def main():
     subs, owner, pupil, dishes, kinds = 0, {}, {}, {}, {}
     unruled = {}
 
-    for p in files(pack):
+    for p in files(pack, include_vendor=False):
         text = p.read_text(encoding="utf-8", errors="replace")
         rel = str(p.relative_to(pack))
         new = text

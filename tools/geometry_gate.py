@@ -63,12 +63,14 @@ REPO_SHAPE = {"BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Build", "Grow", "Lau
 REQUIRED = {"ASDAN PEQ", "grow-anim", "LundyLoop", "README_FIRST.txt", "_Pack_Notes"}
 
 # Five deep ASDAN paths, crawled from their own location.
+# Five real paths, four folders deep or more, spread across all three lanes and
+# including one this pass regenerated. Sampling from the root proves nothing.
 DEEP_SAMPLES = [
     "ASDAN PEQ/Launch/START_HERE.html",
     "ASDAN PEQ/Build/Careers/START_HERE.html",
     "ASDAN PEQ/Grow/Community and Enterprise/START_HERE.html",
     "ASDAN PEQ/Build/DT/build_dt_upcycling.html",
-    "ASDAN PEQ/Grow/Personal Effectiveness/Scheme_of_Work.html",
+    "ASDAN PEQ/Grow/PEQ_L2_Kitchen/Scheme_of_Work.html",
 ]
 
 HREF = re.compile(r'(?:href|src)\s*=\s*["\']([^"\']+)["\']', re.I)
