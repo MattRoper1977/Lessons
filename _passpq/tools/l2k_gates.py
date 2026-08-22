@@ -5,7 +5,8 @@
 #   L2K_PLANT_XLEVEL=1  plants a cross-level minimum in a lane block   -> G4 RED
 #   (the matrix planted-gap control lives in l2k_build.py: L2K_PLANT_GAP=1)
 #
-# G1 ledger re-proven          — l2k_plan.build() asserts every sum, milestone, window
+# G1 ledger re-proven          — l2k_plan._assert_calendar() proves the block scheme covers
+#                                 the year; build() then asserts every sum, milestone, window
 # G2 pages match the ledger    — rebuild to temp, byte-diff against committed pages
 # G3 xlsx twin value-identical — rebuilt workbook's cell values == committed workbook's
 # G4 no cross-level minimum    — every lane-tagged sheet carries ONLY its lane's unit
@@ -30,8 +31,17 @@ def load(modname, path):
     return m
 try:
     plan = load("l2k_plan", os.path.join(ROOT, "_passpq", "tools", "l2k_plan.py"))
+    # _assert_calendar() BEFORE build(). It lived only inside l2k_plan.main(), so it
+    # fired when the ledger was regenerated and nowhere else: a falsified block scheme
+    # reddened the generator but sailed through the whole gate suite, because build()
+    # asserts sums *within* whatever BLOCKS it is handed and never questions the blocks
+    # themselves. PEQ-YEAR-3 caught it by planting a 14-week autumn and watching
+    # l2k_plan.py exit 1 while l2k_gates.py stayed ALL GREEN. The pass brief requires
+    # the spring/summer assumptions to travel with an intact assertion, and "intact"
+    # has to mean load-bearing at the gate, not merely present in the file.
+    plan._assert_calendar()
     plan.build()
-    gate("G1 ledger re-proven (sums, milestones, windows)", True)
+    gate("G1 ledger re-proven (calendar, sums, milestones, windows)", True)
 except AssertionError as e:
     gate("G1 ledger re-proven", False, str(e))
 
