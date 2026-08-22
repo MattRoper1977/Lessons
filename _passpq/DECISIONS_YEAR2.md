@@ -249,3 +249,52 @@ line is **closed** — Apps is attached, so the pin moved properly.
 | print parity vs `2310ea0` | **PASS — 6/6 decks** | divergence check is the gate |
 | boot clean, 11 Kitchen pages | **PASS** — zero console errors | — |
 | `node --check` · `py_compile` | clean | — |
+
+---
+
+## The merge, and the evidence it landed
+
+| | |
+|---|---|
+| **Lessons merge** | `283d67143a4c50db2eac2660cf20a38f1b8dfdb6` — `--no-ff` on `63271c33` |
+| **Apps merge** | `93bbf98ea911bab9601c91efd3f5119a13ec6718` — `--no-ff` on `a7e80737` |
+| **Order** | Lessons first, then Apps, as instructed |
+| **Pages** | `pages build and deployment` on `283d6714` — **completed / success** |
+
+### Both pins, read back from the two merge SHAs
+
+```
+Lessons 283d6714  "resources.json": "907e7875d0e4…
+Apps    93bbf98e  "resources.json": "907e7875d0e4…
+```
+
+Identical, and the two gate copies are byte-identical (`cmp`) at the merged tips.
+
+### The four pages, re-fetched from the merge SHA
+
+| file | HTTP | bytes |
+|---|---|---|
+| `Cooking_Handover.html` | 200 | 13 387 |
+| `Kitchen_Week_Shell.html` | 200 | 165 229 |
+| `Criteria_By_Week.html` | 200 | 77 446 |
+| `Kitchen_Completion_Checklist.html` | 200 | 10 880 |
+
+`resources.json` at that SHA carries **651** entries and all six Kitchen ids.
+
+### Phone check — opened from the catalogue, not by URL
+
+The hub was loaded and each page reached **through the catalogue's own search**, never by typing
+a path:
+
+```
+Cooking Handover              FOUND via search  [Support]
+Weekly Shells                 FOUND via search  [Support]
+Criteria by Week              FOUND via search  [Support]
+Weekly Completion Checklist   FOUND via search  [Support]
+
+GROW chip now reads: GROW Vocational & PfA (48)
+zero console errors
+```
+
+Each renders as **Support** — the "OPEN PACK →" presentation, not the "interactive tool" one —
+which is the §1 type decision showing up where a reader meets it.
