@@ -26,7 +26,27 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 OUT_JSON = os.path.join(ROOT, "_passpq", "inputs", "peq_l2k_year_ledger.json")
 OUT_XLSX = os.path.join(ROOT, "_passpq", "inputs", "PEQ_L2K_YearPlan_2026-27.xlsx")
 
-WEEKLY_MIN = 210          # owner input: 3.5 GLH/week default (Addendum B §B1)
+WEEKLY_MIN = 210          # OWNER INPUT: 3.5 GLH/week (Addendum B §B1). NOT a derived figure.
+# Pass PEQ-YEAR-1 §1 attempted to replace this with a rate measured from the estate's own
+# timetable and STOPPED: the repo does not fix one. See _passpq/DERIVATION_YEAR1.md and
+# `python3 _passpq/tools/year1_derive.py` (exit 1 while any lane is unestablishable).
+# What §1 DID establish, and what the sensitivity table below is now re-based onto:
+PERIOD_MIN = 40           # the estate's period unit — 15 agreeing statements, all lanes
+SLOT_BAND = (1, 7)        # BUILD's measurable band: 1 PEQ row .. 7 rows (PEQ + six slots)
+DERIVATION = (
+    "Period unit 40 min: MEASURED, 15 agreeing statements across all three lanes' weekly "
+    "planners (each on a science row — it fixes the period unit, never a PEQ slot count). "
+    "Slot count: 'Six discrete weekly slots' + 'which is how LI reaches certification on a "
+    "one-slot week' (BUILD_Slot_Planner_2026-27_vA.xlsx [Slot Architecture]!A2) fixes ONE "
+    "period per slot per week — the only cell in the estate that fixes a slot count, and a "
+    "BUILD file. BUILD's PEQ time is therefore bounded 0.67–4.67 h/wk (1–7 periods). It is "
+    "NOT a single figure: which of the six carryable slots may bank an hour to PEQ as well "
+    "as to its own ASDAN short course needs the member-gated PEQ delivery guide (not held) "
+    "or a coordinator ruling. GROW's ASDAN row is empty 8/8 weeks; LAUNCH's eight planners "
+    "disagree on their own row structure (a populated PEQ row in 3 of 8, absent from 4). "
+    "The 3.5 h/wk owner input is 5.25 forty-minute periods — not a whole number of the "
+    "estate's actual timetabled periods."
+)
 WEEKS = 38
 DECK_MIN = 40             # one timetabled 40-minute period per live deck (measured, §"method" below)
 
@@ -222,9 +242,19 @@ def build():
 def sensitivity():
     rows = []
     CO_CAP = {"E3": 420, "L1": 120, "L2": 0}   # the declared co-delivery in the 3.5 h plan
-    for hpw in (2.0, 3.0, 3.5, 4.0):
-        year = int(hpw * 60) * WEEKS
-        cell = {"hpw": hpw, "year_glh": year / 60.0, "lanes": {}}
+    # Re-based (PEQ-YEAR-1 §2) onto the MEASURED 40-minute period rather than the round
+    # numbers 2/3/3.5/4, none of which is a whole number of the estate's real periods.
+    # Each row is a whole count of timetabled periods; the owner input is carried alongside,
+    # flagged, so the page can show it without presenting it as derived.
+    lo, hi = SLOT_BAND
+    grid = [(n, n * PERIOD_MIN / 60.0) for n in range(lo, hi + 1)]
+    grid.append((WEEKLY_MIN / PERIOD_MIN, WEEKLY_MIN / 60.0))     # the declared owner input
+    grid.sort(key=lambda t: t[1])
+    for slots, hpw in grid:
+        year = int(round(hpw * 60)) * WEEKS
+        cell = {"slots": slots, "whole_periods": float(slots).is_integer(),
+                "owner_input": abs(hpw - WEEKLY_MIN / 60.0) < 1e-9,
+                "hpw": round(hpw, 4), "year_glh": round(year / 60.0, 2), "lanes": {}}
         for lane in ("E3", "L1", "L2"):
             reach = []
             for (name, cr, qglh, mw, skills) in QUALS[lane]:
@@ -243,6 +273,8 @@ def main():
         "pass": "PEQ-L2K v2 + Addendum B", "built": "2026-08-22",
         "weekly_min_default": WEEKLY_MIN, "weeks": WEEKS, "blocks": BLOCKS,
         "deck_min": DECK_MIN, "deck_method": DECK_METHOD,
+        "period_min": PERIOD_MIN, "slot_band": list(SLOT_BAND), "derivation": DERIVATION,
+        "weekly_min_is_owner_input": True,
         "decks": [{"week": w, "suite": s, "deck": d, "skill": sk} for (w, s, d, sk) in DECKS],
         "units": {lane: {sk: {"code": u[0], "credits": u[1], "glh": u[2]} for sk, u in UNITS[lane].items()}
                   for lane in UNITS},

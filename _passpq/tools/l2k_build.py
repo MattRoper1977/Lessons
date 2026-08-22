@@ -10,7 +10,7 @@
 # The coverage invariant lives HERE: every AC of all 18 units must land on a week
 # with a named artefact, or the build raises and writes nothing.
 
-import json, os, sys, html
+import json, os, re, sys, html
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 OUT = os.path.join(ROOT, "GROW_ASDAN", "PEQ_L2_Kitchen")
@@ -130,7 +130,9 @@ def build_sow():
     # the honest GLH statement + method
     S.append(f"""<h2>The hours, stated honestly</h2>
 <p class="bank"><b>The live 12-week deck suite is the knowledge-and-assessment spine, not the hours.</b> Measured, it contributes <b>8.0 GLH</b>: {esc(LED["deck_method"])} Against that: ComSkE3 alone is <b>30 GLH</b>, and the smallest qualification (the E3 Award) is <b>40 GLH</b>. The guided hours therefore come from the planned year — the kitchen practicals, the challenge blocks, supervised tutor-time application — because GLH counts <em>any</em> taught or supervised time toward the unit, including assessment by the centre assessor (spec &sect;9 p16, &sect;5.1 p9).</p>
-<p><b>Weekly PEQ hours are an owner input.</b> This map is worked at the default of <b>3.5 supervised hours per week</b> (one classroom session + one kitchen practical), i.e. 3.5 &times; 38 = <b>133 physical GLH</b> per lane. Read the next table before setting the timetable: <b>the E3 Certificate (134 qual-GLH; 140 unit-GLH) needs &asymp;3.5 supervised hours per week for the whole year, with zero slack</b> — the six-unit ledger only closes because 7 hours are co-delivered (one supervised session banked to two units, declared week by week below; the spec's own model — Communication evidence is <em>expected</em> to be generated through a challenge that leads to another unit (pp25/54), ASDAN's worked assessment plan co-assesses two units in the same weekly activity, and ASDAN's own E3 Certificate GLH (134) already sits below the six-unit sum (140), netting overlap out). At 2 or 3 hours per week the honest answer is a smaller qualification, shown below.</p>""")
+<p><b>Weekly PEQ hours are an owner input — still, and now labelled as one.</b> This map is worked at <b>3.5 supervised hours per week</b> (one classroom session + one kitchen practical), i.e. 3.5 &times; 38 = <b>133 physical GLH</b> per lane. A pass was run to replace that input with a rate <em>measured</em> from the school's own timetable, and it <b>stopped rather than guess</b>. What it established: the estate's period unit is <b>40 minutes</b> (fifteen agreeing statements across all three lanes) and BUILD runs <b>six discrete weekly slots at one period each</b> beside its PEQ row — which bounds BUILD's PEQ time at <b>0.67 to 4.67 hours a week</b> but does not fix a single figure. What it could not establish: how many of those six slots may bank an hour to PEQ <em>as well as</em> to their own ASDAN short course (that needs the member-gated PEQ delivery guide, or the coordinator); GROW's ASDAN row, which is empty in all eight built weeks; LAUNCH's weekly planners, which disagree with one another; and spring and summer term dates, which are nowhere in the estate. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>
+<div class="safebox"><b>Read this before setting the timetable.</b> 3.5 hours a week is <b>5.25 forty-minute periods</b> — the one rate in the table below that is <em>not</em> a whole number of the school's actual periods, and the exact point at which the Entry&nbsp;3 and Level&nbsp;1 Certificates flip from out-of-reach to reachable. At <b>five</b> whole periods (3.33 h/wk) the honest answer for those two lanes is the <b>Extended Award</b>, not the Certificate. At <b>six</b> (4.0 h/wk) all three Certificates are reachable with slack and the co-delivery claim can be dropped entirely. <b>The timetabling decision is therefore five periods or six, and it decides the qualification.</b></div>
+<p>The E3 Certificate (134 qual-GLH; 140 unit-GLH) needs &asymp;3.5 supervised hours per week for the whole year with zero slack: at that rate the six-unit ledger only closes because <b>7 hours are co-delivered</b> (one supervised session banked to two units, declared week by week below). That is grounded in the spec's own model — Communication evidence is <em>expected</em> to be generated through a challenge that leads to another unit (pp25/54), ASDAN's worked assessment plan co-assesses two units in the same weekly activity, and ASDAN's own E3 Certificate GLH (134) already sits below the six-unit sum (140), netting the overlap out. <b>At six periods a week that claim is unnecessary and should be withdrawn</b> — the honest number, not the convenient one.</p>""")
 
     # sensitivity table
     rows = []
@@ -140,13 +142,20 @@ def build_sow():
             cells = "".join(
                 f"<td>{'&#9745; yes' if q['ok'] else '&#9746; no — short ' + ('%g' % q['short_h']) + ' h'}</td>"
                 for q in quals)
-            first = (f"<td rowspan=\"3\"><b>{'%g' % cell['hpw']} h/wk</b></td><td rowspan=\"3\" class=\"num\">{'%g' % cell['year_glh']}</td>"
+            slot_txt = ("%g" % cell["slots"]) + (" &times; 40 min" if cell["whole_periods"]
+                        else " &times; 40 min <b>(not a whole period)</b>")
+            mark = " class=\"milestone\"" if cell.get("owner_input") else ""
+            first = (f"<td rowspan=\"3\"{mark}><b>{'%g' % cell['hpw']} h/wk</b><br>"
+                     f"<span style=\"font-size:.82rem;color:#475569\">{slot_txt}</span>"
+                     + ("<br><b style=\"font-size:.82rem\">&#9432; the declared owner input</b>" if cell.get("owner_input") else "")
+                     + f"</td><td rowspan=\"3\" class=\"num\"{mark}>{'%g' % cell['year_glh']}</td>"
                      if i == 0 else "")
             rows.append(f"<tr class=\"lane-{lane}\">{first}<td><b>{LANE_NAME[lane]}</b></td>{cells}</tr>")
     S.append(f"""<h3>Sensitivity: what each weekly commitment can honestly deliver (38 weeks)</h3>
+<p style="font-size:.9rem">Re-based on the <b>measured 40-minute period</b> rather than round numbers: every row but one is a whole count of the school's real timetabled periods, across the band the timetable evidence actually supports (1&ndash;7 periods). The shaded row is the plan's declared owner input.</p>
 <table><tr><th>Supervised h/wk</th><th>Year GLH</th><th>Lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
 {''.join(rows)}</table>
-<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours plus that lane's declared co-delivery (E3 7 h · L1 2 h · L2 0 h). The default plan below is the 3.5 h/wk row.</p>""")
+<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours plus that lane's declared co-delivery (E3 7 h &middot; L1 2 h &middot; L2 0 h). <b>No row is marked live.</b> The weekly rate is an owner input, not a derived figure &mdash; see <code>_passpq/DERIVATION_YEAR1.md</code> for what the timetable evidence does and does not fix. The ledger below is worked at the shaded row.</p>""")
 
     # staged milestones
     mrows = []
@@ -436,6 +445,276 @@ def build_staff():
                 "The Level-2 route · progression ladder · budget bands · kit · safety · safeguarding",
                 "\n".join(S))
 
+
+# ============================================================ PEQ-YEAR-1 §4 ====
+# The colleague's cooking frame. FRAME ONLY: these four pages carry no dish, no
+# recipe, no menu and no ingredient. The "what we're cooking" box is left empty
+# on purpose - it is hers to fill. Enforced by _passpq/tools/food_gate.py, which
+# goes red if a dish name appears on any of them.
+
+WEEK_RE = re.compile(r'W(\d+)(?:\s*(?:&ndash;|&#8211;|-|–)\s*(\d+))?')
+
+def weeks_of(expr):
+    """Turn a matrix week-expression ('W9&ndash;13', 'W4 (deck first pass) · W21&ndash;22')
+    into the set of week numbers it covers. Used to invert the matrix by week."""
+    out = set()
+    for m in WEEK_RE.finditer(expr or ""):
+        a = int(m.group(1)); b = int(m.group(2)) if m.group(2) else a
+        if b < a: a, b = b, a
+        out |= set(range(a, min(b, LED["weeks"]) + 1))
+    return out
+
+def criteria_by_week():
+    """week -> lane -> [(unit code, AC code, demand, artefact, stage)] — inverted
+    from exactly the same mapping the coverage matrix is built from, so the two
+    pages can never drift."""
+    idx = {w: {l: [] for l in LANES} for w in range(1, LED["weeks"] + 1)}
+    for lane in LANES:
+        for sk in SKILLS:
+            code = UNIT_BY[(lane, sk)]
+            u = AC[code]
+            eval_wk = LED["lanes"][lane]["complete_week"][sk]
+            for ac in u["acs"]:
+                if ac["code"] == u.get("plan_ac"):
+                    expr, art, stage = PLAN_WEEKS[sk], ARTEFACT[sk]["plan"], "plan"
+                elif ac["code"] == u.get("use_ac"):
+                    expr, art, stage = USE_WEEKS[sk], ARTEFACT[sk]["use"], "use"
+                elif ac["code"] == u.get("eval_ac"):
+                    expr, art, stage = f"W{eval_wk}", ARTEFACT[sk]["eval"], "evaluate"
+                else:
+                    expr, art, stage = KNOW_WEEKS[sk], ARTEFACT[sk]["know"], "know"
+                for w in weeks_of(expr):
+                    idx[w][lane].append((code, ac["code"], ac["label"], art, stage,
+                                         ac.get("min")))
+    return idx
+
+def _events_due(w):
+    """Plan opens, review points and evaluation weeks falling in week w."""
+    ev = []
+    for sk, win in LED["plan_windows"].items():
+        if win["open"] == w:   ev.append(f"<b>{SKILL_NAME[sk]}</b> plan opens (10-hour window to W{win['close']})")
+        if win["review"] == w: ev.append(f"<b>{SKILL_NAME[sk]}</b> plan <b>review point</b> (Level 1 &amp; Level 2 only &mdash; Entry 3 plans carry none)")
+        if win["close"] == w:  ev.append(f"<b>{SKILL_NAME[sk]}</b> 10-hour window closes &mdash; hours must be logged")
+    ca = LED["com_activity"]
+    if w in ca["plan_weeks"]:     ev.append("<b>Communication</b> plan written (L2: <b>two</b> plans, two different ways)")
+    if w in range(ca["activity_weeks"][0], ca["activity_weeks"][1] + 1):
+        ev.append("<b>Communication</b> activity delivered &mdash; time it / count the words against the lane minima")
+    if w == ca["eval_week"]:      ev.append("<b>Communication</b> evaluation")
+    for lane in LANES:
+        for sk in SKILLS:
+            if LED["lanes"][lane]["complete_week"][sk] == w:
+                ev.append(f"{LANE_NAME[lane]}: <b>{UNIT_BY[(lane, sk)]}</b> evaluation &amp; unit sign-off")
+    for lane in LANES:
+        for m in LED["lanes"][lane]["milestones"]:
+            if m["week"] == w:
+                ev.append(f"<b>MILESTONE</b> &mdash; {LANE_NAME[lane]}: {m['qual']} ({m['credits']} cr)")
+    return ev
+
+HARD_RULES_HTML = """<div class="safebox"><b>The five rules that do not bend.</b>
+<ol style="margin:6px 0 0 18px">
+<li><b>Supervised bench, always.</b> A trained adult at the bench for any knife or heat work,
+ratios per the school's own policy. The kitchen <b>risk assessment is the school's document</b>
+&mdash; this programme runs inside it and nothing here replaces it. Allergen and
+dietary-requirement checks are the school's standing process and happen <b>before</b> any
+cooking is planned.</li>
+<li><b>No diet, calorie, weight or body framing.</b> Anywhere, on any surface a pupil sees.
+The food content of this programme is <b>cooking skill, budget, teamwork and enjoyment</b>.
+This is not a style preference; it is a safeguarding rule for this cohort.</li>
+<li><b>Pupil names never enter the repository.</b> Named registers, photos with faces, and
+anything identifying stay on the school network. Repository copies use Pupil&nbsp;A&ndash;D.</li>
+<li><b>Evidence is signed and dated</b> by <b>both</b> assessor and learner (spec &sect;10 p17),
+with the IQA box completed where the piece is sampled. An unsigned sheet is not evidence.</li>
+<li><b>Every surface says &ldquo;working towards&rdquo;.</b> A pupil has not achieved a unit
+until it is assessed, internally quality-assured and EQA-sampled. Nothing you write may promise
+a certificate.</li>
+</ol></div>"""
+
+def build_cooking_handover():
+    S = [f"""<div class="note"><b>Who this is for.</b> This is the teacher frame for the kitchen
+year &mdash; what it is for, which units each block evidences, what paperwork exists, and what is
+yours to build. It deliberately contains <b>no recipes, no menus, no dishes and no ingredient
+lists</b>. Those are yours: you know the kitchen, the budget and the pupils. What is provided is
+everything that has to line up with the qualification, so that whatever you cook lands on a
+criterion.</div>
+
+<h2>The kitchen year in one page</h2>
+<p>One mixed class, one kitchen, a full {LED["weeks"]}-week year, running the ASDAN Personal
+Effectiveness Qualifications at <b>three levels at once</b> &mdash; the cohort at Entry&nbsp;3, a
+small group at Level&nbsp;1, a directed few at Level&nbsp;2. Everyone cooks in the same session;
+what differs is the <b>demand</b> placed on each pupil and the <b>level</b> their evidence banks
+at. An Entry&nbsp;3 pupil states and lists; a Level&nbsp;1 pupil describes and explains; a
+Level&nbsp;2 pupil compares, assesses and evaluates. Same bench, same task, three standards.</p>
+<p>The qualification is <b>not about food</b>. It is about six personal skills &mdash;
+communication, decision making, learning, team working, thinking, and wellbeing in learning
+&mdash; and the kitchen is simply the vehicle that generates honest evidence of them. That is
+why this pack can hand you the criteria without handing you a menu: <b>what</b> you cook is
+yours; <b>what it has to prove</b> is fixed.</p>
+{HARD_RULES_HTML}
+
+<h2>Which block evidences what</h2>
+<table><tr><th>Block</th><th>Weeks</th><th>Skill in focus</th><th>Unit banked, per lane</th></tr>"""]
+    order = [("TmWk", "Team working"), ("DecMk", "Decision making"), ("LSk", "Learning"),
+             ("Com", "Communication"), ("Th", "Thinking / Critical thinking"),
+             ("Wellb", "Wellbeing in learning")]
+    for (b, a, z) in LED["blocks"]:
+        focus = []
+        for sk, name in order:
+            mins_in = sum(sum(v for k, v in LED["lanes"]["E3"]["rows"][w - 1].items() if k == sk)
+                          for w in range(a, z + 1))
+            if mins_in: focus.append((mins_in, sk, name))
+        focus.sort(reverse=True)
+        if not focus: continue
+        _, sk, name = focus[0]
+        units = " &middot; ".join(f"{LANE_NAME[l]} <b>{UNIT_BY[(l, sk)]}</b>" for l in LANES)
+        S.append(f"<tr><td><b>{b}</b></td><td>W{a}&ndash;{z}</td><td>{name}</td><td>{units}</td></tr>")
+    S.append("</table>")
+    S.append(f"""<p style="font-size:.88rem">The full week-by-week ledger is on the
+<a href="Scheme_of_Work.html">year map</a>; every individual criterion is on the
+<a href="Criteria_Coverage_Matrix.html">coverage matrix</a>, and the same mapping inverted
+week-by-week is on <a href="Criteria_By_Week.html">what each week must produce</a>.</p>
+
+<h2>What is already provided &mdash; you should not rebuild any of this</h2>
+<table><tr><th>Sheet</th><th>What it does</th></tr>
+<tr><td><a href="Kitchen_Week_Shell.html">Week shells</a></td><td>One printable page per week, pre-filled with the block, the units and the exact criteria due that week, the plan and review-point events, and the artefacts to collect &mdash; with a <b>blank box for what you are cooking</b>.</td></tr>
+<tr><td><a href="Criteria_By_Week.html">Criteria by week</a></td><td>The coverage matrix inverted: for any week, what each lane must produce.</td></tr>
+<tr><td><a href="Kitchen_Completion_Checklist.html">Completion checklist</a></td><td>A weekly tick sheet &mdash; evidence collected, sheets signed, plan hours logged.</td></tr>
+<tr><td><a href="Plan_Templates.html">Plan templates</a></td><td>Six skills &times; three levels, level-correct (Entry&nbsp;3 plans carry <b>no</b> review point; L1 and L2 do).</td></tr>
+<tr><td><a href="Evidence_Sheets.html">Evidence sheets</a></td><td>Per unit per level, with assessor / learner / date and the IQA sample box.</td></tr>
+<tr><td><a href="Assessor_Checklists.html">Assessor checklists</a></td><td>Tick-per-criterion, with the lane's own minima printed on the sheet.</td></tr>
+<tr><td><a href="Plan_Hours_Grid.html">Plan-hours grid</a></td><td>The five 10-hour windows, per lane.</td></tr>
+<tr><td><a href="Staff_Kitchen_Guide.html">Staff guide</a></td><td>Progression ladder, budget bands, kit list, safety and safeguarding.</td></tr></table>
+
+<h2>What is yours to produce</h2>
+<p>Everything about the food, and nothing about the qualification:</p>
+<ul>
+<li><b>What is cooked each week</b> &mdash; dishes, recipes, menus, ingredient and shopping
+lists, quantities, substitutions.</li>
+<li><b>The practical demonstrations</b> and how techniques are modelled and sequenced.</li>
+<li><b>Ordering and the budget within the band</b> the office sets each term.</li>
+<li><b>Which pupils work at which bench</b>, and the pairings that work in your room.</li>
+</ul>
+<p class="bank"><b>The one thing to hold on to when you plan a week:</b> pick the food first if
+that is how you think &mdash; then open that week's shell and check the criteria it has to
+carry. If a criterion has no natural home in what you have chosen, change the task slightly
+rather than the criterion. The criteria are fixed by the awarding body; the food is not.</p>
+
+<h2>Where to ask</h2>
+<p>Anything about <b>criteria wording, levels, minima, plans or evidence</b> &mdash; the
+<a href="Criteria_Coverage_Matrix.html">coverage matrix</a> first, then the course coordinator.
+Anything about <b>registration, unit entry or claims</b> &mdash; the coordinator; those are
+settled centre-side and are not decisions you need to make. Anything about <b>kitchen safety,
+allergens or the risk assessment</b> &mdash; the school's own policy and the Head of School.</p>""")
+    S.append(FACTS_PANEL)
+    return page("Made by Matt · GROW ASDAN · Kitchen Programme · Cooking Handover",
+                "Kitchen Programme &middot; Cooking Handover",
+                "The teacher frame &mdash; what is provided, what is yours, and the rules that do not bend",
+                "\n".join(S))
+
+def build_week_shell():
+    idx = criteria_by_week()
+    S = ["""<div class="note no-print"><b>How to use.</b> One page per week. The left column is
+fixed by the qualification &mdash; block, units, criteria, events, artefacts. The
+<b>&ldquo;What we are cooking&rdquo;</b> box is deliberately empty: it is yours. Print the weeks
+you need; the pages break one per sheet.</div>"""]
+    for w in range(1, LED["weeks"] + 1):
+        ev = _events_due(w)
+        deck = DECK_OF.get(w)
+        rows = []
+        for lane in LANES:
+            items = idx[w][lane]
+            if not items: continue
+            seen, bits = set(), []
+            for code, ac, label, art, stage, mn in items:
+                key = (code, ac)
+                if key in seen: continue
+                seen.add(key)
+                mtxt = f' <b style="font-size:.8rem">min: {esc(mn)}</b>' if mn else ""
+                bits.append(f"<b>{code}</b> {ac} <span style=\"font-size:.85rem\">({stage})</span> "
+                            f"&mdash; {esc(label)}{mtxt}")
+            arts = sorted({a for _, _, _, a, _, _ in items})
+            rows.append(f"<tr class=\"lane-{lane}\"><td style=\"width:14%\"><b>{LANE_NAME[lane]}</b></td>"
+                        f"<td>{'<br>'.join(bits)}</td>"
+                        f"<td style=\"width:26%\">{'<br>'.join(arts)}</td></tr>")
+        body = ("".join(rows) or
+                "<tr><td colspan=\"3\"><i>No new criteria fall in this week &mdash; consolidation, "
+                "gap-fill and plan hours.</i></td></tr>")
+        S.append(f"""<div class="sheet">
+<h2 style="margin-top:0">Week {w} &middot; {BLOCK_OF[w]}</h2>
+<p class="sub" style="text-align:left;font-weight:400">
+{('Live PEQ deck this week: <b>' + esc(deck) + '</b>') if deck else 'No PEQ deck this week &mdash; kitchen session and plan hours.'}</p>
+<table><tr><th>Lane</th><th>Units &amp; the exact criteria due this week</th><th>Evidence to collect</th></tr>
+{body}</table>
+<h3>Plan &amp; review-point events due</h3>
+{('<ul>' + ''.join('<li>' + e + '</li>' for e in ev) + '</ul>') if ev else '<p><i>None due this week.</i></p>'}
+<h3>What we are cooking this week</h3>
+<div style="border:1px dashed #94a3b8;border-radius:8px;min-height:150px;padding:10px">
+<span class="no-print" style="color:#94a3b8;font-size:.85rem">&mdash; for the class teacher to complete &mdash;</span></div>
+<table class="sigrow" style="margin-top:10px"><tr>
+<td style="width:50%">Session led by &middot; date</td><td>Evidence collected &amp; filed &middot; initials</td></tr></table>
+</div>""")
+    return page("Made by Matt · GROW ASDAN · Kitchen Programme · Weekly Shells",
+                "Kitchen Programme &middot; Weekly Shells",
+                f"One page per week &middot; all {LED['weeks']} weeks &middot; the cooking box is yours to fill",
+                "\n".join(S))
+
+def build_criteria_by_week():
+    idx = criteria_by_week()
+    S = ["""<div class="note"><b>The coverage matrix, inverted.</b> The
+<a href="Criteria_Coverage_Matrix.html">matrix</a> reads unit&nbsp;&#8614;&nbsp;week. This page
+reads <b>week&nbsp;&#8614;&nbsp;unit</b>, per lane, so a week can be planned at a glance. Both
+are generated from the same mapping in the same build, so they cannot drift apart.</div>"""]
+    for lane in LANES:
+        S.append(f"<h2 style=\"color:{LANE_HEX[lane]}\">{LANE_NAME[lane]} lane</h2>")
+        rows = []
+        for w in range(1, LED["weeks"] + 1):
+            items = idx[w][lane]
+            if not items:
+                rows.append(f"<tr><td><b>W{w}</b></td><td>{BLOCK_OF[w]}</td>"
+                            f"<td colspan=\"2\"><i>consolidation / plan hours &mdash; no new criteria</i></td></tr>")
+                continue
+            seen, bits = set(), []
+            for code, ac, label, art, stage, mn in items:
+                if (code, ac) in seen: continue
+                seen.add((code, ac))
+                bits.append(f"<b>{code}</b>&nbsp;{ac} <span style=\"font-size:.85rem\">({stage})</span>")
+            arts = sorted({a for _, _, _, a, _, _ in items})
+            cls = " class=\"milestone\"" if any(m["week"] == w for m in LED["lanes"][lane]["milestones"]) else ""
+            rows.append(f"<tr{cls}><td><b>W{w}</b></td><td>{BLOCK_OF[w]}</td>"
+                        f"<td>{' &middot; '.join(bits)}</td><td style=\"width:32%\">{'<br>'.join(arts)}</td></tr>")
+        S.append("<table><tr><th style=\"width:7%\">Week</th><th style=\"width:9%\">Block</th>"
+                 "<th>Criteria due</th><th>Evidence artefact</th></tr>" + "".join(rows) + "</table>")
+    return page("Made by Matt · GROW ASDAN · Kitchen Programme · Criteria by Week",
+                "Kitchen Programme &middot; Criteria by Week",
+                "The coverage matrix inverted &mdash; what each week must produce, per lane",
+                "\n".join(S))
+
+def build_completion_checklist():
+    S = ["""<div class="note no-print"><b>How to use.</b> One row per week. Tick as the week
+closes; anything untickable is a gap to fix while the kit is still out and the pupils still
+remember the session. A gap found at the audit week is a gap found too late.</div>
+<table><tr><th style="width:6%">Week</th><th style="width:8%">Block</th>
+<th style="width:22%">Evidence collected</th><th style="width:22%">Sheets signed (assessor + learner)</th>
+<th style="width:22%">Plan hours logged</th><th>Gap / action</th></tr>"""]
+    for w in range(1, LED["weeks"] + 1):
+        due = [sk for sk, win in LED["plan_windows"].items() if win["open"] <= w <= win["close"]]
+        hrs = (" &middot; ".join(SKILL_NAME[sk] for sk in due)) if due else "&mdash;"
+        mile = any(m["week"] == w for lane in LANES for m in LED["lanes"][lane]["milestones"])
+        cls = " class=\"milestone\"" if mile else ""
+        S.append(f"<tr{cls}><td><b>W{w}</b></td><td>{BLOCK_OF[w]}</td>"
+                 f"<td>&#9744;</td><td>&#9744;</td><td>&#9744; <span style=\"font-size:.8rem\">{hrs}</span></td><td></td></tr>")
+    S.append("""</table>
+<p style="font-size:.88rem">&ldquo;Plan hours logged&rdquo; names the 10-hour windows open that
+week &mdash; the hours go on the <a href="Plan_Hours_Grid.html">plan-hours grid</a>, not here;
+this column only records that it was done. Shaded rows are qualification milestones.
+Communication carries <b>no</b> 10-hour window at any level &mdash; it has activity minima
+instead, printed on the <a href="Assessor_Checklists.html">assessor checklists</a>.</p>""")
+    S.append(FACTS_PANEL)
+    return page("Made by Matt · GROW ASDAN · Kitchen Programme · Weekly Completion Checklist",
+                "Kitchen Programme &middot; Weekly Completion Checklist",
+                "Evidence collected &middot; sheets signed &middot; plan hours logged",
+                "\n".join(S))
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     pages = {
@@ -446,6 +725,11 @@ def main():
         "Assessor_Checklists.html": build_checklists(),
         "Plan_Hours_Grid.html": build_grid(),
         "Staff_Kitchen_Guide.html": build_staff(),
+        # PEQ-YEAR-1 §4 — the colleague's cooking frame (frame only, zero cooking content)
+        "Cooking_Handover.html": build_cooking_handover(),
+        "Kitchen_Week_Shell.html": build_week_shell(),
+        "Criteria_By_Week.html": build_criteria_by_week(),
+        "Kitchen_Completion_Checklist.html": build_completion_checklist(),
     }
     for name, content in pages.items():
         with open(os.path.join(OUT, name), "w", encoding="utf-8") as f:

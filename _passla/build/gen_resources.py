@@ -48,7 +48,7 @@ def build_grow():
       'faces, unless consent is filed) · printed witness-statement slips · the full print pack off each title slide · '
       'display space for the term-long Lundy artefact boards (headlines only, never rankings).</p>')
     out.append('<p style="color:#666;font-size:12px;margin-top:18px">Made by Matt · Photos show work, not faces, unless '
-      'consent is filed · PEQ registered with ASDAN before assessment counts · Level 1 in 2026/27 (Stretch tier written to '
+      'consent is filed · PEQ registered with ASDAN, units entered · Level 1 in 2026/27 (Stretch tier written to '
       'an L2 evidence standard; no L2 registration).</p></body></html>')
     return "".join(out)
 
@@ -95,8 +95,8 @@ def build_launch():
       'allergy list is checked before any food session · money content is <b>practice money only</b>, never family '
       'finances · tools are counted out and back every session · off-site community or vocational work runs under the '
       'Trips &amp; Visits and health-and-safety policies.</div>')
-    out.append('<p style="color:#666;font-size:12px;margin-top:18px">Made by Matt · PEQ registered with ASDAN before '
-      'assessment counts; Autumn 1 completes Communication skills (ComSk1) and works toward a PEQ L1 Award / Extended '
+    out.append('<p style="color:#666;font-size:12px;margin-top:18px">Made by Matt · PEQ registered with ASDAN, '
+      'units entered; Autumn 1 completes Communication skills (ComSk1) and works toward a PEQ L1 Award / Extended '
       'Award / Certificate across the year (E3–L1 only; Stretch tier written to an L2 evidence standard, no L2 '
       'registration).</p></body></html>')
     return "".join(out)
