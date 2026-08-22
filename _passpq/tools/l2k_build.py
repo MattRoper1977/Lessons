@@ -627,7 +627,11 @@ with the IQA box completed where the piece is sampled. An unsigned sheet is not 
 <li><b>Every surface says &ldquo;working towards&rdquo;.</b> A pupil has not achieved a unit
 until it is assessed, internally quality-assured and EQA-sampled. Nothing you write may promise
 a certificate.</li>
-</ol></div>"""
+</ol>
+<p style="margin:10px 0 0">Two safeguarding boxes on the <a href="Staff_Kitchen_Guide.html">staff
+guide</a> are <b>read aloud to pupils before the activity runs</b>, in pupil-appropriate words
+&mdash; one when the decision plans open (W9), one when the wellbeing plans open (W27). They are
+on the page verbatim; they are not optional.</p></div>"""
 
 def build_cooking_handover():
     KIT = LED["kitchen"]; RM = LED["room_measured"]; RR = LED["room_reachability"]
@@ -731,6 +735,11 @@ Every sheet in this pack is slot-explicit so whoever picks it up can, without ne
 qualification at every level with headroom. On ASDAN-labelled slots alone, Build reaches nothing
 (it has none), Grow reaches the Award, and Launch reaches the Award and Extended Award but not the
 Certificate. The year map carries the full table.</p>
+
+<p><b>A note on the weeks themselves.</b> Autumn is evidenced at <b>15 teaching weeks</b> and the
+block labels match it. Spring and summer term dates are <b>not in the repository at all</b>
+&mdash; the timetable workbooks are weekly, not annual &mdash; so those block lengths remain
+<b>declared assumptions</b>, tagged as such on the year map. It changes nothing you teach.</p>
 
 <h2>Where to ask</h2>
 <p>Anything about <b>criteria wording, levels, minima, plans or evidence</b> &mdash; the

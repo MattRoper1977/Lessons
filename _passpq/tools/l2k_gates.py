@@ -11,10 +11,21 @@
 # G3 xlsx twin value-identical — rebuilt workbook's cell values == committed workbook's
 # G4 no cross-level minimum    — every lane-tagged sheet carries ONLY its lane's unit
 #                                codes and its lane's Communication activity minima
+# G6 handover pair          — every substantive .md block's content words appear in the .html
 # G5 required statements       — sensitivity table · measured deck-GLH method ·
 #                                L1 14-of-15 named · ThSk/CrTh lane split · working towards
 
-import importlib.util, json, os, re, sys, tempfile, subprocess
+import bisect as _bisect
+import importlib.util, json, os, re, shutil, sys, tempfile, subprocess
+import html as _html_mod
+
+# A gate that reads yesterday's bytecode is worse than no gate. Restoring a
+# planted l2k_plan.py within the same second as the .pyc was written left the
+# cache valid by mtime, and G1 reported the planted calendar against a clean
+# tree. Read the source, every run.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), '__pycache__'),
+              ignore_errors=True)
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 KIT = os.path.join(ROOT, "GROW_ASDAN", "PEQ_L2_Kitchen")
@@ -164,6 +175,138 @@ for k, v in {"safeguarding DecMk box": "Safeguarding — Decision making",
              "no-diet-framing rule": "no diet, calorie, weight or body framing"}.items():
     if v not in staff: missing.append(k)
 gate("G5 required statements present on the surfaces", not missing, "; ".join(missing))
+
+# ---------------------------------------------------------------------------
+# G6 — the handover .md and .html actually carry the same content
+#
+# COOKING_HANDOVER.md tells the colleague the HTML is the "printable copy — same
+# content". G5 checked that claim with a hand-listed set of strings, which is only
+# as good as whoever wrote the list. PEQ-YEAR-3 found a whole safeguarding
+# paragraph — the two boxes read aloud to pupils at W9 and W27, "verbatim; they
+# are not optional" — present in the .md and absent from the .html, because nobody
+# had thought to list it. A colleague printing the HTML never met it.
+#
+# So this gate is structural instead. Every substantive block of the .md must find
+# its content words in the .html. It cannot be defeated by adding prose that
+# neither file was checked for, which is exactly how the last gap happened.
+#
+# The threshold is 60% of content words, not 100%, because the two are worded for
+# different media and always will be. That is enough to catch a missing block
+# (the read-aloud paragraph scored 0%) without firing on a reworded sentence.
+#
+# The allowlist is deliberately tiny and each entry says why. A block belongs
+# there only if it is ABOUT the pairing — a pointer to the other copy — rather
+# than content the colleague needs.
+G6_STOP = set("""a an and are as at be been but by can do does for from had has have he her his
+if in into is it its may me my no not of on one or our so than that the their them then there
+these they this those to two up us was we were what when where which who will with without you
+your each every any all also only just still even own same other more most much many""".split())
+
+def _md_blocks(md):
+    """Substantive blocks: paragraphs and list items; headings, rules, fences dropped."""
+    out, buf = [], []
+    fence = False
+    for line in md.splitlines():
+        s = line.strip()
+        if s.startswith("```"):
+            fence = not fence
+            continue
+        if fence:
+            continue
+        if not s or s.startswith("#") or (len(s) > 2 and set(s) <= set("-*_ ")):
+            if buf:
+                out.append(" ".join(buf))
+                buf = []
+            continue
+        if re.match(r"^([-*+]|\d+\.)\s", s) and buf:
+            out.append(" ".join(buf))
+            buf = []
+        buf.append(s)
+    if buf:
+        out.append(" ".join(buf))
+    return out
+
+def _content_words(s):
+    s = re.sub(r"`[^`]*`", " ", s)                        # code spans: file names, cells
+    s = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", s)        # links -> their visible text
+    s = re.sub(r"&[a-z]+;|&#\d+;", " ", s)
+    s = re.sub(r"[^A-Za-z0-9]+", " ", s).lower()
+    return [w for w in s.split() if len(w) > 2 and w not in G6_STOP]
+
+def _html_tokens(h):
+    h = re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)
+    h = re.sub(r"<[^>]+>", " ", h)
+    h = _html_mod.unescape(h)
+    h = re.sub(r"[^A-Za-z0-9]+", " ", h).lower()
+    return [w for w in h.split() if len(w) > 2]
+
+def _alias(w, index):
+    """The html positions of this word, allowing for inflection.
+
+    Not a stemmer. Stemming both sides made things worse: "state" stems to itself
+    while "states" stems to "stat", so the .md's infinitive verb table read as
+    missing from an .html that says every verb. Prefix matching in both directions
+    handles state/states, assess/assesses, declare/declared and tag/tagged without
+    inventing tokens that exist on neither side. Four characters is the floor, so
+    "the" cannot cover "theme".
+    """
+    hit = list(index.get(w, ()))
+    if len(w) >= 4:
+        i = _bisect.bisect_left(index.keys_sorted, w)
+        j = i
+        while j < len(index.keys_sorted) and index.keys_sorted[j].startswith(w):
+            hit += index[index.keys_sorted[j]]
+            j += 1
+        if i > 0:
+            k = index.keys_sorted[i - 1]
+            if len(k) >= 4 and w.startswith(k):
+                hit += index[k]
+    return hit
+
+class _Index(dict):
+    def __init__(self, toks):
+        super().__init__()
+        for pos, w in enumerate(toks):
+            self.setdefault(w, []).append(pos)
+        self.keys_sorted = sorted(self)
+
+G6_ALLOW = [
+    ("Printable copy", "the .md points at the HTML; the HTML does not point at itself"),
+]
+
+# THE THRESHOLD IS MEASURED, NOT CHOSEN.
+#
+# Two candidate metrics were scored against the two real deletions this pass
+# found, plus every other block of the .md as the false-positive control:
+#
+#                                    intact   read-aloud   calendar   worst
+#                                             para gone    note gone  intact
+#   global  (word appears anywhere)   1.00       0.62         0.48      0.77
+#   window  (words appear together)   1.00       0.24         0.21      0.38
+#
+# The window metric separates too, but by a thinner margin, and it punishes an
+# .html that says the same things in a different order -- which is exactly what
+# an estate-styled printable copy is entitled to do. Global coverage separates
+# 0.62/0.48 from 0.77 with room on both sides, so 0.70 is the line, and both
+# real deletions sit well below it. Re-measure if either file is restructured;
+# do not nudge this number to make a red go away.
+G6_FLOOR = 0.70
+
+_index = _Index(_html_tokens(hand_html))
+_thin = []
+for _blk in _md_blocks(hand_md):
+    _cw = sorted(set(_content_words(_blk)))
+    if len(_cw) < 10:
+        continue
+    if any(a in _blk for a, _ in G6_ALLOW):
+        continue
+    _hit = sum(1 for w in _cw if _alias(w, _index)) / len(_cw)
+    if _hit < G6_FLOOR:
+        _gone = [w for w in _cw if not _alias(w, _index)]
+        _thin.append(f"{int(_hit * 100)}% in .html (absent: {', '.join(_gone[:6])}): "
+                     f"\u201c{_blk[:80]}\u2026\u201d")
+gate("G6 handover .md and .html carry the same content", not _thin,
+     f"{len(_thin)} .md block(s) missing from the .html — " + " | ".join(_thin[:3]))
 
 print()
 if fails:
