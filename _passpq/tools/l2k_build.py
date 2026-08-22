@@ -180,19 +180,29 @@ def build_sow():
 <p class="bank"><b>Thinking vs Critical thinking — the lane split.</b> The E3 and L1 lanes plan <b>ThSkE3 / ThSk1</b> (Thinking skills); only the L2 lane plans <b>CrThSk2</b> (Critical thinking skills) — the unit changes name, code and demand at Level 2 (spec pp11&ndash;13). The shared summer investigation runs at three demands: E3/L1 pupils work their Thinking plan; the L2 pupil assesses sources for credibility, accuracy and bias across &ge;2 sources, primary vs secondary (the blind taste test is the primary source).</p>""")
 
     # block spine
-    S.append("""<h2>The six blocks — one spine, three demands</h2>
-<table><tr><th>Block</th><th>Weeks</th><th>Delivers</th><th>Plan windows and review points</th></tr>
-<tr><td><b>Aut1</b></td><td>W1&ndash;7</td><td>Kitchen induction · the team plan (&ge;3 SMART team goals decided <em>with</em> the team) · wellbeing knowledge layer · the live deck spine begins (LAUNCH W1&ndash;6 = Communication knowledge at every lane's demand)</td><td>Team plan opens W2 (review point W6); TmWk 10-hour window W2&rarr;W12</td></tr>
-<tr><td><b>Aut2</b></td><td>W8&ndash;14</td><td>The menu &amp; budget project: decision situations (short/medium/long-term at L1·L2), tools compared (&ge;3 at L2), plans, cook cycles, both evaluations · GROW decks W2&ndash;6 · <b>Award milestone W14</b></td><td>Decision plan opens W9 (review point W11); window W9&rarr;W13; TmWk evaluation W13&ndash;14, DecMk evaluation W14</td></tr>
-<tr><td><b>Spr1</b></td><td>W15&ndash;20</td><td>The technique ladder — a named kitchen skill improved over the block; learning plans, barriers, ways of improving compared (L1·L2)</td><td>Learning plan opens W15 (review point W18); window W15&rarr;W19; evaluation W20</td></tr>
-<tr><td><b>Spr2</b></td><td>W21&ndash;26</td><td>Communication at full GLH: plans (E3/L1 one · <b>L2 two, over two different ways</b>), live demonstrations, discussion tables and written recipe/menu guides at the activity minima · <b>Extended Award milestone W26</b></td><td>No 10-hour window on Communication at any level — activity minima instead: E3 &ge;2&nbsp;min / &ge;5&nbsp;min / &ge;100 words · L1 &ge;3&nbsp;min / &ge;8&nbsp;min / &ge;250 words · L2 &ge;4&nbsp;min / &ge;10&nbsp;min / &ge;500 words · evaluation W26</td></tr>
-<tr><td><b>Sum1</b></td><td>W27&ndash;32</td><td>The food-claim investigation (Thinking at E3/L1 · Critical thinking at L2: &ge;2 sources, credibility/accuracy/bias, primary = own blind taste test) · wellbeing plans open and run through the learning weeks</td><td>Thinking plan opens W27 (review point W30), window W27&rarr;W32 · Wellbeing plan opens W27 (review point W32), window W27&rarr;W36</td></tr>
-<tr><td><b>Sum2</b></td><td>W33&ndash;38</td><td>Evaluations at the exact minima, portfolio assembly, IQA sample, EQA-window preparation, summer service · <b>Certificate milestone W38</b></td><td>Wellbeing evaluations W36&ndash;37; portfolio sign-off W38</td></tr></table>
+    BW = {b: (a, z) for (b, a, z) in LED["blocks"]}
+    TE = LED["term_evidence"]
+    def brow(b):
+        a, z = BW[b]; t = TE[b]
+        tag = ('<br><span style="font-size:.78rem;color:#166534"><b>evidenced</b></span>'
+               if t["evidenced"] else
+               '<br><span style="font-size:.78rem;color:#92400e"><b>assumption</b></span>')
+        return f"<td><b>{b}</b></td><td>W{a}&ndash;{z}<br><span style=\"font-size:.78rem;color:#475569\">{z-a+1} wks</span>{tag}</td>"
+    S.append(f"""<h2>The six blocks &mdash; one spine, three demands</h2>
+<div class="note"><b>Which of these weeks are real, and which are assumed.</b> {esc(LED["calendar_note"])}</div>
+<table><tr><th>Block</th><th>Weeks</th><th>Delivers</th><th>Plan windows and review points</th></tr>""")
+    S.append(f"""
+<tr>{brow("Aut1")}<td>Kitchen induction · the team plan (&ge;3 SMART team goals decided <em>with</em> the team) · wellbeing knowledge layer · the live deck spine begins (LAUNCH W1&ndash;6 = Communication knowledge at every lane's demand)</td><td>Team plan opens W2 (review point W6); TmWk 10-hour window W2&rarr;W12</td></tr>
+<tr>{brow("Aut2")}<td>The menu &amp; budget project: decision situations (short/medium/long-term at L1·L2), tools compared (&ge;3 at L2), plans, cook cycles, both evaluations · GROW decks W2&ndash;6 · <b>Award milestone W14</b></td><td>Decision plan opens W9 (review point W11); window W9&rarr;W13; TmWk evaluation W13&ndash;14, DecMk evaluation W14</td></tr>
+<tr>{brow("Spr1")}<td>The technique ladder — a named kitchen skill improved over the block; learning plans, barriers, ways of improving compared (L1·L2)</td><td>Learning plan opens W15 (review point W18); window W15&rarr;W19; evaluation W20</td></tr>
+<tr>{brow("Spr2")}<td>Communication at full GLH: plans (E3/L1 one · <b>L2 two, over two different ways</b>), live demonstrations, discussion tables and written recipe/menu guides at the activity minima · <b>Extended Award milestone W26</b></td><td>No 10-hour window on Communication at any level — activity minima instead: E3 &ge;2&nbsp;min / &ge;5&nbsp;min / &ge;100 words · L1 &ge;3&nbsp;min / &ge;8&nbsp;min / &ge;250 words · L2 &ge;4&nbsp;min / &ge;10&nbsp;min / &ge;500 words · evaluation W26</td></tr>
+<tr>{brow("Sum1")}<td>The food-claim investigation (Thinking at E3/L1 · Critical thinking at L2: &ge;2 sources, credibility/accuracy/bias, primary = own blind taste test) · wellbeing plans open and run through the learning weeks</td><td>Thinking plan opens W27 (review point W30), window W27&rarr;W32 · Wellbeing plan opens W27 (review point W32), window W27&rarr;W36</td></tr>
+<tr>{brow("Sum2")}<td>Evaluations at the exact minima, portfolio assembly, IQA sample, EQA-window preparation, summer service · <b>Certificate milestone W38</b></td><td>Wellbeing evaluations W36&ndash;37; portfolio sign-off W38</td></tr></table>
 <p style="font-size:.88rem">Every plan opens early enough that its 10-hour window closes with headroom before its evaluation week (the ledger below carries the minutes); every review point has a named week; every assessment criterion lands on a week in the <a href="Criteria_Coverage_Matrix.html">coverage matrix</a>.</p>""")
 
     # per-lane weekly ledgers
     S.append("""<h2>The GLH ledger — every week &times; lane, minutes per unit</h2>
-<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 3:30. A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
+<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 4:40 (seven 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
     for lane in LANES:
         L = LED["lanes"][lane]
         head = ("<tr><th>Wk</th><th>Blk</th><th>Live deck</th><th>Focus (shared vehicle)</th>"

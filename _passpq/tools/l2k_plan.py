@@ -97,8 +97,59 @@ QUALS = {
         ("Level 2 Certificate (610/5908/0)", 15, 106, 38, SKILLS)],
 }
 
-BLOCKS = [("Aut1", 1, 7), ("Aut2", 8, 14), ("Spr1", 15, 20), ("Spr2", 21, 26),
-          ("Sum1", 27, 32), ("Sum2", 33, 38)]
+# PEQ-YEAR-2 §2 — the block boundaries, and what each one rests on.
+#
+# AUTUMN IS EVIDENCED AND WAS WRONG HERE. Re-derived from the dates rather than
+# read off a label: 31 Aug -> 14 Dec 2026 is 105 days = 16 Mondays; minus the one
+# half-term week (26-30 Oct) = 15 teaching weeks, split Aut1 = 8 (w/c 1 Sep ->
+# w/c 19 Oct) and Aut2 = 7 (w/c 2 Nov -> w/c 14 Dec, term ending Fri 18 Dec).
+# Stated identically in five places (Planning/{BUILD,GROW,LAUNCH}/README.txt and
+# both year-plan workbooks' 'Key Dates & Compliance' tabs), and enumerated week by
+# week in BUILD_Autumn_Year_Plan_ASDAN_Update.xlsx [Autumn Overview] A6:B21.
+# This file previously spent 7 + 7 = 14 on autumn -- the PLACEHOLDER shape those
+# same READMEs declare dead ("Those placeholders are dead - do not reuse them").
+# Corrected below. It mattered in a teacher-facing way: W8 is the AUDIT week and
+# the LAST week of Aut 1, and the printed week shells were labelling it Aut2.
+#
+# SPRING AND SUMMER ARE NOT EVIDENCED. The repo holds no spring or summer term
+# date at all -- no Easter date, no February or May half-term, no INSET day.
+# Their boundaries below are ASSUMPTIONS carried forward, and are labelled as
+# such on the year map. See TERM_EVIDENCE.
+#
+# WHY THE YEAR STAYS 38. The SoW workbooks' own scheme totals 39 (7+7+6+6+6+7),
+# so WEEKS = 38 is that 39 with a week taken off SUMMER, on top of the dead
+# 14-week autumn -- two deviations, not one. Neither 39 nor 40 can simply be set:
+# lane_rows() hand-allocates exactly 38 weeks and build() asserts every week sums
+# to DESIGN_MIN, so WEEKS = 39 dies on "E3 W39: design 0 != 210". Re-cutting the
+# year would move every milestone and every criteria-to-week mapping on the
+# strength of 24 unevidenced weeks, which is exactly what this pass may not do.
+# The +1 that autumn correctly gains is therefore absorbed by Sum2, the last and
+# least-evidenced block, and that is said plainly on the page.
+BLOCKS = [("Aut1", 1, 8), ("Aut2", 9, 15), ("Spr1", 16, 21), ("Spr2", 22, 27),
+          ("Sum1", 28, 33), ("Sum2", 34, 38)]
+TERM_EVIDENCE = {
+ "Aut1": {"weeks": 8, "evidenced": True,
+          "source": "Planning/*/README.txt + BUILD_Autumn_Year_Plan_ASDAN_Update.xlsx "
+                    "[Autumn Overview] A6:B21; re-derived from the dates (w/c 1 Sep -> w/c 19 Oct)"},
+ "Aut2": {"weeks": 7, "evidenced": True,
+          "source": "same; w/c 2 Nov -> w/c 14 Dec, term ends Fri 18 Dec"},
+ "Spr1": {"weeks": 6, "evidenced": False, "source": "assumption carried forward; no calendar in repo"},
+ "Spr2": {"weeks": 6, "evidenced": False, "source": "assumption carried forward; no calendar in repo"},
+ "Sum1": {"weeks": 6, "evidenced": False, "source": "assumption carried forward; no calendar in repo"},
+ "Sum2": {"weeks": 5, "evidenced": False,
+          "source": "assumption, and the block that absorbs autumn's evidenced +1 inside a "
+                    "38-week year. The SoW scheme says 7, which would make the year 40."},
+}
+CALENDAR_NOTE = (
+ "Autumn 2026 = 15 teaching weeks, EVIDENCED and re-derived from the dates (Aut1 8 + Aut2 7). "
+ "Spring and summer have NO term dates anywhere in the repo: their block lengths are declared "
+ "assumptions. The year total of 38 weeks is itself an assumption - the estate's own SoW scheme "
+ "totals 39, and evidenced-autumn plus that scheme's spring/summer would give 40. The ledger "
+ "cannot simply be re-cut to 39 or 40: lane_rows() hand-allocates 38 weeks and build() refuses "
+ "any other length, so changing it would move every milestone and every criteria week on the "
+ "strength of 24 unevidenced weeks. OUTSTANDING FOR MATT: confirm term dates / teaching weeks "
+ "for spring and summer 2026-27."
+)
 
 # ---- the live 12-week deck spine (weeks 1-12) ------------------------------
 # (week, suite, deck, skill banked — from each deck's banking line)
@@ -289,13 +340,31 @@ def sensitivity():
         rows.append(cell)
     return rows
 
+def _assert_calendar():
+    """A block scheme that does not cover the year, or a TERM_EVIDENCE table that
+    disagrees with the blocks it documents, is a silent falsehood on 38 printed
+    pages. Fail the build instead."""
+    span = sum(z - a + 1 for _, a, z in BLOCKS)
+    assert span == WEEKS, f"BLOCKS span {span} != WEEKS {WEEKS}"
+    assert BLOCKS[0][1] == 1 and BLOCKS[-1][2] == WEEKS, "BLOCKS must start at W1 and end at WEEKS"
+    for i in range(1, len(BLOCKS)):
+        assert BLOCKS[i][1] == BLOCKS[i - 1][2] + 1, f"gap/overlap before {BLOCKS[i][0]}"
+    for (b, a, z) in BLOCKS:
+        assert TERM_EVIDENCE[b]["weeks"] == z - a + 1, \
+            f"TERM_EVIDENCE {b} says {TERM_EVIDENCE[b]['weeks']} wks, BLOCKS says {z - a + 1}"
+    ev = sum(t["weeks"] for t in TERM_EVIDENCE.values() if t["evidenced"])
+    assert ev == 15, f"evidenced autumn should total 15 weeks, got {ev}"
+
+
 def main():
+    _assert_calendar()
     lanes = build()
     sens = sensitivity()
     data = {
         "pass": "PEQ-L2K v2 + Addendum B", "built": "2026-08-22",
         "weekly_min_default": WEEKLY_MIN, "weeks": WEEKS, "blocks": BLOCKS,
         "deck_min": DECK_MIN, "deck_method": DECK_METHOD,
+        "term_evidence": TERM_EVIDENCE, "calendar_note": CALENDAR_NOTE,
         "period_min": PERIOD_MIN, "slot_band": list(SLOT_BAND), "derivation": DERIVATION,
         "weekly_min_is_owner_input": True,
         "decks": [{"week": w, "suite": s, "deck": d, "skill": sk} for (w, s, d, sk) in DECKS],
