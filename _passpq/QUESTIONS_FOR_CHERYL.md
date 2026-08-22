@@ -153,3 +153,12 @@ questions… written into the plan"** (spec v1.2 ComSk1 1.4.1f) and completed th
 "ComSk1 minimum" statements (adding the ≥8-minute discussion route). **Confirm** the planning
 templates and any live pupil plans are updated to hold four prepared questions before
 delivery is assessed.
+
+## Added by pass PEQ-L2K (2026-08-22)
+
+- **L1 Certificate claim shape (14 required, six units = 15).** When an L1-lane pupil
+  completes all six L1 units, does ASDAN accept the 15-credit claim against the 14-credit
+  Certificate (spec §5.1 permits exceeding minima), or should the centre submit exactly 14
+  — in which case the only exact-14 arithmetic is five L1 units + ThSkE3 (12 at level + 2
+  adjacent)? Needed by names-confirmation (~4 weeks before the EQA date). Source:
+  `SPEC_FACTS_L2.md` §1–2; the year map names the default.

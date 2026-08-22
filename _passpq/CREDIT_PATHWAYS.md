@@ -175,3 +175,49 @@ which lists ≥2 advantages, ≥2 challenges and ≥3 features for TmWkSkE3 and 
 Nobody is at Level 2, so the L2 rows in the tables above are **reference only**. No L2
 registration is claimed anywhere in the estate, and the PEQ decks no longer use L2 as
 stretch language (PEQ-E3 E1).
+
+## PEQ-L2K addendum (2026-08-22) — the staged Level 2 route, and the year the GLH demanded
+
+**Owner ruling, 2026-08-21 (master prompt PEQ-L2K v2 + Addendum B): the LAUNCH suite gains
+an in-deck Level 2 ROUTE, and the Kitchen Programme becomes a full-year, three-lane plan.**
+This re-scopes — does not contradict — the section above: nobody is *registered* at Level 2,
+no L2 registration is claimed anywhere, and the E3-primary analysis stands for the cohort.
+What changes is that "Level 2 is out of the model" narrows to "Level 2 is out of the
+*registration* model": a staff-directed **route** at the L2 evidence standard now exists in
+the six live LAUNCH PEQ decks (hidden panels behind the Guidance toggle) and as the L2 lane
+of `GROW_ASDAN/PEQ_L2_Kitchen/`. Registration remains a coordinator decision; every surface
+says **working towards**.
+
+### The staged L2 route (spec p4 + p10; `SPEC_FACTS_L2.md`)
+
+| stage | Ofqual no. | credits | min at L2 | GLH | constituent units (all at level) | milestone |
+|---|---|---:|---:|---:|---|---|
+| **L2 Award** | 610/5907/9 | 4 | 4 | 32 | DecMkSk2 2 + TmWkSk2 2 | Christmas (W14) |
+| **L2 Extended Award** | 610/5909/2 | 9 | 6 | 68 | + ComSk2 3 + LSk2 2 | Easter (W26) |
+| **L2 Certificate** | 610/5908/0 | **15** | **12** | 106 | + CrThSk2 3 + WellbLe2 3 = **all six L2 units = exactly 15** | Summer (W38) |
+
+**Barred combinations hold unchanged (§6.5):** each pupil banks each skill at ONE level
+only — the witness Level tick, which now reads `☐ Entry 3 ☐ Level 1 ☐ Level 2`, is the
+record. At L2 the thinking unit is **CrThSk2 (Critical thinking)**, not ThSk; the E3/L1
+lanes plan ThSk, only the L2 lane plans CrTh. The same DecMk+TmWk → +Com+LSk → +Th/CrTh+
+Wellb ladder holds in all three lanes, and at every level the Award pair's unit GLH equals
+the Award's qualification GLH exactly (40/36/32).
+
+### The L1 Certificate 14-of-15, now named (Addendum B §B0)
+
+The six L1 units sum 15 against a 14-credit Certificate. **Default: teach and evidence all
+six L1 units — 15 credits, all at level; §5.1 permits exceeding the 14 minimum.** Where a
+claim of exactly 14 is preferred, or a pupil is stretched by L1 Thinking (the largest
+E3→L1 step), the **named default combination is the five other L1 units (12 cr at L1) +
+ThSkE3 (2 cr adjacent) = 14** — the only exact-14 arithmetic (min 11 at level and max 3
+below both hold). Confirm the preferred claim shape with ASDAN at names-confirmation.
+
+### Where the hours come from — the honest ledger
+
+The live 12-week deck suite measures **8.0 GLH** (12 decks × one 40-minute period) against
+a 32–140 GLH requirement, so the guided hours come from the planned year:
+`GROW_ASDAN/PEQ_L2_Kitchen/Scheme_of_Work.html` carries the week×lane×unit ledger (data
+twin `_passpq/inputs/PEQ_L2K_YearPlan_2026-27.xlsx`), proven by
+`_passpq/tools/l2k_plan.py`, with the 2/3/3.5/4 h-per-week sensitivity table. At the
+default 3.5 h/wk × 38 weeks = 133 physical GLH, the E3 Certificate (unit sum 140) closes
+only via 7 declared co-delivered hours — stated plainly on the SoW page.

@@ -87,3 +87,21 @@ sets is that a deck **runs** those choices. None does yet, so writing the line i
 that does not run the activity would have been applying something the pass does not
 authorise, and would have put a safeguarding instruction next to an activity it does not
 describe. It is carried here instead, where it is due.
+
+## PEQ-L2K addendum (2026-08-22) — item 15 discharged for the kitchen year; item 14 tick now three-way
+
+- **Item 15 (safeguarding routing on DecMk + WellbLe): DISCHARGED for the planned
+  programme.** The condition ("the moment a DecMk or WellbLe activity is planned") is now
+  true: the Kitchen Programme year map schedules the DecMk situation choice (plans open
+  W9) and the WellbLe improvement planning (plans open W27). Both spec "Please note"
+  boxes now exist verbatim-in-substance on the staff surface —
+  `GROW_ASDAN/PEQ_L2_Kitchen/Staff_Kitchen_Guide.html` — each ending with the spec's own
+  requirement that the routing **is communicated to learners as part of the session**,
+  with the named week it is read aloud. The L2 spec pages carry the same two boxes
+  (DecMkSk2 p57 · WellbLe2 p66 — `SPEC_FACTS_L2.md`). Pupil lesson decks for the kitchen
+  year do not exist yet (out of scope, built later FROM the SoW); when authored, each
+  DecMk/WellbLe deck inherits this line as REQUIRED with the `data-mbm-guide="staff"`
+  mechanism recorded above.
+- **Item 14 record-keeping:** the witness Level tick on the six LAUNCH PEQ decks is now
+  `☐ Entry 3 ☐ Level 1 ☐ Level 2` (PEQ-L2K B; the ruled exception to PEQ-E3 E1). The
+  registration decision itself stays CENTRE-ACTION.

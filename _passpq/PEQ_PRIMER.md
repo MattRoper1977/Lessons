@@ -224,3 +224,32 @@ A learner's evidence for a skill banks at **one level only** — Entry 3 *or* Le
 both; the higher counts (spec §6.5). Every PEQ witness statement now carries a
 `Level this evidence banks at — tick ONE: ☐ Entry 3 ☐ Level 1` row beside the assessor
 signature, so the decision is recorded per pupil, per session, on the paper that banks it.
+
+## PEQ-L2K addendum (2026-08-22) — the Level 2 route, and the year the GLH demanded
+
+**Owner ruling 2026-08-21 (PEQ-L2K v2 + Addendum B).** "Level 2 is out" narrows to
+"Level 2 *registration* is out unless the coordinator decides otherwise": the six live
+LAUNCH PEQ decks now carry a staff-directed **Level 2 route** — one hidden panel per task
+behind the ⓘ Guidance toggle, carrying the L2 verb form (Describe · Explain · Compare ·
+Assess · Evaluate) and the ComSk2 minima — and the Kitchen Programme
+(`GROW_ASDAN/PEQ_L2_Kitchen/`) plans the full 38-week year in three lanes (E3 cohort ·
+L1 group · L2 route). The GROW PEQ suite is untouched and stays E3/L1.
+
+- **Facts source:** `SPEC_FACTS_L2.md` — the verified L2 extraction (units pp12–13, quals
+  p4/p10, unit content pp52–66). Headlines: L2 verbs Describe/Explain/Compare/Assess/
+  Evaluate · ComSk2 needs **TWO plans over two DIFFERENT ways** (presentation ≥4 min ·
+  discussion ≥10 min · text ≥500 words) · L2 plans carry **review points** (except
+  Communication) · the 10-hour window sits on five of six units (never Communication) ·
+  at L2 Thinking becomes **Critical thinking, CrThSk2** (credibility/accuracy/bias, ≥2
+  sources, primary vs secondary).
+- **The witness Level tick is now three-way:** `☐ Entry 3 ☐ Level 1 ☐ Level 2` — one
+  level per skill per pupil (§6.5); Supported/Standard evidence E3, Stretch evidences L1,
+  the staff-directed L2 route evidences L2.
+- **Safeguarding boxes now exist** on the Kitchen staff surface
+  (`Staff_Kitchen_Guide.html`): the DecMk box is read before the decision plans open
+  (year-map W9), the WellbLe box before the wellbeing plans open (W27) — discharging
+  COMPLIANCE item 15 for the planned kitchen year (pupil decks, when authored from this
+  SoW, inherit the requirement).
+- **The hours, honestly:** the live 12 decks measure 8.0 GLH; the year plan supplies the
+  rest (133 physical GLH at the default 3.5 h/wk), with the 2/3/4 h/wk sensitivity table
+  on the SoW page. The E3 Certificate needs the whole year at ≈3.5 h/wk with zero slack.
