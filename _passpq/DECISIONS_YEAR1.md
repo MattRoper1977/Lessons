@@ -175,3 +175,40 @@ clean, house style, zero console errors. Horizontal overflow at 390 px is the es
 pre-existing norm for these print-first pages (existing pages: 0–796 px; the new ones: 9–91 px),
 and `Scheme_of_Work.html` measures **796 px before and after** — the re-based sensitivity table
 did not widen it.
+
+---
+
+## The merge, and the evidence it landed
+
+| | |
+|---|---|
+| **Merge commit** | `72e1fa4ceda754c8bdc4c0de464dd6c03c289520` — *Merge PEQ-YEAR-1: the year anchored to the real timetable, and the kitchen handed over* |
+| **Base** | `2a8f9f5` · `--no-ff` from `claude/new-session-yed8ua` |
+| **Pages** | `pages build and deployment` run **694** on `72e1fa4c` — **completed / success** ([run](https://github.com/MattRoper1977/Lessons/actions/runs/32575798977)) |
+
+### Raw-pin — every new surface fetched from the merge SHA, not from disk
+
+```
+https://raw.githubusercontent.com/MattRoper1977/Lessons/72e1fa4ceda754c8bdc4c0de464dd6c03c289520/GROW_ASDAN/PEQ_L2_Kitchen/<file>
+```
+
+| file | HTTP | bytes |
+|---|---|---|
+| `COOKING_HANDOVER.md` | 200 | 8 030 |
+| `Cooking_Handover.html` | 200 | 11 085 |
+| `Kitchen_Week_Shell.html` | 200 | 165 229 |
+| `Criteria_By_Week.html` | 200 | 77 446 |
+| `Kitchen_Completion_Checklist.html` | 200 | 10 880 |
+| `Scheme_of_Work.html` | 200 | 67 820 |
+
+**Content proved from the pin**, so the claim does not rest on the working copy:
+
+- `Scheme_of_Work.html` carries *"seven timetabled 40-minute periods"*, *"co-delivery claim is
+  withdrawn"*, the **THE DERIVED RATE** live-row marker, and *"never claimed against a unit"* —
+  one occurrence each.
+- `Kitchen_Week_Shell.html` carries **38** empty cooking boxes (one per week) and **0** dish,
+  ingredient or recipe-structure words.
+
+A direct fetch of `mattroper1977.github.io` returns `000` **from this session only** — the agent
+proxy, not a Pages fault. The Pages workflow's own success and the raw-pin above are the
+evidence that the content is live.
