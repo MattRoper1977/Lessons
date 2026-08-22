@@ -53,3 +53,15 @@ due by names-confirmation.
 Out of scope here by v2's own line; when authored FROM this SoW, each DecMk/WellbLe deck
 inherits COMPLIANCE item 15 (the safeguarding boxes, `data-mbm-guide="staff"`), and the
 witness sheets those decks carry must use the three-way Level tick from day one.
+
+## P9 — browser-matrix "HUD on Lessons games" nondeterminism (added post-merge)
+On PR #145 the cross-estate `browser-matrix` job failed twice with **different**
+failure sets (11, then 30 of 939 assertions; overlapping Games files; signature = one
+home-control click `TimeoutError`, then "navigation interrupted by another navigation"
+cascading through later routes in the shared context). The identical content run
+locally (canonical site + branch on one origin, canonical search index): **939/939
+passed**. The diff was two files outside `Games/`. Established as runner
+nondeterminism and merged on that evidence (PR #145 comment carries it).
+**Open:** harden `tools/verify_hud_on_lessons_games.mjs` — a fresh context per route,
+or one retry on the cascade signature — in its own pass; it sits outside ALLOWED_DIFF
+so it could not ship with the manifests split.
