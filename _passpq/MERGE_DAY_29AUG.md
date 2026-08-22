@@ -6,60 +6,68 @@ Commands and their real output are quoted so anyone can re-run them.
 > **The short answer.** If nobody touches this repository on the 29th, **nothing breaks.**
 > The estate is stable, GitHub Pages serves `main` only, and the two unmerged branches are on a
 > recorded *do-not-merge, do-not-delete* list where they have sat safely since July. The
-> colleague can start on the kitchen frame without Matt. There is one build that genuinely
-> cannot run without him, named in §4, and nobody should wait on it.
+> colleague can start on the kitchen frame without Matt. §4 used to name two things that could
+> not be done without him; at this pass **both are closed**, so there is nothing left to wait on.
 
 ---
 
 ## 1 · What is live at this pass's merge
 
-**Refreshed for PEQ-YEAR-2, 22 Aug 2026.** The PEQ-YEAR-1 entry below it still stands; this
-section supersedes its SHAs.
+**Refreshed for PEQ-YEAR-3, 22 Aug 2026.** Supersedes the YEAR-2 SHAs below it.
 
 | | |
 |---|---|
-| **Lessons base** | `63271c33` (PEQ-YEAR-1's record commit) |
-| **Lessons branch** | `claude/peq-year-2` |
-| **Apps base** | `a7e80737` — *Merge PEQ-L2K pin: resources.json digest moves with Lessons #145 (#19)* |
-| **Apps branch** | `claude/peq-year-2` (the gate copy only) |
-| **Rollback** | `git reset --hard 63271c33` (Lessons) · `git reset --hard a7e80737` (Apps) |
-| **Serves from** | `main` only — no `gh-pages` among the remote heads; every workflow pins `main`; all 695 Pages deployments have run from `main` |
+| **Lessons base** | `18aa280c` |
+| **Apps base** | `93bbf98e` |
+| **Branch (both)** | `claude/peq-year-3` |
+| **Rollback** | `git reset --hard 18aa280c` (Lessons) · `git reset --hard 93bbf98e` (Apps) |
+| **Serves from** | `main` only |
 
-**New in PEQ-YEAR-2:** the four Kitchen frame pages are **in the catalogue** (`resources.json`
-647 → 651, pin `de9e7c615153` → moved, both gate copies together); `resources.json` line 6109 no
-longer contradicts the page it indexes; the autumn block boundaries match the **evidenced 15
-teaching weeks**; spring and summer are labelled **assumptions** on the page; the AQA UAS codes
-are recorded as an **unverified centre record awaiting confirmation** with the surface count
-re-measured (25 → 60); and the measured-vs-ruled provenance for 4.667 h/wk now travels to the
-handover and the year map, both gated.
+**New in PEQ-YEAR-3.** The owner supplied the real 2026-27 timetable, so the hours stopped being
+inferred: `_passpq/TIMETABLE_2026-27.md` carries every guided slot with a workbook cell cited per
+row. Rates are measured **per room** (Build 0 ASDAN-labelled slots, Grow 2, Launch 4; all three 8
+carryable = 5.333 h/wk), reachability is stated at both the floor and the ceiling with the
+unreachable named, and the **one cooking-labelled slot in the whole school** — Build Wed P5,
+Science Teacher, 25.33 GLH a year — is stated with the kitchen re-sized around it as a *context*
+across each lane's carryable cluster. The planner-derived band, the owner slot-ruling and the
+"GROW/LAUNCH not establishable" verdict are all retired; YEAR-2's lodged GROW/LAUNCH question is
+**closed by evidence**.
 
-**Also live: the year map re-anchored on the derived weekly rate.** `WEEKLY_MIN` 210 → **280**
-(7 timetabled 40-minute periods = 4.667 h/wk), following the owner ruling of 22 Aug that all six
-carryable slots bank guided hours to PEQ. Consequences, all regenerated and gate-proven:
-**all three lanes now target the full Certificate** (Award W14 → Extended W26 → Certificate
-W38); the **co-delivery claim is withdrawn** on every lane (was E3 7 h, L1 2 h); and 37–57 hours
-a lane are declared as QA/consolidation, never claimed against a unit. Also live: the
-registration-contingent hedge strings rewritten across the estate,
-`_passpq/DERIVATION_YEAR1.md`, `_passpq/PROPOSED_YEAR1.md`, `_passpq/DECISIONS_YEAR1.md` and
-`_passpq/tools/year1_derive.py`.
+**The two source workbooks are EVIDENCE and are gitignored** — never committed, never
+redistributed, same rule as the ASDAN instruments. Their sha256 is recorded in the extract so the
+work is reproducible without them.
 
-**Explicitly NOT live** — and none of it is waiting on the 29th:
+**Spring and summer term dates are still unevidenced.** The workbooks are *weekly* timetables, not
+an annual calendar — verified: zero term, half-term, Easter or INSET dates in either. Those block
+lengths remain **tagged assumptions**, `_assert_calendar()` remains intact (re-proved this pass: a
+planted regression to the 14-week autumn goes red), and the single lodged question stands:
+*confirm term dates / teaching weeks for spring and summer 2026-27.*
 
-- Any cooking content. No recipe, menu, dish or ingredient was generated; `food_gate.py` proves it.
-- Any change to `WEEKS = 38`, which remains unsourced, or to the spring/summer calendar, which
-  the repo does not contain. Logged as `PROPOSED_YEAR1.md` P3/P4.
-- Fixes to GROW's empty ASDAN planner row or LAUNCH's inconsistent weekly planners (P5).
-- `resources.json`. **Untouched by design** — see §4.
-- The SL and SBX branches. Measured below, merged nowhere.
+**The AQA UAS wording is applied, not proposed.** Every staff-facing surface that names a UAS
+unit code or unit title now reads it as an **unverified centre record awaiting confirmation** —
+88 sites across 19 files, including the catalogue's 30 search descriptions, which closes the one
+deferral PEQ-YEAR-2 left open. The pupil-facing half stays **PROPOSED and untouched**: that is
+Matt's authoring, and the 25 Science Teesside witness sheets stay byte-pristine under OPEN_ITEMS
+item 17. `_passpq/tools/uas_census.py --gate` proves both holds and both counts.
 
----
+**The staff pack no longer waits on the local lockup.** The owner supplied it; the pack is Stage 2
+of this pass, not a blocked line.
 
-## 2 · SL and SBX — re-measured 22 Aug, and left alone
+## 2 · SL and SBX — re-measured, and left alone (unchanged again at PEQ-YEAR-3)
 
-**Both counts are unchanged from the PEQ-YEAR-1 read: SL 12 ahead / 7 conflicted files; SBX 5
-ahead / 8 conflicted files.** `origin/main` moved `2a8f9f5` → `63271c33` (the eight PEQ-YEAR-1
-commits), and PEQ-YEAR-1 happened to work in a corner of the estate disjoint from both branches,
-so no conflict set grew.
+**Unchanged again.** SL 12 ahead / 7 conflicted; SBX 5 ahead / 8 conflicted — the same figures
+PEQ-YEAR-1 and PEQ-YEAR-2 measured. **PEQ-YEAR-3 does not merge them either, and the reason is
+recorded here so nobody re-litigates it:** main's own `Art_Teesside/HANDOVER.md:25` rules SBX's
+Bronze → Explore change a **REGRESSION**, confirmed on two independent signals, and the A2 decks
+on main carry **Bronze only, zero "Explore"**, with all seven A2 lessons already catalogued.
+**Merging SBX would reintroduce content the estate has already ruled bad into seven live
+pupil-facing decks.** SL's residue is a *proposal* awaiting the owner's read, and its one valuable
+artefact is already on main in a newer copy — merging it would regress that file.
+
+The conflict sets have not grown across three passes because each pass has happened to work in a
+corner of the estate disjoint from both branches. PEQ-YEAR-3 is no exception: it touches the
+Kitchen frame, `_passpq/`, the claim registers and the staff-facing UAS wording — none of which
+SL or SBX carry.
 
 The clone was **not** shallow this time (`git rev-parse --is-shallow-repository` → `false`, no
 `.git/shallow`, 1395 commits on `origin/main`), and both `git merge-base` calls exited 0 — so the
@@ -115,32 +123,41 @@ not the twelve and five commits of history around them.
 
 **The correct action on 29 August is unchanged: do not merge, do not delete.**
 
-## 4 · Two things that are blocked without Matt — do not wait on them
+## 4 · The two old blockers — both now closed
 
-1. **The staff pack cannot be built.** `tools/build_staff_pack.py --mirror` hard-stops without
-   `--logo`: *"There is no fallback to the typographic mark … a pack built without the real
-   lockup is not a Progress Schools pack."* It verifies the PNG by SHA-256, and the binary is
-   deliberately **not in git** (it lives on Matt's machine). Nobody can produce the pack on the
-   29th, and nothing in the kitchen year needs it.
-2. **`resources.json` — no longer blocked. Closed in PEQ-YEAR-2.** PEQ-YEAR-1 left this file
-   untouched because `tools/pin_manifests.py` writes **both gate copies or neither** and the Apps
-   checkout was unreachable from that session. This pass attached
-   `MattRoper1977/Matt-s-Apps-`, so the tool ran properly:
+This section listed two things nobody could do without Matt. **Neither is blocked any more.**
+It is kept, rather than deleted, because the reasoning is what stops a future pass re-blocking
+itself.
+
+1. **The staff pack — unblocked at PEQ-YEAR-3.** `tools/build_staff_pack.py --mirror` hard-stops
+   without `--logo`: *"There is no fallback to the typographic mark … a pack built without the
+   real lockup is not a Progress Schools pack."* It verifies the image by SHA-256, and the binary
+   is deliberately **not in git**. That was a genuine block for two passes. **The owner has now
+   supplied the lockup**, so the pack is **Stage 2 of this pass**, not a waiting line. The rule
+   that made it a block stands unchanged: no logo binary enters git, ever, and a pack without the
+   real mark is not a pack.
+
+2. **`resources.json` — unblocked at PEQ-YEAR-2, and moved again at PEQ-YEAR-3.** PEQ-YEAR-1 left
+   this file untouched because `tools/pin_manifests.py` writes **both gate copies or neither**,
+   and the Apps checkout was unreachable from that session. Every pass since has attached
+   `MattRoper1977/Matt-s-Apps-`, so the tool has run properly:
 
    ```
-   $ python3 tools/pin_manifests.py --apps /home/user/matt-s-apps- --lessons /home/user/Lessons
-      REPINNED  …/matt-s-apps-/tools/verify_cross_estate_unification.py   resources.json: de9e7c615153 -> 907e7875d0e4
-      REPINNED  …/Lessons/tools/verify_cross_estate_unification.py        resources.json: de9e7c615153 -> 907e7875d0e4
+   $ python3 tools/pin_manifests.py
+      REPINNED  …/matt-s-apps-/tools/verify_cross_estate_unification.py   resources.json: 907e7875d0e4 -> 69b94dfe83af
+      REPINNED  …/Lessons/tools/verify_cross_estate_unification.py        resources.json: 907e7875d0e4 -> 69b94dfe83af
    [DONE] pins moved in 2 copy/copies; both copies byte-identical
    ```
 
-   `apps.json` is unchanged (`a4a06b999b5f`). The four Kitchen frame pages are now **in the
-   catalogue**, and `resources.json:6109` no longer contradicts the page it indexes. Both repos
-   merge together — Lessons first, then Apps.
+   `apps.json` is unchanged again (`a4a06b999b5f`). PEQ-YEAR-2 put the four Kitchen frame pages
+   **in the catalogue** and healed `resources.json:6109`. PEQ-YEAR-3 closes the last UAS
+   deferral: the catalogue's **30 `desc` sites** now carry the same claim qualifier the schemes of
+   work carry, so the hub search results and the scheme-of-work cells no longer state one claim
+   two ways. Both repos merge together — **Lessons first, then Apps**.
 
-   One consequence to know for any future pass that lands here without the Apps checkout: the pin
-   cannot be moved, so `resources.json` must not be edited at all. That is what PEQ-YEAR-1 did,
-   and it was right.
+   One consequence to know for any future pass that lands here **without** the Apps checkout: the
+   pin cannot be moved, so `resources.json` must not be edited at all. That is what PEQ-YEAR-1
+   did, and it was right.
 
 ## 5 · What the colleague can do without anybody
 

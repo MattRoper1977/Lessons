@@ -1,8 +1,112 @@
 # PROPOSED — the AQA UAS claim qualifier
 
-**Pass PEQ-YEAR-2 §3. PROPOSED DIFFS, NOT APPLIED.** Emitted under the estate's own
-claim-accuracy-only discipline, the same route `PROPOSED_asdan_claim_accuracy_residuals.md`
-and OPEN_ITEMS item 17(b) used for this exact class of change.
+**Pass PEQ-YEAR-2 §3. PARTLY APPLIED — see the status section immediately below.** Emitted
+under the estate's own claim-accuracy-only discipline, the same route
+`PROPOSED_asdan_claim_accuracy_residuals.md` and OPEN_ITEMS item 17(b) used for this exact
+class of change. The **staff-facing** half was applied by PEQ-YEAR-3 §5 on 2026-08-22; the
+**pupil-facing** half below remains PROPOSED and unapplied. PEQ-YEAR-2's one deferral,
+`resources.json`, was closed by PEQ-YEAR-3 in the same pass — it is applied, not deferred.
+
+## Status — PEQ-YEAR-3 §5 APPLIED the staff-facing half (2026-08-22)
+
+This document is no longer wholly proposed. PEQ-YEAR-3 §5 classified every estate surface
+carrying `AQA UAS` as staff-facing or pupil-facing, and applied the two transforms to the
+**staff-facing** surfaces only. The pupil-facing tables further down are **untouched and
+still PROPOSED** — pupil-facing authoring stays Matt's.
+
+### Applied — 19 files, 88 sites
+
+| split | sites |
+|---|---:|
+| T1 (`(unit unconfirmed — centre record)`) | 30 |
+| T2 (`(unit unconfirmed)`) | 57 |
+| §4-B deviation (nested parenthesis, see below) | 1 |
+| **total** | **88** |
+
+Surfaces: the LAUNCH and GROW schemes of work, the LAUNCH/GROW hubs, the ten strand
+`START_HERE.html` staff panels, the three Humanities schemes of work,
+`build_dt_upcycling.html`, and `resources.json` — the estate catalogue that feeds the
+hub's search descriptions. The 18 HTML surfaces are staff planning documents — no slide
+markup, no `Banks:` award strips, none of them one of the 44 pupil-facing files below.
+`resources.json` holds no lesson content at all: it is the catalogue record *about* each
+lesson, and its 30 `desc` values state the same accreditation claim the schemes of work
+state. It carries 13 T1 + 17 T2; the 18 HTML files carry the other 17 T1 + 40 T2 + the
+one §4-B deviation.
+
+The qualifier bytes use the literal em dash `—` (U+2014), matching both this document's
+own specification and the dominant convention in every file edited.
+
+### Excluded, by reason
+
+| reason | files | occurrences |
+|---|---:|---:|
+| Pupil-facing authoring — the 44 files below, still PROPOSED | 44 | 185 |
+| `Science_Teesside/` entirely — item 17 byte-pristine hold + its 38 variants | 63 | 63 files carrying `TBC (Cheryl)` |
+| Pupil-facing decks newly measured this pass (not in the 44) | 38 | 107 |
+| `*_Estate_v3/` self-identified test copies — OPEN_ITEMS item 43 | 91 | 191 |
+| Staff-facing but nothing asserted — NO-OP | 24 | 167 |
+
+### `resources.json` — applied, and the pin moved with it
+
+The catalogue was the one deferral PEQ-YEAR-2 left open, because a change to it is
+guarded by a SHA-256 pin inside `tools/verify_cross_estate_unification.py`, and that
+gate file is byte-identical in the Lessons and Apps repositories. Moving the pin needs
+both checkouts. **PEQ-YEAR-3 has both**, so the deferral is closed rather than carried.
+
+- **30 sites, 30 catalogue entries, 13 T1 + 17 T2.** Every one is a `desc` value. The
+  edit was applied as whole-string replacements against the raw bytes, so no other key,
+  no entry ordering and no whitespace in the file moved: `git diff --numstat` reads
+  `30 30 resources.json`, and every changed line is a `"desc":` line.
+- **The forms are byte-identical to the ones already applied to the HTML surfaces** —
+  including the two shapes only the catalogue and the schemes share:
+  `AQA UAS occupational units (unit unconfirmed)` and
+  `AQA UAS enterprise (unit unconfirmed) · …`.
+- **§4-C adjacent parentheticals recur once**, at
+  `LAUNCH_ASDAN/Living_Independently/LI_W6_Plan_and_Shop_for_a_Balanced_Meal.html`'s
+  entry: `AQA UAS ‘Planning a meal’ (unit unconfirmed — centre record) (links Maths)`.
+  Applied literally, matching the scheme-of-work site, for the same reason — the
+  qualifier must sit against the title it qualifies.
+- **Pin re-run:** `python3 tools/pin_manifests.py` moved `resources.json`
+  `907e7875d0e4 → 69b94dfe83af` in **both** gate copies in one run; `--check` and
+  `--self-test` both pass and the two copies are byte-identical (`cmp` clean).
+- **Consequence closed.** The hub search descriptions and the `LAUNCH_ASDAN` /
+  `GROW_ASDAN` scheme-of-work cells now state the same claim the same way. Nothing in
+  the estate qualifies a unit title on one surface and asserts it bare on another.
+
+**What is deliberately *not* changed:** the `banks` strings in
+`_passla/build/content_*.py`, from which `gen_catalogue.py` derived these `desc` values.
+Those same strings also stamp the pupil-facing `Banks:` award strips, so editing them
+would reword pupil-facing decks — which stays Matt's. `gen_catalogue.py` is an
+append-only, idempotent one-shot that refuses to re-append and byte-preserves existing
+entries, so it cannot regress the catalogue; but a future generator that *rewrites*
+entries would, and that is the trap to know about.
+
+### Deferred and flagged — not applied this pass
+
+Two items only. `resources.json`, which PEQ-YEAR-2 deferred, is **applied** — see the
+section immediately above.
+
+- **`index.html:422` — `AQA UAS ALIGNED` stamp.** Staff-facing, and "ALIGNED" is a
+  stronger claim than the register permits, but neither transform fits an all-caps stamp.
+  Left byte-unchanged; **Matt to rule the stamp wording.**
+- **§4-B nested parenthesis, `BUILD_ASDAN/Careers/START_HERE.html`.** The site sits inside
+  an existing parenthesis, so literal T2 would give `((unit unconfirmed))`. Applied as
+  `(banks ASDAN Living Independently M8 / AQA UAS — unit unconfirmed)`. This is a
+  **deviation from the canonical suffix**, recorded here rather than applied silently.
+- **§4-C adjacent parentheticals, `‘Planning a meal’ (links Maths)`.** Literal T1 applied,
+  giving two adjacent parentheticals, because the qualifier must sit against the title it
+  qualifies. Flagged for Matt's eye.
+- **Two NO-OP sites** in the BUILD and GROW Humanities schemes already instruct staff to
+  match evidence to the exact unit code/version and disclaim self-certification. Adding
+  `(unit unconfirmed)` to a sentence telling staff to confirm the unit would be noise.
+  Left unedited.
+
+### Corrections to this document's own measurements
+
+- Its T1 table records **12** distinct unit titles. A **13th**, `AQA UAS ‘History around
+  us’`, is asserted in the three `Humanities_Teesside/*_Scheme_of_Work.html` banners and
+  was never measured here — PEQ-YEAR-2 looked only at the three ASDAN lesson estates.
+  All three sites are now qualified.
 
 ## Why these are proposed rather than applied
 
@@ -216,3 +320,16 @@ coordinator's entry record.
   Duke). Explicitly **HELD** by this pass's own brief.
 - The **source SoW workbooks** and the `_pass*` / `_close` audit trees — records of what was,
   not live claims.
+- **Newly measured by PEQ-YEAR-3 §5, and outside both halves of this proposal:**
+  - `AQA UAS ‘History around us’` — the 13th unit title, three staff-facing sites, now
+    **applied** (see the status section above).
+  - `AQA UAS 113789 — Walking` in `5_6 Local Choice/Trekkers_AQA_Evidence_L{1,2}.html`
+    (3 sites), with `Sign off — AQA UAS 113789 portfolio complete.` on L2. This asserts a
+    **live unit code** and a completed portfolio against it — the sharpest unqualified
+    claim in the estate, and stronger than anything in the 44. It is pupil-facing
+    authoring, so PEQ-YEAR-3 §5 could not touch it. **Recommend a named row in
+    `_close/OPEN_ITEMS.md`.**
+  - The `build-engine/lessons/*.{js,json}` generator **inputs** (8 files, 16 occurrences)
+    whose `tag`/`ref`/`programme` fields render verbatim into the frozen Build and Grow
+    slide decks. Editing a source while its rendered deck is frozen is the same divergence
+    this document refuses for the `v3_40min` variants.
