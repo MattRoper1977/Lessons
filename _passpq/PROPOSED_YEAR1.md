@@ -1,47 +1,44 @@
 # PROPOSED_YEAR1.md — judgement calls this pass did NOT take
 
 Pass PEQ-YEAR-1. Each item is something the pass found, could have decided, and deliberately
-did not. Nothing here is applied; each says what it would take to close it.
+did not. Each says what it would take to close it.
+
+**P1 was closed by an owner ruling during the pass** and is kept here with its resolution, since
+it is the item every other number depends on. P2 is superseded by it. P3–P9 remain open.
 
 ---
 
-## P1 · The carryable-slot ruling — **the one that unblocks the year map**
+## P1 · The carryable-slot ruling — **CLOSED 2026-08-22**
 
-**Question.** BUILD runs six timetabled weekly slots (Careers · Vocational/D&T · Living
-Independently · FoodWise · Community A · Community B) beside its PEQ row. **How many of them
-may bank a guided hour to PEQ as well as to their own ASDAN short course?**
+**Question.** Of BUILD's six timetabled weekly slots (Careers · Vocational/D&T · Living
+Independently · FoodWise · Community A · Community B), how many may bank a guided hour to PEQ
+as well as to their own ASDAN short course?
 
-**Why the pass would not answer it.** The repo argues both ways and settles neither. Against:
-the Slot Planner's own rule — *"shared module titles are never double-claimed"* — and the BUILD
-year plan's *"No double-claiming: Duke cookery challenge explicitly excluded from FoodWise."*
-For: the PEQ spec's own delivery model, where Communication evidence is *expected* to be
-generated through a challenge that leads to another unit (pp25/39/54), and ASDAN's worked
-assessment plan co-assesses two units in the same weekly activities.
+**Answer (owner, 2026-08-22): all six.** 6 carryable slots + the PEQ row = **7 periods × 40 min
+= 4.667 h/wk**, the top of the band §1 measured.
 
-**What closes it.** The **PEQ delivery guide** (member-gated, not held — see
-`inputs/README.md`) or a coordinator ruling. **Owner: Cheryl / the course coordinator.**
+Applied: `WEEKLY_MIN` 210 → 280, ledger and all pages regenerated, co-delivery withdrawn on all
+three lanes, every lane targeting the full Certificate with milestones at W14/W26/W38 proven in
+the ledger. See `DECISIONS_YEAR1.md` §1b–§2.
 
-**What it is worth.** It converts BUILD's measured **0.67–4.67 h/wk** band into one figure, and
-that figure sets every lane's target qualification. It is the highest-value open item in this
-pass by a distance.
+**Recorded as an owner input, not a repo finding.** The repo argues both ways and settles
+neither — the Slot Planner forbids double-claiming between LI and FoodWise, while the PEQ spec
+expects PEQ evidence to be generated through other activity (pp25/39/54). If the **PEQ delivery
+guide** (member-gated, still not held) later contradicts this, the ruling is where to look
+first, and `WEEKLY_MIN` is the single constant to change.
 
----
+## P2 · Five periods or six — **SUPERSEDED by P1**
 
-## P2 · Five periods a week, or six — the decision that picks the qualification
-
-Not a research question; a timetabling one, and Matt's to make.
+The timetabling question is answered at seven periods. Kept here only as the fallback table, so
+a timetable change can be costed without re-deriving:
 
 | Weekly periods | h/wk | Entry 3 | Level 1 | Level 2 | E3 co-delivery |
 |---|---|---|---|---|---|
-| **5** × 40 min | 3.33 | Extended Award | Extended Award | Certificate | n/a |
-| **6** × 40 min | 4.00 | **Certificate** | **Certificate** | **Certificate** | **withdraw — unnecessary** |
+| 5 × 40 min | 3.33 | Extended Award | Extended Award | Certificate | n/a |
+| 6 × 40 min | 4.00 | Certificate | Certificate | Certificate | not needed |
+| **7 × 40 min** | **4.67** | **Certificate** | **Certificate** | **Certificate** | **withdrawn — live plan** |
 
-The plan is currently worked at 3.5 h/wk = **5.25 periods**, which is not a whole number of the
-school's real 40-minute periods and sits exactly on the boundary. At six periods the E3 lane's
-**7 declared co-delivered hours become unnecessary and should be dropped** — the honest number,
-not the convenient one.
-
----
+Below **four** periods the Extended Award goes too; at **one**, nothing is reachable at all.
 
 ## P3 · `WEEKS = 38` is unsourced, and `BLOCKS` contradicts the evidenced autumn
 

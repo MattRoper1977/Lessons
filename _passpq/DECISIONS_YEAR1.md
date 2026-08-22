@@ -22,33 +22,53 @@ the gate, not a bug).
 |---|---|
 | **Established** | the **40-minute** period unit (15 agreeing statements, all three lanes, every one on a science row) · BUILD's **six discrete weekly slots at one period each** ("one-slot week" — the only cell in the estate that fixes a slot count) · BUILD's stable 8/8 row layout, bounding its PEQ time at **0.67–4.67 h/wk** |
 | **Not established** | the carryable-slot share (needs the member-gated delivery guide or a coordinator ruling) · **GROW**, whose ASDAN row is empty 8/8 weeks · **LAUNCH**, whose eight planners disagree on their own row structure · spring and summer, which have no dates anywhere in the repo |
-| **Verdict** | **STOP** per §1.4. A guessed slot is worse than a paused pass. |
+| **Verdict** | **STOP** per §1.4, then **RESOLVED** by owner ruling 2026-08-22 (see below). A guessed slot is worse than a paused pass; a ruled one is fine. |
 
 Every lane derivation was independently challenged by an adversarial auditor before this
 verdict; all three initial measurements were refuted, which is what drove the pass to the
 evidence that actually settles it.
 
-## §2 · The year map — re-based, not re-anchored
+## §1b · The owner ruling that closed the STOP
 
-The re-anchoring §2 asks for is **blocked by §1's STOP**: there is no derived constant to
-regenerate on, and inventing one is the failure mode §1.4 names. What was done instead, because
-it needs no derived rate and answers §2's actual question:
+**Owner, 2026-08-22: all six of BUILD's carryable slots** — Careers · Vocational/D&T · Living
+Independently · FoodWise · Community A · Community B — **may bank a guided hour to PEQ alongside
+their own ASDAN short course.**
 
-- The sensitivity table is **re-based from the round numbers 2/3/3.5/4 onto the measured
-  40-minute period**, across the 1–7 period band the evidence supports. Every row but one is a
-  whole count of the school's real periods.
-- **No row is marked live.** The weekly rate is labelled an owner input on the page, which is
-  what it has always been and was not previously said.
-- Reachability is reported per lane per qualification at every period count.
-- The **co-delivery claim is re-checked**: at six periods a week the E3 lane's 7 declared hours
-  are unnecessary and the page says to withdraw them.
-- Ledgers still sum (G1) and the matrix still has **0 gaps** at 38 weeks.
+That selects the **top of the measured band**: 6 carryable slots + the PEQ row = **7 periods ×
+40 min = 280 min = 4.667 GLH/week**. The provenance is kept explicit everywhere it is used —
+*40 minutes* and *six slots at one period each* were **measured**; *seven periods* is **measured
+band + owner ruling**. The ruling selects within what measurement established; it does not
+extend it, and `year1_derive.py` records it as an owner input rather than folding it into the
+repo findings.
 
-**What the re-basing exposed.** 3.5 h/wk is **5.25 periods** — the only rate in the band that
-is not a whole number of the school's periods, and *exactly* the point at which the E3 and L1
-Certificates flip from out-of-reach to reachable. At five whole periods those lanes land the
-Extended Award. That is now stated on the page as the timetabling decision it is, rather than
-sitting unnoticed inside a round number.
+## §2 · The year map — re-anchored on the derived constant
+
+`WEEKLY_MIN` 210 → **280**. The tool now separates `DESIGN_MIN` (the 210 the six-block
+pedagogical year was laid out on) from `WEEKLY_MIN` (the derived week), folds the declared
+co-delivery into real supervised time, and declares the remainder.
+
+| | at 3.5 h/wk (owner input) | at 4.667 h/wk (derived) |
+|---|---|---|
+| Year physical GLH per lane | 133.0 | **177.3** |
+| E3 co-delivery | 7 h (the ledger closed only with it) | **0 — withdrawn** |
+| L1 co-delivery | 2 h | **0 — withdrawn** |
+| Declared QA/consolidation | E3 0 · L1 0 · L2 13 h | **E3 37.3 · L1 42.3 · L2 57.3 h** |
+| E3 Certificate | reachable only via co-delivery | **reachable outright** |
+| L1 Certificate | reachable only via co-delivery | **reachable outright** |
+| Milestones | W14 / W26 / W38 | **W14 / W26 / W38, with headroom** |
+
+Every unit ledger still equals its unit GLH exactly, every plan window still holds ≥600 min,
+the matrix still has **0 gaps**, and every milestone is **proven in the ledger rather than
+asserted**. The sensitivity table is re-based onto the measured 40-minute period across the 1–7
+band, with the **7-period row marked live** — so a later timetable change can be read off it
+rather than re-argued. Had the timetable given five periods, E3 and L1 would honestly land the
+**Extended Award**, and the table says so.
+
+**G5 moved with the change.** Its `"zero-slack statement"` check asserted the page says *"zero
+slack"* — true at 3.5 h/wk, **false** at the derived rate. Asserting it now would be asserting a
+falsehood, so it was replaced by the four statements that are load-bearing at 4.667 h/wk: the
+derived rate, the measured-vs-ruled provenance split, the withdrawal of the co-delivery claim,
+and that the QA headroom is declared and never claimed against a unit.
 
 ## §0 · Hedges — 245 triaged, 184 stale, rewritten
 

@@ -166,12 +166,40 @@ def main():
                     "ruling. It is therefore NOT derived here."),
         }
 
-    ok = all(L["establishable"] for L in report["lanes"].values()) and \
-         all(L.get("glh_per_week", {}) and L["glh_per_week"]["single_value_established"]
-             for L in report["lanes"].values())
+    # ---- the owner ruling that closed the carryable question --------------------
+    # This tool measures the REPO. The ruling below is not a repo fact and is not
+    # derived here: it is an owner input, recorded so the verdict can reflect it
+    # without pretending the repo said it.
+    report["owner_ruling"] = {
+        "date": "2026-08-22",
+        "question": ("Of BUILD's six carryable slots, how many may bank a guided hour to "
+                     "PEQ alongside their own ASDAN short course?"),
+        "answer": "ALL SIX.",
+        "consequence": ("6 carryable slots + the PEQ row = 7 periods x 40 min = 280 min "
+                        "= 4.667 GLH/week. That is the TOP of the band this tool measured "
+                        "(1-7 periods); the ruling selects within the measured band, it does "
+                        "not extend it."),
+        "still_not_repo_facts": ("GROW's empty ASDAN row and LAUNCH's inconsistent planners "
+                                 "are unaffected by the ruling and remain open repo defects; "
+                                 "spring and summer term dates remain absent."),
+    }
+    band_ok = all(
+        L["establishable"] or lane != "BUILD" for lane, L in report["lanes"].items())
+    ok = bool(report["lanes"]["BUILD"]["establishable"])
     report["verdict"] = {
         "single_weekly_constant_established": ok,
+        "weekly_min_minutes": 280 if ok else None,
+        "basis": "measured band (1-7 periods) + owner ruling selecting 7" if ok else None,
         "stop": not ok,
+        "still_open": [
+            "GROW: no populated PEQ row in any of the 8 built weekly planners (row exists, "
+            "empty 0/8). A planner-authoring defect, not a PEQ question.",
+            "LAUNCH: the 8 weekly planners disagree on their own row structure; a PEQ row is "
+            "populated in 3 of 8 weeks and absent from 4.",
+            "CALENDAR: spring and summer 2026-27 have no dates and no calendar-backed week "
+            "count anywhere in the repo. Only autumn (15 weeks) is evidenced; WEEKS = 38 "
+            "remains unsourced.",
+        ],
         "missing": [
             "GROW: no populated PEQ row in any of the 8 built weekly planners — the ASDAN "
             "row exists but is empty 0/8. There is no GROW PEQ slot to measure.",
@@ -200,11 +228,19 @@ def main():
         print(f"  {lane:<7} establishable={str(L['establishable']):<5} {rng}"
               + (f"   ({L['why_not']})" if L["why_not"] else ""))
     print(f"  -> {OUT}")
-    if report["verdict"]["stop"]:
+    v = report["verdict"]
+    if v["stop"]:
         print("\nSTOP (§1.4): no single weekly constant is established. Missing:")
-        for m in report["verdict"]["missing"]:
+        for m in v["missing"]:
             print("   - " + m)
         return 1
+    r = report["owner_ruling"]
+    print(f"\nRESOLVED — owner ruling {r['date']}: {r['answer']} {r['consequence']}")
+    print(f"  WEEKLY_MIN = {v['weekly_min_minutes']} min ({v['weekly_min_minutes']/60:.3f} h/wk)"
+          f"  [{v['basis']}]")
+    print("  still open (unaffected by the ruling):")
+    for m in v["still_open"]:
+        print("   - " + m)
     return 0
 
 

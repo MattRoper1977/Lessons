@@ -99,7 +99,16 @@ checks = {
  "L1 14-of-15 named": "14-of-15",
  "ThSk vs CrTh split": "only the L2 lane plans <b>CrThSk2</b>",
  "working towards": "working towards",
- "zero-slack statement": "zero slack",
+ # PEQ-YEAR-1 §2: the "zero slack" statement was TRUE at the 3.5 h/wk owner input, where
+ # the E3 six-unit ledger closed only via 7 co-delivered hours. At the derived 4.667 h/wk
+ # it is FALSE - the hours are real and there are 37.3 h of declared QA headroom. Asserting
+ # it now would be asserting a falsehood, so it is replaced by the three statements that
+ # ARE load-bearing at the derived rate: the rate itself, the provenance split between what
+ # was measured and what was ruled, and the withdrawal of the co-delivery claim.
+ "derived rate stated": "seven timetabled 40-minute periods",
+ "measured-vs-ruled provenance split": "may bank a guided hour to PEQ alongside their own ASDAN short course",
+ "co-delivery withdrawn": "co-delivery claim is withdrawn",
+ "QA headroom declared, not claimed": "never claimed against a unit",
 }
 missing = [k for k, v in checks.items() if v not in sow]
 mtx = open(os.path.join(KIT, "Criteria_Coverage_Matrix.html"), encoding="utf-8").read()

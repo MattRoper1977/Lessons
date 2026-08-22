@@ -9,14 +9,23 @@
 
 ## The verdict, first
 
-**§1 STOPs.** The year map cannot be re-anchored to a measured weekly constant, because the
-repo does not contain one. Per §1.4 — *"If the derived hours cannot be established from repo
-evidence, STOP and report what is missing — do not invent a timetable. A guessed slot is worse
-than a paused pass."*
+**§1 stopped, and was then resolved by an owner ruling.** Both halves matter, and the record
+keeps them apart.
 
-This is **not** a failure to look. Three things *were* established by measurement, and they are
-worth having. What defeats the derivation is narrower and more specific than "no timetable in
-the repo", and it is stated exactly below so it can be closed with two answers.
+**The stop.** The repo does not contain a weekly constant. Measurement bounded the lane at
+**1–7 periods (0.67–4.67 h/wk)** and could go no further: which of BUILD's six carryable slots
+may bank a guided hour to PEQ *as well as* to their own ASDAN short course is not a repo fact.
+Per §1.4 the pass refused to pick a number — *"do not invent a timetable. A guessed slot is
+worse than a paused pass."*
+
+**The ruling (owner, 2026-08-22): all six carryable slots carry PEQ.** That selects the top of
+the measured band — 6 slots + the PEQ row = **7 periods × 40 min = 280 min = 4.667 GLH/week** —
+and the year map is re-anchored on it (§2 below, and `DECISIONS_YEAR1.md`).
+
+**Keep the provenance straight.** 40 minutes and six-slots-at-one-period were **measured**. Seven
+periods is **measured band + owner ruling**. The ruling selects *within* what measurement
+established; it does not extend it, and it is recorded as an owner input, never as a repo
+finding. Three things below were established by measurement and are worth having on their own.
 
 ---
 
@@ -153,21 +162,29 @@ places. Candidate year lengths: **38** (what the code says) · **39** (what the 
 
 ---
 
-## What closes this
+## What closed it, and what is still open
 
-Two answers, neither of which is in the repo and neither of which this pass may invent:
+**Closed — the carryable ruling (owner, 2026-08-22).** *All six* of BUILD's carryable slots may
+bank guided hours to PEQ alongside their own ASDAN short course. That converts the measured
+0.67–4.67 h/wk band into a single figure: **7 periods = 4.667 h/wk = 177.3 GLH a year per lane.**
 
-1. **The carryable ruling.** Of BUILD's six slots, how many may bank guided hours to PEQ
-   alongside their own ASDAN short course? (Coordinator, or the member-gated PEQ delivery
-   guide.) Answering it converts BUILD's measured 0.67–4.67 h/wk band into a single figure.
-2. **The spring and summer term dates** for 2026-27, from the final Redcar & Cleveland
-   calendar — which also retires the unsourced `WEEKS = 38`.
+What follows from it, all of it proven in the ledger rather than asserted:
 
-Two further items are repo work, not owner decisions, and are logged rather than done here
-because they are outside this pass's scope: **fill GROW's empty ASDAN row**, and **reconcile
-LAUNCH's weekly planners to one row structure**.
+| | |
+|---|---|
+| **Every lane targets the full Certificate** | E3 Certificate (14 cr) · L1 Certificate (14 cr, claimed from the six-unit 15) · L2 Certificate (15 cr) |
+| **Milestones hold on all three lanes** | Award **W14** → Extended Award **W26** → Certificate **W38** |
+| **The co-delivery claim is withdrawn** | was E3 7 h and L1 2 h; at 4.667 h/wk the hours are real supervised time and the six-unit ledgers close without it |
+| **Declared QA/consolidation** | 37.3 h (E3) · 42.3 h (L1) · 57.3 h (L2) — never claimed against a unit |
 
-Until then the year map stays on its declared **owner input of 3.5 h/wk**, which is now
-labelled as such on the page rather than presented as a derived rate — and the sensitivity
-table is re-based onto the measured 40-minute slot arithmetic so the choice in front of the
-centre is the real one. See `§2` in `DECISIONS_YEAR1.md`.
+Had the timetable given **five** periods instead of seven, the honest answer for Entry 3 and
+Level 1 would have been the **Extended Award**. The sensitivity table on the year map now shows
+where every threshold falls, so a later timetable change can be read off it rather than
+re-argued.
+
+**Still open — and unaffected by the ruling:**
+
+1. **The spring and summer term dates** for 2026-27, from the final Redcar & Cleveland calendar
+   — which also retires the unsourced `WEEKS = 38`.
+2. **GROW's empty ASDAN row** and **LAUNCH's inconsistent weekly planners** (§B and §A above).
+   Planner-authoring defects, not PEQ questions; logged in `PROPOSED_YEAR1.md` P5.

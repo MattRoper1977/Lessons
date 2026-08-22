@@ -26,11 +26,21 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 OUT_JSON = os.path.join(ROOT, "_passpq", "inputs", "peq_l2k_year_ledger.json")
 OUT_XLSX = os.path.join(ROOT, "_passpq", "inputs", "PEQ_L2K_YearPlan_2026-27.xlsx")
 
-WEEKLY_MIN = 210          # OWNER INPUT: 3.5 GLH/week (Addendum B §B1). NOT a derived figure.
-# Pass PEQ-YEAR-1 §1 attempted to replace this with a rate measured from the estate's own
-# timetable and STOPPED: the repo does not fix one. See _passpq/DERIVATION_YEAR1.md and
-# `python3 _passpq/tools/year1_derive.py` (exit 1 while any lane is unestablishable).
-# What §1 DID establish, and what the sensitivity table below is now re-based onto:
+WEEKLY_MIN = 280          # DERIVED: 7 timetabled 40-minute periods = 4.667 GLH/week.
+DESIGN_MIN = 210          # the pedagogical allocation the six-block year was laid out on
+# HOW 280 WAS ARRIVED AT (PEQ-YEAR-1 §1-§2, and it is two facts plus one ruling):
+#   MEASURED  the estate's period unit is 40 minutes (15 agreeing statements across all
+#             three lanes' weekly planners) and BUILD runs SIX discrete weekly slots at one
+#             period each beside its PEQ row ("...which is how LI reaches certification on a
+#             one-slot week" — BUILD_Slot_Planner_2026-27_vA.xlsx [Slot Architecture]!A2).
+#             That bounded the lane at 1-7 periods, i.e. 0.67-4.67 h/wk, and no further.
+#   RULED     owner, 2026-08-22: ALL SIX carryable slots (Careers · Vocational/D&T · Living
+#             Independently · FoodWise · Community A · Community B) may bank a guided hour to
+#             PEQ alongside their own ASDAN short course. That is the ceiling of the measured
+#             band: 6 slots + the PEQ row = 7 periods = 280 min.
+# The ruling is what §1 could not derive from the repo and refused to guess (it needs the
+# member-gated PEQ delivery guide, which the centre does not hold). It is recorded as an
+# owner input, not as a repo finding. See _passpq/DERIVATION_YEAR1.md.
 PERIOD_MIN = 40           # the estate's period unit — 15 agreeing statements, all lanes
 SLOT_BAND = (1, 7)        # BUILD's measurable band: 1 PEQ row .. 7 rows (PEQ + six slots)
 DERIVATION = (
@@ -192,12 +202,25 @@ def build():
     lanes = {}
     for lane in ("E3", "L1", "L2"):
         R, C = lane_rows(lane)
+        # -- PEQ-YEAR-1 §2: re-anchor the design onto the DERIVED week ------------
+        # lane_rows lays the six-block pedagogical year out at DESIGN_MIN a week, closing
+        # the E3 and L1 ledgers only with a declared co-delivery top-up. The derived week is
+        # wider, so those minutes are now affordable as REAL supervised time: fold them into
+        # the physical ledger and withdraw the co-delivery claim entirely. Whatever is left
+        # is declared QA/consolidation and is never claimed against a unit.
+        for w in range(1, WEEKS + 1):
+            design = sum(R[w].values())
+            assert design == DESIGN_MIN, f"{lane} W{w}: design {design} != {DESIGN_MIN}"
+            for sk, m in C[w].items():
+                R[w][sk] = R[w].get(sk, 0) + m
+            used = sum(R[w].values())
+            assert used <= WEEKLY_MIN, f"{lane} W{w}: {used} min allocated > derived week {WEEKLY_MIN}"
+            R[w]["QA"] = R[w].get("QA", 0) + (WEEKLY_MIN - used)
+        C = [dict() for _ in range(WEEKS + 1)]   # co-delivery withdrawn — the hours are real now
         # -- assertions: the red gate --
         for w in range(1, WEEKS + 1):
             phys = sum(R[w].values())
             assert phys == WEEKLY_MIN, f"{lane} W{w}: physical {phys} != {WEEKLY_MIN}"
-            for sk in C[w]:
-                assert R[w].get(sk if sk != "Wellb" else "Th", 0) + R[w].get(sk, 0) >= 0  # co rides a real session
         totals, cum, complete_wk = {}, {}, {}
         for sk in SKILLS:
             t = sum(R[w].get(sk, 0) + C[w].get(sk, 0) for w in range(1, WEEKS + 1))
@@ -247,13 +270,13 @@ def sensitivity():
     # Each row is a whole count of timetabled periods; the owner input is carried alongside,
     # flagged, so the page can show it without presenting it as derived.
     lo, hi = SLOT_BAND
-    grid = [(n, n * PERIOD_MIN / 60.0) for n in range(lo, hi + 1)]
-    grid.append((WEEKLY_MIN / PERIOD_MIN, WEEKLY_MIN / 60.0))     # the declared owner input
-    grid.sort(key=lambda t: t[1])
-    for slots, hpw in grid:
+    live_slots = WEEKLY_MIN / PERIOD_MIN
+    grid = {n: n * PERIOD_MIN / 60.0 for n in range(lo, hi + 1)}
+    grid[live_slots] = WEEKLY_MIN / 60.0        # the derived rate; may coincide with a band row
+    for slots, hpw in sorted(grid.items(), key=lambda t: t[1]):
         year = int(round(hpw * 60)) * WEEKS
         cell = {"slots": slots, "whole_periods": float(slots).is_integer(),
-                "owner_input": abs(hpw - WEEKLY_MIN / 60.0) < 1e-9,
+                "live": abs(hpw - WEEKLY_MIN / 60.0) < 1e-9,
                 "hpw": round(hpw, 4), "year_glh": round(year / 60.0, 2), "lanes": {}}
         for lane in ("E3", "L1", "L2"):
             reach = []
@@ -305,12 +328,16 @@ def main():
                             "CONCURRENTLY - one mixed session, three demands, three levels of "
                             "evidence. The L2 route is staff-directed and appears in-deck behind "
                             "the Guidance toggle."),
-            "lane_targets": ("NOT set in this pass. The target qualification per lane follows "
-                             "from the weekly period count, which s1 could not derive from repo "
-                             "evidence (see DERIVATION_YEAR1.md). At five 40-minute periods a "
-                             "week the E3 and L1 lanes land the Extended Award; at six, all "
-                             "three lanes land the Certificate. Both are honest; the timetable "
-                             "decides which."),
+            "lane_targets": ("SET, on the derived rate of 7 x 40-minute periods (4.667 h/wk). "
+                             "ALL THREE LANES TARGET THE FULL CERTIFICATE: Entry Level "
+                             "Certificate (14 cr) - Level 1 Certificate (14 cr, claimed from "
+                             "the six-unit 15) - Level 2 Certificate (15 cr). Award by W14, "
+                             "Extended Award by W26, Certificate by W38 on every lane, each "
+                             "milestone proven in the ledger rather than asserted. The "
+                             "co-delivery claim is WITHDRAWN on all three lanes (was E3 7 h, "
+                             "L1 2 h): at 4.667 h/wk the hours are real supervised time and "
+                             "the six-unit ledgers close without it, leaving 37.3 h (E3), "
+                             "42.3 h (L1) and 57.3 h (L2) of declared QA/consolidation."),
         },
     }
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)

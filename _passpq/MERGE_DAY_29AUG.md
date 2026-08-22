@@ -27,15 +27,22 @@ Commands and their real output are quoted so anyone can re-run them.
 - `Criteria_By_Week.html` — the coverage matrix inverted by week
 - `Kitchen_Completion_Checklist.html` — the weekly tick sheet
 
-**Also live:** the year map's hours paragraph and sensitivity table, re-based onto the measured
-40-minute period and with **no row marked live** (`Scheme_of_Work.html`); the
-registration-contingent hedge strings rewritten across the estate; `_passpq/DERIVATION_YEAR1.md`
-and `_passpq/tools/year1_derive.py`.
+**Also live: the year map re-anchored on the derived weekly rate.** `WEEKLY_MIN` 210 → **280**
+(7 timetabled 40-minute periods = 4.667 h/wk), following the owner ruling of 22 Aug that all six
+carryable slots bank guided hours to PEQ. Consequences, all regenerated and gate-proven:
+**all three lanes now target the full Certificate** (Award W14 → Extended W26 → Certificate
+W38); the **co-delivery claim is withdrawn** on every lane (was E3 7 h, L1 2 h); and 37–57 hours
+a lane are declared as QA/consolidation, never claimed against a unit. Also live: the
+registration-contingent hedge strings rewritten across the estate,
+`_passpq/DERIVATION_YEAR1.md`, `_passpq/PROPOSED_YEAR1.md`, `_passpq/DECISIONS_YEAR1.md` and
+`_passpq/tools/year1_derive.py`.
 
 **Explicitly NOT live** — and none of it is waiting on the 29th:
 
 - Any cooking content. No recipe, menu, dish or ingredient was generated; `food_gate.py` proves it.
-- Any re-anchored year map. §1 stopped rather than guess a timetable — see `DERIVATION_YEAR1.md`.
+- Any change to `WEEKS = 38`, which remains unsourced, or to the spring/summer calendar, which
+  the repo does not contain. Logged as `PROPOSED_YEAR1.md` P3/P4.
+- Fixes to GROW's empty ASDAN planner row or LAUNCH's inconsistent weekly planners (P5).
 - `resources.json`. **Untouched by design** — see §4.
 - The SL and SBX branches. Measured below, merged nowhere.
 

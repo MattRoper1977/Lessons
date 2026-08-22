@@ -123,14 +123,19 @@ one when the wellbeing plans open (W27). They are on the page verbatim; they are
 
 ---
 
-## 7 · One thing that is still open, and does not block you
+## 7 · The hours, settled — and what it means for you
 
-The number of **supervised hours per week** the programme is timetabled is an owner input
-(currently 3.5 h/wk), not a figure measured from the school timetable — an attempt to measure it
-stopped rather than guess. It does not change what you teach or when: the block order, the
-criteria and the week shells are unaffected. It changes only **which qualification each lane can
-honestly finish**. If the class ends up with five 40-minute periods a week rather than six, the
-Entry 3 and Level 1 lanes land the **Extended Award** rather than the Certificate — the same
-teaching, an honestly smaller claim. The detail is in
-[`_passpq/DERIVATION_YEAR1.md`](../../_passpq/DERIVATION_YEAR1.md); the decision is Matt's and the
-coordinator's, not yours.
+The programme is timetabled at **seven 40-minute periods a week** (4.667 supervised hours): the
+PEQ session plus the six slots — Careers, Vocational/D&T, Living Independently, FoodWise,
+Community A and Community B — which all count, because PEQ evidence is generated *through* those
+activities rather than alongside them.
+
+**What that means in practice: all three lanes can finish the full Certificate this year**, with
+the Award banked by W14, the Extended Award by W26 and the Certificate by W38. There is real
+headroom in the plan — between 37 and 57 hours a lane of consolidation time that is deliberately
+*not* claimed against any unit. So a week that overruns, a trip, or a practical that needs a
+second go will not cost anyone their qualification.
+
+You do not need to track any of this. It is why the week shells look unhurried: the hours are
+there. The one thing worth knowing is that **the criteria on each week's shell are the floor,
+not the ceiling** — if a session produces better evidence than the shell asks for, bank it.

@@ -237,21 +237,31 @@ this addendum supersedes it.
 | **The LAUNCH room** | Runs the **Entry 3, Level 1 and Level 2 routes concurrently** — one mixed session, three demands, three levels of evidence. The L2 route is staff-directed and sits in-deck behind the **ⓘ Guidance** toggle. |
 | **What is still genuinely open** | Achievement, and only achievement. A pupil has not achieved a unit until it is assessed, IQA'd and EQA-sampled (§§10–12). The first-year EQA sampling activity must still be booked, and names confirmed ≈4 weeks before it. Which L1 claim shape is *claimed* is stated at that names-confirmation — a normal step in the EQA cycle, not a decision still to be taken. |
 
-### Lane targets — deliberately not set here
+### Lane targets — set, on the derived rate
 
-The target qualification for each lane follows from **how many periods a week the class is
-timetabled**, and pass PEQ-YEAR-1 §1 could not derive that from repo evidence — it stopped
-rather than guess. See [`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
+**Owner ruling, 2026-08-22:** all six of BUILD's carryable slots (Careers · Vocational/D&T ·
+Living Independently · FoodWise · Community A · Community B) may bank a guided hour to PEQ
+alongside their own ASDAN short course. With the PEQ row that is **7 timetabled 40-minute
+periods = 4.667 supervised hours a week = 177.3 GLH a year per lane** — the top of the
+1–7 period band pass PEQ-YEAR-1 §1 measured. See
+[`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
 
-The choice, stated honestly, is:
+**All three lanes target the full Certificate**, every milestone proven in the ledger rather
+than asserted:
 
-| Weekly periods | h/wk | Entry 3 | Level 1 | Level 2 |
+| Lane | Award | Extended Award | Certificate | Credits |
 |---|---|---|---|---|
-| **5** × 40 min | 3.33 | Extended Award | Extended Award | **Certificate** |
-| **6** × 40 min | 4.00 | **Certificate** | **Certificate** | **Certificate** |
+| **Entry 3** | W14 | W26 | **W38** | 14 (all six E3 units, all at level) |
+| **Level 1** | W14 | W26 | **W38** | 14 claimed from the six-unit 15 |
+| **Level 2** | W14 | W26 | **W38** | 15 (all six L2 units, all at level) |
 
-Both rows are honest. Six periods also makes the **7 hours of declared co-delivery on the E3
-lane unnecessary**, and it should be withdrawn if that is what the timetable gives — the
-honest number, not the convenient one. The 3.5 h/wk the plan is currently worked at is
-**5.25 periods**, which is not a whole number of the school's real periods and should not be
-treated as a target.
+**The co-delivery claim is withdrawn on all three lanes.** At the previous 3.5 h/wk owner input
+the E3 six-unit ledger (140 unit-GLH) closed only via **7 co-delivered hours**, and L1 needed 2.
+At 4.667 h/wk those hours are real supervised time and the ledgers close without the claim, so
+it drops to **zero**. What is left is **declared QA and consolidation** — 37.3 h (E3), 42.3 h
+(L1), 57.3 h (L2) — never claimed against a unit. The honest number, not the convenient one.
+
+**If the timetable changes**, the sensitivity table on the year map carries every threshold: at
+**five** periods Entry 3 and Level 1 land the **Extended Award** rather than the Certificate; at
+**six** all three Certificates hold; below **four**, the Extended Award goes too. One constant
+(`WEEKLY_MIN` in `_passpq/tools/l2k_plan.py`) regenerates the whole map.
