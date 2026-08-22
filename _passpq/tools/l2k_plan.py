@@ -358,6 +358,43 @@ def sensitivity():
         rows.append(cell)
     return rows
 
+def _assert_measured_matches_timetable():
+    """ROOM_MEASURED must still equal what the timetable extract measured.
+
+    The per-room ceilings are genuinely DERIVED PER LANE - perturbing one room's
+    ab_slots moves that room's GLH and no other, which is the property that keeps
+    the identical 202.67 across all three honest. It is a coincidence of the real
+    timetable, not one constant applied three times: the three splits are 0+8, 2+6
+    and 4+4, three different shapes that happen to total 8 each.
+
+    But ROOM_MEASURED is TRANSCRIBED from _passpq/inputs/timetable_2026-27.json
+    rather than read from it, and a transcribed copy of a measurement is a
+    measurement that can go stale without anything noticing. Re-extract the
+    timetable, change a classification, and these numbers would quietly keep
+    describing the old one. So they are reconciled here, every run.
+    """
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                       "..", "inputs", "timetable_2026-27.json")
+    with open(src, encoding="utf-8") as fh:
+        tt = json.load(fh)
+    for room, m in ROOM_MEASURED.items():
+        c = tt["counts"][room]
+        a, b = c.get("a", 0), c.get("b", 0)
+        od = c.get("owner-decision", 0)
+        assert m["a_slots"] == a, \
+            f"ROOM_MEASURED[{room}].a_slots={m['a_slots']} but the timetable measures {a}"
+        assert m["ab_slots"] == a + b, \
+            f"ROOM_MEASURED[{room}].ab_slots={m['ab_slots']} but the timetable measures {a + b}"
+        assert m["owner_decision"] == od, \
+            f"ROOM_MEASURED[{room}].owner_decision={m['owner_decision']} but the timetable measures {od}"
+        assert m["a_min"] == a * PERIOD_MIN, \
+            f"ROOM_MEASURED[{room}].a_min={m['a_min']} != {a} slots x {PERIOD_MIN} min"
+        assert m["ab_min"] == (a + b) * PERIOD_MIN, \
+            f"ROOM_MEASURED[{room}].ab_min={m['ab_min']} != {a + b} slots x {PERIOD_MIN} min"
+    assert WEEKLY_MIN == max(m["ab_min"] for m in ROOM_MEASURED.values()), \
+        "WEEKLY_MIN no longer matches the largest measured room"
+
+
 def _assert_calendar():
     """A block scheme that does not cover the year, or a TERM_EVIDENCE table that
     disagrees with the blocks it documents, is a silent falsehood on 38 printed
@@ -487,6 +524,7 @@ def room_reachability():
 
 def main():
     _assert_calendar()
+    _assert_measured_matches_timetable()
     lanes = build()
     sens = sensitivity()
     data = {

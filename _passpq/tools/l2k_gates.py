@@ -51,8 +51,13 @@ try:
     # the spring/summer assumptions to travel with an intact assertion, and "intact"
     # has to mean load-bearing at the gate, not merely present in the file.
     plan._assert_calendar()
+    # ROOM_MEASURED is transcribed from the timetable extract, not read from it, so
+    # it can go stale without anything noticing. Reconciled at the gate for the same
+    # reason _assert_calendar() is: an assertion that only runs in the generator is
+    # not load-bearing.
+    plan._assert_measured_matches_timetable()
     plan.build()
-    gate("G1 ledger re-proven (calendar, sums, milestones, windows)", True)
+    gate("G1 ledger re-proven (calendar, measured rooms, sums, milestones, windows)", True)
 except AssertionError as e:
     gate("G1 ledger re-proven", False, str(e))
 
